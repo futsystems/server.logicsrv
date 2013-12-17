@@ -52,11 +52,9 @@ namespace FutsMoniter
 
         void OnQryAccountInfo(string json)
         {
-            JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(json);
-            int code = int.Parse(jd["Code"].ToString());
-            if (code == 0)
+            IAccountInfo obj = MoniterUtils.ParseJsonResponse<IAccountInfo>(json);
+            if (obj != null)
             {
-                IAccountInfo obj = TradingLib.Mixins.JsonReply.ParsePlayload<AccountInfo>(jd);
                 this.GotAccountInfo(obj);
             }
             else//如果没有配资服

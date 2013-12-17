@@ -30,7 +30,7 @@ namespace TradingLib.Core
                         NotifyMGRContribNotify notify = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(cst.Location);
                         notify.ModuleID = this.CoreId;
                         notify.CMDStr = "NotifyBrokerPM";
-                        notify.Result = new Mixins.ReplyWriter().Start().FillReply(Mixins.JsonReply.GenericSuccess()).FillPlayload(broker.PositionMetrics.ToArray()).End().ToString();
+                        notify.Result = Mixins.JsonReply.SuccessReply(broker.PositionMetrics.ToArray()).ToJson();// new Mixins.ReplyWriter().Start().FillReply(Mixins.JsonReply.GenericSuccess()).FillPlayload(broker.PositionMetrics.ToArray()).End().ToString();
                         CachePacket(notify);
                     }
                 }

@@ -112,7 +112,7 @@ namespace TradingLib.Common
         /// <param name="mgr"></param>
         /// <param name="managertoadd"></param>
         /// <returns></returns>
-        public static bool RightAddManager(this Manager mgr, Manager managertoadd)
+        public static bool RightAddManager(this Manager mgr, ManagerSetting managertoadd)
         {
             //超级管理员有权限添加
             if (mgr.RightRootDomain() || mgr.Type == QSEnumManagerType.AGENT)

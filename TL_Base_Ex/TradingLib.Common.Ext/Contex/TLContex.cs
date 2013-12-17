@@ -288,9 +288,19 @@ namespace TradingLib.Common
 
         public void MessageMgrHandler(ISession session,MGRContribRequest request)
         {
-            Util.Debug("****handle mgr contribrequest:" + request.ToString());
-            CmdHandler(session, request.ModuleID, request.CMDStr, request.Parameters, messageMgrCmdMap);
-
+            try
+            {
+                Util.Debug("****handle mgr contribrequest:" + request.ToString());
+                CmdHandler(session, request.ModuleID, request.CMDStr, request.Parameters, messageMgrCmdMap);
+            }
+            catch (FutsRspError ex)
+            {
+                session.OperationError(ex);
+            }
+            catch (Exception ex)
+            {
+                session.OperationError(new FutsRspError(ex));
+            }
         }
         /// <summary>
         /// 处理web message exchange消息调用

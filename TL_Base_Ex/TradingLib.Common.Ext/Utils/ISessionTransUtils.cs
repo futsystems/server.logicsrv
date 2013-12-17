@@ -45,45 +45,6 @@ namespace TradingLib.Common
             TLCtxHelper.Ctx.MessageMgr.Send(packet);
         }
 
-
-
-        /// <summary>
-        /// 向管理端发送一个jsonreply回报
-        /// </summary>
-        /// <param name="session"></param>
-        /// <param name="reply"></param>
-        /// <param name="islast"></param>
-        public static  void SendJsonReplyMgr(this ISession session, TradingLib.Mixins.JsonReply reply, bool islast = true)
-        {
-            RspMGRContribResponse response = ResponseTemplate<RspMGRContribResponse>.SrvSendRspResponse(session);
-            response.ModuleID = session.ContirbID;
-            response.CMDStr = session.CMDStr;
-            response.IsLast = islast;
-
-            response.RspInfo.ErrorID = reply.Code;
-            response.RspInfo.ErrorMessage = reply.Message;
-            response.Result = new Mixins.ReplyWriter().Start().FillReply(reply).End().ToString();
-
-            SendPacketMgr(session, response);
-        }
-
-        /// <summary>
-        /// 向管理端发送一个jsonwrapper对象
-        /// </summary>
-        /// <param name="session"></param>
-        /// <param name="obj"></param>
-        /// <param name="islast"></param>
-        public static void SendJsonReplyMgr(this ISession session, object obj, bool islast = true)
-        {
-            RspMGRContribResponse response = ResponseTemplate<RspMGRContribResponse>.SrvSendRspResponse(session);
-            response.ModuleID = session.ContirbID;
-            response.CMDStr = session.CMDStr;
-            response.IsLast = islast;
-            response.Result = new Mixins.ReplyWriter().Start().FillReply(Mixins.JsonReply.GenericSuccess()).FillPlayload(obj).End().ToString();
-
-            SendPacketMgr(session, response);
-        }
-
         /// <summary>
         /// 将某个对象放入JsonReply返回给管理端
         /// </summary>
@@ -96,7 +57,7 @@ namespace TradingLib.Common
             response.ModuleID = session.ContirbID;
             response.CMDStr = session.CMDStr;
             response.IsLast = islast;
-            response.Result = new Mixins.ReplyWriter().Start().FillReply(Mixins.JsonReply.GenericSuccess()).FillPlayload(obj).End().ToString();
+            response.Result = Mixins.JsonReply.SuccessReply(obj).ToJson();
 
             session.SendPacketMgr(response);
         }
@@ -110,7 +71,6 @@ namespace TradingLib.Common
         public static void OperationError(this ISession session,FutsRspError error)
         {
             RspMGROperationResponse response = ResponseTemplate<RspMGROperationResponse>.SrvSendRspResponse(session);
-            
             response.RspInfo.Fill(error);
 
             session.SendPacketMgr(response);
@@ -131,6 +91,7 @@ namespace TradingLib.Common
         }
 
 
+
         /// <summary>
         /// 向某地址列表发送通知 如果地址列表为null,则发送到ISession对应的地址
         /// </summary>
@@ -144,11 +105,9 @@ namespace TradingLib.Common
             NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(targets == null ? new ILocation[] { session.GetLocation() } : targets);
             response.ModuleID = session.ContirbID;
             response.CMDStr = cmdstr;
-            response.Result = new Mixins.ReplyWriter().Start().FillReply(Mixins.JsonReply.GenericSuccess()).FillPlayload(obj).End().ToString();
+            response.Result = Mixins.JsonReply.SuccessReply(obj).ToJson();
             session.SendPacketMgr(response);
         }
-
-
 
         public static ILocation GetLocation(this ISession session)
         {

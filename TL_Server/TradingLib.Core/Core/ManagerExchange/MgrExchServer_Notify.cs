@@ -61,7 +61,7 @@ namespace TradingLib.Core
         }
 
         /// <summary>
-        /// 通过谓词顾虑出当前通知地址
+        /// 通过谓词过滤出当前通知地址
         /// 需要提供的参数就是Manager对应的谓词，用于判断是否需要通知该Manager
         /// </summary>
         /// <param name="predictate"></param>
@@ -71,8 +71,6 @@ namespace TradingLib.Core
             //1.过滤没有绑定Manager的custinfoex                2.通过谓词过滤Manager              3.投影成地址
             return this.NotifyTarges.Where(c=>c.Manager!=null).Where(e => predictate(e.Manager)).Select(info => info.Location).ToArray();
         }
-
-
 
 
         /// <summary>
@@ -85,13 +83,14 @@ namespace TradingLib.Core
             NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(GetNotifyTargets(op.GetNotifyPredicate()));
             response.ModuleID = CoreName;
             response.CMDStr = "NotifyCashOperation";
-            response.Result = new Mixins.ReplyWriter().Start().FillReply(Mixins.JsonReply.GenericSuccess()).FillPlayload(op).End().ToString();
+            response.Result = Mixins.JsonReply.SuccessReply(op).ToJson();
             CachePacket(response);
         }
 
 
         /// <summary>
         /// 管理员更新通知
+        /// 向所有有权访问mgr信息的管理员发送mgr变更
         /// </summary>
         /// <param name="mgr"></param>
         void NotifyManagerUpdate(Manager mgr)
@@ -99,7 +98,7 @@ namespace TradingLib.Core
             NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(GetNotifyTargets(mgr.GetNotifyPredicate()));
             response.ModuleID = CoreName;
             response.CMDStr = "NotifyManagerUpdate";
-            response.Result = new Mixins.ReplyWriter().Start().FillReply(Mixins.JsonReply.GenericSuccess()).FillPlayload(mgr).End().ToString();
+            response.Result = Mixins.JsonReply.SuccessReply(mgr).ToJson();
             CachePacket(response);
         }
 

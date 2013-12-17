@@ -21,7 +21,7 @@ namespace TradingLib.Core
             if (manager != null)
             {
                 JsonWrapperReceivableAccount[] splist = manager.Domain.GetRecvBanks().ToArray();
-                session.SendJsonReplyMgr(splist);
+                session.ReplyMgr(splist);
             }
         }
 

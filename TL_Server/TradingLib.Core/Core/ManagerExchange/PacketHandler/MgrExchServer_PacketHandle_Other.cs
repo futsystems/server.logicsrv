@@ -15,7 +15,7 @@ namespace TradingLib.Core
         public void CTE_QryBank(ISession session)
         {
             JsonWrapperBank[] splist = BasicTracker.ContractBankTracker.Banks.Select(b => b.ToJsonWrapperBank()).ToArray();
-            session.SendJsonReplyMgr(splist);
+            session.ReplyMgr(splist);
         }
 
 
@@ -27,11 +27,8 @@ namespace TradingLib.Core
         public void CTE_QryFinanceInfo(ISession session)
         {
             Manager manger = session.GetManager();
-            if (manger !=null)
-            {
-                JsonWrapperAgentFinanceInfo info = manger.GetAgentFinanceInfo();
-                session.SendJsonReplyMgr(info);
-            }
+            JsonWrapperAgentFinanceInfo info = manger.GetAgentFinanceInfo();
+            session.ReplyMgr(info);
         }
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryFinanceInfoLite", "QryFinanceInfoLite - query agent finance lite", "查询代精简理财务信息")]
@@ -41,7 +38,7 @@ namespace TradingLib.Core
             if (manger != null)
             {
                 JsonWrapperAgentFinanceInfoLite info = manger.GetAgentFinanceInfoLite();
-                session.SendJsonReplyMgr(info);
+                session.ReplyMgr(info);
             }
         }
 
@@ -60,7 +57,7 @@ namespace TradingLib.Core
                 {
                     ORM.MAgentFinance.UpdateAgentBankAccount(bankaccount);
                     bankaccount.Bank = BasicTracker.ContractBankTracker[bankaccount.bank_id].ToJsonWrapperBank();
-                    session.SendJsonReplyMgr(bankaccount);
+                    session.ReplyMgr(bankaccount);
                 }
             }
 

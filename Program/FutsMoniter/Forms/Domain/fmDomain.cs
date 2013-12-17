@@ -86,11 +86,9 @@ namespace FutsMoniter
         bool _godomain = false;
         void OnQryDomain(string jsonstr)
         {
-            JsonData jd = TradingLib.Mixins.JsonReply.ParseJsonReplyData(jsonstr);
-            int code = int.Parse(jd["Code"].ToString());
-            if (code == 0)
+            DomainImpl[] objs = MoniterUtils.ParseJsonResponse<DomainImpl[]>(jsonstr);
+            if (objs != null)
             {
-                DomainImpl[] objs = TradingLib.Mixins.JsonReply.ParsePlayload<DomainImpl[]>(jd);
                 foreach (DomainImpl op in objs)
                 {
                     InvokeGotDomain(op);
@@ -105,11 +103,9 @@ namespace FutsMoniter
 
         void OnNotifyDomain(string json)
         {
-            JsonData jd = TradingLib.Mixins.JsonReply.ParseJsonReplyData(json);
-            int code = int.Parse(jd["Code"].ToString());
-            if (code == 0)
+            DomainImpl obj = MoniterUtils.ParseJsonResponse<DomainImpl>(json);
+            if (obj != null)
             {
-                DomainImpl obj = TradingLib.Mixins.JsonReply.ParsePlayload<DomainImpl>(jd);
                 InvokeGotDomain(obj);
             }
             else//如果没有配资服

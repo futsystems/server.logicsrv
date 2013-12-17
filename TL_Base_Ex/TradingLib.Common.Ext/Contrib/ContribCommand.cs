@@ -76,27 +76,16 @@ namespace TradingLib.Common
             }
             else //,号分割参数列表
             {
-                //if (_cmdinfo.Attr.SplitNum > 0)
-                {
-
-                //    p = parameters.Split(new char[] { ',' }, _cmdinfo.Attr.SplitNum);//用逗号分隔参数列表
-                    //Utils.Debug("限制分割: p3:" + p[2]);
-                }
-                //else
-                {
-                    p = parameters.Split(',');//用逗号分隔参数列表
-                }
-                if (_cmdinfo.Attr.IsJsonArg)
+                if (_cmdinfo.Attr.IsJsonArg)//json参数 将整个parameters作为参数传入
                 {
                     p = new string[] { parameters };
                 }
-                else
+                else//用逗号分隔参数列表
                 {
                     p = parameters.Split(',');
                 }
             }
 
-            //string[] p = parameters.Split(',');//用逗号分隔参数列表
             //如果分隔后只有1个参数,并且该参数为空或者null,则为无附加参数的函数调用,我们将p至空
             if (p.Length == 1 && string.IsNullOrEmpty(p[0]))
             {
@@ -128,6 +117,7 @@ namespace TradingLib.Common
                     _argslist[i].Value = p[i];
                 }
             }
+
             object[] args = null;
             try
             {
@@ -138,7 +128,17 @@ namespace TradingLib.Common
                 throw new QSCommandError(ex,"Parse arguments error: can not convert string parameters to arguments list we needed");
             }
 
-            return  _cmdinfo.MethodInfo.Invoke(_obj,args);
+            try
+            {
+                //调用扩展方法
+                return _cmdinfo.MethodInfo.Invoke(_obj, args);
+            }
+            catch (System.Reflection.TargetInvocationException ex)
+            {
+                //扩展命令运行时 抛出原始异常 FutRspError等
+                throw ex.InnerException;
+            }
+            
         }
 
         public override string ToString()
@@ -178,23 +178,6 @@ namespace TradingLib.Common
         public override object ExecuteCmd(ISession session, string parameters, bool istnetstring = false)
         {
             return m_action.Execute(session, parameters,istnetstring);
-
-            /*
-            try
-            {
-                return m_action.Execute(session, parameters);
-            }
-            catch (QSCommandError ex)
-            {
-                TLCtxHelper.Ctx.debug(ex.Label + "\r\n reason@" + ex.Reason + "\r\n RawException:" + ex.RawException.Message.ToString(), QSEnumDebugLevel.ERROR);
-                return DEFAULT_REP_WRONG;
-            }
-            catch (Exception ex)
-            {
-                TLCtxHelper.Ctx.debug("ExectueCmd Error:\r\n" + ex.ToString(), QSEnumDebugLevel.ERROR);
-                return DEFAULT_REP_WRONG;
-            }**/
-
         }
         public string ContribCommandDesp
         {

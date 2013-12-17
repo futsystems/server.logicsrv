@@ -9,10 +9,6 @@ namespace TradingLib.Core
 {
     public partial class MgrExchServer
     {
-
-        #region Account
-
-
         /// <summary>
         /// @请求添加交易帐户
         /// 服务端操作采用如下方式进行
@@ -26,58 +22,51 @@ namespace TradingLib.Core
         /// <param name="manager"></param>
         void SrvOnMGRAddAccount(MGRAddAccountRequest request, ISession session, Manager manager)
         {
-            try
-            {
-                debug(string.Format("管理员:{0} 请求添加交易帐号:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
-                
-                //域帐户数目检查
-                if (manager.Domain.GetAccounts().Count() >= manager.Domain.AccLimit)
-                {
-                    throw new FutsRspError("帐户数目达到上限:" + manager.Domain.AccLimit.ToString());
-                }
+            debug(string.Format("管理员:{0} 请求添加交易帐号:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
 
-                //如果不是Root权限的Manager需要进行执行权限检查
-                if (!manager.RightRootDomain())
+            //域帐户数目检查
+            if (manager.Domain.GetAccounts().Count() >= manager.Domain.AccLimit)
+            {
+                throw new FutsRspError("帐户数目达到上限:" + manager.Domain.AccLimit.ToString());
+            }
+
+            //如果不是Root权限的Manager需要进行执行权限检查
+            if (!manager.RightRootDomain())
+            {
+                //如果不是为该主域添加帐户,则我们需要判断当前Manager的主域是否拥有请求主域的权限
+                if (manager.BaseMgrID != request.MgrID)
                 {
-                    //如果不是为该主域添加帐户,则我们需要判断当前Manager的主域是否拥有请求主域的权限
-                    if (manager.BaseMgrID != request.MgrID)
+                    if (!manager.RightAgentParent(request.MgrID))
                     {
-                        if (!manager.RightAgentParent(request.MgrID))
-                        {
-                            throw new FutsRspError("无权在该管理域开设帐户");
-                        }
+                        throw new FutsRspError("无权在该管理域开设帐户");
                     }
                 }
-
-                //Manager帐户数量限制 如果是在自己的主域中添加交易帐户 则需要检查帐户数量
-                int limit = manager.BaseManager.AccLimit;
-
-                int cnt = manager.GetVisibleAccount().Count();//获得该manger下属的所有帐户数目
-                if (cnt >= limit)
-                {
-                    throw new FutsRspError("可开帐户数量超过限制:" + limit.ToString());
-                }
-
-
-                AccountCreation create = new AccountCreation();
-                create.Account = request.AccountID;
-                create.Category = request.Category;
-                create.Password = request.Password;
-                create.RouteGroup = BasicTracker.RouterGroupTracker[request.RouterGroup_ID];
-                create.RouterType = request.Category == QSEnumAccountCategory.SIMULATION ? QSEnumOrderTransferType.SIM : QSEnumOrderTransferType.LIVE;
-                create.UserID = request.UserID;
-                create.Domain = manager.Domain;
-                create.BaseManager = manager.BaseManager;
-
-
-                //执行操作 并捕获异常 产生异常则给出错误回报
-                clearcentre.AddAccount(ref create);//将交易帐户加入到主域
-                session.OperationSuccess("新增帐户:" + create.Account + "成功");
             }
-            catch (FutsRspError ex)//捕获到FutsRspError则向管理端发送对应回报
+
+            //Manager帐户数量限制 如果是在自己的主域中添加交易帐户 则需要检查帐户数量
+            int limit = manager.BaseManager.AccLimit;
+
+            int cnt = manager.GetVisibleAccount().Count();//获得该manger下属的所有帐户数目
+            if (cnt >= limit)
             {
-                session.OperationError(ex);
+                throw new FutsRspError("可开帐户数量超过限制:" + limit.ToString());
             }
+
+
+            AccountCreation create = new AccountCreation();
+            create.Account = request.AccountID;
+            create.Category = request.Category;
+            create.Password = request.Password;
+            create.RouteGroup = BasicTracker.RouterGroupTracker[request.RouterGroup_ID];
+            create.RouterType = request.Category == QSEnumAccountCategory.SIMULATION ? QSEnumOrderTransferType.SIM : QSEnumOrderTransferType.LIVE;
+            create.UserID = request.UserID;
+            create.Domain = manager.Domain;
+            create.BaseManager = manager.BaseManager;
+
+
+            //执行操作 并捕获异常 产生异常则给出错误回报
+            clearcentre.AddAccount(ref create);//将交易帐户加入到主域
+            session.OperationSuccess("新增帐户:" + create.Account + "成功");
         }
 
         /// <summary>
@@ -89,17 +78,9 @@ namespace TradingLib.Core
         void SrvOnDelAccount(MGRReqDelAccountRequest request, ISession session, Manager manager)
         {
             debug(string.Format("管理员:{0} 请求删除帐户:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
-            try
-            {
-                clearcentre.DelAccount(request.AccountToDelete);
+            clearcentre.DelAccount(request.AccountToDelete);
 
-                session.OperationSuccess("交易帐户:" + request.AccountToDelete + " 删除成功");
-            }
-            catch (FutsRspError ex)
-            {
-                session.OperationError(ex);
-            }
-
+            session.OperationSuccess("交易帐户:" + request.AccountToDelete + " 删除成功");
         }
 
         /// <summary>
@@ -192,31 +173,23 @@ namespace TradingLib.Core
 
         void SrvOnMGRCashOperation(MGRCashOperationRequest request, ISession session, Manager manager)
         {
-            try
+            debug(string.Format("管理员:{0} 请求出入金操作:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
+            IAccount account = clearcentre[request.Account];
+            HandlerMixins.Valid_ObjectNotNull(account);
+
+            Manager manger = session.GetManager();
+
+            if (!manager.RightAccessAccount(account))
             {
-                debug(string.Format("管理员:{0} 请求出入金操作:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
-                IAccount account = clearcentre[request.Account];
-                HandlerMixins.Valid_ObjectNotNull(account);
-
-                Manager manger = session.GetManager();
-                
-                if (!manager.RightAccessAccount(account))
-                {
-                    throw new FutsRspError("无权操作该帐户");
-                }
-
-                //执行出入金操作
-                clearcentre.CashOperation(request.Account, request.Amount, request.TransRef, request.Comment);
-
-                //出入金操作后返回帐户信息更新
-                session.NotifyMgr("NotifyAccountFinInfo", account.ToAccountInfo());
-                session.OperationSuccess("出入金操作成功");
-
+                throw new FutsRspError("无权操作该帐户");
             }
-            catch (FutsRspError ex)
-            {
-                session.OperationError(ex);
-            }
+
+            //执行出入金操作
+            clearcentre.CashOperation(request.Account, request.Amount, request.TransRef, request.Comment);
+
+            //出入金操作后返回帐户信息更新
+            session.NotifyMgr("NotifyAccountFinInfo", account.ToAccountInfo());
+            session.OperationSuccess("出入金操作成功");
         }
 
         /// <summary>
@@ -282,24 +255,17 @@ namespace TradingLib.Core
         /// <param name="manger"></param>
         void SrvOnMGRChangeAccountPassword(MGRChangeAccountPassRequest request, ISession session, Manager manger)
         {
-            try
-            {
-                debug(string.Format("管理员:{0} 请求修改交易密码:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求修改交易密码:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
 
-                IAccount account = clearcentre[request.TradingAccount];
-                if (account != null)
-                {
-                    clearcentre.ChangeAccountPass(request.TradingAccount, request.NewPassword);
-                    session.OperationSuccess("修改密码成功");
-                }
-                else
-                {
-                    throw new FutsRspError("交易帐户不存在");
-                }
-            }
-            catch (FutsRspError ex)
+            IAccount account = clearcentre[request.TradingAccount];
+            if (account != null)
             {
-                session.OperationError(ex);
+                clearcentre.ChangeAccountPass(request.TradingAccount, request.NewPassword);
+                session.OperationSuccess("修改密码成功");
+            }
+            else
+            {
+                throw new FutsRspError("交易帐户不存在");
             }
         }
 
@@ -325,71 +291,51 @@ namespace TradingLib.Core
             }
         }
 
-
-        #endregion
-
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryAccountFinInfo", "QryAccountFinInfo - query account", "查询帐户信息")]
         public void CTE_QryAccountFinInfo(ISession session, string account)
         {
-            try
+            Manager manager = session.GetManager();
+            IAccount acc = clearcentre[account];
+            if (manager.RightAccessAccount(acc))
             {
-                Manager manager = session.GetManager();
-                IAccount acc = clearcentre[account];
-                if (manager.RightAccessAccount(acc))
-                {
-                    session.SendJsonReplyMgr(acc.ToAccountInfo());
-                }
-                else
-                {
-                    throw new FutsRspError("无权查看该帐户信息");
-                }
+                session.ReplyMgr(acc.ToAccountInfo());
             }
-            catch (FutsRspError ex)
+            else
             {
-                session.OperationError(ex);
+                throw new FutsRspError("无权查看该帐户信息");
             }
         }
 
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountRouterGroup", "UpdateAccountRouterGroup - update account router group", "更新帐户路由组信息")]
-        public void CTE_QryDomain(ISession session,string account,int gid)
+        public void CTE_QryDomain(ISession session, string account, int gid)
         {
-            try
+            Manager manager = session.GetManager();
+            if (!manager.RightRootDomain())
             {
-                Manager manager = session.GetManager();
-                if (!manager.RightRootDomain())
-                {
-                    throw new FutsRspError("无权修改帐户路由组设置");
-                }
-
-                IAccount acc = clearcentre[account];
-                if (acc == null)
-                {
-                    throw new FutsRspError("交易帐户不存在");
-                }
-
-                if (!manager.RightAccessAccount(acc))
-                {
-                    throw new FutsRspError("无权修改该交易帐户");
-                }
-
-                RouterGroup rg = manager.Domain.GetRouterGroup(gid);
-                if (rg == null)
-                {
-                    throw new FutsRspError("指定路由组不存在");
-                }
-
-                //更新路由组
-                clearcentre.UpdateRouterGroup(account, rg);
-                session.OperationSuccess("更新帐户路由组成功");
-
-
-
+                throw new FutsRspError("无权修改帐户路由组设置");
             }
-            catch (FutsRspError ex)
+
+            IAccount acc = clearcentre[account];
+            if (acc == null)
             {
-                session.OperationError(ex);
+                throw new FutsRspError("交易帐户不存在");
             }
+
+            if (!manager.RightAccessAccount(acc))
+            {
+                throw new FutsRspError("无权修改该交易帐户");
+            }
+
+            RouterGroup rg = manager.Domain.GetRouterGroup(gid);
+            if (rg == null)
+            {
+                throw new FutsRspError("指定路由组不存在");
+            }
+
+            //更新路由组
+            clearcentre.UpdateRouterGroup(account, rg);
+            session.OperationSuccess("更新帐户路由组成功");
         }
 
     }

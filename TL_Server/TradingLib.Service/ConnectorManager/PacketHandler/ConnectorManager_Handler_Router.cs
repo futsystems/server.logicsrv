@@ -23,7 +23,7 @@ namespace TradingLib.ServiceManager
             {
                 //获得域内所有通道设置
                 ConnectorConfig[] ops = manger.Domain.GetConnectorConfigs().ToArray();// BasicTracker.ConnectorConfigTracker.ConnecotrConfigs.ToArray();
-                session.SendJsonReplyMgr(ops);
+                session.ReplyMgr(ops);
             }
         }
 
@@ -38,7 +38,7 @@ namespace TradingLib.ServiceManager
                 {
                     //获得域内所有通道设置
                     ConnectorConfig[] ops = manger.Domain.GetDefaultConnectorConfigs().ToArray();// BasicTracker.ConnectorConfigTracker.ConnecotrConfigs.ToArray();
-                    session.SendJsonReplyMgr(ops);
+                    session.ReplyMgr(ops);
                 }
             }
             catch (FutsRspError ex)
@@ -93,7 +93,7 @@ namespace TradingLib.ServiceManager
             {
                 //获得域内所有通道设置
                 ConnectorStatus[] ops = manger.Domain.GetConnectorConfigs().Select(cfg => GetConnectorStatus(cfg)).ToArray();// BasicTracker.ConnectorConfigTracker.ConnecotrConfigs.ToArray();
-                session.SendJsonReplyMgr(ops);
+                session.ReplyMgr(ops);
             }
         }
 
@@ -106,7 +106,7 @@ namespace TradingLib.ServiceManager
             {
                 //获得域内所有通道设置
                 ConnectorStatus[] ops = manger.Domain.GetDefaultConnectorConfigs().Select(cfg => GetConnectorStatus(cfg)).ToArray();// BasicTracker.ConnectorConfigTracker.ConnecotrConfigs.ToArray();
-                session.SendJsonReplyMgr(ops);
+                session.ReplyMgr(ops);
             }
         }
 
@@ -202,7 +202,7 @@ namespace TradingLib.ServiceManager
             {
                 Manager manger = session.GetManager();
                 RouterGroupSetting[] ops = manger.Domain.GetRouterGroups().ToArray();// BasicTracker.RouterGroupTracker.RouterGroups.ToArray();
-                session.SendJsonReplyMgr(ops);
+                session.ReplyMgr(ops);
             }
             catch (FutsRspError ex)
             {
@@ -260,7 +260,7 @@ namespace TradingLib.ServiceManager
                         throw new FutsRspError("查询路由组不存在");
                     }
                     RouterItem[] items = rg.RouterItems.ToArray();
-                    session.SendJsonReplyMgr(items);
+                    session.ReplyMgr(items);
                 }
             }
             catch (FutsRspError ex)

@@ -39,15 +39,7 @@ namespace TradingLib.Common
             };
             return TLCtxHelper.Ctx.MessageMgr.GetNotifyTargets(p);
         }
-        /// <summary>
-        /// 获得某个域的Root Manager
-        /// </summary>
-        /// <param name="domain"></param>
-        /// <returns></returns>
-        public static Manager GetRootManager(this Domain domain)
-        {
-            return BasicTracker.ManagerTracker.Managers.Where(mgr => mgr.domain_id == domain.ID).FirstOrDefault();
-        }
+
 
          /// <summary>
         /// 获得域内Account

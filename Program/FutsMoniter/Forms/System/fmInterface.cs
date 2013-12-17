@@ -79,11 +79,9 @@ namespace FutsMoniter
 
         void OnQryInterface(string jsonstr)
         {
-            JsonData jd =  TradingLib.Mixins.JsonReply.ParseJsonReplyData(jsonstr);
-            int code = int.Parse(jd["Code"].ToString());
-            if (code == 0)
+            ConnectorInterface[] objs = MoniterUtils.ParseJsonResponse<ConnectorInterface[]>(jsonstr);
+            if (objs != null)
             {
-                ConnectorInterface[] objs =TradingLib.Mixins.JsonReply.ParsePlayload<ConnectorInterface[]>(jd);
                 foreach (ConnectorInterface op in objs)
                 {
                     InvokeGotInterface(op);

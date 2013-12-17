@@ -46,7 +46,7 @@ namespace TradingLib.Common
             return 0;
         }
 
-        public void UpdateManager(Manager mgr)
+        public void UpdateManager(ManagerSetting mgr)
         {
             Manager target = null;
             //添加

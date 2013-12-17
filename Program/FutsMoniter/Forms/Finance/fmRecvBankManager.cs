@@ -60,11 +60,9 @@ namespace FutsMoniter
 
         void OnNotifyRecvBank(string jsonstr)
         {
-            JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
-            int code = int.Parse(jd["Code"].ToString());
-            if (code == 0)
+            JsonWrapperReceivableAccount obj = MoniterUtils.ParseJsonResponse<JsonWrapperReceivableAccount>(jsonstr);
+            if (obj != null)
             {
-                JsonWrapperReceivableAccount obj = TradingLib.Mixins.JsonReply.ParsePlayload<JsonWrapperReceivableAccount>(jd);
                 InvokeGotRecvBank(obj);
             }
             else//如果没有配资服

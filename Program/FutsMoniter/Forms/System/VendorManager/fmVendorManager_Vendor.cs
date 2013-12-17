@@ -21,13 +21,10 @@ namespace FutsMoniter
 
         void OnNotifyVendorBind(string jsonstr)
         {
-            JsonData jd = TradingLib.Mixins.JsonReply.ParseJsonReplyData(jsonstr);
-            int code = int.Parse(jd["Code"].ToString());
-            if (code == 0)
+            JsonReply<VendorSetting> reply = JsonReply.ParseReply<VendorSetting>(jsonstr);
+            if (reply.Code == 0)
             {
-                VendorSetting obj = TradingLib.Mixins.JsonReply.ParsePlayload<VendorSetting>(jd);
-                InvokeGotVendor(obj);
-              
+                InvokeGotVendor(reply.Playload);
             }
             else//如果没有配资服
             {
@@ -39,11 +36,9 @@ namespace FutsMoniter
         bool _gotvendor = false;
         void OnQryVendor(string jsonstr)
         {
-            JsonData jd = TradingLib.Mixins.JsonReply.ParseJsonReplyData(jsonstr);
-            int code = int.Parse(jd["Code"].ToString());
-            if (code == 0)
+            VendorSetting[] objs = MoniterUtils.ParseJsonResponse<VendorSetting[]>(jsonstr);
+            if (objs != null)
             {
-                VendorSetting[] objs = TradingLib.Mixins.JsonReply.ParsePlayload<VendorSetting[]>(jd);
                 foreach (VendorSetting obj in objs)
                 {
                     InvokeGotVendor(obj);

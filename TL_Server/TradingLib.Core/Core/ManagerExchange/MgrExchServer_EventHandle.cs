@@ -99,6 +99,7 @@ namespace TradingLib.Core
             //return locations.ToArray();
         }
 
+
         IEnumerable<CustInfoEx> NotifyTarges
         {
             get

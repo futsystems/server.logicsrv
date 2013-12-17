@@ -116,7 +116,7 @@ namespace FutsMoniter
                 }
                 if (fmConfirm.Show("确认添加管理员信息?") == System.Windows.Forms.DialogResult.Yes)
                 {
-                    Globals.TLClient.ReqAddManager(m);
+                    Globals.TLClient.ReqUpdateManager(m);
                 }
 
             }
@@ -136,7 +136,7 @@ namespace FutsMoniter
                 MessageBox.Show("manager id:" + _manger.ID.ToString());
                 if (fmConfirm.Show("确认更新管理员信息?") == System.Windows.Forms.DialogResult.Yes)
                 {
-                    //Globals.TLClient.ReqUpdateManager(_manger);
+                    Globals.TLClient.ReqUpdateManager(_manger);
                 }
 
             }

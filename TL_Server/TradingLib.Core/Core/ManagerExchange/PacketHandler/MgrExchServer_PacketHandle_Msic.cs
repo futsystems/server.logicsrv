@@ -27,7 +27,7 @@ namespace TradingLib.Core
                 status.MarketOpenCheck = TLCtxHelper.Ctx.RiskCentre.MarketOpenTimeCheck;
                 status.IsDevMode = GlobalConfig.IsDevelop;
 
-                session.SendJsonReplyMgr(status);
+                session.ReplyMgr(status);
             }
             catch (FutsRspError ex)
             {

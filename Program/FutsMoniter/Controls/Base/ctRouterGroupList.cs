@@ -76,11 +76,9 @@ namespace FutsMoniter.Controls.Base
         
         public void OnNotifyRouterGroup(string json)
         {
-            JsonData jd = TradingLib.Mixins.JsonReply.ParseJsonReplyData(json);
-            int code = int.Parse(jd["Code"].ToString());
-            if (code == 0)
+            RouterGroupSetting rg = MoniterUtils.ParseJsonResponse<RouterGroupSetting>(json);
+            if (rg != null)
             {
-                RouterGroupSetting rg = TradingLib.Mixins.JsonReply.ParsePlayload<RouterGroupSetting>(jd);
                 rgmap[rg.ID] = rg;
                 InvokeGotRouterGroup(rgmap.Values.ToArray());
             }
@@ -94,17 +92,14 @@ namespace FutsMoniter.Controls.Base
         bool _gotrglist = false;
         void OnQryRouterGroup(string json)
         {
-            JsonData jd = TradingLib.Mixins.JsonReply.ParseJsonReplyData(json);
-            int code = int.Parse(jd["Code"].ToString());
-            if (code == 0)
+            RouterGroupSetting[] objs = MoniterUtils.ParseJsonResponse<RouterGroupSetting[]>(json);
+            if (objs != null)
             {
-                RouterGroupSetting[] objlist = TradingLib.Mixins.JsonReply.ParsePlayload<RouterGroupSetting[]>(jd);
-                
-                foreach(RouterGroupSetting obj in objlist)
+                foreach(RouterGroupSetting obj in objs)
                 {
                     rgmap[obj.ID] = obj;
                 }
-                this.InvokeGotRouterGroup(objlist);
+                this.InvokeGotRouterGroup(objs);
                 if (!_gotrglist)
                 {
                     _gotrglist = true;

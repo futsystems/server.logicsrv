@@ -338,16 +338,16 @@ namespace TradingLib.Core
                         //SrvOnMGRQryManager(packet as MGRQryManagerRequest, session, manager);
                         break;
                     }
-                case MessageTypes.MGRADDMANAGER://请求添加管理员
-                    { 
-                        SrvOnMGRAddManger(packet as MGRReqAddManagerRequest,session,manager);
-                        break;
-                    }
-                case MessageTypes.MGRUPDATEMANAGER://请求更新管理员
-                    {
-                        SrvOnMGRUpdateManger(packet as MGRReqUpdateManagerRequest, session, manager);
-                        break;
-                    }
+                //case MessageTypes.MGRADDMANAGER://请求添加管理员
+                //    { 
+                //        SrvOnMGRAddManger(packet as MGRReqAddManagerRequest,session,manager);
+                //        break;
+                //    }
+                //case MessageTypes.MGRUPDATEMANAGER://请求更新管理员
+                //    {
+                //        SrvOnMGRUpdateManger(packet as MGRReqUpdateManagerRequest, session, manager);
+                //        break;
+                //    }
                 //case MessageTypes.MGRQRYACCTSERVICE://查询帐户服务
                 //    {
                 //        SrvOnMGRQryAcctService(packet as MGRQryAcctServiceRequest, session, manager);
@@ -358,11 +358,11 @@ namespace TradingLib.Core
                         SrvOnMGRContribRequest(packet as MGRContribRequest, session, manager);
                         break;
                     }
-                case MessageTypes.MGRUPDATEPASS://请求修改密码
-                    {
-                        SrvOnMGRUpdatePass(packet as MGRUpdatePassRequest, session, manager);
-                        break;
-                    }
+                //case MessageTypes.MGRUPDATEPASS://请求修改密码
+                //    {
+                //        SrvOnMGRUpdatePass(packet as MGRUpdatePassRequest, session, manager);
+                //        break;
+                //    }
                 case MessageTypes.MGRINSERTTRADE://请求插入成交
                     {
                         SrvOnInsertTrade(packet as MGRReqInsertTradeRequest, session, manager);

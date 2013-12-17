@@ -21,7 +21,7 @@ namespace TradingLib.Core
                 Manager manger = session.GetManager();
                 if (manger.RightRootDomain())
                 {
-                    session.SendJsonReplyMgr(manger.Domain.GetUIAccesses().ToArray());
+                    session.ReplyMgr(manger.Domain.GetUIAccesses().ToArray());
                 }
                 else
                 {
@@ -73,7 +73,7 @@ namespace TradingLib.Core
                 if (manger.RightRootDomain())
                 {
                     UIAccess access = BasicTracker.UIAccessTracker.GetAgentUIAccess(managerid);
-                    session.SendJsonReplyMgr(access);
+                    session.ReplyMgr(access);
                 }
                 else
                 {

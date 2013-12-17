@@ -52,11 +52,9 @@ namespace FutsMoniter
         }
         void OnNotifyRouterItem(string jsonstr)
         {
-            JsonData jd = TradingLib.Mixins.JsonReply.ParseJsonReplyData(jsonstr);
-            int code = int.Parse(jd["Code"].ToString());
-            if (code == 0)
+            RouterItemSetting obj = MoniterUtils.ParseJsonResponse<RouterItemSetting>(jsonstr);
+            if (obj!=null)
             {
-                RouterItemSetting obj = TradingLib.Mixins.JsonReply.ParsePlayload<RouterItemSetting>(jd);
                 InvokeGotItem(obj);
             }
             else//如果没有配资服
@@ -68,11 +66,9 @@ namespace FutsMoniter
         bool _gotitem = false;
         void OnQryRouterItem(string jsonstr)
         {
-            JsonData jd = TradingLib.Mixins.JsonReply.ParseJsonReplyData(jsonstr);
-            int code = int.Parse(jd["Code"].ToString());
-            if (code == 0)
+            RouterItemSetting[] objs = MoniterUtils.ParseJsonResponse<RouterItemSetting[]>(jsonstr);
+            if (objs != null)
             {
-                RouterItemSetting[] objs = TradingLib.Mixins.JsonReply.ParsePlayload<RouterItemSetting[]>(jd);
                 foreach (RouterItemSetting obj in objs)
                 {
                     InvokeGotItem(obj);

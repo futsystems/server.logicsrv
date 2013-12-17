@@ -16,48 +16,41 @@ namespace TradingLib.Core
             if (manger.RightRootDomain())
             {
                 VendorSetting[] vendorlist = session.GetManager().Domain.GetVendors().ToArray();// BasicTracker.VendorTracker.Vendors.ToArray();
-                session.SendJsonReplyMgr(vendorlist);
+                session.ReplyMgr(vendorlist);
             }
         }
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateVendor", "UpdateVendor - update vendor", "更新Vendor设置", true)]
         public void CTE_UpdateVendor(ISession session, string json)
         {
-            try
+            Manager manger = session.GetManager();
+            if (manger.RightRootDomain())
             {
-                Manager manger = session.GetManager();
-                if (manger.RightRootDomain())
+                VendorSetting vendor = TradingLib.Mixins.LitJson.JsonMapper.ToObject<VendorSetting>(json);
+                bool isadd = vendor.ID == 0;
+                if (string.IsNullOrEmpty(vendor.Name))
                 {
-                    VendorSetting vendor = TradingLib.Mixins.LitJson.JsonMapper.ToObject<VendorSetting>(json);
-                    bool isadd = vendor.ID == 0;
-                    if (string.IsNullOrEmpty(vendor.Name))
-                    {
-                        throw new FutsRspError("帐户名称不能为空");
-                    }
-                    if (vendor.MarginLimit == 0)
-                    {
-                        throw new FutsRspError("请设置资金限额规则");
-                    }
-
-                    if (isadd && manger.Domain.VendorLimit >=  manger.Domain.GetVendors().Count())
-                    {
-                        throw new FutsRspError("实盘帐户数目达到上限:" + manger.Domain.VendorLimit.ToString());
-                    }
-
-                    //设置域ID
-                    vendor.domain_id = manger.Domain.ID;
-
-                    //1.更新内存数据和数据库数据
-                    BasicTracker.VendorTracker.UpdateVendor(vendor);
-
-                    session.NotifyMgr("NotifyVendor",BasicTracker.VendorTracker[vendor.ID] as VendorSetting);
-                    session.OperationSuccess("更新帐户成功");
-
+                    throw new FutsRspError("帐户名称不能为空");
                 }
-            }
-            catch (FutsRspError ex)
-            {
-                session.OperationError(ex);
+                if (vendor.MarginLimit == 0)
+                {
+                    throw new FutsRspError("请设置资金限额规则");
+                }
+
+                if (isadd && manger.Domain.VendorLimit <=  manger.Domain.GetVendors().Count())
+                {
+                    throw new FutsRspError("实盘帐户数目达到上限:" + manger.Domain.VendorLimit.ToString());
+                }
+
+                //设置域ID
+                vendor.domain_id = manger.Domain.ID;
+
+                //1.更新内存数据和数据库数据
+                BasicTracker.VendorTracker.UpdateVendor(vendor);
+
+                session.NotifyMgr("NotifyVendor",BasicTracker.VendorTracker[vendor.ID] as VendorSetting);
+                session.OperationSuccess("更新帐户成功");
+
             }
         }
 
@@ -70,118 +63,93 @@ namespace TradingLib.Core
             }
             return null;
         }
+
+
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "RegBrokerPM", "RegBrokerPM - unbind vendor", "查询持仓矩阵数据")]
         public void CTE_RegBrokerPM(ISession session, int vid)
         {
-            try
+            Manager manger = session.GetManager();
+            if (manger.IsRoot())
             {
-
-                Manager manger = session.GetManager();
-                if (manger.IsRoot())
+                VendorImpl vendor = BasicTracker.VendorTracker[vid];
+                if (vendor == null)
                 {
-                    VendorImpl vendor = BasicTracker.VendorTracker[vid];
-                    if (vendor == null)
-                    {
-                        throw new FutsRspError("指定实盘帐户不存在");
-                    }
-                    if (vendor.domain_id != manger.domain_id)
-                    {
-                        throw new FutsRspError("无权查看该实盘帐户");
-                    }
-                    if (vendor.Broker == null || (!vendor.Broker.IsLive))
-                    {
-                        throw new FutsRspError("通道未绑定或未启动");
-                    }
-                    CustInfoEx infoex = GetCustInfoEx(session);
-                    if (infoex == null)
-                    {
-                        throw new FutsRspError("管理员数据异常,无权查看通道状态");
-                    }
-                    infoex.RegVendor(vendor.Broker);
-                    session.OperationSuccess("注册Broker统计数据成功");
-                    //session.SendJsonReplyMgr(vendor.Broker.PositionMetrics.ToArray());
+                    throw new FutsRspError("指定实盘帐户不存在");
                 }
-                else
+                if (vendor.domain_id != manger.domain_id)
                 {
-
+                    throw new FutsRspError("无权查看该实盘帐户");
                 }
-
+                if (vendor.Broker == null || (!vendor.Broker.IsLive))
+                {
+                    throw new FutsRspError("通道未绑定或未启动");
+                }
+                CustInfoEx infoex = GetCustInfoEx(session);
+                if (infoex == null)
+                {
+                    throw new FutsRspError("管理员数据异常,无权查看通道状态");
+                }
+                infoex.RegVendor(vendor.Broker);
+                session.OperationSuccess("注册Broker统计数据成功");
             }
-            catch (FutsRspError ex)
+            else
             {
-                session.OperationError(ex);
+
             }
         }
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UnregBrokerPM", "UnregBrokerPM - unbind vendor", "查询持仓矩阵数据")]
         public void CTE_UnregBrokerPM(ISession session, int vid)
         {
-            try
+            Manager manger = session.GetManager();
+            if (manger.IsRoot())
             {
-
-                Manager manger = session.GetManager();
-                if (manger.IsRoot())
+                VendorImpl vendor = BasicTracker.VendorTracker[vid];
+                if (vendor == null)
                 {
-                    VendorImpl vendor = BasicTracker.VendorTracker[vid];
-                    if (vendor == null)
-                    {
-                        throw new FutsRspError("指定实盘帐户不存在");
-                    }
-                    if (vendor.domain_id != manger.domain_id)
-                    {
-                        throw new FutsRspError("无权查看该实盘帐户");
-                    }
-                    if (vendor.Broker == null || (!vendor.Broker.IsLive))
-                    {
-                        throw new FutsRspError("通道未绑定或未启动");
-                    }
-                    CustInfoEx infoex = GetCustInfoEx(session);
-                    if (infoex == null)
-                    {
-                        throw new FutsRspError("管理员数据异常,无权查看通道状态");
-                    }
-                    infoex.UnregVendor(vendor.Broker);
-                    session.OperationSuccess("注销Broker统计数据成功");
-                    //session.SendJsonReplyMgr(vendor.Broker.PositionMetrics.ToArray());
+                    throw new FutsRspError("指定实盘帐户不存在");
                 }
-                else
+                if (vendor.domain_id != manger.domain_id)
                 {
-
+                    throw new FutsRspError("无权查看该实盘帐户");
                 }
-
+                if (vendor.Broker == null || (!vendor.Broker.IsLive))
+                {
+                    throw new FutsRspError("通道未绑定或未启动");
+                }
+                CustInfoEx infoex = GetCustInfoEx(session);
+                if (infoex == null)
+                {
+                    throw new FutsRspError("管理员数据异常,无权查看通道状态");
+                }
+                infoex.UnregVendor(vendor.Broker);
+                session.OperationSuccess("注销Broker统计数据成功");
+                //session.SendJsonReplyMgr(vendor.Broker.PositionMetrics.ToArray());
             }
-            catch (FutsRspError ex)
+            else
             {
-                session.OperationError(ex);
+
             }
         }
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "ClearBrokerPM", "ClearBrokerPM - unbind vendor", "清空持仓统计数据注册列表")]
         public void CTE_UnregBrokerPM(ISession session)
         {
-            try
+
+            Manager manger = session.GetManager();
+            if (manger.IsRoot())
             {
-
-                Manager manger = session.GetManager();
-                if (manger.IsRoot())
+                CustInfoEx infoex = GetCustInfoEx(session);
+                if (infoex == null)
                 {
-                    CustInfoEx infoex = GetCustInfoEx(session);
-                    if (infoex == null)
-                    {
-                        throw new FutsRspError("管理员数据异常,无权查看通道状态");
-                    }
-                    infoex.ClearVendor();
-                    session.OperationSuccess("清空Broker统计注册列表成功");
+                    throw new FutsRspError("管理员数据异常,无权查看通道状态");
                 }
-                else
-                {
-
-                }
-
+                infoex.ClearVendor();
+                session.OperationSuccess("清空Broker统计注册列表成功");
             }
-            catch (FutsRspError ex)
+            else
             {
-                session.OperationError(ex);
+
             }
         }
 

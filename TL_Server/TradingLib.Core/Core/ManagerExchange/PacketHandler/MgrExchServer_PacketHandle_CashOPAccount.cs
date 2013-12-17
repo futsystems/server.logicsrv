@@ -17,7 +17,7 @@ namespace TradingLib.Core
             if (acc == null)
             { 
             }
-            session.SendJsonReplyMgr(acc.GetBankAC());
+            session.ReplyMgr(acc.GetBankAC());
         }
 
 
@@ -39,8 +39,8 @@ namespace TradingLib.Core
                 { 
                     ops = list.Where(op=>manger.RightAccessAccount(clearcentre[op.Account])).ToArray();
                 }
-                
-                session.SendJsonReplyMgr(ops);
+
+                session.ReplyMgr(ops);
             }
         }
 
@@ -81,7 +81,7 @@ namespace TradingLib.Core
 
                     //重新从数据库加载数据 返回当前记录的数据
                     request = ORM.MCashOpAccount.GetAccountCashOperation(request.Ref);
-                    session.SendJsonReplyMgr(request);
+                    session.ReplyMgr(request);
                     //通过事件中继触发事件
                     TLCtxHelper.CashOperationEvent.FireCashOperation(this, QSEnumCashOpEventType.Confirm, request);
                 }
@@ -108,7 +108,7 @@ namespace TradingLib.Core
                 if (request != null)
                 {
                     ORM.MCashOpAccount.CancelAccountCashOperation(request);
-                    session.SendJsonReplyMgr(request);
+                    session.ReplyMgr(request);
                     //通过事件中继触发事件
                     TLCtxHelper.CashOperationEvent.FireCashOperation(this, QSEnumCashOpEventType.Cancel, request);
                 }
@@ -132,7 +132,7 @@ namespace TradingLib.Core
                 if (request != null)
                 {
                     ORM.MCashOpAccount.RejectAccountCashOperation(request);
-                    session.SendJsonReplyMgr(request);
+                    session.ReplyMgr(request);
                     //通过事件中继触发事件
                     TLCtxHelper.CashOperationEvent.FireCashOperation(this, QSEnumCashOpEventType.Reject, request);
                 }
@@ -154,7 +154,7 @@ namespace TradingLib.Core
             if (manger != null)
             {
                 JsonWrapperCasnTrans[] trans = ORM.MCashOpAccount.SelectAccountCashTrans(account, start, end).ToArray();
-                session.SendJsonReplyMgr(trans);
+                session.ReplyMgr(trans);
             }
         }
 

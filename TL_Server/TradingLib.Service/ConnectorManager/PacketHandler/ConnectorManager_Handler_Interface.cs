@@ -24,7 +24,7 @@ namespace TradingLib.ServiceManager
             if (manger.RightRootDomain())
             {
                 ConnectorInterface[] ops = manger.Domain.GetInterface().ToArray();
-                session.SendJsonReplyMgr(ops);
+                session.ReplyMgr(ops);
             }
         }
 

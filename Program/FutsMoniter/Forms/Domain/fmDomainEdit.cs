@@ -111,11 +111,9 @@ namespace FutsMoniter
 
         void OnQryInterface(string jsonstr)
         {
-            JsonData jd = TradingLib.Mixins.JsonReply.ParseJsonReplyData(jsonstr);
-            int code = int.Parse(jd["Code"].ToString());
-            if (code == 0)
+            ConnectorInterface[] objs = MoniterUtils.ParseJsonResponse<ConnectorInterface[]>(jsonstr);
+            if (objs !=null)
             {
-                ConnectorInterface[] objs = TradingLib.Mixins.JsonReply.ParsePlayload<ConnectorInterface[]>(jd);
                 foreach (ConnectorInterface op in objs)
                 {
                     if (!interfacemap.Keys.Contains(op.ID))
@@ -182,13 +180,9 @@ namespace FutsMoniter
         bool _gotsplist = false;
         void OnQryFinServicePlan(string jsonstr)
         {
-            //MessageBox.Show(jsonstr);
-            JsonData jd = TradingLib.Mixins.JsonReply.ParseJsonReplyData(jsonstr);
-            int code = int.Parse(jd["Code"].ToString());
-            if (code == 0)
+            JsonWrapperServicePlane[] objs = MoniterUtils.ParseJsonResponse<JsonWrapperServicePlane[]>(jsonstr);
+            if (objs != null)
             {
-                //Globals.Debug("domain edit got serviceplane ...........");
-                JsonWrapperServicePlane[] objs = TradingLib.Mixins.JsonReply.ParsePlayload<JsonWrapperServicePlane[]>(jd);
                 foreach (JsonWrapperServicePlane sp in objs)
                 {
                     if (!servicePlanMap.Keys.Contains(sp.ID))

@@ -203,13 +203,15 @@ namespace TraddingSrvCLI
                 {
                     //如果有数据返回则 重置计数器
                     _timoutcnt = 0;
+                    TradingLib.Mixins.JsonReply<CoreThreadStatus> reply = TradingLib.Mixins.JsonReply.ParseReply<CoreThreadStatus>(rep);
                     //解析Reply对象
-                    TradingLib.Mixins.JsonReply reply = TradingLib.Mixins.LitJson.JsonMapper.ToObject<TradingLib.Mixins.JsonReply>(rep);
+                    //TradingLib.Mixins.JsonReply reply = TradingLib.Mixins.LitJson.JsonMapper.ToObject<TradingLib.Mixins.JsonReply>(rep);
                     //判断Reply是否为正常返回
                     if (reply.Code == 0)
                     {
-                        TradingLib.Mixins.LitJson.JsonData data = TradingLib.Mixins.JsonReply.ParseJsonReplyData(rep);
-                        status = TradingLib.Mixins.JsonReply.ParsePlayload<CoreThreadStatus>(data);
+                        status = reply.Playload;
+                        //TradingLib.Mixins.LitJson.JsonData data = TradingLib.Mixins.JsonReply.ParseJsonReplyData(rep);
+                        //status = TradingLib.Mixins.JsonReply.ParsePlayload<CoreThreadStatus>(data);
                         debug("reply status:" + status.Status.ToString());
 
                         //记录回报时间
@@ -470,7 +472,7 @@ namespace TraddingSrvCLI
                         return JsonReply.GenericSuccess(ReplyType.Success, "服务非处于运行状态状态").ToJson();
                     }
                 case "STATUS":
-                    return new TradingLib.Mixins.ReplyWriter().Start().FillReply(TradingLib.Mixins.JsonReply.GenericSuccess()).Fill(corethread.CoreStatus,"Playload").End().ToString();
+                    return TradingLib.Mixins.JsonReply.SuccessReply(corethread.CoreStatus).ToJson(); //TradingLib.Mixins.ReplyWriter().Start().FillReply(TradingLib.Mixins.JsonReply.GenericSuccess()).Fill(corethread.CoreStatus,"Playload").End().ToString();
                 default:
                     return JsonReply.GenericError(ReplyType.Error, "未支持命令").ToJson();
             }

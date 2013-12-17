@@ -21,12 +21,10 @@ namespace FutsMoniter
         
         void OnNotifyConnectorConfig(string jsonstr)
         {
-            JsonData jd = TradingLib.Mixins.JsonReply.ParseJsonReplyData(jsonstr);
-            int code = int.Parse(jd["Code"].ToString());
-            if (code == 0)
+            JsonReply<ConnectorConfig> reply = JsonReply.ParseReply<ConnectorConfig>(jsonstr);
+            if (reply.Code == 0)
             {
-                ConnectorConfig objs = TradingLib.Mixins.JsonReply.ParsePlayload<ConnectorConfig>(jd);
-                InvokeGotConnector(objs);
+                InvokeGotConnector(reply.Playload);
             }
             else//如果没有配资服
             {
@@ -37,11 +35,9 @@ namespace FutsMoniter
         bool _gotconnector = false;
         void OnQryConnectorConfig(string jsonstr)
         {
-            JsonData jd = TradingLib.Mixins.JsonReply.ParseJsonReplyData(jsonstr);
-            int code = int.Parse(jd["Code"].ToString());
-            if (code == 0)
+            ConnectorConfig[] objs =  MoniterUtils.ParseJsonResponse<ConnectorConfig[]>(jsonstr);
+            if (objs != null)
             {
-                ConnectorConfig[] objs = TradingLib.Mixins.JsonReply.ParsePlayload<ConnectorConfig[]>(jd);
                 foreach (ConnectorConfig op in objs)
                 {
                     InvokeGotConnector(op);
@@ -61,11 +57,9 @@ namespace FutsMoniter
         bool _gotstatus = false;
         void OnQryConnectorStatus(string jsonstr)
         {
-            JsonData jd = TradingLib.Mixins.JsonReply.ParseJsonReplyData(jsonstr);
-            int code = int.Parse(jd["Code"].ToString());
-            if (code == 0)
+            ConnectorStatus[] objs = MoniterUtils.ParseJsonResponse<ConnectorStatus[]>(jsonstr);
+            if (objs !=null)
             {
-                ConnectorStatus[] objs = TradingLib.Mixins.JsonReply.ParsePlayload<ConnectorStatus[]>(jd);
                 foreach (ConnectorStatus op in objs)
                 {
                     InvokeGotConnectorStatus(op);
@@ -80,12 +74,9 @@ namespace FutsMoniter
 
         void OnNotifyConnectorStatus(string jsonstr)
         {
-            JsonData jd = TradingLib.Mixins.JsonReply.ParseJsonReplyData(jsonstr);
-            int code = int.Parse(jd["Code"].ToString());
-            if (code == 0)
+            ConnectorStatus obj = MoniterUtils.ParseJsonResponse<ConnectorStatus>(jsonstr);
+            if (obj != null)
             {
-                ConnectorStatus obj = TradingLib.Mixins.JsonReply.ParsePlayload<ConnectorStatus>(jd);
-
                 InvokeGotConnectorStatus(obj);
                 _gotstatus = true;
             }
