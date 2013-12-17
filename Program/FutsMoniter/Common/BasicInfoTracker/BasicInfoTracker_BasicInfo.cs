@@ -14,6 +14,7 @@ namespace TradingLib.Common
 
         public void GotMarketTime(MarketTime mt)
         {
+            if (mt == null) return;
             MarketTime target = null;
             MarketTime notify = null;
             if (markettimemap.TryGetValue(mt.ID, out target))
@@ -38,6 +39,7 @@ namespace TradingLib.Common
 
         public void GotExchange(Exchange ex)
         {
+            if (ex == null) return;
             Exchange target = null;
             Exchange notify = null;
             if (exchangemap.TryGetValue(ex.ID, out target))
@@ -66,6 +68,7 @@ namespace TradingLib.Common
         /// <param name="sec"></param>
         public void GotSecurity(SecurityFamilyImpl sec)
         {
+            if (sec == null) return;
             SecurityFamilyImpl target = null;
             SecurityFamilyImpl notify = null;
             if (securitymap.TryGetValue(sec.ID, out target))
@@ -114,6 +117,7 @@ namespace TradingLib.Common
         /// <param name="symbol"></param>
         public void GotSymbol(SymbolImpl symbol)
         {
+            if (symbol == null) return;
             SymbolImpl target = null;
             SymbolImpl notify = null;
             if (symbolmap.TryGetValue(symbol.ID, out target))

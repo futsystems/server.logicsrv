@@ -58,7 +58,12 @@ namespace TradingLib.Core
 
 
 
-
+        /// <summary>
+        /// 扩展命令处理
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="session"></param>
+        /// <param name="manager"></param>
         void SrvOnMGRContribRequest(MGRContribRequest request, ISession session, Manager manager)
         {
             debug(string.Format("管理员:{0} 请求扩展命令:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
@@ -330,7 +335,7 @@ namespace TradingLib.Core
                     }
                 case MessageTypes.MGRQRYMANAGER://请求查询管理员列表
                     {
-                        SrvOnMGRQryManager(packet as MGRQryManagerRequest, session, manager);
+                        //SrvOnMGRQryManager(packet as MGRQryManagerRequest, session, manager);
                         break;
                     }
                 case MessageTypes.MGRADDMANAGER://请求添加管理员

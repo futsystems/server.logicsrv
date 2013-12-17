@@ -10,32 +10,52 @@ namespace TradingLib.Core
     public partial class MgrExchServer
     {
 
-
-
-        void SrvOnMGRQryManager(MGRQryManagerRequest request, ISession session, Manager manager)
+        /// <summary>
+        /// 查询柜员
+        /// </summary>
+        /// <param name="session"></param>
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryManager", "QryManager - query manger", "查询柜员列表")]
+        public void CTE_QryManager(ISession session)
         {
-            debug(string.Format("管理员:{0} 请求查询管理员列表:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
-
+            Manager manager = session.GetManager();
             //获得当前管理员可以查看的柜员列表
             Manager[] mgrs = BasicTracker.ManagerTracker.GetManagers(manager).ToArray();
-            if (mgrs.Length > 0)
-            {
-                for (int i = 0; i < mgrs.Length; i++)
-                {
-                    RspMGRQryManagerResponse response = ResponseTemplate<RspMGRQryManagerResponse>.SrvSendRspResponse(request);
-                    response.ManagerToSend = mgrs[i];
-                    CacheRspResponse(response, i == mgrs.Length - 1);
-                }
-            }
-            else
-            {
-                RspMGRQryManagerResponse response = ResponseTemplate<RspMGRQryManagerResponse>.SrvSendRspResponse(request);
-                response.ManagerToSend = new Manager();
-                CacheRspResponse(response);
-            }
-
-
+            session.ReplyMgr(mgrs);
         }
+
+        /// <summary>
+        /// 更新柜员
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="json"></param>
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateManager", "UpdateManager - update manger", "更新或添加柜员")]
+        public void CTE_UpdateManger(ISession session, string json)
+        { 
+            
+        }
+
+        //void SrvOnMGRQryManager(MGRQryManagerRequest request, ISession session, Manager manager)
+        //{
+        //    debug(string.Format("管理员:{0} 请求查询管理员列表:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
+
+        //    //获得当前管理员可以查看的柜员列表
+        //    Manager[] mgrs = BasicTracker.ManagerTracker.GetManagers(manager).ToArray();
+        //    if (mgrs.Length > 0)
+        //    {
+        //        for (int i = 0; i < mgrs.Length; i++)
+        //        {
+        //            RspMGRQryManagerResponse response = ResponseTemplate<RspMGRQryManagerResponse>.SrvSendRspResponse(request);
+        //            response.ManagerToSend = mgrs[i];
+        //            CacheRspResponse(response, i == mgrs.Length - 1);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        RspMGRQryManagerResponse response = ResponseTemplate<RspMGRQryManagerResponse>.SrvSendRspResponse(request);
+        //        response.ManagerToSend = new Manager();
+        //        CacheRspResponse(response);
+        //    }
+        //}
 
         /// <summary>
         /// Manager添加的代理的MgrFK为数据ID ParentFK为当前MgrFK
@@ -50,22 +70,21 @@ namespace TradingLib.Core
             {
                 debug(string.Format("管理员:{0} 请求添加管理员:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
 
-                //开启代理模块 并且 是超级管理员 或者 是代理同时可以开设下级代理
+                //开启代理模块 并且 是管理员 或者 是代理同时可以开设下级代理
                 if (!(manager.Domain.Module_Agent && (manager.IsRoot() || (manager.IsAgent() && manager.Domain.Module_SubAgent))))
                 {
                     throw new FutsRspError("无权开设下级代理");
                 }
 
                 Manager m = request.ManagerToSend;
-                //1.添加的Manager的父代理为当前管理员的mgr_fk 
-                m.parent_fk = manager.mgr_fk;
+
+                //父MangerID 柜员的父管理域是当前柜员管理域 Root除外,Root的父柜员为自己
+                m.parent_fk = manager.BaseMgrID;
+                //管理域ID 默认添加的管理员的管理域ID与当前管理员管理域ID一致(风控员,财务人员等) 代理与Root除外 他们有独立的管理域 
+                m.mgr_fk = manager.BaseMgrID;
+                //分区ID
                 m.domain_id = manager.domain_id;
 
-                //只有添加代理用户时才从数据库创建主域ID MgrFK,其余员工角色和当前管理员的主域ID一致
-                if (m.Type != QSEnumManagerType.AGENT && m.Type != QSEnumManagerType.ROOT)
-                {
-                    m.mgr_fk = manager.mgr_fk;
-                }
                 if (!manager.RightAddManager(m))
                 {
                     throw new FutsRspError("无权添加管理员类型:" + Util.GetEnumDescription(m.Type));
@@ -81,7 +100,7 @@ namespace TradingLib.Core
                 BasicTracker.ManagerTracker.UpdateManager(m);
 
                 RspMGRQryManagerResponse response = ResponseTemplate<RspMGRQryManagerResponse>.SrvSendRspResponse(request);
-                response.ManagerToSend = m;
+                response.ManagerToSend = BasicTracker.ManagerTracker[m.ID];
                 CacheRspResponse(response);
                 session.OperationSuccess("添加管理员成功");
                 //通知管理员信息变更

@@ -15,7 +15,7 @@ namespace TradingLib.API
         event Action<Exchange> GotExchangeEvent;
         event Action<SecurityFamilyImpl> GotSecurityEvent;
         event Action<SymbolImpl> GotSymbolEvent;
-        event Action<Manager> GotManagerEvent;
+        event Action<ManagerSetting> GotManagerEvent;
 
         #endregion
         /// <summary>
@@ -70,7 +70,7 @@ namespace TradingLib.API
 
         IEnumerable<Exchange> Exchanges { get; }
 
-        IEnumerable<Manager> Managers { get; }
+        IEnumerable<ManagerSetting> Managers { get; }
 
         /// <summary>
         /// 获得所有可交易合约
@@ -109,8 +109,8 @@ namespace TradingLib.API
         /// <param name="item"></param>
         /// <returns></returns>
         RuleClassItem GetRuleItemClass(RuleItem item);
-        
 
-        Manager GetManager(int mgrid);
+
+        ManagerSetting GetManager(int mgrid);
     }
 }

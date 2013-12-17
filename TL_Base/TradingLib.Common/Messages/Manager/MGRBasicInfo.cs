@@ -36,17 +36,24 @@ namespace TradingLib.Common
         public RspMGRQryExchangeResponse()
         {
             _type = MessageTypes.MGREXCHANGERESPONSE;
-            Exchange = new Exchange();
+            Exchange = null;
         }
 
         public Exchange Exchange { get; set; }
         public override string ResponseSerialize()
         {
+            if (this.Exchange == null) return string.Empty;
             return this.Exchange.Serialize();
         }
 
         public override void ResponseDeserialize(string content)
         {
+            if (string.IsNullOrEmpty(content))
+            {
+                this.Exchange = null;
+                return;
+            }
+            this.Exchange = new Exchange();
             this.Exchange.Deserialize(content);
         }
     }
@@ -75,18 +82,26 @@ namespace TradingLib.Common
         public RspMGRQryMarketTimeResponse()
         {
             _type = MessageTypes.MGRMARKETTIMERESPONSE;
-            this.MarketTime = new MarketTime();
+            this.MarketTime = null;
         }
 
         public MarketTime MarketTime { get; set; }
 
         public override string ResponseSerialize()
         {
+            if (this.MarketTime == null)
+                return string.Empty;
             return this.MarketTime.Serialize();
         }
 
         public override void ResponseDeserialize(string content)
         {
+            if (string.IsNullOrEmpty(content))
+            {
+                this.MarketTime = null;
+                return;
+            }
+            this.MarketTime = new MarketTime();
             this.MarketTime.Deserialize(content);
         }
     }
@@ -119,18 +134,26 @@ namespace TradingLib.Common
         public RspMGRQrySecurityResponse()
         {
             _type = MessageTypes.MGRSECURITYRESPONSE;
-            SecurityFaimly = new SecurityFamilyImpl();
+            SecurityFaimly = null;
         }
 
         public SecurityFamilyImpl SecurityFaimly { get; set; }
 
         public override string ResponseSerialize()
         {
+            if (this.SecurityFaimly == null)
+                return string.Empty;
             return this.SecurityFaimly.Serialize();
         }
 
         public override void ResponseDeserialize(string content)
         {
+            if (string.IsNullOrEmpty(content))
+            {
+                this.SecurityFaimly = null;
+                return;
+            }
+            this.SecurityFaimly = new SecurityFamilyImpl();
             this.SecurityFaimly.Deserialize(content);
         }
     }
@@ -143,19 +166,26 @@ namespace TradingLib.Common
         public MGRReqAddSecurityRequest()
         {
             _type = MessageTypes.MGRADDSECURITY;
-            SecurityFaimly = new SecurityFamilyImpl();
+            SecurityFaimly = null;
         }
 
         public SecurityFamilyImpl SecurityFaimly { get; set; }
 
         public override string ContentSerialize()
         {
+            if (this.SecurityFaimly == null)
+                return string.Empty;
             return this.SecurityFaimly.Serialize();
         }
 
         public override void ContentDeserialize(string contentstr)
         {
-            int i = 0;
+            if (string.IsNullOrEmpty(contentstr))
+            {
+                this.SecurityFaimly = null;
+                return;
+            }
+            this.SecurityFaimly = new SecurityFamilyImpl();
             this.SecurityFaimly.Deserialize(contentstr);
         }
     
@@ -169,17 +199,26 @@ namespace TradingLib.Common
         public RspMGRReqAddSecurityResponse()
         {
             _type = MessageTypes.MGRADDSECURITYRESPONSE;
-            SecurityFaimly = new SecurityFamilyImpl();
+            SecurityFaimly = null;
         }
         public SecurityFamilyImpl SecurityFaimly { get; set; }
 
         public override string ResponseSerialize()
         {
+            if (SecurityFaimly == null)
+                return string.Empty;
+
             return this.SecurityFaimly.Serialize();
         }
 
         public override void ResponseDeserialize(string content)
         {
+            if (string.IsNullOrEmpty(content))
+            {
+                this.SecurityFaimly = null;
+                return;
+            }
+            this.SecurityFaimly = new SecurityFamilyImpl();
             this.SecurityFaimly.Deserialize(content);
         }
     }
@@ -191,18 +230,26 @@ namespace TradingLib.Common
         public MGRUpdateSecurityRequest()
         {
             _type = MessageTypes.MGRUPDATESECURITY;
-            SecurityFaimly = new SecurityFamilyImpl();
+            SecurityFaimly = null;
         }
 
         public SecurityFamilyImpl SecurityFaimly { get; set; }
 
         public override string ContentSerialize()
         {
+            if (this.SecurityFaimly == null)
+                return string.Empty;
             return SecurityFaimly.Serialize();
         }
 
         public override void ContentDeserialize(string contentstr)
         {
+            if (string.IsNullOrEmpty(contentstr))
+            {
+                this.SecurityFaimly = null;
+                return;
+            }
+            this.SecurityFaimly = new SecurityFamilyImpl();
             SecurityFaimly.Deserialize(contentstr);
         }
     }
@@ -237,18 +284,26 @@ namespace TradingLib.Common
         public RspMGRQrySymbolResponse()
         {
             _type = MessageTypes.MGRSYMBOLRESPONSE;
-            this.Symbol = new SymbolImpl();
+            this.Symbol = null;
         }
 
         public SymbolImpl Symbol { get; set; }
 
         public override string ResponseSerialize()
         {
+            if (this.Symbol == null)
+                return string.Empty;
             return this.Symbol.Serialize();
         }
 
         public override void ResponseDeserialize(string content)
         {
+            if (string.IsNullOrEmpty(content))
+            {
+                this.Symbol = null;
+                return;
+            }
+            this.Symbol = new SymbolImpl();
             this.Symbol.Deserialize(content);
         }
     }
@@ -261,17 +316,25 @@ namespace TradingLib.Common
         public MGRReqAddSymbolRequest()
         {
             _type = MessageTypes.MGRADDSYMBOL;
-            this.Symbol = new SymbolImpl();
+            this.Symbol = null;
         }
         public SymbolImpl Symbol { get; set; }
 
         public override string ContentSerialize()
         {
+            if (this.Symbol == null)
+                return string.Empty;
             return this.Symbol.Serialize();
         }
 
         public override void ContentDeserialize(string contentstr)
         {
+            if (string.IsNullOrEmpty(contentstr))
+            {
+                this.Symbol = null;
+                return;
+            }
+            this.Symbol = new SymbolImpl();
             this.Symbol.Deserialize(contentstr);
         }
     }
@@ -284,16 +347,24 @@ namespace TradingLib.Common
         public RspMGRReqAddSymbolResponse()
         {
             _type = MessageTypes.MGRADDSYMBOLRESPONSE;
-            this.Symbol = new SymbolImpl();
+            this.Symbol = null;
         }
         public SymbolImpl Symbol { get; set; }
         public override string ResponseSerialize()
         {
+            if (this.Symbol == null)
+                return string.Empty;
             return this.Symbol.Serialize();
         }
 
         public override void ResponseDeserialize(string content)
         {
+            if (string.IsNullOrEmpty(content))
+            {
+                this.Symbol = null;
+                return;
+            }
+            this.Symbol = new SymbolImpl();
             this.Symbol.Deserialize(content);
         }
     }
@@ -305,18 +376,26 @@ namespace TradingLib.Common
         public MGRUpdateSymbolRequest()
         {
             _type = MessageTypes.MGRUPDATESYMBOL;
-            this.Symbol = new SymbolImpl();
+            this.Symbol = null;
         }
 
         public SymbolImpl Symbol { get; set; }
 
         public override string ContentSerialize()
         {
+            if (this.Symbol == null)
+                return string.Empty;
             return this.Symbol.Serialize();
         }
 
         public override void ContentDeserialize(string contentstr)
         {
+            if (string.IsNullOrEmpty(contentstr))
+            {
+                this.Symbol = null;
+                return;
+            }
+            this.Symbol = new SymbolImpl();
             this.Symbol.Deserialize(contentstr);
         }
     }

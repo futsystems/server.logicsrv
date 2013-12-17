@@ -109,6 +109,23 @@ namespace TradingLib.Common
             }
         }
 
+        void OnQryManager(string jsonstr)
+        {
+            ManagerSetting[] mgrlist = MoniterUtils.ParseJsonResponse<ManagerSetting[]>(jsonstr);
+            if (mgrlist != null)
+            {
+                foreach (ManagerSetting mgr in mgrlist)
+                {
+                    basicinfotracker.GotManager(mgr);
+                }
+            }
+            if(!BasicInfoDone)
+            {
+                Status("基础信息下载完成,下载帐户信息");
+                Globals.TLClient.ReqQryAccountList();
+            }
+        }
+
         public void OnMGRMangerResponse(Manager manger, bool islast)
         {
             basicinfotracker.GotManager(manger);

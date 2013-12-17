@@ -53,21 +53,24 @@ namespace TradingLib.Common
             if (!mgridmap.TryGetValue(mgr.ID, out target))
             {
                 target = new Manager();
+
                 target.AccLimit = mgr.AccLimit;
-                target.domain_id = mgr.domain_id;
                 target.Login = mgr.Login;
-                target.mgr_fk = mgr.mgr_fk;
                 target.Mobile = mgr.Mobile;
                 target.Name = mgr.Name;
-                target.parent_fk = mgr.parent_fk;
                 target.QQ = mgr.QQ;
                 target.Type = mgr.Type;
                 target.User_Id = mgr.User_Id;
+                target.Active = mgr.Active;
+
+                target.mgr_fk = mgr.mgr_fk;
+                target.domain_id = mgr.domain_id;
+                target.parent_fk = mgr.parent_fk;
 
                 ORM.MManager.InsertManager(target);
                 mgr.ID = target.ID;
 
-                //添加到内存
+                //添加到数据结构
                 managermap[target.Login] = target;
                 mgridmap[target.ID] = target;
 

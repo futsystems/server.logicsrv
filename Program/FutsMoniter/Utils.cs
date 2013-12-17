@@ -13,8 +13,13 @@ namespace FutsMoniter
 {
     public delegate void SymbolImplDel(SymbolImpl sym,bool islast);
 
-    public class MoniterUtil
+    public class MoniterUtils
     {
+        public static System.Windows.Forms.DialogResult WindowConfirm(string message, string title = "确认操作")
+        {
+            return ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show(message, title, System.Windows.Forms.MessageBoxButtons.YesNo);
+        }
+
         public static T ParseJsonResponse<T>(string json)
         {
             JsonData jd = TradingLib.Mixins.JsonReply.ParseJsonReplyData(json);
@@ -106,7 +111,7 @@ namespace FutsMoniter
         /// <param name="e"></param>
         public static void OpenURL(string url = "http://www.baidu.com")
         {
-            string BrowserPath = MoniterUtil.GetDefaultWebBrowserFilePath();
+            string BrowserPath = MoniterUtils.GetDefaultWebBrowserFilePath();
             string gotoUrl = url;
             if (!gotoUrl.StartsWith("http://"))
             {

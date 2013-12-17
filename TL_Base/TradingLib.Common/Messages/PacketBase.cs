@@ -329,6 +329,7 @@ namespace TradingLib.Common
         }
 
         public QSEnumPacketType PacketType { get; protected set; }
+
         /// <summary>
         /// 请求数据包前置ID
         /// </summary>

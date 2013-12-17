@@ -20,7 +20,11 @@ namespace TradingLib.Common
             infotracker = new TradingInfoTracker();
 
             Globals.RegisterCTX(this);
+
+            RegisterCallback("MgrExchServer", "QryManager", OnQryManager);
         }
+
+        
 
 
         public void PopRspInfo(RspInfo info)

@@ -41,6 +41,7 @@ namespace TradingLib.Common
             ErrorMessage = string.Empty;
             RawException = e;
         }
+
         /// <summary>
         /// 从一个错误信息创建一个FutsRspError
         /// </summary>
@@ -52,18 +53,16 @@ namespace TradingLib.Common
             RawException = new Exception(error);
         }
 
+        /// <summary>
+        /// 将JsonReply生成对应的FutsRspError
+        /// </summary>
+        /// <param name="reply"></param>
+        public FutsRspError(TradingLib.Mixins.JsonReply reply)
+        {
+            ErrorID = reply.Code;
+            ErrorMessage = reply.Message;
+        }
         
-
-        ///// <summary>
-        ///// 常规错误
-        ///// 提供一个错误信息 生成对应的FutsRspError
-        ///// </summary>
-        ///// <param name="error"></param>
-        ///// <returns></returns>
-        //public static FutsRspError GenericError(string errorMessage)
-        //{
-        //    return new FutsRspError() { ErrorID = 1, ErrorMessage = errorMessage };
-        //}
 
         /// <summary>
         /// 用自定义的XMLRspInfo填充错误信息

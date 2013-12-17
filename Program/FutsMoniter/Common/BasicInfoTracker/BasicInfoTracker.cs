@@ -19,7 +19,7 @@ namespace TradingLib.Common
 
         void OnManagerNotify(string jsonstr)
         {
-            Manager mgr = MoniterUtil.ParseJsonResponse<Manager>(jsonstr);
+            ManagerSetting mgr = MoniterUtils.ParseJsonResponse<ManagerSetting>(jsonstr);
             if(mgr != null)
             {
                 GotManager(mgr);
@@ -49,7 +49,7 @@ namespace TradingLib.Common
         public event Action<Exchange> GotExchangeEvent;
         public event Action<SecurityFamilyImpl> GotSecurityEvent;
         public event Action<SymbolImpl> GotSymbolEvent;
-        public event Action<Manager> GotManagerEvent;
+        public event Action<ManagerSetting> GotManagerEvent;
         #endregion
 
 

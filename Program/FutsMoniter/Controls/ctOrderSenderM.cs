@@ -22,8 +22,8 @@ namespace FutsMoniter
         public ctOrderSenderM()
         {
             InitializeComponent();
-            Factory.IDataSourceFactory(cboffsetflag).BindDataSource(MoniterUtil.GetOffsetCBList());
-            Factory.IDataSourceFactory(cbordertype).BindDataSource(MoniterUtil.GetOrderTypeCBList());
+            Factory.IDataSourceFactory(cboffsetflag).BindDataSource(MoniterUtils.GetOffsetCBList());
+            Factory.IDataSourceFactory(cbordertype).BindDataSource(MoniterUtils.GetOrderTypeCBList());
             try
             {
                 WireEvent();

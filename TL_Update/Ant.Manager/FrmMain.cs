@@ -132,6 +132,7 @@ namespace Ant.Manager
                 return;
             }
             Utils.UpdateInfo.Save(Utils.Path + Utils.UPDATE_FILE);
+            //MessageBox.Show("it is pl");
             FrmUpload upload = new FrmUpload();
             upload.UpdateItems = items;
 

@@ -26,12 +26,12 @@ namespace TradingLib.Common
         /// <param name="account"></param>
         public void OnAccountLite(IAccountLite account, bool islast)
         {
-            accountmap[account.Account] = account;
-
-            if (GotAccountEvent != null)
-                GotAccountEvent(account);
-
-            //Globals.Debug("onaccountlite $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$4");
+            if (account != null)
+            {
+                accountmap[account.Account] = account;
+                if (GotAccountEvent != null)
+                    GotAccountEvent(account);
+            }
             if (islast)
             {
                 _basicinfodone = true;

@@ -16,7 +16,7 @@ namespace TradingLib.Common
 
         public override string ContentSerialize()
         {
-            return "MGRQryAccounts";
+            return string.Empty;
         }
 
         public override void ContentDeserialize(string contentstr)
@@ -33,16 +33,23 @@ namespace TradingLib.Common
         public RspMGRQryAccountResponse()
         {
             _type = MessageTypes.MGRQRYACCOUNTSRESPONSE;
-            oAccount = new AccountLite();
+            oAccount = null;
         }
 
         public override string ResponseSerialize()
         {
+            if (this.oAccount == null)
+                return string.Empty;
             return AccountLite.Serialize(this.oAccount);
         }
 
         public override void ResponseDeserialize(string content)
         {
+            if (string.IsNullOrEmpty(content))
+            {
+                this.oAccount = null;
+                return;
+            }
             this.oAccount = AccountLite.Deserialize(content);
         }
 

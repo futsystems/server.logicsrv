@@ -59,7 +59,7 @@ namespace FutsMoniter
         /// <summary>
         /// 管理端对应的对象
         /// </summary>
-        public static Manager Manager { get; set; }
+        public static ManagerSetting Manager { get; set; }
 
 
         public static bool RootRight

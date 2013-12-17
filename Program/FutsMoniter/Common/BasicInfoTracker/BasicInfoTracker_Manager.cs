@@ -12,10 +12,10 @@ namespace TradingLib.Common
     public partial class BasicInfoTracker
     {
 
-        public void GotManager(Manager manager)
+        public void GotManager(ManagerSetting manager)
         {
-            Manager target = null;
-            Manager notify = null;
+            ManagerSetting target = null;
+            ManagerSetting notify = null;
             //如果本地已经有该Manager则进行信息更新
             if (managermap.TryGetValue(manager.ID, out target))
             {
@@ -47,13 +47,13 @@ namespace TradingLib.Common
         /// <summary>
         /// 主管理员map
         /// </summary>
-        Dictionary<int, Manager> managermap = new Dictionary<int, Manager>();
+        Dictionary<int, ManagerSetting> managermap = new Dictionary<int, ManagerSetting>();
 
         #region 管理员
         /// <summary>
         /// 管理员
         /// </summary>
-        public IEnumerable<Manager> Managers
+        public IEnumerable<ManagerSetting> Managers
         {
             get
             {
@@ -62,9 +62,9 @@ namespace TradingLib.Common
         }
 
 
-        public Manager GetManager(int mgrid)
+        public ManagerSetting GetManager(int mgrid)
         {
-            Manager mgr = null;
+            ManagerSetting mgr = null;
             if (managermap.TryGetValue(mgrid, out mgr))
             {
                 return mgr;

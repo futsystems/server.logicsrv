@@ -67,6 +67,39 @@ namespace TradingLib.Common
             SendPacketMgr(session, response);
         }
 
+        /// <summary>
+        /// 向管理端发送一个jsonwrapper对象
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="obj"></param>
+        /// <param name="islast"></param>
+        public static void SendJsonReplyMgr(this ISession session, object obj, bool islast = true)
+        {
+            RspMGRContribResponse response = ResponseTemplate<RspMGRContribResponse>.SrvSendRspResponse(session);
+            response.ModuleID = session.ContirbID;
+            response.CMDStr = session.CMDStr;
+            response.IsLast = islast;
+            response.Result = new Mixins.ReplyWriter().Start().FillReply(Mixins.JsonReply.GenericSuccess()).FillPlayload(obj).End().ToString();
+
+            SendPacketMgr(session, response);
+        }
+
+        /// <summary>
+        /// 将某个对象放入JsonReply返回给管理端
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="obj"></param>
+        /// <param name="islast"></param>
+        public static void ReplyMgr(this ISession session, object obj, bool islast = true)
+        {
+            RspMGRContribResponse response = ResponseTemplate<RspMGRContribResponse>.SrvSendRspResponse(session);
+            response.ModuleID = session.ContirbID;
+            response.CMDStr = session.CMDStr;
+            response.IsLast = islast;
+            response.Result = new Mixins.ReplyWriter().Start().FillReply(Mixins.JsonReply.GenericSuccess()).FillPlayload(obj).End().ToString();
+
+            session.SendPacketMgr(response);
+        }
 
         /// <summary>
         /// 操作错误回报
@@ -125,21 +158,6 @@ namespace TradingLib.Common
             return location;
         }
 
-        /// <summary>
-        /// 向管理端发送一个jsonwrapper对象
-        /// </summary>
-        /// <param name="session"></param>
-        /// <param name="obj"></param>
-        /// <param name="islast"></param>
-        public static void SendJsonReplyMgr(this ISession session, object obj, bool islast = true)
-        {
-            RspMGRContribResponse response = ResponseTemplate<RspMGRContribResponse>.SrvSendRspResponse(session);
-            response.ModuleID = session.ContirbID;
-            response.CMDStr = session.CMDStr;
-            response.IsLast = islast;
-            response.Result = new Mixins.ReplyWriter().Start().FillReply(Mixins.JsonReply.GenericSuccess()).FillPlayload(obj).End().ToString();
 
-            SendPacketMgr(session, response);
-        }
     }
 }

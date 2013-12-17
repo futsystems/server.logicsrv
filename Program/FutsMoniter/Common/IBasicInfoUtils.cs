@@ -193,7 +193,7 @@ namespace TradingLib.Common
             {
                 list.Add(new ValueObject<int> { Name = "所有", Value = 0 });
             }
-            foreach (Manager m in info.Managers.Where(g => (g.Type == QSEnumManagerType.ROOT || g.Type == QSEnumManagerType.AGENT)))
+            foreach (ManagerSetting m in info.Managers.Where(g => (g.Type == QSEnumManagerType.ROOT || g.Type == QSEnumManagerType.AGENT)))
             {
                 if (!includeself && m.mgr_fk == Globals.BaseMGRFK)
                 {

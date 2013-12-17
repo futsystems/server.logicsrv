@@ -9,6 +9,10 @@ namespace TradingLib.Core
 {
     public partial class MgrExchServer
     {
+        /// <summary>
+        /// 查询分区
+        /// </summary>
+        /// <param name="session"></param>
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryDomain", "QryDomain - query domain", "查询域")]
         public void CTE_QryDomain(ISession session)
         {
@@ -21,6 +25,11 @@ namespace TradingLib.Core
             }
         }
 
+        /// <summary>
+        /// 更新或添加分区
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="json"></param>
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateDomain", "UpdateDomain - update domain", "查询域", true)]
         public void CTE_UpdateDomain(ISession session, string json)
         {
@@ -44,6 +53,8 @@ namespace TradingLib.Core
                         toadd.QQ = domain.QQ;
                         toadd.Type = QSEnumManagerType.ROOT;
                         toadd.AccLimit = domain.AccLimit;
+                        toadd.Active = true;//新增domain时添加的Manger为激活状态 否则无法登入
+                        
                         //设定域ID
                         toadd.domain_id = domain.ID;
                         //更新管理员信息

@@ -34,7 +34,7 @@ namespace FutsMoniter
             Globals.RegIEventHandler(this);
             this.FormClosing += new FormClosingEventHandler(fmManagerCentre_FormClosing);
             this.mgrgrid.RowPrePaint += new DataGridViewRowPrePaintEventHandler(mgrgrid_RowPrePaint);
-            foreach (Manager m in Globals.BasicInfoTracker.Managers)
+            foreach (ManagerSetting m in Globals.BasicInfoTracker.Managers)
             {
                 this.GotManager(m);
             }
@@ -42,12 +42,12 @@ namespace FutsMoniter
 
         public void OnInit()
         {
-            Globals.BasicInfoTracker.GotManagerEvent += new Action<Manager>(GotManager);
+            Globals.BasicInfoTracker.GotManagerEvent += new Action<ManagerSetting>(GotManager);
         }
 
         public void OnDisposed()
         {
-            Globals.BasicInfoTracker.GotManagerEvent -= new Action<Manager>(GotManager);
+            Globals.BasicInfoTracker.GotManagerEvent -= new Action<ManagerSetting>(GotManager);
         }
         void mgrgrid_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
         {
@@ -69,7 +69,7 @@ namespace FutsMoniter
         void EditManager_Click(object sender, EventArgs e)
         {
             int id = CurrentManagerID;
-            Manager manger = Globals.BasicInfoTracker.GetManager(id);
+            ManagerSetting manger = Globals.BasicInfoTracker.GetManager(id);
             if (manger != null)
             {
                 if (manger.Type == QSEnumManagerType.ROOT)
@@ -79,7 +79,7 @@ namespace FutsMoniter
                 }
 
                 fmManagerEdit fm = new fmManagerEdit();
-                fm.Manager = manger;
+                fm.SetManger(manger);
                 fm.ShowDialog();
             }
             else
@@ -91,7 +91,7 @@ namespace FutsMoniter
         void ActiveManager_Click(object sender, EventArgs e)
         {
             int id = CurrentManagerID;
-            Manager manger = Globals.BasicInfoTracker.GetManager(id);
+            ManagerSetting manger = Globals.BasicInfoTracker.GetManager(id);
             if (manger == null)
             {
                 ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show("请选择管理员");
@@ -106,7 +106,7 @@ namespace FutsMoniter
         void InactiveManager_Click(object sender, EventArgs e)
         {
             int id = CurrentManagerID;
-            Manager manger = Globals.BasicInfoTracker.GetManager(id);
+            ManagerSetting manger = Globals.BasicInfoTracker.GetManager(id);
             if (manger == null)
             {
                 ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show("请选择管理员");
@@ -250,13 +250,13 @@ namespace FutsMoniter
             }
         }
 
-        public void GotManager(Manager manger)
+        public void GotManager(ManagerSetting manger)
         {
             //如果获得的ManagerID和登入回报的ID一致 则表明该Manger是自己 在列表中不显示
             if (manger.ID.Equals(Globals.LoginResponse.MGRID)) return;
             if (InvokeRequired)
             {
-                Invoke(new Action<Manager>(GotManager), new object[] { manger });
+                Invoke(new Action<ManagerSetting>(GotManager), new object[] { manger });
             }
             else
             {

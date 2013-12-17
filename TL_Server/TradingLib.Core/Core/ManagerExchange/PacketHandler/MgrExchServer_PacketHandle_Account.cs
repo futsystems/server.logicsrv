@@ -40,7 +40,7 @@ namespace TradingLib.Core
                 if (!manager.RightRootDomain())
                 {
                     //如果不是为该主域添加帐户,则我们需要判断当前Manager的主域是否拥有请求主域的权限
-                    if (manager.GetBaseMGR() != request.MgrID)
+                    if (manager.BaseMgrID != request.MgrID)
                     {
                         if (!manager.RightAgentParent(request.MgrID))
                         {

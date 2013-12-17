@@ -35,26 +35,27 @@ namespace FutsMoniter
         {
             Globals.Debug("Set control visable via UIAccess");
 
+            //操作回报消息 弹窗提示
+            Globals.LogicEvent.GotRspInfoEvent += new Action<TradingLib.API.RspInfo>(OnRspInfo);
+
+            //日志窗口
+            kryptonRibbonQATButton_debug.Visible = Globals.LoginResponse.Domain.Super;
+
             //分区管理窗口
             kryptonContextMenuItem_Domain.Visible = Globals.LoginResponse.Domain.Super;
 
             //接口设置
             kryptonRibbonGroupButton_interfacelist.Visible = Globals.LoginResponse.Domain.Super;
             
-            //系统 开启关闭清算中心 默认行情和交易通道
+            //系统 开启关闭清算中心 默认行情和交易通道 超级管理员或者是独立部署的管理员
             kryptonRibbonGroupButton_OpenClearCentre.Visible = Globals.LoginResponse.Domain.Super || Globals.Domain.Dedicated;
             kryptonRibbonGroupButton_CloseClearCentre.Visible = Globals.LoginResponse.Domain.Super || Globals.Domain.Dedicated;
-            kryptonRibbonGroupButton_tickpaper.Visible = Globals.Domain.Super || Globals.Domain.Dedicated;
-            //ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show("defaultrouter:" + kryptonRibbonGroupButton_tickpaper.Visible.ToString());
             kryptonRibbonGroup1.Visible = Globals.LoginResponse.Domain.Super || Globals.Domain.Dedicated;
 
-            //日志窗口
-            kryptonRibbonQATButton_debug.Visible = Globals.LoginResponse.Domain.Super;
-
-            Globals.LogicEvent.GotRspInfoEvent += new Action<TradingLib.API.RspInfo>(OnRspInfo);
+            kryptonRibbonGroupButton_tickpaper.Visible = Globals.Domain.Super || Globals.Domain.Dedicated;
 
             //超级管理员 可以查看所有界面
-            if (!(Globals.LoginResponse.Domain.Super&&Globals.Manager.IsRoot()))
+            if (!(Globals.Domain.Super&&Globals.Manager.IsRoot()))
             {
                 //系统管理
                 if (!Globals.UIAccess.nav_system || (!Globals.Manager.IsRoot()))//只有管理员才可以查看
@@ -63,10 +64,7 @@ namespace FutsMoniter
                 }
                 else
                 {
-                    //kryptonRibbonGroupButton_RouterList.Visible = Globals.UIAccess.nav_system_router;
-                    
                     kryptonRibbonGroupButton_connectorlist.Visible = Globals.Manager.IsRoot();//实盘帐号
-
                     kryptonRibbonGroupButton_SystemStatus.Visible = Globals.Manager.IsRoot();//系统状态
                 }
 

@@ -7,23 +7,8 @@ using TradingLib.Mixins.LitJson;
 
 namespace TradingLib.Common
 {
-    public class Manager
+    public class ManagerSetting
     {
-        public Manager()
-        {
-            Login = string.Empty;
-            User_Id = 0;
-            Type = QSEnumManagerType.ROOT;
-            Name = string.Empty;
-            Mobile = string.Empty;
-            QQ = string.Empty;
-            AccLimit = 0;
-            mgr_fk = 0;
-            BaseManager = null;
-            domain_id = 0;
-
-        }
-
         /// <summary>
         /// 数据库ID编号
         /// </summary>
@@ -33,6 +18,7 @@ namespace TradingLib.Common
         /// 登入名
         /// </summary>
         public string Login { get; set; }
+
         /// <summary>
         /// 对应UCenter UserID
         /// </summary>
@@ -63,13 +49,53 @@ namespace TradingLib.Common
         /// </summary>
         public int AccLimit { get; set; }
 
+        /// <summary>
+        /// 上级代理
+        /// </summary>
+        public int parent_fk { get; set; }
 
         /// <summary>
         /// 交易managerid
         /// </summary>
         public int mgr_fk { get; set; }
 
-        
+        /// <summary>
+        /// 域ID
+        /// </summary>
+        public int domain_id { get; set; }
+
+        /// <summary>
+        /// 激活状态
+        /// </summary>
+        public bool Active { get; set; }
+
+    }
+
+    public class Manager:ManagerSetting
+    {
+        public Manager()
+        {
+            Login = string.Empty;
+            User_Id = 0;
+            Type = QSEnumManagerType.ROOT;
+            Name = string.Empty;
+            Mobile = string.Empty;
+            QQ = string.Empty;
+            AccLimit = 0;
+            mgr_fk = 0;
+            BaseManager = null;
+            domain_id = 0;
+
+        }
+
+
+
+        /// <summary>
+        /// 管理域ID
+        /// Root或者代理下面的柜员的MgrID一致
+        /// </summary>
+        [NoJsonExportAttr()]
+        public int BaseMgrID { get { return mgr_fk; } }
 
         /// <summary>
         /// BaseManager用于标注该管理帐号隶属于哪个Agent,如果是系统级的管理帐户的话直接隶属于ROOT
@@ -77,31 +103,17 @@ namespace TradingLib.Common
         [NoJsonExportAttr()]
         public Manager BaseManager { get; set; }
 
-
-        /// <summary>
-        /// 上级代理
-        /// </summary>
-        public int parent_fk { get; set; }
-
         /// <summary>
         /// 上级代理对象
         /// </summary>
         [NoJsonExportAttr()]
         public Manager ParentManager { get; set; }
 
-        /// <summary>
-        /// 域ID
-        /// </summary>
-        public int domain_id { get; set; }
-
 
         [NoJsonExportAttr()]
         public Domain Domain { get; internal set; }
 
-        /// <summary>
-        /// 激活状态
-        /// </summary>
-        public bool Active { get; set; }
+
 
         public override string ToString()
         {

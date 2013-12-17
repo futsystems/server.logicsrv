@@ -53,6 +53,7 @@ namespace TradingLib.Core
         /// 监听地址
         /// </summary>
         string _serveraddress;
+
         /// <summary>
         /// 服务端监听Base端口
         /// </summary>
@@ -820,16 +821,16 @@ namespace TradingLib.Core
                 switch (type)
                 {
                     #region 通用操作部分
-                    case MessageTypes.REGISTERCLIENT:
+                    case MessageTypes.REGISTERCLIENT://注册
                         SrvRegClient(packet as RegisterClientRequest);
                         break;
-                    case MessageTypes.VERSIONREQUEST:
+                    case MessageTypes.VERSIONREQUEST://版本查询
                         SrvVersonReq(packet as VersionRequest);
                         break;
-                    case MessageTypes.LOGINREQUEST:
+                    case MessageTypes.LOGINREQUEST://登入
                         SrvLoginReq(packet as LoginRequest);
                         break;
-                    case MessageTypes.CLEARCLIENT:
+                    case MessageTypes.CLEARCLIENT://注销
                         SrvClearClient(packet as UnregisterClientRequest);
                         break;
                     case MessageTypes.HEARTBEATREQUEST://客户端请求服务端发送给客户端一个心跳 以让客户端知道 与服务端的连接有效
@@ -838,7 +839,7 @@ namespace TradingLib.Core
                     case MessageTypes.HEARTBEAT://客户端主动向服务端发送心跳,让服务端知道 客户端还存活
                         SrvBeatHeart(packet as HeartBeat);
                         break;
-                    case MessageTypes.FEATUREREQUEST:
+                    case MessageTypes.FEATUREREQUEST://功能特征码请求
                         SrvReqFuture(packet as FeatureRequest);
                         break;
                     #endregion

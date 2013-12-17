@@ -349,13 +349,13 @@ namespace TradingLib.Common
             this.ReqContribRequest("MgrExchServer", "InactiveManager", mgrid.ToString());
         }
 
-        public void ReqQryManager()
-        {
-            debug("请求查询管理员列表", QSEnumDebugLevel.INFO);
-            MGRQryManagerRequest request = RequestTemplate<MGRQryManagerRequest>.CliSendRequest(requestid++);
-            SendPacket(request);
+        //public void ReqQryManager()
+        //{
+        //    debug("请求查询管理员列表", QSEnumDebugLevel.INFO);
+        //    MGRQryManagerRequest request = RequestTemplate<MGRQryManagerRequest>.CliSendRequest(requestid++);
+        //    SendPacket(request);
             
-        }
+        //}
 
         public void ReqUpdateManager(Manager manger)
         {

@@ -347,7 +347,7 @@ namespace FutsMoniter.Controls
                         gt.Rows[i][CATEGORYSTR] = Util.GetEnumDescription(account.Category);
                         gt.Rows[i][CATEGORY] = account.Category.ToString();
                         gt.Rows[i][INTRADAY] = account.IntraDay ? "日内" : "隔夜";
-                        Manager mgr = Globals.BasicInfoTracker.GetManager(account.MGRID);
+                        ManagerSetting mgr = Globals.BasicInfoTracker.GetManager(account.MGRID);
                         gt.Rows[i][AGENTCODE] = mgr.Login + " - " + mgr.Name;
                         gt.Rows[i][AGENTMGRFK] = account.MGRID;
                         gt.Rows[i][NAME] = account.Name;
@@ -373,7 +373,7 @@ namespace FutsMoniter.Controls
                         gt.Rows[r][INTRADAY] = account.IntraDay ? "日内" : "隔夜";
                         gt.Rows[r][POSLOK] = account.PosLock ? "有" : "无";
 
-                        Manager mgr = Globals.BasicInfoTracker.GetManager(account.MGRID);
+                        ManagerSetting mgr = Globals.BasicInfoTracker.GetManager(account.MGRID);
                         gt.Rows[r][AGENTCODE] = mgr.Login + " - " + mgr.Name;
                         gt.Rows[r][NAME] = account.Name;
                         gt.Rows[r][DELETE] = account.Deleted;

@@ -302,7 +302,7 @@ namespace FutsMoniter
                 SecurityFamilyImpl sec = CurrentSecurity;
                 if (sec == null) return;
 
-                symbol.Text = MoniterUtil.GenSymbol(sec, month);
+                symbol.Text = MoniterUtils.GenSymbol(sec, month);
                 //MessageBox.Show(month.ToString());
                 this.expiredate.Value = Util.ToDateTime(month * 100 + 30, 0);
 

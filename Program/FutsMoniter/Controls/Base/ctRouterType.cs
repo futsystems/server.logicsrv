@@ -71,7 +71,7 @@ namespace FutsMoniter.Controls.Base
 
         public void OnInit()
         {
-            Factory.IDataSourceFactory(routeType).BindDataSource(MoniterUtil.GetRouterTypeCombList(this.EnableAny));
+            Factory.IDataSourceFactory(routeType).BindDataSource(MoniterUtils.GetRouterTypeCombList(this.EnableAny));
         }
 
         public void OnDisposed()

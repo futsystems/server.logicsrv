@@ -16,7 +16,7 @@ namespace TradingLib.Common
         public static IEnumerable<IAccount> GetAccounts(this Manager mgr)
         {
             //返回某个管理员下的帐户
-            return mgr.Domain.GetAccounts().Where(ac => ac.Mgr_fk == mgr.GetBaseMGR());
+            return mgr.Domain.GetAccounts().Where(ac => ac.Mgr_fk == mgr.BaseMgrID);
         }
 
         /// <summary>
@@ -53,16 +53,6 @@ namespace TradingLib.Common
             return mgr.Type == QSEnumManagerType.AGENT;
         }
 
-        /// <summary>
-        /// 返回某个交易帐户的主域FK
-        /// </summary>
-        /// <param name="mgr"></param>
-        /// <returns></returns>
-        public static int GetBaseMGR(this Manager mgr)
-        {
-            return mgr.mgr_fk;
-        }
-
 
         /// <summary>
         /// 是否可以访问某个交易帐户
@@ -76,7 +66,7 @@ namespace TradingLib.Common
             if (!mgr.Domain.IsAccountInDomain(account)) return false;//不在同一个域
             if (mgr.RightRootDomain()) return true;
             //如果交易帐户直接属于该Manager的域 则有权限
-            if (mgr.GetBaseMGR().Equals(account.Mgr_fk))
+            if (mgr.BaseMgrID.Equals(account.Mgr_fk))
             {
                 return true;
             }
@@ -108,7 +98,7 @@ namespace TradingLib.Common
             if (agent == null) return false;
             while (!agent.RightRootDomain())//只要不是Root域 则进行递归
             {
-                if (agent.parent_fk == mgr.GetBaseMGR())//如果该代理的父域和当前Manager的主域一致，则具有管理权限
+                if (agent.parent_fk == mgr.BaseMgrID)//如果该代理的父域和当前Manager的主域一致，则具有管理权限
                     return true;
                 agent = agent.ParentManager;//递归到父域
             }

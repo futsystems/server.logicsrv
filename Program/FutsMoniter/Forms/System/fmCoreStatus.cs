@@ -61,7 +61,7 @@ namespace FutsMoniter
         }
         void OnQrySystemStatus(string json)
         {
-            SystemStatus status = MoniterUtil.ParseJsonResponse<SystemStatus>(json);
+            SystemStatus status = MoniterUtils.ParseJsonResponse<SystemStatus>(json);
             if (status != null)
             {
                 GotSystemStatus(status);

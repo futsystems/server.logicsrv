@@ -85,7 +85,10 @@ namespace FutsMoniter
 
         void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            e.Cancel = true;
+            if (MoniterUtils.WindowConfirm("确认退出后台管理端?") != System.Windows.Forms.DialogResult.Yes)
+            {
+                e.Cancel = true;
+            }
         }
 
 

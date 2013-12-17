@@ -88,7 +88,7 @@ namespace FutsMoniter
         {
             lock (ctmap)
             {
-                PositionMetricImpl[] pmlist = MoniterUtil.ParseJsonResponse<PositionMetricImpl[]>(json);
+                PositionMetricImpl[] pmlist = MoniterUtils.ParseJsonResponse<PositionMetricImpl[]>(json);
                 if (pmlist != null && pmlist.Length > 0)
                 {
                     ctPositionMertic pmct = ctmap[pmlist[0].Token];

@@ -13,17 +13,19 @@ namespace TradingLib.API
         UNKNOWN=0,
 
         /// <summary>
-        /// 请求
+        /// 客户端过来提交上来的请求
         /// </summary>
         REQUEST=1,
 
         /// <summary>
-        /// 应答类返回
+        /// 服务端向某个客户端应答返回
         /// </summary>
         RSPRESPONSE=2,
 
         /// <summary>
-        /// 通知类返回 对交易帐户进行通知
+        /// 通知类返回 通知某个交易帐号的状态
+        /// 比如交易帐号同时有多个客户端登入,则需要向多个客户端发送通知
+        /// 多个具有查看某个交易帐号的管理员登入管理端，则需要同时向这些管理端发送通知
         /// 交易客户端通过Account寻找对应客户端
         /// 管理客户端通过Account寻找有权限的管理客户端
         /// </summary>
@@ -57,7 +59,7 @@ namespace TradingLib.API
         string ClientID { get;}
 
         /// <summary>
-        /// 获得消息
+        /// 获得消息具体内容
         /// </summary>
         byte[] Data { get;}
 

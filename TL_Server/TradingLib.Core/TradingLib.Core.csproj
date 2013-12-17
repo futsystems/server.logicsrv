@@ -66,7 +66,6 @@
     <Compile Include="Base\ClientMgr.cs" />
     <Compile Include="Base\CoreGlobal.cs" />
     <Compile Include="Base\HighLowTracker.cs" />
-    <Compile Include="Base\ISessionUtils.cs" />
     <Compile Include="Base\Utils\PositionCloseDetailUtil.cs" />
     <Compile Include="Base\Utils\PositionDetailsUtil.cs" />
     <Compile Include="Base\TIFTracker.cs" />

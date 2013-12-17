@@ -35,18 +35,25 @@ namespace TradingLib.Common
         public RspMGRQryManagerResponse()
         {
             _type = MessageTypes.MGRMANAGERRESPONSE;
-            this.ManagerToSend = new Manager();
+            this.ManagerToSend = null;
         }
 
         public Manager ManagerToSend { get; set; }
 
         public override string ResponseSerialize()
         {
+            if (this.ManagerToSend == null) return string.Empty;
             return this.ManagerToSend.Serialize();
         }
 
         public override void ResponseDeserialize(string content)
         {
+            if (string.IsNullOrEmpty(content))
+            {
+                this.ManagerToSend = null;
+                return;
+            }
+            this.ManagerToSend = new Manager();
             this.ManagerToSend.Deserialize(content);
         }
     }
@@ -59,7 +66,7 @@ namespace TradingLib.Common
         public MGRReqAddManagerRequest()
         {
             _type = MessageTypes.MGRADDMANAGER;
-            this.ManagerToSend = new Manager();
+            this.ManagerToSend = null;
            
         }
 
@@ -67,11 +74,19 @@ namespace TradingLib.Common
 
         public override string ContentSerialize()
         {
+            if (this.ManagerToSend == null)
+                return string.Empty;
             return this.ManagerToSend.Serialize();
         }
 
         public override void ContentDeserialize(string contentstr)
         {
+            if (string.IsNullOrEmpty(contentstr))
+            {
+                this.ManagerToSend = null;
+                return;
+            }
+            this.ManagerToSend = new Manager();
             this.ManagerToSend.Deserialize(contentstr);
         }
         
@@ -85,7 +100,7 @@ namespace TradingLib.Common
         public MGRReqUpdateManagerRequest()
         {
             _type = MessageTypes.MGRUPDATEMANAGER;
-            this.ManagerToSend = new Manager();
+            this.ManagerToSend = null;
            
         }
 
@@ -93,11 +108,17 @@ namespace TradingLib.Common
 
         public override string ContentSerialize()
         {
+            if (this.ManagerToSend == null) return string.Empty;
             return this.ManagerToSend.Serialize();
         }
 
         public override void ContentDeserialize(string contentstr)
         {
+            if (string.IsNullOrEmpty(contentstr))
+            {
+                this.ManagerToSend = null;
+            }
+            this.ManagerToSend = new Manager();
             this.ManagerToSend.Deserialize(contentstr);
         }
     }

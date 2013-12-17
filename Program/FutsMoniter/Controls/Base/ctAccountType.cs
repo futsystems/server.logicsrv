@@ -98,7 +98,7 @@ namespace FutsMoniter.Controls.Base
 
         public void OnInit()
         {
-            Factory.IDataSourceFactory(accountType).BindDataSource(MoniterUtil.GetAccountTypeCombList(this.EnableAny));
+            Factory.IDataSourceFactory(accountType).BindDataSource(MoniterUtils.GetAccountTypeCombList(this.EnableAny));
         }
 
         public void OnDisposed()

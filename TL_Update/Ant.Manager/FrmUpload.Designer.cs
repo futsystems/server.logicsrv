@@ -39,14 +39,14 @@
             this.cmdUpload = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.cmdClose = new System.Windows.Forms.ToolStripButton();
+            this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
+            this.txtUnit = new System.Windows.Forms.ToolStripTextBox();
+            this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
+            this.cbAppName = new System.Windows.Forms.ToolStripComboBox();
             this.imgFile = new System.Windows.Forms.PictureBox();
             this.imtTotal = new System.Windows.Forms.PictureBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.txtError = new System.Windows.Forms.Label();
-            this.txtUnit = new System.Windows.Forms.ToolStripTextBox();
-            this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
-            this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
-            this.cbAppName = new System.Windows.Forms.ToolStripComboBox();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.imgFile)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imtTotal)).BeginInit();
@@ -136,6 +136,28 @@
             this.cmdClose.Text = "关闭";
             this.cmdClose.Click += new System.EventHandler(this.cmdClose_Click_1);
             // 
+            // toolStripLabel2
+            // 
+            this.toolStripLabel2.Name = "toolStripLabel2";
+            this.toolStripLabel2.Size = new System.Drawing.Size(46, 28);
+            this.toolStripLabel2.Text = "更新域:";
+            // 
+            // txtUnit
+            // 
+            this.txtUnit.Name = "txtUnit";
+            this.txtUnit.Size = new System.Drawing.Size(100, 31);
+            // 
+            // toolStripLabel3
+            // 
+            this.toolStripLabel3.Name = "toolStripLabel3";
+            this.toolStripLabel3.Size = new System.Drawing.Size(34, 28);
+            this.toolStripLabel3.Text = "程序:";
+            // 
+            // cbAppName
+            // 
+            this.cbAppName.Name = "cbAppName";
+            this.cbAppName.Size = new System.Drawing.Size(80, 31);
+            // 
             // imgFile
             // 
             this.imgFile.Location = new System.Drawing.Point(21, 39);
@@ -165,28 +187,6 @@
             this.txtError.Name = "txtError";
             this.txtError.Size = new System.Drawing.Size(0, 12);
             this.txtError.TabIndex = 3;
-            // 
-            // txtUnit
-            // 
-            this.txtUnit.Name = "txtUnit";
-            this.txtUnit.Size = new System.Drawing.Size(100, 31);
-            // 
-            // toolStripLabel2
-            // 
-            this.toolStripLabel2.Name = "toolStripLabel2";
-            this.toolStripLabel2.Size = new System.Drawing.Size(46, 28);
-            this.toolStripLabel2.Text = "更新域:";
-            // 
-            // toolStripLabel3
-            // 
-            this.toolStripLabel3.Name = "toolStripLabel3";
-            this.toolStripLabel3.Size = new System.Drawing.Size(34, 28);
-            this.toolStripLabel3.Text = "程序:";
-            // 
-            // cbAppName
-            // 
-            this.cbAppName.Name = "cbAppName";
-            this.cbAppName.Size = new System.Drawing.Size(80, 31);
             // 
             // FrmUpload
             // 

@@ -100,25 +100,26 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("Insert into manager (`login`,`type`,`name`,`mobile`,`qq`,`acclimit`,`domain_id`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}')", manger.Login, manger.Type.ToString(), manger.Name, manger.Mobile, manger.QQ, manger.AccLimit,manger.domain_id);
+                string query = String.Format("Insert into manager (`login`,`type`,`name`,`mobile`,`qq`,`acclimit`,`domain_id`,`active`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}')", manger.Login, manger.Type.ToString(), manger.Name, manger.Mobile, manger.QQ, manger.AccLimit, manger.domain_id,manger.Active?1:0);
                 db.Connection.Execute(query);
                 SetIdentity(db.Connection, id => manger.ID = id, "id", "manager");
 
-                //如果Root/Agent需要更新mgr_fk为自己的全局ID，其余manger在添加时设定了mgr_fk(柜员域)
+                //如果Root/Agent需要更新管理域mgr_fk为自己的全局ID，其余manger在添加时设定了mgr_fk(柜员域)
                 if (manger.Type == QSEnumManagerType.AGENT || manger.Type == QSEnumManagerType.ROOT)
                 {
                     manger.mgr_fk = manger.ID;
+                    query = String.Format("UPDATE manager SET mgr_fk='{0}' WHERE id='{1}'", manger.mgr_fk, manger.ID);
+                    db.Connection.Execute(query);
                 }
-                query = String.Format("UPDATE manager SET mgr_fk='{0}' WHERE id='{1}'", manger.mgr_fk, manger.ID);
-                db.Connection.Execute(query);
 
-
+                //Root没有父域,父域ID与自身域ID一致
                 if (manger.Type == QSEnumManagerType.ROOT)
                 {
                     manger.parent_fk = manger.ID;
+                    query = String.Format("UPDATE manager SET parent_fk='{0}' WHERE id='{1}'", manger.parent_fk, manger.ID);
+                    db.Connection.Execute(query);
                 }
-                query = String.Format("UPDATE manager SET parent_fk='{0}' WHERE id='{1}'", manger.parent_fk, manger.ID);
-                db.Connection.Execute(query);
+                
 
                 return true;
             }

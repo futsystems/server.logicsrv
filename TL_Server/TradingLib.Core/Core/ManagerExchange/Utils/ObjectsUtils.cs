@@ -59,7 +59,7 @@ namespace TradingLib.Core
                     if (mgr.RightRootDomain())
                         return true;
                     //如果该交易帐户的代理客户端登入 则需要通知
-                    if (mgr.GetBaseMGR() == account.Mgr_fk)
+                    if (mgr.BaseMgrID == account.Mgr_fk)
                         return true;
                     return false;
                 };
@@ -72,7 +72,7 @@ namespace TradingLib.Core
                     if (mgr == null) return false;
                     if (mgr.RightRootDomain())
                         return true;
-                    if (mgr.GetBaseMGR() == op.mgr_fk)//如果该出入金记录属于该代理客户端 则需要通知
+                    if (mgr.BaseMgrID == op.mgr_fk)//如果该出入金记录属于该代理客户端 则需要通知
                         return true;
                     return false;
                 };

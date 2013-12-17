@@ -28,7 +28,7 @@ namespace TradingLib.Core
                 if (mgr.RightRootDomain())
                     return true;
                 //如果是该管理端的子代理 则需要通知
-                if (mgr.RightAgentParent(manager.GetBaseMGR())) //
+                if (mgr.RightAgentParent(manager.BaseMgrID)) //
                     return true;
                 return false;
             };

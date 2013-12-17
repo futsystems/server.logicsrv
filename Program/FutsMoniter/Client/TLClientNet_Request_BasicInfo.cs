@@ -9,6 +9,14 @@ namespace TradingLib.Common
 {
     public partial class TLClientNet
     {
+        /// <summary>
+        /// 查询管理员
+        /// </summary>
+        public void ReqQryManager()
+        {
+            this.ReqContribRequest("MgrExchServer", "QryManager",""); 
+        }
+
         #region 基础数据维护
 
         public void ReqUpdateRecvBank(JsonWrapperReceivableAccount bank)
