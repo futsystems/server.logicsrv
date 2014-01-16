@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using Ant.Component;
+using System.Windows.Forms;
 
 namespace FutsMoniter.Common
 {
@@ -15,7 +17,18 @@ namespace FutsMoniter.Common
         protected override bool onUpdate()
         {
             //没有更新我们返回false 程序正常运行
-            return false;
+            Updater update = new Updater();
+            //MessageBox.Show("start to here");
+            if (update.Detect())
+            {
+                //MessageBox.Show("detected");
+                update.Update("Moniter.exe", true);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
 
         }
 
