@@ -217,14 +217,14 @@ namespace TradingLib.Common
             SendPacket(request);
         }
 
-        public void ReqQryAccountInfo(string account)
-        {
-            debug("请求查询交易帐号 Account:" + account + " 信息", QSEnumDebugLevel.INFO);
-            MGRQryAccountInfoRequest request = RequestTemplate<MGRQryAccountInfoRequest>.CliSendRequest(requestid++);
-            request.Account = account;
+        //public void ReqQryAccountInfo(string account)
+        //{
+        //    debug("请求查询交易帐号 Account:" + account + " 信息", QSEnumDebugLevel.INFO);
+        //    MGRQryAccountInfoRequest request = RequestTemplate<MGRQryAccountInfoRequest>.CliSendRequest(requestid++);
+        //    request.Account = account;
 
-            SendPacket(request);
-        }
+        //    SendPacket(request);
+        //}
 
         public void ReqCashOperation(string account, decimal amount, string transref, string comment)
         {
@@ -340,6 +340,15 @@ namespace TradingLib.Common
 
         #region 管理员管理
 
+        public void ReqActiveManger(int mgrid)
+        {
+            this.ReqContribRequest("MgrExchServer", "ActiveManager",mgrid.ToString());
+        }
+        public void ReqInactiveManger(int mgrid)
+        {
+            this.ReqContribRequest("MgrExchServer", "InactiveManager", mgrid.ToString());
+        }
+
         public void ReqQryManager()
         {
             debug("请求查询管理员列表", QSEnumDebugLevel.INFO);
@@ -356,6 +365,16 @@ namespace TradingLib.Common
 
             SendPacket(request);
         }
+
+        public void ReqAddManager(Manager manger)
+        {
+            debug("请求添加管理员", QSEnumDebugLevel.INFO);
+            MGRReqAddManagerRequest request = RequestTemplate<MGRReqAddManagerRequest>.CliSendRequest(requestid++);
+            request.ManagerToSend = manger;
+
+            SendPacket(request);
+        }
+
 
         public void ReqUpdatePass(string oldpass, string pass)
         {
@@ -497,16 +516,6 @@ namespace TradingLib.Common
 
         #endregion
 
-
-        #region 系统状态
-
-        public void ReqQrySystemStatus()
-        {
-            MGRQrySystemStatusRequest request = RequestTemplate<MGRQrySystemStatusRequest>.CliSendRequest(requestid++);
-
-            SendPacket(request);
-        }
-        #endregion
 
 
 

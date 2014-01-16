@@ -12,6 +12,8 @@ namespace TradingLib.ServiceManager
     public partial class ConnectorManager
     {
         #region Vendor
+
+
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UnBindVendor", "UnBindVendor - unbind vendor", "解绑通道")]
         public void CTE_BindVendor(ISession session, int cid)
         {

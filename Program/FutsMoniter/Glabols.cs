@@ -149,29 +149,44 @@ namespace FutsMoniter
             _client = client;
         }
 
-        static TradingInfoTracker _infotracker;
-        public static TradingInfoTracker TradingInfoTracker { get { return _infotracker; } }
-        public static void RegisterInfoTracker(TradingInfoTracker tracker)
+        //static TradingInfoTracker _infotracker;
+        //public static TradingInfoTracker TradingInfoTracker { get { return _infotracker; } }
+        //public static void RegisterInfoTracker(TradingInfoTracker tracker)
+        //{
+        //    _infotracker = tracker;
+        //}
+
+        //static IBasicInfo _basicinfo;
+        //public static IBasicInfo BasicInfoTracker { get { return _basicinfo; } }
+        //public static void RegisterBasicInfoTracker(IBasicInfo basic)
+        //{
+        //    _basicinfo = basic;
+        //}
+
+        //static ICallbackCentre _callbackcentre;
+        //public static ICallbackCentre LogicEvent { get { return _callbackcentre; } }
+        //public static bool CallbackCentreReady { get { return _callbackcentre != null; } }
+        //public static void RegisterCallBackCentre(ICallbackCentre callbackcentre)
+        //{
+        //    _callbackcentre = callbackcentre;
+        //}
+
+        public static TradingInfoTracker TradingInfoTracker { get { return _ctx.TradingInfoTracker; } }
+
+        public static IBasicInfo BasicInfoTracker { get { return _ctx.BasicInfoTracker; } }
+        /// <summary>
+        /// 逻辑处理对象
+        /// </summary>
+        public static ILogicHandler LogicHandler { get { return _ctx; } }
+
+
+        public static ICallbackCentre LogicEvent { get { return _ctx; } }
+
+        static Ctx _ctx;
+        internal static void RegisterCTX(Ctx ctx)
         {
-            _infotracker = tracker;
+            _ctx = ctx;
         }
-
-        static IBasicInfo _basicinfo;
-        public static IBasicInfo BasicInfoTracker { get { return _basicinfo; } }
-        public static void RegisterBasicInfoTracker(IBasicInfo basic)
-        {
-            _basicinfo = basic;
-        }
-
-        static ICallbackCentre _callbackcentre;
-        public static ICallbackCentre CallBackCentre { get { return _callbackcentre; } }
-        public static bool CallbackCentreReady { get { return _callbackcentre != null; } }
-        public static void RegisterCallBackCentre(ICallbackCentre callbackcentre)
-        {
-            _callbackcentre = callbackcentre;
-        }
-
-
         
 
 

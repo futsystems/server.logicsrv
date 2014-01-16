@@ -15,24 +15,28 @@ namespace FutsMoniter
         /// </summary>
         /// <param name="item"></param>
         /// <param name="islast"></param>
-        public void GotRuleItemDel(RuleItem item, bool islast)
+        void OnRuleItemDel(RuleItem item)
         {
             if (item.RuleType == QSEnumRuleType.OrderRule)
             {
-                InvokeGotOrderRuleItemDel(item, islast);
+                InvokeGotOrderRuleItemDel(item, true);
             }
             else if (item.RuleType == QSEnumRuleType.AccountRule)
             {
-                InvokeGotAccountRuleItemDel(item, islast);
-
+                InvokeGotAccountRuleItemDel(item, true);
             }
+        }
+
+        void OnRuleItemUpdate(RuleItem item)
+        {
+            OnRuleItem(item, true);
         }
         /// <summary>
         /// 获得委托风控项
         /// </summary>
         /// <param name="item"></param>
         /// <param name="islast"></param>
-        public void GotRuleItem(RuleItem item, bool islast)
+        void OnRuleItem(RuleItem item, bool islast)
         {
             if (item.RuleType == QSEnumRuleType.OrderRule)
             {
@@ -44,29 +48,16 @@ namespace FutsMoniter
             }
         }
 
-        /// <summary>
-        /// 获得帐户财务信息
-        /// </summary>
-        /// <param name="info"></param>
-        public void GotAccountInfo(IAccountInfo info)
-        {
-            if (Account.Account.Equals(info.Account))
-            {
-                ctFinanceInfo1.GotAccountInfo(info);
-
-            }
-        }
-
 
         /// <summary>
         /// 当帐户有变化时 更新修改窗体
         /// </summary>
         /// <param name="account"></param>
-        public void GotAccountChanged(IAccountLite account)
+        public void OnAccountChanged(IAccountLite account)
         {
-            if (this.Account != null && Account.Account.Equals(account.Account))
+            if (_account != null && _account.Account.Equals(account.Account))
             {
-                this.Account = account;
+                SetAccount(account);
             }
         }
 

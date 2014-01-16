@@ -87,6 +87,7 @@ namespace TradingLib.Common
                 target.Module_PayOnline = domain.Module_PayOnline;
                 target.Router_Live = domain.Router_Live;
                 target.Router_Sim = domain.Router_Sim;
+                target.VendorLimit = domain.VendorLimit;
 
                 ORM.MDomain.UpdateDomain(target);
                 
@@ -114,6 +115,7 @@ namespace TradingLib.Common
                 target.Module_PayOnline = domain.Module_PayOnline;
                 target.Router_Live = domain.Router_Live;
                 target.Router_Sim = domain.Router_Sim;
+                target.VendorLimit = domain.VendorLimit;
 
                 ORM.MDomain.InsertDomain(target);
                 domain.ID = target.ID;

@@ -8,7 +8,11 @@ namespace TradingLib.Common
 {
     public abstract class RuleBase
     {
+        /// <summary>
+        /// 对应交易帐号
+        /// </summary>
         public IAccountExp Account { get; set; }
+
         /// <summary>
         /// 数据库全局ID
         /// </summary>
@@ -26,7 +30,7 @@ namespace TradingLib.Common
 
         string[] _symbolset;
         /// <summary>
-        /// 检查合约列表
+        /// 检查品种列表
         /// </summary>
         public string SymbolSet
         {
@@ -39,9 +43,9 @@ namespace TradingLib.Common
             }
             set
             {
-                if (value != null && value != string.Empty)
+                if (!string.IsNullOrEmpty(value))
                 {
-                    _symbolset = value.Split('_');
+                    _symbolset = value.Split('_');//分解字符串生成对应的代码
                 }
             }
         }
@@ -134,9 +138,19 @@ namespace TradingLib.Common
         public static bool CanSetValue { get { return true; } }
 
         /// <summary>
+        /// 默认值
+        /// </summary>
+        public static string DefaultValue { get { return ""; } }
+
+        /// <summary>
         /// 是否需要设置参数关系
         /// </summary>
         public static bool CanSetCompare { get { return true; } }
+
+        /// <summary>
+        /// 默认比较关系
+        /// </summary>
+        public static QSEnumCompareType DefaultCompare { get { return QSEnumCompareType.GreaterEqual; } }
 
         /// <summary>
         /// 是否需要设置合约列表
@@ -148,6 +162,7 @@ namespace TradingLib.Common
         /// 参数名称
         /// </summary>
         public static string ValueName { get { return "检查变量"; } }
+
         /// <summary>
         /// 验证UI输入item是否有效
         /// </summary>

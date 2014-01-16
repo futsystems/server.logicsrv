@@ -14,7 +14,7 @@ using TradingLib.Mixins.JsonObject;
 
 namespace FutsMoniter
 {
-    public partial class ctAgentReportDayRange : UserControl
+    public partial class ctAgentReportDayRange : UserControl,IEventBinder
     {
         public ctAgentReportDayRange()
         {
@@ -22,26 +22,31 @@ namespace FutsMoniter
             SetPreferences();
             InitTable();
             BindToTable();
-            //ctGridExport1.Grid = totalgrid;
-            Globals.RegInitCallback(OnInitFinished);
-            if (Globals.EnvReady)
-            {
-                Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryTotalReportDayRange", this.OnTotalReport);
-            }
-            
 
+            this.Load += new EventHandler(ctAgentReportDayRange_Load);
             start.Value = Convert.ToDateTime(DateTime.Today.AddMonths(-1).ToString("yyyy-MM-01") + " 0:00:00");
             end.Value = DateTime.Now;
-
-            this.Disposed += new EventHandler(ctProfitReportDayRange_Disposed);
-            btnQryReport.Click += new EventHandler(btnQryReport_Click);
+            
 
         }
 
-        void ctProfitReportDayRange_Disposed(object sender, EventArgs e)
+        void ctAgentReportDayRange_Load(object sender, EventArgs e)
         {
-            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryTotalReportDayRange", this.OnTotalReport);
+            Globals.RegIEventHandler(this);
+            btnQryReport.Click += new EventHandler(btnQryReport_Click);
         }
+
+        public void OnInit()
+        {
+            Globals.LogicEvent.RegisterCallback("FinServiceCentre", "QryTotalReportDayRange", this.OnTotalReport);
+
+        }
+
+        public void OnDisposed()
+        {
+            Globals.LogicEvent.UnRegisterCallback("FinServiceCentre", "QryTotalReportDayRange", this.OnTotalReport);
+        }
+
 
         public void Clear()
         {
@@ -171,15 +176,6 @@ namespace FutsMoniter
 
         #endregion
 
-        /// <summary>
-        /// 用于响应初始化完成事件
-        /// 初始化完成后 会针对初始化得到的数据去填充或者修改界面数据
-        /// </summary>
-        void OnInitFinished()
-        {
-            //Factory.IDataSourceFactory(agent).BindDataSource(Globals.BasicInfoTracker.GetBaseManagerCombList());
-            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryTotalReportDayRange", this.OnTotalReport);
-        }
 
 
         private void btnQryReport_Click(object sender, EventArgs e)

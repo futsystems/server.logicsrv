@@ -39,36 +39,33 @@ namespace TradingLib.Core
 
         #region 对外触发的事件
         /// <summary>
-        /// 将客户端的登入 退出信息提交给风控中心进行处理
+        /// 行情事件
         /// </summary>
-        //public event LoginInfoDel SendLoginInfoEvent;
-        /// <summary>
-        /// 客户端报名事件
-        /// </summary>
-        //public event IAccountSignForPreraceDel SignupPreraceEvent;
-        /// <summary>
-        /// TradingServer接收到委托后进行委托发送前风控检查,事件回调了风控中心的风控规则检查函数
-        /// </summary>
-        //public event RiskCheckOrderDel SendOrderRiskCheckEvent;
-
-        /// <summary>
-        /// 获得某个账户的比赛信息
-        /// </summary>
-        //public event GetRaceInfoDel GetRaceInfoEvent;
-        //IRaceInfo GetRaceInfo(string acc)
-        //{
-        //    if (GetRaceInfoEvent != null)
-        //        return GetRaceInfoEvent(acc);
-        //    return null;
-        //}
-       
-
         public event TickDelegate GotTickEvent;
         
+        /// <summary>
+        /// 委托事件
+        /// </summary>
         public event OrderDelegate GotOrderEvent;
+
+        /// <summary>
+        /// 委托错误事件
+        /// </summary>
         public event OrderErrorDelegate GotOrderErrorEvent;
 
-        public event LongDelegate GotCancelEvent;
+        /// <summary>
+        /// 委托操作事件
+        /// </summary>
+        public event OrderActionDelegate GotOrderActionEvent;
+
+        /// <summary>
+        /// 委托操作错误事件
+        /// </summary>
+        public event OrderActionErrorDelegate GotOrderActionErrorEvent;
+
+        /// <summary>
+        /// 成交事件
+        /// </summary>
         public event FillDelegate GotFillEvent;
 
 
@@ -167,6 +164,8 @@ namespace TradingLib.Core
 
         TLServer_Exch tl;
 
+
+        #region 委托编号 成交编号生成
         //委托编号生成器
         IdTracker _orderIDTracker = new IdTracker();
 
@@ -238,6 +237,26 @@ namespace TradingLib.Core
             }
         }
 
+        /// <summary>
+        /// 绑定唯一的委托编号
+        /// </summary>
+        /// <param name="o"></param>
+        /// <returns></returns>
+        public void AssignOrderID(ref Order o)
+        {
+            if (o.id <= 0)
+                o.id = _orderIDTracker.AssignId;
+            //获得本地递增流水号
+            o.OrderSeq = this.NextOrderSeq;
+        }
+
+        public void AssignTradeID(ref Trade f)
+        {
+            //系统本地给成交赋日内唯一流水号 成交端的TradeID由接口负责
+            f.TradeID = this.NextTradeID.ToString();
+        }
+
+        #endregion
 
 
 
@@ -384,6 +403,7 @@ namespace TradingLib.Core
                 //VerboseDebugging = _cfgdb["VerbDebug"].AsBool();
                 tl.ProviderName = Providers.QSPlatform;
                 tl.NumWorkers = 5;
+
 
                 //设定日志输出
                 //tl.VerboseDebugging = false;

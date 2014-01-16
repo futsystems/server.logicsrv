@@ -80,7 +80,7 @@ namespace TradingLib.Common
 
         //子委托id与子委托映射
         ConcurrentDictionary<long, Order> sonOrder_Map = new ConcurrentDictionary<long, Order>();
-        Order SoneID2SonOrder(long id)
+        Order SonID2SonOrder(long id)
         {
             if (sonOrder_Map.Keys.Contains(id))
                 return sonOrder_Map[id];
@@ -93,7 +93,7 @@ namespace TradingLib.Common
         /// <param name="id"></param>
         public Order SentSonOrder(long id)
         {
-            return SoneID2SonOrder(id);
+            return SonID2SonOrder(id);
         }
         /// <summary>
         /// 清空内存状态
@@ -182,6 +182,13 @@ namespace TradingLib.Common
             if (GotFatherOrderErrorEvent != null)
                 GotFatherOrderErrorEvent(o, info);
         }
+
+        public event OrderActionErrorDelegate GotFatherOrderActionErrorEvent;
+        void GotFatherOrderActionError(OrderAction action,RspInfo info)
+        {
+            if (GotFatherOrderActionErrorEvent != null)
+                GotFatherOrderActionErrorEvent(action, info);
+        }
         #endregion
 
 
@@ -213,27 +220,28 @@ namespace TradingLib.Common
             Order fo = new OrderImpl(fathOrder);
             //2.将委托加入映射map
             fatherOrder_Map.TryAdd(fo.id, fo);//保存付委托映射关系
-            fatherSonOrder_Map.TryAdd(fo.id, sonOrders);//保存父委托到子委托映射关系
-
+            fatherSonOrder_Map.TryAdd(fo.id, sonOrders);//保存父委托到子委托映射关系//这里没有复制委托 其他地方更新该委托可能委托也会被同步更新
+            
             //2.统一发送子委托
             foreach (Order order in sonOrders)
             {
                 sonFathOrder_Map.TryAdd(order.id, fo);//保存子委托到父委托映射关系
+                sonOrder_Map.TryAdd(order.id, order);//保存子委托
                 SendSonOrder(order);
             }
             //3.更新父委托状态
             //如果对应的子委托有正常提交的,那么父委托就是处于提交状态
             if (sonOrders.Any(so => so.Status == QSEnumOrderStatus.Submited))
             {
-                fathOrder.Status = QSEnumOrderStatus.Submited;
+                fo.Status = QSEnumOrderStatus.Submited;
             }
             //如果子委托状态为拒绝,则父委托的状态也为拒绝
             if (sonOrders.All(so => so.Status == QSEnumOrderStatus.Reject))
             {
-                fathOrder.Status = QSEnumOrderStatus.Reject;
+                fo.Status = QSEnumOrderStatus.Reject;
             }
-            //同步本地状态
-            fo.Status = fathOrder.Status;
+            //同步本地状态 接口发送委托 依靠orderstatus 来判断委托是否发送成功
+            fathOrder.Status = fo.Status;
 
             Util.Debug("父子委托关系链条 " + fathOrder.id + "->[" + string.Join(",", sonOrders.Select(so => so.id)) + "] CopyID:"+fo.CopyID.ToString(), QSEnumDebugLevel.INFO);
         }
@@ -249,14 +257,43 @@ namespace TradingLib.Common
             {
                 Util.Debug("OrderSplitTracker[" + this.Token + "] 取消父委托:" + fatherOrder.GetOrderInfo(), QSEnumDebugLevel.INFO);
                 List<Order> sonOrders = FatherID2SonOrders(fatherOrder.id);//获得子委托
-                //如果子委托状态处于pending状态 则发送取消
-                foreach (Order o in sonOrders)
+
+                //如果所有委托均不可撤销 正常委托Opened PartFilled是可以撤销的
+                //如果委托处于提交状态但是没有获得CTP回报,此时委托处于Submited,但是如果这个时候撤单就会发生处于submit 不进行撤单，但是后来委托回报又回来了，则状态会发生混乱
+                if (sonOrders.All(o => !o.IsPending())) //处于Submit的委托 可能CTP回报回报慢导致状态没有进入Opened
                 {
-                    if (o.IsPending())
+                    Util.Debug(string.Format("All SonOrder Can not be canceled,father status:{0} notify father cancel internal", fatherOrder.Status), QSEnumDebugLevel.WARNING);
+                    //如果子委托全部为拒绝 则父委托为拒绝
+                    if (sonOrders.All(o => o.Status == QSEnumOrderStatus.Reject))
                     {
-                        CancelSonOrder(o);
+                        fatherOrder.Status = QSEnumOrderStatus.Reject;
+                    }
+                    fatherOrder.Status = QSEnumOrderStatus.Canceled;
+                    fatherOrder.Comment = string.Empty;//清空回报记录
+
+                    GotFatherOrder(fatherOrder);
+                    //?是否去除单独的Cancel回报
+                    if (fatherOrder.Status == QSEnumOrderStatus.Canceled)
+                    {
+                        GotFatherCancel(fatherOrder.id);
+                    }
+
+                }
+                else
+                {
+                    //如果子委托状态处于pending状态
+                    /* 底层接口委托初始状态为Submit 正常情况接口会立刻返回Opened,PartFilled/Filled 或者直接拒绝
+                     * 
+                     * */
+                    foreach (Order o in sonOrders)
+                    {
+                        if (o.IsPending())//如果委托处于待成交状态 则发送撤单指令
+                        {
+                            CancelSonOrder(o);
+                        }
                     }
                 }
+                
             }
             else
             {
@@ -269,6 +306,9 @@ namespace TradingLib.Common
         #region 子委托端 交易信息输入
         /// <summary>
         /// 获得子委托回报
+        /// 注本地维护了子委托内存数据
+        /// 同时该委托是其余组件进行分拆了
+        /// BrokerSplit分拆委托后将委托提供给委托分拆器
         /// </summary>
         /// <param name="o"></param>
         public void GotSonOrder(Order o)
@@ -276,7 +316,14 @@ namespace TradingLib.Common
             //更新子委托数据完毕后 通过子委托找到父委托 然后转换状态并发送
             Order fatherOrder = SonID2FatherOrder(o.id);//获得父委托
             List<Order> sonOrders = FatherID2SonOrders(fatherOrder.id);//获得子委托列表
-            
+
+            Order sonorder = SonID2SonOrder(o.id);
+            //更新委托
+            sonorder.Status = o.Status;//更新委托状态
+            sonorder.Comment = o.Comment;//填充状态信息
+            sonorder.FilledSize = o.FilledSize;//成交数量
+            sonorder.Size = o.Size;//更新委托当前数量
+
             fatherOrder.OrderSysID = fatherOrder.OrderSeq.ToString();//父委托OrderSysID编号 取系统的OrderSeq
 
             //更新父委托状态 成交数量 状态 以及 状态信息
@@ -383,6 +430,12 @@ namespace TradingLib.Common
         {
             Order fatherOrder = SonID2FatherOrder(o.id);//获得父委托
             List<Order> sonOrders = FatherID2SonOrders(fatherOrder.id);//获得所有子委托
+            Order sonorder = SonID2SonOrder(o.id);
+            //更新委托
+            sonorder.Status = o.Status;//更新委托状态
+            sonorder.Comment = o.Comment;//填充状态信息
+            sonorder.FilledSize = o.FilledSize;//成交数量
+            sonorder.Size = o.Size;//更新委托当前数量
 
             RspInfo info = new RspInfoImpl();
             info.ErrorID = error.ErrorID;
@@ -401,6 +454,28 @@ namespace TradingLib.Common
             //父委托已经对外回报过拒绝则不再对外回报
             if (!isrejected)
                 GotFatherOrderError(fatherOrder, info);
+        }
+
+        /// <summary>
+        /// 获得子委托操作错误回报
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="error"></param>
+        public void GotSonOrderActionError(OrderAction a, RspInfo error)
+        {
+            Order fatherOrder = SonID2FatherOrder(a.OrderID);//获得父委托
+            List<Order> sonOrders = FatherID2SonOrders(fatherOrder.id);//获得所有子委托
+
+            RspInfo info = new RspInfoImpl();
+            info.ErrorID = error.ErrorID;
+            info.ErrorMessage = error.ErrorMessage;
+
+            OrderAction action = new OrderActionImpl();
+            action.OrderID = fatherOrder.id;
+            action.Account = fatherOrder.Account;
+            action.ActionFlag = a.ActionFlag;
+
+            GotFatherOrderActionError(action, info);
         }
 
         #endregion

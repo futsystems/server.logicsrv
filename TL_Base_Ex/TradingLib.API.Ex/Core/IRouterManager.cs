@@ -33,10 +33,10 @@ namespace TradingLib.API
         IDataFeed DefaultDataFeed { get; }
 
 
-        /// <summary>
-        /// 默认实盘成交通道
-        /// </summary>
-        IBroker DefaultLiveBroker { get; }
+        ///// <summary>
+        ///// 默认实盘成交通道
+        ///// </summary>
+        //IBroker DefaultLiveBroker { get; }
 
         /// <summary>
         /// 获得某个合约的行情快照
@@ -51,15 +51,15 @@ namespace TradingLib.API
         /// <returns></returns>
         IEnumerable<Tick> GetTickSnapshot(); 
 
-        /// <summary>
-        /// 获得所有成交路由
-        /// </summary>
+        ///// <summary>
+        ///// 获得所有成交路由
+        ///// </summary>
         IBroker[] Brokers { get;}
 
 
-        /// <summary>
-        /// 获得所有行情路由
-        /// </summary>
+        ///// <summary>
+        ///// 获得所有行情路由
+        ///// </summary>
         IDataFeed[] DataFeeds { get; }
 
 

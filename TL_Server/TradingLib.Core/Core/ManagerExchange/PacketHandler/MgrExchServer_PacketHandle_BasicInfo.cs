@@ -97,6 +97,7 @@ namespace TradingLib.Core
                 }
 
                 SecurityFamilyImpl sec = request.SecurityFaimly;
+
                 manager.Domain.UpdateSecurity(sec);
 
                 RspMGRQrySecurityResponse response = ResponseTemplate<RspMGRQrySecurityResponse>.SrvSendRspResponse(request);
@@ -106,7 +107,7 @@ namespace TradingLib.Core
 
                 if (sec.Tradeable)
                 {
-                    exchsrv.RegisterSymbol(BasicTracker.SymbolTracker[manager.domain_id,sec.Code]);
+                    //exchsrv.RegisterSymbol(BasicTracker.SymbolTracker[manager.domain_id,sec.Code]);
                 }
                 session.OperationSuccess("品种数据更新成功");
             }
@@ -132,6 +133,7 @@ namespace TradingLib.Core
                 SymbolImpl sym = request.Symbol;
 
                 manager.Domain.UpdateSymbol(sym);
+
                 RspMGRQrySymbolResponse response = ResponseTemplate<RspMGRQrySymbolResponse>.SrvSendRspResponse(request);
                 response.Symbol = manager.Domain.GetSymbol(sym.ID);
                 CacheRspResponse(response);

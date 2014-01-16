@@ -62,8 +62,6 @@ namespace TradingLib.Core
                     bankaccount.Bank = BasicTracker.ContractBankTracker[bankaccount.bank_id].ToJsonWrapperBank();
                     session.SendJsonReplyMgr(bankaccount);
                 }
-                //debug("update agent bank account: id:" + bankaccount.Bank.ID + " name:" + bankaccount.Bank.Name, QSEnumDebugLevel.INFO);
-                
             }
 
         }

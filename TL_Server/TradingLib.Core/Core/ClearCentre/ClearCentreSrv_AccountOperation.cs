@@ -157,23 +157,27 @@ namespace TradingLib.Core
         /// <param name="comment"></param>
         public override void CashOperation(string account, decimal amount,string transref, string comment)
         {
-            //if (CoreUtil.IsSettle2Reset())
-            //{
-            //    debug("Account:" + account + " 资金操作:" + amount.ToString() + " comment:" + comment + "被忽略", QSEnumDebugLevel.WARNING);
-            //    FutsRspError error = new FutsRspError();
-            //    error.FillError("CASHOPERATION_NOT_ALLOW_NOW");//当前时间不允许出入金
-            //    throw error;
-            //}
 
             debug("CashOperation ID:" + account + " Amount:" + amount.ToString() + " Comment:" + comment, QSEnumDebugLevel.INFO);
             IAccount acc = this[account];
+            if (acc == null)
             {
-                if (acc == null)
+                throw new FutsRspError("交易帐户不存在");
+            }
+
+            //金额检查
+            if (amount<0)
+            {
+                if (acc.NowEquity < Math.Abs(amount))
                 {
-                    FutsRspError error = new FutsRspError();
-                    error.FillError("TRADING_ACCOUNT_NOT_FOUND");//当前时间不允许出入金
-                    throw error;
+                    throw new FutsRspError("出金额度大于帐户权益");
                 }
+            }
+
+            //执行时间检查 
+            if (TLCtxHelper.Ctx.SettleCentre.IsInSettle)
+            {
+                throw new FutsRspError("系统正在结算,禁止出入金操作");
             }
 
             if (amount > 0)

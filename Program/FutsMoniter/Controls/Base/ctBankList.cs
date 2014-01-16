@@ -14,7 +14,7 @@ using TradingLib.Mixins.JsonObject;
 
 namespace FutsMoniter
 {
-    public partial class ctBankList : UserControl
+    public partial class ctBankList : UserControl,IEventBinder
     {
         public event VoidDelegate BankSelectedChangedEvent;
         bool _gotdata = false;
@@ -22,29 +22,28 @@ namespace FutsMoniter
         {
             InitializeComponent();
             //如果已经初始化完成 则直接读取数据填充 否则将资金放入事件回调中
+
+            this.Load += new EventHandler(ctBankList_Load);
             
-            if (Globals.EnvReady)
-            {
-                if (!_gotdata)//请求银行列表
-                {
-                    Globals.TLClient.ReqQryBank();
-                }
-            }
-            if (Globals.CallbackCentreReady)
-            {
-                Globals.CallBackCentre.RegisterCallback("MgrExchServer", "QryBank", this.OnQryBank);
-            }
-            this.Disposed += new EventHandler(ctBankList_Disposed);
-            this.cbbank.SelectedIndexChanged +=new EventHandler(cbbank_SelectedIndexChanged);
         }
 
-        void ctBankList_Disposed(object sender, EventArgs e)
+        void ctBankList_Load(object sender, EventArgs e)
         {
-            if (Globals.CallbackCentreReady)
-            {
-                Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "QryBank", this.OnQryBank);
-            }
+            Globals.RegIEventHandler(this);
+            this.cbbank.SelectedIndexChanged += new EventHandler(cbbank_SelectedIndexChanged);
         }
+
+        public void OnInit()
+        {
+            Globals.LogicEvent.RegisterCallback("MgrExchServer", "QryBank", this.OnQryBank);
+            Globals.TLClient.ReqQryBank();
+        }
+
+        public void OnDisposed()
+        {
+            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "QryBank", this.OnQryBank);
+        }
+
 
         void OnQryBank(string jsonstr)
         {

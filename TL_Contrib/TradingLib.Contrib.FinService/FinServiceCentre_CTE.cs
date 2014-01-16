@@ -177,9 +177,12 @@ namespace TradingLib.Contrib.FinService
 
             //更新参数
             FinTracker.ArgumentTracker.UpdateArgumentAccount(target.ID, target.FinService.Arguments);
-
+            
             //加载参数
             stub.LoadArgument();
+
+            //调用参数变动事件回调
+            stub.FinService.OnArgumentChanged();
 
             FinServiceStub stub2 = FinTracker.FinServiceTracker[target.Account];
             if (stub2 == null)

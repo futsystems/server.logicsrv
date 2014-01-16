@@ -202,7 +202,7 @@ namespace TradingLib.Mixins
         /// <returns></returns>
         public ReplyWriter FillPlayload(object[] objs)
         {
-            return Fill(objs, "Playlod");
+            return Fill(objs, "Playload");
         }
 
 

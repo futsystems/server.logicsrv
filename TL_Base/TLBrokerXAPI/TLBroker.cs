@@ -34,6 +34,27 @@ namespace TradingLib.BrokerXAPI
         /// </summary>
         public virtual IEnumerable<Position> Positions { get { return new List<Position>(); } }
 
+        /// <summary>
+        /// 返回所有处于有持仓或挂单状态的合约
+        /// </summary>
+        public IEnumerable<string> WorkingSymbols
+        {
+            get
+            {
+                List<string> symlist = new List<string>();
+                foreach (Position pos in Positions.Where(p => !p.isFlat))
+                {
+                    if (!symlist.Contains(pos.Symbol))
+                        symlist.Add(pos.Symbol);
+                }
+                foreach (Order o in Orders.Where(o => o.IsPending()))
+                {
+                    if (!symlist.Contains(o.Symbol))
+                        symlist.Add(o.Symbol);
+                }
+                return symlist;
+            }
+        }
 
         #endregion
 

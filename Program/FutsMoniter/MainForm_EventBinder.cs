@@ -25,6 +25,11 @@ namespace FutsMoniter
 
         }
 
+        void OnRspInfo(TradingLib.API.RspInfo info)
+        {
+            //将RspInfo写入缓存 等待后台线程进行处理
+            infobuffer.Write(info);
+        }
 
         public void OnInit()
         {
@@ -36,16 +41,20 @@ namespace FutsMoniter
             //接口设置
             kryptonRibbonGroupButton_interfacelist.Visible = Globals.LoginResponse.Domain.Super;
             
-            //开启或者关闭清算中心
-            kryptonRibbonGroupButton_OpenClearCentre.Visible = Globals.LoginResponse.Domain.Super;
-            kryptonRibbonGroupButton_CloseClearCentre.Visible = Globals.LoginResponse.Domain.Super;
-            kryptonRibbonGroup1.Visible = Globals.LoginResponse.Domain.Super;
+            //系统 开启关闭清算中心 默认行情和交易通道
+            kryptonRibbonGroupButton_OpenClearCentre.Visible = Globals.LoginResponse.Domain.Super || Globals.Domain.Dedicated;
+            kryptonRibbonGroupButton_CloseClearCentre.Visible = Globals.LoginResponse.Domain.Super || Globals.Domain.Dedicated;
+            kryptonRibbonGroupButton_tickpaper.Visible = Globals.Domain.Super || Globals.Domain.Dedicated;
+            //ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show("defaultrouter:" + kryptonRibbonGroupButton_tickpaper.Visible.ToString());
+            kryptonRibbonGroup1.Visible = Globals.LoginResponse.Domain.Super || Globals.Domain.Dedicated;
 
             //日志窗口
-            kryptonRibbonQATButton_debug.Visible = true;// Globals.LoginResponse.Domain.Super;
+            kryptonRibbonQATButton_debug.Visible = Globals.LoginResponse.Domain.Super;
+
+            Globals.LogicEvent.GotRspInfoEvent += new Action<TradingLib.API.RspInfo>(OnRspInfo);
 
             //超级管理员 可以查看所有界面
-            if (!Globals.LoginResponse.Domain.Super)
+            if (!(Globals.LoginResponse.Domain.Super&&Globals.Manager.IsRoot()))
             {
                 //系统管理
                 if (!Globals.UIAccess.nav_system || (!Globals.Manager.IsRoot()))//只有管理员才可以查看
@@ -175,9 +184,8 @@ namespace FutsMoniter
                 if(!Globals.Domain.Router_Live)
                 {
                     kryptonRibbonGroupButton_connectorlist.Visible = false;
-
-                    kryptonRibbonGroup2.Visible = kryptonRibbonGroupButton_connectorlist.Visible;
                 }
+
             }
                  
         }

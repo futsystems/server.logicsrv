@@ -19,7 +19,9 @@ namespace FutsMoniter
       public IAccountLite Account { get; set; }
 
         RuleClassItem _ruleclass = null;
-        public RuleClassItem RuleClass { get { return _ruleclass; }
+        public RuleClassItem RuleClass 
+        { 
+            get { return _ruleclass; }
 
             set
             {
@@ -28,6 +30,19 @@ namespace FutsMoniter
                 rulecheckargname.Text = _ruleclass.ValueName;
                 Globals.Debug("rule desp:" + _ruleclass.Description);
                 description.Text = _ruleclass.Description;
+
+                symbolset.Enabled = _ruleclass.CanSetSymbols;
+                comparetype.Enabled = _ruleclass.CanSetCompare;
+                argvalue.Enabled = _ruleclass.CanSetValue;
+
+                if (!_ruleclass.CanSetCompare)
+                {
+                    comparetype.SelectedValue = _ruleclass.DefaultCompare;
+                }
+                if (!_ruleclass.CanSetValue)
+                {
+                    argvalue.Text = _ruleclass.DefaultValue;
+                }
             }
         
         }

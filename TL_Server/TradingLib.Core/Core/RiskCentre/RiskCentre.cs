@@ -181,55 +181,59 @@ namespace TradingLib.Core
         /// 而强平事务的完成是在positionround回报中同步处理
         /// </summary>
         /// <param name="oid"></param>
-        public void GotCancel(long oid)
+        public void GotOrder(Order o)
         {
-            foreach (RiskTaskSet ps in posflatlist)
+            if (o.Status == QSEnumOrderStatus.Canceled)
             {
-
-                switch (ps.TaskType)
+                long oid = o.id;
+                foreach (RiskTaskSet ps in posflatlist)
                 {
-                         
-                    case QSEnumTaskType.FlatPosition:
-                        {
-                            //如果不需要先撤单的 则跳过
-                            if (!ps.NeedCancelFirst)
+
+                    switch (ps.TaskType)
+                    {
+
+                        case QSEnumTaskType.FlatPosition:
                             {
-                                if (ps.OrderID == oid)
-                                    ps.OrderID = 0;
-                            }
-                            else//需要先撤单的 则检查撤单列表
-                            {
-                                //如果待成交委托列表中包含对应的ID则先删除该委托
-                                if (ps.PendingOrders.Contains(oid))
+                                //如果不需要先撤单的 则跳过
+                                if (!ps.NeedCancelFirst)
                                 {
-                                    ps.PendingOrders.Remove(oid);
+                                    if (ps.OrderID == oid)
+                                        ps.OrderID = 0;
                                 }
-                                //如果所有待成交委托均撤单完成 则标志canceldone
-                                if (ps.PendingOrders.Count == 0)
+                                else//需要先撤单的 则检查撤单列表
+                                {
+                                    //如果待成交委托列表中包含对应的ID则先删除该委托
+                                    if (ps.PendingOrders.Contains(oid))
+                                    {
+                                        ps.PendingOrders.Remove(oid);
+                                    }
+                                    //如果所有待成交委托均撤单完成 则标志canceldone
+                                    if (ps.PendingOrders.Count == 0)
+                                    {
+                                        ps.CancelDone = true;
+                                    }
+                                }
+                            }
+                            break;
+                        case QSEnumTaskType.CancelOrder:
+                        case QSEnumTaskType.FlatAllPositions:
+                            {
+                                if (ps.OrderCancels.Contains(oid))
+                                {
+                                    ps.OrderCancels.Remove(oid);
+                                }
+                                if (ps.OrderCancels.Count == 0)
                                 {
                                     ps.CancelDone = true;
                                 }
                             }
-                        }
-                        break;
-                    case QSEnumTaskType.CancelOrder:
-                    case QSEnumTaskType.FlatAllPositions:
-                        {
-                            if (ps.OrderCancels.Contains(oid))
-                            {
-                                ps.OrderCancels.Remove(oid);
-                            }
-                            if (ps.OrderCancels.Count == 0)
-                            {
-                                ps.CancelDone = true;
-                            }
-                        }
-                        break;
-                    default:
-                        break;
+                            break;
+                        default:
+                            break;
+                    }
                 }
+                _posoffsetracker.GotCancel(oid);
             }
-            _posoffsetracker.GotCancel(oid);
         }
 
         /// <summary>

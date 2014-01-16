@@ -33,8 +33,8 @@
             this.kryptonPage1 = new ComponentFactory.Krypton.Navigator.KryptonPage();
             this.ctAgentReportOneDay1 = new FutsMoniter.ctAgentReportOneDay();
             this.kryptonPage2 = new ComponentFactory.Krypton.Navigator.KryptonPage();
-            this.kryptonPage3 = new ComponentFactory.Krypton.Navigator.KryptonPage();
             this.ctAgentReportSummaryDayRange1 = new FutsMoniter.ctAgentReportSummaryDayRange();
+            this.kryptonPage3 = new ComponentFactory.Krypton.Navigator.KryptonPage();
             this.ctAgentReportDayRange1 = new FutsMoniter.ctAgentReportDayRange();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
@@ -69,7 +69,7 @@
             this.kryptonPage1,
             this.kryptonPage2,
             this.kryptonPage3});
-            this.kryptonNavigator1.SelectedIndex = 2;
+            this.kryptonNavigator1.SelectedIndex = 0;
             this.kryptonNavigator1.Size = new System.Drawing.Size(905, 534);
             this.kryptonNavigator1.TabIndex = 0;
             this.kryptonNavigator1.Text = "kryptonNavigator1";
@@ -108,6 +108,14 @@
             this.kryptonPage2.ToolTipTitle = "Page ToolTip";
             this.kryptonPage2.UniqueName = "58B4F3B76CBC4BA71CA1F2D9951158F8";
             // 
+            // ctAgentReportSummaryDayRange1
+            // 
+            this.ctAgentReportSummaryDayRange1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ctAgentReportSummaryDayRange1.Location = new System.Drawing.Point(0, 0);
+            this.ctAgentReportSummaryDayRange1.Name = "ctAgentReportSummaryDayRange1";
+            this.ctAgentReportSummaryDayRange1.Size = new System.Drawing.Size(903, 509);
+            this.ctAgentReportSummaryDayRange1.TabIndex = 0;
+            // 
             // kryptonPage3
             // 
             this.kryptonPage3.AutoHiddenSlideSize = new System.Drawing.Size(200, 200);
@@ -120,14 +128,6 @@
             this.kryptonPage3.Text = "多日流水";
             this.kryptonPage3.ToolTipTitle = "Page ToolTip";
             this.kryptonPage3.UniqueName = "96A0925C03B44F546C9A975B8A50B9B3";
-            // 
-            // ctAgentReportSummaryDayRange1
-            // 
-            this.ctAgentReportSummaryDayRange1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ctAgentReportSummaryDayRange1.Location = new System.Drawing.Point(0, 0);
-            this.ctAgentReportSummaryDayRange1.Name = "ctAgentReportSummaryDayRange1";
-            this.ctAgentReportSummaryDayRange1.Size = new System.Drawing.Size(903, 509);
-            this.ctAgentReportSummaryDayRange1.TabIndex = 0;
             // 
             // ctAgentReportDayRange1
             // 

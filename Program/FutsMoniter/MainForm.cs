@@ -11,7 +11,7 @@ using TradingLib.Common;
 
 namespace FutsMoniter
 {
-    public partial class MainForm : ComponentFactory.Krypton.Toolkit.KryptonForm, ILogicHandler, ICallbackCentre,IEventBinder
+    public partial class MainForm : ComponentFactory.Krypton.Toolkit.KryptonForm,IEventBinder
     {
 
         Log logfile = null;
@@ -20,24 +20,13 @@ namespace FutsMoniter
         bool _connected = false;
         bool _logined = false;
         bool _gotloginrep = false;
-        bool _basicinfodone = false;//基本数据是否已经查询完毕
+
         event DebugDelegate ShowInfoHandler;
 
         string _servers = "127.0.0.1";
 
         DebugForm debugform = new DebugForm();
-        //fmRouterMoniter routerform;
-        fmExchange exchangeform;
-        fmMarketTime markettimeform;
-        fmSecurity securityform;
-        fmSymbol symbolform;
-        fmCoreStatus systemstatusfrom;
-        fmHistQuery histqryform;
-        BasicInfoTracker basicinfotracker;
-        fmManagerCentre mgrform;
-        fmAgentProfitReport agentprofitreportform;
-        //结算单查询窗口
-        fmSettlement settlementform = new fmSettlement();
+
         void ShowInfo(string msg)
         {
             if (ShowInfoHandler != null)
@@ -48,35 +37,33 @@ namespace FutsMoniter
 
         void debug(string msg)
         {
-            //ctDebug1.GotDebug(msg);
+
             debugform.GotDebug(msg);
             logfile.GotDebug(msg);
         }
 
-        TradingInfoTracker infotracker;
+
         System.Threading.Timer _timer;
+        Ctx _ctx;
         public MainForm(DebugDelegate showinfo)
         {
             //绑定回调函数
-            Globals.RegisterCallBackCentre(this);
+            //Globals.RegisterCallBackCentre(this);
 
-            
+            _ctx = new Ctx();
+            _ctx.InitStatusEvent += new Action<string>(ShowInfo);
 
             //初始化界面控件
             InitializeComponent();
-
 
             logfile = new Log(Globals.Config["LogFileName"].AsString(), true, true, "log", true);//日志组件
 
             //设定对外消息显示输出
             ShowInfoHandler = showinfo;
 
-
-            ///ThemeResolutionService.ApplicationThemeName = Globals.Config["ThemeName"].AsString();
-
             if (Globals.Config["HeaderImg"].AsString().Equals("OEM"))
             {
-                this.Icon = Properties.Resources.moniter_oem;
+                this.Icon = Properties.Resources.moniter_terminal;
             }
 
 
@@ -98,7 +85,7 @@ namespace FutsMoniter
 
         void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            //e.Cancel = true;
+            e.Cancel = true;
         }
 
 
@@ -112,33 +99,7 @@ namespace FutsMoniter
             ctAccountMontier1.SendDebugEvent += new DebugDelegate(debug);
             ctAccountMontier1.QryAccountHistEvent += new IAccountLiteDel(ctAccountMontier1_QryAccountHistEvent);
 
-            infotracker = new TradingInfoTracker();
-            Globals.RegisterInfoTracker(infotracker);
-
-            basicinfotracker = new BasicInfoTracker();
-            Globals.RegisterBasicInfoTracker(basicinfotracker);
-
-
-
-            //routerform = new fmRouterMoniter();
-            exchangeform = new fmExchange();
-            markettimeform = new fmMarketTime();
-            securityform = new fmSecurity();
-            symbolform = new fmSymbol();
-            systemstatusfrom = new fmCoreStatus();
-            histqryform = new fmHistQuery();
-
-            mgrform = new fmManagerCentre();
-
-            agentprofitreportform = new fmAgentProfitReport();
-
-            //基础数据窗口维护了基础数据 当有基础数据到达时候需要通知窗体 窗体进行加载和现实
-            basicinfotracker.GotMarketTimeEvent += new MarketTimeDel(markettimeform.GotMarketTime);
-            basicinfotracker.GotExchangeEvent += new ExchangeDel(exchangeform.GotExchange);
-            basicinfotracker.GotSecurityEvent += new SecurityDel(securityform.GotSecurity);
-            basicinfotracker.GotSymbolEvent += new SymbolDel(symbolform.GotSymbol);
-
-            basicinfotracker.GotManagerEvent += new ManagerDel(mgrform.GotManager);
+            
 
             Globals.SendDebugEvent += new DebugDelegate(debug);
 
@@ -159,9 +120,9 @@ namespace FutsMoniter
             //停止tlclient
             tlclient.Stop();
             //清空基础数据
-            basicinfotracker.Clear();
+            //basicinfotracker.Clear();
             //清空实时交易记录
-            infotracker.Clear();
+            //infotracker.Clear();
         }
 
 
@@ -170,7 +131,7 @@ namespace FutsMoniter
 
         void InitSymbol2View()
         {
-            foreach (Symbol sym in Globals.BasicInfoTracker.SymbolsTradable)
+            foreach (Symbol sym in Globals.BasicInfoTracker.GetSymbolTradable())
             {
                 ctAccountMontier1.AddSymbol(sym);
                 //Globals.Debug("symbol:" + sym.Symbol);

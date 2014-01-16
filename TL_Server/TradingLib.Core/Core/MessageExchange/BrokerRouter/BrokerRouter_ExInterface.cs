@@ -102,6 +102,7 @@ namespace TradingLib.Core
             errorTitle = string.Empty;
             try
             {
+                //这里可以设计 路由返回机制 从而实现从而实现容错处理
                 IBroker broker = SelectBroker(o);
                 if (broker != null && broker.IsLive)
                 {
@@ -133,6 +134,9 @@ namespace TradingLib.Core
             }
         }
 
+
+
+
         void BrokerCancelOrder(Order o)
         {
             IBroker broker = SelectBroker(o,true);
@@ -157,7 +161,7 @@ namespace TradingLib.Core
             try
             {
                 debug(PROGRAM + ":Route Cancel to Broker Side:" + val.ToString(), QSEnumDebugLevel.INFO);
-                route_CancelOrder(val);
+                RouterCancelOrder(val);
             }
             catch (Exception ex)
             {
@@ -167,7 +171,7 @@ namespace TradingLib.Core
 
         }
         //通过路由选择器将委托取消发送出去
-        void route_CancelOrder(long val)
+        void RouterCancelOrder(long val)
         {
             try
             {

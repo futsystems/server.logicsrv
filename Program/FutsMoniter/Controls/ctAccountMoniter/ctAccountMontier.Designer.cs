@@ -410,7 +410,7 @@
             this.funpagePlaceOrder,
             this.funpageFinservice,
             this.funpageFinanceInfo});
-            this.kryptonNavigator2.SelectedIndex = 2;
+            this.kryptonNavigator2.SelectedIndex = 0;
             this.kryptonNavigator2.Size = new System.Drawing.Size(513, 341);
             this.kryptonNavigator2.TabIndex = 0;
             this.kryptonNavigator2.Text = "kryptonNavigator2";

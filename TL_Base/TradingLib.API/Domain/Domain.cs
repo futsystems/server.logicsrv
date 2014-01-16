@@ -68,6 +68,11 @@ namespace TradingLib.API
         /// </summary>
         bool Super { get; set; }
 
+        /// <summary>
+        /// 独立安装标识
+        /// </summary>
+        bool Dedicated { get; set; }
+
         #region limit
         /// <summary>
         /// 帐户数目限制
@@ -83,6 +88,11 @@ namespace TradingLib.API
         /// 路由组内路由项目数量限制
         /// </summary>
         int RouterItemLimit { get; set; }
+
+        /// <summary>
+        /// 实盘帐户数量限制
+        /// </summary>
+        int VendorLimit { get; set; }
 
         /// <summary>
         /// 接口列表

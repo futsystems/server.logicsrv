@@ -128,6 +128,7 @@ namespace TraddingSrvCLI
                         //3.绑定扩展模块调用事件
                         TLCtxHelper.BindContribEvent();
 
+                        //启动连接管理器 启动通道
                         connectorMgr.Start();
 
                         //最后确认主备机服务状态，并启用全局状态标识，所有的消息接收需要该标识打开,否则不接受任何操作类的消息

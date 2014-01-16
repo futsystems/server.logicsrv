@@ -26,6 +26,7 @@ namespace TradingLib.Core
         ConcurrentDictionary<string, CustInfoEx> customerExInfoMap = null;
 
 
+
         public MgrExchServer(MsgExchServer srv, ClearCentre c, RiskCentre r)
             : base(MgrExchServer.CoreName)
         {
@@ -212,8 +213,8 @@ namespace TradingLib.Core
             //选中的帐号与我们当前比较的帐号 相同,则我们推送该信息
             if (account.Equals(this.SelectedAccount)) return true;
             return false;
-
         }
+
 
         /// <summary>
         /// 观察一个账户列表,用于推送实时的权益数据
@@ -230,6 +231,29 @@ namespace TradingLib.Core
                 WatchAccounts.Add(acc);
             }
         }
+
+
+        #region 注册观察通道列表 用于发送实时通道状态
+        ThreadSafeList<IBroker> _watchBrokers = new ThreadSafeList<IBroker>();
+        public ThreadSafeList<IBroker> WatchBrokers { get { return this._watchBrokers; } }
+
+        public void RegVendor(IBroker broker)
+        {
+            if(!_watchBrokers.Any(b=>b.Token.Equals(broker.Token)))
+                _watchBrokers.Add(broker);
+        }
+
+        public void UnregVendor(IBroker broker)
+        { 
+            if(_watchBrokers.Any(b=>b.Token.Equals(broker.Token)))
+                _watchBrokers.Remove(broker);
+        }
+
+        public void ClearVendor()
+        {
+            _watchBrokers.Clear();
+        }
+        #endregion
 
 
         /// <summary>

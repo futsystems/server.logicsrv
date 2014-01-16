@@ -18,8 +18,8 @@ namespace TradingLib.API
 
         /// <summary>
         /// 订阅事件，将控件的响应函数注册到对应的事件上去，用于响应特定回报并处理
-        /// 这里需要CallBackCentre回调中心完成初始化后才可以进行
-        /// 在界面卡发过程中由于注册事件放在构造函数中会造成在界面编辑过程中出现Globls.CallBackCentre引用为空的错误这里需要进行不为空的判断
+        /// 这里需要LogicEvent回调中心完成初始化后才可以进行
+        /// 在界面卡发过程中由于注册事件放在构造函数中会造成在界面编辑过程中出现Globls.LogicEvent引用为空的错误这里需要进行不为空的判断
         /// </summary>
         void OnInit();
 

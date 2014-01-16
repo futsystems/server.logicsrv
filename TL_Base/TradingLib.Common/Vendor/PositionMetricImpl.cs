@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TradingLib.API;
+using TradingLib.Mixins.LitJson;
 
 namespace TradingLib.Common
 {
@@ -43,6 +44,11 @@ namespace TradingLib.Common
     /// </summary>
     public class PositionMetricImpl : PositionMetric
     {
+        public PositionMetricImpl()
+            :this("")
+        { 
+            
+        }
         public PositionMetricImpl(string symbol)
         {
             this.Symbol = symbol;
@@ -70,6 +76,7 @@ namespace TradingLib.Common
         /// </summary>
         public string Symbol { get; set; }
 
+        public string Token { get; set; }
         /// <summary>
         /// 多头持有仓位
         /// </summary>
@@ -88,6 +95,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 多方可以平掉的数量
         /// </summary>
+        [NoJsonExportAttr()]
         public int LongCanExitSize { get { return LongHoldSize - LongPendingExitSize; } }
 
         /// <summary>
@@ -108,6 +116,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 空头可以平掉的数量
         /// </summary>
+        [NoJsonExportAttr()]
         public int ShortCanExitSaize { get { return ShortHoldSize - ShortPendingExitSize; } }
        
     }

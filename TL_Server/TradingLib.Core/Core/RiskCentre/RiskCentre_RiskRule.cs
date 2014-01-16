@@ -13,11 +13,17 @@ namespace TradingLib.Core
 
         ConcurrentDictionary<string, IAccount> activeaccount = new ConcurrentDictionary<string, IAccount>();
 
+        /// <summary>
+        /// 清空监控中的帐户列表
+        /// </summary>
         void ClearActiveAccount()
         {
             activeaccount.Clear();
         }
-
+        /// <summary>
+        /// 插入某帐户 风控中心以实时监控
+        /// </summary>
+        /// <param name="account"></param>
         void InsertActiveAccount(IAccount account)
         {
             if (!activeaccount.Keys.Contains(account.ID))
@@ -46,9 +52,10 @@ namespace TradingLib.Core
                 }
                 catch (Exception ex)
                 {
-                    debug("OrderRuleSet:" + t.FullName + " load error", QSEnumDebugLevel.ERROR);
+                    debug("OrderRuleSet:" + t.FullName + " load error:"+ex.ToString(), QSEnumDebugLevel.ERROR);
                 }
             }
+
             foreach (Type t in PluginHelper.LoadAccountRule())
             {
                 try
@@ -65,7 +72,7 @@ namespace TradingLib.Core
         }
 
         /// <summary>
-        /// 加载某个账户的账户检查规则
+        /// 加载某个账户的账户风控检查规则 并将其放入检查列表
         /// </summary>
         /// <param name="a"></param>
         public void LoadRuleItem(IAccount account)
@@ -84,7 +91,11 @@ namespace TradingLib.Core
         }
 
 
-
+        /// <summary>
+        /// 为某个交易帐户添加风控规则
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="item"></param>
         void AddRule(IAccount account,RuleItem item)
         {
             debug("添加风控项，帐户:" + account.ID + " rultename:" + item.RuleName, QSEnumDebugLevel.INFO);
@@ -113,6 +124,23 @@ namespace TradingLib.Core
                 }
             }
         }
+
+        /// <summary>
+        /// 验证风控规则 防止设定错误的风控规则比如参数是否是数字等
+        /// </summary>
+        /// <param name="item"></param>
+        void ValidRuleItem(RuleItem item)
+        {
+            RuleClassItem klassitem = null;
+            if (dicRule.TryGetValue(item.RuleName, out klassitem))
+            {
+                klassitem.GenerateRuleInstance(item);
+            }
+            else
+            {
+                throw new FutsRspError("风控规则集不存在");
+            }
+        }
         /// <summary>
         /// 更新风控规则
         /// 如果没有则新增
@@ -124,7 +152,7 @@ namespace TradingLib.Core
             //判断帐户是否存在
             if (account != null)
             {
-                //id不为0 标识新增
+                //id不为0 更新风控规则 删除后然后再添加
                 if (item.ID != 0)
                 {
                     //删除旧的委托规则
@@ -132,7 +160,7 @@ namespace TradingLib.Core
                     {
                         account.DelOrderCheck(item.ID);
                     }
-                    else if(item.RuleType == QSEnumRuleType.AccountRule)
+                    else if (item.RuleType == QSEnumRuleType.AccountRule)
                     {
                         account.DelAccountCheck(item.ID);
                     }
@@ -140,15 +168,14 @@ namespace TradingLib.Core
                     ORM.MRuleItem.UpdateRuleItem(item);
                     //添加新的委托规则
                     AddRule(account, item);
-                    
+
                 }
-                //id不为0则新增
-                else
+                else //添加到数据库然后再加入到帐户规则中
                 {
                     //插入数据库
                     ORM.MRuleItem.InsertRuleItem(item);//数据先添加 获得全局ID号
                     //3.添加新的rule到帐户
-                    AddRule(account,item);
+                    AddRule(account, item);
                 }
             }
         }
@@ -212,223 +239,5 @@ namespace TradingLib.Core
         {
             return dicRule.Values.ToArray();
         }
-
-
-
-        //#region 帐户进入不同阶段的比赛 设定对应的风控规则
-        ///// <summary>
-        ///// 初始化账户风控规则,当账户晋级,淘汰,或者报名均需要初始化风控规则,自动为帐户配置相应的风控规则
-        ///// 相应事件  某个账户加入到了某个比赛的事件
-        ///// </summary>
-        ///// <param name="acc"></param>
-        //public void OnAccountEntryRace(IAccount acc, QSEnumRaceType type)
-        //{
-        //    debug(PROGRAME + "账户:" + acc.ID + " 加入类型为:" + LibUtil.GetEnumDescription(type) + " 比赛,风控中心调整账户风控策略", QSEnumDebugLevel.INFO);
-        //    switch (type)
-        //    {
-        //        case QSEnumRaceType.PRERACE:
-        //            PRERACERiskSet(acc);
-        //            break;
-        //        case QSEnumRaceType.SEMIRACE:
-        //            SEMIRACERiskSet(acc);
-        //            break;
-        //        case QSEnumRaceType.REAL1:
-        //            REAL1RiskSet(acc);
-        //            break;
-        //        case QSEnumRaceType.REAL2:
-        //            REAL2RiskSet(acc);
-        //            break;
-        //        case QSEnumRaceType.REAL3:
-        //            REAL3RiskSet(acc);
-        //            break;
-        //        case QSEnumRaceType.REAL4:
-        //            REAL4RiskSet(acc);
-        //            break;
-        //        case QSEnumRaceType.REAL5:
-        //            REAL5RiskSet(acc);
-        //            break;
-        //        default:
-        //            break;
-        //    }
-
-        //}
-        ///// <summary>
-        ///// 初赛初始化规则
-        ///// 初赛不设定任何风控规则
-        ///// </summary>
-        ///// <param name="acc"></param>
-        //void PRERACERiskSet(IAccount acc)
-        //{
-        //    debug(PROGRAME + ":账户加入初赛,绑定风控规则");
-        //    try
-        //    {
-        //        //lock (orderrulefile_lk)
-        //        {
-        //            AccountCheckTracker.delRuleFromAccount(acc.ID);//清空xml文件中的账户检查
-        //            acc.ClearAccountCheck();//清除账户检查
-        //            OrderCheckTracker.delRuleFromAccount(acc.ID);
-        //            acc.ClearOrderCheck();
-
-        //            //设定默认手续费规则
-        //            string rsname = "OrderRuleSet.RSCommission";
-        //            string cfgtext = "OrderRuleSet.RSCommission,True,LessEqual,1500,";
-        //            if (dicRule.ContainsKey(rsname))
-        //            {
-        //                //IOrderCheck rc = ((IOrderCheck)Activator.CreateInstance(dicRule[rsname])).FromText(cfgtext) as IOrderCheck;
-        //                //OrderCheckTracker.addRuleIntoAccount(acc.ID, rc);
-        //                //AccountCheckTracker.addRuleIntoAccount(acc.ID, rc);//将规则写入到xml配置文件
-        //                //acc.AddAccountCheck(rc);//将规则加入到账户accountcheck列表
-        //            }
-
-        //            LoadOrderRule(acc);
-        //        }
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-
-        //        debug(PROGRAME + "报名初赛赛账户:" + acc.ID + " 风控规则出错误:" + ex.ToString(), QSEnumDebugLevel.ERROR);
-        //    }
-
-        //}
-        ///// <summary>
-        ///// 复赛初始化规则
-        ///// </summary>
-        ///// <param name="acc"></param>
-        //void SEMIRACERiskSet(IAccount acc)
-        //{
-        //    debug(PROGRAME + ":账户加入复赛,绑定风控规则");
-        //    try
-        //    {
-        //        //lock (accountrulefile_lk)
-        //        {
-        //            AccountCheckTracker.delRuleFromAccount(acc.ID);//清空xml文件中的账户检查
-        //            acc.ClearAccountCheck();//清除账户检查
-        //            OrderCheckTracker.delRuleFromAccount(acc.ID);
-        //            acc.ClearOrderCheck();
-
-        //            string rsname = "AccountRuleSet.RSMaxLossPercent2Step";
-        //            string cfgtext = "AccountRuleSet.RSMaxLossPercent2Step,True,Greater,2,";
-        //            if (dicRule.ContainsKey(rsname))
-        //            {
-        //                //IAccountCheck rc = ((IAccountCheck)Activator.CreateInstance(dicRule[rsname])).FromText(cfgtext) as IAccountCheck;
-        //                //AccountCheckTracker.addRuleIntoAccount(acc.ID, rc);//将规则写入到xml配置文件
-        //                //acc.AddAccountCheck(rc);//将规则加入到账户accountcheck列表
-        //            }
-
-        //            //加载规则
-        //            LoadAccountRule(acc);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        debug(PROGRAME + "初始化复赛账户:" + acc.ID + " 风控规则出错误:" + ex.ToString(), QSEnumDebugLevel.ERROR);
-        //    }
-        //}
-
-        //void REAL1RiskSet(IAccount acc)
-        //{
-        //    debug(PROGRAME + ":账户加入实盘1,绑定风控规则");
-        //    try
-        //    {
-        //        //lock (accountrulefile_lk)
-        //        {
-        //            AccountCheckTracker.delRuleFromAccount(acc.ID);//清空xml文件中的账户检查
-        //            acc.ClearAccountCheck();//清除账户检查
-        //            OrderCheckTracker.delRuleFromAccount(acc.ID);
-        //            acc.ClearOrderCheck();
-
-        //            string rsname = "AccountRuleSet.RSMaxLossPercent2Step";
-        //            string cfgtext = "AccountRuleSet.RSMaxLossPercent2Step,True,Greater,2,";
-        //            if (dicRule.ContainsKey(rsname))
-        //            {
-        //                //IAccountCheck rc = ((IAccountCheck)Activator.CreateInstance(dicRule[rsname])).FromText(cfgtext) as IAccountCheck;
-        //                //AccountCheckTracker.addRuleIntoAccount(acc.ID, rc);//将规则写入到xml配置文件
-        //                //acc.AddAccountCheck(rc);//将规则加入到账户accountcheck列表
-        //            }
-
-        //            //加载规则
-        //            LoadAccountRule(acc);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        debug(PROGRAME + "初始化复赛账户:" + acc.ID + " 风控规则出错误:" + ex.ToString(), QSEnumDebugLevel.ERROR);
-        //    }
-
-        //}
-        //void REAL2RiskSet(IAccount acc)
-        //{
-
-        //}
-        //void REAL3RiskSet(IAccount acc)
-        //{
-
-        //}
-        //void REAL4RiskSet(IAccount acc)
-        //{
-
-        //}
-        //void REAL5RiskSet(IAccount acc)
-        //{
-
-        //}
-
-
-        //#endregion
-
-
-        //#region 为配资帐户绑定风控规则
-        ///// <summary>
-        ///// 配资账户生成时,我们给该账户绑定对应的规则
-        ///// </summary>
-        ///// <param name="account"></param>
-        //public void SetLoaneeRule(string account)
-        //{
-        //    try
-        //    {
-        //        //lock (accountrulefile_lk)
-        //        {
-        //            IAccount acc = _clearcentre[account];
-        //            if (acc == null) return;
-        //            //清空账户的所有风控规则
-        //            AccountCheckTracker.delRuleFromAccount(account);//清空xml文件中的账户检查
-        //            acc.ClearAccountCheck();
-        //            //清空委托检查规则
-        //            OrderCheckTracker.delRuleFromAccount(account);
-        //            acc.ClearOrderCheck();
-        //            string rsname;
-        //            string cfgtext;
-
-        //            //风控规则的加载,我们通过开放风控规则加载接口 统一移植到对应的扩展模块中去
-        //            //如果默认激活固定金额配资,我们加载不同类型的风控规则
-        //            //if (CoreGlobal.EnableFixedMargin)
-        //            //{
-        //            //    rsname = "AccountRuleSet.RSFineServiceFixMargin";
-        //            //    cfgtext = "AccountRuleSet.RSFineServiceFixMargin,True,Greater," + CoreGlobal.MarginPerLotStop.ToString() + ",";
-        //            //}
-        //            //else
-        //            {
-        //                rsname = "AccountRuleSet.RSFineService";
-        //                cfgtext = "AccountRuleSet.RSFineService,True,Greater,2,";
-        //            }
-
-        //            if (dicRule.ContainsKey(rsname))
-        //            {
-        //                //生成对应的IAccountCheck
-        //                //IAccountCheck rc = ((IAccountCheck)Activator.CreateInstance(dicRule[rsname])).FromText(cfgtext) as IAccountCheck;
-        //                //AccountCheckTracker.addRuleIntoAccount(account, rc);//将规则写入到xml配置文件
-        //            }
-
-        //            //加载账户检查规则
-        //            LoadAccountRule(acc);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        debug("设定配资账户风控规则出错:" + ex.ToString(), QSEnumDebugLevel.ERROR);
-        //    }
-        //}
-        //#endregion
     }
 }

@@ -119,13 +119,13 @@ namespace FutsMoniter
 
         void configgrid_DoubleClick(object sender, EventArgs e)
         {
-            //ConnectorConfig cfg = CurrentConnectorConfig;
-            //if (cfg != null)
-            //{
-            //    fmConnectorEdit fm = new fmConnectorEdit();
-            //    fm.SetConnectorConfig(cfg);
-            //    fm.Show();
-            //}
+            ConnectorConfig cfg = CurrentConnectorConfig;
+            if (cfg != null)
+            {
+                fmConnectorEdit fm = new fmConnectorEdit();
+                fm.SetConnectorConfig(cfg);
+                fm.Show();
+            }
         }
 
 
@@ -389,9 +389,10 @@ namespace FutsMoniter
                 return routergridmenu;
             }
             int r = ConnectorIdx(cfg.ID);
-            if (r > 0)
+            if (r >= 0)
             {
                 bool isvendorbinded = false;
+                //需要绑定Vendor
                 if (cfg.NeedVendor)
                 {
                     isvendorbinded = bool.Parse(gt.Rows[r][ISBINDED].ToString());
@@ -414,30 +415,33 @@ namespace FutsMoniter
                     routergridmenu.Items[3].Visible = false;
                     routergridmenu.Items[4].Visible = false;
                 }
+
+                //如果不需要绑定Vendor或则已经绑定了Vendor
                 if (isvendorbinded || !cfg.NeedVendor)
                 {
                     routergridmenu.Items[6].Enabled = true;
                     routergridmenu.Items[7].Enabled = true;
-                     QSEnumConnectorStatus status = (QSEnumConnectorStatus)Enum.Parse(typeof(QSEnumConnectorStatus),gt.Rows[r][CONSTATUS].ToString());
-                     switch (status)
-                     {
-                         case QSEnumConnectorStatus.Start:
-                             {
-                                 routergridmenu.Items[6].Enabled = false;
-                                 break;
-                             }
-                         case QSEnumConnectorStatus.Stop:
-                             {
-                                 routergridmenu.Items[7].Enabled = false;
-                                 break;
-                             }
-                         default:
-                             {
-                                 routergridmenu.Items[6].Enabled = false;
-                                 routergridmenu.Items[7].Enabled = false;
-                                 break;
-                             }
-                     }
+                    //根据当天通道状态 选择性显示启动或者停止
+                    QSEnumConnectorStatus status = (QSEnumConnectorStatus)Enum.Parse(typeof(QSEnumConnectorStatus),gt.Rows[r][CONSTATUS].ToString());
+                    switch (status)
+                    {
+                        case QSEnumConnectorStatus.Start:
+                            {
+                                routergridmenu.Items[6].Enabled = false;
+                                break;
+                            }
+                        case QSEnumConnectorStatus.Stop:
+                            {
+                                routergridmenu.Items[7].Enabled = false;
+                                break;
+                            }
+                        default:
+                            {
+                                routergridmenu.Items[6].Enabled = false;
+                                routergridmenu.Items[7].Enabled = false;
+                                break;
+                            }
+                    }
                 }
                 else
                 {   //如果通道没有绑定 则启动停止不可用

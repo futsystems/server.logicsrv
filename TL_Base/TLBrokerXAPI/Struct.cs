@@ -214,19 +214,19 @@ namespace TradingLib.BrokerXAPI
         /// <summary>
         /// 系统唯一委托编号
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 24)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
         public string ID;
 
         /// <summary>
         /// 向远端发单时 生成的本地OrderRef 比如CTP 
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 24)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
         public string BrokerLocalOrderID;
 
         /// <summary>
         /// 远端交易所返回的编号
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 24)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
         public string BrokerRemoteOrderID;
 
         /// <summary>
@@ -265,19 +265,19 @@ namespace TradingLib.BrokerXAPI
         /// <summary>
         /// 本地系统委托编号
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 24)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
         public string ID;
 
         /// <summary>
         /// 相对于成交端 本地编号
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 24)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
         public string BrokerLocalOrderID;
 
         /// <summary>
         /// 交易所委托编号
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 24)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
         public string BrokerRemoteOrderID;
 
         /// <summary>
@@ -343,19 +343,19 @@ namespace TradingLib.BrokerXAPI
         /// <summary>
         /// 成交编号
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 24)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
         public string BrokerTradeID;
 
         /// <summary>
         /// 近端委托编号
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 24)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
         public string BrokerLocalOrderID;
 
         /// <summary>
         /// 远端委托编号
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 24)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
         public string BrokerRemoteOrderID;
 
         /// <summary>

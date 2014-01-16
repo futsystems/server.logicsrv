@@ -17,10 +17,23 @@ namespace FutsMoniter
         public fmMarketTime()
         {
             InitializeComponent();
+            
+
+            this.Load += new EventHandler(fmMarketTime_Load);
+            
+        }
+
+        void fmMarketTime_Load(object sender, EventArgs e)
+        {
             SetPreferences();
             InitTable();
             BindToTable();
             WireEvent();
+
+            foreach (MarketTime mt in Globals.BasicInfoTracker.MarketTimes)
+            {
+                InvokeGotMarketTime(mt);
+            }
         }
 
 
@@ -50,10 +63,6 @@ namespace FutsMoniter
         }
 
 
-        public void GotMarketTime(MarketTime mt)
-        {
-            InvokeGotMarketTime(mt);
-        }
         delegate void MarketTimeDel(MarketTime mt);
 
         void InvokeGotMarketTime(MarketTime mt)
@@ -85,7 +94,7 @@ namespace FutsMoniter
 
         void WireEvent()
         { 
-            this.FormClosing +=new FormClosingEventHandler(fmMarketTime_FormClosing);
+
             mtgrid.DoubleClick +=new EventHandler(mtgrid_DoubleClick);
             mtgrid.RowPrePaint += new DataGridViewRowPrePaintEventHandler(mtgrid_RowPrePaint);
         }
@@ -162,11 +171,6 @@ namespace FutsMoniter
         }
 
 
-        private void fmMarketTime_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            e.Cancel = true;
-            this.Hide();
-        }
 
         private void mtgrid_DoubleClick(object sender, EventArgs e)
         {

@@ -48,14 +48,14 @@ namespace FutsMoniter
 
         public void OnInit()
         {
-            Globals.CallBackCentre.RegisterCallback("MgrExchServer", "QryReceiveableBank", this.OnQryRecvBank);
-            Globals.CallBackCentre.RegisterCallback("MgrExchServer", "NotifyRecvBank", this.OnNotifyRecvBank);
+            Globals.LogicEvent.RegisterCallback("MgrExchServer", "QryReceiveableBank", this.OnQryRecvBank);
+            Globals.LogicEvent.RegisterCallback("MgrExchServer", "NotifyRecvBank", this.OnNotifyRecvBank);
         }
 
         public void OnDisposed()
         {
-            Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "QryReceiveableBank", this.OnQryRecvBank);
-            Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "NotifyRecvBank", this.OnNotifyRecvBank);
+            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "QryReceiveableBank", this.OnQryRecvBank);
+            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "NotifyRecvBank", this.OnNotifyRecvBank);
         }
 
         void OnNotifyRecvBank(string jsonstr)

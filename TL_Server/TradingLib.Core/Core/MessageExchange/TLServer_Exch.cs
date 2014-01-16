@@ -366,7 +366,13 @@ namespace TradingLib.Core
             if (string.IsNullOrEmpty(notify.Order.Account)) return;
 
             TLSend(notify);
-            debug("send error order notify to client | " + notify.ToString());
+            debug("send order error notify to client | " + notify.ToString());
+        }
+
+        internal void newOrderActionError(ErrorOrderActionNotify notify)
+        {
+            TLSend(notify);
+            debug("send orderaction error notify to client | " + notify.ToString());
         }
         /// <summary>
         /// 向客户端发送成交回报

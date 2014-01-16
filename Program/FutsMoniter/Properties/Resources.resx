@@ -169,9 +169,6 @@
   <data name="header_oem" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\header-oem.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="moniter_oem" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\moniter-oem.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="message_error" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\images\message_error.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -189,5 +186,8 @@
   </data>
   <data name="deleteaccount" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\deleteaccount.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="moniter_terminal" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\moniter_terminal.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

@@ -66,6 +66,10 @@ namespace TradingLib.Common
         /// </summary>
         public bool Super { get; set; }
 
+        /// <summary>
+        /// 独立安装标识
+        /// </summary>
+        public bool Dedicated { get; set; }
 
         /// <summary>
         /// 路由组数量限制
@@ -76,6 +80,11 @@ namespace TradingLib.Common
         /// 路由组内路由项目数量限制
         /// </summary>
         public int RouterItemLimit { get; set; }
+
+        /// <summary>
+        /// 实盘帐户数量限制
+        /// </summary>
+        public int VendorLimit { get; set; }
 
         /// <summary>
         /// 接口列表

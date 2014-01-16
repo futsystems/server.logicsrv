@@ -14,7 +14,7 @@ using TradingLib.Mixins.JsonObject;
 
 namespace FutsMoniter
 {
-    public partial class ctFinServicePlanList : UserControl
+    public partial class ctFinServicePlanList : UserControl,IEventBinder
     {
         public event VoidDelegate ServicePlanSelectedChangedEvent;
         bool _gotdata = false;
@@ -22,28 +22,31 @@ namespace FutsMoniter
         public ctFinServicePlanList()
         {
             InitializeComponent();
-            //将响应函数注册到函数回调中心
-            if (Globals.CallbackCentreReady)
-            {
-                Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryFinServicePlan", this.OnQryServicePlan);
-            }
-            //如果环境初始化完毕 则想服务器发送数据请求
-            if (Globals.EnvReady && !_gotdata)
-            {
-                Globals.TLClient.ReqQryServicePlan();
-            }
-            this.Disposed += new EventHandler(ctFinServicePlanList_Disposed);
-            cbServicePlan.SelectedIndexChanged+=new EventHandler(cbServicePlan_SelectedIndexChanged);
+
+            this.Load += new EventHandler(ctFinServicePlanList_Load);
+            
             
         }
 
-        void ctFinServicePlanList_Disposed(object sender, EventArgs e)
+        void ctFinServicePlanList_Load(object sender, EventArgs e)
         {
-            if (Globals.CallbackCentreReady)
-            {
-                Globals.CallBackCentre.UnRegisterCallback("FinServiceCentre", "QryFinServicePlan", this.OnQryServicePlan);
-            }
+            Globals.RegIEventHandler(this);
+            cbServicePlan.SelectedIndexChanged += new EventHandler(cbServicePlan_SelectedIndexChanged);
         }
+
+        public void OnInit()
+        {
+            Globals.LogicEvent.RegisterCallback("FinServiceCentre", "QryFinServicePlan", this.OnQryServicePlan);
+            Globals.TLClient.ReqQryServicePlan();
+        }
+
+        public void OnDisposed()
+        {
+            Globals.LogicEvent.UnRegisterCallback("FinServiceCentre", "QryFinServicePlan", this.OnQryServicePlan);
+          
+        }
+
+
 
         //响应服务端回报
         void OnQryServicePlan(string jsonstr)

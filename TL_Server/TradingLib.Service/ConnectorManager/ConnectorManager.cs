@@ -100,7 +100,6 @@ namespace TradingLib.ServiceManager
 
             //根据设置 设定默认模拟成交接口
             _defaultsimbroker = FindBroker(_defaultSimBrokerToken);//_defaultSimBrokerToken 通过数据库设置
-
             _defaultdatafeed = FindDataFeed(_defaultDataFeedToken);//_defaultDataFeedToken通过数据库设置
         }
 
@@ -108,21 +107,14 @@ namespace TradingLib.ServiceManager
         public void Start()
         {
             Util.StatusSection(this.PROGRAME, "STARTCONNECTOR", QSEnumInfoColor.INFODARKRED,true);
-            //4.启动默认通道
-            if (GlobalConfig.NeedStartDefaultConnector)
+            if (TLCtxHelper.Ctx.SettleCentre.IsTradingday)//如果是交易日则需要启动实盘通道
             {
-                //启动默认通道
-                StartDataFeedViaToken(_defaultDataFeedToken);
-                StartBrokerViaToken(_defaultSimBrokerToken);
+                debug("正常交易日,启动所有通道", QSEnumDebugLevel.INFO);
+                StartConnector();
             }
-
-            //debug("Start RouterGroup ....", QSEnumDebugLevel.INFO);
-            foreach (RouterGroup rg in BasicTracker.RouterGroupTracker.RouterGroups)
-            {
-                //rg.Start();
-            }
-
         }
+
+
 
 
         //接口类型应映射表
@@ -136,15 +128,13 @@ namespace TradingLib.ServiceManager
         {
             debug("Load datafeed and broker connectors", QSEnumDebugLevel.INFO);
             //获得当前插件connecter中所有可用的交易通道插件以及数据通道插件 
-            List<Type> brokerlist = PluginHelper.LoadBrokerType();//ConnecterHelper.GetBroker();
-            List<Type> datafeedlist = PluginHelper.LoadDataFeedType(); // ConnecterHelper.GetDataFeed();
+            List<Type> brokerlist = PluginHelper.LoadBrokerType();
+            List<Type> datafeedlist = PluginHelper.LoadDataFeedType();
 
             foreach(Type t in brokerlist)
             {
-                //debug("BrokerType:" + t.FullName, QSEnumDebugLevel.INFO);
                 if (typeof(TLBrokerBase).IsAssignableFrom(t))
                 {
-                    //debug("XAPI BrokerType:" + t.FullName +" Loaded.", QSEnumDebugLevel.INFO);
                     xapibrokermodule.Add(t.FullName, t);
                 }
             }
@@ -152,10 +142,8 @@ namespace TradingLib.ServiceManager
             //加载数据路由
             foreach (Type t in datafeedlist)
             {
-                //debug("DataFeedType:" + t.FullName, QSEnumDebugLevel.INFO);
                 if (typeof(TLDataFeedBase).IsAssignableFrom(t))
                 {
-                    //debug("XAPI DataFeedType:" + t.FullName + " Loaded.", QSEnumDebugLevel.INFO);
                     xapidatafeedmodule.Add(t.FullName, t);
                 }
             }
@@ -166,8 +154,6 @@ namespace TradingLib.ServiceManager
         {
             Util.DestoryStatus(this.PROGRAME, true);
             base.Dispose();
-
-
         }
 
     }

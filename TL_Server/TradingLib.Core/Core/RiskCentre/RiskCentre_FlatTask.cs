@@ -104,7 +104,10 @@ namespace TradingLib.Core
             //1.遍历所有pending orders 如果委托对应的帐户是日内交易并且该委托需要在该强平时间点撤单 则执行撤单
             //查询所有待成交委托 且该委托合约在对应的强平时间点 撤掉将当前强平时间点的所有委托
             foreach (Order od in _clearcentre.TotalOrders.Where(o => o.IsPending() && IsSymbolWithMarketTime(o.oSymbol, mts)))
-            { 
+            {
+                debug("symbol:"+od.Symbol+"order status:" + od.IsPending().ToString() + " withmarkettime:" + IsSymbolWithMarketTime(od.oSymbol, mts),QSEnumDebugLevel.INFO);
+                //if (od.IsPending() && IsSymbolWithMarketTime(od.oSymbol, mts))
+                //{
                 IAccount acc = null;
                 if (_clearcentre.HaveAccount(od.Account, out acc))
                 {
@@ -114,10 +117,11 @@ namespace TradingLib.Core
                         CancelOrder(od, QSEnumOrderSource.RISKCENTRE, "尾盘强平");
                     }
                 }
+                //}
             }
 
             //等待1秒后再进行强平持仓
-            Util.sleep(1000);
+            Util.sleep(3000);
             //2.遍历所有持仓 进行强平
             foreach (Position pos in _clearcentre.TotalPositions.Where(p=>!p.isFlat && IsSymbolWithMarketTime(p.oSymbol,mts)))
             {

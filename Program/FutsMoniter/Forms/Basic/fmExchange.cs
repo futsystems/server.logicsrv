@@ -17,13 +17,22 @@ namespace FutsMoniter
         public fmExchange()
         {
             InitializeComponent();
+            this.Load += new EventHandler(fmExchange_Load);
+           
+        }
 
+        void fmExchange_Load(object sender, EventArgs e)
+        {
             SetPreferences();
             InitTable();
             BindToTable();
-
-            this.FormClosing +=new FormClosingEventHandler(fmExchange_FormClosing);
             exchangegrid.RowPrePaint += new DataGridViewRowPrePaintEventHandler(exchangegrid_RowPrePaint);
+
+            foreach (Exchange ex in Globals.BasicInfoTracker.Exchanges)
+            {
+                this.InvokeGotExchange(ex);
+            }
+
         }
 
         void exchangegrid_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
@@ -31,13 +40,7 @@ namespace FutsMoniter
             e.PaintParts = e.PaintParts ^ DataGridViewPaintParts.Focus;
         }
 
-        public bool AnyExchange
-        {
-            get
-            {
-                return exchangemap.Count > 0;
-            }
-        }
+
         Dictionary<int, int> exchangeidmap = new Dictionary<int, int>();
         Dictionary<int, Exchange> exchangemap = new Dictionary<int, Exchange>();
 
@@ -54,10 +57,6 @@ namespace FutsMoniter
             }
         }
 
-        public void GotExchange(Exchange ex)
-        {
-            InvokeGotExchange(ex);
-        }
 
         delegate void ExchangeDel(Exchange ex);
         void InvokeGotExchange(Exchange ex)
@@ -154,12 +153,6 @@ namespace FutsMoniter
         #endregion
 
 
-
-        private void fmExchange_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            e.Cancel = true;
-            this.Hide();
-        }
 
     }
 }

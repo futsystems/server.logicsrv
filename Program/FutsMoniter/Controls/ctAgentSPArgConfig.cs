@@ -15,29 +15,36 @@ using TradingLib.Mixins.JsonObject;
 
 namespace FutsMoniter
 {
-    public partial class ctAgentSPArgConfig : UserControl
+    public partial class ctAgentSPArgConfig : UserControl,IEventBinder
     {
         public ctAgentSPArgConfig()
         {
             InitializeComponent();
             notice.Visible = false;
-            ctAgentList1.EnableSelf = false;
-            if (Globals.CallbackCentreReady)
-            {
-                Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryAgentSPArg", this.OnQrySPAgentArg);
-            }
-            this.Disposed += new EventHandler(ctAgentSPArgConfig_Disposed);
+
             this.btnSubmit.Click +=new EventHandler(btnSubmit_Click);
             ctAgentList1.AgentSelectedChangedEvent +=new VoidDelegate(ctAgentList1_AgentSelectedChangedEvent);
             ctFinServicePlanList1.ServicePlanSelectedChangedEvent +=new VoidDelegate(ctFinServicePlanList1_ServicePlanSelectedChangedEvent);
+            this.Load += new EventHandler(ctAgentSPArgConfig_Load);
         }
 
-        void ctAgentSPArgConfig_Disposed(object sender, EventArgs e)
+        void ctAgentSPArgConfig_Load(object sender, EventArgs e)
         {
-            if (Globals.CallbackCentreReady)
-            {
-                Globals.CallBackCentre.UnRegisterCallback("FinServiceCentre", "QryAgentSPArg", this.OnQrySPAgentArg);
-            }
+            Globals.RegIEventHandler(this);
+        }
+
+
+
+        public void OnInit()
+        {
+            Globals.LogicEvent.RegisterCallback("FinServiceCentre", "QryAgentSPArg", this.OnQrySPAgentArg);
+         
+        }
+
+        public void OnDisposed()
+        {
+            Globals.LogicEvent.UnRegisterCallback("FinServiceCentre", "QryAgentSPArg", this.OnQrySPAgentArg);
+          
         }
 
         private void btnSubmit_Click(object sender, EventArgs e)

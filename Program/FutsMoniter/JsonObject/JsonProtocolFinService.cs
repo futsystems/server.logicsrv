@@ -154,6 +154,11 @@ namespace TradingLib.Mixins.JsonObject
         public bool Active { get; set; }
 
         /// <summary>
+        /// 强平标识
+        /// </summary>
+        public bool ForceClose { get; set; }
+
+        /// <summary>
         /// 配资服务
         /// </summary>
         public JsonWrapperFinService FinService { get; set; }

@@ -62,9 +62,19 @@ namespace FutsMoniter
                 Manager m = new Manager();
                 m.Type = (QSEnumManagerType)type.SelectedValue;
                 m.Login = this.login.Text;
-                if ((!reglogin.IsMatch(m.Login)) || m.Login.Length>20)
+                if (string.IsNullOrEmpty(m.Login))
                 {
-                    fmConfirm.Show("登入ID只能包含数字和字母");
+                    ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show("请输入登入名");
+                    return;
+                }
+                if (!InputReg.Login.IsMatch(m.Login))
+                {
+                    ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show("登入ID只能包含数字和字母,-");
+                    return;
+                }
+                if (m.Login.Length > 12)
+                {
+                    ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show("登入名长度不能大于12位");
                     return;
                 }
                 m.Name = this.name.Text;
@@ -84,7 +94,7 @@ namespace FutsMoniter
                 }
                 if (fmConfirm.Show("确认添加管理员信息?") == System.Windows.Forms.DialogResult.Yes)
                 {
-                    Globals.TLClient.ReqUpdateManager(m);
+                    Globals.TLClient.ReqAddManager(m);
                 }
 
             }
@@ -101,6 +111,7 @@ namespace FutsMoniter
                     manger.AccLimit = (int)this.acclimit.Value;
                 }
 
+                MessageBox.Show("manager id:" + manger.ID.ToString());
                 if (fmConfirm.Show("确认更新管理员信息?") == System.Windows.Forms.DialogResult.Yes)
                 {
                     Globals.TLClient.ReqUpdateManager(manger);

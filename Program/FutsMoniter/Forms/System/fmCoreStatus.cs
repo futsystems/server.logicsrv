@@ -12,12 +12,21 @@ using TradingLib.Common;
 
 namespace FutsMoniter
 {
-    public partial class fmCoreStatus : ComponentFactory.Krypton.Toolkit.KryptonForm
+    public partial class fmCoreStatus : ComponentFactory.Krypton.Toolkit.KryptonForm,IEventBinder
     {
         public fmCoreStatus()
         {
             InitializeComponent();
-            this.FormClosing +=new FormClosingEventHandler(fmCoreStatus_FormClosing);
+            this.Load += new EventHandler(fmCoreStatus_Load);
+        }
+
+        void fmCoreStatus_Load(object sender, EventArgs e)
+        {
+            Globals.RegIEventHandler(this);
+            if (Globals.EnvReady)
+            {
+                Globals.TLClient.ReqQrySystemStatus();
+            }
         }
 
         public void GotSystemStatus(SystemStatus s)
@@ -41,10 +50,22 @@ namespace FutsMoniter
             }
         }
 
-        private void fmCoreStatus_FormClosing(object sender, FormClosingEventArgs e)
+        public void OnInit()
         {
-            e.Cancel = true;
-            this.Hide();
+            Globals.LogicEvent.RegisterCallback("MgrExchServer", "QrySystemStatus", this.OnQrySystemStatus);
+        }
+
+        public void OnDisposed()
+        {
+            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "QrySystemStatus", this.OnQrySystemStatus);
+        }
+        void OnQrySystemStatus(string json)
+        {
+            SystemStatus status = MoniterUtil.ParseJsonResponse<SystemStatus>(json);
+            if (status != null)
+            {
+                GotSystemStatus(status);
+            }
         }
     }
 }

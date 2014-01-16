@@ -14,13 +14,6 @@ namespace FutsMoniter
         public fmAgentProfitReport()
         {
             InitializeComponent();
-            this.FormClosing += new FormClosingEventHandler(fmAgentProfitReport_FormClosing);
-        }
-
-        void fmAgentProfitReport_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            e.Cancel = true;
-            this.Hide();
         }
     }
 }

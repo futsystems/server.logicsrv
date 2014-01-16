@@ -9,13 +9,6 @@ using TradingLib.LitJson;
 
 namespace TradingLib.ServiceManager
 {
-    internal enum QSEnumConnectorOperation
-    { 
-        Start,//启动
-
-        Stop,//停止
-    }
-    internal delegate void AsyncConnectorOperationDel(ISession session, ConnectorConfig cfg, QSEnumConnectorOperation op);
 
     public partial class ConnectorManager
     {
@@ -33,6 +26,27 @@ namespace TradingLib.ServiceManager
                 session.SendJsonReplyMgr(ops);
             }
         }
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryDefaultConnectorConfig", "QryDefaultConnectorConfig - query broker config", "查询默认通道设置 行情通道与模拟成交")]
+        public void CTE_QueryDefaultConnectorConfig(ISession session)
+        {
+            try
+            {
+                debug("查询默认通道设置", QSEnumDebugLevel.INFO);
+                Manager manger = session.GetManager();
+                if (manger.Domain.Super || manger.Domain.Dedicated)
+                {
+                    //获得域内所有通道设置
+                    ConnectorConfig[] ops = manger.Domain.GetDefaultConnectorConfigs().ToArray();// BasicTracker.ConnectorConfigTracker.ConnecotrConfigs.ToArray();
+                    session.SendJsonReplyMgr(ops);
+                }
+            }
+            catch (FutsRspError ex)
+            {
+                session.OperationError(ex);
+            }
+        }
+
 
 
         ConnectorStatus GetConnectorStatus(ConnectorConfig cfg)
@@ -83,6 +97,19 @@ namespace TradingLib.ServiceManager
             }
         }
 
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryDefaultConnectorStatus", "QryDefaultConnectorStatus - query connector status", "查询所有通道状态")]
+        public void CTE_QryDefaultConnectorStatus(ISession session)
+        {
+            debug("查询所有通道状态", QSEnumDebugLevel.INFO);
+            Manager manger = session.GetManager();
+            if (manger.RightRootDomain())
+            {
+                //获得域内所有通道设置
+                ConnectorStatus[] ops = manger.Domain.GetDefaultConnectorConfigs().Select(cfg => GetConnectorStatus(cfg)).ToArray();// BasicTracker.ConnectorConfigTracker.ConnecotrConfigs.ToArray();
+                session.SendJsonReplyMgr(ops);
+            }
+        }
+
 
 
 
@@ -105,7 +132,8 @@ namespace TradingLib.ServiceManager
                     {
                         throw new FutsRspError("Token不能为空");
                     }
-                    if (BasicTracker.ConnectorConfigTracker.GetBrokerInterface(cfg.interface_fk) == null)
+                    ConnectorInterface itface = BasicTracker.ConnectorConfigTracker.GetBrokerInterface(cfg.interface_fk);
+                    if ( itface== null)
                     {
                         throw new FutsRspError("请选择有效接口");
                     }
@@ -117,14 +145,18 @@ namespace TradingLib.ServiceManager
 
                     //设定Domain
                     cfg.domain_id = manger.Domain.ID;
-
+                    //添加的通道为交易通道则都需要Vendor
+                    if (itface.Type == QSEnumConnectorType.Broker)
+                    {
+                        cfg.NeedVendor = true;
+                    }
                     
                     //2.更新参数
                     BasicTracker.ConnectorConfigTracker.UpdateConnectorConfig(cfg);
                     //
                     ConnectorConfig config = BasicTracker.ConnectorConfigTracker.GetBrokerConfig(cfg.ID);
                     //3.更新或加载Broker
-                    if (isadd)
+                    if (isadd)//如果是新增通道接口 则加载
                     {
                         if (!config.Interface.IsValid)
                         {
@@ -132,14 +164,20 @@ namespace TradingLib.ServiceManager
                         }
 
                         LoadBrokerConnector(config);
+
+
+                        
+
                     }
                     else
                     {
                         //重新设定参数并停止接口然后再启动接口
                     }
 
-
-                    session.NotifyMgr(config, this.ServiceMgrName, "NotifyConnectorCfg");
+                    //通知通道设置
+                    session.NotifyMgr("NotifyConnectorCfg", config);
+                    //通知通道状态
+                    session.NotifyMgr("NotifyConnectorStatus", GetConnectorStatus(config));
                     session.OperationSuccess("更新通道设置成功");
                 }
             }
@@ -192,7 +230,7 @@ namespace TradingLib.ServiceManager
 
                     BasicTracker.RouterGroupTracker.UpdateRouterGroup(group);
 
-                    session.NotifyMgr(group, this.ServiceMgrName, "NotifyRouterGroup");
+                    session.NotifyMgr("NotifyRouterGroup",group);
                     session.OperationSuccess("更新通道设置成功");
                 }
             }
@@ -269,7 +307,7 @@ namespace TradingLib.ServiceManager
                     //2.更新参数
                     BasicTracker.RouterGroupTracker.UpdateRouterItem(item);
 
-                    session.NotifyMgr(item, this.ServiceMgrName, "NotifyRouterItem");
+                    session.NotifyMgr("NotifyRouterItem",item);
                     session.OperationSuccess("更新路由项目成功");
                 }
             }

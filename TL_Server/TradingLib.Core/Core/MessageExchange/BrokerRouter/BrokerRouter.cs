@@ -71,7 +71,7 @@ namespace TradingLib.Core
             _tifengine = new TIFEngine();
             //_tifengine.SendDebugEvent +=new DebugDelegate(msgdebug);
             //_tifengine.SendOrderEvent += new OrderDelegate(route_SendOrder);
-            _tifengine.SendCancelEvent += new LongDelegate(route_CancelOrder);
+            _tifengine.SendCancelEvent += new LongDelegate(RouterCancelOrder);
 
             _ordHelper = new OrderTransactionHelper("BrokerRouter");
             //_ordHelper.SendDebugEvent +=new DebugDelegate(msgdebug);

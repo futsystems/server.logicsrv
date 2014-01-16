@@ -11,24 +11,22 @@ using TradingLib.Common;
 
 namespace FutsMoniter
 {
-    public partial class ctBasicMangerInfo : UserControl
+    public partial class ctBasicMangerInfo : UserControl,IEventBinder
     {
         public ctBasicMangerInfo()
         {
             InitializeComponent();
-            //如果已经初始化完成 则直接读取数据填充 否则将资金放入事件回调中
-            if (Globals.EnvReady)
-            {
-                InitAgentList();
-            }
-            else
-            {
-                if (Globals.CallbackCentreReady)
-                {
-                    Globals.RegInitCallback(OnInitFinished);
-                }
-            }
             this.btnChangePass.Click +=new EventHandler(btnChangePass_Click);
+        }
+
+        public void OnInit()
+        {
+            InitAgentList();
+        }
+
+        public void OnDisposed()
+        { 
+            
         }
 
         void InitAgentList()

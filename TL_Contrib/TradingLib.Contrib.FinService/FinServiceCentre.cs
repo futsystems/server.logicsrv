@@ -104,32 +104,40 @@ namespace TradingLib.Contrib.FinService
             FinTracker.FinServiceTracker.ToArray();
 
 
+            //将服务的计费日志导出
+            FinTracker.FinServiceTracker.GotFeeChargeItemEvent += new FeeChargeItemDel(_chargelog.newFeeChargeItem);
+
             //配资资金查询事件
             TLCtxHelper.ExContribEvent.GetFinAmmountAvabileEvent += new AccountFinAmmountDel(ExContribEvent_GetFinAmmountAvabileEvent);
 
-            //将服务的计费日志导出
-            FinTracker.FinServiceTracker.GotFeeChargeItemEvent += new FeeChargeItemDel(_chargelog.newFeeChargeItem);
             //手续费调整事件
             TLCtxHelper.ExContribEvent.AdjustCommissionEvent += new AdjustCommissionDel(ExContribEvent_AdjustCommissionEvent);
+            
             //获得成交事件
             TLCtxHelper.EventIndicator.GotFillEvent += new FillDelegate(EventIndicator_GotFillEvent);
+            
             //获得持仓回合关闭事件 一个交易开平结束
             TLCtxHelper.EventIndicator.GotPositionClosedEvent += new PositionRoundClosedDel(EventIndicator_GotPositionClosedEvent);
 
             //帐户添加事件
             TLCtxHelper.EventAccount.AccountAddEvent += new AccountIdDel(EventAccount_AccountAddEvent);
 
+            //帐户激活事件
+            TLCtxHelper.EventAccount.AccountActiveEvent += new AccountIdDel(EventAccount_AccountActiveEvent);
+
             //出入金事件
             TLCtxHelper.CashOperationEvent.CashOperationRequest += new EventHandler<CashOperationEventArgs>(CashOperationEvent_CashOperationRequest);
 
-            //结算前事件
+            //结算前 结算前事件
             TLCtxHelper.EventSystem.BeforeSettleEvent += new EventHandler<SystemEventArgs>(EventSystem_BeforeSettleEvent);
-
             TLCtxHelper.EventSystem.AfterSettleEvent += new EventHandler<SystemEventArgs>(EventSystem_AfterSettleEvent);
 
+            
 
 
         }
+
+
 
         /// <summary>
         /// 销毁
@@ -259,6 +267,20 @@ namespace TradingLib.Contrib.FinService
                     FinTracker.FinServiceTracker.AddFinService(account, sp.ID);
                 }
             }
-        } 
+        }
+
+        /// <summary>
+        /// 帐户激活事件
+        /// 用于重置服务相关状态
+        /// </summary>
+        /// <param name="account"></param>
+        void EventAccount_AccountActiveEvent(string account)
+        {
+            FinServiceStub stub = FinTracker.FinServiceTracker[account];
+            if (stub == null) return;//不存在对应的配资服务
+
+            stub.FinService.OnAccountActive(account);
+
+        }
     }
 }

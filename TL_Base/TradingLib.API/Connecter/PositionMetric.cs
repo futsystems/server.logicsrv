@@ -14,6 +14,11 @@ namespace TradingLib.API
         string Symbol { get; }
 
         /// <summary>
+        /// brokertoken
+        /// </summary>
+        string Token { get; }
+
+        /// <summary>
         /// 多头持有仓位
         /// </summary>
         int LongHoldSize { get; }

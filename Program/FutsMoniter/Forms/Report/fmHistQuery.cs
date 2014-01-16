@@ -13,29 +13,38 @@ using FutSystems.GUI;
 
 namespace FutsMoniter
 {
-    //public enum QSHistQryType
-    //{
-    //    HISTORDER,
-    //    HISTTRADE,
-    //    HISTPOSITION,
-    //    HISTCASH,
-    //    HISTSETTLE,
-    //}
 
-
-    public partial class fmHistQuery : ComponentFactory.Krypton.Toolkit.KryptonForm
+    public partial class fmHistQuery : ComponentFactory.Krypton.Toolkit.KryptonForm,IEventBinder
     {
         public fmHistQuery()
         {
             InitializeComponent();
-            //this.QryType = QSHistQryType.HISTORDER;
 
+            this.Load += new EventHandler(fmHistQuery_Load);
             settleday.Value = DateTime.Now;
 
-            this.FormClosing +=new FormClosingEventHandler(fmHistQuery_FormClosing);
+            //this.FormClosing +=new FormClosingEventHandler(fmHistQuery_FormClosing);
         }
 
-       public void GotHistOrder(Order o, bool islast)
+        void fmHistQuery_Load(object sender, EventArgs e)
+        {
+            Globals.RegIEventHandler(this);
+        }
+
+        public void OnInit()
+        {
+            Globals.LogicEvent.GotHistOrderEvent += new Action<Order, bool>(GotHistOrder);
+            Globals.LogicEvent.GotHistTradeEvent += new Action<Trade, bool>(GotHistTrade);
+            //Globals.LogicEvent.GotSettlementEvent +=new Action<RspMGRQrySettleResponse>(LogicEvent_GotSettlementEvent);
+        }
+
+        public void OnDisposed()
+        {
+            Globals.LogicEvent.GotHistOrderEvent -= new Action<Order, bool>(GotHistOrder);
+            Globals.LogicEvent.GotHistTradeEvent -= new Action<Trade, bool>(GotHistTrade);
+        }
+
+        void GotHistOrder(Order o, bool islast)
         {
 
             if (islast)
@@ -124,12 +133,5 @@ namespace FutsMoniter
                 return TradingLib.Common.Util.ToTLDate(settleday.Value);
             }
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        //public QSHistQryType QryType { get; set; }
     }
 }

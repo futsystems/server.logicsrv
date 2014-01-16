@@ -67,6 +67,7 @@ namespace Broker.Live
         /// </summary>
         public override IEnumerable<Position> Positions { get { return tk.Positions; } }
 
+
         public override int GetPositionAdjustment(Order o)
         {
             
@@ -101,7 +102,7 @@ namespace Broker.Live
             mertic.LongPendingExitSize = longExitOrders.Sum(po => po.UnsignedSize);
             mertic.ShortPendingEntrySize = shortEntryOrders.Sum(po => po.UnsignedSize);
             mertic.ShortPendingExitSize = shortExitOrders.Sum(po => po.UnsignedSize);
-
+            mertic.Token = this.Token;
             return mertic;
         }
 
@@ -112,7 +113,12 @@ namespace Broker.Live
         {
             get
             {
-                return base.PositionMetrics;
+                List<PositionMetric> pmlist = new List<PositionMetric>();
+                foreach (string sym in WorkingSymbols)
+                {
+                    pmlist.Add(GetPositionMetric(sym));
+                }
+                return pmlist;
             }
         }
         #endregion
@@ -149,6 +155,8 @@ namespace Broker.Live
             _splittracker.GotFatherFillEvent += new FillDelegate(NotifyTrade);
             //委托分拆器更新错误 本地对外通知错误更新
             _splittracker.GotFatherOrderErrorEvent += new OrderErrorDelegate(NotifyOrderError);
+            //委托分拆器更新委托操作错误 本地对外通知更新
+            _splittracker.GotFatherOrderActionErrorEvent += new OrderActionErrorDelegate(NotifyOrderOrderActionError);
             #endregion
 
         }
@@ -715,13 +723,13 @@ namespace Broker.Live
                 o.Status = QSEnumOrderStatus.Submited;
                 //1.发送委托时设定本地委托编号
                 o.BrokerLocalOrderID = order.BrokerLocalOrderID;
-                //将委托复制后加入到接口维护的map中
+                
                 Order lo = new OrderImpl(o);
                 //近端ID委托map
                 localOrderID_map.TryAdd(o.BrokerLocalOrderID, lo);
 
-                //交易信息维护器获得委托
-                tk.GotOrder(o);
+                //交易信息维护器获得委托 //？将委托复制后加入到接口维护的map中 在发送子委托过程中 本地记录的Order就是分拆过程中产生的委托，改变这个委托将同步改变委托分拆器中的委托
+                tk.GotOrder(lo);//原来引用的是分拆器发送过来的子委托 现在修改成本地复制后的委托
                 //对外触发成交侧委托数据用于记录该成交接口的交易数据
                 debug("Send Order Success,LocalID:" + order.BrokerLocalOrderID, QSEnumDebugLevel.INFO);
 
@@ -732,7 +740,7 @@ namespace Broker.Live
                 debug("Send Order Fail,will notify to client", QSEnumDebugLevel.WARNING);
             }
 
-            //对外输出分解的子委托,用于记录到数据库
+            //发送子委托时 记录到数据库
             this.LogBrokerOrder(o);
         }
 
@@ -791,6 +799,14 @@ namespace Broker.Live
                     }
                 }
                 Util.Debug("更新子委托:" + o.GetOrderInfo(true), QSEnumDebugLevel.INFO);
+                //这个过程更新了OrderTracker中的状态，原来程序中o使用的是委托分拆器过来的委托,因此委托分拆器没有更新委托状态也能获得正常的回报 
+                /* 委托分拆器获得子委托回报 原来并没有去更新子委托，但是同样获得正常数据
+                 * 委托分拆器的委托在接口里被ordertracker维护了，在ordertracker获得委托更新时候同步更新了委托分拆器中的子委托
+                 * 但是在路由分拆过程中
+                 * 
+                 * 
+                 * 
+                 * */
                 tk.GotOrder(o);
                 this.LogBrokerOrderUpdate(o);
 
@@ -826,6 +842,7 @@ namespace Broker.Live
 
                 Util.Debug("获得子成交:" + sonfill.GetTradeDetail(), QSEnumDebugLevel.INFO);
                 tk.GotFill(sonfill);
+                //记录接口侧成交数据
                 this.LogBrokerTrade(sonfill);
 
                 _splittracker.GotSonFill(sonfill);
@@ -838,21 +855,30 @@ namespace Broker.Live
             Order o = LocalID2Order(error.Order.BrokerLocalOrderID);
             if (o != null)
             {
-                o.Status = QSEnumOrderStatus.Reject;
-                o.Comment = error.Error.ErrorMsg;
-                Util.Debug("更新子委托:" + o.GetOrderInfo(true), QSEnumDebugLevel.INFO);
-                tk.GotOrder(o);
-                this.LogBrokerOrderUpdate(o);//更新日志
+                if (o.Status != QSEnumOrderStatus.Reject)//如果委托已经处于拒绝状态 则不用处理 接口可能会产生多次错误回报
+                {
+                    o.Status = QSEnumOrderStatus.Reject;
+                    o.Comment = error.Error.ErrorMsg;
+                    Util.Debug("更新子委托:" + o.GetOrderInfo(true), QSEnumDebugLevel.INFO);
+                    tk.GotOrder(o);
+                    //更新接口侧委托
+                    this.LogBrokerOrderUpdate(o);//更新日志
 
-                RspInfo info = new RspInfoImpl();
-                info.ErrorID = error.Error.ErrorID;
-                info.ErrorMessage = error.Error.ErrorMsg;
+                    RspInfo info = new RspInfoImpl();
+                    info.ErrorID = error.Error.ErrorID;
+                    info.ErrorMessage = error.Error.ErrorMsg;
 
-                _splittracker.GotSonOrderError(o, info);
-                //平仓量超过持仓量
-                if (error.Error.ErrorID == 30)
-                { 
-                    
+                    _splittracker.GotSonOrderError(o, info);
+                    //平仓量超过持仓量
+                    if (error.Error.ErrorID == 30)
+                    {
+
+                    }
+                    //资金不足
+                    if (error.Error.ErrorID == 31)
+                    {
+
+                    }
                 }
 
             }
@@ -864,7 +890,18 @@ namespace Broker.Live
             Order o = LocalID2Order(error.OrderAction.BrokerLocalOrderID);
             if (o != null)
             {
-                //委托已经被撤销 不能再撤
+                //生成对应的子委托OrderAction 关键是获得对应的子委托本地ID
+                OrderAction action = new OrderActionImpl();
+                action.Account = o.Account;
+                action.ActionFlag = error.OrderAction.ActionFlag;
+                action.Exchagne = error.OrderAction.Exchange;
+                action.Symbol = error.OrderAction.Symbol;
+                action.OrderID = o.id;//*
+
+                //调用分解器处理子委托操作错误
+                _splittracker.GotSonOrderActionError(action, XErrorField2RspInfo(ref error.Error));
+
+                //委托已经被撤销 不能再撤 有些代码需要判断后同步本地委托状态
                 if (error.Error.ErrorID == 26)
                 {
                     o.Status = QSEnumOrderStatus.Canceled;
@@ -882,6 +919,19 @@ namespace Broker.Live
                     
                 }
             }
+        }
+
+        /// <summary>
+        /// XErrorField转换成RspInfo
+        /// </summary>
+        /// <param name="error"></param>
+        /// <returns></returns>
+        RspInfo XErrorField2RspInfo(ref XErrorField error)
+        {
+            RspInfo info = new RspInfoImpl();
+            info.ErrorID = error.ErrorID;
+            info.ErrorMessage = error.ErrorMsg;
+            return info;
         }
     }
 }

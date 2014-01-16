@@ -44,17 +44,6 @@ namespace TradingLib.Core
             
         }
 
-        /// <summary>
-        /// 注册某个品种的所有可交易合约的行情数据
-        /// </summary>
-        /// <param name="sec"></param>
-        //public void RegisterSymbol(SecurityFamily sec)
-        //{
-        //    debug("Register security's market data:" + sec.Code, QSEnumDebugLevel.INFO);
-        //    SymbolBasket b = BasicTracker.SymbolTracker.GetBasketAvabileViaSecurity(sec);
-        //    _datafeedRouter.RegisterSymbols(b);
-        //}
-
         //服务端启动时,统一请求列表中的数据,具体客户端需求的数据根据需要发送。
         //注册symbol数据机制,客户端维护本地basket,需要向服务端请求symbol数据时,统一将整个basket的symbol信息向服务端请求。
         //当收到信息后，我们通过反解析得到basket，然后用DataRouter向对应的数据通道请求symbol数据
@@ -228,7 +217,15 @@ namespace TradingLib.Core
                     response.Authorized = false;
                     response.RspInfo.Fill("LOGINTYPE_NOT_SUPPORT");
                 }
-                if (account.Domain.DateExpired > 0 && account.Domain.DateExpired < Util.ToTLDate())//域过期
+                
+                if (account.Domain.IsExpired())//域过期
+                {
+                    clientinfo.AuthorizedFail();
+                    response.Authorized = false;
+                    response.RspInfo.Fill("PLATFORM_EXPIRED");
+                }
+                Manager mgr = BasicTracker.ManagerTracker[account.Mgr_fk];
+                if (mgr == null || (!mgr.Active))
                 {
                     clientinfo.AuthorizedFail();
                     response.Authorized = false;
@@ -254,83 +251,6 @@ namespace TradingLib.Core
             }
         }
 
-
-        /// <summary>
-        /// 响应客户端委托操作
-        /// </summary>
-        /// <param name="request"></param>
-        void tl_newOrderActionRequest(OrderActionRequest request)
-        {
-            OrderAction action = request.OrderAction;
-            Order o = null;
-            IAccount account = _clearcentre[request.OrderAction.Account];
-
-            //1.通过交易系统分配的全局委托ID进行识别委托
-            if (action.OrderID != 0)
-            {
-                o = _clearcentre.SentOrder(action.OrderID);
-            }
-            else 
-            {
-                debug("OrderAction OrderRef:" + action.OrderRef + " Front:" + action.FrontID.ToString() + " Session:" + action.SessionID.ToString() + " OrderSysID:" + action.OrderExchID +" OrderRef:"+action.OrderRef +" Request:"+action.RequestID, QSEnumDebugLevel.INFO);
-                foreach (Order tmp in account.Orders)
-                {
-                    if ((tmp.OrderRef == action.OrderRef && tmp.FrontIDi == action.FrontID && tmp.SessionIDi == action.SessionID) || (tmp.OrderSysID == action.OrderExchID))
-                    {
-                        o = tmp;
-                    }
-                }
-            }
-
-            if (o != null)
-            {
-                //撤销委托操作
-                if (action.ActionFlag == QSEnumOrderActionFlag.Delete)
-                {
-                    //如果委托处于pending状态
-                    if (o.IsPending())
-                    {
-                        //如果委托状态表面需要通过broker来取消委托 则通过broker来进行撤单
-                        if (o.CanCancel())//opened partfilled
-                        {
-                            //委托操作回报
-                            OrderActionNotify notify = ResponseTemplate<OrderActionNotify>.SrvSendNotifyResponse(action.Account);
-                            notify.BindRequest(request);
-
-                            //通过brokerrouter取消委托
-                            _brokerRouter.CancelOrder(o.id);
-                        }
-                        //处于中间状态Placed或Submited由系统单独逻辑进行定时检查 用于清除处于未知状态的委托
-                        else if (o.Status == QSEnumOrderStatus.Submited || o.Status == QSEnumOrderStatus.Placed)//已经通过broker提交 该状态无法立即撤单 需要等待委托状态更新为Opened或者 被定时程序发现是一个错误委托
-                        {
-                            debug(string.Format("委托:{0} 处于:{1},等待broker返回",o.id,o.Status), QSEnumDebugLevel.INFO);
-                            ErrorOrderActionNotify notify = ResponseTemplate<ErrorOrderActionNotify>.SrvSendNotifyResponse(action.Account);
-                            notify.OrderAction = action;
-                            notify.RspInfo.Fill("ORDER_IN_PRESTAGE");
-                            CachePacket(notify);
-                        }
-                        
-                    }
-                    else
-                    {
-                        //委托不可撤销
-                        ErrorOrderActionNotify notify = ResponseTemplate<ErrorOrderActionNotify>.SrvSendNotifyResponse(action.Account);
-                        notify.OrderAction = action;
-                        notify.RspInfo.Fill("ORDER_CAN_NOT_BE_DELETE");
-                        CachePacket(notify);
-                    }
-                }
-            }
-            else//委托操作所指定的委托不存在 委托操作字段错误
-            {
-                Util.Debug("对应委托没有找到", QSEnumDebugLevel.WARNING);
-                ErrorOrderActionNotify notify = ResponseTemplate<ErrorOrderActionNotify>.SrvSendNotifyResponse(action.Account);
-                notify.OrderAction = action;
-                notify.RspInfo.Fill("ORDERACTION_BAD_FIELD");
-                CachePacket(notify);
-            }
-
-        }
 
         #endregion
 

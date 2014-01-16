@@ -79,11 +79,6 @@ namespace TradingLib.Common
                 config.UpdateConfig("RealPrefix", QSEnumCfgType.String, "88", "实盘帐户前缀");
             }
 
-            if (!config.HaveConfig("DealerPrefix"))
-            {
-                config.UpdateConfig("DealerPrefix", QSEnumCfgType.String, "55", "交易员帐户前缀");
-            }
-
             if (!config.HaveConfig("StartDefaultConnector"))
             {
                 config.UpdateConfig("StartDefaultConnector", QSEnumCfgType.Bool,true, "启动时同步启动默认通道");
@@ -138,16 +133,6 @@ namespace TradingLib.Common
             }
         }
 
-        /// <summary>
-        /// 交易员帐户前缀
-        /// </summary>
-        public static string PrefixDealer
-        {
-            get
-            {
-                return defaultinstance.config["DealerPrefix"].AsString();
-            }
-        }
 
         /// <summary>
         /// 默认期货公司

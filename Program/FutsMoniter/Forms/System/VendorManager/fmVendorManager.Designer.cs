@@ -40,7 +40,6 @@
             this.pageroutergroup = new ComponentFactory.Krypton.Navigator.KryptonPage();
             this.kryptonPanel3 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
             this.kryptonGroupBox2 = new ComponentFactory.Krypton.Toolkit.KryptonGroupBox();
-            this.ctRouterGroupList1 = new FutsMoniter.Controls.Base.ctRouterGroupList();
             this.rgdescrption = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
             this.cbrgstrategytype = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
             this.rgname = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
@@ -52,6 +51,7 @@
             this.btnUpdateRouterGroup = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.kryptonGroupBox1 = new ComponentFactory.Krypton.Toolkit.KryptonGroupBox();
             this.routeritemgrid = new ComponentFactory.Krypton.Toolkit.KryptonDataGridView();
+            this.ctRouterGroupList1 = new FutsMoniter.Controls.Base.ctRouterGroupList();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tabholder)).BeginInit();
@@ -217,14 +217,6 @@
             this.kryptonGroupBox2.Text = "路由组设置";
             this.kryptonGroupBox2.Values.Heading = "路由组设置";
             // 
-            // ctRouterGroupList1
-            // 
-            this.ctRouterGroupList1.Location = new System.Drawing.Point(44, 7);
-            this.ctRouterGroupList1.Name = "ctRouterGroupList1";
-            this.ctRouterGroupList1.RouterGroudSelected = null;
-            this.ctRouterGroupList1.Size = new System.Drawing.Size(201, 28);
-            this.ctRouterGroupList1.TabIndex = 17;
-            // 
             // rgdescrption
             // 
             this.rgdescrption.Location = new System.Drawing.Point(58, 137);
@@ -324,6 +316,15 @@
             this.routeritemgrid.Size = new System.Drawing.Size(468, 231);
             this.routeritemgrid.TabIndex = 0;
             // 
+            // ctRouterGroupList1
+            // 
+            this.ctRouterGroupList1.EnableAny = false;
+            this.ctRouterGroupList1.Location = new System.Drawing.Point(44, 14);
+            this.ctRouterGroupList1.Name = "ctRouterGroupList1";
+            this.ctRouterGroupList1.RouterGroudSelected = null;
+            this.ctRouterGroupList1.Size = new System.Drawing.Size(201, 21);
+            this.ctRouterGroupList1.TabIndex = 17;
+            // 
             // fmVendorManager
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -387,10 +388,10 @@
         private ComponentFactory.Krypton.Toolkit.KryptonTextBox rgdescrption;
         private ComponentFactory.Krypton.Toolkit.KryptonComboBox cbrgstrategytype;
         private ComponentFactory.Krypton.Toolkit.KryptonTextBox rgname;
-        private Controls.Base.ctRouterGroupList ctRouterGroupList1;
         private ComponentFactory.Krypton.Navigator.KryptonPage kryptonPage3;
         private ComponentFactory.Krypton.Toolkit.KryptonPanel kryptonPanel4;
         private ComponentFactory.Krypton.Toolkit.KryptonDataGridView vendorgrid;
         private ComponentFactory.Krypton.Toolkit.KryptonDataGridView routeritemgrid;
+        private Controls.Base.ctRouterGroupList ctRouterGroupList1;
     }
 }

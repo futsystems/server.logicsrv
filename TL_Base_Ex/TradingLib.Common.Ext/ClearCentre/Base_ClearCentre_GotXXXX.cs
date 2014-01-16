@@ -42,20 +42,20 @@ namespace TradingLib.Common
         /// 这里需要判断如果委托已经被记录过则继续响应委托事件 用于更新委托的状态
         /// </summary>
         /// <param name="error"></param>
-        internal void GotErrorOrder(OrderErrorPack error)
+        internal void GotErrorOrder(Order o,RspInfo e)
         {
             try
             {
-                if (!HaveAccount(error.Order.Account)) return;
-                Symbol symbol = error.Order.oSymbol;
+                if (!HaveAccount(o.Account)) return;
+                Symbol symbol = o.oSymbol;
                 if (symbol == null)
                 {
-                    debug("symbol:" + error.Order.Symbol + " not exist in basictracker, drop errororder", QSEnumDebugLevel.ERROR);
+                    debug("symbol:" + o.Symbol + " not exist in basictracker, drop errororder", QSEnumDebugLevel.ERROR);
                     return;
                 }
-                bool neworder = !totaltk.IsTracked(error.Order.id);
-                acctk.GotOrder(error.Order);
-                onGotOrder(error.Order, neworder);
+                bool neworder = !totaltk.IsTracked(o.id);
+                acctk.GotOrder(o);
+                onGotOrder(o, neworder);
             }
             catch (Exception ex)
             {
@@ -85,6 +85,7 @@ namespace TradingLib.Common
                     totaltk.NewOrder(o);
                 }
                 onGotOrder(o, neworder);
+
             }
             catch (Exception ex)
             {

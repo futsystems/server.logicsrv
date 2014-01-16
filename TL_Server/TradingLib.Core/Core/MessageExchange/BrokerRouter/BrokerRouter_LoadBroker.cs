@@ -24,6 +24,7 @@ namespace TradingLib.Core
             broker.GotFillEvent += new FillDelegate(Broker_GotFill);
 
             broker.GotOrderErrorEvent += new OrderErrorDelegate(Broker_GotOrderError);
+            broker.GotOrderActionErrorEvent += new OrderActionErrorDelegate(Broker_GotOrderActionErrorEvent);
             //获得某个symbol的tick数据
             broker.GetSymbolTickEvent += new GetSymbolTickDel(Broker_GetSymbolTickEvent);
             //数据路由中Tick事件驱动交易通道中由Tick部分
@@ -34,35 +35,157 @@ namespace TradingLib.Core
             if (broker is TLBrokerBase)
             {
                 TLBrokerBase brokerbase = broker as TLBrokerBase;
-                brokerbase.NewBrokerOrderEvent += new OrderDelegate(brokerbase_NewBrokerOrderEvent);
-                brokerbase.NewBrokerOrderUpdateEvent += new OrderDelegate(brokerbase_NewBrokerOrderUpdateEvent);
-                brokerbase.NewBrokerFillEvent += new FillDelegate(brokerbase_NewBrokerFillEvent);
-                brokerbase.NewBrokerPositionCloseDetailEvent += new Action<PositionCloseDetail>(brokerbase_NewBrokerPositionCloseDetailEvent);
+                brokerbase.NewBrokerOrderEvent += new OrderDelegate(LogBrokerOrderEvent);
+                brokerbase.NewBrokerOrderUpdateEvent += new OrderDelegate(LogBrokerOrderUpdateEvent);
+                brokerbase.NewBrokerFillEvent += new FillDelegate(LogBrokerFillEvent);
+                brokerbase.NewBrokerPositionCloseDetailEvent += new Action<PositionCloseDetail>(LogBrokerPositionCloseDetailEvent);
             }
         }
 
 
-        #region 保存从成交侧返回的成交信息
-        void brokerbase_NewBrokerPositionCloseDetailEvent(PositionCloseDetail obj)
+        #region Broker向本地回报操作
+        /// <summary>
+        /// 交易接口查询某个symbol的当前最新Tick快照
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        Tick Broker_GetSymbolTickEvent(string symbol)
         {
-            _clearCentre.LogBrokerPositionCloseDetail(obj);
+            try
+            {
+                return DataFeedRouter.GetTickSnapshot(symbol);
+            }
+            catch (Exception ex)
+            {
+                debug(PROGRAM + ":get symbol tick snapshot error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                return null;
+            }
         }
 
-        void brokerbase_NewBrokerFillEvent(Trade t)
+
+
+
+        /// <summary>
+        /// 发送内部产生的委托错误
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="errortitle"></param>
+        void GotOrderErrorNotify(Order o, string errortitle)
         {
-            _clearCentre.LogBrokerTrade(t);
+            RspInfo info = RspInfoImpl.Fill(errortitle);
+            o.Comment = info.ErrorMessage;
+            Broker_GotOrderError(o, info);
         }
 
-        void brokerbase_NewBrokerOrderUpdateEvent(Order o)
+
+        /// <summary>
+        /// 当交易通道有Order错误信息时,进行处理
+        /// </summary>
+        void Broker_GotOrderError(Order order, RspInfo error)
         {
-            _clearCentre.LogBrokerOrderUpdate(o);
+            if (order != null && order.isValid)
+            {
+                if (order.Breed == QSEnumOrderBreedType.ROUTER)
+                {
+                    debug("Reply ErrorOrder To Spliter:" + order.GetOrderInfo() + " ErrorTitle:" + error.ErrorMessage, QSEnumDebugLevel.INFO);
+                    LogRouterOrderUpdate(order);//更新路由侧委托
+                    _splittracker.GotSonOrderError(order, error);
+                    return;
+                }
+                debug("Reply ErrorOrder To MessageExch:" + order.GetOrderInfo() + " ErrorTitle:" + error.ErrorMessage, QSEnumDebugLevel.INFO);
+                _errorordernotifycache.Write(new OrderErrorPack(order, error));
+            }
+            else
+            {
+                debug("Got Invalid OrderError", QSEnumDebugLevel.ERROR);
+            }
         }
 
-        void brokerbase_NewBrokerOrderEvent(Order o)
+        /// <summary>
+        /// 获得委托操作错误
+        /// </summary>
+        /// <param name="action"></param>
+        /// <param name="error"></param>
+        void Broker_GotOrderActionErrorEvent(OrderAction action, RspInfo error)
         {
-            _clearCentre.LogBrokerOrder(o);
+            if (action != null)
+            {
+
+            }
+            else
+            {
+                debug("Got Invalid OrderActionError", QSEnumDebugLevel.ERROR);
+            }
         }
-        #endregion
+
+
+
+        /// <summary>
+        /// 当有成交时候回报msgexch
+        /// </summary>
+        void Broker_GotFill(Trade fill)
+        {
+            if (fill != null && fill.isValid)
+            {
+                if (fill.Breed == QSEnumOrderBreedType.ROUTER)
+                {
+                    debug("Reply Fill To Spliter:" + fill.GetTradeInfo(), QSEnumDebugLevel.INFO);
+                    _splittracker.GotSonFill(fill);
+                    return;
+                }
+                debug("Reply Fill To MessageExch:" + fill.GetTradeInfo(), QSEnumDebugLevel.INFO);
+                _fillcache.Write(new TradeImpl(fill));
+            }
+            else
+            {
+                debug("Got Invalid Fill", QSEnumDebugLevel.ERROR);
+            }
+        }
+
+        /// <summary>
+        /// 委托正确回报时回报msgexch
+        /// 这里回报需要判断是否需同通过委托拆分器处理,如果是子委托则通过委托拆分器处理
+        /// </summary>
+
+        void Broker_GotOrder(Order o)
+        {
+            if (o != null && o.isValid)
+            {
+                //这里需要判断,该委托回报是拆分过的子委托还是分帐户侧的委托 如果是拆分过的委托则需要回报给拆分器
+                if (o.Breed == QSEnumOrderBreedType.ROUTER)
+                {
+                    debug("Reply Order To Spliter:" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
+                    LogRouterOrderUpdate(o);//更新路由侧委托
+                    _splittracker.GotSonOrder(o);
+                    return;
+                }
+                Order no = new OrderImpl(o);
+                debug("Reply Order To MessageExch:" + no.GetOrderInfo(), QSEnumDebugLevel.INFO);
+                _ordercache.Write(no);
+            }
+            else
+            {
+                debug("Got Invalid Order", QSEnumDebugLevel.ERROR);
+            }
+        }
+
+        /// <summary>
+        /// 撤单正确回报时回报msgexch
+        /// </summary>
+
+        void Broker_GotCancel(long oid)
+        {
+            debug("Reply Cancel To MessageExch:" + oid.ToString());
+            _cancelcache.Write(oid);
+        }
+
+        #endregion 
+
+       
+
+
+
+       
 
     }
 }

@@ -29,16 +29,30 @@
         private void InitializeComponent()
         {
             this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
+            this.pmholder = new ComponentFactory.Krypton.Navigator.KryptonNavigator();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
+            this.kryptonPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pmholder)).BeginInit();
+            this.pmholder.SuspendLayout();
             this.SuspendLayout();
             // 
             // kryptonPanel1
             // 
+            this.kryptonPanel1.Controls.Add(this.pmholder);
             this.kryptonPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.kryptonPanel1.Location = new System.Drawing.Point(0, 0);
             this.kryptonPanel1.Name = "kryptonPanel1";
             this.kryptonPanel1.Size = new System.Drawing.Size(711, 416);
             this.kryptonPanel1.TabIndex = 0;
+            // 
+            // pmholder
+            // 
+            this.pmholder.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pmholder.Location = new System.Drawing.Point(0, 0);
+            this.pmholder.Name = "pmholder";
+            this.pmholder.Size = new System.Drawing.Size(711, 416);
+            this.pmholder.TabIndex = 0;
+            this.pmholder.Text = "kryptonNavigator1";
             // 
             // fmPositionMetricMoniter
             // 
@@ -47,8 +61,12 @@
             this.ClientSize = new System.Drawing.Size(711, 416);
             this.Controls.Add(this.kryptonPanel1);
             this.Name = "fmPositionMetricMoniter";
-            this.Text = "fmPositionMetricMoniter";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "持仓统计数据";
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).EndInit();
+            this.kryptonPanel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pmholder)).EndInit();
+            this.pmholder.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -56,5 +74,6 @@
         #endregion
 
         private ComponentFactory.Krypton.Toolkit.KryptonPanel kryptonPanel1;
+        private ComponentFactory.Krypton.Navigator.KryptonNavigator pmholder;
     }
 }

@@ -216,6 +216,8 @@ namespace FutsMoniter
             grid.ContextMenuStrip = new ContextMenuStrip();
             grid.ContextMenuStrip.Items.Add("添加帐户", null, new EventHandler(AddVendor_Click));
             grid.ContextMenuStrip.Items.Add("修改帐户", null, new EventHandler(EditVendor_Click));
+            grid.ContextMenuStrip.Items.Add(new System.Windows.Forms.ToolStripSeparator());
+            grid.ContextMenuStrip.Items.Add("查看持仓矩阵", null, new EventHandler(ShowPositionMetric_Click));
         }
 
         //初始化Account显示空格
@@ -287,6 +289,24 @@ namespace FutsMoniter
             fmVendorEdit fm = new fmVendorEdit();
             fm.SetVendorSetting(setting);
             fm.Show();
+        }
+
+        fmPositionMetricMoniter positionmetricmontier;
+        void ShowPositionMetric_Click(object sender, EventArgs e)
+        {
+            VendorSetting setting = CurrentVendorSetting;
+            if (setting == null)
+            {
+                ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show("请选择帐户设置");
+                return;
+            }
+            if (positionmetricmontier == null)
+            {
+                positionmetricmontier = new fmPositionMetricMoniter();
+            }
+
+            positionmetricmontier.AppendVendor(setting);
+            positionmetricmontier.Show();
         }
     }
 }

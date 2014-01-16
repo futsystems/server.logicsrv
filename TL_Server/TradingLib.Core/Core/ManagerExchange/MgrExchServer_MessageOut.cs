@@ -10,9 +10,6 @@ namespace TradingLib.Core
 {
     public partial class MgrExchServer
     {
-
-
-
         public void Send(IPacket packet)
         {
             CachePacket(packet);

@@ -96,19 +96,33 @@ namespace TradingLib.Core
 
         void SrvOnMGRUpdateManger(MGRReqUpdateManagerRequest request, ISession session, Manager manger)
         {
-            debug(string.Format("管理员:{0} 请求更新管理员:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
+            try
+            {
+                debug(string.Format("管理员:{0} 请求更新管理员:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
 
-            //更新管理员 如果管理不存在则添加新的管理员帐户 如果存在则进行参数更新
-            Manager m = request.ManagerToSend;
-            BasicTracker.ManagerTracker.UpdateManager(m);
+                
 
-            //通知直接请求的管理端
-            RspMGRQryManagerResponse response = ResponseTemplate<RspMGRQryManagerResponse>.SrvSendRspResponse(request);
-            response.ManagerToSend = m;
-            CacheRspResponse(response);
+                //更新管理员 如果管理不存在则添加新的管理员帐户 如果存在则进行参数更新
+                Manager m = request.ManagerToSend;
+                if (!manger.RightAddManager(m))
+                {
+                    throw new FutsRspError("无权添加管理员类型:" + Util.GetEnumDescription(m.Type));
+                }
 
-            //通知管理员信息变更
-            NotifyManagerUpdate(m);
+                BasicTracker.ManagerTracker.UpdateManager(m);
+
+                //通知直接请求的管理端
+                RspMGRQryManagerResponse response = ResponseTemplate<RspMGRQryManagerResponse>.SrvSendRspResponse(request);
+                response.ManagerToSend = m;
+                CacheRspResponse(response);
+
+                //通知管理员信息变更
+                NotifyManagerUpdate(m);
+            }
+            catch (FutsRspError ex)
+            {
+                session.OperationError(ex);
+            }
         }
 
         void SrvOnMGRUpdatePass(MGRUpdatePassRequest request, ISession session, Manager manager)
@@ -130,5 +144,79 @@ namespace TradingLib.Core
             }
         }
 
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "ActiveManager", "ActiveManager - query bank", "查询银行列表")]
+        public void CTE_ActiveManger(ISession session,int mgrid)
+        {
+            try
+            {
+                Manager mgr = session.GetManager();
+                if (mgr.IsRoot() || mgr.IsAgent())
+                {
+                    Manager tomanger = BasicTracker.ManagerTracker[mgrid];
+                    if (tomanger == null)
+                    {
+                        throw new FutsRspError("指定管理员不存在");
+                    }
+
+                    //
+                    if (!mgr.RightAgentParent(tomanger))
+                    {
+                        throw new FutsRspError("无权操作管理员");
+                    }
+
+                    tomanger.Active = true;
+                    ORM.MManager.UpdateManagerActive(mgrid, true);
+                    //通知管理员信息变更
+                    NotifyManagerUpdate(tomanger);
+
+                }
+                else
+                {
+                    throw new FutsRspError("无权操作管理员");
+                }
+            }
+            catch (FutsRspError ex)
+            {
+                session.OperationError(ex);
+            }
+        }
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "InactiveManager", "InactiveManager - query bank", "查询银行列表")]
+        public void CTE_InactiveManger(ISession session, int mgrid)
+        {
+            try
+            {
+                Manager mgr = session.GetManager();
+                if (mgr.IsRoot() || mgr.IsAgent())
+                {
+                    Manager tomanger = BasicTracker.ManagerTracker[mgrid];
+                    if (tomanger == null)
+                    {
+                        throw new FutsRspError("指定管理员不存在");
+                    }
+
+                    //
+                    if (!mgr.RightAgentParent(tomanger))
+                    {
+                        throw new FutsRspError("无权操作管理员");
+                    }
+
+                    tomanger.Active = false;
+                    ORM.MManager.UpdateManagerActive(mgrid, false);
+                    //通知管理员信息变更
+                    NotifyManagerUpdate(tomanger);
+
+                }
+                else
+                {
+                    throw new FutsRspError("无权操作管理员");
+                }
+            }
+            catch (FutsRspError ex)
+            {
+                session.OperationError(ex);
+            }
+        }
     }
 }

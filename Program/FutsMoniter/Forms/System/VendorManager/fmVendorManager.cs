@@ -35,6 +35,15 @@ namespace FutsMoniter
 
             Factory.IDataSourceFactory(cbrgstrategytype).BindDataSource(UIUtil.genEnumList<QSEnumRouterStrategy>());
             this.Load += new EventHandler(fmConnectorCfg_Load);
+            this.FormClosing += new FormClosingEventHandler(fmVendorManager_FormClosing);
+        }
+
+        void fmVendorManager_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            //if (positionmetricmontier != null)
+            //{
+            //    positionmetricmontier.Close();
+            //}
         }
 
         void fmConnectorCfg_Load(object sender, EventArgs e)
@@ -81,34 +90,34 @@ namespace FutsMoniter
 
         public void OnInit()
         {
-            Globals.CallBackCentre.RegisterCallback("ConnectorManager", "QryConnectorConfig", this.OnQryConnectorConfig);//查询交易帐户出入金请求
-            Globals.CallBackCentre.RegisterCallback("MgrExchServer", "QryVendor", this.OnQryVendor);
-            Globals.CallBackCentre.RegisterCallback("ConnectorManager", "QryRouterItem", this.OnQryRouterItem);
-            Globals.CallBackCentre.RegisterCallback("ConnectorManager", "QryInterface", this.OnQryInterface);
-            Globals.CallBackCentre.RegisterCallback("ConnectorManager", "NotifyConnectorCfg", this.OnNotifyConnectorConfig);
-            Globals.CallBackCentre.RegisterCallback("MgrExchServer", "NotifyVendor", this.OnNotifyVendorBind);
-            Globals.CallBackCentre.RegisterCallback("ConnectorManager", "NotifyVendor", this.OnNotifyVendorBind);
-            Globals.CallBackCentre.RegisterCallback("ConnectorManager", "NotifyRouterItem", this.OnNotifyRouterItem);
-            Globals.CallBackCentre.RegisterCallback("ConnectorManager", "NotifyRouterGroup", this.OnNotifyRouterGroup);
+            Globals.LogicEvent.RegisterCallback("ConnectorManager", "QryConnectorConfig", this.OnQryConnectorConfig);//查询交易帐户出入金请求
+            Globals.LogicEvent.RegisterCallback("MgrExchServer", "QryVendor", this.OnQryVendor);
+            Globals.LogicEvent.RegisterCallback("ConnectorManager", "QryRouterItem", this.OnQryRouterItem);
+            Globals.LogicEvent.RegisterCallback("ConnectorManager", "QryInterface", this.OnQryInterface);
+            Globals.LogicEvent.RegisterCallback("ConnectorManager", "NotifyConnectorCfg", this.OnNotifyConnectorConfig);
+            Globals.LogicEvent.RegisterCallback("MgrExchServer", "NotifyVendor", this.OnNotifyVendorBind);
+            Globals.LogicEvent.RegisterCallback("ConnectorManager", "NotifyVendor", this.OnNotifyVendorBind);
+            Globals.LogicEvent.RegisterCallback("ConnectorManager", "NotifyRouterItem", this.OnNotifyRouterItem);
+            Globals.LogicEvent.RegisterCallback("ConnectorManager", "NotifyRouterGroup", this.OnNotifyRouterGroup);
 
-            Globals.CallBackCentre.RegisterCallback("ConnectorManager", "QryConnectorStatus", this.OnQryConnectorStatus);
-            Globals.CallBackCentre.RegisterCallback("ConnectorManager", "NotifyConnectorStatus", this.OnNotifyConnectorStatus);
+            Globals.LogicEvent.RegisterCallback("ConnectorManager", "QryConnectorStatus", this.OnQryConnectorStatus);
+            Globals.LogicEvent.RegisterCallback("ConnectorManager", "NotifyConnectorStatus", this.OnNotifyConnectorStatus);
 
         }
 
         public void OnDisposed()
         {
-            Globals.CallBackCentre.UnRegisterCallback("ConnectorManager", "QryConnectorConfig", this.OnQryConnectorConfig);//查询交易帐户出入金请求
-            Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "QryVendor", this.OnQryVendor);
-            Globals.CallBackCentre.UnRegisterCallback("ConnectorManager", "QryRouterItem", this.OnQryRouterItem);
-            Globals.CallBackCentre.UnRegisterCallback("ConnectorManager", "QryInterface", this.OnQryInterface);
-            Globals.CallBackCentre.UnRegisterCallback("ConnectorManager", "NotifyConnectorCfg", this.OnNotifyConnectorConfig);
-            Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "NotifyVendor", this.OnNotifyVendorBind);
-            Globals.CallBackCentre.UnRegisterCallback("ConnectorManager", "NotifyRouterItem", this.OnNotifyRouterItem);
-            Globals.CallBackCentre.UnRegisterCallback("ConnectorManager", "NotifyVendor", this.OnNotifyVendorBind);
+            Globals.LogicEvent.UnRegisterCallback("ConnectorManager", "QryConnectorConfig", this.OnQryConnectorConfig);//查询交易帐户出入金请求
+            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "QryVendor", this.OnQryVendor);
+            Globals.LogicEvent.UnRegisterCallback("ConnectorManager", "QryRouterItem", this.OnQryRouterItem);
+            Globals.LogicEvent.UnRegisterCallback("ConnectorManager", "QryInterface", this.OnQryInterface);
+            Globals.LogicEvent.UnRegisterCallback("ConnectorManager", "NotifyConnectorCfg", this.OnNotifyConnectorConfig);
+            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "NotifyVendor", this.OnNotifyVendorBind);
+            Globals.LogicEvent.UnRegisterCallback("ConnectorManager", "NotifyRouterItem", this.OnNotifyRouterItem);
+            Globals.LogicEvent.UnRegisterCallback("ConnectorManager", "NotifyVendor", this.OnNotifyVendorBind);
 
-            Globals.CallBackCentre.UnRegisterCallback("ConnectorManager", "QryConnectorStatus", this.OnQryConnectorStatus);
-            Globals.CallBackCentre.UnRegisterCallback("ConnectorManager", "NotifyConnectorStatus", this.OnNotifyConnectorStatus);
+            Globals.LogicEvent.UnRegisterCallback("ConnectorManager", "QryConnectorStatus", this.OnQryConnectorStatus);
+            Globals.LogicEvent.UnRegisterCallback("ConnectorManager", "NotifyConnectorStatus", this.OnNotifyConnectorStatus);
 
         }
 

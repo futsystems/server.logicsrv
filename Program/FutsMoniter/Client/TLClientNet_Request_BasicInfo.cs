@@ -91,7 +91,7 @@ namespace TradingLib.Common
 
         public void ReqAddSymbol(SymbolImpl sym)
         {
-            debug("请求添加合约", QSEnumDebugLevel.INFO);
+            debug("请求添加合约: expiredate:"+sym.ExpireDate.ToString(), QSEnumDebugLevel.INFO);
             MGRReqAddSymbolRequest request = RequestTemplate<MGRReqAddSymbolRequest>.CliSendRequest(requestid++);
             request.Symbol = sym;
 

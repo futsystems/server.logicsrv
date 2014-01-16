@@ -9,6 +9,17 @@ namespace TradingLib.Common
     public static class ManagerUtils_Right
     {
         /// <summary>
+        /// 获得某个管理员下的帐户
+        /// </summary>
+        /// <param name="mgr"></param>
+        /// <returns></returns>
+        public static IEnumerable<IAccount> GetAccounts(this Manager mgr)
+        {
+            //返回某个管理员下的帐户
+            return mgr.Domain.GetAccounts().Where(ac => ac.Mgr_fk == mgr.GetBaseMGR());
+        }
+
+        /// <summary>
         /// 判断Manager是否属于Root主域
         /// </summary>
         /// <param name="mgr"></param>
@@ -91,7 +102,7 @@ namespace TradingLib.Common
         public static bool RightAgentParent(this Manager mgr, Manager submgr)
         {
             if (submgr == null) return false;
-            if (mgr.Domain.IsManagerInDomain(submgr)) return false;//不在同一域
+            if (!mgr.Domain.IsManagerInDomain(submgr)) return false;//不在同一域
             Manager agent = submgr.BaseManager;//获得主域代理
 
             if (agent == null) return false;

@@ -60,6 +60,7 @@ namespace TradingLib.Common
             debug(string.Format("got order error:{0} message:{1} order:{2}", response.RspInfo.ErrorID, response.RspInfo.ErrorMessage, OrderImpl.Serialize(response.Order)));
 
             this.handler.PopRspInfo(response.RspInfo);
+            this.handler.OnOrder(response.Order);
         }
 
 
@@ -97,7 +98,7 @@ namespace TradingLib.Common
         {
             //
             debug("got operation response:" + response.ToString(),QSEnumDebugLevel.INFO);
-            //this.handler.PopRspInfo(response.RspInfo);
+            this.handler.PopRspInfo(response.RspInfo);
         }
 
         #region 查询
@@ -264,7 +265,7 @@ namespace TradingLib.Common
         void CliOnMGRQryConnector(RspMGRQryConnectorResponse response)
         {
             debug("got connector response:" + response.ToString(), QSEnumDebugLevel.INFO);
-            this.handler.OnMGRConnectorResponse(response.Connector, response.IsLast);
+            //this.handler.OnMGRConnectorResponse(response.Connector, response.IsLast);
         }
 
         void CliOnMGRExchange(RspMGRQryExchangeResponse response)
@@ -293,33 +294,13 @@ namespace TradingLib.Common
 
 
         #region 风控规则类回报
-        void CliOnMGRRuleClass(RspMGRQryRuleSetResponse response)
-        {
-            debug("got ruleset response:" + response.ToString(), QSEnumDebugLevel.INFO);
-            this.handler.OnMGRRuleClassResponse(response.RuleClassItem, response.IsLast);
-        }
 
-        void CliOnMGRRuleItem(RspMGRQryRuleItemResponse response)
-        {
-            debug("got ruleitem response:" + response.ToString(), QSEnumDebugLevel.INFO);
-            this.handler.OnMGRRuleItemResponse(response.RuleItem, response.IsLast);
-        }
-        void CliOnMGRUpdateRuleItem(RspMGRUpdateRuleResponse response)
-        {
-            debug("got ruleitem update response:" + response.ToString(), QSEnumDebugLevel.INFO);
-            this.handler.OnMGRRuleItemUpdate(response.RuleItem, response.IsLast);
-        }
-        void CliOnMGRDelRule(RspMGRDelRuleItemResponse response)
-        {
-            debug("got ruleitem delete response:" + response.ToString(), QSEnumDebugLevel.INFO);
-            this.handler.OnMGRRulteItemDelete(response.RuleItem, response.IsLast);
-        }
 
-        void CliOnMGRystemStatus(RspMGRQrySystemStatusResponse response)
-        {
-            debug("got systemstatus response:" + response.ToString(), QSEnumDebugLevel.INFO);
-            this.handler.OnMGRSytstemStatus(response.Status, response.IsLast);
-        }
+        //void CliOnMGRystemStatus(RspMGRQrySystemStatusResponse response)
+        //{
+        //    debug("got systemstatus response:" + response.ToString(), QSEnumDebugLevel.INFO);
+        //    this.handler.OnMGRSytstemStatus(response.Status, response.IsLast);
+        //}
 
 
         void CliOnMGROrderResponse(RspMGRQryOrderResponse response)
@@ -344,13 +325,13 @@ namespace TradingLib.Common
         void CliOnMGRPositionResponse(RspMGRQryPositionResponse response)
         {
             debug("got histpostion response:" + response.ToString(), QSEnumDebugLevel.INFO);
-            this.handler.OnMGRPositionResponse(response.PostionToSend, response.IsLast);
+            //this.handler.OnMGRPositionResponse(response.PostionToSend, response.IsLast);
         }
 
         void CliOnMGRCashTransactionResponse(RspMGRQryCashResponse response)
         {
             debug("got cashtransaction response:" + response.ToString(), QSEnumDebugLevel.INFO);
-            this.handler.OnMGRCashTransactionResponse(response.CashTransToSend, response.IsLast);
+            //this.handler.OnMGRCashTransactionResponse(response.CashTransToSend, response.IsLast);
         }
 
         void CliOnMGRSettlementResponse(RspMGRQrySettleResponse response)
@@ -533,9 +514,9 @@ namespace TradingLib.Common
                 case MessageTypes.MGRDELRULEITEMRESPONSE://删除风控项回报
                     CliOnMGRDelRule(packet as RspMGRDelRuleItemResponse);
                     break;
-                case MessageTypes.MGRSYSTEMSTATUSRESPONSE://查询系统状态回报
-                    CliOnMGRystemStatus(packet as RspMGRQrySystemStatusResponse);
-                    break;
+                //case MessageTypes.MGRSYSTEMSTATUSRESPONSE://查询系统状态回报
+                //    CliOnMGRystemStatus(packet as RspMGRQrySystemStatusResponse);
+                //    break;
                 case MessageTypes.MGRORDERRESPONSE://查询委托回报
                     CliOnMGROrderResponse(packet as RspMGRQryOrderResponse);
                     break;

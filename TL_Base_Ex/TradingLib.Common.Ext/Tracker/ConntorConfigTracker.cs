@@ -16,12 +16,6 @@ namespace TradingLib.Common
         Dictionary<string, ConnectorConfig> configmap = new Dictionary<string, ConnectorConfig>();
         Dictionary<int, ConnectorConfig> configidxmap = new Dictionary<int, ConnectorConfig>();
 
-        //static ConnectorConfigTracker _defaultinstance = null;
-        //static ConnectorConfigTracker()
-        //{
-        //    _defaultinstance = new ConnectorConfigTracker();
-        //}
-
         public void UpdateInterface(ConnectorInterface itface)
         {
             ConnectorInterface target = null;
@@ -187,6 +181,7 @@ namespace TradingLib.Common
                 target.usrinfo_field1 = cfg.usrinfo_field1;
                 target.usrinfo_field2 = cfg.usrinfo_field2;
                 target.Name = cfg.Name;
+                
                 ORM.MConnector.UpdateConnectorConfig(target);
             }
             //添加
@@ -210,6 +205,7 @@ namespace TradingLib.Common
                 target.interface_fk = cfg.interface_fk;
                 target.Token = cfg.Token;
                 target.domain_id = cfg.domain_id;
+                target.NeedVendor = cfg.NeedVendor;
                 target.Domain = BasicTracker.DomainTracker[target.domain_id];
 
                 ORM.MConnector.InsertConnectorConfig(target);
@@ -219,7 +215,6 @@ namespace TradingLib.Common
                 ConnectorInterface itface = this.GetBrokerInterface(itfaceidx);
                 if (itface == null)
                     return;
-                //itface.IsValid = false;//默认设置为false,需要后段程序通过验证加载成功然后再设置成True
                 target.Interface = itface;
                 configidxmap.Add(target.ID, target);
                 configmap.Add(target.Token, target);

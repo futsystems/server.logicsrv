@@ -165,9 +165,9 @@ namespace FutsMoniter.Properties {
             }
         }
         
-        internal static System.Drawing.Icon moniter_oem {
+        internal static System.Drawing.Icon moniter_terminal {
             get {
-                object obj = ResourceManager.GetObject("moniter_oem", resourceCulture);
+                object obj = ResourceManager.GetObject("moniter_terminal", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }

@@ -110,5 +110,15 @@ namespace TradingLib.Common
         /// </summary>
         public bool NeedVendor { get; set; }
 
+        /// <summary>
+        /// 是否有效
+        /// </summary>
+        public bool IsValid
+        {
+            get
+            {
+                return this.Domain != null && this.Interface != null && this.Interface.IsValid;
+            }
+        }
     }
 }

@@ -40,11 +40,13 @@ namespace FutsMoniter
             }
             else
             {
+                Globals.Debug("InvokeGotAccountRuleItem go here.....");
                 if (item.ID == 0 || string.IsNullOrEmpty(item.Account))
                     return;
+                //更新
                 if (accountrulemap.Keys.Contains(item.ID))
                 {
-                    RuleItem target = ruleitemmap[item.ID];
+                    RuleItem target = accountrulemap[item.ID];
                     target.Account = item.Account;
                     target.Compare = item.Compare;
                     target.Enable = item.Enable;
@@ -55,10 +57,11 @@ namespace FutsMoniter
                     target.Value = item.SymbolSet;
 
                 }
-                else
+                else //添加
                 {
                     accountrulemap.Add(item.ID, item);
                 }
+                Globals.Debug("it is here 2");
                 if (islast)//当最后一个回报时刷新数据
                 {
                     Factory.IDataSourceFactory(accountRuleItemList).BindDataSource(this.GetAccountRuleItemList());
@@ -96,7 +99,7 @@ namespace FutsMoniter
                 fmRuleSetConfig fm = new fmRuleSetConfig();
                 fm.Account = _account;
                 fm.RuleClass = (RuleClassItem)accountRuleClassList.SelectedValue;
-                fm.Show();
+                fm.ShowDialog();
             }
         }
 
@@ -113,7 +116,7 @@ namespace FutsMoniter
                 fmRuleSetConfig fm = new fmRuleSetConfig();
                 fm.Account = _account;
                 fm.Rule = (RuleItem)accountRuleItemList.SelectedValue;
-                fm.Show();
+                fm.ShowDialog();
 
             }
         }

@@ -14,7 +14,7 @@ namespace DataFeed.FastTick
 
     public class FastTick :TLDataFeedBase,IDataFeed
     {
-        TimeSpan timeout = new TimeSpan(0, 0, 5);
+        TimeSpan timeout = new TimeSpan(0, 0, 1);
         
         string server="127.0.0.1";
         string server2 = string.Empty;

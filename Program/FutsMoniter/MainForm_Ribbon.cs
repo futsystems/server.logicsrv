@@ -31,6 +31,7 @@ namespace FutsMoniter
             //路由列表
             kryptonRibbonGroupButton_interfacelist.Click += new EventHandler(kryptonRibbonGroupButton_interfacelist_Click);
             kryptonRibbonGroupButton_connectorlist.Click += new EventHandler(kryptonRibbonGroupButton_connectorlist_Click);
+            kryptonRibbonGroupButton_tickpaper.Click += new EventHandler(kryptonRibbonGroupButton_tickpaper_Click);
             //系统状态
             kryptonRibbonGroupButton_SystemStatus.Click += new EventHandler(kryptonRibbonGroupButton_SystemStatus_Click);
 
@@ -63,6 +64,12 @@ namespace FutsMoniter
 
             kryptonRibbonGroupButton_payonline.Click += new EventHandler(kryptonRibbonGroupButton_payonline_Click);
             kryptonRibbonGroupButton_ReceiveBank.Click += new EventHandler(kryptonRibbonGroupButton_ReceiveBank_Click);
+        }
+
+        void kryptonRibbonGroupButton_tickpaper_Click(object sender, EventArgs e)
+        {
+            fmDefaultConnector fm = new fmDefaultConnector();
+            fm.Show();
         }
 
         void kryptonContextMenuItem_changepass_Click(object sender, EventArgs e)
@@ -106,8 +113,8 @@ namespace FutsMoniter
 
         void kryptonRibbonGroupButton_QuerySettleAccount_Click(object sender, EventArgs e)
         {
-            if (securityform != null)
-                settlementform.Show();
+            fmSettlement fm = new fmSettlement();
+            fm.Show();
         }
 
         void kryptonRibbonGroupButton_PermissionAgent_Click(object sender, EventArgs e)
@@ -180,11 +187,8 @@ namespace FutsMoniter
 
         void kryptonRibbonGroupButton_AgentManagement_Click(object sender, EventArgs e)
         {
-            if (mgrform == null)
-            {
-                mgrform = new fmManagerCentre();
-            }
-            mgrform.Show();
+            fmManagerCentre fm = new fmManagerCentre();
+            fm.Show();
         }
 
         #endregion
@@ -194,18 +198,14 @@ namespace FutsMoniter
         #region 历史记录
         void kryptonRibbonGroupButton_QueryAgentProfit_Click(object sender, EventArgs e)
         {
-            if (agentprofitreportform != null)
-            {
-                agentprofitreportform.Show();
-            }
+            fmAgentProfitReport fm = new fmAgentProfitReport();
+            fm.Show();
         }
 
         void kryptonRibbonGroupButton_QueryExHist_Click(object sender, EventArgs e)
         {
-            if (histqryform != null)
-            {
-                histqryform.Show();
-            }
+            fmHistQuery fm = new fmHistQuery();
+            fm.Show();
         }
 
         void kryptonRibbonGroupButton_QueryCashTransAccount_Click(object sender, EventArgs e)
@@ -249,11 +249,8 @@ namespace FutsMoniter
 
         void kryptonRibbonGroupButton_SystemStatus_Click(object sender, EventArgs e)
         {
-            if (systemstatusfrom != null)
-            {
-                systemstatusfrom.Show();
-                Globals.TLClient.ReqQrySystemStatus();
-            }
+            fmCoreStatus fm = new fmCoreStatus();
+            fm.Show();
         }
 
         void kryptonRibbonGroupButton_RouterList_Click(object sender, EventArgs e)
@@ -271,51 +268,27 @@ namespace FutsMoniter
         #region 基础数据
         void kryptonRibbonGroupButton_Exchange_Click(object sender, EventArgs e)
         {
-            if (exchangeform != null)
-            {
-                exchangeform.Show();
-                //如果没有交易所数据则请求交易所数据
-                if (!exchangeform.AnyExchange)
-                {
-                    Globals.TLClient.ReqQryExchange();
-                }
-            }
+            fmExchange fm = new fmExchange();
+            fm.Show();
         }
 
         void kryptonRibbonGroupButton_Mktime_Click(object sender, EventArgs e)
         {
-            if (markettimeform != null)
-            {
-                markettimeform.Show();
-                if (!markettimeform.AnyMarketTime)
-                {
-                    Globals.TLClient.ReqQryMarketTime();
-                }
-            }
+            fmMarketTime fm = new fmMarketTime();
+            fm.Show();
+         
         }
 
         void kryptonRibbonGroupButton_Symbol_Click(object sender, EventArgs e)
         {
-            if (symbolform != null)
-            {
-                symbolform.Show();
-                if (!symbolform.AnySymbol)
-                {
-                    Globals.TLClient.ReqQrySymbol();
-                }
-            }
+            fmSymbol fm = new fmSymbol();
+            fm.Show();
         }
 
         void kryptonRibbonGroupButton_Security_Click(object sender, EventArgs e)
         {
-            if (securityform != null)
-            {
-                securityform.Show();
-                if (!securityform.AnySecurity)
-                {
-                    Globals.TLClient.ReqQrySecurity();
-                }
-            }
+            fmSecurity fm = new fmSecurity();
+            fm.Show();
         }
 
 
@@ -363,11 +336,9 @@ namespace FutsMoniter
         #region 事件处理
         void ctAccountMontier1_QryAccountHistEvent(IAccountLite account)
         {
-            if (histqryform != null)
-            {
-                histqryform.SetAccount(account.Account);
-                histqryform.Show();
-            }
+            fmHistQuery fm = new fmHistQuery();
+            fm.SetAccount(account.Account);
+            fm.Show();
         }
         #endregion
 

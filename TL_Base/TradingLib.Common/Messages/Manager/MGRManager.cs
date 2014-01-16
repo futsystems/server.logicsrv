@@ -84,7 +84,7 @@ namespace TradingLib.Common
     {
         public MGRReqUpdateManagerRequest()
         {
-            _type = MessageTypes.MGRADDMANAGER;
+            _type = MessageTypes.MGRUPDATEMANAGER;
             this.ManagerToSend = new Manager();
            
         }

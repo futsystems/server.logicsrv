@@ -13,9 +13,6 @@ namespace TradingLib.ServiceManager
         IBroker _defaultsimbroker = null;
         public IBroker DefaultSimBroker { get { return _defaultsimbroker; } }
 
-        IBroker _defaultlivebroker = null;
-        public IBroker DefaultLiveBroker { get { return _defaultlivebroker; } }
-
         IDataFeed _defaultdatafeed = null;
         public IDataFeed DefaultDataFeed { get { return _defaultdatafeed; } }
 
@@ -25,7 +22,6 @@ namespace TradingLib.ServiceManager
         /// <param name="fullname"></param>
         public IBroker FindBroker(string fullname)
         {
-            debug("查找成交路由:" + fullname, QSEnumDebugLevel.INFO);
             if (brokerInstList.Keys.Contains(fullname))
             {
                 return brokerInstList[fullname];
@@ -38,7 +34,6 @@ namespace TradingLib.ServiceManager
         /// <param name="fullname"></param>
         public IDataFeed FindDataFeed(string fullname)
         {
-            debug("查找数据路由:" + fullname, QSEnumDebugLevel.INFO);
             if (datafeedInstList.Keys.Contains(fullname))
             {
                 return datafeedInstList[fullname];
@@ -46,6 +41,7 @@ namespace TradingLib.ServiceManager
             return null;
 
         }
+
         public Tick GetTickSnapshot(string symbol)
         {
             return _datafeedrouter.GetTickSnapshot(symbol);

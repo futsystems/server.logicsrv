@@ -20,7 +20,7 @@ namespace TradingLib.Contrib.FinService
             ret.ServicePlaneName = sp != null ? sp.Title : "空";
             ret.Active = stub.Active;
             ret.FinService = stub.FinService.ToJsonWrapperFinService();
-            
+            ret.ForceClose = stub.FinService.ForceClose;
             return ret;
         }
     }

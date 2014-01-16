@@ -72,14 +72,14 @@ namespace FutsMoniter
 
         public void OnInit()
         {
-            Globals.CallBackCentre.RegisterCallback("MgrExchServer", "QryDomain", this.OnQryDomain);
-            Globals.CallBackCentre.RegisterCallback("MgrExchServer", "NotifyDomain", this.OnNotifyDomain);
+            Globals.LogicEvent.RegisterCallback("MgrExchServer", "QryDomain", this.OnQryDomain);
+            Globals.LogicEvent.RegisterCallback("MgrExchServer", "NotifyDomain", this.OnNotifyDomain);
         }
 
         public void OnDisposed()
         {
-            Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "QryDomain", this.OnQryDomain);
-            Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "NotifyDomain", this.OnNotifyDomain);
+            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "QryDomain", this.OnQryDomain);
+            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "NotifyDomain", this.OnNotifyDomain);
        
         }
 

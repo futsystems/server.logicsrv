@@ -25,15 +25,31 @@ namespace TradingLib.Core
         #region ClearCentre
         void SrvOnMGROpenClearCentre(MGRReqOpenClearCentreRequest request, ISession session, Manager manger)
         {
-            debug(string.Format("管理员:{0} 请求开启清算中心:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
-            clearcentre.OpenClearCentre();
+            try
+            {
+                debug(string.Format("管理员:{0} 请求开启清算中心:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
+                clearcentre.OpenClearCentre();
+                session.OperationSuccess("清算中心开启成功");
+            }
+            catch (FutsRspError ex)
+            {
+                session.OperationError(ex);
+            }
             
         }
 
         void SrvOnMGRCloseClearCentre(MGRReqCloseClearCentreRequest request, ISession session, Manager manger)
         {
-            debug(string.Format("管理员:{0} 请求关闭清算中心:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
-            clearcentre.CloseClearCentre();
+            try
+            {
+                debug(string.Format("管理员:{0} 请求关闭清算中心:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
+                clearcentre.CloseClearCentre();
+                session.OperationSuccess("清算中心关闭成功");
+            }
+            catch (FutsRspError ex)
+            {
+                session.OperationError(ex);
+            }
 
         }
         #endregion
@@ -118,6 +134,7 @@ namespace TradingLib.Core
 
         void tl_newPacketRequest(IPacket packet,ISession session,Manager manager)
         {
+            session.ContirbID = CoreName;//在使用session.notify 或 session.sendreply会用到module cmd
             switch (packet.Type)
             {
                 
@@ -256,11 +273,11 @@ namespace TradingLib.Core
                         SrvOnMGRDelRuleItem(packet as MGRDelRuleItemRequest, session, manager);
                         break;
                     }
-                case MessageTypes.MGRQRYSYSTEMSTATUS://请求系统状态
-                    {
-                        SrvOnMGRQrySystemStatus(packet as MGRQrySystemStatusRequest, session, manager);
-                        break;
-                    }
+                //case MessageTypes.MGRQRYSYSTEMSTATUS://请求系统状态
+                //    {
+                //        SrvOnMGRQrySystemStatus(packet as MGRQrySystemStatusRequest, session, manager);
+                //        break;
+                //    }
                 case MessageTypes.MGRQRYORDER://请求查询历史委托
                     {
                         SrvOnMGRQryOrder(packet as MGRQryOrderRequest, session, manager);

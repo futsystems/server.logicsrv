@@ -32,20 +32,20 @@ namespace FutsMoniter
         #region IEventBinder
         public void OnInit()
         {
-            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryFinService", this.OnQryFinService);//查询配资服务
-            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryFinServicePlan", this.OnQryServicePlan);//查询配资服务计划
-            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "UpdateArguments", this.OnQryFinService);//更新参数
-            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "ChangeServicePlane", this.OnQryFinService);//修改服务计划
-            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "DeleteServicePlane", this.OnQryFinService);//删除服务
+            Globals.LogicEvent.RegisterCallback("FinServiceCentre", "QryFinService", this.OnQryFinService);//查询配资服务
+            Globals.LogicEvent.RegisterCallback("FinServiceCentre", "QryFinServicePlan", this.OnQryServicePlan);//查询配资服务计划
+            Globals.LogicEvent.RegisterCallback("FinServiceCentre", "UpdateArguments", this.OnQryFinService);//更新参数
+            Globals.LogicEvent.RegisterCallback("FinServiceCentre", "ChangeServicePlane", this.OnQryFinService);//修改服务计划
+            Globals.LogicEvent.RegisterCallback("FinServiceCentre", "DeleteServicePlane", this.OnQryFinService);//删除服务
         }
 
         public void OnDisposed()
         {
-            Globals.CallBackCentre.UnRegisterCallback("FinServiceCentre", "QryFinService", this.OnQryFinService);//查询配资服务
-            Globals.CallBackCentre.UnRegisterCallback("FinServiceCentre", "QryFinServicePlan", this.OnQryServicePlan);//查询配资服务计划
-            Globals.CallBackCentre.UnRegisterCallback("FinServiceCentre", "UpdateArguments", this.OnQryFinService);//更新参数
-            Globals.CallBackCentre.UnRegisterCallback("FinServiceCentre", "ChangeServicePlane", this.OnQryFinService);//修改服务计划
-            Globals.CallBackCentre.UnRegisterCallback("FinServiceCentre", "DeleteServicePlane", this.OnQryFinService);//删除服务
+            Globals.LogicEvent.UnRegisterCallback("FinServiceCentre", "QryFinService", this.OnQryFinService);//查询配资服务
+            Globals.LogicEvent.UnRegisterCallback("FinServiceCentre", "QryFinServicePlan", this.OnQryServicePlan);//查询配资服务计划
+            Globals.LogicEvent.UnRegisterCallback("FinServiceCentre", "UpdateArguments", this.OnQryFinService);//更新参数
+            Globals.LogicEvent.UnRegisterCallback("FinServiceCentre", "ChangeServicePlane", this.OnQryFinService);//修改服务计划
+            Globals.LogicEvent.UnRegisterCallback("FinServiceCentre", "DeleteServicePlane", this.OnQryFinService);//删除服务
         }
         #endregion
 
@@ -55,21 +55,6 @@ namespace FutsMoniter
         JsonWrapperServicePlane[] serviceplans = null;
 
         IAccountLite _account = null;
-        /// <summary>
-        /// 设定当前交易帐号
-        /// 交易帐号改变就需要查询该帐号的配资服务
-        /// </summary>
-        //public IAccountLite CurrentAccount
-        //{
-        //    get
-        //    {
-        //        return _account;
-        //    }
-        //    set
-        //    {
-                
-        //    }
-        //}
 
         /// <summary>
         /// 响应交易帐户选中事件
@@ -81,7 +66,7 @@ namespace FutsMoniter
             finservice = null;//重置配资服务
 
             if (!Globals.EnvReady) return;
-            if (!Globals.UIAccess.fun_tab_finservice) return;
+            if (!Globals.Domain.Module_FinService) return;
             //如果服务计划没有获取 则请求服务计划
             if (serviceplans == null)
             {
@@ -154,7 +139,7 @@ namespace FutsMoniter
                 this.lbstatus.Text = stub.Active ? "激活" : "冻结";
                 this.lbchargetype.Text = stub.FinService.ChargeType;
                 this.lbcollecttype.Text = stub.FinService.CollectType;
-
+                this.lbforceclose.Text = stub.ForceClose ? "触发" : "未触发";
                 InitArgs(stub.FinService.Arguments);
             }
         }

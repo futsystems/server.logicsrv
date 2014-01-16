@@ -10,6 +10,17 @@ namespace TradingLib.Common
 {
     public static partial class DomainUtils
     {
+        
+        /// <summary>
+        /// 判定该域是否过期
+        /// </summary>
+        /// <param name="domain"></param>
+        /// <returns></returns>
+        public static bool IsExpired(this Domain domain)
+        {
+            //设置了有效的过期时间并且过期日小于当前日期，则过期
+            return domain.DateExpired > 0 && domain.DateExpired < Util.ToTLDate();
+        }
         /// <summary>
         /// 返回某个域的所有管理员地址
         /// </summary>
@@ -153,14 +164,26 @@ namespace TradingLib.Common
         }
 
         /// <summary>
-        /// 获得域内ConnectorConfig
+        /// 获得域内实盘ConnectorConfig
         /// </summary>
         /// <param name="domain"></param>
         /// <returns></returns>
         public static IEnumerable<ConnectorConfig> GetConnectorConfigs(this Domain domain)
         {
-            return BasicTracker.ConnectorConfigTracker.ConnecotrConfigs.Where(cfg => cfg.domain_id == domain.ID);
+            return BasicTracker.ConnectorConfigTracker.ConnecotrConfigs.Where(cfg => cfg.domain_id == domain.ID).Where(cfg=>cfg.NeedVendor);
         }
+
+        /// <summary>
+        /// 获得域内默认通道设置 行情与模拟成交 通道设置 默认通道设置不用绑定vendor
+        /// </summary>
+        /// <param name="domain"></param>
+        /// <returns></returns>
+        public static IEnumerable<ConnectorConfig> GetDefaultConnectorConfigs(this Domain domain)
+        {
+            return BasicTracker.ConnectorConfigTracker.ConnecotrConfigs.Where(cfg => cfg.domain_id == domain.ID).Where(cfg => !cfg.NeedVendor);
+        }
+
+        
 
         /// <summary>
         /// 获得域可以设置的Interface
@@ -171,7 +194,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static IEnumerable<ConnectorInterface> GetInterface(this Domain domain)
         {
-            if (domain.Super)
+            if (domain.Super)//如果是超级管理员则返回所有
             {
                 return BasicTracker.ConnectorConfigTracker.Interfaces;
             }

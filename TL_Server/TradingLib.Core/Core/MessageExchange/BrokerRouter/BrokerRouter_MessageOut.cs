@@ -14,6 +14,7 @@ namespace TradingLib.Core
     public partial class BrokerRouter
     {
         public event OrderErrorDelegate GotOrderErrorEvent;
+        public event OrderActionErrorDelegate GotOrderActionErrorEvent;
         public event FillDelegate GotFillEvent;
         public event OrderDelegate GotOrderEvent;
         public event LongDelegate GotCancelEvent;

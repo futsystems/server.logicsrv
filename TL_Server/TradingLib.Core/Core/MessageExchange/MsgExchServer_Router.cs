@@ -102,24 +102,17 @@ namespace TradingLib.Core
             _brokerRouter.GotCancelEvent += new LongDelegate(_br_GotCancelEvent);
             _brokerRouter.GotFillEvent += new FillDelegate(_br_GotFillEvent);
             _brokerRouter.GotOrderEvent += new OrderDelegate(_br_GotOrderEvent);
+
             _brokerRouter.GotOrderErrorEvent += new OrderErrorDelegate(_br_GotOrderErrorEvent);//路由中心返回的委托错误均要通知到清算中心进行委托更新
-            _brokerRouter.NewRouterOrderEvent += new OrderDelegate(_br_NewRouterOrderEvent);
-            _brokerRouter.NewRouterOrderUpdateEvent += new OrderDelegate(_br_NewRouterOrderUpdateEvent);
+            _brokerRouter.GotOrderActionErrorEvent += new OrderActionErrorDelegate(_br_GotOrderActionErrorEvent);
         }
 
         public Order SentRouterOrder(long val)
         {
             return _brokerRouter.SentRouterOrder(val);
         }
-        void _br_NewRouterOrderUpdateEvent(Order order)
-        {
-            _clearcentre.LogRouterOrderUpdate(order);
-        }
 
-        void _br_NewRouterOrderEvent(Order order)
-        {
-            _clearcentre.LogRouterOrder(order);
-        }
+
 
         public void UnBindBrokerRouter(BrokerRouter brokerrouter)
         {
@@ -129,13 +122,20 @@ namespace TradingLib.Core
                 _brokerRouter.GotFillEvent -= new FillDelegate(_br_GotFillEvent);
                 _brokerRouter.GotOrderEvent -= new OrderDelegate(_br_GotOrderEvent);
                 _brokerRouter.GotOrderErrorEvent -= new OrderErrorDelegate(_br_GotOrderErrorEvent);
-                _brokerRouter.NewRouterOrderEvent -= new OrderDelegate(_br_NewRouterOrderEvent);
-                _brokerRouter.NewRouterOrderUpdateEvent -= new OrderDelegate(_br_NewRouterOrderUpdateEvent);
             }
             _brokerRouter = null;
         }
 
 
+
+        #region 委托操作错误回报处理
+
+        void _br_GotOrderActionErrorEvent(OrderAction action,RspInfo info)
+        {
+            //对外通知
+            NotifyOrderActionError(action, info);
+        }
+        #endregion
 
 
         #region 委托错误回报处理
@@ -157,19 +157,14 @@ namespace TradingLib.Core
         /// <param name="neednotify"></param>
         void handler_GotOrderErrorEvent(Order order,RspInfo info, bool needlog = true)
         {
-            OrderErrorPack pack = new OrderErrorPack(order, info);
             //清算中心响应委托错误回报
             //如果需要记录该委托错误 则需要调用清算中心的goterrororder进行处理
             if (needlog)
             {
-                _clearcentre.GotErrorOrder(pack);
+                _clearcentre.GotErrorOrder(order,info);
             }
-            //放入缓存通知客户端
-            _errorordercache.Write(pack);
-            if (GotOrderErrorEvent != null)
-            {
-                GotOrderErrorEvent(order,info);
-            }
+            //对外通知
+            NotifyOrderError(order, info);
         }
 
         #endregion
@@ -211,43 +206,20 @@ namespace TradingLib.Core
             //清算中心响应委托回报
             _clearcentre.GotOrder(o);
 
-            //如果需要将委托状态通知发送到客户端 则设置needsend为true
-            //路由中心返回委托回报时,发送给客户端的委托需要进行copy 否则后续GotOrderEvent事件如果对委托有修改,则会导致发送给客户端的委托发生变化,委托发送是在线程内延迟执行
-            _ocache.Write(new OrderImpl(o));
-            if (GotOrderEvent != null)
-                GotOrderEvent(o);
+            //if (o.Status == QSEnumOrderStatus.Canceled)
+            //{
+            //    //清算中心响应取消回报
+            //    _clearcentre.GotCancel(o.id);
+            //}
+
+            //对外通知
+            NotifyOrder(o);
         }
         #endregion
 
 
 
         #region 成交回报处理
-        public void AssignTradeID(ref Trade f)
-        { 
-            //系统本地给成交赋日内唯一流水号 成交端的TradeID由接口负责
-            f.TradeID = this.NextTradeID.ToString();
-        }
-
-        /// <summary>
-        /// 用于向客户端发送结算完手续费的成交
-        /// </summary>
-        /// <param name="t"></param>
-        public void newCommissionFill(Trade t)
-        {
-            _fcache.Write(new TradeImpl(t));
-            IAccount account = _clearcentre[t.Account];
-
-            //需要将PositionEx移动到这里 在流程内线获得持仓数据并保存到PositionEx 这样就可以避免在sending线程中造成的时间偏移 而最后position 状态形成状态跳跃
-            //有新的成交数据系统推送当前方向的持仓数据 注 这里持仓进行了多空区分
-            //获得净持仓数据
-            //Position netpost =account.GetPositionNet(t.symbol);
-            //_posupdatecache.Write(netpost.GenPositionEx());
-            //获得持仓明细数据
-            Position pos = account.GetPosition(t.Symbol, t.PositionSide);
-            _posupdatecache.Write(pos.GenPositionEx());
-     
-        }
-
         /// <summary>
         /// 响应成交路由返回的成交回报
         /// </summary>
@@ -256,17 +228,13 @@ namespace TradingLib.Core
         {
             //设定系统内成交编号
             AssignTradeID(ref t);
-
             //在BrokerRouter->GotFillEvent->ClearCentre.GotFill->adjustcommission->this.GotCommissionFill调用链 形成每笔成交手续费的计算 当计算完毕后 再向客户端进行发送
             //清算中心响应成交回报
             _clearcentre.GotFill(t);//注这里的成交没有结算手续费,成交部分我们需要在结算中心结算结算完手续费后再向客户端发送
-            
-            //对于newCommissionFill的事件可以插入到这里 这里先执行清算中心GotFill然后 再对外处理
-
-            //对外触发成交事件
-            if (GotFillEvent != null)
-                GotFillEvent(t);
+            //对外通知
+            NotifyFill(t);
         }
+
         #endregion
 
 
@@ -276,8 +244,8 @@ namespace TradingLib.Core
             //清算中心响应取消回报
             _clearcentre.GotCancel(oid);
             //对外触发取消事件
-            if (GotCancelEvent != null)
-                GotCancelEvent(oid);
+            //if (GotCancelEvent != null)
+            //    GotCancelEvent(oid);
         }
         #endregion
 
