@@ -1,0 +1,41 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Collections;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Text;
+using System.Windows.Forms;
+using Telerik.WinControls;
+using FutSystems.GUI;
+using TradingLib.API;
+
+namespace FutsMoniter
+{
+    public partial class AddAccountForm : Telerik.WinControls.UI.RadForm
+    {
+        public AddAccountForm()
+        {
+            InitializeComponent();
+            Factory.IDataSourceFactory(accountType).BindDataSource(UIUtil.GetEnumValueObjects<QSEnumAccountCategory>());
+
+
+        }
+
+
+        private void btnAddAccount_Click(object sender, EventArgs e)
+        {
+            QSEnumAccountCategory acccat = (QSEnumAccountCategory)accountType.SelectedValue;
+            string accid = account.Text;
+            string pass = password.Text;
+
+            if (fmConfirm.Show("确认添加交易帐号?") == System.Windows.Forms.DialogResult.Yes)
+            { 
+                Globals.TLClient.ReqAddAccount(acccat,accid,pass,0);
+                this.Close();
+            }
+        }
+
+
+    }
+}

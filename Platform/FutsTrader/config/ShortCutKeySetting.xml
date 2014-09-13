@@ -1,0 +1,11 @@
+<ShortCutKey>
+  <Key FunCode="2001" FunName="买入" KeyCode="F1" DefaultKeyCode="F1" />
+  <Key FunCode="2002" FunName="卖入" KeyCode="F2" DefaultKeyCode="F2" />
+  <Key FunCode="2003" FunName="全平" KeyCode="F3" DefaultKeyCode="F3" />
+  <Key FunCode="2004" FunName="撤单" KeyCode="F4" DefaultKeyCode="F4" />
+  <Key FunCode="2005" FunName="清仓" KeyCode="Q" DefaultKeyCode="Q" />
+  <Key FunCode="2006" FunName="全撤" KeyCode="W" DefaultKeyCode="W" />
+  <Key FunCode="2007" FunName="选择合约" KeyCode="E" DefaultKeyCode="E" />
+  <Key FunCode="9001" FunName="查看委托" KeyCode="A" DefaultKeyCode="A" />
+  <Key FunCode="9002" FunName="查看持仓" KeyCode="S" DefaultKeyCode="S" />
+</ShortCutKey>

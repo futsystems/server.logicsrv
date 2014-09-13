@@ -1,0 +1,412 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{908E3D8C-A9D0-4296-91B7-EB8909A66CB8}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FutsMoniter</RootNamespace>
+    <AssemblyName>FutsMoniter</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\Platform\FutsMoniter\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\FutsMoniter2\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>moniter0.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="clrzmq">
+      <HintPath>..\..\lib\clrzmq.dll</HintPath>
+    </Reference>
+    <Reference Include="CTP">
+      <HintPath>..\..\lib\CTP.dll</HintPath>
+    </Reference>
+    <Reference Include="FutSystems.GUI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Win\FutSystems.GUI.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Telerik.WinControls">
+      <HintPath>..\..\lib\Telerik\Telerik.WinControls.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Telerik.WinControls.GridView">
+      <HintPath>..\..\lib\Telerik\Telerik.WinControls.GridView.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Telerik.WinControls.Themes.Office2010Black, Version=2013.2.612.40, Culture=neutral, PublicKeyToken=5bb2a467cbec794e, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Telerik.WinControls.Themes.Office2010Silver">
+      <HintPath>..\..\lib\Telerik\Telerik.WinControls.Themes.Office2010Silver.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Telerik.WinControls.Themes.Windows8, Version=2013.2.612.40, Culture=neutral, PublicKeyToken=5bb2a467cbec794e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Telerik\Telerik.WinControls.Themes.Windows8.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Telerik.WinControls.UI">
+      <HintPath>..\..\lib\Telerik\Telerik.WinControls.UI.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="TelerikCommon">
+      <HintPath>..\..\lib\Telerik\TelerikCommon.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="TradingLib.API, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Win\TradingLib.API.dll</HintPath>
+    </Reference>
+    <Reference Include="TradingLib.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Win\TradingLib.Common.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="API\IBasicInfo.cs" />
+    <Compile Include="Form\ChangeInvestorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\ChangeInvestorForm.Designer.cs">
+      <DependentUpon>ChangeInvestorForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form\ChangePassForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\ChangePassForm.Designer.cs">
+      <DependentUpon>ChangePassForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\BasicInfoTracker.cs" />
+    <Compile Include="Controls\ctHistCashTransaction.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ctHistCashTransaction.Designer.cs">
+      <DependentUpon>ctHistCashTransaction.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ctHistOrder.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ctHistOrder.Designer.cs">
+      <DependentUpon>ctHistOrder.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ctHistPosition.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ctHistPosition.Designer.cs">
+      <DependentUpon>ctHistPosition.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ctHistTrade.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ctHistTrade.Designer.cs">
+      <DependentUpon>ctHistTrade.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form\AccountConfigForm_OrderRule.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\ExchangeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\ExchangeForm.Designer.cs">
+      <DependentUpon>ExchangeForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form\AddAccountForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\AddAccountForm.Designer.cs">
+      <DependentUpon>AddAccountForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form\AccountConfigForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\AccountConfigForm.Designer.cs">
+      <DependentUpon>AccountConfigForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="API\ILogicHandler.cs" />
+    <Compile Include="Client\AsyncClient.cs" />
+    <Compile Include="Client\TLClientNet.cs" />
+    <Compile Include="Client\TLClientNet_PacketHandler.cs" />
+    <Compile Include="Client\TLClient_MQ.cs" />
+    <Compile Include="Client\ZMessage.cs" />
+    <Compile Include="Client\TLClientNet_.cs" />
+    <Compile Include="Client\TLClientNet_Request.cs" />
+    <Compile Include="Common\Delegate.cs" />
+    <Compile Include="Common\Starter.cs" />
+    <Compile Include="Common\TradingInfoTracker.cs" />
+    <Compile Include="Controls\ctAccountMontier.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ctAccountMontier.Designer.cs">
+      <DependentUpon>ctAccountMontier.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ctFinanceInfo.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ctFinanceInfo.Designer.cs">
+      <DependentUpon>ctFinanceInfo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form\AccountConfigForm_.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\AccountConfigForm_GotXXX.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\AccountConfigForm_AccountRule.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\HistQryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\HistQryForm.Designer.cs">
+      <DependentUpon>HistQryForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Glabols.cs" />
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LoginForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LoginForm.Designer.cs">
+      <DependentUpon>LoginForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MainForm_BasicInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm_LogicHandler.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm_Menu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\MarketTimeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\MarketTimeForm.Designer.cs">
+      <DependentUpon>MarketTimeForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form\MarketTimeInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\MarketTimeInfoForm.Designer.cs">
+      <DependentUpon>MarketTimeInfoForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Common\SplashScreenApplication.cs" />
+    <Compile Include="Form\RouterMoniterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\RouterMoniterForm.Designer.cs">
+      <DependentUpon>RouterMoniterForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form\SecurityForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\SecurityForm.Designer.cs">
+      <DependentUpon>SecurityForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form\SecEditForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\SecEditForm.Designer.cs">
+      <DependentUpon>SecEditForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form\SymbolEditForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\SymbolEditForm.Designer.cs">
+      <DependentUpon>SymbolEditForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form\SymbolForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\SymbolForm.Designer.cs">
+      <DependentUpon>SymbolForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form\RuleSetConfig.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\RuleSetConfig.Designer.cs">
+      <DependentUpon>RuleSetConfig.cs</DependentUpon>
+    </Compile>
+    <Compile Include="StaticForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="StaticForm.Designer.cs">
+      <DependentUpon>StaticForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form\SystemStatusForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\SystemStatusForm.Designer.cs">
+      <DependentUpon>SystemStatusForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form\SymbolSyncCTPForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\SymbolSyncCTPForm.Designer.cs">
+      <DependentUpon>SymbolSyncCTPForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Utils.cs" />
+    <EmbeddedResource Include="Form\ChangeInvestorForm.resx">
+      <DependentUpon>ChangeInvestorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\ChangePassForm.resx">
+      <DependentUpon>ChangePassForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ctHistCashTransaction.resx">
+      <DependentUpon>ctHistCashTransaction.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ctHistOrder.resx">
+      <DependentUpon>ctHistOrder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ctHistPosition.resx">
+      <DependentUpon>ctHistPosition.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ctHistTrade.resx">
+      <DependentUpon>ctHistTrade.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\ExchangeForm.resx">
+      <DependentUpon>ExchangeForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\AddAccountForm.resx">
+      <DependentUpon>AddAccountForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\AccountConfigForm.resx">
+      <DependentUpon>AccountConfigForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ctAccountMontier.resx">
+      <DependentUpon>ctAccountMontier.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ctFinanceInfo.resx">
+      <DependentUpon>ctFinanceInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\HistQryForm.resx">
+      <DependentUpon>HistQryForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LoginForm.resx">
+      <DependentUpon>LoginForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\MarketTimeForm.resx">
+      <DependentUpon>MarketTimeForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\MarketTimeInfoForm.resx">
+      <DependentUpon>MarketTimeInfoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="Form\RouterMoniterForm.resx">
+      <DependentUpon>RouterMoniterForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\SecurityForm.resx">
+      <DependentUpon>SecurityForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\SecEditForm.resx">
+      <DependentUpon>SecEditForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\SymbolEditForm.resx">
+      <DependentUpon>SymbolEditForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\SymbolForm.resx">
+      <DependentUpon>SymbolForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\RuleSetConfig.resx">
+      <DependentUpon>RuleSetConfig.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="StaticForm.resx">
+      <DependentUpon>StaticForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\SystemStatusForm.resx">
+      <DependentUpon>SystemStatusForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\SymbolSyncCTPForm.resx">
+      <DependentUpon>SymbolSyncCTPForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="moniter-oem.ico" />
+    <Content Include="moniter.ico" />
+    <Content Include="moniter0.ico" />
+    <None Include="resources\moniter-oem.ico" />
+    <None Include="resources\header.jpg" />
+    <None Include="resources\header-oem.jpg" />
+    <None Include="resources\editAccount_16.png" />
+    <None Include="resources\delAccount_16.png" />
+    <None Include="resources\addAccount_16.png" />
+    <None Include="resources\delAccount.png" />
+    <None Include="resources\addAccount.png" />
+    <None Include="resources\editAccount.png" />
+    <None Include="resources\Router-real.png" />
+    <None Include="resources\profit.png" />
+    <None Include="resources\online.png" />
+    <None Include="resources\offline.png" />
+    <None Include="resources\no_profit_loss.png" />
+    <None Include="resources\loss.png" />
+    <None Include="resources\account_stop.png" />
+    <None Include="resources\account_go.png" />
+    <None Include="resources\Router-simuate.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

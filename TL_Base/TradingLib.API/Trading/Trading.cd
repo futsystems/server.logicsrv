@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Interface Name="TradingLib.API.Order">
+    <Position X="2.25" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>KAQJAAAEIgAQDQAEAIQABAAICAAQCBAAAAAUAQIAC8E=</HashCode>
+      <FileName>Trading\Order.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TradingLib.API.OrderAction">
+    <Position X="4.5" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAABAAAAEAAAAAAAAAAgAIAAAAAAAAAAAAIAAAAEA=</HashCode>
+      <FileName>Trading\OrderAction.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TradingLib.API.Tick">
+    <Position X="0.5" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AGUJAQIABACIKAQAAoBBAgAAFiggAAAAAEkAIQACIgA=</HashCode>
+      <FileName>Trading\Tick.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TradingLib.API.Trade">
+    <Position X="6.25" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQIJAAAAgAADAAEAIAABAAQCAAAAAABBAEUAAIAAkA=</HashCode>
+      <FileName>Trading\Trade.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TradingLib.API.Position">
+    <Position X="8" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ICAAAggBAgAAiAAAIAAAAAAAOAAACAAAAACAAQQACkA=</HashCode>
+      <FileName>Trading\Position.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TradingLib.API.IPositionRound">
+    <Position X="10" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAoKEgAokAAAEAAAgAACQAAAFEAQAQCEQARACEA=</HashCode>
+      <FileName>Trading\IPositionRound.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TradingLib.API.SecurityFamily">
+    <Position X="0.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAIAAQAEAAgEAAwAAQACAAAAAEEAQAYAAAABAA=</HashCode>
+      <FileName>Trading\BasicInfo\SecurityFamily.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TradingLib.API.Symbol">
+    <Position X="2.25" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACEAAAIEAQAEKAAEAAgAAAADAECAAEAAgAQAAAEDAA=</HashCode>
+      <FileName>Trading\BasicInfo\Symbol.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TradingLib.API.IMarketTime">
+    <Position X="4.25" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAAACAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Trading\BasicInfo\IMarketTime.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TradingLib.API.IExchange">
+    <Position X="6" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAAAAAAAAAAAAQAAAIAAAAAAAEAAAAAAAA=</HashCode>
+      <FileName>Trading\BasicInfo\IExchange.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TradingLib.API.Bar">
+    <Position X="7.75" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAABCAKAAADoAAAAAAAAgAQAAAAAIAAADACJA=</HashCode>
+      <FileName>Data\Bar.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="宋体" Size="9" />
+</ClassDiagram>

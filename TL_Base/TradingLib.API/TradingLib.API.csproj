@@ -1,0 +1,221 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{7570AA98-0F7C-4F50-A31F-40D4ABC53FD7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TradingLib.API</RootNamespace>
+    <AssemblyName>TradingLib.API</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <Description>系统基本接口与对象库</Description>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="BeforeClean" />
+      </CustomCommands>
+    </CustomCommands>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>none</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>QuantShop.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DelaySign>true</DelaySign>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>none</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+    <DebugType>none</DebugType>
+    <WarningLevel>4</WarningLevel>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseMono|AnyCPU'">
+    <OutputPath>bin\ReleaseMono\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>none</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+    <DebugType>none</DebugType>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseMono|x86'">
+    <OutputPath>bin\x86\ReleaseMono\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>none</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <DebugType>none</DebugType>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="1tobedelete\FinServiceInfo.cs" />
+    <Compile Include="1tobedelete\RaceInfo.cs" />
+    <Compile Include="Account\AccAdapter\IAccountLite.cs" />
+    <Compile Include="Account\IAccCal.cs" />
+    <Compile Include="Account\IAccOperation.cs" />
+    <Compile Include="1tobedelete\IAccountServiceCentre.cs" />
+    <Compile Include="Account\IAccTradingInfo.cs" />
+    <Compile Include="Account\IFianceFutBase.cs" />
+    <Compile Include="Account\IFinanceINNOVBase.cs" />
+    <Compile Include="Account\IFinanceOptBase.cs" />
+    <Compile Include="Account\IFinanceTotal.cs" />
+    <Compile Include="Connecter\EnumDataFeedTypes.cs" />
+    <Compile Include="CoreForAccount\IAccountRiskCentre.cs" />
+    <Compile Include="IPlugin.cs" />
+    <Compile Include="Message\ILocation.cs" />
+    <Compile Include="Message\IPacket.cs" />
+    <Compile Include="Message\ISession.cs" />
+    <Compile Include="Message\QSMessageContent.cs" />
+    <Compile Include="Rule\IRuleItem.cs" />
+    <Compile Include="Trading\BasicInfo\IMarketTime.cs" />
+    <Compile Include="Reply\ILoginResponse.cs" />
+    <Compile Include="Reply\IReply.cs" />
+    <Compile Include="Reply\ReplyType.cs" />
+    <Compile Include="Trading\EnumAccountCategoy.cs" />
+    <Compile Include="Trading\EnumOrder.cs" />
+    <Compile Include="Account\AccAdapter\IAccountExp.cs" />
+    <Compile Include="Account\AccAdapter\IAccountInfo.cs" />
+    <Compile Include="IBase.cs" />
+    <Compile Include="CoreForAccount\IBrokerClearCentre.cs" />
+    <Compile Include="CoreForAccount\IAccountClearCentre.cs" />
+    <Compile Include="1tobedelete\IFinServiceInfo.cs" />
+    <Compile Include="1tobedelete\GUI\IDataSource.cs" />
+    <Compile Include="Data\Bar.cs" />
+    <Compile Include="Data\BarList.cs" />
+    <Compile Include="Connecter\IBroker.cs" />
+    <Compile Include="Connecter\IConnecter.cs" />
+    <Compile Include="Connecter\IConnecter_base.cs" />
+    <Compile Include="Connecter\IDataFeed.cs" />
+    <Compile Include="Trading\BasicInfo\EnumCountry.cs" />
+    <Compile Include="Other\Delegates.cs" />
+    <Compile Include="Other\enum.cs" />
+    <Compile Include="Account\AccAdapter\IAccountInfoLite.cs" />
+    <Compile Include="Msic\IEmail.cs" />
+    <Compile Include="Trading\BasicInfo\IExchange.cs" />
+    <Compile Include="1tobedelete\IJSON.cs" />
+    <Compile Include="1tobedelete\IProfile.cs" />
+    <Compile Include="1tobedelete\IRaceInfo.cs" />
+    <Compile Include="1tobedelete\ITradingTrackerCentre.cs" />
+    <Compile Include="Other\LibDelegates.cs" />
+    <Compile Include="Msic\TradingLibError.cs" />
+    <Compile Include="Message\QSMessageType.cs" />
+    <Compile Include="1tobedelete\Response\IProperty.cs" />
+    <Compile Include="Trading\Basket.cs" />
+    <Compile Include="Msic\Constants.cs" />
+    <Compile Include="Trading\BasicInfo\EneumCurrency.cs" />
+    <Compile Include="Msic\GenericTrackerI.cs" />
+    <Compile Include="Msic\Imbalance.cs" />
+    <Compile Include="Msic\Indicators.cs" />
+    <Compile Include="Message\Message.cs" />
+    <Compile Include="Message\MessageBarRequest.cs" />
+    <Compile Include="Message\MessageImbalance.cs" />
+    <Compile Include="Message\MessageOrder.cs" />
+    <Compile Include="Message\MessagePositionResponse.cs" />
+    <Compile Include="Message\MessageTradeNotify.cs" />
+    <Compile Include="Message\MessageTypes.cs" />
+    <Compile Include="Trading\EnumOrderPostFlag.cs" />
+    <Compile Include="Trading\EnumOrderStatus.cs" />
+    <Compile Include="Trading\IPositionRound.cs" />
+    <Compile Include="Trading\BasicInfo\EnumOptionSide.cs" />
+    <Compile Include="Trading\Order.cs" />
+    <Compile Include="Trading\EnumOrderInstructionTypes.cs" />
+    <Compile Include="Trading\OrderAction.cs" />
+    <Compile Include="Trading\Position.cs" />
+    <Compile Include="Trading\EnumProviders.cs" />
+    <Compile Include="1tobedelete\Response\Response.cs" />
+    <Compile Include="1tobedelete\Security.cs" />
+    <Compile Include="Trading\BasicInfo\SecurityFamily.cs" />
+    <Compile Include="Trading\BasicInfo\EnumSecurityType.cs" />
+    <Compile Include="Trading\BasicInfo\Symbol.cs" />
+    <Compile Include="Trading\QSEnumOrderActionFlag.cs" />
+    <Compile Include="Trading\Settlement.cs" />
+    <Compile Include="Trading\Tick.cs" />
+    <Compile Include="Trading\Trade.cs" />
+    <Compile Include="1tobedelete\IClient.cs" />
+    <Compile Include="Rule\IRule.cs" />
+    <Compile Include="Rule\IRuleCheckAccount.cs" />
+    <Compile Include="Rule\IRuleCheckOrder.cs" />
+    <Compile Include="1tobedelete\Response\IPositionCheck.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Trading\Trading.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Message\memo.txt" />
+    <Content Include="Rule\memo.txt" />
+    <Content Include="Trading\memo.txt" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy /r /y $(TargetPath) $(ProjectDir)..\..\lib\Win\</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ProjectExtensions>
+    <MonoDevelop>
+      <Properties>
+        <Policies>
+          <VersionControlPolicy inheritsSet="Mono" />
+        </Policies>
+      </Properties>
+    </MonoDevelop>
+  </ProjectExtensions>
+</Project>

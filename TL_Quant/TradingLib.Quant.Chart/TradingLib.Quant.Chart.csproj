@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{3EE2DE69-03A3-44F7-9DDD-B4A79CD3BCDE}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TradingLib.Quant.Chart</RootNamespace>
+    <AssemblyName>TradingLib.Quant.Chart</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\lib\TradingLibQuantRelease\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>none</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Easychart.Finance">
+      <HintPath>..\..\lib\Easychart.Finance.dll</HintPath>
+    </Reference>
+    <Reference Include="Easychart.Finance.Objects">
+      <HintPath>..\..\lib\Easychart.Finance.Objects.dll</HintPath>
+    </Reference>
+    <Reference Include="Easychart.Finance.Win">
+      <HintPath>..\..\lib\Easychart.Finance.Win.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="TradingLib.API, Version=2.4.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Win\TradingLib.API.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ChartObjects\ChartArchimedesSpiral.cs" />
+    <Compile Include="ChartObjects\ChartArrowLine.cs" />
+    <Compile Include="ChartObjects\ChartAsynChannelLRegression.cs" />
+    <Compile Include="ChartObjects\ChartCircle.cs" />
+    <Compile Include="ChartObjects\ChartCrossChannel.cs" />
+    <Compile Include="ChartObjects\ChartCycleLineBase.cs" />
+    <Compile Include="ChartObjects\ChartDownTrendChannel.cs" />
+    <Compile Include="ChartObjects\ChartEllipse.cs" />
+    <Compile Include="ChartObjects\ChartEqualChannel.cs" />
+    <Compile Include="ChartObjects\ChartEqualCycleLine.cs" />
+    <Compile Include="ChartObjects\ChartFan.cs" />
+    <Compile Include="ChartObjects\ChartFibChannel.cs" />
+    <Compile Include="ChartObjects\ChartFibCircle.cs" />
+    <Compile Include="ChartObjects\ChartFibCycleLine.cs" />
+    <Compile Include="ChartObjects\ChartFibFan.cs" />
+    <Compile Include="ChartObjects\ChartFibLine.cs" />
+    <Compile Include="ChartObjects\ChartFilledObjectBase.cs" />
+    <Compile Include="ChartObjects\ChartHorizontalLine.cs" />
+    <Compile Include="ChartObjects\ChartHyperbolicSpiral.cs" />
+    <Compile Include="ChartObjects\ChartImage.cs" />
+    <Compile Include="ChartObjects\ChartLabel.cs" />
+    <Compile Include="ChartObjects\ChartLine.cs" />
+    <Compile Include="ChartObjects\ChartLituusSpiral.cs" />
+    <Compile Include="ChartObjects\ChartLogarithmicSpiral.cs" />
+    <Compile Include="ChartObjects\ChartLRegression.cs" />
+    <Compile Include="ChartObjects\ChartLRegressionChannel.cs" />
+    <Compile Include="ChartObjects\ChartMultiArc.cs" />
+    <Compile Include="ChartObjects\ChartObject2EasyFinance.cs" />
+    <Compile Include="ChartObjects\ChartObjectBase.cs" />
+    <Compile Include="ChartObjects\ChartOpenLRegression.cs" />
+    <Compile Include="ChartObjects\ChartParabolicSpiral.cs" />
+    <Compile Include="ChartObjects\ChartParallelogram.cs" />
+    <Compile Include="ChartObjects\ChartPercentLine.cs" />
+    <Compile Include="ChartObjects\ChartRectangle.cs" />
+    <Compile Include="ChartObjects\ChartRectangleBand.cs" />
+    <Compile Include="ChartObjects\ChartRectanglePrice.cs" />
+    <Compile Include="ChartObjects\ChartRegressionBase.cs" />
+    <Compile Include="ChartObjects\ChartRoundedRectangle.cs" />
+    <Compile Include="ChartObjects\ChartSineObject.cs" />
+    <Compile Include="ChartObjects\ChartSingleLineBase.cs" />
+    <Compile Include="ChartObjects\ChartSpiralObjectBase.cs" />
+    <Compile Include="ChartObjects\ChartSplitObjectBase.cs" />
+    <Compile Include="ChartObjects\ChartSplitObjectFont.cs" />
+    <Compile Include="ChartObjects\ChartSquareCycleLine.cs" />
+    <Compile Include="ChartObjects\ChartStdChannel.cs" />
+    <Compile Include="ChartObjects\ChartStdErrorChannel.cs" />
+    <Compile Include="ChartObjects\ChartSymmetryLine.cs" />
+    <Compile Include="ChartObjects\ChartText.cs" />
+    <Compile Include="ChartObjects\ChartTextBase.cs" />
+    <Compile Include="ChartObjects\ChartTriangle.cs" />
+    <Compile Include="ChartObjects\ChartUpDownTrendChannel.cs" />
+    <Compile Include="ChartObjects\ChartUpTrendChannel.cs" />
+    <Compile Include="ChartObjects\ChartVerticalLine.cs" />
+    <Compile Include="ChartObjects\EasyChartEx\ChartCross.cs" />
+    <Compile Include="ChartObjects\EasyChartEx\ChartSignal.cs" />
+    <Compile Include="ChartObjects\EasyChartEx\CrossObject.cs" />
+    <Compile Include="ChartObjects\EasyChartEx\SignalObject.cs" />
+    <Compile Include="ChartObjects\FilePickUITypeEditor.cs" />
+    <Compile Include="Chart\ChartFormDataManager.cs" />
+    <Compile Include="Chart\ChartIndicatorSeries.cs" />
+    <Compile Include="Chart\ChartScale.cs" />
+    <Compile Include="Chart\ChartSetting.cs" />
+    <Compile Include="Chart\ChartStyle.cs" />
+    <Compile Include="Chart\QSChartData.cs" />
+    <Compile Include="Chart\QSCommonDataProvider.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Chart\说明.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TradingLib.Quant.Base\TradingLib.Quant.Base.csproj">
+      <Project>{1A5D4589-9E2E-4FED-9DD2-C328BFD93576}</Project>
+      <Name>TradingLib.Quant.Base</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

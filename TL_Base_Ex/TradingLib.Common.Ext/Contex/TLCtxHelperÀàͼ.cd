@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Comment CommentText="CTX层事件组">
+    <Position X="1.146" Y="2.469" Height="0.323" Width="1.7" />
+  </Comment>
+  <Comment CommentText="CTX层操作组">
+    <Position X="9.677" Y="2.594" Height="0.323" Width="1.7" />
+  </Comment>
+  <Class Name="TradingLib.Common.TLCtxHelper">
+    <Position X="4.5" Y="3.25" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAXABAIAEAEAEAAAAAAglAgBArGQAABAAAAA=</HashCode>
+      <FileName>Contex\TLContexHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TradingLib.Common.TLContext">
+    <Position X="4.5" Y="9.75" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AwCAARAEEARDSAAIQMCMwAIUonFFBihCBCRABAfIUBk=</HashCode>
+      <FileName>Contex\TLContex.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TradingLib.Common.AccountEvent">
+    <Position X="0.75" Y="5.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAIQAAAAAAAAAAAAAAAgAAAQAAAAEAAAACAAAAAg=</HashCode>
+      <FileName>Contex\Event\AccountEvent.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TradingLib.Common.ExContribEvent">
+    <Position X="0.75" Y="3.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAABAAAAAAAAAAIQAIAAAAAAAAAAAIAA=</HashCode>
+      <FileName>Contex\Event\ExContribEvent.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TradingLib.Common.IndicatorEvent">
+    <Position X="0.75" Y="8.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAgACAAgAAAAAAAQIAABACAAEAAAAAAAgAA=</HashCode>
+      <FileName>Contex\Event\IndicatorEvent.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TradingLib.Common.SessionEvent">
+    <Position X="0.75" Y="11.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AIBAAAACAQACIAAACAABAGBYAAAAAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>Contex\Event\SessionEvent.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="TradingLib.API.IAccountOperationCritical">
+    <Position X="9.5" Y="6.25" Width="2.25" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="TradingLib.API.IAccountOperation">
+    <Position X="9.5" Y="3.5" Width="2.25" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="TradingLib.API.IAccountTradingInfo">
+    <Position X="9.5" Y="8.25" Width="2.25" />
+    <TypeIdentifier />
+  </Interface>
+  <Font Name="宋体" Size="9" />
+</ClassDiagram>

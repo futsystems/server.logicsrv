@@ -1,0 +1,136 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="TradingLib.Common.TLObjectAttribute">
+    <Position X="0.75" Y="2.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>IAACQCAAAAggAAAIoAAAAIQAAAAEAAAAAAACAAAAQkA=</HashCode>
+      <FileName>Plugin\Attr\TLObjectAttribute.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TradingLib.Common.TLAttribute">
+    <Position X="4.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Plugin\Attr\TLAttribute.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TradingLib.Common.ContribAttr">
+    <Position X="0.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAIAAAAAAAAAA=</HashCode>
+      <FileName>Plugin\Attr\ContribAttr.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TradingLib.Common.ContribCommandAttr">
+    <Position X="5" Y="2.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAIAImAoAAAEAAAAAAAAAAAAABAAgIECAAAIAAE=</HashCode>
+      <FileName>Plugin\Attr\ContribCommandAttr.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TradingLib.Common.ContribEventAttr">
+    <Position X="8.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAACAoAAAEAAAAAABAAAAAAAAAgAAAAAAAAAg=</HashCode>
+      <FileName>Plugin\Attr\ContribEventAttr.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TradingLib.Common.CoreAttr">
+    <Position X="2.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAA=</HashCode>
+      <FileName>Plugin\Attr\CoreAttr.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TradingLib.Common.CoreCommandAttr">
+    <Position X="5.25" Y="8" Width="1.75" />
+    <InheritanceLine Type="TradingLib.Common.ContribCommandAttr" FixedToPoint="true">
+      <Path>
+        <Point X="6.25" Y="6.775" />
+        <Point X="6.25" Y="8" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Plugin\Attr\CoreCommandAttr.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TradingLib.Common.TaskAttr">
+    <Position X="10.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAIAAAAAAAAAQEABAAAIQEAAAAECIAAAAAAAAACAA=</HashCode>
+      <FileName>Plugin\Attr\TaskAttr.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TradingLib.Common.MethodArgument">
+    <Position X="13" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABEAJAACAAQgAAQEAAAAAAQAAAgAAAAAQQAgAAAEABA=</HashCode>
+      <FileName>Plugin\Attr\MethodArgument.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TradingLib.Common.ContribEventInfo">
+    <Position X="7.75" Y="12" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAgACAAAAAAAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>Plugin\ContribEventInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TradingLib.Common.FinderPluginInfo">
+    <Position X="12.5" Y="12" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Plugin\FinderPluginInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TradingLib.Common.PluginFinder">
+    <Position X="1.25" Y="12" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AgiBAAAEiQAADIAEAAAQAlAAAAAIAAAAApAAAADAAAg=</HashCode>
+      <FileName>Plugin\PluginFinder.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TradingLib.Common.PluginFinderWrapper">
+    <Position X="1.25" Y="17.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>CgiBAAAACAAAAAAAAAAQAkAQAAAIAAEAABAAAABACAA=</HashCode>
+      <FileName>Plugin\PluginFinderWrapper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TradingLib.Common.PluginHelper">
+    <Position X="5" Y="17.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AgiBAAAACIAAAAAAAAAQAkEAAAAIIAAAABAAABBAAAA=</HashCode>
+      <FileName>Plugin\PluginHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="TradingLib.Common.ContribCommandInfo">
+    <Position X="5" Y="12" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAAAAAgACAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Plugin\ContribCommandInfo.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="TradingLib.Common.TaskInfo">
+    <Position X="10.5" Y="12" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAAAAAgAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Plugin\ContribTaskInfo.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Enum Name="TradingLib.Common.QSContribCommandHandleType">
+    <Position X="7.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Plugin\Attr\ContribCommandAttr.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="TradingLib.Common.QSEnumMethodArgumentType">
+    <Position X="14.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAQAgAAAQUAAAAAAAIAACAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>Plugin\Attr\MethodArgumentType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="宋体" Size="9" />
+</ClassDiagram>

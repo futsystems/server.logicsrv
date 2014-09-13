@@ -1,0 +1,5 @@
+<DefaultStrategy>
+  <Setting Code="IF" Stop="50" Profit="50" Size="1" />
+  <Setting Code="m" Stop="0" Profit="0" Size="5" />
+  <Setting Code="l" Stop="0" Profit="0" Size="0" />
+</DefaultStrategy>

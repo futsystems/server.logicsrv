@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{1A5D4589-9E2E-4FED-9DD2-C328BFD93576}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TradingLib.Quant.Base</RootNamespace>
+    <AssemblyName>TradingLib.Quant.Base</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\lib\TradingLibQuantRelease\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\lib\TradingLibQuantRelease\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>none</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="TradingLib.API">
+      <HintPath>..\..\lib\Win\TradingLib.API.dll</HintPath>
+    </Reference>
+    <Reference Include="TradingLib.Common">
+      <HintPath>..\..\lib\Win\TradingLib.Common.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="API\IBackTestReportPlugin.cs" />
+    <Compile Include="API\IBarDataStorage.cs" />
+    <Compile Include="API\ICallBack.cs" />
+    <Compile Include="API\IChartDisplay.cs" />
+    <Compile Include="API\IChartObject.cs" />
+    <Compile Include="API\IDataAccessor.cs" />
+    <Compile Include="API\IDataStore.cs" />
+    <Compile Include="API\IFrequencyGenerator.cs" />
+    <Compile Include="API\IFrequencyProcessor.cs" />
+    <Compile Include="API\IOptimizationProgressUpdate.cs" />
+    <Compile Include="API\IOptimizationServices.cs" />
+    <Compile Include="API\IOwnedDataSerializable.cs" />
+    <Compile Include="API\IServiceFactory.cs" />
+    <Compile Include="API\ISharedSystemRunData.cs" />
+    <Compile Include="API\IStrategyResults.cs" />
+    <Compile Include="Attr\AttributePlugin.cs" />
+    <Compile Include="Attr\BackTestRepoertAttribute.cs" />
+    <Compile Include="Attr\ExcludedPluginAttribute.cs" />
+    <Compile Include="BaseGlobals.cs" />
+    <Compile Include="Base\BackTestData.cs" />
+    <Compile Include="Base\FrequencyPlugin.cs" />
+    <Compile Include="Base\IndicatorInfo.cs" />
+    <Compile Include="Base\OptimizationPlugin.cs" />
+    <Compile Include="Base\SeriesInputValue.cs" />
+    <Compile Include="Base\ServiceAppDomainFactory.cs" />
+    <Compile Include="Base\ServiceFactory.cs" />
+    <Compile Include="Base\StrategyRunSettings.cs" />
+    <Compile Include="Chart\ChartCap.cs" />
+    <Compile Include="Chart\ChartData.cs" />
+    <Compile Include="Chart\ChartDataSeries.cs" />
+    <Compile Include="Chart\ChartObject.cs" />
+    <Compile Include="Chart\ChartObjectSmoothingMode.cs" />
+    <Compile Include="Chart\ChartOwner.cs" />
+    <Compile Include="Chart\ChartPane.cs" />
+    <Compile Include="Chart\ChartPaneList.cs" />
+    <Compile Include="Chart\ChartPoint.cs" />
+    <Compile Include="Chart\ChartPointAttributes.cs" />
+    <Compile Include="Chart\ChartPriceSeries.cs" />
+    <Compile Include="Chart\ChartSeries.cs" />
+    <Compile Include="Chart\SeriesChartType.cs" />
+    <Compile Include="Data\BarDataSeriesManager.cs" />
+    <Compile Include="Data\BarDataV.cs" />
+    <Compile Include="Data\BarElementSeries.cs" />
+    <Compile Include="Data\BarFrequency.cs" />
+    <Compile Include="Data\BarUtil.cs" />
+    <Compile Include="Data\PositionInfo.cs" />
+    <Compile Include="Data\UserSeries.cs" />
+    <Compile Include="IndicatorCollection.cs" />
+    <Compile Include="Strategy\BarStatistic.cs" />
+    <Compile Include="Data\Frequency.cs" />
+    <Compile Include="Data\FrequencyBarElementSeries.cs" />
+    <Compile Include="Data\FrequencyKey.cs" />
+    <Compile Include="Data\OptimizationParameter.cs" />
+    <Compile Include="Data\OptimizationResult.cs" />
+    <Compile Include="Data\SecurityFreq.cs" />
+    <Compile Include="Strategy\BrokerAccountState.cs" />
+    <Compile Include="Strategy\ChartObjectManager.cs" />
+    <Compile Include="Strategy\SingleRunResults.cs" />
+    <Compile Include="Strategy\StrategyHistory.cs" />
+    <Compile Include="Strategy\StrategyInfo.cs" />
+    <Compile Include="Strategy\StrategyLoader.cs" />
+    <Compile Include="Strategy\StrategyManager.cs" />
+    <Compile Include="Strategy\StrategyParameter.cs" />
+    <Compile Include="Strategy\StrategyParameterInfo.cs" />
+    <Compile Include="Strategy\StrategySetting.cs" />
+    <Compile Include="Strategy\StrategySetup.cs" />
+    <Compile Include="Strategy\StrategyStatistic.cs" />
+    <Compile Include="Data\SymbolSetup.cs" />
+    <Compile Include="Enum\BarConstructionType.cs" />
+    <Compile Include="Enum\ChartLabelAlignment.cs" />
+    <Compile Include="Enum\ChartLineTextAlignment.cs" />
+    <Compile Include="Enum\ChartPanelEnum.cs" />
+    <Compile Include="Base\ConstantSeries.cs" />
+    <Compile Include="Attr\ConstructorArgument.cs" />
+    <Compile Include="Enum\ChartTextLineAlignment.cs" />
+    <Compile Include="Enum\ConstructorArgumentType.cs" />
+    <Compile Include="Data\DataSeries.cs" />
+    <Compile Include="API\IBarData.cs" />
+    <Compile Include="API\IBarDataRetrieval.cs" />
+    <Compile Include="API\IExBroker.cs" />
+    <Compile Include="API\IIndicator.cs" />
+    <Compile Include="API\IIndicatorManager.cs" />
+    <Compile Include="API\IIndicatorPlugin.cs" />
+    <Compile Include="Attr\IndicatorAttribute.cs" />
+    <Compile Include="Base\IndicatorBase.cs" />
+    <Compile Include="Error\fmError.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Error\fmError.Designer.cs">
+      <DependentUpon>fmError.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Error\PluginException.cs" />
+    <Compile Include="Error\QSQuantError.cs" />
+    <Compile Include="EventArgs\ChartObjectEventArgs.cs" />
+    <Compile Include="EventArgs\FrequencyNewBarEventArgs.cs" />
+    <Compile Include="EventArgs\NewBarEventArgs.cs" />
+    <Compile Include="EventArgs\NewTickEventArgs.cs" />
+    <Compile Include="EventArgs\SingleBarEventArgs.cs" />
+    <Compile Include="IndicatorCollections.cs" />
+    <Compile Include="Attr\InPutAttribute.cs" />
+    <Compile Include="API\IQCustomTypeDescriptor.cs" />
+    <Compile Include="API\IQService.cs" />
+    <Compile Include="API\ISeries.cs" />
+    <Compile Include="API\ISeriesChartSettings.cs" />
+    <Compile Include="API\IStrategy.cs" />
+    <Compile Include="API\IStrategyData.cs" />
+    <Compile Include="API\IStrategySupport.cs" />
+    <Compile Include="API\ITickRetrieval.cs" />
+    <Compile Include="API\ITradingInfoTracker.cs" />
+    <Compile Include="PositionDataPair.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Attr\QIndicatorAttribute.cs" />
+    <Compile Include="Data\QList.cs" />
+    <Compile Include="Attr\QuantShopObjectAttribute.cs" />
+    <Compile Include="QuantDel.cs" />
+    <Compile Include="Serialization\SerializableDictionary.cs" />
+    <Compile Include="Base\SeriesChartSettings.cs" />
+    <Compile Include="Attr\SeriesInputAttribute.cs" />
+    <Compile Include="Enum\SeriesLineType.cs" />
+    <Compile Include="Enum\ColorFormat.cs" />
+    <Compile Include="Serialization\ColorSerialization.cs" />
+    <Compile Include="Serialization\SerializationReader.cs" />
+    <Compile Include="Serialization\SerializationUtils.cs" />
+    <Compile Include="Serialization\SerializationWriter.cs" />
+    <Compile Include="Serialization\SerializedType.cs" />
+    <Compile Include="ServiceConnectOptions.cs" />
+    <Compile Include="ServiceEventArgs.cs" />
+    <Compile Include="ServiceEventType.cs" />
+    <Compile Include="Base\StrategyBase.cs" />
+    <Compile Include="StrategyParameters.cs" />
+    <Compile Include="Strategy\InternalSystemRunSettings.cs" />
+    <Compile Include="Strategy\SymbolScriptCollection.cs" />
+    <Compile Include="Strategy\SymbolStrategyBase.cs" />
+    <Compile Include="SymbolIndicatorCollection.cs" />
+    <Compile Include="Util\Profile.cs" />
+    <Compile Include="Util\Profiler.cs" />
+    <Compile Include="Util\ResultUtils.cs" />
+    <Compile Include="Util\SectionStackEntry.cs" />
+    <Compile Include="Util\SectionStats.cs" />
+    <Compile Include="WatchList\SymbolItemManager.cs" />
+    <Compile Include="WatchList\WatchListFolder.cs" />
+    <Compile Include="WatchList\WatchListItem.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Error\fmError.resx">
+      <DependentUpon>fmError.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

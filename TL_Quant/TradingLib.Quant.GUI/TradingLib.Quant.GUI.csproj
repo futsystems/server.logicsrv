@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{CE66A325-FA4B-4A5D-8EBC-DC1BFC978EBE}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TradingLib.Quant.GUI</RootNamespace>
+    <AssemblyName>TradingLib.Quant.GUI</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\lib\TradingLibQuantRelease\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>none</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ComponentFactory.Krypton.Navigator, Version=4.4.0.0, Culture=neutral, PublicKeyToken=a87e673e9ecb6e8e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\kypton\ComponentFactory.Krypton.Navigator.dll</HintPath>
+    </Reference>
+    <Reference Include="ComponentFactory.Krypton.Toolkit, Version=4.4.0.0, Culture=neutral, PublicKeyToken=a87e673e9ecb6e8e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\kypton\ComponentFactory.Krypton.Toolkit.dll</HintPath>
+    </Reference>
+    <Reference Include="Easychart.Finance">
+      <HintPath>..\..\lib\Easychart.Finance.dll</HintPath>
+    </Reference>
+    <Reference Include="Easychart.Finance.Objects">
+      <HintPath>..\..\lib\Easychart.Finance.Objects.dll</HintPath>
+    </Reference>
+    <Reference Include="Easychart.Finance.Win">
+      <HintPath>..\..\lib\Easychart.Finance.Win.dll</HintPath>
+    </Reference>
+    <Reference Include="SourceGrid">
+      <HintPath>..\..\lib\SourceGrid.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="TradingLib.API">
+      <HintPath>..\..\lib\TradingLibRelease\TradingLib.API.dll</HintPath>
+    </Reference>
+    <Reference Include="TradingLib.Common">
+      <HintPath>..\..\lib\TradingLibRelease\TradingLib.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="WeifenLuo.WinFormsUI.Docking">
+      <HintPath>..\..\lib\TradingLibRelease\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Attr\EnumConstructorArgTypeConverter.cs" />
+    <Compile Include="Attr\Indicator\IndicatorArgumentDescriptor.cs" />
+    <Compile Include="Attr\Indicator\IndicatorInfoTypeDescriptor.cs" />
+    <Compile Include="Attr\Indicator\IndicatorInputConverter.cs" />
+    <Compile Include="Attr\Indicator\IndicatorInputDescriptor.cs" />
+    <Compile Include="Attr\Indicator\IndicatorNameDescriptor.cs" />
+    <Compile Include="Attr\Indicator\IndicatorStuffDescriptor.cs" />
+    <Compile Include="Attr\PropertySpec.cs" />
+    <Compile Include="Attr\QBackTestReportAttribute.cs" />
+    <Compile Include="Attr\QTypeDescriptor.cs" />
+    <Compile Include="Attr\Strategy\BarFrequencySelection.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Attr\Strategy\ctBarFrequencySelection.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Attr\Strategy\ctBarFrequencySelection.Designer.cs">
+      <DependentUpon>ctBarFrequencySelection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Attr\Strategy\ctParameterEdit.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Attr\Strategy\ctParameterEdit.Designer.cs">
+      <DependentUpon>ctParameterEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Attr\Strategy\ParameterEdit.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Attr\Strategy\StrategyBarFrequencyConverter.cs" />
+    <Compile Include="Attr\Strategy\StrategyBarFrequencyDescriptor.cs" />
+    <Compile Include="Attr\Strategy\StrategyBarFrequencyEdit.cs" />
+    <Compile Include="Attr\Strategy\StrategyParameterConverter.cs" />
+    <Compile Include="Attr\Strategy\StrategyParameterDescriptor.cs" />
+    <Compile Include="Attr\Strategy\StrategyParameterEdit.cs" />
+    <Compile Include="Attr\Strategy\StrategySettingTypeDescriptor.cs" />
+    <Compile Include="Attr\Strategy\StrategyStuffDescriptor.cs" />
+    <Compile Include="GUI\BackTestReport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BackTestReport.Designer.cs">
+      <DependentUpon>BackTestReport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\BarGenerator.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\BarGenerator.Designer.cs">
+      <DependentUpon>BarGenerator.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\ChartForm.cs" />
+    <Compile Include="GUI\ChartForm.Designer.cs">
+      <DependentUpon>ChartForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\ChartFormIndicatorManager.cs" />
+    <Compile Include="GUI\ChartIndicatorData.cs" />
+    <Compile Include="GUI\ColorDropdown.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="GUI\ComboBoxItem.cs" />
+    <Compile Include="GUI\Control\ctBarListView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\Control\ctBarListView.Designer.cs">
+      <DependentUpon>ctBarListView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Control\ctDebug.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\Control\ctDebug.Designer.cs">
+      <DependentUpon>ctDebug.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Control\ctIndicatorList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\Control\ctIndicatorList.Designer.cs">
+      <DependentUpon>ctIndicatorList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Control\ctStrategyList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\Control\ctStrategyList.Designer.cs">
+      <DependentUpon>ctStrategyList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Control\ctStrategyProject.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\Control\ctStrategyProject.Designer.cs">
+      <DependentUpon>ctStrategyProject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Control\ctStrategySimulation.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\Control\ctStrategySimulation.Designer.cs">
+      <DependentUpon>ctStrategySimulation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Control\ctTickListView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\Control\ctTickListView.Designer.cs">
+      <DependentUpon>ctTickListView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Control\ctWatchList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\Control\ctWatchList.Designer.cs">
+      <DependentUpon>ctWatchList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Control\fmSymbolFolderConfig.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\Control\fmSymbolFolderConfig.Designer.cs">
+      <DependentUpon>fmSymbolFolderConfig.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Control\fmSymbolInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\Control\fmSymbolInfo.Designer.cs">
+      <DependentUpon>fmSymbolInfo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Control\PropertiesWindow.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUI\Control\PropertiesWindow.Designer.cs">
+      <DependentUpon>PropertiesWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\DataOutPut.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\DataOutPut.Designer.cs">
+      <DependentUpon>DataOutPut.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\fmAddNewService.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\fmAddNewService.Designer.cs">
+      <DependentUpon>fmAddNewService.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\fmAddNewStrategy.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\fmAddNewStrategy.Designer.cs">
+      <DependentUpon>fmAddNewStrategy.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\fmConfirm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\fmConfirm.Designer.cs">
+      <DependentUpon>fmConfirm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\fmIndicatorConfig.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\fmIndicatorConfig.Designer.cs">
+      <DependentUpon>fmIndicatorConfig.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\fmIndicatorInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\fmIndicatorInfo.Designer.cs">
+      <DependentUpon>fmIndicatorInfo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\FML.cs" />
+    <Compile Include="GUI\fmMessageBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\fmMessageBox.Designer.cs">
+      <DependentUpon>fmMessageBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\fmParameterInput.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\fmParameterInput.Designer.cs">
+      <DependentUpon>fmParameterInput.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\fmPropertiesWindow.cs" />
+    <Compile Include="GUI\fmPropertiesWindow.Designer.cs">
+      <DependentUpon>fmPropertiesWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\fmServiceConfig.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\fmServiceConfig.Designer.cs">
+      <DependentUpon>fmServiceConfig.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\fmServiceSetting.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\fmServiceSetting.Designer.cs">
+      <DependentUpon>fmServiceSetting.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\fmTiamSpaneSet.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\fmTiamSpaneSet.Designer.cs">
+      <DependentUpon>fmTiamSpaneSet.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\OptimizationReport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\OptimizationReport.Designer.cs">
+      <DependentUpon>OptimizationReport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\QSPluginManager.cs" />
+    <Compile Include="GUI\TickConvert.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\TickConvert.Designer.cs">
+      <DependentUpon>TickConvert.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Util.cs" />
+    <Compile Include="IGlobalAccess.cs" />
+    <Compile Include="msic\ConverterType.cs" />
+    <Compile Include="msic\IndicatorInputUIValue.cs" />
+    <Compile Include="msic\IndicatorUIValue.cs" />
+    <Compile Include="msic\MultiCharts.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PropertyChanged.cs" />
+    <Compile Include="PropertySpecEventArgs.cs" />
+    <Compile Include="QuantGlobals.cs" />
+    <Compile Include="Resource.Designer.cs">
+      <DependentUpon>Resource.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="StrategySettingsPropertiesWrapper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Attr\Strategy\ctBarFrequencySelection.resx">
+      <DependentUpon>ctBarFrequencySelection.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Attr\Strategy\ctParameterEdit.resx">
+      <DependentUpon>ctParameterEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BackTestReport.resx">
+      <DependentUpon>BackTestReport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\BarGenerator.resx">
+      <DependentUpon>BarGenerator.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\ChartForm.resx">
+      <DependentUpon>ChartForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Control\ctBarListView.resx">
+      <DependentUpon>ctBarListView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Control\ctDebug.resx">
+      <DependentUpon>ctDebug.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Control\ctIndicatorList.resx">
+      <DependentUpon>ctIndicatorList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Control\ctStrategyList.resx">
+      <DependentUpon>ctStrategyList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Control\ctStrategyProject.resx">
+      <DependentUpon>ctStrategyProject.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Control\ctStrategySimulation.resx">
+      <DependentUpon>ctStrategySimulation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Control\ctTickListView.resx">
+      <DependentUpon>ctTickListView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Control\ctWatchList.resx">
+      <DependentUpon>ctWatchList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Control\fmSymbolFolderConfig.resx">
+      <DependentUpon>fmSymbolFolderConfig.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Control\fmSymbolInfo.resx">
+      <DependentUpon>fmSymbolInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Control\PropertiesWindow.resx">
+      <DependentUpon>PropertiesWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\DataOutPut.resx">
+      <DependentUpon>DataOutPut.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\fmAddNewService.resx">
+      <DependentUpon>fmAddNewService.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\fmAddNewStrategy.resx">
+      <DependentUpon>fmAddNewStrategy.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\fmConfirm.resx">
+      <DependentUpon>fmConfirm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\fmIndicatorConfig.resx">
+      <DependentUpon>fmIndicatorConfig.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\fmIndicatorInfo.resx">
+      <DependentUpon>fmIndicatorInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\fmMessageBox.resx">
+      <DependentUpon>fmMessageBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\fmParameterInput.resx">
+      <DependentUpon>fmParameterInput.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\fmPropertiesWindow.resx">
+      <DependentUpon>fmPropertiesWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\fmServiceConfig.resx">
+      <DependentUpon>fmServiceConfig.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\fmServiceSetting.resx">
+      <DependentUpon>fmServiceSetting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\fmTiamSpaneSet.resx">
+      <DependentUpon>fmTiamSpaneSet.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\OptimizationReport.resx">
+      <DependentUpon>OptimizationReport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\TickConvert.resx">
+      <DependentUpon>TickConvert.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TradingLib.Quant.Base\TradingLib.Quant.Base.csproj">
+      <Project>{1A5D4589-9E2E-4FED-9DD2-C328BFD93576}</Project>
+      <Name>TradingLib.Quant.Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TradingLib.Quant.Chart\TradingLib.Quant.Chart.csproj">
+      <Project>{3EE2DE69-03A3-44F7-9DDD-B4A79CD3BCDE}</Project>
+      <Name>TradingLib.Quant.Chart</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TradingLib.Quant.Engine\TradingLib.Quant.Engine.csproj">
+      <Project>{70F4E33C-FC52-413E-BC58-654549FFF8FB}</Project>
+      <Name>TradingLib.Quant.Engine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TradingLib.Quant.Loader\TradingLib.Quant.Loader.csproj">
+      <Project>{D965B6F6-4E39-42FE-8F9E-33FA1C2ADE4A}</Project>
+      <Name>TradingLib.Quant.Loader</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TradingLib.Quant.Plugins\TradingLib.Quant.Plugins.csproj">
+      <Project>{D52801AA-6B95-4313-A57A-15045AD050CB}</Project>
+      <Name>TradingLib.Quant.Plugins</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\delete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\editsymbol.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\eidtstrategy.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\folder.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\folder1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\optimization.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\simulation.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\started.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\stopped.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\symbol.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

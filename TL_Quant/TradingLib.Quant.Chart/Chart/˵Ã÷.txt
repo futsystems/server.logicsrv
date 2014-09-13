@@ -1,0 +1,8 @@
+1.ChartDataSeries/ChartPriceSeries/ChartDataSeries 继承于ChartSeries
+2.ChartPanelist->管理ChartPanel
+3.ChartPanel->ChartData->管理显示的ChartSeries
+4.ChartForm用于动态的增加ChartPanel
+x12ca728e0d6c36e0 就是用于显示的ChartForm
+
+ChartForm->ChartFormIndicatorManager/ChartFormDataManager
+一个用于管理数据/一个用于管理指标

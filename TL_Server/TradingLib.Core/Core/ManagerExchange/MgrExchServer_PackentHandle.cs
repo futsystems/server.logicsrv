@@ -1,0 +1,931 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using TradingLib.API;
+using TradingLib.Common;
+
+namespace TradingLib.Core
+{
+    public partial class MgrExchServer
+    {
+        void TokenLast(int i, int len, RspResponsePacket response)
+        {
+            if (i == len - 1)
+            {
+                response.IsLast = true;
+            }
+            else
+            {
+                response.IsLast = false;
+            }
+        }
+
+        /// <summary>
+        /// 查询交易帐号列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="session"></param>
+        /// <param name="manager"></param>
+        void SrvOnMGRQryAccount(MGRQryAccountRequest request, ISession session, Manager manager)
+        {
+            debug(string.Format("管理员:{0} 请求下载交易帐户列表:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            //判断管理账户类别
+            if (manager.BaseManager.Type == QSEnumManagerType.ROOT)
+            {
+                IAccount[] list = clearcentre.Accounts;
+                int len = list.Length;
+                int i=0;
+                if (len > 0)
+                {
+                    foreach(IAccount account in list)
+                    {
+
+                        RspMGRQryAccountResponse response = ResponseTemplate<RspMGRQryAccountResponse>.SrvSendRspResponse(request);
+                        response.oAccount = ObjectInfoHelper.GenAccountLite(account);
+                        CacheRspResponse(response,i==list.Length -1);
+
+                        TrdClientInfo client = exchsrv.FirstClientInfoForAccount(list[i].ID);
+                        if (client != null)
+                        {
+                            NotifyMGRSessionUpdateNotify notify = ResponseTemplate<NotifyMGRSessionUpdateNotify>.SrvSendRspResponse(request);
+                            notify.TradingAccount = client.Account;
+                            notify.IsLogin = client.Authorized;
+                            notify.IPAddress = client.IPAddress;
+                            notify.HardwarCode = client.HardWareCode;
+                            notify.ProductInfo = client.ProductInfo;
+                            notify.FrontID = client.Location.FrontID;
+                            notify.ClientID = client.Location.ClientID;
+
+                            CachePacket(notify);
+                        }
+                        i++;
+                    }
+                }
+                else
+                {
+                    RspMGRQryAccountResponse response = ResponseTemplate<RspMGRQryAccountResponse>.SrvSendRspResponse(request);
+                    CacheRspResponse(response);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 设定观察交易帐号列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="session"></param>
+        /// <param name="manager"></param>
+        void SrvOnMGRWatchAccount(MGRWatchAccountRequest request, ISession session, Manager manager)
+        {
+            debug(string.Format("管理员:{0} 请求设定观察列表:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            CustInfoEx c = customerExInfoMap[request.ClientID];
+            c.Watch(request.AccountList);
+        }
+
+        void SrvOnMGRResumeAccount(MGRResumeAccountRequest request, ISession session, Manager manager)
+        {
+            debug(string.Format("管理员:{0} 请求恢复交易数据,帐号:{1}", session.ManagerID, request.ResumeAccount), QSEnumDebugLevel.INFO);
+            //判断权限
+
+            //将请求放入队列等待处理
+            CustInfoEx c = customerExInfoMap[request.ClientID];
+            c.Selected(request.ResumeAccount);//保存管理客户端选中的交易帐号
+            _resumecache.Write(request);
+        }
+
+        /// <summary>
+        /// 处理管理端的帐户查询
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="session"></param>
+        /// <param name="manager"></param>
+        void SrvOnMGRQryAccountInfo(MGRQryAccountInfoRequest request, ISession session, Manager manager)
+        {
+            debug(string.Format("管理员:{0} 请求查询交易帐户信息,帐号:{1}", session.ManagerID, request.Account), QSEnumDebugLevel.INFO);
+
+            IAccount account = clearcentre[request.Account];
+            if (account != null)
+            {
+                RspMGRQryAccountInfoResponse response = ResponseTemplate<RspMGRQryAccountInfoResponse>.SrvSendRspResponse(request);
+                response.AccountInfoToSend = ObjectInfoHelper.GenAccountInfo(account);
+                CachePacket(response);
+            }
+        }
+
+        void SrvOnMGRCashOperation(MGRCashOperationRequest request, ISession session, Manager manager)
+        {
+            debug(string.Format("管理员:{0} 请求出入金操作:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            IAccount account = clearcentre[request.Account];
+            if (account != null)
+            {
+                clearcentre.CashOperation(request.Account, request.Amount,request.TransRef, request.Comment);
+
+                //出入金操作后返回帐户信息更新
+                RspMGRQryAccountInfoResponse response = ResponseTemplate<RspMGRQryAccountInfoResponse>.SrvSendRspResponse(request);
+                response.AccountInfoToSend = ObjectInfoHelper.GenAccountInfo(account);
+                CachePacket(response);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="session"></param>
+        /// <param name="manager"></param>
+        void SrvOnMGRUpdateAccountCategory(MGRUpdateCategoryRequest request, ISession session, Manager manager)
+        {
+            debug(string.Format("管理员:{0} 请求更新帐户类别:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            IAccount account = clearcentre[request.Account];
+            if (account != null)
+            {
+                clearcentre.UpdateAccountCategory(request.Account, request.Category);
+            }
+        }
+
+        void SrvOnMGRUpdateAccountExecute(MGRUpdateExecuteRequest request, ISession session, Manager manger)
+        {
+            debug(string.Format("管理员:{0} 请求交易权限类别:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            IAccount account = clearcentre[request.Account];
+            if (account != null)
+            {
+                if (request.Execute && !account.Execute)
+                {
+                    clearcentre.ActiveAccount(request.Account);
+                }
+                if (!request.Execute && account.Execute)
+                {
+                    clearcentre.InactiveAccount(request.Account);
+                }
+                
+            }
+        }
+
+        void SrvOnMGRUpdateAccountIntraday(MGRUpdateIntradayRequest request, ISession session, Manager manger)
+        {
+            debug(string.Format("管理员:{0} 请求更新日内交易:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            IAccount account = clearcentre[request.Account];
+            if (account != null)
+            {
+                clearcentre.UpdateAccountIntradyType(request.Account, request.Intraday);
+            }
+        }
+
+        void SrvOnMGRUpdateRouteType(MGRUpdateRouteTypeRequest request, ISession session, Manager manger)
+        {
+            debug(string.Format("管理员:{0} 请求更新路由类被:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            IAccount account = clearcentre[request.Account];
+            if (account != null)
+            {
+                clearcentre.UpdateAccountRouterTransferType(request.Account, request.RouteType);
+            }
+        }
+
+        void SrvOnMGROpenClearCentre(MGRReqOpenClearCentreRequest request, ISession session, Manager manger)
+        {
+            debug(string.Format("管理员:{0} 请求开启清算中心:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            clearcentre.OpenClearCentre();
+            
+        }
+
+        void SrvOnMGRCloseClearCentre(MGRReqCloseClearCentreRequest request, ISession session, Manager manger)
+        {
+            debug(string.Format("管理员:{0} 请求关闭清算中心:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            clearcentre.CloseClearCentre();
+
+        }
+
+        void SrvOnMGRQryConnector(MGRQryConnectorRequest request, ISession session, Manager manager)
+        {
+            debug(string.Format("管理员:{0} 请求查询通道列表:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            List<RspMGRQryConnectorResponse> responselist = new List<RspMGRQryConnectorResponse>();
+            foreach (IBroker b in TLCtxHelper.Ctx.RouterManager.Brokers)
+            {
+                RspMGRQryConnectorResponse response = ResponseTemplate<RspMGRQryConnectorResponse>.SrvSendRspResponse(request);
+                response.Connector = new ConnectorInfo(b);
+                responselist.Add(response);
+            }
+
+            foreach (IDataFeed d in TLCtxHelper.Ctx.RouterManager.DataFeeds)
+            {
+                RspMGRQryConnectorResponse response = ResponseTemplate<RspMGRQryConnectorResponse>.SrvSendRspResponse(request);
+                response.Connector = new ConnectorInfo(d);
+                responselist.Add(response);
+            }
+
+            int totalnum = responselist.Count;
+            if (totalnum>0)
+            {
+                for (int i = 0; i < totalnum; i++)
+                {
+                    CacheRspResponse(responselist[i], i == totalnum - 1);
+                }
+            }
+            else
+            { 
+                
+            }
+            
+        }
+
+        void SrvOnMGRStartBroker(MGRReqStartBrokerRequest request, ISession session, Manager manager)
+        {
+            debug(string.Format("管理员:{0} 请求启动成交通道:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            IBroker b = TLCtxHelper.Ctx.RouterManager.FindBroker(request.FullName);
+            if (b != null && !b.IsLive)
+            {
+                b.Start();
+            }
+
+            RspMGRQryConnectorResponse response = ResponseTemplate<RspMGRQryConnectorResponse>.SrvSendRspResponse(request);
+            response.Connector = new ConnectorInfo(b);
+            CachePacket(response);
+        }
+
+        void SrvOnMGRStopBroker(MGRReqStopBrokerRequest request, ISession session, Manager manager)
+        {
+            debug(string.Format("管理员:{0} 请求停止成交通道:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            IBroker b = TLCtxHelper.Ctx.RouterManager.FindBroker(request.FullName);
+            if (b != null && b.IsLive)
+            {
+                b.Stop();
+            }
+
+            RspMGRQryConnectorResponse response = ResponseTemplate<RspMGRQryConnectorResponse>.SrvSendRspResponse(request);
+            response.Connector = new ConnectorInfo(b);
+            CachePacket(response);
+        }
+        void SrvOnMGRStartDataFeed(MGRReqStartDataFeedRequest request, ISession session, Manager manager)
+        {
+            debug(string.Format("管理员:{0} 请求启动行情通道:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+
+            IDataFeed d = TLCtxHelper.Ctx.RouterManager.FindDataFeed(request.FullName);
+            if (d != null && !d.IsLive)
+            {
+                d.Start();
+            }
+
+            RspMGRQryConnectorResponse response = ResponseTemplate<RspMGRQryConnectorResponse>.SrvSendRspResponse(request);
+            response.Connector = new ConnectorInfo(d);
+            CachePacket(response);
+        }
+        void SrvOnMGRStopDataFeed(MGRReqStopDataFeedRequest request, ISession session, Manager manager)
+        {
+            debug(string.Format("管理员:{0} 请求停止行情通道:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            IDataFeed d = TLCtxHelper.Ctx.RouterManager.FindDataFeed(request.FullName);
+            if (d != null && d.IsLive)
+            {
+                d.Stop();
+            }
+            RspMGRQryConnectorResponse response = ResponseTemplate<RspMGRQryConnectorResponse>.SrvSendRspResponse(request);
+            response.Connector = new ConnectorInfo(d);
+            CachePacket(response);
+        }
+
+        void SrvOnMGRAddAccount(MGRAddAccountRequest request, ISession session, Manager manager)
+        {
+            debug(string.Format("管理员:{0} 请求添加交易帐号:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            string outaccount =string.Empty;
+            bool re = clearcentre.AddAccount(out outaccount, request.UserID.ToString(), request.AccountID, request.Password, request.Category);
+        }
+
+        void SrvOnMGRQryExchange(MGRQryExchangeRequuest request, ISession session, Manager manager)
+        {
+            debug(string.Format("管理员:{0} 请求查询交易所列表:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            IExchange[] exchs = BasicTracker.ExchagneTracker.Exchanges;
+
+            int totalnum = exchs.Length;
+            
+            for (int i = 0; i < totalnum; i++)
+            {
+                RspMGRQryExchangeResponse response = ResponseTemplate<RspMGRQryExchangeResponse>.SrvSendRspResponse(request);
+                response.Exchange = exchs[i] as Exchange;
+
+                CacheRspResponse(response, i == totalnum - 1);
+            }
+        }
+
+        void SrvOnMGRQryMarketTime(MGRQryMarketTimeRequest request, ISession session, Manager manager)
+        {
+            debug(string.Format("管理员:{0} 请求查询交易时间段:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            MarketTime[] mts = BasicTracker.MarketTimeTracker.MarketTimes;
+            int totalnum = mts.Length;
+            for (int i = 0; i < totalnum; i++)
+            {
+                RspMGRQryMarketTimeResponse response = ResponseTemplate<RspMGRQryMarketTimeResponse>.SrvSendRspResponse(request);
+                response.MarketTime = mts[i];
+
+                CacheRspResponse(response, i == totalnum - 1);
+            }
+        }
+
+        void SrvOnMGRQrySecurity(MGRQrySecurityRequest request, ISession session, Manager manager)
+        {
+            debug(string.Format("管理员:{0} 请求查询品种:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            SecurityFamily[] seclist = BasicTracker.SecurityTracker.Securities;
+            int totalnum = seclist.Length;
+            //debug("security totalnum:" + totalnum, QSEnumDebugLevel.INFO);
+            for (int i = 0; i < totalnum; i++)
+            {
+                
+                RspMGRQrySecurityResponse response = ResponseTemplate<RspMGRQrySecurityResponse>.SrvSendRspResponse(request);
+                response.SecurityFaimly = seclist[i] as SecurityFamilyImpl;
+                //debug("sec:" + response.ToString(), QSEnumDebugLevel.INFO);
+                CacheRspResponse(response, i == totalnum - 1);
+            }
+        }
+
+        void SrvOnMGRUpdateSecurity(MGRUpdateSecurityRequest request, ISession session, Manager manager)
+        {
+            debug(string.Format("管理员:{0} 请求更新品种:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+
+            SecurityFamilyImpl sec = request.SecurityFaimly;
+            BasicTracker.SecurityTracker.UpdateSecurity(sec);
+            RspMGRQrySecurityResponse response = ResponseTemplate<RspMGRQrySecurityResponse>.SrvSendRspResponse(request);
+            response.SecurityFaimly = BasicTracker.SecurityTracker[sec.ID] as SecurityFamilyImpl;
+            CacheRspResponse(response);
+
+            if (sec.Tradeable)
+            {
+                exchsrv.RegisterSymbol(BasicTracker.SecurityTracker[sec.Code]);
+            }
+        }
+
+        void SrvOnMGRQrySymbol(MGRQrySymbolRequest request, ISession session, Manager manager)
+        {
+            debug(string.Format("管理员:{0} 请求查询合约:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            Symbol[] symlis = BasicTracker.SymbolTracker.Symbols;
+            int totalnum = symlis.Length;
+            if (totalnum > 0)
+            {
+                for (int i = 0; i < totalnum; i++)
+                {
+                    RspMGRQrySymbolResponse response = ResponseTemplate<RspMGRQrySymbolResponse>.SrvSendRspResponse(request);
+                    response.Symbol = symlis[i] as SymbolImpl;
+
+                    CacheRspResponse(response, i == totalnum - 1);
+                }
+            }
+            else
+            {
+                RspMGRQrySymbolResponse response = ResponseTemplate<RspMGRQrySymbolResponse>.SrvSendRspResponse(request);
+                CacheRspResponse(response);
+            }
+        }
+
+        void SrvOnMGRUpdateSymbol(MGRUpdateSymbolRequest request, ISession session, Manager manager)
+        {
+            debug(string.Format("管理员:{0} 请求更新合约:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            SymbolImpl sym = request.Symbol;
+            BasicTracker.SymbolTracker.UpdateSymbol(sym);
+            RspMGRQrySymbolResponse response = ResponseTemplate<RspMGRQrySymbolResponse>.SrvSendRspResponse(request);
+            response.Symbol = BasicTracker.SymbolTracker[sym.ID] as SymbolImpl;
+            CacheRspResponse(response);
+            if (sym.Tradeable)
+            {
+                exchsrv.RegisterSymbol(sym.Symbol);
+            }
+        }
+
+        void SrvOnMGRQryRuleSet(MGRQryRuleSetRequest request, ISession session, Manager manager)
+        {
+            debug(string.Format("管理员:{0} 请求查询风控规则:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+
+            RuleClassItem[] items = riskcentre.GetRuleClassItems();
+            int totalnum = items.Length;
+
+            if (totalnum > 0)
+            {
+                for (int i = 0; i < totalnum; i++)
+                {
+                    RspMGRQryRuleSetResponse response = ResponseTemplate<RspMGRQryRuleSetResponse>.SrvSendRspResponse(request);
+                    response.RuleClassItem = items[i];
+                    CacheRspResponse(response, i == totalnum - 1);
+                }
+            }
+            else
+            {
+                RspMGRQryRuleSetResponse response = ResponseTemplate<RspMGRQryRuleSetResponse>.SrvSendRspResponse(request);
+                CacheRspResponse(response);
+            }
+        }
+
+        void SrvOnMGRUpdateRule(MGRUpdateRuleRequest request, ISession session, Manager manager)
+        {
+            debug(string.Format("管理员:{0} 请求更新风控规则:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            RuleItem item = request.RuleItem;
+            riskcentre.UpdateRule(item);
+            RspMGRUpdateRuleResponse response = ResponseTemplate<RspMGRUpdateRuleResponse>.SrvSendRspResponse(request);
+            response.RuleItem = item;
+            CacheRspResponse(response);
+        }
+
+        void SrvOnMGRQryRuleItem(MGRQryRuleItemRequest request, ISession session, Manager manager)
+        {
+            debug(string.Format("管理员:{0} 请求查询帐户分控规则列表:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+
+            //RuleItem[] items = ORM.MRuleItem.SelectRuleItem(request.Account, QSEnumRuleType.OrderRule).ToArray();
+            List<RuleItem> items = new List<RuleItem>();
+            IAccount account = clearcentre[request.Account];
+            if (account != null)
+            {
+                if (!account.RuleItemLoaded)
+                {
+                    riskcentre.LoadRuleItem(account);//风控规则延迟加载,如果帐户没有加载则先加载帐户风控规则
+                }
+                //从内存风控实例 生成ruleitem
+                if (request.RuleType == QSEnumRuleType.OrderRule)
+                {
+                    foreach (IOrderCheck oc in account.OrderChecks)
+                    {
+                        items.Add(RuleItem.IRule2RuleItem(oc));
+                    }
+                }
+                else if (request.RuleType == QSEnumRuleType.AccountRule)
+                {
+                    foreach (IAccountCheck ac in account.AccountChecks)
+                    {
+                        items.Add(RuleItem.IRule2RuleItem(ac));
+                    }
+                }
+
+                int totalnum = items.Count;
+                if (totalnum > 0)
+                {
+                    for (int i = 0; i < totalnum; i++)
+                    {
+                        RspMGRQryRuleItemResponse response = ResponseTemplate<RspMGRQryRuleItemResponse>.SrvSendRspResponse(request);
+                        response.RuleItem = items[i];
+
+                        CacheRspResponse(response, i == totalnum - 1);
+                    }
+                }
+                else
+                {
+                    RspMGRQryRuleItemResponse response = ResponseTemplate<RspMGRQryRuleItemResponse>.SrvSendRspResponse(request);
+                    CacheRspResponse(response);
+                }
+            }
+        }
+
+        void SrvOnMGRDelRuleItem(MGRDelRuleItemRequest request, ISession session, Manager manager)
+        {
+            debug(string.Format("管理员:{0} 请求删除风控项:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            riskcentre.DeleteRiskRule(request.RuleItem);
+            RspMGRDelRuleItemResponse response = ResponseTemplate<RspMGRDelRuleItemResponse>.SrvSendRspResponse(request);
+            response.RuleItem = request.RuleItem;
+
+            CacheRspResponse(response);
+
+        }
+
+        void SrvOnMGRQrySystemStatus(MGRQrySystemStatusRequest request, ISession session, Manager manager)
+        {
+            debug(string.Format("管理员:{0} 请求查询系统状态:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            RspMGRQrySystemStatusResponse response = ResponseTemplate<RspMGRQrySystemStatusResponse>.SrvSendRspResponse(request);
+
+            SystemStatus status = new SystemStatus();
+            status.CurrentTradingday = TLCtxHelper.Ctx.SettleCentre.CurrentTradingday;
+            status.IsClearCentreOpen = clearcentre.Status == QSEnumClearCentreStatus.CCOPEN;
+            status.IsSettleNormal = TLCtxHelper.Ctx.SettleCentre.IsNormal;
+            status.IsTradingday = TLCtxHelper.Ctx.SettleCentre.IsTradingday;
+            status.LastSettleday = TLCtxHelper.Ctx.SettleCentre.LastSettleday;
+            status.NextTradingday = TLCtxHelper.Ctx.SettleCentre.NextTradingday;
+            status.TotalAccountNum = clearcentre.Accounts.Length;
+            status.MarketOpenCheck = TLCtxHelper.Ctx.RiskCentre.MarketOpenTimeCheck;
+            status.IsDevMode = GlobalConfig.IsDevelop;
+            response.Status = status;
+
+            CacheRspResponse(response);
+        }
+
+
+        void SrvOnMGRQryOrder(MGRQryOrderRequest request, ISession session, Manager manager)
+        {
+            debug(string.Format("管理员:{0} 请求查询历史委托:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+
+            IList<Order> orders = ORM.MTradingInfo.SelectHistOrders(request.TradingAccount,request.Settleday, request.Settleday);
+
+            int totalnum = orders.Count;
+            if (totalnum > 0)
+            {
+                for (int i = 0; i < totalnum; i++)
+                {
+                    RspMGRQryOrderResponse response = ResponseTemplate<RspMGRQryOrderResponse>.SrvSendRspResponse(request);
+                    response.OrderToSend = orders[i];
+                    response.OrderToSend.side = response.OrderToSend.TotalSize > 0 ? true : false;
+                    CacheRspResponse(response, i == totalnum - 1);
+                }
+            }
+            else
+            {
+                //返回空项目
+                RspMGRQryOrderResponse response = ResponseTemplate<RspMGRQryOrderResponse>.SrvSendRspResponse(request);
+                response.OrderToSend = new OrderImpl();
+                CacheRspResponse(response);
+            }
+        }
+
+        void SrvnMGRQryTrade(MGRQryTradeRequest request, ISession session, Manager manager)
+        {
+            debug(string.Format("管理员:{0} 请求查询历史成交:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+
+            IList<Trade> trades = ORM.MTradingInfo.SelectHistTrades(request.TradingAccount, request.Settleday, request.Settleday);
+
+            int totalnum = trades.Count;
+            if (totalnum > 0)
+            {
+                for (int i = 0; i < totalnum; i++)
+                {
+                    RspMGRQryTradeResponse response = ResponseTemplate<RspMGRQryTradeResponse>.SrvSendRspResponse(request);
+                    response.TradeToSend = trades[i];
+                    response.TradeToSend.side = response.TradeToSend.xsize > 0 ? true : false;
+                    CacheRspResponse(response, i == totalnum - 1);
+                }
+            }
+            else
+            {
+                //返回空项目
+                RspMGRQryTradeResponse response = ResponseTemplate<RspMGRQryTradeResponse>.SrvSendRspResponse(request);
+                response.TradeToSend = new TradeImpl();
+                CacheRspResponse(response);
+            }
+        }
+
+        void SrvOnMGRQryPosition(MGRQryPositionRequest request, ISession session, Manager manager)
+        {
+            debug(string.Format("管理员:{0} 请求查询历史持仓:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+
+            IList<SettlePosition> positions = ORM.MTradingInfo.SelectHistPositions(request.TradingAccount, request.Settleday, request.Settleday);
+
+            int totalnum = positions.Count;
+            if (totalnum > 0)
+            {
+                for (int i = 0; i < totalnum; i++)
+                {
+                    RspMGRQryPositionResponse response = ResponseTemplate<RspMGRQryPositionResponse>.SrvSendRspResponse(request);
+                    response.PostionToSend = positions[i];
+                    CacheRspResponse(response, i == totalnum - 1);
+                }
+            }
+            else
+            {
+                //返回空项目
+                RspMGRQryPositionResponse response = ResponseTemplate<RspMGRQryPositionResponse>.SrvSendRspResponse(request);
+                response.PostionToSend = new SettlePosition();
+                CacheRspResponse(response);
+            }
+        }
+
+        void SrvOnMGRQryCash(MGRQryCashRequest request, ISession session, Manager manager)
+        {
+            debug(string.Format("管理员:{0} 请求查询出入金记录:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+
+            IList<CashTransaction> cts = ORM.MAccount.SelectHistCashTransaction(request.TradingAccount, request.Settleday, request.Settleday);
+
+            int totalnum = cts.Count;
+            if (totalnum > 0)
+            {
+                for (int i = 0; i < totalnum; i++)
+                {
+                    RspMGRQryCashResponse response = ResponseTemplate<RspMGRQryCashResponse>.SrvSendRspResponse(request);
+                    response.CashTransToSend = cts[i];
+                    CacheRspResponse(response, i == totalnum - 1);
+                }
+            }
+            else
+            {
+                //返回空项目
+                RspMGRQryCashResponse response = ResponseTemplate<RspMGRQryCashResponse>.SrvSendRspResponse(request);
+                response.CashTransToSend = new CashTransaction();
+                CacheRspResponse(response);
+            }
+        }
+
+        void SrvOnMGRQrySettlement(MGRQrySettleRequest request, ISession session, Manager manager)
+        { 
+            debug(string.Format("管理员:{0} 请求查询结算记录:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+
+
+            Settlement settlement = ORM.MSettlement.SelectSettlement(request.TradingAccount, request.Settleday);
+           
+            if (settlement != null)
+            {
+                List<string> settlelist = SettlementHelper.GenSettlementFile(settlement);
+                for (int i = 0; i < settlelist.Count; i++)
+                {
+                    RspMGRQrySettleResponse response = ResponseTemplate<RspMGRQrySettleResponse>.SrvSendRspResponse(request);
+                    response.Tradingday = settlement.SettleDay;
+                    response.TradingAccount = settlement.Account;
+                    response.SettlementContent = settlelist[i]+"\n";
+                    CacheRspResponse(response, i == settlelist.Count -1);
+                }
+                /*
+                List<string> settlelist = new List<string>();
+                settlelist.Add(string.Format("客户号:{0,-20}客户名称:{1,-20}日期:{1,-20}\n", "9580001", "钱波", "2014-09-01"));
+                settlelist.Add(string.Format("{0,-15}{1,10}{2,-15}{3,10}{4,-15}{5,-10}\n", "期初结存:", 1000002, "  交割手续费:", 345.67, "  交割保证金:", 45890));
+                settlelist.Add(string.Format("{0,-16}{1,10}{2,-16}{3,10}{4,-15}{5,-10}\n", "出入金:", 20000, "  期末结存:", 110000, "  可用资金:", 110000));
+
+                for (int i = 0; i < settlelist.Count; i++)
+                {
+                    RspMGRQrySettleResponse response = ResponseTemplate<RspMGRQrySettleResponse>.SrvSendRspResponse(request);
+                    response.Tradingday = settlement.SettleDay;
+                    response.TradingAccount = settlement.Account;
+                    response.SettlementContent = settlelist[i];
+                    CacheRspResponse(response,false);
+                }
+
+                string s = TemplateHelper.RenderSettlementInfo(new SettlementInfo(settlement));
+                string[] lines = s.Split('\n');
+                debug("got lines:" + lines.Length.ToString(), QSEnumDebugLevel.INFO);
+                for(int i=0;i<lines.Length;i++)
+                {
+                    RspMGRQrySettleResponse response = ResponseTemplate<RspMGRQrySettleResponse>.SrvSendRspResponse(request);
+                    response.Tradingday = settlement.SettleDay;
+                    response.TradingAccount = settlement.Account;
+                    response.SettlementContent = lines[i];
+                    CacheRspResponse(response, i == lines.Length - 1);
+                }
+                **/
+            }
+        }
+
+        void SrvOnMGRChangeAccountPassword(MGRChangeAccountPassRequest request, ISession session, Manager manger)
+        {
+            debug(string.Format("管理员:{0} 请求修改交易密码:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+
+            IAccount account = clearcentre[request.TradingAccount];
+            if (account != null)
+            {
+                clearcentre.ChangeAccountPass(request.TradingAccount, request.NewPassword);
+                RspMGRChangeAccountPassResponse response = ResponseTemplate<RspMGRChangeAccountPassResponse>.SrvSendRspResponse(request);
+
+                response.NewPassword = request.NewPassword;
+
+                CacheRspResponse(response);
+            }
+            else
+            {
+                RspMGRChangeAccountPassResponse response = ResponseTemplate<RspMGRChangeAccountPassResponse>.SrvSendRspResponse(request);
+                response.RspInfo.FillError("TRADING_ACCOUNT_NOT_FOUND");
+
+                CacheRspResponse(response);
+            }
+        }
+
+        void SrvOnMGRReqAddSecurity(MGRReqAddSecurityRequest request, ISession session, Manager manager)
+        {
+            debug(string.Format("管理员:{0} 请求添加品种:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+
+            SecurityFamilyImpl sec = request.SecurityFaimly;
+            if (BasicTracker.SecurityTracker[sec.Code] == null)
+            {
+                BasicTracker.SecurityTracker.UpdateSecurity(sec);
+
+                RspMGRQrySecurityResponse response = ResponseTemplate<RspMGRQrySecurityResponse>.SrvSendRspResponse(request);
+                response.SecurityFaimly = BasicTracker.SecurityTracker[sec.Code] as SecurityFamilyImpl;
+                CacheRspResponse(response);
+            }
+            else
+            {
+
+                RspMGRQrySecurityResponse response = ResponseTemplate<RspMGRQrySecurityResponse>.SrvSendRspResponse(request);
+                response.RspInfo.FillError("SECURITY_EXIST");
+                CacheRspResponse(response);
+            }
+            if (sec.Tradeable)
+            {
+                exchsrv.RegisterSymbol(BasicTracker.SecurityTracker[sec.Code]);
+            }
+        }
+
+        void SrvOnMGRReqAddSymbol(MGRReqAddSymbolRequest request, ISession session, Manager manager)
+        {
+            debug(string.Format("管理员:{0} 请求添加合约:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            SymbolImpl symbol = request.Symbol;
+            if (BasicTracker.SymbolTracker[symbol.Symbol] == null)
+            {
+                BasicTracker.SymbolTracker.UpdateSymbol(symbol);
+
+                RspMGRReqAddSymbolResponse response = ResponseTemplate<RspMGRReqAddSymbolResponse>.SrvSendRspResponse(request);
+                response.Symbol = BasicTracker.SymbolTracker[symbol.Symbol] as SymbolImpl;
+                CacheRspResponse(response);
+            }
+            else
+            {
+                RspMGRReqAddSymbolResponse response = ResponseTemplate<RspMGRReqAddSymbolResponse>.SrvSendRspResponse(request);
+                response.RspInfo.FillError("SYMBOL_EXIST");
+                CacheRspResponse(response);
+            }
+            if (symbol.Tradeable)
+            {
+                exchsrv.RegisterSymbol(request.Symbol.Symbol);   
+            }
+        }
+
+        void SrvOnMGRReqChangeInvestor(MGRReqChangeInvestorRequest request, ISession session, Manager manager)
+        {
+            debug(string.Format("管理员:{0} 请求修改投资者信息:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            IAccount account = clearcentre[request.TradingAccount];
+            if (account != null)
+            {
+                clearcentre.UpdateAccountToken(request.TradingAccount, request.Token);
+            }
+        }
+        void tl_newPacketRequest(IPacket packet,ISession session,Manager manager)
+        {
+            switch (packet.Type)
+            {
+                case MessageTypes.MGRQRYACCOUNTS://查询交易帐号列表
+                    { 
+                        SrvOnMGRQryAccount(packet as MGRQryAccountRequest, session, manager);
+                        break;
+                    }
+                case MessageTypes.MGRWATCHACCOUNTS://设定观察交易帐号列表
+                    {
+                        SrvOnMGRWatchAccount(packet as MGRWatchAccountRequest, session, manager);
+                        break;
+                    }
+                case MessageTypes.MGRRESUMEACCOUNT://恢复某个交易帐号日内交易数据
+                    {
+                        SrvOnMGRResumeAccount(packet as MGRResumeAccountRequest, session, manager);
+                        break;
+                    }
+                case MessageTypes.MGRQRYACCOUNTINFO://查询帐户信息
+                    {
+                        SrvOnMGRQryAccountInfo(packet as MGRQryAccountInfoRequest, session, manager);
+                        break;
+                    }
+                case MessageTypes.MGRCASHOPERATION://出入金操作
+                    {
+                        SrvOnMGRCashOperation(packet as MGRCashOperationRequest, session, manager);
+                        break;
+                    }
+                case MessageTypes.MGRUPDATEACCOUNTCATEGORY://更新帐户类别
+                    {
+                        SrvOnMGRUpdateAccountCategory(packet as MGRUpdateCategoryRequest, session, manager);
+                        break;
+                    }
+                case MessageTypes.MGRUPDATEACCOUNTEXECUTE://更新帐户执行权限
+                    {
+                        SrvOnMGRUpdateAccountExecute(packet as MGRUpdateExecuteRequest, session, manager);
+                        break;
+                    }
+                case MessageTypes.MGRUPDATEACCOUNTINTRADAY://更新日内交易权限
+                    {
+                        SrvOnMGRUpdateAccountIntraday(packet as MGRUpdateIntradayRequest, session, manager);
+                        break;
+                    }
+                case MessageTypes.MGRUPDATEACCOUNTROUTETRANSFERTYPE://更新路由类别哦
+                    {
+                        SrvOnMGRUpdateRouteType(packet as MGRUpdateRouteTypeRequest, session, manager);
+                        break;
+                    }
+                case MessageTypes.MGROPENCLEARCENTRE://请求开启清算中心
+                    {
+                        SrvOnMGROpenClearCentre(packet as MGRReqOpenClearCentreRequest, session, manager);
+                        break;
+                    }
+                case MessageTypes.MGRCLOSECLEARCENTRE://请求关闭清算中心
+                    {
+                        SrvOnMGRCloseClearCentre(packet as MGRReqCloseClearCentreRequest, session, manager);
+                        break;
+                    }
+                case MessageTypes.MGRQRYCONNECTOR://查询通道列表
+                    {
+                        SrvOnMGRQryConnector(packet as MGRQryConnectorRequest, session, manager);
+                        break;
+                    }
+                case MessageTypes.MGRSTARTBROKER://请求启动成交通道
+                    {
+                        SrvOnMGRStartBroker(packet as MGRReqStartBrokerRequest, session, manager);
+                        break;
+                    }
+                case MessageTypes.MGRSTOPBROKER://请求停止成交通道
+                    {
+                        SrvOnMGRStopBroker(packet as MGRReqStopBrokerRequest, session, manager);
+                        break;
+                    }
+                case MessageTypes.MGRSTARTDATAFEED://请求启动行情通道
+                    {
+                        SrvOnMGRStartDataFeed(packet as MGRReqStartDataFeedRequest, session, manager);
+                        break;
+                    }
+                case MessageTypes.MGRSTOPDATAFEED://请求停止行情通道
+                    {
+                        SrvOnMGRStopDataFeed(packet as MGRReqStopDataFeedRequest, session, manager);
+                        break;
+                    }
+                case MessageTypes.MGRADDACCOUNT://请求添加交易帐号
+                    {
+                        SrvOnMGRAddAccount(packet as MGRAddAccountRequest, session, manager);
+                        break;
+                    }
+                case MessageTypes.MGRQRYEXCHANGE://请求查询交易所
+                    {
+                        SrvOnMGRQryExchange(packet as MGRQryExchangeRequuest, session, manager);
+                        break;
+                    }
+                case MessageTypes.MGRQRYMARKETTIME://请求查询市场时间段
+                    {
+                        SrvOnMGRQryMarketTime(packet as MGRQryMarketTimeRequest, session, manager);
+                        break;
+                    }
+                case MessageTypes.MGRQRYSECURITY://请求查询品种
+                    {
+                        SrvOnMGRQrySecurity(packet as MGRQrySecurityRequest, session, manager);
+                        break;
+                    }
+                case MessageTypes.MGRUPDATESECURITY://请求更新品种
+                    {
+                        SrvOnMGRUpdateSecurity(packet as MGRUpdateSecurityRequest, session, manager);
+                        break;
+                    }
+                case MessageTypes.MGRQRYSYMBOL://请求查询合约
+                    {
+                        SrvOnMGRQrySymbol(packet as MGRQrySymbolRequest, session, manager);
+                        break;
+                    }
+                case MessageTypes.MGRUPDATESYMBOL://请求更新合约
+                    {
+                        SrvOnMGRUpdateSymbol(packet as MGRUpdateSymbolRequest, session, manager);
+                        break;
+                    }
+                case MessageTypes.MGRQRYRULECLASS://请求查询风控规则列表
+                    {
+                        SrvOnMGRQryRuleSet(packet as MGRQryRuleSetRequest, session, manager);
+                        break;
+                    }
+                case MessageTypes.MGRUPDATERULEITEM://请求更新风控规则
+                    {
+                        SrvOnMGRUpdateRule(packet as MGRUpdateRuleRequest, session, manager);
+                        break;
+                    }
+                case MessageTypes.MGRQRYRULEITEM://请求查询帐户风控项目列表
+                    {
+                        SrvOnMGRQryRuleItem(packet as MGRQryRuleItemRequest, session, manager);
+                        break;
+                    }
+                case MessageTypes.MGRDELRULEITEM://请求删除风控规则
+                    {
+                        SrvOnMGRDelRuleItem(packet as MGRDelRuleItemRequest, session, manager);
+                        break;
+                    }
+                case MessageTypes.MGRQRYSYSTEMSTATUS://请求系统状态
+                    {
+                        SrvOnMGRQrySystemStatus(packet as MGRQrySystemStatusRequest, session, manager);
+                        break;
+                    }
+                case MessageTypes.MGRQRYORDER://请求查询历史委托
+                    {
+                        SrvOnMGRQryOrder(packet as MGRQryOrderRequest, session, manager);
+                        break;
+                    }
+                case MessageTypes.MGRQRYTRADE://请求查询历史成交
+                    {
+                        SrvnMGRQryTrade(packet as MGRQryTradeRequest, session, manager);
+                        break;
+                    }
+                case MessageTypes.MGRQRYPOSITION://请求查询历史持仓
+                    {
+                        SrvOnMGRQryPosition(packet as MGRQryPositionRequest, session, manager);
+                        break;
+                    }
+                case MessageTypes.MGRQRYCASH://请求查询出入金记录
+                    {
+                        SrvOnMGRQryCash(packet as MGRQryCashRequest, session, manager);
+                        break;
+                    }
+                case MessageTypes.MGRQRYSETTLEMENT://请求查询结算单
+                    {
+                        SrvOnMGRQrySettlement(packet as MGRQrySettleRequest, session, manager);
+                        break;
+                    }
+                case MessageTypes.MGRCHANGEACCOUNTPASS://请求修改密码
+                    {
+                        SrvOnMGRChangeAccountPassword(packet as MGRChangeAccountPassRequest,session,manager);
+                        break;
+                    }
+                case MessageTypes.MGRADDSECURITY://请求添加品种
+                    {
+                        SrvOnMGRReqAddSecurity(packet as MGRReqAddSecurityRequest, session, manager);
+                        break;
+                    }
+                case MessageTypes.MGRADDSYMBOL://请求添加合约
+                    {
+                        SrvOnMGRReqAddSymbol(packet as MGRReqAddSymbolRequest, session, manager);
+                        break;
+                    }
+                case MessageTypes.MGRCHANGEINVESTOR://请求修改投资者信息
+                    {
+                        SrvOnMGRReqChangeInvestor(packet as MGRReqChangeInvestorRequest, session, manager);
+                        break;
+                    }
+                default:
+                    debug("packet type:" + packet.Type.ToString() + " not set handler", QSEnumDebugLevel.WARNING);
+                    break;
+            }
+        }
+    }
+}

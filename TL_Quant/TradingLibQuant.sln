@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradingLib.Quant.Base", "TradingLib.Quant.Base\TradingLib.Quant.Base.csproj", "{1A5D4589-9E2E-4FED-9DD2-C328BFD93576}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradingLib.Quant.Chart", "TradingLib.Quant.Chart\TradingLib.Quant.Chart.csproj", "{3EE2DE69-03A3-44F7-9DDD-B4A79CD3BCDE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradingLib.Quant.Engine", "TradingLib.Quant.Engine\TradingLib.Quant.Engine.csproj", "{70F4E33C-FC52-413E-BC58-654549FFF8FB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradingLib.Quant.GUI", "TradingLib.Quant.GUI\TradingLib.Quant.GUI.csproj", "{CE66A325-FA4B-4A5D-8EBC-DC1BFC978EBE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradingLib.Quant.Loader", "TradingLib.Quant.Loader\TradingLib.Quant.Loader.csproj", "{D965B6F6-4E39-42FE-8F9E-33FA1C2ADE4A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradingLib.Quant.Plugins", "TradingLib.Quant.Plugins\TradingLib.Quant.Plugins.csproj", "{D52801AA-6B95-4313-A57A-15045AD050CB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1A5D4589-9E2E-4FED-9DD2-C328BFD93576}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A5D4589-9E2E-4FED-9DD2-C328BFD93576}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A5D4589-9E2E-4FED-9DD2-C328BFD93576}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A5D4589-9E2E-4FED-9DD2-C328BFD93576}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3EE2DE69-03A3-44F7-9DDD-B4A79CD3BCDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EE2DE69-03A3-44F7-9DDD-B4A79CD3BCDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3EE2DE69-03A3-44F7-9DDD-B4A79CD3BCDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3EE2DE69-03A3-44F7-9DDD-B4A79CD3BCDE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70F4E33C-FC52-413E-BC58-654549FFF8FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70F4E33C-FC52-413E-BC58-654549FFF8FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70F4E33C-FC52-413E-BC58-654549FFF8FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70F4E33C-FC52-413E-BC58-654549FFF8FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE66A325-FA4B-4A5D-8EBC-DC1BFC978EBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE66A325-FA4B-4A5D-8EBC-DC1BFC978EBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE66A325-FA4B-4A5D-8EBC-DC1BFC978EBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE66A325-FA4B-4A5D-8EBC-DC1BFC978EBE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D965B6F6-4E39-42FE-8F9E-33FA1C2ADE4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D965B6F6-4E39-42FE-8F9E-33FA1C2ADE4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D965B6F6-4E39-42FE-8F9E-33FA1C2ADE4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D965B6F6-4E39-42FE-8F9E-33FA1C2ADE4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D52801AA-6B95-4313-A57A-15045AD050CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D52801AA-6B95-4313-A57A-15045AD050CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D52801AA-6B95-4313-A57A-15045AD050CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D52801AA-6B95-4313-A57A-15045AD050CB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

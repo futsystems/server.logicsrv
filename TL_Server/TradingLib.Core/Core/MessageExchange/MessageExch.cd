@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="TradingLib.Core.TLServer_Generic&lt;T&gt;">
+    <Position X="2.5" Y="1.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>iUBKpAQJACJIAogIgAIAACiACggUKIoAcGBOhQA2AAM=</HashCode>
+      <FileName>Base\TLServer_Generic.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TradingLib.Core.TLServer_Exch">
+    <Position X="5.25" Y="1.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>EQAQDAAoAAAIBAAACAAEAGgAAgAAiAAgCCCSAAAQBIA=</HashCode>
+      <FileName>Core\MessageExchange\TLServer_Exch.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TradingLib.Core.MsgExchServer">
+    <Position X="8" Y="1.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>qQ1IIIkmJPwTSgQBwEWEgrJhjMEBK4IgaEUYsQStBZw=</HashCode>
+      <FileName>Core\MessageExchange\MsgExchServer.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="TradingLib.Common.ClientInfoBase">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Font Name="宋体" Size="9" />
+</ClassDiagram>
