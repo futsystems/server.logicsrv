@@ -11,7 +11,12 @@ namespace TradingLib.Contrib.FinService
 
     public class ServicePlanBase
     {
-        //Dictionary<string,>
+        /// <summary>
+        /// 参数列表
+        /// </summary>
+        Dictionary<string, Argument> argumentmap = new Dictionary<string, Argument>();
+
+
         /// <summary>
         /// 调整收费项目
         /// </summary>

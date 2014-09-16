@@ -23,14 +23,6 @@ namespace TradingLib.Contrib.FinService
         /// </summary>
         public EnumArgumentType Type { get; set; }
 
-
-        /// <summary>
-        /// 服务外键
-        /// 表面该参数是为某个服务设定的
-        /// 每个帐户只允许有一个配资服务，该配资服务从数据库加载参数列表 没有参数则从Agent获得基本数据 如果 Agent没有数据则从Base获得数据
-        /// </summary>
-        public int service_fk { get; set; }
-
         /// <summary>
         /// 转换成字符串
         /// </summary>
@@ -67,4 +59,55 @@ namespace TradingLib.Contrib.FinService
                 throw new Exception("参数类型不正确");
         }
     }
+
+    /// <summary>
+    /// 基准结算费率 用于定义系统默认的客户参数和代理参数
+    /// </summary>
+    public class ArgumentBase:Argument
+    {
+        
+        /// <summary>
+        /// 服务计划外键
+        /// 表面该基准费率绑定于某个服务计划
+        /// </summary>
+        public int serviceplane_fk { get; set; }
+
+        /// <summary>
+        /// 参数所属类别
+        /// </summary>
+        public EnumArgumentClass ArgClass { get; set; }
+
+    }
+
+
+    /// <summary>
+    /// 代理结算费率 用于定义代理参数 将覆盖基准参数
+    /// </summary>
+    public class ArgumentAgent : Argument
+    {
+        /// <summary>
+        /// 该代理结算费率绑定与哪个服务计划
+        /// </summary>
+        public int serviceplane_fk { get; set; }
+
+        /// <summary>
+        /// 该代理外键
+        /// 代理id通过代理表中的agentcode进行标识
+        /// </summary>
+        public int agent_fk { get; set; }
+
+    }
+
+    /// <summary>
+    /// 交易帐户参数 用于定义交易帐户参数 将覆盖基准参数
+    /// </summary>
+    public class ArgumentAccount : Argument
+    {
+        /// <summary>
+        /// 服务外键 用于绑定服务 加载服务时可以通过该外键获得对应的参数
+        /// </summary>
+        public int service_fk { get; set; }
+    }
+
+
 }
