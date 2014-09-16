@@ -51,7 +51,6 @@ namespace TradingLib.API
         /// <summary>
         /// 交易所
         /// </summary>
-        //string ex { get; set; }
         string Exchange { get; set; }
         /// <summary>
         /// 品种类型
@@ -66,10 +65,6 @@ namespace TradingLib.API
         /// </summary>
         CurrencyType Currency { get; set; }
 
-
-
-
-
         /// <summary>
         /// 交易数量绝对值
         /// </summary>
@@ -82,6 +77,7 @@ namespace TradingLib.API
         /// 是否已经被成交过
         /// </summary>
         bool isFilled { get; }
+
         /// <summary>
         /// 成交备注
         /// </summary>
@@ -129,6 +125,25 @@ namespace TradingLib.API
         /// </summary>
         string OrderExchID { get; set; }
 
+        /// <summary>
+        /// 开平标志
+        /// </summary>
+        QSEnumOffsetFlag OffsetFlag { get; set; }
+
+        /// <summary>
+        /// 该成交是否是开仓
+        /// 开仓为True
+        /// 平仓为False
+        /// </summary>
+        /// <returns></returns>
+        bool IsEntryPosition { get;}
+
+        /// <summary>
+        /// 判定的持仓方向
+        /// 正向开仓或者反向平仓则仓位方向为true代表longposition
+        /// 反向开仓或者正向平仓则仓位方向为false代表shortpostion
+        /// </summary>
+        bool PositionSide { get;}
     }
 
     public class InvalidTrade : Exception { }

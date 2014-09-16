@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Drawing;
 using System.Data;
@@ -418,7 +419,8 @@ namespace FutSystems.GUI
         public QuoteRow this[string symbol] { get { return this[symbol2idx(symbol)]; } }
 
         //记录quoteview所监听的证券列表
-        SymbolBasket mb = null;//new BasketImpl();
+        //List<Symbol> mb = new List<Symbol>();
+        ConcurrentDictionary<string, Symbol> symmap = new ConcurrentDictionary<string, Symbol>();
         //加入一个证券
 
         //记录改变颜色的最新价格的行号
@@ -433,12 +435,13 @@ namespace FutSystems.GUI
         /// <param name="sec"></param>
         public void addSecurity(Symbol sec)
         {
+            debug("add symbol:"+sec.Symbol);
             //MessageBox.Show("Symbol:"+sec.Symbol + " "+sec.PriceTick.ToString() +" "+ sec.Currency.ToString());
             string sym = sec.Symbol;//得到该security的symbol代号
             //1.检查是否存在该symbol,如果存在则直接返回
-            if (mb.HaveSymbol(sym)) return;
+            if (symmap.ContainsKey(sec.Symbol)) return;
             //如果baskect中没有该symbol,我们将其加入
-            mb.Add(sec);//basket.add默认有完备性检查
+            symmap.TryAdd(sec.Symbol,sec);//basket.add默认有完备性检查
             //2.如果没有该symbol则进行数据项目的增加
             try
             {
@@ -471,9 +474,10 @@ namespace FutSystems.GUI
         {
             string sym = sec.Symbol;//得到该security的symbol代号
             //1.检查是否存在该symbol,如果存在则直接返回
-            if (!mb.HaveSymbol(sym)) return;
+            if (!symmap.Keys.Contains(sym)) return;
             //如果baskect中没有该symbol,我们将其加入
-            mb.Remove(sec);//basket.add默认有完备性检查
+            Symbol symout=null;
+            symmap.TryRemove(sym, out symout);//basket.add默认有完备性检查
             int rid;
             if(!_symbolIdxMap.TryGetValue(sym,out rid)) return;
             int rnum = _idxQuoteRowMap.Count;
@@ -762,7 +766,8 @@ namespace FutSystems.GUI
         {
             if ((row < 0) || (row >= Count)) return new SymbolImpl();
             string sym = this[row][QuoteListConst.SYMBOL].symbol;
-            Symbol s = mb[sym];
+            Symbol s = null;
+            symmap.TryGetValue(sym, out s);
             return s;
         }
 

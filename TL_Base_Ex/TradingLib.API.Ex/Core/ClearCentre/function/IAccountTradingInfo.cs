@@ -17,21 +17,21 @@ namespace TradingLib.API
         /// <returns></returns>
         bool AnyPosition(string id);
 
-        #region 帐户的持仓与委托管理器
-        /// <summary>
-        /// 获得某交易账户的仓位管理器
-        /// </summary>
-        /// <param name="AccountID"></param>
-        /// <returns></returns>
-        Object getPositionTracker(string AccountID);
+        //#region 帐户的持仓与委托管理器
+        ///// <summary>
+        ///// 获得某交易账户的仓位管理器
+        ///// </summary>
+        ///// <param name="AccountID"></param>
+        ///// <returns></returns>
+        //Object getPositionTracker(string AccountID);
 
-        /// <summary>
-        /// 获得某个交易账户的委托管理器
-        /// </summary>
-        /// <param name="AccountID"></param>
-        /// <returns></returns>
-        Object getOrderTracker(string AccountID);
-        #endregion
+        ///// <summary>
+        ///// 获得某个交易账户的委托管理器
+        ///// </summary>
+        ///// <param name="AccountID"></param>
+        ///// <returns></returns>
+        //Object getOrderTracker(string AccountID);
+        //#endregion
 
         #region 获得当日交易记录 account 为null返回所有
         /// <summary>
@@ -72,7 +72,7 @@ namespace TradingLib.API
         /// </summary>
         /// <param name="o"></param>
         /// <returns></returns>
-        Position getPosition(string account, string symbol);
+        Position getPosition(string account, string symbol,bool side);
 
         /// <summary>
         /// 获得某个委托下对应账户与合约持仓的反向 未平仓合约 用于CTP检查持仓状态
@@ -80,7 +80,7 @@ namespace TradingLib.API
         /// </summary>
         /// <param name="o"></param>
         /// <returns></returns>
-        int getUnfilledSizeExceptStop(Order o);
+        //int getUnfilledSizeExceptStop(Order o);
 
         /// <summary>
         /// 获得某个账户 某个合约 隔夜持仓数据 0 为无持仓

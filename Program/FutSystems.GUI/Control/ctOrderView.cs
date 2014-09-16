@@ -76,6 +76,7 @@ namespace FutSystems.GUI
         const string FILLED = "成交手数";
         const string STATUS = "挂单状态";
         const string STATUSSTR = "状态";
+        const string COMMENT = "备注";
         const string ORDERREF = "本地编号";
         const string EXCHORDERID = "交易所编号";
         const string EXCHANGE = "交易所";
@@ -138,6 +139,7 @@ namespace FutSystems.GUI
                         tb.Rows[i][EXCHANGE] = o.Exchange;
                         tb.Rows[i][EXCHORDERID] = o.OrderExchID;
                         tb.Rows[i][ACCOUNT] = o.Account;
+                        tb.Rows[i][COMMENT] = o.comment;
                         num.Text = orderGrid.RowCount.ToString();
                     }
                     else
@@ -145,6 +147,7 @@ namespace FutSystems.GUI
                         tb.Rows[i][FILLED] = o.Filled;
                         tb.Rows[i][STATUS] = o.Status;
                         tb.Rows[i][STATUSSTR] = LibUtil.GetEnumDescription(o.Status);
+                        tb.Rows[i][COMMENT] = o.comment;
                     }
                 }
                 catch (Exception ex)
@@ -196,6 +199,7 @@ namespace FutSystems.GUI
             tb.Columns.Add(FILLED);
             tb.Columns.Add(STATUS);
             tb.Columns.Add(STATUSSTR);
+            tb.Columns.Add(COMMENT);
             tb.Columns.Add(ORDERREF);
             tb.Columns.Add(EXCHANGE);
             tb.Columns.Add(EXCHORDERID);
@@ -215,6 +219,16 @@ namespace FutSystems.GUI
 
             grid.Columns[DIRECTION].IsVisible = false;
             grid.Columns[STATUS].IsVisible = false;
+
+            grid.Columns[DATETIME].Width = 40;
+            grid.Columns[DATETIME].TextAlignment = ContentAlignment.MiddleCenter;
+            grid.Columns[SYMBOL].Width = 40;
+            grid.Columns[SYMBOL].TextAlignment = ContentAlignment.MiddleCenter;
+            grid.Columns[OPERATION].Width = 30;
+            grid.Columns[OPERATION].TextAlignment = ContentAlignment.MiddleCenter;
+            grid.Columns[SIZE].Width = 40;
+            grid.Columns[COMMENT].Width = 100;
+
             
             //set width
             //grid.Columns[SYMBOL].Width = 80;

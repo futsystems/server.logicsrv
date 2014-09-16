@@ -93,6 +93,14 @@ namespace TradingLib.API
         string _label;
     }
 
+    public class QSUnknownOffsetException : QSError
+    {
+        public QSUnknownOffsetException()
+            :base(new Exception(),"未知开平标识")
+        { 
+            
+        }
+    }
    
 
     public class QSErrorAccountNotExist : QSError

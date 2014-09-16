@@ -186,5 +186,9 @@ namespace TradingLib.API
         void OnMGRSettlementResponse(RspMGRQrySettleResponse response);
         #endregion
 
+
+        void PopRspInfo(RspInfo info);
+
+
     }
 }

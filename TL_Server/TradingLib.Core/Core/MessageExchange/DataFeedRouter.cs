@@ -453,7 +453,7 @@ namespace TradingLib.Core
             Tick k = new TickImpl();
             k.trade=2204.0M;
             k.size=10;
-            k.symbol="IF1406";
+            k.symbol="IF1409";
             k.ask=2205.2M;
             k.os=10;
             k.bid = 2205.0M;

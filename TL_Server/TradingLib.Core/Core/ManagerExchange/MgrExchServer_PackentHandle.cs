@@ -119,12 +119,28 @@ namespace TradingLib.Core
             IAccount account = clearcentre[request.Account];
             if (account != null)
             {
+                //出金
+                if (request.Amount < 0)
+                {
+                    if (Math.Abs(request.Amount)>account.AvabileFunds)
+                    {
+                        RspMGROperationResponse response = ResponseTemplate<RspMGROperationResponse>.SrvSendRspResponse(request);
+                        response.RspInfo.FillError("CASHOUT_OVER_AVABILE");
+                        CachePacket(response);
+                        return;
+                    }
+                }//入金
+                else
+                { 
+                    
+                }
+                //出入金检查
                 clearcentre.CashOperation(request.Account, request.Amount,request.TransRef, request.Comment);
 
                 //出入金操作后返回帐户信息更新
-                RspMGRQryAccountInfoResponse response = ResponseTemplate<RspMGRQryAccountInfoResponse>.SrvSendRspResponse(request);
-                response.AccountInfoToSend = ObjectInfoHelper.GenAccountInfo(account);
-                CachePacket(response);
+                RspMGRQryAccountInfoResponse notify = ResponseTemplate<RspMGRQryAccountInfoResponse>.SrvSendRspResponse(request);
+                notify.AccountInfoToSend = ObjectInfoHelper.GenAccountInfo(account);
+                CachePacket(notify);
             }
         }
 
@@ -733,6 +749,16 @@ namespace TradingLib.Core
                 clearcentre.UpdateAccountToken(request.TradingAccount, request.Token);
             }
         }
+
+        void SrvOnMGRReqUpdateAccountPosLock(MGRReqUpdatePosLockRequest request, ISession session, Manager manager)
+        {
+            debug(string.Format("管理员:{0} 请求修改帐户锁仓权限:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            IAccount account = clearcentre[request.TradingAccount];
+            if (account != null)
+            {
+                clearcentre.UpdateAccountPosLock(request.TradingAccount, request.PosLock);
+            }
+        }
         void tl_newPacketRequest(IPacket packet,ISession session,Manager manager)
         {
             switch (packet.Type)
@@ -920,6 +946,11 @@ namespace TradingLib.Core
                 case MessageTypes.MGRCHANGEINVESTOR://请求修改投资者信息
                     {
                         SrvOnMGRReqChangeInvestor(packet as MGRReqChangeInvestorRequest, session, manager);
+                        break;
+                    }
+                case MessageTypes.MGRUPDATEPOSLOCK://请求修改帐户锁仓权限
+                    {
+                        SrvOnMGRReqUpdateAccountPosLock(packet as MGRReqUpdatePosLockRequest, session, manager);
                         break;
                     }
                 default:

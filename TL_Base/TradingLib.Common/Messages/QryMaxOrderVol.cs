@@ -28,7 +28,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 开平标识
         /// </summary>
-        public QSEnumOrderPosFlag PostFlag { get; set; }
+        public QSEnumOffsetFlag OffsetFlag { get; set; }
 
 
         public QryMaxOrderVolRequest()
@@ -37,7 +37,7 @@ namespace TradingLib.Common
             Account = string.Empty;
             Symbol = string.Empty;
             Side = false;
-            PostFlag = QSEnumOrderPosFlag.UNKNOWN;
+            OffsetFlag = QSEnumOffsetFlag.UNKNOWN;
             
         }
         public override bool IsValid
@@ -60,7 +60,7 @@ namespace TradingLib.Common
             sb.Append(d);
             sb.Append(Side.ToString());
             sb.Append(d);
-            sb.Append(PostFlag.ToString());
+            sb.Append(OffsetFlag.ToString());
             return sb.ToString();
         }
 
@@ -70,7 +70,7 @@ namespace TradingLib.Common
             Account = rec[0];
             Symbol = rec[1];
             Side = bool.Parse(rec[2]);
-            PostFlag = (QSEnumOrderPosFlag)Enum.Parse(typeof(QSEnumOrderPosFlag), rec[3]);
+            OffsetFlag = (QSEnumOffsetFlag)Enum.Parse(typeof(QSEnumOffsetFlag), rec[3]);
         }
 
 
@@ -85,7 +85,7 @@ namespace TradingLib.Common
             Symbol = string.Empty;
             MaxVol = 0;
             Side = false;
-            PostFlag = QSEnumOrderPosFlag.UNKNOWN;
+            OffsetFlag = QSEnumOffsetFlag.UNKNOWN;
             _type = MessageTypes.MAXORDERVOLRESPONSE;
         }
 
@@ -99,7 +99,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 开平标识
         /// </summary>
-        public QSEnumOrderPosFlag PostFlag { get; set; }
+        public QSEnumOffsetFlag OffsetFlag { get; set; }
 
 
         public int MaxVol { get; set; }
@@ -114,7 +114,7 @@ namespace TradingLib.Common
             sb.Append(d);
             sb.Append(Side.ToString());
             sb.Append(d);
-            sb.Append(((int)PostFlag).ToString());
+            sb.Append(((int)OffsetFlag).ToString());
             sb.Append(d);
             sb.Append(MaxVol.ToString());
             return sb.ToString();
@@ -126,7 +126,7 @@ namespace TradingLib.Common
             string[] rec = content.Split(',');
             Symbol = rec[0];
             Side = bool.Parse(rec[1]);
-            PostFlag = (QSEnumOrderPosFlag)Enum.Parse(typeof(QSEnumOrderPosFlag), rec[2]);
+            OffsetFlag = (QSEnumOffsetFlag)Enum.Parse(typeof(QSEnumOffsetFlag), rec[2]);
             MaxVol = int.Parse(rec[3]);
         }
     }

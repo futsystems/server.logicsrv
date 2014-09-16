@@ -381,7 +381,7 @@ namespace TradingLib.Core
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("上次结算持仓:" + Environment.NewLine);
-            foreach (Position pos in this.PositionHoldLastSettleday)
+            foreach (Position pos in this.TotalYDPositions)
             {
                 sb.Append(pos.ToString() + Environment.NewLine);
             }
@@ -393,7 +393,7 @@ namespace TradingLib.Core
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("当前持仓:" + Environment.NewLine);
-            foreach (Position pos in this.PositionsHoldNow)
+            foreach (Position pos in this.TotalPositions)
             {
                 sb.Append(pos.ToString() + Environment.NewLine);
             }

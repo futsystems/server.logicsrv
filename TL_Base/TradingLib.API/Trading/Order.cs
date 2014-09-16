@@ -49,10 +49,6 @@ namespace TradingLib.API
         /// </summary>
         string comment { get; set; }
         /// <summary>
-        /// destination for order
-        /// </summary>
-        //string ex { get; set; }
-        /// <summary>
         /// signed size of order (-100 = sell 100)
         /// </summary>
         int size { get; set; }
@@ -192,7 +188,7 @@ namespace TradingLib.API
         /// <summary>
         /// 委托的开平仓标志
         /// </summary>
-        QSEnumOrderPosFlag OrderPostFlag { get;set;}
+        QSEnumOffsetFlag OffsetFlag { get; set; }
 
         /// <summary>
         /// 该委托触发来源
@@ -233,6 +229,18 @@ namespace TradingLib.API
         /// 标注该委托来自于哪个客户端
         /// </summary>
         int SessionIDi { get; set; }
+
+        /// <summary>
+        /// 该成交是否是开仓
+        /// </summary>
+        /// <returns></returns>
+        bool IsEntryPosition { get; }
+
+        /// <summary>
+        /// 仓位操作方向
+        /// 代表是多头操作还是空头操作
+        /// </summary>
+        bool PositionSide { get; }
     }
 
     public class InvalidOrder : Exception { }

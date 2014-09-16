@@ -29,14 +29,14 @@ namespace TradingLib.API
         /// <param name="account"></param>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        Position getPosition(string account, string symbol);
+        Position getPosition(string account, string symbol,bool side);
 
         /// <summary>
         /// 检查某个委托对应的未成交委托数量
         /// </summary>
         /// <param name="o"></param>
         /// <returns></returns>
-        int getUnfilledSizeExceptStop(Order o);
+        //int getUnfilledSizeExceptStop(Order o);
         int getPositionHoldSize(string account, string symbol);
         /// <summary>
         /// 获得与某委托方向相反的未成交委托

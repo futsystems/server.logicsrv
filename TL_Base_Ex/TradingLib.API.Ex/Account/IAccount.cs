@@ -101,9 +101,21 @@ namespace TradingLib.API
         DateTime SettleDateTime { get; set; }
 
         /// <summary>
+        /// 确认结算日期
+        /// </summary>
+        long SettlementConfirmTimeStamp { get; set; }
+
+
+        /// <summary>
         /// 帐户Token 用于储存帐户标识
         /// </summary>
         string Token { get; set; }
+
+        /// <summary>
+        /// 是否允许锁仓
+        /// </summary>
+        bool PosLock { get; set; }
+
         /// <summary>
         /// 入金接口
         /// </summary>
@@ -116,10 +128,7 @@ namespace TradingLib.API
         /// <param name="amount"></param>
         void Withdraw(decimal amount);
 
-        /// <summary>
-        /// 确认结算日期
-        /// </summary>
-        long SettlementConfirmTimeStamp { get; set; }
+        
 
         /// <summary>
         /// 重置账户状态,用于每日造成开盘时,重置数据 

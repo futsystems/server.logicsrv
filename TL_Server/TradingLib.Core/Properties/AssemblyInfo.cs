@@ -19,6 +19,9 @@ using System.Runtime.InteropServices;
 // COM, set the ComVisible attribute to true on that type.
 [assembly: ComVisible(false)]
 
+//指定友元程序集
+[assembly: InternalsVisibleToAttribute("TradingLib.ServiceManager")]
+
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("c3037d60-9c84-40e0-b8ed-f1e167fc67e8")]
 

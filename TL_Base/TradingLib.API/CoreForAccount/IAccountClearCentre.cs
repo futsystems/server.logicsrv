@@ -18,8 +18,8 @@ namespace TradingLib.API
 
 
         #region 委托与持仓管理器
-        object OrderTracker { get; }
-        object PositionTracker { get; }
+        //object OrderTracker { get; }
+        //object PositionTracker { get; }
         #endregion
 
         //#region 合约信息

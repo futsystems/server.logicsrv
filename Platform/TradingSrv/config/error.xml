@@ -17,6 +17,8 @@
 <error id="POSITION_OVER_CLOSE" value="15" prompt="可平持仓数量不足"/>
 <error id="POSITION_ORDER_CANNOT_CLOSE" value="13" prompt="委托与当前持仓方向相同,无法平仓"/>
 <error id="POSITION_ORDER_CANNOT_OPEN" value="14" prompt="委托与当前持仓方向相反,无法开仓"/>
+<error id="OFFSETFLAG_CAN_NOT_TETECTED" value="140" prompt="同时持有多空头寸，无法自动判定开平标识，请设定开平标识"/>
+<error id="TWO_SIDE_POSITION_HOLD_FORBIDDEN" value="141" prompt="不允许进行锁仓操作"/>
 
 <error id="POSITION_OVER_CLOSE_AUTO_CANCEL" value="16" prompt="市价平仓溢出,系统自动扯单并平仓"/>
 <error id="ORDER_CAN_NOT_BE_DELETE" value="17" prompt="委托无法撤消"/>
@@ -36,7 +38,8 @@
 
 
 
-
+<error id="CASHOUT_OVER_AVABILE" value="200" prompt="超出可提金额"/>
+<error id="CASHOUT_STILL_HAVE_POSITION" value="200" prompt="有持仓,不允许出金"/>
 
 
 

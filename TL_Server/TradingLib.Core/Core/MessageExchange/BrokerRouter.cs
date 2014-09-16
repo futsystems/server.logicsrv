@@ -317,6 +317,7 @@ namespace TradingLib.Core
         /// <summary>
         /// 向Broker发送Order,TradingServer统一通过 BrokerRouter 发送委托,BrokerRouter 则在本地按一定的规则找到对应的
         /// 交易接口将委托发送出去
+        /// 
         /// </summary>
         /// <param name="o"></param>
         public void SendOrder(Order o)
@@ -324,18 +325,13 @@ namespace TradingLib.Core
             try
             {
                 debug("Send  Order to Broker Side | "+o.ToString(),QSEnumDebugLevel.INFO);
-                //Order常规检查 规则
-                Position pos = _clearCentre.getPosition(o.Account, o.symbol);//当前对应持仓
-
-                int ufill_size = _clearCentre.getUnfilledPositionFlatOrderSize(pos);//_clearCentre.getUnfilledSizeExceptStop(o);//得到未平仓委托 计算可平数量(_clearcentre在风控检查时就已经记录该委托)
-                int pos_size = Math.Abs(pos.Size);//目前仓位大小
-                int osize = o.UnsignedSize;
-                debug("Pos size:" + pos.Size.ToString() + " unfillSize:" + ufill_size.ToString() + " osize:" + osize.ToString() + " postflag:" + o.OrderPostFlag.ToString(), QSEnumDebugLevel.INFO);
                 
+                
+                /*
                 if (pos.isFlat)
                 {
                     //空仓直接开仓 直接允许 如果是平仓委托则拒绝
-                    if (o.OrderPostFlag == QSEnumOrderPosFlag.CLOSE)
+                    if (o.OffsetFlag == QSEnumOffsetFlag.CLOSE)
                     {
                         o.Status = QSEnumOrderStatus.Reject;
                         debug("无持仓,无法执行平仓操作", QSEnumDebugLevel.INFO);
@@ -348,7 +344,7 @@ namespace TradingLib.Core
                     if ((pos.isLong && o.side) || (pos.isShort && (!o.side)))
                     {
                         //方向相同,加仓 直接允许
-                        if (o.OrderPostFlag == QSEnumOrderPosFlag.CLOSE)
+                        if (o.OffsetFlag == QSEnumOffsetFlag.CLOSE)
                         {
                             debug("持仓与委托方向相同,无法执行平仓操作", QSEnumDebugLevel.INFO);
                             o.Status = QSEnumOrderStatus.Reject;
@@ -357,7 +353,7 @@ namespace TradingLib.Core
                     }
                     else //方向相反,平仓操作 方向相反才需要计算未成交委托 与持仓数量
                     {
-                        if (o.OrderPostFlag == QSEnumOrderPosFlag.OPEN)
+                        if (o.OffsetFlag == QSEnumOffsetFlag.OPEN)
                         {
                             debug("持仓与委托方向相反,无法执行开仓操作[锁仓]");
                             o.Status = QSEnumOrderStatus.Reject;
@@ -392,7 +388,7 @@ namespace TradingLib.Core
                                 //仓位手数 <未成交合约手数(ufill_size)表明市价单之前有limit委托 造成未成交合约数量大于仓位数量
                                 else//只有在开平标识为未知的情况下才进行自动撤单
                                 {
-                                    if (o.OrderPostFlag == QSEnumOrderPosFlag.UNKNOWN)
+                                    if (o.OffsetFlag == QSEnumOffsetFlag.UNKNOWN)
                                     {
                                         //撤单以前的成交Order
                                         long[] olist = _clearCentre.getPendingOrders(o);
@@ -405,7 +401,7 @@ namespace TradingLib.Core
                                         }
                                         return;//这里将委托放入ordhelper队列中,因此需要直接返回,不需要判断reject然后通过router 发单
                                     }
-                                    else if(o.OrderPostFlag == QSEnumOrderPosFlag.CLOSE && (pos_size < ufill_size))
+                                    else if (o.OffsetFlag == QSEnumOffsetFlag.CLOSE && (pos_size < ufill_size))
                                     { 
                                         //拒绝委托
                                         debug("市价委托,限制开平标志，未成交平仓委托数量大于持仓无法执行", QSEnumDebugLevel.INFO);
@@ -417,7 +413,7 @@ namespace TradingLib.Core
                         } 
                     }
                 }
-
+                **/
                 //debug("#################################order status :" + o.Status.ToString(), QSEnumDebugLevel.INFO);
                 //检查通过,则通过该broker发送委托 拒绝的委托通过 ordermessage对外发送
                 if (o.Status != QSEnumOrderStatus.Reject)

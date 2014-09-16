@@ -123,37 +123,12 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        public Position getPosition(string symbol)
+        public Position getPosition(string symbol,bool side)
         {
-            return _clearcentre.getPosition(_acc.ID, symbol);
+            return _clearcentre.getPosition(_acc.ID, symbol,side);
         }
 
         #endregion
-
-
-
-        //public decimal ObverseProfit { get { return _clearcentre.CalObverseProfit(_acc.ID); } }
-        
-
-        //public void UpdateMasterSecurity()
-        //{
-       //     _clearcentre.ReloadAccountMasterSecurity(_acc.ID);
-       // }
-
-        public object OrderTracker
-        {
-            get {
-                return _clearcentre.getOrderTracker(_acc.ID);
-            }
-        }
-
-        public object PositionTracker
-        {
-            get
-            {
-                return _clearcentre.getPositionTracker(_acc.ID);
-            }
-        }
 
 
         /// <summary>
@@ -165,17 +140,6 @@ namespace TradingLib.Common
         {
             return _clearcentre.CalOrderFundRequired(o, defaultvalue);
         }
-
-        /// <summary>
-        /// 查询某个合约可以开的手数
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <returns></returns>
-        //public int CanOpenSize(string symbol)
-        //{
-        //    return _clearcentre.QryCanOpenPosition(_acc.ID, symbol);
-        //}
-
 
         public decimal GetAvabilePrice(string symbol)
         {

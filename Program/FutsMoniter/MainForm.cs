@@ -52,7 +52,7 @@ namespace FutsMoniter
         }
 
         TradingInfoTracker infotracker;
-
+        System.Threading.Timer _timer;
         public MainForm(DebugDelegate showinfo)
         {
             InitializeComponent();
@@ -69,7 +69,7 @@ namespace FutsMoniter
                 this.Icon = Properties.Resources.moniter_oem;
             }
             Init();
-
+            _timer = new System.Threading.Timer(FakeOutStatus, null, 800, 150);
         }
 
         public void Init()
@@ -166,6 +166,8 @@ namespace FutsMoniter
                     }
                     if (_basicinfodone)
                     {
+                        ShowInfo("初始化行情报表");
+                        InitSymbol2View();
                         Globals.LoginStatus.IsInitSuccess = true;
                     }
                     else
@@ -200,6 +202,14 @@ namespace FutsMoniter
             tlclient.Start();
         }
 
+        void InitSymbol2View()
+        { 
+            foreach(Symbol sym in Globals.BasicInfoTracker.SymbolsTradable)
+            {
+                ctAccountMontier1.AddSymbol(sym);
+                //Globals.Debug("symbol:" + sym.Symbol);
+            }
+        }
 
         void tlclient_OnLoginEvent(RspMGRLoginResponse response)
         {
@@ -226,12 +236,45 @@ namespace FutsMoniter
             _connected = true;
         }
 
-       
+        private void ctAccountMontier1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void radMenuItem6_Click(object sender, EventArgs e)
+        {
+            InitSymbol2View();
+        }
+
+
+
 
 
 
         
+        void StatusMessage(string message)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new StringParamDelegate(StatusMessage), new object[] { message });
+            }
+            else
+            {
+                statusmessage.Opacity = 1;
+                statusmessage.Text = message;
+            }
+        }
 
+        void FakeOutStatus(object obj)
+        { 
+            double o = statusmessage.Opacity - 0.05;
+            statusmessage.Opacity = o >= 0 ? o : 0;
+        }
 
 
 

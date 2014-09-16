@@ -138,7 +138,7 @@
     <Compile Include="Core\MessageExchange\MsgExchServer.cs" />
     <Compile Include="Core\RiskCentre\RiskCentre.cs" />
     <Compile Include="2bedelete\TLServer_MQ.cs" />
-    <Compile Include="Core\ManagerExchange\MgrServer.cs" />
+    <Compile Include="2bedelete\MgrServer.cs" />
     <Compile Include="Core\TaskCentre\TaskCentre_CTE.cs" />
     <Compile Include="Core\TradeFollow\TradeFollow.cs" />
     <Compile Include="Core\WebMessageExchange\HealthReport.cs" />

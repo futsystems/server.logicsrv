@@ -44,6 +44,8 @@ namespace FutsMoniter.Controls
             StartUpdate();
             fmaccountconfig = new AccountConfigForm();
             fmaccountconfig.SendDebugEvent += new DebugDelegate(msgdebug);
+
+            InitViewQuoteList();
             _loaded = true;
         }
         RadContextMenu menu = new RadContextMenu();
@@ -359,6 +361,12 @@ namespace FutsMoniter.Controls
             {
                 strFilter = string.Format(strFilter + " and " + LOGINSTATUS + " = '{0}'", getLoginStatus(true));
             }
+
+            string acctstr = acct.Text;
+            if (!string.IsNullOrEmpty(acctstr))
+            {
+                strFilter = string.Format(strFilter + " and " + ACCOUNT + " like '{0}*'", acctstr);
+            }
             debug("strfilter:" + strFilter, QSEnumDebugLevel.INFO);
             datasource.Filter = strFilter;
             UpdateAccountNum();
@@ -548,6 +556,7 @@ namespace FutsMoniter.Controls
         {
             //debug("account montier got tick:" + k.ToString(), QSEnumDebugLevel.INFO);
             ctPositionView1.GotTick(k);
+            viewQuoteList1.GotTick(k);
         }
         /// <summary>
         /// 获得服务端的帐户信息
@@ -986,6 +995,11 @@ namespace FutsMoniter.Controls
                 ClearTradingInfo();
                 //请求恢复交易帐户交易记录
                 Globals.TLClient.ReqResumeAccount(account);
+
+                if (ctOrderSenderM1 != null)
+                {
+                    ctOrderSenderM1.SetAccount(accountlite);
+                }
             }
         }
         #endregion
@@ -1001,6 +1015,7 @@ namespace FutsMoniter.Controls
             ctPositionView1.Clear();
             ctTradeView1.Clear();
         }
+
         void LoadAccountInfo(string account)
         {
             debug("try to load trading info tracker account:" + Globals.TradingInfoTracker.Account.Account + " request account:" + account, QSEnumDebugLevel.INFO);
@@ -1087,6 +1102,11 @@ namespace FutsMoniter.Controls
             RefreshAccountQuery();
         }
 
+        private void acct_TextChanged(object sender, EventArgs e)
+        {
+            RefreshAccountQuery();
+        }
+
         private void accountgrid_CellFormatting(object sender, CellFormattingEventArgs e)
         {
             try
@@ -1165,6 +1185,33 @@ namespace FutsMoniter.Controls
                 debug("!!!!!!!!!!!!cell format error");
             }
         }
+
+
+        #region 行情部分
+
+
+        void InitViewQuoteList()
+        {
+            viewQuoteList1.SymbolSelectedEvent += new SymbolDelegate(viewQuoteList1_SymbolSelectedEvent);
+            viewQuoteList1.SendDebugEvent += new DebugDelegate(Globals.Debug);
+            ctOrderSenderM1.SendOrderEvent += new OrderDelegate(SendOrder);
+        }
+
+        void viewQuoteList1_SymbolSelectedEvent(Symbol symbol)
+        {
+            ctOrderSenderM1.SetSymbol(symbol);
+        }
+
+
+        public void AddSymbol(Symbol symbol)
+        {
+            if (symbol == null) return;
+            Globals.Debug("viewquotelist1 null:" + (viewQuoteList1 == null).ToString());
+            viewQuoteList1.addSecurity(symbol);
+        }
+
+        #endregion
+
 
     }
 }

@@ -68,23 +68,23 @@ namespace TradingLib.Common
         public RspQryPositionResponse()
         {
             _type = MessageTypes.POSITIONRESPONSE;
-            PositionToSend = new AccountPosition();
+            PositionToSend = new PositionEx();
         }
 
-        public AccountPosition PositionToSend { get; set; }
+        public PositionEx PositionToSend { get; set; }
 
         public override string ResponseSerialize()
         {
             if (PositionToSend == null)
                 return "";
-            return AccountPosition.Serialize(PositionToSend);
+            return PositionEx.Serialize(PositionToSend);
         }
 
         public override void ResponseDeserialize(string content)
         {
             if (string.IsNullOrEmpty(content))
                 return;
-            PositionToSend = AccountPosition.Deserialize(content);
+            PositionToSend = PositionEx.Deserialize(content);
         }
     }
 }

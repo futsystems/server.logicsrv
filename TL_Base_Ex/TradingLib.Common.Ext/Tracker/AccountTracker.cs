@@ -20,9 +20,9 @@ namespace TradingLib.Common
         //为每个账户映射一个OrderTracker用于跟踪该账户的Order
         protected ConcurrentDictionary<string, OrderTracker> OrdBook = new ConcurrentDictionary<string, OrderTracker>();
         //为每个账户映射一个PositionTracker用户维护该Account的Position
-        protected ConcurrentDictionary<string, PositionTracker> PosBook = new ConcurrentDictionary<string, PositionTracker>();
+        protected ConcurrentDictionary<string, LSPositionTracker> PosBook = new ConcurrentDictionary<string, LSPositionTracker>();
         //为每个账户映射一个昨日持仓数据
-        protected ConcurrentDictionary<string, PositionTracker> PosHold = new ConcurrentDictionary<string, PositionTracker>();
+        protected ConcurrentDictionary<string, LSPositionTracker> PosHold = new ConcurrentDictionary<string, LSPositionTracker>();
         //为每个账户映射一个TradeList用于记录实时的成交记录
         protected ConcurrentDictionary<string, ThreadSafeList<Trade>> TradeBook = new ConcurrentDictionary<string, ThreadSafeList<Trade>>();
 
@@ -79,13 +79,13 @@ namespace TradingLib.Common
             //3.添加账户对应的仓位管理器
             if (!PosBook.ContainsKey(account.ID))
             {
-                PositionTracker pt = new PositionTracker();
+                LSPositionTracker pt = new LSPositionTracker();
                 pt.DefaultAccount = account.ID;
                 PosBook.TryAdd(account.ID, pt);
             }
             if (!PosHold.ContainsKey(account.ID))
             {
-                PositionTracker pt = new PositionTracker();
+                LSPositionTracker pt = new LSPositionTracker();
                 pt.DefaultAccount = account.ID;
                 PosHold.TryAdd(account.ID, pt);
             }
@@ -138,7 +138,20 @@ namespace TradingLib.Common
                     return true;
                 }
             }
+            
             return false;
+        }
+
+        public bool HaveLongPosition(string account)
+        {
+            if (!HaveAccount(account)) return false;//如果没有该账户则直接返回
+            return this.GetPositionBook(account).HaveLongPosition;
+        }
+
+        public bool HaveShortPosition(string account)
+        {
+            if (!HaveAccount(account)) return false;//如果没有该账户则直接返回
+            return this.GetPositionBook(account).HaveShortPosition;
         }
 
 
@@ -167,7 +180,7 @@ namespace TradingLib.Common
             }
         }
 
-        public PositionTracker GetPositionBook(string account)
+        public LSPositionTracker GetPositionBook(string account)
         {
             try
             {
@@ -179,7 +192,7 @@ namespace TradingLib.Common
             }
         }
 
-        public PositionTracker GetPositionHoldBook(string account)
+        public LSPositionTracker GetPositionHoldBook(string account)
         {
             try
             {
@@ -190,6 +203,7 @@ namespace TradingLib.Common
                 return null;
             }
         }
+
         #endregion
 
 
@@ -268,9 +282,9 @@ namespace TradingLib.Common
         /// <param name="account"></param>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        internal Position GetPosition(string account, string symbol)
+        internal Position GetPosition(string account, string symbol,bool side)
         {
-            return PosBook[account][symbol];
+            return PosBook[account][symbol, account, side];
         }
 
         /// <summary>
@@ -304,9 +318,9 @@ namespace TradingLib.Common
         internal void GotPosition(Position pos)
         {
             //将昨持仓填充到对应交易账户的仓位管理器中
-            PosBook[pos.Account].Adjust(pos);
+            PosBook[pos.Account].GotPosition(pos);
             //将昨日持仓填充到账户对应的昨日持仓管理器中
-            PosHold[pos.Account].Adjust(pos);
+            PosHold[pos.Account].GotPosition(pos);
         }
 
         /// <summary>
@@ -345,7 +359,7 @@ namespace TradingLib.Common
         /// <param name="k"></param>
         internal void GotTick(Tick k)
         {
-            foreach (PositionTracker pt in PosBook.Values)
+            foreach (LSPositionTracker pt in PosBook.Values)
             {
                 pt.GotTick(k);
             }

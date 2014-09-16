@@ -90,7 +90,12 @@ namespace TradingLib.Common
             return pos;
         }
     }
-    public  class AccountPosition
+
+    /// <summary>
+    /// PostionEx用于封装持仓信息
+    /// 通知交易客户端或查询时回报交易客户端
+    /// </summary>
+    public  class PositionEx
     {
         /// <summary>
         /// 帐户
@@ -130,7 +135,64 @@ namespace TradingLib.Common
         /// </summary>
         public int Size { get; set; }
 
-        public AccountPosition()
+        /// <summary>
+        /// 开仓量
+        /// </summary>
+        public int OpenVolume { get; set; }
+
+        /// <summary>
+        /// 开仓金额
+        /// </summary>
+        public decimal OpenAmount { get; set; }
+
+        /// <summary>
+        /// 开仓均价
+        /// </summary>
+        public decimal OpenAVGPrice { get; set; }
+
+        /// <summary>
+        /// 平仓量
+        /// </summary>
+        public int CloseVolume { get; set; }
+
+        /// <summary>
+        /// 平仓金额
+        /// </summary>
+        public decimal CloseAmount { get; set; }
+
+        /// <summary>
+        /// 平仓均价
+        /// </summary>
+        public decimal CloseAVGPrice { get; set; }
+
+
+       
+        /// <summary>
+        /// 持仓描述类型
+        /// </summary>
+        public QSEnumPositionDirectionType DirectionType { get; set; }
+
+        /// <summary>
+        /// 平仓盈亏
+        /// </summary>
+        public decimal CloseProfit { get; set; }
+
+        /// <summary>
+        /// 持仓成本金额
+        /// </summary>
+        public decimal PositionCost { get; set; }
+
+        /// <summary>
+        /// 浮动盈亏点数
+        /// </summary>
+        public decimal UnRealizedPL { get; set; }
+
+        /// <summary>
+        /// 浮动盈亏金额/持仓盈亏
+        /// </summary>
+        public decimal UnRealizedProfit { get; set; }
+
+        public PositionEx()
         {
             Account = string.Empty;
             Symbol = string.Empty;
@@ -141,23 +203,20 @@ namespace TradingLib.Common
             Side = true;
             Size = 0;
 
-        }
-        public static AccountPosition Deserialize(string msg)
-        {
-            AccountPosition p = new AccountPosition();
-            string [] rec =  msg.Split(',');
-            p.Account = rec[0];
-            p.Symbol = rec[1];
-            p.Multiple = int.Parse(rec[2]);
-            p.ClosedPL = decimal.Parse(rec[3]);
-            p.UnsignedSize = int.Parse(rec[4]);
-            p.AvgPrice = decimal.Parse(rec[5]);
-            p.Side = bool.Parse(rec[6]);
-            p.Size = int.Parse(rec[7]);
-            return p;
+            OpenAmount = 0;
+            OpenAVGPrice = 0;
+            OpenVolume = 0;
+            CloseAmount = 0;
+            CloseAVGPrice = 0;
+            CloseVolume = 0;
+            DirectionType = QSEnumPositionDirectionType.BothSide;
+            CloseProfit = 0;
+            PositionCost = 0;
+            UnRealizedPL = 0;
+            UnRealizedProfit = 0;
         }
 
-        public static string Serialize(AccountPosition p)
+        public static string Serialize(PositionEx p)
         {
             StringBuilder sb = new StringBuilder();
             char d = ',';
@@ -176,21 +235,56 @@ namespace TradingLib.Common
             sb.Append(p.Side.ToString());
             sb.Append(d);
             sb.Append(p.Size.ToString());
+            sb.Append(d);
+            sb.Append(p.OpenAmount.ToString());
+            sb.Append(d);
+            sb.Append(p.OpenAVGPrice.ToString());
+            sb.Append(d);
+            sb.Append(p.OpenVolume.ToString());
+            sb.Append(d);
+            sb.Append(p.CloseAmount.ToString());
+            sb.Append(d);
+            sb.Append(p.CloseAVGPrice.ToString());
+            sb.Append(d);
+            sb.Append(p.CloseVolume.ToString());
+            sb.Append(d);
+            sb.Append(p.DirectionType.ToString());
+            sb.Append(d);
+            sb.Append(p.CloseProfit.ToString());
+            sb.Append(d);
+            sb.Append(p.PositionCost.ToString());
+            sb.Append(d);
+            sb.Append(p.UnRealizedPL.ToString());
+            sb.Append(d);
+            sb.Append(p.UnRealizedProfit.ToString());
             return sb.ToString();
 
         }
 
-        public static AccountPosition GenFromPosition(Position pos)
+
+        public static PositionEx Deserialize(string msg)
         {
-            AccountPosition p = new AccountPosition();
-            p.Account = pos.Account;
-            p.Symbol = pos.Symbol;
-            p.Multiple = pos.oSymbol.Multiple;
-            p.UnsignedSize = pos.UnsignedSize;
-            p.AvgPrice = pos.AvgPrice;
-            p.Side = pos.isLong;
-            p.ClosedPL = pos.ClosedPL;
-            p.Size = pos.Size;
+            PositionEx p = new PositionEx();
+            string [] rec =  msg.Split(',');
+            p.Account = rec[0];
+            p.Symbol = rec[1];
+            p.Multiple = int.Parse(rec[2]);
+            p.ClosedPL = decimal.Parse(rec[3]);
+            p.UnsignedSize = int.Parse(rec[4]);
+            p.AvgPrice = decimal.Parse(rec[5]);
+            p.Side = bool.Parse(rec[6]);
+            p.Size = int.Parse(rec[7]);
+            p.OpenAmount = decimal.Parse(rec[8]);
+            p.OpenAVGPrice = decimal.Parse(rec[9]);
+            p.OpenVolume = int.Parse(rec[10]);
+            p.CloseAmount = decimal.Parse(rec[11]);
+            p.CloseAVGPrice = decimal.Parse(rec[12]);
+            p.CloseVolume = int.Parse(rec[13]);
+            p.DirectionType = (QSEnumPositionDirectionType)Enum.Parse(typeof(QSEnumPositionDirectionType),rec[14]);
+            p.CloseProfit = decimal.Parse(rec[15]);
+            p.PositionCost = decimal.Parse(rec[16]);
+            p.UnRealizedPL = decimal.Parse(rec[17]);
+            p.UnRealizedProfit = decimal.Parse(rec[18]);
             return p;
         }
     }

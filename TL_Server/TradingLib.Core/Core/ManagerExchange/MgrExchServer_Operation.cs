@@ -74,6 +74,11 @@ namespace TradingLib.Core
             _ocache.Write(o);
         }
 
+        public void newErrorOrder(ErrorOrder order)
+        {
+            _errorordercache.Write(order);
+        }
+
         public void newTrade(Trade f)
         {
             _fcache.Write(f);

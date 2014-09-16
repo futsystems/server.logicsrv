@@ -163,6 +163,7 @@
     <Compile Include="Message\MessageTypes.cs" />
     <Compile Include="Trading\EnumOrderPostFlag.cs" />
     <Compile Include="Trading\EnumOrderStatus.cs" />
+    <Compile Include="Trading\EnumPositionDirectionType.cs" />
     <Compile Include="Trading\IPositionRound.cs" />
     <Compile Include="Trading\BasicInfo\EnumOptionSide.cs" />
     <Compile Include="Trading\Order.cs" />

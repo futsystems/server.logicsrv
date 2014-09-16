@@ -79,7 +79,7 @@ namespace TradingLib.Core
             if (!keyPosOffsetMap.Keys.Contains(key))
             {
                 debug("没有对应" + key + " 止盈止损监视器,生成对应的监视器", QSEnumDebugLevel.INFO);
-                PositionOffset po = new PositionOffset(args.Account, args.Symbol);
+                PositionOffset po = new PositionOffset(args.Account, args.Symbol,args.Side);
 
                 keyPosOffsetMap.TryAdd(key, po);
 
@@ -145,6 +145,7 @@ namespace TradingLib.Core
         /// <param name="k"></param>
         void ProcessPosiitonOffset(PositionOffset po, Tick k)
         {
+
             //是否设置止盈止损
             bool needcheck = po.NeedCheck;
 
@@ -153,7 +154,7 @@ namespace TradingLib.Core
             if (po.Position == null)
             {
                 debug("未获得持仓数据,获得持仓数据", QSEnumDebugLevel.INFO);
-                po.Position = _clearcentre.getPosition(po.Account, po.Symbol);
+                po.Position = _clearcentre.getPosition(po.Account, po.Symbol,po.Side);
             }
 
             //仍然没有对应的持仓数据 则直接返回
@@ -290,7 +291,7 @@ namespace TradingLib.Core
             //if (o.side) o.price = 1000;
             //if (!o.side) o.price = 3000;
             o.Account = pos.Account;
-            o.OrderPostFlag = QSEnumOrderPosFlag.CLOSE;
+            o.OffsetFlag = QSEnumOffsetFlag.CLOSE;
             o.OrderSource = QSEnumOrderSource.SRVPOSITIONOFFSET;
             o.comment =comment;
 

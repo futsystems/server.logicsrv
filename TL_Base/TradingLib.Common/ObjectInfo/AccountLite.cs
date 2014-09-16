@@ -87,6 +87,11 @@ namespace TradingLib.Common
         /// </summary>
         public string Token { get; set; }
 
+        /// <summary>
+        /// 锁仓权限
+        /// </summary>
+        public bool PosLock { get; set; }
+
         public static string Serialize(IAccountLite account)
         {
             StringBuilder sb = new StringBuilder();
@@ -120,6 +125,8 @@ namespace TradingLib.Common
             sb.Append(account.MoneyUsed.ToString());
             sb.Append(d);
             sb.Append(account.Token);
+            sb.Append(d);
+            sb.Append(account.PosLock.ToString());
             return sb.ToString();
         }
 
@@ -142,6 +149,7 @@ namespace TradingLib.Common
             account.CashOut = decimal.Parse(rec[12]);
             account.MoneyUsed = decimal.Parse(rec[13]);
             account.Token = rec[14];
+            account.PosLock = bool.Parse(rec[15]);
             return account;
         }
     }

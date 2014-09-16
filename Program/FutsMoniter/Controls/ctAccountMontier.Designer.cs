@@ -33,6 +33,8 @@
             this.radSplitContainer2 = new Telerik.WinControls.UI.RadSplitContainer();
             this.splitPanel1 = new Telerik.WinControls.UI.SplitPanel();
             this.radPanel1 = new Telerik.WinControls.UI.RadPanel();
+            this.acct = new Telerik.WinControls.UI.RadTextBox();
+            this.radLabel6 = new Telerik.WinControls.UI.RadLabel();
             this.accountType = new Telerik.WinControls.UI.RadDropDownList();
             this.radLabel5 = new Telerik.WinControls.UI.RadLabel();
             this.lbCurrentAccount = new Telerik.WinControls.UI.RadLabel();
@@ -56,6 +58,12 @@
             this.radPageViewPage3 = new Telerik.WinControls.UI.RadPageViewPage();
             this.ctPositionView1 = new FutSystems.GUI.ctPositionView();
             this.splitPanel4 = new Telerik.WinControls.UI.SplitPanel();
+            this.radPageView2 = new Telerik.WinControls.UI.RadPageView();
+            this.FinServicePage = new Telerik.WinControls.UI.RadPageViewPage();
+            this.OrderSenderPage = new Telerik.WinControls.UI.RadPageViewPage();
+            this.viewQuoteList1 = new FutSystems.GUI.ViewQuoteList();
+            this.ctOrderSenderM1 = new FutsMoniter.ctOrderSenderM();
+            this.radPageViewPage4 = new Telerik.WinControls.UI.RadPageViewPage();
             ((System.ComponentModel.ISupportInitialize)(this.SplitContainer)).BeginInit();
             this.SplitContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.radSplitContainer1)).BeginInit();
@@ -66,6 +74,8 @@
             this.splitPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.radPanel1)).BeginInit();
             this.radPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.acct)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.accountType)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.lbCurrentAccount)).BeginInit();
@@ -90,6 +100,10 @@
             this.radPageViewPage2.SuspendLayout();
             this.radPageViewPage3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitPanel4)).BeginInit();
+            this.splitPanel4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.radPageView2)).BeginInit();
+            this.radPageView2.SuspendLayout();
+            this.OrderSenderPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // SplitContainer
@@ -103,7 +117,7 @@
             // 
             // 
             this.SplitContainer.RootElement.MinSize = new System.Drawing.Size(25, 25);
-            this.SplitContainer.Size = new System.Drawing.Size(976, 509);
+            this.SplitContainer.Size = new System.Drawing.Size(1256, 638);
             this.SplitContainer.SplitterWidth = 4;
             this.SplitContainer.TabIndex = 0;
             this.SplitContainer.TabStop = false;
@@ -118,7 +132,7 @@
             // 
             // 
             this.radSplitContainer1.RootElement.MinSize = new System.Drawing.Size(25, 25);
-            this.radSplitContainer1.Size = new System.Drawing.Size(976, 509);
+            this.radSplitContainer1.Size = new System.Drawing.Size(1256, 638);
             this.radSplitContainer1.SplitterWidth = 4;
             this.radSplitContainer1.TabIndex = 0;
             this.radSplitContainer1.TabStop = false;
@@ -135,7 +149,7 @@
             // 
             // 
             this.radSplitContainer2.RootElement.MinSize = new System.Drawing.Size(25, 25);
-            this.radSplitContainer2.Size = new System.Drawing.Size(976, 509);
+            this.radSplitContainer2.Size = new System.Drawing.Size(1256, 638);
             this.radSplitContainer2.SplitterWidth = 4;
             this.radSplitContainer2.TabIndex = 0;
             this.radSplitContainer2.TabStop = false;
@@ -150,7 +164,7 @@
             // 
             // 
             this.splitPanel1.RootElement.MinSize = new System.Drawing.Size(25, 25);
-            this.splitPanel1.Size = new System.Drawing.Size(976, 285);
+            this.splitPanel1.Size = new System.Drawing.Size(1256, 358);
             this.splitPanel1.SizeInfo.AutoSizeScale = new System.Drawing.SizeF(0F, 0.06510416F);
             this.splitPanel1.SizeInfo.SplitterCorrection = new System.Drawing.Size(0, 25);
             this.splitPanel1.TabIndex = 0;
@@ -159,6 +173,8 @@
             // 
             // radPanel1
             // 
+            this.radPanel1.Controls.Add(this.acct);
+            this.radPanel1.Controls.Add(this.radLabel6);
             this.radPanel1.Controls.Add(this.accountType);
             this.radPanel1.Controls.Add(this.radLabel5);
             this.radPanel1.Controls.Add(this.lbCurrentAccount);
@@ -174,9 +190,25 @@
             this.radPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.radPanel1.Location = new System.Drawing.Point(0, 0);
             this.radPanel1.Name = "radPanel1";
-            this.radPanel1.Size = new System.Drawing.Size(976, 285);
+            this.radPanel1.Size = new System.Drawing.Size(1256, 358);
             this.radPanel1.TabIndex = 0;
             this.radPanel1.Text = "radPanel1";
+            // 
+            // acct
+            // 
+            this.acct.Location = new System.Drawing.Point(559, 10);
+            this.acct.Name = "acct";
+            this.acct.Size = new System.Drawing.Size(108, 18);
+            this.acct.TabIndex = 25;
+            this.acct.TextChanged += new System.EventHandler(this.acct_TextChanged);
+            // 
+            // radLabel6
+            // 
+            this.radLabel6.Location = new System.Drawing.Point(493, 12);
+            this.radLabel6.Name = "radLabel6";
+            this.radLabel6.Size = new System.Drawing.Size(59, 16);
+            this.radLabel6.TabIndex = 24;
+            this.radLabel6.Text = "帐号搜索:";
             // 
             // accountType
             // 
@@ -200,7 +232,7 @@
             // lbCurrentAccount
             // 
             this.lbCurrentAccount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lbCurrentAccount.Location = new System.Drawing.Point(894, 14);
+            this.lbCurrentAccount.Location = new System.Drawing.Point(1174, 14);
             this.lbCurrentAccount.Name = "lbCurrentAccount";
             this.lbCurrentAccount.Size = new System.Drawing.Size(21, 16);
             this.lbCurrentAccount.TabIndex = 21;
@@ -209,7 +241,7 @@
             // radLabel4
             // 
             this.radLabel4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.radLabel4.Location = new System.Drawing.Point(829, 14);
+            this.radLabel4.Location = new System.Drawing.Point(1109, 14);
             this.radLabel4.Name = "radLabel4";
             this.radLabel4.Size = new System.Drawing.Size(59, 16);
             this.radLabel4.TabIndex = 20;
@@ -217,7 +249,7 @@
             // 
             // num
             // 
-            this.num.Location = new System.Drawing.Point(626, 12);
+            this.num.Location = new System.Drawing.Point(811, 10);
             this.num.Name = "num";
             this.num.Size = new System.Drawing.Size(14, 16);
             this.num.TabIndex = 19;
@@ -225,7 +257,7 @@
             // 
             // radLabel3
             // 
-            this.radLabel3.Location = new System.Drawing.Point(561, 12);
+            this.radLabel3.Location = new System.Drawing.Point(746, 10);
             this.radLabel3.Name = "radLabel3";
             this.radLabel3.Size = new System.Drawing.Size(59, 16);
             this.radLabel3.TabIndex = 18;
@@ -252,7 +284,7 @@
             // 
             // accLogin
             // 
-            this.accLogin.Location = new System.Drawing.Point(496, 12);
+            this.accLogin.Location = new System.Drawing.Point(681, 10);
             this.accLogin.Name = "accLogin";
             this.accLogin.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.accLogin.Size = new System.Drawing.Size(45, 16);
@@ -286,7 +318,7 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.accountgrid.Location = new System.Drawing.Point(3, 36);
             this.accountgrid.Name = "accountgrid";
-            this.accountgrid.Size = new System.Drawing.Size(973, 249);
+            this.accountgrid.Size = new System.Drawing.Size(1253, 322);
             this.accountgrid.TabIndex = 0;
             this.accountgrid.Text = "radGridView1";
             this.accountgrid.CellFormatting += new Telerik.WinControls.UI.CellFormattingEventHandler(this.accountgrid_CellFormatting);
@@ -298,13 +330,13 @@
             // splitPanel2
             // 
             this.splitPanel2.Controls.Add(this.radSplitContainer3);
-            this.splitPanel2.Location = new System.Drawing.Point(0, 289);
+            this.splitPanel2.Location = new System.Drawing.Point(0, 362);
             this.splitPanel2.Name = "splitPanel2";
             // 
             // 
             // 
             this.splitPanel2.RootElement.MinSize = new System.Drawing.Size(25, 25);
-            this.splitPanel2.Size = new System.Drawing.Size(976, 220);
+            this.splitPanel2.Size = new System.Drawing.Size(1256, 276);
             this.splitPanel2.SizeInfo.AutoSizeScale = new System.Drawing.SizeF(0F, -0.06510416F);
             this.splitPanel2.SizeInfo.SplitterCorrection = new System.Drawing.Size(0, -25);
             this.splitPanel2.TabIndex = 1;
@@ -322,7 +354,7 @@
             // 
             // 
             this.radSplitContainer3.RootElement.MinSize = new System.Drawing.Size(25, 25);
-            this.radSplitContainer3.Size = new System.Drawing.Size(976, 220);
+            this.radSplitContainer3.Size = new System.Drawing.Size(1256, 276);
             this.radSplitContainer3.SplitterWidth = 4;
             this.radSplitContainer3.TabIndex = 0;
             this.radSplitContainer3.TabStop = false;
@@ -337,9 +369,9 @@
             // 
             // 
             this.splitPanel3.RootElement.MinSize = new System.Drawing.Size(25, 25);
-            this.splitPanel3.Size = new System.Drawing.Size(636, 220);
-            this.splitPanel3.SizeInfo.AutoSizeScale = new System.Drawing.SizeF(0.1541823F, 0F);
-            this.splitPanel3.SizeInfo.SplitterCorrection = new System.Drawing.Size(124, 0);
+            this.splitPanel3.Size = new System.Drawing.Size(667, 276);
+            this.splitPanel3.SizeInfo.AutoSizeScale = new System.Drawing.SizeF(0.03274763F, 0F);
+            this.splitPanel3.SizeInfo.SplitterCorrection = new System.Drawing.Size(-28, 0);
             this.splitPanel3.TabIndex = 0;
             this.splitPanel3.TabStop = false;
             this.splitPanel3.Text = "splitPanel3";
@@ -353,7 +385,7 @@
             this.radPageView1.Location = new System.Drawing.Point(0, 0);
             this.radPageView1.Name = "radPageView1";
             this.radPageView1.SelectedPage = this.radPageViewPage3;
-            this.radPageView1.Size = new System.Drawing.Size(636, 220);
+            this.radPageView1.Size = new System.Drawing.Size(667, 276);
             this.radPageView1.TabIndex = 0;
             this.radPageView1.Text = "radPageView1";
             this.radPageView1.ThemeName = "Windows8";
@@ -364,7 +396,7 @@
             this.radPageViewPage1.Controls.Add(this.ctOrderView1);
             this.radPageViewPage1.Location = new System.Drawing.Point(5, 27);
             this.radPageViewPage1.Name = "radPageViewPage1";
-            this.radPageViewPage1.Size = new System.Drawing.Size(514, 188);
+            this.radPageViewPage1.Size = new System.Drawing.Size(657, 244);
             this.radPageViewPage1.Text = "委 托";
             // 
             // ctOrderView1
@@ -373,7 +405,7 @@
             this.ctOrderView1.Location = new System.Drawing.Point(0, 0);
             this.ctOrderView1.Name = "ctOrderView1";
             this.ctOrderView1.OrderTracker = null;
-            this.ctOrderView1.Size = new System.Drawing.Size(514, 188);
+            this.ctOrderView1.Size = new System.Drawing.Size(657, 244);
             this.ctOrderView1.TabIndex = 0;
             // 
             // radPageViewPage2
@@ -397,7 +429,7 @@
             this.radPageViewPage3.Controls.Add(this.ctPositionView1);
             this.radPageViewPage3.Location = new System.Drawing.Point(5, 27);
             this.radPageViewPage3.Name = "radPageViewPage3";
-            this.radPageViewPage3.Size = new System.Drawing.Size(626, 188);
+            this.radPageViewPage3.Size = new System.Drawing.Size(657, 244);
             this.radPageViewPage3.Text = "持 仓";
             // 
             // ctPositionView1
@@ -407,23 +439,96 @@
             this.ctPositionView1.Name = "ctPositionView1";
             this.ctPositionView1.OrderTracker = null;
             this.ctPositionView1.PositionTracker = null;
-            this.ctPositionView1.Size = new System.Drawing.Size(626, 188);
+            this.ctPositionView1.Size = new System.Drawing.Size(657, 244);
             this.ctPositionView1.TabIndex = 0;
             // 
             // splitPanel4
             // 
-            this.splitPanel4.Location = new System.Drawing.Point(640, 0);
+            this.splitPanel4.Controls.Add(this.radPageView2);
+            this.splitPanel4.Location = new System.Drawing.Point(671, 0);
             this.splitPanel4.Name = "splitPanel4";
             // 
             // 
             // 
             this.splitPanel4.RootElement.MinSize = new System.Drawing.Size(25, 25);
-            this.splitPanel4.Size = new System.Drawing.Size(336, 220);
-            this.splitPanel4.SizeInfo.AutoSizeScale = new System.Drawing.SizeF(-0.1541823F, 0F);
-            this.splitPanel4.SizeInfo.SplitterCorrection = new System.Drawing.Size(-124, 0);
+            this.splitPanel4.Size = new System.Drawing.Size(585, 276);
+            this.splitPanel4.SizeInfo.AutoSizeScale = new System.Drawing.SizeF(-0.0327476F, 0F);
+            this.splitPanel4.SizeInfo.SplitterCorrection = new System.Drawing.Size(28, 0);
             this.splitPanel4.TabIndex = 1;
             this.splitPanel4.TabStop = false;
             this.splitPanel4.Text = "splitPanel4";
+            // 
+            // radPageView2
+            // 
+            this.radPageView2.Controls.Add(this.FinServicePage);
+            this.radPageView2.Controls.Add(this.OrderSenderPage);
+            this.radPageView2.Controls.Add(this.radPageViewPage4);
+            this.radPageView2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.radPageView2.Location = new System.Drawing.Point(0, 0);
+            this.radPageView2.Name = "radPageView2";
+            this.radPageView2.SelectedPage = this.FinServicePage;
+            this.radPageView2.Size = new System.Drawing.Size(585, 276);
+            this.radPageView2.TabIndex = 0;
+            this.radPageView2.Text = "radPageView2";
+            this.radPageView2.ThemeName = "Windows8";
+            ((Telerik.WinControls.UI.RadPageViewStripElement)(this.radPageView2.GetChildAt(0))).StripButtons = Telerik.WinControls.UI.StripViewButtons.None;
+            // 
+            // FinServicePage
+            // 
+            this.FinServicePage.Location = new System.Drawing.Point(5, 27);
+            this.FinServicePage.Name = "FinServicePage";
+            this.FinServicePage.Size = new System.Drawing.Size(575, 244);
+            this.FinServicePage.Text = "配资服务";
+            // 
+            // OrderSenderPage
+            // 
+            this.OrderSenderPage.Controls.Add(this.viewQuoteList1);
+            this.OrderSenderPage.Controls.Add(this.ctOrderSenderM1);
+            this.OrderSenderPage.Location = new System.Drawing.Point(5, 27);
+            this.OrderSenderPage.Name = "OrderSenderPage";
+            this.OrderSenderPage.Size = new System.Drawing.Size(575, 244);
+            this.OrderSenderPage.Text = "下 单";
+            // 
+            // viewQuoteList1
+            // 
+            this.viewQuoteList1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.viewQuoteList1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.viewQuoteList1.DNColor = System.Drawing.Color.Green;
+            this.viewQuoteList1.HeaderBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.viewQuoteList1.HeaderFont = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.viewQuoteList1.HeaderFontColor = System.Drawing.Color.Turquoise;
+            this.viewQuoteList1.Location = new System.Drawing.Point(0, 0);
+            this.viewQuoteList1.MenuEnable = false;
+            this.viewQuoteList1.Name = "viewQuoteList1";
+            this.viewQuoteList1.QuoteBackColor1 = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.viewQuoteList1.QuoteBackColor2 = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.viewQuoteList1.QuoteFont = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
+            this.viewQuoteList1.QuoteViewWidth = 1030;
+            this.viewQuoteList1.SelectedQuoteRow = -1;
+            this.viewQuoteList1.Size = new System.Drawing.Size(575, 164);
+            this.viewQuoteList1.SymbolFont = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
+            this.viewQuoteList1.SymbolFontColor = System.Drawing.Color.Green;
+            this.viewQuoteList1.TabIndex = 1;
+            this.viewQuoteList1.TableLineColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.viewQuoteList1.Text = "viewQuoteList1";
+            this.viewQuoteList1.UPColor = System.Drawing.Color.Red;
+            // 
+            // ctOrderSenderM1
+            // 
+            this.ctOrderSenderM1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.ctOrderSenderM1.Location = new System.Drawing.Point(0, 180);
+            this.ctOrderSenderM1.Name = "ctOrderSenderM1";
+            this.ctOrderSenderM1.Size = new System.Drawing.Size(575, 64);
+            this.ctOrderSenderM1.TabIndex = 0;
+            // 
+            // radPageViewPage4
+            // 
+            this.radPageViewPage4.Location = new System.Drawing.Point(5, 27);
+            this.radPageViewPage4.Name = "radPageViewPage4";
+            this.radPageViewPage4.Size = new System.Drawing.Size(575, 244);
+            this.radPageViewPage4.Text = "radPageViewPage4";
             // 
             // ctAccountMontier
             // 
@@ -431,8 +536,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.SplitContainer);
             this.Name = "ctAccountMontier";
-            this.Size = new System.Drawing.Size(976, 509);
-            //this.Load += new System.EventHandler(this.ctAccountMontier_Load);
+            this.Size = new System.Drawing.Size(1256, 638);
             ((System.ComponentModel.ISupportInitialize)(this.SplitContainer)).EndInit();
             this.SplitContainer.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.radSplitContainer1)).EndInit();
@@ -444,6 +548,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.radPanel1)).EndInit();
             this.radPanel1.ResumeLayout(false);
             this.radPanel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.acct)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel6)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.accountType)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.lbCurrentAccount)).EndInit();
@@ -468,6 +574,10 @@
             this.radPageViewPage2.ResumeLayout(false);
             this.radPageViewPage3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitPanel4)).EndInit();
+            this.splitPanel4.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.radPageView2)).EndInit();
+            this.radPageView2.ResumeLayout(false);
+            this.OrderSenderPage.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -502,6 +612,14 @@
         private FutSystems.GUI.ctPositionView ctPositionView1;
         private Telerik.WinControls.UI.RadDropDownList accountType;
         private Telerik.WinControls.UI.RadLabel radLabel5;
+        private Telerik.WinControls.UI.RadPageView radPageView2;
+        private Telerik.WinControls.UI.RadPageViewPage OrderSenderPage;
+        private ctOrderSenderM ctOrderSenderM1;
+        private Telerik.WinControls.UI.RadPageViewPage FinServicePage;
+        private FutSystems.GUI.ViewQuoteList viewQuoteList1;
+        private Telerik.WinControls.UI.RadLabel radLabel6;
+        private Telerik.WinControls.UI.RadTextBox acct;
+        private Telerik.WinControls.UI.RadPageViewPage radPageViewPage4;
 
     }
 }

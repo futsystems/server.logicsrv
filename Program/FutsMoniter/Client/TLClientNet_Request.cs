@@ -311,6 +311,17 @@ namespace TradingLib.Common
 
             SendPacket(request);
         }
+
+        public void ReqUpdaetAccountPosLock(string account, bool poslock)
+        {
+            debug("请求更新帐户锁仓权限", QSEnumDebugLevel.INFO);
+            MGRReqUpdatePosLockRequest request = RequestTemplate<MGRReqUpdatePosLockRequest>.CliSendRequest(requestid++);
+
+            request.TradingAccount = account;
+            request.PosLock = poslock;
+
+            SendPacket(request);
+        }
         #endregion
 
 

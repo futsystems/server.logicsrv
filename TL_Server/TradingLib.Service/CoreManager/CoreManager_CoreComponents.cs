@@ -247,6 +247,7 @@ namespace TradingLib.ServiceManager
            
             ////管理组件转发 交易服务器过来的委托 成交 取消 tick
             _messageExchagne.GotOrderEvent += new OrderDelegate(_managerExchange.newOrder);
+            _messageExchagne.GotErrorOrderEvent += new ErrorOrderDel(_managerExchange.newErrorOrder);
             //_messageExchagne.GotCancelEvent += new LongDelegate(_managerExchange.newCancel);
             _messageExchagne.GotFillEvent += new FillDelegate(_managerExchange.newTrade);
             _messageExchagne.GotTickEvent += new TickDelegate(_managerExchange.newTick);

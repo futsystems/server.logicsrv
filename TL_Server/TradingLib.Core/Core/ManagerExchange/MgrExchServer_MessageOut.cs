@@ -65,6 +65,7 @@ namespace TradingLib.Core
         //实时交易信息缓存
         
         RingBuffer<Order> _ocache = new RingBuffer<Order>(buffize);//委托缓存
+        RingBuffer<ErrorOrder> _errorordercache = new RingBuffer<ErrorOrder>(buffize);//委托错误缓存
         RingBuffer<OrderAction> _occache = new RingBuffer<OrderAction>(buffize);//取消缓存
         RingBuffer<Trade> _fcache = new RingBuffer<Trade>(buffize);//成交缓存
 
@@ -137,6 +138,19 @@ namespace TradingLib.Core
                             }
                         }
                     }
+                    while (_errorordercache.hasItems && !_ocache.hasItems && noresumeinfo())
+                    {
+                        ErrorOrder error = _errorordercache.Read();
+                        foreach (CustInfoEx cst in customerExInfoMap.Values)
+                        {
+                            if (cst.NeedPushTradingInfo(error.Order.Account))
+                            {
+                                ErrorOrderNotify notify = ResponseTemplate<ErrorOrderNotify>.SrvSendNotifyResponse(cst.Location);
+                                error.Fill(notify);
+                                tl.TLSend(notify);
+                            }
+                        }
+                    }
                     //转发成交
                     while (_fcache.hasItems && !_ocache.hasItems && noresumeinfo())
                     {
@@ -197,7 +211,7 @@ namespace TradingLib.Core
                 foreach (Position pos in clearcentre.getPositionHold(acc))
                 {
                     HoldPositionNotify notify = ResponseTemplate<HoldPositionNotify>.SrvSendNotifyResponse(location);
-                    notify.Position = AccountPosition.GenFromPosition(pos);
+                    notify.Position = pos.GenPositionEx();
                     tl.TLSend(notify); 
                 }
                 //转发当日委托

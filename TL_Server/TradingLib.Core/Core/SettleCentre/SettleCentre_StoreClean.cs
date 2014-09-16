@@ -31,13 +31,13 @@ namespace TradingLib.Core
         void BindPositionSettlePrice()
         {
             //从清算中心获得所有持仓 如果持仓未关闭则记录到结算持仓表
-            foreach (Position pos in _clearcentre.PositionsHoldNow)//总统计中的postion与account中的分帐户统计是不同的postion数据 需要进行同步
+            foreach (Position pos in _clearcentre.TotalPositions)//总统计中的postion与account中的分帐户统计是不同的postion数据 需要进行同步
             {
                 debug(pos.ToString() + " set settleprice to:" + pos.LastPrice,QSEnumDebugLevel.INFO);
                 //1.设定总统计持仓结算价
                 pos.SettlePrice = pos.LastPrice;
                 //2.设定分帐户持仓结算价
-                _clearcentre.getPosition(pos.Account, pos.Symbol).SettlePrice = pos.SettlePrice;
+                _clearcentre.getPosition(pos.Account, pos.Symbol,pos.isLong).SettlePrice = pos.SettlePrice;
             }
         }
 
@@ -51,7 +51,7 @@ namespace TradingLib.Core
             }
 
             //从清算中心获得所有持仓 如果持仓未关闭则记录到结算持仓表
-            foreach (Position pos in _clearcentre.PositionsHoldNow)
+            foreach (Position pos in _clearcentre.TotalPositions)
             {
 
                 ORM.MSettlement.InsertHoldPosition(pos, CurrentTradingday);

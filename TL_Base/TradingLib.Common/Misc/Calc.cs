@@ -2557,65 +2557,65 @@ namespace TradingLib.Common
 
         #region【财务计算】
 
-        /// <summary>
-        /// 计算一组成交的累积手续费
-        /// </summary>
-        /// <param name="fills"></param>
-        /// <returns></returns>
-        public static decimal CalCommission(Trade[] fills)
-        {
-            if (fills != null)
-            {
-                return fills.Sum(e => e.Commission);
-            }
-            return 0;
-        }
+        ///// <summary>
+        ///// 计算一组成交的累积手续费
+        ///// </summary>
+        ///// <param name="fills"></param>
+        ///// <returns></returns>
+        //public static decimal CalCommission(Trade[] fills)
+        //{
+        //    if (fills != null)
+        //    {
+        //        return fills.Sum(e => e.Commission);
+        //    }
+        //    return 0;
+        //}
 
-        /// <summary>
-        /// 计算一组持仓的平仓盈亏
-        /// </summary>
-        /// <param name="positions"></param>
-        /// <returns></returns>
-        public static decimal CalRealizedPL(Position[] positions)
-        {
-            if (positions != null)
-            {
-                return positions.Sum(e => e.ClosedPL * e.oSymbol.Multiple);//持仓的平仓盈亏 = 平仓盈亏点数*乘数
-            }
-            return 0;
-        }
+        ///// <summary>
+        ///// 计算一组持仓的平仓盈亏
+        ///// </summary>
+        ///// <param name="positions"></param>
+        ///// <returns></returns>
+        //public static decimal CalRealizedPL(Position[] positions)
+        //{
+        //    if (positions != null)
+        //    {
+        //        return positions.Sum(e => e.ClosedPL * e.oSymbol.Multiple);//持仓的平仓盈亏 = 平仓盈亏点数*乘数
+        //    }
+        //    return 0;
+        //}
 
-        /// <summary>
-        /// 计算一组持仓的浮动盈亏点数
-        /// </summary>
-        /// <param name="positions"></param>
-        /// <returns></returns>
-        public static decimal CalUnRealizedPL(Position[] positions)
-        {
-            if (positions != null)
-            {
-                return positions.Sum(e => e.UnRealizedPL * e.oSymbol.Multiple);//持仓的浮动盈亏 = 浮动盈亏点数*乘数
-            }
-            return 0;
-        }
+        ///// <summary>
+        ///// 计算一组持仓的浮动盈亏点数
+        ///// </summary>
+        ///// <param name="positions"></param>
+        ///// <returns></returns>
+        //public static decimal CalUnRealizedPL(Position[] positions)
+        //{
+        //    if (positions != null)
+        //    {
+        //        return positions.Sum(e => e.UnRealizedPL * e.oSymbol.Multiple);//持仓的浮动盈亏 = 浮动盈亏点数*乘数
+        //    }
+        //    return 0;
+        //}
 
         /// <summary>
         /// 计算一组持仓的结算盯市盈亏
         /// </summary>
         /// <param name="positions"></param>
         /// <returns></returns>
-        public static decimal CalSettleUnRealizedPL(Position[] positions)
-        {
-            if (positions != null)
-            {
-                if (positions.Length > 0)
-                {
-                    int i = 0;
-                }
-                return positions.Sum(e => e.SettleUnrealizedPL * e.oSymbol.Multiple);//持仓的浮动盈亏 = 浮动盈亏点数*乘数
-            }
-            return 0;
-        }
+        //public static decimal CalSettleUnRealizedPL(Position[] positions)
+        //{
+        //    if (positions != null)
+        //    {
+        //        if (positions.Length > 0)
+        //        {
+        //            int i = 0;
+        //        }
+        //        return positions.Sum(e => e.SettleUnrealizedPL * e.oSymbol.Multiple);//持仓的浮动盈亏 = 浮动盈亏点数*乘数
+        //    }
+        //    return 0;
+        //}
 
         /// <summary>
         /// 计算一组持仓的保证金
@@ -2623,14 +2623,14 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="positions"></param>
         /// <returns></returns>
-        public static decimal CalPositionMargin(Position[] positions)
-        {
-            if (positions != null)
-            {
-                return positions.Sum(e => CalPositionMargin(e));
-            }
-            return 0;
-        }
+        //public static decimal CalPositionMargin(Position[] positions)
+        //{
+        //    if (positions != null)
+        //    {
+        //        return positions.Sum(e => CalPositionMargin(e));
+        //    }
+        //    return 0;
+        //}
 
         /// <summary>
         /// 计算一组持仓的持仓成本
@@ -2638,67 +2638,67 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="positions"></param>
         /// <returns></returns>
-        public static decimal CalPositionCost(Position[] positions)
-        {
-            if (positions != null)
-            {
-                return positions.Sum(e => PositionCostMultiple(e));
-            }
-            return 0;
-        }
+        //public static decimal CalPositionCost(Position[] positions)
+        //{
+        //    if (positions != null)
+        //    {
+        //        return positions.Sum(e => PositionCostMultiple(e));
+        //    }
+        //    return 0;
+        //}
 
        
 
-        /// <summary>
-        /// 计算一组持仓的市值
-        /// 比如股票,期权等 需要实际计算证券的市值来反映持仓的权益变化
-        /// </summary>
-        /// <param name="positions"></param>
-        /// <returns></returns>
-        public static decimal CalPositionValue(Position[] positions)
-        {
-            if (positions != null)
-            {
-                return positions.Sum(e => PositionValueMultiple(e));
-            }
-            return 0;
-        }
+        ///// <summary>
+        ///// 计算一组持仓的市值
+        ///// 比如股票,期权等 需要实际计算证券的市值来反映持仓的权益变化
+        ///// </summary>
+        ///// <param name="positions"></param>
+        ///// <returns></returns>
+        //public static decimal CalPositionValue(Position[] positions)
+        //{
+        //    if (positions != null)
+        //    {
+        //        return positions.Sum(e => PositionValueMultiple(e));
+        //    }
+        //    return 0;
+        //}
 
         /// <summary>
         /// 计算一组持仓的结算市值
         /// </summary>
         /// <param name="positions"></param>
         /// <returns></returns>
-        public static decimal CalSettlePositionValue(Position[] positions)
-        {
-            if (positions != null)
-            {
-                //if (positions.Length > 0)
-                //{
-                //    int x = 0;
-                //}
-                return positions.Sum(e => e.UnsignedSize * e.SettlePrice * e.oSymbol.Multiple);
-            }
-            return 0;
-        }
+        //public static decimal CalSettlePositionValue(Position[] positions)
+        //{
+        //    if (positions != null)
+        //    {
+        //        //if (positions.Length > 0)
+        //        //{
+        //        //    int x = 0;
+        //        //}
+        //        return positions.Sum(e => e.UnsignedSize * e.SettlePrice * e.oSymbol.Multiple);
+        //    }
+        //    return 0;
+        //}
 
-        /// <summary>
-        /// 计算单个持仓的保证金
-        /// </summary>
-        /// <param name="p"></param>
-        /// <returns></returns>
-        public static decimal CalPositionMargin(Position p)
-        {
-            //异化合约按照固定金额来计算
-            if (p.oSymbol.SecurityType == SecurityType.INNOV)
-            {
-                return p.UnsignedSize * (p.oSymbol.Margin + (p.oSymbol.ExtraMargin > 0 ? p.oSymbol.ExtraMargin : 0));//通过固定保证金来计算持仓保证金占用
-            }
-            if (p.oSymbol.Margin <= 1)
-                return p.UnsignedSize * p.AvgPrice * p.oSymbol.Multiple * p.oSymbol.Margin;
-            else
-                return p.oSymbol.Margin * p.UnsignedSize;
-        }
+        ///// <summary>
+        ///// 计算单个持仓的保证金
+        ///// </summary>
+        ///// <param name="p"></param>
+        ///// <returns></returns>
+        //public static decimal CalPositionMargin(Position p)
+        //{
+        //    //异化合约按照固定金额来计算
+        //    if (p.oSymbol.SecurityType == SecurityType.INNOV)
+        //    {
+        //        return p.UnsignedSize * (p.oSymbol.Margin + (p.oSymbol.ExtraMargin > 0 ? p.oSymbol.ExtraMargin : 0));//通过固定保证金来计算持仓保证金占用
+        //    }
+        //    if (p.oSymbol.Margin <= 1)
+        //        return p.UnsignedSize * p.AvgPrice * p.oSymbol.Multiple * p.oSymbol.Margin;
+        //    else
+        //        return p.oSymbol.Margin * p.UnsignedSize;
+        //}
 
 
         /// <summary>
@@ -2708,18 +2708,18 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="pos"></param>
         /// <returns></returns>
-        public static decimal PositionCostMultiple(Position pos)
-        {
-            //如果是异化证券,则按底层的证券进行计算
-            //if (pos.oSymbol.SecurityType == SecurityType.INNOV)
-            //{
-            //    return pos.UnsignedSize * pos.AvgPrice * pos.oSymbol.ULSymbol.Multiple;//异化合约用底层证券的乘数
-            //}
-            //else//如果是正常证券,则按正常的合约数据进行计算
-            //{
-                return pos.UnsignedSize * pos.AvgPrice * pos.oSymbol.Multiple;
-            //}
-        }
+        //public static decimal PositionCostMultiple(Position pos)
+        //{
+        //    //如果是异化证券,则按底层的证券进行计算
+        //    //if (pos.oSymbol.SecurityType == SecurityType.INNOV)
+        //    //{
+        //    //    return pos.UnsignedSize * pos.AvgPrice * pos.oSymbol.ULSymbol.Multiple;//异化合约用底层证券的乘数
+        //    //}
+        //    //else//如果是正常证券,则按正常的合约数据进行计算
+        //    //{
+        //        return pos.UnsignedSize * pos.AvgPrice * pos.oSymbol.Multiple;
+        //    //}
+        //}
        
 
 
@@ -2729,18 +2729,18 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="pos"></param>
         /// <returns></returns>
-        public static decimal PositionValueMultiple(Position pos)
-        {
-            //如果是异化证券,则按底层的证券进行计算
-            //if (pos.oSymbol.SecurityType == SecurityType.INNOV)
-            //{
-            //    return pos.UnsignedSize * pos.LastPrice * pos.oSymbol.ULSymbol.Multiple;
-            //}
-            //else//如果是正常证券,则按正常的合约数据进行计算
-            //{
-                return pos.UnsignedSize * pos.LastPrice * pos.oSymbol.Multiple;
-            //}
-        }
+        //public static decimal PositionValueMultiple(Position pos)
+        //{
+        //    //如果是异化证券,则按底层的证券进行计算
+        //    //if (pos.oSymbol.SecurityType == SecurityType.INNOV)
+        //    //{
+        //    //    return pos.UnsignedSize * pos.LastPrice * pos.oSymbol.ULSymbol.Multiple;
+        //    //}
+        //    //else//如果是正常证券,则按正常的合约数据进行计算
+        //    //{
+        //        return pos.UnsignedSize * pos.LastPrice * pos.oSymbol.Multiple;
+        //    //}
+        //}
         /// <summary>
         /// 计算某个合约的资金占用
         /// 合约价格/合约数量/合约乘数/合约保证金比例[非杠杆类合约 保证金比例1 比如STK,OPT]

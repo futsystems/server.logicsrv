@@ -72,9 +72,9 @@ namespace TradingLib.Core
             if (o.id <= 0)
                 o.id = _idt.AssignId;
             //如果委托编号已经被记录,则重新获得委托编号(防止产生重复委托编号)
-            OrderTracker otk = _clearcentre.DefaultOrderTracker as OrderTracker;
+          
             //委托编号唯一性检查 如果清算中心已经维护过该委托编号 则重新设定委托编号
-            while (otk.isTracked(o.id))
+            while (_clearcentre.OrderTracker.isTracked(o.id))
             {
                 o.id = _idt.AssignId;
             }

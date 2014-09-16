@@ -233,6 +233,9 @@ namespace TradingLib.Common
                         return RequestTemplate<MGRReqAddSymbolRequest>.SrvRecvRequest(frontid, clientid, content);
                     case MessageTypes.MGRCHANGEINVESTOR://请求修改投资者信息
                         return RequestTemplate<MGRReqChangeInvestorRequest>.SrvRecvRequest(frontid, clientid, content);
+                    case MessageTypes.MGRUPDATEPOSLOCK://请求修改帐户锁仓权限
+                        return RequestTemplate<MGRReqUpdatePosLockRequest>.SrvRecvRequest(frontid, clientid, content);
+
                     #endregion
 
                     default:
@@ -312,6 +315,8 @@ namespace TradingLib.Common
                     return tickhb;
 
                 #region manager
+                case MessageTypes.MGROPERATIONRESPONSE:
+                    return ResponseTemplate<RspMGROperationResponse>.CliRecvResponse(content);
                 case MessageTypes.MGRLOGINRESPONSE://登入回报
                     return ResponseTemplate<RspMGRLoginResponse>.CliRecvResponse(content);
                 case MessageTypes.MGRQRYACCOUNTSRESPONSE://查询帐户列表回报
@@ -364,6 +369,8 @@ namespace TradingLib.Common
                     return ResponseTemplate<RspMGRReqAddSymbolResponse>.CliRecvResponse(content);
                 case MessageTypes.MGRCHANGEINVESTOR://请求修改投资者信息
                     return ResponseTemplate<RspMGRReqChangeInvestorResponse>.CliRecvResponse(content);
+                case MessageTypes.MGRUPDATEPOSLOCKRESPONSE://请求修改帐户锁仓权限回报
+                    return ResponseTemplate<RspMGRReqUpdatePosLockResponse>.CliRecvResponse(content);
                 #endregion
                 default:
                     throw new PacketError();

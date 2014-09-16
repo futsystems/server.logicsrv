@@ -390,7 +390,7 @@ namespace TradingLib.Core
         {
             if (string.IsNullOrEmpty(pos.Account)) return;
             PositionNotify notify = ResponseTemplate<PositionNotify>.SrvSendNotifyResponse(pos.Account);
-            notify.Position = AccountPosition.GenFromPosition(pos);
+            notify.Position = pos.GenPositionEx();
 
             TLSend(notify);
             debug("send positionupdate to client|" + pos.ToString());

@@ -345,6 +345,14 @@ namespace TradingLib.Common
             }
         }
 
+        public SymbolImpl[] SymbolsTradable
+        {
+            get
+            {
+                return symbolmap.Values.Where(sym => sym.IsTradeable).ToArray();//.OrderBy
+            }
+        }
+
         public RuleClassItem[] GetOrderRuleClass()
         {
             return orderruleclassmap.Values.ToArray();

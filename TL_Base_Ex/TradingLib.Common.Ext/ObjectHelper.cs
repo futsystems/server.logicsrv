@@ -130,6 +130,7 @@ namespace TradingLib.Common
             info.RealizedPL = acc.RealizedPL;
             info.UnRealizedPL = acc.UnRealizedPL;
             info.Token = acc.Token;
+            info.PosLock = acc.PosLock;
             return info;
         }
     }

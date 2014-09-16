@@ -15,7 +15,7 @@ namespace FutSystems.GUI
         //event FindSymbolDel FindSecurityEvent;//获得对应的合约信息
         event PositionOffsetArgsDel UpdatePostionOffsetEvent;//对外触发更新止盈止损事件
 
-        PositionTracker PositionTracker { get; set; }
+        LSPositionTracker PositionTracker { get; set; }
         OrderTracker OrderTracker { get; set; }
         void GotTick(Tick k);
         void GotFill(Trade t);

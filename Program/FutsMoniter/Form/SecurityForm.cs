@@ -11,7 +11,6 @@ using Telerik.WinControls;
 using TradingLib.API;
 using TradingLib.Common;
 using FutSystems.GUI;
-using FutSystems.GUI;
 
 namespace FutsMoniter
 {

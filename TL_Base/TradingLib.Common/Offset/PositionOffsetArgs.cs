@@ -11,16 +11,18 @@ namespace TradingLib.Common
     /// </summary>
     public class PositionOffsetArgs
     {
-        public PositionOffsetArgs(string account, string symbol,QSEnumPositionOffsetDirection direction)
+        public PositionOffsetArgs(string account, string symbol,bool side,QSEnumPositionOffsetDirection direction)
         {
             _account = account;
             _symbol = symbol;
             _direction = direction;
+            _side = side;
             Enable = false;
             OffsetType = QSEnumPositionOffsetType.POINTS;
             Value = 0;
             Start = 0;
             Size = 0;
+            
         }
 
         /// <summary>
@@ -116,6 +118,9 @@ namespace TradingLib.Common
         /// </summary>
         public string Symbol { get { return _symbol; } }
 
+        bool _side = false;
+        public bool Side { get { return _side; } }
+
         QSEnumPositionOffsetDirection _direction;
         /// <summary>
         /// 止盈还是止损标识
@@ -205,6 +210,8 @@ namespace TradingLib.Common
             sb.Append(po.Size.ToString());
             sb.Append(d);
             sb.Append(po.Start.ToString());
+            sb.Append(d);
+            sb.Append(po.Side.ToString());
 
             return sb.ToString();
         }
@@ -216,14 +223,16 @@ namespace TradingLib.Common
 
             string account = rec[0];
             string symbol = rec[1];
+            
             bool enable = Convert.ToBoolean(rec[2]);
             QSEnumPositionOffsetDirection direction = (QSEnumPositionOffsetDirection)Enum.Parse(typeof(QSEnumPositionOffsetDirection), rec[3]);
             QSEnumPositionOffsetType type = (QSEnumPositionOffsetType)Enum.Parse(typeof(QSEnumPositionOffsetType), rec[4]);
             decimal value = Convert.ToDecimal(rec[5]);
             int size = Convert.ToInt32(rec[6]);
             decimal start = Convert.ToDecimal(rec[7]);
+            bool side = Convert.ToBoolean(rec[8]);
 
-            PositionOffsetArgs po = new PositionOffsetArgs(account, symbol, direction);
+            PositionOffsetArgs po = new PositionOffsetArgs(account, symbol,side, direction);
             po.Enable = enable;
             po.OffsetType = type;
 

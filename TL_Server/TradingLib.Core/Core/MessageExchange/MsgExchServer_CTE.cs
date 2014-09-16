@@ -72,13 +72,12 @@ namespace TradingLib.Core
             //debug("检查异常状态的委托....", QSEnumDebugLevel.INFO);
             DateTime now = DateTime.Now;
             //遍历所有需要检查的委托 停留在placed 或者 submited unknown
-            OrderTracker otk = (ClearCentre.DefaultOrderTracker as OrderTracker);
-            foreach (Order o in otk.ToArray().Where(o => statuscheck(o, now)))
+            foreach (Order o in _clearcentre.TotalOrders.Where(o => statuscheck(o, now)))
             {
-                int sentsize = otk.Sent(o.id);
-                int fillsize = otk.Filled(o.id);
-                bool iscancel = otk.isCanceled(o.id);
-                bool iscomplete = otk.isCompleted(o.id);
+                int sentsize = _clearcentre.OrderTracker.Sent(o.id);
+                int fillsize = _clearcentre.OrderTracker.Filled(o.id);
+                bool iscancel = _clearcentre.OrderTracker.isCanceled(o.id);
+                bool iscomplete = _clearcentre.OrderTracker.isCompleted(o.id);
                 debug("OrderStatus:" + o.Status.ToString() + " SentSize:" + sentsize.ToString() + " FillSize:" + fillsize.ToString() + " IsCanceled:" + iscancel.ToString() + " IsComplete:" + iscomplete.ToString(), QSEnumDebugLevel.INFO);
                 
                 Order tmp = new OrderImpl(o);

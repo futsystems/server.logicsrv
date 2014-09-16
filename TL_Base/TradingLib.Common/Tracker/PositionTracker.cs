@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections;
+using System.Linq;
 using System.Text;
 using TradingLib.API;
 
@@ -15,18 +16,26 @@ namespace TradingLib.Common
     public class PositionTracker : GenericTracker<Position>,GotPositionIndicator,GotFillIndicator,GotTickIndicator
     {
         /// <summary>
+        /// 持仓维护器 维护持仓类别
+        /// </summary>
+        public QSEnumPositionDirectionType DirectionType { get { return _directiontype; } }
+        protected QSEnumPositionDirectionType _directiontype = QSEnumPositionDirectionType.BothSide;
+        /// <summary>
         /// create a tracker
         /// </summary>
         //public PositionTracker(string account) : this(account,5) { }
-        public PositionTracker() : this(5) { }
+        public PositionTracker() : this(5,QSEnumPositionDirectionType.BothSide) { }
+
+        public PositionTracker(QSEnumPositionDirectionType type) : this(5, type) { }
+        
         /// <summary>
         /// create tracker with approximate # of positions
         /// </summary>
         /// <param name="estimatedPositions"></param>
-        public PositionTracker(int estimatedPositions) : base(estimatedPositions,"POSITION",new PositionImpl()) 
+        public PositionTracker(int estimatedPositions,QSEnumPositionDirectionType type) : base(estimatedPositions,"POSITION",new PositionImpl()) 
         {
+            _directiontype = type;
             NewTxt += new TextIdxDelegate(PositionTracker_NewTxt);
-            //this._defaultacct = account;
         }
 
         public PositionTracker(string name) : base(name) { }
@@ -37,17 +46,34 @@ namespace TradingLib.Common
             if (NewSymbol!= null)
                 NewSymbol(txt);
         }
+
+        /// <summary>
+        /// Create a new position, or overwrite existing position
+        /// 用新的持仓对当前持仓进行覆盖
+        /// </summary>
+        /// <param name="newpos"></param>
+        public void NewPosition(Position newpos)
+        {
+            Adjust(newpos);
+        }
+
         /// <summary>
         /// 获得一个持仓对象
         /// </summary>
         /// <param name="p"></param>
-        public void GotPosition(Position p) { Adjust(p); }
+        public void GotPosition(Position p) 
+        { 
+            Adjust(p); 
+        }
 
         /// <summary>
         /// 获得一个成交对象
         /// </summary>
         /// <param name="f"></param>
-        public void GotFill(Trade f) { Adjust(f); }
+        public void GotFill(Trade f) 
+        { 
+            Adjust(f); 
+        }
 
         /// <summary>
         /// 获得一个Tick对象
@@ -58,7 +84,6 @@ namespace TradingLib.Common
             //clearCentre中计算账户保证金,平仓盈利,浮动盈利等均需要遍历所有的position来进行计算,遍历的时候使用foreach(position p in positiontracker)
             //委托处理与tick是同步进行的，tick更新会调用gottick来遍历所有的position进行价格更新,这里出现2个线程同时操作一个对象。
             //因此gottick不能用Enumerator,使用toArray来进行遍历 避免冲突
-            
             Position[] parray = this.ToArray();
             foreach (Position p in parray)
             {
@@ -96,15 +121,6 @@ namespace TradingLib.Common
         /// <returns></returns>
         public new Position this[string symbol] 
         { 
-            /*
-            get 
-            {
-                int idx = getindex(symbol + DefaultAccount);
-                LibUtil.Debug("account:" + DefaultAccount + " idx:" + idx.ToString());
-                if (idx<0)
-                    return new PositionImpl(symbol,0,0,0,DefaultAccount);  
-                return this[idx];
-            } **/
             get
             {
                 return this[symbol, DefaultAccount];
@@ -125,7 +141,7 @@ namespace TradingLib.Common
             {
                 int idx = getindex(symbol + account);
                 if (idx<0)
-                    return new PositionImpl(symbol,0,0,0,account);
+                    return new PositionImpl(symbol,0,0,0,account,_directiontype);
                     //addindex(symbol + account, new PositionImpl(symbol, 0, 0, 0, account));//当没有任何成交记录时,首次访问获得该合约-帐户所对应的持仓 并且初始化该持仓否则 对该pos的引用将发生错误 应为持仓本身发生了变化
                 return this[idx];
             } 
@@ -145,7 +161,8 @@ namespace TradingLib.Common
                     return new PositionImpl();
                 Position p = base[idx];
                 if (p == null)
-                    return new PositionImpl(getlabel(idx));
+                    return new PositionImpl();
+                    //return new PositionImpl(getlabel(idx));
                 return p;
             }
         }
@@ -163,25 +180,12 @@ namespace TradingLib.Common
         /// gets sum of all closed pl for all positions
         /// </summary>
         public decimal TotalClosedPL { get { return _totalclosedpl; } }
-        public decimal TotalUnRealizedPL { 
-            get {
-                decimal pl = 0;
-                foreach (Position p in ToArray())
-                {
-                    pl = pl + p.UnRealizedPL;
-                }
-                return pl;
-               } 
-            }
-        
+
         /// <summary>
-        /// Create a new position, or overwrite existing position
+        /// 累加所有浮动盈亏
         /// </summary>
-        /// <param name="newpos"></param>
-        public void NewPosition(Position newpos)
-        {
-            Adjust(newpos);
-        }
+        public decimal TotalUnRealizedPL { get { return this.Sum(p => p.UnRealizedPL);}}
+        
 
         /// <summary>
         /// 覆盖当前仓位或者新建一个仓位
@@ -197,12 +201,16 @@ namespace TradingLib.Common
                 _defaultacct = newpos.Account;
             int idx = getindex(newpos.Symbol + newpos.Account);
             //如果没有symbol+account对应的position则新增加一个仓位,或者用新仓位覆盖掉原来的仓位
+            Position p = new PositionImpl(newpos);
+            p.DirectionType = _directiontype;
             if (idx < 0)
-                addindex(newpos.Symbol + newpos.Account, new PositionImpl(newpos));
+            {
+                addindex(newpos.Symbol + newpos.Account, p);
+            }
             else
             {
-                base[idx] = new PositionImpl(newpos);
-                _totalclosedpl += newpos.ClosedPL;
+                base[idx] = p;
+                _totalclosedpl += newpos.ClosedPL;//平仓盈亏进行累加合并
             }
             return 0;
         }
@@ -211,6 +219,7 @@ namespace TradingLib.Common
         /// <summary>
         /// Adjust an existing position, or create new one if none exists.
         /// 处理一笔成交,用于更新position,通过symbol+account形成唯一position标识符
+        /// 对于新的持仓 是通过从成交转化成Position获得持仓
         /// </summary>
         /// <param name="fill"></param>
         /// <returns>any closed PL for adjustment</returns>
@@ -218,29 +227,21 @@ namespace TradingLib.Common
         {
             //LibUtil.Debug("adjust fill, key:" + fill.symbol + fill.Account);
             int idx = getindex(fill.symbol + fill.Account);
-            return Adjust(fill, idx);
-        }
-        /// <summary>
-        /// Adjust an existing position, or create a new one... given a trade and symbol+account index
-        /// 对于新的持仓 是通过从成交转化成Position获得持仓
-        /// </summary>
-        /// <param name="fill"></param>
-        /// <param name="idx"></param>
-        /// <returns></returns>
-        decimal Adjust(Trade fill, int idx)
-        {
             //LibUtil.Debug("adjust fill, idx:" + idx.ToString());
             decimal cpl = 0;
             //设定默认帐户
             if (_defaultacct == string.Empty)
-                _defaultacct = fill.Account ;
-            
+                _defaultacct = fill.Account;
+
             if (idx < 0)
-                addindex(fill.symbol + fill.Account, new PositionImpl(fill));//如果没有持仓 由最新成交产生持仓
-            else
             {
-                cpl += this[idx].Adjust(fill);//position.adjust(fill) 调用position来处理fill.形成closedpl
+                //生成空的持仓数据 然后通过ajust(fill)统一通过fill来推动持仓更新
+                PositionImpl newpos = new PositionImpl(fill.Account,fill.symbol, this.DirectionType);
+                addindex(fill.symbol + fill.Account,newpos);//如果没有持仓 由最新成交产生持仓 
+                idx = getindex(fill.symbol + fill.Account);
             }
+
+            cpl += this[idx].Adjust(fill);//position.adjust(fill) 调用position来处理fill.形成closedpl
             _totalclosedpl += cpl;//返回仓位变更产生的平仓利润,用于累加到系统
             return cpl;
         }
@@ -261,7 +262,10 @@ namespace TradingLib.Common
     /// </summary>
     public class PositionSizeTracker : PositionTracker, GenericTrackerInt
     {
-        public PositionSizeTracker() : base("POSSIZE") { }
+        public PositionSizeTracker() : base("POSSIZE") 
+        {
+            
+        }
         public int getvalue(int idx) { return this[idx]; }
         public int getvalue(string txt) { return this[txt]; }
         public void setvalue(int idx, int v) { }
@@ -298,7 +302,10 @@ namespace TradingLib.Common
     /// </summary>
     public class LongPositionTracker : PositionTracker, GenericTrackerBool
     {
-        public LongPositionTracker() : base("ISLONG") { }
+        public LongPositionTracker() : base("ISLONG") 
+        {
+            _directiontype = QSEnumPositionDirectionType.Long;
+        }
         public bool getvalue(int idx) { return this[idx].isLong; }
         public bool getvalue(string txt) { return this[txt].isLong; }
         public void setvalue(int idx, bool v) { }
@@ -310,7 +317,10 @@ namespace TradingLib.Common
     /// </summary>
     public class ShortPositionTracker : PositionTracker, GenericTrackerBool
     {
-        public ShortPositionTracker() : base("ISSHORT") { }
+        public ShortPositionTracker() : base("ISSHORT") 
+        {
+            _directiontype = QSEnumPositionDirectionType.Short;
+        }
         public bool getvalue(int idx) { return this[idx].isShort; }
         public bool getvalue(string txt) { return this[txt].isShort; }
         public void setvalue(int idx, bool v) { }

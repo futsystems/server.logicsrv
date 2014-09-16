@@ -23,8 +23,8 @@ namespace FutSystems.GUI
 
         BindingSource datasource = new BindingSource();
         //持仓记录器 客户端是通过TradingTracker组件来记录order position记录的,服务端我们需要自己内建一个positiontracker用于记录相关信息
-        PositionTracker pt;
-        public PositionTracker PositionTracker { get { return pt; } set { pt = value; } }
+        LSPositionTracker pt;
+        public LSPositionTracker PositionTracker { get { return pt; } set { pt = value; } }
         
         //委托记录器
         OrderTracker _ot;
@@ -114,7 +114,7 @@ namespace FutSystems.GUI
         {
             if (pos == null || pos.isFlat) return;
             Order o = new MarketOrderFlat(pos);
-            o.OrderPostFlag = QSEnumOrderPosFlag.CLOSE;
+            o.OffsetFlag = QSEnumOffsetFlag.CLOSE;
             SendOrder(o);
             debug("全平仓位:" + pos.Symbol);
         }
@@ -128,7 +128,8 @@ namespace FutSystems.GUI
 
 
         const string SYMBOL = "合约";
-        const string DIRECTION = "买卖";
+        const string SIDE = "方向";
+        const string DIRECTION = "多空";
         const string SIZE = "总持仓";
         const string CANFLATSIZE = "可平量";//用于计算当前限价委托可以挂单数量
         const string LASTPRICE = "最新";//最新成交价
@@ -208,9 +209,9 @@ namespace FutSystems.GUI
         }
 
         //获得显示的数值
-        string GetGridOffsetText(Position pos, QSEnumPositionOffsetDirection direction)
+        string GetGridOffsetText(Position pos,bool side, QSEnumPositionOffsetDirection direction)
         {
-            string key = pos.Account + "_" + pos.Symbol;
+            string key = pos.GetKey(side);
             decimal price = direction == QSEnumPositionOffsetDirection.LOSS ? GetLossArgs(key).TargetPrice(pos) : GetProfitArgs(key).TargetPrice(pos);
             if (price == -1)
             {
@@ -240,10 +241,10 @@ namespace FutSystems.GUI
             return -1;
         }
         //获得持昂方向
-        string getDirection(int size)
-        {
-            return size == 0 ? "无持仓" : (size > 0 ? "看多" : "看空");
-        }
+        //string getDirection(int size)
+        //{
+        //    return size == 0 ? "无持仓" : (size > 0 ? "看多" : "看空");
+        //}
 
         //获得某个持仓的可平数量
         int getCanFlatSize(Position pos)
@@ -252,19 +253,25 @@ namespace FutSystems.GUI
         }
 
         //往datatable中插入一行记录
-        int InsertNewRow(string account,string symbol)
+        int InsertNewRow(Position pos,bool positionside)
         {
+            string account = pos.Account;
+            string symbol = pos.Symbol;
             gt.Rows.Add(symbol);
             int i = gt.Rows.Count - 1;//得到新建的Row号
             //如果不存在,则我们将该account-symbol对插入映射列表我们的键用的是account_symbol配对
-            string key = account + "_" + symbol;
+            string key = pos.GetKey(positionside);
+            gt.Rows[i][SIDE] = positionside;
+            gt.Rows[i][DIRECTION] = positionside ? "多" : "空";
             gt.Rows[i][KEY] = key;
-            gt.Rows[i][ACCOUNT] = account;
+            gt.Rows[i][ACCOUNT] = pos.Account;
+
+            debug("new row inserted,account-symbol-side:" + key);
             if (!symRowMap.ContainsKey(key))
                 symRowMap.TryAdd(key, i);
             //同时为该key准备positoinoffsetarg
-            lossOffsetMap[key] = new PositionOffsetArgs(account, symbol, QSEnumPositionOffsetDirection.LOSS);
-            profitOffsetMap[key] = new PositionOffsetArgs(account, symbol, QSEnumPositionOffsetDirection.PROFIT);
+            lossOffsetMap[key] = new PositionOffsetArgs(account, symbol,positionside, QSEnumPositionOffsetDirection.LOSS);
+            profitOffsetMap[key] = new PositionOffsetArgs(account, symbol, positionside, QSEnumPositionOffsetDirection.PROFIT);
 
             return i;
         }
@@ -279,8 +286,9 @@ namespace FutSystems.GUI
                 {
                     string sym = positiongrid.SelectedRows[0].ViewInfo.CurrentRow.Cells[SYMBOL].Value.ToString();
                     string account = positiongrid.SelectedRows[0].ViewInfo.CurrentRow.Cells[ACCOUNT].Value.ToString();
-                    debug("sym:" + sym + " account:" + account);
-                    Position pos= pt[sym, account];
+                    bool positionside = bool.Parse(positiongrid.SelectedRows[0].ViewInfo.CurrentRow.Cells[SIDE].Value.ToString());
+                    debug("sym:" + sym + " account:" + account +" side:"+positionside.ToString());
+                    Position pos= pt[sym, account,positionside];
                     debug("Pos:" + pos.ToString());
                     return pos;
                 }
@@ -316,7 +324,7 @@ namespace FutSystems.GUI
             {
                 if (positiongrid.SelectedRows.Count > 0)
                 {
-                    string key = positiongrid.CurrentRow.Cells[KEY].Value.ToString();//positiongrid.SelectedRows[0].ViewInfo.CurrentRow.Cells[SYMBOL].Value.ToString();
+                    string key = positiongrid.CurrentRow.Cells[KEY].Value.ToString();
                     return key;
                 }
                 else
@@ -346,23 +354,32 @@ namespace FutSystems.GUI
             }
             else
             {
-                int posidx = positionidx(pos.Account + "_" + pos.Symbol);
+
+                int posidx = positionidx(pos.GetKey(pos.isLong));//通过position key 获得对应的idx
                 string _fromat = getDisplayFormat(pos.oSymbol);
-
-                //如果不存在,则我们将该account-symbol对插入映射列表我们的键用的是account_symbol配对
-                int i = InsertNewRow(pos.Account, pos.Symbol);
-                int size = pos.Size;
-                gt.Rows[i][DIRECTION] = getDirection(size);
-                gt.Rows[i][SIZE] = Math.Abs(size);
-                gt.Rows[i][CANFLATSIZE] = getCanFlatSize(pos);
-                gt.Rows[i][AVGPRICE] = string.Format(getDisplayFormat(pos.oSymbol), pos.AvgPrice);
-                gt.Rows[i][REALIZEDPL] = string.Format(getDisplayFormat(pos.oSymbol), pos.ClosedPL * getMultiple(pos.oSymbol));
-                gt.Rows[i][REALIZEDPLPOINT] = string.Format(getDisplayFormat(pos.oSymbol), pos.ClosedPL);
-                num.Text = positiongrid.RowCount.ToString();
-                //if (guiSide == QSEnumGUISide.Client)
-                //    updatePositionStrategyImg(i);//更新界面图标
-                //updateCurrentRowPositionNum();
-
+                if ((posidx > -1) && (posidx < gt.Rows.Count))//idx存在
+                {
+                    int size = pos.Size;
+                    gt.Rows[posidx][SIZE] = Math.Abs(size);
+                    gt.Rows[posidx][CANFLATSIZE] = getCanFlatSize(pos);
+                    gt.Rows[posidx][AVGPRICE] = string.Format(getDisplayFormat(pos.oSymbol), pos.AvgPrice);
+                    gt.Rows[posidx][REALIZEDPL] = string.Format(getDisplayFormat(pos.oSymbol), pos.ClosedPL * getMultiple(pos.oSymbol));
+                    gt.Rows[posidx][REALIZEDPLPOINT] = string.Format(getDisplayFormat(pos.oSymbol), pos.ClosedPL);
+                    num.Text = positiongrid.RowCount.ToString();
+                }
+                else//idx不存在
+                {
+                    //如果不存在,则我们将该account-symbol对插入映射列表我们的键用的是account_symbol配对
+                    int i = InsertNewRow(pos, pos.isLong);
+                    int size = pos.Size;
+                    gt.Rows[i][SIZE] = Math.Abs(size);
+                    gt.Rows[i][CANFLATSIZE] = getCanFlatSize(pos);
+                    gt.Rows[i][AVGPRICE] = string.Format(getDisplayFormat(pos.oSymbol), pos.AvgPrice);
+                    gt.Rows[i][REALIZEDPL] = string.Format(getDisplayFormat(pos.oSymbol), pos.ClosedPL * getMultiple(pos.oSymbol));
+                    gt.Rows[i][REALIZEDPLPOINT] = string.Format(getDisplayFormat(pos.oSymbol), pos.ClosedPL);
+                    num.Text = positiongrid.RowCount.ToString();
+                    
+                }
             }
 
         }
@@ -372,51 +389,58 @@ namespace FutSystems.GUI
             //debug("position view got tick:" + t.ToString());
             if (InvokeRequired)
             {
-                try
-                {
+                
                     Invoke(new TickDelegate(GotTick), new object[] { t });
-                }
-                catch (Exception ex)
-                { }
+               
             }
             else
             {
-                string _fromat = getDisplayFormat(t.symbol);
-                //数据列中如果是该symbol则必须全比更新
-                for (int i = 0; i < gt.Rows.Count; i++)
+                try
                 {
-                    //debug("it is here");
-                    if (gt.Rows[i][SYMBOL].ToString() == t.symbol)
+                    string _fromat = getDisplayFormat(t.symbol);
+                    //数据列中如果是该symbol则必须全比更新
+                    for (int i = 0; i < gt.Rows.Count; i++)
                     {
-                        //记录该仓位所属账户
-                        string acc = gt.Rows[i][ACCOUNT].ToString();
-                        Position pos = pt[t.symbol, acc];
-                        string key = acc + "_" + t.symbol;
-                        decimal unrealizedpl = pos.UnRealizedPL;
-                        //debug("pos unrealizedpl:"+acc.ToString() +"  " + unrealizedpl.ToString() +" osymbol exist:"+(pos.oSymbol != null).ToString());
-                        
-                        //更新最新成交价
-                        if (t.isTrade)
+                        //便利所有合约与tick.symbol相同的行
+                        //debug("Ticktime"+t.time.ToString()+"symbol:" + gt.Rows[i][SYMBOL].ToString() + " side:" + gt.Rows[i][SIDE].ToString());
+                        //debug("row idx:" + i.ToString() + " acc:" + gt.Rows[i][ACCOUNT].ToString() + " symbol:" + gt.Rows[i][SYMBOL].ToString() + " side:" + gt.Rows[i][SIDE].ToString() + " rowsnum:" + gt.Rows.Count.ToString());
+                        if (gt.Rows[i][SYMBOL].ToString() == t.symbol)
                         {
-                            gt.Rows[i][LASTPRICE] = string.Format(getDisplayFormat(t.symbol), t.trade);
-                        }
-                        //空仓 未平仓合约与 最新价格
-                        if (pos.isFlat)
-                        {
-                            gt.Rows[i][UNREALIZEDPL] = 0;
-                            gt.Rows[i][UNREALIZEDPLPOINT] = 0;
-                        }
-                        else
-                        {
-                            //更新unrealizedpl
-                            gt.Rows[i][UNREALIZEDPL] = string.Format(getDisplayFormat(pos.oSymbol), unrealizedpl * getMultiple(pos.oSymbol));
-                            gt.Rows[i][UNREALIZEDPLPOINT] = string.Format(getDisplayFormat(pos.oSymbol), unrealizedpl);
-                        }
+                            //记录该仓位所属账户
+                            string acc = gt.Rows[i][ACCOUNT].ToString();
+                            bool posside = bool.Parse(gt.Rows[i][SIDE].ToString());
+                            Position pos = pt[t.symbol, acc, posside];
+                            string key = pos.GetKey(posside);
+                            decimal unrealizedpl = pos.UnRealizedPL;
+                            //debug("accc-symbol-side:" + key);
+                            //更新最新成交价
+                            if (t.isTrade)
+                            {
+                                gt.Rows[i][LASTPRICE] = string.Format(getDisplayFormat(t.symbol), t.trade);
+                            }
+                            //空仓 未平仓合约与 最新价格
+                            if (pos.isFlat)
+                            {
+                                gt.Rows[i][UNREALIZEDPL] = 0;
+                                gt.Rows[i][UNREALIZEDPLPOINT] = 0;
+                            }
+                            else
+                            {
+                                //更新unrealizedpl
+                                gt.Rows[i][UNREALIZEDPL] = string.Format(getDisplayFormat(pos.oSymbol), unrealizedpl * getMultiple(pos.oSymbol));
+                                gt.Rows[i][UNREALIZEDPLPOINT] = string.Format(getDisplayFormat(pos.oSymbol), unrealizedpl);
+                            }
 
-                        gt.Rows[i][STOPLOSS] = GetGridOffsetText(pos, QSEnumPositionOffsetDirection.LOSS);
-                        gt.Rows[i][PROFITTARGET] =GetGridOffsetText(pos,QSEnumPositionOffsetDirection.PROFIT);
+                            //gt.Rows[i][STOPLOSS] = GetGridOffsetText(pos, QSEnumPositionOffsetDirection.LOSS);
+                            //gt.Rows[i][PROFITTARGET] = GetGridOffsetText(pos, QSEnumPositionOffsetDirection.PROFIT);
+                        }
                     }
                 }
+                catch (Exception ex)
+                {
+                    debug("error:" + ex.ToString());
+                }
+        
             }
         }
 
@@ -439,14 +463,15 @@ namespace FutSystems.GUI
             }
             else
             {
-                Position pos = pt[o.symbol, o.Account];
+                bool posside = o.PositionSide;
+                Position pos = pt[o.symbol, o.Account, posside];
                 //通过account_symbol键对找到对应的行
-                int posidx = positionidx(o.Account + "_" + o.symbol);
+                int posidx = positionidx(pos.GetKey(posside));
                 string _fromat = getDisplayFormat(pos.Symbol);
+                //如果持仓条目已经存在 更新可平数量 委托回报只会更新可平数量
                 if ((posidx > -1) && (posidx < gt.Rows.Count))
                 {
                     gt.Rows[posidx][CANFLATSIZE] = getCanFlatSize(pos);
-                    //updateCurrentRowPositionNum();
                 }
 
             }
@@ -466,13 +491,16 @@ namespace FutSystems.GUI
                     Invoke(new LongDelegate(GotCancel), new object[] { oid });
                 }
                 catch (Exception ex)
-                { }
+                { 
+                    
+                }
             }
             else
             {
                 Order o = _ot.SentOrder(oid);
                 if (o == null || !o.isValid) return;
-                Position pos = pt[o.symbol, o.Account];
+                bool posside = o.PositionSide;
+                Position pos = pt[o.symbol, o.Account,posside];
                 //通过account_symbol键对找到对应的行
                 int posidx = positionidx(o.Account + "_" + o.symbol);
                 string _fromat = getDisplayFormat(pos.Symbol);
@@ -497,14 +525,15 @@ namespace FutSystems.GUI
             }
             else
             {
-                Position pos = pt[t.symbol, t.Account];//获得对应持仓数据
+                
+                bool posside = t.PositionSide;//每个成交可以确定仓位操作方向比如是多头操作(买入1手开仓 卖出1手平仓) 还是空头操作(卖出1手开仓 买入1手平仓)
+                Position pos = pt[t.symbol, t.Account, posside];//获得对应持仓数据
                 //通过account_symbol键对找到对应的行
-                string key = t.Account + "_" + t.symbol;
+                string key = pos.GetKey(posside);
                 int posidx = positionidx(key);
                 if ((posidx > -1) && (posidx <gt.Rows.Count))
                 {
                     int size = pos.Size;
-                    gt.Rows[posidx][DIRECTION] = getDirection(size);
                     gt.Rows[posidx][SIZE] = Math.Abs(size);
                     gt.Rows[posidx][CANFLATSIZE] = getCanFlatSize(pos);
                     gt.Rows[posidx][AVGPRICE] = string.Format(getDisplayFormat(pos.oSymbol), pos.AvgPrice);
@@ -515,27 +544,23 @@ namespace FutSystems.GUI
                     {
                         ResetOffset(key);
                     }
-                    gt.Rows[posidx][STOPLOSS] = GetGridOffsetText(pos, QSEnumPositionOffsetDirection.LOSS);
-                    gt.Rows[posidx][PROFITTARGET] = GetGridOffsetText(pos, QSEnumPositionOffsetDirection.PROFIT);
+                    //gt.Rows[posidx][STOPLOSS] = GetGridOffsetText(pos, posside,QSEnumPositionOffsetDirection.LOSS);
+                    //gt.Rows[posidx][PROFITTARGET] = GetGridOffsetText(pos,posside, QSEnumPositionOffsetDirection.PROFIT);
                     num.Text = positiongrid.RowCount.ToString();
-                    //updateCurrentRowPositionNum();
                 }
                 else
                 {
                     //如果不存在,则我们将该account-symbol对插入映射列表我们的键用的是account_symbol配对
-                    int i = InsertNewRow(pos.Account, pos.Symbol);
+                    int i = InsertNewRow(pos,posside);
                     int size = pos.Size;
-                    gt.Rows[i][DIRECTION] = getDirection(size);
                     gt.Rows[i][SIZE] = Math.Abs(size);
                     gt.Rows[i][CANFLATSIZE] = getCanFlatSize(pos);
                     gt.Rows[i][AVGPRICE] = string.Format(getDisplayFormat(pos.Symbol), pos.AvgPrice);
                     gt.Rows[i][REALIZEDPL] = string.Format(getDisplayFormat(pos.Symbol), pos.ClosedPL * getMultiple(pos.oSymbol));
                     gt.Rows[i][REALIZEDPLPOINT] = string.Format(getDisplayFormat(pos.Symbol), pos.ClosedPL);
                 }
-
                 _ordTransHelper.GotFill(t);
             }
-            
         }
 
         #endregion
@@ -570,6 +595,7 @@ namespace FutSystems.GUI
         private void InitTable()
         {
             gt.Columns.Add(SYMBOL);
+            gt.Columns.Add(SIDE);
             gt.Columns.Add(DIRECTION);
             gt.Columns.Add(SIZE, typeof(int));
             gt.Columns.Add(CANFLATSIZE, typeof(int));
@@ -601,6 +627,7 @@ namespace FutSystems.GUI
             grid.Columns[KEY].IsVisible = false;
             grid.Columns[PROFITTARGET].IsVisible = false;
             grid.Columns[STOPLOSS].IsVisible = false;
+            grid.Columns[SIDE].IsVisible = false;
 
             //set width
             grid.Columns[SYMBOL].Width = 45;
@@ -642,12 +669,12 @@ namespace FutSystems.GUI
                     if (e.CellElement.ColumnInfo.Name == DIRECTION)
                     {
                         object direction = e.CellElement.RowInfo.Cells[DIRECTION].Value;
-                        if (direction.ToString().Equals("看多"))
+                        if (direction.ToString().Equals("多"))
                         {
                             e.CellElement.ForeColor = UIGlobals.LongSideColor;
                             e.CellElement.Font = UIGlobals.BoldFont;
                         }
-                        else if (direction.ToString().Equals("看空"))
+                        else if (direction.ToString().Equals("空"))
                         {
                             e.CellElement.ForeColor = UIGlobals.ShortSideColor;
                             e.CellElement.Font = UIGlobals.BoldFont;

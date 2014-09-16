@@ -58,6 +58,14 @@ namespace TradingLib.Core
             ORM.MAccount.UpdateAccountToken(account, token);
             AccountChanged(this[account]);
         }
+
+        public void UpdateAccountPosLock(string account, bool poslock)
+        {
+            if (!HaveAccount(account)) return;
+            this[account].PosLock = poslock;
+            ORM.MAccount.UpdateAccountPosLock(account, poslock);
+            AccountChanged(this[account]);
+        }
         /// <summary>
         /// 更新账户日内交易设置
         /// </summary>

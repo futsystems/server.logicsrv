@@ -58,6 +58,10 @@ namespace TradingLib.API
         SymbolImpl[] Symbols { get; }
 
         /// <summary>
+        /// 获得所有可交易合约
+        /// </summary>
+        SymbolImpl[] SymbolsTradable { get; }
+        /// <summary>
         ///  获得委托风控规则数组
         /// </summary>
         /// <returns></returns>

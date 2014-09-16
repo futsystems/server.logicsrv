@@ -971,7 +971,7 @@ namespace FutSystems.GUI
             if (isLossSet.Checked)
             {
                 debug("下单面板 附带止损设置");
-                PositionOffsetArgs lossarg = new PositionOffsetArgs(_account, CurrentSymbol, QSEnumPositionOffsetDirection.LOSS);
+                PositionOffsetArgs lossarg = new PositionOffsetArgs(_account, CurrentSymbol,true, QSEnumPositionOffsetDirection.LOSS);
                 lossarg.Enable = true;
                 lossarg.OffsetType = LossOffsetType;
                 lossarg.Value = lossValue.Value;
@@ -983,7 +983,7 @@ namespace FutSystems.GUI
             if (isProfitSet.Checked)
             {
                 debug("下单面板 附带止盈设置");
-                PositionOffsetArgs profitarg = new PositionOffsetArgs(_account, CurrentSymbol, QSEnumPositionOffsetDirection.PROFIT);
+                PositionOffsetArgs profitarg = new PositionOffsetArgs(_account, CurrentSymbol,true, QSEnumPositionOffsetDirection.PROFIT);
                 profitarg.Enable = true;
                 profitarg.OffsetType = ProfitOffsetType;
                 profitarg.Value = profitValue.Value;

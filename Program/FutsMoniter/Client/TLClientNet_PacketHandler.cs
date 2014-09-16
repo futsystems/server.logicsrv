@@ -22,9 +22,9 @@ namespace TradingLib.Common
         void CliOnOldPositionNotify(HoldPositionNotify response)
         {
             debug("got holdposition notify " + response.Position.ToString(), QSEnumDebugLevel.INFO);
-            AccountPosition ap = response.Position;
+            PositionEx ap = response.Position;
 
-            Position pos = new PositionImpl(ap.Symbol, ap.AvgPrice, ap.Size, 0, ap.Account);
+            Position pos = new PositionImpl(ap.Symbol, ap.AvgPrice, ap.Size, 0, ap.Account,ap.DirectionType);
             //debug("symbol:" + pos.Symbol);
             Symbol osym = Globals.BasicInfoTracker.GetSymbol(pos.Symbol);
             //debug("got osymbol:" + (osym != null).ToString(), QSEnumDebugLevel.INFO);
@@ -57,6 +57,8 @@ namespace TradingLib.Common
         void CliOnErrorOrderNotify(ErrorOrderNotify response)
         {
             debug(string.Format("got order error:{0} message:{1} order:{2}", response.RspInfo.ErrorID, response.RspInfo.ErrorMessage, OrderImpl.Serialize(response.Order)));
+
+            this.handler.PopRspInfo(response.RspInfo);
         }
 
 
@@ -89,7 +91,12 @@ namespace TradingLib.Common
             debug(string.Format("got orderaction error:{0} message:{1} orderaction:{2}", response.RspInfo.ErrorID, response.RspInfo.ErrorMessage, OrderActionImpl.Serialize(response.OrderAction)));
         }
 
-        
+
+        void CliOnOperationResponse(RspMGROperationResponse response)
+        {
+
+            this.handler.PopRspInfo(response.RspInfo);
+        }
 
         #region 查询
         void CliOnRspQryAccountInfoResponse(RspQryAccountInfoResponse response)
@@ -492,6 +499,9 @@ namespace TradingLib.Common
                     break;
                 case MessageTypes.MGRADDSYMBOLRESPONSE://添加合约回报
                     CliOnMGRAddSymbolResponse(packet as RspMGRReqAddSymbolResponse);
+                    break;
+                case MessageTypes.MGROPERATIONRESPONSE://常规操作回报
+                    CliOnOperationResponse(packet as RspMGROperationResponse);
                     break;
                 #region 查询
                 case MessageTypes.ORDERRESPONSE://查询委托回报

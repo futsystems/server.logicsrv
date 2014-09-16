@@ -113,7 +113,7 @@ namespace TradingLib.Core
             //生成市价委托
             Order o = new MarketOrderFlat(pos);
             o.Account = pos.Account;
-            o.OrderPostFlag = QSEnumOrderPosFlag.CLOSE;
+            o.OffsetFlag = QSEnumOffsetFlag.CLOSE;
             o.OrderSource = ordersource;
             o.comment = comment.Replace(',','_');
             //o.price = 2500;//模拟不成交延迟撤单的情况

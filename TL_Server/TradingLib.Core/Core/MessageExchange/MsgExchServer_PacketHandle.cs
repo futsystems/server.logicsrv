@@ -112,14 +112,16 @@ namespace TradingLib.Core
                 for (int i = 0; i < totalnum; i++)
                 {
                     RspQryPositionResponse response = ResponseTemplate<RspQryPositionResponse>.SrvSendRspResponse(request);
-                    response.PositionToSend = AccountPosition.GenFromPosition(positions[i]);
+                    response.PositionToSend = positions[i].GenPositionEx();
+                    Trade[] trades = positions[i].Trades;
+                    debug("Trades num:" + trades.Length.ToString());
                     CacheRspResponse(response, i == totalnum - 1);
                 }
             }
             else
             {
                 RspQryPositionResponse response = ResponseTemplate<RspQryPositionResponse>.SrvSendRspResponse(request);
-                response.PositionToSend = new AccountPosition();
+                response.PositionToSend = new PositionEx();
                 CacheRspResponse(response);
             }
         }
@@ -150,7 +152,7 @@ namespace TradingLib.Core
                 int size = account.CanOpenSize(symbol);
                 response.Symbol = request.Symbol;
                 response.MaxVol = size;
-                response.PostFlag = request.PostFlag;
+                response.OffsetFlag = request.OffsetFlag;
                 request.Side = request.Side;
                 CachePacket(response);
             }

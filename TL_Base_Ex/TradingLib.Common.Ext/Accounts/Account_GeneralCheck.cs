@@ -46,7 +46,8 @@ namespace TradingLib.Common
         {
             msg = string.Empty;
             //获得该委托的持仓
-            Position pos = this.getPosition(o.symbol);
+            bool posiitonside = o.PositionSide;
+            Position pos = this.getPosition(o.symbol,posiitonside);
             //平仓操作不检查保证金(平仓有可平数量检查,释放保证金)
             if ((pos.isLong && !o.side) || (pos.isShort && o.side)) return true;
 

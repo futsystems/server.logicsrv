@@ -70,6 +70,10 @@
     <Compile Include="Accounts\Account_Rule.cs" />
     <Compile Include="Accounts\Account_Service.cs" />
     <Compile Include="Accounts\Manager.cs" />
+    <Compile Include="ClearCentre\Base_ClearCentre_.cs" />
+    <Compile Include="ClearCentre\Base_ClearCentre_TradingInfo.cs" />
+    <Compile Include="ClearCentre\Base_ClearCentre_FinCal.cs" />
+    <Compile Include="ClearCentre\Base_ClearCentre_TotalInfo.cs" />
     <Compile Include="Client\TrdClientInfo.cs" />
     <Compile Include="ORM\Config\ConfigItem.cs" />
     <Compile Include="ORM\Config\ConfigDB.cs" />

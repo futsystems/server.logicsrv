@@ -123,6 +123,7 @@ namespace TradingLib.Common
             if (connecton != null && connecton.IsConnected)
             {
                 connecton.TLSend(packet);
+                debug("Sendpacket to server, type:" + packet.Type.ToString() + " content:" + packet.ToString(), QSEnumDebugLevel.INFO);
             }
         }
         /// <summary>
@@ -179,11 +180,13 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="loginid"></param>
         /// <param name="pass"></param>
-        public void ReqLogin(string loginid, string pass)
+        public void ReqLogin(string loginid, string pass,int logintype,string mac)
         {
             LoginRequest request = RequestTemplate<LoginRequest>.CliSendRequest(requestid++);
             request.LoginID = loginid;
             request.Passwd = pass;
+            request.LoginType = logintype;
+            request.MAC = mac;
             //request.
 
             SendPacket(request);
@@ -206,7 +209,8 @@ namespace TradingLib.Common
         {
             QryMaxOrderVolRequest request = RequestTemplate<QryMaxOrderVolRequest>.CliSendRequest(requestid++);
             request.Symbol = symbol;
-            request.PostFlag = QSEnumOrderPosFlag.UNKNOWN;
+            request.OffsetFlag = QSEnumOffsetFlag.UNKNOWN;
+            request.Account = _account;
 
             SendPacket(request);
         }
@@ -237,7 +241,8 @@ namespace TradingLib.Common
         public void ReqQrySettleInfo()
         {
             QrySettleInfoRequest request = RequestTemplate<QrySettleInfoRequest>.CliSendRequest(requestid++);
-
+            request.Account = _account;
+            request.Tradingday = 0;
             SendPacket(request);
         }
 
@@ -247,10 +252,21 @@ namespace TradingLib.Common
         public void ReqQrySettleInfoConfirm()
         {
             QrySettleInfoConfirmRequest request = RequestTemplate<QrySettleInfoConfirmRequest>.CliSendRequest(requestid++);
-
+            request.Account = _account;
+            
             SendPacket(request);
         }
 
+        /// <summary>
+        /// 确认结算单
+        /// </summary>
+        public void ReqConfirmSettlement()
+        {
+            ConfirmSettlementRequest request = RequestTemplate<ConfirmSettlementRequest>.CliSendRequest(requestid++);
+            request.Account = _account;
+
+            SendPacket(request);
+        }
         /// <summary>
         /// 查询委托
         /// </summary>
@@ -310,7 +326,43 @@ namespace TradingLib.Common
             
         }
 
-        
+        public void ReqContribRequest(string moduleid, string cmdstr, string args)
+        {
+            ContribRequest request = RequestTemplate<ContribRequest>.CliSendRequest(requestid++);
+            request.ModuleID = moduleid;
+            request.CMDStr = cmdstr;
+            request.Parameters = args;
+
+            SendPacket(request);
+        }
+
+        public void ReqChangePassowrd(string oldpass,string newpass)
+        {
+            ReqChangePasswordRequest request = RequestTemplate<ReqChangePasswordRequest>.CliSendRequest(requestid++);
+            request.Account = _account;
+            request.OldPassword = oldpass;
+            request.NewPassword = newpass;
+
+            SendPacket(request);
+        }
+
+
+        public void ReqQrySymbol(string symbol)
+        {
+            QrySymbolRequest request = RequestTemplate<QrySymbolRequest>.CliSendRequest(requestid++);
+            request.Symbol = symbol;
+
+            SendPacket(request);
+        }
+
+        public void ReqQryOpenSize(string symbol)
+        {
+            QryMaxOrderVolRequest request = RequestTemplate<QryMaxOrderVolRequest>.CliSendRequest(requestid++);
+            request.Symbol = symbol;
+            request.Account = _account;
+
+            SendPacket(request);
+        }
         #endregion
 
 
@@ -321,14 +373,15 @@ namespace TradingLib.Common
                 OnTickEvent(response.Tick);
         }
 
-        void CliOnOldPositionNotify(PositionNotify response)
+        void CliOnOldPositionNotify(HoldPositionNotify response)
         {
             //if (OnOldPositionEvent != null)
-            //    OnOldPositionEvent(response.Position);
+                //OnOldPositionEvent(response.Position);
         }
         void CliOnOrderNotify(OrderNotify response)
         {
             debug("got order notify:" + response.Order.ToString(), QSEnumDebugLevel.INFO);
+            debug("##Order:" + response.Order.ToString(), QSEnumDebugLevel.INFO);
             if (OnOrderEvent != null)
                 OnOrderEvent(response.Order);
         }
@@ -337,6 +390,7 @@ namespace TradingLib.Common
         {
             debug(string.Format("got order error:{0} message:{1} order:{2}", response.RspInfo.ErrorID, response.RspInfo.ErrorMessage, OrderImpl.Serialize(response.Order)));
         }
+
         void CliOnTradeNotify(TradeNotify response)
         {
             debug("got trade notify:" + response.Trade.ToString(), QSEnumDebugLevel.INFO);
@@ -351,8 +405,24 @@ namespace TradingLib.Common
             //    OnPositionUpdateEvent(response.Position);
         }
 
+        void CliOnSettleInfoConfirm(RspQrySettleInfoConfirmResponse response)
+        {
+            debug("got confirmsettleconfirm data:" + response.ConfirmDay.ToString() + " time:" + response.ConfirmTime.ToString(), QSEnumDebugLevel.INFO);
+
+        }
+
+        void CliOnSettleInfo(RspQrySettleInfoResponse response)
+        {
+            debug("got settleinfo:", QSEnumDebugLevel.INFO);
+            string[] rec = response.Content.Split('\n');
+            foreach (string s in rec)
+            {
+                debug(s, QSEnumDebugLevel.INFO);
+            }
 
 
+
+        }
 
 
         void CliOnOrderAction(OrderActionNotify response)
@@ -365,6 +435,10 @@ namespace TradingLib.Common
             debug(string.Format("got orderaction error:{0} message:{1} orderaction:{2}", response.RspInfo.ErrorID, response.RspInfo.ErrorMessage, OrderActionImpl.Serialize(response.OrderAction)));
         }
 
+        void CliOnChangePass(RspReqChangePasswordResponse response)
+        {
+            debug("got changepassword response:" + response.RspInfo.ErrorID.ToString() + " " + response.RspInfo.ErrorMessage);
+        }
         #region 查询
         void CliOnRspQryAccountInfoResponse(RspQryAccountInfoResponse response)
         {
@@ -381,6 +455,36 @@ namespace TradingLib.Common
             debug("MoneyUsed:" + response.AccInfo.MoneyUsed.ToString(), QSEnumDebugLevel.INFO);
             debug("TotalLiquidation:" + response.AccInfo.TotalLiquidation.ToString(), QSEnumDebugLevel.INFO);
             debug("AvabileFunds:" + response.AccInfo.AvabileFunds.ToString(), QSEnumDebugLevel.INFO);
+            debug("Category:" + response.AccInfo.Category.ToString(), QSEnumDebugLevel.INFO);
+            debug("OrderRouterType:" + response.AccInfo.OrderRouteType.ToString(), QSEnumDebugLevel.INFO);
+            debug("Excute:" + response.AccInfo.Execute.ToString(), QSEnumDebugLevel.INFO);
+            debug("Intraday:" + response.AccInfo.IntraDay.ToString(), QSEnumDebugLevel.INFO);
+
+            debug("FutMarginUsed:" + response.AccInfo.FutMarginUsed.ToString(), QSEnumDebugLevel.INFO);
+            debug("FutMarginFrozen:" + response.AccInfo.FutMarginFrozen.ToString(), QSEnumDebugLevel.INFO);
+            debug("FutRealizedPL:" + response.AccInfo.FutRealizedPL.ToString(), QSEnumDebugLevel.INFO);
+            debug("FutUnRealizedPL:" + response.AccInfo.FutUnRealizedPL.ToString(), QSEnumDebugLevel.INFO);
+            debug("FutCommission:" + response.AccInfo.FutCommission.ToString(), QSEnumDebugLevel.INFO);
+            debug("FutCash:" + response.AccInfo.FutCash.ToString(), QSEnumDebugLevel.INFO);
+            debug("FutLiquidation:" + response.AccInfo.FutLiquidation.ToString(), QSEnumDebugLevel.INFO);
+            debug("FutMoneyUsed:" + response.AccInfo.FutMoneyUsed.ToString(), QSEnumDebugLevel.INFO);
+            debug("FutAvabileFunds:" + response.AccInfo.FutAvabileFunds.ToString(), QSEnumDebugLevel.INFO);
+
+            debug("OptPositionCost:" + response.AccInfo.OptPositionCost.ToString(), QSEnumDebugLevel.INFO);
+            debug("OptPositionValue:" + response.AccInfo.OptPositionValue.ToString(), QSEnumDebugLevel.INFO);
+            debug("OptRealizedPL:" + response.AccInfo.OptRealizedPL.ToString(), QSEnumDebugLevel.INFO);
+            debug("OptCommission:" + response.AccInfo.OptCommission.ToString(), QSEnumDebugLevel.INFO);
+            debug("OptMoneyFrozen:" + response.AccInfo.OptMoneyFrozen.ToString(), QSEnumDebugLevel.INFO);
+            debug("OptCash:" + response.AccInfo.OptCash.ToString(), QSEnumDebugLevel.INFO);
+            debug("OptMarketValue:" + response.AccInfo.OptMarketValue.ToString(), QSEnumDebugLevel.INFO);
+            debug("OptLiquidation:" + response.AccInfo.OptLiquidation.ToString(), QSEnumDebugLevel.INFO);
+            debug("OptMoneyUsed:" + response.AccInfo.OptMoneyUsed.ToString(), QSEnumDebugLevel.INFO);
+            debug("OptAvabileFunds:" + response.AccInfo.OptAvabileFunds.ToString(), QSEnumDebugLevel.INFO);
+
+            debug("InnovPositionCost:" + response.AccInfo.InnovPositionCost.ToString(), QSEnumDebugLevel.INFO);
+            debug("InnovPositionValue:" + response.AccInfo.InnovPositionValue.ToString(), QSEnumDebugLevel.INFO);
+            debug("InnovCommission:" + response.AccInfo.InnovCommission.ToString(), QSEnumDebugLevel.INFO);
+            debug("InnovRealizedPL:" + response.AccInfo.InnovRealizedPL.ToString(), QSEnumDebugLevel.INFO);
 
 
         }
@@ -395,8 +499,8 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="response"></param>
         void CliOnRspQryOrderResponse(RspQryOrderResponse response)
-        { 
-            
+        {
+            debug("##Order:" + response.OrderToSend.ToString(), QSEnumDebugLevel.INFO);
         }
         /// <summary>
         /// 查询成交回报
@@ -434,7 +538,7 @@ namespace TradingLib.Common
                     break;
                     //昨日持仓数据
                 case MessageTypes.OLDPOSITIONNOTIFY:
-                    CliOnOldPositionNotify(packet as PositionNotify);
+                    CliOnOldPositionNotify(packet as HoldPositionNotify);
                     break;
                     //委托回报
                 case MessageTypes.ORDERNOTIFY:
@@ -455,7 +559,12 @@ namespace TradingLib.Common
                 case MessageTypes.ORDERACTIONNOTIFY:
                     CliOnOrderAction(packet as OrderActionNotify);
                     break;
+                  
                 case MessageTypes.ERRORORDERACTIONNOTIFY:
+                    break;
+
+                case MessageTypes.CHANGEPASSRESPONSE:
+
 
 
                 #region 查询
@@ -479,8 +588,13 @@ namespace TradingLib.Common
                 case MessageTypes.MAXORDERVOLRESPONSE: //最大可开数量回报
                     CliOnMaxOrderVol(packet as RspQryMaxOrderVolResponse);
                     break;
-                
-                 
+                case MessageTypes.SETTLEINFOCONFIRMRESPONSE://结算确认回报
+                    CliOnSettleInfoConfirm(packet as RspQrySettleInfoConfirmResponse);
+                    break;
+                  
+                case MessageTypes.SETTLEINFORESPONSE://结算信息会回报
+                    CliOnSettleInfo(packet as RspQrySettleInfoResponse);
+                    break;
                 #endregion
 
                 default:
@@ -489,12 +603,14 @@ namespace TradingLib.Common
             }
         }
 
+        int _tradingday = 0;
         void connecton_OnLoginResponse(LoginResponse response)
         {
             debug(" got loginresponse:" + response.ToString(), QSEnumDebugLevel.DEBUG);
             if (response.Authorized)
             {
                 _account = response.Account;
+                _tradingday = response.Date;
             }
             if (OnLoginEvent != null)
                 OnLoginEvent(response);

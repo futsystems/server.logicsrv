@@ -54,6 +54,7 @@ namespace TradingLib.ORM
         public long Confrim_TimeStamp { get; set; }
         public string MAC { get; set; }
         public string Token { get; set; }
+        public bool PosLock { get; set; }
 
     }
 
@@ -175,6 +176,20 @@ namespace TradingLib.ORM
         }
 
 
+        /// <summary>
+        /// 更新帐户的锁仓权限
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="poslock"></param>
+        /// <returns></returns>
+        public static bool UpdateAccountPosLock(string account, bool poslock)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = String.Format("UPDATE accounts SET poslock = '{0}' WHERE account = '{1}'", poslock?1:0, account);
+                return db.Connection.Execute(query) >= 0;
+            }
+        }
         /// <summary>
         /// 更新帐户的MAC地址
         /// </summary>
@@ -470,6 +485,7 @@ namespace TradingLib.ORM
             account.SettlementConfirmTimeStamp = fields.Confrim_TimeStamp;
             account.MAC = fields.MAC;
             account.Token = fields.Token;
+            account.PosLock = fields.PosLock;
             //TLCtxHelper.Debug("fileds route:" + fields.Order_Router_Type.ToString() +" category:"+fields.Account_Category.ToString()) ;
             return account;
         }

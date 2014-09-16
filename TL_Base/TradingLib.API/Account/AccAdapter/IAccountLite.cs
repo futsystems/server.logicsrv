@@ -84,5 +84,10 @@ namespace TradingLib.API
         /// 帐户标识
         /// </summary>
         string Token { get; set; }
+
+        /// <summary>
+        /// 锁仓权限
+        /// </summary>
+        bool PosLock { get; set; }
     }
 }

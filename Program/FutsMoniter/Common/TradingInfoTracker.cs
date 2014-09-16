@@ -28,8 +28,8 @@ namespace TradingLib.Common
 
 
         public OrderTracker OrderTracker { get; set; }
-        public PositionTracker PositionTracker { get; set; }
-        public PositionTracker HoldPositionTracker { get; set; }
+        public LSPositionTracker PositionTracker { get; set; }
+        public LSPositionTracker HoldPositionTracker { get; set; }
         public ThreadSafeList<Trade> TradeTracker { get; set; }
 
         public IAccountLite Account { get; set; }
@@ -38,8 +38,8 @@ namespace TradingLib.Common
         public TradingInfoTracker()
         {
             OrderTracker = new OrderTracker();
-            PositionTracker = new PositionTracker();
-            HoldPositionTracker = new PositionTracker();
+            PositionTracker = new LSPositionTracker();
+            HoldPositionTracker = new LSPositionTracker();
             TradeTracker = new ThreadSafeList<Trade>();
             Account = new AccountLite();
         }

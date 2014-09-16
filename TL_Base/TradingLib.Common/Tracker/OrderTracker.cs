@@ -257,8 +257,10 @@ namespace TradingLib.Common
              * */
             //return Math.Abs(sent[idx]) != Math.Abs(filled[idx]);
             //通过委托状态来判定委托当前是否是Pending
+            
             return IsPending(o);
         }
+
 
 
         /// <summary>

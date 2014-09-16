@@ -30,6 +30,9 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.radStatusStrip1 = new Telerik.WinControls.UI.RadStatusStrip();
+            this.radLabelElement1 = new Telerik.WinControls.UI.RadLabelElement();
+            this.statusmessage = new Telerik.WinControls.UI.RadLabelElement();
+            this.radLabelElement2 = new Telerik.WinControls.UI.RadLabelElement();
             this.radMenuItem1 = new Telerik.WinControls.UI.RadMenuItem();
             this.radMenuItem3 = new Telerik.WinControls.UI.RadMenuItem();
             this.btnOpenClearCentre = new Telerik.WinControls.UI.RadMenuItem();
@@ -46,6 +49,7 @@
             this.btnMarketTime = new Telerik.WinControls.UI.RadMenuItem();
             this.radPageView1 = new Telerik.WinControls.UI.RadPageView();
             this.radPageViewPage1 = new Telerik.WinControls.UI.RadPageViewPage();
+            this.ctAccountMontier1 = new FutsMoniter.Controls.ctAccountMontier();
             this.radPageViewPage2 = new Telerik.WinControls.UI.RadPageViewPage();
             this.ctDebug1 = new FutSystems.GUI.ctDebug();
             this.windows8Theme1 = new Telerik.WinControls.Themes.Windows8Theme();
@@ -54,8 +58,9 @@
             this.radMenuItem4 = new Telerik.WinControls.UI.RadMenuItem();
             this.btnQryHist = new Telerik.WinControls.UI.RadMenuItem();
             this.btnStatistic = new Telerik.WinControls.UI.RadMenuItem();
+            this.radMenuItem5 = new Telerik.WinControls.UI.RadMenuItem();
+            this.radMenuItem6 = new Telerik.WinControls.UI.RadMenuItem();
             this.office2010SilverTheme1 = new Telerik.WinControls.Themes.Office2010SilverTheme();
-            this.ctAccountMontier1 = new FutsMoniter.Controls.ctAccountMontier();
             ((System.ComponentModel.ISupportInitialize)(this.radStatusStrip1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.radPageView1)).BeginInit();
             this.radPageView1.SuspendLayout();
@@ -67,12 +72,44 @@
             // 
             // radStatusStrip1
             // 
+            this.radStatusStrip1.Items.AddRange(new Telerik.WinControls.RadItem[] {
+            this.radLabelElement1,
+            this.statusmessage,
+            this.radLabelElement2});
             this.radStatusStrip1.Location = new System.Drawing.Point(0, 631);
             this.radStatusStrip1.Name = "radStatusStrip1";
             this.radStatusStrip1.Size = new System.Drawing.Size(1139, 22);
             this.radStatusStrip1.TabIndex = 0;
             this.radStatusStrip1.Text = "radStatusStrip1";
             this.radStatusStrip1.ThemeName = "Windows8";
+            // 
+            // radLabelElement1
+            // 
+            this.radLabelElement1.AccessibleDescription = "消息:";
+            this.radLabelElement1.AccessibleName = "消息:";
+            this.radLabelElement1.Name = "radLabelElement1";
+            this.radStatusStrip1.SetSpring(this.radLabelElement1, false);
+            this.radLabelElement1.Text = "消息:";
+            this.radLabelElement1.TextWrap = true;
+            this.radLabelElement1.Visibility = Telerik.WinControls.ElementVisibility.Visible;
+            // 
+            // statusmessage
+            // 
+            this.statusmessage.Name = "statusmessage";
+            this.radStatusStrip1.SetSpring(this.statusmessage, true);
+            this.statusmessage.Text = "";
+            this.statusmessage.TextWrap = true;
+            this.statusmessage.Visibility = Telerik.WinControls.ElementVisibility.Visible;
+            // 
+            // radLabelElement2
+            // 
+            this.radLabelElement2.AccessibleDescription = "连接:";
+            this.radLabelElement2.AccessibleName = "连接:";
+            this.radLabelElement2.Name = "radLabelElement2";
+            this.radStatusStrip1.SetSpring(this.radLabelElement2, false);
+            this.radLabelElement2.Text = "连接:";
+            this.radLabelElement2.TextWrap = true;
+            this.radLabelElement2.Visibility = Telerik.WinControls.ElementVisibility.Visible;
             // 
             // radMenuItem1
             // 
@@ -225,10 +262,20 @@
             // radPageViewPage1
             // 
             this.radPageViewPage1.Controls.Add(this.ctAccountMontier1);
-            this.radPageViewPage1.Location = new System.Drawing.Point(5, 25);
+            this.radPageViewPage1.Location = new System.Drawing.Point(5, 27);
             this.radPageViewPage1.Name = "radPageViewPage1";
-            this.radPageViewPage1.Size = new System.Drawing.Size(1129, 583);
+            this.radPageViewPage1.Size = new System.Drawing.Size(1129, 581);
             this.radPageViewPage1.Text = "帐户列表";
+            // 
+            // ctAccountMontier1
+            // 
+            this.ctAccountMontier1.DebugEnable = true;
+            this.ctAccountMontier1.DebugLevel = TradingLib.API.QSEnumDebugLevel.INFO;
+            this.ctAccountMontier1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ctAccountMontier1.Location = new System.Drawing.Point(0, 0);
+            this.ctAccountMontier1.Name = "ctAccountMontier1";
+            this.ctAccountMontier1.Size = new System.Drawing.Size(1129, 581);
+            this.ctAccountMontier1.TabIndex = 0;
             // 
             // radPageViewPage2
             // 
@@ -256,7 +303,8 @@
             this.radMenu1.Items.AddRange(new Telerik.WinControls.RadItem[] {
             this.radMenuItem1,
             this.radMenuItem2,
-            this.radMenuItem4});
+            this.radMenuItem4,
+            this.radMenuItem5});
             this.radMenu1.Location = new System.Drawing.Point(0, 0);
             this.radMenu1.Name = "radMenu1";
             this.radMenu1.Size = new System.Drawing.Size(1139, 18);
@@ -293,15 +341,24 @@
             this.btnStatistic.Visibility = Telerik.WinControls.ElementVisibility.Visible;
             this.btnStatistic.Click += new System.EventHandler(this.btnStatistic_Click);
             // 
-            // ctAccountMontier1
+            // radMenuItem5
             // 
-            this.ctAccountMontier1.DebugEnable = true;
-            this.ctAccountMontier1.DebugLevel = TradingLib.API.QSEnumDebugLevel.INFO;
-            this.ctAccountMontier1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ctAccountMontier1.Location = new System.Drawing.Point(0, 0);
-            this.ctAccountMontier1.Name = "ctAccountMontier1";
-            this.ctAccountMontier1.Size = new System.Drawing.Size(1129, 583);
-            this.ctAccountMontier1.TabIndex = 0;
+            this.radMenuItem5.AccessibleDescription = "radMenuItem5";
+            this.radMenuItem5.AccessibleName = "radMenuItem5";
+            this.radMenuItem5.Items.AddRange(new Telerik.WinControls.RadItem[] {
+            this.radMenuItem6});
+            this.radMenuItem5.Name = "radMenuItem5";
+            this.radMenuItem5.Text = "radMenuItem5";
+            this.radMenuItem5.Visibility = Telerik.WinControls.ElementVisibility.Visible;
+            // 
+            // radMenuItem6
+            // 
+            this.radMenuItem6.AccessibleDescription = "radMenuItem6";
+            this.radMenuItem6.AccessibleName = "radMenuItem6";
+            this.radMenuItem6.Name = "radMenuItem6";
+            this.radMenuItem6.Text = "radMenuItem6";
+            this.radMenuItem6.Visibility = Telerik.WinControls.ElementVisibility.Visible;
+            this.radMenuItem6.Click += new System.EventHandler(this.radMenuItem6_Click);
             // 
             // MainForm
             // 
@@ -319,6 +376,7 @@
             this.RootElement.ApplyShapeToControl = true;
             this.Text = "MainForm";
             this.ThemeName = "Office2010Black";
+            this.Load += new System.EventHandler(this.MainForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.radStatusStrip1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.radPageView1)).EndInit();
             this.radPageView1.ResumeLayout(false);
@@ -361,5 +419,10 @@
         private Telerik.WinControls.UI.RadMenuItem radMenuItem4;
         private Telerik.WinControls.UI.RadMenuItem btnQryHist;
         private Telerik.WinControls.UI.RadMenuItem btnStatistic;
+        private Telerik.WinControls.UI.RadMenuItem radMenuItem5;
+        private Telerik.WinControls.UI.RadMenuItem radMenuItem6;
+        private Telerik.WinControls.UI.RadLabelElement radLabelElement1;
+        private Telerik.WinControls.UI.RadLabelElement statusmessage;
+        private Telerik.WinControls.UI.RadLabelElement radLabelElement2;
     }
 }

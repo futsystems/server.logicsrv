@@ -128,6 +128,7 @@ namespace FutsMoniter
             //debug("main form got tick:" + k.ToString());
             infotracker.GotTick(k);
             ctAccountMontier1.GotTick(k);
+            
         }
 
         /// <summary>
@@ -308,5 +309,21 @@ namespace FutsMoniter
             histqryform.GotHistSettlement(response);
         }
         #endregion
+
+        string genmessage(RspInfo info)
+        {
+            if (info.ErrorID == 0)
+            {
+                return "操作成功!";
+            }
+            else
+            {
+                return "操作失败,原因:"+info.ErrorMessage;
+            }
+        }
+        public void PopRspInfo(RspInfo info)
+        {
+            StatusMessage(genmessage(info));
+        }
     }
 }

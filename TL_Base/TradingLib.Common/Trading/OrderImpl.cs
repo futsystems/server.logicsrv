@@ -10,12 +10,6 @@ namespace TradingLib.Common
     [Serializable]
     public class OrderImpl : TradeImpl, Order
     {
-        public event DebugDelegate SendDebugEvent;
-        private void debug(string msg)
-        {
-            if (SendDebugEvent != null)
-                SendDebugEvent(msg);
-        }
 
         public OrderInstructionType ValidInstruct { get { return (OrderInstructionType)Enum.Parse(typeof(OrderInstructionType), _tif, true); } set { _tif = value.ToString().Replace("OrderInstructionType", string.Empty).Replace(".", string.Empty); } }
         string _tif = "DAY";
@@ -47,26 +41,26 @@ namespace TradingLib.Common
             } 
         }
 
-        //string _broker="";
-        //public string Broker { get { return _broker; } set { _broker = value;} }
-        //string _brokerkey="";
-        //public string BrokerKey { get { return _brokerkey; } set { _brokerkey = value;} }
-
         long _locakID;
         public long LocalID { get { return _locakID; } set { _locakID = value; } }
 
         //委托状态 记录了委托过程
         QSEnumOrderStatus _status=QSEnumOrderStatus.Unknown;
+        /// <summary>
+        /// 委托状态
+        /// </summary>
         public QSEnumOrderStatus Status { get { return _status; } set { _status = value; } }
 
-        //默认情况是无开平标识,不对开平做出逻辑检验
-        QSEnumOrderPosFlag _posflag = QSEnumOrderPosFlag.UNKNOWN;
-        public QSEnumOrderPosFlag OrderPostFlag { get { return _posflag; } set { _posflag = value; } }
-
         QSEnumOrderSource _ordersource = QSEnumOrderSource.UNKNOWN;
+        /// <summary>
+        /// 委托来源
+        /// </summary>
         public QSEnumOrderSource OrderSource { get { return _ordersource; } set { _ordersource = value; } }
 
         int _filled = 0;
+        /// <summary>
+        /// 成交手数
+        /// </summary>
         public int Filled { get { return _filled; } set { _filled = value; } }
 
 
@@ -136,7 +130,7 @@ namespace TradingLib.Common
             this.BrokerKey = copythis.BrokerKey;
             this.LocalID = copythis.LocalID;
             this.Status = copythis.Status;
-            this.OrderPostFlag = copythis.OrderPostFlag;
+            this.OffsetFlag = copythis.OffsetFlag;
             this.OrderRef = copythis.OrderRef;
             this.ForceClose = copythis.ForceClose;
             this.HedgeFlag = copythis.HedgeFlag;
@@ -227,7 +221,7 @@ namespace TradingLib.Common
         {
             if (this.isFilled) return base.ToString();
 
-            return (side ? "BUY" : "SELL") + " "+this.TotalSize.ToString()+" "+this.symbol + " @" + (isMarket ? "Mkt" : (isLimit ? this.price.ToString("N"+decimals.ToString()) : this.stopp.ToString("N"+decimals.ToString())+"stp")) + " ["+this.Account+"] " +id.ToString()+(isLimit && isStop ? " stop: "+stopp.ToString("N"+decimals.ToString()) : string.Empty+" Filled:"+this.Filled.ToString()+ " Status:"+Status.ToString() +" PostFlag:"+OrderPostFlag.ToString() +" OrderRef:"+OrderRef.ToString() +" OrderSeq:"+OrderSeq.ToString() +" HedgeFlag:"+HedgeFlag.ToString()+" OrderExchID:"+OrderExchID.ToString());
+            return (side ? "BUY" : "SELL") + " " + this.TotalSize.ToString() + " " + this.symbol + " @" + (isMarket ? "Mkt" : (isLimit ? this.price.ToString("N" + decimals.ToString()) : this.stopp.ToString("N" + decimals.ToString()) + "stp")) + " [" + this.Account + "] " + id.ToString() + (isLimit && isStop ? " stop: " + stopp.ToString("N" + decimals.ToString()) : string.Empty + " Filled:" + this.Filled.ToString() + " Status:" + Status.ToString() + " PostFlag:" + OffsetFlag.ToString() + " OrderRef:" + OrderRef.ToString() + " OrderSeq:" + OrderSeq.ToString() + " HedgeFlag:" + HedgeFlag.ToString() + " OrderExchID:" + OrderExchID.ToString());
         }
 
         /// <summary>
@@ -402,7 +396,7 @@ namespace TradingLib.Common
             //sb.Append((int)o.Status);
             sb.Append(o.Status.ToString());
             sb.Append(d);
-            sb.Append(o.OrderPostFlag.ToString());
+            sb.Append(o.OffsetFlag.ToString());
             sb.Append(d);
             sb.Append(o.OrderRef);
             sb.Append(d);
@@ -461,7 +455,7 @@ namespace TradingLib.Common
             int.TryParse(rec[(int)OrderField.oFilled],out f);
             o.Filled = f;
 
-            o.OrderPostFlag = (QSEnumOrderPosFlag)Enum.Parse(typeof(QSEnumOrderPosFlag), rec[(int)OrderField.PostFlag]);
+            o.OffsetFlag = (QSEnumOffsetFlag)Enum.Parse(typeof(QSEnumOffsetFlag), rec[(int)OrderField.PostFlag]);
 
             o.OrderRef = rec[(int)OrderField.OrderRef];
             o.ForceClose = bool.Parse(rec[(int)OrderField.ForceClose]);

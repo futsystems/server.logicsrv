@@ -77,7 +77,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("Insert into tmp_orders (`symbol`,`size`,`price`,`stopp`,`comment`,`exchange`,`account`,`securitytype`,`currency`,`localsymbol`,`id`,`tif`,`date`,`time`,`trail`,`broker`,`brokerkey`,`status`,`ordersource`,`settleday`,`orderpostflag`,`forceclose`,`hedgeflag`,`orderref`,`orderexchid`,`orderseq`,`totalsize`,`filled`,`frontidi`,`sessionidi`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}','{17}','{18}','{19}','{20}','{21}','{22}','{23}','{24}','{25}','{26}','{27}','{28}','{29}')", o.symbol, (o.UnsignedSize * (o.side ? 1 : -1)).ToString(), o.price.ToString(), o.stopp.ToString(), o.comment, o.Exchange, o.Account, o.SecurityType.ToString(), o.Currency.ToString(), o.LocalSymbol, o.id.ToString(), o.TIF, o.date.ToString(), o.time.ToString(), o.trail.ToString(), o.Broker, o.BrokerKey, o.Status.ToString(), o.OrderSource.ToString(), TLCtxHelper.Ctx.SettleCentre.CurrentTradingday, o.OrderPostFlag, (o.ForceClose == true ? "1" : "-1"), o.HedgeFlag, o.OrderRef, o.OrderExchID, o.OrderSeq, o.TotalSize, o.Filled,o.FrontIDi,o.SessionIDi);//orderpostflag`,`forceclose`,`hedgeflag`,`orderref`,`orderexchid`,`orderseq`
+                string query = String.Format("Insert into tmp_orders (`symbol`,`size`,`price`,`stopp`,`comment`,`exchange`,`account`,`securitytype`,`currency`,`localsymbol`,`id`,`tif`,`date`,`time`,`trail`,`broker`,`brokerkey`,`status`,`ordersource`,`settleday`,`offsetflag`,`forceclose`,`hedgeflag`,`orderref`,`orderexchid`,`orderseq`,`totalsize`,`filled`,`frontidi`,`sessionidi`,`side`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}','{17}','{18}','{19}','{20}','{21}','{22}','{23}','{24}','{25}','{26}','{27}','{28}','{29}','{30}')", o.symbol, (o.UnsignedSize * (o.side ? 1 : -1)).ToString(), o.price.ToString(), o.stopp.ToString(), o.comment, o.Exchange, o.Account, o.SecurityType.ToString(), o.Currency.ToString(), o.LocalSymbol, o.id.ToString(), o.TIF, o.date.ToString(), o.time.ToString(), o.trail.ToString(), o.Broker, o.BrokerKey, o.Status.ToString(), o.OrderSource.ToString(), TLCtxHelper.Ctx.SettleCentre.CurrentTradingday, o.OffsetFlag, (o.ForceClose == true ? "1" : "-1"), o.HedgeFlag, o.OrderRef, o.OrderExchID, o.OrderSeq, o.TotalSize, o.Filled, o.FrontIDi, o.SessionIDi,o.side?1:0);//orderpostflag`,`forceclose`,`hedgeflag`,`orderref`,`orderexchid`,`orderseq`
                 TLCtxHelper.Ctx.debug("query:" + query);
                 return db.Connection.Execute(query) > 0;
             }
@@ -176,7 +176,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("Insert into tmp_trades (`id`,`xsize`,`xprice`,`xdate`,`xtime`,`symbol`,`account`,`fillid`,`broker`,`brokerkey`,`positionoperation`,`commission`,`settleday`,`orderref`,`orderexchid`,`orderseq`,`hedgeflag`,`profit`,`securitytype`,`currency`,`exchange`,`securitycode`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}',{12},'{13}','{14}','{15}','{16}','{17}','{18}','{19}','{20}','{21}')", f.id.ToString(), f.xsize.ToString(), f.xprice.ToString(), f.xdate.ToString(), f.xtime.ToString(), f.symbol.ToString(), f.Account.ToString(), f.id.ToString(), f.Broker, f.BrokerKey, f.PositionOperation.ToString(), f.Commission.ToString(), TLCtxHelper.Ctx.SettleCentre.CurrentTradingday, f.OrderRef, f.OrderExchID, f.OrderSeq, f.HedgeFlag, f.Profit, f.SecurityType, f.Currency, f.Exchange,f.SecurityCode);
+                string query = String.Format("Insert into tmp_trades (`id`,`xsize`,`xprice`,`xdate`,`xtime`,`symbol`,`account`,`fillid`,`broker`,`brokerkey`,`positionoperation`,`commission`,`settleday`,`orderref`,`orderexchid`,`orderseq`,`hedgeflag`,`profit`,`securitytype`,`currency`,`exchange`,`securitycode`,`offsetflag`,`side`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}',{12},'{13}','{14}','{15}','{16}','{17}','{18}','{19}','{20}','{21}','{22}','{23}')", f.id.ToString(), f.xsize.ToString(), f.xprice.ToString(), f.xdate.ToString(), f.xtime.ToString(), f.symbol.ToString(), f.Account.ToString(), f.id.ToString(), f.Broker, f.BrokerKey, f.PositionOperation.ToString(), f.Commission.ToString(), TLCtxHelper.Ctx.SettleCentre.CurrentTradingday, f.OrderRef, f.OrderExchID, f.OrderSeq, f.HedgeFlag, f.Profit, f.SecurityType, f.Currency, f.Exchange, f.SecurityCode, f.OffsetFlag,f.side?1:0);
                 return  db.Connection.Execute(query) >0;
 
             }
@@ -286,7 +286,7 @@ namespace TradingLib.ORM
 
         static Position posfields2position(positionfields fields)
         {
-            Position pos = new PositionImpl(fields.Symbol, fields.SettlePrice, fields.Size, 0, fields.Account);
+            Position pos = new PositionImpl(fields.Symbol, fields.SettlePrice, fields.Size, 0, fields.Account,fields.Size>0?QSEnumPositionDirectionType.Long:QSEnumPositionDirectionType.Short);
             return pos;
         }
         /// <summary>

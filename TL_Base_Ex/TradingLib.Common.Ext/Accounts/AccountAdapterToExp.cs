@@ -111,9 +111,9 @@ namespace TradingLib.Common
         public Trade[] Trades { get { return _acc.Trades; } }//获得当日所有成交
         public long[] Cancels { get { return _acc.Cancels; } }//获得当日所有取消
         public Position[] PositionsHold { get { return _acc.PositionsHold; } }
-        public Position getPosition(string symbol)//获得某个symbol的持仓信息
+        public Position getPosition(string symbol,bool side)//获得某个symbol的持仓信息
         {
-            return _acc.getPosition(symbol);
+            return _acc.getPosition(symbol,side);
         }
 
 

@@ -17,34 +17,35 @@ namespace TradingLib.API
         /// <returns></returns>
         Order SentOrder(long oid);
 
-        /// <summary>
-        /// 获得总账户positionTracker
-        /// </summary>
-        Object DefaultPositionTracker { get; }
+        ///// <summary>
+        ///// 获得总账户positionTracker
+        ///// </summary>
+        //Object DefaultPositionTracker { get; }
 
-        /// <summary>
-        /// 获得总账户OrderTracker
-        /// </summary>
-        Object DefaultOrderTracker { get; }
+        ///// <summary>
+        ///// 获得总账户OrderTracker
+        ///// </summary>
+        //Object DefaultOrderTracker { get; }
 
-        /// <summary>
-        /// 总账户成交列表
-        /// </summary>
-        List<Trade> DefaultTradeList { get; }
+        ///// <summary>
+        ///// 总账户成交列表
+        ///// </summary>
+        //List<Trade> DefaultTradeList { get; }
 
         /// <summary>
         /// 总账户隔夜持仓列表
         /// </summary>
-        Object DefaultPositionHoldTracker { get; }
+        //Object DefaultPositionHoldTracker { get; }
 
+        
         /// <summary>
         /// 获得当前所有持仓
         /// </summary>
-        Position[] PositionsHoldNow { get; }
+        Position[] TotalPositions { get; }
 
         /// <summary>
         /// 获得上次结算所有持仓
         /// </summary>
-        Position[] PositionHoldLastSettleday { get; }
+        Position[] TotalYDPositions{ get; }
     }
 }

@@ -91,7 +91,7 @@ namespace TradingLib.Core
             _prt.SendDebugEvent += new DebugDelegate(msgdebug);
 
             _prt.RestorePositionRounds(prlist);
-            _prt.SyncPositionHold(_clearcentre.PositionHoldLastSettleday);
+            _prt.SyncPositionHold(_clearcentre.TotalYDPositions);
 
 
 
@@ -162,13 +162,13 @@ namespace TradingLib.Core
             {
                 foreach (Position pos in nPosBook[a.ID])
                 {
-                    decimal diff = _clearcentre.getPosition(a.ID, pos.Symbol).ClosedPL - pos.ClosedPL;
-                    if (diff > 0)
-                    {
-                        sb.AppendLine("Account:" + a.ID + " Postion:" + pos.Symbol + " ClosedPL:" + pos.ClosedPL + " Diff:" + diff.ToString());
-                        sb.AppendLine("Posiotn in DB:" + pos.ToString() + " Posiotn in Memory:" + _clearcentre.getPosition(a.ID, pos.Symbol).ToString());
-                        acclist.Add(a);
-                    }
+                    //decimal diff = _clearcentre.getPosition(a.ID, pos.Symbol).ClosedPL - pos.ClosedPL;
+                    //if (diff > 0)
+                    //{
+                    //    sb.AppendLine("Account:" + a.ID + " Postion:" + pos.Symbol + " ClosedPL:" + pos.ClosedPL + " Diff:" + diff.ToString());
+                    //    sb.AppendLine("Posiotn in DB:" + pos.ToString() + " Posiotn in Memory:" + _clearcentre.getPosition(a.ID, pos.Symbol).ToString());
+                    //    acclist.Add(a);
+                    //}
                 }
             }
             //如果异常账户数目大于0,则表明仓位累加有错误
@@ -190,8 +190,8 @@ namespace TradingLib.Core
             //2.每天重置时,从数据库加载数据 也将和PH数据进行同步，做到每天开盘前是一致的，算法吻合，数据不丢失应该所有数据都是可以吻合和同步的
             //如果内存中的数据和数据库数据得到的PR数据一致 则将position数据与PR数据进行同步 然后保存
             sb.AppendLine("--------持仓数据与PR数据对照表------------------");
-            sb.AppendLine("PositionHold:" + _clearcentre.PositionsHoldNow.Length.ToString() + "  PositionRound(Open)" + _clearcentre.PositionRoundTracker.RoundOpened.Length.ToString());
-            foreach (Position p in _clearcentre.PositionsHoldNow)
+            sb.AppendLine("PositionHold:" + _clearcentre.TotalPositions.Length.ToString() + "  PositionRound(Open)" + _clearcentre.PositionRoundTracker.RoundOpened.Length.ToString());
+            foreach (Position p in _clearcentre.TotalPositions)
             {
                 string key = PositionRound.GetPRKey(p);
                 PositionRound pr = _clearcentre.PositionRoundTracker[key];
@@ -200,7 +200,7 @@ namespace TradingLib.Core
             }
 
             //PR数据与当前持仓数据进行同步,数据同步后就要进行数据保存
-            _clearcentre.PositionRoundTracker.SyncPositionHold(_clearcentre.PositionsHoldNow);
+            _clearcentre.PositionRoundTracker.SyncPositionHold(_clearcentre.TotalPositions);
             Notify("清算数据检验[" + DateTime.Now.ToShortDateString(), sb.ToString());
             return true;//所有检查通过
 
@@ -231,7 +231,7 @@ namespace TradingLib.Core
                         {
                             debug("----处理委托数目异常---------------", QSEnumDebugLevel.MUST);
                             //trdinfodump.ClearIntradayOrders();//清除数据库中的委托数据
-                            foreach (Order o in _clearcentre.DefaultOrderTracker as OrderTracker)//将内存中的数据重新写入到数据库
+                            foreach (Order o in _clearcentre.TotalOrders)//将内存中的数据重新写入到数据库
                             {
                                 //_asynLoger.newOrder(o);
                                 //Thread.Sleep(1);
@@ -242,7 +242,7 @@ namespace TradingLib.Core
                         {
                             debug("----处理成交数目异常---------------", QSEnumDebugLevel.MUST);
                             //trdinfodump.ClearIntradayTrades();//清除数据库中的成交数据
-                            foreach (Trade f in _clearcentre.DefaultTradeList)//将内存中的成交数据重新写入到数据库
+                            foreach (Trade f in _clearcentre.TotalTrades)//将内存中的成交数据重新写入到数据库
                             {
 
                                 //_asynLoger.newTrade(f);

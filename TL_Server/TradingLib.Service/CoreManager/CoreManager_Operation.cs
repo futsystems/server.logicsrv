@@ -25,6 +25,10 @@ namespace TradingLib.ServiceManager
 
         #region 对外公开操作
 
+        public void OpenClearCentre()
+        {
+            _clearCentre.OpenClearCentre();
+        }
         #region 盘中参数调整
 
         //是否输出全局日志

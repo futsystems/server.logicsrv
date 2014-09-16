@@ -37,7 +37,7 @@ namespace TradingLib.API
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        Position getPosition(string symbol);
+        Position getPosition(string symbol,bool side);
 
         #endregion
     }

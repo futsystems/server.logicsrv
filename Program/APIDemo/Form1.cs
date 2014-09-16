@@ -25,8 +25,29 @@ namespace APIDemo
         {
             InitializeComponent();
             Program.SendDebugEvent +=new DebugDel(debug);
+            offsetflag.Items.Add("未知");
+            offsetflag.Items.Add("开仓");
+            offsetflag.Items.Add("平仓");
         }
 
+        QSEnumOffsetFlag CurrentFlag
+        {
+            get
+            {
+                if (offsetflag.SelectedIndex == 0)
+                {
+                    return QSEnumOffsetFlag.UNKNOWN;
+                }
+                else if (offsetflag.SelectedIndex == 1)
+                {
+                    return QSEnumOffsetFlag.OPEN;
+                }
+                else
+                {
+                    return QSEnumOffsetFlag.CLOSE;
+                }
+            }
+        }
         string ReqAddress
         {
             get
@@ -59,83 +80,11 @@ namespace APIDemo
             br.Deserialize(message.Content);
             debug("provider type:" + br.Provider.ToString() + " name:" + br.BrokerName);
         }
-        private void btnBrokerNameRequest_Click(object sender, EventArgs e)
-        {
-            new Thread(reqbrokername).Start();
-        }
+
 
         int requestid=0;
-        private void btnBrokerName_Click(object sender, EventArgs e)
-        {
-            BrokerNameRequest br = new BrokerNameRequest();
-            br.SetRequestID(requestid++);
-            debug("BrokerNameRequest:" + br.ToString());
-
-            debug("BrokerName Content:" + br.Content);
-            BrokerNameRequest request = RequestTemplate<BrokerNameRequest>.SrvRecvRequest("fid", "cid", br.Content);
-            debug("BrokerNameRequest:" + request.ToString());
-
-            BrokerNameResponse response = ResponseTemplate<BrokerNameResponse>.SrvSendRspResponse(br);
-
-            debug("BrokerNameResponse:" + response.ToString());
-        }
-
-        private void btnVersion_Click(object sender, EventArgs e)
-        {
-            VersionRequest vq = new VersionRequest();
-            vq.SetRequestID(requestid++);
-            vq.DeviceType = "device";
-            vq.ClientVersion = "version";
-
-            debug("version request:" + vq.ToString());
-            debug("---");
-            VersionRequest request = RequestTemplate<VersionRequest>.SrvRecvRequest("fid", "cid", vq.Content);
-            debug("versoin request:" + request.ToString());
 
 
-        }
-
-        private void btnConvert_Click(object sender, EventArgs e)
-        {
-            BrokerNameRequest br = new BrokerNameRequest();
-            br.SetRequestID(requestid++);
-            debug("BrokerNameRequest:" + br.ToString());
-            string content = br.Content;
-
-            int num = int.Parse(convertnum.Text);
-
-            Stopwatch packetgen = new Stopwatch();
-            Stopwatch packetconvert = new Stopwatch();
-            Stopwatch packetconvert2 = new Stopwatch();
-            packetgen.Start();
-            for(int i=0;i<num;i++)
-            {
-                BrokerNameRequest request = RequestTemplate<BrokerNameRequest>.SrvRecvRequest("fid", "cid", br.Content);
-            }
-            packetgen.Stop();
-            debug("packet生成消耗:"+packetgen.Elapsed.ToString());
-
-
-            packetconvert.Start();
-            for (int i = 0; i < num; i++)
-            {
-                IPacket request = RequestTemplate<BrokerNameRequest>.SrvRecvRequest("fid", "cid", br.Content);
-            }
-            packetconvert.Stop();
-            debug("packetconvert生成消耗:" + packetconvert.Elapsed.ToString());
-
-            IPacket req2 = RequestTemplate<BrokerNameRequest>.SrvRecvRequest("fid", "cid", br.Content);
-
-            packetconvert2.Start();
-            for (int i = 0; i < num; i++)
-            {
-                BrokerNameRequest req = req2 as BrokerNameRequest;
-            }
-            packetconvert2.Stop();
-            debug("packetconvert2生成消耗:" + packetconvert2.Elapsed.ToString());
-
-
-        }
 
         TLClientNet tlclient = null;
         private void btnStatClient_Click(object sender, EventArgs e)
@@ -165,8 +114,8 @@ namespace APIDemo
         {
             string userid = loginid.Text;
             string pass = passwd.Text;
-
-            tlclient.ReqLogin(userid, pass);
+            string mac = login_mac.Text;
+            tlclient.ReqLogin(userid, pass,int.Parse(logintype.Text),mac);
         }
 
         private void btnQryOrder_Click(object sender, EventArgs e)
@@ -178,10 +127,11 @@ namespace APIDemo
         {
             Order o = new OrderImpl();
             o.symbol = sendorder_symbol.Text;
-            o.size = int.Parse(sendorder_size.Text);
+            o.TotalSize = int.Parse(sendorder_size.Text);
+            o.size = o.TotalSize;
             o.side = true;
             o.price = decimal.Parse(sendorder_price.Text);
-
+            o.OffsetFlag = CurrentFlag;
             tlclient.ReqOrderInsert(o);
 
         }
@@ -190,10 +140,11 @@ namespace APIDemo
         {
             Order o = new OrderImpl();
             o.symbol = sendorder_symbol.Text;
-            o.size = int.Parse(sendorder_size.Text);
+            o.TotalSize = int.Parse(sendorder_size.Text);
+            o.size = o.TotalSize;
             o.side = false;
             o.price = decimal.Parse(sendorder_price.Text);
-
+            o.OffsetFlag = CurrentFlag;
             tlclient.ReqOrderInsert(o);
         }
 
@@ -264,6 +215,49 @@ namespace APIDemo
                 debug("orderaction error:" + ex.ToString());
             }
         }
+
+        private void btnQrySettleConfirm_Click(object sender, EventArgs e)
+        {
+            tlclient.ReqQrySettleInfoConfirm();
+        }
+
+        private void btnQrySettlementInfo_Click(object sender, EventArgs e)
+        {
+            tlclient.ReqQrySettleInfo();
+        }
+
+        private void btnConfirmSettlement_Click(object sender, EventArgs e)
+        {
+            tlclient.ReqConfirmSettlement();
+        }
+
+        private void btnContirbRequest_Click(object sender, EventArgs e)
+        {
+            tlclient.ReqContribRequest(contribmodule.Text, contribcmdstr.Text, contribargs.Text);
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            tlclient.ReqChangePassowrd(changepass_oldpass.Text, changepass_newpass.Text);
+        }
+
+        private void groupBox1_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnQrySymbol_Click(object sender, EventArgs e)
+        {
+            tlclient.ReqQrySymbol(qrysymbol_Symbol.Text);
+        }
+
+        private void btnQryOpenSize_Click(object sender, EventArgs e)
+        {
+            tlclient.ReqQryMaxOrderVol(qymaxvol_symbol.Text);
+        }
+
+
 
 
     }

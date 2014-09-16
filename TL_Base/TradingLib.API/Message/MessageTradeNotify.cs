@@ -29,5 +29,6 @@ namespace TradingLib.API
         HedgeFlag,//投机标识
         OrderSeq,//委托流水
         OrderExchID,//交易所委托标识
+        OffsetFlag,//开平标识
     }
 }

@@ -95,6 +95,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\IBasicInfo.cs" />
+    <Compile Include="Controls\ctOrderSenderM.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ctOrderSenderM.Designer.cs">
+      <DependentUpon>ctOrderSenderM.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form\ChangeInvestorForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -283,6 +289,9 @@
       <DependentUpon>SymbolSyncCTPForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Utils.cs" />
+    <EmbeddedResource Include="Controls\ctOrderSenderM.resx">
+      <DependentUpon>ctOrderSenderM.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form\ChangeInvestorForm.resx">
       <DependentUpon>ChangeInvestorForm.cs</DependentUpon>
     </EmbeddedResource>

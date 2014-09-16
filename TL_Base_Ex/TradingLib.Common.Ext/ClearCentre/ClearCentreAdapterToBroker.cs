@@ -38,9 +38,9 @@ namespace TradingLib.Common
         /// <param name="account"></param>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        public Position getPosition(string account, string symbol)
+        public Position getPosition(string account, string symbol,bool side)
         {
-            return _clearcentre.getPosition(account, symbol);
+            return _clearcentre.getPosition(account, symbol,side);
         }
 
         /// <summary>
@@ -48,10 +48,10 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="o"></param>
         /// <returns></returns>
-        public int getUnfilledSizeExceptStop(Order o)
-        {
-            return _clearcentre.getUnfilledSizeExceptStop(o);
-        }
+        //public int getUnfilledSizeExceptStop(Order o)
+        //{
+        //    return _clearcentre.getUnfilledSizeExceptStop(o);
+        //}
 
         /// <summary>
         /// 获得与某委托方向相反的未成交委托
@@ -76,7 +76,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public bool IsPending(Order o)
         {
-            return (_clearcentre.DefaultOrderTracker as OrderTracker).isPending(o.id);
+            return OrderTracker.IsPending(o);
         }
     }
 

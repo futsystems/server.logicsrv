@@ -50,7 +50,7 @@ namespace TradingLib.Core
                 //将positionround数据恢恢复到positionroundtracker
                 prt.RestorePositionRounds(prlist);
                 //PR数据与持仓数据进行同步1.从数据库加载同步一次  2.保存到数据库同步一次
-                prt.SyncPositionHold(PositionHoldLastSettleday);
+                prt.SyncPositionHold(this.TotalYDPositions);
 
 
                 foreach (Order o in olist)
@@ -65,8 +65,8 @@ namespace TradingLib.Core
                 {
                     this.GotCancel(oid);
                 }
-                
-                foreach (Position p in PositionHoldLastSettleday)
+
+                foreach (Position p in this.TotalYDPositions)
                 {
                     string key = PositionRound.GetPRKey(p);
                     PositionRound pr = prt[key];
@@ -136,7 +136,7 @@ namespace TradingLib.Core
                 //if (Util.ToDateTime(f.xdate, f.xtime) > this[f.Account].SettleDateTime)
                 {
                     f.oSymbol = BasicTracker.SymbolTracker[f.symbol];//从数据库记录的symbol获得对应的oSymbol
-                    f.side = f.xsize > 0 ? true : false;//数据库没有记录具体的方向,通过xsize来获得对应的成交方向
+                    //f.side = f.xsize > 0 ? true : false;//数据库没有记录具体的方向,通过xsize来获得对应的成交方向
                     list.Add(f);
                 }
             }
@@ -159,7 +159,7 @@ namespace TradingLib.Core
                 //if (Util.ToDateTime(o.date, o.time) > this[o.Account].SettleDateTime)
                 {
                     o.oSymbol = BasicTracker.SymbolTracker[o.symbol];
-                    o.side = o.TotalSize > 0 ? true : false;
+                    //o.side = o.TotalSize > 0 ? true : false;
                     list.Add(o);
                 }
             }

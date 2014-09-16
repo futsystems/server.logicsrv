@@ -43,6 +43,9 @@ namespace FutsMoniter
                     btnExecute.ForeColor = Color.Red;
 
 
+                    poslock.Checked = _account.PosLock;
+                    poslock.Text = _account.PosLock ? "允许" : "禁止";
+
                     
                 }
             } 
@@ -144,6 +147,10 @@ namespace FutsMoniter
                 {
                     Globals.TLClient.ReqUpdateRouteType(_account.Account, (QSEnumOrderTransferType)routeType.SelectedValue);
                 }
+                if (poslock.Checked != _account.PosLock)
+                {
+                    Globals.TLClient.ReqUpdaetAccountPosLock(_account.Account, poslock.Checked);
+                }
             }
         }
 
@@ -188,6 +195,11 @@ namespace FutsMoniter
             }
 
             
+
+        }
+
+        private void poslock_ToggleStateChanged(object sender, Telerik.WinControls.UI.StateChangedEventArgs args)
+        {
 
         }
 

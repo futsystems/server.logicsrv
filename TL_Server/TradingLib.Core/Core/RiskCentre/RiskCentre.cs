@@ -61,6 +61,8 @@ namespace TradingLib.Core
         public bool MarketOpenTimeCheck { get { return _marketopencheck; } }
 
         int _orderlimitsize = 10;
+        string commentNoPositionForFlat = "无可平持仓";
+        string commentOverFlatPositionSize = "可平持仓数量不足";
         public RiskCentre(ClearCentre clearcentre):base(CoreName)
         {
             //1.加载配置文件
@@ -76,6 +78,18 @@ namespace TradingLib.Core
             {
                 _cfgdb.UpdateConfig("OrderLimitSize", QSEnumCfgType.Int, 50, "单笔委托最大上限");
             }
+
+            if (!_cfgdb.HaveConfig("CommentNoPositionForFlat"))
+            {
+                _cfgdb.UpdateConfig("CommentNoPositionForFlat", QSEnumCfgType.String,"无可平持仓", "无可平持仓消息");
+            }
+            commentNoPositionForFlat = _cfgdb["CommentNoPositionForFlat"].AsString();
+
+            if (!_cfgdb.HaveConfig("CommentOverFlatPositionSize"))
+            {
+                _cfgdb.UpdateConfig("CommentOverFlatPositionSize", QSEnumCfgType.String, "可平持仓数量不足", "可平持仓数量不足消息");
+            }
+            commentOverFlatPositionSize = _cfgdb["CommentOverFlatPositionSize"].AsString();
 
             //是否执行合约开市检查
             _marketopencheck = _cfgdb["MarketOpenTimeCheck"].AsBool();

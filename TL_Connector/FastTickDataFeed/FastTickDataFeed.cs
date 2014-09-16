@@ -143,6 +143,7 @@ namespace DataFeed.FastTick
                     subscriber.Connect("tcp://" + server + ":" + port);
                     _subscriber = subscriber;
                     _subscriber.SubscribeAll();
+                    //Send(MessageTypes.MGRSTARTDATAFEED, "SIM");
                     subscriber.ReceiveReady += (s, e) =>
                     {
                         try

@@ -98,8 +98,8 @@ namespace TradingLib.Core
         void FlatPositionViaMarketTime(int flattime,MarketTime[] mts)
         {
             debug("执行强平任务,强平时间点:" + flattime.ToString() + " 交易时间对象ID:" + MarketTimeIDstr(mts), QSEnumDebugLevel.INFO);
-            PositionTracker pt = _clearcentre.DefaultPositionTracker as PositionTracker;
-            foreach (Position pos in pt)
+            //PositionTracker pt = _clearcentre.DefaultPositionTracker as PositionTracker;
+            foreach (Position pos in _clearcentre.TotalPositions)
             {
                 IAccount acc = null;
                 if (_clearcentre.HaveAccount(pos.Account, out acc))

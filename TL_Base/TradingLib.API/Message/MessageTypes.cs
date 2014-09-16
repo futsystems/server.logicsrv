@@ -179,7 +179,7 @@ namespace TradingLib.API
         MGRQRYSETTLEMENT,//查询结算单
         MGRCHANGEACCOUNTPASS,//修改交易密码
         MGRCHANGEINVESTOR,//
-        
+        MGRUPDATEPOSLOCK,//修改帐户锁仓权限
 
 
 
@@ -210,8 +210,10 @@ namespace TradingLib.API
         MGRPOSITIONRESPONSE,//查询结算持仓回报
         MGRCASHRESPONSE,//查询出入金回报
         MGRSETTLEMENTRESPONSE,//查询结算单回报
+        MGROPERATIONRESPONSE,//服务端操作回报 修改密码 添加帐户 出入金等 统一使用同一个Operation回报 用于通知管理端是否成功或失败
         MGRCHANGEACCOUNTPASSRESPONSE,//修改密码回报
         MGRCHANGEINVESTORRESPONSE,//修改token回报
+        MGRUPDATEPOSLOCKRESPONSE,//修改帐户锁仓权限回报
 
         //FLATALL,//清仓
         UPDATEPOSOFFSET,

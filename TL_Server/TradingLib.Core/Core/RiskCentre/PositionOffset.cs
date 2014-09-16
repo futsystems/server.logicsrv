@@ -12,19 +12,20 @@ namespace TradingLib.Core
     {
        
 
-        public PositionOffset(string account, string symbol)
+        public PositionOffset(string account, string symbol,bool positionside)
         {
             Account = account;
             Symbol = symbol;
+            Side = positionside;
             Position = null;
 
-            ProfitArgs = new PositionOffsetArgs(account, symbol, QSEnumPositionOffsetDirection.PROFIT);
+            ProfitArgs = new PositionOffsetArgs(account, symbol,positionside, QSEnumPositionOffsetDirection.PROFIT);
             NeedTakeProfit = false;
             ProfitTakeOrder = -1;
             ProfitFireCount = 0;
             ProfitTakeTime = DateTime.Now;
 
-            LossArgs = new PositionOffsetArgs(account, symbol, QSEnumPositionOffsetDirection.LOSS);
+            LossArgs = new PositionOffsetArgs(account, symbol, positionside,QSEnumPositionOffsetDirection.LOSS);
             NeedTakeLoss = false;
             LossTakeOrder = -1;
             LossFireCount = 0;
@@ -97,6 +98,10 @@ namespace TradingLib.Core
         /// </summary>
         public string Symbol { get; set; }
 
+        /// <summary>
+        /// 限定持仓方向
+        /// </summary>
+        public bool Side { get; set; }
         /// <summary>
         /// 该positionoffset所监控的持仓
         /// </summary>

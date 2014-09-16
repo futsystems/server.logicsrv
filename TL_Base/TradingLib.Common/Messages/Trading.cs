@@ -218,19 +218,19 @@ namespace TradingLib.Common
         public PositionNotify()
         {
             _type = MessageTypes.POSITIONUPDATENOTIFY;
-            Position = new AccountPosition();
+            Position = new PositionEx();
         }
 
-        public AccountPosition Position { get; set; }
+        public PositionEx Position { get; set; }
 
         public override string ContentSerialize()
         {
-            return AccountPosition.Serialize(Position);
+            return PositionEx.Serialize(Position);
         }
 
         public override void ContentDeserialize(string contentstr)
         {
-            Position = AccountPosition.Deserialize(contentstr);
+            Position = PositionEx.Deserialize(contentstr);
         }
     }
 
@@ -246,15 +246,15 @@ namespace TradingLib.Common
             _type = MessageTypes.OLDPOSITIONNOTIFY;//持仓数据通知 用于获得隔夜持仓数据
         }
 
-        public AccountPosition Position { get; set; }
+        public PositionEx Position { get; set; }
         public override string ContentSerialize()
         {
-            return AccountPosition.Serialize(Position);
+            return PositionEx.Serialize(Position);
         }
 
         public override void ContentDeserialize(string contentstr)
         {
-            Position = AccountPosition.Deserialize(contentstr);
+            Position = PositionEx.Deserialize(contentstr);
         }
 
     }

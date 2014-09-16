@@ -113,34 +113,41 @@ namespace TradingLib.Common
         /// </summary>
         public string Token { get; set; }
 
-        /// <summary>
-        /// 最近结算确认日期
-        /// </summary>
-        public long SettlementConfirmTimeStamp { get; set; }
-        
 
-        #region 比赛所用字段
         /// <summary>
         /// 记录账户的建立时间
         /// </summary>
         public DateTime CreatedTime { get; set; }
+        /// <summary>
+        /// 最近结算确认日期
+        /// </summary>
+        public long SettlementConfirmTimeStamp { get; set; }
+
 
         /// <summary>
-        /// 比赛周期ID,记录该账户处于的比赛界数。每个月一个比赛周期,每个月未计入比赛的选手可以申请加入该界比赛
-        /// ？是否可以考虑取消
+        /// 锁仓权限
         /// </summary>
-        public string RaceID { get; set; }
+        public bool PosLock { get; set; }
 
-        /// <summary>
-        /// 进入当前比赛状态的时间,用于计算进入该比赛状态以来的盈亏,达到晋级标准 晋级并记录晋级时间。淘汰则
-        /// </summary>
-        public DateTime RaceEntryTime { get; set; }
-        /// <summary>
-        /// 当前账户的比赛状态
-        /// </summary>
-        public QSEnumAccountRaceStatus RaceStatus { get; set; }
-        //当某个账户有一条race状态改变时,进行日志记录account,初始状态,目的状态
-        #endregion
+        //#region 比赛所用字段
+ 
+
+        ///// <summary>
+        ///// 比赛周期ID,记录该账户处于的比赛界数。每个月一个比赛周期,每个月未计入比赛的选手可以申请加入该界比赛
+        ///// ？是否可以考虑取消
+        ///// </summary>
+        //public string RaceID { get; set; }
+
+        ///// <summary>
+        ///// 进入当前比赛状态的时间,用于计算进入该比赛状态以来的盈亏,达到晋级标准 晋级并记录晋级时间。淘汰则
+        ///// </summary>
+        //public DateTime RaceEntryTime { get; set; }
+        ///// <summary>
+        ///// 当前账户的比赛状态
+        ///// </summary>
+        //public QSEnumAccountRaceStatus RaceStatus { get; set; }
+        ////当某个账户有一条race状态改变时,进行日志记录account,初始状态,目的状态
+        //#endregion
 
 
         private QSEnumOrderTransferType _ordroutetype = QSEnumOrderTransferType.SIM;
@@ -163,9 +170,9 @@ namespace TradingLib.Common
         public Trade[] Trades { get { return ClearCentre.Trades; } }//获得当日所有成交
         public long[] Cancels { get { return ClearCentre.Cancels; } }//获得当日所有取消
         public Position[] PositionsHold { get { return ClearCentre.PositionsHold; } }
-        public Position getPosition(string symbol)//获得某个symbol的持仓信息
+        public Position getPosition(string symbol,bool side)//获得某个symbol的持仓信息
         {
-            return ClearCentre.getPosition(symbol);
+            return ClearCentre.getPosition(symbol,side);
         }
 
 
@@ -286,7 +293,7 @@ namespace TradingLib.Common
         {
             get
             {
-                string re = "ID:" + this.ID + " 昨日权益:" + this.LastEquity.ToString() + " 当前权益:" + this.NowEquity.ToString() + " 总委托:" + this.Ordres.Length.ToString() + " 总成交:" + this.Trades.Length.ToString() + " 比赛状态:" + this.RaceStatus.ToString();
+                string re = "ID:" + this.ID + " 昨日权益:" + this.LastEquity.ToString() + " 当前权益:" + this.NowEquity.ToString() + " 总委托:" + this.Ordres.Length.ToString() + " 总成交:" + this.Trades.Length.ToString();
                 return re;
 
             }
@@ -372,9 +379,9 @@ namespace TradingLib.Common
             a.CashOut = cashout;
             a.CreatedTime = createdtime;
 
-            a.RaceID = raceid;
-            a.RaceStatus = racestatus;
-            a.RaceEntryTime = raceentrytime;
+            //a.RaceID = raceid;
+            //a.RaceStatus = racestatus;
+            //a.RaceEntryTime = raceentrytime;
 
             a.IntraDay = intraday;
             a.Category = ca;

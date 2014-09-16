@@ -117,6 +117,8 @@ namespace TradingLib.Core
         }
 
 
+
+
         #region 委托错误回报处理
         /// <summary>
         /// 响应路由中心委托错误回报
@@ -142,6 +144,12 @@ namespace TradingLib.Core
             {
                 if (GotOrderEvent != null)
                     GotOrderEvent(notify.Order);
+            }
+
+            ErrorOrder order = new ErrorOrder(notify.Order, notify.RspInfo);
+            if (GotErrorOrderEvent != null)
+            {
+                GotErrorOrderEvent(order);
             }
         }
         #endregion
@@ -202,7 +210,7 @@ namespace TradingLib.Core
             //debug("Trade Info sectype:" + t.Security.ToString() + " currency:" + t.Currency.ToString() + " exchange:" + t.Exchange, QSEnumDebugLevel.INFO);
             _fcache.Write(new TradeImpl(t));
             //有新的成交数据后,系统自动发送对应的持仓信息
-            Position pos = _clearcentre.getPosition(t.Account, t.symbol);
+            Position pos = _clearcentre.getPosition(t.Account, t.symbol,t.PositionSide);
             debug("New Positon Update:" + pos.ToString(), QSEnumDebugLevel.INFO);
             _posupdatecache.Write(pos);
         }
