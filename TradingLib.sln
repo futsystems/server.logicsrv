@@ -107,7 +107,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradingLib.Mixins", "TL_Bas
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradingLib.Mixins.BasicInfo", "TL_Base\TradingLib.Mixins.BasicInfo\TradingLib.Mixins.BasicInfo.csproj", "{716364DD-F4B8-4448-AEE9-BC906B722381}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lottoqq.FinService", "TL_Contrib\Lottoqq.FinService\Lottoqq.FinService.csproj", "{664E7074-942C-4D44-BB64-5A8D50DA45DF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradingLib.Contrib.FinService", "TL_Contrib\Lottoqq.FinService\TradingLib.Contrib.FinService.csproj", "{664E7074-942C-4D44-BB64-5A8D50DA45DF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "6.Srv", "6.Srv", "{95BB7487-82E7-4582-97B5-B8C3E662076F}"
 EndProject
