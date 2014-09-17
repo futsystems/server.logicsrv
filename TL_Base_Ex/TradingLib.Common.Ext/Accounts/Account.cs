@@ -129,6 +129,11 @@ namespace TradingLib.Common
         /// </summary>
         public bool PosLock { get; set; }
 
+        /// <summary>
+        /// 隶属于管理员
+        /// </summary>
+        public int Mgr_fk { get; set; }
+
         //#region 比赛所用字段
  
 

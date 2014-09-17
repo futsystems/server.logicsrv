@@ -107,6 +107,13 @@ namespace TradingLib.API
 
 
         /// <summary>
+        /// 帐号隶属于哪个管理员
+        /// 可以属于超级管理员Root
+        /// 或者属于代理Agent
+        /// 在用于添加时候就自动进行了绑定
+        /// </summary>
+        int Mgr_fk { get; set; }
+        /// <summary>
         /// 帐户Token 用于储存帐户标识
         /// </summary>
         string Token { get; set; }

@@ -66,10 +66,10 @@ namespace TradingLib.Contrib.FinService
         /// 初始化参数
         /// </summary>
         /// <param name="args"></param>
-        public virtual void InitArgs(Dictionary<string, Argument> accountargs,Dictionary<string,Argument> agentargs)
+        public virtual void InitArgument(Dictionary<string, Argument> accountarg, Dictionary<string, Argument> agentarg)
         {
-            accountargmap = accountargs;
-            agentargmap = agentargs;
+            accountargmap = accountarg;
+            agentargmap = agentarg;
 
         }
 
@@ -170,9 +170,10 @@ namespace TradingLib.Contrib.FinService
         //[ArgumentAttribute("AgtLossCharge", EnumArgumentType.DECIMAL, 100, 50)]
         //public decimal AgentLossCharge { get { return _agentlosscharge; } }
         //decimal _agentlosscharge = 50;
-        public override void InitArgs(Dictionary<string, Argument> accountargs, Dictionary<string, Argument> agentargs)
+        public override void InitArgument(Dictionary<string, Argument> accountarg, Dictionary<string, Argument> agentarg)
         {
-            base.InitArgs(accountargs, agentargs);
+            base.InitArgument(accountarg, agentarg);
+            LibUtil.Debug("调用服务计划的参数初始化");
             //将参数加载到内存
             
         }

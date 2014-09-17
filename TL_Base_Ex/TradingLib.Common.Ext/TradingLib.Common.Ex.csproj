@@ -69,7 +69,7 @@
     <Compile Include="Accounts\Account_Operation.cs" />
     <Compile Include="Accounts\Account_Rule.cs" />
     <Compile Include="Accounts\Account_Service.cs" />
-    <Compile Include="Accounts\Manager.cs" />
+    <Compile Include="Manager\Manager.cs" />
     <Compile Include="ClearCentre\Base_ClearCentre_.cs" />
     <Compile Include="ClearCentre\Base_ClearCentre_TradingInfo.cs" />
     <Compile Include="ClearCentre\Base_ClearCentre_FinCal.cs" />

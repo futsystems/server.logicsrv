@@ -137,7 +137,7 @@ namespace TradingLib.Contrib.FinService
             {
                 return serviceArgMap[service_fk];
             }
-            return null;
+            return new Dictionary<string,ArgumentAccount>();
         }
 
 

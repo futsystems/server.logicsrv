@@ -13,8 +13,40 @@ namespace TradingLib.Contrib.FinService
         Dictionary<string, FinServiceStub> finservicemap = new Dictionary<string, FinServiceStub>();
 
         public FinServiceTracker()
-        { 
-            
+        {
+            foreach (FinServiceStub stub in ORM.MFinService.SelectFinService())
+            {
+                //初始化FinService服务
+                stub.InitFinService();
+                if (!stub.IsValid())
+                {
+                    LibUtil.Debug("FinService:" + stub.ToString() + " is not valid, drop it");
+                }
+                finservicemap.Add(stub.Account, stub);
+            }
+        }
+
+        /// <summary>
+        /// 通过交易帐号 获得FinServiceStub对象
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public FinServiceStub this[string account]
+        {
+            get
+            {
+                FinServiceStub stub = null;
+                if(finservicemap.TryGetValue(account,out stub))
+                {
+                    return stub;
+                }
+                return null;
+            }
+        }
+
+        public FinServiceStub[] ToArray()
+        {
+            return finservicemap.Values.ToArray();
         }
     }
     /// <summary>
@@ -33,6 +65,16 @@ namespace TradingLib.Contrib.FinService
         /// 交易帐户ID
         /// </summary>
         public string Account { get; set; }
+
+        /// <summary>
+        /// 交易帐户对象
+        /// </summary>
+        public IAccount oAccount { get; set; }
+
+        /// <summary>
+        /// 返回代理ID
+        /// </summary>
+        public int AgentID { get { return oAccount != null ? oAccount.Mgr_fk : 0; } }
 
         /// <summary>
         /// 服务计划外键
@@ -56,12 +98,19 @@ namespace TradingLib.Contrib.FinService
         /// </summary>
         public long ModifiedTime { get; set; }
 
-
+        public override string ToString()
+        {
+            return "ID:" + this.ID.ToString() + " Account:" + this.Account + " serviceplan_fk:" + serviceplan_fk.ToString() + " active:" + this.Active.ToString() + " ModifiedTime:" + this.ModifiedTime.ToString();
+        }
         /// <summary>
         /// 初始化配资服务
         /// </summary>
         public void InitFinService()
-        { 
+        {
+            //1.绑定交易帐号
+            this.oAccount = TLCtxHelper.CmdAccount[this.Account];
+
+
             //1.调用服务生成工厂 生成对应的 IFinService
             _finservice = ServiceFactory.GenFinService(this);
             ServicePlanBase baseobj = _finservice as ServicePlanBase;
@@ -69,6 +118,18 @@ namespace TradingLib.Contrib.FinService
             {
                 baseobj.GotFeeChargeEvent += new FeeChargeDel(ChargeFee);
             }
+
+            
+        }
+
+        /// <summary>
+        /// 配资服务是否有效
+        /// 有效必须要有Account对象 IFinService对象
+        /// </summary>
+        /// <returns></returns>
+        public bool IsValid()
+        {
+            return (this.FinService != null) && (this.oAccount != null);
         }
 
         #region 计费事件响应 将具体的事件通过FinService进行响应

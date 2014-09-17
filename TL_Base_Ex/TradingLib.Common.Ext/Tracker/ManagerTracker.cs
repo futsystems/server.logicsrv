@@ -28,7 +28,7 @@ namespace TradingLib.Common
             }
             foreach (Manager m in mlist)
             {
-                m.BaseManager = this[m.mgr_id];
+                m.BaseManager = this[m.mgr_fk];
             }
         }
 

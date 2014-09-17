@@ -55,6 +55,7 @@ namespace TradingLib.ORM
         public string MAC { get; set; }
         public string Token { get; set; }
         public bool PosLock { get; set; }
+        public int Mgr_fk { get; set; }
 
     }
 
@@ -486,6 +487,7 @@ namespace TradingLib.ORM
             account.MAC = fields.MAC;
             account.Token = fields.Token;
             account.PosLock = fields.PosLock;
+            account.Mgr_fk = fields.Mgr_fk;
             //TLCtxHelper.Debug("fileds route:" + fields.Order_Router_Type.ToString() +" category:"+fields.Account_Category.ToString()) ;
             return account;
         }

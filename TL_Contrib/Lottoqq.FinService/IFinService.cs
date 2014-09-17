@@ -43,7 +43,7 @@ namespace TradingLib.Contrib.FinService
         /// </summary>
         /// <param name="accountarg"></param>
         /// <param name="agentarg"></param>
-        //void InitArgument(Dictionary<string, Argument> accountarg, Dictionary<string, Argument> agentarg);
+        void InitArgument(Dictionary<string, Argument> accountarg, Dictionary<string, Argument> agentarg);
 
 
         /// <summary>

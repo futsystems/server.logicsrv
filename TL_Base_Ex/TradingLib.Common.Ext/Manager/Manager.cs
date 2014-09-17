@@ -18,7 +18,7 @@ namespace TradingLib.Common
             Mobile = string.Empty;
             QQ = string.Empty;
             AccLimit = 0;
-            mgr_id = 0;
+            mgr_fk = 0;
             BaseManager = null;
 
         }
@@ -27,6 +27,7 @@ namespace TradingLib.Common
         /// 数据库ID编号
         /// </summary>
         public int ID { get; set; }
+
         /// <summary>
         /// 登入名
         /// </summary>
@@ -65,7 +66,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 交易managerid
         /// </summary>
-        public int mgr_id { get; set; }
+        public int mgr_fk { get; set; }
 
         /// <summary>
         /// BaseManager用于标注该管理帐号隶属于哪个Agent,如果是系统级的管理帐户的话直接隶属于ROOT
@@ -73,6 +74,7 @@ namespace TradingLib.Common
         public Manager BaseManager { get; set; }
 
 
+        
 
     }
 }

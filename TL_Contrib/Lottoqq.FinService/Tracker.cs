@@ -25,6 +25,9 @@ namespace TradingLib.Contrib.FinService
 
         ServicePlanTracker _serviceplantracker = null;
         ArgumentTracker _argtracker = null;
+        FinServiceTracker _finsservicetracker = null;
+
+
 
         public static ServicePlanTracker ServicePlaneTracker
         {
@@ -47,5 +50,15 @@ namespace TradingLib.Contrib.FinService
             }
         }
 
+
+        public static FinServiceTracker FinServiceTracker
+        {
+            get
+            {
+                if (defaultinstance._finsservicetracker == null)
+                    defaultinstance._finsservicetracker = new FinServiceTracker();
+                return defaultinstance._finsservicetracker;
+            }
+        }
     }
 }

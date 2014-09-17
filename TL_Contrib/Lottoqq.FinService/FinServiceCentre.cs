@@ -83,13 +83,17 @@ namespace TradingLib.Contrib.FinService
                 debug("加载服务计划:" + t.FullName, QSEnumDebugLevel.INFO);
                 //同步服务计划 ServicePlane
                 FinTracker.ServicePlaneTracker.InitServicePlan(t);
-                DBServicePlan sp = FinTracker.ServicePlaneTracker[t.FullName];
-                FinTracker.ArgumentTracker.GetAgentArgument(2,sp.ID);
+                //DBServicePlan sp = FinTracker.ServicePlaneTracker[t.FullName];
+                //FinTracker.ArgumentTracker.GetAgentArgument(2,sp.ID);
 
             }
-            
 
-            
+
+            foreach (FinServiceStub fs in FinTracker.FinServiceTracker.ToArray())
+            {
+                debug("finservice:" + fs.ToString(), QSEnumDebugLevel.INFO);
+                //fs.InitFinService();
+            }
         }
 
         /// <summary>

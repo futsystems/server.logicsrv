@@ -19,8 +19,9 @@ namespace TradingLib.Contrib.FinService
         public ServicePlanTracker()
         {
             //从数据库加载服务计划并放入内存Map
-            foreach (DBServicePlan sp in ORM.MService.SelectServicePlan())
+            foreach (DBServicePlan sp in ORM.MServicePlan.SelectServicePlan())
             {
+                //LibUtil.Debug("数据库加载服务计划 id：" + sp.ID.ToString() + " spname:" + sp.ClassName);
                 spidxmap.Add(sp.ID, sp);
                 spclassmap.Add(sp.ClassName, sp);
             }
@@ -29,11 +30,13 @@ namespace TradingLib.Contrib.FinService
         public void InitServicePlan(Type type)
         {
             string fullname = type.FullName;
+
             //如果数据库包含该计划 则将类型加入
             if (spclassmap.Keys.Contains(fullname))
             {
                 sptypemap[fullname] = type;
             }
+
             //如果数据库中不存在 则需要同步数据库信息
             else
             { 
@@ -41,14 +44,13 @@ namespace TradingLib.Contrib.FinService
                 sp.ClassName = type.FullName;
                 sp.Name = type.Name;
                 sp.Title="测试";
-                ORM.MService.InsertServicePlan(sp);
+                ORM.MServicePlan.InsertServicePlan(sp);
                 spidxmap.Add(sp.ID, sp);
                 spclassmap.Add(sp.ClassName, sp);
                 sptypemap[fullname] = type;
-
-
-                
             }
+
+            LibUtil.Debug("服务计划类别加载成功:" + type.ToString() +" fullname:"+fullname +" ");
 
             //同步服务计划的基准参数 如果不存在则从程序集载入同步，如果存在则不作修改，如果修改基准参数 需要从其他入口进行修改
             int serviceplan_fk = spclassmap[fullname].ID;
@@ -87,12 +89,33 @@ namespace TradingLib.Contrib.FinService
         {
             get
             {
-                if (!spidxmap.Keys.Contains(id))
+                if (spidxmap.Keys.Contains(id))
                 {
                     return spidxmap[id];
                 }
                 return null;
             }
+        }
+
+        /// <summary>
+        /// 通过服务计划fk 来获得Type信息 用于factory创建对象
+        /// </summary>
+        /// <param name="serviceplan_fk"></param>
+        /// <returns></returns>
+        public Type GetFinServiceType(int serviceplan_fk)
+        {
+            //LibUtil.Debug("尝试获得sp:" + serviceplan_fk.ToString() + " 的配资服务类型");
+            DBServicePlan sp = this[serviceplan_fk];
+
+            if (sp == null)
+                return null;
+            //LibUtil.Debug("sp:" + sp.ToString());
+            Type tout = null;
+            if (sptypemap.TryGetValue(sp.ClassName, out tout))
+            {
+                return tout;
+            }
+            return null;
         }
 
     }
