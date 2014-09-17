@@ -2,10 +2,110 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using TradingLib.API;
+using TradingLib.Common;
 
 namespace TradingLib.Contrib.FinService
 {
 
+
+    public class ArgumentTracker
+    {
+        ArgumentAccountTracker _acctargtracker = new ArgumentAccountTracker();
+        ArgumentAgentTracker _agtargttracker = new ArgumentAgentTracker();
+        ArgumentBaseTracker _baseargtracker = new ArgumentBaseTracker();
+
+
+        /// <summary>
+        /// 获得某个配资服务的参数设置
+        /// 
+        /// </summary>
+        /// <param name="service_fk"></param>
+        /// <returns></returns>
+        //public Dictionary<string, ArgumentAccount> GetServiceArgument(int service_fk)
+        //{ 
+            
+        //}
+
+
+        /// <summary>
+        /// 获得某个finservicestub的代理参数
+        /// </summary>
+        /// <param name="agent_fk"></param>
+        /// <param name="serviceplan_fk"></param>
+        /// <returns></returns>
+        public Dictionary<string, Argument> GetAgentArgument(int agent_fk, int serviceplan_fk)
+        {
+            Dictionary<string, Argument> agtarg = _agtargttracker.GetAgentArgument(agent_fk, serviceplan_fk).ToDictionary(c=>c.Key,c=>c.Value as Argument);
+            Dictionary<string, Argument> basearg = _baseargtracker.GetAgentArgument(serviceplan_fk).ToDictionary(c => c.Key, c => c.Value as Argument);
+
+            Dictionary<string, Argument> ret = MergeDict(new Dictionary<string, Argument>[] { agtarg, basearg });
+            //foreach (Argument arg in ret.Values)
+            //{
+            //    LibUtil.Debug("arg:" + arg.ToString());
+            //}
+            return ret;
+        }
+
+
+        /// <summary>
+        /// 获得某个finservicestub的交易帐户参数
+        /// </summary>
+        /// <param name="stub"></param>
+        /// <returns></returns>
+        public Dictionary<string, Argument> GetAccountArgument(FinServiceStub stub)
+        {
+            Dictionary<string, Argument> acctarg = _acctargtracker.GetServiceArgument(stub.ID).ToDictionary(c => c.Key, c => c.Value as Argument);
+            Dictionary<string, Argument> basearg = _baseargtracker.GetAccountArgument(stub.serviceplan_fk).ToDictionary(c => c.Key, c => c.Value as Argument);
+            Dictionary<string, Argument> ret = MergeDict(new Dictionary<string, Argument>[] { acctarg, basearg });
+            foreach (Argument arg in ret.Values)
+            {
+                LibUtil.Debug("arg:" + arg.ToString());
+            }
+            return ret;
+
+        }
+        /// <summary>
+        /// 合并Dict,制定后覆盖还是前覆盖
+        /// 当列表中的字典有相同字段时,后覆盖则后面的相同字段会覆盖前面的字段
+        /// 默认使用第一个值
+        /// </summary>
+        /// <param name="dictlist"></param>
+        /// <returns></returns>
+        static Dictionary<string, Argument> MergeDict(ICollection<Dictionary<string, Argument>> dictlist, bool userfirst = true)
+        {
+            Dictionary<string, Argument> tmp = new Dictionary<string, Argument>();
+            IEnumerable<KeyValuePair<string, Argument>> tmpkvpair = new Dictionary<string, Argument>();
+
+            foreach (Dictionary<string, Argument> dict in dictlist)
+            {
+
+                tmpkvpair = tmpkvpair.Concat(dict);
+            }
+            if (!userfirst)
+            {
+                tmp = tmpkvpair.GroupBy(s => s.Key).ToDictionary(s => s.Key, s => s.Last().Value);
+            }
+            else
+            {
+                tmp = tmpkvpair.GroupBy(s => s.Key).ToDictionary(s => s.Key, s => s.First().Value);
+            }
+            return tmp;
+        }
+
+        /// <summary>
+        /// 同步服务计划参数属性到数据库
+        /// </summary>
+        /// <param name="serviceplan_fk"></param>
+        /// <param name="attr"></param>
+        public void UpdateArgumentBase(int serviceplan_fk, ArgumentAttribute attr)
+        {
+            _baseargtracker.UpdateArgumentBase(serviceplan_fk, attr);
+        }
+
+        
+
+    }
     public class ArgumentAccountTracker
     {
         /// <summary>
@@ -39,6 +139,9 @@ namespace TradingLib.Contrib.FinService
             }
             return null;
         }
+
+
+
     }
 
 
@@ -59,11 +162,11 @@ namespace TradingLib.Contrib.FinService
                 {
                     agentArgMap[arg.agent_fk] = new Dictionary<int, Dictionary<string, ArgumentAgent>>();
                 }
-                if (!agentArgMap[arg.agent_fk].Keys.Contains(arg.serviceplane_fk))
+                if (!agentArgMap[arg.agent_fk].Keys.Contains(arg.serviceplan_fk))
                 {
-                    agentArgMap[arg.agent_fk][arg.serviceplane_fk] = new Dictionary<string, ArgumentAgent>();
+                    agentArgMap[arg.agent_fk][arg.serviceplan_fk] = new Dictionary<string, ArgumentAgent>();
                 }
-                agentArgMap[arg.agent_fk][arg.serviceplane_fk][arg.Name] = arg;
+                agentArgMap[arg.agent_fk][arg.serviceplan_fk][arg.Name] = arg;
             }
         }
 
@@ -83,7 +186,7 @@ namespace TradingLib.Contrib.FinService
                     return agentArgMap[agent_fk][serviceplan_fk];
                 }
             }
-            return null;
+            return new Dictionary<string,ArgumentAgent>();
         }
     }
 
@@ -174,18 +277,58 @@ namespace TradingLib.Contrib.FinService
         void RangeArg(Dictionary<int, Dictionary<string, ArgumentBase>> argmap, ArgumentBase arg)
         {
             //如果字典中没有serviceplane_fk 则添加 然后在serviceplane_fk对应的字段中加入name-arg对
-            if (!argmap.Keys.Contains(arg.serviceplane_fk))
+            if (!argmap.Keys.Contains(arg.serviceplan_fk))
             {
-                argmap.Add(arg.serviceplane_fk, new Dictionary<string, ArgumentBase>());
+                argmap.Add(arg.serviceplan_fk, new Dictionary<string, ArgumentBase>());
             }
 
-            argmap[arg.serviceplane_fk][arg.Name] = arg;
+            argmap[arg.serviceplan_fk][arg.Name] = arg;
+        }
 
+
+        /// <summary>
+        /// 从程序集加载参数属性并更新到数据库
+        /// 将服务计划的默认数据更新到数据库
+        /// </summary>
+        /// <param name="serviceplane_fk"></param>
+        /// <param name="attr"></param>
+        public void UpdateArgumentBase(int serviceplane_fk, ArgumentAttribute attr)
+        {
+            if (!agentArgMap.Keys.Contains(serviceplane_fk))
+            {
+                agentArgMap.Add(serviceplane_fk, new Dictionary<string, ArgumentBase>());
+            }
+            if (!accountArgMap.Keys.Contains(serviceplane_fk))
+            {
+                accountArgMap.Add(serviceplane_fk, new Dictionary<string, ArgumentBase>());
+            }
+
+            string argname = attr.Name;
+            //不存在argname 插入对应的基准参数
+            if (!agentArgMap[serviceplane_fk].Keys.Contains(argname))
+            {
+                ArgumentBase arg = new ArgumentBase();
+                arg.ArgClass = EnumArgumentClass.Agent;
+                arg.Name = argname;
+                arg.serviceplan_fk = serviceplane_fk;
+                arg.Type = attr.ArgType;
+                arg.Value = attr.AgentValue.Value;
+                ORM.MArgumentBase.InsertArgumentBase(arg);
+                agentArgMap[serviceplane_fk][argname] = arg;
+            }
+            if (!accountArgMap[serviceplane_fk].Keys.Contains(argname))
+            {
+                ArgumentBase arg = new ArgumentBase();
+                arg.ArgClass = EnumArgumentClass.Account;
+                arg.Name = argname;
+                arg.serviceplan_fk = serviceplane_fk;
+                arg.Type = attr.ArgType;
+                arg.Value = attr.AccountValue.Value;
+                ORM.MArgumentBase.InsertArgumentBase(arg);
+                accountArgMap[serviceplane_fk][argname] = arg;
+            }
         }
 
     }
-    public class ArgumentTracker
-    {
 
-    }
 }

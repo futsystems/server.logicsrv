@@ -16,7 +16,22 @@ namespace TradingLib.Contrib.FinService
     /// </summary>
     public interface IFinService
     {
+        /// <summary>
+        /// 配资服务费用计算方式
+        /// </summary>
+        EnumFeeChargeType ChargeType { get; }
 
+        /// <summary>
+        /// 配资服务费用采集方式
+        /// </summary>
+        EnumFeeCollectType CollectType { get; }
+
+
+        void OnTrade(Trade t);
+
+        void OnRound(IPositionRound round);
+
+        void OnSettle();
         /// <summary>
         /// FinService初始化
         /// 每个服务需要初始化参数
@@ -28,7 +43,7 @@ namespace TradingLib.Contrib.FinService
         /// </summary>
         /// <param name="accountarg"></param>
         /// <param name="agentarg"></param>
-        void InitArgument(Dictionary<string, Argument> accountarg, Dictionary<string, Argument> agentarg);
+        //void InitArgument(Dictionary<string, Argument> accountarg, Dictionary<string, Argument> agentarg);
 
 
         /// <summary>
@@ -36,7 +51,7 @@ namespace TradingLib.Contrib.FinService
         /// </summary>
         /// <param name="account"></param>
         /// <param name="finammount"></param>
-        void Cal(IAccount account, decimal finammount);
+       // void Cal(IAccount account, decimal finammount);
 
     }
 }

@@ -46,10 +46,10 @@ namespace TradingLib.ServiceManager
         private void InitTradeFollow()
         {
             debug("1.1初始化交易数据流服务");
-            //_tradeFollow = new TradeFollow();
-            //_tradeFollow.Start();
+            _tradeFollow = new TradeFollow();
+            _tradeFollow.Start();
 
-            //_messageExchagne.GotFillEvent += new FillDelegate(_tradeFollow.GotTrade);
+            _messageExchagne.GotFillEvent += new FillDelegate(_tradeFollow.GotTrade);
         }
         
         //初始化清算中心

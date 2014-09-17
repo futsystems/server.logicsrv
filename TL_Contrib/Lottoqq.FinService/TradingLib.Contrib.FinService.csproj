@@ -53,11 +53,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Argument.cs" />
+    <Compile Include="ArgumentAttribute.cs" />
+    <Compile Include="ArgumentPair.cs" />
     <Compile Include="ArgumentTracker.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="FeeChargeItem.cs" />
+    <Compile Include="FeeChargeItemLogger.cs" />
     <Compile Include="FinServiceCentre.cs" />
     <Compile Include="IFinService.cs" />
     <Compile Include="ORM\MArgumentBase.cs" />
+    <Compile Include="ORM\MFeeChargeItem.cs" />
+    <Compile Include="ORM\MServicePlan.cs" />
+    <Compile Include="ORM\MFinService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FinService.cs" />
     <Compile Include="ServiceFactory.cs" />

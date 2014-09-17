@@ -9,32 +9,43 @@ namespace TradingLib.Contrib.FinService
     /// <summary>
     /// 单例Tracker
     /// </summary>
-    public class Tracker
+    public class FinTracker
     {
-        static Tracker defaultinstance;
-        static Tracker()
+        static FinTracker defaultinstance;
+        static FinTracker()
         {
-            defaultinstance = new Tracker();
+            defaultinstance = new FinTracker();
         }
 
-        private Tracker()
+        private FinTracker()
         { 
         
         }
 
 
-        ServicePlanTrcker _serviceplantracker = null;
+        ServicePlanTracker _serviceplantracker = null;
+        ArgumentTracker _argtracker = null;
 
-        public static ServicePlanTrcker ServicePlaneTracker
+        public static ServicePlanTracker ServicePlaneTracker
         {
             get
             {
                 if (defaultinstance._serviceplantracker == null)
-                    defaultinstance._serviceplantracker = new ServicePlanTrcker();
+                    defaultinstance._serviceplantracker = new ServicePlanTracker();
                 return defaultinstance._serviceplantracker;
             }
         }
 
+
+        public static ArgumentTracker ArgumentTracker
+        {
+            get
+            {
+                if (defaultinstance._argtracker == null)
+                    defaultinstance._argtracker = new ArgumentTracker();
+                return defaultinstance._argtracker;
+            }
+        }
 
     }
 }

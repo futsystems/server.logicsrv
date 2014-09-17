@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using TradingLib.API;
+using TradingLib.Common;
+using System.Reflection;
 
 /**
  * 配资模块
@@ -50,9 +53,67 @@ using System.Text;
  * **/
 namespace TradingLib.Contrib.FinService
 {
-    public class FinServiceCentre
+
+    [ContribAttr(FinServiceCentre.ContribName, "FinServiceCentre期货配资扩展", "用于提供配资业务逻辑")]
+    public partial class FinServiceCentre : ContribSrvObject, IContrib
     {
 
 
+        const string ContribName = "FinServiceCentre";
+
+        ConfigDB _cfgdb;
+
+        public FinServiceCentre()
+            : base(FinServiceCentre.ContribName)
+        {
+
+        }
+
+
+        /// <summary>
+        /// 加载
+        /// </summary>
+        public void OnLoad()
+        {
+            debug("$$$$$$$$$$$$$$$ loading...............", QSEnumDebugLevel.INFO);
+            IList<Type> types = PluginHelper.GetImplementors("Contrib", typeof(IFinService));
+            debug("got types:" + types.Count.ToString(), QSEnumDebugLevel.INFO);
+            foreach (Type t in types)
+            {
+                debug("加载服务计划:" + t.FullName, QSEnumDebugLevel.INFO);
+                //同步服务计划 ServicePlane
+                FinTracker.ServicePlaneTracker.InitServicePlan(t);
+                DBServicePlan sp = FinTracker.ServicePlaneTracker[t.FullName];
+                FinTracker.ArgumentTracker.GetAgentArgument(2,sp.ID);
+
+            }
+            
+
+            
+        }
+
+        /// <summary>
+        /// 销毁
+        /// </summary>
+        public void OnDestory()
+        {
+
+        }
+        /// <summary>
+        /// 启动
+        /// </summary>
+        public void Start()
+        {
+
+
+        }
+
+        /// <summary>
+        /// 停止
+        /// </summary>
+        public void Stop()
+        {
+
+        }
     }
 }

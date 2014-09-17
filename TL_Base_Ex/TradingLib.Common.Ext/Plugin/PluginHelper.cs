@@ -98,6 +98,18 @@ namespace TradingLib.Common
             return GetWrapper().FindContribTask(obj);
         }
 
+
+        public static List<PropertyInfo> FindProperty<T>(object obj) where T : Attribute
+        {
+            return GetWrapper().FindProperty<T>(obj);
+        }
+
+        public static List<PropertyInfo> FindProperty<T>(Type type) where T : Attribute
+        {
+            return GetWrapper().FindProperty<T>(type);
+        }
+
+
         /// <summary>
         /// 获得某个方法的参数列表
         /// </summary>
@@ -154,6 +166,10 @@ namespace TradingLib.Common
             return GetWrapper().LoadOrderRule();
         }
 
+        public static IList<Type> GetImplementors(string path, Type needtype)
+        {
+            return GetWrapper().GetImplementors(path, needtype);
+        }
         public static void Release()
         {
             DefaultInstance.wrapper = null;

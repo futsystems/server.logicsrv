@@ -45,8 +45,9 @@ namespace TradingLib.Contrib.FinService
         CollectInTrading,
 
         /// <summary>
-        /// 结算后收取
+        /// 结算时收取
         /// 通过统计 收费记录将所有结算后收费项目累加进行统一收费
+        /// 微观上是在结算之前按当天的统计进行收费 费用统一算如结算记录中的出金记录
         /// </summary>
         CollectAfterSettle,
 
@@ -85,8 +86,18 @@ namespace TradingLib.Contrib.FinService
     /// </summary>
     public enum EnumArgumentType
     { 
+        /// <summary>
+        /// 字符串
+        /// </summary>
         STRING=0,//字符串
+        /// <summary>
+        /// 整数
+        /// </summary>
         INT=1,//整数
+
+        /// <summary>
+        /// 浮点小数
+        /// </summary>
         DECIMAL=2,//浮点
     }
     public enum EnumFinServiceType

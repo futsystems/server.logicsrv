@@ -17,15 +17,16 @@ namespace TradingLib.Contrib.FinService
     public class ServiceFactory
     {
 
-        public IFinService GenFinService(FinServiceStub stub)
+        public static IFinService GenFinService(FinServiceStub stub)
         { 
             //通过serviceplane_fk获得度应的dbserviceplane
             int serviceplan_fk = stub.serviceplan_fk;
 
             //获得DBServicePlane
-            DBServicePlan plane = Tracker.ServicePlaneTracker[serviceplan_fk];
+            DBServicePlan plane = FinTracker.ServicePlaneTracker[serviceplan_fk];
 
             //动态生成IFinService
+            return null;
         }
     }
 }

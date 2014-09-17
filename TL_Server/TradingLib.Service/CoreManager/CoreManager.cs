@@ -107,7 +107,8 @@ namespace TradingLib.ServiceManager
             debug("[INIT CORE] MsgExchServer", QSEnumDebugLevel.INFO);
             InitMsgExchSrv();//初始化交易服务
 
-            //InitTradeFollow();//初始化交易数据流
+
+            InitTradeFollow();//初始化交易数据流
 
             debug("[INIT CORE] ClearCentre", QSEnumDebugLevel.INFO);
             InitClearCentre();//初始化结算中心 初始化账户信息

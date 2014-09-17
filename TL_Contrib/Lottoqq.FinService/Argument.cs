@@ -8,6 +8,18 @@ namespace TradingLib.Contrib.FinService
     
     public class Argument
     {
+        public Argument()
+            :this(string.Empty,string.Empty,EnumArgumentType.STRING)
+        { 
+
+        
+        }
+        public Argument(string name, string value, EnumArgumentType type)
+        {
+            this.Name = name;
+            this.Value = value;
+            this.Type = type;
+        }
         /// <summary>
         /// 参数名称
         /// </summary>
@@ -23,6 +35,10 @@ namespace TradingLib.Contrib.FinService
         /// </summary>
         public EnumArgumentType Type { get; set; }
 
+        public override string ToString()
+        {
+            return " Name:" + this.Name + " Value:" + this.Value + " Type:" + this.Type.ToString();
+        }
         /// <summary>
         /// 转换成字符串
         /// </summary>
@@ -70,13 +86,17 @@ namespace TradingLib.Contrib.FinService
         /// 服务计划外键
         /// 表面该基准费率绑定于某个服务计划
         /// </summary>
-        public int serviceplane_fk { get; set; }
+        public int serviceplan_fk { get; set; }
 
         /// <summary>
         /// 参数所属类别
         /// </summary>
         public EnumArgumentClass ArgClass { get; set; }
 
+        public override string ToString()
+        {
+            return "ServicePlan:"+this.serviceplan_fk.ToString() +" ArgClass:"+ArgClass.ToString() + base.ToString();
+        }
     }
 
 
@@ -88,13 +108,18 @@ namespace TradingLib.Contrib.FinService
         /// <summary>
         /// 该代理结算费率绑定与哪个服务计划
         /// </summary>
-        public int serviceplane_fk { get; set; }
+        public int serviceplan_fk { get; set; }
 
         /// <summary>
         /// 该代理外键
         /// 代理id通过代理表中的agentcode进行标识
         /// </summary>
         public int agent_fk { get; set; }
+
+        public override string ToString()
+        {
+            return "ServicePlan:"+this.serviceplan_fk.ToString() +" agent_fk:"+this.agent_fk.ToString() + base.ToString();
+        }
 
     }
 
@@ -107,6 +132,11 @@ namespace TradingLib.Contrib.FinService
         /// 服务外键 用于绑定服务 加载服务时可以通过该外键获得对应的参数
         /// </summary>
         public int service_fk { get; set; }
+
+        public override string ToString()
+        {
+            return "Service Fk:"+this.service_fk.ToString() +base.ToString();
+        }
     }
 
 

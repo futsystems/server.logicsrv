@@ -27,6 +27,21 @@ namespace TradingLib.Contrib.FinService.ORM
         }
 
         /// <summary>
+        /// 插入基准参数
+        /// </summary>
+        /// <param name="arg"></param>
+        /// <returns></returns>
+        public static bool InsertArgumentBase(ArgumentBase arg)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("INSERT INTO contrib_finservice_argument_base (`name`,`value`,`type`,`serviceplan_fk`,`argclass`) VALUES ( '{0}','{1}','{2}','{3}','{4}')", arg.Name, arg.Value, arg.Type, arg.serviceplan_fk, arg.ArgClass);
+                int row = db.Connection.Execute(query);
+                return row > 0;
+            }
+        }
+
+        /// <summary>
         /// 获得代理参数
         /// </summary>
         /// <returns></returns>
@@ -52,5 +67,8 @@ namespace TradingLib.Contrib.FinService.ORM
                 return db.Connection.Query<ArgumentAccount>(query, null).ToArray();
             }
         }
+
+
+
     }
 }

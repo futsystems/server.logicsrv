@@ -102,6 +102,24 @@ namespace TradingLib.Common
             return this.finder.FindContribTask(obj);
         }
 
+        public List<MethodInfo> FindMethod<T>(object obj) where T : Attribute
+        {
+            this.CreateFinder();
+            return this.finder.FindMethod<T>(obj);
+        }
+
+        public List<PropertyInfo> FindProperty<T>(object obj) where T : Attribute
+        {
+            this.CreateFinder();
+            return this.finder.FindProperty<T>(obj);
+        }
+        public List<PropertyInfo> FindProperty<T>(Type type) where T : Attribute
+        {
+            this.CreateFinder();
+            return this.finder.FindProperty<T>(type);
+        }
+
+
         public List<MethodArgument> GetArgumentList(MethodInfo mi)
         {
             this.CreateFinder();
@@ -112,6 +130,12 @@ namespace TradingLib.Common
         {
             this.CreateFinder();
             return this.finder.ParseMethodArgs(args);
+        }
+
+        public IList<Type> GetImplementors(string path, Type needtype)
+        {
+            this.CreateFinder();
+            return this.finder.GetImplementors(path, needtype);
         }
     }
 }
