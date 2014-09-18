@@ -107,11 +107,13 @@
     <Compile Include="Messages\Password.cs" />
     <Compile Include="Messages\QryAccountInfo.cs" />
     <Compile Include="Messages\QryBar.cs" />
+    <Compile Include="Messages\QryContractBank.cs" />
     <Compile Include="Messages\QryInvestor.cs" />
     <Compile Include="Messages\QryMaxOrderVol.cs" />
     <Compile Include="Messages\QryNotice.cs" />
     <Compile Include="Messages\QryOrder.cs" />
     <Compile Include="Messages\QryPosition.cs" />
+    <Compile Include="Messages\QryRegisterBankAccount.cs" />
     <Compile Include="Messages\QrySettleInfo.cs" />
     <Compile Include="Messages\QrySettleInfoConfirm.cs" />
     <Compile Include="Messages\QrySymbol.cs" />
@@ -122,6 +124,7 @@
     <Compile Include="Messages\Trading.cs" />
     <Compile Include="Messages\Version.cs" />
     <Compile Include="Misc\ClientInfo.cs" />
+    <Compile Include="Misc\ContractBank.cs" />
     <Compile Include="Misc\IniFile.cs" />
     <Compile Include="Misc\LibGlobal.cs" />
     <Compile Include="Misc\SystemStatus.cs" />

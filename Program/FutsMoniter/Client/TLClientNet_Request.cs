@@ -301,13 +301,16 @@ namespace TradingLib.Common
             SendPacket(request);
         }
 
-        public void ReqChangeAccountToken(string account, string token)
+        public void ReqChangeInverstorInfo(string account, string name,string broker,string bank,string bankac)
         {
             debug("请求修改投资者信息", QSEnumDebugLevel.INFO);
             MGRReqChangeInvestorRequest request = RequestTemplate<MGRReqChangeInvestorRequest>.CliSendRequest(requestid++);
 
             request.TradingAccount = account;
-            request.Token = token;
+            request.Name = name;
+            request.Broker = broker;
+            request.Bank = bank;
+            request.BankAC = bankac;
 
             SendPacket(request);
         }

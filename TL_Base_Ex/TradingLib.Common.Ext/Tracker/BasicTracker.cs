@@ -18,6 +18,8 @@ namespace TradingLib.Common
 
         DBManagerTracker mgrtracker;
 
+        DBContractBankTracker banktracker;
+
         static BasicTracker()
         {
             defaultinstance = new BasicTracker();
@@ -89,6 +91,19 @@ namespace TradingLib.Common
                 if (defaultinstance.mktimetracker == null)
                     defaultinstance.mktimetracker = new DBMarketTimeTracker();
                 return defaultinstance.mktimetracker;
+            }
+        }
+
+        /// <summary>
+        /// 签约银行列表
+        /// </summary>
+        public static DBContractBankTracker ContractBankTracker
+        {
+            get
+            {
+                if (defaultinstance.banktracker == null)
+                    defaultinstance.banktracker = new DBContractBankTracker();
+                return defaultinstance.banktracker;
             }
         }
 

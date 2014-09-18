@@ -223,7 +223,7 @@ namespace APIDemo
 
         private void btnQrySettlementInfo_Click(object sender, EventArgs e)
         {
-            tlclient.ReqQrySettleInfo();
+            tlclient.ReqQrySettleInfo(int.Parse(qrysettle_day.Text));
         }
 
         private void btnConfirmSettlement_Click(object sender, EventArgs e)

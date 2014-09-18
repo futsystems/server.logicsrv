@@ -176,30 +176,36 @@ namespace TradingLib.Core
 
             Settlement settlement = null;
             
+            //如果查询日期为0 则查询上个结算日
+            IAccount account = _clearcentre[request.Account];
+            //判断account是否为空
+
+
             if (request.Tradingday == 0)
             {
-                settlement = ORM.MSettlement.SelectSettlementInfoUnconfirmed(request.Account);
+                //settlement = ORM.MSettlement.SelectSettlementInfoUnconfirmed(request.Account);
+                int lastsettleday = TLCtxHelper.Ctx.SettleCentre.LastSettleday;
+                ORM.MSettlement.SelectSettlement(request.Account, lastsettleday);
             }
             else
             {
-                settlement = ORM.MSettlement.SelectSettlementInfoUnconfirmed(request.Account, request.Tradingday);
+                settlement = ORM.MSettlement.SelectSettlement(request.Account, request.Tradingday);
             }
+
+            
             if (settlement != null)
             {
-                string s = TemplateHelper.RenderSettlementInfo(new SettlementInfo(settlement));
-                string[] lines = s.Split('\n');
-                debug("got lines:" + lines.Length.ToString(), QSEnumDebugLevel.INFO);
-                for(int i=0;i<lines.Length;i++)
+                debug("got settlement....", QSEnumDebugLevel.INFO);
+                List<string> settlelist = SettlementHelper.GenSettlementFile(settlement,account);
+                for (int i = 0; i < settlelist.Count; i++)
                 {
+                    //debug(settlelist[i]);
                     RspQrySettleInfoResponse response = ResponseTemplate<RspQrySettleInfoResponse>.SrvSendRspResponse(request);
                     response.Tradingday = settlement.SettleDay;
                     response.TradingAccount = settlement.Account;
-                    response.SettlementID = 1000;
-                    response.SequenceNo = i+1;
-                    response.SettlementContent = lines[i];
-                    CacheRspResponse(response, i == lines.Length - 1);
+                    response.SettlementContent = settlelist[i] + "\n";
+                    CacheRspResponse(response, i == settlelist.Count - 1);
                 }
-                
             }
             else
             {
@@ -257,7 +263,7 @@ namespace TradingLib.Core
                 response.TradingAccount = request.Account;
                 response.Email = "xxxx@xxx.com";
                 //查询交易帐户时,如果token为空则生成帐户名否则传递Token
-                response.NickName = string.IsNullOrEmpty(account.Token)?LibUtil.GetEnumDescription(account.Category) + "[" + request.Account + "]" : account.Token;
+                response.NickName = account.GetCustName();
                 
             }
             else
@@ -348,6 +354,60 @@ namespace TradingLib.Core
             }
             
         }
+
+        void SrvOnQryContractBank(QryContractBankRequest request)
+        {
+            debug("QryContractBank:" + request.ToString(), QSEnumDebugLevel.INFO);
+            ContractBank[] banks = BasicTracker.ContractBankTracker.Banks;
+            if (banks.Length > 0)
+            {
+
+                for(int i=0; i<banks.Length;i++)
+                {
+                    RspQryContractBankResponse response = ResponseTemplate<RspQryContractBankResponse>.SrvSendRspResponse(request);
+                    response.BankName = banks[i].Name;
+                    response.BankID = banks[i].BrankID;
+                    response.BankBrchID = banks[i].BrankBrchID;
+                    CacheRspResponse(response, i == banks.Length - 1);
+
+
+                }
+            }
+            else
+            {
+                RspQryContractBankResponse response = ResponseTemplate<RspQryContractBankResponse>.SrvSendRspResponse(request);
+
+                CachePacket(response);
+            }
+        }
+
+        /// <summary>
+        /// 系统返回签约银行列表后
+        /// 客户端会查询每个签约银行所对应的银行帐户
+        /// 这里所有查询均返回同样的帐户
+        /// </summary>
+        /// <param name="request"></param>
+        void SrvOnRegisterBankAccount(QryRegisterBankAccountRequest request)
+        {
+            debug("QryRegisterBankAccount:" + request.ToString(), QSEnumDebugLevel.INFO);
+            IAccount account = _clearcentre[request.TradingAccount];
+            if (account != null)
+            {
+                RspQryRegisterBankAccountResponse response = ResponseTemplate<RspQryRegisterBankAccountResponse>.SrvSendRspResponse(request);
+                response.TradingAccount = account.ID;
+                response.BankAC = account.BankAC;
+                ContractBank bank = BasicTracker.ContractBankTracker[account.GetCustBankID()];
+                response.BankName = bank.Name;
+                response.BankID = bank.BrankID;
+                CacheRspResponse(response);
+            }
+            else
+            {
+                RspQryRegisterBankAccountResponse response = ResponseTemplate<RspQryRegisterBankAccountResponse>.SrvSendRspResponse(request);
+                response.RspInfo.FillError("TRADING_ACCOUNT_NOT_FOUND");
+                CacheRspResponse(response);
+            }
+        }
         void tl_newPacketRequest(IPacket packet,ISession session)
         {
 
@@ -424,6 +484,19 @@ namespace TradingLib.Core
                     {
                         QrySymbolRequest request = packet as QrySymbolRequest;
                         SrvOnQrySymbol(request);
+                    }
+                    break;
+                case MessageTypes.QRYCONTRACTBANK://查询签约银行
+                    {
+                        QryContractBankRequest request = packet as QryContractBankRequest;
+                        SrvOnQryContractBank(request);
+                    }
+                    break;
+                case MessageTypes.QRYREGISTERBANKACCOUNT://查询银行帐户
+                    {
+                        //debug("查询银行帐户.............", QSEnumDebugLevel.INFO);
+                        QryRegisterBankAccountRequest request = packet as QryRegisterBankAccountRequest;
+                        SrvOnRegisterBankAccount(request);
                     }
                     break;
 

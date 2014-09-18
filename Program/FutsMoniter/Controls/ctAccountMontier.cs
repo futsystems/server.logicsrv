@@ -185,7 +185,7 @@ namespace FutsMoniter.Controls
 
         const string INTRADAY = "日内";
         const string AGENTCODE = "代理编号";
-        const string TOKEN = "帐户标识";
+        const string NAME = "姓名";
         #endregion
 
         DataTable gt = new DataTable();
@@ -251,7 +251,7 @@ namespace FutsMoniter.Controls
             gt.Columns.Add(CATEGORY);//18
             gt.Columns.Add(INTRADAY);//19
             gt.Columns.Add(AGENTCODE);//22
-            gt.Columns.Add(TOKEN);//22
+            gt.Columns.Add(NAME);//22
 
 
             //accountlist.ContextMenuStrip = new ContextMenuStrip();
@@ -804,7 +804,7 @@ namespace FutsMoniter.Controls
                         gt.Rows[i][CATEGORY] = LibUtil.GetEnumDescription(account.Category);
                         gt.Rows[i][INTRADAY] = account.IntraDay ? "日内" : "隔夜";
                         gt.Rows[i][AGENTCODE] = "0000";
-                        gt.Rows[i][TOKEN] = account.Token;
+                        gt.Rows[i][NAME] = account.Name;
 
                         accountmap.TryAdd(account.Account, account);
                         accountrowmap.TryAdd(account.Account, i);
@@ -820,7 +820,7 @@ namespace FutsMoniter.Controls
                         gt.Rows[r][EXECUTEIMG] = getExecuteStatusImage(account.Execute);
                         gt.Rows[r][CATEGORY] = LibUtil.GetEnumDescription(account.Category);
                         gt.Rows[r][INTRADAY] = account.IntraDay ? "日内" : "隔夜";
-                        gt.Rows[r][TOKEN] = account.Token;
+                        gt.Rows[r][NAME] = account.Name;
 
                     }
 

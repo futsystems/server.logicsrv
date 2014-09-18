@@ -51,11 +51,15 @@ namespace TradingLib.Core
             AccountChanged(this[account]);
         }
 
-        public void UpdateAccountToken(string account, string token)
+        public void UpdateInvestorInfo(string account, string name,string broker,string bank,string bankac)
         {
             if (!HaveAccount(account)) return;
-            this[account].Token = token;
-            ORM.MAccount.UpdateAccountToken(account, token);
+            IAccount acc = this[account];
+            acc.Name = name;
+            acc.Broker = broker;
+            acc.BankAC = bankac;
+            acc.BankID = bank;
+            ORM.MAccount.UpdateInvestorInfo(account, name,broker,bank,bankac);
             AccountChanged(this[account]);
         }
 

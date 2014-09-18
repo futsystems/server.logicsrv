@@ -109,10 +109,26 @@ namespace TradingLib.Common
         public string MAC { get; set; }
 
         /// <summary>
-        /// 客户端标识
+        /// 交易帐户名称
         /// </summary>
-        public string Token { get; set; }
+        public string Name { get; set; }
 
+
+        /// <summary>
+        /// 期货公司名称
+        /// </summary>
+        public string Broker { get; set; }
+
+
+        /// <summary>
+        /// 银行
+        /// </summary>
+        public string BankID { get; set; }
+
+        /// <summary>
+        /// 银行帐号
+        /// </summary>
+        public string BankAC { get; set; }
 
         /// <summary>
         /// 记录账户的建立时间

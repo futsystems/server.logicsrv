@@ -35,9 +35,6 @@
     <DelaySign>true</DelaySign>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DotLiquid">
-      <HintPath>..\..\lib\DotLiquid.dll</HintPath>
-    </Reference>
     <Reference Include="MySql.Data, Version=6.5.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\MySql.Data.dll</HintPath>
@@ -99,7 +96,7 @@
     <Compile Include="Core\ClearCentre\2bedelete\mysqlDBTransaction.cs" />
     <Compile Include="Core\ManagerExchange\MgrClientInfo.cs" />
     <Compile Include="Core\ManagerExchange\MgrExchServer.cs" />
-    <Compile Include="Core\ManagerExchange\Settlement.cs" />
+    <Compile Include="Base\Settlement.cs" />
     <Compile Include="Core\ManagerExchange\TLServer_MgrExch.cs" />
     <Compile Include="Core\ManagerExchange\MgrExchServer_.cs" />
     <Compile Include="Core\ManagerExchange\MgrExchServer_MessageOut.cs" />

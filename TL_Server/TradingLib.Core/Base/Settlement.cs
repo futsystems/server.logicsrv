@@ -7,6 +7,10 @@ using TradingLib.Common;
 
 namespace TradingLib.Core
 {
+    /// <summary>
+    /// 结算辅助类
+    /// 用于生成结算单
+    /// </summary>
     public class SettlementHelper
     {
 
@@ -48,21 +52,24 @@ namespace TradingLib.Core
         {
             return string.Format("{0," + section_location.ToString() + "}", name);
         }
-        public static List<string> GenSettlementFile(Settlement s)
+
+        public static List<string> GenSettlementFile(Settlement s,IAccount account)
         {
             List<string> settlelist = new List<string>();
 
+            //查询历史持仓 计算保证金占用
             IList<SettlePosition> positions = ORM.MTradingInfo.SelectHistPositions(s.Account, s.SettleDay, s.SettleDay);
             decimal margin=0;
             foreach(SettlePosition pos in positions)
             {
                 margin += Math.Abs(pos.Size * pos.SettlePrice * pos.Multiple * 0.1M);
             }
+
             settlelist.Add(NewLine);
-            settlelist.Add(SectionName("华西期货有限公司"));
+            settlelist.Add(SectionName(account.GetCustBroker()));
             settlelist.Add(line);
             settlelist.Add(SectionName("交易结算单（盯市）"));
-            settlelist.Add(string.Format("{0}{1,10}      {2}{3,10}      {4}{5,10}", padRightEx("客户号:", 10),s.Account, padRightEx("客户名称:", 10), "钱波", padRightEx("日期:", 10),s.SettleDay));
+            settlelist.Add(string.Format("{0}{1,10}      {2}{3,10}      {4}{5,10}", padRightEx("客户号:", 10),s.Account, padRightEx("客户名称:", 10),account.GetCustName(), padRightEx("日期:", 10),s.SettleDay));
             settlelist.Add(NewLine);
             settlelist.Add(NewLine);
             settlelist.Add(SectionName("资金状况"));

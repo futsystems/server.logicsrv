@@ -69,6 +69,7 @@
     <Compile Include="Accounts\Account_Operation.cs" />
     <Compile Include="Accounts\Account_Rule.cs" />
     <Compile Include="Accounts\Account_Service.cs" />
+    <Compile Include="Accounts\AccountUtils.cs" />
     <Compile Include="Manager\Manager.cs" />
     <Compile Include="ClearCentre\Base_ClearCentre_.cs" />
     <Compile Include="ClearCentre\Base_ClearCentre_TradingInfo.cs" />
@@ -172,6 +173,7 @@
     <Compile Include="2bedelete\ManagerClient\Transport\zmessages.cs" />
     <Compile Include="Contex\TLContex.cs" />
     <Compile Include="Tracker\BasicTracker.cs" />
+    <Compile Include="Tracker\ContrackBankTracker.cs" />
     <Compile Include="Tracker\ExchangeTracker.cs" />
     <Compile Include="Tracker\ManagerTracker.cs" />
     <Compile Include="Tracker\SecurityTracker.cs" />

@@ -113,10 +113,27 @@ namespace TradingLib.API
         /// 在用于添加时候就自动进行了绑定
         /// </summary>
         int Mgr_fk { get; set; }
+
         /// <summary>
-        /// 帐户Token 用于储存帐户标识
+        /// 帐户Name 用于储存帐户名称
         /// </summary>
-        string Token { get; set; }
+        string Name { get; set; }
+
+        /// <summary>
+        /// 帐户
+        /// </summary>
+        string Broker { get; set; }
+
+        /// <summary>
+        /// 银行
+        /// </summary>
+        string BankID { get; set; }
+
+        /// <summary>
+        /// 银行帐号
+        /// </summary>
+        string BankAC { get; set; }
+
 
         /// <summary>
         /// 是否允许锁仓

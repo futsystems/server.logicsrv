@@ -148,8 +148,12 @@ namespace TradingLib.Common
                     //请求查询系统通知
                     case MessageTypes.QRYNOTICE:
                         return RequestTemplate<QryNoticeRequest>.SrvRecvRequest(frontid, clientid, content);
-
-
+                    //请求查询签约银行列表
+                    case MessageTypes.QRYCONTRACTBANK:
+                        return RequestTemplate<QryContractBankRequest>.SrvRecvRequest(frontid, clientid, content);
+                    //请求查询银行帐户
+                    case MessageTypes.QRYREGISTERBANKACCOUNT:
+                        return RequestTemplate<QryRegisterBankAccountRequest>.SrvRecvRequest(frontid, clientid, content);
 
 
 
@@ -235,7 +239,7 @@ namespace TradingLib.Common
                         return RequestTemplate<MGRReqChangeInvestorRequest>.SrvRecvRequest(frontid, clientid, content);
                     case MessageTypes.MGRUPDATEPOSLOCK://请求修改帐户锁仓权限
                         return RequestTemplate<MGRReqUpdatePosLockRequest>.SrvRecvRequest(frontid, clientid, content);
-
+                    
                     #endregion
 
                     default:
@@ -305,6 +309,10 @@ namespace TradingLib.Common
                     return ResponseTemplate<RspReqChangePasswordResponse>.CliRecvResponse(content);
                 case MessageTypes.NOTICERESPONSE://查询系统通知回报
                     return ResponseTemplate<RspQryNoticeResponse>.CliRecvResponse(content);
+                case MessageTypes.CONTRACTBANKRESPONSE://查询签约银行通知回报
+                    return ResponseTemplate<RspQryContractBankResponse>.CliRecvResponse(content);
+                case MessageTypes.REGISTERBANKACCOUNTRESPONSE://查询银行帐户回报
+                    return ResponseTemplate<RspQryRegisterBankAccountResponse>.CliRecvResponse(content);
 
                 case MessageTypes.TICKNOTIFY:
                     TickNotify ticknotify = new TickNotify();

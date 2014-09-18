@@ -81,8 +81,8 @@ namespace TradingLib.API
         REQCHANGEPASS,//请求修改密码
         QRYNOTICE,//查询交易服务器通知
         CONFIRMSETTLEMENT,//确认结算数据
-        
-        
+        QRYCONTRACTBANK,//查询签约银行
+        QRYREGISTERBANKACCOUNT,//查询银期转账帐户
         
         DOMREQUEST,//请求DOM市场Level2数据
         IMBALANCEREQUEST,//imbalance..查询这个是什么意思
@@ -124,6 +124,9 @@ namespace TradingLib.API
         CHANGEPASSRESPONSE,//修改密码回报
         NOTICERESPONSE,//交易通知回报
         CONFIRMSETTLEMENTRESPONSE,//确认结算回报
+        CONTRACTBANKRESPONSE,//查询签约银行回报
+        REGISTERBANKACCOUNTRESPONSE,//查询银期签约帐户回报
+
         // END STANDARD MESSAGES
 
 

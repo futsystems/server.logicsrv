@@ -623,12 +623,12 @@ namespace TradingLib.Core
         { 
             debug(string.Format("管理员:{0} 请求查询结算记录:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
 
+            IAccount account = clearcentre[request.TradingAccount];
 
-            Settlement settlement = ORM.MSettlement.SelectSettlement(request.TradingAccount, request.Settleday);
-           
+            Settlement settlement = ORM.MSettlement.SelectSettlement(request.TradingAccount, request.Settleday);           
             if (settlement != null)
             {
-                List<string> settlelist = SettlementHelper.GenSettlementFile(settlement);
+                List<string> settlelist = SettlementHelper.GenSettlementFile(settlement,account);
                 for (int i = 0; i < settlelist.Count; i++)
                 {
                     RspMGRQrySettleResponse response = ResponseTemplate<RspMGRQrySettleResponse>.SrvSendRspResponse(request);
@@ -637,33 +637,6 @@ namespace TradingLib.Core
                     response.SettlementContent = settlelist[i]+"\n";
                     CacheRspResponse(response, i == settlelist.Count -1);
                 }
-                /*
-                List<string> settlelist = new List<string>();
-                settlelist.Add(string.Format("客户号:{0,-20}客户名称:{1,-20}日期:{1,-20}\n", "9580001", "钱波", "2014-09-01"));
-                settlelist.Add(string.Format("{0,-15}{1,10}{2,-15}{3,10}{4,-15}{5,-10}\n", "期初结存:", 1000002, "  交割手续费:", 345.67, "  交割保证金:", 45890));
-                settlelist.Add(string.Format("{0,-16}{1,10}{2,-16}{3,10}{4,-15}{5,-10}\n", "出入金:", 20000, "  期末结存:", 110000, "  可用资金:", 110000));
-
-                for (int i = 0; i < settlelist.Count; i++)
-                {
-                    RspMGRQrySettleResponse response = ResponseTemplate<RspMGRQrySettleResponse>.SrvSendRspResponse(request);
-                    response.Tradingday = settlement.SettleDay;
-                    response.TradingAccount = settlement.Account;
-                    response.SettlementContent = settlelist[i];
-                    CacheRspResponse(response,false);
-                }
-
-                string s = TemplateHelper.RenderSettlementInfo(new SettlementInfo(settlement));
-                string[] lines = s.Split('\n');
-                debug("got lines:" + lines.Length.ToString(), QSEnumDebugLevel.INFO);
-                for(int i=0;i<lines.Length;i++)
-                {
-                    RspMGRQrySettleResponse response = ResponseTemplate<RspMGRQrySettleResponse>.SrvSendRspResponse(request);
-                    response.Tradingday = settlement.SettleDay;
-                    response.TradingAccount = settlement.Account;
-                    response.SettlementContent = lines[i];
-                    CacheRspResponse(response, i == lines.Length - 1);
-                }
-                **/
             }
         }
 
@@ -746,7 +719,7 @@ namespace TradingLib.Core
             IAccount account = clearcentre[request.TradingAccount];
             if (account != null)
             {
-                clearcentre.UpdateAccountToken(request.TradingAccount, request.Token);
+                clearcentre.UpdateInvestorInfo(request.TradingAccount, request.Name,request.Broker,request.Bank,request.BankAC);
             }
         }
 

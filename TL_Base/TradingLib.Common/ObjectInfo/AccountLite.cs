@@ -85,7 +85,22 @@ namespace TradingLib.Common
         /// <summary>
         /// 帐户标识
         /// </summary>
-        public string Token { get; set; }
+        public string Name { get; set; }
+
+        /// <summary>
+        /// 交易帐号
+        /// </summary>
+        public string Broker { get; set; }
+
+        /// <summary>
+        /// 银行
+        /// </summary>
+        public string BankID { get; set; }
+
+        /// <summary>
+        /// 银行帐号
+        /// </summary>
+        public string BankAC { get; set; }
 
         /// <summary>
         /// 锁仓权限
@@ -124,7 +139,13 @@ namespace TradingLib.Common
             sb.Append(d);
             sb.Append(account.MoneyUsed.ToString());
             sb.Append(d);
-            sb.Append(account.Token);
+            sb.Append(account.Name);
+            sb.Append(d);
+            sb.Append(account.Broker);
+            sb.Append(d);
+            sb.Append(account.BankID);
+            sb.Append(d);
+            sb.Append(account.BankAC);
             sb.Append(d);
             sb.Append(account.PosLock.ToString());
             return sb.ToString();
@@ -148,8 +169,11 @@ namespace TradingLib.Common
             account.CashIn = decimal.Parse(rec[11]);
             account.CashOut = decimal.Parse(rec[12]);
             account.MoneyUsed = decimal.Parse(rec[13]);
-            account.Token = rec[14];
-            account.PosLock = bool.Parse(rec[15]);
+            account.Name = rec[14];
+            account.Broker = rec[15];
+            account.BankID = rec[16];
+            account.BankAC = rec[17];
+            account.PosLock = bool.Parse(rec[18]);
             return account;
         }
     }

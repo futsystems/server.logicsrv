@@ -65,6 +65,7 @@
             this.qryorder_symbol = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.offsetflag = new System.Windows.Forms.ComboBox();
             this.label30 = new System.Windows.Forms.Label();
             this.login_mac = new System.Windows.Forms.TextBox();
             this.label29 = new System.Windows.Forms.Label();
@@ -110,7 +111,8 @@
             this.qrytrade_symbol = new System.Windows.Forms.TextBox();
             this.label16 = new System.Windows.Forms.Label();
             this.ctDebug1 = new APIDemo.DebugControl();
-            this.offsetflag = new System.Windows.Forms.ComboBox();
+            this.qrysettle_day = new System.Windows.Forms.TextBox();
+            this.label31 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -432,6 +434,8 @@
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.qrysettle_day);
+            this.groupBox1.Controls.Add(this.label31);
             this.groupBox1.Controls.Add(this.offsetflag);
             this.groupBox1.Controls.Add(this.label30);
             this.groupBox1.Controls.Add(this.login_mac);
@@ -520,6 +524,14 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "groupBox1";
             this.groupBox1.Enter += new System.EventHandler(this.groupBox1_Enter);
+            // 
+            // offsetflag
+            // 
+            this.offsetflag.FormattingEnabled = true;
+            this.offsetflag.Location = new System.Drawing.Point(313, 182);
+            this.offsetflag.Name = "offsetflag";
+            this.offsetflag.Size = new System.Drawing.Size(67, 20);
+            this.offsetflag.TabIndex = 93;
             // 
             // label30
             // 
@@ -750,7 +762,7 @@
             // 
             // btnQrySettlementInfo
             // 
-            this.btnQrySettlementInfo.Location = new System.Drawing.Point(165, 325);
+            this.btnQrySettlementInfo.Location = new System.Drawing.Point(316, 351);
             this.btnQrySettlementInfo.Name = "btnQrySettlementInfo";
             this.btnQrySettlementInfo.Size = new System.Drawing.Size(140, 23);
             this.btnQrySettlementInfo.TabIndex = 66;
@@ -928,13 +940,22 @@
             this.ctDebug1.TimeStamps = true;
             this.ctDebug1.UseExternalTimeStamp = false;
             // 
-            // offsetflag
+            // qrysettle_day
             // 
-            this.offsetflag.FormattingEnabled = true;
-            this.offsetflag.Location = new System.Drawing.Point(313, 182);
-            this.offsetflag.Name = "offsetflag";
-            this.offsetflag.Size = new System.Drawing.Size(67, 20);
-            this.offsetflag.TabIndex = 93;
+            this.qrysettle_day.Location = new System.Drawing.Point(78, 351);
+            this.qrysettle_day.Name = "qrysettle_day";
+            this.qrysettle_day.Size = new System.Drawing.Size(197, 21);
+            this.qrysettle_day.TabIndex = 95;
+            this.qrysettle_day.Text = "0";
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(19, 354);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(53, 12);
+            this.label31.TabIndex = 94;
+            this.label31.Text = "查询日期";
             // 
             // Form1
             // 
@@ -1036,6 +1057,8 @@
         private System.Windows.Forms.Label label29;
         private System.Windows.Forms.Label label30;
         private System.Windows.Forms.ComboBox offsetflag;
+        private System.Windows.Forms.TextBox qrysettle_day;
+        private System.Windows.Forms.Label label31;
     }
 }
 

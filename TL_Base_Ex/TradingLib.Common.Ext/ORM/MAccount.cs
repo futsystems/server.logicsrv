@@ -53,7 +53,12 @@ namespace TradingLib.ORM
         public int User_ID { get; set; }
         public long Confrim_TimeStamp { get; set; }
         public string MAC { get; set; }
-        public string Token { get; set; }
+
+        public string Name { get; set; }
+        public string Broker { get; set; }
+        public string BankID { get; set; }
+        public string BankAC { get; set; }
+
         public bool PosLock { get; set; }
         public int Mgr_fk { get; set; }
 
@@ -167,11 +172,11 @@ namespace TradingLib.ORM
         /// <param name="account"></param>
         /// <param name="intraday"></param>
         /// <returns></returns>
-        public static bool UpdateAccountToken(string account, string token)
+        public static bool UpdateInvestorInfo(string account, string name,string broker,string bank,string bankac)
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("UPDATE accounts SET token = '{0}' WHERE account = '{1}'", token, account);
+                string query = String.Format("UPDATE accounts SET name = '{0}',broker= '{1}' ,bankid='{2}', bankac='{3}' WHERE account = '{4}'", name, broker,bank, bankac, account);
                 return db.Connection.Execute(query) >= 0;
             }
         }
@@ -485,7 +490,10 @@ namespace TradingLib.ORM
             account.Category = fields.Account_Category;
             account.SettlementConfirmTimeStamp = fields.Confrim_TimeStamp;
             account.MAC = fields.MAC;
-            account.Token = fields.Token;
+            account.Name = fields.Name;
+            account.Broker = fields.Broker;
+            account.BankID = fields.BankID;
+            account.BankAC = fields.BankAC;
             account.PosLock = fields.PosLock;
             account.Mgr_fk = fields.Mgr_fk;
             //TLCtxHelper.Debug("fileds route:" + fields.Order_Router_Type.ToString() +" category:"+fields.Account_Category.ToString()) ;

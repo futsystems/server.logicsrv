@@ -129,7 +129,10 @@ namespace TradingLib.Common
             info.Profit = acc.Profit;
             info.RealizedPL = acc.RealizedPL;
             info.UnRealizedPL = acc.UnRealizedPL;
-            info.Token = acc.Token;
+            info.Name = acc.Name;
+            info.Broker = acc.Broker;
+            info.BankID = acc.BankID;
+            info.BankAC = acc.BankAC;
             info.PosLock = acc.PosLock;
             return info;
         }
