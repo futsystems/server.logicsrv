@@ -78,39 +78,27 @@
     <Compile Include="GUI\fmStopTrailing.Designer.cs">
       <DependentUpon>fmStopTrailing.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\fmTargetProfit.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="GUI\fmTargetProfit.cs" />
     <Compile Include="GUI\fmTargetProfit.Designer.cs">
       <DependentUpon>fmTargetProfit.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\MemoScalper.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="GUI\MemoScalper.cs" />
     <Compile Include="GUI\MemoScalper.Designer.cs">
       <DependentUpon>MemoScalper.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\MemoStopLoss.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="GUI\MemoStopLoss.cs" />
     <Compile Include="GUI\MemoStopLoss.Designer.cs">
       <DependentUpon>MemoStopLoss.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\MemoTargetProfit.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="GUI\MemoTargetProfit.cs" />
     <Compile Include="GUI\MemoTargetProfit.Designer.cs">
       <DependentUpon>MemoTargetProfit.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\fmStopLoss.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="GUI\fmStopLoss.cs" />
     <Compile Include="GUI\fmStopLoss.Designer.cs">
       <DependentUpon>fmStopLoss.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\MemoTwoStep.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="GUI\MemoTwoStep.cs" />
     <Compile Include="GUI\MemoTwoStep.Designer.cs">
       <DependentUpon>MemoTwoStep.cs</DependentUpon>
     </Compile>

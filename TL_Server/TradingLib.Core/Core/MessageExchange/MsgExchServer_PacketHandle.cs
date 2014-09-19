@@ -395,7 +395,7 @@ namespace TradingLib.Core
             {
                 RspQryRegisterBankAccountResponse response = ResponseTemplate<RspQryRegisterBankAccountResponse>.SrvSendRspResponse(request);
                 response.TradingAccount = account.ID;
-                response.BankAC = account.BankAC;
+                response.BankAC = account.GetCustBankAC();//获得银行卡号 如果没有设置银行卡号码 会导致博易客户端频繁请求交易帐号信息
                 ContractBank bank = BasicTracker.ContractBankTracker[account.GetCustBankID()];
                 response.BankName = bank.Name;
                 response.BankID = bank.BrankID;

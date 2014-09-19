@@ -146,7 +146,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                const string query = "SELECT * FROM contract_bank";
+                const string query = "SELECT * FROM info_contract_bank";
                 IEnumerable<ContractBank> result = db.Connection.Query<ContractBank>(query);
                 return result;
             }
