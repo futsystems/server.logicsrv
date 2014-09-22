@@ -59,7 +59,6 @@
     <Compile Include="2bedelete\IFinService00.cs" />
     <Compile Include="Contrib\IContribPlugin.cs" />
     <Compile Include="Core\ISettleCentre.cs" />
-    <Compile Include="Core\QSEnumManagerType.cs" />
     <Compile Include="InfoType.cs" />
     <Compile Include="ITask.cs" />
     <Compile Include="2bedelete\ITLCustomerTypeDescriptor.cs" />

@@ -36,6 +36,7 @@ namespace TradingLib.Contrib.FinService
         /// <returns></returns>
         public Dictionary<string, Argument> GetAgentArgument(int agent_fk, int serviceplan_fk)
         {
+            LibUtil.Debug("get agent argument,agent_fk:" + agent_fk.ToString() + " serviceplan_fk:" + serviceplan_fk.ToString());
             Dictionary<string, Argument> agtarg = _agtargttracker.GetAgentArgument(agent_fk, serviceplan_fk).ToDictionary(c=>c.Key,c=>c.Value as Argument);
             Dictionary<string, Argument> basearg = _baseargtracker.GetAgentArgument(serviceplan_fk).ToDictionary(c => c.Key, c => c.Value as Argument);
 

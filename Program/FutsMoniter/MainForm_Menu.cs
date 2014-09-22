@@ -116,6 +116,21 @@ namespace FutsMoniter
 
         }
 
+
+        /// <summary>
+        /// 管理员操作窗口
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnManagerForm_Click(object sender, EventArgs e)
+        {
+            //Globals.TLClient.ReqQryManager();
+            if (mgrform == null)
+            {
+                mgrform = new ManagerForm();
+            }
+            mgrform.Show();
+        }
         #endregion
     }
 }

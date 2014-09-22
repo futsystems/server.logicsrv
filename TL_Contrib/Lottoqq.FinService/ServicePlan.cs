@@ -8,15 +8,35 @@ using TradingLib.Common;
 namespace TradingLib.Contrib.FinService
 {
 
-    public delegate void FeeChargeDel(decimal totalfee,decimal agentfee);
+    public delegate void FeeChargeDel(decimal totalfee,decimal agentfee,string comment);
     /// <summary>
     /// 所有服务计划的父类
     /// 用于定义服务计划的框架
     /// </summary>
     public abstract class ServicePlanBase:IFinService
     {
-
+        protected string SPNAME = "股指专项";
         public event FeeChargeDel GotFeeChargeEvent;
+
+        public ServicePlanBase()
+            :this("配资服务")
+        { 
+        
+        }
+        public ServicePlanBase(string spname)
+        { 
+            
+        }
+
+        IAccount _account = null;
+        /// <summary>
+        /// 交易帐号对象属性 初始化时候需要进行绑定 避免每次运算查找帐户对象
+        /// </summary>
+        public IAccount Account { get { return _account; } }
+        public void BindAccount(IAccount acc)
+        {
+            _account = acc;
+        }
 
         /// <summary>
         /// 按照即定的业务逻辑
@@ -26,20 +46,20 @@ namespace TradingLib.Contrib.FinService
         /// </summary>
         /// <param name="totalfee"></param>
         /// <param name="agentfee"></param>
-        protected void FeeCharge(decimal totalfee, decimal agentfee)
+        protected void FeeCharge(decimal totalfee, decimal agentfee,string comment)
         {
-            GotFeeChargeEvent(totalfee, agentfee);
+            GotFeeChargeEvent(totalfee, agentfee,comment);
         }
         /// <summary>
         /// 费用计算方式
         /// </summary>
-        EnumFeeChargeType _chargetype = EnumFeeChargeType.BYTrade;
+        protected EnumFeeChargeType _chargetype = EnumFeeChargeType.BYTrade;
         public EnumFeeChargeType ChargeType { get { return _chargetype; } }
 
         /// <summary>
         /// 费用收集方式
         /// </summary>
-        EnumFeeCollectType _collecttype = EnumFeeCollectType.CollectInTrading;
+        protected EnumFeeCollectType _collecttype = EnumFeeCollectType.CollectInTrading;
         public EnumFeeCollectType CollectType { get { return _collecttype; } }
 
         /// <summary>
@@ -52,15 +72,7 @@ namespace TradingLib.Contrib.FinService
         /// </summary>
         Dictionary<string, Argument> agentargmap = new Dictionary<string, Argument>();
 
-        /// <summary>
-        /// 默认构造函数
-        /// </summary>
-        /// <param name="args"></param>
-        public  ServicePlanBase()
-        {
 
-
-        }
 
         /// <summary>
         /// 初始化参数
@@ -70,6 +82,8 @@ namespace TradingLib.Contrib.FinService
         {
             accountargmap = accountarg;
             agentargmap = agentarg;
+            //调用反射自动进行参数赋值
+            FinTracker.ServicePlaneTracker.SetArgument(this, accountarg, agentarg);
 
         }
 
@@ -107,6 +121,17 @@ namespace TradingLib.Contrib.FinService
         
         }
 
+
+        /// <summary>
+        /// 响应成交手续费调整
+        /// </summary>
+        /// <param name="t"></param>
+        /// <param name="pr"></param>
+        /// <returns></returns>
+        public virtual decimal OnAdjustCommission(Trade t, IPositionRound pr)
+        {
+            return t.Commission;
+        }
         #endregion
 
         
@@ -117,10 +142,10 @@ namespace TradingLib.Contrib.FinService
         /// <param name="fill"></param>
         /// <param name="positionround"></param>
         /// <returns></returns>
-        public virtual decimal AdjustCommission(Trade fill, IPositionRound positionround)
-        {
-            return fill.Commission;
-        }
+        //public virtual decimal AdjustCommission(Trade fill, IPositionRound positionround)
+        //{
+        //    return fill.Commission;
+        //}
 
         /// <summary>
         /// 获得可用配资额度，用于在标准资金上加入可用资金额度 实现配资逻辑
@@ -133,77 +158,71 @@ namespace TradingLib.Contrib.FinService
         }
 
 
-    }
-
-    /// <summary>
-    /// 覆写相关函数 实现对应的逻辑
-    /// </summary>
-    public class SPSpecialIF : ServicePlanBase
-    {
-
-        ArgumentPair _wincharge = null;
-
+        #region 业务逻辑部分
+        /*
+         * 帐户业务逻辑和服务业务逻辑的分析
+         * 帐户基础业务逻辑可以被实现的特例所覆写，达到修改逻辑的目的
+         * 在帐户业务逻辑覆写过程中可以通过查询帐户相关服务并调用服务实现的业务逻辑从而实现绑定服务
+         * 修改业务逻辑的功能
+         * 
+         * 服务的业务逻辑不存在与帐户间的覆写逻辑，只有当被调用时候才会应用服务的业务逻辑
+         * 因此服务的业务逻辑默认是严格限制的。单确认要用到某个服务的相关业务逻辑接口时才会去实现
+         * 
+         * 
+         * 
+         * 
+         * 
+         * */
         /// <summary>
-        /// 盈利回合收费
+        /// 检查合约交易权限
         /// </summary>
-        [ArgumentAttribute("WinCharge", EnumArgumentType.DECIMAL, 200, 100)]
-        public ArgumentPair WinCharge { get; set; }
-
-        /// <summary>
-        /// 亏损回合收费
-        /// </summary>
-        [ArgumentAttribute("LossCharge", EnumArgumentType.DECIMAL, 100, 50)]
-        public ArgumentPair LossCharge { get; set; }
-        
-
-        //public decimal AccountWinCharge { get { return _accountwincharge; } }
-        //decimal _accountwincharge = 200;
-
-        //[ArgumentAttribute("AcctLossCharge", EnumArgumentType.DECIMAL, 100, 50)]
-        //public decimal AccountLossCharge { get { return _accountlosscharge; } }
-        //decimal _accountlosscharge = 100;
-
-        //[ArgumentAttribute("AgtWinCharge", EnumArgumentType.DECIMAL, 100, 50)]
-        //public decimal AgentWinCharge { get { return _agentwincharge; } }
-        //decimal _agentwincharge = 100;
-
-        //[ArgumentAttribute("AgtLossCharge", EnumArgumentType.DECIMAL, 100, 50)]
-        //public decimal AgentLossCharge { get { return _agentlosscharge; } }
-        //decimal _agentlosscharge = 50;
-        public override void InitArgument(Dictionary<string, Argument> accountarg, Dictionary<string, Argument> agentarg)
+        /// <param name="symbol"></param>
+        /// <param name="msg"></param>
+        /// <returns></returns>
+        public virtual bool CanTradeSymbol(Symbol symbol, out string msg)
         {
-            base.InitArgument(accountarg, agentarg);
-            LibUtil.Debug("调用服务计划的参数初始化");
-            //将参数加载到内存
-            
+            msg = string.Empty;
+            return false;
         }
 
+        /// <summary>
+        /// 保证金检查
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="msg"></param>
+        /// <returns></returns>
+        public virtual bool CanTakeOrder(Order o, out string msg)
+        {
+            msg = string.Empty;
+            return false;
+        }
 
         /// <summary>
-        /// 响应持仓回合事件
-        /// 当一次开仓 平仓结束后触发该调用
+        /// 获得帐户某个合约的可用资金
+        /// 在进行保证金检查时需要查询某个合约的可用资金
+        /// 在业务逻辑覆写时 通过服务对应的结构对外暴露
+        /// 然后在account主逻辑中进行调用
         /// </summary>
-        /// <param name="round"></param>
-        public override void OnRound(IPositionRound round)
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        public virtual decimal GetFundAvabile(Symbol symbol)
         {
-            decimal totalfee = 0;
-            decimal agentfee = 0;
-            //盈利
-            if (round.Profit>0)
-            {
-                totalfee = round.Size * this.WinCharge.AccountArgument.AsDecimal();
-                agentfee = round.Size * this.WinCharge.AgentArgument.AsDecimal();
-            }
-            //亏损
-            else
-            {
-                totalfee = round.Size * this.LossCharge.AccountArgument.AsDecimal();
-                agentfee = round.Size * this.LossCharge.AgentArgument.AsDecimal(); ;
-            }
-
-            //进行收费记录
-            FeeCharge(totalfee, agentfee);
+            return 0;
         }
-        
+
+        /// <summary>
+        /// 计算通过配资服务后某个合约的可开手数
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        public virtual int CanOpenSize(Symbol symbol)
+        {
+            return 0;
+        }
+        #endregion
+
+
     }
+
+   
 }

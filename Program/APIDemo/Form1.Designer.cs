@@ -65,6 +65,8 @@
             this.qryorder_symbol = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.qrysettle_day = new System.Windows.Forms.TextBox();
+            this.label31 = new System.Windows.Forms.Label();
             this.offsetflag = new System.Windows.Forms.ComboBox();
             this.label30 = new System.Windows.Forms.Label();
             this.login_mac = new System.Windows.Forms.TextBox();
@@ -111,8 +113,6 @@
             this.qrytrade_symbol = new System.Windows.Forms.TextBox();
             this.label16 = new System.Windows.Forms.Label();
             this.ctDebug1 = new APIDemo.DebugControl();
-            this.qrysettle_day = new System.Windows.Forms.TextBox();
-            this.label31 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -244,7 +244,7 @@
             this.sendorder_symbol.Name = "sendorder_symbol";
             this.sendorder_symbol.Size = new System.Drawing.Size(71, 21);
             this.sendorder_symbol.TabIndex = 27;
-            this.sendorder_symbol.Text = "IF1409";
+            this.sendorder_symbol.Text = "IF1410";
             // 
             // label9
             // 
@@ -524,6 +524,23 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "groupBox1";
             this.groupBox1.Enter += new System.EventHandler(this.groupBox1_Enter);
+            // 
+            // qrysettle_day
+            // 
+            this.qrysettle_day.Location = new System.Drawing.Point(78, 351);
+            this.qrysettle_day.Name = "qrysettle_day";
+            this.qrysettle_day.Size = new System.Drawing.Size(197, 21);
+            this.qrysettle_day.TabIndex = 95;
+            this.qrysettle_day.Text = "0";
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(19, 354);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(53, 12);
+            this.label31.TabIndex = 94;
+            this.label31.Text = "查询日期";
             // 
             // offsetflag
             // 
@@ -939,23 +956,6 @@
             this.ctDebug1.TabIndex = 0;
             this.ctDebug1.TimeStamps = true;
             this.ctDebug1.UseExternalTimeStamp = false;
-            // 
-            // qrysettle_day
-            // 
-            this.qrysettle_day.Location = new System.Drawing.Point(78, 351);
-            this.qrysettle_day.Name = "qrysettle_day";
-            this.qrysettle_day.Size = new System.Drawing.Size(197, 21);
-            this.qrysettle_day.TabIndex = 95;
-            this.qrysettle_day.Text = "0";
-            // 
-            // label31
-            // 
-            this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(19, 354);
-            this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(53, 12);
-            this.label31.TabIndex = 94;
-            this.label31.Text = "查询日期";
             // 
             // Form1
             // 

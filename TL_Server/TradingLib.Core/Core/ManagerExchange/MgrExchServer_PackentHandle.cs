@@ -303,7 +303,17 @@ namespace TradingLib.Core
         {
             debug(string.Format("管理员:{0} 请求添加交易帐号:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
             string outaccount =string.Empty;
+            int mgrid = request.MgrID;
+            Manager manger = BasicTracker.ManagerTracker[mgrid];
+            if (manager == null)
+            {
+                RspMGROperationResponse response = ResponseTemplate<RspMGROperationResponse>.SrvSendRspResponse(request);
+                response.RspInfo.FillError("制定的管理员不存在");
+                CachePacket(response);
+                return;
+            }
             bool re = clearcentre.AddAccount(out outaccount, request.UserID.ToString(), request.AccountID, request.Password, request.Category);
+            clearcentre.UpdateManagerID(outaccount, mgrid);
         }
 
         void SrvOnMGRQryExchange(MGRQryExchangeRequuest request, ISession session, Manager manager)
@@ -732,6 +742,49 @@ namespace TradingLib.Core
                 clearcentre.UpdateAccountPosLock(request.TradingAccount, request.PosLock);
             }
         }
+
+        void SrvOnMGRQryManager(MGRQryManagerRequest request, ISession session, Manager manager)
+        {
+            debug(string.Format("管理员:{0} 请求查询管理员列表:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+
+            Manager[] mgrs = BasicTracker.ManagerTracker.GetManagers(manager).ToArray();
+            if (mgrs.Length > 0)
+            {
+                for (int i = 0; i < mgrs.Length; i++)
+                {
+                    RspMGRQryManagerResponse response = ResponseTemplate<RspMGRQryManagerResponse>.SrvSendRspResponse(request);
+                    response.ManagerToSend = mgrs[i];
+                    CacheRspResponse(response, i == mgrs.Length - 1);
+                }
+            }
+            
+        
+        }
+
+        void SrvOnMGRAddManger(MGRReqAddManagerRequest request, ISession session, Manager manager)
+        {
+            debug(string.Format("管理员:{0} 请求添加管理员:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+
+            Manager m = request.ManagerToSend;
+            BasicTracker.ManagerTracker.UpdateManager(m);
+
+            RspMGRQryManagerResponse response = ResponseTemplate<RspMGRQryManagerResponse>.SrvSendRspResponse(request);
+            response.ManagerToSend = m;
+            CacheRspResponse(response);
+
+        }
+
+        void SrvOnMGRUpdateManger(MGRReqUpdateManagerRequest request,ISession session,Manager manger)
+        {
+            debug(string.Format("管理员:{0} 请求更新管理员:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+
+            Manager m = request.ManagerToSend;
+            BasicTracker.ManagerTracker.UpdateManager(m);
+
+            RspMGRQryManagerResponse response = ResponseTemplate<RspMGRQryManagerResponse>.SrvSendRspResponse(request);
+            response.ManagerToSend = m;
+            CacheRspResponse(response);
+        }
         void tl_newPacketRequest(IPacket packet,ISession session,Manager manager)
         {
             switch (packet.Type)
@@ -924,6 +977,21 @@ namespace TradingLib.Core
                 case MessageTypes.MGRUPDATEPOSLOCK://请求修改帐户锁仓权限
                     {
                         SrvOnMGRReqUpdateAccountPosLock(packet as MGRReqUpdatePosLockRequest, session, manager);
+                        break;
+                    }
+                case MessageTypes.MGRQRYMANAGER://请求查询管理员列表
+                    {
+                        SrvOnMGRQryManager(packet as MGRQryManagerRequest, session, manager);
+                        break;
+                    }
+                case MessageTypes.MGRADDMANAGER://请求添加管理员
+                    { 
+                        SrvOnMGRAddManger(packet as MGRReqAddManagerRequest,session,manager);
+                        break;
+                    }
+                case MessageTypes.MGRUPDATEMANAGER://请求更新管理员
+                    {
+                        SrvOnMGRUpdateManger(packet as MGRReqUpdateManagerRequest, session, manager);
                         break;
                     }
                 default:

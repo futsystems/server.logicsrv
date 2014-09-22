@@ -77,6 +77,7 @@
     <Compile Include="Messages\Location.cs" />
     <Compile Include="Messages\Login.cs" />
     <Compile Include="Messages\Manager\MGRAccountChangeUpdateNotify.cs" />
+    <Compile Include="Messages\Manager\MGRAcctService.cs" />
     <Compile Include="Messages\Manager\MGRAddAccount.cs" />
     <Compile Include="Messages\Manager\MGRBasicInfo.cs" />
     <Compile Include="Messages\Manager\MGRCashOperation.cs" />
@@ -85,6 +86,7 @@
     <Compile Include="Messages\Manager\MGRClearCentre.cs" />
     <Compile Include="Messages\Manager\MGRConnector.cs" />
     <Compile Include="Messages\Manager\MGRHistQry.cs" />
+    <Compile Include="Messages\Manager\MGRManager.cs" />
     <Compile Include="Messages\Manager\MGROperationResponse.cs" />
     <Compile Include="Messages\Manager\MGRPosLock.cs" />
     <Compile Include="Messages\Manager\MGRQryAccountInfo.cs" />
@@ -127,6 +129,7 @@
     <Compile Include="Misc\ContractBank.cs" />
     <Compile Include="Misc\IniFile.cs" />
     <Compile Include="Misc\LibGlobal.cs" />
+    <Compile Include="Misc\Manager.cs" />
     <Compile Include="Misc\SystemStatus.cs" />
     <Compile Include="Misc\XMLRspInfo.cs" />
     <Compile Include="ObjectInfo\AccountInfo.cs" />

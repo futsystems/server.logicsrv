@@ -9,6 +9,7 @@ using TradingLib.Common;
 namespace TradingLib.Contrib.FinService
 {
 
+    public delegate void FeeChargeItemDel(FeeChargeItem item);
     /// <summary>
     /// 收费项目和记录
     /// 记录了某个收费项目
@@ -31,6 +32,7 @@ namespace TradingLib.Contrib.FinService
             this.CollectType = EnumFeeCollectType.CollectAfterSettle;
             this.Account = string.Empty;
             this.serviceplan_fk = 0;
+            this.Agent_fk = 0;
         }
         /// <summary>
         /// 向客户收取的费用总和
@@ -69,6 +71,16 @@ namespace TradingLib.Contrib.FinService
         /// </summary>
         public int serviceplan_fk { get; set; }
 
+        /// <summary>
+        /// 代理fk
+        /// </summary>
+        public int Agent_fk { get; set; }
+
+
+        /// <summary>
+        /// 收费备注 用于描述该收费的情况
+        /// </summary>
+        public string Comment { get; set; }
 
     }
 }

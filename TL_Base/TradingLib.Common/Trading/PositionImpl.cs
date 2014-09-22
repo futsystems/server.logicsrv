@@ -438,7 +438,7 @@ namespace TradingLib.Common
         public decimal Adjust(Trade t) 
         {
             //put trade into list;
-            LibUtil.Debug("$$$$$$$$$Position:"+this.Account + "-" + this.Symbol +"-"+ _directiontype.ToString() +" got trade:" + t.ToString());
+            //LibUtil.Debug("$$$$$$$$$Position:"+this.Account + "-" + this.Symbol +"-"+ _directiontype.ToString() +" got trade:" + t.ToString());
             _tradelist.Add(t);
             decimal cpl =  Adjust(new PositionImpl(t,_directiontype));
 

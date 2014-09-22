@@ -77,6 +77,32 @@ namespace FutsMoniter
             return list;
         }
 
+        public static ArrayList GetManagerTypeCBList()
+        {
+            ArrayList list = new ArrayList();
+            ValueObject<QSEnumManagerType> vo1 = new ValueObject<QSEnumManagerType>();
+            vo1.Name = LibUtil.GetEnumDescription(QSEnumManagerType.AGENT);
+            vo1.Value = QSEnumManagerType.AGENT;
+            list.Add(vo1);
+
+            ValueObject<QSEnumManagerType> vo2 = new ValueObject<QSEnumManagerType>();
+            vo2.Name = LibUtil.GetEnumDescription(QSEnumManagerType.ACCOUNTENTER);
+            vo2.Value = QSEnumManagerType.ACCOUNTENTER;
+            list.Add(vo2);
+
+            ValueObject<QSEnumManagerType> vo3 = new ValueObject<QSEnumManagerType>();
+            vo3.Name = LibUtil.GetEnumDescription(QSEnumManagerType.RISKER);
+            vo3.Value = QSEnumManagerType.RISKER;
+            list.Add(vo3);
+
+            ValueObject<QSEnumManagerType> vo4 = new ValueObject<QSEnumManagerType>();
+            vo4.Name = LibUtil.GetEnumDescription(QSEnumManagerType.MONITER);
+            vo4.Value = QSEnumManagerType.MONITER;
+            list.Add(vo4);
+            return list;
+
+        }
+
         public static string GenSymbol(SecurityFamilyImpl sec, int month)
         {
             switch (sec.Type)
@@ -87,6 +113,8 @@ namespace FutsMoniter
                     return sec.Code;
             }
         }
+
+
 
         static string GenFutSymbol(SecurityFamilyImpl sec, int month)
         {

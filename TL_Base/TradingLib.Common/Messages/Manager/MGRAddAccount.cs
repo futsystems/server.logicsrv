@@ -37,6 +37,12 @@ namespace TradingLib.Common
         /// </summary>
         public int UserID { get; set; }
 
+        /// <summary>
+        /// 代理商ID
+        /// 用于指明该交易帐户属于哪个Manager域
+        /// 每个Manager可以开始多个管理帐户，是以Root或Agent标识的管理来跟踪ID
+        /// </summary>
+        public int MgrID { get; set; }
         public override string ContentSerialize()
         {
             StringBuilder sb = new StringBuilder();
@@ -48,6 +54,8 @@ namespace TradingLib.Common
             sb.Append(this.Password);
             sb.Append(d);
             sb.Append(this.UserID.ToString());
+            sb.Append(d);
+            sb.Append(this.MgrID.ToString());
             return sb.ToString();
         }
 
@@ -58,6 +66,7 @@ namespace TradingLib.Common
             this.AccountID = rec[1];
             this.Password = rec[2];
             this.UserID = int.Parse(rec[3]);
+            this.MgrID = int.Parse(rec[4]);
         }
     }
 }

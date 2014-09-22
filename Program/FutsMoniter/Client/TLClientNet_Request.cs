@@ -278,7 +278,7 @@ namespace TradingLib.Common
             SendPacket(request);
         }
 
-        public void ReqAddAccount(QSEnumAccountCategory category, string account, string pass, int userid)
+        public void ReqAddAccount(QSEnumAccountCategory category, string account, string pass, int mgrid,int userid)
         {
             debug("请求添加交易帐号", QSEnumDebugLevel.INFO);
             MGRAddAccountRequest request = RequestTemplate<MGRAddAccountRequest>.CliSendRequest(requestid++);
@@ -286,6 +286,7 @@ namespace TradingLib.Common
             request.Category = category;
             request.Password = pass;
             request.UserID = userid;
+            request.MgrID = mgrid;
 
             SendPacket(request);
         }
@@ -322,6 +323,27 @@ namespace TradingLib.Common
 
             request.TradingAccount = account;
             request.PosLock = poslock;
+
+            SendPacket(request);
+        }
+        #endregion
+
+
+        #region 管理员管理
+
+        public void ReqQryManager()
+        {
+            debug("请求查询管理员列表", QSEnumDebugLevel.INFO);
+            MGRQryManagerRequest request = RequestTemplate<MGRQryManagerRequest>.CliSendRequest(requestid++);
+            SendPacket(request);
+            
+        }
+
+        public void ReqUpdateManager(Manager manger)
+        {
+            debug("请求更新管理员", QSEnumDebugLevel.INFO);
+            MGRReqUpdateManagerRequest request = RequestTemplate<MGRReqUpdateManagerRequest>.CliSendRequest(requestid++);
+            request.ManagerToSend = manger;
 
             SendPacket(request);
         }

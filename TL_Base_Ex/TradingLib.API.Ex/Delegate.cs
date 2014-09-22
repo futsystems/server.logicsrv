@@ -36,7 +36,8 @@ namespace TradingLib.API
 
     //配资中心使用的委托
     public delegate decimal AccountFinAmmountDel(string account);//查找某个账户的配资额度
-    public delegate decimal AdjustCommissionDel(Trade fill, IPositionRound positionround);//配资中心的手续费调整,比如某些收费计划中的手续费加成
+    //清算中心手续费调整委托 用于调整某个成交的手续费
+    public delegate decimal AdjustCommissionDel(Trade fill, IPositionRound positionround);
     public delegate void ChargeFinFeeDel(string account, decimal fee);//配资中心的扣费出金委托 用于调用清算中心进行出金操作
     public delegate bool IsTradingDayDel();//查询当前是否是交易日
     //public delegate void IFinStatisticDel(IFinStatistic f);//获得配资账户总体的一个统计信息

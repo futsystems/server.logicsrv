@@ -183,6 +183,15 @@ namespace TradingLib.API
         MGRCHANGEACCOUNTPASS,//修改交易密码
         MGRCHANGEINVESTOR,//
         MGRUPDATEPOSLOCK,//修改帐户锁仓权限
+        MGRQRYMANAGER,//查询管理员列表
+        MGRADDMANAGER,//添加管理员
+        MGRUPDATEMANAGER,//更新管理员
+        MGRQRYACCTSERVICE,//查询交易帐户服务
+
+
+
+
+
 
 
 
@@ -217,6 +226,8 @@ namespace TradingLib.API
         MGRCHANGEACCOUNTPASSRESPONSE,//修改密码回报
         MGRCHANGEINVESTORRESPONSE,//修改token回报
         MGRUPDATEPOSLOCKRESPONSE,//修改帐户锁仓权限回报
+        MGRMANAGERRESPONSE,//查询管理员列表回报
+        MGRQRYACCTSERVICERESPONSE,//查询交易帐户服务回报
 
         //FLATALL,//清仓
         UPDATEPOSOFFSET,

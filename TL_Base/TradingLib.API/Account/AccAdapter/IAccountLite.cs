@@ -105,5 +105,10 @@ namespace TradingLib.API
         /// 锁仓权限
         /// </summary>
         bool PosLock { get; set; }
+
+        /// <summary>
+        /// 所属管理员的ID
+        /// </summary>
+        int MGRID{ get; set; }
     }
 }

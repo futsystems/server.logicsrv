@@ -150,6 +150,7 @@ namespace TradingLib.Core
             else
             {
                 int size = account.CanOpenSize(symbol);
+                debug("got max opensize:" + size.ToString(), QSEnumDebugLevel.INFO);
                 response.Symbol = request.Symbol;
                 response.MaxVol = size;
                 response.OffsetFlag = request.OffsetFlag;

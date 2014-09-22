@@ -202,12 +202,17 @@ namespace TradingLib.Core
 
 
         #region 启动 停止 销毁
+        public void InitAccount()
+        {
+            //加载所有帐户
+            this.LoadAccount();
+        }
         public void Start()
         {
             debug("启动清算中心...", QSEnumDebugLevel.INFO);
             _asynLoger.Start();
             //加载交易帐户
-            LoadAccount();
+            //LoadAccount();
             //从数据库恢复日内交易信息
             RestoreFromMysql();
         }

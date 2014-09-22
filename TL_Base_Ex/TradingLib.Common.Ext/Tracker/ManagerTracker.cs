@@ -32,6 +32,45 @@ namespace TradingLib.Common
             }
         }
 
+        
+
+        public void UpdateManager(Manager mgr)
+        {
+            //添加
+            if (mgr.ID == 0)
+            {
+                ORM.MManager.InsertManager(mgr);
+                managermap[mgr.Login] = mgr;
+                mgridmap[mgr.ID] = mgr;
+                mgr.BaseManager = this[mgr.mgr_fk];
+            }
+            else//更新
+            {
+                Manager target = null;
+                if (mgridmap.TryGetValue(mgr.ID, out target))
+                {
+                    target.Type = mgr.Type;
+                    target.Name = mgr.Name;
+                    target.Mobile = mgr.Mobile;
+                    target.QQ = mgr.QQ;
+                    target.AccLimit = mgr.AccLimit;
+                    ORM.MManager.UpdateManager(target);
+                }
+            }
+        }
+        /// <summary>
+        /// 查询某个管理员可以查询的管理员列表
+        /// </summary>
+        /// <param name="mgr"></param>
+        /// <returns></returns>
+        public IEnumerable<Manager> GetManagers(Manager mgr)
+        {
+            if (mgr.Type == QSEnumManagerType.ROOT)
+            {
+                return managermap.Values;
+            }
+            return new List<Manager>();
+        }
         /// <summary>
         /// 更新管理员密码
         /// </summary>

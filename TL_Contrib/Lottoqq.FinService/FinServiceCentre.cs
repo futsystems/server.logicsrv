@@ -60,7 +60,7 @@ namespace TradingLib.Contrib.FinService
 
 
         const string ContribName = "FinServiceCentre";
-
+        FeeChargeItemLogger _chargelog = new FeeChargeItemLogger();
         ConfigDB _cfgdb;
 
         public FinServiceCentre()
@@ -88,13 +88,25 @@ namespace TradingLib.Contrib.FinService
 
             }
 
-
+            debug("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxx", QSEnumDebugLevel.INFO);
             foreach (FinServiceStub fs in FinTracker.FinServiceTracker.ToArray())
             {
                 debug("finservice:" + fs.ToString(), QSEnumDebugLevel.INFO);
                 //fs.InitFinService();
             }
+
+            FinTracker.FinServiceTracker.GotFeeChargeItemEvent += new FeeChargeItemDel(_chargelog.newFeeChargeItem);
+            TLCtxHelper.ExContribEvent.AdjustCommissionEvent += new AdjustCommissionDel(ExContribEvent_AdjustCommissionEvent);
+            TLCtxHelper.EventIndicator.GotFillEvent += new FillDelegate(EventIndicator_GotFillEvent);
+            TLCtxHelper.EventIndicator.GotPositionClosedEvent += new IPositionRoundDel(EventIndicator_GotPositionClosedEvent);
         }
+
+        
+
+
+
+
+        
 
         /// <summary>
         /// 销毁
@@ -108,7 +120,7 @@ namespace TradingLib.Contrib.FinService
         /// </summary>
         public void Start()
         {
-
+            _chargelog.Start();
 
         }
 

@@ -37,6 +37,7 @@ namespace FutsMoniter
         SystemStatusForm systemstatusfrom;
         HistQryForm histqryform;
         BasicInfoTracker basicinfotracker;
+        ManagerForm mgrform;
         void ShowInfo(string msg)
         {
             if (ShowInfoHandler != null)
@@ -89,10 +90,14 @@ namespace FutsMoniter
             systemstatusfrom = new SystemStatusForm();
             histqryform = new HistQryForm();
 
+            mgrform = new ManagerForm();
+
             basicinfotracker.GotMarketTimeEvent += new MarketTimeDel(markettimeform.GotMarketTime);
             basicinfotracker.GotExchangeEvent += new ExchangeDel(exchangeform.GotExchange);
             basicinfotracker.GotSecurityEvent += new SecurityDel(securityform.GotSecurity);
             basicinfotracker.GotSymbolEvent += new SymbolDel(symbolform.GotSymbol);
+
+            basicinfotracker.GotManagerEvent += new ManagerDel(mgrform.GotManager);
 
             Globals.SendDebugEvent +=new DebugDelegate(debug);
         }
@@ -275,6 +280,9 @@ namespace FutsMoniter
             double o = statusmessage.Opacity - 0.05;
             statusmessage.Opacity = o >= 0 ? o : 0;
         }
+
+        
+
 
 
 

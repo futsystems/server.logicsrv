@@ -107,6 +107,10 @@ namespace TradingLib.Common
         /// </summary>
         public bool PosLock { get; set; }
 
+        /// <summary>
+        /// 帐户所属管理员全局ID
+        /// </summary>
+        public int MGRID { get; set; }
         public static string Serialize(IAccountLite account)
         {
             StringBuilder sb = new StringBuilder();
@@ -148,6 +152,8 @@ namespace TradingLib.Common
             sb.Append(account.BankAC);
             sb.Append(d);
             sb.Append(account.PosLock.ToString());
+            sb.Append(d);
+            sb.Append(account.MGRID.ToString());
             return sb.ToString();
         }
 
@@ -174,6 +180,7 @@ namespace TradingLib.Common
             account.BankID = rec[16];
             account.BankAC = rec[17];
             account.PosLock = bool.Parse(rec[18]);
+            account.MGRID = int.Parse(rec[19]);
             return account;
         }
     }

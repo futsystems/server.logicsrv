@@ -114,6 +114,7 @@
     <Compile Include="Message\IPacket.cs" />
     <Compile Include="Message\ISession.cs" />
     <Compile Include="Message\QSMessageContent.cs" />
+    <Compile Include="Msic\QSEnumManagerType.cs" />
     <Compile Include="Rule\IRuleItem.cs" />
     <Compile Include="Trading\BasicInfo\IMarketTime.cs" />
     <Compile Include="Reply\ILoginResponse.cs" />

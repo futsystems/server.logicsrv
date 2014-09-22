@@ -16,6 +16,8 @@ namespace TradingLib.Contrib.FinService
 
         //具体类名和类型的影射通过初始化时候动态加载
         Dictionary<string, Type> sptypemap = new Dictionary<string, Type>();
+        Dictionary<string, List<PropertyInfo>> argumentmap = new Dictionary<string, List<PropertyInfo>>();
+
         public ServicePlanTracker()
         {
             //从数据库加载服务计划并放入内存Map
@@ -27,6 +29,12 @@ namespace TradingLib.Contrib.FinService
             }
         }
 
+        /// <summary>
+        /// 初始化服务计划类型
+        /// 1.写入服务计划到数据库
+        /// 2.写入服务计划默认参数到数据库
+        /// </summary>
+        /// <param name="type"></param>
         public void InitServicePlan(Type type)
         {
             string fullname = type.FullName;
@@ -47,7 +55,9 @@ namespace TradingLib.Contrib.FinService
                 ORM.MServicePlan.InsertServicePlan(sp);
                 spidxmap.Add(sp.ID, sp);
                 spclassmap.Add(sp.ClassName, sp);
+
                 sptypemap[fullname] = type;
+                
             }
 
             LibUtil.Debug("服务计划类别加载成功:" + type.ToString() +" fullname:"+fullname +" ");
@@ -56,6 +66,10 @@ namespace TradingLib.Contrib.FinService
             int serviceplan_fk = spclassmap[fullname].ID;
             //查找用argumentattribute标注过的属性 这些属性是服务计划的参数
             List<PropertyInfo> propertyInfos = PluginHelper.FindProperty<ArgumentAttribute>(type);
+
+            //将标记的属性放到map中
+            argumentmap[fullname] = propertyInfos;
+
             //遍历每个属性 获得对应的特性对象
             foreach (PropertyInfo pi in propertyInfos)
             {
@@ -64,6 +78,52 @@ namespace TradingLib.Contrib.FinService
             }
         }
 
+        /// <summary>
+        /// 设定某个配资服务的参数
+        /// 从Dictinoary通过反射自动设定到对应的参数
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="accountarg"></param>
+        /// <param name="agentarg"></param>
+        public void SetArgument(object obj, Dictionary<string, Argument> accountarg, Dictionary<string, Argument> agentarg)
+        {
+            string fullname = obj.GetType().FullName;
+            LibUtil.Debug("setargument,obj fullname:" + fullname);
+            if (!sptypemap.Keys.Contains(fullname))
+            { 
+                //如果当前数据集没有记录到该对象的类型 则抛出异常
+                throw new Exception("unknow serviceplan type");
+            }
+            Type type = sptypemap[fullname];
+            List<PropertyInfo> propertyInfos = argumentmap[fullname];
+
+            foreach (PropertyInfo pi in propertyInfos)
+            {
+                ArgumentAttribute attr = (ArgumentAttribute)Attribute.GetCustomAttribute(pi, typeof(ArgumentAttribute));
+                ArgumentPair pair = GenArgument(attr.Name, accountarg, agentarg);
+                if (pair == null)
+                {
+                    throw new Exception("account can not be null");
+                    
+                }
+                pi.SetValue(obj, pair, null);
+
+            }
+
+        }
+
+        private ArgumentPair GenArgument(string name, Dictionary<string, Argument> accountarg, Dictionary<string, Argument> agentarg)
+        {
+            Argument arg1 = null;
+            Argument arg2 = null;
+            accountarg.TryGetValue(name, out arg1);
+            agentarg.TryGetValue(name, out arg2);
+            if (arg1 == null || arg2 == null)
+            {
+                return null;
+            }
+            return new ArgumentPair(arg1, arg2);
+        }
         /// <summary>
         /// 通过类名获得BDServicePlane数据
         /// </summary>

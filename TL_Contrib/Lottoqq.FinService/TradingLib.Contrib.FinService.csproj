@@ -60,6 +60,7 @@
     <Compile Include="FeeChargeItem.cs" />
     <Compile Include="FeeChargeItemLogger.cs" />
     <Compile Include="FinServiceCentre.cs" />
+    <Compile Include="FinServiceCentre_.cs" />
     <Compile Include="IFinService.cs" />
     <Compile Include="ORM\MArgumentBase.cs" />
     <Compile Include="ORM\MFeeChargeItem.cs" />
@@ -70,7 +71,9 @@
     <Compile Include="ServiceFactory.cs" />
     <Compile Include="ServicePlan.cs" />
     <Compile Include="DBServicePlan.cs" />
+    <Compile Include="ServicePlane\SPSpecialIF.cs" />
     <Compile Include="Tracker.cs" />
+    <Compile Include="FinServiceCentre_OnXXXX.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

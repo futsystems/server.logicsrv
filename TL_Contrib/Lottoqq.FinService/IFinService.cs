@@ -27,6 +27,8 @@ namespace TradingLib.Contrib.FinService
         EnumFeeCollectType CollectType { get; }
 
 
+        decimal OnAdjustCommission(Trade t, IPositionRound pr);
+
         void OnTrade(Trade t);
 
         void OnRound(IPositionRound round);
@@ -51,7 +53,44 @@ namespace TradingLib.Contrib.FinService
         /// </summary>
         /// <param name="account"></param>
         /// <param name="finammount"></param>
-       // void Cal(IAccount account, decimal finammount);
+        // void Cal(IAccount account, decimal finammount);
+
+        #region 交易业务逻辑部分
+
+        /// <summary>
+        /// 检查合约交易权限
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <param name="msg"></param>
+        /// <returns></returns>
+        bool CanTradeSymbol(Symbol symbol, out string msg);
+
+        /// <summary>
+        /// 保证金检查
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="msg"></param>
+        /// <returns></returns>
+        bool CanTakeOrder(Order o, out string msg);
+
+        /// <summary>
+        /// 获得帐户某个合约的可用资金
+        /// 在进行保证金检查时需要查询某个合约的可用资金
+        /// 在业务逻辑覆写时 通过服务对应的结构对外暴露
+        /// 然后在account主逻辑中进行调用
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        decimal GetFundAvabile(Symbol symbol);
+
+        /// <summary>
+        /// 计算通过配资服务后某个合约的可开手数
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        int CanOpenSize(Symbol symbol);
+        #endregion
+
 
     }
 }

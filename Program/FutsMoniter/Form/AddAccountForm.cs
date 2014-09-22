@@ -18,6 +18,7 @@ namespace FutsMoniter
         {
             InitializeComponent();
             Factory.IDataSourceFactory(accountType).BindDataSource(UIUtil.GetEnumValueObjects<QSEnumAccountCategory>());
+            Factory.IDataSourceFactory(agent).BindDataSource(Globals.BasicInfoTracker.GetBaseManagerCombList());
 
 
         }
@@ -28,10 +29,10 @@ namespace FutsMoniter
             QSEnumAccountCategory acccat = (QSEnumAccountCategory)accountType.SelectedValue;
             string accid = account.Text;
             string pass = password.Text;
-
+            int mgrid = (int)agent.SelectedValue;
             if (fmConfirm.Show("确认添加交易帐号?") == System.Windows.Forms.DialogResult.Yes)
             { 
-                Globals.TLClient.ReqAddAccount(acccat,accid,pass,0);
+                Globals.TLClient.ReqAddAccount(acccat,accid,pass,mgrid,0);
                 this.Close();
             }
         }

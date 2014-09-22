@@ -181,7 +181,20 @@ namespace TradingLib.ORM
             }
         }
 
-
+        /// <summary>
+        /// 更新交易帐户的代理ID
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static bool UpdateManagerID(string account, int id)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = String.Format("UPDATE accounts SET mgr_fk = '{0}' WHERE account = '{1}'", id, account);
+                return db.Connection.Execute(query) >= 0;
+            }
+        }
         /// <summary>
         /// 更新帐户的锁仓权限
         /// </summary>

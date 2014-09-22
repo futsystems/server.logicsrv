@@ -134,6 +134,7 @@ namespace TradingLib.Common
             info.BankID = acc.BankID;
             info.BankAC = acc.BankAC;
             info.PosLock = acc.PosLock;
+            info.MGRID = acc.Mgr_fk;
             return info;
         }
     }

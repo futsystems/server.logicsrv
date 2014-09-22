@@ -36,6 +36,8 @@
             this.account = new Telerik.WinControls.UI.RadTextBox();
             this.password = new Telerik.WinControls.UI.RadTextBox();
             this.btnAddAccount = new Telerik.WinControls.UI.RadButton();
+            this.radLabel5 = new Telerik.WinControls.UI.RadLabel();
+            this.agent = new Telerik.WinControls.UI.RadDropDownList();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel3)).BeginInit();
@@ -44,6 +46,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.account)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.password)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnAddAccount)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel5)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.agent)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this)).BeginInit();
             this.SuspendLayout();
             // 
@@ -104,18 +108,38 @@
             // 
             // btnAddAccount
             // 
-            this.btnAddAccount.Location = new System.Drawing.Point(156, 89);
+            this.btnAddAccount.Location = new System.Drawing.Point(156, 149);
             this.btnAddAccount.Name = "btnAddAccount";
             this.btnAddAccount.Size = new System.Drawing.Size(110, 24);
             this.btnAddAccount.TabIndex = 19;
             this.btnAddAccount.Text = "添加交易帐号";
             this.btnAddAccount.Click += new System.EventHandler(this.btnAddAccount_Click);
             // 
+            // radLabel5
+            // 
+            this.radLabel5.Location = new System.Drawing.Point(25, 85);
+            this.radLabel5.Name = "radLabel5";
+            this.radLabel5.Size = new System.Drawing.Size(47, 16);
+            this.radLabel5.TabIndex = 20;
+            this.radLabel5.Text = "代理商:";
+            // 
+            // agent
+            // 
+            this.agent.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.agent.Location = new System.Drawing.Point(78, 83);
+            this.agent.Name = "agent";
+            this.agent.Size = new System.Drawing.Size(109, 18);
+            this.agent.TabIndex = 21;
+            this.agent.Text = "--";
+            ((Telerik.WinControls.Primitives.FillPrimitive)(this.agent.GetChildAt(0).GetChildAt(1))).BackColor = System.Drawing.SystemColors.Window;
+            // 
             // AddAccountForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(278, 125);
+            this.ClientSize = new System.Drawing.Size(278, 185);
+            this.Controls.Add(this.agent);
+            this.Controls.Add(this.radLabel5);
             this.Controls.Add(this.btnAddAccount);
             this.Controls.Add(this.password);
             this.Controls.Add(this.account);
@@ -144,6 +168,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.account)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.password)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnAddAccount)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel5)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.agent)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -160,5 +186,7 @@
         private Telerik.WinControls.UI.RadTextBox account;
         private Telerik.WinControls.UI.RadTextBox password;
         private Telerik.WinControls.UI.RadButton btnAddAccount;
+        private Telerik.WinControls.UI.RadLabel radLabel5;
+        private Telerik.WinControls.UI.RadDropDownList agent;
     }
 }

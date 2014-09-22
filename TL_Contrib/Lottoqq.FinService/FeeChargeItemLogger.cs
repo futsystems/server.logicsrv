@@ -59,7 +59,7 @@ namespace TradingLib.Contrib.FinService
                         {
                             debug(ex.ToString(), QSEnumDebugLevel.ERROR);
                         }
-                        string s = "交易日志:Order inserted:" + o.ToString();
+                        string s = "服务收费日志:FeeCharge inserted:" + o.ToString();
                         if (!re)
                         {
                             _nrt++;
@@ -81,7 +81,7 @@ namespace TradingLib.Contrib.FinService
                 }
                 catch (Exception ex)
                 {
-                    debug(PROGRAME + ":交易日志持久化发生错误:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                    debug(PROGRAME + ":服务收费日志持久化发生错误:" + ex.ToString(), QSEnumDebugLevel.ERROR);
                 }
             }
         }

@@ -803,7 +803,7 @@ namespace FutsMoniter.Controls
                         gt.Rows[i][PROFIT] = decDisp(0);
                         gt.Rows[i][CATEGORY] = LibUtil.GetEnumDescription(account.Category);
                         gt.Rows[i][INTRADAY] = account.IntraDay ? "日内" : "隔夜";
-                        gt.Rows[i][AGENTCODE] = "0000";
+                        gt.Rows[i][AGENTCODE] = Globals.BasicInfoTracker.GetManager(account.MGRID).Name;
                         gt.Rows[i][NAME] = account.Name;
 
                         accountmap.TryAdd(account.Account, account);
@@ -820,6 +820,7 @@ namespace FutsMoniter.Controls
                         gt.Rows[r][EXECUTEIMG] = getExecuteStatusImage(account.Execute);
                         gt.Rows[r][CATEGORY] = LibUtil.GetEnumDescription(account.Category);
                         gt.Rows[r][INTRADAY] = account.IntraDay ? "日内" : "隔夜";
+                        gt.Rows[r][AGENTCODE] = Globals.BasicInfoTracker.GetManager(account.MGRID).Name;
                         gt.Rows[r][NAME] = account.Name;
 
                     }

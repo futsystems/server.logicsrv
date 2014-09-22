@@ -113,6 +113,8 @@ namespace TradingLib.ServiceManager
             debug("[INIT CORE] ClearCentre", QSEnumDebugLevel.INFO);
             InitClearCentre();//初始化结算中心 初始化账户信息
 
+            //初始化帐户数据 加载交易帐号，需要在加载扩展模块之前准备好交易账号
+            _clearCentre.InitAccount();
            
 
             debug("[INIT CORE] RiskCentre", QSEnumDebugLevel.INFO);
@@ -270,7 +272,7 @@ namespace TradingLib.ServiceManager
             _messageExchagne.GotTickEvent += new TickDelegate(TLCtxHelper.EventIndicator.FireTickEvent);
             //获得底层委托回报
             _messageExchagne.GotOrderEvent += new OrderDelegate(TLCtxHelper.EventIndicator.FireOrderEvent);
-            //获得底层成交回报
+            //获得底层成交回报 //系统内的成交回报是清算中心处理过手续费的成交
             _clearCentre.GotCommissionFill += new FillDelegate(TLCtxHelper.EventIndicator.FireFillEvent);
             //_messageExchagne.GotFillEvent += new FillDelegate(TLCtxHelper.EventIndicator.FireFillEvent);
             //获得底层取消委托回报

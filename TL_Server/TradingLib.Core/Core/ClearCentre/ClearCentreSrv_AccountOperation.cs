@@ -63,6 +63,20 @@ namespace TradingLib.Core
             AccountChanged(this[account]);
         }
 
+        /// <summary>
+        /// 更新交易帐户的ManagerID
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="id"></param>
+        public void UpdateManagerID(string account, int id)
+        {
+            if (!HaveAccount(account)) return;
+            IAccount acc = this[account];
+            acc.Mgr_fk = id;
+            ORM.MAccount.UpdateManagerID(account, id);
+            AccountChanged(this[account]);
+        }
+
         public void UpdateAccountPosLock(string account, bool poslock)
         {
             if (!HaveAccount(account)) return;
