@@ -49,7 +49,7 @@ namespace TradingLib.ServiceManager
             _tradeFollow = new TradeFollow();
             _tradeFollow.Start();
 
-            _messageExchagne.GotFillEvent += new FillDelegate(_tradeFollow.GotTrade);
+            //_messageExchagne.GotFillEvent += new FillDelegate(_tradeFollow.GotTrade);
         }
         
         //初始化清算中心

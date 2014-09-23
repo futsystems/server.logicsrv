@@ -165,7 +165,7 @@ namespace TradingLib.Contrib.FinService
             {
                 //当每手资金小于设定的强平金额时执行强平
                 decimal marginperplot = nowequity / totalsize;
-                LibUtil.Debug("now equity:" + nowequity.ToString() + " marginperlot:" + marginperplot + " stopline:" + MarginPerLotStop.AccountArgument.Value);
+                //LibUtil.Debug("now equity:" + nowequity.ToString() + " marginperlot:" + marginperplot + " stopline:" + MarginPerLotStop.AccountArgument.Value);
                 if (marginperplot <= MarginPerLotStop.AccountArgument.AsDecimal())
                 {
                     
