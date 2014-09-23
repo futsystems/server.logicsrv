@@ -100,6 +100,11 @@ namespace FutsMoniter
             basicinfotracker.GotManagerEvent += new ManagerDel(mgrform.GotManager);
 
             Globals.SendDebugEvent +=new DebugDelegate(debug);
+
+            if (!Globals.Config["Agent"].AsBool())
+            {
+                btnManagerGP.Enabled = false;
+            }
         }
 
 

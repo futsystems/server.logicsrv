@@ -605,5 +605,17 @@ namespace TradingLib.Common
         }
         #endregion
 
+
+        #region 服务查询与设置
+        public void ReqQryAcctService(string account, string servicename)
+        {
+            debug("请求查询帐户服务", QSEnumDebugLevel.INFO);
+            MGRQryAcctServiceRequest request = RequestTemplate<MGRQryAcctServiceRequest>.CliSendRequest(requestid++);
+            request.TradingAccount = account;
+            request.ServiceName = servicename;
+
+            SendPacket(request);
+        }
+        #endregion 
     }
 }

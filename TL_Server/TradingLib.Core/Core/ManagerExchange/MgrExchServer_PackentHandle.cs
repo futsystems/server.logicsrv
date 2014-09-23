@@ -785,6 +785,32 @@ namespace TradingLib.Core
             response.ManagerToSend = m;
             CacheRspResponse(response);
         }
+
+        void SrvOnMGRQryAcctService(MGRQryAcctServiceRequest request, ISession session, Manager manager)
+        {
+            debug(string.Format("管理员:{0} 请求查询服务:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+
+            IAccount account = clearcentre[request.TradingAccount];
+            debug("account null:" + (account == null).ToString(), QSEnumDebugLevel.INFO);
+            AccountBase acct = account as AccountBase;
+            if (acct != null)
+            {
+                debug("got account impl:"+request.TradingAccount, QSEnumDebugLevel.INFO);
+                IAccountService service = null;
+                if(acct.GetService(request.ServiceName,out service))
+                {
+                    debug("got service:" + request.ServiceName,QSEnumDebugLevel.INFO);
+                    RspMGRQryAcctServiceResponse response = ResponseTemplate<RspMGRQryAcctServiceResponse>.SrvSendRspResponse(request);
+                    response.TradingAccount = request.TradingAccount;
+                    response.ServiceName = request.ServiceName;
+                    response.JsonRet = service.QryService();
+
+                    CacheRspResponse(response);
+                }
+                //服务不存在
+            }
+            //帐号不存在
+        }
         void tl_newPacketRequest(IPacket packet,ISession session,Manager manager)
         {
             switch (packet.Type)
@@ -992,6 +1018,11 @@ namespace TradingLib.Core
                 case MessageTypes.MGRUPDATEMANAGER://请求更新管理员
                     {
                         SrvOnMGRUpdateManger(packet as MGRReqUpdateManagerRequest, session, manager);
+                        break;
+                    }
+                case MessageTypes.MGRQRYACCTSERVICE://查询帐户服务
+                    {
+                        SrvOnMGRQryAcctService(packet as MGRQryAcctServiceRequest, session, manager);
                         break;
                     }
                 default:

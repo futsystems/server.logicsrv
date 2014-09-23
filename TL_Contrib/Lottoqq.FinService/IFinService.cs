@@ -91,6 +91,48 @@ namespace TradingLib.Contrib.FinService
         int CanOpenSize(Symbol symbol);
         #endregion
 
+        
+    }
 
+
+    internal class JsonArgumentWrapper
+    {
+        public string ArgName {get;set;}
+
+        public string ArguValue {get;set;}
+    }
+
+    internal class JsonFinServiceWrapper
+    {
+        public JsonFinServiceWrapper()
+        {
+            this.Account = string.Empty;
+            this.ServicePlanName = string.Empty;
+            this.ServicePlanID = 0;
+            this.ServiceID = 0;
+            this.Arguments = new JsonArgumentWrapper[] { };
+        }
+        /// <summary>
+        /// 交易帐号
+        /// </summary>
+        public string Account { get; set; }
+
+        /// <summary>
+        /// 服务计划名称
+        /// </summary>
+        public string ServicePlanName { get; set; }
+
+
+        /// <summary>
+        /// 服务计划FK
+        /// </summary>
+        public int ServicePlanID { get; set; }
+
+        /// <summary>
+        /// 服务FK
+        /// </summary>
+        public int ServiceID { get; set; }
+
+        public JsonArgumentWrapper[] Arguments { get; set; }
     }
 }

@@ -300,5 +300,40 @@ namespace TradingLib.Contrib.FinService
 
         #endregion
 
+
+        #region 服务查询和设置
+        /// <summary>
+        /// 查询服务状态和参数
+        /// </summary>
+        /// <returns></returns>
+        public string QryService()
+        {
+            return _finservice.ToString();   
+        }
+
+        /// <summary>
+        /// 设置服务状态和参数
+        /// </summary>
+        /// <param name="cfg"></param>
+        public void SetService(string cfg)
+        {
+
+        }
+
+        #endregion
+
+
+        JsonFinServiceWrapper ToJsonObj()
+        {
+            JsonFinServiceWrapper obj = new JsonFinServiceWrapper();
+            obj.Account = this.Acct;
+            obj.ServicePlanName = "股指配资";
+            obj.ServicePlanID = 2;
+            obj.ServiceID = 10;
+
+            return obj;
+           
+        }
+
     }
 }

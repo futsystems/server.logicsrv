@@ -47,6 +47,12 @@ namespace FutsMoniter.Controls
 
             InitViewQuoteList();
             _loaded = true;
+
+            if (!Globals.Config["FinService"].AsBool())
+            {
+                FinServicePage.Text = "开发中";
+                FinServicePage.Enabled = false;
+            }
         }
         RadContextMenu menu = new RadContextMenu();
         #region  初始化与事件绑定
@@ -1212,6 +1218,11 @@ namespace FutsMoniter.Controls
         }
 
         #endregion
+
+        private void btnSubmit_Click(object sender, EventArgs e)
+        {
+            Globals.TLClient.ReqQryAcctService("4444", "FinService");
+        }
 
 
     }
