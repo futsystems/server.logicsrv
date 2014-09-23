@@ -84,7 +84,11 @@ namespace TradingLib.Common
         public bool ForceClose { get { return _isforceclose; } set { _isforceclose = value; } }
 
 
-        
+        string _forceclosereason = string.Empty;
+        /// <summary>
+        /// 强平原因
+        /// </summary>
+        public string ForceCloseReason { get { return _forceclosereason; } set { _forceclosereason = value; } }
 
 
         public bool isMarket { get { return (price == 0) && (stopp == 0); } }
@@ -133,6 +137,7 @@ namespace TradingLib.Common
             this.OffsetFlag = copythis.OffsetFlag;
             this.OrderRef = copythis.OrderRef;
             this.ForceClose = copythis.ForceClose;
+            this.ForceCloseReason = copythis.ForceCloseReason;
             this.HedgeFlag = copythis.HedgeFlag;
             this.OrderSeq = copythis.OrderSeq;
             this.OrderExchID = copythis.OrderExchID;

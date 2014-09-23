@@ -3,6 +3,7 @@ using TradingLib.API;
 
 namespace TradingLib.Common
 {
+
         /// <summary>
         /// 交易过程中触发的事件,用于在系统底层逻辑处理完毕后向扩展模块进行事件传递
         /// </summary>

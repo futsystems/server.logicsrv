@@ -217,9 +217,9 @@ namespace TradingLib.Core
             _posupdatecache.Write(pos);
 
             //获得净持仓数据
-            //Position netpost =_clearcentre.getPosition(t.Account,t.symbol);
+            Position netpost =_clearcentre.getPosition(t.Account,t.symbol);
             //debug("netpost null:" + (netpost == null).ToString(), QSEnumDebugLevel.INFO);
-            //_posupdatecache.Write(netpost);          
+            _posupdatecache.Write(netpost);          
         }
 
         void _br_GotFillEvent(Trade t)

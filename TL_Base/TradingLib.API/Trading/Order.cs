@@ -201,6 +201,11 @@ namespace TradingLib.API
         bool ForceClose { get; set; }
 
         /// <summary>
+        /// 强平原因
+        /// </summary>
+        string ForceCloseReason { get; set; }
+
+        /// <summary>
         /// 客户端委托引用
         /// </summary>
         string OrderRef { get; set; }

@@ -63,6 +63,7 @@ namespace TradingLib.Core
         int _orderlimitsize = 10;
         string commentNoPositionForFlat = "无可平持仓";
         string commentOverFlatPositionSize = "可平持仓数量不足";
+
         public RiskCentre(ClearCentre clearcentre):base(CoreName)
         {
             //1.加载配置文件
@@ -71,13 +72,16 @@ namespace TradingLib.Core
             {
                 _cfgdb.UpdateConfig("MarketOpenTimeCheck", QSEnumCfgType.Bool,"True", "是否进行时间检查,交易日/合约交易时间段等");
             }
-
+            //是否执行合约开市检查
+            _marketopencheck = _cfgdb["MarketOpenTimeCheck"].AsBool();
             
 
             if (!_cfgdb.HaveConfig("OrderLimitSize"))
             {
                 _cfgdb.UpdateConfig("OrderLimitSize", QSEnumCfgType.Int, 50, "单笔委托最大上限");
             }
+            //最大委托数量
+            _orderlimitsize = _cfgdb["OrderLimitSize"].AsInt();
 
             if (!_cfgdb.HaveConfig("CommentNoPositionForFlat"))
             {
@@ -91,10 +95,19 @@ namespace TradingLib.Core
             }
             commentOverFlatPositionSize = _cfgdb["CommentOverFlatPositionSize"].AsString();
 
-            //是否执行合约开市检查
-            _marketopencheck = _cfgdb["MarketOpenTimeCheck"].AsBool();
-            //最大委托数量
-            _orderlimitsize = _cfgdb["OrderLimitSize"].AsInt();
+            if (!_cfgdb.HaveConfig("FlatSendOrderFreq"))
+            {
+                _cfgdb.UpdateConfig("FlatSendOrderFreq", QSEnumCfgType.Int, 3, "强平重试时间间隔");
+            }
+            SENDORDERDELAY = _cfgdb["FlatSendOrderFreq"].AsInt();
+
+            if (!_cfgdb.HaveConfig("FlatSendOrderRetryNum"))
+            {
+                _cfgdb.UpdateConfig("FlatSendOrderRetryNum", QSEnumCfgType.Int, 3, "强平重试次数");
+            }
+            SENDORDERRETRY = _cfgdb["FlatSendOrderRetryNum"].AsInt();
+
+            
 
 
             _clearcentre = clearcentre;

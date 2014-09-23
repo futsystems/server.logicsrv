@@ -321,6 +321,9 @@ namespace TradingLib.ServiceManager
             //_clearCentre.GetAccountFinAmmountTotalEvent +=new AccountFinAmmountDel(TLCtxHelper.ExContribEvent.GetFinAmmountTotal);
             //_clearCentre.GetAccountFinAmmountAvabileEvent += new AccountFinAmmountDel(TLCtxHelper.ExContribEvent.GetFinAmmountAvabile);
             _clearCentre.AdjustCommissionEvent += new AdjustCommissionDel(TLCtxHelper.ExContribEvent.AdjustCommission);
+
+            _riskCentre.GotFlatFailedEvent += new PositionDelegate(TLCtxHelper.ExContribEvent.FireFlatFailedEvent);
+            _riskCentre.GotFlatSuccessEvent +=new PositionDelegate(TLCtxHelper.ExContribEvent.FireFlatSuccessEvent);
         }
 
 

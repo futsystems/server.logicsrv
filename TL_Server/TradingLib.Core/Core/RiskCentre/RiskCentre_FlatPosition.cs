@@ -10,31 +10,49 @@ namespace TradingLib.Core
 {
     internal class PositionFlatSet
     {
+        /// <summary>
+        /// 委托来源
+        /// </summary>
         public QSEnumOrderSource Source { get; set; }
 
-        public string Comment { get; set; }
+        /// <summary>
+        /// 备注
+        /// </summary>
+        public string ForceCloseReason { get; set; }
+
         /// <summary>
         /// 待平持仓
         /// </summary>
         public Position Position { get; set; }
+
         /// <summary>
         /// 平仓指令发送时间
         /// </summary>
         public DateTime SentTime { get; set; }
+
         /// <summary>
         /// 平仓指令发送次数
         /// </summary>
         public int FireCount { get; set; }
 
-
+        /// <summary>
+        /// 发送的平仓委托OrderID
+        /// </summary>
         public long OrderID { get; set; }
-        public PositionFlatSet(Position pos, QSEnumOrderSource source, string comment)
+
+        /// <summary>
+        /// 强迫异常或失效
+        /// </summary>
+        public bool FlatFailed { get; set; }
+
+        public PositionFlatSet(Position pos, QSEnumOrderSource source, string closereason)
         {
             Position = pos;
             SentTime = DateTime.Now;
             FireCount = 1;
             Source = source;
-            Comment = comment;
+            ForceCloseReason = closereason;
+            FlatFailed = false;
         }
 
         public override string ToString()
@@ -45,11 +63,32 @@ namespace TradingLib.Core
 
     public partial class RiskCentre
     {
+
+        /// <summary>
+        /// 强迫成功事件
+        /// </summary>
+        public event PositionDelegate GotFlatSuccessEvent;
+
+        /// <summary>
+        /// 强迫异常事件
+        /// </summary>
+        public event PositionDelegate GotFlatFailedEvent;
+
+
+
+
+
+
         //待平仓列表,主要包含系统尾盘集中强平,系统内部风控强平等形成的平仓指令
         ThreadSafeList<PositionFlatSet> posflatlist = new ThreadSafeList<PositionFlatSet>();
         
         #region【持仓强平的循环检查与维护】
 
+        /// <summary>
+        /// 检查某个持仓是否在强平队列
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <returns></returns>
         bool IsPosFlatPending(Position pos)
         {
 
@@ -78,14 +117,14 @@ namespace TradingLib.Core
         /// <param name="accid"></param>
         /// <param name="source"></param>
         /// <param name="comment"></param>
-        public  void FlatPosition(string accid, QSEnumOrderSource source, string comment = "系统强平")
+        public void FlatPosition(string accid, QSEnumOrderSource source, string closereason = "系统强平")
         {
-            debug("平掉账户:" + accid + "所有仓位", QSEnumDebugLevel.INFO);
+            //debug("平掉账户:" + accid + "所有仓位", QSEnumDebugLevel.INFO);
             foreach (Position pos in _clearcentre.getPositions(accid))//遍历该账户的所有仓位 若不是空仓则市价平仓
             {
                 if (!pos.isFlat)
                 {
-                    FlatPosition(pos, source, comment);
+                    FlatPosition(pos, source, closereason);
                 }
                 Thread.Sleep(100);
             }
@@ -99,27 +138,28 @@ namespace TradingLib.Core
         /// <param name="ourdersource">委托源</param>
         /// <param name="comment">平仓备注</param>
         /// <returns></returns>
-        public void FlatPosition(Position pos, QSEnumOrderSource ordersource, string comment="系统强平")
+        public void FlatPosition(Position pos, QSEnumOrderSource ordersource, string closereason = "系统强平")
         {
-            FlatPosition(pos, ordersource, comment, true);
+            FlatPosition(pos, ordersource, closereason, true);
         }
 
 
-        long FlatPosition(Position pos, QSEnumOrderSource ordersource, string comment,bool first)
+        long FlatPosition(Position pos, QSEnumOrderSource ordersource, string closereason, bool first)
         {
-            debug("RiskCentre Flatpostion:" + pos.ToString(), QSEnumDebugLevel.INFO);
             //如果该持仓已经在平仓队列中并且是标注为第一次发送强平指令则直接返回(表面已经触发过强平指令)
             if (first &&IsPosFlatPending(pos))
                 return 0;
 
+            debug("RiskCentre Flatpostion:" + pos.ToString(), QSEnumDebugLevel.INFO);
             //生成市价委托
             Order o = new MarketOrderFlat(pos);
             o.Account = pos.Account;
             o.OffsetFlag = QSEnumOffsetFlag.CLOSE;
             o.OrderSource = ordersource;
-            o.comment = comment.Replace(',','_');
             o.ForceClose = true;
-            //o.price = 2500;//模拟不成交延迟撤单的情况
+            o.ForceCloseReason = closereason;
+            
+            o.price = 2500;//模拟不成交延迟撤单的情况
 
             //绑定委托编号 用于提前获得系统唯一OrderID 方便撤单
             if (AssignOrderIDEvent != null)
@@ -127,39 +167,29 @@ namespace TradingLib.Core
 
             BasicTracker.SymbolTracker.TrckerOrderSymbol(o);
             //对外发送委托
-            //debug("对外发送委托:" + o.ToString(),QSEnumDebugLevel.INFO);
             SendOrder(o);
 
             //第一次强平 将持仓信组成flatset放入系统队列
             if (first)
             {
                 //将持仓加入监控列表
-                PositionFlatSet ps = new PositionFlatSet(pos, ordersource, comment);
+                PositionFlatSet ps = new PositionFlatSet(pos, ordersource, closereason);
                 ps.OrderID = o.id;
                 posflatlist.Add(ps);
             }
             return o.id;
         }
 
-
-        /// <summary>
-        /// 持仓主键
-        /// </summary>
-        /// <param name="pos"></param>
-        /// <returns></returns>
-        //string PosKey(Position pos)
-        //{
-        //    return pos.Account + "-" + pos.Symbol;
-        //}
-
-
         int SENDORDERDELAY = 3;
         int SENDORDERRETRY = 3;
         bool waitforcancel = true;
+
         /// <summary>
-        /// 监控持仓列表,用于观察委托是否正常平仓
+        /// 监控强平持仓列表,用于观察委托是否正常平仓
+        /// 强平是一个触发过程
+        /// 系统内部的帐户风控规则检查或者定时检查 扫描到需要强平的仓位或者帐户就会进行强平
+        /// 执行强平后 对应的持仓将进入队列进行监控处理 直到强平成功或者异常
         /// </summary>
-        
         void ProcessPositionFlat()
         {
             //debug("检查待平仓列表...", QSEnumDebugLevel.INFO);
@@ -189,19 +219,29 @@ namespace TradingLib.Core
                             debug(ps.Position.GetPositionKey() + " 原有委托已撤掉,重新平仓", QSEnumDebugLevel.INFO);
                             ps.FireCount++;
                             ps.SentTime = DateTime.Now;
-                            ps.OrderID = FlatPosition(ps.Position, ps.Source, ps.Comment, false);
+                            ps.OrderID = FlatPosition(ps.Position, ps.Source, ps.ForceCloseReason, false);
                             continue;
                         }
                     }
-                    if (ps.FireCount == SENDORDERRETRY)//报警的时间设定
+                    if (ps.FireCount == SENDORDERRETRY && (!ps.FlatFailed))//报警的时间设定
                     {
-                        debug(ps.Position.GetPositionKey() + " 平仓次数超过" + SENDORDERRETRY, QSEnumDebugLevel.INFO);
+                        debug(ps.Position.GetPositionKey() + " 平仓次数超过" + SENDORDERRETRY +" 出发警告通知", QSEnumDebugLevel.INFO);
                         if (ps.OrderID != 0)
                         {
                             CancelOrder(ps.OrderID);
-                            
+                        }
+                        ps.FlatFailed = true;
+                        //强迫异常后冻结交易帐户 等待处理 这里需要对外触发事件 相关扩展模块监听后进行通知
+                        IAccount account = _clearcentre[ps.Position.Account];
+                        if (account != null)
+                        {
+                            account.InactiveAccount();
                         }
                         //对外进行未正常平仓报警
+                        if (GotFlatFailedEvent != null)
+                        {
+                            GotFlatFailedEvent(ps.Position);
+                        }
                         
                     }
                 }
@@ -211,10 +251,21 @@ namespace TradingLib.Core
             foreach (PositionFlatSet ps in deletelist)
             {
                 posflatlist.Remove(ps);
+                if (GotFlatSuccessEvent != null)
+                {
+                    GotFlatSuccessEvent(ps.Position);
+                }
             }
         }
 
-
+        /// <summary>
+        /// 保证金检查,当保证金超过可用资金时执行强制减仓
+        /// 这里需要结合期货业务规则进行设计
+        /// </summary>
+        void ProcessPositionOff()
+        { 
+        
+        }
         #endregion
     }
 }
