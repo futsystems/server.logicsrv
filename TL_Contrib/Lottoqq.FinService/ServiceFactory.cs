@@ -26,20 +26,6 @@ namespace TradingLib.Contrib.FinService
             {
                 //生成FinService对象
                 IFinService finservice = (IFinService)Activator.CreateInstance(type);
-                //获得参数
-                Dictionary<string,Argument> agentarg = FinTracker.ArgumentTracker.GetAgentArgument(stub.AgentID,stub.serviceplan_fk);
-                Dictionary<string,Argument> accountarg = FinTracker.ArgumentTracker.GetAccountArgument(stub);
-                //初始化参数
-                finservice.InitArgument(accountarg, agentarg);
-
-                foreach (Argument arg in agentarg.Values)
-                {
-                    LibUtil.Debug("agent arg:" + arg.ToString());
-                }
-                foreach (Argument arg in accountarg.Values)
-                {
-                    LibUtil.Debug("account arg:" + arg.ToString());
-                }
                 return finservice;
             }
             return null;

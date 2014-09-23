@@ -113,12 +113,16 @@ namespace TradingLib.ServiceManager
             debug("[INIT CORE] ClearCentre", QSEnumDebugLevel.INFO);
             InitClearCentre();//初始化结算中心 初始化账户信息
 
-            //初始化帐户数据 加载交易帐号，需要在加载扩展模块之前准备好交易账号
-            _clearCentre.InitAccount();
+            
            
 
             debug("[INIT CORE] RiskCentre", QSEnumDebugLevel.INFO);
             InitRiskCentre();//初始化风控中心 初始化账户风控规则
+
+
+            //初始化帐户数据 加载交易帐号，需要在加载扩展模块之前准备好交易账号 同时清算中心和风控中心有wrapper绑定到Account因此需要在清算中心和RiskCentre中心初始化之后
+            _clearCentre.InitAccount();
+
 
             debug("[INIT CORE] DataFeedRouter", QSEnumDebugLevel.INFO);
             InitDataFeedRouter();//初始化数据路由

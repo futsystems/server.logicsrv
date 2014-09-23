@@ -54,6 +54,17 @@ namespace TradingLib.Common
         }
 
         /// <summary>
+        /// 返回净持仓
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public Position[] getNetPositions(string account)
+        {
+            return acctk.GetNetPositions(account);
+        }
+
+
+        /// <summary>
         /// 获得某个交易账户当天所有的委托
         /// </summary>
         /// <param name="accountID"></param>
@@ -118,6 +129,17 @@ namespace TradingLib.Common
             return acctk.GetPosition(account, symbol, side);
         }
 
+        /// <summary>
+        /// 净持仓
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        public Position getPosition(string account, string symbol)
+        {
+            return acctk.GetPosition(account, symbol);
+
+        }
         /// <summary>
         /// 获得某个交易帐户 某个合约 某个持仓方向的待成交数量
         /// </summary>

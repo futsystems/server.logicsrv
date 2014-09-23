@@ -16,7 +16,9 @@ namespace TradingLib.Common
         /// <param name="comment"></param>
         public void FlatPosition(QSEnumOrderSource source, string comment)
         {
-            RiskCentre.FlatPosition(source, comment);
+            //LibUtil.Debug("帐户调用清算中心执行强平");
+            //RiskCentre.FlatPosition(source, comment);
+            TLCtxHelper.CmdRiskCentre.FlatPosition(this.ID, source, comment);
         }
 
         /// <summary>
@@ -35,7 +37,8 @@ namespace TradingLib.Common
         /// <param name="comment"></param>
         public void FlatPosition(Position pos,QSEnumOrderSource source, string comment)
         {
-            RiskCentre.FlatPosition(pos, source, comment);
+            //RiskCentre.FlatPosition(pos, source, comment);
+            TLCtxHelper.CmdRiskCentre.FlatPosition(pos, source, comment);
         }
 
         #endregion

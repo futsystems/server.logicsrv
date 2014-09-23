@@ -74,6 +74,8 @@ namespace TradingLib.API
         /// <returns></returns>
         Position getPosition(string account, string symbol,bool side);
 
+
+        Position getPosition(string account, string symbol);
         /// <summary>
         /// 获得某个委托下对应账户与合约持仓的反向 未平仓合约 用于CTP检查持仓状态
         /// 主要用于检查可平持仓

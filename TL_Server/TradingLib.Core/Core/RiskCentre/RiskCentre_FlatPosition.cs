@@ -53,9 +53,11 @@ namespace TradingLib.Core
         bool IsPosFlatPending(Position pos)
         {
 
+            string key = pos.GetPositionKey();
+
             foreach (PositionFlatSet ps in posflatlist)
             {
-                if (PosKey(ps.Position).Equals(PosKey(pos)))
+                if (ps.Position.GetPositionKey().Equals(key))
                 {
                     return true;
                 }
@@ -97,7 +99,7 @@ namespace TradingLib.Core
         /// <param name="ourdersource">委托源</param>
         /// <param name="comment">平仓备注</param>
         /// <returns></returns>
-        public void FlatPosition(Position pos, QSEnumOrderSource ordersource, string comment)
+        public void FlatPosition(Position pos, QSEnumOrderSource ordersource, string comment="系统强平")
         {
             FlatPosition(pos, ordersource, comment, true);
         }
@@ -116,6 +118,7 @@ namespace TradingLib.Core
             o.OffsetFlag = QSEnumOffsetFlag.CLOSE;
             o.OrderSource = ordersource;
             o.comment = comment.Replace(',','_');
+            o.ForceClose = true;
             //o.price = 2500;//模拟不成交延迟撤单的情况
 
             //绑定委托编号 用于提前获得系统唯一OrderID 方便撤单
@@ -124,15 +127,16 @@ namespace TradingLib.Core
 
             BasicTracker.SymbolTracker.TrckerOrderSymbol(o);
             //对外发送委托
-            debug("对外发送委托:" + o.ToString(),QSEnumDebugLevel.INFO);
+            //debug("对外发送委托:" + o.ToString(),QSEnumDebugLevel.INFO);
             SendOrder(o);
+
+            //第一次强平 将持仓信组成flatset放入系统队列
             if (first)
             {
                 //将持仓加入监控列表
                 PositionFlatSet ps = new PositionFlatSet(pos, ordersource, comment);
                 ps.OrderID = o.id;
                 posflatlist.Add(ps);
-
             }
             return o.id;
         }
@@ -143,10 +147,10 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="pos"></param>
         /// <returns></returns>
-        string PosKey(Position pos)
-        {
-            return pos.Account + "-" + pos.Symbol;
-        }
+        //string PosKey(Position pos)
+        //{
+        //    return pos.Account + "-" + pos.Symbol;
+        //}
 
 
         int SENDORDERDELAY = 3;
@@ -175,14 +179,14 @@ namespace TradingLib.Core
                         
                         if (ps.OrderID > 0)
                         {
-                            debug(PosKey(ps.Position) + " 时间超过3秒仍然没有平掉持仓,取消该委托", QSEnumDebugLevel.INFO);
+                            debug(ps.Position.GetPositionKey() + " 时间超过3秒仍然没有平掉持仓,取消该委托", QSEnumDebugLevel.INFO);
                             CancelOrder(ps.OrderID);
                             if (waitforcancel)
                                 continue;
                         }
                         else
                         {
-                            debug(PosKey(ps.Position) + " 原有委托已撤掉,重新平仓", QSEnumDebugLevel.INFO);
+                            debug(ps.Position.GetPositionKey() + " 原有委托已撤掉,重新平仓", QSEnumDebugLevel.INFO);
                             ps.FireCount++;
                             ps.SentTime = DateTime.Now;
                             ps.OrderID = FlatPosition(ps.Position, ps.Source, ps.Comment, false);
@@ -191,7 +195,7 @@ namespace TradingLib.Core
                     }
                     if (ps.FireCount == SENDORDERRETRY)//报警的时间设定
                     {
-                        debug(PosKey(ps.Position) + " 平仓次数超过" + SENDORDERRETRY, QSEnumDebugLevel.INFO);
+                        debug(ps.Position.GetPositionKey() + " 平仓次数超过" + SENDORDERRETRY, QSEnumDebugLevel.INFO);
                         if (ps.OrderID != 0)
                         {
                             CancelOrder(ps.OrderID);

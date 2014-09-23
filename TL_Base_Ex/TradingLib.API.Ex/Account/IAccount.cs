@@ -41,7 +41,7 @@ namespace TradingLib.API
         /// 帐户风控中心
         /// 用于直接调用风控中心的相关操作与函数
         /// </summary>
-        IAccountRiskCentre RiskCentre { get; set; }
+        //IAccountRiskCentre RiskCentre { get; set; }
 
 
 

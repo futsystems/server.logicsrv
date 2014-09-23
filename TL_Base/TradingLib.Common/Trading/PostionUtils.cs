@@ -39,6 +39,10 @@ namespace TradingLib.Common
             return sb.ToString();
         }
 
+        public static string GetPositionKey(this Position pos)
+        {
+            return pos.Account + "-" + pos.Symbol + "-" + pos.DirectionType.ToString();
+        }
         /// <summary>
         /// 计算持仓保证金
         /// </summary>

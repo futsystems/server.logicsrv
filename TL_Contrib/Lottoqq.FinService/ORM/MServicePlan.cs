@@ -11,31 +11,31 @@ using TradingLib.Mixins.DataBase;
 
 namespace TradingLib.Contrib.FinService.ORM
 {
-    public class MFinService:MBase
+    public class MServicePlan:MBase
     {
         /// <summary>
-        /// 获得所有的配资服务
+        /// 获得所有服务计划
         /// </summary>
         /// <returns></returns>
-        public static FinServiceStub[] SelectFinService()
+        public static DBServicePlan[] SelectServicePlan()
         {
             using (DBMySql db = new DBMySql())
             {
-                const string query = "SELECT *  FROM contrib_finservice_service";
-                return db.Connection.Query<FinServiceStub>(query, null).ToArray();
+                const string query = "SELECT *  FROM contrib_finservice_serviceplan";
+                return db.Connection.Query<DBServicePlan>(query, null).ToArray();
             }
         }
 
 
-        //public static bool InsertServicePlan(DBServicePlan sp)
-        //{
-        //    using (DBMySql db = new DBMySql())
-        //    {
-        //        string query = string.Format("INSERT INTO contrib_finservice_serviceplan (`name`,`title`,`classname`) VALUES ( '{0}','{1}','{2}')",sp.Name,sp.Title,sp.ClassName);
-        //        int row = db.Connection.Execute(query);
-        //        SetIdentity(db.Connection, id => sp.ID = id, "id", "contrib_finservice_serviceplan");
-        //        return row > 0;
-        //    }
-        //}
+        public static bool InsertServicePlan(DBServicePlan sp)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("INSERT INTO contrib_finservice_serviceplan (`name`,`title`,`classname`) VALUES ( '{0}','{1}','{2}')",sp.Name,sp.Title,sp.ClassName);
+                int row = db.Connection.Execute(query);
+                SetIdentity(db.Connection, id => sp.ID = id, "id", "contrib_finservice_serviceplan");
+                return row > 0;
+            }
+        }
     }
 }

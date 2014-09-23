@@ -236,6 +236,17 @@ namespace TradingLib.Common
         }
 
         /// <summary>
+        /// 返回净持仓
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public Position[] GetNetPositions(string account)
+        {
+            List<Position> l = new List<Position>();
+            if (!HaveAccount(account)) return l.ToArray();
+            return PosBook[account].ToNetArray();
+        }
+        /// <summary>
         /// 获得某个帐户所有委托
         /// </summary>
         /// <param name="account"></param>
@@ -287,6 +298,16 @@ namespace TradingLib.Common
             return PosBook[account][symbol, account, side];
         }
 
+        /// <summary>
+        /// 如果不分方向 则获得的就是净持仓
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        internal Position GetPosition(string account, string symbol)
+        {
+            return PosBook[account][symbol, account];
+        }
         /// <summary>
         /// 重置
         /// </summary>

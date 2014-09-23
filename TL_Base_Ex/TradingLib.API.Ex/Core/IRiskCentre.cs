@@ -29,5 +29,21 @@ namespace TradingLib.API
         /// 
         /// </summary>
         bool MarketOpenTimeCheck { get; }
+
+        /// <summary>
+        /// 强平某个交易帐户的所有持仓
+        /// </summary>
+        /// <param name="accid"></param>
+        /// <param name="source"></param>
+        /// <param name="comment"></param>
+        void FlatPosition(string account, QSEnumOrderSource source, string comment = "系统强平");
+
+        /// <summary>
+        /// 强平某个持仓
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <param name="ordersource"></param>
+        /// <param name="comment"></param>
+        void FlatPosition(Position pos, QSEnumOrderSource ordersource, string comment = "系统强平");
     }
 }

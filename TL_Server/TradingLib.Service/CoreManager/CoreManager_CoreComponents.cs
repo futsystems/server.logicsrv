@@ -129,6 +129,7 @@ namespace TradingLib.ServiceManager
             //交易服务行情驱动风控中心
             _messageExchagne.GotTickEvent += new TickDelegate(_riskCentre.GotTick);
             _messageExchagne.GotCancelEvent += new LongDelegate(_riskCentre.GotCancel);
+            _messageExchagne.GotErrorOrderEvent += new ErrorOrderDel(_riskCentre.GotErrorOrder);
             
             //风控中心从tradingsrv获得委托编号 提交委托 取消委托的操作
             _riskCentre.AssignOrderIDEvent += new AssignOrderIDDel(_messageExchagne.AssignOrderID);
@@ -136,7 +137,7 @@ namespace TradingLib.ServiceManager
             _riskCentre.newOrderCancelRequest += new LongDelegate(_messageExchagne.CancelOrder);
 
             //帐户加载事件 用于清算中心Addapter附加到帐户对象
-            _clearCentre.AccountCachedEvent += new IAccountDel(_riskCentre.CacheAccount);
+            //_clearCentre.AccountCachedEvent += new IAccountDel(_riskCentre.CacheAccount);
 
             //绑定风控中心
             _messageExchagne.RiskCentre = _riskCentre;
@@ -174,7 +175,7 @@ namespace TradingLib.ServiceManager
             _riskCentre.newOrderCancelRequest -= new LongDelegate(_messageExchagne.CancelOrder);
 
             //_clearCentre.FlatPositionEvent -= new FlatPostionDel(_riskCentre.FlatPosition);
-            _clearCentre.AccountCachedEvent -= new IAccountDel(_riskCentre.CacheAccount);
+            //_clearCentre.AccountCachedEvent -= new IAccountDel(_riskCentre.CacheAccount);
             //绑定风控中心
             _messageExchagne.RiskCentre = null;
             _riskCentre.Dispose();

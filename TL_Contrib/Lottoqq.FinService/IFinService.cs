@@ -8,6 +8,12 @@ namespace TradingLib.Contrib.FinService
 {
 
     /// <summary>
+    /// 配资服务接口
+    /// 定义具体的业务逻辑
+    /// 然后在FinServiceStub中进行调用
+    /// 不同的FinServiceStub其实是加载了不同的IFinService
+    /// FinServiceStub同时实现IAccountService接口
+    /// 
     /// 收费模式
     /// 交易回合收费
     /// 按成交收费
@@ -27,33 +33,36 @@ namespace TradingLib.Contrib.FinService
         EnumFeeCollectType CollectType { get; }
 
 
+        #region 响应交易事件
+        /// <summary>
+        /// 响应手续费调整事件
+        /// </summary>
+        /// <param name="t"></param>
+        /// <param name="pr"></param>
+        /// <returns></returns>
         decimal OnAdjustCommission(Trade t, IPositionRound pr);
 
+        /// <summary>
+        /// 响应成交
+        /// </summary>
+        /// <param name="t"></param>
         void OnTrade(Trade t);
 
+        /// <summary>
+        /// 响应成交回合
+        /// </summary>
+        /// <param name="round"></param>
         void OnRound(IPositionRound round);
 
+        /// <summary>
+        /// 响应结算事件
+        /// 结算事件应该分为 结算后事件和结算前事件
+        /// 具体这里需要结合业务逻辑进行分析
+        /// </summary>
         void OnSettle();
-        /// <summary>
-        /// FinService初始化
-        /// 每个服务需要初始化参数
-        /// 包括帐户参数和代理参数,从而实现分润
-        /// 比如
-        /// 帐户设置1万/15元
-        /// 代理设置1万/10元
-        /// 从而可以计算获得代理收费和帐户收费
-        /// </summary>
-        /// <param name="accountarg"></param>
-        /// <param name="agentarg"></param>
-        void InitArgument(Dictionary<string, Argument> accountarg, Dictionary<string, Argument> agentarg);
+        #endregion
 
 
-        /// <summary>
-        /// 按金额计算收费
-        /// </summary>
-        /// <param name="account"></param>
-        /// <param name="finammount"></param>
-        // void Cal(IAccount account, decimal finammount);
 
         #region 交易业务逻辑部分
 
@@ -91,7 +100,16 @@ namespace TradingLib.Contrib.FinService
         int CanOpenSize(Symbol symbol);
         #endregion
 
-        
+        #region 风控部分,每个配资服务都有强平规则，当触发到什么条件的时候进行强平
+
+        /// <summary>
+        /// 执行定时帐户检查 
+        /// 当帐户情况到到一定条件时
+        /// 执行强平
+        /// </summary>
+        void CheckAccount();
+
+        #endregion
     }
 
 

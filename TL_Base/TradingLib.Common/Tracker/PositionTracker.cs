@@ -19,12 +19,12 @@ namespace TradingLib.Common
         /// 持仓维护器 维护持仓类别
         /// </summary>
         public QSEnumPositionDirectionType DirectionType { get { return _directiontype; } }
-        protected QSEnumPositionDirectionType _directiontype = QSEnumPositionDirectionType.BothSide;
+        protected QSEnumPositionDirectionType _directiontype = QSEnumPositionDirectionType.Net;
         /// <summary>
         /// create a tracker
         /// </summary>
         //public PositionTracker(string account) : this(account,5) { }
-        public PositionTracker() : this(5,QSEnumPositionDirectionType.BothSide) { }
+        public PositionTracker() : this(5,QSEnumPositionDirectionType.Net) { }
 
         public PositionTracker(QSEnumPositionDirectionType type) : this(5, type) { }
         

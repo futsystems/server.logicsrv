@@ -222,6 +222,13 @@ namespace TradingLib.Contrib.FinService
         #endregion
 
 
+        #region 风控规则
+
+        public virtual void CheckAccount()
+        {
+            
+        }
+        #endregion
     }
 
    

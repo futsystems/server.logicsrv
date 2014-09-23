@@ -117,7 +117,7 @@ namespace FutsMoniter.Controls
             if (account != null)
             {
                 fmaccountconfig.Account = account;
-                fmaccountconfig.ShowDialog();
+                fmaccountconfig.Show();//.ShowDialog();
             }
             else
             {

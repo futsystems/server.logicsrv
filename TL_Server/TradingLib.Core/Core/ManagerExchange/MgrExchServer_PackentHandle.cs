@@ -119,21 +119,21 @@ namespace TradingLib.Core
             IAccount account = clearcentre[request.Account];
             if (account != null)
             {
-                //出金
-                if (request.Amount < 0)
-                {
-                    if (Math.Abs(request.Amount)>account.AvabileFunds)
-                    {
-                        RspMGROperationResponse response = ResponseTemplate<RspMGROperationResponse>.SrvSendRspResponse(request);
-                        response.RspInfo.FillError("CASHOUT_OVER_AVABILE");
-                        CachePacket(response);
-                        return;
-                    }
-                }//入金
-                else
-                { 
+                ////出金
+                //if (request.Amount < 0)
+                //{
+                //    if (Math.Abs(request.Amount)>account.AvabileFunds)
+                //    {
+                //        RspMGROperationResponse response = ResponseTemplate<RspMGROperationResponse>.SrvSendRspResponse(request);
+                //        response.RspInfo.FillError("CASHOUT_OVER_AVABILE");
+                //        CachePacket(response);
+                //        return;
+                //    }
+                //}//入金
+                //else
+                //{ 
                     
-                }
+                //}
                 //出入金检查
                 clearcentre.CashOperation(request.Account, request.Amount,request.TransRef, request.Comment);
 

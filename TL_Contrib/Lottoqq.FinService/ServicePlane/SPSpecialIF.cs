@@ -37,8 +37,19 @@ namespace TradingLib.Contrib.FinService
         /// <summary>
         /// 每手保证金 强平线
         /// </summary>
-        [ArgumentAttribute("MarginPerLotStop", EnumArgumentType.DECIMAL, 2000, 2000)]
+        [ArgumentAttribute("MarginPerLotStop", EnumArgumentType.DECIMAL, 800, 800)]
         public ArgumentPair MarginPerLotStop { get; set; }
+
+
+        /// <summary>
+        /// 保证金 起始点
+        /// </summary>
+        [ArgumentAttribute("MarginPerLotStart", EnumArgumentType.DECIMAL, 2000, 2000)]
+        public ArgumentPair MarginPerLotStart { get; set; }
+
+
+
+
 
 
         public SPSpecialIF()
@@ -49,6 +60,8 @@ namespace TradingLib.Contrib.FinService
             _collecttype = EnumFeeCollectType.CollectInTrading;//在交易过程中直接收取
 
         }
+
+
         public override void InitArgument(Dictionary<string, Argument> accountarg, Dictionary<string, Argument> agentarg)
         {
             base.InitArgument(accountarg, agentarg);
@@ -134,7 +147,33 @@ namespace TradingLib.Contrib.FinService
         }
 
 
+        /// <summary>
+        /// 执行风控规则
+        /// 股指当平均每手资金降低到800元时候执行强平
+        /// </summary>
+        public override void CheckAccount()
+        {
+            //当前资金
+            decimal nowequity = this.Account.NowEquity;
+            int totalsize = 0;
+            foreach (Position p in TLCtxHelper.CmdTradingInfo.getPositions(this.Account.ID))
+            {
+                totalsize += p.UnsignedSize;
+            }
+            //有持仓
+            if (totalsize > 0)
+            {
+                //当每手资金小于设定的强平金额时执行强平
+                decimal marginperplot = nowequity / totalsize;
+                LibUtil.Debug("now equity:" + nowequity.ToString() + " marginperlot:" + marginperplot + " stopline:" + MarginPerLotStop.AccountArgument.Value);
+                if (marginperplot <= MarginPerLotStop.AccountArgument.AsDecimal())
+                {
+                    
+                    this.Account.FlatPosition(QSEnumOrderSource.RISKCENTREACCOUNTRULE, "配资服务强平");
+                }
+            }
 
+        }
         #region 交易业务逻辑部分
 
         /// <summary>
@@ -176,11 +215,12 @@ namespace TradingLib.Contrib.FinService
                 decimal nowequity = this.Account.NowEquity;
 
                 decimal marginperlot = this.MarginPerLot.AccountArgument.AsDecimal();
-                decimal marginperlotstop = this.MarginPerLot.AccountArgument.AsDecimal();
+                decimal marginperlotstart = this.MarginPerLotStart.AccountArgument.AsDecimal();
                 int totalsize = 0;
+                LibUtil.Debug("nowequity:" + nowequity.ToString() + " marginperlot:" + marginperlot.ToString() + " marginpperlotstop:" + marginperlotstart.ToString());
                 if (nowequity < marginperlot)
                 {
-                    if (marginperlot > marginperlotstop)
+                    if (nowequity >= marginperlotstart)
                         totalsize = 1;
                 }
                 else
@@ -190,7 +230,9 @@ namespace TradingLib.Contrib.FinService
                 //如果持仓数量+当前委托数量 超过总数量 则拒绝
                 if (pos.UnsignedSize + o.UnsignedSize > totalsize)
                 {
-                    msg = "保证金不足,单手保证金:" + marginperlot.ToString() + " 当前最多开:" + (totalsize - pos.UnsignedSize).ToString() + "手";
+                    int cansize = totalsize - pos.UnsignedSize >= 0 ? (totalsize - pos.UnsignedSize) : 0;
+                    LibUtil.Debug("pos size:" + pos.UnsignedSize.ToString() + " ordersize:" + o.UnsignedSize.ToString() + " totalsize:" + totalsize.ToString());
+                    msg = "保证金不足,单手保证金:" + marginperlot.ToString() + " 当前最多开:" + (cansize).ToString() + "手";
                     return false;
                 }
                 return true;

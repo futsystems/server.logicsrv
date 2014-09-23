@@ -115,10 +115,10 @@ namespace TradingLib.Core
             InitFlatTask();
         }
 
-        public void CacheAccount(IAccount account)
-        {
-            account.RiskCentre = new RiskCentreAdapterToAccount(account, this);
-        }
+        //public void CacheAccount(IAccount account)
+        //{
+        //    account.RiskCentre = new RiskCentreAdapterToAccount(account, this);
+        //}
 
         /// <summary>
         /// 查询当前是否是交易日
@@ -239,6 +239,25 @@ namespace TradingLib.Core
             _posoffsetracker.GotCancel(oid);
         }
 
+        /// <summary>
+        /// 响应交易服务返回过来的ErrorOrder
+        /// 比如风控中心强平 发送委托 但是委托被拒绝，则需要对该事件进行响应
+        /// 否则超时后 会出现强平系统无法正常撤单的问题。而无法正常撤单则没有撤单回报,导致强平系统一直试图撤单
+        /// </summary>
+        /// <param name="error"></param>
+        public void GotErrorOrder(ErrorOrder error)
+        {
+            debug("~~~~~~~~~~~~~~~~~~~~~ riskcentre got errororder orderid:" + error.Order.id.ToString(), QSEnumDebugLevel.INFO);
+            foreach (PositionFlatSet ps in posflatlist)
+            {
+                //如果委托被拒绝 并且委托ID是本地发送过去的ID 则将positionflatset的委托ID置0
+                if (ps.OrderID == error.Order.id && error.Order.Status == QSEnumOrderStatus.Reject)
+                    ps.OrderID = 0;
+            }
+
+            //止损 止盈
+            //_posoffsetracker.GotCancel(oid);
+        }
 
         #endregion
 

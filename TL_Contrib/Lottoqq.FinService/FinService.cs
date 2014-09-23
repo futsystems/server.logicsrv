@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using TradingLib.API;
@@ -8,7 +9,7 @@ using TradingLib.Common;
 
 namespace TradingLib.Contrib.FinService
 {
-    public class FinServiceTracker
+    public class FinServiceTracker : IEnumerable,IEnumerable<FinServiceStub>
     {
         public event FeeChargeItemDel GotFeeChargeItemEvent;
         Dictionary<string, FinServiceStub> finservicemap = new Dictionary<string, FinServiceStub>();
@@ -17,14 +18,20 @@ namespace TradingLib.Contrib.FinService
         {
             foreach (FinServiceStub stub in ORM.MFinService.SelectFinService())
             {
-                //初始化FinService服务
-                stub.InitFinService();
-                if (!stub.IsValid)
-                {
-                    LibUtil.Debug("FinService:" + stub.ToString() + " is not valid, drop it");
-                }
-                finservicemap.Add(stub.Acct, stub);
+                LoadStub(stub);
             }
+        }
+
+        void LoadStub(FinServiceStub stub)
+        {
+            //初始化FinService服务
+            stub.InitFinService();
+            if (!stub.IsValid)
+            {
+                LibUtil.Debug("FinService:" + stub.ToString() + " is not valid, drop it");
+                return;
+            }
+            finservicemap.Add(stub.Acct, stub);
         }
 
         /// <summary>
@@ -45,9 +52,58 @@ namespace TradingLib.Contrib.FinService
             }
         }
 
+        /// <summary>
+        /// 判断某个帐户是否有配资服务
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public bool HaveFinService(string account)
+        {
+            if (finservicemap.Keys.Contains(account))
+                return true;
+            return false;
+        }
+
+
+        public void AddFinService(string account,int sp_fk)
+        {
+
+            FinServiceStub stub = new FinServiceStub();
+            //配资服务帐号
+            stub.Acct = account;
+            //是否激活
+            stub.Active = true;
+            //修改时间
+            stub.ModifiedTime = Util.ToTLDateTime();
+            //服务计划fk
+            stub.serviceplan_fk = sp_fk;
+
+            //插入到数据库
+            ORM.MFinService.InsertFinService(stub);
+
+            //加载FinServiceStub
+            LoadStub(stub);
+
+            
+        }
         public FinServiceStub[] ToArray()
         {
             return finservicemap.Values.ToArray();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+        
+        IEnumerator<FinServiceStub> IEnumerable<FinServiceStub>.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+        public IEnumerator<FinServiceStub> GetEnumerator()
+        {
+            foreach (FinServiceStub stub in finservicemap.Values.ToArray())
+                yield return stub;
         }
 
         public void GotFeeChargeItem(FeeChargeItem item)
@@ -112,25 +168,40 @@ namespace TradingLib.Contrib.FinService
         public void InitFinService()
         {
             LibUtil.Debug("初始化配资服务项,account:" + this.Acct);
-            //1.绑定交易帐号
-            this.Account = TLCtxHelper.CmdAccount[this.Acct];
+            //1.预检查
+            this.Account = TLCtxHelper.CmdAccount[this.Acct];//如果没有对应的交易帐号 则直接返回
+            if (this.Account == null) return;
+            Type type = FinTracker.ServicePlaneTracker.GetFinServiceType(this.serviceplan_fk);
+            if (type == null) return;//如果没有获得对应的类型 则直接返回
 
-            bool ret = TLCtxHelper.CmdAccount.HaveAccount(this.Acct);
-
-            //1.调用服务生成工厂 生成对应的 IFinService
-            _finservice = ServiceFactory.GenFinService(this);
+            //2.生成对应的IFinService
+            _finservice  = (IFinService)Activator.CreateInstance(type);
             
+            //3.绑定收费事件,绑定交易帐号,同时将服务绑定到对应的交易帐号对象上
             ServicePlanBase baseobj = _finservice as ServicePlanBase;
             if (baseobj != null)
             {
-                baseobj.GotFeeChargeEvent += new FeeChargeDel(ChargeFee);
-                baseobj.BindAccount(this.Account);
+                //获得对应的参数参数
+                Dictionary<string, Argument> agentarg = FinTracker.ArgumentTracker.GetAgentArgument(this.AgentID, this.serviceplan_fk);
+                Dictionary<string, Argument> accountarg = FinTracker.ArgumentTracker.GetAccountArgument(this);
+                //初始化参数
+                baseobj.InitArgument(accountarg, agentarg);
+
+                /*
+                foreach (Argument arg in agentarg.Values)
+                {
+                    LibUtil.Debug("agent arg:" + arg.ToString());
+                }
+                foreach (Argument arg in accountarg.Values)
+                {
+                    LibUtil.Debug("account arg:" + arg.ToString());
+                }
+                 * **/
+
+                baseobj.GotFeeChargeEvent += new FeeChargeDel(ChargeFee);//绑定计费事件
+                baseobj.BindAccount(this.Account);//绑定交易帐号
                 this.Account.BindService(this);//将服务绑定到帐户
             }
-
-            //this.FinService = _finservice;
-
-            
         }
 
         /// <summary>
@@ -215,6 +286,15 @@ namespace TradingLib.Contrib.FinService
             FinTracker.FinServiceTracker.GotFeeChargeItem(item);
         }
 
+
+
+        /// <summary>
+        /// 执行帐户分控检查
+        /// </summary>
+        public  void CheckAccount()
+        {
+            _finservice.CheckAccount();
+        }
 
         #region AccountService接口
         /// <summary>

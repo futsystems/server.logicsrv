@@ -26,11 +26,14 @@ namespace TradingLib.Common
         /// </summary>
         ShortPositionTracker _stk;
 
-        
+
+        PositionTracker _nettk;
+
         public LSPositionTracker()
         {
             _ltk = new LongPositionTracker();
             _stk = new ShortPositionTracker();
+            _nettk = new PositionTracker();
         }
 
         /// <summary>
@@ -41,6 +44,7 @@ namespace TradingLib.Common
         {
             _ltk.GotTick(k);
             _stk.GotTick(k);
+            _nettk.GotTick(k);
         }
 
         /// <summary>
@@ -60,6 +64,7 @@ namespace TradingLib.Common
             {
                 _stk.GotFill(f);
             }
+            _nettk.GotFill(f);
         }
 
         /// <summary>
@@ -82,6 +87,7 @@ namespace TradingLib.Common
             {
                 _stk.GotPosition(p);
             }
+            _nettk.GotPosition(p);
         }
 
         /// <summary>
@@ -91,6 +97,7 @@ namespace TradingLib.Common
         {
             _ltk.Clear();
             _stk.Clear();
+            _nettk.Clear();
         }
 
         /// <summary>
@@ -116,6 +123,14 @@ namespace TradingLib.Common
             }
         }
 
+        public Position this[string symbol, string account]
+        {
+            get
+            {
+                return _nettk[symbol, account];
+            }
+        }
+
         string _defaultacct = string.Empty;
         /// <summary>
         /// Default account used when querying positions
@@ -133,6 +148,7 @@ namespace TradingLib.Common
                 _defaultacct = value;
                 _ltk.DefaultAccount = _defaultacct;
                 _stk.DefaultAccount = _defaultacct;
+                _nettk.DefaultAccount = _defaultacct;
             } 
         }
 
@@ -164,7 +180,14 @@ namespace TradingLib.Common
             return _ltk.Concat(_stk).ToArray();
         }
 
-
+        /// <summary>
+        /// 返回净持仓
+        /// </summary>
+        /// <returns></returns>
+        public Position[] ToNetArray()
+        {
+            return _nettk.ToArray();
+        }
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();

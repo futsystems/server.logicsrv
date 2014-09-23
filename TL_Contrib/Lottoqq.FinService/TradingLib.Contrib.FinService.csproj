@@ -64,8 +64,8 @@
     <Compile Include="IFinService.cs" />
     <Compile Include="ORM\MArgumentBase.cs" />
     <Compile Include="ORM\MFeeChargeItem.cs" />
-    <Compile Include="ORM\MServicePlan.cs" />
     <Compile Include="ORM\MFinService.cs" />
+    <Compile Include="ORM\MServicePlan.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FinService.cs" />
     <Compile Include="ServiceFactory.cs" />
@@ -74,6 +74,7 @@
     <Compile Include="ServicePlane\SPSpecialIF.cs" />
     <Compile Include="Tracker.cs" />
     <Compile Include="FinServiceCentre_OnXXXX.cs" />
+    <Compile Include="FinServiceCentre_CTE.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

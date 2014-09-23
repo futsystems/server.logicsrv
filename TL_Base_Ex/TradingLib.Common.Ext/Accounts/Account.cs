@@ -16,7 +16,7 @@ namespace TradingLib.Common
 
 
         public IAccountClearCentre ClearCentre { get;set;}
-        public IAccountRiskCentre RiskCentre {get;set;}
+        //public IAccountRiskCentre RiskCentre {get;set;}
 
         //#region 构造函数
         //public AccountBase() 

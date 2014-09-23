@@ -95,26 +95,35 @@ namespace TradingLib.Core
         {
             debug("QryPosition :" + request.ToString(), QSEnumDebugLevel.INFO);
             Position[] positions = new Position[] { };
+            Position[] netpos = new Position[] { };
+
             if (string.IsNullOrEmpty(request.Symbol))
             {
                 string account = request.Account;
                 positions = _clearcentre.getPositions(account);
+                netpos = _clearcentre.getNetPositions(account);
             }
             if (!string.IsNullOrEmpty(request.Symbol))
             {
                 positions = positions.Where(pos => pos.Symbol.Equals(request.Symbol)).ToArray();
             }
 
-            debug("total num:" + positions.Length.ToString(), QSEnumDebugLevel.INFO);
-            int totalnum = positions.Length;
+
+            List<Position> poslist = new List<Position>();
+            poslist.AddRange(positions);
+            poslist.AddRange(netpos);
+
+            debug("total num:" + poslist.Count.ToString(), QSEnumDebugLevel.INFO);
+            int totalnum = poslist.Count;
+            
             if (totalnum > 0)
             {
                 for (int i = 0; i < totalnum; i++)
                 {
                     RspQryPositionResponse response = ResponseTemplate<RspQryPositionResponse>.SrvSendRspResponse(request);
-                    response.PositionToSend = positions[i].GenPositionEx();
-                    Trade[] trades = positions[i].Trades;
-                    debug("Trades num:" + trades.Length.ToString());
+                    response.PositionToSend = poslist[i].GenPositionEx();
+                    //Trade[] trades = poslist[i].Trades;
+                    //debug("Trades num:" + trades.Length.ToString());
                     CacheRspResponse(response, i == totalnum - 1);
                 }
             }
