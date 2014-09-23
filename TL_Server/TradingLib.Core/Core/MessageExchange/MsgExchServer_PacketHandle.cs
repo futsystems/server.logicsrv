@@ -110,8 +110,9 @@ namespace TradingLib.Core
 
 
             List<Position> poslist = new List<Position>();
-            poslist.AddRange(positions);
             poslist.AddRange(netpos);
+            poslist.AddRange(positions);
+            
 
             debug("total num:" + poslist.Count.ToString(), QSEnumDebugLevel.INFO);
             int totalnum = poslist.Count;
