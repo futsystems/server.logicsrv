@@ -9,9 +9,24 @@ namespace TradingLib.Mixins
 {
     public class JsonRequest
     {
+        /// <summary>
+        /// 访问模块
+        /// </summary>
         public string Module;
+
+        /// <summary>
+        /// 访问方法
+        /// </summary>
         public string Method;
+
+        /// <summary>
+        /// 访问对应参数
+        /// </summary>
         public string Args;
+
+        /// <summary>
+        /// 访问标识
+        /// </summary>
         public string Token;
 
         public JsonRequest(string method, string module = "main", string args="",string token = "")
