@@ -83,6 +83,7 @@ namespace TradingLib.Core
                     f.Commission = onAdjuestCommission(f,pr);   
                 }
 
+                Position pos = getPosition(f.Account, f.symbol, f.PositionSide);
                 //如果交易中心处于开启状态 则对外触发包含交易手续费的fill回报 通过tradingserver向管理端与交易客户端发送
                 if (_status == QSEnumClearCentreStatus.CCOPEN)
                 {
@@ -98,7 +99,7 @@ namespace TradingLib.Core
                         _asynLoger.newPositonRound(pr);
                         if (PositionRoundClosedEvent != null)
                         {
-                            PositionRoundClosedEvent(pr);
+                            PositionRoundClosedEvent(pr,pos);
                         }
                     }
                 }

@@ -52,7 +52,7 @@ namespace Lottoqq.Race
             RaceConstant.OptSimEquity = _cfgdb["OPTFund"].AsDecimal();
             RaceConstant.MJSimEquity = _cfgdb["MJFund"].AsDecimal();
 
-            TLCtxHelper.EventIndicator.GotPositionClosedEvent += new IPositionRoundDel(EventIndicator_GotPositionClosedEvent);
+            TLCtxHelper.EventIndicator.GotPositionClosedEvent += new PositionRoundClosedDel(EventIndicator_GotPositionClosedEvent);
             TLCtxHelper.EventAccount.AccountAddEvent += new AccountIdDel(EventAccount_AccountAddEvent);
 
             //用于加载比赛服务
@@ -90,7 +90,7 @@ namespace Lottoqq.Race
         /// 有新的交易回合产生时,将属于比赛的回合数据记录到数据库
         /// </summary>
         /// <param name="pr"></param>
-        void EventIndicator_GotPositionClosedEvent(IPositionRound pr)
+        void EventIndicator_GotPositionClosedEvent(IPositionRound pr,Position pos)
         {
             debug("PR:" + pr.Account + "-" + pr.Symbol, QSEnumDebugLevel.INFO);
 
@@ -103,7 +103,7 @@ namespace Lottoqq.Race
         /// </summary>
         public void OnDestory()
         {
-            TLCtxHelper.EventIndicator.GotPositionClosedEvent -= new IPositionRoundDel(EventIndicator_GotPositionClosedEvent);
+            TLCtxHelper.EventIndicator.GotPositionClosedEvent -= new PositionRoundClosedDel(EventIndicator_GotPositionClosedEvent);
             base.Dispose();
         }
         /// <summary>

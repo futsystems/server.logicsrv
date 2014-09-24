@@ -138,7 +138,7 @@ namespace TradingLib.ServiceManager
 
             //帐户加载事件 用于清算中心Addapter附加到帐户对象
             //_clearCentre.AccountCachedEvent += new IAccountDel(_riskCentre.CacheAccount);
-
+            _clearCentre.PositionRoundClosedEvent += new PositionRoundClosedDel(_riskCentre.GotPostionRoundClosed);
             //绑定风控中心
             _messageExchagne.RiskCentre = _riskCentre;
         }

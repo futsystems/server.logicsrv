@@ -20,7 +20,7 @@ namespace TradingLib.API
     //public delegate void ClientParamDel(IClientInfo c);
 
     //当有持仓回合记录关闭时触发该事件
-    public delegate void IPositionRoundDel(IPositionRound pr);
+    public delegate void PositionRoundClosedDel(IPositionRound pr,Position pos);
 
     //通过帐户编号返回账户实例
     public delegate IAccount FindAccountDel(string account);

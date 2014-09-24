@@ -32,7 +32,7 @@ namespace TradingLib.Common
             /// <summary>
             /// 交易系统某个交易回合结束
             /// </summary>
-            public event IPositionRoundDel GotPositionClosedEvent;
+            public event PositionRoundClosedDel GotPositionClosedEvent;
 
             internal void FireTickEvent(Tick k)
             {
@@ -58,10 +58,10 @@ namespace TradingLib.Common
                     GotFillEvent(f);
             }
 
-            internal void FirePositionRoundClosed(IPositionRound pr)
+            internal void FirePositionRoundClosed(IPositionRound pr,Position pos)
             {
                 if (GotPositionClosedEvent != null)
-                    GotPositionClosedEvent(pr);
+                    GotPositionClosedEvent(pr,pos);
             }
         }
 }

@@ -136,13 +136,13 @@ namespace TraddingSrvCLI
             _status = QSEnumCoreThreadStatus.Started;
 
             Thread.Sleep(2000);
-            if (GlobalConfig.IsDevelop)
-            {
-                debug(">>Start Broker and DataFeed");
-                connectorMgr.StartDataFeedViaName("DataFeed.FastTick.FastTick");
-                connectorMgr.StartBrokerViaName("Broker.SIM.SIMTrader");
-                coreMgr.OpenClearCentre();
-            }
+
+            debug(">>Start Broker and DataFeed");
+            connectorMgr.StartDataFeedViaName("DataFeed.FastTick.FastTick");
+            connectorMgr.StartBrokerViaName("Broker.SIM.SIMTrader");
+            coreMgr.OpenClearCentre();
+            Thread.Sleep(2000);
+            TLCtxHelper.IsReady = true;
             while (go)
             {
                 //debug("go status:" + go.ToString());

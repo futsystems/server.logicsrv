@@ -184,6 +184,7 @@ namespace TradingLib.Core
         int SENDORDERRETRY = 3;
         bool waitforcancel = true;
 
+        
         /// <summary>
         /// 监控强平持仓列表,用于观察委托是否正常平仓
         /// 强平是一个触发过程
@@ -193,16 +194,19 @@ namespace TradingLib.Core
         void ProcessPositionFlat()
         {
             //debug("检查待平仓列表...", QSEnumDebugLevel.INFO);
-            List<PositionFlatSet> deletelist = new List<PositionFlatSet>();
+            
             foreach (PositionFlatSet ps in posflatlist)
             {
                 //如果持仓已经平掉 则加入待删除列表
-                if (ps.Position.isFlat)
-                {
-                    debug("Pos"+ps.Position.Account +"-"+ps.Position.Symbol +" 已经平掉,从缓存中移除", QSEnumDebugLevel.INFO);
-                    deletelist.Add(ps);
-                }
-                else//持仓未平掉则 检查平仓间隔/平仓次数/触发报警
+                //如果持仓平调 但是在平调后立马再次开仓，此时PostioinFlat并没有从队列中删除，当再次扫描到该持仓时 系统会认为该持仓没有被及时平调,从而尝试撤单并重新强平，最后单子又无法撤单成功
+                //需要监听positionround closed event 然后将列表删除
+                //if (ps.Position.isFlat)
+                //{
+                //    debug("Position:"+ps.Position.GetPositionKey() +" 已经平掉,从队列中移除", QSEnumDebugLevel.INFO);
+                //    //deletelist.Add(ps);
+                //}
+                //else//持仓未平掉则 检查平仓间隔/平仓次数/触发报警
+                if(!ps.Position.isFlat)//如果有持仓 则检查时间 进行撤单并再次强平
                 {
                     if (DateTime.Now.Subtract(ps.SentTime).TotalSeconds >= SENDORDERDELAY && ps.FireCount < SENDORDERRETRY)
                     {
@@ -248,14 +252,7 @@ namespace TradingLib.Core
             }
 
 
-            foreach (PositionFlatSet ps in deletelist)
-            {
-                posflatlist.Remove(ps);
-                if (GotFlatSuccessEvent != null)
-                {
-                    GotFlatSuccessEvent(ps.Position);
-                }
-            }
+           
         }
 
         /// <summary>

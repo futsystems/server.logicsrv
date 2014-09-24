@@ -20,9 +20,14 @@ namespace TradingLib.Common
         private AccountEvent m_AccountEvent;
         private ExContribEvent m_ExContribEvent;
 
+
+        public static bool IsReady { get; set; }
+
         static TLCtxHelper()
         {
             defaultInstance = new TLCtxHelper();
+            IsReady = false;
+            
         }
 
         public TLCtxHelper()

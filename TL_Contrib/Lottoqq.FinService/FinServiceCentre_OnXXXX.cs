@@ -38,7 +38,7 @@ namespace TradingLib.Contrib.FinService
         /// 响应持仓回合数据
         /// </summary>
         /// <param name="pr"></param>
-        void EventIndicator_GotPositionClosedEvent(IPositionRound pr)
+        void EventIndicator_GotPositionClosedEvent(IPositionRound pr,Position pos)
         {
             FinServiceStub stub = FinTracker.FinServiceTracker[pr.Account];
             if (stub == null)

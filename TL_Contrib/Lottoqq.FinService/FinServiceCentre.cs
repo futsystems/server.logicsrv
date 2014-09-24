@@ -116,7 +116,7 @@ namespace TradingLib.Contrib.FinService
             //获得成交事件
             TLCtxHelper.EventIndicator.GotFillEvent += new FillDelegate(EventIndicator_GotFillEvent);
             //获得持仓回合关闭事件 一个交易开平结束
-            TLCtxHelper.EventIndicator.GotPositionClosedEvent += new IPositionRoundDel(EventIndicator_GotPositionClosedEvent);
+            TLCtxHelper.EventIndicator.GotPositionClosedEvent += new PositionRoundClosedDel(EventIndicator_GotPositionClosedEvent);
 
             //帐户添加事件
             TLCtxHelper.EventAccount.AccountAddEvent += new AccountIdDel(EventAccount_AccountAddEvent);

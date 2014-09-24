@@ -60,7 +60,7 @@ namespace TradingLib.API
         /// <summary>
         /// 持仓回合关闭事件
         /// </summary>
-        event IPositionRoundDel PositionRoundClosedEvent;//交易回合生成事件
+        event PositionRoundClosedDel PositionRoundClosedEvent;//交易回合生成事件
 
         
 

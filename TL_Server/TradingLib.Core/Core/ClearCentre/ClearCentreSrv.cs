@@ -64,7 +64,7 @@ namespace TradingLib.Core
         /// <summary>
         /// 交易回合结束
         /// </summary>
-        public event IPositionRoundDel PositionRoundClosedEvent;
+        public event PositionRoundClosedDel PositionRoundClosedEvent;
 
         /// <summary>
         /// 帐户修改事件

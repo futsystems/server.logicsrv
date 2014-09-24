@@ -282,7 +282,7 @@ namespace TradingLib.ServiceManager
             //获得底层取消委托回报
             _messageExchagne.GotCancelEvent += new LongDelegate(TLCtxHelper.EventIndicator.FireCancelEvent);
             //获得底层持仓回合回报
-            _clearCentre.PositionRoundClosedEvent +=new IPositionRoundDel(TLCtxHelper.EventIndicator.FirePositionRoundClosed);
+            _clearCentre.PositionRoundClosedEvent += new PositionRoundClosedDel(TLCtxHelper.EventIndicator.FirePositionRoundClosed);
 
             //EventSession
             //客户端建立连接
