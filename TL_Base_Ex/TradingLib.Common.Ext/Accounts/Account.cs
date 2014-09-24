@@ -134,6 +134,7 @@ namespace TradingLib.Common
         /// 记录账户的建立时间
         /// </summary>
         public DateTime CreatedTime { get; set; }
+
         /// <summary>
         /// 最近结算确认日期
         /// </summary>
