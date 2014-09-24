@@ -14,14 +14,14 @@ namespace TradingLib.Mixins
     /// </summary>
     public class JsonReply
     {
-        public int Result;
-        public string Code;
+        //public int Result;
+        public int Code;
         public string Message;
         public object Playload;
 
-        public JsonReply(int result, string code, string message,object playload)
+        public JsonReply(int code, string message,object playload)
         {
-            Result = result;
+            //Result = result;
             Code = code;
             Message = message;
             Playload = playload;
@@ -42,13 +42,13 @@ namespace TradingLib.Mixins
         /// <param name="code"></param>
         /// <param name="message"></param>
         /// <returns></returns>
-        public static JsonReply GenericError(string code, string message = "")
+        public static JsonReply GenericError(int code=1, string message = "")
         {
             if (string.IsNullOrEmpty(message))
             {
                 message = "Error:" + code;
             }
-            return new JsonReply(1, code, message,null);
+            return new JsonReply(code, message,null);
         }
 
         /// <summary>
@@ -57,13 +57,13 @@ namespace TradingLib.Mixins
         /// <param name="code"></param>
         /// <param name="message"></param>
         /// <returns></returns>
-        public static JsonReply GenericSuccess(string code, string message = "")
+        public static JsonReply GenericSuccess(int code=0, string message = "")
         {
             if (string.IsNullOrEmpty(message))
             {
                 message = "Success:" + code;
             }
-            return new JsonReply(0, code, message,null);
+            return new JsonReply(code, message,null);
         }
     }
 
@@ -100,8 +100,8 @@ namespace TradingLib.Mixins
 
         public ReplyWriter FillReply(JsonReply reply)
         { 
-            this.WritePropertyName("Result");
-            this.Write(reply.Result);
+            //this.WritePropertyName("Result");
+            //this.Write(reply.Result);
             this.WritePropertyName("Code");
             this.Write(reply.Code);
             this.WritePropertyName("Message");

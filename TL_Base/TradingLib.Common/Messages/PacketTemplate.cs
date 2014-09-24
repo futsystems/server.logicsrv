@@ -247,6 +247,8 @@ namespace TradingLib.Common
                         return RequestTemplate<MGRReqUpdateManagerRequest>.SrvRecvRequest(frontid, clientid, content);
                     case MessageTypes.MGRQRYACCTSERVICE://请求查询帐户服务
                         return RequestTemplate<MGRQryAcctServiceRequest>.SrvRecvRequest(frontid, clientid, content);
+                    case MessageTypes.MGRCONTRIBREQUEST://扩展请求
+                        return RequestTemplate<MGRContribRequest>.SrvRecvRequest(frontid, clientid, content);
                     #endregion
 
                     default:
@@ -390,6 +392,8 @@ namespace TradingLib.Common
                     return ResponseTemplate<RspMGRQryManagerResponse>.CliRecvResponse(content);
                 case MessageTypes.MGRQRYACCTSERVICERESPONSE://查询帐户服务回报
                     return ResponseTemplate<RspMGRQryAcctServiceResponse>.CliRecvResponse(content);
+                case MessageTypes.MGRCONTRIBRESPONSE://扩展回报
+                    return ResponseTemplate<RspMGRContribResponse>.CliRecvResponse(content);
                 #endregion
                 default:
                     throw new PacketError();

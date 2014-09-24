@@ -191,6 +191,10 @@ namespace TradingLib.API
 
 
 
+        MGRCONTRIBREQUEST,//管理扩展请求
+
+
+
 
 
 
@@ -228,6 +232,12 @@ namespace TradingLib.API
         MGRUPDATEPOSLOCKRESPONSE,//修改帐户锁仓权限回报
         MGRMANAGERRESPONSE,//查询管理员列表回报
         MGRQRYACCTSERVICERESPONSE,//查询交易帐户服务回报
+
+
+
+
+        MGRCONTRIBRESPONSE,//管理扩展回报
+
 
         //FLATALL,//清仓
         UPDATEPOSOFFSET,

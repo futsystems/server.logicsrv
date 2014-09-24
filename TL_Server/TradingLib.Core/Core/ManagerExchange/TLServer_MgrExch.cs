@@ -286,7 +286,12 @@ namespace TradingLib.Core
                 default:
                     //1.生成对应的Session 用于减少ClientInfo的暴露防止错误修改相关参数
                     Client2Session sesssion = new Client2Session(clientinfo);
+
+                    //针对Manager设置相关属性
+                    sesssion.SessionType = QSEnumSessionType.MANAGER;
                     sesssion.ManagerID = clientinfo.ManagerID;
+                    
+
                     //2.通过managerid来获得manager对象,并传递到逻辑包处理函数
                     Manager manager = BasicTracker.ManagerTracker[clientinfo.ManagerID];
                     if (manager == null)

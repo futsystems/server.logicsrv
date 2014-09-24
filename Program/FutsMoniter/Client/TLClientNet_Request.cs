@@ -606,7 +606,29 @@ namespace TradingLib.Common
         #endregion
 
 
-        #region 服务查询与设置
+        #region 扩展请求
+
+        public void ReqQryFinService(string account)
+        {
+            this.ReqContribRequest("FinServiceCentre", "QryFinService", account);
+        }
+        /// <summary>
+        /// 调用某个模块 某个命令 某个参数 
+        /// </summary>
+        /// <param name="module"></param>
+        /// <param name="cmd"></param>
+        /// <param name="args"></param>
+        public void ReqContribRequest(string module, string cmd, string args)
+        {
+            debug("请求扩展命令,module:" + module + " cmd:" + cmd + " args:" + args, QSEnumDebugLevel.INFO);
+            MGRContribRequest request = RequestTemplate<MGRContribRequest>.CliSendRequest(requestid++);
+            request.ModuleID = module;
+            request.CMDStr = cmd;
+            request.Parameters = args;
+
+            SendPacket(request);
+        
+        }
         public void ReqQryAcctService(string account, string servicename)
         {
             debug("请求查询帐户服务", QSEnumDebugLevel.INFO);

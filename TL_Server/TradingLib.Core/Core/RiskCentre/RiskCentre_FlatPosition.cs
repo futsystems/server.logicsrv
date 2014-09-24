@@ -159,7 +159,7 @@ namespace TradingLib.Core
             o.ForceClose = true;
             o.ForceCloseReason = closereason;
             
-            o.price = 2500;//模拟不成交延迟撤单的情况
+            //o.price = 2500;//模拟不成交延迟撤单的情况
 
             //绑定委托编号 用于提前获得系统唯一OrderID 方便撤单
             if (AssignOrderIDEvent != null)

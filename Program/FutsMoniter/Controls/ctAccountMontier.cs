@@ -1221,7 +1221,8 @@ namespace FutsMoniter.Controls
 
         private void btnSubmit_Click(object sender, EventArgs e)
         {
-            Globals.TLClient.ReqQryAcctService("4444", "FinService");
+            //Globals.TLClient.ReqQryAcctService("4444", "FinService");
+            Globals.TLClient.ReqQryFinService("4444");
         }
 
 

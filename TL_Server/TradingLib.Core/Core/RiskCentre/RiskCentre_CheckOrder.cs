@@ -269,7 +269,7 @@ namespace TradingLib.Core
                 
 
                 //3.合约交易权限检查(如果帐户存在特殊服务,可由特殊服务进行合约交易权限检查) 有关特殊服务的主力合约控制与检查放入到对应的特殊服务实现中
-                if (!inter)
+                //if (!inter)
                 {
                     if (!account.CanTakeSymbol(o.oSymbol, out msg))
                     {

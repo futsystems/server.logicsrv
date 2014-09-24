@@ -11,6 +11,11 @@ namespace TradingLib.Core
     public partial class MgrExchServer
     {
 
+        void Sendd(IPacket packet)
+        {
+            CachePacket(packet);
+        }
+
         void CachePacket(IPacket packet)
         {
             //debug("cachepacket ~~~~~~~~~~~~~~~~~~~~",QSEnumDebugLevel.INFO);

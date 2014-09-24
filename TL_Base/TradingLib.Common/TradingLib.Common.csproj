@@ -85,6 +85,7 @@
     <Compile Include="Messages\Manager\MGRChangeInvestor.cs" />
     <Compile Include="Messages\Manager\MGRClearCentre.cs" />
     <Compile Include="Messages\Manager\MGRConnector.cs" />
+    <Compile Include="Messages\Manager\MGRContrib.cs" />
     <Compile Include="Messages\Manager\MGRHistQry.cs" />
     <Compile Include="Messages\Manager\MGRManager.cs" />
     <Compile Include="Messages\Manager\MGROperationResponse.cs" />
@@ -125,7 +126,7 @@
     <Compile Include="Messages\Symbols.cs" />
     <Compile Include="Messages\Trading.cs" />
     <Compile Include="Messages\Version.cs" />
-    <Compile Include="Misc\ClientInfo.cs" />
+    <Compile Include="Network\ClientInfo.cs" />
     <Compile Include="Misc\ContractBank.cs" />
     <Compile Include="Misc\IniFile.cs" />
     <Compile Include="Misc\LibGlobal.cs" />

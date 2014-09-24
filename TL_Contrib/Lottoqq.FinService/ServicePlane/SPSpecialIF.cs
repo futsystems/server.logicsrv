@@ -165,7 +165,7 @@ namespace TradingLib.Contrib.FinService
             {
                 //当每手资金小于设定的强平金额时执行强平
                 decimal marginperplot = nowequity / totalsize;
-                //LibUtil.Debug("now equity:" + nowequity.ToString() + " marginperlot:" + marginperplot + " stopline:" + MarginPerLotStop.AccountArgument.Value);
+                //LibUtil.Debug("account:"+this.Account.ID +" now equity:" + nowequity.ToString() +" totalsize:"+ totalsize.ToString() +" marginperlot:" + marginperplot + " stopline:" + MarginPerLotStop.AccountArgument.Value);
                 if (marginperplot <= MarginPerLotStop.AccountArgument.AsDecimal())
                 {
                     
@@ -184,6 +184,7 @@ namespace TradingLib.Contrib.FinService
         /// <returns></returns>
         public override bool CanTradeSymbol(Symbol symbol, out string msg)
         {
+            LibUtil.Debug("xxxxxxxxxxxxxxxxxxxx检查是否可以交易合约:" + symbol.Symbol);
             msg = string.Empty;
             if (symbol.SecurityFamily.Code.Equals("IF"))
             {

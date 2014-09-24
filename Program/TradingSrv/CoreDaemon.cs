@@ -115,7 +115,7 @@ namespace TraddingSrvCLI
                         return JsonReply.GenericSuccess(ReplyType.Success, "服务非处于运行状态状态").ToJson();
                     }
                 case "STATUS":
-                    return new TradingLib.Mixins.ReplyWriter().Start().FillReply(TradingLib.Mixins.JsonReply.GenericSuccess("")).Fill(new CoreThreadStatus(corethread.Status),"Playload").End().ToString();
+                    return new TradingLib.Mixins.ReplyWriter().Start().FillReply(TradingLib.Mixins.JsonReply.GenericSuccess()).Fill(new CoreThreadStatus(corethread.Status),"Playload").End().ToString();
                 default:
                     return JsonReply.GenericError(ReplyType.Error, "未支持命令").ToJson();
             }

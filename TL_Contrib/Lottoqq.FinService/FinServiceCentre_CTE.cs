@@ -20,5 +20,17 @@ namespace TradingLib.Contrib.FinService
                 stub.CheckAccount();
             }
         }
+
+
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryFinService", "QryFinService - query finservice of account", "查询某个帐户的配资服务")]
+        public void recharge(ISession session, string account)
+        {
+            debug("查询帐户:" + account + "的配资服务", QSEnumDebugLevel.INFO);
+
+            SendJsonReplyMgr(session, 2);
+        }
     }
+
+
 }

@@ -59,11 +59,11 @@
             this.ctPositionView1 = new FutSystems.GUI.ctPositionView();
             this.splitPanel4 = new Telerik.WinControls.UI.SplitPanel();
             this.ServiceTabHolder = new Telerik.WinControls.UI.RadPageView();
-            this.FinServicePage = new Telerik.WinControls.UI.RadPageViewPage();
-            this.btnSubmit = new Telerik.WinControls.UI.RadButton();
             this.OrderSenderPage = new Telerik.WinControls.UI.RadPageViewPage();
             this.viewQuoteList1 = new FutSystems.GUI.ViewQuoteList();
             this.ctOrderSenderM1 = new FutsMoniter.ctOrderSenderM();
+            this.FinServicePage = new Telerik.WinControls.UI.RadPageViewPage();
+            this.btnSubmit = new Telerik.WinControls.UI.RadButton();
             this.radPageViewPage4 = new Telerik.WinControls.UI.RadPageViewPage();
             ((System.ComponentModel.ISupportInitialize)(this.SplitContainer)).BeginInit();
             this.SplitContainer.SuspendLayout();
@@ -104,9 +104,9 @@
             this.splitPanel4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ServiceTabHolder)).BeginInit();
             this.ServiceTabHolder.SuspendLayout();
+            this.OrderSenderPage.SuspendLayout();
             this.FinServicePage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnSubmit)).BeginInit();
-            this.OrderSenderPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // SplitContainer
@@ -469,29 +469,12 @@
             this.ServiceTabHolder.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ServiceTabHolder.Location = new System.Drawing.Point(0, 0);
             this.ServiceTabHolder.Name = "ServiceTabHolder";
-            this.ServiceTabHolder.SelectedPage = this.OrderSenderPage;
+            this.ServiceTabHolder.SelectedPage = this.FinServicePage;
             this.ServiceTabHolder.Size = new System.Drawing.Size(585, 276);
             this.ServiceTabHolder.TabIndex = 0;
             this.ServiceTabHolder.Text = "radPageView2";
             this.ServiceTabHolder.ThemeName = "Windows8";
             ((Telerik.WinControls.UI.RadPageViewStripElement)(this.ServiceTabHolder.GetChildAt(0))).StripButtons = Telerik.WinControls.UI.StripViewButtons.None;
-            // 
-            // FinServicePage
-            // 
-            this.FinServicePage.Controls.Add(this.btnSubmit);
-            this.FinServicePage.Location = new System.Drawing.Point(10, 35);
-            this.FinServicePage.Name = "FinServicePage";
-            this.FinServicePage.Size = new System.Drawing.Size(564, 230);
-            this.FinServicePage.Text = "配资服务";
-            // 
-            // btnSubmit
-            // 
-            this.btnSubmit.Location = new System.Drawing.Point(80, 42);
-            this.btnSubmit.Name = "btnSubmit";
-            this.btnSubmit.Size = new System.Drawing.Size(110, 24);
-            this.btnSubmit.TabIndex = 0;
-            this.btnSubmit.Text = "更 新";
-            this.btnSubmit.Click += new System.EventHandler(this.btnSubmit_Click);
             // 
             // OrderSenderPage
             // 
@@ -535,6 +518,23 @@
             this.ctOrderSenderM1.Name = "ctOrderSenderM1";
             this.ctOrderSenderM1.Size = new System.Drawing.Size(564, 64);
             this.ctOrderSenderM1.TabIndex = 0;
+            // 
+            // FinServicePage
+            // 
+            this.FinServicePage.Controls.Add(this.btnSubmit);
+            this.FinServicePage.Location = new System.Drawing.Point(10, 35);
+            this.FinServicePage.Name = "FinServicePage";
+            this.FinServicePage.Size = new System.Drawing.Size(564, 230);
+            this.FinServicePage.Text = "配资服务";
+            // 
+            // btnSubmit
+            // 
+            this.btnSubmit.Location = new System.Drawing.Point(80, 42);
+            this.btnSubmit.Name = "btnSubmit";
+            this.btnSubmit.Size = new System.Drawing.Size(110, 24);
+            this.btnSubmit.TabIndex = 0;
+            this.btnSubmit.Text = "更 新";
+            this.btnSubmit.Click += new System.EventHandler(this.btnSubmit_Click);
             // 
             // radPageViewPage4
             // 
@@ -590,9 +590,9 @@
             this.splitPanel4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.ServiceTabHolder)).EndInit();
             this.ServiceTabHolder.ResumeLayout(false);
+            this.OrderSenderPage.ResumeLayout(false);
             this.FinServicePage.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.btnSubmit)).EndInit();
-            this.OrderSenderPage.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }

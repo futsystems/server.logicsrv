@@ -60,8 +60,8 @@ namespace Lottoqq.UCenter
 
         //ZmqContext ctx;
         TimeSpan timeout = new TimeSpan(0, 0, 3);
-        string timeoutreply = TradingLib.Mixins.JsonReply.GenericError("9999", "API调用超时").ToJson();
-        string errorreply = TradingLib.Mixins.JsonReply.GenericError("9998", "服务端调用异常").ToJson();
+        string timeoutreply = TradingLib.Mixins.JsonReply.GenericError(9999, "API调用超时").ToJson();
+        string errorreply = TradingLib.Mixins.JsonReply.GenericError(9998, "服务端调用异常").ToJson();
         string request(string request)
         {
             //锁定_socket,防止多个线程同时进行请求访问

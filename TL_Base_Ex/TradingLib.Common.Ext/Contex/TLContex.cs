@@ -271,7 +271,6 @@ namespace TradingLib.Common
         {
             CmdHandler(session, message, messageRouterCmdMap);
         }
-
         public void MessageExchangeHandler(ISession session, ContribRequest request)
         {
             TLCtxHelper.Debug("****handle contribrequest:" + request.ToString());
@@ -280,9 +279,16 @@ namespace TradingLib.Common
 
         public void MessageMgrHandler(ISession session, string message)
         {
+            
             CmdHandler(session, message, messageMgrCmdMap);
         }
 
+        public void MessageMgrHandler(ISession session,MGRContribRequest request)
+        {
+            TLCtxHelper.Debug("****handle mgr contribrequest:" + request.ToString());
+            CmdHandler(session, request.ModuleID, request.CMDStr, request.Parameters, messageMgrCmdMap);
+
+        }
         /// <summary>
         /// 处理web message exchange消息调用
         /// </summary>
@@ -366,6 +372,13 @@ namespace TradingLib.Common
             return "CLICommand:" + cmd + " Not Found\r\n";
         }
 
+
+        /// <summary>
+        /// message 为 contribid|cmdstr|parameters的格式
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="message"></param>
+        /// <param name="cmdmap"></param>
         void CmdHandler(ISession session, string message, ConcurrentDictionary<string, ContribCommand> cmdmap)
         {
 
@@ -392,6 +405,7 @@ namespace TradingLib.Common
         {
             TLCtxHelper.Debug("Contirb:" + contribid + " cmd:" + cmd + " args:" + parameters);
             string cmdkey = ContribCommandKey(contribid, cmd);
+
             if (!IsContribRegisted(contribid))
             {
                 debug("Error:Contirb[" + contribid + "] do not registed");

@@ -8,6 +8,7 @@ using TradingLib.Common;
 
 namespace TradingLib.Common
 {
+
     /// <summary>
     /// 将Client转换成Session 适配器
     /// Client是内部底层使用的数据,可以用于相关字段的设置与修改
@@ -20,6 +21,12 @@ namespace TradingLib.Common
         public Client2Session(ClientInfoBase client)
         {
             _client = client;
+            this.AccountID = string.Empty;
+            this.ManagerID = string.Empty;
+            this.SessionType = QSEnumSessionType.CLIENT;
+            this.ContirbID = string.Empty;
+            this.CMDStr = string.Empty;
+            this.RequestID = 0;
         }
 
         /// <summary>
@@ -32,7 +39,10 @@ namespace TradingLib.Common
         /// </summary>
         public string ManagerID { get; set; }
 
-        public string SessionID { get { return _client.Location.ClientID; } }
+        /// <summary>
+        /// 回话类型
+        /// </summary>
+        public QSEnumSessionType SessionType { get; set; }
 
         public string FrontID { get { return _client.Location.FrontID; } }
 
@@ -43,23 +53,20 @@ namespace TradingLib.Common
         public bool IsLoggedIn { get { return _client.Authorized; } }
 
         
-
-        string _contribid = "";
-
         /// <summary>
         /// 对应的扩展模块编号
         /// </summary>
-        public string ContirbID { get { return _contribid; } set { _contribid = value; } }
+        public string ContirbID { get; set; }
 
-        string _cmdstr = ""; 
         /// <summary>
         /// 对应的扩展模块命令
         /// </summary>
-        public string CMDStr { get { return _cmdstr; } set { _cmdstr = value; } }
+        public string CMDStr { get; set; }
 
-
-        int _requestid = 0;
-        public int RequestID { get { return _requestid; } set { _requestid = value; } }
+        /// <summary>
+        /// 请求编号
+        /// </summary>
+        public int RequestID { get; set; }
 
     }
 }

@@ -21,7 +21,7 @@ namespace DemeRecharge
         public void recharge(ISession session,string email)
         {
 
-            TLCtxHelper.Debug("客户端请求资金重置:" + session.SessionID);
+            TLCtxHelper.Debug("客户端请求资金重置:" + session.ClientID);
             int num=0;
             if (QryUserFollowersNumEvent != null)
                 num = QryUserFollowersNumEvent(email);

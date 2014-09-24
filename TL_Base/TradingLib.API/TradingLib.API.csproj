@@ -113,6 +113,7 @@
     <Compile Include="Message\ILocation.cs" />
     <Compile Include="Message\IPacket.cs" />
     <Compile Include="Message\ISession.cs" />
+    <Compile Include="Message\ISessionUtils.cs" />
     <Compile Include="Message\QSMessageContent.cs" />
     <Compile Include="Msic\QSEnumManagerType.cs" />
     <Compile Include="Rule\IRuleItem.cs" />

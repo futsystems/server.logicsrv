@@ -6,9 +6,34 @@ using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.LitJson;
 
-
 namespace TradingLib.Common
 {
+
+    public static class ISessionJsonUtils
+    {
+        /// <summary>
+        /// 生成session所对应的jsonreply
+        /// 需要标注code,message,以及模块ID,命令Str
+        /// </summary>
+        /// <param name="session"></param>
+        /// <returns></returns>
+        //public static TradingLib.Mixins.ReplyWriter JsonReply(this ISession session)
+        //{
+        //    TradingLib.Mixins.ReplyWriter writer = new Mixins.ReplyWriter();
+        //    writer.Start();
+        //    writer.WritePropertyName("Code");
+        //    writer.Write(0);
+        //    writer.WritePropertyName("Message");
+        //    writer.Write("");
+        //    writer.WritePropertyName("ModuleID");
+        //    writer.Write(session.ContirbID);
+        //    writer.WritePropertyName("CMDStr");
+        //    writer.Write(session.CMDStr);
+        //    return writer;
+        //}
+    }
+
+
     public class ContribSrvObject:BaseSrvObject
     {
         public ContribSrvObject(string programe)
@@ -18,7 +43,7 @@ namespace TradingLib.Common
             
         }
 
-
+        
         /// <summary>
         /// 发送一个逻辑数据包
         /// </summary>
@@ -26,6 +51,11 @@ namespace TradingLib.Common
         void SendPacket(IPacket packet)
         {
             TLCtxHelper.Ctx.MessageExchange.Send(packet);
+        }
+
+        void SendPacketMgr(IPacket packet)
+        {
+            TLCtxHelper.Ctx.MessageMgr.Send(packet);
         }
 
         void Send(string message, MessageTypes type, string address)
@@ -69,7 +99,7 @@ namespace TradingLib.Common
         /// <param name="message"></param>
         protected void Send(ISession session, string message, MessageTypes type)
         {
-            Send(message, type, session.SessionID);
+            Send(message, type, session.ClientID);
         }
 
 
@@ -90,6 +120,38 @@ namespace TradingLib.Common
             SendPacket(response);
         }
 
+        /// <summary>
+        /// 向管理端发送一个jsonreply回报
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="reply"></param>
+        /// <param name="islast"></param>
+        protected void SendJsonReplyMgr(ISession session, TradingLib.Mixins.JsonReply reply, bool islast = true)
+        {
+            RspMGRContribResponse response = ResponseTemplate<RspMGRContribResponse>.SrvSendRspResponse(session);
+            response.ModuleID = session.ContirbID;
+            response.CMDStr = session.CMDStr;
+            response.IsLast = islast;
+
+            response.RspInfo.ErrorID = reply.Code;
+            response.RspInfo.ErrorMessage = reply.Message;
+
+            SendPacketMgr(response);
+        }
+
+        protected void SendJsonReplyMgr(ISession session, object obj, bool islast = true)
+        {
+            RspMGRContribResponse response = ResponseTemplate<RspMGRContribResponse>.SrvSendRspResponse(session);
+            response.ModuleID = session.ContirbID;
+            response.CMDStr = session.CMDStr;
+            response.IsLast = islast;
+            response.Result = new Mixins.ReplyWriter().Start().FillReply(Mixins.JsonReply.GenericSuccess()).FillPlayload(obj).End().ToString();
+
+            SendPacketMgr(response);
+
+        }
+
+
         protected void SendJsonReply(ISession session, JsonReply reply,bool islast=true)
         {
             RspContribResponse response = ResponseTemplate<RspContribResponse>.SrvSendRspResponse(session);
@@ -102,6 +164,8 @@ namespace TradingLib.Common
 
             SendPacket(response);
         }
+
+        
 
         /// <summary>
         /// 向Session对应的客户端发送一个标准结构体

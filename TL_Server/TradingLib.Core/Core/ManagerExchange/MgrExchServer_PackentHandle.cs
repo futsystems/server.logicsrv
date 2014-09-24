@@ -811,10 +811,23 @@ namespace TradingLib.Core
             }
             //帐号不存在
         }
+
+        void SrvOnMGRContribRequest(MGRContribRequest request, ISession session, Manager manager)
+        {
+            debug(string.Format("管理员:{0} 请求扩展命令:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            debug("MGRContrib Request,ModuleID:" + request.ModuleID + " CMDStr:" + request.CMDStr + " Parameters:" + request.Parameters, QSEnumDebugLevel.INFO);
+            
+            session.ContirbID = request.ModuleID;
+            session.CMDStr = request.CMDStr;
+            session.RequestID = request.RequestID;
+
+            TLCtxHelper.Ctx.MessageMgrHandler(session, request);
+        }
         void tl_newPacketRequest(IPacket packet,ISession session,Manager manager)
         {
             switch (packet.Type)
             {
+                
                 case MessageTypes.MGRQRYACCOUNTS://查询交易帐号列表
                     { 
                         SrvOnMGRQryAccount(packet as MGRQryAccountRequest, session, manager);
@@ -1023,6 +1036,11 @@ namespace TradingLib.Core
                 case MessageTypes.MGRQRYACCTSERVICE://查询帐户服务
                     {
                         SrvOnMGRQryAcctService(packet as MGRQryAcctServiceRequest, session, manager);
+                        break;
+                    }
+                case MessageTypes.MGRCONTRIBREQUEST://扩展请求
+                    {
+                        SrvOnMGRContribRequest(packet as MGRContribRequest, session, manager);
                         break;
                     }
                 default:
