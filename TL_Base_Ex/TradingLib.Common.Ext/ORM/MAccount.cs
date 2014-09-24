@@ -237,7 +237,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("Insert into transactions (`datetime`,`amount`,`comment`,`account`,`transref`,`settleday`) values('{0}','{1}','{2}','{3}','{4}','{5}')", DateTime.Now.ToString(), amount.ToString(), comment, account.ToString(),transref,TLCtxHelper.Ctx.SettleCentre.CurrentTradingday);
+                string query = String.Format("Insert into log_cashtrans (`datetime`,`amount`,`comment`,`account`,`transref`,`settleday`) values('{0}','{1}','{2}','{3}','{4}','{5}')", DateTime.Now.ToString(), amount.ToString(), comment, account.ToString(),transref,TLCtxHelper.Ctx.SettleCentre.CurrentTradingday);
                 return db.Connection.Execute(query) > 0;
             }
         }
@@ -252,7 +252,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("SELECT * FROM transactions WHERE account={0} AND transref ={1}",account,transref);
+                string query = String.Format("SELECT * FROM log_cashtrans WHERE account={0} AND transref ={1}", account, transref);
                 return db.Connection.Query<TransRefFields>(query, null).ToArray().Length > 0;
             }
         }
@@ -267,7 +267,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("SELECT Sum(amount) as total FROM transactions where settleday ='{0}' and account='{1}' and amount>0",tradingday, accId);
+                string query = String.Format("SELECT Sum(amount) as total FROM log_cashtrans where settleday ='{0}' and account='{1}' and amount>0", tradingday, accId);
                 TotalCashAmount total = db.Connection.Query<TotalCashAmount>(query, null).Single<TotalCashAmount>();
                 return total.Total;
             }
@@ -284,7 +284,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("SELECT Sum(amount) as total FROM transactions where datetime >='{0}'and datetime <= '{1}' and account='{2}' and amount>0", start.ToString(), end.ToString(), accId);
+                string query = String.Format("SELECT Sum(amount) as total FROM log_cashtrans where datetime >='{0}'and datetime <= '{1}' and account='{2}' and amount>0", start.ToString(), end.ToString(), accId);
                 TotalCashAmount total = db.Connection.Query<TotalCashAmount>(query, null).Single<TotalCashAmount>();
                 return total.Total;
             }
@@ -300,7 +300,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("SELECT Sum(amount) as total FROM transactions where settleday ='{0}' and account='{1}' and amount<0", tradingday, accId);
+                string query = String.Format("SELECT Sum(amount) as total FROM log_cashtrans where settleday ='{0}' and account='{1}' and amount<0", tradingday, accId);
                 TotalCashAmount total = db.Connection.Query<TotalCashAmount>(query, null).Single<TotalCashAmount>();
                 return total.Total;
             }
@@ -316,7 +316,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("SELECT Sum(amount) as total FROM transactions where datetime >='{0}'and datetime <= '{1}' and account='{2}' and amount<0", start.ToString(), end.ToString(), accId);
+                string query = String.Format("SELECT Sum(amount) as total FROM log_cashtrans where datetime >='{0}'and datetime <= '{1}' and account='{2}' and amount<0", start.ToString(), end.ToString(), accId);
                 TotalCashAmount total = db.Connection.Query<TotalCashAmount>(query, null).Single<TotalCashAmount>();
                 return total.Total;
             }
@@ -327,7 +327,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("SELECT * FROM  {0}  WHERE settleday >='{1}' AND settleday <='{2}' AND account='{3}'", "transactions", begin, end, account);
+                string query = string.Format("SELECT * FROM  {0}  WHERE settleday >='{1}' AND settleday <='{2}' AND account='{3}'", "log_cashtrans", begin, end, account);
                 IList<CashTransaction> cts = db.Connection.Query<CashTransaction>(query).ToArray();
 
                 return cts;
