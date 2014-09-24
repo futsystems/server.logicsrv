@@ -17,7 +17,7 @@ namespace TradingLib.Contrib.FinService.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("INSERT INTO service_feecharge (`totalfee`,`agentfee`,`agentprofit`,`chargetype`,`collecttype`,`account`,`serviceplan_fk`,`agent_fk`,`comment`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}')", item.TotalFee, item.AgentFee, item.AgetProfit, item.ChargeType, item.CollectType, item.Account, item.serviceplan_fk, item.Agent_fk,item.Comment);
+                string query = string.Format("INSERT INTO service_feecharge (`totalfee`,`agentfee`,`agentprofit`,`chargetype`,`collecttype`,`account`,`serviceplan_fk`,`agent_fk`,`comment`,`settleday`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}')", item.TotalFee, item.AgentFee, item.AgetProfit, item.ChargeType, item.CollectType, item.Account, item.serviceplan_fk, item.Agent_fk, item.Comment, item.Settleday);
                 int row = db.Connection.Execute(query);
 
                 return row > 0;

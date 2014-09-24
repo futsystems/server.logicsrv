@@ -129,6 +129,15 @@ namespace TradingLib.Common
             }
         }
 
+
+        public static ISettleCentre CmdSettleCentre
+        {
+            get
+            {
+                return defaultInstance.ctx.SettleCentre as ISettleCentre;
+            }
+        }
+
         //public static IClearCentreOperation CmdClearCentre
         //{
         //    get

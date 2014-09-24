@@ -25,6 +25,7 @@ namespace TradingLib.Contrib.FinService
 
         public FeeChargeItem()
         {
+            this.Settleday = 0;
             this.TotalFee = 0;
             this.AgentFee = 0;
             this.AgetProfit = 0;
@@ -34,6 +35,10 @@ namespace TradingLib.Contrib.FinService
             this.serviceplan_fk = 0;
             this.Agent_fk = 0;
         }
+        /// <summary>
+        /// 交易日
+        /// </summary>
+        public int Settleday { get; set; }
         /// <summary>
         /// 向客户收取的费用总和
         /// </summary>

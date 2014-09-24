@@ -283,6 +283,7 @@ namespace TradingLib.Contrib.FinService
             item.serviceplan_fk = this.serviceplan_fk;
             item.Agent_fk = this.AgentID;
             item.Comment = comment;
+            item.Settleday = TLCtxHelper.CmdSettleCentre.CurrentTradingday;
             FinTracker.FinServiceTracker.GotFeeChargeItem(item);
         }
 

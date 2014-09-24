@@ -61,7 +61,6 @@ namespace TradingLib.Core
                 if (!flatlist.Keys.Contains(p.FlatTime))
                 {
                     flatlist[p.FlatTime] = new List<MarketTime>();
-                    
                 }
                 flatlist[p.FlatTime].Add(p.MarketTime);
             }
@@ -97,8 +96,25 @@ namespace TradingLib.Core
         /// <param name="mt"></param>
         void FlatPositionViaMarketTime(int flattime,MarketTime[] mts)
         {
-            debug("执行强平任务,强平时间点:" + flattime.ToString() + " 交易时间对象ID:" + MarketTimeIDstr(mts), QSEnumDebugLevel.INFO);
-            //PositionTracker pt = _clearcentre.DefaultPositionTracker as PositionTracker;
+            debug("执行强平任务 对日内帐户执行撤单并强平持仓,强平时间点:" + flattime.ToString(), QSEnumDebugLevel.INFO);
+            
+            //1.遍历所有pending orders 如果委托对应的帐户是日内交易并且该委托需要在该强平时间点撤单 则执行撤单
+            foreach (Order od in _clearcentre.TotalOrders.Where(o => OrderTracker.IsPending(o)))
+            { 
+                IAccount acc = null;
+                if (_clearcentre.HaveAccount(od.Account, out acc))
+                {
+                    if (!acc.IntraDay) continue;
+                    if (IsSymbolWithMarketTime(od.oSymbol, mts))
+                    {
+                        //撤单
+                        this.CancelOrder(od.id);
+                    }
+                }
+                Thread.Sleep(50);
+            }
+
+            //2.遍历所有持仓 进行强平
             foreach (Position pos in _clearcentre.TotalPositions)
             {
                 IAccount acc = null;
@@ -107,123 +123,16 @@ namespace TradingLib.Core
                     if (!acc.IntraDay) continue;//如果隔夜账户,则不用平仓
                     if (!pos.isFlat && IsSymbolWithMarketTime(pos.oSymbol,mts))//如果有持仓 并且持仓合约绑定在对应的市场交易时间上
                     {
-                        Order o = new MarketOrderFlat(pos);
-                        o.Account = pos.Account;
-                        o.OrderSource = QSEnumOrderSource.RISKCENTRE;
-                        o.comment = "风控日内强平";
-                        this.SendOrder(o);
+                        this.FlatPosition(pos, QSEnumOrderSource.RISKCENTRE);
+                        //Order o = new MarketOrderFlat(pos);
+                        //o.Account = pos.Account;
+                        //o.OrderSource = QSEnumOrderSource.RISKCENTRE;
+                        //o.comment = "风控日内强平";
+                        //this.SendOrder(o);
                     }
                     Thread.Sleep(50);
                 }
             }
         }
-
-
-
-        //#region 定时撤销委托与平仓
-        ///// <summary>
-        ///// 收盘前平掉所有商品仓位
-        ///// </summary>
-        //[TaskAttr("FlatPositionCommunity_n", 2, 25, 35, "夜盘收盘前平掉商品持仓")]
-        //[TaskAttr("FlatPositionCommunity_d", 14, 55, 35, "夜盘收盘前平掉商品持仓")]
-        //public void Task_FlatPosition_Community()
-        //{
-        //    if (!IsTradingday) return;
-        //    PositionTracker pt = _clearcentre.DefaultPositionTracker as PositionTracker;
-
-        //    debug("全平所有账户商品仓位,共计仓位:" + pt.Count.ToString(), QSEnumDebugLevel.INFO);
-        //    //遍历所有持仓开始平仓
-        //    foreach (Position pos in pt)
-        //    {
-        //        IAccount acc = null;
-        //        if (_clearcentre.HaveAccount(pos.Account, out acc))
-        //        {
-        //            if (!acc.IntraDay) continue;//如果隔夜账户,则不用平仓
-        //            if (!pos.isFlat && pos.oSymbol.SecurityFamily.Code!="IF")
-        //            {
-        //                Order o = new MarketOrderFlat(pos);
-        //                o.Account = pos.Account;
-        //                o.OrderSource = QSEnumOrderSource.RISKCENTRE;
-        //                o.comment = "风控中心尾盘强平";
-        //                this.SendOrder(o);
-        //            }
-        //            Thread.Sleep(50);
-        //        }
-        //    }
-        //    Notify("全平商品[" + DateTime.Now.ToString() + "]", " ");
-        //}
-
-        ///// <summary>
-        ///// 收盘前平掉所有股指仓位
-        ///// </summary>
-        //[TaskAttr("FlatPositionIF", 15, 10, 35, "日盘收盘前平掉股指持仓")]
-        //public void Task_FlatPosition_IF()
-        //{
-        //    if (!IsTradingday) return;
-        //    PositionTracker pt = _clearcentre.DefaultPositionTracker as PositionTracker;
-        //    debug("全平所有账户股指仓位:" + pt.Count.ToString(), QSEnumDebugLevel.INFO);
-
-        //    foreach (Position pos in pt)
-        //    {
-        //        IAccount acc = null;
-        //        if (_clearcentre.HaveAccount(pos.Account, out acc))
-        //        {
-        //            if (!acc.IntraDay) continue;//如果隔夜账户,则不用平仓
-        //            if (!pos.isFlat && pos.oSymbol.SecurityFamily.Code == "IF")
-        //            {
-        //                Order o = new MarketOrderFlat(pos);
-        //                o.Account = pos.Account;
-        //                o.OrderSource = QSEnumOrderSource.CLEARCENTRE;
-        //                o.comment = "风控中心尾盘强平";
-        //                this.SendOrder(o);
-        //            }
-        //            Thread.Sleep(50);
-        //        }
-        //    }
-        //    Notify("全平股指[" + DateTime.Now.ToString() + "]", " ");
-        //}
-        ///// <summary>
-        ///// 撤掉所有商品委托
-        ///// </summary>
-        //[TaskAttr("ClearOrderCommunity_n", 2, 25, 5, "夜盘收盘前撤掉商品委托")]
-        //[TaskAttr("ClearOrderCommunity_d", 14, 55, 5, "日盘收盘前撤掉商品委托")]
-        //public void Task_ClearOrders_Community()
-        //{
-        //    if (!IsTradingday && !CoreUtil.IsSat230()) return;
-        //    OrderTracker ot = _clearcentre.DefaultOrderTracker as OrderTracker;
-        //    debug("全撤所有账户商品委托", QSEnumDebugLevel.INFO);
-        //    foreach (Order o in ot.getPendingOrders())
-        //    {
-        //        if (ot.isPending(o.id) && o.oSymbol.SecurityFamily.Code != "IF")
-        //        {
-        //            this.CancelOrder(o.id);
-        //            Thread.Sleep(10);
-        //        }
-        //    }
-        //    Notify("全撤商品[" + DateTime.Now.ToString() + "]", " ");
-        //}
-        ///// <summary>
-        ///// 撤掉所有股指委托
-        ///// </summary>
-        //[TaskAttr("ClearOrderIF", 15, 10, 5, "日盘收盘前撤掉股指委托")]
-        //public void Task_ClearOrders_IF()
-        //{
-        //    if (!IsTradingday) return;
-        //    OrderTracker ot = _clearcentre.DefaultOrderTracker as OrderTracker;
-
-        //    debug("全撤所有账户股指委托", QSEnumDebugLevel.INFO);
-        //    foreach (Order o in ot.getPendingOrders())
-        //    {
-        //        if (ot.isPending(o.id) && o.oSymbol.SecurityFamily.Code == "IF")
-        //        {
-        //            this.CancelOrder(o.id);
-        //            Thread.Sleep(10);
-        //        }
-        //    }
-        //    Notify("全撤股指[" + DateTime.Now.ToString() + "]", " ");
-        //}
-
-        
-        //#endregion
     }
 }

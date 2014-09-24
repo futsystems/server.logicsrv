@@ -11,7 +11,7 @@ namespace TradingLib.Core
     public partial class MgrExchServer
     {
 
-        void Sendd(IPacket packet)
+        public void Send(IPacket packet)
         {
             CachePacket(packet);
         }
