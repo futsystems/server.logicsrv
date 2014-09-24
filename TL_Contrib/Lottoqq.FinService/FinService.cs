@@ -167,7 +167,7 @@ namespace TradingLib.Contrib.FinService
         /// </summary>
         public void InitFinService()
         {
-            LibUtil.Debug("初始化配资服务项,account:" + this.Acct);
+            //LibUtil.Debug("初始化配资服务项,account:" + this.Acct);
             //1.预检查
             this.Account = TLCtxHelper.CmdAccount[this.Acct];//如果没有对应的交易帐号 则直接返回
             if (this.Account == null) return;

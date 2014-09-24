@@ -76,7 +76,9 @@ namespace TradingLib.Contrib.FinService
         /// </summary>
         public void OnLoad()
         {
-            debug("$$$$$$$$$$$$$$$ loading...............", QSEnumDebugLevel.INFO);
+            debug("FinServiceCentre loading......", QSEnumDebugLevel.INFO);
+
+            //从数据库加载参数
             _cfgdb = new ConfigDB(FinServiceCentre.ContribName);
             if (!_cfgdb.HaveConfig("DefaultSPClassName"))
             {
@@ -90,28 +92,25 @@ namespace TradingLib.Contrib.FinService
             }
             _addservice = _cfgdb["AddFinServiceOnCreate"].AsBool();
 
-
+            //从扩展目录加载所有实现IFinService的类型
             IList<Type> types = PluginHelper.GetImplementors("Contrib", typeof(IFinService));
-            debug("got types:" + types.Count.ToString(), QSEnumDebugLevel.INFO);
             foreach (Type t in types)
             {
-                debug("加载服务计划:" + t.FullName, QSEnumDebugLevel.INFO);
+                debug("Load ServicePlane Type:" + t.FullName, QSEnumDebugLevel.INFO);
                 //同步服务计划 ServicePlane
                 FinTracker.ServicePlaneTracker.InitServicePlan(t);
-                //DBServicePlan sp = FinTracker.ServicePlaneTracker[t.FullName];
-                //FinTracker.ArgumentTracker.GetAgentArgument(2,sp.ID);
-
             }
 
-            debug("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxx", QSEnumDebugLevel.INFO);
-            foreach (FinServiceStub fs in FinTracker.FinServiceTracker.ToArray())
-            {
-                debug("finservice:" + fs.ToString(), QSEnumDebugLevel.INFO);
-                //fs.InitFinService();
-            }
+            debug("Load Service Instance......", QSEnumDebugLevel.INFO);
+            FinTracker.FinServiceTracker.ToArray();
+
+            //foreach (FinServiceStub fs in FinTracker.FinServiceTracker.ToArray())
+            //{
+            //    debug("finservice:" + fs.ToString(), QSEnumDebugLevel.INFO);
+            //    //fs.InitFinService();
+            //}
 
             FinTracker.FinServiceTracker.GotFeeChargeItemEvent += new FeeChargeItemDel(_chargelog.newFeeChargeItem);
-
             //手续费调整事件
             TLCtxHelper.ExContribEvent.AdjustCommissionEvent += new AdjustCommissionDel(ExContribEvent_AdjustCommissionEvent);
             //获得成交事件

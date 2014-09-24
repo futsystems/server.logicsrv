@@ -39,13 +39,12 @@ namespace TradingLib.Contrib.FinService
         {
             string fullname = type.FullName;
 
-            //如果数据库包含该计划 则将类型加入
+            //如果数据库包含该计划 则将类型加入到内存映射
             if (spclassmap.Keys.Contains(fullname))
             {
                 sptypemap[fullname] = type;
             }
-
-            //如果数据库中不存在 则需要同步数据库信息
+            //如果数据库中不存在 则需要同步数据库信息 然后加入到内存映射
             else
             { 
                 DBServicePlan sp = new DBServicePlan();
@@ -57,16 +56,11 @@ namespace TradingLib.Contrib.FinService
                 spclassmap.Add(sp.ClassName, sp);
 
                 sptypemap[fullname] = type;
-                
             }
-
-            LibUtil.Debug("服务计划类别加载成功:" + type.ToString() +" fullname:"+fullname +" ");
-
-            //同步服务计划的基准参数 如果不存在则从程序集载入同步，如果存在则不作修改，如果修改基准参数 需要从其他入口进行修改
             int serviceplan_fk = spclassmap[fullname].ID;
-            //查找用argumentattribute标注过的属性 这些属性是服务计划的参数
-            List<PropertyInfo> propertyInfos = PluginHelper.FindProperty<ArgumentAttribute>(type);
 
+            //查找用argumentattribute标注过的属性
+            List<PropertyInfo> propertyInfos = PluginHelper.FindProperty<ArgumentAttribute>(type);
             //将标记的属性放到map中
             argumentmap[fullname] = propertyInfos;
 
@@ -74,7 +68,7 @@ namespace TradingLib.Contrib.FinService
             foreach (PropertyInfo pi in propertyInfos)
             {
                 ArgumentAttribute attr = (ArgumentAttribute)Attribute.GetCustomAttribute(pi, typeof(ArgumentAttribute));
-                FinTracker.ArgumentTracker.UpdateArgumentBase(serviceplan_fk, attr);
+                FinTracker.ArgumentTracker.UpdateArgumentBase(serviceplan_fk, attr);//将属性中的默认参数值同步到数据库 如果已经存在则不同步
             }
         }
 
@@ -88,7 +82,7 @@ namespace TradingLib.Contrib.FinService
         public void SetArgument(object obj, Dictionary<string, Argument> accountarg, Dictionary<string, Argument> agentarg)
         {
             string fullname = obj.GetType().FullName;
-            LibUtil.Debug("setargument,obj fullname:" + fullname);
+            //LibUtil.Debug("setargument,obj fullname:" + fullname);
             if (!sptypemap.Keys.Contains(fullname))
             { 
                 //如果当前数据集没有记录到该对象的类型 则抛出异常

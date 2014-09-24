@@ -65,7 +65,7 @@ namespace TradingLib.Contrib.FinService
         public override void InitArgument(Dictionary<string, Argument> accountarg, Dictionary<string, Argument> agentarg)
         {
             base.InitArgument(accountarg, agentarg);
-            LibUtil.Debug("调用服务计划的参数初始化");
+            //LibUtil.Debug("调用服务计划的参数初始化");
             //将参数加载到内存
             //LibUtil.Debug("account args wincharge:" + this.WinCharge.AccountArgument.Value + " losscharge:" + this.LossCharge.AccountArgument.Value + " marginperlot:" + this.MarginPerLot.AccountArgument.Value + " marginperlotstop:" + this.MarginPerLotStop.AccountArgument.Value);
 
@@ -165,10 +165,10 @@ namespace TradingLib.Contrib.FinService
             {
                 //当每手资金小于设定的强平金额时执行强平
                 decimal marginperplot = nowequity / totalsize;
-                //LibUtil.Debug("account:"+this.Account.ID +" now equity:" + nowequity.ToString() +" totalsize:"+ totalsize.ToString() +" marginperlot:" + marginperplot + " stopline:" + MarginPerLotStop.AccountArgument.Value);
+                //
                 if (marginperplot <= MarginPerLotStop.AccountArgument.AsDecimal())
                 {
-                    
+                    LibUtil.Debug("SPSpecialIF 触发强平  account:" + this.Account.ID + " now equity:" + nowequity.ToString() + " totalsize:" + totalsize.ToString() + " marginperlot:" + marginperplot + " stopline:" + MarginPerLotStop.AccountArgument.Value);
                     this.Account.FlatPosition(QSEnumOrderSource.RISKCENTREACCOUNTRULE, "配资服务强平");
                 }
             }
@@ -184,7 +184,7 @@ namespace TradingLib.Contrib.FinService
         /// <returns></returns>
         public override bool CanTradeSymbol(Symbol symbol, out string msg)
         {
-            LibUtil.Debug("xxxxxxxxxxxxxxxxxxxx检查是否可以交易合约:" + symbol.Symbol);
+            //LibUtil.Debug("xxxxxxxxxxxxxxxxxxxx检查是否可以交易合约:" + symbol.Symbol);
             msg = string.Empty;
             if (symbol.SecurityFamily.Code.Equals("IF"))
             {
@@ -215,8 +215,11 @@ namespace TradingLib.Contrib.FinService
 
                 decimal nowequity = this.Account.NowEquity;
 
+                int frozensize = TLCtxHelper.CmdTradingInfo.getOrders(this.Account.ID).Where(od => od.IsEntryPosition && OrderTracker.IsPending(od)).Sum(od=>od.UnsignedSize);
+
                 decimal marginperlot = this.MarginPerLot.AccountArgument.AsDecimal();
                 decimal marginperlotstart = this.MarginPerLotStart.AccountArgument.AsDecimal();
+
                 int totalsize = 0;
                 LibUtil.Debug("nowequity:" + nowequity.ToString() + " marginperlot:" + marginperlot.ToString() + " marginpperlotstop:" + marginperlotstart.ToString());
                 if (nowequity < marginperlot)
@@ -228,12 +231,14 @@ namespace TradingLib.Contrib.FinService
                 {
                     totalsize = (int)(nowequity / marginperlot) + 1;
                 }
+
                 //如果持仓数量+当前委托数量 超过总数量 则拒绝
-                if (pos.UnsignedSize + o.UnsignedSize > totalsize)
+                if (pos.UnsignedSize + o.UnsignedSize + frozensize> totalsize)
                 {
                     int cansize = totalsize - pos.UnsignedSize >= 0 ? (totalsize - pos.UnsignedSize) : 0;
-                    LibUtil.Debug("pos size:" + pos.UnsignedSize.ToString() + " ordersize:" + o.UnsignedSize.ToString() + " totalsize:" + totalsize.ToString());
-                    msg = "保证金不足,单手保证金:" + marginperlot.ToString() + " 当前最多开:" + (cansize).ToString() + "手";
+                    LibUtil.Debug("pos size:" + pos.UnsignedSize.ToString() + " ordersize:" + o.UnsignedSize.ToString() +" frozensize:"+frozensize.ToString()+ " totalsize:" + totalsize.ToString());
+
+                    msg = "保证金不足";
                     return false;
                 }
                 return true;

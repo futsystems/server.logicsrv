@@ -36,7 +36,7 @@ namespace TradingLib.Contrib.FinService
         /// <returns></returns>
         public Dictionary<string, Argument> GetAgentArgument(int agent_fk, int serviceplan_fk)
         {
-            LibUtil.Debug("get agent argument,agent_fk:" + agent_fk.ToString() + " serviceplan_fk:" + serviceplan_fk.ToString());
+            //LibUtil.Debug("get agent argument,agent_fk:" + agent_fk.ToString() + " serviceplan_fk:" + serviceplan_fk.ToString());
             Dictionary<string, Argument> agtarg = _agtargttracker.GetAgentArgument(agent_fk, serviceplan_fk).ToDictionary(c=>c.Key,c=>c.Value as Argument);
             Dictionary<string, Argument> basearg = _baseargtracker.GetAgentArgument(serviceplan_fk).ToDictionary(c => c.Key, c => c.Value as Argument);
 
@@ -59,10 +59,10 @@ namespace TradingLib.Contrib.FinService
             Dictionary<string, Argument> acctarg = _acctargtracker.GetServiceArgument(stub.ID).ToDictionary(c => c.Key, c => c.Value as Argument);
             Dictionary<string, Argument> basearg = _baseargtracker.GetAccountArgument(stub.serviceplan_fk).ToDictionary(c => c.Key, c => c.Value as Argument);
             Dictionary<string, Argument> ret = MergeDict(new Dictionary<string, Argument>[] { acctarg, basearg });
-            foreach (Argument arg in ret.Values)
-            {
-                LibUtil.Debug("arg:" + arg.ToString());
-            }
+            //foreach (Argument arg in ret.Values)
+            //{
+            //    LibUtil.Debug("arg:" + arg.ToString());
+            //}
             return ret;
 
         }
