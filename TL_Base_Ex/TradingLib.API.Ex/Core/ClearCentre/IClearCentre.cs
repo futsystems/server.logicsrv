@@ -10,7 +10,7 @@ namespace TradingLib.API
     /// <summary>
     /// ClearCentre母本，用于提供基本的账户操作,财务信息计算,账户交易信息,总账户交易信息等
     /// </summary>
-    public interface IClearCentreBase :IAccountOperation,IAccountOperationCritical, IFinanceCaculation, IAccountTradingInfo, ITotalAccountInfo
+    public interface IClearCentreBase :IAccountOperation,IAccountOperationCritical,ITotalAccountInfo
     {
 
         /// <summary>

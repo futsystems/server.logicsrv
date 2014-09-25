@@ -46,10 +46,10 @@
     <Compile Include="Account\Service\IAccountService.cs" />
     <Compile Include="Account\Service\IAccountServiceCentre.cs" />
     <Compile Include="Account\IAccRiskCheck.cs" />
-    <Compile Include="Account\IFinanceFut.cs" />
-    <Compile Include="Account\IFinanceINNOV.cs" />
+    <Compile Include="2bedelete\IFinanceFut.cs" />
+    <Compile Include="2bedelete\IFinanceINNOV.cs" />
     <Compile Include="Core\IRouterManager.cs" />
-    <Compile Include="IFinanceOpt.cs" />
+    <Compile Include="2bedelete\IFinanceOpt.cs" />
     <Compile Include="2bedelete\IFinService.cs" />
     <Compile Include="Account\IGeneralCheck.cs" />
     <Compile Include="2bedelete\IMJService.cs" />
@@ -66,11 +66,11 @@
     <Compile Include="2bedelete\IAccountFilter.cs" />
     <Compile Include="2bedelete\IAccountSetStatistic.cs" />
     <Compile Include="Core\ClearCentre\function\IAccountOperation.cs" />
-    <Compile Include="Core\ClearCentre\function\IAccountTradingInfo.cs" />
+    <Compile Include="2bedelete\IAccountTradingInfo.cs" />
     <Compile Include="Core\ClearCentre\function\IBrokerTradingInfo.cs" />
     <Compile Include="2bedelete\IClearCentreOperation.cs" />
     <Compile Include="2bedelete\ICustomerFunction.cs" />
-    <Compile Include="Core\ClearCentre\function\IFinanceCaculaton.cs" />
+    <Compile Include="2bedelete\IFinanceCaculaton.cs" />
     <Compile Include="2bedelete\IFinServiceFunction.cs" />
     <Compile Include="2bedelete\IRaceFunction.cs" />
     <Compile Include="2bedelete\IRiskOperation.cs" />

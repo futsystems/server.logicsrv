@@ -211,13 +211,15 @@ namespace TradingLib.Core
         public void newCommissionFill(Trade t)
         {
             _fcache.Write(new TradeImpl(t));
+            IAccount account = _clearcentre[t.Account];
+
             //需要将PositionEx移动到这里 在流程内线获得持仓数据并保存到PositionEx 这样就可以避免在sending线程中造成的时间偏移 而最后position 状态形成状态跳跃
             //有新的成交数据系统推送当前方向的持仓数据 注 这里持仓进行了多空区分
             //获得净持仓数据
-            Position netpost =_clearcentre.getPosition(t.Account,t.symbol);
+            Position netpost =account.GetPositionNet(t.symbol);
             _posupdatecache.Write(netpost.GenPositionEx());
             //获得持仓明细数据
-            Position pos = _clearcentre.getPosition(t.Account, t.symbol,t.PositionSide);
+            Position pos = account.GetPosition(t.symbol, t.PositionSide);
             _posupdatecache.Write(pos.GenPositionEx());
      
         }

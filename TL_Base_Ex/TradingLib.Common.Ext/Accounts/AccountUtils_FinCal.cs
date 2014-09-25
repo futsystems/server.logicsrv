@@ -7,7 +7,7 @@ using TradingLib.API;
 
 namespace TradingLib.Common
 {
-    public static class AccountUtils
+    public static class AccountUtils_FinCal
     {
 
         #region 财务计算
@@ -169,6 +169,9 @@ namespace TradingLib.Common
         {
             return CalOptMoneyFrozen(account) + CalOptPositionCost(account);
         }
+  
+        #endregion
+
         #region 异化合约财务计算
         /// <summary>
         /// 异化合约持仓成本
@@ -257,9 +260,11 @@ namespace TradingLib.Common
         }
         #endregion
 
-        #endregion
 
         #endregion
+
+
+
         public static string GetCustName(this IAccount account)
         {
             if (string.IsNullOrEmpty(account.Name))

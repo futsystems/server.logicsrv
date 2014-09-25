@@ -103,9 +103,9 @@
     <Compile Include="Account\IAccOperation.cs" />
     <Compile Include="1tobedelete\IAccountServiceCentre.cs" />
     <Compile Include="Account\IAccTradingInfo.cs" />
-    <Compile Include="Account\IFianceFutBase.cs" />
-    <Compile Include="Account\IFinanceINNOVBase.cs" />
-    <Compile Include="Account\IFinanceOptBase.cs" />
+    <Compile Include="1tobedelete\IFianceFutBase.cs" />
+    <Compile Include="1tobedelete\IFinanceINNOVBase.cs" />
+    <Compile Include="1tobedelete\IFinanceOptBase.cs" />
     <Compile Include="Account\IFinanceTotal.cs" />
     <Compile Include="Connecter\EnumDataFeedTypes.cs" />
     <Compile Include="CoreForAccount\IAccountRiskCentre.cs" />
@@ -127,7 +127,7 @@
     <Compile Include="Account\AccAdapter\IAccountInfo.cs" />
     <Compile Include="IBase.cs" />
     <Compile Include="CoreForAccount\IBrokerClearCentre.cs" />
-    <Compile Include="CoreForAccount\IAccountClearCentre.cs" />
+    <Compile Include="1tobedelete\IAccountClearCentre.cs" />
     <Compile Include="1tobedelete\IFinServiceInfo.cs" />
     <Compile Include="1tobedelete\GUI\IDataSource.cs" />
     <Compile Include="Data\Bar.cs" />

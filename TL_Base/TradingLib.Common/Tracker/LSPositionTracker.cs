@@ -15,41 +15,45 @@ namespace TradingLib.Common
     /// </summary>
     public class LSPositionTracker : IEnumerable<Position>
     {
-
+        public PositionTracker LongPositionTracker { get { return _ltk; } }
         /// <summary>
         /// long position tracker
         /// </summary>
-        LongPositionTracker _ltk;
+        public PositionTracker _ltk;
 
+        public PositionTracker ShortPositionTracker { get { return _stk; } }
         /// <summary>
         /// short position tracker
         /// </summary>
-        ShortPositionTracker _stk;
+        PositionTracker _stk;
 
-
+        public PositionTracker NetPositionTracker { get { return _nettk; } }
         PositionTracker _nettk;
 
         public LSPositionTracker()
         {
-            _ltk = new LongPositionTracker();
-            _ltk.NewSymbol += new SymDelegate(_ltk_NewSymbol);
-            
-            _stk = new ShortPositionTracker();
-            _stk.NewSymbol += new SymDelegate(_stk_NewSymbol);
+            _ltk = new PositionTracker(QSEnumPositionDirectionType.Long);
+            _ltk.NewPositionEvent +=new PositionDelegate(_ltk_NewPositionEvent);
+
+            _stk = new PositionTracker(QSEnumPositionDirectionType.Short);
+            _stk.NewPositionEvent +=new PositionDelegate(_stk_NewPositionEvent);
+
             _nettk = new PositionTracker();
         }
 
-        void _stk_NewSymbol(string sym)
-        {
-            poslist.Add(_stk[sym]);
-            int i = 0;
-        }
+        //由于多 空 分别在不同的poslist中生成并维护 为了方便对所有postion进行访问，在新的postion生成时我们在poslist内保存一个引用
         ThreadSafeList<Position> poslist = new ThreadSafeList<Position>();
-        void _ltk_NewSymbol(string sym)
+        void _ltk_NewPositionEvent(Position pos)
         {
-            poslist.Add(_ltk[sym]);
+            //LibUtil.Debug("xxxxxxxxxxxxxxx lspositiontracker got a new long postion object");
+            poslist.Add(pos);
         }
 
+        void _stk_NewPositionEvent(Position pos)
+        {
+            //LibUtil.Debug("xxxxxxxxxxxxxxx lspositiontracker got a new short postion object");
+            poslist.Add(pos);
+        }
         /// <summary>
         /// 更新持仓管理器中的最新行情数据
         /// </summary>
@@ -89,18 +93,11 @@ namespace TradingLib.Common
         public void GotPosition(Position p)
         {
             //无持仓直接返回
-            if(p.isFlat)
-                return;
+            if (p.isFlat) return;  
             //多头持仓
-            if (p.isLong)
-            {
-                _ltk.GotPosition(p);
-            }
+            if (p.isLong){_ltk.GotPosition(p);}
             //空头持仓
-            else
-            {
-                _stk.GotPosition(p);
-            }
+            else{_stk.GotPosition(p);}
             _nettk.GotPosition(p);
         }
 
@@ -112,8 +109,17 @@ namespace TradingLib.Common
             _ltk.Clear();
             _stk.Clear();
             _nettk.Clear();
+            poslist.Clear();
         }
 
+
+        public Position this[string symbol, bool side]
+        {
+            get
+            {
+                return this[symbol, _defaultacct, side];
+            }
+        }
         /// <summary>
         /// 获得某个合约 某个帐户 某个方向的持仓
         /// 获得持仓时需要明确提供对应的方向
@@ -137,6 +143,19 @@ namespace TradingLib.Common
             }
         }
 
+        public Position this[string symbol]
+        {
+            get
+            {
+                return _nettk[symbol, _defaultacct];
+            }
+        }
+        /// <summary>
+        /// 获得净持仓
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <param name="account"></param>
+        /// <returns></returns>
         public Position this[string symbol, string account]
         {
             get
@@ -148,7 +167,6 @@ namespace TradingLib.Common
         string _defaultacct = string.Empty;
         /// <summary>
         /// Default account used when querying positions
-        /// (if never set by user, defaults to first account provided via adjust)
         /// 默认交易帐户 默认情况下为空
         /// 在没有任何成交的情况下 this[symbol] 会返回 symbol+empty 所对应的position
         /// 当有成交进入后 会自动将第一个成交的account设定到Account  this[symbol] 会返回 symbol+account 所对应的position
@@ -168,6 +186,7 @@ namespace TradingLib.Common
 
         /// <summary>
         /// 是否有多头持仓
+        /// 这里需要获得有持仓数量的持仓 不是内存中是否有持仓数据
         /// </summary>
         public bool HaveLongPosition
         {
@@ -188,14 +207,17 @@ namespace TradingLib.Common
             }
         }
 
+        /// <summary>
+        /// 获得多空持仓数组
+        /// </summary>
+        /// <returns></returns>
         public Position[] ToArray()
         {
-            //连接2个tk
-            return _ltk.Concat(_stk).ToArray();
+            return poslist.ToArray();
         }
 
         /// <summary>
-        /// 返回净持仓
+        /// 获得净持仓数组
         /// </summary>
         /// <returns></returns>
         public Position[] ToNetArray()
@@ -204,6 +226,7 @@ namespace TradingLib.Common
         }
 
 
+        #region Enumerator
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
@@ -214,17 +237,12 @@ namespace TradingLib.Common
             return GetEnumerator();
         }
 
-        object m_lock = new object();
+        //object m_lock = new object();
         public IEnumerator<Position> GetEnumerator()
         {
-            //return poslist.GetEnumerator();
-            //return _ltk.Concat(_stk);
-            lock (m_lock)
-            {
-                Position[] poslist = this.ToArray();//toarray会生成一个引用copy 导致后期无法获得最新数据
-                for (int i = 0; i < poslist.Length; i++)
-                    yield return poslist[i];
-            }
+            return poslist.GetEnumerator();
         }
+        #endregion
+
     }
 }

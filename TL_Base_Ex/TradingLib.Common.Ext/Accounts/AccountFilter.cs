@@ -54,7 +54,7 @@ namespace TradingLib.Common
                 //占用保证金
                 case "MARGIN":
                 case "M":
-                    return account.GetFundUsed();
+                    return account.MoneyUsed;
                 //手续费
                 case "COMMISSION":
                 case "C":

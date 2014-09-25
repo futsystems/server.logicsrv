@@ -55,13 +55,13 @@ namespace OrderRuleSet
                 return true;
 
             //判断是开仓还是平仓如果是开仓则进行判断拒绝,平仓则直接允许
-            Position pos = Account.getPosition(o.symbol,o.side);
+            Position pos = Account.GetPosition(o.symbol,o.side);
             if ((pos.isLong && !o.side) || (pos.isShort && o.side)) return true;
 
             //如果是开仓，可用资金-该Order需要占用的保证金为该Order成交后所剩余可用资金，该资金比例是我们监控的主要项目
-            decimal power = Account.GetFundAvabile() - Account.CalOrderFundRequired(o, 0);
+            decimal power = Account.AvabileFunds - Account.CalOrderFundRequired(o, 0);
 
-            decimal per = (power / Account.GetFundTotal()) * 100;
+            decimal per = (power / Account.NowEquity) * 100;
 
             bool ret = per >= _percent;
             if (!ret)

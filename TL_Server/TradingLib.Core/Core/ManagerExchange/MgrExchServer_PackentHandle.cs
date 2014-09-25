@@ -115,7 +115,7 @@ namespace TradingLib.Core
             debug(string.Format("管理员:{0} 请求查询交易帐户信息,帐号:{1}", session.ManagerID, request.Account), QSEnumDebugLevel.INFO);
 
             IAccount account = clearcentre[request.Account];
-            clearcentre.getPositions(request.Account);
+            
             if (account != null)
             {
                 RspMGRQryAccountInfoResponse response = ResponseTemplate<RspMGRQryAccountInfoResponse>.SrvSendRspResponse(request);

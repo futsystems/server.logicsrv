@@ -40,7 +40,8 @@ namespace TradingLib.Common
         /// <returns></returns>
         public Position getPosition(string account, string symbol,bool side)
         {
-            return _clearcentre.getPosition(account, symbol,side);
+            IAccount acc = _clearcentre[account];
+            return acc.GetPosition(symbol, side);
         }
 
         /// <summary>

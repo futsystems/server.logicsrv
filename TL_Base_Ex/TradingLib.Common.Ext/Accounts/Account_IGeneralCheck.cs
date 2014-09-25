@@ -8,15 +8,12 @@ using TradingLib.Common;
 
 namespace TradingLib.Common
 {
+    /// <summary>
+    /// 帐户常规检查
+    /// </summary>
     public partial class AccountBase
     {
-
-        //帐户常规检查 
-        //CanTakeSymbol 是否有权交易某个合约
-        //CanFundTakeOrder 资金是否允许提交某个委托
-        //CanOpenSize 当前还可以开仓数量
         #region 【IGeneral】
-
         /// <summary>
         /// 检查帐户是否可以交易某个合约,在帐户是否可以交易合约逻辑部分
         /// 我们可以按照合约的种类去查询对应的服务是否支持该合约。
@@ -27,7 +24,6 @@ namespace TradingLib.Common
         /// <returns></returns>
         public virtual bool CanTakeSymbol(Symbol symbol, out string msg)
         {
-            //TLCtxHelper.Debug("it is in base cantake symbol");
             msg = string.Empty;
             bool re = true;
             if (symbol.SecurityType == SecurityType.INNOV)
@@ -48,24 +44,25 @@ namespace TradingLib.Common
         public virtual bool CanFundTakeOrder(Order o, out string msg)
         {
             msg = string.Empty;
-            //获得该委托的持仓
-            bool posiitonside = o.PositionSide;
-            Position pos = this.getPosition(o.symbol,posiitonside);
-            //平仓操作不检查保证金(平仓有可平数量检查,释放保证金)
-            if ((pos.isLong && !o.side) || (pos.isShort && o.side)) return true;
+
+            //如果是平仓委托 则直接返回
+            if (!o.IsEntryPosition) return true;
+
+            //获得对应方向的持仓
+            Position pos = GetPosition(o.symbol,o.PositionSide);
 
             //获得某个帐户交易某个合约的可用资金
-            decimal fund = GetFundAvabile(o.oSymbol);
+            decimal avabile = GetFundAvabile(o.oSymbol);
 
             //可用资金大于需求资金则可以接受该委托
             decimal required = CalOrderFundRequired(o);
-            bool re = fund >required;
-            TLCtxHelper.Debug("Fundavabile:" + fund.ToString() + " Required:" + required);
-            if (!re)
+            TLCtxHelper.Debug("[CanFundTakeOrder Check] Fundavabile:" + avabile.ToString() + " Required:" + required);
+            if (required > avabile)
             {
                 msg = QSMessageContent.INSUFFICIENT_MOENY;
+                return false;
             }
-            return re;
+            return true;
         }
 
         /// <summary>
@@ -86,6 +83,7 @@ namespace TradingLib.Common
             TLCtxHelper.Debug("QryCanOpenSize Fundavablie:" + avabilefund.ToString() + " Symbol:" + symbol.Symbol + " Price:" + price.ToString() + " Fundperlot:" + fundperlot.ToString());
             return (int)(avabilefund/fundperlot);
         }
+
         #endregion
 
         #region 【IAccCal】
@@ -99,7 +97,6 @@ namespace TradingLib.Common
         /// <returns></returns>
         public virtual decimal CalOrderFundRequired(Order o,decimal defaultvalue=0)
         {
-            //return ClearCentre.CalOrderFundRequired(o,defaultvalue);
             decimal price = TLCtxHelper.Ctx.MessageExchange.GetAvabilePrice(o.symbol);
             return o.CalFundRequired(price, defaultvalue);
         }
@@ -123,34 +120,6 @@ namespace TradingLib.Common
                 return this.AvabileFunds;
             else
                 return 0;
-        }
-
-        /// <summary>
-        /// 获得总帐户的所有可用资金
-        /// 可用资金有帐户所有可用资金和对于某个合约的可用资金
-        /// </summary>
-        /// <returns></returns>
-        public  decimal GetFundAvabile()
-        {
-            return AvabileFunds;
-        }
-
-        /// <summary>
-        /// 获得帐户总净值,
-        /// </summary>
-        /// <returns></returns>
-        public  decimal GetFundTotal()
-        {
-            return TotalLiquidation;
-        }
-
-        /// <summary>
-        /// 获得帐户所有占用资金
-        /// </summary>
-        /// <returns></returns>
-        public virtual decimal GetFundUsed()
-        {
-            return this.CalFutMoneyUsed() + this.CalOptMoneyUsed() + this.CalInnovMoneyUsed();
         }
         #endregion
     }

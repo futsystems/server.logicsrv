@@ -151,60 +151,12 @@ namespace TradingLib.Common
         /// </summary>
         public int Mgr_fk { get; set; }
 
-        //#region 比赛所用字段
- 
-
-        ///// <summary>
-        ///// 比赛周期ID,记录该账户处于的比赛界数。每个月一个比赛周期,每个月未计入比赛的选手可以申请加入该界比赛
-        ///// ？是否可以考虑取消
-        ///// </summary>
-        //public string RaceID { get; set; }
-
-        ///// <summary>
-        ///// 进入当前比赛状态的时间,用于计算进入该比赛状态以来的盈亏,达到晋级标准 晋级并记录晋级时间。淘汰则
-        ///// </summary>
-        //public DateTime RaceEntryTime { get; set; }
-        ///// <summary>
-        ///// 当前账户的比赛状态
-        ///// </summary>
-        //public QSEnumAccountRaceStatus RaceStatus { get; set; }
-        ////当某个账户有一条race状态改变时,进行日志记录account,初始状态,目的状态
-        //#endregion
 
 
         private QSEnumOrderTransferType _ordroutetype = QSEnumOrderTransferType.SIM;
         public QSEnumOrderTransferType OrderRouteType { get { return _ordroutetype; } set { _ordroutetype = value; } }
 
-        #region 该账户当日交易信息
-        public bool AnyPosition { get { return false; } }//是否有持仓
 
-        IEnumerable<Position> _pv = null;
-        /// <summary>
-        /// 获得账户当前持仓
-        /// </summary>
-        public IEnumerable<Position> Positions { 
-            get
-            {
-                return TLCtxHelper.Ctx.ClearCentre.GetPositions(_id);
-            
-        }
-        //get { return _pv; } 
-        set { _pv = value; }
-        }
-
-        public IEnumerable<Order> Orders { get; set; }//获得当日所有委托
-        public IEnumerable<Trade> Trades { get; set; }//获得当日所有成交
-        public IEnumerable<Position> YdPositions { get; set; }
-
-        public long[] Cancels { get { return new long[]{}; } }//获得当日所有取消
-        
-        public Position getPosition(string symbol,bool side)//获得某个symbol的持仓信息
-        {
-            return TLCtxHelper.CmdTradingInfo.getPosition(_id, symbol, side);
-        }
-
-
-        #endregion
 
 
         #region 账户财务参数

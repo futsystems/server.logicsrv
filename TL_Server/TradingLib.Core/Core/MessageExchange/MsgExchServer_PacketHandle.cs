@@ -24,11 +24,13 @@ namespace TradingLib.Core
         {
             debug("QryOrder :" + request.ToString(), QSEnumDebugLevel.INFO);
             Order[] orders = new Order[]{};
+            IAccount account = _clearcentre[request.Account];
+
+
             //合约为空 查询所有
             if (string.IsNullOrEmpty(request.Symbol))
             {
-                string account = request.Account;
-                orders = _clearcentre.getOrders(account);
+                orders = account.Orders.ToArray();
             }
 
 
@@ -60,11 +62,10 @@ namespace TradingLib.Core
         {
             debug("QryTrade :" + request.ToString(), QSEnumDebugLevel.INFO);
             Trade[] trades = new Trade[] { };
+            IAccount account = _clearcentre[request.Account];
             if (string.IsNullOrEmpty(request.Symbol))
             {
-                string account = request.Account;
-                trades = _clearcentre.getTrades(account);
-                
+                trades = account.Trades.ToArray();
             }
 
             int totalnum = trades.Length;
@@ -96,12 +97,12 @@ namespace TradingLib.Core
             debug("QryPosition :" + request.ToString(), QSEnumDebugLevel.INFO);
             Position[] positions = new Position[] { };
             Position[] netpos = new Position[] { };
+            IAccount account = _clearcentre[request.Account];
 
             if (string.IsNullOrEmpty(request.Symbol))
             {
-                string account = request.Account;
-                positions = _clearcentre.getPositions(account);
-                netpos = _clearcentre.getNetPositions(account);
+                positions = account.Positions.ToArray();
+                netpos = account.PositionsNet.ToArray();
             }
             if (!string.IsNullOrEmpty(request.Symbol))
             {

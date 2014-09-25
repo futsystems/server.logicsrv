@@ -213,21 +213,21 @@ namespace TradingLib.Core
                 
                 ILocation location = new Location(request.FrontID,request.ClientID);
                 //转发昨日持仓信息
-                foreach (Position pos in clearcentre.getPositionHold(acc))
+                foreach (Position pos in account.YdPositions)
                 {
                     HoldPositionNotify notify = ResponseTemplate<HoldPositionNotify>.SrvSendNotifyResponse(location);
                     notify.Position = pos.GenPositionEx();
                     tl.TLSend(notify); 
                 }
                 //转发当日委托
-                foreach (Order o in clearcentre.getOrders(acc))
+                foreach (Order o in account.Orders)
                 {
                     OrderNotify notify = ResponseTemplate<OrderNotify>.SrvSendNotifyResponse(location);
                     notify.Order = o;
                     tl.TLSend(notify);
                 }
                 //转发当日成交
-                foreach (Trade f in clearcentre.getTrades(acc))
+                foreach (Trade f in account.Trades)
                 {
                     TradeNotify notify = ResponseTemplate<TradeNotify>.SrvSendNotifyResponse(location);
                     notify.Trade = f;

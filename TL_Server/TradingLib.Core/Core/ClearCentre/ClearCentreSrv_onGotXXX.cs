@@ -81,8 +81,8 @@ namespace TradingLib.Core
                     //调整手续费 注意 这里手续费已经进行了标准手续费计算
                     f.Commission = onAdjuestCommission(f,pr);   
                 }
-
-                Position pos = getPosition(f.Account, f.symbol, f.PositionSide);
+                IAccount account = this[f.Account];
+                Position pos = account.GetPosition(f.symbol, f.PositionSide);
                 //如果交易中心处于开启状态 则对外触发包含交易手续费的fill回报 通过tradingserver向管理端与交易客户端发送
                 if (_status == QSEnumClearCentreStatus.CCOPEN)
                 {

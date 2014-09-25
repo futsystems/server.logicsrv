@@ -72,7 +72,7 @@ namespace TradingLib.Common
                 decimal d = 0;
                 foreach (IAccount a in this)
                 {
-                    d += a.GetFundAvabile();
+                    d += a.AvabileFunds;
                 }
                 return d;
             }
@@ -154,7 +154,7 @@ namespace TradingLib.Common
                 decimal d = 0;
                 foreach (IAccount a in this)
                 {
-                    d += a.GetFundUsed();// Margin;
+                    d += a.Margin;
                 }
                 return d;
 

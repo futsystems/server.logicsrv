@@ -317,7 +317,7 @@ namespace TradingLib.Core
                 ReplyHelper.EndWriter(w);
 
                 sb.Append(w.ToString() + ExComConst.Line);
-                foreach (Order o in this.getOrders(account))
+                foreach (Order o in acc.Orders)
                 {
                     sb.Append(o.ToString() + ExComConst.Line);
                 }
@@ -423,7 +423,7 @@ namespace TradingLib.Core
             {
                 string re = "";
                 StringBuilder sb = new StringBuilder();
-                foreach (Position pos in this.getPositions(acc.ID))
+                foreach (Position pos in acc.Positions)
                 {
                     sb.Append(pos.ToString() + Environment.NewLine);
                 }
@@ -442,7 +442,7 @@ namespace TradingLib.Core
             {
                 string re = "";
                 StringBuilder sb = new StringBuilder();
-                foreach (Position pos in this.getPositions(acc.ID).Where(p => p.oSymbol.SecurityType == SecurityType.FUT).ToArray())
+                foreach (Position pos in acc.Positions.Where(p => p.oSymbol.SecurityType == SecurityType.FUT).ToArray())
                 {
                     sb.Append(pos.ToString() + Environment.NewLine);
                 }

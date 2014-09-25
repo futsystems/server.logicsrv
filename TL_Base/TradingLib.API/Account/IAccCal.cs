@@ -5,11 +5,12 @@ using System.Text;
 
 namespace TradingLib.API
 {
+    /// <summary>
+    /// 帐户计算类公共接口
+    /// </summary>
     public interface IAccCal
     {
         #region 帐户公共类计算
-
-
         /// <summary>
         /// 计算某个委托所占用资金
         /// </summary>
@@ -24,24 +25,6 @@ namespace TradingLib.API
         /// <param name="symbol"></param>
         /// <returns></returns>
         decimal GetFundAvabile(Symbol symbol);
-
-        /// <summary>
-        /// 获得帐户所有可用资金
-        /// </summary>
-        /// <returns></returns>
-        decimal GetFundAvabile();
-
-        /// <summary>
-        /// 获得帐户所有资金包含已经使用和未使用资金
-        /// </summary>
-        /// <returns></returns>
-        decimal GetFundTotal();
-
-        /// <summary>
-        /// 获得所使用资金
-        /// </summary>
-        /// <returns></returns>
-        decimal GetFundUsed();
 
 
         #endregion

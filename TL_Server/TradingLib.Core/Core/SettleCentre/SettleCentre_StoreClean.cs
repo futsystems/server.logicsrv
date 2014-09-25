@@ -37,7 +37,8 @@ namespace TradingLib.Core
                 //1.设定总统计持仓结算价
                 pos.SettlePrice = pos.LastPrice;
                 //2.设定分帐户持仓结算价
-                _clearcentre.getPosition(pos.Account, pos.Symbol,pos.isLong).SettlePrice = pos.SettlePrice;
+                IAccount account = _clearcentre[pos.Account];
+                account.GetPosition(pos.Symbol,pos.isLong).SettlePrice = pos.SettlePrice;
             }
         }
 

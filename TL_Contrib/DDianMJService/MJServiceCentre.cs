@@ -136,7 +136,7 @@ namespace Lottoqq.MJService
         /// <returns></returns>
         Position[] GetINNOVLottoPositoins()
         {
-            return TLCtxHelper.CmdTradingInfo.getPositions(null).Where(delegate(Position pos) { return !pos.isFlat && pos.oSymbol.SecurityType == SecurityType.INNOV && pos.oSymbol.SecurityFamily.Code.Equals("LOTTO"); }).ToArray();
+            return null;// TLCtxHelper.CmdTradingInfo.getPositions(null).Where(delegate(Position pos) { return !pos.isFlat && pos.oSymbol.SecurityType == SecurityType.INNOV && pos.oSymbol.SecurityFamily.Code.Equals("LOTTO"); }).ToArray();
         }
 
 

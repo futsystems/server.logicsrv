@@ -120,7 +120,8 @@ namespace TradingLib.Core
         public void FlatPosition(string accid, QSEnumOrderSource source, string closereason = "系统强平")
         {
             //debug("平掉账户:" + accid + "所有仓位", QSEnumDebugLevel.INFO);
-            foreach (Position pos in _clearcentre.getPositions(accid))//遍历该账户的所有仓位 若不是空仓则市价平仓
+            IAccount account = _clearcentre[accid];
+            foreach (Position pos in account!=null?account.Positions:new Position[]{})//遍历该账户的所有仓位 若不是空仓则市价平仓
             {
                 if (!pos.isFlat)
                 {

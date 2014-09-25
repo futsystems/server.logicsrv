@@ -118,13 +118,13 @@ namespace TradingLib.Common
             }
         }
 
-        public static IAccountTradingInfo CmdTradingInfo
-        {
-            get
-            {
-                return defaultInstance.ctx.ClearCentre as IAccountTradingInfo;
-            }
-        }
+        //public static IAccountTradingInfo CmdTradingInfo
+        //{
+        //    get
+        //    {
+        //        return defaultInstance.ctx.ClearCentre as IAccountTradingInfo;
+        //    }
+        //}
 
         public static IAccountOperationCritical CmdAccountCritical
         {

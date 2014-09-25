@@ -263,11 +263,11 @@ namespace TradingLib.Core
 
         [CoreCommandAttr(QSEnumCommandSource.CLI, "flatpos", "flatpos - flat postion of account", "风控中心平掉某个帐户的某个合约的所有持仓")]
         public void CTE_FlatPosition(string account, string symbol)
-        { 
-            Position pos = _clearcentre.getPosition(account,symbol,true);
+        {
+            Position pos = _clearcentre[account].GetPosition(symbol, true);
             if (pos != null && !pos.isFlat)
                 FlatPosition(pos, QSEnumOrderSource.RISKCENTRE, "风控强平");
-            Position pos2 = _clearcentre.getPosition(account, symbol, false);
+            Position pos2 =_clearcentre[account].GetPosition(symbol, false);
             if (pos2 != null && !pos2.isFlat)
                 FlatPosition(pos2, QSEnumOrderSource.RISKCENTRE, "风控强平");
         }

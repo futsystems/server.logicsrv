@@ -5,6 +5,12 @@ using System.Text;
 
 namespace TradingLib.API
 {
+    /// <summary>
+    /// 帐户核心常规检查
+    /// 合约交易权限检查
+    /// 委托保证金检查
+    /// 可开数量等
+    /// </summary>
     public interface IGeneralCheck
     {
         /// <summary>

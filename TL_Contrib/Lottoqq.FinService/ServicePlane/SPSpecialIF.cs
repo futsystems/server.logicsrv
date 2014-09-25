@@ -156,7 +156,7 @@ namespace TradingLib.Contrib.FinService
             //当前资金
             decimal nowequity = this.Account.NowEquity;
             int totalsize = 0;
-            foreach (Position p in TLCtxHelper.CmdTradingInfo.getPositions(this.Account.ID))
+            foreach (Position p in this.Account.Positions)
             {
                 totalsize += p.UnsignedSize;
             }
@@ -211,11 +211,11 @@ namespace TradingLib.Contrib.FinService
             {
                 bool positoinside = o.PositionSide;
                 //获得对应的持仓数据
-                Position pos = TLCtxHelper.CmdTradingInfo.getPosition(o.Account, o.symbol, positoinside);
+                Position pos = TLCtxHelper.CmdAccount[o.Account].GetPosition(o.symbol, positoinside);
 
                 decimal nowequity = this.Account.NowEquity;
 
-                int frozensize = TLCtxHelper.CmdTradingInfo.getOrders(this.Account.ID).Where(od => od.IsEntryPosition &&od.IsPending()).Sum(od=>od.UnsignedSize);
+                int frozensize = this.Account.Orders.Where(od => od.IsEntryPosition &&od.IsPending()).Sum(od=>od.UnsignedSize);
 
                 decimal marginperlot = this.MarginPerLot.AccountArgument.AsDecimal();
                 decimal marginperlotstart = this.MarginPerLotStart.AccountArgument.AsDecimal();
@@ -273,8 +273,8 @@ namespace TradingLib.Contrib.FinService
             decimal marginperlot = this.MarginPerLot.AccountArgument.AsDecimal();
             decimal nowequity = this.Account.NowEquity;
             int totalsize = (int)(nowequity / marginperlot) + 1;
-            Position longpos = TLCtxHelper.CmdTradingInfo.getPosition(this.Account.ID, symbol.Symbol, true);
-            Position shortpos = TLCtxHelper.CmdTradingInfo.getPosition(this.Account.ID, symbol.Symbol, false);
+            Position longpos = this.Account.GetPosition(symbol.Symbol, true);
+            Position shortpos = this.Account.GetPosition(symbol.Symbol, false);
             int totalposzie = longpos.UnsignedSize + shortpos.UnsignedSize;
 
             return totalsize - totalposzie;

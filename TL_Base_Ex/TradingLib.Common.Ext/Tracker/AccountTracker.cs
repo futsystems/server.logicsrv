@@ -83,7 +83,7 @@ namespace TradingLib.Common
             OrderTracker ot = new OrderTracker();
             if (!OrdBook.ContainsKey(account.ID))
                 OrdBook.TryAdd(account.ID,ot);
-            baseacc.Orders = ot;
+            baseacc.TKOrder = ot;
 
             //3.添加账户对应的仓位管理器
             LSPositionTracker pt = new LSPositionTracker();
@@ -92,7 +92,7 @@ namespace TradingLib.Common
                 pt.DefaultAccount = account.ID;
                 PosBook.TryAdd(account.ID, pt);
             }
-            baseacc.Positions = pt;
+            baseacc.TKPosition = pt;
 
             LSPositionTracker ydpt = new LSPositionTracker();
             if (!PosHold.ContainsKey(account.ID))
@@ -100,14 +100,14 @@ namespace TradingLib.Common
                 ydpt.DefaultAccount = account.ID;
                 PosHold.TryAdd(account.ID, ydpt);
             }
-            baseacc.Positions = ydpt;
+            baseacc.TKYdPosition = ydpt;
 
 
             //4.添加账户对应的成交管理器
             ThreadSafeList<Trade> tt = new ThreadSafeList<Trade>();
             if (!TradeBook.ContainsKey(account.ID))
                 TradeBook.TryAdd(account.ID, tt);
-            baseacc.Trades = tt;
+            baseacc.TKTrade = tt;
 
         }
 

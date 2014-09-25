@@ -20,6 +20,7 @@ namespace TradingLib.Common
             return false;
         }
 
+
         /// <summary>
         /// 
         /// </summary>

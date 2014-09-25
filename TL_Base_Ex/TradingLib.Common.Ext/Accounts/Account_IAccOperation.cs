@@ -6,8 +6,14 @@ using TradingLib.API;
 
 namespace TradingLib.Common
 {
+    /// <summary>
+    /// 帐户操作类接口
+    /// 原来的设计是通过将ClearCenter和RiskCentre进行wrapper然后注入到IAccount内部实现对应操作的调用
+    /// 后期实现了CTX访问总线，通过总线自动绑定核心组件，然后外围的组件可以通过CTX对关键操作进行操作
+    /// </summary>
     public partial class AccountBase
     {
+        
         #region【IAccOperation】
 
         /// <summary>
