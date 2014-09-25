@@ -91,7 +91,7 @@ namespace FutsMoniter
         /// <param name="account"></param>
         public void GotAccountChanged(IAccountLite account)
         {
-            if (Account.Account.Equals(account.Account))
+            if (this.Account !=null && Account.Account.Equals(account.Account))
             {
                 this.Account = account;
             }
@@ -203,10 +203,20 @@ namespace FutsMoniter
 
         }
 
-       
 
-        
 
+
+        public void ValidView()
+        {
+            if (!Globals.RightRouter)
+            {
+                routerpanel.Visible = false;
+            }
+            if (!Globals.RightCashOperation)
+            {
+                cashoppanel.Visible = false;
+            }
+        }
        
     }
 }

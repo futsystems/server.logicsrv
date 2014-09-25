@@ -20,7 +20,10 @@ namespace FutsMoniter
             Factory.IDataSourceFactory(accountType).BindDataSource(UIUtil.GetEnumValueObjects<QSEnumAccountCategory>());
             Factory.IDataSourceFactory(agent).BindDataSource(Globals.BasicInfoTracker.GetBaseManagerCombList());
 
-
+            if (!Globals.RightAgent)
+            {
+                agent.Enabled = false;
+            }
         }
 
 

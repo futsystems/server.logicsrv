@@ -292,6 +292,23 @@ namespace FutsMoniter.Controls
         }
 
         /// <summary>
+        /// validview 调整视图状态
+        /// 根据具体的权限状态进行调整
+        /// </summary>
+        public void ValidView()
+        {
+            if (!Globals.RightRouter)
+            {
+                accountgrid.Columns[ROUTEIMG].IsVisible = false;
+            }
+            if (!Globals.RightAgent)
+            {
+                accountgrid.Columns[AGENTCODE].IsVisible = false;
+            }
+
+            fmaccountconfig.ValidView();
+        }
+        /// <summary>
         /// 绑定数据表格到grid
         /// </summary>
         private void BindToTable()
@@ -309,6 +326,11 @@ namespace FutsMoniter.Controls
             accountgrid.Columns[ROUTE].IsVisible = false;
             accountgrid.Columns[LOGINSTATUS].IsVisible = false;
 
+            //if (! (Globals.Manager.Type == QSEnumManagerType.ROOT))
+            //{
+            //    accountgrid.Columns[ROUTEIMG].IsVisible = false;
+            //    accountgrid.Columns[AGENTCODE].IsVisible = false;
+            //}
             accountgrid.Columns[ACCOUNT].Width = 60;
             accountgrid.Columns[ROUTEIMG].Width = 20;
             accountgrid.Columns[EXECUTEIMG].Width = 20;
@@ -809,7 +831,8 @@ namespace FutsMoniter.Controls
                         gt.Rows[i][PROFIT] = decDisp(0);
                         gt.Rows[i][CATEGORY] = LibUtil.GetEnumDescription(account.Category);
                         gt.Rows[i][INTRADAY] = account.IntraDay ? "日内" : "隔夜";
-                        gt.Rows[i][AGENTCODE] = Globals.BasicInfoTracker.GetManager(account.MGRID).Name;
+                        Manager mgr = Globals.BasicInfoTracker.GetManager(account.MGRID);
+                        gt.Rows[i][AGENTCODE] = mgr.Login + " - " + mgr.Name;
                         gt.Rows[i][NAME] = account.Name;
 
                         accountmap.TryAdd(account.Account, account);
@@ -826,7 +849,8 @@ namespace FutsMoniter.Controls
                         gt.Rows[r][EXECUTEIMG] = getExecuteStatusImage(account.Execute);
                         gt.Rows[r][CATEGORY] = LibUtil.GetEnumDescription(account.Category);
                         gt.Rows[r][INTRADAY] = account.IntraDay ? "日内" : "隔夜";
-                        gt.Rows[r][AGENTCODE] = Globals.BasicInfoTracker.GetManager(account.MGRID).Name;
+                        Manager mgr = Globals.BasicInfoTracker.GetManager(account.MGRID);
+                        gt.Rows[r][AGENTCODE] = mgr.Login +" - "+ mgr.Name;
                         gt.Rows[r][NAME] = account.Name;
 
                     }

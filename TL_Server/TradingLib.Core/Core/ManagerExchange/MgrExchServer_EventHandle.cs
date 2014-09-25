@@ -81,6 +81,7 @@ namespace TradingLib.Core
 
         ILocation[] tl_GetLocationsViaAccountEvent(string account)
         {
+            //当以account为对象查找通知对象时,遍历所有链接的管理端,如果对应的管理端有权限查看该帐户,则进行通知
             List<ILocation> locations = new List<ILocation>();
             foreach (CustInfoEx cst in customerExInfoMap.Values)
             {

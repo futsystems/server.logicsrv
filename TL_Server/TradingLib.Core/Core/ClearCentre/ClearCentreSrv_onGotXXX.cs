@@ -18,7 +18,7 @@ namespace TradingLib.Core
         /// 系统内的委托不更改基本属性,只进行委托状态修改
         /// </summary>
         /// <param name="o"></param>
-        public override void onGotOrder(Order o, bool neworder)
+        internal override void onGotOrder(Order o, bool neworder)
         {
             try
             {
@@ -48,7 +48,7 @@ namespace TradingLib.Core
             }
         }
 
-        public override void onGotCancel(long oid)
+        internal override void onGotCancel(long oid)
         {
             if (this.Status == QSEnumClearCentreStatus.CCOPEN)
                 debug("Got cancel:" + oid, QSEnumDebugLevel.INFO);
@@ -63,12 +63,11 @@ namespace TradingLib.Core
                     oc.OrderID = o.id;
                     _asynLoger.newOrderAction(oc);
                 }
-                
             }
         }
 
-        
-        public override void onGotFill(Trade f, PositionTransaction postrans)
+
+        internal override void onGotFill(Trade f, PositionTransaction postrans)
         {
             try
             {
@@ -119,7 +118,7 @@ namespace TradingLib.Core
         /// <param name="fill"></param>
         /// <param name="c"></param>
         /// <returns></returns>
-        public decimal onAdjuestCommission(Trade fill, IPositionRound positionround)
+        internal decimal onAdjuestCommission(Trade fill, IPositionRound positionround)
         {
             if (AdjustCommissionEvent != null)
                 return AdjustCommissionEvent(fill, positionround);

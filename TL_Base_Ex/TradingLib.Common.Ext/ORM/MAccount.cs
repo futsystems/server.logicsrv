@@ -418,8 +418,9 @@ namespace TradingLib.ORM
         /// <param name="pass"></param>
         /// <param name="category"></param>
         /// <returns></returns>
-        public static bool AddAccount(out string account, string user_id = "0",string setaccount="", string pass = "123456", QSEnumAccountCategory category = QSEnumAccountCategory.DEALER)
+        public static bool AddAccount(out string account, string user_id = "0",string setaccount="", string pass = "123456", QSEnumAccountCategory category = QSEnumAccountCategory.DEALER,int mgr_fk=0)
         {
+            
             using (DBMySql db = new DBMySql())
             {
                 account = string.Empty;
@@ -462,7 +463,7 @@ namespace TradingLib.ORM
                             return false;
                         }
                     }
-                    string query = String.Format("Insert into accounts (`account`,`user_id`,`createdtime`,`pass`,`account_category`,`settledatetime`) values('{0}','{1}','{2}','{3}','{4}','{5}')", account, user_id.ToString(), DateTime.Now.ToString(), pass, category, DateTime.Now - new TimeSpan(1, 0, 0, 0, 0));
+                    string query = String.Format("Insert into accounts (`account`,`user_id`,`createdtime`,`pass`,`account_category`,`settledatetime` ,`mgr_fk` ) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}')", account, user_id.ToString(), DateTime.Now.ToString(), pass, category, DateTime.Now - new TimeSpan(1, 0, 0, 0, 0),mgr_fk);
                     return db.Connection.Execute(query) > 0;
                 }
                 catch (Exception ex)

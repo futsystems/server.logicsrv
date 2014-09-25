@@ -89,7 +89,7 @@ namespace FutsMoniter
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
-
+            Globals.LoginStatus.Reset();
             new Thread(delegate() {
                 if (ServerLoginEvent != null)
                 {

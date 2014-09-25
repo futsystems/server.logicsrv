@@ -32,7 +32,19 @@ namespace TradingLib.Common
             }
         }
 
-        
+        /// <summary>
+        /// 获得Root全局ID
+        /// </summary>
+        /// <returns></returns>
+        public int GetRootFK()
+        {
+            foreach (Manager m in mgridmap.Values)
+            {
+                if (m.Type == QSEnumManagerType.ROOT)
+                    return m.ID;
+            }
+            return 0;
+        }
 
         public void UpdateManager(Manager mgr)
         {
@@ -58,8 +70,11 @@ namespace TradingLib.Common
                 }
             }
         }
+
+
         /// <summary>
         /// 查询某个管理员可以查询的管理员列表
+        /// 
         /// </summary>
         /// <param name="mgr"></param>
         /// <returns></returns>
@@ -69,7 +84,21 @@ namespace TradingLib.Common
             {
                 return managermap.Values;
             }
-            return new List<Manager>();
+            else
+            { 
+                //如果是代理 返回所有属于该代理的所有柜员
+                if(mgr.Type == QSEnumManagerType.AGENT)
+                {
+                    //如果Manager的mgr_fk等于该代理的ID则返回
+                    return managermap.Values.Where(m => m.mgr_fk.Equals(mgr.ID));
+                }
+                else
+                {
+                    return new Manager[]{mgr};
+                }
+                
+            }
+            //return new List<Manager>();
         }
         /// <summary>
         /// 更新管理员密码

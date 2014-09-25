@@ -15,6 +15,7 @@ namespace TradingLib.Common
             this.AccountID = string.Empty;
             this.Password = string.Empty;
             this.UserID = 0;
+            this.MgrID = 0;
         }
 
         /// <summary>

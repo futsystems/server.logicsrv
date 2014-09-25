@@ -88,7 +88,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 强平原因
         /// </summary>
-        public string ForceCloseReason { get { return _forceclosereason; } set { _forceclosereason = value; } }
+        public string ForceCloseReason { get { return _forceclosereason; } set { _forceclosereason = value.Replace(',',' ').Replace('|',' ').Replace('^',' '); } }
 
 
         public bool isMarket { get { return (price == 0) && (stopp == 0); } }
@@ -412,7 +412,8 @@ namespace TradingLib.Common
             sb.Append(o.OrderSeq.ToString());
             sb.Append(d);
             sb.Append(o.OrderExchID);
-
+            sb.Append(d);
+            sb.Append(o.ForceCloseReason);
             return sb.ToString();
         }
 
@@ -467,6 +468,7 @@ namespace TradingLib.Common
             o.HedgeFlag = rec[(int)OrderField.HedgeFlag];
             o.OrderSeq = int.Parse(rec[(int)OrderField.OrderSeq]);
             o.OrderExchID = rec[(int)OrderField.OrderExchID];
+            o.ForceCloseReason = rec[(int)OrderField.ForceReason];
             return o;
         }
 

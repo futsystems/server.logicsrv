@@ -237,6 +237,7 @@ namespace TradingLib.Core
             //如果验证通过返回具体的管理信息
             if (response.Authorized)
             {
+                //查找对应的管理端对象 将相关信息与clientinfo进行绑定
                 Manager m = BasicTracker.ManagerTracker[request.LoginID];
                 if (m != null)
                 {
@@ -245,10 +246,18 @@ namespace TradingLib.Core
                     response.Name = m.Name;
                     response.QQ = m.QQ;
                     response.ManagerType = m.Type;
+                    response.mgr_fk = m.ID;//传递mgr_fk
+
+                    clientinfo.mgr_fk = m.ID;
+                    clientinfo.AuthorizedSuccess();
+                    clientinfo.ManagerID = request.LoginID;
 
                 }
-                clientinfo.AuthorizedSuccess();
-                clientinfo.ManagerID = request.LoginID;
+                else//如果管理端对象在内存中不存在 则返回登入失败
+                {
+                    clientinfo.AuthorizedFail();
+                }
+                
             }
             else
             {

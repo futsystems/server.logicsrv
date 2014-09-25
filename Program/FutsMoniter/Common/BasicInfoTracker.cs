@@ -230,7 +230,10 @@ namespace TradingLib.Common
                 managermap.Add(manager.ID, manager);
                 notify = manager;
             }
-
+            if (Globals.MgrFK != null && Globals.MgrFK == manager.ID)
+            {
+                Globals.Manager = manager;//将获得的柜员列表中 属于本登入mgr_fk的manager绑定到全局对象
+            }
             //对外触发 初始化过程中不对外出发
             if (_firstloadfinish && GotManagerEvent != null)
             {

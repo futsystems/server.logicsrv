@@ -386,11 +386,11 @@ namespace TradingLib.Core
         /// 向客户端发送持仓状态更新回报
         /// </summary>
         /// <param name="pos"></param>
-        internal void newPositionUpdate(Position pos)
+        internal void newPositionUpdate(PositionEx pos)
         {
             if (string.IsNullOrEmpty(pos.Account)) return;
             PositionNotify notify = ResponseTemplate<PositionNotify>.SrvSendNotifyResponse(pos.Account);
-            notify.Position = pos.GenPositionEx();
+            notify.Position = pos;
 
             TLSend(notify);
             debug("send positionupdate to client|" + pos.ToString());

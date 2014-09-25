@@ -29,7 +29,9 @@ namespace FutsMoniter
                 this.qq.Text = manger.QQ;
                 this.acclimit.Value = manger.AccLimit;
                 this.type.Enabled = false;
+                this.login.Enabled = false;
                 this.acclimit.Enabled = false;
+
                 if (manger.Type == QSEnumManagerType.AGENT)
                 {
                     this.acclimit.Enabled = true;
@@ -44,6 +46,10 @@ namespace FutsMoniter
 
         private void btnSubmit_Click(object sender, EventArgs e)
         {
+            if (!Globals.RightAddManger)
+            {
+                fmConfirm.Show("没有添加柜员的权限");
+            }
             if (manger == null)
             {
                 Manager m = new Manager();
@@ -53,6 +59,17 @@ namespace FutsMoniter
                 m.Mobile = this.mobile.Text;
                 m.QQ = this.qq.Text;
                 m.AccLimit = (int)this.acclimit.Value;
+                if (Globals.Manager.Type == QSEnumManagerType.ROOT)
+                {
+                    if (m.Type == QSEnumManagerType.AGENT)//如果添加代理则mgr_fk=0
+                    {
+                        m.mgr_fk =0;
+                    }
+                }
+                if (Globals.Manager.Type == QSEnumManagerType.AGENT)
+                {
+                    m.mgr_fk = Globals.Manager.mgr_fk;
+                }
                 if (fmConfirm.Show("确认添加管理员信息?") == System.Windows.Forms.DialogResult.Yes)
                 {
                     Globals.TLClient.ReqUpdateManager(m);

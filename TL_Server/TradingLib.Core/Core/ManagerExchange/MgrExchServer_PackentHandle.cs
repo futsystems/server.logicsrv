@@ -31,44 +31,54 @@ namespace TradingLib.Core
         {
             debug(string.Format("管理员:{0} 请求下载交易帐户列表:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
             //判断管理账户类别
+            //1.超级管理员可以查看所有帐户
+            IAccount[] list = new IAccount[] { };
             if (manager.BaseManager.Type == QSEnumManagerType.ROOT)
             {
-                IAccount[] list = clearcentre.Accounts;
-                int len = list.Length;
-                int i=0;
-                if (len > 0)
-                {
-                    foreach(IAccount account in list)
-                    {
+                //获得系统所有交易帐号
+                list = clearcentre.Accounts;
+            }
+            else
+            {
+                debug("柜员所属于主柜员ID:" + manager.BaseManager.ID.ToString(), QSEnumDebugLevel.INFO);
+                //获得属于该主柜员的所有交易帐号
+                list = clearcentre.Accounts.Where(acc=>acc.Mgr_fk.Equals(manager.BaseManager.ID)).ToArray();
 
-                        RspMGRQryAccountResponse response = ResponseTemplate<RspMGRQryAccountResponse>.SrvSendRspResponse(request);
-                        response.oAccount = ObjectInfoHelper.GenAccountLite(account);
-                        CacheRspResponse(response,i==list.Length -1);
-
-                        TrdClientInfo client = exchsrv.FirstClientInfoForAccount(list[i].ID);
-                        if (client != null)
-                        {
-                            NotifyMGRSessionUpdateNotify notify = ResponseTemplate<NotifyMGRSessionUpdateNotify>.SrvSendRspResponse(request);
-                            notify.TradingAccount = client.Account;
-                            notify.IsLogin = client.Authorized;
-                            notify.IPAddress = client.IPAddress;
-                            notify.HardwarCode = client.HardWareCode;
-                            notify.ProductInfo = client.ProductInfo;
-                            notify.FrontID = client.Location.FrontID;
-                            notify.ClientID = client.Location.ClientID;
-
-                            CachePacket(notify);
-                        }
-                        i++;
-                    }
-                }
-                else
+                
+            }
+            if (list.Length > 0)
+            {
+                for (int i = 0; i < list.Length; i++)
                 {
                     RspMGRQryAccountResponse response = ResponseTemplate<RspMGRQryAccountResponse>.SrvSendRspResponse(request);
-                    CacheRspResponse(response);
+                    response.oAccount = ObjectInfoHelper.GenAccountLite(list[i]);
+                    CacheRspResponse(response, i == list.Length - 1);
+
+
+                    TrdClientInfo client = exchsrv.FirstClientInfoForAccount(list[i].ID);
+                    if (client != null)
+                    {
+                        NotifyMGRSessionUpdateNotify notify = ResponseTemplate<NotifyMGRSessionUpdateNotify>.SrvSendRspResponse(request);
+                        notify.TradingAccount = client.Account;
+                        notify.IsLogin = client.Authorized;
+                        notify.IPAddress = client.IPAddress;
+                        notify.HardwarCode = client.HardWareCode;
+                        notify.ProductInfo = client.ProductInfo;
+                        notify.FrontID = client.Location.FrontID;
+                        notify.ClientID = client.Location.ClientID;
+
+                        CachePacket(notify);
+                    }
                 }
             }
+            else
+            {
+                RspMGRQryAccountResponse response = ResponseTemplate<RspMGRQryAccountResponse>.SrvSendRspResponse(request);
+                CacheRspResponse(response);
+
+            }
         }
+        
 
         /// <summary>
         /// 设定观察交易帐号列表
@@ -305,12 +315,12 @@ namespace TradingLib.Core
             if (manager == null)
             {
                 RspMGROperationResponse response = ResponseTemplate<RspMGROperationResponse>.SrvSendRspResponse(request);
-                response.RspInfo.FillError("制定的管理员不存在");
+                response.RspInfo.FillError("指定的管理员不存在");
                 CachePacket(response);
                 return;
             }
-            bool re = clearcentre.AddAccount(out outaccount, request.UserID.ToString(), request.AccountID, request.Password, request.Category);
-            clearcentre.UpdateManagerID(outaccount, mgrid);
+            bool re = clearcentre.AddAccount(out outaccount, request.UserID.ToString(), request.AccountID, request.Password, request.Category,request.MgrID);
+            //clearcentre.UpdateManagerID(outaccount, mgrid);
         }
 
         void SrvOnMGRQryExchange(MGRQryExchangeRequuest request, ISession session, Manager manager)
@@ -744,6 +754,7 @@ namespace TradingLib.Core
         {
             debug(string.Format("管理员:{0} 请求查询管理员列表:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
 
+            //获得当前管理员可以查看的柜员列表
             Manager[] mgrs = BasicTracker.ManagerTracker.GetManagers(manager).ToArray();
             if (mgrs.Length > 0)
             {
@@ -753,6 +764,12 @@ namespace TradingLib.Core
                     response.ManagerToSend = mgrs[i];
                     CacheRspResponse(response, i == mgrs.Length - 1);
                 }
+            }
+            else
+            {
+                RspMGRQryManagerResponse response = ResponseTemplate<RspMGRQryManagerResponse>.SrvSendRspResponse(request);
+                response.ManagerToSend = new Manager();
+                CacheRspResponse(response);
             }
             
         

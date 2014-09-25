@@ -399,16 +399,18 @@ namespace TradingLib.Core
 
         /// <summary>
         /// 为某个user_id添加某个类型的帐号 密码为pass
+        /// 默认mgr_fk为0 如果为0则通过ManagerTracker获得Root的mgr_fk 将默认帐户统一挂在Root用户下
         /// </summary>
         /// <param name="user_id"></param>
         /// <param name="type"></param>
         /// <param name="pass"></param>
         /// <returns></returns>
-        public bool AddAccount(out string account, string user_id,string setaccount,string pass, QSEnumAccountCategory type)
+        public bool AddAccount(out string account, string user_id,string setaccount,string pass, QSEnumAccountCategory type,int mgr_fk=0)
         {
-            debug("清算中心为user:" + user_id + " 添加交易帐号", QSEnumDebugLevel.INFO);
+            debug("清算中心为user:" + user_id + " 添加交易帐号到主柜员ID:"+mgr_fk.ToString(), QSEnumDebugLevel.INFO);
             account = null;
-            bool re = ORM.MAccount.AddAccount(out account, user_id, setaccount,pass, type);
+            mgr_fk  = (mgr_fk == 0 ? BasicTracker.ManagerTracker.GetRootFK() : mgr_fk);
+            bool re = ORM.MAccount.AddAccount(out account, user_id, setaccount,pass, type,mgr_fk);
 
             //如果添加成功则将该账户加载到内存
             if (re)

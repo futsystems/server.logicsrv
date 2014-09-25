@@ -39,20 +39,25 @@ namespace TradingLib.Core
         /// <summary>
         /// 风控中心委托一段检查
         /// 如果未通过检查则则给出具体的错误报告
+        /// 一段检查中有一些委托错误并不需要记录数据
+        /// 比如非交易日，结算中心异常，以及清算中心以关闭等
+        /// 这些回报不需要进行记录 否则会形成大量无意义的拒绝数据
         /// </summary>
         /// <param name="o"></param>
         /// <param name="acc"></param>
         /// <param name="errortitle"></param>
         /// <param name="inter">是否是内部委托 比如风控系统产生的委托</param>
         /// <returns></returns>
-        public bool CheckOrderStep1(ref Order o,IAccount account, out string errortitle,bool inter=false)
+        public bool CheckOrderStep1(ref Order o,IAccount account,out bool needlog, out string errortitle,bool inter=false)
         {
             errortitle = string.Empty;
+            needlog = true;
             //1 结算中心检查
             //1.1检查结算中心是否正常状态 如果历史结算状态则需要将结算记录补充完毕后才可以接受新的委托
             if (!TLCtxHelper.Ctx.SettleCentre.IsNormal)
             {
                 errortitle = "SETTLECENTRE_NOT_RESET";//结算中心异常
+                needlog = false;
                 return false;
             }
 
@@ -60,6 +65,7 @@ namespace TradingLib.Core
             if (!TLCtxHelper.Ctx.SettleCentre.IsTradingday)//非周六0->2:30 周六0:00->2:30有交易(金银夜盘交易)
             {
                 errortitle = "NOT_TRADINGDAY";//非交易日
+                needlog = false;
                 return false;
             }
 
@@ -67,6 +73,7 @@ namespace TradingLib.Core
             if (TLCtxHelper.Ctx.SettleCentre.IsInSettle)
             {
                 errortitle = "SETTLECENTRE_IN_SETTLE";//结算中心出入结算状态
+                needlog = false;
                 return false;
             }
 
@@ -75,6 +82,7 @@ namespace TradingLib.Core
             if (_clearcentre.Status != QSEnumClearCentreStatus.CCOPEN)
             {
                 errortitle = "CLEARCENTRE_CLOSED";//清算中心已关闭
+                needlog = false;
                 return false;
             }
 
@@ -83,6 +91,7 @@ namespace TradingLib.Core
             if (!BasicTracker.SymbolTracker.TrckerOrderSymbol(o))
             {
                 errortitle = "SYMBOL_NOT_EXISTED";//合约不存在
+                needlog = false;
                 return false;
             }
 

@@ -77,7 +77,7 @@ namespace TradingLib.API
         /// <param name="pass"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        bool AddAccount(out string account, string user_id, string setaccount,string pass, QSEnumAccountCategory type);
+        bool AddAccount(out string account, string user_id, string setaccount,string pass, QSEnumAccountCategory type,int mgr_fk);
 
         /// <summary>
         /// 验证某交易账户

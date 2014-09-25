@@ -40,7 +40,12 @@ namespace FutsMoniter
 
         void AddManager_Click(object sender, EventArgs e)
         {
-
+            Globals.Debug("manger type:" + Globals.Manager.Type.ToString());
+            if (!Globals.RightAddManger)
+            {
+                fmConfirm.Show("没有添加柜员的权限");
+                return;
+            }
             ManagerEditForm fm = new ManagerEditForm();
             fm.Show();
         }
@@ -56,6 +61,7 @@ namespace FutsMoniter
                     fmConfirm.Show("超级管理员不允许编辑!");
                     return;
                 }
+
                 ManagerEditForm fm = new ManagerEditForm();
                 fm.Manager = manger;
                 fm.ShowDialog();

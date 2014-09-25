@@ -27,17 +27,13 @@ namespace TradingLib.ServiceManager
         private void InitMsgExchSrv()
         {
             debug("1.初始化MsgExchServer");
-            //根据不同的配置生成具体的TLServer
-            
             _messageExchagne = new MsgExchServer();
-
         }
 
 
         private void DestoryMsgExchSrv()
         {
             _messageExchagne.Dispose();
-            //_messageExchagne = null;
         }
 
 
@@ -58,17 +54,6 @@ namespace TradingLib.ServiceManager
             debug("2.初始化ClearCentre");
             _clearCentre = new ClearCentre(config.LoadMode);
 
-            //clearcentre对外发送委托 取消委托的请求回调 _srv.SendOrderNoRiskCheck 内函数被 客户请求调用,我们不能再该函数隐藏掉异常，因此我们需要在清算中心的函数中处理异常
-            //_clearCentre.newSendOrderRequest += new OrderDelegate(_messageExchagne.SendOrderNoRiskCheck);
-            //_clearCentre.newOrderCancelRequest += new LongDelegate(_messageExchagne.CancelOrder);
-
-            //将order,fill,cancle,tick与清算中心的回调函数绑定，清算中心会根据接收到的信息进行账户交易信息记录与财务计算
-            //_srv.gottick/等被多个组件订阅，因此该事件处理函数必须无异常，否则会影响其他后续组件的对该事件的订阅
-            _messageExchagne.GotTickEvent += new TickDelegate(_clearCentre.GotTick);
-            _messageExchagne.GotOrderEvent += new OrderDelegate(_clearCentre.GotOrder);
-            _messageExchagne.GotFillEvent += new FillDelegate(_clearCentre.GotFill);
-            _messageExchagne.GotCancelEvent += new LongDelegate(_clearCentre.GotCancel);
-
             //tradingserver得到成交后发送给clearcentre处理，计算完手续费后再通过tradingserver回报给客户端
             _clearCentre.GotCommissionFill += new FillDelegate(_messageExchagne.newCommissionFill);
 
@@ -81,17 +66,6 @@ namespace TradingLib.ServiceManager
 
         private void DestoryClearCentre()
         {
-            //clearcentre对外发送委托 取消委托的请求回调 _srv.SendOrderNoRiskCheck 内函数被 客户请求调用,我们不能再该函数隐藏掉异常，因此我们需要在清算中心的函数中处理异常
-            //_clearCentre.newSendOrderRequest -= new OrderDelegate(_messageExchagne.SendOrderNoRiskCheck);
-            //_clearCentre.newOrderCancelRequest -= new LongDelegate(_messageExchagne.CancelOrder);
-
-            //将order,fill,cancle,tick与清算中心的回调函数绑定，清算中心会根据接收到的信息进行账户交易信息记录与财务计算
-            //_srv.gottick/等被多个组件订阅，因此该事件处理函数必须无异常，否则会影响其他后续组件的对该事件的订阅
-            _messageExchagne.GotTickEvent -= new TickDelegate(_clearCentre.GotTick);
-            _messageExchagne.GotOrderEvent -= new OrderDelegate(_clearCentre.GotOrder);
-            _messageExchagne.GotFillEvent -= new FillDelegate(_clearCentre.GotFill);
-            _messageExchagne.GotCancelEvent -= new LongDelegate(_clearCentre.GotCancel);
-
             //tradingserver得到成交后发送给clearcentre处理，计算完手续费后再通过tradingserver回报给客户端
             _clearCentre.GotCommissionFill -= new FillDelegate(_messageExchagne.newCommissionFill);
             //_messageExchagne.ClearCentre = null;

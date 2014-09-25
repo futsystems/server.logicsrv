@@ -14,9 +14,10 @@ namespace TradingLib.Core
         /// 指定是否需要通知清算中心或者管理中心
         /// </summary>
         /// <param name="notify"></param>
-        void ReplyOrderError(ErrorOrderNotify notify,bool neednotify=false)
+        void ReplyErrorOrder(ErrorOrderNotify notify,bool needlog = true)
         {
-            handler_GotOrderErrorNotify(notify, neednotify);
+            handler_GotOrderErrorNotify(notify,needlog);
+            
         }
 
         /// <summary>
@@ -25,9 +26,9 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="o"></param>
         /// <param name="needsend"></param>
-        void ReplyOrder(Order o, bool needsend=true)
+        void ReplyOrder(Order o)
         {
-            handler_GotOrderEvent(o, needsend);
+            handler_GotOrderEvent(o);
         }
 
 
@@ -108,7 +109,7 @@ namespace TradingLib.Core
                     ErrorOrderNotify order = ResponseTemplate<ErrorOrderNotify>.SrvSendNotifyResponse(o.Account);
                     order.Order = o;
                     order.RspInfo.FillError("TRADING_ACCOUNT_NOT_FOUND");
-                    ReplyOrderError(order);
+                    ReplyErrorOrder(order,false);
                     return;
                 }
 
@@ -117,16 +118,16 @@ namespace TradingLib.Core
                 {
                     debug("Got Order[Check1]:" + o.ToString(), QSEnumDebugLevel.INFO);
                     string errortitle = string.Empty;
-                    if (!_riskcentre.CheckOrderStep1(ref o, acc, out errortitle, inter))
+                    bool needlog = true;
+                    if (!_riskcentre.CheckOrderStep1(ref o, acc, out needlog,out errortitle, inter))
                     {
-                        
                         o.Status = QSEnumOrderStatus.Reject;
                         ErrorOrderNotify order = ResponseTemplate<ErrorOrderNotify>.SrvSendNotifyResponse(o.Account);
                         order.Order = o;
                         order.RspInfo.FillError(errortitle);
                         o.comment = "风控拒绝:" + order.RspInfo.ErrorMessage;
-                        ReplyOrderError(order);
-                        debug("委托(" + o.id.ToString() + ")被拒绝,ErrorID:" + order.RspInfo.ErrorID.ToString() + " ErrorMesssage:" + order.RspInfo.ErrorMessage,QSEnumDebugLevel.WARNING);
+                        ReplyErrorOrder(order,needlog);
+                        debug("委托(" + o.id.ToString() + ")被拒绝,ErrorID:" + order.RspInfo.ErrorID.ToString() + " ErrorMesssage:" + order.RspInfo.ErrorMessage +" needlog:"+needlog.ToString(),QSEnumDebugLevel.WARNING);
                         return;
                     }
                 }
@@ -150,8 +151,9 @@ namespace TradingLib.Core
                             order.RspInfo.FillError("RISKCENTRE_CHECK_ERROR");
                             order.RspInfo.ErrorMessage = string.IsNullOrEmpty(msg) ? order.RspInfo.ErrorMessage : msg;//错误代码替换
                             o.comment = "风控拒绝:"+order.RspInfo.ErrorMessage;
-                            ReplyOrderError(order);
+                            ReplyErrorOrder(order);
                             debug("委托(" + o.id.ToString() + ")被拒绝,ErrorID:" + order.RspInfo.ErrorID.ToString() + " ErrorMesssage:" + order.RspInfo.ErrorMessage, QSEnumDebugLevel.WARNING);
+                            return;
                         }
                     }
 
@@ -160,15 +162,14 @@ namespace TradingLib.Core
                         o.Status = QSEnumOrderStatus.Placed;
 
                     //debug("####################### gotorderevent Placed", QSEnumDebugLevel.INFO);
-                    //向客户端发送委托提交回报 这里已经将委托提交到清算中心做记录,如果没有通过检查 则不需要写入ordercache进行发送,没有通过检查的委托通过 errorordernotiy进行发送
-                    ReplyOrder(o, riskcheckresuslt);
+                    //向客户端发送委托提交回报 这里已经将委托提交到清算中心做记录,没有通过委托检查的委托 通过ReplyErrorOrder进行回报
+                    ReplyOrder(o);
 
                     //debug("####################### brokerrouter send order", QSEnumDebugLevel.INFO);
                     //委托通过风控检查,则通过brokerrouter路由到对应的下单接口
                     if (o.Status == QSEnumOrderStatus.Placed)
                         _brokerRouter.SendOrder(o);
                 }
-                return;
             }
             catch (Exception ex)
             {

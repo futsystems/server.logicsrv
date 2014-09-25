@@ -80,11 +80,14 @@ namespace FutsMoniter
         public static ArrayList GetManagerTypeCBList()
         {
             ArrayList list = new ArrayList();
-            ValueObject<QSEnumManagerType> vo1 = new ValueObject<QSEnumManagerType>();
-            vo1.Name = LibUtil.GetEnumDescription(QSEnumManagerType.AGENT);
-            vo1.Value = QSEnumManagerType.AGENT;
-            list.Add(vo1);
-
+            if (Globals.RootRight)
+            {
+                
+                ValueObject<QSEnumManagerType> vo1 = new ValueObject<QSEnumManagerType>();
+                vo1.Name = LibUtil.GetEnumDescription(QSEnumManagerType.AGENT);
+                vo1.Value = QSEnumManagerType.AGENT;
+                list.Add(vo1);
+            }
             ValueObject<QSEnumManagerType> vo2 = new ValueObject<QSEnumManagerType>();
             vo2.Name = LibUtil.GetEnumDescription(QSEnumManagerType.ACCOUNTENTER);
             vo2.Value = QSEnumManagerType.ACCOUNTENTER;
