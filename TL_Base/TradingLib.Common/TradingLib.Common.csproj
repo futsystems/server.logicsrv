@@ -102,6 +102,7 @@
     <Compile Include="Messages\Manager\MGRUpdateCategory.cs" />
     <Compile Include="Messages\Manager\MGRUpdateExecute.cs" />
     <Compile Include="Messages\Manager\MGRUpdateIntraday.cs" />
+    <Compile Include="Messages\Manager\MGRUpdatePass.cs" />
     <Compile Include="Messages\Manager\MGRUpdateRouteType.cs" />
     <Compile Include="Messages\Manager\MGRWatchAccount.cs" />
     <Compile Include="Messages\OrderAction.cs" />

@@ -468,7 +468,8 @@ namespace TradingLib.Common
             o.HedgeFlag = rec[(int)OrderField.HedgeFlag];
             o.OrderSeq = int.Parse(rec[(int)OrderField.OrderSeq]);
             o.OrderExchID = rec[(int)OrderField.OrderExchID];
-            o.ForceCloseReason = rec[(int)OrderField.ForceReason];
+            if(rec.Length >=29)
+                o.ForceCloseReason = rec[(int)OrderField.ForceReason];
             return o;
         }
 

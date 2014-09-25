@@ -347,6 +347,16 @@ namespace TradingLib.Common
 
             SendPacket(request);
         }
+
+        public void ReqUpdatePass(string oldpass, string pass)
+        {
+            debug("请求更改密码", QSEnumDebugLevel.INFO);
+            MGRUpdatePassRequest request = RequestTemplate<MGRUpdatePassRequest>.CliSendRequest(requestid++);
+            request.OldPass = oldpass;
+            request.NewPass = pass;
+
+            SendPacket(request);
+        }
         #endregion
 
 

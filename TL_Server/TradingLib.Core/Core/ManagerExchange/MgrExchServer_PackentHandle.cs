@@ -837,6 +837,25 @@ namespace TradingLib.Core
 
             TLCtxHelper.Ctx.MessageMgrHandler(session, request);
         }
+
+        void SrvOnMGRUpdatePass(MGRUpdatePassRequest request, ISession session, Manager manager)
+        {
+            debug(string.Format("管理员:{0} 请求修改密码:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+
+            if (ORM.MManager.ValidManager(manager.Login, request.OldPass))
+            {
+                ORM.MManager.UpdateManagerPass(manager.ID, request.NewPass);
+                RspMGROperationResponse response = ResponseTemplate<RspMGROperationResponse>.SrvSendRspResponse(request);
+                //response.RspInfo.ErrorMessag="密码修改成功"
+                CacheRspResponse(response);
+            }
+            else
+            {
+                RspMGROperationResponse response = ResponseTemplate<RspMGROperationResponse>.SrvSendRspResponse(request);
+                response.RspInfo.FillError("MGR_PASS_ERROR");
+                CacheRspResponse(response);
+            }
+        }
         void tl_newPacketRequest(IPacket packet,ISession session,Manager manager)
         {
             switch (packet.Type)
@@ -1055,6 +1074,11 @@ namespace TradingLib.Core
                 case MessageTypes.MGRCONTRIBREQUEST://扩展请求
                     {
                         SrvOnMGRContribRequest(packet as MGRContribRequest, session, manager);
+                        break;
+                    }
+                case MessageTypes.MGRUPDATEPASS://请求修改密码
+                    {
+                        SrvOnMGRUpdatePass(packet as MGRUpdatePassRequest, session, manager);
                         break;
                     }
                 default:

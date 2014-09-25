@@ -46,4 +46,6 @@
 
 <error id="SECURITY_EXIST" value="500" prompt="品种已存在"/>
 <error id="SYMBOL_EXIST" value="501" prompt="合约已存在"/>
+
+<error id="MGR_PASS_ERROR" value="502" prompt="柜员密码不正确"/>
 </errors>

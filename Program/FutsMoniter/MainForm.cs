@@ -301,6 +301,9 @@ namespace FutsMoniter
             statusmessage.Opacity = o >= 0 ? o : 0;
         }
 
+
+
+
         
 
 

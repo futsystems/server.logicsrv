@@ -131,6 +131,12 @@ namespace FutsMoniter
             }
             mgrform.Show();
         }
+
+        private void btnChangePass_Click(object sender, EventArgs e)
+        {
+            UpdatePassForm fm = new UpdatePassForm();
+            fm.ShowDialog();
+        }
         #endregion
     }
 }

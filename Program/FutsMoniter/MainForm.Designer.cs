@@ -62,6 +62,8 @@
             this.radMenuItem6 = new Telerik.WinControls.UI.RadMenuItem();
             this.radMenuItem7 = new Telerik.WinControls.UI.RadMenuItem();
             this.btnManagerForm = new Telerik.WinControls.UI.RadMenuItem();
+            this.radMenuSeparatorItem2 = new Telerik.WinControls.UI.RadMenuSeparatorItem();
+            this.btnChangePass = new Telerik.WinControls.UI.RadMenuItem();
             this.office2010SilverTheme1 = new Telerik.WinControls.Themes.Office2010SilverTheme();
             ((System.ComponentModel.ISupportInitialize)(this.radStatusStrip1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.radPageView1)).BeginInit();
@@ -349,7 +351,9 @@
             this.btnManagerGP.AccessibleName = "radMenuItem5";
             this.btnManagerGP.Items.AddRange(new Telerik.WinControls.RadItem[] {
             this.radMenuItem6,
-            this.btnManagerForm});
+            this.btnManagerForm,
+            this.radMenuSeparatorItem2,
+            this.btnChangePass});
             this.btnManagerGP.Name = "btnManagerGP";
             this.btnManagerGP.Text = "柜员管理";
             this.btnManagerGP.Visibility = Telerik.WinControls.ElementVisibility.Visible;
@@ -381,6 +385,23 @@
             this.btnManagerForm.Text = "柜员帐户列表";
             this.btnManagerForm.Visibility = Telerik.WinControls.ElementVisibility.Visible;
             this.btnManagerForm.Click += new System.EventHandler(this.btnManagerForm_Click);
+            // 
+            // radMenuSeparatorItem2
+            // 
+            this.radMenuSeparatorItem2.AccessibleDescription = "radMenuSeparatorItem2";
+            this.radMenuSeparatorItem2.AccessibleName = "radMenuSeparatorItem2";
+            this.radMenuSeparatorItem2.Name = "radMenuSeparatorItem2";
+            this.radMenuSeparatorItem2.Text = "radMenuSeparatorItem2";
+            this.radMenuSeparatorItem2.Visibility = Telerik.WinControls.ElementVisibility.Visible;
+            // 
+            // btnChangePass
+            // 
+            this.btnChangePass.AccessibleDescription = "radMenuItem5";
+            this.btnChangePass.AccessibleName = "radMenuItem5";
+            this.btnChangePass.Name = "btnChangePass";
+            this.btnChangePass.Text = "修改柜员密码";
+            this.btnChangePass.Visibility = Telerik.WinControls.ElementVisibility.Visible;
+            this.btnChangePass.Click += new System.EventHandler(this.btnChangePass_Click);
             // 
             // MainForm
             // 
@@ -448,5 +469,7 @@
         private Telerik.WinControls.UI.RadLabelElement radLabelElement2;
         private Telerik.WinControls.UI.RadMenuItem radMenuItem7;
         private Telerik.WinControls.UI.RadMenuItem btnManagerForm;
+        private Telerik.WinControls.UI.RadMenuSeparatorItem radMenuSeparatorItem2;
+        private Telerik.WinControls.UI.RadMenuItem btnChangePass;
     }
 }

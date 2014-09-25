@@ -249,6 +249,8 @@ namespace TradingLib.Common
                         return RequestTemplate<MGRQryAcctServiceRequest>.SrvRecvRequest(frontid, clientid, content);
                     case MessageTypes.MGRCONTRIBREQUEST://扩展请求
                         return RequestTemplate<MGRContribRequest>.SrvRecvRequest(frontid, clientid, content);
+                    case MessageTypes.MGRUPDATEPASS://请求修改密码
+                        return RequestTemplate<MGRUpdatePassRequest>.SrvRecvRequest(frontid, clientid, content);
                     #endregion
 
                     default:

@@ -100,6 +100,7 @@ namespace TradingLib.Common
             }
             //return new List<Manager>();
         }
+
         /// <summary>
         /// 更新管理员密码
         /// </summary>

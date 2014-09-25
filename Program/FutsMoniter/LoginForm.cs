@@ -67,6 +67,17 @@ namespace FutsMoniter
             //servers.Items.Add("logic_dev.huiky.com");
             //servers.Items.Add("logic-sim.lottoqq.com");
             InitBW();
+            ckremberuser.Checked = Properties.Settings.Default.remberuser;
+            ckremberpass.Checked = Properties.Settings.Default.remberpass;
+            if (Properties.Settings.Default.remberuser)
+            {
+                username.Text = Properties.Settings.Default.login;
+            }
+            if (Properties.Settings.Default.remberpass)
+            {
+                password.Text = Properties.Settings.Default.pass;
+            }
+
         }
 
 
@@ -89,6 +100,25 @@ namespace FutsMoniter
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
+            Properties.Settings.Default.remberuser = ckremberuser.Checked;
+            Properties.Settings.Default.remberpass = ckremberpass.Checked;
+
+            if (ckremberuser.Checked)
+            {
+                Properties.Settings.Default.login = username.Text;
+            }
+
+            if (ckremberpass.Checked)
+            {
+                Properties.Settings.Default.pass = password.Text;
+            }
+            else
+            {
+                Properties.Settings.Default.pass = string.Empty;
+            }
+            Properties.Settings.Default.Save();
+
+
             Globals.LoginStatus.Reset();
             new Thread(delegate() {
                 if (ServerLoginEvent != null)
@@ -97,7 +127,7 @@ namespace FutsMoniter
                 }
             }).Start();
             this.btnLogin.Enabled = false;
-            
+           
         }
         
 

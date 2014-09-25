@@ -187,7 +187,7 @@ namespace TradingLib.API
         MGRADDMANAGER,//添加管理员
         MGRUPDATEMANAGER,//更新管理员
         MGRQRYACCTSERVICE,//查询交易帐户服务
-
+        MGRUPDATEPASS,//更改管理员密码
 
 
 
