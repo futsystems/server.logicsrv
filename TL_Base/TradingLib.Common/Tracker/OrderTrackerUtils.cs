@@ -8,13 +8,6 @@ namespace TradingLib.Common
 {
     public static class OrderTrackerUtils
     {
-        //public static bool IsPending(this OrderTracker tracker, Order o)
-        //{
-        //    if (o.Status == QSEnumOrderStatus.Opened || o.Status == QSEnumOrderStatus.PartFilled || o.Status == QSEnumOrderStatus.Submited || o.Status == QSEnumOrderStatus.Placed)
-        //        return true;
-        //    return false;
-            
-        //}
         /// <summary>
         /// OrderTracker的扩展方法
         /// 获得某个持仓方向的开仓委托数量
@@ -25,7 +18,7 @@ namespace TradingLib.Common
         {
             
             //查找 持仓方向为设定方向 并且为开仓操作的委托 累加 将所有委托的数量进行累加
-            return tracker.ToArray().Where(o =>(o.symbol.Equals(symbol))&& OrderTracker.IsPending(o) && (o.PositionSide == positionside) && (o.IsEntryPosition)).Sum(o => o.UnsignedSize);
+            return tracker.Where(o =>(o.symbol.Equals(symbol))&& o.IsPending() && (o.PositionSide == positionside) && (o.IsEntryPosition)).Sum(o => o.UnsignedSize);
         }
 
         /// <summary>
@@ -36,7 +29,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static int GetPendingExitSize(this OrderTracker tracker,string symbol,bool positionside)
         {
-            return tracker.ToArray().Where(o => (o.symbol.Equals(symbol)) && OrderTracker.IsPending(o) && (o.PositionSide == positionside) && (!o.IsEntryPosition)).Sum(o => o.UnsignedSize);
+            return tracker.Where(o => (o.symbol.Equals(symbol)) && o.IsPending() && (o.PositionSide == positionside) && (!o.IsEntryPosition)).Sum(o => o.UnsignedSize);
         }
     }
 }

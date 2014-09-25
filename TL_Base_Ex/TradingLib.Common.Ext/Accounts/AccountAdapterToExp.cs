@@ -99,7 +99,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 获得账户当前持仓
         /// </summary>
-        public Position[] Positions
+        public IEnumerable<Position> Positions
         {
             get
             {
@@ -107,10 +107,10 @@ namespace TradingLib.Common
             }
         }
 
-        public Order[] Ordres { get { return _acc.Ordres; } }//获得当日所有委托
-        public Trade[] Trades { get { return _acc.Trades; } }//获得当日所有成交
+        public IEnumerable<Order> Orders { get { return _acc.Orders; } }//获得当日所有委托
+        public IEnumerable<Trade> Trades { get { return _acc.Trades; } }//获得当日所有成交
         public long[] Cancels { get { return _acc.Cancels; } }//获得当日所有取消
-        public Position[] PositionsHold { get { return _acc.PositionsHold; } }
+        public IEnumerable<Position> YdPositions { get { return _acc.YdPositions; } }
         public Position getPosition(string symbol,bool side)//获得某个symbol的持仓信息
         {
             return _acc.getPosition(symbol,side);

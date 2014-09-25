@@ -15,15 +15,15 @@ namespace TradingLib.API
         /// <summary>
         /// 获得所有持仓对象
         /// </summary>
-        Position[] Positions { get; }
+        IEnumerable<Position> Positions { get; }
         /// <summary>
         /// 获得所有委托对象
         /// </summary>
-        Order[] Ordres { get; }
+        IEnumerable<Order> Orders { get; }
         /// <summary>
         /// 获得所有成交对象
         /// </summary>
-        Trade[] Trades { get; }
+        IEnumerable<Trade> Trades { get; }
         /// <summary>
         /// 获得所有取消
         /// </summary>
@@ -31,14 +31,13 @@ namespace TradingLib.API
         /// <summary>
         /// 获得所有隔夜持仓数据
         /// </summary>
-        Position[] PositionsHold { get; }
+        IEnumerable<Position> YdPositions { get; }
         /// <summary>
         /// 获得某个合约的持仓对象
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
         Position getPosition(string symbol,bool side);
-
         #endregion
     }
 }

@@ -219,7 +219,7 @@ namespace TradingLib.Core
             }
             else
             {
-                return string.Format("Account:{0} UnrealizedPL:{1} SettleUnrealizedPL:{2}", acc.ID, acc.FutUnRealizedPL, acc.FutSettleUnRealizedPL);
+                return string.Format("Account:{0} UnrealizedPL:{1} SettleUnrealizedPL:{2}", acc.ID, acc.CalFutRealizedPL(), acc.CalFutSettleUnRealizedPL());
             }
         }
 

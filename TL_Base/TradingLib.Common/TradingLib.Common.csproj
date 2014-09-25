@@ -157,7 +157,11 @@
     <Compile Include="Rule\RuleClassItem.cs" />
     <Compile Include="Tracker\LSPositionTracker.cs" />
     <Compile Include="Tracker\OrderTrackerUtils.cs" />
+    <Compile Include="Tracker\safelist\SafeEnumerable.cs" />
+    <Compile Include="Tracker\safelist\SafeEnumerator.cs" />
+    <Compile Include="Tracker\safelist\SafeList.cs" />
     <Compile Include="Trading\OrderError.cs" />
+    <Compile Include="Trading\OrderUtils.cs" />
     <Compile Include="Trading\PositionEx.cs" />
     <Compile Include="Trading\CashTransaction.cs" />
     <Compile Include="Trading\Exchange.cs" />
@@ -189,7 +193,7 @@
     <Compile Include="Reply\GenericReply.cs" />
     <Compile Include="Tracker\MessageTracker.cs" />
     <Compile Include="Messages\TrdMessage.cs" />
-    <Compile Include="Trading\OrderHelper.cs" />
+    <Compile Include="1tobedelete\OrderHelper.cs" />
     <Compile Include="1tobedelete\BasketImpl.cs" />
     <Compile Include="Trading\OrderTransactionHelper.cs" />
     <Compile Include="Trading\PositionRound.cs" />
@@ -230,7 +234,7 @@
     <Compile Include="Trading\Tick\TikUtil.cs" />
     <Compile Include="Trading\Tick\TikWriter.cs" />
     <Compile Include="Trading\TradeImpl.cs" />
-    <Compile Include="Tracker\ThreadSafeList.cs" />
+    <Compile Include="Tracker\safelist\ThreadSafeList.cs" />
     <Compile Include="Tracker\TLTracker.cs" />
     <Compile Include="Offset\TrailTracker.cs" />
     <Compile Include="Misc\Util.cs" />

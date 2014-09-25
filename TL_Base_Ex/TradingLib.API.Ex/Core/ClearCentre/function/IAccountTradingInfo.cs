@@ -96,7 +96,7 @@ namespace TradingLib.API
         /// </summary>
         /// <param name="o"></param>
         /// <returns></returns>
-        long[] getPendingOrders(Order o);
+        //long[] getPendingOrders(Order o);
 
         /// <summary>
         /// 获得某个账户 某个合约 某个方向的所有待成交委托
@@ -104,6 +104,6 @@ namespace TradingLib.API
         /// <param name="symbol"></param>
         /// <param name="side"></param>
         /// <returns></returns>
-        long[] getPendingOrders(string account, string symbol, bool side);
+        //long[] getPendingOrders(string account, string symbol, bool side);
     }
 }

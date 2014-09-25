@@ -28,7 +28,12 @@ namespace TradingLib.API
         /// <returns></returns>
         string[] FilterClient(string filter);
 
-
+        /// <summary>
+        /// 获得某个合约当前有效价格
+        /// 通过DataRouter进行获取
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
         decimal GetAvabilePrice(string symbol);
         /// <summary>
         /// 获得帐户比赛信息

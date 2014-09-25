@@ -13,7 +13,7 @@ namespace TradingLib.Common
     /// 按持仓的多空方向进行维护
     /// 可以进行锁仓操作
     /// </summary>
-    public class LSPositionTracker : IEnumerable
+    public class LSPositionTracker : IEnumerable<Position>
     {
 
         /// <summary>
@@ -32,8 +32,22 @@ namespace TradingLib.Common
         public LSPositionTracker()
         {
             _ltk = new LongPositionTracker();
+            _ltk.NewSymbol += new SymDelegate(_ltk_NewSymbol);
+            
             _stk = new ShortPositionTracker();
+            _stk.NewSymbol += new SymDelegate(_stk_NewSymbol);
             _nettk = new PositionTracker();
+        }
+
+        void _stk_NewSymbol(string sym)
+        {
+            poslist.Add(_stk[sym]);
+            int i = 0;
+        }
+        ThreadSafeList<Position> poslist = new ThreadSafeList<Position>();
+        void _ltk_NewSymbol(string sym)
+        {
+            poslist.Add(_ltk[sym]);
         }
 
         /// <summary>
@@ -188,17 +202,26 @@ namespace TradingLib.Common
         {
             return _nettk.ToArray();
         }
+
+
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
         }
 
-        object m_lock = new object();
-        public IEnumerator GetEnumerator()
+        IEnumerator<Position> IEnumerable<Position>.GetEnumerator()
         {
+            return GetEnumerator();
+        }
+
+        object m_lock = new object();
+        public IEnumerator<Position> GetEnumerator()
+        {
+            //return poslist.GetEnumerator();
+            //return _ltk.Concat(_stk);
             lock (m_lock)
             {
-                Position[] poslist = this.ToArray();
+                Position[] poslist = this.ToArray();//toarray会生成一个引用copy 导致后期无法获得最新数据
                 for (int i = 0; i < poslist.Length; i++)
                     yield return poslist[i];
             }

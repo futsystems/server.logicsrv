@@ -109,7 +109,7 @@ namespace TradingLib.API
         bool CashOperationSafe(string accid, decimal ammount, string comment, out string msg);
 
 
-
+        IEnumerable<Position> GetPositions(string account);
 
     }
 }

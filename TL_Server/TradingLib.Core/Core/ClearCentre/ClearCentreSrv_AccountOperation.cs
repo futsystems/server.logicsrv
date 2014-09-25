@@ -357,7 +357,7 @@ namespace TradingLib.Core
         /// <param name="a"></param>
         public override void onCacheAccount(IAccount a)
         {
-            a.ClearCentre = new ClearCentreAdapterToAccount(a, this);
+            //a.ClearCentre = new ClearCentreAdapterToAccount(a, this);
             if (AccountCachedEvent != null)
                 AccountCachedEvent(a);
         }
@@ -443,5 +443,10 @@ namespace TradingLib.Core
         
         #endregion
 
+
+        public IEnumerable<Position> GetPositions(string account)
+        {
+            return acctk.GetPositionBook(account);
+        }
     }
 }

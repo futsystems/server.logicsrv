@@ -174,7 +174,7 @@ namespace TradingLib.Core
         {
             debug("QryAccountInfo :" + request.ToString(), QSEnumDebugLevel.INFO);
             IAccount account = _clearcentre[request.Account];
-            IAccountInfo info = ObjectInfoHelper.GenAccountInfo(account);
+            IAccountInfo info = account.ToAccountInfo();
             RspQryAccountInfoResponse response  = ResponseTemplate<RspQryAccountInfoResponse>.SrvSendRspResponse(request);
             response.AccInfo = info;
 

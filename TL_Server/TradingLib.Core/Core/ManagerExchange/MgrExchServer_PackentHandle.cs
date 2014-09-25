@@ -51,7 +51,7 @@ namespace TradingLib.Core
                 for (int i = 0; i < list.Length; i++)
                 {
                     RspMGRQryAccountResponse response = ResponseTemplate<RspMGRQryAccountResponse>.SrvSendRspResponse(request);
-                    response.oAccount = ObjectInfoHelper.GenAccountLite(list[i]);
+                    response.oAccount =list[i].ToAccountLite();
                     CacheRspResponse(response, i == list.Length - 1);
 
 
@@ -115,10 +115,11 @@ namespace TradingLib.Core
             debug(string.Format("管理员:{0} 请求查询交易帐户信息,帐号:{1}", session.ManagerID, request.Account), QSEnumDebugLevel.INFO);
 
             IAccount account = clearcentre[request.Account];
+            clearcentre.getPositions(request.Account);
             if (account != null)
             {
                 RspMGRQryAccountInfoResponse response = ResponseTemplate<RspMGRQryAccountInfoResponse>.SrvSendRspResponse(request);
-                response.AccountInfoToSend = ObjectInfoHelper.GenAccountInfo(account);
+                response.AccountInfoToSend = account.ToAccountInfo();
                 CachePacket(response);
             }
         }
@@ -146,7 +147,7 @@ namespace TradingLib.Core
 
                 //出入金操作后返回帐户信息更新
                 RspMGRQryAccountInfoResponse notify = ResponseTemplate<RspMGRQryAccountInfoResponse>.SrvSendRspResponse(request);
-                notify.AccountInfoToSend = ObjectInfoHelper.GenAccountInfo(account);
+                notify.AccountInfoToSend = account.ToAccountInfo();
                 CachePacket(notify);
             }
         }

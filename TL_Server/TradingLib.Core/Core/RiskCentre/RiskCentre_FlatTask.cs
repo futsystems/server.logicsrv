@@ -99,7 +99,7 @@ namespace TradingLib.Core
             debug("执行强平任务 对日内帐户执行撤单并强平持仓,强平时间点:" + flattime.ToString(), QSEnumDebugLevel.INFO);
             
             //1.遍历所有pending orders 如果委托对应的帐户是日内交易并且该委托需要在该强平时间点撤单 则执行撤单
-            foreach (Order od in _clearcentre.TotalOrders.Where(o => OrderTracker.IsPending(o)))
+            foreach (Order od in _clearcentre.TotalOrders.Where(o => o.IsPending()))
             { 
                 IAccount acc = null;
                 if (_clearcentre.HaveAccount(od.Account, out acc))

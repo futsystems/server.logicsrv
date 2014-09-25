@@ -111,7 +111,7 @@ namespace Lottoqq.Race
         {
             get
             {
-                return this.LastFutEquity + _account.FutLiquidation - _account.FutMoneyUsed;
+                return this.LastFutEquity + _account.CalFutLiquidation() - _account.CalFutMoneyUsed();
             }
         }
 
@@ -119,14 +119,14 @@ namespace Lottoqq.Race
         {
             get
             {
-                return this.LastOptEquity + _account.OptLiquidation - _account.OptMoneyUsed;
+                return this.LastOptEquity + _account.CalOptLiquidation() - _account.CalOptMoneyUsed();
             }
         }
         public decimal MJAvabileFund
         {
             get
             {
-                return this.LastMJEquity + _account.InnovLiquidation - _account.InnovMoneyUsed;
+                return this.LastMJEquity + _account.CalInnovLiquidation() - _account.CalOptMoneyUsed();
             }
         }
 

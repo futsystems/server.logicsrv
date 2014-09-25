@@ -21,7 +21,7 @@ namespace TradingLib.Core
                     {
                         //debug("采集帐户信息:" + account, QSEnumDebugLevel.INFO);
                         NotifyMGRAccountInfoLiteResponse notify = ResponseTemplate<NotifyMGRAccountInfoLiteResponse>.SrvSendNotifyResponse(cst.Location);
-                        notify.InfoLite = ObjectInfoHelper.GenAccountInfoLite(acc);
+                        notify.InfoLite = acc.ToAccountInfoLite();
                         CachePacket(notify);
                     }
                 }

@@ -48,7 +48,7 @@ namespace TradingLib.Core
         {
             debug("account changed,will send to manager montier", QSEnumDebugLevel.INFO);
             NotifyMGRAccountChangeUpdateResponse notify = ResponseTemplate<NotifyMGRAccountChangeUpdateResponse>.SrvSendNotifyResponse(account.ID);
-            notify.oAccount = ObjectInfoHelper.GenAccountLite(account);
+            notify.oAccount = account.ToAccountLite();
             CachePacket(notify);
         }
 
@@ -63,7 +63,7 @@ namespace TradingLib.Core
             if (acc != null)
             {
                 NotifyMGRAccountChangeUpdateResponse notify = ResponseTemplate<NotifyMGRAccountChangeUpdateResponse>.SrvSendNotifyResponse(account);
-                notify.oAccount = ObjectInfoHelper.GenAccountLite(acc);
+                notify.oAccount = acc.ToAccountLite();
                 CachePacket(notify);
             }
         }

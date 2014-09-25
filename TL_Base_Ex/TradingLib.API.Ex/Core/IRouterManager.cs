@@ -35,5 +35,6 @@ namespace TradingLib.API
         /// </summary>
         IDataFeed[] DataFeeds { get; }
 
+
     }
 }

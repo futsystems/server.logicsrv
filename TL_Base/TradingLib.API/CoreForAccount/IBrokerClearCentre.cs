@@ -37,13 +37,13 @@ namespace TradingLib.API
         /// <param name="o"></param>
         /// <returns></returns>
         //int getUnfilledSizeExceptStop(Order o);
-        int getPositionHoldSize(string account, string symbol);
+        //int getPositionHoldSize(string account, string symbol);
         /// <summary>
         /// 获得与某委托方向相反的未成交委托
         /// </summary>
         /// <param name="o"></param>
         /// <returns></returns>
-        long[] getPendingOrders(Order o);
+        //long[] getPendingOrders(Order o);
         /// <summary>
         /// 获得某个合约的品种信息/该品种信息为默认品种信息
         /// </summary>

@@ -10,6 +10,7 @@ namespace TradingLib.Common
 {
     public partial class AccountBase
     {
+
         //帐户常规检查 
         //CanTakeSymbol 是否有权交易某个合约
         //CanFundTakeOrder 资金是否允许提交某个委托
@@ -35,6 +36,8 @@ namespace TradingLib.Common
                 re = false;
             }
             return re;
+
+            
         }
 
         /// <summary>
@@ -74,7 +77,7 @@ namespace TradingLib.Common
         public virtual int CanOpenSize(Symbol symbol)
         {
 
-            decimal price = ClearCentre.GetAvabilePrice(symbol.Symbol);
+            decimal price = TLCtxHelper.Ctx.MessageExchange.GetAvabilePrice(symbol.Symbol);
 
             decimal fundperlot = Calc.CalFundRequired(symbol, price, 1);
 
@@ -96,8 +99,9 @@ namespace TradingLib.Common
         /// <returns></returns>
         public virtual decimal CalOrderFundRequired(Order o,decimal defaultvalue=0)
         {
-            return ClearCentre.CalOrderFundRequired(o,defaultvalue);
-
+            //return ClearCentre.CalOrderFundRequired(o,defaultvalue);
+            decimal price = TLCtxHelper.Ctx.MessageExchange.GetAvabilePrice(o.symbol);
+            return o.CalFundRequired(price, defaultvalue);
         }
 
         /// <summary>
@@ -112,11 +116,11 @@ namespace TradingLib.Common
         {
             //常规状态下合约的可用资金即为帐户的可用资金
             if (symbol.SecurityType == SecurityType.FUT)
-                return FutAvabileFunds;
+                return this.AvabileFunds;
             if (symbol.SecurityType == SecurityType.OPT)
-                return OptAvabileFunds;
+                return this.AvabileFunds;
             if (symbol.SecurityType == SecurityType.INNOV)
-                return InnovAvabileFunds;
+                return this.AvabileFunds;
             else
                 return 0;
         }
@@ -146,7 +150,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public virtual decimal GetFundUsed()
         {
-            return FutMoneyUsed + OptMoneyUsed + InnovMoneyUsed;
+            return this.CalFutMoneyUsed() + this.CalOptMoneyUsed() + this.CalInnovMoneyUsed();
         }
         #endregion
     }

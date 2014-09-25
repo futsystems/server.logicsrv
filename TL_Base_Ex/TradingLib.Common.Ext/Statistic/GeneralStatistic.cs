@@ -47,7 +47,7 @@ namespace TradingLib.Common
 
                 foreach (IAccount a in this)
                 {
-                    n += a.Ordres.Length;
+                    n += a.Orders.Count();
                 }
                 return n;
             }
@@ -60,7 +60,7 @@ namespace TradingLib.Common
                 int n = 0;
                 foreach (IAccount a in this)
                 {
-                    n += a.Trades.Length;
+                    n += a.Trades.Count();
                 }
                 return n;
             }

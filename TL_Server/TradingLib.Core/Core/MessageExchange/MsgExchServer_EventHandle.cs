@@ -95,7 +95,7 @@ namespace TradingLib.Core
                 debug("Got CancelOrder :" + val, QSEnumDebugLevel.INFO);
                 Order o = _clearcentre.SentOrder(val);
                 //如果委托处于pending状态
-                if (OrderTracker.IsPending(o))
+                if (o.IsPending())
                 {
                     //如果委托状态表面需要通过broker来取消委托 则通过broker来进行撤单
                     if (OrderTracker.CanCancel(o))//opened partfilled
@@ -284,7 +284,7 @@ namespace TradingLib.Core
                 if (action.ActionFlag == QSEnumOrderActionFlag.Delete)
                 {
                     //如果委托处于pending状态
-                    if (OrderTracker.IsPending(o))
+                    if (o.IsPending())
                     {
                         //如果委托状态表面需要通过broker来取消委托 则通过broker来进行撤单
                         if (OrderTracker.CanCancel(o))//opened partfilled

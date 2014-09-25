@@ -55,7 +55,7 @@ namespace TradingLib.Common
         {
             try
             {
-                return acctk.GetOrderBook(acc.ID).ToArray().Where(delegate(Order o) { return o.SecurityType == type && OrderTracker.IsPending(o); }).ToArray();
+                return acctk.GetOrderBook(acc.ID).ToArray().Where(delegate(Order o) { return o.SecurityType == type && o.IsPending(); }).ToArray();
             }
             catch (Exception ex)
             {

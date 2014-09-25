@@ -64,12 +64,13 @@
     <Compile Include="Accounts\AccountAdapterToExp.cs" />
     <Compile Include="Accounts\AccountFilter.cs" />
     <Compile Include="Accounts\AccountHelper.cs" />
+    <Compile Include="Accounts\AccountUtils_ObjectWrapper.cs" />
     <Compile Include="Accounts\Account_Finance.cs" />
     <Compile Include="Accounts\Account_GeneralCheck.cs" />
     <Compile Include="Accounts\Account_Operation.cs" />
     <Compile Include="Accounts\Account_Rule.cs" />
     <Compile Include="Accounts\Account_Service.cs" />
-    <Compile Include="Accounts\AccountUtils.cs" />
+    <Compile Include="Accounts\AccountUtils_FinCal.cs" />
     <Compile Include="ClearCentre\Base_ClearCentre_GotXXXX.cs" />
     <Compile Include="Manager\Manager.cs" />
     <Compile Include="ClearCentre\Base_ClearCentre_.cs" />
@@ -157,7 +158,7 @@
     <Compile Include="2bedelete\ConnecterHelper.cs" />
     <Compile Include="2bedelete\DllLoader\ContribLoader.cs" />
     <Compile Include="2bedelete\DllLoader\RuleSetHelper.cs" />
-    <Compile Include="ObjectHelper.cs" />
+    <Compile Include="2bedelete\ObjectHelper.cs" />
     <Compile Include="2bedelete\HealthInfo.cs" />
     <Compile Include="2bedelete\ManagerClient\MgrClient.cs" />
     <Compile Include="2bedelete\Statistic\TradingStatistic.cs" />

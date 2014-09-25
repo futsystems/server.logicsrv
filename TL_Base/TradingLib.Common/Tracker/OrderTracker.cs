@@ -9,7 +9,7 @@ namespace TradingLib.Common
     /// 用于记录Order状态
     /// </summary>
     [Serializable]
-    public class OrderTracker : GotOrderIndicator, GotCancelIndicator, GotFillIndicator, GenericTrackerI, IEnumerable
+    public class OrderTracker : GotOrderIndicator, GotCancelIndicator, GotFillIndicator, GenericTrackerI, IEnumerable<Order>
     {
         public void Clear()
         {
@@ -39,11 +39,7 @@ namespace TradingLib.Common
         }
         public int getindex(string txt) { return orders.getindex(txt); }
         public Type TrackedType { get { return typeof(int); } }
-        /// <summary>
-        /// get orders from tracker
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerator GetEnumerator() { foreach (Order o in orders) yield return o; }
+       
         /// <summary>
         /// create a tracker
         /// </summary>
@@ -71,71 +67,71 @@ namespace TradingLib.Common
         }
 
 
-        //获得某个合约的所有pendingOrder
-        /// <summary>
-        /// 获得某个合约 买入或卖出 的等待成交委托
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <param name="side"></param>
-        /// <returns></returns>
-        public long[] getPending(string symbol,bool side)
-        {
-            List<long> olist = new List<long>();
-            for (int i = 0; i < orders.Count; i++)
-            {
-                if (orders[i].symbol == symbol &&  orders[i].side == side && isPending(i))
-                    olist.Add(orders[i].id);
-            }
-            return olist.ToArray();
-        }
+        ////获得某个合约的所有pendingOrder
+        ///// <summary>
+        ///// 获得某个合约 买入或卖出 的等待成交委托
+        ///// </summary>
+        ///// <param name="symbol"></param>
+        ///// <param name="side"></param>
+        ///// <returns></returns>
+        //public long[] getPending(string symbol,bool side)
+        //{
+        //    List<long> olist = new List<long>();
+        //    for (int i = 0; i < orders.Count; i++)
+        //    {
+        //        if (orders[i].symbol == symbol &&  orders[i].side == side && isPending(i))
+        //            olist.Add(orders[i].id);
+        //    }
+        //    return olist.ToArray();
+        //}
 
-        /// <summary>
-        /// 获得某个合约的所有待成交委托
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <param name="side"></param>
-        /// <returns></returns>
-        public long[] getPending(string symbol)
-        {
-            List<long> olist = new List<long>();
-            for (int i = 0; i < orders.Count; i++)
-            {
-                if (orders[i].symbol == symbol && isPending(i))
-                    olist.Add(orders[i].id);
-            }
-            return olist.ToArray();
-        }
+        ///// <summary>
+        ///// 获得某个合约的所有待成交委托
+        ///// </summary>
+        ///// <param name="symbol"></param>
+        ///// <param name="side"></param>
+        ///// <returns></returns>
+        //public long[] getPending(string symbol)
+        //{
+        //    List<long> olist = new List<long>();
+        //    for (int i = 0; i < orders.Count; i++)
+        //    {
+        //        if (orders[i].symbol == symbol && isPending(i))
+        //            olist.Add(orders[i].id);
+        //    }
+        //    return olist.ToArray();
+        //}
 
-        /// <summary>
-        /// 获得所有待成交委托
-        /// </summary>
-        /// <returns></returns>
-        public long[] getPending()
-        {
-            List<long> olist = new List<long>();
-            for (int i = 0; i < orders.Count; i++)
-            {
-                if (isPending(i))
-                    olist.Add(orders[i].id);
-            }
-            return olist.ToArray();
-        }
+        ///// <summary>
+        ///// 获得所有待成交委托
+        ///// </summary>
+        ///// <returns></returns>
+        //public long[] getPending()
+        //{
+        //    List<long> olist = new List<long>();
+        //    for (int i = 0; i < orders.Count; i++)
+        //    {
+        //        if (isPending(i))
+        //            olist.Add(orders[i].id);
+        //    }
+        //    return olist.ToArray();
+        //}
 
 
-        /// <summary>
-        /// 获得所有未成交委托
-        /// </summary>
-        /// <returns></returns>
-        public Order[] getPendingOrders()
-        {
-            List<Order> olist = new List<Order>();
-            for (int i = 0; i < orders.Count; i++)
-            {
-                if (isPending(i))
-                    olist.Add(orders[i]);
-            }
-            return olist.ToArray();
-        }
+        ///// <summary>
+        ///// 获得所有未成交委托
+        ///// </summary>
+        ///// <returns></returns>
+        //public Order[] getPendingOrders()
+        //{
+        //    List<Order> olist = new List<Order>();
+        //    for (int i = 0; i < orders.Count; i++)
+        //    {
+        //        if (isPending(i))
+        //            olist.Add(orders[i]);
+        //    }
+        //    return olist.ToArray();
+        //}
         
 
         ///// <summary>
@@ -153,47 +149,47 @@ namespace TradingLib.Common
         //    return getUnfilledSize(symbol,false);
         //}
 
-        /// <summary>
-        /// 获得某个合约某个方向未成交数量
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <param name="side"></param>
-        /// <returns></returns>
-        public int getUnfilledSize(string symbol, bool side)
-        { 
-            int size=0;
-            for(int i=0;i<orders.Count;i++)
-            {
-                if (orders[i].symbol == symbol && orders[i].side == side && isPending(i))
-                    size = size + this[i];
-            }
-            return size;
-        }
+        ///// <summary>
+        ///// 获得某个合约某个方向未成交数量
+        ///// </summary>
+        ///// <param name="symbol"></param>
+        ///// <param name="side"></param>
+        ///// <returns></returns>
+        //public int getUnfilledSize(string symbol, bool side)
+        //{ 
+        //    int size=0;
+        //    for(int i=0;i<orders.Count;i++)
+        //    {
+        //        if (orders[i].symbol == symbol && orders[i].side == side && isPending(i))
+        //            size = size + this[i];
+        //    }
+        //    return size;
+        //}
 
 
 
-        //CTP不支持条件单,因此需要在系统内自己实现追价单.
-        //系统OrderEngine接受了Order之后会给客户一个Order回报,ClearCenter也会记录并维护该Order
-        //当CTP发送Order时候会检查正向开仓，反向则需要检查当前已委托数量
-        /// <summary>
-        /// 查询某个合约,在某个方向上的待成交合约
-        /// 比如在平多头时,需要查询 卖出的委托[平掉当前多头] 如果待成交委托累计数量超过可平仓数 则出错
-        /// 用于CTP下单检查
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <param name="side"></param>
-        /// <returns></returns>
-        public int getUnfilledSizeExceptStop(string symbol, bool side)
-        {
-            int size = 0;
-            for (int i = 0; i < orders.Count; i++)
-            {
-                if (orders[i].symbol == symbol && orders[i].side == side && isPending(i) && (!orders[i].isStop))
-                    size = size + this[i];
+        ////CTP不支持条件单,因此需要在系统内自己实现追价单.
+        ////系统OrderEngine接受了Order之后会给客户一个Order回报,ClearCenter也会记录并维护该Order
+        ////当CTP发送Order时候会检查正向开仓，反向则需要检查当前已委托数量
+        ///// <summary>
+        ///// 查询某个合约,在某个方向上的待成交合约
+        ///// 比如在平多头时,需要查询 卖出的委托[平掉当前多头] 如果待成交委托累计数量超过可平仓数 则出错
+        ///// 用于CTP下单检查
+        ///// </summary>
+        ///// <param name="symbol"></param>
+        ///// <param name="side"></param>
+        ///// <returns></returns>
+        //public int getUnfilledSizeExceptStop(string symbol, bool side)
+        //{
+        //    int size = 0;
+        //    for (int i = 0; i < orders.Count; i++)
+        //    {
+        //        if (orders[i].symbol == symbol && orders[i].side == side && isPending(i) && (!orders[i].isStop))
+        //            size = size + this[i];
 
-            }
-            return size;
-        }
+        //    }
+        //    return size;
+        //}
 
 
         /// <summary>
@@ -257,8 +253,8 @@ namespace TradingLib.Common
              * */
             //return Math.Abs(sent[idx]) != Math.Abs(filled[idx]);
             //通过委托状态来判定委托当前是否是Pending
-            
-            return IsPending(o);
+
+            return o.IsPending();
         }
 
 
@@ -268,12 +264,12 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="o"></param>
         /// <returns></returns>
-        public static bool IsPending(Order o)
-        {
-            if (o.Status == QSEnumOrderStatus.Opened || o.Status == QSEnumOrderStatus.PartFilled || o.Status == QSEnumOrderStatus.Submited || o.Status == QSEnumOrderStatus.Placed)
-                return true;
-            return false;
-        }
+        //public static bool IsPending(Order o)
+        //{
+        //    if (o.Status == QSEnumOrderStatus.Opened || o.Status == QSEnumOrderStatus.PartFilled || o.Status == QSEnumOrderStatus.Submited || o.Status == QSEnumOrderStatus.Placed)
+        //        return true;
+        //    return false;
+        //}
 
         /// <summary>
         /// 判断某个委托是否可以被撤销
@@ -408,6 +404,8 @@ namespace TradingLib.Common
         {
             return orders.ToArray();
         }
+
+
         public event DebugDelegate SendDebugEvent;
         protected void debug(string msg)
         {
@@ -545,26 +543,25 @@ namespace TradingLib.Common
             debug(msg);
         }
 
-        /*
+        /// <summary>
+        /// get orders from tracker
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerator<Order> GetEnumerator() 
+        { 
+            return orders.GetEnumerator(); 
+        
+        }
+
+        IEnumerator<Order> IEnumerable<Order>.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
         }
 
-
-        IEnumerator<T> IEnumerable<T>.GetEnumerator()
-        {
-            return GetEnumerator(); // this will return the one
-            // available through the object reference
-            // ie. "IEnumerator<int> GetEnumerator"
-        }
-        public IEnumerator<T> GetEnumerator()
-        {
-            lock (m_lock)
-            {
-                for (int i = 0; i < m_list.Count; i++)
-                    yield return m_list[i];
-            }
-        }**/
     }
 }

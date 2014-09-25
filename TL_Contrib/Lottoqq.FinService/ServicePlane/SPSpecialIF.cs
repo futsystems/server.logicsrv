@@ -215,7 +215,7 @@ namespace TradingLib.Contrib.FinService
 
                 decimal nowequity = this.Account.NowEquity;
 
-                int frozensize = TLCtxHelper.CmdTradingInfo.getOrders(this.Account.ID).Where(od => od.IsEntryPosition && OrderTracker.IsPending(od)).Sum(od=>od.UnsignedSize);
+                int frozensize = TLCtxHelper.CmdTradingInfo.getOrders(this.Account.ID).Where(od => od.IsEntryPosition &&od.IsPending()).Sum(od=>od.UnsignedSize);
 
                 decimal marginperlot = this.MarginPerLot.AccountArgument.AsDecimal();
                 decimal marginperlotstart = this.MarginPerLotStart.AccountArgument.AsDecimal();

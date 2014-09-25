@@ -328,12 +328,13 @@ namespace TradingLib.Common
 
         public IEnumerator<T> GetEnumerator()
         {
-            lock (_tracked.SyncRoot)
-            {
-                //foreach (T o in _tracked) yield return o;
-                for (int i = 0; i < _tracked.Count; i++)
-                    yield return _tracked[i];
-            }
+            //lock (_tracked.SyncRoot)
+            //{
+            //    //foreach (T o in _tracked) yield return o;
+            //    for (int i = 0; i < _tracked.Count; i++)
+            //        yield return _tracked[i];
+            //}
+            return (_tracked as IEnumerable<T>).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

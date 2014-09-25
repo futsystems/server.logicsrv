@@ -15,7 +15,7 @@ namespace TradingLib.Common
         
 
 
-        public IAccountClearCentre ClearCentre { get;set;}
+        //public IAccountClearCentre ClearCentre { get;set;}
         //public IAccountRiskCentre RiskCentre {get;set;}
 
         //#region 构造函数
@@ -176,25 +176,31 @@ namespace TradingLib.Common
         public QSEnumOrderTransferType OrderRouteType { get { return _ordroutetype; } set { _ordroutetype = value; } }
 
         #region 该账户当日交易信息
-        public bool AnyPosition { get { return ClearCentre.AnyPosition; } }//是否有持仓
+        public bool AnyPosition { get { return false; } }//是否有持仓
+
+        IEnumerable<Position> _pv = null;
         /// <summary>
         /// 获得账户当前持仓
         /// </summary>
-        public Position[] Positions
-        {
+        public IEnumerable<Position> Positions { 
             get
             {
-                return ClearCentre.Positions;
-            }
+                return TLCtxHelper.Ctx.ClearCentre.GetPositions(_id);
+            
+        }
+        //get { return _pv; } 
+        set { _pv = value; }
         }
 
-        public Order[] Ordres { get { return ClearCentre.Ordres; } }//获得当日所有委托
-        public Trade[] Trades { get { return ClearCentre.Trades; } }//获得当日所有成交
-        public long[] Cancels { get { return ClearCentre.Cancels; } }//获得当日所有取消
-        public Position[] PositionsHold { get { return ClearCentre.PositionsHold; } }
+        public IEnumerable<Order> Orders { get; set; }//获得当日所有委托
+        public IEnumerable<Trade> Trades { get; set; }//获得当日所有成交
+        public IEnumerable<Position> YdPositions { get; set; }
+
+        public long[] Cancels { get { return new long[]{}; } }//获得当日所有取消
+        
         public Position getPosition(string symbol,bool side)//获得某个symbol的持仓信息
         {
-            return ClearCentre.getPosition(symbol,side);
+            return TLCtxHelper.CmdTradingInfo.getPosition(_id, symbol, side);
         }
 
 
@@ -315,103 +321,103 @@ namespace TradingLib.Common
         {
             get
             {
-                string re = "ID:" + this.ID + " 昨日权益:" + this.LastEquity.ToString() + " 当前权益:" + this.NowEquity.ToString() + " 总委托:" + this.Ordres.Length.ToString() + " 总成交:" + this.Trades.Length.ToString();
+                string re = "ID:" + this.ID + " 昨日权益:" + this.LastEquity.ToString() + " 当前权益:" + this.NowEquity.ToString() + " 总委托:" + this.Orders.Count().ToString() + " 总成交:" + this.Trades.Count().ToString();
                 return re;
 
             }
         }
 
-        public string DisplayString2
-        {
-            get
-            {
-                string re = "FM:" + FutMarginUsed.ToString() + " FMF:" + FutMarginFrozen.ToString() + " FR:" + FutRealizedPL.ToString() + " FU:" + FutUnRealizedPL.ToString() + " FC:" + FutCommission.ToString()  + Environment.NewLine+ " OCost:" + OptPositionCost.ToString() + " OV:" + OptPositionValue.ToString() + " OR:" + OptRealizedPL.ToString() + " OC:" + OptCommission.ToString() + Environment.NewLine;
-                string re1 = "FCash:" + FutCash.ToString() + " FL:" + FutLiquidation.ToString() + " FMU:" + FutMoneyUsed.ToString() + Environment.NewLine;
-                string re2 = "OCash:" + OptCash.ToString() + " OMV:" + OptMarketValue.ToString() + " OL:" + OptLiquidation.ToString() + " OMU:" + OptMoneyUsed.ToString() + Environment.NewLine;
-                string re3 = "TL:" + TotalLiquidation.ToString() + " AF:" + AvabileFunds.ToString()+Environment.NewLine;
+        //public string DisplayString2
+        //{
+        //    get
+        //    {
+        //        string re = "FM:" + FutMarginUsed.ToString() + " FMF:" + FutMarginFrozen.ToString() + " FR:" + FutRealizedPL.ToString() + " FU:" + FutUnRealizedPL.ToString() + " FC:" + FutCommission.ToString()  + Environment.NewLine+ " OCost:" + OptPositionCost.ToString() + " OV:" + OptPositionValue.ToString() + " OR:" + OptRealizedPL.ToString() + " OC:" + OptCommission.ToString() + Environment.NewLine;
+        //        string re1 = "FCash:" + FutCash.ToString() + " FL:" + FutLiquidation.ToString() + " FMU:" + FutMoneyUsed.ToString() + Environment.NewLine;
+        //        string re2 = "OCash:" + OptCash.ToString() + " OMV:" + OptMarketValue.ToString() + " OL:" + OptLiquidation.ToString() + " OMU:" + OptMoneyUsed.ToString() + Environment.NewLine;
+        //        string re3 = "TL:" + TotalLiquidation.ToString() + " AF:" + AvabileFunds.ToString()+Environment.NewLine;
 
-                return re + re1 + re2 + re3;
-            }
+        //        return re + re1 + re2 + re3;
+        //    }
             
-        }
+        //}
 
 
 
-        public static string Series(IAccount a)
-        {
-            const char d = ',';
-            System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            sb.Append(a.ID);//交易帐户编号
-            sb.Append(d);
-            sb.Append(a.OrderRouteType.ToString());//路由类别
-            sb.Append(d);
-            sb.Append(a.LastEquity.ToString());//上期权益
-            sb.Append(d);
-            sb.Append(a.SettleDateTime.ToString());//结算时间
-            sb.Append(d);
-            sb.Append(a.Execute.ToString());//是否允许交易
-            sb.Append(d);
-            sb.Append(a.CashIn.ToString());//入金
-            sb.Append(d);
-            sb.Append(a.CashOut.ToString());//出金
-            sb.Append(d);
-            sb.Append(a.CreatedTime.ToString());//账户建立时间;
-            sb.Append(d);
-            sb.Append("");//账户当前raceID;
-            sb.Append(d);
-            sb.Append("");//账户当前RaceStatus;
-            sb.Append(d);
-            sb.Append("");//加入比赛时间
-            sb.Append(d);
-            sb.Append(a.IntraDay.ToString());//是否是日内
-            sb.Append(d);
-            sb.Append(a.Category.ToString());//类别 交易员 配资客户
-            //sb.Append(d);
-            //sb.Append(a.AgentCode.ToString());//代理编码
-            //sb.Append(d);
-            //sb.Append(a.AgentSubToken.ToString());//代理介绍人
-            return sb.ToString();
-        }
-        public static IAccount Deseries(string msg)
-        {
-            string[] p = msg.Split(',');
-            string acc = p[0];
-            QSEnumOrderTransferType ortype = (QSEnumOrderTransferType)Enum.Parse(typeof(QSEnumOrderTransferType), p[1]);
-            decimal lasequity = decimal.Parse(p[2]);
-            DateTime settletime = DateTime.Parse(p[3]);
-            bool execute = bool.Parse(p[4]);
-            decimal cashin = decimal.Parse(p[5]);
-            decimal cashout = decimal.Parse(p[6]);
-            DateTime createdtime = Convert.ToDateTime(p[7]);
-            string raceid = Convert.ToString(p[8]);
-            QSEnumAccountRaceStatus racestatus = (QSEnumAccountRaceStatus)Enum.Parse(typeof(QSEnumAccountRaceStatus), p[9]);
-            DateTime raceentrytime = Convert.ToDateTime(p[10]);
-            bool intraday = Convert.ToBoolean(p[11]);
-            QSEnumAccountCategory ca = (QSEnumAccountCategory)Enum.Parse(typeof(QSEnumAccountCategory), p[12]);
+        //public static string Series(IAccount a)
+        //{
+        //    const char d = ',';
+        //    System.Text.StringBuilder sb = new System.Text.StringBuilder();
+        //    sb.Append(a.ID);//交易帐户编号
+        //    sb.Append(d);
+        //    sb.Append(a.OrderRouteType.ToString());//路由类别
+        //    sb.Append(d);
+        //    sb.Append(a.LastEquity.ToString());//上期权益
+        //    sb.Append(d);
+        //    sb.Append(a.SettleDateTime.ToString());//结算时间
+        //    sb.Append(d);
+        //    sb.Append(a.Execute.ToString());//是否允许交易
+        //    sb.Append(d);
+        //    sb.Append(a.CashIn.ToString());//入金
+        //    sb.Append(d);
+        //    sb.Append(a.CashOut.ToString());//出金
+        //    sb.Append(d);
+        //    sb.Append(a.CreatedTime.ToString());//账户建立时间;
+        //    sb.Append(d);
+        //    sb.Append("");//账户当前raceID;
+        //    sb.Append(d);
+        //    sb.Append("");//账户当前RaceStatus;
+        //    sb.Append(d);
+        //    sb.Append("");//加入比赛时间
+        //    sb.Append(d);
+        //    sb.Append(a.IntraDay.ToString());//是否是日内
+        //    sb.Append(d);
+        //    sb.Append(a.Category.ToString());//类别 交易员 配资客户
+        //    //sb.Append(d);
+        //    //sb.Append(a.AgentCode.ToString());//代理编码
+        //    //sb.Append(d);
+        //    //sb.Append(a.AgentSubToken.ToString());//代理介绍人
+        //    return sb.ToString();
+        //}
+        //public static IAccount Deseries(string msg)
+        //{
+        //    string[] p = msg.Split(',');
+        //    string acc = p[0];
+        //    QSEnumOrderTransferType ortype = (QSEnumOrderTransferType)Enum.Parse(typeof(QSEnumOrderTransferType), p[1]);
+        //    decimal lasequity = decimal.Parse(p[2]);
+        //    DateTime settletime = DateTime.Parse(p[3]);
+        //    bool execute = bool.Parse(p[4]);
+        //    decimal cashin = decimal.Parse(p[5]);
+        //    decimal cashout = decimal.Parse(p[6]);
+        //    DateTime createdtime = Convert.ToDateTime(p[7]);
+        //    string raceid = Convert.ToString(p[8]);
+        //    QSEnumAccountRaceStatus racestatus = (QSEnumAccountRaceStatus)Enum.Parse(typeof(QSEnumAccountRaceStatus), p[9]);
+        //    DateTime raceentrytime = Convert.ToDateTime(p[10]);
+        //    bool intraday = Convert.ToBoolean(p[11]);
+        //    QSEnumAccountCategory ca = (QSEnumAccountCategory)Enum.Parse(typeof(QSEnumAccountCategory), p[12]);
 
-            string agentcode = p[13];
-            string agentsubtoken = p[14];
+        //    string agentcode = p[13];
+        //    string agentsubtoken = p[14];
             
-            AccountBase a = new AccountBase(acc);
-            a.OrderRouteType = ortype;
-            a.LastEquity = lasequity;
-            a.SettleDateTime = settletime;
-            a.Execute = execute;
-            a.CashIn = cashin;
-            a.CashOut = cashout;
-            a.CreatedTime = createdtime;
+        //    AccountBase a = new AccountBase(acc);
+        //    a.OrderRouteType = ortype;
+        //    a.LastEquity = lasequity;
+        //    a.SettleDateTime = settletime;
+        //    a.Execute = execute;
+        //    a.CashIn = cashin;
+        //    a.CashOut = cashout;
+        //    a.CreatedTime = createdtime;
 
-            //a.RaceID = raceid;
-            //a.RaceStatus = racestatus;
-            //a.RaceEntryTime = raceentrytime;
+        //    //a.RaceID = raceid;
+        //    //a.RaceStatus = racestatus;
+        //    //a.RaceEntryTime = raceentrytime;
 
-            a.IntraDay = intraday;
-            a.Category = ca;
-            //a.AgentCode = agentcode;
-            //a.AgentSubToken = agentsubtoken;
-            return a;
+        //    a.IntraDay = intraday;
+        //    a.Category = ca;
+        //    //a.AgentCode = agentcode;
+        //    //a.AgentSubToken = agentsubtoken;
+        //    return a;
 
-        }
+        //}
 
         #region AccountBase静态函数 用于生成Account对应的相关数据或者统计
 

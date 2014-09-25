@@ -195,47 +195,47 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
-        public long[] getPendingOrders(string account)
-        {
-            return acctk.GetOrderBook(account).getPending();
-        }
-        /// <summary>
-        /// 返回某个委托对应账户与合约下所有与该委托方向相同其他委托,用于提交委托前取消同向委托
-        /// </summary>
-        /// <param name="o"></param>
-        /// <returns></returns>
-        public long[] getPendingOrders(Order o)
-        {
-            long[] olist = this.getPendingOrders(o.Account, o.symbol, o.side);//(this.getOrderTracker(o.Account) as OrderTracker).getPending(o.symbol, o.side);
-            List<long> nlist = new List<long>();
-            foreach (long oid in olist)
-            {
-                if (oid != o.id)
-                    nlist.Add(oid);
-            }
-            return nlist.ToArray();
-        }
-        /// <summary>
-        /// 返回某个账户 某个合约 某个方向的待成交委托
-        /// </summary>
-        /// <param name="account"></param>
-        /// <param name="symbol"></param>
-        /// <param name="side"></param>
-        /// <returns></returns>
-        public long[] getPendingOrders(string account, string symbol, bool side)
-        {
-            return acctk.GetOrderBook(account).getPending(symbol, side);
-        }
+        //public long[] getPendingOrders(string account)
+        //{
+        //    return acctk.GetOrderBook(account).getPending();
+        //}
+        ///// <summary>
+        ///// 返回某个委托对应账户与合约下所有与该委托方向相同其他委托,用于提交委托前取消同向委托
+        ///// </summary>
+        ///// <param name="o"></param>
+        ///// <returns></returns>
+        //public long[] getPendingOrders(Order o)
+        //{
+        //    long[] olist = this.getPendingOrders(o.Account, o.symbol, o.side);//(this.getOrderTracker(o.Account) as OrderTracker).getPending(o.symbol, o.side);
+        //    List<long> nlist = new List<long>();
+        //    foreach (long oid in olist)
+        //    {
+        //        if (oid != o.id)
+        //            nlist.Add(oid);
+        //    }
+        //    return nlist.ToArray();
+        //}
+        ///// <summary>
+        ///// 返回某个账户 某个合约 某个方向的待成交委托
+        ///// </summary>
+        ///// <param name="account"></param>
+        ///// <param name="symbol"></param>
+        ///// <param name="side"></param>
+        ///// <returns></returns>
+        //public long[] getPendingOrders(string account, string symbol, bool side)
+        //{
+        //    return acctk.GetOrderBook(account).getPending(symbol, side);
+        //}
         /// <summary>
         /// 获得某个账户 某个合约的所有待成交委托
         /// </summary>
         /// <param name="account"></param>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        public long[] getPendingOrders(string account, string symbol)
-        {
-            return acctk.GetOrderBook(account).getPending(symbol);
-        }
+        //public long[] getPendingOrders(string account, string symbol)
+        //{
+        //    return acctk.GetOrderBook(account).getPending(symbol);
+        //}
         #endregion
 
     }

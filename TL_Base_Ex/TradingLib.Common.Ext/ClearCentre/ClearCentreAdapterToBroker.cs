@@ -58,15 +58,15 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="o"></param>
         /// <returns></returns>
-        public long[] getPendingOrders(Order o)
-        {
-            return _clearcentre.getPendingOrders(o);
-        }
+        //public long[] getPendingOrders(Order o)
+        //{
+        //    return _clearcentre.getPendingOrders(o);
+        //}
 
-        public int getPositionHoldSize(string account, string symbol)
-        {
-            return _clearcentre.getPositionHoldSize(account, symbol);
-        }
+        //public int getPositionHoldSize(string account, string symbol)
+        //{
+        //    return _clearcentre.getPositionHoldSize(account, symbol);
+        //}
 
         /// <summary>
         /// 检查某个委托是否是Pending状态，simbroker 如果委托处于pending状态则需要被加载到成交引擎中去
@@ -76,7 +76,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public bool IsPending(Order o)
         {
-            return OrderTracker.IsPending(o);
+            return o.IsPending();
         }
     }
 

@@ -71,27 +71,43 @@ namespace TradingLib.Common
         /// <param name="account"></param>
         internal void CacheAccount(IAccount account)
         {
+            AccountBase baseacc = account as AccountBase;
+            if (baseacc == null)
+            {
+                return;
+            }
             //1.添加到帐户列表
             AcctList.TryAdd(account.ID, account);
+
             //2.添加账户对应的委托管理器
+            OrderTracker ot = new OrderTracker();
             if (!OrdBook.ContainsKey(account.ID))
-                OrdBook.TryAdd(account.ID, new OrderTracker());
+                OrdBook.TryAdd(account.ID,ot);
+            baseacc.Orders = ot;
+
             //3.添加账户对应的仓位管理器
+            LSPositionTracker pt = new LSPositionTracker();
             if (!PosBook.ContainsKey(account.ID))
             {
-                LSPositionTracker pt = new LSPositionTracker();
                 pt.DefaultAccount = account.ID;
                 PosBook.TryAdd(account.ID, pt);
             }
+            baseacc.Positions = pt;
+
+            LSPositionTracker ydpt = new LSPositionTracker();
             if (!PosHold.ContainsKey(account.ID))
             {
-                LSPositionTracker pt = new LSPositionTracker();
-                pt.DefaultAccount = account.ID;
-                PosHold.TryAdd(account.ID, pt);
+                ydpt.DefaultAccount = account.ID;
+                PosHold.TryAdd(account.ID, ydpt);
             }
+            baseacc.Positions = ydpt;
+
+
             //4.添加账户对应的成交管理器
+            ThreadSafeList<Trade> tt = new ThreadSafeList<Trade>();
             if (!TradeBook.ContainsKey(account.ID))
-                TradeBook.TryAdd(account.ID, new ThreadSafeList<Trade>());
+                TradeBook.TryAdd(account.ID, tt);
+            baseacc.Trades = tt;
 
         }
 

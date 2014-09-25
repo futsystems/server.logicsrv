@@ -8,7 +8,7 @@ namespace TradingLib.API
     /// 将财务计算,账户交易信息,以及账户操作等接口集合成IAccountClearCentre用于调用相关函数进行操作
 	/// 将Account对象需要的功能暴露给Account对象
     /// </summary>
-    public interface IAccountClearCentre : IFianceFutBase, IFinanceOptBase,IFinanceINNOVBase, IAccTradingInfo,IAccOperation
+    public interface IAccountClearCentre : IFianceFutBase, IFinanceOptBase,IFinanceINNOVBase,IAccOperation
     {
 
         decimal CalOrderFundRequired(Order o,decimal defaultvalue);//计算冻结保证金
