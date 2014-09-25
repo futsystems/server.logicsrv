@@ -70,13 +70,6 @@
     <Compile Include="Base\CoreGlobal.cs" />
     <Compile Include="Base\HighLowTracker.cs" />
     <Compile Include="Base\TIFTracker.cs" />
-    <Compile Include="2bedelete\Contrib\Customer\Customer.cs" />
-    <Compile Include="2bedelete\Contrib\Customer\CustomerManager.cs" />
-    <Compile Include="2bedelete\CoreHealthReport.cs" />
-    <Compile Include="2bedelete\ReportCentre.cs" />
-    <Compile Include="2bedelete\Report.cs" />
-    <Compile Include="2bedelete\WebStatisticReport.cs" />
-    <Compile Include="2bedelete\Contrib\Customer\mysqlCustomer.cs" />
     <Compile Include="Base\TLServer_Generic.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_AccountOperation.cs" />
@@ -109,7 +102,6 @@
     <Compile Include="Core\MessageExchange\MsgExchServer_CTE.cs" />
     <Compile Include="Core\MessageExchange\MsgExchServer_EventHandle.cs" />
     <Compile Include="Core\MessageExchange\TLServer_Exch.cs" />
-    <Compile Include="2bedelete\TrdClientInfo.cs" />
     <Compile Include="Core\MessageExchange\MsgExchServer_Router.cs" />
     <Compile Include="Core\MessageExchange\MsgExchServer_MessageOut.cs" />
     <Compile Include="Core\MessageExchange\MsgExchServer_Order.cs" />
@@ -134,8 +126,6 @@
     <Compile Include="Core\TaskCentre\TaskCentre.cs" />
     <Compile Include="Core\MessageExchange\MsgExchServer.cs" />
     <Compile Include="Core\RiskCentre\RiskCentre.cs" />
-    <Compile Include="2bedelete\TLServer_MQ.cs" />
-    <Compile Include="2bedelete\MgrServer.cs" />
     <Compile Include="Core\TaskCentre\TaskCentre_CTE.cs" />
     <Compile Include="Core\TradeFollow\TradeFollow.cs" />
     <Compile Include="Core\WebMessageExchange\HealthReport.cs" />
@@ -145,17 +135,12 @@
     <Compile Include="Core\WebMessageExchange\WebMsgPubServer.cs" />
     <Compile Include="Core\WebMessageExchange\WebMsgRepServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="2bedelete\TLServer_Moniter.cs" />
-    <Compile Include="2bedelete\TradingInfoDump.cs" />
     <Compile Include="Transport\AsyncServer.cs" />
     <Compile Include="Transport\FastTickSrvMgrClient.cs" />
     <Compile Include="Transport\ThroughtPutTracker.cs" />
     <Compile Include="Transport\ZeromqThroughPut.cs" />
     <Compile Include="Base\CoreUtil.cs" />
-    <Compile Include="2bedelete\MessageCacheStruct.cs" />
     <Compile Include="Base\AsyncTransactionLoger.cs" />
-    <Compile Include="2bedelete\TLServer_Base.cs" />
-    <Compile Include="2bedelete\ClientsTracker.cs" />
     <Compile Include="Base\TIFEngine.cs" />
     <Compile Include="Transport\zmessages.cs" />
   </ItemGroup>

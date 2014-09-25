@@ -89,7 +89,7 @@ namespace TradingLib.Core
             foreach (Trade t in ORM.MTradingInfo.SelectHistTrades(s.Account, s.SettleDay, s.SettleDay))
             {
 
-                settlelist.Add(string.Format(" {0} {1} {2} {3} {4} {5} {6,8:F2} {7,4} {8,10:F2} {9} {10,6:F2} {11,10:F2} {12,10}", t.xdate.ToString().PadRight(10), padRightEx(BasicTracker.ExchagneTracker.GetExchangeTitle(t.Exchange), 8), padRightEx(BasicTracker.SecurityTracker.GetSecurityName(t.SecurityCode), 20), "201415".PadRight(8), padRightEx((t.xsize > 0 ? "买" : " 卖"), 4), padRightEx("投", 4), t.xprice, Math.Abs(t.xsize), BasicTracker.SecurityTracker.GetMultiple(t.SecurityCode)*t.xprice*Math.Abs(t.xsize), padRightEx(GetCombFlag(t.PositionOperation), 4), t.Commission, t.Profit,10101));
+                settlelist.Add(string.Format(" {0} {1} {2} {3} {4} {5} {6,8:F2} {7,4} {8,10:F2} {9} {10,6:F2} {11,10:F2} {12,10}", t.xdate.ToString().PadRight(10), padRightEx(BasicTracker.ExchagneTracker.GetExchangeTitle(t.Exchange), 8), padRightEx(BasicTracker.SecurityTracker.GetSecurityName(t.SecurityCode), 20), "201415".PadRight(8), padRightEx((t.xsize > 0 ? "买" : " 卖"), 4), padRightEx("投", 4), t.xprice, Math.Abs(t.xsize), BasicTracker.SecurityTracker.GetMultiple(t.SecurityCode)*t.xprice*Math.Abs(t.xsize), padRightEx(GetCombFlag(t.OffsetFlag), 4), t.Commission, t.Profit,10101));
             }
 
             settlelist.Add(NewLine);
@@ -122,19 +122,24 @@ namespace TradingLib.Core
         }
 
 
-        static string GetCombFlag(QSEnumPosOperation op)
+        static string GetCombFlag(QSEnumOffsetFlag op)
         {
-            switch (op)
-            { 
-                case QSEnumPosOperation.AddPosition:
-                case QSEnumPosOperation.EntryPosition:
-                    return "开";
-                case QSEnumPosOperation.DelPosition:
-                case QSEnumPosOperation.ExitPosition:
-                    return "平";
-                default:
-                    return "";
+            if (op == QSEnumOffsetFlag.OPEN)
+            {
+                return "开仓";
             }
+            else if (op == QSEnumOffsetFlag.UNKNOWN)
+            {
+                return "未知";
+            }
+            else
+            {
+                return "平仓";
+            }
+                
+                
+                
+
         }
     }
 }

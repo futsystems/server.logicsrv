@@ -17,18 +17,24 @@ namespace TradingLib.Common
         /// <param name="p"></param>
         internal void GotPosition(Position p)
         {
-            debug("got postioin:" + p.ToString(), QSEnumDebugLevel.INFO);
-            if (!HaveAccount(p.Account)) return;
-            Symbol symbol = p.oSymbol;
-            if (symbol == null)
+            try
             {
-                debug("symbol:" + p.Symbol + " not exist in basictracker, dropit", QSEnumDebugLevel.ERROR);
-                return;
+                if (!HaveAccount(p.Account)) return;
+                Symbol symbol = p.oSymbol;
+                if (symbol == null)
+                {
+                    debug("symbol:" + p.Symbol + " not exist in basictracker, dropit", QSEnumDebugLevel.ERROR);
+                    return;
+                }
+
+                acctk.GotPosition(p);
+                totaltk.GotPosition(p);
+                onGotPosition(p);
             }
-            debug("account tracker got position", QSEnumDebugLevel.INFO);
-            acctk.GotPosition(p);
-            totaltk.GotPosition(p);
-            onGotPosition(p);
+            catch (Exception ex)
+            {
+                debug("处理隔夜持仓异常:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+            }
         }
 
         internal virtual void onGotPosition(Position p)
@@ -53,14 +59,9 @@ namespace TradingLib.Common
                     return;
                 }
                 bool neworder = !totaltk.IsTracked(error.Order.id);
-                
-                //如果委托错误不是新委托 则处理该委托
-                //if (!neworder)
-                {
-                    acctk.GotOrder(error.Order);
-                    totaltk.GotOrder(new OrderImpl(error.Order));
-                    onGotOrder(error.Order, neworder);
-                }
+                acctk.GotOrder(error.Order);
+                totaltk.GotOrder(new OrderImpl(error.Order));
+                onGotOrder(error.Order, neworder);
             }
             catch (Exception ex)
             {
@@ -86,8 +87,6 @@ namespace TradingLib.Common
                 bool neworder = !totaltk.IsTracked(o.id);
                 acctk.GotOrder(o);
                 totaltk.GotOrder(new OrderImpl(o));
-
-                //o.Filled = OrdBook[o.Account].Filled(o.id);//获得委托成交
                 onGotOrder(o, neworder);
             }
             catch (Exception ex)
@@ -109,9 +108,9 @@ namespace TradingLib.Common
             {
                 string account = SentOrder(oid).Account;
                 if (!HaveAccount(account)) return;
+
                 acctk.GotCancel(account, oid);
                 totaltk.GotCancel(oid);
-
                 onGotCancel(oid);
             }
             catch (Exception ex)
@@ -139,33 +138,32 @@ namespace TradingLib.Common
                     debug("symbol:" + f.symbol + " not exist in basictracker, dropit", QSEnumDebugLevel.ERROR);
                     return;
                 }
+
+                //通过成交的多空以及开平标志 判断是多方操作还是空方操作
                 bool positionside = f.PositionSide;
 
                 PositionTransaction postrans = null;
+
+                //获得对应的持仓
                 Position pos = acctk.GetPosition(f.Account, f.symbol, positionside);
                 int beforesize = pos.UnsignedSize;
-                decimal highest = pos.Highest;
-                decimal lowest = pos.Lowest;
-
+                //累加持仓
                 acctk.GotFill(f);
-
-                int aftersize = acctk.GetPosition(f.Account, f.symbol, positionside).UnsignedSize;//查询该成交后数量
-                decimal c = -1;
-
-                //debug("got fill beforesize:" + beforesize.ToString() + " aftersize:" + aftersize.ToString(), QSEnumDebugLevel.INFO);
+                pos = acctk.GetPosition(f.Account, f.symbol, positionside);
+                int aftersize = pos.UnsignedSize;//查询该成交后数量
                 //当成交数据中f.commission<0表明清算中心没有计算手续费,若>=0表明已经计算过手续费 则不需要计算了
                 if (f.Commission < 0)
                 {
                     decimal commissionrate = 0;
-                    //成交后持仓数量大于成交前数量 开仓或者加仓
-                    if (aftersize > beforesize)
+                    //开仓
+                    if (f.IsEntryPosition)
                     {
                         commissionrate = symbol.EntryCommission;
                     }
-                    //成交后持仓数量小于成交后数量 平仓或者减仓
-                    if (aftersize < beforesize)
+                    //平仓
+                    else
                     {
-
+                        //进行特殊手续费判定并设定对应的手续费费率
                         //如果对应的合约是单边计费的或者有特殊计费方式的合约，则我们单独计算该部分费用,注这里还需要加入一个日内交易的判断,暂时不做(当前交易均为日内)
                         //获得平仓手续费特例
                         if (CommissionHelper.AnyCommissionSetting(SymbolHelper.genSecurityCode(f.symbol), out commissionrate))
@@ -177,14 +175,13 @@ namespace TradingLib.Common
                             commissionrate = symbol.ExitCommission;
                         }
                     }
-
+                    //计算标准手续费
                     f.Commission = Calc.CalCommission(commissionrate, f);
                 }
 
                 //生成持仓操作记录 同时结合beforeszie aftersize 设置fill PositionOperation,需要知道帐户的持仓信息才可以知道是开 加 减 平等信息
-                f.PositionOperation = PositionTransaction.GenPositionOperation(beforesize, aftersize);
-                postrans = new PositionTransaction(f, symbol, beforesize, aftersize, highest, lowest);
-
+                postrans = new PositionTransaction(f, symbol, beforesize, aftersize, pos.Highest,pos.Lowest);
+                f.PositionOperation = postrans.PosOperation;
                 totaltk.GotFill(f);
 
                 //子类函数的onGotFill用于执行数据记录以及其他相关业务逻辑

@@ -22,6 +22,7 @@ namespace TradingLib.ORM
     {
         public string Account { get; set; }
         public string Symbol { get; set; }
+        public bool Side { get; set; }
 
         public DateTime EntryTime { get; set; }
         public decimal EntryPrice { get; set; }
@@ -33,6 +34,8 @@ namespace TradingLib.ORM
 
         public decimal Highest { get; set; }
         public decimal Lowest { get; set; }
+        
+        
     }
 
     internal class positionfields
@@ -325,7 +328,7 @@ namespace TradingLib.ORM
 
         static PositionRound PRInfo2PositionRound(positionroundinfo info)
         {
-            PositionRound pr = new PositionRound(info.Account, BasicTracker.SymbolTracker[info.Symbol]);
+            PositionRound pr = new PositionRound(info.Account, BasicTracker.SymbolTracker[info.Symbol],info.Side);
 
             pr.EntryTime = info.EntryTime;
             pr.EntrySize = info.EntrySize;
@@ -338,7 +341,6 @@ namespace TradingLib.ORM
             {
                 pr.SetOpen();
             }
-            pr.Side = pr.EntrySize > 0;
             return pr;
 
         }
@@ -347,7 +349,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("SELECT account,symbol,entrytime,entryprice,entrysize,exittime,exitprice,exitsize,highest,lowest FROM  hold_postransactions WHERE settleday = {0}", lastsettleday);
+                string query = string.Format("SELECT account,symbol,side,entrytime,entryprice,entrysize,exittime,exitprice,exitsize,highest,lowest FROM  hold_postransactions WHERE settleday = {0}", lastsettleday);
                 IList<PositionRound> prs = (from prinfo in db.Connection.Query<positionroundinfo>(query).ToArray()
                                                    select PRInfo2PositionRound(prinfo)).ToArray<PositionRound>();
                 return prs;
@@ -381,7 +383,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("Insert into tmp_postransactions (`account`,`symbol`,`security`,`multiple`,`entrytime`,`entrysize`,`entryprice`,`entrycommission`,`exittime`,`exitsize`,`exitprice`,`exitcommission`,`highest`,`lowest`,`size`,`holdsize`,`side`,`wl`,`totalpoints`,`profit`,`commission`,`netprofit`,`type`,`settleday`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}','{17}','{18}','{19}','{20}','{21}','{22}',{23})", pr.Account, pr.Symbol, pr.Security, pr.Multiple.ToString(), pr.EntryTime.ToString(), pr.EntrySize.ToString(), pr.EntryPrice.ToString(), pr.EntryCommission.ToString(), pr.ExitTime.ToString(), pr.ExitSize.ToString(), pr.ExitPrice.ToString(), pr.ExitCommission.ToString(), pr.Highest.ToString(), pr.Lowest.ToString(), pr.Size.ToString(), pr.HoldSize.ToString(), pr.Side.ToString(), pr.WL.ToString(), pr.TotalPoints.ToString(), pr.Profit.ToString(), pr.Commissoin.ToString(), pr.NetProfit.ToString(), pr.Type.ToString(),TLCtxHelper.Ctx.SettleCentre.CurrentTradingday);
+                string query = String.Format("Insert into tmp_postransactions (`account`,`symbol`,`security`,`multiple`,`entrytime`,`entrysize`,`entryprice`,`entrycommission`,`exittime`,`exitsize`,`exitprice`,`exitcommission`,`highest`,`lowest`,`size`,`holdsize`,`side`,`wl`,`totalpoints`,`profit`,`commission`,`netprofit`,`type`,`settleday`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}','{17}','{18}','{19}','{20}','{21}','{22}',{23})", pr.Account, pr.Symbol, pr.Security, pr.Multiple.ToString(), pr.EntryTime.ToString(), pr.EntrySize.ToString(), pr.EntryPrice.ToString(), pr.EntryCommission.ToString(), pr.ExitTime.ToString(), pr.ExitSize.ToString(), pr.ExitPrice.ToString(), pr.ExitCommission.ToString(), pr.Highest.ToString(), pr.Lowest.ToString(), pr.Size.ToString(), pr.HoldSize.ToString(), pr.Side?1:0, pr.WL.ToString(), pr.TotalPoints.ToString(), pr.Profit.ToString(), pr.Commissoin.ToString(), pr.NetProfit.ToString(), pr.Type.ToString(),TLCtxHelper.Ctx.SettleCentre.CurrentTradingday);
                 return db.Connection.Execute(query) > 0;
             }
         }

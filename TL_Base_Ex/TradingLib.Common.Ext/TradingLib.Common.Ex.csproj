@@ -59,7 +59,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="2bedelete\mysqlDBReport.cs" />
     <Compile Include="Accounts\Account.cs" />
     <Compile Include="Accounts\AccountAdapterToExp.cs" />
     <Compile Include="Accounts\AccountFilter.cs" />
@@ -77,8 +76,6 @@
     <Compile Include="ClearCentre\Base_ClearCentre_GotXXXX.cs" />
     <Compile Include="Manager\Manager.cs" />
     <Compile Include="ClearCentre\Base_ClearCentre_.cs" />
-    <Compile Include="2bedelete\Base_ClearCentre_TradingInfo.cs" />
-    <Compile Include="2bedelete\Base_ClearCentre_FinCal.cs" />
     <Compile Include="ClearCentre\Base_ClearCentre_TotalInfo.cs" />
     <Compile Include="Client\TrdClientInfo.cs" />
     <Compile Include="ORM\Config\ConfigItem.cs" />
@@ -123,17 +120,9 @@
     <Compile Include="ExCommConst.cs" />
     <Compile Include="ExUtil.cs" />
     <Compile Include="Filter.cs" />
-    <Compile Include="2bedelete\MBase.cs" />
     <Compile Include="JsonReply\ReplyHelper.cs" />
     <Compile Include="JsonReply\ReplyType.cs" />
-    <Compile Include="2bedelete\ConnectionPoll.cs" />
     <Compile Include="ORM\MBasicInfo.cs" />
-    <Compile Include="2bedelete\MSecurityFamily.cs" />
-    <Compile Include="2bedelete\MMarketTime.cs" />
-    <Compile Include="2bedelete\MSymbol.cs" />
-    <Compile Include="2bedelete\mysqlDBBase.cs" />
-    <Compile Include="2bedelete\SqlGlobal.cs" />
-    <Compile Include="2bedelete\ObjectPool.cs" />
     <Compile Include="Plugin\ContribCommandInfo.cs" />
     <Compile Include="Plugin\ContribEventInfo.cs" />
     <Compile Include="Plugin\ContribTaskInfo.cs" />
@@ -144,38 +133,16 @@
     <Compile Include="Rule\JsonWrapperRule.cs" />
     <Compile Include="Rule\JsonWrapperRuleInstance.cs" />
     <Compile Include="SrvObject\ContribSrvObject.cs" />
-    <Compile Include="2bedelete\Statistic\AccountSets.cs" />
-    <Compile Include="2bedelete\Statistic\GeneralStatistic.cs" />
-    <Compile Include="2bedelete\Statistic\PositionMeger.cs" />
-    <Compile Include="2bedelete\Statistic\PositionStatistic.cs" />
-    <Compile Include="2bedelete\ManagerClient\Transport\AsyncClient.cs" />
     <Compile Include="SrvObject\BaseObject.cs" />
     <Compile Include="ClearCentre\Base_ClearCentre.cs" />
-    <Compile Include="2bedelete\ClearCentreAdapterToAccount.cs" />
     <Compile Include="ClearCentre\ClearCentreAdapterToBroker.cs" />
-    <Compile Include="2bedelete\ClearCentreMgr.cs" />
     <Compile Include="ClearCentre\CommissionHelper.cs" />
-    <Compile Include="2bedelete\ClearCentreAdapterToAccountMgr.cs" />
-    <Compile Include="2bedelete\ClientInfo.cs" />
     <Compile Include="Client\ClientTracker.cs" />
-    <Compile Include="2bedelete\ConnecterHelper.cs" />
-    <Compile Include="2bedelete\DllLoader\ContribLoader.cs" />
-    <Compile Include="2bedelete\DllLoader\RuleSetHelper.cs" />
-    <Compile Include="2bedelete\ObjectHelper.cs" />
-    <Compile Include="2bedelete\HealthInfo.cs" />
-    <Compile Include="2bedelete\ManagerClient\MgrClient.cs" />
-    <Compile Include="2bedelete\Statistic\TradingStatistic.cs" />
-    <Compile Include="2bedelete\Profile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="2bedelete\DailySummary.cs" />
-    <Compile Include="2bedelete\ReportSecurityDis.cs" />
-    <Compile Include="2bedelete\ReportWLLSDis.cs" />
     <Compile Include="SessionInfo.cs" />
     <Compile Include="Statistic\AccountSet.cs" />
     <Compile Include="Statistic\GeneralStatistic.cs" />
     <Compile Include="ThroughtPutTracker.cs" />
-    <Compile Include="2bedelete\ManagerClient\Transport\TLClient_ZMQ.cs" />
-    <Compile Include="2bedelete\ManagerClient\Transport\zmessages.cs" />
     <Compile Include="Contex\TLContex.cs" />
     <Compile Include="Tracker\BasicTracker.cs" />
     <Compile Include="Tracker\ContrackBankTracker.cs" />

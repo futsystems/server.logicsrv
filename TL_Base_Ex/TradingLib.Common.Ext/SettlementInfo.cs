@@ -74,7 +74,7 @@ namespace TradingLib.Common
             hedgeflag = "投机";
             xprice = f.xprice.ToString();
             amount = Math.Abs(f.xprice * f.xsize * f.oSymbol.Multiple).ToString();
-            posflag = (f.PositionOperation == QSEnumPosOperation.AddPosition || f.PositionOperation == QSEnumPosOperation.EntryPosition) ? "开仓" : "平仓";
+            posflag = f.IsEntryPosition? "开仓" : "平仓";
             commission = f.Commission.ToString();
             profit = "";
             seq = "";

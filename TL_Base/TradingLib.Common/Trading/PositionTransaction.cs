@@ -7,7 +7,7 @@ using TradingLib.API;
 namespace TradingLib.Common
 {
     /// <summary>
-    /// 开仓或者加仓数据
+    /// 开仓或者平仓数据
     /// </summary>
     [Serializable]
     public class PositionTransaction
@@ -86,40 +86,47 @@ namespace TradingLib.Common
         /// 该positiontransaction底层的成交记录
         /// </summary>
         public Trade Trade { get;private set; }
-        /// <summary>
-        /// 仓位操作对应的品种数据
-        /// </summary>
-        //public Symbol SecurityInstance { get; private set; }
+
         /// <summary>
         /// 仓位操作标识 开仓 加仓 减仓 平仓
         /// </summary>
         public QSEnumPosOperation PosOperation { get {return  PositionTransaction.GenPositionOperation(BeforeSize,AfterSize); } }
 
+        /// <summary>
+        /// 合约对象
+        /// </summary>
         public Symbol oSymbol { get; private set; }
+
         /// <summary>
         /// 交易帐户ID
         /// </summary>
         public string Account { get { return Trade.Account; } }
+
         /// <summary>
         /// 交易合约
         /// </summary>
         public string Symbol { get { return oSymbol.Symbol; } }
+
         /// <summary>
         /// 品种
         /// </summary>
         public string Security { get { return oSymbol.FullName; } }
+
         /// <summary>
         /// 时间
         /// </summary>
         public DateTime Time { get { return Util.ToDateTime(Trade.xdate, Trade.xtime); } }
+
         /// <summary>
         /// 数量
         /// </summary>
         public int Size { get { return Trade.xsize; } }
+
         /// <summary>
         /// 合约乘数
         /// </summary>
         public int Multiple { get { return oSymbol.Multiple; } }
+
         /// <summary>
         /// 价格
         /// </summary>
@@ -128,10 +135,12 @@ namespace TradingLib.Common
         /// 手续费
         /// </summary>
         public decimal Commission { get { return Trade.Commission; } }
+
         /// <summary>
         /// 持仓期间最高价
         /// </summary>
         public decimal Highest { get; private set; }
+
         /// <summary>
         /// 持仓期间最低价
         /// </summary>

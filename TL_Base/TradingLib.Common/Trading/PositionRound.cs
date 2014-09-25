@@ -25,12 +25,17 @@ namespace TradingLib.Common
         /// </summary>
         ThreadSafeList<PositionTransaction> _postransactionlist = new ThreadSafeList<PositionTransaction>();
 
-
-        
-        public PositionRound(string account,Symbol symbol)
+        /// <summary>
+        /// 某个交易帐户 某个合约 某个方向上的持仓回合
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="symbol"></param>
+        /// <param name="side"></param>
+        public PositionRound(string account,Symbol symbol,bool side)
         {
             Account = account;//记录账户
             oSymbol = symbol;
+            Side = side;
         }
 
 
@@ -40,7 +45,7 @@ namespace TradingLib.Common
         public Symbol oSymbol { get; set; }
 
         /// <summary>
-        /// 品种类被
+        /// 品种类别
         /// </summary>
         public SecurityType Type { get { return oSymbol.SecurityType; } }
 
@@ -48,6 +53,7 @@ namespace TradingLib.Common
         /// 乘数
         /// </summary>
         public int Multiple { get { return oSymbol.Multiple; } }
+
 
         public void SetOpen()
         {
@@ -67,7 +73,7 @@ namespace TradingLib.Common
         /// </summary>
         public bool IsClosed { get { return _closed; } }
 
-       
+        
         /// <summary>
         /// rpt获得一个positiontrans
         /// 持仓回合获得一个持仓成交记录
@@ -113,7 +119,6 @@ namespace TradingLib.Common
                     //debug("仓位增加");
                     int oldsize = _entrysize;
                     _entrysize += postrans.Size;//数量增加
-                    //_entrycommission += postrans.Commission;//累加手续费
                     _entryprice = (oldsize * _entryprice + postrans.Size * postrans.Price) / Convert.ToDecimal(_entrysize);//计算均价
                 }
 
@@ -123,7 +128,6 @@ namespace TradingLib.Common
                     //debug("仓位减少");
                     int oldsize = _exitsize;
                     _exitsize += postrans.Size;//数量累加
-                    //_exitcommission += postrans.Commission;//累加手续费
                     _exitprice = (oldsize * _exitprice + postrans.Size * postrans.Price) / Convert.ToDecimal(_exitsize);//计算均价
                 }
 
@@ -141,7 +145,7 @@ namespace TradingLib.Common
                 _lowest = Math.Min(_lowest, postrans.Lowest);
 
                 //保存仓位变动数据
-                _postransactionlist.Add(new PositionTransaction(postrans));
+                _postransactionlist.Add(postrans);
                 return true;
             }
             catch (Exception ex)
@@ -158,7 +162,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static string GetPRKey(PositionTransaction p)
         {
-            return p.Account + "-" + p.Symbol;
+            return p.Account + "-" + p.Symbol+"-"+(p.Trade.PositionSide?QSEnumPositionDirectionType.Long.ToString():QSEnumPositionDirectionType.Short.ToString());
         }
 
         /// <summary>
@@ -168,13 +172,13 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static string GetPRKey(Position position)
         {
-			return position.Account + "-" + position.Symbol;
+			return position.Account + "-" + position.Symbol +"-"+ position.DirectionType.ToString();
         }
 
         public string PRKey
         {
             get {
-                return Account+ "-" + Symbol;
+                return Account+ "-" + Symbol +"-"+(Side?QSEnumPositionDirectionType.Long.ToString():QSEnumPositionDirectionType.Short.ToString());
             }
         }
         
@@ -196,7 +200,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 多空
         /// </summary>
-        public bool Side { get; set; }
+        public bool Side { get; private set; }
 
         /// <summary>
         /// 当前持仓数量
@@ -221,7 +225,6 @@ namespace TradingLib.Common
         /// </summary>
         public decimal EntryPrice { get { return _entryprice; } set { _entryprice = value; } }
 
-        //decimal _entrycommission = 0;
         /// <summary>
         /// 开仓手续费 通过累加所有开仓操作的手续费来得到 累计的开仓手续费
         /// </summary>
@@ -352,7 +355,6 @@ namespace TradingLib.Common
     /// 交易回合记录器,用于记录交易员的成交回合,一次开 平回合
     /// 
     /// </summary>
-    [Serializable]
     public class PositionRoundTracker
     {
         public event DebugDelegate SendDebugEvent;
@@ -369,14 +371,6 @@ namespace TradingLib.Common
                 return FindSymbolEvent(symbol);
             return null;
         }
-        /*
-        public event FindSecurity FindSecurityEvent;
-        Security findSecurity(string symbol)
-        {
-            if (FindSecurityEvent != null)
-                return FindSecurityEvent(symbol);
-            return null;
-        }**/
 
         ConcurrentDictionary<string, PositionRound> _roundmap = new ConcurrentDictionary<string, PositionRound>();
         ThreadSafeList<PositionRound> _roundlog = new ThreadSafeList<PositionRound>();
@@ -387,7 +381,6 @@ namespace TradingLib.Common
         public PositionRound[] RoundClosed
         {
             get {
-                //FinishGotPosTrans();
                 return _roundlog.ToArray();
             }
         }
@@ -444,10 +437,6 @@ namespace TradingLib.Common
             }
         }
 
-        //public string genKey(Position p)
-        //{
-        //    return p.Account + "-" + p.symbol;
-        //}
         /// <summary>
         /// 获得某个key对应的开启的仓位操作记录
         /// </summary>
@@ -487,6 +476,7 @@ namespace TradingLib.Common
             //对别数据然后进行数据同步
             IncludeKeyList(keylist);
         }
+
         /// <summary>
         /// 同步持仓数据和PR数据,PositionRound记录了账户的开平回合记录,是交易来回的记录
         /// 持仓数据时所有交易累加到当前的状态信息,
@@ -525,6 +515,7 @@ namespace TradingLib.Common
                 return false;
             }
         }
+
         /// <summary>
         /// 将key列表外的open PR数据排除  并返回我们排除的列表
         /// </summary>
@@ -559,6 +550,7 @@ namespace TradingLib.Common
             }
             return removelist;
         }
+
         /// <summary>
         /// 将某个position转换成对应的PR数据,在转换的过程中 加减仓数据会丢失，只是针对当前的持仓状态进行的PR数据复原
         /// </summary>
@@ -568,7 +560,7 @@ namespace TradingLib.Common
         {
             Symbol sym = FindSymbol(p.Symbol);
             if (sym == null) return null;
-            PositionRound pr = new PositionRound(p.Account,p.oSymbol);
+            PositionRound pr = new PositionRound(p.Account,p.oSymbol,p.isLong);
             //pr.EntryTime  = p.
             pr.EntrySize = p.Size;
             pr.EntryPrice = p.AvgPrice;
@@ -604,39 +596,26 @@ namespace TradingLib.Common
         /// <param name="p"></param>
         public IPositionRound GotPositionTransaction(PositionTransaction p)
         {
-            string key = PositionRound.GetPRKey(p);//p.Account + "-" + p.Symbol;//PositionTransaction key值用于索引唯一的account-symbol positionround维护
+            string key = PositionRound.GetPRKey(p);
 
             PositionRound pr = null;
             if (_roundmap.TryGetValue(key, out pr))//存在对应的key
             {
-                //存在则需要进行判断是否closed,如果closed则我们将closed的记录放入log.然后新建一个空PositionRound
-                //if (pr.IsClosed)
-                //{
-                //    _roundlog.Add(pr);//如果已经平仓,则将该positionround数据添加到log中
-                //    pr = new PositionRound(p.Account, p.Symbol, p.Security, p.Multiple);
-                //    //pr.SendDebugEvent  +=new DebugDelegate(debug);
-                //    _roundmap[key] = pr;
-                //    if(!pr.GotPositionTransaction(p)) wrongpt++;
-                //}
-                //else
-                //{
                 if(!pr.GotPositionTransaction(p)) wrongpt++;
-                //}
             }
             else//不存在key则新建一个
             {
-                pr =  new PositionRound(p.Account,p.oSymbol);
+                pr =  new PositionRound(p.Account,p.oSymbol,p.Trade.PositionSide);
                 _roundmap.TryAdd(key,pr);
-                //pr.SendDebugEvent += new DebugDelegate(debug);
                 if(!pr.GotPositionTransaction(p)) wrongpt++;
             }
 
             //检查持仓是否关闭,如果关闭则对外触发相应的事件
             if (pr.IsClosed)
             {
-                _roundlog.Add(pr);//如果已经平仓,则将该positionround数据添加到log中
-                //同时新建一个positionround添加到roundmap中,用于等待新的成交进入(初始状态是未开启)
-                //pr = new PositionRound(p.Account, p.Symbol, p.Security, p.Multiple);
+                //如果已经平仓,则将该positionround数据添加到log中并且从map中移除该pr记录
+                _roundlog.Add(pr);
+                
                 PositionRound prremoved;
                 _roundmap.TryRemove(key, out prremoved);
                 //pr.SendDebugEvent  +=new DebugDelegate(debug);

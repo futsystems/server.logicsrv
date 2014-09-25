@@ -91,7 +91,7 @@ namespace TradingLib.Core
             _prt.SendDebugEvent += new DebugDelegate(msgdebug);
 
             _prt.RestorePositionRounds(prlist);
-            _prt.SyncPositionHold(_clearcentre.TotalYDPositions);
+            _prt.SyncPositionHold(_clearcentre.TotalYdPositions.Where(pos=>!pos.isFlat).ToArray());
 
 
 
@@ -190,7 +190,7 @@ namespace TradingLib.Core
             //2.每天重置时,从数据库加载数据 也将和PH数据进行同步，做到每天开盘前是一致的，算法吻合，数据不丢失应该所有数据都是可以吻合和同步的
             //如果内存中的数据和数据库数据得到的PR数据一致 则将position数据与PR数据进行同步 然后保存
             sb.AppendLine("--------持仓数据与PR数据对照表------------------");
-            sb.AppendLine("PositionHold:" + _clearcentre.TotalPositions.Length.ToString() + "  PositionRound(Open)" + _clearcentre.PositionRoundTracker.RoundOpened.Length.ToString());
+            sb.AppendLine("PositionHold:" + _clearcentre.TotalPositions.Count().ToString() + "  PositionRound(Open)" + _clearcentre.PositionRoundTracker.RoundOpened.Length.ToString());
             foreach (Position p in _clearcentre.TotalPositions)
             {
                 string key = PositionRound.GetPRKey(p);
@@ -200,7 +200,7 @@ namespace TradingLib.Core
             }
 
             //PR数据与当前持仓数据进行同步,数据同步后就要进行数据保存
-            _clearcentre.PositionRoundTracker.SyncPositionHold(_clearcentre.TotalPositions);
+            _clearcentre.PositionRoundTracker.SyncPositionHold(_clearcentre.TotalPositions.Where(pos=>!pos.isFlat).ToArray());
             Notify("清算数据检验[" + DateTime.Now.ToShortDateString(), sb.ToString());
             return true;//所有检查通过
 

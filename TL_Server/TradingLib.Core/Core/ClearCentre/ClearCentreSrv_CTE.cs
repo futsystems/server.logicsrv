@@ -381,7 +381,7 @@ namespace TradingLib.Core
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("上次结算持仓:" + Environment.NewLine);
-            foreach (Position pos in this.TotalYDPositions)
+            foreach (Position pos in this.TotalYdPositions)
             {
                 sb.Append(pos.ToString() + Environment.NewLine);
             }

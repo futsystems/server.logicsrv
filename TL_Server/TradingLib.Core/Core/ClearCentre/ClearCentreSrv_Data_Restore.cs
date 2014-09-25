@@ -50,7 +50,7 @@ namespace TradingLib.Core
                 //将positionround数据恢恢复到positionroundtracker
                 prt.RestorePositionRounds(prlist);
                 //PR数据与持仓数据进行同步1.从数据库加载同步一次  2.保存到数据库同步一次
-                prt.SyncPositionHold(this.TotalYDPositions);
+                prt.SyncPositionHold(this.TotalYdPositions.Where(pos=>!pos.isFlat).ToArray());
 
 
                 foreach (Order o in olist)
@@ -66,7 +66,7 @@ namespace TradingLib.Core
                     this.GotCancel(oid);
                 }
 
-                foreach (Position p in this.TotalYDPositions)
+                foreach (Position p in this.TotalYdPositions)
                 {
                     string key = PositionRound.GetPRKey(p);
                     PositionRound pr = prt[key];

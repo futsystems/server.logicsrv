@@ -24,20 +24,17 @@ namespace TradingLib.Core
             {
                 if (o != null && o.isValid)
                 {
-                    //debug("Got Order:" + o.ToString() + " neworder:" + neworder.ToString(), QSEnumDebugLevel.INFO);
                     if (this.Status == QSEnumClearCentreStatus.CCOPEN)
                         debug("Got  Order:" + o.ToString(), QSEnumDebugLevel.INFO);
                     if (_status == QSEnumClearCentreStatus.CCOPEN)
                     {
                         if (neworder)
                         {
-                            //如果没有记录记录该委托,则新记录该委托
-                            _asynLoger.newOrder(o);//记录委托
+                            _asynLoger.newOrder(o);//如果没有记录记录该委托,则新记录该委托 
                         }
                         else
                         {
-                            //如果系统没有记录该位图,则更新该委托
-                            _asynLoger.updateOrder(o);
+                            _asynLoger.updateOrder(o);//如果系统没有记录该位图,则更新该委托
                         }
                     }
                 }
@@ -92,7 +89,6 @@ namespace TradingLib.Core
                     _asynLoger.newTrade(f);
 
                     //当PositionRound关闭后 对外触发PositionRound关闭事件
-                    //debug("PositionRound:" + pr.ToString(), QSEnumDebugLevel.INFO);
                     if (pr.IsClosed)
                     {
                         _asynLoger.newPositonRound(pr);
@@ -102,8 +98,6 @@ namespace TradingLib.Core
                         }
                     }
                 }
-
-
             }
             catch (Exception ex)
             {
