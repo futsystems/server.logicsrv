@@ -19,7 +19,7 @@ namespace APIDemo
     {
         void debug(string msg)
         {
-            ctDebug1.GotDebug(msg);
+            //ctDebug1.GotDebug(msg);
         }
         public Form1()
         {
@@ -125,6 +125,7 @@ namespace APIDemo
 
         private void btnBuy_Click(object sender, EventArgs e)
         {
+            
             Order o = new OrderImpl();
             o.symbol = sendorder_symbol.Text;
             o.TotalSize = int.Parse(sendorder_size.Text);
@@ -132,7 +133,11 @@ namespace APIDemo
             o.side = true;
             o.price = decimal.Parse(sendorder_price.Text);
             o.OffsetFlag = CurrentFlag;
-            tlclient.ReqOrderInsert(o);
+            for (int i = 0; i < int.Parse(submintnum.Text); i++)
+            {
+                tlclient.ReqOrderInsert(o);
+                Thread.Sleep(2);
+            }
 
         }
 
@@ -145,7 +150,11 @@ namespace APIDemo
             o.side = false;
             o.price = decimal.Parse(sendorder_price.Text);
             o.OffsetFlag = CurrentFlag;
-            tlclient.ReqOrderInsert(o);
+            for (int i = 0; i < int.Parse(submintnum.Text); i++)
+            {
+                tlclient.ReqOrderInsert(o);
+                Thread.Sleep(2);
+            }
         }
 
         private void btnQryOrder_Click_1(object sender, EventArgs e)

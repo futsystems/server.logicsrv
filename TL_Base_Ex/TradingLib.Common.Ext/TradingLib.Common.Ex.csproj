@@ -74,7 +74,6 @@
     <Compile Include="Accounts\AccountUtils_TradingInfoEx.cs" />
     <Compile Include="Accounts\Account_IAccTradingInfo.cs" />
     <Compile Include="ClearCentre\Base_ClearCentre_GotXXXX.cs" />
-    <Compile Include="Manager\Manager.cs" />
     <Compile Include="ClearCentre\Base_ClearCentre_.cs" />
     <Compile Include="ClearCentre\Base_ClearCentre_TotalInfo.cs" />
     <Compile Include="Client\TrdClientInfo.cs" />
@@ -115,7 +114,6 @@
     <Compile Include="Plugin\Attr\CoreCommandAttr.cs" />
     <Compile Include="Contrib\ExCommand.cs" />
     <Compile Include="Contrib\TaskProc.cs" />
-    <Compile Include="Enums.cs" />
     <Compile Include="Plugin\Attr\MethodArgumentType.cs" />
     <Compile Include="ExCommConst.cs" />
     <Compile Include="ExUtil.cs" />
@@ -164,9 +162,6 @@
       <Project>{14D1C397-B06C-4012-BA32-D1AE6DD41252}</Project>
       <Name>TradingLib.API.Ex</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Plugin\插件系统说明.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Plugin\plugin.cd" />

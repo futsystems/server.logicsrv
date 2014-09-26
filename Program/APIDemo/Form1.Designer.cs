@@ -113,6 +113,8 @@
             this.qrytrade_symbol = new System.Windows.Forms.TextBox();
             this.label16 = new System.Windows.Forms.Label();
             this.ctDebug1 = new APIDemo.DebugControl();
+            this.label32 = new System.Windows.Forms.Label();
+            this.submintnum = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -434,6 +436,8 @@
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.label32);
+            this.groupBox1.Controls.Add(this.submintnum);
             this.groupBox1.Controls.Add(this.qrysettle_day);
             this.groupBox1.Controls.Add(this.label31);
             this.groupBox1.Controls.Add(this.offsetflag);
@@ -957,6 +961,23 @@
             this.ctDebug1.TimeStamps = true;
             this.ctDebug1.UseExternalTimeStamp = false;
             // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(289, 212);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(29, 12);
+            this.label32.TabIndex = 96;
+            this.label32.Text = "循环";
+            // 
+            // submintnum
+            // 
+            this.submintnum.Location = new System.Drawing.Point(319, 203);
+            this.submintnum.Name = "submintnum";
+            this.submintnum.Size = new System.Drawing.Size(61, 21);
+            this.submintnum.TabIndex = 97;
+            this.submintnum.Text = "1";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -1059,6 +1080,8 @@
         private System.Windows.Forms.ComboBox offsetflag;
         private System.Windows.Forms.TextBox qrysettle_day;
         private System.Windows.Forms.Label label31;
+        private System.Windows.Forms.Label label32;
+        private System.Windows.Forms.TextBox submintnum;
     }
 }
 

@@ -59,7 +59,7 @@ namespace TradingLib.Core
             messageoutthread = null;
 
         }
-        const int buffize = 1000;
+        const int buffize = 20000;
 
         
         RingBuffer<Order> _ocache = new RingBuffer<Order>(buffize);//委托缓存

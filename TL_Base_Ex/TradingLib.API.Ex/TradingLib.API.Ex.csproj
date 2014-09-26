@@ -46,14 +46,16 @@
     <Compile Include="Account\Service\IAccountService.cs" />
     <Compile Include="Account\Service\IAccountServiceCentre.cs" />
     <Compile Include="Account\IAccRiskCheck.cs" />
+    <Compile Include="Contrib\IPlugin.cs" />
     <Compile Include="Core\IRouterManager.cs" />
     <Compile Include="Account\IGeneralCheck.cs" />
     <Compile Include="Contrib\EnumCommandSource.cs" />
     <Compile Include="Contrib\ICommandAction.cs" />
     <Compile Include="Contrib\IContribPlugin.cs" />
     <Compile Include="Core\ISettleCentre.cs" />
-    <Compile Include="InfoType.cs" />
-    <Compile Include="ITask.cs" />
+    <Compile Include="Core\Task\EnumTaskType.cs" />
+    <Compile Include="EnumInfoType.cs" />
+    <Compile Include="Core\Task\ITask.cs" />
     <Compile Include="Account\IAccount.cs" />
     <Compile Include="Core\ClearCentre\function\IAccountOperation.cs" />
     <Compile Include="Core\ClearCentre\function\IBrokerTradingInfo.cs" />
@@ -63,9 +65,8 @@
     <Compile Include="Core\ClearCentre\function\IGotTradingInfo.cs" />
     <Compile Include="Contrib\IContrib.cs" />
     <Compile Include="Delegate.cs" />
-    <Compile Include="enum.cs" />
-    <Compile Include="Core\ICore.cs" />
-    <Compile Include="Core\IIndicatorEvent.cs" />
+    <Compile Include="Core\Base\ICore.cs" />
+    <Compile Include="Core\Base\IIndicatorEvent.cs" />
     <Compile Include="Core\IServiceManager.cs" />
     <Compile Include="Service\ITransport.cs" />
     <Compile Include="Core\IMessageMgr.cs" />
@@ -73,13 +74,6 @@
     <Compile Include="Core\IRiskCentre.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\coreinterface\IService_base.cs" />
-    <Compile Include="Service\coreinterface\ITLService.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Core\ClearCentre\ClearCentre.cd" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Contrib\扩展模块说明.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

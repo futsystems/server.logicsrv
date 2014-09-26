@@ -711,7 +711,7 @@ namespace Broker.SIM
 
 
         #region 信息对外发送线程
-        const int buffersize = 2000;
+        const int buffersize = 20000;
         RingBuffer<Order> _ocache = new RingBuffer<Order>(buffersize);
         RingBuffer<long> _ccache = new RingBuffer<long>(buffersize);
         RingBuffer<Trade> _fcache = new RingBuffer<Trade>(buffersize);

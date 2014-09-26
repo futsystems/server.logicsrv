@@ -16,3 +16,4 @@
    在 TradingLib.Core.TLServer_Generic`1.basehandle(MessageTypes type, String msg, String front, String address)
    在 TradingLib.Core.AsyncServer.handleMessage(MessageTypes type, String msg, String front, String address)
    在 TradingLib.Core.AsyncServer.WorkerMessageProc(ZmqSocket worker, Int32 id)
+094602: manager: do not exist!

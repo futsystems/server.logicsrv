@@ -144,7 +144,7 @@
     <Compile Include="Bar\BarTimeIntervalData.cs" />
     <Compile Include="Bar\BarVolIntervalData.cs" />
     <Compile Include="Bar\TaskStatus.cs" />
-    <Compile Include="Misc\Book.cs" />
+    <Compile Include="Utils\Book.cs" />
     <Compile Include="Utils\Calc.cs" />
     <Compile Include="Other\Email.cs" />
     <Compile Include="Rule\RuleBase.cs" />
@@ -162,7 +162,7 @@
     <Compile Include="Trading\Exchange.cs" />
     <Compile Include="Messages\PopMessage.cs" />
     <Compile Include="Messages\QSMessageHelper.cs" />
-    <Compile Include="Misc\ConfigHelper.cs" />
+    <Compile Include="Utils\ConfigHelper.cs" />
     <Compile Include="Utils\Log.cs" />
     <Compile Include="Messages\Message.cs" />
     <Compile Include="Offset\PositionOffsetArgs.cs" />

@@ -102,7 +102,6 @@
     <Compile Include="Account\IAccTradingInfo.cs" />
     <Compile Include="Account\IFinanceTotal.cs" />
     <Compile Include="Connecter\EnumDataFeedTypes.cs" />
-    <Compile Include="IPlugin.cs" />
     <Compile Include="Message\ILocation.cs" />
     <Compile Include="Message\IPacket.cs" />
     <Compile Include="Message\ISession.cs" />
