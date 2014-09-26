@@ -28,7 +28,7 @@ namespace TradingLib.API
     /// <summary>
     /// 暴露给风控规则使用的账户,避免IAccount暴露过多内部函数
     /// </summary>
-    public interface IAccountExp : IAccCal, IFinanceTotal, IAccTradingInfo,IAccOperation
+    public interface IAccountExp : IFinanceTotal,IAccCal,IAccTradingInfo,IAccOperation
     {
         /// <summary>
         /// 账户ID

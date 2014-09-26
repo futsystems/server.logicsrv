@@ -98,12 +98,11 @@ namespace TradingLib.ORM
             if (IsAccountSettled(acc.ID)) return true;//如果该账户已经结算过，则直接返回
             using (DBMySql db = new DBMySql())
             {
-
                 using (var transaction = db.Connection.BeginTransaction())
                 {
                     bool istransok = true;
 
-                    Settlement settle = AccountBase.GenSettle(acc);
+                    Settlement settle = acc.ToSettlement();
                     settle.SettleDay = TLCtxHelper.Ctx.SettleCentre.CurrentTradingday;//结算日为当前交易日
                     settle.SettleTime = TLCtxHelper.Ctx.SettleCentre.SettleTime;//获得结算时间
 

@@ -27,18 +27,6 @@ namespace TradingLib.API
     public interface ISession
     {
         /// <summary>
-        /// 客户端通话唯一标识,内部采用GUID进行标识,每个交易客户端或者管理端注册到系统时,系统会自动给其分配一个
-        /// 唯一的会话编号来标记与该客户端的通讯
-        /// </summary>
-        //int iSessionID { get; }
-
-        /// <summary>
-        /// 前置编号
-        /// </summary>
-        //int iFrontID { get; set; }
-
-        
-        /// <summary>
         /// 客户端ID
         /// </summary>
         string ClientID { get; }

@@ -148,7 +148,7 @@ namespace TradingLib.Common
 
         public override string ToString()
         {
-            string s = Account + LibUtil.GetEnumDescription(PosOperation) + "  " + Size.ToString() + "手" + Symbol.ToString() + " @ " + Price.ToString() + "#" + Time.ToString();
+            string s = Account + Util.GetEnumDescription(PosOperation) + "  " + Size.ToString() + "手" + Symbol.ToString() + " @ " + Price.ToString() + "#" + Time.ToString();
             return s;
         }
 

@@ -41,7 +41,7 @@ namespace Lottoqq.Account
                     }
                     else
                     {
-                        msg = QSMessageContent.PREFIX + "帐户无乐透服务,无法交易乐透期权!";
+                        msg ="帐户无乐透服务,无法交易乐透期权!";
                         return false;
                     }
                 }

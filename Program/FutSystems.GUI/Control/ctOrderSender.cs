@@ -431,7 +431,7 @@ namespace FutSystems.GUI
 
                     Position pos = CurrentPosition;
                     if (pos == null) return;
-                    posCanFlat.Text = (pos.isFlat ? 0 : (pos.UnsignedSize - _ot.getUnfilledSizeExceptStop(pos.Symbol, !pos.isLong))).ToString();
+                    posCanFlat.Text = (pos.isFlat ? 0 : (pos.UnsignedSize - _ot.GetPendingExitSize(pos.Symbol,pos.DirectionType== QSEnumPositionDirectionType.Long?true:false))).ToString();
                 }
                 catch (Exception ex)
                 {

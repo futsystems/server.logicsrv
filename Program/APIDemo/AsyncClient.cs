@@ -413,7 +413,7 @@ namespace TradingLib.Common
             //ZMessage zmsg = new ZMessage(package.Data);
             //发送消息并得到服务端回报
             //zmsg.Send(requester);
-            //rep = requester.Receive(Encoding.UTF8, new TimeSpan(0, 0, IPUtil.SOCKETREPLAYTIMEOUT));
+            //rep = requester.Receive(Encoding.UTF8, new TimeSpan(0, 0, Util.SOCKETREPLAYTIMEOUT));
             //debug("helloServer response:" + rep);
             BrokerNameRequest package = new BrokerNameRequest();
             package.SetRequestID(10001);
@@ -423,7 +423,7 @@ namespace TradingLib.Common
             zmsg.Send(requester);
             byte[] response = new byte[0];
             int size = 0;
-            response = requester.Receive(response, new TimeSpan(0, 0, IPUtil.SOCKETREPLAYTIMEOUT), out size);
+            response = requester.Receive(response, new TimeSpan(0, 0, Const.SOCKETREPLAYTIMEOUT), out size);
             TradingLib.Common.Message message = TradingLib.Common.Message.gotmessage(response);
             debug("got raw size:" + size + " type:" + message.Type + " content:" + message.Content);
 
@@ -461,7 +461,7 @@ namespace TradingLib.Common
             ZMessage zmsg = new ZMessage(data);
             //发送消息并得到服务端回报
             zmsg.Send(requester);
-            rep = requester.Receive(Encoding.UTF8, new TimeSpan(0, 0, IPUtil.SOCKETREPLAYTIMEOUT));
+            rep = requester.Receive(Encoding.UTF8, new TimeSpan(0, 0, Util.SOCKETREPLAYTIMEOUT));
             //debug("helloServer response:" + rep);
             if (rep == null)
             {

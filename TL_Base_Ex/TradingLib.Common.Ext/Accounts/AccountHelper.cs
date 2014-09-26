@@ -44,7 +44,7 @@ namespace TradingLib.Common
         {
             if (string.IsNullOrEmpty(typename))
             {
-                TLCtxHelper.Debug(LibGlobal.GlobalPrefix+"AccountType not setted,used default AccountBase");
+                TLCtxHelper.Debug(Util.GlobalPrefix+"AccountType not setted,used default AccountBase");
                 return;
             }
 
@@ -54,11 +54,11 @@ namespace TradingLib.Common
                 {
                     AccountTypeName = typename;
                     AccountType = accounttypemap[AccountTypeName];
-                    TLCtxHelper.Debug(LibGlobal.GlobalPrefix + "use user-defined AccountType:" + AccountTypeName);
+                    TLCtxHelper.Debug(Util.GlobalPrefix + "use user-defined AccountType:" + AccountTypeName);
                 }
                 else
                 {
-                    TLCtxHelper.Debug(LibGlobal.GlobalPrefix + "Account Type:" + typename + " can not be loaded form dll,please check");
+                    TLCtxHelper.Debug(Util.GlobalPrefix + "Account Type:" + typename + " can not be loaded form dll,please check");
                 }
             }
             
@@ -80,7 +80,7 @@ namespace TradingLib.Common
                     //检查是否有以单个string为参数的构造函数
 
                     AccountType = accounttypemap[AccountTypeName];
-                    TLCtxHelper.Debug(LibGlobal.GlobalPrefix + "use user-defined AccountType:" + AccountTypeName);
+                    TLCtxHelper.Debug(Util.GlobalPrefix + "use user-defined AccountType:" + AccountTypeName);
                 }
                 else
                 {

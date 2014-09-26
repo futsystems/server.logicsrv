@@ -24,7 +24,7 @@ namespace TradingLib.API
     /// IAccRiskCheck:交易帐户风控规则检查,添加删除委托风控规则或帐户风控规则
     /// IAccOperation:交易帐户操作接口
     /// </summary>
-    public interface IAccount : IFinanceTotal, /*IFinanceFut, IFinanceOpt,IFinanceINNOV,**/ IAccCal, IAccTradingInfo, IGeneralCheck, IAccRiskCheck, IAccOperation
+    public interface IAccount : IFinanceTotal,IAccCal, IAccTradingInfo, IAccOperation,IGeneralCheck,IAccRiskCheck
     {
 
         #region 交易帐号服务类相关操作
@@ -33,25 +33,19 @@ namespace TradingLib.API
         #endregion
 
         /// <summary>
-        /// 帐户清算中心
-        /// 用于直接调用清算中心的相关函数与操作
-        /// </summary>
-        //IAccountClearCentre ClearCentre { get; set; }
-        /// <summary>
-        /// 帐户风控中心
-        /// 用于直接调用风控中心的相关操作与函数
-        /// </summary>
-        //IAccountRiskCentre RiskCentre { get; set; }
-
-
-
-
-        
-
-        /// <summary>
         /// 交易帐号对应的数据库全局ID
         /// </summary>
         string ID { get; }
+
+        /// <summary>
+        /// 是否可以进行交易
+        /// </summary>
+        bool Execute { get; set; }
+
+        /// <summary>
+        /// 是否日内交易
+        /// </summary>
+        bool IntraDay { get; set; }
 
         /// <summary>
         /// 账户委托转发通道类型
@@ -64,55 +58,9 @@ namespace TradingLib.API
         QSEnumAccountCategory Category { get; set; }
 
         /// <summary>
-        /// 是否可以进行交易
-        /// </summary>
-        bool Execute { get; set; }
-
-        /// <summary>
-        /// 账户描述
-        /// </summary>
-        string Desc { get; set; }
-
-        /// <summary>
-        /// 是否日内交易
-        /// </summary>
-        bool IntraDay { get; set; }
-
-
-        /// <summary>
-        /// 该帐号所绑定的全局UserID
-        /// </summary>
-        int UserID { get; set; }
-
-
-        /// <summary>
         /// MAC地址 用于标注客户端硬件
         /// </summary>
         string MAC { get; set; }
-
-        /// <summary>
-        /// 账户建立时间
-        /// </summary>
-        DateTime CreatedTime { get; set; }
-
-        /// <summary>
-        /// 上次结算日
-        /// </summary>
-        DateTime SettleDateTime { get; set; }
-
-        /// <summary>
-        /// 确认结算日期
-        /// </summary>
-        long SettlementConfirmTimeStamp { get; set; }
-
-
-        /// <summary>
-        /// 帐号隶属于哪个管理员
-        /// 可以属于超级管理员Root
-        /// 或者属于代理Agent
-        /// 在用于添加时候就自动进行了绑定
-        /// </summary>
-        int Mgr_fk { get; set; }
 
         /// <summary>
         /// 帐户Name 用于储存帐户名称
@@ -136,9 +84,38 @@ namespace TradingLib.API
 
 
         /// <summary>
+        /// 账户建立时间
+        /// </summary>
+        DateTime CreatedTime { get; set; }
+
+        /// <summary>
+        /// 上次结算日
+        /// </summary>
+        DateTime SettleDateTime { get; set; }
+
+        /// <summary>
+        /// 确认结算日期
+        /// </summary>
+        long SettlementConfirmTimeStamp { get; set; }
+
+        /// <summary>
         /// 是否允许锁仓
         /// </summary>
         bool PosLock { get; set; }
+
+        /// <summary>
+        /// 帐号隶属于哪个管理员
+        /// 可以属于超级管理员Root
+        /// 或者属于代理Agent
+        /// 在用于添加时候就自动进行了绑定
+        /// </summary>
+        int Mgr_fk { get; set; }
+
+        /// <summary>
+        /// 该帐号所绑定的全局UserID
+        /// </summary>
+        int UserID { get; set; }
+
 
         /// <summary>
         /// 入金接口
@@ -153,6 +130,7 @@ namespace TradingLib.API
         void Withdraw(decimal amount);
 
         
+
 
         /// <summary>
         /// 重置账户状态,用于每日造成开盘时,重置数据 

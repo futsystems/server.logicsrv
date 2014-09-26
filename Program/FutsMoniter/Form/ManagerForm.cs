@@ -207,7 +207,7 @@ namespace FutsMoniter
                     gt.Rows.Add(manger.ID);
                     int i = gt.Rows.Count - 1;
                     gt.Rows[i][LOGIN] = manger.Login;
-                    gt.Rows[i][MGRTYPESTR] = LibUtil.GetEnumDescription(manger.Type);
+                    gt.Rows[i][MGRTYPESTR] = Util.GetEnumDescription(manger.Type);
                     gt.Rows[i][MGRTYPE] = manger.Type;
                     gt.Rows[i][NAME] = manger.Name;
                     gt.Rows[i][MOBILE] = manger.Mobile;
@@ -223,7 +223,7 @@ namespace FutsMoniter
                 {
                     int i = r;
                     gt.Rows[i][LOGIN] = manger.Login;
-                    gt.Rows[i][MGRTYPESTR] = LibUtil.GetEnumDescription(manger.Type);
+                    gt.Rows[i][MGRTYPESTR] = Util.GetEnumDescription(manger.Type);
                     gt.Rows[i][MGRTYPE] = manger.Type;
                     gt.Rows[i][NAME] = manger.Name;
                     gt.Rows[i][MOBILE] = manger.Mobile;

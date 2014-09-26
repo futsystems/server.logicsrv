@@ -148,7 +148,7 @@ namespace Lottoqq.Race
         {
             get
             {
-                return LibUtil.isToday(SettleDay);
+                return Util.IsToday(SettleDay);
             }
         }
 

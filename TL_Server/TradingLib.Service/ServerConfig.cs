@@ -102,12 +102,12 @@ namespace TradingLib.ServiceManager
                         break;
                 }
                 //初始化lib全局参数
-                LibGlobal.InitCTPConfig(_configFile["MarketOrderOffset"].AsInt());
+                //LibGlobal.InitCTPConfig(_configFile["MarketOrderOffset"].AsInt());
 
 
 
                 //模拟成交引擎参数
-                LibGlobal.InitSimBrokerConfig(_configFile["PPTUseBidAsk"].AsBool(), _configFile["FillTickByTick"].AsBool());
+                //LibGlobal.InitSimBrokerConfig(_configFile["PPTUseBidAsk"].AsBool(), _configFile["FillTickByTick"].AsBool());
 
             }
             catch (Exception ex)

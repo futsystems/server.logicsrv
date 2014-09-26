@@ -18,22 +18,22 @@ namespace FutsMoniter
         {
             ArrayList list = new ArrayList();
             ValueObject<QSEnumOffsetFlag> vo0 = new ValueObject<QSEnumOffsetFlag>();
-            vo0.Name = LibUtil.GetEnumDescription(QSEnumOffsetFlag.UNKNOWN);
+            vo0.Name = Util.GetEnumDescription(QSEnumOffsetFlag.UNKNOWN);
             vo0.Value = QSEnumOffsetFlag.UNKNOWN;
             list.Add(vo0);
 
             ValueObject<QSEnumOffsetFlag> vo1 = new ValueObject<QSEnumOffsetFlag>();
-            vo1.Name = LibUtil.GetEnumDescription(QSEnumOffsetFlag.OPEN);
+            vo1.Name = Util.GetEnumDescription(QSEnumOffsetFlag.OPEN);
             vo1.Value = QSEnumOffsetFlag.OPEN;
             list.Add(vo1);
 
             ValueObject<QSEnumOffsetFlag> vo2 = new ValueObject<QSEnumOffsetFlag>();
-            vo2.Name = LibUtil.GetEnumDescription(QSEnumOffsetFlag.CLOSE);
+            vo2.Name = Util.GetEnumDescription(QSEnumOffsetFlag.CLOSE);
             vo2.Value = QSEnumOffsetFlag.CLOSE;
             list.Add(vo2);
 
             ValueObject<QSEnumOffsetFlag> vo3 = new ValueObject<QSEnumOffsetFlag>();
-            vo3.Name = LibUtil.GetEnumDescription(QSEnumOffsetFlag.CLOSEYESTERDAY);
+            vo3.Name = Util.GetEnumDescription(QSEnumOffsetFlag.CLOSEYESTERDAY);
             vo3.Value = QSEnumOffsetFlag.CLOSEYESTERDAY;
             list.Add(vo3);
             return list;
@@ -84,22 +84,22 @@ namespace FutsMoniter
             {
                 
                 ValueObject<QSEnumManagerType> vo1 = new ValueObject<QSEnumManagerType>();
-                vo1.Name = LibUtil.GetEnumDescription(QSEnumManagerType.AGENT);
+                vo1.Name = Util.GetEnumDescription(QSEnumManagerType.AGENT);
                 vo1.Value = QSEnumManagerType.AGENT;
                 list.Add(vo1);
             }
             ValueObject<QSEnumManagerType> vo2 = new ValueObject<QSEnumManagerType>();
-            vo2.Name = LibUtil.GetEnumDescription(QSEnumManagerType.ACCOUNTENTER);
+            vo2.Name = Util.GetEnumDescription(QSEnumManagerType.ACCOUNTENTER);
             vo2.Value = QSEnumManagerType.ACCOUNTENTER;
             list.Add(vo2);
 
             ValueObject<QSEnumManagerType> vo3 = new ValueObject<QSEnumManagerType>();
-            vo3.Name = LibUtil.GetEnumDescription(QSEnumManagerType.RISKER);
+            vo3.Name = Util.GetEnumDescription(QSEnumManagerType.RISKER);
             vo3.Value = QSEnumManagerType.RISKER;
             list.Add(vo3);
 
             ValueObject<QSEnumManagerType> vo4 = new ValueObject<QSEnumManagerType>();
-            vo4.Name = LibUtil.GetEnumDescription(QSEnumManagerType.MONITER);
+            vo4.Name = Util.GetEnumDescription(QSEnumManagerType.MONITER);
             vo4.Value = QSEnumManagerType.MONITER;
             list.Add(vo4);
             return list;

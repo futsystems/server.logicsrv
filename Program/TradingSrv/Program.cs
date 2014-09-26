@@ -48,6 +48,7 @@ namespace TraddingSrvCLI
             try
             {
                 debug("*********");
+                
                 CoreDaemon cd = new CoreDaemon();
                 cd.SendDebugEvent +=new DebugDelegate(debug);
                 cd.Start();

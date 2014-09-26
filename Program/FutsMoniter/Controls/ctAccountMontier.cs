@@ -192,6 +192,7 @@ namespace FutsMoniter.Controls
         const string INTRADAY = "日内";
         const string AGENTCODE = "代理编号";
         const string NAME = "姓名";
+        const string POSLOK = "锁仓权限";
         #endregion
 
         DataTable gt = new DataTable();
@@ -257,6 +258,7 @@ namespace FutsMoniter.Controls
             gt.Columns.Add(CATEGORY);//18
             gt.Columns.Add(INTRADAY);//19
             gt.Columns.Add(AGENTCODE);//22
+            gt.Columns.Add(POSLOK);//
             gt.Columns.Add(NAME);//22
 
 
@@ -829,11 +831,12 @@ namespace FutsMoniter.Controls
                         gt.Rows[i][UNREALIZEDPL] = decDisp(0);
                         gt.Rows[i][COMMISSION] = decDisp(0);
                         gt.Rows[i][PROFIT] = decDisp(0);
-                        gt.Rows[i][CATEGORY] = LibUtil.GetEnumDescription(account.Category);
+                        gt.Rows[i][CATEGORY] = Util.GetEnumDescription(account.Category);
                         gt.Rows[i][INTRADAY] = account.IntraDay ? "日内" : "隔夜";
                         Manager mgr = Globals.BasicInfoTracker.GetManager(account.MGRID);
                         gt.Rows[i][AGENTCODE] = mgr.Login + " - " + mgr.Name;
                         gt.Rows[i][NAME] = account.Name;
+                        gt.Rows[i][POSLOK] = account.PosLock?"有":"无";
 
                         accountmap.TryAdd(account.Account, account);
                         accountrowmap.TryAdd(account.Account, i);
@@ -847,8 +850,10 @@ namespace FutsMoniter.Controls
                         gt.Rows[r][ROUTEIMG] = getRouteStatusImage(account.OrderRouteType);
                         gt.Rows[r][EXECUTE] = getExecuteStatus(account.Execute);
                         gt.Rows[r][EXECUTEIMG] = getExecuteStatusImage(account.Execute);
-                        gt.Rows[r][CATEGORY] = LibUtil.GetEnumDescription(account.Category);
+                        gt.Rows[r][CATEGORY] = Util.GetEnumDescription(account.Category);
                         gt.Rows[r][INTRADAY] = account.IntraDay ? "日内" : "隔夜";
+                        gt.Rows[r][POSLOK] = account.PosLock ? "有" : "无";
+
                         Manager mgr = Globals.BasicInfoTracker.GetManager(account.MGRID);
                         gt.Rows[r][AGENTCODE] = mgr.Login +" - "+ mgr.Name;
                         gt.Rows[r][NAME] = account.Name;

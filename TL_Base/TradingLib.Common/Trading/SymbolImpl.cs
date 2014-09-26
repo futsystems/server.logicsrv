@@ -414,7 +414,7 @@ namespace TradingLib.Common
 
         public override string ToString()
         {
-            return "Symbol:" + Symbol + " Security:" + LibUtil.ObjectToString(SecurityFamily) + " entrycommision:" + EntryCommission.ToString() + " exitcommission:" + ExitCommission.ToString() + " SecurityID:" + security_fk.ToString();
+            return "Symbol:" + Symbol + " Security:" + Util.SafeToString(SecurityFamily) + " entrycommision:" + EntryCommission.ToString() + " exitcommission:" + ExitCommission.ToString() + " SecurityID:" + security_fk.ToString();
         }
 
 

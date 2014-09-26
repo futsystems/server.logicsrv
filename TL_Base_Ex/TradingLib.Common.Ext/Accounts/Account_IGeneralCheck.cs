@@ -28,7 +28,7 @@ namespace TradingLib.Common
             bool re = true;
             if (symbol.SecurityType == SecurityType.INNOV)
             {
-                msg = QSMessageContent.INSTRUMENT_NOT_TRADING;
+                msg = "合约无法交易";
                 re = false;
             }
             return re;
@@ -59,7 +59,7 @@ namespace TradingLib.Common
             TLCtxHelper.Debug("[CanFundTakeOrder Check] Fundavabile:" + avabile.ToString() + " Required:" + required);
             if (required > avabile)
             {
-                msg = QSMessageContent.INSUFFICIENT_MOENY;
+                msg = "资金不足";
                 return false;
             }
             return true;

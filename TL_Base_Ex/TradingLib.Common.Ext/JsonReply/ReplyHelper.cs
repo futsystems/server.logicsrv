@@ -47,7 +47,7 @@ namespace TradingLib.Common
         {
             if(string.IsNullOrEmpty(message))
             {
-                message = LibUtil.GetEnumDescription(code);
+                message = Util.GetEnumDescription(code);
             }
             return new JsonReply(1, code, message);
         }
@@ -62,7 +62,7 @@ namespace TradingLib.Common
         {
             if (string.IsNullOrEmpty(message))
             {
-                message = LibUtil.GetEnumDescription(code);
+                message = Util.GetEnumDescription(code);
             }
             return new JsonReply(0, code, message);
         }

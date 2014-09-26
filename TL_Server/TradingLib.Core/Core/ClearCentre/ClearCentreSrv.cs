@@ -278,9 +278,9 @@ namespace TradingLib.Core
             //交易日内 盘中 启动软件
             if (oldstatus == QSEnumClearCentreStatus.CCRESTORE && Status == QSEnumClearCentreStatus.CCRESTOREFINISH)
             {
-                bool day = LibUtil.IsInPeriod(Convert.ToDateTime(OpenTime), Convert.ToDateTime(CloseTime));
-                bool nigth1 = LibUtil.IsInPeriod(Convert.ToDateTime(NightOpenTime), Convert.ToDateTime(NightClosedTime));
-                bool night2 = LibUtil.IsInPeriod(Convert.ToDateTime(NightOpenTime2), Convert.ToDateTime(NightClosedTime2));
+                bool day = Util.IsInPeriod(Convert.ToDateTime(OpenTime), Convert.ToDateTime(CloseTime));
+                bool nigth1 = Util.IsInPeriod(Convert.ToDateTime(NightOpenTime), Convert.ToDateTime(NightClosedTime));
+                bool night2 = Util.IsInPeriod(Convert.ToDateTime(NightOpenTime2), Convert.ToDateTime(NightClosedTime2));
 
                 if (day || nigth1 || night2)
                     Status = QSEnumClearCentreStatus.CCOPEN;

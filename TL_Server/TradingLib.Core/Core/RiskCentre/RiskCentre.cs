@@ -29,11 +29,11 @@ namespace TradingLib.Core
         
 
         //账户检查日志
-        Log _accountcheklog = new Log("Risk_Account", true, true, LibGlobal.LOGPATH, true);//日志组件
+        Log _accountcheklog = new Log("Risk_Account", true, true,Util.ProgramData(CoreName), true);//日志组件
         //委托检查日志
-        Log _ordercheklog = new Log("Risk_Order", true, true, LibGlobal.LOGPATH, true);//日志组件
+        Log _ordercheklog = new Log("Risk_Order", true, true, Util.ProgramData(CoreName), true);//日志组件
         //其他日志
-        Log _othercheklog = new Log("Risk_Other", true, true, LibGlobal.LOGPATH, true);//日志组件
+        Log _othercheklog = new Log("Risk_Other", true, true, Util.ProgramData(CoreName), true);//日志组件
 
         
 

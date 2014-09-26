@@ -76,7 +76,6 @@
     <Compile Include="Service\coreinterface\ITLService.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Account\IAccount.cd" />
     <None Include="Core\ClearCentre\ClearCentre.cd" />
   </ItemGroup>
   <ItemGroup>

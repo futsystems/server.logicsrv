@@ -27,17 +27,17 @@ namespace TradingLib.Common
         ///// </summary>
         ///// <param name="pos"></param>
         ///// <returns></returns>
-        //public static string GetKey(this Position pos,bool positionside)
-        //{
-        //    StringBuilder sb = new StringBuilder();
-        //    char d = '-';
-        //    sb.Append(pos.Account);
-        //    sb.Append(d);
-        //    sb.Append(pos.Symbol);
-        //    sb.Append(d);
-        //    sb.Append(PositionSideStr(positionside));
-        //    return sb.ToString();
-        //}
+        public static string GetKey(this Position pos,bool positionside)
+        {
+            StringBuilder sb = new StringBuilder();
+            char d = '-';
+            sb.Append(pos.Account);
+            sb.Append(d);
+            sb.Append(pos.Symbol);
+            sb.Append(d);
+            sb.Append(positionside?QSEnumPositionDirectionType.Long.ToString():QSEnumPositionDirectionType.Short.ToString());
+            return sb.ToString();
+        }
 
         public static string GetPositionKey(this Position pos)
         {

@@ -19,9 +19,9 @@ namespace TradingLib.Contrib.FinService
 
         public static IFinService GenFinService(FinServiceStub stub)
         {
-            LibUtil.Debug("ServiceFactory 生成FinService");
+            Util.Debug("ServiceFactory 生成FinService");
             Type type = FinTracker.ServicePlaneTracker.GetFinServiceType(stub.serviceplan_fk);
-            LibUtil.Debug("Type:" + type.ToString());
+            Util.Debug("Type:" + type.ToString());
             if (type != null)
             {
                 //生成FinService对象

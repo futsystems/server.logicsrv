@@ -10,6 +10,11 @@ namespace TradingLib.Common
     public static class AccountUtils_ObjectWrapper
     {
 
+        /// <summary>
+        /// 生成财务信息
+        /// </summary>
+        /// <param name="acc"></param>
+        /// <returns></returns>
         public static AccountInfo ToAccountInfo(this IAccount acc)
         {
             AccountInfo a = new AccountInfo();
@@ -72,7 +77,11 @@ namespace TradingLib.Common
             return a;
         }
 
-
+        /// <summary>
+        /// 生成当前实时财务统计信息
+        /// </summary>
+        /// <param name="acc"></param>
+        /// <returns></returns>
         public static AccountInfoLite ToAccountInfoLite(this IAccount acc)
         {
             AccountInfoLite info = new AccountInfoLite();
@@ -89,7 +98,11 @@ namespace TradingLib.Common
             return info;
         }
 
-
+        /// <summary>
+        /// 生成客户端使用的交易帐户信息
+        /// </summary>
+        /// <param name="acc"></param>
+        /// <returns></returns>
         public static AccountLite ToAccountLite(this IAccount acc)
         {
             AccountLite info = new AccountLite();
@@ -114,6 +127,30 @@ namespace TradingLib.Common
             info.PosLock = acc.PosLock;
             info.MGRID = acc.Mgr_fk;
             return info;
+        }
+
+        /// <summary>
+        /// 生成结算单
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public static Settlement ToSettlement(this IAccount account)
+        {
+            Settlement settle = new SettlementImpl();
+            settle.Account = account.ID;
+            settle.CashIn = account.CashIn;
+            settle.CashOut = account.CashOut;
+            settle.Commission = account.Commission;
+            settle.Confirmed = false;
+            settle.LastEqutiy = account.LastEquity;
+            settle.RealizedPL = account.RealizedPL;
+            settle.UnRealizedPL = account.SettleUnRealizedPL;
+            settle.NowEquity = settle.LastEqutiy + settle.RealizedPL + settle.UnRealizedPL - settle.Commission + settle.CashIn - settle.CashOut;
+
+            //指定交易日期
+            settle.SettleDay = Util.ToTLDate();
+            settle.SettleTime = Util.ToTLTime();
+            return settle;
         }
     }
 }

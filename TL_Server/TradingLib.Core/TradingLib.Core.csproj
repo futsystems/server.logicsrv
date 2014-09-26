@@ -109,7 +109,6 @@
     <Compile Include="Core\RiskCentre\PositionOffsetTracker.cs" />
     <Compile Include="Core\MessageExchange\BrokerRouter.cs" />
     <Compile Include="Core\MessageExchange\DataFeedRouter.cs" />
-    <Compile Include="Core\RiskCentre\RiskCentreAdapterToAccount.cs" />
     <Compile Include="Core\RiskCentre\RiskCentre_CheckAccount.cs" />
     <Compile Include="Core\RiskCentre\RiskCentre_CTE.cs" />
     <Compile Include="Core\RiskCentre\RiskCentre_FlatPosition.cs" />

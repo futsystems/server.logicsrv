@@ -31,5 +31,7 @@ namespace TradingLib.Common
         {
             return tracker.Where(o => (o.symbol.Equals(symbol)) && o.IsPending() && (o.PositionSide == positionside) && (!o.IsEntryPosition)).Sum(o => o.UnsignedSize);
         }
+
+        
     }
 }

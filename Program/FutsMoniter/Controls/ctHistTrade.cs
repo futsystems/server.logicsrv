@@ -37,7 +37,7 @@ namespace FutsMoniter
                 DataRow r = tb.Rows.Add(t.id);
                 int i = tb.Rows.Count - 1;//得到新建的Row号
 
-                //tradeGrid.Rows.Add(t.id, Util.ToDateTime(t.xdate, t.xtime).ToString("HH:mm:ss"), t.symbol, (t.side ? "买" : "卖"), t.xsize, string.Format(getDisplayFormat(t.symbol), t.xprice), string.Format(_defaultformat, t.Commission), LibUtil.GetEnumDescription(t.PositionOperation), t.Account); // if we accept trade, add it to list
+                //tradeGrid.Rows.Add(t.id, Util.ToDateTime(t.xdate, t.xtime).ToString("HH:mm:ss"), t.symbol, (t.side ? "买" : "卖"), t.xsize, string.Format(getDisplayFormat(t.symbol), t.xprice), string.Format(_defaultformat, t.Commission), Util.GetEnumDescription(t.PositionOperation), t.Account); // if we accept trade, add it to list
                 //tradeGrid.Refresh();
                 tb.Rows[i][ID] = t.id;
                 tb.Rows[i][DATETIME] = Util.ToDateTime(t.xdate, t.xtime).ToString("HH:mm:ss");
@@ -46,12 +46,12 @@ namespace FutsMoniter
                 tb.Rows[i][SIZE] = Math.Abs(t.xsize);
                 tb.Rows[i][PRICE] = string.Format(_defaultformat, t.xprice);
                 tb.Rows[i][COMMISSION] = string.Format(_defaultformat, t.Commission);
-                tb.Rows[i][OPERATION] = LibUtil.GetEnumDescription(t.PositionOperation);
+                tb.Rows[i][OPERATION] = Util.GetEnumDescription(t.PositionOperation);
                 tb.Rows[i][ACCOUNT] = t.Account;
                 tb.Rows[i][PROFIT] = string.Format(_defaultformat, 0);
                 tb.Rows[i][FILLID] = "fillid";
                 //toUpdateRow();
-                //tb.Rows.Add(new object[] { t.id, Util.ToDateTime(t.xdate, t.xtime).ToString("HH:mm:ss"), t.symbol, (t.side ? "买" : "卖"), t.xsize, string.Format(getDisplayFormat(t.symbol), t.xprice), string.Format(_defaultformat, t.Commission), LibUtil.GetEnumDescription(t.PositionOperation), t.Account });
+                //tb.Rows.Add(new object[] { t.id, Util.ToDateTime(t.xdate, t.xtime).ToString("HH:mm:ss"), t.symbol, (t.side ? "买" : "卖"), t.xsize, string.Format(getDisplayFormat(t.symbol), t.xprice), string.Format(_defaultformat, t.Commission), Util.GetEnumDescription(t.PositionOperation), t.Account });
             }
         }
 

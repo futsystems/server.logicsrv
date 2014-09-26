@@ -184,7 +184,7 @@ namespace FutsMoniter
                         }
                         else
                         {
-                            this.Text = Globals.Config["CopName"].AsString() + " " + Globals.Config["Version"].AsString() +"           柜员用户名:"+Globals.Manager.Login +" 名称:"+Globals.Manager.Name +" 类型:"+LibUtil.GetEnumDescription(Globals.Manager.Type);
+                            this.Text = Globals.Config["CopName"].AsString() + " " + Globals.Config["Version"].AsString() +"           柜员用户名:"+Globals.Manager.Login +" 名称:"+Globals.Manager.Name +" 类型:"+Util.GetEnumDescription(Globals.Manager.Type);
 
                             //如果不是总平台柜员 隐藏
 

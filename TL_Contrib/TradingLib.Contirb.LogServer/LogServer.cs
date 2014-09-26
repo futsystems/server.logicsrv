@@ -16,10 +16,10 @@ namespace TradingLib.Contirb.LogServer
     {
         const string ContribName = "LogServer";
 
-        Log _logerror = new Log("G-Error", true, true, LibGlobal.LOGPATH, true);//日志组件
-        Log _loginfo = new Log("G-Info", true, true, LibGlobal.LOGPATH, true);//日志组件
-        Log _logwarning = new Log("G-Warning", true, true, LibGlobal.LOGPATH, true);//日志组件
-        Log _logdebug = new Log("G-Debug", true, true, LibGlobal.LOGPATH, true);//日志组件
+        Log _logerror = new Log("G-Error", true, true, Util.ProgramData(ContribName), true);//日志组件
+        Log _loginfo = new Log("G-Info", true, true, Util.ProgramData(ContribName), true);//日志组件
+        Log _logwarning = new Log("G-Warning", true, true, Util.ProgramData(ContribName), true);//日志组件
+        Log _logdebug = new Log("G-Debug", true, true, Util.ProgramData(ContribName), true);//日志组件
 
         RingBuffer<LogItem> logcache = new RingBuffer<LogItem>(2000);
         ZmqSocket _logpub = null;
@@ -90,7 +90,7 @@ namespace TradingLib.Contirb.LogServer
             debug("停止日志服务.....");
             if (!_loggo) return;
             _loggo = false;
-            LibUtil.WaitThreadStop(_reportThread);
+            Util.WaitThreadStop(_reportThread);
         }
 
 

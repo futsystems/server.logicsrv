@@ -341,10 +341,10 @@ namespace TradingLib.Common
         public override string ToString()
         {
                 //return Account + "," + Symbol + "," +Security+","+ EntryTime.ToString() + "," + EntrySize.ToString() + "," + EntryPrice.ToString() + "," + ExitTime.ToString() + "," + ExitSize.ToString() + "," + ExitPrice.ToString() + "," + Highest.ToString() + "," + Lowest.ToString() + "," + HoldSize.ToString()+","+EntryCommission.ToString()+","+ExitCommission.ToString()+","+Side.ToString()+","+WL.ToString()+","+Points.ToString()+","+TotalPoints.ToString()+","+Profit.ToString()+","+Commissoin.ToString()+","+NetProfit.ToString();
-                string nm = Account + "_" + Symbol + " 方向:" + Side.ToString() + " 开仓:" + EntryTime.ToString() + "," + EntrySize.ToString() + "," + LibUtil.FormatDisp(EntryPrice) + " 平仓:" + ExitTime.ToString() + "," + ExitSize.ToString() + "," + LibUtil.FormatDisp(ExitPrice) + " 最高:" + LibUtil.FormatDisp(Highest) + " 最底:" + LibUtil.FormatDisp(Lowest) + " 持有数量:" + HoldSize.ToString() + " 开仓手续费:" + LibUtil.FormatDisp(EntryCommission) + " 平仓手续费:" + LibUtil.FormatDisp(ExitCommission);
+            string nm = Account + "_" + Symbol + " 方向:" + Side.ToString() + " 开仓:" + EntryTime.ToString() + "," + EntrySize.ToString() + "," + Util.FormatDecimal(EntryPrice) + " 平仓:" + ExitTime.ToString() + "," + ExitSize.ToString() + "," + Util.FormatDecimal(ExitPrice) + " 最高:" + Util.FormatDecimal(Highest) + " 最底:" + Util.FormatDecimal(Lowest) + " 持有数量:" + HoldSize.ToString() + " 开仓手续费:" + Util.FormatDecimal(EntryCommission) + " 平仓手续费:" + Util.FormatDecimal(ExitCommission);
 
                 if (IsClosed)
-                    nm = nm + "盈亏:" + WL.ToString() + " 总点数:" + LibUtil.FormatDisp(TotalPoints) + " 总盈利:" + LibUtil.FormatDisp(Profit) + " 总手续费:" + LibUtil.FormatDisp(Commissoin) + " 净利润:" + LibUtil.FormatDisp(NetProfit);
+                    nm = nm + "盈亏:" + WL.ToString() + " 总点数:" + Util.FormatDecimal(TotalPoints) + " 总盈利:" + Util.FormatDecimal(Profit) + " 总手续费:" + Util.FormatDecimal(Commissoin) + " 净利润:" + Util.FormatDecimal(NetProfit);
                 return nm;
         }
 

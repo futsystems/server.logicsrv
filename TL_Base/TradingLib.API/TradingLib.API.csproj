@@ -102,21 +102,20 @@
     <Compile Include="Account\IAccTradingInfo.cs" />
     <Compile Include="Account\IFinanceTotal.cs" />
     <Compile Include="Connecter\EnumDataFeedTypes.cs" />
-    <Compile Include="CoreForAccount\IAccountRiskCentre.cs" />
     <Compile Include="IPlugin.cs" />
     <Compile Include="Message\ILocation.cs" />
     <Compile Include="Message\IPacket.cs" />
     <Compile Include="Message\ISession.cs" />
     <Compile Include="Message\ISessionUtils.cs" />
-    <Compile Include="Message\QSMessageContent.cs" />
-    <Compile Include="Msic\QSEnumManagerType.cs" />
+    <Compile Include="1delete\QSMessageContent.cs" />
+    <Compile Include="Msic\EnumManagerType.cs" />
     <Compile Include="Rule\IRuleItem.cs" />
     <Compile Include="Trading\BasicInfo\IMarketTime.cs" />
-    <Compile Include="Reply\ILoginResponse.cs" />
+    <Compile Include="1delete\ILoginResponse.cs" />
     <Compile Include="Reply\IReply.cs" />
     <Compile Include="Reply\ReplyType.cs" />
     <Compile Include="Trading\EnumAccountCategoy.cs" />
-    <Compile Include="Trading\EnumOrder.cs" />
+    <Compile Include="Trading\EnumOrderType.cs" />
     <Compile Include="Account\AccAdapter\IAccountExp.cs" />
     <Compile Include="Account\AccAdapter\IAccountInfo.cs" />
     <Compile Include="IBase.cs" />
@@ -128,20 +127,20 @@
     <Compile Include="Connecter\IConnecter_base.cs" />
     <Compile Include="Connecter\IDataFeed.cs" />
     <Compile Include="Trading\BasicInfo\EnumCountry.cs" />
-    <Compile Include="Other\Delegates.cs" />
-    <Compile Include="Other\enum.cs" />
+    <Compile Include="Msic\Delegates.cs" />
+    <Compile Include="Msic\enum.cs" />
     <Compile Include="Account\AccAdapter\IAccountInfoLite.cs" />
     <Compile Include="Msic\IEmail.cs" />
     <Compile Include="Trading\BasicInfo\IExchange.cs" />
-    <Compile Include="Other\LibDelegates.cs" />
+    <Compile Include="Msic\LibDelegates.cs" />
     <Compile Include="Msic\TradingLibError.cs" />
-    <Compile Include="Message\QSMessageType.cs" />
+    <Compile Include="1delete\QSMessageType.cs" />
     <Compile Include="Trading\Basket.cs" />
     <Compile Include="Msic\Constants.cs" />
     <Compile Include="Trading\BasicInfo\EneumCurrency.cs" />
     <Compile Include="Msic\GenericTrackerI.cs" />
     <Compile Include="Msic\Imbalance.cs" />
-    <Compile Include="Msic\Indicators.cs" />
+    <Compile Include="Trading\Indicators.cs" />
     <Compile Include="Message\Message.cs" />
     <Compile Include="Message\MessageBarRequest.cs" />
     <Compile Include="Message\MessageImbalance.cs" />
@@ -149,7 +148,8 @@
     <Compile Include="Message\MessagePositionResponse.cs" />
     <Compile Include="Message\MessageTradeNotify.cs" />
     <Compile Include="Message\MessageTypes.cs" />
-    <Compile Include="Trading\EnumOrderPostFlag.cs" />
+    <Compile Include="Trading\EnumOffsetFlag.cs" />
+    <Compile Include="Trading\EnumOrderSource.cs" />
     <Compile Include="Trading\EnumOrderStatus.cs" />
     <Compile Include="Trading\EnumPositionDirectionType.cs" />
     <Compile Include="Trading\IPositionRound.cs" />
@@ -162,7 +162,8 @@
     <Compile Include="Trading\BasicInfo\SecurityFamily.cs" />
     <Compile Include="Trading\BasicInfo\EnumSecurityType.cs" />
     <Compile Include="Trading\BasicInfo\Symbol.cs" />
-    <Compile Include="Trading\QSEnumOrderActionFlag.cs" />
+    <Compile Include="Trading\EnumOrderActionFlag.cs" />
+    <Compile Include="Trading\EnumPosOperation.cs" />
     <Compile Include="Trading\Settlement.cs" />
     <Compile Include="Trading\Tick.cs" />
     <Compile Include="Trading\Trade.cs" />
@@ -170,14 +171,6 @@
     <Compile Include="Rule\IRuleCheckAccount.cs" />
     <Compile Include="Rule\IRuleCheckOrder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Trading\Trading.cd" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Message\memo.txt" />
-    <Content Include="Rule\memo.txt" />
-    <Content Include="Trading\memo.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

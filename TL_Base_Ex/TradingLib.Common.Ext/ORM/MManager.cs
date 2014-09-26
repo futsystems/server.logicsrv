@@ -81,7 +81,7 @@ namespace TradingLib.ORM
 
         public static bool InsertManager(Manager manger)
         {
-            LibUtil.Debug("add manger,mgrfk:" + manger.mgr_fk.ToString());
+            Util.Debug("add manger,mgrfk:" + manger.mgr_fk.ToString());
             using (DBMySql db = new DBMySql())
             {
                 string query = String.Format("Insert into accounts_manager (`login`,`type`,`name`,`mobile`,`qq`,`acclimit`) values('{0}','{1}','{2}','{3}','{4}','{5}')", manger.Login, manger.Type.ToString(), manger.Name, manger.Mobile, manger.QQ, manger.AccLimit);//orderpostflag`,`forceclose`,`hedgeflag`,`orderref`,`orderexchid`,`orderseq`

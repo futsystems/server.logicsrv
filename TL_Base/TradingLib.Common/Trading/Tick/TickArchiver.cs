@@ -15,7 +15,7 @@ namespace TradingLib.Common
 
         Dictionary<string, TikWriter> filedict = new Dictionary<string, TikWriter>();
         Dictionary<string, int> datedict = new Dictionary<string, int>();
-        public TickArchiver() : this(LibGlobal.TICKDIR) { }
+        public TickArchiver() : this(Util.TLTickDir) { }
         public TickArchiver(string folderpath)
         {
             _path = folderpath;

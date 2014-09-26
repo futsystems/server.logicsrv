@@ -168,7 +168,7 @@ namespace TradingLib.Core
             if (acc != null)
             {
                 acc.ClearAccountCheck();//清空帐户帐户规则列表
-                OrderCheckTracker.delRuleFromAccount(account);//xml文件操作清空该帐户帐户规则设置
+                //OrderCheckTracker.delRuleFromAccount(account);//xml文件操作清空该帐户帐户规则设置
             }
 
         }
@@ -180,7 +180,7 @@ namespace TradingLib.Core
             if (acc != null)
             {
                 acc.ClearOrderCheck();
-                AccountCheckTracker.delRuleFromAccount(account);
+                //AccountCheckTracker.delRuleFromAccount(account);
             }
 
         }

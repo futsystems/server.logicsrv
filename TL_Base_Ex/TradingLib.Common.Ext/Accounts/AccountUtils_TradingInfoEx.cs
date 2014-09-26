@@ -95,12 +95,12 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static bool GetHaveLongPosition(this IAccount account)
         {
-            foreach (Position pos in account.PositionsLong)
-            {
-                if (!pos.isFlat)
-                    return true;
-            }
-            return false;
+            return account.PositionsLong.Where(pos => !pos.isFlat).Count() > 0;
+        }
+
+        public static bool GetHaveLongPosition(this IAccount account, string symbol)
+        {
+            return account.PositionsLong.Where(pos => !pos.isFlat && pos.Symbol.Equals(symbol)).Count()>0;
         }
 
         /// <summary>
@@ -110,14 +110,13 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static bool GetHaveShortPosition(this IAccount account)
         {
-            foreach (Position pos in account.PositionsShort)
-            {
-                if (!pos.isFlat)
-                    return true;
-            }
-            return false;
+            return account.PositionsShort.Where(pos => !pos.isFlat).Count() > 0;
         }
 
+        public static bool GetHaveShortPosition(this IAccount account, string symbol)
+        {
+            return account.PositionsShort.Where(pos => !pos.isFlat && pos.Symbol.Equals(symbol)).Count() > 0;
+        }
         
     }
 }

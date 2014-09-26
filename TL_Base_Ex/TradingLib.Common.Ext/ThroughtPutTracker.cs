@@ -13,10 +13,10 @@ namespace TradingLib.Common
     /// <typeparam name="T"></typeparam>
     public class ThroughputTracker<T>
     {
-        int StartNum = IPUtil.TPStartNum;//当消息数量累计到多少时开始启动检测
-        int CheckNum = IPUtil.TPCheckNum;//启动检测后跟踪消息的数目(在这个数目内计算TP)
-        double RejectValue = IPUtil.TPRejectValue;//TP数值达到多少后拒绝该地址的消息
-        double StopValue = IPUtil.TPStartNum;//Tp数值降低到多少后停止检测
+        int StartNum = Const.TPStartNum;//当消息数量累计到多少时开始启动检测
+        int CheckNum = Const.TPCheckNum;//启动检测后跟踪消息的数目(在这个数目内计算TP)
+        double RejectValue = Const.TPRejectValue;//TP数值达到多少后拒绝该地址的消息
+        double StopValue = Const.TPStartNum;//Tp数值降低到多少后停止检测
 
         public event DebugDelegate SendDebugEvent;
         void debug(string msg)
@@ -24,7 +24,33 @@ namespace TradingLib.Common
             if (SendDebugEvent != null)
                 SendDebugEvent(msg);
         }
-        public ThroughputTracker() { }
+
+        ConfigDB _cfgdb = null;
+        public ThroughputTracker() 
+        {
+            //_cfgdb = new ConfigDB("TPTracker");
+            //if (!_cfgdb.HaveConfig("TPStartNum"))
+            //{
+            //    _cfgdb.UpdateConfig("TPStartNum", QSEnumCfgType.Int, 100, "当消息数量达到该数时启动检测");
+            //}
+            //StartNum = _cfgdb["TPStartNum"].AsInt();
+
+            //if (!_cfgdb.HaveConfig("TPCheckNum"))
+            //{
+            //    _cfgdb.UpdateConfig("TPCheckNum", QSEnumCfgType.Int, 10000, "启动检测后跟踪消息的数目(在这个数目内计算TP)");
+            //}
+            //CheckNum = _cfgdb["TPCheckNum"].AsInt();
+
+            //if (!_cfgdb.HaveConfig("TPRejectValue"))
+            //{
+            //    _cfgdb.UpdateConfig("TPRejectValue", QSEnumCfgType.Decimal,1.5, "启动检测后跟踪消息的数目(在这个数目内计算TP)");
+            //}
+            //RejectValue = _cfgdb["TPRejectValue"].AsDecimal();
+
+
+
+        
+        }
         DateTime _start;
         int _count=0;
         DateTime _stop;
@@ -42,7 +68,7 @@ namespace TradingLib.Common
         {
             get
             {
-                return DateTime.Now.Subtract(_heartbeattime).TotalSeconds > IPUtil.CLIENTDEADTIME;
+                return DateTime.Now.Subtract(_heartbeattime).TotalSeconds > Const.CLIENTDEADTIME;
             }
         }
 

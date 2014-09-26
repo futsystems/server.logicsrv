@@ -63,7 +63,7 @@ namespace TradingLib.Core
                     addressThroughPut.TryRemove(tobedelete[i], out dead);
                 }
                 //等待多少时间后,再次运行一次超时客户端清除
-                Thread.Sleep(IPUtil.CLEARDEADSESSIONPERIOD * 1000);
+                Thread.Sleep(Const.CLEARDEADSESSIONPERIOD * 1000);
             }
         }
         /// <summary>

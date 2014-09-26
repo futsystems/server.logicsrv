@@ -115,8 +115,8 @@ namespace TradingLib.Core
 
             //4.开仓标识与锁仓权限检查
             //4.1自动开平标识识别
-            bool havelong = account.GetHaveLongPosition();
-            bool haveshort = account.GetHaveShortPosition();
+            bool havelong = account.GetHaveLongPosition(o.symbol);
+            bool haveshort = account.GetHaveShortPosition(o.symbol);
             //自动判定开平标识
             if (o.OffsetFlag == QSEnumOffsetFlag.UNKNOWN)
             {

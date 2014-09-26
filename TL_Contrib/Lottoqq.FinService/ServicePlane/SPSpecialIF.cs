@@ -221,7 +221,7 @@ namespace TradingLib.Contrib.FinService
                 decimal marginperlotstart = this.MarginPerLotStart.AccountArgument.AsDecimal();
 
                 int totalsize = 0;
-                LibUtil.Debug("nowequity:" + nowequity.ToString() + " marginperlot:" + marginperlot.ToString() + " marginpperlotstop:" + marginperlotstart.ToString());
+                Util.Debug("nowequity:" + nowequity.ToString() + " marginperlot:" + marginperlot.ToString() + " marginpperlotstop:" + marginperlotstart.ToString());
                 if (nowequity < marginperlot)
                 {
                     if (nowequity >= marginperlotstart)
@@ -236,7 +236,7 @@ namespace TradingLib.Contrib.FinService
                 if (pos.UnsignedSize + o.UnsignedSize + frozensize> totalsize)
                 {
                     int cansize = totalsize - pos.UnsignedSize >= 0 ? (totalsize - pos.UnsignedSize) : 0;
-                    LibUtil.Debug("pos size:" + pos.UnsignedSize.ToString() + " ordersize:" + o.UnsignedSize.ToString() +" frozensize:"+frozensize.ToString()+ " totalsize:" + totalsize.ToString());
+                    Util.Debug("pos size:" + pos.UnsignedSize.ToString() + " ordersize:" + o.UnsignedSize.ToString() +" frozensize:"+frozensize.ToString()+ " totalsize:" + totalsize.ToString());
 
                     msg = "保证金不足";
                     return false;

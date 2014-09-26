@@ -70,8 +70,7 @@ namespace TraddingSrvCLI
             //lib 初始化 文件夹以及相关全局设置信息
             if (firstload)
             {
-                LibGlobal.InitPath();
-                LibUtil.SendDebugEvent += new DebugDelegate(debug);
+                Util.SendDebugEvent += new DebugDelegate(debug);
                 TLCtxHelper.SendDebugEvent += new DebugDelegate(debug);//将全局DebugEvent绑定到当前输出
                 firstload = false;
             }

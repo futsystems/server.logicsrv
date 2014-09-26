@@ -80,7 +80,7 @@ namespace OrderRuleSet
         {
             get
             {
-                return "开仓条件:当可用资金比例 " + LibUtil.GetEnumDescription(this.Compare) + " " + _percent.ToString("N2") + "%" + " [" + SymbolSet + "]"; ;
+                return "开仓条件:当可用资金比例 " + Util.GetEnumDescription(this.Compare) + " " + _percent.ToString("N2") + "%" + " [" + SymbolSet + "]"; ;
             }
         }
 

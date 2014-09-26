@@ -192,7 +192,7 @@ namespace Lottoqq.Race
             if (!_loggo) return;
             ThreadTracker.Unregister(_logthread);
             _loggo = false;
-            LibUtil.WaitThreadStop(_logthread);
+            Util.WaitThreadStop(_logthread);
 
             try
             {

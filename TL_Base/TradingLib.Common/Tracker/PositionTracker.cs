@@ -49,7 +49,6 @@ namespace TradingLib.Common
         //有新的合约建立持仓时,对外触发事件 传递symbol作为参数
         void PositionTracker_NewTxt(string txt, int idx)
         {
-            LibUtil.Debug("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx PositionTracker acc:"+_defaultacct +" direction:"+_directiontype.ToString() +"xxxx got a new position txt:" + txt);
             if (NewSymbol!= null)
                 NewSymbol(txt);
             if (NewPositionEvent != null)

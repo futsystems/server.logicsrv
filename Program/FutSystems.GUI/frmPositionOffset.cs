@@ -70,7 +70,7 @@ namespace FutSystems.GUI
             _security = sec;
 
             symbol.Text = _posOffset.Symbol;
-            directionLabel.Text = LibUtil.GetEnumDescription(_posOffset.Direction);
+            directionLabel.Text = Util.GetEnumDescription(_posOffset.Direction);
             if (_posOffset.Direction == QSEnumPositionOffsetDirection.LOSS)
             {
                 typelabel.Text = "止损方式";

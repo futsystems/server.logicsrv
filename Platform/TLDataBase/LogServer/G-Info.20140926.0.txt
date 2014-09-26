@@ -1,0 +1,105 @@
+090053: [LOAD CONTRIB] TradingLib.Contrib.WebPortal.WebPortal
+090053: [LOAD CONTRIB] TradingLib.Contrib.CLI.CLIServer
+090053: [LOAD CONTRIB] Lottoqq.BasicInfo.BasicInfoServer
+090053: [LOAD CONTRIB] TradingLib.Contrib.FinService.FinServiceCentre
+090053: FinServiceCentre loading......
+090053: Load ServicePlane Type:TradingLib.Contrib.FinService.SPSpecialIF
+090053: Load Service Instance......
+090053: Start contrib modules....
+090053: [START CONTRIB] TradingLib.Contrib.EmailSrv.EmailServer
+090053: [START CONTRIB] TradingLib.Contirb.LogServer.LogServer
+090053: 启动日志服务,监听端口:3369
+090053: [START CONTRIB] TradingLib.Contrib.WebPortal.WebPortal
+090053: Start webportal at port:7070
+090053: [START CONTRIB] TradingLib.Contrib.CLI.CLIServer
+090053: [START CONTRIB] Lottoqq.BasicInfo.BasicInfoServer
+090053: [START CONTRIB] TradingLib.Contrib.FinService.FinServiceCentre
+090053: Start Core Modules ....
+090053: [START CORE] ClearCentre
+090053: 启动清算中心...
+090053: 数据库恢复前次结算以来委托数据:46条
+090053: 数据库恢复前次结算以来成交数据:39条
+090053: 数据库恢复前次结算以来取消数据:2条
+090053: 数据库恢复前次结算持仓数据:0条
+090053: 数据库恢复开启的PositionRound数据:0条
+090053: Max order seq:1046
+090053: [START CORE] MgrMsgExchServer
+090053: ##########启动 Manager Server###################
+090054: try to load sessions form file:cache\MgrExch
+090054: [START CORE] WebMsgExchServer
+090054: webmsgexch start....
+090054: Start WebMsgRepServer
+090114: [LOAD CONTRIB] TradingLib.Contrib.WebPortal.WebPortal
+090114: [LOAD CONTRIB] TradingLib.Contrib.CLI.CLIServer
+090114: [LOAD CONTRIB] Lottoqq.BasicInfo.BasicInfoServer
+090114: [LOAD CONTRIB] TradingLib.Contrib.FinService.FinServiceCentre
+090114: FinServiceCentre loading......
+090114: Load ServicePlane Type:TradingLib.Contrib.FinService.SPSpecialIF
+090114: Load Service Instance......
+090114: Start contrib modules....
+090114: [START CONTRIB] TradingLib.Contrib.EmailSrv.EmailServer
+090114: [START CONTRIB] TradingLib.Contirb.LogServer.LogServer
+090114: 启动日志服务,监听端口:3369
+090114: [START CONTRIB] TradingLib.Contrib.WebPortal.WebPortal
+090114: Start webportal at port:7070
+090114: [START CONTRIB] TradingLib.Contrib.CLI.CLIServer
+090114: [START CONTRIB] Lottoqq.BasicInfo.BasicInfoServer
+090114: [START CONTRIB] TradingLib.Contrib.FinService.FinServiceCentre
+090114: Start Core Modules ....
+090114: [START CORE] ClearCentre
+090114: 启动清算中心...
+090115: 数据库恢复前次结算以来委托数据:46条
+090115: 数据库恢复前次结算以来成交数据:39条
+090115: 数据库恢复前次结算以来取消数据:2条
+090115: 数据库恢复前次结算持仓数据:0条
+090115: 数据库恢复开启的PositionRound数据:0条
+090115: Max order seq:1046
+090115: [START CORE] MgrMsgExchServer
+090115: ##########启动 Manager Server###################
+090115: try to load sessions form file:cache\MgrExch
+090115: [START CORE] WebMsgExchServer
+090115: webmsgexch start....
+090115: Start WebMsgRepServer
+090116: Start WebMsgRepServer
+090117: Restore Client Connection....
+090117: try to load sessions form file:cache\Exch
+090117: [START CORE] MsgExchServer
+090117: ##########启动交易服务###################
+090117: [START CORE] TaskCentre
+090132: [LOAD CONTRIB] TradingLib.Contrib.WebPortal.WebPortal
+090132: [LOAD CONTRIB] TradingLib.Contrib.CLI.CLIServer
+090132: [LOAD CONTRIB] Lottoqq.BasicInfo.BasicInfoServer
+090132: [LOAD CONTRIB] TradingLib.Contrib.FinService.FinServiceCentre
+090132: FinServiceCentre loading......
+090132: Load ServicePlane Type:TradingLib.Contrib.FinService.SPSpecialIF
+090132: Load Service Instance......
+090132: Start contrib modules....
+090132: [START CONTRIB] TradingLib.Contrib.EmailSrv.EmailServer
+090132: [START CONTRIB] TradingLib.Contirb.LogServer.LogServer
+090132: 启动日志服务,监听端口:3369
+090132: [START CONTRIB] TradingLib.Contrib.WebPortal.WebPortal
+090132: Start webportal at port:7070
+090132: [START CONTRIB] TradingLib.Contrib.CLI.CLIServer
+090132: [START CONTRIB] Lottoqq.BasicInfo.BasicInfoServer
+090132: [START CONTRIB] TradingLib.Contrib.FinService.FinServiceCentre
+090132: Start Core Modules ....
+090132: [START CORE] ClearCentre
+090132: 启动清算中心...
+090133: 数据库恢复前次结算以来委托数据:46条
+090133: 数据库恢复前次结算以来成交数据:39条
+090133: 数据库恢复前次结算以来取消数据:2条
+090133: 数据库恢复前次结算持仓数据:0条
+090133: 数据库恢复开启的PositionRound数据:0条
+090133: Max order seq:1046
+090133: [START CORE] MgrMsgExchServer
+090133: ##########启动 Manager Server###################
+090133: try to load sessions form file:cache\MgrExch
+090133: [START CORE] WebMsgExchServer
+090133: webmsgexch start....
+090133: Start WebMsgRepServer
+090134: Start WebMsgRepServer
+090135: Restore Client Connection....
+090135: try to load sessions form file:cache\Exch
+090135: [START CORE] MsgExchServer
+090135: ##########启动交易服务###################
+090135: [START CORE] TaskCentre

@@ -28,7 +28,7 @@ namespace TradingLib.Contrib.FinService
             stub.InitFinService();
             if (!stub.IsValid)
             {
-                LibUtil.Debug("FinService:" + stub.ToString() + " is not valid, drop it");
+                Util.Debug("FinService:" + stub.ToString() + " is not valid, drop it");
                 return;
             }
             finservicemap.Add(stub.Acct, stub);

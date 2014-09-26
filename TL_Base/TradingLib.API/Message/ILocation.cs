@@ -19,10 +19,5 @@ namespace TradingLib.API
         /// 客户端编号
         /// </summary>
         string ClientID { get; set; }
-
-        /// <summary>
-        /// 客户端Session编号
-        /// </summary>
-        //int SessionID { get; set; }
     }
 }
