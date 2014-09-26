@@ -46,3 +46,116 @@
 090135: #:1mainthread:False dnsthread:FalseAsyncServer is starting.....
 090135: Starting Exch_AsyncSrv successfull
 090135: Trading Server Starting success
+092331: 启动命令行服务
+092332: 从数据库恢复取消数据....
+092332: 从数据库恢复昨持仓数据....
+092332: 从数据库恢复开启的PositionRound数据....
+092332: Start Message Transport Service @MgrExch_AsyncSrv
+092332: Start  Names REQ Service @MgrExch_AsyncSrv
+092332: #:1mainthread:False dnsthread:FalseAsyncServer is starting.....
+092332: Starting MgrExch_AsyncSrv successfull
+092332: Trading Server Starting success
+092332: #:1webchannelServer is starting.....
+092333: Start WebSocketRoute Transport Server....
+092333: #:1websocketServer is starting.....
+092333: #:1webchannelServer is starting.....
+092334: Start Message Transport Service @Exch_AsyncSrv
+092334: Start  Names REQ Service @Exch_AsyncSrv
+092334: #:1mainthread:False dnsthread:FalseAsyncServer is starting.....
+092334: Starting Exch_AsyncSrv successfull
+092334: Trading Server Starting success
+092416: Order offsetflag unknown ,detected and set to:OPEN
+092416: 加载账户:9280003 账户规则
+092416: 交易帐户:9280003 链接端数量:0
+092416: send ordernotify to client | BUY 1 IF1410 @Mkt [9280003] 635473202115781251 Filled:0 Status:Placed PostFlag:OPEN OrderRef: OrderSeq:1047 HedgeFlag: OrderExchID:
+092416: 交易帐户:9280003 链接端数量:0
+092416: send ordernotify to client | BUY 1 IF1410 @Mkt [9280003] 635473202115781251 Filled:0 Status:Submited PostFlag:OPEN OrderRef: OrderSeq:1047 HedgeFlag: OrderExchID:
+092416: 交易帐户:9280003 链接端数量:0
+092416: send ordernotify to client | BUY 1 IF1410 @Mkt [9280003] 635473202115781251 Filled:0 Status:Opened PostFlag:OPEN OrderRef: OrderSeq:1047 HedgeFlag: OrderExchID:1047
+092416: 交易帐户:9280003 链接端数量:0
+092416: send ordernotify to client | BUY 1 IF1410 @Mkt [9280003] 635473202115781251 Filled:1 Status:Filled PostFlag:OPEN OrderRef: OrderSeq:1047 HedgeFlag: OrderExchID:1047
+092416: 交易帐户:9280003 链接端数量:0
+092416: send Filld to client | 20140927-2426 [9280003] BOT 1 IF1410 FUT  @2455.200000 C:22.09680000000000 Via:Broker.SIM.SIMTrader/000000 OP:EntryPosition
+092416: 交易帐户:9280003 链接端数量:0
+092416: send positionupdate to client|TradingLib.Common.PositionEx
+092416: 交易帐户:9280003 链接端数量:0
+092416: send positionupdate to client|TradingLib.Common.PositionEx
+092417: Order offsetflag unknown ,detected and set to:OPEN
+092417: 交易帐户:9280003 链接端数量:0
+092417: send ordernotify to client | BUY 1 IF1410 @Mkt [9280003] 635473202115781252 Filled:0 Status:Placed PostFlag:OPEN OrderRef: OrderSeq:1048 HedgeFlag: OrderExchID:
+092417: 交易帐户:9280003 链接端数量:0
+092417: send ordernotify to client | BUY 1 IF1410 @Mkt [9280003] 635473202115781252 Filled:0 Status:Submited PostFlag:OPEN OrderRef: OrderSeq:1048 HedgeFlag: OrderExchID:
+092417: 交易帐户:9280003 链接端数量:0
+092417: send ordernotify to client | BUY 1 IF1410 @Mkt [9280003] 635473202115781252 Filled:0 Status:Opened PostFlag:OPEN OrderRef: OrderSeq:1048 HedgeFlag: OrderExchID:1048
+092417: 交易帐户:9280003 链接端数量:0
+092417: send ordernotify to client | BUY 1 IF1410 @Mkt [9280003] 635473202115781252 Filled:1 Status:Filled PostFlag:OPEN OrderRef: OrderSeq:1048 HedgeFlag: OrderExchID:1048
+092417: 交易帐户:9280003 链接端数量:0
+092417: send Filld to client | 20140927-2427 [9280003] BOT 1 IF1410 FUT  @2455.200000 C:22.09680000000000 Via:Broker.SIM.SIMTrader/000000 OP:AddPosition
+092417: 交易帐户:9280003 链接端数量:0
+092417: send positionupdate to client|TradingLib.Common.PositionEx
+092417: 交易帐户:9280003 链接端数量:0
+092417: send positionupdate to client|TradingLib.Common.PositionEx
+092421: Order offsetflag unknown ,detected and set to:OPEN
+092421: 交易帐户:9280003 链接端数量:0
+092421: send ordernotify to client | BUY 1 IF1410 @Mkt [9280003] 635473202115781253 Filled:0 Status:Placed PostFlag:OPEN OrderRef: OrderSeq:1049 HedgeFlag: OrderExchID:
+092421: 交易帐户:9280003 链接端数量:0
+092421: send ordernotify to client | BUY 1 IF1410 @Mkt [9280003] 635473202115781253 Filled:0 Status:Submited PostFlag:OPEN OrderRef: OrderSeq:1049 HedgeFlag: OrderExchID:
+092421: 交易帐户:9280003 链接端数量:0
+092421: send ordernotify to client | BUY 1 IF1410 @Mkt [9280003] 635473202115781253 Filled:0 Status:Opened PostFlag:OPEN OrderRef: OrderSeq:1049 HedgeFlag: OrderExchID:1049
+092421: 交易帐户:9280003 链接端数量:0
+092421: send ordernotify to client | BUY 1 IF1410 @Mkt [9280003] 635473202115781253 Filled:1 Status:Filled PostFlag:OPEN OrderRef: OrderSeq:1049 HedgeFlag: OrderExchID:1049
+092421: 交易帐户:9280003 链接端数量:0
+092421: send Filld to client | 20140927-2431 [9280003] BOT 1 IF1410 FUT  @2455.600000 C:22.10040000000000 Via:Broker.SIM.SIMTrader/000000 OP:AddPosition
+092421: 交易帐户:9280003 链接端数量:0
+092421: send positionupdate to client|TradingLib.Common.PositionEx
+092421: 交易帐户:9280003 链接端数量:0
+092421: send positionupdate to client|TradingLib.Common.PositionEx
+092422: Order offsetflag unknown ,detected and set to:OPEN
+092422: 交易帐户:9280003 链接端数量:0
+092422: send ordernotify to client | BUY 1 IF1410 @Mkt [9280003] 635473202115781254 Filled:0 Status:Placed PostFlag:OPEN OrderRef: OrderSeq:1050 HedgeFlag: OrderExchID:
+092422: 交易帐户:9280003 链接端数量:0
+092422: send ordernotify to client | BUY 1 IF1410 @Mkt [9280003] 635473202115781254 Filled:0 Status:Submited PostFlag:OPEN OrderRef: OrderSeq:1050 HedgeFlag: OrderExchID:
+092422: 交易帐户:9280003 链接端数量:0
+092422: send ordernotify to client | BUY 1 IF1410 @Mkt [9280003] 635473202115781254 Filled:0 Status:Opened PostFlag:OPEN OrderRef: OrderSeq:1050 HedgeFlag: OrderExchID:1050
+092422: 交易帐户:9280003 链接端数量:0
+092422: send ordernotify to client | BUY 1 IF1410 @Mkt [9280003] 635473202115781254 Filled:1 Status:Filled PostFlag:OPEN OrderRef: OrderSeq:1050 HedgeFlag: OrderExchID:1050
+092422: 交易帐户:9280003 链接端数量:0
+092422: send Filld to client | 20140927-2432 [9280003] BOT 1 IF1410 FUT  @2455.600000 C:22.10040000000000 Via:Broker.SIM.SIMTrader/000000 OP:AddPosition
+092422: 交易帐户:9280003 链接端数量:0
+092422: send positionupdate to client|TradingLib.Common.PositionEx
+092422: 交易帐户:9280003 链接端数量:0
+092422: send positionupdate to client|TradingLib.Common.PositionEx
+092425: Order offsetflag unknown ,detected and set to:OPEN
+092425: 交易帐户:9280003 链接端数量:0
+092425: send ordernotify to client | BUY 1 IF1410 @2,400.00 [9280003] 635473202115781255 Filled:0 Status:Placed PostFlag:OPEN OrderRef: OrderSeq:1051 HedgeFlag: OrderExchID:
+092425: 交易帐户:9280003 链接端数量:0
+092425: send ordernotify to client | BUY 1 IF1410 @2,400.00 [9280003] 635473202115781255 Filled:0 Status:Submited PostFlag:OPEN OrderRef: OrderSeq:1051 HedgeFlag: OrderExchID:
+092425: 交易帐户:9280003 链接端数量:0
+092425: send ordernotify to client | BUY 1 IF1410 @2,400.00 [9280003] 635473202115781255 Filled:0 Status:Opened PostFlag:OPEN OrderRef: OrderSeq:1051 HedgeFlag: OrderExchID:1051
+092425: Order offsetflag unknown ,detected and set to:OPEN
+092425: 交易帐户:9280003 链接端数量:0
+092425: send ordernotify to client | BUY 1 IF1410 @2,400.00 [9280003] 635473202115781256 Filled:0 Status:Placed PostFlag:OPEN OrderRef: OrderSeq:1052 HedgeFlag: OrderExchID:
+092425: 交易帐户:9280003 链接端数量:0
+092425: send ordernotify to client | BUY 1 IF1410 @2,400.00 [9280003] 635473202115781256 Filled:0 Status:Submited PostFlag:OPEN OrderRef: OrderSeq:1052 HedgeFlag: OrderExchID:
+092425: 交易帐户:9280003 链接端数量:0
+092425: send ordernotify to client | BUY 1 IF1410 @2,400.00 [9280003] 635473202115781256 Filled:0 Status:Opened PostFlag:OPEN OrderRef: OrderSeq:1052 HedgeFlag: OrderExchID:1052
+092549: Reply cancle to tlserver |635473202115781255
+092549: Reply cancle to tlserver |635473202115781256
+092549: 交易帐户:9280003 链接端数量:0
+092549: send ordernotify to client | BUY 1 IF1410 @2,400.00 [9280003] 635473202115781255 Filled:0 Status:Canceled PostFlag:OPEN OrderRef: OrderSeq:1051 HedgeFlag: OrderExchID:1051
+092549: 交易帐户:9280003 链接端数量:0
+092549: send ordernotify to client | BUY 1 IF1410 @2,400.00 [9280003] 635473202115781256 Filled:0 Status:Canceled PostFlag:OPEN OrderRef: OrderSeq:1052 HedgeFlag: OrderExchID:1052
+092552: 交易帐户:9280003 链接端数量:0
+092552: send ordernotify to client | SELL -4 IF1410 @Mkt [9280003] 635473202115781257 Filled:0 Status:Placed PostFlag:CLOSE OrderRef: OrderSeq:1053 HedgeFlag: OrderExchID:
+092552: 交易帐户:9280003 链接端数量:0
+092552: send ordernotify to client | SELL -4 IF1410 @Mkt [9280003] 635473202115781257 Filled:0 Status:Submited PostFlag:CLOSE OrderRef: OrderSeq:1053 HedgeFlag: OrderExchID:
+092552: 交易帐户:9280003 链接端数量:0
+092552: send ordernotify to client | SELL -4 IF1410 @Mkt [9280003] 635473202115781257 Filled:0 Status:Opened PostFlag:CLOSE OrderRef: OrderSeq:1053 HedgeFlag: OrderExchID:1053
+092552: 交易帐户:9280003 链接端数量:0
+092552: send ordernotify to client | SELL -4 IF1410 @Mkt [9280003] 635473202115781257 Filled:4 Status:Filled PostFlag:CLOSE OrderRef: OrderSeq:1053 HedgeFlag: OrderExchID:1053
+092552: 交易帐户:9280003 链接端数量:0
+092552: send Filld to client | 20140927-2602 [9280003] SOD 4 IF1410 FUT  @2456.600000 C:88.43760000000000 Via:Broker.SIM.SIMTrader/000000 OP:ExitPosition
+092552: 交易帐户:9280003 链接端数量:0
+092552: send positionupdate to client|TradingLib.Common.PositionEx
+092552: 交易帐户:9280003 链接端数量:0
+092552: send positionupdate to client|TradingLib.Common.PositionEx

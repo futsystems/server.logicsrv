@@ -87,7 +87,27 @@ namespace Broker.SIM
         }
 
 
-        
+
+        /// <summary>
+        /// CTP接口 用限价单模拟市价单的超价跳数
+        /// </summary>
+        public static int CTPMarketOrderPriceOffset = 10;
+
+        /// <summary>
+        /// 模拟成交用盘口数据成交还是用最新价成交
+        /// </summary>
+        public static bool SimBrokerUseBikAsk = true;
+
+        /// <summary>
+        /// 挂单成交是否使用 最新价成交 用于区分模拟与实盘
+        /// </summary>
+        public static bool SimLimitReal = false;
+
+        /// <summary>
+        /// 模拟成交用Tick数据逐个成交还是用市场切片快速成交
+        /// </summary>
+        public static bool FillOrderTickByTick = false;
+
 
         /// <summary>
         /// 是否模拟真实挂单
@@ -99,16 +119,16 @@ namespace Broker.SIM
         /// 当有挂单时,如果价格上下跳动,我们不能马上以该成交价格成交,应为这里存在排队机制。
         /// 挂10买的时候记录当时盘口,并且需要记录该价位的成交数量,如果累计成交的数量 超过了该委托下达时当时的盘口厚度，则给予成交
         /// </summary>
-        bool _simreal = LibGlobal.SimLimitReal;
+        bool _simreal = SimLimitReal;
 
 
-        bool _usebidask = LibGlobal.SimBrokerUseBikAsk;
+        bool _usebidask = SimBrokerUseBikAsk;
         /// <summary>
         /// 模拟成交取价模式 盘口对手价 或 最新价
         /// </summary>
         public bool UseBidAskFills { get { return _usebidask; } set { _usebidask = value; } }
 
-       
+        
         /// <summary>
         /// fill acknowledged, order filled.
         /// </summary>
@@ -157,7 +177,7 @@ namespace Broker.SIM
                 UpdateLimitOrderQuoteStatus(k);
             }
 
-            if(LibGlobal.FillOrderTickByTick)
+            if(FillOrderTickByTick)
             {
                 asynctick.newTick(k);//为了保证其他组件运行流畅，在模拟成交部分我们将tick缓存到本地然后再进行成交处理
             }
@@ -674,7 +694,7 @@ namespace Broker.SIM
 
         void StartPTEngine()
         {
-            if (LibGlobal.FillOrderTickByTick) return;//如果需要逐个tick去进行成交 则不用启动成交扫描线程
+            if (FillOrderTickByTick) return;//如果需要逐个tick去进行成交 则不用启动成交扫描线程
             if (ptgo) return;
             ptgo = true;
             ptthread = new Thread(new ThreadStart(PTEngine));
@@ -785,7 +805,7 @@ namespace Broker.SIM
          */
         public void Start()
         {
-            debug("模拟引擎启动,成交方式:" + (LibGlobal.FillOrderTickByTick ? "逐个Tick成交" : "市场断面扫描")+" 模拟实盘取价:"+_simreal.ToString(), QSEnumDebugLevel.INFO);
+            debug("模拟引擎启动,成交方式:" + (FillOrderTickByTick ? "逐个Tick成交" : "市场断面扫描")+" 模拟实盘取价:"+_simreal.ToString(), QSEnumDebugLevel.INFO);
             StartPTEngine();//启动模拟成交引擎
             StartProcOut();//启动对外消息发送线程
 

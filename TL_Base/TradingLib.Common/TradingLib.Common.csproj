@@ -129,7 +129,6 @@
     <Compile Include="Messages\Version.cs" />
     <Compile Include="Other\ClientInfo.cs" />
     <Compile Include="Other\ContractBank.cs" />
-    <Compile Include="Misc\LibGlobal.cs" />
     <Compile Include="Other\Manager.cs" />
     <Compile Include="Other\SystemStatus.cs" />
     <Compile Include="Utils\XMLRspInfo.cs" />

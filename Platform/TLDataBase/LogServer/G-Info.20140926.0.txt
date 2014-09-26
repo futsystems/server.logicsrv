@@ -103,3 +103,272 @@
 090135: [START CORE] MsgExchServer
 090135: ##########启动交易服务###################
 090135: [START CORE] TaskCentre
+092331: [LOAD CONTRIB] TradingLib.Contrib.WebPortal.WebPortal
+092331: [LOAD CONTRIB] TradingLib.Contrib.CLI.CLIServer
+092331: [LOAD CONTRIB] Lottoqq.BasicInfo.BasicInfoServer
+092331: [LOAD CONTRIB] TradingLib.Contrib.FinService.FinServiceCentre
+092331: FinServiceCentre loading......
+092331: Load ServicePlane Type:TradingLib.Contrib.FinService.SPSpecialIF
+092331: Load Service Instance......
+092331: Start contrib modules....
+092331: [START CONTRIB] TradingLib.Contrib.EmailSrv.EmailServer
+092331: [START CONTRIB] TradingLib.Contirb.LogServer.LogServer
+092331: 启动日志服务,监听端口:3369
+092331: [START CONTRIB] TradingLib.Contrib.WebPortal.WebPortal
+092331: Start webportal at port:7070
+092331: [START CONTRIB] TradingLib.Contrib.CLI.CLIServer
+092331: [START CONTRIB] Lottoqq.BasicInfo.BasicInfoServer
+092331: [START CONTRIB] TradingLib.Contrib.FinService.FinServiceCentre
+092331: Start Core Modules ....
+092331: [START CORE] ClearCentre
+092331: 启动清算中心...
+092332: 数据库恢复前次结算以来委托数据:46条
+092332: 数据库恢复前次结算以来成交数据:39条
+092332: 数据库恢复前次结算以来取消数据:2条
+092332: 数据库恢复前次结算持仓数据:0条
+092332: 数据库恢复开启的PositionRound数据:0条
+092332: Max order seq:1046
+092332: [START CORE] MgrMsgExchServer
+092332: ##########启动 Manager Server###################
+092332: try to load sessions form file:cache\MgrExch
+092332: [START CORE] WebMsgExchServer
+092332: webmsgexch start....
+092332: Start WebMsgRepServer
+092333: Start WebMsgRepServer
+092334: Restore Client Connection....
+092334: try to load sessions form file:cache\Exch
+092334: [START CORE] MsgExchServer
+092334: ##########启动交易服务###################
+092334: [START CORE] TaskCentre
+092336: 启动数据通道:DataFeed.FastTick.FastTick
+092336: 查找数据路由:DataFeed.FastTick.FastTick
+092336: [INFO] Connect to FastTickServer:tcp://tick_dev.huiky.com:6660
+092336: [INFO] Subscribe to FastTick Publisher server:tick_dev.huiky.com Port:6661
+092336: 查找所有需要注册的合约,进行初始化注册
+092336: request market data to datafeed:ag1412,IF1409,i1501,p1501,j1501,IF1410
+092336: FastTick RegisterSymbol Type:CTP Syms:ag1412,IF1409,i1501,p1501,j1501,IF1410
+092336: [INFO] FastTick数据通道:注册市场数据 CTP:ag1412,IF1409,i1501,p1501,j1501,IF1410
+092337: 启动成交通道:Broker.SIM.SIMTrader
+092337: 查找成交路由:Broker.SIM.SIMTrader
+092337: [INFO] 模拟引擎启动,成交方式:市场断面扫描 模拟实盘取价:False
+092337: [INFO] 从清算中心得到当天的委托数据并恢复到缓存中
+092337: 数据库恢复前次结算以来委托数据:46条
+092338: 客户端:0ecb25bf-73ad-48b4-9a07-f265eaa53b0a FrontID:  FrontType:Direct Register to system..
+092338: Client:0ecb25bf-73ad-48b4-9a07-f265eaa53b0a regist to tlserver
+092338: Client:0ecb25bf-73ad-48b4-9a07-f265eaa53b0a Bind With Int32 Token, FrontIDi:1 SessionIDi:1
+092339: got login request:Packet Type:MGRLOGINREQUEST Content:888888,123456|1 FrontID: Client:0ecb25bf-73ad-48b4-9a07-f265eaa53b0a Size:23
+092344: 客户端:e0555d0e-3871-4dbc-831b-20d70e45ffd1 FrontID:  FrontType:Direct Register to system..
+092344: Client:e0555d0e-3871-4dbc-831b-20d70e45ffd1 regist to tlserver
+092344: Client:e0555d0e-3871-4dbc-831b-20d70e45ffd1 Bind With Int32 Token, FrontIDi:1 SessionIDi:2
+092344: got login request:Packet Type:MGRLOGINREQUEST Content:888888,111|0 FrontID: Client:e0555d0e-3871-4dbc-831b-20d70e45ffd1 Size:20
+092345: 管理员:888888 请求查询交易时间段:Packet Type:MGRQRYMARKETTIME Content:|1 FrontID: Client:e0555d0e-3871-4dbc-831b-20d70e45ffd1 Size:10
+092345: 管理员:888888 请求查询交易所列表:Packet Type:MGRQRYEXCHANGE Content:|2 FrontID: Client:e0555d0e-3871-4dbc-831b-20d70e45ffd1 Size:10
+092345: 管理员:888888 请求查询品种:Packet Type:MGRQRYSECURITY Content:|3 FrontID: Client:e0555d0e-3871-4dbc-831b-20d70e45ffd1 Size:10
+092345: 管理员:888888 请求查询合约:Packet Type:MGRQRYSYMBOL Content:|4 FrontID: Client:e0555d0e-3871-4dbc-831b-20d70e45ffd1 Size:10
+092345: 管理员:888888 请求查询风控规则:Packet Type:MGRQRYRULECLASS Content:|5 FrontID: Client:e0555d0e-3871-4dbc-831b-20d70e45ffd1 Size:10
+092345: 管理员:888888 请求查询管理员列表:Packet Type:MGRQRYMANAGER Content:|6 FrontID: Client:e0555d0e-3871-4dbc-831b-20d70e45ffd1 Size:10
+092345: 管理员:888888 请求下载交易帐户列表:Packet Type:MGRQRYACCOUNTS Content:MGRQryAccounts|7 FrontID: Client:e0555d0e-3871-4dbc-831b-20d70e45ffd1 Size:24
+092351: 管理员:888888 请求设定观察列表:Packet Type:MGRWATCHACCOUNTS Content:4444,9280001,9280002,9280003,9280004,9280005,9580001,9680001,9680002|8 FrontID: Client:e0555d0e-3871-4dbc-831b-20d70e45ffd1 Size:78
+092352: 管理员:888888 请求恢复交易数据,帐号:9280003
+092352: resuem account:9280003
+092353: 管理员:888888 请求设定观察列表:Packet Type:MGRWATCHACCOUNTS Content:4444,9280001,9280002,9280003,9280004,9280005,9580001,9680001,9680002|10 FrontID: Client:e0555d0e-3871-4dbc-831b-20d70e45ffd1 Size:79
+092354: 管理员:888888 请求恢复交易数据,帐号:9280002
+092354: resuem account:9280002
+092401: 管理员:888888 请求恢复交易数据,帐号:9280003
+092401: resuem account:9280003
+092402: 管理员:888888 请求恢复交易数据,帐号:9280003
+092402: resuem account:9280003
+092404: 管理员:888888 请求恢复交易数据,帐号:9280003
+092404: resuem account:9280003
+092416: got order:BUY 0 IF1410 @Mkt [9280003] 0 Filled:0 Status:Unknown PostFlag:UNKNOWN OrderRef: OrderSeq:0 HedgeFlag: OrderExchID:
+092416: Got Order[Check1]:BUY 1 IF1410 @Mkt [9280003] 635473202115781251 Filled:0 Status:Unknown PostFlag:UNKNOWN OrderRef: OrderSeq:1047 HedgeFlag: OrderExchID:
+092416: Got Order[Check2]:BUY 1 IF1410 @Mkt [9280003] 635473202115781251 Filled:0 Status:Unknown PostFlag:OPEN OrderRef: OrderSeq:1047 HedgeFlag: OrderExchID:
+092416: 检查委托 635473202115781251
+092416: Order[635473202115781251] try to 开仓 操作方向:多头持仓
+092416: Got  Order:BUY 1 IF1410 @Mkt [9280003] 635473202115781251 Filled:0 Status:Placed PostFlag:OPEN OrderRef: OrderSeq:1047 HedgeFlag: OrderExchID:
+092416: Send  Order to Broker Side | BUY 1 IF1410 @Mkt [9280003] 635473202115781251 Filled:0 Status:Placed PostFlag:OPEN OrderRef: OrderSeq:1047 HedgeFlag: OrderExchID:
+092416: [INFO] PTT Server got order: BUY 1 IF1410 @Mkt [9280003] 635473202115781251 Filled:0 Status:Placed PostFlag:OPEN OrderRef: OrderSeq:1047 HedgeFlag: OrderExchID:
+092416: Reply order to tlserver |BUY 1 IF1410 @Mkt [9280003] 635473202115781251 Filled:0 Status:Submited PostFlag:OPEN OrderRef: OrderSeq:1047 HedgeFlag: OrderExchID:
+092416: 交易日志:Order inserted:BUY 1 IF1410 @Mkt [9280003] 635473202115781251 Filled:0 Status:Placed PostFlag:OPEN OrderRef: OrderSeq:1047 HedgeFlag: OrderExchID: 成功
+092416: Got  Order:BUY 1 IF1410 @Mkt [9280003] 635473202115781251 Filled:0 Status:Submited PostFlag:OPEN OrderRef: OrderSeq:1047 HedgeFlag: OrderExchID:
+092416: 交易日志:Order update:BUY 1 IF1410 @Mkt [9280003] 635473202115781251 Filled:0 Status:Submited PostFlag:OPEN OrderRef: OrderSeq:1047 HedgeFlag: OrderExchID: 成功
+092416: [INFO] PTT Server queueing order: BUY 1 IF1410 @Mkt [9280003] 635473202115781251 Filled:0 Status:Placed PostFlag:OPEN OrderRef: OrderSeq:1047 HedgeFlag: OrderExchID:
+092416: Reply order to tlserver |BUY 1 IF1410 @Mkt [9280003] 635473202115781251 Filled:0 Status:Opened PostFlag:OPEN OrderRef: OrderSeq:1047 HedgeFlag: OrderExchID:1047
+092416: [INFO] PTT Server filled: 20140927-2426 [9280003] BOT 1 IF1410 FUT  @2455.200000 C:-1 Via:Broker.SIM.SIMTrader/000000 OP:UNKNOWN
+092416: Reply order to tlserver |BUY 1 IF1410 @Mkt [9280003] 635473202115781251 Filled:1 Status:Filled PostFlag:OPEN OrderRef: OrderSeq:1047 HedgeFlag: OrderExchID:1047
+092416: Reply Fill to tlserver |20140927-2426 [9280003] BOT 1 IF1410 FUT  @2455.200000 C:-1 Via:Broker.SIM.SIMTrader/000000 OP:UNKNOWN
+092416: Got  Order:BUY 1 IF1410 @Mkt [9280003] 635473202115781251 Filled:0 Status:Opened PostFlag:OPEN OrderRef: OrderSeq:1047 HedgeFlag: OrderExchID:1047
+092416: Got  Order:BUY 1 IF1410 @Mkt [9280003] 635473202115781251 Filled:1 Status:Filled PostFlag:OPEN OrderRef: OrderSeq:1047 HedgeFlag: OrderExchID:1047
+092416: Got Fill:20140927-2426 [9280003] BOT 1 IF1410 FUT  @2455.200000 C:22.09680000000000 Via:Broker.SIM.SIMTrader/000000 OP:EntryPosition
+092416: 交易日志:Order update:BUY 1 IF1410 @Mkt [9280003] 635473202115781251 Filled:0 Status:Opened PostFlag:OPEN OrderRef: OrderSeq:1047 HedgeFlag: OrderExchID:1047 成功
+092416: 交易日志:Order update:BUY 1 IF1410 @Mkt [9280003] 635473202115781251 Filled:1 Status:Filled PostFlag:OPEN OrderRef: OrderSeq:1047 HedgeFlag: OrderExchID:1047 成功
+092416: 交易日志:Trade inserted:20140927-2426 [9280003] BOT 1 IF1410 FUT  @2455.200000 C:22.09680000000000 Via:Broker.SIM.SIMTrader/000000 OP:EntryPosition 成功
+092417: got order:BUY 0 IF1410 @Mkt [9280003] 0 Filled:0 Status:Unknown PostFlag:UNKNOWN OrderRef: OrderSeq:0 HedgeFlag: OrderExchID:
+092417: Got Order[Check1]:BUY 1 IF1410 @Mkt [9280003] 635473202115781252 Filled:0 Status:Unknown PostFlag:UNKNOWN OrderRef: OrderSeq:1048 HedgeFlag: OrderExchID:
+092417: Got Order[Check2]:BUY 1 IF1410 @Mkt [9280003] 635473202115781252 Filled:0 Status:Unknown PostFlag:OPEN OrderRef: OrderSeq:1048 HedgeFlag: OrderExchID:
+092417: 检查委托 635473202115781252
+092417: Order[635473202115781252] try to 开仓 操作方向:多头持仓
+092417: Got  Order:BUY 1 IF1410 @Mkt [9280003] 635473202115781252 Filled:0 Status:Placed PostFlag:OPEN OrderRef: OrderSeq:1048 HedgeFlag: OrderExchID:
+092417: Send  Order to Broker Side | BUY 1 IF1410 @Mkt [9280003] 635473202115781252 Filled:0 Status:Placed PostFlag:OPEN OrderRef: OrderSeq:1048 HedgeFlag: OrderExchID:
+092417: [INFO] PTT Server got order: BUY 1 IF1410 @Mkt [9280003] 635473202115781252 Filled:0 Status:Placed PostFlag:OPEN OrderRef: OrderSeq:1048 HedgeFlag: OrderExchID:
+092417: Reply order to tlserver |BUY 1 IF1410 @Mkt [9280003] 635473202115781252 Filled:0 Status:Submited PostFlag:OPEN OrderRef: OrderSeq:1048 HedgeFlag: OrderExchID:
+092417: 交易日志:Order inserted:BUY 1 IF1410 @Mkt [9280003] 635473202115781252 Filled:0 Status:Placed PostFlag:OPEN OrderRef: OrderSeq:1048 HedgeFlag: OrderExchID: 成功
+092417: Got  Order:BUY 1 IF1410 @Mkt [9280003] 635473202115781252 Filled:0 Status:Submited PostFlag:OPEN OrderRef: OrderSeq:1048 HedgeFlag: OrderExchID:
+092417: 交易日志:Order update:BUY 1 IF1410 @Mkt [9280003] 635473202115781252 Filled:0 Status:Submited PostFlag:OPEN OrderRef: OrderSeq:1048 HedgeFlag: OrderExchID: 成功
+092417: [INFO] PTT Server queueing order: BUY 1 IF1410 @Mkt [9280003] 635473202115781252 Filled:0 Status:Placed PostFlag:OPEN OrderRef: OrderSeq:1048 HedgeFlag: OrderExchID:
+092417: [INFO] PTT Server filled: 20140927-2427 [9280003] BOT 1 IF1410 FUT  @2455.200000 C:-1 Via:Broker.SIM.SIMTrader/000000 OP:UNKNOWN
+092417: Reply order to tlserver |BUY 1 IF1410 @Mkt [9280003] 635473202115781252 Filled:0 Status:Opened PostFlag:OPEN OrderRef: OrderSeq:1048 HedgeFlag: OrderExchID:1048
+092417: Reply order to tlserver |BUY 1 IF1410 @Mkt [9280003] 635473202115781252 Filled:1 Status:Filled PostFlag:OPEN OrderRef: OrderSeq:1048 HedgeFlag: OrderExchID:1048
+092417: Reply Fill to tlserver |20140927-2427 [9280003] BOT 1 IF1410 FUT  @2455.200000 C:-1 Via:Broker.SIM.SIMTrader/000000 OP:UNKNOWN
+092417: Got  Order:BUY 1 IF1410 @Mkt [9280003] 635473202115781252 Filled:0 Status:Opened PostFlag:OPEN OrderRef: OrderSeq:1048 HedgeFlag: OrderExchID:1048
+092417: Got  Order:BUY 1 IF1410 @Mkt [9280003] 635473202115781252 Filled:1 Status:Filled PostFlag:OPEN OrderRef: OrderSeq:1048 HedgeFlag: OrderExchID:1048
+092417: Got Fill:20140927-2427 [9280003] BOT 1 IF1410 FUT  @2455.200000 C:22.09680000000000 Via:Broker.SIM.SIMTrader/000000 OP:AddPosition
+092417: 交易日志:Order update:BUY 1 IF1410 @Mkt [9280003] 635473202115781252 Filled:0 Status:Opened PostFlag:OPEN OrderRef: OrderSeq:1048 HedgeFlag: OrderExchID:1048 成功
+092417: 交易日志:Order update:BUY 1 IF1410 @Mkt [9280003] 635473202115781252 Filled:1 Status:Filled PostFlag:OPEN OrderRef: OrderSeq:1048 HedgeFlag: OrderExchID:1048 成功
+092417: 交易日志:Trade inserted:20140927-2427 [9280003] BOT 1 IF1410 FUT  @2455.200000 C:22.09680000000000 Via:Broker.SIM.SIMTrader/000000 OP:AddPosition 成功
+092421: got order:BUY 0 IF1410 @Mkt [9280003] 0 Filled:0 Status:Unknown PostFlag:UNKNOWN OrderRef: OrderSeq:0 HedgeFlag: OrderExchID:
+092421: Got Order[Check1]:BUY 1 IF1410 @Mkt [9280003] 635473202115781253 Filled:0 Status:Unknown PostFlag:UNKNOWN OrderRef: OrderSeq:1049 HedgeFlag: OrderExchID:
+092421: Got Order[Check2]:BUY 1 IF1410 @Mkt [9280003] 635473202115781253 Filled:0 Status:Unknown PostFlag:OPEN OrderRef: OrderSeq:1049 HedgeFlag: OrderExchID:
+092421: 检查委托 635473202115781253
+092421: Order[635473202115781253] try to 开仓 操作方向:多头持仓
+092421: Got  Order:BUY 1 IF1410 @Mkt [9280003] 635473202115781253 Filled:0 Status:Placed PostFlag:OPEN OrderRef: OrderSeq:1049 HedgeFlag: OrderExchID:
+092421: Send  Order to Broker Side | BUY 1 IF1410 @Mkt [9280003] 635473202115781253 Filled:0 Status:Placed PostFlag:OPEN OrderRef: OrderSeq:1049 HedgeFlag: OrderExchID:
+092421: [INFO] PTT Server got order: BUY 1 IF1410 @Mkt [9280003] 635473202115781253 Filled:0 Status:Placed PostFlag:OPEN OrderRef: OrderSeq:1049 HedgeFlag: OrderExchID:
+092421: Reply order to tlserver |BUY 1 IF1410 @Mkt [9280003] 635473202115781253 Filled:0 Status:Submited PostFlag:OPEN OrderRef: OrderSeq:1049 HedgeFlag: OrderExchID:
+092421: 交易日志:Order inserted:BUY 1 IF1410 @Mkt [9280003] 635473202115781253 Filled:0 Status:Placed PostFlag:OPEN OrderRef: OrderSeq:1049 HedgeFlag: OrderExchID: 成功
+092421: Got  Order:BUY 1 IF1410 @Mkt [9280003] 635473202115781253 Filled:0 Status:Submited PostFlag:OPEN OrderRef: OrderSeq:1049 HedgeFlag: OrderExchID:
+092421: 交易日志:Order update:BUY 1 IF1410 @Mkt [9280003] 635473202115781253 Filled:0 Status:Submited PostFlag:OPEN OrderRef: OrderSeq:1049 HedgeFlag: OrderExchID: 成功
+092421: [INFO] PTT Server queueing order: BUY 1 IF1410 @Mkt [9280003] 635473202115781253 Filled:0 Status:Placed PostFlag:OPEN OrderRef: OrderSeq:1049 HedgeFlag: OrderExchID:
+092421: [INFO] PTT Server filled: 20140927-2431 [9280003] BOT 1 IF1410 FUT  @2455.600000 C:-1 Via:Broker.SIM.SIMTrader/000000 OP:UNKNOWN
+092421: Reply order to tlserver |BUY 1 IF1410 @Mkt [9280003] 635473202115781253 Filled:0 Status:Opened PostFlag:OPEN OrderRef: OrderSeq:1049 HedgeFlag: OrderExchID:1049
+092421: Reply order to tlserver |BUY 1 IF1410 @Mkt [9280003] 635473202115781253 Filled:1 Status:Filled PostFlag:OPEN OrderRef: OrderSeq:1049 HedgeFlag: OrderExchID:1049
+092421: Reply Fill to tlserver |20140927-2431 [9280003] BOT 1 IF1410 FUT  @2455.600000 C:-1 Via:Broker.SIM.SIMTrader/000000 OP:UNKNOWN
+092421: Got  Order:BUY 1 IF1410 @Mkt [9280003] 635473202115781253 Filled:0 Status:Opened PostFlag:OPEN OrderRef: OrderSeq:1049 HedgeFlag: OrderExchID:1049
+092421: Got  Order:BUY 1 IF1410 @Mkt [9280003] 635473202115781253 Filled:1 Status:Filled PostFlag:OPEN OrderRef: OrderSeq:1049 HedgeFlag: OrderExchID:1049
+092421: Got Fill:20140927-2431 [9280003] BOT 1 IF1410 FUT  @2455.600000 C:22.10040000000000 Via:Broker.SIM.SIMTrader/000000 OP:AddPosition
+092421: 交易日志:Order update:BUY 1 IF1410 @Mkt [9280003] 635473202115781253 Filled:0 Status:Opened PostFlag:OPEN OrderRef: OrderSeq:1049 HedgeFlag: OrderExchID:1049 成功
+092421: 交易日志:Order update:BUY 1 IF1410 @Mkt [9280003] 635473202115781253 Filled:1 Status:Filled PostFlag:OPEN OrderRef: OrderSeq:1049 HedgeFlag: OrderExchID:1049 成功
+092421: 交易日志:Trade inserted:20140927-2431 [9280003] BOT 1 IF1410 FUT  @2455.600000 C:22.10040000000000 Via:Broker.SIM.SIMTrader/000000 OP:AddPosition 成功
+092422: got order:BUY 0 IF1410 @Mkt [9280003] 0 Filled:0 Status:Unknown PostFlag:UNKNOWN OrderRef: OrderSeq:0 HedgeFlag: OrderExchID:
+092422: Got Order[Check1]:BUY 1 IF1410 @Mkt [9280003] 635473202115781254 Filled:0 Status:Unknown PostFlag:UNKNOWN OrderRef: OrderSeq:1050 HedgeFlag: OrderExchID:
+092422: Got Order[Check2]:BUY 1 IF1410 @Mkt [9280003] 635473202115781254 Filled:0 Status:Unknown PostFlag:OPEN OrderRef: OrderSeq:1050 HedgeFlag: OrderExchID:
+092422: 检查委托 635473202115781254
+092422: Order[635473202115781254] try to 开仓 操作方向:多头持仓
+092422: Got  Order:BUY 1 IF1410 @Mkt [9280003] 635473202115781254 Filled:0 Status:Placed PostFlag:OPEN OrderRef: OrderSeq:1050 HedgeFlag: OrderExchID:
+092422: Send  Order to Broker Side | BUY 1 IF1410 @Mkt [9280003] 635473202115781254 Filled:0 Status:Placed PostFlag:OPEN OrderRef: OrderSeq:1050 HedgeFlag: OrderExchID:
+092422: [INFO] PTT Server got order: BUY 1 IF1410 @Mkt [9280003] 635473202115781254 Filled:0 Status:Placed PostFlag:OPEN OrderRef: OrderSeq:1050 HedgeFlag: OrderExchID:
+092422: Reply order to tlserver |BUY 1 IF1410 @Mkt [9280003] 635473202115781254 Filled:0 Status:Submited PostFlag:OPEN OrderRef: OrderSeq:1050 HedgeFlag: OrderExchID:
+092422: 交易日志:Order inserted:BUY 1 IF1410 @Mkt [9280003] 635473202115781254 Filled:0 Status:Placed PostFlag:OPEN OrderRef: OrderSeq:1050 HedgeFlag: OrderExchID: 成功
+092422: [INFO] PTT Server queueing order: BUY 1 IF1410 @Mkt [9280003] 635473202115781254 Filled:0 Status:Placed PostFlag:OPEN OrderRef: OrderSeq:1050 HedgeFlag: OrderExchID:
+092422: [INFO] PTT Server filled: 20140927-2432 [9280003] BOT 1 IF1410 FUT  @2455.600000 C:-1 Via:Broker.SIM.SIMTrader/000000 OP:UNKNOWN
+092422: Reply order to tlserver |BUY 1 IF1410 @Mkt [9280003] 635473202115781254 Filled:0 Status:Opened PostFlag:OPEN OrderRef: OrderSeq:1050 HedgeFlag: OrderExchID:1050
+092422: Reply order to tlserver |BUY 1 IF1410 @Mkt [9280003] 635473202115781254 Filled:1 Status:Filled PostFlag:OPEN OrderRef: OrderSeq:1050 HedgeFlag: OrderExchID:1050
+092422: Reply Fill to tlserver |20140927-2432 [9280003] BOT 1 IF1410 FUT  @2455.600000 C:-1 Via:Broker.SIM.SIMTrader/000000 OP:UNKNOWN
+092422: Got  Order:BUY 1 IF1410 @Mkt [9280003] 635473202115781254 Filled:0 Status:Submited PostFlag:OPEN OrderRef: OrderSeq:1050 HedgeFlag: OrderExchID:
+092422: Got  Order:BUY 1 IF1410 @Mkt [9280003] 635473202115781254 Filled:0 Status:Opened PostFlag:OPEN OrderRef: OrderSeq:1050 HedgeFlag: OrderExchID:1050
+092422: Got  Order:BUY 1 IF1410 @Mkt [9280003] 635473202115781254 Filled:1 Status:Filled PostFlag:OPEN OrderRef: OrderSeq:1050 HedgeFlag: OrderExchID:1050
+092422: Got Fill:20140927-2432 [9280003] BOT 1 IF1410 FUT  @2455.600000 C:22.10040000000000 Via:Broker.SIM.SIMTrader/000000 OP:AddPosition
+092422: 交易日志:Order update:BUY 1 IF1410 @Mkt [9280003] 635473202115781254 Filled:0 Status:Submited PostFlag:OPEN OrderRef: OrderSeq:1050 HedgeFlag: OrderExchID: 成功
+092422: 交易日志:Order update:BUY 1 IF1410 @Mkt [9280003] 635473202115781254 Filled:0 Status:Opened PostFlag:OPEN OrderRef: OrderSeq:1050 HedgeFlag: OrderExchID:1050 成功
+092422: 交易日志:Order update:BUY 1 IF1410 @Mkt [9280003] 635473202115781254 Filled:1 Status:Filled PostFlag:OPEN OrderRef: OrderSeq:1050 HedgeFlag: OrderExchID:1050 成功
+092422: 交易日志:Trade inserted:20140927-2432 [9280003] BOT 1 IF1410 FUT  @2455.600000 C:22.10040000000000 Via:Broker.SIM.SIMTrader/000000 OP:AddPosition 成功
+092425: got order:BUY 0 IF1410 @2,400.00 [9280003] 0 Filled:0 Status:Unknown PostFlag:UNKNOWN OrderRef: OrderSeq:0 HedgeFlag: OrderExchID:
+092425: Got Order[Check1]:BUY 1 IF1410 @2,400.00 [9280003] 635473202115781255 Filled:0 Status:Unknown PostFlag:UNKNOWN OrderRef: OrderSeq:1051 HedgeFlag: OrderExchID:
+092425: Got Order[Check2]:BUY 1 IF1410 @2,400.00 [9280003] 635473202115781255 Filled:0 Status:Unknown PostFlag:OPEN OrderRef: OrderSeq:1051 HedgeFlag: OrderExchID:
+092425: 检查委托 635473202115781255
+092425: Order[635473202115781255] try to 开仓 操作方向:多头持仓
+092425: Got  Order:BUY 1 IF1410 @2,400.00 [9280003] 635473202115781255 Filled:0 Status:Placed PostFlag:OPEN OrderRef: OrderSeq:1051 HedgeFlag: OrderExchID:
+092425: Send  Order to Broker Side | BUY 1 IF1410 @2,400.00 [9280003] 635473202115781255 Filled:0 Status:Placed PostFlag:OPEN OrderRef: OrderSeq:1051 HedgeFlag: OrderExchID:
+092425: [INFO] PTT Server got order: BUY 1 IF1410 @2,400.00 [9280003] 635473202115781255 Filled:0 Status:Placed PostFlag:OPEN OrderRef: OrderSeq:1051 HedgeFlag: OrderExchID:
+092425: Reply order to tlserver |BUY 1 IF1410 @2,400.00 [9280003] 635473202115781255 Filled:0 Status:Submited PostFlag:OPEN OrderRef: OrderSeq:1051 HedgeFlag: OrderExchID:
+092425: 交易日志:Order inserted:BUY 1 IF1410 @2,400.00 [9280003] 635473202115781255 Filled:0 Status:Placed PostFlag:OPEN OrderRef: OrderSeq:1051 HedgeFlag: OrderExchID: 成功
+092425: Got  Order:BUY 1 IF1410 @2,400.00 [9280003] 635473202115781255 Filled:0 Status:Submited PostFlag:OPEN OrderRef: OrderSeq:1051 HedgeFlag: OrderExchID:
+092425: 交易日志:Order update:BUY 1 IF1410 @2,400.00 [9280003] 635473202115781255 Filled:0 Status:Submited PostFlag:OPEN OrderRef: OrderSeq:1051 HedgeFlag: OrderExchID: 成功
+092425: [INFO] PTT Server queueing order: BUY 1 IF1410 @2,400.00 [9280003] 635473202115781255 Filled:0 Status:Placed PostFlag:OPEN OrderRef: OrderSeq:1051 HedgeFlag: OrderExchID:
+092425: Reply order to tlserver |BUY 1 IF1410 @2,400.00 [9280003] 635473202115781255 Filled:0 Status:Opened PostFlag:OPEN OrderRef: OrderSeq:1051 HedgeFlag: OrderExchID:1051
+092425: Got  Order:BUY 1 IF1410 @2,400.00 [9280003] 635473202115781255 Filled:0 Status:Opened PostFlag:OPEN OrderRef: OrderSeq:1051 HedgeFlag: OrderExchID:1051
+092425: 交易日志:Order update:BUY 1 IF1410 @2,400.00 [9280003] 635473202115781255 Filled:0 Status:Opened PostFlag:OPEN OrderRef: OrderSeq:1051 HedgeFlag: OrderExchID:1051 成功
+092425: got order:BUY 0 IF1410 @2,400.00 [9280003] 0 Filled:0 Status:Unknown PostFlag:UNKNOWN OrderRef: OrderSeq:0 HedgeFlag: OrderExchID:
+092425: Got Order[Check1]:BUY 1 IF1410 @2,400.00 [9280003] 635473202115781256 Filled:0 Status:Unknown PostFlag:UNKNOWN OrderRef: OrderSeq:1052 HedgeFlag: OrderExchID:
+092425: Got Order[Check2]:BUY 1 IF1410 @2,400.00 [9280003] 635473202115781256 Filled:0 Status:Unknown PostFlag:OPEN OrderRef: OrderSeq:1052 HedgeFlag: OrderExchID:
+092425: 检查委托 635473202115781256
+092425: Order[635473202115781256] try to 开仓 操作方向:多头持仓
+092425: Got  Order:BUY 1 IF1410 @2,400.00 [9280003] 635473202115781256 Filled:0 Status:Placed PostFlag:OPEN OrderRef: OrderSeq:1052 HedgeFlag: OrderExchID:
+092425: Send  Order to Broker Side | BUY 1 IF1410 @2,400.00 [9280003] 635473202115781256 Filled:0 Status:Placed PostFlag:OPEN OrderRef: OrderSeq:1052 HedgeFlag: OrderExchID:
+092425: [INFO] PTT Server got order: BUY 1 IF1410 @2,400.00 [9280003] 635473202115781256 Filled:0 Status:Placed PostFlag:OPEN OrderRef: OrderSeq:1052 HedgeFlag: OrderExchID:
+092425: Reply order to tlserver |BUY 1 IF1410 @2,400.00 [9280003] 635473202115781256 Filled:0 Status:Submited PostFlag:OPEN OrderRef: OrderSeq:1052 HedgeFlag: OrderExchID:
+092425: 交易日志:Order inserted:BUY 1 IF1410 @2,400.00 [9280003] 635473202115781256 Filled:0 Status:Placed PostFlag:OPEN OrderRef: OrderSeq:1052 HedgeFlag: OrderExchID: 成功
+092425: Got  Order:BUY 1 IF1410 @2,400.00 [9280003] 635473202115781256 Filled:0 Status:Submited PostFlag:OPEN OrderRef: OrderSeq:1052 HedgeFlag: OrderExchID:
+092425: 交易日志:Order update:BUY 1 IF1410 @2,400.00 [9280003] 635473202115781256 Filled:0 Status:Submited PostFlag:OPEN OrderRef: OrderSeq:1052 HedgeFlag: OrderExchID: 成功
+092425: [INFO] PTT Server queueing order: BUY 1 IF1410 @2,400.00 [9280003] 635473202115781256 Filled:0 Status:Placed PostFlag:OPEN OrderRef: OrderSeq:1052 HedgeFlag: OrderExchID:
+092425: Reply order to tlserver |BUY 1 IF1410 @2,400.00 [9280003] 635473202115781256 Filled:0 Status:Opened PostFlag:OPEN OrderRef: OrderSeq:1052 HedgeFlag: OrderExchID:1052
+092425: Got  Order:BUY 1 IF1410 @2,400.00 [9280003] 635473202115781256 Filled:0 Status:Opened PostFlag:OPEN OrderRef: OrderSeq:1052 HedgeFlag: OrderExchID:1052
+092425: 交易日志:Order update:BUY 1 IF1410 @2,400.00 [9280003] 635473202115781256 Filled:0 Status:Opened PostFlag:OPEN OrderRef: OrderSeq:1052 HedgeFlag: OrderExchID:1052 成功
+092442: 管理员:888888 请求修改投资者信息:Packet Type:MGRCHANGEINVESTOR Content:9280003,3333,华西期货,未设置,未设置|21 FrontID: Client:e0555d0e-3871-4dbc-831b-20d70e45ffd1 Size:56
+092527: 管理员:888888 请求修改投资者信息:Packet Type:MGRCHANGEINVESTOR Content:9280003,3333,华西期货,未设置,未设置|22 FrontID: Client:e0555d0e-3871-4dbc-831b-20d70e45ffd1 Size:56
+092527: account changed,will send to manager montier
+092527: 转发 account setting change
+092536: 客户端:0ecb25bf-73ad-48b4-9a07-f265eaa53b0a FrontID:  FrontType:Direct Unregisted from system..
+092536: Client:0ecb25bf-73ad-48b4-9a07-f265eaa53b0a unregist from tlserver
+092537: 管理员:888888 请求修改投资者信息:Packet Type:MGRCHANGEINVESTOR Content:9280003,3333,华西期货,1,44444444444|23 FrontID: Client:e0555d0e-3871-4dbc-831b-20d70e45ffd1 Size:50
+092537: account changed,will send to manager montier
+092537: 转发 account setting change
+092547: 管理员:888888 请求恢复交易数据,帐号:9280003
+092547: resuem account:9280003
+092549: got order action:Packet Type:SENDORDERACTION Content:9280003,Delete,635473202115781256,0,0,,,,|26 FrontID: Client:e0555d0e-3871-4dbc-831b-20d70e45ffd1 Size:52
+092549: got order action:Packet Type:SENDORDERACTION Content:9280003,Delete,635473202115781255,0,0,,,,|25 FrontID: Client:e0555d0e-3871-4dbc-831b-20d70e45ffd1 Size:52
+092549: Got CancelOrder :635473202115781256
+092549: Got CancelOrder :635473202115781255
+092549: BrokerRouter:Route Cancel to Broker Side |635473202115781256
+092549: BrokerRouter:Route Cancel to Broker Side |635473202115781255
+092549: [INFO]  PTT got cancel: 635473202115781256
+092549: [INFO]  PTT got cancel: 635473202115781255
+092549: [INFO]  PTT queueing cancel: 635473202115781256
+092549: [INFO]  PTT queueing cancel: 635473202115781255
+092549: [INFO] PTT Server canceled: 635473202115781255
+092549: [INFO] PTT Server canceled: 635473202115781256
+092549: Reply order to tlserver |BUY 1 IF1410 @2,400.00 [9280003] 635473202115781255 Filled:0 Status:Canceled PostFlag:OPEN OrderRef: OrderSeq:1051 HedgeFlag: OrderExchID:1051
+092549: Reply order to tlserver |BUY 1 IF1410 @2,400.00 [9280003] 635473202115781256 Filled:0 Status:Canceled PostFlag:OPEN OrderRef: OrderSeq:1052 HedgeFlag: OrderExchID:1052
+092549: Got  Order:BUY 1 IF1410 @2,400.00 [9280003] 635473202115781255 Filled:0 Status:Canceled PostFlag:OPEN OrderRef: OrderSeq:1051 HedgeFlag: OrderExchID:1051
+092549: Got  Order:BUY 1 IF1410 @2,400.00 [9280003] 635473202115781256 Filled:0 Status:Canceled PostFlag:OPEN OrderRef: OrderSeq:1052 HedgeFlag: OrderExchID:1052
+092549: Got cancel:635473202115781255
+092549: 获得取消回报..635473202115781255
+092549: Got cancel:635473202115781256
+092549: 获得取消回报..635473202115781256
+092549: 交易日志:Order update:BUY 1 IF1410 @2,400.00 [9280003] 635473202115781255 Filled:0 Status:Canceled PostFlag:OPEN OrderRef: OrderSeq:1051 HedgeFlag: OrderExchID:1051 成功
+092549: 交易日志:Order update:BUY 1 IF1410 @2,400.00 [9280003] 635473202115781256 Filled:0 Status:Canceled PostFlag:OPEN OrderRef: OrderSeq:1052 HedgeFlag: OrderExchID:1052 成功
+092549: 交易日志:orderaction inserted9280003,Delete,635473202115781255,0,0,,,, 成功
+092549: 交易日志:orderaction inserted9280003,Delete,635473202115781256,0,0,,,, 成功
+092552: got order:SELL -4 IF1410 @Mkt [9280003] 0 Filled:0 Status:Unknown PostFlag:CLOSE OrderRef: OrderSeq:0 HedgeFlag: OrderExchID:
+092552: Got Order[Check1]:SELL -4 IF1410 @Mkt [9280003] 635473202115781257 Filled:0 Status:Unknown PostFlag:CLOSE OrderRef: OrderSeq:1053 HedgeFlag: OrderExchID:
+092552: Got Order[Check2]:SELL -4 IF1410 @Mkt [9280003] 635473202115781257 Filled:0 Status:Unknown PostFlag:CLOSE OrderRef: OrderSeq:1053 HedgeFlag: OrderExchID:
+092552: 检查委托 635473202115781257
+092552: Order[635473202115781257] try to 平仓 操作方向:多头持仓
+092552: Order try to exit postion,pos size:4 pending exit size:0 osize:4 offsetflag:CLOSE
+092552: Got  Order:SELL -4 IF1410 @Mkt [9280003] 635473202115781257 Filled:0 Status:Placed PostFlag:CLOSE OrderRef: OrderSeq:1053 HedgeFlag: OrderExchID:
+092552: Send  Order to Broker Side | SELL -4 IF1410 @Mkt [9280003] 635473202115781257 Filled:0 Status:Placed PostFlag:CLOSE OrderRef: OrderSeq:1053 HedgeFlag: OrderExchID:
+092552: [INFO] PTT Server got order: SELL -4 IF1410 @Mkt [9280003] 635473202115781257 Filled:0 Status:Placed PostFlag:CLOSE OrderRef: OrderSeq:1053 HedgeFlag: OrderExchID:
+092552: Reply order to tlserver |SELL -4 IF1410 @Mkt [9280003] 635473202115781257 Filled:0 Status:Submited PostFlag:CLOSE OrderRef: OrderSeq:1053 HedgeFlag: OrderExchID:
+092552: 交易日志:Order inserted:SELL -4 IF1410 @Mkt [9280003] 635473202115781257 Filled:0 Status:Placed PostFlag:CLOSE OrderRef: OrderSeq:1053 HedgeFlag: OrderExchID: 成功
+092552: Got  Order:SELL -4 IF1410 @Mkt [9280003] 635473202115781257 Filled:0 Status:Submited PostFlag:CLOSE OrderRef: OrderSeq:1053 HedgeFlag: OrderExchID:
+092552: 交易日志:Order update:SELL -4 IF1410 @Mkt [9280003] 635473202115781257 Filled:0 Status:Submited PostFlag:CLOSE OrderRef: OrderSeq:1053 HedgeFlag: OrderExchID: 成功
+092552: [INFO] PTT Server queueing order: SELL -4 IF1410 @Mkt [9280003] 635473202115781257 Filled:0 Status:Placed PostFlag:CLOSE OrderRef: OrderSeq:1053 HedgeFlag: OrderExchID:
+092552: [INFO] PTT Server filled: 20140927-2602 [9280003] SOD 4 IF1410 FUT  @2456.600000 C:-1 Via:Broker.SIM.SIMTrader/000000 OP:UNKNOWN
+092552: Reply order to tlserver |SELL -4 IF1410 @Mkt [9280003] 635473202115781257 Filled:0 Status:Opened PostFlag:CLOSE OrderRef: OrderSeq:1053 HedgeFlag: OrderExchID:1053
+092552: Reply order to tlserver |SELL -4 IF1410 @Mkt [9280003] 635473202115781257 Filled:4 Status:Filled PostFlag:CLOSE OrderRef: OrderSeq:1053 HedgeFlag: OrderExchID:1053
+092552: Reply Fill to tlserver |20140927-2602 [9280003] SOD 4 IF1410 FUT  @2456.600000 C:-1 Via:Broker.SIM.SIMTrader/000000 OP:UNKNOWN
+092552: Got  Order:SELL -4 IF1410 @Mkt [9280003] 635473202115781257 Filled:0 Status:Opened PostFlag:CLOSE OrderRef: OrderSeq:1053 HedgeFlag: OrderExchID:1053
+092552: Got  Order:SELL -4 IF1410 @Mkt [9280003] 635473202115781257 Filled:4 Status:Filled PostFlag:CLOSE OrderRef: OrderSeq:1053 HedgeFlag: OrderExchID:1053
+092552: Got Fill:20140927-2602 [9280003] SOD 4 IF1410 FUT  @2456.600000 C:88.43760000000000 Via:Broker.SIM.SIMTrader/000000 OP:ExitPosition
+092552: 交易日志:Order update:SELL -4 IF1410 @Mkt [9280003] 635473202115781257 Filled:0 Status:Opened PostFlag:CLOSE OrderRef: OrderSeq:1053 HedgeFlag: OrderExchID:1053 成功
+092552: 交易日志:Order update:SELL -4 IF1410 @Mkt [9280003] 635473202115781257 Filled:4 Status:Filled PostFlag:CLOSE OrderRef: OrderSeq:1053 HedgeFlag: OrderExchID:1053 成功
+092552: 交易日志:Trade inserted:20140927-2602 [9280003] SOD 4 IF1410 FUT  @2456.600000 C:88.43760000000000 Via:Broker.SIM.SIMTrader/000000 OP:ExitPosition 成功
+092552: 交易日志:PosTransaction inserted: 成功
+092601: 管理员:888888 请求设定观察列表:Packet Type:MGRWATCHACCOUNTS Content:|28 FrontID: Client:e0555d0e-3871-4dbc-831b-20d70e45ffd1 Size:11
+092606: 管理员:888888 请求设定观察列表:Packet Type:MGRWATCHACCOUNTS Content:|29 FrontID: Client:e0555d0e-3871-4dbc-831b-20d70e45ffd1 Size:11
+092609: 管理员:888888 请求设定观察列表:Packet Type:MGRWATCHACCOUNTS Content:4444,9280001,9280002,9280003,9280004,9280005,9580001,9680001,9680002|30 FrontID: Client:e0555d0e-3871-4dbc-831b-20d70e45ffd1 Size:79
+092619: 管理员:888888 请求查询交易帐户信息,帐号:9280003
+092619: 管理员:888888 请求查询帐户分控规则列表:Packet Type:MGRQRYRULEITEM Content:9280003,OrderRule|32 FrontID: Client:e0555d0e-3871-4dbc-831b-20d70e45ffd1 Size:28
+092620: 管理员:888888 请求查询帐户分控规则列表:Packet Type:MGRQRYRULEITEM Content:9280003,AccountRule|33 FrontID: Client:e0555d0e-3871-4dbc-831b-20d70e45ffd1 Size:30
+092836: 客户端:e0555d0e-3871-4dbc-831b-20d70e45ffd1 FrontID:  FrontType:Direct Unregisted from system..
+092836: Client:e0555d0e-3871-4dbc-831b-20d70e45ffd1 unregist from tlserver
