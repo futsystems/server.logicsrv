@@ -422,6 +422,7 @@ namespace TradingLib.Core
             IList<CashTransaction> cts = ORM.MAccount.SelectHistCashTransaction(request.TradingAccount, 0, 0);
             IAccount account = _clearcentre[request.TradingAccount];
             int totalnum = cts.Count;
+            debug("total transfer num:" + totalnum.ToString(), QSEnumDebugLevel.INFO);
             if (totalnum > 0)
             {
                 for (int i = 0; i < totalnum; i++)
@@ -431,7 +432,7 @@ namespace TradingLib.Core
                     response.Date = Util.ToTLDate(t.DateTime);
                     response.Time = Util.ToTLTime(t.DateTime);
                     response.TradingAccount = request.TradingAccount;
-                    response.TradingAccount = account.BankAC;
+                    response.BankAccount = account.GetCustBankAC();
                     response.Amount = t.Amount;
                     response.TransRef = t.TransRef;
                     CacheRspResponse(response, i == totalnum - 1);

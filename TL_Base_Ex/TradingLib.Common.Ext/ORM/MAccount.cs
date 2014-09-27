@@ -327,7 +327,15 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("SELECT * FROM  {0}  WHERE settleday >='{1}' AND settleday <='{2}' AND account='{3}'", "log_cashtrans", begin, end, account);
+                string query = string.Empty;
+                if (begin == 0 && end == 0)
+                {
+                    query = string.Format("SELECT * FROM  {0}  WHERE account='{1}'", "log_cashtrans",account);
+                }
+                else
+                {
+                    query = string.Format("SELECT * FROM  {0}  WHERE settleday >='{1}' AND settleday <='{2}' AND account='{3}'", "log_cashtrans", begin, end, account);
+                }
                 IList<CashTransaction> cts = db.Connection.Query<CashTransaction>(query).ToArray();
 
                 return cts;
