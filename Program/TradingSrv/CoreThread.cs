@@ -120,6 +120,9 @@ namespace TraddingSrvCLI
             debug(">>> Wire Ctx Event....");
             coreMgr.WireCtxEvent();
 
+            debug(">>> Set DebugConfig....");
+            coreMgr.ApplyDebugConfig();
+            coreMgr.DebugAll();
             //3.绑定扩展模块调用事件
             debug(">>> Wire Contrib Event....");
             TLCtxHelper.BindContribEvent();

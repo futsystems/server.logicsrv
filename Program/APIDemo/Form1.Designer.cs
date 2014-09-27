@@ -65,6 +65,8 @@
             this.qryorder_symbol = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label32 = new System.Windows.Forms.Label();
+            this.submintnum = new System.Windows.Forms.TextBox();
             this.qrysettle_day = new System.Windows.Forms.TextBox();
             this.label31 = new System.Windows.Forms.Label();
             this.offsetflag = new System.Windows.Forms.ComboBox();
@@ -113,8 +115,6 @@
             this.qrytrade_symbol = new System.Windows.Forms.TextBox();
             this.label16 = new System.Windows.Forms.Label();
             this.ctDebug1 = new APIDemo.DebugControl();
-            this.label32 = new System.Windows.Forms.Label();
-            this.submintnum = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -194,7 +194,7 @@
             this.passwd.Name = "passwd";
             this.passwd.Size = new System.Drawing.Size(75, 21);
             this.passwd.TabIndex = 16;
-            this.passwd.Text = "4444";
+            this.passwd.Text = "123456";
             // 
             // label4
             // 
@@ -207,11 +207,11 @@
             // 
             // loginid
             // 
-            this.loginid.Location = new System.Drawing.Point(55, 91);
+            this.loginid.Location = new System.Drawing.Point(64, 91);
             this.loginid.Name = "loginid";
-            this.loginid.Size = new System.Drawing.Size(100, 21);
+            this.loginid.Size = new System.Drawing.Size(91, 21);
             this.loginid.TabIndex = 14;
-            this.loginid.Text = "4444";
+            this.loginid.Text = "9280001";
             // 
             // label5
             // 
@@ -529,13 +529,30 @@
             this.groupBox1.Text = "groupBox1";
             this.groupBox1.Enter += new System.EventHandler(this.groupBox1_Enter);
             // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(289, 212);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(29, 12);
+            this.label32.TabIndex = 96;
+            this.label32.Text = "循环";
+            // 
+            // submintnum
+            // 
+            this.submintnum.Location = new System.Drawing.Point(319, 203);
+            this.submintnum.Name = "submintnum";
+            this.submintnum.Size = new System.Drawing.Size(61, 21);
+            this.submintnum.TabIndex = 97;
+            this.submintnum.Text = "1";
+            // 
             // qrysettle_day
             // 
             this.qrysettle_day.Location = new System.Drawing.Point(78, 351);
             this.qrysettle_day.Name = "qrysettle_day";
             this.qrysettle_day.Size = new System.Drawing.Size(197, 21);
             this.qrysettle_day.TabIndex = 95;
-            this.qrysettle_day.Text = "0";
+            this.qrysettle_day.Text = "20140926";
             // 
             // label31
             // 
@@ -960,23 +977,6 @@
             this.ctDebug1.TabIndex = 0;
             this.ctDebug1.TimeStamps = true;
             this.ctDebug1.UseExternalTimeStamp = false;
-            // 
-            // label32
-            // 
-            this.label32.AutoSize = true;
-            this.label32.Location = new System.Drawing.Point(289, 212);
-            this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(29, 12);
-            this.label32.TabIndex = 96;
-            this.label32.Text = "循环";
-            // 
-            // submintnum
-            // 
-            this.submintnum.Location = new System.Drawing.Point(319, 203);
-            this.submintnum.Name = "submintnum";
-            this.submintnum.Size = new System.Drawing.Size(61, 21);
-            this.submintnum.TabIndex = 97;
-            this.submintnum.Text = "1";
             // 
             // Form1
             // 

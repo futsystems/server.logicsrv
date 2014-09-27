@@ -19,7 +19,7 @@ namespace APIDemo
     {
         void debug(string msg)
         {
-            //ctDebug1.GotDebug(msg);
+            ctDebug1.GotDebug(msg);
         }
         public Form1()
         {

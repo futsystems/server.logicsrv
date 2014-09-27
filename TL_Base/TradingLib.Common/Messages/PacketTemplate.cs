@@ -154,7 +154,9 @@ namespace TradingLib.Common
                     //请求查询银行帐户
                     case MessageTypes.QRYREGISTERBANKACCOUNT:
                         return RequestTemplate<QryRegisterBankAccountRequest>.SrvRecvRequest(frontid, clientid, content);
-
+                    //查询出入金流水记录
+                    case MessageTypes.QRYTRANSFERSERIAL:
+                        return RequestTemplate<QryTransferSerialRequest>.SrvRecvRequest(frontid, clientid, content);
 
 
 
@@ -324,7 +326,8 @@ namespace TradingLib.Common
                     return ResponseTemplate<RspQryContractBankResponse>.CliRecvResponse(content);
                 case MessageTypes.REGISTERBANKACCOUNTRESPONSE://查询银行帐户回报
                     return ResponseTemplate<RspQryRegisterBankAccountResponse>.CliRecvResponse(content);
-
+                case MessageTypes.TRANSFERSERIALRESPONSE://查询出入金流水回报
+                    return ResponseTemplate<RspQryTransferSerialResponse>.CliRecvResponse(content);
                 case MessageTypes.TICKNOTIFY:
                     TickNotify ticknotify = new TickNotify();
                     ticknotify.Tick = TickImpl.Deserialize(content);

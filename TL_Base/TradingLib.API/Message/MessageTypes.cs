@@ -83,7 +83,9 @@ namespace TradingLib.API
         CONFIRMSETTLEMENT,//确认结算数据
         QRYCONTRACTBANK,//查询签约银行
         QRYREGISTERBANKACCOUNT,//查询银期转账帐户
-        
+        QRYTRANSFERSERIAL,//查询转账流水
+
+
         DOMREQUEST,//请求DOM市场Level2数据
         IMBALANCEREQUEST,//imbalance..查询这个是什么意思
 
@@ -126,7 +128,7 @@ namespace TradingLib.API
         CONFIRMSETTLEMENTRESPONSE,//确认结算回报
         CONTRACTBANKRESPONSE,//查询签约银行回报
         REGISTERBANKACCOUNTRESPONSE,//查询银期签约帐户回报
-
+        TRANSFERSERIALRESPONSE,//查询转账流水回报
         // END STANDARD MESSAGES
 
 

@@ -58,6 +58,7 @@
     <Reference Include="TelerikCommon, Version=2013.2.612.40, Culture=neutral, PublicKeyToken=5bb2a467cbec794e, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Messages\QryTransferSerial.cs" />
     <Compile Include="Other\LogItem.cs" />
     <Compile Include="Trading\SymbolUtils.cs" />
     <Compile Include="Utils\ConfigFile.cs" />

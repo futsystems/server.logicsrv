@@ -11,7 +11,7 @@ namespace TradingLib.Core
     /// 结算辅助类
     /// 用于生成结算单
     /// </summary>
-    public class SettlementHelper
+    public class SettlementFactory
     {
 
 
@@ -53,16 +53,29 @@ namespace TradingLib.Core
             return string.Format("{0," + section_location.ToString() + "}", name);
         }
 
+        static ConfigDB _cfgdb = null;
+        static string comment = string.Empty;
+        static SettlementFactory()
+        {
+            _cfgdb = new ConfigDB("SettlementFactory");
+            if (!_cfgdb.HaveConfig("Comment"))
+            {
+                _cfgdb.UpdateConfig("Comment", QSEnumCfgType.String, "对结算单如有疑问，请于下一交易日上午11:00以前到结算部查询，过期责任自负！！！", "结算单最后免责声明");
+            }
+            comment = _cfgdb["Comment"].AsString();
+        }
         public static List<string> GenSettlementFile(Settlement s,IAccount account)
         {
             List<string> settlelist = new List<string>();
 
             //查询历史持仓 计算保证金占用
             IList<SettlePosition> positions = ORM.MTradingInfo.SelectHistPositions(s.Account, s.SettleDay, s.SettleDay);
-            decimal margin=0;
+            IList<Trade> trades = ORM.MTradingInfo.SelectHistTrades(s.Account, s.SettleDay, s.SettleDay);
+
+            decimal margin = 0;
             foreach(SettlePosition pos in positions)
             {
-                margin += Math.Abs(pos.Size * pos.SettlePrice * pos.Multiple * 0.1M);
+                margin += Math.Abs(pos.Size * pos.SettlePrice * pos.Multiple * 0.1M);//结算持仓数据总包含对应的保证金记录 这样下次读取时直接累加即可
             }
 
             settlelist.Add(NewLine);
@@ -82,29 +95,39 @@ namespace TradingLib.Core
             settlelist.Add(string.Format(tp_onefield, FieldName("总盈亏", fieldwidth_total), s.RealizedPL+s.UnRealizedPL-s.Commission));
             settlelist.Add(NewLine);
             settlelist.Add(NewLine);
-            settlelist.Add(SectionName("成交明细"));
-            settlelist.Add(line);
-            //settlelist.Add("|成交日期|交易所|品种|交割期|买卖|投保|成交价|手数|成交额|开平|手续费|平仓盈亏|成交序号".Replace('|', '*'));
-            settlelist.Add(string.Format("|{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|{10}|{11}|{12}|", padRightEx("成交日期",10), padRightEx("交易所",8), padRightEx("品种",20), padRightEx("交割期",8), padRightEx("买卖",4), padRightEx("投保",4), padRightEx("成交价",8), padRightEx("手数",4), padRightEx("成交额",10), padRightEx("开平",4), padRightEx("手续费",8), padRightEx("平仓盈亏",10), padRightEx("成交序号",10)).Replace('|', '*'));
-            foreach (Trade t in ORM.MTradingInfo.SelectHistTrades(s.Account, s.SettleDay, s.SettleDay))
+
+            
+            //输出成交明细
+            if (trades.Count > 0)
             {
+                settlelist.Add(SectionName("成交明细"));
+                settlelist.Add(line);
+                //settlelist.Add("|成交日期|交易所|品种|交割期|买卖|投保|成交价|手数|成交额|开平|手续费|平仓盈亏|成交序号".Replace('|', '*'));
+                settlelist.Add(string.Format("|{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|{10}|{11}|{12}|", padRightEx("成交日期", 10), padRightEx("交易所", 8), padRightEx("品种", 20), padRightEx("交割期", 8), padRightEx("买卖", 4), padRightEx("投保", 4), padRightEx("成交价", 8), padRightEx("手数", 4), padRightEx("成交额", 10), padRightEx("开平", 4), padRightEx("手续费", 8), padRightEx("平仓盈亏", 10), padRightEx("成交序号", 10)).Replace('|', '*'));
+                foreach (Trade t in trades)
+                {
 
-                settlelist.Add(string.Format(" {0} {1} {2} {3} {4} {5} {6,8:F2} {7,4} {8,10:F2} {9} {10,6:F2} {11,10:F2} {12,10}", t.xdate.ToString().PadRight(10), padRightEx(BasicTracker.ExchagneTracker.GetExchangeTitle(t.Exchange), 8), padRightEx(BasicTracker.SecurityTracker.GetSecurityName(t.SecurityCode), 20), "201415".PadRight(8), padRightEx((t.xsize > 0 ? "买" : " 卖"), 4), padRightEx("投", 4), t.xprice, Math.Abs(t.xsize), BasicTracker.SecurityTracker.GetMultiple(t.SecurityCode)*t.xprice*Math.Abs(t.xsize), padRightEx(GetCombFlag(t.OffsetFlag), 4), t.Commission, t.Profit,10101));
+                    settlelist.Add(string.Format(" {0} {1} {2} {3} {4} {5} {6,8:F2} {7,4} {8,10:F2} {9} {10,6:F2} {11,10:F2} {12,10}", t.xdate.ToString().PadRight(10), padRightEx(BasicTracker.ExchagneTracker.GetExchangeTitle(t.Exchange), 8), padRightEx(BasicTracker.SecurityTracker.GetSecurityName(t.SecurityCode), 20), "201415".PadRight(8), padRightEx((t.xsize > 0 ? "买" : " 卖"), 4), padRightEx("投", 4), t.xprice, Math.Abs(t.xsize), BasicTracker.SecurityTracker.GetMultiple(t.SecurityCode) * t.xprice * Math.Abs(t.xsize), padRightEx(GetCombFlag(t.OffsetFlag), 4), t.Commission, t.Profit, 10101));
+                }
+
+                settlelist.Add(NewLine);
+                settlelist.Add(NewLine);
             }
-
-            settlelist.Add(NewLine);
-            settlelist.Add(NewLine);
-            settlelist.Add(SectionName("持仓汇总"));
-            settlelist.Add(line);
-
-            settlelist.Add("|   合约   |买持| 买均价 |卖持| 卖均价 | 昨结算 | 今结算 |盯市盈亏|保证金占用|投保".Replace('|', '*'));
-            foreach (SettlePosition pos in positions)
+            //输出持仓明细
+            if (positions.Count > 0)
             {
-                settlelist.Add(string.Format(" {0,-10} {1,4} {2,8:F2} {3,4} {4,8:F2} {5,8:F2} {6,8:F2} {7,8:F2} {8,10:F2} {9,4}", pos.Symbol, pos.Size > 0 ? pos.Size : 0, pos.Size > 0 ? pos.AVGPrice : 0, pos.Size < 0 ? pos.Size : 0, pos.Size < 0 ? pos.AVGPrice : 0,0,pos.SettlePrice,pos.Size*(pos.SettlePrice-pos.AVGPrice)*pos.Multiple,Math.Abs(pos.AVGPrice*pos.Size*pos.Multiple*0.1M),"投"));
+                settlelist.Add(SectionName("持仓汇总"));
+                settlelist.Add(line);
+
+                settlelist.Add("|   合约   |买持| 买均价 |卖持| 卖均价 | 昨结算 | 今结算 |盯市盈亏|保证金占用|投保".Replace('|', '*'));
+                foreach (SettlePosition pos in positions)
+                {
+                    settlelist.Add(string.Format(" {0,-10} {1,4} {2,8:F2} {3,4} {4,8:F2} {5,8:F2} {6,8:F2} {7,8:F2} {8,10:F2} {9,4}", pos.Symbol, pos.Size > 0 ? pos.Size : 0, pos.Size > 0 ? pos.AVGPrice : 0, pos.Size < 0 ? pos.Size : 0, pos.Size < 0 ? pos.AVGPrice : 0, 0, pos.SettlePrice, pos.Size * (pos.SettlePrice - pos.AVGPrice) * pos.Multiple, Math.Abs(pos.AVGPrice * pos.Size * pos.Multiple * 0.1M), "投"));
+                }
+                settlelist.Add(NewLine);
+                settlelist.Add(NewLine);
             }
-            settlelist.Add(NewLine);
-            settlelist.Add(NewLine);
-            settlelist.Add("对结算单如有疑问，请于下一加以日上午11:00以前到结算部查询，过期责任自负！！！");
+            settlelist.Add(comment);
 
 
             //settlelist.Add(string.Format(tp_total, FieldName("权利金收支:", fieldwidth_total), 500, FieldName("本币证金占用:", fieldwidth_total), 3434, FieldName("交割保证金:", fieldwidth_total), 98088));

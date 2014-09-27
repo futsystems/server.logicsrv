@@ -646,7 +646,7 @@ namespace TradingLib.Core
             Settlement settlement = ORM.MSettlement.SelectSettlement(request.TradingAccount, request.Settleday);           
             if (settlement != null)
             {
-                List<string> settlelist = SettlementHelper.GenSettlementFile(settlement,account);
+                List<string> settlelist = SettlementFactory.GenSettlementFile(settlement, account);
                 for (int i = 0; i < settlelist.Count; i++)
                 {
                     RspMGRQrySettleResponse response = ResponseTemplate<RspMGRQrySettleResponse>.SrvSendRspResponse(request);

@@ -192,23 +192,17 @@ namespace TradingLib.Core
             IAccount account = _clearcentre[request.Account];
             //判断account是否为空
 
-
-            if (request.Tradingday == 0)
+            int settleday = request.Tradingday;
+            if (settleday == 0)
             {
-                //settlement = ORM.MSettlement.SelectSettlementInfoUnconfirmed(request.Account);
-                int lastsettleday = TLCtxHelper.Ctx.SettleCentre.LastSettleday;
-                ORM.MSettlement.SelectSettlement(request.Account, lastsettleday);
+                debug("Request Tradingday:0 ,try to get the settlement of lastsettleday:" + TLCtxHelper.Ctx.SettleCentre.LastSettleday, QSEnumDebugLevel.INFO);
+                settleday = TLCtxHelper.Ctx.SettleCentre.LastSettleday;
             }
-            else
-            {
-                settlement = ORM.MSettlement.SelectSettlement(request.Account, request.Tradingday);
-            }
-
-            
+            settlement = ORM.MSettlement.SelectSettlement(request.Account, settleday);
             if (settlement != null)
             {
                 debug("got settlement....", QSEnumDebugLevel.INFO);
-                List<string> settlelist = SettlementHelper.GenSettlementFile(settlement,account);
+                List<string> settlelist = SettlementFactory.GenSettlementFile(settlement,account);
                 for (int i = 0; i < settlelist.Count; i++)
                 {
                     //debug(settlelist[i]);
@@ -327,7 +321,8 @@ namespace TradingLib.Core
                     response.NoticeContent = string.IsNullOrEmpty(GlobalConfig.RealPrompt) ? ("欢迎使用" + GlobalConfig.VendorName + "实盘交易系统,市场有风险,投资需谨慎!祝您交易愉快!") : GlobalConfig.RealPrompt;
                 }
             }
-            else
+            //如果通知内容为空 则提供默认提示
+            if(string.IsNullOrEmpty(response.NoticeContent))
             {
                 response.NoticeContent = string.IsNullOrEmpty(GlobalConfig.DealerPrompt)?("欢迎使用" + GlobalConfig.VendorName + "交易系统"):GlobalConfig.DealerPrompt;
             }
@@ -420,6 +415,37 @@ namespace TradingLib.Core
                 CacheRspResponse(response);
             }
         }
+
+        void SrvOnQryTransferSerial(QryTransferSerialRequest request)
+        {
+            debug("QryTransferSerialRequest:" + request.ToString(), QSEnumDebugLevel.INFO);
+            IList<CashTransaction> cts = ORM.MAccount.SelectHistCashTransaction(request.TradingAccount, 0, 0);
+            IAccount account = _clearcentre[request.TradingAccount];
+            int totalnum = cts.Count;
+            if (totalnum > 0)
+            {
+                for (int i = 0; i < totalnum; i++)
+                {
+                    RspQryTransferSerialResponse response = ResponseTemplate<RspQryTransferSerialResponse>.SrvSendRspResponse(request);
+                    CashTransaction t = cts[i];
+                    response.Date = Util.ToTLDate(t.DateTime);
+                    response.Time = Util.ToTLTime(t.DateTime);
+                    response.TradingAccount = request.TradingAccount;
+                    response.TradingAccount = account.BankAC;
+                    response.Amount = t.Amount;
+                    response.TransRef = t.TransRef;
+                    CacheRspResponse(response, i == totalnum - 1);
+                }
+            }
+            else
+            {
+                //返回空项目
+                RspQryTransferSerialResponse response = ResponseTemplate<RspQryTransferSerialResponse>.SrvSendRspResponse(request);
+                CacheRspResponse(response);
+            }
+
+
+        }
         void tl_newPacketRequest(IPacket packet,ISession session)
         {
 
@@ -509,6 +535,12 @@ namespace TradingLib.Core
                         //debug("查询银行帐户.............", QSEnumDebugLevel.INFO);
                         QryRegisterBankAccountRequest request = packet as QryRegisterBankAccountRequest;
                         SrvOnRegisterBankAccount(request);
+                    }
+                    break;
+                case MessageTypes.QRYTRANSFERSERIAL://查询出入金记录
+                    {
+                        QryTransferSerialRequest request = packet as QryTransferSerialRequest;
+                        SrvOnQryTransferSerial(request);
                     }
                     break;
 
