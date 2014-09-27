@@ -351,16 +351,6 @@ namespace TradingLib.Core
                 throw (new QSClearCentreLoadAccountError(ex, "ClearCentre加载账户:" + account + "异常"));
             }
         }
-        /// <summary>
-        /// 重写onCacheAccount 服务端的清算中心反向引用到IAccount对象
-        /// </summary>
-        /// <param name="a"></param>
-        public override void onCacheAccount(IAccount a)
-        {
-            //a.ClearCentre = new ClearCentreAdapterToAccount(a, this);
-            if (AccountCachedEvent != null)
-                AccountCachedEvent(a);
-        }
 
 
         bool needLoad(IAccount account)

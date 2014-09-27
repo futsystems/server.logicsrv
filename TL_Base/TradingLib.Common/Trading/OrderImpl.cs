@@ -217,17 +217,17 @@ namespace TradingLib.Common
 
 
 
-        public override string ToString()
-        {
-            return ToString(2);
-        }
+        //public override string ToString()
+        //{
+        //    return ToString(2);
+        //}
 
-        public string ToString(int decimals)
-        {
-            if (this.isFilled) return base.ToString();
+        //public string ToString(int decimals)
+        //{
+        //    if (this.isFilled) return base.ToString();
 
-            return (side ? "BUY" : "SELL") + " " + this.TotalSize.ToString() + " " + this.symbol + " @" + (isMarket ? "Mkt" : (isLimit ? this.price.ToString("N" + decimals.ToString()) : this.stopp.ToString("N" + decimals.ToString()) + "stp")) + " [" + this.Account + "] " + id.ToString() + (isLimit && isStop ? " stop: " + stopp.ToString("N" + decimals.ToString()) : string.Empty + " Filled:" + this.Filled.ToString() + " Status:" + Status.ToString() + " PostFlag:" + OffsetFlag.ToString() + " OrderRef:" + OrderRef.ToString() + " OrderSeq:" + OrderSeq.ToString() + " HedgeFlag:" + HedgeFlag.ToString() + " OrderExchID:" + OrderExchID.ToString());
-        }
+        //    return (side ? "BUY" : "SELL") + " " + this.TotalSize.ToString() + " " + this.symbol + " @" + (isMarket ? "Mkt" : (isLimit ? this.price.ToString("N" + decimals.ToString()) : this.stopp.ToString("N" + decimals.ToString()) + "stp")) + " [" + this.Account + "] " + id.ToString() + (isLimit && isStop ? " stop: " + stopp.ToString("N" + decimals.ToString()) : string.Empty + " Filled:" + this.Filled.ToString() + " Status:" + Status.ToString() + " PostFlag:" + OffsetFlag.ToString() + " OrderRef:" + OrderRef.ToString() + " OrderSeq:" + OrderSeq.ToString() + " HedgeFlag:" + HedgeFlag.ToString() + " OrderExchID:" + OrderExchID.ToString());
+        //}
 
         /// <summary>
         /// Fills this order with a tick

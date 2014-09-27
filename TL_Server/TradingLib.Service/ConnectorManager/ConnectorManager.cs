@@ -106,7 +106,7 @@ namespace TradingLib.ServiceManager
 
         void debug(string msg)
         {
-            TLCtxHelper.Debug(">>>Connector:" + msg);
+            //TLCtxHelper.Debug(">>>Connector:" + msg);
             this.debug(msg, QSEnumDebugLevel.INFO);
         }
 

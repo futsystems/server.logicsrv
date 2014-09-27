@@ -39,7 +39,7 @@ namespace TradingLib.API
         /// 比如 获得清算中心对应该帐户的数据
         /// 风控中心的强平操作等
         /// </summary>
-        event IAccountDel AccountCachedEvent;
+        //event IAccountDel AccountCachedEvent;
 
         /// <summary>
         /// 帐户修改事件

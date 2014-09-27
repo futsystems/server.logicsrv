@@ -187,32 +187,29 @@ namespace TradingLib.Common
             Util.Debug(msg);
         }
 
-
+        public static Profiler Profiler = new Profiler();
 
         /// <summary>
         /// 全局日志事件
         /// 绑定该事件可以获得系统所有对象的log输出
         /// </summary>
         public static event ILogItemDel SendLogEvent = null;
-
-        //public static void Debug(string message, QSEnumDebugLevel level)
-        //{ 
-            
-        //}
-
+        static bool _consoleEnable = true;
+        public static bool ConsoleEnable { get { return _consoleEnable; } set { _consoleEnable = value; } }
         public static void Log(ILogItem item)
         {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("[");
-            sb.Append(item.Level.ToString());
-            sb.Append("] ");
-            sb.Append(item.Programe);
-            sb.Append(":");
-            sb.Append(item.Message);
-
-            
             //1.控制台输出
-            Util.ConsolePrint(sb.ToString());
+            if (ConsoleEnable)
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Append("[");
+                sb.Append(item.Level.ToString());
+                sb.Append("] ");
+                sb.Append(item.Programe);
+                sb.Append(":");
+                sb.Append(item.Message);
+                Util.ConsolePrint(sb.ToString());
+            }
 
             //2.通过委托对外触发日志事件 其他组件获得日志事件后可以对日志进行处理 比如通过网络发送，日志分析等
             if (SendLogEvent != null)

@@ -173,7 +173,7 @@ namespace TradingLib.Core
         /// <param name="address"></param>
         public void SrvOnOrderInsert(OrderInsertRequest request)
         {
-            debug("got order:" + request.Order.ToString(), QSEnumDebugLevel.INFO);
+            debug("Got Order:" + request.Order.GetOrderInfo(), QSEnumDebugLevel.INFO);
             MgrClientInfo cinfo = _clients[request.ClientID];
             //1.如果不存在,表明该ID没有通过注册连接到我们的服务端
             if (cinfo == null)

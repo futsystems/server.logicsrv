@@ -49,6 +49,15 @@ namespace TradingLib.Core
 
         }
 
+        [TaskAttr("重置行情与成交路由", 16, 00, 5, "重置行情与成交路由")]
+        public void Task_ResetRouter()
+        {
+            debug("重置行情与成交路由", QSEnumDebugLevel.INFO);
+            _brokerRouter.Reset();
+            _datafeedRouter.Reset();
+        }
+
+
         /// <summary>
         /// 用于检查状体异常的委托
         /// 当委托处于unknown,placed,submited但是没有随着委托的进行 跟新为rejected,canceled,filled,partfilled

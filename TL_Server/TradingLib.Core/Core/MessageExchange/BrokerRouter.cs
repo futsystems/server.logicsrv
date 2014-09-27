@@ -181,7 +181,7 @@ namespace TradingLib.Core
         void GotOrderErrorNotify(Order o, string errortitle)
         {
             
-            debug("Reply ErrorOrder To MessageExch  |" + o.ToString() + " ErrorTitle:" + errortitle, QSEnumDebugLevel.INFO);
+            debug("Reply ErrorOrder To MessageExch:" + o.ToString() + " ErrorTitle:" + errortitle, QSEnumDebugLevel.INFO);
             ErrorOrderNotify notify = ResponseTemplate<ErrorOrderNotify>.SrvSendNotifyResponse(o.Account);
             notify.Order = new OrderImpl(o);
             notify.RspInfo.FillError(errortitle);
@@ -197,7 +197,7 @@ namespace TradingLib.Core
         {
             if (fill != null && fill.isValid)
             {
-                debug("Reply Fill To MessageExch |" + fill.ToString(), QSEnumDebugLevel.INFO);
+                debug("Reply Fill To MessageExch:" + fill.GetTradeInfo(), QSEnumDebugLevel.INFO);
                 _fillcache.Write(new TradeImpl(fill));
             }
         }

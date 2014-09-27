@@ -72,6 +72,7 @@ namespace TraddingSrvCLI
             {
                 //Util.SendDebugEvent += new DebugDelegate(debug);
                 //TLCtxHelper.SendDebugEvent += new DebugDelegate(debug);//将全局DebugEvent绑定到当前输出
+                //TLCtxHelper.ConsoleEnable = false;
                 firstload = false;
             }
 
@@ -102,8 +103,8 @@ namespace TraddingSrvCLI
             connectorMgr.Init();
 
             //绑定数据与行情通道查询回调
-            coreMgr.FindBrokerEvent += new FindBrokerDel(connectorMgr.FindBroker);
-            coreMgr.FindDataFeedEvent += new FindDataFeedDel(connectorMgr.FindDataFeed);
+            //coreMgr.FindBrokerEvent += new FindBrokerDel(connectorMgr.FindBroker);
+            //coreMgr.FindDataFeedEvent += new FindDataFeedDel(connectorMgr.FindDataFeed);
 
             debug(">>> Init Contrib Module Manager....");
             //3.扩展模块管理器 加载扩展模块,启动扩展模块
@@ -139,7 +140,7 @@ namespace TraddingSrvCLI
             debug(">>Start Broker and DataFeed");
             connectorMgr.StartDataFeedViaName("DataFeed.FastTick.FastTick");
             connectorMgr.StartBrokerViaName("Broker.SIM.SIMTrader");
-            coreMgr.OpenClearCentre();
+            //coreMgr.OpenClearCentre();
             Thread.Sleep(2000);
             TLCtxHelper.IsReady = true;
             while (go)

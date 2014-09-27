@@ -122,9 +122,6 @@ namespace TradingLib.Core
             {
                 if (havelong && haveshort)
                 {
-                    //errortitle = "OFFSETFLAG_CAN_NOT_TETECTED";
-                    //return false;
-
                     o.OffsetFlag = QSEnumOffsetFlag.CLOSE;//如果同时持有多空两个方向的持仓 则自动判定为平仓
                 }
                 else if (havelong)//多头
@@ -153,7 +150,7 @@ namespace TradingLib.Core
                 {
                     o.OffsetFlag = QSEnumOffsetFlag.OPEN;
                 }
-                debug("Order offsetflag unknown ,detected and set to:" + o.OffsetFlag.ToString());
+                debug("Order offsetFlag unknown,auto detected to:" + o.OffsetFlag.ToString());
             }
 
 
@@ -174,7 +171,7 @@ namespace TradingLib.Core
                     if ((o.oSymbol.SecurityType != SecurityType.FUT) || (!account.PosLock))
                     {
                         errortitle = "TWO_SIDE_POSITION_HOLD_FORBIDDEN";
-                        debug("SecurityType:" + o.oSymbol.SecurityType.ToString() + " account PosLock:" + account.PosLock.ToString(), QSEnumDebugLevel.INFO);
+                        //debug("SecurityType:" + o.oSymbol.SecurityType.ToString() + " account PosLock:" + account.PosLock.ToString(), QSEnumDebugLevel.INFO);
                         return false;
                     }
                 }
@@ -253,7 +250,7 @@ namespace TradingLib.Core
         {
             try
             {
-                debug("检查委托 " + o.id.ToString(), QSEnumDebugLevel.INFO);
+                //debug("检查委托 " + o.id.ToString(), QSEnumDebugLevel.INFO);
                 msg = "";
                 //延迟加载规则,这样系统就没有必要加载不没有登入的账户规则
                 if (!account.RuleItemLoaded)
@@ -265,7 +262,7 @@ namespace TradingLib.Core
                     if (!account.Execute)
                     {
                         msg = "账户被冻结";
-                        debug("Order rejected by [Execute Check]" + o.ToString(), QSEnumDebugLevel.INFO);
+                        debug("Order rejected by [Execute Check]" + o.GetOrderInfo(), QSEnumDebugLevel.WARNING);
                         return false;
                     }
                 }
@@ -280,7 +277,7 @@ namespace TradingLib.Core
                         if (o.oSymbol.IsFlatTime)
                         {
                             msg = "日内交易帐户，系统正在强平，无法处理委托！";
-                            debug("Order rejected by [FlatTime Check] not in [intraday] trading time" + o.ToString(), QSEnumDebugLevel.INFO);
+                            debug("Order rejected by [FlatTime Check] not in [intraday] trading time" + o.GetOrderInfo(), QSEnumDebugLevel.WARNING);
                             return false;
                         }
                     }
@@ -293,7 +290,7 @@ namespace TradingLib.Core
                 {
                     if (!account.CanTakeSymbol(o.oSymbol, out msg))
                     {
-                        debug("Order rejected by[Account CanTakeSymbol Check]" + o.ToString(), QSEnumDebugLevel.INFO);
+                        debug("Order rejected by[Account CanTakeSymbol Check]" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
                         return false;
                     }
                 }
@@ -304,14 +301,14 @@ namespace TradingLib.Core
                 Position pos = account.GetPosition(o.symbol, o.PositionSide);//当前对应持仓
                 //检查该委托是否是开仓委托
                 bool entryposition = o.IsEntryPosition;
-                debug("Order[" + o.id.ToString() + "]" + " try to " + (o.IsEntryPosition ? "开仓" : "平仓") + " 操作方向:" + (o.PositionSide ? "多头持仓" : "空头"), QSEnumDebugLevel.INFO);
+                //debug("Order[" + o.id.ToString() + "]" + " try to " + (o.IsEntryPosition ? "开仓" : "平仓") + " 操作方向:" + (o.PositionSide ? "多头持仓" : "空头"), QSEnumDebugLevel.INFO);
                 if (entryposition)//开仓执行资金检查
                 {
                     //如果是开仓委托 则直接允许
                     //保证金检查(如果帐户存在特殊的服务,可由特殊的服务进行保证金检查)
                     if (!account.CanFundTakeOrder(o, out msg))
                     {
-                        debug("Order rejected by[Order Margin Check]" + o.ToString(), QSEnumDebugLevel.INFO);
+                        debug("Order rejected by[Order Margin Check]" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
                         return false;
                     }
                 }
@@ -323,12 +320,12 @@ namespace TradingLib.Core
                     int pos_size = pos.UnsignedSize;
                     //当前委托数量
                     int osize = o.UnsignedSize;
-                    debug("Order try to exit postion,pos size:" + pos.Size.ToString() + " pending exit size:" + pendingExitSize.ToString() + " osize:" + osize.ToString() + " offsetflag:" + o.OffsetFlag.ToString(), QSEnumDebugLevel.INFO);
+                    //debug("Order try to exit postion,pos size:" + pos.Size.ToString() + " pending exit size:" + pendingExitSize.ToString() + " osize:" + osize.ToString() + " offsetflag:" + o.OffsetFlag.ToString(), QSEnumDebugLevel.INFO);
 
                     if (pos_size < pendingExitSize+osize)
                     {
                         //debug("限价委托,未成交数量超过当前持仓", QSEnumDebugLevel.INFO);
-                        debug("Order rejected by[Order FlatSize Check]", QSEnumDebugLevel.INFO);
+                        debug("Order rejected by[Order FlatSize Check]" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
                         msg = (pos_size == 0 ? commentNoPositionForFlat : commentOverFlatPositionSize);
                         return false;
                     }
@@ -343,7 +340,7 @@ namespace TradingLib.Core
                 {
                     if (!account.CheckOrder(o, out msg))//如果通过风控检查 则置委托状态为Placed
                     {
-                        debug("Order rejected by[Order Rule Check]" + o.ToString(), QSEnumDebugLevel.INFO);
+                        debug("Order rejected by[Order Rule Check]" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
                         return false;
                     }
                 }

@@ -465,7 +465,7 @@ namespace Broker.SIM
                     int cidx = gotcancel(o.id, cancels);
                     if (cidx >= 0)
                     {
-                        debug("PTT Server canceled: " + o.id,QSEnumDebugLevel.INFO);
+                        debug("PTT Server Canceled: " + o.id,QSEnumDebugLevel.INFO);
                         cancels[cidx] = 0;
                         o.Status = QSEnumOrderStatus.Canceled;
 
@@ -514,7 +514,7 @@ namespace Broker.SIM
                         fill.Broker = this.GetType().FullName;
                         fill.BrokerKey = "000000";
 
-                        debug("PTT Server filled: " + fill.ToString(),QSEnumDebugLevel.INFO);
+                        debug("PTT Server Filled: " + fill.GetTradeInfo(),QSEnumDebugLevel.INFO);
 
                         bool partial = fill.UnsignedSize != o.UnsignedSize;//如果是部分成交 则需要将剩余未成交的委托 返还到委托队列
                         if (partial)
@@ -621,7 +621,7 @@ namespace Broker.SIM
         /// <param name="o"></param>
         public void SendOrder(Order o)
         {
-            debug("PTT Server got order: " + o.ToString(), QSEnumDebugLevel.INFO);
+            debug("PTT Server Got Order: " + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
             o.Broker = this.GetType().FullName;//提交到Broker的委托 均会设置Broker名称
             o.BrokerKey = "000000";
             _orderinCache.Write(new OrderImpl(o));//复制委托 委托的模拟成交变化不会改变初始委托数据
@@ -630,7 +630,7 @@ namespace Broker.SIM
 
         void queueOrder(Order o)
         {
-            debug("PTT Server queueing order: " + o.ToString(), QSEnumDebugLevel.INFO);
+            debug("PTT Server Queue Order: " + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
             //模拟交易对新提交上来的order进行复制后保留,原来的order形成事件触发.这样本地的order fill process对order信息的修改就不会影响到对外触发事件的order.
             o.Status = QSEnumOrderStatus.Opened;//标识 委托状态为open,等待成交
             o.OrderExchID = o.OrderSeq.ToString();//当委托处于Opened的状态时,我们模拟交易所将委托标识填入 当扯单时,我们可以通过交易帐号和交易所委托编号找到对应的委托
@@ -650,7 +650,7 @@ namespace Broker.SIM
         /// <param name="id"></param>
         public void CancelOrder(long id)
         {
-            debug(" PTT got cancel: " + id, QSEnumDebugLevel.INFO);
+            debug(" PTT Got Cancel: " + id, QSEnumDebugLevel.INFO);
             _cancelinCache.Write(id);
         }
 

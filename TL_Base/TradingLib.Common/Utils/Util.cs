@@ -683,7 +683,7 @@ namespace TradingLib.Common
             StreamWriter sw = new StreamWriter(filepath, false);
             sw.WriteLine("Date,Time,Symbol,Side,xSize,xPrice,Comment");
             foreach (TradeImpl t in stocktrades)
-                sw.WriteLine(t.ToString(delimiter));
+                sw.WriteLine(t.GetTradStr());
             sw.Close();
         }
 
@@ -718,7 +718,7 @@ namespace TradingLib.Common
 
             foreach (TradeImpl t in tradelist)
             {
-                string r = t.ToString(delimiter, false) + delimiter;
+                string r = t.GetTradStr() + delimiter;
                 string s = t.symbol;
                 decimal cpl = 0;
                 decimal opl = 0;

@@ -83,8 +83,18 @@ namespace TradingLib.Core
             }
         }
         ClearCentre _clearcentre = null;
+        public void BindClearCentre(ClearCentre cc)
+        {
+            _clearcentre = cc;
+        }
 
-        public ClearCentre ClearCentre { get { return _clearcentre; } set { _clearcentre = value; } }
+        RiskCentre _riskcentre = null;
+        public void BindRiskCentre(RiskCentre rc)
+        {
+            _riskcentre = rc;
+        }
+
+
         public SettleCentre()
             :base(SettleCentre.CoreName)
         {

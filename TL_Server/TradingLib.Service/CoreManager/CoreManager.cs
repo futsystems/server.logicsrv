@@ -27,8 +27,8 @@ namespace TradingLib.ServiceManager
             :base("CoreManager")
         {
             config = cfg;
-            dconfig = DebugConfig.DevDebugConfig;
-            dconfig.ApplyDebugConfigEvent +=new VoidDelegate(this.ApplyDebugConfig);
+            dconfig = new DebugConfig();
+            //dconfig.ApplyDebugConfigEvent +=new VoidDelegate(this.ApplyDebugConfig);
 
         }
         /*
@@ -53,7 +53,6 @@ namespace TradingLib.ServiceManager
         private MsgExchServer _messageExchagne;//交易消息交换
         private MgrExchServer _managerExchange;//管理消息交换
         private WebMsgExchServer _webmsgExchange;//Web端消息响应
-        private TradeFollow _tradeFollow;//交易数据流
         private ClearCentre _clearCentre;//清算服务
         private SettleCentre _settleCentre;//结算中心
         private RiskCentre _riskCentre;//风控服务
@@ -66,31 +65,6 @@ namespace TradingLib.ServiceManager
         /// </summary>
         public event LoadConnecter LoadConnecterEvent;
 
-
-        //信息输出
-        public event DebugDelegate SendDebugEvent;
-        public event DebugDelegate SendLoadingInfoEvent;
-
-        /// <summary>
-        /// 对外输出加载过程信息
-        /// 比如给UI界面提供加载进度信息
-        /// </summary>
-        /// <param name="msg"></param>
-        void loadingInfo(string msg)
-        {
-            if (SendLoadingInfoEvent != null)
-                SendLoadingInfoEvent(msg);
-        }
-        /// <summary>
-        /// 对外输出日志信息
-        /// </summary>
-        /// <param name="msg"></param>
-        void debug(string msg)
-        {
-            if (SendDebugEvent != null)
-                SendDebugEvent(msg);
-        }
-
         /// <summary>
         /// 加载模块
         /// </summary>
@@ -98,46 +72,26 @@ namespace TradingLib.ServiceManager
         {
             debug("Init Core Modules....", QSEnumDebugLevel.INFO);
             #region 加载核心模块
-
             debug("[INIT CORE] SettleCentre", QSEnumDebugLevel.INFO);
             InitSettleCentre();//初始化结算中心
 
-
-            //1.核心服务组件的加载
             debug("[INIT CORE] MsgExchServer", QSEnumDebugLevel.INFO);
             InitMsgExchSrv();//初始化交易服务
-
-
-            InitTradeFollow();//初始化交易数据流
 
             debug("[INIT CORE] ClearCentre", QSEnumDebugLevel.INFO);
             InitClearCentre();//初始化结算中心 初始化账户信息
 
-            
-           
-
             debug("[INIT CORE] RiskCentre", QSEnumDebugLevel.INFO);
             InitRiskCentre();//初始化风控中心 初始化账户风控规则
-
-
-            //初始化帐户数据 加载交易帐号，需要在加载扩展模块之前准备好交易账号 同时清算中心和风控中心有wrapper绑定到Account因此需要在清算中心和RiskCentre中心初始化之后
-            _clearCentre.InitAccount();
-
 
             debug("[INIT CORE] DataFeedRouter", QSEnumDebugLevel.INFO);
             InitDataFeedRouter();//初始化数据路由
 
-
-
-            debug("[INIT CORE] TickMgrClient", QSEnumDebugLevel.INFO);
+            //debug("[INIT CORE] TickMgrClient", QSEnumDebugLevel.INFO);
             //InitFastTickMgr();
 
             debug("[INIT CORE] BrokerRouter", QSEnumDebugLevel.INFO);
             InitBrokerRouter();//初始化交易路由选择器
-
-            //debug("初始化Broker/DataFeed", QSEnumDebugLevel.INFO);//将数据与交易路由外绑到gui界面
-            //if (LoadConnecterEvent != null)
-            //    LoadConnecterEvent(_brokerRouter, _datafeedRouter);
 
             debug("[INIT CORE] MgrExchServer", QSEnumDebugLevel.INFO);//服务端管理界面,提供管理客户端接入,查看并设置相关数据
             InitMgrExchSrv();//初始化管理服务
@@ -165,11 +119,8 @@ namespace TradingLib.ServiceManager
             //1.从数据库恢复当日交易数据
             debug("[START CORE] ClearCentre",QSEnumDebugLevel.INFO);
             _clearCentre.Start();
-           // _clearCentre.RestoreFromMysql();
-            
 
-            //2.从缓存文件恢复当时行情快照,这样就可以恢复整个交易快照 包括平仓盈亏与持仓盈亏
-            loadingInfo("启动数据路由线程");//并加载行情快照,需要在系统从数据库加载交易记录之后进行
+            //2.从缓存文件恢复当时行情快照,这样就可以恢复整个交易快照 包括平仓盈亏与持仓盈亏//并加载行情快照,需要在系统从数据库加载交易记录之后进行
             _datafeedRouter.Start();
             //_datafeedRouter.LoadTickSnapshot();
 
@@ -181,11 +132,8 @@ namespace TradingLib.ServiceManager
             _managerExchange.Start();
 
             //启动web端消息响应服务
-            loadingInfo("启动WebMsg消息交换");
             debug("[START CORE] WebMsgExchServer",QSEnumDebugLevel.INFO);
             _webmsgExchange.Start();
-
-            //启动交易消息交换服务
 
             debug("Restore Client Connection....",QSEnumDebugLevel.INFO);
             _messageExchagne.RestoreSession();//恢复客户端连接
@@ -201,7 +149,7 @@ namespace TradingLib.ServiceManager
             #endregion
             //初始化
             ApplyDebugConfig();
-            debug("----------- Core Started -----------------");
+            debug("----------- Core Started -----------------",QSEnumDebugLevel.INFO);
         }
 
         public void Stop()

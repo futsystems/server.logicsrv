@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
+using System.Reflection;
 using System.Linq;
 using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
+using System.Diagnostics;
 
 namespace TradingLib.Common
 {
@@ -118,15 +120,9 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="msg"></param>
         /// <param name="level"></param>
+        [Conditional("DEBUG")]
         protected void debug(string msg, QSEnumDebugLevel level = QSEnumDebugLevel.DEBUG)
         {
-            //1.判断日志级别,然后调用日志输出 比如向控件或者屏幕输出显示
-            //if (_debugEnable && (int)level <= (int)_debuglevel)
-            //    msgdebug("[" + level.ToString() + "] " + PROGRAME+":"+msg);
-            //2.调用日志事件对外触发日志事件
-            //if (SendLogEvent != null)
-            //    SendLogEvent(PROGRAME, msg, level);
-
             if (_debugEnable && (int)level <= (int)_debuglevel && SendLogItemEvent != null)
             {
                 ILogItem item = new LogItem(msg, level, this.PROGRAME);

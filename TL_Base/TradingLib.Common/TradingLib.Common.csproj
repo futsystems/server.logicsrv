@@ -59,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Other\LogItem.cs" />
+    <Compile Include="Trading\SymbolUtils.cs" />
     <Compile Include="Utils\ConfigFile.cs" />
     <Compile Include="FutsError.cs" />
     <Compile Include="Json\IJsonWrapper.cs" />

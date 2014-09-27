@@ -93,6 +93,8 @@ namespace TradingLib.Core
 
         
         //4.重置结算中心交易日信息 重置清算中心交易帐户 将昨日扎帐
+        //清算中心，风控中心，以及数据路由 成交路由都需要进行重置
+        //开盘前需要重置
         [TaskAttr("重置结算中心-结算后", 16, 00, 5, "结算后重置结算中心")]
         [ContribCommandAttr(QSEnumCommandSource.CLI, "resetsc", "resetsc - reset settlecentre trading day", "重置结算中心")]
         public void Task_ResetTradingday()
@@ -101,6 +103,10 @@ namespace TradingLib.Core
             this.Reset();//需要把结算重置移动到 结算帐户之后,帐户一结算完毕就重置结算日期信息，这样帐户结算与帐户清算中心重置间的重置会对应到正确的交易日上去
             //15:50分结算帐户完毕后 4点从数据库重新加载帐户权益数据
             _clearcentre.Reset();
+            //重置风控中心，加载帐户规则
+            _riskcentre.Reset();
+
+            
             this.IsInSettle = false;//标识系统结算完毕
         }
         #endregion

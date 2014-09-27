@@ -24,16 +24,16 @@ namespace TradingLib.Core
             {
                 if (o != null && o.isValid)
                 {
-                    if (this.Status == QSEnumClearCentreStatus.CCOPEN)
-                        debug("Got Order:" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
                     if (_status == QSEnumClearCentreStatus.CCOPEN)
                     {
                         if (neworder)
                         {
+                            debug("Got Order:" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
                             _asynLoger.newOrder(o);//如果没有记录记录该委托,则新记录该委托 
                         }
                         else
                         {
+                            debug("Update Order:" + o.GetOrderStatus(), QSEnumDebugLevel.INFO);
                             _asynLoger.updateOrder(o);//如果系统没有记录该位图,则更新该委托
                         }
                     }
@@ -47,10 +47,9 @@ namespace TradingLib.Core
 
         internal override void onGotCancel(long oid)
         {
-            if (this.Status == QSEnumClearCentreStatus.CCOPEN)
-                debug("Got Cancel:" + oid, QSEnumDebugLevel.INFO);
             if (_status == QSEnumClearCentreStatus.CCOPEN)
             {
+                
                 OrderAction oc = new OrderActionImpl();
                 Order o = this.SentOrder(oid);
                 if (o != null)
@@ -58,6 +57,7 @@ namespace TradingLib.Core
                     oc.Account = o.Account;
                     oc.ActionFlag = QSEnumOrderActionFlag.Delete;
                     oc.OrderID = o.id;
+                    debug("Got Cancel:" + oid, QSEnumDebugLevel.INFO);
                     _asynLoger.newOrderAction(oc);
                 }
             }
@@ -68,8 +68,6 @@ namespace TradingLib.Core
         {
             try
             {
-                if(this.Status == QSEnumClearCentreStatus.CCOPEN)
-                    debug("Got Fill:" + f.ToString(), QSEnumDebugLevel.INFO);
                 IPositionRound pr = null;
                 //PR数据在从数据库恢复数据的时候任然需要被加载到PositionRoundTracker用于恢复PR数据
                 if (postrans != null)
@@ -83,8 +81,11 @@ namespace TradingLib.Core
                 //如果交易中心处于开启状态 则对外触发包含交易手续费的fill回报 通过tradingserver向管理端与交易客户端发送
                 if (_status == QSEnumClearCentreStatus.CCOPEN)
                 {
+                    
                     if (GotCommissionFill != null)
                         GotCommissionFill(f);
+
+                    debug("Got Fill:" + f.GetTradeInfo(), QSEnumDebugLevel.INFO);
                     //数据库记录成交
                     _asynLoger.newTrade(f);
 

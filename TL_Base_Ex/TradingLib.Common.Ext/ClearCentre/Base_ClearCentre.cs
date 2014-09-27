@@ -224,14 +224,6 @@ namespace TradingLib.Common
         protected void CacheAccount(IAccount a)
         {
             acctk.CacheAccount(a);
-            //6.账户反向引用clearcentre用于计算财务信息
-            onCacheAccount(a);
-            //a.ClearCentre = new ClearCentreAdapterToAccount(a as IAccount,this);//this;// as IAccountClearCentre);
-        }
-
-        public virtual void onCacheAccount(IAccount a)
-        { 
-        
         }
         #endregion
 

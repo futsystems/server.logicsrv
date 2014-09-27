@@ -22,7 +22,7 @@ namespace TradingLib.Common
         public bool CheckOrder(Order o, out string msg)
         {
             //string msg;
-            Util.Debug("account check order now ....");
+            //Util.Debug("account check order now ....");
             msg = "";
             foreach (IOrderCheck rc in _ordchekMap.Values)
             {

@@ -252,7 +252,7 @@ namespace TradingLib.Core
                 commentOpened = _cfgdb["CommentOpened"].AsString();
 
 
-                tl = new TLServer_Exch(_cfgdb["TLServerIP"].AsString(), _cfgdb["TLPort"].AsInt(), true);
+                tl = new TLServer_Exch(CoreName,_cfgdb["TLServerIP"].AsString(), _cfgdb["TLPort"].AsInt(), true);
 
                 //tl = new TLServer_Exch("TradingServer", _cfgdb["TLServerIP"].AsString(), _cfgdb["TLPort"].AsInt());
                 //VerboseDebugging = _cfgdb["VerbDebug"].AsBool();

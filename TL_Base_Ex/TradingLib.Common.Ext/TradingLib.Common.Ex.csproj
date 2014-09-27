@@ -88,6 +88,9 @@
     <Compile Include="ORM\MSettlement.cs" />
     <Compile Include="ORM\MTradingInfo.cs" />
     <Compile Include="ORM\MySqlBase.cs" />
+    <Compile Include="Profile\Profiler.cs" />
+    <Compile Include="Profile\SectionStackEntry.cs" />
+    <Compile Include="Profile\SectionStats.cs" />
     <Compile Include="SettlementInfo.cs" />
     <Compile Include="Template\TemplateHelper.cs" />
     <Compile Include="Tracker\AccountTracker.cs" />
