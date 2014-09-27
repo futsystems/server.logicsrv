@@ -108,6 +108,7 @@
     <Compile Include="Message\ISessionUtils.cs" />
     <Compile Include="1delete\QSMessageContent.cs" />
     <Compile Include="Msic\EnumManagerType.cs" />
+    <Compile Include="Msic\ILogItem.cs" />
     <Compile Include="Rule\IRuleItem.cs" />
     <Compile Include="Trading\BasicInfo\IMarketTime.cs" />
     <Compile Include="1delete\ILoginResponse.cs" />

@@ -18,21 +18,49 @@ namespace TradingLib.Common
     /// </summary>
     public class Util
     {
+        const string PROGRAME = "GlobalUtil";
 
         public static string GlobalPrefix = ">>> ";
 
 
-        public static DebugDelegate SendDebugEvent;
-        public static void Debug(string msg, QSEnumDebugLevel level = QSEnumDebugLevel.DEBUG)
+        public static event ILogItemDel SendLogEvent;
+        /// <summary>
+        /// 控制台输出
+        /// </summary>
+        /// <param name="msg"></param>
+        public static void ConsolePrint(string msg)
         {
-            if (SendDebugEvent != null)
-                SendDebugEvent(msg);
+            Console.WriteLine(msg);
         }
+
+
+        /// <summary>
+        /// string日志的输入委托 将系统的日志以文本形式输出到console
+        /// </summary>
+        //public static DebugDelegate SendDebugEvent;
+        public static void Debug(string msg, QSEnumDebugLevel level = QSEnumDebugLevel.INFO)
+        {
+            //如果给util绑定了sendlogevent事件处理器 则通过sendlogevent处理日志
+            if (SendLogEvent != null)
+            {
+                ILogItem item = new LogItem(msg, level, PROGRAME);
+                SendLogEvent(item);
+
+            }//如果没有绑定处理器 则通过控制台输出
+            else
+            {
+                string m = "[" + level.ToString() + "] " + PROGRAME + ":" + msg;
+                ConsolePrint(m);
+            }
+        }
+
+        
+
         static void debug(string msg)
         {
-            if (SendDebugEvent != null)
-                SendDebugEvent(msg);
+            Debug(msg);
         }
+
 
 
         /// <summary>
@@ -146,15 +174,15 @@ namespace TradingLib.Common
         }
 
 
-        //public static string getDisplayFormat(decimal pricetick)
-        //{
-        //    string[] p = pricetick.ToString().Split('.');
-        //    if (p.Length <= 1)
-        //        return "{0:F0}";
-        //    else
-        //        return "{0:F" + p[1].ToCharArray().Length.ToString() + "}";
+        public static string GetPriceTickFormat(decimal pricetick)
+        {
+            string[] p = pricetick.ToString().Split('.');
+            if (p.Length <= 1)
+                return "{0:F0}";
+            else
+                return "{0:F" + p[1].ToCharArray().Length.ToString() + "}";
 
-        //}
+        }
 
         /// <summary>
         /// 获得某个Enum的描述

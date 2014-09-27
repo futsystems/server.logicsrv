@@ -116,7 +116,7 @@ namespace TradingLib.Core
                 //执行常规检查,step1检查不涉及帐户类的检查不用加锁 常规检查部分拒绝的委托不记录到数据库 避免记录很多无效委托
                 if (riskcheck)
                 {
-                    debug("Got Order[Check1]:" + o.ToString(), QSEnumDebugLevel.INFO);
+                    debug("Got Order[Check1]:" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
                     string errortitle = string.Empty;
                     bool needlog = true;
                     if (!_riskcentre.CheckOrderStep1(ref o, acc, out needlog,out errortitle, inter))
@@ -141,7 +141,7 @@ namespace TradingLib.Core
                     bool riskcheckresuslt = true;
                     if (riskcheck)
                     {
-                        debug("Got Order[Check2]:" + o.ToString(), QSEnumDebugLevel.INFO);
+                        debug("Got Order[Check2]:" + o.id.ToString(), QSEnumDebugLevel.INFO);
                         riskcheckresuslt = _riskcentre.CheckOrderStep2(ref o, acc,out msg, inter);
                         if (!riskcheckresuslt)
                         {

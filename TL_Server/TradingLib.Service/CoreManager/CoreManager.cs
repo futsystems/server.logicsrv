@@ -339,8 +339,8 @@ namespace TradingLib.ServiceManager
                 _messageExchagne.DebugEnable = DebugConfig.D_TrdLogic;
                 _messageExchagne.DebugLevel = DebugConfig.DL_TrdLogic;
 
-                _messageExchagne.TrdService.DebugEnable = DebugConfig.D_TrdMessage;
-                _messageExchagne.TrdService.DebugLevel = DebugConfig.DL_TrdMessage;
+                //_messageExchagne.TrdService.DebugEnable = DebugConfig.D_TrdMessage;
+                //_messageExchagne.TrdService.DebugLevel = DebugConfig.DL_TrdMessage;
             }
 
             //管理业务与消息

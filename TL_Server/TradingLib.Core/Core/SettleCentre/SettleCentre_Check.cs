@@ -88,7 +88,7 @@ namespace TradingLib.Core
             }
             PositionRoundTracker _prt = new PositionRoundTracker();
             _prt.FindSymbolEvent += (sym) => { return BasicTracker.SymbolTracker[sym]; };//.FindSecurityEvent += new FindSecurity(getMasterSecurity);
-            _prt.SendDebugEvent += new DebugDelegate(msgdebug);
+            //_prt.SendDebugEvent += new DebugDelegate(msgdebug);
 
             _prt.RestorePositionRounds(prlist);
             _prt.SyncPositionHold(_clearcentre.TotalYdPositions.Where(pos=>!pos.isFlat).ToArray());

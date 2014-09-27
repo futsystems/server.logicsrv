@@ -122,7 +122,7 @@ namespace TradingLib.Core
 
             try
             {
-                VerboseDebugging = verb;
+                //VerboseDebugging = verb;
                 _serveraddress = ipaddr;
                 _port = port;
 
@@ -326,7 +326,7 @@ namespace TradingLib.Core
                     try
                     {   //注意从外层传入服务器监听地址
                         _trans = new AsyncServer(PROGRAME, _serveraddress, _port, this.NumWorks, this.EnableTPTracker, false);
-                        _trans.SendDebugEvent += new DebugDelegate(msgdebug);
+                        //_trans.SendDebugEvent += new DebugDelegate(msgdebug);
                         _trans.GotTLMessageEvent += new HandleTLMessageDel(basehandle);
                         _trans.ProviderName = ProviderName;//将TLServerProviderName传递给传输层,用于客户端的名称查询
 
@@ -337,7 +337,7 @@ namespace TradingLib.Core
                     catch (Exception ex)
                     {
                         Stop();
-                        v("start attempt #" + attempts + " failed: " + ex.Message + ex.StackTrace);
+                        //v("start attempt #" + attempts + " failed: " + ex.Message + ex.StackTrace);
                         Thread.Sleep(delayms);
                     }
                 }

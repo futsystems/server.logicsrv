@@ -140,11 +140,11 @@ namespace TradingLib.Core
 
                 //初始化异步储存组件
                 _asynLoger = new AsyncTransactionLoger();//获得交易信息数据库记录对象，用于记录委托，成交，取消等信息
-                _asynLoger.SendDebugEvent += new DebugDelegate(msgdebug);
+                //_asynLoger.SendDebugEvent += new DebugDelegate(msgdebug);
                 
                 //初始化PositionRound生成器
                 prt = new PositionRoundTracker();
-                prt.SendDebugEvent += new DebugDelegate(msgdebug);
+                //prt.SendDebugEvent += new DebugDelegate(msgdebug);
                 prt.FindSymbolEvent += (sym) => { return BasicTracker.SymbolTracker[sym]; };// new FindSecurity(getMasterSecurity);
 
                 debug("Loading Accounts Infomation form database.....");

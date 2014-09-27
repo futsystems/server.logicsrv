@@ -113,7 +113,7 @@ namespace TradingLib.Core
             _clearcentre = clearcentre;
 
             _posoffsetracker = new PositionOffsetTracker(_clearcentre as ClearCentre);
-            _posoffsetracker.SendDebugEvent +=new DebugDelegate(msgdebug);
+            //_posoffsetracker.SendDebugEvent +=new DebugDelegate(msgdebug);
             _posoffsetracker.SendOrderEvent +=new OrderDelegate(SendOrder);
             _posoffsetracker.CancelOrderEvent += new LongDelegate(CancelOrder);
             _posoffsetracker.AssignOrderIDEvent += new AssignOrderIDDel(AssignOrderID);

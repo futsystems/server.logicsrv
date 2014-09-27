@@ -25,7 +25,7 @@ namespace TradingLib.Core
                 if (o != null && o.isValid)
                 {
                     if (this.Status == QSEnumClearCentreStatus.CCOPEN)
-                        debug("Got  Order:" + o.ToString(), QSEnumDebugLevel.INFO);
+                        debug("Got Order:" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
                     if (_status == QSEnumClearCentreStatus.CCOPEN)
                     {
                         if (neworder)
@@ -48,7 +48,7 @@ namespace TradingLib.Core
         internal override void onGotCancel(long oid)
         {
             if (this.Status == QSEnumClearCentreStatus.CCOPEN)
-                debug("Got cancel:" + oid, QSEnumDebugLevel.INFO);
+                debug("Got Cancel:" + oid, QSEnumDebugLevel.INFO);
             if (_status == QSEnumClearCentreStatus.CCOPEN)
             {
                 OrderAction oc = new OrderActionImpl();

@@ -100,4 +100,7 @@ namespace TradingLib.API
     //#endregion
 
 
+    //日志项目委托
+    public delegate void ILogItemDel(ILogItem log);
+
 }

@@ -95,5 +95,35 @@ namespace TradingLib.Common
             }
             return decimal.MaxValue;
         }
+
+
+
+        public static string GetOrderInfo(this Order o)
+        { 
+            //123342 953 [INFO] BrokerRouter:Reply Order To MessageExch |BUY 1 IF1409 @Mkt [9280007] 635474179608593751 Filled:0 Status:Submited PostFlag:OPEN OrderRef: OrderSeq:1011 HedgeFlag: OrderExchID:
+            StringBuilder sb = new StringBuilder();
+            sb.Append(o.side?"Buy":"Sell");
+            sb.Append(" "+o.OffsetFlag.ToString());
+            sb.Append(" "+Math.Abs(o.TotalSize).ToString());
+            sb.Append(" "+o.symbol);
+            sb.Append(" @" + (o.isMarket ? "Mkt" : (o.isLimit? Util.FormatDecimal(o.price): Util.FormatDecimal(o.price)+ "stp")));
+            sb.Append(" ["+o.Account+"]");
+            sb.Append(" ID:" + o.id.ToString());
+            sb.Append(" T:"+Math.Abs(o.TotalSize).ToString()+" F:"+o.Filled.ToString()+" R:"+o.UnsignedSize.ToString());
+            sb.Append(" Ref:" + o.OrderRef + " Seq:" + o.OrderSeq.ToString() + " ExchID:" + o.OrderExchID);
+            sb.Append(" Status:" + o.Status.ToString());
+
+            return sb.ToString();
+        }
+
+        public static string GetOrderStatus(this Order o)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("ID" + o.id.ToString());
+            sb.Append(" T:" + Math.Abs(o.TotalSize).ToString() + " F:" + o.Filled.ToString() + " R:" + o.UnsignedSize.ToString());
+            sb.Append(" Ref:" + o.OrderRef + " Seq:" + o.OrderSeq.ToString() + " ExchID:" + o.OrderExchID);
+            sb.Append(" Status:" + o.Status.ToString());
+            return sb.ToString();
+        }
     }
 }

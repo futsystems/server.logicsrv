@@ -169,7 +169,7 @@ namespace TradingLib.Core
         /// <summary>
         /// 主要将底层交易消息暴露给外层，用于实时修改日志级别
         /// </summary>
-        public IDebug TrdService { get { return tl; } }
+        //public IDebug TrdService { get { return tl; } }
         //委托编号生成器
         IdTracker _idt = new IdTracker();
 
@@ -255,11 +255,11 @@ namespace TradingLib.Core
                 tl = new TLServer_Exch(_cfgdb["TLServerIP"].AsString(), _cfgdb["TLPort"].AsInt(), true);
 
                 //tl = new TLServer_Exch("TradingServer", _cfgdb["TLServerIP"].AsString(), _cfgdb["TLPort"].AsInt());
-                VerboseDebugging = _cfgdb["VerbDebug"].AsBool();
+                //VerboseDebugging = _cfgdb["VerbDebug"].AsBool();
                 tl.ProviderName = Providers.QSPlatform;
 
                 //设定日志输出
-                tl.VerboseDebugging = false;
+                //tl.VerboseDebugging = false;
                 //tlserver内部直接发送的消息通过回调将消息缓存到外部缓存中进行队列发送
                 tl.CachePacketEvent +=new IPacketDelegate(CachePacket);
                 //查找对应交易账户

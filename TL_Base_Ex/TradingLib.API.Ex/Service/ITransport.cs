@@ -2,7 +2,7 @@
 
 namespace TradingLib.API
 {
-    public interface ITransport:IService,IDebug,IDisposable
+    public interface ITransport:IService,IDisposable
     {
         /// <summary>
         /// 服务标识

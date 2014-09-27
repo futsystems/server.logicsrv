@@ -116,7 +116,7 @@ namespace TradingLib.Core
                                     debug(ex.ToString(),QSEnumDebugLevel.ERROR);
                                     throw (new QSTranLogOrderError(o));
                                 }
-                                string s = "交易日志:Order inserted:" + o.ToString();
+                                string s = "交易日志:Order Inserted:" + o.GetOrderInfo();
                                 if (!re)
                                 {
                                     _nrt++;
@@ -145,7 +145,7 @@ namespace TradingLib.Core
                                     debug(ex.ToString(), QSEnumDebugLevel.ERROR);
                                     throw (new QSTranLogOrderUpdateError(o));
                                 }
-                                string s = "交易日志:Order update:" + o.ToString();
+                                string s = "交易日志:Order Update:" + o.GetOrderStatus();
                                 if (!re)
                                 {
                                     _nrt++;
@@ -173,7 +173,7 @@ namespace TradingLib.Core
                                     debug(ex.ToString(), QSEnumDebugLevel.ERROR);
                                     throw (new QSTranLogFillError(f));
                                 }
-                                string s = "交易日志:Trade inserted:" + f.ToString();
+                                string s = "交易日志:Trade Inserted:" + f.ToString();
                                 if (!re)
                                 {
                                     _nrt++;

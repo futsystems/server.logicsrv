@@ -88,7 +88,7 @@ namespace TradingLib.Core
         public SettleCentre()
             :base(SettleCentre.CoreName)
         {
-            TradingCalendar.SendDebugEvent +=new DebugDelegate(msgdebug);
+            //TradingCalendar.SendDebugEvent +=new DebugDelegate(msgdebug);
 
             //初始化置结算中心状态为未知
             SettleCentreStatus = QSEnumSettleCentreStatus.UNKNOWN;

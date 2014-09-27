@@ -88,13 +88,13 @@ namespace TradingLib.Core
         {
             _clearCentre = c;
             _tifengine = new TIFEngine();
-            _tifengine.SendDebugEvent +=new DebugDelegate(msgdebug);
+            //_tifengine.SendDebugEvent +=new DebugDelegate(msgdebug);
             _tifengine.SendOrderEvent += new OrderDelegate(route_SendOrder);
             _tifengine.SendCancelEvent += new LongDelegate(route_CancelOrder);
             
 
             _ordHelper = new OrderTransactionHelper("BrokerRouter");
-            _ordHelper.SendDebugEvent +=new DebugDelegate(msgdebug);
+            //_ordHelper.SendDebugEvent +=new DebugDelegate(msgdebug);
             _ordHelper.SendOrderEvent += new OrderDelegate(broker_sendorder);
            
 
@@ -180,7 +180,8 @@ namespace TradingLib.Core
         public event ErrorOrderNotifyDel GotErrorOrderNotifyEvent;
         void GotOrderErrorNotify(Order o, string errortitle)
         {
-            debug("Reply ordererror to tlserver  |" + o.ToString() + " ErrorTitle:" + errortitle, QSEnumDebugLevel.INFO);
+            
+            debug("Reply ErrorOrder To MessageExch  |" + o.ToString() + " ErrorTitle:" + errortitle, QSEnumDebugLevel.INFO);
             ErrorOrderNotify notify = ResponseTemplate<ErrorOrderNotify>.SrvSendNotifyResponse(o.Account);
             notify.Order = new OrderImpl(o);
             notify.RspInfo.FillError(errortitle);
@@ -196,7 +197,7 @@ namespace TradingLib.Core
         {
             if (fill != null && fill.isValid)
             {
-                debug("Reply Fill to tlserver |" + fill.ToString(), QSEnumDebugLevel.INFO);
+                debug("Reply Fill To MessageExch |" + fill.ToString(), QSEnumDebugLevel.INFO);
                 _fillcache.Write(new TradeImpl(fill));
             }
         }
@@ -209,7 +210,7 @@ namespace TradingLib.Core
         {
             if (o != null && o.isValid)
             {
-                debug("Reply order to tlserver |" + o.ToString(), QSEnumDebugLevel.INFO);
+                debug("Reply Order To MessageExch:" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
                 _ordercache.Write(new OrderImpl(o));
             }
         }
@@ -219,7 +220,7 @@ namespace TradingLib.Core
         public event LongDelegate GotCancelEvent;
         void GotCancel(long oid)
         {
-            debug("Reply cancle to tlserver |"+oid.ToString());
+            debug("Reply Cancel To MessageExch:"+oid.ToString());
             _cancelcache.Write(oid);
         }
 
@@ -324,101 +325,12 @@ namespace TradingLib.Core
         {
             try
             {
-                debug("Send  Order to Broker Side | "+o.ToString(),QSEnumDebugLevel.INFO);
                 
-                
-                /*
-                if (pos.isFlat)
-                {
-                    //空仓直接开仓 直接允许 如果是平仓委托则拒绝
-                    if (o.OffsetFlag == QSEnumOffsetFlag.CLOSE)
-                    {
-                        o.Status = QSEnumOrderStatus.Reject;
-                        debug("无持仓,无法执行平仓操作", QSEnumDebugLevel.INFO);
-                        GotOrderErrorNotify(o, "POSITION_NOT_HOLDING");
-                    }
-
-                }
-                else
-                {
-                    if ((pos.isLong && o.side) || (pos.isShort && (!o.side)))
-                    {
-                        //方向相同,加仓 直接允许
-                        if (o.OffsetFlag == QSEnumOffsetFlag.CLOSE)
-                        {
-                            debug("持仓与委托方向相同,无法执行平仓操作", QSEnumDebugLevel.INFO);
-                            o.Status = QSEnumOrderStatus.Reject;
-                            GotOrderErrorNotify(o, "POSITION_ORDER_CANNOT_CLOSE");
-                        }
-                    }
-                    else //方向相反,平仓操作 方向相反才需要计算未成交委托 与持仓数量
-                    {
-                        if (o.OffsetFlag == QSEnumOffsetFlag.OPEN)
-                        {
-                            debug("持仓与委托方向相反,无法执行开仓操作[锁仓]");
-                            o.Status = QSEnumOrderStatus.Reject;
-                            GotOrderErrorNotify(o, "POSITION_ORDER_CANNOT_CLOSE");
-                        }
-                        else
-                        {
-                            //委托方向和持仓方向相反 并且委托开平标识为平仓或者unknow
-                            //仓位手数 <未成交合约手数 与 当前下单和 则下单错误 提示仓位不足
-                            debug(PROGRAM + " :检查平仓仓位 当前仓位:" + pos.ToString() + " 未成交数量:" + ufill_size.ToString(),QSEnumDebugLevel.INFO);
-                            
-                            //如果委托没有正常发送到模拟交易接口会导致取消委托时 模拟成交接口无法正常返回取消回报，导致某帐户一直有委托挂着，从而进入撤单死循环，导致无法平仓
-                            if (o.isLimit)
-                            {
-                                if (pos_size < ufill_size)
-                                {
-                                    //平仓仓位不足 则拒绝该委托
-                                    debug("限价委托,未成交数量超过当前持仓", QSEnumDebugLevel.INFO);
-                                    o.Status = QSEnumOrderStatus.Reject;
-                                    GotOrderErrorNotify(o, "POSITION_OVER_CLOSE");
-                                }
-                            }
-                            if (o.isMarket)
-                            {
-                                //委托数量超过持仓数量
-                                if (pos_size < osize)
-                                {
-                                    debug("市价委托,委托总数超过持仓总数", QSEnumDebugLevel.INFO);
-                                    o.Status = QSEnumOrderStatus.Reject;
-                                    GotOrderErrorNotify(o, "POSITION_OVER_CLOSE");
-                                }
-                                //仓位手数 <未成交合约手数(ufill_size)表明市价单之前有limit委托 造成未成交合约数量大于仓位数量
-                                else//只有在开平标识为未知的情况下才进行自动撤单
-                                {
-                                    if (o.OffsetFlag == QSEnumOffsetFlag.UNKNOWN)
-                                    {
-                                        //撤单以前的成交Order
-                                        long[] olist = _clearCentre.getPendingOrders(o);
-                                        //一个list包含要撤单的Order当 全部撤完后 触发新委托单
-                                        _ordHelper.AddDelBeforeInsert(olist, o);
-                                        foreach (long oid in olist)
-                                        {
-                                            //取消委托
-                                            CancelOrder(oid);
-                                        }
-                                        return;//这里将委托放入ordhelper队列中,因此需要直接返回,不需要判断reject然后通过router 发单
-                                    }
-                                    else if (o.OffsetFlag == QSEnumOffsetFlag.CLOSE && (pos_size < ufill_size))
-                                    { 
-                                        //拒绝委托
-                                        debug("市价委托,限制开平标志，未成交平仓委托数量大于持仓无法执行", QSEnumDebugLevel.INFO);
-                                        o.Status = QSEnumOrderStatus.Reject;
-                                        GotOrderErrorNotify(o, "POSITION_OVER_CLOSE");
-                                    }
-                                }
-                            }
-                        } 
-                    }
-                }
-                **/
-                //debug("#################################order status :" + o.Status.ToString(), QSEnumDebugLevel.INFO);
                 //检查通过,则通过该broker发送委托 拒绝的委托通过 ordermessage对外发送
                 if (o.Status != QSEnumOrderStatus.Reject)
                 {
                     //按照委托方式发送委托直接发送或通过本地委托模拟器进行发送
+                    debug("Send  Order To Broker Side:" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
                     broker_sendorder(o);
                     //调用broker_sendorder对外发送委托 如果委托状态为拒绝 则表明委托被broker_send部分拒绝了，我们不用再标记委托状态为submited 因此不用再进入下一步
                     if (o.Status != QSEnumOrderStatus.Reject)
@@ -481,7 +393,7 @@ namespace TradingLib.Core
         {
             try
             {
-                debug(PROGRAM + ":Route Cancel to Broker Side |" + val.ToString(), QSEnumDebugLevel.INFO);
+                debug(PROGRAM + ":Route Cancel to Broker Side:" + val.ToString(), QSEnumDebugLevel.INFO);
                 route_CancelOrder(val);
             }
             catch (Exception ex)
