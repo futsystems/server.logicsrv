@@ -494,7 +494,7 @@ namespace TradingLib.ORM
 
         static IAccount AccountFields2IAccount(AccountFields fields)
         {
-            IAccount account = AccountHelper.CreateAccount(fields.Account);
+            IAccount account = AccountBase.CreateAccount(fields.Account);
             account.LastEquity = fields.LastEquity;
             account.UserID = fields.User_ID;
             account.CreatedTime = fields.CreatedTime;

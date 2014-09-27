@@ -6,7 +6,7 @@ using System.Threading;
 using TradingLib.ServiceManager;
 using TradingLib.API;
 using TradingLib.Common;
-
+using TradingLib.ORM;
 using ZeroMQ;
 
 
@@ -77,24 +77,16 @@ namespace TraddingSrvCLI
             }
 
             ////////////////////////////////// Init & Load Section
-            debug(">>> Init Server Configuration....");
-            ServerConfig srvconfig = new ServerConfig(debug);
-
+            debug(">>> Init DB Configuration....");
+            //读取配置文件 初始化数据库参数 系统其余设置均从数据库中加载
+            ConfigFile _configFile = ConfigFile.GetConfigFile();
+            //设定数据库
+            DBHelper.InitDBConfig(_configFile["DBAddress"].AsString(), _configFile["DBPort"].AsInt(), _configFile["DBName"].AsString(), _configFile["DBUser"].AsString(), _configFile["DBPass"].AsString());
 
             debug(">>> Init Core Module Manager....");
             //1.核心模块管理器,加载核心服务组件
-            CoreManager coreMgr = new CoreManager(srvconfig);
+            CoreManager coreMgr = new CoreManager();
             coreMgr.Init();
-
-
-            foreach (RuleItem item in TradingLib.ORM.MRuleItem.SelectRuleItem("9580001",QSEnumRuleType.OrderRule))
-            {
-                debug("ruleitem account:" + item.Account + " rulename:" + item.RuleName + " compate:" + item.Compare.ToString() + " value:" + item.Value.ToString() + " type:" + item.RuleType.ToString() + " symbolset:" + item.SymbolSet);  
-            }
-            //int acref = TradingLib.Core.MAccount.MaxOrderRef(QSEnumAccountCategory.DEALER);
-            //debug("MaxAccount id ref:" + acref.ToString());
-
-            //System.Threading.Thread.Sleep(1000000);
 
             debug(">>> Init Connector Manger....");
             //2.路由管理器,绑定核心部分的数据与成交路由,并加载Connector

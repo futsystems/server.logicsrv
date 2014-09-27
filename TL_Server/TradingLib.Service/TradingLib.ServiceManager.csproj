@@ -31,9 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="License">
-      <HintPath>..\..\lib\License.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data" />
@@ -60,11 +57,9 @@
     <Compile Include="ContribManager.cs" />
     <Compile Include="CoreManager\CoreManager_CTE.cs" />
     <Compile Include="DebugConfig.cs" />
-    <Compile Include="LicenseMgr.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CoreManager\CoreManager.cs" />
     <Compile Include="CoreManager\CoreManager_CoreComponents.cs" />
-    <Compile Include="ServerConfig.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -115,7 +115,7 @@ namespace TradingLib.Core
             }
         }
 
-        public ClearCentre(QSEnumAccountLoadMode loadmode = QSEnumAccountLoadMode.ALL):
+        public ClearCentre():
             base("ClearCentre")
         {
             Status = QSEnumClearCentreStatus.CCINIT;
@@ -130,13 +130,14 @@ namespace TradingLib.Core
             {
                 _cfgdb.UpdateConfig("DefaultPass", QSEnumCfgType.String,"123456", "模拟帐户在没有提供UserID进行直接创建时的默认交易密码");
             }
-
+            if (!_cfgdb.HaveConfig("AccountLoadMode"))
+            {
+                _cfgdb.UpdateConfig("AccountLoadMode", QSEnumCfgType.String,QSEnumAccountLoadMode.ALL, "清算中心加载帐户类别");
+            }
+            //加载模式
+            _loadmode = (QSEnumAccountLoadMode)Enum.Parse(typeof(QSEnumAccountLoadMode), _cfgdb["AccountLoadMode"].AsString());
             try
             {
-                //设定加载模式
-                _loadmode = loadmode;
-
-
                 //初始化异步储存组件
                 _asynLoger = new AsyncTransactionLoger();//获得交易信息数据库记录对象，用于记录委托，成交，取消等信息
 

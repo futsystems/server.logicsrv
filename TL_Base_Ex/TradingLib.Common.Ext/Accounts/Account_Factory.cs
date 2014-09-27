@@ -1,46 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
 using TradingLib.API;
 
-
 namespace TradingLib.Common
 {
-    /// <summary>
-    /// 用于按照设定生成对应的Account实例
-    /// </summary>
-    public class AccountHelper
+    public partial class AccountBase
     {
-        
         static string AccountTypeName = "";
         static Type AccountType = null;
-        static ConcurrentDictionary<string, Type> accounttypemap = new ConcurrentDictionary<string, Type>();
-
-        static AccountHelper()
+        static Dictionary<string, Type> accounttypemap = new Dictionary<string, Type>();
+        static ConfigDB  _cfgdb = new ConfigDB("Account");
+            
+        /// <summary>
+        /// 静态初始化
+        /// </summary>
+        static AccountBase()
         {
             foreach (Type t in PluginHelper.LoadAccountType())
             {
-                accounttypemap.TryAdd(t.FullName, t);
+                accounttypemap.Add(t.FullName, t);
             }
-        }
 
-
-
-        public static void print()
-        { 
-            foreach(KeyValuePair<string,Type> v in accounttypemap)
+            if (!_cfgdb.HaveConfig("AccountType"))
             {
-                TLCtxHelper.Debug(v.Key);
+                _cfgdb.UpdateConfig("AccountType", QSEnumCfgType.String, "Lottoqq.Account.AccountImpl", "系统使用的帐户类型");
             }
+            string acctype = _cfgdb["AccountType"].AsString();
+            SetAccountType(acctype);
         }
+
 
         /// <summary>
         /// 设定帐户类型
         /// </summary>
         /// <param name="typename"></param>
-        public static void SetAccountType(string typename)
+        static void SetAccountType(string typename)
         {
             if (string.IsNullOrEmpty(typename))
             {
@@ -90,7 +86,6 @@ namespace TradingLib.Common
             return (IAccount)Activator.CreateInstance(AccountType, new object[] { id});
             
         }
-
 
     }
 }

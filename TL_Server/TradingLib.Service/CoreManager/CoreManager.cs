@@ -17,18 +17,27 @@ namespace TradingLib.ServiceManager
 
     public partial class CoreManager : BaseSrvObject, IServiceManager
     {
-        ServerConfig config;//服务设置信息
+        //ServerConfig config;//服务设置信息
         DebugConfig dconfig;//日志设置信息
 
         public DebugConfig DebugConfig { get { return dconfig; } }
 
+        ConfigFile _configFile;
         public string ServiceMgrName { get { return PROGRAME; } }
-        public CoreManager(ServerConfig cfg)
+        public CoreManager()
             :base("CoreManager")
         {
-            config = cfg;
             dconfig = new DebugConfig();
-            //dconfig.ApplyDebugConfigEvent +=new VoidDelegate(this.ApplyDebugConfig);
+
+            ////设定数据库
+            //DBHelper.InitDBConfig(_configFile["DBAddress"].AsString(), _configFile["DBPort"].AsInt(), _configFile["DBName"].AsString(), _configFile["DBUser"].AsString(), _configFile["DBPass"].AsString());
+
+            ////设定帐户类型
+            //AccountHelper.SetAccountType(_configFile["AccountType"].AsString());
+
+
+            //_loadMode = (QSEnumAccountLoadMode)Enum.Parse(typeof(QSEnumAccountLoadMode), _configFile["LoadMode"].AsString());
+                
 
         }
         /*

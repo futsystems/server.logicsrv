@@ -40,7 +40,7 @@ namespace TradingLib.ServiceManager
         private void InitClearCentre()
         {
             debug("2.初始化ClearCentre");
-            _clearCentre = new ClearCentre(config.LoadMode);
+            _clearCentre = new ClearCentre();
 
             //tradingserver得到成交后发送给clearcentre处理，计算完手续费后再通过tradingserver回报给客户端
             _clearCentre.GotCommissionFill += new FillDelegate(_messageExchagne.newCommissionFill);
