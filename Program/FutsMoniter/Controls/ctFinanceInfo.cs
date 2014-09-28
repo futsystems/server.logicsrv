@@ -28,16 +28,16 @@ namespace FutsMoniter
             }
             else
             {
-                lastequtiy.Text = LibUtil.FormatDisp(info.LastEquity);
-                realizedpl.Text = LibUtil.FormatDisp(info.RealizedPL);
-                unrealizedpl.Text = LibUtil.FormatDisp(info.UnRealizedPL);
-                commission.Text = LibUtil.FormatDisp(info.Commission);
-                netprofit.Text = LibUtil.FormatDisp(info.Profit);
-                cashin.Text = LibUtil.FormatDisp(info.CashIn);
-                cashout.Text = LibUtil.FormatDisp(info.CashOut);
-                nowequity.Text = LibUtil.FormatDisp(info.NowEquity);
-                margin.Text = LibUtil.FormatDisp(info.Margin);
-                marginfrozen.Text = LibUtil.FormatDisp(info.MarginFrozen);
+                lastequtiy.Text = Util.FormatDecimal(info.LastEquity);
+                realizedpl.Text = Util.FormatDecimal(info.RealizedPL);
+                unrealizedpl.Text = Util.FormatDecimal(info.UnRealizedPL);
+                commission.Text = Util.FormatDecimal(info.Commission);
+                netprofit.Text = Util.FormatDecimal(info.Profit);
+                cashin.Text = Util.FormatDecimal(info.CashIn);
+                cashout.Text = Util.FormatDecimal(info.CashOut);
+                nowequity.Text = Util.FormatDecimal(info.NowEquity);
+                margin.Text = Util.FormatDecimal(info.Margin);
+                marginfrozen.Text = Util.FormatDecimal(info.MarginFrozen);
             }
         }
     }

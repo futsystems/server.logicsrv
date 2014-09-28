@@ -11,14 +11,17 @@ namespace TradingLib.API
         /// 未知
         /// </summary>
         UNKNOWN=0,
+
         /// <summary>
         /// 请求
         /// </summary>
         REQUEST=1,
+
         /// <summary>
         /// 应答类返回
         /// </summary>
         RSPRESPONSE=2,
+
         /// <summary>
         /// 通知类返回 对交易帐户进行通知
         /// 交易客户端通过Account寻找对应客户端
@@ -31,6 +34,7 @@ namespace TradingLib.API
         /// </summary>
         LOCATIONNOTIFYRESPONSE=4,
     }
+
     /// <summary>
     /// 通讯消息Message用于系统底层通讯
     /// Package基于Message构成了具体消息的逻辑结构
@@ -51,6 +55,7 @@ namespace TradingLib.API
         /// 请求数据包客户端Client
         /// </summary>
         string ClientID { get;}
+
         /// <summary>
         /// 获得消息
         /// </summary>

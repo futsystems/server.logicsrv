@@ -111,7 +111,7 @@ namespace Lottoqq.Race
         {
             get
             {
-                return this.LastFutEquity + _account.FutLiquidation - _account.FutMoneyUsed;
+                return this.LastFutEquity + _account.CalFutLiquidation() - _account.CalFutMoneyUsed();
             }
         }
 
@@ -119,14 +119,14 @@ namespace Lottoqq.Race
         {
             get
             {
-                return this.LastOptEquity + _account.OptLiquidation - _account.OptMoneyUsed;
+                return this.LastOptEquity + _account.CalOptLiquidation() - _account.CalOptMoneyUsed();
             }
         }
         public decimal MJAvabileFund
         {
             get
             {
-                return this.LastMJEquity + _account.InnovLiquidation - _account.InnovMoneyUsed;
+                return this.LastMJEquity + _account.CalInnovLiquidation() - _account.CalOptMoneyUsed();
             }
         }
 
@@ -148,7 +148,7 @@ namespace Lottoqq.Race
         {
             get
             {
-                return LibUtil.isToday(SettleDay);
+                return Util.IsToday(SettleDay);
             }
         }
 
@@ -187,5 +187,27 @@ namespace Lottoqq.Race
                 return false;
             }
         }
+
+        #region 服务查询和设置
+        /// <summary>
+        /// 查询服务状态和参数
+        /// </summary>
+        /// <returns></returns>
+        public string QryService()
+        {
+            return "";
+        }
+
+        /// <summary>
+        /// 设置服务状态和参数
+        /// </summary>
+        /// <param name="cfg"></param>
+        public void SetService(string cfg)
+        {
+
+        }
+
+        #endregion
+
     }
 }

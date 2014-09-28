@@ -91,7 +91,7 @@ namespace FutsMoniter
                     tb.Rows[i][PRICE] = GetOrderPrice(o);
                     tb.Rows[i][FILLED] = Math.Abs(o.Filled);
                     tb.Rows[i][STATUS] = o.Status;
-                    tb.Rows[i][STATUSSTR] = LibUtil.GetEnumDescription(o.Status);
+                    tb.Rows[i][STATUSSTR] = Util.GetEnumDescription(o.Status);
                     tb.Rows[i][ORDERREF] = o.OrderRef;
                     tb.Rows[i][EXCHANGE] = o.Exchange;
                     tb.Rows[i][EXCHORDERID] = o.OrderExchID;

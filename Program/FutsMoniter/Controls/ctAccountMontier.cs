@@ -47,6 +47,12 @@ namespace FutsMoniter.Controls
 
             InitViewQuoteList();
             _loaded = true;
+
+            if (!Globals.Config["FinService"].AsBool())
+            {
+                FinServicePage.Text = "开发中";
+                FinServicePage.Enabled = false;
+            }
         }
         RadContextMenu menu = new RadContextMenu();
         #region  初始化与事件绑定
@@ -111,7 +117,7 @@ namespace FutsMoniter.Controls
             if (account != null)
             {
                 fmaccountconfig.Account = account;
-                fmaccountconfig.ShowDialog();
+                fmaccountconfig.Show();//.ShowDialog();
             }
             else
             {
@@ -185,7 +191,8 @@ namespace FutsMoniter.Controls
 
         const string INTRADAY = "日内";
         const string AGENTCODE = "代理编号";
-        const string TOKEN = "帐户标识";
+        const string NAME = "姓名";
+        const string POSLOK = "锁仓权限";
         #endregion
 
         DataTable gt = new DataTable();
@@ -251,7 +258,8 @@ namespace FutsMoniter.Controls
             gt.Columns.Add(CATEGORY);//18
             gt.Columns.Add(INTRADAY);//19
             gt.Columns.Add(AGENTCODE);//22
-            gt.Columns.Add(TOKEN);//22
+            gt.Columns.Add(POSLOK);//
+            gt.Columns.Add(NAME);//22
 
 
             //accountlist.ContextMenuStrip = new ContextMenuStrip();
@@ -286,6 +294,23 @@ namespace FutsMoniter.Controls
         }
 
         /// <summary>
+        /// validview 调整视图状态
+        /// 根据具体的权限状态进行调整
+        /// </summary>
+        public void ValidView()
+        {
+            if (!Globals.RightRouter)
+            {
+                accountgrid.Columns[ROUTEIMG].IsVisible = false;
+            }
+            if (!Globals.RightAgent)
+            {
+                accountgrid.Columns[AGENTCODE].IsVisible = false;
+            }
+
+            fmaccountconfig.ValidView();
+        }
+        /// <summary>
         /// 绑定数据表格到grid
         /// </summary>
         private void BindToTable()
@@ -303,6 +328,11 @@ namespace FutsMoniter.Controls
             accountgrid.Columns[ROUTE].IsVisible = false;
             accountgrid.Columns[LOGINSTATUS].IsVisible = false;
 
+            //if (! (Globals.Manager.Type == QSEnumManagerType.ROOT))
+            //{
+            //    accountgrid.Columns[ROUTEIMG].IsVisible = false;
+            //    accountgrid.Columns[AGENTCODE].IsVisible = false;
+            //}
             accountgrid.Columns[ACCOUNT].Width = 60;
             accountgrid.Columns[ROUTEIMG].Width = 20;
             accountgrid.Columns[EXECUTEIMG].Width = 20;
@@ -801,10 +831,12 @@ namespace FutsMoniter.Controls
                         gt.Rows[i][UNREALIZEDPL] = decDisp(0);
                         gt.Rows[i][COMMISSION] = decDisp(0);
                         gt.Rows[i][PROFIT] = decDisp(0);
-                        gt.Rows[i][CATEGORY] = LibUtil.GetEnumDescription(account.Category);
+                        gt.Rows[i][CATEGORY] = Util.GetEnumDescription(account.Category);
                         gt.Rows[i][INTRADAY] = account.IntraDay ? "日内" : "隔夜";
-                        gt.Rows[i][AGENTCODE] = "0000";
-                        gt.Rows[i][TOKEN] = account.Token;
+                        Manager mgr = Globals.BasicInfoTracker.GetManager(account.MGRID);
+                        gt.Rows[i][AGENTCODE] = mgr.Login + " - " + mgr.Name;
+                        gt.Rows[i][NAME] = account.Name;
+                        gt.Rows[i][POSLOK] = account.PosLock?"有":"无";
 
                         accountmap.TryAdd(account.Account, account);
                         accountrowmap.TryAdd(account.Account, i);
@@ -818,9 +850,13 @@ namespace FutsMoniter.Controls
                         gt.Rows[r][ROUTEIMG] = getRouteStatusImage(account.OrderRouteType);
                         gt.Rows[r][EXECUTE] = getExecuteStatus(account.Execute);
                         gt.Rows[r][EXECUTEIMG] = getExecuteStatusImage(account.Execute);
-                        gt.Rows[r][CATEGORY] = LibUtil.GetEnumDescription(account.Category);
+                        gt.Rows[r][CATEGORY] = Util.GetEnumDescription(account.Category);
                         gt.Rows[r][INTRADAY] = account.IntraDay ? "日内" : "隔夜";
-                        gt.Rows[r][TOKEN] = account.Token;
+                        gt.Rows[r][POSLOK] = account.PosLock ? "有" : "无";
+
+                        Manager mgr = Globals.BasicInfoTracker.GetManager(account.MGRID);
+                        gt.Rows[r][AGENTCODE] = mgr.Login +" - "+ mgr.Name;
+                        gt.Rows[r][NAME] = account.Name;
 
                     }
 
@@ -1211,6 +1247,12 @@ namespace FutsMoniter.Controls
         }
 
         #endregion
+
+        private void btnSubmit_Click(object sender, EventArgs e)
+        {
+            //Globals.TLClient.ReqQryAcctService("4444", "FinService");
+            Globals.TLClient.ReqQryFinService("4444");
+        }
 
 
     }

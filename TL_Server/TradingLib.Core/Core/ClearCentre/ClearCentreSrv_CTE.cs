@@ -219,7 +219,7 @@ namespace TradingLib.Core
             }
             else
             {
-                return string.Format("Account:{0} UnrealizedPL:{1} SettleUnrealizedPL:{2}", acc.ID, acc.FutUnRealizedPL, acc.FutSettleUnRealizedPL);
+                return string.Format("Account:{0} UnrealizedPL:{1} SettleUnrealizedPL:{2}", acc.ID, acc.CalFutRealizedPL(), acc.CalFutSettleUnRealizedPL());
             }
         }
 
@@ -317,7 +317,7 @@ namespace TradingLib.Core
                 ReplyHelper.EndWriter(w);
 
                 sb.Append(w.ToString() + ExComConst.Line);
-                foreach (Order o in this.getOrders(account))
+                foreach (Order o in acc.Orders)
                 {
                     sb.Append(o.ToString() + ExComConst.Line);
                 }
@@ -381,7 +381,7 @@ namespace TradingLib.Core
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("上次结算持仓:" + Environment.NewLine);
-            foreach (Position pos in this.TotalYDPositions)
+            foreach (Position pos in this.TotalYdPositions)
             {
                 sb.Append(pos.ToString() + Environment.NewLine);
             }
@@ -423,7 +423,7 @@ namespace TradingLib.Core
             {
                 string re = "";
                 StringBuilder sb = new StringBuilder();
-                foreach (Position pos in this.getPositions(acc.ID))
+                foreach (Position pos in acc.Positions)
                 {
                     sb.Append(pos.ToString() + Environment.NewLine);
                 }
@@ -442,7 +442,7 @@ namespace TradingLib.Core
             {
                 string re = "";
                 StringBuilder sb = new StringBuilder();
-                foreach (Position pos in this.getPositions(acc.ID).Where(p => p.oSymbol.SecurityType == SecurityType.FUT).ToArray())
+                foreach (Position pos in acc.Positions.Where(p => p.oSymbol.SecurityType == SecurityType.FUT).ToArray())
                 {
                     sb.Append(pos.ToString() + Environment.NewLine);
                 }

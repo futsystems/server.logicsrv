@@ -148,12 +148,12 @@ namespace TradingLib.Common
                     off.StopId = stop.id;
                     SendOrderEvent(stop);
                     // notify
-                    debug(string.Format("sent new stop: {0} {1}", stop.id, stop.ToString(DebugDecimals)));
+                    debug(string.Format("sent new stop: {0} {1}", stop.id,stop.GetOrderInfo()));
                     sentorder = true;
                 }
                 else if (_verbdebug)
                 {
-                    debug(sym + " invalid stop: " + stop.ToString(DebugDecimals));
+                    debug(sym + " invalid stop: " + stop.GetOrderInfo());
                 }
 
             }
@@ -173,12 +173,12 @@ namespace TradingLib.Common
                     off.ProfitId = profit.id;
                     SendOrderEvent(profit);
                     // notify
-                    debug(string.Format("sent new profit: {0} {1}", profit.id, profit.ToString(DebugDecimals)));
+                    debug(string.Format("sent new profit: {0} {1}", profit.id, profit.GetOrderInfo()));
                     sentorder = true;
                 }
                 else if (_verbdebug)
                 {
-                    debug(sym + " invalid profit: " + profit.ToString(DebugDecimals));
+                    debug(sym + " invalid profit: " + profit.GetOrderInfo());
                 }
             }
             // make sure new offset info is reflected

@@ -122,11 +122,11 @@ namespace TradingLib.Core
 
             try
             {
-                VerboseDebugging = verb;
+                //VerboseDebugging = verb;
                 _serveraddress = ipaddr;
                 _port = port;
 
-                if (!IPUtil.isValidAddress(ipaddr))
+                if (Util.IsValidAddress(ipaddr))
                 {
                     ipaddr = "127.0.0.1";
                 }
@@ -326,7 +326,7 @@ namespace TradingLib.Core
                     try
                     {   //注意从外层传入服务器监听地址
                         _trans = new AsyncServer(PROGRAME, _serveraddress, _port, this.NumWorks, this.EnableTPTracker, false);
-                        _trans.SendDebugEvent += new DebugDelegate(msgdebug);
+                        //_trans.SendDebugEvent += new DebugDelegate(msgdebug);
                         _trans.GotTLMessageEvent += new HandleTLMessageDel(basehandle);
                         _trans.ProviderName = ProviderName;//将TLServerProviderName传递给传输层,用于客户端的名称查询
 
@@ -337,7 +337,7 @@ namespace TradingLib.Core
                     catch (Exception ex)
                     {
                         Stop();
-                        v("start attempt #" + attempts + " failed: " + ex.Message + ex.StackTrace);
+                        //v("start attempt #" + attempts + " failed: " + ex.Message + ex.StackTrace);
                         Thread.Sleep(delayms);
                     }
                 }
@@ -927,8 +927,8 @@ namespace TradingLib.Core
 
 
         #region 心跳检查 并删除数据库中死掉的session
-        int deadcheckingperiod = IPUtil.CLEARDEADSESSIONPERIOD;//1.5分钟检查一次死链接信息
-        int deaddiff = IPUtil.CLIENTDEADTIME;//死链接时间为1分钟,1分钟内没有hearbeat更新的则视为死链接
+        int deadcheckingperiod = Const.CLEARDEADSESSIONPERIOD;//1.5分钟检查一次死链接信息
+        int deaddiff = Const.CLIENTDEADTIME;//死链接时间为1分钟,1分钟内没有hearbeat更新的则视为死链接
         //每分钟检查一次客户端回话session
         [TaskAttr("定时清除无效客户端回话",60, "定时清除无效客户端回话")]
         public void Task_CleanDeadSession()

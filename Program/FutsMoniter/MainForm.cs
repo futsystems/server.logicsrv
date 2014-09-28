@@ -37,6 +37,7 @@ namespace FutsMoniter
         SystemStatusForm systemstatusfrom;
         HistQryForm histqryform;
         BasicInfoTracker basicinfotracker;
+        ManagerForm mgrform;
         void ShowInfo(string msg)
         {
             if (ShowInfoHandler != null)
@@ -60,7 +61,7 @@ namespace FutsMoniter
 
             //设定对外消息显示输出
             ShowInfoHandler = showinfo;
-            this.Text = Globals.Config["CopName"].AsString() + " " + Globals.Config["Version"].AsString();
+            
 
             ThemeResolutionService.ApplicationThemeName = Globals.Config["ThemeName"].AsString();
 
@@ -89,12 +90,21 @@ namespace FutsMoniter
             systemstatusfrom = new SystemStatusForm();
             histqryform = new HistQryForm();
 
+            mgrform = new ManagerForm();
+
             basicinfotracker.GotMarketTimeEvent += new MarketTimeDel(markettimeform.GotMarketTime);
             basicinfotracker.GotExchangeEvent += new ExchangeDel(exchangeform.GotExchange);
             basicinfotracker.GotSecurityEvent += new SecurityDel(securityform.GotSecurity);
             basicinfotracker.GotSymbolEvent += new SymbolDel(symbolform.GotSymbol);
 
+            basicinfotracker.GotManagerEvent += new ManagerDel(mgrform.GotManager);
+
             Globals.SendDebugEvent +=new DebugDelegate(debug);
+
+            if (!Globals.Config["Agent"].AsBool())
+            {
+                btnManagerGP.Enabled = false;
+            }
         }
 
 
@@ -166,9 +176,23 @@ namespace FutsMoniter
                     }
                     if (_basicinfodone)
                     {
-                        ShowInfo("初始化行情报表");
-                        InitSymbol2View();
-                        Globals.LoginStatus.IsInitSuccess = true;
+                        if (Globals.Manager == null)
+                        {
+                            ShowInfo("柜员数据获取异常,请重新登入!");
+                            Globals.LoginStatus.SetInitMessage("加载基础数据失败");
+
+                        }
+                        else
+                        {
+                            this.Text = Globals.Config["CopName"].AsString() + " " + Globals.Config["Version"].AsString() +"           柜员用户名:"+Globals.Manager.Login +" 名称:"+Globals.Manager.Name +" 类型:"+Util.GetEnumDescription(Globals.Manager.Type);
+
+                            //如果不是总平台柜员 隐藏
+
+                            ctAccountMontier1.ValidView();
+                            ShowInfo("初始化行情报表");
+                            InitSymbol2View();
+                            Globals.LoginStatus.IsInitSuccess = true;
+                        }
                     }
                     else
                     {
@@ -218,6 +242,7 @@ namespace FutsMoniter
             if (response.Authorized)
             {
                 _logined = true;
+                Globals.MgrFK = response.mgr_fk;//保存管理端登入获得的全局ID用于获取Manager列表时 绑定对应的Manager
             }
             else
             {
@@ -275,6 +300,12 @@ namespace FutsMoniter
             double o = statusmessage.Opacity - 0.05;
             statusmessage.Opacity = o >= 0 ? o : 0;
         }
+
+
+
+
+        
+
 
 
 

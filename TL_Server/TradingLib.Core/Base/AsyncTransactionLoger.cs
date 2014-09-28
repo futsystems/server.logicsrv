@@ -116,7 +116,7 @@ namespace TradingLib.Core
                                     debug(ex.ToString(),QSEnumDebugLevel.ERROR);
                                     throw (new QSTranLogOrderError(o));
                                 }
-                                string s = "交易日志:Order inserted:" + o.ToString();
+                                string s = "交易日志:Order Inserted:" + o.GetOrderInfo();
                                 if (!re)
                                 {
                                     _nrt++;
@@ -145,7 +145,7 @@ namespace TradingLib.Core
                                     debug(ex.ToString(), QSEnumDebugLevel.ERROR);
                                     throw (new QSTranLogOrderUpdateError(o));
                                 }
-                                string s = "交易日志:Order update:" + o.ToString();
+                                string s = "交易日志:Order Update:" + o.GetOrderStatus();
                                 if (!re)
                                 {
                                     _nrt++;
@@ -173,7 +173,7 @@ namespace TradingLib.Core
                                     debug(ex.ToString(), QSEnumDebugLevel.ERROR);
                                     throw (new QSTranLogFillError(f));
                                 }
-                                string s = "交易日志:Trade inserted:" + f.ToString();
+                                string s = "交易日志:Trade Inserted:" + f.GetTradeInfo();
                                 if (!re)
                                 {
                                     _nrt++;
@@ -228,7 +228,7 @@ namespace TradingLib.Core
                                     debug(ex.ToString(), QSEnumDebugLevel.ERROR);
                                 }
 
-                                string s = "交易日志:orderaction inserted" + OrderActionImpl.Serialize(action);
+                                string s = "交易日志:OrderAction Inserted" + OrderActionImpl.Serialize(action);
                                 if (!re)
                                 {
                                     _nrt++;
@@ -256,7 +256,7 @@ namespace TradingLib.Core
                                     debug(ex.ToString(), QSEnumDebugLevel.ERROR);
                                     //throw (new QSTranLogCancelError(oid));
                                 }
-                                string s = "交易日志:PosTransaction inserted:";// +oid.ToString();
+                                string s = "交易日志:PosTransaction Inserted:";// +oid.ToString();
                                 if (!re)
                                 {
                                     _nrt++;
@@ -483,4 +483,6 @@ namespace TradingLib.Core
         }
 
     }
+
+
 }

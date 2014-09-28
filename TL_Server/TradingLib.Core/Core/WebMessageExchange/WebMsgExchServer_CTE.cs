@@ -78,7 +78,7 @@ namespace TradingLib.Core
                     foreach (IAccount acc in cst.WatchAccounts)
                     {
                         bool sent = cst.IsSent;
-                        _pubserver.NewWebSockTopic(cst.UUID, InfoType.AccInfoLite, ObjectInfoHelper.GenAccountInfoLite(acc));
+                        _pubserver.NewWebSockTopic(cst.UUID, InfoType.AccInfoLite, acc.ToAccountInfoLite());
                         if (!sent)
                         {
                             ClientTrackerInfo info = null;

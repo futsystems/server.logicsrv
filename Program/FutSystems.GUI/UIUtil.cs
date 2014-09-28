@@ -49,7 +49,7 @@ namespace FutSystems.GUI
             foreach (T c in Enum.GetValues(typeof(T)))
             {
                 ValueObject<T> vo = new ValueObject<T>();
-                vo.Name = LibUtil.GetEnumDescription(c);
+                vo.Name = Util.GetEnumDescription(c);
                 vo.Value = c;
                 list.Add(vo);
             }
@@ -73,7 +73,7 @@ namespace FutSystems.GUI
             foreach (T c in Enum.GetValues(typeof(T)))
             {
                 ValueObject<T> vo = new ValueObject<T>();
-                vo.Name = LibUtil.GetEnumDescription(c);
+                vo.Name = Util.GetEnumDescription(c);
                 vo.Value = c;
                 list.Add(vo);
             }
@@ -261,7 +261,7 @@ namespace FutSystems.GUI
             foreach (T c in Enum.GetValues(typeof(T)))
             {
                 ValueObject<T> vo = new ValueObject<T>();
-                vo.Name = LibUtil.GetEnumDescription(c);
+                vo.Name = Util.GetEnumDescription(c);
                 vo.Value = c;
                 list.Add(vo);
             }

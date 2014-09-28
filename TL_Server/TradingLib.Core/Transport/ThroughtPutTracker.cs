@@ -14,10 +14,10 @@ namespace TradingLib.Core
     /// <typeparam name="T"></typeparam>
     public class ThroughputTracker<T>
     {
-        int StartNum = IPUtil.TPStartNum;//当消息数量累计到多少时开始启动检测
-        int CheckNum = IPUtil.TPCheckNum;//启动检测后跟踪消息的数目(在这个数目内计算TP)
-        double RejectValue = IPUtil.TPRejectValue;//TP数值达到多少后拒绝该地址的消息
-        double StopValue = IPUtil.TPStartNum;//Tp数值降低到多少后停止检测
+        int StartNum = Const.TPStartNum;//当消息数量累计到多少时开始启动检测
+        int CheckNum = Const.TPCheckNum;//启动检测后跟踪消息的数目(在这个数目内计算TP)
+        double RejectValue = Const.TPRejectValue;//TP数值达到多少后拒绝该地址的消息
+        double StopValue = Const.TPStartNum;//Tp数值降低到多少后停止检测
 
         public event DebugDelegate SendDebugEvent;
         void debug(string msg)
@@ -43,7 +43,7 @@ namespace TradingLib.Core
         {
             get
             {
-                return DateTime.Now.Subtract(_heartbeattime).TotalSeconds > IPUtil.CLIENTDEADTIME;
+                return DateTime.Now.Subtract(_heartbeattime).TotalSeconds > Const.CLIENTDEADTIME;
             }
         }
 

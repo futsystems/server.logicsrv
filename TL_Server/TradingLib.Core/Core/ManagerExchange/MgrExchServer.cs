@@ -10,7 +10,7 @@ using TradingLib.Common;
 namespace TradingLib.Core
 {
 
-    public partial class MgrExchServer:BaseSrvObject,ICore
+    public partial class MgrExchServer : BaseSrvObject, ICore, IMessageMgr
     {
         const string CoreName = "MgrExchServer";
         public string CoreId { get { return this.PROGRAME; } }
@@ -148,11 +148,11 @@ namespace TradingLib.Core
 public class CustInfoEx
 {
 
-    //管理端ID
+    //管理端位置
     public ILocation Location {get;set;}
     //管理端的当前观察账户列表,保存了需要向管理端推送当前动态信息的账户列表
-    ThreadSafeList<string> WatchAccounts = new ThreadSafeList<string>();
-    public ThreadSafeList<string> WathAccountList { get { return this.WatchAccounts; } }
+    ThreadSafeList<IAccount> WatchAccounts = new ThreadSafeList<IAccount>();
+    public ThreadSafeList<IAccount> WathAccountList { get { return this.WatchAccounts; } }
     //保存了管理端当前需要推送实时交易信息的帐号,任何时刻管理端只接受若干个账户财务信息更新，以及某个账户的交易记录
     string _selectacc = string.Empty;
     public string SelectedAccount { get { return _selectacc; } set { _selectacc = value; } }
@@ -170,7 +170,7 @@ public class CustInfoEx
     public bool NeedPushTradingInfo(string account)
     {
         //如果提供的帐号 或者 设定当前选择的帐号为空或null 则不推送该交易信息
-        if (string.IsNullOrEmpty(account) || string.IsNullOrEmpty(SelectedAccount)) return false;
+        if (string.IsNullOrEmpty(account) || string.IsNullOrEmpty(this.SelectedAccount)) return false;
         //选中的帐号与我们当前比较的帐号 相同,则我们推送该信息
         if (account.Equals(this.SelectedAccount)) return true;
 
@@ -187,7 +187,9 @@ public class CustInfoEx
         WatchAccounts.Clear();
         foreach (string account in accountlist)
         {
-            WatchAccounts.Add(account);
+            IAccount acc = TLCtxHelper.CmdAccount[account];
+            if (acc == null) continue;
+            WatchAccounts.Add(acc);
         }
 
     }

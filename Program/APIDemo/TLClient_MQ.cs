@@ -40,20 +40,20 @@ namespace TradingLib.Common
 
         AsyncClient _mqcli = null;//通讯client组件
         int _tickerrors = 0;//tick数据处理错误计数
-        int port = IPUtil.TLDEFAULTBASEPORT;//默认服务端口
+        int port = Const.TLDEFAULTBASEPORT;//默认服务端口
         int _wait = 5;//后台检测连接状态频率
-        public const int DEFAULTWAIT = IPUtil.DEFAULTWAIT;//心跳检测线程检测频率
+        public const int DEFAULTWAIT = Const.DEFAULTWAIT;//心跳检测线程检测频率
 
-        int heartbeatperiod = IPUtil.HEARTBEATPERIOD;//向服务端发送心跳信息间隔
+        int heartbeatperiod = Const.HEARTBEATPERIOD;//向服务端发送心跳信息间隔
 
         bool _started = false;//后台检测连接状态线程是否启动
         bool _connect = false;//客户端是否连接到服务端
 
-        int _tickheartbeatdead = IPUtil.TICKHEARTBEATDEADMS;
-        int _tickprocesscheckfreq = IPUtil.TICKHEARTBEATCHECKFREQ;
+        int _tickheartbeatdead = Const.TICKHEARTBEATDEADMS;
+        int _tickprocesscheckfreq = Const.TICKHEARTBEATCHECKFREQ;
 
-        int _sendheartbeat = IPUtil.SENDHEARTBEATMS;//发送心跳请求间隔
-        int _heartbeatdeadat = IPUtil.HEARTBEATDEADMS;//心跳死亡间隔
+        int _sendheartbeat = Const.SENDHEARTBEATMS;//发送心跳请求间隔
+        int _heartbeatdeadat = Const.HEARTBEATDEADMS;//心跳死亡间隔
         long _lastheartbeat = 0;//最后心跳时间
         long _tickhartbeat = 0;//最后tick心跳时间
         bool _requestheartbeat = false;//请求心跳回复
@@ -81,8 +81,8 @@ namespace TradingLib.Common
         public const int DEFAULTRETRIES = 3;//默认尝试连接次数
         public int DisconnectRetries { get { return _disconnectretry; } set { _disconnectretry = value; } }
 
-        int _remodedelay = IPUtil.RECONNECTDELAY;//在心跳机制中重新建立连接中 Mode失败后再次Mode的时间间隔 单位秒
-        int _modeRetries = IPUtil.RECONNECTTIMES;//在心跳机制中通过Mode重新搜索服务列表 并建立连接，重试次数
+        int _remodedelay = Const.RECONNECTDELAY;//在心跳机制中重新建立连接中 Mode失败后再次Mode的时间间隔 单位秒
+        int _modeRetries = Const.RECONNECTTIMES;//在心跳机制中通过Mode重新搜索服务列表 并建立连接，重试次数
         public int ModeRetries { get { return _modeRetries; } set { _modeRetries = value; } }
         //可用服务端列表
         public Providers[] ProvidersAvailable { get { return servers.ToArray(); } }

@@ -166,7 +166,7 @@ namespace TradingLib.API
         /// </summary>
         /// <param name="decimals"></param>
         /// <returns></returns>
-        string ToString(int decimals);
+       // string ToString(int decimals);
         /// <summary>
         /// 获得该委托通过哪个交易通道发出
         /// </summary>
@@ -199,6 +199,11 @@ namespace TradingLib.API
         /// 是否强平
         /// </summary>
         bool ForceClose { get; set; }
+
+        /// <summary>
+        /// 强平原因
+        /// </summary>
+        string ForceCloseReason { get; set; }
 
         /// <summary>
         /// 客户端委托引用

@@ -59,7 +59,7 @@ namespace AccountRuleSet
         {
             get
             {
-                return "账户损失 " + LibUtil.GetEnumDescription(this.Compare) + " " + _profit.ToString("N2") + "[" + SymbolSet + "]" +"强平仓位并禁止交易";
+                return "账户损失 " + Util.GetEnumDescription(this.Compare) + " " + _profit.ToString("N2") + "[" + SymbolSet + "]" +"强平仓位并禁止交易";
             }
         }
 

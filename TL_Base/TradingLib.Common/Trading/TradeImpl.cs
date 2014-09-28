@@ -284,22 +284,22 @@ namespace TradingLib.Common
         public virtual bool isValid { get { return (xsize != 0) && (xprice != 0) && (xtime+xdate != 0) && (symbol != null) && (symbol!=""); } }
 
 
-        public override string ToString()
-        {
-            return xdate.ToString() + "-" + xtime.ToString() + " [" + Account.ToString() +"]"+ (side ? " BOT" : " SOD") + " " + Math.Abs(xsize).ToString() + " " + (this.oSymbol != null ? this.oSymbol.FullName : this.symbol)  + "  @" + xprice.ToString() + " C:" + Commission.ToString() + " Via:" + Broker + "/" + BrokerKey + " OP:" + _posop.ToString();
+        //public override string ToString()
+        //{
+        //    return xdate.ToString() + "-" + xtime.ToString() + " [" + Account.ToString() +"]"+ (side ? " BOT" : " SOD") + " " + Math.Abs(xsize).ToString() + " " + (this.oSymbol != null ? this.oSymbol.FullName : this.symbol)  + "  @" + xprice.ToString() + " C:" + Commission.ToString() + " Via:" + Broker + "/" + BrokerKey + " OP:" + _posop.ToString();
 
-        }
+        //}
         
-        public string ToString(bool includeid) { return ToString(',', includeid); }
-        public string ToString(char delimiter) { return ToString(delimiter, true); }
-        public string ToString(char delimiter,bool includeid)
-        {
-            int usize = Math.Abs(xsize);
-            string[] trade = new string[] { xdate.ToString(System.Globalization.CultureInfo.InvariantCulture), xtime.ToString(System.Globalization.CultureInfo.InvariantCulture), symbol, (side ? "BUY" : "SELL"), usize.ToString(System.Globalization.CultureInfo.InvariantCulture), xprice.ToString("F2", System.Globalization.CultureInfo.InvariantCulture), Account ,Broker,Commission.ToString(),this.PositionOperation.ToString()};
-            if (!includeid)
-                return string.Join(delimiter.ToString(), trade);
-            return string.Join(delimiter.ToString(), trade) + delimiter + id;
-        }
+        //public string ToString(bool includeid) { return ToString(',', includeid); }
+        //public string ToString(char delimiter) { return ToString(delimiter, true); }
+        //public string ToString(char delimiter,bool includeid)
+        //{
+        //    int usize = Math.Abs(xsize);
+        //    string[] trade = new string[] { xdate.ToString(System.Globalization.CultureInfo.InvariantCulture), xtime.ToString(System.Globalization.CultureInfo.InvariantCulture), symbol, (side ? "BUY" : "SELL"), usize.ToString(System.Globalization.CultureInfo.InvariantCulture), xprice.ToString("F2", System.Globalization.CultureInfo.InvariantCulture), Account ,Broker,Commission.ToString(),this.PositionOperation.ToString()};
+        //    if (!includeid)
+        //        return string.Join(delimiter.ToString(), trade);
+        //    return string.Join(delimiter.ToString(), trade) + delimiter + id;
+        //}
        
         /// <summary>
         /// Serialize trade as a string

@@ -53,8 +53,14 @@ namespace TradingLib.ORM
         public int User_ID { get; set; }
         public long Confrim_TimeStamp { get; set; }
         public string MAC { get; set; }
-        public string Token { get; set; }
+
+        public string Name { get; set; }
+        public string Broker { get; set; }
+        public string BankID { get; set; }
+        public string BankAC { get; set; }
+
         public bool PosLock { get; set; }
+        public int Mgr_fk { get; set; }
 
     }
 
@@ -166,16 +172,29 @@ namespace TradingLib.ORM
         /// <param name="account"></param>
         /// <param name="intraday"></param>
         /// <returns></returns>
-        public static bool UpdateAccountToken(string account, string token)
+        public static bool UpdateInvestorInfo(string account, string name,string broker,string bank,string bankac)
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("UPDATE accounts SET token = '{0}' WHERE account = '{1}'", token, account);
+                string query = String.Format("UPDATE accounts SET name = '{0}',broker= '{1}' ,bankid='{2}', bankac='{3}' WHERE account = '{4}'", name, broker,bank, bankac, account);
                 return db.Connection.Execute(query) >= 0;
             }
         }
 
-
+        /// <summary>
+        /// 更新交易帐户的代理ID
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static bool UpdateManagerID(string account, int id)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = String.Format("UPDATE accounts SET mgr_fk = '{0}' WHERE account = '{1}'", id, account);
+                return db.Connection.Execute(query) >= 0;
+            }
+        }
         /// <summary>
         /// 更新帐户的锁仓权限
         /// </summary>
@@ -218,7 +237,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("Insert into transactions (`datetime`,`amount`,`comment`,`account`,`transref`,`settleday`) values('{0}','{1}','{2}','{3}','{4}','{5}')", DateTime.Now.ToString(), amount.ToString(), comment, account.ToString(),transref,TLCtxHelper.Ctx.SettleCentre.CurrentTradingday);
+                string query = String.Format("Insert into log_cashtrans (`datetime`,`amount`,`comment`,`account`,`transref`,`settleday`) values('{0}','{1}','{2}','{3}','{4}','{5}')", DateTime.Now.ToString(), amount.ToString(), comment, account.ToString(),transref,TLCtxHelper.Ctx.SettleCentre.CurrentTradingday);
                 return db.Connection.Execute(query) > 0;
             }
         }
@@ -233,7 +252,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("SELECT * FROM transactions WHERE account={0} AND transref ={1}",account,transref);
+                string query = String.Format("SELECT * FROM log_cashtrans WHERE account={0} AND transref ={1}", account, transref);
                 return db.Connection.Query<TransRefFields>(query, null).ToArray().Length > 0;
             }
         }
@@ -248,7 +267,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("SELECT Sum(amount) as total FROM transactions where settleday ='{0}' and account='{1}' and amount>0",tradingday, accId);
+                string query = String.Format("SELECT Sum(amount) as total FROM log_cashtrans where settleday ='{0}' and account='{1}' and amount>0", tradingday, accId);
                 TotalCashAmount total = db.Connection.Query<TotalCashAmount>(query, null).Single<TotalCashAmount>();
                 return total.Total;
             }
@@ -265,7 +284,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("SELECT Sum(amount) as total FROM transactions where datetime >='{0}'and datetime <= '{1}' and account='{2}' and amount>0", start.ToString(), end.ToString(), accId);
+                string query = String.Format("SELECT Sum(amount) as total FROM log_cashtrans where datetime >='{0}'and datetime <= '{1}' and account='{2}' and amount>0", start.ToString(), end.ToString(), accId);
                 TotalCashAmount total = db.Connection.Query<TotalCashAmount>(query, null).Single<TotalCashAmount>();
                 return total.Total;
             }
@@ -281,7 +300,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("SELECT Sum(amount) as total FROM transactions where settleday ='{0}' and account='{1}' and amount<0", tradingday, accId);
+                string query = String.Format("SELECT Sum(amount) as total FROM log_cashtrans where settleday ='{0}' and account='{1}' and amount<0", tradingday, accId);
                 TotalCashAmount total = db.Connection.Query<TotalCashAmount>(query, null).Single<TotalCashAmount>();
                 return total.Total;
             }
@@ -297,7 +316,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("SELECT Sum(amount) as total FROM transactions where datetime >='{0}'and datetime <= '{1}' and account='{2}' and amount<0", start.ToString(), end.ToString(), accId);
+                string query = String.Format("SELECT Sum(amount) as total FROM log_cashtrans where datetime >='{0}'and datetime <= '{1}' and account='{2}' and amount<0", start.ToString(), end.ToString(), accId);
                 TotalCashAmount total = db.Connection.Query<TotalCashAmount>(query, null).Single<TotalCashAmount>();
                 return total.Total;
             }
@@ -308,7 +327,15 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("SELECT * FROM  {0}  WHERE settleday >='{1}' AND settleday <='{2}' AND account='{3}'", "transactions", begin, end, account);
+                string query = string.Empty;
+                if (begin == 0 && end == 0)
+                {
+                    query = string.Format("SELECT * FROM  {0}  WHERE account='{1}'", "log_cashtrans",account);
+                }
+                else
+                {
+                    query = string.Format("SELECT * FROM  {0}  WHERE settleday >='{1}' AND settleday <='{2}' AND account='{3}'", "log_cashtrans", begin, end, account);
+                }
                 IList<CashTransaction> cts = db.Connection.Query<CashTransaction>(query).ToArray();
 
                 return cts;
@@ -399,8 +426,9 @@ namespace TradingLib.ORM
         /// <param name="pass"></param>
         /// <param name="category"></param>
         /// <returns></returns>
-        public static bool AddAccount(out string account, string user_id = "0",string setaccount="", string pass = "123456", QSEnumAccountCategory category = QSEnumAccountCategory.DEALER)
+        public static bool AddAccount(out string account, string user_id = "0",string setaccount="", string pass = "123456", QSEnumAccountCategory category = QSEnumAccountCategory.DEALER,int mgr_fk=0)
         {
+            
             using (DBMySql db = new DBMySql())
             {
                 account = string.Empty;
@@ -443,7 +471,7 @@ namespace TradingLib.ORM
                             return false;
                         }
                     }
-                    string query = String.Format("Insert into accounts (`account`,`user_id`,`createdtime`,`pass`,`account_category`,`settledatetime`) values('{0}','{1}','{2}','{3}','{4}','{5}')", account, user_id.ToString(), DateTime.Now.ToString(), pass, category, DateTime.Now - new TimeSpan(1, 0, 0, 0, 0));
+                    string query = String.Format("Insert into accounts (`account`,`user_id`,`createdtime`,`pass`,`account_category`,`settledatetime` ,`mgr_fk` ) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}')", account, user_id.ToString(), DateTime.Now.ToString(), pass, category, DateTime.Now - new TimeSpan(1, 0, 0, 0, 0),mgr_fk);
                     return db.Connection.Execute(query) > 0;
                 }
                 catch (Exception ex)
@@ -474,7 +502,7 @@ namespace TradingLib.ORM
 
         static IAccount AccountFields2IAccount(AccountFields fields)
         {
-            IAccount account = AccountHelper.CreateAccount(fields.Account);
+            IAccount account = AccountBase.CreateAccount(fields.Account);
             account.LastEquity = fields.LastEquity;
             account.UserID = fields.User_ID;
             account.CreatedTime = fields.CreatedTime;
@@ -484,8 +512,12 @@ namespace TradingLib.ORM
             account.Category = fields.Account_Category;
             account.SettlementConfirmTimeStamp = fields.Confrim_TimeStamp;
             account.MAC = fields.MAC;
-            account.Token = fields.Token;
+            account.Name = fields.Name;
+            account.Broker = fields.Broker;
+            account.BankID = fields.BankID;
+            account.BankAC = fields.BankAC;
             account.PosLock = fields.PosLock;
+            account.Mgr_fk = fields.Mgr_fk;
             //TLCtxHelper.Debug("fileds route:" + fields.Order_Router_Type.ToString() +" category:"+fields.Account_Category.ToString()) ;
             return account;
         }

@@ -24,11 +24,13 @@ namespace TradingLib.Core
         {
             debug("QryOrder :" + request.ToString(), QSEnumDebugLevel.INFO);
             Order[] orders = new Order[]{};
+            IAccount account = _clearcentre[request.Account];
+
+
             //合约为空 查询所有
             if (string.IsNullOrEmpty(request.Symbol))
             {
-                string account = request.Account;
-                orders = _clearcentre.getOrders(account);
+                orders = account.Orders.ToArray();
             }
 
 
@@ -60,11 +62,10 @@ namespace TradingLib.Core
         {
             debug("QryTrade :" + request.ToString(), QSEnumDebugLevel.INFO);
             Trade[] trades = new Trade[] { };
+            IAccount account = _clearcentre[request.Account];
             if (string.IsNullOrEmpty(request.Symbol))
             {
-                string account = request.Account;
-                trades = _clearcentre.getTrades(account);
-                
+                trades = account.Trades.ToArray();
             }
 
             int totalnum = trades.Length;
@@ -95,26 +96,36 @@ namespace TradingLib.Core
         {
             debug("QryPosition :" + request.ToString(), QSEnumDebugLevel.INFO);
             Position[] positions = new Position[] { };
+            Position[] netpos = new Position[] { };
+            IAccount account = _clearcentre[request.Account];
+
             if (string.IsNullOrEmpty(request.Symbol))
             {
-                string account = request.Account;
-                positions = _clearcentre.getPositions(account);
+                positions = account.Positions.ToArray();
+                netpos = account.PositionsNet.ToArray();
             }
             if (!string.IsNullOrEmpty(request.Symbol))
             {
                 positions = positions.Where(pos => pos.Symbol.Equals(request.Symbol)).ToArray();
             }
 
-            debug("total num:" + positions.Length.ToString(), QSEnumDebugLevel.INFO);
-            int totalnum = positions.Length;
+
+            List<Position> poslist = new List<Position>();
+            poslist.AddRange(netpos);
+            poslist.AddRange(positions);
+            
+
+            debug("total num:" + poslist.Count.ToString(), QSEnumDebugLevel.INFO);
+            int totalnum = poslist.Count;
+            
             if (totalnum > 0)
             {
                 for (int i = 0; i < totalnum; i++)
                 {
                     RspQryPositionResponse response = ResponseTemplate<RspQryPositionResponse>.SrvSendRspResponse(request);
-                    response.PositionToSend = positions[i].GenPositionEx();
-                    Trade[] trades = positions[i].Trades;
-                    debug("Trades num:" + trades.Length.ToString());
+                    response.PositionToSend = poslist[i].GenPositionEx();
+                    //Trade[] trades = poslist[i].Trades;
+                    //debug("Trades num:" + trades.Length.ToString());
                     CacheRspResponse(response, i == totalnum - 1);
                 }
             }
@@ -150,6 +161,7 @@ namespace TradingLib.Core
             else
             {
                 int size = account.CanOpenSize(symbol);
+                debug("got max opensize:" + size.ToString(), QSEnumDebugLevel.INFO);
                 response.Symbol = request.Symbol;
                 response.MaxVol = size;
                 response.OffsetFlag = request.OffsetFlag;
@@ -163,7 +175,7 @@ namespace TradingLib.Core
         {
             debug("QryAccountInfo :" + request.ToString(), QSEnumDebugLevel.INFO);
             IAccount account = _clearcentre[request.Account];
-            IAccountInfo info = ObjectInfoHelper.GenAccountInfo(account);
+            IAccountInfo info = account.ToAccountInfo();
             RspQryAccountInfoResponse response  = ResponseTemplate<RspQryAccountInfoResponse>.SrvSendRspResponse(request);
             response.AccInfo = info;
 
@@ -176,30 +188,30 @@ namespace TradingLib.Core
 
             Settlement settlement = null;
             
-            if (request.Tradingday == 0)
+            //如果查询日期为0 则查询上个结算日
+            IAccount account = _clearcentre[request.Account];
+            //判断account是否为空
+
+            int settleday = request.Tradingday;
+            if (settleday == 0)
             {
-                settlement = ORM.MSettlement.SelectSettlementInfoUnconfirmed(request.Account);
+                debug("Request Tradingday:0 ,try to get the settlement of lastsettleday:" + TLCtxHelper.Ctx.SettleCentre.LastSettleday, QSEnumDebugLevel.INFO);
+                settleday = TLCtxHelper.Ctx.SettleCentre.LastSettleday;
             }
-            else
-            {
-                settlement = ORM.MSettlement.SelectSettlementInfoUnconfirmed(request.Account, request.Tradingday);
-            }
+            settlement = ORM.MSettlement.SelectSettlement(request.Account, settleday);
             if (settlement != null)
             {
-                string s = TemplateHelper.RenderSettlementInfo(new SettlementInfo(settlement));
-                string[] lines = s.Split('\n');
-                debug("got lines:" + lines.Length.ToString(), QSEnumDebugLevel.INFO);
-                for(int i=0;i<lines.Length;i++)
+                debug("got settlement....", QSEnumDebugLevel.INFO);
+                List<string> settlelist = SettlementFactory.GenSettlementFile(settlement,account);
+                for (int i = 0; i < settlelist.Count; i++)
                 {
+                    //debug(settlelist[i]);
                     RspQrySettleInfoResponse response = ResponseTemplate<RspQrySettleInfoResponse>.SrvSendRspResponse(request);
                     response.Tradingday = settlement.SettleDay;
                     response.TradingAccount = settlement.Account;
-                    response.SettlementID = 1000;
-                    response.SequenceNo = i+1;
-                    response.SettlementContent = lines[i];
-                    CacheRspResponse(response, i == lines.Length - 1);
+                    response.SettlementContent = settlelist[i] + "\n";
+                    CacheRspResponse(response, i == settlelist.Count - 1);
                 }
-                
             }
             else
             {
@@ -257,7 +269,7 @@ namespace TradingLib.Core
                 response.TradingAccount = request.Account;
                 response.Email = "xxxx@xxx.com";
                 //查询交易帐户时,如果token为空则生成帐户名否则传递Token
-                response.NickName = string.IsNullOrEmpty(account.Token)?LibUtil.GetEnumDescription(account.Category) + "[" + request.Account + "]" : account.Token;
+                response.NickName = account.GetCustName();
                 
             }
             else
@@ -309,7 +321,8 @@ namespace TradingLib.Core
                     response.NoticeContent = string.IsNullOrEmpty(GlobalConfig.RealPrompt) ? ("欢迎使用" + GlobalConfig.VendorName + "实盘交易系统,市场有风险,投资需谨慎!祝您交易愉快!") : GlobalConfig.RealPrompt;
                 }
             }
-            else
+            //如果通知内容为空 则提供默认提示
+            if(string.IsNullOrEmpty(response.NoticeContent))
             {
                 response.NoticeContent = string.IsNullOrEmpty(GlobalConfig.DealerPrompt)?("欢迎使用" + GlobalConfig.VendorName + "交易系统"):GlobalConfig.DealerPrompt;
             }
@@ -347,6 +360,92 @@ namespace TradingLib.Core
                 CacheRspResponse(response);
             }
             
+        }
+
+        void SrvOnQryContractBank(QryContractBankRequest request)
+        {
+            debug("QryContractBank:" + request.ToString(), QSEnumDebugLevel.INFO);
+            ContractBank[] banks = BasicTracker.ContractBankTracker.Banks;
+            if (banks.Length > 0)
+            {
+
+                for(int i=0; i<banks.Length;i++)
+                {
+                    RspQryContractBankResponse response = ResponseTemplate<RspQryContractBankResponse>.SrvSendRspResponse(request);
+                    response.BankName = banks[i].Name;
+                    response.BankID = banks[i].BrankID;
+                    response.BankBrchID = banks[i].BrankBrchID;
+                    CacheRspResponse(response, i == banks.Length - 1);
+
+
+                }
+            }
+            else
+            {
+                RspQryContractBankResponse response = ResponseTemplate<RspQryContractBankResponse>.SrvSendRspResponse(request);
+
+                CachePacket(response);
+            }
+        }
+
+        /// <summary>
+        /// 系统返回签约银行列表后
+        /// 客户端会查询每个签约银行所对应的银行帐户
+        /// 这里所有查询均返回同样的帐户
+        /// </summary>
+        /// <param name="request"></param>
+        void SrvOnRegisterBankAccount(QryRegisterBankAccountRequest request)
+        {
+            debug("QryRegisterBankAccount:" + request.ToString(), QSEnumDebugLevel.INFO);
+            IAccount account = _clearcentre[request.TradingAccount];
+            if (account != null)
+            {
+                RspQryRegisterBankAccountResponse response = ResponseTemplate<RspQryRegisterBankAccountResponse>.SrvSendRspResponse(request);
+                response.TradingAccount = account.ID;
+                response.BankAC = account.GetCustBankAC();//获得银行卡号 如果没有设置银行卡号码 会导致博易客户端频繁请求交易帐号信息
+                ContractBank bank = BasicTracker.ContractBankTracker[account.GetCustBankID()];
+                response.BankName = bank.Name;
+                response.BankID = bank.BrankID;
+                CacheRspResponse(response);
+            }
+            else
+            {
+                RspQryRegisterBankAccountResponse response = ResponseTemplate<RspQryRegisterBankAccountResponse>.SrvSendRspResponse(request);
+                response.RspInfo.FillError("TRADING_ACCOUNT_NOT_FOUND");
+                CacheRspResponse(response);
+            }
+        }
+
+        void SrvOnQryTransferSerial(QryTransferSerialRequest request)
+        {
+            debug("QryTransferSerialRequest:" + request.ToString(), QSEnumDebugLevel.INFO);
+            IList<CashTransaction> cts = ORM.MAccount.SelectHistCashTransaction(request.TradingAccount, 0, 0);
+            IAccount account = _clearcentre[request.TradingAccount];
+            int totalnum = cts.Count;
+            debug("total transfer num:" + totalnum.ToString(), QSEnumDebugLevel.INFO);
+            if (totalnum > 0)
+            {
+                for (int i = 0; i < totalnum; i++)
+                {
+                    RspQryTransferSerialResponse response = ResponseTemplate<RspQryTransferSerialResponse>.SrvSendRspResponse(request);
+                    CashTransaction t = cts[i];
+                    response.Date = Util.ToTLDate(t.DateTime);
+                    response.Time = Util.ToTLTime(t.DateTime);
+                    response.TradingAccount = request.TradingAccount;
+                    response.BankAccount = account.GetCustBankAC();
+                    response.Amount = t.Amount;
+                    response.TransRef = t.TransRef;
+                    CacheRspResponse(response, i == totalnum - 1);
+                }
+            }
+            else
+            {
+                //返回空项目
+                RspQryTransferSerialResponse response = ResponseTemplate<RspQryTransferSerialResponse>.SrvSendRspResponse(request);
+                CacheRspResponse(response);
+            }
+
+
         }
         void tl_newPacketRequest(IPacket packet,ISession session)
         {
@@ -424,6 +523,25 @@ namespace TradingLib.Core
                     {
                         QrySymbolRequest request = packet as QrySymbolRequest;
                         SrvOnQrySymbol(request);
+                    }
+                    break;
+                case MessageTypes.QRYCONTRACTBANK://查询签约银行
+                    {
+                        QryContractBankRequest request = packet as QryContractBankRequest;
+                        SrvOnQryContractBank(request);
+                    }
+                    break;
+                case MessageTypes.QRYREGISTERBANKACCOUNT://查询银行帐户
+                    {
+                        //debug("查询银行帐户.............", QSEnumDebugLevel.INFO);
+                        QryRegisterBankAccountRequest request = packet as QryRegisterBankAccountRequest;
+                        SrvOnRegisterBankAccount(request);
+                    }
+                    break;
+                case MessageTypes.QRYTRANSFERSERIAL://查询出入金记录
+                    {
+                        QryTransferSerialRequest request = packet as QryTransferSerialRequest;
+                        SrvOnQryTransferSerial(request);
                     }
                     break;
 

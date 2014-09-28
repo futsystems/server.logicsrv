@@ -5,6 +5,10 @@ using System.Text;
 
 namespace TradingLib.API
 {
+    /// <summary>
+    /// 帐户风控检查接口
+    /// 用于加载帐户的委托风控规则和帐户风控规则
+    /// </summary>
     public interface IAccRiskCheck
     {
         //RiskCentre用于风险检查,风险检查还是按照账户为分类 不同的账户设定有不同的风空检查规则，因此最终还是以Acount为单位进行风控检查

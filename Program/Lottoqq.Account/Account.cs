@@ -23,6 +23,7 @@ namespace Lottoqq.Account
         /// <returns></returns>
         public override bool CanTakeSymbol(Symbol symbol, out string msg)
         {
+            IAccountService service = null;
             msg = string.Empty;
             bool re = true;
             //异化证券
@@ -32,7 +33,7 @@ namespace Lottoqq.Account
                 if (symbol.SecurityFamily.Code.Equals("LOTTO"))
                 {
                     //检查秘籍服务是否可以交易该合约
-                    IAccountService service = null;
+                    service = null;
                     if (GetService("MJService", out service))
                     {
                         re = re && service.CanTradeSymbol(symbol, out msg);
@@ -40,10 +41,14 @@ namespace Lottoqq.Account
                     }
                     else
                     {
-                        msg = QSMessageContent.PREFIX + "帐户无乐透服务,无法交易乐透期权!";
+                        msg ="帐户无乐透服务,无法交易乐透期权!";
                         return false;
                     }
                 }
+            }
+            if (GetService("FinService", out service))
+            {
+                return service.CanTradeSymbol(symbol, out msg);
             }
 
             //其他未判断的情况通过AccountBase进行判断输出
@@ -58,6 +63,13 @@ namespace Lottoqq.Account
         /// <returns></returns>
         public override bool CanFundTakeOrder(Order o, out string msg)
         {
+            IAccountService service = null;
+
+            //如果有配资服务 则调用配资服务的保证金检查机制进行处理
+            if (GetService("FinService", out service))
+            {
+                return service.CanTakeOrder(o, out msg);
+            }
             return base.CanFundTakeOrder(o, out msg);
         }
 
@@ -70,6 +82,7 @@ namespace Lottoqq.Account
         /// <returns></returns>
         public override int CanOpenSize(Symbol symbol)
         {
+            IAccountService service = null;
             //如果是异化合约,则我们按照异化合约的保证金直接进行计算可开手数
             if (symbol.SecurityType == SecurityType.INNOV)
             {
@@ -84,6 +97,11 @@ namespace Lottoqq.Account
 
                 TLCtxHelper.Debug("Fundavabile:" + fundavabile.ToString() + " fundperlot:" + fundperlot.ToString());
                 return (int)(fundavabile / fundperlot);
+            }
+            //配资服务通过配资服务查询可开手数
+            if (GetService("FinService", out service))
+            {
+                return service.CanOpenSize(symbol);
             }
 
             return base.CanOpenSize(symbol);
@@ -108,6 +126,8 @@ namespace Lottoqq.Account
                 if(service.IsAvabile)
                     return service.GetFundAvabile(symbol);
             }
+            
+
             return base.GetFundAvabile(symbol);
         }
     }

@@ -54,7 +54,7 @@ namespace TradingLib.Core
         /// <summary>
         /// 加载交易帐号
         /// </summary>
-        public event IAccountDel AccountCachedEvent;
+        //public event IAccountDel AccountCachedEvent;
 
         /// <summary>
         /// 调整手续费事件,对外触发手续费调整事件,用于相关逻辑进行手续费调整
@@ -64,7 +64,7 @@ namespace TradingLib.Core
         /// <summary>
         /// 交易回合结束
         /// </summary>
-        public event IPositionRoundDel PositionRoundClosedEvent;
+        public event PositionRoundClosedDel PositionRoundClosedEvent;
 
         /// <summary>
         /// 帐户修改事件
@@ -115,7 +115,7 @@ namespace TradingLib.Core
             }
         }
 
-        public ClearCentre(QSEnumAccountLoadMode loadmode = QSEnumAccountLoadMode.ALL,QSEnumDebugLevel level = QSEnumDebugLevel.INFO):
+        public ClearCentre():
             base("ClearCentre")
         {
             Status = QSEnumClearCentreStatus.CCINIT;
@@ -130,26 +130,24 @@ namespace TradingLib.Core
             {
                 _cfgdb.UpdateConfig("DefaultPass", QSEnumCfgType.String,"123456", "模拟帐户在没有提供UserID进行直接创建时的默认交易密码");
             }
-
-            DebugLevel = level;
-
+            if (!_cfgdb.HaveConfig("AccountLoadMode"))
+            {
+                _cfgdb.UpdateConfig("AccountLoadMode", QSEnumCfgType.String,QSEnumAccountLoadMode.ALL, "清算中心加载帐户类别");
+            }
+            //加载模式
+            _loadmode = (QSEnumAccountLoadMode)Enum.Parse(typeof(QSEnumAccountLoadMode), _cfgdb["AccountLoadMode"].AsString());
             try
             {
-                //设定加载模式
-                _loadmode = loadmode;
-
                 //初始化异步储存组件
                 _asynLoger = new AsyncTransactionLoger();//获得交易信息数据库记录对象，用于记录委托，成交，取消等信息
-                _asynLoger.SendDebugEvent += new DebugDelegate(msgdebug);
-                
+
                 //初始化PositionRound生成器
                 prt = new PositionRoundTracker();
-                prt.SendDebugEvent += new DebugDelegate(msgdebug);
                 prt.FindSymbolEvent += (sym) => { return BasicTracker.SymbolTracker[sym]; };// new FindSecurity(getMasterSecurity);
 
                 debug("Loading Accounts Infomation form database.....");
                 //加载账户信息
-                //LoadAccount();
+                LoadAccount();
 
                 Status = QSEnumClearCentreStatus.CCINITFINISH;
             }
@@ -202,12 +200,17 @@ namespace TradingLib.Core
 
 
         #region 启动 停止 销毁
+        //public void InitAccount()
+        //{
+        //    //加载所有帐户
+        //    this.LoadAccount();
+        //}
         public void Start()
         {
             debug("启动清算中心...", QSEnumDebugLevel.INFO);
             _asynLoger.Start();
             //加载交易帐户
-            LoadAccount();
+            //LoadAccount();
             //从数据库恢复日内交易信息
             RestoreFromMysql();
         }
@@ -273,9 +276,9 @@ namespace TradingLib.Core
             //交易日内 盘中 启动软件
             if (oldstatus == QSEnumClearCentreStatus.CCRESTORE && Status == QSEnumClearCentreStatus.CCRESTOREFINISH)
             {
-                bool day = LibUtil.IsInPeriod(Convert.ToDateTime(OpenTime), Convert.ToDateTime(CloseTime));
-                bool nigth1 = LibUtil.IsInPeriod(Convert.ToDateTime(NightOpenTime), Convert.ToDateTime(NightClosedTime));
-                bool night2 = LibUtil.IsInPeriod(Convert.ToDateTime(NightOpenTime2), Convert.ToDateTime(NightClosedTime2));
+                bool day = Util.IsInPeriod(Convert.ToDateTime(OpenTime), Convert.ToDateTime(CloseTime));
+                bool nigth1 = Util.IsInPeriod(Convert.ToDateTime(NightOpenTime), Convert.ToDateTime(NightClosedTime));
+                bool night2 = Util.IsInPeriod(Convert.ToDateTime(NightOpenTime2), Convert.ToDateTime(NightClosedTime2));
 
                 if (day || nigth1 || night2)
                     Status = QSEnumClearCentreStatus.CCOPEN;

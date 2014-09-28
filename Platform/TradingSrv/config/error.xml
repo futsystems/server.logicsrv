@@ -14,7 +14,7 @@
 <error id="SETTLECENTRE_NOT_RESET" value="10" prompt="交易柜台未重置,等待结算"/>
 <error id="INSUFFICIENT_MONEY" value="11" prompt="可用资金不足"/>
 <error id="POSITION_NOT_HOLDING" value="12" prompt="无可平仓位"/>
-<error id="POSITION_OVER_CLOSE" value="15" prompt="可平持仓数量不足"/>
+<error id="POSITION_OVER_CLOSE" value="15" prompt="可平持仓数量不足,请检查挂单"/>
 <error id="POSITION_ORDER_CANNOT_CLOSE" value="13" prompt="委托与当前持仓方向相同,无法平仓"/>
 <error id="POSITION_ORDER_CANNOT_OPEN" value="14" prompt="委托与当前持仓方向相反,无法开仓"/>
 <error id="OFFSETFLAG_CAN_NOT_TETECTED" value="140" prompt="同时持有多空头寸，无法自动判定开平标识，请设定开平标识"/>
@@ -32,7 +32,7 @@
 <error id="SERVICE_NOT_VALID" value="25" prompt="请求服务无效"/>
 <error id="ACCOUNT_NOT_CREATED" value="26" prompt="没有开通交易帐号,登入网站开通"/>
 <error id="LOGINTYPE_NOT_SUPPORT" value="27" prompt="登入方式不支持"/>
-<error id="CASHOPERATION_NOT_ALLOW_NOW" value="28" prompt="当前时间不允许出入金操作,出入金操作时间为"/>
+<error id="CASHOPERATION_NOT_ALLOW_NOW" value="28" prompt="当前时间不允许出入金操作"/>
 <error id="SETTLECENTRE_IN_SETTLE" value="29" prompt="结算系统正在结算,无法处理委托"/>
 <error id="RISKCENTRE_CHECK_ERROR" value="100" prompt="风控检查异常"/>
 
@@ -46,4 +46,6 @@
 
 <error id="SECURITY_EXIST" value="500" prompt="品种已存在"/>
 <error id="SYMBOL_EXIST" value="501" prompt="合约已存在"/>
+
+<error id="MGR_PASS_ERROR" value="502" prompt="柜员密码不正确"/>
 </errors>

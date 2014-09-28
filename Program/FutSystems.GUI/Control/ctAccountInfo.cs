@@ -30,9 +30,9 @@ namespace FutSystems.GUI
         //        racebox1.Visible = true;
         //        raceType1.Text = "晋级赛";
         //        promptLevel.Text = info.RaceID;
-        //        raceStatus.Text = LibUtil.GetEnumDescription(info.RaceStatus);
-        //        obverseProfit.Text = LibUtil.FormatDisp(info.ObverseProfit);
-        //        promptDiff.Text = LibUtil.FormatDisp(info.PromptEquity - info.StartEquity - info.ObverseProfit);
+        //        raceStatus.Text = Util.GetEnumDescription(info.RaceStatus);
+        //        obverseProfit.Text = Util.FormatDecimal(info.ObverseProfit);
+        //        promptDiff.Text = Util.FormatDecimal(info.PromptEquity - info.StartEquity - info.ObverseProfit);
         //    }
         //}
         //public void GotFinServiceInfo(IFinServiceInfo info)
@@ -45,23 +45,23 @@ namespace FutSystems.GUI
             account.Text = info.Account;
             execution.Text = info.Execute ? "允许交易" : "禁止交易";
             _accounttype = info.Category;
-            accountCategory.Text = LibUtil.GetEnumDescription(info.Category);
+            accountCategory.Text = Util.GetEnumDescription(info.Category);
             interday.Text = info.IntraDay ? "日内交易" : "隔夜交易";
 
 
-            lastequity.Text = LibUtil.FormatDisp(info.LastEquity);
-            nowequity.Text = LibUtil.FormatDisp(info.NowEquity);
+            lastequity.Text = Util.FormatDecimal(info.LastEquity);
+            nowequity.Text = Util.FormatDecimal(info.NowEquity);
 
-            realizedpl.Text = LibUtil.FormatDisp(info.RealizedPL);
-            unrealizedpl.Text = LibUtil.FormatDisp(info.UnRealizedPL);
-            profit.Text = LibUtil.FormatDisp(info.Profit);
-            //marginUsed.Text = LibUtil.FormatDisp(info.Margin);
-           // marginFrozen.Text = LibUtil.FormatDisp(info.ForzenMargin);
+            realizedpl.Text = Util.FormatDecimal(info.RealizedPL);
+            unrealizedpl.Text = Util.FormatDecimal(info.UnRealizedPL);
+            profit.Text = Util.FormatDecimal(info.Profit);
+            //marginUsed.Text = Util.FormatDecimal(info.Margin);
+           // marginFrozen.Text = Util.FormatDecimal(info.ForzenMargin);
 
-            commission.Text = LibUtil.FormatDisp(info.Commission);
-            //buypower.Text = LibUtil.FormatDisp(info.BuyPower);
-            cashin.Text = LibUtil.FormatDisp(info.CashIn);
-            cashout.Text = LibUtil.FormatDisp(info.CashOut);
+            commission.Text = Util.FormatDecimal(info.Commission);
+            //buypower.Text = Util.FormatDecimal(info.BuyPower);
+            cashin.Text = Util.FormatDecimal(info.CashIn);
+            cashout.Text = Util.FormatDecimal(info.CashOut);
 
 
         

@@ -17,8 +17,8 @@ namespace TradingLib.Core
     /// </summary>
     public class TLServer_Exch :TLServer_Generic<TrdClientInfo>
     {
-        public TLServer_Exch(string server, int port, bool verb)
-            : base("Exch",server, port, verb)
+        public TLServer_Exch(string name,string server, int port, bool verb)
+            : base(name, server, port, verb)
         {
             
 
@@ -150,7 +150,7 @@ namespace TradingLib.Core
             SendOutPacket(response);
         }
 
-
+        //Profiler orderInsertProfile = new Profiler();
         /// <summary>
         /// 系统接受到客户端发送过来的委托
         /// 1.检查客户端是否Register如果没有register则clientlist不存在该ClientID
@@ -160,6 +160,7 @@ namespace TradingLib.Core
         /// <param name="address"></param>
         public  void SrvOnOrderInsert(OrderInsertRequest request ,TrdClientInfo clientinfo)
         {
+            TLCtxHelper.Profiler.EnterSection("OrderInsert");
             debug("Got Order:" + request.Order.ToString(), QSEnumDebugLevel.DEBUG);
             //通过address(ClientID)查询本地客户端列表是否存在该ID
             TrdClientInfo cinfo = _clients[request.ClientID];
@@ -213,6 +214,8 @@ namespace TradingLib.Core
             //对外层触发委托事件
             if (newSendOrderRequest != null)
                 newSendOrderRequest(order);
+
+            TLCtxHelper.Profiler.LeaveSection();
         }
 
         /// <summary>
@@ -386,11 +389,11 @@ namespace TradingLib.Core
         /// 向客户端发送持仓状态更新回报
         /// </summary>
         /// <param name="pos"></param>
-        internal void newPositionUpdate(Position pos)
+        internal void newPositionUpdate(PositionEx pos)
         {
             if (string.IsNullOrEmpty(pos.Account)) return;
             PositionNotify notify = ResponseTemplate<PositionNotify>.SrvSendNotifyResponse(pos.Account);
-            notify.Position = pos.GenPositionEx();
+            notify.Position = pos;
 
             TLSend(notify);
             debug("send positionupdate to client|" + pos.ToString());

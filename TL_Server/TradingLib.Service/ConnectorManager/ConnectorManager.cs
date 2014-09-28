@@ -9,7 +9,10 @@ using TradingLib.Core;
 namespace TradingLib.ServiceManager
 {
 
-
+    /// <summary>
+    /// 路由通道管理器
+    /// 加载对应的路由通道类型 然后按照设定生成对应的路由并进行管理
+    /// </summary>
     public partial class ConnectorManager : BaseSrvObject, IServiceManager, IRouterManager
     {
 
@@ -34,6 +37,7 @@ namespace TradingLib.ServiceManager
         bool routerbinded = false;
         /// <summary>
         /// 绑定数据与成交路由中心
+        /// 用于连接路由和行情中心
         /// </summary>
         /// <param name="_br"></param>
         /// <param name="_dr"></param>
@@ -104,11 +108,11 @@ namespace TradingLib.ServiceManager
         public IDataFeed[] DataFeeds { get { return datafeedInstList.Values.ToArray(); } }
 
 
-        void debug(string msg)
-        {
-            TLCtxHelper.Debug(">>>Connector:" + msg);
-            this.debug(msg, QSEnumDebugLevel.INFO);
-        }
+        //void debug(string msg)
+        //{
+        //    //TLCtxHelper.Debug(">>>Connector:" + msg);
+        //    this.debug(msg, QSEnumDebugLevel.INFO);
+        //}
 
         //接口类型应映射表
         Dictionary<string, Type> brokermodule = new Dictionary<string, Type>();
@@ -136,8 +140,14 @@ namespace TradingLib.ServiceManager
                 IBroker broker = (IBroker)Activator.CreateInstance(t, args);
                 brokermodule.Add(t.FullName, t);
                 brokerInstList.Add(t.FullName, broker);
-                //绑定交易通道对外输出日志以及状态更新
-                broker.SendDebugEvent += new DebugDelegate(debug);
+
+                //绑定交易通道对外输出日志事件
+                broker.SendDebugEvent += (string message) =>
+                    {
+                        debug("BR["+t.FullName + "] " + message, QSEnumDebugLevel.INFO);
+                    };
+
+                //绑定状态事件
                 broker.Connected += (IConnecter b) =>
                 {
                     TLCtxHelper.Debug("Broker:" + b.GetType().FullName + " Connected");
@@ -150,6 +160,7 @@ namespace TradingLib.ServiceManager
                     if (BrokerDisconnectedEvent != null)
                         BrokerDisconnectedEvent(b);
                 };
+                //将broker的交易类事件绑定到路由内 然后通过路由转发到交易消息服务
                 BindBrokerIntoRouter(broker);
 
             }
@@ -163,7 +174,13 @@ namespace TradingLib.ServiceManager
                 datafeedmodule.Add(t.FullName, t);
                 datafeedInstList.Add(t.FullName, datafeed);
                 //绑定数据通道对外输出日志以及状态更新
-                datafeed.SendDebugEvent += new DebugDelegate(debug);
+                datafeed.SendDebugEvent += (string message) =>
+                    {
+                        debug("DR["+t.FullName + "] " + message, QSEnumDebugLevel.INFO);
+                    };
+                    
+
+
                 datafeed.Connected += (IConnecter d) =>
                 {
                     TLCtxHelper.Debug("DataFeed:" + d.GetType().FullName + " Connected");
@@ -217,6 +234,7 @@ namespace TradingLib.ServiceManager
             }
             else
             {
+                //将broker绑定到路由中心的事件
                 _brokerrouter.LoadBroker(broker);
                 if(brokerLoadedFlags.Keys.Contains(fullname))
                     brokerLoadedFlags[fullname] = true;

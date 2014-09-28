@@ -34,6 +34,6 @@ namespace TradingLib.API
         HedgeFlag,//投机标识
         OrderSeq,//委托流水
         OrderExchID,//交易所委托标识
-
+        ForceReason,//强平原因
     }
 }

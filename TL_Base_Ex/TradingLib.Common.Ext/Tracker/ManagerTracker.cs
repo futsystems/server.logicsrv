@@ -28,8 +28,77 @@ namespace TradingLib.Common
             }
             foreach (Manager m in mlist)
             {
-                m.BaseManager = this[m.mgr_id];
+                m.BaseManager = this[m.mgr_fk];
             }
+        }
+
+        /// <summary>
+        /// 获得Root全局ID
+        /// </summary>
+        /// <returns></returns>
+        public int GetRootFK()
+        {
+            foreach (Manager m in mgridmap.Values)
+            {
+                if (m.Type == QSEnumManagerType.ROOT)
+                    return m.ID;
+            }
+            return 0;
+        }
+
+        public void UpdateManager(Manager mgr)
+        {
+            //添加
+            if (mgr.ID == 0)
+            {
+                ORM.MManager.InsertManager(mgr);
+                managermap[mgr.Login] = mgr;
+                mgridmap[mgr.ID] = mgr;
+                mgr.BaseManager = this[mgr.mgr_fk];
+            }
+            else//更新
+            {
+                Manager target = null;
+                if (mgridmap.TryGetValue(mgr.ID, out target))
+                {
+                    target.Type = mgr.Type;
+                    target.Name = mgr.Name;
+                    target.Mobile = mgr.Mobile;
+                    target.QQ = mgr.QQ;
+                    target.AccLimit = mgr.AccLimit;
+                    ORM.MManager.UpdateManager(target);
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// 查询某个管理员可以查询的管理员列表
+        /// 
+        /// </summary>
+        /// <param name="mgr"></param>
+        /// <returns></returns>
+        public IEnumerable<Manager> GetManagers(Manager mgr)
+        {
+            if (mgr.Type == QSEnumManagerType.ROOT)
+            {
+                return managermap.Values;
+            }
+            else
+            { 
+                //如果是代理 返回所有属于该代理的所有柜员
+                if(mgr.Type == QSEnumManagerType.AGENT)
+                {
+                    //如果Manager的mgr_fk等于该代理的ID则返回
+                    return managermap.Values.Where(m => m.mgr_fk.Equals(mgr.ID));
+                }
+                else
+                {
+                    return new Manager[]{mgr};
+                }
+                
+            }
+            //return new List<Manager>();
         }
 
         /// <summary>

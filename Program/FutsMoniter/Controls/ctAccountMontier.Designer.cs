@@ -58,11 +58,12 @@
             this.radPageViewPage3 = new Telerik.WinControls.UI.RadPageViewPage();
             this.ctPositionView1 = new FutSystems.GUI.ctPositionView();
             this.splitPanel4 = new Telerik.WinControls.UI.SplitPanel();
-            this.radPageView2 = new Telerik.WinControls.UI.RadPageView();
-            this.FinServicePage = new Telerik.WinControls.UI.RadPageViewPage();
+            this.ServiceTabHolder = new Telerik.WinControls.UI.RadPageView();
             this.OrderSenderPage = new Telerik.WinControls.UI.RadPageViewPage();
             this.viewQuoteList1 = new FutSystems.GUI.ViewQuoteList();
             this.ctOrderSenderM1 = new FutsMoniter.ctOrderSenderM();
+            this.FinServicePage = new Telerik.WinControls.UI.RadPageViewPage();
+            this.btnSubmit = new Telerik.WinControls.UI.RadButton();
             this.radPageViewPage4 = new Telerik.WinControls.UI.RadPageViewPage();
             ((System.ComponentModel.ISupportInitialize)(this.SplitContainer)).BeginInit();
             this.SplitContainer.SuspendLayout();
@@ -101,9 +102,11 @@
             this.radPageViewPage3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitPanel4)).BeginInit();
             this.splitPanel4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.radPageView2)).BeginInit();
-            this.radPageView2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ServiceTabHolder)).BeginInit();
+            this.ServiceTabHolder.SuspendLayout();
             this.OrderSenderPage.SuspendLayout();
+            this.FinServicePage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.btnSubmit)).BeginInit();
             this.SuspendLayout();
             // 
             // SplitContainer
@@ -427,9 +430,9 @@
             // radPageViewPage3
             // 
             this.radPageViewPage3.Controls.Add(this.ctPositionView1);
-            this.radPageViewPage3.Location = new System.Drawing.Point(5, 27);
+            this.radPageViewPage3.Location = new System.Drawing.Point(10, 35);
             this.radPageViewPage3.Name = "radPageViewPage3";
-            this.radPageViewPage3.Size = new System.Drawing.Size(657, 244);
+            this.radPageViewPage3.Size = new System.Drawing.Size(646, 230);
             this.radPageViewPage3.Text = "持 仓";
             // 
             // ctPositionView1
@@ -439,12 +442,12 @@
             this.ctPositionView1.Name = "ctPositionView1";
             this.ctPositionView1.OrderTracker = null;
             this.ctPositionView1.PositionTracker = null;
-            this.ctPositionView1.Size = new System.Drawing.Size(657, 244);
+            this.ctPositionView1.Size = new System.Drawing.Size(646, 230);
             this.ctPositionView1.TabIndex = 0;
             // 
             // splitPanel4
             // 
-            this.splitPanel4.Controls.Add(this.radPageView2);
+            this.splitPanel4.Controls.Add(this.ServiceTabHolder);
             this.splitPanel4.Location = new System.Drawing.Point(671, 0);
             this.splitPanel4.Name = "splitPanel4";
             // 
@@ -458,35 +461,28 @@
             this.splitPanel4.TabStop = false;
             this.splitPanel4.Text = "splitPanel4";
             // 
-            // radPageView2
+            // ServiceTabHolder
             // 
-            this.radPageView2.Controls.Add(this.FinServicePage);
-            this.radPageView2.Controls.Add(this.OrderSenderPage);
-            this.radPageView2.Controls.Add(this.radPageViewPage4);
-            this.radPageView2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.radPageView2.Location = new System.Drawing.Point(0, 0);
-            this.radPageView2.Name = "radPageView2";
-            this.radPageView2.SelectedPage = this.FinServicePage;
-            this.radPageView2.Size = new System.Drawing.Size(585, 276);
-            this.radPageView2.TabIndex = 0;
-            this.radPageView2.Text = "radPageView2";
-            this.radPageView2.ThemeName = "Windows8";
-            ((Telerik.WinControls.UI.RadPageViewStripElement)(this.radPageView2.GetChildAt(0))).StripButtons = Telerik.WinControls.UI.StripViewButtons.None;
-            // 
-            // FinServicePage
-            // 
-            this.FinServicePage.Location = new System.Drawing.Point(5, 27);
-            this.FinServicePage.Name = "FinServicePage";
-            this.FinServicePage.Size = new System.Drawing.Size(575, 244);
-            this.FinServicePage.Text = "配资服务";
+            this.ServiceTabHolder.Controls.Add(this.OrderSenderPage);
+            this.ServiceTabHolder.Controls.Add(this.FinServicePage);
+            this.ServiceTabHolder.Controls.Add(this.radPageViewPage4);
+            this.ServiceTabHolder.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ServiceTabHolder.Location = new System.Drawing.Point(0, 0);
+            this.ServiceTabHolder.Name = "ServiceTabHolder";
+            this.ServiceTabHolder.SelectedPage = this.FinServicePage;
+            this.ServiceTabHolder.Size = new System.Drawing.Size(585, 276);
+            this.ServiceTabHolder.TabIndex = 0;
+            this.ServiceTabHolder.Text = "radPageView2";
+            this.ServiceTabHolder.ThemeName = "Windows8";
+            ((Telerik.WinControls.UI.RadPageViewStripElement)(this.ServiceTabHolder.GetChildAt(0))).StripButtons = Telerik.WinControls.UI.StripViewButtons.None;
             // 
             // OrderSenderPage
             // 
             this.OrderSenderPage.Controls.Add(this.viewQuoteList1);
             this.OrderSenderPage.Controls.Add(this.ctOrderSenderM1);
-            this.OrderSenderPage.Location = new System.Drawing.Point(5, 27);
+            this.OrderSenderPage.Location = new System.Drawing.Point(10, 35);
             this.OrderSenderPage.Name = "OrderSenderPage";
-            this.OrderSenderPage.Size = new System.Drawing.Size(575, 244);
+            this.OrderSenderPage.Size = new System.Drawing.Size(564, 230);
             this.OrderSenderPage.Text = "下 单";
             // 
             // viewQuoteList1
@@ -507,7 +503,7 @@
             this.viewQuoteList1.QuoteFont = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
             this.viewQuoteList1.QuoteViewWidth = 1030;
             this.viewQuoteList1.SelectedQuoteRow = -1;
-            this.viewQuoteList1.Size = new System.Drawing.Size(575, 164);
+            this.viewQuoteList1.Size = new System.Drawing.Size(564, 150);
             this.viewQuoteList1.SymbolFont = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
             this.viewQuoteList1.SymbolFontColor = System.Drawing.Color.Green;
             this.viewQuoteList1.TabIndex = 1;
@@ -518,10 +514,27 @@
             // ctOrderSenderM1
             // 
             this.ctOrderSenderM1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.ctOrderSenderM1.Location = new System.Drawing.Point(0, 180);
+            this.ctOrderSenderM1.Location = new System.Drawing.Point(0, 166);
             this.ctOrderSenderM1.Name = "ctOrderSenderM1";
-            this.ctOrderSenderM1.Size = new System.Drawing.Size(575, 64);
+            this.ctOrderSenderM1.Size = new System.Drawing.Size(564, 64);
             this.ctOrderSenderM1.TabIndex = 0;
+            // 
+            // FinServicePage
+            // 
+            this.FinServicePage.Controls.Add(this.btnSubmit);
+            this.FinServicePage.Location = new System.Drawing.Point(10, 35);
+            this.FinServicePage.Name = "FinServicePage";
+            this.FinServicePage.Size = new System.Drawing.Size(564, 230);
+            this.FinServicePage.Text = "配资服务";
+            // 
+            // btnSubmit
+            // 
+            this.btnSubmit.Location = new System.Drawing.Point(80, 42);
+            this.btnSubmit.Name = "btnSubmit";
+            this.btnSubmit.Size = new System.Drawing.Size(110, 24);
+            this.btnSubmit.TabIndex = 0;
+            this.btnSubmit.Text = "更 新";
+            this.btnSubmit.Click += new System.EventHandler(this.btnSubmit_Click);
             // 
             // radPageViewPage4
             // 
@@ -575,9 +588,11 @@
             this.radPageViewPage3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitPanel4)).EndInit();
             this.splitPanel4.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.radPageView2)).EndInit();
-            this.radPageView2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.ServiceTabHolder)).EndInit();
+            this.ServiceTabHolder.ResumeLayout(false);
             this.OrderSenderPage.ResumeLayout(false);
+            this.FinServicePage.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.btnSubmit)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -612,7 +627,7 @@
         private FutSystems.GUI.ctPositionView ctPositionView1;
         private Telerik.WinControls.UI.RadDropDownList accountType;
         private Telerik.WinControls.UI.RadLabel radLabel5;
-        private Telerik.WinControls.UI.RadPageView radPageView2;
+        private Telerik.WinControls.UI.RadPageView ServiceTabHolder;
         private Telerik.WinControls.UI.RadPageViewPage OrderSenderPage;
         private ctOrderSenderM ctOrderSenderM1;
         private Telerik.WinControls.UI.RadPageViewPage FinServicePage;
@@ -620,6 +635,7 @@
         private Telerik.WinControls.UI.RadLabel radLabel6;
         private Telerik.WinControls.UI.RadTextBox acct;
         private Telerik.WinControls.UI.RadPageViewPage radPageViewPage4;
+        private Telerik.WinControls.UI.RadButton btnSubmit;
 
     }
 }

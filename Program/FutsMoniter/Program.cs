@@ -13,6 +13,7 @@ namespace FutsMoniter
         [STAThread]
         static void Main()
         {
+            
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
             //处理UI线程异常
             Application.ThreadException += new System.Threading.ThreadExceptionEventHandler(Application_ThreadException);

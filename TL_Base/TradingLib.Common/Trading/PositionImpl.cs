@@ -190,6 +190,7 @@ namespace TradingLib.Common
         public PositionImpl(Position p)
         {
             _sym = p.Symbol;
+            _osymbol = p.oSymbol;
             _price = p.AvgPrice;
             _size = p.Size;
             _closedpl = p.ClosedPL;
@@ -438,7 +439,7 @@ namespace TradingLib.Common
         public decimal Adjust(Trade t) 
         {
             //put trade into list;
-            LibUtil.Debug("$$$$$$$$$Position:"+this.Account + "-" + this.Symbol +"-"+ _directiontype.ToString() +" got trade:" + t.ToString());
+            //LibUtil.Debug("$$$$$$$$$Position:"+this.Account + "-" + this.Symbol +"-"+ _directiontype.ToString() +" got trade:" + t.ToString());
             _tradelist.Add(t);
             decimal cpl =  Adjust(new PositionImpl(t,_directiontype));
 

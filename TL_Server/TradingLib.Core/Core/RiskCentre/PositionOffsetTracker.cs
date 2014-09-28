@@ -154,7 +154,7 @@ namespace TradingLib.Core
             if (po.Position == null)
             {
                 debug("未获得持仓数据,获得持仓数据", QSEnumDebugLevel.INFO);
-                po.Position = _clearcentre.getPosition(po.Account, po.Symbol,po.Side);
+                po.Position = _clearcentre[po.Account].GetPosition(po.Symbol,po.Side);//.GetPosition(po.Account, po.Symbol, po.Side);
             }
 
             //仍然没有对应的持仓数据 则直接返回

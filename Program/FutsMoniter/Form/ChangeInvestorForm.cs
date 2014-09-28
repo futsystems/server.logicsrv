@@ -18,24 +18,34 @@ namespace FutsMoniter
             InitializeComponent();
         }
 
+
         IAccountLite _account = null;
         public void SetAccount(IAccountLite acc)
         {
             _account = acc;
             account.Text = _account.Account;
-            token.Text = string.IsNullOrEmpty(_account.Token) ? "未设置" : _account.Token;
+            name.Text = string.IsNullOrEmpty(_account.Name) ? "未设置" : _account.Name;
+            broker.Text = string.IsNullOrEmpty(_account.Broker) ? "未设置" : _account.Broker;
+            bankac.Text = string.IsNullOrEmpty(_account.BankAC) ? "未设置" : _account.BankAC;
+            bank.Text = string.IsNullOrEmpty(_account.BankID) ? "未设置" : _account.BankID;
         }
 
         private void btnSubmit_Click(object sender, EventArgs e)
         {
-            string t = token.Text;
-            if (string.IsNullOrEmpty(t) || t.Length > 5)
+            string _name = name.Text;
+            if (string.IsNullOrEmpty(_name) || _name.Length > 5)
             {
                 fmConfirm.Show("请输入正确的投资者姓名!");
                 return;
             }
 
-            Globals.TLClient.ReqChangeAccountToken(_account.Account, t);
+            string _broker = broker.Text;
+
+            string _bankac = bankac.Text;
+
+            string _bank = bank.Text;
+
+            Globals.TLClient.ReqChangeInverstorInfo(_account.Account, _name, _broker,_bank, _bankac);
             this.Close();
         }
     }

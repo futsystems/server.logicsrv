@@ -83,7 +83,7 @@ namespace FutSystems.GUI
         {
             string sectype = string.Empty;
             string exchange = string.Empty;
-            //LibUtil.Debug("selectedvalue text:" + exchlist.SelectedText.ToString());
+            //Util.Debug("selectedvalue text:" + exchlist.SelectedText.ToString());
             if (exchlist.SelectedText == UIUtil.ANY)
             {
                 exchange = string.Empty;
@@ -93,7 +93,7 @@ namespace FutSystems.GUI
                 exchange = ((Exchange)exchlist.SelectedValue).Index;
             }
 
-            //LibUtil.Debug("selected exchange:" + exchange);
+            //Util.Debug("selected exchange:" + exchange);
             secgrid.DataSource = null;// SecurityTracker.getSecuityTable(sectype, exchange);
             secgrid.Columns["全称"].IsVisible = false;
             //secgrid.DataSource
@@ -150,7 +150,7 @@ namespace FutSystems.GUI
             string symbol = null;// BasketTracker.addSecIntoBasket(mastsec, "Default", monthcode);
             LoadSymbol();
             Symbol sec = null;// BasketTracker.getSecFromBasket(symbol, "Default");
-            LibUtil.Debug("sec add:" + symbol + " sec:" + sec.Symbol);
+            Util.Debug("sec add:" + symbol + " sec:" + sec.Symbol);
             if (DefaultBasketSymAdd != null && sec!=null)
             {
                 DefaultBasketSymAdd(sec);

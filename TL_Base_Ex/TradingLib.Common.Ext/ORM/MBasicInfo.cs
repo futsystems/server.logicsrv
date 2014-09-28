@@ -137,6 +137,20 @@ namespace TradingLib.ORM
                 return row > 0;
             }
         }
+
+        /// <summary>
+        /// 获得所有签约银行列表
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable<ContractBank> SelectContractBanks()
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                const string query = "SELECT * FROM info_contract_bank";
+                IEnumerable<ContractBank> result = db.Connection.Query<ContractBank>(query);
+                return result;
+            }
+        }
     }
         
 

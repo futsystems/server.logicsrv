@@ -8,9 +8,98 @@ using TradingLib.Common;
 
 namespace FutsMoniter
 {
+    
     public class Globals
     {
         public static ConfigFile Config = ConfigFile.GetConfigFile("moniter.cfg");
+
+        /// <summary>
+        /// 管理端对因的managerID
+        /// </summary>
+        public static int? MgrFK { get; set; }
+
+        /// <summary>
+        /// 管理端对应的对象
+        /// </summary>
+        public static Manager Manager { get; set; }
+
+
+        public static bool RootRight
+        {
+            get
+            {
+                if (Manager == null)
+                    return false;
+                if (Manager.Type == QSEnumManagerType.ROOT)
+                    return true;
+                else
+                    return false;
+            }
+        }
+
+        /// <summary>
+        /// 路由状态权限
+        /// </summary>
+        /// <returns></returns>
+        public static bool RightRouter
+        {
+            get
+            {
+                if (Manager == null)
+                    return false;
+                if (Manager.Type == QSEnumManagerType.ROOT)
+                    return true;
+                else
+                    return false;
+            }
+        }
+
+        /// <summary>
+        /// 出入金操作权限
+        /// </summary>
+        /// <returns></returns>
+        public static bool RightCashOperation
+        {
+            get
+            {
+                if (Manager == null)
+                    return false;
+                if (Manager.Type == QSEnumManagerType.ROOT)
+                    return true;
+                else
+                    return false;
+            }
+        }
+
+        public static bool RightAgent
+        {
+            get
+            {
+                if (Manager == null)
+                    return false;
+                if (Manager.Type == QSEnumManagerType.ROOT)
+                    return true;
+                else
+                    return false;
+            }
+        }
+
+        public static bool RightAddManger
+        {
+            get
+            {
+                if (Manager == null)
+                    return false;
+                if (Manager.Type == QSEnumManagerType.ROOT)
+                    return true;
+                if (Manager.Type == QSEnumManagerType.AGENT)
+                    return true;
+                return false;
+            }
+        }
+
+        
+
         /// <summary>
         /// 全局TLClient用于进行客户端调用
         /// 这里可以限制成一定的功能接口
@@ -141,6 +230,13 @@ namespace FutsMoniter
             InitMessage = message;
             IsReported = false;
             needReport = true;
+        }
+        public void Reset()
+        {
+            IsReported = false;
+            InitMessage = "";
+            IsInitSuccess = false;
+            needReport = false;
         }
         public bool needReport;
         public bool IsReported;

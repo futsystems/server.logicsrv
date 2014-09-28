@@ -17,19 +17,16 @@ namespace TradingLib.ServiceManager
 
     public partial class CoreManager : BaseSrvObject, IServiceManager
     {
-        ServerConfig config;//服务设置信息
+
         DebugConfig dconfig;//日志设置信息
 
-        public DebugConfig DebugConfig { get { return dconfig; } }
+        //public DebugConfig DebugConfig { get { return dconfig; } }
 
         public string ServiceMgrName { get { return PROGRAME; } }
-        public CoreManager(ServerConfig cfg)
+        public CoreManager()
             :base("CoreManager")
         {
-            config = cfg;
-            dconfig = DebugConfig.DevDebugConfig;
-            dconfig.ApplyDebugConfigEvent +=new VoidDelegate(this.ApplyDebugConfig);
-
+            dconfig = new DebugConfig();
         }
         /*
         public void Dispose()
@@ -53,7 +50,6 @@ namespace TradingLib.ServiceManager
         private MsgExchServer _messageExchagne;//交易消息交换
         private MgrExchServer _managerExchange;//管理消息交换
         private WebMsgExchServer _webmsgExchange;//Web端消息响应
-        private TradeFollow _tradeFollow;//交易数据流
         private ClearCentre _clearCentre;//清算服务
         private SettleCentre _settleCentre;//结算中心
         private RiskCentre _riskCentre;//风控服务
@@ -66,31 +62,6 @@ namespace TradingLib.ServiceManager
         /// </summary>
         public event LoadConnecter LoadConnecterEvent;
 
-
-        //信息输出
-        public event DebugDelegate SendDebugEvent;
-        public event DebugDelegate SendLoadingInfoEvent;
-
-        /// <summary>
-        /// 对外输出加载过程信息
-        /// 比如给UI界面提供加载进度信息
-        /// </summary>
-        /// <param name="msg"></param>
-        void loadingInfo(string msg)
-        {
-            if (SendLoadingInfoEvent != null)
-                SendLoadingInfoEvent(msg);
-        }
-        /// <summary>
-        /// 对外输出日志信息
-        /// </summary>
-        /// <param name="msg"></param>
-        void debug(string msg)
-        {
-            if (SendDebugEvent != null)
-                SendDebugEvent(msg);
-        }
-
         /// <summary>
         /// 加载模块
         /// </summary>
@@ -98,21 +69,14 @@ namespace TradingLib.ServiceManager
         {
             debug("Init Core Modules....", QSEnumDebugLevel.INFO);
             #region 加载核心模块
-
             debug("[INIT CORE] SettleCentre", QSEnumDebugLevel.INFO);
             InitSettleCentre();//初始化结算中心
 
-
-            //1.核心服务组件的加载
             debug("[INIT CORE] MsgExchServer", QSEnumDebugLevel.INFO);
             InitMsgExchSrv();//初始化交易服务
 
-            //InitTradeFollow();//初始化交易数据流
-
             debug("[INIT CORE] ClearCentre", QSEnumDebugLevel.INFO);
             InitClearCentre();//初始化结算中心 初始化账户信息
-
-           
 
             debug("[INIT CORE] RiskCentre", QSEnumDebugLevel.INFO);
             InitRiskCentre();//初始化风控中心 初始化账户风控规则
@@ -120,17 +84,11 @@ namespace TradingLib.ServiceManager
             debug("[INIT CORE] DataFeedRouter", QSEnumDebugLevel.INFO);
             InitDataFeedRouter();//初始化数据路由
 
-
-
-            debug("[INIT CORE] TickMgrClient", QSEnumDebugLevel.INFO);
+            //debug("[INIT CORE] TickMgrClient", QSEnumDebugLevel.INFO);
             //InitFastTickMgr();
 
             debug("[INIT CORE] BrokerRouter", QSEnumDebugLevel.INFO);
             InitBrokerRouter();//初始化交易路由选择器
-
-            //debug("初始化Broker/DataFeed", QSEnumDebugLevel.INFO);//将数据与交易路由外绑到gui界面
-            //if (LoadConnecterEvent != null)
-            //    LoadConnecterEvent(_brokerRouter, _datafeedRouter);
 
             debug("[INIT CORE] MgrExchServer", QSEnumDebugLevel.INFO);//服务端管理界面,提供管理客户端接入,查看并设置相关数据
             InitMgrExchSrv();//初始化管理服务
@@ -158,11 +116,8 @@ namespace TradingLib.ServiceManager
             //1.从数据库恢复当日交易数据
             debug("[START CORE] ClearCentre",QSEnumDebugLevel.INFO);
             _clearCentre.Start();
-           // _clearCentre.RestoreFromMysql();
-            
 
-            //2.从缓存文件恢复当时行情快照,这样就可以恢复整个交易快照 包括平仓盈亏与持仓盈亏
-            loadingInfo("启动数据路由线程");//并加载行情快照,需要在系统从数据库加载交易记录之后进行
+            //2.从缓存文件恢复当时行情快照,这样就可以恢复整个交易快照 包括平仓盈亏与持仓盈亏//并加载行情快照,需要在系统从数据库加载交易记录之后进行
             _datafeedRouter.Start();
             //_datafeedRouter.LoadTickSnapshot();
 
@@ -174,11 +129,8 @@ namespace TradingLib.ServiceManager
             _managerExchange.Start();
 
             //启动web端消息响应服务
-            loadingInfo("启动WebMsg消息交换");
             debug("[START CORE] WebMsgExchServer",QSEnumDebugLevel.INFO);
             _webmsgExchange.Start();
-
-            //启动交易消息交换服务
 
             debug("Restore Client Connection....",QSEnumDebugLevel.INFO);
             _messageExchagne.RestoreSession();//恢复客户端连接
@@ -193,8 +145,8 @@ namespace TradingLib.ServiceManager
 
             #endregion
             //初始化
-            ApplyDebugConfig();
-            debug("----------- Core Started -----------------");
+            //ApplyDebugConfig();
+            debug("----------- Core Started -----------------",QSEnumDebugLevel.INFO);
         }
 
         public void Stop()
@@ -269,13 +221,13 @@ namespace TradingLib.ServiceManager
             _messageExchagne.GotTickEvent += new TickDelegate(TLCtxHelper.EventIndicator.FireTickEvent);
             //获得底层委托回报
             _messageExchagne.GotOrderEvent += new OrderDelegate(TLCtxHelper.EventIndicator.FireOrderEvent);
-            //获得底层成交回报
+            //获得底层成交回报 //系统内的成交回报是清算中心处理过手续费的成交
             _clearCentre.GotCommissionFill += new FillDelegate(TLCtxHelper.EventIndicator.FireFillEvent);
             //_messageExchagne.GotFillEvent += new FillDelegate(TLCtxHelper.EventIndicator.FireFillEvent);
             //获得底层取消委托回报
             _messageExchagne.GotCancelEvent += new LongDelegate(TLCtxHelper.EventIndicator.FireCancelEvent);
             //获得底层持仓回合回报
-            _clearCentre.PositionRoundClosedEvent +=new IPositionRoundDel(TLCtxHelper.EventIndicator.FirePositionRoundClosed);
+            _clearCentre.PositionRoundClosedEvent += new PositionRoundClosedDel(TLCtxHelper.EventIndicator.FirePositionRoundClosed);
 
             //EventSession
             //客户端建立连接
@@ -314,10 +266,39 @@ namespace TradingLib.ServiceManager
             //_clearCentre.GetAccountFinAmmountTotalEvent +=new AccountFinAmmountDel(TLCtxHelper.ExContribEvent.GetFinAmmountTotal);
             //_clearCentre.GetAccountFinAmmountAvabileEvent += new AccountFinAmmountDel(TLCtxHelper.ExContribEvent.GetFinAmmountAvabile);
             _clearCentre.AdjustCommissionEvent += new AdjustCommissionDel(TLCtxHelper.ExContribEvent.AdjustCommission);
+
+            _riskCentre.GotFlatFailedEvent += new PositionDelegate(TLCtxHelper.ExContribEvent.FireFlatFailedEvent);
+            _riskCentre.GotFlatSuccessEvent +=new PositionDelegate(TLCtxHelper.ExContribEvent.FireFlatSuccessEvent);
         }
 
+        /// <summary>
+        /// 显示所有日志信息
+        /// </summary>
+        public void DebugAll()
+        {
+            _messageExchagne.DebugEnable = true;
+            _messageExchagne.DebugLevel = QSEnumDebugLevel.DEBUG;
+
+            _managerExchange.DebugEnable = true;
+            _managerExchange.DebugLevel = QSEnumDebugLevel.DEBUG;
+
+            _clearCentre.DebugEnable = true;
+            _clearCentre.DebugLevel = QSEnumDebugLevel.DEBUG;
+
+            _clearCentre.SqlLog.DebugEnable = true;
+            _clearCentre.SqlLog.DebugLevel = QSEnumDebugLevel.DEBUG;
+
+            _riskCentre.DebugEnable = true;
+            _riskCentre.DebugLevel = QSEnumDebugLevel.DEBUG;
+
+            _brokerRouter.DebugEnable = true;
+            _brokerRouter.DebugLevel = QSEnumDebugLevel.DEBUG;
+
+            _datafeedRouter.DebugEnable = true;
+            _datafeedRouter.DebugLevel = QSEnumDebugLevel.DEBUG;
 
 
+        }
         /// <summary>
         /// 应用日志输出级别
         /// </summary>
@@ -326,54 +307,55 @@ namespace TradingLib.ServiceManager
             //交易业务与消息
             if (_messageExchagne != null)
             {
-                _messageExchagne.DebugEnable = DebugConfig.D_TrdLogic;
-                _messageExchagne.DebugLevel = DebugConfig.DL_TrdLogic;
+                _messageExchagne.DebugEnable = dconfig.D_TrdLogic;
+                _messageExchagne.DebugLevel = dconfig.DL_TrdLogic;
 
-                _messageExchagne.TrdService.DebugEnable = DebugConfig.D_TrdMessage;
-                _messageExchagne.TrdService.DebugLevel = DebugConfig.DL_TrdMessage;
+                //_messageExchagne.TrdService.DebugEnable = DebugConfig.D_TrdMessage;
+                //_messageExchagne.TrdService.DebugLevel = DebugConfig.DL_TrdMessage;
             }
 
             //管理业务与消息
-            //if (_managerExchange != null)
-            //{
-            //    _managerExchange.DebugEnable = DebugConfig.D_MgrLogic;
-            //    _managerExchange.DebugLevel = DebugConfig.DL_MgrLogic;
+            if (_managerExchange != null)
+            {
+                _managerExchange.DebugEnable = dconfig.D_MgrLogic;
+                _managerExchange.DebugLevel = dconfig.DL_MgrLogic;
 
-            //    _managerExchange.MgrService.DebugEnable = DebugConfig.D_MgrMessage;
-            //    _managerExchange.MgrService.DebugLevel = DebugConfig.DL_MgrMessage;
-            //}
+                //    _managerExchange.MgrService.DebugEnable = dconfig.D_MgrMessage;
+                //    _managerExchange.MgrService.DebugLevel = dconfig.DL_MgrMessage;
+                //}
+            }
 
             //清算中心
             if (_clearCentre != null)
             {
-                _clearCentre.DebugEnable = DebugConfig.D_ClearCentre;
-                _clearCentre.DebugLevel = DebugConfig.DL_ClearCentre;
+                _clearCentre.DebugEnable = dconfig.D_ClearCentre;
+                _clearCentre.DebugLevel = dconfig.DL_ClearCentre;
 
                 //交易信息记录
 
-                _clearCentre.SqlLog.DebugEnable = DebugConfig.D_TrdLoger;
-                _clearCentre.SqlLog.DebugLevel = DebugConfig.DL_TrdLoger;
+                _clearCentre.SqlLog.DebugEnable = dconfig.D_TrdLoger;
+                _clearCentre.SqlLog.DebugLevel = dconfig.DL_TrdLoger;
             }
 
             //风控中心
             if (_riskCentre != null)
             {
-                _riskCentre.DebugEnable = DebugConfig.D_RiskCentre;
-                _riskCentre.DebugLevel = DebugConfig.DL_RiskCentre;
+                _riskCentre.DebugEnable = dconfig.D_RiskCentre;
+                _riskCentre.DebugLevel = dconfig.DL_RiskCentre;
             }
 
             //交易路由
             if (_brokerRouter != null)
             {
-                _brokerRouter.DebugEnable = DebugConfig.D_BrokerRouter;
-                _brokerRouter.DebugLevel = DebugConfig.DL_BrokerRouter;
+                _brokerRouter.DebugEnable = dconfig.D_BrokerRouter;
+                _brokerRouter.DebugLevel = dconfig.DL_BrokerRouter;
             }
 
             //数据路由
             if (_datafeedRouter != null)
             {
-                _datafeedRouter.DebugEnable = DebugConfig.D_DataFeedRouter;
-                _datafeedRouter.DebugLevel = DebugConfig.DL_DataFeedRouter;
+                _datafeedRouter.DebugEnable = dconfig.D_DataFeedRouter;
+                _datafeedRouter.DebugLevel = dconfig.DL_DataFeedRouter;
             }
 
 

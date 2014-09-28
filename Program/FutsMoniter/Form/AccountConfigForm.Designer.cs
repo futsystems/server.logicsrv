@@ -31,28 +31,29 @@
             this.editpageview = new Telerik.WinControls.UI.RadPageView();
             this.radPageViewPage1 = new Telerik.WinControls.UI.RadPageViewPage();
             this.radGroupBox1 = new Telerik.WinControls.UI.RadGroupBox();
+            this.routerpanel = new Telerik.WinControls.UI.RadPanel();
+            this.radLabel1 = new Telerik.WinControls.UI.RadLabel();
+            this.accountType = new Telerik.WinControls.UI.RadDropDownList();
+            this.routeType = new Telerik.WinControls.UI.RadDropDownList();
+            this.radLabel2 = new Telerik.WinControls.UI.RadLabel();
             this.radLabel12 = new Telerik.WinControls.UI.RadLabel();
             this.poslock = new Telerik.WinControls.UI.RadCheckBox();
-            this.radLabel1 = new Telerik.WinControls.UI.RadLabel();
             this.btnUpdate = new Telerik.WinControls.UI.RadButton();
-            this.radLabel2 = new Telerik.WinControls.UI.RadLabel();
-            this.routeType = new Telerik.WinControls.UI.RadDropDownList();
             this.radLabel3 = new Telerik.WinControls.UI.RadLabel();
-            this.accountType = new Telerik.WinControls.UI.RadDropDownList();
             this.intraday = new Telerik.WinControls.UI.RadCheckBox();
             this.btnExecute = new Telerik.WinControls.UI.RadButton();
             this.pageFinance = new Telerik.WinControls.UI.RadPageViewPage();
+            this.cashoppanel = new Telerik.WinControls.UI.RadPanel();
+            this.radLabel4 = new Telerik.WinControls.UI.RadLabel();
             this.cashop_comment = new Telerik.WinControls.UI.RadTextBox();
+            this.radLabel5 = new Telerik.WinControls.UI.RadLabel();
             this.cashop_ref = new Telerik.WinControls.UI.RadTextBox();
+            this.radLabel6 = new Telerik.WinControls.UI.RadLabel();
             this.cashop_type = new Telerik.WinControls.UI.RadDropDownList();
+            this.radLabel7 = new Telerik.WinControls.UI.RadLabel();
             this.cashop_amount = new Telerik.WinControls.UI.RadSpinEditor();
             this.btnCashOperation = new Telerik.WinControls.UI.RadButton();
-            this.radLabel7 = new Telerik.WinControls.UI.RadLabel();
-            this.radLabel6 = new Telerik.WinControls.UI.RadLabel();
-            this.radLabel5 = new Telerik.WinControls.UI.RadLabel();
-            this.radLabel4 = new Telerik.WinControls.UI.RadLabel();
             this.btnUpdateAccountInfo = new Telerik.WinControls.UI.RadButton();
-            this.ctFinanceInfo1 = new FutsMoniter.ctFinanceInfo();
             this.pageOrderCheck = new Telerik.WinControls.UI.RadPageViewPage();
             this.btnDelOrderRule = new Telerik.WinControls.UI.RadButton();
             this.btnAddOrderRule = new Telerik.WinControls.UI.RadButton();
@@ -68,31 +69,36 @@
             this.accountRuleItemList = new Telerik.WinControls.UI.RadListControl();
             this.accountRuleClassList = new Telerik.WinControls.UI.RadListControl();
             this.radPageViewPage5 = new Telerik.WinControls.UI.RadPageViewPage();
+            this.ctFinanceInfo1 = new FutsMoniter.ctFinanceInfo();
             ((System.ComponentModel.ISupportInitialize)(this.editpageview)).BeginInit();
             this.editpageview.SuspendLayout();
             this.radPageViewPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.radGroupBox1)).BeginInit();
             this.radGroupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.routerpanel)).BeginInit();
+            this.routerpanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.accountType)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.routeType)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel12)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.poslock)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnUpdate)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.routeType)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.accountType)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.intraday)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnExecute)).BeginInit();
             this.pageFinance.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.cashoppanel)).BeginInit();
+            this.cashoppanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cashop_comment)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cashop_ref)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cashop_type)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel7)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cashop_amount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnCashOperation)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel7)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel6)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel5)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnUpdateAccountInfo)).BeginInit();
             this.pageOrderCheck.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnDelOrderRule)).BeginInit();
@@ -133,22 +139,19 @@
             // 
             this.radPageViewPage1.Controls.Add(this.radGroupBox1);
             this.radPageViewPage1.Controls.Add(this.btnExecute);
-            this.radPageViewPage1.Location = new System.Drawing.Point(10, 35);
+            this.radPageViewPage1.Location = new System.Drawing.Point(10, 31);
             this.radPageViewPage1.Name = "radPageViewPage1";
-            this.radPageViewPage1.Size = new System.Drawing.Size(586, 211);
+            this.radPageViewPage1.Size = new System.Drawing.Size(586, 215);
             this.radPageViewPage1.Text = "帐户属性";
             // 
             // radGroupBox1
             // 
             this.radGroupBox1.AccessibleRole = System.Windows.Forms.AccessibleRole.Grouping;
+            this.radGroupBox1.Controls.Add(this.routerpanel);
             this.radGroupBox1.Controls.Add(this.radLabel12);
             this.radGroupBox1.Controls.Add(this.poslock);
-            this.radGroupBox1.Controls.Add(this.radLabel1);
             this.radGroupBox1.Controls.Add(this.btnUpdate);
-            this.radGroupBox1.Controls.Add(this.radLabel2);
-            this.radGroupBox1.Controls.Add(this.routeType);
             this.radGroupBox1.Controls.Add(this.radLabel3);
-            this.radGroupBox1.Controls.Add(this.accountType);
             this.radGroupBox1.Controls.Add(this.intraday);
             this.radGroupBox1.HeaderText = "基本属性";
             this.radGroupBox1.Location = new System.Drawing.Point(0, 0);
@@ -161,9 +164,56 @@
             this.radGroupBox1.TabIndex = 18;
             this.radGroupBox1.Text = "基本属性";
             // 
+            // routerpanel
+            // 
+            this.routerpanel.Controls.Add(this.radLabel1);
+            this.routerpanel.Controls.Add(this.accountType);
+            this.routerpanel.Controls.Add(this.routeType);
+            this.routerpanel.Controls.Add(this.radLabel2);
+            this.routerpanel.Location = new System.Drawing.Point(4, 67);
+            this.routerpanel.Name = "routerpanel";
+            this.routerpanel.Size = new System.Drawing.Size(188, 55);
+            this.routerpanel.TabIndex = 19;
+            // 
+            // radLabel1
+            // 
+            this.radLabel1.Location = new System.Drawing.Point(3, 3);
+            this.radLabel1.Name = "radLabel1";
+            this.radLabel1.Size = new System.Drawing.Size(59, 16);
+            this.radLabel1.TabIndex = 0;
+            this.radLabel1.Text = "帐户类别:";
+            // 
+            // accountType
+            // 
+            this.accountType.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.accountType.Location = new System.Drawing.Point(78, 3);
+            this.accountType.Name = "accountType";
+            this.accountType.Size = new System.Drawing.Size(105, 18);
+            this.accountType.TabIndex = 15;
+            this.accountType.Text = "--";
+            ((Telerik.WinControls.Primitives.FillPrimitive)(this.accountType.GetChildAt(0).GetChildAt(1))).BackColor = System.Drawing.SystemColors.Window;
+            // 
+            // routeType
+            // 
+            this.routeType.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.routeType.Location = new System.Drawing.Point(78, 33);
+            this.routeType.Name = "routeType";
+            this.routeType.Size = new System.Drawing.Size(105, 18);
+            this.routeType.TabIndex = 16;
+            this.routeType.Text = "--";
+            ((Telerik.WinControls.Primitives.FillPrimitive)(this.routeType.GetChildAt(0).GetChildAt(1))).BackColor = System.Drawing.SystemColors.Window;
+            // 
+            // radLabel2
+            // 
+            this.radLabel2.Location = new System.Drawing.Point(3, 33);
+            this.radLabel2.Name = "radLabel2";
+            this.radLabel2.Size = new System.Drawing.Size(59, 16);
+            this.radLabel2.TabIndex = 1;
+            this.radLabel2.Text = "成交路由:";
+            // 
             // radLabel12
             // 
-            this.radLabel12.Location = new System.Drawing.Point(5, 108);
+            this.radLabel12.Location = new System.Drawing.Point(6, 45);
             this.radLabel12.Name = "radLabel12";
             this.radLabel12.Size = new System.Drawing.Size(59, 16);
             this.radLabel12.TabIndex = 18;
@@ -171,69 +221,33 @@
             // 
             // poslock
             // 
-            this.poslock.Location = new System.Drawing.Point(80, 108);
+            this.poslock.Location = new System.Drawing.Point(81, 45);
             this.poslock.Name = "poslock";
             this.poslock.Size = new System.Drawing.Size(45, 16);
             this.poslock.TabIndex = 19;
             this.poslock.Text = "允许";
             this.poslock.ToggleStateChanged += new Telerik.WinControls.UI.StateChangedEventHandler(this.poslock_ToggleStateChanged);
             // 
-            // radLabel1
-            // 
-            this.radLabel1.Location = new System.Drawing.Point(5, 21);
-            this.radLabel1.Name = "radLabel1";
-            this.radLabel1.Size = new System.Drawing.Size(59, 16);
-            this.radLabel1.TabIndex = 0;
-            this.radLabel1.Text = "帐户类别:";
-            // 
             // btnUpdate
             // 
-            this.btnUpdate.Location = new System.Drawing.Point(115, 183);
+            this.btnUpdate.Location = new System.Drawing.Point(110, 181);
             this.btnUpdate.Name = "btnUpdate";
             this.btnUpdate.Size = new System.Drawing.Size(80, 23);
             this.btnUpdate.TabIndex = 17;
             this.btnUpdate.Text = "更新";
             this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
             // 
-            // radLabel2
-            // 
-            this.radLabel2.Location = new System.Drawing.Point(5, 51);
-            this.radLabel2.Name = "radLabel2";
-            this.radLabel2.Size = new System.Drawing.Size(59, 16);
-            this.radLabel2.TabIndex = 1;
-            this.radLabel2.Text = "成交路由:";
-            // 
-            // routeType
-            // 
-            this.routeType.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.routeType.Location = new System.Drawing.Point(80, 51);
-            this.routeType.Name = "routeType";
-            this.routeType.Size = new System.Drawing.Size(105, 18);
-            this.routeType.TabIndex = 16;
-            this.routeType.Text = "--";
-            ((Telerik.WinControls.Primitives.FillPrimitive)(this.routeType.GetChildAt(0).GetChildAt(1))).BackColor = System.Drawing.SystemColors.Window;
-            // 
             // radLabel3
             // 
-            this.radLabel3.Location = new System.Drawing.Point(5, 84);
+            this.radLabel3.Location = new System.Drawing.Point(6, 21);
             this.radLabel3.Name = "radLabel3";
             this.radLabel3.Size = new System.Drawing.Size(59, 16);
             this.radLabel3.TabIndex = 2;
             this.radLabel3.Text = "日内交易:";
             // 
-            // accountType
-            // 
-            this.accountType.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.accountType.Location = new System.Drawing.Point(80, 21);
-            this.accountType.Name = "accountType";
-            this.accountType.Size = new System.Drawing.Size(105, 18);
-            this.accountType.TabIndex = 15;
-            this.accountType.Text = "--";
-            ((Telerik.WinControls.Primitives.FillPrimitive)(this.accountType.GetChildAt(0).GetChildAt(1))).BackColor = System.Drawing.SystemColors.Window;
-            // 
             // intraday
             // 
-            this.intraday.Location = new System.Drawing.Point(80, 84);
+            this.intraday.Location = new System.Drawing.Point(81, 21);
             this.intraday.Name = "intraday";
             this.intraday.Size = new System.Drawing.Size(45, 16);
             this.intraday.TabIndex = 3;
@@ -250,51 +264,91 @@
             // 
             // pageFinance
             // 
-            this.pageFinance.Controls.Add(this.cashop_comment);
-            this.pageFinance.Controls.Add(this.cashop_ref);
-            this.pageFinance.Controls.Add(this.cashop_type);
-            this.pageFinance.Controls.Add(this.cashop_amount);
-            this.pageFinance.Controls.Add(this.btnCashOperation);
-            this.pageFinance.Controls.Add(this.radLabel7);
-            this.pageFinance.Controls.Add(this.radLabel6);
-            this.pageFinance.Controls.Add(this.radLabel5);
-            this.pageFinance.Controls.Add(this.radLabel4);
+            this.pageFinance.Controls.Add(this.cashoppanel);
             this.pageFinance.Controls.Add(this.btnUpdateAccountInfo);
             this.pageFinance.Controls.Add(this.ctFinanceInfo1);
-            this.pageFinance.Location = new System.Drawing.Point(10, 35);
+            this.pageFinance.Location = new System.Drawing.Point(10, 31);
             this.pageFinance.Name = "pageFinance";
-            this.pageFinance.Size = new System.Drawing.Size(586, 211);
+            this.pageFinance.Size = new System.Drawing.Size(586, 215);
             this.pageFinance.Text = "财务管理";
+            // 
+            // cashoppanel
+            // 
+            this.cashoppanel.Controls.Add(this.radLabel4);
+            this.cashoppanel.Controls.Add(this.cashop_comment);
+            this.cashoppanel.Controls.Add(this.radLabel5);
+            this.cashoppanel.Controls.Add(this.cashop_ref);
+            this.cashoppanel.Controls.Add(this.radLabel6);
+            this.cashoppanel.Controls.Add(this.cashop_type);
+            this.cashoppanel.Controls.Add(this.radLabel7);
+            this.cashoppanel.Controls.Add(this.cashop_amount);
+            this.cashoppanel.Controls.Add(this.btnCashOperation);
+            this.cashoppanel.Location = new System.Drawing.Point(312, 3);
+            this.cashoppanel.Name = "cashoppanel";
+            this.cashoppanel.Size = new System.Drawing.Size(271, 205);
+            this.cashoppanel.TabIndex = 16;
+            // 
+            // radLabel4
+            // 
+            this.radLabel4.Location = new System.Drawing.Point(3, 3);
+            this.radLabel4.Name = "radLabel4";
+            this.radLabel4.Size = new System.Drawing.Size(72, 16);
+            this.radLabel4.TabIndex = 6;
+            this.radLabel4.Text = "出入金类别:";
             // 
             // cashop_comment
             // 
             this.cashop_comment.AutoSize = false;
-            this.cashop_comment.Location = new System.Drawing.Point(405, 94);
+            this.cashop_comment.Location = new System.Drawing.Point(81, 94);
             this.cashop_comment.Multiline = true;
             this.cashop_comment.Name = "cashop_comment";
-            this.cashop_comment.Size = new System.Drawing.Size(178, 78);
+            this.cashop_comment.Size = new System.Drawing.Size(178, 68);
             this.cashop_comment.TabIndex = 15;
+            // 
+            // radLabel5
+            // 
+            this.radLabel5.Location = new System.Drawing.Point(41, 27);
+            this.radLabel5.Name = "radLabel5";
+            this.radLabel5.Size = new System.Drawing.Size(34, 16);
+            this.radLabel5.TabIndex = 7;
+            this.radLabel5.Text = "金额:";
             // 
             // cashop_ref
             // 
-            this.cashop_ref.Location = new System.Drawing.Point(405, 47);
+            this.cashop_ref.Location = new System.Drawing.Point(81, 47);
             this.cashop_ref.Name = "cashop_ref";
             this.cashop_ref.Size = new System.Drawing.Size(178, 18);
             this.cashop_ref.TabIndex = 14;
             // 
+            // radLabel6
+            // 
+            this.radLabel6.Location = new System.Drawing.Point(16, 49);
+            this.radLabel6.Name = "radLabel6";
+            this.radLabel6.Size = new System.Drawing.Size(59, 16);
+            this.radLabel6.TabIndex = 8;
+            this.radLabel6.Text = "流水编号:";
+            // 
             // cashop_type
             // 
             this.cashop_type.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.cashop_type.Location = new System.Drawing.Point(405, 0);
+            this.cashop_type.Location = new System.Drawing.Point(81, 2);
             this.cashop_type.Name = "cashop_type";
             this.cashop_type.Size = new System.Drawing.Size(76, 18);
             this.cashop_type.TabIndex = 13;
             this.cashop_type.Text = "--";
             ((Telerik.WinControls.Primitives.FillPrimitive)(this.cashop_type.GetChildAt(0).GetChildAt(1))).BackColor = System.Drawing.SystemColors.Window;
             // 
+            // radLabel7
+            // 
+            this.radLabel7.Location = new System.Drawing.Point(41, 71);
+            this.radLabel7.Name = "radLabel7";
+            this.radLabel7.Size = new System.Drawing.Size(34, 16);
+            this.radLabel7.TabIndex = 10;
+            this.radLabel7.Text = "说明:";
+            // 
             // cashop_amount
             // 
-            this.cashop_amount.Location = new System.Drawing.Point(405, 24);
+            this.cashop_amount.Location = new System.Drawing.Point(81, 24);
             this.cashop_amount.Maximum = new decimal(new int[] {
             5000000,
             0,
@@ -309,44 +363,12 @@
             // 
             // btnCashOperation
             // 
-            this.btnCashOperation.Location = new System.Drawing.Point(501, 178);
+            this.btnCashOperation.Location = new System.Drawing.Point(177, 175);
             this.btnCashOperation.Name = "btnCashOperation";
             this.btnCashOperation.Size = new System.Drawing.Size(82, 24);
             this.btnCashOperation.TabIndex = 11;
             this.btnCashOperation.Text = "提交";
             this.btnCashOperation.Click += new System.EventHandler(this.btnCashOperation_Click);
-            // 
-            // radLabel7
-            // 
-            this.radLabel7.Location = new System.Drawing.Point(365, 71);
-            this.radLabel7.Name = "radLabel7";
-            this.radLabel7.Size = new System.Drawing.Size(34, 16);
-            this.radLabel7.TabIndex = 10;
-            this.radLabel7.Text = "说明:";
-            // 
-            // radLabel6
-            // 
-            this.radLabel6.Location = new System.Drawing.Point(340, 49);
-            this.radLabel6.Name = "radLabel6";
-            this.radLabel6.Size = new System.Drawing.Size(59, 16);
-            this.radLabel6.TabIndex = 8;
-            this.radLabel6.Text = "流水编号:";
-            // 
-            // radLabel5
-            // 
-            this.radLabel5.Location = new System.Drawing.Point(365, 27);
-            this.radLabel5.Name = "radLabel5";
-            this.radLabel5.Size = new System.Drawing.Size(34, 16);
-            this.radLabel5.TabIndex = 7;
-            this.radLabel5.Text = "金额:";
-            // 
-            // radLabel4
-            // 
-            this.radLabel4.Location = new System.Drawing.Point(327, 3);
-            this.radLabel4.Name = "radLabel4";
-            this.radLabel4.Size = new System.Drawing.Size(72, 16);
-            this.radLabel4.TabIndex = 6;
-            this.radLabel4.Text = "出入金类别:";
             // 
             // btnUpdateAccountInfo
             // 
@@ -356,13 +378,6 @@
             this.btnUpdateAccountInfo.TabIndex = 5;
             this.btnUpdateAccountInfo.Text = "更新帐户信息";
             this.btnUpdateAccountInfo.Click += new System.EventHandler(this.btnUpdateAccountInfo_Click);
-            // 
-            // ctFinanceInfo1
-            // 
-            this.ctFinanceInfo1.Location = new System.Drawing.Point(3, 3);
-            this.ctFinanceInfo1.Name = "ctFinanceInfo1";
-            this.ctFinanceInfo1.Size = new System.Drawing.Size(303, 203);
-            this.ctFinanceInfo1.TabIndex = 0;
             // 
             // pageOrderCheck
             // 
@@ -499,6 +514,13 @@
             this.radPageViewPage5.Size = new System.Drawing.Size(586, 211);
             this.radPageViewPage5.Text = "保证金手续费";
             // 
+            // ctFinanceInfo1
+            // 
+            this.ctFinanceInfo1.Location = new System.Drawing.Point(3, 3);
+            this.ctFinanceInfo1.Name = "ctFinanceInfo1";
+            this.ctFinanceInfo1.Size = new System.Drawing.Size(303, 203);
+            this.ctFinanceInfo1.TabIndex = 0;
+            // 
             // AccountConfigForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -522,27 +544,32 @@
             ((System.ComponentModel.ISupportInitialize)(this.radGroupBox1)).EndInit();
             this.radGroupBox1.ResumeLayout(false);
             this.radGroupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.routerpanel)).EndInit();
+            this.routerpanel.ResumeLayout(false);
+            this.routerpanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.accountType)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.routeType)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel12)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.poslock)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnUpdate)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.routeType)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.accountType)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.intraday)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnExecute)).EndInit();
             this.pageFinance.ResumeLayout(false);
-            this.pageFinance.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.cashoppanel)).EndInit();
+            this.cashoppanel.ResumeLayout(false);
+            this.cashoppanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cashop_comment)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cashop_ref)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel6)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cashop_type)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel7)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cashop_amount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnCashOperation)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel7)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel6)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel5)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnUpdateAccountInfo)).EndInit();
             this.pageOrderCheck.ResumeLayout(false);
             this.pageOrderCheck.PerformLayout();
@@ -607,5 +634,7 @@
         private Telerik.WinControls.UI.RadTextBox cashop_comment;
         private Telerik.WinControls.UI.RadLabel radLabel12;
         private Telerik.WinControls.UI.RadCheckBox poslock;
+        private Telerik.WinControls.UI.RadPanel routerpanel;
+        private Telerik.WinControls.UI.RadPanel cashoppanel;
     }
 }

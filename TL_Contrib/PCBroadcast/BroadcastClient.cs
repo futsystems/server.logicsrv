@@ -79,7 +79,7 @@ namespace Message.Broadcast
         {
             if (!pcgo) return;
             pcgo = false;
-            LibUtil.WaitThreadStop(pcthread);
+            Util.WaitThreadStop(pcthread);
 
         }
 

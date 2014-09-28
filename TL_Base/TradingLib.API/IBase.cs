@@ -17,36 +17,36 @@ using System.Text;
 
 namespace TradingLib.API
 {
-	public interface IMail
-	{
-		event EmailDel SendEmailEvent;
-	}
+    public interface IMail
+    {
+        event EmailDel SendEmailEvent;
+    }
 
-	/// <summary>
-	/// debug接口,组件实现了这个接口可以对外输出日志
-	/// </summary>
-	public interface IDebug
-	{
-		/// <summary>
-		/// 日志级别
-		/// </summary>
-		QSEnumDebugLevel DebugLevel { get; set; }
+    /// <summary>
+    /// debug接口,组件实现了这个接口可以对外输出日志
+    /// </summary>
+    public interface IDebug
+    {
+        /// <summary>
+        /// 日志级别
+        /// </summary>
+        QSEnumDebugLevel DebugLevel { get; set; }
 
-		/// <summary>
-		/// 是否输出日志
-		/// </summary>
-		bool DebugEnable { get; set; }
+        /// <summary>
+        /// 是否输出日志
+        /// </summary>
+        bool DebugEnable { get; set; }
 
-		/// <summary>
-		/// 打开日志输出功能
-		/// </summary>
-		bool VerboseDebugging { get; set; }
+        /// <summary>
+        /// 打开日志输出功能
+        /// </summary>
+        bool VerboseDebugging { get; set; }
 
-		/// <summary>
-		/// 对外输出日志信息
-		/// </summary>
-		event DebugDelegate SendDebugEvent;
-	}
+        /// <summary>
+        /// 对外输出日志信息
+        /// </summary>
+        event DebugDelegate SendDebugEvent;
+    }
 
 	/// <summary>
 	/// 服务类的基本接口 启动 停止 是否可以用

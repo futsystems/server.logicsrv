@@ -278,7 +278,7 @@ namespace TradingLib.Common
             SendPacket(request);
         }
 
-        public void ReqAddAccount(QSEnumAccountCategory category, string account, string pass, int userid)
+        public void ReqAddAccount(QSEnumAccountCategory category, string account, string pass, int mgrid,int userid)
         {
             debug("请求添加交易帐号", QSEnumDebugLevel.INFO);
             MGRAddAccountRequest request = RequestTemplate<MGRAddAccountRequest>.CliSendRequest(requestid++);
@@ -286,6 +286,7 @@ namespace TradingLib.Common
             request.Category = category;
             request.Password = pass;
             request.UserID = userid;
+            request.MgrID = mgrid;
 
             SendPacket(request);
         }
@@ -301,13 +302,16 @@ namespace TradingLib.Common
             SendPacket(request);
         }
 
-        public void ReqChangeAccountToken(string account, string token)
+        public void ReqChangeInverstorInfo(string account, string name,string broker,string bank,string bankac)
         {
             debug("请求修改投资者信息", QSEnumDebugLevel.INFO);
             MGRReqChangeInvestorRequest request = RequestTemplate<MGRReqChangeInvestorRequest>.CliSendRequest(requestid++);
 
             request.TradingAccount = account;
-            request.Token = token;
+            request.Name = name;
+            request.Broker = broker;
+            request.Bank = bank;
+            request.BankAC = bankac;
 
             SendPacket(request);
         }
@@ -319,6 +323,37 @@ namespace TradingLib.Common
 
             request.TradingAccount = account;
             request.PosLock = poslock;
+
+            SendPacket(request);
+        }
+        #endregion
+
+
+        #region 管理员管理
+
+        public void ReqQryManager()
+        {
+            debug("请求查询管理员列表", QSEnumDebugLevel.INFO);
+            MGRQryManagerRequest request = RequestTemplate<MGRQryManagerRequest>.CliSendRequest(requestid++);
+            SendPacket(request);
+            
+        }
+
+        public void ReqUpdateManager(Manager manger)
+        {
+            debug("请求更新管理员", QSEnumDebugLevel.INFO);
+            MGRReqUpdateManagerRequest request = RequestTemplate<MGRReqUpdateManagerRequest>.CliSendRequest(requestid++);
+            request.ManagerToSend = manger;
+
+            SendPacket(request);
+        }
+
+        public void ReqUpdatePass(string oldpass, string pass)
+        {
+            debug("请求更改密码", QSEnumDebugLevel.INFO);
+            MGRUpdatePassRequest request = RequestTemplate<MGRUpdatePassRequest>.CliSendRequest(requestid++);
+            request.OldPass = oldpass;
+            request.NewPass = pass;
 
             SendPacket(request);
         }
@@ -580,5 +615,39 @@ namespace TradingLib.Common
         }
         #endregion
 
+
+        #region 扩展请求
+
+        public void ReqQryFinService(string account)
+        {
+            this.ReqContribRequest("FinServiceCentre", "QryFinService", account);
+        }
+        /// <summary>
+        /// 调用某个模块 某个命令 某个参数 
+        /// </summary>
+        /// <param name="module"></param>
+        /// <param name="cmd"></param>
+        /// <param name="args"></param>
+        public void ReqContribRequest(string module, string cmd, string args)
+        {
+            debug("请求扩展命令,module:" + module + " cmd:" + cmd + " args:" + args, QSEnumDebugLevel.INFO);
+            MGRContribRequest request = RequestTemplate<MGRContribRequest>.CliSendRequest(requestid++);
+            request.ModuleID = module;
+            request.CMDStr = cmd;
+            request.Parameters = args;
+
+            SendPacket(request);
+        
+        }
+        public void ReqQryAcctService(string account, string servicename)
+        {
+            debug("请求查询帐户服务", QSEnumDebugLevel.INFO);
+            MGRQryAcctServiceRequest request = RequestTemplate<MGRQryAcctServiceRequest>.CliSendRequest(requestid++);
+            request.TradingAccount = account;
+            request.ServiceName = servicename;
+
+            SendPacket(request);
+        }
+        #endregion 
     }
 }

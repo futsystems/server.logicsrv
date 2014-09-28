@@ -83,7 +83,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("select account from settlement  where `account` = '{0}' and `settleday` = '{1}'", account,settleday);
+                string query = String.Format("select account from log_settlement  where `account` = '{0}' and `settleday` = '{1}'", account,settleday);
                 return db.Connection.Query(query).Count() > 0;
             }
         }
@@ -98,18 +98,17 @@ namespace TradingLib.ORM
             if (IsAccountSettled(acc.ID)) return true;//如果该账户已经结算过，则直接返回
             using (DBMySql db = new DBMySql())
             {
-
                 using (var transaction = db.Connection.BeginTransaction())
                 {
                     bool istransok = true;
 
-                    Settlement settle = AccountBase.GenSettle(acc);
+                    Settlement settle = acc.ToSettlement();
                     settle.SettleDay = TLCtxHelper.Ctx.SettleCentre.CurrentTradingday;//结算日为当前交易日
                     settle.SettleTime = TLCtxHelper.Ctx.SettleCentre.SettleTime;//获得结算时间
 
                     //1.插入某账户的结算信息(当前财务信息)平仓盈亏,持仓盈亏,手续费,入金,出金,昨日权益,当前权益
                     TLCtxHelper.Debug(string.Format("account:{0} lastequity:{1} nowequity:{2}", settle.Account, settle.LastEqutiy, settle.NowEquity));
-                    string query = String.Format("Insert into settlement (`account`,`settleday`,`realizedpl`,`unrealizedpl`,`commission`,`cashin`,`cashout`,`lastequity`,`nowequity`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}')", settle.Account, settle.SettleDay, settle.RealizedPL,settle.UnRealizedPL, settle.Commission, settle.CashIn,settle.CashOut,settle.LastEqutiy,settle.NowEquity);
+                    string query = String.Format("Insert into log_settlement (`account`,`settleday`,`realizedpl`,`unrealizedpl`,`commission`,`cashin`,`cashout`,`lastequity`,`nowequity`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}')", settle.Account, settle.SettleDay, settle.RealizedPL,settle.UnRealizedPL, settle.Commission, settle.CashIn,settle.CashOut,settle.LastEqutiy,settle.NowEquity);
                     istransok =  istransok &&  (db.Connection.Execute(query) > 0);
 
                     //3.更新账户表中的上期权益数据 将结算数据的当前权益更新为帐户的昨日权益
@@ -182,7 +181,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("SELECT * FROM settlement WHERE account = '{0}' AND confrim_timestamp = 0 AND settleday = {1}", account, tradingday);
+                string query = String.Format("SELECT * FROM log_settlement WHERE account = '{0}' AND confrim_timestamp = 0 AND settleday = {1}", account, tradingday);
                 Settlement settlement = db.Connection.Query<SettlementImpl>(query, null).SingleOrDefault();
                 return settlement;
             }
@@ -197,7 +196,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("SELECT * FROM settlement WHERE account = '{0}' AND confrim_timestamp = 0 ORDER BY  settleday DESC limit 1", account);
+                string query = String.Format("SELECT * FROM log_settlement WHERE account = '{0}' AND confrim_timestamp = 0 ORDER BY  settleday DESC limit 1", account);
                 Settlement settlement = db.Connection.Query<SettlementImpl>(query, null).SingleOrDefault();
                 return settlement;
             }
@@ -213,7 +212,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("SELECT * FROM settlement WHERE account = '{0}' AND settleday = '{1}'", account,settleday);
+                string query = String.Format("SELECT * FROM log_settlement WHERE account = '{0}' AND settleday = '{1}'", account,settleday);
                 Settlement settlement = db.Connection.Query<SettlementImpl>(query, null).SingleOrDefault();
                 return settlement;
             }
@@ -233,7 +232,7 @@ namespace TradingLib.ORM
                 using (var transaction = db.Connection.BeginTransaction())
                 {
                     
-                    string query = String.Format("UPDATE settlement SET confrim_timestamp='{0}' WHERE account = '{1}' AND settleday < '{2}'",timestamp, account, tradingday);
+                    string query = String.Format("UPDATE log_settlement SET confrim_timestamp='{0}' WHERE account = '{1}' AND settleday < '{2}'",timestamp, account, tradingday);
                     istransok =  (db.Connection.Execute(query) > 0);
 
                     query = String.Format("UPDATE accounts SET confrim_timestamp = '{0}' WHERE account = '{1}'",timestamp, account);

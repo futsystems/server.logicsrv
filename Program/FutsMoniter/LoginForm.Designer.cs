@@ -41,6 +41,8 @@
             this.windows8Theme1 = new Telerik.WinControls.Themes.Windows8Theme();
             this.office2010BlackTheme1 = new Telerik.WinControls.Themes.Office2010BlackTheme();
             this.imageheader = new System.Windows.Forms.PictureBox();
+            this.ckremberuser = new Telerik.WinControls.UI.RadCheckBox();
+            this.ckremberpass = new Telerik.WinControls.UI.RadCheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.label1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.label2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnLogin)).BeginInit();
@@ -49,6 +51,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.label0)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.servers)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageheader)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ckremberuser)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ckremberpass)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -69,9 +73,9 @@
             // 
             // btnLogin
             // 
-            this.btnLogin.Location = new System.Drawing.Point(273, 85);
+            this.btnLogin.Location = new System.Drawing.Point(279, 84);
             this.btnLogin.Name = "btnLogin";
-            this.btnLogin.Size = new System.Drawing.Size(76, 52);
+            this.btnLogin.Size = new System.Drawing.Size(76, 31);
             this.btnLogin.TabIndex = 5;
             this.btnLogin.Text = "登 入";
             this.btnLogin.ThemeName = "ControlDefault";
@@ -93,7 +97,7 @@
             this.btnExit.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnExit.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
             this.btnExit.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.btnExit.Location = new System.Drawing.Point(286, 154);
+            this.btnExit.Location = new System.Drawing.Point(312, 185);
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(49, 19);
             this.btnExit.TabIndex = 7;
@@ -163,6 +167,22 @@
             this.imageheader.MouseMove += new System.Windows.Forms.MouseEventHandler(this.imageheader_MouseMove);
             this.imageheader.MouseUp += new System.Windows.Forms.MouseEventHandler(this.imageheader_MouseUp);
             // 
+            // ckremberuser
+            // 
+            this.ckremberuser.Location = new System.Drawing.Point(279, 128);
+            this.ckremberuser.Name = "ckremberuser";
+            this.ckremberuser.Size = new System.Drawing.Size(82, 16);
+            this.ckremberuser.TabIndex = 18;
+            this.ckremberuser.Text = "记住用户名";
+            // 
+            // ckremberpass
+            // 
+            this.ckremberpass.Location = new System.Drawing.Point(279, 150);
+            this.ckremberpass.Name = "ckremberpass";
+            this.ckremberpass.Size = new System.Drawing.Size(70, 16);
+            this.ckremberpass.TabIndex = 19;
+            this.ckremberpass.Text = "保存密码";
+            // 
             // LoginForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -170,6 +190,8 @@
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(219)))), ((int)(((byte)(254)))));
             this.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(59)))), ((int)(((byte)(90)))), ((int)(((byte)(130)))));
             this.ClientSize = new System.Drawing.Size(385, 225);
+            this.Controls.Add(this.ckremberpass);
+            this.Controls.Add(this.ckremberuser);
             this.Controls.Add(this.servers);
             this.Controls.Add(this.label0);
             this.Controls.Add(this.password);
@@ -192,6 +214,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.label0)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.servers)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageheader)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ckremberuser)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ckremberpass)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -212,5 +236,7 @@
         private Telerik.WinControls.Themes.Office2010SilverTheme office2010SilverTheme1;
         private Telerik.WinControls.Themes.Windows8Theme windows8Theme1;
         private Telerik.WinControls.Themes.Office2010BlackTheme office2010BlackTheme1;
+        private Telerik.WinControls.UI.RadCheckBox ckremberuser;
+        private Telerik.WinControls.UI.RadCheckBox ckremberpass;
     }
 }

@@ -144,7 +144,11 @@ namespace TradingLib.Contrib.CLI
             return TLCtxHelper.Ctx.PrintTask();
         }
 
-
+        [ContribCommandAttr(QSEnumCommandSource.CLI, "profile", "profile - print profile information", "")]
+        public static string Profile()
+        {
+            return TLCtxHelper.Profiler.GetStatsString();
+        }
         [ContribCommandAttr(QSEnumCommandSource.CLI, "info", "info[all/core/contrib] - print the basic information for system", "")]
         public string Info(string section)
         {

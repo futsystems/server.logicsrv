@@ -48,6 +48,56 @@ namespace TradingLib.Common
                 config.UpdateConfig("RealPrompt", QSEnumCfgType.String, "", "实盘帐户登入提示");
             }
 
+
+            if (!config.HaveConfig("DefaultBroker"))
+            {
+                config.UpdateConfig("DefaultBroker", QSEnumCfgType.String, "申银万国期货有限公司", "默认期货公司名称");
+            }
+
+            if (!config.HaveConfig("DefaultBankID"))
+            {
+                config.UpdateConfig("DefaultBankID", QSEnumCfgType.String, "1", "默认银行名称");
+            }
+
+            if (!config.HaveConfig("DefaultBankAC"))
+            {
+                config.UpdateConfig("DefaultBankAC", QSEnumCfgType.String, "95993939899002123", "默认银行卡号");
+            }
+
+        }
+
+        /// <summary>
+        /// 默认期货公司
+        /// </summary>
+        public static string DefaultBroker
+        {
+            get
+            {
+                return defaultinstance.config["DefaultBroker"].AsString();
+            }
+        }
+
+
+        /// <summary>
+        /// 默认银行
+        /// </summary>
+        public static string DefaultBankID
+        {
+            get
+            {
+                return defaultinstance.config["DefaultBankID"].AsString();
+            }
+        }
+
+        /// <summary>
+        /// 默认银行帐号
+        /// </summary>
+        public static string DefaultBankAC
+        {
+            get
+            {
+                return defaultinstance.config["DefaultBankAC"].AsString();
+            }
         }
         /// <summary>
         /// 是否处于开发模式

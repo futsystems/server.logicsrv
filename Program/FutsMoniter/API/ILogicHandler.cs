@@ -136,6 +136,14 @@ namespace TradingLib.API
         /// <param name="symbol"></param>
         /// <param name="islast"></param>
         void OnMGRSymbolAddResponse(SymbolImpl symbol, bool islast);
+
+
+        /// <summary>
+        /// 管理员列表回报
+        /// </summary>
+        /// <param name="manger"></param>
+        /// <param name="islast"></param>
+        void OnMGRMangerResponse(Manager manger, bool islast);
         #endregion
 
         #region 风控规则类

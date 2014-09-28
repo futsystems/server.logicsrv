@@ -39,7 +39,7 @@ namespace TradingLib.API
         /// 比如 获得清算中心对应该帐户的数据
         /// 风控中心的强平操作等
         /// </summary>
-        event IAccountDel AccountCachedEvent;
+        //event IAccountDel AccountCachedEvent;
 
         /// <summary>
         /// 帐户修改事件
@@ -60,7 +60,7 @@ namespace TradingLib.API
         /// <summary>
         /// 持仓回合关闭事件
         /// </summary>
-        event IPositionRoundDel PositionRoundClosedEvent;//交易回合生成事件
+        event PositionRoundClosedDel PositionRoundClosedEvent;//交易回合生成事件
 
         
 
@@ -77,7 +77,7 @@ namespace TradingLib.API
         /// <param name="pass"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        bool AddAccount(out string account, string user_id, string setaccount,string pass, QSEnumAccountCategory type);
+        bool AddAccount(out string account, string user_id, string setaccount,string pass, QSEnumAccountCategory type,int mgr_fk);
 
         /// <summary>
         /// 验证某交易账户
@@ -109,7 +109,7 @@ namespace TradingLib.API
         bool CashOperationSafe(string accid, decimal ammount, string comment, out string msg);
 
 
-
+        IEnumerable<Position> GetPositions(string account);
 
     }
 }

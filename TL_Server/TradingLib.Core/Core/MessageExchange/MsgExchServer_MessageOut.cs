@@ -59,14 +59,14 @@ namespace TradingLib.Core
             messageoutthread = null;
 
         }
-        const int buffize = 1000;
+        const int buffize = 20000;
 
         
         RingBuffer<Order> _ocache = new RingBuffer<Order>(buffize);//委托缓存
         //RingBuffer<long> _ccache = new RingBuffer<long>(buffize);//取消缓存
         RingBuffer<ErrorOrderNotify> _errorordercache = new RingBuffer<ErrorOrderNotify>(buffize);//委托错误缓存
         RingBuffer<Trade> _fcache = new RingBuffer<Trade>(buffize);//成交缓存
-        RingBuffer<Position> _posupdatecache = new RingBuffer<Position>(buffize);
+        RingBuffer<PositionEx> _posupdatecache = new RingBuffer<PositionEx>(buffize);
         RingBuffer<IPacket> _packetcache = new RingBuffer<IPacket>(buffize);//数据包缓存队列
 
         //关于交易信息转发,交易信息转发时,我们需要区分是实时发生的交易信息转发还是请求回补的信息转发。

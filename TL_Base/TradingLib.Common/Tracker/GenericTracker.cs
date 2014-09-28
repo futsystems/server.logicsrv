@@ -33,6 +33,7 @@ namespace TradingLib.Common
         /// 返回缓存的实例数量
         /// </summary>
         public int Count { get { return _tracked.Count; } }
+
         /// <summary>
         /// 将缓存的实例重置为默认值
         /// </summary>
@@ -41,6 +42,7 @@ namespace TradingLib.Common
             for (int i = 0; i < _tracked.Count; i++)
                 _tracked[i] = Default;
         }
+
         /// <summary>
         /// 将某个序号的实例重置到默认值
         /// </summary>
@@ -49,6 +51,7 @@ namespace TradingLib.Common
         {
             _tracked[idx] = Default;
         }
+
         /// <summary>
         /// 将某个标签对应的实例重置到默认值
         /// </summary>
@@ -60,29 +63,33 @@ namespace TradingLib.Common
         }
 
         T _defval = default(T);
+
         /// <summary>
         /// 默认值
         /// </summary>
         public virtual T Default { get { return _defval; } set { _defval = value; } }
+
         /// <summary>
         /// 记录类型
         /// </summary>
         public virtual Type TrackedType
         {
-            get 
-        {
-            T val = default(T);
-            if (val == null)
-                return null;
-            return val.GetType();
-        } 
+            get
+            {
+                T val = default(T);
+                if (val == null)
+                    return null;
+                return val.GetType();
+            }
         }
+
         /// <summary>
         /// 尝试将某个标签转换成decimal值
         /// </summary>
         /// <param name="txt"></param>
         /// <returns></returns>
         public virtual decimal ValueDecimal(string txt) { return Convert.ToDecimal(this[txt]); }
+
         /// <summary>
         /// 尝试获得某个序号的decimal值
         /// </summary>
@@ -115,10 +122,10 @@ namespace TradingLib.Common
         /// 记录器的名称
         /// </summary>
         public string Name { get { return _name; } set { _name = value; } }
+
         /// <summary>
         /// get display-ready tracked value of a given index.
         /// For this to work, your tracked type MUST implement ToString() otherwise it will return as empty.
-        /// 获得某个序号对应实例的描述
         /// </summary>
         /// <param name="idx"></param>
         /// <returns></returns>
@@ -133,6 +140,7 @@ namespace TradingLib.Common
                 return string.Empty;
             }
         }
+
         /// <summary>
         /// get display-ready tracked value of a given label
         /// 获得某个标签对应实例的描述
@@ -159,6 +167,7 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="name"></param>
         public GenericTracker(string name) : this(0, name, default(T)) { }
+
         /// <summary>
         /// creates tracker with given name and default value
         /// </summary>
@@ -178,6 +187,7 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="EstCount"></param>
         public GenericTracker(int EstCount) : this(EstCount, string.Empty,default(T)) { }
+
         /// <summary>
         /// 记录器构造函数
         /// </summary>
@@ -188,6 +198,7 @@ namespace TradingLib.Common
             _estcount = EstCount;
             if (EstCount != 0)
             {
+                //具体的对象放在list中,通过下标进行索引 label转换成idx然后再索引到对象
                 _tracked = new ThreadSafeList<T>();//new List<T>(EstCount);
                 //_txtidx = new Dictionary<string, int>(EstCount);
                 _txtidx = new ConcurrentDictionary<string, int>();
@@ -220,6 +231,7 @@ namespace TradingLib.Common
         /// <param name="i"></param>
         /// <returns></returns>
         public virtual T this[int i] { get { return _tracked[i]; } set { _tracked[i] = value; } }
+
         /// <summary>
         /// 获得标签对应实例
         /// </summary>
@@ -232,6 +244,7 @@ namespace TradingLib.Common
         /// 当增加了新标签时触发事件
         /// </summary>
         public event TextIdxDelegate NewTxt;
+
         /// <summary>
         /// text label has no index
         /// </summary>
@@ -249,12 +262,14 @@ namespace TradingLib.Common
                 return idx;
             return UNKNOWN;
         }
+
         /// <summary>
         /// 获得序号对应的标签
         /// </summary>
         /// <param name="idx"></param>
         /// <returns></returns>
         public string getlabel(int idx) { return _txt[idx]; }
+
         /// <summary>
         /// gets index of a label, adding it if it doesn't exist.
         /// initial value associated with index will be Default
@@ -286,15 +301,16 @@ namespace TradingLib.Common
                     _txt.Add(txtidx);
                     _txtidx.TryAdd(txtidx, idx);//
                     _tracked.Add(val);
+                    //对外触发新对象加入事件
                     if (NewTxt != null)
                         NewTxt(txtidx, idx);
                 }
                 else
                 {
-                    _tracked[idx] = val;
+                    _tracked[idx] = val;//如果txtidx已经存在则重新赋值
                 }
             }
-            return idx;
+            return idx;//返回对应的idx
         }
 
         /// <summary>
@@ -328,12 +344,13 @@ namespace TradingLib.Common
 
         public IEnumerator<T> GetEnumerator()
         {
-            lock (_tracked.SyncRoot)
-            {
-                //foreach (T o in _tracked) yield return o;
-                for (int i = 0; i < _tracked.Count; i++)
-                    yield return _tracked[i];
-            }
+            //lock (_tracked.SyncRoot)
+            //{
+            //    //foreach (T o in _tracked) yield return o;
+            //    for (int i = 0; i < _tracked.Count; i++)
+            //        yield return _tracked[i];
+            //}
+            return (_tracked as IEnumerable<T>).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

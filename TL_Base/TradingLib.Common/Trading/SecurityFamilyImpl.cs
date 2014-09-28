@@ -95,7 +95,7 @@ namespace TradingLib.Common
 
         public override string ToString()
         {
-            return ID.ToString() + " Code:" + Code.ToString() + " Name:" + Name.ToString() + " Currency:" + Currency.ToString() + " Exch:" + LibUtil.ObjectToString(Exchange) + " Mutil:" + Multiple.ToString() + " PriceTick:" + PriceTick.ToString() + " Tradeable:" + Tradeable.ToString() + " Underlaying:" + LibUtil.ObjectToString(UnderLaying) + " EntryC:" + EntryCommission.ToString() + " ExitC:" + ExitCommission.ToString() + " Margin:" + Margin.ToString() +" underlaying_fk:"+LibUtil.ObjectToString(underlaying_fk); 
+            return ID.ToString() + " Code:" + Code.ToString() + " Name:" + Name.ToString() + " Currency:" + Currency.ToString() + " Exch:" + Util.SafeToString(Exchange) + " Mutil:" + Multiple.ToString() + " PriceTick:" + PriceTick.ToString() + " Tradeable:" + Tradeable.ToString() + " Underlaying:" + Util.SafeToString(UnderLaying) + " EntryC:" + EntryCommission.ToString() + " ExitC:" + ExitCommission.ToString() + " Margin:" + Margin.ToString() + " underlaying_fk:" + Util.SafeToString(underlaying_fk); 
         }
 
         /// <summary>

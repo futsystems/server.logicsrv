@@ -682,8 +682,42 @@ namespace TradingLib.Common
             return list;
         }
 
+        /// <summary>
+        /// 查找对象中用某个attr标注的所有属性
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public List<PropertyInfo> FindProperty<T>(object obj) where T : Attribute
+        {
+            List<PropertyInfo> list = new List<PropertyInfo>();
+            Type type = obj.GetType();
+            PropertyInfo[] propertyInfos = type.GetProperties();
+            foreach (PropertyInfo pi in propertyInfos)
+            {
+                T attr = (T)Attribute.GetCustomAttribute(pi, typeof(T));
+                if (attr != null)
+                {
+                    list.Add(pi);
+                }
+            }
+            return list;
+        }
 
-        
+        public List<PropertyInfo> FindProperty<T>(Type type) where T : Attribute
+        {
+            List<PropertyInfo> list = new List<PropertyInfo>();
+            PropertyInfo[] propertyInfos = type.GetProperties();
+            foreach (PropertyInfo pi in propertyInfos)
+            {
+                T attr = (T)Attribute.GetCustomAttribute(pi, typeof(T));
+                if (attr != null)
+                {
+                    list.Add(pi);
+                }
+            }
+            return list;
+        }
 
         /// <summary>
         /// 获得某个对象的扩展模块方法
@@ -760,5 +794,57 @@ namespace TradingLib.Common
             return list;
         }
 
+
+
+        /// <summary>
+        /// 从某个文件夹加载实现某个接口的类型
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="Interface"></param>
+        /// <returns></returns>
+        public IList<Type> GetImplementors(string path, Type needtype)
+        {
+            //遍历搜索路径 获得所有dll文件
+            List<string> dllfilelist = new List<string>();
+            dllfilelist.AddRange(Directory.GetFiles(path, "*.dll"));
+
+            List<Type> types = new List<Type>();
+            foreach (string dllfile in dllfilelist)
+            {
+                //TLCtxHelper.Debug(ExUtil.SectionHeader(" Dll List "));
+                //TLCtxHelper.Debug("Dll File:" + dllfile);
+                try
+                {
+                    var assembly = Assembly.ReflectionOnlyLoadFrom(dllfile);
+                    AssemblyName assemblyName = AssemblyName.GetAssemblyName(dllfile);
+                    foreach (var an in assembly.GetReferencedAssemblies())
+                    {
+                        try
+                        {
+                            Assembly.ReflectionOnlyLoad(an.FullName);
+                        }
+                        catch
+                        {
+                            Assembly.ReflectionOnlyLoadFrom(Path.Combine(Path.GetDirectoryName(dllfile), an.Name + ".dll"));
+                        }
+                    }
+                    foreach (Type type in assembly.GetExportedTypes())
+                    {
+                        //程序集中的type不是抽象函数并且其实现了needType接口,则标记为有效
+                        if (!type.IsAbstract && type.GetInterface(needtype.FullName) != null)
+                        {
+                            Assembly a = Assembly.Load(assemblyName);
+                            types.Add(a.GetType(type.FullName));
+                        }
+
+                    }
+                }
+                catch (Exception ex)
+                {
+                    TLCtxHelper.Debug("GetImplementors error" + ex.ToString());
+                }
+            }
+            return types;
+        }
     }
 }

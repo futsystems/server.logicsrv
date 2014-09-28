@@ -72,7 +72,7 @@ namespace APIDemo
             zmsg.Send(requester);
             byte[] response =new byte[0];
             int size=0;
-            response = requester.Receive(response,new TimeSpan(0, 0, IPUtil.SOCKETREPLAYTIMEOUT),out size);
+            response = requester.Receive(response, new TimeSpan(0, 0, Const.SOCKETREPLAYTIMEOUT), out size);
             TradingLib.Common.Message message = TradingLib.Common.Message.gotmessage(response);
             debug("got raw size:" + size +" type:"+message.Type +" content:"+message.Content);
 
@@ -125,6 +125,7 @@ namespace APIDemo
 
         private void btnBuy_Click(object sender, EventArgs e)
         {
+            
             Order o = new OrderImpl();
             o.symbol = sendorder_symbol.Text;
             o.TotalSize = int.Parse(sendorder_size.Text);
@@ -132,7 +133,11 @@ namespace APIDemo
             o.side = true;
             o.price = decimal.Parse(sendorder_price.Text);
             o.OffsetFlag = CurrentFlag;
-            tlclient.ReqOrderInsert(o);
+            for (int i = 0; i < int.Parse(submintnum.Text); i++)
+            {
+                tlclient.ReqOrderInsert(o);
+                Thread.Sleep(2);
+            }
 
         }
 
@@ -145,7 +150,11 @@ namespace APIDemo
             o.side = false;
             o.price = decimal.Parse(sendorder_price.Text);
             o.OffsetFlag = CurrentFlag;
-            tlclient.ReqOrderInsert(o);
+            for (int i = 0; i < int.Parse(submintnum.Text); i++)
+            {
+                tlclient.ReqOrderInsert(o);
+                Thread.Sleep(2);
+            }
         }
 
         private void btnQryOrder_Click_1(object sender, EventArgs e)
@@ -223,7 +232,7 @@ namespace APIDemo
 
         private void btnQrySettlementInfo_Click(object sender, EventArgs e)
         {
-            tlclient.ReqQrySettleInfo();
+            tlclient.ReqQrySettleInfo(int.Parse(qrysettle_day.Text));
         }
 
         private void btnConfirmSettlement_Click(object sender, EventArgs e)

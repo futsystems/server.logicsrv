@@ -51,11 +51,29 @@ namespace TradingLib.Core
             AccountChanged(this[account]);
         }
 
-        public void UpdateAccountToken(string account, string token)
+        public void UpdateInvestorInfo(string account, string name,string broker,string bank,string bankac)
         {
             if (!HaveAccount(account)) return;
-            this[account].Token = token;
-            ORM.MAccount.UpdateAccountToken(account, token);
+            IAccount acc = this[account];
+            acc.Name = name;
+            acc.Broker = broker;
+            acc.BankAC = bankac;
+            acc.BankID = bank;
+            ORM.MAccount.UpdateInvestorInfo(account, name,broker,bank,bankac);
+            AccountChanged(this[account]);
+        }
+
+        /// <summary>
+        /// 更新交易帐户的ManagerID
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="id"></param>
+        public void UpdateManagerID(string account, int id)
+        {
+            if (!HaveAccount(account)) return;
+            IAccount acc = this[account];
+            acc.Mgr_fk = id;
+            ORM.MAccount.UpdateManagerID(account, id);
             AccountChanged(this[account]);
         }
 
@@ -329,19 +347,9 @@ namespace TradingLib.Core
             }
             catch (Exception ex)
             {
-                TLCtxHelper.Debug(LibGlobal.GlobalPrefix + ex.ToString());
+                TLCtxHelper.Debug(Util.GlobalPrefix + ex.ToString());
                 throw (new QSClearCentreLoadAccountError(ex, "ClearCentre加载账户:" + account + "异常"));
             }
-        }
-        /// <summary>
-        /// 重写onCacheAccount 服务端的清算中心反向引用到IAccount对象
-        /// </summary>
-        /// <param name="a"></param>
-        public override void onCacheAccount(IAccount a)
-        {
-            a.ClearCentre = new ClearCentreAdapterToAccount(a, this);
-            if (AccountCachedEvent != null)
-                AccountCachedEvent(a);
         }
 
 
@@ -381,16 +389,18 @@ namespace TradingLib.Core
 
         /// <summary>
         /// 为某个user_id添加某个类型的帐号 密码为pass
+        /// 默认mgr_fk为0 如果为0则通过ManagerTracker获得Root的mgr_fk 将默认帐户统一挂在Root用户下
         /// </summary>
         /// <param name="user_id"></param>
         /// <param name="type"></param>
         /// <param name="pass"></param>
         /// <returns></returns>
-        public bool AddAccount(out string account, string user_id,string setaccount,string pass, QSEnumAccountCategory type)
+        public bool AddAccount(out string account, string user_id,string setaccount,string pass, QSEnumAccountCategory type,int mgr_fk=0)
         {
-            debug("清算中心为user:" + user_id + " 添加交易帐号", QSEnumDebugLevel.INFO);
+            debug("清算中心为user:" + user_id + " 添加交易帐号到主柜员ID:"+mgr_fk.ToString(), QSEnumDebugLevel.INFO);
             account = null;
-            bool re = ORM.MAccount.AddAccount(out account, user_id, setaccount,pass, type);
+            mgr_fk  = (mgr_fk == 0 ? BasicTracker.ManagerTracker.GetRootFK() : mgr_fk);
+            bool re = ORM.MAccount.AddAccount(out account, user_id, setaccount,pass, type,mgr_fk);
 
             //如果添加成功则将该账户加载到内存
             if (re)
@@ -423,5 +433,10 @@ namespace TradingLib.Core
         
         #endregion
 
+
+        public IEnumerable<Position> GetPositions(string account)
+        {
+            return acctk.GetPositionBook(account);
+        }
     }
 }

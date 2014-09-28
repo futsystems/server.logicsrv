@@ -10,8 +10,6 @@ namespace TradingLib.API
     /// </summary>
     public interface IFinanceTotal
     {
-        
-
         /// <summary>
         /// 上期权益
         /// </summary>
@@ -57,21 +55,6 @@ namespace TradingLib.API
         decimal CashOut { get; }
 
         /// <summary>
-        /// 总占用资金 = 个品种占用资金之和
-        /// </summary>
-        decimal MoneyUsed { get;}
-
-        /// <summary>
-        /// 总净值 帐户当前权益=总净值
-        /// </summary>
-        decimal TotalLiquidation { get; }//帐户总净值
-
-        /// <summary>
-        /// 帐户总可用资金
-        /// </summary>
-        decimal AvabileFunds { get; }//帐户总可用资金
-
-        /// <summary>
         /// 保证金占用
         /// </summary>
         decimal Margin { get;}
@@ -80,6 +63,22 @@ namespace TradingLib.API
         /// 保证金冻结
         /// </summary>
         decimal MarginFrozen { get;}
+
+        /// <summary>
+        /// 总占用资金 = 个品种占用资金之和
+        /// 总资金使用量 = 占用保证金 + 冻结保证金
+        /// </summary>
+        decimal MoneyUsed { get; }
+
+        /// <summary>
+        /// 总净值 帐户当前权益=总净值
+        /// </summary>
+        decimal TotalLiquidation { get; }//帐户总净值
+
+        /// <summary>
+        /// 帐户总可用资金=总净值 - 总资金使用量
+        /// </summary>
+        decimal AvabileFunds { get; }//帐户总可用资金
 
     }
 }

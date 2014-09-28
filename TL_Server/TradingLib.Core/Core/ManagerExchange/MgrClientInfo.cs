@@ -14,7 +14,13 @@ namespace TradingLib.Core
             :base()
         {
             this.ManagerID = string.Empty;
+            this.mgr_fk = 0;
         }
         public string ManagerID { get; set; }
+
+        /// <summary>
+        /// 如果管理端登入成功 则会将对应的Manager绑定到该管理端对象上
+        /// </summary>
+        public int mgr_fk { get; set; }
     }
 }

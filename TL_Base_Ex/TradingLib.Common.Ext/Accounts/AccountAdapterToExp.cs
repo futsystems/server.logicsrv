@@ -18,14 +18,10 @@ namespace TradingLib.Common
         }
 
         /// <summary>
-        /// 账户所对应的清算适配器,用于从清算中心获得账户对应的信息
-        /// </summary>
-        //public IAccountClearCentre ClearCentre { get { return _acc.ClearCentre; } }
-
-        /// <summary>
         /// 账户ID
         /// </summary>
         public string ID { get { return _acc.ID; } }
+
         /// <summary>
         /// 账户委托转发通道类型 模拟还是实盘
         /// </summary>
@@ -47,24 +43,12 @@ namespace TradingLib.Common
         public bool IntraDay { get { return _acc.IntraDay; } }
 
 
-
-        /// <summary>
-        /// 服务设定的配资额度
-        /// </summary>
-        //public decimal FinAmmountTotal { get { return _acc.FinAmmountTotal; } }//配资额度
-        /// <summary>
-        /// 当前有效配资额度
-        /// </summary>
-        //public decimal FinAmmountAvabile { get { return _acc.FinAmmountAvabile; } }
-
         /// <summary>
         /// 上次结算日
         /// </summary>
         public DateTime SettleDateTime { get { return _acc.SettleDateTime; } }
 
-        //public decimal ObverseProfit { get { return _acc.ObverseProfit; } }
-
-
+      
         #region【IAccOperation】
 
         /// <summary>
@@ -86,6 +70,14 @@ namespace TradingLib.Common
             _acc.InactiveAccount();
         }
 
+        /// <summary>
+        /// 激活帐户
+        /// </summary>
+        public void ActiveAccount()
+        {
+            _acc.ActiveAccount();
+        }
+
         public void FlatPosition(Position pos, QSEnumOrderSource source, string comment)
         {
             _acc.FlatPosition(pos, source, comment);
@@ -93,27 +85,51 @@ namespace TradingLib.Common
 
         #endregion
 
+
         #region 【IAccTradingInfo】
 
         public bool AnyPosition { get { return _acc.AnyPosition; } }//是否有持仓
         /// <summary>
         /// 获得账户当前持仓
         /// </summary>
-        public Position[] Positions
-        {
-            get
-            {
-                return _acc.Positions;
-            }
+        public IEnumerable<Position> Positions{get{return _acc.Positions; } }
+
+        public IEnumerable<Position> PositionsNet { get { return _acc.PositionsNet; } }
+
+        /// <summary>
+        /// 多头持仓维护器
+        /// </summary>
+        public IEnumerable<Position> PositionsLong { get { return _acc.PositionsLong; } }
+
+        /// <summary>
+        /// 空头持仓维护器
+        /// </summary>
+        public IEnumerable<Position> PositionsShort { get { return _acc.PositionsShort; } }
+
+        public IEnumerable<Order> Orders { get { return _acc.Orders; } }//获得当日所有委托
+        public IEnumerable<Trade> Trades { get { return _acc.Trades; } }//获得当日所有成交
+        //public long[] Cancels { get { return _acc.Cancels; } }//获得当日所有取消
+        public IEnumerable<Position> YdPositions { get { return _acc.YdPositions; } }
+
+        /// <summary>
+        /// 获得某个合约的持仓对象
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        public Position GetPosition(string symbol, bool side)
+        { 
+            return _acc.GetPosition(symbol,side);
         }
 
-        public Order[] Ordres { get { return _acc.Ordres; } }//获得当日所有委托
-        public Trade[] Trades { get { return _acc.Trades; } }//获得当日所有成交
-        public long[] Cancels { get { return _acc.Cancels; } }//获得当日所有取消
-        public Position[] PositionsHold { get { return _acc.PositionsHold; } }
-        public Position getPosition(string symbol,bool side)//获得某个symbol的持仓信息
+
+        /// <summary>
+        /// 获得某个合约的净持仓对象
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        public Position GetPositionNet(string symbol)
         {
-            return _acc.getPosition(symbol,side);
+            return _acc.GetPositionNet(symbol);
         }
 
 
@@ -124,9 +140,6 @@ namespace TradingLib.Common
         #endregion
 
         #region 【IFinanceTotal】
-
-
-
         // <summary>
         /// 当前动态权益
         /// </summary>
@@ -136,11 +149,6 @@ namespace TradingLib.Common
         /// 上期权益
         /// </summary>
         public decimal LastEquity { get { return _acc.LastEquity; } set { } }
-
-        /// <summary>
-        /// 账户初始权益
-        /// </summary>
-        //public decimal StartEquity { get { return _acc.StartEquity; } }
 
         /// <summary>
         /// 平仓利润
@@ -174,29 +182,30 @@ namespace TradingLib.Common
         public decimal CashOut { get { return _acc.CashOut; } }
 
         /// <summary>
+        /// 保证金占用
+        /// </summary>
+        public decimal Margin { get { return _acc.Margin; } }
+
+        /// <summary>
+        /// 保证金冻结
+        /// </summary>
+        public decimal MarginFrozen { get { return _acc.Margin; } }
+
+        /// <summary>
         /// 总占用资金 = 个品种占用资金之和
         /// </summary>
         public decimal MoneyUsed { get { return _acc.MoneyUsed; } }
 
         /// <summary>
+        /// 帐户总可用资金
+        /// </summary>
+        public decimal AvabileFunds { get { return _acc.AvabileFunds; } }
+
+        /// <summary>
         /// 总净值 帐户当前权益=总净值
         /// </summary>
-        public decimal TotalLiquidation { get { return _acc.TotalLiquidation; } }//帐户总净值
-
-
-        public decimal AvabileFunds { get { return _acc.AvabileFunds; } }//帐户总可用资金
-
-
-
-        /// <summary>
-        /// 保证金占用
-        /// </summary>
-        public decimal Margin { get{return _acc.Margin;} }
-
-        /// <summary>
-        /// 保证金冻结
-        /// </summary>
-        public decimal MarginFrozen { get{return _acc.Margin;}}
+        public decimal TotalLiquidation { get { return _acc.TotalLiquidation; } }
+       
         #endregion
 
         #region 【IAccCal】
@@ -219,33 +228,6 @@ namespace TradingLib.Common
         public decimal GetFundAvabile(Symbol symbol)
         {
             return _acc.GetFundAvabile(symbol);
-        }
-
-        /// <summary>
-        /// 获得帐户总可用资金
-        /// </summary>
-        /// <returns></returns>
-        public decimal GetFundAvabile()
-        {
-            return _acc.GetFundAvabile();
-        }
-
-        /// <summary>
-        /// 获得帐户所有资金包含已经使用和未使用资金
-        /// </summary>
-        /// <returns></returns>
-        public decimal GetFundTotal()
-        {
-            return _acc.GetFundTotal();
-        }
-
-        /// <summary>
-        /// 获得所使用资金
-        /// </summary>
-        /// <returns></returns>
-        public decimal GetFundUsed()
-        {
-            return _acc.GetFundUsed();
         }
 
         /// <summary>

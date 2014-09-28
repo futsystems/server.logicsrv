@@ -39,20 +39,25 @@ namespace TradingLib.Core
         /// <summary>
         /// 风控中心委托一段检查
         /// 如果未通过检查则则给出具体的错误报告
+        /// 一段检查中有一些委托错误并不需要记录数据
+        /// 比如非交易日，结算中心异常，以及清算中心以关闭等
+        /// 这些回报不需要进行记录 否则会形成大量无意义的拒绝数据
         /// </summary>
         /// <param name="o"></param>
         /// <param name="acc"></param>
         /// <param name="errortitle"></param>
         /// <param name="inter">是否是内部委托 比如风控系统产生的委托</param>
         /// <returns></returns>
-        public bool CheckOrderStep1(ref Order o,IAccount account, out string errortitle,bool inter=false)
+        public bool CheckOrderStep1(ref Order o,IAccount account,out bool needlog, out string errortitle,bool inter=false)
         {
             errortitle = string.Empty;
+            needlog = true;
             //1 结算中心检查
             //1.1检查结算中心是否正常状态 如果历史结算状态则需要将结算记录补充完毕后才可以接受新的委托
             if (!TLCtxHelper.Ctx.SettleCentre.IsNormal)
             {
                 errortitle = "SETTLECENTRE_NOT_RESET";//结算中心异常
+                needlog = false;
                 return false;
             }
 
@@ -60,6 +65,7 @@ namespace TradingLib.Core
             if (!TLCtxHelper.Ctx.SettleCentre.IsTradingday)//非周六0->2:30 周六0:00->2:30有交易(金银夜盘交易)
             {
                 errortitle = "NOT_TRADINGDAY";//非交易日
+                needlog = false;
                 return false;
             }
 
@@ -67,6 +73,7 @@ namespace TradingLib.Core
             if (TLCtxHelper.Ctx.SettleCentre.IsInSettle)
             {
                 errortitle = "SETTLECENTRE_IN_SETTLE";//结算中心出入结算状态
+                needlog = false;
                 return false;
             }
 
@@ -75,6 +82,7 @@ namespace TradingLib.Core
             if (_clearcentre.Status != QSEnumClearCentreStatus.CCOPEN)
             {
                 errortitle = "CLEARCENTRE_CLOSED";//清算中心已关闭
+                needlog = false;
                 return false;
             }
 
@@ -83,6 +91,7 @@ namespace TradingLib.Core
             if (!BasicTracker.SymbolTracker.TrckerOrderSymbol(o))
             {
                 errortitle = "SYMBOL_NOT_EXISTED";//合约不存在
+                needlog = false;
                 return false;
             }
 
@@ -106,15 +115,14 @@ namespace TradingLib.Core
 
             //4.开仓标识与锁仓权限检查
             //4.1自动开平标识识别
-            bool havelong = _clearcentre.HaveLongPosition(account.ID);
-            bool haveshort = _clearcentre.HaveShortPosition(account.ID);
+            bool havelong = account.GetHaveLongPosition(o.symbol);
+            bool haveshort = account.GetHaveShortPosition(o.symbol);
             //自动判定开平标识
             if (o.OffsetFlag == QSEnumOffsetFlag.UNKNOWN)
             {
                 if (havelong && haveshort)
                 {
-                    errortitle = "OFFSETFLAG_CAN_NOT_TETECTED";
-                    return false;
+                    o.OffsetFlag = QSEnumOffsetFlag.CLOSE;//如果同时持有多空两个方向的持仓 则自动判定为平仓
                 }
                 else if (havelong)//多头
                 {
@@ -142,21 +150,30 @@ namespace TradingLib.Core
                 {
                     o.OffsetFlag = QSEnumOffsetFlag.OPEN;
                 }
-                debug("Order offsetflag unknown ,detected and set to:" + o.OffsetFlag.ToString());
+                debug("Order offsetFlag unknown,auto detected to:" + o.OffsetFlag.ToString());
             }
+
 
             //4.2检查锁仓方向
             //获得委托持仓操作方向
             bool orderside = o.PositionSide;
-            //委托多头开仓操作,同时又空头头寸 或者 委托空头开仓操作，同时又有多头头寸 则表明在持有头寸的时候进行了反向头寸的操作
-            if ((orderside && o.IsEntryPosition && haveshort) || ((!orderside) && o.IsEntryPosition && havelong))//多头持仓操作
+
+            //反待成交开仓委托
+            bool othersideentry = account.GetPendingEntrySize(o.symbol,!orderside) > 0;
+
+            //开仓操作
+            if (o.IsEntryPosition)
             {
-                //非期货品种无法进行锁仓操作 同时帐户设置是否允许锁仓操作
-                if ((o.oSymbol.SecurityType != SecurityType.FUT) || (!account.PosLock))
+                //委托多头开仓操作,同时又空头头寸 或者 委托空头开仓操作，同时又有多头头寸 则表明在持有头寸的时候进行了反向头寸的操作
+                if (othersideentry || (orderside && haveshort) || ((!orderside) && havelong))//多头持仓操作
                 {
-                    errortitle = "TWO_SIDE_POSITION_HOLD_FORBIDDEN";
-                    debug("SecurityType:" + o.oSymbol.SecurityType.ToString() + " account PosLock:" + account.PosLock.ToString(), QSEnumDebugLevel.INFO);
-                    return false;
+                    //非期货品种无法进行锁仓操作 同时帐户设置是否允许锁仓操作
+                    if ((o.oSymbol.SecurityType != SecurityType.FUT) || (!account.PosLock))
+                    {
+                        errortitle = "TWO_SIDE_POSITION_HOLD_FORBIDDEN";
+                        //debug("SecurityType:" + o.oSymbol.SecurityType.ToString() + " account PosLock:" + account.PosLock.ToString(), QSEnumDebugLevel.INFO);
+                        return false;
+                    }
                 }
             }
 
@@ -233,7 +250,7 @@ namespace TradingLib.Core
         {
             try
             {
-                debug("检查委托 " + o.id.ToString(), QSEnumDebugLevel.INFO);
+                //debug("检查委托 " + o.id.ToString(), QSEnumDebugLevel.INFO);
                 msg = "";
                 //延迟加载规则,这样系统就没有必要加载不没有登入的账户规则
                 if (!account.RuleItemLoaded)
@@ -245,7 +262,7 @@ namespace TradingLib.Core
                     if (!account.Execute)
                     {
                         msg = "账户被冻结";
-                        debug("Order rejected by [Execute Check]" + o.ToString(), QSEnumDebugLevel.INFO);
+                        debug("Order rejected by [Execute Check]" + o.GetOrderInfo(), QSEnumDebugLevel.WARNING);
                         return false;
                     }
                 }
@@ -260,7 +277,7 @@ namespace TradingLib.Core
                         if (o.oSymbol.IsFlatTime)
                         {
                             msg = "日内交易帐户，系统正在强平，无法处理委托！";
-                            debug("Order rejected by [FlatTime Check] not in [intraday] trading time" + o.ToString(), QSEnumDebugLevel.INFO);
+                            debug("Order rejected by [FlatTime Check] not in [intraday] trading time" + o.GetOrderInfo(), QSEnumDebugLevel.WARNING);
                             return false;
                         }
                     }
@@ -269,11 +286,11 @@ namespace TradingLib.Core
                 
 
                 //3.合约交易权限检查(如果帐户存在特殊服务,可由特殊服务进行合约交易权限检查) 有关特殊服务的主力合约控制与检查放入到对应的特殊服务实现中
-                if (!inter)
+                //if (!inter)
                 {
                     if (!account.CanTakeSymbol(o.oSymbol, out msg))
                     {
-                        debug("Order rejected by[Account CanTakeSymbol Check]" + o.ToString(), QSEnumDebugLevel.INFO);
+                        debug("Order rejected by[Account CanTakeSymbol Check]" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
                         return false;
                     }
                 }
@@ -281,34 +298,34 @@ namespace TradingLib.Core
 
                 //4 委托开仓 平仓项目检查
                 //通过account symbol 以及委托的持仓操作方向查找对应的position
-                Position pos = _clearcentre.getPosition(o.Account, o.symbol, o.PositionSide);//当前对应持仓
+                Position pos = account.GetPosition(o.symbol, o.PositionSide);//当前对应持仓
                 //检查该委托是否是开仓委托
                 bool entryposition = o.IsEntryPosition;
-                debug("Order[" + o.id.ToString() + "]" + " try to " + (o.IsEntryPosition ? "开仓" : "平仓") + " 操作方向:" + (o.PositionSide ? "多头持仓" : "空头"), QSEnumDebugLevel.INFO);
+                //debug("Order[" + o.id.ToString() + "]" + " try to " + (o.IsEntryPosition ? "开仓" : "平仓") + " 操作方向:" + (o.PositionSide ? "多头持仓" : "空头"), QSEnumDebugLevel.INFO);
                 if (entryposition)//开仓执行资金检查
                 {
                     //如果是开仓委托 则直接允许
                     //保证金检查(如果帐户存在特殊的服务,可由特殊的服务进行保证金检查)
                     if (!account.CanFundTakeOrder(o, out msg))
                     {
-                        debug("Order rejected by[Order Margin Check]" + o.ToString(), QSEnumDebugLevel.INFO);
+                        debug("Order rejected by[Order Margin Check]" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
                         return false;
                     }
                 }
                 else//平仓执行数量检查
                 {
                     //获得该帐户 该合约 该持仓方向的待成交平仓委托
-                    int pendingExitSize = _clearcentre.GetPendingExitSize(o.Account, o.symbol, o.PositionSide);
+                    int pendingExitSize =account.GetPendingExitSize(o.symbol, o.PositionSide);
                     //当前持仓数量
                     int pos_size = pos.UnsignedSize;
                     //当前委托数量
                     int osize = o.UnsignedSize;
-                    debug("Order try to exit postion,pos size:" + pos.Size.ToString() + " pending exit size:" + pendingExitSize.ToString() + " osize:" + osize.ToString() + " offsetflag:" + o.OffsetFlag.ToString(), QSEnumDebugLevel.INFO);
+                    //debug("Order try to exit postion,pos size:" + pos.Size.ToString() + " pending exit size:" + pendingExitSize.ToString() + " osize:" + osize.ToString() + " offsetflag:" + o.OffsetFlag.ToString(), QSEnumDebugLevel.INFO);
 
                     if (pos_size < pendingExitSize+osize)
                     {
                         //debug("限价委托,未成交数量超过当前持仓", QSEnumDebugLevel.INFO);
-                        debug("Order rejected by[Order FlatSize Check]", QSEnumDebugLevel.INFO);
+                        debug("Order rejected by[Order FlatSize Check]" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
                         msg = (pos_size == 0 ? commentNoPositionForFlat : commentOverFlatPositionSize);
                         return false;
                     }
@@ -323,7 +340,7 @@ namespace TradingLib.Core
                 {
                     if (!account.CheckOrder(o, out msg))//如果通过风控检查 则置委托状态为Placed
                     {
-                        debug("Order rejected by[Order Rule Check]" + o.ToString(), QSEnumDebugLevel.INFO);
+                        debug("Order rejected by[Order Rule Check]" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
                         return false;
                     }
                 }

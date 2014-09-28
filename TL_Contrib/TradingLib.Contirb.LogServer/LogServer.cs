@@ -16,12 +16,12 @@ namespace TradingLib.Contirb.LogServer
     {
         const string ContribName = "LogServer";
 
-        Log _logerror = new Log("G-Error", true, true, LibGlobal.LOGPATH, true);//日志组件
-        Log _loginfo = new Log("G-Info", true, true, LibGlobal.LOGPATH, true);//日志组件
-        Log _logwarning = new Log("G-Warning", true, true, LibGlobal.LOGPATH, true);//日志组件
-        Log _logdebug = new Log("G-Debug", true, true, LibGlobal.LOGPATH, true);//日志组件
+        Log _logerror = new Log("G-Error", true, true, Util.ProgramData(ContribName), true);//日志组件
+        Log _loginfo = new Log("G-Info", true, true, Util.ProgramData(ContribName), true);//日志组件
+        Log _logwarning = new Log("G-Warning", true, true, Util.ProgramData(ContribName), true);//日志组件
+        Log _logdebug = new Log("G-Debug", true, true, Util.ProgramData(ContribName), true);//日志组件
 
-        RingBuffer<LogItem> logcache = new RingBuffer<LogItem>(2000);
+        RingBuffer<ILogItem> logcache = new RingBuffer<ILogItem>(50000);
         ZmqSocket _logpub = null;
         bool _loggo = false;
 
@@ -56,15 +56,14 @@ namespace TradingLib.Contirb.LogServer
             _port = _cfgdb["port"].AsInt();
             _savedebug = _cfgdb["logtofile"].AsBool();
 
-            TLCtxHelper.SendLogEvent +=new LogDelegate(NewLog);
-
+            TLCtxHelper.SendLogEvent += new ILogItemDel(NewLog);
         }
         /// <summary>
         /// 销毁
         /// </summary>
         public void OnDestory()
         {
-            TLCtxHelper.SendLogEvent -= new LogDelegate(NewLog);
+            TLCtxHelper.SendLogEvent -= new ILogItemDel(NewLog);
             base.Dispose();
             
 
@@ -90,7 +89,7 @@ namespace TradingLib.Contirb.LogServer
             debug("停止日志服务.....");
             if (!_loggo) return;
             _loggo = false;
-            LibUtil.WaitThreadStop(_reportThread);
+            Util.WaitThreadStop(_reportThread);
         }
 
 
@@ -99,9 +98,9 @@ namespace TradingLib.Contirb.LogServer
         /// </summary>
         /// <param name="msg"></param>
         /// <param name="level"></param>
-        void NewLog(string objname, string msg, QSEnumDebugLevel level)
+        void NewLog(ILogItem item)
         {
-            logcache.Write(new LogItem(objname, msg, level));
+            logcache.Write(item);
         }
 
 
@@ -110,9 +109,9 @@ namespace TradingLib.Contirb.LogServer
         /// 将日志写入到当前文件
         /// </summary>
         /// <param name="l"></param>
-        void SaveLog(LogItem l)
+        void SaveLog(ILogItem l)
         {
-            switch (l.DebugLevel)
+            switch (l.Level)
             {
                 case QSEnumDebugLevel.ERROR:
                     _logerror.GotDebug(l.Message);
@@ -139,14 +138,14 @@ namespace TradingLib.Contirb.LogServer
         /// 将日志通过publisher进行分发,用于远程显示或记录日志
         /// </summary>
         /// <param name="l"></param>
-        void SendLog(LogItem l)
+        void SendLog(ILogItem l)
         {
             /**
              * 通过网路分发日志,方便在其他服务器上通过网络连接到日志服务器上获取实时日志
              * 
              * **/
             if (_logpub != null)
-                _logpub.Send(l.ObjName + "/" + l.Message + "/" + l.DebugLevel.ToString(), Encoding.UTF8);
+                _logpub.Send(LogItem.Serialize(l), Encoding.UTF8);
         }
 
         
@@ -162,11 +161,11 @@ namespace TradingLib.Contirb.LogServer
                     {
                         while (logcache.hasItems)
                         {
-                            LogItem l = logcache.Read();
-                            SaveLog(l);
-                            SendLog(l);
+                            ILogItem l = logcache.Read();
+                            SaveLog(l);//保存日志到文本文件
+                            SendLog(l);//发送日志到网络
                         }
-                        Thread.Sleep(500);
+                        Thread.Sleep(50);
                     }
                 }
 
@@ -176,16 +175,4 @@ namespace TradingLib.Contirb.LogServer
         
     }
 
-    struct LogItem
-    {
-        public QSEnumDebugLevel DebugLevel;
-        public string Message;
-        public string ObjName;
-        public LogItem(string objname, string msg, QSEnumDebugLevel level)
-        {
-            ObjName = objname;
-            DebugLevel = level;
-            Message = msg;
-        }
-    }
 }

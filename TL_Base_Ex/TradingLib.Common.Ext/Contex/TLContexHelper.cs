@@ -20,9 +20,14 @@ namespace TradingLib.Common
         private AccountEvent m_AccountEvent;
         private ExContribEvent m_ExContribEvent;
 
+
+        public static bool IsReady { get; set; }
+
         static TLCtxHelper()
         {
             defaultInstance = new TLCtxHelper();
+            IsReady = false;
+            
         }
 
         public TLCtxHelper()
@@ -113,19 +118,28 @@ namespace TradingLib.Common
             }
         }
 
-        public static IAccountTradingInfo CmdTradingInfo
-        {
-            get
-            {
-                return defaultInstance.ctx.ClearCentre as IAccountTradingInfo;
-            }
-        }
+        //public static IAccountTradingInfo CmdTradingInfo
+        //{
+        //    get
+        //    {
+        //        return defaultInstance.ctx.ClearCentre as IAccountTradingInfo;
+        //    }
+        //}
 
         public static IAccountOperationCritical CmdAccountCritical
         {
             get
             {
                 return defaultInstance.ctx.ClearCentre as IAccountOperationCritical;
+            }
+        }
+
+
+        public static ISettleCentre CmdSettleCentre
+        {
+            get
+            {
+                return defaultInstance.ctx.SettleCentre as ISettleCentre;
             }
         }
 
@@ -154,37 +168,52 @@ namespace TradingLib.Common
         {
             defaultInstance.ctx.BindContribEvent();
         }
+
+
         #region 【全局日志 通知】
         /// <summary>
         /// 初始化全局标准输出入口
         /// </summary>
         /// <param name="debug"></param>
-        public static event DebugDelegate SendDebugEvent = null;
+        //public static event DebugDelegate SendDebugEvent = null;
+
+
         /// <summary>
         /// 全局标准输出入口,用于在屏幕或者信息面板输出系统内的日志信息
         /// </summary>
         /// <param name="msg"></param>
         public static void Debug(string msg)
         {
-            if (SendDebugEvent != null)
-                SendDebugEvent(msg);
+            Util.Debug(msg);
         }
+
+        public static Profiler Profiler = new Profiler();
 
         /// <summary>
         /// 全局日志事件
         /// 绑定该事件可以获得系统所有对象的log输出
         /// </summary>
-        public static event LogDelegate SendLogEvent = null;
-        /// <summary>
-        /// 全局日志入口,用于向日志保存分发系统写入日志
-        /// </summary>
-        /// <param name="objname">产生日志的对象</param>
-        /// <param name="msg">消息</param>
-        /// <param name="level">级别</param>
-        public static void Log(string objname, string msg, QSEnumDebugLevel level)
+        public static event ILogItemDel SendLogEvent = null;
+        static bool _consoleEnable = true;
+        public static bool ConsoleEnable { get { return _consoleEnable; } set { _consoleEnable = value; } }
+        public static void Log(ILogItem item)
         {
+            //1.控制台输出
+            if (ConsoleEnable)
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Append("[");
+                sb.Append(item.Level.ToString());
+                sb.Append("] ");
+                sb.Append(item.Programe);
+                sb.Append(":");
+                sb.Append(item.Message);
+                Util.ConsolePrint(sb.ToString());
+            }
+
+            //2.通过委托对外触发日志事件 其他组件获得日志事件后可以对日志进行处理 比如通过网络发送，日志分析等
             if (SendLogEvent != null)
-                SendLogEvent(objname, msg, level);
+                SendLogEvent(item);
         }
 
         /// <summary>

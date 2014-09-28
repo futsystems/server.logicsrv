@@ -87,10 +87,10 @@ namespace TradingLib.Core
             _port = port;//服务主端口
             _worknum = numWorkers;
             _enableThroutPutTracker = pttracker;
-            VerboseDebugging = verb;//是否输出详细日志
+            //VerboseDebugging = verb;//是否输出详细日志
 
             zmqTP = new ZeromqThroughPut();
-            zmqTP.SendDebugEvent += new DebugDelegate(msgdebug);
+            //zmqTP.SendDebugEvent += new DebugDelegate(msgdebug);
 
         }
 
@@ -256,7 +256,7 @@ namespace TradingLib.Core
                         {
                             buffer = rep.Receive(buffer,SocketFlags.DontWait,out size);
                             Message msg = Message.gotmessage(buffer);
-                            v("ServerDNS Got Message:" + msg.Type.ToString() + "|" + msg.Content.ToString() + "|" + msg.Content.Length.ToString() + " message buffer size:" + size + " recevied size:" + buffer.Length.ToString());
+                            //v("ServerDNS Got Message:" + msg.Type.ToString() + "|" + msg.Content.ToString() + "|" + msg.Content.Length.ToString() + " message buffer size:" + size + " recevied size:" + buffer.Length.ToString());
                             //如果消息无效则直接返回
                             if (!msg.isValid)
                                 return;
@@ -435,7 +435,7 @@ namespace TradingLib.Core
                     frontend.ReceiveReady += (s, e) =>
                     {
 #if DEBUG
-                        v("frontend->backent");
+                        //v("frontend->backent");
 #endif
                         var zmsg = new ZMessage(e.Socket);
                         zmsg.Send(backend);
@@ -444,7 +444,7 @@ namespace TradingLib.Core
                     backend.ReceiveReady += (s, e) =>
                     {
 #if DEBUG
-                        v("backend->frontend");
+                       // v("backend->frontend");
 #endif
                         var zmsg = new ZMessage(e.Socket);
                         zmsg.Send(frontend);
@@ -453,12 +453,12 @@ namespace TradingLib.Core
                     outchannel.ReceiveReady += (s, e) =>
                     {
 #if DEBUG
-                            v("server side send the message outside");
-                            v("output->frontend");
+                            //v("server side send the message outside");
+                            //v("output->frontend");
 #endif
                         var zmsg = new ZMessage(e.Socket);
 #if DEBUG
-                            v("address is:" + zmsg.AddressToString());
+                            //v("address is:" + zmsg.AddressToString());
 #endif
                         zmsg.Send(frontend);
                     };

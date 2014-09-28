@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using FutSystems.GUI;
 using TradingLib.API;
+using FutsMoniter;
 
 namespace TradingLib.Common
 {
@@ -13,7 +14,7 @@ namespace TradingLib.Common
     public delegate void ExchangeDel(Exchange ex);
     public delegate void SecurityDel(SecurityFamilyImpl sec);
     public delegate void SymbolDel(SymbolImpl sym);
-    
+    public delegate void ManagerDel(Manager manger);
 
     public class BasicInfoTracker:IBasicInfo
     {
@@ -37,6 +38,7 @@ namespace TradingLib.Common
         Dictionary<int, SecurityFamilyImpl> securitymap = new Dictionary<int, SecurityFamilyImpl>();
         Dictionary<int, SymbolImpl> symbolmap = new Dictionary<int, SymbolImpl>();
         Dictionary<string, SymbolImpl> symbolnammap = new Dictionary<string, SymbolImpl>();
+        Dictionary<int, Manager> managermap = new Dictionary<int, Manager>();
 
         Dictionary<string, RuleClassItem> orderruleclassmap = new Dictionary<string, RuleClassItem>();
         Dictionary<string, RuleClassItem> accountruleclassmap = new Dictionary<string, RuleClassItem>();
@@ -46,7 +48,7 @@ namespace TradingLib.Common
         public event ExchangeDel GotExchangeEvent;
         public event SecurityDel GotSecurityEvent;
         public event SymbolDel GotSymbolEvent;
-
+        public event ManagerDel GotManagerEvent;
 
 
         #region 获得服务端相关对象数据
@@ -209,6 +211,36 @@ namespace TradingLib.Common
                 }
             }
         }
+
+        public void GotManager(Manager manager)
+        {
+            
+            Globals.Debug("basicinfotracker got manger:" + manager.ID.ToString());
+            Manager target = null;
+            Manager notify = null;
+            if (managermap.TryGetValue(manager.ID, out target))
+            {
+                target.Mobile = manager.Mobile;
+                target.Name = manager.Name;
+                target.QQ = manager.QQ;
+                notify = target;
+            }
+            else
+            {
+                managermap.Add(manager.ID, manager);
+                notify = manager;
+            }
+            if (Globals.MgrFK != null && Globals.MgrFK == manager.ID)
+            {
+                Globals.Manager = manager;//将获得的柜员列表中 属于本登入mgr_fk的manager绑定到全局对象
+            }
+            //对外触发 初始化过程中不对外出发
+            if (_firstloadfinish && GotManagerEvent != null)
+            {
+                GotManagerEvent(notify);
+            }
+
+        }
         #endregion
 
         /// <summary>
@@ -263,6 +295,13 @@ namespace TradingLib.Common
                 if (GotSymbolEvent != null)
                 {
                     GotSymbolEvent(sym);
+                }
+            }
+            foreach (Manager manger in managermap.Values)
+            {
+                if (GotManagerEvent != null)
+                {
+                    GotManagerEvent(manger);
                 }
             }
         }
@@ -403,6 +442,16 @@ namespace TradingLib.Common
         
         }
 
+        public Manager GetManager(int mgrid)
+        {
+            Manager mgr = null;
+            if (managermap.TryGetValue(mgrid, out mgr))
+            {
+                return mgr;
+            }
+            return null;
+        }
+
 
 
 
@@ -520,6 +569,26 @@ namespace TradingLib.Common
                 vo.Name = lastday.AddMonths(i).ToString("yyyyMM");
                 vo.Value = Convert.ToInt32(vo.Name);
                 list.Add(vo);
+            }
+            return list;
+        }
+
+        /// <summary>
+        /// 返回manger选择项
+        /// 用于创建用户
+        /// </summary>
+        /// <returns></returns>
+        public ArrayList GetBaseManagerCombList()
+        {
+            ArrayList list = new ArrayList();
+            
+            foreach (Manager m in managermap.Values.Where(g=>(g.Type== QSEnumManagerType.ROOT||g.Type== QSEnumManagerType.AGENT) ))
+            {
+                ValueObject<int> vo1 = new ValueObject<int>();
+                vo1.Name = m.Name + " - " + m.mgr_fk;
+                vo1.Value = m.mgr_fk;
+                list.Add(vo1);
+                
             }
             return list;
         }

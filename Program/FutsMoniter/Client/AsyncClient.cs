@@ -429,7 +429,7 @@ namespace TradingLib.Common
             zmsg.Send(requester);
             byte[] response = new byte[0];
             int size = 0;
-            response = requester.Receive(response, new TimeSpan(0, 0, IPUtil.SOCKETREPLAYTIMEOUT), out size);
+            response = requester.Receive(response, new TimeSpan(0, 0, Const.SOCKETREPLAYTIMEOUT), out size);
             TradingLib.Common.Message message = TradingLib.Common.Message.gotmessage(response);
             debug("got raw size:" + size + " type:" + message.Type + " content:" + message.Content);
 

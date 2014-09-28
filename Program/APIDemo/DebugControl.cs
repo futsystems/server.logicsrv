@@ -22,6 +22,7 @@ namespace APIDemo
             ContextMenu.MenuItems.Add("清除记录", new EventHandler(clearlogs));
             ContextMenu.MenuItems.Add("Create Ticket", new EventHandler(createticket));
             toggleselectall();
+            _timestamp = false;
         }
         public event DebugDelegate NewCreateTicketEvent;
 

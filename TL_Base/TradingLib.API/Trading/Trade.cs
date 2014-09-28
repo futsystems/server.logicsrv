@@ -92,10 +92,12 @@ namespace TradingLib.API
         /// 获得该委托通过哪个交易通道发出
         /// </summary>
         string Broker { get; set; }
+
         /// <summary>
         /// 用于标示交易通道委托的唯一标石,用于向交易通道查询或者撤销委托时用到的序列
         /// </summary>
         string BrokerKey { get; set; }
+
         /// <summary>
         /// 标记该成交的性质 开仓 加仓 平仓 减仓
         /// </summary>
@@ -105,6 +107,7 @@ namespace TradingLib.API
         /// 平仓盈亏
         /// </summary>
         decimal Profit { get; set; }
+
         /// <summary>
         /// 客户端委托引用
         /// </summary>

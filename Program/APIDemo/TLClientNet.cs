@@ -238,11 +238,11 @@ namespace TradingLib.Common
         /// <summary>
         /// 查询结算信息
         /// </summary>
-        public void ReqQrySettleInfo()
+        public void ReqQrySettleInfo(int tradingday=0)
         {
             QrySettleInfoRequest request = RequestTemplate<QrySettleInfoRequest>.CliSendRequest(requestid++);
             request.Account = _account;
-            request.Tradingday = 0;
+            request.Tradingday = tradingday;
             SendPacket(request);
         }
 

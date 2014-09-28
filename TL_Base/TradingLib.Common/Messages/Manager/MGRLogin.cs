@@ -69,6 +69,12 @@ namespace TradingLib.Common
         /// </summary>
         public bool Authorized { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public int mgr_fk { get; set; }
+
+
         public RspMGRLoginResponse()
         {
             _type = MessageTypes.MGRLOGINRESPONSE;
@@ -77,6 +83,7 @@ namespace TradingLib.Common
             ManagerType = QSEnumManagerType.MONITER;
             Mobile = string.Empty;
             QQ = string.Empty;
+            mgr_fk = 0;
         }
 
         public override string ResponseSerialize()
@@ -94,6 +101,8 @@ namespace TradingLib.Common
             sb.Append(this.QQ);
             sb.Append(d);
             sb.Append(this.Authorized.ToString());
+            sb.Append(d);
+            sb.Append(this.mgr_fk.ToString());
             return sb.ToString();
             
         }
@@ -107,6 +116,7 @@ namespace TradingLib.Common
             this.Mobile = rec[3];
             this.QQ = rec[4];
             this.Authorized = bool.Parse(rec[5]);
+            this.mgr_fk = int.Parse(rec[6]);
         }
     }
 }

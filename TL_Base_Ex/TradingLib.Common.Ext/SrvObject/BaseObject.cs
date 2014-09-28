@@ -1,17 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
+using System.Reflection;
 using System.Linq;
 using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
+using System.Diagnostics;
 
 namespace TradingLib.Common
 {
     /// <summary>
     /// 服务端服务对象的基类,实现日志输出,邮件通知,以及服务端对象名称标识
     /// </summary>
-    public class BaseSrvObject:IDisposable,IDebug
+    public class BaseSrvObject:IDisposable
     {
         /// <summary>
         /// 服务端对象名称
@@ -87,16 +89,22 @@ namespace TradingLib.Common
         /// <summary>
         /// 日志输出事件
         /// </summary>
-        public event DebugDelegate SendDebugEvent;
+        //public event DebugDelegate SendDebugEvent;
+
+        /// <summary>
+        /// 对外发送日志事件
+        /// </summary>
+        public event ILogItemDel SendLogItemEvent;
 
         /// <summary>
         /// 日志输出事件
         /// </summary>
-        public event LogDelegate SendLogEvent;
+        //public event LogDelegate SendLogEvent;
 
         bool _debugEnable = true;
         /// <summary>
         /// 是否输出日志
+        /// 如果禁用日志 则所有日志将不对外发送
         /// </summary>
         public bool DebugEnable { get { return _debugEnable; } set { _debugEnable = value; } }
 
@@ -112,52 +120,52 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="msg"></param>
         /// <param name="level"></param>
+        [Conditional("DEBUG")]
         protected void debug(string msg, QSEnumDebugLevel level = QSEnumDebugLevel.DEBUG)
         {
-            //1.判断日志级别,然后调用日志输出 比如向控件或者屏幕输出显示
-            if (_debugEnable && (int)level <= (int)_debuglevel)
-                msgdebug("[" + level.ToString() + "] " + PROGRAME+":"+msg);
-            //2.调用日志事件对外触发日志事件
-            if (SendLogEvent != null)
-                SendLogEvent(PROGRAME, msg, level);
+            if (_debugEnable && (int)level <= (int)_debuglevel && SendLogItemEvent != null)
+            {
+                ILogItem item = new LogItem(msg, level, this.PROGRAME);
+                SendLogItemEvent(item);
+            }
         }
 
         /// <summary>
         /// 日志输出
         /// </summary>
         /// <param name="msg"></param>
-        protected void msgdebug(string msg)
-        {
-            if (SendDebugEvent != null)
-                SendDebugEvent(msg);
-        }
+        //protected void msgdebug(string msg)
+        //{
+        //    if (SendDebugEvent != null)
+        //        SendDebugEvent(msg);
+        //}
 
-        private bool _noverb = true;
-        /// <summary>
-        /// 是否显示内部调试信息
-        /// </summary>
-        public bool VerboseDebugging
-        {
-            get { return !_noverb; }
-            set
-            {
-                _noverb = !value;
-            }
-        }
+        //private bool _noverb = true;
+        ///// <summary>
+        ///// 是否显示内部调试信息
+        ///// </summary>
+        //public bool VerboseDebugging
+        //{
+        //    get { return !_noverb; }
+        //    set
+        //    {
+        //        _noverb = !value;
+        //    }
+        //}
         /// <summary>
         /// 内部输出调试日志
         /// </summary>
         /// <param name="msg"></param>
-        protected void v(string msg)
-        {
-            if (!_noverb)
-            {
-                msgdebug(string.Format("[Verb] {0}:{1}",PROGRAME,msg));
-                //2.调用日志事件对外触发日志事件
-                if (SendLogEvent != null)
-                    SendLogEvent(PROGRAME, msg, QSEnumDebugLevel.VERB);
-            }
-        }
+        //protected void v(string msg)
+        //{
+        //    if (!_noverb)
+        //    {
+        //        msgdebug(string.Format("[Verb] {0}:{1}",PROGRAME,msg));
+        //        //2.调用日志事件对外触发日志事件
+        //        if (SendLogEvent != null)
+        //            SendLogEvent(PROGRAME, msg, QSEnumDebugLevel.VERB);
+        //    }
+        //}
         #endregion
 
     }

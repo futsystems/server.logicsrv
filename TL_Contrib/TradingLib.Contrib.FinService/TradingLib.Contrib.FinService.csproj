@@ -33,32 +33,20 @@
     <DocumentationFile>..\..\lib\Contrib\Release\TradingLib.Contrib.FinService.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MySql.Data">
-      <HintPath>..\..\lib\MySql.Data.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="TradingLib.Common.Ex">
-      <HintPath>..\..\lib\Win\TradingLib.Common.Ex.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="TradingLib.API">
       <HintPath>..\..\lib\Win\TradingLib.API.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="TradingLib.API.Ex">
       <HintPath>..\..\lib\Win\TradingLib.API.Ex.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="TradingLib.Common">
       <HintPath>..\..\lib\Win\TradingLib.Common.dll</HintPath>
-      <Private>False</Private>
     </Reference>
-    <Reference Include="TradingLib.MySql">
-      <HintPath>..\..\lib\Win\TradingLib.MySql.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="TradingLib.Common.Ex">
+      <HintPath>..\..\lib\Win\TradingLib.Common.Ex.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

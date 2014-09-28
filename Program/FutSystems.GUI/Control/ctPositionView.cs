@@ -42,8 +42,8 @@ namespace FutSystems.GUI
         public event PositionOffsetArgsDel UpdatePostionOffsetEvent;//对外触发止盈止损更新事件
 
         public event PositionDelegate PositionSelectedEvent;//选择了某个持仓
-        public event LookUpLossArgs LookUpLossArgsEvent;//获得sendorder中的某个合约的止损参数
-        public event LookUpProfitArgs LookUpProfitArgsEvent;//获得sendorder中的某个合约的止盈参数
+        //public event LookUpLossArgs LookUpLossArgsEvent;//获得sendorder中的某个合约的止损参数
+        //public event LookUpProfitArgs LookUpProfitArgsEvent;//获得sendorder中的某个合约的止盈参数
 
         //通过symbol查找到对应的security
         Symbol findSecurity(string symbol)
@@ -84,20 +84,20 @@ namespace FutSystems.GUI
                 return sym.Multiple;
         }
 
-        //获得止盈参数
-        ProfitArgs getDefaultprofitargs(string symbol)
-        {
-            if (LookUpProfitArgsEvent != null)
-                return LookUpProfitArgsEvent(symbol);
-            return null;
-        }
-        //获得止损参数
-        StopLossArgs getDefaultlossargs(string symbol)
-        {
-            if (LookUpLossArgsEvent != null)
-                return LookUpLossArgsEvent(symbol);
-            return null;
-        }
+        ////获得止盈参数
+        //ProfitArgs getDefaultprofitargs(string symbol)
+        //{
+        //    if (LookUpProfitArgsEvent != null)
+        //        return LookUpProfitArgsEvent(symbol);
+        //    return null;
+        //}
+        ////获得止损参数
+        //StopLossArgs getDefaultlossargs(string symbol)
+        //{
+        //    if (LookUpLossArgsEvent != null)
+        //        return LookUpLossArgsEvent(symbol);
+        //    return null;
+        //}
 
         void SendOrder(Order o)
         {
@@ -249,7 +249,7 @@ namespace FutSystems.GUI
         //获得某个持仓的可平数量
         int getCanFlatSize(Position pos)
         {
-            return pos.isFlat ? 0 : (pos.UnsignedSize - _ot.getUnfilledSizeExceptStop(pos.Symbol, !pos.isLong));
+            return pos.isFlat ? 0 : (pos.UnsignedSize - _ot.GetPendingExitSize(pos.Symbol,pos.DirectionType== QSEnumPositionDirectionType.Long?true:false));
         }
 
         //往datatable中插入一行记录

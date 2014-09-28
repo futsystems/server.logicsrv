@@ -101,6 +101,41 @@ namespace FutsMoniter
             }
         }
 
+        public void OnMGRRuleClassResponse(RuleClassItem item, bool islast)
+        {
+            //debug("111mainform ruleclass handler: is last:" + islast.ToString());
+            if (basicinfotracker != null)
+            {
+                basicinfotracker.GotRuleClass(item);
+            }
+            //debug("mainform ruleclass handler: is last:" + islast.ToString());
+            if (islast)
+            {
+                ShowInfo("风控规则下载完毕，下载管理员列表");
+                tlclient.ReqQryManager();
+                //basicinfotracker.OnFinishLoad();//数据加载完毕后调用 用于建立对象绑定并进行界面
+
+            }
+        }
+
+        public void OnMGRMangerResponse(Manager manger, bool islast)
+        {
+            debug("xxxxxxxxxxxxxxxxxxxxx here:"+manger.Name);
+            if (basicinfotracker != null)
+            {
+                basicinfotracker.GotManager(manger);
+            }
+            //debug("mainform ruleclass handler: is last:" + islast.ToString());
+            if (islast)
+            {
+                ShowInfo("基础信息下载完成,下载帐户信息");
+                tlclient.ReqQryAccountList();
+                basicinfotracker.OnFinishLoad();//数据加载完毕后调用 用于建立对象绑定并进行界面
+
+            }
+        }
+
+
         public void OnMGRSymbolAddResponse(SymbolImpl symbol, bool islast)
         {
             if (basicinfotracker != null)
@@ -229,23 +264,7 @@ namespace FutsMoniter
 
 
         #region 风控类接口实现
-        public void OnMGRRuleClassResponse(RuleClassItem item, bool islast)
-        {
-            //debug("111mainform ruleclass handler: is last:" + islast.ToString());
-            if (basicinfotracker != null)
-            {
-                basicinfotracker.GotRuleClass(item);
-            }
-            //debug("mainform ruleclass handler: is last:" + islast.ToString());
-            if (islast)
-            {
-                ShowInfo("基础信息下载完成,下载帐户信息");
-                tlclient.ReqQryAccountList();
-                basicinfotracker.OnFinishLoad();//数据加载完毕后调用 用于建立对象绑定并进行界面
-               
-            }
         
-        }
 
         /// <summary>
         /// 帐户风控规则项目回报

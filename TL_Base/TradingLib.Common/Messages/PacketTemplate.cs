@@ -148,9 +148,15 @@ namespace TradingLib.Common
                     //请求查询系统通知
                     case MessageTypes.QRYNOTICE:
                         return RequestTemplate<QryNoticeRequest>.SrvRecvRequest(frontid, clientid, content);
-
-
-
+                    //请求查询签约银行列表
+                    case MessageTypes.QRYCONTRACTBANK:
+                        return RequestTemplate<QryContractBankRequest>.SrvRecvRequest(frontid, clientid, content);
+                    //请求查询银行帐户
+                    case MessageTypes.QRYREGISTERBANKACCOUNT:
+                        return RequestTemplate<QryRegisterBankAccountRequest>.SrvRecvRequest(frontid, clientid, content);
+                    //查询出入金流水记录
+                    case MessageTypes.QRYTRANSFERSERIAL:
+                        return RequestTemplate<QryTransferSerialRequest>.SrvRecvRequest(frontid, clientid, content);
 
 
 
@@ -235,7 +241,18 @@ namespace TradingLib.Common
                         return RequestTemplate<MGRReqChangeInvestorRequest>.SrvRecvRequest(frontid, clientid, content);
                     case MessageTypes.MGRUPDATEPOSLOCK://请求修改帐户锁仓权限
                         return RequestTemplate<MGRReqUpdatePosLockRequest>.SrvRecvRequest(frontid, clientid, content);
-
+                    case MessageTypes.MGRQRYMANAGER://查询管理员列表
+                        return RequestTemplate<MGRQryManagerRequest>.SrvRecvRequest(frontid, clientid, content);
+                    case MessageTypes.MGRADDMANAGER://请求添加管理员
+                        return RequestTemplate<MGRReqAddManagerRequest>.SrvRecvRequest(frontid, clientid, content);
+                    case MessageTypes.MGRUPDATEMANAGER://请求更新管理员
+                        return RequestTemplate<MGRReqUpdateManagerRequest>.SrvRecvRequest(frontid, clientid, content);
+                    case MessageTypes.MGRQRYACCTSERVICE://请求查询帐户服务
+                        return RequestTemplate<MGRQryAcctServiceRequest>.SrvRecvRequest(frontid, clientid, content);
+                    case MessageTypes.MGRCONTRIBREQUEST://扩展请求
+                        return RequestTemplate<MGRContribRequest>.SrvRecvRequest(frontid, clientid, content);
+                    case MessageTypes.MGRUPDATEPASS://请求修改密码
+                        return RequestTemplate<MGRUpdatePassRequest>.SrvRecvRequest(frontid, clientid, content);
                     #endregion
 
                     default:
@@ -305,7 +322,12 @@ namespace TradingLib.Common
                     return ResponseTemplate<RspReqChangePasswordResponse>.CliRecvResponse(content);
                 case MessageTypes.NOTICERESPONSE://查询系统通知回报
                     return ResponseTemplate<RspQryNoticeResponse>.CliRecvResponse(content);
-
+                case MessageTypes.CONTRACTBANKRESPONSE://查询签约银行通知回报
+                    return ResponseTemplate<RspQryContractBankResponse>.CliRecvResponse(content);
+                case MessageTypes.REGISTERBANKACCOUNTRESPONSE://查询银行帐户回报
+                    return ResponseTemplate<RspQryRegisterBankAccountResponse>.CliRecvResponse(content);
+                case MessageTypes.TRANSFERSERIALRESPONSE://查询出入金流水回报
+                    return ResponseTemplate<RspQryTransferSerialResponse>.CliRecvResponse(content);
                 case MessageTypes.TICKNOTIFY:
                     TickNotify ticknotify = new TickNotify();
                     ticknotify.Tick = TickImpl.Deserialize(content);
@@ -371,6 +393,12 @@ namespace TradingLib.Common
                     return ResponseTemplate<RspMGRReqChangeInvestorResponse>.CliRecvResponse(content);
                 case MessageTypes.MGRUPDATEPOSLOCKRESPONSE://请求修改帐户锁仓权限回报
                     return ResponseTemplate<RspMGRReqUpdatePosLockResponse>.CliRecvResponse(content);
+                case MessageTypes.MGRMANAGERRESPONSE://查询管理员列表回报
+                    return ResponseTemplate<RspMGRQryManagerResponse>.CliRecvResponse(content);
+                case MessageTypes.MGRQRYACCTSERVICERESPONSE://查询帐户服务回报
+                    return ResponseTemplate<RspMGRQryAcctServiceResponse>.CliRecvResponse(content);
+                case MessageTypes.MGRCONTRIBRESPONSE://扩展回报
+                    return ResponseTemplate<RspMGRContribResponse>.CliRecvResponse(content);
                 #endregion
                 default:
                     throw new PacketError();

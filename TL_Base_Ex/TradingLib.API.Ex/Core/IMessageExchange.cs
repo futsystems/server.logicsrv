@@ -16,11 +16,8 @@ namespace TradingLib.API
         /// <summary>
         /// 向某个地址的客户端发送一条消息
         /// </summary>
-        /// <param name="msg">消息体</param>
-        /// <param name="type">消息类别</param>
-        /// <param name="address">客户端唯一地址</param>
-        //void Send(string msg, MessageTypes type, string address);
         void Send(IPacket packet);
+
         /// <summary>
         /// 查询满足某个条件的客户端地址
         /// </summary>
@@ -28,22 +25,13 @@ namespace TradingLib.API
         /// <returns></returns>
         string[] FilterClient(string filter);
 
-
+        /// <summary>
+        /// 获得某个合约当前有效价格
+        /// 通过DataRouter进行获取
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
         decimal GetAvabilePrice(string symbol);
-        /// <summary>
-        /// 获得帐户比赛信息
-        /// </summary>
-        //event GetRaceInfoDel GetRaceInfoEvent;
 
-        /// <summary>
-        /// 通过第三方进行帐户认证
-        /// </summary>
-        //event LoginRequestDel<T> AuthUserEvent;
-
-        /// <summary>
-        /// 对外发送某个帐户的最新比赛状态
-        /// </summary>
-        /// <param name="acc"></param>
-        //void newRaceInfo(IAccount acc);
     }
 }

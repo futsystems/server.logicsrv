@@ -10,23 +10,23 @@ namespace TradingLib.Common
     public static class PostionUtils
     {
 
-        static string PositionSideStr(bool side)
-        {
-            if (side)
-            {
-                return "Long";
-            }
-            else
-            {
-                return "Short";
-            }
-        }
+        //static string PositionSideStr(bool side)
+        //{
+        //    if (side)
+        //    {
+        //        return "Long";
+        //    }
+        //    else
+        //    {
+        //        return "Short";
+        //    }
+        //}
 
-        /// <summary>
-        /// 获得posiiton的key值 用于对该positon进行唯一性标识
-        /// </summary>
-        /// <param name="pos"></param>
-        /// <returns></returns>
+        ///// <summary>
+        ///// 获得posiiton的key值 用于对该positon进行唯一性标识
+        ///// </summary>
+        ///// <param name="pos"></param>
+        ///// <returns></returns>
         public static string GetKey(this Position pos,bool positionside)
         {
             StringBuilder sb = new StringBuilder();
@@ -35,10 +35,14 @@ namespace TradingLib.Common
             sb.Append(d);
             sb.Append(pos.Symbol);
             sb.Append(d);
-            sb.Append(PositionSideStr(positionside));
+            sb.Append(positionside?QSEnumPositionDirectionType.Long.ToString():QSEnumPositionDirectionType.Short.ToString());
             return sb.ToString();
         }
 
+        public static string GetPositionKey(this Position pos)
+        {
+            return pos.Account + "-" + pos.Symbol + "-" + pos.DirectionType.ToString();
+        }
         /// <summary>
         /// 计算持仓保证金
         /// </summary>

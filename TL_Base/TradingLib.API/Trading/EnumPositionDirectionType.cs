@@ -21,6 +21,5 @@ namespace TradingLib.API
         Net=3,
         [Description("双向")]//该持仓信息描述的可变双向持仓
         BothSide=4,
-
     }
 }

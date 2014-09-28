@@ -81,6 +81,8 @@ namespace FutSystems.GUI
         const string EXCHORDERID = "交易所编号";
         const string EXCHANGE = "交易所";
         const string ACCOUNT = "账户";
+        const string FORCECLOSE = "强平标识";
+        const string FORCEREASON = "强平原因";
 
         DataTable tb = new DataTable();
         ConcurrentDictionary<long, int> orderidxmap = new ConcurrentDictionary<long, int>();
@@ -134,20 +136,24 @@ namespace FutSystems.GUI
                         tb.Rows[i][PRICE] = GetOrderPrice(o);
                         tb.Rows[i][FILLED] = Math.Abs(o.Filled);
                         tb.Rows[i][STATUS] = o.Status;
-                        tb.Rows[i][STATUSSTR] = LibUtil.GetEnumDescription(o.Status);
+                        tb.Rows[i][STATUSSTR] = Util.GetEnumDescription(o.Status);
                         tb.Rows[i][ORDERREF] = o.OrderRef;
                         tb.Rows[i][EXCHANGE] = o.Exchange;
                         tb.Rows[i][EXCHORDERID] = o.OrderExchID;
                         tb.Rows[i][ACCOUNT] = o.Account;
                         tb.Rows[i][COMMENT] = o.comment;
+                        tb.Rows[i][FORCECLOSE] = o.ForceClose?"强平":"";
+                        tb.Rows[i][FORCEREASON] = o.ForceCloseReason;
                         num.Text = orderGrid.RowCount.ToString();
                     }
                     else
                     {
                         tb.Rows[i][FILLED] = o.Filled;
                         tb.Rows[i][STATUS] = o.Status;
-                        tb.Rows[i][STATUSSTR] = LibUtil.GetEnumDescription(o.Status);
+                        tb.Rows[i][STATUSSTR] = Util.GetEnumDescription(o.Status);
                         tb.Rows[i][COMMENT] = o.comment;
+                        tb.Rows[i][FORCECLOSE] = o.ForceClose ? "强平" : "";
+                        tb.Rows[i][FORCEREASON] = o.ForceCloseReason;
                     }
                 }
                 catch (Exception ex)
@@ -201,6 +207,8 @@ namespace FutSystems.GUI
             tb.Columns.Add(STATUSSTR);
             tb.Columns.Add(COMMENT);
             tb.Columns.Add(ORDERREF);
+            tb.Columns.Add(FORCECLOSE);
+            tb.Columns.Add(FORCEREASON);
             tb.Columns.Add(EXCHANGE);
             tb.Columns.Add(EXCHORDERID);
             tb.Columns.Add(ACCOUNT);

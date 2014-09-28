@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using TradingLib.API;
+using TradingLib.Common;
 
 namespace Lottoqq.Race
 {
@@ -40,18 +42,18 @@ namespace Lottoqq.Race
             rs.SettleDay = DateTime.Now;
 
             rs.OptLastEquity = r.LastOptEquity;
-            rs.OptRealizedPL = r.Account.OptRealizedPL;
-            rs.OptCommission = r.Account.OptCommission;
+            rs.OptRealizedPL = r.Account.CalOptRealizedPL();
+            rs.OptCommission = r.Account.CalOptCommission();
             rs.OptNowEquity = rs.OptLastEquity + rs.OptRealizedPL - rs.OptCommission;
 
             rs.FutLastEquity = r.LastFutEquity;
-            rs.FutRealizedPL = r.Account.FutRealizedPL;
-            rs.FutCommission = r.Account.FutCommission;
+            rs.FutRealizedPL = r.Account.CalFutRealizedPL();
+            rs.FutCommission = r.Account.CalFutCommission();
             rs.FutNowEquity = rs.FutLastEquity + rs.FutRealizedPL - rs.FutCommission;
 
             rs.MJLastEquity = r.LastMJEquity;
-            rs.MJRealizedPL = r.Account.InnovRealizedPL;
-            rs.MJCommission = r.Account.InnovCommission;
+            rs.MJRealizedPL = r.Account.CalInnovRealizedPL();
+            rs.MJCommission = r.Account.CalInnovCommission();
             rs.MJNowEquity = rs.MJLastEquity + rs.MJRealizedPL - rs.MJCommission;
 
             return rs;

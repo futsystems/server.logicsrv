@@ -173,7 +173,7 @@ namespace TradingLib.Core
         /// <param name="address"></param>
         public void SrvOnOrderInsert(OrderInsertRequest request)
         {
-            debug("got order:" + request.Order.ToString(), QSEnumDebugLevel.INFO);
+            debug("Got Order:" + request.Order.GetOrderInfo(), QSEnumDebugLevel.INFO);
             MgrClientInfo cinfo = _clients[request.ClientID];
             //1.如果不存在,表明该ID没有通过注册连接到我们的服务端
             if (cinfo == null)
@@ -237,6 +237,7 @@ namespace TradingLib.Core
             //如果验证通过返回具体的管理信息
             if (response.Authorized)
             {
+                //查找对应的管理端对象 将相关信息与clientinfo进行绑定
                 Manager m = BasicTracker.ManagerTracker[request.LoginID];
                 if (m != null)
                 {
@@ -245,10 +246,18 @@ namespace TradingLib.Core
                     response.Name = m.Name;
                     response.QQ = m.QQ;
                     response.ManagerType = m.Type;
+                    response.mgr_fk = m.ID;//传递mgr_fk
+
+                    clientinfo.mgr_fk = m.ID;
+                    clientinfo.AuthorizedSuccess();
+                    clientinfo.ManagerID = request.LoginID;
 
                 }
-                clientinfo.AuthorizedSuccess();
-                clientinfo.ManagerID = request.LoginID;
+                else//如果管理端对象在内存中不存在 则返回登入失败
+                {
+                    clientinfo.AuthorizedFail();
+                }
+                
             }
             else
             {
@@ -286,7 +295,12 @@ namespace TradingLib.Core
                 default:
                     //1.生成对应的Session 用于减少ClientInfo的暴露防止错误修改相关参数
                     Client2Session sesssion = new Client2Session(clientinfo);
+
+                    //针对Manager设置相关属性
+                    sesssion.SessionType = QSEnumSessionType.MANAGER;
                     sesssion.ManagerID = clientinfo.ManagerID;
+                    
+
                     //2.通过managerid来获得manager对象,并传递到逻辑包处理函数
                     Manager manager = BasicTracker.ManagerTracker[clientinfo.ManagerID];
                     if (manager == null)

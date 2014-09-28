@@ -76,7 +76,6 @@ namespace TradingLib.Core
         /// <param name="t"></param>
         public void GotTrade(Trade t)
         {
-
             lock (sendlock)
             {
                 string message = TradeImpl.Serialize(t);

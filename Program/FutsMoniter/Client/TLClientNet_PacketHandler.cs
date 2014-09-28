@@ -386,6 +386,14 @@ namespace TradingLib.Common
 
 
 
+        #region 管理员管理
+
+        void CliOnMGRManagerResponse(RspMGRQryManagerResponse response)
+        {
+            debug("got manager response:" + response.ToString());
+            this.handler.OnMGRMangerResponse(response.ManagerToSend, response.IsLast);
+        }
+        #endregion
 
 
 
@@ -502,6 +510,9 @@ namespace TradingLib.Common
                     break;
                 case MessageTypes.MGROPERATIONRESPONSE://常规操作回报
                     CliOnOperationResponse(packet as RspMGROperationResponse);
+                    break;
+                case MessageTypes.MGRMANAGERRESPONSE://管理员查询回报
+                    CliOnMGRManagerResponse(packet as RspMGRQryManagerResponse);
                     break;
                 #region 查询
                 case MessageTypes.ORDERRESPONSE://查询委托回报

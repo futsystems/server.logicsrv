@@ -95,7 +95,7 @@ namespace TradingLib.Core
                 debug("Got CancelOrder :" + val, QSEnumDebugLevel.INFO);
                 Order o = _clearcentre.SentOrder(val);
                 //如果委托处于pending状态
-                if (OrderTracker.IsPending(o))
+                if (o.IsPending())
                 {
                     //如果委托状态表面需要通过broker来取消委托 则通过broker来进行撤单
                     if (OrderTracker.CanCancel(o))//opened partfilled
@@ -259,6 +259,7 @@ namespace TradingLib.Core
         {
             OrderAction action = request.OrderAction;
             Order o = null;
+            IAccount account = _clearcentre[request.OrderAction.Account];
 
             //1.通过交易系统分配的全局委托ID进行识别委托
             if (action.OrderID != 0)
@@ -269,7 +270,7 @@ namespace TradingLib.Core
             {
 
                 debug("通过orderref或者orderexchid查找委托 orderref:" + action.OrderRef, QSEnumDebugLevel.INFO);
-                foreach (Order tmp in _clearcentre.getOrders(action.Account))
+                foreach (Order tmp in account.Orders)
                 {
                     if ((tmp.OrderRef == action.OrderRef && tmp.FrontIDi == action.FrontID && tmp.SessionIDi == action.SessionID)|| (tmp.OrderExchID == action.OrderExchID))
                     {
@@ -284,7 +285,7 @@ namespace TradingLib.Core
                 if (action.ActionFlag == QSEnumOrderActionFlag.Delete)
                 {
                     //如果委托处于pending状态
-                    if (OrderTracker.IsPending(o))
+                    if (o.IsPending())
                     {
                         //如果委托状态表面需要通过broker来取消委托 则通过broker来进行撤单
                         if (OrderTracker.CanCancel(o))//opened partfilled

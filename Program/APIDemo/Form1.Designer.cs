@@ -65,6 +65,11 @@
             this.qryorder_symbol = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label32 = new System.Windows.Forms.Label();
+            this.submintnum = new System.Windows.Forms.TextBox();
+            this.qrysettle_day = new System.Windows.Forms.TextBox();
+            this.label31 = new System.Windows.Forms.Label();
+            this.offsetflag = new System.Windows.Forms.ComboBox();
             this.label30 = new System.Windows.Forms.Label();
             this.login_mac = new System.Windows.Forms.TextBox();
             this.label29 = new System.Windows.Forms.Label();
@@ -110,7 +115,6 @@
             this.qrytrade_symbol = new System.Windows.Forms.TextBox();
             this.label16 = new System.Windows.Forms.Label();
             this.ctDebug1 = new APIDemo.DebugControl();
-            this.offsetflag = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -190,7 +194,7 @@
             this.passwd.Name = "passwd";
             this.passwd.Size = new System.Drawing.Size(75, 21);
             this.passwd.TabIndex = 16;
-            this.passwd.Text = "4444";
+            this.passwd.Text = "123456";
             // 
             // label4
             // 
@@ -203,11 +207,11 @@
             // 
             // loginid
             // 
-            this.loginid.Location = new System.Drawing.Point(55, 91);
+            this.loginid.Location = new System.Drawing.Point(64, 91);
             this.loginid.Name = "loginid";
-            this.loginid.Size = new System.Drawing.Size(100, 21);
+            this.loginid.Size = new System.Drawing.Size(91, 21);
             this.loginid.TabIndex = 14;
-            this.loginid.Text = "4444";
+            this.loginid.Text = "9280001";
             // 
             // label5
             // 
@@ -242,7 +246,7 @@
             this.sendorder_symbol.Name = "sendorder_symbol";
             this.sendorder_symbol.Size = new System.Drawing.Size(71, 21);
             this.sendorder_symbol.TabIndex = 27;
-            this.sendorder_symbol.Text = "IF1409";
+            this.sendorder_symbol.Text = "IF1410";
             // 
             // label9
             // 
@@ -432,6 +436,10 @@
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.label32);
+            this.groupBox1.Controls.Add(this.submintnum);
+            this.groupBox1.Controls.Add(this.qrysettle_day);
+            this.groupBox1.Controls.Add(this.label31);
             this.groupBox1.Controls.Add(this.offsetflag);
             this.groupBox1.Controls.Add(this.label30);
             this.groupBox1.Controls.Add(this.login_mac);
@@ -520,6 +528,48 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "groupBox1";
             this.groupBox1.Enter += new System.EventHandler(this.groupBox1_Enter);
+            // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(289, 212);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(29, 12);
+            this.label32.TabIndex = 96;
+            this.label32.Text = "循环";
+            // 
+            // submintnum
+            // 
+            this.submintnum.Location = new System.Drawing.Point(319, 203);
+            this.submintnum.Name = "submintnum";
+            this.submintnum.Size = new System.Drawing.Size(61, 21);
+            this.submintnum.TabIndex = 97;
+            this.submintnum.Text = "1";
+            // 
+            // qrysettle_day
+            // 
+            this.qrysettle_day.Location = new System.Drawing.Point(78, 351);
+            this.qrysettle_day.Name = "qrysettle_day";
+            this.qrysettle_day.Size = new System.Drawing.Size(197, 21);
+            this.qrysettle_day.TabIndex = 95;
+            this.qrysettle_day.Text = "20140926";
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(19, 354);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(53, 12);
+            this.label31.TabIndex = 94;
+            this.label31.Text = "查询日期";
+            // 
+            // offsetflag
+            // 
+            this.offsetflag.FormattingEnabled = true;
+            this.offsetflag.Location = new System.Drawing.Point(313, 182);
+            this.offsetflag.Name = "offsetflag";
+            this.offsetflag.Size = new System.Drawing.Size(67, 20);
+            this.offsetflag.TabIndex = 93;
             // 
             // label30
             // 
@@ -750,7 +800,7 @@
             // 
             // btnQrySettlementInfo
             // 
-            this.btnQrySettlementInfo.Location = new System.Drawing.Point(165, 325);
+            this.btnQrySettlementInfo.Location = new System.Drawing.Point(316, 351);
             this.btnQrySettlementInfo.Name = "btnQrySettlementInfo";
             this.btnQrySettlementInfo.Size = new System.Drawing.Size(140, 23);
             this.btnQrySettlementInfo.TabIndex = 66;
@@ -928,14 +978,6 @@
             this.ctDebug1.TimeStamps = true;
             this.ctDebug1.UseExternalTimeStamp = false;
             // 
-            // offsetflag
-            // 
-            this.offsetflag.FormattingEnabled = true;
-            this.offsetflag.Location = new System.Drawing.Point(313, 182);
-            this.offsetflag.Name = "offsetflag";
-            this.offsetflag.Size = new System.Drawing.Size(67, 20);
-            this.offsetflag.TabIndex = 93;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -1036,6 +1078,10 @@
         private System.Windows.Forms.Label label29;
         private System.Windows.Forms.Label label30;
         private System.Windows.Forms.ComboBox offsetflag;
+        private System.Windows.Forms.TextBox qrysettle_day;
+        private System.Windows.Forms.Label label31;
+        private System.Windows.Forms.Label label32;
+        private System.Windows.Forms.TextBox submintnum;
     }
 }
 

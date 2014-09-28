@@ -17,7 +17,7 @@ namespace TradingLib.Core
     public partial class TaskCentre:BaseSrvObject,ICore
     {
         const string CoreName = "MsgExch";
-        public static Log Logger = new Log("TaskCentre_Error", true, true, LibGlobal.LOGPATH, true);//日志组件
+        public static Log Logger = new Log("TaskCentre_Error", true, true, Util.ProgramData(CoreName), true);//日志组件
 
         System.Timers.Timer _timer = null;
 

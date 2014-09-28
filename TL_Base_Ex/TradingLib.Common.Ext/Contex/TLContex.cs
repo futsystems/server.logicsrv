@@ -234,14 +234,9 @@ namespace TradingLib.Common
             TLCtxHelper.Debug(">>>>Context:" + msg);
         }
 
-
-        void objdebug(string msg)
+        void objlog(ILogItem item)
         {
-            TLCtxHelper.Debug(msg);
-        }
-        void objlog(string programe, string message, QSEnumDebugLevel level)
-        {
-            TLCtxHelper.Log(programe, message, level);
+            TLCtxHelper.Log(item);
         }
         void objemail(IEmail email)
         {
@@ -271,7 +266,6 @@ namespace TradingLib.Common
         {
             CmdHandler(session, message, messageRouterCmdMap);
         }
-
         public void MessageExchangeHandler(ISession session, ContribRequest request)
         {
             TLCtxHelper.Debug("****handle contribrequest:" + request.ToString());
@@ -280,9 +274,16 @@ namespace TradingLib.Common
 
         public void MessageMgrHandler(ISession session, string message)
         {
+            
             CmdHandler(session, message, messageMgrCmdMap);
         }
 
+        public void MessageMgrHandler(ISession session,MGRContribRequest request)
+        {
+            TLCtxHelper.Debug("****handle mgr contribrequest:" + request.ToString());
+            CmdHandler(session, request.ModuleID, request.CMDStr, request.Parameters, messageMgrCmdMap);
+
+        }
         /// <summary>
         /// 处理web message exchange消息调用
         /// </summary>
@@ -366,6 +367,13 @@ namespace TradingLib.Common
             return "CLICommand:" + cmd + " Not Found\r\n";
         }
 
+
+        /// <summary>
+        /// message 为 contribid|cmdstr|parameters的格式
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="message"></param>
+        /// <param name="cmdmap"></param>
         void CmdHandler(ISession session, string message, ConcurrentDictionary<string, ContribCommand> cmdmap)
         {
 
@@ -392,6 +400,7 @@ namespace TradingLib.Common
         {
             TLCtxHelper.Debug("Contirb:" + contribid + " cmd:" + cmd + " args:" + parameters);
             string cmdkey = ContribCommandKey(contribid, cmd);
+
             if (!IsContribRegisted(contribid))
             {
                 debug("Error:Contirb[" + contribid + "] do not registed");
@@ -450,6 +459,8 @@ namespace TradingLib.Common
 
 
         #region 注册BaseSrvObject
+
+
         public void Unregister(object obj)
         {
             if (obj is BaseSrvObject)
@@ -457,13 +468,13 @@ namespace TradingLib.Common
                 BaseSrvObject srvobj = obj as BaseSrvObject;
 
                 //2.将BaseSrvObject的日志输出时间绑定到全局日志输出组件
-                srvobj.SendDebugEvent -= new DebugDelegate(objdebug);
-
+                //srvobj -= new DebugDelegate(objdebug);
+                srvobj.SendLogItemEvent -= new ILogItemDel(objlog);
                 //3.将BaseSrvObject的邮件发送事件banding到全局邮件发送函数
                 srvobj.SendEmailEvent -= new EmailDel(objemail);
 
                 //4.将BaseSrvObject的log事件绑定到全局日志发送函数
-                srvobj.SendLogEvent -= new LogDelegate(objlog);
+                //srvobj.SendLogEvent -= new LogDelegate(objlog);
 
 
                 UnParseTaskInfo(srvobj);//注销任务
@@ -564,13 +575,13 @@ namespace TradingLib.Common
                 baseSrvObjectMap.TryAdd(srvobj.UUID, srvobj);
 
                 //2.将BaseSrvObject的日志输出时间绑定到全局日志输出组件
-                srvobj.SendDebugEvent += new DebugDelegate(objdebug);
-
+                //srvobj.SendDebugEvent += new DebugDelegate(objdebug);
+                srvobj.SendLogItemEvent += new ILogItemDel(objlog) ;
                 //3.将BaseSrvObject的邮件发送事件banding到全局邮件发送函数
                 srvobj.SendEmailEvent += new EmailDel(objemail);
 
                 //4.将BaseSrvObject的log事件绑定到全局日志发送函数
-                srvobj.SendLogEvent += new LogDelegate(objlog);
+                //srvobj.SendLogEvent += new LogDelegate(objlog);
 
                 //4.查找该对象所支持模块任务列表
                 ParseTaskInfo(srvobj);

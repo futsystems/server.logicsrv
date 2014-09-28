@@ -83,11 +83,32 @@ namespace TradingLib.API
         /// <summary>
         /// 帐户标识
         /// </summary>
-        string Token { get; set; }
+        string Name { get; set; }
+
+
+        /// <summary>
+        /// 期货公司
+        /// </summary>
+        string Broker { get; set; }
+
+        /// <summary>
+        /// 银行
+        /// </summary>
+        string BankID { get; set; }
+
+        /// <summary>
+        /// 银行帐号
+        /// </summary>
+        string BankAC { get; set; }
 
         /// <summary>
         /// 锁仓权限
         /// </summary>
         bool PosLock { get; set; }
+
+        /// <summary>
+        /// 所属管理员的ID
+        /// </summary>
+        int MGRID{ get; set; }
     }
 }

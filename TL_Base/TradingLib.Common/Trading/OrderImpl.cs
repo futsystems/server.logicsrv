@@ -84,7 +84,11 @@ namespace TradingLib.Common
         public bool ForceClose { get { return _isforceclose; } set { _isforceclose = value; } }
 
 
-        
+        string _forceclosereason = string.Empty;
+        /// <summary>
+        /// 强平原因
+        /// </summary>
+        public string ForceCloseReason { get { return _forceclosereason; } set { _forceclosereason = value.Replace(',',' ').Replace('|',' ').Replace('^',' '); } }
 
 
         public bool isMarket { get { return (price == 0) && (stopp == 0); } }
@@ -133,6 +137,7 @@ namespace TradingLib.Common
             this.OffsetFlag = copythis.OffsetFlag;
             this.OrderRef = copythis.OrderRef;
             this.ForceClose = copythis.ForceClose;
+            this.ForceCloseReason = copythis.ForceCloseReason;
             this.HedgeFlag = copythis.HedgeFlag;
             this.OrderSeq = copythis.OrderSeq;
             this.OrderExchID = copythis.OrderExchID;
@@ -212,17 +217,17 @@ namespace TradingLib.Common
 
 
 
-        public override string ToString()
-        {
-            return ToString(2);
-        }
+        //public override string ToString()
+        //{
+        //    return ToString(2);
+        //}
 
-        public string ToString(int decimals)
-        {
-            if (this.isFilled) return base.ToString();
+        //public string ToString(int decimals)
+        //{
+        //    if (this.isFilled) return base.ToString();
 
-            return (side ? "BUY" : "SELL") + " " + this.TotalSize.ToString() + " " + this.symbol + " @" + (isMarket ? "Mkt" : (isLimit ? this.price.ToString("N" + decimals.ToString()) : this.stopp.ToString("N" + decimals.ToString()) + "stp")) + " [" + this.Account + "] " + id.ToString() + (isLimit && isStop ? " stop: " + stopp.ToString("N" + decimals.ToString()) : string.Empty + " Filled:" + this.Filled.ToString() + " Status:" + Status.ToString() + " PostFlag:" + OffsetFlag.ToString() + " OrderRef:" + OrderRef.ToString() + " OrderSeq:" + OrderSeq.ToString() + " HedgeFlag:" + HedgeFlag.ToString() + " OrderExchID:" + OrderExchID.ToString());
-        }
+        //    return (side ? "BUY" : "SELL") + " " + this.TotalSize.ToString() + " " + this.symbol + " @" + (isMarket ? "Mkt" : (isLimit ? this.price.ToString("N" + decimals.ToString()) : this.stopp.ToString("N" + decimals.ToString()) + "stp")) + " [" + this.Account + "] " + id.ToString() + (isLimit && isStop ? " stop: " + stopp.ToString("N" + decimals.ToString()) : string.Empty + " Filled:" + this.Filled.ToString() + " Status:" + Status.ToString() + " PostFlag:" + OffsetFlag.ToString() + " OrderRef:" + OrderRef.ToString() + " OrderSeq:" + OrderSeq.ToString() + " HedgeFlag:" + HedgeFlag.ToString() + " OrderExchID:" + OrderExchID.ToString());
+        //}
 
         /// <summary>
         /// Fills this order with a tick
@@ -407,7 +412,8 @@ namespace TradingLib.Common
             sb.Append(o.OrderSeq.ToString());
             sb.Append(d);
             sb.Append(o.OrderExchID);
-
+            sb.Append(d);
+            sb.Append(o.ForceCloseReason);
             return sb.ToString();
         }
 
@@ -462,6 +468,8 @@ namespace TradingLib.Common
             o.HedgeFlag = rec[(int)OrderField.HedgeFlag];
             o.OrderSeq = int.Parse(rec[(int)OrderField.OrderSeq]);
             o.OrderExchID = rec[(int)OrderField.OrderExchID];
+            if(rec.Length >=29)
+                o.ForceCloseReason = rec[(int)OrderField.ForceReason];
             return o;
         }
 

@@ -81,9 +81,11 @@ namespace TradingLib.API
         REQCHANGEPASS,//请求修改密码
         QRYNOTICE,//查询交易服务器通知
         CONFIRMSETTLEMENT,//确认结算数据
-        
-        
-        
+        QRYCONTRACTBANK,//查询签约银行
+        QRYREGISTERBANKACCOUNT,//查询银期转账帐户
+        QRYTRANSFERSERIAL,//查询转账流水
+
+
         DOMREQUEST,//请求DOM市场Level2数据
         IMBALANCEREQUEST,//imbalance..查询这个是什么意思
 
@@ -124,6 +126,9 @@ namespace TradingLib.API
         CHANGEPASSRESPONSE,//修改密码回报
         NOTICERESPONSE,//交易通知回报
         CONFIRMSETTLEMENTRESPONSE,//确认结算回报
+        CONTRACTBANKRESPONSE,//查询签约银行回报
+        REGISTERBANKACCOUNTRESPONSE,//查询银期签约帐户回报
+        TRANSFERSERIALRESPONSE,//查询转账流水回报
         // END STANDARD MESSAGES
 
 
@@ -180,6 +185,19 @@ namespace TradingLib.API
         MGRCHANGEACCOUNTPASS,//修改交易密码
         MGRCHANGEINVESTOR,//
         MGRUPDATEPOSLOCK,//修改帐户锁仓权限
+        MGRQRYMANAGER,//查询管理员列表
+        MGRADDMANAGER,//添加管理员
+        MGRUPDATEMANAGER,//更新管理员
+        MGRQRYACCTSERVICE,//查询交易帐户服务
+        MGRUPDATEPASS,//更改管理员密码
+
+
+
+        MGRCONTRIBREQUEST,//管理扩展请求
+
+
+
+
 
 
 
@@ -214,6 +232,14 @@ namespace TradingLib.API
         MGRCHANGEACCOUNTPASSRESPONSE,//修改密码回报
         MGRCHANGEINVESTORRESPONSE,//修改token回报
         MGRUPDATEPOSLOCKRESPONSE,//修改帐户锁仓权限回报
+        MGRMANAGERRESPONSE,//查询管理员列表回报
+        MGRQRYACCTSERVICERESPONSE,//查询交易帐户服务回报
+
+
+
+
+        MGRCONTRIBRESPONSE,//管理扩展回报
+
 
         //FLATALL,//清仓
         UPDATEPOSOFFSET,

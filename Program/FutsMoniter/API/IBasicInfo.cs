@@ -94,6 +94,7 @@ namespace TradingLib.API
         /// <returns></returns>
         RuleClassItem[] GetAccountRuleClass();
 
+        Manager GetManager(int mgrid);
         ArrayList GetOrderRuleClassListItems();
         ArrayList GetAccountRuleClassListItems();
 
@@ -102,7 +103,7 @@ namespace TradingLib.API
         ArrayList GetSecurityCombList(bool isany = false);
         ArrayList GetSecurityCombListViaExchange(int id);
         ArrayList GetExpireMonth();
-
+        ArrayList GetBaseManagerCombList();
         
     }
 }

@@ -49,6 +49,15 @@ namespace TradingLib.Core
 
         }
 
+        [TaskAttr("重置行情与成交路由", 16, 00, 5, "重置行情与成交路由")]
+        public void Task_ResetRouter()
+        {
+            debug("重置行情与成交路由", QSEnumDebugLevel.INFO);
+            _brokerRouter.Reset();
+            _datafeedRouter.Reset();
+        }
+
+
         /// <summary>
         /// 用于检查状体异常的委托
         /// 当委托处于unknown,placed,submited但是没有随着委托的进行 跟新为rejected,canceled,filled,partfilled
@@ -87,7 +96,7 @@ namespace TradingLib.Core
                     //标注委托状态
                     tmp.Status = QSEnumOrderStatus.Reject;
                     tmp.comment = "异常委托-拒绝";
-                    ReplyOrder(tmp,false);
+                    ReplyOrder(tmp);
                 }
                 //将全部成交或部分成交的委托进行补充处理
                 //全部成交
@@ -95,21 +104,21 @@ namespace TradingLib.Core
                 {
                     tmp.Status = QSEnumOrderStatus.Filled;
                     tmp.comment = "异常委托-全部成交";
-                    ReplyOrder(tmp,false);
+                    ReplyOrder(tmp);
                 }
                 //部分成交
                 if (Math.Abs(fillsize) > 0 && Math.Abs(fillsize) < Math.Abs(sentsize))
                 {
                     tmp.Status = QSEnumOrderStatus.Canceled;
                     tmp.comment = "异常委托-部分成交";
-                    ReplyOrder(tmp,false);
+                    ReplyOrder(tmp);
                     
                 }
                 if (fillsize == 0)
                 {
                     tmp.Status =QSEnumOrderStatus.Reject;
                     tmp.comment = "异常委托-拒绝";
-                    ReplyOrder(tmp, false);
+                    ReplyOrder(tmp);
                 }
 
             }

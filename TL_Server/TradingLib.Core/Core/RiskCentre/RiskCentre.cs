@@ -29,11 +29,11 @@ namespace TradingLib.Core
         
 
         //账户检查日志
-        Log _accountcheklog = new Log("Risk_Account", true, true, LibGlobal.LOGPATH, true);//日志组件
+        Log _accountcheklog = new Log("Risk_Account", true, true,Util.ProgramData(CoreName), true);//日志组件
         //委托检查日志
-        Log _ordercheklog = new Log("Risk_Order", true, true, LibGlobal.LOGPATH, true);//日志组件
+        Log _ordercheklog = new Log("Risk_Order", true, true, Util.ProgramData(CoreName), true);//日志组件
         //其他日志
-        Log _othercheklog = new Log("Risk_Other", true, true, LibGlobal.LOGPATH, true);//日志组件
+        Log _othercheklog = new Log("Risk_Other", true, true, Util.ProgramData(CoreName), true);//日志组件
 
         
 
@@ -63,6 +63,7 @@ namespace TradingLib.Core
         int _orderlimitsize = 10;
         string commentNoPositionForFlat = "无可平持仓";
         string commentOverFlatPositionSize = "可平持仓数量不足";
+
         public RiskCentre(ClearCentre clearcentre):base(CoreName)
         {
             //1.加载配置文件
@@ -71,13 +72,16 @@ namespace TradingLib.Core
             {
                 _cfgdb.UpdateConfig("MarketOpenTimeCheck", QSEnumCfgType.Bool,"True", "是否进行时间检查,交易日/合约交易时间段等");
             }
-
+            //是否执行合约开市检查
+            _marketopencheck = _cfgdb["MarketOpenTimeCheck"].AsBool();
             
 
             if (!_cfgdb.HaveConfig("OrderLimitSize"))
             {
                 _cfgdb.UpdateConfig("OrderLimitSize", QSEnumCfgType.Int, 50, "单笔委托最大上限");
             }
+            //最大委托数量
+            _orderlimitsize = _cfgdb["OrderLimitSize"].AsInt();
 
             if (!_cfgdb.HaveConfig("CommentNoPositionForFlat"))
             {
@@ -91,16 +95,25 @@ namespace TradingLib.Core
             }
             commentOverFlatPositionSize = _cfgdb["CommentOverFlatPositionSize"].AsString();
 
-            //是否执行合约开市检查
-            _marketopencheck = _cfgdb["MarketOpenTimeCheck"].AsBool();
-            //最大委托数量
-            _orderlimitsize = _cfgdb["OrderLimitSize"].AsInt();
+            if (!_cfgdb.HaveConfig("FlatSendOrderFreq"))
+            {
+                _cfgdb.UpdateConfig("FlatSendOrderFreq", QSEnumCfgType.Int, 3, "强平重试时间间隔");
+            }
+            SENDORDERDELAY = _cfgdb["FlatSendOrderFreq"].AsInt();
+
+            if (!_cfgdb.HaveConfig("FlatSendOrderRetryNum"))
+            {
+                _cfgdb.UpdateConfig("FlatSendOrderRetryNum", QSEnumCfgType.Int, 3, "强平重试次数");
+            }
+            SENDORDERRETRY = _cfgdb["FlatSendOrderRetryNum"].AsInt();
+
+            
 
 
             _clearcentre = clearcentre;
 
             _posoffsetracker = new PositionOffsetTracker(_clearcentre as ClearCentre);
-            _posoffsetracker.SendDebugEvent +=new DebugDelegate(msgdebug);
+            //_posoffsetracker.SendDebugEvent +=new DebugDelegate(msgdebug);
             _posoffsetracker.SendOrderEvent +=new OrderDelegate(SendOrder);
             _posoffsetracker.CancelOrderEvent += new LongDelegate(CancelOrder);
             _posoffsetracker.AssignOrderIDEvent += new AssignOrderIDDel(AssignOrderID);
@@ -115,10 +128,10 @@ namespace TradingLib.Core
             InitFlatTask();
         }
 
-        public void CacheAccount(IAccount account)
-        {
-            account.RiskCentre = new RiskCentreAdapterToAccount(account, this);
-        }
+        //public void CacheAccount(IAccount account)
+        //{
+        //    account.RiskCentre = new RiskCentreAdapterToAccount(account, this);
+        //}
 
         /// <summary>
         /// 查询当前是否是交易日
@@ -239,6 +252,58 @@ namespace TradingLib.Core
             _posoffsetracker.GotCancel(oid);
         }
 
+        /// <summary>
+        /// 响应交易服务返回过来的ErrorOrder
+        /// 比如风控中心强平 发送委托 但是委托被拒绝，则需要对该事件进行响应
+        /// 否则超时后 会出现强平系统无法正常撤单的问题。而无法正常撤单则没有撤单回报,导致强平系统一直试图撤单
+        /// </summary>
+        /// <param name="error"></param>
+        public void GotErrorOrder(ErrorOrder error)
+        {
+            debug("~~~~~~~~~~~~~~~~~~~~~ riskcentre got errororder orderid:" + error.Order.id.ToString(), QSEnumDebugLevel.INFO);
+            foreach (PositionFlatSet ps in posflatlist)
+            {
+                //如果委托被拒绝 并且委托ID是本地发送过去的ID 则将positionflatset的委托ID置0
+                if (ps.OrderID == error.Order.id && error.Order.Status == QSEnumOrderStatus.Reject)
+                    ps.OrderID = 0;
+            }
+
+            //止损 止盈
+            //_posoffsetracker.GotCancel(oid);
+        }
+
+        /// <summary>
+        /// 当有持仓平调后 遍历当地强平列表，如果在列表中 则直接删除
+        /// 如果统一在processpostionflat中检查持仓情况会出现以下问题：如果持仓平调 但是在平调后立马再次开仓，此时PostioinFlat并没有从队列中删除，当再次扫描到该持仓时 系统会认为该持仓没有被及时平调,从而尝试撤单并重新强平，最后单子又无法撤单成功
+        /// </summary>
+        /// <param name="pr"></param>
+        /// <param name="pos"></param>
+        public void GotPostionRoundClosed(IPositionRound pr, Position pos)
+        { 
+            string key = pos.GetPositionKey();
+            //List<PositionFlatSet> _postiondeletelist = new List<PositionFlatSet>();
+            PositionFlatSet[] list = posflatlist.Where(ps => ps.Position.GetPositionKey().Equals(key)).ToArray();
+            //foreach (PositionFlatSet ps in posflatlist)
+            //{
+            //    if (ps.Position.GetPositionKey().Equals(key))
+            //    {
+            //        _postiondeletelist.Add(ps);
+            //    }
+            //}
+
+            foreach (PositionFlatSet ps in list)
+            {
+                debug("Position:" + ps.Position.GetPositionKey() + " 已经平掉,从队列中移除", QSEnumDebugLevel.INFO);
+                posflatlist.Remove(ps);
+                if (GotFlatSuccessEvent != null)
+                {
+                    GotFlatSuccessEvent(ps.Position);
+                }
+            }
+
+            
+            
+        }
 
         #endregion
 

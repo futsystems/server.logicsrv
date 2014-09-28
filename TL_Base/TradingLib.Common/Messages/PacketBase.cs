@@ -79,7 +79,6 @@ namespace TradingLib.Common
             }
             catch (Exception ex)
             {
-                LibUtil.Debug(ex.ToString());
                 RspInfo.ErrorID = 999;
                 RspInfo.ErrorMessage = "协议解析错误";
             }
@@ -175,7 +174,7 @@ namespace TradingLib.Common
             }
             catch (Exception ex)
             {
-                LibUtil.Debug(ex.ToString());
+                Util.Debug(ex.ToString());
                 RspInfo.ErrorID = 999;
                 RspInfo.ErrorMessage = "协议解析错误";
             }

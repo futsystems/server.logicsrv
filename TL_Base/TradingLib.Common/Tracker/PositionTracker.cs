@@ -13,26 +13,32 @@ namespace TradingLib.Common
     /// 管理交易仓位
     /// </summary>
     [Serializable]
-    public class PositionTracker : GenericTracker<Position>,GotPositionIndicator,GotFillIndicator,GotTickIndicator
+    public class PositionTracker : GenericTracker<Position>,GotPositionIndicator,GotFillIndicator,GotTickIndicator,IEnumerable<Position>
     {
         /// <summary>
         /// 持仓维护器 维护持仓类别
         /// </summary>
         public QSEnumPositionDirectionType DirectionType { get { return _directiontype; } }
-        protected QSEnumPositionDirectionType _directiontype = QSEnumPositionDirectionType.BothSide;
-        /// <summary>
-        /// create a tracker
-        /// </summary>
-        //public PositionTracker(string account) : this(account,5) { }
-        public PositionTracker() : this(5,QSEnumPositionDirectionType.BothSide) { }
+        protected QSEnumPositionDirectionType _directiontype = QSEnumPositionDirectionType.Net;
 
+        /// <summary>
+        /// 指定创建的持仓管理器类型
+        /// </summary>
+        /// <param name="type"></param>
         public PositionTracker(QSEnumPositionDirectionType type) : this(5, type) { }
+
+        /// <summary>
+        /// 设定一个默认的PositionTracker其为Net类型的持仓管理
+        /// </summary>
+        public PositionTracker() : this(5,QSEnumPositionDirectionType.Net) { }
+
+        
         
         /// <summary>
         /// create tracker with approximate # of positions
         /// </summary>
         /// <param name="estimatedPositions"></param>
-        public PositionTracker(int estimatedPositions,QSEnumPositionDirectionType type) : base(estimatedPositions,"POSITION",new PositionImpl()) 
+        public PositionTracker(int estimatedPositions,QSEnumPositionDirectionType type) : base(estimatedPositions,type.ToString()+"-POSITION",new PositionImpl()) 
         {
             _directiontype = type;
             NewTxt += new TextIdxDelegate(PositionTracker_NewTxt);
@@ -45,6 +51,8 @@ namespace TradingLib.Common
         {
             if (NewSymbol!= null)
                 NewSymbol(txt);
+            if (NewPositionEvent != null)
+                NewPositionEvent(this[idx]);
         }
 
         /// <summary>
@@ -102,6 +110,7 @@ namespace TradingLib.Common
             //_defaultacct = string.Empty;
             base.Clear();
         }
+
         string _defaultacct = string.Empty;
         /// <summary>
         /// Default account used when querying positions
@@ -112,6 +121,7 @@ namespace TradingLib.Common
         /// 因此在组装accounttracker时 我们需要明确指定该positiontracker的account
         /// </summary>
         public string DefaultAccount { get { return _defaultacct; } set { _defaultacct = value; } }
+
         /// <summary>
         /// get position given positions symbol (assumes default account)
         /// 查询某个symbol的position
@@ -126,6 +136,7 @@ namespace TradingLib.Common
                 return this[symbol, DefaultAccount];
             }
         }
+
         /// <summary>
         /// get a position in tracker given symbol and account
         /// 通过symbol,account来查询某个position
@@ -246,6 +257,28 @@ namespace TradingLib.Common
             return cpl;
         }
 
+        ///// <summary>
+        ///// get positions from tracker
+        ///// </summary>
+        ///// <returns></returns>
+        //public IEnumerator<Position> GetEnumerator()
+        //{
+        //    return this.GetEnumerator();
+
+        //}
+
+        //IEnumerator<Position> IEnumerable<Position>.GetEnumerator()
+        //{
+        //    return GetEnumerator();
+        //}
+
+        //IEnumerator IEnumerable.GetEnumerator()
+        //{
+        //    return GetEnumerator();
+        //}
+
+
+
         /// <summary>
         /// called when a new position is added to tracker.
         /// 当有新的symbol产生position时,触发该事件
@@ -253,6 +286,11 @@ namespace TradingLib.Common
         public event SymDelegate NewSymbol;
 
 
+        /// <summary>
+        /// 当有新的持仓数据被建立时触发
+        /// 比如某个帐户原来没有持仓，新建开仓单开仓后,PositionTracker就会为他创建一个Position
+        /// </summary>
+        public event PositionDelegate NewPositionEvent;
 
 
     }
@@ -273,6 +311,7 @@ namespace TradingLib.Common
         public new int this[int idx] { get { return base[idx].Size; } set {} }
         public new int this[string txt] { get { return base[txt].Size; } set { } }
     }
+
     /// <summary>
     /// track only position price
     /// </summary>
@@ -286,6 +325,7 @@ namespace TradingLib.Common
         public new decimal this[int idx] { get { return base[idx].AvgPrice; } set { } }
         public new decimal this[string txt] { get { return base[txt].AvgPrice; } set { } }
     }
+
     /// <summary>
     /// track only whether position is flat
     /// </summary>
@@ -297,6 +337,7 @@ namespace TradingLib.Common
         public void setvalue(int idx, bool v) {  }
         public int addindex(string txt, bool v) { return getindex(txt); }
     }
+
     /// <summary>
     /// track only whether position is long
     /// </summary>
