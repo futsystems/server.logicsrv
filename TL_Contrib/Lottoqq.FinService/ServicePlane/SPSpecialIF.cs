@@ -169,6 +169,9 @@ namespace TradingLib.Contrib.FinService
                 if (marginperplot <= MarginPerLotStop.AccountArgument.AsDecimal())
                 {
                     TLCtxHelper.Debug("SPSpecialIF 触发强平  account:" + this.Account.ID + " now equity:" + nowequity.ToString() + " totalsize:" + totalsize.ToString() + " marginperlot:" + marginperplot + " stopline:" + MarginPerLotStop.AccountArgument.Value);
+                    //撤掉帐户下所有委托
+                    this.Account.CancelOrder(QSEnumOrderSource.RISKCENTREACCOUNTRULE, "配资服务强迫");
+                    //平掉帐户下所有持仓
                     this.Account.FlatPosition(QSEnumOrderSource.RISKCENTREACCOUNTRULE, "配资服务强平");
                 }
             }

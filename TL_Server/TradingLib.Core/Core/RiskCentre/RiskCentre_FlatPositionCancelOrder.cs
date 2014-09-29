@@ -61,6 +61,11 @@ namespace TradingLib.Core
         }
     }
 
+
+    /// <summary>
+    /// 强平与撤单部分 最后会封装在队列中进行操作由统一的线程对外进行发送
+    /// 避免多个节点调用发单或者撤单出现问题
+    /// </summary>
     public partial class RiskCentre
     {
 
@@ -144,7 +149,67 @@ namespace TradingLib.Core
             FlatPosition(pos, ordersource, closereason, true);
         }
 
+        /// <summary>
+        /// 取消委托
+        /// </summary>
+        /// <param name="order"></param>
+        /// <param name="ordersource"></param>
+        /// <param name="cancelreason"></param>
+        public void CancelOrder(Order order, QSEnumOrderSource ordersource, string cancelreason = "系统强平")
+        {
+            //撤掉某个委托
+            this.CancelOrder(order.id);
+            Util.sleep(10);
+        }
 
+        /// <summary>
+        /// 撤掉某个帐户的所有待成交委托
+        /// </summary>
+        /// <param name="accid"></param>
+        /// <param name="ordersouce"></param>
+        /// <param name="cancelreason"></param>
+        public void CancelOrder(string accid,QSEnumOrderSource ordersouce, string cancelreason = "系统强平")
+        {
+            IAccount account = _clearcentre[accid];
+            if (account != null)
+            {
+                foreach (Order o in account.GetPendingOrders())
+                {
+                    this.CancelOrder(o.id);
+                    Util.sleep(10);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 撤掉某个交易帐户下的某个合约的所有委托
+        /// </summary>
+        /// <param name="accid"></param>
+        /// <param name="symbol"></param>
+        /// <param name="ordersource"></param>
+        /// <param name="cancelreason"></param>
+        public void CancelOrder(string accid, string symbol, QSEnumOrderSource ordersource, string cancelreason = "系统强平")
+        {
+            IAccount account = _clearcentre[accid];
+            if (account != null)
+            {
+                foreach (Order o in account.GetPendingOrders(symbol))
+                {
+                    this.CancelOrder(o.id);
+                    Util.sleep(10);
+                }
+            }
+        }
+        /// <summary>
+        /// 强平进入队列进行操作
+        /// 在强平过程中需要检查对应的持仓方向上是否有委托
+        /// 如果有委托挂单需要先撤单然后再强平
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <param name="ordersource"></param>
+        /// <param name="closereason"></param>
+        /// <param name="first"></param>
+        /// <returns></returns>
         long FlatPosition(Position pos, QSEnumOrderSource ordersource, string closereason, bool first)
         {
             //如果该持仓已经在平仓队列中并且是标注为第一次发送强平指令则直接返回(表面已经触发过强平指令)
@@ -195,7 +260,6 @@ namespace TradingLib.Core
         void ProcessPositionFlat()
         {
             //debug("检查待平仓列表...", QSEnumDebugLevel.INFO);
-            
             foreach (PositionFlatSet ps in posflatlist)
             {
                 //如果持仓已经平掉 则加入待删除列表
@@ -211,7 +275,6 @@ namespace TradingLib.Core
                 {
                     if (DateTime.Now.Subtract(ps.SentTime).TotalSeconds >= SENDORDERDELAY && ps.FireCount < SENDORDERRETRY)
                     {
-                        
                         if (ps.OrderID > 0)
                         {
                             debug(ps.Position.GetPositionKey() + " 时间超过3秒仍然没有平掉持仓,取消该委托", QSEnumDebugLevel.INFO);
