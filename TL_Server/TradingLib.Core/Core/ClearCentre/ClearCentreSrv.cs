@@ -99,6 +99,10 @@ namespace TradingLib.Core
 
 
         int _maxorderseq = 0;
+        int startseq = 0;//起始流水号
+        bool enbaleRandom = false;
+        Random rand = new Random();
+        
         object _orderseqobj = new object();
         /// <summary>
         /// 获得委托流水号
@@ -109,7 +113,7 @@ namespace TradingLib.Core
             {
                 lock (_orderseqobj)
                 {
-                    _maxorderseq++;
+                    _maxorderseq += rand.Next(1, 10);
                     return _maxorderseq;
                 }
             }
@@ -134,6 +138,20 @@ namespace TradingLib.Core
             {
                 _cfgdb.UpdateConfig("AccountLoadMode", QSEnumCfgType.String,QSEnumAccountLoadMode.ALL, "清算中心加载帐户类别");
             }
+
+            if (!_cfgdb.HaveConfig("StartBrokerSeq"))
+            {
+                _cfgdb.UpdateConfig("StartBrokerSeq", QSEnumCfgType.Int,1000, "起始Broker流水号");
+            }
+            startseq = _cfgdb["StartBrokerSeq"].AsInt();
+
+            if (!_cfgdb.HaveConfig("RandomSeqEnable"))
+            {
+                _cfgdb.UpdateConfig("RandomSeqEnable", QSEnumCfgType.Bool,true, "Broker流水号随机");
+            }
+            enbaleRandom = _cfgdb["RandomSeqEnable"].AsBool();
+            
+
             //加载模式
             _loadmode = (QSEnumAccountLoadMode)Enum.Parse(typeof(QSEnumAccountLoadMode), _cfgdb["AccountLoadMode"].AsString());
             try

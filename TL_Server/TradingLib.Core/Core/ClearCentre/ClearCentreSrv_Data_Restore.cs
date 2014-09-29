@@ -26,6 +26,7 @@ namespace TradingLib.Core
         public void RestoreFromMysql()
         {
             Status = QSEnumClearCentreStatus.CCRESTORE;
+            //从数据库恢复交易记录和出入金记录
             try
             {
                 //从数据库加载账户的当日出入金信息以及昨日结算权益数据
@@ -81,8 +82,10 @@ namespace TradingLib.Core
             }
             //加载委托后进行矫正
             checkOrder();
-
-            _maxorderseq = ORM.MTradingInfo.MaxOrderSeq();
+            //获得最大报单引用 
+            
+            int maxorder = ORM.MTradingInfo.MaxOrderSeq();
+            _maxorderseq = maxorder > startseq ? maxorder : startseq;
             debug("Max order seq:" + _maxorderseq, QSEnumDebugLevel.INFO);
             Status = QSEnumClearCentreStatus.CCRESTOREFINISH;
         }
