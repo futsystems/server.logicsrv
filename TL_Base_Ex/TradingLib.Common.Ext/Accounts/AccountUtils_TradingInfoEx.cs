@@ -41,6 +41,28 @@ namespace TradingLib.Common
         }
 
         /// <summary>
+        /// 获得某个合约上的所有待成交委托
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        public static IEnumerable<Order> GetPendingOrders(this IAccount account, string symbol)
+        {
+            return account.Orders.Where(o => o.IsPending() && o.symbol.Equals(symbol));
+        }
+
+        /// <summary>
+        /// 获得所有待成交委托
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public static IEnumerable<Order> GetPendingOrders(this IAccount account)
+        {
+            return account.Orders.Where(o => o.IsPending());
+        }
+
+
+        /// <summary>
         /// 待处理开仓委托
         /// </summary>
         /// <param name="account"></param>
@@ -88,6 +110,7 @@ namespace TradingLib.Common
             return GetPendingExitOrders(account,symbol,positionside).Sum(o => o.UnsignedSize);
         }
 
+        
         /// <summary>
         /// 判断是否有多方头寸
         /// </summary>

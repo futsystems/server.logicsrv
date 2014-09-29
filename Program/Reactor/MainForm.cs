@@ -16,6 +16,7 @@ namespace Reactor
         public MainForm()
         {
             InitializeComponent();
+            InitTFReceiver();
         }
 
         void debug(string message)
@@ -36,6 +37,11 @@ namespace Reactor
         private void kryptonButton1_Click(object sender, EventArgs e)
         {
             InitTFReceiver();
+        }
+
+        private void splitContainer1_Panel2_Paint(object sender, PaintEventArgs e)
+        {
+
         }
 
     }

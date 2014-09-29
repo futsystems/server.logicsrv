@@ -35,5 +35,26 @@ namespace TradingLib.API
         /// <param name="ordersource"></param>
         /// <param name="comment"></param>
         void FlatPosition(Position pos, QSEnumOrderSource ordersource, string comment = "系统强平");
+
+        /// <summary>
+        /// 撤掉帐户下所有委托
+        /// </summary>
+        void CancelOrder(string account, QSEnumOrderSource source, string cancelreason = "系统强平");
+
+        /// <summary>
+        /// 撤掉帐户下某个合约的所有委托
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <param name="source"></param>
+        /// <param name="cancelreason"></param>
+        void CancelOrder(string account, string symbol, QSEnumOrderSource source, string cancelreason = "系统强平");
+
+        /// <summary>
+        /// 撤掉帐户下的某个为头
+        /// </summary>
+        /// <param name="order"></param>
+        /// <param name="source"></param>
+        /// <param name="cancelreason"></param>
+        void CancelOrder(Order order, QSEnumOrderSource source, string cancelreason = "系统强平");
     }
 }
