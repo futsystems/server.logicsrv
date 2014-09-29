@@ -16,6 +16,7 @@
 /Platform/**/*.dll
 /Platform/**/*.exe
 /Platform/**/log/
+/Platform/**/cache/
 /Platform/TLDataBase
 
 
