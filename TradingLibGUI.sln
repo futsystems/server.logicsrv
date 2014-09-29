@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FutsMoniter", "Program\Futs
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APIDemo", "Program\APIDemo\APIDemo.csproj", "{1C903716-33F2-4FF7-9419-E46ADCA87E50}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reactor", "Program\Reactor\Reactor.csproj", "{1F19DAA4-2247-41DD-8934-8771DF364A6C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -91,6 +93,27 @@ Global
 		{1C903716-33F2-4FF7-9419-E46ADCA87E50}.ReleaseMono|x64.ActiveCfg = Release|x86
 		{1C903716-33F2-4FF7-9419-E46ADCA87E50}.ReleaseMono|x86.ActiveCfg = Release|x86
 		{1C903716-33F2-4FF7-9419-E46ADCA87E50}.ReleaseMono|x86.Build.0 = Release|x86
+		{1F19DAA4-2247-41DD-8934-8771DF364A6C}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{1F19DAA4-2247-41DD-8934-8771DF364A6C}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{1F19DAA4-2247-41DD-8934-8771DF364A6C}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{1F19DAA4-2247-41DD-8934-8771DF364A6C}.Debug|Win32.ActiveCfg = Debug|x86
+		{1F19DAA4-2247-41DD-8934-8771DF364A6C}.Debug|x64.ActiveCfg = Debug|x86
+		{1F19DAA4-2247-41DD-8934-8771DF364A6C}.Debug|x86.ActiveCfg = Debug|x86
+		{1F19DAA4-2247-41DD-8934-8771DF364A6C}.Debug|x86.Build.0 = Debug|x86
+		{1F19DAA4-2247-41DD-8934-8771DF364A6C}.Release|Any CPU.ActiveCfg = Release|x86
+		{1F19DAA4-2247-41DD-8934-8771DF364A6C}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{1F19DAA4-2247-41DD-8934-8771DF364A6C}.Release|Mixed Platforms.Build.0 = Release|x86
+		{1F19DAA4-2247-41DD-8934-8771DF364A6C}.Release|Win32.ActiveCfg = Release|x86
+		{1F19DAA4-2247-41DD-8934-8771DF364A6C}.Release|x64.ActiveCfg = Release|x86
+		{1F19DAA4-2247-41DD-8934-8771DF364A6C}.Release|x86.ActiveCfg = Release|x86
+		{1F19DAA4-2247-41DD-8934-8771DF364A6C}.Release|x86.Build.0 = Release|x86
+		{1F19DAA4-2247-41DD-8934-8771DF364A6C}.ReleaseMono|Any CPU.ActiveCfg = Release|x86
+		{1F19DAA4-2247-41DD-8934-8771DF364A6C}.ReleaseMono|Mixed Platforms.ActiveCfg = Release|x86
+		{1F19DAA4-2247-41DD-8934-8771DF364A6C}.ReleaseMono|Mixed Platforms.Build.0 = Release|x86
+		{1F19DAA4-2247-41DD-8934-8771DF364A6C}.ReleaseMono|Win32.ActiveCfg = Release|x86
+		{1F19DAA4-2247-41DD-8934-8771DF364A6C}.ReleaseMono|x64.ActiveCfg = Release|x86
+		{1F19DAA4-2247-41DD-8934-8771DF364A6C}.ReleaseMono|x86.ActiveCfg = Release|x86
+		{1F19DAA4-2247-41DD-8934-8771DF364A6C}.ReleaseMono|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -99,5 +122,6 @@ Global
 		{C87A245F-E926-4027-96BC-A6BFC40AA8E6} = {3B0CAAC3-E11D-4411-AE9F-808FE3EDAF5C}
 		{908E3D8C-A9D0-4296-91B7-EB8909A66CB8} = {3B0CAAC3-E11D-4411-AE9F-808FE3EDAF5C}
 		{1C903716-33F2-4FF7-9419-E46ADCA87E50} = {3B0CAAC3-E11D-4411-AE9F-808FE3EDAF5C}
+		{1F19DAA4-2247-41DD-8934-8771DF364A6C} = {3B0CAAC3-E11D-4411-AE9F-808FE3EDAF5C}
 	EndGlobalSection
 EndGlobal

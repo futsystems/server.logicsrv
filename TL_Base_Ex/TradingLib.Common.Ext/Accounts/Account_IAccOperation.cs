@@ -56,6 +56,37 @@ namespace TradingLib.Common
             
         }
 
+        /// <summary>
+        /// 撤掉帐户下所有委托
+        /// </summary>
+        public void CancelOrder(QSEnumOrderSource source, string cancelreason)
+        {
+            TLCtxHelper.CmdRiskCentre.CancelOrder(this.ID, source, cancelreason);
+        }
+
+        /// <summary>
+        /// 撤掉帐户下某个合约的所有委托
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <param name="source"></param>
+        /// <param name="cancelreason"></param>
+        public void CancelOrder(string symbol, QSEnumOrderSource source, string cancelreason)
+        {
+            TLCtxHelper.CmdRiskCentre.CancelOrder(this.ID, symbol, source, cancelreason);
+        }
+
+        /// <summary>
+        /// 撤掉帐户下的某个为头
+        /// </summary>
+        /// <param name="order"></param>
+        /// <param name="source"></param>
+        /// <param name="cancelreason"></param>
+        public void CancelOrder(Order order, QSEnumOrderSource source, string cancelreason)
+        {
+            TLCtxHelper.CmdRiskCentre.CancelOrder(order, source, cancelreason);
+        }
+
+
         #endregion
     }
 }

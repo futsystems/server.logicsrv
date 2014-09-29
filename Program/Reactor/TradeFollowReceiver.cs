@@ -17,7 +17,7 @@ namespace Reactor
         
         }
 
-        string server = "127.0.0.1";
+        string server = "logic_dev.huiky.com";
         int port = 6868;
 
         public event DebugDelegate SendDebugEvent;

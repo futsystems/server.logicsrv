@@ -108,10 +108,9 @@ namespace TradingLib.Core
                     if (IsSymbolWithMarketTime(od.oSymbol, mts))
                     {
                         //撤单
-                        this.CancelOrder(od.id);
+                        CancelOrder(od, QSEnumOrderSource.RISKCENTRE, "尾盘强平");
                     }
                 }
-                Thread.Sleep(50);
             }
 
             //2.遍历所有持仓 进行强平

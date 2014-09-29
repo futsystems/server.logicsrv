@@ -103,7 +103,7 @@
     <Compile Include="Core\MessageExchange\DataFeedRouter.cs" />
     <Compile Include="Core\RiskCentre\RiskCentre_CheckAccount.cs" />
     <Compile Include="Core\RiskCentre\RiskCentre_CTE.cs" />
-    <Compile Include="Core\RiskCentre\RiskCentre_FlatPosition.cs" />
+    <Compile Include="Core\RiskCentre\RiskCentre_FlatPositionCancelOrder.cs" />
     <Compile Include="Core\RiskCentre\RiskCentre_CheckOrder.cs" />
     <Compile Include="Core\RiskCentre\RiskCentre_FlatTask.cs" />
     <Compile Include="Core\RiskCentre\RiskCentre_RiskRule.cs" />
@@ -118,7 +118,6 @@
     <Compile Include="Core\MessageExchange\MsgExchServer.cs" />
     <Compile Include="Core\RiskCentre\RiskCentre.cs" />
     <Compile Include="Core\TaskCentre\TaskCentre_CTE.cs" />
-    <Compile Include="Core\TradeFollow\TradeFollow.cs" />
     <Compile Include="Core\WebMessageExchange\HealthReport.cs" />
     <Compile Include="Core\WebMessageExchange\WebAdminInfoEx.cs" />
     <Compile Include="Core\WebMessageExchange\WebMsgExchServer.cs" />
