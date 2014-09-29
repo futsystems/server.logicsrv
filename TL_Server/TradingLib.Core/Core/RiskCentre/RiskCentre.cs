@@ -249,6 +249,25 @@ namespace TradingLib.Core
                 if (ps.OrderID == oid)
                     ps.OrderID = 0;
             }
+            foreach (PositionFlatSet ps in posflatlist)
+            {
+                //如果不需要先撤单的 则跳过
+                if (!ps.NeedCancelFirst)
+                    continue;
+                else//需要先撤单的 则检查撤单列表
+                {
+                    //如果待成交委托列表中包含对应的ID则先删除该委托
+                    if (ps.PendingOrders.Contains(oid))
+                    {
+                        ps.PendingOrders.Remove(oid);
+                    }
+                    if (ps.PendingOrders.Count == 0)
+                    {
+                        ps.CancelDone = true;
+                    }
+                }
+            }
+
             _posoffsetracker.GotCancel(oid);
         }
 
@@ -273,7 +292,8 @@ namespace TradingLib.Core
         }
 
         /// <summary>
-        /// 当有持仓平调后 遍历当地强平列表，如果在列表中 则直接删除
+        /// 当有持仓平调后 遍历当地平仓事务列表，如果在列表中 则直接删除该平仓事务,表明该平仓事务已经完成
+        /// 注意平仓事务列表为线程安全的list可以同时被多个线程操作
         /// 如果统一在processpostionflat中检查持仓情况会出现以下问题：如果持仓平调 但是在平调后立马再次开仓，此时PostioinFlat并没有从队列中删除，当再次扫描到该持仓时 系统会认为该持仓没有被及时平调,从而尝试撤单并重新强平，最后单子又无法撤单成功
         /// </summary>
         /// <param name="pr"></param>
@@ -283,14 +303,6 @@ namespace TradingLib.Core
             string key = pos.GetPositionKey();
             //List<PositionFlatSet> _postiondeletelist = new List<PositionFlatSet>();
             PositionFlatSet[] list = posflatlist.Where(ps => ps.Position.GetPositionKey().Equals(key)).ToArray();
-            //foreach (PositionFlatSet ps in posflatlist)
-            //{
-            //    if (ps.Position.GetPositionKey().Equals(key))
-            //    {
-            //        _postiondeletelist.Add(ps);
-            //    }
-            //}
-
             foreach (PositionFlatSet ps in list)
             {
                 debug("Position:" + ps.Position.GetPositionKey() + " 已经平掉,从队列中移除", QSEnumDebugLevel.INFO);
@@ -300,10 +312,29 @@ namespace TradingLib.Core
                     GotFlatSuccessEvent(ps.Position);
                 }
             }
-
-            
-            
         }
+
+        ///// <summary>
+        ///// 获得消息中心转发的取消回报
+        ///// </summary>
+        ///// <param name="id"></param>
+        //public void GotCancel(long id)
+        //{
+        //    foreach (PositionFlatSet ps in posflatlist)
+        //    {
+        //        //如果不需要先撤单的 则跳过
+        //        if (!ps.NeedCancelFirst)
+        //            continue;
+        //        else
+        //        {
+        //            //如果待成交委托列表中包含对应的ID则先删除该委托
+        //            if (ps.PendingOrders.Contains(id))
+        //            {
+        //                ps.PendingOrders.Remove(id);
+        //            }
+        //        }
+        //    }
+        //}
 
         #endregion
 

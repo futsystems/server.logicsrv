@@ -26,6 +26,10 @@ namespace TradingLib.Core
         public Position Position { get; set; }
 
         /// <summary>
+        /// 是否已经发送
+        /// </summary>
+        public bool FlatSent { get; set; }
+        /// <summary>
         /// 平仓指令发送时间
         /// </summary>
         public DateTime SentTime { get; set; }
@@ -41,18 +45,72 @@ namespace TradingLib.Core
         public long OrderID { get; set; }
 
         /// <summary>
-        /// 强迫异常或失效
+        /// 强迫异常或失效通知
         /// </summary>
-        public bool FlatFailed { get; set; }
+        public bool FlatFailNoticed { get; set; }
 
-        public PositionFlatSet(Position pos, QSEnumOrderSource source, string closereason)
+        List<long> _pendingorders = new List<long>();
+
+        /// <summary>
+        /// 是否需要先取消委托
+        /// </summary>
+        public bool NeedCancelFirst { get; set; }
+        /// <summary>
+        /// 取消已经发送
+        /// </summary>
+        public bool CancelSent { get; set; }
+        /// <summary>
+        /// 取消已经完成
+        /// </summary>
+        public bool CancelDone { get; set; }
+
+        /// <summary>
+        /// 待撤单委托编号
+        /// 需要在平仓前撤掉的委托
+        /// </summary>
+        public List<long> PendingOrders 
         {
+            get
+            {   
+                return _pendingorders;
+            }
+
+            set
+            {
+                _pendingorders = value;
+                //如果待成交委托数量大于0 则需要先取消
+                if (_pendingorders.Count > 0)
+                {
+                    NeedCancelFirst = true;
+                }
+            }
+        
+        }
+
+        /// <summary>
+        /// 平仓事务
+        /// 强平某个持仓pos
+        /// 其对应的待成交委托为pendingorders
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <param name="pendingorders"></param>
+        /// <param name="source"></param>
+        /// <param name="closereason"></param>
+        public PositionFlatSet(Position pos,List<long> pendingorders, QSEnumOrderSource source, string closereason)
+        {
+            //持仓数据
             Position = pos;
+            //待平仓数据
+            this.PendingOrders = pendingorders;
+            this.CancelDone = false;
+            this.CancelSent = false;
+
+            FlatSent = false;
             SentTime = DateTime.Now;
             FireCount = 1;
             Source = source;
             ForceCloseReason = closereason;
-            FlatFailed = false;
+            FlatFailNoticed = false;
         }
 
         public override string ToString()
@@ -96,13 +154,14 @@ namespace TradingLib.Core
         /// <returns></returns>
         bool IsPosFlatPending(Position pos)
         {
-
+            //flatset = null;
             string key = pos.GetPositionKey();
 
             foreach (PositionFlatSet ps in posflatlist)
             {
                 if (ps.Position.GetPositionKey().Equals(key))
                 {
+                    //flatset = ps;
                     return true;
                 }
             }
@@ -144,10 +203,10 @@ namespace TradingLib.Core
         /// <param name="ourdersource">委托源</param>
         /// <param name="comment">平仓备注</param>
         /// <returns></returns>
-        public void FlatPosition(Position pos, QSEnumOrderSource ordersource, string closereason = "系统强平")
-        {
-            FlatPosition(pos, ordersource, closereason, true);
-        }
+        //public void FlatPosition(Position pos, QSEnumOrderSource ordersource, string closereason = "系统强平")
+        //{
+        //    FlatPosition(pos, ordersource, closereason, true);
+        //}
 
         /// <summary>
         /// 取消委托
@@ -210,13 +269,21 @@ namespace TradingLib.Core
         /// <param name="closereason"></param>
         /// <param name="first"></param>
         /// <returns></returns>
-        long FlatPosition(Position pos, QSEnumOrderSource ordersource, string closereason, bool first)
+        public void FlatPosition(Position pos, QSEnumOrderSource ordersource, string closereason)
         {
-            //如果该持仓已经在平仓队列中并且是标注为第一次发送强平指令则直接返回(表面已经触发过强平指令)
-            if (first &&IsPosFlatPending(pos))
-                return 0;
-
+            
+            //如果该持仓已经在平仓队列中则直接返回
+            if (IsPosFlatPending(pos))
+                return;
+            IAccount account = _clearcentre[pos.Account];
             debug("RiskCentre Flatpostion:" + pos.ToString(), QSEnumDebugLevel.INFO);
+            //生成持仓强平事务
+            List<long> pendingorders = account.GetPendingOrders(pos.Symbol).Select(o=>o.id).ToList();
+            PositionFlatSet ps = new PositionFlatSet(pos,pendingorders, ordersource, closereason);
+            //放入列表中维护
+            posflatlist.Add(ps);
+
+            /*
             //生成市价委托
             Order o = new MarketOrderFlat(pos);
             o.Account = pos.Account;
@@ -232,6 +299,13 @@ namespace TradingLib.Core
                 AssignOrderIDEvent(ref o);
 
             BasicTracker.SymbolTracker.TrckerOrderSymbol(o);
+
+            //如果该合约上有待成交委托 则需要延迟平仓 否则会出现平仓不足的问题。要等待撤掉所有委托之后才可以平仓
+            //这里有一个操作权的问题,是平仓撤单还是显示的调用撤单命令。在目前情况下是都需要的
+            //平仓只管当前仓位是否有委托，如果有待成交委托则进行撤单，如果其他合约没有持仓 但是有挂单，在尾盘强平时 就需要撤掉所有的委托
+            
+            //获得该合约的所有待成交委托
+            account.GetPendingOrders(pos.Symbol);
             //对外发送委托
             SendOrder(o);
 
@@ -244,7 +318,40 @@ namespace TradingLib.Core
                 posflatlist.Add(ps);
             }
             return o.id;
+             * **/
         }
+
+        /// <summary>
+        /// 发送底层强平持仓委托
+        /// </summary>
+        /// <param name="set"></param>
+        /// <returns></returns>
+        void SendFlatPositionOrder(PositionFlatSet set)
+        {
+            Position pos = set.Position;
+            //生成市价委托
+            Order o = new MarketOrderFlat(pos);
+            o.Account = pos.Account;
+            o.OffsetFlag = QSEnumOffsetFlag.CLOSE;
+            o.OrderSource = set.Source;
+            o.ForceClose = true;
+            o.ForceCloseReason = set.ForceCloseReason;
+            //o.price = 2500;//模拟不成交延迟撤单的情况
+
+            //绑定委托编号 用于提前获得系统唯一OrderID 方便撤单
+            if (AssignOrderIDEvent != null)
+                AssignOrderIDEvent(ref o);
+
+            //绑定合约对象
+            BasicTracker.SymbolTracker.TrckerOrderSymbol(o);
+
+            set.FlatSent = true;
+            set.FireCount++;
+            set.SentTime = DateTime.Now;
+            set.OrderID = o.id;
+            SendOrder(o);
+        }
+
 
         int SENDORDERDELAY = 3;
         int SENDORDERRETRY = 3;
@@ -262,61 +369,89 @@ namespace TradingLib.Core
             //debug("检查待平仓列表...", QSEnumDebugLevel.INFO);
             foreach (PositionFlatSet ps in posflatlist)
             {
-                //如果持仓已经平掉 则加入待删除列表
-                //如果持仓平调 但是在平调后立马再次开仓，此时PostioinFlat并没有从队列中删除，当再次扫描到该持仓时 系统会认为该持仓没有被及时平调,从而尝试撤单并重新强平，最后单子又无法撤单成功
-                //需要监听positionround closed event 然后将列表删除
-                //if (ps.Position.isFlat)
-                //{
-                //    debug("Position:"+ps.Position.GetPositionKey() +" 已经平掉,从队列中移除", QSEnumDebugLevel.INFO);
-                //    //deletelist.Add(ps);
-                //}
-                //else//持仓未平掉则 检查平仓间隔/平仓次数/触发报警
-                if(!ps.Position.isFlat)//如果有持仓 则检查时间 进行撤单并再次强平
+                //没有发送过强平委托
+                if (!ps.FlatSent)
                 {
-                    if (DateTime.Now.Subtract(ps.SentTime).TotalSeconds >= SENDORDERDELAY && ps.FireCount < SENDORDERRETRY)
+                    //如果是要先取消再平仓的 则需要发送取消委托
+                    if (ps.NeedCancelFirst)
                     {
-                        if (ps.OrderID > 0)
+                        //如果没有发送过取消委托 则遍历所有委托 发送取消
+                        if (!ps.CancelSent)
                         {
-                            debug(ps.Position.GetPositionKey() + " 时间超过3秒仍然没有平掉持仓,取消该委托", QSEnumDebugLevel.INFO);
-                            CancelOrder(ps.OrderID);
-                            if (waitforcancel)
-                                continue;
-                        }
-                        else
-                        {
-                            debug(ps.Position.GetPositionKey() + " 原有委托已撤掉,重新平仓", QSEnumDebugLevel.INFO);
-                            ps.FireCount++;
-                            ps.SentTime = DateTime.Now;
-                            ps.OrderID = FlatPosition(ps.Position, ps.Source, ps.ForceCloseReason, false);
+                            debug(ps.Position.GetPositionKey()+":没有发送强平委托,且需要先撤单，发送撤单", QSEnumDebugLevel.INFO);
+                            foreach (long oid in ps.PendingOrders)
+                            {
+                                this.CancelOrder(oid);
+                                Util.sleep(10);//取消委托
+                            }
+                            ps.CancelSent = true;//标注 取消已经发出
                             continue;
                         }
+
+                        //如果取消委托已经发送并且已经完成 同时是第一次发送强迫指令 则执行强平
+                        if (ps.CancelSent && ps.CancelDone)
+                        {
+                            debug(ps.Position.GetPositionKey() + ":已经发送撤单,并且所有委托已经撤掉,继续执行强平逻辑", QSEnumDebugLevel.INFO);
+                            SendFlatPositionOrder(ps);
+                            continue;
+                        }
+                        //这里加入撤单超时检查
+                        continue;
                     }
-                    if (ps.FireCount == SENDORDERRETRY && (!ps.FlatFailed))//报警的时间设定
+
+                    //如果不是需要先撤单的 则直接发送强平委托
+                    debug(ps.Position.GetPositionKey() + ":没有发送过强平委托，发送强平委托", QSEnumDebugLevel.INFO);
+                    SendFlatPositionOrder(ps);
+                }
+                //已经发送过强平委托
+                else
+                {
+                    if (!ps.Position.isFlat)//如果有持仓 则检查时间 进行撤单并再次强平
                     {
-                        debug(ps.Position.GetPositionKey() + " 平仓次数超过" + SENDORDERRETRY +" 出发警告通知", QSEnumDebugLevel.INFO);
-                        if (ps.OrderID != 0)
+                        //平仓发单时间后超过一定时间 但是平仓次数小于设定次数则撤单然后再次平仓
+                        if (DateTime.Now.Subtract(ps.SentTime).TotalSeconds >= SENDORDERDELAY && ps.FireCount < SENDORDERRETRY)
                         {
-                            CancelOrder(ps.OrderID);
+                            if (ps.OrderID > 0)//有委托编号表明有平仓委托在事务上，需要撤单
+                            {
+                                debug(ps.Position.GetPositionKey() + " 时间超过3秒仍然没有平掉持仓,取消该委托", QSEnumDebugLevel.INFO);
+                                CancelOrder(ps.OrderID);
+                                if (waitforcancel)
+                                    continue;
+                            }
+                            else
+                            {
+                                //如果没有委托编号 则表明委托已经撤掉 需要重新发送平仓委托
+                                debug(ps.Position.GetPositionKey() + " 原有委托已撤掉,重新平仓", QSEnumDebugLevel.INFO);
+                                SendFlatPositionOrder(ps);
+                                continue;
+                            }
                         }
-                        ps.FlatFailed = true;
-                        //强迫异常后冻结交易帐户 等待处理 这里需要对外触发事件 相关扩展模块监听后进行通知
-                        IAccount account = _clearcentre[ps.Position.Account];
-                        if (account != null)
+
+                        //当达到强平尝试次数 并且没有发送过强平异常通知 执行强平异常逻辑
+                        if (ps.FireCount == SENDORDERRETRY && (!ps.FlatFailNoticed))//报警的时间设定
                         {
-                            account.InactiveAccount();
+                            debug(ps.Position.GetPositionKey() + " 平仓次数超过" + SENDORDERRETRY + " 出发警告通知", QSEnumDebugLevel.INFO);
+                            if (ps.OrderID != 0)
+                            {
+                                CancelOrder(ps.OrderID);
+                            }
+                            ps.FlatFailNoticed = true;
+                            //强迫异常后冻结交易帐户 等待处理 这里需要对外触发事件 相关扩展模块监听后进行通知
+                            IAccount account = _clearcentre[ps.Position.Account];
+                            if (account != null)
+                            {
+                                account.InactiveAccount();
+                            }
+                            //对外进行未正常平仓报警
+                            if (GotFlatFailedEvent != null)
+                            {
+                                GotFlatFailedEvent(ps.Position);
+                            }
+
                         }
-                        //对外进行未正常平仓报警
-                        if (GotFlatFailedEvent != null)
-                        {
-                            GotFlatFailedEvent(ps.Position);
-                        }
-                        
                     }
                 }
             }
-
-
-           
         }
 
         /// <summary>

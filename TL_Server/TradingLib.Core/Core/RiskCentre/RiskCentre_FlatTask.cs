@@ -122,7 +122,7 @@ namespace TradingLib.Core
                     if (!acc.IntraDay) continue;//如果隔夜账户,则不用平仓
                     if (!pos.isFlat && IsSymbolWithMarketTime(pos.oSymbol,mts))//如果有持仓 并且持仓合约绑定在对应的市场交易时间上
                     {
-                        this.FlatPosition(pos, QSEnumOrderSource.RISKCENTRE);
+                        this.FlatPosition(pos, QSEnumOrderSource.RISKCENTRE, "尾盘强平");
                         //Order o = new MarketOrderFlat(pos);
                         //o.Account = pos.Account;
                         //o.OrderSource = QSEnumOrderSource.RISKCENTRE;
