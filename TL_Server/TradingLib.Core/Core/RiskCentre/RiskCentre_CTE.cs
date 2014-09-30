@@ -311,6 +311,29 @@ namespace TradingLib.Core
              return sym.IsMarketTime.ToString();
          }
 
+         [CoreCommandAttr(QSEnumCommandSource.CLI, "demoflat", "demoflat - demoflat", "强平某个帐户的持仓，先撤单，然后再强平")]
+         public string CTE_DemoFalt1(string account)
+         {
+             IAccount acc = _clearcentre[account];
+             if (acc != null)
+             {
+                 //List<long> olist = acc.GetPendingOrders().Select(o => o.id).ToList();
+
+                 //List<Position> plist = acc.GetPositionsHold().ToList();
+
+                 //PositionFlatSet ps = new PositionFlatSet(olist, plist, QSEnumOrderSource.RISKCENTRE, "DemoFlat");
+
+                 //posflatlist.Add(ps);
+                 acc.FlatPosition(QSEnumOrderSource.RISKCENTRE, "DemoFlat");
+                 return "操作成功";
+
+             }
+             else
+             {
+                 return "帐户不存在";
+             }
+         }
+
         
          #endregion
 
@@ -333,5 +356,6 @@ namespace TradingLib.Core
              this.ProcessPositionFlat();
          }
 
+        
     }
 }

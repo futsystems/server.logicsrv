@@ -118,9 +118,6 @@ namespace TradingLib.Core
             _posoffsetracker.CancelOrderEvent += new LongDelegate(CancelOrder);
             _posoffsetracker.AssignOrderIDEvent += new AssignOrderIDDel(AssignOrderID);
 
-            //加载主力合约
-            InitHotBasket();
-
             //加载风空规则
             LoadRuleSet();
 
@@ -128,11 +125,7 @@ namespace TradingLib.Core
             InitFlatTask();
         }
 
-        //public void CacheAccount(IAccount account)
-        //{
-        //    account.RiskCentre = new RiskCentreAdapterToAccount(account, this);
-        //}
-
+     
         /// <summary>
         /// 查询当前是否是交易日
         /// </summary>
@@ -145,69 +138,14 @@ namespace TradingLib.Core
         }
 
 
-        #region 获得帐户的配资服务
-
-        /// <summary>
-        /// 获得账户的配资服务
-        /// </summary>
-        /// <param name="account"></param>
-        /// <returns></returns>
-        //IFinService GetFinService(string account)
-        //{
-            //if (GetFinServiceDelEvent != null)
-            //    return GetFinServiceDelEvent(account);
-            //return null;
-        //}
-        #endregion
-
-        #region 辅助功能函数
-        /// <summary>
-        /// 加载主力合约列表
-        /// </summary>
-        public void InitHotBasket()
-        {
-            //hotbasket.Clear();
-            /*
-            //获得主力合约组,并从配置文件夹在主力合约
-            string[] l = CoreGlobal.HotSymbolBaskets.Split(',');
-            foreach (string h in l)
-            {
-                Basket b = BasketTracker.getBasket(h);
-                if (b != null && b.Count > 0)
-                {
-                    hotbasket.Add(b);
-                }
-            }**/
-            //debug("got basket:" + string.Join(",", hotbasket.ToSymArray()).ToString(), QSEnumDebugLevel.MUST);
-        }
 
 
-        #endregion
 
 
 
 
 
         #region 【服务端止盈止损】客户端提交上来的持仓止盈止损 服务端检查
-
-        //void SendOrder(Order o)
-        //{
-        //    if (SendOrderEvent != null)
-        //        SendOrderEvent(o);
-        //}
-
-        //void CancelOrder(long oid)
-        //{
-        //    if (CancelOrderEvent != null)
-        //        CancelOrderEvent(oid);
-        //}
-
-        //void AssignOrderID(ref Order o)
-        //{
-        //    if (AssignOrderIDEvent != null)
-        //        AssignOrderIDEvent(ref o);
-        //}
-
         /// <summary>
         /// 获得某个账户的所有持仓止盈止损参数
         /// </summary>
@@ -246,25 +184,55 @@ namespace TradingLib.Core
             foreach (PositionFlatSet ps in posflatlist)
             {
                 //如果取消的委托是平仓所发出的委托 则将orderid置0 表面该委托已经被取消
-                if (ps.OrderID == oid)
-                    ps.OrderID = 0;
+               
             }
-            foreach (PositionFlatSet ps in posflatlist)
+
+            foreach (PositionFlatSet ps in posflatlist.ToArray())
             {
-                //如果不需要先撤单的 则跳过
-                if (!ps.NeedCancelFirst)
-                    continue;
-                else//需要先撤单的 则检查撤单列表
+
+                switch (ps.TaskType)
                 {
-                    //如果待成交委托列表中包含对应的ID则先删除该委托
-                    if (ps.PendingOrders.Contains(oid))
-                    {
-                        ps.PendingOrders.Remove(oid);
-                    }
-                    if (ps.PendingOrders.Count == 0)
-                    {
-                        ps.CancelDone = true;
-                    }
+                         
+                    case QSEnumTaskType.FlatPosition:
+                        {
+                            //如果不需要先撤单的 则跳过
+                            if (!ps.NeedCancelFirst)
+                            {
+                                if (ps.OrderID == oid)
+                                    ps.OrderID = 0;
+                            }
+                            else//需要先撤单的 则检查撤单列表
+                            {
+                                //如果待成交委托列表中包含对应的ID则先删除该委托
+                                if (ps.PendingOrders.Contains(oid))
+                                {
+                                    ps.PendingOrders.Remove(oid);
+                                }
+                                //如果所有待成交委托均撤单完成 则标志canceldone
+                                if (ps.PendingOrders.Count == 0)
+                                {
+                                    ps.CancelDone = true;
+                                }
+                            }
+                        }
+                        break;
+                    case QSEnumTaskType.CancelOrder:
+                        {
+                            if (ps.OrderCancels.Contains(oid))
+                            {
+                                ps.OrderCancels.Remove(oid);
+                            }
+                            if (ps.OrderCancels.Count == 0)
+                            {
+                                debug("cancel is done");
+                                ps.CancelDone = true;
+                                //posflatlist.Remove(ps);
+                            }
+                            
+                        }
+                        break;
+                    default:
+                        break;
                 }
             }
 
@@ -313,28 +281,6 @@ namespace TradingLib.Core
                 }
             }
         }
-
-        ///// <summary>
-        ///// 获得消息中心转发的取消回报
-        ///// </summary>
-        ///// <param name="id"></param>
-        //public void GotCancel(long id)
-        //{
-        //    foreach (PositionFlatSet ps in posflatlist)
-        //    {
-        //        //如果不需要先撤单的 则跳过
-        //        if (!ps.NeedCancelFirst)
-        //            continue;
-        //        else
-        //        {
-        //            //如果待成交委托列表中包含对应的ID则先删除该委托
-        //            if (ps.PendingOrders.Contains(id))
-        //            {
-        //                ps.PendingOrders.Remove(id);
-        //            }
-        //        }
-        //    }
-        //}
 
         #endregion
 

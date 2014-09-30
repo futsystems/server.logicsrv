@@ -71,7 +71,11 @@ namespace TradingLib.Core
             }
         }
 
-
+        /// <summary>
+        /// 注入强平任务
+        /// </summary>
+        /// <param name="flattime"></param>
+        /// <param name="mts"></param>
         void InjectTask(int flattime, MarketTime[] mts)
         {
             //注入强平任务
@@ -97,17 +101,16 @@ namespace TradingLib.Core
         void FlatPositionViaMarketTime(int flattime,MarketTime[] mts)
         {
             debug("执行强平任务 对日内帐户执行撤单并强平持仓,强平时间点:" + flattime.ToString(), QSEnumDebugLevel.INFO);
-            
             //1.遍历所有pending orders 如果委托对应的帐户是日内交易并且该委托需要在该强平时间点撤单 则执行撤单
-            foreach (Order od in _clearcentre.TotalOrders.Where(o => o.IsPending()))
+            //查询所有待成交委托 且该委托合约在对应的强平时间点 撤掉将当前强平时间点的所有委托
+            foreach (Order od in _clearcentre.TotalOrders.Where(o => o.IsPending() && IsSymbolWithMarketTime(o.oSymbol, mts)))
             { 
                 IAccount acc = null;
                 if (_clearcentre.HaveAccount(od.Account, out acc))
                 {
                     if (!acc.IntraDay) continue;
-                    if (IsSymbolWithMarketTime(od.oSymbol, mts))
                     {
-                        //撤单
+                        //取消委托
                         CancelOrder(od, QSEnumOrderSource.RISKCENTRE, "尾盘强平");
                     }
                 }
@@ -123,11 +126,6 @@ namespace TradingLib.Core
                     if (!pos.isFlat && IsSymbolWithMarketTime(pos.oSymbol,mts))//如果有持仓 并且持仓合约绑定在对应的市场交易时间上
                     {
                         this.FlatPosition(pos, QSEnumOrderSource.RISKCENTRE, "尾盘强平");
-                        //Order o = new MarketOrderFlat(pos);
-                        //o.Account = pos.Account;
-                        //o.OrderSource = QSEnumOrderSource.RISKCENTRE;
-                        //o.comment = "风控日内强平";
-                        //this.SendOrder(o);
                     }
                     Thread.Sleep(50);
                 }
