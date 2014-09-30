@@ -281,7 +281,7 @@ namespace TradingLib.Core
         public string CTE_PostionFlatSetList()
         {
             StringBuilder sb = new StringBuilder();
-            foreach (PositionFlatSet ps in posflatlist)
+            foreach (RiskTaskSet ps in posflatlist)
             {
                 sb.Append(ps.ToString() + Environment.NewLine);
             }
@@ -317,13 +317,6 @@ namespace TradingLib.Core
              IAccount acc = _clearcentre[account];
              if (acc != null)
              {
-                 //List<long> olist = acc.GetPendingOrders().Select(o => o.id).ToList();
-
-                 //List<Position> plist = acc.GetPositionsHold().ToList();
-
-                 //PositionFlatSet ps = new PositionFlatSet(olist, plist, QSEnumOrderSource.RISKCENTRE, "DemoFlat");
-
-                 //posflatlist.Add(ps);
                  acc.FlatPosition(QSEnumOrderSource.RISKCENTRE, "DemoFlat");
                  return "操作成功";
 
@@ -334,6 +327,15 @@ namespace TradingLib.Core
              }
          }
 
+         [CoreCommandAttr(QSEnumCommandSource.CLI, "rtask", "rtask - rtask", "列出风控中心所有任务")]
+         public string CTE_RTask()
+         {
+             foreach (RiskTaskSet task in posflatlist)
+             {
+                 debug("Account:" + task.Account + " Type:" + task.TaskType.ToString() + " SubTaskCnt:" + task.SubTask.Count.ToString(), QSEnumDebugLevel.INFO);
+             }
+             return "打印成功";
+         }
         
          #endregion
 

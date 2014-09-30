@@ -33,7 +33,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 强平异常事件
         /// </summary>
-        public event PositionDelegate FlatFailedEvent;
+        public event PositionFlatFailDel FlatFailedEvent;
 
         internal decimal GetFinAmmountAvabile(string account)
         {
@@ -66,11 +66,11 @@ namespace TradingLib.Common
         }
 
 
-        internal void FireFlatFailedEvent(Position pos)
+        internal void FireFlatFailedEvent(Position pos,string reason)
         {
             if (FlatFailedEvent != null)
             {
-                FlatFailedEvent(pos);
+                FlatFailedEvent(pos,reason);
             }
         }
     }

@@ -177,17 +177,13 @@ namespace TradingLib.Core
 
         /// <summary>
         /// 获得取消
+        /// 取消事务是在处理队列中进行异步处理
+        /// 而强平事务的完成是在positionround回报中同步处理
         /// </summary>
         /// <param name="oid"></param>
         public void GotCancel(long oid)
         {
-            foreach (PositionFlatSet ps in posflatlist)
-            {
-                //如果取消的委托是平仓所发出的委托 则将orderid置0 表面该委托已经被取消
-               
-            }
-
-            foreach (PositionFlatSet ps in posflatlist.ToArray())
+            foreach (RiskTaskSet ps in posflatlist)
             {
 
                 switch (ps.TaskType)
@@ -217,6 +213,7 @@ namespace TradingLib.Core
                         }
                         break;
                     case QSEnumTaskType.CancelOrder:
+                    case QSEnumTaskType.FlatAllPositions:
                         {
                             if (ps.OrderCancels.Contains(oid))
                             {
@@ -224,9 +221,7 @@ namespace TradingLib.Core
                             }
                             if (ps.OrderCancels.Count == 0)
                             {
-                                debug("cancel is done");
                                 ps.CancelDone = true;
-                                //posflatlist.Remove(ps);
                             }
                             
                         }
@@ -248,7 +243,7 @@ namespace TradingLib.Core
         public void GotErrorOrder(ErrorOrder error)
         {
             debug("~~~~~~~~~~~~~~~~~~~~~ riskcentre got errororder orderid:" + error.Order.id.ToString(), QSEnumDebugLevel.INFO);
-            foreach (PositionFlatSet ps in posflatlist)
+            foreach (RiskTaskSet ps in posflatlist)
             {
                 //如果委托被拒绝 并且委托ID是本地发送过去的ID 则将positionflatset的委托ID置0
                 if (ps.OrderID == error.Order.id && error.Order.Status == QSEnumOrderStatus.Reject)
@@ -263,21 +258,28 @@ namespace TradingLib.Core
         /// 当有持仓平调后 遍历当地平仓事务列表，如果在列表中 则直接删除该平仓事务,表明该平仓事务已经完成
         /// 注意平仓事务列表为线程安全的list可以同时被多个线程操作
         /// 如果统一在processpostionflat中检查持仓情况会出现以下问题：如果持仓平调 但是在平调后立马再次开仓，此时PostioinFlat并没有从队列中删除，当再次扫描到该持仓时 系统会认为该持仓没有被及时平调,从而尝试撤单并重新强平，最后单子又无法撤单成功
+        /// 
+        /// 只有在FlatPosition类型的任务中真正触发委托
+        /// 平仓任务出队在持仓回合中进行
+        /// 取消任务队列在处理程序中进行
+        /// 
         /// </summary>
         /// <param name="pr"></param>
         /// <param name="pos"></param>
         public void GotPostionRoundClosed(IPositionRound pr, Position pos)
         { 
             string key = pos.GetPositionKey();
-            //List<PositionFlatSet> _postiondeletelist = new List<PositionFlatSet>();
-            PositionFlatSet[] list = posflatlist.Where(ps => ps.Position.GetPositionKey().Equals(key)).ToArray();
-            foreach (PositionFlatSet ps in list)
+
+            RiskTaskSet[] list = posflatlist.Where(task => task.TaskType == QSEnumTaskType.FlatPosition && task.Position.GetPositionKey().Equals(key)).ToArray();
+
+
+            foreach (RiskTaskSet tmp in list)
             {
-                debug("Position:" + ps.Position.GetPositionKey() + " 已经平掉,从队列中移除", QSEnumDebugLevel.INFO);
-                posflatlist.Remove(ps);
+                debug("Position:" + tmp.Position.GetPositionKey() + " 已经平掉,从队列中移除", QSEnumDebugLevel.INFO);
+                posflatlist.Remove(tmp);
                 if (GotFlatSuccessEvent != null)
                 {
-                    GotFlatSuccessEvent(ps.Position);
+                    GotFlatSuccessEvent(tmp.Position);
                 }
             }
         }

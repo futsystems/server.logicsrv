@@ -267,9 +267,12 @@ namespace TradingLib.ServiceManager
             //_clearCentre.GetAccountFinAmmountAvabileEvent += new AccountFinAmmountDel(TLCtxHelper.ExContribEvent.GetFinAmmountAvabile);
             _clearCentre.AdjustCommissionEvent += new AdjustCommissionDel(TLCtxHelper.ExContribEvent.AdjustCommission);
 
-            _riskCentre.GotFlatFailedEvent += new PositionDelegate(TLCtxHelper.ExContribEvent.FireFlatFailedEvent);
+
+            _riskCentre.GotFlatFailedEvent += new PositionFlatFailDel(TLCtxHelper.ExContribEvent.FireFlatFailedEvent);
             _riskCentre.GotFlatSuccessEvent +=new PositionDelegate(TLCtxHelper.ExContribEvent.FireFlatSuccessEvent);
         }
+
+
 
         /// <summary>
         /// 显示所有日志信息

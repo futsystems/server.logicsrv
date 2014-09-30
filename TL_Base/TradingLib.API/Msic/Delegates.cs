@@ -38,6 +38,7 @@ namespace TradingLib.API
     public delegate void SymbolRegisterDel(string client, string symbols);
     public delegate void ObjectArrayDelegate(object[] parameters);
     public delegate void PositionDelegate(Position pos);
+    public delegate void PositionFlatFailDel(Position pos,string reason);//强平失效事件
     
     public delegate decimal DecimalStringDelegate(string s);
     public delegate int IntStringDelegate(string s);

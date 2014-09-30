@@ -173,6 +173,8 @@ namespace TradingLib.Contrib.FinService
                     //this.Account.CancelOrder(QSEnumOrderSource.RISKCENTREACCOUNTRULE, "配资服务强迫");
                     //平掉帐户下所有持仓
                     this.Account.FlatPosition(QSEnumOrderSource.RISKCENTREACCOUNTRULE, "配资服务强平");
+
+                    this.Account.InactiveAccount();
                 }
             }
 

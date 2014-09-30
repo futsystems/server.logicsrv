@@ -116,17 +116,16 @@ namespace TradingLib.Core
                 }
             }
 
+            //等待1秒后再进行强平持仓
+            Util.sleep(1000);
             //2.遍历所有持仓 进行强平
-            foreach (Position pos in _clearcentre.TotalPositions)
+            foreach (Position pos in _clearcentre.TotalPositions.Where(p=>!p.isFlat && IsSymbolWithMarketTime(p.oSymbol,mts)))
             {
                 IAccount acc = null;
                 if (_clearcentre.HaveAccount(pos.Account, out acc))
                 {
                     if (!acc.IntraDay) continue;//如果隔夜账户,则不用平仓
-                    if (!pos.isFlat && IsSymbolWithMarketTime(pos.oSymbol,mts))//如果有持仓 并且持仓合约绑定在对应的市场交易时间上
-                    {
-                        this.FlatPosition(pos, QSEnumOrderSource.RISKCENTRE, "尾盘强平");
-                    }
+                    this.FlatPosition(pos, QSEnumOrderSource.RISKCENTRE, "尾盘强平");
                     Thread.Sleep(50);
                 }
             }
