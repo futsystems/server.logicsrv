@@ -352,7 +352,7 @@ namespace TradingLib.Core
 
 
          
-         [TaskAttr("2秒检查待平持仓",1, "调度系统每2秒检查一次待平仓列表")]
+         [TaskAttr("2秒检查待平持仓",1, "调度系统每1秒检查一次待平仓列表")]
          public void Task_ProcessPositionFlatSet()
          {
              this.ProcessPositionFlat();

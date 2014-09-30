@@ -602,6 +602,8 @@ namespace TradingLib.Core
 
             foreach (RiskTaskSet ps in posflatlist)
             {
+                if (ps.FlatFailNoticed) continue;//如果已经通知过异常的 则直接跳过
+
                 //如果生成了子任务 则检查是否子任务都已经完成并从队列中删除 如果已经删除 则父任务完成加入待删除列表
                 if (ps.SubTaskGenerated)
                 {
@@ -611,7 +613,7 @@ namespace TradingLib.Core
                         removelist.Add(ps);
                     }
                 }
-                if (ps.FlatFailNoticed) continue;//如果已经通知过异常的 则直接跳过
+                
                 switch (ps.TaskType)
                 {
                     case QSEnumTaskType.FlatPosition:
@@ -634,26 +636,30 @@ namespace TradingLib.Core
                                         }
                                         ps.CancelSent = true;//标注 取消已经发出
                                         ps.SentTime = DateTime.Now;//标注委托发送时间
-                                        continue;
                                     }
+                                    else
+                                    {
 
-                                    //如果取消委托已经发送并且已经完成 同时是第一次发送强迫指令 则执行强平
-                                    if (ps.CancelSent && ps.CancelDone)
-                                    {
-                                        debug(ps.Position.GetPositionKey() + ":已经发送撤单,并且所有委托已经撤掉,继续执行强平逻辑", QSEnumDebugLevel.INFO);
-                                        SendFlatPositionOrder(ps);
-                                        continue;
-                                    }
-                                    //这里加入撤单超时检查 取消未完成 并且超时
-                                    if (!ps.CancelDone && DateTime.Now.Subtract(ps.SentTime).TotalSeconds >= SENDORDERDELAY&&(!ps.FlatFailNoticed))
-                                    {
-                                        string reason = ps.Position.GetPositionKey() + " 强平过程异常,强平前撤单未成功";
-                                        debug(reason, QSEnumDebugLevel.INFO);
-                                        ps.FlatFailNoticed = true;
-                                        //对外进行异常平仓报警
-                                        if (GotFlatFailedEvent != null)
+                                        //如果取消委托已经发送并且已经完成 同时是第一次发送强迫指令 则执行强平
+                                        if (ps.CancelDone)
                                         {
-                                            GotFlatFailedEvent(ps.Position,reason);
+                                            debug(ps.Position.GetPositionKey() + ":已经发送撤单,并且所有委托已经撤掉,继续执行强平逻辑", QSEnumDebugLevel.INFO);
+                                            SendFlatPositionOrder(ps);
+                                        }
+                                        else
+                                        {
+                                            //这里加入撤单超时检查 取消未完成 并且超时
+                                            if (DateTime.Now.Subtract(ps.SentTime).TotalSeconds >= SENDORDERDELAY && (!ps.FlatFailNoticed))
+                                            {
+                                                string reason = ps.Position.GetPositionKey() + " 强平过程异常,强平前撤单未成功";
+                                                debug(reason, QSEnumDebugLevel.INFO);
+                                                ps.FlatFailNoticed = true;
+                                                //对外进行异常平仓报警
+                                                if (GotFlatFailedEvent != null)
+                                                {
+                                                    GotFlatFailedEvent(ps.Position, reason);
+                                                }
+                                            }
                                         }
                                     }
                                 }
