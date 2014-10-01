@@ -1,4 +1,4 @@
-PROJ = src/build.proj
+PROJ = build.proj
 FLAGS = /property:OperatingPlatform=Unix /property:NetFramework=Mono
 XBUILD = /opt/mono/bin/xbuild /tv:4.0
 
@@ -15,8 +15,9 @@ PACKFILES = build/clrzmq.* README.md AUTHORS LICENSE
 
 .PHONY=all release package clean
 
-all:
-	$(XBUILD) $(FLAGS) $(PROJ)
+#build base server and so on ...
+all:clean base server contrib connector account exsrv
+
 
 release:
 	ifdef VERSION
@@ -40,3 +41,34 @@ package: release
 
 clean:
 	$(XBUILD) /target:Clean $(FLAGS) $(PROJ)
+
+base:
+	$(XBUILD) /target:Base $(FLAGS) $(PROJ)
+
+server:
+	$(XBUILD) /target:Server $(FLAGS) $(PROJ)
+
+contrib:
+	$(XBUILD) /target:Contrib $(FLAGS) $(PROJ)
+
+connector:
+	$(XBUILD) /target:Connector $(FLAGS) $(PROJ)
+
+account:
+	$(XBUILD) /target:Account $(FLAGS) $(PROJ)
+
+exsrv:
+	$(XBUILD) /target:ExServer $(FLAGS) $(PROJ)
+
+install:
+	rm -rf /home/qianbo/opt/logicsrv1
+	mkdir  /opt/logicsrv1
+	cp -rf Platform/TradingSrv/config /opt/logicsrv1/
+	cp -rf Platform/TradingSrv/TraddingSrvCLI.exe /opt/logicsrv1/
+	cp -rf lib/TradingLib/* /opt/logicsrv1/
+	cp -rf lib/libzmq/clrzmq-nix/* /opt/logicsrv1/
+	cp -rf lib/MySql.Data.dll /opt/logicsrv1/
+
+
+
+

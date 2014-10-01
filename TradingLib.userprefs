@@ -1,6 +1,12 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench />
+  <MonoDevelop.Ide.Workbench ActiveDocument="TL_Server/TradingLib.Core/Core/RiskCentre/RiskCentre_CheckAccount.cs">
+    <Files>
+      <File FileName="TL_Server/TradingLib.Core/Core/ClearCentre/ClearCentreSrv_onGotXXX.cs" Line="14" Column="9" />
+      <File FileName="TL_Server/TradingLib.Core/Core/RiskCentre/RiskCentre.cs" Line="1" Column="1" />
+      <File FileName="TL_Server/TradingLib.Core/Core/RiskCentre/RiskCentre_CheckAccount.cs" Line="22" Column="14" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
