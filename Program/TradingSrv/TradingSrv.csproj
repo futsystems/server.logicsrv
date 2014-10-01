@@ -52,41 +52,39 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="clrzmq, Version=3.0.0.0, Culture=neutral, PublicKeyToken=ef95cdc29d237b0d, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\clrzmq.dll</HintPath>
-    </Reference>
     <Reference Include="License">
       <HintPath>..\..\lib\License.dll</HintPath>
     </Reference>
-    <Reference Include="MySql.Data, Version=6.5.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\MySql.Data.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.XML" />
     <Reference Include="TradingLib.API">
-      <HintPath>..\..\lib\Win\TradingLib.API.dll</HintPath>
+      <HintPath>..\..\lib\TradingLib\TradingLib.API.dll</HintPath>
     </Reference>
     <Reference Include="TradingLib.API.Ex">
-      <HintPath>..\..\lib\Win\TradingLib.API.Ex.dll</HintPath>
+      <HintPath>..\..\lib\TradingLib\TradingLib.API.Ex.dll</HintPath>
     </Reference>
     <Reference Include="TradingLib.Common">
-      <HintPath>..\..\lib\Win\TradingLib.Common.dll</HintPath>
+      <HintPath>..\..\lib\TradingLib\TradingLib.Common.dll</HintPath>
     </Reference>
     <Reference Include="TradingLib.Common.Ex">
-      <HintPath>..\..\lib\Win\TradingLib.Common.Ex.dll</HintPath>
+      <HintPath>..\..\lib\TradingLib\TradingLib.Common.Ex.dll</HintPath>
     </Reference>
     <Reference Include="TradingLib.Core">
-      <HintPath>..\..\lib\Win\TradingLib.Core.dll</HintPath>
+      <HintPath>..\..\lib\TradingLib\TradingLib.Core.dll</HintPath>
     </Reference>
     <Reference Include="TradingLib.Mixins">
-      <HintPath>..\..\lib\Win\TradingLib.Mixins.dll</HintPath>
+      <HintPath>..\..\lib\TradingLib\TradingLib.Mixins.dll</HintPath>
     </Reference>
     <Reference Include="TradingLib.ServiceManager">
-      <HintPath>..\..\lib\Win\TradingLib.ServiceManager.dll</HintPath>
+      <HintPath>..\..\lib\TradingLib\TradingLib.ServiceManager.dll</HintPath>
     </Reference>
+    <Reference Include="clrzmq">
+      <HintPath>..\..\lib\clrzmq.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data">
+      <HintPath>..\..\lib\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CoreDaemon.cs" />

@@ -16,7 +16,7 @@ namespace TradingLib.Core
             _pubserver.NewString("demo message");
         }
 
-        [TaskAttr("PubInfo_Health",3,"每3秒采集服务端状态信息并发布")]
+		//[TaskAttr("PubInfo_Health",3,"每3秒采集服务端状态信息并发布")]
         public void PubInfo_Health()
         {
             this.NewObject(InfoType.Health, _healthreport);

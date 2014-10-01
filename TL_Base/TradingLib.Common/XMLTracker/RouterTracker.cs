@@ -11,7 +11,7 @@ namespace TradingLib.Common
         private static XmlDocument getXMLDoc()
         {
             XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.Load(@"config\Router.xml");
+			xmlDoc.Load(@"config\router.xml");
             return xmlDoc;
         }
 

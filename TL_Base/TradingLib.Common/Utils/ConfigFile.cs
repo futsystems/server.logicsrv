@@ -50,38 +50,31 @@ namespace TradingLib.Common
     /// </summary>
     public class ConfigFile
     {
-        const string delimiter = @"\";
-
         public static ConfigFile GetConfigFile(string filename = "srv.cfg")
         {
-            string programPath = System.Environment.CurrentDirectory;
-            return new ConfigFile(programPath+delimiter+"config",filename);
+			return new ConfigFile(Util.GetConfigFile (filename));
         }
-        public static ConfigFile GetContribConfigFile(string filename = "srv.cfg")
-        {
-            string programPath = System.Environment.CurrentDirectory;
-            return new ConfigFile(programPath + delimiter + "config" + delimiter + "contribcfg", filename);
-        }
+
         public Dictionary<string, CfgValue> configData;
         string fullFileName;
 
-        public ConfigFile(string _path,string _fileName)
+        public ConfigFile(string _fileName)
         {
             configData = new Dictionary<string, CfgValue>();
-            fullFileName = _path + delimiter + _fileName;
+            fullFileName =_fileName;
 
-            bool hasPath = Directory.Exists(_path);
-            if (!hasPath)
-            {
-                Directory.CreateDirectory(_path);
-            }
-            bool hasCfgFile = File.Exists(_path + delimiter + _fileName);
+			//bool hasPath = Directory.Exists(_path);
+			//if (!hasPath)
+			//{
+			//    Directory.CreateDirectory(_path);
+			//}
+            bool hasCfgFile = File.Exists(_fileName);
             if (hasCfgFile == false)
             {
-                StreamWriter writer = new StreamWriter(File.Create(_path + delimiter + _fileName), Encoding.Default);
+                StreamWriter writer = new StreamWriter(File.Create(_fileName), Encoding.Default);
                 writer.Close();
             }
-            StreamReader reader = new StreamReader(_path + delimiter + _fileName, Encoding.Default);
+            StreamReader reader = new StreamReader(_fileName, Encoding.Default);
             string line;
 
             int indx = 0;

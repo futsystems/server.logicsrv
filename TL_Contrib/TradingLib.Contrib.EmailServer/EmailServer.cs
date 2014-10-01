@@ -77,9 +77,9 @@ namespace TradingLib.Contrib.EmailSrv
             client = new System.Net.Mail.SmtpClient();
             client.Host = _smtp;
             client.Port = _port;
-            client.UseDefaultCredentials = true;
-            client.DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.Network;
-            client.Credentials = new System.Net.NetworkCredential(_user,_pass);
+//            client.UseDefaultCredentials = true;
+//            client.DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.Network;
+//            client.Credentials = new System.Net.NetworkCredential(_user,_pass);
 
         }
 

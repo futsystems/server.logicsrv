@@ -152,7 +152,7 @@ namespace TradingLib.ServiceManager
             {
                 
                 string programPath = System.Environment.CurrentDirectory;
-                string fn = programPath + "\\config\\contriblist.cfg";
+				string fn = Util.GetConfigFile("contriblist.cfg");
                 //实例化一个文件流--->与写入文件相关联  
                 using (FileStream fs = new FileStream(fn, FileMode.Open))
                 {

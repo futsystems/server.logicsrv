@@ -1,0 +1,65 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build" ToolsVersion="4.0">
+<PropertyGroup>
+<SolutionDir Condition="'$(SolutionDir)' == ''">$(MSBuildProjectDirectory)</SolutionDir>
+<BuildDir>build</BuildDir>
+<Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
+</PropertyGroup>
+
+
+  <ItemGroup>
+    <CleanFiles Include="lib\TradingLib\*" />
+    <CleanFiles Include="lib\TradingLib\Contrib\*" />
+    <CleanFiles Include="TL*\*\bin\$(Configuration)\**" />
+    <CleanFiles Include="TL*\*\obj\$(Configuration)\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <OutputFiles Include="$(SolutionDir)\*\bin\$(Configuration)\*.dll" />
+    <OutputFiles Include="$(SolutionDir)\*\bin\$(Configuration)\*.pdb" />
+    <OutputFiles Include="$(SolutionDir)\*\bin\$(Configuration)\*.xml" />
+  </ItemGroup>
+  
+
+  <Target Name="Clean">
+    <Delete Files="@(CleanFiles)"/>
+  </Target>
+  
+  
+  
+  <Target Name="RuleSet" DependsOnTargets="CompileBase">
+		<MSBuild Projects="TL_Base\TradingLib.API\TradingLib.API.csproj" Properties="Configuration=$(Configuration);" />
+  </Target>
+  
+  <Target Name="CompileBase">
+    <MSBuild Projects="TL_Base\TradingLib.API\TradingLib.API.csproj" Properties="Configuration=$(Configuration);" />
+		<MSBuild Projects="TL_Base\TradingLib.Common\TradingLib.Common.csproj" Properties="Configuration=$(Configuration);" />
+		<MSBuild Projects="TL_Base\TradingLib.Mixins\TradingLib.Mixins.csproj" Properties="Configuration=$(Configuration);" />
+	
+		<MSBuild Projects="TL_Base_Ex\TradingLib.API.Ex\TradingLib.API.Ex.csproj" Properties="Configuration=$(Configuration);" />
+		<MSBuild Projects="TL_Base_Ex\TradingLib.Common.Ext\TradingLib.Common.Ex.csproj" Properties="Configuration=$(Configuration);" />
+	
+		<MSBuild Projects="TL_Server\TradingLib.Core\TradingLib.Core.csproj" Properties="Configuration=$(Configuration);" />
+		<MSBuild Projects="TL_Server\TradingLib.Service\TradingLib.ServiceManager.csproj" Properties="Configuration=$(Configuration);" />
+  </Target>
+  
+  <Target Name="CompileContrib">
+    <MSBuild Projects="TL_Contrib\TradingLib.Contirb.LogServer\TradingLib.Contirb.LogServer.csproj" Properties="Configuration=$(Configuration);" />
+  </Target>
+  
+  <PropertyGroup>
+    <CompileDependsOn >CompileBase</CompileDependsOn>
+    <CompileDependsOn >CompileContrib</CompileDependsOn>
+  </PropertyGroup>
+  
+  <Target Name="Compile" DependsOnTargets="CompileContrib">
+  </Target>
+  
+ <Target Name="Test" DependsOnTargets="Compile">
+   
+ </Target>
+  
+  <Target Name="Build" DependsOnTargets="CompileBase">
+    
+  </Target>
+  
+</Project>
