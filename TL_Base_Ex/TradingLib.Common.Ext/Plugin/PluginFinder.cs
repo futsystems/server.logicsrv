@@ -34,7 +34,7 @@ namespace TradingLib.Common
             //设定动态dll加载目录
             searchPathList.Add("RuleSet");
             searchPathList.Add("Contrib");
-            searchPathList.Add("Connecter");
+			searchPathList.Add("Connector");
             searchPathList.Add("Account");
 
             this.DesiredInterfaces = new List<Type>();
@@ -42,6 +42,7 @@ namespace TradingLib.Common
             this.Plugins = new Dictionary<Type, Dictionary<string, FinderPluginInfo>>();
             this.Reset();
 
+			//需要加载的插件接口
             this.DesiredInterfaces.Add(typeof(ICore));
             this.DesiredInterfaces.Add(typeof(IContrib));
 
@@ -259,7 +260,7 @@ namespace TradingLib.Common
         /// <param name="intface"></param>
         public void LoadImplementors(Type intface)
         {
-            //TLCtxHelper.Debug("loadimplementors:" + intface.ToString());
+			//TLCtxHelper.Debug("loadimplementors:" + intface.ToString());
 
             //可用type集合中不存在该interface
             if (!this.AvailableTypes.ContainsKey(intface))
@@ -302,13 +303,15 @@ namespace TradingLib.Common
                     //遍历搜索路径 获得所有dll文件
                     foreach (string path in searchPathList)
                     {
-                        dllfilelist.AddRange(Directory.GetFiles(path, "*.dll"));
+						string lpath = Util.GetPluginPath(path);
+						//TLCtxHelper.Debug("Search path:"+lpath);
+						dllfilelist.AddRange(Directory.GetFiles(lpath, "*.dll"));
                     }
-
+					//TLCtxHelper.Debug("avabile dll files num:"+dllfilelist.Count.ToString());
                     foreach (string dllfile in dllfilelist)
                     {
                         //TLCtxHelper.Debug(ExUtil.SectionHeader(" Dll List "));
-                        //TLCtxHelper.Debug("Dll File:" + dllfile);
+						//TLCtxHelper.Debug("Dll File:" + dllfile);
                         try
                         {
                             var assembly = Assembly.ReflectionOnlyLoadFrom(dllfile);
@@ -394,7 +397,7 @@ namespace TradingLib.Common
                                 }
                                 catch (Exception ex)
                                 { 
-                                    
+									Util.Debug("plugin parse error:"+ex.ToString(),QSEnumDebugLevel.ERROR);
                                 }
                             
                             }
@@ -403,7 +406,7 @@ namespace TradingLib.Common
                 }
                 catch (Exception ex)
                 { 
-                    
+					Util.Debug ("pluginhelper LoadImplementors error:" + ex.ToString (), QSEnumDebugLevel.ERROR);
                 }
                 
             }

@@ -1,3 +1,4 @@
+PREFIX = /opt
 PROJ = build.proj
 FLAGS = /property:OperatingPlatform=Unix /property:NetFramework=Mono
 XBUILD = /opt/mono/bin/xbuild /tv:4.0
@@ -36,7 +37,7 @@ release:
 		$(error Invalid VERSION==$(VERSION) - specify package version. E.g., `make VERSION=3.0 BUILD=12345 REVISION=1 MATURITY=Beta')
 	endif
 
-package: release
+package1: release
 	$(PACK) $(PACKFILES)
 
 clean:
@@ -60,7 +61,14 @@ account:
 exsrv:
 	$(XBUILD) /target:ExServer $(FLAGS) $(PROJ)
 
+package:
+	$(XBUILD) /target:Package $(FLAGS) $(PROJ)
+
+packageclean:
+	$(XBUILD) /target:PackageClean $(FLAGS) $(PROJ)
+
 install:
+	
 	rm -rf /home/qianbo/opt/logicsrv1
 	mkdir  /home/qianbo/opt/logicsrv1
 	cp -rf Platform/TradingSrv/config /home/qianbo/opt/logicsrv1/

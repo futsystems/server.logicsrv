@@ -2,7 +2,10 @@
 <PropertyGroup>
 <SolutionDir Condition="'$(SolutionDir)' == ''">$(MSBuildProjectDirectory)</SolutionDir>
 <BuildDir>build</BuildDir>
-<Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
+<Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
+<OperatingPlatform Condition="'$(OperatingPlatform)' == ''">Windows</OperatingPlatform>
+<clrzmqSuffix Condition="'$(OperatingPlatform)' == 'Unix'">-unix</clrzmqSuffix>
+<PackageDir>publish\logicsrv</PackageDir>
 </PropertyGroup>
 
 
@@ -16,11 +19,41 @@
     <CleanFiles Include="TL*\*\obj\$(Configuration)\**" />
   </ItemGroup>
 
+	<ItemGroup>
+		<PackageCleanFiles Include="$(PackageDir)\*.dll" />
+		<PackageCleanFiles Include="$(PackageDir)\*.exe" />
+		<PackageCleanFiles Include="$(PackageDir)\*.a" />
+    <PackageCleanFiles Include="$(PackageDir)\**\*.dll" />
+	</ItemGroup>
   <ItemGroup>
-    <OutputFiles Include="$(SolutionDir)\*\bin\$(Configuration)\*.dll" />
-    <OutputFiles Include="$(SolutionDir)\*\bin\$(Configuration)\*.pdb" />
-    <OutputFiles Include="$(SolutionDir)\*\bin\$(Configuration)\*.xml" />
+    <BuildFilesBase Include="lib\TradingLib\*" />
   </ItemGroup>
+  <ItemGroup>
+    <BuildFilesContrib Include="lib\TradingLib\Contrib\*" />
+  </ItemGroup>
+  <ItemGroup>
+    <BuildFilesConnector Include="lib\TradingLib\Connector\*" />
+  </ItemGroup>
+  <ItemGroup>
+    <BuildFilesAccount Include="lib\TradingLib\Account\*" />
+  </ItemGroup>
+  <ItemGroup>
+    <BuildFilesRuleSet Include="lib\TradingLib\RuleSet\*" />
+  </ItemGroup>
+  <ItemGroup>
+    <LibFiles Include="lib\MySql.Data.dll" />
+		<LibFiles Condition=" '$(OperatingPlatform)' == 'Windows' " Include="lib\libzmq\clrzmq\clrzmq.dll" />
+		<LibFiles Condition=" '$(OperatingPlatform)' == 'Unix' " Include="lib\libzmq\clrzmq-unix\clrzmq.dll" />
+		<LibFiles Condition=" '$(OperatingPlatform)' == 'Unix' " Include="lib\libzmq\clrzmq-unix\libzmq.a" />
+  </ItemGroup>
+  <ItemGroup>
+    <BuildFilesExecute Include="Platform\TradingSrv\LogicSrv.exe" />
+  </ItemGroup>
+  <ItemGroup>
+    <ConfigFiles Include="Platform\TradingSrv\config\*" />
+  </ItemGroup>
+
+
   
 
   <Target Name="Clean">
@@ -75,6 +108,27 @@
    
  	</Target>
   
+	<Target Name="PackageClean">
+		 <Delete Files="@(PackageCleanFiles)"/>
+	</Target>
+
+	<Target Name="Package">
+    <MakeDir Directories="$(PackageDir)\Contrib" />
+		<MakeDir Directories="$(PackageDir)\Connector" />
+		<MakeDir Directories="$(PackageDir)\Account" />
+		<MakeDir Directories="$(PackageDir)\RuleSet" />
+		<MakeDir Directories="$(PackageDir)\config" />
+		<Copy SourceFiles="@(BuildFilesBase)" DestinationFolder="$(PackageDir)" ContinueOnError="false" />
+		<Copy SourceFiles="@(BuildFilesContrib)" DestinationFolder="$(PackageDir)\Contrib" ContinueOnError="false" />
+		<Copy SourceFiles="@(BuildFilesConnector)" DestinationFolder="$(PackageDir)\Connector" ContinueOnError="false" />
+		<Copy SourceFiles="@(BuildFilesAccount)" DestinationFolder="$(PackageDir)\Account" ContinueOnError="false" />
+		<Copy SourceFiles="@(BuildFilesRuleSet)" DestinationFolder="$(PackageDir)\RuleSet" ContinueOnError="false" />
+
+		<Copy SourceFiles="@(LibFiles)" DestinationFolder="$(PackageDir)" ContinueOnError="false" />
+		<Copy SourceFiles="@(BuildFilesExecute)" DestinationFolder="$(PackageDir)" ContinueOnError="false" />
+		<Copy SourceFiles="@(ConfigFiles)" DestinationFolder="$(PackageDir)\config" ContinueOnError="false" />
+	</Target>
+
   <Target Name="Build" DependsOnTargets="Base">
     
   </Target>

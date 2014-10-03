@@ -67,6 +67,7 @@ namespace TradingLib.ServiceManager
         /// </summary>
         public void Init()
         {
+			Console.WriteLine ("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx core init");
             debug("Init Core Modules....", QSEnumDebugLevel.INFO);
             #region 加载核心模块
             debug("[INIT CORE] SettleCentre", QSEnumDebugLevel.INFO);

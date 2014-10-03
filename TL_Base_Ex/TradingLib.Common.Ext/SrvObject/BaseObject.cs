@@ -120,7 +120,7 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="msg"></param>
         /// <param name="level"></param>
-        [Conditional("DEBUG")]
+		//[Conditional("DEBUG")]
         protected void debug(string msg, QSEnumDebugLevel level = QSEnumDebugLevel.DEBUG)
         {
             if (_debugEnable && (int)level <= (int)_debuglevel && SendLogItemEvent != null)

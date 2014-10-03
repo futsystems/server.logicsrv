@@ -42,7 +42,7 @@
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml" />
     <Reference Include="clrzmq">
-      <HintPath>..\..\lib\clrzmq.dll</HintPath>
+      <HintPath>..\..\lib\libzmq\clrzmq\clrzmq.dll1</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="TradingLib.API">
