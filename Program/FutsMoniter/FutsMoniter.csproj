@@ -35,7 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>moniter0.ico</ApplicationIcon>
+    <ApplicationIcon>moniter-oem.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="clrzmq">
@@ -84,13 +84,13 @@
       <HintPath>..\..\lib\Telerik\TelerikCommon.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="TradingLib.API, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="TradingLib.API, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\Win\TradingLib.API.dll</HintPath>
+      <HintPath>..\..\lib\TradingLib\TradingLib.API.dll</HintPath>
     </Reference>
     <Reference Include="TradingLib.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\Win\TradingLib.Common.dll</HintPath>
+      <HintPath>..\..\lib\TradingLib\TradingLib.Common.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

@@ -37,15 +37,19 @@
     <Reference Include="System.Xml" />
     <Reference Include="TradingLib.API">
       <HintPath>..\..\lib\TradingLib\TradingLib.API.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="TradingLib.API.Ex">
       <HintPath>..\..\lib\TradingLib\TradingLib.API.Ex.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="TradingLib.Common">
       <HintPath>..\..\lib\TradingLib\TradingLib.Common.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="TradingLib.Common.Ex">
       <HintPath>..\..\lib\TradingLib\TradingLib.Common.Ex.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -63,5 +67,6 @@
       <OutFiles Include="$(OutputPath)\$(AssemblyName).dll" />
     </ItemGroup>
     <Copy SourceFiles="@(OutFiles)" DestinationFolder="..\..\lib\TradingLib\Contrib" SkipUnchangedFiles="true" />
+	<Copy SourceFiles="@(OutFiles)" DestinationFolder="..\..\Platform\TradingSrv\Contrib" SkipUnchangedFiles="true" />
   </Target>
 </Project>

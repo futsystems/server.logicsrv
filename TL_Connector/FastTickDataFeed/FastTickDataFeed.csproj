@@ -66,6 +66,7 @@
       <OutFiles Include="$(OutputPath)\$(AssemblyName).dll" />
     </ItemGroup>
     <Copy SourceFiles="@(OutFiles)" DestinationFolder="..\..\lib\TradingLib\Connector" SkipUnchangedFiles="true" />
+	<Copy SourceFiles="@(OutFiles)" DestinationFolder="..\..\Platform\TradingSrv\Connector" SkipUnchangedFiles="true" />
   </Target>
   
 </Project>

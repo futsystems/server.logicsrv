@@ -34,17 +34,17 @@ namespace DataFeed.FastTick
         /// </summary>
         public event TickDelegate GotTickEvent;
 
-		//ConfigHelper cfg;
+		ConfigHelper cfg;
         string server;
 		int port;
 		int reqport;
         public FastTick()
         {
-			//cfg = new ConfigHelper(CfgConstDFFastTick.XMLFN);
-			server = "tick_dev.huiky.com";//cfg.GetConfig(CfgConstDFFastTick.Server);
-			port = 6001;//cfg.GetConfig(CfgConstDFFastTick.Port);
-			reqport = 6000;
-			//cfg.GetConfig(CfgConstDFFastTick.ReqPort);
+			cfg = new ConfigHelper(CfgConstDFFastTick.XMLFN);
+			server = cfg.GetConfig(CfgConstDFFastTick.Server);
+			port = int.Parse(cfg.GetConfig(CfgConstDFFastTick.Port));
+			reqport = int.Parse(cfg.GetConfig(CfgConstDFFastTick.ReqPort));
+			
         }
         public bool IsLive
         {

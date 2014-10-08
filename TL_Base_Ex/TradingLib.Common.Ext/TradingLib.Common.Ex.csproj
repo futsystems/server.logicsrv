@@ -47,15 +47,19 @@
     </Reference>
     <Reference Include="TradingLib.API">
       <HintPath>..\..\lib\TradingLib\TradingLib.API.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="TradingLib.API.Ex">
       <HintPath>..\..\lib\TradingLib\TradingLib.API.Ex.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="TradingLib.Common">
       <HintPath>..\..\lib\TradingLib\TradingLib.Common.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="TradingLib.Mixins">
       <HintPath>..\..\lib\TradingLib\TradingLib.Mixins.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>

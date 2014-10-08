@@ -42,18 +42,22 @@
     <Reference Include="TradingLib.API, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\TradingLib\TradingLib.API.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="TradingLib.API.Ex, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\TradingLib\TradingLib.API.Ex.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="TradingLib.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\TradingLib\TradingLib.Common.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="TradingLib.Common.Ex, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\TradingLib\TradingLib.Common.Ex.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -71,5 +75,6 @@
       <OutFiles Include="$(OutputPath)\$(AssemblyName).dll" />
     </ItemGroup>
     <Copy SourceFiles="@(OutFiles)" DestinationFolder="..\..\lib\TradingLib\Contrib" SkipUnchangedFiles="true" />
+	<Copy SourceFiles="@(OutFiles)" DestinationFolder="..\..\Platform\TradingSrv\Contrib" SkipUnchangedFiles="true" />
   </Target>
 </Project>

@@ -1,16 +1,6 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="TL_Base_Ex/TradingLib.Common.Ext/Plugin/PluginFinder.cs">
-    <Files>
-      <File FileName="Program/TradingSrv/CoreDaemon.cs" Line="1" Column="1" />
-      <File FileName="Program/TradingSrv/CoreThread.cs" Line="1" Column="1" />
-      <File FileName="TL_Server/TradingLib.Service/CoreManager/CoreManager_CoreComponents.cs" Line="1" Column="1" />
-      <File FileName="TL_Server/TradingLib.Service/CoreManager/CoreManager.cs" Line="1" Column="1" />
-      <File FileName="TL_Base_Ex/TradingLib.Common.Ext/SrvObject/BaseObject.cs" Line="108" Column="23" />
-      <File FileName="TL_Base_Ex/TradingLib.Common.Ext/Plugin/PluginFinder.cs" Line="346" Column="24" />
-      <File FileName="TL_Base/TradingLib.Common/Utils/Util.cs" Line="236" Column="37" />
-    </Files>
-  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workbench />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
