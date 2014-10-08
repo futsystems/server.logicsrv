@@ -28,19 +28,19 @@ namespace TradingLib.Core
         }
 
 
-        #region 交易记录检验
-        /// <summary>
-        /// 数据检验
-        /// </summary>
-        [TaskAttr("清算中心数据检验", 15, 22, 35, "清算中心数据检验")]
-        public void Task_DataCheck()
-        {
-            if (IsNormal && !IsTradingday) return;//如果是正常状态 且当前是非交易日则直接返回
-            this.CheckAccountLastEquity();
-            this.CheckTradingInfo();
-            Notify("数据检验[" + DateTime.Now.ToString() + "]", " ");
-        }
-        #endregion
+        //#region 交易记录检验
+        ///// <summary>
+        ///// 数据检验
+        ///// </summary>
+        //[TaskAttr("清算中心数据检验", 15, 22, 35, "清算中心数据检验")]
+        //public void Task_DataCheck()
+        //{
+        //    if (IsNormal && !IsTradingday) return;//如果是正常状态 且当前是非交易日则直接返回
+        //    this.CheckAccountLastEquity();
+        //    this.CheckTradingInfo();
+        //    Notify("数据检验[" + DateTime.Now.ToString() + "]", " ");
+        //}
+        //#endregion
 
 
         #region 大结算过程
@@ -52,13 +52,11 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.CLI, "datastore", "datastore - datastore", "datastore")]
         public void Task_DataStore()
         {   
-            //@@@@@@采集当日品种的计算价,目前以最后的一个价设定为持仓的结算价
             this.IsInSettle = true;//标识结算中心处于结算状态
             if (IsNormal && !IsTradingday) return;//结算中心正常 但不是交易日 不做记录转储
             //先将内存中的PR数据保存到数据库 在保存pr数据之前,先清空了当日的pr临时数据表(这里的清空 会造成 清空其他程序加载账户的数据 ？？)
             this.BindPositionSettlePrice();//采集持仓结算价
-            this.SaveHoldInfo();
-            //这个操作由数据维护程序进行处理
+            this.SaveHoldInfo();//保存结算持仓数据 包括当前持仓和当前持仓对应的PositionRound数据
             this.Dump2Log();//将委托 成交 撤单 PR数据保存到对应的log_表 所有的转储操作均是replace into不会存在重复操作
             Notify("保存交易数据[" + DateTime.Now.ToString() + "]", " ");
         }
@@ -99,15 +97,45 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.CLI, "resetsc", "resetsc - reset settlecentre trading day", "重置结算中心")]
         public void Task_ResetTradingday()
         {
-            debug("结算中心重置交易日信息", QSEnumDebugLevel.INFO);
-            this.Reset();//需要把结算重置移动到 结算帐户之后,帐户一结算完毕就重置结算日期信息，这样帐户结算与帐户清算中心重置间的重置会对应到正确的交易日上去
-            //15:50分结算帐户完毕后 4点从数据库重新加载帐户权益数据
+            if (IsNormal && !IsTradingday) return;
+            debug("系统重置，清算中心重置帐户，风控中心重置规则", QSEnumDebugLevel.INFO);
+            //重置结算中心
+            this.Reset();
+
+            //15:50分结算帐户完毕后 4点从数据库重新加载帐户权益数据,此时数据库加载的数据是按结算重置后加载的日期信息 即结算日向前滚动一日
             _clearcentre.Reset();
-            //重置风控中心，加载帐户规则
+
+            //重置风控中心，清空内存缓存数据
             _riskcentre.Reset();
 
-            
             this.IsInSettle = false;//标识系统结算完毕
+        }
+
+        /// <summary>
+        /// 执行历史结算
+        /// 从某个交易日开始从数据库加载历史持仓,出入金,日内交易记录 恢复对应结算日的数据然后进行结算转储存
+        /// </summary>
+        [ContribCommandAttr(QSEnumCommandSource.CLI, "settleround", "settleround - 执行一次结算并重置交易系统状态", "执行结算并重置系统状态")]
+        public void HistSettleRound()
+        {
+            //A:储存当前数据
+            this.BindPositionSettlePrice();//采集持仓结算价
+            this.SaveHoldInfo();//保存结算持仓数据和对应的PR数据
+            this.Dump2Log();//转储到历史记录表
+
+            //B:结算交易帐户形成结算记录
+            this.SettleAccount();
+
+            //C:清空当日交易记录
+            this.CleanTempTable();
+
+            //D:重置系统状态
+            //重置结算中心 形成新的最后结算日 下一交易日和当前交易日数据
+            this.Reset();
+            //重置清算中心，加载下一交易日的交易记录
+            _clearcentre.Reset();
+            //重置风控中心，清空内存缓存数据
+            _riskcentre.Reset();
         }
         #endregion
 
@@ -126,7 +154,7 @@ namespace TradingLib.Core
         [TaskAttr("白天开盘前开启交易中心", 8, 50, 5, "每天白天8:50:5开启清算中心")]
         public void Task_OpenClearCentre()
         {
-            if (!IsTradingday) return;
+            if (IsNormal && !IsTradingday) return;
             _clearcentre.OpenClearCentre();
             Notify("开启清算中心[" + DateTime.Now.ToString() + "]", " ");
             debug("开启清算中心,准备接受客户委托", QSEnumDebugLevel.INFO);

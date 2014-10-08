@@ -78,7 +78,7 @@ namespace FutSystems.GUI.Control
                 tb.Rows[i][COMMISSION] = string.Format(_defaultformat, t.Commission);
                 tb.Rows[i][OPERATION] = Util.GetEnumDescription(t.PositionOperation);
                 tb.Rows[i][ACCOUNT] = t.Account;
-                tb.Rows[i][PROFIT] = string.Format(_defaultformat,0);
+                tb.Rows[i][PROFIT] = string.Format(_defaultformat,t.Profit);
                 tb.Rows[i][FILLID] = "fillid";
                 toUpdateRow();
                 //tb.Rows.Add(new object[] { t.id, Util.ToDateTime(t.xdate, t.xtime).ToString("HH:mm:ss"), t.symbol, (t.side ? "买" : "卖"), t.xsize, string.Format(getDisplayFormat(t.symbol), t.xprice), string.Format(_defaultformat, t.Commission), Util.GetEnumDescription(t.PositionOperation), t.Account });

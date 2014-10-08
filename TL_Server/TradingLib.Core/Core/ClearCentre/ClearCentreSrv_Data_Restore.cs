@@ -19,9 +19,9 @@ namespace TradingLib.Core
         /// <summary>
         /// 从数据库恢复委托 成交 取消数据
         /// 账户的交易数据恢复
-        /// 清算中心初始化时,只是加载的账户的状态数据,账户当日的成交与出入金数据需要从数据进行回复
-        /// 1.恢复昨日持仓数据
-        /// 2.在昨日持仓数据的基础上 叠加当天交易数据得到账户最新的交易信息
+        /// 清算中心初始化时,只是加载的账户的状态数据,账户当日的交易数据与出入金数据需要从数据进行回复
+        /// 1.恢复结算持仓数据
+        /// 2.在结算持仓数据的基础上 叠加下个交易数据得到账户最新的交易信息
         /// </summary>
         public void RestoreFromMysql()
         {
@@ -32,15 +32,19 @@ namespace TradingLib.Core
                 //从数据库加载账户的当日出入金信息以及昨日结算权益数据
                 foreach (IAccount acc in acctk.Accounts)
                 {
-                    acc.Deposit(ORM.MAccount.CashInOfTradingDay(acc.ID,TLCtxHelper.Ctx.SettleCentre.CurrentTradingday));
-                    acc.Withdraw(ORM.MAccount.CashOutOfTradingDay(acc.ID, TLCtxHelper.Ctx.SettleCentre.CurrentTradingday));
-                    acc.LastEquity = ORM.MAccount.GetAccountLastEquity(acc.ID);
+                    //这里累计NextTradingday的出入金数据 恢复到当前状态,结算之后的所有交易数据都归入以结算日为基础计算的下一个交易日
+                    acc.Deposit(ORM.MAccount.CashInOfTradingDay(acc.ID,TLCtxHelper.Ctx.SettleCentre.NextTradingday));
+                    acc.Withdraw(ORM.MAccount.CashOutOfTradingDay(acc.ID, TLCtxHelper.Ctx.SettleCentre.NextTradingday));
+                    acc.LastEquity = ORM.MAccount.GetSettleEquity(acc.ID,TLCtxHelper.Ctx.SettleCentre.LastSettleday);
                 }
-                IList<Order> olist = LoadOrderFromMysql();
-                IList<Trade> flist = LoadTradesFromMysql();
-                IList<long> clist = LoadCanclesFromMysql();
-                IList<Position> plist = LoadPositionFromMysql();//从数据得到昨持仓数据
-                IList<PositionRound> prlist = LoadPositionRoundFromMysql();//恢复开启的positionround数据
+                debug("从数据库加载交易日:" + TLCtxHelper.Ctx.SettleCentre.NextTradingday.ToString() + " 交易数据", QSEnumDebugLevel.INFO);
+                IEnumerable<Order> olist = LoadOrderFromMysql();
+                IEnumerable<Trade> flist = LoadTradesFromMysql();
+                IEnumerable<long> clist = LoadCanclesFromMysql();
+
+                debug("从数据库加载交易日:" + TLCtxHelper.Ctx.SettleCentre.LastSettleday.ToString() + " 隔夜持仓数据", QSEnumDebugLevel.INFO);
+                IEnumerable<Position> plist = LoadPositionFromMysql();//从数据得到昨持仓数据
+                IEnumerable<PositionRound> prlist = LoadPositionRoundFromMysql();//恢复开启的positionround数据
                 //从数据库恢复昨天持仓信息,账户resume也要将昨持仓数据正确加载进来 
                 foreach (Position p in plist)
                 {
@@ -72,7 +76,6 @@ namespace TradingLib.Core
                     string key = PositionRound.GetPRKey(p);
                     PositionRound pr = prt[key];
                     debug("PH:" + p.Account + " " + p.Symbol + "  Size:" + p.Size + "    PR:" + (pr == null ? "NULL" : pr.HoldSize.ToString()), QSEnumDebugLevel.MUST);
-
                 }
             }
             catch (Exception ex)
@@ -131,20 +134,12 @@ namespace TradingLib.Core
         /// <summary>
         /// 从数据库导出成交数据
         /// </summary>
-        public IList<Trade> LoadTradesFromMysql()
+        public IEnumerable<Trade> LoadTradesFromMysql()
         {
-            List<Trade> list = new List<Trade>();
-            foreach (Trade f in ORM.MTradingInfo.SelectTrades())
-            {
-                //if (Util.ToDateTime(f.xdate, f.xtime) > this[f.Account].SettleDateTime)
-                {
-                    f.oSymbol = BasicTracker.SymbolTracker[f.symbol];//从数据库记录的symbol获得对应的oSymbol
-                    //f.side = f.xsize > 0 ? true : false;//数据库没有记录具体的方向,通过xsize来获得对应的成交方向
-                    list.Add(f);
-                }
-            }
-            debug("数据库恢复前次结算以来成交数据:" + list.Count.ToString() + "条", QSEnumDebugLevel.INFO);
-            return list;
+            //填充对象oSymbol
+            IEnumerable<Trade> trades =  ORM.MTradingInfo.SelectTrades().Select(f => { f.oSymbol = BasicTracker.SymbolTracker[f.symbol]; return f; });
+            debug("数据库恢复前次结算以来成交数据:" + trades.Count().ToString() + "条", QSEnumDebugLevel.INFO);
+            return trades;
         }
        
 
@@ -154,39 +149,23 @@ namespace TradingLib.Core
         /// 给Account加载数据的时候,只需要加载Account上次结算时间之后产生的交易数据
         /// </summary>
         /// <returns></returns>
-        public IList<Order> LoadOrderFromMysql()
+        public IEnumerable<Order> LoadOrderFromMysql()
         {
-            List<Order> list = new List<Order>();
-            foreach(Order o in ORM.MTradingInfo.SelectOrders())
-            {
-                //if (Util.ToDateTime(o.date, o.time) > this[o.Account].SettleDateTime)
-                {
-                    o.oSymbol = BasicTracker.SymbolTracker[o.symbol];
-                    //o.side = o.TotalSize > 0 ? true : false;
-                    list.Add(o);
-                }
-            }
-
-            debug("数据库恢复前次结算以来委托数据:" + list.Count.ToString() + "条", QSEnumDebugLevel.INFO);
-            return list;
+            IEnumerable<Order> orders = ORM.MTradingInfo.SelectOrders().Select(o => { o.oSymbol = BasicTracker.SymbolTracker[o.symbol]; return o; });
+            debug("数据库恢复前次结算以来委托数据:" + orders.Count().ToString() + "条", QSEnumDebugLevel.INFO);
+            return orders;
         }
 
         /// <summary>
         /// 加载上次结算时的持仓数据,这里的持仓均是隔夜仓数据
         /// </summary>
         /// <returns></returns>
-        public IList<Position> LoadPositionFromMysql()
+        public IEnumerable<Position> LoadPositionFromMysql()
         {
-            debug("从数据库恢复昨持仓数据....", QSEnumDebugLevel.DEBUG);
-            List<Position> list = new List<Position>();
-            //获得上次结算日的结算持仓
-            foreach (Position pos in ORM.MTradingInfo.SelectHoldPositions(TLCtxHelper.Ctx.SettleCentre.LastSettleday))//
-            {
-                pos.oSymbol = BasicTracker.SymbolTracker[pos.Symbol];
-                list.Add(pos);
-            }
-            debug("数据库恢复前次结算持仓数据:" + list.Count.ToString() + "条", QSEnumDebugLevel.INFO);
-            return list;
+            //debug("从数据库恢复昨持仓数据....", QSEnumDebugLevel.DEBUG);
+            IEnumerable<Position> positions = ORM.MTradingInfo.SelectHoldPositions(TLCtxHelper.Ctx.SettleCentre.LastSettleday).Select(pos => { pos.oSymbol = BasicTracker.SymbolTracker[pos.Symbol]; return pos; });
+            debug("数据库恢复前次结算持仓数据:" + positions.Count().ToString() + "条", QSEnumDebugLevel.INFO);
+            return positions;
         }
 
         /// <summary>

@@ -259,6 +259,7 @@ namespace TradingLib.Common
             _localsymbol = copytrade.LocalSymbol;
             id = copytrade.id;
             _ex = copytrade.Exchange;
+            _profit = copytrade.Profit;
 
             Broker = copytrade.Broker;
             BrokerKey = copytrade.BrokerKey;

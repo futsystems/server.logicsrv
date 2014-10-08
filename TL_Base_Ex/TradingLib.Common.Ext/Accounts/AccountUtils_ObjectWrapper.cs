@@ -142,10 +142,10 @@ namespace TradingLib.Common
             settle.CashOut = account.CashOut;
             settle.Commission = account.Commission;
             settle.Confirmed = false;
-            settle.LastEqutiy = account.LastEquity;
+            settle.LastEquity = account.LastEquity;
             settle.RealizedPL = account.RealizedPL;
             settle.UnRealizedPL = account.SettleUnRealizedPL;
-            settle.NowEquity = settle.LastEqutiy + settle.RealizedPL + settle.UnRealizedPL - settle.Commission + settle.CashIn - settle.CashOut;
+            settle.NowEquity = settle.LastEquity + settle.RealizedPL + settle.UnRealizedPL - settle.Commission + settle.CashIn - settle.CashOut;
 
             //指定交易日期
             settle.SettleDay = Util.ToTLDate();

@@ -131,7 +131,7 @@ namespace TraddingSrvCLI
             _status = QSEnumCoreThreadStatus.Started;
 
             Thread.Sleep(2000);
-
+            
             debug(">>Start Broker and DataFeed");
             connectorMgr.StartDataFeedViaName("DataFeed.FastTick.FastTick");
             connectorMgr.StartBrokerViaName("Broker.SIM.SIMTrader");

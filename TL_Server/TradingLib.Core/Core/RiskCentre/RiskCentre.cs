@@ -395,11 +395,6 @@ namespace TradingLib.Core
         public void Reset()
         {
             debug("重置风控中心", QSEnumDebugLevel.INFO);
-            foreach (IAccount a in _clearcentre.Accounts)
-            {
-                a.Reset();//重置交易帐户 交易帐户对象内存复位
-            }
-
             //清空帐户的止盈止损参数设置
             _posoffsetracker.Clear();
 

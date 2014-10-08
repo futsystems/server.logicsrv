@@ -575,7 +575,7 @@ namespace TradingLib.Common
         /// 将positionround list恢复到 roundmap中去
         /// </summary>
         /// <param name="prlist"></param>
-        public void RestorePositionRounds(IList<PositionRound> prlist)
+        public void RestorePositionRounds(IEnumerable<PositionRound> prlist)
         {
             foreach (PositionRound pr in prlist)
             {

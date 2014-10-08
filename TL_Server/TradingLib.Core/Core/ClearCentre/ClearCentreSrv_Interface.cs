@@ -23,7 +23,7 @@ namespace TradingLib.Core
         /// <returns></returns>
         public IList<Order> getOrders(IBroker broker)
         {
-            IList<Order> olist = LoadOrderFromMysql();
+            IEnumerable<Order> olist = LoadOrderFromMysql();
             IList<Order> brokreorder = new List<Order>();
 
             foreach (Order o in olist)

@@ -160,6 +160,9 @@ namespace TradingLib.Common
         /// </summary>
         public void Reset()
         {
+            //出入金归零
+            _cashin = 0;
+            _cashout = 0;
             //清空账户附加的规则 用于重新加载帐户规则
             ClearAccountCheck();
             ClearOrderCheck();

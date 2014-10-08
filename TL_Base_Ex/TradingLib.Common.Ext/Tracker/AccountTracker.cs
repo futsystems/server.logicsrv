@@ -329,12 +329,9 @@ namespace TradingLib.Common
         /// </summary>
         public void ResetAccount(IAccount account)
         {
-            AccountBase wa = (account as AccountBase);
-            wa.LastEquity = 0;//将昨日权益归0 
-            wa.CashIn = 0;//归零日内出入金记录
-            wa.CashOut = 0;
+            account.Reset();//结算后要对account进行reset 包括出入金数据 同时将相关标识复位
             //昨日权益以及出入金数据从数据库重新加载
-            account.Reset();//结算后要对account进行reset 用于将相关标识复位
+
             //清空交易帐户的当日交易记录
             OrdBook[account.ID].Clear();
             PosBook[account.ID].Clear();

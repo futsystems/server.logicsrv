@@ -339,7 +339,7 @@ namespace TradingLib.Core
                 foreach (IAccount acc in accountlist)
                 {
                     //1.检查该帐户当前是否可以交易
-                    CheckAccountExecute(acc);
+                    //CheckAccountExecute(acc);
                     //2.如果缓存中没有该账户,则加入该账户
                     if (!HaveAccount(acc.ID) && needLoad(acc))
                         CacheAccount(acc);
@@ -371,21 +371,21 @@ namespace TradingLib.Core
             }
         }
 
-        /// <summary>
-        /// 检查账户是否应该被冻结
-        /// </summary>
-        /// <param name="account"></param>
-        void CheckAccountExecute(IAccount account)
-        {
-            //account.Execute = true;
-            ////初赛账户，报名后
-            //if (account.RaceStatus == QSEnumAccountRaceStatus.INPRERACE)
-            //{
-            //    //报名后账户就被冻结,当重行启动或者加载时，需要检测，需要一直冻结到结算。这样才可以保证结算时为25万。
-            //    if (account.SettleDateTime <= account.RaceEntryTime)
-            //        account.Execute = false;
-            //}
-        }
+        ///// <summary>
+        ///// 检查账户是否应该被冻结
+        ///// </summary>
+        ///// <param name="account"></param>
+        //void CheckAccountExecute(IAccount account)
+        //{
+        //    //account.Execute = true;
+        //    ////初赛账户，报名后
+        //    //if (account.RaceStatus == QSEnumAccountRaceStatus.INPRERACE)
+        //    //{
+        //    //    //报名后账户就被冻结,当重行启动或者加载时，需要检测，需要一直冻结到结算。这样才可以保证结算时为25万。
+        //    //    if (account.SettleDateTime <= account.RaceEntryTime)
+        //    //        account.Execute = false;
+        //    //}
+        //}
 
         /// <summary>
         /// 为某个user_id添加某个类型的帐号 密码为pass

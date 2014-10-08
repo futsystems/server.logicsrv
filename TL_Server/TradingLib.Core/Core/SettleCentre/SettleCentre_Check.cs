@@ -51,9 +51,9 @@ namespace TradingLib.Core
                 nPosHold.TryAdd(a.ID, new PositionTracker());
             }
 
-            IList<Order> olist = _clearcentre.LoadOrderFromMysql();//从数据库加载委托数据
-            IList<Trade> flist = _clearcentre.LoadTradesFromMysql();//从数据库加载成交数据
-            IList<Position> plist = _clearcentre.LoadPositionFromMysql();//从数据得到昨持仓数据
+            IEnumerable<Order> olist = _clearcentre.LoadOrderFromMysql();//从数据库加载委托数据
+            IEnumerable<Trade> flist = _clearcentre.LoadTradesFromMysql();//从数据库加载成交数据
+            IEnumerable<Position> plist = _clearcentre.LoadPositionFromMysql();//从数据得到昨持仓数据
             IList<PositionRound> prlist = _clearcentre.LoadPositionRoundFromMysql();//恢复开启的positionround数据
 
             //TradingStatistic ts = new TradingStatistic(this);

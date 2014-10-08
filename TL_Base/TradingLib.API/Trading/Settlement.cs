@@ -46,7 +46,7 @@ namespace TradingLib.API
         /// <summary>
         /// 昨日权益
         /// </summary>
-        decimal LastEqutiy { get; set; }
+        decimal LastEquity { get; set; }
 
         /// <summary>
         /// 当前权益

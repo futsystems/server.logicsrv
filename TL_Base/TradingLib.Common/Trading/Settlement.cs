@@ -11,6 +11,21 @@ namespace TradingLib.Common
     /// </summary>
     public class SettlementImpl:Settlement
     {
+        public SettlementImpl()
+        {
+            this.Account = string.Empty;
+            this.SettleDay = 0;
+            this.SettleTime = 0;
+            this.RealizedPL = 0M;
+            this.UnRealizedPL = 0M;
+            this.Commission = 0M;
+            this.CashIn = 0M;
+            this.CashOut = 0M;
+            this.LastEquity = 0M;
+            this.NowEquity = 0M;
+            this.Confirmed = false;
+        }
+
         public string Account { get; set; }
         public int SettleDay { get; set; }
         public int SettleTime { get; set; }
@@ -20,7 +35,7 @@ namespace TradingLib.Common
         public decimal Commission { get; set; }
         public decimal CashIn { get; set; }
         public decimal CashOut { get; set; }
-        public decimal LastEqutiy { get; set; }
+        public decimal LastEquity { get; set; }
         public decimal NowEquity { get; set; }
         public bool Confirmed { get; set; }
     }
