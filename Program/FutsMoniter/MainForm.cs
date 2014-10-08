@@ -77,6 +77,7 @@ namespace FutsMoniter
         {
             
             ctAccountMontier1.SendDebugEvent +=new DebugDelegate(debug);
+            ctAccountMontier1.QryAccountHistEvent += new IAccountLiteDel(ctAccountMontier1_QryAccountHistEvent);
 
             infotracker = new TradingInfoTracker();
             Globals.RegisterInfoTracker(infotracker);
@@ -106,6 +107,8 @@ namespace FutsMoniter
                 btnManagerGP.Enabled = false;
             }
         }
+
+
 
 
         public void Reset()
@@ -224,6 +227,7 @@ namespace FutsMoniter
             _logined = false;
             _connected = false;
             tlclient.Start();
+            
         }
 
         void InitSymbol2View()

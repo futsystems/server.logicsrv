@@ -64,6 +64,7 @@
       <HintPath>..\..\lib\Telerik\Telerik.WinControls.GridView.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Telerik.WinControls.PdfViewer, Version=2013.2.612.40, Culture=neutral, PublicKeyToken=5bb2a467cbec794e, processorArchitecture=MSIL" />
     <Reference Include="Telerik.WinControls.Themes.Office2010Black, Version=2013.2.612.40, Culture=neutral, PublicKeyToken=5bb2a467cbec794e, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
@@ -94,6 +95,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\Delegate.cs" />
     <Compile Include="API\IBasicInfo.cs" />
     <Compile Include="Controls\ctOrderSenderM.cs">
       <SubType>UserControl</SubType>

@@ -107,7 +107,7 @@ namespace TradingLib.Core
                 foreach (Trade t in trades)
                 {
 
-                    settlelist.Add(string.Format(" {0} {1} {2} {3} {4} {5} {6,8:F2} {7,4} {8,10:F2} {9} {10,6:F2} {11,10:F2} {12,10}", t.xdate.ToString().PadRight(10), padRightEx(BasicTracker.ExchagneTracker.GetExchangeTitle(t.Exchange), 8), padRightEx(BasicTracker.SecurityTracker.GetSecurityName(t.SecurityCode), 20), "201415".PadRight(8), padRightEx((t.xsize > 0 ? "买" : " 卖"), 4), padRightEx("投", 4), t.xprice, Math.Abs(t.xsize), BasicTracker.SecurityTracker.GetMultiple(t.SecurityCode) * t.xprice * Math.Abs(t.xsize), padRightEx(GetCombFlag(t.OffsetFlag), 4), t.Commission, t.Profit,10000));
+                    settlelist.Add(string.Format(" {0} {1} {2} {3} {4} {5} {6,8:F2} {7,4} {8,10:F2} {9} {10,6:F2} {11,10:F2} {12,10}", t.xdate.ToString().PadRight(10), padRightEx(BasicTracker.ExchagneTracker.GetExchangeTitle(t.Exchange), 8), padRightEx(BasicTracker.SecurityTracker.GetSecurityName(t.SecurityCode), 20), "201415".PadRight(8), padRightEx((t.xsize > 0 ? "买" : " 卖"), 4), padRightEx("投", 4), t.xprice, Math.Abs(t.xsize), BasicTracker.SecurityTracker.GetMultiple(t.SecurityCode) * t.xprice * Math.Abs(t.xsize), padRightEx(GetCombFlag(t.OffsetFlag), 4), t.Commission, t.Profit,t.BrokerKey));
                 }
 
                 settlelist.Add(NewLine);

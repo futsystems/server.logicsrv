@@ -19,6 +19,10 @@ namespace FutsMoniter.Controls
 {
     public partial class ctAccountMontier : UserControl
     {
+        #region 事件
+        public event IAccountLiteDel QryAccountHistEvent;
+
+        #endregion
 
         const string PROGRAME = "AccountMontier";
         AccountConfigForm fmaccountconfig = null;
@@ -90,10 +94,15 @@ namespace FutsMoniter.Controls
             //MenuItem_changepass.Image = Properties.Resources.addAccount_16;
             MenuItem_changeinvestor.Click += new EventHandler(ChangeInvestor_Click);
 
+            Telerik.WinControls.UI.RadMenuItem MenuItem_qryhist = new Telerik.WinControls.UI.RadMenuItem("历史记录");
+            //MenuItem_changepass.Image = Properties.Resources.addAccount_16;
+            MenuItem_qryhist.Click += new EventHandler(QryHist_Click);
+
             menu.Items.Add(MenuItem_edit);
             menu.Items.Add(MenuItem_add);
             menu.Items.Add(MenuItem_changepass);
             menu.Items.Add(MenuItem_changeinvestor);
+            menu.Items.Add(MenuItem_qryhist);
             
 
 
@@ -157,6 +166,23 @@ namespace FutsMoniter.Controls
                 fmConfirm.Show("请选择需要编辑的交易帐户！");
             }
         }
+
+        void QryHist_Click(object sender, EventArgs e)
+        {
+            IAccountLite account = GetVisibleAccount(CurrentAccount);
+            if (account != null)
+            {
+                if (QryAccountHistEvent != null)
+                    QryAccountHistEvent(account);
+
+            }
+            else
+            {
+                fmConfirm.Show("请选择需要查询的交易帐户！");
+            }
+        }
+
+
 
         #endregion
 
@@ -797,7 +823,7 @@ namespace FutsMoniter.Controls
         //RingBuffer<IAccountLite> accountchagnecache = new RingBuffer<IAccountLite>(bufferisze);//交易帐户变动缓存
         
 
-        delegate void IAccountLiteDel(IAccountLite account);
+       
         void InvokeGotAccount(IAccountLite account)
         {
             if (InvokeRequired)

@@ -45,12 +45,10 @@
     <Compile Include="Message\IPacket.cs" />
     <Compile Include="Message\ISession.cs" />
     <Compile Include="Message\ISessionUtils.cs" />
-    <Compile Include="1delete\QSMessageContent.cs" />
     <Compile Include="Msic\EnumManagerType.cs" />
     <Compile Include="Msic\ILogItem.cs" />
     <Compile Include="Rule\IRuleItem.cs" />
     <Compile Include="Trading\BasicInfo\IMarketTime.cs" />
-    <Compile Include="1delete\ILoginResponse.cs" />
     <Compile Include="Reply\IReply.cs" />
     <Compile Include="Reply\ReplyType.cs" />
     <Compile Include="Trading\EnumAccountCategoy.cs" />
@@ -73,7 +71,6 @@
     <Compile Include="Trading\BasicInfo\IExchange.cs" />
     <Compile Include="Msic\LibDelegates.cs" />
     <Compile Include="Msic\TradingLibError.cs" />
-    <Compile Include="1delete\QSMessageType.cs" />
     <Compile Include="Trading\Basket.cs" />
     <Compile Include="Msic\Constants.cs" />
     <Compile Include="Trading\BasicInfo\EneumCurrency.cs" />

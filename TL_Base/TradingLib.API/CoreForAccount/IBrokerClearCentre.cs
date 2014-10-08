@@ -15,8 +15,14 @@ namespace TradingLib.API
         /// </summary>
         /// <param name="b"></param>
         /// <returns></returns>
-        IList<Order> getOrders(IBroker b);
+        IEnumerable<Order> GetOrdersViaBroker(string broker);
 
+        /// <summary>
+        /// 获得某个broker的所有成交记录(日内)
+        /// </summary>
+        /// <param name="broker"></param>
+        /// <returns></returns>
+        IEnumerable<Trade> GetTradesViaBroker(string broker);
         /// <summary>
         /// 检查某个委托是否是Pending状态，simbroker 如果委托处于pending状态则需要被加载到成交引擎中去
         /// </summary>
