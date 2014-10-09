@@ -86,6 +86,14 @@ namespace TradingLib.Common
                 {
                     p = parameters.Split(',');//用逗号分隔参数列表
                 }
+                if (_cmdinfo.Attr.IsJsonArg)
+                {
+                    p = new string[] { parameters };
+                }
+                else
+                {
+                    p = parameters.Split(',');
+                }
             }
 
             //string[] p = parameters.Split(',');//用逗号分隔参数列表

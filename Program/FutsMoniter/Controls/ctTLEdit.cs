@@ -30,5 +30,15 @@ namespace FutsMoniter
         {
             InitializeComponent();
         }
+
+        /// <summary>
+        /// 解析参数并验证有效性
+        /// </summary>
+        /// <returns></returns>
+        public bool ParseArg()
+        {
+            _argument.ArgValue = argvalue.Text;
+            return true;
+        }
     }
 }

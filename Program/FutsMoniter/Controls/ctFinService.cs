@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using TradingLib;
 using TradingLib.Mixins.JsonObject;
 using TradingLib.Mixins.LitJson;
+using FutSystems.GUI;
 
 namespace FutsMoniter
 {
@@ -21,6 +22,7 @@ namespace FutsMoniter
             //oppanel.Visible = false;
         }
 
+        JsonWrapperFinServiceStub finservice = null;
         public void OnQryFinService(string jsonstr)
         {
             Globals.Debug("ctFinService got json ret:" + jsonstr);
@@ -33,6 +35,7 @@ namespace FutsMoniter
                 //Globals.Debug("playload:" + JsonMapper.ToJson(obj));
                 GotFinServiceStub(obj);
                 //oppanel.Visible = true;
+                finservice = obj;
             }
             else
             {
@@ -78,6 +81,24 @@ namespace FutsMoniter
                 ctTLEdit edit = new ctTLEdit();
                 edit.Argument = arg;
                 tableLayoutPanel.Controls.Add(edit);
+            }
+        }
+
+        private void btnUpdateArgs_Click(object sender, EventArgs e)
+        {
+
+            if (finservice != null)
+            {
+                foreach(Control c in tableLayoutPanel.Controls)
+                {
+                    ctTLEdit edit = c as ctTLEdit;
+                    if (!edit.ParseArg())
+                    {
+                        fmConfirm.Show("参数:" + edit.Argument.ArgTitle + " 设置无效,请输入有效参数!");
+                        return;
+                    }
+                }
+                Globals.TLClient.ReqUpdateFinServiceArgument(TradingLib.Mixins.LitJson.JsonMapper.ToJson(finservice));
             }
         }
     }

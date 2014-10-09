@@ -11,18 +11,19 @@ namespace TradingLib.Mixins.JsonObject
     /// </summary>
     public class JsonWrapperArgument
     {
-        public JsonWrapperArgument(string argname, string argtitle, string argvalue, bool editable)
-        {
-            this.ArgName = argname;
-            this.ArgTitle = argtitle;
-            this.ArgValue = argvalue;
-            this.Editable = editable;
-        }
+        //public JsonWrapperArgument(string argname, string argtitle, string argvalue, bool editable)
+        //{
+        //    this.ArgName = argname;
+        //    this.ArgTitle = argtitle;
+        //    this.ArgValue = argvalue;
+        //    this.Editable = editable;
+        //}
         public JsonWrapperArgument()
         {
             this.ArgName = string.Empty;
             this.ArgTitle = string.Empty;
             this.ArgValue = string.Empty;
+            this.ArgType = string.Empty;
             this.Editable = false;
         }
         /// <summary>
@@ -40,6 +41,10 @@ namespace TradingLib.Mixins.JsonObject
         /// </summary>
         public string ArgValue { get; set; }
 
+        /// <summary>
+        /// 参数类别
+        /// </summary>
+        public string ArgType { get; set; }
         /// <summary>
         /// 是否可编辑
         /// </summary>

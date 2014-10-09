@@ -35,9 +35,18 @@ namespace TradingLib.Contrib.FinService
                 {
                     continue;
                 }
+
                 string title = attr.Title;
+                
                 bool editable = attr.Editable;
-                list.Add(new JsonWrapperArgument(name, title, value,editable));
+                list.Add(new JsonWrapperArgument { 
+                    ArgName = name,
+                    ArgTitle = title,
+                    ArgValue = value,
+                    ArgType = type,
+                    Editable = editable,
+                    
+                });
 
             }
             return list;

@@ -29,44 +29,44 @@
         private void InitializeComponent()
         {
             this.radPanel1 = new Telerik.WinControls.UI.RadPanel();
-            this.lbcollecttype = new Telerik.WinControls.UI.RadLabel();
-            this.lbchargetype = new Telerik.WinControls.UI.RadLabel();
-            this.lbstatus = new Telerik.WinControls.UI.RadLabel();
-            this.lbsptitle = new Telerik.WinControls.UI.RadLabel();
-            this.lbaccount = new Telerik.WinControls.UI.RadLabel();
-            this.radLabel5 = new Telerik.WinControls.UI.RadLabel();
-            this.radLabel4 = new Telerik.WinControls.UI.RadLabel();
-            this.radLabel3 = new Telerik.WinControls.UI.RadLabel();
-            this.radLabel2 = new Telerik.WinControls.UI.RadLabel();
+            this.radGroupBox2 = new Telerik.WinControls.UI.RadGroupBox();
             this.radLabel1 = new Telerik.WinControls.UI.RadLabel();
-            this.tableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
-            this.btnChangeStatus = new Telerik.WinControls.UI.RadButton();
+            this.radLabel2 = new Telerik.WinControls.UI.RadLabel();
+            this.radLabel3 = new Telerik.WinControls.UI.RadLabel();
+            this.lbcollecttype = new Telerik.WinControls.UI.RadLabel();
+            this.radLabel4 = new Telerik.WinControls.UI.RadLabel();
+            this.lbchargetype = new Telerik.WinControls.UI.RadLabel();
+            this.radLabel5 = new Telerik.WinControls.UI.RadLabel();
+            this.lbstatus = new Telerik.WinControls.UI.RadLabel();
+            this.lbaccount = new Telerik.WinControls.UI.RadLabel();
+            this.lbsptitle = new Telerik.WinControls.UI.RadLabel();
+            this.radGroupBox1 = new Telerik.WinControls.UI.RadGroupBox();
             this.btnUpdateArgs = new Telerik.WinControls.UI.RadButton();
+            this.btnChangeStatus = new Telerik.WinControls.UI.RadButton();
             this.radButton1 = new Telerik.WinControls.UI.RadButton();
             this.gparg = new Telerik.WinControls.UI.RadGroupBox();
-            this.radGroupBox1 = new Telerik.WinControls.UI.RadGroupBox();
-            this.radGroupBox2 = new Telerik.WinControls.UI.RadGroupBox();
+            this.tableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)(this.radPanel1)).BeginInit();
             this.radPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.lbcollecttype)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.lbchargetype)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.lbstatus)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.lbsptitle)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.lbaccount)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel5)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radGroupBox2)).BeginInit();
+            this.radGroupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.btnChangeStatus)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lbcollecttype)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lbchargetype)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel5)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lbstatus)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lbaccount)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lbsptitle)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radGroupBox1)).BeginInit();
+            this.radGroupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnUpdateArgs)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.btnChangeStatus)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.radButton1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gparg)).BeginInit();
             this.gparg.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.radGroupBox1)).BeginInit();
-            this.radGroupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.radGroupBox2)).BeginInit();
-            this.radGroupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // radPanel1
@@ -79,169 +79,6 @@
             this.radPanel1.Name = "radPanel1";
             this.radPanel1.Size = new System.Drawing.Size(524, 252);
             this.radPanel1.TabIndex = 0;
-            // 
-            // lbcollecttype
-            // 
-            this.lbcollecttype.Location = new System.Drawing.Point(70, 106);
-            this.lbcollecttype.Name = "lbcollecttype";
-            this.lbcollecttype.Size = new System.Drawing.Size(14, 16);
-            this.lbcollecttype.TabIndex = 9;
-            this.lbcollecttype.Text = "--";
-            // 
-            // lbchargetype
-            // 
-            this.lbchargetype.Location = new System.Drawing.Point(70, 84);
-            this.lbchargetype.Name = "lbchargetype";
-            this.lbchargetype.Size = new System.Drawing.Size(14, 16);
-            this.lbchargetype.TabIndex = 8;
-            this.lbchargetype.Text = "--";
-            // 
-            // lbstatus
-            // 
-            this.lbstatus.Location = new System.Drawing.Point(70, 62);
-            this.lbstatus.Name = "lbstatus";
-            this.lbstatus.Size = new System.Drawing.Size(14, 16);
-            this.lbstatus.TabIndex = 7;
-            this.lbstatus.Text = "--";
-            // 
-            // lbsptitle
-            // 
-            this.lbsptitle.Location = new System.Drawing.Point(70, 40);
-            this.lbsptitle.Name = "lbsptitle";
-            this.lbsptitle.Size = new System.Drawing.Size(14, 16);
-            this.lbsptitle.TabIndex = 6;
-            this.lbsptitle.Text = "--";
-            // 
-            // lbaccount
-            // 
-            this.lbaccount.Location = new System.Drawing.Point(70, 18);
-            this.lbaccount.Name = "lbaccount";
-            this.lbaccount.Size = new System.Drawing.Size(14, 16);
-            this.lbaccount.TabIndex = 5;
-            this.lbaccount.Text = "--";
-            // 
-            // radLabel5
-            // 
-            this.radLabel5.Location = new System.Drawing.Point(5, 106);
-            this.radLabel5.Name = "radLabel5";
-            this.radLabel5.Size = new System.Drawing.Size(59, 16);
-            this.radLabel5.TabIndex = 4;
-            this.radLabel5.Text = "采集方式:";
-            // 
-            // radLabel4
-            // 
-            this.radLabel4.Location = new System.Drawing.Point(5, 84);
-            this.radLabel4.Name = "radLabel4";
-            this.radLabel4.Size = new System.Drawing.Size(59, 16);
-            this.radLabel4.TabIndex = 3;
-            this.radLabel4.Text = "计费方式:";
-            // 
-            // radLabel3
-            // 
-            this.radLabel3.Location = new System.Drawing.Point(5, 62);
-            this.radLabel3.Name = "radLabel3";
-            this.radLabel3.Size = new System.Drawing.Size(59, 16);
-            this.radLabel3.TabIndex = 2;
-            this.radLabel3.Text = "激活状态:";
-            // 
-            // radLabel2
-            // 
-            this.radLabel2.Location = new System.Drawing.Point(5, 40);
-            this.radLabel2.Name = "radLabel2";
-            this.radLabel2.Size = new System.Drawing.Size(59, 16);
-            this.radLabel2.TabIndex = 1;
-            this.radLabel2.Text = "服务计划:";
-            // 
-            // radLabel1
-            // 
-            this.radLabel1.Location = new System.Drawing.Point(5, 18);
-            this.radLabel1.Name = "radLabel1";
-            this.radLabel1.Size = new System.Drawing.Size(59, 16);
-            this.radLabel1.TabIndex = 0;
-            this.radLabel1.Text = "交易帐户:";
-            // 
-            // tableLayoutPanel
-            // 
-            this.tableLayoutPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.tableLayoutPanel.ColumnCount = 1;
-            this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel.Location = new System.Drawing.Point(2, 18);
-            this.tableLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
-            this.tableLayoutPanel.Name = "tableLayoutPanel";
-            this.tableLayoutPanel.RowCount = 9;
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanel.Size = new System.Drawing.Size(232, 195);
-            this.tableLayoutPanel.TabIndex = 11;
-            // 
-            // btnChangeStatus
-            // 
-            this.btnChangeStatus.Location = new System.Drawing.Point(5, 21);
-            this.btnChangeStatus.Name = "btnChangeStatus";
-            this.btnChangeStatus.Size = new System.Drawing.Size(89, 28);
-            this.btnChangeStatus.TabIndex = 14;
-            this.btnChangeStatus.Text = "冻 结";
-            // 
-            // btnUpdateArgs
-            // 
-            this.btnUpdateArgs.Location = new System.Drawing.Point(5, 91);
-            this.btnUpdateArgs.Name = "btnUpdateArgs";
-            this.btnUpdateArgs.Size = new System.Drawing.Size(89, 28);
-            this.btnUpdateArgs.TabIndex = 15;
-            this.btnUpdateArgs.Text = "更新参数";
-            // 
-            // radButton1
-            // 
-            this.radButton1.Location = new System.Drawing.Point(5, 57);
-            this.radButton1.Name = "radButton1";
-            this.radButton1.Size = new System.Drawing.Size(89, 28);
-            this.radButton1.TabIndex = 17;
-            this.radButton1.Text = "修改服务计划";
-            // 
-            // gparg
-            // 
-            this.gparg.AccessibleRole = System.Windows.Forms.AccessibleRole.Grouping;
-            this.gparg.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)));
-            this.gparg.Controls.Add(this.tableLayoutPanel);
-            this.gparg.HeaderText = "参数列表";
-            this.gparg.Location = new System.Drawing.Point(160, 3);
-            this.gparg.Name = "gparg";
-            // 
-            // 
-            // 
-            this.radGroupBox1.RootElement.Padding = new System.Windows.Forms.Padding(2, 18, 2, 2);
-            this.gparg.Size = new System.Drawing.Size(236, 244);
-            this.gparg.TabIndex = 19;
-            this.gparg.Text = "参数列表";
-            // 
-            // radGroupBox1
-            // 
-            this.radGroupBox1.AccessibleRole = System.Windows.Forms.AccessibleRole.Grouping;
-            this.radGroupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)));
-            this.radGroupBox1.Controls.Add(this.btnUpdateArgs);
-            this.radGroupBox1.Controls.Add(this.btnChangeStatus);
-            this.radGroupBox1.Controls.Add(this.radButton1);
-            this.radGroupBox1.HeaderText = "操 作";
-            this.radGroupBox1.Location = new System.Drawing.Point(402, 3);
-            this.radGroupBox1.Name = "radGroupBox1";
-            // 
-            // 
-            // 
-            this.radGroupBox1.RootElement.Padding = new System.Windows.Forms.Padding(2, 18, 2, 2);
-            this.radGroupBox1.Size = new System.Drawing.Size(113, 242);
-            this.radGroupBox1.TabIndex = 0;
-            this.radGroupBox1.Text = "操 作";
             // 
             // radGroupBox2
             // 
@@ -269,6 +106,172 @@
             this.radGroupBox2.TabIndex = 20;
             this.radGroupBox2.Text = "基本属性";
             // 
+            // radLabel1
+            // 
+            this.radLabel1.Location = new System.Drawing.Point(5, 18);
+            this.radLabel1.Name = "radLabel1";
+            this.radLabel1.Size = new System.Drawing.Size(59, 16);
+            this.radLabel1.TabIndex = 0;
+            this.radLabel1.Text = "交易帐户:";
+            // 
+            // radLabel2
+            // 
+            this.radLabel2.Location = new System.Drawing.Point(5, 40);
+            this.radLabel2.Name = "radLabel2";
+            this.radLabel2.Size = new System.Drawing.Size(59, 16);
+            this.radLabel2.TabIndex = 1;
+            this.radLabel2.Text = "服务计划:";
+            // 
+            // radLabel3
+            // 
+            this.radLabel3.Location = new System.Drawing.Point(5, 62);
+            this.radLabel3.Name = "radLabel3";
+            this.radLabel3.Size = new System.Drawing.Size(59, 16);
+            this.radLabel3.TabIndex = 2;
+            this.radLabel3.Text = "激活状态:";
+            // 
+            // lbcollecttype
+            // 
+            this.lbcollecttype.Location = new System.Drawing.Point(70, 106);
+            this.lbcollecttype.Name = "lbcollecttype";
+            this.lbcollecttype.Size = new System.Drawing.Size(14, 16);
+            this.lbcollecttype.TabIndex = 9;
+            this.lbcollecttype.Text = "--";
+            // 
+            // radLabel4
+            // 
+            this.radLabel4.Location = new System.Drawing.Point(5, 84);
+            this.radLabel4.Name = "radLabel4";
+            this.radLabel4.Size = new System.Drawing.Size(59, 16);
+            this.radLabel4.TabIndex = 3;
+            this.radLabel4.Text = "计费方式:";
+            // 
+            // lbchargetype
+            // 
+            this.lbchargetype.Location = new System.Drawing.Point(70, 84);
+            this.lbchargetype.Name = "lbchargetype";
+            this.lbchargetype.Size = new System.Drawing.Size(14, 16);
+            this.lbchargetype.TabIndex = 8;
+            this.lbchargetype.Text = "--";
+            // 
+            // radLabel5
+            // 
+            this.radLabel5.Location = new System.Drawing.Point(5, 106);
+            this.radLabel5.Name = "radLabel5";
+            this.radLabel5.Size = new System.Drawing.Size(59, 16);
+            this.radLabel5.TabIndex = 4;
+            this.radLabel5.Text = "采集方式:";
+            // 
+            // lbstatus
+            // 
+            this.lbstatus.Location = new System.Drawing.Point(70, 62);
+            this.lbstatus.Name = "lbstatus";
+            this.lbstatus.Size = new System.Drawing.Size(14, 16);
+            this.lbstatus.TabIndex = 7;
+            this.lbstatus.Text = "--";
+            // 
+            // lbaccount
+            // 
+            this.lbaccount.Location = new System.Drawing.Point(70, 18);
+            this.lbaccount.Name = "lbaccount";
+            this.lbaccount.Size = new System.Drawing.Size(14, 16);
+            this.lbaccount.TabIndex = 5;
+            this.lbaccount.Text = "--";
+            // 
+            // lbsptitle
+            // 
+            this.lbsptitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.lbsptitle.ForeColor = System.Drawing.Color.DarkRed;
+            this.lbsptitle.Location = new System.Drawing.Point(70, 40);
+            this.lbsptitle.Name = "lbsptitle";
+            this.lbsptitle.Size = new System.Drawing.Size(14, 16);
+            this.lbsptitle.TabIndex = 6;
+            this.lbsptitle.Text = "--";
+            // 
+            // radGroupBox1
+            // 
+            this.radGroupBox1.AccessibleRole = System.Windows.Forms.AccessibleRole.Grouping;
+            this.radGroupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)));
+            this.radGroupBox1.Controls.Add(this.btnUpdateArgs);
+            this.radGroupBox1.Controls.Add(this.btnChangeStatus);
+            this.radGroupBox1.Controls.Add(this.radButton1);
+            this.radGroupBox1.HeaderText = "操 作";
+            this.radGroupBox1.Location = new System.Drawing.Point(402, 3);
+            this.radGroupBox1.Name = "radGroupBox1";
+            // 
+            // 
+            // 
+            this.radGroupBox1.RootElement.Padding = new System.Windows.Forms.Padding(2, 18, 2, 2);
+            this.radGroupBox1.Size = new System.Drawing.Size(113, 242);
+            this.radGroupBox1.TabIndex = 0;
+            this.radGroupBox1.Text = "操 作";
+            // 
+            // btnUpdateArgs
+            // 
+            this.btnUpdateArgs.Location = new System.Drawing.Point(5, 91);
+            this.btnUpdateArgs.Name = "btnUpdateArgs";
+            this.btnUpdateArgs.Size = new System.Drawing.Size(89, 28);
+            this.btnUpdateArgs.TabIndex = 15;
+            this.btnUpdateArgs.Text = "更新参数";
+            this.btnUpdateArgs.Click += new System.EventHandler(this.btnUpdateArgs_Click);
+            // 
+            // btnChangeStatus
+            // 
+            this.btnChangeStatus.Location = new System.Drawing.Point(5, 21);
+            this.btnChangeStatus.Name = "btnChangeStatus";
+            this.btnChangeStatus.Size = new System.Drawing.Size(89, 28);
+            this.btnChangeStatus.TabIndex = 14;
+            this.btnChangeStatus.Text = "冻 结";
+            // 
+            // radButton1
+            // 
+            this.radButton1.Location = new System.Drawing.Point(5, 57);
+            this.radButton1.Name = "radButton1";
+            this.radButton1.Size = new System.Drawing.Size(89, 28);
+            this.radButton1.TabIndex = 17;
+            this.radButton1.Text = "修改服务计划";
+            // 
+            // gparg
+            // 
+            this.gparg.AccessibleRole = System.Windows.Forms.AccessibleRole.Grouping;
+            this.gparg.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)));
+            this.gparg.Controls.Add(this.tableLayoutPanel);
+            this.gparg.HeaderText = "参数列表";
+            this.gparg.Location = new System.Drawing.Point(160, 3);
+            this.gparg.Name = "gparg";
+            // 
+            // 
+            // 
+            this.gparg.RootElement.Padding = new System.Windows.Forms.Padding(2, 18, 2, 2);
+            this.gparg.Size = new System.Drawing.Size(236, 244);
+            this.gparg.TabIndex = 19;
+            this.gparg.Text = "参数列表";
+            // 
+            // tableLayoutPanel
+            // 
+            this.tableLayoutPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel.ColumnCount = 1;
+            this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 232F));
+            this.tableLayoutPanel.Location = new System.Drawing.Point(2, 18);
+            this.tableLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.tableLayoutPanel.Name = "tableLayoutPanel";
+            this.tableLayoutPanel.RowCount = 9;
+            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel.Size = new System.Drawing.Size(232, 195);
+            this.tableLayoutPanel.TabIndex = 11;
+            // 
             // ctFinService
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -278,26 +281,26 @@
             this.Size = new System.Drawing.Size(524, 252);
             ((System.ComponentModel.ISupportInitialize)(this.radPanel1)).EndInit();
             this.radPanel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.lbcollecttype)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.lbchargetype)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.lbstatus)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.lbsptitle)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.lbaccount)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel5)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.btnChangeStatus)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.btnUpdateArgs)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radButton1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gparg)).EndInit();
-            this.gparg.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.radGroupBox1)).EndInit();
-            this.radGroupBox1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.radGroupBox2)).EndInit();
             this.radGroupBox2.ResumeLayout(false);
             this.radGroupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lbcollecttype)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lbchargetype)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel5)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lbstatus)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lbaccount)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lbsptitle)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radGroupBox1)).EndInit();
+            this.radGroupBox1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.btnUpdateArgs)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.btnChangeStatus)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radButton1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gparg)).EndInit();
+            this.gparg.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }

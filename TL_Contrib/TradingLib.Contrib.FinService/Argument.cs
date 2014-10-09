@@ -14,6 +14,8 @@ namespace TradingLib.Contrib.FinService
 
         
         }
+
+
         public Argument(string name, string value, EnumArgumentType type)
         {
             this.Name = name;
@@ -71,6 +73,14 @@ namespace TradingLib.Contrib.FinService
         {
             if (this.Type == EnumArgumentType.DECIMAL)
                 return decimal.Parse(this.Value);
+            else
+                throw new Exception("参数类型不正确");
+        }
+
+        public bool AsBool()
+        {
+            if (this.Type == EnumArgumentType.BOOLEAN)
+                return bool.Parse(this.Value);
             else
                 throw new Exception("参数类型不正确");
         }

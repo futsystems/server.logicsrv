@@ -1098,6 +1098,9 @@ namespace FutsMoniter.Controls
                 accountselected = accountlite;
                 lbCurrentAccount.Text = account;
 
+                //B 更新ServiceTab区域
+                ServiceTabRefresh();
+
                 //A 更新交易记录区域
                 //清空交易记录
                 ClearTradingInfo();
@@ -1109,8 +1112,7 @@ namespace FutsMoniter.Controls
                     ctOrderSenderM1.SetAccount(accountlite);
                 }
 
-                //B 更新ServiceTab区域
-                ServiceTabRefresh();
+                
             }
         }
         #endregion

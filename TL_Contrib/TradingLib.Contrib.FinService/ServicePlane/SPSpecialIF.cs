@@ -51,21 +51,10 @@ namespace TradingLib.Contrib.FinService
 
 
         public SPSpecialIF()
-            : base("股指专项")
         {
-
+            SPNAME = "股指专配";
             _chargetype = EnumFeeChargeType.BYRound;//按交易回合计算费用
             _collecttype = EnumFeeCollectType.CollectInTrading;//在交易过程中直接收取
-
-        }
-
-
-        public override void InitArgument(Dictionary<string, Argument> accountarg, Dictionary<string, Argument> agentarg)
-        {
-            base.InitArgument(accountarg, agentarg);
-            //LibUtil.Debug("调用服务计划的参数初始化");
-            //将参数加载到内存
-            //LibUtil.Debug("account args wincharge:" + this.WinCharge.AccountArgument.Value + " losscharge:" + this.LossCharge.AccountArgument.Value + " marginperlot:" + this.MarginPerLot.AccountArgument.Value + " marginperlotstop:" + this.MarginPerLotStop.AccountArgument.Value);
 
         }
 

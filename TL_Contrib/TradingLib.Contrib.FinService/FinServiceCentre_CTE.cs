@@ -5,6 +5,7 @@ using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
 using System.Reflection;
+using TradingLib.Mixins.JsonObject;
 
 namespace TradingLib.Contrib.FinService
 {
@@ -24,7 +25,7 @@ namespace TradingLib.Contrib.FinService
 
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryFinService", "QryFinService - query finservice of account", "查询某个帐户的配资服务")]
-        public void recharge(ISession session, string account)
+        public void CTE_QryFinService(ISession session, string account)
         {
             debug("查询帐户:" + account + "的配资服务", QSEnumDebugLevel.INFO);
             IAccount acc = TLCtxHelper.CmdAccount[account];
@@ -43,7 +44,37 @@ namespace TradingLib.Contrib.FinService
             SendJsonReplyMgr(session, stub.ToJsonWrapperFinServiceStub());
         }
 
-        
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateArguments", "UpdateArguments - update argument of finservice", "更新某个帐户的配资参数", true)]
+        public void CTE_UpdateArguments(ISession session,string playload)
+        {
+            debug("arg:" + playload, QSEnumDebugLevel.INFO);
+            JsonWrapperFinServiceStub target = Mixins.LitJson.JsonMapper.ToObject<JsonWrapperFinServiceStub>(playload);
+
+            debug("更新帐户:" + target.Account+ "的配资服务参数", QSEnumDebugLevel.INFO);
+            IAccount acc = TLCtxHelper.CmdAccount[target.Account];
+            if (acc == null)
+            {
+                SendJsonReplyMgr(session, Mixins.JsonReply.GenericError(1, "交易帐号不存在"));
+                return;
+            }
+            FinServiceStub stub = FinTracker.FinServiceTracker[target.Account];
+            if (stub == null)
+            {
+                SendJsonReplyMgr(session, Mixins.JsonReply.GenericError(1, "无有效配资服务"));
+                return;
+            }
+
+            if (!stub.ID.Equals(target.ID))
+            { 
+                
+            }
+
+            //更新参数
+            FinTracker.ArgumentTracker.UpdateArgumentAccount(target.ID, target.FinService.Arguments);
+
+            //加载参数
+            stub.LoadArgument();
+        }
     }
 
 

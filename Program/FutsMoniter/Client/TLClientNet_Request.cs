@@ -618,9 +618,22 @@ namespace TradingLib.Common
 
         #region 扩展请求
 
+        /// <summary>
+        /// 查询某个交易帐户的配资参数
+        /// </summary>
+        /// <param name="account"></param>
         public void ReqQryFinService(string account)
         {
             this.ReqContribRequest("FinServiceCentre", "QryFinService", account);
+        }
+
+        /// <summary>
+        /// 更新配资服务参数
+        /// </summary>
+        /// <param name="playload"></param>
+        public void ReqUpdateFinServiceArgument(string playload)
+        {
+            this.ReqContribRequest("FinServiceCentre", "UpdateArguments", playload);
         }
         /// <summary>
         /// 调用某个模块 某个命令 某个参数 

@@ -164,6 +164,21 @@ namespace TradingLib.Contrib.FinService
         {
             return "ID:" + this.ID.ToString() + " Account:" + this.Account + " serviceplan_fk:" + serviceplan_fk.ToString() + " active:" + this.Active.ToString() + " ModifiedTime:" + this.ModifiedTime.ToString();
         }
+
+
+        /// <summary>
+        /// 加载配资服务参数
+        /// </summary>
+        public void LoadArgument()
+        {
+            
+            //获得对应的参数参数
+            Dictionary<string, Argument> agentarg = FinTracker.ArgumentTracker.GetAgentArgument(this.AgentID, this.serviceplan_fk);
+            Dictionary<string, Argument> accountarg = FinTracker.ArgumentTracker.GetAccountArgument(this);
+
+            ServicePlanBase baseobj = _finservice as ServicePlanBase;
+            baseobj.InitArgument(accountarg, agentarg);
+        }
         /// <summary>
         /// 初始化配资服务
         /// </summary>
@@ -183,11 +198,13 @@ namespace TradingLib.Contrib.FinService
             ServicePlanBase baseobj = _finservice as ServicePlanBase;
             if (baseobj != null)
             {
+                //加载配资服务参数
+                this.LoadArgument();
                 //获得对应的参数参数
-                Dictionary<string, Argument> agentarg = FinTracker.ArgumentTracker.GetAgentArgument(this.AgentID, this.serviceplan_fk);
-                Dictionary<string, Argument> accountarg = FinTracker.ArgumentTracker.GetAccountArgument(this);
-                //初始化参数
-                baseobj.InitArgument(accountarg, agentarg);
+                //Dictionary<string, Argument> agentarg = FinTracker.ArgumentTracker.GetAgentArgument(this.AgentID, this.serviceplan_fk);
+                //Dictionary<string, Argument> accountarg = FinTracker.ArgumentTracker.GetAccountArgument(this);
+                ////初始化参数
+                //baseobj.InitArgument(accountarg, agentarg);
 
                 /*
                 foreach (Argument arg in agentarg.Values)

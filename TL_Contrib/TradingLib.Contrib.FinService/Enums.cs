@@ -104,6 +104,11 @@ namespace TradingLib.Contrib.FinService
         /// 浮点小数
         /// </summary>
         DECIMAL=2,//浮点
+
+        /// <summary>
+        /// 布尔值
+        /// </summary>
+        BOOLEAN=3,//
     }
     public enum EnumFinServiceType
     {

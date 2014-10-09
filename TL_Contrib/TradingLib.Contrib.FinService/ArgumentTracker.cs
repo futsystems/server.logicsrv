@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
+using TradingLib.Mixins.JsonObject;
+
 
 namespace TradingLib.Contrib.FinService
 {
@@ -15,17 +17,6 @@ namespace TradingLib.Contrib.FinService
         ArgumentAgentTracker _agtargttracker = new ArgumentAgentTracker();
         ArgumentBaseTracker _baseargtracker = new ArgumentBaseTracker();
 
-
-        /// <summary>
-        /// 获得某个配资服务的参数设置
-        /// 
-        /// </summary>
-        /// <param name="service_fk"></param>
-        /// <returns></returns>
-        //public Dictionary<string, ArgumentAccount> GetServiceArgument(int service_fk)
-        //{ 
-            
-        //}
 
 
         /// <summary>
@@ -64,8 +55,9 @@ namespace TradingLib.Contrib.FinService
             //    LibUtil.Debug("arg:" + arg.ToString());
             //}
             return ret;
-
         }
+
+
         /// <summary>
         /// 合并Dict,制定后覆盖还是前覆盖
         /// 当列表中的字典有相同字段时,后覆盖则后面的相同字段会覆盖前面的字段
@@ -104,9 +96,16 @@ namespace TradingLib.Contrib.FinService
             _baseargtracker.UpdateArgumentBase(serviceplan_fk, attr);
         }
 
-        
+        public void UpdateArgumentAccount(int service_fk, JsonWrapperArgument[] args)
+        {
+            _acctargtracker.UpdateArgument(service_fk, args);
+        }
 
     }
+
+    /// <summary>
+    /// 交易帐户的参数维护其
+    /// </summary>
     public class ArgumentAccountTracker
     {
         /// <summary>
@@ -129,6 +128,7 @@ namespace TradingLib.Contrib.FinService
 
         /// <summary>
         /// 查找某个服务的参数字典
+        /// service_fk为某帐户添加的配资服务记录全局ID
         /// </summary>
         /// <param name="service_fk"></param>
         /// <returns></returns>
@@ -139,6 +139,54 @@ namespace TradingLib.Contrib.FinService
                 return serviceArgMap[service_fk];
             }
             return new Dictionary<string,ArgumentAccount>();
+        }
+
+
+        /// <summary>
+        /// 更新service_fk对应的配资参数
+        /// </summary>
+        /// <param name="service_fk"></param>
+        /// <param name="args"></param>
+        public void UpdateArgument(int service_fk,JsonWrapperArgument[] args)
+        {
+            if (!serviceArgMap.Keys.Contains(service_fk))
+            {
+                serviceArgMap.Add(service_fk, new Dictionary<string, ArgumentAccount>());
+            }
+
+            Dictionary<string, ArgumentAccount> argmap = serviceArgMap[service_fk];
+
+            foreach (JsonWrapperArgument arg in args)
+            {
+                ArgumentAccount newarg = new ArgumentAccount
+                {
+                    Name = arg.ArgName,
+                    Value = arg.ArgValue,
+                    Type = (EnumArgumentType)Enum.Parse(typeof(EnumArgumentType),arg.ArgType),
+                    service_fk = service_fk
+                };
+                if (argmap.Keys.Contains(arg.ArgName))
+                {
+                    //如果参数发生变化则进行数据库更新
+                    ArgumentAccount target = argmap[arg.ArgName];
+                    if (!target.Value.Equals(newarg.Value))
+                    {
+                        Util.Debug("arg changed ,update database arg:" + newarg.Name);
+                        //更新数据库
+                        ORM.MArgumentBase.UpdateArgumentAccount(newarg);
+                        //更新内存
+                        target.Value = newarg.Value;
+                    }
+                }
+                else//如果内存中没有加载该帐户的参数则直接进行数据库更新
+                {
+                    Util.Debug("database have no arg:" + newarg.Name + " update directly");
+                    //更新数据库
+                    ORM.MArgumentBase.UpdateArgumentAccount(newarg);
+                    //插入新的内存参数
+                    argmap[arg.ArgName] = newarg;
+                }
+            }
         }
 
 

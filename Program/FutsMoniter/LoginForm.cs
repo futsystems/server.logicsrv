@@ -24,7 +24,7 @@ namespace FutsMoniter
         {
             InitializeComponent();
 
-            ThemeResolutionService.ApplicationThemeName = "TelerikMetro";//Globals.Config["ThemeName"].AsString();
+            ThemeResolutionService.ApplicationThemeName = Globals.Config["ThemeName"].AsString();
             this.ThemeName = ThemeResolutionService.ApplicationThemeName;
             if (Globals.Config["HeaderImg"].AsString() == "OEM")
             {
