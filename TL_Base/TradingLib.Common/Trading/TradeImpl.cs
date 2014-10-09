@@ -221,6 +221,8 @@ namespace TradingLib.Common
             
             }
         }
+
+
         #region 成交构造函数
         public TradeImpl() { }
         public TradeImpl(string symbol, decimal fillprice, int fillsize) : this(symbol, fillprice, fillsize, DateTime.Now) { }

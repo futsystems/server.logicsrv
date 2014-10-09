@@ -193,6 +193,12 @@
     <Compile Include="Form\AccountConfigForm_AccountRule.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Form\InsertTradeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\InsertTradeForm.Designer.cs">
+      <DependentUpon>InsertTradeForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form\HistQryForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -344,6 +350,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\ctFinanceInfo.resx">
       <DependentUpon>ctFinanceInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\InsertTradeForm.resx">
+      <DependentUpon>InsertTradeForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form\HistQryForm.resx">
       <DependentUpon>HistQryForm.cs</DependentUpon>

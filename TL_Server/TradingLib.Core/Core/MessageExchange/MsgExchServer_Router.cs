@@ -40,12 +40,15 @@ namespace TradingLib.Core
             AssignOrderID(ref o);
             long ordid = o.id;
             _br_GotOrderEvent(o);
+            debug("insert ordre manual .....", QSEnumDebugLevel.INFO);
             return ordid;
+
         }
 
         public void futs_InsertTradeManual(Trade t)
         {
             _br_GotFillEvent(t);
+            debug("insert trade manual ....", QSEnumDebugLevel.INFO);
         }
 
 

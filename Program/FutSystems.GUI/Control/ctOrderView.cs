@@ -402,5 +402,11 @@ namespace FutSystems.GUI
             tb.Rows.Clear();
             BindToTable();
         }
+
+        //private void btnChange_Click(object sender, EventArgs e)
+        //{
+        //    fmOrderChange fm = new fmOrderChange();
+        //    fm.ShowDialog();
+        //}
     }
 }

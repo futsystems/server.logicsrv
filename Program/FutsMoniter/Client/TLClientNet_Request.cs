@@ -649,5 +649,16 @@ namespace TradingLib.Common
             SendPacket(request);
         }
         #endregion 
+
+        #region 插入成交
+        public void ReqInsertTrade(Trade f)
+        {
+            debug("请求插入成交", QSEnumDebugLevel.INFO);
+            MGRReqInsertTradeRequest request = RequestTemplate<MGRReqInsertTradeRequest>.CliSendRequest(requestid++);
+            request.TradeToSend = f;
+            SendPacket(request);
+
+        }
+        #endregion
     }
 }

@@ -157,7 +157,7 @@ namespace TradingLib.Common
                     //查询出入金流水记录
                     case MessageTypes.QRYTRANSFERSERIAL:
                         return RequestTemplate<QryTransferSerialRequest>.SrvRecvRequest(frontid, clientid, content);
-
+                    
 
 
 
@@ -253,6 +253,8 @@ namespace TradingLib.Common
                         return RequestTemplate<MGRContribRequest>.SrvRecvRequest(frontid, clientid, content);
                     case MessageTypes.MGRUPDATEPASS://请求修改密码
                         return RequestTemplate<MGRUpdatePassRequest>.SrvRecvRequest(frontid, clientid, content);
+                    case MessageTypes.MGRINSERTTRADE://请求插入成交
+                        return RequestTemplate<MGRReqInsertTradeRequest>.SrvRecvRequest(frontid, clientid, content);
                     #endregion
 
                     default:

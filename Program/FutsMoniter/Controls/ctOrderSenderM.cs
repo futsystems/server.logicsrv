@@ -167,5 +167,15 @@ namespace FutsMoniter
             if (SendOrderEvent != null)
                 SendOrderEvent(order);
         }
+
+        private void btnInsertTrade_Click(object sender, EventArgs e)
+        {
+            InsertTradeForm fm = new InsertTradeForm();
+            if (!ValidAccount()) return;
+            if (!validSecurity()) return;
+            fm.SetAccount(_account.Account);
+            fm.SetSymbol(_symbol);
+            fm.ShowDialog();
+        }
     }
 }

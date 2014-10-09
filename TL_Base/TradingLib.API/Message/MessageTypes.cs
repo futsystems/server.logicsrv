@@ -194,7 +194,7 @@ namespace TradingLib.API
 
 
         MGRCONTRIBREQUEST,//管理扩展请求
-
+        MGRINSERTTRADE,//插入成交
 
 
 

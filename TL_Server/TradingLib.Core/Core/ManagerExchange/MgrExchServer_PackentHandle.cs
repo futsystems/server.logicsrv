@@ -857,6 +857,62 @@ namespace TradingLib.Core
                 CacheRspResponse(response);
             }
         }
+
+        void SrvOnInsertTrade(MGRReqInsertTradeRequest request, ISession session, Manager manager)
+        {
+            debug(string.Format("管理员:{0} 请求插入委托:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            RspMGROperationResponse response = ResponseTemplate<RspMGROperationResponse>.SrvSendRspResponse(request);
+
+            Trade fill = request.TradeToSend;
+            fill.oSymbol = BasicTracker.SymbolTracker[fill.symbol];
+            if (fill.oSymbol == null)
+            {
+                response.RspInfo.FillError("SYMBOL_NOT_EXISTED");
+                CacheRspResponse(response);
+                return;
+            }
+            IAccount account = clearcentre[fill.Account];
+            if (account == null)
+            {
+                response.RspInfo.FillError("交易帐号不存在");
+                CacheRspResponse(response);
+                return;
+            }
+
+            fill.Broker = "Broker.SIM.SIMTrader";
+
+            Order o = new MarketOrder(fill.symbol, fill.side, fill.UnsignedSize);
+
+            o.oSymbol = fill.oSymbol;
+            o.Account = fill.Account;
+            o.date = fill.xdate;
+            o.time = Util.ToTLTime(Util.ToDateTime(fill.xdate, fill.xtime) - new TimeSpan(0, 0, 1));
+            o.Status = QSEnumOrderStatus.Filled;
+            o.OffsetFlag = fill.OffsetFlag;
+            o.Broker = fill.Broker;
+
+            //委托成交之后
+            o.TotalSize = o.size;
+            o.size = 0;
+            o.Filled = o.UnsignedSize;
+            
+            
+            
+
+
+            //注意这里需要获得可用的委托流水和成交流水号
+            long ordid = exchsrv.futs_InsertOrderManual(o);
+            o.OrderExchID = o.OrderSeq.ToString();
+            //o.BrokerKey = 
+            
+            fill.id = ordid;
+            fill.OrderSeq = o.OrderSeq;
+            fill.BrokerKey = "xxxxx";//随机产生的成交编号
+
+            Util.sleep(100);
+            exchsrv.futs_InsertTradeManual(fill);
+
+        }
         void tl_newPacketRequest(IPacket packet,ISession session,Manager manager)
         {
             switch (packet.Type)
@@ -1080,6 +1136,11 @@ namespace TradingLib.Core
                 case MessageTypes.MGRUPDATEPASS://请求修改密码
                     {
                         SrvOnMGRUpdatePass(packet as MGRUpdatePassRequest, session, manager);
+                        break;
+                    }
+                case MessageTypes.MGRINSERTTRADE://请求插入委托
+                    {
+                        SrvOnInsertTrade(packet as MGRReqInsertTradeRequest, session, manager);
                         break;
                     }
                 default:

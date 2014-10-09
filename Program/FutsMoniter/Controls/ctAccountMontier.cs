@@ -27,6 +27,9 @@ namespace FutsMoniter.Controls
         const string PROGRAME = "AccountMontier";
         AccountConfigForm fmaccountconfig = null;
         bool _loaded = false;
+
+        Symbol _symbolselected = null;
+        Symbol SymbolSelected { get { return _symbolselected; } }
         public ctAccountMontier()
         {
             InitializeComponent();
@@ -98,16 +101,42 @@ namespace FutsMoniter.Controls
             //MenuItem_changepass.Image = Properties.Resources.addAccount_16;
             MenuItem_qryhist.Click += new EventHandler(QryHist_Click);
 
+            //Telerik.WinControls.UI.RadMenuItem MenuItem_inserttrade = new Telerik.WinControls.UI.RadMenuItem("插入成交");
+            ////MenuItem_changepass.Image = Properties.Resources.addAccount_16;
+            //MenuItem_inserttrade.Click += new EventHandler(InsertTrade_Click);
+
             menu.Items.Add(MenuItem_edit);
             menu.Items.Add(MenuItem_add);
             menu.Items.Add(MenuItem_changepass);
             menu.Items.Add(MenuItem_changeinvestor);
             menu.Items.Add(MenuItem_qryhist);
+
+            //menu.Items.Add(MenuItem_inserttrade);
             
 
 
         }
-        
+
+        //void InsertTrade_Click(object sender, EventArgs e)
+        //{
+        //    IAccountLite account = GetVisibleAccount(CurrentAccount);
+        //    if (account != null)
+        //    {
+        //        InsertTradeForm fm = new InsertTradeForm();
+        //        fm.SetAccount(account.Account);
+        //        fm.SetSymbol(SymbolSelected);
+        //        fm.ShowDialog();
+        //    }
+        //    else
+        //    {
+        //        fmConfirm.Show("请选择交易帐户！");
+        //    }
+        //}
+        /// <summary>
+        /// 添加交易帐户
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void AddAccount_Click(object sender, EventArgs e)
         {
             AddAccountForm fm = new AddAccountForm();
@@ -134,6 +163,11 @@ namespace FutsMoniter.Controls
             }
         }
 
+        /// <summary>
+        /// 修改密码
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void ChangePass_Click(object sender, EventArgs e)
         {
             IAccountLite account = GetVisibleAccount(CurrentAccount);
@@ -150,6 +184,11 @@ namespace FutsMoniter.Controls
             }
         }
 
+        /// <summary>
+        /// 修改投资者信息
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void ChangeInvestor_Click(object sender, EventArgs e)
         {
             IAccountLite account = GetVisibleAccount(CurrentAccount);
@@ -167,6 +206,11 @@ namespace FutsMoniter.Controls
             }
         }
 
+        /// <summary>
+        /// 查询历史记录
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void QryHist_Click(object sender, EventArgs e)
         {
             IAccountLite account = GetVisibleAccount(CurrentAccount);
@@ -1261,6 +1305,7 @@ namespace FutsMoniter.Controls
 
         void viewQuoteList1_SymbolSelectedEvent(Symbol symbol)
         {
+            _symbolselected = symbol;
             ctOrderSenderM1.SetSymbol(symbol);
         }
 

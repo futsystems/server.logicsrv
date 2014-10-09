@@ -41,6 +41,7 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Messages\Manager\MGRInsertTrade.cs" />
     <Compile Include="Messages\QryTransferSerial.cs" />
     <Compile Include="Other\LogItem.cs" />
     <Compile Include="Trading\SymbolUtils.cs" />

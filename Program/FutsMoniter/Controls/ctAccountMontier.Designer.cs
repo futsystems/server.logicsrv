@@ -387,7 +387,7 @@
             this.radPageView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.radPageView1.Location = new System.Drawing.Point(0, 0);
             this.radPageView1.Name = "radPageView1";
-            this.radPageView1.SelectedPage = this.radPageViewPage3;
+            this.radPageView1.SelectedPage = this.radPageViewPage1;
             this.radPageView1.Size = new System.Drawing.Size(667, 276);
             this.radPageView1.TabIndex = 0;
             this.radPageView1.Text = "radPageView1";
@@ -397,9 +397,9 @@
             // radPageViewPage1
             // 
             this.radPageViewPage1.Controls.Add(this.ctOrderView1);
-            this.radPageViewPage1.Location = new System.Drawing.Point(5, 27);
+            this.radPageViewPage1.Location = new System.Drawing.Point(10, 35);
             this.radPageViewPage1.Name = "radPageViewPage1";
-            this.radPageViewPage1.Size = new System.Drawing.Size(657, 244);
+            this.radPageViewPage1.Size = new System.Drawing.Size(646, 230);
             this.radPageViewPage1.Text = "委 托";
             // 
             // ctOrderView1
@@ -408,7 +408,7 @@
             this.ctOrderView1.Location = new System.Drawing.Point(0, 0);
             this.ctOrderView1.Name = "ctOrderView1";
             this.ctOrderView1.OrderTracker = null;
-            this.ctOrderView1.Size = new System.Drawing.Size(657, 244);
+            this.ctOrderView1.Size = new System.Drawing.Size(646, 230);
             this.ctOrderView1.TabIndex = 0;
             // 
             // radPageViewPage2

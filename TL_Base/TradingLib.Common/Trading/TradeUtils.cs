@@ -9,8 +9,14 @@ namespace TradingLib.Common
     public static class TradeUtils
     {
 
+        public static long GetDateTime(this Trade f)
+        {
+            return Util.ToTLDateTime(f.xdate, f.xtime);
+        }
+
         public static decimal GetCommission(this Trade f)
         {
+            
             if (f.Commission >= 0)
                 return f.Commission;
             return f.Commission;
