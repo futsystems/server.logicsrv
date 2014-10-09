@@ -35,6 +35,18 @@ namespace TradingLib.Contrib.FinService
         /// </summary>
         public string Name { get { return _name; } }
 
+
+        string _title = string.Empty;
+        /// <summary>
+        /// 标题
+        /// </summary>
+        public string Title { get { return _title; } }
+
+        bool _editable = false;
+        /// <summary>
+        /// 是否可以设置
+        /// </summary>
+        public bool Editable { get { return _editable; } }
         /// <summary>
         /// 设定参数特性
         /// 参数名称 英文
@@ -49,12 +61,14 @@ namespace TradingLib.Contrib.FinService
         /// <param name="type"></param>
         /// <param name="acctvalue"></param>
         /// <param name="agentvalue"></param>
-        public ArgumentAttribute(string name, EnumArgumentType type, object acctvalue, object agentvalue)
+        public ArgumentAttribute(string name,string title, EnumArgumentType type, bool editable,object acctvalue, object agentvalue)
         {
             _name = name;
+            _title = title;
             _argtype = type;
             _accountvalue = acctvalue;
             _agentvalue = agentvalue;
+            _editable = editable;
         }
 
 

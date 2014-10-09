@@ -72,6 +72,20 @@ namespace TradingLib.Contrib.FinService
             }
         }
 
+        public IEnumerable<ArgumentAttribute> GetAttribute(object obj)
+        {
+            string fullname = obj.GetType().FullName;
+            //LibUtil.Debug("setargument,obj fullname:" + fullname);
+            if (!sptypemap.Keys.Contains(fullname))
+            {
+                //如果当前数据集没有记录到该对象的类型 则抛出异常
+                throw new Exception("unknow serviceplan type");
+            }
+            List<PropertyInfo> propertyInfos = argumentmap[fullname];
+            return propertyInfos.Select(pi=>(ArgumentAttribute)Attribute.GetCustomAttribute(pi, typeof(ArgumentAttribute)));
+
+
+        }
         /// <summary>
         /// 设定某个配资服务的参数
         /// 从Dictinoary通过反射自动设定到对应的参数
@@ -98,7 +112,6 @@ namespace TradingLib.Contrib.FinService
                 if (pair == null)
                 {
                     throw new Exception("account can not be null");
-                    
                 }
                 pi.SetValue(obj, pair, null);
 

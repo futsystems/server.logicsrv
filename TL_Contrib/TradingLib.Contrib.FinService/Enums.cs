@@ -18,18 +18,21 @@ namespace TradingLib.Contrib.FinService
         /// 按成交计算
         /// 响应成交回报 处理并记录收费记录
         /// </summary>
+        [Description("成交")]
         BYTrade,
 
         /// <summary>
         /// 按成交回合计算
         /// 响应成交回合回报 处理并记录收费记录
         /// </summary>
+        [Description("回合")]
         BYRound,//按成交回合 计算费用记录
 
         /// <summary>
         /// 按时间计算
         /// 盘后结算响应定时时间 处理并记录收费记录
         /// </summary>
+        [Description("时间")]
         BYTime,//按时间收取
     }
 
@@ -42,6 +45,7 @@ namespace TradingLib.Contrib.FinService
         /// 交易过程中实时收取
         /// 该费用收取在手续费中 不做单独收取
         /// </summary>
+        [Description("实时收费")]
         CollectInTrading,
 
         /// <summary>
@@ -49,6 +53,7 @@ namespace TradingLib.Contrib.FinService
         /// 通过统计 收费记录将所有结算后收费项目累加进行统一收费
         /// 微观上是在结算之前按当天的统计进行收费 费用统一算如结算记录中的出金记录
         /// </summary>
+        [Description("结算后收费")]
         CollectAfterSettle,
 
     }

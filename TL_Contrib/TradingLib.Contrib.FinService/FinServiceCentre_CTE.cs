@@ -27,9 +27,23 @@ namespace TradingLib.Contrib.FinService
         public void recharge(ISession session, string account)
         {
             debug("查询帐户:" + account + "的配资服务", QSEnumDebugLevel.INFO);
+            IAccount acc = TLCtxHelper.CmdAccount[account];
+            if (acc == null)
+            { 
+                SendJsonReplyMgr(session,Mixins.JsonReply.GenericError(1,"交易帐号不存在"));
+                return;
+            }
 
-            SendJsonReplyMgr(session, 2);
+            FinServiceStub stub = FinTracker.FinServiceTracker[account];
+            if (stub == null)
+            {
+                SendJsonReplyMgr(session, Mixins.JsonReply.GenericError(1, "无有效配资服务"));
+                return;
+            }
+            SendJsonReplyMgr(session, stub.ToJsonWrapperFinServiceStub());
         }
+
+        
     }
 
 

@@ -32,6 +32,11 @@ namespace TradingLib.Contrib.FinService
         /// </summary>
         EnumFeeCollectType CollectType { get; }
 
+        /// <summary>
+        /// 获得配资服务的参数
+        /// </summary>
+        Dictionary<string, Argument> AccountArgumentMap { get; }
+
 
         #region 响应交易事件
         /// <summary>
@@ -113,44 +118,5 @@ namespace TradingLib.Contrib.FinService
     }
 
 
-    internal class JsonArgumentWrapper
-    {
-        public string ArgName {get;set;}
-
-        public string ArguValue {get;set;}
-    }
-
-    internal class JsonFinServiceWrapper
-    {
-        public JsonFinServiceWrapper()
-        {
-            this.Account = string.Empty;
-            this.ServicePlanName = string.Empty;
-            this.ServicePlanID = 0;
-            this.ServiceID = 0;
-            this.Arguments = new JsonArgumentWrapper[] { };
-        }
-        /// <summary>
-        /// 交易帐号
-        /// </summary>
-        public string Account { get; set; }
-
-        /// <summary>
-        /// 服务计划名称
-        /// </summary>
-        public string ServicePlanName { get; set; }
-
-
-        /// <summary>
-        /// 服务计划FK
-        /// </summary>
-        public int ServicePlanID { get; set; }
-
-        /// <summary>
-        /// 服务FK
-        /// </summary>
-        public int ServiceID { get; set; }
-
-        public JsonArgumentWrapper[] Arguments { get; set; }
-    }
+    
 }

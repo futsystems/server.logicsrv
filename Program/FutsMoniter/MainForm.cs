@@ -13,7 +13,7 @@ using TradingLib.Common;
 
 namespace FutsMoniter
 {
-    public partial class MainForm : Telerik.WinControls.UI.RadForm, ILogicHandler
+    public partial class MainForm : Telerik.WinControls.UI.RadForm, ILogicHandler, ICallbackCentre
     {
 
         
@@ -56,6 +56,7 @@ namespace FutsMoniter
         System.Threading.Timer _timer;
         public MainForm(DebugDelegate showinfo)
         {
+            Globals.RegisterCallBackCentre(this);
             InitializeComponent();
             logfile = new Log(Globals.Config["LogFileName"].AsString(), true, true, "log", true);//日志组件
 
@@ -83,6 +84,9 @@ namespace FutsMoniter
             Globals.RegisterInfoTracker(infotracker);
             basicinfotracker = new BasicInfoTracker();
             Globals.RegisterBasicInfoTracker(basicinfotracker);
+
+            
+
             routerform = new RouterMoniterForm();
             exchangeform = new ExchangeForm();
             markettimeform = new MarketTimeForm();

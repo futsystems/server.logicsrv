@@ -111,14 +111,12 @@ namespace FutsMoniter
             _client = client;
         }
 
-
         static TradingInfoTracker _infotracker;
         public static TradingInfoTracker TradingInfoTracker { get { return _infotracker; } }
         public static void RegisterInfoTracker(TradingInfoTracker tracker)
         {
             _infotracker = tracker;
         }
-
 
         static IBasicInfo _basicinfo;
         public static IBasicInfo BasicInfoTracker { get { return _basicinfo; } }
@@ -127,6 +125,13 @@ namespace FutsMoniter
             _basicinfo = basic;
         }
 
+        static ICallbackCentre _callbackcentre;
+        public static ICallbackCentre CallBackCentre { get { return _callbackcentre; } }
+
+        public static void RegisterCallBackCentre(ICallbackCentre callbackcentre)
+        {
+            _callbackcentre = callbackcentre;
+        }
 
 
         
@@ -144,6 +149,7 @@ namespace FutsMoniter
         public static System.Drawing.Font BoldFont = new Font("微软雅黑", 9, FontStyle.Bold);
 
         public static System.Windows.Forms.Form MainForm = null;
+
 
         /// <summary>
         /// 主体名称
@@ -164,11 +170,9 @@ namespace FutsMoniter
 
 
         #endregion
+
+
         public static LoginStatus LoginStatus = new LoginStatus(false,"",false);
-
-        //public static Log logger = new Log("FutsMoniter_log", true, true, "log", true);//日志组件
-
-
 
         public static event DebugDelegate SendDebugEvent;
         public static void Debug(string msg)

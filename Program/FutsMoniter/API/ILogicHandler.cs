@@ -197,6 +197,9 @@ namespace TradingLib.API
 
         void PopRspInfo(RspInfo info);
 
-
+        #region 扩展管理回调接口
+        void OnMGRContribResponse(string module, string cmd, string result);
+        
+        #endregion
     }
 }

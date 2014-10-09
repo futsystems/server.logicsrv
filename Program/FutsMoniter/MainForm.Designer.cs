@@ -52,7 +52,6 @@
             this.ctAccountMontier1 = new FutsMoniter.Controls.ctAccountMontier();
             this.radPageViewPage2 = new Telerik.WinControls.UI.RadPageViewPage();
             this.ctDebug1 = new FutSystems.GUI.ctDebug();
-            this.windows8Theme1 = new Telerik.WinControls.Themes.Windows8Theme();
             this.office2010BlackTheme1 = new Telerik.WinControls.Themes.Office2010BlackTheme();
             this.radMenu1 = new Telerik.WinControls.UI.RadMenu();
             this.radMenuItem4 = new Telerik.WinControls.UI.RadMenuItem();
@@ -441,7 +440,6 @@
         private Telerik.WinControls.UI.RadPageViewPage radPageViewPage1;
         private Controls.ctAccountMontier ctAccountMontier1;
         private Telerik.WinControls.UI.RadPageViewPage radPageViewPage2;
-        private Telerik.WinControls.Themes.Windows8Theme windows8Theme1;
         private FutSystems.GUI.ctDebug ctDebug1;
         private Telerik.WinControls.UI.RadMenuItem radMenuItem3;
         private Telerik.WinControls.UI.RadMenuItem btnOpenClearCentre;

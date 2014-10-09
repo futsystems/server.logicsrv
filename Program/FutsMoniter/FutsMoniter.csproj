@@ -72,10 +72,10 @@
       <HintPath>..\..\lib\Telerik\Telerik.WinControls.Themes.Office2010Silver.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Telerik.WinControls.Themes.TelerikMetro, Version=2013.2.612.40, Culture=neutral, PublicKeyToken=5bb2a467cbec794e, processorArchitecture=MSIL" />
     <Reference Include="Telerik.WinControls.Themes.Windows8, Version=2013.2.612.40, Culture=neutral, PublicKeyToken=5bb2a467cbec794e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Telerik\Telerik.WinControls.Themes.Windows8.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Telerik.WinControls.UI">
       <HintPath>..\..\lib\Telerik\Telerik.WinControls.UI.dll</HintPath>
@@ -93,15 +93,34 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\TradingLib\TradingLib.Common.dll</HintPath>
     </Reference>
+    <Reference Include="TradingLib.Mixins">
+      <HintPath>..\..\lib\TradingLib\TradingLib.Mixins.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\Delegate.cs" />
     <Compile Include="API\IBasicInfo.cs" />
+    <Compile Include="API\ICallback.cs" />
+    <Compile Include="Controls\ctAccountMoniter_ServiceHolder.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Controls\ctOrderSenderM.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Controls\ctOrderSenderM.Designer.cs">
       <DependentUpon>ctOrderSenderM.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ctFinService.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ctFinService.Designer.cs">
+      <DependentUpon>ctFinService.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ctTLEdit.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ctTLEdit.Designer.cs">
+      <DependentUpon>ctTLEdit.cs</DependentUpon>
     </Compile>
     <Compile Include="Form\ChangeInvestorForm.cs">
       <SubType>Form</SubType>
@@ -206,6 +225,7 @@
       <DependentUpon>HistQryForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Glabols.cs" />
+    <Compile Include="JsonObject\JsonProtocolFinService.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -219,6 +239,9 @@
       <DependentUpon>LoginForm.cs</DependentUpon>
     </Compile>
     <Compile Include="MainForm_BasicInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm_ContribResponse.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MainForm_LogicHandler.cs">
@@ -317,6 +340,12 @@
     <Compile Include="Utils.cs" />
     <EmbeddedResource Include="Controls\ctOrderSenderM.resx">
       <DependentUpon>ctOrderSenderM.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ctFinService.resx">
+      <DependentUpon>ctFinService.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ctTLEdit.resx">
+      <DependentUpon>ctTLEdit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form\ChangeInvestorForm.resx">
       <DependentUpon>ChangeInvestorForm.cs</DependentUpon>

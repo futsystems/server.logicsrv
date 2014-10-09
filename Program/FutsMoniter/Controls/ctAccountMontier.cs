@@ -112,9 +112,9 @@ namespace FutsMoniter.Controls
             menu.Items.Add(MenuItem_qryhist);
 
             //menu.Items.Add(MenuItem_inserttrade);
-            
 
 
+            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryFinService", ctFinService1.OnQryFinService);
         }
 
         //void InsertTrade_Click(object sender, EventArgs e)
@@ -1097,6 +1097,8 @@ namespace FutsMoniter.Controls
                 //设定选中帐号
                 accountselected = accountlite;
                 lbCurrentAccount.Text = account;
+
+                //A 更新交易记录区域
                 //清空交易记录
                 ClearTradingInfo();
                 //请求恢复交易帐户交易记录
@@ -1106,6 +1108,9 @@ namespace FutsMoniter.Controls
                 {
                     ctOrderSenderM1.SetAccount(accountlite);
                 }
+
+                //B 更新ServiceTab区域
+                ServiceTabRefresh();
             }
         }
         #endregion
@@ -1319,11 +1324,7 @@ namespace FutsMoniter.Controls
 
         #endregion
 
-        private void btnSubmit_Click(object sender, EventArgs e)
-        {
-            //Globals.TLClient.ReqQryAcctService("4444", "FinService");
-            Globals.TLClient.ReqQryFinService("4444");
-        }
+       
 
 
     }

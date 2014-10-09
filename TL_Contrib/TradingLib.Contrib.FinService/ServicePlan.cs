@@ -63,6 +63,11 @@ namespace TradingLib.Contrib.FinService
         public EnumFeeCollectType CollectType { get { return _collecttype; } }
 
         /// <summary>
+        /// 外部程序用于获得该服务计划的参数
+        /// </summary>
+        public Dictionary<string, Argument> AccountArgumentMap { get { return accountargmap; } }
+
+        /// <summary>
         /// 交易帐户参数列表
         /// </summary>
         Dictionary<string, Argument> accountargmap = new Dictionary<string, Argument>();

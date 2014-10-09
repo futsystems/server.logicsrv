@@ -35,19 +35,29 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="TradingLib.API">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\TradingLib\TradingLib.API.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="TradingLib.API.Ex">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\TradingLib\TradingLib.API.Ex.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="TradingLib.Common">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\TradingLib\TradingLib.Common.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="TradingLib.Common.Ex">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\TradingLib\TradingLib.Common.Ex.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="TradingLib.Mixins">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\TradingLib\TradingLib.Mixins.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -60,7 +70,10 @@
     <Compile Include="FeeChargeItemLogger.cs" />
     <Compile Include="FinServiceCentre.cs" />
     <Compile Include="FinServiceCentre_.cs" />
+    <Compile Include="FinServiceStubUtils.cs" />
     <Compile Include="IFinService.cs" />
+    <Compile Include="IFinServiceUtils.cs" />
+    <Compile Include="JsonObject\JsonProtocolFinService.cs" />
     <Compile Include="ORM\MArgumentBase.cs" />
     <Compile Include="ORM\MFeeChargeItem.cs" />
     <Compile Include="ORM\MFinService.cs" />
@@ -82,10 +95,10 @@
   </Target>
 	-->
   <Target Name="AfterBuild">
-		<ItemGroup>
+    <ItemGroup>
       <OutFiles Include="$(OutputPath)\$(AssemblyName).dll" />
     </ItemGroup>
     <Copy SourceFiles="@(OutFiles)" DestinationFolder="..\..\lib\TradingLib\Contrib" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(OutFiles)" DestinationFolder="..\..\Platform\TradingSrv\Contrib" SkipUnchangedFiles="true" />
   </Target>
-  
 </Project>

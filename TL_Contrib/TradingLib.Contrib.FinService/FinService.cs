@@ -126,6 +126,7 @@ namespace TradingLib.Contrib.FinService
         /// 数据库ID
         /// </summary>
         public int ID { get; set; }
+
         /// <summary>
         /// 交易帐户ID
         /// </summary>
@@ -148,6 +149,7 @@ namespace TradingLib.Contrib.FinService
         /// 用于调用响应和计算
         /// </summary>
         public IFinService FinService { get { return _finservice; }  }
+
         /// <summary>
         /// 是否激活
         /// </summary>
@@ -402,19 +404,6 @@ namespace TradingLib.Contrib.FinService
         }
 
         #endregion
-
-
-        JsonFinServiceWrapper ToJsonObj()
-        {
-            JsonFinServiceWrapper obj = new JsonFinServiceWrapper();
-            obj.Account = this.Acct;
-            obj.ServicePlanName = "股指配资";
-            obj.ServicePlanID = 2;
-            obj.ServiceID = 10;
-
-            return obj;
-           
-        }
 
     }
 }

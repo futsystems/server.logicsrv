@@ -13,38 +13,36 @@ namespace TradingLib.Contrib.FinService
     /// </summary>
     public class SPSpecialIF : ServicePlanBase
     {
-
-
-
+        
         /// <summary>
         /// 盈利回合收费
         /// </summary>
-        [ArgumentAttribute("WinCharge", EnumArgumentType.DECIMAL, 200, 100)]
+        [ArgumentAttribute("WinCharge","盈利收费",EnumArgumentType.DECIMAL,true, 200, 100)]
         public ArgumentPair WinCharge { get; set; }
 
         /// <summary>
         /// 亏损回合收费
         /// </summary>
-        [ArgumentAttribute("LossCharge", EnumArgumentType.DECIMAL, 100, 50)]
+        [ArgumentAttribute("LossCharge","亏损收费",EnumArgumentType.DECIMAL,true, 100, 50)]
         public ArgumentPair LossCharge { get; set; }
 
         /// <summary>
         /// 每手保证金
         /// </summary>
-        [ArgumentAttribute("MarginPerLot", EnumArgumentType.DECIMAL, 5000, 5000)]
+        [ArgumentAttribute("MarginPerLot", "每手保证金", EnumArgumentType.DECIMAL, false, 5000, 5000)]
         public ArgumentPair MarginPerLot { get; set; }
 
         /// <summary>
         /// 每手保证金 强平线
         /// </summary>
-        [ArgumentAttribute("MarginPerLotStop", EnumArgumentType.DECIMAL, 800, 800)]
+        [ArgumentAttribute("MarginPerLotStop", "单手强平线", EnumArgumentType.DECIMAL, false, 800, 800)]
         public ArgumentPair MarginPerLotStop { get; set; }
 
 
         /// <summary>
         /// 保证金 起始点
         /// </summary>
-        [ArgumentAttribute("MarginPerLotStart", EnumArgumentType.DECIMAL, 2000, 2000)]
+        [ArgumentAttribute("MarginPerLotStart", "保证金起步值", EnumArgumentType.DECIMAL, false, 2000, 2000)]
         public ArgumentPair MarginPerLotStart { get; set; }
 
 
