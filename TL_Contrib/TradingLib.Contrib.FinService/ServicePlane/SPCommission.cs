@@ -20,7 +20,6 @@ namespace TradingLib.Contrib.FinService
         public ArgumentPair CommissionMarginPect { get; set; }
 
 
-
         [ArgumentAttribute("FinAmount", "配资额度", EnumArgumentType.DECIMAL, true,100000, 100000)]
         public ArgumentPair FinAmount { get; set; }
 

@@ -11,20 +11,13 @@ namespace TradingLib.Mixins.JsonObject
     /// </summary>
     public class JsonWrapperArgument
     {
-        //public JsonWrapperArgument(string argname, string argtitle, string argvalue, bool editable)
-        //{
-        //    this.ArgName = argname;
-        //    this.ArgTitle = argtitle;
-        //    this.ArgValue = argvalue;
-        //    this.Editable = editable;
-        //}
         public JsonWrapperArgument()
         {
             this.ArgName = string.Empty;
             this.ArgTitle = string.Empty;
             this.ArgValue = string.Empty;
-            this.ArgType = string.Empty;
             this.Editable = false;
+            this.ArgType = string.Empty;
         }
         /// <summary>
         /// 参数名称
@@ -112,8 +105,55 @@ namespace TradingLib.Mixins.JsonObject
         /// </summary>
         public bool Active { get; set; }
 
-
+        /// <summary>
+        /// 配资服务
+        /// </summary>
         public JsonWrapperFinService FinService { get; set; }
 
     }
+
+
+    /// <summary>
+    /// 请求修改帐户的服务计划
+    /// </summary>
+    public class JsonWrapperChgServicePlaneRequest
+    {
+        /// <summary>
+        /// 交易帐号
+        /// </summary>
+        public string Account { get; set; }
+
+        /// <summary>
+        /// 服务外键ID
+        /// </summary>
+        public int ServicePlaneFK { get; set; }
+    }
+
+    public class JsonWrapperServicePlane
+    {
+
+
+        /// <summary>
+        /// 数据库全局ID
+        /// </summary>
+        public int ID { get; set; }
+
+
+        /// <summary>
+        /// 名称
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// 名称
+        /// </summary>
+        public string Title { get; set; }
+
+        /// <summary>
+        /// 类名
+        /// </summary>
+        public string ClassName { get; set; }
+    }
+
+
 }

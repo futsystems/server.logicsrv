@@ -60,6 +60,17 @@ namespace FutsMoniter.Controls
                 FinServicePage.Text = "开发中";
                 FinServicePage.Enabled = false;
             }
+            if (!Globals.Config["RaceService"].AsBool())
+            {
+                RaceServicePage.Text = "开发中";
+                FinServicePage.Enabled = false;
+            }
+            if(!Globals.Config["LottoService"].AsBool())
+            {
+                LottoServicePage.Text ="开发中";
+                LottoServicePage.Enabled = false;
+            }
+            
         }
         RadContextMenu menu = new RadContextMenu();
         #region  初始化与事件绑定
@@ -115,6 +126,10 @@ namespace FutsMoniter.Controls
 
 
             Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryFinService", ctFinService1.OnQryFinService);
+            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryFinServicePlan", ctFinService1.OnQryServicePlan);
+            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "UpdateArguments", ctFinService1.OnQryFinService);
+            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "ChangeServicePlane", ctFinService1.OnQryFinService);
+            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "DeleteServicePlane", ctFinService1.OnQryFinService);
         }
 
         //void InsertTrade_Click(object sender, EventArgs e)
@@ -1096,10 +1111,11 @@ namespace FutsMoniter.Controls
             {
                 //设定选中帐号
                 accountselected = accountlite;
+                ctFinService1.CurrentAccount = accountlite;
                 lbCurrentAccount.Text = account;
 
                 //B 更新ServiceTab区域
-                ServiceTabRefresh();
+                //ServiceTabRefresh();
 
                 //A 更新交易记录区域
                 //清空交易记录

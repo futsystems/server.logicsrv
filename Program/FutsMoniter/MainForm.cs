@@ -199,6 +199,7 @@ namespace FutsMoniter
                             ShowInfo("初始化行情报表");
                             InitSymbol2View();
                             Globals.LoginStatus.IsInitSuccess = true;
+                            Globals.EnvReady = true;
                         }
                     }
                     else

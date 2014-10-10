@@ -10,6 +10,8 @@ using TradingLib;
 using TradingLib.Mixins.JsonObject;
 using TradingLib.Mixins.LitJson;
 using FutSystems.GUI;
+using TradingLib.API;
+using TradingLib.Common;
 
 namespace FutsMoniter
 {
@@ -18,11 +20,49 @@ namespace FutsMoniter
         public ctFinService()
         {
             InitializeComponent();
-            //EmptyShow();
-            //oppanel.Visible = false;
+            
         }
 
         JsonWrapperFinServiceStub finservice = null;
+        JsonWrapperServicePlane[] serviceplans = null;
+
+        IAccountLite _account = null;
+        /// <summary>
+        /// 设定当前交易帐号
+        /// 交易帐号改变就需要查询该帐号的配资服务
+        /// </summary>
+        public IAccountLite CurrentAccount
+        {
+            get
+            {
+                return _account;
+            }
+            set
+            {
+                _account = value;
+                finservice = null;
+                if (!Globals.EnvReady) return;
+                if (serviceplans == null)
+                {
+                    Globals.TLClient.ReqQryServicePlan();
+                }
+
+                if (_account != null)
+                {
+                    Globals.TLClient.ReqQryFinService(_account.Account);
+                }
+            }
+        }
+        
+        public void PrepareServicePlan()
+        {
+            if (serviceplans == null)
+            {
+                Globals.TLClient.ReqQryServicePlan();
+            }
+        }
+
+
         public void OnQryFinService(string jsonstr)
         {
             Globals.Debug("ctFinService got json ret:" + jsonstr);
@@ -32,14 +72,31 @@ namespace FutsMoniter
             if (code == 0)
             {
                 JsonWrapperFinServiceStub obj = TradingLib.Mixins.LitJson.JsonMapper.ToObject<JsonWrapperFinServiceStub>(jd["Playload"].ToJson());
-                //Globals.Debug("playload:" + JsonMapper.ToJson(obj));
                 GotFinServiceStub(obj);
-                //oppanel.Visible = true;
                 finservice = obj;
+                
+                StubShow();
+
             }
-            else
+            else//如果没有配资服
             {
-                EmptyShow();
+                finservice = null;
+                NoStubShow();
+            }
+        }
+
+        /// <summary>
+        /// 获得服务计划
+        /// </summary>
+        /// <param name="jsonstr"></param>
+        public void OnQryServicePlan(string jsonstr)
+        {
+            Globals.Debug("ctFinService got json ret:" + jsonstr);
+            JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
+            int code = int.Parse(jd["Code"].ToString());
+            if (code == 0)
+            {
+                serviceplans = TradingLib.Mixins.LitJson.JsonMapper.ToObject<JsonWrapperServicePlane[]>(jd["Playload"].ToJson());
             }
         }
 
@@ -61,15 +118,27 @@ namespace FutsMoniter
                 InitArgs(stub.FinService.Arguments);
             }
         }
-        void EmptyShow()
+        void NoStubShow()
         {
             this.lbaccount.Text = "--";
-            this.lbsptitle.Text = "--";
+            this.lbsptitle.Text = "服务未开通";
             this.lbstatus.Text = "--";
             this.lbchargetype.Text = "--";
             this.lbcollecttype.Text = "--";
+            btnChangeServicePlan.Text = "添加配资服务";
             this.tableLayoutPanel.Controls.Clear();
-            //this.oppanel.Visible = false;
+            btnChangeStatus.Enabled = false;
+            btnUpdateArgs.Enabled = false;
+            btnDeleteFinService.Enabled = false;
+
+        }
+
+        void StubShow()
+        {
+            btnChangeServicePlan.Text = "修改配资服务";
+            btnChangeStatus.Enabled = true;
+            btnUpdateArgs.Enabled = true;
+            btnDeleteFinService.Enabled = true;
         }
 
         void InitArgs(JsonWrapperArgument[] args)
@@ -98,9 +167,47 @@ namespace FutsMoniter
                         return;
                     }
                 }
-                Globals.TLClient.ReqUpdateFinServiceArgument(TradingLib.Mixins.LitJson.JsonMapper.ToJson(finservice));
+                if (fmConfirm.Show("确认更新帐户:" + _account.Account + "的配资服务参数为当前设置?") == DialogResult.Yes)
+                {
+                    Globals.TLClient.ReqUpdateFinServiceArgument(TradingLib.Mixins.LitJson.JsonMapper.ToJson(finservice));
+                }
             }
         }
+
+        private void btnChangeServicePlan_Click(object sender, EventArgs e)
+        {
+            if (_account == null)
+            {
+                fmConfirm.Show("请选择交易帐号");
+                return;
+            }
+            if (serviceplans == null || serviceplans.Length == 0)
+            {
+                fmConfirm.Show("获取服务计划异常!");
+                return;
+            }
+
+            ServicePlanChangeForm fm = new ServicePlanChangeForm();
+            fm.Text = btnChangeServicePlan.Text;
+            fm.FinServiceStub = finservice;
+            fm.Account = _account;
+            fm.SetServicePlans(serviceplans);
+            fm.ShowDialog();
+        }
+
+        private void btnDeleteFinService_Click(object sender, EventArgs e)
+        {
+            if (_account == null)
+            {
+                fmConfirm.Show("请选择交易帐号");
+                return;
+            }
+            if (fmConfirm.Show("确认删除帐户:" + _account.Account + "的配资服务?") == DialogResult.Yes)
+            {
+                Globals.TLClient.ReqDeleteFinService(_account.Account);
+            }
+        }
+
     }
 
     

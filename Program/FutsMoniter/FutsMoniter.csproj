@@ -312,6 +312,12 @@
     <Compile Include="Form\RuleSetConfig.Designer.cs">
       <DependentUpon>RuleSetConfig.cs</DependentUpon>
     </Compile>
+    <Compile Include="Form\ServicePlanChangeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\ServicePlanChangeForm.Designer.cs">
+      <DependentUpon>ServicePlanChangeForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="StaticForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -430,6 +436,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form\RuleSetConfig.resx">
       <DependentUpon>RuleSetConfig.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\ServicePlanChangeForm.resx">
+      <DependentUpon>ServicePlanChangeForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="StaticForm.resx">
       <DependentUpon>StaticForm.cs</DependentUpon>

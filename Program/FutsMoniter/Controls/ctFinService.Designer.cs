@@ -41,9 +41,10 @@
             this.lbaccount = new Telerik.WinControls.UI.RadLabel();
             this.lbsptitle = new Telerik.WinControls.UI.RadLabel();
             this.radGroupBox1 = new Telerik.WinControls.UI.RadGroupBox();
+            this.btnDeleteFinService = new Telerik.WinControls.UI.RadButton();
             this.btnUpdateArgs = new Telerik.WinControls.UI.RadButton();
             this.btnChangeStatus = new Telerik.WinControls.UI.RadButton();
-            this.radButton1 = new Telerik.WinControls.UI.RadButton();
+            this.btnChangeServicePlan = new Telerik.WinControls.UI.RadButton();
             this.gparg = new Telerik.WinControls.UI.RadGroupBox();
             this.tableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)(this.radPanel1)).BeginInit();
@@ -62,9 +63,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.lbsptitle)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.radGroupBox1)).BeginInit();
             this.radGroupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.btnDeleteFinService)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnUpdateArgs)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnChangeStatus)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radButton1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.btnChangeServicePlan)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gparg)).BeginInit();
             this.gparg.SuspendLayout();
             this.SuspendLayout();
@@ -181,7 +183,7 @@
             // lbsptitle
             // 
             this.lbsptitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.lbsptitle.ForeColor = System.Drawing.Color.DarkRed;
+            this.lbsptitle.ForeColor = System.Drawing.Color.Crimson;
             this.lbsptitle.Location = new System.Drawing.Point(70, 40);
             this.lbsptitle.Name = "lbsptitle";
             this.lbsptitle.Size = new System.Drawing.Size(14, 16);
@@ -193,9 +195,10 @@
             this.radGroupBox1.AccessibleRole = System.Windows.Forms.AccessibleRole.Grouping;
             this.radGroupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)));
+            this.radGroupBox1.Controls.Add(this.btnDeleteFinService);
             this.radGroupBox1.Controls.Add(this.btnUpdateArgs);
             this.radGroupBox1.Controls.Add(this.btnChangeStatus);
-            this.radGroupBox1.Controls.Add(this.radButton1);
+            this.radGroupBox1.Controls.Add(this.btnChangeServicePlan);
             this.radGroupBox1.HeaderText = "操 作";
             this.radGroupBox1.Location = new System.Drawing.Point(402, 3);
             this.radGroupBox1.Name = "radGroupBox1";
@@ -206,6 +209,20 @@
             this.radGroupBox1.Size = new System.Drawing.Size(113, 242);
             this.radGroupBox1.TabIndex = 0;
             this.radGroupBox1.Text = "操 作";
+            // 
+            // btnDeleteFinService
+            // 
+            this.btnDeleteFinService.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(65)))), ((int)(((byte)(109)))));
+            this.btnDeleteFinService.Location = new System.Drawing.Point(5, 125);
+            this.btnDeleteFinService.Name = "btnDeleteFinService";
+            this.btnDeleteFinService.Size = new System.Drawing.Size(89, 28);
+            this.btnDeleteFinService.TabIndex = 18;
+            this.btnDeleteFinService.Text = "删除服务";
+            this.btnDeleteFinService.Click += new System.EventHandler(this.btnDeleteFinService_Click);
+            ((Telerik.WinControls.UI.RadButtonElement)(this.btnDeleteFinService.GetChildAt(0))).Text = "删除服务";
+            ((Telerik.WinControls.Primitives.TextPrimitive)(this.btnDeleteFinService.GetChildAt(0).GetChildAt(1).GetChildAt(1))).ForeColor = System.Drawing.Color.Crimson;
+            ((Telerik.WinControls.Primitives.TextPrimitive)(this.btnDeleteFinService.GetChildAt(0).GetChildAt(1).GetChildAt(1))).Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            ((Telerik.WinControls.Primitives.TextPrimitive)(this.btnDeleteFinService.GetChildAt(0).GetChildAt(1).GetChildAt(1))).Alignment = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnUpdateArgs
             // 
@@ -224,13 +241,14 @@
             this.btnChangeStatus.TabIndex = 14;
             this.btnChangeStatus.Text = "冻 结";
             // 
-            // radButton1
+            // btnChangeServicePlan
             // 
-            this.radButton1.Location = new System.Drawing.Point(5, 57);
-            this.radButton1.Name = "radButton1";
-            this.radButton1.Size = new System.Drawing.Size(89, 28);
-            this.radButton1.TabIndex = 17;
-            this.radButton1.Text = "修改服务计划";
+            this.btnChangeServicePlan.Location = new System.Drawing.Point(5, 57);
+            this.btnChangeServicePlan.Name = "btnChangeServicePlan";
+            this.btnChangeServicePlan.Size = new System.Drawing.Size(89, 28);
+            this.btnChangeServicePlan.TabIndex = 17;
+            this.btnChangeServicePlan.Text = "修改服务计划";
+            this.btnChangeServicePlan.Click += new System.EventHandler(this.btnChangeServicePlan_Click);
             // 
             // gparg
             // 
@@ -296,9 +314,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.lbsptitle)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.radGroupBox1)).EndInit();
             this.radGroupBox1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.btnDeleteFinService)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnUpdateArgs)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnChangeStatus)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radButton1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.btnChangeServicePlan)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gparg)).EndInit();
             this.gparg.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -321,9 +340,10 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel;
         private Telerik.WinControls.UI.RadButton btnUpdateArgs;
         private Telerik.WinControls.UI.RadButton btnChangeStatus;
-        private Telerik.WinControls.UI.RadButton radButton1;
+        private Telerik.WinControls.UI.RadButton btnChangeServicePlan;
         private Telerik.WinControls.UI.RadGroupBox gparg;
         private Telerik.WinControls.UI.RadGroupBox radGroupBox1;
         private Telerik.WinControls.UI.RadGroupBox radGroupBox2;
+        private Telerik.WinControls.UI.RadButton btnDeleteFinService;
     }
 }

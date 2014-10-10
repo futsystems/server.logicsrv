@@ -22,6 +22,10 @@ namespace TradingLib.Contrib.FinService
             }
         }
 
+        /// <summary>
+        /// 加载配资服务
+        /// </summary>
+        /// <param name="stub"></param>
         void LoadStub(FinServiceStub stub)
         {
             //初始化FinService服务
@@ -29,6 +33,11 @@ namespace TradingLib.Contrib.FinService
             if (!stub.IsValid)
             {
                 Util.Debug("FinService:" + stub.ToString() + " is not valid, drop it");
+                return;
+            }
+            if (finservicemap.Keys.Contains(stub.Acct))
+            {
+                Util.Debug("account:"+stub.Acct+"already load finservice,drop newer");
                 return;
             }
             finservicemap.Add(stub.Acct, stub);
@@ -64,10 +73,13 @@ namespace TradingLib.Contrib.FinService
             return false;
         }
 
-
+        /// <summary>
+        /// 为某个交易帐号添加 某个服务计划 sp_fk
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="sp_fk"></param>
         public void AddFinService(string account,int sp_fk)
         {
-
             FinServiceStub stub = new FinServiceStub();
             //配资服务帐号
             stub.Acct = account;
@@ -82,10 +94,29 @@ namespace TradingLib.Contrib.FinService
             ORM.MFinService.InsertFinService(stub);
 
             //加载FinServiceStub
-            LoadStub(stub);
-
-            
+            LoadStub(stub);           
         }
+
+        /// <summary>
+        /// 删除某个配资服务
+        /// </summary>
+        /// <param name="service_id"></param>
+        public void DeleteFinService(FinServiceStub stub)
+        {
+            //将服务从交易帐户上注销
+            stub.Account.UnBindService(stub);
+
+            //内存清空相关记录
+            if (finservicemap.Keys.Contains(stub.Acct))
+            {
+                finservicemap.Remove(stub.Acct);
+            }
+
+            //数据库删除记录
+            ORM.MFinService.DeleteFinService(stub);
+        }
+
+
         public FinServiceStub[] ToArray()
         {
             return finservicemap.Values.ToArray();
@@ -105,6 +136,8 @@ namespace TradingLib.Contrib.FinService
             foreach (FinServiceStub stub in finservicemap.Values.ToArray())
                 yield return stub;
         }
+
+
 
         public void GotFeeChargeItem(FeeChargeItem item)
         {
@@ -200,26 +233,12 @@ namespace TradingLib.Contrib.FinService
             {
                 //加载配资服务参数
                 this.LoadArgument();
-                //获得对应的参数参数
-                //Dictionary<string, Argument> agentarg = FinTracker.ArgumentTracker.GetAgentArgument(this.AgentID, this.serviceplan_fk);
-                //Dictionary<string, Argument> accountarg = FinTracker.ArgumentTracker.GetAccountArgument(this);
-                ////初始化参数
-                //baseobj.InitArgument(accountarg, agentarg);
-
-                /*
-                foreach (Argument arg in agentarg.Values)
-                {
-                    LibUtil.Debug("agent arg:" + arg.ToString());
-                }
-                foreach (Argument arg in accountarg.Values)
-                {
-                    LibUtil.Debug("account arg:" + arg.ToString());
-                }
-                 * **/
-
-                baseobj.GotFeeChargeEvent += new FeeChargeDel(ChargeFee);//绑定计费事件
-                baseobj.BindAccount(this.Account);//绑定交易帐号
-                this.Account.BindService(this);//将服务绑定到帐户
+                //绑定输出计费事件
+                baseobj.GotFeeChargeEvent += new FeeChargeDel(ChargeFee);
+                //绑定交易帐号
+                baseobj.BindAccount(this.Account);
+                //将服务绑定到帐户
+                this.Account.BindService(this);
             }
         }
 

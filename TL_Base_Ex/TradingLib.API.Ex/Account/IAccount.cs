@@ -29,6 +29,7 @@ namespace TradingLib.API
 
         #region 交易帐号服务类相关操作
         void BindService(IAccountService service, bool force = true);
+        void UnBindService(IAccountService service);
         bool GetService(string sn, out IAccountService service);
         #endregion
 

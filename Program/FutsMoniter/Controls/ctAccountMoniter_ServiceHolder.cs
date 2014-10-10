@@ -31,6 +31,9 @@ namespace FutsMoniter.Controls
                 {
                     Globals.TLClient.ReqQryFinService(AccountSetlected.Account);
                 }
+
+                //如果没有获得服务计划列表则请求服务计划列表
+                //ctFinService1.PrepareServicePlan();
             }
         }
     }

@@ -5,6 +5,7 @@ using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
 using System.Reflection;
+using TradingLib.Mixins.JsonObject;
 
 namespace TradingLib.Contrib.FinService
 {
@@ -86,6 +87,8 @@ namespace TradingLib.Contrib.FinService
 
 
         }
+
+
         /// <summary>
         /// 设定某个配资服务的参数
         /// 从Dictinoary通过反射自动设定到对应的参数
@@ -131,6 +134,8 @@ namespace TradingLib.Contrib.FinService
             }
             return new ArgumentPair(arg1, arg2);
         }
+
+
         /// <summary>
         /// 通过类名获得BDServicePlane数据
         /// </summary>
@@ -147,6 +152,8 @@ namespace TradingLib.Contrib.FinService
                 return null;
             }
         }
+
+
         /// <summary>
         /// 通过数据库serviceplan_fkid获得对应的DBServicePlane
         /// </summary>
@@ -161,6 +168,17 @@ namespace TradingLib.Contrib.FinService
                     return spidxmap[id];
                 }
                 return null;
+            }
+        }
+
+        /// <summary>
+        /// 返回所有service plan
+        /// </summary>
+        public IEnumerable<DBServicePlan> ServicePlans
+        {
+            get 
+            {
+                return spidxmap.Values;
             }
         }
 
@@ -217,5 +235,18 @@ namespace TradingLib.Contrib.FinService
         public string ClassName { get; set; }
     }
 
-
+    public static class DBServicePlanUtils
+    {
+        public static JsonWrapperServicePlane ToJsonWrapperServicePlane(this DBServicePlan sp)
+        {
+            JsonWrapperServicePlane ret = new JsonWrapperServicePlane
+            {
+                ID = sp.ID,
+                Name = sp.Name,
+                ClassName = sp.ClassName,
+                Title = sp.Title,
+            };
+            return ret;
+        }
+    }
 }

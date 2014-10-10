@@ -44,7 +44,19 @@ namespace TradingLib.Contrib.FinService.ORM
             }
         }
 
-
+        /// <summary>
+        /// 删除数据库记录
+        /// </summary>
+        /// <param name="stub"></param>
+        /// <returns></returns>
+        public static bool DeleteFinService(FinServiceStub stub)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("DELETE FROM contrib_finservice_service WHERE id = '{0}'", stub.ID);
+                return db.Connection.Execute(query)>=0;
+            }
+        }
         //public static bool InsertServicePlan(DBServicePlan sp)
         //{
         //    using (DBMySql db = new DBMySql())
