@@ -38,6 +38,7 @@ namespace FutsMoniter
         HistQryForm histqryform;
         BasicInfoTracker basicinfotracker;
         ManagerForm mgrform;
+        AgentProfitReportForm agentprofitreportform;
         void ShowInfo(string msg)
         {
             if (ShowInfoHandler != null)
@@ -97,6 +98,8 @@ namespace FutsMoniter
 
             mgrform = new ManagerForm();
 
+            agentprofitreportform = new AgentProfitReportForm();
+            
             basicinfotracker.GotMarketTimeEvent += new MarketTimeDel(markettimeform.GotMarketTime);
             basicinfotracker.GotExchangeEvent += new ExchangeDel(exchangeform.GotExchange);
             basicinfotracker.GotSecurityEvent += new SecurityDel(securityform.GotSecurity);
@@ -309,6 +312,8 @@ namespace FutsMoniter
             double o = statusmessage.Opacity - 0.05;
             statusmessage.Opacity = o >= 0 ? o : 0;
         }
+
+        
 
 
 

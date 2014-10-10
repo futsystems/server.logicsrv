@@ -64,6 +64,8 @@
             this.radMenuSeparatorItem2 = new Telerik.WinControls.UI.RadMenuSeparatorItem();
             this.btnChangePass = new Telerik.WinControls.UI.RadMenuItem();
             this.office2010SilverTheme1 = new Telerik.WinControls.Themes.Office2010SilverTheme();
+            this.radMenuSeparatorItem4 = new Telerik.WinControls.UI.RadMenuSeparatorItem();
+            this.btnAgentProfit = new Telerik.WinControls.UI.RadMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.radStatusStrip1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.radPageView1)).BeginInit();
             this.radPageView1.SuspendLayout();
@@ -79,9 +81,9 @@
             this.radLabelElement1,
             this.statusmessage,
             this.radLabelElement2});
-            this.radStatusStrip1.Location = new System.Drawing.Point(0, 631);
+            this.radStatusStrip1.Location = new System.Drawing.Point(0, 629);
             this.radStatusStrip1.Name = "radStatusStrip1";
-            this.radStatusStrip1.Size = new System.Drawing.Size(1139, 22);
+            this.radStatusStrip1.Size = new System.Drawing.Size(1139, 24);
             this.radStatusStrip1.TabIndex = 0;
             this.radStatusStrip1.Text = "radStatusStrip1";
             this.radStatusStrip1.ThemeName = "Windows8";
@@ -257,7 +259,7 @@
             this.radPageView1.Location = new System.Drawing.Point(0, 18);
             this.radPageView1.Name = "radPageView1";
             this.radPageView1.SelectedPage = this.radPageViewPage1;
-            this.radPageView1.Size = new System.Drawing.Size(1139, 613);
+            this.radPageView1.Size = new System.Drawing.Size(1139, 611);
             this.radPageView1.TabIndex = 2;
             this.radPageView1.ThemeName = "Windows8";
             ((Telerik.WinControls.UI.RadPageViewStripElement)(this.radPageView1.GetChildAt(0))).StripButtons = Telerik.WinControls.UI.StripViewButtons.None;
@@ -265,9 +267,9 @@
             // radPageViewPage1
             // 
             this.radPageViewPage1.Controls.Add(this.ctAccountMontier1);
-            this.radPageViewPage1.Location = new System.Drawing.Point(5, 27);
+            this.radPageViewPage1.Location = new System.Drawing.Point(10, 35);
             this.radPageViewPage1.Name = "radPageViewPage1";
-            this.radPageViewPage1.Size = new System.Drawing.Size(1129, 581);
+            this.radPageViewPage1.Size = new System.Drawing.Size(1118, 565);
             this.radPageViewPage1.Text = "帐户列表";
             // 
             // ctAccountMontier1
@@ -277,7 +279,7 @@
             this.ctAccountMontier1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ctAccountMontier1.Location = new System.Drawing.Point(0, 0);
             this.ctAccountMontier1.Name = "ctAccountMontier1";
-            this.ctAccountMontier1.Size = new System.Drawing.Size(1129, 581);
+            this.ctAccountMontier1.Size = new System.Drawing.Size(1118, 565);
             this.ctAccountMontier1.TabIndex = 0;
             // 
             // radPageViewPage2
@@ -321,7 +323,8 @@
             this.radMenuItem4.AccessibleName = "radMenuItem4";
             this.radMenuItem4.Items.AddRange(new Telerik.WinControls.RadItem[] {
             this.btnQryHist,
-            this.btnStatistic});
+            this.btnStatistic,
+            this.radMenuSeparatorItem4});
             this.radMenuItem4.Name = "radMenuItem4";
             this.radMenuItem4.Text = "记录查询";
             this.radMenuItem4.Visibility = Telerik.WinControls.ElementVisibility.Visible;
@@ -339,6 +342,8 @@
             // 
             this.btnStatistic.AccessibleDescription = "统计报表";
             this.btnStatistic.AccessibleName = "统计报表";
+            this.btnStatistic.Items.AddRange(new Telerik.WinControls.RadItem[] {
+            this.btnAgentProfit});
             this.btnStatistic.Name = "btnStatistic";
             this.btnStatistic.Text = "统计报表";
             this.btnStatistic.Visibility = Telerik.WinControls.ElementVisibility.Visible;
@@ -401,6 +406,23 @@
             this.btnChangePass.Text = "修改柜员密码";
             this.btnChangePass.Visibility = Telerik.WinControls.ElementVisibility.Visible;
             this.btnChangePass.Click += new System.EventHandler(this.btnChangePass_Click);
+            // 
+            // radMenuSeparatorItem4
+            // 
+            this.radMenuSeparatorItem4.AccessibleDescription = "radMenuSeparatorItem4";
+            this.radMenuSeparatorItem4.AccessibleName = "radMenuSeparatorItem4";
+            this.radMenuSeparatorItem4.Name = "radMenuSeparatorItem4";
+            this.radMenuSeparatorItem4.Text = "radMenuSeparatorItem4";
+            this.radMenuSeparatorItem4.Visibility = Telerik.WinControls.ElementVisibility.Visible;
+            // 
+            // btnAgentProfit
+            // 
+            this.btnAgentProfit.AccessibleDescription = "代理商分润报表";
+            this.btnAgentProfit.AccessibleName = "代理商分润报表";
+            this.btnAgentProfit.Name = "btnAgentProfit";
+            this.btnAgentProfit.Text = "代理商分润报表";
+            this.btnAgentProfit.Visibility = Telerik.WinControls.ElementVisibility.Visible;
+            this.btnAgentProfit.Click += new System.EventHandler(this.btnAgentProfit_Click);
             // 
             // MainForm
             // 
@@ -469,5 +491,7 @@
         private Telerik.WinControls.UI.RadMenuItem btnManagerForm;
         private Telerik.WinControls.UI.RadMenuSeparatorItem radMenuSeparatorItem2;
         private Telerik.WinControls.UI.RadMenuItem btnChangePass;
+        private Telerik.WinControls.UI.RadMenuSeparatorItem radMenuSeparatorItem4;
+        private Telerik.WinControls.UI.RadMenuItem btnAgentProfit;
     }
 }

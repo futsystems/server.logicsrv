@@ -44,6 +44,9 @@
     <Reference Include="CTP">
       <HintPath>..\..\lib\CTP.dll</HintPath>
     </Reference>
+    <Reference Include="FutsMoniter, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <ExecutableExtension>.exe</ExecutableExtension>
+    </Reference>
     <Reference Include="FutSystems.GUI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Win\FutSystems.GUI.dll</HintPath>
@@ -84,6 +87,10 @@
       <HintPath>..\..\lib\Telerik\TelerikCommon.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="TelerikData, Version=2013.2.612.40, Culture=neutral, PublicKeyToken=5bb2a467cbec794e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Telerik\TelerikData.dll</HintPath>
+    </Reference>
     <Reference Include="TradingLib.API, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\TradingLib\TradingLib.API.dll</HintPath>
@@ -97,6 +104,36 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\Report\ctDetailReportByAccount.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\Report\ctDetailReportByAccount.Designer.cs">
+      <DependentUpon>ctDetailReportByAccount.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Report\ctProfitReportOneDay.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\Report\ctProfitReportOneDay.Designer.cs">
+      <DependentUpon>ctProfitReportOneDay.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Report\ctProfitReportDayRange.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\Report\ctProfitReportDayRange.Designer.cs">
+      <DependentUpon>ctProfitReportDayRange.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ctGridExport.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ctGridExport.Designer.cs">
+      <DependentUpon>ctGridExport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form\AgentProfitReportForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\AgentProfitReportForm.Designer.cs">
+      <DependentUpon>AgentProfitReportForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="API\Delegate.cs" />
     <Compile Include="API\IBasicInfo.cs" />
     <Compile Include="API\ICallback.cs" />
@@ -343,6 +380,21 @@
       <DependentUpon>UpdatePassForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Utils.cs" />
+    <EmbeddedResource Include="Controls\Report\ctDetailReportByAccount.resx">
+      <DependentUpon>ctDetailReportByAccount.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\Report\ctProfitReportOneDay.resx">
+      <DependentUpon>ctProfitReportOneDay.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\Report\ctProfitReportDayRange.resx">
+      <DependentUpon>ctProfitReportDayRange.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ctGridExport.resx">
+      <DependentUpon>ctGridExport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\AgentProfitReportForm.resx">
+      <DependentUpon>AgentProfitReportForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\ctOrderSenderM.resx">
       <DependentUpon>ctOrderSenderM.cs</DependentUpon>
     </EmbeddedResource>

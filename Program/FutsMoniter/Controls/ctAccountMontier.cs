@@ -32,6 +32,8 @@ namespace FutsMoniter.Controls
         Symbol SymbolSelected { get { return _symbolselected; } }
         public ctAccountMontier()
         {
+            try
+            {
             InitializeComponent();
 
             Factory.IDataSourceFactory(accountType).BindDataSource(UIUtil.GetEnumValueObjects<QSEnumAccountCategory>(true));
@@ -55,20 +57,26 @@ namespace FutsMoniter.Controls
             InitViewQuoteList();
             _loaded = true;
 
-            if (!Globals.Config["FinService"].AsBool())
-            {
-                FinServicePage.Text = "开发中";
-                FinServicePage.Enabled = false;
+            
+                if (!Globals.Config["FinService"].AsBool())
+                {
+                    FinServicePage.Text = "开发中";
+                    FinServicePage.Enabled = false;
+                }
+                if (!Globals.Config["RaceService"].AsBool())
+                {
+                    RaceServicePage.Text = "开发中";
+                    FinServicePage.Enabled = false;
+                }
+                if (!Globals.Config["LottoService"].AsBool())
+                {
+                    LottoServicePage.Text = "开发中";
+                    LottoServicePage.Enabled = false;
+                }
             }
-            if (!Globals.Config["RaceService"].AsBool())
-            {
-                RaceServicePage.Text = "开发中";
-                FinServicePage.Enabled = false;
-            }
-            if(!Globals.Config["LottoService"].AsBool())
-            {
-                LottoServicePage.Text ="开发中";
-                LottoServicePage.Enabled = false;
+            catch (Exception ex)
+            { 
+                
             }
             
         }

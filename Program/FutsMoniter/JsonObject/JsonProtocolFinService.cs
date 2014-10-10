@@ -155,5 +155,54 @@ namespace TradingLib.Mixins.JsonObject
         public string ClassName { get; set; }
     }
 
+    public class JsonWrapperToalReport
+    {
+        /// <summary>
+        /// 结算日
+        /// </summary>
+        public int SettleDay { get; set; }
+
+        /// <summary>
+        /// 代理编号
+        /// </summary>
+        public int Agent_FK { get; set; }
+
+        /// <summary>
+        /// 代理名称
+        /// </summary>
+        public string AgentName { get; set; }
+
+        /// <summary>
+        /// 手机号码 用于 发送手机端消息
+        /// </summary>
+        public string Mobile { get; set; }
+
+        /// <summary>
+        /// QQ号码 用于发送邮件
+        /// </summary>
+        public string QQ { get; set; }
+
+        /// <summary>
+        /// 交易帐号
+        /// </summary>
+        public string Account { get; set; }
+
+        /// <summary>
+        /// 客户收费
+        /// </summary>
+        public decimal TotalFee { get; set; }
+
+
+        /// <summary>
+        /// 代理成本
+        /// </summary>
+        public decimal AgentFee { get; set; }
+
+        /// <summary>
+        /// 代理利润
+        /// </summary>
+        public decimal AgentProfit { get; set; }
+    }
+
 
 }

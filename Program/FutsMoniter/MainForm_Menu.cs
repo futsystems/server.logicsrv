@@ -151,5 +151,16 @@ namespace FutsMoniter
             }
         }
         #endregion
+
+        #region 报表
+        private void btnAgentProfit_Click(object sender, EventArgs e)
+        {
+            if (agentprofitreportform != null)
+            {
+                agentprofitreportform.Show();
+            }
+        }
+        #endregion
+
     }
 }

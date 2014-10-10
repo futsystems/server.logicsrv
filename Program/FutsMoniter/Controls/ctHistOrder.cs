@@ -28,6 +28,8 @@ namespace FutsMoniter
 
         }
 
+        public Telerik.WinControls.UI.RadGridView Grid { get { return orderGrid; } }
+
         public void Clear()
         {
             orderGrid.DataSource = null;

@@ -618,6 +618,39 @@ namespace TradingLib.Common
 
         #region 扩展请求
 
+        #region 查询报表
+
+        /// <summary>
+        /// 查询某日所有代理的利润报表
+        /// </summary>
+        /// <param name="settleday"></param>
+        public void ReqQryTotalReport(int settleday)
+        {
+            this.ReqContribRequest("FinServiceCentre", "QryTotalReport", settleday.ToString());
+        }
+
+        /// <summary>
+        /// 查询某个代理某个时间段内的所有利润流水
+        /// </summary>
+        /// <param name="agentfk"></param>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        public void ReqQryTotalReportByDayRange(int agentfk, int start, int end)
+        {
+            this.ReqContribRequest("FinServiceCentre", "QryTotalReportDayRange", agentfk.ToString() + "," + start.ToString() + "," + end.ToString());
+        }
+
+        /// <summary>
+        /// 查询某个代理某个交易日的按帐户汇总的利润报表
+        /// </summary>
+        /// <param name="agentfk"></param>
+        /// <param name="settleday"></param>
+        public void ReqQryDetailReportByAccount(int agentfk, int settleday)
+        {
+            this.ReqContribRequest("FinServiceCentre", "QryDetailReportByAccount", agentfk.ToString() + "," + settleday.ToString());
+        }
+        #endregion
+
         /// <summary>
         /// 查询某个交易帐户的配资参数
         /// </summary>

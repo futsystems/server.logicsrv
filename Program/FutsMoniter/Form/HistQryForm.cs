@@ -158,7 +158,7 @@ namespace FutsMoniter
         {
             if (qrypage.SelectedPage.Name.Equals("historder"))
             {
-                //this.QryType = QSHistQryType.HISTORDER;
+                ctGridExport1.Grid = ctHistOrder1.Grid;
             }
             else if (qrypage.SelectedPage.Name.Equals("histtrade"))
             {

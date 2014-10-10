@@ -173,6 +173,36 @@ namespace TradingLib.Contrib.FinService
             SendJsonReplyMgr(session, splist);
         }
 
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryTotalReport", "QryTotalReport - query totalreport", "查询某日所有代理的汇总统计")]
+        public void CTE_QryTotalReport(ISession session,int settleday)
+        {
+            JsonWrapperToalReport[] reports = ORM.MServiceChargeReport.GenTotalReport(settleday).Select((ret) => { return FillTotalReport(ret); }).ToArray();
+            SendJsonReplyMgr(session, reports);
+        }
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryTotalReportDayRange", "QryTotalReportDayRange - query totalreport", "查询某个代理某个时间段内利润流水")]
+        public void CTE_QryTotalReport(ISession session, int agentfk,int start,int end)
+        {
+            JsonWrapperToalReport[] reports = ORM.MServiceChargeReport.GenTotalReportByDayRange(agentfk,start,end).Select((ret) => { return FillTotalReport(ret); }).ToArray();
+            SendJsonReplyMgr(session, reports);
+        }
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryDetailReportByAccount", "QryDetailReportByAccount - query totalreport", "查询某个代理某个时间段内利润流水")]
+        public void CTE_QryDetailReportByAccount(ISession session, int agentfk,int settleday)
+        {
+            JsonWrapperToalReport[] reports = ORM.MServiceChargeReport.GenDetailReportByAccount(agentfk, settleday).Select((ret) => { return FillTotalReport(ret); }).ToArray();
+            SendJsonReplyMgr(session, reports);
+        }
+
+        JsonWrapperToalReport FillTotalReport(JsonWrapperToalReport report)
+        {
+            Manager m = BasicTracker.ManagerTracker[report.Agent_FK];
+            if(m!= null)
+                report.AgentName = m.Name;
+                report.Mobile = m.Mobile;
+                report.QQ = m.QQ;
+            return report;
+        }
     }
 
 
