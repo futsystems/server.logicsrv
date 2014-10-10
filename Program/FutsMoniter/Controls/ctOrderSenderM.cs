@@ -24,9 +24,18 @@ namespace FutsMoniter
             InitializeComponent();
             Factory.IDataSourceFactory(cboffsetflag).BindDataSource(Utils.GetOffsetCBList());
             Factory.IDataSourceFactory(cbordertype).BindDataSource(Utils.GetOrderTypeCBList());
-            if (!Globals.Config["InsertTrade"].AsBool())
+            try
             {
-                btnInsertTrade.Visible = false;
+                if (!Globals.Config["InsertTrade"].AsBool())
+                {
+                    //MessageBox.Show("xxxx:"+Globals.Config["InsertTrade"].Value);
+                    //Globals.Debug("```````````````````````inserttrade config:" + Globals.Config["InsertTrade"].Value);
+                    btnInsertTrade.Visible = false;
+                }
+            }
+            catch (Exception ex)
+            { 
+            
             }
         }
 

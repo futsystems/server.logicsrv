@@ -63,9 +63,9 @@
             this.viewQuoteList1 = new FutSystems.GUI.ViewQuoteList();
             this.FinServicePage = new Telerik.WinControls.UI.RadPageViewPage();
             this.RaceServicePage = new Telerik.WinControls.UI.RadPageViewPage();
+            this.LottoServicePage = new Telerik.WinControls.UI.RadPageViewPage();
             this.ctOrderSenderM1 = new FutsMoniter.ctOrderSenderM();
             this.ctFinService1 = new FutsMoniter.ctFinService();
-            this.LottoServicePage = new Telerik.WinControls.UI.RadPageViewPage();
             ((System.ComponentModel.ISupportInitialize)(this.SplitContainer)).BeginInit();
             this.SplitContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.radSplitContainer1)).BeginInit();
@@ -470,7 +470,7 @@
             this.ServiceTabHolder.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ServiceTabHolder.Location = new System.Drawing.Point(0, 0);
             this.ServiceTabHolder.Name = "ServiceTabHolder";
-            this.ServiceTabHolder.SelectedPage = this.FinServicePage;
+            this.ServiceTabHolder.SelectedPage = this.OrderSenderPage;
             this.ServiceTabHolder.Size = new System.Drawing.Size(585, 276);
             this.ServiceTabHolder.TabIndex = 0;
             this.ServiceTabHolder.Text = "radPageView2";
@@ -482,9 +482,9 @@
             // 
             this.OrderSenderPage.Controls.Add(this.viewQuoteList1);
             this.OrderSenderPage.Controls.Add(this.ctOrderSenderM1);
-            this.OrderSenderPage.Location = new System.Drawing.Point(10, 35);
+            this.OrderSenderPage.Location = new System.Drawing.Point(10, 31);
             this.OrderSenderPage.Name = "OrderSenderPage";
-            this.OrderSenderPage.Size = new System.Drawing.Size(564, 230);
+            this.OrderSenderPage.Size = new System.Drawing.Size(564, 234);
             this.OrderSenderPage.Text = "下 单";
             // 
             // viewQuoteList1
@@ -505,7 +505,7 @@
             this.viewQuoteList1.QuoteFont = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
             this.viewQuoteList1.QuoteViewWidth = 1030;
             this.viewQuoteList1.SelectedQuoteRow = -1;
-            this.viewQuoteList1.Size = new System.Drawing.Size(564, 142);
+            this.viewQuoteList1.Size = new System.Drawing.Size(564, 146);
             this.viewQuoteList1.SymbolFont = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
             this.viewQuoteList1.SymbolFontColor = System.Drawing.Color.Green;
             this.viewQuoteList1.TabIndex = 1;
@@ -528,10 +528,17 @@
             this.RaceServicePage.Size = new System.Drawing.Size(564, 230);
             this.RaceServicePage.Text = "比赛服务";
             // 
+            // LottoServicePage
+            // 
+            this.LottoServicePage.Location = new System.Drawing.Point(10, 35);
+            this.LottoServicePage.Name = "LottoServicePage";
+            this.LottoServicePage.Size = new System.Drawing.Size(564, 230);
+            this.LottoServicePage.Text = "乐透服务";
+            // 
             // ctOrderSenderM1
             // 
             this.ctOrderSenderM1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.ctOrderSenderM1.Location = new System.Drawing.Point(0, 166);
+            this.ctOrderSenderM1.Location = new System.Drawing.Point(0, 170);
             this.ctOrderSenderM1.Name = "ctOrderSenderM1";
             this.ctOrderSenderM1.Size = new System.Drawing.Size(564, 64);
             this.ctOrderSenderM1.TabIndex = 0;
@@ -544,13 +551,6 @@
             this.ctFinService1.Name = "ctFinService1";
             this.ctFinService1.Size = new System.Drawing.Size(564, 230);
             this.ctFinService1.TabIndex = 1;
-            // 
-            // LottoServicePage
-            // 
-            this.LottoServicePage.Location = new System.Drawing.Point(10, 35);
-            this.LottoServicePage.Name = "LottoServicePage";
-            this.LottoServicePage.Size = new System.Drawing.Size(564, 230);
-            this.LottoServicePage.Text = "乐透服务";
             // 
             // ctAccountMontier
             // 
