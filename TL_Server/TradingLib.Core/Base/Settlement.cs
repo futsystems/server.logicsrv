@@ -75,7 +75,7 @@ namespace TradingLib.Core
             decimal margin = 0;
             foreach(SettlePosition pos in positions)
             {
-                margin += Math.Abs(pos.Size * pos.SettlePrice * pos.Multiple * 0.1M);//结算持仓数据总包含对应的保证金记录 这样下次读取时直接累加即可
+                margin += pos.Margin;//Math.Abs(pos.Size * pos.SettlePrice * pos.Multiple * 0.1M);//结算持仓数据总包含对应的保证金记录 这样下次读取时直接累加即可
             }
 
             settlelist.Add(NewLine);
@@ -87,7 +87,7 @@ namespace TradingLib.Core
             settlelist.Add(NewLine);
             settlelist.Add(SectionName("资金状况"));
             settlelist.Add(line);
-            settlelist.Add(string.Format(tp_total, FieldName("上日结存:", fieldwidth_total), s.LastEqutiy, FieldName("当日结存:", fieldwidth_total), s.NowEquity, FieldName("可用资金:", fieldwidth_total), s.NowEquity-margin));
+            settlelist.Add(string.Format(tp_total, FieldName("上日结存:", fieldwidth_total), s.LastEquity, FieldName("当日结存:", fieldwidth_total), s.NowEquity, FieldName("可用资金:", fieldwidth_total), s.NowEquity - margin));
             settlelist.Add(string.Format(tp_total, FieldName("出入金:", fieldwidth_total), s.CashIn-s.CashOut, FieldName("客户权益:", fieldwidth_total), s.NowEquity, FieldName("风险度:", fieldwidth_total), margin/s.NowEquity));
             settlelist.Add(string.Format(tp_total, FieldName("手续费:", fieldwidth_total), s.Commission, FieldName("总保证金占用:", fieldwidth_total), margin, FieldName("追加保证金:", fieldwidth_total), 0));
             settlelist.Add(string.Format(tp_total, FieldName("平仓盈亏:", fieldwidth_total), s.RealizedPL, FieldName("持仓盯市盈亏:", fieldwidth_total), s.UnRealizedPL, FieldName("交割保证金:", fieldwidth_total), 0));
@@ -107,12 +107,13 @@ namespace TradingLib.Core
                 foreach (Trade t in trades)
                 {
 
-                    settlelist.Add(string.Format(" {0} {1} {2} {3} {4} {5} {6,8:F2} {7,4} {8,10:F2} {9} {10,6:F2} {11,10:F2} {12,10}", t.xdate.ToString().PadRight(10), padRightEx(BasicTracker.ExchagneTracker.GetExchangeTitle(t.Exchange), 8), padRightEx(BasicTracker.SecurityTracker.GetSecurityName(t.SecurityCode), 20), "201415".PadRight(8), padRightEx((t.xsize > 0 ? "买" : " 卖"), 4), padRightEx("投", 4), t.xprice, Math.Abs(t.xsize), BasicTracker.SecurityTracker.GetMultiple(t.SecurityCode) * t.xprice * Math.Abs(t.xsize), padRightEx(GetCombFlag(t.OffsetFlag), 4), t.Commission, t.Profit, 10101));
+                    settlelist.Add(string.Format(" {0} {1} {2} {3} {4} {5} {6,8:F2} {7,4} {8,10:F2} {9} {10,6:F2} {11,10:F2} {12,10}", t.xdate.ToString().PadRight(10), padRightEx(BasicTracker.ExchagneTracker.GetExchangeTitle(t.Exchange), 8), padRightEx(BasicTracker.SecurityTracker.GetSecurityName(t.SecurityCode), 20), "201415".PadRight(8), padRightEx((t.xsize > 0 ? "买" : " 卖"), 4), padRightEx("投", 4), t.xprice, Math.Abs(t.xsize), BasicTracker.SecurityTracker.GetMultiple(t.SecurityCode) * t.xprice * Math.Abs(t.xsize), padRightEx(GetCombFlag(t.OffsetFlag), 4), t.Commission, t.Profit,t.BrokerKey));
                 }
 
                 settlelist.Add(NewLine);
                 settlelist.Add(NewLine);
             }
+
             //输出持仓明细
             if (positions.Count > 0)
             {
@@ -120,10 +121,28 @@ namespace TradingLib.Core
                 settlelist.Add(line);
 
                 settlelist.Add("|   合约   |买持| 买均价 |卖持| 卖均价 | 昨结算 | 今结算 |盯市盈亏|保证金占用|投保".Replace('|', '*'));
-                foreach (SettlePosition pos in positions)
+                
+                Dictionary<string, List<SettlePosition>> ret = GenPositionPairMap(positions);
+                foreach (string key in ret.Keys)
                 {
-                    settlelist.Add(string.Format(" {0,-10} {1,4} {2,8:F2} {3,4} {4,8:F2} {5,8:F2} {6,8:F2} {7,8:F2} {8,10:F2} {9,4}", pos.Symbol, pos.Size > 0 ? pos.Size : 0, pos.Size > 0 ? pos.AVGPrice : 0, pos.Size < 0 ? pos.Size : 0, pos.Size < 0 ? pos.AVGPrice : 0, 0, pos.SettlePrice, pos.Size * (pos.SettlePrice - pos.AVGPrice) * pos.Multiple, Math.Abs(pos.AVGPrice * pos.Size * pos.Multiple * 0.1M), "投"));
+                    List<SettlePosition> list = ret[key];
+                    if (list.Count > 0)
+                    {
+                        string symbol = list[0].Symbol;
+                        int longsize = list.Where(pos => pos.Size > 0).Sum(pos => pos.Size);
+                        decimal longavgprice = longsize>0?list.Where(pos => pos.Size > 0).Sum(pos => pos.Size * pos.AVGPrice) / longsize : 0;
+                        int shortsize = list.Where(pos => pos.Size < 0).Sum(pos => Math.Abs(pos.Size));
+                        decimal shortavgprice =shortsize>0? list.Where(pos => pos.Size < 0).Sum(pos => Math.Abs(pos.Size) * pos.AVGPrice) / shortsize :0;
+                        decimal settleprice = list[0].SettlePrice;
+                        decimal settleunpl = list.Sum(pos=> pos.Size * (pos.SettlePrice - pos.AVGPrice) * pos.Multiple);
+                        decimal lmargin = list.Sum(pos => pos.Margin);
+                        settlelist.Add(string.Format(" {0,-10} {1,4} {2,8:F2} {3,4} {4,8:F2} {5,8:F2} {6,8:F2} {7,8:F2} {8,10:F2} {9,4}", symbol, longsize, longavgprice, shortsize, shortavgprice, 0, settleprice, settleunpl, lmargin, "投"));
+                    }
                 }
+                //foreach (SettlePosition pos in positions)
+                //{
+                //    settlelist.Add(string.Format(" {0,-10} {1,4} {2,8:F2} {3,4} {4,8:F2} {5,8:F2} {6,8:F2} {7,8:F2} {8,10:F2} {9,4}", pos.Symbol, pos.Size > 0 ? pos.Size : 0, pos.Size > 0 ? pos.AVGPrice : 0, pos.Size < 0 ? pos.Size : 0, pos.Size < 0 ? pos.AVGPrice : 0, 0, pos.SettlePrice, pos.Size * (pos.SettlePrice - pos.AVGPrice) * pos.Multiple, Math.Abs(pos.AVGPrice * pos.Size * pos.Multiple * 0.1M), "投"));
+                //}
                 settlelist.Add(NewLine);
                 settlelist.Add(NewLine);
             }
@@ -145,6 +164,19 @@ namespace TradingLib.Core
         }
 
 
+        static Dictionary<string, List<SettlePosition>> GenPositionPairMap(IEnumerable<SettlePosition> poslist)
+        {
+            Dictionary<string, List<SettlePosition>> ret = new Dictionary<string, List<SettlePosition>>();
+            foreach (SettlePosition sp in poslist)
+            {
+                if (!ret.Keys.Contains(sp.SecurityCode))
+                {
+                    ret.Add(sp.SecurityCode, new List<SettlePosition>());
+                }
+                ret[sp.SecurityCode].Add(sp);
+            }
+            return ret;
+        }
         static string GetCombFlag(QSEnumOffsetFlag op)
         {
             if (op == QSEnumOffsetFlag.OPEN)

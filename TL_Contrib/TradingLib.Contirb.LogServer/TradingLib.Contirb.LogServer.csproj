@@ -10,17 +10,16 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TradingLib.Contirb.LogServer</RootNamespace>
     <AssemblyName>TradingLib.Contirb.LogServer</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,29 +28,36 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>
-    </DocumentationFile>
     <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="clrzmq">
       <HintPath>..\..\lib\clrzmq.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="TradingLib.API">
-      <HintPath>..\..\lib\Win\TradingLib.API.dll</HintPath>
+    <Reference Include="TradingLib.API, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\TradingLib\TradingLib.API.dll</HintPath>
+      <Private>False</Private>
     </Reference>
-    <Reference Include="TradingLib.API.Ex">
-      <HintPath>..\..\lib\Win\TradingLib.API.Ex.dll</HintPath>
+    <Reference Include="TradingLib.API.Ex, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\TradingLib\TradingLib.API.Ex.dll</HintPath>
+      <Private>False</Private>
     </Reference>
-    <Reference Include="TradingLib.Common">
-      <HintPath>..\..\lib\Win\TradingLib.Common.dll</HintPath>
+    <Reference Include="TradingLib.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\TradingLib\TradingLib.Common.dll</HintPath>
+      <Private>False</Private>
     </Reference>
-    <Reference Include="TradingLib.Common.Ex">
-      <HintPath>..\..\lib\Win\TradingLib.Common.Ex.dll</HintPath>
+    <Reference Include="TradingLib.Common.Ex, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\TradingLib\TradingLib.Common.Ex.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -59,14 +65,16 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>xcopy /r /y $(TargetPath) $(ProjectDir)..\..\Platform\TradingSrv\Contrib\</PostBuildEvent>
-  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
-  <Target Name="AfterBuild">
-  </Target>
   -->
+  <Target Name="AfterBuild">
+    <ItemGroup>
+      <OutFiles Include="$(OutputPath)\$(AssemblyName).dll" />
+    </ItemGroup>
+    <Copy SourceFiles="@(OutFiles)" DestinationFolder="..\..\lib\TradingLib\Contrib" SkipUnchangedFiles="true" />
+	<Copy SourceFiles="@(OutFiles)" DestinationFolder="..\..\Platform\TradingSrv\Contrib" SkipUnchangedFiles="true" />
+  </Target>
 </Project>

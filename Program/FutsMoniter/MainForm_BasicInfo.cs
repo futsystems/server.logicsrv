@@ -8,8 +8,9 @@ using TradingLib.Common;
 
 namespace FutsMoniter
 {
+     
     partial class MainForm
     {
-       
+
     }
 }

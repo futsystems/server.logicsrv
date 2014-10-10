@@ -281,7 +281,7 @@ namespace TradingLib.Core
         public string CTE_PostionFlatSetList()
         {
             StringBuilder sb = new StringBuilder();
-            foreach (PositionFlatSet ps in posflatlist)
+            foreach (RiskTaskSet ps in posflatlist)
             {
                 sb.Append(ps.ToString() + Environment.NewLine);
             }
@@ -311,6 +311,31 @@ namespace TradingLib.Core
              return sym.IsMarketTime.ToString();
          }
 
+         [CoreCommandAttr(QSEnumCommandSource.CLI, "demoflat", "demoflat - demoflat", "强平某个帐户的持仓，先撤单，然后再强平")]
+         public string CTE_DemoFalt1(string account)
+         {
+             IAccount acc = _clearcentre[account];
+             if (acc != null)
+             {
+                 acc.FlatPosition(QSEnumOrderSource.RISKCENTRE, "DemoFlat");
+                 return "操作成功";
+
+             }
+             else
+             {
+                 return "帐户不存在";
+             }
+         }
+
+         [CoreCommandAttr(QSEnumCommandSource.CLI, "rtask", "rtask - rtask", "列出风控中心所有任务")]
+         public string CTE_RTask()
+         {
+             foreach (RiskTaskSet task in posflatlist)
+             {
+                 debug("Account:" + task.Account + " Type:" + task.TaskType.ToString() + " SubTaskCnt:" + task.SubTask.Count.ToString(), QSEnumDebugLevel.INFO);
+             }
+             return "打印成功";
+         }
         
          #endregion
 
@@ -327,11 +352,12 @@ namespace TradingLib.Core
 
 
          
-         [TaskAttr("2秒检查待平持仓",2, "调度系统每2秒检查一次待平仓列表")]
+         [TaskAttr("2秒检查待平持仓",1, "调度系统每1秒检查一次待平仓列表")]
          public void Task_ProcessPositionFlatSet()
          {
              this.ProcessPositionFlat();
          }
 
+        
     }
 }

@@ -42,7 +42,6 @@
     <Reference Include="System.Xml" />
     <Reference Include="TradingLib.GUI">
       <HintPath>..\..\lib\IF888\Debug\TradingLib.GUI.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="WeifenLuo.WinFormsUI.Docking">
       <HintPath>..\..\lib\WeifenLuo.WinFormsUI.Docking.dll</HintPath>

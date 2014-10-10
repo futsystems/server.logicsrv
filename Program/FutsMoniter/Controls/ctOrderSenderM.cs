@@ -24,6 +24,10 @@ namespace FutsMoniter
             InitializeComponent();
             Factory.IDataSourceFactory(cboffsetflag).BindDataSource(Utils.GetOffsetCBList());
             Factory.IDataSourceFactory(cbordertype).BindDataSource(Utils.GetOrderTypeCBList());
+            if (!Globals.Config["InsertTrade"].AsBool())
+            {
+                btnInsertTrade.Visible = false;
+            }
         }
 
         /// <summary>
@@ -166,6 +170,16 @@ namespace FutsMoniter
 
             if (SendOrderEvent != null)
                 SendOrderEvent(order);
+        }
+
+        private void btnInsertTrade_Click(object sender, EventArgs e)
+        {
+            InsertTradeForm fm = new InsertTradeForm();
+            if (!ValidAccount()) return;
+            if (!validSecurity()) return;
+            fm.SetAccount(_account.Account);
+            fm.SetSymbol(_symbol);
+            fm.ShowDialog();
         }
     }
 }

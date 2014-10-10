@@ -99,6 +99,10 @@ namespace TradingLib.Core
 
 
         int _maxorderseq = 0;
+        int startseq = 0;//起始流水号
+        bool enbaleRandom = false;
+        Random rand = new Random();
+        
         object _orderseqobj = new object();
         /// <summary>
         /// 获得委托流水号
@@ -109,7 +113,7 @@ namespace TradingLib.Core
             {
                 lock (_orderseqobj)
                 {
-                    _maxorderseq++;
+                    _maxorderseq += rand.Next(1, 10);
                     return _maxorderseq;
                 }
             }
@@ -134,6 +138,20 @@ namespace TradingLib.Core
             {
                 _cfgdb.UpdateConfig("AccountLoadMode", QSEnumCfgType.String,QSEnumAccountLoadMode.ALL, "清算中心加载帐户类别");
             }
+
+            if (!_cfgdb.HaveConfig("StartBrokerSeq"))
+            {
+                _cfgdb.UpdateConfig("StartBrokerSeq", QSEnumCfgType.Int,1000, "起始Broker流水号");
+            }
+            startseq = _cfgdb["StartBrokerSeq"].AsInt();
+
+            if (!_cfgdb.HaveConfig("RandomSeqEnable"))
+            {
+                _cfgdb.UpdateConfig("RandomSeqEnable", QSEnumCfgType.Bool,true, "Broker流水号随机");
+            }
+            enbaleRandom = _cfgdb["RandomSeqEnable"].AsBool();
+            
+
             //加载模式
             _loadmode = (QSEnumAccountLoadMode)Enum.Parse(typeof(QSEnumAccountLoadMode), _cfgdb["AccountLoadMode"].AsString());
             try
@@ -174,25 +192,28 @@ namespace TradingLib.Core
         /// <summary>
         /// 清算中心重置,我们只需要清空交易记录,然后重新从数据库加载数据,即可
         /// 在每日结算完毕后,清算中心会重置,
+        /// 重置交易帐户数据 清空帐户交易记录 然后从数据库加载数据恢复到内存
         /// </summary>
         public void Reset()
         {
-            if (!IsTradingday) return;//如果当天不是交易日则不进行重置
             Status = QSEnumClearCentreStatus.CCRESET;
+            
             //清空账户交易记录
             debug("重置交易账户", QSEnumDebugLevel.INFO);
             foreach (IAccount a in this.Accounts)
             {
                 acctk.ResetAccount(a);
-                ////检查是否需要冻结帐号
-                CheckAccountExecute(a);
             }
+
             //清空总计的交易合约
             totaltk.Clear();
+
             //清空positionround tracker 数据 准备初始化数据
             prt.Clear();
-            //再从数据中恢复数据用于得到当前最新状态
+
+            //从数据中恢复数据用于得到当前最新状态包含持仓,PR,出入金等数据
             RestoreFromMysql();
+
             Notify("清算中心重置(结算后)[" + DateTime.Now.ToShortDateString() + "]", " ");
             Status = QSEnumClearCentreStatus.CCRESETFINISH;
         }

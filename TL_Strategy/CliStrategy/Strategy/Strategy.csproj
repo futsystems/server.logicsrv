@@ -40,18 +40,15 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="TradingLib.API, Version=2.4.0.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="TradingLib.GUI">
+      <HintPath>..\..\..\lib\IF888\Debug\TradingLib.GUI.dll</HintPath>
+    </Reference>
+    <Reference Include="TradingLib.API">
       <HintPath>..\..\..\lib\Win\TradingLib.API.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="TradingLib.Common, Version=2.4.0.17436, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="TradingLib.Common">
       <HintPath>..\..\..\lib\Win\TradingLib.Common.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="TradingLib.GUI">
-      <HintPath>..\..\..\lib\IF888\Debug\TradingLib.GUI.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>

@@ -135,6 +135,7 @@ namespace TradingLib.Common
 
             response.RspInfo.ErrorID = reply.Code;
             response.RspInfo.ErrorMessage = reply.Message;
+            response.Result = new Mixins.ReplyWriter().Start().FillReply(reply).End().ToString();
 
             SendPacketMgr(response);
         }

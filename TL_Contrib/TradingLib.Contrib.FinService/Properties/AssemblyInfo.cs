@@ -1,16 +1,16 @@
-using System.Reflection;
+﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // 有关程序集的常规信息通过以下
 // 特性集控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("TradingLib.Contrib.FinService")]
+[assembly: AssemblyTitle("Lottoqq.FinService")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("TradingLib.Contrib.FinService")]
-[assembly: AssemblyCopyright("Copyright (c) Microsoft 2013")]
+[assembly: AssemblyProduct("Lottoqq.FinService")]
+[assembly: AssemblyCopyright("Copyright © Microsoft 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // 如果此项目向 COM 公开，则下列 GUID 用于类型库的 ID
-[assembly: Guid("da51bfeb-7792-4b78-9059-51683947c5d7")]
+[assembly: Guid("6fd81aa3-db51-44fb-af52-9a7d24cec218")]
 
 // 程序集的版本信息由下面四个值组成:
 //

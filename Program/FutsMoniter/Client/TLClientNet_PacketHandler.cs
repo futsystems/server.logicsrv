@@ -397,6 +397,18 @@ namespace TradingLib.Common
 
 
 
+        #region 扩展管理命令
+        void CliOnMGRContribResponse(RspMGRContribResponse response)
+        {
+            
+            string module = response.ModuleID;
+            string cmd = response.CMDStr;
+            string ret = response.Result;
+            debug("Module:" + module + " CMD:" + cmd + " Ret:" + ret);
+            this.handler.OnMGRContribResponse(module, cmd, ret);
+        }
+        #endregion
+
 
         void connecton_OnPacketEvent(IPacket packet)
         {
@@ -541,6 +553,9 @@ namespace TradingLib.Common
 
                 case MessageTypes.SETTLEINFORESPONSE://结算信息会回报
                     CliOnSettleInfo(packet as RspQrySettleInfoResponse);
+                    break;
+                case MessageTypes.MGRCONTRIBRESPONSE://管理扩展回报
+                    CliOnMGRContribResponse(packet as RspMGRContribResponse);
                     break;
                 #endregion
 

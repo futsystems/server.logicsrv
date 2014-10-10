@@ -12,12 +12,15 @@
 #排除目录
 /output
 /lib/Win
+/lib/TradingLib
 
 /Platform/**/*.dll
 /Platform/**/*.exe
 /Platform/**/log/
 /Platform/**/cache/
 /Platform/TLDataBase
+
+/publish
 
 
 #排除子目录中的bin obj debug release

@@ -48,8 +48,9 @@ namespace FutsMoniter
                 tb.Rows[i][COMMISSION] = string.Format(_defaultformat, t.Commission);
                 tb.Rows[i][OPERATION] = Util.GetEnumDescription(t.PositionOperation);
                 tb.Rows[i][ACCOUNT] = t.Account;
-                tb.Rows[i][PROFIT] = string.Format(_defaultformat, 0);
-                tb.Rows[i][FILLID] = "fillid";
+                tb.Rows[i][PROFIT] = string.Format(_defaultformat,t.Profit);
+                tb.Rows[i][FILLID] = t.BrokerKey;
+                tb.Rows[i][ORDERREF] = t.OrderSeq;
                 //toUpdateRow();
                 //tb.Rows.Add(new object[] { t.id, Util.ToDateTime(t.xdate, t.xtime).ToString("HH:mm:ss"), t.symbol, (t.side ? "买" : "卖"), t.xsize, string.Format(getDisplayFormat(t.symbol), t.xprice), string.Format(_defaultformat, t.Commission), Util.GetEnumDescription(t.PositionOperation), t.Account });
             }
@@ -73,6 +74,7 @@ namespace FutsMoniter
         const string ACCOUNT = "账户";
         const string PROFIT = "盈亏";
         const string FILLID = "成交编号";
+        const string ORDERREF = "委托流水号";
 
         DataTable tb = new DataTable();
 
@@ -115,6 +117,7 @@ namespace FutsMoniter
             tb.Columns.Add(ACCOUNT);
             tb.Columns.Add(PROFIT);
             tb.Columns.Add(FILLID);
+            tb.Columns.Add(ORDERREF);
         }
         /// <summary>
         /// 绑定数据表格到grid

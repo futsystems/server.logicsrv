@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using FutSystems.GUI;
+using TradingLib.API;
 
 namespace FutsMoniter
 {
@@ -136,6 +137,18 @@ namespace FutsMoniter
         {
             UpdatePassForm fm = new UpdatePassForm();
             fm.ShowDialog();
+        }
+        #endregion
+
+
+        #region 事件处理
+        void ctAccountMontier1_QryAccountHistEvent(IAccountLite account)
+        {
+            if (histqryform != null)
+            {
+                histqryform.SetAccount(account.Account);
+                histqryform.Show();
+            }
         }
         #endregion
     }

@@ -32,13 +32,8 @@
     <DocumentationFile>..\..\lib\Contrib\Release\TradingLib.Contrib.Race.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MySql.Data, Version=6.5.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\MySql.Data.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.XML" />
     <Reference Include="TradingLib.API">
       <HintPath>..\..\lib\Win\TradingLib.API.dll</HintPath>
       <Private>False</Private>
@@ -55,6 +50,10 @@
       <HintPath>..\..\lib\Win\TradingLib.Common.Ex.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="MySql.Data">
+      <HintPath>..\..\lib\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IRace.cs" />

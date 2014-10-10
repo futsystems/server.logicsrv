@@ -40,12 +40,15 @@ namespace TradingLib.Core
             AssignOrderID(ref o);
             long ordid = o.id;
             _br_GotOrderEvent(o);
+            debug("insert ordre manual .....", QSEnumDebugLevel.INFO);
             return ordid;
+
         }
 
         public void futs_InsertTradeManual(Trade t)
         {
             _br_GotFillEvent(t);
+            debug("insert trade manual ....", QSEnumDebugLevel.INFO);
         }
 
 
@@ -229,6 +232,9 @@ namespace TradingLib.Core
             //在BrokerRouter->GotFillEvent->ClearCentre.GotFill->adjustcommission->this.GotCommissionFill调用链 形成每笔成交手续费的计算 当计算完毕后 再向客户端进行发送
             //清算中心响应成交回报
             _clearcentre.GotFill(t);//注这里的成交没有结算手续费,成交部分我们需要在结算中心结算结算完手续费后再向客户端发送
+            
+            //对于newCommissionFill的事件可以插入到这里 这里先执行清算中心GotFill然后 再对外处理
+
             //对外触发成交事件
             if (GotFillEvent != null)
                 GotFillEvent(t);

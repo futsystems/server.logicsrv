@@ -221,6 +221,8 @@ namespace TradingLib.Common
             
             }
         }
+
+
         #region 成交构造函数
         public TradeImpl() { }
         public TradeImpl(string symbol, decimal fillprice, int fillsize) : this(symbol, fillprice, fillsize, DateTime.Now) { }
@@ -259,6 +261,7 @@ namespace TradingLib.Common
             _localsymbol = copytrade.LocalSymbol;
             id = copytrade.id;
             _ex = copytrade.Exchange;
+            _profit = copytrade.Profit;
 
             Broker = copytrade.Broker;
             BrokerKey = copytrade.BrokerKey;

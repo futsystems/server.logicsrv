@@ -21,9 +21,14 @@ namespace TradingLib.Common
         }
 
 
-        public IList<Order> getOrders(IBroker b)
+        public IEnumerable<Order> GetOrdersViaBroker(string broker)
         {
-            return _clearcentre.getOrders(b);
+            return _clearcentre.TotalOrders.Where(o => o.Broker.Equals(broker));
+        }
+
+        public IEnumerable<Trade> GetTradesViaBroker(string broker)
+        {
+            return _clearcentre.TotalTrades.Where(f => f.Broker.Equals(broker));
         }
         /// <summary>
         /// 获得清算中心下所有交易账户

@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             this.radPanel1 = new Telerik.WinControls.UI.RadPanel();
+            this.num = new Telerik.WinControls.UI.RadLabel();
+            this.radLabel1 = new Telerik.WinControls.UI.RadLabel();
             this.btnCancelAll = new Telerik.WinControls.UI.RadButton();
             this.btnCancelOrder = new Telerik.WinControls.UI.RadButton();
             this.btnFilterCancelError = new Telerik.WinControls.UI.RadRadioButton();
@@ -36,10 +38,10 @@
             this.btnFilterPlaced = new Telerik.WinControls.UI.RadRadioButton();
             this.btnFilterAll = new Telerik.WinControls.UI.RadRadioButton();
             this.orderGrid = new Telerik.WinControls.UI.RadGridView();
-            this.num = new Telerik.WinControls.UI.RadLabel();
-            this.radLabel1 = new Telerik.WinControls.UI.RadLabel();
             ((System.ComponentModel.ISupportInitialize)(this.radPanel1)).BeginInit();
             this.radPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.num)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnCancelAll)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnCancelOrder)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnFilterCancelError)).BeginInit();
@@ -47,8 +49,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.btnFilterPlaced)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnFilterAll)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.orderGrid)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.num)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel1)).BeginInit();
             this.SuspendLayout();
             // 
             // radPanel1
@@ -68,6 +68,24 @@
             this.radPanel1.Size = new System.Drawing.Size(697, 175);
             this.radPanel1.TabIndex = 0;
             this.radPanel1.Text = "radPanel1";
+            // 
+            // num
+            // 
+            this.num.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.num.Location = new System.Drawing.Point(638, 153);
+            this.num.Name = "num";
+            this.num.Size = new System.Drawing.Size(14, 16);
+            this.num.TabIndex = 8;
+            this.num.Text = "--";
+            // 
+            // radLabel1
+            // 
+            this.radLabel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.radLabel1.Location = new System.Drawing.Point(573, 153);
+            this.radLabel1.Name = "radLabel1";
+            this.radLabel1.Size = new System.Drawing.Size(59, 16);
+            this.radLabel1.TabIndex = 7;
+            this.radLabel1.Text = "记录条数:";
             // 
             // btnCancelAll
             // 
@@ -143,24 +161,6 @@
             this.orderGrid.CellFormatting += new Telerik.WinControls.UI.CellFormattingEventHandler(this.orderGrid_CellFormatting);
             this.orderGrid.DoubleClick += new System.EventHandler(this.orderGrid_DoubleClick);
             // 
-            // num
-            // 
-            this.num.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.num.Location = new System.Drawing.Point(638, 153);
-            this.num.Name = "num";
-            this.num.Size = new System.Drawing.Size(14, 16);
-            this.num.TabIndex = 8;
-            this.num.Text = "--";
-            // 
-            // radLabel1
-            // 
-            this.radLabel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.radLabel1.Location = new System.Drawing.Point(573, 153);
-            this.radLabel1.Name = "radLabel1";
-            this.radLabel1.Size = new System.Drawing.Size(59, 16);
-            this.radLabel1.TabIndex = 7;
-            this.radLabel1.Text = "记录条数:";
-            // 
             // ctOrderView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -172,6 +172,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.radPanel1)).EndInit();
             this.radPanel1.ResumeLayout(false);
             this.radPanel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.num)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnCancelAll)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnCancelOrder)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnFilterCancelError)).EndInit();
@@ -179,8 +181,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.btnFilterPlaced)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnFilterAll)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.orderGrid)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.num)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel1)).EndInit();
             this.ResumeLayout(false);
 
         }

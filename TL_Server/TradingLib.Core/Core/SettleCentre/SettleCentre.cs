@@ -9,9 +9,24 @@ namespace TradingLib.Core
 {
     public enum QSEnumSettleCentreStatus
     { 
+        /// <summary>
+        /// 未初始化
+        /// </summary>
         UNKNOWN,//未知
+
+        /// <summary>
+        /// 结算信息不完整 需要在对应日期上加载历史记录并做结算
+        /// </summary>
         HISTSETTLE,//历史结算
+
+        /// <summary>
+        /// 当前是交易日 可以进行正常的交易与结算
+        /// </summary>
         TRADINGDAY,//交易日
+
+        /// <summary>
+        /// 当前非交易日
+        /// </summary>
         NOTRADINGDAY,//非交易日
 
         
@@ -33,18 +48,21 @@ namespace TradingLib.Core
         int _lastsettleday = 0;
         /// <summary>
         /// 上一个结算日
+        /// 系统结算后会将结算日期写入system表 用于记录最近的结算日期
         /// </summary>
         public int LastSettleday { get { return _lastsettleday; } }
 
         int _tradingday = 0;
         /// <summary>
         /// 当前交易日
+        /// 当前交易日是通过当前日期 时间 以及节假日信息综合判定 如果为0则表明当前为非交易日
         /// </summary>
         public int CurrentTradingday { get { return _tradingday; } }
 
         int _nexttradingday =0;
         /// <summary>
         /// 下一个交易日
+        /// 在上个结算日基础上获得下一个交易日
         /// </summary>
         public int NextTradingday { get { return _nexttradingday; } }
 
@@ -66,7 +84,9 @@ namespace TradingLib.Core
         public bool IsInSettle { get; set; }
 
         /// <summary>
-        /// 获得结算时间 如果是历史结算 则返回的结算时间是16:00
+        /// 获得结算时间
+        /// 如果是历史结算 则返回的结算时间是16:00
+        /// 如果是正常结算 则返回系统当前时间
         /// </summary>
         public int SettleTime {
 
@@ -82,6 +102,7 @@ namespace TradingLib.Core
                 }
             }
         }
+
         ClearCentre _clearcentre = null;
         public void BindClearCentre(ClearCentre cc)
         {
@@ -98,8 +119,6 @@ namespace TradingLib.Core
         public SettleCentre()
             :base(SettleCentre.CoreName)
         {
-            //TradingCalendar.SendDebugEvent +=new DebugDelegate(msgdebug);
-
             //初始化置结算中心状态为未知
             SettleCentreStatus = QSEnumSettleCentreStatus.UNKNOWN;
 
@@ -108,7 +127,9 @@ namespace TradingLib.Core
         }
 
 
-
+        /// <summary>
+        /// 初始化交易日信息
+        /// </summary>
         void InitTradingDay()
         {
             //开发模式每天都有结算,运行模式按照交易日里进行结算
@@ -125,6 +146,7 @@ namespace TradingLib.Core
             }
             else
             {
+                //如果是开发模式则在上一个结算日基础上顺延一天获得下一个交易日 该日期不排除周末和假期主要用于系统开发(周末和节假日也可以正常进行交易)
                 DateTime nexdate = Util.ToDateTime(_lastsettleday,0).AddDays(1);
                 _nexttradingday = Util.ToTLDate(nexdate);
             }
@@ -138,9 +160,8 @@ namespace TradingLib.Core
                 debug(string.Format("上次结算日:{0} 下一交易日:{1} 当前日期:{2}", _lastsettleday, _nexttradingday, nowdate), QSEnumDebugLevel.INFO);
                 debug("当前日期越过了交易日,系统缺少对应交易的结算,请手工进行结算", QSEnumDebugLevel.INFO);
                 SettleCentreStatus = QSEnumSettleCentreStatus.HISTSETTLE;
+                debug(string.Format("设定当前交易日为下一个交易日:{0}", _nexttradingday), QSEnumDebugLevel.INFO);
                 _tradingday = _nexttradingday;
-                debug(string.Format("设定当前交易日为下一个交易日:{0}", _nexttradingday),QSEnumDebugLevel.INFO);
-
             }
             //如果当前日期<=netxtradingday则正常,比如下午结算后 当前交易日就是夜盘隶属的下一个交易日,当前时间则小于该交易日,遇到周五则会小2天
             else
@@ -148,8 +169,8 @@ namespace TradingLib.Core
                 
                 if (!GlobalConfig.IsDevelop)
                 {
-                    //运行模式的交易日是通过交易日里来获得当前交易日 当前交易日有可能为0,为0标识当前不是交易日
-                    _tradingday = TradingCalendar.GetCurrentTradingday(nowtime, nowdate, _nexttradingday);
+                    //运行模式的交易日是通过交易日历来获得当前交易日 当前交易日有可能为0,为0标识当前不是交易日
+                    _tradingday = TradingCalendar.GetCurrentTradingday(nowdate,nowtime,_nexttradingday);
                 }
                 else
                 {
@@ -171,6 +192,7 @@ namespace TradingLib.Core
         }
         /// <summary>
         /// 重置结算信息
+        /// 按照系统记录的上个结算日 当前日期 时间来获得对应的当前交易日和结算状态信息
         /// </summary>
         public void Reset()
         {
@@ -205,7 +227,6 @@ namespace TradingLib.Core
         /// </summary>
         public void SettleAccount()
         {
-            //Status = QSEnumClearCentreStatus.CCSETTLE;
             debug(string.Format("结算系统开始结算交易账户 当前交易日{0}",CurrentTradingday), QSEnumDebugLevel.INFO);
             foreach (IAccount acc in _clearcentre.Accounts)
             {
@@ -222,8 +243,6 @@ namespace TradingLib.Core
             //更新最近结算日
             debug(string.Format("更新上次结算日为当前交易日{0}", CurrentTradingday), QSEnumDebugLevel.INFO);
             ORM.MSettlement.UpdateSettleday(CurrentTradingday);
-
-            //Status = QSEnumClearCentreStatus.CCSETTLEFINISH;
             debug("交易系统结算完毕=====================================", QSEnumDebugLevel.INFO);
         }
 

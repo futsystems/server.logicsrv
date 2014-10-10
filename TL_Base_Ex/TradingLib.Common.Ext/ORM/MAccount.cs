@@ -69,10 +69,10 @@ namespace TradingLib.ORM
         public AccountLastEquity()
         {
             this.Account = string.Empty;
-            this.LastEquity = 0M;
+            this.NowEquity = 0M;
         }
         public string Account { get; set; }
-        public decimal LastEquity { get; set; }
+        public decimal NowEquity { get; set; }
     }
 
 
@@ -539,20 +539,22 @@ namespace TradingLib.ORM
         }
 
         /// <summary>
-        /// 查询某个交易帐户的昨日权益
+        /// 查询某个交易帐户某个交易日的结算权益
+        /// 
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
-        public static decimal GetAccountLastEquity(string account)
+        public static decimal GetSettleEquity(string account,int settleday)
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("SELECT account,lastequity FROM accounts WHERE account = '{0}'",account);
-                AccountLastEquity lastequity = db.Connection.Query<AccountLastEquity>(query).SingleOrDefault();
-
-                return lastequity.LastEquity;
+                string query = string.Format("SELECT account,nowequity FROM log_settlement WHERE account = '{0}' AND settleday = '{1}'", account,settleday);
+                AccountLastEquity settleEquity = db.Connection.Query<AccountLastEquity>(query).SingleOrDefault();//包含多个元素则异常
+                //Util.Debug("settleEquity == null :" + (settleEquity == null).ToString());
+                return settleEquity==null?0:settleEquity.NowEquity;
             }
         }
+
         /// <summary>
         /// 获得某个交易帐户
         /// </summary>

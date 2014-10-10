@@ -11,83 +11,22 @@
     <RootNamespace>TradingLib.API</RootNamespace>
     <AssemblyName>TradingLib.API</AssemblyName>
     <FileAlignment>512</FileAlignment>
-    <Description>系统基本接口与对象库</Description>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CustomCommands>
-      <CustomCommands>
-        <Command type="BeforeClean" />
-      </CustomCommands>
-    </CustomCommands>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>none</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>QuantShop.pfx</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
-  <PropertyGroup>
-    <DelaySign>true</DelaySign>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
-    <WarningLevel>4</WarningLevel>
-    <Optimize>false</Optimize>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>none</ErrorReport>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
-    <DebugType>none</DebugType>
-    <WarningLevel>4</WarningLevel>
-    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseMono|AnyCPU'">
-    <OutputPath>bin\ReleaseMono\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>none</ErrorReport>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
-    <DebugType>none</DebugType>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseMono|x86'">
-    <OutputPath>bin\x86\ReleaseMono\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>none</ErrorReport>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-    <DebugType>none</DebugType>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
@@ -106,12 +45,10 @@
     <Compile Include="Message\IPacket.cs" />
     <Compile Include="Message\ISession.cs" />
     <Compile Include="Message\ISessionUtils.cs" />
-    <Compile Include="1delete\QSMessageContent.cs" />
     <Compile Include="Msic\EnumManagerType.cs" />
     <Compile Include="Msic\ILogItem.cs" />
     <Compile Include="Rule\IRuleItem.cs" />
     <Compile Include="Trading\BasicInfo\IMarketTime.cs" />
-    <Compile Include="1delete\ILoginResponse.cs" />
     <Compile Include="Reply\IReply.cs" />
     <Compile Include="Reply\ReplyType.cs" />
     <Compile Include="Trading\EnumAccountCategoy.cs" />
@@ -134,7 +71,6 @@
     <Compile Include="Trading\BasicInfo\IExchange.cs" />
     <Compile Include="Msic\LibDelegates.cs" />
     <Compile Include="Msic\TradingLibError.cs" />
-    <Compile Include="1delete\QSMessageType.cs" />
     <Compile Include="Trading\Basket.cs" />
     <Compile Include="Msic\Constants.cs" />
     <Compile Include="Trading\BasicInfo\EneumCurrency.cs" />
@@ -174,26 +110,17 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /r /y $(TargetPath) $(ProjectDir)..\..\lib\Win\</PostBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
-  <Target Name="AfterBuild">
-  </Target>
   -->
-  <ProjectExtensions>
-    <MonoDevelop>
-      <Properties>
-        <Policies>
-          <VersionControlPolicy inheritsSet="Mono" />
-        </Policies>
-      </Properties>
-    </MonoDevelop>
-  </ProjectExtensions>
+  <!-- copy dll builded-->
+  <Target Name="AfterBuild">
+    <ItemGroup>
+      <OutFiles Include="$(OutputPath)\$(AssemblyName).dll" />
+    </ItemGroup>
+    <Copy SourceFiles="@(OutFiles)" DestinationFolder="..\..\lib\TradingLib\" SkipUnchangedFiles="true" />
+  </Target>
 </Project>

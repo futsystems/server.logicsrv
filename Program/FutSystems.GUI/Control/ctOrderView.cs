@@ -151,6 +151,9 @@ namespace FutSystems.GUI
                         tb.Rows[i][FILLED] = o.Filled;
                         tb.Rows[i][STATUS] = o.Status;
                         tb.Rows[i][STATUSSTR] = Util.GetEnumDescription(o.Status);
+                        tb.Rows[i][ORDERREF] = o.OrderRef;
+                        tb.Rows[i][EXCHANGE] = o.Exchange;
+                        tb.Rows[i][EXCHORDERID] = o.OrderExchID;
                         tb.Rows[i][COMMENT] = o.comment;
                         tb.Rows[i][FORCECLOSE] = o.ForceClose ? "强平" : "";
                         tb.Rows[i][FORCEREASON] = o.ForceCloseReason;
@@ -399,5 +402,11 @@ namespace FutSystems.GUI
             tb.Rows.Clear();
             BindToTable();
         }
+
+        //private void btnChange_Click(object sender, EventArgs e)
+        //{
+        //    fmOrderChange fm = new fmOrderChange();
+        //    fm.ShowDialog();
+        //}
     }
 }

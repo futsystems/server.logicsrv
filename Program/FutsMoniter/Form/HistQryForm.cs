@@ -108,6 +108,10 @@ namespace FutsMoniter
             settleday.Value = DateTime.Now;
         }
 
+        public void SetAccount(string acc)
+        {
+            account.Text = acc;
+        }
         
         private void HistQryForm_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -131,7 +135,7 @@ namespace FutsMoniter
             ctHistCashTransaction1.Clear();
             sb.Clear();
             Globals.TLClient.ReqQryHistOrders(account.Text, Settleday);
-
+            
         }
 
         int Settleday

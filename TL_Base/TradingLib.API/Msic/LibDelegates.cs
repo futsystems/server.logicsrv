@@ -60,6 +60,7 @@ namespace TradingLib.API
 
     //public delegate bool LoginRequestDel(string loginid, string pass,ref ILoginResponse response);//请求账户验证委托 传递loginreponse对象 然后根据业务层的相关结果对其进行更新
     //public delegate void LoginResponseDel(bool resoult,string account);//得到登入回报委托 成功或者失败 同时传入服务端返回的交易帐号
+    
 
     public delegate void IAccountInfoDel(IAccountInfo accinfo);//以帐户信息为参数的调用比如显示或者处理等
     public delegate void IAccountInfoLiteDel(IAccountInfoLite info);

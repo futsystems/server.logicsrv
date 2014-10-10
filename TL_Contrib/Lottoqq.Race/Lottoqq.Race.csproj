@@ -50,8 +50,7 @@
     <Reference Include="TradingLib.Common.Ex">
       <HintPath>..\..\lib\Win\TradingLib.Common.Ex.dll</HintPath>
     </Reference>
-    <Reference Include="TradingLib.Mixins, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="TradingLib.Mixins">
       <HintPath>..\..\lib\Win\TradingLib.Mixins.dll</HintPath>
     </Reference>
   </ItemGroup>

@@ -8,6 +8,11 @@ namespace TradingLib.Common
 {
     public static class OrderUtils
     {
+
+        public static long GetDateTime(this Order o)
+        {
+            return Util.ToTLDateTime(o.date, o.time);
+        }
         /// <summary>
         /// 判断委托是否处于pending状态
         /// </summary>

@@ -26,6 +26,7 @@ namespace TradingLib.API
         [Description("配资服务")]
         Service_FinService=1,
     }
+
     //枚举了tradingsession的工作模式 设定当前工作模式是恢复模式还是交易模式
     //当QStrading登入的时候会自动获取当日的成交明细
     public enum QSEnumTradingSessinMode

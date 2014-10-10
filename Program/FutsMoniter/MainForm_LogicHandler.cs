@@ -329,6 +329,8 @@ namespace FutsMoniter
         }
         #endregion
 
+
+
         string genmessage(RspInfo info)
         {
             if (info.ErrorID == 0)

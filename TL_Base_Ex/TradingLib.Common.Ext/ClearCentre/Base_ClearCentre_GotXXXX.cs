@@ -147,6 +147,7 @@ namespace TradingLib.Common
                 //获得对应的持仓
                 Position pos = acctk.GetPosition(f.Account, f.symbol, positionside);
                 int beforesize = pos.UnsignedSize;
+                decimal avgprice = pos.AvgPrice;
                 //累加持仓
                 acctk.GotFill(f);
                 pos = acctk.GetPosition(f.Account, f.symbol, positionside);
@@ -177,7 +178,16 @@ namespace TradingLib.Common
                     }
                     //计算标准手续费
                     f.Commission = Calc.CalCommission(commissionrate, f);
+
+                    //手续费为-1表明是新产生的成交,再计算手续费之后 需要计算平仓盈亏
+                    //如果是平仓成交 计算对应的平仓盈亏 成交前有持仓 并且为平仓成交
+                    if (!f.IsEntryPosition && beforesize != 0)
+                    {
+                        f.Profit = -1*(f.xprice - avgprice) * f.xsize * f.oSymbol.Multiple;
+                    }
                 }
+                
+                
 
                 //生成持仓操作记录 同时结合beforeszie aftersize 设置fill PositionOperation,需要知道帐户的持仓信息才可以知道是开 加 减 平等信息
                 postrans = new PositionTransaction(f, symbol, beforesize, aftersize, pos.Highest,pos.Lowest);

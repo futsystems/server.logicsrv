@@ -13,7 +13,7 @@ using TradingLib.Common;
 
 namespace FutsMoniter
 {
-    public partial class MainForm : Telerik.WinControls.UI.RadForm, ILogicHandler
+    public partial class MainForm : Telerik.WinControls.UI.RadForm, ILogicHandler, ICallbackCentre
     {
 
         
@@ -56,6 +56,7 @@ namespace FutsMoniter
         System.Threading.Timer _timer;
         public MainForm(DebugDelegate showinfo)
         {
+            Globals.RegisterCallBackCentre(this);
             InitializeComponent();
             logfile = new Log(Globals.Config["LogFileName"].AsString(), true, true, "log", true);//日志组件
 
@@ -77,11 +78,15 @@ namespace FutsMoniter
         {
             
             ctAccountMontier1.SendDebugEvent +=new DebugDelegate(debug);
+            ctAccountMontier1.QryAccountHistEvent += new IAccountLiteDel(ctAccountMontier1_QryAccountHistEvent);
 
             infotracker = new TradingInfoTracker();
             Globals.RegisterInfoTracker(infotracker);
             basicinfotracker = new BasicInfoTracker();
             Globals.RegisterBasicInfoTracker(basicinfotracker);
+
+            
+
             routerform = new RouterMoniterForm();
             exchangeform = new ExchangeForm();
             markettimeform = new MarketTimeForm();
@@ -106,6 +111,8 @@ namespace FutsMoniter
                 btnManagerGP.Enabled = false;
             }
         }
+
+
 
 
         public void Reset()
@@ -192,6 +199,7 @@ namespace FutsMoniter
                             ShowInfo("初始化行情报表");
                             InitSymbol2View();
                             Globals.LoginStatus.IsInitSuccess = true;
+                            Globals.EnvReady = true;
                         }
                     }
                     else
@@ -224,6 +232,7 @@ namespace FutsMoniter
             _logined = false;
             _connected = false;
             tlclient.Start();
+            
         }
 
         void InitSymbol2View()

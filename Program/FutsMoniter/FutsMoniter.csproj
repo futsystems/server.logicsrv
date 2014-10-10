@@ -35,7 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>moniter0.ico</ApplicationIcon>
+    <ApplicationIcon>moniter-oem.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="clrzmq">
@@ -64,6 +64,7 @@
       <HintPath>..\..\lib\Telerik\Telerik.WinControls.GridView.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Telerik.WinControls.PdfViewer, Version=2013.2.612.40, Culture=neutral, PublicKeyToken=5bb2a467cbec794e, processorArchitecture=MSIL" />
     <Reference Include="Telerik.WinControls.Themes.Office2010Black, Version=2013.2.612.40, Culture=neutral, PublicKeyToken=5bb2a467cbec794e, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
@@ -74,7 +75,6 @@
     <Reference Include="Telerik.WinControls.Themes.Windows8, Version=2013.2.612.40, Culture=neutral, PublicKeyToken=5bb2a467cbec794e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Telerik\Telerik.WinControls.Themes.Windows8.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Telerik.WinControls.UI">
       <HintPath>..\..\lib\Telerik\Telerik.WinControls.UI.dll</HintPath>
@@ -84,22 +84,42 @@
       <HintPath>..\..\lib\Telerik\TelerikCommon.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="TradingLib.API, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="TradingLib.API, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\Win\TradingLib.API.dll</HintPath>
+      <HintPath>..\..\lib\TradingLib\TradingLib.API.dll</HintPath>
     </Reference>
     <Reference Include="TradingLib.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\Win\TradingLib.Common.dll</HintPath>
+      <HintPath>..\..\lib\TradingLib\TradingLib.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="TradingLib.Mixins">
+      <HintPath>..\..\lib\TradingLib\TradingLib.Mixins.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\Delegate.cs" />
     <Compile Include="API\IBasicInfo.cs" />
+    <Compile Include="API\ICallback.cs" />
+    <Compile Include="Controls\ctAccountMoniter_ServiceHolder.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Controls\ctOrderSenderM.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Controls\ctOrderSenderM.Designer.cs">
       <DependentUpon>ctOrderSenderM.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ctFinService.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ctFinService.Designer.cs">
+      <DependentUpon>ctFinService.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ctTLEdit.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ctTLEdit.Designer.cs">
+      <DependentUpon>ctTLEdit.cs</DependentUpon>
     </Compile>
     <Compile Include="Form\ChangeInvestorForm.cs">
       <SubType>Form</SubType>
@@ -191,6 +211,12 @@
     <Compile Include="Form\AccountConfigForm_AccountRule.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Form\InsertTradeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\InsertTradeForm.Designer.cs">
+      <DependentUpon>InsertTradeForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form\HistQryForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -198,6 +224,7 @@
       <DependentUpon>HistQryForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Glabols.cs" />
+    <Compile Include="JsonObject\JsonProtocolFinService.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -211,6 +238,9 @@
       <DependentUpon>LoginForm.cs</DependentUpon>
     </Compile>
     <Compile Include="MainForm_BasicInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm_ContribResponse.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MainForm_LogicHandler.cs">
@@ -282,6 +312,12 @@
     <Compile Include="Form\RuleSetConfig.Designer.cs">
       <DependentUpon>RuleSetConfig.cs</DependentUpon>
     </Compile>
+    <Compile Include="Form\ServicePlanChangeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\ServicePlanChangeForm.Designer.cs">
+      <DependentUpon>ServicePlanChangeForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="StaticForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -309,6 +345,12 @@
     <Compile Include="Utils.cs" />
     <EmbeddedResource Include="Controls\ctOrderSenderM.resx">
       <DependentUpon>ctOrderSenderM.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ctFinService.resx">
+      <DependentUpon>ctFinService.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ctTLEdit.resx">
+      <DependentUpon>ctTLEdit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form\ChangeInvestorForm.resx">
       <DependentUpon>ChangeInvestorForm.cs</DependentUpon>
@@ -342,6 +384,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\ctFinanceInfo.resx">
       <DependentUpon>ctFinanceInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\InsertTradeForm.resx">
+      <DependentUpon>InsertTradeForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form\HistQryForm.resx">
       <DependentUpon>HistQryForm.cs</DependentUpon>
@@ -391,6 +436,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form\RuleSetConfig.resx">
       <DependentUpon>RuleSetConfig.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\ServicePlanChangeForm.resx">
+      <DependentUpon>ServicePlanChangeForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="StaticForm.resx">
       <DependentUpon>StaticForm.cs</DependentUpon>

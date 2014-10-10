@@ -117,20 +117,18 @@ namespace TradingLib.ORM
             }
         }
 
-
+        /// <summary>
+        /// 获得最近结算日的下一个结算日的委托数据
+        /// </summary>
+        /// <returns></returns>
         public static IList<Order> SelectOrders()
         {
-            int tradingday = TLCtxHelper.Ctx.SettleCentre.CurrentTradingday;
-            if (tradingday == 0)
-            {
-                throw new Exception("not valid current trading day!");
-            }
-            return SelectOrders(tradingday,tradingday);
+            int settleday = TLCtxHelper.Ctx.SettleCentre.NextTradingday;
+            return SelectOrders(settleday, settleday);
         }
 
         /// <summary>
         /// 搜索某个结算时间段的委托记录
-        /// 
         /// </summary>
         /// <param name="begin"></param>
         /// <param name="end"></param>
@@ -140,11 +138,11 @@ namespace TradingLib.ORM
             using (DBMySql db = new DBMySql())
             {
                 string query = string.Format("SELECT * FROM  {0}  WHERE settleday >='{1}' AND settleday <='{2}'", "tmp_orders", begin, end);
-                TLCtxHelper.Debug(query);
+                //TLCtxHelper.Debug(query);
                 List<Order> orders = db.Connection.Query<OrderImpl>(query).ToList<Order>();
 
                 string query2 = string.Format("SELECT * FROM  {0}  WHERE settleday >='{1}' AND settleday <='{2}'", "log_orders", begin, end);
-                TLCtxHelper.Debug(query);
+                //TLCtxHelper.Debug(query);
                 List<Order> orders2 = db.Connection.Query<OrderImpl>(query2).ToList<Order>();
                 
                 //合并委托记录
@@ -153,6 +151,8 @@ namespace TradingLib.ORM
                 return orders;
             }
         }
+
+
 
         /// <summary>
         /// 查询历史委托
@@ -186,14 +186,14 @@ namespace TradingLib.ORM
 
         }
 
+        /// <summary>
+        /// 获得最近结算日的下一个结算日的成交数据
+        /// </summary>
+        /// <returns></returns>
         public static IList<Trade> SelectTrades()
         {
-            int tradingday = TLCtxHelper.Ctx.SettleCentre.CurrentTradingday;
-            if (tradingday == 0)
-            {
-                throw new Exception("not valid current trading day!");
-            }
-            return SelectTrades(tradingday, tradingday);
+            int settleday = TLCtxHelper.Ctx.SettleCentre.NextTradingday;
+            return SelectTrades(settleday, settleday);
         }
 
         /// <summary>
@@ -254,12 +254,8 @@ namespace TradingLib.ORM
         /// <returns></returns>
         public static IList<OrderAction> SelectOrderActions()
         {
-            int tradingday = TLCtxHelper.Ctx.SettleCentre.CurrentTradingday;
-            if (tradingday == 0)
-            {
-                throw new Exception("not valid current trading day!");
-            }
-            return SelectOrderActions(tradingday, tradingday);
+            int settleday = TLCtxHelper.Ctx.SettleCentre.NextTradingday;
+            return SelectOrderActions(settleday, settleday);
         }
 
 
@@ -293,16 +289,16 @@ namespace TradingLib.ORM
             return pos;
         }
         /// <summary>
-        /// 获得所有隔夜持仓
+        /// 获得所有隔夜持仓生成对应的position 用于加载到持仓管理器
         /// </summary>
         /// <returns></returns>
-        public static IList<Position> SelectHoldPositions(int lastsettleday)
+        public static IEnumerable<Position> SelectHoldPositions(int lastsettleday)
         {
             using (DBMySql db = new DBMySql())
             {
                 string query = string.Format("SELECT * FROM  hold_positions WHERE settleday = {0}",lastsettleday);
-                IList<Position> positions = (from fields in (db.Connection.Query<positionfields>(query).ToArray())
-                                             select posfields2position(fields)).ToArray();
+                IEnumerable<Position> positions = db.Connection.Query<positionfields>(query).Select(fields => posfields2position(fields));// (from fields in (db.Connection.Query<positionfields>(query).ToArray())
+                                             //select posfields2position(fields)).ToArray();
                 return positions;
             }
         }
@@ -401,7 +397,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                tradingday = (tradingday != 0 ? tradingday : TLCtxHelper.Ctx.SettleCentre.CurrentTradingday);
+                tradingday = (tradingday != 0 ? tradingday : TLCtxHelper.Ctx.SettleCentre.NextTradingday);
                 string query = String.Format("delete from tmp_orders where settleday ={0}",tradingday);
                 return db.Connection.Execute(query) >= 0;
             }
@@ -411,12 +407,13 @@ namespace TradingLib.ORM
         /// 转储orders
         /// </summary>
         /// <returns></returns>
-        public static bool DumpIntradayOrders(out int rows)
+        public static bool DumpIntradayOrders(out int rows,int tradingday=0)
         {
             using (DBMySql db = new DBMySql())
             {
                 rows = 0;
-                string query = String.Format("replace into log_orders select * from tmp_orders");
+                tradingday = (tradingday != 0 ? tradingday : TLCtxHelper.Ctx.SettleCentre.NextTradingday);
+                string query = String.Format("replace into log_orders select * from tmp_orders WHERE settleday={0}",tradingday);
                 rows = db.Connection.Execute(query);
                 return rows>= 0;
             }
@@ -440,12 +437,13 @@ namespace TradingLib.ORM
         /// 转储成交数据
         /// </summary>
         /// <returns></returns>
-        public static bool DumpIntradayTrades(out int rows)
+        public static bool DumpIntradayTrades(out int rows, int tradingday = 0)
         {
             using (DBMySql db = new DBMySql())
             {
                 rows = 0;
-                string query = String.Format("replace into log_trades select * from tmp_trades");
+                tradingday = (tradingday != 0 ? tradingday : TLCtxHelper.Ctx.SettleCentre.NextTradingday);
+                string query = String.Format("replace into log_trades select * from tmp_trades WHERE settleday={0}", tradingday);
                 rows = db.Connection.Execute(query);
                 return rows >= 0;
             }
@@ -469,12 +467,13 @@ namespace TradingLib.ORM
         /// </summary>
         /// <param name="rows"></param>
         /// <returns></returns>
-        public static bool DumpIntradayOrderActions(out int rows)
+        public static bool DumpIntradayOrderActions(out int rows,int tradingday=0)
         {
             using (DBMySql db = new DBMySql())
             {
                 rows = 0;
-                string query = String.Format("replace into log_orderactions select * from tmp_orderactions");
+                tradingday = (tradingday != 0 ? tradingday : TLCtxHelper.Ctx.SettleCentre.CurrentTradingday);
+                string query = String.Format("replace into log_orderactions select * from tmp_orderactions where settleday={0}", tradingday);
                 rows = db.Connection.Execute(query);
                 return rows >= 0;
             }
@@ -485,11 +484,13 @@ namespace TradingLib.ORM
         /// </summary>
         /// <param name="rows"></param>
         /// <returns></returns>
-        public static bool DumpIntradayPosTransactions(out int rows)
+        public static bool DumpIntradayPosTransactions(out int rows, int tradingday = 0)
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("replace into log_postransactions select * from tmp_postransactions");
+                rows = 0;
+                tradingday = (tradingday != 0 ? tradingday : TLCtxHelper.Ctx.SettleCentre.CurrentTradingday);
+                string query = String.Format("replace into log_postransactions select * from tmp_postransactions where settleday={0}", tradingday);
                 rows = db.Connection.Execute(query);
                 return rows >= 0;
             }

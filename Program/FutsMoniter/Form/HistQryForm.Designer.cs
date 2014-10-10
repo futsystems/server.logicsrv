@@ -159,7 +159,7 @@
             this.settleday.Size = new System.Drawing.Size(117, 18);
             this.settleday.TabIndex = 39;
             this.settleday.TabStop = false;
-            this.settleday.Text = "2014年9月1日";
+            this.settleday.Text = "Monday, September 01, 2014";
             this.settleday.Value = new System.DateTime(2014, 9, 1, 15, 53, 33, 406);
             // 
             // radLabel2

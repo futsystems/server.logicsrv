@@ -69,6 +69,21 @@ namespace Broker.SIM
 
         AsyncResponse asynctick;
 
+        int _fillseq = 2000;
+        Random random = new Random();
+        object _fillseqobj = new object();
+        int NextFillSeq
+        {
+            get
+            {
+                lock (_fillseqobj)
+                {
+                    _fillseq += random.Next(1, 100);
+                    return _fillseq;
+                }
+
+            }
+        }
         /// <summary>
         /// 模拟交易服务,这里基本实现了委托,取消以及通过行情来成交委托的功能，但是单个tick能否成交多个委托的问题这里没有考虑
         /// 同时这里加入了委托 平仓检查,对于超买 超卖 会给出平今仓位不足的提示。
@@ -83,7 +98,7 @@ namespace Broker.SIM
             VerboseDebugging = false;
             asynctick = new AsyncResponse("SIMBroker");
             asynctick.GotTick +=new TickDelegate(asynctick_GotTick);
-
+            _fillseq = random.Next(1000, 4000);
         }
 
 
@@ -512,7 +527,7 @@ namespace Broker.SIM
                         //检查全部成交还是部分成交
                         Trade fill = (Trade)o;
                         fill.Broker = this.GetType().FullName;
-                        fill.BrokerKey = "000000";
+                        fill.BrokerKey = NextFillSeq.ToString();
 
                         debug("PTT Server Filled: " + fill.GetTradeInfo(),QSEnumDebugLevel.INFO);
 
@@ -772,20 +787,32 @@ namespace Broker.SIM
         /// </summary>
         void Restore()
         {
-            debug("从清算中心得到当天的委托数据并恢复到缓存中",QSEnumDebugLevel.INFO);
-            IList<Order> olist = _clearCentre.getOrders(this);
-            lock (aq)
+            try
             {
-                foreach (Order o in olist)
+                debug("从清算中心得到当天的委托数据并恢复到缓存中", QSEnumDebugLevel.INFO);
+                IEnumerable<Order> olist = _clearCentre.GetOrdersViaBroker(this.GetType().FullName);
+                lock (aq)
                 {
-                    //将等待成交的委托放入队列 注意这里加入一个规则 如果是市价委托则不加载 等待成交的均是limit或stop order.
-                    //如果有一些委托没有得到正确的委托标识,则系统会重复成交
-                    if (o.Status == QSEnumOrderStatus.PartFilled || o.Status == QSEnumOrderStatus.Opened)//处于Opened或者Partilled才会被加载
+                    foreach (Order o in olist)
                     {
-                        //debug("加载委托:" + o.ToString());
-                        aq.Enqueue(o);
+                        //将等待成交的委托放入队列 注意这里加入一个规则 如果是市价委托则不加载 等待成交的均是limit或stop order.
+                        //如果有一些委托没有得到正确的委托标识,则系统会重复成交
+                        if (o.Status == QSEnumOrderStatus.PartFilled || o.Status == QSEnumOrderStatus.Opened)//处于Opened或者Partilled才会被加载
+                        {
+                            //debug("加载委托:" + o.ToString());
+                            aq.Enqueue(o);
+                        }
                     }
                 }
+                //debug("------------------------------------------------------1", QSEnumDebugLevel.INFO);
+                IEnumerable<Trade> trades = _clearCentre.GetTradesViaBroker(this.GetType().FullName);
+                _fillseq = trades.Count() > 0 ? trades.Max(f => int.Parse(f.BrokerKey)) : _fillseq;
+                //debug("------------------------------------------------------2", QSEnumDebugLevel.INFO);
+                debug("Max Fill Seq:" + _fillseq.ToString(), QSEnumDebugLevel.INFO);
+            }
+            catch (Exception ex)
+            {
+                debug("Resotore error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
             }
         }
         bool _working = false;

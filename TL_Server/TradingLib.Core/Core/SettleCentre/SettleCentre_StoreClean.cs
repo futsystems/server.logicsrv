@@ -19,26 +19,41 @@ namespace TradingLib.Core
         public void CleanTempTable()
         {
             debug(datacleanheader + "清空日内交易记录临时表", QSEnumDebugLevel.INFO);
-            ORM.MTradingInfo.ClearIntradayOrders(CurrentTradingday);
-            ORM.MTradingInfo.ClearIntradayTrades(CurrentTradingday);
-            ORM.MTradingInfo.ClearIntradayOrderActions(CurrentTradingday);
-            ORM.MTradingInfo.ClearIntradayPosTransactions(CurrentTradingday);
+            ORM.MTradingInfo.ClearIntradayOrders(NextTradingday);
+            ORM.MTradingInfo.ClearIntradayTrades(NextTradingday);
+            ORM.MTradingInfo.ClearIntradayOrderActions(NextTradingday);
+            ORM.MTradingInfo.ClearIntradayPosTransactions(NextTradingday);
             debug(datacleanheader + "清空日内交易记录临时表完毕", QSEnumDebugLevel.INFO);
         }
 
 
-
+        /// <summary>
+        /// 设定隔夜持仓的结算价格
+        /// 如果是历史结算则历史持仓的价格需要获得对应交易日的结算价格 目前这里没有保存历史行情数据
+        /// 这里我们取原来的成本价格 将结算浮动盈亏调整到最后一个交易日
+        /// </summary>
         void BindPositionSettlePrice()
         {
             //从清算中心获得所有持仓 如果持仓未关闭则记录到结算持仓表
             foreach (Position pos in _clearcentre.TotalPositions)//总统计中的postion与account中的分帐户统计是不同的postion数据 需要进行同步
             {
                 debug(pos.ToString() + " set settleprice to:" + pos.LastPrice,QSEnumDebugLevel.INFO);
-                //1.设定总统计持仓结算价
-                pos.SettlePrice = pos.LastPrice;
-                //2.设定分帐户持仓结算价
-                IAccount account = _clearcentre[pos.Account];
-                account.GetPosition(pos.Symbol,pos.isLong).SettlePrice = pos.SettlePrice;
+                if (this.IsNormal)
+                {
+                    //1.设定总统计持仓结算价
+                    pos.SettlePrice = pos.LastPrice;
+                    //2.设定分帐户持仓结算价
+                    IAccount account = _clearcentre[pos.Account];
+                    account.GetPosition(pos.Symbol, pos.isLong).SettlePrice = pos.SettlePrice;
+                }
+                else
+                {
+                    //1.设定总统计持仓结算价
+                    pos.SettlePrice = pos.AvgPrice;
+                    //2.设定分帐户持仓结算价
+                    IAccount account = _clearcentre[pos.Account];
+                    account.GetPosition(pos.Symbol, pos.isLong).SettlePrice = pos.SettlePrice;
+                }
             }
         }
 
@@ -48,16 +63,15 @@ namespace TradingLib.Core
             debug(datastoreheader + "保存结算持仓和结算回合记录到相关记录表", QSEnumDebugLevel.INFO);
             foreach (PositionRound pr in _clearcentre.PositionRoundTracker.RoundOpened)
             {
-                ORM.MSettlement.InsertHoldPositionRound(pr,CurrentTradingday);
+                ORM.MSettlement.InsertHoldPositionRound(pr, NextTradingday);
             }
 
             //从清算中心获得所有持仓 如果持仓未关闭则记录到结算持仓表
-            foreach (Position pos in _clearcentre.TotalPositions)
+            foreach (Position pos in _clearcentre.TotalPositions.Where(p=>!p.isFlat))
             {
-
-                ORM.MSettlement.InsertHoldPosition(pos, CurrentTradingday);
+                ORM.MSettlement.InsertHoldPosition(pos.ToSettlePosition(), NextTradingday);
             }
-            debug(datastoreheader + "保存PR数据完毕", QSEnumDebugLevel.INFO);
+            //debug(datastoreheader + "保存PR数据完毕", QSEnumDebugLevel.INFO);
         }
 
         /// <summary>
@@ -73,11 +87,10 @@ namespace TradingLib.Core
             ORM.MTradingInfo.DumpIntradayOrderActions(out cnum);
             ORM.MTradingInfo.DumpIntradayPosTransactions(out prnum);
 
-            debug("委托转储:" + onum.ToString());
-            debug("成交转储:" + tnum.ToString());
-            debug("成交转储:" + cnum.ToString());
-            debug("交易回合转储:" + prnum.ToString());
-            debug(datastoreheader + "转储交易信息 委托 取消 成交 完毕", QSEnumDebugLevel.INFO);
+            debug("委托转储:" + onum.ToString(),QSEnumDebugLevel.INFO);
+            debug("成交转储:" + tnum.ToString(), QSEnumDebugLevel.INFO);
+            debug("委托操作转储:" + cnum.ToString(), QSEnumDebugLevel.INFO);
+            debug("交易回合转储:" + prnum.ToString(), QSEnumDebugLevel.INFO);
         }
 
         #endregion

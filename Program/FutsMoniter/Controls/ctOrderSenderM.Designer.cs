@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.radPanel1 = new Telerik.WinControls.UI.RadPanel();
+            this.symbol = new Telerik.WinControls.UI.RadLabel();
             this.account = new Telerik.WinControls.UI.RadLabel();
             this.radLabel6 = new Telerik.WinControls.UI.RadLabel();
             this.cbordertype = new Telerik.WinControls.UI.RadDropDownList();
@@ -42,9 +43,10 @@
             this.radLabel1 = new Telerik.WinControls.UI.RadLabel();
             this.btnSell = new Telerik.WinControls.UI.RadButton();
             this.btnBuy = new Telerik.WinControls.UI.RadButton();
-            this.symbol = new Telerik.WinControls.UI.RadLabel();
+            this.btnInsertTrade = new Telerik.WinControls.UI.RadButton();
             ((System.ComponentModel.ISupportInitialize)(this.radPanel1)).BeginInit();
             this.radPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.symbol)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.account)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cbordertype)).BeginInit();
@@ -58,11 +60,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.radLabel1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnSell)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnBuy)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.symbol)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.btnInsertTrade)).BeginInit();
             this.SuspendLayout();
             // 
             // radPanel1
             // 
+            this.radPanel1.Controls.Add(this.btnInsertTrade);
             this.radPanel1.Controls.Add(this.symbol);
             this.radPanel1.Controls.Add(this.account);
             this.radPanel1.Controls.Add(this.radLabel6);
@@ -80,8 +83,17 @@
             this.radPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.radPanel1.Location = new System.Drawing.Point(0, 0);
             this.radPanel1.Name = "radPanel1";
-            this.radPanel1.Size = new System.Drawing.Size(584, 69);
+            this.radPanel1.Size = new System.Drawing.Size(620, 69);
             this.radPanel1.TabIndex = 0;
+            // 
+            // symbol
+            // 
+            this.symbol.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.symbol.Location = new System.Drawing.Point(45, 40);
+            this.symbol.Name = "symbol";
+            this.symbol.Size = new System.Drawing.Size(16, 18);
+            this.symbol.TabIndex = 21;
+            this.symbol.Text = "--";
             // 
             // account
             // 
@@ -194,7 +206,7 @@
             // 
             this.btnSell.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSell.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.btnSell.Location = new System.Drawing.Point(460, 6);
+            this.btnSell.Location = new System.Drawing.Point(453, 6);
             this.btnSell.Name = "btnSell";
             this.btnSell.Size = new System.Drawing.Size(62, 50);
             this.btnSell.TabIndex = 3;
@@ -218,14 +230,14 @@
             ((Telerik.WinControls.Primitives.TextPrimitive)(this.btnBuy.GetChildAt(0).GetChildAt(1).GetChildAt(1))).ForeColor = System.Drawing.Color.Crimson;
             ((Telerik.WinControls.Primitives.TextPrimitive)(this.btnBuy.GetChildAt(0).GetChildAt(1).GetChildAt(1))).Alignment = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // symbol
+            // btnInsertTrade
             // 
-            this.symbol.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.symbol.Location = new System.Drawing.Point(45, 40);
-            this.symbol.Name = "symbol";
-            this.symbol.Size = new System.Drawing.Size(16, 18);
-            this.symbol.TabIndex = 21;
-            this.symbol.Text = "--";
+            this.btnInsertTrade.Location = new System.Drawing.Point(526, 7);
+            this.btnInsertTrade.Name = "btnInsertTrade";
+            this.btnInsertTrade.Size = new System.Drawing.Size(77, 49);
+            this.btnInsertTrade.TabIndex = 22;
+            this.btnInsertTrade.Text = "插入成交";
+            this.btnInsertTrade.Click += new System.EventHandler(this.btnInsertTrade_Click);
             // 
             // ctOrderSenderM
             // 
@@ -233,10 +245,11 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.radPanel1);
             this.Name = "ctOrderSenderM";
-            this.Size = new System.Drawing.Size(584, 69);
+            this.Size = new System.Drawing.Size(620, 69);
             ((System.ComponentModel.ISupportInitialize)(this.radPanel1)).EndInit();
             this.radPanel1.ResumeLayout(false);
             this.radPanel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.symbol)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.account)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel6)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cbordertype)).EndInit();
@@ -250,7 +263,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.radLabel1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnSell)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnBuy)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.symbol)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.btnInsertTrade)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -272,5 +285,6 @@
         private Telerik.WinControls.UI.RadLabel radLabel6;
         private Telerik.WinControls.UI.RadLabel account;
         private Telerik.WinControls.UI.RadLabel symbol;
+        private Telerik.WinControls.UI.RadButton btnInsertTrade;
     }
 }

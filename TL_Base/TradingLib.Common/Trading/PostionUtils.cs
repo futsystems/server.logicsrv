@@ -10,18 +10,6 @@ namespace TradingLib.Common
     public static class PostionUtils
     {
 
-        //static string PositionSideStr(bool side)
-        //{
-        //    if (side)
-        //    {
-        //        return "Long";
-        //    }
-        //    else
-        //    {
-        //        return "Short";
-        //    }
-        //}
-
         ///// <summary>
         ///// 获得posiiton的key值 用于对该positon进行唯一性标识
         ///// </summary>
@@ -63,6 +51,25 @@ namespace TradingLib.Common
                 return p.oSymbol.Margin * p.UnsignedSize;
         }
 
+        /// <summary>
+        /// 计算结算保证金
+        /// </summary>
+        /// <param name="p"></param>
+        /// <returns></returns>
+        public static decimal CalcPositionSettleMargin(this Position p)
+        {
+            //异化合约按照固定金额来计算
+            if (p.oSymbol.SecurityType == SecurityType.INNOV)
+            {
+                return p.UnsignedSize * (p.oSymbol.Margin + (p.oSymbol.ExtraMargin > 0 ? p.oSymbol.ExtraMargin : 0));//通过固定保证金来计算持仓保证金占用
+            }
+
+            //其余品种保证金按照结算价格计算
+            if (p.oSymbol.Margin <= 1)
+                return p.UnsignedSize * p.SettlePrice * p.oSymbol.Multiple * p.oSymbol.Margin;
+            else
+                return p.oSymbol.Margin * p.UnsignedSize;
+        }
         /// <summary>
         /// 计算平仓盈亏
         /// </summary>

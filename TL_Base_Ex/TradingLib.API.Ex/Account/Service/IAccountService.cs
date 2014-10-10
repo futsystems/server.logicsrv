@@ -109,13 +109,13 @@ namespace TradingLib.API
         /// 查询服务状态和参数
         /// </summary>
         /// <returns></returns>
-        string QryService();
+        //string QryService();
 
         /// <summary>
         /// 设置服务状态和参数
         /// </summary>
         /// <param name="cfg"></param>
-        void SetService(string cfg);
+        //void SetService(string cfg);
     }
 
 

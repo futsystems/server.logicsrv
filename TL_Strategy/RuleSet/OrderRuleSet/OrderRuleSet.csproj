@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\lib\Strategy\Debug\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -33,11 +33,11 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="TradingLib.API">
-      <HintPath>..\..\..\lib\Win\TradingLib.API.dll</HintPath>
+      <HintPath>..\..\..\lib\TradingLib\TradingLib.API.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="TradingLib.Common">
-      <HintPath>..\..\..\lib\Win\TradingLib.Common.dll</HintPath>
+      <HintPath>..\..\..\lib\TradingLib\TradingLib.Common.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
@@ -49,14 +49,18 @@
     <Compile Include="RSTime.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>xcopy /r /y $(TargetPath) $(ProjectDir)..\..\..\Platform\TradingSrv\RuleSet\</PostBuildEvent>
-  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
+  
   </Target>
   -->
+  <Target Name="AfterBuild">
+    <ItemGroup>
+      <OutFiles Include="$(OutputPath)\$(AssemblyName).dll" />
+    </ItemGroup>
+    <Copy SourceFiles="@(OutFiles)" DestinationFolder="..\..\..\lib\TradingLib\RuleSet" SkipUnchangedFiles="true" />
+	<Copy SourceFiles="@(OutFiles)" DestinationFolder="..\..\..\Platform\TradingSrv\RuleSet" SkipUnchangedFiles="true" />
+  </Target>
+  
 </Project>

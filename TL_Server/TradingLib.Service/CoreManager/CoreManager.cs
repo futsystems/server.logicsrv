@@ -67,6 +67,7 @@ namespace TradingLib.ServiceManager
         /// </summary>
         public void Init()
         {
+			Console.WriteLine ("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx core init");
             debug("Init Core Modules....", QSEnumDebugLevel.INFO);
             #region 加载核心模块
             debug("[INIT CORE] SettleCentre", QSEnumDebugLevel.INFO);
@@ -267,9 +268,12 @@ namespace TradingLib.ServiceManager
             //_clearCentre.GetAccountFinAmmountAvabileEvent += new AccountFinAmmountDel(TLCtxHelper.ExContribEvent.GetFinAmmountAvabile);
             _clearCentre.AdjustCommissionEvent += new AdjustCommissionDel(TLCtxHelper.ExContribEvent.AdjustCommission);
 
-            _riskCentre.GotFlatFailedEvent += new PositionDelegate(TLCtxHelper.ExContribEvent.FireFlatFailedEvent);
+
+            _riskCentre.GotFlatFailedEvent += new PositionFlatFailDel(TLCtxHelper.ExContribEvent.FireFlatFailedEvent);
             _riskCentre.GotFlatSuccessEvent +=new PositionDelegate(TLCtxHelper.ExContribEvent.FireFlatSuccessEvent);
         }
+
+
 
         /// <summary>
         /// 显示所有日志信息

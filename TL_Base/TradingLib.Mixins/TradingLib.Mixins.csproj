@@ -10,20 +10,19 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TradingLib.Mixins</RootNamespace>
     <AssemblyName>TradingLib.Mixins</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
@@ -65,18 +64,16 @@
     <Compile Include="TNetString\ByteArrayExtensions.cs" />
     <Compile Include="TNetString\TNetStrings.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="readme.txt" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>xcopy /r /y $(TargetPath) $(ProjectDir)..\..\lib\Win\</PostBuildEvent>
-  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
-  <Target Name="AfterBuild">
-  </Target>
   -->
+  <Target Name="AfterBuild">
+    <ItemGroup>
+      <OutFiles Include="$(OutputPath)\$(AssemblyName).dll" />
+    </ItemGroup>
+    <Copy SourceFiles="@(OutFiles)" DestinationFolder="..\..\lib\TradingLib\" SkipUnchangedFiles="true" />
+  </Target>
 </Project>

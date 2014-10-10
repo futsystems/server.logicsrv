@@ -618,10 +618,51 @@ namespace TradingLib.Common
 
         #region 扩展请求
 
+        /// <summary>
+        /// 查询某个交易帐户的配资参数
+        /// </summary>
+        /// <param name="account"></param>
         public void ReqQryFinService(string account)
         {
             this.ReqContribRequest("FinServiceCentre", "QryFinService", account);
         }
+
+        /// <summary>
+        /// 更新配资服务参数
+        /// </summary>
+        /// <param name="playload"></param>
+        public void ReqUpdateFinServiceArgument(string playload)
+        {
+            this.ReqContribRequest("FinServiceCentre", "UpdateArguments", playload);
+        }
+
+        /// <summary>
+        /// 查询服务计划
+        /// </summary>
+        public void ReqQryServicePlan()
+        {
+            this.ReqContribRequest("FinServiceCentre", "QryFinServicePlan", "");
+        }
+
+        /// <summary>
+        /// 修改某个帐户的配资服务
+        /// </summary>
+        /// <param name="playload"></param>
+        public void ReqChangeFinService(string playload)
+        {
+            this.ReqContribRequest("FinServiceCentre", "ChangeServicePlane", playload);
+        }
+
+        /// <summary>
+        /// 删除某个交易帐号的配资服务
+        /// </summary>
+        /// <param name="account"></param>
+        public void ReqDeleteFinService(string account)
+        {
+            this.ReqContribRequest("FinServiceCentre", "DeleteServicePlane", account);
+        }
+
+
         /// <summary>
         /// 调用某个模块 某个命令 某个参数 
         /// </summary>
@@ -639,6 +680,8 @@ namespace TradingLib.Common
             SendPacket(request);
         
         }
+
+
         public void ReqQryAcctService(string account, string servicename)
         {
             debug("请求查询帐户服务", QSEnumDebugLevel.INFO);
@@ -649,5 +692,16 @@ namespace TradingLib.Common
             SendPacket(request);
         }
         #endregion 
+
+        #region 插入成交
+        public void ReqInsertTrade(Trade f)
+        {
+            debug("请求插入成交", QSEnumDebugLevel.INFO);
+            MGRReqInsertTradeRequest request = RequestTemplate<MGRReqInsertTradeRequest>.CliSendRequest(requestid++);
+            request.TradeToSend = f;
+            SendPacket(request);
+
+        }
+        #endregion
     }
 }

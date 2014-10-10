@@ -60,6 +60,8 @@ namespace TradingLib.Common
         /// </summary>
         public bool NeedAuth { get { return _needauth; } set { _needauth = true; } }
 
+        bool _jsonreq = false;
+        public bool IsJsonArg { get { return _jsonreq; } set { _jsonreq = value; } }
         /// <summary>
         /// 消息处理命令
         /// 用于绑定到对应消息处理路由表相应对应消息源的消息
@@ -68,14 +70,16 @@ namespace TradingLib.Common
         /// <param name="cmd">命令操作码 标识了该命令</param>
         /// <param name="help">帮助</param>
         /// <param name="description">描述</param>
-        public ContribCommandAttr(QSEnumCommandSource source,string cmd,string help,string description,bool needauth=true)
+        public ContribCommandAttr(QSEnumCommandSource source,string cmd,string help,string description,bool isjson = false,bool needauth=true)
         {
             _htype = QSContribCommandHandleType.MessageHandler;
             _source = source;
             _cmdstr = cmd;
             _help = help;
             _description = description;
+            _jsonreq = isjson;
             _needauth = needauth;
+
         }
 
         /// <summary>
@@ -87,7 +91,7 @@ namespace TradingLib.Common
         /// <param name="cmd"></param>
         /// <param name="help"></param>
         /// <param name="desctiption"></param>
-        public ContribCommandAttr(string contrib, string eventstr, string cmd, string help, string desctiption, bool needauth = true)
+        public ContribCommandAttr(string contrib, string eventstr, string cmd, string help, string desctiption, bool isjson = false,bool needauth = true)
         {
             _htype = QSContribCommandHandleType.EventHandler;
             _sourceContrib = contrib;
@@ -96,6 +100,8 @@ namespace TradingLib.Common
             _cmdstr = cmd;
             _help = help;
             _description = desctiption;
+
+            _jsonreq = isjson;
             _needauth = needauth;
         }
     }

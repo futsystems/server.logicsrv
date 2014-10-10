@@ -64,6 +64,8 @@ namespace FutsMoniter
         Thread synctrhead = null;
         void process()
         {
+            updatestatus("开始初始化CTP");
+            Globals.Debug("开始初始化CTP");
             string path = System.IO.Directory.GetCurrentDirectory();
             path = System.IO.Path.Combine(path, "Cache4Trade\\");
             System.IO.Directory.CreateDirectory(path);
@@ -78,10 +80,11 @@ namespace FutsMoniter
             tradeApi.OnFrontDisconnected += new FrontDisconnected(tradeApi_OnFrontDisconnected);
             tradeApi.OnRspQryInstrument += new RspQryInstrument(tradeApi_OnRspQryInstrument);
 
+            Globals.Debug("注册前置地址");
             //注册到前置机并进行接口初始化
             tradeApi.RegisterFront(_FRONT_ADDR);
             tradeApi.Init();
-
+            Globals.Debug("Join后台线程");
             tradeApi.Join();
         }
 
@@ -143,13 +146,13 @@ namespace FutsMoniter
 
         void tradeApi_OnFrontDisconnected(int nReason)
         {
-            //Globals.Debug("front disconnected");
+            Globals.Debug("front disconnected");
             updatestatus("前置链接断开");
         }
 
         void tradeApi_OnFrontConnected()
         {
-            //Globals.Debug("front connected");
+            Globals.Debug("front connected");
             updatestatus("前置链接建立");
             ReqLogin();
         }

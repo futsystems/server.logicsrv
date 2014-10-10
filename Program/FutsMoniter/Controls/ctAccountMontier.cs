@@ -19,10 +19,17 @@ namespace FutsMoniter.Controls
 {
     public partial class ctAccountMontier : UserControl
     {
+        #region 事件
+        public event IAccountLiteDel QryAccountHistEvent;
+
+        #endregion
 
         const string PROGRAME = "AccountMontier";
         AccountConfigForm fmaccountconfig = null;
         bool _loaded = false;
+
+        Symbol _symbolselected = null;
+        Symbol SymbolSelected { get { return _symbolselected; } }
         public ctAccountMontier()
         {
             InitializeComponent();
@@ -53,6 +60,17 @@ namespace FutsMoniter.Controls
                 FinServicePage.Text = "开发中";
                 FinServicePage.Enabled = false;
             }
+            if (!Globals.Config["RaceService"].AsBool())
+            {
+                RaceServicePage.Text = "开发中";
+                FinServicePage.Enabled = false;
+            }
+            if(!Globals.Config["LottoService"].AsBool())
+            {
+                LottoServicePage.Text ="开发中";
+                LottoServicePage.Enabled = false;
+            }
+            
         }
         RadContextMenu menu = new RadContextMenu();
         #region  初始化与事件绑定
@@ -90,15 +108,50 @@ namespace FutsMoniter.Controls
             //MenuItem_changepass.Image = Properties.Resources.addAccount_16;
             MenuItem_changeinvestor.Click += new EventHandler(ChangeInvestor_Click);
 
+            Telerik.WinControls.UI.RadMenuItem MenuItem_qryhist = new Telerik.WinControls.UI.RadMenuItem("历史记录");
+            //MenuItem_changepass.Image = Properties.Resources.addAccount_16;
+            MenuItem_qryhist.Click += new EventHandler(QryHist_Click);
+
+            //Telerik.WinControls.UI.RadMenuItem MenuItem_inserttrade = new Telerik.WinControls.UI.RadMenuItem("插入成交");
+            ////MenuItem_changepass.Image = Properties.Resources.addAccount_16;
+            //MenuItem_inserttrade.Click += new EventHandler(InsertTrade_Click);
+
             menu.Items.Add(MenuItem_edit);
             menu.Items.Add(MenuItem_add);
             menu.Items.Add(MenuItem_changepass);
             menu.Items.Add(MenuItem_changeinvestor);
-            
+            menu.Items.Add(MenuItem_qryhist);
+
+            //menu.Items.Add(MenuItem_inserttrade);
 
 
+            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryFinService", ctFinService1.OnQryFinService);
+            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryFinServicePlan", ctFinService1.OnQryServicePlan);
+            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "UpdateArguments", ctFinService1.OnQryFinService);
+            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "ChangeServicePlane", ctFinService1.OnQryFinService);
+            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "DeleteServicePlane", ctFinService1.OnQryFinService);
         }
-        
+
+        //void InsertTrade_Click(object sender, EventArgs e)
+        //{
+        //    IAccountLite account = GetVisibleAccount(CurrentAccount);
+        //    if (account != null)
+        //    {
+        //        InsertTradeForm fm = new InsertTradeForm();
+        //        fm.SetAccount(account.Account);
+        //        fm.SetSymbol(SymbolSelected);
+        //        fm.ShowDialog();
+        //    }
+        //    else
+        //    {
+        //        fmConfirm.Show("请选择交易帐户！");
+        //    }
+        //}
+        /// <summary>
+        /// 添加交易帐户
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void AddAccount_Click(object sender, EventArgs e)
         {
             AddAccountForm fm = new AddAccountForm();
@@ -125,6 +178,11 @@ namespace FutsMoniter.Controls
             }
         }
 
+        /// <summary>
+        /// 修改密码
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void ChangePass_Click(object sender, EventArgs e)
         {
             IAccountLite account = GetVisibleAccount(CurrentAccount);
@@ -141,6 +199,11 @@ namespace FutsMoniter.Controls
             }
         }
 
+        /// <summary>
+        /// 修改投资者信息
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void ChangeInvestor_Click(object sender, EventArgs e)
         {
             IAccountLite account = GetVisibleAccount(CurrentAccount);
@@ -157,6 +220,28 @@ namespace FutsMoniter.Controls
                 fmConfirm.Show("请选择需要编辑的交易帐户！");
             }
         }
+
+        /// <summary>
+        /// 查询历史记录
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void QryHist_Click(object sender, EventArgs e)
+        {
+            IAccountLite account = GetVisibleAccount(CurrentAccount);
+            if (account != null)
+            {
+                if (QryAccountHistEvent != null)
+                    QryAccountHistEvent(account);
+
+            }
+            else
+            {
+                fmConfirm.Show("请选择需要查询的交易帐户！");
+            }
+        }
+
+
 
         #endregion
 
@@ -797,7 +882,7 @@ namespace FutsMoniter.Controls
         //RingBuffer<IAccountLite> accountchagnecache = new RingBuffer<IAccountLite>(bufferisze);//交易帐户变动缓存
         
 
-        delegate void IAccountLiteDel(IAccountLite account);
+       
         void InvokeGotAccount(IAccountLite account)
         {
             if (InvokeRequired)
@@ -1026,7 +1111,13 @@ namespace FutsMoniter.Controls
             {
                 //设定选中帐号
                 accountselected = accountlite;
+                ctFinService1.CurrentAccount = accountlite;
                 lbCurrentAccount.Text = account;
+
+                //B 更新ServiceTab区域
+                //ServiceTabRefresh();
+
+                //A 更新交易记录区域
                 //清空交易记录
                 ClearTradingInfo();
                 //请求恢复交易帐户交易记录
@@ -1036,6 +1127,8 @@ namespace FutsMoniter.Controls
                 {
                     ctOrderSenderM1.SetAccount(accountlite);
                 }
+
+                
             }
         }
         #endregion
@@ -1235,6 +1328,7 @@ namespace FutsMoniter.Controls
 
         void viewQuoteList1_SymbolSelectedEvent(Symbol symbol)
         {
+            _symbolselected = symbol;
             ctOrderSenderM1.SetSymbol(symbol);
         }
 
@@ -1248,11 +1342,7 @@ namespace FutsMoniter.Controls
 
         #endregion
 
-        private void btnSubmit_Click(object sender, EventArgs e)
-        {
-            //Globals.TLClient.ReqQryAcctService("4444", "FinService");
-            Globals.TLClient.ReqQryFinService("4444");
-        }
+       
 
 
     }

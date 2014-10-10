@@ -31,6 +31,19 @@ namespace TradingLib.Common
         }
 
         /// <summary>
+        /// 卸载服务
+        /// </summary>
+        /// <param name="service"></param>
+        public void UnBindService(IAccountService service)
+        {
+            string servicename = service.SN;
+            IAccountService s = null;
+            if (servicemap.Keys.Contains(servicename))
+            {
+                servicemap.TryRemove(servicename, out s);
+            }
+        }
+        /// <summary>
         /// 获得某个服务
         /// </summary>
         /// <param name="sn"></param>

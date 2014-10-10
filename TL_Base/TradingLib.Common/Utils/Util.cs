@@ -233,6 +233,11 @@ namespace TradingLib.Common
             return filepath;
         }
 
+		public static string GetPluginPath(string path)
+		{
+			return Path.Combine (new string[]{ BaseDir, path });
+		}
+
         static Util()
         {
             if (string.IsNullOrEmpty(BaseDir))

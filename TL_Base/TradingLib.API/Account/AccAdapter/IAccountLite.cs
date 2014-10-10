@@ -5,6 +5,7 @@ using System.Text;
 
 namespace TradingLib.API
 {
+    
     /// <summary>
     /// 交易帐户基础信息
     /// </summary>

@@ -9,7 +9,6 @@ namespace TradingLib.Common
 
     public class SettlePosition
     {
-
         public SettlePosition()
         {
             this.Account = string.Empty;
@@ -19,40 +18,53 @@ namespace TradingLib.Common
             this.SettlePrice = 0;
             this.Settleday = 0;
             this.SecurityCode = string.Empty;
+            this.Margin = 0;
         }
         /// <summary>
         /// 交易帐号
         /// </summary>
         public string Account { get; set; }
+
         /// <summary>
         /// 合约
         /// </summary>
         public string Symbol { get; set; }
+
         /// <summary>
         /// 持仓数量
         /// </summary>
         public int Size { get; set; }
+
         /// <summary>
         /// 持仓均价
         /// </summary>
         public decimal AVGPrice { get; set; }
+
         /// <summary>
         /// 结算价
         /// </summary>
         public decimal SettlePrice { get; set; }
+
         /// <summary>
         /// 结算日
         /// </summary>
         public int Settleday { get; set; }
+
         /// <summary>
         /// 乘数
         /// </summary>
         public int Multiple { get; set; }
 
         /// <summary>
+        /// 占用保证金
+        /// </summary>
+        public decimal Margin { get; set; }
+
+        /// <summary>
         /// 品种字头
         /// </summary>
         public string SecurityCode { get; set; }
+
         public static string Serialize(SettlePosition p)
         {
             StringBuilder sb = new StringBuilder();
