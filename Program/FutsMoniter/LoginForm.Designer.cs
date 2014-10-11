@@ -42,7 +42,7 @@
             this.imageheader = new System.Windows.Forms.PictureBox();
             this.ckremberuser = new Telerik.WinControls.UI.RadCheckBox();
             this.ckremberpass = new Telerik.WinControls.UI.RadCheckBox();
-            this.windows8Theme1 = new Telerik.WinControls.Themes.Windows8Theme();
+            //this.windows8Theme1 = new Telerik.WinControls.Themes.Windows8Theme();
             ((System.ComponentModel.ISupportInitialize)(this.label1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.label2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnLogin)).BeginInit();
@@ -237,6 +237,6 @@
         private Telerik.WinControls.Themes.Office2010BlackTheme office2010BlackTheme1;
         private Telerik.WinControls.UI.RadCheckBox ckremberuser;
         private Telerik.WinControls.UI.RadCheckBox ckremberpass;
-        private Telerik.WinControls.Themes.Windows8Theme windows8Theme1;
+        //private Telerik.WinControls.Themes.Windows8Theme windows8Theme1;
     }
 }

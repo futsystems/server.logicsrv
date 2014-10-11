@@ -44,7 +44,7 @@
             this.radPageView1.Location = new System.Drawing.Point(0, 0);
             this.radPageView1.Name = "radPageView1";
             this.radPageView1.SelectedPage = this.FinServiceFeePage;
-            this.radPageView1.Size = new System.Drawing.Size(678, 344);
+            this.radPageView1.Size = new System.Drawing.Size(689, 368);
             this.radPageView1.TabIndex = 0;
             this.radPageView1.Text = "radPageView1";
             ((Telerik.WinControls.UI.RadPageViewStripElement)(this.radPageView1.GetChildAt(0))).StripButtons = Telerik.WinControls.UI.StripViewButtons.None;
@@ -52,9 +52,9 @@
             // FinServiceFeePage
             // 
             this.FinServiceFeePage.Controls.Add(this.ctAgentSPArgConfig1);
-            this.FinServiceFeePage.Location = new System.Drawing.Point(10, 31);
+            this.FinServiceFeePage.Location = new System.Drawing.Point(10, 35);
             this.FinServiceFeePage.Name = "FinServiceFeePage";
-            this.FinServiceFeePage.Size = new System.Drawing.Size(657, 302);
+            this.FinServiceFeePage.Size = new System.Drawing.Size(668, 322);
             this.FinServiceFeePage.Text = "配资服务";
             // 
             // ctAgentSPArgConfig1
@@ -62,15 +62,18 @@
             this.ctAgentSPArgConfig1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ctAgentSPArgConfig1.Location = new System.Drawing.Point(0, 0);
             this.ctAgentSPArgConfig1.Name = "ctAgentSPArgConfig1";
-            this.ctAgentSPArgConfig1.Size = new System.Drawing.Size(657, 302);
+            this.ctAgentSPArgConfig1.Size = new System.Drawing.Size(668, 322);
             this.ctAgentSPArgConfig1.TabIndex = 0;
             // 
             // FeeConfigForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(678, 344);
+            this.ClientSize = new System.Drawing.Size(689, 368);
             this.Controls.Add(this.radPageView1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "FeeConfigForm";
             // 
             // 

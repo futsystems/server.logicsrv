@@ -44,9 +44,6 @@
     <Reference Include="CTP">
       <HintPath>..\..\lib\CTP.dll</HintPath>
     </Reference>
-    <Reference Include="FutsMoniter, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <ExecutableExtension>.exe</ExecutableExtension>
-    </Reference>
     <Reference Include="FutSystems.GUI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Win\FutSystems.GUI.dll</HintPath>
@@ -74,10 +71,6 @@
     <Reference Include="Telerik.WinControls.Themes.Office2010Silver">
       <HintPath>..\..\lib\Telerik\Telerik.WinControls.Themes.Office2010Silver.dll</HintPath>
       <Private>True</Private>
-    </Reference>
-    <Reference Include="Telerik.WinControls.Themes.Windows8, Version=2013.2.612.40, Culture=neutral, PublicKeyToken=5bb2a467cbec794e, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\Telerik\Telerik.WinControls.Themes.Windows8.dll</HintPath>
     </Reference>
     <Reference Include="Telerik.WinControls.UI">
       <HintPath>..\..\lib\Telerik\Telerik.WinControls.UI.dll</HintPath>

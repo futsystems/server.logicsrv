@@ -10,7 +10,6 @@ namespace TradingLib.Common
 
     public class DBManagerTracker
     {
-
         ConcurrentDictionary<string, Manager> managermap = new ConcurrentDictionary<string, Manager>();
         ConcurrentDictionary<int, Manager> mgridmap = new ConcurrentDictionary<int, Manager>();
 
@@ -21,16 +20,15 @@ namespace TradingLib.Common
             foreach (Manager m in mlist)
             {
                 managermap[m.Login] = m;
-            }
-            foreach (Manager m in mlist)
-            { 
                 mgridmap[m.ID] = m;
             }
             foreach (Manager m in mlist)
             {
                 m.BaseManager = this[m.mgr_fk];
+                m.ParentManager = this[m.parent_fk];
             }
         }
+
 
         /// <summary>
         /// 获得Root全局ID
@@ -74,7 +72,6 @@ namespace TradingLib.Common
 
         /// <summary>
         /// 查询某个管理员可以查询的管理员列表
-        /// 
         /// </summary>
         /// <param name="mgr"></param>
         /// <returns></returns>

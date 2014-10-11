@@ -61,13 +61,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Argument.cs" />
-    <Compile Include="ArgumentAttribute.cs" />
-    <Compile Include="ArgumentPair.cs" />
-    <Compile Include="ArgumentTracker.cs" />
+    <Compile Include="Argument\Argument.cs" />
+    <Compile Include="Argument\ArgumentAttribute.cs" />
+    <Compile Include="Argument\ArgumentPair.cs" />
+    <Compile Include="Argument\ArgumentTracker.cs" />
     <Compile Include="Enums.cs" />
-    <Compile Include="FeeChargeItem.cs" />
-    <Compile Include="FeeChargeItemLogger.cs" />
+    <Compile Include="FeeCommission\CommissionItem.cs" />
+    <Compile Include="FeeCommission\FeeChargeItem.cs" />
+    <Compile Include="FeeCommission\FeeChargeItemLogger.cs" />
     <Compile Include="FinServiceCentre.cs" />
     <Compile Include="FinServiceCentre_.cs" />
     <Compile Include="FinServiceStubUtils.cs" />
