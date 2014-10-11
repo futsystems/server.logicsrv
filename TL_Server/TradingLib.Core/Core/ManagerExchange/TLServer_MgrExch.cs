@@ -246,7 +246,8 @@ namespace TradingLib.Core
                     response.Name = m.Name;
                     response.QQ = m.QQ;
                     response.ManagerType = m.Type;
-                    response.mgr_fk = m.ID;//传递mgr_fk
+                    response.MGRID = m.ID;//mgrid
+                    response.BaseMGRFK = m.mgr_fk;//主域id
 
                     clientinfo.mgr_fk = m.ID;
                     clientinfo.AuthorizedSuccess();

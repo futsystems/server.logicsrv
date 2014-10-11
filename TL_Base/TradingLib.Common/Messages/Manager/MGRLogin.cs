@@ -70,9 +70,14 @@ namespace TradingLib.Common
         public bool Authorized { get; set; }
 
         /// <summary>
-        /// 
+        /// 所属主域ID
         /// </summary>
-        public int mgr_fk { get; set; }
+        public int BaseMGRFK { get; set; }
+
+        /// <summary>
+        /// 管理ID
+        /// </summary>
+        public int MGRID { get; set; }
 
 
         public RspMGRLoginResponse()
@@ -83,7 +88,8 @@ namespace TradingLib.Common
             ManagerType = QSEnumManagerType.MONITER;
             Mobile = string.Empty;
             QQ = string.Empty;
-            mgr_fk = 0;
+            MGRID = 0;
+            BaseMGRFK = 0;
         }
 
         public override string ResponseSerialize()
@@ -102,7 +108,9 @@ namespace TradingLib.Common
             sb.Append(d);
             sb.Append(this.Authorized.ToString());
             sb.Append(d);
-            sb.Append(this.mgr_fk.ToString());
+            sb.Append(this.BaseMGRFK.ToString());
+            sb.Append(d);
+            sb.Append(this.MGRID.ToString());
             return sb.ToString();
             
         }
@@ -116,7 +124,8 @@ namespace TradingLib.Common
             this.Mobile = rec[3];
             this.QQ = rec[4];
             this.Authorized = bool.Parse(rec[5]);
-            this.mgr_fk = int.Parse(rec[6]);
+            this.BaseMGRFK = int.Parse(rec[6]);
+            this.MGRID = int.Parse(rec[7]);
         }
     }
 }

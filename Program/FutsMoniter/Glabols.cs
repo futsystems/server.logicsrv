@@ -53,10 +53,20 @@ namespace FutsMoniter
             }
                 
         }
+
         /// <summary>
-        /// 管理端对因的managerID
+        /// 登入回报 用于获得登入基本信息
         /// </summary>
-        public static int? MgrFK { get; set; }
+        public static RspMGRLoginResponse LoginResponse { get; set; }
+        /// <summary>
+        /// 管理主域ID
+        /// </summary>
+        public static int? BaseMGRFK { get; set; }
+
+        /// <summary>
+        /// 管理ID
+        /// </summary>
+        public static int? MGRID { get; set; }
 
         /// <summary>
         /// 管理端对应的对象

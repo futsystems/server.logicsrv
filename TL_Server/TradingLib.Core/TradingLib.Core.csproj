@@ -74,6 +74,8 @@
     <Compile Include="Core\ClearCentre\ClearCentreSrv_Data_Restore.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_CTE.cs" />
     <Compile Include="Core\ClearCentre\JsonWrapperClearCentre.cs" />
+    <Compile Include="Core\ManagerExchange\ManagerRights.cs" />
+    <Compile Include="Core\ManagerExchange\MangerUtils.cs" />
     <Compile Include="Core\ManagerExchange\MgrClientInfo.cs" />
     <Compile Include="Core\ManagerExchange\MgrExchServer.cs" />
     <Compile Include="Base\Settlement.cs" />

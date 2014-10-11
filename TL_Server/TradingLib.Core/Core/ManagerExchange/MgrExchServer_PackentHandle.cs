@@ -776,11 +776,29 @@ namespace TradingLib.Core
         
         }
 
+        /// <summary>
+        /// Manager添加的代理的MgrFK为数据ID ParentFK为当前MgrFK
+        /// Manager添加的其他角色MgrFK为当前MgrFK ParentFK为当前MgrFK
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="session"></param>
+        /// <param name="manager"></param>
         void SrvOnMGRAddManger(MGRReqAddManagerRequest request, ISession session, Manager manager)
         {
             debug(string.Format("管理员:{0} 请求添加管理员:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
 
             Manager m = request.ManagerToSend;
+
+            //1.添加的Manager的父代理为当前管理员的mgr_fk 
+            m.parent_fk = manager.mgr_fk;
+
+            //只有添加代理用户时才从数据库创建主域ID MgrFK,其余员工角色和当前管理员的主域ID一致
+            if (m.Type != QSEnumManagerType.AGENT && m.Type != QSEnumManagerType.ROOT)
+            {
+                m.mgr_fk = manager.mgr_fk;
+            }
+            
+
             BasicTracker.ManagerTracker.UpdateManager(m);
 
             RspMGRQryManagerResponse response = ResponseTemplate<RspMGRQryManagerResponse>.SrvSendRspResponse(request);

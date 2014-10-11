@@ -154,6 +154,17 @@ namespace FutsMoniter
             FeeConfigForm fm = new FeeConfigForm();
             fm.Show();
         }
+
+        /// <summary>
+        /// 资金管理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnFinanceMgr_Click(object sender, EventArgs e)
+        {
+            FinanceMangerForm fm = new FinanceMangerForm();
+            fm.Show();
+        }
         #endregion
 
 

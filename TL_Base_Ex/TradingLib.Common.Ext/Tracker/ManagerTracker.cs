@@ -50,9 +50,11 @@ namespace TradingLib.Common
             if (mgr.ID == 0)
             {
                 ORM.MManager.InsertManager(mgr);
+                //添加到内存
                 managermap[mgr.Login] = mgr;
                 mgridmap[mgr.ID] = mgr;
                 mgr.BaseManager = this[mgr.mgr_fk];
+                mgr.ParentManager = this[mgr.parent_fk];
             }
             else//更新
             {
@@ -86,8 +88,8 @@ namespace TradingLib.Common
                 //如果是代理 返回所有属于该代理的所有柜员
                 if(mgr.Type == QSEnumManagerType.AGENT)
                 {
-                    //如果Manager的mgr_fk等于该代理的ID则返回
-                    return managermap.Values.Where(m => m.mgr_fk.Equals(mgr.ID));
+                    //如果Manager的mgr_fk等于该代理的ID则返回 或则该Manger的下属一级子代理 如果是员工登入则只显示员工帐户
+                    return managermap.Values.Where(m => m.mgr_fk.Equals(mgr.ID)||m.parent_fk.Equals(mgr.ID));
                 }
                 else
                 {

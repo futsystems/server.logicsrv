@@ -215,9 +215,10 @@ namespace TradingLib.Common
         public void GotManager(Manager manager)
         {
             
-            Globals.Debug("basicinfotracker got manger:" + manager.ID.ToString());
+            //Globals.Debug("basicinfotracker got manger:" + manager.ID.ToString());
             Manager target = null;
             Manager notify = null;
+            //如果本地已经有该Manager则进行信息更新
             if (managermap.TryGetValue(manager.ID, out target))
             {
                 target.Mobile = manager.Mobile;
@@ -225,14 +226,16 @@ namespace TradingLib.Common
                 target.QQ = manager.QQ;
                 notify = target;
             }
-            else
+            else//否则添加该Manager
             {
                 managermap.Add(manager.ID, manager);
                 notify = manager;
             }
-            if (Globals.MgrFK != null && Globals.MgrFK == manager.ID)
+
+            //将获得的柜员列表中 属于本登入mgr_fk的manager绑定到全局对象
+            if (Globals.MGRID == manager.ID)
             {
-                Globals.Manager = manager;//将获得的柜员列表中 属于本登入mgr_fk的manager绑定到全局对象
+                Globals.Manager = manager;
             }
             //对外触发 初始化过程中不对外出发
             if (_firstloadfinish && GotManagerEvent != null)

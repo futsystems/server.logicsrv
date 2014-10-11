@@ -187,7 +187,7 @@ namespace TradingLib.Common
         
         void CliOnRspMGRLoginResponse(RspMGRLoginResponse response)
         {
-            debug("got login responsexxxxxxxxxxxxxxxxxx:" + response.ToString(), QSEnumDebugLevel.INFO);
+            debug("got login response:" + response.ToString(), QSEnumDebugLevel.INFO);
             if (OnLoginEvent != null)
                 OnLoginEvent(response);
         }
