@@ -19,7 +19,7 @@ namespace FutsMoniter
         public AgentProfitReportForm()
         {
             InitializeComponent();
-            
+            //ctProfitReportDayRange1.o
 
             }
 

@@ -18,16 +18,46 @@ namespace TradingLib.Contrib.FinService.ORM
         /// </summary>
         /// <param name="settleday"></param>
         /// <returns></returns>
-        public static IEnumerable<JsonWrapperToalReport> GenTotalReport(int settleday)
+        public static IEnumerable<JsonWrapperToalReport> GenTotalReport(int agentfk,int settleday)
         { 
-            
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("select agent_fk,settleday,sum(totalfee) as totalfee,sum(agentfee) as agentfee ,sum(agentprofit) as agentprofit FROM log_service_feecharge  WHERE settleday='{0}' GROUP BY agent_fk",settleday);
+                string query = string.Empty;
+                if (agentfk == 0)
+                {
+                    query = string.Format("select agent_fk,settleday,sum(totalfee) as totalfee,sum(agentfee) as agentfee ,sum(agentprofit) as agentprofit FROM log_service_feecharge  WHERE settleday='{0}' GROUP BY agent_fk", settleday);
+                }
+                else
+                {
+                    query = string.Format("select agent_fk,settleday,sum(totalfee) as totalfee,sum(agentfee) as agentfee ,sum(agentprofit) as agentprofit FROM log_service_feecharge  WHERE settleday='{0}' AND agent_fk ='{1}'", settleday,agentfk);
+                }
                 return db.Connection.Query<JsonWrapperToalReport>(query, null).ToArray();
             }
         }
 
+        /// <summary>
+        /// 获得某个代理或所有代理 在某个时间段内的流水汇总
+        /// </summary>
+        /// <param name="agentfk"></param>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <returns></returns>
+        public static IEnumerable<JsonWrapperToalReport> GenSummaryReportByDayRange(int agentfk, int start, int end)
+        {
+            using (DBMySql db = new DBMySql())
+            {   
+                string query = string.Empty;
+                if (agentfk == 0)
+                {
+                    query = string.Format("select agent_fk,sum(totalfee) as totalfee,sum(agentfee) as agentfee ,sum(agentprofit) as agentprofit FROM log_service_feecharge  WHERE settleday>='{0}' AND settleday<='{1}' GROUP BY agent_fk", start, end);
+                }
+                else
+                {
+                    query = string.Format("select agent_fk,sum(totalfee) as totalfee,sum(agentfee) as agentfee ,sum(agentprofit) as agentprofit FROM log_service_feecharge  WHERE settleday>='{0}' AND settleday<='{1}' AND agent_fk='{2}'", start, end,agentfk);
+                }
+                return db.Connection.Query<JsonWrapperToalReport>(query, null).ToArray();
+            }
+        }
         /// <summary>
         /// 查询某个代理一段时间内的利润流水
         /// </summary>

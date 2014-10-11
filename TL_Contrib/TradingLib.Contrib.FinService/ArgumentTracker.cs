@@ -96,11 +96,27 @@ namespace TradingLib.Contrib.FinService
             _baseargtracker.UpdateArgumentBase(serviceplan_fk, attr);
         }
 
+
+        /// <summary>
+        /// 更新某个配资服务的参数
+        /// </summary>
+        /// <param name="service_fk"></param>
+        /// <param name="args"></param>
         public void UpdateArgumentAccount(int service_fk, JsonWrapperArgument[] args)
         {
             _acctargtracker.UpdateArgument(service_fk, args);
         }
 
+        /// <summary>
+        /// 更新某个代理某个服务计划的参数
+        /// </summary>
+        /// <param name="agent_fk"></param>
+        /// <param name="serviceplan_fk"></param>
+        /// <param name="args"></param>
+        public void UpdateArgumentAgent(int agent_fk,int serviceplan_fk,JsonWrapperArgument[] args)
+        {
+            _agtargttracker.UpdateArgument(agent_fk, serviceplan_fk, args);
+        }
     }
 
     /// <summary>
@@ -236,6 +252,65 @@ namespace TradingLib.Contrib.FinService
                 }
             }
             return new Dictionary<string,ArgumentAgent>();
+        }
+
+        /// <summary>
+        /// 更新某个代理某个服务计划的参数
+        /// </summary>
+        /// <param name="agent_fk"></param>
+        /// <param name="serviceplan_fk"></param>
+        /// <param name="args"></param>
+        public void UpdateArgument(int agent_fk, int serviceplan_fk, JsonWrapperArgument[] args)
+        {
+            //如果内存中没有该代理的数据集 建立数据集
+            if (!agentArgMap.Keys.Contains(agent_fk))
+            {
+                agentArgMap.Add(agent_fk, new Dictionary<int, Dictionary<string, ArgumentAgent>>());
+            }
+            //获得代理的配资服务计划参数 代理有多个配资服务计划的参数
+            Dictionary<int, Dictionary<string, ArgumentAgent>> agentspargmap = agentArgMap[agent_fk];
+
+            if (!agentspargmap.Keys.Contains(serviceplan_fk))
+            {
+                agentspargmap.Add(serviceplan_fk, new Dictionary<string, ArgumentAgent>());
+            }
+
+            Dictionary<string, ArgumentAgent> argmap = agentspargmap[serviceplan_fk];
+
+            foreach (JsonWrapperArgument arg in args)
+            {
+                ArgumentAgent newarg = new ArgumentAgent
+                {
+                    Name = arg.ArgName,
+                    Value = arg.ArgValue,
+                    Type = (EnumArgumentType)Enum.Parse(typeof(EnumArgumentType), arg.ArgType),
+                    serviceplan_fk = serviceplan_fk,
+                    agent_fk =agent_fk,
+                };
+                if (argmap.Keys.Contains(arg.ArgName))
+                {
+                    //如果参数发生变化则进行数据库更新
+                    ArgumentAgent target = argmap[arg.ArgName];
+                    if (!target.Value.Equals(newarg.Value))
+                    {
+                        Util.Debug("arg changed ,update database arg:" + newarg.Name);
+                        //更新数据库
+                        ORM.MArgumentBase.UpdateArgumentAgent(newarg);
+                        //更新内存
+                        target.Value = newarg.Value;
+                    }
+                }
+                else//如果内存中没有加载该帐户的参数则直接进行数据库更新
+                {
+                    Util.Debug("database have no arg:" + newarg.Name + " update directly");
+                    //更新数据库
+                    ORM.MArgumentBase.UpdateArgumentAgent(newarg);
+                    //插入新的内存参数
+                    argmap[arg.ArgName] = newarg;
+                }
+            }
+            
+            
         }
     }
 

@@ -133,10 +133,26 @@ namespace FutsMoniter
             mgrform.Show();
         }
 
+        /// <summary>
+        /// 修改密码
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnChangePass_Click(object sender, EventArgs e)
         {
             UpdatePassForm fm = new UpdatePassForm();
             fm.ShowDialog();
+        }
+
+        /// <summary>
+        /// 柜员 代理 资费设置
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnChangeFee_Click(object sender, EventArgs e)
+        {
+            FeeConfigForm fm = new FeeConfigForm();
+            fm.Show();
         }
         #endregion
 
@@ -159,6 +175,12 @@ namespace FutsMoniter
             {
                 agentprofitreportform.Show();
             }
+        }
+
+        private void btnTotalOperationStatic_Click(object sender, EventArgs e)
+        {
+            OperationReportForm fm = new OperationReportForm();
+            fm.Show();
         }
         #endregion
 

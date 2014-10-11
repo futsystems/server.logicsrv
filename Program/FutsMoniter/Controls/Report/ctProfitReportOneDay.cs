@@ -23,16 +23,12 @@ namespace FutsMoniter
             InitTable();
             BindToTable();
             ctGridExport1.Grid = totalgrid;
-            try
-            {
-                //把自己注册到回调中心
-                Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryTotalReport", this.OnTotalReport);
+            Globals.RegInitCallback(OnInitFinished);
+            settleday.Value = DateTime.Now;
 
-            }
-            catch (Exception ex)
-            {
-            }
         }
+
+        
 
         public void Clear()
         {
@@ -162,10 +158,30 @@ namespace FutsMoniter
 
         #endregion
 
+        /// <summary>
+        /// 用于响应初始化完成事件
+        /// 初始化完成后 会针对初始化得到的数据去填充或者修改界面数据
+        /// </summary>
+        void OnInitFinished()
+        {
+            if (Globals.RootRight)
+            {
+                Factory.IDataSourceFactory(agent).BindDataSource(Globals.BasicInfoTracker.GetBaseManagerCombList(true));
+            }
+            else
+            {
+                Factory.IDataSourceFactory(agent).BindDataSource(Globals.BasicInfoTracker.GetBaseManagerCombList());
+                
+            }
+            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryTotalReport", this.OnTotalReport);
+
+        }
+
+
         private void btnQryReport_Click(object sender, EventArgs e)
         {
             this.Clear();
-            Globals.TLClient.ReqQryTotalReport(20141010);
+            Globals.TLClient.ReqQryTotalReport(int.Parse(agent.SelectedValue.ToString()),Util.ToTLDate(settleday.Value));
         }
 
 

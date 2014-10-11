@@ -14,9 +14,9 @@ using TradingLib.Common;
 
 namespace FutsMoniter
 {
-    public partial class ctProfitReportDayRange : UserControl
+    public partial class ctSummaryReport : UserControl
     {
-        public ctProfitReportDayRange()
+        public ctSummaryReport()
         {
             InitializeComponent();
             SetPreferences();
@@ -27,7 +27,6 @@ namespace FutsMoniter
             start.Value = Convert.ToDateTime(DateTime.Today.AddMonths(-1).ToString("yyyy-MM-01") + " 0:00:00");
 
             end.Value = DateTime.Now;
-
         }
 
         public void Clear()
@@ -67,7 +66,7 @@ namespace FutsMoniter
                 gt.Rows[i][AGENTNAME] = report.AgentName;
                 //gt.Rows[i][MOBILE] = report.Mobile;
                 //gt.Rows[i][QQ] = report.QQ;
-                gt.Rows[i][SETTLEDAY] = report.SettleDay;
+                //gt.Rows[i][SETTLEDAY] = report.SettleDay;
                 gt.Rows[i][TOTALFEE] = report.TotalFee;
                 gt.Rows[i][AGENTFEE] = report.AgentFee;
                 gt.Rows[i][AGENTPROFIT] = report.AgentProfit;
@@ -123,7 +122,7 @@ namespace FutsMoniter
             gt.Columns.Add(AGENTNAME);//
             //gt.Columns.Add(MOBILE);//
             //gt.Columns.Add(QQ);//
-            gt.Columns.Add(SETTLEDAY);//
+            //gt.Columns.Add(SETTLEDAY);//
             gt.Columns.Add(TOTALFEE);//
             gt.Columns.Add(AGENTFEE);//
             gt.Columns.Add(AGENTPROFIT);//
@@ -164,16 +163,22 @@ namespace FutsMoniter
         /// </summary>
         void OnInitFinished()
         {
-            Factory.IDataSourceFactory(agent).BindDataSource(Globals.BasicInfoTracker.GetBaseManagerCombList());
-            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryTotalReportDayRange", this.OnTotalReport);
+            if (Globals.RootRight)
+            {
+                Factory.IDataSourceFactory(agent).BindDataSource(Globals.BasicInfoTracker.GetBaseManagerCombList(true));
+            }
+            else
+            {
+                Factory.IDataSourceFactory(agent).BindDataSource(Globals.BasicInfoTracker.GetBaseManagerCombList());
+            }
+            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QrySummaryReport", this.OnTotalReport);
         }
 
 
         private void btnQryReport_Click(object sender, EventArgs e)
         {
             this.Clear();
-            Globals.TLClient.ReqQryTotalReportByDayRange(int.Parse(agent.SelectedValue.ToString()), Util.ToTLDate(start.Value), Util.ToTLDate(end.Value));
-            
+            Globals.TLClient.ReqQrySummaryReport(int.Parse(agent.SelectedValue.ToString()), Util.ToTLDate(start.Value), Util.ToTLDate(end.Value));
         }
 
  

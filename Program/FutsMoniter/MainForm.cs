@@ -202,7 +202,9 @@ namespace FutsMoniter
                             ShowInfo("初始化行情报表");
                             InitSymbol2View();
                             Globals.LoginStatus.IsInitSuccess = true;
-                            Globals.EnvReady = true;
+                            //触发初始化完成事件
+                            Globals.OnInitFinished();
+                            
                         }
                     }
                     else
@@ -283,10 +285,10 @@ namespace FutsMoniter
             
         }
 
-        private void radMenuItem6_Click(object sender, EventArgs e)
-        {
-            InitSymbol2View();
-        }
+        //private void radMenuItem6_Click(object sender, EventArgs e)
+        //{
+        //    InitSymbol2View();
+        //}
 
 
 
@@ -312,6 +314,10 @@ namespace FutsMoniter
             double o = statusmessage.Opacity - 0.05;
             statusmessage.Opacity = o >= 0 ? o : 0;
         }
+
+        
+
+        
 
         
 

@@ -57,15 +57,16 @@
             this.radMenuItem4 = new Telerik.WinControls.UI.RadMenuItem();
             this.btnQryHist = new Telerik.WinControls.UI.RadMenuItem();
             this.btnStatistic = new Telerik.WinControls.UI.RadMenuItem();
+            this.btnAgentProfit = new Telerik.WinControls.UI.RadMenuItem();
+            this.btnTotalOperationStatic = new Telerik.WinControls.UI.RadMenuItem();
+            this.radMenuSeparatorItem4 = new Telerik.WinControls.UI.RadMenuSeparatorItem();
             this.btnManagerGP = new Telerik.WinControls.UI.RadMenuItem();
-            this.radMenuItem6 = new Telerik.WinControls.UI.RadMenuItem();
-            this.radMenuItem7 = new Telerik.WinControls.UI.RadMenuItem();
+            this.btnChangeFee = new Telerik.WinControls.UI.RadMenuItem();
             this.btnManagerForm = new Telerik.WinControls.UI.RadMenuItem();
             this.radMenuSeparatorItem2 = new Telerik.WinControls.UI.RadMenuSeparatorItem();
             this.btnChangePass = new Telerik.WinControls.UI.RadMenuItem();
+            this.radMenuItem7 = new Telerik.WinControls.UI.RadMenuItem();
             this.office2010SilverTheme1 = new Telerik.WinControls.Themes.Office2010SilverTheme();
-            this.radMenuSeparatorItem4 = new Telerik.WinControls.UI.RadMenuSeparatorItem();
-            this.btnAgentProfit = new Telerik.WinControls.UI.RadMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.radStatusStrip1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.radPageView1)).BeginInit();
             this.radPageView1.SuspendLayout();
@@ -343,18 +344,45 @@
             this.btnStatistic.AccessibleDescription = "统计报表";
             this.btnStatistic.AccessibleName = "统计报表";
             this.btnStatistic.Items.AddRange(new Telerik.WinControls.RadItem[] {
-            this.btnAgentProfit});
+            this.btnAgentProfit,
+            this.btnTotalOperationStatic});
             this.btnStatistic.Name = "btnStatistic";
             this.btnStatistic.Text = "统计报表";
             this.btnStatistic.Visibility = Telerik.WinControls.ElementVisibility.Visible;
             this.btnStatistic.Click += new System.EventHandler(this.btnStatistic_Click);
+            // 
+            // btnAgentProfit
+            // 
+            this.btnAgentProfit.AccessibleDescription = "代理商分润报表";
+            this.btnAgentProfit.AccessibleName = "代理商分润报表";
+            this.btnAgentProfit.Name = "btnAgentProfit";
+            this.btnAgentProfit.Text = "代理商分润报表";
+            this.btnAgentProfit.Visibility = Telerik.WinControls.ElementVisibility.Visible;
+            this.btnAgentProfit.Click += new System.EventHandler(this.btnAgentProfit_Click);
+            // 
+            // btnTotalOperationStatic
+            // 
+            this.btnTotalOperationStatic.AccessibleDescription = "radMenuItem5";
+            this.btnTotalOperationStatic.AccessibleName = "radMenuItem5";
+            this.btnTotalOperationStatic.Name = "btnTotalOperationStatic";
+            this.btnTotalOperationStatic.Text = "当日运营报表";
+            this.btnTotalOperationStatic.Visibility = Telerik.WinControls.ElementVisibility.Visible;
+            this.btnTotalOperationStatic.Click += new System.EventHandler(this.btnTotalOperationStatic_Click);
+            // 
+            // radMenuSeparatorItem4
+            // 
+            this.radMenuSeparatorItem4.AccessibleDescription = "radMenuSeparatorItem4";
+            this.radMenuSeparatorItem4.AccessibleName = "radMenuSeparatorItem4";
+            this.radMenuSeparatorItem4.Name = "radMenuSeparatorItem4";
+            this.radMenuSeparatorItem4.Text = "radMenuSeparatorItem4";
+            this.radMenuSeparatorItem4.Visibility = Telerik.WinControls.ElementVisibility.Visible;
             // 
             // btnManagerGP
             // 
             this.btnManagerGP.AccessibleDescription = "radMenuItem5";
             this.btnManagerGP.AccessibleName = "radMenuItem5";
             this.btnManagerGP.Items.AddRange(new Telerik.WinControls.RadItem[] {
-            this.radMenuItem6,
+            this.btnChangeFee,
             this.btnManagerForm,
             this.radMenuSeparatorItem2,
             this.btnChangePass});
@@ -362,24 +390,14 @@
             this.btnManagerGP.Text = "柜员管理";
             this.btnManagerGP.Visibility = Telerik.WinControls.ElementVisibility.Visible;
             // 
-            // radMenuItem6
+            // btnChangeFee
             // 
-            this.radMenuItem6.AccessibleDescription = "radMenuItem6";
-            this.radMenuItem6.AccessibleName = "radMenuItem6";
-            this.radMenuItem6.Items.AddRange(new Telerik.WinControls.RadItem[] {
-            this.radMenuItem7});
-            this.radMenuItem6.Name = "radMenuItem6";
-            this.radMenuItem6.Text = "radMenuItem6";
-            this.radMenuItem6.Visibility = Telerik.WinControls.ElementVisibility.Visible;
-            this.radMenuItem6.Click += new System.EventHandler(this.radMenuItem6_Click);
-            // 
-            // radMenuItem7
-            // 
-            this.radMenuItem7.AccessibleDescription = "radMenuItem7";
-            this.radMenuItem7.AccessibleName = "radMenuItem7";
-            this.radMenuItem7.Name = "radMenuItem7";
-            this.radMenuItem7.Text = "radMenuItem7";
-            this.radMenuItem7.Visibility = Telerik.WinControls.ElementVisibility.Visible;
+            this.btnChangeFee.AccessibleDescription = "radMenuItem5";
+            this.btnChangeFee.AccessibleName = "radMenuItem5";
+            this.btnChangeFee.Name = "btnChangeFee";
+            this.btnChangeFee.Text = "代理资费设置";
+            this.btnChangeFee.Visibility = Telerik.WinControls.ElementVisibility.Visible;
+            this.btnChangeFee.Click += new System.EventHandler(this.btnChangeFee_Click);
             // 
             // btnManagerForm
             // 
@@ -407,22 +425,13 @@
             this.btnChangePass.Visibility = Telerik.WinControls.ElementVisibility.Visible;
             this.btnChangePass.Click += new System.EventHandler(this.btnChangePass_Click);
             // 
-            // radMenuSeparatorItem4
+            // radMenuItem7
             // 
-            this.radMenuSeparatorItem4.AccessibleDescription = "radMenuSeparatorItem4";
-            this.radMenuSeparatorItem4.AccessibleName = "radMenuSeparatorItem4";
-            this.radMenuSeparatorItem4.Name = "radMenuSeparatorItem4";
-            this.radMenuSeparatorItem4.Text = "radMenuSeparatorItem4";
-            this.radMenuSeparatorItem4.Visibility = Telerik.WinControls.ElementVisibility.Visible;
-            // 
-            // btnAgentProfit
-            // 
-            this.btnAgentProfit.AccessibleDescription = "代理商分润报表";
-            this.btnAgentProfit.AccessibleName = "代理商分润报表";
-            this.btnAgentProfit.Name = "btnAgentProfit";
-            this.btnAgentProfit.Text = "代理商分润报表";
-            this.btnAgentProfit.Visibility = Telerik.WinControls.ElementVisibility.Visible;
-            this.btnAgentProfit.Click += new System.EventHandler(this.btnAgentProfit_Click);
+            this.radMenuItem7.AccessibleDescription = "radMenuItem7";
+            this.radMenuItem7.AccessibleName = "radMenuItem7";
+            this.radMenuItem7.Name = "radMenuItem7";
+            this.radMenuItem7.Text = "radMenuItem7";
+            this.radMenuItem7.Visibility = Telerik.WinControls.ElementVisibility.Visible;
             // 
             // MainForm
             // 
@@ -483,7 +492,7 @@
         private Telerik.WinControls.UI.RadMenuItem btnQryHist;
         private Telerik.WinControls.UI.RadMenuItem btnStatistic;
         private Telerik.WinControls.UI.RadMenuItem btnManagerGP;
-        private Telerik.WinControls.UI.RadMenuItem radMenuItem6;
+        //private Telerik.WinControls.UI.RadMenuItem radMenuItem6;
         private Telerik.WinControls.UI.RadLabelElement radLabelElement1;
         private Telerik.WinControls.UI.RadLabelElement statusmessage;
         private Telerik.WinControls.UI.RadLabelElement radLabelElement2;
@@ -493,5 +502,7 @@
         private Telerik.WinControls.UI.RadMenuItem btnChangePass;
         private Telerik.WinControls.UI.RadMenuSeparatorItem radMenuSeparatorItem4;
         private Telerik.WinControls.UI.RadMenuItem btnAgentProfit;
+        private Telerik.WinControls.UI.RadMenuItem btnTotalOperationStatic;
+        private Telerik.WinControls.UI.RadMenuItem btnChangeFee;
     }
 }

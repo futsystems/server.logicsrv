@@ -73,6 +73,11 @@ namespace TradingLib.Contrib.FinService
             }
         }
 
+        /// <summary>
+        /// 传入一个IFinService对象 通过配资服务对象来获得其对应的参数特性列表
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public IEnumerable<ArgumentAttribute> GetAttribute(object obj)
         {
             string fullname = obj.GetType().FullName;
@@ -84,8 +89,24 @@ namespace TradingLib.Contrib.FinService
             }
             List<PropertyInfo> propertyInfos = argumentmap[fullname];
             return propertyInfos.Select(pi=>(ArgumentAttribute)Attribute.GetCustomAttribute(pi, typeof(ArgumentAttribute)));
+        }
 
+        /// <summary>
+        /// 通过服务计划ID获得对应的参数特性列表
+        /// </summary>
+        /// <param name="spfk"></param>
+        /// <returns></returns>
+        public IEnumerable<ArgumentAttribute> GetAttribute(int spfk)
+        {
+            if (!spidxmap.Keys.Contains(spfk))
+            {
+                //如果当前数据集没有记录到该对象的类型 则抛出异常
+                throw new Exception("unknow serviceplan type");
+            }
 
+            string fullname = spidxmap[spfk].ClassName;
+            List<PropertyInfo> propertyInfos = argumentmap[fullname];
+            return propertyInfos.Select(pi => (ArgumentAttribute)Attribute.GetCustomAttribute(pi, typeof(ArgumentAttribute)));
         }
 
 

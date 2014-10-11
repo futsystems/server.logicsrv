@@ -578,10 +578,14 @@ namespace TradingLib.Common
         /// 用于创建用户
         /// </summary>
         /// <returns></returns>
-        public ArrayList GetBaseManagerCombList()
+        public ArrayList GetBaseManagerCombList(bool all =false)
         {
             ArrayList list = new ArrayList();
-            
+
+            if (all)
+            {
+                list.Add(new ValueObject<int> { Name = "所有", Value = 0 });
+            }
             foreach (Manager m in managermap.Values.Where(g=>(g.Type== QSEnumManagerType.ROOT||g.Type== QSEnumManagerType.AGENT) ))
             {
                 ValueObject<int> vo1 = new ValueObject<int>();

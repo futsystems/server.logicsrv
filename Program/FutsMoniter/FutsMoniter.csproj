@@ -128,6 +128,36 @@
     <Compile Include="Controls\ctGridExport.Designer.cs">
       <DependentUpon>ctGridExport.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Report\ctSummaryReport.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\Report\ctSummaryReport.Designer.cs">
+      <DependentUpon>ctSummaryReport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ctAgentList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ctAgentList.Designer.cs">
+      <DependentUpon>ctAgentList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ctFinServicePlanList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ctFinServicePlanList.Designer.cs">
+      <DependentUpon>ctFinServicePlanList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ctAgentSPArgConfig.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ctAgentSPArgConfig.Designer.cs">
+      <DependentUpon>ctAgentSPArgConfig.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form\FeeConfigForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\FeeConfigForm.Designer.cs">
+      <DependentUpon>FeeConfigForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form\AgentProfitReportForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -171,28 +201,28 @@
       <DependentUpon>ChangePassForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Common\BasicInfoTracker.cs" />
-    <Compile Include="Controls\ctHistCashTransaction.cs">
+    <Compile Include="Controls\hist\ctHistCashTransaction.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ctHistCashTransaction.Designer.cs">
+    <Compile Include="Controls\hist\ctHistCashTransaction.Designer.cs">
       <DependentUpon>ctHistCashTransaction.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ctHistOrder.cs">
+    <Compile Include="Controls\hist\ctHistOrder.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ctHistOrder.Designer.cs">
+    <Compile Include="Controls\hist\ctHistOrder.Designer.cs">
       <DependentUpon>ctHistOrder.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ctHistPosition.cs">
+    <Compile Include="Controls\hist\ctHistPosition.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ctHistPosition.Designer.cs">
+    <Compile Include="Controls\hist\ctHistPosition.Designer.cs">
       <DependentUpon>ctHistPosition.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ctHistTrade.cs">
+    <Compile Include="Controls\hist\ctHistTrade.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ctHistTrade.Designer.cs">
+    <Compile Include="Controls\hist\ctHistTrade.Designer.cs">
       <DependentUpon>ctHistTrade.cs</DependentUpon>
     </Compile>
     <Compile Include="Form\AccountConfigForm_OrderRule.cs">
@@ -310,6 +340,12 @@
     <Compile Include="Form\ManagerEditForm.Designer.cs">
       <DependentUpon>ManagerEditForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Form\OperationReportForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\OperationReportForm.Designer.cs">
+      <DependentUpon>OperationReportForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Common\SplashScreenApplication.cs" />
@@ -392,6 +428,21 @@
     <EmbeddedResource Include="Controls\ctGridExport.resx">
       <DependentUpon>ctGridExport.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Controls\Report\ctSummaryReport.resx">
+      <DependentUpon>ctSummaryReport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ctAgentList.resx">
+      <DependentUpon>ctAgentList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ctFinServicePlanList.resx">
+      <DependentUpon>ctFinServicePlanList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ctAgentSPArgConfig.resx">
+      <DependentUpon>ctAgentSPArgConfig.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\FeeConfigForm.resx">
+      <DependentUpon>FeeConfigForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form\AgentProfitReportForm.resx">
       <DependentUpon>AgentProfitReportForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -410,16 +461,16 @@
     <EmbeddedResource Include="Form\ChangePassForm.resx">
       <DependentUpon>ChangePassForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ctHistCashTransaction.resx">
+    <EmbeddedResource Include="Controls\hist\ctHistCashTransaction.resx">
       <DependentUpon>ctHistCashTransaction.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ctHistOrder.resx">
+    <EmbeddedResource Include="Controls\hist\ctHistOrder.resx">
       <DependentUpon>ctHistOrder.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ctHistPosition.resx">
+    <EmbeddedResource Include="Controls\hist\ctHistPosition.resx">
       <DependentUpon>ctHistPosition.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ctHistTrade.resx">
+    <EmbeddedResource Include="Controls\hist\ctHistTrade.resx">
       <DependentUpon>ctHistTrade.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form\ExchangeForm.resx">
@@ -460,6 +511,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form\ManagerEditForm.resx">
       <DependentUpon>ManagerEditForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\OperationReportForm.resx">
+      <DependentUpon>OperationReportForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

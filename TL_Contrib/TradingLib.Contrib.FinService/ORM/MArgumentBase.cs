@@ -116,6 +116,41 @@ namespace TradingLib.Contrib.FinService.ORM
             }
         }
 
+        /// <summary>
+        /// 判断数据库中是否存在某个代理的服务计划参数
+        /// </summary>
+        /// <param name="arg"></param>
+        /// <returns></returns>
+        public static bool HaveArgumentAgent(ArgumentAgent arg)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("SELECT count(*) as  ArgCount FROM contrib_finservice_argument_agent WHERE agent_fk='{0}' AND serviceplan_fk='{0}' AND name='{1}'", arg.agent_fk, arg.serviceplan_fk, arg.Name);
+                ArgumentCount num = db.Connection.Query<ArgumentCount>(query).SingleOrDefault();
+                if (num != null && num.ArgCount > 0)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
 
+        public static bool UpdateArgumentAgent(ArgumentAgent arg)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                if (HaveArgumentAgent(arg))//更新
+                {
+                    string query = String.Format("UPDATE contrib_finservice_argument_agent SET value = '{0}' WHERE serviceplan_fk = '{1}' AND name='{2}' AND agent_fk='{3}'", arg.Value, arg.serviceplan_fk, arg.Name,arg.agent_fk);
+                    return db.Connection.Execute(query) >= 0;
+                }
+                else//插入
+                {
+                    string query = string.Format("INSERT INTO contrib_finservice_argument_agent (`name`,`value`,`type`,`serviceplan_fk`,`agent_fk`) VALUES ( '{0}','{1}','{2}','{3}','{4}')", arg.Name, arg.Value, arg.Type, arg.serviceplan_fk,arg.agent_fk);
+                    return db.Connection.Execute(query) >= 0;
+                }
+            }
+        
+        }
     }
 }

@@ -624,10 +624,20 @@ namespace TradingLib.Common
         /// 查询某日所有代理的利润报表
         /// </summary>
         /// <param name="settleday"></param>
-        public void ReqQryTotalReport(int settleday)
+        public void ReqQryTotalReport(int agentfk,int settleday)
         {
-            this.ReqContribRequest("FinServiceCentre", "QryTotalReport", settleday.ToString());
+            this.ReqContribRequest("FinServiceCentre", "QryTotalReport", agentfk.ToString()+","+settleday.ToString());
         }
+
+        /// <summary>
+        /// 查询某个代理的在一个时间段内的汇总
+        /// </summary>
+        /// <param name="settleday"></param>
+        public void ReqQrySummaryReport(int agentfk,int start,int end)
+        {
+            this.ReqContribRequest("FinServiceCentre", "QrySummaryReport", agentfk.ToString() + "," + start.ToString() + "," + end.ToString());
+        }
+
 
         /// <summary>
         /// 查询某个代理某个时间段内的所有利润流水
@@ -651,6 +661,26 @@ namespace TradingLib.Common
         }
         #endregion
 
+        /// <summary>
+        /// 查询某个代理 某个服务计划的成本参数
+        /// 如果没有设置则返回默认参数
+        /// 
+        /// </summary>
+        /// <param name="agentfk"></param>
+        /// <param name="spfk"></param>
+        public void ReqQrySPAgentArg(int agentfk, int spfk)
+        {
+            this.ReqContribRequest("FinServiceCentre", "QryAgentSPArg", agentfk.ToString()+","+spfk.ToString());
+        }
+
+        /// <summary>
+        /// 更新某个代理的某个服务计划的参数
+        /// </summary>
+        /// <param name="playload"></param>
+        public void ReqUpdateSPAgentArg(string playload)
+        {
+            this.ReqContribRequest("FinServiceCentre", "UpdateAgentSPArg", playload);
+        }
         /// <summary>
         /// 查询某个交易帐户的配资参数
         /// </summary>
