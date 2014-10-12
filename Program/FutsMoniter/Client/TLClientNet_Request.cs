@@ -626,6 +626,10 @@ namespace TradingLib.Common
             this.ReqContribRequest("MgrExchServer", "QryBank", "");
         }
 
+        public void ReqQryAgentPaymentInfo(int agentfk)
+        {
+            this.ReqContribRequest("MgrExchServer", "QryAgentPaymentInfo",agentfk.ToString());
+        }
         /// <summary>
         /// 查询代理的财务信息
         /// </summary>

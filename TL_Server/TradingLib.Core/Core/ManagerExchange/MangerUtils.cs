@@ -153,5 +153,26 @@ namespace TradingLib.Core
             info.CashOut = GetWithdrawNotSettled(manager);
             return info;
         }
+
+        /// <summary>
+        /// 获得某个manager的支付信息
+        /// </summary>
+        /// <param name="manager"></param>
+        /// <returns></returns>
+        public static JsonWrapperAgentPaymentInfo GetPaymentInfo(this Manager manager)
+        {
+            int agentfk = manager.mgr_fk;
+            JsonWrapperAgentPaymentInfo info = new JsonWrapperAgentPaymentInfo();
+            info.BaseMGRFK = agentfk;
+            info.BankAccount = GetAgentBankAccount(manager);
+            info.Mobile = manager.BaseManager.Mobile;
+            info.QQ = manager.BaseManager.QQ;
+            info.Name = manager.BaseManager.Name;
+
+            return info;
+
+        }
+
+
     }
 }

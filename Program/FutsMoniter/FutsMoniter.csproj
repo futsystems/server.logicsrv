@@ -44,9 +44,6 @@
     <Reference Include="CTP">
       <HintPath>..\..\lib\CTP.dll</HintPath>
     </Reference>
-    <Reference Include="FutsMoniter, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <ExecutableExtension>.exe</ExecutableExtension>
-    </Reference>
     <Reference Include="FutSystems.GUI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Win\FutSystems.GUI.dll</HintPath>
@@ -387,6 +384,12 @@
     <Compile Include="Form\OperationReportForm.Designer.cs">
       <DependentUpon>OperationReportForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Form\PaySlipForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\PaySlipForm.Designer.cs">
+      <DependentUpon>PaySlipForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Common\SplashScreenApplication.cs" />
@@ -576,6 +579,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form\OperationReportForm.resx">
       <DependentUpon>OperationReportForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\PaySlipForm.resx">
+      <DependentUpon>PaySlipForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

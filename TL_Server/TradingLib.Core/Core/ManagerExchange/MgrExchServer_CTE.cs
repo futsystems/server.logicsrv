@@ -18,6 +18,14 @@ namespace TradingLib.Core
             session.SendJsonReplyMgr(splist);
         }
 
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryAgentPaymentInfo", "QryAgentPaymentInfo - query payment Info", "查询代理支付信息")]
+        public void CTE_QryPaymentInfo(ISession session,int agentfk)
+        {
+            Manager manger = BasicTracker.ManagerTracker[agentfk];
+            JsonWrapperAgentPaymentInfo info = manger.GetPaymentInfo();
+            session.SendJsonReplyMgr(info);
+        }
+
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryFinanceInfo", "QryFinanceInfo - query agent finance", "查询代理财务信息")]
         public void CTE_QryFinanceInfo(ISession session)

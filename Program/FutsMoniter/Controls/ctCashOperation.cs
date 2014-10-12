@@ -63,7 +63,18 @@ namespace FutsMoniter
                 fmConfirm.Show("请选择对应的出入金操作请求记录");
                 return;
             }
-            if (fmConfirm.Show("确认该操作?") == DialogResult.Yes)
+            if (op.Operation == QSEnumCashOperation.WithDraw)
+            { 
+                //生成支付单
+                PaySlipForm fm = new PaySlipForm();
+                fm.SetCashOperation(op);
+                if (fm.ShowDialog() != DialogResult.Yes)
+                {
+                    return;
+                }
+            }
+
+            //if (fmConfirm.Show("确认该操作?") == DialogResult.Yes)
             {
 
                 Globals.TLClient.ReqConfirmCashOperation(TradingLib.Mixins.LitJson.JsonMapper.ToJson(op));

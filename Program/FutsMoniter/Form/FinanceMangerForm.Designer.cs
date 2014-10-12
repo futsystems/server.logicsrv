@@ -55,13 +55,13 @@
             this.radLabel17 = new Telerik.WinControls.UI.RadLabel();
             this.radPageView2 = new Telerik.WinControls.UI.RadPageView();
             this.pendingOperationPage = new Telerik.WinControls.UI.RadPageViewPage();
-            this.ctCashOperation1 = new FutsMoniter.ctCashOperation();
             this.histqrypage = new Telerik.WinControls.UI.RadPageViewPage();
             this.radLabel14 = new Telerik.WinControls.UI.RadLabel();
             this.end = new Telerik.WinControls.UI.RadDateTimePicker();
             this.btnQryReport = new Telerik.WinControls.UI.RadButton();
             this.radLabel15 = new Telerik.WinControls.UI.RadLabel();
             this.start = new Telerik.WinControls.UI.RadDateTimePicker();
+            this.ctCashOperation1 = new FutsMoniter.ctCashOperation();
             ((System.ComponentModel.ISupportInitialize)(this.radGroupBox1)).BeginInit();
             this.radGroupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnCashOperation)).BeginInit();
@@ -237,9 +237,9 @@
             // 
             // settlepage
             // 
-            this.settlepage.Location = new System.Drawing.Point(10, 31);
+            this.settlepage.Location = new System.Drawing.Point(10, 35);
             this.settlepage.Name = "settlepage";
-            this.settlepage.Size = new System.Drawing.Size(624, 207);
+            this.settlepage.Size = new System.Drawing.Size(624, 203);
             this.settlepage.Text = "结算记录";
             // 
             // cashpage
@@ -362,18 +362,10 @@
             // pendingOperationPage
             // 
             this.pendingOperationPage.Controls.Add(this.ctCashOperation1);
-            this.pendingOperationPage.Location = new System.Drawing.Point(10, 35);
+            this.pendingOperationPage.Location = new System.Drawing.Point(10, 31);
             this.pendingOperationPage.Name = "pendingOperationPage";
-            this.pendingOperationPage.Size = new System.Drawing.Size(671, 278);
+            this.pendingOperationPage.Size = new System.Drawing.Size(671, 282);
             this.pendingOperationPage.Text = "待处理";
-            // 
-            // ctCashOperation1
-            // 
-            this.ctCashOperation1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ctCashOperation1.Location = new System.Drawing.Point(0, 0);
-            this.ctCashOperation1.Name = "ctCashOperation1";
-            this.ctCashOperation1.Size = new System.Drawing.Size(671, 278);
-            this.ctCashOperation1.TabIndex = 0;
             // 
             // histqrypage
             // 
@@ -436,6 +428,14 @@
             this.start.TabStop = false;
             this.start.Text = "Monday, September 01, 2014";
             this.start.Value = new System.DateTime(2014, 9, 1, 15, 53, 33, 406);
+            // 
+            // ctCashOperation1
+            // 
+            this.ctCashOperation1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ctCashOperation1.Location = new System.Drawing.Point(0, 0);
+            this.ctCashOperation1.Name = "ctCashOperation1";
+            this.ctCashOperation1.Size = new System.Drawing.Size(671, 282);
+            this.ctCashOperation1.TabIndex = 0;
             // 
             // FinanceMangerForm
             // 

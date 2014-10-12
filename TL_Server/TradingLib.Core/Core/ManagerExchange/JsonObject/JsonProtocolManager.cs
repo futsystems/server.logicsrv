@@ -99,6 +99,33 @@ namespace TradingLib.Mixins.JsonObject
 
     }
 
+
+    public class JsonWrapperAgentPaymentInfo
+    {
+        /// <summary>
+        /// 主域编号
+        /// </summary>
+        public int BaseMGRFK { get; set; }
+
+        /// <summary>
+        /// 代理姓名
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// 代理手机号码
+        /// </summary>
+        public string Mobile { get; set; }
+
+        /// <summary>
+        /// 代理QQ号码
+        /// </summary>
+        public string QQ { get; set; }
+        /// <summary>
+        /// 银行帐户信息
+        /// </summary>
+        public JsonWrapperBankAccount BankAccount { get; set; }
+    }
     /// <summary>
     /// 代理财务信息 全面
     /// </summary>
