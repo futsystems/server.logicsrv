@@ -60,11 +60,13 @@
       <HintPath>..\..\lib\Telerik\Telerik.WinControls.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Telerik.WinControls.ChartView, Version=2013.2.612.40, Culture=neutral, PublicKeyToken=5bb2a467cbec794e" />
     <Reference Include="Telerik.WinControls.GridView">
       <HintPath>..\..\lib\Telerik\Telerik.WinControls.GridView.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Telerik.WinControls.PdfViewer, Version=2013.2.612.40, Culture=neutral, PublicKeyToken=5bb2a467cbec794e, processorArchitecture=MSIL" />
+    <Reference Include="Telerik.WinControls.PivotGrid, Version=2013.2.612.40, Culture=neutral, PublicKeyToken=5bb2a467cbec794e, processorArchitecture=MSIL" />
     <Reference Include="Telerik.WinControls.Themes.Office2010Black, Version=2013.2.612.40, Culture=neutral, PublicKeyToken=5bb2a467cbec794e, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
@@ -97,6 +99,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Form\CashOperationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\CashOperationForm.Designer.cs">
+      <DependentUpon>CashOperationForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form\BankAccountForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\BankAccountForm.Designer.cs">
+      <DependentUpon>BankAccountForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Report\ctDetailReportByAccount.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -150,6 +164,12 @@
     </Compile>
     <Compile Include="Controls\Base\ctBasicMangerInfo.Designer.cs">
       <DependentUpon>ctBasicMangerInfo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Base\ctBankList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\Base\ctBankList.Designer.cs">
+      <DependentUpon>ctBankList.cs</DependentUpon>
     </Compile>
     <Compile Include="Form\FinanceMangerForm.cs">
       <SubType>Form</SubType>
@@ -297,6 +317,7 @@
     </Compile>
     <Compile Include="Glabols.cs" />
     <Compile Include="JsonObject\JsonProtocolFinService.cs" />
+    <Compile Include="JsonObject\JsonProtocolManager.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -421,6 +442,9 @@
       <DependentUpon>UpdatePassForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Utils.cs" />
+    <EmbeddedResource Include="Form\CashOperationForm.resx">
+      <DependentUpon>CashOperationForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\Report\ctDetailReportByAccount.resx">
       <DependentUpon>ctDetailReportByAccount.cs</DependentUpon>
     </EmbeddedResource>
@@ -447,6 +471,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\Base\ctBasicMangerInfo.resx">
       <DependentUpon>ctBasicMangerInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\Base\ctBankList.resx">
+      <DependentUpon>ctBankList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\BankAccountForm.resx">
+      <DependentUpon>BankAccountForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form\FinanceMangerForm.resx">
       <DependentUpon>FinanceMangerForm.cs</DependentUpon>

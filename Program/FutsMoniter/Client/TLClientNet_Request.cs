@@ -618,6 +618,40 @@ namespace TradingLib.Common
 
         #region 扩展请求
 
+        /// <summary>
+        /// 查询银行列表
+        /// </summary>
+        public void ReqQryBank()
+        {
+            this.ReqContribRequest("MgrExchServer", "QryBank", "");
+        }
+
+        /// <summary>
+        /// 查询代理的财务信息
+        /// </summary>
+        public void ReqQryAgentFinanceInfo()
+        {
+            this.ReqContribRequest("MgrExchServer", "QryFinanceInfo", "");
+        }
+
+        /// <summary>
+        /// 更新代理主域的银行卡信息
+        /// </summary>
+        /// <param name="playload"></param>
+        public void ReqUpdateAgentBankInfo(string playload)
+        {
+            this.ReqContribRequest("MgrExchServer", "UpdateAgentBankAccount", playload);
+        }
+
+        /// <summary>
+        /// 请求出入金操作
+        /// </summary>
+        /// <param name="playload"></param>
+        public void ReqRequestCashOperation(string playload)
+        {
+            this.ReqContribRequest("MgrExchServer", "RequestCashOperation", playload);
+        }
+
         #region 查询报表
 
         /// <summary>

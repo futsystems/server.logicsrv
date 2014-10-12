@@ -237,7 +237,7 @@ namespace TradingLib.Core
             //如果验证通过返回具体的管理信息
             if (response.Authorized)
             {
-                //查找对应的管理端对象 将相关信息与clientinfo进行绑定
+                //通过登入名在内存中获得对应的Manager对象 然后将该Manager对象的数据复制到ClientInfo上
                 Manager m = BasicTracker.ManagerTracker[request.LoginID];
                 if (m != null)
                 {
@@ -249,9 +249,10 @@ namespace TradingLib.Core
                     response.MGRID = m.ID;//mgrid
                     response.BaseMGRFK = m.mgr_fk;//主域id
 
-                    clientinfo.mgr_fk = m.ID;
+                    //将Manger信息绑定到对应的clientinfo
+                    clientinfo.BindManger(m);
+                    //标注登入成功
                     clientinfo.AuthorizedSuccess();
-                    clientinfo.ManagerID = request.LoginID;
 
                 }
                 else//如果管理端对象在内存中不存在 则返回登入失败
@@ -294,21 +295,19 @@ namespace TradingLib.Core
                     break;
 
                 default:
-                    //1.生成对应的Session 用于减少ClientInfo的暴露防止错误修改相关参数
-                    Client2Session sesssion = new Client2Session(clientinfo);
-
-                    //针对Manager设置相关属性
-                    sesssion.SessionType = QSEnumSessionType.MANAGER;
-                    sesssion.ManagerID = clientinfo.ManagerID;
-                    
-
-                    //2.通过managerid来获得manager对象,并传递到逻辑包处理函数
-                    Manager manager = BasicTracker.ManagerTracker[clientinfo.ManagerID];
+                    //1.如果已经登入成功 则ClientInfo会绑定对应的Manager信息
+                    Manager manager = clientinfo.Manager;
                     if (manager == null)
                     {
-                        debug("manager:" + clientinfo.ManagerID + " do not exist!", QSEnumDebugLevel.ERROR);
+                        debug("manager:" + clientinfo.MGRLoginName + " do not exist!", QSEnumDebugLevel.ERROR);
                         return -1;
                     }
+
+                    //2.生成对应的Session 将Manager绑定到session 
+                    Client2Session sesssion = new Client2Session(clientinfo);
+                    sesssion.BindManager(manager);
+
+                    //3.执行packetrequest 处理
                     if (newPacketRequest != null)
                         newPacketRequest(packet,sesssion,manager);
                     else

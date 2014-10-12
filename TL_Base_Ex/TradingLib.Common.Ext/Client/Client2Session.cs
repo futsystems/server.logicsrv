@@ -21,8 +21,11 @@ namespace TradingLib.Common
         public Client2Session(ClientInfoBase client)
         {
             _client = client;
-            this.AccountID = string.Empty;
-            this.ManagerID = string.Empty;
+            this.AccountID = string.Empty;//交易员帐号
+            this.MGRLoginName = string.Empty;//管理员帐号
+            this.MGRID = 0;
+            this.MGRFK = 0;
+
             this.SessionType = QSEnumSessionType.CLIENT;
             this.ContirbID = string.Empty;
             this.CMDStr = string.Empty;
@@ -34,15 +37,45 @@ namespace TradingLib.Common
         /// </summary>
         public string AccountID { get; set; }
 
+
+        #region Manager 对象
+
         /// <summary>
-        /// 管理ID用于 管理服务
+        /// Manager对象
         /// </summary>
-        public string ManagerID { get; set; }
+        public Manager Manager { get; private set; }
+        /// <summary>
+        /// 管理员登入名
+        /// </summary>
+        public string MGRLoginName { get; private set; }
+
+        /// <summary>
+        /// 管理员ID
+        /// </summary>
+        public int MGRID { get; private set; }
+
+        /// <summary>
+        /// 管理员主域ID
+        /// </summary>
+        public int MGRFK { get; private set; }
 
         /// <summary>
         /// 回话类型
         /// </summary>
-        public QSEnumSessionType SessionType { get; set; }
+        public QSEnumSessionType SessionType { get; private set; }
+
+        public void BindManager(Manager manger)
+        {
+            this.SessionType = QSEnumSessionType.MANAGER;
+            this.Manager = manger;
+            this.MGRFK = manger.mgr_fk;
+            this.MGRID = manger.ID;
+            this.MGRLoginName = manger.Login;
+        }
+
+        #endregion
+
+
 
         public string FrontID { get { return _client.Location.FrontID; } }
 

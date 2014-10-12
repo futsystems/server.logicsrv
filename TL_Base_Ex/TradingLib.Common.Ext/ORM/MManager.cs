@@ -113,9 +113,16 @@ namespace TradingLib.ORM
                 IList<Manager> mgrlsit = db.Connection.Query<Manager>(query, null).ToList<Manager>();
                 return mgrlsit;
             }
-            
+
         }
 
+
+
+        #region manager的结算 出入金 等财务操作
+
+
+
+        #endregion
 
     }
 }

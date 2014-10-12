@@ -110,6 +110,10 @@ namespace TradingLib.Common
             return (contribIDUUIDMap.Keys.Contains(contribId.ToUpper()));
         }
 
+        bool IsCoreRegisted(string coreid)
+        {
+            return (coreIdUUIDMap.Keys.Contains(coreid.ToUpper()));
+        }
 
         /// <summary>
         /// 通过contribId找到其对应的IContirb插件对象
@@ -401,9 +405,9 @@ namespace TradingLib.Common
             TLCtxHelper.Debug("Contirb:" + contribid + " cmd:" + cmd + " args:" + parameters);
             string cmdkey = ContribCommandKey(contribid, cmd);
 
-            if (!IsContribRegisted(contribid))
+            if (!IsContribRegisted(contribid) && !IsCoreRegisted(contribid))
             {
-                debug("Error:Contirb[" + contribid + "] do not registed");
+                debug("Error:Module[" + contribid + "] do not registed");
                 return;
             }
             if (!cmdmap.Keys.Contains(cmdkey))
@@ -559,6 +563,7 @@ namespace TradingLib.Common
                 }
             }
         }
+
         /// <summary>
         /// 注册清算中心到全局上下文
         /// 通过在BaseSrvObject基类中统一向TLContext进行注册,则ctx可以获得全局所有继承自BaseSrvObject的对象
@@ -630,13 +635,13 @@ namespace TradingLib.Common
                 if (obj is ICore)
                 {
                     ICore core = obj as ICore;
-                    coreIdUUIDMap.TryAdd(core.CoreId, srvobj.UUID);
+                    coreIdUUIDMap.TryAdd(core.CoreId.ToUpper(), srvobj.UUID);
                     
                     ParseCommandInfo(obj, core.CoreId);
                 }
 
                 //2.检查是否是是扩展模块
-                if (obj is IContrib)//.GetType().IsAssignableFrom(typeof(IContrib)))
+                if (obj is IContrib)
                 {
                     IContribPlugin plugin = PluginHelper.LoadContribPlugin(obj.GetType().FullName);
 

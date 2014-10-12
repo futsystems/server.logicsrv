@@ -39,7 +39,7 @@ namespace TradingLib.API
         /// <summary>
         /// 回话类型
         /// </summary>
-        QSEnumSessionType SessionType { get; set; }
+        QSEnumSessionType SessionType { get; }
 
 
         /// <summary>
@@ -48,11 +48,19 @@ namespace TradingLib.API
         string AccountID { get; }
 
         /// <summary>
+        /// 管理员登入
+        /// </summary>
+        string MGRLoginName { get; }
+
+        /// <summary>
         /// 管理员ID
         /// </summary>
-        string ManagerID { get; }
+        int MGRID { get; }
 
-
+        /// <summary>
+        /// 管理员主域ID
+        /// </summary>
+        int MGRFK { get;  }
 
         /// <summary>
         /// 对应的扩展模块编号

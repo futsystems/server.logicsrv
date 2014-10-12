@@ -257,6 +257,12 @@ namespace TradingLib.Mixins.JsonObject
         /// 代理利润
         /// </summary>
         public decimal AgentProfit { get; set; }
+
+
+        /// <summary>
+        /// 代理佣金利润
+        /// </summary>
+        public decimal CommissionProfit { get; set; }
     }
 
 

@@ -11,6 +11,37 @@ namespace TradingLib.Core
     public partial class MgrExchServer
     {
 
+        /// <summary>
+        /// 向管理端发送一个jsonreply回报
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="reply"></param>
+        /// <param name="islast"></param>
+        protected void SendJsonReplyMgr(ISession session, TradingLib.Mixins.JsonReply reply, bool islast = true)
+        {
+            RspMGRContribResponse response = ResponseTemplate<RspMGRContribResponse>.SrvSendRspResponse(session);
+            response.ModuleID = session.ContirbID;
+            response.CMDStr = session.CMDStr;
+            response.IsLast = islast;
+
+            response.RspInfo.ErrorID = reply.Code;
+            response.RspInfo.ErrorMessage = reply.Message;
+            response.Result = new Mixins.ReplyWriter().Start().FillReply(reply).End().ToString();
+
+            Send(response);
+        }
+
+        protected void SendJsonReplyMgr(ISession session, object obj, bool islast = true)
+        {
+            RspMGRContribResponse response = ResponseTemplate<RspMGRContribResponse>.SrvSendRspResponse(session);
+            response.ModuleID = session.ContirbID;
+            response.CMDStr = session.CMDStr;
+            response.IsLast = islast;
+            response.Result = new Mixins.ReplyWriter().Start().FillReply(Mixins.JsonReply.GenericSuccess()).FillPlayload(obj).End().ToString();
+
+            Send(response);
+        }
+
         public void Send(IPacket packet)
         {
             CachePacket(packet);
@@ -18,7 +49,6 @@ namespace TradingLib.Core
 
         void CachePacket(IPacket packet)
         {
-            //debug("cachepacket ~~~~~~~~~~~~~~~~~~~~",QSEnumDebugLevel.INFO);
             _packetcache.Write(packet);
         }
 

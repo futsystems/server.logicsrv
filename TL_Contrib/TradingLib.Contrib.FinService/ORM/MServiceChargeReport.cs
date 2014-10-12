@@ -13,8 +13,10 @@ namespace TradingLib.Contrib.FinService.ORM
 
     public class MServiceChargeReport:MBase
     {
+
         /// <summary>
         /// 查询某天的代理统计
+        /// select * from (select sum(commission) as total,agent_fk  from log_service_commission GROUP BY agent_fk)a INNER JOIN (SELECT sum(agentfee) as fee ,agent_fk from log_service_feecharge GROUP BY agent_fk)b on a.agent_fk=b.agent_fk
         /// </summary>
         /// <param name="settleday"></param>
         /// <returns></returns>

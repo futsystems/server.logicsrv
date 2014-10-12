@@ -10,12 +10,13 @@ namespace TradingLib.Common
     public class DBContractBankTracker
     {
         Dictionary<string, ContractBank> bankmap = new Dictionary<string, ContractBank>();
-
+        Dictionary<int, ContractBank> bankidxmap = new Dictionary<int, ContractBank>();
         public DBContractBankTracker()
         {
             foreach (ContractBank b in ORM.MBasicInfo.SelectContractBanks())
             {
                 bankmap[b.BrankID] = b;
+                bankidxmap[b.ID] = b;
             }
         }
 
@@ -29,6 +30,15 @@ namespace TradingLib.Common
             }
         }
 
+        public ContractBank this[int id]
+        {
+            get
+            {
+                if (bankidxmap.Keys.Contains(id))
+                    return bankidxmap[id];
+                return null;
+            }
+        }
 
         public string DefaultBankID
         {
