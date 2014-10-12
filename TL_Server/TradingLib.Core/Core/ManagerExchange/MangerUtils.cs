@@ -21,7 +21,51 @@ namespace TradingLib.Core
             return ORM.MAgentFinance.GetAgentBalance(agentfk);
         }
 
+        /// <summary>
+        /// 获得某个Manager主域的待处理提现
+        /// </summary>
+        /// <param name="manger"></param>
+        /// <returns></returns>
+        public static decimal GetPendingWithdraw(this Manager manger)
+        {
+            int agentfk = manger.mgr_fk;
+            return ORM.MAgentFinance.GetPendingWithdraw(agentfk);
+        }
 
+        /// <summary>
+        /// 获得某个Manager主域的待处理充值
+        /// </summary>
+        /// <param name="manager"></param>
+        /// <returns></returns>
+        public static decimal GetPendingDeposit(this Manager manager)
+        {
+            int agentfk = manager.mgr_fk;
+            return ORM.MAgentFinance.GetPendingDeposit(agentfk);
+        }
+
+        /// <summary>
+        /// 获得未结算的提现金额
+        /// 由于每个交易日必须结算，因此上个交易日内的充值提现已经通过结算计入当前Balance
+        /// 而当前结算周期内的充值提现记录没有反应到Balance需要单独计算并显示
+        /// </summary>
+        /// <param name="manger"></param>
+        /// <returns></returns>
+        public static decimal GetWithdrawNotSettled(this Manager manger)
+        {
+            int agentfk = manger.mgr_fk;
+            return ORM.MAgentFinance.GetWithdrawOfTradingDay(agentfk, TLCtxHelper.Ctx.SettleCentre.NextTradingday);
+        }
+
+        /// <summary>
+        /// 获得未结算的充值金额
+        /// </summary>
+        /// <param name="manager"></param>
+        /// <returns></returns>
+        public static decimal GetDepositNotSettled(this Manager manager)
+        {
+            int agentfk = manager.mgr_fk;
+            return ORM.MAgentFinance.GetDepositOfTradingDay(agentfk, TLCtxHelper.Ctx.SettleCentre.NextTradingday);
+        }
         /// <summary>
         /// 获得某个代理某天的结算信息
         /// </summary>
@@ -66,6 +110,8 @@ namespace TradingLib.Core
             int agentfk = manager.mgr_fk;
             return ORM.MAgentFinance.GetAgentLatestCashOperation(agentfk).ToArray();
         }
+
+
         /// <summary>
         /// 获得某个Manager对应主域的财务信息
         /// </summary>
@@ -83,6 +129,28 @@ namespace TradingLib.Core
                 info.LastSettle = GetAgentSettlement(manager, info.Balance.Settleday);
             }
             info.LatestCashOperations = GetAgentLatestCashOperation(manager);
+            info.PendingDeposit = GetPendingDeposit(manager);
+            info.PendingWithDraw = GetPendingWithdraw(manager);
+            info.CashIn = GetDepositNotSettled(manager);
+            info.CashOut = GetWithdrawNotSettled(manager);
+            return info;
+        }
+
+        /// <summary>
+        /// 获得代理精简财务信息
+        /// </summary>
+        /// <param name="manager"></param>
+        /// <returns></returns>
+        public static JsonWrapperAgentFinanceInfoLite GetAgentFinanceInfoLite(this Manager manager)
+        {
+            JsonWrapperAgentFinanceInfoLite info = new JsonWrapperAgentFinanceInfoLite();
+            info.BaseMGRFK = manager.mgr_fk;
+
+            info.Balance = GetAgentBalance(manager);
+            info.PendingDeposit = GetPendingDeposit(manager);
+            info.PendingWithDraw = GetPendingWithdraw(manager);
+            info.CashIn = GetDepositNotSettled(manager);
+            info.CashOut = GetWithdrawNotSettled(manager);
             return info;
         }
     }

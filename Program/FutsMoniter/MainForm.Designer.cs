@@ -65,10 +65,11 @@
             this.btnChangeFee = new Telerik.WinControls.UI.RadMenuItem();
             this.radMenuSeparatorItem2 = new Telerik.WinControls.UI.RadMenuSeparatorItem();
             this.btnChangePass = new Telerik.WinControls.UI.RadMenuItem();
+            this.radMenuSeparatorItem5 = new Telerik.WinControls.UI.RadMenuSeparatorItem();
             this.btnFinanceMgr = new Telerik.WinControls.UI.RadMenuItem();
+            this.btnCasher = new Telerik.WinControls.UI.RadMenuItem();
             this.radMenuItem7 = new Telerik.WinControls.UI.RadMenuItem();
             this.office2010SilverTheme1 = new Telerik.WinControls.Themes.Office2010SilverTheme();
-            this.radMenuSeparatorItem5 = new Telerik.WinControls.UI.RadMenuSeparatorItem();
             ((System.ComponentModel.ISupportInitialize)(this.radStatusStrip1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.radPageView1)).BeginInit();
             this.radPageView1.SuspendLayout();
@@ -264,7 +265,6 @@
             this.radPageView1.SelectedPage = this.radPageViewPage1;
             this.radPageView1.Size = new System.Drawing.Size(1139, 611);
             this.radPageView1.TabIndex = 2;
-            //this.radPageView1.ThemeName = "Windows8";
             ((Telerik.WinControls.UI.RadPageViewStripElement)(this.radPageView1.GetChildAt(0))).StripButtons = Telerik.WinControls.UI.StripViewButtons.None;
             // 
             // radPageViewPage1
@@ -318,7 +318,6 @@
             this.radMenu1.Size = new System.Drawing.Size(1139, 18);
             this.radMenu1.TabIndex = 1;
             this.radMenu1.Text = "radMenu1";
-            //this.radMenu1.ThemeName = "Windows8";
             // 
             // radMenuItem4
             // 
@@ -389,7 +388,8 @@
             this.radMenuSeparatorItem2,
             this.btnChangePass,
             this.radMenuSeparatorItem5,
-            this.btnFinanceMgr});
+            this.btnFinanceMgr,
+            this.btnCasher});
             this.btnManagerGP.Name = "btnManagerGP";
             this.btnManagerGP.Text = "柜员管理";
             this.btnManagerGP.Visibility = Telerik.WinControls.ElementVisibility.Visible;
@@ -429,14 +429,31 @@
             this.btnChangePass.Visibility = Telerik.WinControls.ElementVisibility.Visible;
             this.btnChangePass.Click += new System.EventHandler(this.btnChangePass_Click);
             // 
+            // radMenuSeparatorItem5
+            // 
+            this.radMenuSeparatorItem5.AccessibleDescription = "radMenuSeparatorItem5";
+            this.radMenuSeparatorItem5.AccessibleName = "radMenuSeparatorItem5";
+            this.radMenuSeparatorItem5.Name = "radMenuSeparatorItem5";
+            this.radMenuSeparatorItem5.Text = "radMenuSeparatorItem5";
+            this.radMenuSeparatorItem5.Visibility = Telerik.WinControls.ElementVisibility.Visible;
+            // 
             // btnFinanceMgr
             // 
             this.btnFinanceMgr.AccessibleDescription = "资金管理";
             this.btnFinanceMgr.AccessibleName = "资金管理";
             this.btnFinanceMgr.Name = "btnFinanceMgr";
-            this.btnFinanceMgr.Text = "资金管理";
+            this.btnFinanceMgr.Text = "财务管理";
             this.btnFinanceMgr.Visibility = Telerik.WinControls.ElementVisibility.Visible;
             this.btnFinanceMgr.Click += new System.EventHandler(this.btnFinanceMgr_Click);
+            // 
+            // btnCasher
+            // 
+            this.btnCasher.AccessibleDescription = "财务出纳管理";
+            this.btnCasher.AccessibleName = "财务出纳管理";
+            this.btnCasher.Name = "btnCasher";
+            this.btnCasher.Text = "出纳管理";
+            this.btnCasher.Visibility = Telerik.WinControls.ElementVisibility.Visible;
+            this.btnCasher.Click += new System.EventHandler(this.btnCasher_Click);
             // 
             // radMenuItem7
             // 
@@ -445,14 +462,6 @@
             this.radMenuItem7.Name = "radMenuItem7";
             this.radMenuItem7.Text = "radMenuItem7";
             this.radMenuItem7.Visibility = Telerik.WinControls.ElementVisibility.Visible;
-            // 
-            // radMenuSeparatorItem5
-            // 
-            this.radMenuSeparatorItem5.AccessibleDescription = "radMenuSeparatorItem5";
-            this.radMenuSeparatorItem5.AccessibleName = "radMenuSeparatorItem5";
-            this.radMenuSeparatorItem5.Name = "radMenuSeparatorItem5";
-            this.radMenuSeparatorItem5.Text = "radMenuSeparatorItem5";
-            this.radMenuSeparatorItem5.Visibility = Telerik.WinControls.ElementVisibility.Visible;
             // 
             // MainForm
             // 
@@ -527,5 +536,6 @@
         private Telerik.WinControls.UI.RadMenuItem btnChangeFee;
         private Telerik.WinControls.UI.RadMenuItem btnFinanceMgr;
         private Telerik.WinControls.UI.RadMenuSeparatorItem radMenuSeparatorItem5;
+        private Telerik.WinControls.UI.RadMenuItem btnCasher;
     }
 }

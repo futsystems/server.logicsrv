@@ -17,6 +17,7 @@ namespace FutsMoniter
     public partial class CashOperationForm : Telerik.WinControls.UI.RadForm
     {
         int mgrfk = 0;
+        bool loaded = false;
         public CashOperationForm()
         {
             InitializeComponent();
@@ -26,8 +27,16 @@ namespace FutsMoniter
                 mgrfk = (int)Globals.BaseMGRFK;
                 lbmgrfk.Text = mgrfk.ToString();
             }
+            message.Visible = false;
+            loaded = true;
         }
 
+        decimal avabile = 0;
+        
+        public void SetAvabileBalance(decimal amount)
+        {
+            avabile = amount;
+        }
         private void btnSubmit_Click(object sender, EventArgs e)
         {
             QSEnumCashOperation op = (QSEnumCashOperation)cashoptype.SelectedValue;
@@ -35,6 +44,11 @@ namespace FutsMoniter
             if (a <= 0)
             {
                 fmConfirm.Show("请输入有效金额!");
+                return;
+            }
+            if (a > avabile && op == QSEnumCashOperation.WithDraw)
+            {
+                fmConfirm.Show("最大提现金额:"+avabile.ToString());
                 return;
             }
 
@@ -47,6 +61,21 @@ namespace FutsMoniter
                 Globals.TLClient.ReqRequestCashOperation(TradingLib.Mixins.LitJson.JsonMapper.ToJson(request));
             }
             this.Close();
+        }
+
+        private void cashoptype_SelectedIndexChanged(object sender, Telerik.WinControls.UI.Data.PositionChangedEventArgs e)
+        {
+            if (!loaded) return;
+            QSEnumCashOperation op = (QSEnumCashOperation)cashoptype.SelectedValue;
+            if (op == QSEnumCashOperation.Deposit)
+            {
+                message.Visible = false;
+            }
+            else
+            {
+                message.Visible = true;
+                message.Text = "最大提现额度:" + Util.FormatDecimal(avabile);
+            }
         }
     }
 }

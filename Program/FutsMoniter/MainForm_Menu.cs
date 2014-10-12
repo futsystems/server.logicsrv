@@ -165,6 +165,16 @@ namespace FutsMoniter
             FinanceMangerForm fm = new FinanceMangerForm();
             fm.Show();
         }
+        /// <summary>
+        /// 出纳管理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnCasher_Click(object sender, EventArgs e)
+        {
+            CasherMangerForm fm = new CasherMangerForm();
+            fm.Show();
+        }
         #endregion
 
 

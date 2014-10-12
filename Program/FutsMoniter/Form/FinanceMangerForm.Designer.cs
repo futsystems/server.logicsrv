@@ -29,15 +29,11 @@
         private void InitializeComponent()
         {
             this.radGroupBox1 = new Telerik.WinControls.UI.RadGroupBox();
-            this.btnDeposit = new Telerik.WinControls.UI.RadButton();
-            this.btnWithDraw = new Telerik.WinControls.UI.RadButton();
-            this.radLabel12 = new Telerik.WinControls.UI.RadLabel();
+            this.btnCashOperation = new Telerik.WinControls.UI.RadButton();
+            this.lbpendingwithdraw = new Telerik.WinControls.UI.RadLabel();
             this.radLabel13 = new Telerik.WinControls.UI.RadLabel();
-            this.lbwithdrawpending = new Telerik.WinControls.UI.RadLabel();
+            this.lbpendingdeposit = new Telerik.WinControls.UI.RadLabel();
             this.radLabel11 = new Telerik.WinControls.UI.RadLabel();
-            this.radLabel9 = new Telerik.WinControls.UI.RadLabel();
-            this.radLabel7 = new Telerik.WinControls.UI.RadLabel();
-            this.radLabel8 = new Telerik.WinControls.UI.RadLabel();
             this.lblastprofitcommission = new Telerik.WinControls.UI.RadLabel();
             this.radLabel6 = new Telerik.WinControls.UI.RadLabel();
             this.lblastprofitfee = new Telerik.WinControls.UI.RadLabel();
@@ -59,8 +55,8 @@
             this.radLabel17 = new Telerik.WinControls.UI.RadLabel();
             this.radPageView2 = new Telerik.WinControls.UI.RadPageView();
             this.pendingOperationPage = new Telerik.WinControls.UI.RadPageViewPage();
+            this.ctCashOperation1 = new FutsMoniter.ctCashOperation();
             this.histqrypage = new Telerik.WinControls.UI.RadPageViewPage();
-            this.opgrid = new Telerik.WinControls.UI.RadGridView();
             this.radLabel14 = new Telerik.WinControls.UI.RadLabel();
             this.end = new Telerik.WinControls.UI.RadDateTimePicker();
             this.btnQryReport = new Telerik.WinControls.UI.RadButton();
@@ -68,15 +64,11 @@
             this.start = new Telerik.WinControls.UI.RadDateTimePicker();
             ((System.ComponentModel.ISupportInitialize)(this.radGroupBox1)).BeginInit();
             this.radGroupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.btnDeposit)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.btnWithDraw)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel12)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.btnCashOperation)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lbpendingwithdraw)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel13)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.lbwithdrawpending)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lbpendingdeposit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel11)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel9)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel7)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel8)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.lblastprofitcommission)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.lblastprofitfee)).BeginInit();
@@ -100,7 +92,6 @@
             this.radPageView2.SuspendLayout();
             this.pendingOperationPage.SuspendLayout();
             this.histqrypage.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.opgrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel14)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.end)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnQryReport)).BeginInit();
@@ -112,15 +103,11 @@
             // radGroupBox1
             // 
             this.radGroupBox1.AccessibleRole = System.Windows.Forms.AccessibleRole.Grouping;
-            this.radGroupBox1.Controls.Add(this.btnDeposit);
-            this.radGroupBox1.Controls.Add(this.btnWithDraw);
-            this.radGroupBox1.Controls.Add(this.radLabel12);
+            this.radGroupBox1.Controls.Add(this.btnCashOperation);
+            this.radGroupBox1.Controls.Add(this.lbpendingwithdraw);
             this.radGroupBox1.Controls.Add(this.radLabel13);
-            this.radGroupBox1.Controls.Add(this.lbwithdrawpending);
+            this.radGroupBox1.Controls.Add(this.lbpendingdeposit);
             this.radGroupBox1.Controls.Add(this.radLabel11);
-            this.radGroupBox1.Controls.Add(this.radLabel9);
-            this.radGroupBox1.Controls.Add(this.radLabel7);
-            this.radGroupBox1.Controls.Add(this.radLabel8);
             this.radGroupBox1.Controls.Add(this.lblastprofitcommission);
             this.radGroupBox1.Controls.Add(this.radLabel6);
             this.radGroupBox1.Controls.Add(this.lblastprofitfee);
@@ -135,43 +122,30 @@
             // 
             // 
             this.radGroupBox1.RootElement.Padding = new System.Windows.Forms.Padding(2, 18, 2, 2);
-            this.radGroupBox1.Size = new System.Drawing.Size(666, 98);
+            this.radGroupBox1.Size = new System.Drawing.Size(692, 98);
             this.radGroupBox1.TabIndex = 0;
             this.radGroupBox1.Text = "财务信息";
             // 
-            // btnDeposit
+            // btnCashOperation
             // 
-            this.btnDeposit.Location = new System.Drawing.Point(570, 21);
-            this.btnDeposit.Name = "btnDeposit";
-            this.btnDeposit.Size = new System.Drawing.Size(85, 56);
-            this.btnDeposit.TabIndex = 14;
-            this.btnDeposit.Text = "充 值";
-            this.btnDeposit.Click += new System.EventHandler(this.btnDeposit_Click);
-            ((Telerik.WinControls.UI.RadButtonElement)(this.btnDeposit.GetChildAt(0))).Text = "充 值";
-            ((Telerik.WinControls.Primitives.TextPrimitive)(this.btnDeposit.GetChildAt(0).GetChildAt(1).GetChildAt(1))).ForeColor = System.Drawing.Color.Crimson;
-            ((Telerik.WinControls.Primitives.TextPrimitive)(this.btnDeposit.GetChildAt(0).GetChildAt(1).GetChildAt(1))).Font = new System.Drawing.Font("微软雅黑", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            ((Telerik.WinControls.Primitives.TextPrimitive)(this.btnDeposit.GetChildAt(0).GetChildAt(1).GetChildAt(1))).Alignment = System.Drawing.ContentAlignment.MiddleCenter;
+            this.btnCashOperation.Location = new System.Drawing.Point(549, 22);
+            this.btnCashOperation.Name = "btnCashOperation";
+            this.btnCashOperation.Size = new System.Drawing.Size(131, 56);
+            this.btnCashOperation.TabIndex = 13;
+            this.btnCashOperation.Text = "提 现/充 值";
+            this.btnCashOperation.Click += new System.EventHandler(this.btnCashOperation_Click);
+            ((Telerik.WinControls.UI.RadButtonElement)(this.btnCashOperation.GetChildAt(0))).Text = "提 现/充 值";
+            ((Telerik.WinControls.Primitives.TextPrimitive)(this.btnCashOperation.GetChildAt(0).GetChildAt(1).GetChildAt(1))).ForeColor = System.Drawing.SystemColors.ControlText;
+            ((Telerik.WinControls.Primitives.TextPrimitive)(this.btnCashOperation.GetChildAt(0).GetChildAt(1).GetChildAt(1))).Font = new System.Drawing.Font("微软雅黑", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ((Telerik.WinControls.Primitives.TextPrimitive)(this.btnCashOperation.GetChildAt(0).GetChildAt(1).GetChildAt(1))).Alignment = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // btnWithDraw
+            // lbpendingwithdraw
             // 
-            this.btnWithDraw.Location = new System.Drawing.Point(483, 21);
-            this.btnWithDraw.Name = "btnWithDraw";
-            this.btnWithDraw.Size = new System.Drawing.Size(77, 56);
-            this.btnWithDraw.TabIndex = 13;
-            this.btnWithDraw.Text = "提 现";
-            this.btnWithDraw.Click += new System.EventHandler(this.btnWithDraw_Click);
-            ((Telerik.WinControls.UI.RadButtonElement)(this.btnWithDraw.GetChildAt(0))).Text = "提 现";
-            ((Telerik.WinControls.Primitives.TextPrimitive)(this.btnWithDraw.GetChildAt(0).GetChildAt(1).GetChildAt(1))).ForeColor = System.Drawing.Color.LimeGreen;
-            ((Telerik.WinControls.Primitives.TextPrimitive)(this.btnWithDraw.GetChildAt(0).GetChildAt(1).GetChildAt(1))).Font = new System.Drawing.Font("微软雅黑", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            ((Telerik.WinControls.Primitives.TextPrimitive)(this.btnWithDraw.GetChildAt(0).GetChildAt(1).GetChildAt(1))).Alignment = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // radLabel12
-            // 
-            this.radLabel12.Location = new System.Drawing.Point(77, 76);
-            this.radLabel12.Name = "radLabel12";
-            this.radLabel12.Size = new System.Drawing.Size(14, 16);
-            this.radLabel12.TabIndex = 12;
-            this.radLabel12.Text = "--";
+            this.lbpendingwithdraw.Location = new System.Drawing.Point(77, 76);
+            this.lbpendingwithdraw.Name = "lbpendingwithdraw";
+            this.lbpendingwithdraw.Size = new System.Drawing.Size(14, 16);
+            this.lbpendingwithdraw.TabIndex = 12;
+            this.lbpendingwithdraw.Text = "--";
             // 
             // radLabel13
             // 
@@ -181,13 +155,13 @@
             this.radLabel13.TabIndex = 11;
             this.radLabel13.Text = "在途资金:";
             // 
-            // lbwithdrawpending
+            // lbpendingdeposit
             // 
-            this.lbwithdrawpending.Location = new System.Drawing.Point(77, 57);
-            this.lbwithdrawpending.Name = "lbwithdrawpending";
-            this.lbwithdrawpending.Size = new System.Drawing.Size(14, 16);
-            this.lbwithdrawpending.TabIndex = 10;
-            this.lbwithdrawpending.Text = "--";
+            this.lbpendingdeposit.Location = new System.Drawing.Point(77, 57);
+            this.lbpendingdeposit.Name = "lbpendingdeposit";
+            this.lbpendingdeposit.Size = new System.Drawing.Size(14, 16);
+            this.lbpendingdeposit.TabIndex = 10;
+            this.lbpendingdeposit.Text = "--";
             // 
             // radLabel11
             // 
@@ -196,30 +170,6 @@
             this.radLabel11.Size = new System.Drawing.Size(59, 16);
             this.radLabel11.TabIndex = 9;
             this.radLabel11.Text = "冻结资金:";
-            // 
-            // radLabel9
-            // 
-            this.radLabel9.Location = new System.Drawing.Point(307, 72);
-            this.radLabel9.Name = "radLabel9";
-            this.radLabel9.Size = new System.Drawing.Size(19, 16);
-            this.radLabel9.TabIndex = 8;
-            this.radLabel9.Text = "笔";
-            // 
-            // radLabel7
-            // 
-            this.radLabel7.Location = new System.Drawing.Point(289, 72);
-            this.radLabel7.Name = "radLabel7";
-            this.radLabel7.Size = new System.Drawing.Size(12, 16);
-            this.radLabel7.TabIndex = 7;
-            this.radLabel7.Text = "1";
-            // 
-            // radLabel8
-            // 
-            this.radLabel8.Location = new System.Drawing.Point(210, 72);
-            this.radLabel8.Name = "radLabel8";
-            this.radLabel8.Size = new System.Drawing.Size(72, 16);
-            this.radLabel8.TabIndex = 6;
-            this.radLabel8.Text = "待处理提现:";
             // 
             // lblastprofitcommission
             // 
@@ -270,7 +220,7 @@
             this.radLabel1.Name = "radLabel1";
             this.radLabel1.Size = new System.Drawing.Size(64, 17);
             this.radLabel1.TabIndex = 0;
-            this.radLabel1.Text = "帐户资金:";
+            this.radLabel1.Text = "可用资金:";
             // 
             // radPageView1
             // 
@@ -287,9 +237,9 @@
             // 
             // settlepage
             // 
-            this.settlepage.Location = new System.Drawing.Point(10, 35);
+            this.settlepage.Location = new System.Drawing.Point(10, 31);
             this.settlepage.Name = "settlepage";
-            this.settlepage.Size = new System.Drawing.Size(624, 203);
+            this.settlepage.Size = new System.Drawing.Size(624, 207);
             this.settlepage.Text = "结算记录";
             // 
             // cashpage
@@ -318,14 +268,14 @@
             // 
             // 
             this.radGroupBox3.RootElement.Padding = new System.Windows.Forms.Padding(2, 18, 2, 2);
-            this.radGroupBox3.Size = new System.Drawing.Size(662, 66);
+            this.radGroupBox3.Size = new System.Drawing.Size(690, 66);
             this.radGroupBox3.TabIndex = 2;
             this.radGroupBox3.Text = "收款银行卡信息";
             // 
             // btnChangeBankAccount
             // 
             this.btnChangeBankAccount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnChangeBankAccount.Location = new System.Drawing.Point(541, 13);
+            this.btnChangeBankAccount.Location = new System.Drawing.Point(569, 13);
             this.btnChangeBankAccount.Name = "btnChangeBankAccount";
             this.btnChangeBankAccount.Size = new System.Drawing.Size(110, 46);
             this.btnChangeBankAccount.TabIndex = 19;
@@ -401,21 +351,29 @@
             this.radPageView2.Controls.Add(this.pendingOperationPage);
             this.radPageView2.Controls.Add(this.histqrypage);
             this.radPageView2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.radPageView2.Location = new System.Drawing.Point(0, 177);
+            this.radPageView2.Location = new System.Drawing.Point(0, 176);
             this.radPageView2.Name = "radPageView2";
             this.radPageView2.SelectedPage = this.pendingOperationPage;
-            this.radPageView2.Size = new System.Drawing.Size(666, 324);
+            this.radPageView2.Size = new System.Drawing.Size(692, 324);
             this.radPageView2.TabIndex = 3;
             this.radPageView2.Text = "radPageView2";
             ((Telerik.WinControls.UI.RadPageViewStripElement)(this.radPageView2.GetChildAt(0))).StripButtons = Telerik.WinControls.UI.StripViewButtons.None;
             // 
             // pendingOperationPage
             // 
-            this.pendingOperationPage.Controls.Add(this.opgrid);
+            this.pendingOperationPage.Controls.Add(this.ctCashOperation1);
             this.pendingOperationPage.Location = new System.Drawing.Point(10, 35);
             this.pendingOperationPage.Name = "pendingOperationPage";
-            this.pendingOperationPage.Size = new System.Drawing.Size(645, 278);
+            this.pendingOperationPage.Size = new System.Drawing.Size(671, 278);
             this.pendingOperationPage.Text = "待处理";
+            // 
+            // ctCashOperation1
+            // 
+            this.ctCashOperation1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ctCashOperation1.Location = new System.Drawing.Point(0, 0);
+            this.ctCashOperation1.Name = "ctCashOperation1";
+            this.ctCashOperation1.Size = new System.Drawing.Size(671, 278);
+            this.ctCashOperation1.TabIndex = 0;
             // 
             // histqrypage
             // 
@@ -429,15 +387,6 @@
             this.histqrypage.Name = "histqrypage";
             this.histqrypage.Size = new System.Drawing.Size(645, 278);
             this.histqrypage.Text = "历史查询";
-            // 
-            // opgrid
-            // 
-            this.opgrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.opgrid.Location = new System.Drawing.Point(0, 0);
-            this.opgrid.Name = "opgrid";
-            this.opgrid.Size = new System.Drawing.Size(645, 278);
-            this.opgrid.TabIndex = 0;
-            this.opgrid.Text = "radGridView1";
             // 
             // radLabel14
             // 
@@ -492,7 +441,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(666, 501);
+            this.ClientSize = new System.Drawing.Size(692, 500);
             this.Controls.Add(this.radPageView2);
             this.Controls.Add(this.radGroupBox3);
             this.Controls.Add(this.radGroupBox1);
@@ -505,19 +454,15 @@
             // 
             this.RootElement.ApplyShapeToControl = true;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "资金管理";
+            this.Text = "财务中心";
             ((System.ComponentModel.ISupportInitialize)(this.radGroupBox1)).EndInit();
             this.radGroupBox1.ResumeLayout(false);
             this.radGroupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.btnDeposit)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.btnWithDraw)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel12)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.btnCashOperation)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lbpendingwithdraw)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel13)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.lbwithdrawpending)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lbpendingdeposit)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel11)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel9)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel7)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel8)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.lblastprofitcommission)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel6)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.lblastprofitfee)).EndInit();
@@ -543,7 +488,6 @@
             this.pendingOperationPage.ResumeLayout(false);
             this.histqrypage.ResumeLayout(false);
             this.histqrypage.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.opgrid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel14)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.end)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnQryReport)).EndInit();
@@ -566,15 +510,11 @@
         private Telerik.WinControls.UI.RadLabel radLabel6;
         private Telerik.WinControls.UI.RadLabel lblastprofitfee;
         private Telerik.WinControls.UI.RadLabel radLabel4;
-        private Telerik.WinControls.UI.RadLabel radLabel9;
-        private Telerik.WinControls.UI.RadLabel radLabel7;
-        private Telerik.WinControls.UI.RadLabel radLabel8;
-        private Telerik.WinControls.UI.RadLabel radLabel12;
+        private Telerik.WinControls.UI.RadLabel lbpendingwithdraw;
         private Telerik.WinControls.UI.RadLabel radLabel13;
-        private Telerik.WinControls.UI.RadLabel lbwithdrawpending;
+        private Telerik.WinControls.UI.RadLabel lbpendingdeposit;
         private Telerik.WinControls.UI.RadLabel radLabel11;
-        private Telerik.WinControls.UI.RadButton btnDeposit;
-        private Telerik.WinControls.UI.RadButton btnWithDraw;
+        private Telerik.WinControls.UI.RadButton btnCashOperation;
         private Telerik.WinControls.UI.RadGroupBox radGroupBox3;
         private Telerik.WinControls.UI.RadLabel lbname;
         private Telerik.WinControls.UI.RadLabel radLabel17;
@@ -588,11 +528,11 @@
         private Telerik.WinControls.UI.RadPageView radPageView2;
         private Telerik.WinControls.UI.RadPageViewPage pendingOperationPage;
         private Telerik.WinControls.UI.RadPageViewPage histqrypage;
-        private Telerik.WinControls.UI.RadGridView opgrid;
         private Telerik.WinControls.UI.RadLabel radLabel14;
         private Telerik.WinControls.UI.RadDateTimePicker end;
         private Telerik.WinControls.UI.RadButton btnQryReport;
         private Telerik.WinControls.UI.RadLabel radLabel15;
         private Telerik.WinControls.UI.RadDateTimePicker start;
+        private ctCashOperation ctCashOperation1;
     }
 }

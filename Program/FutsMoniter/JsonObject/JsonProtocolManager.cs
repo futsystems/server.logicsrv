@@ -60,10 +60,47 @@ namespace TradingLib.Mixins.JsonObject
     }
 
 
+    /// <summary>
+    /// 代理财务信息 精简
+    /// </summary>
+    public class JsonWrapperAgentFinanceInfoLite
+    {
+        /// <summary>
+        /// 主域编号
+        /// </summary>
+        public int BaseMGRFK { get; set; }
 
+        /// <summary>
+        /// 当前权益信息
+        /// </summary>
+        public JsonWrapperAgentBalance Balance { get; set; }
+
+        /// <summary>
+        /// 待处理提现金额
+        /// </summary>
+        public decimal PendingDeposit { get; set; }
+
+        /// <summary>
+        /// 待处理充值金额
+        /// </summary>
+        public decimal PendingWithDraw { get; set; }
+
+        /// <summary>
+        /// 充值金额
+        /// </summary>
+        public decimal CashIn { get; set; }
+
+
+        /// <summary>
+        /// 提现记录
+        /// </summary>
+        public decimal CashOut { get; set; }
+
+
+    }
 
     /// <summary>
-    /// 代理财务信息
+    /// 代理财务信息 全面
     /// </summary>
     public class JsonWrapperAgentFinanceInfo
     {
@@ -84,6 +121,28 @@ namespace TradingLib.Mixins.JsonObject
         public JsonWrapperAgentBalance Balance { get; set; }
 
         /// <summary>
+        /// 待处理提现金额
+        /// </summary>
+        public decimal PendingDeposit { get; set; }
+
+        /// <summary>
+        /// 待处理充值金额
+        /// </summary>
+        public decimal PendingWithDraw { get; set; }
+
+
+        /// <summary>
+        /// 充值金额
+        /// </summary>
+        public decimal CashIn { get; set; }
+
+
+        /// <summary>
+        /// 提现记录
+        /// </summary>
+        public decimal CashOut { get; set; }
+
+        /// <summary>
         /// Balance对应的最近结算信息
         /// </summary>
         public JsonWrapperAgentSettle LastSettle { get; set; }
@@ -95,7 +154,9 @@ namespace TradingLib.Mixins.JsonObject
         public JsonWrapperCashOperation[] LatestCashOperations { get; set; }
     }
 
-
+    /// <summary>
+    /// 代理帐户余额记录
+    /// </summary>
     public class JsonWrapperAgentBalance
     {
 
@@ -116,6 +177,9 @@ namespace TradingLib.Mixins.JsonObject
     }
 
 
+    /// <summary>
+    /// 代理结算记录
+    /// </summary>
     public class JsonWrapperAgentSettle
     {
         /// <summary>
@@ -187,5 +251,39 @@ namespace TradingLib.Mixins.JsonObject
         /// 状态
         /// </summary>
         public QSEnumCashInOutStatus Status { get; set; }
+    }
+
+    public class JsonWrapperCasnTrans
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        public int mgr_fk { get; set; }
+
+        /// <summary>
+        /// 结算日
+        /// </summary>
+        public int Settleday { get; set; }
+
+
+        /// <summary>
+        /// 发生时间
+        /// </summary>
+        public DateTime DateTime { get; set; }
+
+        /// <summary>
+        /// 金额 带有方向
+        /// </summary>
+        public decimal Amount { get; set; }
+
+        /// <summary>
+        /// 对应流水
+        /// </summary>
+        public string TransRef { get; set; }
+
+        /// <summary>
+        /// 说明
+        /// </summary>
+        public string Comment { get; set; }
     }
 }

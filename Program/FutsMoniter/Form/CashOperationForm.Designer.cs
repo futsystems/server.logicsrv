@@ -35,6 +35,7 @@
             this.btnSubmit = new Telerik.WinControls.UI.RadButton();
             this.cashoptype = new Telerik.WinControls.UI.RadDropDownList();
             this.amount = new Telerik.WinControls.UI.RadSpinEditor();
+            this.message = new Telerik.WinControls.UI.RadLabel();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.lbmgrfk)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel3)).BeginInit();
@@ -42,6 +43,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.btnSubmit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cashoptype)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.amount)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.message)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this)).BeginInit();
             this.SuspendLayout();
             // 
@@ -63,7 +65,7 @@
             // 
             // radLabel3
             // 
-            this.radLabel3.Location = new System.Drawing.Point(36, 37);
+            this.radLabel3.Location = new System.Drawing.Point(36, 41);
             this.radLabel3.Name = "radLabel3";
             this.radLabel3.Size = new System.Drawing.Size(59, 16);
             this.radLabel3.TabIndex = 2;
@@ -71,7 +73,7 @@
             // 
             // radLabel4
             // 
-            this.radLabel4.Location = new System.Drawing.Point(61, 62);
+            this.radLabel4.Location = new System.Drawing.Point(61, 69);
             this.radLabel4.Name = "radLabel4";
             this.radLabel4.Size = new System.Drawing.Size(34, 16);
             this.radLabel4.TabIndex = 3;
@@ -79,9 +81,9 @@
             // 
             // btnSubmit
             // 
-            this.btnSubmit.Location = new System.Drawing.Point(127, 104);
+            this.btnSubmit.Location = new System.Drawing.Point(155, 121);
             this.btnSubmit.Name = "btnSubmit";
-            this.btnSubmit.Size = new System.Drawing.Size(68, 24);
+            this.btnSubmit.Size = new System.Drawing.Size(74, 35);
             this.btnSubmit.TabIndex = 6;
             this.btnSubmit.Text = "提 交";
             this.btnSubmit.Click += new System.EventHandler(this.btnSubmit_Click);
@@ -89,17 +91,19 @@
             // cashoptype
             // 
             this.cashoptype.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.cashoptype.Location = new System.Drawing.Point(101, 35);
+            this.cashoptype.Location = new System.Drawing.Point(101, 39);
             this.cashoptype.Name = "cashoptype";
             this.cashoptype.Size = new System.Drawing.Size(94, 18);
             this.cashoptype.TabIndex = 17;
             this.cashoptype.Text = "--";
+            this.cashoptype.SelectedIndexChanged += new Telerik.WinControls.UI.Data.PositionChangedEventHandler(this.cashoptype_SelectedIndexChanged);
             ((Telerik.WinControls.Primitives.FillPrimitive)(this.cashoptype.GetChildAt(0).GetChildAt(1))).BackColor = System.Drawing.SystemColors.Window;
             // 
             // amount
             // 
+            this.amount.DecimalPlaces = 2;
             this.amount.ForeColor = System.Drawing.Color.Black;
-            this.amount.Location = new System.Drawing.Point(101, 59);
+            this.amount.Location = new System.Drawing.Point(101, 66);
             this.amount.Maximum = new decimal(new int[] {
             100000,
             0,
@@ -109,15 +113,25 @@
             this.amount.Size = new System.Drawing.Size(94, 19);
             this.amount.TabIndex = 18;
             this.amount.TabStop = false;
-            ((Telerik.WinControls.UI.RadTextBoxItem)(this.amount.GetChildAt(0).GetChildAt(2).GetChildAt(0))).Text = "0";
+            ((Telerik.WinControls.UI.RadTextBoxItem)(this.amount.GetChildAt(0).GetChildAt(2).GetChildAt(0))).Text = "0.00";
             ((Telerik.WinControls.UI.RadTextBoxItem)(this.amount.GetChildAt(0).GetChildAt(2).GetChildAt(0))).ForeColor = System.Drawing.Color.Black;
             ((Telerik.WinControls.UI.RadTextBoxItem)(this.amount.GetChildAt(0).GetChildAt(2).GetChildAt(0))).Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            // 
+            // message
+            // 
+            this.message.ForeColor = System.Drawing.Color.Crimson;
+            this.message.Location = new System.Drawing.Point(101, 91);
+            this.message.Name = "message";
+            this.message.Size = new System.Drawing.Size(14, 16);
+            this.message.TabIndex = 19;
+            this.message.Text = "--";
             // 
             // CashOperationForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(222, 137);
+            this.ClientSize = new System.Drawing.Size(259, 168);
+            this.Controls.Add(this.message);
             this.Controls.Add(this.amount);
             this.Controls.Add(this.cashoptype);
             this.Controls.Add(this.btnSubmit);
@@ -142,6 +156,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.btnSubmit)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cashoptype)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.amount)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.message)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -157,5 +172,6 @@
         private Telerik.WinControls.UI.RadButton btnSubmit;
         private Telerik.WinControls.UI.RadDropDownList cashoptype;
         private Telerik.WinControls.UI.RadSpinEditor amount;
+        private Telerik.WinControls.UI.RadLabel message;
     }
 }

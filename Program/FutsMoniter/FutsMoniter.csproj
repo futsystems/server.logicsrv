@@ -44,6 +44,9 @@
     <Reference Include="CTP">
       <HintPath>..\..\lib\CTP.dll</HintPath>
     </Reference>
+    <Reference Include="FutsMoniter, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <ExecutableExtension>.exe</ExecutableExtension>
+    </Reference>
     <Reference Include="FutSystems.GUI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Win\FutSystems.GUI.dll</HintPath>
@@ -99,6 +102,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Form\CasherMangerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\CasherMangerForm.Designer.cs">
+      <DependentUpon>CasherMangerForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ctCashOperation.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ctCashOperation.Designer.cs">
+      <DependentUpon>ctCashOperation.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form\CashOperationForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -442,6 +457,12 @@
       <DependentUpon>UpdatePassForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Utils.cs" />
+    <EmbeddedResource Include="Form\CasherMangerForm.resx">
+      <DependentUpon>CasherMangerForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ctCashOperation.resx">
+      <DependentUpon>ctCashOperation.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form\CashOperationForm.resx">
       <DependentUpon>CashOperationForm.cs</DependentUpon>
     </EmbeddedResource>

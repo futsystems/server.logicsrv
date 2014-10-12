@@ -10,6 +10,22 @@ using TradingLib.Mixins.JsonObject;
 
 namespace TradingLib.ORM
 {
+
+    internal class PendingAmount
+    {
+        public int mgr_fk { get; set; }
+
+        public int Amount { get; set; }
+    }
+
+    internal class CashAmount
+    {
+        public int mgr_fk { get; set; }
+
+        public int TotalAmount { get; set; }
+    }
+
+
     public class MAgentFinance : MBase
     {
         /// <summary>
@@ -131,11 +147,26 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("SELECT * FROM manager_cashinout  WHERE mgr_fk = '{0}' AND (status='{1}' || datetime>= '{2}')", agentfk, QSEnumCashInOutStatus.PENDING,Util.ToTLDateTime(DateTime.Now.AddMonths(-1)));
+                string query = String.Format("SELECT * FROM manager_cashopreq  WHERE mgr_fk = '{0}' AND (status='{1}' || datetime>= '{2}')", agentfk, QSEnumCashInOutStatus.PENDING, Util.ToTLDateTime(DateTime.Now.AddMonths(-1)));
                 Util.Debug(query);
                 return   db.Connection.Query<JsonWrapperCashOperation>(query);
             }
         }
+
+        /// <summary>
+        /// 查询一个月以内所有出入金操作或待处理操作
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable<JsonWrapperCashOperation> GetAgentLatestCashOperationTotal()
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = String.Format("SELECT * FROM manager_cashopreq  WHERE status='{0}' || datetime>= '{1}'",QSEnumCashInOutStatus.PENDING, Util.ToTLDateTime(DateTime.Now.AddMonths(-1)));
+                Util.Debug(query);
+                return db.Connection.Query<JsonWrapperCashOperation>(query);
+            }
+        }
+
 
         /// <summary>
         /// 插入出入金操作
@@ -146,8 +177,143 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("INSERT INTO manager_cashinout (`mgr_fk`,`datetime`,`operation`,`amount`,`ref`,`status`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}')", op.mgr_fk, op.DateTime, op.Operation, op.Amount, op.Ref, op.Status);
+                string query = string.Format("INSERT INTO manager_cashopreq (`mgr_fk`,`datetime`,`operation`,`amount`,`ref`,`status`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}')", op.mgr_fk, op.DateTime, op.Operation, op.Amount, op.Ref, op.Status);
                 return db.Connection.Execute(query) > 0;
+            }
+        }
+
+        /// <summary>
+        /// 确认出入金操作
+        /// 这里需要在数据库事务中进行
+        /// 在确认的时候 需要成功在manager_cashtrans中进行记录
+        /// </summary>
+        /// <param name="op"></param>
+        /// <returns></returns>
+        public static bool ConfirmAgentCashOperation(JsonWrapperCashOperation op)
+        {
+            op.Status = QSEnumCashInOutStatus.CONFIRMED;
+            using (DBMySql db = new DBMySql())
+            {
+                using (var transaction = db.Connection.BeginTransaction())
+                {
+                    bool istransok = true;
+                    string query = String.Format("UPDATE manager_cashopreq SET status = '{0}'  WHERE mgr_fk = '{1}' AND ref ='{2}'", QSEnumCashInOutStatus.CONFIRMED, op.mgr_fk, op.Ref);
+                    istransok =  db.Connection.Execute(query) > 0;
+
+                    JsonWrapperCasnTrans trans = new JsonWrapperCasnTrans();
+                    trans.mgr_fk = op.mgr_fk;
+                    trans.Settleday = TLCtxHelper.Ctx.SettleCentre.NextTradingday;
+                    trans.TransRef = op.Ref;
+                    trans.DateTime = DateTime.Now;
+                    trans.Comment = "";
+                    trans.Amount = (op.Operation == QSEnumCashOperation.Deposit ? 1 : -1) * op.Amount;
+                    string query2 = string.Format("INSERT INTO manager_cashtrans (`mgr_fk`,`settleday`,`datetime`,`amount`,`transref`,`comment`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}')",trans.mgr_fk,trans.Settleday,trans.DateTime,trans.Amount,trans.TransRef,trans.Comment);
+
+                    istransok = istransok && db.Connection.Execute(query2) > 0;
+                    if (istransok)
+                        transaction.Commit();
+                    return istransok;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 取消出入金操作
+        /// </summary>
+        /// <param name="op"></param>
+        /// <returns></returns>
+        public static bool CancelAgentCashOperation(JsonWrapperCashOperation op)
+        {
+            op.Status = QSEnumCashInOutStatus.CANCELED;
+            using (DBMySql db = new DBMySql())
+            {
+                string query = String.Format("UPDATE manager_cashopreq SET status = '{0}'  WHERE mgr_fk = '{1}' AND ref ='{2}'", QSEnumCashInOutStatus.CANCELED, op.mgr_fk, op.Ref);
+                return db.Connection.Execute(query) > 0;
+            }
+        }
+
+        /// <summary>
+        /// 拒绝出入金操作请求
+        /// </summary>
+        /// <param name="op"></param>
+        /// <returns></returns>
+        public static bool RejectAgentCashOperation(JsonWrapperCashOperation op)
+        {
+            op.Status = QSEnumCashInOutStatus.REFUSED;
+            using (DBMySql db = new DBMySql())
+            {
+                string query = String.Format("UPDATE manager_cashopreq SET status = '{0}'  WHERE mgr_fk = '{1}' AND ref ='{2}'", QSEnumCashInOutStatus.REFUSED, op.mgr_fk, op.Ref);
+                return db.Connection.Execute(query) > 0;
+            }
+        }
+
+        /// <summary>
+        /// 获得某个代理的待充值额度
+        /// </summary>
+        /// <param name="agentfk"></param>
+        /// <returns></returns>
+        public static decimal GetPendingDeposit(int agentfk)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = String.Format("SELECT mgr_fk ,sum(amount) as amount FROM manager_cashopreq  WHERE mgr_fk = '{0}' AND status='{1}' AND operation='{2}'", agentfk, QSEnumCashInOutStatus.PENDING, QSEnumCashOperation.Deposit);
+                PendingAmount pm = db.Connection.Query<PendingAmount>(query).SingleOrDefault<PendingAmount>();
+                if (pm != null)
+                {
+                    return pm.Amount;
+                }
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// 获得某个代理的待提现额度
+        /// </summary>
+        /// <param name="agentfk"></param>
+        /// <returns></returns>
+        public static decimal GetPendingWithdraw(int agentfk)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = String.Format("SELECT mgr_fk ,sum(amount) as amount FROM manager_cashopreq  WHERE mgr_fk = '{0}' AND status='{1}' AND operation='{2}'", agentfk, QSEnumCashInOutStatus.PENDING, QSEnumCashOperation.WithDraw);
+                PendingAmount pm = db.Connection.Query<PendingAmount>(query).SingleOrDefault<PendingAmount>();
+                if (pm != null)
+                {
+                    return pm.Amount;
+                }
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// 查询某个代理 某个交易日的充值金额
+        /// </summary>
+        /// <param name="agentfk"></param>
+        /// <param name="tradingday"></param>
+        /// <returns></returns>
+        public static decimal GetDepositOfTradingDay(int agentfk, int tradingday)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = String.Format("SELECT Sum(amount) as totalamount,mgr_fk FROM manager_cashtrans where settleday ='{0}' and mgr_fk='{1}' and amount>0", tradingday, agentfk);
+                CashAmount total = db.Connection.Query<CashAmount>(query, null).Single<CashAmount>();
+                return Math.Abs(total.TotalAmount);
+            }
+        }
+
+        /// <summary>
+        /// 查询某个代理 某个交易日的提现金额
+        /// </summary>
+        /// <param name="agentfk"></param>
+        /// <param name="tradingday"></param>
+        /// <returns></returns>
+        public static decimal GetWithdrawOfTradingDay(int agentfk, int tradingday)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = String.Format("SELECT Sum(amount) as totalamount,mgr_fk FROM manager_cashtrans where settleday ='{0}' and mgr_fk='{1}' and amount<0", tradingday, agentfk);
+                CashAmount total = db.Connection.Query<CashAmount>(query, null).Single<CashAmount>();
+                return Math.Abs(total.TotalAmount);
             }
         }
     }
