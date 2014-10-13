@@ -16,29 +16,29 @@ namespace TradingLib.Contrib.RechargeOnLine
     {
 
         JsonWrapperCashOperation _cashop = null;
-        PayGWInfo _gwinfo = null;
-        public PaymentViewData(JsonWrapperCashOperation cashop,PayGWInfo gwinfo)
+        //PayGWInfo _gwinfo = null;
+        public PaymentViewData(JsonWrapperCashOperation cashop)
         {
             _cashop = cashop;
-            _gwinfo = gwinfo;
+            //_gwinfo = gwinfo;
             
         }
 
         //交易帐号
         public string Account { get { return _cashop.Account; } }
         //原始资金数额
-        public string Amount { get { return _cashop.Amount.ToString(); } }
+        public string Amount { get { return Util.FormatDecimal(_cashop.Amount,"{0:F2}"); } }
         //出入金操作
         public string CashOperation { get { return Util.GetEnumDescription(_cashop.Operation); } }
 
         //商户号
-        public string MemberID { get { return _gwinfo.MemberID; } }
+        public string MemberID { get { return GWGlobals.GWInfo.MemberID; } }
         //终端
-        public string TerminalID { get { return _gwinfo.TerminalID; } }
+        public string TerminalID { get { return GWGlobals.GWInfo.TerminalID; } }
         //版本 当前为4.0请勿修改 
-        public string InterfaceVersion { get { return _gwinfo.InterfaceVersion; } }
+        public string InterfaceVersion { get { return GWGlobals.GWInfo.InterfaceVersion; } }
         //加密方式默认1 MD5
-        public string KeyType { get { return _gwinfo.KeyType; } }
+        public string KeyType { get { return GWGlobals.GWInfo.KeyType; } }
         //招商银行是1001 空字符串跳转到宝付选择页面
         public string PayID { get { return ""; } }
         //订单日期
@@ -52,11 +52,11 @@ namespace TradingLib.Contrib.RechargeOnLine
         //通知方式 0 不跳转 1 会跳转
         public string NoticeType { get { return "1"; } }
         //客户端跳转地址
-        public string PageUrl { get { return GWGlobals.PageUrl; } }
+        public string PageUrl { get { return GWGlobals.GWInfo.PageURL; } }
         //服务器端返回地址
-        public string ReturnUrl { get { return GWGlobals.NotifyUrl; } }
+        public string ReturnUrl { get { return GWGlobals.GWInfo.NotifyURL; } }
         //加密参数
-        public string Md5Key { get { return _gwinfo.Md5Key; } }
+        public string Md5Key { get { return GWGlobals.GWInfo.Md5Key; } }
         /// <summary>
         /// 获得加密数据
         /// </summary>

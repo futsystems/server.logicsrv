@@ -7,17 +7,18 @@ namespace TradingLib.Contrib.RechargeOnLine
 {
     public static class GWGlobals
     {
-        public static TemplateHelper TemplateHelper { get; set; }
+        public static TemplateHelper TemplateHelper { get; private set; }
 
-        public static PayGWInfo PayGWInfo { get; set; }
-        /// <summary>
-        /// 页面跳转地址
-        /// </summary>
-        public static string PageUrl { get; set; }
+        public static void RegisterTemplate(TemplateHelper th)
+        {
+            TemplateHelper = th;
+        }
+        public static PayGWInfo GWInfo { get; private set; }
 
-        /// <summary>
-        /// 服务器端通知地址
-        /// </summary>
-        public static string NotifyUrl { get; set; }
+        public static void RegisterPayGW(PayGWInfo info)
+        {
+            GWInfo = info;
+        }
+
     }
 }

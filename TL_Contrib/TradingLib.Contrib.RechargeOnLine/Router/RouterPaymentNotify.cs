@@ -50,66 +50,42 @@ namespace TradingLib.Contrib.RechargeOnLine
                 //获得需要的参数 进行验证和操作
                 Util.Debug("customer pageurl called");
 
-                bool checkret = PayGwHelper.CheckPaggeURL_Baofu(request.QueryString, GWGlobals.PayGWInfo.Md5Key);
+                bool checkret = PayGwHelper.CheckPaggeURL_Baofu(request.QueryString, GWGlobals.GWInfo.Md5Key);
 
-               
                 //如果MD5Sign检验成功
                 if (checkret)
                 {
                     string transID = request.QueryString["TransID"];
                     string result = request.QueryString["Result"];
-                    //string Md5Sign = request.QueryString["Md5Sign"];
                     JsonWrapperCashOperation op = ORM.MCashOpAccount.GetAccountCashOperation(transID);
 
-
-                    PayResultViewData viewdata = new PayResultViewData();
-                    viewdata.Account = op.Account;
-                    viewdata.Amount = op.Amount;
-                    viewdata.OperationRef = op.Ref;
-                    viewdata.Result = result.Equals("1") ? true : false;
-
-                    string body = string.Empty;
-                    bool renderret = GWGlobals.TemplateHelper.Render("payresult", viewdata, out body);
-                    //Util.Debug("body is:" + body);
-
-                    if (renderret)
+                    if (op != null)
                     {
-                        byte[] buffer = Encoding.Default.GetBytes(body);
-                        response.Body.Write(buffer, 0, buffer.Length);
-                        return ProcessingResult.SendResponse;
+                        PayResultViewData viewdata = new PayResultViewData();
+                        viewdata.Account = op.Account;
+                        viewdata.Amount = Util.FormatDecimal(op.Amount,"{0:F2}");
+                        viewdata.OperationRef = op.Ref;
+                        viewdata.Result = result.Equals("1") ? true : false;
+
+                        response.PageTemplate("payresult", viewdata);
                     }
                     else
                     {
-                        response.Redirect("/success.html");
-                        return ProcessingResult.SendResponse;
+                        response.PageError("指定的出入金操作记录不存在");
                     }
                 }
                 else
                 {
-                    Dictionary<string, object> map = new Dictionary<string, object>();
-                    string body = string.Empty;
-                    bool renderret = GWGlobals.TemplateHelper.Render("payresult_nocashop", map, out body);
-
-                    if (renderret)
-                    {
-                        byte[] buffer = Encoding.Default.GetBytes(body);
-                        response.Body.Write(buffer, 0, buffer.Length);
-                        return ProcessingResult.SendResponse;
-                    }
-                    else
-                    {
-                        response.Redirect("/success.html");
-                        return ProcessingResult.SendResponse;
-                    }
-                    
+                    response.PageError("该地址不允许你访问哦");
                 }
+                return ProcessingResult.SendResponse;
             }
             //服务端通知 宝付服务端通知会进行2次 第一次不待参数访问 第二次带参数访问
             else if (request.Uri.AbsolutePath == NotifyURL)
             {
                 Util.Debug("service side notify called");
                 Util.Debug("url:" + request.Uri.ToString());
-                bool checkret = PayGwHelper.CheckPaggeURL_Baofu(request.QueryString, GWGlobals.PayGWInfo.Md5Key);
+                bool checkret = PayGwHelper.CheckPaggeURL_Baofu(request.QueryString, GWGlobals.GWInfo.Md5Key);
                 //如果MD5Sign检验成功
                 if (checkret)
                 {

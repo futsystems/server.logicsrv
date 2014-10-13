@@ -59,16 +59,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Basic\LocalURLInfo.cs" />
     <Compile Include="Globals.cs" />
-    <Compile Include="PayGWInfo.cs" />
+    <Compile Include="Basic\PayGWInfo.cs" />
+    <Compile Include="HttpHelper.cs" />
     <Compile Include="PayGW\PayGwHelper.cs" />
-    <Compile Include="Payment.cs" />
     <Compile Include="ViewData\PaymentViewData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RechargeGateway.cs" />
     <Compile Include="RechargeHttpServer.cs" />
-    <Compile Include="RouterPaymentNotify.cs" />
-    <Compile Include="RouterRecharge.cs" />
+    <Compile Include="Router\RouterPaymentNotify.cs" />
+    <Compile Include="Router\RouterRecharge.cs" />
     <Compile Include="TemplateHelper.cs" />
     <Compile Include="ViewData\PayResultViewData.cs" />
   </ItemGroup>

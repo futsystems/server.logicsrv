@@ -1,34 +1,33 @@
 ﻿<html>
 <head>
-<title>Example page</title>
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<link type="text/css" href="/styles/screen.css"  rel="Stylesheet" />
-<link rel="icon" href="/images/favicon.ico"/><link rel="shortcut icon" href="/images/favicon.ico"/></head>
-<body>
-<p>欢迎使用天财邦在线入金系统</p>
+	<title>出入金</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+	<link type="text/css" href="/css/uikit.min.css"  rel="Stylesheet" />
+	<link rel="icon" href="/images/favicon.ico"/>
+	<script src="/js/uikit.min.js"></script></head>
+<body class="uk-height-1-1">
+	<div class="uk-text-center uk-height-1-1">
+	<h2>欢迎使用天财邦在线入金系统</h2>
+		<div class="uk-vertical-align-middle" style="width: 250px;">
+		
+			<form method="post" action="/recharge" enctype="multipart/form-data" class="uk-panel uk-panel-box uk-form">
+				<div class="uk-form-row">
+					<input class="uk-width-1-1 uk-form-large" type="text" name="Account" placeholder="交易帐号">
+				</div>
 
-<!--h1>Some images</h1>
-<img src="images/worries.gif" /><br />
-<img src="images/default/sun.jpg" /><br /-->
+				<div class="uk-form-row">
+					<input class="uk-width-1-1 uk-form-large" type="text" name="Pass" placeholder="密码">
+				</div>
 
-<form method="post" action="/recharge" enctype="multipart/form-data">
-
-<p>
-交易帐号
-<input type="text" name="Account" />
-</p>
-
-<p>
-密码
-<input type="text" name="Pass" />
-</p>
-
-<p>
-金额
-<input type="text" name="Amount" />
-</p>
-
-<input value="在线入金" type="submit" />
-</form>
+				<div class="uk-form-row">
+					<input class="uk-width-1-1 uk-form-large" type="text" name="Amount" placeholder="金额">
+				</div>
+				
+				<div class="uk-form-row">
+					<button class="uk-button uk-button-primary" type="submit">在线入金</button>
+				</div>
+			</form>
+		</div>
+	</div>
 </body>
 </html>

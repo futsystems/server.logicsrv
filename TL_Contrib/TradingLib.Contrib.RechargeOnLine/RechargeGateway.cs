@@ -39,29 +39,71 @@ namespace TradingLib.Contrib.RechargeOnLine
             {
                 _cfgdb.UpdateConfig("HttpResource", QSEnumCfgType.String, "RechargeGateway", "Http资源文件目录");
             }
-            if (!_cfgdb.HaveConfig("PageURL"))
-            {
-                _cfgdb.UpdateConfig("PageURL", QSEnumCfgType.String, "/custnotify", "客户浏览器跳转页面");
-            }
-            string pagepath = _cfgdb["PageURL"].AsString();
-
-            if (!_cfgdb.HaveConfig("NotifyURL"))
-            {
-                _cfgdb.UpdateConfig("NotifyURL", QSEnumCfgType.String, "/srvnotify", "服务端通知页面");
-            }
-            string notifypath = _cfgdb["NotifyURL"].AsString();
-
-
-
-            GWGlobals.PageUrl = "http://58.37.90.221:8050" + pagepath;
-            GWGlobals.NotifyUrl = "http://58.37.90.221:8050" + notifypath;
-            GWGlobals.PayGWInfo = new PayGWInfo();
-
-
             int httpport = _cfgdb["HttpPort"].AsInt();
-            string path = _cfgdb["HttpResource"].AsString();
+            string resourcepath = _cfgdb["HttpResource"].AsString();
 
-            httpserver = new RechargeHttpServer(httpport, path,pagepath,notifypath); 
+
+            if (!_cfgdb.HaveConfig("PayURL"))
+            {
+                _cfgdb.UpdateConfig("PayURL", QSEnumCfgType.String, "http://vgw.baofoo.com/payindex", "支付网关地址");
+            }
+            string payUrl = _cfgdb["PayURL"].AsString();
+
+            if (!_cfgdb.HaveConfig("MemberID"))
+            {
+                _cfgdb.UpdateConfig("MemberID", QSEnumCfgType.String, "100000178", "商户编号");
+            }
+            string memberID = _cfgdb["MemberID"].AsString();
+
+            if (!_cfgdb.HaveConfig("TerminalID"))
+            {
+                _cfgdb.UpdateConfig("TerminalID", QSEnumCfgType.String, "10000001", "商户编号");
+            }
+            string terminalID = _cfgdb["TerminalID"].AsString();
+
+            if (!_cfgdb.HaveConfig("Md5Key"))
+            {
+                _cfgdb.UpdateConfig("Md5Key", QSEnumCfgType.String, "abcdefg", "MD5Key");
+            }
+            string md5Key = _cfgdb["Md5Key"].AsString();
+
+
+
+            if (!_cfgdb.HaveConfig("BaseURL"))
+            {
+                _cfgdb.UpdateConfig("BaseURL", QSEnumCfgType.String, "http://58.37.90.221:8050", "客户浏览器跳转页面");
+            }
+            string baseurl = _cfgdb["BaseURL"].AsString();
+            if (!_cfgdb.HaveConfig("PagePath"))
+            {
+                _cfgdb.UpdateConfig("PagePath", QSEnumCfgType.String, "/custnotify", "客户浏览器跳转页面");
+            }
+            string pagepath = _cfgdb["PagePath"].AsString();
+
+            if (!_cfgdb.HaveConfig("NotifyPath"))
+            {
+                _cfgdb.UpdateConfig("NotifyPath", QSEnumCfgType.String, "/srvnotify", "服务端通知页面");
+            }
+            string notifypath = _cfgdb["NotifyPath"].AsString();
+
+            LocalURLInfo urlinfo = new LocalURLInfo(baseurl, pagepath, notifypath);
+
+            PayGWInfo info = new PayGWInfo
+            {
+                PayURL = payUrl,
+                MemberID = memberID,
+                TerminalID = terminalID,
+                Md5Key = md5Key,
+                LocalURLInfo = urlinfo,
+            };
+
+            //初始化支付网关信息
+            GWGlobals.RegisterPayGW(info);
+
+            //初始化模板信息
+            GWGlobals.RegisterTemplate(new TemplateHelper(resourcepath));
+
+            httpserver = new RechargeHttpServer(httpport, resourcepath); 
 
             httpserver.SendDebugEvent += (msg) => 
             {

@@ -22,7 +22,7 @@ namespace TradingLib.Contrib.RechargeOnLine
         /// <summary>
         /// 金额
         /// </summary>
-        public decimal Amount { get; set; }
+        public string Amount { get; set; }
 
         /// <summary>
         /// 交易帐户

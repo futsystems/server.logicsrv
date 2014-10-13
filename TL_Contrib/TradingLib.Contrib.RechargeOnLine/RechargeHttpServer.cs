@@ -29,15 +29,13 @@ namespace TradingLib.Contrib.RechargeOnLine
 
         int _httpPort = 8085;
         string _httpDirectory = "RechargeGateway";
-        string _pagepath = string.Empty;
-        string _notifypath = string.Empty;
+        //string _pagepath = string.Empty;
+        //string _notifypath = string.Empty;
 
-        public RechargeHttpServer(int httpport, string httpresource,string pagepath,string notifypath)
+        public RechargeHttpServer(int httpport, string httpresource)
         { 
             _httpPort = httpport;
             _httpDirectory = httpresource;
-            _pagepath = pagepath;
-            _notifypath = notifypath;
         }
 
 
@@ -93,6 +91,7 @@ namespace TradingLib.Contrib.RechargeOnLine
         TemplateHelper _tmphelper = null;
         void httpproc()
         {
+            //日志
             //var filter = new LogFilter();
             //filter.AddStandardRules();
             //LogFactory.Assign(new ConsoleLogFactory(filter));
@@ -100,27 +99,32 @@ namespace TradingLib.Contrib.RechargeOnLine
             // create a server.
             var server = new Server();
 
+            //添加文件访问模块
             var module = new FileModule();
             string path = Util.GetResourceDirectory(_httpDirectory);
             debug("Http Resource path:" + path, QSEnumDebugLevel.INFO);
             module.Resources.Add(new FileResources("/",path));
-
             server.Add(module);
-            server.RequestReceived += OnRequest;
+
             server.Add(new MultiPartDecoder());
 
             // use one http listener.
             server.Add(HttpListener.Create(IPAddress.Any, _httpPort));
             debug("HttpServer listen at port:" + _httpPort.ToString(), QSEnumDebugLevel.INFO);
+
+            //默认根目录首页跳转
             server.Add(new SimpleRouter("/", "/index.html"));
+            //添加充值处理模块
             server.Add(new RouterRecharge("/recharge"));
-            server.Add(new RouterPaymentNotify(_pagepath,_notifypath));
+            //添加通知处理模块
+            server.Add(new RouterPaymentNotify(GWGlobals.GWInfo.LocalURLInfo.PagePath, GWGlobals.GWInfo.LocalURLInfo.NotifyPath));
 
 
             server.Add(new SimpleRouter("/error", "/error.html"));
 
-            _tmphelper = new TemplateHelper(_httpDirectory);
-            GWGlobals.TemplateHelper = _tmphelper;
+            
+            server.RequestReceived += OnRequest;
+
             // start server, can have max 5 pending accepts.
             server.Start(5);
         }
