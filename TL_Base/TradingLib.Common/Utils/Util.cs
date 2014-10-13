@@ -233,6 +233,18 @@ namespace TradingLib.Common
             return filepath;
         }
 
+        /// <summary>
+        /// 获得某个资源目录
+        /// </summary>
+        /// <param name="resource"></param>
+        /// <returns></returns>
+        public static string GetResourceDirectory(string resource)
+        {
+            //Resource\RechargeGateway
+            string dict = Path.Combine(new string[] { BaseDir, "Resource", resource });
+            return dict;
+        }
+
 		public static string GetPluginPath(string path)
 		{
 			return Path.Combine (new string[]{ BaseDir, path });

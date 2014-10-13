@@ -134,6 +134,16 @@ namespace TradingLib.Common
             }
         }
 
+        /// <summary>
+        /// 认真与出入金请求
+        /// </summary>
+        public static IAuthCashOperation CmdAuthCashOperation
+        {
+            get
+            {
+                return defaultInstance.ctx.ClearCentre as IAuthCashOperation;
+            }
+        }
 
         public static ISettleCentre CmdSettleCentre
         {

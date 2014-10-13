@@ -35,10 +35,10 @@ namespace TradingLib.Mixins.JsonObject
         public int mgr_fk { get; set; }
 
 
-        public int bank_id { get; set; }
+        public int bank_id {get;set;}
         public JsonWrapperBank Bank { get; set; }
 
-
+        
 
         /// <summary>
         /// 姓名
@@ -255,6 +255,11 @@ namespace TradingLib.Mixins.JsonObject
         public int mgr_fk { get; set; }
 
         /// <summary>
+        /// 交易帐户
+        /// </summary>
+        public string Account { get; set; }
+
+        /// <summary>
         /// 时间
         /// </summary>
         public long DateTime { get; set; }
@@ -278,14 +283,31 @@ namespace TradingLib.Mixins.JsonObject
         /// 状态
         /// </summary>
         public QSEnumCashInOutStatus Status { get; set; }
+
+
+        /// <summary>
+        /// 出入金操作来源
+        /// </summary>
+        public QSEnumCashOPSource Source { get; set; }
+
+
+        /// <summary>
+        /// MD5密签
+        /// </summary>
+        public string MD5Sign { get; set; }
     }
 
     public class JsonWrapperCasnTrans
     {
         /// <summary>
-        /// 
+        /// 管理主域ID
         /// </summary>
         public int mgr_fk { get; set; }
+
+        /// <summary>
+        /// 交易帐号
+        /// </summary>
+        public string Account { get; set; }
 
         /// <summary>
         /// 结算日

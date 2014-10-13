@@ -45,6 +45,7 @@
     <Compile Include="Message\IPacket.cs" />
     <Compile Include="Message\ISession.cs" />
     <Compile Include="Message\ISessionUtils.cs" />
+    <Compile Include="Msic\EnumCashOPSource.cs" />
     <Compile Include="Msic\EnumManagerType.cs" />
     <Compile Include="Msic\EnumCashOperation.cs" />
     <Compile Include="Msic\ILogItem.cs" />

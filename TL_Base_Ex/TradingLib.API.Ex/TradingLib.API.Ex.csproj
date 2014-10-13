@@ -43,6 +43,7 @@
     <Compile Include="Account\Service\IAccountService.cs" />
     <Compile Include="Account\IAccRiskCheck.cs" />
     <Compile Include="Contrib\IPlugin.cs" />
+    <Compile Include="Core\ClearCentre\function\IAuthCashOperation.cs" />
     <Compile Include="Core\IRouterManager.cs" />
     <Compile Include="Account\IGeneralCheck.cs" />
     <Compile Include="Contrib\EnumCommandSource.cs" />

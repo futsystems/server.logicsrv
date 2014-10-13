@@ -75,8 +75,8 @@
     <Compile Include="Core\ClearCentre\ClearCentreSrv_Data_Restore.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_CTE.cs" />
     <Compile Include="Core\ClearCentre\JsonWrapperClearCentre.cs" />
+    <Compile Include="Core\ClearCentre\ClearCentreSrv_AccountCashOperation.cs" />
     <Compile Include="Core\ManagerExchange\ContractBankUtils.cs" />
-    <Compile Include="Core\ManagerExchange\JsonObject\JsonProtocolManager.cs" />
     <Compile Include="Core\ManagerExchange\ManagerRights.cs" />
     <Compile Include="Core\ManagerExchange\MangerUtils.cs" />
     <Compile Include="Core\ManagerExchange\MgrClientInfo.cs" />
@@ -135,6 +135,9 @@
     <Compile Include="Base\AsyncTransactionLoger.cs" />
     <Compile Include="Base\TIFEngine.cs" />
     <Compile Include="Transport\zmessages.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Core\ManagerExchange\JsonObject\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

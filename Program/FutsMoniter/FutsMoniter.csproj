@@ -329,7 +329,6 @@
     </Compile>
     <Compile Include="Glabols.cs" />
     <Compile Include="JsonObject\JsonProtocolFinService.cs" />
-    <Compile Include="JsonObject\JsonProtocolManager.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
