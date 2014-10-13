@@ -85,6 +85,10 @@ namespace TradingLib.ORM
                     string query = String.Format("UPDATE log_cashopreq SET status = '{0}'  WHERE account = '{1}' AND ref ='{2}'", QSEnumCashInOutStatus.CONFIRMED, op.Account, op.Ref);
                     istransok = db.Connection.Execute(query) > 0;
 
+                    decimal amount = op.Operation == QSEnumCashOperation.Deposit ? op.Amount : op.Amount * -1;
+                    string query2 = String.Format("Insert into log_cashtrans (`datetime`,`amount`,`comment`,`account`,`transref`,`settleday`) values('{0}','{1}','{2}','{3}','{4}','{5}')", DateTime.Now.ToString(), amount.ToString(),"Online Deposit",op.Account, op.Ref, TLCtxHelper.Ctx.SettleCentre.NextTradingday);
+                    //return db.Connection.Execute(query) > 0;
+
                     //JsonWrapperCasnTrans trans = new JsonWrapperCasnTrans();
                     //trans.mgr_fk = op.mgr_fk;
                     //trans.Settleday = TLCtxHelper.Ctx.SettleCentre.NextTradingday;
@@ -94,7 +98,7 @@ namespace TradingLib.ORM
                     //trans.Amount = (op.Operation == QSEnumCashOperation.Deposit ? 1 : -1) * op.Amount;
                     //string query2 = string.Format("INSERT INTO manager_cashtrans (`mgr_fk`,`settleday`,`datetime`,`amount`,`transref`,`comment`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}')", trans.mgr_fk, trans.Settleday, trans.DateTime, trans.Amount, trans.TransRef, trans.Comment);
 
-                    //istransok = istransok && db.Connection.Execute(query2) > 0;
+                    istransok = istransok && db.Connection.Execute(query2) > 0;
                     if (istransok)
                         transaction.Commit();
                     return istransok;

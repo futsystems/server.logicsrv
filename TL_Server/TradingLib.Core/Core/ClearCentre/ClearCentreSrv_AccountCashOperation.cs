@@ -39,5 +39,46 @@ namespace TradingLib.Core
             opref = request.Ref;
             return true;
         }
+
+        /// <summary>
+        /// 确认某个入金记录 在线
+        /// </summary>
+        /// <param name="opref"></param>
+        /// <returns></returns>
+        public bool ConfirmCashOperationOnline(string opref)
+        {
+            try
+            {
+                JsonWrapperCashOperation op = ORM.MCashOpAccount.GetAccountCashOperation(opref);
+                IAccount account = this[op.Account];
+                if (account == null)
+                    return false;
+                //出入金记录不存在 不是入金操作 或不处于待处理状态 则直接返回
+                if (op == null || op.Operation != QSEnumCashOperation.Deposit || op.Status != QSEnumCashInOutStatus.PENDING) return false;
+                //decimal amount = op.Operation== QSEnumCashOperation.Deposit? op.Amount : op.Amount*-1;
+                //bool ret ORM.MAccount.CashOperation(op.Account, amount, opref, "Online Deposit");
+                bool ret = ORM.MCashOpAccount.ConfirmAccountCashOperation(op);
+                //如果数据库操作正常 则同步内存数据
+                if (ret)
+                {
+                    if (op.Operation == QSEnumCashOperation.Deposit)
+                    {
+                        account.Deposit(op.Amount);
+                    }
+                    else
+                    {
+                        account.Withdraw(op.Amount);
+                    }
+                }
+                debug("Account:" + op.Account + " 在线入金:" + op.Amount.ToString() + " 成功!");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                debug("confirm cashoperatoin online error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                return false;
+            }
+
+        }
     }
 }

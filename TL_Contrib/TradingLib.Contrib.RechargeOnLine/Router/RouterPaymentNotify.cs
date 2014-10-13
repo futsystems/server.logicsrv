@@ -67,6 +67,8 @@ namespace TradingLib.Contrib.RechargeOnLine
                         viewdata.OperationRef = op.Ref;
                         viewdata.Result = result.Equals("1") ? true : false;
 
+                        
+
                         response.PageTemplate("payresult", viewdata);
                     }
                     else
@@ -96,7 +98,12 @@ namespace TradingLib.Contrib.RechargeOnLine
                     if (int.Parse(result) == 1)
                     {
                         Util.Debug("payment success try to mark it localy and deposit to customer account");
-                        ORM.MCashOpAccount.ConfirmAccountCashOperation(op);
+                        bool ret = TLCtxHelper.CmdAuthCashOperation.ConfirmCashOperationOnline(op.Ref);
+                        if (ret)
+                        {
+                            byte[] buffer = Encoding.UTF8.GetBytes("OK");
+                            response.Body.Write(buffer, 0, buffer.Length);
+                        }
                     }
                     //支付异常
                     else

@@ -20,6 +20,15 @@ namespace TradingLib.API
         /// <returns></returns>
         bool RequestCashOperation(string account, decimal amount, QSEnumCashOperation op,out string opref,QSEnumCashOPSource source= QSEnumCashOPSource.Unknown );
 
+
+        /// <summary>
+        /// 确认某个入金记录
+        /// 用于在线入金时的自动调用
+        /// </summary>
+        /// <param name="opref"></param>
+        /// <returns></returns>
+        bool ConfirmCashOperationOnline(string opref);
+
         /// <summary>
         /// 验证交易帐户
         /// </summary>
