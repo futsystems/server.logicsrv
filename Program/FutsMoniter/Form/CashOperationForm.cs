@@ -37,6 +37,8 @@ namespace FutsMoniter
         {
             avabile = amount;
         }
+
+
         private void btnSubmit_Click(object sender, EventArgs e)
         {
             QSEnumCashOperation op = (QSEnumCashOperation)cashoptype.SelectedValue;

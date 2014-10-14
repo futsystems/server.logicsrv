@@ -114,6 +114,7 @@ namespace TradingLib.Contrib.RechargeOnLine
 
             //默认根目录首页跳转
             server.Add(new SimpleRouter("/", "/index.html"));
+            server.Add(new RouterHome());
             //添加充值处理模块
             server.Add(new RouterRecharge("/recharge"));
             //添加通知处理模块

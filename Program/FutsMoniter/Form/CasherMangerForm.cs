@@ -24,7 +24,9 @@ namespace FutsMoniter
                 if (Globals.CallbackCentreReady)
                 {
                     //Globals.CallBackCentre.RegisterCallback("MgrExchServer", "QryFinanceInfo", this.OnQryAgentFinanceInfo);
-                    Globals.CallBackCentre.RegisterCallback("MgrExchServer", "QryAgentCashOperationTotal", this.OnQryAgentCashOperationTotal);
+                    Globals.CallBackCentre.RegisterCallback("MgrExchServer", "QryAgentCashOperationTotal", this.OnQryAgentCashOperationTotal);//查询代理出入金请求
+                    Globals.CallBackCentre.RegisterCallback("MgrExchServer", "QryAccountCashOperationTotal", this.OnQryAccountCashOperationTotal);//查询交易帐户出入金请求
+
                     Globals.CallBackCentre.RegisterCallback("MgrExchServer", "RequestCashOperation", this.OnCashOperation);
                     Globals.CallBackCentre.RegisterCallback("MgrExchServer", "ConfirmCashOperation", this.OnCashOperation);
                     Globals.CallBackCentre.RegisterCallback("MgrExchServer", "CancelCashOperation", this.OnCashOperation);
@@ -41,13 +43,18 @@ namespace FutsMoniter
         {
             if (Globals.EnvReady)
             {
+
                 Globals.TLClient.ReqQryAgentCashopOperationTotal();
+                Globals.TLClient.ReqQryAccountCashopOperationTotal();
             }
         }
 
         void CasherMangerForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Globals.CallBackCentre.RegisterCallback("MgrExchServer", "QryAgentCashOperationTotal", this.OnQryAgentCashOperationTotal);
+            Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "QryAgentCashOperationTotal", this.OnQryAgentCashOperationTotal);
+            Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "QryAccountCashOperationTotal", this.OnQryAccountCashOperationTotal);//查询交易帐户出入金请求
+
+
             Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "RequestCashOperation", this.OnCashOperation);
             Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "ConfirmCashOperation", this.OnCashOperation);
             Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "CancelCashOperation", this.OnCashOperation);
@@ -71,6 +78,26 @@ namespace FutsMoniter
 
             }
         }
+
+        void OnQryAccountCashOperationTotal(string jsonstr)
+        {
+            JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
+            int code = int.Parse(jd["Code"].ToString());
+            if (code == 0)
+            {
+                JsonWrapperCashOperation[] objs = TradingLib.Mixins.LitJson.JsonMapper.ToObject<JsonWrapperCashOperation[]>(jd["Playload"].ToJson());
+                foreach (JsonWrapperCashOperation op in objs)
+                {
+                    ctCashOperation2.GotJsonWrapperCashOperation(op);
+                }
+            }
+            else//如果没有配资服
+            {
+
+            }
+        }
+
+
 
         void OnCashOperation(string jsonstr)
         {

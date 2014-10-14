@@ -187,6 +187,7 @@ namespace FutsMoniter
                     string key = getkey(op);
                     gt.Rows[i][KEY] = key;
                     gt.Rows[i][MGRFK] = op.mgr_fk;
+                    gt.Rows[i][ACCOUNT] = op.Account;
                     gt.Rows[i][DATETIME] = Util.ToDateTime(op.DateTime).ToString("yy-MM-dd HH:mm:ss");
                     gt.Rows[i][OPERATIONSTR] = Util.GetEnumDescription(op.Operation);
                     gt.Rows[i][OPERATION] = op.Operation;
@@ -194,6 +195,8 @@ namespace FutsMoniter
                     gt.Rows[i][REF] = op.Ref;
                     gt.Rows[i][STATUS] = op.Status;
                     gt.Rows[i][STATUSSTR] = Util.GetEnumDescription(op.Status);
+                    gt.Rows[i][SOURCE] = op.Source;
+                    gt.Rows[i][SOURCESTR] = Util.GetEnumDescription(op.Source);
                     operationkeymap.TryAdd(key, op);
                     idxmap.TryAdd(key, i);
                 }
@@ -213,6 +216,7 @@ namespace FutsMoniter
         //const string ID = "编号D";
         const string KEY = "主键";
         const string MGRFK = "管理主域ID";
+        const string ACCOUNT = "交易帐号";
         const string DATETIME = "时间";
         const string OPERATIONSTR = "操作";
         const string OPERATION = "OPERATION";
@@ -220,6 +224,8 @@ namespace FutsMoniter
         const string REF = "流水号";
         const string STATUS = "STATUS";
         const string STATUSSTR = "状态";
+        const string SOURCE = "SOURCE";
+        const string SOURCESTR = "来源";
 
         #endregion
 
@@ -256,6 +262,7 @@ namespace FutsMoniter
         {
             gt.Columns.Add(KEY);//
             gt.Columns.Add(MGRFK);//
+            gt.Columns.Add(ACCOUNT);//
             gt.Columns.Add(DATETIME);//
             gt.Columns.Add(OPERATION);//
             gt.Columns.Add(OPERATIONSTR);//
@@ -263,6 +270,8 @@ namespace FutsMoniter
             gt.Columns.Add(REF);//
             gt.Columns.Add(STATUS);//
             gt.Columns.Add(STATUSSTR);//
+            gt.Columns.Add(SOURCE);//
+            gt.Columns.Add(SOURCESTR);//
         }
 
         /// <summary>

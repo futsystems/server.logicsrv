@@ -699,6 +699,14 @@ namespace TradingLib.Common
             this.ReqContribRequest("MgrExchServer", "QryAgentCashOperationTotal", "");
         }
 
+        /// <summary>
+        /// 查询所有交易帐户出入金操作
+        /// </summary>
+        public void ReqQryAccountCashopOperationTotal()
+        {
+            this.ReqContribRequest("MgrExchServer", "QryAccountCashOperationTotal", "");
+        }
+
         #region 查询报表
 
         /// <summary>

@@ -291,10 +291,6 @@ namespace TradingLib.Mixins.JsonObject
         public QSEnumCashOPSource Source { get; set; }
 
 
-        /// <summary>
-        /// MD5密签
-        /// </summary>
-        public string MD5Sign { get; set; }
     }
 
     public class JsonWrapperCasnTrans

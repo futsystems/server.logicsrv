@@ -29,37 +29,39 @@
         private void InitializeComponent()
         {
             this.radGroupBox1 = new Telerik.WinControls.UI.RadGroupBox();
+            this.radLabel8 = new Telerik.WinControls.UI.RadLabel();
+            this.radLabel7 = new Telerik.WinControls.UI.RadLabel();
+            this.radLabel9 = new Telerik.WinControls.UI.RadLabel();
+            this.radLabel6 = new Telerik.WinControls.UI.RadLabel();
+            this.radLabel10 = new Telerik.WinControls.UI.RadLabel();
+            this.radLabel5 = new Telerik.WinControls.UI.RadLabel();
+            this.radLabel4 = new Telerik.WinControls.UI.RadLabel();
+            this.radLabel3 = new Telerik.WinControls.UI.RadLabel();
+            this.radLabel2 = new Telerik.WinControls.UI.RadLabel();
+            this.radLabel1 = new Telerik.WinControls.UI.RadLabel();
             this.radPageView1 = new Telerik.WinControls.UI.RadPageView();
             this.accountCashOperationPage = new Telerik.WinControls.UI.RadPageViewPage();
             this.agentCashOperationPage = new Telerik.WinControls.UI.RadPageViewPage();
+            this.ctCashOperation1 = new FutsMoniter.ctCashOperation();
             this.accountCashOpQryPage = new Telerik.WinControls.UI.RadPageViewPage();
             this.agentCashOpQryPage = new Telerik.WinControls.UI.RadPageViewPage();
-            this.radLabel1 = new Telerik.WinControls.UI.RadLabel();
-            this.radLabel2 = new Telerik.WinControls.UI.RadLabel();
-            this.radLabel3 = new Telerik.WinControls.UI.RadLabel();
-            this.radLabel4 = new Telerik.WinControls.UI.RadLabel();
-            this.radLabel5 = new Telerik.WinControls.UI.RadLabel();
-            this.radLabel6 = new Telerik.WinControls.UI.RadLabel();
-            this.radLabel7 = new Telerik.WinControls.UI.RadLabel();
-            this.radLabel8 = new Telerik.WinControls.UI.RadLabel();
-            this.radLabel9 = new Telerik.WinControls.UI.RadLabel();
-            this.radLabel10 = new Telerik.WinControls.UI.RadLabel();
-            this.ctCashOperation1 = new FutsMoniter.ctCashOperation();
+            this.ctCashOperation2 = new FutsMoniter.ctCashOperation();
             ((System.ComponentModel.ISupportInitialize)(this.radGroupBox1)).BeginInit();
             this.radGroupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel8)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel7)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel9)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel6)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel10)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel5)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.radPageView1)).BeginInit();
             this.radPageView1.SuspendLayout();
+            this.accountCashOperationPage.SuspendLayout();
             this.agentCashOperationPage.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel5)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel6)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel7)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel8)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel9)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel10)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this)).BeginInit();
             this.SuspendLayout();
             // 
@@ -88,6 +90,90 @@
             this.radGroupBox1.TabIndex = 0;
             this.radGroupBox1.Text = "现金事务统计";
             // 
+            // radLabel8
+            // 
+            this.radLabel8.Location = new System.Drawing.Point(574, 53);
+            this.radLabel8.Name = "radLabel8";
+            this.radLabel8.Size = new System.Drawing.Size(19, 16);
+            this.radLabel8.TabIndex = 9;
+            this.radLabel8.Text = "笔";
+            // 
+            // radLabel7
+            // 
+            this.radLabel7.Location = new System.Drawing.Point(120, 53);
+            this.radLabel7.Name = "radLabel7";
+            this.radLabel7.Size = new System.Drawing.Size(19, 16);
+            this.radLabel7.TabIndex = 6;
+            this.radLabel7.Text = "笔";
+            // 
+            // radLabel9
+            // 
+            this.radLabel9.Location = new System.Drawing.Point(554, 53);
+            this.radLabel9.Name = "radLabel9";
+            this.radLabel9.Size = new System.Drawing.Size(14, 16);
+            this.radLabel9.TabIndex = 8;
+            this.radLabel9.Text = "--";
+            // 
+            // radLabel6
+            // 
+            this.radLabel6.Location = new System.Drawing.Point(100, 53);
+            this.radLabel6.Name = "radLabel6";
+            this.radLabel6.Size = new System.Drawing.Size(14, 16);
+            this.radLabel6.TabIndex = 5;
+            this.radLabel6.Text = "--";
+            // 
+            // radLabel10
+            // 
+            this.radLabel10.Location = new System.Drawing.Point(526, 53);
+            this.radLabel10.Name = "radLabel10";
+            this.radLabel10.Size = new System.Drawing.Size(22, 16);
+            this.radLabel10.TabIndex = 7;
+            this.radLabel10.Text = "共:";
+            // 
+            // radLabel5
+            // 
+            this.radLabel5.Location = new System.Drawing.Point(72, 53);
+            this.radLabel5.Name = "radLabel5";
+            this.radLabel5.Size = new System.Drawing.Size(22, 16);
+            this.radLabel5.TabIndex = 4;
+            this.radLabel5.Text = "共:";
+            // 
+            // radLabel4
+            // 
+            this.radLabel4.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F);
+            this.radLabel4.ForeColor = System.Drawing.Color.LimeGreen;
+            this.radLabel4.Location = new System.Drawing.Point(546, 18);
+            this.radLabel4.Name = "radLabel4";
+            this.radLabel4.Size = new System.Drawing.Size(77, 29);
+            this.radLabel4.TabIndex = 3;
+            this.radLabel4.Text = "3560.2";
+            // 
+            // radLabel3
+            // 
+            this.radLabel3.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F);
+            this.radLabel3.ForeColor = System.Drawing.Color.Crimson;
+            this.radLabel3.Location = new System.Drawing.Point(93, 18);
+            this.radLabel3.Name = "radLabel3";
+            this.radLabel3.Size = new System.Drawing.Size(89, 29);
+            this.radLabel3.TabIndex = 2;
+            this.radLabel3.Text = "25089.2";
+            // 
+            // radLabel2
+            // 
+            this.radLabel2.Location = new System.Drawing.Point(476, 26);
+            this.radLabel2.Name = "radLabel2";
+            this.radLabel2.Size = new System.Drawing.Size(72, 16);
+            this.radLabel2.TabIndex = 1;
+            this.radLabel2.Text = "待支付出金:";
+            // 
+            // radLabel1
+            // 
+            this.radLabel1.Location = new System.Drawing.Point(22, 26);
+            this.radLabel1.Name = "radLabel1";
+            this.radLabel1.Size = new System.Drawing.Size(72, 16);
+            this.radLabel1.TabIndex = 0;
+            this.radLabel1.Text = "待确认入金:";
+            // 
             // radPageView1
             // 
             this.radPageView1.Controls.Add(this.accountCashOperationPage);
@@ -105,9 +191,10 @@
             // 
             // accountCashOperationPage
             // 
-            this.accountCashOperationPage.Location = new System.Drawing.Point(10, 31);
+            this.accountCashOperationPage.Controls.Add(this.ctCashOperation2);
+            this.accountCashOperationPage.Location = new System.Drawing.Point(10, 35);
             this.accountCashOperationPage.Name = "accountCashOperationPage";
-            this.accountCashOperationPage.Size = new System.Drawing.Size(671, 368);
+            this.accountCashOperationPage.Size = new System.Drawing.Size(671, 364);
             this.accountCashOperationPage.Text = "交易帐户";
             // 
             // agentCashOperationPage
@@ -115,8 +202,16 @@
             this.agentCashOperationPage.Controls.Add(this.ctCashOperation1);
             this.agentCashOperationPage.Location = new System.Drawing.Point(10, 35);
             this.agentCashOperationPage.Name = "agentCashOperationPage";
-            this.agentCashOperationPage.Size = new System.Drawing.Size(764, 295);
+            this.agentCashOperationPage.Size = new System.Drawing.Size(671, 364);
             this.agentCashOperationPage.Text = "代理帐户";
+            // 
+            // ctCashOperation1
+            // 
+            this.ctCashOperation1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ctCashOperation1.Location = new System.Drawing.Point(0, 0);
+            this.ctCashOperation1.Name = "ctCashOperation1";
+            this.ctCashOperation1.Size = new System.Drawing.Size(671, 364);
+            this.ctCashOperation1.TabIndex = 0;
             // 
             // accountCashOpQryPage
             // 
@@ -132,97 +227,13 @@
             this.agentCashOpQryPage.Size = new System.Drawing.Size(764, 295);
             this.agentCashOpQryPage.Text = "代理帐户历史查询";
             // 
-            // radLabel1
+            // ctCashOperation2
             // 
-            this.radLabel1.Location = new System.Drawing.Point(22, 26);
-            this.radLabel1.Name = "radLabel1";
-            this.radLabel1.Size = new System.Drawing.Size(72, 16);
-            this.radLabel1.TabIndex = 0;
-            this.radLabel1.Text = "待确认入金:";
-            // 
-            // radLabel2
-            // 
-            this.radLabel2.Location = new System.Drawing.Point(476, 26);
-            this.radLabel2.Name = "radLabel2";
-            this.radLabel2.Size = new System.Drawing.Size(72, 16);
-            this.radLabel2.TabIndex = 1;
-            this.radLabel2.Text = "待支付出金:";
-            // 
-            // radLabel3
-            // 
-            this.radLabel3.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F);
-            this.radLabel3.ForeColor = System.Drawing.Color.Crimson;
-            this.radLabel3.Location = new System.Drawing.Point(93, 18);
-            this.radLabel3.Name = "radLabel3";
-            this.radLabel3.Size = new System.Drawing.Size(89, 29);
-            this.radLabel3.TabIndex = 2;
-            this.radLabel3.Text = "25089.2";
-            // 
-            // radLabel4
-            // 
-            this.radLabel4.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F);
-            this.radLabel4.ForeColor = System.Drawing.Color.LimeGreen;
-            this.radLabel4.Location = new System.Drawing.Point(546, 18);
-            this.radLabel4.Name = "radLabel4";
-            this.radLabel4.Size = new System.Drawing.Size(77, 29);
-            this.radLabel4.TabIndex = 3;
-            this.radLabel4.Text = "3560.2";
-            // 
-            // radLabel5
-            // 
-            this.radLabel5.Location = new System.Drawing.Point(72, 53);
-            this.radLabel5.Name = "radLabel5";
-            this.radLabel5.Size = new System.Drawing.Size(22, 16);
-            this.radLabel5.TabIndex = 4;
-            this.radLabel5.Text = "共:";
-            // 
-            // radLabel6
-            // 
-            this.radLabel6.Location = new System.Drawing.Point(100, 53);
-            this.radLabel6.Name = "radLabel6";
-            this.radLabel6.Size = new System.Drawing.Size(14, 16);
-            this.radLabel6.TabIndex = 5;
-            this.radLabel6.Text = "--";
-            // 
-            // radLabel7
-            // 
-            this.radLabel7.Location = new System.Drawing.Point(120, 53);
-            this.radLabel7.Name = "radLabel7";
-            this.radLabel7.Size = new System.Drawing.Size(19, 16);
-            this.radLabel7.TabIndex = 6;
-            this.radLabel7.Text = "笔";
-            // 
-            // radLabel8
-            // 
-            this.radLabel8.Location = new System.Drawing.Point(574, 53);
-            this.radLabel8.Name = "radLabel8";
-            this.radLabel8.Size = new System.Drawing.Size(19, 16);
-            this.radLabel8.TabIndex = 9;
-            this.radLabel8.Text = "笔";
-            // 
-            // radLabel9
-            // 
-            this.radLabel9.Location = new System.Drawing.Point(554, 53);
-            this.radLabel9.Name = "radLabel9";
-            this.radLabel9.Size = new System.Drawing.Size(14, 16);
-            this.radLabel9.TabIndex = 8;
-            this.radLabel9.Text = "--";
-            // 
-            // radLabel10
-            // 
-            this.radLabel10.Location = new System.Drawing.Point(526, 53);
-            this.radLabel10.Name = "radLabel10";
-            this.radLabel10.Size = new System.Drawing.Size(22, 16);
-            this.radLabel10.TabIndex = 7;
-            this.radLabel10.Text = "共:";
-            // 
-            // ctCashOperation1
-            // 
-            this.ctCashOperation1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ctCashOperation1.Location = new System.Drawing.Point(0, 0);
-            this.ctCashOperation1.Name = "ctCashOperation1";
-            this.ctCashOperation1.Size = new System.Drawing.Size(764, 295);
-            this.ctCashOperation1.TabIndex = 0;
+            this.ctCashOperation2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ctCashOperation2.Location = new System.Drawing.Point(0, 0);
+            this.ctCashOperation2.Name = "ctCashOperation2";
+            this.ctCashOperation2.Size = new System.Drawing.Size(671, 364);
+            this.ctCashOperation2.TabIndex = 0;
             // 
             // CasherMangerForm
             // 
@@ -244,19 +255,20 @@
             ((System.ComponentModel.ISupportInitialize)(this.radGroupBox1)).EndInit();
             this.radGroupBox1.ResumeLayout(false);
             this.radGroupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel8)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel7)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel9)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel6)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel10)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel5)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.radPageView1)).EndInit();
             this.radPageView1.ResumeLayout(false);
+            this.accountCashOperationPage.ResumeLayout(false);
             this.agentCashOperationPage.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel5)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel6)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel7)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel8)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel9)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel10)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this)).EndInit();
             this.ResumeLayout(false);
 
@@ -281,5 +293,6 @@
         private Telerik.WinControls.UI.RadLabel radLabel8;
         private Telerik.WinControls.UI.RadLabel radLabel9;
         private Telerik.WinControls.UI.RadLabel radLabel10;
+        private ctCashOperation ctCashOperation2;
     }
 }
