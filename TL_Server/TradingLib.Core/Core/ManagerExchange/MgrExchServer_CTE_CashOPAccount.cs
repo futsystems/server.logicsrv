@@ -60,6 +60,8 @@ namespace TradingLib.Core
                     //重新从数据库加载数据 返回当前记录的数据
                     request = ORM.MCashOpAccount.GetAccountCashOperation(request.Ref);
                     session.SendJsonReplyMgr(request);
+                    //通过事件中继触发事件
+                    TLCtxHelper.CashOperationEvent.FireCashOperation(this, QSEnumCashOpEventType.Confirm, request);
                 }
             }
         }
@@ -81,6 +83,8 @@ namespace TradingLib.Core
                 {
                     ORM.MCashOpAccount.CancelAccountCashOperation(request);
                     session.SendJsonReplyMgr(request);
+                    //通过事件中继触发事件
+                    TLCtxHelper.CashOperationEvent.FireCashOperation(this, QSEnumCashOpEventType.Cancel, request);
                 }
             }
         }
@@ -103,6 +107,8 @@ namespace TradingLib.Core
                 {
                     ORM.MCashOpAccount.RejectAccountCashOperation(request);
                     session.SendJsonReplyMgr(request);
+                    //通过事件中继触发事件
+                    TLCtxHelper.CashOperationEvent.FireCashOperation(this, QSEnumCashOpEventType.Reject, request);
                 }
             }
         }

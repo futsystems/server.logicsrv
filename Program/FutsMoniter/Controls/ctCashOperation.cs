@@ -61,6 +61,7 @@ namespace FutsMoniter
             menu.Items.Add(MenuItem_cancel);
             ctGridExport1.Grid = opgrid;
 
+            
             this.Load += new EventHandler(ctCashOperation_Load);
         }
 

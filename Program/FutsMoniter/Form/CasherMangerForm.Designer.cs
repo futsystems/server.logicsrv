@@ -187,7 +187,7 @@
             this.radPageView1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.radPageView1.Location = new System.Drawing.Point(0, 90);
             this.radPageView1.Name = "radPageView1";
-            this.radPageView1.SelectedPage = this.agentCashOpQryPage;
+            this.radPageView1.SelectedPage = this.accountCashOperationPage;
             this.radPageView1.Size = new System.Drawing.Size(742, 410);
             this.radPageView1.TabIndex = 1;
             this.radPageView1.Text = "radPageView1";
@@ -196,9 +196,9 @@
             // accountCashOperationPage
             // 
             this.accountCashOperationPage.Controls.Add(this.ctCashOperationAccount);
-            this.accountCashOperationPage.Location = new System.Drawing.Point(10, 35);
+            this.accountCashOperationPage.Location = new System.Drawing.Point(10, 31);
             this.accountCashOperationPage.Name = "accountCashOperationPage";
-            this.accountCashOperationPage.Size = new System.Drawing.Size(721, 364);
+            this.accountCashOperationPage.Size = new System.Drawing.Size(721, 368);
             this.accountCashOperationPage.Text = "交易帐户";
             // 
             // agentCashOperationPage
@@ -220,9 +220,9 @@
             // agentCashOpQryPage
             // 
             this.agentCashOpQryPage.Controls.Add(this.ctCashTrans2);
-            this.agentCashOpQryPage.Location = new System.Drawing.Point(10, 31);
+            this.agentCashOpQryPage.Location = new System.Drawing.Point(10, 35);
             this.agentCashOpQryPage.Name = "agentCashOpQryPage";
-            this.agentCashOpQryPage.Size = new System.Drawing.Size(721, 368);
+            this.agentCashOpQryPage.Size = new System.Drawing.Size(721, 364);
             this.agentCashOpQryPage.Text = "代理帐户历史查询";
             // 
             // ctCashOperationAccount
@@ -230,7 +230,7 @@
             this.ctCashOperationAccount.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ctCashOperationAccount.Location = new System.Drawing.Point(0, 0);
             this.ctCashOperationAccount.Name = "ctCashOperationAccount";
-            this.ctCashOperationAccount.Size = new System.Drawing.Size(721, 364);
+            this.ctCashOperationAccount.Size = new System.Drawing.Size(721, 368);
             this.ctCashOperationAccount.TabIndex = 0;
             this.ctCashOperationAccount.ViewType = FutsMoniter.CashOpViewType.Account;
             // 
@@ -257,7 +257,7 @@
             this.ctCashTrans2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ctCashTrans2.Location = new System.Drawing.Point(0, 0);
             this.ctCashTrans2.Name = "ctCashTrans2";
-            this.ctCashTrans2.Size = new System.Drawing.Size(721, 368);
+            this.ctCashTrans2.Size = new System.Drawing.Size(721, 364);
             this.ctCashTrans2.TabIndex = 0;
             this.ctCashTrans2.ViewType = FutsMoniter.CashOpViewType.Agent;
             // 

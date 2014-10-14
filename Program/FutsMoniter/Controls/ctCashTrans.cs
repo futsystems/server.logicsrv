@@ -234,11 +234,11 @@ namespace FutsMoniter
             {
                 if (ViewType == CashOpViewType.Account)
                 {
-                    Globals.TLClient.ReqQryAccountCashTrans("", Util.ToTLDateTime(start.Value), Util.ToTLDateTime(end.Value));
+                    Globals.TLClient.ReqQryAccountCashTrans("", Util.ToTLDateTime(start.Value), Util.ToTLDateTimeEnd(end.Value));
                 }
                 else
                 {
-                    Globals.TLClient.ReqQryAgentCashTrans(ctAgentList1.CurrentAgentFK, Util.ToTLDateTime(start.Value), Util.ToTLDateTime(end.Value));
+                    Globals.TLClient.ReqQryAgentCashTrans(ctAgentList1.CurrentAgentFK, Util.ToTLDateTime(start.Value), Util.ToTLDateTimeEnd(end.Value));
                 }
             }
         }

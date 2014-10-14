@@ -475,6 +475,21 @@ namespace TradingLib.Common
             return new DateTime(1, 1, 1, h, m, s);
         }
 
+        /// <summary>
+        /// 获得某个时间当天最后一刻
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        public static long ToTLDateTimeEnd(DateTime datetime)
+        {
+            return ToTLDateTime(Util.ToTLDate(datetime),235959);
+        }
+
+        public static long ToTLDateTimeEnd(long datetime)
+        {
+            return ToTLDateTimeEnd(ToDateTime(datetime));
+        }
+
         public static long ToTLDateTime(int tldate, int tltime) { return (long)tldate * 1000000 + (long)tltime; }
         /// <summary>
         /// get long for current date + time

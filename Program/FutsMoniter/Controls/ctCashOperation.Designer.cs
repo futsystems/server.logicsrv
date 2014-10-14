@@ -58,8 +58,8 @@
             // 
             // btnFilterCancelOrReject
             // 
-            this.btnFilterCancelOrReject.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnFilterCancelOrReject.Location = new System.Drawing.Point(130, 336);
+            this.btnFilterCancelOrReject.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnFilterCancelOrReject.Location = new System.Drawing.Point(554, 336);
             this.btnFilterCancelOrReject.Name = "btnFilterCancelOrReject";
             this.btnFilterCancelOrReject.Size = new System.Drawing.Size(73, 16);
             this.btnFilterCancelOrReject.TabIndex = 6;
@@ -68,8 +68,8 @@
             // 
             // btnFilterConfirmed
             // 
-            this.btnFilterConfirmed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnFilterConfirmed.Location = new System.Drawing.Point(67, 336);
+            this.btnFilterConfirmed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnFilterConfirmed.Location = new System.Drawing.Point(491, 336);
             this.btnFilterConfirmed.Name = "btnFilterConfirmed";
             this.btnFilterConfirmed.Size = new System.Drawing.Size(58, 16);
             this.btnFilterConfirmed.TabIndex = 5;
@@ -78,8 +78,8 @@
             // 
             // btnFilterPending
             // 
-            this.btnFilterPending.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnFilterPending.Location = new System.Drawing.Point(3, 336);
+            this.btnFilterPending.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnFilterPending.Location = new System.Drawing.Point(427, 336);
             this.btnFilterPending.Name = "btnFilterPending";
             this.btnFilterPending.Size = new System.Drawing.Size(58, 16);
             this.btnFilterPending.TabIndex = 4;
@@ -102,9 +102,9 @@
             // 
             // ctGridExport1
             // 
-            this.ctGridExport1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.ctGridExport1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.ctGridExport1.Grid = null;
-            this.ctGridExport1.Location = new System.Drawing.Point(527, 331);
+            this.ctGridExport1.Location = new System.Drawing.Point(3, 331);
             this.ctGridExport1.Name = "ctGridExport1";
             this.ctGridExport1.Size = new System.Drawing.Size(110, 24);
             this.ctGridExport1.TabIndex = 7;

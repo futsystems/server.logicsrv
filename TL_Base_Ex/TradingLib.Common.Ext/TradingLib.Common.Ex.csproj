@@ -81,6 +81,7 @@
     <Compile Include="ClearCentre\Base_ClearCentre_.cs" />
     <Compile Include="ClearCentre\Base_ClearCentre_TotalInfo.cs" />
     <Compile Include="Client\TrdClientInfo.cs" />
+    <Compile Include="Contex\Event\CashOperationEvent.cs" />
     <Compile Include="ORM\MCashOpAccount.cs" />
     <Compile Include="SrvObject\ISessionTransUtils.cs" />
     <Compile Include="ORM\Config\ConfigItem.cs" />

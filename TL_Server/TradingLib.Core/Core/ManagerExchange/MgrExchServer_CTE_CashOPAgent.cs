@@ -52,6 +52,8 @@ namespace TradingLib.Core
 
                     //bankaccount.Bank = BasicTracker.ContractBankTracker[bankaccount.bank_id].ToJsonWrapperBank();
                     session.SendJsonReplyMgr(request);
+                    //通过事件中继触发事件
+                    TLCtxHelper.CashOperationEvent.FireCashOperation(this, QSEnumCashOpEventType.Request, request);
                 }
                 //debug("update agent bank account: id:" + bankaccount.Bank.ID + " name:" + bankaccount.Bank.Name, QSEnumDebugLevel.INFO);
 
@@ -77,6 +79,8 @@ namespace TradingLib.Core
                 {
                     ORM.MAgentFinance.ConfirmAgentCashOperation(request);
                     session.SendJsonReplyMgr(request);
+                    //通过事件中继触发事件
+                    TLCtxHelper.CashOperationEvent.FireCashOperation(this, QSEnumCashOpEventType.Confirm, request);
                 }
             }
         }
@@ -93,6 +97,8 @@ namespace TradingLib.Core
                 {
                     ORM.MAgentFinance.CancelAgentCashOperation(request);
                     session.SendJsonReplyMgr(request);
+                    //通过事件中继触发事件
+                    TLCtxHelper.CashOperationEvent.FireCashOperation(this, QSEnumCashOpEventType.Cancel, request);
                 }
             }
         }
@@ -109,6 +115,8 @@ namespace TradingLib.Core
                 {
                     ORM.MAgentFinance.RejectAgentCashOperation(request);
                     session.SendJsonReplyMgr(request);
+                    //通过事件中继触发事件
+                    TLCtxHelper.CashOperationEvent.FireCashOperation(this, QSEnumCashOpEventType.Reject, request);
                 }
             }
         }
