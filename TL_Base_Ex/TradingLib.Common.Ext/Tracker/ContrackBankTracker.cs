@@ -46,6 +46,8 @@ namespace TradingLib.Common
         {
             get
             {
+                if (bankid == null)
+                    return null;
                 if (bankmap.Keys.Contains(bankid))
                     return bankmap[bankid];
                 return null;

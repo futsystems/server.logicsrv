@@ -99,6 +99,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\ctCashTrans.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ctCashTrans.Designer.cs">
+      <DependentUpon>ctCashTrans.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form\CasherMangerForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -327,6 +333,12 @@
     <Compile Include="Form\HistQryForm.Designer.cs">
       <DependentUpon>HistQryForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Form\PaySlipFormAccount.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\PaySlipFormAccount.Designer.cs">
+      <DependentUpon>PaySlipFormAccount.cs</DependentUpon>
+    </Compile>
     <Compile Include="Glabols.cs" />
     <Compile Include="JsonObject\JsonProtocolFinService.cs" />
     <Compile Include="MainForm.cs">
@@ -459,6 +471,9 @@
       <DependentUpon>UpdatePassForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Utils.cs" />
+    <EmbeddedResource Include="Controls\ctCashTrans.resx">
+      <DependentUpon>ctCashTrans.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form\CasherMangerForm.resx">
       <DependentUpon>CasherMangerForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -557,6 +572,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form\HistQryForm.resx">
       <DependentUpon>HistQryForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\PaySlipFormAccount.resx">
+      <DependentUpon>PaySlipFormAccount.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

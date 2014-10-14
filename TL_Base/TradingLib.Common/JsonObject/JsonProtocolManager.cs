@@ -244,6 +244,42 @@ namespace TradingLib.Mixins.JsonObject
     }
 
     /// <summary>
+    /// 交易帐户对应的银行帐户信息
+    /// </summary>
+    public class JsonWrapperAccountBankAC : JsonObjectBase
+    {
+        /// <summary>
+        /// 姓名
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// 银行名称
+        /// </summary>
+        public string Bank { get; set; }
+
+
+        /// <summary>
+        /// 银行帐户
+        /// </summary>
+        public string BankAC { get; set; }
+
+        /// <summary>
+        /// 开户分行
+        /// </summary>
+        public string Branch { get; set; }
+
+        /// <summary>
+        /// 代理信息
+        /// </summary>
+        public string AgentInfo { get; set; }
+
+        /// <summary>
+        /// 交易帐号
+        /// </summary>
+        public string Account { get; set; }
+    }
+    /// <summary>
     /// 收款银行
     /// </summary>
     public class JsonWrapperReceivableAccount : JsonObjectBase
@@ -273,6 +309,7 @@ namespace TradingLib.Mixins.JsonObject
         /// </summary>
         public string Branch { get; set; }
     }
+
 
     /// <summary>
     /// 出入金操作
@@ -330,6 +367,7 @@ namespace TradingLib.Mixins.JsonObject
 
     public class JsonWrapperCasnTrans
     {
+        public int ID { get; set; }
         /// <summary>
         /// 管理主域ID
         /// </summary>

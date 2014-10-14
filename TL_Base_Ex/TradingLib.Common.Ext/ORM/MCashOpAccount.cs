@@ -62,7 +62,7 @@ namespace TradingLib.ORM
                     istransok = db.Connection.Execute(query) > 0;
 
                     decimal amount = op.Operation == QSEnumCashOperation.Deposit ? op.Amount : op.Amount * -1;
-                    string query2 = String.Format("Insert into log_cashtrans (`datetime`,`amount`,`comment`,`account`,`transref`,`settleday`) values('{0}','{1}','{2}','{3}','{4}','{5}')", DateTime.Now.ToString(), amount.ToString(),"Online Deposit",op.Account, op.Ref, TLCtxHelper.Ctx.SettleCentre.NextTradingday);
+                    string query2 = String.Format("Insert into log_cashtrans (`datetime`,`amount`,`comment`,`account`,`transref`,`settleday`) values('{0}','{1}','{2}','{3}','{4}','{5}')", DateTime.Now.ToString(), amount.ToString(),op.Source.ToString(),op.Account, op.Ref, TLCtxHelper.Ctx.SettleCentre.NextTradingday);
 
                     istransok = istransok && db.Connection.Execute(query2) > 0;
                     if (istransok)
@@ -115,6 +115,30 @@ namespace TradingLib.ORM
             {
                 string query = String.Format("UPDATE log_cashopreq SET status = '{0}'  WHERE account = '{1}' AND ref ='{2}'", QSEnumCashInOutStatus.REFUSED, op.Account, op.Ref);
                 return db.Connection.Execute(query) > 0;
+            }
+        }
+
+        /// <summary>
+        /// 获取在一个时间段内所有出入金记录
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <returns></returns>
+        public static IEnumerable<JsonWrapperCasnTrans> SelectAccountCashTrans(string account, long start, long end)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Empty;
+                if (string.IsNullOrEmpty(account))
+                {
+                    query = String.Format("SELECT * FROM log_cashtrans  WHERE  datetime>= '{0}' AND datetime<= '{1}' ",Util.ToDateTime(start), Util.ToDateTime(end));
+                }
+                else
+                {
+                    query = String.Format("SELECT * FROM log_cashtrans  WHERE account='{0}' AND datetime>= '{1}' AND datetime<= '{2}' ", account, Util.ToDateTime(start), Util.ToDateTime(end));
+                }
+                return db.Connection.Query<JsonWrapperCasnTrans>(query);
             }
         }
 

@@ -49,7 +49,6 @@
             this.btnMarketTime = new Telerik.WinControls.UI.RadMenuItem();
             this.radPageView1 = new Telerik.WinControls.UI.RadPageView();
             this.radPageViewPage1 = new Telerik.WinControls.UI.RadPageViewPage();
-            this.ctAccountMontier1 = new FutsMoniter.Controls.ctAccountMontier();
             this.radPageViewPage2 = new Telerik.WinControls.UI.RadPageViewPage();
             this.ctDebug1 = new FutSystems.GUI.ctDebug();
             this.office2010BlackTheme1 = new Telerik.WinControls.Themes.Office2010BlackTheme();
@@ -70,6 +69,7 @@
             this.btnCasher = new Telerik.WinControls.UI.RadMenuItem();
             this.radMenuItem7 = new Telerik.WinControls.UI.RadMenuItem();
             this.office2010SilverTheme1 = new Telerik.WinControls.Themes.Office2010SilverTheme();
+            this.ctAccountMontier1 = new FutsMoniter.Controls.ctAccountMontier();
             ((System.ComponentModel.ISupportInitialize)(this.radStatusStrip1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.radPageView1)).BeginInit();
             this.radPageView1.SuspendLayout();
@@ -270,20 +270,10 @@
             // radPageViewPage1
             // 
             this.radPageViewPage1.Controls.Add(this.ctAccountMontier1);
-            this.radPageViewPage1.Location = new System.Drawing.Point(10, 35);
+            this.radPageViewPage1.Location = new System.Drawing.Point(10, 31);
             this.radPageViewPage1.Name = "radPageViewPage1";
-            this.radPageViewPage1.Size = new System.Drawing.Size(1118, 565);
+            this.radPageViewPage1.Size = new System.Drawing.Size(1118, 569);
             this.radPageViewPage1.Text = "帐户列表";
-            // 
-            // ctAccountMontier1
-            // 
-            this.ctAccountMontier1.DebugEnable = true;
-            this.ctAccountMontier1.DebugLevel = TradingLib.API.QSEnumDebugLevel.INFO;
-            this.ctAccountMontier1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ctAccountMontier1.Location = new System.Drawing.Point(0, 0);
-            this.ctAccountMontier1.Name = "ctAccountMontier1";
-            this.ctAccountMontier1.Size = new System.Drawing.Size(1118, 565);
-            this.ctAccountMontier1.TabIndex = 0;
             // 
             // radPageViewPage2
             // 
@@ -333,8 +323,8 @@
             // 
             // btnQryHist
             // 
-            this.btnQryHist.AccessibleDescription = "历史记录查询";
-            this.btnQryHist.AccessibleName = "历史记录查询";
+            this.btnQryHist.AccessibleDescription = "交易记录查询";
+            this.btnQryHist.AccessibleName = "交易记录查询";
             this.btnQryHist.Name = "btnQryHist";
             this.btnQryHist.Text = "历史记录查询";
             this.btnQryHist.Visibility = Telerik.WinControls.ElementVisibility.Visible;
@@ -462,6 +452,16 @@
             this.radMenuItem7.Name = "radMenuItem7";
             this.radMenuItem7.Text = "radMenuItem7";
             this.radMenuItem7.Visibility = Telerik.WinControls.ElementVisibility.Visible;
+            // 
+            // ctAccountMontier1
+            // 
+            this.ctAccountMontier1.DebugEnable = true;
+            this.ctAccountMontier1.DebugLevel = TradingLib.API.QSEnumDebugLevel.INFO;
+            this.ctAccountMontier1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ctAccountMontier1.Location = new System.Drawing.Point(0, 0);
+            this.ctAccountMontier1.Name = "ctAccountMontier1";
+            this.ctAccountMontier1.Size = new System.Drawing.Size(1118, 569);
+            this.ctAccountMontier1.TabIndex = 0;
             // 
             // MainForm
             // 

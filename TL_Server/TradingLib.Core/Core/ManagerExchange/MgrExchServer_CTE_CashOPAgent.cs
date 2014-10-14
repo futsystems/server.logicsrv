@@ -10,6 +10,15 @@ namespace TradingLib.Core
 {
     public partial class MgrExchServer
     {
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryAgentPaymentInfo", "QryAgentPaymentInfo - query payment Info", "查询代理支付信息")]
+        public void CTE_QryPaymentInfo(ISession session, int agentfk)
+        {
+            Manager manger = BasicTracker.ManagerTracker[agentfk];
+            JsonWrapperAgentPaymentInfo info = manger.GetPaymentInfo();
+            session.SendJsonReplyMgr(info);
+        }
+
+
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryAgentCashOperationTotal", "QryAgentCashOperationTotal - query agent pending cash operation", "查询所有代理待处理委托")]
         public void CTE_QryAgentCashOperationTotal(ISession session)
         {
@@ -101,6 +110,25 @@ namespace TradingLib.Core
                     ORM.MAgentFinance.RejectAgentCashOperation(request);
                     session.SendJsonReplyMgr(request);
                 }
+            }
+        }
+
+        /// <summary>
+        /// 查询交易帐户的出入金记录
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="account"></param>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QueryAgentCashTrans", "QueryAgentCashTrans -query agents cashtrans", "查询代理出入金记录")]
+        public void CTE_QueryAgentCashTrans(ISession session,int agentfk, long start, long end)
+        {
+            debug("查询出入金记录", QSEnumDebugLevel.INFO);
+            Manager manger = session.GetManager();
+            if (manger != null)
+            {
+                JsonWrapperCasnTrans[] trans = ORM.MAgentFinance.SelectAgentCashTrans(agentfk, start, end).ToArray();
+                session.SendJsonReplyMgr(trans);
             }
         }
     }

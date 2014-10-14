@@ -61,7 +61,7 @@ namespace TradingLib.Core
                 if (account == null)
                     return false;
                 //出入金记录不存在 不是入金操作 或不处于待处理状态 则直接返回
-                if (op == null || op.Operation != QSEnumCashOperation.Deposit || op.Status != QSEnumCashInOutStatus.PENDING) return false;
+                if (op == null /*|| op.Operation != QSEnumCashOperation.Deposit **/|| op.Status != QSEnumCashInOutStatus.PENDING) return false;
                 //decimal amount = op.Operation== QSEnumCashOperation.Deposit? op.Amount : op.Amount*-1;
                 //bool ret ORM.MAccount.CashOperation(op.Account, amount, opref, "Online Deposit");
                 bool ret = ORM.MCashOpAccount.ConfirmAccountCashOperation(op);

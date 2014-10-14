@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TradingLib.API;
+using TradingLib.Mixins.JsonObject;
 
 
 namespace TradingLib.Common
@@ -10,6 +11,34 @@ namespace TradingLib.Common
     public static class AccountUtils_ObjectWrapper
     {
 
+        public static string GetAgentInfo(this IAccount acc)
+        {
+            Manager basemgr = BasicTracker.ManagerTracker[acc.Mgr_fk];
+            if (basemgr != null)
+            {
+                if (basemgr.Type == QSEnumManagerType.ROOT)
+                {
+                    return "主域(" + acc.Mgr_fk + ")-" + basemgr.Name;
+                }
+                else
+                {
+                    return "代理域(" + acc.Mgr_fk + ")-" + basemgr.Name;
+                }
+            }
+            return "未设置";
+        }
+        public static JsonWrapperAccountBankAC GetBankAC(this IAccount acc)
+        {
+            JsonWrapperAccountBankAC bkacc = new JsonWrapperAccountBankAC();
+            bkacc.Name = string.IsNullOrEmpty(acc.Name) ? null : acc.Name;
+            bkacc.BankAC = acc.BankAC;
+            bkacc.Branch = "";
+            ContractBank bk = BasicTracker.ContractBankTracker[acc.BankID];
+            bkacc.Bank = bk != null ? bk.Name : null;
+            bkacc.Account = acc.ID;
+            bkacc.AgentInfo = GetAgentInfo(acc);
+            return bkacc;
+        }
         /// <summary>
         /// 生成财务信息
         /// </summary>

@@ -10,6 +10,17 @@ namespace TradingLib.Core
 {
     public partial class MgrExchServer
     {
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryAccountPaymentInfo", "QryAccountPaymentInfo - query payment Info", "查询交易帐户支付信息")]
+        public void CTE_QryAccountPaymentInfo(ISession session, string account)
+        {
+            IAccount acc = clearcentre[account];
+            if (acc == null)
+            { 
+            }
+            session.SendJsonReplyMgr(acc.GetBankAC());
+        }
+
+
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryAccountCashOperationTotal", "QryAccountCashOperationTotal - query account pending cash operation", "查询所有交易帐户待处理委托")]
         public void CTE_QryAccountCashOperationTotal(ISession session)
         {
@@ -36,9 +47,15 @@ namespace TradingLib.Core
             Manager manger = session.GetManager();
             if (manger != null)
             {
+                
                 JsonWrapperCashOperation request = Mixins.LitJson.JsonMapper.ToObject<JsonWrapperCashOperation>(playload);
                 if (request != null)
                 {
+                    //如果是出金则需要进行资金检查
+                    if (request.Operation == QSEnumCashOperation.WithDraw)
+                    { 
+                        
+                    }
                     TLCtxHelper.CmdAuthCashOperation.ConfirmCashOperation(request.Ref);
                     //重新从数据库加载数据 返回当前记录的数据
                     request = ORM.MCashOpAccount.GetAccountCashOperation(request.Ref);
@@ -90,6 +107,24 @@ namespace TradingLib.Core
             }
         }
 
+        /// <summary>
+        /// 查询交易帐户的出入金记录
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="account"></param>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QueryAccountCashTrans", "QueryAccountCashTrans -query account cashtrans", "查询交易帐户出入金记录")]
+        public void CTE_QueryAccountCashTrans(ISession session, string account, long start, long end)
+        {
+            debug("查询出入金记录", QSEnumDebugLevel.INFO);
+            Manager manger = session.GetManager();
+            if (manger != null)
+            {
+                JsonWrapperCasnTrans[] trans = ORM.MCashOpAccount.SelectAccountCashTrans(account, start, end).ToArray();
+                session.SendJsonReplyMgr(trans);
+            }
+        }
 
     }
 }

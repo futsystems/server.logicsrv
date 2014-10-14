@@ -145,13 +145,26 @@ namespace FutsMoniter
             if (!validManualDeposit(op)) return;
             //如果出金 就打印支付申请单
             if (op.Operation == QSEnumCashOperation.WithDraw)
-            { 
-                //生成支付单
-                PaySlipForm fm = new PaySlipForm();
-                fm.SetCashOperation(op);
-                if (fm.ShowDialog() != DialogResult.Yes)
+            {
+                if (ViewType == CashOpViewType.Agent)//代理支付凭证
                 {
-                    return;
+                    //生成支付单
+                    PaySlipForm fm = new PaySlipForm();
+                    fm.SetCashOperation(op);
+                    if (fm.ShowDialog() != DialogResult.Yes)
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    PaySlipFormAccount fm = new PaySlipFormAccount();
+                    fm.SetCashOperation(op);
+                    if (fm.ShowDialog() != DialogResult.Yes)
+                    {
+                        return;
+                    }
+                    
                 }
             }
 

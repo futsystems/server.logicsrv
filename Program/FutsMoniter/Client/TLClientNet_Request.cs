@@ -626,9 +626,22 @@ namespace TradingLib.Common
             this.ReqContribRequest("MgrExchServer", "QryBank", "");
         }
 
+        /// <summary>
+        /// 查询代理对应的支付信息
+        /// </summary>
+        /// <param name="agentfk"></param>
         public void ReqQryAgentPaymentInfo(int agentfk)
         {
             this.ReqContribRequest("MgrExchServer", "QryAgentPaymentInfo",agentfk.ToString());
+        }
+
+        /// <summary>
+        /// 查询交易帐户对应的支付信息
+        /// </summary>
+        /// <param name="account"></param>
+        public void ReqQryAccountPaymentInfo(string account)
+        {
+            this.ReqContribRequest("MgrExchServer", "QryAccountPaymentInfo",account);
         }
         /// <summary>
         /// 查询代理的财务信息
@@ -656,6 +669,17 @@ namespace TradingLib.Common
         }
 
         #region 代理出入金操作
+        /// <summary>
+        /// 查询代理出入金记录
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        public void ReqQryAgentCashTrans(int mgrfk, long start, long end)
+        {
+            this.ReqContribRequest("MgrExchServer", "QueryAgentCashTrans", mgrfk.ToString() + "," + start.ToString() + "," + end.ToString());
+        }
+
         /// <summary>
         /// 请求出入金操作
         /// </summary>
@@ -694,6 +718,17 @@ namespace TradingLib.Common
         #endregion
 
         #region 帐户出入金操作
+
+        /// <summary>
+        /// 查询交易帐户出入金记录
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        public void ReqQryAccountCashTrans(string account, long start, long end)
+        {
+            this.ReqContribRequest("MgrExchServer", "QueryAccountCashTrans",account+","+start.ToString()+","+end.ToString());
+        }
         /// <summary>
         /// 请求出入金操作
         /// </summary>

@@ -316,5 +316,31 @@ namespace TradingLib.ORM
                 return Math.Abs(total.TotalAmount);
             }
         }
+
+
+
+        /// <summary>
+        /// 获取在一个时间段内所有出入金记录
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <returns></returns>
+        public static IEnumerable<JsonWrapperCasnTrans> SelectAgentCashTrans(int agentfk, long start, long end)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Empty;
+                if (agentfk ==0)
+                {
+                    query = String.Format("SELECT * FROM manager_cashtrans  WHERE  datetime>= '{0}' AND datetime<= '{1}' ", Util.ToDateTime(start), Util.ToDateTime(end));
+                }
+                else
+                {
+                    query = String.Format("SELECT * FROM manager_cashtrans  WHERE mgr_fk='{0}' AND datetime>= '{1}' AND datetime<= '{2}' ", agentfk, Util.ToDateTime(start), Util.ToDateTime(end));
+                }
+                return db.Connection.Query<JsonWrapperCasnTrans>(query);
+            }
+        }
     }
 }

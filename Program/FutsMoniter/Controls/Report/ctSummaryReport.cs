@@ -25,7 +25,6 @@ namespace FutsMoniter
             ctGridExport1.Grid = totalgrid;
             Globals.RegInitCallback(OnInitFinished);
             start.Value = Convert.ToDateTime(DateTime.Today.AddMonths(-1).ToString("yyyy-MM-01") + " 0:00:00");
-
             end.Value = DateTime.Now;
         }
 

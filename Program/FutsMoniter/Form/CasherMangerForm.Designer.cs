@@ -46,6 +46,8 @@
             this.agentCashOpQryPage = new Telerik.WinControls.UI.RadPageViewPage();
             this.ctCashOperationAccount = new FutsMoniter.ctCashOperation();
             this.ctCashOperation1 = new FutsMoniter.ctCashOperation();
+            this.ctCashTrans1 = new FutsMoniter.ctCashTrans();
+            this.ctCashTrans2 = new FutsMoniter.ctCashTrans();
             ((System.ComponentModel.ISupportInitialize)(this.radGroupBox1)).BeginInit();
             this.radGroupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel8)).BeginInit();
@@ -62,6 +64,8 @@
             this.radPageView1.SuspendLayout();
             this.accountCashOperationPage.SuspendLayout();
             this.agentCashOperationPage.SuspendLayout();
+            this.accountCashOpQryPage.SuspendLayout();
+            this.agentCashOpQryPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this)).BeginInit();
             this.SuspendLayout();
             // 
@@ -183,7 +187,7 @@
             this.radPageView1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.radPageView1.Location = new System.Drawing.Point(0, 90);
             this.radPageView1.Name = "radPageView1";
-            this.radPageView1.SelectedPage = this.accountCashOperationPage;
+            this.radPageView1.SelectedPage = this.agentCashOpQryPage;
             this.radPageView1.Size = new System.Drawing.Size(742, 410);
             this.radPageView1.TabIndex = 1;
             this.radPageView1.Text = "radPageView1";
@@ -192,9 +196,9 @@
             // accountCashOperationPage
             // 
             this.accountCashOperationPage.Controls.Add(this.ctCashOperationAccount);
-            this.accountCashOperationPage.Location = new System.Drawing.Point(10, 31);
+            this.accountCashOperationPage.Location = new System.Drawing.Point(10, 35);
             this.accountCashOperationPage.Name = "accountCashOperationPage";
-            this.accountCashOperationPage.Size = new System.Drawing.Size(721, 368);
+            this.accountCashOperationPage.Size = new System.Drawing.Size(721, 364);
             this.accountCashOperationPage.Text = "交易帐户";
             // 
             // agentCashOperationPage
@@ -207,6 +211,7 @@
             // 
             // accountCashOpQryPage
             // 
+            this.accountCashOpQryPage.Controls.Add(this.ctCashTrans1);
             this.accountCashOpQryPage.Location = new System.Drawing.Point(10, 31);
             this.accountCashOpQryPage.Name = "accountCashOpQryPage";
             this.accountCashOpQryPage.Size = new System.Drawing.Size(721, 368);
@@ -214,9 +219,10 @@
             // 
             // agentCashOpQryPage
             // 
-            this.agentCashOpQryPage.Location = new System.Drawing.Point(10, 35);
+            this.agentCashOpQryPage.Controls.Add(this.ctCashTrans2);
+            this.agentCashOpQryPage.Location = new System.Drawing.Point(10, 31);
             this.agentCashOpQryPage.Name = "agentCashOpQryPage";
-            this.agentCashOpQryPage.Size = new System.Drawing.Size(764, 295);
+            this.agentCashOpQryPage.Size = new System.Drawing.Size(721, 368);
             this.agentCashOpQryPage.Text = "代理帐户历史查询";
             // 
             // ctCashOperationAccount
@@ -224,7 +230,7 @@
             this.ctCashOperationAccount.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ctCashOperationAccount.Location = new System.Drawing.Point(0, 0);
             this.ctCashOperationAccount.Name = "ctCashOperationAccount";
-            this.ctCashOperationAccount.Size = new System.Drawing.Size(721, 368);
+            this.ctCashOperationAccount.Size = new System.Drawing.Size(721, 364);
             this.ctCashOperationAccount.TabIndex = 0;
             this.ctCashOperationAccount.ViewType = FutsMoniter.CashOpViewType.Account;
             // 
@@ -236,6 +242,24 @@
             this.ctCashOperation1.Size = new System.Drawing.Size(721, 368);
             this.ctCashOperation1.TabIndex = 0;
             this.ctCashOperation1.ViewType = FutsMoniter.CashOpViewType.Agent;
+            // 
+            // ctCashTrans1
+            // 
+            this.ctCashTrans1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ctCashTrans1.Location = new System.Drawing.Point(0, 0);
+            this.ctCashTrans1.Name = "ctCashTrans1";
+            this.ctCashTrans1.Size = new System.Drawing.Size(721, 368);
+            this.ctCashTrans1.TabIndex = 0;
+            this.ctCashTrans1.ViewType = FutsMoniter.CashOpViewType.Account;
+            // 
+            // ctCashTrans2
+            // 
+            this.ctCashTrans2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ctCashTrans2.Location = new System.Drawing.Point(0, 0);
+            this.ctCashTrans2.Name = "ctCashTrans2";
+            this.ctCashTrans2.Size = new System.Drawing.Size(721, 368);
+            this.ctCashTrans2.TabIndex = 0;
+            this.ctCashTrans2.ViewType = FutsMoniter.CashOpViewType.Agent;
             // 
             // CasherMangerForm
             // 
@@ -271,6 +295,8 @@
             this.radPageView1.ResumeLayout(false);
             this.accountCashOperationPage.ResumeLayout(false);
             this.agentCashOperationPage.ResumeLayout(false);
+            this.accountCashOpQryPage.ResumeLayout(false);
+            this.agentCashOpQryPage.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this)).EndInit();
             this.ResumeLayout(false);
 
@@ -296,5 +322,7 @@
         private Telerik.WinControls.UI.RadLabel radLabel9;
         private Telerik.WinControls.UI.RadLabel radLabel10;
         private ctCashOperation ctCashOperationAccount;
+        private ctCashTrans ctCashTrans1;
+        private ctCashTrans ctCashTrans2;
     }
 }
