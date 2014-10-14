@@ -115,7 +115,15 @@ namespace TradingLib.Contrib.RechargeOnLine
         /// <returns></returns>
         public Template LoadTempalte(string fn)
         {
-            return Template.Parse(File.ReadAllText(fn, Encoding.UTF8));
+            try
+            {
+                return Template.Parse(File.ReadAllText(fn, Encoding.UTF8));
+            }
+            catch (Exception ex)
+            {
+                Util.Debug("load template error," + fn + ex.ToString(), QSEnumDebugLevel.DEBUG);
+                return null;
+            }
         }
     }
 }

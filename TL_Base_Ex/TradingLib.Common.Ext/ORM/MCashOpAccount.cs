@@ -11,6 +11,8 @@ namespace TradingLib.ORM
 {
     public class MCashOpAccount:MBase
     {
+
+
         /// <summary>
         /// 插入出入金操作
         /// </summary>
@@ -20,7 +22,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("INSERT INTO log_cashopreq (`account`,`datetime`,`operation`,`amount`,`ref`,`status`,`source`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}')", op.Account, op.DateTime, op.Operation, op.Amount, op.Ref, op.Status,op.Source);
+                string query = string.Format("INSERT INTO log_cashopreq (`account`,`datetime`,`operation`,`amount`,`ref`,`status`,`source`,`recvinfo`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}')", op.Account, op.DateTime, op.Operation, op.Amount, op.Ref, op.Status, op.Source, op.RecvInfo);
                 return db.Connection.Execute(query) > 0;
             }
         }

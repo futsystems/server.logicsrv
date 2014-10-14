@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TradingLib.API;
+using TradingLib.Mixins.JsonObject;
 
 
 namespace TradingLib.Common
@@ -11,6 +12,8 @@ namespace TradingLib.Common
     {
         Dictionary<string, ContractBank> bankmap = new Dictionary<string, ContractBank>();
         Dictionary<int, ContractBank> bankidxmap = new Dictionary<int, ContractBank>();
+        Dictionary<int, JsonWrapperReceivableAccount> recvaccidxmap = new Dictionary<int, JsonWrapperReceivableAccount>();
+
         public DBContractBankTracker()
         {
             foreach (ContractBank b in ORM.MBasicInfo.SelectContractBanks())
@@ -18,8 +21,27 @@ namespace TradingLib.Common
                 bankmap[b.BrankID] = b;
                 bankidxmap[b.ID] = b;
             }
+            _receivableAccounts = ORM.MBasicInfo.SelectReceivableBanks();
+            foreach (JsonWrapperReceivableAccount a in _receivableAccounts)
+            {
+                recvaccidxmap.Add(a.ID, a);
+            }
         }
 
+        /// <summary>
+        /// 从收款银行编号获得对应的收款银行信息
+        /// </summary>
+        /// <param name="idx"></param>
+        /// <returns></returns>
+        public JsonWrapperReceivableAccount GetRecvBankAccount(int idx)
+        { 
+            JsonWrapperReceivableAccount tmp = null;
+            if (recvaccidxmap.TryGetValue(idx, out tmp))
+            {
+                return tmp;
+            }
+            return null;
+        }
         public ContractBank this[string bankid]
         {
             get
@@ -40,6 +62,14 @@ namespace TradingLib.Common
             }
         }
 
+        IEnumerable<JsonWrapperReceivableAccount> _receivableAccounts = null;
+        public IEnumerable<JsonWrapperReceivableAccount> ReceivableAccounts
+        {
+            get
+            {
+                return _receivableAccounts;
+            }
+        }
         public string DefaultBankID
         {
             get

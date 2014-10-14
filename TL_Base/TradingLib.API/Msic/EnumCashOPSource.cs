@@ -10,9 +10,9 @@ namespace TradingLib.API
     {
         [Description("未知")]
         Unknown,
-        [Description("线下")]
+        [Description("线下汇款")]
         Manual,
-        [Description("在线")]
+        [Description("在线支付")]
         Online,
     }
 }

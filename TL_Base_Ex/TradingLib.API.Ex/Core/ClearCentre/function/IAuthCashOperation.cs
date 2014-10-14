@@ -18,8 +18,7 @@ namespace TradingLib.API
         /// <param name="amount"></param>
         /// <param name="op"></param>
         /// <returns></returns>
-        bool RequestCashOperation(string account, decimal amount, QSEnumCashOperation op,out string opref,QSEnumCashOPSource source= QSEnumCashOPSource.Unknown );
-
+        bool RequestCashOperation(string account, decimal amount, QSEnumCashOperation op,out string opref,QSEnumCashOPSource source= QSEnumCashOPSource.Unknown ,string recvinfo ="");
 
         /// <summary>
         /// 确认某个入金记录
@@ -27,7 +26,7 @@ namespace TradingLib.API
         /// </summary>
         /// <param name="opref"></param>
         /// <returns></returns>
-        bool ConfirmCashOperationOnline(string opref);
+        bool ConfirmCashOperation(string opref);
 
         /// <summary>
         /// 验证交易帐户

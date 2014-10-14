@@ -17,6 +17,18 @@ using Telerik.WinControls.UI;
 
 namespace FutsMoniter
 {
+    public enum CashOpViewType
+    { 
+        /// <summary>
+        /// 显示代理
+        /// </summary>
+        Agent,
+
+        /// <summary>
+        /// 显示交易帐户
+        /// </summary>
+        Account,
+    }
     public partial class ctCashOperation : UserControl
     {
 
@@ -48,8 +60,77 @@ namespace FutsMoniter
             menu.Items.Add(MenuItem_reject);
             menu.Items.Add(MenuItem_cancel);
             ctGridExport1.Grid = opgrid;
+
+            this.Load += new EventHandler(ctCashOperation_Load);
         }
 
+        void ctCashOperation_Load(object sender, EventArgs e)
+        {
+            if (ViewType == CashOpViewType.Agent)
+            {
+                opgrid.Columns[ACCOUNT].IsVisible = false;
+            }
+            else
+            {
+                opgrid.Columns[MGRFK].IsVisible = false;
+            }
+        }
+
+        //属性获得和设置
+        [DefaultValue(CashOpViewType.Account)]
+        CashOpViewType _viewType = CashOpViewType.Account;
+        public CashOpViewType ViewType
+        {
+            get
+            {
+                return _viewType;
+            }
+            set
+            {
+                _viewType = value;
+            }
+        }
+
+        /// <summary>
+        /// 检查出入金有效新
+        /// 不为null 且处于pending状态
+        /// </summary>
+        /// <param name="op"></param>
+        /// <returns></returns>
+        bool validCashOperation(JsonWrapperCashOperation op)
+        {
+            if (op == null)
+            {
+                fmConfirm.Show("请选择对应的出入金操作请求记录");
+                return false;
+            }
+            //如果不是待处理状态 则提示返回
+            if (op.Status != QSEnumCashInOutStatus.PENDING)
+            {
+                fmConfirm.Show("已处理请求无法重复处理");
+                return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// 如果是入金操作 则须为手工发起的请求才可以进行手工操作
+        /// </summary>
+        /// <param name="op"></param>
+        /// <returns></returns>
+        bool validManualDeposit(JsonWrapperCashOperation op)
+        {
+            if (op.Operation == QSEnumCashOperation.Deposit)
+            {
+                //如果是在线提交的入金请求 则无法手工确认
+                if (op.Source == QSEnumCashOPSource.Online)
+                {
+                    fmConfirm.Show("在线入金请求无法手工执行操作,需等待支付网关返回");
+                    return false;
+                }
+            }
+            return true;
+        }
         /// <summary>
         /// 添加交易帐户
         /// </summary>
@@ -58,11 +139,11 @@ namespace FutsMoniter
         void Confirm_Click(object sender, EventArgs e)
         {
             JsonWrapperCashOperation op = CurrentCashOperation;
-            if(op == null)
-            {
-                fmConfirm.Show("请选择对应的出入金操作请求记录");
-                return;
-            }
+
+            if (!validCashOperation(op)) return;
+
+            if (!validManualDeposit(op)) return;
+            //如果出金 就打印支付申请单
             if (op.Operation == QSEnumCashOperation.WithDraw)
             { 
                 //生成支付单
@@ -74,10 +155,13 @@ namespace FutsMoniter
                 }
             }
 
-            //if (fmConfirm.Show("确认该操作?") == DialogResult.Yes)
+            if (ViewType == CashOpViewType.Agent)
             {
-
-                Globals.TLClient.ReqConfirmCashOperation(TradingLib.Mixins.LitJson.JsonMapper.ToJson(op));
+                Globals.TLClient.ReqConfirmCashOperation(op.ToJson());
+            }
+            else
+            {
+                Globals.TLClient.ReqConfirmAccountCashOperation(op.ToJson());
             }
         }
         /// <summary>
@@ -88,15 +172,21 @@ namespace FutsMoniter
         void Reject_Click(object sender, EventArgs e)
         {
             JsonWrapperCashOperation op = CurrentCashOperation;
-            if (op == null)
-            {
-                fmConfirm.Show("请选择对应的出入金操作请求记录");
-                return;
-            }
+
+            if (!validCashOperation(op)) return;
+
+            if (!validManualDeposit(op)) return;
+
             if (fmConfirm.Show("确认该操作?") == DialogResult.Yes)
             {
-
-                Globals.TLClient.ReqRejectCashOperation(TradingLib.Mixins.LitJson.JsonMapper.ToJson(op));
+                if (ViewType == CashOpViewType.Agent)
+                {
+                    Globals.TLClient.ReqRejectCashOperation(op.ToJson());
+                }
+                else
+                {
+                    Globals.TLClient.ReqRejectAccountCashOperation(op.ToJson());
+                }
             }
         }
 
@@ -108,29 +198,42 @@ namespace FutsMoniter
         void Cancel_Click(object sender, EventArgs e)
         {
             JsonWrapperCashOperation op = CurrentCashOperation;
-            if (op == null)
-            {
-                fmConfirm.Show("请选择对应的出入金操作请求记录");
-                return;
-            }
+
+            if (!validCashOperation(op)) return;
+
+            if (!validManualDeposit(op)) return;
+
             if (fmConfirm.Show("确认该操作?") == DialogResult.Yes)
             {
-
-                Globals.TLClient.ReqCancelCashOperation(TradingLib.Mixins.LitJson.JsonMapper.ToJson(op));
+                if (ViewType == CashOpViewType.Agent)
+                {
+                    Globals.TLClient.ReqCancelCashOperation(op.ToJson());
+                }
+                else
+                {
+                    Globals.TLClient.ReqCancelAccountCashOperation(op.ToJson());
+                }
             }
         }
 
 
         string getkey(JsonWrapperCashOperation op)
         {
-            return op.mgr_fk + "-" + op.Ref;
+            if (ViewType == CashOpViewType.Account)
+            {
+                return op.Account + "-" + op.Ref;
+            }
+            else
+            {
+                return op.mgr_fk + "-" + op.Ref;
+            }
         }
+
         ConcurrentDictionary<string, JsonWrapperCashOperation> operationkeymap = new ConcurrentDictionary<string, JsonWrapperCashOperation>();
         ConcurrentDictionary<string, int> idxmap = new ConcurrentDictionary<string, int>();
 
         int CashOperationIdx(JsonWrapperCashOperation op)
         {
-            int id = -1;
             string key = getkey(op);
             if (idxmap.Keys.Contains(key))
             {
@@ -141,18 +244,12 @@ namespace FutsMoniter
         //得到当前选择的行号
         private string CurrentKey
         {
-
             get
             {
-
                 if (opgrid.SelectedRows.Count > 0)
-                {
                     return opgrid.SelectedRows[0].ViewInfo.CurrentRow.Cells[KEY].Value.ToString();
-                }
                 else
-                {
                     return string.Empty;
-                }
             }
         }
 
@@ -197,6 +294,7 @@ namespace FutsMoniter
                     gt.Rows[i][STATUSSTR] = Util.GetEnumDescription(op.Status);
                     gt.Rows[i][SOURCE] = op.Source;
                     gt.Rows[i][SOURCESTR] = Util.GetEnumDescription(op.Source);
+                    gt.Rows[i][RECVINFO] = op.RecvInfo;
                     operationkeymap.TryAdd(key, op);
                     idxmap.TryAdd(key, i);
                 }
@@ -226,6 +324,7 @@ namespace FutsMoniter
         const string STATUSSTR = "状态";
         const string SOURCE = "SOURCE";
         const string SOURCESTR = "来源";
+        const string RECVINFO = "收款信息";
 
         #endregion
 
@@ -271,7 +370,8 @@ namespace FutsMoniter
             gt.Columns.Add(STATUS);//
             gt.Columns.Add(STATUSSTR);//
             gt.Columns.Add(SOURCE);//
-            gt.Columns.Add(SOURCESTR);//
+            gt.Columns.Add(SOURCESTR);//RECVINFO
+            gt.Columns.Add(RECVINFO);//
         }
 
         /// <summary>
@@ -291,8 +391,12 @@ namespace FutsMoniter
 
             //需要在绑定数据源后设定具体的可见性
             grid.Columns[KEY].IsVisible = false;
+
+            
+
+            
             //grid.Columns[UNDERLAYINGID].IsVisible = false;
-            //grid.Columns[MARKETTIMEID].IsVisible = false;
+            grid.Columns[SOURCE].IsVisible = false;
             grid.Columns[STATUS].IsVisible = false;
             grid.Columns[OPERATION].IsVisible = false;
         }

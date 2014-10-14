@@ -7,6 +7,7 @@ using System.Data;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Mixins.DataBase;
+using TradingLib.Mixins.JsonObject;
 
 
 namespace TradingLib.ORM
@@ -148,6 +149,20 @@ namespace TradingLib.ORM
             {
                 const string query = "SELECT * FROM info_contract_bank";
                 IEnumerable<ContractBank> result = db.Connection.Query<ContractBank>(query);
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// 获得所有收款银行
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable<JsonWrapperReceivableAccount> SelectReceivableBanks()
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                const string query = "select a.id, a.name , a.bank_ac ,a.branch ,b.name as bankname from info_receivable_bankac a JOIN info_contract_bank b where a.bank_id = b.id";
+                IEnumerable<JsonWrapperReceivableAccount> result = db.Connection.Query<JsonWrapperReceivableAccount>(query);
                 return result;
             }
         }

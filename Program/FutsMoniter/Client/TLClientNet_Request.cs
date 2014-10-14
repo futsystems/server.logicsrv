@@ -655,6 +655,7 @@ namespace TradingLib.Common
             this.ReqContribRequest("MgrExchServer", "UpdateAgentBankAccount", playload);
         }
 
+        #region 代理出入金操作
         /// <summary>
         /// 请求出入金操作
         /// </summary>
@@ -690,6 +691,46 @@ namespace TradingLib.Common
         {
             this.ReqContribRequest("MgrExchServer", "RejectCashOperation", playload);
         }
+        #endregion
+
+        #region 帐户出入金操作
+        /// <summary>
+        /// 请求出入金操作
+        /// </summary>
+        /// <param name="playload"></param>
+        public void ReqRequestAccountCashOperation(string playload)
+        {
+            this.ReqContribRequest("MgrExchServer", "RequestAccountCashOperation", playload);
+        }
+
+        /// <summary>
+        /// 确认出入金操作
+        /// </summary>
+        /// <param name="playload"></param>
+        public void ReqConfirmAccountCashOperation(string playload)
+        {
+            this.ReqContribRequest("MgrExchServer", "ConfirmAccountCashOperation", playload);
+        }
+
+        /// <summary>
+        /// 取消出入金操作
+        /// </summary>
+        /// <param name="playload"></param>
+        public void ReqCancelAccountCashOperation(string playload)
+        {
+            this.ReqContribRequest("MgrExchServer", "CancelAccountCashOperation", playload);
+        }
+
+        /// <summary>
+        /// 拒绝出入金操作
+        /// </summary>
+        /// <param name="playload"></param>
+        public void ReqRejectAccountCashOperation(string playload)
+        {
+            this.ReqContribRequest("MgrExchServer", "RejectAccountCashOperation", playload);
+        }
+        #endregion
+
 
         /// <summary>
         /// 查询所有代理的出入金操作

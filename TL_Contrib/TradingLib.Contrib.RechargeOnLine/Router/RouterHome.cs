@@ -10,6 +10,8 @@ using HttpServer.Modules;
 using HttpServer.Resources;
 using HttpServer.Routing;
 using TradingLib.Mixins.JsonObject;
+using TradingLib.API;
+using TradingLib.Common;
 
 namespace TradingLib.Contrib.RechargeOnLine
 {
@@ -28,7 +30,8 @@ namespace TradingLib.Contrib.RechargeOnLine
             }
             else if (loacalpath == "/deposit_manual")
             {
-                response.PageTemplate("deposit_manual", new Dictionary<string, object>());
+                DepositManualViewData viewdata = DepositManualViewData.GetDepositManualViewData();
+                response.PageTemplate("deposit_manual", viewdata);
                 return ProcessingResult.SendResponse;
             }
             else if (loacalpath == "/withdraw")

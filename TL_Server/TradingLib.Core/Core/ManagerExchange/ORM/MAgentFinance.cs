@@ -177,7 +177,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("INSERT INTO manager_cashopreq (`mgr_fk`,`datetime`,`operation`,`amount`,`ref`,`status`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}')", op.mgr_fk, op.DateTime, op.Operation, op.Amount, op.Ref, op.Status);
+                string query = string.Format("INSERT INTO manager_cashopreq (`mgr_fk`,`datetime`,`operation`,`amount`,`ref`,`status`,`source`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}')", op.mgr_fk, op.DateTime, op.Operation, op.Amount, op.Ref, op.Status,op.Source);
                 return db.Connection.Execute(query) > 0;
             }
         }

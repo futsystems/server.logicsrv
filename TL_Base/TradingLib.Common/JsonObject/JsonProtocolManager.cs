@@ -243,11 +243,41 @@ namespace TradingLib.Mixins.JsonObject
         public decimal NowEquity { get; set; }
     }
 
+    /// <summary>
+    /// 收款银行
+    /// </summary>
+    public class JsonWrapperReceivableAccount : JsonObjectBase
+    {
+        /// <summary>
+        /// 收款银行ID
+        /// </summary>
+        public int ID { get; set; }
+
+        /// <summary>
+        /// 银行名称
+        /// </summary>
+        public string BankName { get; set; }
+
+        /// <summary>
+        /// 姓名
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// 银行帐号
+        /// </summary>
+        public string Bank_AC { get; set; }
+
+        /// <summary>
+        /// 分行地址
+        /// </summary>
+        public string Branch { get; set; }
+    }
 
     /// <summary>
     /// 出入金操作
     /// </summary>
-    public class JsonWrapperCashOperation
+    public class JsonWrapperCashOperation : JsonObjectBase
     {
         /// <summary>
         /// 主域ID
@@ -291,6 +321,11 @@ namespace TradingLib.Mixins.JsonObject
         public QSEnumCashOPSource Source { get; set; }
 
 
+        /// <summary>
+        /// 收款银行ID
+        /// 0表示第三方支付
+        /// </summary>
+        public string  RecvInfo { get; set; }
     }
 
     public class JsonWrapperCasnTrans

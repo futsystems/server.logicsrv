@@ -98,7 +98,7 @@ namespace TradingLib.Contrib.RechargeOnLine
                     if (int.Parse(result) == 1)
                     {
                         Util.Debug("payment success try to mark it localy and deposit to customer account");
-                        bool ret = TLCtxHelper.CmdAuthCashOperation.ConfirmCashOperationOnline(op.Ref);
+                        bool ret = TLCtxHelper.CmdAuthCashOperation.ConfirmCashOperation(op.Ref);
                         if (ret)
                         {
                             byte[] buffer = Encoding.UTF8.GetBytes("OK");

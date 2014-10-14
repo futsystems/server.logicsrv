@@ -3,7 +3,6 @@
 	<title>出入金</title>
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 	<link type="text/css" href="/css/uikit.gradient.min.css"  rel="Stylesheet" />
-	<link type="text/css" href="/css/uikit.docs.min.css"  rel="Stylesheet" />
 	<link rel="icon" href="/images/favicon.ico"/>
 	<script src="/js/uikit.min.js"></script>
 </head>
@@ -13,10 +12,10 @@
             <nav class="uk-navbar uk-margin-large-bottom">
                 <a class="uk-navbar-brand uk-hidden-small" href="/">TCB</a>
                 <ul class="uk-navbar-nav uk-hidden-small">
-                    <li>
+                    <li >
                         <a href="/deposit">在线入金</a>
                     </li>
-                    <li >
+                    <li>
                         <a href="/deposit_manual">离线入金</a>
                     </li>
                     <li class="uk-active">
@@ -32,31 +31,28 @@
 
             <div class="uk-grid" data-uk-grid-margin>
                 <div class="uk-width-medium-1-1">
+					<div class="uk-vertical-align-middle" style="width: 350px;">
+					
+						<form method="post" action="/withdraw_confirm" enctype="multipart/form-data" class="uk-panel uk-panel-box uk-form">
+							<div class="uk-form-row">
+								<input class="uk-width-1-1 uk-form-large" type="text" name="Account" placeholder="交易帐号">
+							</div>
 
+							<div class="uk-form-row">
+								<input class="uk-width-1-1 uk-form-large" type="text" name="Pass" placeholder="密码">
+							</div>
 
-	<h2>出金</h2>
-		<div class="uk-vertical-align-middle" style="width: 350px;">
-		
-			<!--form method="post" action="/recharge" enctype="multipart/form-data" class="uk-panel uk-panel-box uk-form">
-				<div class="uk-form-row">
-					<input class="uk-width-1-1 uk-form-large" type="text" name="Account" placeholder="交易帐号">
+							<div class="uk-form-row">
+								<input class="uk-width-1-1 uk-form-large" type="text" name="Amount" placeholder="金额">
+							</div>
+							
+							<div class="uk-form-row">
+								<button class="uk-button uk-button-primary" type="submit">申请出金</button>
+							</div>
+						</form>
+					</div>
 				</div>
-
-				<div class="uk-form-row">
-					<input class="uk-width-1-1 uk-form-large" type="text" name="Pass" placeholder="密码">
-				</div>
-
-				<div class="uk-form-row">
-					<input class="uk-width-1-1 uk-form-large" type="text" name="Amount" placeholder="金额">
-				</div>
-				
-				<div class="uk-form-row">
-					<button class="uk-button uk-button-primary" type="submit">在线入金</button>
-				</div>
-			</form-->
-		</div>
-	</div>
-	</div>
+			</div>
 	</div>
 </body>
 </html>

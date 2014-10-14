@@ -57,6 +57,16 @@ namespace TradingLib.Contrib.RechargeOnLine
         public string ReturnUrl { get { return GWGlobals.GWInfo.NotifyURL; } }
         //加密参数
         public string Md5Key { get { return GWGlobals.GWInfo.Md5Key; } }
+
+        /// <summary>
+        /// 收款银行
+        /// </summary>
+        public string RecvAccount {
+            get
+            {
+                return _cashop.RecvInfo;
+            }
+        }
         /// <summary>
         /// 获得加密数据
         /// </summary>

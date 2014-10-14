@@ -117,6 +117,9 @@ namespace TradingLib.Contrib.RechargeOnLine
             server.Add(new RouterHome());
             //添加充值处理模块
             server.Add(new RouterRecharge("/recharge"));
+            //添加提现处理模块
+            server.Add(new RouterWithdraw("/withdraw_confirm"));
+
             //添加通知处理模块
             server.Add(new RouterPaymentNotify(GWGlobals.GWInfo.LocalURLInfo.PagePath, GWGlobals.GWInfo.LocalURLInfo.NotifyPath));
 

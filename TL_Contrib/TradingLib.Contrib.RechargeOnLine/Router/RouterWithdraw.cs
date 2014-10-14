@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using TradingLib.API;
-using TradingLib.Common;
-
 using HttpServer;
 using HttpServer.BodyDecoders;
 using HttpServer.Logging;
@@ -12,26 +9,29 @@ using HttpServer.Modules;
 using HttpServer.Resources;
 using HttpServer.Routing;
 using TradingLib.Mixins.JsonObject;
+using TradingLib.API;
+using TradingLib.Common;
 
 
 namespace TradingLib.Contrib.RechargeOnLine
 {
-    public class RouterRecharge:IRouter
+    public class RouterWithdraw:IRouter
     {
-        string _rechargePath = "/";
-        public string RechargePath { get { return _rechargePath; } }
-
-        public RouterRecharge(string rechargePath)
+        string _withdrawPath = string.Empty;
+        public RouterWithdraw(string withdrawPath)
         {
-            _rechargePath = rechargePath;
+            _withdrawPath = withdrawPath;
         }
+
+        public string WithdrawPath { get { return _withdrawPath; } }
+
 
         public virtual ProcessingResult Process(RequestContext context)
         {
             IRequest request = context.Request;
             IResponse response = context.Response;
             //过滤访问地址
-            if (request.Uri.AbsolutePath.StartsWith(RechargePath))
+            if (request.Uri.AbsolutePath.StartsWith(WithdrawPath))
             {
                 //获得操作需要的参数
                 try
@@ -39,23 +39,11 @@ namespace TradingLib.Contrib.RechargeOnLine
                     string acct = string.Empty;
                     string pass = string.Empty;
                     decimal amount = 0;
-                    string recvinfo = "";
-                    bool manual = false;
-                    if (request.Uri.AbsolutePath == "/recharge_manual")
-                    {
-                        manual = true;
-                        Util.Debug("submit deposit request manual XXXXXXXXXXXXXXXX");
-                    }
                     try
                     {
                         acct = request.Parameters["account"];
                         pass = request.Parameters["pass"];
                         amount = decimal.Parse(request.Parameters["amount"]);
-                        if (manual)
-                        {
-                            recvinfo = request.Parameters["receiveableaccount"];
-                            Util.Debug("manual receive account:" + recvinfo);
-                        }
                     }
                     catch (Exception ex)
                     {
@@ -72,7 +60,7 @@ namespace TradingLib.Contrib.RechargeOnLine
                     }
                     if (account.Category != QSEnumAccountCategory.REAL)
                     {
-                        response.PageError("实盘交易帐户才可以在线出入金");
+                        response.PageError("实盘交易帐户才可以在线出出金");
                         return ProcessingResult.SendResponse;
                     }
                     //交易帐户密码验证
@@ -82,11 +70,9 @@ namespace TradingLib.Contrib.RechargeOnLine
                         response.PageError("交易帐户密码不正确");
                         return ProcessingResult.SendResponse;
                     }
-
-
                     string opref = string.Empty;
                     //提交入金 出金 请求
-                    TLCtxHelper.CmdAuthCashOperation.RequestCashOperation(acct, amount, QSEnumCashOperation.Deposit, out opref, (manual ? QSEnumCashOPSource.Manual : QSEnumCashOPSource.Online),recvinfo);
+                    TLCtxHelper.CmdAuthCashOperation.RequestCashOperation(acct, amount, QSEnumCashOperation.WithDraw, out opref,QSEnumCashOPSource.Manual,"");
 
                     //获得数据库内插入的对象
                     JsonWrapperCashOperation operation = ORM.MCashOpAccount.GetAccountCashOperation(opref);
@@ -94,29 +80,22 @@ namespace TradingLib.Contrib.RechargeOnLine
                     Util.Debug("CashOperation request inserted ref:" + opref + " Status:" + operation.Status);
 
                     //1.生成数据
-                    PaymentViewData viewdata = new PaymentViewData(operation);
+                    WithdrawViewData viewdata = new WithdrawViewData(operation);
 
                     //2.渲染模板
-                    if (manual)
-                    {
-                        response.PageTemplate("payment_manual", viewdata);
-                    }
-                    else
-                    {
-                        response.PageTemplate("payment", viewdata);
-                    }
+                    response.PageTemplate("withdraw_confirm", viewdata);
+
                 }
-                catch (Exception ex)//如果异常 以Internal Server Error显示
-                {
+                catch (Exception ex)
+                { 
                     Util.Debug("error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
                     throw ex;
                 }
                 return ProcessingResult.SendResponse;
+                
 
             }
             return ProcessingResult.Continue;
-
         }
-
     }
 }

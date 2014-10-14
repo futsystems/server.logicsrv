@@ -55,13 +55,13 @@
             this.radLabel17 = new Telerik.WinControls.UI.RadLabel();
             this.radPageView2 = new Telerik.WinControls.UI.RadPageView();
             this.pendingOperationPage = new Telerik.WinControls.UI.RadPageViewPage();
-            this.ctCashOperation1 = new FutsMoniter.ctCashOperation();
             this.histqrypage = new Telerik.WinControls.UI.RadPageViewPage();
             this.radLabel14 = new Telerik.WinControls.UI.RadLabel();
             this.end = new Telerik.WinControls.UI.RadDateTimePicker();
             this.btnQryReport = new Telerik.WinControls.UI.RadButton();
             this.radLabel15 = new Telerik.WinControls.UI.RadLabel();
             this.start = new Telerik.WinControls.UI.RadDateTimePicker();
+            this.ctCashOperation1 = new FutsMoniter.ctCashOperation();
             ((System.ComponentModel.ISupportInitialize)(this.radGroupBox1)).BeginInit();
             this.radGroupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnCashOperation)).BeginInit();
@@ -122,13 +122,13 @@
             // 
             // 
             this.radGroupBox1.RootElement.Padding = new System.Windows.Forms.Padding(2, 18, 2, 2);
-            this.radGroupBox1.Size = new System.Drawing.Size(692, 98);
+            this.radGroupBox1.Size = new System.Drawing.Size(742, 98);
             this.radGroupBox1.TabIndex = 0;
             this.radGroupBox1.Text = "财务信息";
             // 
             // btnCashOperation
             // 
-            this.btnCashOperation.Location = new System.Drawing.Point(549, 22);
+            this.btnCashOperation.Location = new System.Drawing.Point(600, 22);
             this.btnCashOperation.Name = "btnCashOperation";
             this.btnCashOperation.Size = new System.Drawing.Size(131, 56);
             this.btnCashOperation.TabIndex = 13;
@@ -268,14 +268,14 @@
             // 
             // 
             this.radGroupBox3.RootElement.Padding = new System.Windows.Forms.Padding(2, 18, 2, 2);
-            this.radGroupBox3.Size = new System.Drawing.Size(690, 66);
+            this.radGroupBox3.Size = new System.Drawing.Size(740, 66);
             this.radGroupBox3.TabIndex = 2;
             this.radGroupBox3.Text = "收款银行卡信息";
             // 
             // btnChangeBankAccount
             // 
             this.btnChangeBankAccount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnChangeBankAccount.Location = new System.Drawing.Point(569, 13);
+            this.btnChangeBankAccount.Location = new System.Drawing.Point(619, 13);
             this.btnChangeBankAccount.Name = "btnChangeBankAccount";
             this.btnChangeBankAccount.Size = new System.Drawing.Size(110, 46);
             this.btnChangeBankAccount.TabIndex = 19;
@@ -354,7 +354,7 @@
             this.radPageView2.Location = new System.Drawing.Point(0, 176);
             this.radPageView2.Name = "radPageView2";
             this.radPageView2.SelectedPage = this.pendingOperationPage;
-            this.radPageView2.Size = new System.Drawing.Size(692, 324);
+            this.radPageView2.Size = new System.Drawing.Size(742, 324);
             this.radPageView2.TabIndex = 3;
             this.radPageView2.Text = "radPageView2";
             ((Telerik.WinControls.UI.RadPageViewStripElement)(this.radPageView2.GetChildAt(0))).StripButtons = Telerik.WinControls.UI.StripViewButtons.None;
@@ -362,18 +362,10 @@
             // pendingOperationPage
             // 
             this.pendingOperationPage.Controls.Add(this.ctCashOperation1);
-            this.pendingOperationPage.Location = new System.Drawing.Point(10, 35);
+            this.pendingOperationPage.Location = new System.Drawing.Point(10, 31);
             this.pendingOperationPage.Name = "pendingOperationPage";
-            this.pendingOperationPage.Size = new System.Drawing.Size(671, 278);
+            this.pendingOperationPage.Size = new System.Drawing.Size(721, 282);
             this.pendingOperationPage.Text = "待处理";
-            // 
-            // ctCashOperation1
-            // 
-            this.ctCashOperation1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ctCashOperation1.Location = new System.Drawing.Point(0, 0);
-            this.ctCashOperation1.Name = "ctCashOperation1";
-            this.ctCashOperation1.Size = new System.Drawing.Size(671, 278);
-            this.ctCashOperation1.TabIndex = 0;
             // 
             // histqrypage
             // 
@@ -437,11 +429,20 @@
             this.start.Text = "Monday, September 01, 2014";
             this.start.Value = new System.DateTime(2014, 9, 1, 15, 53, 33, 406);
             // 
+            // ctCashOperation1
+            // 
+            this.ctCashOperation1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ctCashOperation1.Location = new System.Drawing.Point(0, 0);
+            this.ctCashOperation1.Name = "ctCashOperation1";
+            this.ctCashOperation1.Size = new System.Drawing.Size(721, 282);
+            this.ctCashOperation1.TabIndex = 0;
+            this.ctCashOperation1.ViewType = FutsMoniter.CashOpViewType.Account;
+            // 
             // FinanceMangerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(692, 500);
+            this.ClientSize = new System.Drawing.Size(742, 500);
             this.Controls.Add(this.radPageView2);
             this.Controls.Add(this.radGroupBox3);
             this.Controls.Add(this.radGroupBox1);

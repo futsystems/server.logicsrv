@@ -20,7 +20,7 @@ namespace TradingLib.Core
         /// <param name="amount"></param>
         /// <param name="op"></param>
         /// <returns></returns>
-        public bool RequestCashOperation(string account, decimal amount, QSEnumCashOperation op,out string opref,QSEnumCashOPSource source= QSEnumCashOPSource.Unknown )
+        public bool RequestCashOperation(string account, decimal amount, QSEnumCashOperation op,out string opref,QSEnumCashOPSource source= QSEnumCashOPSource.Unknown,string  recvinfo="")
         {
             opref = string.Empty;
             if (!this.HaveAccount(account)) return false;
@@ -33,7 +33,14 @@ namespace TradingLib.Core
             request.Status = QSEnumCashInOutStatus.PENDING;
             request.Ref = accchashopid.AssignId.ToString();
             request.Source = source;
-            
+            if (request.Source == QSEnumCashOPSource.Online)
+            {
+                request.RecvInfo = "第三方支付";
+            }
+            else
+            {
+                request.RecvInfo = recvinfo;
+            }
             ORM.MCashOpAccount.InsertAccountCashOperation(request);
             //向外部暴露出入金请求的Ref
             opref = request.Ref;
@@ -45,7 +52,7 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="opref"></param>
         /// <returns></returns>
-        public bool ConfirmCashOperationOnline(string opref)
+        public bool ConfirmCashOperation(string opref)
         {
             try
             {
@@ -58,6 +65,7 @@ namespace TradingLib.Core
                 //decimal amount = op.Operation== QSEnumCashOperation.Deposit? op.Amount : op.Amount*-1;
                 //bool ret ORM.MAccount.CashOperation(op.Account, amount, opref, "Online Deposit");
                 bool ret = ORM.MCashOpAccount.ConfirmAccountCashOperation(op);
+                
                 //如果数据库操作正常 则同步内存数据
                 if (ret)
                 {
@@ -70,7 +78,7 @@ namespace TradingLib.Core
                         account.Withdraw(op.Amount);
                     }
                 }
-                debug("Account:" + op.Account + " 在线入金:" + op.Amount.ToString() + " 成功!");
+                debug("Account:" + op.Account + " 确认入金:" + op.Amount.ToString() + " 成功!");
                 return true;
             }
             catch (Exception ex)
