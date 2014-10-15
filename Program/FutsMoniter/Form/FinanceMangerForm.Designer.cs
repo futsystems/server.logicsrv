@@ -43,6 +43,7 @@
             this.radPageView1 = new Telerik.WinControls.UI.RadPageView();
             this.settlepage = new Telerik.WinControls.UI.RadPageViewPage();
             this.cashpage = new Telerik.WinControls.UI.RadPageViewPage();
+            this.ctCashTrans1 = new FutsMoniter.ctCashTrans();
             this.radGroupBox3 = new Telerik.WinControls.UI.RadGroupBox();
             this.btnChangeBankAccount = new Telerik.WinControls.UI.RadButton();
             this.lbbankbranch = new Telerik.WinControls.UI.RadLabel();
@@ -55,9 +56,8 @@
             this.radLabel17 = new Telerik.WinControls.UI.RadLabel();
             this.radPageView2 = new Telerik.WinControls.UI.RadPageView();
             this.pendingOperationPage = new Telerik.WinControls.UI.RadPageViewPage();
-            this.histqrypage = new Telerik.WinControls.UI.RadPageViewPage();
             this.ctCashOperation1 = new FutsMoniter.ctCashOperation();
-            this.ctCashTrans1 = new FutsMoniter.ctCashTrans();
+            this.histqrypage = new Telerik.WinControls.UI.RadPageViewPage();
             ((System.ComponentModel.ISupportInitialize)(this.radGroupBox1)).BeginInit();
             this.radGroupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnCashOperation)).BeginInit();
@@ -242,6 +242,15 @@
             this.cashpage.Size = new System.Drawing.Size(700, 240);
             this.cashpage.Text = "出入金记录";
             // 
+            // ctCashTrans1
+            // 
+            this.ctCashTrans1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ctCashTrans1.Location = new System.Drawing.Point(0, 0);
+            this.ctCashTrans1.Name = "ctCashTrans1";
+            this.ctCashTrans1.Size = new System.Drawing.Size(700, 240);
+            this.ctCashTrans1.TabIndex = 0;
+            this.ctCashTrans1.ViewType = FutsMoniter.CashOpViewType.Agent;
+            // 
             // radGroupBox3
             // 
             this.radGroupBox3.AccessibleRole = System.Windows.Forms.AccessibleRole.Grouping;
@@ -355,10 +364,19 @@
             // pendingOperationPage
             // 
             this.pendingOperationPage.Controls.Add(this.ctCashOperation1);
-            this.pendingOperationPage.Location = new System.Drawing.Point(10, 31);
+            this.pendingOperationPage.Location = new System.Drawing.Point(10, 35);
             this.pendingOperationPage.Name = "pendingOperationPage";
-            this.pendingOperationPage.Size = new System.Drawing.Size(721, 282);
+            this.pendingOperationPage.Size = new System.Drawing.Size(721, 278);
             this.pendingOperationPage.Text = "待处理";
+            // 
+            // ctCashOperation1
+            // 
+            this.ctCashOperation1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ctCashOperation1.Location = new System.Drawing.Point(0, 0);
+            this.ctCashOperation1.Name = "ctCashOperation1";
+            this.ctCashOperation1.Size = new System.Drawing.Size(721, 278);
+            this.ctCashOperation1.TabIndex = 0;
+            this.ctCashOperation1.ViewType = FutsMoniter.CashOpViewType.Agent;
             // 
             // histqrypage
             // 
@@ -367,23 +385,6 @@
             this.histqrypage.Name = "histqrypage";
             this.histqrypage.Size = new System.Drawing.Size(721, 282);
             this.histqrypage.Text = "历史查询";
-            // 
-            // ctCashOperation1
-            // 
-            this.ctCashOperation1.Location = new System.Drawing.Point(0, 0);
-            this.ctCashOperation1.Name = "ctCashOperation1";
-            this.ctCashOperation1.Size = new System.Drawing.Size(626, 213);
-            this.ctCashOperation1.TabIndex = 0;
-            this.ctCashOperation1.ViewType = FutsMoniter.CashOpViewType.Agent;
-            // 
-            // ctCashTrans1
-            // 
-            this.ctCashTrans1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ctCashTrans1.Location = new System.Drawing.Point(0, 0);
-            this.ctCashTrans1.Name = "ctCashTrans1";
-            this.ctCashTrans1.Size = new System.Drawing.Size(700, 240);
-            this.ctCashTrans1.TabIndex = 0;
-            this.ctCashTrans1.ViewType = FutsMoniter.CashOpViewType.Agent;
             // 
             // FinanceMangerForm
             // 

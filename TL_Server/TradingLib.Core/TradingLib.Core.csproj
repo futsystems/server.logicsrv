@@ -78,10 +78,10 @@
     <Compile Include="Core\ClearCentre\ClearCentreSrv_AccountCashOperation.cs" />
     <Compile Include="Core\ManagerExchange\ContractBankUtils.cs" />
     <Compile Include="Core\ManagerExchange\ManagerRights.cs" />
-    <Compile Include="Core\ManagerExchange\ManagerUtils\ManagerUtils_.cs" />
-    <Compile Include="Core\ManagerExchange\ManagerUtils\ManagerUtils_Account.cs" />
-    <Compile Include="Core\ManagerExchange\ManagerUtils\ManagerUtils.cs" />
-    <Compile Include="Core\ManagerExchange\ManagerUtils\ManagerUtils_Right.cs" />
+    <Compile Include="Core\ManagerExchange\Utils\ManagerUtils_.cs" />
+    <Compile Include="Core\ManagerExchange\Utils\ManagerUtils_Account.cs" />
+    <Compile Include="Core\ManagerExchange\Utils\ManagerUtils.cs" />
+    <Compile Include="Core\ManagerExchange\Utils\ManagerUtils_Right.cs" />
     <Compile Include="Core\ManagerExchange\MgrClientInfo.cs" />
     <Compile Include="Core\ManagerExchange\MgrExchServer.cs" />
     <Compile Include="Base\Settlement.cs" />
@@ -96,6 +96,8 @@
     <Compile Include="Core\ManagerExchange\MgrExchServer_Operation.cs" />
     <Compile Include="Core\ManagerExchange\MgrExchServer_CTE_CashOPAccount.cs" />
     <Compile Include="Core\ManagerExchange\MgrExchServer_CTE_CashOPAgent.cs" />
+    <Compile Include="Core\ManagerExchange\Utils\ObjectsUtils.cs" />
+    <Compile Include="Core\ManagerExchange\MgrExchServer_Notify.cs" />
     <Compile Include="Core\MessageExchange\MsgExchServer_.cs" />
     <Compile Include="Core\MessageExchange\MsgExchServer_PacketHandle.cs" />
     <Compile Include="Core\MessageExchange\MsgExchServer_CTE.cs" />
@@ -141,9 +143,7 @@
     <Compile Include="Base\TIFEngine.cs" />
     <Compile Include="Transport\zmessages.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Core\ManagerExchange\JsonObject\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

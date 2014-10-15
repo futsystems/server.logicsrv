@@ -177,7 +177,12 @@ namespace TradingLib.Core
                     //发送其他类型的信息
                     while (_packetcache.hasItems && noresumeinfo())
                     {
+                        
                         IPacket packet = _packetcache.Read();
+                        if (packet.Type == MessageTypes.MGRCONTRIBRESPONSE)
+                        {
+                            string x = "";
+                        }
                         //debug("发送消息: 类型:" + packet.Type.ToString() + " 发送消息:" + packet.Content, QSEnumDebugLevel.INFO);
                         tl.TLSend(packet);
                     }

@@ -65,8 +65,8 @@ namespace TradingLib.Core
 
 
 
-
-
+            //初始化通知
+            InitNotifySection();
             //启动消息服务
             StartMessageRouter();
         }
@@ -234,7 +234,7 @@ namespace TradingLib.Core
         {
             IAccount acc = TLCtxHelper.CmdAccount[account];
             if (acc == null) return;//交易帐户不存在 
-            if (this.Manager.RightAccessAccount(acc)) return;//无权查看交易帐户
+            if (!this.Manager.RightAccessAccount(acc)) return;//无权查看交易帐户
             _selectacc = account;
         }
 

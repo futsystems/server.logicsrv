@@ -32,6 +32,9 @@ namespace FutsMoniter
                 Globals.CallBackCentre.RegisterCallback("MgrExchServer", "CancelCashOperation", this.OnCashOperation);
                 Globals.CallBackCentre.RegisterCallback("MgrExchServer", "RejectCashOperation", this.OnCashOperation);
                 Globals.CallBackCentre.RegisterCallback("MgrExchServer", "QryFinanceInfoLite", this.OnQryAgentFinanceInfoLite);
+
+                Globals.CallBackCentre.RegisterCallback("MgrExchServer", "NotifyCashOperation", this.OnNotifyCashOperation);
+                
             }
             this.FormClosing += new FormClosingEventHandler(FinanceMangerForm_FormClosing);
             this.Load += new EventHandler(FinanceMangerForm_Load);
@@ -56,6 +59,9 @@ namespace FutsMoniter
                 Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "CancelCashOperation", this.OnCashOperation);
                 Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "RejectCashOperation", this.OnCashOperation);
                 Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "QryFinanceInfoLite", this.OnQryAgentFinanceInfoLite);
+
+                Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "NotifyCashOperation", this.OnNotifyCashOperation);
+                
             }
         }
 
@@ -132,6 +138,25 @@ namespace FutsMoniter
             {
                 Globals.TLClient.ReqQryAgentFinanceInfoLite();
             }
+        }
+
+        void OnNotifyCashOperation(string jsonstr)
+        {
+            JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
+            int code = int.Parse(jd["Code"].ToString());
+            if (code == 0)
+            {
+                JsonWrapperCashOperation obj = TradingLib.Mixins.LitJson.JsonMapper.ToObject<JsonWrapperCashOperation>(jd["Playload"].ToJson());
+                ctCashOperation1.GotJsonWrapperCashOperation(obj);
+            }
+            else//如果没有配资服
+            {
+
+            }
+            //if (Globals.EnvReady)
+            //{
+            //    Globals.TLClient.ReqQryAgentFinanceInfoLite();
+            //}
         }
 
         delegate void del3(JsonWrapperAgentFinanceInfoLite info);
