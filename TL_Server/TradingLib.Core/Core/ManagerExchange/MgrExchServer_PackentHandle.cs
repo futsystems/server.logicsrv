@@ -333,7 +333,7 @@ namespace TradingLib.Core
                 RspMGROperationResponse response = ResponseTemplate<RspMGROperationResponse>.SrvSendRspResponse(request);
                 response.RspInfo.FillError("指定的管理员不存在");
                 CachePacket(response);
-                return;
+                return; 
             }
 
             
