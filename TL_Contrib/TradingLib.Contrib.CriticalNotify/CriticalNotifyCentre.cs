@@ -8,12 +8,13 @@ using TradingLib.API;
 using TradingLib.Common;
 
 
-namespace TradingLib.Contrib.CriticalNotify
+
+namespace TradingLib.Contrib.NotifyCentre
 {
-    [ContribAttr(CriticalNotifyCentre.ContribName, "重要消息通知扩展", "用于采集系统重要信息然后通过邮件,短消息,微信等方式对外发送")]
-    public class CriticalNotifyCentre : ContribSrvObject, IContrib
+    [ContribAttr(NotifyGatway.ContribName, "重要消息通知扩展", "用于采集系统重要信息然后通过邮件,短消息,微信等方式对外发送")]
+    public class NotifyGatway : ContribSrvObject, IContrib
     {
-        const string ContribName = "CriticalNotifyCentre";
+        const string ContribName = "NotifyGatway";
 
         System.Net.Mail.SmtpClient client;
 
@@ -27,9 +28,13 @@ namespace TradingLib.Contrib.CriticalNotify
         ConfigDB _cfgdb;
 
 
-        public CriticalNotifyCentre()
-            : base(CriticalNotifyCentre.ContribName)
-        { }
+
+        public NotifyGatway()
+            : base(NotifyGatway.ContribName)
+        {
+
+            
+        }
 
 
 
@@ -43,7 +48,7 @@ namespace TradingLib.Contrib.CriticalNotify
             debug("");
             
             //1.加载配置文件
-            _cfgdb = new ConfigDB(CriticalNotifyCentre.ContribName);
+            _cfgdb = new ConfigDB(NotifyGatway.ContribName);
             if (!_cfgdb.HaveConfig("smtp"))
             {
                 _cfgdb.UpdateConfig("smtp", QSEnumCfgType.String, "smtp.qq.com", "SMTP邮件服务器");
@@ -87,12 +92,19 @@ namespace TradingLib.Contrib.CriticalNotify
 
         }
 
+        /// <summary>
+        /// 响应出入金操作事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void CashOperationEvent_CashOperationRequest(object sender, CashOperationEventArgs e)
         {
-            debug("CashOperation Event Notify Ref:" + e.CashOperation.Ref + " Status:" + e.CashOperation.Status, QSEnumDebugLevel.INFO);
-            string body = "出入金编号:" + e.CashOperation.Ref + " 金额:" + e.CashOperation.Amount + " 状态:" + Util.GetEnumDescription(e.CashOperation.Status) + " 来源:" + Util.GetEnumDescription(e.CashOperation.Source);
-            IEmail email = new Email(body, body, new string[] { "qstrading@foxmail.com" });
-            SendEmail(email);
+            EmailDrop emaildrop = new CashOperationEmailDrop(e.CashOperation);
+
+            foreach (IEmail email in emaildrop.GenerateEmails())
+            {
+                SendEmail(email);
+            }
         }
 
         public void SendEmail(IEmail email)
@@ -106,7 +118,7 @@ namespace TradingLib.Contrib.CriticalNotify
         {
             try
             {
-                debug("check and send emial ------------", QSEnumDebugLevel.INFO);
+                //debug("check and send emial ------------", QSEnumDebugLevel.INFO);
                 while (emailcache.hasItems)
                 {
                     sendmail(emailcache.Read());
@@ -126,7 +138,7 @@ namespace TradingLib.Contrib.CriticalNotify
         {
             if (email.Receivers.Length == 0)
                 email.Receivers = _noticelsit.Split(',');
-            debug(PROGRAME + ":发送邮件到:" + string.Join(",", email.Receivers), QSEnumDebugLevel.INFO);
+            debug("send email to:" + string.Join(",", email.Receivers), QSEnumDebugLevel.INFO);
             System.Net.Mail.MailMessage Message = new System.Net.Mail.MailMessage();
             Message.From = new System.Net.Mail.MailAddress(_from);//这里需要注
             foreach (string add in email.Receivers)

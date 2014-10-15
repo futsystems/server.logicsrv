@@ -238,6 +238,7 @@ namespace TradingLib.Contrib.FinService
 
                 int totalsize = 0;
                 Util.Debug("nowequity:" + nowequity.ToString() + " marginperlot:" + marginperlot.ToString() + " marginpperlotstop:" + marginperlotstart.ToString());
+
                 if (nowequity < marginperlot)
                 {
                     if (nowequity >= marginperlotstart)

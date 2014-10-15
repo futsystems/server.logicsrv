@@ -105,7 +105,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradingLib.Contrib.Recharge
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpServer", "TL_Base\HttpServer\HttpServer.csproj", "{363D4A84-957E-4CDA-ACB7-EEDE603FDD81}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradingLib.Contrib.CriticalNotify", "TL_Contrib\TradingLib.Contrib.CriticalNotify\TradingLib.Contrib.CriticalNotify.csproj", "{81153C5F-047F-4F61-8A6F-44235E07D254}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradingLib.Contrib.NotifyCentre", "TL_Contrib\TradingLib.Contrib.CriticalNotify\TradingLib.Contrib.NotifyCentre.csproj", "{81153C5F-047F-4F61-8A6F-44235E07D254}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
