@@ -16,6 +16,25 @@ namespace FutsMoniter
     {
         public event VoidDelegate AgentSelectedChangedEvent;
         bool _gotdata = false;
+
+        //属性获得和设置
+        [DefaultValue(true)]
+        bool _enableselected = false;
+        public bool EnableSelected
+        {
+            get
+            {
+                return _enableselected;
+            }
+            set
+            {
+                _enableselected = value;
+                agent.Enabled = _enableselected;
+            }
+        }
+
+
+
         public ctAgentList()
         {
             InitializeComponent();
@@ -24,6 +43,7 @@ namespace FutsMoniter
             if (Globals.EnvReady)
             {
                 InitAgentList();
+                
             }
             else
             {
@@ -33,6 +53,19 @@ namespace FutsMoniter
                 }
             }
             this.Disposed += new EventHandler(ctAgentList_Disposed);
+            this.Load += new EventHandler(ctAgentList_Load);
+        }
+
+        void ctAgentList_Load(object sender, EventArgs e)
+        {
+            if (!_enableselected)
+            {
+                agent.Enabled = false;
+            }
+            else
+            {
+                agent.Enabled = true;
+            }
         }
 
         void ctAgentList_Disposed(object sender, EventArgs e)
@@ -46,6 +79,10 @@ namespace FutsMoniter
         void InitAgentList()
         {
             Factory.IDataSourceFactory(agent).BindDataSource(Globals.BasicInfoTracker.GetBaseManagerCombList());
+            if (Globals.Manager.Type != QSEnumManagerType.ROOT)
+            {
+                agent.SelectedValue = Globals.BaseMGRFK;
+            }
             _gotdata = true;
         }
 

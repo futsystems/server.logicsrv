@@ -30,22 +30,7 @@ namespace TradingLib.Core
         void SrvOnMGRQryAccount(MGRQryAccountRequest request, ISession session, Manager manager)
         {
             debug(string.Format("管理员:{0} 请求下载交易帐户列表:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
-            //判断管理账户类别
-            //1.超级管理员可以查看所有帐户
-            IAccount[] list = new IAccount[] { };
-            if (manager.BaseManager.Type == QSEnumManagerType.ROOT)
-            {
-                //获得系统所有交易帐号
-                list = clearcentre.Accounts;
-            }
-            else
-            {
-                debug("柜员所属于主柜员ID:" + manager.BaseManager.ID.ToString(), QSEnumDebugLevel.INFO);
-                //获得属于该主柜员的所有交易帐号
-                list = clearcentre.Accounts.Where(acc=>acc.Mgr_fk.Equals(manager.BaseManager.ID)).ToArray();
-
-                
-            }
+            IAccount[] list = manager.GetVisibleAccount().ToArray();
             if (list.Length > 0)
             {
                 for (int i = 0; i < list.Length; i++)
@@ -311,14 +296,17 @@ namespace TradingLib.Core
         {
             debug(string.Format("管理员:{0} 请求添加交易帐号:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
             string outaccount =string.Empty;
-            int mgrid = request.MgrID;
-            Manager manger = BasicTracker.ManagerTracker[mgrid];
+            if (manager.RightRootDomain())//如果是Root权限则可以指定帐户所属域 代理域不能指定，只能按代理自己的主域来设置
+            {
+                bool re = clearcentre.AddAccount(out outaccount, request.UserID.ToString(), request.AccountID, request.Password, request.Category,request.MgrID);//将交易帐户加入到主域
+                return;
+            }
             Manager basemgr = manager.BaseManager;
             int limit = basemgr.AccLimit;
             int cnt = TLCtxHelper.CmdAccount.Accounts.Where(acc => acc.Mgr_fk == basemgr.mgr_fk).Count();
             if (cnt < limit)
             {
-                bool re = clearcentre.AddAccount(out outaccount, request.UserID.ToString(), request.AccountID, request.Password, request.Category, request.MgrID);
+                bool re = clearcentre.AddAccount(out outaccount, request.UserID.ToString(), request.AccountID, request.Password, request.Category, basemgr.GetBaseMGR());//将交易帐户加入到主域
                 //clearcentre.UpdateMGRLoginName(outaccount, mgrid);
             }
             else

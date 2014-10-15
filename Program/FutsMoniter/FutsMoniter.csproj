@@ -99,6 +99,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\ManagerUtils.cs" />
     <Compile Include="Controls\ctCashTrans.cs">
       <SubType>UserControl</SubType>
     </Compile>
