@@ -44,7 +44,7 @@ namespace TradingLib.Contrib.NotifyCentre
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
-        public static AccountContact GetContractTracker(string account)
+        public static AccountContact GetAccountContract(string account)
         {
             return defaultinstance[account];
         }

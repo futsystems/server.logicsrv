@@ -12,7 +12,7 @@ using TradingLib.Common;
 namespace TradingLib.Contrib.NotifyCentre
 {
     [ContribAttr(NotifyGatway.ContribName, "重要消息通知扩展", "用于采集系统重要信息然后通过邮件,短消息,微信等方式对外发送")]
-    public class NotifyGatway : ContribSrvObject, IContrib
+    public partial class NotifyGatway : ContribSrvObject, IContrib
     {
         const string ContribName = "NotifyGatway";
 

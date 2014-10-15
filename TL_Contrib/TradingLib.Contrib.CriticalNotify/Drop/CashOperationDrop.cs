@@ -94,7 +94,7 @@ namespace TradingLib.Contrib.NotifyCentre
                 case EnumNotifeeType.Account:
                     {
                         //获得交易帐户的邮件地址
-                        AccountContact ct = ContactTracker.GetContractTracker(this.Account);
+                        AccountContact ct = ContactTracker.GetAccountContract(this.Account);
                         if (ct != null && ct.IsEmailValid)
                         {
                             return new string[] { ct.Email };

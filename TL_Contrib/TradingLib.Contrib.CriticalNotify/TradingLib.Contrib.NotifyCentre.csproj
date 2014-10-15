@@ -58,8 +58,10 @@
     <Compile Include="AccountContact.cs" />
     <Compile Include="Drop\CashOperationDrop.cs" />
     <Compile Include="ContactTracker.cs" />
-    <Compile Include="CriticalNotifyCentre.cs" />
+    <Compile Include="Drop\NotifyContactChangedDrop.cs" />
+    <Compile Include="NotifyGatway.cs" />
     <Compile Include="Drop\EmailDrop.cs" />
+    <Compile Include="NotifyGatway_CTE.cs" />
     <Compile Include="RenderHelper.cs" />
     <Compile Include="EnumNotifeeType.cs" />
     <Compile Include="NotifyeeContact.cs" />

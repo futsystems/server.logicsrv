@@ -1,6 +1,6 @@
 <html>
 <head>
-	<title>出入金</title>
+	<title>订阅通知消息</title>
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 	<link type="text/css" href="/css/uikit.gradient.min.css"  rel="Stylesheet" />
 	<link rel="icon" href="/images/favicon.ico"/>
@@ -18,10 +18,10 @@
                     <li>
                         <a href="/deposit_manual">离线入金</a>
                     </li>
-                    <li class="uk-active">
+                    <li >
                         <a href="/withdraw">出金</a>
                     </li>
-					<li>
+					<li class="uk-active">
                         <a href="/notify">订阅通知消息</a>
                     </li>
                     <li>
@@ -36,7 +36,7 @@
                 <div class="uk-width-medium-1-1">
 					<div class="uk-vertical-align-middle" style="width: 350px;">
 					
-						<form method="post" action="/withdraw_confirm" enctype="multipart/form-data" class="uk-panel uk-panel-box uk-form">
+						<form method="post" action="/notify_confirm" enctype="multipart/form-data" class="uk-panel uk-panel-box uk-form">
 							<div class="uk-form-row">
 								<input class="uk-width-1-1 uk-form-large" type="text" name="Account" placeholder="交易帐号">
 							</div>
@@ -46,11 +46,11 @@
 							</div>
 
 							<div class="uk-form-row">
-								<input class="uk-width-1-1 uk-form-large" type="text" name="Amount" placeholder="金额">
+								<input class="uk-width-1-1 uk-form-large" type="text" name="email" placeholder="QQ邮箱">
 							</div>
 							
 							<div class="uk-form-row">
-								<button class="uk-button uk-button-primary" type="submit">申请出金</button>
+								<button class="uk-button uk-button-primary" type="submit">订阅通知消息</button>
 							</div>
 						</form>
 					</div>
