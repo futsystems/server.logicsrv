@@ -313,6 +313,21 @@ namespace TradingLib.Core
             string outaccount =string.Empty;
             int mgrid = request.MgrID;
             Manager manger = BasicTracker.ManagerTracker[mgrid];
+            Manager basemgr = manager.BaseManager;
+            int limit = basemgr.AccLimit;
+            int cnt = TLCtxHelper.CmdAccount.Accounts.Where(acc => acc.Mgr_fk == basemgr.mgr_fk).Count();
+            if (cnt < limit)
+            {
+                bool re = clearcentre.AddAccount(out outaccount, request.UserID.ToString(), request.AccountID, request.Password, request.Category, request.MgrID);
+                //clearcentre.UpdateMGRLoginName(outaccount, mgrid);
+            }
+            else
+            {
+                RspMGROperationResponse response = ResponseTemplate<RspMGROperationResponse>.SrvSendRspResponse(request);
+                response.RspInfo.Fill(FutsRspError.GenericError("可开帐户数量超过限制:" + limit.ToString()));
+                CachePacket(response);
+                return;
+            }
             if (manager == null)
             {
                 RspMGROperationResponse response = ResponseTemplate<RspMGROperationResponse>.SrvSendRspResponse(request);
@@ -320,8 +335,8 @@ namespace TradingLib.Core
                 CachePacket(response);
                 return;
             }
-            bool re = clearcentre.AddAccount(out outaccount, request.UserID.ToString(), request.AccountID, request.Password, request.Category,request.MgrID);
-            //clearcentre.UpdateMGRLoginName(outaccount, mgrid);
+
+            
         }
 
         void SrvOnMGRQryExchange(MGRQryExchangeRequuest request, ISession session, Manager manager)
