@@ -254,6 +254,31 @@ namespace TradingLib.Contrib.FinService
         {
 
         }
+
+        DateTime _firetime = DateTime.Now;
+        int _timediff = 5;
+        /// <summary>
+        /// 触发强平，这里启用了过滤
+        /// 在4秒内 触发2次执行强平，防止第一次计算错误造成误差
+        /// </summary>
+        /// <param name="reason"></param>
+        protected virtual void FireFlatPosition(string reason)
+        {
+            //如果5秒内触发过2此强平信号，则认为该计算是正确的 可以排除第一次计算出现当前权益为负数的情况[待查]
+            if (DateTime.Now.Subtract(_firetime).TotalSeconds < _timediff)
+            {
+                Util.Debug("5秒内触发2次强平信号,执行强平");
+                this.Account.FlatPosition(QSEnumOrderSource.RISKCENTREACCOUNTRULE, "配资服务强平:" + reason);
+                this.Account.InactiveAccount();
+            }
+            else
+            {
+                Util.Debug("距离上次触发时间超过5秒,重置触发时间");
+                //如果离上一次触发大于5秒，则重置促发时间
+                _firetime = DateTime.Now;
+            }
+                
+        }
         #endregion
 
 

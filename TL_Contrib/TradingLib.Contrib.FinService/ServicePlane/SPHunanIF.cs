@@ -37,7 +37,7 @@ namespace TradingLib.Contrib.FinService
         /// <summary>
         /// 强平比例 配资金额的2%
         /// </summary>
-        [ArgumentAttribute("StopPect", "强平比例", EnumArgumentType.DECIMAL, false,0.2,0.02)]
+        [ArgumentAttribute("StopPect", "强平比例", EnumArgumentType.DECIMAL, false,0.02,0.02)]
         public ArgumentPair StopPect { get; set; }
 
 
@@ -126,23 +126,28 @@ namespace TradingLib.Contrib.FinService
 
         /// <summary>
         /// 执行风控规则
-        /// 股指当平均每手资金降低到800元时候执行强平
+        /// 自由资金小于配资金额的2%执行强平
         /// </summary>
         public override void CheckAccount()
         {
+            //没有持仓直接返回
+            if (!this.Account.GetAnyPosition()) return;
+            //检查当前配资额度,如果配资额度<=0表明没有配资额度，不用检查，即便使用帐户也是自由资金
             decimal finamount = this.FinAmount.AccountArgument.AsDecimal();
             if (finamount <= 0) return;
-            //当前资金
-            decimal nowequity = this.Account.NowEquity;
-            decimal pect = nowequity / this.FinAmount.AccountArgument.AsDecimal();
 
+            //当前权益
+            decimal nowequity = this.Account.NowEquity;
+            //计算当前权益占配资资金的比例
+            decimal pect = nowequity / this.FinAmount.AccountArgument.AsDecimal();
             decimal stoppect = this.StopPect.AccountArgument.AsDecimal();
-            Util.Debug("finamount:" + finamount.ToString() + " nowequity:" + nowequity.ToString() + " pect:" + pect.ToString() + " stoppect:" + stoppect.ToString());
-            //如果当前资金只有  低于配资金额的2% 时候强平
-            if (pect < this.StopPect.AccountArgument.AsDecimal())
+            //Util.Debug("finamount:" + finamount.ToString() + " nowequity:" + nowequity.ToString() + " pect:" + pect.ToString() + " stoppect:" + stoppect.ToString());
+                
+            //如果当前资金只有  低于配资金额的2% 时候触发强平信号
+            if (pect < stoppect)
             {
-                this.Account.FlatPosition(QSEnumOrderSource.RISKCENTREACCOUNTRULE, "配资服务强平");
-                this.Account.InactiveAccount();            
+                //Util.Debug("finamount:" + finamount.ToString() + " nowequity:" + nowequity.ToString() + " pect:" + pect.ToString() + " stoppect:" + stoppect.ToString());
+                FireFlatPosition("湖南股指专配");       
             }
             
 
@@ -193,12 +198,13 @@ namespace TradingLib.Contrib.FinService
 
             //可用资金大于需求资金则可以接受该委托
             decimal required = this.Account.CalOrderFundRequired(o,0);
-            //TLCtxHelper.Debug("[CanFundTakeOrder Check] Fundavabile:" + avabile.ToString() + " Required:" + required);
+            Util.Debug("SPHunanIF Fundavabile:" + avabile.ToString() + " Required:" + required +" account avabile fund:"+this.Account.AvabileFunds.ToString());
             if (required > avabile)
             {
                 msg = "资金不足";
                 return false;
             }
+
             return true;
         }
 
@@ -212,7 +218,7 @@ namespace TradingLib.Contrib.FinService
         /// <returns></returns>
         public override decimal GetFundAvabile(Symbol symbol)
         {
-            return this.Account.NowEquity + this.FinAmount.AccountArgument.AsDecimal();
+            return this.Account.AvabileFunds + this.FinAmount.AccountArgument.AsDecimal();
         }
 
         /// <summary>
