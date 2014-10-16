@@ -101,6 +101,8 @@ namespace TradingLib.Core
         {
             return !_accqrycache.hasItems;
         }
+
+
         /// <summary>
         /// 所有需要转发到客户端的消息均通过缓存进行，这样避免了多个线程同时操作一个ZeroMQ socket
         /// </summary>

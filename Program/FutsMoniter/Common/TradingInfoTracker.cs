@@ -100,6 +100,7 @@ namespace TradingLib.Common
             status = QSEnumInfoTrackerStatus.RESUMEEND;
         }
 
+
         public bool IsReady(string account)
         {
             if (string.IsNullOrEmpty(account)) return false;

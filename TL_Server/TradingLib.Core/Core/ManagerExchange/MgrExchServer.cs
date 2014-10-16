@@ -242,29 +242,3 @@ namespace TradingLib.Core
 
 
 }
-
-///// <summary>
-///// 记录是哪个管理端请求了该账户
-///// </summary>
-//public struct AccountSource
-//{
-//    public IAccount Account;
-//    public string Source;
-//    public AccountSource(IAccount acc, string source)
-//    {
-//        Account = acc;
-//        Source = source;
-//    }
-//}
-
-//public struct AccountInfoLiteSource
-//{
-//    public IAccountInfoLite AccInfo;
-//    public string Source;
-//    public AccountInfoLiteSource(IAccountInfoLite info, string source)
-//    {
-//        AccInfo = info;
-//        Source = source;
-//    }
-
-//}

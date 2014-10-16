@@ -19,7 +19,7 @@ namespace FutsMoniter
 
         //属性获得和设置
         [DefaultValue(true)]
-        bool _enableselected = false;
+        bool _enableselected = true;
         public bool EnableSelected
         {
             get
@@ -33,6 +33,46 @@ namespace FutsMoniter
             }
         }
 
+        /// <summary>
+        /// 是否允许显示Any 即所有代理商
+        /// 比如查询时查询所有统计 则选择Any 帐户列表过滤时候选择Any则表示不用代理上过滤
+        /// </summary>
+        [DefaultValue(false)]
+        bool _enableany = false;
+        public bool EnableAny
+        {
+            get
+            {
+                return _enableany;
+            }
+            set
+            {
+                _enableany = value;
+                if (Globals.EnvReady)
+                {
+                    InitAgentList();
+                }
+                //agent.Enabled = _enableselected;
+            }
+        }
+
+        [DefaultValue(true)]
+        bool _defaultbasemgr = true;
+        public bool EnableDefaultBaseMGR
+        {
+            get
+            {
+                return _defaultbasemgr;
+            }
+            set
+            {
+                _defaultbasemgr = value;
+                if (Globals.EnvReady)
+                {
+                    InitAgentList();
+                }
+            }
+        }
 
 
         public ctAgentList()
@@ -42,12 +82,11 @@ namespace FutsMoniter
             //如果已经初始化完成 则直接读取数据填充 否则将资金放入事件回调中
             if (Globals.EnvReady)
             {
-                InitAgentList();
-                
+                InitAgentList();   
             }
             else
             {
-                if (Globals.CallbackCentreReady)
+                if (Globals.CallbackCentreReady)//回调初始化后在加入回调，当系统初始化完毕后 通过回调更新列表
                 {
                     Globals.RegInitCallback(OnInitFinished);
                 }
@@ -72,16 +111,20 @@ namespace FutsMoniter
         {
             if (Globals.CallbackCentreReady)
             {
+                
                 //Globals.CallBackCentre.UnRegisterCallback("FinServiceCentre", "QryFinServicePlan", OnInitFinished);
             }
         }
 
         void InitAgentList()
         {
-            Factory.IDataSourceFactory(agent).BindDataSource(Globals.BasicInfoTracker.GetBaseManagerCombList());
+            Factory.IDataSourceFactory(agent).BindDataSource(Globals.BasicInfoTracker.GetBaseManagerCombList(_enableany));
             if (Globals.Manager.Type != QSEnumManagerType.ROOT)
             {
-                agent.SelectedValue = Globals.BaseMGRFK;
+                if (_defaultbasemgr)//如果默认选择当前域 则设置selectedvalue
+                {
+                    agent.SelectedValue = Globals.BaseMGRFK;
+                }
             }
             _gotdata = true;
         }

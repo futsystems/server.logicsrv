@@ -301,12 +301,28 @@ namespace TradingLib.Core
                 bool re = clearcentre.AddAccount(out outaccount, request.UserID.ToString(), request.AccountID, request.Password, request.Category,request.MgrID);//将交易帐户加入到主域
                 return;
             }
-            Manager basemgr = manager.BaseManager;
-            int limit = basemgr.AccLimit;
-            int cnt = TLCtxHelper.CmdAccount.Accounts.Where(acc => acc.Mgr_fk == basemgr.mgr_fk).Count();
+            int mgrk = request.MgrID;
+            bool right = manager.RightAgentParent(mgrk);
+            debug("Manager:" + manager.Name +" fk:"+manager.mgr_fk.ToString() + " try  to add account for mgrfk:" + mgrk.ToString() +" have access right:"+right.ToString(),QSEnumDebugLevel.INFO);
+            
+            //Manager basemgr = manager.BaseManager;//获得当前Manager的主域
+            
+            //如果不是为该主域添加帐户,则我们需要判断当前Manager的主域是否拥有请求主域的权限
+            if (manager.GetBaseMGR() != request.MgrID)
+            {
+                if (!manager.RightAgentParent(request.MgrID))
+                {
+                    RspMGROperationResponse response = ResponseTemplate<RspMGROperationResponse>.SrvSendRspResponse(request);
+                    response.RspInfo.Fill(FutsRspError.GenericError("无权在该管理域开设帐户"));
+                    CachePacket(response);
+                }
+            }
+
+            int limit =manager.BaseManager.AccLimit;
+            int cnt = TLCtxHelper.CmdAccount.Accounts.Where(acc => acc.Mgr_fk ==manager.GetBaseMGR()).Count();
             if (cnt < limit)
             {
-                bool re = clearcentre.AddAccount(out outaccount, request.UserID.ToString(), request.AccountID, request.Password, request.Category, basemgr.GetBaseMGR());//将交易帐户加入到主域
+                bool re = clearcentre.AddAccount(out outaccount, request.UserID.ToString(), request.AccountID, request.Password, request.Category,request.MgrID);//将交易帐户加入到主域
                 //clearcentre.UpdateMGRLoginName(outaccount, mgrid);
             }
             else
@@ -316,6 +332,8 @@ namespace TradingLib.Core
                 CachePacket(response);
                 return;
             }
+
+
             if (manager == null)
             {
                 RspMGROperationResponse response = ResponseTemplate<RspMGROperationResponse>.SrvSendRspResponse(request);

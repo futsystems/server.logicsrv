@@ -100,11 +100,41 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\ManagerUtils.cs" />
+    <Compile Include="Controls\ctAccountMoniter\ctAccountMontier_QueryAccountList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ctAccountMoniter\ctAccountMontier_Resume.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Controls\ctCashTrans.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Controls\ctCashTrans.Designer.cs">
       <DependentUpon>ctCashTrans.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ctAccountMoniter\ctAccountMontier_.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ctAccountMoniter\ctAccountMontier_UpdateAccountInfo.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ctAccountMoniter\ctAccountMontier_OnXXXXX.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ctAccountMoniter\ctAccountMontier_Event.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ctAccountMoniter\ctAccountMontier_SendCancelOrder.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ctAccountMoniter\ctAccountMontier_DyanmicWatchAccounts.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ctAccountMoniter\ctAccountMontier_Menu.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ctAccountMoniter\ctAccountMontier_AccountHolder.cs">
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Form\CasherMangerForm.cs">
       <SubType>Form</SubType>
@@ -211,7 +241,7 @@
     <Compile Include="API\Delegate.cs" />
     <Compile Include="API\IBasicInfo.cs" />
     <Compile Include="API\ICallback.cs" />
-    <Compile Include="Controls\ctAccountMoniter_ServiceHolder.cs">
+    <Compile Include="Controls\ctAccountMoniter\ctAccountMoniter_ServiceHolder.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Controls\ctOrderSenderM.cs">
@@ -301,10 +331,10 @@
     <Compile Include="Common\Delegate.cs" />
     <Compile Include="Common\Starter.cs" />
     <Compile Include="Common\TradingInfoTracker.cs" />
-    <Compile Include="Controls\ctAccountMontier.cs">
+    <Compile Include="Controls\ctAccountMoniter\ctAccountMontier.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ctAccountMontier.Designer.cs">
+    <Compile Include="Controls\ctAccountMoniter\ctAccountMontier.Designer.cs">
       <DependentUpon>ctAccountMontier.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\ctFinanceInfo.cs">
@@ -562,7 +592,7 @@
     <EmbeddedResource Include="Form\AccountConfigForm.resx">
       <DependentUpon>AccountConfigForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ctAccountMontier.resx">
+    <EmbeddedResource Include="Controls\ctAccountMoniter\ctAccountMontier.resx">
       <DependentUpon>ctAccountMontier.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\ctFinanceInfo.resx">
