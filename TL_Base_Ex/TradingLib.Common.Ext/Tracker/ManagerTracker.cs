@@ -10,7 +10,6 @@ namespace TradingLib.Common
 
     public class DBManagerTracker
     {
-
         ConcurrentDictionary<string, Manager> managermap = new ConcurrentDictionary<string, Manager>();
         ConcurrentDictionary<int, Manager> mgridmap = new ConcurrentDictionary<int, Manager>();
 
@@ -21,16 +20,15 @@ namespace TradingLib.Common
             foreach (Manager m in mlist)
             {
                 managermap[m.Login] = m;
-            }
-            foreach (Manager m in mlist)
-            { 
                 mgridmap[m.ID] = m;
             }
             foreach (Manager m in mlist)
             {
                 m.BaseManager = this[m.mgr_fk];
+                m.ParentManager = this[m.parent_fk];
             }
         }
+
 
         /// <summary>
         /// 获得Root全局ID
@@ -52,9 +50,11 @@ namespace TradingLib.Common
             if (mgr.ID == 0)
             {
                 ORM.MManager.InsertManager(mgr);
+                //添加到内存
                 managermap[mgr.Login] = mgr;
                 mgridmap[mgr.ID] = mgr;
                 mgr.BaseManager = this[mgr.mgr_fk];
+                mgr.ParentManager = this[mgr.parent_fk];
             }
             else//更新
             {
@@ -74,7 +74,6 @@ namespace TradingLib.Common
 
         /// <summary>
         /// 查询某个管理员可以查询的管理员列表
-        /// 
         /// </summary>
         /// <param name="mgr"></param>
         /// <returns></returns>
@@ -89,8 +88,8 @@ namespace TradingLib.Common
                 //如果是代理 返回所有属于该代理的所有柜员
                 if(mgr.Type == QSEnumManagerType.AGENT)
                 {
-                    //如果Manager的mgr_fk等于该代理的ID则返回
-                    return managermap.Values.Where(m => m.mgr_fk.Equals(mgr.ID));
+                    //如果Manager的mgr_fk等于该代理的ID则返回 或则该Manger的下属一级子代理 如果是员工登入则只显示员工帐户
+                    return managermap.Values.Where(m => m.mgr_fk.Equals(mgr.ID)||m.parent_fk.Equals(mgr.ID));
                 }
                 else
                 {

@@ -61,11 +61,11 @@
             this.ServiceTabHolder = new Telerik.WinControls.UI.RadPageView();
             this.OrderSenderPage = new Telerik.WinControls.UI.RadPageViewPage();
             this.viewQuoteList1 = new FutSystems.GUI.ViewQuoteList();
+            this.ctOrderSenderM1 = new FutsMoniter.ctOrderSenderM();
             this.FinServicePage = new Telerik.WinControls.UI.RadPageViewPage();
+            this.ctFinService1 = new FutsMoniter.ctFinService();
             this.RaceServicePage = new Telerik.WinControls.UI.RadPageViewPage();
             this.LottoServicePage = new Telerik.WinControls.UI.RadPageViewPage();
-            this.ctOrderSenderM1 = new FutsMoniter.ctOrderSenderM();
-            this.ctFinService1 = new FutsMoniter.ctFinService();
             ((System.ComponentModel.ISupportInitialize)(this.SplitContainer)).BeginInit();
             this.SplitContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.radSplitContainer1)).BeginInit();
@@ -397,9 +397,9 @@
             // radPageViewPage1
             // 
             this.radPageViewPage1.Controls.Add(this.ctOrderView1);
-            this.radPageViewPage1.Location = new System.Drawing.Point(10, 31);
+            this.radPageViewPage1.Location = new System.Drawing.Point(10, 35);
             this.radPageViewPage1.Name = "radPageViewPage1";
-            this.radPageViewPage1.Size = new System.Drawing.Size(646, 234);
+            this.radPageViewPage1.Size = new System.Drawing.Size(646, 230);
             this.radPageViewPage1.Text = "委 托";
             // 
             // ctOrderView1
@@ -408,7 +408,7 @@
             this.ctOrderView1.Location = new System.Drawing.Point(0, 0);
             this.ctOrderView1.Name = "ctOrderView1";
             this.ctOrderView1.OrderTracker = null;
-            this.ctOrderView1.Size = new System.Drawing.Size(646, 234);
+            this.ctOrderView1.Size = new System.Drawing.Size(646, 230);
             this.ctOrderView1.TabIndex = 0;
             // 
             // radPageViewPage2
@@ -482,9 +482,9 @@
             // 
             this.OrderSenderPage.Controls.Add(this.viewQuoteList1);
             this.OrderSenderPage.Controls.Add(this.ctOrderSenderM1);
-            this.OrderSenderPage.Location = new System.Drawing.Point(10, 31);
+            this.OrderSenderPage.Location = new System.Drawing.Point(10, 35);
             this.OrderSenderPage.Name = "OrderSenderPage";
-            this.OrderSenderPage.Size = new System.Drawing.Size(564, 234);
+            this.OrderSenderPage.Size = new System.Drawing.Size(564, 230);
             this.OrderSenderPage.Text = "下 单";
             // 
             // viewQuoteList1
@@ -505,13 +505,21 @@
             this.viewQuoteList1.QuoteFont = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
             this.viewQuoteList1.QuoteViewWidth = 1030;
             this.viewQuoteList1.SelectedQuoteRow = -1;
-            this.viewQuoteList1.Size = new System.Drawing.Size(564, 146);
+            this.viewQuoteList1.Size = new System.Drawing.Size(564, 150);
             this.viewQuoteList1.SymbolFont = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
             this.viewQuoteList1.SymbolFontColor = System.Drawing.Color.Green;
             this.viewQuoteList1.TabIndex = 1;
             this.viewQuoteList1.TableLineColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.viewQuoteList1.Text = "viewQuoteList1";
             this.viewQuoteList1.UPColor = System.Drawing.Color.Red;
+            // 
+            // ctOrderSenderM1
+            // 
+            this.ctOrderSenderM1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.ctOrderSenderM1.Location = new System.Drawing.Point(0, 166);
+            this.ctOrderSenderM1.Name = "ctOrderSenderM1";
+            this.ctOrderSenderM1.Size = new System.Drawing.Size(564, 64);
+            this.ctOrderSenderM1.TabIndex = 0;
             // 
             // FinServicePage
             // 
@@ -520,6 +528,15 @@
             this.FinServicePage.Name = "FinServicePage";
             this.FinServicePage.Size = new System.Drawing.Size(564, 230);
             this.FinServicePage.Text = "配资服务";
+            // 
+            // ctFinService1
+            // 
+            this.ctFinService1.CurrentAccount = null;
+            this.ctFinService1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ctFinService1.Location = new System.Drawing.Point(0, 0);
+            this.ctFinService1.Name = "ctFinService1";
+            this.ctFinService1.Size = new System.Drawing.Size(564, 230);
+            this.ctFinService1.TabIndex = 1;
             // 
             // RaceServicePage
             // 
@@ -534,23 +551,6 @@
             this.LottoServicePage.Name = "LottoServicePage";
             this.LottoServicePage.Size = new System.Drawing.Size(564, 230);
             this.LottoServicePage.Text = "乐透服务";
-            // 
-            // ctOrderSenderM1
-            // 
-            this.ctOrderSenderM1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.ctOrderSenderM1.Location = new System.Drawing.Point(0, 170);
-            this.ctOrderSenderM1.Name = "ctOrderSenderM1";
-            this.ctOrderSenderM1.Size = new System.Drawing.Size(564, 64);
-            this.ctOrderSenderM1.TabIndex = 0;
-            // 
-            // ctFinService1
-            // 
-            this.ctFinService1.CurrentAccount = null;
-            this.ctFinService1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ctFinService1.Location = new System.Drawing.Point(0, 0);
-            this.ctFinService1.Name = "ctFinService1";
-            this.ctFinService1.Size = new System.Drawing.Size(564, 230);
-            this.ctFinService1.TabIndex = 1;
             // 
             // ctAccountMontier
             // 

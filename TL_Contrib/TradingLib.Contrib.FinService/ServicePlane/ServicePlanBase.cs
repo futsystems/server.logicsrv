@@ -7,8 +7,23 @@ using TradingLib.Common;
 
 namespace TradingLib.Contrib.FinService
 {
+    /// <summary>
+    /// 代理间分润计算公式
+    /// 用于提供代理分润公式 然后递归代理进行计算
+    /// </summary>
+    /// <param name="parent"></param>
+    /// <param name="agent"></param>
+    /// <returns></returns>
+    public delegate decimal AgentCommissionDel(Manager agent, Manager parent);
 
-    public delegate void FeeChargeDel(decimal totalfee,decimal agentfee,string comment);
+    /// <summary>
+    /// 直客分润计算公式
+    /// 用于提供直接客户与代理间的利润计算
+    /// </summary>
+    /// <param name="totalfee"></param>
+    /// <param name="agentfee"></param>
+    /// <param name="comment"></param>
+    public delegate void FeeChargeDel(decimal totalfee, decimal agentfee, AgentCommissionDel func,string comment);
     /// <summary>
     /// 所有服务计划的父类
     /// 用于定义服务计划的框架
@@ -33,6 +48,12 @@ namespace TradingLib.Contrib.FinService
             _account = acc;
         }
 
+
+        /// <summary>
+        /// 对应的服务计划外键
+        /// </summary>
+        public int ServicePlanFK { get; set; }
+
         /// <summary>
         /// 按照即定的业务逻辑
         /// 当需要收费时触发收费事件
@@ -41,9 +62,9 @@ namespace TradingLib.Contrib.FinService
         /// </summary>
         /// <param name="totalfee"></param>
         /// <param name="agentfee"></param>
-        protected void FeeCharge(decimal totalfee, decimal agentfee,string comment)
+        protected void FeeCharge(decimal totalfee, decimal agentfee, AgentCommissionDel func, string comment)
         {
-            GotFeeChargeEvent(totalfee, agentfee,comment);
+            GotFeeChargeEvent(totalfee, agentfee,func,comment);
         }
         /// <summary>
         /// 费用计算方式

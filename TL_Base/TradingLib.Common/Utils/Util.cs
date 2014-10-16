@@ -233,6 +233,18 @@ namespace TradingLib.Common
             return filepath;
         }
 
+        /// <summary>
+        /// 获得某个资源目录
+        /// </summary>
+        /// <param name="resource"></param>
+        /// <returns></returns>
+        public static string GetResourceDirectory(string resource)
+        {
+            //Resource\RechargeGateway
+            string dict = Path.Combine(new string[] { BaseDir, "Resource", resource });
+            return dict;
+        }
+
 		public static string GetPluginPath(string path)
 		{
 			return Path.Combine (new string[]{ BaseDir, path });
@@ -461,6 +473,21 @@ namespace TradingLib.Common
             int m = ((ftime - s) / 100) % 100;
             int h = (int)((ftime - m * 100 - s) / 10000);
             return new DateTime(1, 1, 1, h, m, s);
+        }
+
+        /// <summary>
+        /// 获得某个时间当天最后一刻
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        public static long ToTLDateTimeEnd(DateTime datetime)
+        {
+            return ToTLDateTime(Util.ToTLDate(datetime),235959);
+        }
+
+        public static long ToTLDateTimeEnd(long datetime)
+        {
+            return ToTLDateTimeEnd(ToDateTime(datetime));
         }
 
         public static long ToTLDateTime(int tldate, int tltime) { return (long)tldate * 1000000 + (long)tltime; }

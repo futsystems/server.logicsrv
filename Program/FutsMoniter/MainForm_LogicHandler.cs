@@ -120,7 +120,7 @@ namespace FutsMoniter
 
         public void OnMGRMangerResponse(Manager manger, bool islast)
         {
-            debug("xxxxxxxxxxxxxxxxxxxxx here:"+manger.Name);
+            //debug("xxxxxxxxxxxxxxxxxxxxx here:"+manger.Name);
             if (basicinfotracker != null)
             {
                 basicinfotracker.GotManager(manger);

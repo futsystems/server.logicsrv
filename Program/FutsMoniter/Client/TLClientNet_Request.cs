@@ -619,6 +619,234 @@ namespace TradingLib.Common
         #region 扩展请求
 
         /// <summary>
+        /// 查询银行列表
+        /// </summary>
+        public void ReqQryBank()
+        {
+            this.ReqContribRequest("MgrExchServer", "QryBank", "");
+        }
+
+        /// <summary>
+        /// 查询代理对应的支付信息
+        /// </summary>
+        /// <param name="agentfk"></param>
+        public void ReqQryAgentPaymentInfo(int agentfk)
+        {
+            this.ReqContribRequest("MgrExchServer", "QryAgentPaymentInfo",agentfk.ToString());
+        }
+
+        /// <summary>
+        /// 查询交易帐户对应的支付信息
+        /// </summary>
+        /// <param name="account"></param>
+        public void ReqQryAccountPaymentInfo(string account)
+        {
+            this.ReqContribRequest("MgrExchServer", "QryAccountPaymentInfo",account);
+        }
+        /// <summary>
+        /// 查询代理的财务信息
+        /// </summary>
+        public void ReqQryAgentFinanceInfo()
+        {
+            this.ReqContribRequest("MgrExchServer", "QryFinanceInfo", "");
+        }
+
+        /// <summary>
+        /// 查询代理精简财务信息
+        /// </summary>
+        public void ReqQryAgentFinanceInfoLite()
+        {
+            this.ReqContribRequest("MgrExchServer", "QryFinanceInfoLite", "");
+        }
+
+        /// <summary>
+        /// 更新代理主域的银行卡信息
+        /// </summary>
+        /// <param name="playload"></param>
+        public void ReqUpdateAgentBankInfo(string playload)
+        {
+            this.ReqContribRequest("MgrExchServer", "UpdateAgentBankAccount", playload);
+        }
+
+        #region 代理出入金操作
+        /// <summary>
+        /// 查询代理出入金记录
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        public void ReqQryAgentCashTrans(int mgrfk, long start, long end)
+        {
+            this.ReqContribRequest("MgrExchServer", "QueryAgentCashTrans", mgrfk.ToString() + "," + start.ToString() + "," + end.ToString());
+        }
+
+        /// <summary>
+        /// 请求出入金操作
+        /// </summary>
+        /// <param name="playload"></param>
+        public void ReqRequestCashOperation(string playload)
+        {
+            this.ReqContribRequest("MgrExchServer", "RequestCashOperation", playload);
+        }
+
+        /// <summary>
+        /// 确认出入金操作
+        /// </summary>
+        /// <param name="playload"></param>
+        public void ReqConfirmCashOperation(string playload)
+        {
+            this.ReqContribRequest("MgrExchServer", "ConfirmCashOperation", playload);
+        }
+
+        /// <summary>
+        /// 取消出入金操作
+        /// </summary>
+        /// <param name="playload"></param>
+        public void ReqCancelCashOperation(string playload)
+        {
+            this.ReqContribRequest("MgrExchServer", "CancelCashOperation", playload);
+        }
+
+        /// <summary>
+        /// 拒绝出入金操作
+        /// </summary>
+        /// <param name="playload"></param>
+        public void ReqRejectCashOperation(string playload)
+        {
+            this.ReqContribRequest("MgrExchServer", "RejectCashOperation", playload);
+        }
+        #endregion
+
+        #region 帐户出入金操作
+
+        /// <summary>
+        /// 查询交易帐户出入金记录
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        public void ReqQryAccountCashTrans(string account, long start, long end)
+        {
+            this.ReqContribRequest("MgrExchServer", "QueryAccountCashTrans",account+","+start.ToString()+","+end.ToString());
+        }
+        /// <summary>
+        /// 请求出入金操作
+        /// </summary>
+        /// <param name="playload"></param>
+        public void ReqRequestAccountCashOperation(string playload)
+        {
+            this.ReqContribRequest("MgrExchServer", "RequestAccountCashOperation", playload);
+        }
+
+        /// <summary>
+        /// 确认出入金操作
+        /// </summary>
+        /// <param name="playload"></param>
+        public void ReqConfirmAccountCashOperation(string playload)
+        {
+            this.ReqContribRequest("MgrExchServer", "ConfirmAccountCashOperation", playload);
+        }
+
+        /// <summary>
+        /// 取消出入金操作
+        /// </summary>
+        /// <param name="playload"></param>
+        public void ReqCancelAccountCashOperation(string playload)
+        {
+            this.ReqContribRequest("MgrExchServer", "CancelAccountCashOperation", playload);
+        }
+
+        /// <summary>
+        /// 拒绝出入金操作
+        /// </summary>
+        /// <param name="playload"></param>
+        public void ReqRejectAccountCashOperation(string playload)
+        {
+            this.ReqContribRequest("MgrExchServer", "RejectAccountCashOperation", playload);
+        }
+        #endregion
+
+
+        /// <summary>
+        /// 查询所有代理的出入金操作
+        /// </summary>
+        public void ReqQryAgentCashopOperationTotal()
+        {
+            this.ReqContribRequest("MgrExchServer", "QryAgentCashOperationTotal", "");
+        }
+
+        /// <summary>
+        /// 查询所有交易帐户出入金操作
+        /// </summary>
+        public void ReqQryAccountCashopOperationTotal()
+        {
+            this.ReqContribRequest("MgrExchServer", "QryAccountCashOperationTotal", "");
+        }
+
+        #region 查询报表
+
+        /// <summary>
+        /// 查询某日所有代理的利润报表
+        /// </summary>
+        /// <param name="settleday"></param>
+        public void ReqQryTotalReport(int agentfk,int settleday)
+        {
+            this.ReqContribRequest("FinServiceCentre", "QryTotalReport", agentfk.ToString()+","+settleday.ToString());
+        }
+
+        /// <summary>
+        /// 查询某个代理的在一个时间段内的汇总
+        /// </summary>
+        /// <param name="settleday"></param>
+        public void ReqQrySummaryReport(int agentfk,int start,int end)
+        {
+            this.ReqContribRequest("FinServiceCentre", "QrySummaryReport", agentfk.ToString() + "," + start.ToString() + "," + end.ToString());
+        }
+
+
+        /// <summary>
+        /// 查询某个代理某个时间段内的所有利润流水
+        /// </summary>
+        /// <param name="agentfk"></param>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        public void ReqQryTotalReportByDayRange(int agentfk, int start, int end)
+        {
+            this.ReqContribRequest("FinServiceCentre", "QryTotalReportDayRange", agentfk.ToString() + "," + start.ToString() + "," + end.ToString());
+        }
+
+        /// <summary>
+        /// 查询某个代理某个交易日的按帐户汇总的利润报表
+        /// </summary>
+        /// <param name="agentfk"></param>
+        /// <param name="settleday"></param>
+        public void ReqQryDetailReportByAccount(int agentfk, int settleday)
+        {
+            this.ReqContribRequest("FinServiceCentre", "QryDetailReportByAccount", agentfk.ToString() + "," + settleday.ToString());
+        }
+        #endregion
+
+        /// <summary>
+        /// 查询某个代理 某个服务计划的成本参数
+        /// 如果没有设置则返回默认参数
+        /// 
+        /// </summary>
+        /// <param name="agentfk"></param>
+        /// <param name="spfk"></param>
+        public void ReqQrySPAgentArg(int agentfk, int spfk)
+        {
+            this.ReqContribRequest("FinServiceCentre", "QryAgentSPArg", agentfk.ToString()+","+spfk.ToString());
+        }
+
+        /// <summary>
+        /// 更新某个代理的某个服务计划的参数
+        /// </summary>
+        /// <param name="playload"></param>
+        public void ReqUpdateSPAgentArg(string playload)
+        {
+            this.ReqContribRequest("FinServiceCentre", "UpdateAgentSPArg", playload);
+        }
+        /// <summary>
         /// 查询某个交易帐户的配资参数
         /// </summary>
         /// <param name="account"></param>

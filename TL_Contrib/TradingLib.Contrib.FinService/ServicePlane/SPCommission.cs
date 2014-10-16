@@ -95,7 +95,7 @@ namespace TradingLib.Contrib.FinService
 
             //进行收费记录
             string comment = SPNAME + " Seq:" +t.BrokerKey +" Time:"+t.GetDateTime().ToString();
-            FeeCharge(totalfee, agentfee, comment);
+            FeeCharge(totalfee, agentfee,null, comment);
 
             return accountcommission;
         }

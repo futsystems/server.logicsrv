@@ -233,6 +233,7 @@ namespace TradingLib.Contrib.FinService
             {
                 //加载配资服务参数
                 this.LoadArgument();
+                baseobj.ServicePlanFK = this.serviceplan_fk;
                 //绑定输出计费事件
                 baseobj.GotFeeChargeEvent += new FeeChargeDel(ChargeFee);
                 //绑定交易帐号
@@ -309,7 +310,7 @@ namespace TradingLib.Contrib.FinService
         /// </summary>
         /// <param name="totalfee"></param>
         /// <param name="agentfee"></param>
-        void ChargeFee(decimal totalfee, decimal agentfee,string comment)
+        void ChargeFee(decimal totalfee, decimal agentfee,AgentCommissionDel func, string comment)
         {
             FeeChargeItem item = new FeeChargeItem();
             item.Account = this.Acct;
@@ -322,6 +323,31 @@ namespace TradingLib.Contrib.FinService
             item.Agent_fk = this.AgentID;
             item.Comment = comment;
             item.Settleday = TLCtxHelper.CmdSettleCentre.CurrentTradingday;
+            
+
+            //定义了代理之间的分润计算
+            if (func != null)
+            {
+                Manager agent = BasicTracker.ManagerTracker[item.Agent_fk];//客户的直接代理
+
+                //递归代理的父代理 计算对应的分润
+                while (agent.ParentManager.Type != QSEnumManagerType.ROOT)
+                {
+                    decimal commission = func(agent, agent.ParentManager);
+                    Util.Debug("代理:" + agent.mgr_fk.ToString() + " 的父代理:" + agent.ParentManager.mgr_fk.ToString() + " 收入:" + commission.ToString());
+                    //插入代理分润数据
+                    CommissionItem commissionitem = new CommissionItem()
+                    {
+                        Settleday = item.Settleday,
+                        Agent_FK = agent.parent_fk,
+                        SubAgent_FK = agent.mgr_fk,
+                        Commission = commission,
+                    };
+                    item.AppendCommissionItem(commissionitem);
+                    agent = agent.ParentManager;
+                }
+            }
+
             FinTracker.FinServiceTracker.GotFeeChargeItem(item);
         }
 

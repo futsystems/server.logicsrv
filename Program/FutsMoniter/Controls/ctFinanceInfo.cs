@@ -19,6 +19,8 @@ namespace FutsMoniter
             InitializeComponent();
         }
 
+
+      
         delegate void IAccountInfoDel(IAccountInfo info);
         public void GotAccountInfo(IAccountInfo info)
         {

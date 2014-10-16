@@ -19,6 +19,7 @@ namespace TradingLib.Common
         private SessionEvent<TrdClientInfo> m_SessionEvent;
         private AccountEvent m_AccountEvent;
         private ExContribEvent m_ExContribEvent;
+        private CashOperationEvent m_CashOperationEvent;
 
 
         public static bool IsReady { get; set; }
@@ -37,6 +38,7 @@ namespace TradingLib.Common
             this.m_SessionEvent = new SessionEvent<TrdClientInfo>();
             this.m_AccountEvent = new AccountEvent();
             this.m_ExContribEvent = new ExContribEvent();
+            this.m_CashOperationEvent = new CashOperationEvent();
         }
 
         public static void Release()
@@ -46,6 +48,7 @@ namespace TradingLib.Common
             defaultInstance.m_ExContribEvent = null;
             defaultInstance.m_IndicatorEvent = null;
             defaultInstance.m_SessionEvent = null;
+            defaultInstance.m_CashOperationEvent = null;
         }
 
         public static TLContext Ctx
@@ -110,6 +113,20 @@ namespace TradingLib.Common
             }
         }
 
+        /// <summary>
+        /// 出入金请求操作事件
+        /// </summary>
+        public static CashOperationEvent CashOperationEvent
+        {
+            get
+            {
+                if (defaultInstance.m_CashOperationEvent == null)
+                    defaultInstance.m_CashOperationEvent = new CashOperationEvent();
+                return defaultInstance.m_CashOperationEvent;
+            }
+        }
+
+
         public static IAccountOperation CmdAccount
         {
             get
@@ -134,6 +151,16 @@ namespace TradingLib.Common
             }
         }
 
+        /// <summary>
+        /// 认真与出入金请求
+        /// </summary>
+        public static IAuthCashOperation CmdAuthCashOperation
+        {
+            get
+            {
+                return defaultInstance.ctx.ClearCentre as IAuthCashOperation;
+            }
+        }
 
         public static ISettleCentre CmdSettleCentre
         {

@@ -11,6 +11,27 @@ namespace FutsMoniter
     
     public class Globals
     {
+        static event  VoidDelegate InitFinishedEvent;
+
+        /// <summary>
+        /// 触发初始化完成事件 用于通知常驻界面资源进行界面更新
+        /// </summary>
+        public static void OnInitFinished()
+        {
+            if (InitFinishedEvent != null)
+                InitFinishedEvent();
+            Globals.EnvReady = true;
+        }
+
+        /// <summary>
+        /// 注册初始化完成事件回调
+        /// </summary>
+        /// <param name="callback"></param>
+        public static void RegInitCallback(VoidDelegate callback)
+        {
+            InitFinishedEvent += new VoidDelegate(callback);
+        }
+
         public static ConfigFile Config = null;
 
         /// <summary>
@@ -32,10 +53,20 @@ namespace FutsMoniter
             }
                 
         }
+
         /// <summary>
-        /// 管理端对因的managerID
+        /// 登入回报 用于获得登入基本信息
         /// </summary>
-        public static int? MgrFK { get; set; }
+        public static RspMGRLoginResponse LoginResponse { get; set; }
+        /// <summary>
+        /// 管理主域ID
+        /// </summary>
+        public static int? BaseMGRFK { get; set; }
+
+        /// <summary>
+        /// 管理ID
+        /// </summary>
+        public static int? MGRID { get; set; }
 
         /// <summary>
         /// 管理端对应的对象
@@ -146,7 +177,7 @@ namespace FutsMoniter
 
         static ICallbackCentre _callbackcentre;
         public static ICallbackCentre CallBackCentre { get { return _callbackcentre; } }
-
+        public static bool CallbackCentreReady { get { return _callbackcentre != null; } }
         public static void RegisterCallBackCentre(ICallbackCentre callbackcentre)
         {
             _callbackcentre = callbackcentre;

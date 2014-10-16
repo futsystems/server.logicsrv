@@ -29,7 +29,7 @@ namespace TradingLib.Core
         /// <param name="manager"></param>
         void SrvOnMGRQryAccount(MGRQryAccountRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求下载交易帐户列表:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求下载交易帐户列表:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
             //判断管理账户类别
             //1.超级管理员可以查看所有帐户
             IAccount[] list = new IAccount[] { };
@@ -88,14 +88,14 @@ namespace TradingLib.Core
         /// <param name="manager"></param>
         void SrvOnMGRWatchAccount(MGRWatchAccountRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求设定观察列表:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求设定观察列表:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
             CustInfoEx c = customerExInfoMap[request.ClientID];
             c.Watch(request.AccountList);
         }
 
         void SrvOnMGRResumeAccount(MGRResumeAccountRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求恢复交易数据,帐号:{1}", session.ManagerID, request.ResumeAccount), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求恢复交易数据,帐号:{1}", session.MGRLoginName, request.ResumeAccount), QSEnumDebugLevel.INFO);
             //判断权限
 
             //将请求放入队列等待处理
@@ -112,7 +112,7 @@ namespace TradingLib.Core
         /// <param name="manager"></param>
         void SrvOnMGRQryAccountInfo(MGRQryAccountInfoRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求查询交易帐户信息,帐号:{1}", session.ManagerID, request.Account), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求查询交易帐户信息,帐号:{1}", session.MGRLoginName, request.Account), QSEnumDebugLevel.INFO);
 
             IAccount account = clearcentre[request.Account];
             
@@ -126,7 +126,7 @@ namespace TradingLib.Core
 
         void SrvOnMGRCashOperation(MGRCashOperationRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求出入金操作:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求出入金操作:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
             IAccount account = clearcentre[request.Account];
             if (account != null)
             {
@@ -160,7 +160,7 @@ namespace TradingLib.Core
         /// <param name="manager"></param>
         void SrvOnMGRUpdateAccountCategory(MGRUpdateCategoryRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求更新帐户类别:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求更新帐户类别:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
             IAccount account = clearcentre[request.Account];
             if (account != null)
             {
@@ -170,7 +170,7 @@ namespace TradingLib.Core
 
         void SrvOnMGRUpdateAccountExecute(MGRUpdateExecuteRequest request, ISession session, Manager manger)
         {
-            debug(string.Format("管理员:{0} 请求交易权限类别:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求交易权限类别:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
             IAccount account = clearcentre[request.Account];
             if (account != null)
             {
@@ -188,7 +188,7 @@ namespace TradingLib.Core
 
         void SrvOnMGRUpdateAccountIntraday(MGRUpdateIntradayRequest request, ISession session, Manager manger)
         {
-            debug(string.Format("管理员:{0} 请求更新日内交易:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求更新日内交易:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
             IAccount account = clearcentre[request.Account];
             if (account != null)
             {
@@ -198,7 +198,7 @@ namespace TradingLib.Core
 
         void SrvOnMGRUpdateRouteType(MGRUpdateRouteTypeRequest request, ISession session, Manager manger)
         {
-            debug(string.Format("管理员:{0} 请求更新路由类被:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求更新路由类被:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
             IAccount account = clearcentre[request.Account];
             if (account != null)
             {
@@ -208,21 +208,21 @@ namespace TradingLib.Core
 
         void SrvOnMGROpenClearCentre(MGRReqOpenClearCentreRequest request, ISession session, Manager manger)
         {
-            debug(string.Format("管理员:{0} 请求开启清算中心:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求开启清算中心:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
             clearcentre.OpenClearCentre();
             
         }
 
         void SrvOnMGRCloseClearCentre(MGRReqCloseClearCentreRequest request, ISession session, Manager manger)
         {
-            debug(string.Format("管理员:{0} 请求关闭清算中心:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求关闭清算中心:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
             clearcentre.CloseClearCentre();
 
         }
 
         void SrvOnMGRQryConnector(MGRQryConnectorRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求查询通道列表:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求查询通道列表:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
             List<RspMGRQryConnectorResponse> responselist = new List<RspMGRQryConnectorResponse>();
             foreach (IBroker b in TLCtxHelper.Ctx.RouterManager.Brokers)
             {
@@ -255,7 +255,7 @@ namespace TradingLib.Core
 
         void SrvOnMGRStartBroker(MGRReqStartBrokerRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求启动成交通道:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求启动成交通道:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
             IBroker b = TLCtxHelper.Ctx.RouterManager.FindBroker(request.FullName);
             if (b != null && !b.IsLive)
             {
@@ -269,7 +269,7 @@ namespace TradingLib.Core
 
         void SrvOnMGRStopBroker(MGRReqStopBrokerRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求停止成交通道:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求停止成交通道:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
             IBroker b = TLCtxHelper.Ctx.RouterManager.FindBroker(request.FullName);
             if (b != null && b.IsLive)
             {
@@ -282,7 +282,7 @@ namespace TradingLib.Core
         }
         void SrvOnMGRStartDataFeed(MGRReqStartDataFeedRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求启动行情通道:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求启动行情通道:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
 
             IDataFeed d = TLCtxHelper.Ctx.RouterManager.FindDataFeed(request.FullName);
             if (d != null && !d.IsLive)
@@ -296,7 +296,7 @@ namespace TradingLib.Core
         }
         void SrvOnMGRStopDataFeed(MGRReqStopDataFeedRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求停止行情通道:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求停止行情通道:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
             IDataFeed d = TLCtxHelper.Ctx.RouterManager.FindDataFeed(request.FullName);
             if (d != null && d.IsLive)
             {
@@ -309,7 +309,7 @@ namespace TradingLib.Core
 
         void SrvOnMGRAddAccount(MGRAddAccountRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求添加交易帐号:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求添加交易帐号:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
             string outaccount =string.Empty;
             int mgrid = request.MgrID;
             Manager manger = BasicTracker.ManagerTracker[mgrid];
@@ -321,12 +321,12 @@ namespace TradingLib.Core
                 return;
             }
             bool re = clearcentre.AddAccount(out outaccount, request.UserID.ToString(), request.AccountID, request.Password, request.Category,request.MgrID);
-            //clearcentre.UpdateManagerID(outaccount, mgrid);
+            //clearcentre.UpdateMGRLoginName(outaccount, mgrid);
         }
 
         void SrvOnMGRQryExchange(MGRQryExchangeRequuest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求查询交易所列表:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求查询交易所列表:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
             IExchange[] exchs = BasicTracker.ExchagneTracker.Exchanges;
 
             int totalnum = exchs.Length;
@@ -342,7 +342,7 @@ namespace TradingLib.Core
 
         void SrvOnMGRQryMarketTime(MGRQryMarketTimeRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求查询交易时间段:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求查询交易时间段:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
             MarketTime[] mts = BasicTracker.MarketTimeTracker.MarketTimes;
             int totalnum = mts.Length;
             for (int i = 0; i < totalnum; i++)
@@ -356,7 +356,7 @@ namespace TradingLib.Core
 
         void SrvOnMGRQrySecurity(MGRQrySecurityRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求查询品种:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求查询品种:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
             SecurityFamily[] seclist = BasicTracker.SecurityTracker.Securities;
             int totalnum = seclist.Length;
             //debug("security totalnum:" + totalnum, QSEnumDebugLevel.INFO);
@@ -372,7 +372,7 @@ namespace TradingLib.Core
 
         void SrvOnMGRUpdateSecurity(MGRUpdateSecurityRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求更新品种:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求更新品种:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
 
             SecurityFamilyImpl sec = request.SecurityFaimly;
             BasicTracker.SecurityTracker.UpdateSecurity(sec);
@@ -388,7 +388,7 @@ namespace TradingLib.Core
 
         void SrvOnMGRQrySymbol(MGRQrySymbolRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求查询合约:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求查询合约:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
             Symbol[] symlis = BasicTracker.SymbolTracker.Symbols;
             int totalnum = symlis.Length;
             if (totalnum > 0)
@@ -410,7 +410,7 @@ namespace TradingLib.Core
 
         void SrvOnMGRUpdateSymbol(MGRUpdateSymbolRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求更新合约:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求更新合约:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
             SymbolImpl sym = request.Symbol;
             BasicTracker.SymbolTracker.UpdateSymbol(sym);
             RspMGRQrySymbolResponse response = ResponseTemplate<RspMGRQrySymbolResponse>.SrvSendRspResponse(request);
@@ -424,7 +424,7 @@ namespace TradingLib.Core
 
         void SrvOnMGRQryRuleSet(MGRQryRuleSetRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求查询风控规则:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求查询风控规则:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
 
             RuleClassItem[] items = riskcentre.GetRuleClassItems();
             int totalnum = items.Length;
@@ -447,7 +447,7 @@ namespace TradingLib.Core
 
         void SrvOnMGRUpdateRule(MGRUpdateRuleRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求更新风控规则:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求更新风控规则:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
             RuleItem item = request.RuleItem;
             riskcentre.UpdateRule(item);
             RspMGRUpdateRuleResponse response = ResponseTemplate<RspMGRUpdateRuleResponse>.SrvSendRspResponse(request);
@@ -457,7 +457,7 @@ namespace TradingLib.Core
 
         void SrvOnMGRQryRuleItem(MGRQryRuleItemRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求查询帐户分控规则列表:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求查询帐户分控规则列表:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
 
             //RuleItem[] items = ORM.MRuleItem.SelectRuleItem(request.Account, QSEnumRuleType.OrderRule).ToArray();
             List<RuleItem> items = new List<RuleItem>();
@@ -505,7 +505,7 @@ namespace TradingLib.Core
 
         void SrvOnMGRDelRuleItem(MGRDelRuleItemRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求删除风控项:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求删除风控项:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
             riskcentre.DeleteRiskRule(request.RuleItem);
             RspMGRDelRuleItemResponse response = ResponseTemplate<RspMGRDelRuleItemResponse>.SrvSendRspResponse(request);
             response.RuleItem = request.RuleItem;
@@ -516,7 +516,7 @@ namespace TradingLib.Core
 
         void SrvOnMGRQrySystemStatus(MGRQrySystemStatusRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求查询系统状态:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求查询系统状态:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
             RspMGRQrySystemStatusResponse response = ResponseTemplate<RspMGRQrySystemStatusResponse>.SrvSendRspResponse(request);
 
             SystemStatus status = new SystemStatus();
@@ -537,7 +537,7 @@ namespace TradingLib.Core
 
         void SrvOnMGRQryOrder(MGRQryOrderRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求查询历史委托:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求查询历史委托:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
 
             IList<Order> orders = ORM.MTradingInfo.SelectHistOrders(request.TradingAccount,request.Settleday, request.Settleday);
 
@@ -563,7 +563,7 @@ namespace TradingLib.Core
 
         void SrvnMGRQryTrade(MGRQryTradeRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求查询历史成交:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求查询历史成交:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
 
             IList<Trade> trades = ORM.MTradingInfo.SelectHistTrades(request.TradingAccount, request.Settleday, request.Settleday);
 
@@ -589,7 +589,7 @@ namespace TradingLib.Core
 
         void SrvOnMGRQryPosition(MGRQryPositionRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求查询历史持仓:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求查询历史持仓:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
 
             IList<SettlePosition> positions = ORM.MTradingInfo.SelectHistPositions(request.TradingAccount, request.Settleday, request.Settleday);
 
@@ -614,7 +614,7 @@ namespace TradingLib.Core
 
         void SrvOnMGRQryCash(MGRQryCashRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求查询出入金记录:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求查询出入金记录:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
 
             IList<CashTransaction> cts = ORM.MAccount.SelectHistCashTransaction(request.TradingAccount, request.Settleday, request.Settleday);
 
@@ -639,7 +639,7 @@ namespace TradingLib.Core
 
         void SrvOnMGRQrySettlement(MGRQrySettleRequest request, ISession session, Manager manager)
         { 
-            debug(string.Format("管理员:{0} 请求查询结算记录:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求查询结算记录:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
 
             IAccount account = clearcentre[request.TradingAccount];
 
@@ -660,7 +660,7 @@ namespace TradingLib.Core
 
         void SrvOnMGRChangeAccountPassword(MGRChangeAccountPassRequest request, ISession session, Manager manger)
         {
-            debug(string.Format("管理员:{0} 请求修改交易密码:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求修改交易密码:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
 
             IAccount account = clearcentre[request.TradingAccount];
             if (account != null)
@@ -683,7 +683,7 @@ namespace TradingLib.Core
 
         void SrvOnMGRReqAddSecurity(MGRReqAddSecurityRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求添加品种:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求添加品种:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
 
             SecurityFamilyImpl sec = request.SecurityFaimly;
             if (BasicTracker.SecurityTracker[sec.Code] == null)
@@ -709,7 +709,7 @@ namespace TradingLib.Core
 
         void SrvOnMGRReqAddSymbol(MGRReqAddSymbolRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求添加合约:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求添加合约:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
             SymbolImpl symbol = request.Symbol;
             if (BasicTracker.SymbolTracker[symbol.Symbol] == null)
             {
@@ -733,7 +733,7 @@ namespace TradingLib.Core
 
         void SrvOnMGRReqChangeInvestor(MGRReqChangeInvestorRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求修改投资者信息:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求修改投资者信息:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
             IAccount account = clearcentre[request.TradingAccount];
             if (account != null)
             {
@@ -743,7 +743,7 @@ namespace TradingLib.Core
 
         void SrvOnMGRReqUpdateAccountPosLock(MGRReqUpdatePosLockRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求修改帐户锁仓权限:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求修改帐户锁仓权限:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
             IAccount account = clearcentre[request.TradingAccount];
             if (account != null)
             {
@@ -753,7 +753,7 @@ namespace TradingLib.Core
 
         void SrvOnMGRQryManager(MGRQryManagerRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求查询管理员列表:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求查询管理员列表:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
 
             //获得当前管理员可以查看的柜员列表
             Manager[] mgrs = BasicTracker.ManagerTracker.GetManagers(manager).ToArray();
@@ -776,11 +776,29 @@ namespace TradingLib.Core
         
         }
 
+        /// <summary>
+        /// Manager添加的代理的MgrFK为数据ID ParentFK为当前MgrFK
+        /// Manager添加的其他角色MgrFK为当前MgrFK ParentFK为当前MgrFK
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="session"></param>
+        /// <param name="manager"></param>
         void SrvOnMGRAddManger(MGRReqAddManagerRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求添加管理员:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求添加管理员:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
 
             Manager m = request.ManagerToSend;
+
+            //1.添加的Manager的父代理为当前管理员的mgr_fk 
+            m.parent_fk = manager.mgr_fk;
+
+            //只有添加代理用户时才从数据库创建主域ID MgrFK,其余员工角色和当前管理员的主域ID一致
+            if (m.Type != QSEnumManagerType.AGENT && m.Type != QSEnumManagerType.ROOT)
+            {
+                m.mgr_fk = manager.mgr_fk;
+            }
+            
+
             BasicTracker.ManagerTracker.UpdateManager(m);
 
             RspMGRQryManagerResponse response = ResponseTemplate<RspMGRQryManagerResponse>.SrvSendRspResponse(request);
@@ -791,7 +809,7 @@ namespace TradingLib.Core
 
         void SrvOnMGRUpdateManger(MGRReqUpdateManagerRequest request,ISession session,Manager manger)
         {
-            debug(string.Format("管理员:{0} 请求更新管理员:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求更新管理员:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
 
             Manager m = request.ManagerToSend;
             BasicTracker.ManagerTracker.UpdateManager(m);
@@ -803,7 +821,7 @@ namespace TradingLib.Core
 
         void SrvOnMGRQryAcctService(MGRQryAcctServiceRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求查询服务:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求查询服务:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
 
             //IAccount account = clearcentre[request.TradingAccount];
             //debug("account null:" + (account == null).ToString(), QSEnumDebugLevel.INFO);
@@ -829,7 +847,7 @@ namespace TradingLib.Core
 
         void SrvOnMGRContribRequest(MGRContribRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求扩展命令:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求扩展命令:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
             debug("MGRContrib Request,ModuleID:" + request.ModuleID + " CMDStr:" + request.CMDStr + " Parameters:" + request.Parameters, QSEnumDebugLevel.INFO);
             
             session.ContirbID = request.ModuleID;
@@ -841,7 +859,7 @@ namespace TradingLib.Core
 
         void SrvOnMGRUpdatePass(MGRUpdatePassRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求修改密码:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求修改密码:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
 
             if (ORM.MManager.ValidManager(manager.Login, request.OldPass))
             {
@@ -860,7 +878,7 @@ namespace TradingLib.Core
 
         void SrvOnInsertTrade(MGRReqInsertTradeRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求插入委托:{1}", session.ManagerID, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求插入委托:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
             RspMGROperationResponse response = ResponseTemplate<RspMGROperationResponse>.SrvSendRspResponse(request);
 
             Trade fill = request.TradeToSend;

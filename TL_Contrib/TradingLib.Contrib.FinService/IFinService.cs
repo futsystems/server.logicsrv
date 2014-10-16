@@ -23,6 +23,11 @@ namespace TradingLib.Contrib.FinService
     public interface IFinService
     {
         /// <summary>
+        /// 对应的服务计划ID
+        /// </summary>
+        int ServicePlanFK { get; set; }
+
+        /// <summary>
         /// 配资服务费用计算方式
         /// </summary>
         EnumFeeChargeType ChargeType { get; }

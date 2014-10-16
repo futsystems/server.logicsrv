@@ -30,9 +30,13 @@
         {
             this.qrypage = new Telerik.WinControls.UI.RadPageView();
             this.historder = new Telerik.WinControls.UI.RadPageViewPage();
+            this.ctHistOrder1 = new FutsMoniter.ctHistOrder();
             this.histtrade = new Telerik.WinControls.UI.RadPageViewPage();
+            this.ctHistTrade1 = new FutsMoniter.ctHistTrade();
             this.histposition = new Telerik.WinControls.UI.RadPageViewPage();
+            this.ctHistPosition1 = new FutsMoniter.ctHistPosition();
             this.histcash = new Telerik.WinControls.UI.RadPageViewPage();
+            this.ctHistCashTransaction1 = new FutsMoniter.ctHistCashTransaction();
             this.histsettle = new Telerik.WinControls.UI.RadPageViewPage();
             this.settlebox = new System.Windows.Forms.RichTextBox();
             this.radLabel1 = new Telerik.WinControls.UI.RadLabel();
@@ -40,10 +44,7 @@
             this.btnQryHist = new Telerik.WinControls.UI.RadButton();
             this.settleday = new Telerik.WinControls.UI.RadDateTimePicker();
             this.radLabel2 = new Telerik.WinControls.UI.RadLabel();
-            this.ctHistOrder1 = new FutsMoniter.ctHistOrder();
-            this.ctHistTrade1 = new FutsMoniter.ctHistTrade();
-            this.ctHistPosition1 = new FutsMoniter.ctHistPosition();
-            this.ctHistCashTransaction1 = new FutsMoniter.ctHistCashTransaction();
+            this.ctGridExport1 = new FutsMoniter.ctGridExport();
             ((System.ComponentModel.ISupportInitialize)(this.qrypage)).BeginInit();
             this.qrypage.SuspendLayout();
             this.historder.SuspendLayout();
@@ -72,7 +73,7 @@
             this.qrypage.Location = new System.Drawing.Point(0, 37);
             this.qrypage.Name = "qrypage";
             this.qrypage.SelectedPage = this.histsettle;
-            this.qrypage.Size = new System.Drawing.Size(1069, 481);
+            this.qrypage.Size = new System.Drawing.Size(792, 433);
             this.qrypage.TabIndex = 0;
             this.qrypage.Text = "radPageView1";
             this.qrypage.SelectedPageChanged += new System.EventHandler(this.qrypage_SelectedPageChanged);
@@ -83,8 +84,16 @@
             this.historder.Controls.Add(this.ctHistOrder1);
             this.historder.Location = new System.Drawing.Point(10, 35);
             this.historder.Name = "historder";
-            this.historder.Size = new System.Drawing.Size(1048, 435);
+            this.historder.Size = new System.Drawing.Size(771, 387);
             this.historder.Text = "委 托";
+            // 
+            // ctHistOrder1
+            // 
+            this.ctHistOrder1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ctHistOrder1.Location = new System.Drawing.Point(0, 0);
+            this.ctHistOrder1.Name = "ctHistOrder1";
+            this.ctHistOrder1.Size = new System.Drawing.Size(771, 387);
+            this.ctHistOrder1.TabIndex = 0;
             // 
             // histtrade
             // 
@@ -94,6 +103,14 @@
             this.histtrade.Size = new System.Drawing.Size(1048, 439);
             this.histtrade.Text = "成 交";
             // 
+            // ctHistTrade1
+            // 
+            this.ctHistTrade1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ctHistTrade1.Location = new System.Drawing.Point(0, 0);
+            this.ctHistTrade1.Name = "ctHistTrade1";
+            this.ctHistTrade1.Size = new System.Drawing.Size(1048, 439);
+            this.ctHistTrade1.TabIndex = 0;
+            // 
             // histposition
             // 
             this.histposition.Controls.Add(this.ctHistPosition1);
@@ -101,6 +118,14 @@
             this.histposition.Name = "histposition";
             this.histposition.Size = new System.Drawing.Size(1048, 439);
             this.histposition.Text = "持 仓";
+            // 
+            // ctHistPosition1
+            // 
+            this.ctHistPosition1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ctHistPosition1.Location = new System.Drawing.Point(0, 0);
+            this.ctHistPosition1.Name = "ctHistPosition1";
+            this.ctHistPosition1.Size = new System.Drawing.Size(1048, 439);
+            this.ctHistPosition1.TabIndex = 0;
             // 
             // histcash
             // 
@@ -110,12 +135,20 @@
             this.histcash.Size = new System.Drawing.Size(1048, 439);
             this.histcash.Text = "出入金";
             // 
+            // ctHistCashTransaction1
+            // 
+            this.ctHistCashTransaction1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ctHistCashTransaction1.Location = new System.Drawing.Point(0, 0);
+            this.ctHistCashTransaction1.Name = "ctHistCashTransaction1";
+            this.ctHistCashTransaction1.Size = new System.Drawing.Size(1048, 439);
+            this.ctHistCashTransaction1.TabIndex = 0;
+            // 
             // histsettle
             // 
             this.histsettle.Controls.Add(this.settlebox);
-            this.histsettle.Location = new System.Drawing.Point(10, 31);
+            this.histsettle.Location = new System.Drawing.Point(10, 35);
             this.histsettle.Name = "histsettle";
-            this.histsettle.Size = new System.Drawing.Size(1048, 439);
+            this.histsettle.Size = new System.Drawing.Size(771, 387);
             this.histsettle.Text = "结算单";
             // 
             // settlebox
@@ -123,7 +156,7 @@
             this.settlebox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.settlebox.Location = new System.Drawing.Point(0, 0);
             this.settlebox.Name = "settlebox";
-            this.settlebox.Size = new System.Drawing.Size(1048, 439);
+            this.settlebox.Size = new System.Drawing.Size(771, 387);
             this.settlebox.TabIndex = 0;
             this.settlebox.Text = "";
             // 
@@ -170,54 +203,35 @@
             this.radLabel2.TabIndex = 40;
             this.radLabel2.Text = "交易日:";
             // 
-            // ctHistOrder1
+            // ctGridExport1
             // 
-            this.ctHistOrder1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ctHistOrder1.Location = new System.Drawing.Point(0, 0);
-            this.ctHistOrder1.Name = "ctHistOrder1";
-            this.ctHistOrder1.Size = new System.Drawing.Size(1048, 435);
-            this.ctHistOrder1.TabIndex = 0;
-            // 
-            // ctHistTrade1
-            // 
-            this.ctHistTrade1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ctHistTrade1.Location = new System.Drawing.Point(0, 0);
-            this.ctHistTrade1.Name = "ctHistTrade1";
-            this.ctHistTrade1.Size = new System.Drawing.Size(1048, 439);
-            this.ctHistTrade1.TabIndex = 0;
-            // 
-            // ctHistPosition1
-            // 
-            this.ctHistPosition1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ctHistPosition1.Location = new System.Drawing.Point(0, 0);
-            this.ctHistPosition1.Name = "ctHistPosition1";
-            this.ctHistPosition1.Size = new System.Drawing.Size(1048, 439);
-            this.ctHistPosition1.TabIndex = 0;
-            // 
-            // ctHistCashTransaction1
-            // 
-            this.ctHistCashTransaction1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ctHistCashTransaction1.Location = new System.Drawing.Point(0, 0);
-            this.ctHistCashTransaction1.Name = "ctHistCashTransaction1";
-            this.ctHistCashTransaction1.Size = new System.Drawing.Size(1048, 439);
-            this.ctHistCashTransaction1.TabIndex = 0;
+            this.ctGridExport1.Grid = null;
+            this.ctGridExport1.Location = new System.Drawing.Point(671, 7);
+            this.ctGridExport1.Name = "ctGridExport1";
+            this.ctGridExport1.Size = new System.Drawing.Size(110, 24);
+            this.ctGridExport1.TabIndex = 41;
             // 
             // HistQryForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1069, 518);
+            this.ClientSize = new System.Drawing.Size(792, 470);
+            this.Controls.Add(this.ctGridExport1);
             this.Controls.Add(this.radLabel2);
             this.Controls.Add(this.settleday);
             this.Controls.Add(this.btnQryHist);
             this.Controls.Add(this.account);
             this.Controls.Add(this.radLabel1);
             this.Controls.Add(this.qrypage);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "HistQryForm";
             // 
             // 
             // 
             this.RootElement.ApplyShapeToControl = true;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "历史记录查询";
             this.ThemeName = "ControlDefault";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.HistQryForm_FormClosing);
@@ -257,5 +271,6 @@
         private ctHistPosition ctHistPosition1;
         private ctHistCashTransaction ctHistCashTransaction1;
         private System.Windows.Forms.RichTextBox settlebox;
+        private ctGridExport ctGridExport1;
     }
 }

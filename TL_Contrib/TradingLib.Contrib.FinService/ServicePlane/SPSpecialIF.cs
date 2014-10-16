@@ -102,6 +102,8 @@ namespace TradingLib.Contrib.FinService
         {
 
         }
+
+        
         /// <summary>
         /// 响应持仓回合事件
         /// 当一次开仓 平仓结束后触发该调用
@@ -128,10 +130,32 @@ namespace TradingLib.Contrib.FinService
                 agentfee = round.Size * this.LossCharge.AgentArgument.AsDecimal(); ;
             }
             
-            //进行收费记录
+            //进行直客收费记录
             string comment = SPNAME + " 平仓时间:" + Util.ToTLDateTime(round.ExitTime).ToString();
-            FeeCharge(totalfee, agentfee,comment);
+            
+            //计算代理收费记录
+            AgentCommissionDel func = (Manager agent, Manager parent) =>
+                {
+                    decimal fee = 0;
+                    //盈利
+                    if (round.Profit > 0)
+                    {
+                        //代理的收费 - 代理的父代理的收费
+                        decimal diff = FinTracker.ArgumentTracker.GetAgentArgument(agent.mgr_fk, this.ServicePlanFK, this.WinCharge.AccountArgument.Name).AsDecimal() - FinTracker.ArgumentTracker.GetAgentArgument(parent.mgr_fk, this.ServicePlanFK, this.WinCharge.AccountArgument.Name).AsDecimal();
+                        fee = round.Size * diff;
+                    }
+                    //亏损
+                    else
+                    {
+                        decimal diff = FinTracker.ArgumentTracker.GetAgentArgument(agent.mgr_fk, this.ServicePlanFK, this.LossCharge.AccountArgument.Name).AsDecimal() - FinTracker.ArgumentTracker.GetAgentArgument(parent.mgr_fk, this.ServicePlanFK, this.LossCharge.AccountArgument.Name).AsDecimal();
+                        fee = round.Size * diff;
+                    }
+                    return fee;
+                };
+            FeeCharge(totalfee, agentfee,func, comment);
         }
+
+        
 
 
         /// <summary>

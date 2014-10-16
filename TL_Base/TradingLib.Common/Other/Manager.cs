@@ -68,9 +68,19 @@ namespace TradingLib.Common
         public int mgr_fk { get; set; }
 
         /// <summary>
+        /// 上级代理
+        /// </summary>
+        public int parent_fk { get; set; }
+
+        /// <summary>
         /// BaseManager用于标注该管理帐号隶属于哪个Agent,如果是系统级的管理帐户的话直接隶属于ROOT
         /// </summary>
         public Manager BaseManager { get; set; }
+
+        /// <summary>
+        /// 上级代理对象
+        /// </summary>
+        public Manager ParentManager { get; set; }
 
 
         public string Serialize()

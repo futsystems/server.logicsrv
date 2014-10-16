@@ -9,7 +9,7 @@ namespace TradingLib.API
     /// <summary>
     /// 服务端的IClearCentreSrv
     /// </summary>
-    public interface IClearCentreSrv : IClearCentreBase, IBrokerTradingInfo
+    public interface IClearCentreSrv : IClearCentreBase, IBrokerTradingInfo, IAuthCashOperation
     {
 
         /// <summary>

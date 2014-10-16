@@ -103,7 +103,7 @@ namespace FutsMoniter
         const string QQ = "QQ号码";
         const string ACCNUMLIMIT = "帐户数量限制";
         
-        const string MGRFK = "代理编号";
+        const string MGRFK = "管理域ID";
         
 
         #endregion
@@ -166,6 +166,9 @@ namespace FutsMoniter
             //datasource.Filter=""
             grid.DataSource = datasource;
             datasource.Sort = ID + " ASC";
+
+            grid.Columns[MGRTYPE].IsVisible = false;
+            grid.Columns[ID].IsVisible = false;
         }
 
         private void ManagerForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -192,7 +195,9 @@ namespace FutsMoniter
 
         public void GotManager(Manager manger)
         {
-            Globals.Debug("got manager %%%%%%%%%%%%%%%%%%%%%%5 name:"+manger.Name);
+            //Globals.Debug("got manager %%%%%%%%%%%%%%%%%%%%%%5 name:"+manger.Name);
+            //如果获得的ManagerID和登入回报的ID一致 则表明该Manger是自己 在列表中不显示
+            if (manger.ID.Equals(Globals.LoginResponse.MGRID)) return;
             if (InvokeRequired)
             {
                 Invoke(new ManagerDel(GotManager), new object[] { manger });
@@ -203,16 +208,16 @@ namespace FutsMoniter
                 //添加
                 if (r == -1)
                 {
-                    Globals.Debug("add row");
+                    //Globals.Debug("add row");
                     gt.Rows.Add(manger.ID);
                     int i = gt.Rows.Count - 1;
                     gt.Rows[i][LOGIN] = manger.Login;
-                    gt.Rows[i][MGRTYPESTR] = Util.GetEnumDescription(manger.Type);
+                    gt.Rows[i][MGRTYPESTR] = (manger.Type== QSEnumManagerType.AGENT?"":"员工-") +Util.GetEnumDescription(manger.Type);
                     gt.Rows[i][MGRTYPE] = manger.Type;
                     gt.Rows[i][NAME] = manger.Name;
                     gt.Rows[i][MOBILE] = manger.Mobile;
                     gt.Rows[i][QQ] = manger.QQ;
-                    gt.Rows[i][ACCNUMLIMIT] = manger.AccLimit;
+                    gt.Rows[i][ACCNUMLIMIT] = manger.Type== QSEnumManagerType.AGENT?manger.AccLimit.ToString():"";
                     gt.Rows[i][MGRFK] = manger.mgr_fk;
 
                     //mgridmap.Add(manger.ID, ex);

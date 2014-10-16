@@ -195,13 +195,13 @@ namespace TradingLib.API
     /// <summary>
     /// 现金操作 入金 出金
     /// </summary>
-    public enum QSEnumCashOperation
-    {
-        [Description("入金")]
-        CashIn,
-        [Description("出金")]
-        CashOut,
-    }
+    //public enum QSEnumCashOperation
+    //{
+    //    [Description("入金")]
+    //    CashIn,
+    //    [Description("出金")]
+    //    CashOut,
+    //}
     /*
     public enum QSEnumTIF
     { 

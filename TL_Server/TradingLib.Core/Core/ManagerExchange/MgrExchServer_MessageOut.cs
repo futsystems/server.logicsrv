@@ -11,6 +11,8 @@ namespace TradingLib.Core
     public partial class MgrExchServer
     {
 
+
+
         public void Send(IPacket packet)
         {
             CachePacket(packet);
@@ -18,7 +20,6 @@ namespace TradingLib.Core
 
         void CachePacket(IPacket packet)
         {
-            //debug("cachepacket ~~~~~~~~~~~~~~~~~~~~",QSEnumDebugLevel.INFO);
             _packetcache.Write(packet);
         }
 

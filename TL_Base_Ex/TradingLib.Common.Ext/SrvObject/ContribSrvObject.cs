@@ -53,10 +53,7 @@ namespace TradingLib.Common
             TLCtxHelper.Ctx.MessageExchange.Send(packet);
         }
 
-        void SendPacketMgr(IPacket packet)
-        {
-            TLCtxHelper.Ctx.MessageMgr.Send(packet);
-        }
+
 
         void Send(string message, MessageTypes type, string address)
         {
@@ -103,6 +100,12 @@ namespace TradingLib.Common
         }
 
 
+        void SendPacketMgr(IPacket packet)
+        {
+            TLCtxHelper.Ctx.MessageMgr.Send(packet);
+        }
+
+
         /// <summary>
         /// 向Session对应的客户端发送一条文本字符串
         /// 在发送该字符串消息的时候,系统会以格式 ContribID|CMDStr|Message 发送到对端
@@ -119,6 +122,8 @@ namespace TradingLib.Common
             response.IsLast = islast;
             SendPacket(response);
         }
+
+
 
         /// <summary>
         /// 向管理端发送一个jsonreply回报
@@ -149,8 +154,9 @@ namespace TradingLib.Common
             response.Result = new Mixins.ReplyWriter().Start().FillReply(Mixins.JsonReply.GenericSuccess()).FillPlayload(obj).End().ToString();
 
             SendPacketMgr(response);
-
         }
+
+
 
 
         protected void SendJsonReply(ISession session, JsonReply reply,bool islast=true)

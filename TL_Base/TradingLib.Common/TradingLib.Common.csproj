@@ -39,8 +39,13 @@
       <HintPath>..\..\lib\TradingLib\TradingLib.API.dll</HintPath>
     </Reference>
     <Reference Include="System.Configuration" />
+    <Reference Include="TradingLib.Mixins">
+      <HintPath>..\..\lib\TradingLib\TradingLib.Mixins.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="JsonObject\JsonObjectBase.cs" />
+    <Compile Include="JsonObject\JsonProtocolManager.cs" />
     <Compile Include="Messages\Manager\MGRInsertTrade.cs" />
     <Compile Include="Messages\QryTransferSerial.cs" />
     <Compile Include="Other\LogItem.cs" />

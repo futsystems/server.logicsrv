@@ -38,6 +38,7 @@ namespace FutsMoniter
         HistQryForm histqryform;
         BasicInfoTracker basicinfotracker;
         ManagerForm mgrform;
+        AgentProfitReportForm agentprofitreportform;
         void ShowInfo(string msg)
         {
             if (ShowInfoHandler != null)
@@ -97,6 +98,8 @@ namespace FutsMoniter
 
             mgrform = new ManagerForm();
 
+            agentprofitreportform = new AgentProfitReportForm();
+            
             basicinfotracker.GotMarketTimeEvent += new MarketTimeDel(markettimeform.GotMarketTime);
             basicinfotracker.GotExchangeEvent += new ExchangeDel(exchangeform.GotExchange);
             basicinfotracker.GotSecurityEvent += new SecurityDel(securityform.GotSecurity);
@@ -199,7 +202,9 @@ namespace FutsMoniter
                             ShowInfo("初始化行情报表");
                             InitSymbol2View();
                             Globals.LoginStatus.IsInitSuccess = true;
-                            Globals.EnvReady = true;
+                            //触发初始化完成事件
+                            Globals.OnInitFinished();
+                            
                         }
                     }
                     else
@@ -250,8 +255,13 @@ namespace FutsMoniter
             _gotloginrep = true;
             if (response.Authorized)
             {
+                //登入的时候会的mgr_fk用于获得对应的编号
+                //如果是代理 则 通过mgr_fk获得对应的Manager对象
+                //如果是代理的员工 则服务端只会返回该员工的编号
                 _logined = true;
-                Globals.MgrFK = response.mgr_fk;//保存管理端登入获得的全局ID用于获取Manager列表时 绑定对应的Manager
+                Globals.LoginResponse = response;
+                Globals.MGRID = response.MGRID;//保存管理端登入获得的全局ID用于获取Manager列表时 绑定对应的Manager
+                Globals.BaseMGRFK = response.BaseMGRFK;
             }
             else
             {
@@ -280,10 +290,10 @@ namespace FutsMoniter
             
         }
 
-        private void radMenuItem6_Click(object sender, EventArgs e)
-        {
-            InitSymbol2View();
-        }
+        //private void radMenuItem6_Click(object sender, EventArgs e)
+        //{
+        //    InitSymbol2View();
+        //}
 
 
 
@@ -309,6 +319,19 @@ namespace FutsMoniter
             double o = statusmessage.Opacity - 0.05;
             statusmessage.Opacity = o >= 0 ? o : 0;
         }
+
+
+
+
+
+
+
+
+        
+
+        
+
+        
 
 
 

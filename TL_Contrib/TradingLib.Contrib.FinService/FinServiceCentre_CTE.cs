@@ -22,6 +22,94 @@ namespace TradingLib.Contrib.FinService
             }
         }
 
+        #region 代理参数查询与设置
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryAgentSPArg", "QryAgentSPArg - qry agent sparg  of account", "查询代理某个服务计划的参数")]
+        public void CTE_QryAgentSPArg(ISession session, int agentfk, int spfk)
+        {
+            debug("查询代理:" + agentfk.ToString() + " 的配资服务计划:" + spfk.ToString()+" 参数", QSEnumDebugLevel.INFO);
+            Manager m = BasicTracker.ManagerTracker[agentfk];
+            //session.ManagerID 对应的登入ID 这里需要用AgentFK标识
+            if (m == null)
+            { 
+                
+            }
+            //获得对应的服务计划
+            DBServicePlan sp = FinTracker.ServicePlaneTracker[spfk];
+            if (sp == null)
+            { 
+            
+            }
+            Dictionary<string, Argument> argumap = FinTracker.ArgumentTracker.GetAgentArgument(agentfk, spfk);
+
+            List<JsonWrapperArgument> list = new List<JsonWrapperArgument>();
+            foreach (string key in argumap.Keys)
+            {
+                Argument arg = argumap[key];
+                string name = arg.Name;
+                string value = arg.Value;
+                string type = arg.Type.ToString();
+                IEnumerable<ArgumentAttribute> attrlist = FinTracker.ServicePlaneTracker.GetAttribute(spfk);
+                ArgumentAttribute attr = attrlist.Where(a => a.Name.Equals(name)).SingleOrDefault();
+                if (attr == null)
+                {
+                    continue;
+                }
+
+                string title = attr.Title;
+
+                bool editable = attr.Editable;
+                list.Add(new JsonWrapperArgument
+                {
+                    ArgName = name,
+                    ArgTitle = title,
+                    ArgValue = value,
+                    ArgType = type,
+                    Editable = editable,
+
+                });
+            }
+
+            Type sptype = FinTracker.ServicePlaneTracker.GetFinServiceType(spfk);
+            //if (sptype == null) return;//如果没有获得对应的类型 则直接返回
+
+            //2.生成对应的IFinService
+            IFinService fs = (IFinService)Activator.CreateInstance(sptype);
+
+            JsonWrapperServicePlanAgentArgument ret = new JsonWrapperServicePlanAgentArgument
+            {
+                ClassName = sp.ClassName,
+                Name = sp.Name,
+                Title = sp.Title,
+                serviceplan_fk = sp.ID,
+                agent_fk = agentfk,
+                ChargeType =Util.GetEnumDescription(fs.ChargeType),
+                CollectType = Util.GetEnumDescription(fs.CollectType),
+                Arguments = list.ToArray(),
+            };
+
+            SendJsonReplyMgr(session, ret);
+        }
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAgentSPArg", "UpdateAgentSPArg - update agent service plan arg  of account", "更新代理配资服务计划参数",true)]
+        public void CTE_UpdateAgentSPArg(ISession session, string playload)
+        {
+            debug("arg:" + playload, QSEnumDebugLevel.INFO);
+            JsonWrapperServicePlanAgentArgument target = Mixins.LitJson.JsonMapper.ToObject<JsonWrapperServicePlanAgentArgument>(playload);
+            
+            //更新参数
+            FinTracker.ArgumentTracker.UpdateArgumentAgent(target.agent_fk, target.serviceplan_fk, target.Arguments);
+
+            //代理更新完毕参数后 需要将该代理下所有客户 对应的该服务计划的配资服务重新加载参数 
+            foreach (FinServiceStub stub in FinTracker.FinServiceTracker.Where(s => s.Account.Mgr_fk == target.agent_fk && s.serviceplan_fk == target.serviceplan_fk))
+            {
+                stub.LoadArgument();
+            }
+
+
+        }
+        #endregion
+
 
         /// <summary>
         /// 查询配资服务
@@ -173,6 +261,68 @@ namespace TradingLib.Contrib.FinService
             SendJsonReplyMgr(session, splist);
         }
 
+        /// <summary>
+        /// 查询某个交易日 代理商流水汇总
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="settleday"></param>
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryTotalReport", "QryTotalReport - query totalreport", "查询某日所有代理的汇总统计")]
+        public void CTE_QryTotalReport(ISession session,int agent,int settleday)
+        {
+            JsonWrapperToalReport[] reports = ORM.MServiceChargeReport.GenTotalReport(agent,settleday).Select((ret) => { return FillTotalReport(ret); }).ToArray();
+            SendJsonReplyMgr(session, reports);
+        }
+
+        /// <summary>
+        /// 查询某个代理 在某个时间段内的流水汇总
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="agentfk"></param>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QrySummaryReport", "QrySummaryReport - query summary report", "查询某个代理在一段时间内的汇总")]
+        public void CTE_QrySummaryReport(ISession session, int agentfk,int start,int end)
+        {
+            JsonWrapperToalReport[] reports = ORM.MServiceChargeReport.GenSummaryReportByDayRange(agentfk,start,end).Select((ret) => { return FillTotalReport(ret); }).ToArray();
+            SendJsonReplyMgr(session, reports);
+        }
+
+        /// <summary>
+        /// 查询某个代理在某段时间的每日汇总流水
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="agentfk"></param>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryTotalReportDayRange", "QryTotalReportDayRange - query totalreport", "查询某个代理某个时间段内利润流水")]
+        public void CTE_QryTotalReport(ISession session, int agentfk,int start,int end)
+        {
+            JsonWrapperToalReport[] reports = ORM.MServiceChargeReport.GenTotalReportByDayRange(agentfk,start,end).Select((ret) => { return FillTotalReport(ret); }).ToArray();
+            SendJsonReplyMgr(session, reports);
+        }
+
+        /// <summary>
+        /// 查询某个代理在某个结算日的客户流水分组
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="agentfk"></param>
+        /// <param name="settleday"></param>
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryDetailReportByAccount", "QryDetailReportByAccount - query totalreport", "查询某个代理某个时间段内利润流水")]
+        public void CTE_QryDetailReportByAccount(ISession session, int agentfk,int settleday)
+        {
+            JsonWrapperToalReport[] reports = ORM.MServiceChargeReport.GenDetailReportByAccount(agentfk, settleday).Select((ret) => { return FillTotalReport(ret); }).ToArray();
+            SendJsonReplyMgr(session, reports);
+        }
+
+        JsonWrapperToalReport FillTotalReport(JsonWrapperToalReport report)
+        {
+            Manager m = BasicTracker.ManagerTracker[report.Agent_FK];
+            if(m!= null)
+                report.AgentName = m.Name;
+                report.Mobile = m.Mobile;
+                report.QQ = m.QQ;
+            return report;
+        }
     }
 
 

@@ -133,10 +133,47 @@ namespace FutsMoniter
             mgrform.Show();
         }
 
+        /// <summary>
+        /// 修改密码
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnChangePass_Click(object sender, EventArgs e)
         {
             UpdatePassForm fm = new UpdatePassForm();
             fm.ShowDialog();
+        }
+
+        /// <summary>
+        /// 柜员 代理 资费设置
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnChangeFee_Click(object sender, EventArgs e)
+        {
+            FeeConfigForm fm = new FeeConfigForm();
+            fm.Show();
+        }
+
+        /// <summary>
+        /// 资金管理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnFinanceMgr_Click(object sender, EventArgs e)
+        {
+            FinanceMangerForm fm = new FinanceMangerForm();
+            fm.Show();
+        }
+        /// <summary>
+        /// 出纳管理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnCasher_Click(object sender, EventArgs e)
+        {
+            CasherMangerForm fm = new CasherMangerForm();
+            fm.Show();
         }
         #endregion
 
@@ -151,5 +188,22 @@ namespace FutsMoniter
             }
         }
         #endregion
+
+        #region 报表
+        private void btnAgentProfit_Click(object sender, EventArgs e)
+        {
+            if (agentprofitreportform != null)
+            {
+                agentprofitreportform.Show();
+            }
+        }
+
+        private void btnTotalOperationStatic_Click(object sender, EventArgs e)
+        {
+            OperationReportForm fm = new OperationReportForm();
+            fm.Show();
+        }
+        #endregion
+
     }
 }

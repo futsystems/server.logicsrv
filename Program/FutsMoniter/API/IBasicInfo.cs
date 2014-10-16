@@ -103,7 +103,7 @@ namespace TradingLib.API
         ArrayList GetSecurityCombList(bool isany = false);
         ArrayList GetSecurityCombListViaExchange(int id);
         ArrayList GetExpireMonth();
-        ArrayList GetBaseManagerCombList();
+        ArrayList GetBaseManagerCombList(bool all=false);
         
     }
 }

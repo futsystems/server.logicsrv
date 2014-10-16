@@ -156,25 +156,26 @@ namespace FutsMoniter
 
         private void qrypage_SelectedPageChanged(object sender, EventArgs e)
         {
+            ctGridExport1.Visible = true;
             if (qrypage.SelectedPage.Name.Equals("historder"))
             {
-                //this.QryType = QSHistQryType.HISTORDER;
+                ctGridExport1.Grid = ctHistOrder1.Grid;
             }
             else if (qrypage.SelectedPage.Name.Equals("histtrade"))
             {
-                //this.QryType = QSHistQryType.HISTTRADE;
+                ctGridExport1.Grid = ctHistTrade1.Grid;
             }
             else if (qrypage.SelectedPage.Name.Equals("histposition"))
             {
-                //this.QryType = QSHistQryType.HISTPOSITION;
+                ctGridExport1.Grid = ctHistPosition1.Grid;
             }
             else if (qrypage.SelectedPage.Name.Equals("histcash"))
             {
-                //this.QryType = QSHistQryType.HISTCASH;
+                ctGridExport1.Grid = ctHistCashTransaction1.Grid;
             }
             else if (qrypage.SelectedPage.Name.Equals("histsettle"))
             {
-                //this.QryType = QSHistQryType.HISTSETTLE;
+                ctGridExport1.Visible = false;
             }
         }
     }

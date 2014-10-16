@@ -11,6 +11,14 @@ namespace TradingLib.Mixins.DataBase
         public int Id { get; set; }
     }
 
+    /// <summary>
+    /// 用于判断数据库是否存在某个条记录
+    /// </summary>
+    public class TotalNum
+    {
+        public int num { get; set; }
+    }
+
     public class MBase
     {
         /// <summary>
