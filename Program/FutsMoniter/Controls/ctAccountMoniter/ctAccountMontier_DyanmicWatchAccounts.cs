@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
+using System.Windows.Forms;
 using Telerik.WinControls;
 using Telerik.WinControls.UI;
 using FutSystems.GUI;
@@ -25,6 +26,7 @@ namespace FutsMoniter.Controls
             _gridChangeTime = DateTime.Now;
         }
 
+
         /// <summary>
         /// 获得所有可视范围内的帐户
         /// </summary>
@@ -32,11 +34,13 @@ namespace FutsMoniter.Controls
         List<string> GetVisualAccounts()
         {
             List<string> accountlist = new List<string>();
-            int num = this.accountgrid.TableElement.VisualRows.Count;
-            for (int i = 1; i < num; i++)
+            int _startrow = accountgrid.FirstDisplayedCell.RowIndex;
+            int _rownum = accountgrid.DisplayedRowCount(true);
+            for(int i=0;i<_rownum;i++)
             {
-                accountlist.Add(this.accountgrid.TableElement.VisualRows[i].VisualCells[0].Value.ToString());
+                accountlist.Add(accountgrid[0, _startrow + i].Value.ToString());
             }
+            Globals.Debug("accounts:" + string.Join(",", accountlist.ToArray()));
             return accountlist;
         }
 
@@ -51,28 +55,16 @@ namespace FutsMoniter.Controls
         }
 
 
-        /// <summary>
-        /// accountgrid滚动条滚动
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void VScrollBar_ValueChanged(object sender, EventArgs e)
+
+        private void accountgrid_Scroll(object sender, ScrollEventArgs e)
         {
             GridChanged();
         }
 
-        /// <summary>
-        /// accountgrid改变大小
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void accountgrid_Resize(object sender, EventArgs e)
+        private void accountgrid_SizeChanged(object sender, EventArgs e)
         {
             GridChanged();
         }
-
-
-
 
 
 

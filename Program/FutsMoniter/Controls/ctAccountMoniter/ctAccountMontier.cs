@@ -51,10 +51,8 @@ namespace FutsMoniter.Controls
             accexecute.SelectedIndex = 0;
 
             Init();
+            InitAccountMoniterGrid();
 
-            SetPreferences();
-            InitTable();
-            BindToTable();
 
             StartUpdate();
             fmaccountconfig = new AccountConfigForm();
@@ -81,8 +79,8 @@ namespace FutsMoniter.Controls
                 }
             }
             catch (Exception ex)
-            { 
-                
+            {
+                MessageBox.Show("error ex:" + ex.ToString());
             }
             
         }
@@ -90,7 +88,7 @@ namespace FutsMoniter.Controls
 
         void Init()
         {
-            this.accountgrid.TableElement.VScrollBar.ValueChanged += new EventHandler(VScrollBar_ValueChanged);
+            //this.accountgrid.TableElement.VScrollBar.ValueChanged += new EventHandler(VScrollBar_ValueChanged);
 
             ctOrderView1.SendDebugEvent += new DebugDelegate(msgdebug);
             ctOrderView1.SendOrderCancel += new LongDelegate(CancelOrder);
@@ -209,6 +207,34 @@ namespace FutsMoniter.Controls
         }
 
         #endregion
+
+        private void radButton1_Click(object sender, EventArgs e)
+        {
+            Globals.TLClient.ReqWatchAccount(GetVisualAccounts());
+        }
+
+        private void accountgrid_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            try
+            {
+
+            }
+            catch (Exception ex)
+            { 
+                
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

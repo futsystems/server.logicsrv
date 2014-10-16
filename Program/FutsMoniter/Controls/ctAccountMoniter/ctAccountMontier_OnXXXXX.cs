@@ -37,6 +37,7 @@ namespace FutsMoniter.Controls
             if (string.IsNullOrEmpty(account.Account))
                 return;
             accountcache.Write(account);
+            Globals.Debug(">>>>>>>>>>>>>>>>> ctaccountmontier got account");
         }
 
         /// <summary>

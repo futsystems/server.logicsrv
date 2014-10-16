@@ -125,13 +125,12 @@ namespace FutsMoniter
             {
                 basicinfotracker.GotManager(manger);
             }
-            //debug("mainform ruleclass handler: is last:" + islast.ToString());
+            debug("mainform ruleclass handler: is last:" + islast.ToString());
             if (islast)
             {
                 ShowInfo("基础信息下载完成,下载帐户信息");
                 tlclient.ReqQryAccountList();
                 basicinfotracker.OnFinishLoad();//数据加载完毕后调用 用于建立对象绑定并进行界面
-
             }
         }
 

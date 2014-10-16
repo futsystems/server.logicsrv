@@ -85,9 +85,16 @@ namespace FutsMoniter.Common
 
         private void DisplaySplashScreen()
         {
-            
-            this._SplashScreenTimer.Enabled = true;
-            Application.Run(this._SplashScreenForm);
+
+            try
+            {
+                this._SplashScreenTimer.Enabled = true;
+                Application.Run(this._SplashScreenForm);
+            }
+            catch (Exception ex)
+            { 
+                
+            }
         }
 
         //方式2.将第一屏幕显示时间设置成无限长,则实现登入窗口,则登入的时候需要手工关闭第一屏

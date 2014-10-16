@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
 using TradingLib.API;
 using TradingLib.Common;
 using Telerik.WinControls;
@@ -74,14 +75,14 @@ namespace FutsMoniter.Controls
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void accountgrid_DoubleClick(object sender, EventArgs e)
+        private void accountgrid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            //MessageBox.Show("curent account:" + CurrentAccount);
-            if (Globals.TradingInfoTracker.Status == QSEnumInfoTrackerStatus.RESUMEBEGIN)
+            if (Globals.TradingInfoTracker.IsInResume)
             {
                 debug("处于恢复过程中，直接返回等候", QSEnumDebugLevel.INFO);
                 return;
             }
+
             string account = CurrentAccount;
             IAccountLite accountlite = null;
             if (accountmap.TryGetValue(account, out accountlite))
@@ -91,10 +92,9 @@ namespace FutsMoniter.Controls
                 ctFinService1.CurrentAccount = accountlite;
                 lbCurrentAccount.Text = account;
 
-                //清空交易记录
+                //清空交易记录然后请求新的交易数据
                 ClearTradingInfo();
-                //请求恢复交易帐户交易记录
-                //Globals.TLClient.ReqResumeAccount(account);
+                Globals.TradingInfoTracker.RequetResume(account);
 
                 if (ctOrderSenderM1 != null)
                 {

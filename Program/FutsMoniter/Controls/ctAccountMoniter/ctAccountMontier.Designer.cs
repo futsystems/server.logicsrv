@@ -28,11 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.SplitContainer = new Telerik.WinControls.UI.RadSplitContainer();
             this.radSplitContainer1 = new Telerik.WinControls.UI.RadSplitContainer();
             this.radSplitContainer2 = new Telerik.WinControls.UI.RadSplitContainer();
             this.splitPanel1 = new Telerik.WinControls.UI.SplitPanel();
             this.radPanel1 = new Telerik.WinControls.UI.RadPanel();
+            this.accountgrid = new ComponentFactory.Krypton.Toolkit.KryptonDataGridView();
             this.btnAddAccount = new Telerik.WinControls.UI.RadButton();
             this.radLabel1 = new Telerik.WinControls.UI.RadLabel();
             this.acct = new Telerik.WinControls.UI.RadTextBox();
@@ -47,7 +49,6 @@
             this.radLabel2 = new Telerik.WinControls.UI.RadLabel();
             this.accLogin = new Telerik.WinControls.UI.RadCheckBox();
             this.routeType = new Telerik.WinControls.UI.RadDropDownList();
-            this.accountgrid = new Telerik.WinControls.UI.RadGridView();
             this.splitPanel2 = new Telerik.WinControls.UI.SplitPanel();
             this.radSplitContainer3 = new Telerik.WinControls.UI.RadSplitContainer();
             this.splitPanel3 = new Telerik.WinControls.UI.SplitPanel();
@@ -78,6 +79,7 @@
             this.splitPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.radPanel1)).BeginInit();
             this.radPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.accountgrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnAddAccount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.acct)).BeginInit();
@@ -92,7 +94,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.radLabel2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.accLogin)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.routeType)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.accountgrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitPanel2)).BeginInit();
             this.splitPanel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.radSplitContainer3)).BeginInit();
@@ -179,6 +180,7 @@
             // 
             // radPanel1
             // 
+            this.radPanel1.Controls.Add(this.accountgrid);
             this.radPanel1.Controls.Add(this.btnAddAccount);
             this.radPanel1.Controls.Add(this.radLabel1);
             this.radPanel1.Controls.Add(this.ctAgentList1);
@@ -194,13 +196,38 @@
             this.radPanel1.Controls.Add(this.radLabel2);
             this.radPanel1.Controls.Add(this.accLogin);
             this.radPanel1.Controls.Add(this.routeType);
-            this.radPanel1.Controls.Add(this.accountgrid);
             this.radPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.radPanel1.Location = new System.Drawing.Point(0, 0);
             this.radPanel1.Name = "radPanel1";
             this.radPanel1.Size = new System.Drawing.Size(1256, 358);
             this.radPanel1.TabIndex = 0;
             this.radPanel1.Text = "radPanel1";
+            // 
+            // accountgrid
+            // 
+            this.accountgrid.AllowUserToAddRows = false;
+            this.accountgrid.AllowUserToDeleteRows = false;
+            this.accountgrid.AllowUserToResizeRows = false;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.accountgrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            this.accountgrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.accountgrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.accountgrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            this.accountgrid.Location = new System.Drawing.Point(0, 34);
+            this.accountgrid.Name = "accountgrid";
+            this.accountgrid.ReadOnly = true;
+            this.accountgrid.RowHeadersVisible = false;
+            this.accountgrid.RowTemplate.Height = 23;
+            this.accountgrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.accountgrid.Size = new System.Drawing.Size(1256, 322);
+            this.accountgrid.TabIndex = 28;
+            this.accountgrid.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.accountgrid_CellDoubleClick);
+            this.accountgrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.accountgrid_CellFormatting);
+            this.accountgrid.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.accountgrid_DataError);
+            this.accountgrid.Scroll += new System.Windows.Forms.ScrollEventHandler(this.accountgrid_Scroll);
+            this.accountgrid.SizeChanged += new System.EventHandler(this.accountgrid_SizeChanged);
             // 
             // btnAddAccount
             // 
@@ -332,22 +359,6 @@
             this.routeType.Text = "--";
             this.routeType.SelectedIndexChanged += new Telerik.WinControls.UI.Data.PositionChangedEventHandler(this.routeType_SelectedIndexChanged);
             ((Telerik.WinControls.Primitives.FillPrimitive)(this.routeType.GetChildAt(0).GetChildAt(1))).BackColor = System.Drawing.SystemColors.Window;
-            // 
-            // accountgrid
-            // 
-            this.accountgrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.accountgrid.Location = new System.Drawing.Point(3, 36);
-            this.accountgrid.Name = "accountgrid";
-            this.accountgrid.Size = new System.Drawing.Size(1253, 322);
-            this.accountgrid.TabIndex = 0;
-            this.accountgrid.Text = "radGridView1";
-            this.accountgrid.CellFormatting += new Telerik.WinControls.UI.CellFormattingEventHandler(this.accountgrid_CellFormatting);
-            this.accountgrid.ContextMenuOpening += new Telerik.WinControls.UI.ContextMenuOpeningEventHandler(this.accountgrid_ContextMenuOpening);
-            this.accountgrid.Click += new System.EventHandler(this.accountgrid_Click);
-            this.accountgrid.DoubleClick += new System.EventHandler(this.accountgrid_DoubleClick);
-            this.accountgrid.Resize += new System.EventHandler(this.accountgrid_Resize);
             // 
             // splitPanel2
             // 
@@ -524,7 +535,7 @@
             this.viewQuoteList1.QuoteFont = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
             this.viewQuoteList1.QuoteViewWidth = 1030;
             this.viewQuoteList1.SelectedQuoteRow = -1;
-            this.viewQuoteList1.Size = new System.Drawing.Size(564, 166);
+            this.viewQuoteList1.Size = new System.Drawing.Size(564, 164);
             this.viewQuoteList1.SymbolFont = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
             this.viewQuoteList1.SymbolFontColor = System.Drawing.Color.Green;
             this.viewQuoteList1.TabIndex = 1;
@@ -599,6 +610,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.radPanel1)).EndInit();
             this.radPanel1.ResumeLayout(false);
             this.radPanel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.accountgrid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnAddAccount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.acct)).EndInit();
@@ -613,7 +625,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.radLabel2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.accLogin)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.routeType)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.accountgrid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitPanel2)).EndInit();
             this.splitPanel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.radSplitContainer3)).EndInit();
@@ -642,7 +653,6 @@
         private Telerik.WinControls.UI.RadSplitContainer radSplitContainer2;
         private Telerik.WinControls.UI.SplitPanel splitPanel1;
         private Telerik.WinControls.UI.RadPanel radPanel1;
-        private Telerik.WinControls.UI.RadGridView accountgrid;
         private Telerik.WinControls.UI.SplitPanel splitPanel2;
         private Telerik.WinControls.UI.RadSplitContainer radSplitContainer3;
         private Telerik.WinControls.UI.SplitPanel splitPanel3;
@@ -677,6 +687,7 @@
         private Telerik.WinControls.UI.RadPageViewPage LottoServicePage;
         private ctAgentList ctAgentList1;
         private Telerik.WinControls.UI.RadButton btnAddAccount;
+        private ComponentFactory.Krypton.Toolkit.KryptonDataGridView accountgrid;
         //private Telerik.WinControls.UI.RadPageViewPage LottoServicePage;
 
     }

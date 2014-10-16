@@ -59,37 +59,42 @@ namespace FutsMoniter.Controls
         DataTable gt = new DataTable();
         BindingSource datasource = new BindingSource();
 
+
+        /// <summary>
+        /// validview 调整视图状态
+        /// 根据具体的权限状态进行调整
+        /// </summary>
+        public void ValidView()
+        {
+            if (!Globals.RightRouter)
+            {
+                //accountgrid.Columns[ROUTEIMG].IsVisible = false;
+            }
+            if (!Globals.RightAgent)
+            {
+                //accountgrid.Columns[AGENTCODE].IsVisible = false;
+            }
+
+            //fmaccountconfig.ValidView();
+        }
+
+
         /// <summary>
         /// 设定表格控件的属性
         /// </summary>
         private void SetPreferences()
         {
-            //Telerik.WinControls.UI.RadGridView grid = accountgrid;
-            //grid.ShowRowHeaderColumn = false;//显示每行的头部
-            //grid.MasterTemplate.AutoSizeColumnsMode = Telerik.WinControls.UI.GridViewAutoSizeColumnsMode.Fill;//列的填充方式
-            //grid.ShowGroupPanel = false;//是否显示顶部的panel用于组合排序
-            //grid.MasterTemplate.EnableGrouping = false;//是否允许分组
-            //grid.EnableHotTracking = true;
-            //this.radRadioDataReader.ToggleState = Telerik.WinControls.Enumerations.ToggleState.On; 
+            ComponentFactory.Krypton.Toolkit.KryptonDataGridView grid = accountgrid;
 
-            Telerik.WinControls.UI.RadGridView grid = accountgrid;
-            grid.ShowRowHeaderColumn = false;//显示每行的头部
-            grid.MasterTemplate.AutoSizeColumnsMode = Telerik.WinControls.UI.GridViewAutoSizeColumnsMode.Fill;//列的填充方式
-            grid.ShowGroupPanel = false;//是否显示顶部的panel用于组合排序
-            grid.MasterTemplate.EnableGrouping = false;//是否允许分组
-            grid.EnableHotTracking = true;
-
-            grid.AllowAddNewRow = false;//不允许增加新行
-            grid.AllowDeleteRow = false;//不允许删除行
-            grid.AllowEditRow = false;//不允许编辑行
-            grid.AllowRowResize = false;
-            //grid.EnableSorting = false;
-            grid.TableElement.TableHeaderHeight = Globals.HeaderHeight;
-            grid.TableElement.RowHeight = Globals.RowHeight;
-
-            grid.EnableAlternatingRowColor = true;//隔行不同颜色
-            //this.radRadioDataReader.ToggleState = Telerik.WinControls.Enumerations.ToggleState.On; 
-
+            grid.AllowUserToAddRows = false;
+            grid.AllowUserToDeleteRows = false;
+            grid.AllowUserToResizeRows = false;
+            grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            grid.ColumnHeadersHeight = 25;
+            grid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            grid.ReadOnly = true;
+            grid.RowHeadersVisible = false;
+            grid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
         }
 
         //初始化Account显示空格
@@ -111,96 +116,55 @@ namespace FutsMoniter.Controls
             gt.Columns.Add(NOWEQUITY);//10
             gt.Columns.Add(MARGIN);//11
             gt.Columns.Add(FROZENMARGIN);//12
-            gt.Columns.Add(REALIZEDPL);//14
-            gt.Columns.Add(UNREALIZEDPL);//15
+            gt.Columns.Add(REALIZEDPL);//13
+            gt.Columns.Add(UNREALIZEDPL);//14
 
-            gt.Columns.Add(COMMISSION, typeof(Decimal));//16
-            gt.Columns.Add(PROFIT);//17
+            gt.Columns.Add(COMMISSION, typeof(Decimal));//15
+            gt.Columns.Add(PROFIT);//16
             gt.Columns.Add(CATEGORY);//18
             gt.Columns.Add(INTRADAY);//19
             gt.Columns.Add(AGENTCODE);//22
             gt.Columns.Add(AGENTMGRFK);//22
             gt.Columns.Add(POSLOK);//
             gt.Columns.Add(NAME);//22
-
-
-            //accountlist.ContextMenuStrip = new ContextMenuStrip();
-            //accountlist.ContextMenuStrip.Items.Add("添加账户", Properties.Resources.addAccount, new EventHandler(addAccount));
-            //accountlist.ContextMenuStrip.Items.Add("编辑账户", Properties.Resources.editAccount, new EventHandler(editAccount));
-            //accountlist.ContextMenuStrip.Items.Add("删除账户", Properties.Resources.delAccount, new EventHandler(delAccount));
-
-
-
-            //隐藏搜索关键字
-            /*
-            accountgrid.Columns[MODE].Visible = false;
-            accountgrid.Columns[EXECUTE].Visible = false;
-            accountgrid.Columns[REGSTATUS].Visible = false;
-
-
-            accountgrid.Columns[ACCOUNT].Width = 60;
-            accountgrid.Columns[MODEIMG].Width = 20;
-            accountgrid.Columns[EXECUTEIMG].Width = 20;
-            accountgrid.Columns[PROFITLOSSIMG].Width = 20;
-            accountgrid.Columns[REGSTATUSIMG].Width = 20;
-            accountgrid.Columns[ADDRESS].Width = 120;
-            **/
-
-            //检查模块 然后隐藏对应的界面
-
-
-            for (int i = 0; i < gt.Columns.Count; i++)
-            {
-                //accountgrid.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
-            }
         }
 
-        /// <summary>
-        /// validview 调整视图状态
-        /// 根据具体的权限状态进行调整
-        /// </summary>
-        public void ValidView()
+        void InitAccountMoniterGrid()
         {
-            if (!Globals.RightRouter)
-            {
-                accountgrid.Columns[ROUTEIMG].IsVisible = false;
-            }
-            if (!Globals.RightAgent)
-            {
-                //accountgrid.Columns[AGENTCODE].IsVisible = false;
-            }
+            InitTable();
+            SetPreferences();
+            BindToTable();
 
-            fmaccountconfig.ValidView();
+            //初始化右键菜单
+            InitMenu();
+
         }
+        
         /// <summary>
         /// 绑定数据表格到grid
         /// </summary>
         private void BindToTable()
         {
-            Telerik.WinControls.UI.RadGridView grid = accountgrid;
-
-            //grid.TableElement.BeginUpdate();             
-            //grid.MasterTemplate.Columns.Clear(); 
-            //accountlist.DataSource = gt;
             datasource.DataSource = gt;
             datasource.Sort = ACCOUNT + " ASC";
             accountgrid.DataSource = datasource;
 
-            accountgrid.Columns[EXECUTE].IsVisible = false;
-            accountgrid.Columns[ROUTE].IsVisible = false;
-            accountgrid.Columns[LOGINSTATUS].IsVisible = false;
+            accountgrid.Columns[EXECUTE].Visible = false;
+            accountgrid.Columns[EXECUTE].Width = 0;
+            accountgrid.Columns[ROUTE].Visible = false;
+            accountgrid.Columns[LOGINSTATUS].Visible = false;
+            accountgrid.Columns[AGENTMGRFK].Visible = false;
 
-            //if (! (Globals.Manager.Type == QSEnumManagerType.ROOT))
-            //{
-            //    accountgrid.Columns[ROUTEIMG].IsVisible = false;
-            //    accountgrid.Columns[AGENTCODE].IsVisible = false;
-            //}
             accountgrid.Columns[ACCOUNT].Width = 60;
             accountgrid.Columns[ROUTEIMG].Width = 20;
             accountgrid.Columns[EXECUTEIMG].Width = 20;
             accountgrid.Columns[PROFITLOSSIMG].Width = 20;
             accountgrid.Columns[LOGINSTATUSIMG].Width = 20;
             accountgrid.Columns[ADDRESS].Width = 120;
+            for (int i = 0; i < gt.Columns.Count; i++)
+            {
+                accountgrid.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
+            }
         }
 
         #endregion
@@ -217,6 +181,7 @@ namespace FutsMoniter.Controls
 
         /// <summary>
         /// 检查帐户缓存中是否有帐号未填充
+        /// 用于初始化登入时 等待所有帐户加载完毕
         /// </summary>
         public bool AnyAccountInCache
         {
@@ -270,15 +235,18 @@ namespace FutsMoniter.Controls
 
         bool _accountgo = false;
         Thread _accountthread = null;
+        
         void acccountproc()
         {
             while (_accountgo)
             {
+               // Globals.Debug("got account in cache*************************");
                 try
                 {
                     //更新账户主体信息
                     while (accountcache.hasItems)
                     {
+                       // Globals.Debug("got account in cache*************************");
                         IAccountLite account = accountcache.Read();
                         InvokeGotAccount(account);
                         UpdateAccountNum();
@@ -289,11 +257,12 @@ namespace FutsMoniter.Controls
                     {
                         NotifyMGRSessionUpdateNotify notify = sessionupdatecache.Read();
                         InvokeGotMGRSessionUpdate(notify);
-                        Thread.Sleep(1);
+                        Thread.Sleep(20);
                     }
                     //更新账户盘中动态财务信息
                     while (!accountcache.hasItems && accountinfocache.hasItems)
                     {
+                        //Globals.Debug("got account in cache*************************");
                         InvokeGotAccountInfoLite(accountinfocache.Read());
                         Thread.Sleep(1);
                     }
@@ -310,6 +279,7 @@ namespace FutsMoniter.Controls
 
         void StartUpdate()
         {
+            //MessageBox.Show("start update");
             if (_accountgo) return;
             _accountgo = true;
             _accountthread = new Thread(acccountproc);
@@ -351,6 +321,7 @@ namespace FutsMoniter.Controls
                     int r = accountIdx(account.Account);
                     if (r == -1)//datatable不存在该行，我们则增加该行
                     {
+                        //debug("add account row ......................xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:" + account.Account +" lastequity:"+account.LastEquity.ToString(), QSEnumDebugLevel.INFO);
                         gt.Rows.Add(account.Account);
                         int i = gt.Rows.Count - 1;
                         gt.Rows[i][ROUTE] = account.OrderRouteType.ToString();
@@ -361,7 +332,7 @@ namespace FutsMoniter.Controls
                         gt.Rows[i][LOGINSTATUS] = getLoginStatus(false);
                         gt.Rows[i][LOGINSTATUSIMG] = getLoginStatusImage(false);
                         gt.Rows[i][ADDRESS] = "";
-                        gt.Rows[i][LASTEQUITY] = decDisp(account.LastEquity);
+                        gt.Rows[i][LASTEQUITY] = account.LastEquity;//decDisp(account.LastEquity);
 
                         gt.Rows[i][NOWEQUITY] = decDisp(account.NowEquity);
                         gt.Rows[i][MARGIN] = decDisp(0);
@@ -424,11 +395,12 @@ namespace FutsMoniter.Controls
             {
                 string acc = account.Account;
                 int r = accountIdx(acc);
+                //Globals.Debug("account idx:" + r);
                 if (r == -1)
                     return;
                 else
                 {
-
+                    //Globals.Debug("account:"+account.Account + "now:" + decDisp(account.NowEquity) + " margin:" + decDisp(account.Margin));
                     gt.Rows[r][NOWEQUITY] = decDisp(account.NowEquity);
                     gt.Rows[r][MARGIN] = decDisp(account.Margin);
                     gt.Rows[r][FROZENMARGIN] = decDisp(account.ForzenMargin);
@@ -457,7 +429,7 @@ namespace FutsMoniter.Controls
 
                 string acc = notify.TradingAccount;
                 int i = accountIdx(acc);
-                debug("got sessionupdate info account:" + notify.TradingAccount + " status:" + notify.IsLogin.ToString() + " rindex:" + i.ToString(), QSEnumDebugLevel.INFO);
+                //debug("got sessionupdate info account:" + notify.TradingAccount + " status:" + notify.IsLogin.ToString() + " rindex:" + i.ToString(), QSEnumDebugLevel.INFO);
                 if (i == -1)
                     return;
                 else

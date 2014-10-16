@@ -50,14 +50,8 @@ namespace FutsMoniter.Controls
 
             get
             {
-                if (accountgrid.SelectedRows.Count > 0)
-                {
-                    return accountgrid.SelectedRows[0].ViewInfo.CurrentRow.Cells[ACCOUNT].Value.ToString();
-                }
-                else
-                {
-                    return string.Empty;
-                }
+                int row =  (accountgrid.SelectedRows.Count > 0 ? accountgrid.SelectedRows[0].Index : -1);
+                return accountgrid[0, row].Value.ToString();
             }
         }
 

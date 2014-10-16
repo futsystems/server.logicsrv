@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
 using TradingLib.API;
 using TradingLib.Common;
 using Telerik.WinControls;
@@ -37,89 +38,34 @@ namespace FutsMoniter.Controls
         }
 
 
-
         /// <summary>
         /// Grid渲染
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void accountgrid_CellFormatting(object sender, CellFormattingEventArgs e)
+        private void accountgrid_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            try
+
+            if (e.ColumnIndex == 13 || e.ColumnIndex == 14 || e.ColumnIndex == 16)
             {
-                //if (e.CellElement.RowInfo is GridViewDataRowInfo)
-                //{
-                //    if (e.CellElement.ColumnInfo.Name == REALIZEDPL)
-                //    {
-                //        decimal value = decimal.Parse(e.CellElement.RowInfo.Cells[REALIZEDPL].Value.ToString());
-
-                //        if (value < 0)
-                //        {
-                //            e.CellElement.ForeColor = UIGlobals.ShortSideColor;
-                //            e.CellElement.Font = UIGlobals.BoldFont;
-                //        }
-                //        else if (value > 0)
-                //        {
-                //            e.CellElement.ForeColor = UIGlobals.LongSideColor;
-                //            e.CellElement.Font = UIGlobals.BoldFont;
-                //        }
-                //        else
-                //        {
-                //            e.CellElement.ForeColor = UIGlobals.DefaultColor;
-                //            e.CellElement.Font = UIGlobals.DefaultFont;
-                //        }
-                //    }
-
-                //    if (e.CellElement.ColumnInfo.Name == UNREALIZEDPL)
-                //    {
-                //        decimal value = decimal.Parse(e.CellElement.RowInfo.Cells[UNREALIZEDPL].Value.ToString());
-
-                //        if (value < 0)
-                //        {
-                //            e.CellElement.ForeColor = UIGlobals.ShortSideColor;
-                //            e.CellElement.Font = UIGlobals.BoldFont;
-                //        }
-                //        else if (value > 0)
-                //        {
-                //            e.CellElement.ForeColor = UIGlobals.LongSideColor;
-                //            e.CellElement.Font = UIGlobals.BoldFont;
-                //        }
-                //        else
-                //        {
-                //            e.CellElement.ForeColor = UIGlobals.DefaultColor;
-                //            e.CellElement.Font = UIGlobals.DefaultFont;
-                //        }
-                //    }
-
-                //    if (e.CellElement.ColumnInfo.Name == PROFIT)
-                //    {
-                //        decimal value = decimal.Parse(e.CellElement.RowInfo.Cells[PROFIT].Value.ToString());
-
-                //        if (value < 0)
-                //        {
-                //            e.CellElement.ForeColor = UIGlobals.ShortSideColor;
-                //            e.CellElement.Font = UIGlobals.BoldFont;
-                //        }
-                //        else if (value > 0)
-                //        {
-                //            e.CellElement.ForeColor = UIGlobals.LongSideColor;
-                //            e.CellElement.Font = UIGlobals.BoldFont;
-                //        }
-                //        else
-                //        {
-                //            e.CellElement.ForeColor = UIGlobals.DefaultColor;
-                //            e.CellElement.Font = UIGlobals.DefaultFont;
-                //        }
-                //    }
-
-                //}
-
-
-            }
-            catch (Exception ex)
-            {
-                debug("!!!!!!!!!!!!cell format error");
+                e.CellStyle.Font = UIGlobals.BoldFont;
+                decimal v = 0;
+                decimal.TryParse(e.Value.ToString(), out v);
+                if (v > 0)
+                {
+                    e.CellStyle.ForeColor = UIGlobals.LongSideColor;
+                }
+                else if (v < 0)
+                {
+                    e.CellStyle.ForeColor = UIGlobals.ShortSideColor;
+                }
+                else if (v == 0)
+                {
+                    e.CellStyle.ForeColor = System.Drawing.Color.Black;
+                }
+                
             }
         }
+
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
+using System.Windows.Forms;
 using Telerik.WinControls;
 using Telerik.WinControls.UI;
 using FutSystems.GUI;
@@ -47,6 +48,14 @@ namespace FutsMoniter.Controls
             menu.Items.Add(MenuItem_changepass);
             menu.Items.Add(MenuItem_changeinvestor);
             menu.Items.Add(MenuItem_qryhist);
+
+            accountgrid.ContextMenuStrip = new ContextMenuStrip();
+            accountgrid.ContextMenuStrip.Items.Add("编辑账户", Properties.Resources.editAccount, new EventHandler(EditAccount_Click));
+            accountgrid.ContextMenuStrip.Items.Add("修改密码",null, new EventHandler(ChangePass_Click));
+            accountgrid.ContextMenuStrip.Items.Add("修改信息", null, new EventHandler(ChangeInvestor_Click));
+            accountgrid.ContextMenuStrip.Items.Add("历史查询", null, new EventHandler(QryHist_Click));
+
+
         }
         /// <summary>
         /// 编辑某个交易帐号

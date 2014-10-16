@@ -9,7 +9,7 @@ namespace TradingLib.Core
 {
     public partial class MgrExchServer
     {
-        [TaskAttr("采集帐户信息", 2, "定时采集帐户信息用于向管理端进行推送")]
+        [TaskAttr("采集帐户信息", 1, "定时采集帐户信息用于向管理端进行推送")]
         public void Task_CollectAccountInfo()
         {
             try
