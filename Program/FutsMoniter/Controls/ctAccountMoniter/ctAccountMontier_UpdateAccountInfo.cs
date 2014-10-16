@@ -17,6 +17,7 @@ namespace FutsMoniter.Controls
 {
     /// <summary>
     /// 更新交易帐户的信息
+    /// 替换Grid性能大幅提高，后期会对控件做一个整理
     /// </summary>
     public partial class ctAccountMontier
     {
