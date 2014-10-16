@@ -11,8 +11,18 @@ namespace TradingLib.Common
     public enum QSEnumInfoTrackerStatus
     { 
         UNKNOWN,
+        /// <summary>
+        /// 恢复开始
+        /// </summary>
         RESUMEBEGIN,
+        /// <summary>
+        /// 恢复结束
+        /// </summary>
         RESUMEEND,
+        /// <summary>
+        /// 请求恢复 本地
+        /// </summary>
+        RESUMEREQUEST,
     }
 
     public class TradingInfoTracker
@@ -87,7 +97,24 @@ namespace TradingLib.Common
             HoldPositionTracker.GotPosition(pos);
         }
 
+        /// <summary>
+        /// 是否处于恢复数据状态
+        /// </summary>
+        public bool IsInResume
+        {
+            get
+            {
+                if (status == QSEnumInfoTrackerStatus.RESUMEEND || status == QSEnumInfoTrackerStatus.UNKNOWN)
+                    return false;
+                return true;
+            }
+        }
 
+
+        /// <summary>
+        /// 获得服务端回报 获得开始恢复数据标记
+        /// </summary>
+        /// <param name="account"></param>
         public void StartResume(IAccountLite account)
         {
             debug("set account:" + account.Account);
@@ -95,10 +122,25 @@ namespace TradingLib.Common
             status = QSEnumInfoTrackerStatus.RESUMEBEGIN;
         }
 
+        /// <summary>
+        /// 获得服务端回报 获得结束恢复数据标记
+        /// </summary>
         public void EndResume()
         {
             status = QSEnumInfoTrackerStatus.RESUMEEND;
         }
+
+        /// <summary>
+        /// 请求恢复某个交易帐户的数据
+        /// </summary>
+        /// <param name="account"></param>
+        public void RequetResume(string account)
+        {
+            status = QSEnumInfoTrackerStatus.RESUMEREQUEST;
+            //请求恢复交易帐户交易记录
+            Globals.TLClient.ReqResumeAccount(account);
+        }
+
 
         public bool IsReady(string account)
         {

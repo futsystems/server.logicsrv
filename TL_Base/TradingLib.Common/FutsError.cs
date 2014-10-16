@@ -32,7 +32,16 @@ namespace TradingLib.Common
             ErrorMessage = string.Empty;
             RawException = e;
         }
-
+        /// <summary>
+        /// 常规错误
+        /// 提供一个错误信息 生成对应的FutsRspError
+        /// </summary>
+        /// <param name="error"></param>
+        /// <returns></returns>
+        public static FutsRspError GenericError(string errorMessage)
+        {
+            return new FutsRspError() { ErrorID = 1, ErrorMessage = errorMessage };
+        }
         public void FillError(XMLRspInfo error)
         {
             ErrorID = error.Code;

@@ -18,27 +18,8 @@ namespace TradingLib.Common
         public decimal UnRealizedPL { get; set; }//浮动盈亏
         public decimal Commission { get; set; }//手续费
         public decimal Profit { get; set; }//净利
+        public int TotalPositionSize { get; set; }//所有持仓手数量
 
-        /*
-        public static IAccountInfoLite genAccountInfo(IAccount acc)
-        {
-            AccountInfoLite info = new AccountInfoLite();
-            info.Account = acc.ID;
-            info.NowEquity = acc.NowEquity;
-            info.Margin = acc.Margin;
-            info.ForzenMargin = acc.ForzenMargin;
-            info.BuyPower = acc.BuyPower;
-            info.RealizedPL = acc.RealizedPL;
-            info.UnRealizedPL = acc.UnRealizedPL;
-            info.Commission = acc.Commission;
-            info.Profit = acc.Profit;
-
-            return info;
-        }
-        public static string Serialize(IAccount account)
-        {
-            return Serialize(genAccountInfo(account));
-        }**/
 
         public static string Serialize(IAccountInfoLite info)
         {
@@ -61,7 +42,8 @@ namespace TradingLib.Common
             sb.Append(info.Profit);
             sb.Append(d);
             sb.Append(info.Account);
-
+            sb.Append(d);
+            sb.Append(info.TotalPositionSize);
             return sb.ToString();
 
         }
@@ -81,6 +63,7 @@ namespace TradingLib.Common
                 a.Commission = Decimal.Parse(r[6]);
                 a.Profit = Decimal.Parse(r[7]);
                 a.Account = r[8];
+                a.TotalPositionSize = int.Parse(r[9]);
             }
             return a;
         }

@@ -17,5 +17,6 @@ namespace TradingLib.API
         decimal UnRealizedPL { get; set; }//浮动盈亏
         decimal Commission { get; set; }//手续费
         decimal Profit { get; set; }//净利
+        int TotalPositionSize { get; set; }//所有持仓总数
     }
 }

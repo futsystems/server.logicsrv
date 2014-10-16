@@ -29,32 +29,54 @@
         private void InitializeComponent()
         {
             this.radPanel1 = new Telerik.WinControls.UI.RadPanel();
+            this.opgrid = new Telerik.WinControls.UI.RadGridView();
+            this.ctGridExport1 = new FutsMoniter.ctGridExport();
             this.btnFilterCancelOrReject = new Telerik.WinControls.UI.RadRadioButton();
             this.btnFilterConfirmed = new Telerik.WinControls.UI.RadRadioButton();
             this.btnFilterPending = new Telerik.WinControls.UI.RadRadioButton();
-            this.opgrid = new Telerik.WinControls.UI.RadGridView();
-            this.ctGridExport1 = new FutsMoniter.ctGridExport();
             ((System.ComponentModel.ISupportInitialize)(this.radPanel1)).BeginInit();
             this.radPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.opgrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnFilterCancelOrReject)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnFilterConfirmed)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnFilterPending)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.opgrid)).BeginInit();
             this.SuspendLayout();
             // 
             // radPanel1
             // 
+            this.radPanel1.Controls.Add(this.opgrid);
             this.radPanel1.Controls.Add(this.ctGridExport1);
             this.radPanel1.Controls.Add(this.btnFilterCancelOrReject);
             this.radPanel1.Controls.Add(this.btnFilterConfirmed);
             this.radPanel1.Controls.Add(this.btnFilterPending);
-            this.radPanel1.Controls.Add(this.opgrid);
             this.radPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.radPanel1.Location = new System.Drawing.Point(0, 0);
             this.radPanel1.Name = "radPanel1";
             this.radPanel1.Size = new System.Drawing.Size(639, 356);
             this.radPanel1.TabIndex = 0;
             ((Telerik.WinControls.Primitives.BorderPrimitive)(this.radPanel1.GetChildAt(0).GetChildAt(1))).Width = 0F;
+            // 
+            // opgrid
+            // 
+            this.opgrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.opgrid.Location = new System.Drawing.Point(0, 0);
+            this.opgrid.Name = "opgrid";
+            this.opgrid.Size = new System.Drawing.Size(639, 325);
+            this.opgrid.TabIndex = 8;
+            this.opgrid.Text = "radGridView1";
+            this.opgrid.CellFormatting += new Telerik.WinControls.UI.CellFormattingEventHandler(this.opgrid_CellFormatting);
+            this.opgrid.ContextMenuOpening += new Telerik.WinControls.UI.ContextMenuOpeningEventHandler(this.opgrid_ContextMenuOpening);
+            // 
+            // ctGridExport1
+            // 
+            this.ctGridExport1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.ctGridExport1.Grid = null;
+            this.ctGridExport1.Location = new System.Drawing.Point(3, 331);
+            this.ctGridExport1.Name = "ctGridExport1";
+            this.ctGridExport1.Size = new System.Drawing.Size(110, 24);
+            this.ctGridExport1.TabIndex = 7;
             // 
             // btnFilterCancelOrReject
             // 
@@ -86,29 +108,6 @@
             this.btnFilterPending.Text = "待处理";
             this.btnFilterPending.ToggleStateChanged += new Telerik.WinControls.UI.StateChangedEventHandler(this.btnFilterPending_ToggleStateChanged);
             // 
-            // opgrid
-            // 
-            this.opgrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.opgrid.ForeColor = System.Drawing.Color.Black;
-            this.opgrid.Location = new System.Drawing.Point(0, 0);
-            this.opgrid.Name = "opgrid";
-            this.opgrid.Size = new System.Drawing.Size(639, 330);
-            this.opgrid.TabIndex = 0;
-            this.opgrid.Text = "radGridView1";
-            this.opgrid.CellFormatting += new Telerik.WinControls.UI.CellFormattingEventHandler(this.opgrid_CellFormatting);
-            this.opgrid.ContextMenuOpening += new Telerik.WinControls.UI.ContextMenuOpeningEventHandler(this.opgrid_ContextMenuOpening);
-            // 
-            // ctGridExport1
-            // 
-            this.ctGridExport1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.ctGridExport1.Grid = null;
-            this.ctGridExport1.Location = new System.Drawing.Point(3, 331);
-            this.ctGridExport1.Name = "ctGridExport1";
-            this.ctGridExport1.Size = new System.Drawing.Size(110, 24);
-            this.ctGridExport1.TabIndex = 7;
-            // 
             // ctCashOperation
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -119,10 +118,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.radPanel1)).EndInit();
             this.radPanel1.ResumeLayout(false);
             this.radPanel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.opgrid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnFilterCancelOrReject)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnFilterConfirmed)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnFilterPending)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.opgrid)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -130,10 +129,10 @@
         #endregion
 
         private Telerik.WinControls.UI.RadPanel radPanel1;
-        private Telerik.WinControls.UI.RadGridView opgrid;
         private Telerik.WinControls.UI.RadRadioButton btnFilterCancelOrReject;
         private Telerik.WinControls.UI.RadRadioButton btnFilterConfirmed;
         private Telerik.WinControls.UI.RadRadioButton btnFilterPending;
         private ctGridExport ctGridExport1;
+        private Telerik.WinControls.UI.RadGridView opgrid;
     }
 }

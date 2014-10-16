@@ -741,6 +741,10 @@ namespace TradingLib.Core
                 case QSEnumPacketType.NOTIFYRESPONSE:
                 case QSEnumPacketType.LOCATIONNOTIFYRESPONSE:
                     {
+                        if (packet.Type == MessageTypes.MGRCONTRIBRESPONSE)
+                        {
+                            string x = "";
+                        }
                         ILocation[] targets = GetNotifyTargets(packet);
                         byte[] data = packet.Data;
                         foreach (ILocation location in targets)

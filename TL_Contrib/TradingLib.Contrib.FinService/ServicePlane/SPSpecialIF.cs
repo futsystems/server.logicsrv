@@ -180,12 +180,8 @@ namespace TradingLib.Contrib.FinService
                 if (marginperplot <= MarginPerLotStop.AccountArgument.AsDecimal())
                 {
                     TLCtxHelper.Debug("SPSpecialIF 触发强平  account:" + this.Account.ID + " now equity:" + nowequity.ToString() + " totalsize:" + totalsize.ToString() + " marginperlot:" + marginperplot + " stopline:" + MarginPerLotStop.AccountArgument.Value);
-                    //撤掉帐户下所有委托
-                    //this.Account.CancelOrder(QSEnumOrderSource.RISKCENTREACCOUNTRULE, "配资服务强迫");
-                    //平掉帐户下所有持仓
-                    this.Account.FlatPosition(QSEnumOrderSource.RISKCENTREACCOUNTRULE, "配资服务强平");
 
-                    this.Account.InactiveAccount();
+                    this.FireFlatPosition("福建股指专配");
                 }
             }
 
@@ -227,8 +223,8 @@ namespace TradingLib.Contrib.FinService
             {
                 bool positoinside = o.PositionSide;
                 //获得对应的持仓数据
-                Position pos = TLCtxHelper.CmdAccount[o.Account].GetPosition(o.symbol, positoinside);
-
+                //Position  = TLCtxHelper.CmdAccount[o.Account].GetPosition(o.symbol, positoinside);
+                int poszie = Account.GetPositionSize(o.symbol);
                 decimal nowequity = this.Account.NowEquity;
 
                 int frozensize = this.Account.Orders.Where(od => od.IsEntryPosition &&od.IsPending()).Sum(od=>od.UnsignedSize);
@@ -238,6 +234,7 @@ namespace TradingLib.Contrib.FinService
 
                 int totalsize = 0;
                 Util.Debug("nowequity:" + nowequity.ToString() + " marginperlot:" + marginperlot.ToString() + " marginpperlotstop:" + marginperlotstart.ToString());
+
                 if (nowequity < marginperlot)
                 {
                     if (nowequity >= marginperlotstart)
@@ -249,10 +246,10 @@ namespace TradingLib.Contrib.FinService
                 }
 
                 //如果持仓数量+当前委托数量 超过总数量 则拒绝
-                if (pos.UnsignedSize + o.UnsignedSize + frozensize> totalsize)
+                if (poszie + o.UnsignedSize + frozensize > totalsize)
                 {
-                    int cansize = totalsize - pos.UnsignedSize >= 0 ? (totalsize - pos.UnsignedSize) : 0;
-                    Util.Debug("pos size:" + pos.UnsignedSize.ToString() + " ordersize:" + o.UnsignedSize.ToString() +" frozensize:"+frozensize.ToString()+ " totalsize:" + totalsize.ToString());
+                    int cansize = totalsize - poszie >= 0 ? (totalsize - poszie) : 0;
+                    Util.Debug("pos size:" + poszie.ToString() + " ordersize:" + o.UnsignedSize.ToString() + " frozensize:" + frozensize.ToString() + " totalsize:" + totalsize.ToString());
 
                     msg = "保证金不足";
                     return false;

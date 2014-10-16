@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
+using TradingLib.Mixins.JsonObject;
 
 namespace TradingLib.Contrib.FinService
 {
@@ -28,14 +29,14 @@ namespace TradingLib.Contrib.FinService
     /// 所有服务计划的父类
     /// 用于定义服务计划的框架
     /// </summary>
-    public abstract class ServicePlanBase:IFinService
+    public abstract class ServicePlanBase : IFinService
     {
         protected string SPNAME = "股指专项";
         public event FeeChargeDel GotFeeChargeEvent;
 
         public ServicePlanBase()
-        { 
-        
+        {
+
         }
 
         IAccount _account = null;
@@ -55,6 +56,10 @@ namespace TradingLib.Contrib.FinService
         public int ServicePlanFK { get; set; }
 
         /// <summary>
+        /// 服务ID
+        /// </summary>
+        public int ServiceID { get; set; }
+        /// <summary>
         /// 按照即定的业务逻辑
         /// 当需要收费时触发收费事件
         /// 收费事件只需要提供累计收费多少，代理成本是多少
@@ -64,7 +69,7 @@ namespace TradingLib.Contrib.FinService
         /// <param name="agentfee"></param>
         protected void FeeCharge(decimal totalfee, decimal agentfee, AgentCommissionDel func, string comment)
         {
-            GotFeeChargeEvent(totalfee, agentfee,func,comment);
+            GotFeeChargeEvent(totalfee, agentfee, func, comment);
         }
         /// <summary>
         /// 费用计算方式
@@ -115,8 +120,8 @@ namespace TradingLib.Contrib.FinService
         /// </summary>
         /// <param name="t"></param>
         public virtual void OnTrade(Trade t)
-        { 
-            
+        {
+
         }
 
         /// <summary>
@@ -126,9 +131,9 @@ namespace TradingLib.Contrib.FinService
         /// </summary>
         /// <param name="round"></param>
         public virtual void OnRound(IPositionRound round)
-        { 
-         
-        
+        {
+
+
         }
 
         /// <summary>
@@ -138,8 +143,8 @@ namespace TradingLib.Contrib.FinService
         /// 或者按当日盈利综合收费等
         /// </summary>
         public virtual void OnSettle()
-        { 
-        
+        {
+
         }
 
 
@@ -155,7 +160,7 @@ namespace TradingLib.Contrib.FinService
         }
         #endregion
 
-        
+
 
         /// <summary>
         /// 调整收费项目
@@ -247,12 +252,42 @@ namespace TradingLib.Contrib.FinService
 
         public virtual void CheckAccount()
         {
-            
+
+        }
+
+        DateTime _firetime = DateTime.Now;
+        int _timediff = 5;
+        /// <summary>
+        /// 触发强平，这里启用了过滤
+        /// 在4秒内 触发2次执行强平，防止第一次计算错误造成误差
+        /// </summary>
+        /// <param name="reason"></param>
+        protected virtual void FireFlatPosition(string reason)
+        {
+            //如果5秒内触发过2此强平信号，则认为该计算是正确的 可以排除第一次计算出现当前权益为负数的情况[待查]
+            if (DateTime.Now.Subtract(_firetime).TotalSeconds < _timediff)
+            {
+                Util.Debug("5秒内触发2次强平信号,执行强平");
+                this.Account.FlatPosition(QSEnumOrderSource.RISKCENTREACCOUNTRULE, "配资服务强平:" + reason);
+                this.Account.InactiveAccount();
+            }
+            else
+            {
+                Util.Debug("距离上次触发时间超过5秒,重置触发时间");
+                //如果离上一次触发大于5秒，则重置促发时间
+                _firetime = DateTime.Now;
+            }
+                
         }
         #endregion
 
 
-    }
+        /// <summary>
+        /// 调整配资服务
+        /// </summary>
+        public virtual void AdjustOmCashOperation(JsonWrapperCashOperation op)
+        {
 
-   
+        }
+    }
 }

@@ -25,7 +25,7 @@ namespace TradingLib.Common
             defaultinstance = new BasicTracker();
         }
 
-        public BasicTracker()
+        private BasicTracker()
         { 
         
         }

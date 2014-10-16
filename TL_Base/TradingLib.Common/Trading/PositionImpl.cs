@@ -246,12 +246,25 @@ namespace TradingLib.Common
         /// <summary>
         /// 最新价格
         /// </summary>
-        public decimal LastPrice { get { return _last; } }
+        public decimal LastPrice { 
+            get 
+            {
+                if (!_gotTick) return AvgPrice;//如果没有获得过最新的Tick以持仓的均价来作为最新价
+                return _last; } 
+        }
 
         /// <summary>
         /// 浮动盈亏
+        /// 当第一次有持仓时,会造成_last为0 从而导致有一个时间片段计算的unrealziedpl为不准确的 
+        /// 因此这里需要做出判断
         /// </summary>
-        public decimal UnRealizedPL{get {return _size * (_last - AvgPrice); }}
+        public decimal UnRealizedPL{
+            get 
+            {
+                //if (!_gotTick) return 0;
+                return _size * (LastPrice - AvgPrice); 
+            }
+        }
 
         
         /// <summary>
@@ -340,11 +353,10 @@ namespace TradingLib.Common
         public int CloseVolume { get { return _closevol ; } }
 
 
-
+        bool _gotTick = false;
         /// <summary>
         /// 是否使用盘口价格来更新最新价格
         /// </summary>
-        
         public void GotTick(Tick k)
         {
             //动态的更新unrealizedpl，这样就不用再委托检查是频繁计算
@@ -366,7 +378,10 @@ namespace TradingLib.Common
             }
             //position通过askbid来更新其对手价格然后得到last
             if (nprice != 0)
+            {
+                _gotTick = true;
                 _last = nprice;
+            }
             //更新最高最低价
             //需要及时将开仓以来的最优 最差价格归0 否则相关策略会出错。
             if (!isFlat)

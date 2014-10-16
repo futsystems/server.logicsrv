@@ -80,5 +80,34 @@ namespace FutsMoniter
             }
         }
 
+        /// <summary>
+        /// 响应服务端的通知回报
+        /// </summary>
+        /// <param name="module"></param>
+        /// <param name="cmd"></param>
+        /// <param name="result"></param>
+        public void OnMGRContribNotify(string module, string cmd, string result)
+        {
+            string key = module.ToUpper() + "-" + cmd.ToUpper();
+            if (callbackmap.Keys.Contains(key))
+            {
+                foreach (JsonReplyDel del in callbackmap[key])
+                {
+                    try
+                    {
+                        del(result);
+                    }
+                    catch (Exception ex)
+                    {
+                        Globals.Debug("run callback error:" + ex.ToString());
+                    }
+                }
+            }
+            else
+            {
+                Globals.Debug("do not have any callback for " + key + " registed!");
+            }
+        }
+
     }
 }

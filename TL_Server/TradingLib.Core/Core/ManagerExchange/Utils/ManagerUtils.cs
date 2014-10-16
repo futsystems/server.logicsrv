@@ -8,7 +8,7 @@ using TradingLib.Mixins.JsonObject;
 
 namespace TradingLib.Core
 {
-    public static class MangerUtils
+    public static partial class MangerUtils
     {
         /// <summary>
         /// 获得某个Manager对应主域的权益信息

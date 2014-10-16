@@ -401,6 +401,8 @@ namespace TradingLib.Common
                     return ResponseTemplate<RspMGRQryAcctServiceResponse>.CliRecvResponse(content);
                 case MessageTypes.MGRCONTRIBRESPONSE://扩展回报
                     return ResponseTemplate<RspMGRContribResponse>.CliRecvResponse(content);
+                case MessageTypes.MGRCONTRIBRNOTIFY://扩展回报
+                    return ResponseTemplate<NotifyMGRContribNotify>.CliRecvResponse(content);
                 #endregion
                 default:
                     throw new PacketError();

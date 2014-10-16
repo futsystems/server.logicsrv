@@ -46,7 +46,11 @@ namespace TradingLib.Common
 
             //其余品种保证金按照最新价格计算
             if (p.oSymbol.Margin <= 1)
-                return p.UnsignedSize * p.LastPrice * p.oSymbol.Multiple * p.oSymbol.Margin;
+            {
+                //需要判断价格的有效性
+                decimal m = p.UnsignedSize * p.LastPrice * p.oSymbol.Multiple * p.oSymbol.Margin;
+                return m;
+            }
             else
                 return p.oSymbol.Margin * p.UnsignedSize;
         }
@@ -131,33 +135,6 @@ namespace TradingLib.Common
         }
 
         
-
-        ///// <summary>
-        ///// 计算开仓统计
-        ///// </summary>
-        ///// <param name="pos"></param>
-        ///// <returns></returns>
-        //public static TradeStatistic GetEntryTradeStatistic(this Position pos)
-        //{
-        //    int volume = pos.Trades.Where(f => f.IsEntryPosition).Sum(f => f.UnsignedSize);
-        //    decimal amount = pos.Trades.Where(f => f.IsEntryPosition).Sum(f => f.GetAmount());
-        //    decimal avgprice = volume!=0?(amount / volume / pos.oSymbol.Multiple):0;
-        //    return new TradeStatistic(amount, volume, avgprice);
-        //}
-
-        ///// <summary>
-        ///// 计算平仓统计
-        ///// </summary>
-        ///// <param name="pos"></param>
-        ///// <returns></returns>
-        //public static TradeStatistic GetExitTradeStatistic(this Position pos)
-        //{
-        //    int volume = pos.Trades.Where(f => !f.IsEntryPosition).Sum(f => f.UnsignedSize);
-        //    decimal amount = pos.Trades.Where(f => !f.IsEntryPosition).Sum(f => f.GetAmount());
-        //    decimal avgprice = volume!=0?(amount / volume / pos.oSymbol.Multiple):0;
-        //    return new TradeStatistic(amount, volume, avgprice);
-        //}
-
         /// <summary>
         /// 获得持仓内所有成交手续费
         /// </summary>
@@ -201,30 +178,4 @@ namespace TradingLib.Common
         }
     }
 
-    /// <summary>
-    /// 成交统计
-    /// </summary>
-    //public  class TradeStatistic
-    //{
-    //    public TradeStatistic(decimal amount, int volume, decimal avgprice)
-    //    {
-    //        this.Amount = amount;
-    //        this.Volume = volume;
-    //        this.AVGPrice = avgprice;
-    //    }
-    //    /// <summary>
-    //    /// 均价
-    //    /// </summary>
-    //    public decimal AVGPrice {get;set;}
-
-    //    /// <summary>
-    //    /// 开仓/平仓 金额
-    //    /// </summary>
-    //    public decimal Amount{get;set;}
-
-    //    /// <summary>
-    //    /// 开仓/平仓 累计数量
-    //    /// </summary>
-    //    public int Volume{get;set;}
-    //}
 }

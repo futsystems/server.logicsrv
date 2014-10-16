@@ -18,12 +18,19 @@ namespace FutsMoniter
         {
             InitializeComponent();
             Factory.IDataSourceFactory(accountType).BindDataSource(UIUtil.GetEnumValueObjects<QSEnumAccountCategory>());
-            Factory.IDataSourceFactory(agent).BindDataSource(Globals.BasicInfoTracker.GetBaseManagerCombList());
+            //Factory.IDataSourceFactory(agent).BindDataSource(Globals.BasicInfoTracker.GetBaseManagerCombList());
 
             if (!Globals.RightAgent)
             {
-                agent.Enabled = false;
+                //agent.Enabled = false;
             }
+            this.Load += new EventHandler(AddAccountForm_Load);
+        }
+
+        void AddAccountForm_Load(object sender, EventArgs e)
+        {
+            //if(Globals)
+            ctAgentList1.EnableSelected = true;
         }
 
 
@@ -32,7 +39,7 @@ namespace FutsMoniter
             QSEnumAccountCategory acccat = (QSEnumAccountCategory)accountType.SelectedValue;
             string accid = account.Text;
             string pass = password.Text;
-            int mgrid = (int)agent.SelectedValue;
+            int mgrid = ctAgentList1.CurrentAgentFK;
             if (fmConfirm.Show("确认添加交易帐号?") == System.Windows.Forms.DialogResult.Yes)
             { 
                 Globals.TLClient.ReqAddAccount(acccat,accid,pass,mgrid,0);

@@ -234,6 +234,7 @@ namespace TradingLib.Contrib.FinService
                 //加载配资服务参数
                 this.LoadArgument();
                 baseobj.ServicePlanFK = this.serviceplan_fk;
+                baseobj.ServiceID = this.ID;
                 //绑定输出计费事件
                 baseobj.GotFeeChargeEvent += new FeeChargeDel(ChargeFee);
                 //绑定交易帐号

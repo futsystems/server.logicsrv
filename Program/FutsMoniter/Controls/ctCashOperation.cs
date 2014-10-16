@@ -36,33 +36,37 @@ namespace FutsMoniter
         public ctCashOperation()
         {
             InitializeComponent();
-            SetPreferences();
-            InitTable();
-            BindToTable();
-            //if (Globals.CallbackCentreReady)
-            //{
-            //    Globals.CallBackCentre.RegisterCallback("MgrExchServer", "RequestCashOperation", this.OnRequestCashOperation);
-            //}
-            Telerik.WinControls.UI.RadMenuItem MenuItem_confirm = new Telerik.WinControls.UI.RadMenuItem("确认");
-            //MenuItem_confirm.Image = Properties.Resources.editAccount_16;
-            MenuItem_confirm.Click += new EventHandler(Confirm_Click);
+            try
+            {
+                SetPreferences();
+                InitTable();
+                BindToTable();
 
-            Telerik.WinControls.UI.RadMenuItem MenuItem_reject = new Telerik.WinControls.UI.RadMenuItem("拒绝");
-            //MenuItem_confirm.Image = Properties.Resources.editAccount_16;
-            MenuItem_reject.Click += new EventHandler(Reject_Click);
+                Telerik.WinControls.UI.RadMenuItem MenuItem_confirm = new Telerik.WinControls.UI.RadMenuItem("确认");
+                ////MenuItem_confirm.Image = Properties.Resources.editAccount_16;
+                MenuItem_confirm.Click += new EventHandler(Confirm_Click);
 
-            Telerik.WinControls.UI.RadMenuItem MenuItem_cancel = new Telerik.WinControls.UI.RadMenuItem("取消");
-            //MenuItem_confirm.Image = Properties.Resources.editAccount_16;
-            MenuItem_cancel.Click += new EventHandler(Cancel_Click);
+                Telerik.WinControls.UI.RadMenuItem MenuItem_reject = new Telerik.WinControls.UI.RadMenuItem("拒绝");
+                ////MenuItem_confirm.Image = Properties.Resources.editAccount_16;
+                MenuItem_reject.Click += new EventHandler(Reject_Click);
+
+                Telerik.WinControls.UI.RadMenuItem MenuItem_cancel = new Telerik.WinControls.UI.RadMenuItem("取消");
+                ////MenuItem_confirm.Image = Properties.Resources.editAccount_16;
+                MenuItem_cancel.Click += new EventHandler(Cancel_Click);
 
 
-            menu.Items.Add(MenuItem_confirm);
-            menu.Items.Add(MenuItem_reject);
-            menu.Items.Add(MenuItem_cancel);
-            ctGridExport1.Grid = opgrid;
+                menu.Items.Add(MenuItem_confirm);
+                menu.Items.Add(MenuItem_reject);
+                menu.Items.Add(MenuItem_cancel);
+                ctGridExport1.Grid = opgrid;
 
-            
-            this.Load += new EventHandler(ctCashOperation_Load);
+
+                this.Load += new EventHandler(ctCashOperation_Load);
+            }
+            catch (Exception ex)
+            { 
+                
+            }
         }
 
         void ctCashOperation_Load(object sender, EventArgs e)
@@ -178,6 +182,8 @@ namespace FutsMoniter
                 Globals.TLClient.ReqConfirmAccountCashOperation(op.ToJson());
             }
         }
+
+
         /// <summary>
         /// 拒绝出入金操作
         /// </summary>
@@ -255,6 +261,8 @@ namespace FutsMoniter
             }
             return -1;
         }
+
+
         //得到当前选择的行号
         private string CurrentKey
         {
@@ -264,6 +272,7 @@ namespace FutsMoniter
                     return opgrid.SelectedRows[0].ViewInfo.CurrentRow.Cells[KEY].Value.ToString();
                 else
                     return string.Empty;
+                return string.Empty;
             }
         }
 
@@ -350,7 +359,7 @@ namespace FutsMoniter
         /// </summary>
         private void SetPreferences()
         {
-            Telerik.WinControls.UI.RadGridView grid = opgrid;
+            Telerik.WinControls.UI.RadGridView grid =  opgrid;
             grid.ShowRowHeaderColumn = false;//显示每行的头部
             grid.MasterTemplate.AutoSizeColumnsMode = Telerik.WinControls.UI.GridViewAutoSizeColumnsMode.Fill;//列的填充方式
             grid.ShowGroupPanel = false;//是否显示顶部的panel用于组合排序
@@ -393,7 +402,7 @@ namespace FutsMoniter
         /// </summary>
         private void BindToTable()
         {
-            Telerik.WinControls.UI.RadGridView grid = opgrid;
+            Telerik.WinControls.UI.RadGridView grid =  opgrid;
 
             //grid.TableElement.BeginUpdate();             
             //grid.MasterTemplate.Columns.Clear(); 

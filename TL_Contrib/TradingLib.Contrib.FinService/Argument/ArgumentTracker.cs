@@ -112,6 +112,16 @@ namespace TradingLib.Contrib.FinService
         }
 
         /// <summary>
+        /// 更新帐户某个参数
+        /// </summary>
+        /// <param name="service_fk"></param>
+        /// <param name="arg"></param>
+        public void UpdateArgumentAccount(int service_fk, Argument arg)
+        {
+            _acctargtracker.UpdateArgument(service_fk, arg);
+        }
+
+        /// <summary>
         /// 更新某个代理某个服务计划的参数
         /// </summary>
         /// <param name="agent_fk"></param>
@@ -209,6 +219,45 @@ namespace TradingLib.Contrib.FinService
             }
         }
 
+        public void UpdateArgument(int service_fk,Argument arg)
+        {
+            if (!serviceArgMap.Keys.Contains(service_fk))
+            {
+                serviceArgMap.Add(service_fk, new Dictionary<string, ArgumentAccount>());
+            }
+
+            Dictionary<string, ArgumentAccount> argmap = serviceArgMap[service_fk];
+
+           
+                ArgumentAccount newarg = new ArgumentAccount
+                {
+                    Name = arg.Name,
+                    Value = arg.Value,
+                    Type = arg.Type,
+                    service_fk = service_fk
+                };
+                if (argmap.Keys.Contains(arg.Name))
+                {
+                    //如果参数发生变化则进行数据库更新
+                    ArgumentAccount target = argmap[arg.Name];
+                    if (!target.Value.Equals(newarg.Value))
+                    {
+                        Util.Debug("arg changed ,update database arg:" + newarg.Name);
+                        //更新数据库
+                        ORM.MArgumentBase.UpdateArgumentAccount(newarg);
+                        //更新内存
+                        target.Value = newarg.Value;
+                    }
+                }
+                else//如果内存中没有加载该帐户的参数则直接进行数据库更新
+                {
+                    Util.Debug("database have no arg:" + newarg.Name + " update directly");
+                    //更新数据库
+                    ORM.MArgumentBase.UpdateArgumentAccount(newarg);
+                    //插入新的内存参数
+                    argmap[arg.Name] = newarg;
+                }
+        }
 
 
     }

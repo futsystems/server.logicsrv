@@ -404,8 +404,16 @@ namespace TradingLib.Common
             string module = response.ModuleID;
             string cmd = response.CMDStr;
             string ret = response.Result;
-            debug("Module:" + module + " CMD:" + cmd + " Ret:" + ret);
+            debug("ContribResponse ->Module:" + module + " CMD:" + cmd + " Ret:" + ret);
             this.handler.OnMGRContribResponse(module, cmd, ret);
+        }
+        void CliOnMGRContribNotify(NotifyMGRContribNotify notify)
+        {
+            string module = notify.ModuleID;
+            string cmd = notify.CMDStr;
+            string ret = notify.Result;
+            debug("ContribNotify ->Module:" + module + " CMD:" + cmd + " Ret:" + ret);
+            this.handler.OnMGRContribNotify(module, cmd, ret);
         }
         #endregion
 
@@ -556,6 +564,9 @@ namespace TradingLib.Common
                     break;
                 case MessageTypes.MGRCONTRIBRESPONSE://管理扩展回报
                     CliOnMGRContribResponse(packet as RspMGRContribResponse);
+                    break;
+                case MessageTypes.MGRCONTRIBRNOTIFY://管理扩展通知
+                    CliOnMGRContribNotify(packet as NotifyMGRContribNotify);
                     break;
                 #endregion
 

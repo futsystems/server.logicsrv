@@ -51,6 +51,22 @@ namespace TradingLib.Common
         }
 
         /// <summary>
+        /// 向一组管理端发送通知
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="reply"></param>
+        /// <param name="locations"></param>
+        /// <param name="islast"></param>
+        //public static void SendJsonNotifyMgr(this ISession session, string notifyname, TradingLib.Mixins.JsonReply reply, ILocation[] locations, bool islast = true)
+        //{
+        //    NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(locations);
+        //    response.ModuleID = session.ContirbID;
+        //    response.CMDStr = notifyname;
+        //    response.Result = new Mixins.ReplyWriter().Start().FillReply(reply).End().ToString();
+
+        //    SendPacketMgr(session, response);
+        //}
+        /// <summary>
         /// 向管理端发送一个jsonwrapper对象
         /// </summary>
         /// <param name="session"></param>
@@ -66,6 +82,24 @@ namespace TradingLib.Common
 
             SendPacketMgr(session, response);
         }
+
+
+        /// <summary>
+        /// 向一组管理端发送通知
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="obj"></param>
+        /// <param name="locations"></param>
+        /// <param name="islast"></param>
+        //public static void SendJsonNotifyMgr(ISession session,string notifyname, object obj,ILocation[] locations, bool islast = true)
+        //{
+        //    NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(locations);
+        //    response.ModuleID = session.ContirbID;
+        //    response.CMDStr = notifyname;
+        //    response.Result = new Mixins.ReplyWriter().Start().FillReply(Mixins.JsonReply.GenericSuccess()).FillPlayload(obj).End().ToString();
+
+        //    SendPacketMgr(session, response);
+        //}
 
     }
 }

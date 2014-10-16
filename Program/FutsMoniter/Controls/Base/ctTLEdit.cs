@@ -21,8 +21,19 @@ namespace FutsMoniter
             set { 
                 _argument = value;
                 argtitle.Text = _argument.ArgTitle;
-                argvalue.Text = _argument.ArgValue;
-                argvalue.Enabled = _argument.Editable;
+                if (!Argument.Editable)
+                {
+                    argvalue.Visible = false;
+                    argvalue_label.Visible = true;
+                    argvalue_label.Text = _argument.ArgValue;
+                }
+                else
+                {
+                    argvalue.Visible = true;
+                    argvalue_label.Visible = false;
+                    argvalue.Text = _argument.ArgValue;
+                }
+                
             } 
         
         }
@@ -37,7 +48,16 @@ namespace FutsMoniter
         /// <returns></returns>
         public bool ParseArg()
         {
-            _argument.ArgValue = argvalue.Text;
+            string setvalue = string.Empty;
+            if (!Argument.Editable)
+            {
+                _argument.ArgValue = argvalue_label.Text;
+            }
+            else
+            {
+
+                _argument.ArgValue = argvalue.Text;
+            }
             return true;
         }
     }

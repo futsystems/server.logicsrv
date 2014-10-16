@@ -43,6 +43,7 @@
             this.radPageView1 = new Telerik.WinControls.UI.RadPageView();
             this.settlepage = new Telerik.WinControls.UI.RadPageViewPage();
             this.cashpage = new Telerik.WinControls.UI.RadPageViewPage();
+            this.ctCashTrans1 = new FutsMoniter.ctCashTrans();
             this.radGroupBox3 = new Telerik.WinControls.UI.RadGroupBox();
             this.btnChangeBankAccount = new Telerik.WinControls.UI.RadButton();
             this.lbbankbranch = new Telerik.WinControls.UI.RadLabel();
@@ -55,9 +56,8 @@
             this.radLabel17 = new Telerik.WinControls.UI.RadLabel();
             this.radPageView2 = new Telerik.WinControls.UI.RadPageView();
             this.pendingOperationPage = new Telerik.WinControls.UI.RadPageViewPage();
-            this.histqrypage = new Telerik.WinControls.UI.RadPageViewPage();
             this.ctCashOperation1 = new FutsMoniter.ctCashOperation();
-            this.ctCashTrans1 = new FutsMoniter.ctCashTrans();
+            this.histqrypage = new Telerik.WinControls.UI.RadPageViewPage();
             ((System.ComponentModel.ISupportInitialize)(this.radGroupBox1)).BeginInit();
             this.radGroupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnCashOperation)).BeginInit();
@@ -222,16 +222,16 @@
             this.radPageView1.Location = new System.Drawing.Point(0, 0);
             this.radPageView1.Name = "radPageView1";
             this.radPageView1.SelectedPage = this.cashpage;
-            this.radPageView1.Size = new System.Drawing.Size(721, 278);
+            this.radPageView1.Size = new System.Drawing.Size(721, 282);
             this.radPageView1.TabIndex = 0;
             this.radPageView1.Text = "radPageView1";
             ((Telerik.WinControls.UI.RadPageViewStripElement)(this.radPageView1.GetChildAt(0))).StripButtons = Telerik.WinControls.UI.StripViewButtons.None;
             // 
             // settlepage
             // 
-            this.settlepage.Location = new System.Drawing.Point(10, 35);
+            this.settlepage.Location = new System.Drawing.Point(10, 31);
             this.settlepage.Name = "settlepage";
-            this.settlepage.Size = new System.Drawing.Size(700, 232);
+            this.settlepage.Size = new System.Drawing.Size(700, 240);
             this.settlepage.Text = "结算记录";
             // 
             // cashpage
@@ -239,8 +239,17 @@
             this.cashpage.Controls.Add(this.ctCashTrans1);
             this.cashpage.Location = new System.Drawing.Point(10, 31);
             this.cashpage.Name = "cashpage";
-            this.cashpage.Size = new System.Drawing.Size(700, 236);
+            this.cashpage.Size = new System.Drawing.Size(700, 240);
             this.cashpage.Text = "出入金记录";
+            // 
+            // ctCashTrans1
+            // 
+            this.ctCashTrans1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ctCashTrans1.Location = new System.Drawing.Point(0, 0);
+            this.ctCashTrans1.Name = "ctCashTrans1";
+            this.ctCashTrans1.Size = new System.Drawing.Size(700, 240);
+            this.ctCashTrans1.TabIndex = 0;
+            this.ctCashTrans1.ViewType = FutsMoniter.CashOpViewType.Agent;
             // 
             // radGroupBox3
             // 
@@ -355,36 +364,27 @@
             // pendingOperationPage
             // 
             this.pendingOperationPage.Controls.Add(this.ctCashOperation1);
-            this.pendingOperationPage.Location = new System.Drawing.Point(10, 31);
+            this.pendingOperationPage.Location = new System.Drawing.Point(10, 35);
             this.pendingOperationPage.Name = "pendingOperationPage";
-            this.pendingOperationPage.Size = new System.Drawing.Size(721, 282);
+            this.pendingOperationPage.Size = new System.Drawing.Size(721, 278);
             this.pendingOperationPage.Text = "待处理";
-            // 
-            // histqrypage
-            // 
-            this.histqrypage.Controls.Add(this.radPageView1);
-            this.histqrypage.Location = new System.Drawing.Point(10, 35);
-            this.histqrypage.Name = "histqrypage";
-            this.histqrypage.Size = new System.Drawing.Size(721, 278);
-            this.histqrypage.Text = "历史查询";
             // 
             // ctCashOperation1
             // 
             this.ctCashOperation1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ctCashOperation1.Location = new System.Drawing.Point(0, 0);
             this.ctCashOperation1.Name = "ctCashOperation1";
-            this.ctCashOperation1.Size = new System.Drawing.Size(721, 282);
+            this.ctCashOperation1.Size = new System.Drawing.Size(721, 278);
             this.ctCashOperation1.TabIndex = 0;
             this.ctCashOperation1.ViewType = FutsMoniter.CashOpViewType.Agent;
             // 
-            // ctCashTrans1
+            // histqrypage
             // 
-            this.ctCashTrans1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ctCashTrans1.Location = new System.Drawing.Point(0, 0);
-            this.ctCashTrans1.Name = "ctCashTrans1";
-            this.ctCashTrans1.Size = new System.Drawing.Size(700, 236);
-            this.ctCashTrans1.TabIndex = 0;
-            this.ctCashTrans1.ViewType = FutsMoniter.CashOpViewType.Agent;
+            this.histqrypage.Controls.Add(this.radPageView1);
+            this.histqrypage.Location = new System.Drawing.Point(10, 31);
+            this.histqrypage.Name = "histqrypage";
+            this.histqrypage.Size = new System.Drawing.Size(721, 282);
+            this.histqrypage.Text = "历史查询";
             // 
             // FinanceMangerForm
             // 

@@ -199,7 +199,9 @@ namespace TradingLib.API
 
         #region 扩展管理回调接口
         void OnMGRContribResponse(string module, string cmd, string result);
+
         
+        void OnMGRContribNotify(string module, string cmd, string result);
         #endregion
     }
 }

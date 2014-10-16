@@ -30,7 +30,7 @@ namespace TradingLib.Core
         void tl_ClientRegistedEvent(MgrClientInfo client)
         {
             debug(string.Format("Client:{0} regist to tlserver", client.Location.ClientID), QSEnumDebugLevel.INFO);
-            customerExInfoMap[client.Location.ClientID] = new CustInfoEx(client.Location);
+            customerExInfoMap[client.Location.ClientID] = new CustInfoEx(client);
         }
 
 
@@ -78,17 +78,32 @@ namespace TradingLib.Core
             throw new NotImplementedException();
         }
 
-
+        /// <summary>
+        /// 查询具有查看某个帐户account权限的Manager地址
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
         ILocation[] tl_GetLocationsViaAccountEvent(string account)
         {
-            //当以account为对象查找通知对象时,遍历所有链接的管理端,如果对应的管理端有权限查看该帐户,则进行通知
-            List<ILocation> locations = new List<ILocation>();
-            foreach (CustInfoEx cst in customerExInfoMap.Values)
-            {
-                locations.Add(cst.Location);
-            }
 
-            return locations.ToArray();
+            return customerExInfoMap.Values.Where(ex => ex.RightAccessAccount(account)).Select(ex2=>ex2.Location).ToArray();
+
+            //当以account为对象查找通知对象时,遍历所有链接的管理端,如果对应的管理端有权限查看该帐户,则进行通知
+            //List<ILocation> locations = new List<ILocation>();
+            //foreach (CustInfoEx cst in customerExInfoMap.Values)
+            //{
+            //    locations.Add(cst.Location);
+            //}
+
+            //return locations.ToArray();
+        }
+
+        IEnumerable<CustInfoEx> NotifyTarges
+        {
+            get
+            {
+                return customerExInfoMap.Values;
+            }
         }
 
     }

@@ -239,7 +239,7 @@ namespace TradingLib.API
 
 
         MGRCONTRIBRESPONSE,//管理扩展回报
-
+        MGRCONTRIBRNOTIFY,//管理扩展通知
 
         //FLATALL,//清仓
         UPDATEPOSOFFSET,

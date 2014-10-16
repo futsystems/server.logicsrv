@@ -50,7 +50,7 @@
             // 
             // radLabel5
             // 
-            this.radLabel5.Location = new System.Drawing.Point(0, 0);
+            this.radLabel5.Location = new System.Drawing.Point(0, 2);
             this.radLabel5.Name = "radLabel5";
             this.radLabel5.Size = new System.Drawing.Size(47, 16);
             this.radLabel5.TabIndex = 47;

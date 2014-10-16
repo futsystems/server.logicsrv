@@ -32,9 +32,11 @@ namespace FutsMoniter
                 this.login.Enabled = false;
                 this.acclimit.Enabled = false;
 
+                //如果是代理商则可以修改帐户数量限制 同时设定限制为自己的限制 给代理的客户数量不能超过过自己的限制
                 if (manger.Type == QSEnumManagerType.AGENT)
                 {
                     this.acclimit.Enabled = true;
+                    this.acclimit.Maximum = Globals.Manager.AccLimit;
                 }
             }
         }

@@ -104,7 +104,7 @@
             // 
             // 
             this.radGroupBox2.RootElement.Padding = new System.Windows.Forms.Padding(2, 18, 2, 2);
-            this.radGroupBox2.Size = new System.Drawing.Size(151, 244);
+            this.radGroupBox2.Size = new System.Drawing.Size(166, 244);
             this.radGroupBox2.TabIndex = 20;
             this.radGroupBox2.Text = "基本属性";
             // 
@@ -257,13 +257,13 @@
                         | System.Windows.Forms.AnchorStyles.Left)));
             this.gparg.Controls.Add(this.tableLayoutPanel);
             this.gparg.HeaderText = "参数列表";
-            this.gparg.Location = new System.Drawing.Point(160, 3);
+            this.gparg.Location = new System.Drawing.Point(175, 3);
             this.gparg.Name = "gparg";
             // 
             // 
             // 
             this.gparg.RootElement.Padding = new System.Windows.Forms.Padding(2, 18, 2, 2);
-            this.gparg.Size = new System.Drawing.Size(236, 244);
+            this.gparg.Size = new System.Drawing.Size(221, 244);
             this.gparg.TabIndex = 19;
             this.gparg.Text = "参数列表";
             // 
@@ -287,7 +287,7 @@
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanel.Size = new System.Drawing.Size(232, 195);
+            this.tableLayoutPanel.Size = new System.Drawing.Size(217, 195);
             this.tableLayoutPanel.TabIndex = 11;
             // 
             // ctFinService

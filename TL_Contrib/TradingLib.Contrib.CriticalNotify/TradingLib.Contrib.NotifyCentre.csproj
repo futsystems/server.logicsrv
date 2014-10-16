@@ -8,8 +8,8 @@
     <ProjectGuid>{81153C5F-047F-4F61-8A6F-44235E07D254}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TradingLib.Contrib.CriticalNotify</RootNamespace>
-    <AssemblyName>TradingLib.Contrib.CriticalNotify</AssemblyName>
+    <RootNamespace>TradingLib.Contrib.NotifyCentre</RootNamespace>
+    <AssemblyName>TradingLib.Contrib.NotifyCentre</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DotLiquid">
+      <HintPath>..\..\lib\DotLiquid.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data" />
@@ -52,9 +55,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CriticalNotifyCentre.cs" />
+    <Compile Include="AccountContact.cs" />
+    <Compile Include="Drop\CashOperationDrop.cs" />
+    <Compile Include="ContactTracker.cs" />
+    <Compile Include="Drop\NotifyContactChangedDrop.cs" />
+    <Compile Include="NotifyGatway.cs" />
+    <Compile Include="Drop\EmailDrop.cs" />
+    <Compile Include="NotifyGatway_CTE.cs" />
+    <Compile Include="RenderHelper.cs" />
+    <Compile Include="EnumNotifeeType.cs" />
+    <Compile Include="NotifyeeContact.cs" />
+    <Compile Include="ORM\MNotify.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

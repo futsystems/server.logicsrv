@@ -101,6 +101,8 @@ namespace TradingLib.Core
         {
             return !_accqrycache.hasItems;
         }
+
+
         /// <summary>
         /// 所有需要转发到客户端的消息均通过缓存进行，这样避免了多个线程同时操作一个ZeroMQ socket
         /// </summary>
@@ -177,7 +179,12 @@ namespace TradingLib.Core
                     //发送其他类型的信息
                     while (_packetcache.hasItems && noresumeinfo())
                     {
+                        
                         IPacket packet = _packetcache.Read();
+                        if (packet.Type == MessageTypes.MGRCONTRIBRESPONSE)
+                        {
+                            string x = "";
+                        }
                         //debug("发送消息: 类型:" + packet.Type.ToString() + " 发送消息:" + packet.Content, QSEnumDebugLevel.INFO);
                         tl.TLSend(packet);
                     }

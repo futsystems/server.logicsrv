@@ -33,17 +33,31 @@
     <Reference Include="clrzmq">
       <HintPath>..\..\lib\clrzmq.dll</HintPath>
     </Reference>
+    <Reference Include="DotLiquid">
+      <HintPath>..\..\lib\DotLiquid.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Delegate.cs" />
+    <Compile Include="DotLiquid\TemplateTracker.cs" />
     <Compile Include="JsonProtocol\JsonRequest.cs" />
     <Compile Include="DataBase\DBConnectionPoll.cs" />
     <Compile Include="DataBase\MBase.cs" />
     <Compile Include="DataBase\ObjectPoll.cs" />
     <Compile Include="DataBase\SQLBase.cs" />
     <Compile Include="DataBase\SQLMapper.cs" />
+    <Compile Include="Log\ConsoleLogFactory.cs" />
+    <Compile Include="Log\ConsoleLogger.cs" />
+    <Compile Include="Log\ILogFactory.cs" />
+    <Compile Include="Log\ILogFilter.cs" />
+    <Compile Include="Log\ILogger.cs" />
+    <Compile Include="Log\LogFactory.cs" />
+    <Compile Include="Log\LogFilter.cs" />
+    <Compile Include="Log\LogLevel.cs" />
+    <Compile Include="Log\NullLogFactory.cs" />
+    <Compile Include="Log\NullLogWriter.cs" />
     <Compile Include="ServiceNode.cs" />
     <Compile Include="JsonProtocol\JsonReply.cs" />
     <Compile Include="KeepLiveServer.cs" />
@@ -64,6 +78,7 @@
     <Compile Include="TNetString\ByteArrayExtensions.cs" />
     <Compile Include="TNetString\TNetStrings.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -30,22 +30,7 @@ namespace TradingLib.Core
         void SrvOnMGRQryAccount(MGRQryAccountRequest request, ISession session, Manager manager)
         {
             debug(string.Format("管理员:{0} 请求下载交易帐户列表:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
-            //判断管理账户类别
-            //1.超级管理员可以查看所有帐户
-            IAccount[] list = new IAccount[] { };
-            if (manager.BaseManager.Type == QSEnumManagerType.ROOT)
-            {
-                //获得系统所有交易帐号
-                list = clearcentre.Accounts;
-            }
-            else
-            {
-                debug("柜员所属于主柜员ID:" + manager.BaseManager.ID.ToString(), QSEnumDebugLevel.INFO);
-                //获得属于该主柜员的所有交易帐号
-                list = clearcentre.Accounts.Where(acc=>acc.Mgr_fk.Equals(manager.BaseManager.ID)).ToArray();
-
-                
-            }
+            IAccount[] list = manager.GetVisibleAccount().ToArray();
             if (list.Length > 0)
             {
                 for (int i = 0; i < list.Length; i++)
@@ -311,17 +296,53 @@ namespace TradingLib.Core
         {
             debug(string.Format("管理员:{0} 请求添加交易帐号:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
             string outaccount =string.Empty;
-            int mgrid = request.MgrID;
-            Manager manger = BasicTracker.ManagerTracker[mgrid];
+            if (manager.RightRootDomain())//如果是Root权限则可以指定帐户所属域 代理域不能指定，只能按代理自己的主域来设置
+            {
+                bool re = clearcentre.AddAccount(out outaccount, request.UserID.ToString(), request.AccountID, request.Password, request.Category,request.MgrID);//将交易帐户加入到主域
+                return;
+            }
+            int mgrk = request.MgrID;
+            bool right = manager.RightAgentParent(mgrk);
+            debug("Manager:" + manager.Name +" fk:"+manager.mgr_fk.ToString() + " try  to add account for mgrfk:" + mgrk.ToString() +" have access right:"+right.ToString(),QSEnumDebugLevel.INFO);
+            
+            //Manager basemgr = manager.BaseManager;//获得当前Manager的主域
+            
+            //如果不是为该主域添加帐户,则我们需要判断当前Manager的主域是否拥有请求主域的权限
+            if (manager.GetBaseMGR() != request.MgrID)
+            {
+                if (!manager.RightAgentParent(request.MgrID))
+                {
+                    RspMGROperationResponse response = ResponseTemplate<RspMGROperationResponse>.SrvSendRspResponse(request);
+                    response.RspInfo.Fill(FutsRspError.GenericError("无权在该管理域开设帐户"));
+                    CachePacket(response);
+                }
+            }
+
+            int limit =manager.BaseManager.AccLimit;
+            int cnt = TLCtxHelper.CmdAccount.Accounts.Where(acc => acc.Mgr_fk ==manager.GetBaseMGR()).Count();
+            if (cnt < limit)
+            {
+                bool re = clearcentre.AddAccount(out outaccount, request.UserID.ToString(), request.AccountID, request.Password, request.Category,request.MgrID);//将交易帐户加入到主域
+                //clearcentre.UpdateMGRLoginName(outaccount, mgrid);
+            }
+            else
+            {
+                RspMGROperationResponse response = ResponseTemplate<RspMGROperationResponse>.SrvSendRspResponse(request);
+                response.RspInfo.Fill(FutsRspError.GenericError("可开帐户数量超过限制:" + limit.ToString()));
+                CachePacket(response);
+                return;
+            }
+
+
             if (manager == null)
             {
                 RspMGROperationResponse response = ResponseTemplate<RspMGROperationResponse>.SrvSendRspResponse(request);
                 response.RspInfo.FillError("指定的管理员不存在");
                 CachePacket(response);
-                return;
+                return; 
             }
-            bool re = clearcentre.AddAccount(out outaccount, request.UserID.ToString(), request.AccountID, request.Password, request.Category,request.MgrID);
-            //clearcentre.UpdateMGRLoginName(outaccount, mgrid);
+
+            
         }
 
         void SrvOnMGRQryExchange(MGRQryExchangeRequuest request, ISession session, Manager manager)

@@ -52,6 +52,9 @@ namespace TradingLib.Core
 
                     //bankaccount.Bank = BasicTracker.ContractBankTracker[bankaccount.bank_id].ToJsonWrapperBank();
                     session.SendJsonReplyMgr(request);
+
+                    //通知出入金操作
+                    //NotifyCashOperation(request);
                     //通过事件中继触发事件
                     TLCtxHelper.CashOperationEvent.FireCashOperation(this, QSEnumCashOpEventType.Request, request);
                 }
@@ -59,6 +62,10 @@ namespace TradingLib.Core
 
             }
         }
+
+
+
+        
 
         /// <summary>
         /// 确认出入金操作 

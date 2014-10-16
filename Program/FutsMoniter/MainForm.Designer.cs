@@ -33,7 +33,7 @@
             this.radLabelElement1 = new Telerik.WinControls.UI.RadLabelElement();
             this.statusmessage = new Telerik.WinControls.UI.RadLabelElement();
             this.radLabelElement2 = new Telerik.WinControls.UI.RadLabelElement();
-            this.radMenuItem1 = new Telerik.WinControls.UI.RadMenuItem();
+            this.btnGPSystem = new Telerik.WinControls.UI.RadMenuItem();
             this.radMenuItem3 = new Telerik.WinControls.UI.RadMenuItem();
             this.btnOpenClearCentre = new Telerik.WinControls.UI.RadMenuItem();
             this.btnCloseOpenCentre = new Telerik.WinControls.UI.RadMenuItem();
@@ -42,7 +42,7 @@
             this.btnRouter = new Telerik.WinControls.UI.RadMenuItem();
             this.radMenuSeparatorItem3 = new Telerik.WinControls.UI.RadMenuSeparatorItem();
             this.btnSystemStatus = new Telerik.WinControls.UI.RadMenuItem();
-            this.radMenuItem2 = new Telerik.WinControls.UI.RadMenuItem();
+            this.btnGPSymbol = new Telerik.WinControls.UI.RadMenuItem();
             this.btnSecEdit = new Telerik.WinControls.UI.RadMenuItem();
             this.btnSymbolEdit = new Telerik.WinControls.UI.RadMenuItem();
             this.btnExchange = new Telerik.WinControls.UI.RadMenuItem();
@@ -53,13 +53,13 @@
             this.ctDebug1 = new FutSystems.GUI.ctDebug();
             this.office2010BlackTheme1 = new Telerik.WinControls.Themes.Office2010BlackTheme();
             this.radMenu1 = new Telerik.WinControls.UI.RadMenu();
-            this.radMenuItem4 = new Telerik.WinControls.UI.RadMenuItem();
+            this.btnGPQuery = new Telerik.WinControls.UI.RadMenuItem();
             this.btnQryHist = new Telerik.WinControls.UI.RadMenuItem();
             this.btnStatistic = new Telerik.WinControls.UI.RadMenuItem();
             this.btnAgentProfit = new Telerik.WinControls.UI.RadMenuItem();
             this.btnTotalOperationStatic = new Telerik.WinControls.UI.RadMenuItem();
             this.radMenuSeparatorItem4 = new Telerik.WinControls.UI.RadMenuSeparatorItem();
-            this.btnManagerGP = new Telerik.WinControls.UI.RadMenuItem();
+            this.btnGPAgent = new Telerik.WinControls.UI.RadMenuItem();
             this.btnManagerForm = new Telerik.WinControls.UI.RadMenuItem();
             this.btnChangeFee = new Telerik.WinControls.UI.RadMenuItem();
             this.radMenuSeparatorItem2 = new Telerik.WinControls.UI.RadMenuSeparatorItem();
@@ -120,20 +120,20 @@
             this.radLabelElement2.TextWrap = true;
             this.radLabelElement2.Visibility = Telerik.WinControls.ElementVisibility.Visible;
             // 
-            // radMenuItem1
+            // btnGPSystem
             // 
-            this.radMenuItem1.AccessibleDescription = "radMenuItem1";
-            this.radMenuItem1.AccessibleName = "radMenuItem1";
-            this.radMenuItem1.Items.AddRange(new Telerik.WinControls.RadItem[] {
+            this.btnGPSystem.AccessibleDescription = "radMenuItem1";
+            this.btnGPSystem.AccessibleName = "radMenuItem1";
+            this.btnGPSystem.Items.AddRange(new Telerik.WinControls.RadItem[] {
             this.radMenuItem3,
             this.radMenuItem8,
             this.radMenuSeparatorItem1,
             this.btnRouter,
             this.radMenuSeparatorItem3,
             this.btnSystemStatus});
-            this.radMenuItem1.Name = "radMenuItem1";
-            this.radMenuItem1.Text = "系统维护";
-            this.radMenuItem1.Visibility = Telerik.WinControls.ElementVisibility.Visible;
+            this.btnGPSystem.Name = "btnGPSystem";
+            this.btnGPSystem.Text = "系统维护";
+            this.btnGPSystem.Visibility = Telerik.WinControls.ElementVisibility.Visible;
             // 
             // radMenuItem3
             // 
@@ -206,18 +206,18 @@
             this.btnSystemStatus.Visibility = Telerik.WinControls.ElementVisibility.Visible;
             this.btnSystemStatus.Click += new System.EventHandler(this.btnSystemStatus_Click);
             // 
-            // radMenuItem2
+            // btnGPSymbol
             // 
-            this.radMenuItem2.AccessibleDescription = "radMenuItem2";
-            this.radMenuItem2.AccessibleName = "radMenuItem2";
-            this.radMenuItem2.Items.AddRange(new Telerik.WinControls.RadItem[] {
+            this.btnGPSymbol.AccessibleDescription = "radMenuItem2";
+            this.btnGPSymbol.AccessibleName = "radMenuItem2";
+            this.btnGPSymbol.Items.AddRange(new Telerik.WinControls.RadItem[] {
             this.btnSecEdit,
             this.btnSymbolEdit,
             this.btnExchange,
             this.btnMarketTime});
-            this.radMenuItem2.Name = "radMenuItem2";
-            this.radMenuItem2.Text = "合约管理";
-            this.radMenuItem2.Visibility = Telerik.WinControls.ElementVisibility.Visible;
+            this.btnGPSymbol.Name = "btnGPSymbol";
+            this.btnGPSymbol.Text = "合约管理";
+            this.btnGPSymbol.Visibility = Telerik.WinControls.ElementVisibility.Visible;
             // 
             // btnSecEdit
             // 
@@ -299,27 +299,27 @@
             // radMenu1
             // 
             this.radMenu1.Items.AddRange(new Telerik.WinControls.RadItem[] {
-            this.radMenuItem1,
-            this.radMenuItem2,
-            this.radMenuItem4,
-            this.btnManagerGP});
+            this.btnGPSystem,
+            this.btnGPSymbol,
+            this.btnGPQuery,
+            this.btnGPAgent});
             this.radMenu1.Location = new System.Drawing.Point(0, 0);
             this.radMenu1.Name = "radMenu1";
             this.radMenu1.Size = new System.Drawing.Size(1139, 18);
             this.radMenu1.TabIndex = 1;
             this.radMenu1.Text = "radMenu1";
             // 
-            // radMenuItem4
+            // btnGPQuery
             // 
-            this.radMenuItem4.AccessibleDescription = "radMenuItem4";
-            this.radMenuItem4.AccessibleName = "radMenuItem4";
-            this.radMenuItem4.Items.AddRange(new Telerik.WinControls.RadItem[] {
+            this.btnGPQuery.AccessibleDescription = "radMenuItem4";
+            this.btnGPQuery.AccessibleName = "radMenuItem4";
+            this.btnGPQuery.Items.AddRange(new Telerik.WinControls.RadItem[] {
             this.btnQryHist,
             this.btnStatistic,
             this.radMenuSeparatorItem4});
-            this.radMenuItem4.Name = "radMenuItem4";
-            this.radMenuItem4.Text = "记录查询";
-            this.radMenuItem4.Visibility = Telerik.WinControls.ElementVisibility.Visible;
+            this.btnGPQuery.Name = "btnGPQuery";
+            this.btnGPQuery.Text = "记录查询";
+            this.btnGPQuery.Visibility = Telerik.WinControls.ElementVisibility.Visible;
             // 
             // btnQryHist
             // 
@@ -368,11 +368,11 @@
             this.radMenuSeparatorItem4.Text = "radMenuSeparatorItem4";
             this.radMenuSeparatorItem4.Visibility = Telerik.WinControls.ElementVisibility.Visible;
             // 
-            // btnManagerGP
+            // btnGPAgent
             // 
-            this.btnManagerGP.AccessibleDescription = "radMenuItem5";
-            this.btnManagerGP.AccessibleName = "radMenuItem5";
-            this.btnManagerGP.Items.AddRange(new Telerik.WinControls.RadItem[] {
+            this.btnGPAgent.AccessibleDescription = "radMenuItem5";
+            this.btnGPAgent.AccessibleName = "radMenuItem5";
+            this.btnGPAgent.Items.AddRange(new Telerik.WinControls.RadItem[] {
             this.btnManagerForm,
             this.btnChangeFee,
             this.radMenuSeparatorItem2,
@@ -380,9 +380,9 @@
             this.radMenuSeparatorItem5,
             this.btnFinanceMgr,
             this.btnCasher});
-            this.btnManagerGP.Name = "btnManagerGP";
-            this.btnManagerGP.Text = "柜员管理";
-            this.btnManagerGP.Visibility = Telerik.WinControls.ElementVisibility.Visible;
+            this.btnGPAgent.Name = "btnGPAgent";
+            this.btnGPAgent.Text = "柜员管理";
+            this.btnGPAgent.Visibility = Telerik.WinControls.ElementVisibility.Visible;
             // 
             // btnManagerForm
             // 
@@ -495,8 +495,8 @@
         #endregion
 
         private Telerik.WinControls.UI.RadStatusStrip radStatusStrip1;
-        private Telerik.WinControls.UI.RadMenuItem radMenuItem1;
-        private Telerik.WinControls.UI.RadMenuItem radMenuItem2;
+        private Telerik.WinControls.UI.RadMenuItem btnGPSystem;
+        private Telerik.WinControls.UI.RadMenuItem btnGPSymbol;
         private Telerik.WinControls.UI.RadPageView radPageView1;
         private Telerik.WinControls.UI.RadPageViewPage radPageViewPage1;
         private Controls.ctAccountMontier ctAccountMontier1;
@@ -518,10 +518,10 @@
         private Telerik.WinControls.UI.RadMenuItem btnSystemStatus;
         private Telerik.WinControls.UI.RadMenu radMenu1;
         private Telerik.WinControls.Themes.Office2010SilverTheme office2010SilverTheme1;
-        private Telerik.WinControls.UI.RadMenuItem radMenuItem4;
+        private Telerik.WinControls.UI.RadMenuItem btnGPQuery;
         private Telerik.WinControls.UI.RadMenuItem btnQryHist;
         private Telerik.WinControls.UI.RadMenuItem btnStatistic;
-        private Telerik.WinControls.UI.RadMenuItem btnManagerGP;
+        private Telerik.WinControls.UI.RadMenuItem btnGPAgent;
         //private Telerik.WinControls.UI.RadMenuItem radMenuItem6;
         private Telerik.WinControls.UI.RadLabelElement radLabelElement1;
         private Telerik.WinControls.UI.RadLabelElement statusmessage;

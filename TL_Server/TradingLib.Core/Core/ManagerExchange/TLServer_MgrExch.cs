@@ -51,6 +51,10 @@ namespace TradingLib.Core
             //1.向某个特定的地址发送的通知
             if (packet.PacketType == QSEnumPacketType.LOCATIONNOTIFYRESPONSE)
             {
+                if (packet.Type == MessageTypes.MGRCONTRIBRESPONSE)
+                {
+                    string x = "";
+                }
                 return notify.Locatioins.ToArray();
             }
             
