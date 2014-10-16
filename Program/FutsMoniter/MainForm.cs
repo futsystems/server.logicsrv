@@ -57,8 +57,12 @@ namespace FutsMoniter
         System.Threading.Timer _timer;
         public MainForm(DebugDelegate showinfo)
         {
+            //绑定回调函数
             Globals.RegisterCallBackCentre(this);
+            Globals.RegInitCallback(OnInitFinished);
             InitializeComponent();
+
+
             logfile = new Log(Globals.Config["LogFileName"].AsString(), true, true, "log", true);//日志组件
 
             //设定对外消息显示输出
@@ -73,7 +77,13 @@ namespace FutsMoniter
             }
             Init();
             _timer = new System.Threading.Timer(FakeOutStatus, null, 800, 150);
+
+            
+           
         }
+
+        
+
 
         public void Init()
         {
@@ -111,8 +121,10 @@ namespace FutsMoniter
 
             if (!Globals.Config["Agent"].AsBool())
             {
-                btnManagerGP.Enabled = false;
+                btnGPAgent.Enabled = false;
             }
+
+
         }
 
 

@@ -80,7 +80,7 @@ namespace FutsMoniter.Controls
             }
             catch (Exception ex)
             {
-                MessageBox.Show("error ex:" + ex.ToString());
+                //MessageBox.Show("error ex:" + ex.ToString());
             }
             
         }
@@ -90,26 +90,33 @@ namespace FutsMoniter.Controls
         {
             //this.accountgrid.TableElement.VScrollBar.ValueChanged += new EventHandler(VScrollBar_ValueChanged);
 
-            ctOrderView1.SendDebugEvent += new DebugDelegate(msgdebug);
-            ctOrderView1.SendOrderCancel += new LongDelegate(CancelOrder);
+            try
+            {
+                ctOrderView1.SendDebugEvent += new DebugDelegate(msgdebug);
+                ctOrderView1.SendOrderCancel += new LongDelegate(CancelOrder);
 
-            ctPositionView1.SendDebugEvent += new DebugDelegate(msgdebug);
-            ctPositionView1.SendCancelEvent +=new LongDelegate(CancelOrder);
-            ctPositionView1.SendOrderEvent += new OrderDelegate(SendOrder);
+                ctPositionView1.SendDebugEvent += new DebugDelegate(msgdebug);
+                ctPositionView1.SendCancelEvent += new LongDelegate(CancelOrder);
+                ctPositionView1.SendOrderEvent += new OrderDelegate(SendOrder);
 
-            ctTradeView1.SendDebugEvent += new DebugDelegate(msgdebug);
+                ctTradeView1.SendDebugEvent += new DebugDelegate(msgdebug);
 
-            ctAgentList1.AgentSelectedChangedEvent +=new VoidDelegate(ctAgentList1_AgentSelectedChangedEvent);
+                ctAgentList1.AgentSelectedChangedEvent += new VoidDelegate(ctAgentList1_AgentSelectedChangedEvent);
 
 
-            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryFinService", ctFinService1.OnQryFinService);
-            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryFinServicePlan", ctFinService1.OnQryServicePlan);
-            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "UpdateArguments", ctFinService1.OnQryFinService);
-            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "ChangeServicePlane", ctFinService1.OnQryFinService);
-            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "DeleteServicePlane", ctFinService1.OnQryFinService);
+                Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryFinService", ctFinService1.OnQryFinService);
+                Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryFinServicePlan", ctFinService1.OnQryServicePlan);
+                Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "UpdateArguments", ctFinService1.OnQryFinService);
+                Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "ChangeServicePlane", ctFinService1.OnQryFinService);
+                Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "DeleteServicePlane", ctFinService1.OnQryFinService);
 
-            //初始化菜单
-            InitMenu();
+                //初始化菜单
+                InitMenu();
+            }
+            catch (Exception ex)
+            { 
+                
+            }
         }
 
         #region  辅助函数

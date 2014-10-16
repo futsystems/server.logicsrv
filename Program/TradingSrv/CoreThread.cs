@@ -8,7 +8,7 @@ using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.ORM;
 using ZeroMQ;
-
+using TradingLib.Logging;
 
 namespace TraddingSrvCLI
 {
@@ -138,6 +138,12 @@ namespace TraddingSrvCLI
             //coreMgr.OpenClearCentre();
             Thread.Sleep(2000);
             TLCtxHelper.IsReady = true;
+            //日志
+            //var filter = new LogFilter();
+            //filter.AddStandardRules();
+            //LogFactory.Assign(new ConsoleLogFactory(filter));
+            //ILogger _logger = LogFactory.CreateLogger(typeof (HttpContext));
+
             while (go)
             {
                 //debug("go status:" + go.ToString());

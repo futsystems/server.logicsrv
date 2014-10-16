@@ -31,14 +31,17 @@
             this.radPanel1 = new Telerik.WinControls.UI.RadPanel();
             this.argvalue = new Telerik.WinControls.UI.RadTextBox();
             this.argtitle = new Telerik.WinControls.UI.RadLabel();
+            this.argvalue_label = new Telerik.WinControls.UI.RadLabel();
             ((System.ComponentModel.ISupportInitialize)(this.radPanel1)).BeginInit();
             this.radPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.argvalue)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.argtitle)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.argvalue_label)).BeginInit();
             this.SuspendLayout();
             // 
             // radPanel1
             // 
+            this.radPanel1.Controls.Add(this.argvalue_label);
             this.radPanel1.Controls.Add(this.argvalue);
             this.radPanel1.Controls.Add(this.argtitle);
             this.radPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -54,7 +57,7 @@
             // 
             // argvalue
             // 
-            this.argvalue.Location = new System.Drawing.Point(92, 3);
+            this.argvalue.Location = new System.Drawing.Point(93, 3);
             this.argvalue.Name = "argvalue";
             this.argvalue.Size = new System.Drawing.Size(131, 18);
             this.argvalue.TabIndex = 1;
@@ -66,6 +69,14 @@
             this.argtitle.Size = new System.Drawing.Size(14, 16);
             this.argtitle.TabIndex = 0;
             this.argtitle.Text = "--";
+            // 
+            // argvalue_label
+            // 
+            this.argvalue_label.Location = new System.Drawing.Point(93, 3);
+            this.argvalue_label.Name = "argvalue_label";
+            this.argvalue_label.Size = new System.Drawing.Size(14, 16);
+            this.argvalue_label.TabIndex = 1;
+            this.argvalue_label.Text = "--";
             // 
             // ctTLEdit
             // 
@@ -79,6 +90,7 @@
             this.radPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.argvalue)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.argtitle)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.argvalue_label)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -88,5 +100,6 @@
         private Telerik.WinControls.UI.RadPanel radPanel1;
         private Telerik.WinControls.UI.RadLabel argtitle;
         private Telerik.WinControls.UI.RadTextBox argvalue;
+        private Telerik.WinControls.UI.RadLabel argvalue_label;
     }
 }

@@ -48,6 +48,16 @@
     <Compile Include="DataBase\ObjectPoll.cs" />
     <Compile Include="DataBase\SQLBase.cs" />
     <Compile Include="DataBase\SQLMapper.cs" />
+    <Compile Include="Log\ConsoleLogFactory.cs" />
+    <Compile Include="Log\ConsoleLogger.cs" />
+    <Compile Include="Log\ILogFactory.cs" />
+    <Compile Include="Log\ILogFilter.cs" />
+    <Compile Include="Log\ILogger.cs" />
+    <Compile Include="Log\LogFactory.cs" />
+    <Compile Include="Log\LogFilter.cs" />
+    <Compile Include="Log\LogLevel.cs" />
+    <Compile Include="Log\NullLogFactory.cs" />
+    <Compile Include="Log\NullLogWriter.cs" />
     <Compile Include="ServiceNode.cs" />
     <Compile Include="JsonProtocol\JsonReply.cs" />
     <Compile Include="KeepLiveServer.cs" />

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TradingLib.API;
+using TradingLib.Mixins.JsonObject;
 
 namespace TradingLib.Contrib.FinService
 {
@@ -27,6 +28,10 @@ namespace TradingLib.Contrib.FinService
         /// </summary>
         int ServicePlanFK { get; set; }
 
+        /// <summary>
+        /// 对应数据服务ID
+        /// </summary>
+        int ServiceID { get; set; }
         /// <summary>
         /// 配资服务费用计算方式
         /// </summary>
@@ -118,8 +123,14 @@ namespace TradingLib.Contrib.FinService
         /// 执行强平
         /// </summary>
         void CheckAccount();
-
         #endregion
+
+
+        /// <summary>
+        /// 服务调整
+        /// 结算时按照权益重新计算配资额度等
+        /// </summary>
+        void AdjustOmCashOperation(JsonWrapperCashOperation op);
     }
 
 

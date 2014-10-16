@@ -86,6 +86,7 @@
     <Compile Include="ServicePlane\ServicePlanBase.cs" />
     <Compile Include="DBServicePlan.cs" />
     <Compile Include="ServicePlane\SPCommission.cs" />
+    <Compile Include="ServicePlane\SPHunanIF.cs" />
     <Compile Include="ServicePlane\SPSpecialIF.cs" />
     <Compile Include="Tracker.cs" />
     <Compile Include="FinServiceCentre_OnXXXX.cs" />

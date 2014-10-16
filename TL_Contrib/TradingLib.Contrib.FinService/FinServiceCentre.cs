@@ -120,6 +120,22 @@ namespace TradingLib.Contrib.FinService
 
             //帐户添加事件
             TLCtxHelper.EventAccount.AccountAddEvent += new AccountIdDel(EventAccount_AccountAddEvent);
+
+            TLCtxHelper.CashOperationEvent.CashOperationRequest += new EventHandler<CashOperationEventArgs>(CashOperationEvent_CashOperationRequest);
+        }
+
+        void CashOperationEvent_CashOperationRequest(object sender, CashOperationEventArgs e)
+        {
+            //出入金操作
+            string account = e.CashOperation.Account;
+            if(string.IsNullOrEmpty(account)) return;//如果不是交易帐户的出入金
+            FinServiceStub stub = FinTracker.FinServiceTracker[account];
+            if(stub == null) return;//不存在对应的配资服务
+
+            
+            debug("配资本中心获得出入金事件,对配资服务进行调整", QSEnumDebugLevel.INFO);
+
+            stub.FinService.AdjustOmCashOperation(e.CashOperation);
         }
 
         /// <summary>
