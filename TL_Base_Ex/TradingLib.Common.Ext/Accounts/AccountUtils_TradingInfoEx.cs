@@ -110,7 +110,37 @@ namespace TradingLib.Common
             return GetPendingExitOrders(account,symbol,positionside).Sum(o => o.UnsignedSize);
         }
 
-        
+        /// <summary>
+        /// 获得某个合约的所有持仓数量包含多和空
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        public static int GetPositionSize(this IAccount account, string symbol)
+        {
+            return account.GetLongPositionSize(symbol) + account.GetShortPositionSize(symbol);
+        }
+
+        /// <summary>
+        /// 获得某个合约的多头持仓数量
+        /// </summary>
+        /// <param name="accoount"></param>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        public static int GetLongPositionSize(this IAccount accoount, string symbol)
+        {
+            return accoount.GetPosition(symbol, true).UnsignedSize;
+        }
+        /// <summary>
+        /// 获得某个合约的空头持仓数量
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        public static int GetShortPositionSize(this IAccount account, string symbol)
+        {
+            return account.GetPosition(symbol, false).UnsignedSize; 
+        }
         /// <summary>
         /// 判断是否有多方头寸
         /// </summary>
