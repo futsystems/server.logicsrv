@@ -91,7 +91,7 @@ namespace TradingLib.API
         /// <summary>
         /// 最新价格
         /// </summary>
-        decimal LastPrice { get; }
+        /decimal LastPrice { get; }
         
         
         //position建立后的一些数据，仓位建立后出现的最高价与最低价

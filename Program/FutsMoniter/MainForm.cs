@@ -196,6 +196,7 @@ namespace FutsMoniter
                         Thread.Sleep(500);
                         s += ".";
                     }
+                    //_basicinfodone由帐户加载过程中通过最后一个帐户信息带有的Islast进行设定
                     if (_basicinfodone)
                     {
                         if (Globals.Manager == null)

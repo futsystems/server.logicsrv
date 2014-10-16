@@ -251,6 +251,11 @@ namespace FutsMoniter.Controls
                         IAccountLite account = accountcache.Read();
                         InvokeGotAccount(account);
                         UpdateAccountNum();
+                        //如果在初始化之后获得AccountLite信息 则表明该帐户是新增造成的 需要重新watchaccount
+                        if (Globals.EnvReady)
+                        {
+                            GridChanged();
+                        }
                         Thread.Sleep(1);
                     }
                     //更新账户登入 或者 注销 状态
