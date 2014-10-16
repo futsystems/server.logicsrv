@@ -123,7 +123,7 @@ namespace TradingLib.Common
             info.UnRealizedPL = acc.UnRealizedPL;
             info.Commission = acc.Commission;
             info.Profit = acc.Profit;
-
+            info.TotalPositionSize = acc.GetTotalPositionSize();
             return info;
         }
 

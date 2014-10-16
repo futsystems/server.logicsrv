@@ -41,6 +41,15 @@ namespace TradingLib.Common
         }
 
         /// <summary>
+        /// 返回所有持仓手数之和
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public static int GetTotalPositionSize(this IAccount account)
+        {
+            return account.GetPositionsHold().Sum(pos => pos.UnsignedSize);
+        }
+        /// <summary>
         /// 获得某个合约上的所有待成交委托
         /// </summary>
         /// <param name="account"></param>

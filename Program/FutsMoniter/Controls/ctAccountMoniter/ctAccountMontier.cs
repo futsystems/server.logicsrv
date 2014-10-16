@@ -52,7 +52,7 @@ namespace FutsMoniter.Controls
 
             Init();
             InitAccountMoniterGrid();
-
+            Globals.RegInitCallback(this.OnInitFinished);
 
             StartUpdate();
             fmaccountconfig = new AccountConfigForm();
@@ -231,6 +231,8 @@ namespace FutsMoniter.Controls
                 
             }
         }
+
+
 
 
 

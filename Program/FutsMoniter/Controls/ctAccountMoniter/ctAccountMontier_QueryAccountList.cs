@@ -66,7 +66,10 @@ namespace FutsMoniter.Controls
             RefreshAccountQuery();
         }
 
-
+        private void acchodpos_ToggleStateChanged(object sender, StateChangedEventArgs args)
+        {
+            RefreshAccountQuery();
+        }
         /// <summary>
         /// 刷新帐户筛选结果
         /// </summary>
@@ -113,9 +116,14 @@ namespace FutsMoniter.Controls
                 }
             }
 
+
             if (accLogin.Checked)
             {
                 strFilter = string.Format(strFilter + " and " + LOGINSTATUS + " = '{0}'", getLoginStatus(true));
+            }
+            if (acchodpos.Checked)
+            {
+                strFilter = string.Format(strFilter + " and " + HOLDSIZE + " > 0");
             }
 
             string acctstr = acct.Text;

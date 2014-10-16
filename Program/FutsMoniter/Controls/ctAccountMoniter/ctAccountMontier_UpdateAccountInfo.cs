@@ -45,6 +45,7 @@ namespace FutsMoniter.Controls
         const string UNREALIZEDPL = "浮动盈亏";
         const string COMMISSION = "手续费";
         const string PROFIT = "净利";
+        const string HOLDSIZE = "持";
         const string CATEGORY = "帐户类型";
         const string RACEENTRYTIME = "参赛日期";
         const string RACEID = "比赛编号";
@@ -122,12 +123,13 @@ namespace FutsMoniter.Controls
 
             gt.Columns.Add(COMMISSION, typeof(Decimal));//15
             gt.Columns.Add(PROFIT);//16
+            gt.Columns.Add(HOLDSIZE);//17
             gt.Columns.Add(CATEGORY);//18
             gt.Columns.Add(INTRADAY);//19
-            gt.Columns.Add(AGENTCODE);//22
-            gt.Columns.Add(AGENTMGRFK);//22
-            gt.Columns.Add(POSLOK);//
-            gt.Columns.Add(NAME);//22
+            gt.Columns.Add(AGENTCODE);//20
+            gt.Columns.Add(AGENTMGRFK);//21
+            gt.Columns.Add(POSLOK);//22
+            gt.Columns.Add(NAME);//23
         }
 
         void InitAccountMoniterGrid()
@@ -162,7 +164,8 @@ namespace FutsMoniter.Controls
             accountgrid.Columns[PROFITLOSSIMG].Width = 20;
             accountgrid.Columns[LOGINSTATUSIMG].Width = 20;
             accountgrid.Columns[ADDRESS].Width = 120;
-            for (int i = 0; i < gt.Columns.Count; i++)
+            accountgrid.Columns[HOLDSIZE].Width = 20;
+             for (int i = 0; i < gt.Columns.Count; i++)
             {
                 accountgrid.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
             }
@@ -415,6 +418,7 @@ namespace FutsMoniter.Controls
                     gt.Rows[r][COMMISSION] = decDisp(account.Commission);
                     gt.Rows[r][PROFIT] = decDisp(account.Profit);
                     gt.Rows[r][PROFITLOSSIMG] = getProfitLossImage(account.Profit);
+                    gt.Rows[r][HOLDSIZE] = account.TotalPositionSize;
                 }
             }
         }

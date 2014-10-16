@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.SplitContainer = new Telerik.WinControls.UI.RadSplitContainer();
             this.radSplitContainer1 = new Telerik.WinControls.UI.RadSplitContainer();
             this.radSplitContainer2 = new Telerik.WinControls.UI.RadSplitContainer();
@@ -36,7 +36,8 @@
             this.radPanel1 = new Telerik.WinControls.UI.RadPanel();
             this.accountgrid = new ComponentFactory.Krypton.Toolkit.KryptonDataGridView();
             this.btnAddAccount = new Telerik.WinControls.UI.RadButton();
-            this.radLabel1 = new Telerik.WinControls.UI.RadLabel();
+            this.lbroutetype = new Telerik.WinControls.UI.RadLabel();
+            this.ctAgentList1 = new FutsMoniter.ctAgentList();
             this.acct = new Telerik.WinControls.UI.RadTextBox();
             this.radLabel6 = new Telerik.WinControls.UI.RadLabel();
             this.accountType = new Telerik.WinControls.UI.RadDropDownList();
@@ -63,12 +64,12 @@
             this.ServiceTabHolder = new Telerik.WinControls.UI.RadPageView();
             this.OrderSenderPage = new Telerik.WinControls.UI.RadPageViewPage();
             this.viewQuoteList1 = new FutSystems.GUI.ViewQuoteList();
+            this.ctOrderSenderM1 = new FutsMoniter.ctOrderSenderM();
             this.FinServicePage = new Telerik.WinControls.UI.RadPageViewPage();
+            this.ctFinService1 = new FutsMoniter.ctFinService();
             this.RaceServicePage = new Telerik.WinControls.UI.RadPageViewPage();
             this.LottoServicePage = new Telerik.WinControls.UI.RadPageViewPage();
-            this.ctAgentList1 = new FutsMoniter.ctAgentList();
-            this.ctOrderSenderM1 = new FutsMoniter.ctOrderSenderM();
-            this.ctFinService1 = new FutsMoniter.ctFinService();
+            this.acchodpos = new Telerik.WinControls.UI.RadCheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.SplitContainer)).BeginInit();
             this.SplitContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.radSplitContainer1)).BeginInit();
@@ -81,7 +82,7 @@
             this.radPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.accountgrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnAddAccount)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lbroutetype)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.acct)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.accountType)).BeginInit();
@@ -111,6 +112,7 @@
             this.ServiceTabHolder.SuspendLayout();
             this.OrderSenderPage.SuspendLayout();
             this.FinServicePage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.acchodpos)).BeginInit();
             this.SuspendLayout();
             // 
             // SplitContainer
@@ -180,9 +182,10 @@
             // 
             // radPanel1
             // 
+            this.radPanel1.Controls.Add(this.acchodpos);
             this.radPanel1.Controls.Add(this.accountgrid);
             this.radPanel1.Controls.Add(this.btnAddAccount);
-            this.radPanel1.Controls.Add(this.radLabel1);
+            this.radPanel1.Controls.Add(this.lbroutetype);
             this.radPanel1.Controls.Add(this.ctAgentList1);
             this.radPanel1.Controls.Add(this.acct);
             this.radPanel1.Controls.Add(this.radLabel6);
@@ -208,12 +211,11 @@
             this.accountgrid.AllowUserToAddRows = false;
             this.accountgrid.AllowUserToDeleteRows = false;
             this.accountgrid.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.accountgrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.accountgrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle2;
             this.accountgrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.accountgrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.accountgrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.accountgrid.Location = new System.Drawing.Point(0, 34);
             this.accountgrid.Name = "accountgrid";
@@ -239,18 +241,28 @@
             this.btnAddAccount.Text = "添加交易帐号";
             this.btnAddAccount.Click += new System.EventHandler(this.btnAddAccount_Click);
             // 
-            // radLabel1
+            // lbroutetype
             // 
-            this.radLabel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.radLabel1.Location = new System.Drawing.Point(863, 10);
-            this.radLabel1.Name = "radLabel1";
-            this.radLabel1.Size = new System.Drawing.Size(59, 16);
-            this.radLabel1.TabIndex = 1;
-            this.radLabel1.Text = "路由通道:";
+            this.lbroutetype.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lbroutetype.Location = new System.Drawing.Point(863, 10);
+            this.lbroutetype.Name = "lbroutetype";
+            this.lbroutetype.Size = new System.Drawing.Size(59, 16);
+            this.lbroutetype.TabIndex = 1;
+            this.lbroutetype.Text = "路由通道:";
+            // 
+            // ctAgentList1
+            // 
+            this.ctAgentList1.EnableAny = true;
+            this.ctAgentList1.EnableDefaultBaseMGR = false;
+            this.ctAgentList1.EnableSelected = true;
+            this.ctAgentList1.Location = new System.Drawing.Point(261, 10);
+            this.ctAgentList1.Name = "ctAgentList1";
+            this.ctAgentList1.Size = new System.Drawing.Size(167, 20);
+            this.ctAgentList1.TabIndex = 26;
             // 
             // acct
             // 
-            this.acct.Location = new System.Drawing.Point(573, 10);
+            this.acct.Location = new System.Drawing.Point(474, 10);
             this.acct.Name = "acct";
             this.acct.Size = new System.Drawing.Size(108, 18);
             this.acct.TabIndex = 25;
@@ -258,16 +270,16 @@
             // 
             // radLabel6
             // 
-            this.radLabel6.Location = new System.Drawing.Point(508, 12);
+            this.radLabel6.Location = new System.Drawing.Point(434, 12);
             this.radLabel6.Name = "radLabel6";
-            this.radLabel6.Size = new System.Drawing.Size(59, 16);
+            this.radLabel6.Size = new System.Drawing.Size(34, 16);
             this.radLabel6.TabIndex = 24;
-            this.radLabel6.Text = "帐号搜索:";
+            this.radLabel6.Text = "帐号:";
             // 
             // accountType
             // 
             this.accountType.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.accountType.Location = new System.Drawing.Point(68, 10);
+            this.accountType.Location = new System.Drawing.Point(43, 10);
             this.accountType.Name = "accountType";
             this.accountType.Size = new System.Drawing.Size(103, 18);
             this.accountType.TabIndex = 23;
@@ -279,9 +291,9 @@
             // 
             this.radLabel5.Location = new System.Drawing.Point(3, 12);
             this.radLabel5.Name = "radLabel5";
-            this.radLabel5.Size = new System.Drawing.Size(59, 16);
+            this.radLabel5.Size = new System.Drawing.Size(34, 16);
             this.radLabel5.TabIndex = 22;
-            this.radLabel5.Text = "帐户类别:";
+            this.radLabel5.Text = "类别:";
             // 
             // lbCurrentAccount
             // 
@@ -322,9 +334,9 @@
             // accexecute
             // 
             this.accexecute.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.accexecute.Location = new System.Drawing.Point(253, 10);
+            this.accexecute.Location = new System.Drawing.Point(192, 10);
             this.accexecute.Name = "accexecute";
-            this.accexecute.Size = new System.Drawing.Size(76, 18);
+            this.accexecute.Size = new System.Drawing.Size(63, 18);
             this.accexecute.TabIndex = 17;
             this.accexecute.Text = "--";
             this.accexecute.SelectedIndexChanged += new Telerik.WinControls.UI.Data.PositionChangedEventHandler(this.accexecute_SelectedIndexChanged);
@@ -332,15 +344,15 @@
             // 
             // radLabel2
             // 
-            this.radLabel2.Location = new System.Drawing.Point(188, 12);
+            this.radLabel2.Location = new System.Drawing.Point(152, 12);
             this.radLabel2.Name = "radLabel2";
-            this.radLabel2.Size = new System.Drawing.Size(59, 16);
+            this.radLabel2.Size = new System.Drawing.Size(34, 16);
             this.radLabel2.TabIndex = 16;
-            this.radLabel2.Text = "交易权限:";
+            this.radLabel2.Text = "状态:";
             // 
             // accLogin
             // 
-            this.accLogin.Location = new System.Drawing.Point(702, 10);
+            this.accLogin.Location = new System.Drawing.Point(599, 12);
             this.accLogin.Name = "accLogin";
             this.accLogin.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.accLogin.Size = new System.Drawing.Size(45, 16);
@@ -427,9 +439,9 @@
             // radPageViewPage1
             // 
             this.radPageViewPage1.Controls.Add(this.ctOrderView1);
-            this.radPageViewPage1.Location = new System.Drawing.Point(10, 31);
+            this.radPageViewPage1.Location = new System.Drawing.Point(10, 35);
             this.radPageViewPage1.Name = "radPageViewPage1";
-            this.radPageViewPage1.Size = new System.Drawing.Size(646, 234);
+            this.radPageViewPage1.Size = new System.Drawing.Size(646, 230);
             this.radPageViewPage1.Text = "委 托";
             // 
             // ctOrderView1
@@ -438,7 +450,7 @@
             this.ctOrderView1.Location = new System.Drawing.Point(0, 0);
             this.ctOrderView1.Name = "ctOrderView1";
             this.ctOrderView1.OrderTracker = null;
-            this.ctOrderView1.Size = new System.Drawing.Size(646, 234);
+            this.ctOrderView1.Size = new System.Drawing.Size(646, 230);
             this.ctOrderView1.TabIndex = 0;
             // 
             // radPageViewPage2
@@ -512,9 +524,9 @@
             // 
             this.OrderSenderPage.Controls.Add(this.viewQuoteList1);
             this.OrderSenderPage.Controls.Add(this.ctOrderSenderM1);
-            this.OrderSenderPage.Location = new System.Drawing.Point(10, 31);
+            this.OrderSenderPage.Location = new System.Drawing.Point(10, 35);
             this.OrderSenderPage.Name = "OrderSenderPage";
-            this.OrderSenderPage.Size = new System.Drawing.Size(564, 234);
+            this.OrderSenderPage.Size = new System.Drawing.Size(564, 230);
             this.OrderSenderPage.Text = "下 单";
             // 
             // viewQuoteList1
@@ -543,6 +555,14 @@
             this.viewQuoteList1.Text = "viewQuoteList1";
             this.viewQuoteList1.UPColor = System.Drawing.Color.Red;
             // 
+            // ctOrderSenderM1
+            // 
+            this.ctOrderSenderM1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.ctOrderSenderM1.Location = new System.Drawing.Point(0, 166);
+            this.ctOrderSenderM1.Name = "ctOrderSenderM1";
+            this.ctOrderSenderM1.Size = new System.Drawing.Size(564, 64);
+            this.ctOrderSenderM1.TabIndex = 0;
+            // 
             // FinServicePage
             // 
             this.FinServicePage.Controls.Add(this.ctFinService1);
@@ -550,6 +570,15 @@
             this.FinServicePage.Name = "FinServicePage";
             this.FinServicePage.Size = new System.Drawing.Size(564, 230);
             this.FinServicePage.Text = "配资服务";
+            // 
+            // ctFinService1
+            // 
+            this.ctFinService1.CurrentAccount = null;
+            this.ctFinService1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ctFinService1.Location = new System.Drawing.Point(0, 0);
+            this.ctFinService1.Name = "ctFinService1";
+            this.ctFinService1.Size = new System.Drawing.Size(564, 230);
+            this.ctFinService1.TabIndex = 1;
             // 
             // RaceServicePage
             // 
@@ -565,32 +594,15 @@
             this.LottoServicePage.Size = new System.Drawing.Size(564, 230);
             this.LottoServicePage.Text = "乐透服务";
             // 
-            // ctAgentList1
+            // acchodpos
             // 
-            this.ctAgentList1.EnableAny = true;
-            this.ctAgentList1.EnableDefaultBaseMGR = false;
-            this.ctAgentList1.EnableSelected = true;
-            this.ctAgentList1.Location = new System.Drawing.Point(335, 10);
-            this.ctAgentList1.Name = "ctAgentList1";
-            this.ctAgentList1.Size = new System.Drawing.Size(162, 20);
-            this.ctAgentList1.TabIndex = 26;
-            // 
-            // ctOrderSenderM1
-            // 
-            this.ctOrderSenderM1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.ctOrderSenderM1.Location = new System.Drawing.Point(0, 170);
-            this.ctOrderSenderM1.Name = "ctOrderSenderM1";
-            this.ctOrderSenderM1.Size = new System.Drawing.Size(564, 64);
-            this.ctOrderSenderM1.TabIndex = 0;
-            // 
-            // ctFinService1
-            // 
-            this.ctFinService1.CurrentAccount = null;
-            this.ctFinService1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ctFinService1.Location = new System.Drawing.Point(0, 0);
-            this.ctFinService1.Name = "ctFinService1";
-            this.ctFinService1.Size = new System.Drawing.Size(564, 230);
-            this.ctFinService1.TabIndex = 1;
+            this.acchodpos.Location = new System.Drawing.Point(660, 12);
+            this.acchodpos.Name = "acchodpos";
+            this.acchodpos.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.acchodpos.Size = new System.Drawing.Size(45, 16);
+            this.acchodpos.TabIndex = 29;
+            this.acchodpos.Text = "持仓";
+            this.acchodpos.ToggleStateChanged += new Telerik.WinControls.UI.StateChangedEventHandler(this.acchodpos_ToggleStateChanged);
             // 
             // ctAccountMontier
             // 
@@ -612,7 +624,7 @@
             this.radPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.accountgrid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnAddAccount)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.lbroutetype)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.acct)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel6)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.accountType)).EndInit();
@@ -642,6 +654,7 @@
             this.ServiceTabHolder.ResumeLayout(false);
             this.OrderSenderPage.ResumeLayout(false);
             this.FinServicePage.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.acchodpos)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -661,7 +674,7 @@
         private Telerik.WinControls.UI.RadPageViewPage radPageViewPage2;
         private Telerik.WinControls.UI.RadPageViewPage radPageViewPage3;
         private Telerik.WinControls.UI.SplitPanel splitPanel4;
-        private Telerik.WinControls.UI.RadLabel radLabel1;
+        private Telerik.WinControls.UI.RadLabel lbroutetype;
         private Telerik.WinControls.UI.RadDropDownList routeType;
         private Telerik.WinControls.UI.RadCheckBox accLogin;
         private Telerik.WinControls.UI.RadDropDownList accexecute;
@@ -688,6 +701,7 @@
         private ctAgentList ctAgentList1;
         private Telerik.WinControls.UI.RadButton btnAddAccount;
         private ComponentFactory.Krypton.Toolkit.KryptonDataGridView accountgrid;
+        private Telerik.WinControls.UI.RadCheckBox acchodpos;
         //private Telerik.WinControls.UI.RadPageViewPage LottoServicePage;
 
     }
