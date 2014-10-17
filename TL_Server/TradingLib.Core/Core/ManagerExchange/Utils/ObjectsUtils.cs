@@ -35,8 +35,11 @@ namespace TradingLib.Core
         {
             return !string.IsNullOrEmpty(op.Account);
         }
+
+
+        
         /// <summary>
-        /// 获得出入金操作的通知对象判断为此
+        /// 获得出入金操作的通知对象判断诸词
         /// </summary>
         /// <param name="op"></param>
         /// <returns></returns>

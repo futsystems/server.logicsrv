@@ -98,6 +98,7 @@
     <Compile Include="Core\ManagerExchange\MgrExchServer_CTE_CashOPAgent.cs" />
     <Compile Include="Core\ManagerExchange\Utils\ObjectsUtils.cs" />
     <Compile Include="Core\ManagerExchange\MgrExchServer_Notify.cs" />
+    <Compile Include="Core\ManagerExchange\Utils\ManagerUtils_Predicate.cs" />
     <Compile Include="Core\MessageExchange\MsgExchServer_.cs" />
     <Compile Include="Core\MessageExchange\MsgExchServer_PacketHandle.cs" />
     <Compile Include="Core\MessageExchange\MsgExchServer_CTE.cs" />

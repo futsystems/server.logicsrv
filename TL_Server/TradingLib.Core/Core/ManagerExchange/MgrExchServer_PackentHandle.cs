@@ -826,18 +826,26 @@ namespace TradingLib.Core
             response.ManagerToSend = m;
             CacheRspResponse(response);
 
+            //通知管理员信息变更
+            NotifyManagerUpdate(m);
+
         }
 
         void SrvOnMGRUpdateManger(MGRReqUpdateManagerRequest request,ISession session,Manager manger)
         {
             debug(string.Format("管理员:{0} 请求更新管理员:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
 
+            //更新管理员 如果管理不存在则添加新的管理员帐户 如果存在则进行参数更新
             Manager m = request.ManagerToSend;
             BasicTracker.ManagerTracker.UpdateManager(m);
 
+            //通知直接请求的管理端
             RspMGRQryManagerResponse response = ResponseTemplate<RspMGRQryManagerResponse>.SrvSendRspResponse(request);
             response.ManagerToSend = m;
             CacheRspResponse(response);
+
+            //通知管理员信息变更
+            NotifyManagerUpdate(m);
         }
 
         void SrvOnMGRQryAcctService(MGRQryAcctServiceRequest request, ISession session, Manager manager)

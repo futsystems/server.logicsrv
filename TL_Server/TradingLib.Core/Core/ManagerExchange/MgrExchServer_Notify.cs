@@ -30,6 +30,18 @@ namespace TradingLib.Core
         {
             NotifyCashOperation(e.CashOperation);
         }
+
+        /// <summary>
+        /// 通过谓词顾虑出当前通知地址
+        /// </summary>
+        /// <param name="predictate"></param>
+        /// <returns></returns>
+        ILocation[] GetNotifyTargets(Predicate<CustInfoEx> predictate)
+        {
+            return this.NotifyTarges.Where(e => predictate(e)).Select(info => info.Location).ToArray();
+        }
+
+
         /// <summary>
         /// 出入金状态通知
         /// </summary>
@@ -37,13 +49,31 @@ namespace TradingLib.Core
         void NotifyCashOperation(JsonWrapperCashOperation op)
         {
             //通知方式 request获得对应的判断谓词 用于判断哪个客户端需要通知，然后再投影获得对应的地址集合
-            ILocation[] locations = this.NotifyTarges.Where(e => op.GetNotifyPredicate()(e)).Select(info => info.Location).ToArray();
+            //ILocation[] locations = this.NotifyTarges.Where(e => op.GetNotifyPredicate()(e)).Select(info => info.Location).ToArray();
+            ILocation[] locations = GetNotifyTargets(op.GetNotifyPredicate());
             NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(locations);
             response.ModuleID = CoreName;
             response.CMDStr = "NotifyCashOperation";
             response.Result = new Mixins.ReplyWriter().Start().FillReply(Mixins.JsonReply.GenericSuccess()).FillPlayload(op).End().ToString();
             CachePacket(response);
             debug(" send out cashoperation notify");
+        }
+
+
+        /// <summary>
+        /// 管理员更新通知
+        /// </summary>
+        /// <param name="mgr"></param>
+        void NotifyManagerUpdate(Manager mgr)
+        {
+            ILocation[] locations = GetNotifyTargets(mgr.GetNotifyPredicate());
+            NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(locations);
+            response.ModuleID = CoreName;
+            response.CMDStr = "NotifyManagerUpdate";
+            response.Result = new Mixins.ReplyWriter().Start().FillReply(Mixins.JsonReply.GenericSuccess()).FillPlayload(mgr).End().ToString();
+            CachePacket(response);
+            debug(" send out managerupdate notify");
+
         }
     }
 }
