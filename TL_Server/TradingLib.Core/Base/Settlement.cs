@@ -75,7 +75,7 @@ namespace TradingLib.Core
             decimal margin = 0;
             foreach(SettlePosition pos in positions)
             {
-                margin += pos.Margin;//Math.Abs(pos.Size * pos.SettlePrice * pos.Multiple * 0.1M);//结算持仓数据总包含对应的保证金记录 这样下次读取时直接累加即可
+                margin += pos.Margin;//结算持仓数据总包含对应的保证金记录 这样下次读取时直接累加即可
             }
 
             settlelist.Add(NewLine);
@@ -88,7 +88,7 @@ namespace TradingLib.Core
             settlelist.Add(SectionName("资金状况"));
             settlelist.Add(line);
             settlelist.Add(string.Format(tp_total, FieldName("上日结存:", fieldwidth_total), s.LastEquity, FieldName("当日结存:", fieldwidth_total), s.NowEquity, FieldName("可用资金:", fieldwidth_total), s.NowEquity - margin));
-            settlelist.Add(string.Format(tp_total, FieldName("出入金:", fieldwidth_total), s.CashIn-s.CashOut, FieldName("客户权益:", fieldwidth_total), s.NowEquity, FieldName("风险度:", fieldwidth_total), margin/s.NowEquity));
+            settlelist.Add(string.Format(tp_total, FieldName("出入金:", fieldwidth_total), s.CashIn-s.CashOut, FieldName("客户权益:", fieldwidth_total), s.NowEquity, FieldName("风险度:", fieldwidth_total),s.NowEquity!=0 ?margin/s.NowEquity:0));
             settlelist.Add(string.Format(tp_total, FieldName("手续费:", fieldwidth_total), s.Commission, FieldName("总保证金占用:", fieldwidth_total), margin, FieldName("追加保证金:", fieldwidth_total), 0));
             settlelist.Add(string.Format(tp_total, FieldName("平仓盈亏:", fieldwidth_total), s.RealizedPL, FieldName("持仓盯市盈亏:", fieldwidth_total), s.UnRealizedPL, FieldName("交割保证金:", fieldwidth_total), 0));
             settlelist.Add(string.Format(tp_onefield, FieldName("可提资金", fieldwidth_total), s.NowEquity-margin));
@@ -139,10 +139,7 @@ namespace TradingLib.Core
                         settlelist.Add(string.Format(" {0,-10} {1,4} {2,8:F2} {3,4} {4,8:F2} {5,8:F2} {6,8:F2} {7,8:F2} {8,10:F2} {9,4}", symbol, longsize, longavgprice, shortsize, shortavgprice, 0, settleprice, settleunpl, lmargin, "投"));
                     }
                 }
-                //foreach (SettlePosition pos in positions)
-                //{
-                //    settlelist.Add(string.Format(" {0,-10} {1,4} {2,8:F2} {3,4} {4,8:F2} {5,8:F2} {6,8:F2} {7,8:F2} {8,10:F2} {9,4}", pos.Symbol, pos.Size > 0 ? pos.Size : 0, pos.Size > 0 ? pos.AVGPrice : 0, pos.Size < 0 ? pos.Size : 0, pos.Size < 0 ? pos.AVGPrice : 0, 0, pos.SettlePrice, pos.Size * (pos.SettlePrice - pos.AVGPrice) * pos.Multiple, Math.Abs(pos.AVGPrice * pos.Size * pos.Multiple * 0.1M), "投"));
-                //}
+
                 settlelist.Add(NewLine);
                 settlelist.Add(NewLine);
             }
