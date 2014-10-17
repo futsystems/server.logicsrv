@@ -798,7 +798,7 @@ namespace TradingLib.Common
         /// 查询某个代理的在一个时间段内的汇总
         /// </summary>
         /// <param name="settleday"></param>
-        public void ReqQrySummaryReport(int agentfk,int start,int end)
+        public void ReqQrySummaryReport(int agentfk, int start, int end)
         {
             this.ReqContribRequest("FinServiceCentre", "QrySummaryReport", agentfk.ToString() + "," + start.ToString() + "," + end.ToString());
         }

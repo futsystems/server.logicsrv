@@ -88,8 +88,6 @@ namespace FutsMoniter.Controls
 
         void Init()
         {
-            //this.accountgrid.TableElement.VScrollBar.ValueChanged += new EventHandler(VScrollBar_ValueChanged);
-
             try
             {
                 ctOrderView1.SendDebugEvent += new DebugDelegate(msgdebug);

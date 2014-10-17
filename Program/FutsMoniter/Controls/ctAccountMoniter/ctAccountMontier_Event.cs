@@ -46,7 +46,7 @@ namespace FutsMoniter.Controls
         private void accountgrid_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
 
-            if (e.ColumnIndex == 13 || e.ColumnIndex == 14 || e.ColumnIndex == 16)
+            if (e.ColumnIndex == 14 || e.ColumnIndex == 15 || e.ColumnIndex == 17)
             {
                 e.CellStyle.Font = UIGlobals.BoldFont;
                 decimal v = 0;

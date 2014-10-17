@@ -24,10 +24,20 @@ namespace FutsMoniter
             BindToTable();
             ctGridExport1.Grid = totalgrid;
             Globals.RegInitCallback(OnInitFinished);
-            start.Value = Convert.ToDateTime(DateTime.Today.AddMonths(-1).ToString("yyyy-MM-01") + " 0:00:00");
+            if (Globals.EnvReady)
+            {
+                Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryTotalReportDayRange", this.OnTotalReport);
+            }
+            this.Disposed += new EventHandler(ctProfitReportDayRange_Disposed);
 
+            start.Value = Convert.ToDateTime(DateTime.Today.AddMonths(-1).ToString("yyyy-MM-01") + " 0:00:00");
             end.Value = DateTime.Now;
 
+        }
+
+        void ctProfitReportDayRange_Disposed(object sender, EventArgs e)
+        {
+            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryTotalReportDayRange", this.OnTotalReport);
         }
 
         public void Clear()
@@ -70,7 +80,9 @@ namespace FutsMoniter
                 gt.Rows[i][SETTLEDAY] = report.SettleDay;
                 gt.Rows[i][TOTALFEE] = report.TotalFee;
                 gt.Rows[i][AGENTFEE] = report.AgentFee;
-                gt.Rows[i][AGENTPROFIT] = report.AgentProfit;
+                gt.Rows[i][CUSTOMERPROFIT] = report.AgentProfit;
+                gt.Rows[i][COMMISSIONPROFIT] = report.CommissionProfit;
+                gt.Rows[i][TOTALPROFIT] = report.CommissionProfit + report.AgentProfit;
             }
         }
 
@@ -84,7 +96,9 @@ namespace FutsMoniter
         const string SETTLEDAY = "结算日";
         const string TOTALFEE = "客户收费";
         const string AGENTFEE = "代理成本";
-        const string AGENTPROFIT = "代理利润";
+        const string CUSTOMERPROFIT = "直客利润";
+        const string COMMISSIONPROFIT = "代理提成";
+        const string TOTALPROFIT = "利润总和";
 
         #endregion
 
@@ -126,7 +140,9 @@ namespace FutsMoniter
             gt.Columns.Add(SETTLEDAY);//
             gt.Columns.Add(TOTALFEE);//
             gt.Columns.Add(AGENTFEE);//
-            gt.Columns.Add(AGENTPROFIT);//
+            gt.Columns.Add(CUSTOMERPROFIT);
+            gt.Columns.Add(COMMISSIONPROFIT);
+            gt.Columns.Add(TOTALPROFIT);
 
         }
 
@@ -164,7 +180,7 @@ namespace FutsMoniter
         /// </summary>
         void OnInitFinished()
         {
-            Factory.IDataSourceFactory(agent).BindDataSource(Globals.BasicInfoTracker.GetBaseManagerCombList());
+            //Factory.IDataSourceFactory(agent).BindDataSource(Globals.BasicInfoTracker.GetBaseManagerCombList());
             Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryTotalReportDayRange", this.OnTotalReport);
         }
 
@@ -172,7 +188,7 @@ namespace FutsMoniter
         private void btnQryReport_Click(object sender, EventArgs e)
         {
             this.Clear();
-            Globals.TLClient.ReqQryTotalReportByDayRange(int.Parse(agent.SelectedValue.ToString()), Util.ToTLDate(start.Value), Util.ToTLDate(end.Value));
+            Globals.TLClient.ReqQryTotalReportByDayRange(ctAgentList1.CurrentAgentFK, Util.ToTLDate(start.Value), Util.ToTLDate(end.Value));
             
         }
 

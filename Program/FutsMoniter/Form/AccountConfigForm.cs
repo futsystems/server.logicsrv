@@ -12,6 +12,7 @@ using Telerik.WinControls;
 using TradingLib.API;
 using TradingLib.Common;
 using FutSystems.GUI;
+using FutsMoniter.Common;
 
 namespace FutsMoniter
 {
@@ -60,7 +61,18 @@ namespace FutsMoniter
             cashop_type.Items.Add("入金");
             cashop_type.Items.Add("出金");
 
+            Globals.RegInitCallback(OnInitCallback);
             
+        }
+
+        void OnInitCallback()
+        {
+            if (!Globals.Manager.RightRootDomain())
+            {
+                cashoppanel.Visible = false;
+                routerpanel.Visible = false;
+            }
+
         }
 
         

@@ -103,6 +103,7 @@ namespace FutsMoniter.Controls
         private void InitTable()
         {
             gt.Columns.Add(ACCOUNT);//0
+            gt.Columns.Add(NAME);//23
             gt.Columns.Add(ROUTE);//1
             gt.Columns.Add(ROUTEIMG, typeof(Image));//2
 
@@ -129,7 +130,7 @@ namespace FutsMoniter.Controls
             gt.Columns.Add(AGENTCODE);//20
             gt.Columns.Add(AGENTMGRFK);//21
             gt.Columns.Add(POSLOK);//22
-            gt.Columns.Add(NAME);//23
+            
         }
 
         void InitAccountMoniterGrid()

@@ -55,7 +55,7 @@
             this.radPageView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.radPageView1.Location = new System.Drawing.Point(0, 0);
             this.radPageView1.Name = "radPageView1";
-            this.radPageView1.SelectedPage = this.SummaryReportPage;
+            this.radPageView1.SelectedPage = this.TotalReportPage;
             this.radPageView1.Size = new System.Drawing.Size(792, 470);
             this.radPageView1.TabIndex = 43;
             this.radPageView1.Text = "radPageView1";
@@ -64,17 +64,17 @@
             // TotalReportPage
             // 
             this.TotalReportPage.Controls.Add(this.ctProfitReportOneDay1);
-            this.TotalReportPage.Location = new System.Drawing.Point(10, 35);
+            this.TotalReportPage.Location = new System.Drawing.Point(10, 31);
             this.TotalReportPage.Name = "TotalReportPage";
-            this.TotalReportPage.Size = new System.Drawing.Size(771, 424);
+            this.TotalReportPage.Size = new System.Drawing.Size(771, 428);
             this.TotalReportPage.Text = "单日汇总";
             // 
             // SummaryReportPage
             // 
             this.SummaryReportPage.Controls.Add(this.ctSummaryReport1);
-            this.SummaryReportPage.Location = new System.Drawing.Point(10, 31);
+            this.SummaryReportPage.Location = new System.Drawing.Point(10, 35);
             this.SummaryReportPage.Name = "SummaryReportPage";
-            this.SummaryReportPage.Size = new System.Drawing.Size(771, 428);
+            this.SummaryReportPage.Size = new System.Drawing.Size(771, 424);
             this.SummaryReportPage.Text = "多日汇总";
             // 
             // TotalReportDayRangePage
@@ -98,7 +98,7 @@
             this.ctProfitReportOneDay1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ctProfitReportOneDay1.Location = new System.Drawing.Point(0, 0);
             this.ctProfitReportOneDay1.Name = "ctProfitReportOneDay1";
-            this.ctProfitReportOneDay1.Size = new System.Drawing.Size(771, 424);
+            this.ctProfitReportOneDay1.Size = new System.Drawing.Size(771, 428);
             this.ctProfitReportOneDay1.TabIndex = 0;
             // 
             // ctSummaryReport1
@@ -106,7 +106,7 @@
             this.ctSummaryReport1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ctSummaryReport1.Location = new System.Drawing.Point(0, 0);
             this.ctSummaryReport1.Name = "ctSummaryReport1";
-            this.ctSummaryReport1.Size = new System.Drawing.Size(771, 428);
+            this.ctSummaryReport1.Size = new System.Drawing.Size(771, 424);
             this.ctSummaryReport1.TabIndex = 0;
             // 
             // ctProfitReportDayRange1

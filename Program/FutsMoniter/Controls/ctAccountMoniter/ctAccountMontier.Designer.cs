@@ -28,12 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.SplitContainer = new Telerik.WinControls.UI.RadSplitContainer();
             this.radSplitContainer1 = new Telerik.WinControls.UI.RadSplitContainer();
             this.radSplitContainer2 = new Telerik.WinControls.UI.RadSplitContainer();
             this.splitPanel1 = new Telerik.WinControls.UI.SplitPanel();
             this.radPanel1 = new Telerik.WinControls.UI.RadPanel();
+            this.acchodpos = new Telerik.WinControls.UI.RadCheckBox();
             this.accountgrid = new ComponentFactory.Krypton.Toolkit.KryptonDataGridView();
             this.btnAddAccount = new Telerik.WinControls.UI.RadButton();
             this.lbroutetype = new Telerik.WinControls.UI.RadLabel();
@@ -69,7 +70,6 @@
             this.ctFinService1 = new FutsMoniter.ctFinService();
             this.RaceServicePage = new Telerik.WinControls.UI.RadPageViewPage();
             this.LottoServicePage = new Telerik.WinControls.UI.RadPageViewPage();
-            this.acchodpos = new Telerik.WinControls.UI.RadCheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.SplitContainer)).BeginInit();
             this.SplitContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.radSplitContainer1)).BeginInit();
@@ -80,6 +80,7 @@
             this.splitPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.radPanel1)).BeginInit();
             this.radPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.acchodpos)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.accountgrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnAddAccount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.lbroutetype)).BeginInit();
@@ -112,7 +113,6 @@
             this.ServiceTabHolder.SuspendLayout();
             this.OrderSenderPage.SuspendLayout();
             this.FinServicePage.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.acchodpos)).BeginInit();
             this.SuspendLayout();
             // 
             // SplitContainer
@@ -206,13 +206,23 @@
             this.radPanel1.TabIndex = 0;
             this.radPanel1.Text = "radPanel1";
             // 
+            // acchodpos
+            // 
+            this.acchodpos.Location = new System.Drawing.Point(660, 12);
+            this.acchodpos.Name = "acchodpos";
+            this.acchodpos.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.acchodpos.Size = new System.Drawing.Size(45, 16);
+            this.acchodpos.TabIndex = 29;
+            this.acchodpos.Text = "持仓";
+            this.acchodpos.ToggleStateChanged += new Telerik.WinControls.UI.StateChangedEventHandler(this.acchodpos_ToggleStateChanged);
+            // 
             // accountgrid
             // 
             this.accountgrid.AllowUserToAddRows = false;
             this.accountgrid.AllowUserToDeleteRows = false;
             this.accountgrid.AllowUserToResizeRows = false;
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.accountgrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.accountgrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.accountgrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
@@ -547,7 +557,7 @@
             this.viewQuoteList1.QuoteFont = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
             this.viewQuoteList1.QuoteViewWidth = 1030;
             this.viewQuoteList1.SelectedQuoteRow = -1;
-            this.viewQuoteList1.Size = new System.Drawing.Size(564, 172);
+            this.viewQuoteList1.Size = new System.Drawing.Size(564, 160);
             this.viewQuoteList1.SymbolFont = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
             this.viewQuoteList1.SymbolFontColor = System.Drawing.Color.Green;
             this.viewQuoteList1.TabIndex = 1;
@@ -594,16 +604,6 @@
             this.LottoServicePage.Size = new System.Drawing.Size(564, 230);
             this.LottoServicePage.Text = "乐透服务";
             // 
-            // acchodpos
-            // 
-            this.acchodpos.Location = new System.Drawing.Point(660, 12);
-            this.acchodpos.Name = "acchodpos";
-            this.acchodpos.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.acchodpos.Size = new System.Drawing.Size(45, 16);
-            this.acchodpos.TabIndex = 29;
-            this.acchodpos.Text = "持仓";
-            this.acchodpos.ToggleStateChanged += new Telerik.WinControls.UI.StateChangedEventHandler(this.acchodpos_ToggleStateChanged);
-            // 
             // ctAccountMontier
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -622,6 +622,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.radPanel1)).EndInit();
             this.radPanel1.ResumeLayout(false);
             this.radPanel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.acchodpos)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.accountgrid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnAddAccount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.lbroutetype)).EndInit();
@@ -654,7 +655,6 @@
             this.ServiceTabHolder.ResumeLayout(false);
             this.OrderSenderPage.ResumeLayout(false);
             this.FinServicePage.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.acchodpos)).EndInit();
             this.ResumeLayout(false);
 
         }

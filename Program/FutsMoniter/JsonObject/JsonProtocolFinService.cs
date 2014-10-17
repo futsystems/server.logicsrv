@@ -54,6 +54,7 @@ namespace TradingLib.Mixins.JsonObject
         /// </summary>
         public int agent_fk { get; set; }
 
+
         /// <summary>
         /// 数据库全局ID
         /// </summary>
@@ -207,7 +208,7 @@ namespace TradingLib.Mixins.JsonObject
 
 
     /// <summary>
-    /// 统计汇总
+    /// 统计汇总 统计每天的汇总报表
     /// </summary>
     public class JsonWrapperToalReport
     {
@@ -256,6 +257,12 @@ namespace TradingLib.Mixins.JsonObject
         /// 代理利润
         /// </summary>
         public decimal AgentProfit { get; set; }
+
+
+        /// <summary>
+        /// 代理佣金利润
+        /// </summary>
+        public decimal CommissionProfit { get; set; }
     }
 
 

@@ -54,6 +54,7 @@
             this.cashop_amount = new Telerik.WinControls.UI.RadSpinEditor();
             this.btnCashOperation = new Telerik.WinControls.UI.RadButton();
             this.btnUpdateAccountInfo = new Telerik.WinControls.UI.RadButton();
+            this.ctFinanceInfo1 = new FutsMoniter.ctFinanceInfo();
             this.pageOrderCheck = new Telerik.WinControls.UI.RadPageViewPage();
             this.btnDelOrderRule = new Telerik.WinControls.UI.RadButton();
             this.btnAddOrderRule = new Telerik.WinControls.UI.RadButton();
@@ -69,7 +70,6 @@
             this.accountRuleItemList = new Telerik.WinControls.UI.RadListControl();
             this.accountRuleClassList = new Telerik.WinControls.UI.RadListControl();
             this.radPageViewPage5 = new Telerik.WinControls.UI.RadPageViewPage();
-            this.ctFinanceInfo1 = new FutsMoniter.ctFinanceInfo();
             ((System.ComponentModel.ISupportInitialize)(this.editpageview)).BeginInit();
             this.editpageview.SuspendLayout();
             this.radPageViewPage1.SuspendLayout();
@@ -139,9 +139,9 @@
             // 
             this.radPageViewPage1.Controls.Add(this.radGroupBox1);
             this.radPageViewPage1.Controls.Add(this.btnExecute);
-            this.radPageViewPage1.Location = new System.Drawing.Point(10, 31);
+            this.radPageViewPage1.Location = new System.Drawing.Point(10, 35);
             this.radPageViewPage1.Name = "radPageViewPage1";
-            this.radPageViewPage1.Size = new System.Drawing.Size(586, 215);
+            this.radPageViewPage1.Size = new System.Drawing.Size(586, 211);
             this.radPageViewPage1.Text = "帐户属性";
             // 
             // radGroupBox1
@@ -174,6 +174,7 @@
             this.routerpanel.Name = "routerpanel";
             this.routerpanel.Size = new System.Drawing.Size(188, 55);
             this.routerpanel.TabIndex = 19;
+            ((Telerik.WinControls.Primitives.BorderPrimitive)(this.routerpanel.GetChildAt(0).GetChildAt(1))).Width = 0F;
             // 
             // radLabel1
             // 
@@ -267,9 +268,9 @@
             this.pageFinance.Controls.Add(this.cashoppanel);
             this.pageFinance.Controls.Add(this.btnUpdateAccountInfo);
             this.pageFinance.Controls.Add(this.ctFinanceInfo1);
-            this.pageFinance.Location = new System.Drawing.Point(10, 31);
+            this.pageFinance.Location = new System.Drawing.Point(10, 35);
             this.pageFinance.Name = "pageFinance";
-            this.pageFinance.Size = new System.Drawing.Size(586, 215);
+            this.pageFinance.Size = new System.Drawing.Size(586, 211);
             this.pageFinance.Text = "财务管理";
             // 
             // cashoppanel
@@ -285,7 +286,7 @@
             this.cashoppanel.Controls.Add(this.btnCashOperation);
             this.cashoppanel.Location = new System.Drawing.Point(312, 3);
             this.cashoppanel.Name = "cashoppanel";
-            this.cashoppanel.Size = new System.Drawing.Size(271, 205);
+            this.cashoppanel.Size = new System.Drawing.Size(271, 203);
             this.cashoppanel.TabIndex = 16;
             // 
             // radLabel4
@@ -299,7 +300,7 @@
             // cashop_comment
             // 
             this.cashop_comment.AutoSize = false;
-            this.cashop_comment.Location = new System.Drawing.Point(81, 94);
+            this.cashop_comment.Location = new System.Drawing.Point(81, 71);
             this.cashop_comment.Multiline = true;
             this.cashop_comment.Name = "cashop_comment";
             this.cashop_comment.Size = new System.Drawing.Size(178, 68);
@@ -363,7 +364,7 @@
             // 
             // btnCashOperation
             // 
-            this.btnCashOperation.Location = new System.Drawing.Point(177, 175);
+            this.btnCashOperation.Location = new System.Drawing.Point(177, 162);
             this.btnCashOperation.Name = "btnCashOperation";
             this.btnCashOperation.Size = new System.Drawing.Size(82, 24);
             this.btnCashOperation.TabIndex = 11;
@@ -372,12 +373,19 @@
             // 
             // btnUpdateAccountInfo
             // 
-            this.btnUpdateAccountInfo.Location = new System.Drawing.Point(209, 178);
+            this.btnUpdateAccountInfo.Location = new System.Drawing.Point(209, 165);
             this.btnUpdateAccountInfo.Name = "btnUpdateAccountInfo";
             this.btnUpdateAccountInfo.Size = new System.Drawing.Size(88, 24);
             this.btnUpdateAccountInfo.TabIndex = 5;
             this.btnUpdateAccountInfo.Text = "更新帐户信息";
             this.btnUpdateAccountInfo.Click += new System.EventHandler(this.btnUpdateAccountInfo_Click);
+            // 
+            // ctFinanceInfo1
+            // 
+            this.ctFinanceInfo1.Location = new System.Drawing.Point(3, 3);
+            this.ctFinanceInfo1.Name = "ctFinanceInfo1";
+            this.ctFinanceInfo1.Size = new System.Drawing.Size(303, 203);
+            this.ctFinanceInfo1.TabIndex = 0;
             // 
             // pageOrderCheck
             // 
@@ -513,13 +521,6 @@
             this.radPageViewPage5.Name = "radPageViewPage5";
             this.radPageViewPage5.Size = new System.Drawing.Size(586, 211);
             this.radPageViewPage5.Text = "保证金手续费";
-            // 
-            // ctFinanceInfo1
-            // 
-            this.ctFinanceInfo1.Location = new System.Drawing.Point(3, 3);
-            this.ctFinanceInfo1.Name = "ctFinanceInfo1";
-            this.ctFinanceInfo1.Size = new System.Drawing.Size(303, 203);
-            this.ctFinanceInfo1.TabIndex = 0;
             // 
             // AccountConfigForm
             // 
