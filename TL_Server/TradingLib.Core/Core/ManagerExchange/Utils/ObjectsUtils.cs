@@ -43,52 +43,39 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="op"></param>
         /// <returns></returns>
-        public static Predicate<CustInfoEx> GetNotifyPredicate(this JsonWrapperCashOperation op)
+        public static Predicate<Manager> GetNotifyPredicate(this JsonWrapperCashOperation op)
         {
-            Predicate<CustInfoEx> func=null;
+            Predicate<Manager> func=null;
+
             //如果是交易帐户的出入金记录
             if (op.IsForAccount())
-            { 
+            {   
                 //交易帐户出入金 通知代理和Root
-                func = (info)=>
+                func = (mgr)=>
                 {
+                    if (mgr == null) return false;
                     IAccount account = TLCtxHelper.CmdAccount[op.Account];
 
-                    //该custinfoex 绑定了管理端
-                    if (info.Manager != null)
-                    {
-                        //如果有Root域的管理端登入 则需要通知
-                        if (info.Manager.RightRootDomain())
-                            return true;
-                        //如果该交易帐户的代理客户端登入 则需要通知
-                        if (info.Manager.GetBaseMGR() == account.Mgr_fk)
-                            return true;
-                        return false;
-                    }
-                    else
-                    {
-                        return false;
-                    }
+                    //如果有Root域的管理端登入 则需要通知
+                    if (mgr.RightRootDomain())
+                        return true;
+                    //如果该交易帐户的代理客户端登入 则需要通知
+                    if (mgr.GetBaseMGR() == account.Mgr_fk)
+                        return true;
+                    return false;
                 };
             }
             //如果是代理的出入金记录
             if (op.IsForAgent())
             {
-                func = (info) => 
+                func = (mgr) => 
                 {
-                    if (info.Manager != null)
-                    {
-                        if (info.Manager.RightRootDomain())
-                            return true;
-                        if (info.Manager.GetBaseMGR() == op.mgr_fk)//如果该出入金记录属于该代理客户端 则需要通知
-                            return true;
-                        return false;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                    
+                    if (mgr == null) return false;
+                    if (mgr.RightRootDomain())
+                        return true;
+                    if (mgr.GetBaseMGR() == op.mgr_fk)//如果该出入金记录属于该代理客户端 则需要通知
+                        return true;
+                    return false;
                 };
             }
             return func;

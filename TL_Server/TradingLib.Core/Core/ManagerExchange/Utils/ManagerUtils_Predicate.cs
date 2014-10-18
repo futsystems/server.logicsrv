@@ -16,28 +16,22 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="op"></param>
         /// <returns></returns>
-        public static Predicate<CustInfoEx> GetNotifyPredicate(this Manager op)
+        public static Predicate<Manager> GetNotifyPredicate(this Manager manager)
         {
-            Predicate<CustInfoEx> func = null;
+            Predicate<Manager> func = null;
 
-            func = (info) =>
+            func = (mgr) =>
             {
                 
                 //该custinfoex 绑定了管理端
-                if (info.Manager != null)
-                {
-                    //如果有Root域的管理端登入 则需要通知
-                    if (info.Manager.RightRootDomain())
-                        return true;
-                    //如果是该管理端的子代理 则需要通知
-                    if (info.Manager.RightAgentParent(op.GetBaseMGR())) //
-                        return true;
-                    return false;
-                }
-                else
-                {
-                    return false;
-                }
+                if (mgr == null) return false;
+                //如果有Root域的管理端登入 则需要通知
+                if (mgr.RightRootDomain())
+                    return true;
+                //如果是该管理端的子代理 则需要通知
+                if (mgr.RightAgentParent(manager.GetBaseMGR())) //
+                    return true;
+                return false;
             };
             return func;
         }

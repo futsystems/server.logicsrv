@@ -894,7 +894,7 @@ namespace TradingLib.Core
             {
                 ORM.MManager.UpdateManagerPass(manager.ID, request.NewPass);
                 RspMGROperationResponse response = ResponseTemplate<RspMGROperationResponse>.SrvSendRspResponse(request);
-                //response.RspInfo.ErrorMessag="密码修改成功"
+                response.RspInfo.ErrorMessage = "密码修改成功";
                 CacheRspResponse(response);
             }
             else
