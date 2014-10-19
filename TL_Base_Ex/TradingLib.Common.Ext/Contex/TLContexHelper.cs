@@ -20,6 +20,7 @@ namespace TradingLib.Common
         private AccountEvent m_AccountEvent;
         private ExContribEvent m_ExContribEvent;
         private CashOperationEvent m_CashOperationEvent;
+        private SystemEvent m_SystemEvent;
 
 
         public static bool IsReady { get; set; }
@@ -97,6 +98,16 @@ namespace TradingLib.Common
                 if (defaultInstance.m_AccountEvent == null)
                     defaultInstance.m_AccountEvent = new AccountEvent();
                 return defaultInstance.m_AccountEvent;
+            }
+        }
+
+        public static SystemEvent EventSystem
+        {
+            get
+            {
+                if (defaultInstance.m_SystemEvent == null)
+                    defaultInstance.m_SystemEvent = new SystemEvent();
+                return defaultInstance.m_SystemEvent;
             }
         }
 

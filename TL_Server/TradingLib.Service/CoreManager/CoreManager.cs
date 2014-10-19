@@ -244,7 +244,7 @@ namespace TradingLib.ServiceManager
             //客户端登入失败
             _messageExchagne.AccountLoginFailedEvent += new AccountIdDel(TLCtxHelper.EventSession.FireAccountLoginFailedEvent);
             //向登入成功客户端推送消息
-            _messageExchagne.NotifyLoginSuccessEvent += new AccountIdDel(TLCtxHelper.EventSession.FireNotifyLoginSuccessEvent);
+            //_messageExchagne.NotifyLoginSuccessEvent += new AccountIdDel(TLCtxHelper.EventSession.FireNotifyLoginSuccessEvent);
             //客户端会话状态变化
             _messageExchagne.AccountSessionChangedEvent +=new ISessionDel(TLCtxHelper.EventSession.FireSessionChangedEvent);
             //客户端统一认证

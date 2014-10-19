@@ -72,13 +72,15 @@ namespace Broker.SIM
         int _fillseq = 2000;
         Random random = new Random();
         object _fillseqobj = new object();
+        int _steplow = 50;
+        int _stephigh = 100;
         int NextFillSeq
         {
             get
             {
                 lock (_fillseqobj)
                 {
-                    _fillseq += random.Next(1, 100);
+                    _fillseq += random.Next(_steplow, _stephigh);
                     return _fillseq;
                 }
 

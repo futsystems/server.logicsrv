@@ -42,7 +42,9 @@ namespace TradingLib.Common
         /// 3.比赛信息
         /// 4.配资信息
         /// </summary>
-        public event AccountIdDel NotifyLoginSuccessEvent;
+        //public event AccountIdDel NotifyLoginSuccessEvent;
+
+
         /// <summary>
         /// 会话状态改变事件
         /// 1.客户端交易帐号登入
@@ -96,11 +98,11 @@ namespace TradingLib.Common
             if (AccountLoginFailedEvent != null)
                 AccountLoginFailedEvent(account);
         }
-        internal void FireNotifyLoginSuccessEvent(string account)
-        {
-            if (NotifyLoginSuccessEvent != null)
-                NotifyLoginSuccessEvent(account);
-        }
+        //internal void FireNotifyLoginSuccessEvent(string account)
+        //{
+        //    if (NotifyLoginSuccessEvent != null)
+        //        NotifyLoginSuccessEvent(account);
+        //}
 
         public bool IsAuthEventBinded { get { return AuthUserEvent != null; } }
 

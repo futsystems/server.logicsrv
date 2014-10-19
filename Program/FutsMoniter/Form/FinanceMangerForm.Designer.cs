@@ -229,9 +229,9 @@
             // 
             // settlepage
             // 
-            this.settlepage.Location = new System.Drawing.Point(10, 31);
+            this.settlepage.Location = new System.Drawing.Point(10, 35);
             this.settlepage.Name = "settlepage";
-            this.settlepage.Size = new System.Drawing.Size(700, 240);
+            this.settlepage.Size = new System.Drawing.Size(700, 236);
             this.settlepage.Text = "结算记录";
             // 
             // cashpage

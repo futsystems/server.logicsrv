@@ -229,6 +229,7 @@
             this.accountgrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.accountgrid.Location = new System.Drawing.Point(0, 34);
             this.accountgrid.Name = "accountgrid";
+            this.accountgrid.PaletteMode = ComponentFactory.Krypton.Toolkit.PaletteMode.Office2010Black;
             this.accountgrid.ReadOnly = true;
             this.accountgrid.RowHeadersVisible = false;
             this.accountgrid.RowTemplate.Height = 23;
@@ -557,7 +558,7 @@
             this.viewQuoteList1.QuoteFont = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
             this.viewQuoteList1.QuoteViewWidth = 1030;
             this.viewQuoteList1.SelectedQuoteRow = -1;
-            this.viewQuoteList1.Size = new System.Drawing.Size(564, 160);
+            this.viewQuoteList1.Size = new System.Drawing.Size(564, 164);
             this.viewQuoteList1.SymbolFont = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
             this.viewQuoteList1.SymbolFontColor = System.Drawing.Color.Green;
             this.viewQuoteList1.TabIndex = 1;

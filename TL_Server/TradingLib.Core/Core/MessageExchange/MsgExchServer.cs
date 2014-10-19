@@ -100,7 +100,7 @@ namespace TradingLib.Core
         /// <summary>
         /// 客户端登入成功后回报消息事件
         /// </summary>
-        public event AccountIdDel NotifyLoginSuccessEvent;
+       // public event AccountIdDel NotifyLoginSuccessEvent;
 
         /// <summary>
         /// 客户端会话状态变化事件

@@ -121,7 +121,28 @@ namespace TradingLib.Contrib.FinService
             //帐户添加事件
             TLCtxHelper.EventAccount.AccountAddEvent += new AccountIdDel(EventAccount_AccountAddEvent);
 
+            //出入金事件
             TLCtxHelper.CashOperationEvent.CashOperationRequest += new EventHandler<CashOperationEventArgs>(CashOperationEvent_CashOperationRequest);
+
+            //结算前事件
+            TLCtxHelper.EventSystem.BeforeSettleEvent += new EventHandler<SystemEventArgs>(EventSystem_BeforeSettleEvent);
+        }
+
+        void EventSystem_BeforeSettleEvent(object sender, SystemEventArgs e)
+        {
+            debug("系统将进行结算,结算前配资中心执行交易帐户收费结算 用于收取盘后结算的费用", QSEnumDebugLevel.INFO);
+
+            //1.运行所有配资服务的结算响应回调
+            foreach (FinServiceStub stub in FinTracker.FinServiceTracker)
+            {
+                stub.FinService.OnSettle();//执行结算回调 比如盈利分红的收费 则在onsettle中执行计费与记录
+            }
+
+            //2.检查当天所有的收费记录，对于结算后收取的 进行出入金操作 将盘后计算的配资费用通过出入金方式从帐户中扣除
+
+
+            //
+
         }
 
         void CashOperationEvent_CashOperationRequest(object sender, CashOperationEventArgs e)

@@ -37,8 +37,7 @@
             this.radLabel3 = new Telerik.WinControls.UI.RadLabel();
             this.bankac = new Telerik.WinControls.UI.RadTextBox();
             this.radLabel4 = new Telerik.WinControls.UI.RadLabel();
-            this.bank = new Telerik.WinControls.UI.RadTextBox();
-            this.radLabel5 = new Telerik.WinControls.UI.RadLabel();
+            this.ctBankList1 = new FutsMoniter.ctBankList();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.account)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel2)).BeginInit();
@@ -48,8 +47,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.radLabel3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bankac)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bank)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this)).BeginInit();
             this.SuspendLayout();
             // 
@@ -123,28 +120,19 @@
             this.radLabel4.TabIndex = 7;
             this.radLabel4.Text = "银行帐号:";
             // 
-            // bank
+            // ctBankList1
             // 
-            this.bank.Location = new System.Drawing.Point(77, 98);
-            this.bank.Name = "bank";
-            this.bank.Size = new System.Drawing.Size(30, 18);
-            this.bank.TabIndex = 10;
-            // 
-            // radLabel5
-            // 
-            this.radLabel5.Location = new System.Drawing.Point(12, 100);
-            this.radLabel5.Name = "radLabel5";
-            this.radLabel5.Size = new System.Drawing.Size(59, 16);
-            this.radLabel5.TabIndex = 9;
-            this.radLabel5.Text = "银行编号:";
+            this.ctBankList1.Location = new System.Drawing.Point(37, 98);
+            this.ctBankList1.Name = "ctBankList1";
+            this.ctBankList1.Size = new System.Drawing.Size(150, 20);
+            this.ctBankList1.TabIndex = 9;
             // 
             // ChangeInvestorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(226, 196);
-            this.Controls.Add(this.bank);
-            this.Controls.Add(this.radLabel5);
+            this.Controls.Add(this.ctBankList1);
             this.Controls.Add(this.bankac);
             this.Controls.Add(this.radLabel4);
             this.Controls.Add(this.broker);
@@ -173,8 +161,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.radLabel3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bankac)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bank)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -192,7 +178,6 @@
         private Telerik.WinControls.UI.RadLabel radLabel3;
         private Telerik.WinControls.UI.RadTextBox bankac;
         private Telerik.WinControls.UI.RadLabel radLabel4;
-        private Telerik.WinControls.UI.RadTextBox bank;
-        private Telerik.WinControls.UI.RadLabel radLabel5;
+        private ctBankList ctBankList1;
     }
 }

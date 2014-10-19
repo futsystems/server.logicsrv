@@ -51,7 +51,10 @@ namespace TradingLib.Core
         [TaskAttr("清算中心转储交易记录", 15, 30, 05, "清算中心转储交易记录")]
         [ContribCommandAttr(QSEnumCommandSource.CLI, "datastore", "datastore - datastore", "datastore")]
         public void Task_DataStore()
-        {   
+        {
+            //通过系统事件中继触发结算前事件
+            TLCtxHelper.EventSystem.FireBeforeSettleEvent(this,new SystemEventArgs());
+
             this.IsInSettle = true;//标识结算中心处于结算状态
             if (IsNormal && !IsTradingday) return;//结算中心正常 但不是交易日 不做记录转储
             //先将内存中的PR数据保存到数据库 在保存pr数据之前,先清空了当日的pr临时数据表(这里的清空 会造成 清空其他程序加载账户的数据 ？？)
@@ -109,6 +112,8 @@ namespace TradingLib.Core
             _riskcentre.Reset();
 
             this.IsInSettle = false;//标识系统结算完毕
+
+            TLCtxHelper.EventSystem.FireAfterSettleEvent(this, new SystemEventArgs());
         }
 
         /// <summary>
@@ -118,6 +123,9 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.CLI, "settleround", "settleround - 执行一次结算并重置交易系统状态", "执行结算并重置系统状态")]
         public void HistSettleRound()
         {
+            //通过系统事件中继触发结算前事件
+            TLCtxHelper.EventSystem.FireBeforeSettleEvent(this, new SystemEventArgs());
+
             //A:储存当前数据
             this.BindPositionSettlePrice();//采集持仓结算价
             this.SaveHoldInfo();//保存结算持仓数据和对应的PR数据
@@ -136,6 +144,8 @@ namespace TradingLib.Core
             _clearcentre.Reset();
             //重置风控中心，清空内存缓存数据
             _riskcentre.Reset();
+
+            TLCtxHelper.EventSystem.FireAfterSettleEvent(this, new SystemEventArgs());
         }
         #endregion
 
