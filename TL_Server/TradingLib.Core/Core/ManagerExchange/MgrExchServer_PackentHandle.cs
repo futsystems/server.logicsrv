@@ -292,57 +292,67 @@ namespace TradingLib.Core
             CachePacket(response);
         }
 
+        /// <summary>
+        /// 请求添加交易帐户
+        /// 服务端操作采用如下方式进行
+        /// 1.权限常规检查
+        /// 2.执行操作时内部通过FutsRspErro抛出异常的方式 外层通过捕获异常来将异常信息回报给客户端
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="session"></param>
+        /// <param name="manager"></param>
         void SrvOnMGRAddAccount(MGRAddAccountRequest request, ISession session, Manager manager)
         {
             debug(string.Format("管理员:{0} 请求添加交易帐号:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
+            RspMGROperationResponse response = ResponseTemplate<RspMGROperationResponse>.SrvSendRspResponse(request);
+
             string outaccount =string.Empty;
-            if (manager.RightRootDomain())//如果是Root权限则可以指定帐户所属域 代理域不能指定，只能按代理自己的主域来设置
+
+            //如果不是Root权限的Manager需要进行执行权限检查
+            if (!manager.RightRootDomain())
             {
-                bool re = clearcentre.AddAccount(out outaccount, request.UserID.ToString(), request.AccountID, request.Password, request.Category,request.MgrID);//将交易帐户加入到主域
-                return;
-            }
-            int mgrk = request.MgrID;
-            bool right = manager.RightAgentParent(mgrk);
-            debug("Manager:" + manager.Name +" fk:"+manager.mgr_fk.ToString() + " try  to add account for mgrfk:" + mgrk.ToString() +" have access right:"+right.ToString(),QSEnumDebugLevel.INFO);
-            
-            //Manager basemgr = manager.BaseManager;//获得当前Manager的主域
-            
-            //如果不是为该主域添加帐户,则我们需要判断当前Manager的主域是否拥有请求主域的权限
-            if (manager.GetBaseMGR() != request.MgrID)
-            {
-                if (!manager.RightAgentParent(request.MgrID))
+                //如果不是为该主域添加帐户,则我们需要判断当前Manager的主域是否拥有请求主域的权限
+                if (manager.GetBaseMGR() != request.MgrID)
                 {
-                    RspMGROperationResponse response = ResponseTemplate<RspMGROperationResponse>.SrvSendRspResponse(request);
-                    response.RspInfo.Fill(FutsRspError.GenericError("无权在该管理域开设帐户"));
-                    CachePacket(response);
+                    if (!manager.RightAgentParent(request.MgrID))
+                    {
+                        //RspMGROperationResponse response = ResponseTemplate<RspMGROperationResponse>.SrvSendRspResponse(request);
+                        response.RspInfo.Fill(FutsRspError.GenericError("无权在该管理域开设帐户"));
+                        CachePacket(response);
+                        return;
+                    }
+                }
+                else
+                { 
+                    //如果是在自己的主域中添加交易帐户 则需要检查帐户数量
+                    int limit = manager.BaseManager.AccLimit;
+                    int cnt = TLCtxHelper.CmdAccount.Accounts.Where(acc => acc.Mgr_fk == manager.GetBaseMGR()).Count();
+                    if (cnt > limit)
+                    {
+                        response.RspInfo.Fill(FutsRspError.GenericError("可开帐户数量超过限制:" + limit.ToString()));
+                        CacheRspResponse(response);
+                        return;
+                    }
                 }
             }
 
-            int limit =manager.BaseManager.AccLimit;
-            int cnt = TLCtxHelper.CmdAccount.Accounts.Where(acc => acc.Mgr_fk ==manager.GetBaseMGR()).Count();
-            if (cnt < limit)
+            //执行操作 并捕获异常 产生异常则给出错误回报
+            try
             {
-                bool re = clearcentre.AddAccount(out outaccount, request.UserID.ToString(), request.AccountID, request.Password, request.Category,request.MgrID);//将交易帐户加入到主域
-                //clearcentre.UpdateMGRLoginName(outaccount, mgrid);
+                bool re = clearcentre.AddAccount(out outaccount, request.UserID.ToString(), request.AccountID, request.Password, request.Category, request.MgrID);//将交易帐户加入到主域
+                if (re)
+                {
+                    CacheRspResponse(response);
+                    return;
+                }
             }
-            else
+            catch (FutsRspError ex)
             {
-                RspMGROperationResponse response = ResponseTemplate<RspMGROperationResponse>.SrvSendRspResponse(request);
-                response.RspInfo.Fill(FutsRspError.GenericError("可开帐户数量超过限制:" + limit.ToString()));
+                response.RspInfo.Fill(ex);
                 CachePacket(response);
                 return;
             }
-
-
-            if (manager == null)
-            {
-                RspMGROperationResponse response = ResponseTemplate<RspMGROperationResponse>.SrvSendRspResponse(request);
-                response.RspInfo.FillError("指定的管理员不存在");
-                CachePacket(response);
-                return; 
-            }
-
-            
+          
         }
 
         void SrvOnMGRQryExchange(MGRQryExchangeRequuest request, ISession session, Manager manager)

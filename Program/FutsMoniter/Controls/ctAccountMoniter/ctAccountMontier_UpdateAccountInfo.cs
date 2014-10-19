@@ -159,7 +159,7 @@ namespace FutsMoniter.Controls
             accountgrid.Columns[LOGINSTATUS].Visible = false;
             accountgrid.Columns[AGENTMGRFK].Visible = false;
 
-            accountgrid.Columns[ACCOUNT].Width = 60;
+            accountgrid.Columns[ACCOUNT].Width = 100;
             accountgrid.Columns[ROUTEIMG].Width = 20;
             accountgrid.Columns[EXECUTEIMG].Width = 20;
             accountgrid.Columns[PROFITLOSSIMG].Width = 20;

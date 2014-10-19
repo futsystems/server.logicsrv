@@ -21,17 +21,31 @@ namespace TradingLib.Common
         public Exception RawException { get; set; }
         public FutsRspError()
         {
-            ErrorID = 0;
+            ErrorID = 1;
             ErrorMessage = string.Empty;
             RawException = new Exception("");
         }
-
+        /// <summary>
+        /// 从一个异常创建一个错误信息
+        /// </summary>
+        /// <param name="e"></param>
         public FutsRspError(Exception e)
         {
-            ErrorID = 0;
+            ErrorID = 1;
             ErrorMessage = string.Empty;
             RawException = e;
         }
+        /// <summary>
+        /// 从一个错误信息创建一个FutsRspError
+        /// </summary>
+        /// <param name="error"></param>
+        public FutsRspError(string error)
+        {
+            ErrorID = 1;
+            ErrorMessage = error;
+            RawException = new Exception(error);
+        }
+
         /// <summary>
         /// 常规错误
         /// 提供一个错误信息 生成对应的FutsRspError
@@ -42,6 +56,11 @@ namespace TradingLib.Common
         {
             return new FutsRspError() { ErrorID = 1, ErrorMessage = errorMessage };
         }
+
+        /// <summary>
+        /// 用自定义的XMLRspInfo填充错误信息
+        /// </summary>
+        /// <param name="error"></param>
         public void FillError(XMLRspInfo error)
         {
             ErrorID = error.Code;

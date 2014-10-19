@@ -64,6 +64,70 @@ namespace TradingLib.Common
                 config.UpdateConfig("DefaultBankAC", QSEnumCfgType.String, "95993939899002123", "默认银行卡号");
             }
 
+            if (!config.HaveConfig("DefaultAccountLen"))
+            {
+                config.UpdateConfig("DefaultAccountLen", QSEnumCfgType.Int,7, "默认交易帐户长度");
+            }
+
+            if (!config.HaveConfig("SimPrefix"))
+            {
+                config.UpdateConfig("SimPrefix", QSEnumCfgType.String, "66", "模拟帐户前缀");
+            }
+
+            if (!config.HaveConfig("RealPrefix"))
+            {
+                config.UpdateConfig("RealPrefix", QSEnumCfgType.String, "88", "实盘帐户前缀");
+            }
+
+            if (!config.HaveConfig("DealerPrefix"))
+            {
+                config.UpdateConfig("DealerPrefix", QSEnumCfgType.String, "55", "交易员帐户前缀");
+            }
+
+        }
+
+        /// <summary>
+        /// 默认帐户长度
+        /// </summary>
+        public static int DefaultAccountLen
+        {
+            get
+            {
+                return defaultinstance.config["DefaultAccountLen"].AsInt();
+            }
+        }
+
+        /// <summary>
+        /// 实盘交易帐户前缀
+        /// </summary>
+        public static string PrefixReal
+        {
+            get
+            {
+                return defaultinstance.config["RealPrefix"].AsString();
+            }
+        }
+
+        /// <summary>
+        /// 模拟交易帐户前缀
+        /// </summary>
+        public static string PrefixSim
+        {
+            get
+            {
+                return defaultinstance.config["SimPrefix"].AsString();
+            }
+        }
+
+        /// <summary>
+        /// 交易员帐户前缀
+        /// </summary>
+        public static string PrefixDealer
+        {
+            get
+            {
+                return defaultinstance.config["DealerPrefix"].AsString();
+            }
         }
 
         /// <summary>
