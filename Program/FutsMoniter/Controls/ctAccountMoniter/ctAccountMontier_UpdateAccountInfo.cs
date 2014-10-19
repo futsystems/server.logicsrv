@@ -342,7 +342,7 @@ namespace FutsMoniter.Controls
                         gt.Rows[i][LOGINSTATUS] = getLoginStatus(false);
                         gt.Rows[i][LOGINSTATUSIMG] = getLoginStatusImage(false);
                         gt.Rows[i][ADDRESS] = "";
-                        gt.Rows[i][LASTEQUITY] = account.LastEquity;//decDisp(account.LastEquity);
+                        gt.Rows[i][LASTEQUITY] = decDisp(account.LastEquity);//decDisp(account.LastEquity);
 
                         gt.Rows[i][NOWEQUITY] = decDisp(account.NowEquity);
                         gt.Rows[i][MARGIN] = decDisp(0);

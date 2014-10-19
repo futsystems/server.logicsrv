@@ -122,7 +122,7 @@ namespace FutsMoniter.Controls
         private string _format = "{0:F2}";
         private string decDisp(decimal d)
         {
-            return string.Format(_format, d);
+            return Util.FormatDecimal(d, _format);
         }
 
         public event DebugDelegate SendDebugEvent;

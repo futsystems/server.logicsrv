@@ -20,7 +20,7 @@ namespace FutsMoniter
         }
 
 
-      
+        //string _format="{0:F2}"
         delegate void IAccountInfoDel(IAccountInfo info);
         public void GotAccountInfo(IAccountInfo info)
         {

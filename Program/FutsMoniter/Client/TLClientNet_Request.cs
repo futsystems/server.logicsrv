@@ -302,7 +302,7 @@ namespace TradingLib.Common
             SendPacket(request);
         }
 
-        public void ReqChangeInverstorInfo(string account, string name,string broker,string bank,string bankac)
+        public void ReqChangeInverstorInfo(string account, string name, string broker, int bankfk, string bankac)
         {
             debug("请求修改投资者信息", QSEnumDebugLevel.INFO);
             MGRReqChangeInvestorRequest request = RequestTemplate<MGRReqChangeInvestorRequest>.CliSendRequest(requestid++);
@@ -310,7 +310,7 @@ namespace TradingLib.Common
             request.TradingAccount = account;
             request.Name = name;
             request.Broker = broker;
-            request.Bank = bank;
+            request.BankFK = bankfk;
             request.BankAC = bankac;
 
             SendPacket(request);

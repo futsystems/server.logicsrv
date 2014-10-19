@@ -758,7 +758,7 @@ namespace TradingLib.Core
             IAccount account = clearcentre[request.TradingAccount];
             if (account != null)
             {
-                clearcentre.UpdateInvestorInfo(request.TradingAccount, request.Name,request.Broker,request.Bank,request.BankAC);
+                clearcentre.UpdateInvestorInfo(request.TradingAccount, request.Name,request.Broker,request.BankFK,request.BankAC);
             }
         }
 

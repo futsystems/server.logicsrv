@@ -402,10 +402,13 @@ namespace TradingLib.Core
             {
                 RspQryRegisterBankAccountResponse response = ResponseTemplate<RspQryRegisterBankAccountResponse>.SrvSendRspResponse(request);
                 response.TradingAccount = account.ID;
-                response.BankAC = account.GetCustBankAC();//获得银行卡号 如果没有设置银行卡号码 会导致博易客户端频繁请求交易帐号信息
-                ContractBank bank = BasicTracker.ContractBankTracker[account.GetCustBankID()];
-                response.BankName = bank.Name;
-                response.BankID = bank.BrankID;
+                if (account.BankID != 0)
+                {
+                    response.BankAC = account.BankAC;//获得银行卡号 如果没有设置银行卡号码 会导致博易客户端频繁请求交易帐号信息
+                    ContractBank bank = BasicTracker.ContractBankTracker[account.BankID];
+                    response.BankName =  bank.Name;
+                    response.BankID = bank.BrankID;
+                }
                 CacheRspResponse(response);
             }
             else
@@ -432,7 +435,7 @@ namespace TradingLib.Core
                     response.Date = Util.ToTLDate(t.DateTime);
                     response.Time = Util.ToTLTime(t.DateTime);
                     response.TradingAccount = request.TradingAccount;
-                    response.BankAccount = account.GetCustBankAC();
+                    response.BankAccount = account.BankAC;
                     response.Amount = t.Amount;
                     response.TransRef = t.TransRef;
                     CacheRspResponse(response, i == totalnum - 1);

@@ -28,11 +28,9 @@ namespace FutsMoniter
             broker.Text = string.IsNullOrEmpty(_account.Broker) ? "未设置" : _account.Broker;
             bankac.Text = string.IsNullOrEmpty(_account.BankAC) ? "未设置" : _account.BankAC;
             //bank.Text = string.IsNullOrEmpty(_account.BankID) ? "未设置" : _account.BankID;
-            if (!string.IsNullOrEmpty(_account.BankID))
+            if (_account.BankID != 0)
             {
-                int bankid = 0;
-                int.TryParse(_account.BankID,out bankid);
-                ctBankList1.BankSelected = bankid;
+                ctBankList1.BankSelected = _account.BankID;
             }
         }
         System.Text.RegularExpressions.Regex regexbankid = new System.Text.RegularExpressions.Regex(@"^[-]?[1-9]{1}\d*$|^[0]{1}$");
@@ -44,7 +42,7 @@ namespace FutsMoniter
         private void btnSubmit_Click(object sender, EventArgs e)
         {
             string _name = name.Text;
-            if (string.IsNullOrEmpty(_name) || _name.Length > 5 || (!regexname.IsMatch(_name)))
+            if (string.IsNullOrEmpty(_name) || _name.Length > 5)
             {
                 fmConfirm.Show("请输入正确的投资者姓名!");
                 return;
@@ -53,16 +51,22 @@ namespace FutsMoniter
             
             string _broker = broker.Text;
 
-            if (!regexbankid.IsMatch(bankac.Text))
+            int _bankfk=0;
+            string _bankac=string.Empty;
+
+            //如果要设置银行卡信息 则将界面上的银行卡信息提交到服务端
+            if (!cbnosetbank.Checked)
             {
-                fmConfirm.Show("请输入有效的银行帐户");
-                return;
+                if (!regexbankid.IsMatch(bankac.Text))
+                {
+                    fmConfirm.Show("请输入有效的银行帐户");
+                    return;
+                }
+                _bankac = bankac.Text;
+
+                _bankfk = ctBankList1.BankSelected;
             }
-            string _bankac = bankac.Text;
-
-            string _bank = ctBankList1.BankSelected.ToString();
-
-            Globals.TLClient.ReqChangeInverstorInfo(_account.Account, _name, _broker,_bank, _bankac);
+            Globals.TLClient.ReqChangeInverstorInfo(_account.Account, _name, _broker, _bankfk, _bankac);
             this.Close();
         }
     }

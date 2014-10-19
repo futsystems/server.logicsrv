@@ -104,7 +104,7 @@ namespace TradingLib.Common
         ///// <param name="d"></param>
         ///// <param name="format"></param>
         ///// <returns></returns>
-        public static string FormatDecimal(decimal d, string format = "{0:F1}")
+        public static string FormatDecimal(decimal d, string format = "{0:F2}")
         {
             return string.Format(format, d);
         }
@@ -114,7 +114,7 @@ namespace TradingLib.Common
         ///// <param name="d"></param>
         ///// <param name="format"></param>
         ///// <returns></returns>
-        public static string FormatDouble(double d, string format = "{0:F1}")
+        public static string FormatDouble(double d, string format = "{0:F2}")
         {
             return string.Format(format, d);
         }

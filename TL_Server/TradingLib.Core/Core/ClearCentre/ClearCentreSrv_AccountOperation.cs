@@ -51,15 +51,15 @@ namespace TradingLib.Core
             AccountChanged(this[account]);
         }
 
-        public void UpdateInvestorInfo(string account, string name,string broker,string bank,string bankac)
+        public void UpdateInvestorInfo(string account, string name,string broker,int  bankfk,string bankac)
         {
             if (!HaveAccount(account)) return;
             IAccount acc = this[account];
             acc.Name = name;
             acc.Broker = broker;
             acc.BankAC = bankac;
-            acc.BankID = bank;
-            ORM.MAccount.UpdateInvestorInfo(account, name,broker,bank,bankac);
+            acc.BankID = bankfk;
+            ORM.MAccount.UpdateInvestorInfo(account, name, broker, bankfk, bankac);
             AccountChanged(this[account]);
         }
 

@@ -95,7 +95,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 银行
         /// </summary>
-        public string BankID { get; set; }
+        public int BankID { get; set; }
 
         /// <summary>
         /// 银行帐号
@@ -177,7 +177,7 @@ namespace TradingLib.Common
             account.MoneyUsed = decimal.Parse(rec[13]);
             account.Name = rec[14];
             account.Broker = rec[15];
-            account.BankID = rec[16];
+            account.BankID = int.Parse(rec[16]);
             account.BankAC = rec[17];
             account.PosLock = bool.Parse(rec[18]);
             account.MGRID = int.Parse(rec[19]);

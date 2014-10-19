@@ -76,7 +76,7 @@ namespace TradingLib.API
         /// <summary>
         /// 银行
         /// </summary>
-        string BankID { get; set; }
+        int BankID { get; set; }
 
         /// <summary>
         /// 银行帐号

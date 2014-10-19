@@ -80,7 +80,7 @@ namespace TradingLib.Common
 
             decimal avabilefund = GetFundAvabile(symbol);
 
-            TLCtxHelper.Debug("QryCanOpenSize Fundavablie:" + avabilefund.ToString() + " Symbol:" + symbol.Symbol + " Price:" + price.ToString() + " Fundperlot:" + fundperlot.ToString());
+            Util.Debug("QryCanOpenSize Fundavablie:" + avabilefund.ToString() + " Symbol:" + symbol.Symbol + " Price:" + price.ToString() + " Fundperlot:" + fundperlot.ToString());
             return (int)(avabilefund/fundperlot);
         }
 

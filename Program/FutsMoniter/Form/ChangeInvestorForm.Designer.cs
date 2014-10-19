@@ -38,6 +38,7 @@
             this.bankac = new Telerik.WinControls.UI.RadTextBox();
             this.radLabel4 = new Telerik.WinControls.UI.RadLabel();
             this.ctBankList1 = new FutsMoniter.ctBankList();
+            this.cbnosetbank = new ComponentFactory.Krypton.Toolkit.KryptonCheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.account)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel2)).BeginInit();
@@ -83,7 +84,7 @@
             // 
             // btnSubmit
             // 
-            this.btnSubmit.Location = new System.Drawing.Point(106, 157);
+            this.btnSubmit.Location = new System.Drawing.Point(106, 181);
             this.btnSubmit.Name = "btnSubmit";
             this.btnSubmit.Size = new System.Drawing.Size(110, 24);
             this.btnSubmit.TabIndex = 4;
@@ -127,11 +128,22 @@
             this.ctBankList1.Size = new System.Drawing.Size(150, 20);
             this.ctBankList1.TabIndex = 9;
             // 
+            // cbnosetbank
+            // 
+            this.cbnosetbank.LabelStyle = ComponentFactory.Krypton.Toolkit.LabelStyle.NormalControl;
+            this.cbnosetbank.Location = new System.Drawing.Point(77, 148);
+            this.cbnosetbank.Name = "cbnosetbank";
+            this.cbnosetbank.Size = new System.Drawing.Size(119, 18);
+            this.cbnosetbank.TabIndex = 21;
+            this.cbnosetbank.Text = "不设置银行信息";
+            this.cbnosetbank.Values.Text = "不设置银行信息";
+            // 
             // ChangeInvestorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(226, 196);
+            this.ClientSize = new System.Drawing.Size(223, 216);
+            this.Controls.Add(this.cbnosetbank);
             this.Controls.Add(this.ctBankList1);
             this.Controls.Add(this.bankac);
             this.Controls.Add(this.radLabel4);
@@ -179,5 +191,6 @@
         private Telerik.WinControls.UI.RadTextBox bankac;
         private Telerik.WinControls.UI.RadLabel radLabel4;
         private ctBankList ctBankList1;
+        private ComponentFactory.Krypton.Toolkit.KryptonCheckBox cbnosetbank;
     }
 }

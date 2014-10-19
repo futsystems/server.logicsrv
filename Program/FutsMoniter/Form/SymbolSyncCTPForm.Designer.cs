@@ -40,6 +40,7 @@
             this.radLabel5 = new Telerik.WinControls.UI.RadLabel();
             this.radLabel6 = new Telerik.WinControls.UI.RadLabel();
             this.status = new Telerik.WinControls.UI.RadLabel();
+            this.defaulttradeable = new Telerik.WinControls.UI.RadCheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.btnSyncSymbol)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel2)).BeginInit();
@@ -52,13 +53,14 @@
             ((System.ComponentModel.ISupportInitialize)(this.radLabel5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.status)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.defaulttradeable)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this)).BeginInit();
             this.SuspendLayout();
             // 
             // btnSyncSymbol
             // 
             this.btnSyncSymbol.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSyncSymbol.Location = new System.Drawing.Point(268, 162);
+            this.btnSyncSymbol.Location = new System.Drawing.Point(268, 187);
             this.btnSyncSymbol.Name = "btnSyncSymbol";
             this.btnSyncSymbol.Size = new System.Drawing.Size(98, 24);
             this.btnSyncSymbol.TabIndex = 0;
@@ -131,7 +133,7 @@
             // 
             // radLabel5
             // 
-            this.radLabel5.Location = new System.Drawing.Point(22, 110);
+            this.radLabel5.Location = new System.Drawing.Point(22, 128);
             this.radLabel5.Name = "radLabel5";
             this.radLabel5.Size = new System.Drawing.Size(228, 16);
             this.radLabel5.TabIndex = 9;
@@ -139,7 +141,7 @@
             // 
             // radLabel6
             // 
-            this.radLabel6.Location = new System.Drawing.Point(22, 132);
+            this.radLabel6.Location = new System.Drawing.Point(22, 150);
             this.radLabel6.Name = "radLabel6";
             this.radLabel6.Size = new System.Drawing.Size(59, 16);
             this.radLabel6.TabIndex = 10;
@@ -147,17 +149,26 @@
             // 
             // status
             // 
-            this.status.Location = new System.Drawing.Point(87, 132);
+            this.status.Location = new System.Drawing.Point(87, 150);
             this.status.Name = "status";
             this.status.Size = new System.Drawing.Size(14, 16);
             this.status.TabIndex = 11;
             this.status.Text = "--";
             // 
+            // defaulttradeable
+            // 
+            this.defaulttradeable.Location = new System.Drawing.Point(123, 101);
+            this.defaulttradeable.Name = "defaulttradeable";
+            this.defaulttradeable.Size = new System.Drawing.Size(107, 16);
+            this.defaulttradeable.TabIndex = 12;
+            this.defaulttradeable.Text = "默认可交易";
+            // 
             // SymbolSyncCTPForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(369, 189);
+            this.ClientSize = new System.Drawing.Size(369, 214);
+            this.Controls.Add(this.defaulttradeable);
             this.Controls.Add(this.status);
             this.Controls.Add(this.radLabel6);
             this.Controls.Add(this.radLabel5);
@@ -194,6 +205,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.radLabel5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel6)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.status)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.defaulttradeable)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -214,5 +226,6 @@
         private Telerik.WinControls.UI.RadLabel radLabel5;
         private Telerik.WinControls.UI.RadLabel radLabel6;
         private Telerik.WinControls.UI.RadLabel status;
+        private Telerik.WinControls.UI.RadCheckBox defaulttradeable;
     }
 }

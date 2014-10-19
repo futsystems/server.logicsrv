@@ -92,22 +92,32 @@ namespace FutsMoniter
         {
             get
             {
-                return int.Parse(cbbank.SelectedValue.ToString());
+                try
+                {
+                    return int.Parse(cbbank.SelectedValue.ToString());
+                }
+                catch (Exception ex)
+                {
+                    return 0;
+                }
             }
             set
             {
-                _bankselected = value;
-                cbbank.SelectedValue = value;
+                try
+                {
+                    _bankselected = value;
+                    cbbank.SelectedValue = value;
+                }
+                catch (Exception ex)
+                { 
+                    
+                }
             }
         }
 
         private void bank_SelectedIndexChanged(object sender, Telerik.WinControls.UI.Data.PositionChangedEventArgs e)
         {
 
-            //if (_gotdata)//获得数据后 选择列表变化 保存当前选中的值
-            //{
-            //    _bankselected = int.Parse(cbbank.SelectedValue.ToString());
-            //}
             if (BankSelectedChangedEvent!= null && _gotdata)
             {
 

@@ -283,23 +283,23 @@ namespace TradingLib.Common
             return account.Broker;
         }
 
-        public static string GetCustBankID(this IAccount account)
-        {
-            if (string.IsNullOrEmpty(account.BankID))
-            {
-                return GlobalConfig.DefaultBankID;
-            }
+        //public static string GetCustBankID(this IAccount account)
+        //{
+        //    if (string.IsNullOrEmpty(account.BankID))
+        //    {
+        //        return GlobalConfig.DefaultBankID;
+        //    }
 
-            return account.BankID;
-        }
+        //    return account.BankID;
+        //}
 
-        public static string GetCustBankAC(this IAccount account)
-        {
-            if (string.IsNullOrEmpty(account.BankAC))
-            {
-                return GlobalConfig.DefaultBankAC;
-            }
-            return account.BankAC;
-        }
+        //public static string GetCustBankAC(this IAccount account)
+        //{
+        //    if (string.IsNullOrEmpty(account.BankAC))
+        //    {
+        //        return GlobalConfig.DefaultBankAC;
+        //    }
+        //    return account.BankAC;
+        //}
     }
 }

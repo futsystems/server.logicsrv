@@ -56,7 +56,7 @@ namespace TradingLib.ORM
 
         public string Name { get; set; }
         public string Broker { get; set; }
-        public string BankID { get; set; }
+        public int? BankID { get; set; }
         public string BankAC { get; set; }
 
         public bool PosLock { get; set; }
@@ -172,11 +172,11 @@ namespace TradingLib.ORM
         /// <param name="account"></param>
         /// <param name="intraday"></param>
         /// <returns></returns>
-        public static bool UpdateInvestorInfo(string account, string name,string broker,string bank,string bankac)
+        public static bool UpdateInvestorInfo(string account, string name,string broker,int bankfk,string bankac)
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("UPDATE accounts SET name = '{0}',broker= '{1}' ,bankid='{2}', bankac='{3}' WHERE account = '{4}'", name, broker,bank, bankac, account);
+                string query = String.Format("UPDATE accounts SET name = '{0}',broker= '{1}' ,bankid='{2}', bankac='{3}' WHERE account = '{4}'", name, broker, bankfk, bankac, account);
                 return db.Connection.Execute(query) >= 0;
             }
         }
@@ -514,7 +514,7 @@ namespace TradingLib.ORM
             account.MAC = fields.MAC;
             account.Name = fields.Name;
             account.Broker = fields.Broker;
-            account.BankID = fields.BankID;
+            account.BankID = fields.BankID==null?0:(int)fields.BankID;
             account.BankAC = fields.BankAC;
             account.PosLock = fields.PosLock;
             account.Mgr_fk = fields.Mgr_fk;
