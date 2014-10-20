@@ -1,0 +1,267 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using FutSystems.GUI;
+using TradingLib.API;
+
+namespace FutsMoniter
+{
+    partial class MainForm
+    {
+        /// <summary>
+        /// 绑定Ribbon菜单事件
+        /// </summary>
+        void WireRibbon()
+        {
+            //kryptonRibbonQATButton_debug.Click += new EventHandler(kryptonRibbonQATButton_debug_Click);
+            
+            //清算中心
+            kryptonRibbonGroupButton_OpenClearCentre.Click += new EventHandler(kryptonRibbonGroupButton_OpenClearCentre_Click);
+            kryptonRibbonGroupButton_CloseClearCentre.Click += new EventHandler(kryptonRibbonGroupButton_CloseClearCentre_Click);
+
+            //路由列表
+            kryptonRibbonGroupButton_RouterList.Click += new EventHandler(kryptonRibbonGroupButton_RouterList_Click);
+            
+            
+            //系统状态
+            kryptonRibbonGroupButton_SystemStatus.Click += new EventHandler(kryptonRibbonGroupButton_SystemStatus_Click);
+
+
+            //基础数据
+            kryptonRibbonGroupButton_Mktime.Click += new EventHandler(kryptonRibbonGroupButton_Mktime_Click);
+            kryptonRibbonGroupButton_Exchange.Click += new EventHandler(kryptonRibbonGroupButton_Exchange_Click);
+
+            kryptonRibbonGroupButton_Security.Click += new EventHandler(kryptonRibbonGroupButton_Security_Click);
+            kryptonRibbonGroupButton_Symbol.Click += new EventHandler(kryptonRibbonGroupButton_Symbol_Click);
+        
+            //历史记录
+            kryptonRibbonGroupButton_QueryExHist.Click += new EventHandler(kryptonRibbonGroupButton_QueryExHist_Click);
+            kryptonRibbonGroupButton_QueryAgentProfit.Click += new EventHandler(kryptonRibbonGroupButton_QueryAgentProfit_Click);
+               
+            //柜员管理
+            kryptonRibbonGroupButton_AgentManagement.Click += new EventHandler(kryptonRibbonGroupButton_AgentManagement_Click);
+            kryptonRibbonGroupButton_AgentCost.Click += new EventHandler(kryptonRibbonGroupButton_AgentCost_Click);
+        
+
+            //财务管理
+            kryptonRibbonGroupButton_FinanceManagement.Click += new EventHandler(kryptonRibbonGroupButton_FinanceManagement_Click);
+            kryptonRibbonGroupButton_CasherManagement.Click += new EventHandler(kryptonRibbonGroupButton_CasherManagement_Click);
+        
+        }
+
+        void kryptonRibbonGroupButton_CasherManagement_Click(object sender, EventArgs e)
+        {
+            CasherMangerForm fm = new CasherMangerForm();
+            fm.Show();
+        }
+
+        void kryptonRibbonGroupButton_FinanceManagement_Click(object sender, EventArgs e)
+        {
+            FinanceMangerForm fm = new FinanceMangerForm();
+            fm.Show();
+        }
+
+        #region 柜员管理
+        void kryptonRibbonGroupButton_AgentCost_Click(object sender, EventArgs e)
+        {
+            FeeConfigForm fm = new FeeConfigForm();
+            fm.Show();
+        }
+
+        void kryptonRibbonGroupButton_AgentManagement_Click(object sender, EventArgs e)
+        {
+            if (mgrform == null)
+            {
+                mgrform = new ManagerForm();
+            }
+            mgrform.Show();
+        }
+
+        #endregion
+
+
+
+        #region 历史记录
+        void kryptonRibbonGroupButton_QueryAgentProfit_Click(object sender, EventArgs e)
+        {
+            if (agentprofitreportform != null)
+            {
+                agentprofitreportform.Show();
+            }
+        }
+
+        void kryptonRibbonGroupButton_QueryExHist_Click(object sender, EventArgs e)
+        {
+            if (histqryform != null)
+            {
+                histqryform.Show();
+            }
+        }
+
+        #endregion
+
+
+
+
+
+
+
+        #region 系统管理
+
+        void kryptonRibbonGroupButton_CloseClearCentre_Click(object sender, EventArgs e)
+        {
+            if (fmConfirm.Show("确认关闭清算中心?") == System.Windows.Forms.DialogResult.Yes)
+            {
+                Globals.TLClient.ReqCloseCentre();
+
+            }
+        }
+
+        void kryptonRibbonGroupButton_OpenClearCentre_Click(object sender, EventArgs e)
+        {
+            if (fmConfirm.Show("确认开启清算中心?") == System.Windows.Forms.DialogResult.Yes)
+            {
+                Globals.TLClient.ReqOpenClearCentre();
+            }
+        }
+
+        void kryptonRibbonGroupButton_SystemStatus_Click(object sender, EventArgs e)
+        {
+            if (systemstatusfrom != null)
+            {
+                systemstatusfrom.Show();
+                Globals.TLClient.ReqQrySystemStatus();
+            }
+        }
+
+        void kryptonRibbonGroupButton_RouterList_Click(object sender, EventArgs e)
+        {
+            if (routerform != null)
+            {
+                routerform.Show();
+                Globals.TLClient.ReqQryConnector();
+            }
+        }
+
+
+        #endregion
+
+        #region 基础数据 
+        void kryptonRibbonGroupButton_Exchange_Click(object sender, EventArgs e)
+        {
+            if (exchangeform != null)
+            {
+                exchangeform.Show();
+                //如果没有交易所数据则请求交易所数据
+                if (!exchangeform.AnyExchange)
+                {
+                    Globals.TLClient.ReqQryExchange();
+                }
+            }
+        }
+
+        void kryptonRibbonGroupButton_Mktime_Click(object sender, EventArgs e)
+        {
+            if (markettimeform != null)
+            {
+                markettimeform.Show();
+                if (!markettimeform.AnyMarketTime)
+                {
+                    Globals.TLClient.ReqQryMarketTime();
+                }
+            }
+        }
+
+        void kryptonRibbonGroupButton_Symbol_Click(object sender, EventArgs e)
+        {
+            if (symbolform != null)
+            {
+                symbolform.Show();
+                if (!symbolform.AnySymbol)
+                {
+                    Globals.TLClient.ReqQrySymbol();
+                }
+            }
+        }
+
+        void kryptonRibbonGroupButton_Security_Click(object sender, EventArgs e)
+        {
+            if (securityform != null)
+            {
+                securityform.Show();
+                if (!securityform.AnySecurity)
+                {
+                    Globals.TLClient.ReqQrySecurity();
+                }
+            }
+        }
+
+
+        #endregion
+
+        #region 菜单操作
+
+       
+
+
+        /// <summary>
+        /// 修改密码
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnChangePass_Click(object sender, EventArgs e)
+        {
+            UpdatePassForm fm = new UpdatePassForm();
+            fm.ShowDialog();
+        }
+
+        
+
+        /// <summary>
+        /// 资金管理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnFinanceMgr_Click(object sender, EventArgs e)
+        {
+           
+        }
+        /// <summary>
+        /// 出纳管理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnCasher_Click(object sender, EventArgs e)
+        {
+            
+        }
+        #endregion
+
+
+        #region 事件处理
+        void ctAccountMontier1_QryAccountHistEvent(IAccountLite account)
+        {
+            if (histqryform != null)
+            {
+                histqryform.SetAccount(account.Account);
+                histqryform.Show();
+            }
+        }
+        #endregion
+
+        #region 报表
+        private void btnAgentProfit_Click(object sender, EventArgs e)
+        {
+           
+        }
+
+        private void btnTotalOperationStatic_Click(object sender, EventArgs e)
+        {
+            OperationReportForm fm = new OperationReportForm();
+            fm.Show();
+        }
+        #endregion
+
+    }
+}

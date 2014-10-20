@@ -417,7 +417,7 @@
     <Compile Include="MainForm_LogicHandler.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainForm_Menu.cs">
+    <Compile Include="MainForm_Ribbon.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form\MarketTimeForm.cs">
