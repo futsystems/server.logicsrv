@@ -90,7 +90,9 @@ namespace FutSystems.GUI.Control
                 tb.Rows[i][ACCOUNT] = t.Account;
                 tb.Rows[i][PROFIT] = string.Format(_defaultformat,t.Profit);
                 tb.Rows[i][FILLID] = t.BrokerKey;
-                toUpdateRow();
+                num.Text = tradeGrid.RowCount.ToString();
+
+                //toUpdateRow();
                 //tb.Rows.Add(new object[] { t.id, Util.ToDateTime(t.xdate, t.xtime).ToString("HH:mm:ss"), t.symbol, (t.side ? "买" : "卖"), t.xsize, string.Format(getDisplayFormat(t.symbol), t.xprice), string.Format(_defaultformat, t.Commission), Util.GetEnumDescription(t.PositionOperation), t.Account });
             }
         }
@@ -105,22 +107,22 @@ namespace FutSystems.GUI.Control
             tb.Rows.Clear();
             BindToTable();
         }
-        void toUpdateRow()
-        {
-            for (int i = 0; i < tradeGrid.Rows.Count; i++)
-            {
-                if (i == tradeGrid.Rows.Count - 1)
-                {
-                    tradeGrid.Rows[i].Selected = true;
-                }
-                else
-                {
-                    tradeGrid.Rows[i].Selected = false;
-                }
-            }
-            num.Text = tradeGrid.RowCount.ToString();
-            //tradeGrid..FirstDisplayedScrollingRowIndex = tradeGrid.RowCount - 1;
-        }
+        //void toUpdateRow()
+        //{
+        //    for (int i = 0; i < tradeGrid.Rows.Count; i++)
+        //    {
+        //        if (i == tradeGrid.Rows.Count - 1)
+        //        {
+        //            tradeGrid.Rows[i].Selected = true;
+        //        }
+        //        else
+        //        {
+        //            tradeGrid.Rows[i].Selected = false;
+        //        }
+        //    }
+        //    num.Text = tradeGrid.RowCount.ToString();
+        //    //tradeGrid..FirstDisplayedScrollingRowIndex = tradeGrid.RowCount - 1;
+        //}
 
 
         const string ID = "委托编号";
@@ -155,6 +157,9 @@ namespace FutSystems.GUI.Control
             grid.RowHeadersVisible = false;
             grid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             grid.AlternatingRowsDefaultCellStyle.BackColor = Color.WhiteSmoke;
+
+            grid.StateCommon.Background.Color1 = Color.WhiteSmoke;
+            grid.StateCommon.Background.Color2 = Color.WhiteSmoke;
         }
         /// <summary>
         /// 初始化数据表格
@@ -174,15 +179,24 @@ namespace FutSystems.GUI.Control
             tb.Columns.Add(FILLID);
             tb.Columns.Add(ACCOUNT);
         }
+
+        BindingSource datasource = new BindingSource();
         /// <summary>
         /// 绑定数据表格到grid
         /// </summary>
         private void BindToTable()
         {
             ComponentFactory.Krypton.Toolkit.KryptonDataGridView grid = tradeGrid;
-            //grid.TableElement.BeginUpdate();             
-            //grid.MasterTemplate.Columns.Clear(); 
-            grid.DataSource = tb;
+
+            datasource.DataSource = tb;
+            datasource.Sort = DATETIME + " DESC";
+            grid.DataSource = datasource;
+
+            for (int i = 0; i < tb.Columns.Count; i++)
+            {
+                grid.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
+            }
+
             //grid.Columns[ACCOUNT].IsVisible = false;
         }
         private void ctTradeView_Load(object sender, EventArgs e)

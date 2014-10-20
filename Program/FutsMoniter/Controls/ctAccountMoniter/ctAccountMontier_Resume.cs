@@ -17,14 +17,21 @@ namespace FutsMoniter.Controls
     public partial class ctAccountMontier
     {
 
+        DateTime _lastresumetime = DateTime.Now;
         private void accountgrid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (Globals.TradingInfoTracker.IsInResume)
+            //if (Globals.TradingInfoTracker.IsInResume)
+            //{
+            //    debug("处于恢复过程中，直接返回等候", QSEnumDebugLevel.INFO);
+            //    return;
+            //}
+
+            if (DateTime.Now.Subtract(_lastresumetime).TotalSeconds <= 5)
             {
-                debug("处于恢复过程中，直接返回等候", QSEnumDebugLevel.INFO);
+                fmConfirm.Show("请不要频繁请求帐户日内数据");
                 return;
             }
-
+            _lastresumetime = DateTime.Now;
             string account = CurrentAccount;
             IAccountLite accountlite = null;
             if (accountmap.TryGetValue(account, out accountlite))

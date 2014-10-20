@@ -32,11 +32,23 @@ namespace FutsMoniter
                     //Globals.Debug("```````````````````````inserttrade config:" + Globals.Config["InsertTrade"].Value);
                     btnInsertTrade.Visible = false;
                 }
+
+                WireEvent();
             }
             catch (Exception ex)
             { 
             
             }
+        }
+
+        /// <summary>
+        /// 绑定事件
+        /// </summary>
+        void WireEvent()
+        { 
+            btnBuy.Click +=new EventHandler(btnBuy_Click);
+            btnSell.Click +=new EventHandler(btnSell_Click);
+            btnInsertTrade.Click +=new EventHandler(btnInsertTrade_Click);
         }
 
         /// <summary>
@@ -54,6 +66,7 @@ namespace FutsMoniter
             _symbol = sym;
             symbol.Text = _symbol.Symbol; 
         }
+
         private void btnBuy_Click(object sender, EventArgs e)
         {
             try
@@ -77,6 +90,18 @@ namespace FutsMoniter
                 Globals.Debug("error:" + ex.ToString());
             }
         }
+
+        private void btnInsertTrade_Click(object sender, EventArgs e)
+        {
+            InsertTradeForm fm = new InsertTradeForm();
+            if (!ValidAccount()) return;
+            if (!validSecurity()) return;
+            fm.SetAccount(_account.Account);
+            fm.SetSymbol(_symbol);
+            fm.ShowDialog();
+        }
+
+
 
         /// <summary>
         /// 生成对应的买 卖委托并发送出去
@@ -181,14 +206,7 @@ namespace FutsMoniter
                 SendOrderEvent(order);
         }
 
-        private void btnInsertTrade_Click(object sender, EventArgs e)
-        {
-            InsertTradeForm fm = new InsertTradeForm();
-            if (!ValidAccount()) return;
-            if (!validSecurity()) return;
-            fm.SetAccount(_account.Account);
-            fm.SetSymbol(_symbol);
-            fm.ShowDialog();
-        }
+        
+
     }
 }

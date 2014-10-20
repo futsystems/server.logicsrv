@@ -189,6 +189,9 @@ namespace FutSystems.GUI
             grid.RowHeadersVisible = false;
             grid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             grid.AlternatingRowsDefaultCellStyle.BackColor = Color.WhiteSmoke;
+
+            grid.StateCommon.Background.Color1 = Color.WhiteSmoke;
+            grid.StateCommon.Background.Color2 = Color.WhiteSmoke;
         }
         /// <summary>
         /// 初始化数据表格
@@ -220,7 +223,7 @@ namespace FutSystems.GUI
         {
             ComponentFactory.Krypton.Toolkit.KryptonDataGridView grid = orderGrid;
             datasource.DataSource = tb;
-            datasource.Sort = DATETIME+ " ASC";
+            datasource.Sort = DATETIME+ " DESC";
             grid.DataSource = datasource;
 
             grid.Columns[DIRECTION].Visible = false;
@@ -235,6 +238,10 @@ namespace FutSystems.GUI
             
             //set width
             //grid.Columns[SYMBOL].Width = 80;
+            for (int i = 0; i < tb.Columns.Count; i++)
+            {
+                grid.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
+            }
 
             
         }

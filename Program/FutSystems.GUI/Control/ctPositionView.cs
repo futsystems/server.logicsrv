@@ -585,6 +585,9 @@ namespace FutSystems.GUI
             grid.RowHeadersVisible = false;
             grid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             grid.AlternatingRowsDefaultCellStyle.BackColor = Color.WhiteSmoke;
+
+            grid.StateCommon.Background.Color1 = Color.WhiteSmoke;
+            grid.StateCommon.Background.Color2 = Color.WhiteSmoke;
         }
         /// <summary>
         /// 初始化数据表格
@@ -647,6 +650,11 @@ namespace FutSystems.GUI
             //grid.Columns[PROFITTARGET].TextAlignment = ContentAlignment.MiddleCenter;
             grid.Columns[STOPLOSS].Width = 75;
             //grid.Columns[STOPLOSS].TextAlignment = ContentAlignment.MiddleCenter;
+
+            for (int i = 0; i < gt.Columns.Count; i++)
+            {
+                grid.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
+            }
 
         }
 
