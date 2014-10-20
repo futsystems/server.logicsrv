@@ -14,7 +14,7 @@ using FutSystems.GUI;
 
 namespace FutsMoniter
 {
-    public partial class LoginForm : Telerik.WinControls.UI.ShapedForm
+    public partial class LoginForm : ComponentFactory.Krypton.Toolkit.KryptonForm
     {
         public event ServerLoginDel ServerLoginEvent;
         public event VoidDelegate ResetEvent;
@@ -25,7 +25,7 @@ namespace FutsMoniter
             InitializeComponent();
 
             ThemeResolutionService.ApplicationThemeName = Globals.Config["ThemeName"].AsString();
-            this.ThemeName = ThemeResolutionService.ApplicationThemeName;
+            //this.ThemeName = ThemeResolutionService.ApplicationThemeName;
             if (Globals.Config["HeaderImg"].AsString() == "OEM")
             {
                 imageheader.Image = Properties.Resources.header_oem;
@@ -78,6 +78,13 @@ namespace FutsMoniter
                 password.Text = Properties.Settings.Default.pass;
             }
 
+            WireEvent();
+        }
+
+        void WireEvent()
+        { 
+            btnLogin.Click +=new EventHandler(btnLogin_Click);
+            btnExit.Click += new EventHandler(btnExit_LinkClicked);
         }
 
 
@@ -93,7 +100,7 @@ namespace FutsMoniter
             }
         }
 
-        private void btnExit_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void btnExit_LinkClicked(object sender, EventArgs e)
         {
             System.Diagnostics.Process.GetCurrentProcess().Kill();
         }

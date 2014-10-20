@@ -14,7 +14,9 @@ namespace FutsMoniter
         /// </summary>
         void WireRibbon()
         {
-            //kryptonRibbonQATButton_debug.Click += new EventHandler(kryptonRibbonQATButton_debug_Click);
+            kryptonContextMenuItem_exit.Click += new EventHandler(kryptonContextMenuItem_exit_Click);
+            kryptonRibbonQATButton_debug.Click += new EventHandler(kryptonRibbonQATButton_debug_Click);
+            //kryptonContextMenuItem_exit.Click +=new EventHandler(kryptonContextMenuItem_exit_Click);
             
             //清算中心
             kryptonRibbonGroupButton_OpenClearCentre.Click += new EventHandler(kryptonRibbonGroupButton_OpenClearCentre_Click);
@@ -49,6 +51,21 @@ namespace FutsMoniter
             kryptonRibbonGroupButton_CasherManagement.Click += new EventHandler(kryptonRibbonGroupButton_CasherManagement_Click);
         
         }
+
+        void kryptonContextMenuItem_exit_Click(object sender, EventArgs e)
+        {
+            if (fmConfirm.Show("确认退出管理端?") == System.Windows.Forms.DialogResult.Yes)
+            {
+                System.Diagnostics.Process.GetCurrentProcess().Kill();
+            }
+        }
+
+        void kryptonRibbonQATButton_debug_Click(object sender, EventArgs e)
+        {
+            if (debugform != null)
+                debugform.Show();
+        }
+
 
         void kryptonRibbonGroupButton_CasherManagement_Click(object sender, EventArgs e)
         {

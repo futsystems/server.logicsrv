@@ -492,6 +492,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.kryptonSplitContainer1);
+            this.DoubleBuffered = true;
             this.Name = "ctAccountMontier";
             this.Size = new System.Drawing.Size(1380, 638);
             this.kryptonSplitContainer1.Panel1.ResumeLayout(false);

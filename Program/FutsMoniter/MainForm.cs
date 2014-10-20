@@ -77,15 +77,16 @@ namespace FutsMoniter
             Init();
             _timer = new System.Threading.Timer(FakeOutStatus, null, 800, 150);
 
+            this.FormClosing += new FormClosingEventHandler(MainForm_FormClosing);
             
-           
         }
 
-        void kryptonRibbonQATButton_debug_Click(object sender, EventArgs e)
+        void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (debugform != null)
-                debugform.Show();
+            e.Cancel = true;
         }
+
+
 
         
 

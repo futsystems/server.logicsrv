@@ -29,16 +29,16 @@
         private void InitializeComponent()
         {
             this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
-            this.btnShowHold = new ComponentFactory.Krypton.Toolkit.KryptonRadioButton();
-            this.btnShowAll = new ComponentFactory.Krypton.Toolkit.KryptonRadioButton();
-            this.btnFlat = new ComponentFactory.Krypton.Toolkit.KryptonButton();
-            this.btnFlatAll = new ComponentFactory.Krypton.Toolkit.KryptonButton();
-            this.btnReserve = new ComponentFactory.Krypton.Toolkit.KryptonButton();
-            this.btnCancel = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.positiongrid = new ComponentFactory.Krypton.Toolkit.KryptonDataGridView();
+            this.isDoubleFlat = new ComponentFactory.Krypton.Toolkit.KryptonCheckBox();
             this.num = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel1 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.isDoubleFlat = new ComponentFactory.Krypton.Toolkit.KryptonCheckBox();
-            this.positiongrid = new ComponentFactory.Krypton.Toolkit.KryptonDataGridView();
+            this.btnCancel = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.btnReserve = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.btnFlatAll = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.btnFlat = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.btnShowAll = new ComponentFactory.Krypton.Toolkit.KryptonRadioButton();
+            this.btnShowHold = new ComponentFactory.Krypton.Toolkit.KryptonRadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.positiongrid)).BeginInit();
@@ -62,59 +62,28 @@
             this.kryptonPanel1.Size = new System.Drawing.Size(872, 261);
             this.kryptonPanel1.TabIndex = 2;
             // 
-            // btnShowHold
+            // positiongrid
             // 
-            this.btnShowHold.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnShowHold.Location = new System.Drawing.Point(4, 236);
-            this.btnShowHold.Name = "btnShowHold";
-            this.btnShowHold.Size = new System.Drawing.Size(50, 18);
-            this.btnShowHold.TabIndex = 0;
-            this.btnShowHold.Values.Text = "持仓";
+            this.positiongrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.positiongrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.positiongrid.Location = new System.Drawing.Point(0, 0);
+            this.positiongrid.Name = "positiongrid";
+            this.positiongrid.RowTemplate.Height = 23;
+            this.positiongrid.Size = new System.Drawing.Size(872, 230);
+            this.positiongrid.TabIndex = 12;
             // 
-            // btnShowAll
+            // isDoubleFlat
             // 
-            this.btnShowAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnShowAll.Location = new System.Drawing.Point(60, 236);
-            this.btnShowAll.Name = "btnShowAll";
-            this.btnShowAll.Size = new System.Drawing.Size(77, 18);
-            this.btnShowAll.TabIndex = 1;
-            this.btnShowAll.Values.Text = "当日明细";
-            // 
-            // btnFlat
-            // 
-            this.btnFlat.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnFlat.Location = new System.Drawing.Point(143, 233);
-            this.btnFlat.Name = "btnFlat";
-            this.btnFlat.Size = new System.Drawing.Size(59, 25);
-            this.btnFlat.TabIndex = 2;
-            this.btnFlat.Values.Text = "平 仓";
-            // 
-            // btnFlatAll
-            // 
-            this.btnFlatAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnFlatAll.Location = new System.Drawing.Point(208, 233);
-            this.btnFlatAll.Name = "btnFlatAll";
-            this.btnFlatAll.Size = new System.Drawing.Size(59, 25);
-            this.btnFlatAll.TabIndex = 3;
-            this.btnFlatAll.Values.Text = "全 平";
-            // 
-            // btnReserve
-            // 
-            this.btnReserve.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnReserve.Location = new System.Drawing.Point(273, 233);
-            this.btnReserve.Name = "btnReserve";
-            this.btnReserve.Size = new System.Drawing.Size(59, 25);
-            this.btnReserve.TabIndex = 4;
-            this.btnReserve.Values.Text = "反 手";
-            // 
-            // btnCancel
-            // 
-            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnCancel.Location = new System.Drawing.Point(338, 233);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(59, 25);
-            this.btnCancel.TabIndex = 5;
-            this.btnCancel.Values.Text = "撤 单";
+            this.isDoubleFlat.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.isDoubleFlat.LabelStyle = ComponentFactory.Krypton.Toolkit.LabelStyle.NormalControl;
+            this.isDoubleFlat.Location = new System.Drawing.Point(403, 236);
+            this.isDoubleFlat.Name = "isDoubleFlat";
+            this.isDoubleFlat.Size = new System.Drawing.Size(78, 18);
+            this.isDoubleFlat.TabIndex = 11;
+            this.isDoubleFlat.Text = "双击平仓";
+            this.isDoubleFlat.Values.Text = "双击平仓";
             // 
             // num
             // 
@@ -134,34 +103,66 @@
             this.kryptonLabel1.TabIndex = 9;
             this.kryptonLabel1.Values.Text = "记录条数:";
             // 
-            // isDoubleFlat
+            // btnCancel
             // 
-            this.isDoubleFlat.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.isDoubleFlat.LabelStyle = ComponentFactory.Krypton.Toolkit.LabelStyle.NormalControl;
-            this.isDoubleFlat.Location = new System.Drawing.Point(403, 236);
-            this.isDoubleFlat.Name = "isDoubleFlat";
-            this.isDoubleFlat.Size = new System.Drawing.Size(78, 18);
-            this.isDoubleFlat.TabIndex = 11;
-            this.isDoubleFlat.Text = "双击平仓";
-            this.isDoubleFlat.Values.Text = "双击平仓";
+            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnCancel.Location = new System.Drawing.Point(338, 233);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(59, 25);
+            this.btnCancel.TabIndex = 5;
+            this.btnCancel.Values.Text = "撤 单";
             // 
-            // positiongrid
+            // btnReserve
             // 
-            this.positiongrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.positiongrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.positiongrid.Location = new System.Drawing.Point(0, 0);
-            this.positiongrid.Name = "positiongrid";
-            this.positiongrid.RowTemplate.Height = 23;
-            this.positiongrid.Size = new System.Drawing.Size(872, 230);
-            this.positiongrid.TabIndex = 12;
+            this.btnReserve.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnReserve.Location = new System.Drawing.Point(273, 233);
+            this.btnReserve.Name = "btnReserve";
+            this.btnReserve.Size = new System.Drawing.Size(59, 25);
+            this.btnReserve.TabIndex = 4;
+            this.btnReserve.Values.Text = "反 手";
+            // 
+            // btnFlatAll
+            // 
+            this.btnFlatAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnFlatAll.Location = new System.Drawing.Point(208, 233);
+            this.btnFlatAll.Name = "btnFlatAll";
+            this.btnFlatAll.Size = new System.Drawing.Size(59, 25);
+            this.btnFlatAll.TabIndex = 3;
+            this.btnFlatAll.Values.Text = "全 平";
+            // 
+            // btnFlat
+            // 
+            this.btnFlat.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnFlat.Location = new System.Drawing.Point(143, 233);
+            this.btnFlat.Name = "btnFlat";
+            this.btnFlat.Size = new System.Drawing.Size(59, 25);
+            this.btnFlat.TabIndex = 2;
+            this.btnFlat.Values.Text = "平 仓";
+            // 
+            // btnShowAll
+            // 
+            this.btnShowAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnShowAll.Location = new System.Drawing.Point(60, 236);
+            this.btnShowAll.Name = "btnShowAll";
+            this.btnShowAll.Size = new System.Drawing.Size(77, 18);
+            this.btnShowAll.TabIndex = 1;
+            this.btnShowAll.Values.Text = "当日明细";
+            // 
+            // btnShowHold
+            // 
+            this.btnShowHold.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnShowHold.Location = new System.Drawing.Point(4, 236);
+            this.btnShowHold.Name = "btnShowHold";
+            this.btnShowHold.Size = new System.Drawing.Size(50, 18);
+            this.btnShowHold.TabIndex = 0;
+            this.btnShowHold.Values.Text = "持仓";
             // 
             // ctPositionView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.kryptonPanel1);
+            this.DoubleBuffered = true;
             this.Name = "ctPositionView";
             this.Size = new System.Drawing.Size(872, 261);
             this.Load += new System.EventHandler(this.ctPositionView_Load);

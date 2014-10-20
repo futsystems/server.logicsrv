@@ -26,11 +26,11 @@ namespace FutsMoniter.Controls
             //    return;
             //}
 
-            if (DateTime.Now.Subtract(_lastresumetime).TotalSeconds <= 3)
-            {
-                fmConfirm.Show("请不要频繁请求帐户日内数据");
-                return;
-            }
+            //if (DateTime.Now.Subtract(_lastresumetime).TotalSeconds <= 3)
+            //{
+            //    fmConfirm.Show("请不要频繁请求帐户日内数据");
+            //    return;
+            //}
             _lastresumetime = DateTime.Now;
             string account = CurrentAccount;
             IAccountLite accountlite = null;

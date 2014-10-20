@@ -119,7 +119,7 @@ namespace FutsMoniter.Common
             while (!(this._bSplashScreenClosed))
             {
                 Application.DoEvents();
-                //Thread.Sleep(10);
+                Thread.Sleep(10);
             }
             DisposeDelegate SplashScreenFormDisposeDelegate = new DisposeDelegate(this._SplashScreenForm.Dispose);
             this._SplashScreenForm.Invoke(SplashScreenFormDisposeDelegate);

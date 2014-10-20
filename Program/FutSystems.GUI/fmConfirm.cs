@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using Telerik.WinControls;
 
 namespace FutSystems.GUI
 {
-    public partial class fmConfirm : Telerik.WinControls.UI.RadForm
+    public partial class fmConfirm : ComponentFactory.Krypton.Toolkit.KryptonForm
     {
         public fmConfirm(string msg)
         {
@@ -35,6 +35,5 @@ namespace FutSystems.GUI
             fm.Text = title;
             return fm.ShowDialog();
         }
-
     }
 }
