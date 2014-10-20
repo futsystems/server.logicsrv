@@ -815,7 +815,7 @@ namespace TradingLib.Core
         /// <param name="session"></param>
         /// <param name="manager"></param>
         void SrvOnMGRAddManger(MGRReqAddManagerRequest request, ISession session, Manager manager)
-        {
+         {
             debug(string.Format("管理员:{0} 请求添加管理员:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
 
             Manager m = request.ManagerToSend;

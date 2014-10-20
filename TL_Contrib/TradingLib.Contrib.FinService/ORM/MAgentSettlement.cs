@@ -21,7 +21,7 @@ namespace TradingLib.Contrib.FinService.ORM
         /// <returns></returns>
         public static bool IsAgentSettled(int agentfk)
         {
-            return IsAgentSettled(agentfk, TLCtxHelper.Ctx.SettleCentre.CurrentTradingday);
+            return IsAgentSettled(agentfk, TLCtxHelper.CmdSettleCentre.CurrentTradingday);
         }
 
 

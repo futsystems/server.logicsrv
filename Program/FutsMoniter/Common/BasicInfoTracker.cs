@@ -6,6 +6,7 @@ using System.Text;
 using FutSystems.GUI;
 using TradingLib.API;
 using FutsMoniter;
+using TradingLib.Mixins.LitJson;
 
 namespace TradingLib.Common
 {
@@ -18,7 +19,21 @@ namespace TradingLib.Common
 
     public class BasicInfoTracker:IBasicInfo
     {
+        public BasicInfoTracker()
+        {
+            Globals.CallBackCentre.RegisterCallback("MgrExchServer", "NotifyManagerUpdate", OnManagerNotify);
+        }
 
+        void OnManagerNotify(string jsonstr)
+        {
+            JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
+            int code = int.Parse(jd["Code"].ToString());
+            if (code == 0)
+            {
+                Manager obj = TradingLib.Mixins.LitJson.JsonMapper.ToObject<Manager>(jd["Playload"].ToJson());
+                GotManager(obj);
+            }
+        }
         public void Clear()
         {
             markettimemap.Clear();
@@ -214,7 +229,6 @@ namespace TradingLib.Common
 
         public void GotManager(Manager manager)
         {
-            
             //Globals.Debug("basicinfotracker got manger:" + manager.ID.ToString());
             Manager target = null;
             Manager notify = null;

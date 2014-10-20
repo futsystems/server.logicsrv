@@ -8,6 +8,8 @@ using System.Text;
 using System.Windows.Forms;
 using FutSystems.GUI;
 using TradingLib.API;
+using TradingLib.Common;
+using TradingLib.Mixins.LitJson;
 
 
 namespace FutsMoniter
@@ -89,10 +91,24 @@ namespace FutsMoniter
                 if (Globals.CallbackCentreReady)//回调初始化后在加入回调，当系统初始化完毕后 通过回调更新列表
                 {
                     Globals.RegInitCallback(OnInitFinished);
+
+                    //订阅Manager变动事件
+                    Globals.CallBackCentre.RegisterCallback("MgrExchServer", "NotifyManagerUpdate", OnManagerNotify);
                 }
             }
             this.Disposed += new EventHandler(ctAgentList_Disposed);
             this.Load += new EventHandler(ctAgentList_Load);
+        }
+
+        void OnManagerNotify(string jsonstr)
+        {
+            JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
+            int code = int.Parse(jd["Code"].ToString());
+            if (code == 0)
+            {
+                Manager obj = TradingLib.Mixins.LitJson.JsonMapper.ToObject<Manager>(jd["Playload"].ToJson());
+                InitAgentList();
+            }
         }
 
         void ctAgentList_Load(object sender, EventArgs e)

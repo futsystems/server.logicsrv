@@ -93,6 +93,7 @@ namespace FutsMoniter
 
             infotracker = new TradingInfoTracker();
             Globals.RegisterInfoTracker(infotracker);
+
             basicinfotracker = new BasicInfoTracker();
             Globals.RegisterBasicInfoTracker(basicinfotracker);
 
@@ -110,6 +111,7 @@ namespace FutsMoniter
 
             agentprofitreportform = new AgentProfitReportForm();
             
+            //基础数据窗口维护了基础数据 当有基础数据到达时候需要通知窗体 窗体进行加载和现实
             basicinfotracker.GotMarketTimeEvent += new MarketTimeDel(markettimeform.GotMarketTime);
             basicinfotracker.GotExchangeEvent += new ExchangeDel(exchangeform.GotExchange);
             basicinfotracker.GotSecurityEvent += new SecurityDel(securityform.GotSecurity);
