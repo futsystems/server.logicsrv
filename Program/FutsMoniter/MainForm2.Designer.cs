@@ -1,6 +1,6 @@
 ﻿namespace FutsMoniter
 {
-    partial class MainForm2
+    partial class MainForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,60 +28,57 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.tabSystem = new ComponentFactory.Krypton.Ribbon.KryptonRibbonTab();
-            this.kryptonRibbonGroupLines1 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupLines();
-            this.kryptonRibbonGroup2 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroup();
-            this.tabBasicInfo = new ComponentFactory.Krypton.Ribbon.KryptonRibbonTab();
-            this.tabHistQuery = new ComponentFactory.Krypton.Ribbon.KryptonRibbonTab();
-            this.tabManger = new ComponentFactory.Krypton.Ribbon.KryptonRibbonTab();
+            this.components = new System.ComponentModel.Container();
             this.kryptonRibbon1 = new ComponentFactory.Krypton.Ribbon.KryptonRibbon();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.ctAccountMontier1 = new FutsMoniter.Controls.ctAccountMontier();
+            this.kryptonManager1 = new ComponentFactory.Krypton.Toolkit.KryptonManager(this.components);
+            this.kryptonPalette1 = new ComponentFactory.Krypton.Toolkit.KryptonPalette(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.kryptonRibbon1)).BeginInit();
             this.SuspendLayout();
-            // 
-            // tabSystem
-            // 
-            this.tabSystem.Text = "系统管理";
-            // 
-            // kryptonRibbonGroupLines1
-            // 
-            this.kryptonRibbonGroupLines1.MaximumSize = ComponentFactory.Krypton.Ribbon.GroupItemSize.Small;
-            // 
-            // tabBasicInfo
-            // 
-            this.tabBasicInfo.Groups.AddRange(new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroup[] {
-            this.kryptonRibbonGroup2});
-            this.tabBasicInfo.Text = "基础数据";
-            // 
-            // tabHistQuery
-            // 
-            this.tabHistQuery.Text = "历史查询";
-            // 
-            // tabManger
-            // 
-            this.tabManger.Text = "柜员管理";
             // 
             // kryptonRibbon1
             // 
             this.kryptonRibbon1.InDesignHelperMode = true;
             this.kryptonRibbon1.Name = "kryptonRibbon1";
-            this.kryptonRibbon1.RibbonTabs.AddRange(new ComponentFactory.Krypton.Ribbon.KryptonRibbonTab[] {
-            this.tabSystem,
-            this.tabBasicInfo,
-            this.tabHistQuery,
-            this.tabManger});
-            this.kryptonRibbon1.SelectedTab = this.tabHistQuery;
-            this.kryptonRibbon1.Size = new System.Drawing.Size(745, 111);
+            this.kryptonRibbon1.SelectedContext = null;
+            this.kryptonRibbon1.SelectedTab = null;
+            this.kryptonRibbon1.Size = new System.Drawing.Size(1307, 110);
             this.kryptonRibbon1.TabIndex = 0;
             // 
-            // MainForm2
+            // statusStrip1
+            // 
+            this.statusStrip1.Location = new System.Drawing.Point(0, 693);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(1307, 22);
+            this.statusStrip1.TabIndex = 1;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // ctAccountMontier1
+            // 
+            this.ctAccountMontier1.DebugEnable = true;
+            this.ctAccountMontier1.DebugLevel = TradingLib.API.QSEnumDebugLevel.INFO;
+            this.ctAccountMontier1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ctAccountMontier1.Location = new System.Drawing.Point(0, 110);
+            this.ctAccountMontier1.Name = "ctAccountMontier1";
+            this.ctAccountMontier1.Size = new System.Drawing.Size(1307, 583);
+            this.ctAccountMontier1.TabIndex = 2;
+            // 
+            // kryptonManager1
+            // 
+            this.kryptonManager1.GlobalPalette = this.kryptonPalette1;
+            this.kryptonManager1.GlobalPaletteMode = ComponentFactory.Krypton.Toolkit.PaletteModeManager.Custom;
+            // 
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(745, 456);
+            this.ClientSize = new System.Drawing.Size(1307, 715);
+            this.Controls.Add(this.ctAccountMontier1);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.kryptonRibbon1);
-            this.CustomCaptionArea = new System.Drawing.Rectangle(411, 0, 309, 24);
-            this.Name = "MainForm2";
-            this.Text = "MainForm2";
+            this.Name = "MainForm";
+            this.Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)(this.kryptonRibbon1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -90,13 +87,11 @@
 
         #endregion
 
-        private ComponentFactory.Krypton.Ribbon.KryptonRibbonTab tabSystem;
-        private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupLines kryptonRibbonGroupLines1;
-        private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroup kryptonRibbonGroup2;
-        private ComponentFactory.Krypton.Ribbon.KryptonRibbonTab tabBasicInfo;
-        private ComponentFactory.Krypton.Ribbon.KryptonRibbonTab tabHistQuery;
-        private ComponentFactory.Krypton.Ribbon.KryptonRibbonTab tabManger;
         private ComponentFactory.Krypton.Ribbon.KryptonRibbon kryptonRibbon1;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private Controls.ctAccountMontier ctAccountMontier1;
+        private ComponentFactory.Krypton.Toolkit.KryptonManager kryptonManager1;
+        private ComponentFactory.Krypton.Toolkit.KryptonPalette kryptonPalette1;
 
     }
 }

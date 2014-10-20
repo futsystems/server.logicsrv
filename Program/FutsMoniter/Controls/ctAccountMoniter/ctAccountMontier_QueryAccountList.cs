@@ -12,13 +12,27 @@ namespace FutsMoniter.Controls
 {
     public partial class ctAccountMontier
     {
+        /// <summary>
+        /// 初始化顾虑帐户控件
+        /// </summary>
+        void InitQueryAccountControl()
+        {
+            Factory.IDataSourceFactory(accountType).BindDataSource(UIUtil.GetEnumValueObjects<QSEnumAccountCategory>(true));
+            Factory.IDataSourceFactory(routeType).BindDataSource(UIUtil.GetEnumValueObjects<QSEnumOrderTransferType>(true));
+
+            accexecute.Items.Add("<Any>");
+            accexecute.Items.Add("允许");
+            accexecute.Items.Add("冻结");
+            accexecute.SelectedIndex = 0;
+        }
         #region 过滤帐户列表
+
         /// <summary>
         /// 帐户类型选择
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void accountType_SelectedIndexChanged(object sender, Telerik.WinControls.UI.Data.PositionChangedEventArgs e)
+        private void accountType_SelectedIndexChanged(object sender, EventArgs e)
         {
             RefreshAccountQuery();
         }
@@ -27,7 +41,7 @@ namespace FutsMoniter.Controls
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void routeType_SelectedIndexChanged(object sender, Telerik.WinControls.UI.Data.PositionChangedEventArgs e)
+        private void routeType_SelectedIndexChanged(object sender, EventArgs e)
         {
             RefreshAccountQuery();
         }
@@ -36,16 +50,17 @@ namespace FutsMoniter.Controls
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void accexecute_SelectedIndexChanged(object sender, Telerik.WinControls.UI.Data.PositionChangedEventArgs e)
+        private void accexecute_SelectedIndexChanged(object sender, EventArgs e)
         {
             RefreshAccountQuery();
         }
+
         /// <summary>
         /// 是否登入选择
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
-        private void accLogin_ToggleStateChanged(object sender, StateChangedEventArgs args)
+        private void accLogin_CheckedChanged(object sender, EventArgs args)
         {
             RefreshAccountQuery();
         }
@@ -66,10 +81,12 @@ namespace FutsMoniter.Controls
             RefreshAccountQuery();
         }
 
-        private void acchodpos_ToggleStateChanged(object sender, StateChangedEventArgs args)
+        private void acchodpos_CheckedChanged(object sender, EventArgs args)
         {
             RefreshAccountQuery();
         }
+
+
         /// <summary>
         /// 刷新帐户筛选结果
         /// </summary>
@@ -83,7 +100,7 @@ namespace FutsMoniter.Controls
             }
             else
             {
-                acctype = accountType.SelectedItem.Text;
+                acctype = accountType.SelectedValue.ToString();
             }
 
             string strFilter = string.Empty;
@@ -138,7 +155,15 @@ namespace FutsMoniter.Controls
             }
             debug("strfilter:" + strFilter, QSEnumDebugLevel.INFO);
             datasource.Filter = strFilter;
+
+            //更新帐户数目
             UpdateAccountNum();
+
+            //订阅观察列表
+            if (Globals.EnvReady)
+            {
+                GridChanged();
+            }
         }
 
         void UpdateAccountNum()

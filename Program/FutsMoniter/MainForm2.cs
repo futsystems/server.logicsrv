@@ -3,17 +3,198 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Telerik.WinControls;
+using System.Threading;
+using TradingLib.API;
+using TradingLib.Common;
 
 namespace FutsMoniter
 {
-    public partial class MainForm2 : ComponentFactory.Krypton.Toolkit.KryptonForm
+    public partial class MainForm : ComponentFactory.Krypton.Toolkit.KryptonForm,ILogicHandler, ICallbackCentre
     {
-        public MainForm2()
+       
+        Log logfile = null;
+
+        TLClientNet tlclient;
+        bool _connected = false;
+        bool _logined = false;
+        bool _gotloginrep = false;
+        bool _basicinfodone = false;//基本数据是否已经查询完毕
+        event DebugDelegate ShowInfoHandler;
+        
+        string _servers = "127.0.0.1";
+
+        DebugForm debugform = new DebugForm();
+        RouterMoniterForm routerform;
+        ExchangeForm exchangeform;
+        MarketTimeForm markettimeform;
+        SecurityForm securityform;
+        SymbolForm symbolform;
+        SystemStatusForm systemstatusfrom;
+        HistQryForm histqryform;
+        BasicInfoTracker basicinfotracker;
+        ManagerForm mgrform;
+        AgentProfitReportForm agentprofitreportform;
+        void ShowInfo(string msg)
         {
-            InitializeComponent();
+            if (ShowInfoHandler != null)
+                ShowInfoHandler(msg);
+            logfile.GotDebug(msg);
         }
+
+
+        void debug(string msg)
+        {
+            //ctDebug1.GotDebug(msg);
+            debugform.GotDebug(msg);
+            logfile.GotDebug(msg);
+        }
+
+        TradingInfoTracker infotracker;
+        System.Threading.Timer _timer;
+        public MainForm(DebugDelegate showinfo)
+        {
+            //绑定回调函数
+            Globals.RegisterCallBackCentre(this);
+            Globals.RegInitCallback(OnInitFinished);
+            InitializeComponent();
+
+
+            logfile = new Log(Globals.Config["LogFileName"].AsString(), true, true, "log", true);//日志组件
+
+            //设定对外消息显示输出
+            ShowInfoHandler = showinfo;
+            
+
+            ThemeResolutionService.ApplicationThemeName = Globals.Config["ThemeName"].AsString();
+
+            if (Globals.Config["HeaderImg"].AsString().Equals("OEM"))
+            {
+                this.Icon = Properties.Resources.moniter_oem;
+            }
+            Init();
+            _timer = new System.Threading.Timer(FakeOutStatus, null, 800, 150);
+
+            
+           
+        }
+
+        void kryptonRibbonQATButton_debug_Click(object sender, EventArgs e)
+        {
+            if (debugform != null)
+                debugform.Show();
+        }
+
+        
+
+
+        public void Init()
+        {
+            
+            ctAccountMontier1.SendDebugEvent +=new DebugDelegate(debug);
+            ctAccountMontier1.QryAccountHistEvent += new IAccountLiteDel(ctAccountMontier1_QryAccountHistEvent);
+
+            infotracker = new TradingInfoTracker();
+            Globals.RegisterInfoTracker(infotracker);
+
+            basicinfotracker = new BasicInfoTracker();
+            Globals.RegisterBasicInfoTracker(basicinfotracker);
+
+            
+
+            routerform = new RouterMoniterForm();
+            exchangeform = new ExchangeForm();
+            markettimeform = new MarketTimeForm();
+            securityform = new SecurityForm();
+            symbolform = new SymbolForm();
+            systemstatusfrom = new SystemStatusForm();
+            histqryform = new HistQryForm();
+
+            mgrform = new ManagerForm();
+
+            agentprofitreportform = new AgentProfitReportForm();
+            
+            //基础数据窗口维护了基础数据 当有基础数据到达时候需要通知窗体 窗体进行加载和现实
+            basicinfotracker.GotMarketTimeEvent += new MarketTimeDel(markettimeform.GotMarketTime);
+            basicinfotracker.GotExchangeEvent += new ExchangeDel(exchangeform.GotExchange);
+            basicinfotracker.GotSecurityEvent += new SecurityDel(securityform.GotSecurity);
+            basicinfotracker.GotSymbolEvent += new SymbolDel(symbolform.GotSymbol);
+
+            basicinfotracker.GotManagerEvent += new ManagerDel(mgrform.GotManager);
+
+            Globals.SendDebugEvent +=new DebugDelegate(debug);
+
+            if (!Globals.Config["Agent"].AsBool())
+            {
+                //btnGPAgent.Enabled = false;
+            }
+
+            WireRibbon();
+
+        }
+
+
+
+
+        public void Reset()
+        {
+            //停止tlclient
+            tlclient.Stop();
+            //清空基础数据
+            basicinfotracker.Clear();
+            //清空实时交易记录
+            infotracker.Clear();
+        }
+
+       
+
+        
+
+        void InitSymbol2View()
+        { 
+            foreach(Symbol sym in Globals.BasicInfoTracker.SymbolsTradable)
+            {
+                ctAccountMontier1.AddSymbol(sym);
+                //Globals.Debug("symbol:" + sym.Symbol);
+            }
+        }
+
+
+        
+
+
+
+
+
+
+
+        
+        void StatusMessage(string message)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new StringParamDelegate(StatusMessage), new object[] { message });
+            }
+            else
+            {
+                //toolStripStatusLabel1.Opacity = 1;
+                //toolStripStatusLabel1.Text = message;
+            }
+        }
+
+        void FakeOutStatus(object obj)
+        {
+            //double o = toolStripStatusLabel1.Opacity - 0.05;
+            //toolStripStatusLabel1.Opacity = o >= 0 ? o : 0;
+        }
+
+        private void radMenuItem1_Click(object sender, EventArgs e)
+        {
+            //MainForm2 mf = new MainForm2();
+            //mf.Show();
+        }
+
     }
 }

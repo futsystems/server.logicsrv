@@ -55,7 +55,17 @@ namespace FutSystems.GUI.Control
             SetPreferences();
             InitTable();
             BindToTable();
+
+            tradeGrid.CellFormatting += new DataGridViewCellFormattingEventHandler(tradeGrid_CellFormatting);
+            tradeGrid.RowPrePaint += new DataGridViewRowPrePaintEventHandler(tradeGrid_RowPrePaint);
         }
+
+        void tradeGrid_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        {
+            e.PaintParts = e.PaintParts ^ DataGridViewPaintParts.Focus;
+        }
+
+        
 
        
         public void GotFill(Trade t)
@@ -101,11 +111,11 @@ namespace FutSystems.GUI.Control
             {
                 if (i == tradeGrid.Rows.Count - 1)
                 {
-                    tradeGrid.Rows[i].IsSelected = true;
+                    tradeGrid.Rows[i].Selected = true;
                 }
                 else
                 {
-                    tradeGrid.Rows[i].IsSelected = false;
+                    tradeGrid.Rows[i].Selected = false;
                 }
             }
             num.Text = tradeGrid.RowCount.ToString();
@@ -132,23 +142,19 @@ namespace FutSystems.GUI.Control
         /// </summary>
         private void SetPreferences() 
         {
-            Telerik.WinControls.UI.RadGridView grid = tradeGrid;
-            grid.ShowRowHeaderColumn = false;//显示每行的头部
-            grid.MasterTemplate.AutoSizeColumnsMode = Telerik.WinControls.UI.GridViewAutoSizeColumnsMode.Fill;//列的填充方式
-            grid.ShowGroupPanel = false;//是否显示顶部的panel用于组合排序
-            grid.MasterTemplate.EnableGrouping = false;//是否允许分组
-            grid.EnableHotTracking = true; 
-            //this.radRadioDataReader.ToggleState = Telerik.WinControls.Enumerations.ToggleState.On; 
+            ComponentFactory.Krypton.Toolkit.KryptonDataGridView grid = tradeGrid;
+;
 
-            grid.AllowAddNewRow = false;//不允许增加新行
-            grid.AllowDeleteRow = false;//不允许删除行
-            grid.AllowEditRow = false;//不允许编辑行
-            grid.AllowRowResize = false;
-            grid.EnableSorting = false;
-            grid.TableElement.TableHeaderHeight = UIGlobals.HeaderHeight;
-            grid.TableElement.RowHeight = UIGlobals.RowHeight;
-
-            grid.EnableAlternatingRowColor = true;//隔行不同颜色
+            grid.AllowUserToAddRows = false;
+            grid.AllowUserToDeleteRows = false;
+            grid.AllowUserToResizeRows = false;
+            grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            grid.ColumnHeadersHeight = 25;
+            grid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            grid.ReadOnly = true;
+            grid.RowHeadersVisible = false;
+            grid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            grid.AlternatingRowsDefaultCellStyle.BackColor = Color.WhiteSmoke;
         }
         /// <summary>
         /// 初始化数据表格
@@ -172,8 +178,8 @@ namespace FutSystems.GUI.Control
         /// 绑定数据表格到grid
         /// </summary>
         private void BindToTable()
-        { 
-            Telerik.WinControls.UI.RadGridView grid = tradeGrid;
+        {
+            ComponentFactory.Krypton.Toolkit.KryptonDataGridView grid = tradeGrid;
             //grid.TableElement.BeginUpdate();             
             //grid.MasterTemplate.Columns.Clear(); 
             grid.DataSource = tb;
@@ -184,44 +190,27 @@ namespace FutSystems.GUI.Control
            
         }
 
-        private void tradeGrid_CellFormatting(object sender, Telerik.WinControls.UI.CellFormattingEventArgs e)
+        void tradeGrid_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             try
             {
-                if (e.CellElement.RowInfo is GridViewDataRowInfo)
+                if (e.ColumnIndex == 2)
                 {
-                    
-                    if (e.CellElement.ColumnInfo.Name == SIDE)
-                    {
-                        object side = e.CellElement.RowInfo.Cells[SIDE].Value;
-                        if (side.ToString().Equals("买入"))
-                        {
-                            e.CellElement.ForeColor = UIGlobals.LongSideColor;
-                            e.CellElement.Font = UIGlobals.BoldFont;
-                        }
-                        else
-                        {
-                            e.CellElement.ForeColor = UIGlobals.ShortSideColor;
-                            e.CellElement.Font = UIGlobals.BoldFont;
-                        }
-                    }
-                    else if (e.CellElement.ColumnInfo.Name == PROFIT)
-                    {
-                        decimal p =0;
+                    e.CellStyle.Font = UIGlobals.BoldFont;
+                }
 
-                        decimal.TryParse(e.CellElement.Value.ToString(), out p);
-                        if (p < 0)
-                        {
-                            e.CellElement.ForeColor = UIGlobals.ShortSideColor;
-                        }
-                        else if (p > 0)
-                        {
-                            e.CellElement.ForeColor = UIGlobals.LongSideColor;
-                        }
-                        else
-                        {
-                            e.CellElement.ForeColor = Color.Black;
-                        }
+                
+                if (e.ColumnIndex == 3)
+                {
+                    e.CellStyle.Font = UIGlobals.BoldFont;
+                    if (e.Value.ToString() == "买入")
+                    {
+                        e.CellStyle.ForeColor = UIGlobals.LongSideColor;
+
+                    }
+                    else
+                    {
+                        e.CellStyle.ForeColor = UIGlobals.ShortSideColor;
                     }
                 }
             }
@@ -230,6 +219,8 @@ namespace FutSystems.GUI.Control
                 debug("Cellformating error:" + ex.ToString());
             }
         }
+
+
 
 
     }

@@ -32,6 +32,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ComponentFactory.Krypton.Toolkit, Version=4.4.0.0, Culture=neutral, PublicKeyToken=a87e673e9ecb6e8e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\kypton\ComponentFactory.Krypton.Toolkit.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Drawing" />
@@ -84,53 +88,17 @@
     <Compile Include="Control\ctDebug.Designer.cs">
       <DependentUpon>ctDebug.cs</DependentUpon>
     </Compile>
-    <Compile Include="Control\demo.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Control\demo.Designer.cs">
-      <DependentUpon>demo.cs</DependentUpon>
-    </Compile>
     <Compile Include="Control\ctOrderView.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Control\ctOrderView.Designer.cs">
       <DependentUpon>ctOrderView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Control\ctOrderSender.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Control\ctOrderSender.Designer.cs">
-      <DependentUpon>ctOrderSender.cs</DependentUpon>
-    </Compile>
     <Compile Include="Control\ctPositionView.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Control\ctPositionView.Designer.cs">
       <DependentUpon>ctPositionView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Control\ctQuoteView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Control\ctQuoteView.Designer.cs">
-      <DependentUpon>ctQuoteView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Control\ctAccountInfo.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Control\ctAccountInfo.Designer.cs">
-      <DependentUpon>ctAccountInfo.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Control\ctRaceInfo.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Control\ctRaceInfo.Designer.cs">
-      <DependentUpon>ctRaceInfo.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Control\ctSymbolSelect.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Control\ctSymbolSelect.Designer.cs">
-      <DependentUpon>ctSymbolSelect.cs</DependentUpon>
     </Compile>
     <Compile Include="deledge.cs" />
     <Compile Include="demo.cs" />
@@ -178,9 +146,6 @@
     <Compile Include="UIUtil.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Control\ctAccountInfo.resx">
-      <DependentUpon>ctAccountInfo.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Control\ctQuoteView\ViewQuoteList.resx">
       <DependentUpon>ViewQuoteList.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -191,26 +156,11 @@
     <EmbeddedResource Include="Control\ctDebug.resx">
       <DependentUpon>ctDebug.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Control\demo.resx">
-      <DependentUpon>demo.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Control\ctOrderView.resx">
       <DependentUpon>ctOrderView.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Control\ctOrderSender.resx">
-      <DependentUpon>ctOrderSender.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Control\ctPositionView.resx">
       <DependentUpon>ctPositionView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Control\ctQuoteView.resx">
-      <DependentUpon>ctQuoteView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Control\ctRaceInfo.resx">
-      <DependentUpon>ctRaceInfo.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Control\ctSymbolSelect.resx">
-      <DependentUpon>ctSymbolSelect.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="fmConfirm.resx">
       <DependentUpon>fmConfirm.cs</DependentUpon>

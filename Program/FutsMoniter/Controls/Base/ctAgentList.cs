@@ -127,7 +127,7 @@ namespace FutsMoniter
         {
             if (Globals.CallbackCentreReady)
             {
-                
+                Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "NotifyManagerUpdate", OnManagerNotify);
                 //Globals.CallBackCentre.UnRegisterCallback("FinServiceCentre", "QryFinServicePlan", OnInitFinished);
             }
         }
@@ -164,7 +164,7 @@ namespace FutsMoniter
             }
         }
 
-        private void agent_SelectedIndexChanged(object sender, Telerik.WinControls.UI.Data.PositionChangedEventArgs e)
+        private void agent_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (AgentSelectedChangedEvent != null && _gotdata)
                 AgentSelectedChangedEvent();

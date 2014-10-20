@@ -55,7 +55,6 @@ namespace FutsMoniter.Controls
         }
 
 
-
         private void accountgrid_Scroll(object sender, ScrollEventArgs e)
         {
             GridChanged();
@@ -65,7 +64,6 @@ namespace FutsMoniter.Controls
         {
             GridChanged();
         }
-
 
 
     }

@@ -78,14 +78,13 @@ namespace FutsMoniter.Common
 
             this._SplashScreenTimer.AutoReset = false;
             Thread DisplaySpashScreenThread = new Thread(new ThreadStart(DisplaySplashScreen));
-            DisplaySpashScreenThread.SetApartmentState(ApartmentState.STA);
+            //DisplaySpashScreenThread.SetApartmentState(ApartmentState.STA);
             DisplaySpashScreenThread.Start();
             //Application.Run(this._SplashScreenForm);
         }
 
         private void DisplaySplashScreen()
         {
-
             try
             {
                 this._SplashScreenTimer.Enabled = true;
@@ -120,7 +119,7 @@ namespace FutsMoniter.Common
             while (!(this._bSplashScreenClosed))
             {
                 Application.DoEvents();
-                Thread.Sleep(10);
+                //Thread.Sleep(10);
             }
             DisposeDelegate SplashScreenFormDisposeDelegate = new DisposeDelegate(this._SplashScreenForm.Dispose);
             this._SplashScreenForm.Invoke(SplashScreenFormDisposeDelegate);
@@ -128,6 +127,7 @@ namespace FutsMoniter.Common
 
 
             //必须先显示，再激活，否则主窗体不能在启动窗体消失后出现
+            //MessageBox.Show("xxxx");
             this._PrimaryForm.Show();
             this._PrimaryForm.Activate();
             this._PrimaryForm.Closed += new EventHandler(_PrimaryForm_Closed);

@@ -31,7 +31,7 @@ namespace FutsMoniter.Controls
 
 
         const string PROGRAME = "AccountMontier";
-        AccountConfigForm fmaccountconfig = null;
+        AccountConfigForm fmaccountconfig = new AccountConfigForm();
         bool _loaded = false;
 
         Symbol _symbolselected = null;
@@ -40,43 +40,33 @@ namespace FutsMoniter.Controls
         {
             try
             {
-            InitializeComponent();
+                InitializeComponent();
 
-            Factory.IDataSourceFactory(accountType).BindDataSource(UIUtil.GetEnumValueObjects<QSEnumAccountCategory>(true));
-            Factory.IDataSourceFactory(routeType).BindDataSource(UIUtil.GetEnumValueObjects<QSEnumOrderTransferType>(true));
+                InitQueryAccountControl();
 
-            accexecute.Items.Add("<Any>");
-            accexecute.Items.Add("允许");
-            accexecute.Items.Add("冻结");
-            accexecute.SelectedIndex = 0;
+                InitAccountMoniterGrid();
 
-            Init();
-            InitAccountMoniterGrid();
-            Globals.RegInitCallback(this.OnInitFinished);
 
-            StartUpdate();
-            fmaccountconfig = new AccountConfigForm();
-            fmaccountconfig.SendDebugEvent += new DebugDelegate(msgdebug);
-
-            InitViewQuoteList();
-            _loaded = true;
-
+                StartUpdate();
+                _loaded = true;
             
-                if (!Globals.Config["FinService"].AsBool())
-                {
-                    FinServicePage.Text = "开发中";
-                    FinServicePage.Enabled = false;
-                }
-                if (!Globals.Config["RaceService"].AsBool())
-                {
-                    RaceServicePage.Text = "开发中";
-                    FinServicePage.Enabled = false;
-                }
-                if (!Globals.Config["LottoService"].AsBool())
-                {
-                    LottoServicePage.Text = "开发中";
-                    LottoServicePage.Enabled = false;
-                }
+                    //if (!Globals.Config["FinService"].AsBool())
+                    //{
+                    //    FinServicePage.Text = "开发中";
+                    //    FinServicePage.Enabled = false;
+                    //}
+                    //if (!Globals.Config["RaceService"].AsBool())
+                    //{
+                    //    RaceServicePage.Text = "开发中";
+                    //    FinServicePage.Enabled = false;
+                    //}
+                    //if (!Globals.Config["LottoService"].AsBool())
+                    //{
+                    //    LottoServicePage.Text = "开发中";
+                    //    LottoServicePage.Enabled = false;
+                    //}
+
+                this.Load += new EventHandler(ctAccountMontier_Load);
             }
             catch (Exception ex)
             {
@@ -84,38 +74,20 @@ namespace FutsMoniter.Controls
             }
             
         }
-        
 
-        void Init()
+        void ctAccountMontier_Load(object sender, EventArgs e)
         {
-            try
-            {
-                ctOrderView1.SendDebugEvent += new DebugDelegate(msgdebug);
-                ctOrderView1.SendOrderCancel += new LongDelegate(CancelOrder);
+            
 
-                ctPositionView1.SendDebugEvent += new DebugDelegate(msgdebug);
-                ctPositionView1.SendCancelEvent += new LongDelegate(CancelOrder);
-                ctPositionView1.SendOrderEvent += new OrderDelegate(SendOrder);
+            //绑定事件
+            WireEvents();
 
-                ctTradeView1.SendDebugEvent += new DebugDelegate(msgdebug);
-
-                ctAgentList1.AgentSelectedChangedEvent += new VoidDelegate(ctAgentList1_AgentSelectedChangedEvent);
+            
 
 
-                Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryFinService", ctFinService1.OnQryFinService);
-                Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryFinServicePlan", ctFinService1.OnQryServicePlan);
-                Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "UpdateArguments", ctFinService1.OnQryFinService);
-                Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "ChangeServicePlane", ctFinService1.OnQryFinService);
-                Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "DeleteServicePlane", ctFinService1.OnQryFinService);
-
-                //初始化菜单
-                InitMenu();
-            }
-            catch (Exception ex)
-            { 
-                
-            }
         }
+
+        
 
         #region  辅助函数
 
@@ -192,9 +164,7 @@ namespace FutsMoniter.Controls
 
         void InitViewQuoteList()
         {
-            viewQuoteList1.SymbolSelectedEvent += new SymbolDelegate(viewQuoteList1_SymbolSelectedEvent);
-            viewQuoteList1.SendDebugEvent += new DebugDelegate(Globals.Debug);
-            ctOrderSenderM1.SendOrderEvent += new OrderDelegate(SendOrder);
+            
         }
 
         void viewQuoteList1_SymbolSelectedEvent(Symbol symbol)
@@ -231,19 +201,84 @@ namespace FutsMoniter.Controls
         }
 
 
+        #region 界面事件触发
+
+        void WireEvents()
+        {
+            Globals.RegInitCallback(this.OnInitFinished);
+
+            //交易帐户过滤控件
+            accountType.SelectedIndexChanged +=new EventHandler(accountType_SelectedIndexChanged);
+            routeType.SelectedIndexChanged +=new EventHandler(routeType_SelectedIndexChanged);
+            accexecute.SelectedIndexChanged +=new EventHandler(accexecute_SelectedIndexChanged);
+            accLogin.CheckedChanged+=new EventHandler(accLogin_CheckedChanged);
+            acct.TextChanged+=new EventHandler(acct_TextChanged);
+            ctAgentList1.AgentSelectedChangedEvent+=new VoidDelegate(ctAgentList1_AgentSelectedChangedEvent);
+            acchodpos.CheckedChanged +=new EventHandler(acchodpos_CheckedChanged);
+
+
+            //帐户表格事件
+            accountgrid.CellDoubleClick +=new DataGridViewCellEventHandler(accountgrid_CellDoubleClick);//双击单元格
+            accountgrid.CellFormatting +=new DataGridViewCellFormattingEventHandler(accountgrid_CellFormatting);//格式化单元格
+            accountgrid.SizeChanged +=new EventHandler(accountgrid_SizeChanged);//大小改变
+            accountgrid.Scroll +=new ScrollEventHandler(accountgrid_Scroll);//滚轮滚动
+            accountgrid.RowPrePaint += new DataGridViewRowPrePaintEventHandler(accountgrid_RowPrePaint);
+
+            //交易信息显示控件事件
+            ctOrderView1.SendDebugEvent += new DebugDelegate(msgdebug);
+            ctOrderView1.SendOrderCancel += new LongDelegate(CancelOrder);
+
+            ctPositionView1.SendDebugEvent += new DebugDelegate(msgdebug);
+            ctPositionView1.SendCancelEvent += new LongDelegate(CancelOrder);
+            ctPositionView1.SendOrderEvent += new OrderDelegate(SendOrder);
+
+            ctTradeView1.SendDebugEvent += new DebugDelegate(msgdebug);
+
+            viewQuoteList1.SymbolSelectedEvent += new SymbolDelegate(viewQuoteList1_SymbolSelectedEvent);
+            viewQuoteList1.SendDebugEvent += new DebugDelegate(Globals.Debug);
+            ctOrderSenderM1.SendOrderEvent += new OrderDelegate(SendOrder);
+
+            if (Globals.EnvReady)
+            {
+                //ctFinService事件 移动到控件内部 进行内聚封装
+                Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryFinService", ctFinService1.OnQryFinService);
+                Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryFinServicePlan", ctFinService1.OnQryServicePlan);
+                Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "UpdateArguments", ctFinService1.OnQryFinService);
+                Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "ChangeServicePlane", ctFinService1.OnQryFinService);
+                Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "DeleteServicePlane", ctFinService1.OnQryFinService);
+            }
+
+        }
+
+
+       
+        
 
 
 
 
 
+        
 
+       
 
+       
 
+        private void ServiceTabHolder_SelectedPageChanged(object sender, EventArgs e)
+        {
+            //if (ServiceTabHolder.SelectedPage.Name.Equals("FinServicePage"))
+            //{
+            //    if (AccountSetlected != null)
+            //    {
+            //        Globals.TLClient.ReqQryFinService(AccountSetlected.Account);
+            //    }
 
+            //    //如果没有获得服务计划列表则请求服务计划列表
+            //    //ctFinService1.PrepareServicePlan();
+            //}
+        }
 
-
-
-
+        #endregion
 
 
 

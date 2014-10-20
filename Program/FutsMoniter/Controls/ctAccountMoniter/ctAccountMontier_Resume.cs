@@ -17,6 +17,36 @@ namespace FutsMoniter.Controls
     public partial class ctAccountMontier
     {
 
+        private void accountgrid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (Globals.TradingInfoTracker.IsInResume)
+            {
+                debug("处于恢复过程中，直接返回等候", QSEnumDebugLevel.INFO);
+                return;
+            }
+
+            string account = CurrentAccount;
+            IAccountLite accountlite = null;
+            if (accountmap.TryGetValue(account, out accountlite))
+            {
+                //设定选中帐号
+                accountselected = accountlite;
+                ctFinService1.CurrentAccount = accountlite;
+                lbCurrentAccount.Text = account;
+
+                //清空交易记录然后请求新的交易数据
+                ClearTradingInfo();
+                Globals.TradingInfoTracker.RequetResume(account);
+
+                if (ctOrderSenderM1 != null)
+                {
+                    ctOrderSenderM1.SetAccount(accountlite);
+                }
+            }
+        }
+
+
+
         /// <summary>
         /// 清空交易记录
         /// </summary>
@@ -65,42 +95,6 @@ namespace FutsMoniter.Controls
                 debug("TradingInfoTracker 维护帐户与请求加载帐户不一致..", QSEnumDebugLevel.ERROR);
             }
 
-        }
-
-
-        /// <summary>
-        /// accountgrid双击某行
-        /// 获取该交易帐户日内交易数据
-        /// 避免多次双击
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void accountgrid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (Globals.TradingInfoTracker.IsInResume)
-            {
-                debug("处于恢复过程中，直接返回等候", QSEnumDebugLevel.INFO);
-                return;
-            }
-
-            string account = CurrentAccount;
-            IAccountLite accountlite = null;
-            if (accountmap.TryGetValue(account, out accountlite))
-            {
-                //设定选中帐号
-                accountselected = accountlite;
-                ctFinService1.CurrentAccount = accountlite;
-                lbCurrentAccount.Text = account;
-
-                //清空交易记录然后请求新的交易数据
-                ClearTradingInfo();
-                Globals.TradingInfoTracker.RequetResume(account);
-
-                if (ctOrderSenderM1 != null)
-                {
-                    ctOrderSenderM1.SetAccount(accountlite);
-                }
-            }
         }
     }
 }

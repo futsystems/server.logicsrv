@@ -38,34 +38,6 @@ namespace FutsMoniter.Controls
         }
 
 
-        /// <summary>
-        /// Grid渲染
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void accountgrid_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
-        {
-
-            if (e.ColumnIndex == 14 || e.ColumnIndex == 15 || e.ColumnIndex == 17)
-            {
-                e.CellStyle.Font = UIGlobals.BoldFont;
-                decimal v = 0;
-                decimal.TryParse(e.Value.ToString(), out v);
-                if (v > 0)
-                {
-                    e.CellStyle.ForeColor = UIGlobals.LongSideColor;
-                }
-                else if (v < 0)
-                {
-                    e.CellStyle.ForeColor = UIGlobals.ShortSideColor;
-                }
-                else if (v == 0)
-                {
-                    e.CellStyle.ForeColor = System.Drawing.Color.Black;
-                }
-                
-            }
-        }
 
     }
 }

@@ -9,18 +9,20 @@ namespace FutsMoniter
 {
     partial class MainForm
     {
-        #region 菜单操作
-
-        #region 清算中心
-        private void btnOpenClearCentre_Click(object sender, EventArgs e)
+        /// <summary>
+        /// 绑定Ribbon菜单事件
+        /// </summary>
+        void WireRibbon()
         {
-            if (fmConfirm.Show("确认开启清算中心?") == System.Windows.Forms.DialogResult.Yes)
-            {
-                Globals.TLClient.ReqOpenClearCentre();
-            }
+            //kryptonRibbonQATButton_debug.Click += new EventHandler(kryptonRibbonQATButton_debug_Click);
+            //kryptonRibbonGroupButton_OpenClearCentre.Click += new EventHandler(kryptonRibbonGroupButton_OpenClearCentre_Click);
+            //kryptonRibbonGroupButton_CloseClearCentre.Click += new EventHandler(kryptonRibbonGroupButton_CloseClearCentre_Click);
         }
 
-        private void btnCloseOpenCentre_Click(object sender, EventArgs e)
+        
+        #region 系统管理
+
+        void kryptonRibbonGroupButton_CloseClearCentre_Click(object sender, EventArgs e)
         {
             if (fmConfirm.Show("确认关闭清算中心?") == System.Windows.Forms.DialogResult.Yes)
             {
@@ -29,7 +31,19 @@ namespace FutsMoniter
             }
         }
 
+        void kryptonRibbonGroupButton_OpenClearCentre_Click(object sender, EventArgs e)
+        {
+            if (fmConfirm.Show("确认开启清算中心?") == System.Windows.Forms.DialogResult.Yes)
+            {
+                Globals.TLClient.ReqOpenClearCentre();
+            }
+        }
+
+
         #endregion
+        #region 菜单操作
+
+        
 
         #region 路由中心
         private void btnRouter_Click(object sender, EventArgs e)

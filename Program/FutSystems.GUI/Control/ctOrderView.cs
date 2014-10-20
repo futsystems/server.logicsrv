@@ -57,6 +57,8 @@ namespace FutSystems.GUI
             InitTable();
             BindToTable();
 
+            WireEvent();//绑定事件
+
         }
         OrderTracker ord;
         /// <summary>
@@ -175,39 +177,34 @@ namespace FutSystems.GUI
         /// </summary>
         private void SetPreferences()
         {
-            Telerik.WinControls.UI.RadGridView grid = orderGrid;
-            grid.ShowRowHeaderColumn = false;//显示每行的头部
-            grid.MasterTemplate.AutoSizeColumnsMode = Telerik.WinControls.UI.GridViewAutoSizeColumnsMode.Fill;//列的填充方式
-            grid.ShowGroupPanel = false;//是否显示顶部的panel用于组合排序
-            grid.MasterTemplate.EnableGrouping = false;//是否允许分组
-            grid.EnableHotTracking = true;
+            ComponentFactory.Krypton.Toolkit.KryptonDataGridView grid = orderGrid;
 
-            grid.AllowAddNewRow = false;//不允许增加新行
-            grid.AllowDeleteRow = false;//不允许删除行
-            grid.AllowEditRow = false;//不允许编辑行
-            grid.AllowRowResize = false;
-            grid.EnableSorting = false;
-            grid.TableElement.TableHeaderHeight = UIGlobals.HeaderHeight;
-            grid.TableElement.RowHeight = UIGlobals.RowHeight;
-            
-            grid.EnableAlternatingRowColor = true;//隔行不同颜色
-            //this.radRadioDataReader.ToggleState = Telerik.WinControls.Enumerations.ToggleState.On; 
+            grid.AllowUserToAddRows = false;
+            grid.AllowUserToDeleteRows = false;
+            grid.AllowUserToResizeRows = false;
+            grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            grid.ColumnHeadersHeight = 25;
+            grid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            grid.ReadOnly = true;
+            grid.RowHeadersVisible = false;
+            grid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            grid.AlternatingRowsDefaultCellStyle.BackColor = Color.WhiteSmoke;
         }
         /// <summary>
         /// 初始化数据表格
         /// </summary>
         private void InitTable()
         {
-            tb.Columns.Add(ID);
-            tb.Columns.Add(DATETIME);
-            tb.Columns.Add(SYMBOL);
-            tb.Columns.Add(DIRECTION);
-            tb.Columns.Add(OPERATION);
-            tb.Columns.Add(SIZE);
-            tb.Columns.Add(PRICE);
-            tb.Columns.Add(FILLED);
-            tb.Columns.Add(STATUS);
-            tb.Columns.Add(STATUSSTR);
+            tb.Columns.Add(ID);//0
+            tb.Columns.Add(DATETIME);//1
+            tb.Columns.Add(SYMBOL);//2
+            tb.Columns.Add(DIRECTION);//3
+            tb.Columns.Add(OPERATION);//4
+            tb.Columns.Add(SIZE);//5
+            tb.Columns.Add(PRICE);//6
+            tb.Columns.Add(FILLED);//7
+            tb.Columns.Add(STATUS);//8
+            tb.Columns.Add(STATUSSTR);//9
             tb.Columns.Add(COMMENT);
             tb.Columns.Add(ORDERREF);
             tb.Columns.Add(FORCECLOSE);
@@ -221,22 +218,17 @@ namespace FutSystems.GUI
         /// </summary>
         private void BindToTable()
         {
-            Telerik.WinControls.UI.RadGridView grid = orderGrid;
-            //grid.TableElement.BeginUpdate();             
-            //grid.MasterTemplate.Columns.Clear(); 
+            ComponentFactory.Krypton.Toolkit.KryptonDataGridView grid = orderGrid;
             datasource.DataSource = tb;
             datasource.Sort = DATETIME+ " ASC";
             grid.DataSource = datasource;
 
-            grid.Columns[DIRECTION].IsVisible = false;
-            grid.Columns[STATUS].IsVisible = false;
+            grid.Columns[DIRECTION].Visible = false;
+            grid.Columns[STATUS].Visible = false;
 
             grid.Columns[DATETIME].Width = 40;
-            grid.Columns[DATETIME].TextAlignment = ContentAlignment.MiddleCenter;
             grid.Columns[SYMBOL].Width = 40;
-            grid.Columns[SYMBOL].TextAlignment = ContentAlignment.MiddleCenter;
             grid.Columns[OPERATION].Width = 30;
-            grid.Columns[OPERATION].TextAlignment = ContentAlignment.MiddleCenter;
             grid.Columns[SIZE].Width = 40;
             grid.Columns[COMMENT].Width = 100;
 
@@ -247,35 +239,54 @@ namespace FutSystems.GUI
             
         }
 
-        private void ctOrderView_Load(object sender, EventArgs e)
+
+        void WireEvent()
         {
-            //SetPreferences();
-            //InitTable();
-            //BindToTable();
+            btnFilterAll.CheckedChanged += new EventHandler(btnFilterAll_CheckedChanged);
+            btnFilterPlaced.CheckedChanged +=new EventHandler(btnFilterPlaced_CheckedChanged);
+            btnFilterFilled.CheckedChanged += new EventHandler(btnFilterFilled_CheckedChanged);
+            btnFilterCancelError.CheckedChanged +=new EventHandler(btnFilterCancelError_CheckedChanged);
+            
+            btnCancelOrder.Click +=new EventHandler(btnCancelOrder_Click);
+            btnCancelAll.Click +=new EventHandler(btnCancelAll_Click);
+
+            orderGrid.CellDoubleClick +=new DataGridViewCellEventHandler(orderGrid_CellDoubleClick);
+            orderGrid.CellFormatting += new DataGridViewCellFormattingEventHandler(orderGrid_CellFormatting);
+            orderGrid.RowPrePaint += new DataGridViewRowPrePaintEventHandler(orderGrid_RowPrePaint);
         }
 
-        #region 界面事件
-        private void btnFilterAll_ToggleStateChanged(object sender, Telerik.WinControls.UI.StateChangedEventArgs args)
+        void orderGrid_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
         {
-            string strFilter ="";
+            e.PaintParts = e.PaintParts ^ DataGridViewPaintParts.Focus;
+        }
+
+
+
+
+
+        
+        #region 界面事件
+        void btnFilterAll_CheckedChanged(object sender, EventArgs e)
+        {
+            string strFilter = "";
             datasource.Filter = strFilter;
         }
 
-        private void btnFilterPlaced_ToggleStateChanged(object sender, Telerik.WinControls.UI.StateChangedEventArgs args)
+        private void btnFilterPlaced_CheckedChanged(object sender, EventArgs args)
         {
             string strFilter = DATETIME + " ASC";
             strFilter = String.Format(STATUS + " = '{0}' or " + STATUS + " = '{1}'", "Placed", "Opened");
             datasource.Filter = strFilter;
         }
 
-        private void btnFilterFilled_ToggleStateChanged(object sender, Telerik.WinControls.UI.StateChangedEventArgs args)
+        private void btnFilterFilled_CheckedChanged(object sender, EventArgs args)
         {
             string strFilter = DATETIME + " ASC";
             strFilter = String.Format(STATUS + " = '{0}' ", "Filled");
             datasource.Filter = strFilter;
         }
 
-        private void btnFilterCancelError_ToggleStateChanged(object sender, Telerik.WinControls.UI.StateChangedEventArgs args)
+        private void btnFilterCancelError_CheckedChanged(object sender, EventArgs args)
         {
             string strFilter = DATETIME + " ASC";
             strFilter = String.Format(STATUS + " = '{0}' or " + STATUS + " = '{1}' or " + STATUS + " = '{2}'", "Canceled", "Reject", "Unknown");
@@ -315,7 +326,7 @@ namespace FutSystems.GUI
                 }
             }
         }
-        private void orderGrid_DoubleClick(object sender, EventArgs e)
+        private void orderGrid_CellDoubleClick(object sender, EventArgs e)
         {
             long oid = SelectedOrderID;
             if (oid == -1)
@@ -342,71 +353,39 @@ namespace FutSystems.GUI
         {
             get
             {
-                if (orderGrid.SelectedRows.Count > 0)
-                {
-                    return long.Parse(orderGrid.SelectedRows[0].ViewInfo.CurrentRow.Cells[ID].Value.ToString());
-                }
-                else
-                {
-                    return -1;
-                }
-            
+                int row = (orderGrid.SelectedRows.Count > 0 ? orderGrid.SelectedRows[0].Index : -1);
+                return long.Parse(orderGrid[0, row].Value.ToString());
             }
         }
 
-
         //格式化输出
-        private void orderGrid_CellFormatting(object sender, Telerik.WinControls.UI.CellFormattingEventArgs e)
+        private void orderGrid_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            try
+            if (e.ColumnIndex == 4)
             {
-                if (e.CellElement.RowInfo is GridViewDataRowInfo)
+                e.CellStyle.Font = UIGlobals.BoldFont;
+                int v = 0;
+                int.TryParse(orderGrid[3, e.RowIndex].Value.ToString(), out v);
+                if (v > 0)
                 {
-                    if (e.CellElement.ColumnInfo.Name == OPERATION)
-                    {
-                        object direction = e.CellElement.RowInfo.Cells[DIRECTION].Value;
-                        if (direction.ToString().Equals("1"))
-                        {
-                            e.CellElement.ForeColor = UIGlobals.LongSideColor;
-                            e.CellElement.Font = UIGlobals.BoldFont;
-                        }
-                        else
-                        {
-                            e.CellElement.ForeColor = UIGlobals.ShortSideColor;
-                            e.CellElement.Font = UIGlobals.BoldFont;
-                        }
-                    }
-
-                    if (e.CellElement.ColumnInfo.Name == SYMBOL)
-                    {
-                        //e.CellElement.Font = UIGlobals.BoldFont;
-                    }
-
+                    e.CellStyle.ForeColor = UIGlobals.LongSideColor;
                 }
-
+                else
+                {
+                    e.CellStyle.ForeColor = UIGlobals.ShortSideColor;
+                }
+               
 
             }
-            catch (Exception ex)
-            {
-                debug("!!!!!!!!!!!!cell format error");
-            }
-
         }
 
 
         public void Clear()
         {
-            
             orderGrid.DataSource = null;
             orderidxmap.Clear();
             tb.Rows.Clear();
             BindToTable();
         }
-
-        //private void btnChange_Click(object sender, EventArgs e)
-        //{
-        //    fmOrderChange fm = new fmOrderChange();
-        //    fm.ShowDialog();
-        //}
     }
 }

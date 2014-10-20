@@ -154,7 +154,7 @@ namespace FutSystems.GUI
             InitTable();
             BindToTable();
 
-
+            WireEvent();
             _ordTransHelper = new OrderTransactionHelper("Moniter");
             _ordTransHelper.SendOrderEvent += new OrderDelegate(SendOrder);
             
@@ -282,13 +282,15 @@ namespace FutSystems.GUI
         {
             get
             {
+
                 if (positiongrid.SelectedRows.Count > 0)
                 {
-                    string sym = positiongrid.SelectedRows[0].ViewInfo.CurrentRow.Cells[SYMBOL].Value.ToString();
-                    string account = positiongrid.SelectedRows[0].ViewInfo.CurrentRow.Cells[ACCOUNT].Value.ToString();
-                    bool positionside = bool.Parse(positiongrid.SelectedRows[0].ViewInfo.CurrentRow.Cells[SIDE].Value.ToString());
-                    debug("sym:" + sym + " account:" + account +" side:"+positionside.ToString());
-                    Position pos= pt[sym, account,positionside];
+                    int row = positiongrid.SelectedRows[0].Index;
+                    string account = positiongrid[ACCOUNT, row].Value.ToString();
+                    string sym = positiongrid[SYMBOL, row].Value.ToString();
+                    bool side = bool.Parse(positiongrid[SIDE, row].Value.ToString());
+                    debug("sym:" + sym + " account:" + account + " side:" + side.ToString());
+                    Position pos = pt[sym, account, side];
                     debug("Pos:" + pos.ToString());
                     return pos;
                 }
@@ -306,14 +308,14 @@ namespace FutSystems.GUI
             {
                 if (positiongrid.SelectedRows.Count > 0)
                 {
-                    string sym = positiongrid.SelectedRows[0].ViewInfo.CurrentRow.Cells[SYMBOL].Value.ToString();
+                    int row = positiongrid.SelectedRows[0].Index;
+                    string sym = positiongrid[SYMBOL, row].Value.ToString();
                     return sym;
                 }
                 else
                 {
                     return null;
                 }
-                
             }
         }
 
@@ -571,40 +573,35 @@ namespace FutSystems.GUI
         /// </summary>
         private void SetPreferences()
         {
-            Telerik.WinControls.UI.RadGridView grid = positiongrid;
-            grid.ShowRowHeaderColumn = false;//显示每行的头部
-            grid.MasterTemplate.AutoSizeColumnsMode = Telerik.WinControls.UI.GridViewAutoSizeColumnsMode.Fill;//列的填充方式
-            grid.ShowGroupPanel = false;//是否显示顶部的panel用于组合排序
-            grid.MasterTemplate.EnableGrouping = false;//是否允许分组
-            grid.EnableHotTracking = true;
-            //this.radRadioDataReader.ToggleState = Telerik.WinControls.Enumerations.ToggleState.On; 
+            ComponentFactory.Krypton.Toolkit.KryptonDataGridView grid = positiongrid;
 
-            grid.AllowAddNewRow = false;//不允许增加新行
-            grid.AllowDeleteRow = false;//不允许删除行
-            grid.AllowEditRow = false;//不允许编辑行
-            grid.AllowRowResize = false;
-            grid.EnableSorting = false;
-            grid.TableElement.TableHeaderHeight = UIGlobals.HeaderHeight;
-            grid.TableElement.RowHeight = UIGlobals.RowHeight;
-
-            grid.EnableAlternatingRowColor = true;//隔行不同颜色
+            grid.AllowUserToAddRows = false;
+            grid.AllowUserToDeleteRows = false;
+            grid.AllowUserToResizeRows = false;
+            grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            grid.ColumnHeadersHeight = 25;
+            grid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            grid.ReadOnly = true;
+            grid.RowHeadersVisible = false;
+            grid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            grid.AlternatingRowsDefaultCellStyle.BackColor = Color.WhiteSmoke;
         }
         /// <summary>
         /// 初始化数据表格
         /// </summary>
         private void InitTable()
         {
-            gt.Columns.Add(SYMBOL);
-            gt.Columns.Add(SIDE);
-            gt.Columns.Add(DIRECTION);
-            gt.Columns.Add(SIZE, typeof(int));
-            gt.Columns.Add(CANFLATSIZE, typeof(int));
-            gt.Columns.Add(LASTPRICE);
-            gt.Columns.Add(AVGPRICE);
-            gt.Columns.Add(UNREALIZEDPL);
-            gt.Columns.Add(REALIZEDPL);
-            gt.Columns.Add(UNREALIZEDPLPOINT);
-            gt.Columns.Add(REALIZEDPLPOINT);
+            gt.Columns.Add(SYMBOL);//0
+            gt.Columns.Add(SIDE);//1
+            gt.Columns.Add(DIRECTION);//2
+            gt.Columns.Add(SIZE, typeof(int));//3
+            gt.Columns.Add(CANFLATSIZE, typeof(int));//4
+            gt.Columns.Add(LASTPRICE);//5
+            gt.Columns.Add(AVGPRICE);//6
+            gt.Columns.Add(UNREALIZEDPL);//7
+            gt.Columns.Add(REALIZEDPL);//8
+            gt.Columns.Add(UNREALIZEDPLPOINT);//9
+            gt.Columns.Add(REALIZEDPLPOINT);//10
             
             gt.Columns.Add(PROFITTARGET);
             gt.Columns.Add(STOPLOSS);
@@ -618,38 +615,38 @@ namespace FutSystems.GUI
         /// </summary>
         private void BindToTable()
         {
-            Telerik.WinControls.UI.RadGridView grid = positiongrid;
+            ComponentFactory.Krypton.Toolkit.KryptonDataGridView grid = positiongrid;
             //grid.TableElement.BeginUpdate();             
             //grid.MasterTemplate.Columns.Clear(); 
             datasource.DataSource = gt;
             grid.DataSource = datasource;
             //grid.Columns[ACCOUNT].IsVisible = false;
-            grid.Columns[KEY].IsVisible = false;
-            grid.Columns[PROFITTARGET].IsVisible = false;
-            grid.Columns[STOPLOSS].IsVisible = false;
-            grid.Columns[SIDE].IsVisible = false;
+            grid.Columns[KEY].Visible = false;
+            grid.Columns[PROFITTARGET].Visible = false;
+            grid.Columns[STOPLOSS].Visible = false;
+            grid.Columns[SIDE].Visible = false;
 
             //set width
             grid.Columns[SYMBOL].Width = 45;
-            grid.Columns[SYMBOL].TextAlignment = ContentAlignment.MiddleCenter;
+            //grid.Columns[SYMBOL].TextAlignment = ContentAlignment.MiddleCenter;
             grid.Columns[DIRECTION].Width = 45;
-            grid.Columns[DIRECTION].TextAlignment = ContentAlignment.MiddleCenter;
+            //grid.Columns[DIRECTION].TextAlignment = ContentAlignment.MiddleCenter;
             grid.Columns[SIZE].Width = 45;
-            grid.Columns[SIZE].TextAlignment = ContentAlignment.MiddleCenter;
+            //grid.Columns[SIZE].TextAlignment = ContentAlignment.MiddleCenter;
             grid.Columns[CANFLATSIZE].Width = 45;
-            grid.Columns[CANFLATSIZE].TextAlignment = ContentAlignment.MiddleCenter;
+            //grid.Columns[CANFLATSIZE].TextAlignment = ContentAlignment.MiddleCenter;
             grid.Columns[LASTPRICE].Width = 65;
-            grid.Columns[LASTPRICE].TextAlignment = ContentAlignment.MiddleRight;
+            //grid.Columns[LASTPRICE].TextAlignment = ContentAlignment.MiddleRight;
             grid.Columns[AVGPRICE].Width = 65;
-            grid.Columns[AVGPRICE].TextAlignment = ContentAlignment.MiddleRight;
+            //grid.Columns[AVGPRICE].TextAlignment = ContentAlignment.MiddleRight;
             grid.Columns[UNREALIZEDPL].Width = 65;
-            grid.Columns[UNREALIZEDPL].TextAlignment = ContentAlignment.MiddleRight;
+            //grid.Columns[UNREALIZEDPL].TextAlignment = ContentAlignment.MiddleRight;
             grid.Columns[REALIZEDPL].Width = 65;
-            grid.Columns[REALIZEDPL].TextAlignment = ContentAlignment.MiddleRight;
+            //grid.Columns[REALIZEDPL].TextAlignment = ContentAlignment.MiddleRight;
             grid.Columns[PROFITTARGET].Width = 75;
-            grid.Columns[PROFITTARGET].TextAlignment = ContentAlignment.MiddleCenter;
+            //grid.Columns[PROFITTARGET].TextAlignment = ContentAlignment.MiddleCenter;
             grid.Columns[STOPLOSS].Width = 75;
-            grid.Columns[STOPLOSS].TextAlignment = ContentAlignment.MiddleCenter;
+            //grid.Columns[STOPLOSS].TextAlignment = ContentAlignment.MiddleCenter;
 
         }
 
@@ -660,82 +657,75 @@ namespace FutSystems.GUI
             //BindToTable();
         }
 
-        private void positiongrid_CellFormatting(object sender, Telerik.WinControls.UI.CellFormattingEventArgs e)
-        {
-            try
-            {
-                if (e.CellElement.RowInfo is GridViewDataRowInfo)
-                {
-                    if (e.CellElement.ColumnInfo.Name == DIRECTION)
-                    {
-                        object direction = e.CellElement.RowInfo.Cells[DIRECTION].Value;
-                        if (direction.ToString().Equals("多"))
-                        {
-                            e.CellElement.ForeColor = UIGlobals.LongSideColor;
-                            e.CellElement.Font = UIGlobals.BoldFont;
-                        }
-                        else if (direction.ToString().Equals("空"))
-                        {
-                            e.CellElement.ForeColor = UIGlobals.ShortSideColor;
-                            e.CellElement.Font = UIGlobals.BoldFont;
-                        }
-                        else
-                        {
-                            e.CellElement.ForeColor = Color.Black;
-                            e.CellElement.Font = UIGlobals.BoldFont;
-                        }
-                    }
-                    else if (e.CellElement.ColumnInfo.Name == REALIZEDPL || e.CellElement.ColumnInfo.Name == REALIZEDPLPOINT)
-                    {
-                        decimal v = decimal.Parse(e.CellElement.RowInfo.Cells[REALIZEDPL].Value.ToString());
-                        if (v > 0)
-                        {
-                            e.CellElement.ForeColor = UIGlobals.LongSideColor;
-                        }
-                        else if (v < 0)
-                        {
-                            e.CellElement.ForeColor = UIGlobals.ShortSideColor;
-                        }
-                        else
-                        {
-                            e.CellElement.ForeColor = Color.Black;
-                        }
-                    }
-                    else if (e.CellElement.ColumnInfo.Name == UNREALIZEDPL || e.CellElement.ColumnInfo.Name == UNREALIZEDPLPOINT)
-                    {
-                        decimal v = decimal.Parse(e.CellElement.RowInfo.Cells[UNREALIZEDPL].Value.ToString());
-                        if (v > 0)
-                        {
-                            e.CellElement.ForeColor = UIGlobals.LongSideColor;
-                        }
-                        else if (v < 0)
-                        {
-                            e.CellElement.ForeColor = UIGlobals.ShortSideColor;
-                        }
-                        else
-                        {
-                            e.CellElement.ForeColor = Color.Black;
-                        }
-                    }
 
-                }
-            }
-            catch (Exception ex)
-            {
-                //debug("positionview cellformat error:" + ex.ToString());
-            }
+
+
+        void WireEvent()
+        {
+            btnShowAll.CheckedChanged += new EventHandler(btnShowAll_CheckedChanged);
+            btnShowHold.CheckedChanged += new EventHandler(btnShowHold_CheckedChanged);
+            btnFlat.Click +=new EventHandler(btnFlat_Click);
+            btnFlatAll.Click +=new EventHandler(btnFlatAll_Click);
+            btnCancel.Click +=new EventHandler(btnCancel_Click);
+            btnReserve.Click +=new EventHandler(btnReserve_Click);
+
+            positiongrid.DoubleClick +=new EventHandler(positiongrid_DoubleClick);
+            positiongrid.CellFormatting += new DataGridViewCellFormattingEventHandler(positiongrid_CellFormatting);
         }
 
-       
+        void positiongrid_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if(e.ColumnIndex == 2)
+            {
+                string direction = positiongrid[DIRECTION, e.RowIndex].Value.ToString();
+                if (direction.Equals("多"))
+                {
+                    e.CellStyle.ForeColor = UIGlobals.LongSideColor;
+                    e.CellStyle.Font = UIGlobals.BoldFont;
+                }
+                else if (direction.Equals("空"))
+                {
+                    e.CellStyle.ForeColor = UIGlobals.ShortSideColor;
+                    e.CellStyle.Font = UIGlobals.BoldFont;
+                }
+                else
+                {
+                    e.CellStyle.ForeColor = Color.Black;
+                    e.CellStyle.Font = UIGlobals.BoldFont;
+                }
+            }
+
+            if (e.ColumnIndex == 7 || e.ColumnIndex == 8 || e.ColumnIndex == 9 || e.ColumnIndex == 10)
+            {
+                decimal v = decimal.Parse(positiongrid[e.ColumnIndex, e.RowIndex].Value.ToString());
+                if (v > 0)
+                {
+                    e.CellStyle.ForeColor = UIGlobals.LongSideColor;
+                    e.CellStyle.Font = UIGlobals.BoldFont;
+                }
+                else if (v < 0)
+                {
+                    e.CellStyle.ForeColor = UIGlobals.ShortSideColor;
+                    e.CellStyle.Font = UIGlobals.BoldFont;
+                }
+                else
+                {
+                    e.CellStyle.ForeColor = Color.Black;
+                    e.CellStyle.Font = UIGlobals.BoldFont;
+                }
+            }
+
+        }
+
 
         #region 界面操作事件
-        private void btnShowAll_ToggleStateChanged(object sender, StateChangedEventArgs args)
+        private void btnShowAll_CheckedChanged(object sender, EventArgs e)
         {
             string strFilter = "";
             datasource.Filter = strFilter;
         }
 
-        private void btnShowHold_ToggleStateChanged(object sender, StateChangedEventArgs args)
+        private void btnShowHold_CheckedChanged(object sender, EventArgs e)
         {
             string strFilter;
             strFilter = String.Format(SIZE + " > '{0}'","0");
@@ -783,87 +773,7 @@ namespace FutSystems.GUI
                 }
             }
         }
-        //双击持仓某行
-        //1.修改止盈止损参数
-        private void positiongrid_DoubleClick(object sender, EventArgs e)
-        {
-            
-            int rownum = positiongrid.CurrentRow.Index+1;
-            //止盈 止损设置
-            if (positiongrid.CurrentColumn.Name == STOPLOSS)
-            {
-                //MessageBox.Show("stoploss edit");
-                //frmPositionOffset fm = new frmPositionOffset();
-                //fm.TopMost = true;
-                frmPosOffset.ParseOffset(GetLossArgs(CurrentKey),CurrentPositoin,findSecurity(CurrentSymbol));
-                Point p = this.PointToScreen(positiongrid.Location);
-                p.X = p.X + 250;
-                p.Y = p.Y + UIGlobals.HeaderHeight + UIGlobals.RowHeight * rownum;
-                frmPosOffset.Location = p;
-                frmPosOffset.Show();
-                return;
-            }
-            if (positiongrid.CurrentColumn.Name == PROFITTARGET)
-            {
-                //frmPositionOffset fm = new frmPositionOffset();
-                //fm.TopMost = true;
-                frmPosOffset.ParseOffset(GetProfitArgs(CurrentKey), CurrentPositoin, findSecurity(CurrentSymbol));
-                Point p = this.PointToScreen(positiongrid.Location);
-                p.X = p.X + 250;
-                p.Y = p.Y + UIGlobals.HeaderHeight + UIGlobals.RowHeight * rownum;
-                frmPosOffset.Location = p;
-                frmPosOffset.Show();
-                return;
-            }
-
-            //非止盈止损列的双击并且设定为双击平仓,平调所选持仓
-            if (isDoubleFlat.Checked)
-            {
-                FlatPosition(CurrentPositoin);
-            }
-            else
-            { 
-            
-            }
-
-        }
-        #endregion
-
-        private void positiongrid_EditorRequired(object sender, EditorRequiredEventArgs e)
-        {
-
-        }
-        // Fires when the cell changes its value 
-        private void positiongrid_CellValueChanged(object sender, GridViewCellEventArgs e)
-        {
-
-        }
-        // Fires when the editor changes its value. The value is stored only inside the editor. 
-        private void positiongrid_ValueChanged(object sender, EventArgs e)
-        {
-            MessageBox.Show("eidtor value changed");
-            StopLossEditor edit = sender as StopLossEditor;
-            if (edit != null)
-            {
-                GridCellElement cellstop = positiongrid.TableElement.GetCellElement(positiongrid.CurrentRow, positiongrid.Columns[STOPLOSS]);
-                if (cellstop != null)
-                {
-                    cellstop.Text = "i am here";
-                }
-            }
-        }
-
-
-
-
-        public void Clear()
-        {
-            positiongrid.DataSource = null;
-            symRowMap.Clear();
-            gt.Rows.Clear();
-            BindToTable();
-        }
-
+        //反手
         private void btnReserve_Click(object sender, EventArgs e)
         {
             Position pos = CurrentPositoin;
@@ -880,6 +790,82 @@ namespace FutSystems.GUI
                 MessageForm.Show("请选择有效持仓!");
             }
         }
+
+        //双击持仓某行
+        //1.修改止盈止损参数
+        private void positiongrid_DoubleClick(object sender, EventArgs e)
+        {
+            
+            int rownum = positiongrid.CurrentRow.Index+1;
+            //止盈 止损设置
+            //if (positiongrid.CurrentColumn.Name == STOPLOSS)
+            //{
+            //    //MessageBox.Show("stoploss edit");
+            //    //frmPositionOffset fm = new frmPositionOffset();
+            //    //fm.TopMost = true;
+            //    frmPosOffset.ParseOffset(GetLossArgs(CurrentKey),CurrentPositoin,findSecurity(CurrentSymbol));
+            //    Point p = this.PointToScreen(positiongrid.Location);
+            //    p.X = p.X + 250;
+            //    p.Y = p.Y + UIGlobals.HeaderHeight + UIGlobals.RowHeight * rownum;
+            //    frmPosOffset.Location = p;
+            //    frmPosOffset.Show();
+            //    return;
+            //}
+            //if (positiongrid.CurrentColumn.Name == PROFITTARGET)
+            //{
+            //    //frmPositionOffset fm = new frmPositionOffset();
+            //    //fm.TopMost = true;
+            //    frmPosOffset.ParseOffset(GetProfitArgs(CurrentKey), CurrentPositoin, findSecurity(CurrentSymbol));
+            //    Point p = this.PointToScreen(positiongrid.Location);
+            //    p.X = p.X + 250;
+            //    p.Y = p.Y + UIGlobals.HeaderHeight + UIGlobals.RowHeight * rownum;
+            //    frmPosOffset.Location = p;
+            //    frmPosOffset.Show();
+            //    return;
+            //}
+
+            //非止盈止损列的双击并且设定为双击平仓,平调所选持仓
+            if (isDoubleFlat.Checked)
+            {
+                FlatPosition(CurrentPositoin);
+            }
+            else
+            { 
+            
+            }
+
+        }
+        #endregion
+
+
+
+        // Fires when the editor changes its value. The value is stored only inside the editor. 
+        //private void positiongrid_ValueChanged(object sender, EventArgs e)
+        //{
+        //    MessageBox.Show("eidtor value changed");
+        //    StopLossEditor edit = sender as StopLossEditor;
+        //    if (edit != null)
+        //    {
+        //        GridCellElement cellstop = positiongrid.TableElement.GetCellElement(positiongrid.CurrentRow, positiongrid.Columns[STOPLOSS]);
+        //        if (cellstop != null)
+        //        {
+        //            cellstop.Text = "i am here";
+        //        }
+        //    }
+        //}
+
+
+
+
+        public void Clear()
+        {
+            positiongrid.DataSource = null;
+            symRowMap.Clear();
+            gt.Rows.Clear();
+            BindToTable();
+        }
+
+        
         
 
 

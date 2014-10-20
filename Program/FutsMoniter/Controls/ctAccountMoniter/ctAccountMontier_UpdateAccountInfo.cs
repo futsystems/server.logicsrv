@@ -46,7 +46,8 @@ namespace FutsMoniter.Controls
         const string COMMISSION = "手续费";
         const string PROFIT = "净利";
         const string HOLDSIZE = "持";
-        const string CATEGORY = "帐户类型";
+        const string CATEGORYSTR = "帐户类型";
+        const string CATEGORY = "CATEGORY";
         const string RACEENTRYTIME = "参赛日期";
         const string RACEID = "比赛编号";
         const string RACESTATUS = "比赛状态";
@@ -97,6 +98,9 @@ namespace FutsMoniter.Controls
             grid.ReadOnly = true;
             grid.RowHeadersVisible = false;
             grid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            grid.StateCommon.Background.Color1 = Color.WhiteSmoke;
+            grid.StateCommon.Background.Color2 = Color.WhiteSmoke;
+
         }
 
         //初始化Account显示空格
@@ -126,6 +130,7 @@ namespace FutsMoniter.Controls
             gt.Columns.Add(PROFIT);//16
             gt.Columns.Add(HOLDSIZE);//17
             gt.Columns.Add(CATEGORY);//18
+            gt.Columns.Add(CATEGORYSTR);
             gt.Columns.Add(INTRADAY);//19
             gt.Columns.Add(AGENTCODE);//20
             gt.Columns.Add(AGENTMGRFK);//21
@@ -136,10 +141,12 @@ namespace FutsMoniter.Controls
         void InitAccountMoniterGrid()
         {
             InitTable();
+
             SetPreferences();
+
             BindToTable();
 
-            //初始化右键菜单
+            //初始表格右键化右键菜单
             InitMenu();
 
         }
@@ -154,10 +161,10 @@ namespace FutsMoniter.Controls
             accountgrid.DataSource = datasource;
 
             accountgrid.Columns[EXECUTE].Visible = false;
-            accountgrid.Columns[EXECUTE].Width = 0;
             accountgrid.Columns[ROUTE].Visible = false;
             accountgrid.Columns[LOGINSTATUS].Visible = false;
             accountgrid.Columns[AGENTMGRFK].Visible = false;
+            accountgrid.Columns[CATEGORY].Visible = false;
 
             accountgrid.Columns[ACCOUNT].Width = 100;
             accountgrid.Columns[ROUTEIMG].Width = 20;
@@ -351,7 +358,8 @@ namespace FutsMoniter.Controls
                         gt.Rows[i][UNREALIZEDPL] = decDisp(0);
                         gt.Rows[i][COMMISSION] = decDisp(0);
                         gt.Rows[i][PROFIT] = decDisp(0);
-                        gt.Rows[i][CATEGORY] = Util.GetEnumDescription(account.Category);
+                        gt.Rows[i][CATEGORYSTR] = Util.GetEnumDescription(account.Category);
+                        gt.Rows[i][CATEGORY] = account.Category.ToString();
                         gt.Rows[i][INTRADAY] = account.IntraDay ? "日内" : "隔夜";
                         Manager mgr = Globals.BasicInfoTracker.GetManager(account.MGRID);
                         gt.Rows[i][AGENTCODE] = mgr.Login + " - " + mgr.Name;
@@ -371,7 +379,8 @@ namespace FutsMoniter.Controls
                         gt.Rows[r][ROUTEIMG] = getRouteStatusImage(account.OrderRouteType);
                         gt.Rows[r][EXECUTE] = getExecuteStatus(account.Execute);
                         gt.Rows[r][EXECUTEIMG] = getExecuteStatusImage(account.Execute);
-                        gt.Rows[r][CATEGORY] = Util.GetEnumDescription(account.Category);
+                        gt.Rows[r][CATEGORYSTR] = Util.GetEnumDescription(account.Category);
+                        gt.Rows[r][CATEGORY] = account.Category.ToString();
                         gt.Rows[r][INTRADAY] = account.IntraDay ? "日内" : "隔夜";
                         gt.Rows[r][POSLOK] = account.PosLock ? "有" : "无";
 
@@ -459,5 +468,36 @@ namespace FutsMoniter.Controls
             }
         }
         #endregion
+
+
+        private void accountgrid_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.ColumnIndex == 14 || e.ColumnIndex == 15 || e.ColumnIndex == 17)
+            {
+                e.CellStyle.Font = UIGlobals.BoldFont;
+                decimal v = 0;
+                decimal.TryParse(e.Value.ToString(), out v);
+                if (v > 0)
+                {
+                    e.CellStyle.ForeColor = UIGlobals.LongSideColor;
+                }
+                else if (v < 0)
+                {
+                    e.CellStyle.ForeColor = UIGlobals.ShortSideColor;
+                }
+                else if (v == 0)
+                {
+                    e.CellStyle.ForeColor = System.Drawing.Color.Black;
+                }
+
+            }
+        }
+
+        void accountgrid_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        {
+            e.PaintParts = e.PaintParts ^ DataGridViewPaintParts.Focus;
+        }
+
+
     }
 }
