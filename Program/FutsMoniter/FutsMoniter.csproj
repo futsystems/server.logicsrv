@@ -154,16 +154,10 @@
     <Compile Include="DebugForm.Designer.cs">
       <DependentUpon>DebugForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form1.cs">
+    <Compile Include="Forms\CasherMangerForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Form\CasherMangerForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form\CasherMangerForm.Designer.cs">
+    <Compile Include="Forms\CasherMangerForm.Designer.cs">
       <DependentUpon>CasherMangerForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\ctCashOperation.cs">
@@ -172,17 +166,11 @@
     <Compile Include="Controls\ctCashOperation.Designer.cs">
       <DependentUpon>ctCashOperation.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form\CashOperationForm.cs">
+    <Compile Include="Forms\CashOperationForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\CashOperationForm.Designer.cs">
+    <Compile Include="Forms\CashOperationForm.Designer.cs">
       <DependentUpon>CashOperationForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Form\BankAccountForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form\BankAccountForm.Designer.cs">
-      <DependentUpon>BankAccountForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\Report\ctDetailReportByAccount.cs">
       <SubType>UserControl</SubType>
@@ -244,22 +232,22 @@
     <Compile Include="Controls\Base\ctBankList.Designer.cs">
       <DependentUpon>ctBankList.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form\FinanceMangerForm.cs">
+    <Compile Include="Forms\FinanceMangerForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\FinanceMangerForm.Designer.cs">
+    <Compile Include="Forms\FinanceMangerForm.Designer.cs">
       <DependentUpon>FinanceMangerForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form\FeeConfigForm.cs">
+    <Compile Include="Forms\FeeConfigForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\FeeConfigForm.Designer.cs">
+    <Compile Include="Forms\FeeConfigForm.Designer.cs">
       <DependentUpon>FeeConfigForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form\AgentProfitReportForm.cs">
+    <Compile Include="Forms\AgentProfitReportForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\AgentProfitReportForm.Designer.cs">
+    <Compile Include="Forms\AgentProfitReportForm.Designer.cs">
       <DependentUpon>AgentProfitReportForm.cs</DependentUpon>
     </Compile>
     <Compile Include="API\Delegate.cs" />
@@ -286,18 +274,6 @@
     <Compile Include="Controls\Base\ctTLEdit.Designer.cs">
       <DependentUpon>ctTLEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form\ChangeInvestorForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form\ChangeInvestorForm.Designer.cs">
-      <DependentUpon>ChangeInvestorForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Form\ChangePassForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form\ChangePassForm.Designer.cs">
-      <DependentUpon>ChangePassForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Common\BasicInfoTracker.cs" />
     <Compile Include="Controls\hist\ctHistCashTransaction.cs">
       <SubType>UserControl</SubType>
@@ -323,25 +299,19 @@
     <Compile Include="Controls\hist\ctHistTrade.Designer.cs">
       <DependentUpon>ctHistTrade.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form\AccountConfigForm_OrderRule.cs">
+    <Compile Include="Forms\AccountConfigForm_OrderRule.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\ExchangeForm.cs">
+    <Compile Include="Forms\ExchangeForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\ExchangeForm.Designer.cs">
+    <Compile Include="Forms\ExchangeForm.Designer.cs">
       <DependentUpon>ExchangeForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form\AddAccountForm.cs">
+    <Compile Include="Forms\AccountConfigForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\AddAccountForm.Designer.cs">
-      <DependentUpon>AddAccountForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Form\AccountConfigForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form\AccountConfigForm.Designer.cs">
+    <Compile Include="Forms\AccountConfigForm.Designer.cs">
       <DependentUpon>AccountConfigForm.cs</DependentUpon>
     </Compile>
     <Compile Include="API\ILogicHandler.cs" />
@@ -367,31 +337,55 @@
     <Compile Include="Controls\ctFinanceInfo.Designer.cs">
       <DependentUpon>ctFinanceInfo.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form\AccountConfigForm_.cs">
+    <Compile Include="Forms\AccountConfigForm_.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\AccountConfigForm_GotXXX.cs">
+    <Compile Include="Forms\AccountConfigForm_GotXXX.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\AccountConfigForm_AccountRule.cs">
+    <Compile Include="Forms\AccountConfigForm_AccountRule.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\InsertTradeForm.cs">
+    <Compile Include="Forms\fms\fmAddAccount.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\InsertTradeForm.Designer.cs">
+    <Compile Include="Forms\fms\fmAddAccount.Designer.cs">
+      <DependentUpon>fmAddAccount.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\fms\fmAgentBankAccount.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\fms\fmAgentBankAccount.Designer.cs">
+      <DependentUpon>fmAgentBankAccount.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\fms\fmChangeInvestor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\fms\fmChangeInvestor.Designer.cs">
+      <DependentUpon>fmChangeInvestor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\fms\fmChangePassword.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\fms\fmChangePassword.Designer.cs">
+      <DependentUpon>fmChangePassword.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\InsertTradeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\InsertTradeForm.Designer.cs">
       <DependentUpon>InsertTradeForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form\HistQryForm.cs">
+    <Compile Include="Forms\HistQryForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\HistQryForm.Designer.cs">
+    <Compile Include="Forms\HistQryForm.Designer.cs">
       <DependentUpon>HistQryForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form\PaySlipFormAccount.cs">
+    <Compile Include="Forms\PaySlipFormAccount.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\PaySlipFormAccount.Designer.cs">
+    <Compile Include="Forms\PaySlipFormAccount.Designer.cs">
       <DependentUpon>PaySlipFormAccount.cs</DependentUpon>
     </Compile>
     <Compile Include="Glabols.cs" />
@@ -420,40 +414,40 @@
     <Compile Include="MainForm_Ribbon.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\MarketTimeForm.cs">
+    <Compile Include="Forms\MarketTimeForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\MarketTimeForm.Designer.cs">
+    <Compile Include="Forms\MarketTimeForm.Designer.cs">
       <DependentUpon>MarketTimeForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form\MarketTimeInfoForm.cs">
+    <Compile Include="Forms\MarketTimeInfoForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\MarketTimeInfoForm.Designer.cs">
+    <Compile Include="Forms\MarketTimeInfoForm.Designer.cs">
       <DependentUpon>MarketTimeInfoForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form\ManagerForm.cs">
+    <Compile Include="Forms\ManagerForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\ManagerForm.Designer.cs">
+    <Compile Include="Forms\ManagerForm.Designer.cs">
       <DependentUpon>ManagerForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form\ManagerEditForm.cs">
+    <Compile Include="Forms\ManagerEditForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\ManagerEditForm.Designer.cs">
+    <Compile Include="Forms\ManagerEditForm.Designer.cs">
       <DependentUpon>ManagerEditForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form\OperationReportForm.cs">
+    <Compile Include="Forms\OperationReportForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\OperationReportForm.Designer.cs">
+    <Compile Include="Forms\OperationReportForm.Designer.cs">
       <DependentUpon>OperationReportForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form\PaySlipForm.cs">
+    <Compile Include="Forms\PaySlipForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\PaySlipForm.Designer.cs">
+    <Compile Include="Forms\PaySlipForm.Designer.cs">
       <DependentUpon>PaySlipForm.cs</DependentUpon>
     </Compile>
     <Compile Include="MainForm_OnInit.cs">
@@ -462,46 +456,46 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Common\SplashScreenApplication.cs" />
-    <Compile Include="Form\RouterMoniterForm.cs">
+    <Compile Include="Forms\RouterMoniterForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\RouterMoniterForm.Designer.cs">
+    <Compile Include="Forms\RouterMoniterForm.Designer.cs">
       <DependentUpon>RouterMoniterForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form\SecurityForm.cs">
+    <Compile Include="Forms\SecurityForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\SecurityForm.Designer.cs">
+    <Compile Include="Forms\SecurityForm.Designer.cs">
       <DependentUpon>SecurityForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form\SecEditForm.cs">
+    <Compile Include="Forms\SecEditForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\SecEditForm.Designer.cs">
+    <Compile Include="Forms\SecEditForm.Designer.cs">
       <DependentUpon>SecEditForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form\SymbolEditForm.cs">
+    <Compile Include="Forms\SymbolEditForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\SymbolEditForm.Designer.cs">
+    <Compile Include="Forms\SymbolEditForm.Designer.cs">
       <DependentUpon>SymbolEditForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form\SymbolForm.cs">
+    <Compile Include="Forms\SymbolForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\SymbolForm.Designer.cs">
+    <Compile Include="Forms\SymbolForm.Designer.cs">
       <DependentUpon>SymbolForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form\RuleSetConfig.cs">
+    <Compile Include="Forms\RuleSetConfig.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\RuleSetConfig.Designer.cs">
+    <Compile Include="Forms\RuleSetConfig.Designer.cs">
       <DependentUpon>RuleSetConfig.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form\ServicePlanChangeForm.cs">
+    <Compile Include="Forms\ServicePlanChangeForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\ServicePlanChangeForm.Designer.cs">
+    <Compile Include="Forms\ServicePlanChangeForm.Designer.cs">
       <DependentUpon>ServicePlanChangeForm.cs</DependentUpon>
     </Compile>
     <Compile Include="StaticForm.cs">
@@ -510,22 +504,22 @@
     <Compile Include="StaticForm.Designer.cs">
       <DependentUpon>StaticForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form\SystemStatusForm.cs">
+    <Compile Include="Forms\SystemStatusForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\SystemStatusForm.Designer.cs">
+    <Compile Include="Forms\SystemStatusForm.Designer.cs">
       <DependentUpon>SystemStatusForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form\SymbolSyncCTPForm.cs">
+    <Compile Include="Forms\SymbolSyncCTPForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\SymbolSyncCTPForm.Designer.cs">
+    <Compile Include="Forms\SymbolSyncCTPForm.Designer.cs">
       <DependentUpon>SymbolSyncCTPForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form\UpdatePassForm.cs">
+    <Compile Include="Forms\UpdatePassForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form\UpdatePassForm.Designer.cs">
+    <Compile Include="Forms\UpdatePassForm.Designer.cs">
       <DependentUpon>UpdatePassForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Utils.cs" />
@@ -541,13 +535,13 @@
     <EmbeddedResource Include="DebugForm.resx">
       <DependentUpon>DebugForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form\CasherMangerForm.resx">
+    <EmbeddedResource Include="Forms\CasherMangerForm.resx">
       <DependentUpon>CasherMangerForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\ctCashOperation.resx">
       <DependentUpon>ctCashOperation.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form\CashOperationForm.resx">
+    <EmbeddedResource Include="Forms\CashOperationForm.resx">
       <DependentUpon>CashOperationForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\Report\ctDetailReportByAccount.resx">
@@ -580,16 +574,13 @@
     <EmbeddedResource Include="Controls\Base\ctBankList.resx">
       <DependentUpon>ctBankList.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form\BankAccountForm.resx">
-      <DependentUpon>BankAccountForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form\FinanceMangerForm.resx">
+    <EmbeddedResource Include="Forms\FinanceMangerForm.resx">
       <DependentUpon>FinanceMangerForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form\FeeConfigForm.resx">
+    <EmbeddedResource Include="Forms\FeeConfigForm.resx">
       <DependentUpon>FeeConfigForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form\AgentProfitReportForm.resx">
+    <EmbeddedResource Include="Forms\AgentProfitReportForm.resx">
       <DependentUpon>AgentProfitReportForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\ctOrderSenderM.resx">
@@ -600,12 +591,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\Base\ctTLEdit.resx">
       <DependentUpon>ctTLEdit.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form\ChangeInvestorForm.resx">
-      <DependentUpon>ChangeInvestorForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form\ChangePassForm.resx">
-      <DependentUpon>ChangePassForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\hist\ctHistCashTransaction.resx">
       <DependentUpon>ctHistCashTransaction.cs</DependentUpon>
@@ -619,13 +604,10 @@
     <EmbeddedResource Include="Controls\hist\ctHistTrade.resx">
       <DependentUpon>ctHistTrade.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form\ExchangeForm.resx">
+    <EmbeddedResource Include="Forms\ExchangeForm.resx">
       <DependentUpon>ExchangeForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form\AddAccountForm.resx">
-      <DependentUpon>AddAccountForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form\AccountConfigForm.resx">
+    <EmbeddedResource Include="Forms\AccountConfigForm.resx">
       <DependentUpon>AccountConfigForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\ctAccountMoniter\ctAccountMontier.resx">
@@ -634,31 +616,43 @@
     <EmbeddedResource Include="Controls\ctFinanceInfo.resx">
       <DependentUpon>ctFinanceInfo.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form\InsertTradeForm.resx">
+    <EmbeddedResource Include="Forms\fms\fmAddAccount.resx">
+      <DependentUpon>fmAddAccount.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\fms\fmAgentBankAccount.resx">
+      <DependentUpon>fmAgentBankAccount.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\fms\fmChangeInvestor.resx">
+      <DependentUpon>fmChangeInvestor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\fms\fmChangePassword.resx">
+      <DependentUpon>fmChangePassword.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\InsertTradeForm.resx">
       <DependentUpon>InsertTradeForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form\HistQryForm.resx">
+    <EmbeddedResource Include="Forms\HistQryForm.resx">
       <DependentUpon>HistQryForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form\PaySlipFormAccount.resx">
+    <EmbeddedResource Include="Forms\PaySlipFormAccount.resx">
       <DependentUpon>PaySlipFormAccount.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form\MarketTimeForm.resx">
+    <EmbeddedResource Include="Forms\MarketTimeForm.resx">
       <DependentUpon>MarketTimeForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form\MarketTimeInfoForm.resx">
+    <EmbeddedResource Include="Forms\MarketTimeInfoForm.resx">
       <DependentUpon>MarketTimeInfoForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form\ManagerForm.resx">
+    <EmbeddedResource Include="Forms\ManagerForm.resx">
       <DependentUpon>ManagerForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form\ManagerEditForm.resx">
+    <EmbeddedResource Include="Forms\ManagerEditForm.resx">
       <DependentUpon>ManagerEditForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form\OperationReportForm.resx">
+    <EmbeddedResource Include="Forms\OperationReportForm.resx">
       <DependentUpon>OperationReportForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form\PaySlipForm.resx">
+    <EmbeddedResource Include="Forms\PaySlipForm.resx">
       <DependentUpon>PaySlipForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LoginForm.resx">
@@ -678,37 +672,37 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="Form\RouterMoniterForm.resx">
+    <EmbeddedResource Include="Forms\RouterMoniterForm.resx">
       <DependentUpon>RouterMoniterForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form\SecurityForm.resx">
+    <EmbeddedResource Include="Forms\SecurityForm.resx">
       <DependentUpon>SecurityForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form\SecEditForm.resx">
+    <EmbeddedResource Include="Forms\SecEditForm.resx">
       <DependentUpon>SecEditForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form\SymbolEditForm.resx">
+    <EmbeddedResource Include="Forms\SymbolEditForm.resx">
       <DependentUpon>SymbolEditForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form\SymbolForm.resx">
+    <EmbeddedResource Include="Forms\SymbolForm.resx">
       <DependentUpon>SymbolForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form\RuleSetConfig.resx">
+    <EmbeddedResource Include="Forms\RuleSetConfig.resx">
       <DependentUpon>RuleSetConfig.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form\ServicePlanChangeForm.resx">
+    <EmbeddedResource Include="Forms\ServicePlanChangeForm.resx">
       <DependentUpon>ServicePlanChangeForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="StaticForm.resx">
       <DependentUpon>StaticForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form\SystemStatusForm.resx">
+    <EmbeddedResource Include="Forms\SystemStatusForm.resx">
       <DependentUpon>SystemStatusForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form\SymbolSyncCTPForm.resx">
+    <EmbeddedResource Include="Forms\SymbolSyncCTPForm.resx">
       <DependentUpon>SymbolSyncCTPForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form\UpdatePassForm.resx">
+    <EmbeddedResource Include="Forms\UpdatePassForm.resx">
       <DependentUpon>UpdatePassForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />

@@ -86,7 +86,7 @@ namespace FutsMoniter.Controls
             IAccountLite account = GetVisibleAccount(CurrentAccount);
             if (account != null)
             {
-                ChangePassForm fm = new ChangePassForm();
+                fmChangePassword fm = new fmChangePassword();
                 fm.SetAccount(account.Account);
                 fm.ShowDialog();
 
@@ -107,8 +107,7 @@ namespace FutsMoniter.Controls
             IAccountLite account = GetVisibleAccount(CurrentAccount);
             if (account != null)
             {
-                ChangeInvestorForm fm = new ChangeInvestorForm();
-
+                fmChangeInvestor fm = new fmChangeInvestor();
                 fm.SetAccount(account);
                 fm.ShowDialog();
 

@@ -215,7 +215,7 @@ namespace FutsMoniter.Controls
             acct.TextChanged+=new EventHandler(acct_TextChanged);
             ctAgentList1.AgentSelectedChangedEvent+=new VoidDelegate(ctAgentList1_AgentSelectedChangedEvent);
             acchodpos.CheckedChanged +=new EventHandler(acchodpos_CheckedChanged);
-
+            btnAddAccount.Click +=new EventHandler(btnAddAccount_Click);
 
             //帐户表格事件
             accountgrid.CellDoubleClick +=new DataGridViewCellEventHandler(accountgrid_CellDoubleClick);//双击单元格

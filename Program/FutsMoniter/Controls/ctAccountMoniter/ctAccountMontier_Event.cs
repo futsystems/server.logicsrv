@@ -21,7 +21,7 @@ namespace FutsMoniter.Controls
         /// <param name="e"></param>
         private void btnAddAccount_Click(object sender, EventArgs e)
         {
-            AddAccountForm fm = new AddAccountForm();
+            fmAddAccount fm = new fmAddAccount();
             fm.TopMost = true;
             fm.ShowDialog();
         }
