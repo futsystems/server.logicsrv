@@ -99,6 +99,7 @@
     <Compile Include="Core\ManagerExchange\Utils\ObjectsUtils.cs" />
     <Compile Include="Core\ManagerExchange\MgrExchServer_Notify.cs" />
     <Compile Include="Core\ManagerExchange\Utils\ManagerUtils_Predicate.cs" />
+    <Compile Include="Core\ManagerExchange\Utils\ManagerUtils_ObjectWrapper.cs" />
     <Compile Include="Core\MessageExchange\MsgExchServer_.cs" />
     <Compile Include="Core\MessageExchange\MsgExchServer_PacketHandle.cs" />
     <Compile Include="Core\MessageExchange\MsgExchServer_CTE.cs" />

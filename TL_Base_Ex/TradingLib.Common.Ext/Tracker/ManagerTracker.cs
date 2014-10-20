@@ -71,7 +71,15 @@ namespace TradingLib.Common
             }
         }
 
-
+        /// <summary>
+        /// 获得所有基础主域
+        /// 管理员的基础域ID和他的ID相同 则该Manager为主域Manager
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Manager> GetBaseManagers()
+        {
+            return managermap.Values.Where(m => m.mgr_fk == m.ID);
+        }
         /// <summary>
         /// 查询某个管理员可以查询的管理员列表
         /// </summary>

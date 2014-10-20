@@ -76,6 +76,8 @@ namespace TradingLib.Core
         {
             if (IsNormal && !IsTradingday) return;
             this.SettleAccount();
+            //触发结算后记录
+            TLCtxHelper.EventSystem.FireAfterSettleEvent(this, new SystemEventArgs());
             Notify("结算交易账户[" + DateTime.Now.ToString() + "]", " ");
         }
 
@@ -88,6 +90,7 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.CLI, "cleanafterreset", "cleanafterreset - clean the interday tmp table after reset", "结算后清空日内交易临时数据表")]
         public void Task_CleanAfterReset()
         {
+            TLCtxHelper.EventSystem.FireBeforeSettleResetEvent(this, new SystemEventArgs());
             if (IsNormal && !IsTradingday) return;
             this.CleanTempTable();
         }
@@ -112,8 +115,8 @@ namespace TradingLib.Core
             _riskcentre.Reset();
 
             this.IsInSettle = false;//标识系统结算完毕
-
-            TLCtxHelper.EventSystem.FireAfterSettleEvent(this, new SystemEventArgs());
+            TLCtxHelper.EventSystem.FireAfterSettleResetEvent(this, new SystemEventArgs());
+            
         }
 
         /// <summary>
@@ -133,7 +136,9 @@ namespace TradingLib.Core
 
             //B:结算交易帐户形成结算记录
             this.SettleAccount();
+            TLCtxHelper.EventSystem.FireAfterSettleEvent(this, new SystemEventArgs());
 
+            TLCtxHelper.EventSystem.FireBeforeSettleResetEvent(this, new SystemEventArgs());
             //C:清空当日交易记录
             this.CleanTempTable();
 
@@ -145,7 +150,7 @@ namespace TradingLib.Core
             //重置风控中心，清空内存缓存数据
             _riskcentre.Reset();
 
-            TLCtxHelper.EventSystem.FireAfterSettleEvent(this, new SystemEventArgs());
+            TLCtxHelper.EventSystem.FireAfterSettleResetEvent(this, new SystemEventArgs());
         }
         #endregion
 

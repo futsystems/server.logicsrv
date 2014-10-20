@@ -232,6 +232,18 @@ namespace TradingLib.Mixins.JsonObject
 
 
         /// <summary>
+        /// 资金流入 入金
+        /// </summary>
+        public decimal CashIn { get; set; }
+
+
+        /// <summary>
+        /// 资金流出 出金
+        /// </summary>
+        public decimal CashOut { get; set; }
+
+
+        /// <summary>
         /// 上日权益
         /// </summary>
         public decimal LastEquity { get; set; }

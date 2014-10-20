@@ -259,6 +259,11 @@ namespace TradingLib.Core
             CachePacket(response);
             
         }
+
+        /// <summary>
+        /// 查询投资者信息
+        /// </summary>
+        /// <param name="request"></param>
         void SrvOnQryInvestor(QryInvestorRequest request)
         {
             debug("QryInvestor :" + request.ToString(), QSEnumDebugLevel.INFO);
@@ -286,6 +291,10 @@ namespace TradingLib.Core
             TLCtxHelper.Ctx.MessageExchangeHandler(session, request);
         }
 
+        /// <summary>
+        /// 请求修改密码
+        /// </summary>
+        /// <param name="request"></param>
         void SrvOnReqChangePassword(ReqChangePasswordRequest request)
         {
             debug("ReqChangePassword:" + request.ToString(), QSEnumDebugLevel.INFO);
@@ -304,6 +313,10 @@ namespace TradingLib.Core
             CachePacket(response);
         }
 
+        /// <summary>
+        /// 查询通知
+        /// </summary>
+        /// <param name="request"></param>
         void SrvOnQryNotice(QryNoticeRequest request)
         {
             debug("QryNoticeRequest:" + request.ToString(), QSEnumDebugLevel.INFO);
@@ -330,6 +343,10 @@ namespace TradingLib.Core
 
         }
 
+        /// <summary>
+        /// 查询合约
+        /// </summary>
+        /// <param name="request"></param>
         void SrvOnQrySymbol(QrySymbolRequest request)
         {
             debug("QrySymbol:" + request.ToString(), QSEnumDebugLevel.INFO);
@@ -362,6 +379,10 @@ namespace TradingLib.Core
             
         }
 
+        /// <summary>
+        /// 查询签约银行
+        /// </summary>
+        /// <param name="request"></param>
         void SrvOnQryContractBank(QryContractBankRequest request)
         {
             debug("QryContractBank:" + request.ToString(), QSEnumDebugLevel.INFO);
@@ -402,6 +423,7 @@ namespace TradingLib.Core
             {
                 RspQryRegisterBankAccountResponse response = ResponseTemplate<RspQryRegisterBankAccountResponse>.SrvSendRspResponse(request);
                 response.TradingAccount = account.ID;
+                //如果对应的BankFK不为0 则传递设置的银行帐户信息
                 if (account.BankID != 0)
                 {
                     response.BankAC = account.BankAC;//获得银行卡号 如果没有设置银行卡号码 会导致博易客户端频繁请求交易帐号信息
@@ -419,6 +441,10 @@ namespace TradingLib.Core
             }
         }
 
+        /// <summary>
+        /// 查询出入金记录
+        /// </summary>
+        /// <param name="request"></param>
         void SrvOnQryTransferSerial(QryTransferSerialRequest request)
         {
             debug("QryTransferSerialRequest:" + request.ToString(), QSEnumDebugLevel.INFO);
@@ -447,9 +473,10 @@ namespace TradingLib.Core
                 RspQryTransferSerialResponse response = ResponseTemplate<RspQryTransferSerialResponse>.SrvSendRspResponse(request);
                 CacheRspResponse(response);
             }
-
-
         }
+
+
+
         void tl_newPacketRequest(IPacket packet,ISession session)
         {
 

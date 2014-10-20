@@ -333,6 +333,12 @@ namespace FutsMoniter
             statusmessage.Opacity = o >= 0 ? o : 0;
         }
 
+        private void radMenuItem1_Click(object sender, EventArgs e)
+        {
+            MainForm2 mf = new MainForm2();
+            mf.Show();
+        }
+
 
 
 

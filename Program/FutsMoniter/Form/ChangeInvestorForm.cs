@@ -24,13 +24,16 @@ namespace FutsMoniter
         {
             _account = acc;
             account.Text = _account.Account;
-            name.Text = string.IsNullOrEmpty(_account.Name) ? "未设置" : _account.Name;
-            broker.Text = string.IsNullOrEmpty(_account.Broker) ? "未设置" : _account.Broker;
-            bankac.Text = string.IsNullOrEmpty(_account.BankAC) ? "未设置" : _account.BankAC;
-            //bank.Text = string.IsNullOrEmpty(_account.BankID) ? "未设置" : _account.BankID;
+            name.Text = string.IsNullOrEmpty(_account.Name) ? "" : _account.Name;
+            broker.Text = string.IsNullOrEmpty(_account.Broker) ? "" : _account.Broker;
+            bankac.Text = string.IsNullOrEmpty(_account.BankAC) ? "" : _account.BankAC;
             if (_account.BankID != 0)
             {
                 ctBankList1.BankSelected = _account.BankID;
+            }
+            else
+            {
+                cbnosetbank.Checked = true;
             }
         }
         System.Text.RegularExpressions.Regex regexbankid = new System.Text.RegularExpressions.Regex(@"^[-]?[1-9]{1}\d*$|^[0]{1}$");
@@ -42,11 +45,11 @@ namespace FutsMoniter
         private void btnSubmit_Click(object sender, EventArgs e)
         {
             string _name = name.Text;
-            if (string.IsNullOrEmpty(_name) || _name.Length > 5)
-            {
-                fmConfirm.Show("请输入正确的投资者姓名!");
-                return;
-            }
+            //if (string.IsNullOrEmpty(_name) || _name.Length > 5)
+            //{
+            //    fmConfirm.Show("请输入正确的投资者姓名!");
+            //    return;
+            //}
             
             
             string _broker = broker.Text;

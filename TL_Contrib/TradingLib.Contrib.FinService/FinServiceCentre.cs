@@ -104,11 +104,6 @@ namespace TradingLib.Contrib.FinService
             debug("Load Service Instance......", QSEnumDebugLevel.INFO);
             FinTracker.FinServiceTracker.ToArray();
 
-            //foreach (FinServiceStub fs in FinTracker.FinServiceTracker.ToArray())
-            //{
-            //    debug("finservice:" + fs.ToString(), QSEnumDebugLevel.INFO);
-            //    //fs.InitFinService();
-            //}
 
             FinTracker.FinServiceTracker.GotFeeChargeItemEvent += new FeeChargeItemDel(_chargelog.newFeeChargeItem);
             //手续费调整事件
@@ -126,25 +121,54 @@ namespace TradingLib.Contrib.FinService
 
             //结算前事件
             TLCtxHelper.EventSystem.BeforeSettleEvent += new EventHandler<SystemEventArgs>(EventSystem_BeforeSettleEvent);
+
+            TLCtxHelper.EventSystem.AfterSettleEvent += new EventHandler<SystemEventArgs>(EventSystem_AfterSettleEvent);
         }
 
+
+
+        /// <summary>
+        /// 在帐户结算前 配资服务中按日收费部分
+        /// 比如收取利息 盈利分成需要生成服务收费记录并统一采集后对帐户作出入金操作以作扣费
+        /// 在扣费完成后执行结算 则将扣费记录对应的结算日内
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void EventSystem_BeforeSettleEvent(object sender, SystemEventArgs e)
         {
             debug("系统将进行结算,结算前配资中心执行交易帐户收费结算 用于收取盘后结算的费用", QSEnumDebugLevel.INFO);
 
-            //1.运行所有配资服务的结算响应回调
+            //1.运行所有配资服务的结算响应回调 比如按每天收取利息 或者按盈利分红的计费模式
             foreach (FinServiceStub stub in FinTracker.FinServiceTracker)
             {
                 stub.FinService.OnSettle();//执行结算回调 比如盈利分红的收费 则在onsettle中执行计费与记录
             }
 
             //2.检查当天所有的收费记录，对于结算后收取的 进行出入金操作 将盘后计算的配资费用通过出入金方式从帐户中扣除
-
-
-            //
-
         }
 
+
+        /// <summary>
+        /// 交易帐户结算后 执行代理结算 
+        /// 将代理当日的服务收费，代理佣金，出入金等记录形成结算记录插入并更新代理的Balance
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void EventSystem_AfterSettleEvent(object sender, SystemEventArgs e)
+        {
+            //1.结算代理商
+            foreach (Manager mgr in BasicTracker.ManagerTracker.GetBaseManagers())
+            {
+                ORM.MAgentSettlement.SettleAgent(mgr);
+            }
+        }
+
+
+        /// <summary>
+        /// 响应出入金操作
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void CashOperationEvent_CashOperationRequest(object sender, CashOperationEventArgs e)
         {
             //出入金操作

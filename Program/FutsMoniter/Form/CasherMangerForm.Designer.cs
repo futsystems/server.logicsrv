@@ -41,12 +41,12 @@
             this.radLabel1 = new Telerik.WinControls.UI.RadLabel();
             this.radPageView1 = new Telerik.WinControls.UI.RadPageView();
             this.accountCashOperationPage = new Telerik.WinControls.UI.RadPageViewPage();
-            this.agentCashOperationPage = new Telerik.WinControls.UI.RadPageViewPage();
-            this.accountCashOpQryPage = new Telerik.WinControls.UI.RadPageViewPage();
-            this.agentCashOpQryPage = new Telerik.WinControls.UI.RadPageViewPage();
             this.ctCashOperationAccount = new FutsMoniter.ctCashOperation();
+            this.agentCashOperationPage = new Telerik.WinControls.UI.RadPageViewPage();
             this.ctCashOperation1 = new FutsMoniter.ctCashOperation();
+            this.accountCashOpQryPage = new Telerik.WinControls.UI.RadPageViewPage();
             this.ctCashTrans1 = new FutsMoniter.ctCashTrans();
+            this.agentCashOpQryPage = new Telerik.WinControls.UI.RadPageViewPage();
             this.ctCashTrans2 = new FutsMoniter.ctCashTrans();
             ((System.ComponentModel.ISupportInitialize)(this.radGroupBox1)).BeginInit();
             this.radGroupBox1.SuspendLayout();
@@ -196,10 +196,19 @@
             // accountCashOperationPage
             // 
             this.accountCashOperationPage.Controls.Add(this.ctCashOperationAccount);
-            this.accountCashOperationPage.Location = new System.Drawing.Point(10, 31);
+            this.accountCashOperationPage.Location = new System.Drawing.Point(10, 35);
             this.accountCashOperationPage.Name = "accountCashOperationPage";
-            this.accountCashOperationPage.Size = new System.Drawing.Size(721, 368);
+            this.accountCashOperationPage.Size = new System.Drawing.Size(721, 364);
             this.accountCashOperationPage.Text = "交易帐户";
+            // 
+            // ctCashOperationAccount
+            // 
+            this.ctCashOperationAccount.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ctCashOperationAccount.Location = new System.Drawing.Point(0, 0);
+            this.ctCashOperationAccount.Name = "ctCashOperationAccount";
+            this.ctCashOperationAccount.Size = new System.Drawing.Size(721, 364);
+            this.ctCashOperationAccount.TabIndex = 0;
+            this.ctCashOperationAccount.ViewType = FutsMoniter.CashOpViewType.Account;
             // 
             // agentCashOperationPage
             // 
@@ -208,31 +217,6 @@
             this.agentCashOperationPage.Name = "agentCashOperationPage";
             this.agentCashOperationPage.Size = new System.Drawing.Size(721, 368);
             this.agentCashOperationPage.Text = "代理帐户";
-            // 
-            // accountCashOpQryPage
-            // 
-            this.accountCashOpQryPage.Controls.Add(this.ctCashTrans1);
-            this.accountCashOpQryPage.Location = new System.Drawing.Point(10, 31);
-            this.accountCashOpQryPage.Name = "accountCashOpQryPage";
-            this.accountCashOpQryPage.Size = new System.Drawing.Size(721, 368);
-            this.accountCashOpQryPage.Text = "交易帐户历史查询";
-            // 
-            // agentCashOpQryPage
-            // 
-            this.agentCashOpQryPage.Controls.Add(this.ctCashTrans2);
-            this.agentCashOpQryPage.Location = new System.Drawing.Point(10, 35);
-            this.agentCashOpQryPage.Name = "agentCashOpQryPage";
-            this.agentCashOpQryPage.Size = new System.Drawing.Size(721, 364);
-            this.agentCashOpQryPage.Text = "代理帐户历史查询";
-            // 
-            // ctCashOperationAccount
-            // 
-            this.ctCashOperationAccount.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ctCashOperationAccount.Location = new System.Drawing.Point(0, 0);
-            this.ctCashOperationAccount.Name = "ctCashOperationAccount";
-            this.ctCashOperationAccount.Size = new System.Drawing.Size(721, 368);
-            this.ctCashOperationAccount.TabIndex = 0;
-            this.ctCashOperationAccount.ViewType = FutsMoniter.CashOpViewType.Account;
             // 
             // ctCashOperation1
             // 
@@ -243,6 +227,14 @@
             this.ctCashOperation1.TabIndex = 0;
             this.ctCashOperation1.ViewType = FutsMoniter.CashOpViewType.Agent;
             // 
+            // accountCashOpQryPage
+            // 
+            this.accountCashOpQryPage.Controls.Add(this.ctCashTrans1);
+            this.accountCashOpQryPage.Location = new System.Drawing.Point(10, 31);
+            this.accountCashOpQryPage.Name = "accountCashOpQryPage";
+            this.accountCashOpQryPage.Size = new System.Drawing.Size(721, 368);
+            this.accountCashOpQryPage.Text = "交易帐户历史查询";
+            // 
             // ctCashTrans1
             // 
             this.ctCashTrans1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -251,6 +243,14 @@
             this.ctCashTrans1.Size = new System.Drawing.Size(721, 368);
             this.ctCashTrans1.TabIndex = 0;
             this.ctCashTrans1.ViewType = FutsMoniter.CashOpViewType.Account;
+            // 
+            // agentCashOpQryPage
+            // 
+            this.agentCashOpQryPage.Controls.Add(this.ctCashTrans2);
+            this.agentCashOpQryPage.Location = new System.Drawing.Point(10, 35);
+            this.agentCashOpQryPage.Name = "agentCashOpQryPage";
+            this.agentCashOpQryPage.Size = new System.Drawing.Size(721, 364);
+            this.agentCashOpQryPage.Text = "代理帐户历史查询";
             // 
             // ctCashTrans2
             // 

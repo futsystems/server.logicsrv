@@ -49,6 +49,7 @@
             this.btnMarketTime = new Telerik.WinControls.UI.RadMenuItem();
             this.radPageView1 = new Telerik.WinControls.UI.RadPageView();
             this.radPageViewPage1 = new Telerik.WinControls.UI.RadPageViewPage();
+            this.ctAccountMontier1 = new FutsMoniter.Controls.ctAccountMontier();
             this.radPageViewPage2 = new Telerik.WinControls.UI.RadPageViewPage();
             this.ctDebug1 = new FutSystems.GUI.ctDebug();
             this.office2010BlackTheme1 = new Telerik.WinControls.Themes.Office2010BlackTheme();
@@ -69,7 +70,7 @@
             this.btnCasher = new Telerik.WinControls.UI.RadMenuItem();
             this.radMenuItem7 = new Telerik.WinControls.UI.RadMenuItem();
             this.office2010SilverTheme1 = new Telerik.WinControls.Themes.Office2010SilverTheme();
-            this.ctAccountMontier1 = new FutsMoniter.Controls.ctAccountMontier();
+            this.radMenuItem1 = new Telerik.WinControls.UI.RadMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.radStatusStrip1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.radPageView1)).BeginInit();
             this.radPageView1.SuspendLayout();
@@ -270,10 +271,20 @@
             // radPageViewPage1
             // 
             this.radPageViewPage1.Controls.Add(this.ctAccountMontier1);
-            this.radPageViewPage1.Location = new System.Drawing.Point(10, 31);
+            this.radPageViewPage1.Location = new System.Drawing.Point(10, 35);
             this.radPageViewPage1.Name = "radPageViewPage1";
-            this.radPageViewPage1.Size = new System.Drawing.Size(1118, 569);
+            this.radPageViewPage1.Size = new System.Drawing.Size(1118, 565);
             this.radPageViewPage1.Text = "帐户列表";
+            // 
+            // ctAccountMontier1
+            // 
+            this.ctAccountMontier1.DebugEnable = true;
+            this.ctAccountMontier1.DebugLevel = TradingLib.API.QSEnumDebugLevel.INFO;
+            this.ctAccountMontier1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ctAccountMontier1.Location = new System.Drawing.Point(0, 0);
+            this.ctAccountMontier1.Name = "ctAccountMontier1";
+            this.ctAccountMontier1.Size = new System.Drawing.Size(1118, 565);
+            this.ctAccountMontier1.TabIndex = 0;
             // 
             // radPageViewPage2
             // 
@@ -379,7 +390,8 @@
             this.btnChangePass,
             this.radMenuSeparatorItem5,
             this.btnFinanceMgr,
-            this.btnCasher});
+            this.btnCasher,
+            this.radMenuItem1});
             this.btnGPAgent.Name = "btnGPAgent";
             this.btnGPAgent.Text = "柜员管理";
             this.btnGPAgent.Visibility = Telerik.WinControls.ElementVisibility.Visible;
@@ -453,15 +465,14 @@
             this.radMenuItem7.Text = "radMenuItem7";
             this.radMenuItem7.Visibility = Telerik.WinControls.ElementVisibility.Visible;
             // 
-            // ctAccountMontier1
+            // radMenuItem1
             // 
-            this.ctAccountMontier1.DebugEnable = true;
-            this.ctAccountMontier1.DebugLevel = TradingLib.API.QSEnumDebugLevel.INFO;
-            this.ctAccountMontier1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ctAccountMontier1.Location = new System.Drawing.Point(0, 0);
-            this.ctAccountMontier1.Name = "ctAccountMontier1";
-            this.ctAccountMontier1.Size = new System.Drawing.Size(1118, 569);
-            this.ctAccountMontier1.TabIndex = 0;
+            this.radMenuItem1.AccessibleDescription = "radMenuItem1";
+            this.radMenuItem1.AccessibleName = "radMenuItem1";
+            this.radMenuItem1.Name = "radMenuItem1";
+            this.radMenuItem1.Text = "radMenuItem1";
+            this.radMenuItem1.Visibility = Telerik.WinControls.ElementVisibility.Visible;
+            this.radMenuItem1.Click += new System.EventHandler(this.radMenuItem1_Click);
             // 
             // MainForm
             // 
@@ -537,5 +548,6 @@
         private Telerik.WinControls.UI.RadMenuItem btnFinanceMgr;
         private Telerik.WinControls.UI.RadMenuSeparatorItem radMenuSeparatorItem5;
         private Telerik.WinControls.UI.RadMenuItem btnCasher;
+        private Telerik.WinControls.UI.RadMenuItem radMenuItem1;
     }
 }
