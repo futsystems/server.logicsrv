@@ -28,15 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(fmCashCentre));
             this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
             this.kryptonNavigator1 = new ComponentFactory.Krypton.Navigator.KryptonNavigator();
             this.kryptonPage1 = new ComponentFactory.Krypton.Navigator.KryptonPage();
-            this.ctCashOperationAccount = new FutsMoniter.ctCashOperation();
             this.kryptonPage2 = new ComponentFactory.Krypton.Navigator.KryptonPage();
-            this.ctCashOperation2 = new FutsMoniter.ctCashOperation();
             this.kryptonGroupBox1 = new ComponentFactory.Krypton.Toolkit.KryptonGroupBox();
             this.kryptonLabel2 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel1 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.ctCashOperationAccount = new FutsMoniter.ctCashOperation();
+            this.ctCashOperationAgent = new FutsMoniter.ctCashOperation();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonNavigator1)).BeginInit();
@@ -57,7 +58,7 @@
             this.kryptonPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.kryptonPanel1.Location = new System.Drawing.Point(0, 0);
             this.kryptonPanel1.Name = "kryptonPanel1";
-            this.kryptonPanel1.Size = new System.Drawing.Size(824, 516);
+            this.kryptonPanel1.Size = new System.Drawing.Size(752, 566);
             this.kryptonPanel1.TabIndex = 0;
             // 
             // kryptonNavigator1
@@ -73,8 +74,8 @@
             this.kryptonNavigator1.Pages.AddRange(new ComponentFactory.Krypton.Navigator.KryptonPage[] {
             this.kryptonPage1,
             this.kryptonPage2});
-            this.kryptonNavigator1.SelectedIndex = 0;
-            this.kryptonNavigator1.Size = new System.Drawing.Size(824, 408);
+            this.kryptonNavigator1.SelectedIndex = 1;
+            this.kryptonNavigator1.Size = new System.Drawing.Size(752, 458);
             this.kryptonNavigator1.TabIndex = 1;
             this.kryptonNavigator1.Text = "kryptonNavigator1";
             // 
@@ -91,36 +92,18 @@
             this.kryptonPage1.ToolTipTitle = "Page ToolTip";
             this.kryptonPage1.UniqueName = "4DC186C585284CCA358E5A418FA7D292";
             // 
-            // ctCashOperationAccount
-            // 
-            this.ctCashOperationAccount.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ctCashOperationAccount.Location = new System.Drawing.Point(0, 0);
-            this.ctCashOperationAccount.Name = "ctCashOperationAccount";
-            this.ctCashOperationAccount.Size = new System.Drawing.Size(822, 383);
-            this.ctCashOperationAccount.TabIndex = 0;
-            this.ctCashOperationAccount.ViewType = FutsMoniter.CashOpViewType.Account;
-            // 
             // kryptonPage2
             // 
             this.kryptonPage2.AutoHiddenSlideSize = new System.Drawing.Size(200, 200);
-            this.kryptonPage2.Controls.Add(this.ctCashOperation2);
+            this.kryptonPage2.Controls.Add(this.ctCashOperationAgent);
             this.kryptonPage2.Flags = 65534;
             this.kryptonPage2.LastVisibleSet = true;
             this.kryptonPage2.MinimumSize = new System.Drawing.Size(50, 50);
             this.kryptonPage2.Name = "kryptonPage2";
-            this.kryptonPage2.Size = new System.Drawing.Size(822, 383);
+            this.kryptonPage2.Size = new System.Drawing.Size(750, 433);
             this.kryptonPage2.Text = "代理帐户";
             this.kryptonPage2.ToolTipTitle = "Page ToolTip";
             this.kryptonPage2.UniqueName = "C4C13A7E8E59459B18A8B22EF77C3EA8";
-            // 
-            // ctCashOperation2
-            // 
-            this.ctCashOperation2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ctCashOperation2.Location = new System.Drawing.Point(0, 0);
-            this.ctCashOperation2.Name = "ctCashOperation2";
-            this.ctCashOperation2.Size = new System.Drawing.Size(822, 383);
-            this.ctCashOperation2.TabIndex = 0;
-            this.ctCashOperation2.ViewType = FutsMoniter.CashOpViewType.Account;
             // 
             // kryptonGroupBox1
             // 
@@ -134,7 +117,7 @@
             // 
             this.kryptonGroupBox1.Panel.Controls.Add(this.kryptonLabel2);
             this.kryptonGroupBox1.Panel.Controls.Add(this.kryptonLabel1);
-            this.kryptonGroupBox1.Size = new System.Drawing.Size(824, 102);
+            this.kryptonGroupBox1.Size = new System.Drawing.Size(752, 152);
             this.kryptonGroupBox1.TabIndex = 0;
             this.kryptonGroupBox1.Text = "现金事务统计";
             this.kryptonGroupBox1.Values.Heading = "现金事务统计";
@@ -155,12 +138,34 @@
             this.kryptonLabel1.TabIndex = 0;
             this.kryptonLabel1.Values.Text = "待确认入金:";
             // 
+            // ctCashOperationAccount
+            // 
+            this.ctCashOperationAccount.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ctCashOperationAccount.Location = new System.Drawing.Point(0, 0);
+            this.ctCashOperationAccount.Name = "ctCashOperationAccount";
+            this.ctCashOperationAccount.Size = new System.Drawing.Size(822, 383);
+            this.ctCashOperationAccount.TabIndex = 0;
+            this.ctCashOperationAccount.ViewType = FutsMoniter.CashOpViewType.Account;
+            // 
+            // ctCashOperationAgent
+            // 
+            this.ctCashOperationAgent.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ctCashOperationAgent.Location = new System.Drawing.Point(0, 0);
+            this.ctCashOperationAgent.Name = "ctCashOperationAgent";
+            this.ctCashOperationAgent.Size = new System.Drawing.Size(750, 433);
+            this.ctCashOperationAgent.TabIndex = 0;
+            this.ctCashOperationAgent.ViewType = FutsMoniter.CashOpViewType.Agent;
+            // 
             // fmCashCentre
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(824, 516);
+            this.ClientSize = new System.Drawing.Size(752, 566);
             this.Controls.Add(this.kryptonPanel1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "fmCashCentre";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "出纳中心";
@@ -190,6 +195,6 @@
         private ComponentFactory.Krypton.Navigator.KryptonPage kryptonPage1;
         private ComponentFactory.Krypton.Navigator.KryptonPage kryptonPage2;
         private ctCashOperation ctCashOperationAccount;
-        private ctCashOperation ctCashOperation2;
+        private ctCashOperation ctCashOperationAgent;
     }
 }

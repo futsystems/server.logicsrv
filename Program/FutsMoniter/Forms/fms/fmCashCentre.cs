@@ -20,26 +20,24 @@ namespace FutsMoniter
         public fmCashCentre()
         {
             InitializeComponent();
+
             if (Globals.CallbackCentreReady)
             {
-                if (Globals.CallbackCentreReady)
-                {
-                    //Globals.CallBackCentre.RegisterCallback("MgrExchServer", "QryFinanceInfo", this.OnQryAgentFinanceInfo);
-                    Globals.CallBackCentre.RegisterCallback("MgrExchServer", "QryAgentCashOperationTotal", this.OnQryAgentCashOperationTotal);//查询代理出入金请求
-                    Globals.CallBackCentre.RegisterCallback("MgrExchServer", "QryAccountCashOperationTotal", this.OnQryAccountCashOperationTotal);//查询交易帐户出入金请求
 
-                    Globals.CallBackCentre.RegisterCallback("MgrExchServer", "RequestCashOperation", this.OnCashOperation);
-                    Globals.CallBackCentre.RegisterCallback("MgrExchServer", "ConfirmCashOperation", this.OnCashOperation);
-                    Globals.CallBackCentre.RegisterCallback("MgrExchServer", "CancelCashOperation", this.OnCashOperation);
-                    Globals.CallBackCentre.RegisterCallback("MgrExchServer", "RejectCashOperation", this.OnCashOperation);
+                Globals.CallBackCentre.RegisterCallback("MgrExchServer", "QryAgentCashOperationTotal", this.OnQryAgentCashOperationTotal);//查询代理出入金请求
+                Globals.CallBackCentre.RegisterCallback("MgrExchServer", "QryAccountCashOperationTotal", this.OnQryAccountCashOperationTotal);//查询交易帐户出入金请求
 
-                    Globals.CallBackCentre.RegisterCallback("MgrExchServer", "ConfirmAccountCashOperation", this.OnAccountCashOperation);
-                    Globals.CallBackCentre.RegisterCallback("MgrExchServer", "CancelAccountCashOperation", this.OnAccountCashOperation);
-                    Globals.CallBackCentre.RegisterCallback("MgrExchServer", "RejectAccountCashOperation", this.OnAccountCashOperation);
+                Globals.CallBackCentre.RegisterCallback("MgrExchServer", "RequestCashOperation", this.OnAccountCashOperation);
+                Globals.CallBackCentre.RegisterCallback("MgrExchServer", "ConfirmCashOperation", this.OnAccountCashOperation);
+                Globals.CallBackCentre.RegisterCallback("MgrExchServer", "CancelCashOperation", this.OnAccountCashOperation);
+                Globals.CallBackCentre.RegisterCallback("MgrExchServer", "RejectCashOperation", this.OnAccountCashOperation);
 
-                    Globals.CallBackCentre.RegisterCallback("MgrExchServer", "NotifyCashOperation", this.OnNotifyCashOperation);
+                Globals.CallBackCentre.RegisterCallback("MgrExchServer", "ConfirmAccountCashOperation", this.OnAccountCashOperation);
+                Globals.CallBackCentre.RegisterCallback("MgrExchServer", "CancelAccountCashOperation", this.OnAccountCashOperation);
+                Globals.CallBackCentre.RegisterCallback("MgrExchServer", "RejectAccountCashOperation", this.OnAccountCashOperation);
 
-                }
+                Globals.CallBackCentre.RegisterCallback("MgrExchServer", "NotifyCashOperation", this.OnNotifyCashOperation);
+
             }
             this.FormClosing += new FormClosingEventHandler(CasherMangerForm_FormClosing);
             this.Load += new EventHandler(CasherMangerForm_Load);
@@ -50,7 +48,6 @@ namespace FutsMoniter
         {
             if (Globals.EnvReady)
             {
-
                 Globals.TLClient.ReqQryAgentCashopOperationTotal();
                 Globals.TLClient.ReqQryAccountCashopOperationTotal();
             }
@@ -62,10 +59,10 @@ namespace FutsMoniter
             Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "QryAccountCashOperationTotal", this.OnQryAccountCashOperationTotal);//查询交易帐户出入金请求
 
 
-            Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "RequestCashOperation", this.OnCashOperation);
-            Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "ConfirmCashOperation", this.OnCashOperation);
-            Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "CancelCashOperation", this.OnCashOperation);
-            Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "RejectCashOperation", this.OnCashOperation);
+            Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "RequestCashOperation", this.OnAccountCashOperation);
+            Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "ConfirmCashOperation", this.OnAccountCashOperation);
+            Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "CancelCashOperation", this.OnAccountCashOperation);
+            Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "RejectCashOperation", this.OnAccountCashOperation);
 
             Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "ConfirmAccountCashOperation", this.OnAccountCashOperation);
             Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "CancelAccountCashOperation", this.OnAccountCashOperation);
@@ -74,6 +71,7 @@ namespace FutsMoniter
             Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "NotifyCashOperation", this.OnNotifyCashOperation);
 
         }
+
 
         void OnQryAgentCashOperationTotal(string jsonstr)
         {
@@ -84,7 +82,7 @@ namespace FutsMoniter
                 JsonWrapperCashOperation[] objs = TradingLib.Mixins.LitJson.JsonMapper.ToObject<JsonWrapperCashOperation[]>(jd["Playload"].ToJson());
                 foreach (JsonWrapperCashOperation op in objs)
                 {
-                    ctCashOperationAccount.GotJsonWrapperCashOperation(op);
+                    ctCashOperationAgent.GotJsonWrapperCashOperation(op);
                 }
             }
             else//如果没有配资服
@@ -113,7 +111,7 @@ namespace FutsMoniter
 
 
 
-        void OnCashOperation(string jsonstr)
+        void OnAgentCashOperation(string jsonstr)
         {
             JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
             int code = int.Parse(jd["Code"].ToString());
@@ -121,32 +119,6 @@ namespace FutsMoniter
             {
                 JsonWrapperCashOperation obj = TradingLib.Mixins.LitJson.JsonMapper.ToObject<JsonWrapperCashOperation>(jd["Playload"].ToJson());
                 ctCashOperationAccount.GotJsonWrapperCashOperation(obj);
-            }
-            else//如果没有配资服
-            {
-
-            }
-            if (Globals.EnvReady)
-            {
-                //Globals.TLClient.ReqQryAgentFinanceInfoLite();
-            }
-        }
-        void OnNotifyCashOperation(string jsonstr)
-        {
-            JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
-            int code = int.Parse(jd["Code"].ToString());
-            if (code == 0)
-            {
-                JsonWrapperCashOperation obj = TradingLib.Mixins.LitJson.JsonMapper.ToObject<JsonWrapperCashOperation>(jd["Playload"].ToJson());
-
-                if (obj.mgr_fk > 0)
-                {
-                    ctCashOperationAccount.GotJsonWrapperCashOperation(obj);
-                }
-                else
-                {
-                    ctCashOperationAccount.GotJsonWrapperCashOperation(obj);
-                }
             }
             else//如果没有配资服
             {
@@ -176,5 +148,35 @@ namespace FutsMoniter
                 //Globals.TLClient.ReqQryAgentFinanceInfoLite();
             }
         }
+
+
+        void OnNotifyCashOperation(string jsonstr)
+        {
+            JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
+            int code = int.Parse(jd["Code"].ToString());
+            if (code == 0)
+            {
+                JsonWrapperCashOperation obj = TradingLib.Mixins.LitJson.JsonMapper.ToObject<JsonWrapperCashOperation>(jd["Playload"].ToJson());
+
+                if (obj.mgr_fk > 0)
+                {
+                    ctCashOperationAgent.GotJsonWrapperCashOperation(obj);
+                }
+                else
+                {
+                    ctCashOperationAccount.GotJsonWrapperCashOperation(obj);
+                }
+            }
+            else//如果没有配资服
+            {
+
+            }
+            if (Globals.EnvReady)
+            {
+                //Globals.TLClient.ReqQryAgentFinanceInfoLite();
+            }
+        }
+
+        
     }
 }

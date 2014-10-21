@@ -75,7 +75,7 @@
             this.kryptonPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.kryptonPanel1.Location = new System.Drawing.Point(0, 0);
             this.kryptonPanel1.Name = "kryptonPanel1";
-            this.kryptonPanel1.Size = new System.Drawing.Size(754, 576);
+            this.kryptonPanel1.Size = new System.Drawing.Size(754, 568);
             this.kryptonPanel1.TabIndex = 0;
             // 
             // kryptonGroupBox3
@@ -89,7 +89,7 @@
             // kryptonGroupBox3.Panel
             // 
             this.kryptonGroupBox3.Panel.Controls.Add(this.ctCashOperation1);
-            this.kryptonGroupBox3.Size = new System.Drawing.Size(750, 356);
+            this.kryptonGroupBox3.Size = new System.Drawing.Size(750, 348);
             this.kryptonGroupBox3.TabIndex = 2;
             this.kryptonGroupBox3.Text = "出入金请求";
             this.kryptonGroupBox3.Values.Heading = "出入金请求";
@@ -312,7 +312,7 @@
             this.ctCashOperation1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ctCashOperation1.Location = new System.Drawing.Point(0, 0);
             this.ctCashOperation1.Name = "ctCashOperation1";
-            this.ctCashOperation1.Size = new System.Drawing.Size(746, 334);
+            this.ctCashOperation1.Size = new System.Drawing.Size(746, 326);
             this.ctCashOperation1.TabIndex = 0;
             this.ctCashOperation1.ViewType = FutsMoniter.CashOpViewType.Agent;
             // 
@@ -320,7 +320,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(754, 576);
+            this.ClientSize = new System.Drawing.Size(754, 568);
             this.Controls.Add(this.kryptonPanel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -328,7 +328,7 @@
             this.MinimizeBox = false;
             this.Name = "fmFinanceCentre";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "财务管理";
+            this.Text = "代理财务管理";
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).EndInit();
             this.kryptonPanel1.ResumeLayout(false);
             this.kryptonGroupBox3.Panel.ResumeLayout(false);

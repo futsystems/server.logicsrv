@@ -43,13 +43,13 @@ namespace FutsMoniter
                 BindToTable();
 
 
+
                 menu.Items.Add("确认", Properties.Resources.editAccount, new EventHandler(Confirm_Click));
                 menu.Items.Add("拒绝", Properties.Resources.editAccount, new EventHandler(Reject_Click));
                 menu.Items.Add("取消", Properties.Resources.editAccount, new EventHandler(Cancel_Click));
 
-                opgrid.ContextMenuStrip = menu;
                 WireEvent();
-                this.Load += new EventHandler(ctCashOperation_Load);
+                
             }
             catch (Exception ex)
             {
@@ -373,17 +373,17 @@ namespace FutsMoniter
         //初始化Account显示空格
         private void InitTable()
         {
-            gt.Columns.Add(KEY);//
-            gt.Columns.Add(MGRFK);//
-            gt.Columns.Add(ACCOUNT);//
-            gt.Columns.Add(DATETIME);//
-            gt.Columns.Add(OPERATION);//
-            gt.Columns.Add(OPERATIONSTR);//
-            gt.Columns.Add(AMOUNT);//
-            gt.Columns.Add(REF);//
-            gt.Columns.Add(STATUS);//
-            gt.Columns.Add(STATUSSTR);//
-            gt.Columns.Add(SOURCE);//
+            gt.Columns.Add(KEY);//0
+            gt.Columns.Add(MGRFK);//1
+            gt.Columns.Add(ACCOUNT);//2
+            gt.Columns.Add(DATETIME);//3
+            gt.Columns.Add(OPERATION);//4
+            gt.Columns.Add(OPERATIONSTR);//5
+            gt.Columns.Add(AMOUNT);//6
+            gt.Columns.Add(REF);//7
+            gt.Columns.Add(STATUS);//8
+            gt.Columns.Add(STATUSSTR);//9
+            gt.Columns.Add(SOURCE);//10
             gt.Columns.Add(SOURCESTR);//RECVINFO
             gt.Columns.Add(RECVINFO);//
         }
@@ -395,20 +395,25 @@ namespace FutsMoniter
         {
             ComponentFactory.Krypton.Toolkit.KryptonDataGridView grid = opgrid;
 
-
             datasource.DataSource = gt;
             grid.DataSource = datasource;
 
             //需要在绑定数据源后设定具体的可见性
             grid.Columns[KEY].Visible = false;
 
-
-
-
-            //grid.Columns[UNDERLAYINGID].IsVisible = false;
             grid.Columns[SOURCE].Visible = false;
             grid.Columns[STATUS].Visible = false;
             grid.Columns[OPERATION].Visible = false;
+
+            grid.Columns[MGRFK].Width = 80;
+            grid.Columns[ACCOUNT].Width = 80;
+
+            grid.Columns[DATETIME].Width = 120;
+            grid.Columns[OPERATIONSTR].Width = 60;
+            grid.Columns[AMOUNT].Width = 60;
+            grid.Columns[REF].Width = 150;
+            grid.Columns[STATUS].Width = 40;
+            grid.Columns[SOURCESTR].Width = 80;
         }
 
 
@@ -419,67 +424,75 @@ namespace FutsMoniter
 
         void WireEvent()
         { 
-            btnFilterPending.Click +=new EventHandler(btnFilterPending_Click);
-            btnFilterConfirmed.Click +=new EventHandler(btnFilterConfirmed_Click);
-            btnFilterCancelOrReject.Click+=new EventHandler(btnFilterCancelOrReject_Click);
+            btnFilterPending.Click +=new EventHandler(btnFilterPending_Click);//过滤
+            btnFilterConfirmed.Click +=new EventHandler(btnFilterConfirmed_Click);//
+            btnFilterCancelOrReject.Click+=new EventHandler(btnFilterCancelOrReject_Click);//
+
+            opgrid.CellMouseClick += new DataGridViewCellMouseEventHandler(opgrid_CellMouseClick);
+            opgrid.RowPrePaint += new DataGridViewRowPrePaintEventHandler(opgrid_RowPrePaint);
+            opgrid.CellFormatting += new DataGridViewCellFormattingEventHandler(opgrid_CellFormatting);
+            this.Load += new EventHandler(ctCashOperation_Load);
         }
 
-
-        //private void opgrid_CellFormatting(object sender, CellFormattingEventArgs e)
-        //{
-        //    try
-        //    {
-        //        if (e.CellElement.RowInfo is GridViewDataRowInfo)
-        //        {
-        //            if (e.CellElement.ColumnInfo.Name == STATUSSTR)
-        //            {
-        //                QSEnumCashInOutStatus status = (QSEnumCashInOutStatus)Enum.Parse(typeof(QSEnumCashInOutStatus), (e.CellElement.RowInfo.Cells[STATUS].Value.ToString()));
-
-        //                switch (status)
-        //                {
-        //                    case QSEnumCashInOutStatus.CONFIRMED:
-        //                        e.CellElement.ForeColor = Color.Green;
-        //                        e.CellElement.Font = UIGlobals.BoldFont;
-        //                        break;
-        //                    case QSEnumCashInOutStatus.REFUSED:
-        //                        e.CellElement.ForeColor = Color.Red;
-        //                        e.CellElement.Font = UIGlobals.BoldFont;
-        //                        break;
-        //                    case QSEnumCashInOutStatus.CANCELED:
-        //                        e.CellElement.ForeColor = Color.Sienna;
-        //                        e.CellElement.Font = UIGlobals.BoldFont;
-        //                        break;
-        //                    default:
-        //                        break;
-        //                }
-        //            }
-        //            if (e.CellElement.ColumnInfo.Name == OPERATIONSTR)
-        //            {
-
-        //                QSEnumCashOperation op = (QSEnumCashOperation)Enum.Parse(typeof(QSEnumCashOperation), (e.CellElement.RowInfo.Cells[OPERATION].Value.ToString()));
-        //                if (op == QSEnumCashOperation.Deposit)
-        //                {
-        //                    e.CellElement.ForeColor = Color.Red;
-        //                    e.CellElement.Font = UIGlobals.BoldFont;
-        //                }
-        //                else
-        //                {
-        //                    e.CellElement.ForeColor = Color.Green;
-        //                    e.CellElement.Font = UIGlobals.BoldFont;
-        //                }
-        //            }
+        void opgrid_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.ColumnIndex == 5)
+            {
+                e.CellStyle.Font = UIGlobals.BoldFont;
+                QSEnumCashOperation op = (QSEnumCashOperation)Enum.Parse(typeof(QSEnumCashOperation),opgrid[4,e.RowIndex].Value.ToString());
+                if (op == QSEnumCashOperation.Deposit)
+                {
+                    e.CellStyle.ForeColor = UIGlobals.LongSideColor;
+                }
+                else
+                {
+                    e.CellStyle.ForeColor = UIGlobals.ShortSideColor;
+                }
+            }
+            else if (e.ColumnIndex == 9)
+            {
+                e.CellStyle.Font = UIGlobals.BoldFont;
+                QSEnumCashInOutStatus status = (QSEnumCashInOutStatus)Enum.Parse(typeof(QSEnumCashInOutStatus), opgrid[8, e.RowIndex].Value.ToString());
+                switch (status)
+                {
+                    case QSEnumCashInOutStatus.CONFIRMED:
+                        e.CellStyle.ForeColor = Color.Green;
+                        break;
+                    case QSEnumCashInOutStatus.REFUSED:
+                        e.CellStyle.ForeColor = Color.Red;
+                        break;
+                    case QSEnumCashInOutStatus.CANCELED:
+                        e.CellStyle.ForeColor = Color.Sienna;
+                        break;
+                    default:
+                        break;
+                }
+            }
 
 
+        }
 
-        //        }
+        void opgrid_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        {
+            e.PaintParts = e.PaintParts ^ DataGridViewPaintParts.Focus;
+        }
 
+        void opgrid_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+                GetRightMenu().Show(Control.MousePosition);
+            }
+        }
 
-        //    }
-        //    catch (Exception ex)
-        //    {
-
-        //    }
-        //}
+        /// <summary>
+        /// 动态设置菜单的可见性
+        /// </summary>
+        /// <returns></returns>
+        ContextMenuStrip GetRightMenu()
+        {
+            return menu;
+        }
 
         private void btnFilterPending_Click(object sender, EventArgs args)
         {
