@@ -86,8 +86,10 @@
             this.kryptonRibbonGroup10 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroup();
             this.kryptonRibbonGroupTriple10 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupTriple();
             this.kryptonRibbonGroupButton_FinanceManagement = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
+            this.kryptonRibbonGroupButton_payonline = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
+            this.kryptonRibbonGroup12 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroup();
+            this.kryptonRibbonGroupTriple13 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupTriple();
             this.kryptonRibbonGroupButton_CasherManagement = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
-            this.kryptonRibbonGroupButton8 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.ctAccountMontier1 = new FutsMoniter.Controls.ctAccountMontier();
             this.kryptonRibbonGroupButton1 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
@@ -121,9 +123,14 @@
             this.tabHistQuery,
             this.tabAgent,
             this.tabFinance});
-            this.TabRibbon.SelectedTab = this.tabSystem;
+            this.TabRibbon.SelectedContext = null;
+            this.TabRibbon.SelectedTab = this.tabFinance;
             this.TabRibbon.Size = new System.Drawing.Size(1284, 111);
             this.TabRibbon.TabIndex = 0;
+            // 
+            // kryptonRibbonQATButton_debug
+            // 
+            this.kryptonRibbonQATButton_debug.Image = ((System.Drawing.Image)(resources.GetObject("kryptonRibbonQATButton_debug.Image")));
             // 
             // kryptonContextMenuItem_exit
             // 
@@ -201,6 +208,7 @@
             // 
             // kryptonRibbonGroupButton_SystemStatus
             // 
+            this.kryptonRibbonGroupButton_SystemStatus.ImageLarge = ((System.Drawing.Image)(resources.GetObject("kryptonRibbonGroupButton_SystemStatus.ImageLarge")));
             this.kryptonRibbonGroupButton_SystemStatus.TextLine1 = "系统状态";
             // 
             // tabBasicConfig
@@ -241,10 +249,12 @@
             // 
             // kryptonRibbonGroupButton_Security
             // 
+            this.kryptonRibbonGroupButton_Security.ImageLarge = ((System.Drawing.Image)(resources.GetObject("kryptonRibbonGroupButton_Security.ImageLarge")));
             this.kryptonRibbonGroupButton_Security.TextLine1 = "品种";
             // 
             // kryptonRibbonGroupButton_Symbol
             // 
+            this.kryptonRibbonGroupButton_Symbol.ImageLarge = ((System.Drawing.Image)(resources.GetObject("kryptonRibbonGroupButton_Symbol.ImageLarge")));
             this.kryptonRibbonGroupButton_Symbol.TextLine1 = "合约";
             // 
             // kryptonRibbonGroup5
@@ -367,36 +377,56 @@
             // tabFinance
             // 
             this.tabFinance.Groups.AddRange(new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroup[] {
-            this.kryptonRibbonGroup10});
+            this.kryptonRibbonGroup10,
+            this.kryptonRibbonGroup12});
             this.tabFinance.Text = "财务管理";
             // 
             // kryptonRibbonGroup10
             // 
             this.kryptonRibbonGroup10.Items.AddRange(new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupContainer[] {
             this.kryptonRibbonGroupTriple10});
-            this.kryptonRibbonGroup10.TextLine1 = "财务操作";
+            this.kryptonRibbonGroup10.TextLine1 = "财务";
             // 
             // kryptonRibbonGroupTriple10
             // 
             this.kryptonRibbonGroupTriple10.Items.AddRange(new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupItem[] {
             this.kryptonRibbonGroupButton_FinanceManagement,
-            this.kryptonRibbonGroupButton_CasherManagement,
-            this.kryptonRibbonGroupButton8});
+            this.kryptonRibbonGroupButton_payonline});
             // 
             // kryptonRibbonGroupButton_FinanceManagement
             // 
             this.kryptonRibbonGroupButton_FinanceManagement.ImageLarge = ((System.Drawing.Image)(resources.GetObject("kryptonRibbonGroupButton_FinanceManagement.ImageLarge")));
             this.kryptonRibbonGroupButton_FinanceManagement.TextLine1 = "财务中心";
+            this.kryptonRibbonGroupButton_FinanceManagement.ToolTipBody = "管理代理收益帐户";
+            // 
+            // kryptonRibbonGroupButton_payonline
+            // 
+            this.kryptonRibbonGroupButton_payonline.ImageLarge = ((System.Drawing.Image)(resources.GetObject("kryptonRibbonGroupButton_payonline.ImageLarge")));
+            this.kryptonRibbonGroupButton_payonline.TextLine1 = "在线出入金";
+            this.kryptonRibbonGroupButton_payonline.ToolTipBody = "交易帐户在线入金或出金";
+            // 
+            // kryptonRibbonGroup12
+            // 
+            this.kryptonRibbonGroup12.Items.AddRange(new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupContainer[] {
+            this.kryptonRibbonGroupTriple13});
+            this.kryptonRibbonGroup12.TextLine1 = "出纳";
+            // 
+            // kryptonRibbonGroupTriple13
+            // 
+            this.kryptonRibbonGroupTriple13.Items.AddRange(new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupItem[] {
+            this.kryptonRibbonGroupButton_CasherManagement});
             // 
             // kryptonRibbonGroupButton_CasherManagement
             // 
             this.kryptonRibbonGroupButton_CasherManagement.ImageLarge = ((System.Drawing.Image)(resources.GetObject("kryptonRibbonGroupButton_CasherManagement.ImageLarge")));
-            this.kryptonRibbonGroupButton_CasherManagement.TextLine1 = "出纳中心";
+            this.kryptonRibbonGroupButton_CasherManagement.TextLine1 = "出纳管理";
             // 
             // statusStrip1
             // 
+            this.statusStrip1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
             this.statusStrip1.Location = new System.Drawing.Point(0, 693);
             this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.ManagerRenderMode;
             this.statusStrip1.Size = new System.Drawing.Size(1284, 22);
             this.statusStrip1.TabIndex = 1;
             this.statusStrip1.Text = "statusStrip1";
@@ -424,6 +454,7 @@
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.TabRibbon);
             this.DoubleBuffered = true;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form1";
@@ -485,8 +516,6 @@
         private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroup kryptonRibbonGroup10;
         private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupTriple kryptonRibbonGroupTriple10;
         private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton_FinanceManagement;
-        private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton_CasherManagement;
-        private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton8;
         private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupTriple kryptonRibbonGroupTriple11;
         private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton_CfgModule;
         private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton6;
@@ -497,6 +526,10 @@
         private ComponentFactory.Krypton.Ribbon.ButtonSpecAppMenu buttonSpecAppMenu1;
         private ComponentFactory.Krypton.Ribbon.ButtonSpecAppMenu buttonSpecAppMenu2;
         private ComponentFactory.Krypton.Ribbon.KryptonRibbonQATButton kryptonRibbonQATButton1;
+        private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupTriple kryptonRibbonGroupTriple13;
+        private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton_CasherManagement;
+        public ComponentFactory.Krypton.Ribbon.KryptonRibbonGroup kryptonRibbonGroup12;
+        private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton_payonline;
 
     }
 }

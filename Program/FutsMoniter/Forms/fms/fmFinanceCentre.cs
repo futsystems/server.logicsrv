@@ -201,7 +201,7 @@ namespace FutsMoniter
                     lbbankbranch.Text = info.BankAccount.Branch;
                     lbbankac.Text = info.BankAccount.Bank_AC;
                     lbbankname.Text = info.BankAccount.Bank.Name;
-                    btnChangeBankAccount.Text = "修改银行卡信息";
+                    btnChangeBankAccount.Text = "修改银行卡";
                 }
                 else
                 {
@@ -209,7 +209,7 @@ namespace FutsMoniter
                     lbbankbranch.Text = "--";
                     lbbankac.Text = "--";
                     lbbankname.Text = "--";
-                    btnChangeBankAccount.Text = "添加银行卡信息";
+                    btnChangeBankAccount.Text = "添加银行卡";
                 }
 
                 if (info.LastSettle != null)

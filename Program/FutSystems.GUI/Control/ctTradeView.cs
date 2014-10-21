@@ -5,8 +5,6 @@ using System.Drawing;
 using System.Data;
 using System.Linq;
 using System.Text;
-using Telerik.WinControls;
-using Telerik.WinControls.UI; 
 using System.Windows.Forms;
 using TradingLib.API;
 using TradingLib.Common;

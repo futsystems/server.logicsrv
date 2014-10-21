@@ -29,16 +29,16 @@
         private void InitializeComponent()
         {
             this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
+            this.btnSubmit = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.branch = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
+            this.bankac = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
+            this.name = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
+            this.kryptonLabel5 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.kryptonLabel4 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.ctBankList1 = new FutsMoniter.ctBankList();
             this.kryptonLabel3 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.lbmgrid = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel1 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.kryptonLabel4 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.kryptonLabel5 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.name = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
-            this.bankac = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
-            this.branch = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
-            this.btnSubmit = new ComponentFactory.Krypton.Toolkit.KryptonButton();
-            this.ctBankList1 = new FutsMoniter.ctBankList();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             this.SuspendLayout();
@@ -60,6 +60,61 @@
             this.kryptonPanel1.Name = "kryptonPanel1";
             this.kryptonPanel1.Size = new System.Drawing.Size(300, 200);
             this.kryptonPanel1.TabIndex = 0;
+            // 
+            // btnSubmit
+            // 
+            this.btnSubmit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSubmit.Location = new System.Drawing.Point(215, 163);
+            this.btnSubmit.Name = "btnSubmit";
+            this.btnSubmit.Size = new System.Drawing.Size(73, 25);
+            this.btnSubmit.TabIndex = 9;
+            this.btnSubmit.Values.Text = "提 交";
+            this.btnSubmit.Click += new System.EventHandler(this.btnSubmit_Click);
+            // 
+            // branch
+            // 
+            this.branch.Location = new System.Drawing.Point(87, 119);
+            this.branch.Name = "branch";
+            this.branch.Size = new System.Drawing.Size(193, 21);
+            this.branch.TabIndex = 8;
+            // 
+            // bankac
+            // 
+            this.bankac.Location = new System.Drawing.Point(87, 91);
+            this.bankac.Name = "bankac";
+            this.bankac.Size = new System.Drawing.Size(193, 21);
+            this.bankac.TabIndex = 7;
+            // 
+            // name
+            // 
+            this.name.Location = new System.Drawing.Point(87, 37);
+            this.name.Name = "name";
+            this.name.Size = new System.Drawing.Size(100, 21);
+            this.name.TabIndex = 6;
+            // 
+            // kryptonLabel5
+            // 
+            this.kryptonLabel5.Location = new System.Drawing.Point(23, 119);
+            this.kryptonLabel5.Name = "kryptonLabel5";
+            this.kryptonLabel5.Size = new System.Drawing.Size(55, 18);
+            this.kryptonLabel5.TabIndex = 5;
+            this.kryptonLabel5.Values.Text = "开户行:";
+            // 
+            // kryptonLabel4
+            // 
+            this.kryptonLabel4.Location = new System.Drawing.Point(37, 91);
+            this.kryptonLabel4.Name = "kryptonLabel4";
+            this.kryptonLabel4.Size = new System.Drawing.Size(41, 18);
+            this.kryptonLabel4.TabIndex = 4;
+            this.kryptonLabel4.Values.Text = "帐户:";
+            // 
+            // ctBankList1
+            // 
+            this.ctBankList1.BankSelected = 0;
+            this.ctBankList1.Location = new System.Drawing.Point(37, 65);
+            this.ctBankList1.Name = "ctBankList1";
+            this.ctBankList1.Size = new System.Drawing.Size(174, 20);
+            this.ctBankList1.TabIndex = 3;
             // 
             // kryptonLabel3
             // 
@@ -84,61 +139,6 @@
             this.kryptonLabel1.Size = new System.Drawing.Size(68, 18);
             this.kryptonLabel1.TabIndex = 0;
             this.kryptonLabel1.Values.Text = "管理主域:";
-            // 
-            // kryptonLabel4
-            // 
-            this.kryptonLabel4.Location = new System.Drawing.Point(37, 91);
-            this.kryptonLabel4.Name = "kryptonLabel4";
-            this.kryptonLabel4.Size = new System.Drawing.Size(41, 18);
-            this.kryptonLabel4.TabIndex = 4;
-            this.kryptonLabel4.Values.Text = "帐户:";
-            // 
-            // kryptonLabel5
-            // 
-            this.kryptonLabel5.Location = new System.Drawing.Point(23, 119);
-            this.kryptonLabel5.Name = "kryptonLabel5";
-            this.kryptonLabel5.Size = new System.Drawing.Size(55, 18);
-            this.kryptonLabel5.TabIndex = 5;
-            this.kryptonLabel5.Values.Text = "开户行:";
-            // 
-            // name
-            // 
-            this.name.Location = new System.Drawing.Point(87, 37);
-            this.name.Name = "name";
-            this.name.Size = new System.Drawing.Size(100, 21);
-            this.name.TabIndex = 6;
-            // 
-            // bankac
-            // 
-            this.bankac.Location = new System.Drawing.Point(87, 91);
-            this.bankac.Name = "bankac";
-            this.bankac.Size = new System.Drawing.Size(193, 21);
-            this.bankac.TabIndex = 7;
-            // 
-            // branch
-            // 
-            this.branch.Location = new System.Drawing.Point(87, 119);
-            this.branch.Name = "branch";
-            this.branch.Size = new System.Drawing.Size(193, 21);
-            this.branch.TabIndex = 8;
-            // 
-            // btnSubmit
-            // 
-            this.btnSubmit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSubmit.Location = new System.Drawing.Point(215, 163);
-            this.btnSubmit.Name = "btnSubmit";
-            this.btnSubmit.Size = new System.Drawing.Size(73, 25);
-            this.btnSubmit.TabIndex = 9;
-            this.btnSubmit.Values.Text = "提 交";
-            this.btnSubmit.Click += new System.EventHandler(this.btnSubmit_Click);
-            // 
-            // ctBankList1
-            // 
-            this.ctBankList1.BankSelected = 0;
-            this.ctBankList1.Location = new System.Drawing.Point(37, 65);
-            this.ctBankList1.Name = "ctBankList1";
-            this.ctBankList1.Size = new System.Drawing.Size(150, 20);
-            this.ctBankList1.TabIndex = 3;
             // 
             // fmAgentBankAccount
             // 

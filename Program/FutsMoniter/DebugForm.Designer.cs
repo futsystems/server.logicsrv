@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DebugForm));
             this.ctDebug1 = new FutSystems.GUI.ctDebug();
             this.SuspendLayout();
             // 
@@ -50,8 +51,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(999, 508);
             this.Controls.Add(this.ctDebug1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "DebugForm";
-            this.Text = "DebugForm";
+            this.Text = "日志打印窗口";
             this.ResumeLayout(false);
 
         }

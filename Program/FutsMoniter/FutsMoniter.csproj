@@ -82,10 +82,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\ManagerUtils.cs" />
-    <Compile Include="Controls\Base\ctCashOperation.cs">
+    <Compile Include="Controls\ctCashOperation.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\Base\ctCashOperation.Designer.cs">
+    <Compile Include="Controls\ctCashOperation.Designer.cs">
       <DependentUpon>ctCashOperation.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\ctAccountMoniter\ctAccountMontier_QueryAccountList.cs">
@@ -118,64 +118,64 @@
     <Compile Include="Controls\ctAccountMoniter\ctAccountMontier_AccountHolder.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\krypton\ctHistOrder.cs">
+    <Compile Include="Controls\HistQuery\ctHistOrder.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\krypton\ctHistOrder.Designer.cs">
+    <Compile Include="Controls\HistQuery\ctHistOrder.Designer.cs">
       <DependentUpon>ctHistOrder.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\krypton\ctHistPosition.cs">
+    <Compile Include="Controls\HistQuery\ctHistPosition.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\krypton\ctHistPosition.Designer.cs">
+    <Compile Include="Controls\HistQuery\ctHistPosition.Designer.cs">
       <DependentUpon>ctHistPosition.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\krypton\ctHistTrade.cs">
+    <Compile Include="Controls\HistQuery\ctHistTrade.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\krypton\ctHistTrade.Designer.cs">
+    <Compile Include="Controls\HistQuery\ctHistTrade.Designer.cs">
       <DependentUpon>ctHistTrade.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Report\krypton\ctAgentReportDayRange.cs">
+    <Compile Include="Controls\Report\ctAgentReportDayRange.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\Report\krypton\ctAgentReportDayRange.Designer.cs">
+    <Compile Include="Controls\Report\ctAgentReportDayRange.Designer.cs">
       <DependentUpon>ctAgentReportDayRange.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Report\krypton\ctAgentReportOneDay.cs">
+    <Compile Include="Controls\Report\ctAgentReportOneDay.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\Report\krypton\ctAgentReportOneDay.Designer.cs">
+    <Compile Include="Controls\Report\ctAgentReportOneDay.Designer.cs">
       <DependentUpon>ctAgentReportOneDay.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Report\krypton\ctAgentReportSummaryDayRange.cs">
+    <Compile Include="Controls\Report\ctAgentReportSummaryDayRange.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\Report\krypton\ctAgentReportSummaryDayRange.Designer.cs">
+    <Compile Include="Controls\Report\ctAgentReportSummaryDayRange.Designer.cs">
       <DependentUpon>ctAgentReportSummaryDayRange.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Report\krypton\ctAgentSPArgConfig.cs">
+    <Compile Include="Controls\ctAgentSPArgConfig.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\Report\krypton\ctAgentSPArgConfig.Designer.cs">
+    <Compile Include="Controls\ctAgentSPArgConfig.Designer.cs">
       <DependentUpon>ctAgentSPArgConfig.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Report\krypton\ctCashTrans.cs">
+    <Compile Include="Controls\ctCashTrans.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\Report\krypton\ctCashTrans.Designer.cs">
+    <Compile Include="Controls\ctCashTrans.Designer.cs">
       <DependentUpon>ctCashTrans.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Report\krypton\ctFinanceInfo.cs">
+    <Compile Include="Controls\ctFinanceInfo.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\Report\krypton\ctFinanceInfo.Designer.cs">
+    <Compile Include="Controls\ctFinanceInfo.Designer.cs">
       <DependentUpon>ctFinanceInfo.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Report\krypton\ctFinService.cs">
+    <Compile Include="Controls\ctFinService.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\Report\krypton\ctFinService.Designer.cs">
+    <Compile Include="Controls\ctFinService.Designer.cs">
       <DependentUpon>ctFinService.cs</DependentUpon>
     </Compile>
     <Compile Include="DebugForm.cs">
@@ -196,10 +196,10 @@
     <Compile Include="Controls\Base\ctFinServicePlanList.Designer.cs">
       <DependentUpon>ctFinServicePlanList.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Base\ctBasicMangerInfo.cs">
+    <Compile Include="Controls\ctBasicMangerInfo.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\Base\ctBasicMangerInfo.Designer.cs">
+    <Compile Include="Controls\ctBasicMangerInfo.Designer.cs">
       <DependentUpon>ctBasicMangerInfo.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\Base\ctBankList.cs">
@@ -214,10 +214,10 @@
     <Compile Include="Controls\ctAccountMoniter\ctAccountMoniter_ServiceHolder.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\Report\krypton\ctOrderSenderM.cs">
+    <Compile Include="Controls\ctOrderSenderM.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\Report\krypton\ctOrderSenderM.Designer.cs">
+    <Compile Include="Controls\ctOrderSenderM.Designer.cs">
       <DependentUpon>ctOrderSenderM.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\Base\ctTLEdit.cs">
@@ -322,16 +322,16 @@
     <Compile Include="Forms\fms\fmChangeServicePlan.Designer.cs">
       <DependentUpon>fmChangeServicePlan.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\fms\fmCoreStatus.cs">
+    <Compile Include="Forms\fmCoreStatus.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\fms\fmCoreStatus.Designer.cs">
+    <Compile Include="Forms\fmCoreStatus.Designer.cs">
       <DependentUpon>fmCoreStatus.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\fms\fmExchange.cs">
+    <Compile Include="Forms\fmExchange.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\fms\fmExchange.Designer.cs">
+    <Compile Include="Forms\fmExchange.Designer.cs">
       <DependentUpon>fmExchange.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\fms\fmFinanceCentre.cs">
@@ -352,28 +352,28 @@
     <Compile Include="Forms\fms\fmInsertTrade.Designer.cs">
       <DependentUpon>fmInsertTrade.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\fms\fmManagerCentre.cs">
+    <Compile Include="Forms\fmManagerCentre.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\fms\fmManagerCentre.Designer.cs">
+    <Compile Include="Forms\fmManagerCentre.Designer.cs">
       <DependentUpon>fmManagerCentre.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\fms\fmManagerEdit.cs">
+    <Compile Include="Forms\fmManagerEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\fms\fmManagerEdit.Designer.cs">
+    <Compile Include="Forms\fmManagerEdit.Designer.cs">
       <DependentUpon>fmManagerEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\fms\fmMarketTime.cs">
+    <Compile Include="Forms\fmMarketTime.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\fms\fmMarketTime.Designer.cs">
+    <Compile Include="Forms\fmMarketTime.Designer.cs">
       <DependentUpon>fmMarketTime.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\fms\fmMarketTimeInfo.cs">
+    <Compile Include="Forms\fmMarketTimeInfo.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\fms\fmMarketTimeInfo.Designer.cs">
+    <Compile Include="Forms\fmMarketTimeInfo.Designer.cs">
       <DependentUpon>fmMarketTimeInfo.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\fms\fmPaySlip.cs">
@@ -400,28 +400,28 @@
     <Compile Include="Forms\fms\fmRuleSetConfig.Designer.cs">
       <DependentUpon>fmRuleSetConfig.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\fms\fmSecEdit.cs">
+    <Compile Include="Forms\fmSecEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\fms\fmSecEdit.Designer.cs">
+    <Compile Include="Forms\fmSecEdit.Designer.cs">
       <DependentUpon>fmSecEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\fms\fmSecurity.cs">
+    <Compile Include="Forms\fmSecurity.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\fms\fmSecurity.Designer.cs">
+    <Compile Include="Forms\fmSecurity.Designer.cs">
       <DependentUpon>fmSecurity.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\fms\fmSymbol.cs">
+    <Compile Include="Forms\fmSymbol.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\fms\fmSymbol.Designer.cs">
+    <Compile Include="Forms\fmSymbol.Designer.cs">
       <DependentUpon>fmSymbol.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\fms\fmSymbolEdit.cs">
+    <Compile Include="Forms\fmSymbolEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\fms\fmSymbolEdit.Designer.cs">
+    <Compile Include="Forms\fmSymbolEdit.Designer.cs">
       <DependentUpon>fmSymbolEdit.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\fms\fmSyncCTPSymbols.cs">
@@ -479,37 +479,37 @@
     <Compile Include="MainForm_Client.cs">
       <SubType>Form</SubType>
     </Compile>
-    <EmbeddedResource Include="Controls\Base\ctCashOperation.resx">
+    <EmbeddedResource Include="Controls\ctCashOperation.resx">
       <DependentUpon>ctCashOperation.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\krypton\ctHistOrder.resx">
+    <EmbeddedResource Include="Controls\HistQuery\ctHistOrder.resx">
       <DependentUpon>ctHistOrder.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\krypton\ctHistPosition.resx">
+    <EmbeddedResource Include="Controls\HistQuery\ctHistPosition.resx">
       <DependentUpon>ctHistPosition.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\krypton\ctHistTrade.resx">
+    <EmbeddedResource Include="Controls\HistQuery\ctHistTrade.resx">
       <DependentUpon>ctHistTrade.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\Report\krypton\ctAgentReportDayRange.resx">
+    <EmbeddedResource Include="Controls\Report\ctAgentReportDayRange.resx">
       <DependentUpon>ctAgentReportDayRange.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\Report\krypton\ctAgentReportOneDay.resx">
+    <EmbeddedResource Include="Controls\Report\ctAgentReportOneDay.resx">
       <DependentUpon>ctAgentReportOneDay.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\Report\krypton\ctAgentReportSummaryDayRange.resx">
+    <EmbeddedResource Include="Controls\Report\ctAgentReportSummaryDayRange.resx">
       <DependentUpon>ctAgentReportSummaryDayRange.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\Report\krypton\ctAgentSPArgConfig.resx">
+    <EmbeddedResource Include="Controls\ctAgentSPArgConfig.resx">
       <DependentUpon>ctAgentSPArgConfig.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\Report\krypton\ctCashTrans.resx">
+    <EmbeddedResource Include="Controls\ctCashTrans.resx">
       <DependentUpon>ctCashTrans.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\Report\krypton\ctFinanceInfo.resx">
+    <EmbeddedResource Include="Controls\ctFinanceInfo.resx">
       <DependentUpon>ctFinanceInfo.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\Report\krypton\ctFinService.resx">
+    <EmbeddedResource Include="Controls\ctFinService.resx">
       <DependentUpon>ctFinService.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DebugForm.resx">
@@ -521,13 +521,13 @@
     <EmbeddedResource Include="Controls\Base\ctFinServicePlanList.resx">
       <DependentUpon>ctFinServicePlanList.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\Base\ctBasicMangerInfo.resx">
+    <EmbeddedResource Include="Controls\ctBasicMangerInfo.resx">
       <DependentUpon>ctBasicMangerInfo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\Base\ctBankList.resx">
       <DependentUpon>ctBankList.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\Report\krypton\ctOrderSenderM.resx">
+    <EmbeddedResource Include="Controls\ctOrderSenderM.resx">
       <DependentUpon>ctOrderSenderM.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\Base\ctTLEdit.resx">
@@ -569,10 +569,10 @@
     <EmbeddedResource Include="Forms\fms\fmChangeServicePlan.resx">
       <DependentUpon>fmChangeServicePlan.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\fms\fmCoreStatus.resx">
+    <EmbeddedResource Include="Forms\fmCoreStatus.resx">
       <DependentUpon>fmCoreStatus.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\fms\fmExchange.resx">
+    <EmbeddedResource Include="Forms\fmExchange.resx">
       <DependentUpon>fmExchange.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\fms\fmFinanceCentre.resx">
@@ -584,16 +584,16 @@
     <EmbeddedResource Include="Forms\fms\fmInsertTrade.resx">
       <DependentUpon>fmInsertTrade.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\fms\fmManagerCentre.resx">
+    <EmbeddedResource Include="Forms\fmManagerCentre.resx">
       <DependentUpon>fmManagerCentre.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\fms\fmManagerEdit.resx">
+    <EmbeddedResource Include="Forms\fmManagerEdit.resx">
       <DependentUpon>fmManagerEdit.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\fms\fmMarketTime.resx">
+    <EmbeddedResource Include="Forms\fmMarketTime.resx">
       <DependentUpon>fmMarketTime.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\fms\fmMarketTimeInfo.resx">
+    <EmbeddedResource Include="Forms\fmMarketTimeInfo.resx">
       <DependentUpon>fmMarketTimeInfo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\fms\fmPaySlip.resx">
@@ -608,16 +608,16 @@
     <EmbeddedResource Include="Forms\fms\fmRuleSetConfig.resx">
       <DependentUpon>fmRuleSetConfig.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\fms\fmSecEdit.resx">
+    <EmbeddedResource Include="Forms\fmSecEdit.resx">
       <DependentUpon>fmSecEdit.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\fms\fmSecurity.resx">
+    <EmbeddedResource Include="Forms\fmSecurity.resx">
       <DependentUpon>fmSecurity.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\fms\fmSymbol.resx">
+    <EmbeddedResource Include="Forms\fmSymbol.resx">
       <DependentUpon>fmSymbol.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\fms\fmSymbolEdit.resx">
+    <EmbeddedResource Include="Forms\fmSymbolEdit.resx">
       <DependentUpon>fmSymbolEdit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\fms\fmSyncCTPSymbols.resx">

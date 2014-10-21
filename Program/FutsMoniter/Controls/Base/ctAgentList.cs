@@ -21,6 +21,22 @@ namespace FutsMoniter
 
         //属性获得和设置
         [DefaultValue(true)]
+        bool _enableself = true;
+        public bool EnableSelf
+        {
+            get
+            {
+                return _enableself;
+            }
+            set
+            {
+                _enableself = value;
+            }
+        }
+
+
+        //属性获得和设置
+        [DefaultValue(true)]
         bool _enableselected = true;
         public bool EnableSelected
         {
@@ -134,7 +150,8 @@ namespace FutsMoniter
 
         void InitAgentList()
         {
-            Factory.IDataSourceFactory(agent).BindDataSource(Globals.BasicInfoTracker.GetBaseManagerCombList(_enableany));
+           // MessageBox.Show("_enableself:" + _enableself.ToString());
+            Factory.IDataSourceFactory(agent).BindDataSource(Globals.BasicInfoTracker.GetBaseManagerCombList(_enableany,_enableself));
             if (Globals.Manager.Type != QSEnumManagerType.ROOT)
             {
                 if (_defaultbasemgr)//如果默认选择当前域 则设置selectedvalue

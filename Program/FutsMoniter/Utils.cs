@@ -6,6 +6,7 @@ using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
 using FutSystems.GUI;
+using Microsoft.Win32;
 
 namespace FutsMoniter
 {
@@ -13,6 +14,55 @@ namespace FutsMoniter
 
     public class Utils
     {
+
+        /// <summary>
+        /// 使用默认的浏览器打开指定的url地址
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public static void OpenURL(string url = "http://www.baidu.com")
+        {
+            string BrowserPath = Utils.GetDefaultWebBrowserFilePath();
+            string gotoUrl = url;
+            if (!gotoUrl.StartsWith("http://"))
+            {
+                gotoUrl = "http://" + gotoUrl;
+            }
+            //如果输入的url地址为空，则清空url地址，浏览器默认跳转到默认页面
+            if (gotoUrl == "http://")
+            {
+                gotoUrl = "";
+            }
+            System.Diagnostics.Process.Start(BrowserPath, gotoUrl);
+        }
+
+        /// <summary>
+        /// 获取默认浏览器的路径
+        /// </summary>
+        /// <returns></returns>
+        public static string GetDefaultWebBrowserFilePath()
+        {
+            string _BrowserKey1 = @"Software\Clients\StartmenuInternet\";
+            string _BrowserKey2 = @"\shell\open\command";
+
+            RegistryKey _RegistryKey = Registry.CurrentUser.OpenSubKey(_BrowserKey1, false);
+            if (_RegistryKey == null)
+                _RegistryKey = Registry.LocalMachine.OpenSubKey(_BrowserKey1, false);
+            String _Result = _RegistryKey.GetValue("").ToString();
+            _RegistryKey.Close();
+
+            _RegistryKey = Registry.LocalMachine.OpenSubKey(_BrowserKey1 + _Result + _BrowserKey2);
+            _Result = _RegistryKey.GetValue("").ToString();
+            _RegistryKey.Close();
+
+            if (_Result.Contains("\""))
+            {
+                _Result = _Result.TrimStart('"');
+                _Result = _Result.Substring(0, _Result.IndexOf('"'));
+            }
+            return _Result;
+        }
+
 
         //public static void RunExportToExcelML(string title, Telerik.WinControls.UI.RadGridView grid)
         //{

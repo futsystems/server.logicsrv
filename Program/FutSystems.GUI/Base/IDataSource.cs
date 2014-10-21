@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using TradingLib.API;
 using System.Windows.Forms;
-using Telerik.WinControls.UI;
 using System.Collections;
 using ComponentFactory.Krypton.Toolkit;
 
@@ -33,10 +32,6 @@ namespace FutSystems.GUI
                 return new KryptonComboBox2IDataSource(obj as KryptonComboBox);
             else if (obj is KryptonListBox)
                 return new KryptonListBox2IDataSource(obj as KryptonListBox);
-            if (obj is RadDropDownList)
-                return new RadDropDownList2IDataSource(obj as RadDropDownList);
-            else if (obj is RadListControl)
-                return new RadListControl2IDataSource(obj as RadListControl);
             else if (obj is ListBox)
                 return new ListBox2IDataSource(obj as ListBox);
             else if (obj is ComboBox)
@@ -99,58 +94,6 @@ namespace FutSystems.GUI
     {
         KryptonListBox _lc;
         public KryptonListBox2IDataSource(KryptonListBox lc)
-        {
-            _lc = lc;
-        }
-
-        public object DataSource { get { return _lc.DataSource; } set { _lc.DataSource = value; } }
-        public string DisplayMember { get { return _lc.DisplayMember; } set { _lc.DisplayMember = value; } }
-        public string ValueMember { get { return _lc.ValueMember; } set { _lc.ValueMember = value; } }
-
-        /// <summary>
-        /// 绑定对应的数据
-        /// </summary>
-        /// <param name="list"></param>
-        public void BindDataSource(ArrayList list)
-        {
-            this.DataSource = list;
-            this.ValueMember = "Value";
-            this.DisplayMember = "Name";
-
-        }
-    }
-
-
-    public class RadDropDownList2IDataSource : IDataSource
-    {
-        RadDropDownList _lc;
-        public RadDropDownList2IDataSource(RadDropDownList lc)
-        {
-            _lc = lc;
-            
-        }
-
-        public object DataSource { get { return _lc.DataSource; } set { _lc.DataSource = value; } }
-        public string DisplayMember { get { return _lc.DisplayMember; } set { _lc.DisplayMember = value; } }
-        public string ValueMember { get { return _lc.ValueMember; } set { _lc.ValueMember = value; } }
-
-        /// <summary>
-        /// 绑定对应的数据
-        /// </summary>
-        /// <param name="list"></param>
-        public void BindDataSource(ArrayList list)
-        {
-            this.DataSource = list;
-            this.ValueMember = "Value";
-            this.DisplayMember = "Name";
-
-        }
-    }
-
-    public class RadListControl2IDataSource : IDataSource
-    {
-        RadListControl _lc;
-        public RadListControl2IDataSource(RadListControl lc)
         {
             _lc = lc;
         }

@@ -595,7 +595,7 @@ namespace TradingLib.Common
         /// 用于创建用户
         /// </summary>
         /// <returns></returns>
-        public ArrayList GetBaseManagerCombList(bool all =false)
+        public ArrayList GetBaseManagerCombList(bool all = false, bool includeself = true)
         {
             ArrayList list = new ArrayList();
 
@@ -605,6 +605,11 @@ namespace TradingLib.Common
             }
             foreach (Manager m in managermap.Values.Where(g=>(g.Type== QSEnumManagerType.ROOT||g.Type== QSEnumManagerType.AGENT) ))
             {
+                if (!includeself && m.mgr_fk == Globals.BaseMGRFK)
+                {
+                    continue;
+                }
+                //Globals.Debug("get agentlist:" + includeself.ToString() + " mgrfk:" + m.mgr_fk.ToString() + " basemgrfk:" + Globals.BaseMGRFK.ToString());
                 ValueObject<int> vo1 = new ValueObject<int>();
                 vo1.Name = m.Name + " - " + m.mgr_fk;
                 vo1.Value = m.mgr_fk;

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using FutSystems.GUI;
 using TradingLib.API;
+using Microsoft.Win32;
 
 namespace FutsMoniter
 {
@@ -49,8 +50,17 @@ namespace FutsMoniter
             //财务管理
             kryptonRibbonGroupButton_FinanceManagement.Click += new EventHandler(kryptonRibbonGroupButton_FinanceManagement_Click);
             kryptonRibbonGroupButton_CasherManagement.Click += new EventHandler(kryptonRibbonGroupButton_CasherManagement_Click);
-        
+
+
+            kryptonRibbonGroupButton_payonline.Click += new EventHandler(kryptonRibbonGroupButton_payonline_Click);
         }
+
+        void kryptonRibbonGroupButton_payonline_Click(object sender, EventArgs e)
+        {
+           Utils.OpenURL("http://www.baidu.com");
+        }
+
+        
 
         void kryptonContextMenuItem_exit_Click(object sender, EventArgs e)
         {

@@ -7,8 +7,6 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using Telerik.WinControls;
-using Telerik.WinControls.UI; 
 
 using TradingLib.API;
 using TradingLib.Common;
@@ -160,19 +158,19 @@ namespace FutSystems.GUI
             
             _ordTransHelper.Start();
             //初始化止盈止损设置窗口
-            frmPosOffset = new frmPositionOffset();
-            frmPosOffset.TopMost = true;
-            frmPosOffset.UpdatePostionOffsetEvent += (PositionOffsetArgs args) =>
-            {
-                if (UpdatePostionOffsetEvent != null)
-                    UpdatePostionOffsetEvent(args);
-            };
+            //frmPosOffset = new frmPositionOffset();
+            //frmPosOffset.TopMost = true;
+            //frmPosOffset.UpdatePostionOffsetEvent += (PositionOffsetArgs args) =>
+            //{
+            //    if (UpdatePostionOffsetEvent != null)
+            //        UpdatePostionOffsetEvent(args);
+            //};
         }
 
 
         #region 止盈止损参数
 
-        frmPositionOffset frmPosOffset;
+        //frmPositionOffset frmPosOffset;
         //止损参数映射
         ConcurrentDictionary<string, PositionOffsetArgs> lossOffsetMap = new ConcurrentDictionary<string, PositionOffsetArgs>();
         //止盈参数映射

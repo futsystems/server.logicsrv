@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(fmAgentCostConfig));
             this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
             this.kryptonNavigator1 = new ComponentFactory.Krypton.Navigator.KryptonNavigator();
             this.kryptonPage1 = new ComponentFactory.Krypton.Navigator.KryptonPage();
@@ -48,7 +49,7 @@
             this.kryptonPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.kryptonPanel1.Location = new System.Drawing.Point(0, 0);
             this.kryptonPanel1.Name = "kryptonPanel1";
-            this.kryptonPanel1.Size = new System.Drawing.Size(694, 349);
+            this.kryptonPanel1.Size = new System.Drawing.Size(754, 376);
             this.kryptonPanel1.TabIndex = 0;
             // 
             // kryptonNavigator1
@@ -63,7 +64,7 @@
             this.kryptonPage1,
             this.kryptonPage2});
             this.kryptonNavigator1.SelectedIndex = 0;
-            this.kryptonNavigator1.Size = new System.Drawing.Size(694, 349);
+            this.kryptonNavigator1.Size = new System.Drawing.Size(754, 376);
             this.kryptonNavigator1.TabIndex = 0;
             this.kryptonNavigator1.Text = "kryptonNavigator1";
             // 
@@ -75,7 +76,7 @@
             this.kryptonPage1.LastVisibleSet = true;
             this.kryptonPage1.MinimumSize = new System.Drawing.Size(50, 50);
             this.kryptonPage1.Name = "kryptonPage1";
-            this.kryptonPage1.Size = new System.Drawing.Size(692, 324);
+            this.kryptonPage1.Size = new System.Drawing.Size(752, 351);
             this.kryptonPage1.Text = "配资服务";
             this.kryptonPage1.ToolTipTitle = "Page ToolTip";
             this.kryptonPage1.UniqueName = "FE71B6601FDF4A65F997DE7C05BEBACE";
@@ -85,7 +86,7 @@
             this.ctAgentSPArgConfig1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ctAgentSPArgConfig1.Location = new System.Drawing.Point(0, 0);
             this.ctAgentSPArgConfig1.Name = "ctAgentSPArgConfig1";
-            this.ctAgentSPArgConfig1.Size = new System.Drawing.Size(692, 324);
+            this.ctAgentSPArgConfig1.Size = new System.Drawing.Size(752, 351);
             this.ctAgentSPArgConfig1.TabIndex = 0;
             // 
             // kryptonPage2
@@ -95,8 +96,8 @@
             this.kryptonPage2.LastVisibleSet = true;
             this.kryptonPage2.MinimumSize = new System.Drawing.Size(50, 50);
             this.kryptonPage2.Name = "kryptonPage2";
-            this.kryptonPage2.Size = new System.Drawing.Size(692, 324);
-            this.kryptonPage2.Text = "kryptonPage2";
+            this.kryptonPage2.Size = new System.Drawing.Size(752, 351);
+            this.kryptonPage2.Text = "其他";
             this.kryptonPage2.ToolTipTitle = "Page ToolTip";
             this.kryptonPage2.UniqueName = "3D9DECE6A5EB49F9F7B34BF7707CE85A";
             // 
@@ -104,9 +105,10 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(694, 349);
+            this.ClientSize = new System.Drawing.Size(754, 376);
             this.Controls.Add(this.kryptonPanel1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "fmAgentCostConfig";

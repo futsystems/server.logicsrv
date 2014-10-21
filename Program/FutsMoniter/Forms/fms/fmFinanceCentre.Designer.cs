@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(fmFinanceCentre));
             this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
             this.kryptonGroupBox3 = new ComponentFactory.Krypton.Toolkit.KryptonGroupBox();
             this.kryptonGroupBox2 = new ComponentFactory.Krypton.Toolkit.KryptonGroupBox();
@@ -74,7 +75,7 @@
             this.kryptonPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.kryptonPanel1.Location = new System.Drawing.Point(0, 0);
             this.kryptonPanel1.Name = "kryptonPanel1";
-            this.kryptonPanel1.Size = new System.Drawing.Size(742, 576);
+            this.kryptonPanel1.Size = new System.Drawing.Size(754, 576);
             this.kryptonPanel1.TabIndex = 0;
             // 
             // kryptonGroupBox3
@@ -82,13 +83,13 @@
             this.kryptonGroupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.kryptonGroupBox3.Location = new System.Drawing.Point(4, 221);
+            this.kryptonGroupBox3.Location = new System.Drawing.Point(4, 220);
             this.kryptonGroupBox3.Name = "kryptonGroupBox3";
             // 
             // kryptonGroupBox3.Panel
             // 
             this.kryptonGroupBox3.Panel.Controls.Add(this.ctCashOperation1);
-            this.kryptonGroupBox3.Size = new System.Drawing.Size(738, 355);
+            this.kryptonGroupBox3.Size = new System.Drawing.Size(750, 356);
             this.kryptonGroupBox3.TabIndex = 2;
             this.kryptonGroupBox3.Text = "出入金请求";
             this.kryptonGroupBox3.Values.Heading = "出入金请求";
@@ -111,7 +112,7 @@
             this.kryptonGroupBox2.Panel.Controls.Add(this.kryptonLabel6);
             this.kryptonGroupBox2.Panel.Controls.Add(this.kryptonLabel5);
             this.kryptonGroupBox2.Panel.Controls.Add(this.kryptonLabel4);
-            this.kryptonGroupBox2.Size = new System.Drawing.Size(742, 79);
+            this.kryptonGroupBox2.Size = new System.Drawing.Size(754, 79);
             this.kryptonGroupBox2.TabIndex = 1;
             this.kryptonGroupBox2.Text = "收款银行卡信息";
             this.kryptonGroupBox2.Values.Heading = "收款银行卡信息";
@@ -119,11 +120,11 @@
             // btnChangeBankAccount
             // 
             this.btnChangeBankAccount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnChangeBankAccount.Location = new System.Drawing.Point(638, 21);
+            this.btnChangeBankAccount.Location = new System.Drawing.Point(650, 21);
             this.btnChangeBankAccount.Name = "btnChangeBankAccount";
             this.btnChangeBankAccount.Size = new System.Drawing.Size(90, 25);
             this.btnChangeBankAccount.TabIndex = 14;
-            this.btnChangeBankAccount.Values.Text = "提现或充值";
+            this.btnChangeBankAccount.Values.Text = "更新银行卡";
             // 
             // lbbankbranch
             // 
@@ -209,7 +210,7 @@
             this.kryptonGroupBox1.Panel.Controls.Add(this.kryptonLabel3);
             this.kryptonGroupBox1.Panel.Controls.Add(this.kryptonLabel2);
             this.kryptonGroupBox1.Panel.Controls.Add(this.kryptonLabel1);
-            this.kryptonGroupBox1.Size = new System.Drawing.Size(742, 128);
+            this.kryptonGroupBox1.Size = new System.Drawing.Size(751, 128);
             this.kryptonGroupBox1.TabIndex = 0;
             this.kryptonGroupBox1.Text = "财务信息";
             this.kryptonGroupBox1.Values.Heading = "财务信息";
@@ -217,9 +218,9 @@
             // btnCashOperation
             // 
             this.btnCashOperation.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCashOperation.Location = new System.Drawing.Point(638, 18);
+            this.btnCashOperation.Location = new System.Drawing.Point(647, 18);
             this.btnCashOperation.Name = "btnCashOperation";
-            this.btnCashOperation.Size = new System.Drawing.Size(90, 25);
+            this.btnCashOperation.Size = new System.Drawing.Size(90, 52);
             this.btnCashOperation.TabIndex = 10;
             this.btnCashOperation.Values.Text = "提现或充值";
             // 
@@ -273,9 +274,12 @@
             // 
             // lbbalance
             // 
-            this.lbbalance.Location = new System.Drawing.Point(85, 18);
+            this.lbbalance.Location = new System.Drawing.Point(84, 15);
             this.lbbalance.Name = "lbbalance";
-            this.lbbalance.Size = new System.Drawing.Size(19, 18);
+            this.lbbalance.Size = new System.Drawing.Size(26, 26);
+            this.lbbalance.StateCommon.ShortText.Color1 = System.Drawing.Color.Crimson;
+            this.lbbalance.StateCommon.ShortText.Color2 = System.Drawing.Color.Crimson;
+            this.lbbalance.StateCommon.ShortText.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.lbbalance.TabIndex = 3;
             this.lbbalance.Values.Text = "--";
             // 
@@ -308,7 +312,7 @@
             this.ctCashOperation1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ctCashOperation1.Location = new System.Drawing.Point(0, 0);
             this.ctCashOperation1.Name = "ctCashOperation1";
-            this.ctCashOperation1.Size = new System.Drawing.Size(734, 333);
+            this.ctCashOperation1.Size = new System.Drawing.Size(746, 334);
             this.ctCashOperation1.TabIndex = 0;
             this.ctCashOperation1.ViewType = FutsMoniter.CashOpViewType.Agent;
             // 
@@ -316,9 +320,10 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(742, 576);
+            this.ClientSize = new System.Drawing.Size(754, 576);
             this.Controls.Add(this.kryptonPanel1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "fmFinanceCentre";

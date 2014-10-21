@@ -37,24 +37,10 @@
       <HintPath>..\..\lib\kypton\ComponentFactory.Krypton.Toolkit.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Telerik.WinControls">
-      <HintPath>..\..\lib\Telerik\Telerik.WinControls.dll</HintPath>
-    </Reference>
-    <Reference Include="Telerik.WinControls.GridView">
-      <HintPath>..\..\lib\Telerik\Telerik.WinControls.GridView.dll</HintPath>
-    </Reference>
-    <Reference Include="Telerik.WinControls.UI">
-      <HintPath>..\..\lib\Telerik\Telerik.WinControls.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="TelerikCommon">
-      <HintPath>..\..\lib\Telerik\TelerikCommon.dll</HintPath>
-    </Reference>
+    <Reference Include="System.XML" />
     <Reference Include="TradingLib.API, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\TradingLib\TradingLib.API.dll</HintPath>
@@ -101,21 +87,12 @@
       <DependentUpon>ctPositionView.cs</DependentUpon>
     </Compile>
     <Compile Include="deledge.cs" />
-    <Compile Include="demo.cs" />
     <Compile Include="fmConfirm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="fmConfirm.Designer.cs">
       <DependentUpon>fmConfirm.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmPositionOffset.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmPositionOffset.Designer.cs">
-      <DependentUpon>frmPositionOffset.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Fut.Price\FutPriceEditorContentElement.cs" />
-    <Compile Include="Fut.Price\FutsPriceArrowButtonElement.cs" />
     <Compile Include="API\IOrderSender.cs" />
     <Compile Include="API\IOrderView.cs" />
     <Compile Include="API\ITradeView.cs" />
@@ -128,19 +105,11 @@
     <Compile Include="MessageForm.Designer.cs">
       <DependentUpon>MessageForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="MyPanel.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="MyPanelElement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Editor\StopLossEditor.cs" />
-    <Compile Include="tracker.cs">
-      <SubType>Component</SubType>
     </Compile>
     <Compile Include="UIGlobals.cs" />
     <Compile Include="UIUtil.cs" />
@@ -164,9 +133,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="fmConfirm.resx">
       <DependentUpon>fmConfirm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmPositionOffset.resx">
-      <DependentUpon>frmPositionOffset.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MessageForm.resx">
       <DependentUpon>MessageForm.cs</DependentUpon>

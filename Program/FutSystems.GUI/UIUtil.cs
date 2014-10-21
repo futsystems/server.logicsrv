@@ -595,30 +595,30 @@ namespace FutSystems.GUI
         /// <param name="btn"></param>
         /// <param name="func"></param>
         /// <param name="timedelay"></param>
-        public static void ButtonActionDelay(object btn, VoidDelegate func, decimal timedelay = 1.5M)
-        {
+        //public static void ButtonActionDelay(object btn, VoidDelegate func, decimal timedelay = 1.5M)
+        //{
 
-            if (btn is Telerik.WinControls.UI.RadButton)
-            {
-                Telerik.WinControls.UI.RadButton b = btn as Telerik.WinControls.UI.RadButton;
+        //    if (btn is Telerik.WinControls.UI.RadButton)
+        //    {
+        //        Telerik.WinControls.UI.RadButton b = btn as Telerik.WinControls.UI.RadButton;
 
-                b.Enabled = false;
-                Thread t = new Thread(() =>
-                {
-                    //平掉当前仓位
-                    func();
-                    Thread.Sleep((int)(1000 * timedelay));
-                    b.Invoke(new Action(() =>
-                    {
-                        //btnFlatPostions.Text = i.ToString();
-                        b.Enabled = true;
-                        //updatePositionButton();
-                    }));
-                });
-                t.IsBackground = true;
-                t.Start();
-            }
-        }
+        //        b.Enabled = false;
+        //        Thread t = new Thread(() =>
+        //        {
+        //            //平掉当前仓位
+        //            func();
+        //            Thread.Sleep((int)(1000 * timedelay));
+        //            b.Invoke(new Action(() =>
+        //            {
+        //                //btnFlatPostions.Text = i.ToString();
+        //                b.Enabled = true;
+        //                //updatePositionButton();
+        //            }));
+        //        });
+        //        t.IsBackground = true;
+        //        t.Start();
+        //    }
+        //}
 
 
         
