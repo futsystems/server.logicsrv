@@ -187,11 +187,11 @@ namespace FutsMoniter
                 return;
             }
 
-            ServicePlanChangeForm fm = new ServicePlanChangeForm();
+            fmChangeServicePlan fm = new fmChangeServicePlan();
             fm.Text = btnChangeServicePlan.Text;
             fm.FinServiceStub = finservice;
             fm.Account = _account;
-            fm.SetServicePlans(serviceplans);
+            //fm.SetServicePlans(serviceplans);
             fm.ShowDialog();
         }
 

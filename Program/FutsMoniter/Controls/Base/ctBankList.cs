@@ -35,6 +35,7 @@ namespace FutsMoniter
                 Globals.CallBackCentre.RegisterCallback("MgrExchServer", "QryBank", this.OnQryBank);
             }
             this.Disposed += new EventHandler(ctBankList_Disposed);
+            this.cbbank.SelectedIndexChanged +=new EventHandler(cbbank_SelectedIndexChanged);
         }
 
         void ctBankList_Disposed(object sender, EventArgs e)
@@ -115,7 +116,7 @@ namespace FutsMoniter
             }
         }
 
-        private void bank_SelectedIndexChanged(object sender, Telerik.WinControls.UI.Data.PositionChangedEventArgs e)
+        private void cbbank_SelectedIndexChanged(object sender,EventArgs e)
         {
 
             if (BankSelectedChangedEvent!= null && _gotdata)

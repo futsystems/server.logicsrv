@@ -7,18 +7,17 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using FutSystems.GUI;
 using TradingLib.API;
 using TradingLib.Common;
+using FutSystems.GUI;
+using TradingLib.Mixins.LitJson;
 using TradingLib.Mixins.JsonObject;
-using Telerik.WinControls;
-using Telerik.WinControls.UI;
 
 
 namespace FutsMoniter
 {
     public enum CashOpViewType
-    { 
+    {
         /// <summary>
         /// 显示代理
         /// </summary>
@@ -29,10 +28,11 @@ namespace FutsMoniter
         /// </summary>
         Account,
     }
+
     public partial class ctCashOperation : UserControl
     {
 
-        RadContextMenu menu = new RadContextMenu();
+        ContextMenuStrip menu = new ContextMenuStrip();
         public ctCashOperation()
         {
             InitializeComponent();
@@ -42,30 +42,18 @@ namespace FutsMoniter
                 InitTable();
                 BindToTable();
 
-                Telerik.WinControls.UI.RadMenuItem MenuItem_confirm = new Telerik.WinControls.UI.RadMenuItem("确认");
-                ////MenuItem_confirm.Image = Properties.Resources.editAccount_16;
-                MenuItem_confirm.Click += new EventHandler(Confirm_Click);
 
-                Telerik.WinControls.UI.RadMenuItem MenuItem_reject = new Telerik.WinControls.UI.RadMenuItem("拒绝");
-                ////MenuItem_confirm.Image = Properties.Resources.editAccount_16;
-                MenuItem_reject.Click += new EventHandler(Reject_Click);
+                menu.Items.Add("确认", Properties.Resources.editAccount, new EventHandler(Confirm_Click));
+                menu.Items.Add("拒绝", Properties.Resources.editAccount, new EventHandler(Reject_Click));
+                menu.Items.Add("取消", Properties.Resources.editAccount, new EventHandler(Cancel_Click));
 
-                Telerik.WinControls.UI.RadMenuItem MenuItem_cancel = new Telerik.WinControls.UI.RadMenuItem("取消");
-                ////MenuItem_confirm.Image = Properties.Resources.editAccount_16;
-                MenuItem_cancel.Click += new EventHandler(Cancel_Click);
-
-
-                menu.Items.Add(MenuItem_confirm);
-                menu.Items.Add(MenuItem_reject);
-                menu.Items.Add(MenuItem_cancel);
-                ctGridExport1.Grid = opgrid;
-
-
+                opgrid.ContextMenuStrip = menu;
+                WireEvent();
                 this.Load += new EventHandler(ctCashOperation_Load);
             }
             catch (Exception ex)
-            { 
-                
+            {
+
             }
         }
 
@@ -73,11 +61,11 @@ namespace FutsMoniter
         {
             if (ViewType == CashOpViewType.Agent)
             {
-                opgrid.Columns[ACCOUNT].IsVisible = false;
+                opgrid.Columns[ACCOUNT].Visible = false;
             }
             else
             {
-                opgrid.Columns[MGRFK].IsVisible = false;
+                opgrid.Columns[MGRFK].Visible = false;
             }
         }
 
@@ -154,7 +142,7 @@ namespace FutsMoniter
                 if (ViewType == CashOpViewType.Agent)//代理支付凭证
                 {
                     //生成支付单
-                    PaySlipForm fm = new PaySlipForm();
+                    fmPaySlipAgent fm = new fmPaySlipAgent();
                     fm.SetCashOperation(op);
                     if (fm.ShowDialog() != DialogResult.Yes)
                     {
@@ -163,13 +151,12 @@ namespace FutsMoniter
                 }
                 else
                 {
-                    PaySlipFormAccount fm = new PaySlipFormAccount();
+                    fmPaySlip fm = new fmPaySlip();
                     fm.SetCashOperation(op);
                     if (fm.ShowDialog() != DialogResult.Yes)
                     {
                         return;
                     }
-                    
                 }
             }
 
@@ -263,16 +250,22 @@ namespace FutsMoniter
         }
 
 
+        int CurrentRow
+        {
+            get
+            {
+                return opgrid.SelectedRows.Count > 0 ? opgrid.SelectedRows[0].Index : -1;
+            }
+        }
         //得到当前选择的行号
         private string CurrentKey
         {
             get
             {
                 if (opgrid.SelectedRows.Count > 0)
-                    return opgrid.SelectedRows[0].ViewInfo.CurrentRow.Cells[KEY].Value.ToString();
+                    return opgrid[KEY,CurrentRow].Value.ToString();
                 else
                     return string.Empty;
-                return string.Empty;
             }
         }
 
@@ -289,7 +282,7 @@ namespace FutsMoniter
             }
         }
 
-        
+
         delegate void del2(JsonWrapperCashOperation op);
         public void GotJsonWrapperCashOperation(JsonWrapperCashOperation op)
         {
@@ -300,7 +293,7 @@ namespace FutsMoniter
             else
             {
                 int id = CashOperationIdx(op);
-                if(id==-1)
+                if (id == -1)
                 {
                     DataRow r = gt.Rows.Add("");
                     int i = gt.Rows.Count - 1;//得到新建的Row号
@@ -325,9 +318,9 @@ namespace FutsMoniter
                 {
                     gt.Rows[id][STATUS] = op.Status;
                     gt.Rows[id][STATUSSTR] = Util.GetEnumDescription(op.Status);
-                    
+
                 }
-                
+
             }
         }
 
@@ -359,23 +352,21 @@ namespace FutsMoniter
         /// </summary>
         private void SetPreferences()
         {
-            Telerik.WinControls.UI.RadGridView grid =  opgrid;
-            grid.ShowRowHeaderColumn = false;//显示每行的头部
-            grid.MasterTemplate.AutoSizeColumnsMode = Telerik.WinControls.UI.GridViewAutoSizeColumnsMode.Fill;//列的填充方式
-            grid.ShowGroupPanel = false;//是否显示顶部的panel用于组合排序
-            grid.MasterTemplate.EnableGrouping = false;//是否允许分组
-            grid.EnableHotTracking = true;
+            ComponentFactory.Krypton.Toolkit.KryptonDataGridView grid = opgrid;
 
-            grid.AllowAddNewRow = false;//不允许增加新行
-            grid.AllowDeleteRow = false;//不允许删除行
-            grid.AllowEditRow = false;//不允许编辑行
-            grid.AllowRowResize = false;
-            //grid.EnableSorting = false;
-            grid.TableElement.TableHeaderHeight = Globals.HeaderHeight;
-            grid.TableElement.RowHeight = Globals.RowHeight;
+            grid.AllowUserToAddRows = false;
+            grid.AllowUserToDeleteRows = false;
+            grid.AllowUserToResizeRows = false;
+            grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            grid.ColumnHeadersHeight = 25;
+            grid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            grid.ReadOnly = true;
+            grid.RowHeadersVisible = false;
+            grid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            grid.AlternatingRowsDefaultCellStyle.BackColor = Color.WhiteSmoke;
 
-            grid.EnableAlternatingRowColor = true;//隔行不同颜色
-            //this.radRadioDataReader.ToggleState = Telerik.WinControls.Enumerations.ToggleState.On; 
+            grid.StateCommon.Background.Color1 = Color.WhiteSmoke;
+            grid.StateCommon.Background.Color2 = Color.WhiteSmoke;
 
         }
 
@@ -402,26 +393,22 @@ namespace FutsMoniter
         /// </summary>
         private void BindToTable()
         {
-            Telerik.WinControls.UI.RadGridView grid =  opgrid;
-
-            //grid.TableElement.BeginUpdate();             
-            //grid.MasterTemplate.Columns.Clear(); 
-            //accountlist.DataSource = gt;
+            ComponentFactory.Krypton.Toolkit.KryptonDataGridView grid = opgrid;
 
 
             datasource.DataSource = gt;
             grid.DataSource = datasource;
 
             //需要在绑定数据源后设定具体的可见性
-            grid.Columns[KEY].IsVisible = false;
+            grid.Columns[KEY].Visible = false;
 
-            
 
-            
+
+
             //grid.Columns[UNDERLAYINGID].IsVisible = false;
-            grid.Columns[SOURCE].IsVisible = false;
-            grid.Columns[STATUS].IsVisible = false;
-            grid.Columns[OPERATION].IsVisible = false;
+            grid.Columns[SOURCE].Visible = false;
+            grid.Columns[STATUS].Visible = false;
+            grid.Columns[OPERATION].Visible = false;
         }
 
 
@@ -430,89 +417,90 @@ namespace FutsMoniter
 
         #endregion
 
-        private void opgrid_ContextMenuOpening(object sender, ContextMenuOpeningEventArgs e)
-        {
-            e.ContextMenu = menu.DropDown;
+        void WireEvent()
+        { 
+            btnFilterPending.Click +=new EventHandler(btnFilterPending_Click);
+            btnFilterConfirmed.Click +=new EventHandler(btnFilterConfirmed_Click);
+            btnFilterCancelOrReject.Click+=new EventHandler(btnFilterCancelOrReject_Click);
         }
 
-        private void opgrid_CellFormatting(object sender, CellFormattingEventArgs e)
-        {
-            try
-            {
-                if (e.CellElement.RowInfo is GridViewDataRowInfo)
-                {
-                    if (e.CellElement.ColumnInfo.Name == STATUSSTR)
-                    {
-                        QSEnumCashInOutStatus status = (QSEnumCashInOutStatus)Enum.Parse(typeof(QSEnumCashInOutStatus), (e.CellElement.RowInfo.Cells[STATUS].Value.ToString()));
 
-                        switch (status)
-                        {
-                            case QSEnumCashInOutStatus.CONFIRMED:
-                                e.CellElement.ForeColor = Color.Green;
-                                e.CellElement.Font = UIGlobals.BoldFont;
-                                break;
-                            case QSEnumCashInOutStatus.REFUSED:
-                                e.CellElement.ForeColor = Color.Red;
-                                e.CellElement.Font = UIGlobals.BoldFont;
-                                break;
-                            case QSEnumCashInOutStatus.CANCELED:
-                                e.CellElement.ForeColor = Color.Sienna;
-                                e.CellElement.Font = UIGlobals.BoldFont;
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                    if (e.CellElement.ColumnInfo.Name == OPERATIONSTR)
-                    {
+        //private void opgrid_CellFormatting(object sender, CellFormattingEventArgs e)
+        //{
+        //    try
+        //    {
+        //        if (e.CellElement.RowInfo is GridViewDataRowInfo)
+        //        {
+        //            if (e.CellElement.ColumnInfo.Name == STATUSSTR)
+        //            {
+        //                QSEnumCashInOutStatus status = (QSEnumCashInOutStatus)Enum.Parse(typeof(QSEnumCashInOutStatus), (e.CellElement.RowInfo.Cells[STATUS].Value.ToString()));
 
-                        QSEnumCashOperation op = (QSEnumCashOperation)Enum.Parse(typeof(QSEnumCashOperation), (e.CellElement.RowInfo.Cells[OPERATION].Value.ToString()));
-                        if (op == QSEnumCashOperation.Deposit)
-                        {
-                            e.CellElement.ForeColor = Color.Red;
-                            e.CellElement.Font = UIGlobals.BoldFont;
-                        }
-                        else
-                        {
-                            e.CellElement.ForeColor = Color.Green;
-                            e.CellElement.Font = UIGlobals.BoldFont;
-                        }
-                    }
+        //                switch (status)
+        //                {
+        //                    case QSEnumCashInOutStatus.CONFIRMED:
+        //                        e.CellElement.ForeColor = Color.Green;
+        //                        e.CellElement.Font = UIGlobals.BoldFont;
+        //                        break;
+        //                    case QSEnumCashInOutStatus.REFUSED:
+        //                        e.CellElement.ForeColor = Color.Red;
+        //                        e.CellElement.Font = UIGlobals.BoldFont;
+        //                        break;
+        //                    case QSEnumCashInOutStatus.CANCELED:
+        //                        e.CellElement.ForeColor = Color.Sienna;
+        //                        e.CellElement.Font = UIGlobals.BoldFont;
+        //                        break;
+        //                    default:
+        //                        break;
+        //                }
+        //            }
+        //            if (e.CellElement.ColumnInfo.Name == OPERATIONSTR)
+        //            {
 
-                       
-
-                }
+        //                QSEnumCashOperation op = (QSEnumCashOperation)Enum.Parse(typeof(QSEnumCashOperation), (e.CellElement.RowInfo.Cells[OPERATION].Value.ToString()));
+        //                if (op == QSEnumCashOperation.Deposit)
+        //                {
+        //                    e.CellElement.ForeColor = Color.Red;
+        //                    e.CellElement.Font = UIGlobals.BoldFont;
+        //                }
+        //                else
+        //                {
+        //                    e.CellElement.ForeColor = Color.Green;
+        //                    e.CellElement.Font = UIGlobals.BoldFont;
+        //                }
+        //            }
 
 
-            }
-            catch (Exception ex)
-            {
-                
-            }
-        }
 
-        private void btnFilterPending_ToggleStateChanged(object sender, StateChangedEventArgs args)
+        //        }
+
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+
+        //    }
+        //}
+
+        private void btnFilterPending_Click(object sender, EventArgs args)
         {
             string strFilter = DATETIME + " ASC";
-            strFilter = String.Format(STATUS + " = '{0}' ",QSEnumCashInOutStatus.PENDING);
+            strFilter = String.Format(STATUS + " = '{0}' ", QSEnumCashInOutStatus.PENDING);
             datasource.Filter = strFilter;
         }
 
-        private void btnFilterConfirmed_ToggleStateChanged(object sender, StateChangedEventArgs args)
+        private void btnFilterConfirmed_Click(object sender, EventArgs args)
         {
             string strFilter = DATETIME + " ASC";
             strFilter = String.Format(STATUS + " = '{0}' ", QSEnumCashInOutStatus.CONFIRMED);
             datasource.Filter = strFilter;
         }
 
-        private void btnFilterCancelOrReject_ToggleStateChanged(object sender, StateChangedEventArgs args)
+        private void btnFilterCancelOrReject_Click(object sender, EventArgs args)
         {
             string strFilter = DATETIME + " ASC";
             strFilter = String.Format(STATUS + " = '{0}' or " + STATUS + " = '{1}'", QSEnumCashInOutStatus.CANCELED, QSEnumCashInOutStatus.REFUSED);
             datasource.Filter = strFilter;
         }
-
-
 
 
 

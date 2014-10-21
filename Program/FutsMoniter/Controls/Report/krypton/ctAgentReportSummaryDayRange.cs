@@ -6,23 +6,23 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using TradingLib.Mixins.JsonObject;
-using TradingLib.Mixins.LitJson;
-using FutSystems.GUI;
 using TradingLib.API;
 using TradingLib.Common;
+using TradingLib.Mixins.LitJson;
+using TradingLib.Mixins.JsonObject;
+
 
 namespace FutsMoniter
 {
-    public partial class ctProfitReportDayRange : UserControl
+    public partial class ctAgentReportSummaryDayRange : UserControl
     {
-        public ctProfitReportDayRange()
+        public ctAgentReportSummaryDayRange()
         {
             InitializeComponent();
             SetPreferences();
             InitTable();
             BindToTable();
-            ctGridExport1.Grid = totalgrid;
+            //ctGridExport1.Grid = totalgrid;
             Globals.RegInitCallback(OnInitFinished);
             if (Globals.EnvReady)
             {
@@ -110,23 +110,21 @@ namespace FutsMoniter
         /// </summary>
         private void SetPreferences()
         {
-            Telerik.WinControls.UI.RadGridView grid = totalgrid;
-            grid.ShowRowHeaderColumn = false;//显示每行的头部
-            grid.MasterTemplate.AutoSizeColumnsMode = Telerik.WinControls.UI.GridViewAutoSizeColumnsMode.Fill;//列的填充方式
-            grid.ShowGroupPanel = false;//是否显示顶部的panel用于组合排序
-            grid.MasterTemplate.EnableGrouping = false;//是否允许分组
-            grid.EnableHotTracking = true;
+            ComponentFactory.Krypton.Toolkit.KryptonDataGridView grid = totalgrid;
 
-            grid.AllowAddNewRow = false;//不允许增加新行
-            grid.AllowDeleteRow = false;//不允许删除行
-            grid.AllowEditRow = false;//不允许编辑行
-            grid.AllowRowResize = false;
-            //grid.EnableSorting = false;
-            grid.TableElement.TableHeaderHeight = Globals.HeaderHeight;
-            grid.TableElement.RowHeight = Globals.RowHeight;
+            grid.AllowUserToAddRows = false;
+            grid.AllowUserToDeleteRows = false;
+            grid.AllowUserToResizeRows = false;
+            grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            grid.ColumnHeadersHeight = 25;
+            grid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            grid.ReadOnly = true;
+            grid.RowHeadersVisible = false;
+            grid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            grid.AlternatingRowsDefaultCellStyle.BackColor = Color.WhiteSmoke;
 
-            grid.EnableAlternatingRowColor = true;//隔行不同颜色
-            //this.radRadioDataReader.ToggleState = Telerik.WinControls.Enumerations.ToggleState.On; 
+            grid.StateCommon.Background.Color1 = Color.WhiteSmoke;
+            grid.StateCommon.Background.Color2 = Color.WhiteSmoke;
 
         }
 
@@ -151,11 +149,7 @@ namespace FutsMoniter
         /// </summary>
         private void BindToTable()
         {
-            Telerik.WinControls.UI.RadGridView grid = totalgrid;
-
-            //grid.TableElement.BeginUpdate();             
-            //grid.MasterTemplate.Columns.Clear(); 
-            //accountlist.DataSource = gt;
+            ComponentFactory.Krypton.Toolkit.KryptonDataGridView grid = totalgrid;
 
 
             datasource.DataSource = gt;
@@ -189,9 +183,7 @@ namespace FutsMoniter
         {
             this.Clear();
             Globals.TLClient.ReqQryTotalReportByDayRange(ctAgentList1.CurrentAgentFK, Util.ToTLDate(start.Value), Util.ToTLDate(end.Value));
-            
-        }
 
- 
+        }
     }
 }

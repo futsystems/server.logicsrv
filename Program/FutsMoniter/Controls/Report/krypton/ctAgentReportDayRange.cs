@@ -6,37 +6,41 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using TradingLib.Mixins.JsonObject;
-using TradingLib.Mixins.LitJson;
-using FutSystems.GUI;
 using TradingLib.API;
 using TradingLib.Common;
+using TradingLib.Mixins.LitJson;
+using TradingLib.Mixins.JsonObject;
+
 
 namespace FutsMoniter
 {
-    public partial class ctSummaryReport : UserControl
+    public partial class ctAgentReportDayRange : UserControl
     {
-        public ctSummaryReport()
+        public ctAgentReportDayRange()
         {
             InitializeComponent();
             SetPreferences();
             InitTable();
             BindToTable();
-            ctGridExport1.Grid = totalgrid;
+            //ctGridExport1.Grid = totalgrid;
             Globals.RegInitCallback(OnInitFinished);
             if (Globals.EnvReady)
             {
-                Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QrySummaryReport", this.OnTotalReport);
+                Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryTotalReportDayRange", this.OnTotalReport);
             }
-            this.Disposed += new EventHandler(ctSummaryReport_Disposed);
+            
 
             start.Value = Convert.ToDateTime(DateTime.Today.AddMonths(-1).ToString("yyyy-MM-01") + " 0:00:00");
             end.Value = DateTime.Now;
+
+            this.Disposed += new EventHandler(ctProfitReportDayRange_Disposed);
+            btnQryReport.Click += new EventHandler(btnQryReport_Click);
+
         }
 
-        void ctSummaryReport_Disposed(object sender, EventArgs e)
+        void ctProfitReportDayRange_Disposed(object sender, EventArgs e)
         {
-            Globals.CallBackCentre.UnRegisterCallback("FinServiceCentre", "QrySummaryReport", this.OnTotalReport);
+            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryTotalReportDayRange", this.OnTotalReport);
         }
 
         public void Clear()
@@ -52,8 +56,11 @@ namespace FutsMoniter
             int code = int.Parse(jd["Code"].ToString());
             if (code == 0)
             {
-                JsonWrapperToalReport obj = TradingLib.Mixins.LitJson.JsonMapper.ToObject<JsonWrapperToalReport>(jd["Playload"].ToJson());
-                InvokeGotJsonWrapperTotalReport(obj);
+                JsonWrapperToalReport[] objlist = TradingLib.Mixins.LitJson.JsonMapper.ToObject<JsonWrapperToalReport[]>(jd["Playload"].ToJson());
+                foreach (JsonWrapperToalReport obj in objlist)
+                {
+                    InvokeGotJsonWrapperTotalReport(obj);
+                }
             }
         }
 
@@ -73,12 +80,12 @@ namespace FutsMoniter
                 gt.Rows[i][AGENTNAME] = report.AgentName;
                 //gt.Rows[i][MOBILE] = report.Mobile;
                 //gt.Rows[i][QQ] = report.QQ;
-                //gt.Rows[i][SETTLEDAY] = report.SettleDay;
+                gt.Rows[i][SETTLEDAY] = report.SettleDay;
                 gt.Rows[i][TOTALFEE] = report.TotalFee;
                 gt.Rows[i][AGENTFEE] = report.AgentFee;
                 gt.Rows[i][CUSTOMERPROFIT] = report.AgentProfit;
                 gt.Rows[i][COMMISSIONPROFIT] = report.CommissionProfit;
-                gt.Rows[i][TOTALPROFIT] = report.AgentProfit + report.CommissionProfit;
+                gt.Rows[i][TOTALPROFIT] = report.CommissionProfit + report.AgentProfit;
             }
         }
 
@@ -106,23 +113,21 @@ namespace FutsMoniter
         /// </summary>
         private void SetPreferences()
         {
-            Telerik.WinControls.UI.RadGridView grid = totalgrid;
-            grid.ShowRowHeaderColumn = false;//显示每行的头部
-            grid.MasterTemplate.AutoSizeColumnsMode = Telerik.WinControls.UI.GridViewAutoSizeColumnsMode.Fill;//列的填充方式
-            grid.ShowGroupPanel = false;//是否显示顶部的panel用于组合排序
-            grid.MasterTemplate.EnableGrouping = false;//是否允许分组
-            grid.EnableHotTracking = true;
+            ComponentFactory.Krypton.Toolkit.KryptonDataGridView grid = totalgrid;
 
-            grid.AllowAddNewRow = false;//不允许增加新行
-            grid.AllowDeleteRow = false;//不允许删除行
-            grid.AllowEditRow = false;//不允许编辑行
-            grid.AllowRowResize = false;
-            //grid.EnableSorting = false;
-            grid.TableElement.TableHeaderHeight = Globals.HeaderHeight;
-            grid.TableElement.RowHeight = Globals.RowHeight;
+            grid.AllowUserToAddRows = false;
+            grid.AllowUserToDeleteRows = false;
+            grid.AllowUserToResizeRows = false;
+            grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            grid.ColumnHeadersHeight = 25;
+            grid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            grid.ReadOnly = true;
+            grid.RowHeadersVisible = false;
+            grid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            grid.AlternatingRowsDefaultCellStyle.BackColor = Color.WhiteSmoke;
 
-            grid.EnableAlternatingRowColor = true;//隔行不同颜色
-            //this.radRadioDataReader.ToggleState = Telerik.WinControls.Enumerations.ToggleState.On; 
+            grid.StateCommon.Background.Color1 = Color.WhiteSmoke;
+            grid.StateCommon.Background.Color2 = Color.WhiteSmoke;
 
         }
 
@@ -131,6 +136,9 @@ namespace FutsMoniter
         {
             gt.Columns.Add(ID);//
             gt.Columns.Add(AGENTNAME);//
+            //gt.Columns.Add(MOBILE);//
+            //gt.Columns.Add(QQ);//
+            gt.Columns.Add(SETTLEDAY);//
             gt.Columns.Add(TOTALFEE);//
             gt.Columns.Add(AGENTFEE);//
             gt.Columns.Add(CUSTOMERPROFIT);
@@ -144,11 +152,7 @@ namespace FutsMoniter
         /// </summary>
         private void BindToTable()
         {
-            Telerik.WinControls.UI.RadGridView grid = totalgrid;
-
-            //grid.TableElement.BeginUpdate();             
-            //grid.MasterTemplate.Columns.Clear(); 
-            //accountlist.DataSource = gt;
+            ComponentFactory.Krypton.Toolkit.KryptonDataGridView grid = totalgrid;
 
 
             datasource.DataSource = gt;
@@ -173,16 +177,16 @@ namespace FutsMoniter
         /// </summary>
         void OnInitFinished()
         {
-            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QrySummaryReport", this.OnTotalReport);
+            //Factory.IDataSourceFactory(agent).BindDataSource(Globals.BasicInfoTracker.GetBaseManagerCombList());
+            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryTotalReportDayRange", this.OnTotalReport);
         }
 
 
         private void btnQryReport_Click(object sender, EventArgs e)
         {
             this.Clear();
-            Globals.TLClient.ReqQrySummaryReport(ctAgentList1.CurrentAgentFK, Util.ToTLDate(start.Value), Util.ToTLDate(end.Value));
-        }
+            Globals.TLClient.ReqQryTotalReportByDayRange(ctAgentList1.CurrentAgentFK, Util.ToTLDate(start.Value), Util.ToTLDate(end.Value));
 
- 
+        }
     }
 }

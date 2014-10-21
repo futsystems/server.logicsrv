@@ -1,24 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using FutSystems.GUI;
 using TradingLib.API;
 using TradingLib.Common;
+using TradingLib.Mixins.LitJson;
 using TradingLib.Mixins.JsonObject;
+using FutSystems.GUI;
+
 
 namespace FutsMoniter
 {
-    public partial class ServicePlanChangeForm : Telerik.WinControls.UI.RadForm
+    public partial class fmChangeServicePlan : ComponentFactory.Krypton.Toolkit.KryptonForm
     {
-        public ServicePlanChangeForm()
+        public fmChangeServicePlan()
         {
             InitializeComponent();
+            
         }
 
         JsonWrapperFinServiceStub stub = null;
@@ -31,7 +33,7 @@ namespace FutsMoniter
             set
             {
                 stub = value;
-                if(stub != null)
+                if (stub != null)
                 {
                     lbcurrentsp.Text = stub.ServicePlaneName;
                 }
@@ -56,29 +58,16 @@ namespace FutsMoniter
             }
         }
 
-        public void SetServicePlans(JsonWrapperServicePlane[] plans)
-        { 
-            ArrayList list = new ArrayList();
-            foreach (JsonWrapperServicePlane sp in plans)
-            {
-                ValueObject<int> vo = new ValueObject<int>();
-                vo.Name = sp.Title;
-                vo.Value = sp.ID;
-                list.Add(vo);
-            }
-
-            Factory.IDataSourceFactory(cbServicePlan).BindDataSource(list);
-        }
 
         private void btnSubmit_Click(object sender, EventArgs e)
         {
             JsonWrapperChgServicePlaneRequest request = new JsonWrapperChgServicePlaneRequest();
             request.Account = _account.Account;
-            request.ServicePlaneFK = int.Parse(cbServicePlan.SelectedValue.ToString());
+            request.ServicePlaneFK = ctFinServicePlanList1.CurrentServicePlanFK;
 
             if (stub == null)
             {
-                if (fmConfirm.Show("确认为帐户:" + _account.Account + " 添加配资服务:【" + cbServicePlan.SelectedItem.Text + "】? 添加成功后请修改服务参数!") == System.Windows.Forms.DialogResult.No)
+                if (fmConfirm.Show("确认为帐户:" + _account.Account + " 添加配资服务:【" + ctFinServicePlanList1.CurrentServicePlanName + "】? 添加成功后请修改服务参数!") == System.Windows.Forms.DialogResult.No)
                 {
                     return;
                 }
@@ -90,7 +79,7 @@ namespace FutsMoniter
                     fmConfirm.Show("当前服务即为:【" + stub.ServicePlaneName + "】请选择不同的服务计划类型!");
                     return;
                 }
-                if (fmConfirm.Show("确认将帐户:" + _account.Account + "的配资服务:【" + stub.ServicePlaneName + "】修改为:【" + cbServicePlan.SelectedItem.Text + "】? 修改配资服务将删除原来的参数设置,修改成功后请修改服务参数!") == System.Windows.Forms.DialogResult.No)
+                if (fmConfirm.Show("确认将帐户:" + _account.Account + "的配资服务:【" + stub.ServicePlaneName + "】修改为:【" + ctFinServicePlanList1.CurrentServicePlanName + "】? 修改配资服务将删除原来的参数设置,修改成功后请修改服务参数!") == System.Windows.Forms.DialogResult.No)
                 {
                     return;
                 }

@@ -36,7 +36,7 @@ namespace FutsMoniter
         fmHistQuery histqryform;
         BasicInfoTracker basicinfotracker;
         fmManagerCentre mgrform;
-        AgentProfitReportForm agentprofitreportform;
+        fmAgentProfitReport agentprofitreportform;
         void ShowInfo(string msg)
         {
             if (ShowInfoHandler != null)
@@ -115,7 +115,7 @@ namespace FutsMoniter
 
             mgrform = new fmManagerCentre();
 
-            agentprofitreportform = new AgentProfitReportForm();
+            agentprofitreportform = new fmAgentProfitReport();
             
             //基础数据窗口维护了基础数据 当有基础数据到达时候需要通知窗体 窗体进行加载和现实
             basicinfotracker.GotMarketTimeEvent += new MarketTimeDel(markettimeform.GotMarketTime);

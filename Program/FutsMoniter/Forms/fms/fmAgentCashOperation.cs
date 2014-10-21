@@ -9,16 +9,16 @@ using System.Windows.Forms;
 using TradingLib.API;
 using TradingLib.Common;
 using FutSystems.GUI;
+using TradingLib.Mixins.LitJson;
 using TradingLib.Mixins.JsonObject;
-
 
 namespace FutsMoniter
 {
-    public partial class CashOperationForm : Telerik.WinControls.UI.RadForm
+    public partial class fmAgentCashOperation : ComponentFactory.Krypton.Toolkit.KryptonForm
     {
         int mgrfk = 0;
         bool loaded = false;
-        public CashOperationForm()
+        public fmAgentCashOperation()
         {
             InitializeComponent();
             Factory.IDataSourceFactory(cashoptype).BindDataSource(UIUtil.GetEnumValueObjects<QSEnumCashOperation>());

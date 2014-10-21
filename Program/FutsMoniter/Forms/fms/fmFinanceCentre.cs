@@ -6,21 +6,19 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using FutSystems.GUI;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Mixins.LitJson;
 using TradingLib.Mixins.JsonObject;
-
+using FutSystems.GUI;
 
 namespace FutsMoniter
 {
-    
-    public partial class FinanceMangerForm : Telerik.WinControls.UI.RadForm
+    public partial class fmFinanceCentre : ComponentFactory.Krypton.Toolkit.KryptonForm
     {
-        bool _gotdata = false;
+         bool _gotdata = false;
         decimal _avabile = 0;
-        public FinanceMangerForm()
+        public fmFinanceCentre()
         {
             InitializeComponent();
             if (Globals.CallbackCentreReady)
@@ -38,6 +36,8 @@ namespace FutsMoniter
             }
             this.FormClosing += new FormClosingEventHandler(FinanceMangerForm_FormClosing);
             this.Load += new EventHandler(FinanceMangerForm_Load);
+            this.btnCashOperation.Click +=new EventHandler(btnCashOperation_Click);
+            this.btnChangeBankAccount.Click +=new EventHandler(btnChangeBankAccount_Click);
         }
 
         void FinanceMangerForm_Load(object sender, EventArgs e)
@@ -267,9 +267,10 @@ namespace FutsMoniter
 
         private void btnCashOperation_Click(object sender, EventArgs e)
         {
-            CashOperationForm fm = new CashOperationForm();
+            fmAgentCashOperation fm = new fmAgentCashOperation();
             fm.SetAvabileBalance(_avabile);
             fm.ShowDialog();
         }
+    
     }
 }

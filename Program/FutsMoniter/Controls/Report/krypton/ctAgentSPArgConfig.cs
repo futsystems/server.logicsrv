@@ -6,9 +6,12 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using TradingLib.API;
+using TradingLib.Common;
 using FutSystems.GUI;
 using TradingLib.Mixins.LitJson;
 using TradingLib.Mixins.JsonObject;
+
 
 namespace FutsMoniter
 {
@@ -22,6 +25,9 @@ namespace FutsMoniter
                 Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryAgentSPArg", this.OnQrySPAgentArg);
             }
             this.Disposed += new EventHandler(ctAgentSPArgConfig_Disposed);
+            this.btnSubmit.Click +=new EventHandler(btnSubmit_Click);
+            ctAgentList1.AgentSelectedChangedEvent +=new VoidDelegate(ctAgentList1_AgentSelectedChangedEvent);
+            ctFinServicePlanList1.ServicePlanSelectedChangedEvent +=new VoidDelegate(ctFinServicePlanList1_ServicePlanSelectedChangedEvent);
         }
 
         void ctAgentSPArgConfig_Disposed(object sender, EventArgs e)
@@ -122,6 +128,5 @@ namespace FutsMoniter
         {
             Globals.TLClient.ReqQrySPAgentArg(ctAgentList1.CurrentAgentFK, ctFinServicePlanList1.CurrentServicePlanFK);
         }
-
     }
 }

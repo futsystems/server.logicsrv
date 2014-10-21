@@ -69,20 +69,20 @@ namespace FutsMoniter
 
         void kryptonRibbonGroupButton_CasherManagement_Click(object sender, EventArgs e)
         {
-            CasherMangerForm fm = new CasherMangerForm();
+            fmCashCentre fm = new fmCashCentre();
             fm.Show();
         }
 
         void kryptonRibbonGroupButton_FinanceManagement_Click(object sender, EventArgs e)
         {
-            FinanceMangerForm fm = new FinanceMangerForm();
+            fmFinanceCentre fm = new fmFinanceCentre();
             fm.Show();
         }
 
         #region 柜员管理
         void kryptonRibbonGroupButton_AgentCost_Click(object sender, EventArgs e)
         {
-            FeeConfigForm fm = new FeeConfigForm();
+            fmAgentCostConfig fm = new fmAgentCostConfig();
             fm.Show();
         }
 

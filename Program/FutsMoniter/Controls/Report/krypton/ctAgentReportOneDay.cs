@@ -6,25 +6,27 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using TradingLib.Mixins.JsonObject;
-using TradingLib.Mixins.LitJson;
-using FutSystems.GUI;
 using TradingLib.API;
 using TradingLib.Common;
+using FutSystems.GUI;
+using TradingLib.Mixins.LitJson;
+using TradingLib.Mixins.JsonObject;
+
+
 
 namespace FutsMoniter
 {
-    public partial class ctProfitReportOneDay : UserControl
+    public partial class ctAgentReportOneDay : UserControl
     {
-        public ctProfitReportOneDay()
+        public ctAgentReportOneDay()
         {
             InitializeComponent();
             SetPreferences();
             InitTable();
             BindToTable();
-            ctGridExport1.Grid = totalgrid;
+           // ctGridExport1.Grid = totalgrid;
 
-            settleday.Value = DateTime.Now;
+            q_settleday.Value = DateTime.Now;
 
             Globals.RegInitCallback(OnInitFinished);
             if (Globals.EnvReady)
@@ -32,6 +34,7 @@ namespace FutsMoniter
                 Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryTotalReport", this.OnTotalReport);
             }
             this.Disposed += new EventHandler(ctProfitReportOneDay_Disposed);
+            this.btnQryReport.Click +=new EventHandler(btnQryReport_Click);
         }
 
         void ctProfitReportOneDay_Disposed(object sender, EventArgs e)
@@ -44,7 +47,7 @@ namespace FutsMoniter
             Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryTotalReport", this.OnTotalReport);
         }
 
-        
+
 
         public void Clear()
         {
@@ -115,24 +118,21 @@ namespace FutsMoniter
         /// </summary>
         private void SetPreferences()
         {
-            Telerik.WinControls.UI.RadGridView grid = totalgrid;
-            grid.ShowRowHeaderColumn = false;//显示每行的头部
-            grid.MasterTemplate.AutoSizeColumnsMode = Telerik.WinControls.UI.GridViewAutoSizeColumnsMode.Fill;//列的填充方式
-            grid.ShowGroupPanel = false;//是否显示顶部的panel用于组合排序
-            grid.MasterTemplate.EnableGrouping = false;//是否允许分组
-            grid.EnableHotTracking = true;
+            ComponentFactory.Krypton.Toolkit.KryptonDataGridView grid = totalgrid;
 
-            grid.AllowAddNewRow = false;//不允许增加新行
-            grid.AllowDeleteRow = false;//不允许删除行
-            grid.AllowEditRow = false;//不允许编辑行
-            grid.AllowRowResize = false;
-            //grid.EnableSorting = false;
-            grid.TableElement.TableHeaderHeight = Globals.HeaderHeight;
-            grid.TableElement.RowHeight = Globals.RowHeight;
+            grid.AllowUserToAddRows = false;
+            grid.AllowUserToDeleteRows = false;
+            grid.AllowUserToResizeRows = false;
+            grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            grid.ColumnHeadersHeight = 25;
+            grid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            grid.ReadOnly = true;
+            grid.RowHeadersVisible = false;
+            grid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            grid.AlternatingRowsDefaultCellStyle.BackColor = Color.WhiteSmoke;
 
-            grid.EnableAlternatingRowColor = true;//隔行不同颜色
-            //this.radRadioDataReader.ToggleState = Telerik.WinControls.Enumerations.ToggleState.On; 
-
+            grid.StateCommon.Background.Color1 = Color.WhiteSmoke;
+            grid.StateCommon.Background.Color2 = Color.WhiteSmoke;
         }
 
         //初始化Account显示空格
@@ -148,7 +148,7 @@ namespace FutsMoniter
             gt.Columns.Add(CUSTOMERPROFIT);
             gt.Columns.Add(COMMISSIONPROFIT);
             gt.Columns.Add(TOTALPROFIT);
-            
+
 
         }
 
@@ -157,11 +157,7 @@ namespace FutsMoniter
         /// </summary>
         private void BindToTable()
         {
-            Telerik.WinControls.UI.RadGridView grid = totalgrid;
-
-            //grid.TableElement.BeginUpdate();             
-            //grid.MasterTemplate.Columns.Clear(); 
-            //accountlist.DataSource = gt;
+            ComponentFactory.Krypton.Toolkit.KryptonDataGridView grid = totalgrid;
 
 
             datasource.DataSource = gt;
@@ -180,9 +176,8 @@ namespace FutsMoniter
         private void btnQryReport_Click(object sender, EventArgs e)
         {
             this.Clear();
-            Globals.TLClient.ReqQryTotalReport(ctAgentList1.CurrentAgentFK,Util.ToTLDate(settleday.Value));
+            Globals.TLClient.ReqQryTotalReport(ctAgentList1.CurrentAgentFK, Util.ToTLDate(q_settleday.Value));
         }
-
 
     }
 }

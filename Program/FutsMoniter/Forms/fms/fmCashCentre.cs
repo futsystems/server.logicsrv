@@ -6,17 +6,18 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using FutSystems.GUI;
 using TradingLib.API;
 using TradingLib.Common;
+using FutSystems.GUI;
 using TradingLib.Mixins.LitJson;
 using TradingLib.Mixins.JsonObject;
 
+
 namespace FutsMoniter
 {
-    public partial class CasherMangerForm : Telerik.WinControls.UI.RadForm
+    public partial class fmCashCentre : ComponentFactory.Krypton.Toolkit.KryptonForm
     {
-        public CasherMangerForm()
+        public fmCashCentre()
         {
             InitializeComponent();
             if (Globals.CallbackCentreReady)
@@ -37,7 +38,7 @@ namespace FutsMoniter
                     Globals.CallBackCentre.RegisterCallback("MgrExchServer", "RejectAccountCashOperation", this.OnAccountCashOperation);
 
                     Globals.CallBackCentre.RegisterCallback("MgrExchServer", "NotifyCashOperation", this.OnNotifyCashOperation);
-                
+
                 }
             }
             this.FormClosing += new FormClosingEventHandler(CasherMangerForm_FormClosing);
@@ -71,7 +72,7 @@ namespace FutsMoniter
             Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "RejectAccountCashOperation", this.OnAccountCashOperation);
 
             Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "NotifyCashOperation", this.OnNotifyCashOperation);
-                
+
         }
 
         void OnQryAgentCashOperationTotal(string jsonstr)
@@ -83,7 +84,7 @@ namespace FutsMoniter
                 JsonWrapperCashOperation[] objs = TradingLib.Mixins.LitJson.JsonMapper.ToObject<JsonWrapperCashOperation[]>(jd["Playload"].ToJson());
                 foreach (JsonWrapperCashOperation op in objs)
                 {
-                    ctCashOperation1.GotJsonWrapperCashOperation(op);
+                    ctCashOperationAccount.GotJsonWrapperCashOperation(op);
                 }
             }
             else//如果没有配资服
@@ -119,7 +120,7 @@ namespace FutsMoniter
             if (code == 0)
             {
                 JsonWrapperCashOperation obj = TradingLib.Mixins.LitJson.JsonMapper.ToObject<JsonWrapperCashOperation>(jd["Playload"].ToJson());
-                ctCashOperation1.GotJsonWrapperCashOperation(obj);
+                ctCashOperationAccount.GotJsonWrapperCashOperation(obj);
             }
             else//如果没有配资服
             {
@@ -140,7 +141,7 @@ namespace FutsMoniter
 
                 if (obj.mgr_fk > 0)
                 {
-                    ctCashOperation1.GotJsonWrapperCashOperation(obj);
+                    ctCashOperationAccount.GotJsonWrapperCashOperation(obj);
                 }
                 else
                 {
@@ -175,6 +176,5 @@ namespace FutsMoniter
                 //Globals.TLClient.ReqQryAgentFinanceInfoLite();
             }
         }
-
     }
 }

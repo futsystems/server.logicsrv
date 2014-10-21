@@ -64,6 +64,7 @@
             this.btnRefresh.Size = new System.Drawing.Size(58, 24);
             this.btnRefresh.TabIndex = 39;
             this.btnRefresh.Text = "刷 新";
+            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
             // 
             // OperationReportForm
             // 

@@ -33,6 +33,7 @@ namespace FutsMoniter
                 Globals.TLClient.ReqQryServicePlan();
             }
             this.Disposed += new EventHandler(ctFinServicePlanList_Disposed);
+            cbServicePlan.SelectedIndexChanged+=new EventHandler(cbServicePlan_SelectedIndexChanged);
             
         }
 
@@ -100,7 +101,7 @@ namespace FutsMoniter
         {
             get
             {
-                return cbServicePlan.SelectedItem.Text;
+                return cbServicePlan.SelectedValue.ToString();
             }
         }
         /// <summary>
@@ -108,7 +109,7 @@ namespace FutsMoniter
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void cbServicePlan_SelectedIndexChanged(object sender, Telerik.WinControls.UI.Data.PositionChangedEventArgs e)
+        private void cbServicePlan_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (ServicePlanSelectedChangedEvent != null && _gotdata)
                 ServicePlanSelectedChangedEvent();

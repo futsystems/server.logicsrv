@@ -146,5 +146,10 @@ namespace FutsMoniter
             datasource.DataSource = gt;
             grid.DataSource = datasource;
         }
+
+        private void btnRefresh_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

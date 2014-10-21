@@ -28,78 +28,70 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.radPanel1 = new Telerik.WinControls.UI.RadPanel();
-            this.argvalue = new Telerik.WinControls.UI.RadTextBox();
-            this.argtitle = new Telerik.WinControls.UI.RadLabel();
-            this.argvalue_label = new Telerik.WinControls.UI.RadLabel();
-            ((System.ComponentModel.ISupportInitialize)(this.radPanel1)).BeginInit();
-            this.radPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.argvalue)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.argtitle)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.argvalue_label)).BeginInit();
+            this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
+            this.argtitle = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.argvalue_label = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.argvalue = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
+            ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
+            this.kryptonPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // radPanel1
+            // kryptonPanel1
             // 
-            this.radPanel1.Controls.Add(this.argvalue_label);
-            this.radPanel1.Controls.Add(this.argvalue);
-            this.radPanel1.Controls.Add(this.argtitle);
-            this.radPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.radPanel1.Location = new System.Drawing.Point(0, 0);
-            this.radPanel1.Name = "radPanel1";
-            this.radPanel1.Size = new System.Drawing.Size(288, 26);
-            this.radPanel1.TabIndex = 0;
-            ((Telerik.WinControls.Primitives.BorderPrimitive)(this.radPanel1.GetChildAt(0).GetChildAt(1))).Width = 0F;
-            ((Telerik.WinControls.Primitives.BorderPrimitive)(this.radPanel1.GetChildAt(0).GetChildAt(1))).LeftWidth = 0F;
-            ((Telerik.WinControls.Primitives.BorderPrimitive)(this.radPanel1.GetChildAt(0).GetChildAt(1))).TopWidth = 0F;
-            ((Telerik.WinControls.Primitives.BorderPrimitive)(this.radPanel1.GetChildAt(0).GetChildAt(1))).RightWidth = 0F;
-            ((Telerik.WinControls.Primitives.BorderPrimitive)(this.radPanel1.GetChildAt(0).GetChildAt(1))).BottomWidth = 0F;
-            // 
-            // argvalue
-            // 
-            this.argvalue.Location = new System.Drawing.Point(93, 3);
-            this.argvalue.Name = "argvalue";
-            this.argvalue.Size = new System.Drawing.Size(131, 18);
-            this.argvalue.TabIndex = 1;
+            this.kryptonPanel1.Controls.Add(this.argvalue);
+            this.kryptonPanel1.Controls.Add(this.argvalue_label);
+            this.kryptonPanel1.Controls.Add(this.argtitle);
+            this.kryptonPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.kryptonPanel1.Location = new System.Drawing.Point(0, 0);
+            this.kryptonPanel1.Name = "kryptonPanel1";
+            this.kryptonPanel1.Size = new System.Drawing.Size(229, 26);
+            this.kryptonPanel1.TabIndex = 1;
             // 
             // argtitle
             // 
-            this.argtitle.Location = new System.Drawing.Point(3, 3);
+            this.argtitle.Location = new System.Drawing.Point(4, 4);
             this.argtitle.Name = "argtitle";
-            this.argtitle.Size = new System.Drawing.Size(14, 16);
+            this.argtitle.Size = new System.Drawing.Size(19, 18);
             this.argtitle.TabIndex = 0;
-            this.argtitle.Text = "--";
+            this.argtitle.Values.Text = "--";
             // 
             // argvalue_label
             // 
-            this.argvalue_label.Location = new System.Drawing.Point(93, 3);
+            this.argvalue_label.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.argvalue_label.Location = new System.Drawing.Point(87, 3);
             this.argvalue_label.Name = "argvalue_label";
-            this.argvalue_label.Size = new System.Drawing.Size(14, 16);
+            this.argvalue_label.Size = new System.Drawing.Size(19, 18);
             this.argvalue_label.TabIndex = 1;
-            this.argvalue_label.Text = "--";
+            this.argvalue_label.Values.Text = "--";
+            // 
+            // argvalue
+            // 
+            this.argvalue.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.argvalue.Location = new System.Drawing.Point(87, 1);
+            this.argvalue.Name = "argvalue";
+            this.argvalue.Size = new System.Drawing.Size(136, 21);
+            this.argvalue.TabIndex = 2;
             // 
             // ctTLEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.radPanel1);
+            this.Controls.Add(this.kryptonPanel1);
             this.Name = "ctTLEdit";
-            this.Size = new System.Drawing.Size(288, 26);
-            ((System.ComponentModel.ISupportInitialize)(this.radPanel1)).EndInit();
-            this.radPanel1.ResumeLayout(false);
-            this.radPanel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.argvalue)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.argtitle)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.argvalue_label)).EndInit();
+            this.Size = new System.Drawing.Size(229, 26);
+            ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).EndInit();
+            this.kryptonPanel1.ResumeLayout(false);
+            this.kryptonPanel1.PerformLayout();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private Telerik.WinControls.UI.RadPanel radPanel1;
-        private Telerik.WinControls.UI.RadLabel argtitle;
-        private Telerik.WinControls.UI.RadTextBox argvalue;
-        private Telerik.WinControls.UI.RadLabel argvalue_label;
+        private ComponentFactory.Krypton.Toolkit.KryptonPanel kryptonPanel1;
+        private ComponentFactory.Krypton.Toolkit.KryptonTextBox argvalue;
+        private ComponentFactory.Krypton.Toolkit.KryptonLabel argvalue_label;
+        private ComponentFactory.Krypton.Toolkit.KryptonLabel argtitle;
+
     }
 }
