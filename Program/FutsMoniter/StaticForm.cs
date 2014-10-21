@@ -5,11 +5,11 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using Telerik.WinControls;
+
 
 namespace FutsMoniter
 {
-    public partial class StaticForm : Telerik.WinControls.UI.RadForm
+    public partial class StaticForm : Form//Telerik.WinControls.UI.RadForm
     {
         public StaticForm()
         {

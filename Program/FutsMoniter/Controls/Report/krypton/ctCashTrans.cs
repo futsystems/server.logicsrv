@@ -1,19 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Drawing;
 using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using FutSystems.GUI;
 using TradingLib.API;
 using TradingLib.Common;
-using TradingLib.Mixins.JsonObject;
 using TradingLib.Mixins.LitJson;
-using Telerik.WinControls;
-using Telerik.WinControls.UI;
+using TradingLib.Mixins.JsonObject;
+using FutSystems.GUI;
+
 
 namespace FutsMoniter
 {
@@ -29,9 +27,10 @@ namespace FutsMoniter
 
             start.Value = Convert.ToDateTime(DateTime.Today.AddMonths(-1).ToString("yyyy-MM-01") + " 0:00:00");
             end.Value = DateTime.Now;
-            ctGridExport1.Grid = cashgrid;
+            //ctGridExport1.Grid = cashgrid;
             this.Disposed += new EventHandler(ctCashTrans_Disposed);
             this.Load += new EventHandler(ctCashTrans_Load);
+            this.btnQryReport.Click +=new EventHandler(btnQryReport_Click);
 
         }
 
@@ -39,12 +38,12 @@ namespace FutsMoniter
         {
             if (ViewType == CashOpViewType.Account)
             {
-                cashgrid.Columns[MGRFK].IsVisible = false;
+                cashgrid.Columns[MGRFK].Visible = false;
                 ctAgentList1.Visible = false;
             }
             else
             {
-                cashgrid.Columns[ACCOUNT].IsVisible = false;
+                cashgrid.Columns[ACCOUNT].Visible = false;
                 lbaccount.Visible = false;
                 boxaccount.Visible = false;
             }
@@ -85,7 +84,7 @@ namespace FutsMoniter
             if (code == 0)
             {
                 JsonWrapperCasnTrans[] obj = TradingLib.Mixins.LitJson.JsonMapper.ToObject<JsonWrapperCasnTrans[]>(jd["Playload"].ToJson());
-                foreach(JsonWrapperCasnTrans c in obj)
+                foreach (JsonWrapperCasnTrans c in obj)
                 {
                     GotCashTrans(c);
                 }
@@ -162,23 +161,21 @@ namespace FutsMoniter
         /// </summary>
         private void SetPreferences()
         {
-            Telerik.WinControls.UI.RadGridView grid = cashgrid;
-            grid.ShowRowHeaderColumn = false;//显示每行的头部
-            grid.MasterTemplate.AutoSizeColumnsMode = Telerik.WinControls.UI.GridViewAutoSizeColumnsMode.Fill;//列的填充方式
-            grid.ShowGroupPanel = false;//是否显示顶部的panel用于组合排序
-            grid.MasterTemplate.EnableGrouping = false;//是否允许分组
-            grid.EnableHotTracking = true;
+            ComponentFactory.Krypton.Toolkit.KryptonDataGridView grid = cashgrid;
 
-            grid.AllowAddNewRow = false;//不允许增加新行
-            grid.AllowDeleteRow = false;//不允许删除行
-            grid.AllowEditRow = false;//不允许编辑行
-            grid.AllowRowResize = false;
-            //grid.EnableSorting = false;
-            grid.TableElement.TableHeaderHeight = Globals.HeaderHeight;
-            grid.TableElement.RowHeight = Globals.RowHeight;
+            grid.AllowUserToAddRows = false;
+            grid.AllowUserToDeleteRows = false;
+            grid.AllowUserToResizeRows = false;
+            grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            grid.ColumnHeadersHeight = 25;
+            grid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            grid.ReadOnly = true;
+            grid.RowHeadersVisible = false;
+            grid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            grid.AlternatingRowsDefaultCellStyle.BackColor = Color.WhiteSmoke;
 
-            grid.EnableAlternatingRowColor = true;//隔行不同颜色
-            //this.radRadioDataReader.ToggleState = Telerik.WinControls.Enumerations.ToggleState.On; 
+            grid.StateCommon.Background.Color1 = Color.WhiteSmoke;
+            grid.StateCommon.Background.Color2 = Color.WhiteSmoke;
 
         }
 
@@ -200,11 +197,7 @@ namespace FutsMoniter
         /// </summary>
         private void BindToTable()
         {
-            Telerik.WinControls.UI.RadGridView grid = cashgrid;
-
-            //grid.TableElement.BeginUpdate();             
-            //grid.MasterTemplate.Columns.Clear(); 
-            //accountlist.DataSource = gt;
+            ComponentFactory.Krypton.Toolkit.KryptonDataGridView grid = cashgrid;
 
 
             datasource.DataSource = gt;
@@ -218,11 +211,11 @@ namespace FutsMoniter
             //grid.Columns[OPERATION].IsVisible = false;
             if (ViewType == CashOpViewType.Account)
             {
-                cashgrid.Columns[MGRFK].IsVisible = false;
+                cashgrid.Columns[MGRFK].Visible = false;
             }
             else
             {
-                cashgrid.Columns[ACCOUNT].IsVisible = false;
+                cashgrid.Columns[ACCOUNT].Visible = false;
             }
         }
         #endregion
@@ -243,35 +236,34 @@ namespace FutsMoniter
             }
         }
 
-        private void cashgrid_CellFormatting(object sender, Telerik.WinControls.UI.CellFormattingEventArgs e)
-        {
-            try
-            {
-                if (e.CellElement.RowInfo is GridViewDataRowInfo)
-                {
-                    if (e.CellElement.ColumnInfo.Name == OPERATION)
-                    {
-                        decimal v = decimal.Parse((e.CellElement.RowInfo.Cells[AMOUNT].Value.ToString()));
+        //private void cashgrid_CellFormatting(object sender, Telerik.WinControls.UI.CellFormattingEventArgs e)
+        //{
+        //    try
+        //    {
+        //        if (e.CellElement.RowInfo is GridViewDataRowInfo)
+        //        {
+        //            if (e.CellElement.ColumnInfo.Name == OPERATION)
+        //            {
+        //                decimal v = decimal.Parse((e.CellElement.RowInfo.Cells[AMOUNT].Value.ToString()));
 
-                        if (v > 0)
-                        {
-                            e.CellElement.ForeColor = Color.Red;
-                            e.CellElement.Font = UIGlobals.BoldFont;
-                        }
-                        else
-                        {
-                            e.CellElement.ForeColor = Color.Green;
-                            e.CellElement.Font = UIGlobals.BoldFont;
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            { 
-                
-            }
+        //                if (v > 0)
+        //                {
+        //                    e.CellElement.ForeColor = Color.Red;
+        //                    e.CellElement.Font = UIGlobals.BoldFont;
+        //                }
+        //                else
+        //                {
+        //                    e.CellElement.ForeColor = Color.Green;
+        //                    e.CellElement.Font = UIGlobals.BoldFont;
+        //                }
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
 
-        }
+        //    }
 
+        //}
     }
 }

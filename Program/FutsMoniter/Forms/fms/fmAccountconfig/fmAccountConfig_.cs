@@ -8,7 +8,7 @@ using FutSystems.GUI;
 
 namespace FutsMoniter
 {
-    public partial class AccountConfigForm
+    public partial class fmAccountConfig
     {
       
     }

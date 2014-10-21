@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.office2010SilverTheme1 = new Telerik.WinControls.Themes.Office2010SilverTheme();
-            this.office2010BlackTheme1 = new Telerik.WinControls.Themes.Office2010BlackTheme();
+            //this.office2010SilverTheme1 = new Telerik.WinControls.Themes.Office2010SilverTheme();
+            //this.office2010BlackTheme1 = new Telerik.WinControls.Themes.Office2010BlackTheme();
             this.imageheader = new System.Windows.Forms.PictureBox();
             this.label0 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.label1 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
@@ -208,8 +208,8 @@
         #endregion
 
         private System.Windows.Forms.PictureBox imageheader;
-        private Telerik.WinControls.Themes.Office2010SilverTheme office2010SilverTheme1;
-        private Telerik.WinControls.Themes.Office2010BlackTheme office2010BlackTheme1;
+        //private Telerik.WinControls.Themes.Office2010SilverTheme office2010SilverTheme1;
+        //private Telerik.WinControls.Themes.Office2010BlackTheme office2010BlackTheme1;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel label0;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel label1;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel label2;

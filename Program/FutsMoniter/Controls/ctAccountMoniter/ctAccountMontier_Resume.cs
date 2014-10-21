@@ -5,8 +5,6 @@ using System.Text;
 using System.Windows.Forms;
 using TradingLib.API;
 using TradingLib.Common;
-using Telerik.WinControls;
-using Telerik.WinControls.UI;
 using FutSystems.GUI;
 
 namespace FutsMoniter.Controls

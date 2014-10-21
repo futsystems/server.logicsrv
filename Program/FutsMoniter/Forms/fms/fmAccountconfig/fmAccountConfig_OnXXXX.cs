@@ -8,7 +8,7 @@ using FutSystems.GUI;
 
 namespace FutsMoniter
 {
-    public partial class AccountConfigForm
+    public partial class fmAccountConfig
     {
         /// <summary>
         /// 获得风控项删除回报
@@ -24,7 +24,7 @@ namespace FutsMoniter
             else if (item.RuleType == QSEnumRuleType.AccountRule)
             {
                 InvokeGotAccountRuleItemDel(item, islast);
-                
+
             }
         }
         /// <summary>
@@ -57,6 +57,18 @@ namespace FutsMoniter
             }
         }
 
+
+        /// <summary>
+        /// 当帐户有变化时 更新修改窗体
+        /// </summary>
+        /// <param name="account"></param>
+        public void GotAccountChanged(IAccountLite account)
+        {
+            if (this.Account != null && Account.Account.Equals(account.Account))
+            {
+                this.Account = account;
+            }
+        }
 
     }
 }

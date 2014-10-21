@@ -3,18 +3,20 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using Telerik.WinControls;
 using TradingLib.API;
 using TradingLib.Common;
 using FutSystems.GUI;
 
+
+
 namespace FutsMoniter
 {
-    public partial class RuleSetConfig : Telerik.WinControls.UI.RadForm
+    public partial class fmRuleSetConfig : ComponentFactory.Krypton.Toolkit.KryptonForm
     {
-        public IAccountLite Account { get; set; }
+      public IAccountLite Account { get; set; }
 
         RuleClassItem _ruleclass = null;
         public RuleClassItem RuleClass { get { return _ruleclass; }
@@ -47,11 +49,13 @@ namespace FutsMoniter
         }
 
 
-        public RuleSetConfig()
+        public fmRuleSetConfig()
         {
             InitializeComponent();
             //_ruleclass = new RuleClassItem();
             Factory.IDataSourceFactory(comparetype).BindDataSource(UIUtil.GetEnumValueObjects<QSEnumCompareType>());
+
+            btnSubmit.Click +=new EventHandler(btnSubmit_Click);
         }
 
         private void btnSubmit_Click(object sender, EventArgs e)

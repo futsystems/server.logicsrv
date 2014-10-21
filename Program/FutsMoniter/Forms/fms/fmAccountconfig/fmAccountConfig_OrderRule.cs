@@ -9,9 +9,8 @@ using FutSystems.GUI;
 
 namespace FutsMoniter
 {
-    public partial class AccountConfigForm
+    public partial class fmAccountConfig
     {
-        
 
 
         /// <summary>
@@ -103,7 +102,7 @@ namespace FutsMoniter
             //orderRuleClassList.selected
             if (orderRuleClassList.SelectedItems.Count > 0)
             {
-                RuleSetConfig fm = new RuleSetConfig();
+                fmRuleSetConfig fm = new fmRuleSetConfig();
                 fm.Account = _account;
                 fm.RuleClass = (RuleClassItem)orderRuleClassList.SelectedValue;
                 fm.Show();
@@ -118,7 +117,7 @@ namespace FutsMoniter
         {
             if (orderRuleItemList.SelectedItems.Count > 0)
             {
-                RuleSetConfig fm = new RuleSetConfig();
+                fmRuleSetConfig fm = new fmRuleSetConfig();
                 fm.Account = _account;
                 fm.Rule = (RuleItem)orderRuleItemList.SelectedValue;
                 fm.Show();

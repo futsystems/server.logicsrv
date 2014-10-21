@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using TradingLib.API;
-using Telerik.WinControls;
+
 using FutsMoniter.Common;
 using FutSystems.GUI;
 
@@ -24,7 +24,7 @@ namespace FutsMoniter
         {
             InitializeComponent();
 
-            ThemeResolutionService.ApplicationThemeName = Globals.Config["ThemeName"].AsString();
+            //ThemeResolutionService.ApplicationThemeName = Globals.Config["ThemeName"].AsString();
             //this.ThemeName = ThemeResolutionService.ApplicationThemeName;
             if (Globals.Config["HeaderImg"].AsString() == "OEM")
             {

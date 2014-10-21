@@ -10,8 +10,6 @@ using System.Threading;
 using System.Windows.Forms;
 using TradingLib.API;
 using TradingLib.Common;
-using Telerik.WinControls;
-using Telerik.WinControls.UI;
 using FutSystems.GUI;
 
 
@@ -31,7 +29,7 @@ namespace FutsMoniter.Controls
 
 
         const string PROGRAME = "AccountMontier";
-        AccountConfigForm fmaccountconfig = new AccountConfigForm();
+        fmAccountConfig fmaccountconfig = new fmAccountConfig();
         bool _loaded = false;
 
         Symbol _symbolselected = null;

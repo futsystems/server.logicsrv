@@ -5,8 +5,6 @@ using System.Text;
 using System.Windows.Forms;
 using TradingLib.API;
 using TradingLib.Common;
-using Telerik.WinControls;
-using Telerik.WinControls.UI;
 using FutSystems.GUI;
 
 namespace FutsMoniter.Controls
@@ -31,11 +29,11 @@ namespace FutsMoniter.Controls
         /// Grid右键菜单
         /// </summary>
         /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void accountgrid_ContextMenuOpening(object sender, Telerik.WinControls.UI.ContextMenuOpeningEventArgs e)
-        {
-            e.ContextMenu = menu.DropDown;
-        }
+        ///// <param name="e"></param>
+        //private void accountgrid_ContextMenuOpening(object sender, Telerik.WinControls.UI.ContextMenuOpeningEventArgs e)
+        //{
+        //    e.ContextMenu = menu.DropDown;
+        //}
 
 
 

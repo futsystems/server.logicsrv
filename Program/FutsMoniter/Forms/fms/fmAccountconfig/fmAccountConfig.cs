@@ -1,24 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections;
-using System.Collections.Concurrent;
 using System.ComponentModel;
-using System.Linq;
 using System.Data;
 using System.Drawing;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using Telerik.WinControls;
 using TradingLib.API;
 using TradingLib.Common;
 using FutSystems.GUI;
-using FutsMoniter.Common;
+
 
 namespace FutsMoniter
 {
-    public partial class AccountConfigForm : Telerik.WinControls.UI.RadForm
+    public partial class fmAccountConfig : ComponentFactory.Krypton.Toolkit.KryptonForm
     {
-        IAccountLite _account;
+       IAccountLite _account;
         public event DebugDelegate SendDebugEvent;
         void debug(string msg)
         {
@@ -51,7 +48,7 @@ namespace FutsMoniter
                 }
             } 
         }
-        public AccountConfigForm()
+        public fmAccountConfig()
         {
             InitializeComponent();
 
@@ -61,33 +58,48 @@ namespace FutsMoniter
             cashop_type.Items.Add("入金");
             cashop_type.Items.Add("出金");
 
-            Globals.RegInitCallback(OnInitCallback);
-            
+            //绑定事件
+            WireEvent();
         }
+
+        void WireEvent()
+        {
+            Globals.RegInitCallback(OnInitCallback);
+
+            this.FormClosing +=new FormClosingEventHandler(fmAccountConfig_FormClosing);
+
+            this.btnUpdateAccountInfo.Click +=new EventHandler(btnUpdateAccountInfo_Click);//更新财务信息
+            this.btnCashOperation.Click +=new EventHandler(btnCashOperation_Click);//出入金按钮
+            this.btnExecute.Click +=new EventHandler(btnExecute_Click);//冻结 激活
+            this.btnUpdate.Click +=new EventHandler(btnUpdate_Click);//更新属性设置
+
+            this.btnAddAccountRule.Click +=new EventHandler(btnAddAccountRule_Click);
+            this.btnAddOrderRule.Click +=new EventHandler(btnAddOrderRule_Click);
+            this.btnDelAccountRule.Click +=new EventHandler(btnDelAccountRule_Click);
+            this.btnDelOrderRule.Click +=new EventHandler(btnDelOrderRule_Click);
+            this.pagenav.SelectedPageChanged += new EventHandler(pagenav_SelectedPageChanged);
+        }
+
 
         void OnInitCallback()
         {
-            if (!Globals.Manager.RightRootDomain())
-            {
-                cashoppanel.Visible = false;
-                routerpanel.Visible = false;
-            }
+            //if (!Globals.Manager.RightRootDomain())
+            //{
+            //    cashoppanel.Visible = false;
+            //    routerpanel.Visible = false;
+            //}
 
         }
 
-        
 
-        private void AccountConfigForm_FormClosing(object sender, FormClosingEventArgs e)
+
+        private void fmAccountConfig_FormClosing(object sender, FormClosingEventArgs e)
         {
             e.Cancel = true;
             this.Hide();
         }
 
-        private void editpageview_PageIndexChanged(object sender, Telerik.WinControls.UI.RadPageViewIndexChangedEventArgs e)
-        {
 
-            debug("page index changed:" + e.Page.Name);
-        }
 
         private void btnUpdateAccountInfo_Click(object sender, EventArgs e)
         {
@@ -97,17 +109,13 @@ namespace FutsMoniter
 
 
 
+
+
         /// <summary>
-        /// 当帐户有变化时 更新修改窗体
+        /// 出入金按钮
         /// </summary>
-        /// <param name="account"></param>
-        public void GotAccountChanged(IAccountLite account)
-        {
-            if (this.Account !=null && Account.Account.Equals(account.Account))
-            {
-                this.Account = account;
-            }
-        }
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnCashOperation_Click(object sender, EventArgs e)
         {
             decimal amount = cashop_amount.Value;
@@ -143,6 +151,11 @@ namespace FutsMoniter
 
         }
 
+        /// <summary>
+        /// 更新帐户属性
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnUpdate_Click(object sender, EventArgs e)
         {
             if (fmConfirm.Show("确认更新帐户属性?") == System.Windows.Forms.DialogResult.Yes)
@@ -166,6 +179,11 @@ namespace FutsMoniter
             }
         }
 
+        /// <summary>
+        /// 冻结激活
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnExecute_Click(object sender, EventArgs e)
         {
             if (fmConfirm.Show("确认[" + (_account.Execute ? "冻结" : "激活") + "]交易帐户 " + _account.Account) == System.Windows.Forms.DialogResult.Yes)
@@ -188,20 +206,20 @@ namespace FutsMoniter
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void editpageview_SelectedPageChanged(object sender, EventArgs e)
+        private void pagenav_SelectedPageChanged(object sender, EventArgs e)
         {
-            
-            if (editpageview.SelectedPage.Name.Equals("pageOrderCheck"))
+
+            if (pagenav.SelectedPage.Name.Equals("pageOrderCheck"))
             {
                 Factory.IDataSourceFactory(orderRuleClassList).BindDataSource(Globals.BasicInfoTracker.GetOrderRuleClassListItems());
                 Globals.TLClient.ReqQryRuleItem(_account.Account, QSEnumRuleType.OrderRule);
             }
-            else if (editpageview.SelectedPage.Name.Equals("pageAccountCheck"))
+            else if (pagenav.SelectedPage.Name.Equals("pageAccountCheck"))
             {
                 Factory.IDataSourceFactory(accountRuleClassList).BindDataSource(Globals.BasicInfoTracker.GetAccountRuleClassListItems());
                 Globals.TLClient.ReqQryRuleItem(_account.Account, QSEnumRuleType.AccountRule);
             }
-            else if (editpageview.SelectedPage.Name.Equals("pageFinance"))
+            else if (pagenav.SelectedPage.Name.Equals("pageFinance"))
             {
                 Globals.TLClient.ReqQryAccountInfo(_account.Account);
             }
@@ -210,25 +228,18 @@ namespace FutsMoniter
 
         }
 
-        private void poslock_ToggleStateChanged(object sender, Telerik.WinControls.UI.StateChangedEventArgs args)
-        {
-
-        }
-
-
 
 
         public void ValidView()
         {
-            if (!Globals.RightRouter)
-            {
-                routerpanel.Visible = false;
-            }
-            if (!Globals.RightCashOperation)
-            {
-                cashoppanel.Visible = false;
-            }
+            //if (!Globals.RightRouter)
+            //{
+            //    routerpanel.Visible = false;
+            //}
+            //if (!Globals.RightCashOperation)
+            //{
+            //    cashoppanel.Visible = false;
+            //}
         }
-       
     }
 }

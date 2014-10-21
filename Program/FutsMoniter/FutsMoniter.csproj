@@ -44,14 +44,17 @@
     <Reference Include="ComponentFactory.Krypton.Navigator, Version=4.4.0.0, Culture=neutral, PublicKeyToken=a87e673e9ecb6e8e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\kypton\ComponentFactory.Krypton.Navigator.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="ComponentFactory.Krypton.Ribbon, Version=4.4.0.0, Culture=neutral, PublicKeyToken=a87e673e9ecb6e8e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\kypton\ComponentFactory.Krypton.Ribbon.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="ComponentFactory.Krypton.Toolkit, Version=4.4.0.0, Culture=neutral, PublicKeyToken=a87e673e9ecb6e8e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\kypton\ComponentFactory.Krypton.Toolkit.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="CTP">
       <HintPath>..\..\lib\CTP.dll</HintPath>
@@ -61,43 +64,10 @@
       <HintPath>..\..\lib\Win\FutSystems.GUI.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Composition" />
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="Telerik.WinControls">
-      <HintPath>..\..\lib\Telerik\Telerik.WinControls.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Telerik.WinControls.ChartView, Version=2013.2.612.40, Culture=neutral, PublicKeyToken=5bb2a467cbec794e" />
-    <Reference Include="Telerik.WinControls.GridView">
-      <HintPath>..\..\lib\Telerik\Telerik.WinControls.GridView.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Telerik.WinControls.PdfViewer, Version=2013.2.612.40, Culture=neutral, PublicKeyToken=5bb2a467cbec794e, processorArchitecture=MSIL" />
-    <Reference Include="Telerik.WinControls.PivotGrid, Version=2013.2.612.40, Culture=neutral, PublicKeyToken=5bb2a467cbec794e, processorArchitecture=MSIL" />
-    <Reference Include="Telerik.WinControls.Themes.Office2010Black, Version=2013.2.612.40, Culture=neutral, PublicKeyToken=5bb2a467cbec794e, processorArchitecture=MSIL">
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Telerik.WinControls.Themes.Office2010Silver">
-      <HintPath>..\..\lib\Telerik\Telerik.WinControls.Themes.Office2010Silver.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Telerik.WinControls.UI">
-      <HintPath>..\..\lib\Telerik\Telerik.WinControls.UI.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="TelerikCommon">
-      <HintPath>..\..\lib\Telerik\TelerikCommon.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="TelerikData, Version=2013.2.612.40, Culture=neutral, PublicKeyToken=5bb2a467cbec794e, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\Telerik\TelerikData.dll</HintPath>
-    </Reference>
     <Reference Include="TradingLib.API, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\TradingLib\TradingLib.API.dll</HintPath>
@@ -123,12 +93,6 @@
     </Compile>
     <Compile Include="Controls\ctAccountMoniter\ctAccountMontier_Resume.cs">
       <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\ctCashTrans.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\ctCashTrans.Designer.cs">
-      <DependentUpon>ctCashTrans.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\ctAccountMoniter\ctAccountMontier_.cs">
       <SubType>UserControl</SubType>
@@ -196,6 +160,18 @@
     <Compile Include="Controls\Report\krypton\ctAgentSPArgConfig.Designer.cs">
       <DependentUpon>ctAgentSPArgConfig.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Report\krypton\ctCashTrans.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\Report\krypton\ctCashTrans.Designer.cs">
+      <DependentUpon>ctCashTrans.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Report\krypton\ctFinanceInfo.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\Report\krypton\ctFinanceInfo.Designer.cs">
+      <DependentUpon>ctFinanceInfo.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Report\krypton\ctFinService.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -207,12 +183,6 @@
     </Compile>
     <Compile Include="DebugForm.Designer.cs">
       <DependentUpon>DebugForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ctGridExport.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\ctGridExport.Designer.cs">
-      <DependentUpon>ctGridExport.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\Base\ctAgentList.cs">
       <SubType>UserControl</SubType>
@@ -244,17 +214,11 @@
     <Compile Include="Controls\ctAccountMoniter\ctAccountMoniter_ServiceHolder.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ctOrderSenderM.cs">
+    <Compile Include="Controls\Report\krypton\ctOrderSenderM.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ctOrderSenderM.Designer.cs">
+    <Compile Include="Controls\Report\krypton\ctOrderSenderM.Designer.cs">
       <DependentUpon>ctOrderSenderM.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ctFinService.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\ctFinService.Designer.cs">
-      <DependentUpon>ctFinService.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\Base\ctTLEdit.cs">
       <SubType>UserControl</SubType>
@@ -263,21 +227,6 @@
       <DependentUpon>ctTLEdit.cs</DependentUpon>
     </Compile>
     <Compile Include="Common\BasicInfoTracker.cs" />
-    <Compile Include="Controls\hist\ctHistCashTransaction.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\hist\ctHistCashTransaction.Designer.cs">
-      <DependentUpon>ctHistCashTransaction.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\AccountConfigForm_OrderRule.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\AccountConfigForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\AccountConfigForm.Designer.cs">
-      <DependentUpon>AccountConfigForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="API\ILogicHandler.cs" />
     <Compile Include="Client\AsyncClient.cs" />
     <Compile Include="Client\TLClientNet.cs" />
@@ -295,19 +244,22 @@
     <Compile Include="Controls\ctAccountMoniter\ctAccountMontier.Designer.cs">
       <DependentUpon>ctAccountMontier.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ctFinanceInfo.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\ctFinanceInfo.Designer.cs">
-      <DependentUpon>ctFinanceInfo.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\AccountConfigForm_.cs">
+    <Compile Include="Forms\fms\fmAccountconfig\fmAccountConfig_.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\AccountConfigForm_GotXXX.cs">
+    <Compile Include="Forms\fms\fmAccountconfig\fmAccountConfig.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\AccountConfigForm_AccountRule.cs">
+    <Compile Include="Forms\fms\fmAccountconfig\fmAccountConfig.Designer.cs">
+      <DependentUpon>fmAccountConfig.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\fms\fmAccountconfig\fmAccountConfig_AccountRule.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\fms\fmAccountconfig\fmAccountConfig_OrderRule.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\fms\fmAccountconfig\fmAccountConfig_OnXXXX.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\fms\fmAddAccount.cs">
@@ -442,6 +394,12 @@
     <Compile Include="Forms\fms\fmRouterMoniter.Designer.cs">
       <DependentUpon>fmRouterMoniter.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\fms\fmRuleSetConfig.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\fms\fmRuleSetConfig.Designer.cs">
+      <DependentUpon>fmRuleSetConfig.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\fms\fmSecEdit.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -498,10 +456,8 @@
     <Compile Include="MainForm_Ribbon.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\OperationReportForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\OperationReportForm.Designer.cs">
+    <Compile Include="xxtobedelete\OperationReportForm.cs" />
+    <Compile Include="xxtobedelete\OperationReportForm.Designer.cs">
       <DependentUpon>OperationReportForm.cs</DependentUpon>
     </Compile>
     <Compile Include="MainForm_OnInit.cs">
@@ -510,12 +466,6 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Common\SplashScreenApplication.cs" />
-    <Compile Include="Forms\RuleSetConfig.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\RuleSetConfig.Designer.cs">
-      <DependentUpon>RuleSetConfig.cs</DependentUpon>
-    </Compile>
     <Compile Include="StaticForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -531,9 +481,6 @@
     </Compile>
     <EmbeddedResource Include="Controls\Base\ctCashOperation.resx">
       <DependentUpon>ctCashOperation.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ctCashTrans.resx">
-      <DependentUpon>ctCashTrans.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\krypton\ctHistOrder.resx">
       <DependentUpon>ctHistOrder.cs</DependentUpon>
@@ -556,14 +503,17 @@
     <EmbeddedResource Include="Controls\Report\krypton\ctAgentSPArgConfig.resx">
       <DependentUpon>ctAgentSPArgConfig.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Controls\Report\krypton\ctCashTrans.resx">
+      <DependentUpon>ctCashTrans.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\Report\krypton\ctFinanceInfo.resx">
+      <DependentUpon>ctFinanceInfo.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\Report\krypton\ctFinService.resx">
       <DependentUpon>ctFinService.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DebugForm.resx">
       <DependentUpon>DebugForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ctGridExport.resx">
-      <DependentUpon>ctGridExport.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\Base\ctAgentList.resx">
       <DependentUpon>ctAgentList.cs</DependentUpon>
@@ -577,26 +527,17 @@
     <EmbeddedResource Include="Controls\Base\ctBankList.resx">
       <DependentUpon>ctBankList.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ctOrderSenderM.resx">
+    <EmbeddedResource Include="Controls\Report\krypton\ctOrderSenderM.resx">
       <DependentUpon>ctOrderSenderM.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ctFinService.resx">
-      <DependentUpon>ctFinService.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\Base\ctTLEdit.resx">
       <DependentUpon>ctTLEdit.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\hist\ctHistCashTransaction.resx">
-      <DependentUpon>ctHistCashTransaction.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\AccountConfigForm.resx">
-      <DependentUpon>AccountConfigForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Controls\ctAccountMoniter\ctAccountMontier.resx">
       <DependentUpon>ctAccountMontier.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ctFinanceInfo.resx">
-      <DependentUpon>ctFinanceInfo.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\fms\fmAccountconfig\fmAccountConfig.resx">
+      <DependentUpon>fmAccountConfig.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\fms\fmAddAccount.resx">
       <DependentUpon>fmAddAccount.cs</DependentUpon>
@@ -664,6 +605,9 @@
     <EmbeddedResource Include="Forms\fms\fmRouterMoniter.resx">
       <DependentUpon>fmRouterMoniter.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\fms\fmRuleSetConfig.resx">
+      <DependentUpon>fmRuleSetConfig.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\fms\fmSecEdit.resx">
       <DependentUpon>fmSecEdit.cs</DependentUpon>
     </EmbeddedResource>
@@ -679,7 +623,7 @@
     <EmbeddedResource Include="Forms\fms\fmSyncCTPSymbols.resx">
       <DependentUpon>fmSyncCTPSymbols.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\OperationReportForm.resx">
+    <EmbeddedResource Include="xxtobedelete\OperationReportForm.resx">
       <DependentUpon>OperationReportForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LoginForm.resx">
@@ -699,9 +643,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="Forms\RuleSetConfig.resx">
-      <DependentUpon>RuleSetConfig.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="StaticForm.resx">
       <DependentUpon>StaticForm.cs</DependentUpon>
     </EmbeddedResource>

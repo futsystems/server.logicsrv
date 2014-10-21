@@ -275,8 +275,8 @@ namespace FutsMoniter
 
         private void btnTotalOperationStatic_Click(object sender, EventArgs e)
         {
-            OperationReportForm fm = new OperationReportForm();
-            fm.Show();
+            //OperationReportForm fm = new OperationReportForm();
+            //fm.Show();
         }
         #endregion
 

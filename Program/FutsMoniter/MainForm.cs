@@ -5,7 +5,6 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using Telerik.WinControls;
 using System.Threading;
 using TradingLib.API;
 using TradingLib.Common;
@@ -68,7 +67,7 @@ namespace FutsMoniter
             ShowInfoHandler = showinfo;
             
 
-            ThemeResolutionService.ApplicationThemeName = Globals.Config["ThemeName"].AsString();
+            ///ThemeResolutionService.ApplicationThemeName = Globals.Config["ThemeName"].AsString();
 
             if (Globals.Config["HeaderImg"].AsString().Equals("OEM"))
             {

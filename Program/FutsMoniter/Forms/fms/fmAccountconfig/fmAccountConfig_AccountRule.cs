@@ -9,7 +9,7 @@ using FutSystems.GUI;
 
 namespace FutsMoniter
 {
-    public partial class AccountConfigForm
+    public partial class fmAccountConfig
     {
         Dictionary<int, RuleItem> accountrulemap = new Dictionary<int, RuleItem>();
 
@@ -93,7 +93,7 @@ namespace FutsMoniter
         {
             if (accountRuleClassList.SelectedItems.Count > 0)
             {
-                RuleSetConfig fm = new RuleSetConfig();
+                fmRuleSetConfig fm = new fmRuleSetConfig();
                 fm.Account = _account;
                 fm.RuleClass = (RuleClassItem)accountRuleClassList.SelectedValue;
                 fm.Show();
@@ -110,7 +110,7 @@ namespace FutsMoniter
 
             if (accountRuleItemList.SelectedItems.Count > 0)
             {
-                RuleSetConfig fm = new RuleSetConfig();
+                fmRuleSetConfig fm = new fmRuleSetConfig();
                 fm.Account = _account;
                 fm.Rule = (RuleItem)accountRuleItemList.SelectedValue;
                 fm.Show();
@@ -136,6 +136,5 @@ namespace FutsMoniter
 
             }
         }
-      
     }
 }
