@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.TabRibbon = new ComponentFactory.Krypton.Ribbon.KryptonRibbon();
             this.kryptonRibbonQATButton_debug = new ComponentFactory.Krypton.Ribbon.KryptonRibbonQATButton();
             this.kryptonRibbonQATButton1 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonQATButton();
@@ -120,13 +121,13 @@
             this.tabHistQuery,
             this.tabAgent,
             this.tabFinance});
-            this.TabRibbon.SelectedContext = null;
             this.TabRibbon.SelectedTab = this.tabSystem;
             this.TabRibbon.Size = new System.Drawing.Size(1284, 111);
             this.TabRibbon.TabIndex = 0;
             // 
             // kryptonContextMenuItem_exit
             // 
+            this.kryptonContextMenuItem_exit.Image = ((System.Drawing.Image)(resources.GetObject("kryptonContextMenuItem_exit.Image")));
             this.kryptonContextMenuItem_exit.Text = "退 出";
             // 
             // kryptonContextMenuItem1
@@ -163,10 +164,12 @@
             // 
             // kryptonRibbonGroupButton_OpenClearCentre
             // 
+            this.kryptonRibbonGroupButton_OpenClearCentre.ImageLarge = ((System.Drawing.Image)(resources.GetObject("kryptonRibbonGroupButton_OpenClearCentre.ImageLarge")));
             this.kryptonRibbonGroupButton_OpenClearCentre.TextLine1 = "开启";
             // 
             // kryptonRibbonGroupButton_CloseClearCentre
             // 
+            this.kryptonRibbonGroupButton_CloseClearCentre.ImageLarge = ((System.Drawing.Image)(resources.GetObject("kryptonRibbonGroupButton_CloseClearCentre.ImageLarge")));
             this.kryptonRibbonGroupButton_CloseClearCentre.TextLine1 = "关闭";
             // 
             // kryptonRibbonGroup2
@@ -182,6 +185,7 @@
             // 
             // kryptonRibbonGroupButton_RouterList
             // 
+            this.kryptonRibbonGroupButton_RouterList.ImageLarge = ((System.Drawing.Image)(resources.GetObject("kryptonRibbonGroupButton_RouterList.ImageLarge")));
             this.kryptonRibbonGroupButton_RouterList.TextLine1 = "路由列表";
             // 
             // kryptonRibbonGroup3
@@ -221,10 +225,12 @@
             // 
             // kryptonRibbonGroupButton_Mktime
             // 
+            this.kryptonRibbonGroupButton_Mktime.ImageLarge = ((System.Drawing.Image)(resources.GetObject("kryptonRibbonGroupButton_Mktime.ImageLarge")));
             this.kryptonRibbonGroupButton_Mktime.TextLine1 = "交易时间";
             // 
             // kryptonRibbonGroupButton_Exchange
             // 
+            this.kryptonRibbonGroupButton_Exchange.ImageLarge = ((System.Drawing.Image)(resources.GetObject("kryptonRibbonGroupButton_Exchange.ImageLarge")));
             this.kryptonRibbonGroupButton_Exchange.TextLine1 = "交易所";
             // 
             // kryptonRibbonGroupTriple4
@@ -256,6 +262,7 @@
             // 
             // kryptonRibbonGroupButton_CfgModule
             // 
+            this.kryptonRibbonGroupButton_CfgModule.ImageLarge = ((System.Drawing.Image)(resources.GetObject("kryptonRibbonGroupButton_CfgModule.ImageLarge")));
             this.kryptonRibbonGroupButton_CfgModule.TextLine1 = "模块参数";
             // 
             // tabHistQuery
@@ -349,10 +356,12 @@
             // 
             // kryptonRibbonGroupButton_AgentManagement
             // 
+            this.kryptonRibbonGroupButton_AgentManagement.ImageLarge = ((System.Drawing.Image)(resources.GetObject("kryptonRibbonGroupButton_AgentManagement.ImageLarge")));
             this.kryptonRibbonGroupButton_AgentManagement.TextLine1 = "柜员管理";
             // 
             // kryptonRibbonGroupButton_AgentCost
             // 
+            this.kryptonRibbonGroupButton_AgentCost.ImageLarge = ((System.Drawing.Image)(resources.GetObject("kryptonRibbonGroupButton_AgentCost.ImageLarge")));
             this.kryptonRibbonGroupButton_AgentCost.TextLine1 = "资费设置";
             // 
             // tabFinance
@@ -376,10 +385,12 @@
             // 
             // kryptonRibbonGroupButton_FinanceManagement
             // 
+            this.kryptonRibbonGroupButton_FinanceManagement.ImageLarge = ((System.Drawing.Image)(resources.GetObject("kryptonRibbonGroupButton_FinanceManagement.ImageLarge")));
             this.kryptonRibbonGroupButton_FinanceManagement.TextLine1 = "财务中心";
             // 
             // kryptonRibbonGroupButton_CasherManagement
             // 
+            this.kryptonRibbonGroupButton_CasherManagement.ImageLarge = ((System.Drawing.Image)(resources.GetObject("kryptonRibbonGroupButton_CasherManagement.ImageLarge")));
             this.kryptonRibbonGroupButton_CasherManagement.TextLine1 = "出纳中心";
             // 
             // statusStrip1

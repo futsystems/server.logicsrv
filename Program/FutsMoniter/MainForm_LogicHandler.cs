@@ -320,11 +320,11 @@ namespace FutsMoniter
 
         public void OnMGRCashTransactionResponse(CashTransaction c, bool islast)
         {
-            histqryform.GotHistCashTransaction(c, islast);
+            //histqryform.GotHistCashTransaction(c, islast);
         }
         public void OnMGRSettlementResponse(RspMGRQrySettleResponse response)
         {
-            histqryform.GotHistSettlement(response);
+            //histqryform.GotHistSettlement(response);
         }
         #endregion
 

@@ -28,245 +28,214 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.radPanel1 = new Telerik.WinControls.UI.RadPanel();
-            this.radGroupBox1 = new Telerik.WinControls.UI.RadGroupBox();
-            this.lbrole = new Telerik.WinControls.UI.RadLabel();
-            this.radLabel10 = new Telerik.WinControls.UI.RadLabel();
-            this.lbqq = new Telerik.WinControls.UI.RadLabel();
-            this.radLabel9 = new Telerik.WinControls.UI.RadLabel();
-            this.lbmobile = new Telerik.WinControls.UI.RadLabel();
-            this.radLabel7 = new Telerik.WinControls.UI.RadLabel();
-            this.lbname = new Telerik.WinControls.UI.RadLabel();
-            this.radLabel5 = new Telerik.WinControls.UI.RadLabel();
-            this.lblogin = new Telerik.WinControls.UI.RadLabel();
-            this.radLabel2 = new Telerik.WinControls.UI.RadLabel();
-            this.radLabel1 = new Telerik.WinControls.UI.RadLabel();
-            this.lbbasemgrfk = new Telerik.WinControls.UI.RadLabel();
-            this.btnChangeInfo = new Telerik.WinControls.UI.RadButton();
-            this.btnChagnePass = new Telerik.WinControls.UI.RadButton();
-            ((System.ComponentModel.ISupportInitialize)(this.radPanel1)).BeginInit();
-            this.radPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.radGroupBox1)).BeginInit();
-            this.radGroupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.lbrole)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel10)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.lbqq)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel9)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.lbmobile)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel7)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.lbname)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel5)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.lblogin)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.lbbasemgrfk)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.btnChangeInfo)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.btnChagnePass)).BeginInit();
+            this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
+            this.kryptonGroupBox1 = new ComponentFactory.Krypton.Toolkit.KryptonGroupBox();
+            this.kryptonButton1 = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.kryptonButton2 = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.lbqq = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.lbmobile = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.lbrole = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.lbname = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.lblogin = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.kryptonLabel6 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.kryptonLabel7 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.kryptonLabel8 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.kryptonLabel9 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.kryptonLabel10 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.lbbasemgrfk = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.kryptonLabel12 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
+            this.kryptonPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.kryptonGroupBox1)).BeginInit();
+            this.kryptonGroupBox1.Panel.SuspendLayout();
+            this.kryptonGroupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // radPanel1
+            // kryptonPanel1
             // 
-            this.radPanel1.Controls.Add(this.radGroupBox1);
-            this.radPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.radPanel1.Location = new System.Drawing.Point(0, 0);
-            this.radPanel1.Name = "radPanel1";
-            this.radPanel1.Size = new System.Drawing.Size(566, 90);
-            this.radPanel1.TabIndex = 0;
-            ((Telerik.WinControls.Primitives.BorderPrimitive)(this.radPanel1.GetChildAt(0).GetChildAt(1))).Width = 0F;
+            this.kryptonPanel1.Controls.Add(this.kryptonGroupBox1);
+            this.kryptonPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.kryptonPanel1.Location = new System.Drawing.Point(0, 0);
+            this.kryptonPanel1.Name = "kryptonPanel1";
+            this.kryptonPanel1.Size = new System.Drawing.Size(753, 98);
+            this.kryptonPanel1.TabIndex = 1;
             // 
-            // radGroupBox1
+            // kryptonGroupBox1
             // 
-            this.radGroupBox1.AccessibleRole = System.Windows.Forms.AccessibleRole.Grouping;
-            this.radGroupBox1.Controls.Add(this.btnChagnePass);
-            this.radGroupBox1.Controls.Add(this.btnChangeInfo);
-            this.radGroupBox1.Controls.Add(this.lbbasemgrfk);
-            this.radGroupBox1.Controls.Add(this.lbrole);
-            this.radGroupBox1.Controls.Add(this.radLabel10);
-            this.radGroupBox1.Controls.Add(this.lbqq);
-            this.radGroupBox1.Controls.Add(this.radLabel9);
-            this.radGroupBox1.Controls.Add(this.lbmobile);
-            this.radGroupBox1.Controls.Add(this.radLabel7);
-            this.radGroupBox1.Controls.Add(this.lbname);
-            this.radGroupBox1.Controls.Add(this.radLabel5);
-            this.radGroupBox1.Controls.Add(this.lblogin);
-            this.radGroupBox1.Controls.Add(this.radLabel2);
-            this.radGroupBox1.Controls.Add(this.radLabel1);
-            this.radGroupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.radGroupBox1.HeaderText = "管理域信息";
-            this.radGroupBox1.Location = new System.Drawing.Point(0, 0);
-            this.radGroupBox1.Name = "radGroupBox1";
+            this.kryptonGroupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.kryptonGroupBox1.Location = new System.Drawing.Point(0, 0);
+            this.kryptonGroupBox1.Name = "kryptonGroupBox1";
             // 
+            // kryptonGroupBox1.Panel
             // 
+            this.kryptonGroupBox1.Panel.Controls.Add(this.kryptonButton1);
+            this.kryptonGroupBox1.Panel.Controls.Add(this.kryptonButton2);
+            this.kryptonGroupBox1.Panel.Controls.Add(this.lbqq);
+            this.kryptonGroupBox1.Panel.Controls.Add(this.lbmobile);
+            this.kryptonGroupBox1.Panel.Controls.Add(this.lbrole);
+            this.kryptonGroupBox1.Panel.Controls.Add(this.lbname);
+            this.kryptonGroupBox1.Panel.Controls.Add(this.lblogin);
+            this.kryptonGroupBox1.Panel.Controls.Add(this.kryptonLabel6);
+            this.kryptonGroupBox1.Panel.Controls.Add(this.kryptonLabel7);
+            this.kryptonGroupBox1.Panel.Controls.Add(this.kryptonLabel8);
+            this.kryptonGroupBox1.Panel.Controls.Add(this.kryptonLabel9);
+            this.kryptonGroupBox1.Panel.Controls.Add(this.kryptonLabel10);
+            this.kryptonGroupBox1.Panel.Controls.Add(this.lbbasemgrfk);
+            this.kryptonGroupBox1.Panel.Controls.Add(this.kryptonLabel12);
+            this.kryptonGroupBox1.Size = new System.Drawing.Size(753, 98);
+            this.kryptonGroupBox1.TabIndex = 1;
+            this.kryptonGroupBox1.Text = "管理域信息";
+            this.kryptonGroupBox1.Values.Heading = "管理域信息";
             // 
-            this.radGroupBox1.RootElement.Padding = new System.Windows.Forms.Padding(2, 18, 2, 2);
-            this.radGroupBox1.Size = new System.Drawing.Size(566, 90);
-            this.radGroupBox1.TabIndex = 5;
-            this.radGroupBox1.Text = "管理域信息";
+            // kryptonButton1
             // 
-            // lbrole
+            this.kryptonButton1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.kryptonButton1.Location = new System.Drawing.Point(649, 39);
+            this.kryptonButton1.Name = "kryptonButton1";
+            this.kryptonButton1.Size = new System.Drawing.Size(90, 25);
+            this.kryptonButton1.TabIndex = 13;
+            this.kryptonButton1.Values.Text = "修改密码";
             // 
-            this.lbrole.Location = new System.Drawing.Point(197, 44);
-            this.lbrole.Name = "lbrole";
-            this.lbrole.Size = new System.Drawing.Size(14, 16);
-            this.lbrole.TabIndex = 10;
-            this.lbrole.Text = "--";
+            // kryptonButton2
             // 
-            // radLabel10
-            // 
-            this.radLabel10.Location = new System.Drawing.Point(157, 44);
-            this.radLabel10.Name = "radLabel10";
-            this.radLabel10.Size = new System.Drawing.Size(34, 16);
-            this.radLabel10.TabIndex = 9;
-            this.radLabel10.Text = "角色:";
+            this.kryptonButton2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.kryptonButton2.Location = new System.Drawing.Point(649, 8);
+            this.kryptonButton2.Name = "kryptonButton2";
+            this.kryptonButton2.Size = new System.Drawing.Size(90, 25);
+            this.kryptonButton2.TabIndex = 12;
+            this.kryptonButton2.Values.Text = "修改信息";
             // 
             // lbqq
             // 
-            this.lbqq.Location = new System.Drawing.Point(345, 66);
+            this.lbqq.Location = new System.Drawing.Point(403, 52);
             this.lbqq.Name = "lbqq";
-            this.lbqq.Size = new System.Drawing.Size(14, 16);
-            this.lbqq.TabIndex = 8;
-            this.lbqq.Text = "--";
-            // 
-            // radLabel9
-            // 
-            this.radLabel9.Location = new System.Drawing.Point(312, 66);
-            this.radLabel9.Name = "radLabel9";
-            this.radLabel9.Size = new System.Drawing.Size(27, 16);
-            this.radLabel9.TabIndex = 7;
-            this.radLabel9.Text = "QQ:";
+            this.lbqq.Size = new System.Drawing.Size(19, 18);
+            this.lbqq.TabIndex = 11;
+            this.lbqq.Values.Text = "--";
             // 
             // lbmobile
             // 
-            this.lbmobile.Location = new System.Drawing.Point(197, 66);
+            this.lbmobile.Location = new System.Drawing.Point(254, 52);
             this.lbmobile.Name = "lbmobile";
-            this.lbmobile.Size = new System.Drawing.Size(14, 16);
-            this.lbmobile.TabIndex = 6;
-            this.lbmobile.Text = "--";
+            this.lbmobile.Size = new System.Drawing.Size(19, 18);
+            this.lbmobile.TabIndex = 10;
+            this.lbmobile.Values.Text = "--";
             // 
-            // radLabel7
+            // lbrole
             // 
-            this.radLabel7.Location = new System.Drawing.Point(157, 66);
-            this.radLabel7.Name = "radLabel7";
-            this.radLabel7.Size = new System.Drawing.Size(34, 16);
-            this.radLabel7.TabIndex = 5;
-            this.radLabel7.Text = "手机:";
+            this.lbrole.Location = new System.Drawing.Point(254, 28);
+            this.lbrole.Name = "lbrole";
+            this.lbrole.Size = new System.Drawing.Size(19, 18);
+            this.lbrole.TabIndex = 9;
+            this.lbrole.Values.Text = "--";
             // 
             // lbname
             // 
-            this.lbname.Location = new System.Drawing.Point(77, 66);
+            this.lbname.Location = new System.Drawing.Point(84, 52);
             this.lbname.Name = "lbname";
-            this.lbname.Size = new System.Drawing.Size(14, 16);
-            this.lbname.TabIndex = 4;
-            this.lbname.Text = "--";
-            // 
-            // radLabel5
-            // 
-            this.radLabel5.Location = new System.Drawing.Point(37, 66);
-            this.radLabel5.Name = "radLabel5";
-            this.radLabel5.Size = new System.Drawing.Size(34, 16);
-            this.radLabel5.TabIndex = 3;
-            this.radLabel5.Text = "姓名:";
+            this.lbname.Size = new System.Drawing.Size(19, 18);
+            this.lbname.TabIndex = 8;
+            this.lbname.Values.Text = "--";
             // 
             // lblogin
             // 
-            this.lblogin.Location = new System.Drawing.Point(77, 44);
+            this.lblogin.Location = new System.Drawing.Point(84, 28);
             this.lblogin.Name = "lblogin";
-            this.lblogin.Size = new System.Drawing.Size(14, 16);
-            this.lblogin.TabIndex = 2;
-            this.lblogin.Text = "--";
+            this.lblogin.Size = new System.Drawing.Size(19, 18);
+            this.lblogin.TabIndex = 7;
+            this.lblogin.Values.Text = "--";
             // 
-            // radLabel2
+            // kryptonLabel6
             // 
-            this.radLabel2.Location = new System.Drawing.Point(24, 44);
-            this.radLabel2.Name = "radLabel2";
-            this.radLabel2.Size = new System.Drawing.Size(47, 16);
-            this.radLabel2.TabIndex = 1;
-            this.radLabel2.Text = "登入名:";
+            this.kryptonLabel6.Location = new System.Drawing.Point(364, 52);
+            this.kryptonLabel6.Name = "kryptonLabel6";
+            this.kryptonLabel6.Size = new System.Drawing.Size(33, 18);
+            this.kryptonLabel6.TabIndex = 6;
+            this.kryptonLabel6.Values.Text = "QQ:";
             // 
-            // radLabel1
+            // kryptonLabel7
             // 
-            this.radLabel1.Location = new System.Drawing.Point(13, 22);
-            this.radLabel1.Name = "radLabel1";
-            this.radLabel1.Size = new System.Drawing.Size(58, 16);
-            this.radLabel1.TabIndex = 0;
-            this.radLabel1.Text = "管理域ID:";
+            this.kryptonLabel7.Location = new System.Drawing.Point(207, 52);
+            this.kryptonLabel7.Name = "kryptonLabel7";
+            this.kryptonLabel7.Size = new System.Drawing.Size(41, 18);
+            this.kryptonLabel7.TabIndex = 5;
+            this.kryptonLabel7.Values.Text = "手机:";
+            // 
+            // kryptonLabel8
+            // 
+            this.kryptonLabel8.Location = new System.Drawing.Point(37, 52);
+            this.kryptonLabel8.Name = "kryptonLabel8";
+            this.kryptonLabel8.Size = new System.Drawing.Size(41, 18);
+            this.kryptonLabel8.TabIndex = 4;
+            this.kryptonLabel8.Values.Text = "姓名:";
+            // 
+            // kryptonLabel9
+            // 
+            this.kryptonLabel9.Location = new System.Drawing.Point(207, 28);
+            this.kryptonLabel9.Name = "kryptonLabel9";
+            this.kryptonLabel9.Size = new System.Drawing.Size(41, 18);
+            this.kryptonLabel9.TabIndex = 3;
+            this.kryptonLabel9.Values.Text = "角色:";
+            // 
+            // kryptonLabel10
+            // 
+            this.kryptonLabel10.Location = new System.Drawing.Point(23, 28);
+            this.kryptonLabel10.Name = "kryptonLabel10";
+            this.kryptonLabel10.Size = new System.Drawing.Size(55, 18);
+            this.kryptonLabel10.TabIndex = 2;
+            this.kryptonLabel10.Values.Text = "登入名:";
             // 
             // lbbasemgrfk
             // 
-            this.lbbasemgrfk.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
-            this.lbbasemgrfk.ForeColor = System.Drawing.Color.Black;
-            this.lbbasemgrfk.Location = new System.Drawing.Point(77, 19);
+            this.lbbasemgrfk.Location = new System.Drawing.Point(84, 4);
             this.lbbasemgrfk.Name = "lbbasemgrfk";
-            this.lbbasemgrfk.Size = new System.Drawing.Size(15, 17);
-            this.lbbasemgrfk.TabIndex = 11;
-            this.lbbasemgrfk.Text = "--";
+            this.lbbasemgrfk.Size = new System.Drawing.Size(19, 18);
+            this.lbbasemgrfk.TabIndex = 1;
+            this.lbbasemgrfk.Values.Text = "--";
             // 
-            // btnChangeInfo
+            // kryptonLabel12
             // 
-            this.btnChangeInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnChangeInfo.Location = new System.Drawing.Point(469, 15);
-            this.btnChangeInfo.Name = "btnChangeInfo";
-            this.btnChangeInfo.Size = new System.Drawing.Size(92, 27);
-            this.btnChangeInfo.TabIndex = 12;
-            this.btnChangeInfo.Text = "修改信息";
-            // 
-            // btnChagnePass
-            // 
-            this.btnChagnePass.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnChagnePass.Location = new System.Drawing.Point(469, 50);
-            this.btnChagnePass.Name = "btnChagnePass";
-            this.btnChagnePass.Size = new System.Drawing.Size(92, 27);
-            this.btnChagnePass.TabIndex = 13;
-            this.btnChagnePass.Text = "修改密码";
-            this.btnChagnePass.Click += new System.EventHandler(this.btnChagnePass_Click);
+            this.kryptonLabel12.Location = new System.Drawing.Point(11, 4);
+            this.kryptonLabel12.Name = "kryptonLabel12";
+            this.kryptonLabel12.Size = new System.Drawing.Size(67, 18);
+            this.kryptonLabel12.TabIndex = 0;
+            this.kryptonLabel12.Values.Text = "管理域ID:";
             // 
             // ctBasicMangerInfo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.radPanel1);
+            this.Controls.Add(this.kryptonPanel1);
             this.Name = "ctBasicMangerInfo";
-            this.Size = new System.Drawing.Size(566, 90);
-            ((System.ComponentModel.ISupportInitialize)(this.radPanel1)).EndInit();
-            this.radPanel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.radGroupBox1)).EndInit();
-            this.radGroupBox1.ResumeLayout(false);
-            this.radGroupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.lbrole)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel10)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.lbqq)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel9)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.lbmobile)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel7)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.lbname)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel5)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.lblogin)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.lbbasemgrfk)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.btnChangeInfo)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.btnChagnePass)).EndInit();
+            this.Size = new System.Drawing.Size(753, 98);
+            ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).EndInit();
+            this.kryptonPanel1.ResumeLayout(false);
+            this.kryptonGroupBox1.Panel.ResumeLayout(false);
+            this.kryptonGroupBox1.Panel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.kryptonGroupBox1)).EndInit();
+            this.kryptonGroupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private Telerik.WinControls.UI.RadPanel radPanel1;
-        private Telerik.WinControls.UI.RadGroupBox radGroupBox1;
-        private Telerik.WinControls.UI.RadLabel lbrole;
-        private Telerik.WinControls.UI.RadLabel radLabel10;
-        private Telerik.WinControls.UI.RadLabel lbqq;
-        private Telerik.WinControls.UI.RadLabel radLabel9;
-        private Telerik.WinControls.UI.RadLabel lbmobile;
-        private Telerik.WinControls.UI.RadLabel radLabel7;
-        private Telerik.WinControls.UI.RadLabel lbname;
-        private Telerik.WinControls.UI.RadLabel radLabel5;
-        private Telerik.WinControls.UI.RadLabel lblogin;
-        private Telerik.WinControls.UI.RadLabel radLabel2;
-        private Telerik.WinControls.UI.RadLabel radLabel1;
-        private Telerik.WinControls.UI.RadLabel lbbasemgrfk;
-        private Telerik.WinControls.UI.RadButton btnChagnePass;
-        private Telerik.WinControls.UI.RadButton btnChangeInfo;
+        private ComponentFactory.Krypton.Toolkit.KryptonPanel kryptonPanel1;
+        private ComponentFactory.Krypton.Toolkit.KryptonGroupBox kryptonGroupBox1;
+        private ComponentFactory.Krypton.Toolkit.KryptonButton kryptonButton1;
+        private ComponentFactory.Krypton.Toolkit.KryptonButton kryptonButton2;
+        private ComponentFactory.Krypton.Toolkit.KryptonLabel lbqq;
+        private ComponentFactory.Krypton.Toolkit.KryptonLabel lbmobile;
+        private ComponentFactory.Krypton.Toolkit.KryptonLabel lbrole;
+        private ComponentFactory.Krypton.Toolkit.KryptonLabel lbname;
+        private ComponentFactory.Krypton.Toolkit.KryptonLabel lblogin;
+        private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel6;
+        private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel7;
+        private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel8;
+        private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel9;
+        private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel10;
+        private ComponentFactory.Krypton.Toolkit.KryptonLabel lbbasemgrfk;
+        private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel12;
+
     }
 }

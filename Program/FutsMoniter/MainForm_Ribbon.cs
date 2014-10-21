@@ -90,7 +90,7 @@ namespace FutsMoniter
         {
             if (mgrform == null)
             {
-                mgrform = new ManagerForm();
+                mgrform = new fmManagerCentre();
             }
             mgrform.Show();
         }
@@ -229,7 +229,7 @@ namespace FutsMoniter
         /// <param name="e"></param>
         private void btnChangePass_Click(object sender, EventArgs e)
         {
-            UpdatePassForm fm = new UpdatePassForm();
+            fmChangePasswordAgent fm = new fmChangePasswordAgent();
             fm.ShowDialog();
         }
 

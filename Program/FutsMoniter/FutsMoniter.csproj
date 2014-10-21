@@ -148,6 +148,24 @@
     <Compile Include="Controls\ctAccountMoniter\ctAccountMontier_AccountHolder.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Controls\krypton\ctHistOrder.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\krypton\ctHistOrder.Designer.cs">
+      <DependentUpon>ctHistOrder.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\krypton\ctHistPosition.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\krypton\ctHistPosition.Designer.cs">
+      <DependentUpon>ctHistPosition.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\krypton\ctHistTrade.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\krypton\ctHistTrade.Designer.cs">
+      <DependentUpon>ctHistTrade.cs</DependentUpon>
+    </Compile>
     <Compile Include="DebugForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -281,32 +299,8 @@
     <Compile Include="Controls\hist\ctHistCashTransaction.Designer.cs">
       <DependentUpon>ctHistCashTransaction.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\hist\ctHistOrder.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\hist\ctHistOrder.Designer.cs">
-      <DependentUpon>ctHistOrder.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\hist\ctHistPosition.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\hist\ctHistPosition.Designer.cs">
-      <DependentUpon>ctHistPosition.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\hist\ctHistTrade.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\hist\ctHistTrade.Designer.cs">
-      <DependentUpon>ctHistTrade.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\AccountConfigForm_OrderRule.cs">
       <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ExchangeForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ExchangeForm.Designer.cs">
-      <DependentUpon>ExchangeForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\AccountConfigForm.cs">
       <SubType>Form</SubType>
@@ -370,17 +364,95 @@
     <Compile Include="Forms\fms\fmChangePassword.Designer.cs">
       <DependentUpon>fmChangePassword.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\InsertTradeForm.cs">
+    <Compile Include="Forms\fms\fmChangePasswordAgent.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\InsertTradeForm.Designer.cs">
-      <DependentUpon>InsertTradeForm.cs</DependentUpon>
+    <Compile Include="Forms\fms\fmChangePasswordAgent.Designer.cs">
+      <DependentUpon>fmChangePasswordAgent.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\HistQryForm.cs">
+    <Compile Include="Forms\fms\fmCoreStatus.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\HistQryForm.Designer.cs">
-      <DependentUpon>HistQryForm.cs</DependentUpon>
+    <Compile Include="Forms\fms\fmCoreStatus.Designer.cs">
+      <DependentUpon>fmCoreStatus.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\fms\fmExchange.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\fms\fmExchange.Designer.cs">
+      <DependentUpon>fmExchange.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\fms\fmHistQuery.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\fms\fmHistQuery.Designer.cs">
+      <DependentUpon>fmHistQuery.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\fms\fmInsertTrade.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\fms\fmInsertTrade.Designer.cs">
+      <DependentUpon>fmInsertTrade.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\fms\fmManagerCentre.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\fms\fmManagerCentre.Designer.cs">
+      <DependentUpon>fmManagerCentre.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\fms\fmManagerEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\fms\fmManagerEdit.Designer.cs">
+      <DependentUpon>fmManagerEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\fms\fmMarketTime.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\fms\fmMarketTime.Designer.cs">
+      <DependentUpon>fmMarketTime.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\fms\fmMarketTimeInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\fms\fmMarketTimeInfo.Designer.cs">
+      <DependentUpon>fmMarketTimeInfo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\fms\fmRouterMoniter.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\fms\fmRouterMoniter.Designer.cs">
+      <DependentUpon>fmRouterMoniter.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\fms\fmSecEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\fms\fmSecEdit.Designer.cs">
+      <DependentUpon>fmSecEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\fms\fmSecurity.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\fms\fmSecurity.Designer.cs">
+      <DependentUpon>fmSecurity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\fms\fmSymbol.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\fms\fmSymbol.Designer.cs">
+      <DependentUpon>fmSymbol.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\fms\fmSymbolEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\fms\fmSymbolEdit.Designer.cs">
+      <DependentUpon>fmSymbolEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\fms\fmSyncCTPSymbols.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\fms\fmSyncCTPSymbols.Designer.cs">
+      <DependentUpon>fmSyncCTPSymbols.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\PaySlipFormAccount.cs">
       <SubType>Form</SubType>
@@ -414,30 +486,6 @@
     <Compile Include="MainForm_Ribbon.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\MarketTimeForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\MarketTimeForm.Designer.cs">
-      <DependentUpon>MarketTimeForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\MarketTimeInfoForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\MarketTimeInfoForm.Designer.cs">
-      <DependentUpon>MarketTimeInfoForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ManagerForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ManagerForm.Designer.cs">
-      <DependentUpon>ManagerForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ManagerEditForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ManagerEditForm.Designer.cs">
-      <DependentUpon>ManagerEditForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\OperationReportForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -456,36 +504,6 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Common\SplashScreenApplication.cs" />
-    <Compile Include="Forms\RouterMoniterForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\RouterMoniterForm.Designer.cs">
-      <DependentUpon>RouterMoniterForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\SecurityForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\SecurityForm.Designer.cs">
-      <DependentUpon>SecurityForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\SecEditForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\SecEditForm.Designer.cs">
-      <DependentUpon>SecEditForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\SymbolEditForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\SymbolEditForm.Designer.cs">
-      <DependentUpon>SymbolEditForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\SymbolForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\SymbolForm.Designer.cs">
-      <DependentUpon>SymbolForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\RuleSetConfig.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -504,24 +522,6 @@
     <Compile Include="StaticForm.Designer.cs">
       <DependentUpon>StaticForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\SystemStatusForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\SystemStatusForm.Designer.cs">
-      <DependentUpon>SystemStatusForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\SymbolSyncCTPForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\SymbolSyncCTPForm.Designer.cs">
-      <DependentUpon>SymbolSyncCTPForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\UpdatePassForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\UpdatePassForm.Designer.cs">
-      <DependentUpon>UpdatePassForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Utils.cs" />
     <Compile Include="MainForm_.cs">
       <SubType>Form</SubType>
@@ -531,6 +531,15 @@
     </Compile>
     <EmbeddedResource Include="Controls\ctCashTrans.resx">
       <DependentUpon>ctCashTrans.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\krypton\ctHistOrder.resx">
+      <DependentUpon>ctHistOrder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\krypton\ctHistPosition.resx">
+      <DependentUpon>ctHistPosition.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\krypton\ctHistTrade.resx">
+      <DependentUpon>ctHistTrade.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DebugForm.resx">
       <DependentUpon>DebugForm.cs</DependentUpon>
@@ -595,18 +604,6 @@
     <EmbeddedResource Include="Controls\hist\ctHistCashTransaction.resx">
       <DependentUpon>ctHistCashTransaction.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\hist\ctHistOrder.resx">
-      <DependentUpon>ctHistOrder.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\hist\ctHistPosition.resx">
-      <DependentUpon>ctHistPosition.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\hist\ctHistTrade.resx">
-      <DependentUpon>ctHistTrade.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ExchangeForm.resx">
-      <DependentUpon>ExchangeForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\AccountConfigForm.resx">
       <DependentUpon>AccountConfigForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -628,26 +625,53 @@
     <EmbeddedResource Include="Forms\fms\fmChangePassword.resx">
       <DependentUpon>fmChangePassword.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\InsertTradeForm.resx">
-      <DependentUpon>InsertTradeForm.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\fms\fmChangePasswordAgent.resx">
+      <DependentUpon>fmChangePasswordAgent.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\HistQryForm.resx">
-      <DependentUpon>HistQryForm.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\fms\fmCoreStatus.resx">
+      <DependentUpon>fmCoreStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\fms\fmExchange.resx">
+      <DependentUpon>fmExchange.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\fms\fmHistQuery.resx">
+      <DependentUpon>fmHistQuery.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\fms\fmInsertTrade.resx">
+      <DependentUpon>fmInsertTrade.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\fms\fmManagerCentre.resx">
+      <DependentUpon>fmManagerCentre.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\fms\fmManagerEdit.resx">
+      <DependentUpon>fmManagerEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\fms\fmMarketTime.resx">
+      <DependentUpon>fmMarketTime.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\fms\fmMarketTimeInfo.resx">
+      <DependentUpon>fmMarketTimeInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\fms\fmRouterMoniter.resx">
+      <DependentUpon>fmRouterMoniter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\fms\fmSecEdit.resx">
+      <DependentUpon>fmSecEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\fms\fmSecurity.resx">
+      <DependentUpon>fmSecurity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\fms\fmSymbol.resx">
+      <DependentUpon>fmSymbol.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\fms\fmSymbolEdit.resx">
+      <DependentUpon>fmSymbolEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\fms\fmSyncCTPSymbols.resx">
+      <DependentUpon>fmSyncCTPSymbols.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\PaySlipFormAccount.resx">
       <DependentUpon>PaySlipFormAccount.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\MarketTimeForm.resx">
-      <DependentUpon>MarketTimeForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\MarketTimeInfoForm.resx">
-      <DependentUpon>MarketTimeInfoForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ManagerForm.resx">
-      <DependentUpon>ManagerForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ManagerEditForm.resx">
-      <DependentUpon>ManagerEditForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OperationReportForm.resx">
       <DependentUpon>OperationReportForm.cs</DependentUpon>
@@ -672,21 +696,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="Forms\RouterMoniterForm.resx">
-      <DependentUpon>RouterMoniterForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SecurityForm.resx">
-      <DependentUpon>SecurityForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SecEditForm.resx">
-      <DependentUpon>SecEditForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SymbolEditForm.resx">
-      <DependentUpon>SymbolEditForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SymbolForm.resx">
-      <DependentUpon>SymbolForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\RuleSetConfig.resx">
       <DependentUpon>RuleSetConfig.cs</DependentUpon>
     </EmbeddedResource>
@@ -695,15 +704,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="StaticForm.resx">
       <DependentUpon>StaticForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SystemStatusForm.resx">
-      <DependentUpon>SystemStatusForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SymbolSyncCTPForm.resx">
-      <DependentUpon>SymbolSyncCTPForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\UpdatePassForm.resx">
-      <DependentUpon>UpdatePassForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="Properties\Settings.settings">
@@ -739,9 +739,7 @@
     <None Include="resources\account_go.png" />
     <None Include="resources\Router-simuate.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Controls\krypton\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

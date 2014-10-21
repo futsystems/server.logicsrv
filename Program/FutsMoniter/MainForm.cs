@@ -27,15 +27,15 @@ namespace FutsMoniter
         string _servers = "127.0.0.1";
 
         DebugForm debugform = new DebugForm();
-        RouterMoniterForm routerform;
-        ExchangeForm exchangeform;
-        MarketTimeForm markettimeform;
-        SecurityForm securityform;
-        SymbolForm symbolform;
-        SystemStatusForm systemstatusfrom;
-        HistQryForm histqryform;
+        fmRouterMoniter routerform;
+        fmExchange exchangeform;
+        fmMarketTime markettimeform;
+        fmSecurity securityform;
+        fmSymbol symbolform;
+        fmCoreStatus systemstatusfrom;
+        fmHistQuery histqryform;
         BasicInfoTracker basicinfotracker;
-        ManagerForm mgrform;
+        fmManagerCentre mgrform;
         AgentProfitReportForm agentprofitreportform;
         void ShowInfo(string msg)
         {
@@ -103,17 +103,17 @@ namespace FutsMoniter
             basicinfotracker = new BasicInfoTracker();
             Globals.RegisterBasicInfoTracker(basicinfotracker);
 
-            
 
-            routerform = new RouterMoniterForm();
-            exchangeform = new ExchangeForm();
-            markettimeform = new MarketTimeForm();
-            securityform = new SecurityForm();
-            symbolform = new SymbolForm();
-            systemstatusfrom = new SystemStatusForm();
-            histqryform = new HistQryForm();
 
-            mgrform = new ManagerForm();
+            routerform = new fmRouterMoniter();
+            exchangeform = new fmExchange();
+            markettimeform = new fmMarketTime();
+            securityform = new fmSecurity();
+            symbolform = new fmSymbol();
+            systemstatusfrom = new fmCoreStatus();
+            histqryform = new fmHistQuery();
+
+            mgrform = new fmManagerCentre();
 
             agentprofitreportform = new AgentProfitReportForm();
             

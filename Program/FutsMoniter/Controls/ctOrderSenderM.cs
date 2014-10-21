@@ -93,7 +93,7 @@ namespace FutsMoniter
 
         private void btnInsertTrade_Click(object sender, EventArgs e)
         {
-            InsertTradeForm fm = new InsertTradeForm();
+            fmInsertTrade fm = new fmInsertTrade();
             if (!ValidAccount()) return;
             if (!validSecurity()) return;
             fm.SetAccount(_account.Account);
