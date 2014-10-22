@@ -24,8 +24,10 @@ namespace FutsMoniter
         {
             InitializeComponent();
 
-            //ThemeResolutionService.ApplicationThemeName = Globals.Config["ThemeName"].AsString();
-            //this.ThemeName = ThemeResolutionService.ApplicationThemeName;
+            mStart = starter;
+            btnLogin.Enabled = false;
+
+
             if (Globals.Config["HeaderImg"].AsString() == "OEM")
             {
                 imageheader.Image = Properties.Resources.header_oem;
@@ -36,8 +38,7 @@ namespace FutsMoniter
                 message.ForeColor = Color.Brown;
             }
 
-            mStart = starter;
-            btnLogin.Enabled = false;
+           
             string[] addresses = Globals.Config["Servers"].AsString().Split(',');
             foreach (string s in addresses)
             {
@@ -45,6 +46,7 @@ namespace FutsMoniter
                     continue;
                 servers.Items.Add(s);
             }
+            servers.SelectedIndex = 0;
 
             if (addresses.Length == 1)
             {
@@ -62,11 +64,7 @@ namespace FutsMoniter
                 servers.SelectedIndex = 0;
 
             }
-            
-            //servers.Items.Add("127.0.0.1");
-            //servers.Items.Add("logic_dev.huiky.com");
-            //servers.Items.Add("logic-sim.lottoqq.com");
-            InitBW();
+
             ckremberuser.Checked = Properties.Settings.Default.remberuser;
             ckremberpass.Checked = Properties.Settings.Default.remberpass;
             if (Properties.Settings.Default.remberuser)
@@ -78,6 +76,9 @@ namespace FutsMoniter
                 password.Text = Properties.Settings.Default.pass;
             }
 
+            
+            InitBW();
+            
             WireEvent();
         }
 
@@ -125,12 +126,12 @@ namespace FutsMoniter
             }
             Properties.Settings.Default.Save();
 
-
+            string srvaddress = servers.SelectedItem.ToString();
             Globals.LoginStatus.Reset();
             new Thread(delegate() {
                 if (ServerLoginEvent != null)
                 {
-                    ServerLoginEvent(servers.SelectedText.ToString(), username.Text, password.Text);
+                    ServerLoginEvent(srvaddress, username.Text, password.Text);
                 }
             }).Start();
             this.btnLogin.Enabled = false;
