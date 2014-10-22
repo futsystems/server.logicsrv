@@ -353,10 +353,10 @@
     <Compile Include="Forms\fmFinanceCentre.Designer.cs">
       <DependentUpon>fmFinanceCentre.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\fms\fmHistQuery.cs">
+    <Compile Include="Forms\fmHistQuery.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\fms\fmHistQuery.Designer.cs">
+    <Compile Include="Forms\fmHistQuery.Designer.cs">
       <DependentUpon>fmHistQuery.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\fms\fmInsertTrade.cs">
@@ -608,7 +608,7 @@
     <EmbeddedResource Include="Forms\fmFinanceCentre.resx">
       <DependentUpon>fmFinanceCentre.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\fms\fmHistQuery.resx">
+    <EmbeddedResource Include="Forms\fmHistQuery.resx">
       <DependentUpon>fmHistQuery.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\fms\fmInsertTrade.resx">
