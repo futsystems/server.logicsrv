@@ -41,6 +41,13 @@ namespace TradingLib.Contrib.FinService
                 return;
             }
             finservicemap.Add(stub.Acct, stub);
+
+            //只有当stub加载进入内存后才可以调用oninit,否则如果在OnInit中调用stub来进行参数重新加载，会造成无法从内存获得数据
+            if(stub.FinService is ServicePlanBase)
+            {
+                (stub.FinService as ServicePlanBase).OnInit();
+            }
+            
         }
 
         /// <summary>
@@ -235,6 +242,7 @@ namespace TradingLib.Contrib.FinService
                 this.LoadArgument();
                 baseobj.ServicePlanFK = this.serviceplan_fk;
                 baseobj.ServiceID = this.ID;
+                
                 //绑定输出计费事件
                 baseobj.GotFeeChargeEvent += new FeeChargeDel(ChargeFee);
                 //绑定交易帐号

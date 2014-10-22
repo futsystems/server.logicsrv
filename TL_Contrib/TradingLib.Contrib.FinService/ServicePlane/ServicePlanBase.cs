@@ -59,6 +59,8 @@ namespace TradingLib.Contrib.FinService
         /// 服务ID
         /// </summary>
         public int ServiceID { get; set; }
+
+
         /// <summary>
         /// 按照即定的业务逻辑
         /// 当需要收费时触发收费事件
@@ -111,6 +113,15 @@ namespace TradingLib.Contrib.FinService
             //调用反射自动进行参数赋值
             FinTracker.ServicePlaneTracker.SetArgument(this, accountarg, agentarg);
 
+        }
+
+        /// <summary>
+        /// 配资服务初始化
+        /// 比如创建一个服务时 自动调整相关参数或者设定激活开关等
+        /// </summary>
+        public virtual void OnInit()
+        { 
+        
         }
 
         #region 事件响应 执行计费收集 这里可以进行进一步的扩展 针对不同的计费方式 监听不同的事件 进行计费

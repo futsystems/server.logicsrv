@@ -51,6 +51,34 @@ namespace TradingLib.Contrib.FinService
 
         }
 
+
+        public override void OnInit()
+        {
+            //如果配资额度为0 则检查当前交易帐户 如果帐户有自己则按照比例自动配置上配资额度
+            if (this.FinAmount.AccountArgument.AsDecimal() == 0)
+            {
+                decimal nowequity = this.Account.NowEquity;
+                decimal finamount = nowequity * this.FinLever.AccountArgument.AsInt();
+                if (nowequity > 0)
+                {
+                    Util.Debug("帐户:" + this.Account.ID + "当前权益:" + nowequity.ToString() + "而配资额度为0，自动加载配资额度为:" + finamount.ToString());
+
+                    Argument newarg = new Argument()
+                    {
+                        Name = this.FinAmount.AccountArgument.Name,
+                        Type = this.FinAmount.AccountArgument.Type,
+                        Value = finamount.ToString(),
+                    };
+                    //调整配资额度
+                    FinTracker.ArgumentTracker.UpdateArgumentAccount(this.ServiceID, newarg);
+
+                    //更新内存参数
+                    FinServiceStub stub = FinTracker.FinServiceTracker[this.Account.ID];
+                    if (stub != null)
+                        stub.LoadArgument();
+                }
+            }
+        }
         /// <summary>
         /// 调整手续费
         /// </summary>
