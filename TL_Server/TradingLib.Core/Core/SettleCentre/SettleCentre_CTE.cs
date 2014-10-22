@@ -52,11 +52,13 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.CLI, "datastore", "datastore - datastore", "datastore")]
         public void Task_DataStore()
         {
+            if (IsNormal && !IsTradingday) return;//结算中心正常 但不是交易日 不做记录转储
+
             //通过系统事件中继触发结算前事件
             TLCtxHelper.EventSystem.FireBeforeSettleEvent(this,new SystemEventArgs());
 
             this.IsInSettle = true;//标识结算中心处于结算状态
-            if (IsNormal && !IsTradingday) return;//结算中心正常 但不是交易日 不做记录转储
+            
             //先将内存中的PR数据保存到数据库 在保存pr数据之前,先清空了当日的pr临时数据表(这里的清空 会造成 清空其他程序加载账户的数据 ？？)
             this.BindPositionSettlePrice();//采集持仓结算价
             this.SaveHoldInfo();//保存结算持仓数据 包括当前持仓和当前持仓对应的PositionRound数据
@@ -86,25 +88,29 @@ namespace TradingLib.Core
         /// 结算后清空临时数据表 用于准备进入下一个交易日
         /// 需要在重置前进行清空,清空临时表是以交易日来进行清空的，而清算中心重置后 交易日会发生改变导致无法清空日内记录表
         /// </summary>
-        [TaskAttr("清空日内交易记录[SQL]", 15, 58, 5, "清空日内交易缓存")]
-        [ContribCommandAttr(QSEnumCommandSource.CLI, "cleanafterreset", "cleanafterreset - clean the interday tmp table after reset", "结算后清空日内交易临时数据表")]
-        public void Task_CleanAfterReset()
-        {
-            TLCtxHelper.EventSystem.FireBeforeSettleResetEvent(this, new SystemEventArgs());
-            if (IsNormal && !IsTradingday) return;
-            this.CleanTempTable();
-        }
+        //[TaskAttr("清空日内交易记录[SQL]", 15, 58, 5, "清空日内交易缓存")]
+        //[ContribCommandAttr(QSEnumCommandSource.CLI, "cleanafterreset", "cleanafterreset - clean the interday tmp table after reset", "结算后清空日内交易临时数据表")]
+        //public void Task_CleanAfterReset()
+        //{
+            
+        //    if (IsNormal && !IsTradingday) return;
+
+
+        //}
 
         
         //4.重置结算中心交易日信息 重置清算中心交易帐户 将昨日扎帐
         //清算中心，风控中心，以及数据路由 成交路由都需要进行重置
         //开盘前需要重置
-        [TaskAttr("重置结算中心-结算后", 16, 00, 5, "结算后重置结算中心")]
+        //[TaskAttr("重置结算中心-结算后", 16, 00, 5, "结算后重置结算中心")]
         [ContribCommandAttr(QSEnumCommandSource.CLI, "resetsc", "resetsc - reset settlecentre trading day", "重置结算中心")]
         public void Task_ResetTradingday()
         {
             if (IsNormal && !IsTradingday) return;
-            debug("系统重置，清算中心重置帐户，风控中心重置规则", QSEnumDebugLevel.INFO);
+            debug("系统重置，清算中心重置帐户，风控中心重置规则 清空日内记录表", QSEnumDebugLevel.INFO);
+            TLCtxHelper.EventSystem.FireBeforeSettleResetEvent(this, new SystemEventArgs());
+            this.CleanTempTable();
+
             //重置结算中心
             this.Reset();
 

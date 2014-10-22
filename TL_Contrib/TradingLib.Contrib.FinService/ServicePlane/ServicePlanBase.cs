@@ -245,6 +245,11 @@ namespace TradingLib.Contrib.FinService
         {
             return 0;
         }
+
+        public virtual decimal GetFinAmountAvabile()
+        {
+            return 0;
+        }
         #endregion
 
 

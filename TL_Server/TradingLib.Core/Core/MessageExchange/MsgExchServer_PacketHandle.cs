@@ -229,11 +229,22 @@ namespace TradingLib.Core
             IAccount account = _clearcentre[request.Account];
             debug("confirm stamp:" + account.SettlementConfirmTimeStamp.ToString(), QSEnumDebugLevel.INFO);
 
-            //如果结算时间戳为0 则表明为新注册用户,新注册用户不用注册
-            DateTime confirmtime = Util.ToDateTime(account.SettlementConfirmTimeStamp);
+           
             response.TradingAccount = request.Account;
-            response.ConfirmDay = Util.ToTLDate(confirmtime);
-            response.ConfirmTime = Util.ToTLTime(confirmtime);
+            if (needConfirmSettlement)
+            {
+                //如果结算时间戳为0 则表明为新注册用户,新注册用户不用注册
+                DateTime confirmtime = Util.ToDateTime(account.SettlementConfirmTimeStamp);
+                response.ConfirmDay = Util.ToTLDate(confirmtime);
+                response.ConfirmTime = Util.ToTLTime(confirmtime);
+            }
+            else
+            {
+                DateTime confirmtime = DateTime.Now;
+                response.ConfirmDay = Util.ToTLDate(confirmtime);
+                response.ConfirmTime = Util.ToTLTime(confirmtime);
+                
+            }
 
             CachePacket(response);
         }

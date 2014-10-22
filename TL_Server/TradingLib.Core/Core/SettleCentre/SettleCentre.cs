@@ -119,19 +119,37 @@ namespace TradingLib.Core
         public SettleCentre()
             :base(SettleCentre.CoreName)
         {
+            _cfgdb = new ConfigDB(SettleCentre.CoreName);
+
             //初始化置结算中心状态为未知
             SettleCentreStatus = QSEnumSettleCentreStatus.UNKNOWN;
 
             //初始化交易日信息
             InitTradingDay();
+
+            if (!_cfgdb.HaveConfig("ResetTime"))
+            {
+                _cfgdb.UpdateConfig("ResetTime", QSEnumCfgType.Int, 170101, "执行重置任务清空日内数据 系统帐户归位(170101)");
+            }
+            resetTime = _cfgdb["ResetTime"].AsInt();
+
+
+            //注入重置任务 用于在数据调整执行时间
+            DateTime t = Util.ToDateTime(Util.ToTLDate(DateTime.Now), resetTime);
+            TaskProc task = new TaskProc(this.UUID, "交易系统重置-" + resetTime.ToString(), t.Hour, t.Minute, t.Second, delegate() { Task_ResetTradingday(); });
+            TLCtxHelper.Ctx.InjectTask(task);
+
         }
 
-
+        ConfigDB _cfgdb;
+        int resetTime = 40101;
         /// <summary>
         /// 初始化交易日信息
         /// </summary>
         void InitTradingDay()
         {
+            
+
             //开发模式每天都有结算,运行模式按照交易日里进行结算
             debug("结算系统工作模式:" + (GlobalConfig.IsDevelop?"开发模式":"运行模式"), QSEnumDebugLevel.INFO);
 
@@ -189,6 +207,8 @@ namespace TradingLib.Core
                     SettleCentreStatus = QSEnumSettleCentreStatus.TRADINGDAY;//如果获得了当前交易日则当前为可交易日状态
                 }
             }
+
+
         }
         /// <summary>
         /// 重置结算信息

@@ -39,6 +39,10 @@ namespace TradingLib.Common
             bkacc.AgentInfo = GetAgentInfo(acc);
             return bkacc;
         }
+
+
+
+
         /// <summary>
         /// 生成财务信息
         /// </summary>

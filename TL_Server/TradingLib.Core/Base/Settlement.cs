@@ -67,7 +67,7 @@ namespace TradingLib.Core
 
             if (!_cfgdb.HaveConfig("Header1"))
             {
-                _cfgdb.UpdateConfig("Header1", QSEnumCfgType.String, "交易结算单(盯市)");
+                _cfgdb.UpdateConfig("Header1", QSEnumCfgType.String, "交易结算单(盯市)","结算表第一行表头");
             }
             header1 = _cfgdb["Header1"].AsString();
             

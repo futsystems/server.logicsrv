@@ -233,7 +233,7 @@ namespace TradingLib.ORM
                 {
                     
                     string query = String.Format("UPDATE log_settlement SET confrim_timestamp='{0}' WHERE account = '{1}' AND settleday < '{2}'",timestamp, account, tradingday);
-                    istransok =  (db.Connection.Execute(query) > 0);
+                    istransok =  (db.Connection.Execute(query) >= 0);
 
                     query = String.Format("UPDATE accounts SET confrim_timestamp = '{0}' WHERE account = '{1}'",timestamp, account);
                     istransok = istransok && (db.Connection.Execute(query) > 0);

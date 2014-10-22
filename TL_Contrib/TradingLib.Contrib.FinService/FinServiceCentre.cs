@@ -105,6 +105,10 @@ namespace TradingLib.Contrib.FinService
             FinTracker.FinServiceTracker.ToArray();
 
 
+            //配资资金查询事件
+            TLCtxHelper.ExContribEvent.GetFinAmmountAvabileEvent += new AccountFinAmmountDel(ExContribEvent_GetFinAmmountAvabileEvent);
+
+            //将服务的计费日志导出
             FinTracker.FinServiceTracker.GotFeeChargeItemEvent += new FeeChargeItemDel(_chargelog.newFeeChargeItem);
             //手续费调整事件
             TLCtxHelper.ExContribEvent.AdjustCommissionEvent += new AdjustCommissionDel(ExContribEvent_AdjustCommissionEvent);
@@ -123,6 +127,21 @@ namespace TradingLib.Contrib.FinService
             TLCtxHelper.EventSystem.BeforeSettleEvent += new EventHandler<SystemEventArgs>(EventSystem_BeforeSettleEvent);
 
             TLCtxHelper.EventSystem.AfterSettleEvent += new EventHandler<SystemEventArgs>(EventSystem_AfterSettleEvent);
+
+
+
+        }
+
+        /// <summary>
+        /// 查询某个交易帐户的配资服务所扩展的配资资金
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        decimal ExContribEvent_GetFinAmmountAvabileEvent(string account)
+        {
+            FinServiceStub stub = FinTracker.FinServiceTracker[account];
+            if (stub == null) return 0;
+            return stub.FinService.GetFinAmountAvabile();
         }
 
 

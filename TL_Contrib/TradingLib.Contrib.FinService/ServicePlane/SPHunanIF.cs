@@ -218,9 +218,18 @@ namespace TradingLib.Contrib.FinService
         /// <returns></returns>
         public override decimal GetFundAvabile(Symbol symbol)
         {
-            return this.Account.AvabileFunds + this.FinAmount.AccountArgument.AsDecimal();
+            //帐户当前可用资金即为所有额度， 在帐户可用额度计算时 加上了配资扩展的额度 见GetFinAmountAvabile()
+            return this.Account.AvabileFunds;
         }
 
+        /// <summary>
+        /// 获得配资额度
+        /// </summary>
+        /// <returns></returns>
+        public override decimal GetFinAmountAvabile()
+        {
+            return this.FinAmount.AccountArgument.AsDecimal();
+        }
         /// <summary>
         /// 计算通过配资服务后某个合约的可开手数
         /// </summary>

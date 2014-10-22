@@ -192,6 +192,7 @@ namespace TradingLib.Core
 
         //Server将融合多个Broker和DataFeed通道
         //int _orderlimitsize = 0;
+        bool needConfirmSettlement = true;
         public MsgExchServer()
             : base(MsgExchServer.CoreName)
         {
@@ -251,6 +252,11 @@ namespace TradingLib.Core
                 }
                 commentOpened = _cfgdb["CommentOpened"].AsString();
 
+                if (!_cfgdb.HaveConfig("NeedConfirmSettlement"))
+                {
+                    _cfgdb.UpdateConfig("NeedConfirmSettlement", QSEnumCfgType.Bool,true, "是否需要确认结算单");
+                }
+                needConfirmSettlement = _cfgdb["NeedConfirmSettlement"].AsBool();
 
                 tl = new TLServer_Exch(CoreName,_cfgdb["TLServerIP"].AsString(), _cfgdb["TLPort"].AsInt(), true);
 

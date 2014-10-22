@@ -32,6 +32,7 @@ namespace TradingLib.Contrib.FinService
         /// 对应数据服务ID
         /// </summary>
         int ServiceID { get; set; }
+
         /// <summary>
         /// 配资服务费用计算方式
         /// </summary>
@@ -113,6 +114,12 @@ namespace TradingLib.Contrib.FinService
         /// <param name="symbol"></param>
         /// <returns></returns>
         int CanOpenSize(Symbol symbol);
+
+        /// <summary>
+        /// 获得该配资服务提供的配资金额 用于以资金为单位的配资模式
+        /// </summary>
+        /// <returns></returns>
+        decimal GetFinAmountAvabile();
         #endregion
 
         #region 风控部分,每个配资服务都有强平规则，当触发到什么条件的时候进行强平
