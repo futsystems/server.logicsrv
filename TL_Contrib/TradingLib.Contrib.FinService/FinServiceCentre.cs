@@ -88,7 +88,7 @@ namespace TradingLib.Contrib.FinService
 
             if (!_cfgdb.HaveConfig("AddFinServiceOnCreate"))
             {
-                _cfgdb.UpdateConfig("AddFinServiceOnCreate", QSEnumCfgType.Bool,true, "默认是否开通的配资服务");
+                _cfgdb.UpdateConfig("AddFinServiceOnCreate", QSEnumCfgType.Bool,false, "默认是否开通的配资服务");
             }
             _addservice = _cfgdb["AddFinServiceOnCreate"].AsBool();
 

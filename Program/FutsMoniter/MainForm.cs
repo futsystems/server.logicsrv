@@ -78,7 +78,13 @@ namespace FutsMoniter
 
             InitBW();
             this.FormClosing += new FormClosingEventHandler(MainForm_FormClosing);
+            this.Load += new EventHandler(MainForm_Load);
 
+        }
+
+        void MainForm_Load(object sender, EventArgs e)
+        {
+            
         }
 
         void MainForm_FormClosing(object sender, FormClosingEventArgs e)

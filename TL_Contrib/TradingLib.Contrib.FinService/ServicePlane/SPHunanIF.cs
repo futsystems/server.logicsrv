@@ -171,7 +171,7 @@ namespace TradingLib.Contrib.FinService
             }
             else
             {
-                msg = "配资服务[" + this.SPNAME + "]只能交易品种:IF";
+                msg = "只允许交易:IF股指期货";
                 return false;
             }
         }

@@ -55,6 +55,7 @@ namespace TradingLib.Core
 
         static ConfigDB _cfgdb = null;
         static string comment = string.Empty;
+        static string header1 = string.Empty;
         static SettlementFactory()
         {
             _cfgdb = new ConfigDB("SettlementFactory");
@@ -63,6 +64,13 @@ namespace TradingLib.Core
                 _cfgdb.UpdateConfig("Comment", QSEnumCfgType.String, "对结算单如有疑问，请于下一交易日上午11:00以前到结算部查询，过期责任自负！！！", "结算单最后免责声明");
             }
             comment = _cfgdb["Comment"].AsString();
+
+            if (!_cfgdb.HaveConfig("Header1"))
+            {
+                _cfgdb.UpdateConfig("Header1", QSEnumCfgType.String, "交易结算单(盯市)");
+            }
+            header1 = _cfgdb["Header1"].AsString();
+            
         }
         public static List<string> GenSettlementFile(Settlement s,IAccount account)
         {
@@ -81,7 +89,7 @@ namespace TradingLib.Core
             settlelist.Add(NewLine);
             settlelist.Add(SectionName(account.GetCustBroker()));
             settlelist.Add(line);
-            settlelist.Add(SectionName("交易结算单（盯市）"));
+            settlelist.Add(SectionName(header1));
             settlelist.Add(string.Format("{0}{1,10}      {2}{3,10}      {4}{5,10}", padRightEx("客户号:", 10),s.Account, padRightEx("客户名称:", 10),account.GetCustName(), padRightEx("日期:", 10),s.SettleDay));
             settlelist.Add(NewLine);
             settlelist.Add(NewLine);

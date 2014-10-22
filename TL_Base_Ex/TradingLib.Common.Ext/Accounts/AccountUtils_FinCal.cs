@@ -269,7 +269,7 @@ namespace TradingLib.Common
         {
             if (string.IsNullOrEmpty(account.Name))
             {
-                return Util.GetEnumDescription(account.Category) + "[" + account.ID + "]";
+                return  "帐号[" + account.ID + "]";
             }
             return account.Name;
         }

@@ -62,7 +62,10 @@ namespace FutsMoniter.Controls
             
         }
 
-        
+        public void Start()
+        {
+            StartUpdate();
+        }
 
         #region  辅助函数
 
@@ -218,20 +221,6 @@ namespace FutsMoniter.Controls
             //绑定帐户选中事件
 
             this.AccountSelectedEvent += new Action<IAccountLite>(ctFinService1.OnAccountSelected);
-
-
-
-
-            //if (Globals.EnvReady)
-            //{
-            //    //ctFinService事件 移动到控件内部 进行内聚封装
-            //    Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryFinService", ctFinService1.OnQryFinService);
-            //    Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryFinServicePlan", ctFinService1.OnQryServicePlan);
-            //    Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "UpdateArguments", ctFinService1.OnQryFinService);
-            //    Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "ChangeServicePlane", ctFinService1.OnQryFinService);
-            //    Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "DeleteServicePlane", ctFinService1.OnQryFinService);
-            //}
-
         }
 
 

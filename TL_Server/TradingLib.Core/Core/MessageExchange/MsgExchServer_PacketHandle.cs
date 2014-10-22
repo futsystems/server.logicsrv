@@ -327,11 +327,11 @@ namespace TradingLib.Core
             {
                 if (account.Category == QSEnumAccountCategory.SIMULATION)
                 {
-                    response.NoticeContent = string.IsNullOrEmpty(GlobalConfig.SimPrompt) ? ("欢迎使用" + GlobalConfig.VendorName + "模拟交易系统,部署环境:模拟") : GlobalConfig.SimPrompt;
+                    response.NoticeContent = string.IsNullOrEmpty(GlobalConfig.SimPrompt) ? ("欢迎使用" + GlobalConfig.VendorName + "交易系统") : GlobalConfig.SimPrompt;
                 }
                 else if (account.Category == QSEnumAccountCategory.REAL)
                 {
-                    response.NoticeContent = string.IsNullOrEmpty(GlobalConfig.RealPrompt) ? ("欢迎使用" + GlobalConfig.VendorName + "实盘交易系统,市场有风险,投资需谨慎!祝您交易愉快!") : GlobalConfig.RealPrompt;
+                    response.NoticeContent = string.IsNullOrEmpty(GlobalConfig.RealPrompt) ? ("欢迎使用" + GlobalConfig.VendorName + "交易系统,市场有风险,投资需谨慎!祝您交易愉快!") : GlobalConfig.RealPrompt;
                 }
             }
             //如果通知内容为空 则提供默认提示

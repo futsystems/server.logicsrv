@@ -138,10 +138,8 @@ namespace FutsMoniter.Controls
 
         void InitAccountMoniterGrid()
         {
-            InitTable();
-
             SetPreferences();
-
+            InitTable();
             BindToTable();
 
             //初始表格右键化右键菜单

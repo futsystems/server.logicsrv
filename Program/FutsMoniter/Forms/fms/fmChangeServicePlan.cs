@@ -21,6 +21,7 @@ namespace FutsMoniter
         {
             InitializeComponent();
             
+            btnSubmit.Click +=new EventHandler(btnSubmit_Click);
         }
 
         JsonWrapperFinServiceStub stub = null;

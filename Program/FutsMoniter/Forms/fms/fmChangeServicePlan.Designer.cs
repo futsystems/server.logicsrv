@@ -29,19 +29,19 @@
         private void InitializeComponent()
         {
             this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
-            this.ctFinServicePlanList1 = new FutsMoniter.ctFinServicePlanList();
+            this.btnSubmit = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.lbcurrentsp = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel3 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.lbaccount = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel1 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.kryptonButton1 = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.ctFinServicePlanList1 = new FutsMoniter.ctFinServicePlanList();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // kryptonPanel1
             // 
-            this.kryptonPanel1.Controls.Add(this.kryptonButton1);
+            this.kryptonPanel1.Controls.Add(this.btnSubmit);
             this.kryptonPanel1.Controls.Add(this.ctFinServicePlanList1);
             this.kryptonPanel1.Controls.Add(this.lbcurrentsp);
             this.kryptonPanel1.Controls.Add(this.kryptonLabel3);
@@ -53,12 +53,14 @@
             this.kryptonPanel1.Size = new System.Drawing.Size(226, 153);
             this.kryptonPanel1.TabIndex = 0;
             // 
-            // ctFinServicePlanList1
+            // btnSubmit
             // 
-            this.ctFinServicePlanList1.Location = new System.Drawing.Point(12, 61);
-            this.ctFinServicePlanList1.Name = "ctFinServicePlanList1";
-            this.ctFinServicePlanList1.Size = new System.Drawing.Size(187, 21);
-            this.ctFinServicePlanList1.TabIndex = 4;
+            this.btnSubmit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSubmit.Location = new System.Drawing.Point(144, 116);
+            this.btnSubmit.Name = "btnSubmit";
+            this.btnSubmit.Size = new System.Drawing.Size(70, 25);
+            this.btnSubmit.TabIndex = 5;
+            this.btnSubmit.Values.Text = "提 交";
             // 
             // lbcurrentsp
             // 
@@ -92,14 +94,12 @@
             this.kryptonLabel1.TabIndex = 0;
             this.kryptonLabel1.Values.Text = "交易帐号:";
             // 
-            // kryptonButton1
+            // ctFinServicePlanList1
             // 
-            this.kryptonButton1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.kryptonButton1.Location = new System.Drawing.Point(144, 116);
-            this.kryptonButton1.Name = "kryptonButton1";
-            this.kryptonButton1.Size = new System.Drawing.Size(70, 25);
-            this.kryptonButton1.TabIndex = 5;
-            this.kryptonButton1.Values.Text = "提 交";
+            this.ctFinServicePlanList1.Location = new System.Drawing.Point(12, 61);
+            this.ctFinServicePlanList1.Name = "ctFinServicePlanList1";
+            this.ctFinServicePlanList1.Size = new System.Drawing.Size(187, 21);
+            this.ctFinServicePlanList1.TabIndex = 4;
             // 
             // fmChangeServicePlan
             // 
@@ -107,8 +107,12 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(226, 153);
             this.Controls.Add(this.kryptonPanel1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "fmChangeServicePlan";
-            this.Text = "fmChangeServicePlan";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "修改配资服务计划";
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).EndInit();
             this.kryptonPanel1.ResumeLayout(false);
             this.kryptonPanel1.PerformLayout();
@@ -124,6 +128,6 @@
         private ComponentFactory.Krypton.Toolkit.KryptonLabel lbaccount;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel1;
         private ctFinServicePlanList ctFinServicePlanList1;
-        private ComponentFactory.Krypton.Toolkit.KryptonButton kryptonButton1;
+        private ComponentFactory.Krypton.Toolkit.KryptonButton btnSubmit;
     }
 }

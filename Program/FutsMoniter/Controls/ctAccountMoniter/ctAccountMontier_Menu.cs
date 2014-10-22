@@ -13,39 +13,8 @@ namespace FutsMoniter.Controls
 {
     public partial class ctAccountMontier
     {
-       // RadContextMenu menu = new RadContextMenu();
         void InitMenu()
         {
-            //Telerik.WinControls.UI.RadMenuItem MenuItem_edit = new Telerik.WinControls.UI.RadMenuItem("编辑");
-            //MenuItem_edit.Image = Properties.Resources.editAccount_16;
-            //MenuItem_edit.Click += new EventHandler(EditAccount_Click);
-
-            ////Telerik.WinControls.UI.RadMenuItem MenuItem_add = new Telerik.WinControls.UI.RadMenuItem("添加");
-            ////MenuItem_add.Image = Properties.Resources.addAccount_16;
-            ////MenuItem_add.Click += new EventHandler(AddAccount_Click);
-
-            //Telerik.WinControls.UI.RadMenuItem MenuItem_changepass = new Telerik.WinControls.UI.RadMenuItem("修改密码");
-            ////MenuItem_changepass.Image = Properties.Resources.addAccount_16;
-            //MenuItem_changepass.Click += new EventHandler(ChangePass_Click);
-
-            //Telerik.WinControls.UI.RadMenuItem MenuItem_changeinvestor = new Telerik.WinControls.UI.RadMenuItem("修改信息");
-            ////MenuItem_changepass.Image = Properties.Resources.addAccount_16;
-            //MenuItem_changeinvestor.Click += new EventHandler(ChangeInvestor_Click);
-
-            //Telerik.WinControls.UI.RadMenuItem MenuItem_qryhist = new Telerik.WinControls.UI.RadMenuItem("历史记录");
-            ////MenuItem_changepass.Image = Properties.Resources.addAccount_16;
-            //MenuItem_qryhist.Click += new EventHandler(QryHist_Click);
-
-            //Telerik.WinControls.UI.RadMenuItem MenuItem_inserttrade = new Telerik.WinControls.UI.RadMenuItem("插入成交");
-            ////MenuItem_changepass.Image = Properties.Resources.addAccount_16;
-            //MenuItem_inserttrade.Click += new EventHandler(InsertTrade_Click);
-
-            //menu.Items.Add(MenuItem_edit);
-            ////menu.Items.Add(MenuItem_add);
-            //menu.Items.Add(MenuItem_changepass);
-            //menu.Items.Add(MenuItem_changeinvestor);
-            //menu.Items.Add(MenuItem_qryhist);
-
             accountgrid.ContextMenuStrip = new ContextMenuStrip();
             accountgrid.ContextMenuStrip.Items.Add("编辑账户", Properties.Resources.editAccount, new EventHandler(EditAccount_Click));
             accountgrid.ContextMenuStrip.Items.Add("修改密码",null, new EventHandler(ChangePass_Click));
