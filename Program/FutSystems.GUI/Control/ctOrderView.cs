@@ -227,9 +227,9 @@ namespace FutSystems.GUI
             grid.Columns[DIRECTION].Visible = false;
             grid.Columns[STATUS].Visible = false;
 
-            grid.Columns[DATETIME].Width = 40;
-            grid.Columns[SYMBOL].Width = 40;
-            grid.Columns[OPERATION].Width = 30;
+            grid.Columns[DATETIME].Width = 80;
+            grid.Columns[SYMBOL].Width = 80;
+            grid.Columns[OPERATION].Width = 50;
             grid.Columns[SIZE].Width = 40;
             grid.Columns[COMMENT].Width = 100;
 
@@ -379,8 +379,11 @@ namespace FutSystems.GUI
                 {
                     e.CellStyle.ForeColor = UIGlobals.ShortSideColor;
                 }
-               
+            }
 
+            if (e.ColumnIndex == 2 || e.ColumnIndex == 4)
+            {
+                e.CellStyle.Font = UIGlobals.BoldFont;
             }
         }
 

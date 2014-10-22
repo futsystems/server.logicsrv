@@ -24,12 +24,14 @@ namespace FutsMoniter
             if (Globals.CallbackCentreReady)
             {
                 Globals.CallBackCentre.RegisterCallback("MgrExchServer", "QryFinanceInfo", this.OnQryAgentFinanceInfo);
+                Globals.CallBackCentre.RegisterCallback("MgrExchServer", "QryFinanceInfoLite", this.OnQryAgentFinanceInfoLite);
                 Globals.CallBackCentre.RegisterCallback("MgrExchServer", "UpdateAgentBankAccount", this.OnUpdateAgentBankInfo);
+
                 Globals.CallBackCentre.RegisterCallback("MgrExchServer", "RequestCashOperation", this.OnCashOperation);
                 Globals.CallBackCentre.RegisterCallback("MgrExchServer", "ConfirmCashOperation", this.OnCashOperation);
                 Globals.CallBackCentre.RegisterCallback("MgrExchServer", "CancelCashOperation", this.OnCashOperation);
                 Globals.CallBackCentre.RegisterCallback("MgrExchServer", "RejectCashOperation", this.OnCashOperation);
-                Globals.CallBackCentre.RegisterCallback("MgrExchServer", "QryFinanceInfoLite", this.OnQryAgentFinanceInfoLite);
+                
 
                 Globals.CallBackCentre.RegisterCallback("MgrExchServer", "NotifyCashOperation", this.OnNotifyCashOperation);
                 
@@ -66,7 +68,10 @@ namespace FutsMoniter
         }
 
 
-
+        /// <summary>
+        /// 响应代理银行信息
+        /// </summary>
+        /// <param name="jsonstr"></param>
         void OnUpdateAgentBankInfo(string jsonstr)
         {
             JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
@@ -86,6 +91,10 @@ namespace FutsMoniter
             }
         }
 
+        /// <summary>
+        /// 响应代理财务信息lite
+        /// </summary>
+        /// <param name="jsonstr"></param>
         void OnQryAgentFinanceInfoLite(string jsonstr)
         {
             JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
@@ -103,7 +112,10 @@ namespace FutsMoniter
             }
         }
 
-
+        /// <summary>
+        /// 响应代理财务信息
+        /// </summary>
+        /// <param name="jsonstr"></param>
         void OnQryAgentFinanceInfo(string jsonstr)
         {
             JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
@@ -121,6 +133,10 @@ namespace FutsMoniter
             }
         }
 
+        /// <summary>
+        /// 响应出入金操作
+        /// </summary>
+        /// <param name="jsonstr"></param>
         void OnCashOperation(string jsonstr)
         {
             JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
@@ -129,6 +145,9 @@ namespace FutsMoniter
             {
                 JsonWrapperCashOperation obj = TradingLib.Mixins.LitJson.JsonMapper.ToObject<JsonWrapperCashOperation>(jd["Playload"].ToJson());
                 ctCashOperation1.GotJsonWrapperCashOperation(obj);
+
+                //当有出入金操作变更通知时 重新查询财务信息
+                Globals.TLClient.ReqQryAgentFinanceInfoLite();
             }
             else//如果没有配资服
             {
@@ -140,6 +159,11 @@ namespace FutsMoniter
             }
         }
 
+
+        /// <summary>
+        /// 响应出入金操作通知
+        /// </summary>
+        /// <param name="jsonstr"></param>
         void OnNotifyCashOperation(string jsonstr)
         {
             JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
@@ -148,23 +172,21 @@ namespace FutsMoniter
             {
                 JsonWrapperCashOperation obj = TradingLib.Mixins.LitJson.JsonMapper.ToObject<JsonWrapperCashOperation>(jd["Playload"].ToJson());
                 ctCashOperation1.GotJsonWrapperCashOperation(obj);
+
+                //当有出入金操作变更通知时 重新查询财务信息
+                Globals.TLClient.ReqQryAgentFinanceInfoLite();
             }
             else//如果没有配资服
             {
 
             }
-            //if (Globals.EnvReady)
-            //{
-            //    Globals.TLClient.ReqQryAgentFinanceInfoLite();
-            //}
         }
 
-        delegate void del3(JsonWrapperAgentFinanceInfoLite info);
         void GotFinanceInfoLite(JsonWrapperAgentFinanceInfoLite info)
         {
             if (InvokeRequired)
             {
-                Invoke(new del3(GotFinanceInfoLite), new object[] { info });
+                Invoke(new Action<JsonWrapperAgentFinanceInfoLite>(GotFinanceInfoLite), new object[] { info });
             }
             else
             {
@@ -182,12 +204,11 @@ namespace FutsMoniter
         }
 
         JsonWrapperAgentFinanceInfo _financeinfo = null;
-        delegate void del1(JsonWrapperAgentFinanceInfo info);
         void GotFinanceInfo(JsonWrapperAgentFinanceInfo info)
         { 
             if(InvokeRequired)
             {
-                Invoke(new del1(GotFinanceInfo), new object[] { info });
+                Invoke(new Action<JsonWrapperAgentFinanceInfo>(GotFinanceInfo), new object[] { info });
             }
             else
             {

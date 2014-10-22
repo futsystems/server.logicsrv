@@ -385,8 +385,8 @@ namespace TradingLib.Common
                     return ResponseTemplate<RspMGRQryCashResponse>.CliRecvResponse(content);
                 case MessageTypes.MGRSETTLEMENTRESPONSE://请求查询结算单回报
                     return ResponseTemplate<RspMGRQrySettleResponse>.CliRecvResponse(content);
-                case MessageTypes.MGRCHANGEACCOUNTPASSRESPONSE://请求修改帐户密码回报
-                    return ResponseTemplate<RspMGRChangeAccountPassResponse>.CliRecvResponse(content);
+                //case MessageTypes.MGRCHANGEACCOUNTPASSRESPONSE://请求修改帐户密码回报
+                //    return ResponseTemplate<RspMGRChangeAccountPassResponse>.CliRecvResponse(content);
                 case MessageTypes.MGRADDSECURITYRESPONSE://请求添加品种回报
                     return ResponseTemplate<RspMGRReqAddSecurityResponse>.CliRecvResponse(content);
                 case MessageTypes.MGRADDSYMBOLRESPONSE://请求添加合约回报

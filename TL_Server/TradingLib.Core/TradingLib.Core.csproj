@@ -90,7 +90,7 @@
     <Compile Include="Core\ManagerExchange\TLServer_MgrExch.cs" />
     <Compile Include="Core\ManagerExchange\MgrExchServer_.cs" />
     <Compile Include="Core\ManagerExchange\MgrExchServer_MessageOut.cs" />
-    <Compile Include="Core\ManagerExchange\MgrExchServer_PackentHandle.cs" />
+    <Compile Include="Core\ManagerExchange\MgrExchServer_PacketHandle.cs" />
     <Compile Include="Core\ManagerExchange\MgrExchServer_EventHandle.cs" />
     <Compile Include="Core\ManagerExchange\MgrExchServer_Task.cs" />
     <Compile Include="Core\ManagerExchange\MgrExchServer_Operation.cs" />
@@ -100,6 +100,7 @@
     <Compile Include="Core\ManagerExchange\MgrExchServer_Notify.cs" />
     <Compile Include="Core\ManagerExchange\Utils\ManagerUtils_Predicate.cs" />
     <Compile Include="Core\ManagerExchange\Utils\ManagerUtils_ObjectWrapper.cs" />
+    <Compile Include="Core\ManagerExchange\MgrExchServer_PacketHandle_.cs" />
     <Compile Include="Core\MessageExchange\MsgExchServer_.cs" />
     <Compile Include="Core\MessageExchange\MsgExchServer_PacketHandle.cs" />
     <Compile Include="Core\MessageExchange\MsgExchServer_CTE.cs" />

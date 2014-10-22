@@ -18,7 +18,6 @@ namespace FutsMoniter
         public fmAddAccount()
         {
             InitializeComponent();
-            InitializeComponent();
             Factory.IDataSourceFactory(accountType).BindDataSource(UIUtil.GetEnumValueObjects<QSEnumAccountCategory>());
 
         }

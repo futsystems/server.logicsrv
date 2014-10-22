@@ -51,7 +51,7 @@ namespace TradingLib.Core
                     ORM.MAgentFinance.InsertAgentCashOperation(request);
 
                     //bankaccount.Bank = BasicTracker.ContractBankTracker[bankaccount.bank_id].ToJsonWrapperBank();
-                    session.SendJsonReplyMgr(request);
+                    //session.SendJsonReplyMgr(request);
 
                     //通知出入金操作
                     //NotifyCashOperation(request);

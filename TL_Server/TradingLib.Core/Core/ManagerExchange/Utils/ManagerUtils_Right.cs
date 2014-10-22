@@ -78,5 +78,21 @@ namespace TradingLib.Core
             return false;
         }
 
+
+        /// <summary>
+        /// 检查Manager是否有权限添加Manager
+        /// </summary>
+        /// <param name="mgr"></param>
+        /// <param name="managertoadd"></param>
+        /// <returns></returns>
+        public static bool RightAddManager(this Manager mgr, Manager managertoadd)
+        {
+            //超级管理员有权限添加
+            if (mgr.RightRootDomain() || mgr.Type == QSEnumManagerType.AGENT)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

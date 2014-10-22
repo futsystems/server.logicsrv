@@ -23,5 +23,8 @@ namespace TradingLib.API
         /// <param name="cmd"></param>
         /// <param name="del"></param>
         void UnRegisterCallback(string module, string cmd, JsonReplyDel del);
+
+
+
     }
 }

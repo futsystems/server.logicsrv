@@ -14,7 +14,7 @@ using TradingLib.Mixins.LitJson;
 
 namespace FutsMoniter
 {
-    public partial class ctAgentList : UserControl
+    public partial class ctAgentList : UserControl,IEventBinder
     {
         public event VoidDelegate AgentSelectedChangedEvent;
         bool _gotdata = false;
@@ -68,7 +68,7 @@ namespace FutsMoniter
                 _enableany = value;
                 if (Globals.EnvReady)
                 {
-                    InitAgentList();
+                    ReloadList();
                 }
                 //agent.Enabled = _enableselected;
             }
@@ -87,7 +87,7 @@ namespace FutsMoniter
                 _defaultbasemgr = value;
                 if (Globals.EnvReady)
                 {
-                    InitAgentList();
+                    ReloadList();
                 }
             }
         }
@@ -96,23 +96,24 @@ namespace FutsMoniter
         public ctAgentList()
         {
             InitializeComponent();
-            
-            //如果已经初始化完成 则直接读取数据填充 否则将资金放入事件回调中
-            if (Globals.EnvReady)
-            {
-                InitAgentList();   
-            }
-            else
-            {
-                if (Globals.CallbackCentreReady)//回调初始化后在加入回调，当系统初始化完毕后 通过回调更新列表
-                {
-                    Globals.RegInitCallback(OnInitFinished);
 
-                    //订阅Manager变动事件
-                    Globals.CallBackCentre.RegisterCallback("MgrExchServer", "NotifyManagerUpdate", OnManagerNotify);
-                }
-            }
-            this.Disposed += new EventHandler(ctAgentList_Disposed);
+            Globals.RegIEventHandler(this);
+            //如果已经初始化完成 则直接读取数据填充 否则将资金放入事件回调中
+            //if (Globals.EnvReady)
+            //{
+            //    InitAgentList();   
+            //}
+            //else
+            //{
+            //    if (Globals.CallbackCentreReady)//回调初始化后在加入回调，当系统初始化完毕后 通过回调更新列表
+            //    {
+            //        Globals.RegInitCallback(OnInitFinished);
+
+            //        //订阅Manager变动事件
+            //        Globals.CallBackCentre.RegisterCallback("MgrExchServer", "NotifyManagerUpdate", OnManagerNotify);
+            //    }
+            //}
+            //this.Disposed += new EventHandler(ctAgentList_Disposed);
             this.Load += new EventHandler(ctAgentList_Load);
         }
 
@@ -123,7 +124,7 @@ namespace FutsMoniter
             if (code == 0)
             {
                 Manager obj = TradingLib.Mixins.LitJson.JsonMapper.ToObject<Manager>(jd["Playload"].ToJson());
-                InitAgentList();
+                ReloadList();
             }
         }
 
@@ -139,19 +140,12 @@ namespace FutsMoniter
             }
         }
 
-        void ctAgentList_Disposed(object sender, EventArgs e)
-        {
-            if (Globals.CallbackCentreReady)
-            {
-                Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "NotifyManagerUpdate", OnManagerNotify);
-                //Globals.CallBackCentre.UnRegisterCallback("FinServiceCentre", "QryFinServicePlan", OnInitFinished);
-            }
-        }
 
-        void InitAgentList()
+
+        public void OnInit()
         {
-           // MessageBox.Show("_enableself:" + _enableself.ToString());
-            Factory.IDataSourceFactory(agent).BindDataSource(Globals.BasicInfoTracker.GetBaseManagerCombList(_enableany,_enableself));
+            Globals.Debug("agentlist oninit called....");
+            ReloadList();
             if (Globals.Manager.Type != QSEnumManagerType.ROOT)
             {
                 if (_defaultbasemgr)//如果默认选择当前域 则设置selectedvalue
@@ -159,15 +153,20 @@ namespace FutsMoniter
                     agent.SelectedValue = Globals.BaseMGRFK;
                 }
             }
+
+            Globals.CallBackCentre.RegisterCallback("MgrExchServer", "NotifyManagerUpdate", OnManagerNotify);
             _gotdata = true;
         }
 
-        /// <summary>
-        /// 响应环境初始化完成事件 用于在环境初始化之前创立的空间获得对应的基础数据
-        /// </summary>
-        public void OnInitFinished()
-        { 
-            InitAgentList();
+        public void OnDisposed()
+        {
+            Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "NotifyManagerUpdate", OnManagerNotify);
+        }
+
+
+        void ReloadList()
+        {
+            Factory.IDataSourceFactory(agent).BindDataSource(Globals.BasicInfoTracker.GetBaseManagerCombList(_enableany, _enableself));
         }
 
         /// <summary>

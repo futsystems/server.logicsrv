@@ -47,23 +47,6 @@ namespace FutsMoniter.Controls
 
                 StartUpdate();
                 _loaded = true;
-            
-                    //if (!Globals.Config["FinService"].AsBool())
-                    //{
-                    //    FinServicePage.Text = "开发中";
-                    //    FinServicePage.Enabled = false;
-                    //}
-                    //if (!Globals.Config["RaceService"].AsBool())
-                    //{
-                    //    RaceServicePage.Text = "开发中";
-                    //    FinServicePage.Enabled = false;
-                    //}
-                    //if (!Globals.Config["LottoService"].AsBool())
-                    //{
-                    //    LottoServicePage.Text = "开发中";
-                    //    LottoServicePage.Enabled = false;
-                    //}
-
                 this.Load += new EventHandler(ctAccountMontier_Load);
             }
             catch (Exception ex)
@@ -75,14 +58,8 @@ namespace FutsMoniter.Controls
 
         void ctAccountMontier_Load(object sender, EventArgs e)
         {
-            
-
-            //绑定事件
             WireEvents();
-
             
-
-
         }
 
         
@@ -236,15 +213,24 @@ namespace FutsMoniter.Controls
             viewQuoteList1.SendDebugEvent += new DebugDelegate(Globals.Debug);
             ctOrderSenderM1.SendOrderEvent += new OrderDelegate(SendOrder);
 
-            if (Globals.EnvReady)
-            {
-                //ctFinService事件 移动到控件内部 进行内聚封装
-                Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryFinService", ctFinService1.OnQryFinService);
-                Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryFinServicePlan", ctFinService1.OnQryServicePlan);
-                Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "UpdateArguments", ctFinService1.OnQryFinService);
-                Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "ChangeServicePlane", ctFinService1.OnQryFinService);
-                Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "DeleteServicePlane", ctFinService1.OnQryFinService);
-            }
+
+
+            //绑定帐户选中事件
+
+            this.AccountSelectedEvent += new Action<IAccountLite>(ctFinService1.OnAccountSelected);
+
+
+
+
+            //if (Globals.EnvReady)
+            //{
+            //    //ctFinService事件 移动到控件内部 进行内聚封装
+            //    Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryFinService", ctFinService1.OnQryFinService);
+            //    Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryFinServicePlan", ctFinService1.OnQryServicePlan);
+            //    Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "UpdateArguments", ctFinService1.OnQryFinService);
+            //    Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "ChangeServicePlane", ctFinService1.OnQryFinService);
+            //    Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "DeleteServicePlane", ctFinService1.OnQryFinService);
+            //}
 
         }
 

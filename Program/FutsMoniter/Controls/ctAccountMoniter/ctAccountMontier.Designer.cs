@@ -480,7 +480,7 @@
             // 
             // ctFinService1
             // 
-            this.ctFinService1.CurrentAccount = null;
+            //this.ctFinService1.CurrentAccount = null;
             this.ctFinService1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ctFinService1.Location = new System.Drawing.Point(0, 0);
             this.ctFinService1.Name = "ctFinService1";

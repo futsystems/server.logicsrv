@@ -18,15 +18,15 @@ namespace FutsMoniter
             kryptonContextMenuItem_exit.Click += new EventHandler(kryptonContextMenuItem_exit_Click);
             kryptonRibbonQATButton_debug.Click += new EventHandler(kryptonRibbonQATButton_debug_Click);
             //kryptonContextMenuItem_exit.Click +=new EventHandler(kryptonContextMenuItem_exit_Click);
-            
+
             //清算中心
             kryptonRibbonGroupButton_OpenClearCentre.Click += new EventHandler(kryptonRibbonGroupButton_OpenClearCentre_Click);
             kryptonRibbonGroupButton_CloseClearCentre.Click += new EventHandler(kryptonRibbonGroupButton_CloseClearCentre_Click);
 
             //路由列表
             kryptonRibbonGroupButton_RouterList.Click += new EventHandler(kryptonRibbonGroupButton_RouterList_Click);
-            
-            
+
+
             //系统状态
             kryptonRibbonGroupButton_SystemStatus.Click += new EventHandler(kryptonRibbonGroupButton_SystemStatus_Click);
 
@@ -37,15 +37,18 @@ namespace FutsMoniter
 
             kryptonRibbonGroupButton_Security.Click += new EventHandler(kryptonRibbonGroupButton_Security_Click);
             kryptonRibbonGroupButton_Symbol.Click += new EventHandler(kryptonRibbonGroupButton_Symbol_Click);
-        
+
             //历史记录
             kryptonRibbonGroupButton_QueryExHist.Click += new EventHandler(kryptonRibbonGroupButton_QueryExHist_Click);
             kryptonRibbonGroupButton_QueryAgentProfit.Click += new EventHandler(kryptonRibbonGroupButton_QueryAgentProfit_Click);
-               
+            kryptonRibbonGroupButton_QueryCashTransAccount.Click += new EventHandler(kryptonRibbonGroupButton_QueryCashTransAccount_Click);
+            kryptonRibbonGroupButton_QueryCashTransAgent.Click += new EventHandler(kryptonRibbonGroupButton_QueryCashTransAgent_Click);
+
+
             //柜员管理
             kryptonRibbonGroupButton_AgentManagement.Click += new EventHandler(kryptonRibbonGroupButton_AgentManagement_Click);
             kryptonRibbonGroupButton_AgentCost.Click += new EventHandler(kryptonRibbonGroupButton_AgentCost_Click);
-        
+
 
             //财务管理
             kryptonRibbonGroupButton_FinanceManagement.Click += new EventHandler(kryptonRibbonGroupButton_FinanceManagement_Click);
@@ -55,12 +58,16 @@ namespace FutsMoniter
             kryptonRibbonGroupButton_payonline.Click += new EventHandler(kryptonRibbonGroupButton_payonline_Click);
         }
 
+
+
+
+
         void kryptonRibbonGroupButton_payonline_Click(object sender, EventArgs e)
         {
-           Utils.OpenURL("http://www.baidu.com");
+            Utils.OpenURL("http://www.baidu.com");
         }
 
-        
+
 
         void kryptonContextMenuItem_exit_Click(object sender, EventArgs e)
         {
@@ -126,6 +133,18 @@ namespace FutsMoniter
             }
         }
 
+        void kryptonRibbonGroupButton_QueryCashTransAccount_Click(object sender, EventArgs e)
+        {
+            fmHistQueryCashTrans fm = new fmHistQueryCashTrans();
+            fm.Show();
+        }
+
+        void kryptonRibbonGroupButton_QueryCashTransAgent_Click(object sender, EventArgs e)
+        {
+            fmHistQueryCashTransAgent fm = new fmHistQueryCashTransAgent();
+            fm.Show();
+        }
+
         #endregion
 
 
@@ -174,7 +193,7 @@ namespace FutsMoniter
 
         #endregion
 
-        #region 基础数据 
+        #region 基础数据
         void kryptonRibbonGroupButton_Exchange_Click(object sender, EventArgs e)
         {
             if (exchangeform != null)
@@ -229,7 +248,7 @@ namespace FutsMoniter
 
         #region 菜单操作
 
-       
+
 
 
         /// <summary>
@@ -243,7 +262,7 @@ namespace FutsMoniter
             fm.ShowDialog();
         }
 
-        
+
 
         /// <summary>
         /// 资金管理
@@ -252,7 +271,7 @@ namespace FutsMoniter
         /// <param name="e"></param>
         private void btnFinanceMgr_Click(object sender, EventArgs e)
         {
-           
+
         }
         /// <summary>
         /// 出纳管理
@@ -261,7 +280,7 @@ namespace FutsMoniter
         /// <param name="e"></param>
         private void btnCasher_Click(object sender, EventArgs e)
         {
-            
+
         }
         #endregion
 
@@ -280,7 +299,7 @@ namespace FutsMoniter
         #region 报表
         private void btnAgentProfit_Click(object sender, EventArgs e)
         {
-           
+
         }
 
         private void btnTotalOperationStatic_Click(object sender, EventArgs e)

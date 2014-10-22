@@ -18,7 +18,7 @@ namespace FutsMoniter
         public void RegisterCallback(string module, string cmd, JsonReplyDel del)
         {
             string key = module.ToUpper() + "-" + cmd.ToUpper();
-            
+
             if (!callbackmap.Keys.Contains(key))
             {
                 callbackmap.TryAdd(key, new List<JsonReplyDel>());
@@ -70,7 +70,7 @@ namespace FutsMoniter
                     }
                     catch (Exception ex)
                     {
-                        Globals.Debug("run callback error:" + ex.ToString()); 
+                        Globals.Debug("run callback error:" + ex.ToString());
                     }
                 }
             }

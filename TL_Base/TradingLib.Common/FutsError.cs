@@ -13,6 +13,10 @@ namespace TradingLib.Common
         }
     }
 
+    /// <summary>
+    /// 回报异常 当操作产生异常时候 通过将异常封装到FutsRspError来向外层抛出报错信息
+    /// 
+    /// </summary>
     public class FutsRspError : Exception
     {
 
@@ -46,16 +50,18 @@ namespace TradingLib.Common
             RawException = new Exception(error);
         }
 
-        /// <summary>
-        /// 常规错误
-        /// 提供一个错误信息 生成对应的FutsRspError
-        /// </summary>
-        /// <param name="error"></param>
-        /// <returns></returns>
-        public static FutsRspError GenericError(string errorMessage)
-        {
-            return new FutsRspError() { ErrorID = 1, ErrorMessage = errorMessage };
-        }
+        
+
+        ///// <summary>
+        ///// 常规错误
+        ///// 提供一个错误信息 生成对应的FutsRspError
+        ///// </summary>
+        ///// <param name="error"></param>
+        ///// <returns></returns>
+        //public static FutsRspError GenericError(string errorMessage)
+        //{
+        //    return new FutsRspError() { ErrorID = 1, ErrorMessage = errorMessage };
+        //}
 
         /// <summary>
         /// 用自定义的XMLRspInfo填充错误信息

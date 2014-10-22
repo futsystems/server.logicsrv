@@ -11,9 +11,9 @@ using TradingLib.Common;
 
 namespace FutsMoniter
 {
-    public partial class MainForm : ComponentFactory.Krypton.Toolkit.KryptonForm,ILogicHandler, ICallbackCentre
+    public partial class MainForm : ComponentFactory.Krypton.Toolkit.KryptonForm, ILogicHandler, ICallbackCentre
     {
-       
+
         Log logfile = null;
 
         TLClientNet tlclient;
@@ -22,7 +22,7 @@ namespace FutsMoniter
         bool _gotloginrep = false;
         bool _basicinfodone = false;//基本数据是否已经查询完毕
         event DebugDelegate ShowInfoHandler;
-        
+
         string _servers = "127.0.0.1";
 
         DebugForm debugform = new DebugForm();
@@ -65,7 +65,7 @@ namespace FutsMoniter
 
             //设定对外消息显示输出
             ShowInfoHandler = showinfo;
-            
+
 
             ///ThemeResolutionService.ApplicationThemeName = Globals.Config["ThemeName"].AsString();
 
@@ -76,8 +76,9 @@ namespace FutsMoniter
             Init();
             _timer = new System.Threading.Timer(FakeOutStatus, null, 800, 150);
 
+            InitBW();
             this.FormClosing += new FormClosingEventHandler(MainForm_FormClosing);
-            
+
         }
 
         void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -87,13 +88,13 @@ namespace FutsMoniter
 
 
 
-        
+
 
 
         public void Init()
         {
-            
-            ctAccountMontier1.SendDebugEvent +=new DebugDelegate(debug);
+
+            ctAccountMontier1.SendDebugEvent += new DebugDelegate(debug);
             ctAccountMontier1.QryAccountHistEvent += new IAccountLiteDel(ctAccountMontier1_QryAccountHistEvent);
 
             infotracker = new TradingInfoTracker();
@@ -115,7 +116,7 @@ namespace FutsMoniter
             mgrform = new fmManagerCentre();
 
             agentprofitreportform = new fmAgentProfitReport();
-            
+
             //基础数据窗口维护了基础数据 当有基础数据到达时候需要通知窗体 窗体进行加载和现实
             basicinfotracker.GotMarketTimeEvent += new MarketTimeDel(markettimeform.GotMarketTime);
             basicinfotracker.GotExchangeEvent += new ExchangeDel(exchangeform.GotExchange);
@@ -124,7 +125,7 @@ namespace FutsMoniter
 
             basicinfotracker.GotManagerEvent += new ManagerDel(mgrform.GotManager);
 
-            Globals.SendDebugEvent +=new DebugDelegate(debug);
+            Globals.SendDebugEvent += new DebugDelegate(debug);
 
             if (!Globals.Config["Agent"].AsBool())
             {
@@ -148,13 +149,13 @@ namespace FutsMoniter
             infotracker.Clear();
         }
 
-       
 
-        
+
+
 
         void InitSymbol2View()
-        { 
-            foreach(Symbol sym in Globals.BasicInfoTracker.SymbolsTradable)
+        {
+            foreach (Symbol sym in Globals.BasicInfoTracker.SymbolsTradable)
             {
                 ctAccountMontier1.AddSymbol(sym);
                 //Globals.Debug("symbol:" + sym.Symbol);
@@ -162,7 +163,6 @@ namespace FutsMoniter
         }
 
 
-        
 
 
 
@@ -170,7 +170,8 @@ namespace FutsMoniter
 
 
 
-        
+
+
         void StatusMessage(string message)
         {
             if (InvokeRequired)

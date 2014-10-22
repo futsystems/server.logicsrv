@@ -99,7 +99,7 @@ namespace TradingLib.Common
     }
 
     /// <summary>
-    /// 通知类型的逻辑包,用于生成成交回报,委托回报,持仓更新回报等数据包
+    /// 通知类型的逻辑包,用于生成成交回报,委托回报,持仓更新回报等数据包 通知类的数据包不包含RspInfo
     /// 这些包调用OnRtnOrder,OnRtnTrade
     /// 
     /// </summary>

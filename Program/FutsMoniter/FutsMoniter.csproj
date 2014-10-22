@@ -15,7 +15,7 @@
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -81,6 +81,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\IEventBinder.cs" />
     <Compile Include="Common\ManagerUtils.cs" />
     <Compile Include="Controls\ctCashOperation.cs">
       <SubType>UserControl</SubType>
@@ -244,6 +245,18 @@
     <Compile Include="Controls\ctAccountMoniter\ctAccountMontier.Designer.cs">
       <DependentUpon>ctAccountMontier.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\fmHistQueryCashTrans.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\fmHistQueryCashTrans.Designer.cs">
+      <DependentUpon>fmHistQueryCashTrans.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\fmPopMessage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\fmPopMessage.Designer.cs">
+      <DependentUpon>fmPopMessage.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\fms\fmAccountconfig\fmAccountConfig_.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -292,10 +305,10 @@
     <Compile Include="Forms\fms\fmAgentProfitReport.Designer.cs">
       <DependentUpon>fmAgentProfitReport.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\fms\fmCashCentre.cs">
+    <Compile Include="Forms\fmCashCentre.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\fms\fmCashCentre.Designer.cs">
+    <Compile Include="Forms\fmCashCentre.Designer.cs">
       <DependentUpon>fmCashCentre.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\fms\fmChangeInvestor.cs">
@@ -304,10 +317,10 @@
     <Compile Include="Forms\fms\fmChangeInvestor.Designer.cs">
       <DependentUpon>fmChangeInvestor.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\fms\fmChangePassword.cs">
+    <Compile Include="Forms\fmChangePassword.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\fms\fmChangePassword.Designer.cs">
+    <Compile Include="Forms\fmChangePassword.Designer.cs">
       <DependentUpon>fmChangePassword.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\fms\fmChangePasswordAgent.cs">
@@ -430,7 +443,14 @@
     <Compile Include="Forms\fms\fmSyncCTPSymbols.Designer.cs">
       <DependentUpon>fmSyncCTPSymbols.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\fmHistQueryCashTransAgent.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\fmHistQueryCashTransAgent.Designer.cs">
+      <DependentUpon>fmHistQueryCashTransAgent.cs</DependentUpon>
+    </Compile>
     <Compile Include="Glabols.cs" />
+    <Compile Include="Globals_.cs" />
     <Compile Include="JsonObject\JsonProtocolFinService.cs" />
     <Compile Include="LoginForm.cs">
       <SubType>Form</SubType>
@@ -447,7 +467,7 @@
     <Compile Include="MainForm_BasicInfo.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainForm_ContribResponse.cs">
+    <Compile Include="MainForm_ContribCallBack.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MainForm_LogicHandler.cs">
@@ -479,6 +499,10 @@
     <Compile Include="MainForm_Client.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="MainForm_PopMessage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Globals_RegEvent.cs" />
     <EmbeddedResource Include="Controls\ctCashOperation.resx">
       <DependentUpon>ctCashOperation.cs</DependentUpon>
     </EmbeddedResource>
@@ -536,6 +560,12 @@
     <EmbeddedResource Include="Controls\ctAccountMoniter\ctAccountMontier.resx">
       <DependentUpon>ctAccountMontier.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\fmHistQueryCashTrans.resx">
+      <DependentUpon>fmHistQueryCashTrans.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\fmPopMessage.resx">
+      <DependentUpon>fmPopMessage.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\fms\fmAccountconfig\fmAccountConfig.resx">
       <DependentUpon>fmAccountConfig.cs</DependentUpon>
     </EmbeddedResource>
@@ -554,13 +584,13 @@
     <EmbeddedResource Include="Forms\fms\fmAgentProfitReport.resx">
       <DependentUpon>fmAgentProfitReport.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\fms\fmCashCentre.resx">
+    <EmbeddedResource Include="Forms\fmCashCentre.resx">
       <DependentUpon>fmCashCentre.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\fms\fmChangeInvestor.resx">
       <DependentUpon>fmChangeInvestor.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\fms\fmChangePassword.resx">
+    <EmbeddedResource Include="Forms\fmChangePassword.resx">
       <DependentUpon>fmChangePassword.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\fms\fmChangePasswordAgent.resx">
@@ -623,6 +653,9 @@
     <EmbeddedResource Include="Forms\fms\fmSyncCTPSymbols.resx">
       <DependentUpon>fmSyncCTPSymbols.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\fmHistQueryCashTransAgent.resx">
+      <DependentUpon>fmHistQueryCashTransAgent.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="xxtobedelete\OperationReportForm.resx">
       <DependentUpon>OperationReportForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -658,6 +691,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="images\message_error.png" />
+    <None Include="images\message_success.png" />
     <Content Include="moniter-oem.ico" />
     <Content Include="moniter.ico" />
     <Content Include="moniter0.ico" />

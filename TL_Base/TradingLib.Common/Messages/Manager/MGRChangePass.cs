@@ -48,31 +48,31 @@ namespace TradingLib.Common
     }
 
 
-    /// <summary>
-    /// 修改密码回报
-    /// </summary>
-    public class RspMGRChangeAccountPassResponse : RspResponsePacket
-    {
-        public RspMGRChangeAccountPassResponse()
-        {
-            _type = MessageTypes.MGRCHANGEACCOUNTPASSRESPONSE;
-            this.NewPassword = string.Empty;
-        }
+    ///// <summary>
+    ///// 修改密码回报
+    ///// </summary>
+    //public class RspMGRChangeAccountPassResponse : RspResponsePacket
+    //{
+    //    public RspMGRChangeAccountPassResponse()
+    //    {
+    //        _type = MessageTypes.MGRCHANGEACCOUNTPASSRESPONSE;
+    //        this.NewPassword = string.Empty;
+    //    }
 
-        public string NewPassword { get; set; }
+    //    public string NewPassword { get; set; }
 
-        public override string ResponseSerialize()
-        {
-            return this.NewPassword;
-        }
+    //    public override string ResponseSerialize()
+    //    {
+    //        return this.NewPassword;
+    //    }
 
-        public override void ResponseDeserialize(string content)
-        {
-            this.NewPassword = content;
-        }
+    //    public override void ResponseDeserialize(string content)
+    //    {
+    //        this.NewPassword = content;
+    //    }
 
 
         
         
-    }
+    //}
 }

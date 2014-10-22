@@ -10,7 +10,7 @@ namespace FutsMoniter.Common
     {
         LoginForm _loginform;
         MainForm mainfm;
-
+        //System.Windows.Forms.Form mainfm;
         //用于调用升级逻辑,然后再显示启动窗口与主窗口
         protected override bool onUpdate()
         {

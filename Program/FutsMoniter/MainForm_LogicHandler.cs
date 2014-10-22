@@ -34,7 +34,7 @@ namespace FutsMoniter
                 ShowInfo("交易时间查询完毕,查询交易所信息");
                 Globals.TLClient.ReqQryExchange();
             }
-        
+
         }
         public void OnMGRExchangeResponse(Exchange ex, bool islast)
         {
@@ -76,7 +76,7 @@ namespace FutsMoniter
                 Globals.TLClient.ReqQrySymbol();
             }
 
-           
+
         }
 
         public void OnMGRSecurityAddResponse(SecurityFamilyImpl security, bool islast)
@@ -84,7 +84,7 @@ namespace FutsMoniter
             if (basicinfotracker != null)
             {
                 basicinfotracker.GotSecurity(security);
-            }        
+            }
         }
 
 
@@ -142,13 +142,13 @@ namespace FutsMoniter
                 basicinfotracker.GotSymbol(symbol);
             }
 
-        
+
         }
 
         #endregion
 
 
-        
+
 
 
 
@@ -162,7 +162,7 @@ namespace FutsMoniter
             //debug("main form got tick:" + k.ToString());
             infotracker.GotTick(k);
             ctAccountMontier1.GotTick(k);
-            
+
         }
 
         /// <summary>
@@ -200,8 +200,8 @@ namespace FutsMoniter
         /// </summary>
         /// <param name="pos"></param>
         public void OnPositionUpdate(Position pos)
-        { 
-           
+        {
+
         }
 
         #endregion
@@ -247,9 +247,9 @@ namespace FutsMoniter
 
         public void OnAccountInfo(IAccountInfo accountinfo)
         {
-            
+
             ctAccountMontier1.GotAccountInfo(accountinfo);
-            
+
         }
 
         /// <summary>
@@ -263,7 +263,7 @@ namespace FutsMoniter
 
 
         #region 风控类接口实现
-        
+
 
         /// <summary>
         /// 帐户风控规则项目回报
@@ -296,7 +296,7 @@ namespace FutsMoniter
             {
                 systemstatusfrom.GotSystemStatus(status);
             }
-        
+
         }
         #endregion
 
@@ -307,10 +307,10 @@ namespace FutsMoniter
             histqryform.GotHistOrder(o, islast);
         }
         public void OnMGRTradeResponse(Trade f, bool islast)
-        { 
+        {
             //histqryform
             histqryform.GotHistTrade(f, islast);
-        
+
         }
 
         public void OnMGRPositionResponse(SettlePosition pos, bool islast)
@@ -338,12 +338,14 @@ namespace FutsMoniter
             }
             else
             {
-                return "操作失败,原因:"+info.ErrorMessage;
+                return "操作失败,原因:" + info.ErrorMessage;
             }
         }
         public void PopRspInfo(RspInfo info)
         {
-            StatusMessage(genmessage(info));
+            //StatusMessage(genmessage(info));
+            //将RspInfo写入缓存 等待后台线程进行处理
+            infobuffer.Write(info);
         }
     }
 }

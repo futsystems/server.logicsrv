@@ -48,6 +48,7 @@ namespace FutsMoniter
             }
 
             Globals.TLClient.ReqChangeAccountPass(account.Text, newpass.Text);
+            this.Close();
         }
     }
 }
