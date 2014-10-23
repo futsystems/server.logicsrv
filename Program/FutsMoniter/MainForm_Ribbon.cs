@@ -25,7 +25,7 @@ namespace FutsMoniter
 
             //路由列表
             kryptonRibbonGroupButton_RouterList.Click += new EventHandler(kryptonRibbonGroupButton_RouterList_Click);
-
+            kryptonRibbonGroupButton_PermissionTemplate.Click += new EventHandler(kryptonRibbonGroupButton_PermissionTemplate_Click);
 
             //系统状态
             kryptonRibbonGroupButton_SystemStatus.Click += new EventHandler(kryptonRibbonGroupButton_SystemStatus_Click);
@@ -56,6 +56,12 @@ namespace FutsMoniter
 
 
             kryptonRibbonGroupButton_payonline.Click += new EventHandler(kryptonRibbonGroupButton_payonline_Click);
+        }
+
+        void kryptonRibbonGroupButton_PermissionTemplate_Click(object sender, EventArgs e)
+        {
+            fmPermissionTemplate fm = new fmPermissionTemplate();
+            fm.Show();
         }
 
 

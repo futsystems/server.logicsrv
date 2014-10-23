@@ -66,6 +66,26 @@ namespace TradingLib.Core
 
         }
 
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QueryPermmissionTemplateList", "QueryPermmissionTemplateList - Query Permmission lsit", "查询权限模板列表")]
+        public void CTE_QueryPermissionTemplateList(ISession session)
+        {
+            try
+            {
+                Manager manger = session.GetManager();
+                if (manger.RightRootDomain())
+                {
+                    session.SendJsonReplyMgr(UIAccessTracker.GetUIAccessList().ToArray());
+                }
+                else
+                {
+                    throw new FutsRspError("无权查询权限模板列表");
+                }
+            }
+            catch (FutsRspError ex)
+            {
+                session.OperationError(ex);
+            }
+        }
 
 
 

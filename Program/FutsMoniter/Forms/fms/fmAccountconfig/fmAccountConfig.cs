@@ -13,7 +13,7 @@ using FutSystems.GUI;
 
 namespace FutsMoniter
 {
-    public partial class fmAccountConfig : ComponentFactory.Krypton.Toolkit.KryptonForm
+    public partial class fmAccountConfig : ComponentFactory.Krypton.Toolkit.KryptonForm,IEventBinder
     {
        IAccountLite _account;
         public event DebugDelegate SendDebugEvent;
@@ -58,13 +58,14 @@ namespace FutsMoniter
             cashop_type.Items.Add("入金");
             cashop_type.Items.Add("出金");
 
+
             //绑定事件
             WireEvent();
         }
 
         void WireEvent()
         {
-            Globals.RegInitCallback(OnInitCallback);
+            Globals.RegIEventHandler(this);
 
             this.FormClosing +=new FormClosingEventHandler(fmAccountConfig_FormClosing);
 
@@ -81,15 +82,6 @@ namespace FutsMoniter
         }
 
 
-        void OnInitCallback()
-        {
-            //if (!Globals.Manager.RightRootDomain())
-            //{
-            //    cashoppanel.Visible = false;
-            //    routerpanel.Visible = false;
-            //}
-
-        }
 
 
 

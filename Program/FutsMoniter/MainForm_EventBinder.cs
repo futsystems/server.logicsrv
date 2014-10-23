@@ -27,6 +27,10 @@ namespace FutsMoniter
         public void OnInit()
         {
             Globals.Debug("Evinited success @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+            
+
+            kryptonRibbonQATButton_debug.Visible = Globals.UIAccess.fm_debug;
+
             if (!Globals.UIAccess.nav_system)
             {
                 tabSystem.Visible = false;

@@ -357,6 +357,7 @@ namespace TradingLib.Common
 
             SendPacket(request);
         }
+
         #endregion
 
 
@@ -891,6 +892,19 @@ namespace TradingLib.Common
         }
 
 
+
+        #region 权限类操作
+
+        public void ReqQryPermmissionTemplateList()
+        {
+            debug("请求查询权限模板列表", QSEnumDebugLevel.INFO);
+
+            this.ReqContribRequest("MgrExchServer", "QueryPermmissionTemplateList", "");
+        }
+
+        #endregion
+
+
         /// <summary>
         /// 调用某个模块 某个命令 某个参数 
         /// </summary>
@@ -919,7 +933,10 @@ namespace TradingLib.Common
 
             SendPacket(request);
         }
-        #endregion 
+
+        
+
+        #endregion
 
         #region 插入成交
         public void ReqInsertTrade(Trade f)

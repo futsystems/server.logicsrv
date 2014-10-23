@@ -15,7 +15,7 @@ using FutSystems.GUI;
 
 namespace FutsMoniter.Controls
 {
-    public partial class ctAccountMontier : UserControl
+    public partial class ctAccountMontier : UserControl,IEventBinder
     {
         #region 事件
         /// <summary>
@@ -44,10 +44,14 @@ namespace FutsMoniter.Controls
 
                 InitAccountMoniterGrid();
 
+                //注册回调
+                Globals.RegIEventHandler(this);
 
                 //StartUpdate();
                 _loaded = true;
                 this.Load += new EventHandler(ctAccountMontier_Load);
+
+
             }
             catch (Exception ex)
             {

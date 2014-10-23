@@ -89,6 +89,8 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.kryptonRibbonGroupButton1 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
             this.popmessage = new System.Windows.Forms.ToolTip(this.components);
+            this.ctAccountMontier1 = new FutsMoniter.Controls.ctAccountMontier();
+            this.kryptonRibbonGroupButton_PermissionTemplate = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
             ((System.ComponentModel.ISupportInitialize)(this.TabRibbon)).BeginInit();
             this.SuspendLayout();
             // 
@@ -120,7 +122,7 @@
             this.tabFinance,
             this.tabHistQuery});
             this.TabRibbon.SelectedContext = null;
-            this.TabRibbon.SelectedTab = this.tabHistQuery;
+            this.TabRibbon.SelectedTab = this.tabBasicConfig;
             this.TabRibbon.Size = new System.Drawing.Size(1284, 111);
             this.TabRibbon.TabIndex = 0;
             // 
@@ -262,7 +264,8 @@
             // kryptonRibbonGroupTriple11
             // 
             this.kryptonRibbonGroupTriple11.Items.AddRange(new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupItem[] {
-            this.kryptonRibbonGroupButton_CfgModule});
+            this.kryptonRibbonGroupButton_CfgModule,
+            this.kryptonRibbonGroupButton_PermissionTemplate});
             // 
             // kryptonRibbonGroupButton_CfgModule
             // 
@@ -432,11 +435,26 @@
             // 
             this.kryptonRibbonGroupButton1.TextLine1 = "品种";
             // 
+            // ctAccountMontier1
+            // 
+            this.ctAccountMontier1.DebugEnable = true;
+            this.ctAccountMontier1.DebugLevel = TradingLib.API.QSEnumDebugLevel.INFO;
+            this.ctAccountMontier1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ctAccountMontier1.Location = new System.Drawing.Point(0, 111);
+            this.ctAccountMontier1.Name = "ctAccountMontier1";
+            this.ctAccountMontier1.Size = new System.Drawing.Size(1284, 582);
+            this.ctAccountMontier1.TabIndex = 2;
+            // 
+            // kryptonRibbonGroupButton_PermissionTemplate
+            // 
+            this.kryptonRibbonGroupButton_PermissionTemplate.TextLine1 = "权限模板";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1284, 715);
+            this.Controls.Add(this.ctAccountMontier1);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.TabRibbon);
             this.DoubleBuffered = true;
@@ -511,6 +529,8 @@
         public ComponentFactory.Krypton.Ribbon.KryptonRibbonGroup kryptonRibbonGroup12;
         private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton_payonline;
         private System.Windows.Forms.ToolTip popmessage;
+        private Controls.ctAccountMontier ctAccountMontier1;
+        private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton_PermissionTemplate;
 
     }
 }

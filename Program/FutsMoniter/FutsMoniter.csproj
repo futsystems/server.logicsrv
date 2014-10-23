@@ -83,6 +83,15 @@
   <ItemGroup>
     <Compile Include="API\IEventBinder.cs" />
     <Compile Include="Common\ManagerUtils.cs" />
+    <Compile Include="Controls\Base\ctTLPermissionEdit.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\Base\ctTLPermissionEdit.Designer.cs">
+      <DependentUpon>ctTLPermissionEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ctAccountMoniter\ctAccountMontier_EventBinder.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Controls\ctCashOperation.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -251,6 +260,12 @@
     <Compile Include="Forms\fmHistQueryCashTrans.Designer.cs">
       <DependentUpon>fmHistQueryCashTrans.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\fmPermissionTemplate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\fmPermissionTemplate.Designer.cs">
+      <DependentUpon>fmPermissionTemplate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\fmPopMessage.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -273,6 +288,9 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\fms\fmAccountconfig\fmAccountConfig_OnXXXX.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\fms\fmAccountconfig\fmAccountConfig_EventBinder.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\fms\fmAddAccount.cs">
@@ -464,13 +482,25 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="MainForm_.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="MainForm_BasicInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm_Client.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MainForm_ContribCallBack.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="MainForm_EventBinder.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="MainForm_LogicHandler.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm_PopMessage.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MainForm_Ribbon.cs">
@@ -479,9 +509,6 @@
     <Compile Include="xxtobedelete\OperationReportForm.cs" />
     <Compile Include="xxtobedelete\OperationReportForm.Designer.cs">
       <DependentUpon>OperationReportForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MainForm_EventBinder.cs">
-      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -493,16 +520,10 @@
       <DependentUpon>StaticForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Utils.cs" />
-    <Compile Include="MainForm_.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="MainForm_Client.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="MainForm_PopMessage.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Globals_RegEvent.cs" />
+    <EmbeddedResource Include="Controls\Base\ctTLPermissionEdit.resx">
+      <DependentUpon>ctTLPermissionEdit.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\ctCashOperation.resx">
       <DependentUpon>ctCashOperation.cs</DependentUpon>
     </EmbeddedResource>
@@ -562,6 +583,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\fmHistQueryCashTrans.resx">
       <DependentUpon>fmHistQueryCashTrans.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\fmPermissionTemplate.resx">
+      <DependentUpon>fmPermissionTemplate.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\fmPopMessage.resx">
       <DependentUpon>fmPopMessage.cs</DependentUpon>
@@ -656,14 +680,14 @@
     <EmbeddedResource Include="Forms\fmHistQueryCashTransAgent.resx">
       <DependentUpon>fmHistQueryCashTransAgent.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="xxtobedelete\OperationReportForm.resx">
       <DependentUpon>OperationReportForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MainForm.resx">
-      <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Properties\Resources.resx">

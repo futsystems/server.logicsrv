@@ -82,6 +82,15 @@ namespace TradingLib.Core
             return null;//递归到父代理 返回默认权限
         }
 
+        /// <summary>
+        /// 获得所有界面访问权限
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable<UIAccess> GetUIAccessList()
+        {
+            return defalutinstance.uiaccessmap.Values;
+        }
+
 
     }
 
