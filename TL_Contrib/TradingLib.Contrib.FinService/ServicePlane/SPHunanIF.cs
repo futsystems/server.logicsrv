@@ -181,6 +181,8 @@ namespace TradingLib.Contrib.FinService
 
 
         }
+
+
         #region 交易业务逻辑部分
 
         /// <summary>
@@ -265,15 +267,19 @@ namespace TradingLib.Contrib.FinService
         /// <returns></returns>
         public override int CanOpenSize(Symbol symbol)
         {
-            //decimal price = TLCtxHelper.Ctx.MessageExchange.GetAvabilePrice(symbol.Symbol);
+            if (!symbol.SecurityFamily.Code.Equals("IF"))
+            {
+                return 0;
+            }
 
-            //decimal fundperlot = Calc.CalFundRequired(symbol, price, 1);
+            decimal price = TLCtxHelper.CmdUtil.GetAvabilePrice(symbol);
 
-            //decimal avabilefund = GetFundAvabile(symbol);
+            decimal fundperlot = Calc.CalFundRequired(symbol, price, 1);
 
-            //TLCtxHelper.Debug("QryCanOpenSize Fundavablie:" + avabilefund.ToString() + " Symbol:" + symbol.Symbol + " Price:" + price.ToString() + " Fundperlot:" + fundperlot.ToString());
-            //return (int)(avabilefund / fundperlot);
-            return 0;
+            decimal avabilefund = GetFundAvabile(symbol);
+
+            Util.Debug("QryCanOpenSize Fundavablie:" + avabilefund.ToString() + " Symbol:" + symbol.Symbol + " Price:" + price.ToString() + " Fundperlot:" + fundperlot.ToString());
+            return (int)(avabilefund / fundperlot);
         }
         #endregion
 

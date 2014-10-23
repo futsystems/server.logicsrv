@@ -15,14 +15,14 @@ namespace TradingLib.Common
         private static TLCtxHelper defaultInstance;
         private TLContext ctx;
 
-        private IndicatorEvent m_IndicatorEvent;
+        private IndicatorEvent m_IndicatorEvent;//交易信息类
         private SessionEvent<TrdClientInfo> m_SessionEvent;
         private AccountEvent m_AccountEvent;
         private ExContribEvent m_ExContribEvent;
         private CashOperationEvent m_CashOperationEvent;
         private SystemEvent m_SystemEvent;
 
-
+        private IUtil m_util;
         public static bool IsReady { get; set; }
 
         static TLCtxHelper()
@@ -138,6 +138,10 @@ namespace TradingLib.Common
         }
 
 
+
+        /// <summary>
+        /// 交易帐号类操作
+        /// </summary>
         public static IAccountOperation CmdAccount
         {
             get
@@ -146,14 +150,10 @@ namespace TradingLib.Common
             }
         }
 
-        //public static IAccountTradingInfo CmdTradingInfo
-        //{
-        //    get
-        //    {
-        //        return defaultInstance.ctx.ClearCentre as IAccountTradingInfo;
-        //    }
-        //}
 
+        /// <summary>
+        /// 交易帐号 操作
+        /// </summary>
         public static IAccountOperationCritical CmdAccountCritical
         {
             get
@@ -163,7 +163,7 @@ namespace TradingLib.Common
         }
 
         /// <summary>
-        /// 认真与出入金请求
+        /// 认证与出入金请求
         /// </summary>
         public static IAuthCashOperation CmdAuthCashOperation
         {
@@ -173,6 +173,9 @@ namespace TradingLib.Common
             }
         }
 
+        /// <summary>
+        /// 结算中心
+        /// </summary>
         public static ISettleCentre CmdSettleCentre
         {
             get
@@ -181,16 +184,10 @@ namespace TradingLib.Common
             }
         }
 
-        //public static IClearCentreOperation CmdClearCentre
-        //{
-        //    get
-        //    {
-        //        //TLCtxHelper.Debug("ClearCenter XXXX :" + (defaultInstance.ctx.ClearCentre is IClearCentreOperation).ToString());
-        //        //return defaultInstance.ctx.ClearCentre as IClearCentreOperation;
-        //        return defaultInstance.ctx.ClearCentre as IClearCentreOperation;
-        //    }
-        //}
 
+        /// <summary>
+        /// 风控中心
+        /// </summary>
         public static IRiskCentre CmdRiskCentre
         {
             get
@@ -198,6 +195,20 @@ namespace TradingLib.Common
                 return defaultInstance.ctx.RiskCentre as IRiskCentre;
             }
         }
+
+        /// <summary>
+        /// 辅助类操作函数
+        /// </summary>
+        public static IUtil CmdUtil
+        {
+            get
+            {
+                if (defaultInstance.m_util == null)
+                    defaultInstance.m_util = new CoreUtil();
+                return defaultInstance.m_util;
+            }
+        }
+
 
         /// <summary>
         /// 系统加载完毕后绑定扩展模块的事件

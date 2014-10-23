@@ -186,6 +186,8 @@ namespace TradingLib.Contrib.FinService
             }
 
         }
+
+
         #region 交易业务逻辑部分
 
         /// <summary>
