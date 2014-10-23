@@ -87,6 +87,34 @@ namespace TradingLib.Core
             }
         }
 
+        /// <summary>
+        /// 更新权限模板
+        /// </summary>
+        /// <param name="session"></param>
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdatePermission", "UpdatePermission - update permission config", "更新权限模板",true)]
+        public void CTE_UpdatePermissionTemplateList(ISession session,string playload)
+        {
+            try
+            {
+                Manager manger = session.GetManager();
+                if (manger.RightRootDomain())
+                {
+                    UIAccess access = Mixins.LitJson.JsonMapper.ToObject<UIAccess>(playload);
+                    //session.SendJsonReplyMgr(UIAccessTracker.GetUIAccessList().ToArray());
+                    UIAccessTracker.UpdateUIAccess(access);//更新
+                }
+                else
+                {
+                    throw new FutsRspError("无权查询权限模板列表");
+                }
+
+            }
+            catch (FutsRspError ex)
+            {
+                session.OperationError(ex);
+            }
+        }
+
 
 
 

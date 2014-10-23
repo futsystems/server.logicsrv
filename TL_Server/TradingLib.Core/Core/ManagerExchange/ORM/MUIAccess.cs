@@ -6,6 +6,8 @@ using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Mixins.DataBase;
 using TradingLib.Mixins.JsonObject;
+using System.Reflection;
+
 
 
 namespace TradingLib.ORM
@@ -50,7 +52,89 @@ namespace TradingLib.ORM
             }
         }
 
+        //UPDATE manager_bankac SET bank_id = '{0}' ,name = '{1}',bank_ac = '{2}',b
 
+        static string GetUpdateString(UIAccess access)
+        {
+            string query = "UPDATE manager_ui_access SET ";
+            PropertyInfo[] propertyInfos = typeof(UIAccess).GetProperties();
+            for (int i = 0; i < propertyInfos.Length;i++)
+            {
+                PropertyInfo pi = propertyInfos[i];
+                if (pi.Name.Equals("id"))
+                    continue;
+                if (pi.Name.Equals("name"))
+                {
+                    query += pi.Name + "='" + pi.GetValue(access, null).ToString() + ((i != propertyInfos.Length - 1) ? "'," : "");
+                    continue;
+                }
+                if (pi.Name.Equals("desp"))
+                {
+                    query += pi.Name + "='" + pi.GetValue(access, null).ToString() + ((i != propertyInfos.Length - 1) ? "'," : "");
+                    continue;
+                }
+                query += pi.Name + "=" + (((bool)pi.GetValue(access, null)) ? 1 : 0).ToString()+ ((i!=propertyInfos.Length-1)?",":"");//不是最后一个属性需要加逗号分开 Desp Name ID需要放到前面
+            }
+
+            query =query + " WHERE id="+((int)typeof(UIAccess).GetProperty("id").GetValue(access,null)).ToString();
+            return query;
+        }
+
+        static string GetInsertString(UIAccess access)
+        {
+            string query = "INSERT INTO manager_ui_access (";
+            PropertyInfo[] propertyInfos = typeof(UIAccess).GetProperties();
+            for (int i = 0; i < propertyInfos.Length; i++)
+            {
+                PropertyInfo pi = propertyInfos[i];
+                if (pi.Name.Equals("id"))
+                    continue;
+                query += "`"+pi.Name+"`" + ((i!=propertyInfos.Length-1)?",":") VALUES(");//不是最后一个属性需要加逗号分开 Desp Name ID需要放到前面
+            }
+            for (int i = 0; i < propertyInfos.Length; i++)
+            {
+                PropertyInfo pi = propertyInfos[i];
+                if (pi.Name.Equals("id"))
+                {
+                    continue;
+                }
+                if (pi.Name.Equals("name"))
+                {
+                    query += "'"+pi.GetValue(access, null).ToString()+"'" + ((i != propertyInfos.Length - 1) ? "," : ")");
+                    continue;
+                }
+                if (pi.Name.Equals("desp"))
+                {
+                    query += "'" + pi.GetValue(access, null).ToString() + "'" + ((i != propertyInfos.Length - 1) ? "," : ")");
+                    continue;
+                }
+
+                query += (((bool)pi.GetValue(access, null)) ? 1 : 0).ToString()+ ((i!=propertyInfos.Length-1)?",":")");//不是最后一个属性需要加逗号分开 Desp Name ID需要放到前面
+            }
+
+            return query;
+        }
+
+        public static bool InsertUIAccess(UIAccess access)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = GetInsertString(access);
+                Util.Debug("insert string:" + query);
+                int row = db.Connection.Execute(query);
+                SetIdentity(db.Connection, id => access.id = id, "id", "manager_ui_access");
+                return row > 0;
+            }
+        }
+        public static bool UpdateUIAccess(UIAccess access)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = GetUpdateString(access);
+                Util.Debug("update string:" + query);
+                return db.Connection.Execute(query)>= 0;
+            }
+        }
 
 
 

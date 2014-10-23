@@ -32,18 +32,69 @@ namespace FutsMoniter
             }
             Globals.RegIEventHandler(this);
             pmlist.SelectedIndexChanged += new EventHandler(pmlist_SelectedIndexChanged);
+            btnSubmit.Click += new EventHandler(btnSubmit_Click);
+            btnSaveAs.Click += new EventHandler(btnSaveAs_Click);
+
         }
+
+        void btnSaveAs_Click(object sender, EventArgs e)
+        {
+            UIAccess access = new UIAccess();
+            access.id = int.Parse(pmlist.SelectedValue.ToString());
+
+            foreach (string key in permissionmap.Keys)
+            {
+                ctTLPermissionEdit edit = permissioneditmap[key];
+                PermissionField field = permissionmap[key];
+
+                //设置值
+                field.Info.SetValue(access, edit.Value, null);
+            }
+            access.id = 0;//用于新建，设置id为0
+            access.name = pmname.Text;
+            access.desp = pmdesp.Text;
+            Globals.TLClient.ReqUpdatePermissionTemplate(access.ToJson());
+        }
+
+        void btnSubmit_Click(object sender, EventArgs e)
+        {
+            UIAccess access = new UIAccess();
+            access.id = int.Parse(pmlist.SelectedValue.ToString());
+
+            foreach (string key in permissionmap.Keys)
+            {
+                ctTLPermissionEdit edit = permissioneditmap[key];
+                PermissionField field = permissionmap[key];
+                
+                //设置值
+                field.Info.SetValue(access,edit.Value,null);
+            }
+            access.name = pmname.Text;
+            access.desp = pmdesp.Text;
+
+            Globals.TLClient.ReqUpdatePermissionTemplate(access.ToJson());
+        }
+
+
+
 
         void pmlist_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (!_loaded) return;
             int id = int.Parse(pmlist.SelectedValue.ToString());
             UIAccess access = accessmap[id];
             
-            if (access == null)
-            { 
-                    
+            if (access != null)
+            {
+                foreach (string key in permissionmap.Keys)
+                {
+                    ctTLPermissionEdit edit = permissioneditmap[key];
+                    PermissionField field = permissionmap[key];
+                    edit.Value = (bool)field.Info.GetValue(access, null);
+                }
+                pmname.Text = access.name;
+                pmdesp.Text = access.desp;
             }
-        
         }
 
 
@@ -60,7 +111,7 @@ namespace FutsMoniter
             Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "QueryPermmissionTemplateList", OnPermissionTemplate);
         }
 
-
+        bool _loaded = false;
         void OnPermissionTemplate(string jsonstr)
         {
             JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
@@ -74,13 +125,15 @@ namespace FutsMoniter
                 }
 
                 Factory.IDataSourceFactory(pmlist).BindDataSource(GetPermissionTemplateListCB());
+                _loaded = true;
             }
+            
         }
 
         Dictionary<int, UIAccess> accessmap = new Dictionary<int, UIAccess>();
         void GotUIAccess(UIAccess access)
         {
-            accessmap.Add(access.ID, access);
+            accessmap.Add(access.id, access);
         }
 
 
@@ -91,8 +144,9 @@ namespace FutsMoniter
             foreach(UIAccess access in accessmap.Values)
             {
                 ValueObject<int> vo = new ValueObject<int>();
-                vo.Name = access.Name;
-                vo.Value = access.ID;
+                vo.Name = access.id.ToString()+"-"+access.name;
+                
+                vo.Value = access.id;
                 list.Add(vo);
             }
             return list;

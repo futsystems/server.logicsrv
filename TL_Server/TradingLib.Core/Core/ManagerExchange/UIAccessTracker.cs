@@ -31,7 +31,7 @@ namespace TradingLib.Core
             //加载访问权限对象到内存
             foreach(UIAccess  a in ORM.MUIAccess.SelectUIAccess())
             {
-                uiaccessmap.TryAdd(a.ID, a);
+                uiaccessmap.TryAdd(a.id, a);
             }
 
             foreach (Manager2UIACcess access in ORM.MUIAccess.SelectManager2UIAccess())
@@ -91,6 +91,20 @@ namespace TradingLib.Core
             return defalutinstance.uiaccessmap.Values;
         }
 
+
+        public static void UpdateUIAccess(UIAccess access)
+        {
+            if (defalutinstance.uiaccessmap.Keys.Contains(access.id))
+            {
+                defalutinstance.uiaccessmap[access.id] = access;
+                ORM.MUIAccess.UpdateUIAccess(access);
+            }
+            else
+            {
+                ORM.MUIAccess.InsertUIAccess(access);
+                defalutinstance.uiaccessmap[access.id] = access;
+            }
+        }
 
     }
 

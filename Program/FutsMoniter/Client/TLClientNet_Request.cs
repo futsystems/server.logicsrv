@@ -895,6 +895,9 @@ namespace TradingLib.Common
 
         #region 权限类操作
 
+        /// <summary>
+        /// 查询所有权限模板
+        /// </summary>
         public void ReqQryPermmissionTemplateList()
         {
             debug("请求查询权限模板列表", QSEnumDebugLevel.INFO);
@@ -902,6 +905,17 @@ namespace TradingLib.Common
             this.ReqContribRequest("MgrExchServer", "QueryPermmissionTemplateList", "");
         }
 
+
+        /// <summary>
+        /// 更新某个权限模板
+        /// </summary>
+        /// <param name="jsonstr"></param>
+        public void ReqUpdatePermissionTemplate(string jsonstr)
+        {
+            debug("请求更新权限模板", QSEnumDebugLevel.INFO);
+
+            this.ReqContribRequest("MgrExchServer", "UpdatePermission", jsonstr);
+        }
         #endregion
 
 

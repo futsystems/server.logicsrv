@@ -44,7 +44,7 @@
             this.kryptonPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.kryptonPanel1.Location = new System.Drawing.Point(0, 0);
             this.kryptonPanel1.Name = "kryptonPanel1";
-            this.kryptonPanel1.Size = new System.Drawing.Size(676, 25);
+            this.kryptonPanel1.Size = new System.Drawing.Size(670, 25);
             this.kryptonPanel1.TabIndex = 0;
             // 
             // pmDesp
@@ -79,7 +79,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.kryptonPanel1);
             this.Name = "ctTLPermissionEdit";
-            this.Size = new System.Drawing.Size(676, 25);
+            this.Size = new System.Drawing.Size(670, 25);
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).EndInit();
             this.kryptonPanel1.ResumeLayout(false);
             this.kryptonPanel1.PerformLayout();

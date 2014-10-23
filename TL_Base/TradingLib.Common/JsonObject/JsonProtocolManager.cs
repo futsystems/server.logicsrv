@@ -427,14 +427,17 @@ namespace TradingLib.Mixins.JsonObject
         /// <summary>
         /// 数据库ID
         /// </summary>
-        public int ID { get; set; }
+        public int id { get; set; }
 
         /// <summary>
         /// 界面权限名称
         /// </summary>
-        public string Name { get; set; }
+        public string name { get; set; }
 
-
+        /// <summary>
+        /// 描述
+        /// </summary>
+        public string desp { get; set; }
         /// <summary>
         /// 日志窗口显示
         /// </summary>
