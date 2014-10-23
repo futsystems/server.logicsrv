@@ -416,4 +416,147 @@ namespace TradingLib.Mixins.JsonObject
         /// </summary>
         public string Comment { get; set; }
     }
+
+
+    /// <summary>
+    /// 管理端界面权限
+    /// 用于控制管理端的界面元素的现实
+    /// </summary>
+    public class UIAccess : JsonObjectBase
+    {
+        /// <summary>
+        /// 数据库ID
+        /// </summary>
+        public int ID { get; set; }
+
+        /// <summary>
+        /// 界面权限名称
+        /// </summary>
+        public string Name { get; set; }
+
+
+        /// <summary>
+        /// 头部导航 系统管理
+        /// </summary>
+        public bool nav_system { get; set; }
+
+
+        /// <summary>
+        /// 系统管理-开启清算中心
+        /// </summary>
+        public bool nav_system_ccopen { get; set; }
+
+        /// <summary>
+        /// 系统管理-关闭清算中心
+        /// </summary>
+        public bool nav_system_ccclose { get; set; }
+
+
+        /// <summary>
+        /// 系统管理-路由列表
+        /// </summary>
+        public bool nav_system_router { get; set; }
+
+        /// <summary>
+        /// 系统管理-内核状态
+        /// </summary>
+        public bool nav_system_corestatus { get; set; }
+
+        /// <summary>
+        /// 基础数据
+        /// </summary>
+        public bool nav_basic { get; set; }
+
+        /// <summary>
+        /// 基础数据-交易时间段
+        /// </summary>
+        public bool nav_basic_mktime { get; set; }
+
+        /// <summary>
+        /// 基础数据-交易所
+        /// </summary>
+        public bool nav_basic_exchange { get; set; }
+
+        /// <summary>
+        /// 基础数据-品种管理
+        /// </summary>
+        public bool nav_basic_security { get; set; }
+
+        /// <summary>
+        /// 基础数据-合约管理
+        /// </summary>
+        public bool nav_basic_symbol { get; set; }
+
+        /// <summary>
+        /// 柜员管理
+        /// </summary>
+        public bool nav_manager { get; set; }
+
+        /// <summary>
+        /// 柜员管理-柜员列表
+        /// </summary>
+        public bool nav_manager_management { get; set; }
+
+        /// <summary>
+        /// 柜员管理-资费管理
+        /// </summary>
+        public bool nav_manager_feeconfig { get; set; }
+
+        /// <summary>
+        /// 财务管理
+        /// </summary>
+        public bool nav_finance { get; set; }
+
+        /// <summary>
+        /// 财务管理-财务中心
+        /// </summary>
+        public bool nav_finance_fincentre { get; set; }
+
+        /// <summary>
+        /// 财务管理-在线支付
+        /// </summary>
+        public bool nav_finance_payonline { get; set; }
+
+        /// <summary>
+        /// 财务管理-出纳管理
+        /// </summary>
+        public bool nav_finance_cashercentre { get; set; }
+
+        /// <summary>
+        /// 记录与报表
+        /// </summary>
+        public bool nav_report { get; set; }
+
+        /// <summary>
+        /// 记录报表-记录查询
+        /// </summary>
+        public bool nav_report_acchistinfo { get; set; }
+
+        /// <summary>
+        /// 记录报表-出入金查询
+        /// </summary>
+        public bool nav_report_acccashtrans { get; set; }
+
+        /// <summary>
+        /// 记录报表-结算单
+        /// </summary>
+        public bool nav_report_accsettlement { get; set; }
+
+
+        /// <summary>
+        /// 记录报表-代理出入金
+        /// </summary>
+        public bool nav_report_agentcashtrans { get; set; }
+
+
+        /// <summary>
+        /// 记录报表-代理结算
+        /// </summary>
+        public bool nav_report_agentsettlement { get; set; }
+
+        /// <summary>
+        /// 代理分润
+        /// </summary>
+        public bool nav_report_agentreport { get; set; }
+    }
 }

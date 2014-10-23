@@ -45,7 +45,7 @@ namespace FutsMoniter.Controls
                 InitAccountMoniterGrid();
 
 
-                StartUpdate();
+                //StartUpdate();
                 _loaded = true;
                 this.Load += new EventHandler(ctAccountMontier_Load);
             }

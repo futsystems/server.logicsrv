@@ -11,7 +11,7 @@ using TradingLib.Common;
 
 namespace FutsMoniter
 {
-    public partial class MainForm : ComponentFactory.Krypton.Toolkit.KryptonForm, ILogicHandler, ICallbackCentre
+    public partial class MainForm : ComponentFactory.Krypton.Toolkit.KryptonForm, ILogicHandler, ICallbackCentre,IEventBinder
     {
 
         Log logfile = null;
@@ -57,7 +57,10 @@ namespace FutsMoniter
         {
             //绑定回调函数
             Globals.RegisterCallBackCentre(this);
-            Globals.RegInitCallback(OnInitFinished);
+
+            
+
+            //初始化界面控件
             InitializeComponent();
 
 
@@ -73,13 +76,17 @@ namespace FutsMoniter
             {
                 this.Icon = Properties.Resources.moniter_oem;
             }
+
+
             Init();
             _timer = new System.Threading.Timer(FakeOutStatus, null, 800, 150);
 
             InitBW();
             this.FormClosing += new FormClosingEventHandler(MainForm_FormClosing);
             this.Load += new EventHandler(MainForm_Load);
+            ctAccountMontier1.Start();
 
+            Globals.RegIEventHandler(this);
         }
 
         void MainForm_Load(object sender, EventArgs e)
@@ -94,7 +101,7 @@ namespace FutsMoniter
 
 
 
-
+       
 
 
         public void Init()

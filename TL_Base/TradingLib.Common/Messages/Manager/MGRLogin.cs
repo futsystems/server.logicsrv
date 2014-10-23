@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TradingLib.API;
+using TradingLib.Mixins.LitJson;
+using TradingLib.Mixins.JsonObject;
 
 namespace TradingLib.Common
 {
@@ -79,6 +81,11 @@ namespace TradingLib.Common
         /// </summary>
         public int MGRID { get; set; }
 
+        /// <summary>
+        /// 界面权限
+        /// </summary>
+        public UIAccess UIAccess { get; set; }
+
 
         public RspMGRLoginResponse()
         {
@@ -90,6 +97,7 @@ namespace TradingLib.Common
             QQ = string.Empty;
             MGRID = 0;
             BaseMGRFK = 0;
+            UIAccess = new UIAccess();
         }
 
         public override string ResponseSerialize()
@@ -111,14 +119,16 @@ namespace TradingLib.Common
             sb.Append(this.BaseMGRFK.ToString());
             sb.Append(d);
             sb.Append(this.MGRID.ToString());
+            sb.Append(d);
+            sb.Append(this.UIAccess.ToJson());
             return sb.ToString();
             
         }
 
         public override void ResponseDeserialize(string content)
         {
-            string[] rec = content.Split(',');
-            this.LoginID = rec[0];
+            string[] rec = content.Split(new char[]{','},9);
+            this.LoginID = rec[0];//1
             this.Name = rec[1];
             this.ManagerType = (QSEnumManagerType)Enum.Parse(typeof(QSEnumManagerType), rec[2]);
             this.Mobile = rec[3];
@@ -126,6 +136,7 @@ namespace TradingLib.Common
             this.Authorized = bool.Parse(rec[5]);
             this.BaseMGRFK = int.Parse(rec[6]);
             this.MGRID = int.Parse(rec[7]);
+            this.UIAccess = Mixins.LitJson.JsonMapper.ToObject<UIAccess>(rec[8]);
         }
     }
 }

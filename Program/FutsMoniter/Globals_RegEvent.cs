@@ -54,16 +54,33 @@ namespace FutsMoniter
 
 
 
-        public static void RegIEventHandler(UserControl control)
+        public static void RegIEventHandler(object control)
         {
-            if (control is IEventBinder)
+            if (control is UserControl)
             {
-                IEventBinder h = control as IEventBinder;
-                //注册初始化完成事件响应函数 用于响应初始化完成事件 当对象在初始化完成之前创建 需要在完成初始化后 加载基础数据
-                Globals.RegInitCallback(h.OnInit);
-                //将组件销毁的事件与对应的注销函数进行绑定
-                control.Disposed += (s, e) => { h.OnDisposed();};   
+                if (control is IEventBinder)
+                {
+                    IEventBinder h = control as IEventBinder;
+                    //注册初始化完成事件响应函数 用于响应初始化完成事件 当对象在初始化完成之前创建 需要在完成初始化后 加载基础数据
+                    Globals.RegInitCallback(h.OnInit);
+                    //将组件销毁的事件与对应的注销函数进行绑定
+                    (control as UserControl).Disposed += (s, e) => { h.OnDisposed(); };
+                }
             }
+
+            if (control is ComponentFactory.Krypton.Toolkit.KryptonForm)
+            {
+                if (control is IEventBinder)
+                {
+                    IEventBinder h = control as IEventBinder;
+                    //注册初始化完成事件响应函数 用于响应初始化完成事件 当对象在初始化完成之前创建 需要在完成初始化后 加载基础数据
+                    Globals.RegInitCallback(h.OnInit);
+                    //将组件销毁的事件与对应的注销函数进行绑定
+                    (control as ComponentFactory.Krypton.Toolkit.KryptonForm).Disposed += (s, e) => { h.OnDisposed(); };
+                }
+            }
+
+
 
 
         }

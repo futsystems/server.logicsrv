@@ -59,8 +59,6 @@
             this.kryptonRibbonGroup5 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroup();
             this.kryptonRibbonGroupTriple11 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupTriple();
             this.kryptonRibbonGroupButton_CfgModule = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
-            this.kryptonRibbonGroupButton6 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
-            this.kryptonRibbonGroupButton9 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
             this.tabAgent = new ComponentFactory.Krypton.Ribbon.KryptonRibbonTab();
             this.kryptonRibbonGroup9 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroup();
             this.kryptonRibbonGroupTriple9 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupTriple();
@@ -91,7 +89,6 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.kryptonRibbonGroupButton1 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
             this.popmessage = new System.Windows.Forms.ToolTip(this.components);
-            this.ctAccountMontier1 = new FutsMoniter.Controls.ctAccountMontier();
             ((System.ComponentModel.ISupportInitialize)(this.TabRibbon)).BeginInit();
             this.SuspendLayout();
             // 
@@ -265,9 +262,7 @@
             // kryptonRibbonGroupTriple11
             // 
             this.kryptonRibbonGroupTriple11.Items.AddRange(new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupItem[] {
-            this.kryptonRibbonGroupButton_CfgModule,
-            this.kryptonRibbonGroupButton6,
-            this.kryptonRibbonGroupButton9});
+            this.kryptonRibbonGroupButton_CfgModule});
             // 
             // kryptonRibbonGroupButton_CfgModule
             // 
@@ -437,22 +432,11 @@
             // 
             this.kryptonRibbonGroupButton1.TextLine1 = "品种";
             // 
-            // ctAccountMontier1
-            // 
-            this.ctAccountMontier1.DebugEnable = true;
-            this.ctAccountMontier1.DebugLevel = TradingLib.API.QSEnumDebugLevel.INFO;
-            this.ctAccountMontier1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ctAccountMontier1.Location = new System.Drawing.Point(0, 111);
-            this.ctAccountMontier1.Name = "ctAccountMontier1";
-            this.ctAccountMontier1.Size = new System.Drawing.Size(1284, 582);
-            this.ctAccountMontier1.TabIndex = 2;
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1284, 715);
-            this.Controls.Add(this.ctAccountMontier1);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.TabRibbon);
             this.DoubleBuffered = true;
@@ -516,8 +500,6 @@
         private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton_FinanceManagement;
         private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupTriple kryptonRibbonGroupTriple11;
         private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton_CfgModule;
-        private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton6;
-        private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton9;
         private ComponentFactory.Krypton.Ribbon.KryptonRibbonQATButton kryptonRibbonQATButton_debug;
         private ComponentFactory.Krypton.Toolkit.KryptonContextMenuItem kryptonContextMenuItem_exit;
         private ComponentFactory.Krypton.Toolkit.KryptonContextMenuItem kryptonContextMenuItem1;
@@ -529,7 +511,6 @@
         public ComponentFactory.Krypton.Ribbon.KryptonRibbonGroup kryptonRibbonGroup12;
         private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton_payonline;
         private System.Windows.Forms.ToolTip popmessage;
-        private Controls.ctAccountMontier ctAccountMontier1;
 
     }
 }

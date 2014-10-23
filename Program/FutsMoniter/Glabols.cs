@@ -5,6 +5,7 @@ using System.Text;
 using System.Drawing;
 using TradingLib.API;
 using TradingLib.Common;
+using TradingLib.Mixins.JsonObject;
 
 namespace FutsMoniter
 {
@@ -34,6 +35,14 @@ namespace FutsMoniter
         /// 登入回报 用于获得登入基本信息
         /// </summary>
         public static RspMGRLoginResponse LoginResponse { get; set; }
+
+        /// <summary>
+        /// 获得全局界面访问权限对象
+        /// </summary>
+        public static UIAccess UIAccess { get { return LoginResponse.UIAccess; } }
+
+
+
         /// <summary>
         /// 管理主域ID
         /// </summary>
