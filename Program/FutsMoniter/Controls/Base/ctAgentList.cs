@@ -98,22 +98,6 @@ namespace FutsMoniter
             InitializeComponent();
 
             Globals.RegIEventHandler(this);
-            //如果已经初始化完成 则直接读取数据填充 否则将资金放入事件回调中
-            //if (Globals.EnvReady)
-            //{
-            //    InitAgentList();   
-            //}
-            //else
-            //{
-            //    if (Globals.CallbackCentreReady)//回调初始化后在加入回调，当系统初始化完毕后 通过回调更新列表
-            //    {
-            //        Globals.RegInitCallback(OnInitFinished);
-
-            //        //订阅Manager变动事件
-            //        Globals.CallBackCentre.RegisterCallback("MgrExchServer", "NotifyManagerUpdate", OnManagerNotify);
-            //    }
-            //}
-            //this.Disposed += new EventHandler(ctAgentList_Disposed);
             this.Load += new EventHandler(ctAgentList_Load);
         }
 

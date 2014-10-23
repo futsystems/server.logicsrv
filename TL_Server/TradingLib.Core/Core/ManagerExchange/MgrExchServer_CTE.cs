@@ -115,6 +115,56 @@ namespace TradingLib.Core
             }
         }
 
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QueryAgentPermission", "QueryAgentPermission - query agent permission", "查询某个代理的权限设置")]
+        public void CTE_QueryAgentPermission(ISession session, int managerid)
+        {
+            try
+            {
+                Manager manger = session.GetManager();
+                if (manger.RightRootDomain())
+                {
+
+                    UIAccess access = UIAccessTracker.GetAgentUIAccess(managerid);
+                    session.SendJsonReplyMgr(access);
+                }
+                else
+                {
+                    throw new FutsRspError("无权查询代理权限设置");
+                }
+            }
+            catch (FutsRspError ex)
+            {
+                session.OperationError(ex);
+            }
+        }
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAgentPermission", "UpdateAgentPermission - updaet agent permission", "更新管理员的权限设置")]
+        public void CTE_UpdateAgentPermission(ISession session,int managerid,int accessid)
+        {
+             try
+            {
+                Manager manger = session.GetManager();
+                if (manger.RightRootDomain())
+                {
+                    Manager m = BasicTracker.ManagerTracker[managerid];
+                    if (m == null)
+                    {
+                        throw new FutsRspError("指定的管理员不存在");
+                    }
+                    UIAccessTracker.UpdateAgentPermission(managerid, accessid);
+                    
+                }
+                else
+                {
+                    throw new FutsRspError("无权更新代理权限设置");
+                }
+            }
+            catch (FutsRspError ex)
+            {
+                session.OperationError(ex);
+            }
+        }
+
 
 
 

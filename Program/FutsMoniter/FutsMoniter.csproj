@@ -254,6 +254,12 @@
     <Compile Include="Controls\ctAccountMoniter\ctAccountMontier.Designer.cs">
       <DependentUpon>ctAccountMontier.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\fmAgentPermission.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\fmAgentPermission.Designer.cs">
+      <DependentUpon>fmAgentPermission.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\fmHistQueryCashTrans.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -580,6 +586,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\ctAccountMoniter\ctAccountMontier.resx">
       <DependentUpon>ctAccountMontier.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\fmAgentPermission.resx">
+      <DependentUpon>fmAgentPermission.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\fmHistQueryCashTrans.resx">
       <DependentUpon>fmHistQueryCashTrans.cs</DependentUpon>

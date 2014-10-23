@@ -47,7 +47,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = "SELECT * FROM manager_ui_access_to_manager";
+                string query = "SELECT * FROM manager_ui_manager_to_access";
                 return db.Connection.Query<Manager2UIACcess>(query);
             }
         }
@@ -135,6 +135,43 @@ namespace TradingLib.ORM
                 return db.Connection.Execute(query)>= 0;
             }
         }
+
+
+
+        /// <summary>
+        /// 更新代理的权限模板
+        /// </summary>
+        /// <param name="managerid"></param>
+        /// <param name="accessid"></param>
+        /// <returns></returns>
+        public static bool UpdateManagerPermissionSet(int managerid, int accessid)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("UPDATE manager_ui_manager_to_access SET access_id ='{0}' WHERE manager_id='{1}'", accessid, managerid);
+                int row = db.Connection.Execute(query);
+                return row > 0;
+            }
+        }
+
+        /// <summary>
+        /// 插入代理权限设置
+        /// </summary>
+        /// <param name="managerid"></param>
+        /// <param name="accessid"></param>
+        /// <returns></returns>
+        public static bool InsertManagerPermissionSet(int managerid, int accessid)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("INSERT INTO manager_ui_manager_to_access (manager_id,access_id) VALUES ('{0}','{1}')", managerid, accessid);
+                int row = db.Connection.Execute(query);
+                return row > 0;
+            }
+        }
+
+
+
 
 
 

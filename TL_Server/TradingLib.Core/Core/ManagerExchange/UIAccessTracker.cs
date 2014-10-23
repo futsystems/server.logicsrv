@@ -41,6 +41,42 @@ namespace TradingLib.Core
         }
 
         /// <summary>
+        /// 获得某个代理的UIAccess
+        /// </summary>
+        /// <param name="managerid"></param>
+        /// <returns></returns>
+        public static UIAccess GetAgentUIAccess(int managerid)
+        {
+            if (defalutinstance.manageruiidxmap.Keys.Contains(managerid))
+            {
+                return defalutinstance.uiaccessmap[defalutinstance.manageruiidxmap[managerid]];
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 更新某个Manager的权限设置
+        /// </summary>
+        /// <param name="managerid"></param>
+        /// <param name="accessid"></param>
+        public static void UpdateAgentPermission(int managerid, int accessid)
+        {
+            if (!defalutinstance.uiaccessmap.Keys.Contains(accessid))
+            {
+                throw new FutsRspError("指定权限不存在");
+            }
+            if (defalutinstance.manageruiidxmap.Keys.Contains(managerid))
+            {
+                //更新
+                defalutinstance.manageruiidxmap[managerid] = accessid;
+                ORM.MUIAccess.UpdateManagerPermissionSet(managerid, accessid);
+            }
+            //新增
+            defalutinstance.manageruiidxmap[managerid] = accessid;
+            ORM.MUIAccess.InsertManagerPermissionSet(managerid, accessid);
+        }
+
+        /// <summary>
         /// 获得某个管理员的UIAccess
         /// 1.如果有指定的权限则使用该权限
         /// 2.如果指定则使用主域权限

@@ -48,7 +48,7 @@ namespace FutsMoniter
             //柜员管理
             kryptonRibbonGroupButton_AgentManagement.Click += new EventHandler(kryptonRibbonGroupButton_AgentManagement_Click);
             kryptonRibbonGroupButton_AgentCost.Click += new EventHandler(kryptonRibbonGroupButton_AgentCost_Click);
-
+            kryptonRibbonGroupButton_PermissionAgent.Click += new EventHandler(kryptonRibbonGroupButton_PermissionAgent_Click);
 
             //财务管理
             kryptonRibbonGroupButton_FinanceManagement.Click += new EventHandler(kryptonRibbonGroupButton_FinanceManagement_Click);
@@ -56,6 +56,12 @@ namespace FutsMoniter
 
 
             kryptonRibbonGroupButton_payonline.Click += new EventHandler(kryptonRibbonGroupButton_payonline_Click);
+        }
+
+        void kryptonRibbonGroupButton_PermissionAgent_Click(object sender, EventArgs e)
+        {
+            fmAgentPermission fm = new fmAgentPermission();
+            fm.Show();//.ShowDialog();
         }
 
         void kryptonRibbonGroupButton_PermissionTemplate_Click(object sender, EventArgs e)
