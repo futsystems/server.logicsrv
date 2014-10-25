@@ -808,7 +808,8 @@ namespace Broker.SIM
                 }
                 //debug("------------------------------------------------------1", QSEnumDebugLevel.INFO);
                 IEnumerable<Trade> trades = _clearCentre.GetTradesViaBroker(this.GetType().FullName);
-                _fillseq = trades.Count() > 0 ? trades.Max(f => int.Parse(f.BrokerKey)) : _fillseq;
+                //tryparse用于避免非数字brokerkey造成的异常
+                _fillseq = trades.Count() > 0 ? trades.Max(f => { int seq = 0; int.TryParse(f.BrokerKey, out seq); return seq; }) : _fillseq;
                 //debug("------------------------------------------------------2", QSEnumDebugLevel.INFO);
                 debug("Max Fill Seq:" + _fillseq.ToString(), QSEnumDebugLevel.INFO);
             }
