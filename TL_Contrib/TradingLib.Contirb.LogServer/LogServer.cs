@@ -111,6 +111,8 @@ namespace TradingLib.Contirb.LogServer
         /// <param name="l"></param>
         void SaveLog(ILogItem l)
         {
+            if (l == null)
+                return;
             switch (l.Level)
             {
                 case QSEnumDebugLevel.ERROR:
@@ -140,6 +142,8 @@ namespace TradingLib.Contirb.LogServer
         /// <param name="l"></param>
         void SendLog(ILogItem l)
         {
+            if (l != null)
+                return;
             /**
              * 通过网路分发日志,方便在其他服务器上通过网络连接到日志服务器上获取实时日志
              * 

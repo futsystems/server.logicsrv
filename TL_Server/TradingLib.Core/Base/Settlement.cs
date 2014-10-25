@@ -72,6 +72,15 @@ namespace TradingLib.Core
             header1 = _cfgdb["Header1"].AsString();
             
         }
+        public static string Line(int num)
+        {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < num; i++)
+            {
+                sb.Append("-");
+            }
+            return sb.ToString();
+        }
         public static List<string> GenSettlementFile(Settlement s,IAccount account)
         {
             List<string> settlelist = new List<string>();
@@ -108,13 +117,25 @@ namespace TradingLib.Core
             //输出成交明细
             if (trades.Count > 0)
             {
+                int ln = 123;
+                string sline = Line(ln);
                 settlelist.Add(SectionName("成交明细"));
-                settlelist.Add(line);
+                settlelist.Add(sline);
                 //settlelist.Add("|成交日期|交易所|品种|合约|买卖|投保|成交价|手数|成交额|开平|手续费|平仓盈亏|成交序号".Replace('|', '*'));
                 settlelist.Add(string.Format("|{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|{10}|{11}|{12}|", padRightEx("成交日期", 10), padRightEx("交易所", 8), padRightEx("品种", 20), padRightEx("合约", 10), padRightEx("买卖", 4), padRightEx("投保", 4), padRightEx("成交价", 8), padRightEx("手数", 4), padRightEx("成交额", 10), padRightEx("开平", 4), padRightEx("手续费", 8), padRightEx("平仓盈亏", 10), padRightEx("成交序号", 10)).Replace('|', '*'));
+                settlelist.Add(sline);
+                int i = 0;
+                int size = 0;
+                decimal tunover = 0;
+                decimal commission = 0;
+                decimal profit = 0;
                 foreach (Trade t in trades)
                 {
-
+                    i++;
+                    size += Math.Abs(t.xsize);
+                    tunover += BasicTracker.SecurityTracker.GetMultiple(t.SecurityCode) * t.xprice * Math.Abs(t.xsize);
+                    commission += t.Commission;
+                    profit += t.Profit;
                     settlelist.Add(string.Format(" {0} {1} {2} {3} {4} {5} {6,8:F2} {7,4} {8,10:F2} {9} {10,6:F2} {11,10:F2} {12,10}", 
                         t.xdate.ToString().PadRight(10), //成交日期
                         padRightEx(BasicTracker.ExchagneTracker.GetExchangeTitle(t.Exchange), 8),//交易所
@@ -131,6 +152,23 @@ namespace TradingLib.Core
                         t.BrokerKey));//成交序号
                 }
 
+                settlelist.Add(sline);
+                settlelist.Add(string.Format(" {0} {1} {2} {3} {4} {5} {6} {7,4} {8,10:F2} {9} {10,6:F2} {11,10:F2} {12,10}",
+                        padRightEx("共"+i.ToString()+"条",10), //成交日期
+                        padRightEx("", 8),//交易所
+                        padRightEx("", 20),//品种
+                        padRightEx("", 10), //合约
+                        padRightEx("", 4), //买卖 3
+                        padRightEx("", 4),//头保
+                        padRightEx("", 8), //成交价 6
+                        size, //手数量 7
+                        tunover,//成交额
+                        padRightEx("", 4), //开平
+                        commission, //手续费
+                        profit,//平仓盈亏
+                        padRightEx("", 10)));//成交序号
+
+                settlelist.Add(sline);
                 settlelist.Add(NewLine);
                 settlelist.Add(NewLine);
             }
@@ -139,13 +177,21 @@ namespace TradingLib.Core
             IEnumerable<Trade> flattrades = trades.Where(t => !t.IsEntryPosition);
             if (flattrades.Count() > 0)//平仓成交数量大于0 则输出明细
             {
+                int ln = 118;
+                string sline = Line(ln);
                 settlelist.Add(SectionName("平仓明细"));
-                settlelist.Add(line);
+                settlelist.Add(sline);
                 //settlelist.Add("|平仓日期|交易所|品种|合约|开仓日期|买卖|手数|开仓价|昨结算|成交价格|平仓盈亏|".Replace('|', '*'));
                 settlelist.Add(string.Format("|{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|{10}|", padRightEx("平仓日期", 10), padRightEx("交易所", 8), padRightEx("品种", 20), padRightEx("合约", 10), padRightEx("开仓日期", 10), padRightEx("买卖", 4), padRightEx("手数", 4), padRightEx("开仓价",10), padRightEx("昨结算",10), padRightEx("成交价", 10), padRightEx("平仓盈亏", 10)).Replace('|', '*'));
+                settlelist.Add(sline);
+                int i=0;
+                int size=0;
+                decimal profit=0;
                 foreach (Trade t in flattrades)
                 {
-                                                                   //                               
+                    i++;                                             
+                    size +=    Math.Abs(t.xsize);
+                    profit += t.Profit;
                     settlelist.Add(string.Format(" {0} {1} {2} {3} {4} {5} {6,4} {7,10:F2} {8,10:F2} {9,10:F2} {10,10:F2}", 
                         t.xdate.ToString().PadRight(10), //平仓日期
                         padRightEx(BasicTracker.ExchagneTracker.GetExchangeTitle(t.Exchange), 8),//交易所
@@ -160,6 +206,21 @@ namespace TradingLib.Core
                         t.Profit//平仓盈亏
                         ));
                 }
+                settlelist.Add(sline);
+                settlelist.Add(string.Format(" {0} {1} {2} {3} {4} {5} {6,4} {7} {8} {9} {10,10:F2}",
+                        padRightEx("共"+i.ToString()+"条",10), //平仓日期
+                        padRightEx("", 8),//交易所
+                        padRightEx("", 20),//品种
+                        padRightEx("", 10), //合约
+                        padRightEx("", 10),//开仓日期
+                        padRightEx("", 4), //买卖
+                        size, //手数 6
+                        padRightEx("", 10),//开仓价  7
+                        padRightEx("", 10),//昨结算
+                        padRightEx("", 10), //成交价
+                        profit//平仓盈亏
+                        ));
+                settlelist.Add(sline);
                 settlelist.Add(NewLine);
                 settlelist.Add(NewLine);
             }
@@ -168,17 +229,25 @@ namespace TradingLib.Core
             //输出持仓明细
             if (positions.Count > 0)
             {
+                int ln = 85;
+                string sline = Line(ln);
                 settlelist.Add(SectionName("持仓汇总"));
-                settlelist.Add(line);
+                settlelist.Add(sline);
 
-                settlelist.Add("|   合约   |买持| 买均价 |卖持| 卖均价 | 昨结算 | 今结算 |盯市盈亏|保证金占用|投保".Replace('|', '*'));
-                
+                settlelist.Add("|   合约   |买持| 买均价 |卖持| 卖均价 | 昨结算 | 今结算 |盯市盈亏|保证金占用|投保|".Replace('|', '*'));
+                settlelist.Add(sline);
+                int i=0;
+                int lsize = 0;
+                int ssize = 0;
+                decimal profit = 0;
+                decimal tmargin = 0;
                 Dictionary<string, List<SettlePosition>> ret = GenPositionPairMap(positions);
                 foreach (string key in ret.Keys)
                 {
                     List<SettlePosition> list = ret[key];
                     if (list.Count > 0)
                     {
+                        i++;
                         string symbol = list[0].Symbol;
                         int longsize = list.Where(pos => pos.Size > 0).Sum(pos => pos.Size);
                         decimal longavgprice = longsize>0?list.Where(pos => pos.Size > 0).Sum(pos => pos.Size * pos.AVGPrice) / longsize : 0;
@@ -188,9 +257,25 @@ namespace TradingLib.Core
                         decimal settleunpl = list.Sum(pos=> pos.Size * (pos.SettlePrice - pos.AVGPrice) * pos.Multiple);
                         decimal lmargin = list.Sum(pos => pos.Margin);
                         settlelist.Add(string.Format(" {0,-10} {1,4} {2,8:F2} {3,4} {4,8:F2} {5,8:F2} {6,8:F2} {7,8:F2} {8,10:F2} {9,4}", symbol, longsize, longavgprice, shortsize, shortavgprice, 0, settleprice, settleunpl, lmargin, "投"));
+                        lsize += longsize;
+                        ssize += shortsize;
+                        profit += settleunpl;
+                        tmargin += lmargin;
                     }
                 }
-
+                settlelist.Add(sline);
+                settlelist.Add(string.Format(" {0,-10} {1,4} {2,8} {3,4} {4,8} {5,8} {6,8} {7,8:F2} {8,10:F2} {9,4}",
+                    "共"+i.ToString()+"条", //0
+                    lsize, //1
+                    "",//2 
+                    ssize, //3
+                    "", 
+                    "", 
+                    "", 
+                    profit, 
+                    margin, 
+                    ""));
+                settlelist.Add(sline);
                 settlelist.Add(NewLine);
                 settlelist.Add(NewLine);
             }

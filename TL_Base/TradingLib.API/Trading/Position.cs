@@ -108,7 +108,7 @@ namespace TradingLib.API
         /// <summary>
         /// 返回所有成交
         /// </summary>
-        Trade[] Trades { get; }
+        IEnumerable<Trade> Trades { get; }
 
         /// <summary>
         /// 转换成等效成交

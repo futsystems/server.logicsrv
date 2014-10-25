@@ -395,13 +395,13 @@ namespace TradingLib.Common
 
 
         /// <summary>
-        /// 返回该持仓当日所有成交列表
+        /// 返回该持仓当日所有成交列表 用于结算时候进行持仓明细计算
         /// </summary>
-        public Trade[] Trades
+        public IEnumerable<Trade> Trades
         {
             get
             {
-                return _tradelist.ToArray();
+                return _tradelist;
             }
         }
         ThreadSafeList<Trade> _tradelist = new ThreadSafeList<Trade>();
@@ -448,6 +448,7 @@ namespace TradingLib.Common
 
         /// <summary>
         /// Adjusts the position by applying a new trade or fill.
+        /// 这里记录了日内所有成交,将成交叠加到持仓上形成最新的持仓状态
         /// </summary>
         /// <param name="t">The new fill you want this position to reflect.</param>
         /// <returns></returns>

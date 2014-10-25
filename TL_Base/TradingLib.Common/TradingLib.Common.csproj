@@ -50,6 +50,7 @@
     <Compile Include="Messages\QryTransferSerial.cs" />
     <Compile Include="Other\LogItem.cs" />
     <Compile Include="Other\PermissionFieldAttr.cs" />
+    <Compile Include="Trading\PositionDetail.cs" />
     <Compile Include="Trading\SymbolUtils.cs" />
     <Compile Include="Utils\ConfigFile.cs" />
     <Compile Include="FutsError.cs" />
