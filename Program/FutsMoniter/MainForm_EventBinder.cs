@@ -53,6 +53,7 @@ namespace FutsMoniter
                 kryptonRibbonGroupButton_Exchange.Visible = Globals.UIAccess.nav_basic_exchange;
                 kryptonRibbonGroupButton_Security.Visible = Globals.UIAccess.nav_basic_security;
                 kryptonRibbonGroupButton_Symbol.Visible = Globals.UIAccess.nav_basic_symbol;
+                kryptonRibbonGroupButton_PermissionTemplate.Visible = Globals.UIAccess.nav_basic_permissiontemplate;
             }
 
             if (!Globals.UIAccess.nav_manager)
@@ -63,6 +64,7 @@ namespace FutsMoniter
             {
                 kryptonRibbonGroupButton_AgentManagement.Visible = Globals.UIAccess.nav_manager_management;
                 kryptonRibbonGroupButton_AgentCost.Visible = Globals.UIAccess.nav_manager_feeconfig;
+                kryptonRibbonGroupButton_PermissionAgent.Visible = Globals.UIAccess.nav_manager_permissionagent;
             }
 
             if (!Globals.UIAccess.nav_finance)

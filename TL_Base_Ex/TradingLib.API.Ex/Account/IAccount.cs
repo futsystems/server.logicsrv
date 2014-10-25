@@ -138,6 +138,11 @@ namespace TradingLib.API
         /// </summary>
         void Reset();
 
+        /// <summary>
+        /// 删除标志，如果已经删除 则管理端不显示，下次启动不会加载
+        /// </summary>
+        bool Deleted { get; set; }
+
     }
 
 

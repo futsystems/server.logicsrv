@@ -110,17 +110,60 @@ namespace TradingLib.Core
             {
                 settlelist.Add(SectionName("成交明细"));
                 settlelist.Add(line);
-                //settlelist.Add("|成交日期|交易所|品种|交割期|买卖|投保|成交价|手数|成交额|开平|手续费|平仓盈亏|成交序号".Replace('|', '*'));
-                settlelist.Add(string.Format("|{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|{10}|{11}|{12}|", padRightEx("成交日期", 10), padRightEx("交易所", 8), padRightEx("品种", 20), padRightEx("交割期", 8), padRightEx("买卖", 4), padRightEx("投保", 4), padRightEx("成交价", 8), padRightEx("手数", 4), padRightEx("成交额", 10), padRightEx("开平", 4), padRightEx("手续费", 8), padRightEx("平仓盈亏", 10), padRightEx("成交序号", 10)).Replace('|', '*'));
+                //settlelist.Add("|成交日期|交易所|品种|合约|买卖|投保|成交价|手数|成交额|开平|手续费|平仓盈亏|成交序号".Replace('|', '*'));
+                settlelist.Add(string.Format("|{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|{10}|{11}|{12}|", padRightEx("成交日期", 10), padRightEx("交易所", 8), padRightEx("品种", 20), padRightEx("合约", 10), padRightEx("买卖", 4), padRightEx("投保", 4), padRightEx("成交价", 8), padRightEx("手数", 4), padRightEx("成交额", 10), padRightEx("开平", 4), padRightEx("手续费", 8), padRightEx("平仓盈亏", 10), padRightEx("成交序号", 10)).Replace('|', '*'));
                 foreach (Trade t in trades)
                 {
 
-                    settlelist.Add(string.Format(" {0} {1} {2} {3} {4} {5} {6,8:F2} {7,4} {8,10:F2} {9} {10,6:F2} {11,10:F2} {12,10}", t.xdate.ToString().PadRight(10), padRightEx(BasicTracker.ExchagneTracker.GetExchangeTitle(t.Exchange), 8), padRightEx(BasicTracker.SecurityTracker.GetSecurityName(t.SecurityCode), 20), "201415".PadRight(8), padRightEx((t.xsize > 0 ? "买" : " 卖"), 4), padRightEx("投", 4), t.xprice, Math.Abs(t.xsize), BasicTracker.SecurityTracker.GetMultiple(t.SecurityCode) * t.xprice * Math.Abs(t.xsize), padRightEx(GetCombFlag(t.OffsetFlag), 4), t.Commission, t.Profit,t.BrokerKey));
+                    settlelist.Add(string.Format(" {0} {1} {2} {3} {4} {5} {6,8:F2} {7,4} {8,10:F2} {9} {10,6:F2} {11,10:F2} {12,10}", 
+                        t.xdate.ToString().PadRight(10), //成交日期
+                        padRightEx(BasicTracker.ExchagneTracker.GetExchangeTitle(t.Exchange), 8),//交易所
+                        padRightEx(BasicTracker.SecurityTracker.GetSecurityName(t.SecurityCode), 20),//品种
+                        padRightEx(t.symbol,10), //合约
+                        padRightEx((t.xsize > 0 ? "买" : " 卖"), 4), //买卖 3
+                        padRightEx("投", 4),//头保
+                        t.xprice, //成交价 6
+                        Math.Abs(t.xsize), //手数量 7
+                        BasicTracker.SecurityTracker.GetMultiple(t.SecurityCode) * t.xprice * Math.Abs(t.xsize),//成交额
+                        padRightEx(GetCombFlag(t.OffsetFlag), 4), //开平
+                        t.Commission, //手续费
+                        t.Profit,//平仓盈亏
+                        t.BrokerKey));//成交序号
                 }
 
                 settlelist.Add(NewLine);
                 settlelist.Add(NewLine);
             }
+
+            //输出平仓明细
+            IEnumerable<Trade> flattrades = trades.Where(t => !t.IsEntryPosition);
+            if (flattrades.Count() > 0)//平仓成交数量大于0 则输出明细
+            {
+                settlelist.Add(SectionName("平仓明细"));
+                settlelist.Add(line);
+                //settlelist.Add("|平仓日期|交易所|品种|合约|开仓日期|买卖|手数|开仓价|昨结算|成交价格|平仓盈亏|".Replace('|', '*'));
+                settlelist.Add(string.Format("|{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|{10}|", padRightEx("平仓日期", 10), padRightEx("交易所", 8), padRightEx("品种", 20), padRightEx("合约", 10), padRightEx("开仓日期", 10), padRightEx("买卖", 4), padRightEx("手数", 4), padRightEx("开仓价",10), padRightEx("昨结算",10), padRightEx("成交价", 10), padRightEx("平仓盈亏", 10)).Replace('|', '*'));
+                foreach (Trade t in flattrades)
+                {
+                                                                   //                               
+                    settlelist.Add(string.Format(" {0} {1} {2} {3} {4} {5} {6,4} {7,10:F2} {8,10:F2} {9,10:F2} {10,10:F2}", 
+                        t.xdate.ToString().PadRight(10), //平仓日期
+                        padRightEx(BasicTracker.ExchagneTracker.GetExchangeTitle(t.Exchange), 8),//交易所
+                        padRightEx(BasicTracker.SecurityTracker.GetSecurityName(t.SecurityCode), 20),//品种
+                        padRightEx(t.symbol,10), //合约
+                        padRightEx("xxxxx",10),//开仓日期
+                        padRightEx((t.xsize > 0 ? "买" : " 卖"), 4), //买卖
+                        Math.Abs(t.xsize), //手数 6
+                        2444.00,//开仓价  7
+                        2450.00,//昨结算
+                        t.xprice, //成交价
+                        t.Profit//平仓盈亏
+                        ));
+                }
+                settlelist.Add(NewLine);
+                settlelist.Add(NewLine);
+            }
+
 
             //输出持仓明细
             if (positions.Count > 0)

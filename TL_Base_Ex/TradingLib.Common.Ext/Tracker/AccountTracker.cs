@@ -65,6 +65,27 @@ namespace TradingLib.Common
             return AcctList.Values.FirstOrDefault(t => (t.UserID == uid && t.Category == category));
         }
 
+        internal void DropAccount(IAccount account)
+        { 
+            IAccount accremove = null;
+            AcctList.TryRemove(account.ID, out accremove);//从帐户列表删除
+
+            OrderTracker otremove = null;
+            OrdBook.TryRemove(account.ID, out otremove);//删除委托维护其
+            if (otremove != null)
+                otremove.Clear();
+
+            LSPositionTracker ptremove = null;
+            PosBook.TryRemove(account.ID, out ptremove);//删除持仓维护其
+            if (ptremove != null)
+                ptremove.Clear();
+
+            ThreadSafeList<Trade> ttremove = null;
+            TradeBook.TryRemove(account.ID, out ttremove);//删除成交列表
+            if (ttremove != null)
+                ttremove.Clear();
+
+        }
         /// <summary>
         /// 为accouont生成交易记录内存数据结构
         /// </summary>

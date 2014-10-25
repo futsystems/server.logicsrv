@@ -111,5 +111,10 @@ namespace TradingLib.API
         /// 所属管理员的ID
         /// </summary>
         int MGRID{ get; set; }
+
+        /// <summary>
+        /// 是否已经删除
+        /// </summary>
+        bool Deleted { get; set; }
     }
 }

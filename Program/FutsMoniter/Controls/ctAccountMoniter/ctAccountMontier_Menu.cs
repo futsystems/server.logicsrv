@@ -20,9 +20,41 @@ namespace FutsMoniter.Controls
             accountgrid.ContextMenuStrip.Items.Add("修改密码",null, new EventHandler(ChangePass_Click));
             accountgrid.ContextMenuStrip.Items.Add("修改信息", null, new EventHandler(ChangeInvestor_Click));
             accountgrid.ContextMenuStrip.Items.Add("历史查询", null, new EventHandler(QryHist_Click));
+            accountgrid.ContextMenuStrip.Items.Add("删除帐户", null, new EventHandler(DelAccount_Click));
 
 
         }
+
+        /// <summary>
+        /// 删除某个交易帐号
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void DelAccount_Click(object sender, EventArgs e)
+        {
+            IAccountLite account = GetVisibleAccount(CurrentAccount);
+            if (account != null)
+            {
+                if (fmConfirm.Show("确认删除交易帐户?") == DialogResult.Yes)
+                {
+                    Globals.TLClient.ReqDelAccount(account.Account);
+                    account.Deleted = true;//修改删除标识
+                    GotAccount(account);//更新界面数据
+                    RefreshAccountQuery();//刷新表格
+
+                }
+                else
+                {
+                    return;
+                }
+            }
+            else
+            {
+                fmConfirm.Show("请选择需要编辑的交易帐户！");
+            }
+        }
+
+
         /// <summary>
         /// 编辑某个交易帐号
         /// </summary>

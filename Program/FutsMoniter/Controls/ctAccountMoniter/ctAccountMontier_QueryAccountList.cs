@@ -112,6 +112,7 @@ namespace FutsMoniter.Controls
                 strFilter = string.Format(CATEGORY + " = '{0}'", acctype);
             }
 
+            strFilter = string.Format(strFilter + " and " + DELETE + " ='{0}'", false);
 
             //路由
             if (routeType.SelectedIndex != 0)

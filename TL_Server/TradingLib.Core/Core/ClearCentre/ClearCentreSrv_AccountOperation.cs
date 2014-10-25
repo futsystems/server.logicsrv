@@ -430,6 +430,38 @@ namespace TradingLib.Core
             return re;
         }
 
+
+        public void DelAccount(string account)
+        {
+            debug("清算中心删除交易帐户:" + account, QSEnumDebugLevel.INFO);
+            IAccount acc = this[account];
+            if (acc == null)
+            {
+                throw new FutsRspError("交易帐号不存在");
+            }
+
+            try
+            {
+                
+                //InactiveAccount(account);//冻结交易帐号
+                //删除数据库
+                ORM.MAccount.DelAccount(account);//删除数据库记录
+                DropAccount(acc);//删除内存记录
+                //对外触发交易帐户删除事件
+                if (AccountDelEvent != null)
+                    AccountDelEvent(account);
+                acc.Deleted = true;
+                AccountChanged(acc);
+
+                
+            }
+            catch (Exception ex)
+            {
+                debug("删除交易帐户错误:" + ex.ToString());
+                throw new FutsRspError("删除交易帐户异常，请手工删除相关信息");
+            }
+        }
+
         
         #endregion
 

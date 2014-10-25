@@ -31,7 +31,7 @@ namespace TradingLib.Common
             this.PosLock = false;
             this.Mgr_fk = 0;
             this.UserID = 0;
-
+            this.Deleted = false;
         
         }
 
@@ -168,6 +168,8 @@ namespace TradingLib.Common
             ClearOrderCheck();
             _rulitemloaded = false;
         }
+
+        public bool Deleted { get; set; }
 
 
         public string DisplayString

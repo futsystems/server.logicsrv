@@ -159,6 +159,7 @@ namespace TradingLib.Common
             info.BankAC = acc.BankAC;
             info.PosLock = acc.PosLock;
             info.MGRID = acc.Mgr_fk;
+            info.Deleted = acc.Deleted;
             return info;
         }
 

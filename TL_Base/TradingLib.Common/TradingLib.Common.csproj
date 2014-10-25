@@ -71,7 +71,7 @@
     <Compile Include="Messages\Login.cs" />
     <Compile Include="Messages\Manager\MGRAccountChangeUpdateNotify.cs" />
     <Compile Include="Messages\Manager\MGRAcctService.cs" />
-    <Compile Include="Messages\Manager\MGRAddAccount.cs" />
+    <Compile Include="Messages\Manager\MGRAccount.cs" />
     <Compile Include="Messages\Manager\MGRBasicInfo.cs" />
     <Compile Include="Messages\Manager\MGRCashOperation.cs" />
     <Compile Include="Messages\Manager\MGRChangePass.cs" />

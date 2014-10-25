@@ -291,6 +291,15 @@ namespace TradingLib.Common
             SendPacket(request);
         }
 
+        public void ReqDelAccount(string account)
+        {
+            debug("请求删除交易帐号", QSEnumDebugLevel.INFO);
+            MGRReqDelAccountRequest request = RequestTemplate<MGRReqDelAccountRequest>.CliSendRequest(requestid++);
+            request.AccountToDelete = account;
+
+            SendPacket(request);
+        }
+
         public void ReqChangeAccountPass(string account, string pass)
         {
             debug("请求修改交易帐号密码", QSEnumDebugLevel.INFO);

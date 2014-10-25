@@ -55,6 +55,7 @@ namespace FutsMoniter.Controls
         const string AGENTMGRFK = "AGENTMGRFK";
         const string NAME = "姓名";
         const string POSLOK = "锁仓权限";
+        const string DELETE = "DELETE";
 
 
         DataTable gt = new DataTable();
@@ -133,6 +134,7 @@ namespace FutsMoniter.Controls
             gt.Columns.Add(AGENTCODE);//20
             gt.Columns.Add(AGENTMGRFK);//21
             gt.Columns.Add(POSLOK);//22
+            gt.Columns.Add(DELETE);
             
         }
 
@@ -161,6 +163,7 @@ namespace FutsMoniter.Controls
             accountgrid.Columns[LOGINSTATUS].Visible = false;
             accountgrid.Columns[AGENTMGRFK].Visible = false;
             accountgrid.Columns[CATEGORY].Visible = false;
+            accountgrid.Columns[DELETE].Visible = false;
 
             accountgrid.Columns[ACCOUNT].Width = 100;
             accountgrid.Columns[ROUTEIMG].Width = 20;
@@ -362,7 +365,7 @@ namespace FutsMoniter.Controls
                         gt.Rows[i][AGENTMGRFK] = account.MGRID;
                         gt.Rows[i][NAME] = account.Name;
                         gt.Rows[i][POSLOK] = account.PosLock ? "有" : "无";
-
+                        gt.Rows[i][DELETE] = account.Deleted;
                         accountmap.TryAdd(account.Account, account);
                         accountrowmap.TryAdd(account.Account, i);
                         //debug("got account:" + account.Account, QSEnumDebugLevel.INFO);
@@ -383,6 +386,7 @@ namespace FutsMoniter.Controls
                         Manager mgr = Globals.BasicInfoTracker.GetManager(account.MGRID);
                         gt.Rows[r][AGENTCODE] = mgr.Login + " - " + mgr.Name;
                         gt.Rows[r][NAME] = account.Name;
+                        gt.Rows[r][DELETE] = account.Deleted;
                     }
 
                 }

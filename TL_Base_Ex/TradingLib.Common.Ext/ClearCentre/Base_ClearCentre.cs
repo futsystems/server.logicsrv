@@ -225,6 +225,15 @@ namespace TradingLib.Common
         {
             acctk.CacheAccount(a);
         }
+
+        /// <summary>
+        /// 将某个帐户从内存中删除
+        /// </summary>
+        /// <param name="a"></param>
+        protected void DropAccount(IAccount a)
+        {
+            acctk.DropAccount(a);
+        }
         #endregion
 
 

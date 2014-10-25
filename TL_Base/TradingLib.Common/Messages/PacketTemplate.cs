@@ -258,6 +258,8 @@ namespace TradingLib.Common
                         return RequestTemplate<MGRUpdatePassRequest>.SrvRecvRequest(frontid, clientid, content);
                     case MessageTypes.MGRINSERTTRADE://请求插入成交
                         return RequestTemplate<MGRReqInsertTradeRequest>.SrvRecvRequest(frontid, clientid, content);
+                    case MessageTypes.MGRDELACCOUNT://请求删除帐户
+                        return RequestTemplate<MGRReqDelAccountRequest>.SrvRecvRequest(frontid, clientid, content);
                     #endregion
 
                     default:

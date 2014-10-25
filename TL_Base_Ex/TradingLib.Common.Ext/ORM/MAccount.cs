@@ -237,7 +237,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("Insert into log_cashtrans (`datetime`,`amount`,`comment`,`account`,`transref`,`settleday`) values('{0}','{1}','{2}','{3}','{4}','{5}')", DateTime.Now.ToString(), amount.ToString(), comment, account.ToString(),transref,TLCtxHelper.Ctx.SettleCentre.CurrentTradingday);
+                string query = String.Format("Insert into log_cashtrans (`datetime`,`amount`,`comment`,`account`,`transref`,`settleday`) values('{0}','{1}','{2}','{3}','{4}','{5}')", DateTime.Now.ToString(), amount.ToString(), comment, account.ToString(),transref,TLCtxHelper.Ctx.SettleCentre.NextTradingday);
                 return db.Connection.Execute(query) > 0;
             }
         }
@@ -487,6 +487,47 @@ namespace TradingLib.ORM
                 }
                 string query = String.Format("Insert into accounts (`account`,`user_id`,`createdtime`,`pass`,`account_category`,`settledatetime` ,`mgr_fk` ) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}')", account, user_id.ToString(), DateTime.Now.ToString(), pass, category, DateTime.Now - new TimeSpan(1, 0, 0, 0, 0),mgr_fk);
                 return db.Connection.Execute(query) > 0;
+            }
+        }
+
+        /// <summary>
+        /// 数据库删除交易帐户 以及信息
+        /// </summary>
+        /// <param name="account"></param>
+        public static void DelAccount(string account)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string delquery = string.Empty;
+                delquery = string.Format("DELETE FROM accounts WHERE account = '{0}'", account);//删除帐户列表
+                db.Connection.Execute(delquery);
+                delquery = string.Format("DELETE FROM hold_positions WHERE account='{0}'", account);//删除隔夜持仓
+                db.Connection.Execute(delquery);
+                delquery = string.Format("DELETE FROM hold_postransactions WHERE account='{0}'", account);//删除隔夜持仓
+
+                db.Connection.Execute(delquery);
+                delquery = string.Format("DELETE FROM log_cashopreq WHERE account='{0}'", account);//删除出入金请求
+                db.Connection.Execute(delquery);
+                delquery = string.Format("DELETE FROM log_cashtrans WHERE account='{0}'", account);//删除出入金记录
+
+                db.Connection.Execute(delquery);
+                delquery = string.Format("DELETE FROM log_orderactions WHERE account='{0}'", account);//删除委托操作
+                db.Connection.Execute(delquery);
+                delquery = string.Format("DELETE FROM log_orders WHERE account='{0}'", account);//删除委托
+                db.Connection.Execute(delquery);
+                delquery = string.Format("DELETE FROM log_trades WHERE account='{0}'", account);//删除交易回合
+                db.Connection.Execute(delquery);
+                delquery = string.Format("DELETE FROM log_postransactions WHERE account='{0}'", account);//删除交易回合
+
+                db.Connection.Execute(delquery);
+                delquery = string.Format("DELETE FROM tmp_orderactions WHERE account='{0}'", account);//删除日内交易记录
+                db.Connection.Execute(delquery);
+                delquery = string.Format("DELETE FROM tmp_orders WHERE account='{0}'", account);//
+                db.Connection.Execute(delquery);
+                delquery = string.Format("DELETE FROM tmp_trades WHERE account='{0}'", account);//
+                db.Connection.Execute(delquery);
+                delquery = string.Format("DELETE FROM tmp_postransactions WHERE account='{0}'", account);//
+                db.Connection.Execute(delquery);
             }
         }
 

@@ -13,7 +13,7 @@ using FutSystems.GUI;
 
 namespace FutsMoniter
 {
-    public partial class ctOrderSenderM : UserControl
+    public partial class ctOrderSenderM : UserControl,IEventBinder
     {
 
         IAccountLite _account = null;
@@ -26,13 +26,6 @@ namespace FutsMoniter
             Factory.IDataSourceFactory(cbordertype).BindDataSource(Utils.GetOrderTypeCBList());
             try
             {
-                if (!Globals.Config["InsertTrade"].AsBool())
-                {
-                    //MessageBox.Show("xxxx:"+Globals.Config["InsertTrade"].Value);
-                    //Globals.Debug("```````````````````````inserttrade config:" + Globals.Config["InsertTrade"].Value);
-                    btnInsertTrade.Visible = false;
-                }
-
                 WireEvent();
             }
             catch (Exception ex)
@@ -41,11 +34,22 @@ namespace FutsMoniter
             }
         }
 
+        public void OnInit()
+        {
+            btnInsertTrade.Visible = Globals.UIAccess.fun_tab_placeorder_insert;
+        }
+
+        public void OnDisposed()
+        { 
+        
+        }
+
         /// <summary>
         /// 绑定事件
         /// </summary>
         void WireEvent()
-        { 
+        {
+            Globals.RegIEventHandler(this);
             btnBuy.Click +=new EventHandler(btnBuy_Click);
             btnSell.Click +=new EventHandler(btnSell_Click);
             btnInsertTrade.Click +=new EventHandler(btnInsertTrade_Click);
@@ -95,9 +99,9 @@ namespace FutsMoniter
         {
             fmInsertTrade fm = new fmInsertTrade();
             if (!ValidAccount()) return;
-            if (!validSecurity()) return;
+            //if (!validSecurity()) return;
             fm.SetAccount(_account.Account);
-            fm.SetSymbol(_symbol);
+            //fm.SetSymbol(_symbol);
             fm.ShowDialog();
         }
 

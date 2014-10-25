@@ -508,6 +508,11 @@ namespace TradingLib.Mixins.JsonObject
         public bool nav_basic_symbol { get; set; }
 
         /// <summary>
+        /// 基础数据-权限模板
+        /// </summary>
+        [PermissionFieldAttr("导航-权限模板", "查看或设置权限模板")]
+        public bool nav_basic_permissiontemplate { get; set; }
+        /// <summary>
         /// 柜员管理
         /// </summary>
         [PermissionFieldAttr("导航-柜员管理", "管理下级柜员")]
@@ -525,6 +530,11 @@ namespace TradingLib.Mixins.JsonObject
         [PermissionFieldAttr("导航-柜员费率设置", "查看或设置下级柜员费率")]
         public bool nav_manager_feeconfig { get; set; }
 
+        /// <summary>
+        /// 柜员管理-权限设定
+        /// </summary>
+        [PermissionFieldAttr("导航-柜员权限设置", "查看或设置官员权限")]
+        public bool nav_manager_permissionagent { get; set; }
         /// <summary>
         /// 财务管理
         /// </summary>
@@ -669,6 +679,12 @@ namespace TradingLib.Mixins.JsonObject
         /// </summary>
         [PermissionFieldAttr("功能面板-下单面板", "管理端执行下单操作")]
         public bool fun_tab_placeorder { get; set; }
+
+        /// <summary>
+        /// 下单面板-插入成交
+        /// </summary>
+        [PermissionFieldAttr("功能面板-下单面板-插入成交", "管理端执行插入成交调试操作")]
+        public bool fun_tab_placeorder_insert { get; set; }
 
         /// <summary>
         /// 配资模块面板

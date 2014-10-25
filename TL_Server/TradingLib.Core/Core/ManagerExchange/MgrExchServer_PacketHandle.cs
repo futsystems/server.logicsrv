@@ -985,6 +985,28 @@ namespace TradingLib.Core
             exchsrv.futs_InsertTradeManual(fill);
 
         }
+
+        /// <summary>
+        /// 请求删除交易帐户
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="session"></param>
+        /// <param name="manager"></param>
+        void SrvOnDelAccount(MGRReqDelAccountRequest request, ISession session, Manager manager)
+        {
+            debug(string.Format("管理员:{0} 请求删除帐户:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
+            try
+            {
+                clearcentre.DelAccount(request.AccountToDelete);
+
+                session.OperationSuccess("交易帐户:" + request.AccountToDelete + " 删除成功");
+            }
+            catch (FutsRspError ex)
+            {
+                session.OperationError(ex);
+            }
+        
+        }
         void tl_newPacketRequest(IPacket packet,ISession session,Manager manager)
         {
             switch (packet.Type)
@@ -1210,9 +1232,14 @@ namespace TradingLib.Core
                         SrvOnMGRUpdatePass(packet as MGRUpdatePassRequest, session, manager);
                         break;
                     }
-                case MessageTypes.MGRINSERTTRADE://请求插入委托
+                case MessageTypes.MGRINSERTTRADE://请求插入成交
                     {
                         SrvOnInsertTrade(packet as MGRReqInsertTradeRequest, session, manager);
+                        break;
+                    }
+                case MessageTypes.MGRDELACCOUNT://请求删除交易帐户
+                    {
+                        SrvOnDelAccount(packet as MGRReqDelAccountRequest, session, manager);
                         break;
                     }
                 default:
