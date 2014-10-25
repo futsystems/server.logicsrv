@@ -84,6 +84,7 @@ namespace TradingLib.API
         QRYCONTRACTBANK,//查询签约银行
         QRYREGISTERBANKACCOUNT,//查询银期转账帐户
         QRYTRANSFERSERIAL,//查询转账流水
+        QRYPOSITIONDETAIL,//查询持仓明细
 
 
         DOMREQUEST,//请求DOM市场Level2数据
@@ -129,6 +130,8 @@ namespace TradingLib.API
         CONTRACTBANKRESPONSE,//查询签约银行回报
         REGISTERBANKACCOUNTRESPONSE,//查询银期签约帐户回报
         TRANSFERSERIALRESPONSE,//查询转账流水回报
+        POSITIONDETAILRESPONSE,//查询持仓明细回报
+
         // END STANDARD MESSAGES
 
 

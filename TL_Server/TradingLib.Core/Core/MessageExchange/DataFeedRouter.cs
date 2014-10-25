@@ -451,16 +451,16 @@ namespace TradingLib.Core
         public void DemoTick()
         {
             Tick k = new TickImpl();
-            k.trade=2204.0M;
+            k.trade=2404.0M;
             k.size=10;
-            k.symbol="IF1409";
-            k.ask=2205.2M;
+            k.symbol="IF1411";
+            k.ask=2405.2M;
             k.os=10;
-            k.bid = 2205.0M;
+            k.bid = 2405.0M;
             k.bs =2;
-            k.Open= 2210.0M;
-            k.Low=2198.0M;
-            k.High=2212.0M;
+            k.Open= 2410.0M;
+            k.Low=2398.0M;
+            k.High=2412.0M;
             k.Vol=2000;
             k.OpenInterest=100;
             k.PreOpenInterest=120;

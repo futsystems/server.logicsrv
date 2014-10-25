@@ -34,6 +34,15 @@ namespace TradingLib.Core
             return _clients.Clients.Where(client => (client.Account.Equals(account))).ToArray();
         }
 
+        /// <summary>
+        /// 查找某个地址的ClientInfo
+        /// </summary>
+        /// <param name="clientid"></param>
+        /// <returns></returns>
+        public TrdClientInfo GetClient(string clientid)
+        {
+            return _clients.Clients.Where(c => c.Location.ClientID.Equals(clientid)).FirstOrDefault();
+        }
        
 
         #region client-->TLServer消息所引发的各类操作
@@ -189,7 +198,11 @@ namespace TradingLib.Core
                 debug("客户端:" + cinfo.Location.ClientID + "未登入,无法请求委托", QSEnumDebugLevel.ERROR);
                 return;
             }
-
+            //如果请求没有指定交易帐号 则根据对应的Client信息自动绑定交易帐号
+            if (string.IsNullOrEmpty(request.Order.Account))
+            {
+                request.Order.Account = cinfo.Account;
+            }
             if (cinfo.Account != request.Order.Account)//客户端没有登入或者登入ID与委托ID不符
             {
                 debug("客户端对应的帐户:" + cinfo.Account + " 与委托帐户:" + request.Order.Account + " 不符合", QSEnumDebugLevel.ERROR);

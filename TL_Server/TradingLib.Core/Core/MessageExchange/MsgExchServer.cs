@@ -306,6 +306,8 @@ namespace TradingLib.Core
                         }
                         debug("客户端:" + c.Location.ClientID + " 登入状态:"+login.ToString(), QSEnumDebugLevel.INFO);
                     };
+                //初始化优先发送缓存对象
+                InitPriorityBuffer();
                 //启动消息服务
                 StartMessageRouter();
                 

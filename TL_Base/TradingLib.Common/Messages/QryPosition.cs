@@ -87,4 +87,47 @@ namespace TradingLib.Common
             PositionToSend = PositionEx.Deserialize(content);
         }
     }
+
+
+    /// <summary>
+    /// 持仓明细查询
+    /// </summary>
+    public class QryPositionDetailRequest : RequestPacket
+    {
+        public QryPositionDetailRequest()
+        {
+            _type = MessageTypes.QRYPOSITIONDETAIL;
+        }
+
+        public override string ContentSerialize()
+        {
+            return "";
+        }
+
+        public override void ContentDeserialize(string contentstr)
+        {
+            
+        }
+    }
+
+    /// <summary>
+    /// 持仓明细查询回报
+    /// </summary>
+    public class RspQryPositionDetailResponse : RspResponsePacket
+    {
+        public RspQryPositionDetailResponse()
+        {
+            _type = MessageTypes.POSITIONDETAILRESPONSE;
+        }
+
+        public override string ResponseSerialize()
+        {
+            return "";
+        }
+
+        public override void ResponseDeserialize(string content)
+        {
+            
+        }
+    }
 }
