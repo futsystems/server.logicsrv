@@ -675,6 +675,13 @@ namespace TradingLib.Mixins.JsonObject
 
 
         /// <summary>
+        /// 删除交易帐户
+        /// </summary>
+        [PermissionFieldAttr("监控菜单-删除交易帐户", "删除交易帐户")]
+        public bool moniter_menu_delaccount { get; set; }
+
+
+        /// <summary>
         /// 下单面板
         /// </summary>
         [PermissionFieldAttr("功能面板-下单面板", "管理端执行下单操作")]

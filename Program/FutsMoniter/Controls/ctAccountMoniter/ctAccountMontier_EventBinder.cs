@@ -32,6 +32,7 @@ namespace FutsMoniter.Controls
             accountgrid.ContextMenuStrip.Items[1].Visible = Globals.UIAccess.moniter_menu_changepass;
             accountgrid.ContextMenuStrip.Items[2].Visible = Globals.UIAccess.moniter_menu_changeinvestor;
             accountgrid.ContextMenuStrip.Items[3].Visible = Globals.UIAccess.moniter_menu_queryhist;
+            accountgrid.ContextMenuStrip.Items[4].Visible = Globals.UIAccess.moniter_menu_delaccount;
 
             funpagePlaceOrder.Visible = Globals.UIAccess.fun_tab_placeorder;
             funpageFinservice.Visible = Globals.UIAccess.fun_tab_finservice;
