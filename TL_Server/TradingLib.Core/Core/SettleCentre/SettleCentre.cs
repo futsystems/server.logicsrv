@@ -115,7 +115,9 @@ namespace TradingLib.Core
             _riskcentre = rc;
         }
 
-
+        ConfigDB _cfgdb;
+        int resetTime = 40101;
+        bool _cleanTmp = false;
         public SettleCentre()
             :base(SettleCentre.CoreName)
         {
@@ -133,6 +135,12 @@ namespace TradingLib.Core
             }
             resetTime = _cfgdb["ResetTime"].AsInt();
 
+            if (!_cfgdb.HaveConfig("CleanTmpTable"))
+            {
+                _cfgdb.UpdateConfig("CleanTmpTable", QSEnumCfgType.Bool,false, "结算后重置系统是否情况日内临时表");
+            }
+            _cleanTmp = _cfgdb["CleanTmpTable"].AsBool();
+
 
             //注入重置任务 用于在数据调整执行时间
             DateTime t = Util.ToDateTime(Util.ToTLDate(DateTime.Now), resetTime);
@@ -141,8 +149,7 @@ namespace TradingLib.Core
 
         }
 
-        ConfigDB _cfgdb;
-        int resetTime = 40101;
+        
         /// <summary>
         /// 初始化交易日信息
         /// </summary>

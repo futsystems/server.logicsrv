@@ -109,8 +109,10 @@ namespace TradingLib.Core
             if (IsNormal && !IsTradingday) return;
             debug("系统重置，清算中心重置帐户，风控中心重置规则 清空日内记录表", QSEnumDebugLevel.INFO);
             TLCtxHelper.EventSystem.FireBeforeSettleResetEvent(this, new SystemEventArgs());
-            this.CleanTempTable();
-
+            if (_cleanTmp)
+            {
+                this.CleanTempTable();
+            }
             //重置结算中心
             this.Reset();
 
@@ -146,7 +148,10 @@ namespace TradingLib.Core
 
             TLCtxHelper.EventSystem.FireBeforeSettleResetEvent(this, new SystemEventArgs());
             //C:清空当日交易记录
-            this.CleanTempTable();
+            if (_cleanTmp)
+            {
+                this.CleanTempTable();
+            }
 
             //D:重置系统状态
             //重置结算中心 形成新的最后结算日 下一交易日和当前交易日数据

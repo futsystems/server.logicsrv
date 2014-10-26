@@ -32,9 +32,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.TabRibbon = new ComponentFactory.Krypton.Ribbon.KryptonRibbon();
             this.kryptonRibbonQATButton_debug = new ComponentFactory.Krypton.Ribbon.KryptonRibbonQATButton();
-            this.kryptonRibbonQATButton1 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonQATButton();
             this.kryptonContextMenuItem_exit = new ComponentFactory.Krypton.Toolkit.KryptonContextMenuItem();
-            this.kryptonContextMenuItem1 = new ComponentFactory.Krypton.Toolkit.KryptonContextMenuItem();
             this.buttonSpecAppMenu1 = new ComponentFactory.Krypton.Ribbon.ButtonSpecAppMenu();
             this.buttonSpecAppMenu2 = new ComponentFactory.Krypton.Ribbon.ButtonSpecAppMenu();
             this.tabSystem = new ComponentFactory.Krypton.Ribbon.KryptonRibbonTab();
@@ -100,12 +98,10 @@
             this.TabRibbon.MinimizedMode = true;
             this.TabRibbon.Name = "TabRibbon";
             this.TabRibbon.QATButtons.AddRange(new System.ComponentModel.Component[] {
-            this.kryptonRibbonQATButton_debug,
-            this.kryptonRibbonQATButton1});
+            this.kryptonRibbonQATButton_debug});
             this.TabRibbon.QATUserChange = false;
             this.TabRibbon.RibbonAppButton.AppButtonMenuItems.AddRange(new ComponentFactory.Krypton.Toolkit.KryptonContextMenuItemBase[] {
-            this.kryptonContextMenuItem_exit,
-            this.kryptonContextMenuItem1});
+            this.kryptonContextMenuItem_exit});
             this.TabRibbon.RibbonAppButton.AppButtonShowRecentDocs = false;
             this.TabRibbon.RibbonAppButton.AppButtonSpecs.AddRange(new ComponentFactory.Krypton.Ribbon.ButtonSpecAppMenu[] {
             this.buttonSpecAppMenu1,
@@ -121,7 +117,7 @@
             this.tabAgent,
             this.tabFinance,
             this.tabHistQuery});
-            this.TabRibbon.SelectedTab = this.tabAgent;
+            this.TabRibbon.SelectedTab = this.tabBasicConfig;
             this.TabRibbon.Size = new System.Drawing.Size(1284, 111);
             this.TabRibbon.TabIndex = 0;
             // 
@@ -133,10 +129,6 @@
             // 
             this.kryptonContextMenuItem_exit.Image = ((System.Drawing.Image)(resources.GetObject("kryptonContextMenuItem_exit.Image")));
             this.kryptonContextMenuItem_exit.Text = "退 出";
-            // 
-            // kryptonContextMenuItem1
-            // 
-            this.kryptonContextMenuItem1.Text = "Menu Item";
             // 
             // buttonSpecAppMenu1
             // 
@@ -526,10 +518,8 @@
         private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton_CfgModule;
         private ComponentFactory.Krypton.Ribbon.KryptonRibbonQATButton kryptonRibbonQATButton_debug;
         private ComponentFactory.Krypton.Toolkit.KryptonContextMenuItem kryptonContextMenuItem_exit;
-        private ComponentFactory.Krypton.Toolkit.KryptonContextMenuItem kryptonContextMenuItem1;
         private ComponentFactory.Krypton.Ribbon.ButtonSpecAppMenu buttonSpecAppMenu1;
         private ComponentFactory.Krypton.Ribbon.ButtonSpecAppMenu buttonSpecAppMenu2;
-        private ComponentFactory.Krypton.Ribbon.KryptonRibbonQATButton kryptonRibbonQATButton1;
         private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupTriple kryptonRibbonGroupTriple13;
         private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton_CasherManagement;
         public ComponentFactory.Krypton.Ribbon.KryptonRibbonGroup kryptonRibbonGroup12;

@@ -41,11 +41,11 @@ namespace FutsMoniter
 
             //历史记录
             kryptonRibbonGroupButton_QueryExHist.Click += new EventHandler(kryptonRibbonGroupButton_QueryExHist_Click);
-            kryptonRibbonGroupButton_QueryAgentProfit.Click += new EventHandler(kryptonRibbonGroupButton_QueryAgentProfit_Click);
             kryptonRibbonGroupButton_QueryCashTransAccount.Click += new EventHandler(kryptonRibbonGroupButton_QueryCashTransAccount_Click);
             kryptonRibbonGroupButton_QueryCashTransAgent.Click += new EventHandler(kryptonRibbonGroupButton_QueryCashTransAgent_Click);
 
-
+            kryptonRibbonGroupButton_QueryAgentProfit.Click += new EventHandler(kryptonRibbonGroupButton_QueryAgentProfit_Click);
+            
             //柜员管理
             kryptonRibbonGroupButton_AgentManagement.Click += new EventHandler(kryptonRibbonGroupButton_AgentManagement_Click);
             kryptonRibbonGroupButton_AgentCost.Click += new EventHandler(kryptonRibbonGroupButton_AgentCost_Click);

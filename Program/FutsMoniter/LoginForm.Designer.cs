@@ -29,8 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            //this.office2010SilverTheme1 = new Telerik.WinControls.Themes.Office2010SilverTheme();
-            //this.office2010BlackTheme1 = new Telerik.WinControls.Themes.Office2010BlackTheme();
             this.imageheader = new System.Windows.Forms.PictureBox();
             this.label0 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.label1 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
@@ -101,6 +99,7 @@
             // 
             this.password.Location = new System.Drawing.Point(97, 155);
             this.password.Name = "password";
+            this.password.PasswordChar = '#';
             this.password.Size = new System.Drawing.Size(121, 22);
             this.password.TabIndex = 24;
             this.password.Text = "123456";
@@ -198,6 +197,7 @@
             this.Name = "LoginForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "LoginForm";
+            this.TopMost = true;
             ((System.ComponentModel.ISupportInitialize)(this.imageheader)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.servers)).EndInit();
             this.ResumeLayout(false);

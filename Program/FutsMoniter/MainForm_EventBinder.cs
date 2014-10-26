@@ -53,7 +53,10 @@ namespace FutsMoniter
                 kryptonRibbonGroupButton_Exchange.Visible = Globals.UIAccess.nav_basic_exchange;
                 kryptonRibbonGroupButton_Security.Visible = Globals.UIAccess.nav_basic_security;
                 kryptonRibbonGroupButton_Symbol.Visible = Globals.UIAccess.nav_basic_symbol;
+
+
                 kryptonRibbonGroupButton_PermissionTemplate.Visible = Globals.UIAccess.nav_basic_permissiontemplate;
+                kryptonRibbonGroup5.Visible = Globals.UIAccess.nav_basic_permissiontemplate;
             }
 
             if (!Globals.UIAccess.nav_manager)
@@ -87,10 +90,14 @@ namespace FutsMoniter
                 kryptonRibbonGroupButton_QueryExHist.Visible = Globals.UIAccess.nav_report_acchistinfo;
                 kryptonRibbonGroupButton_QueryCashTransAccount.Visible = Globals.UIAccess.nav_report_acccashtrans;
                 kryptonRibbonGroupButton_QuerySettleAccount.Visible = Globals.UIAccess.nav_report_accsettlement;
+                kryptonRibbonGroup6.Visible = Globals.UIAccess.nav_report_acchistinfo||Globals.UIAccess.nav_report_acccashtrans||Globals.UIAccess.nav_report_accsettlement;
 
                 kryptonRibbonGroupButton_QueryCashTransAgent.Visible = Globals.UIAccess.nav_report_agentcashtrans;
                 kryptonRibbonGroupButton_QuerySettleAgent.Visible = Globals.UIAccess.nav_report_agentsettlement;
+                kryptonRibbonGroup7.Visible = Globals.UIAccess.nav_report_agentcashtrans || Globals.UIAccess.nav_report_agentsettlement;
+
                 kryptonRibbonGroupButton_QueryAgentProfit.Visible = Globals.UIAccess.nav_report_agentreport;
+                kryptonRibbonGroup8.Visible=Globals.UIAccess.nav_report_agentreport;
             }
         }
         public void OnDisposed()

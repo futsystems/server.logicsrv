@@ -44,6 +44,21 @@ namespace TradingLib.Common
             return string.Join(delimiter,trade);
         }
 
+        public static string GetTradeDetail(this Trade f)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append(f.Account + " " + f.symbol + " ");
+            sb.Append(" T:" + f.GetDateTime().ToString());
+            sb.Append(" " + f.OffsetFlag.ToString());
+            sb.Append(f.side ? " BOT" : " SOD");
+
+            sb.Append(" " + Math.Abs(f.xsize).ToString());
+            sb.Append("@" + f.oSymbol.FormatPrice(f.xprice));
+            sb.Append(" C:" + f.Commission.ToString());
+            sb.Append(" R:" + f.Broker + "/" + f.BrokerKey);
+
+            return sb.ToString();
+        }
         public static string GetTradeInfo(this Trade f)
         {
             StringBuilder sb = new StringBuilder();
@@ -56,6 +71,30 @@ namespace TradingLib.Common
             sb.Append(" R:" + f.Broker+"/"+f.BrokerKey);
 
             return sb.ToString();
+        }
+
+        /// <summary>
+        /// 形成新的开仓明细
+        /// </summary>
+        /// <param name="f"></param>
+        /// <returns></returns>
+        public static PositionDetail ToPositionDetail(this Trade f)
+        {
+            PositionDetail pos = new PositionDetail();
+            pos.Account = f.Account;
+            pos.Symbol = f.symbol;
+
+            pos.OpenDate = f.xdate;
+            pos.OpenTime = f.xtime;
+            pos.Tradingday = f.xdate;//从新的开仓成交记录生成的持仓明细持仓日期为当前结算日
+
+            pos.Side = f.PositionSide;
+            pos.Volume = Math.Abs(f.xsize);
+            pos.OpenPrice = f.xprice;
+
+            pos.Exchange = f.Exchange;
+
+            return pos;
         }
     }
 }

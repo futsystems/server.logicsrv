@@ -32,11 +32,7 @@ namespace FutsMoniter
             {
                 imageheader.Image = Properties.Resources.header_oem;
             }
-
-            if (Globals.Config["MessageColor"].AsString() == "Brown")
-            {
-                message.ForeColor = Color.Brown;
-            }
+            
 
            
             string[] addresses = Globals.Config["Servers"].AsString().Split(',');
@@ -56,9 +52,11 @@ namespace FutsMoniter
                 username.Location = new Point(username.Location.X, username.Location.Y - 20);
                 password.Location = new Point(password.Location.X, password.Location.Y - 20);
 
-                btnLogin.Location = new Point(btnLogin.Location.X, btnLogin.Location.Y + 11);
-                btnExit.Location = new Point(btnExit.Location.X, btnExit.Location.Y + 11);
+                //btnLogin.Location = new Point(btnLogin.Location.X, btnLogin.Location.Y + 11);
+                //btnExit.Location = new Point(btnExit.Location.X, btnExit.Location.Y + 11);
 
+
+                //隐藏服务端选择
                 label0.Visible = false;
                 servers.Visible = false;
                 servers.SelectedIndex = 0;
