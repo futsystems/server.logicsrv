@@ -119,7 +119,27 @@ namespace TradingLib.API
         /// <summary>
         /// 返回所有历史持仓明细
         /// </summary>
-        IEnumerable<PositionDetail> YdPositionDetails { get; }
+        IEnumerable<PositionDetail> PositionDetailYdRef { get; }
+
+        /// <summary>
+        /// 所有持仓明细 包括昨日与当日
+        /// </summary>
+        IEnumerable<PositionDetail> PositionDetailTotal { get; }
+
+        /// <summary>
+        /// 昨日持仓明细更新 更新了当日平仓操作
+        /// </summary>
+        IEnumerable<PositionDetail> PositionDetailYdNew { get; }
+
+        /// <summary>
+        /// 当日持仓明细
+        /// </summary>
+        IEnumerable<PositionDetail> PositionDetailTodayNew { get; }
+
+        /// <summary>
+        /// 当日平仓明细
+        /// </summary>
+        IEnumerable<PositionCloseDetail> PositionCloseDetail { get; }
 
         /// <summary>
         /// 转换成等效成交

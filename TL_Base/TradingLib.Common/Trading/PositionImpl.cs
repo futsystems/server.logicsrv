@@ -415,17 +415,7 @@ namespace TradingLib.Common
 
         }
 
-        ThreadSafeList<PositionDetail> _poshislist = new ThreadSafeList<PositionDetail>();
-        /// <summary>
-        /// 返回该持仓当日所有历史持仓明细
-        /// </summary>
-        public IEnumerable<PositionDetail> YdPositionDetails
-        {
-            get
-            {
-                return _poshislist;
-            }
-        }
+        
 
         ThreadSafeList<Trade> _tradelist = new ThreadSafeList<Trade>();
         /// <summary>
@@ -438,9 +428,72 @@ namespace TradingLib.Common
                 return _tradelist;
             }
         }
-        
 
-        
+        ThreadSafeList<PositionDetail> _poshisreflist = new ThreadSafeList<PositionDetail>();
+        /// <summary>
+        /// 返回该持仓当日所有历史持仓明细
+        /// 这里的数据不做具体计算,
+        /// </summary>
+        public IEnumerable<PositionDetail> PositionDetailYdRef
+        {
+            get
+            {
+                return _poshisreflist;
+            }
+        }
+
+
+
+
+        ThreadSafeList<PositionDetail> _postotallist = new ThreadSafeList<PositionDetail>();
+        /// <summary>
+        /// 所有持仓明细
+        /// 包括昨日结算持仓明细和当日新开仓持仓明细
+        /// </summary>
+        public IEnumerable<PositionDetail> PositionDetailTotal
+        {
+            get
+            {
+                return _postotallist;
+            }
+        }
+
+        ThreadSafeList<PositionDetail> _poshisnewlist = new ThreadSafeList<PositionDetail>();
+        /// <summary>
+        /// 返回该持仓当日所有历史持仓明细
+        /// 这里的数据做具体计算
+        /// </summary>
+        public IEnumerable<PositionDetail> PositionDetailYdNew
+        {
+            get
+            {
+                return _poshisnewlist;
+            }
+        }
+
+        ThreadSafeList<PositionDetail> _postodaynewlist = new ThreadSafeList<PositionDetail>();
+        /// <summary>
+        /// 今日新开仓持仓明细列表
+        /// </summary>
+        public IEnumerable<PositionDetail> PositionDetailTodayNew
+        {
+            get
+            {
+                return _postodaynewlist;
+            }
+        }
+
+        ThreadSafeList<PositionCloseDetail> _posclosedetaillist = new ThreadSafeList<PositionCloseDetail>();
+        /// <summary>
+        /// 平仓明细
+        /// </summary>
+        public IEnumerable<PositionCloseDetail> PositionCloseDetail
+        {
+            get
+            {
+                return _posclosedetaillist;
+            }
+        }
         // returns any closed PL calculated on position basis (not per share)
         /// <summary>
         /// 将新的仓位变化合并到当前仓位(Trade->Position)
@@ -498,12 +551,18 @@ namespace TradingLib.Common
             {
                 _openamount += t.GetAmount();
                 _openvol += t.UnsignedSize;
+                PositionDetail d = t.ToPositionDetail();
+                _postodaynewlist.Add(d);//插入今日新开仓持仓明细
+                _postotallist.Add(d);//插入到Totallist便于访问
             }
             else//平仓金额 数量累加
             {
                 _closeamount += t.GetAmount();
                 _closevol += t.UnsignedSize;
+
+                ClosePosition(t);//执行平仓操作
             }
+            
             return cpl;
         }
 
@@ -514,13 +573,64 @@ namespace TradingLib.Common
         /// <returns></returns>
         public decimal Adjust(PositionDetail d)
         {
-            _poshislist.Add(d);
+            _poshisreflist.Add(d);
+
+            PositionDetail pd = new PositionDetailImpl(d);//复制该持仓明细加入到对应的列表中 准备进行计算
+            _poshisnewlist.Add(pd);
+            _postotallist.Add(pd);
+            
 
             decimal cpl = Adjust(new PositionImpl(d, _directiontype));
 
             return cpl;
         }
 
+        void ClosePosition(Trade close)
+        {
+            if (close.IsEntryPosition) throw new Exception("entry trade can not close position");
+
+            int remainsize = close.UnsignedSize;
+
+            //先平历史持仓
+            foreach (PositionDetail p in _poshisnewlist)
+            {
+                //剩余数量为0跳出
+                if (remainsize == 0)
+                {
+                    break;
+                }
+
+                if (p.IsClosed())
+                {
+                    continue;
+                }
+                PositionCloseDetail closedetail = p.ClosePositon(close, ref remainsize);
+                if (closedetail != null)
+                {
+                    _posclosedetaillist.Add(closedetail);
+                }
+            }
+
+            //再平日内持仓
+            foreach (PositionDetail p in _postodaynewlist)
+            {
+                //剩余数量为0跳出
+                if (remainsize == 0)
+                {
+                    break;
+                }
+                if (p.IsClosed())
+                {
+                    continue;
+                }
+                PositionCloseDetail closedetail = p.ClosePositon(close, ref remainsize);
+                if (closedetail != null)
+                {
+                    _posclosedetaillist.Add(closedetail);
+                }
+            }
+
+        }
 
 
 

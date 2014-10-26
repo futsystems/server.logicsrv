@@ -444,9 +444,9 @@ namespace TradingLib.Core
                 StringBuilder sb = new StringBuilder();
                 foreach (Position pos in acc.Positions)
                 {
-                    sb.Append("-------------" + pos.Account + " " + pos.Symbol + " " + pos.DirectionType.ToString() + " -------------"+Environment.NewLine);
+                    sb.Append("-------------" + pos.Account + " " + pos.Symbol + " " + pos.DirectionType.ToString() +" "+pos.UnsignedSize.ToString()+" -------------"+Environment.NewLine);
                     sb.Append("昨日持仓明细" + Environment.NewLine);
-                    foreach (PositionDetail p in pos.YdPositionDetails)
+                    foreach (PositionDetail p in pos.PositionDetailYdRef)
                     {
                         sb.Append(p.GetPositionDetailStr() + Environment.NewLine);
                     }
@@ -463,6 +463,16 @@ namespace TradingLib.Core
                     sb.Append("当日平仓明细" + Environment.NewLine);
 
                     foreach (PositionCloseDetail p in closedetail)
+                    {
+                        sb.Append(p.GetPositionCloseStr() + Environment.NewLine);
+                    }
+
+                    sb.Append("实时生成数据##################################"+Environment.NewLine);
+                    foreach (PositionDetail p in pos.PositionDetailTotal)
+                    {
+                        sb.Append(p.GetPositionDetailStr() + Environment.NewLine);
+                    }
+                    foreach (PositionCloseDetail p in pos.PositionCloseDetail)
                     {
                         sb.Append(p.GetPositionCloseStr() + Environment.NewLine);
                     }

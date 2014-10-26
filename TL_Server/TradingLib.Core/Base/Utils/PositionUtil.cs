@@ -60,7 +60,7 @@ namespace TradingLib.Core
             IEnumerable<Trade> trades_close = trades.Where(f => !f.IsEntryPosition);
 
             //昨日持仓明细列表 这里需要复制对应持仓的隔夜持仓明细数据 否则计算持仓明细的时候会修改该持仓明细的closevolume等数据
-            IEnumerable<PositionDetail> pos_his_open = pos.YdPositionDetails.Select(f=>new PositionDetailImpl(f));//
+            IEnumerable<PositionDetail> pos_his_open = pos.PositionDetailYdRef.Select(f=>new PositionDetailImpl(f));//
 
             //开仓成交记录形成当日持仓明细列表
             IEnumerable<PositionDetail> pos_today_open = trades_open.Select(f => f.ToPositionDetail());

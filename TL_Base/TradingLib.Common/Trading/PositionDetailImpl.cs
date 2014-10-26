@@ -89,6 +89,58 @@ namespace TradingLib.Common
     public static class PositionDetailUtil
     {
         /// <summary>
+        /// 用某个平仓成交区平当前持仓
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <param name="f"></param>
+        /// <returns></returns>
+        public static PositionCloseDetail ClosePositon(this PositionDetail pos, Trade f, ref int remainsize)
+        {
+            if (pos.IsClosed()) throw new Exception("can not close the closed position");
+            if (f.IsEntryPosition) throw new Exception("entry trade can not close postion");
+            if (pos.Account != f.Account) throw new Exception("postion's account do not match with trade");
+            if (pos.Symbol != f.symbol) throw new Exception("position's symbol do not math with trade");
+            if (pos.Side != f.PositionSide) throw new Exception("position's side do not math with trade's side");
+
+            int closesize = pos.HoldSize() >= remainsize ? remainsize : pos.HoldSize();
+
+            pos.CloseVolume += closesize;//持仓明细的平仓量累加
+            remainsize -= closesize;//剩余平仓量累减
+
+            PositionCloseDetail closedetail = new PositionCloseDetailImpl();
+
+            closedetail.Account = pos.Account;
+            closedetail.Symbol = pos.Symbol;
+
+            //交易日
+            closedetail.Settleday = 0;
+
+            //设定方向
+            closedetail.Side = pos.Side;
+
+            //设定开仓时间
+            closedetail.OpenDate = pos.OpenDate;
+            closedetail.OpenTime = pos.OpenTime;
+            closedetail.OpenTradeID = pos.TradeID;
+            //设定平仓时间
+            closedetail.CloseDate = f.xdate;
+            closedetail.CloseTime = f.xtime;
+            closedetail.CloseTradeID = f.BrokerKey;
+
+            //设定开仓平仓价格信息
+            closedetail.OpenPrice = pos.OpenPrice;
+            closedetail.LastSettlementPrice = pos.LastSettlementPrice;
+            closedetail.ClosePrice = f.xprice;
+            closedetail.CloseVolume = closesize;
+
+            //传递合约信息
+            closedetail.oSymbol = f.oSymbol;
+
+            return closedetail;
+        }
+
+
+        /// <summary>
         /// 判断是否是历史持仓
         /// </summary>
         /// <param name="pos"></param>
@@ -174,131 +226,7 @@ namespace TradingLib.Common
 
 
 
-    /// <summary>
-    /// 平仓明细
-    /// </summary>
-    public class PositionCloseDetail
-    {
-
-
-        /// <summary>
-        /// 交易帐号
-        /// </summary>
-        public string Account { get; set; }
-
-        /// <summary>
-        /// 交易日
-        /// </summary>
-        public int Settleday { get; set; }
-
-
-        /// <summary>
-        /// 方向
-        /// </summary>
-        public bool Side { get; set; }
-        /// <summary>
-        /// 开仓日期
-        /// </summary>
-        public int OpenDate { get; set; }
-
-        /// <summary>
-        /// 开仓时间
-        /// </summary>
-        public int OpenTime { get; set; }
-
-        /// <summary>
-        /// 开仓成交编号
-        /// </summary>
-        public string OpenTradeID { get; set; }
-
-        /// <summary>
-        /// 平仓日期
-        /// </summary>
-        public int CloseDate { get; set; }
-
-        /// <summary>
-        /// 平仓时间
-        /// </summary>
-        public int CloseTime { get; set; }
-
-        /// <summary>
-        /// 平仓成交编号
-        /// </summary>
-        public string CloseTradeID { get; set; }
-        /// <summary>
-        /// 开仓价格
-        /// </summary>
-        public decimal OpenPrice { get; set; }
-
-        /// <summary>
-        /// 昨结算价
-        /// </summary>
-        public decimal LastSettlementPrice { get; set; }
-
-        /// <summary>
-        /// 平仓价格
-        /// </summary>
-        public decimal ClosePrice { get; set; }
-
-
-        /// <summary>
-        /// 平仓量
-        /// </summary>
-        public int CloseVolume { get; set; }
-        /// <summary>
-        /// 盯市平仓盈亏
-        /// 平当日仓 (开仓-平仓)*手数*乘数
-        /// </summary>
-        public decimal CloseProfitByDate{ get; set; }
-
-
-        /// <summary>
-        /// 合约信息
-        /// </summary>
-        public Symbol oSymbol { get; set; }
-
-        string _exchange = string.Empty;
-        /// <summary>
-        /// 交易所
-        /// </summary>
-        public string Exchange {
-            get
-            {
-                
-                return  oSymbol!=null?oSymbol.SecurityFamily.Exchange.EXCode:_exchange;
-            }
-            set
-            {
-                _exchange = value;
-            }
-        }
-
-        string _symbol = string.Empty;
-        public string Symbol
-        {
-            get
-            {
-                return oSymbol != null ? oSymbol.Symbol : _symbol;
-            }
-            set
-            {
-                _symbol = value;
-            }
-        }
-
-        string _seccode = string.Empty;
-        public string SecCode
-        {
-            get
-            {
-                return oSymbol != null ? oSymbol.SecurityFamily.Code : _seccode;
-            }
-            set
-            {
-                _seccode = value;
-            }
-        }
-    }
+    
 
 
     /// <summary>
