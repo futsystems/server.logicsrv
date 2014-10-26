@@ -448,12 +448,12 @@ namespace TradingLib.Core
             return _ticktracker[symbol];
         }
 
-        public void DemoTick()
+        public void DemoTick(decimal lastsettle,decimal settleprice)
         {
             Tick k = new TickImpl();
             k.trade=2404.0M;
             k.size=10;
-            k.symbol="IF1410";
+            k.symbol="IF1411";
             k.ask=2405.2M;
             k.os=10;
             k.bid = 2405.0M;
@@ -461,11 +461,14 @@ namespace TradingLib.Core
             k.Open= 2410.0M;
             k.Low=2398.0M;
             k.High=2412.0M;
+            k.ex = "demo";
             k.Vol=2000;
             k.OpenInterest=100;
             k.PreOpenInterest=120;
             k.date = Util.ToTLDate();
             k.time = Util.ToTLTime();
+            k.PreSettlement = lastsettle;
+            k.Settlement = settleprice;
             GotTick(k);
 
             Tick k2 = new TickImpl();

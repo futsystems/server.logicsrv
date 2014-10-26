@@ -203,6 +203,10 @@ namespace TradingLib.Core
             if (_status == QSEnumClearCentreStatus.CCOPEN)
             {
                 debug("平仓明细生成:" + obj.GetPositionCloseStr(), QSEnumDebugLevel.INFO);
+                if (obj.Tradingday == 0)
+                {
+                    obj.Tradingday = TLCtxHelper.Ctx.SettleCentre.NextTradingday;
+                }
                 //设定该平仓明细所在结算日
                 obj.Settleday = TLCtxHelper.Ctx.SettleCentre.NextTradingday;
                 //计算平仓盈亏

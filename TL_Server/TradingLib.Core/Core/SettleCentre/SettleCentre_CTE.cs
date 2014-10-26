@@ -138,8 +138,9 @@ namespace TradingLib.Core
             TLCtxHelper.EventSystem.FireBeforeSettleEvent(this, new SystemEventArgs());
 
             //A:储存当前数据
-            this.BindPositionSettlePrice();//采集持仓结算价
-            this.SaveHoldInfo();//保存结算持仓数据和对应的PR数据
+            //this.BindPositionSettlePrice();//采集持仓结算价 结算价是自动推送的
+            //this.SaveHoldInfo();//保存结算持仓数据和对应的PR数据
+            this.SavePositionDetails();//保存持仓明细
             this.Dump2Log();//转储到历史记录表
 
             //B:结算交易帐户形成结算记录

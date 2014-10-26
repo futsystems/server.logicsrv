@@ -51,7 +51,9 @@
     <Compile Include="Other\LogItem.cs" />
     <Compile Include="Other\PermissionFieldAttr.cs" />
     <Compile Include="Trading\PositionCloseDetailImpl.cs" />
+    <Compile Include="Trading\PositionCloseDetailUtil.cs" />
     <Compile Include="Trading\PositionDetailImpl.cs" />
+    <Compile Include="Trading\PositionDetailUtil.cs" />
     <Compile Include="Trading\SymbolUtils.cs" />
     <Compile Include="Utils\ConfigFile.cs" />
     <Compile Include="FutsError.cs" />

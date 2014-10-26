@@ -75,6 +75,41 @@ namespace TradingLib.Core
         }
 
         /// <summary>
+        /// 保存持仓明细
+        /// 将所有隔夜持仓明细保存到历史持仓明细表 用于下一个交易日生成对应的持仓状态
+        /// 这里包含了持仓明细的盯市盈亏计算，该计算需要当日结算价
+        /// </summary>
+        public void SavePositionDetails()
+        {
+            //遍历所有交易帐户
+            foreach (IAccount account in _clearcentre.Accounts)
+            {
+                //遍历交易帐户下所有未平仓持仓对象
+                foreach (Position pos in account.GetPositionsHold())
+                {
+                    //遍历该未平仓持仓对象下的所有持仓明细
+                    foreach (PositionDetail pd in pos.PositionDetailTotal.Where(pd => !pd.IsClosed()))
+                    {
+                        //表明该持仓明细是今日新开仓持仓明细 交易日设定为当前交易日
+                        if (pd.Tradingday == 0)
+                        {
+                            pd.Tradingday = TLCtxHelper.Ctx.SettleCentre.NextTradingday;
+                        }
+                        //结算日
+                        pd.Settleday = TLCtxHelper.Ctx.SettleCentre.NextTradingday;
+
+                        //计算留仓保证金和盯市浮动盈亏
+                        pd.Margin = pd.CalMargin();
+                        pd.UnRealizedProfitByDate = pd.CalUnRealizedProfitByDate();
+
+                        //保存持仓明细到数据库
+                        ORM.MSettlement.InsertPositionDetail(pd);
+                    }   
+                }
+            }
+        }
+
+        /// <summary>
         /// 2.将日内交易数据传储到历史交易记录表
         /// </summary>
         public void Dump2Log()

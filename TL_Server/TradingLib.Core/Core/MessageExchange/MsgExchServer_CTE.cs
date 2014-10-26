@@ -29,9 +29,9 @@ namespace TradingLib.Core
                             "demotick",
                             "demotick - send demotick to system",
                             "向系统输出模拟tick数据 用于系统调试")]
-        public string DemoTick()
+        public string DemoTick(decimal lastsettle , decimal settleprice)
         {
-            _datafeedRouter.DemoTick();
+            _datafeedRouter.DemoTick(lastsettle,settleprice);
             return "DemoTick Send";
         }
 

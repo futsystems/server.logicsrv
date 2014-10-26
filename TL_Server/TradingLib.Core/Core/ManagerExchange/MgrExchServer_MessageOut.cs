@@ -225,7 +225,7 @@ namespace TradingLib.Core
                 {
                     HoldPositionNotify notify = ResponseTemplate<HoldPositionNotify>.SrvSendNotifyResponse(location);
                     notify.Position = pos.GenPositionEx();
-                    tl.TLSend(notify); 
+                    tl.TLSend(notify);
                 }
                 //转发当日委托
                 foreach (Order o in account.Orders)

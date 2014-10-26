@@ -43,7 +43,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("Insert into log_position_detail_hist (`account`,`opendate`,`opentime`,`tradingday`,`settleday`,`side`,`volume`,`openprice`,`tradeid`,`lastsettlementprice`,`settlementprice`,`closevolume`,`hedgeflag`,`margin`,`exchange`,`symbol`,`seccode`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}')", p.Account, p.OpenDate, p.OpenTime, p.Tradingday, p.Settleday, p.Side ? 1 : 0, p.Volume, p.OpenPrice, p.TradeID, p.LastSettlementPrice, p.SettlementPrice, p.CloseVolume, p.HedgeFlag, p.Margin, p.Exchange, p.Symbol, p.SecCode);
+                string query = String.Format("Insert into log_position_detail_hist (`account`,`opendate`,`opentime`,`tradingday`,`settleday`,`side`,`volume`,`openprice`,`tradeid`,`lastsettlementprice`,`settlementprice`,`closevolume`,`hedgeflag`,`margin`,`exchange`,`symbol`,`seccode`,`unrealizedprofitbydate`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}','{17}')", p.Account, p.OpenDate, p.OpenTime, p.Tradingday, p.Settleday, p.Side ? 1 : 0, p.Volume, p.OpenPrice, p.TradeID, p.LastSettlementPrice, p.SettlementPrice, p.CloseVolume, p.HedgeFlag, p.Margin, p.Exchange, p.Symbol, p.SecCode,p.UnRealizedProfitByDate);
                 return db.Connection.Execute(query) > 0;
             }
         
@@ -74,7 +74,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("Insert into log_position_close_detail (`account`,`settleday`,`side`,`opendate`,`opentime`,`closedate`,`closetime`,`openprice`,`lastsettlementprice`,`closeprice`,`closevolume`,`closeprofitbydate`,`exchange`,`symbol`,`seccode`,`opentradeid`,`closetradeid`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}')", p.Account, p.Settleday, p.Side ? 1 : 0, p.OpenDate, p.OpenTime, p.CloseDate, p.CloseTime, p.OpenPrice, p.LastSettlementPrice, p.ClosePrice, p.CloseVolume, p.CloseProfitByDate, p.Exchange, p.Symbol, p.SecCode,p.OpenTradeID,p.CloseTradeID);
+                string query = String.Format("Insert into log_position_close_detail (`account`,`settleday`,`side`,`opendate`,`opentime`,`closedate`,`closetime`,`openprice`,`lastsettlementprice`,`closeprice`,`closevolume`,`closeprofitbydate`,`exchange`,`symbol`,`seccode`,`opentradeid`,`closetradeid`,`tradingday`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}','{17}')", p.Account, p.Settleday, p.Side ? 1 : 0, p.OpenDate, p.OpenTime, p.CloseDate, p.CloseTime, p.OpenPrice, p.LastSettlementPrice, p.ClosePrice, p.CloseVolume, p.CloseProfitByDate, p.Exchange, p.Symbol, p.SecCode, p.OpenTradeID, p.CloseTradeID,p.Tradingday);
                 return db.Connection.Execute(query) > 0;
             }
         }

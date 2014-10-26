@@ -21,10 +21,16 @@ namespace TradingLib.Core
             Symbol sym = close.oSymbol != null ? close.oSymbol : BasicTracker.SymbolTracker[close.Symbol];
 
             decimal profit = 0;
-            if (true)
+            //平今仓
+            if (!close.IsCloseHist())
             {
-                //
-                profit = (close.ClosePrice -close.OpenPrice) * close.CloseVolume * sym.Multiple*(close.Side?1:-1);
+                //今仓 平仓盈亏为平仓价-平仓价
+                profit = (close.ClosePrice - close.OpenPrice) * close.CloseVolume * sym.Multiple * (close.Side ? 1 : -1);
+            }
+            else
+            {
+                //昨仓 平仓盈亏为昨结算-平仓价
+                profit = (close.ClosePrice - close.LastSettlementPrice) * close.CloseVolume * sym.Multiple * (close.Side ? 1 : -1);
             }
 
             return profit;

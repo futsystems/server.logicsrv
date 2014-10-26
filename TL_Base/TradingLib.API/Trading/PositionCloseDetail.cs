@@ -13,7 +13,13 @@ namespace TradingLib.API
         string Account { get; set; }
 
         /// <summary>
-        /// 交易日
+        /// 开仓时 所在交易日
+        /// </summary>
+        int Tradingday { get; set; }
+
+        /// <summary>
+        /// 结算日，平仓时所在结算日
+        /// 通过交易日与结算日可以判断是今仓还是昨仓
         /// </summary>
         int Settleday { get; set; }
 

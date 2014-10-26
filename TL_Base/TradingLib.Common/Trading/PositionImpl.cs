@@ -239,12 +239,13 @@ namespace TradingLib.Common
         public PositionImpl(PositionDetail d, QSEnumPositionDirectionType type)
         {
             _sym = d.Symbol;
-            _price = d.SettlementPrice;//持仓明细
-            _size = d.Side ? d.HoldSize() : d.HoldSize() * -1;
+            _price = d.SettlementPrice;//历史持仓明细中恢复到今日交易其成本价为结算持仓的结算价，因为昨日计算盯市盈亏时按结算价来计算浮动盈亏并已计入帐户财务数据
+            _size = d.Side ? d.HoldSize() : d.HoldSize() * -1;//数量为具体的持仓数量
+
             _date = d.OpenDate;
             _time = d.OpenTime;
             _acct = d.Account;
-            _last = d.SettlementPrice;
+            _last = d.SettlementPrice;//最新价以昨日结算价为准
 
             _directiontype = type;
             _osymbol = d.oSymbol;
@@ -398,6 +399,10 @@ namespace TradingLib.Common
         /// </summary>
         public void GotTick(Tick k)
         {
+            //if (k.ex.Equals("demo"))
+            //{
+            //    int x = 1;
+            //}
             //动态的更新unrealizedpl，这样就不用再委托检查是频繁计算
             //更新最新的价格信息
 			if (k.symbol != (this.oSymbol!=null? this.oSymbol.TickSymbol:this.Symbol))//合约的行情比对或者模拟成交是按Tick进行的。应为异化合约只是合约代码和保证金手续费不同,异化合约依赖于底层合约
@@ -434,6 +439,7 @@ namespace TradingLib.Common
             {
                 _lastsettlementprice = k.PreSettlement;
                 //更新所有持仓明细的昨日结算价格
+                //昨日持仓明细在YdRef保存的不用更新 该数据用于获得隔夜仓的成本即昨天的结算价为成本
                 foreach (PositionDetail p in this.PositionDetailTotal)
                 {
                     p.LastSettlementPrice = k.PreSettlement;
@@ -446,7 +452,7 @@ namespace TradingLib.Common
                 Util.Debug("update presettlementprice for position[" + this.Account + "-" + this.Symbol + "] price:" + _lastsettlementprice.ToString(), QSEnumDebugLevel.MUST);
             }
             //检查昨结算价格是否异常 如果获得了昨日结算价格 但是又和行情中的昨结算价格不一致则有异常
-            if (_lastsettlementprice != null && k.PreSettlement != _lastsettlementprice)
+            if (_lastsettlementprice != null && k.PreSettlement > 0 && k.PreSettlement != _lastsettlementprice)
             {
                 Util.Debug("PreSettlement price error,it changed during trading", QSEnumDebugLevel.ERROR);
             }
@@ -459,7 +465,7 @@ namespace TradingLib.Common
                 //更新所有持仓明细的当日结算价格
                 foreach (PositionDetail p in this.PositionDetailTotal)
                 {
-                    p.SettlementPrice = k.PreSettlement;
+                    p.SettlementPrice = k.Settlement;
                 }
                 Util.Debug("update settlementprice for position[" + this.Account + "-" + this.Symbol + "] price:" + _settlementprice.ToString(), QSEnumDebugLevel.MUST);
             }
@@ -553,18 +559,21 @@ namespace TradingLib.Common
         /// <returns></returns>
         public decimal Adjust(Position pos)
         {
-            
-            if ((_sym!="") && (this.Symbol != pos.Symbol)) throw new Exception("Failed because adjustment symbol did not match position symbol");
-
+            //如果合约为空 则默认pos的合约
+            if ((_sym == "") && pos.isValid) _sym = pos.Symbol;
+            //合约不为空比较 当前持仓合约和adjusted pos的合约
+            if ((_sym!= pos.Symbol)) throw new Exception("Failed because adjustment symbol did not match position symbol");
+            //如果osymbol为空则取默认pos的osymbol
             if (_osymbol == null)
             {
                 if (!pos.Symbol.Equals(this.Symbol)) throw new Exception("Failed because osymbol and symbol do not match");
                 _osymbol = pos.oSymbol;
             }
 
+            //帐户比较
             if (_acct == "") _acct = pos.Account;
             if (_acct != pos.Account) throw new Exception("Failed because adjustment account did not match position account.");
-            if ((_sym=="") && pos.isValid) _sym = pos.Symbol;
+            
             if (!pos.isValid) throw new Exception("Invalid position adjustment, existing:" + this.ToString() + " adjustment:" + pos.ToString());
             if (pos.isFlat) return 0; // nothing to do
             bool oldside = isLong;
@@ -762,121 +771,10 @@ namespace TradingLib.Common
             sb.Append(" ");
             sb.Append("Trade Num:" + _tradelist.Count.ToString());
             sb.Append(Environment.NewLine);
-
-            /*
-            //某个特定持仓已经按照交易帐号 交易合约进行了默认分组 只需要将对应的开仓成交和平仓成交进行逻辑处理
-            sb.Append("Trade Open" + Environment.NewLine);
-            foreach(Trade fill in _tradelist.Where(f=>f.IsEntryPosition))
-            {
-                sb.Append(fill.GetTradeDetail()+Environment.NewLine);
-            }
-
-            sb.Append("Trade Close[分组]" + Environment.NewLine);
-
-            //按合约进行平仓分组 同时平仓需要区分平今还是平昨(上期所支持 其余期货交易所不支持)
-            //foreach (Trade fill in _tradelist.Where(f => !f.IsEntryPosition).GroupBy()
-            //{
-            //    sb.Append(fill.GetTradeDetail() + Environment.NewLine);
-            //}
-            //from 
-
-            IEnumerable<Tuple<string, string, QSEnumOffsetFlag, int>> result = demo(_tradelist.Where(f => !f.IsEntryPosition));
-            foreach (Tuple<string, string, QSEnumOffsetFlag, int> t in result)
-            {
-                sb.Append(string.Format("{0}  {1}  {2}  {3}", t.Item1, t.Item2, t.Item3, t.Item4) + Environment.NewLine);
-            }
-
-            //将日内成交记录分组成开仓成交与平仓成交
-            //开仓成交记录
-            IEnumerable<Trade> trades_open = _tradelist.Where(f => f.IsEntryPosition);
-            //平仓成交记录
-            IEnumerable<Trade> trades_close = _tradelist.Where(f => !f.IsEntryPosition);
-
-            //开仓成交记录直接形成持仓明细列表
-            List<PositionDetail> pos_today_open = trades_open.Select(f => f.ToPositionDetail()).ToList();
-
-            //计算当前持仓明细
-            //没有平仓成交记录
-            if (trades_close.Count() == 0)
-            {
-                sb.Append("没有平仓成交记录,所有的开仓成交记录形成当日新开仓记录" + Environment.NewLine);
-                foreach (PositionDetail pos in pos_today_open)
-                {
-                    sb.Append(pos.GetPosDetailStr() + Environment.NewLine);
-                }
-            }
-            //有平仓汇总记录 
-            else
-            {
-                sb.Append("有平仓成交汇总记录,计算当日新开仓记录"+Environment.NewLine);
-                //用当日开仓成交记录形成持仓明细 再用平仓汇总记录去执行平仓
-                
-                List<PositionDetail> closed = new List<PositionDetail>();//已经平掉的开仓
-
-                foreach (Trade close in trades_close)//遍历所有平仓成交记录 用平仓成交记录去平开仓成交记录形成的持仓明细
-                {
-                    sb.Append("取平仓成交:" + close.GetTradeDetail()+Environment.NewLine);
-                    int remainsize = Math.Abs(close.xsize);
-
-                    foreach (PositionDetail pos in pos_today_open)
-                    {
-                        //如果持仓已经关闭则取下一条新开持仓记录 
-                        if (pos.IsClosed())
-                        {
-                            sb.Append("持仓:" + pos.GetPosDetailStr() + "已经全部平掉,取下一条持仓记录"+Environment.NewLine);
-                            continue;
-                        }
-
-                        PositionCloseDetail closedetail = pos.ClosePositon(close, ref remainsize);
-
-                        sb.Append("获得平仓明细:" + closedetail.GetPositionCloseStr()+Environment.NewLine);
-                        sb.Append("持仓跟新:" + pos.GetPosDetailStr() + " 平仓量:" + closedetail.CloseVolume.ToString() + " 持仓量:" + remainsize.ToString()+Environment.NewLine);
-
-                        //如果剩余平仓数量为0 则跳出持仓循环，取下一个平仓记录
-                        if (remainsize == 0)
-                        {
-                            sb.Append("平仓成交:" + close.GetTradeDetail() + " 全部用完，取下一条平仓成交记录"+Environment.NewLine);
-                            break;
-                        }
-                    }
-                    
-                }
-
-                sb.Append(Environment.NewLine);
-                sb.Append("平仓后最新记录" + Environment.NewLine);
-                foreach (PositionDetail pos in pos_today_open.Where(pos=>!pos.IsClosed()))
-                {
-                    sb.Append(pos.GetPosDetailStr() + Environment.NewLine);
-                }
-
-                
-            }
-             * **/
             return sb.ToString();
-            
-
-
-            //return (this.oSymbol !=null ?this.oSymbol.FullName:this.Symbol) +" " + Size + "@" + AvgPrice.ToString("F2") + " UnPL:"+this.UnRealizedPL.ToString() + " RePL:"+this.ClosedPL.ToString() + "[" + Account + "] " +" SettlePrice:"+this.SettlePrice.ToString();
         }
-        //account,symbol,offset,sizesum
-        //IEnumerable<Tuple<string,string,QSEnumOffsetFlag,int>> demo(IEnumerable<Trade> trades)
-        //{
-        //    var result = new List<Tuple<string,string,QSEnumOffsetFlag,int>>();
-        //    var q = from k in trades group k by k.symbol;
-        //    foreach (var g in q)
-        //    {
-        //        result.Add(new Tuple<string, string, QSEnumOffsetFlag, int>(
-        //            "demo1",g.Key,QSEnumOffsetFlag.CLOSE,g.Sum(v=>v.xsize)
-        //            ));
-        //    }
-        //    return result;
-
-        //    //这里需要先按合约分组然后按
-        //}
-        /// <summary>
-        /// 将持仓转换成Fill(account,symbol,price,size,time)等
-        /// </summary>
-        /// <returns></returns>
+             
+        
         public Trade ToTrade()
         {
             DateTime dt = (_date*_time!=0) ? Util.ToDateTime(_date, _time) : DateTime.Now;
@@ -885,6 +783,8 @@ namespace TradingLib.Common
             return f;
         }
 
+
+        #region 静态函数
         public static Position Deserialize(string msg)
         {
             string[] r = msg.Split(',');
@@ -902,6 +802,22 @@ namespace TradingLib.Common
             string[] r = new string[] { p.Symbol, p.AvgPrice.ToString("F2", System.Globalization.CultureInfo.InvariantCulture), p.Size.ToString("F0", System.Globalization.CultureInfo.InvariantCulture), p.ClosedPL.ToString("F2", System.Globalization.CultureInfo.InvariantCulture), p.Account };
             return string.Join(",", r);
         }
+
+        /// <summary>
+        /// 从一组持仓明细生成持仓汇总
+        /// </summary>
+        /// <param name="details"></param>
+        /// <returns></returns>
+        public static Position FromPositionDetail(IEnumerable<PositionDetail> details)
+        {
+            Position pos = new PositionImpl();
+            foreach (PositionDetail p in details)
+            {
+                pos.Adjust(p);
+            }
+            return pos;
+        }
+        #endregion
 
 
     }

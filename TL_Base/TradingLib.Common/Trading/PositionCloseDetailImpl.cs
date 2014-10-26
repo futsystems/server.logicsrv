@@ -17,6 +17,7 @@ namespace TradingLib.Common
         {
             this.Account = string.Empty;
             this.Settleday = 0;
+            this.Tradingday = 0;
             this.Side = true;
             this.OpenDate = 0;
             this.OpenTime = 0;
@@ -40,7 +41,13 @@ namespace TradingLib.Common
         public string Account { get; set; }
 
         /// <summary>
-        /// 交易日
+        /// 开仓所在交易日
+        /// </summary>
+        public int Tradingday { get; set; }
+
+
+        /// <summary>
+        /// 平仓所在结算日
         /// </summary>
         public int Settleday { get; set; }
 

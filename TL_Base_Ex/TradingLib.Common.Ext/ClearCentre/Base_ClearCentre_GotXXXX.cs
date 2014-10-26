@@ -222,7 +222,7 @@ namespace TradingLib.Common
                 //生成持仓操作记录 同时结合beforeszie aftersize 设置fill PositionOperation,需要知道帐户的持仓信息才可以知道是开 加 减 平等信息
                 postrans = new PositionTransaction(f, symbol, beforesize, aftersize, pos.Highest,pos.Lowest);
                 f.PositionOperation = postrans.PosOperation;
-                //totaltk.GotFill(f);
+                totaltk.GotFill(f);
 
                 //子类函数的onGotFill用于执行数据记录以及其他相关业务逻辑
                 onGotFill(f, postrans);
