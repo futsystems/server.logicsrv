@@ -152,6 +152,7 @@ namespace TradingLib.Common
             sb.Append(" S:" + (pos.Side ? "Long" : "Short"));
             sb.Append(string.Format(" {0}@{1}", pos.Volume, pos.OpenPrice));
             sb.Append(" HoldSize:" + pos.HoldSize());
+            sb.Append(" TradeID:" + pos.TradeID);
             return sb.ToString();
         }
 
@@ -161,8 +162,8 @@ namespace TradingLib.Common
             StringBuilder sb = new StringBuilder();
             sb.Append(d.Account+" ");
             sb.Append(d.Symbol + " ");
-            sb.Append("Open:" + d.OpenDate.ToString() + " " + d.OpenPrice.ToString() +" ");
-            sb.Append("Close:" + d.CloseDate.ToString() + " " + d.ClosePrice.ToString() +" ");
+            sb.Append("Open:" + d.OpenDate.ToString() + " " + d.OpenPrice.ToString() +" ID:"+d.OpenTradeID +" ");
+            sb.Append("Close:" + d.CloseDate.ToString() + " " + d.ClosePrice.ToString() +" ID:"+d.CloseTradeID+" ");
             sb.Append(string.Format("{0} {1}手@{2} PreS:{3}",d.Side?"买入":"卖出",d.CloseVolume,d.ClosePrice,d.LastSettlementPrice));
             return sb.ToString();
         }
@@ -178,6 +179,7 @@ namespace TradingLib.Common
     /// </summary>
     public class PositionCloseDetail
     {
+
 
         /// <summary>
         /// 交易帐号
@@ -205,6 +207,11 @@ namespace TradingLib.Common
         public int OpenTime { get; set; }
 
         /// <summary>
+        /// 开仓成交编号
+        /// </summary>
+        public string OpenTradeID { get; set; }
+
+        /// <summary>
         /// 平仓日期
         /// </summary>
         public int CloseDate { get; set; }
@@ -213,6 +220,11 @@ namespace TradingLib.Common
         /// 平仓时间
         /// </summary>
         public int CloseTime { get; set; }
+
+        /// <summary>
+        /// 平仓成交编号
+        /// </summary>
+        public string CloseTradeID { get; set; }
         /// <summary>
         /// 开仓价格
         /// </summary>
@@ -304,10 +316,10 @@ namespace TradingLib.Common
     /// 
     /// 
     /// </summary>
-    public class PositionDetail
+    public class PositionDetailImpl:PositionDetail
     {
 
-        public PositionDetail()
+        public PositionDetailImpl()
         {
             this.Account = string.Empty;
             this.Symbol = string.Empty;
@@ -318,14 +330,44 @@ namespace TradingLib.Common
             this.Volume = 0;
             this.OpenPrice = 0;
             this.TradeID = string.Empty;
-            this.HedgeFlag = string.Empty;
-            this.Exchange = string.Empty;
-            this.Margin = 0M;
+            
             this.LastSettlementPrice = 0M;
             this.SettlementPrice = 0M;
             this.CloseVolume = 0;
 
+            this.HedgeFlag = string.Empty;
+            this.oSymbol = null;
+            this.Exchange = string.Empty;
+            this.SecCode = string.Empty;
+            this.Margin = 0M;
+            this.CloseProfitByDate = 0;
+            this.UnRealizedProfitByDate = 0;
         }
+
+        public PositionDetailImpl(PositionDetail p)
+        {
+            this.Account = p.Account;
+            this.Symbol = p.Symbol;
+            this.OpenDate = p.OpenDate;
+            this.OpenTime = p.OpenTime;
+            this.Tradingday = p.Tradingday;
+            this.Side = p.Side;
+            this.Volume = p.Volume;
+            this.OpenPrice = p.OpenPrice;
+            this.TradeID = p.TradeID;
+
+            this.LastSettlementPrice = p.LastSettlementPrice;
+            this.SettlementPrice = p.SettlementPrice;
+            this.CloseVolume = p.CloseVolume;
+            this.HedgeFlag = p.HedgeFlag;
+            this.oSymbol = p.oSymbol;
+            this.Exchange = p.Exchange;
+            this.SecCode = p.SecCode;
+            this.Margin = p.Margin;
+            this.CloseProfitByDate = p.CloseProfitByDate;
+            this.UnRealizedProfitByDate = p.UnRealizedProfitByDate;
+        }
+        
         /// <summary>
         /// 交易帐号
         /// </summary>

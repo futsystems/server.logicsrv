@@ -43,9 +43,11 @@ namespace TradingLib.Core
             //设定开仓时间
             closedetail.OpenDate = pos.OpenDate;
             closedetail.OpenTime = pos.OpenTime;
+            closedetail.OpenTradeID = pos.TradeID;
             //设定平仓时间
             closedetail.CloseDate = f.xdate;
             closedetail.CloseTime = f.xtime;
+            closedetail.CloseTradeID = f.BrokerKey;
 
             //设定开仓平仓价格信息
             closedetail.OpenPrice = pos.OpenPrice;

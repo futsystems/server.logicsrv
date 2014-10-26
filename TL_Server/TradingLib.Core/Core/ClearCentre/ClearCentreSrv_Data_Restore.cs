@@ -42,11 +42,13 @@ namespace TradingLib.Core
                 IEnumerable<Trade> flist = LoadTradesFromMysql();
                 IEnumerable<long> clist = LoadCanclesFromMysql();
 
-                debug("从数据库加载交易日:" + TLCtxHelper.Ctx.SettleCentre.LastSettleday.ToString() + " 隔夜持仓数据", QSEnumDebugLevel.INFO);
-                IEnumerable<Position> plist = LoadPositionFromMysql();//从数据得到昨持仓数据
+                debug("从数据库加载上次结算日:" + TLCtxHelper.Ctx.SettleCentre.LastSettleday.ToString() + " 持仓明细数据", QSEnumDebugLevel.INFO);
+                IEnumerable<PositionDetail> plist = LoadPositionFromMysql();//从数据得到昨持仓数据
                 IEnumerable<PositionRound> prlist = LoadPositionRoundFromMysql();//恢复开启的positionround数据
+
+
                 //从数据库恢复昨天持仓信息,账户resume也要将昨持仓数据正确加载进来 
-                foreach (Position p in plist)
+                foreach (PositionDetail p in plist)
                 {
                     this.GotPosition(p);
                 }
@@ -160,11 +162,13 @@ namespace TradingLib.Core
         /// 加载上次结算时的持仓数据,这里的持仓均是隔夜仓数据
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Position> LoadPositionFromMysql()
+        public IEnumerable<PositionDetail> LoadPositionFromMysql()
         {
             //debug("从数据库恢复昨持仓数据....", QSEnumDebugLevel.DEBUG);
-            IEnumerable<Position> positions = ORM.MTradingInfo.SelectHoldPositions(TLCtxHelper.Ctx.SettleCentre.LastSettleday).Select(pos => { pos.oSymbol = BasicTracker.SymbolTracker[pos.Symbol]; return pos; });
-            debug("数据库恢复前次结算持仓数据:" + positions.Count().ToString() + "条", QSEnumDebugLevel.INFO);
+            IEnumerable<PositionDetail> positions = ORM.MSettlement.SelectPositionDetails(TLCtxHelper.Ctx.SettleCentre.LastSettleday).Select(pos => { pos.oSymbol = BasicTracker.SymbolTracker[pos.Symbol]; return pos; });
+
+            //IEnumerable<Position> positions = ORM.MTradingInfo.SelectHoldPositions(TLCtxHelper.Ctx.SettleCentre.LastSettleday).Select(pos => { pos.oSymbol = BasicTracker.SymbolTracker[pos.Symbol]; return pos; });
+            debug("数据库恢复前次结算持仓明细数据:" + positions.Count().ToString() + "条", QSEnumDebugLevel.INFO);
             return positions;
         }
 

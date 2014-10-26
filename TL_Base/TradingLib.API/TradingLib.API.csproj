@@ -102,6 +102,7 @@
     <Compile Include="Trading\BasicInfo\Symbol.cs" />
     <Compile Include="Trading\EnumOrderActionFlag.cs" />
     <Compile Include="Trading\EnumPosOperation.cs" />
+    <Compile Include="Trading\PositionDetail.cs" />
     <Compile Include="Trading\Settlement.cs" />
     <Compile Include="Trading\Tick.cs" />
     <Compile Include="Trading\Trade.cs" />

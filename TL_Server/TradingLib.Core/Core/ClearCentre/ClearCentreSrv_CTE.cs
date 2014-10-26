@@ -426,13 +426,52 @@ namespace TradingLib.Core
                 foreach (Position pos in acc.Positions)
                 {
                     sb.Append(pos.ToString() + Environment.NewLine);
-                    pos.SettlePosition();
                 }
 
                 return re + sb.ToString();
             }
             return "";
         }
+
+
+        [ContribCommandAttr(QSEnumCommandSource.CLI, "posdetail", "posdetail - print out position details", "")]
+        public string CTE_PrintPosDetails(string id)
+        {
+            IAccount acc = this[id];
+            if (acc != null)
+            {
+                string re = "";
+                StringBuilder sb = new StringBuilder();
+                foreach (Position pos in acc.Positions)
+                {
+                    sb.Append("-------------" + pos.Account + " " + pos.Symbol + " " + pos.DirectionType.ToString() + " -------------"+Environment.NewLine);
+                    sb.Append("昨日持仓明细" + Environment.NewLine);
+                    foreach (PositionDetail p in pos.YdPositionDetails)
+                    {
+                        sb.Append(p.GetPositionDetailStr() + Environment.NewLine);
+                    }
+
+                    IEnumerable<PositionCloseDetail> closedetail = null;
+                    IEnumerable<PositionDetail> nowdetails = pos.CalPositionDetail(out closedetail);
+
+                    sb.Append("当前持仓明细" + Environment.NewLine);
+                    foreach (PositionDetail p in nowdetails)
+                    {
+                        sb.Append(p.GetPositionDetailStr() + Environment.NewLine);
+                    }
+
+                    sb.Append("当日平仓明细" + Environment.NewLine);
+
+                    foreach (PositionCloseDetail p in closedetail)
+                    {
+                        sb.Append(p.GetPositionCloseStr() + Environment.NewLine);
+                    }
+                }
+                return sb.ToString();
+            }
+            return "";
+        }
+
 
         [ContribCommandAttr(QSEnumCommandSource.CLI, "accfutpos", "accfutpos - print out account fut postions", "")]
         public string CTE_Printfutpostions(string id)

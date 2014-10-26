@@ -102,6 +102,25 @@ namespace TradingLib.Common
         }
 
         /// <summary>
+        /// 获得一个持仓明细记录
+        /// 用于恢复历史持仓
+        /// </summary>
+        /// <param name="p"></param>
+        public void GotPosition(PositionDetail p)
+        {
+            if (p.HoldSize() == 0) return;//无实际持仓
+            if (p.Side)
+            {
+                _ltk.GotPosition(p);
+            }
+            else
+            {
+                _stk.GotPosition(p);
+            }
+            _nettk.GotPosition(p);
+        }
+
+        /// <summary>
         /// 清空记录的数据
         /// </summary>
         public void Clear()

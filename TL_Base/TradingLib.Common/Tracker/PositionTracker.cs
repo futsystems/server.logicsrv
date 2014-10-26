@@ -75,6 +75,14 @@ namespace TradingLib.Common
         }
 
         /// <summary>
+        /// 获得一个持仓明细数据 用于加载隔夜持仓数据 生成初始化持仓状态
+        /// </summary>
+        /// <param name="p"></param>
+        public void GotPosition(PositionDetail p)
+        {
+            Adjust(p);
+        }
+        /// <summary>
         /// 获得一个成交对象
         /// </summary>
         /// <param name="f"></param>
@@ -257,26 +265,32 @@ namespace TradingLib.Common
             return cpl;
         }
 
-        ///// <summary>
-        ///// get positions from tracker
-        ///// </summary>
-        ///// <returns></returns>
-        //public IEnumerator<Position> GetEnumerator()
-        //{
-        //    return this.GetEnumerator();
+        /// <summary>
+        /// 获得持仓明细数据
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <returns></returns>
+        public decimal Adjust(PositionDetail pos)
+        {
+            int idx = getindex(pos.Symbol + pos.Account);
+            //LibUtil.Debug("adjust fill, idx:" + idx.ToString());
+            decimal cpl = 0;
+            //设定默认帐户
+            if (_defaultacct == string.Empty)
+                _defaultacct = pos.Account;
 
-        //}
+            if (idx < 0)
+            {
+                //生成空的持仓数据 然后通过ajust(fill)统一通过fill来推动持仓更新
+                PositionImpl newpos = new PositionImpl(pos.Account, pos.Symbol, this.DirectionType);
+                addindex(pos.Symbol + pos.Account, newpos);//如果没有持仓添加对应的持仓 该持仓数据0数据
+                idx = getindex(pos.Symbol + pos.Account);
+            }
 
-        //IEnumerator<Position> IEnumerable<Position>.GetEnumerator()
-        //{
-        //    return GetEnumerator();
-        //}
-
-        //IEnumerator IEnumerable.GetEnumerator()
-        //{
-        //    return GetEnumerator();
-        //}
-
+            cpl += this[idx].Adjust(pos);
+            _totalclosedpl += cpl;//返回仓位变更产生的平仓利润,用于累加到系统
+            return cpl;
+        }
 
 
         /// <summary>

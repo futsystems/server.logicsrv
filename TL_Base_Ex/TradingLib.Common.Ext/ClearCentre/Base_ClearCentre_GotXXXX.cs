@@ -10,6 +10,35 @@ namespace TradingLib.Common
     {
 
         #region 【IGotTradingInfo】昨日持仓 委托 成交 取消 Tick数据处理
+
+        internal void GotPosition(PositionDetail p)
+        {
+            try
+            {
+                if (!HaveAccount(p.Account)) return;
+                Symbol symbol = p.oSymbol;
+                if (symbol == null)
+                {
+                    debug("symbol:" + p.Symbol + " not exist in basictracker, dropit", QSEnumDebugLevel.ERROR);
+                    return;
+                }
+
+                acctk.GotPosition(p);
+                totaltk.GotPosition(p);
+                onGotPosition(p);
+            }
+            catch (Exception ex)
+            {
+                debug("处理隔夜持仓明细数据异常:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+            }
+        }
+
+        internal virtual void onGotPosition(PositionDetail p)
+        {
+
+        }
+
+
         //注为了记录隔夜尺长 分账户与总账户的隔夜持仓要单独放置即要体现在当前持仓总又要体现在隔夜持仓中
         /// <summary>
         /// 清算中心获得持仓数据

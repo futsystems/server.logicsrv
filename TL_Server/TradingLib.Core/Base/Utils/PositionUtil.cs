@@ -59,8 +59,14 @@ namespace TradingLib.Core
             //平仓成交记录
             IEnumerable<Trade> trades_close = trades.Where(f => !f.IsEntryPosition);
 
-            //开仓成交记录直接形成持仓明细列表
-            List<PositionDetail> pos_today_open = trades_open.Select(f => f.ToPositionDetail()).ToList();
+            //昨日持仓明细列表 这里需要复制对应持仓的隔夜持仓明细数据 否则计算持仓明细的时候会修改该持仓明细的closevolume等数据
+            IEnumerable<PositionDetail> pos_his_open = pos.YdPositionDetails.Select(f=>new PositionDetailImpl(f));//
+
+            //开仓成交记录形成当日持仓明细列表
+            IEnumerable<PositionDetail> pos_today_open = trades_open.Select(f => f.ToPositionDetail());
+
+            //获得所有持仓明细的并集
+            List<PositionDetail> pos_open = pos_his_open.Concat(pos_today_open).ToList();
 
             Util.Debug("当日新开仓明细");
             foreach (PositionDetail pd in pos_today_open)
@@ -88,9 +94,8 @@ namespace TradingLib.Core
                     Util.Debug("取平仓成交:" + close.GetTradeDetail());
                     int remainsize = Math.Abs(close.xsize);
 
-                    foreach (PositionDetail pd in pos_today_open)
+                    foreach (PositionDetail pd in pos_open)
                     {
-                        //如果持仓已经关闭则取下一条新开持仓记录 
                         if (pd.IsClosed())
                         {
                             Util.Debug("持仓:" + pd.GetPositionDetailStr() + "已经全部平掉,取下一条持仓记录");
@@ -112,20 +117,47 @@ namespace TradingLib.Core
                         }
                     }
 
+
+                    //foreach (PositionDetail pd in pos_today_open)
+                    //{
+                    //    //如果持仓已经关闭则取下一条新开持仓记录 
+                    //    if (pd.IsClosed())
+                    //    {
+                    //        Util.Debug("持仓:" + pd.GetPositionDetailStr() + "已经全部平掉,取下一条持仓记录");
+                    //        continue;
+                    //    }
+
+                    //    PositionCloseDetail closedetail = pd.ClosePositon(close, ref remainsize);
+
+                    //    Util.Debug("获得平仓明细:" + closedetail.GetPositionCloseStr());
+                    //    pos_close_details.Add(closedetail);
+
+                    //    Util.Debug("持仓跟新:" + pd.GetPositionDetailStr() + " 平仓量:" + closedetail.CloseVolume.ToString() + " 剩余平仓量:" + remainsize.ToString());
+
+                    //    //如果剩余平仓数量为0 则跳出持仓循环，取下一个平仓记录
+                    //    if (remainsize == 0)
+                    //    {
+                    //        Util.Debug("平仓成交:" + close.GetTradeDetail() + " 全部用完，取下一条平仓成交记录");
+                    //        break;
+                    //    }
+                    //}
+
                 }
 
             }//有平仓记录处理结束
 
+            //取昨日持仓明细与当日新开持仓明细 并集
+            
             Util.Debug("当前持仓明细汇总");
             //当前最终持仓明细
-            IEnumerable<PositionDetail> pos_today_hist = pos_today_open.Where(pd => !pd.IsClosed());
-            foreach (PositionDetail pd in pos_today_open.Where(pd => !pd.IsClosed()))
+            //IEnumerable<PositionDetail> pos_today_hist = pos_today_open.Where(pd => !pd.IsClosed());
+            foreach (PositionDetail pd in pos_open)
             {
 
                 Util.Debug(pd.GetPositionDetailStr());
             }
 
-            return pos_today_hist;
+            return pos_open;
         }
     }
 }

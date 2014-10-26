@@ -224,9 +224,30 @@ namespace TradingLib.Common
             _directiontype = type;
             if (_size > 0) _size *= t.side ? 1 : -1;
 
+            _directiontype = type;
             _osymbol = t.oSymbol;//将成交所引用的合约对象设置给position
         }
 
+        /// <summary>
+        /// 从持仓明细生成对应的持仓数据 用于恢复当日持仓状态
+        /// 此时持仓数据的价格按持仓明细的结算价取价，因为结算价之前的价格变动已经通过盯市盈亏的方式体现到帐户权益中了
+        /// </summary>
+        /// <param name="d"></param>
+        /// <param name="type"></param>
+        public PositionImpl(PositionDetail d, QSEnumPositionDirectionType type)
+        {
+            _sym = d.Symbol;
+            _price = d.SettlementPrice;//持仓明细
+            _size = d.Side ? d.HoldSize() : d.HoldSize() * -1;
+            _date = d.OpenDate;
+            _time = d.OpenTime;
+            _acct = d.Account;
+            _last = d.SettlementPrice;
+
+            _directiontype = type;
+            _osymbol = d.oSymbol;
+            
+        }
 
 
         
@@ -394,10 +415,21 @@ namespace TradingLib.Common
 
         }
 
-
-
+        ThreadSafeList<PositionDetail> _poshislist = new ThreadSafeList<PositionDetail>();
         /// <summary>
-        /// 返回该持仓当日所有成交列表 用于结算时候进行持仓明细计算
+        /// 返回该持仓当日所有历史持仓明细
+        /// </summary>
+        public IEnumerable<PositionDetail> YdPositionDetails
+        {
+            get
+            {
+                return _poshislist;
+            }
+        }
+
+        ThreadSafeList<Trade> _tradelist = new ThreadSafeList<Trade>();
+        /// <summary>
+        /// 返回该持仓当日所有成交列表
         /// </summary>
         public IEnumerable<Trade> Trades
         {
@@ -406,8 +438,9 @@ namespace TradingLib.Common
                 return _tradelist;
             }
         }
-        ThreadSafeList<Trade> _tradelist = new ThreadSafeList<Trade>();
+        
 
+        
         // returns any closed PL calculated on position basis (not per share)
         /// <summary>
         /// 将新的仓位变化合并到当前仓位(Trade->Position)
@@ -474,7 +507,19 @@ namespace TradingLib.Common
             return cpl;
         }
 
+        /// <summary>
+        /// 用历史持仓明细数据调整当前持仓数据 用于初始化时从数据库恢复历史持仓数据
+        /// </summary>
+        /// <param name="d"></param>
+        /// <returns></returns>
+        public decimal Adjust(PositionDetail d)
+        {
+            _poshislist.Add(d);
 
+            decimal cpl = Adjust(new PositionImpl(d, _directiontype));
+
+            return cpl;
+        }
 
 
 

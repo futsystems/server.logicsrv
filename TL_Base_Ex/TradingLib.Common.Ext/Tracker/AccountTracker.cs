@@ -379,6 +379,18 @@ namespace TradingLib.Common
         }
 
         /// <summary>
+        /// 从数据库加载昨日持仓明细数据 
+        /// </summary>
+        /// <param name="pos"></param>
+        internal void GotPosition(PositionDetail pos)
+        {
+            //将昨持仓填充到对应交易账户的仓位管理器中
+            PosBook[pos.Account].GotPosition(pos);
+            //将昨日持仓填充到账户对应的昨日持仓管理器中
+            PosHold[pos.Account].GotPosition(pos);
+        }
+
+        /// <summary>
         /// 获得委托 用于记录帐户记录
         /// </summary>
         /// <param name="order"></param>

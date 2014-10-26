@@ -80,7 +80,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static PositionDetail ToPositionDetail(this Trade f)
         {
-            PositionDetail pos = new PositionDetail();
+            PositionDetail pos = new PositionDetailImpl();
             pos.Account = f.Account;
             pos.oSymbol = f.oSymbol;
 
@@ -92,7 +92,7 @@ namespace TradingLib.Common
             pos.Side = f.PositionSide;
             pos.Volume = Math.Abs(f.xsize);
             pos.OpenPrice = f.xprice;
-
+            pos.TradeID = f.BrokerKey;//开仓明细中的开仓成交编号
             
 
             return pos;

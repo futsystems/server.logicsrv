@@ -42,6 +42,14 @@ namespace TradingLib.Common
             PositionsHold.GotPosition(pos);
         }
 
+        public void GotPosition(PositionDetail pos)
+        {
+            //将昨持仓填充到总交易账户中去
+            DefaultPosTracker.GotPosition(pos);
+            //单独记录隔夜持仓
+            PositionsHold.GotPosition(pos);
+        }
+
         public bool IsTracked(long id)
         {
             return DefaultOrdTracker.isTracked(id);

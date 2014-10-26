@@ -75,6 +75,13 @@ namespace TradingLib.API
         /// <param name="newFill"></param>
         /// <returns></returns>
         decimal Adjust(Trade newFill);
+
+        /// <summary>
+        /// 累加持仓明细
+        /// </summary>
+        /// <param name="newPositiondetail"></param>
+        /// <returns></returns>
+        decimal Adjust(PositionDetail newPositiondetail);
         
         /// <summary>
         /// 浮动盈亏点数
@@ -93,8 +100,6 @@ namespace TradingLib.API
         /// </summary>
         decimal LastPrice { get; }
         
-        
-        //position建立后的一些数据，仓位建立后出现的最高价与最低价
         /// <summary>
         /// 开仓以来最高价
         /// </summary>
@@ -105,10 +110,16 @@ namespace TradingLib.API
         /// </summary>
         decimal Lowest { get; set; }
 
+
         /// <summary>
         /// 返回所有成交
         /// </summary>
         IEnumerable<Trade> Trades { get; }
+
+        /// <summary>
+        /// 返回所有历史持仓明细
+        /// </summary>
+        IEnumerable<PositionDetail> YdPositionDetails { get; }
 
         /// <summary>
         /// 转换成等效成交
