@@ -62,7 +62,7 @@ namespace TradingLib.Common
             //pos.IsHisPosition(); 
             //平仓盈亏需要判断是今仓还是昨仓
             closedetail.CloseProfitByDate = closedetail.CalCloseProfitByDate(pos.IsHisPosition());
-
+            closedetail.ClosePointByDate = closedetail.CalClosePointByDate(pos.IsHisPosition());
             return closedetail;
         }
 

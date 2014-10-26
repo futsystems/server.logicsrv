@@ -80,12 +80,15 @@ namespace TradingLib.API
         int CloseVolume { get; set; }
 
         /// <summary>
-        /// 盯市平仓盈亏
+        /// 盯市平仓盈亏金额
         /// 平当日仓 (开仓-平仓)*手数*乘数
         /// </summary>
         decimal CloseProfitByDate { get; set; }
 
-
+        /// <summary>
+        /// 盯市平仓盈亏点数
+        /// </summary>
+        decimal ClosePointByDate { get; set; }
         /// <summary>
         /// 合约信息
         /// </summary>

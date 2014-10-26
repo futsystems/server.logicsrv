@@ -11,15 +11,12 @@ namespace TradingLib.Common
     {
 
         /// <summary>
-        /// 计算某个平仓明细的平仓盈亏
+        /// 计算平仓明细的平仓盈亏
         /// </summary>
         /// <param name="close"></param>
         /// <returns></returns>
         public static decimal CalCloseProfitByDate(this PositionCloseDetail close,bool hispos)
         {
-            //获得合约对象
-            //Symbol sym = close.oSymbol != null ? close.oSymbol : BasicTracker.SymbolTracker[close.Symbol];
-
             decimal profit = 0;
             //平今仓
             if (!hispos)
@@ -36,6 +33,28 @@ namespace TradingLib.Common
             return profit;
         }
 
+        /// <summary>
+        /// 计算平仓明细的平仓盈亏点数
+        /// </summary>
+        /// <param name="close"></param>
+        /// <param name="hispos"></param>
+        /// <returns></returns>
+        public static decimal CalClosePointByDate(this PositionCloseDetail close, bool hispos)
+        {
+            decimal point = 0;
+            //平今仓
+            if (!hispos)
+            {
+                //今仓 平仓盈亏为平仓价-平仓价
+                point = (close.ClosePrice - close.OpenPrice) * close.CloseVolume * (close.Side ? 1 : -1);
+            }
+            else
+            {
+                //昨仓 平仓盈亏为昨结算-平仓价
+                point = (close.ClosePrice - close.LastSettlementPrice) * close.oSymbol.Multiple * (close.Side ? 1 : -1);
+            }
+            return point;
+        }
         /// <summary>
         /// 判断是否是平历史持仓
         /// </summary>

@@ -81,17 +81,17 @@ namespace TradingLib.API
         /// </summary>
         /// <param name="newPosition"></param>
         /// <returns></returns>
-        decimal Adjust(Position newPosition);
+        //decimal Adjust(Position newPosition);
 
         /// <summary>
-        /// 累加成交
+        /// 用成交数据更新持仓状态
         /// </summary>
         /// <param name="newFill"></param>
         /// <returns></returns>
         decimal Adjust(Trade newFill);
 
         /// <summary>
-        /// 累加持仓明细
+        /// 用持仓明细更新持仓状态
         /// </summary>
         /// <param name="newPositiondetail"></param>
         /// <returns></returns>

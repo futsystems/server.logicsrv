@@ -13,11 +13,19 @@ namespace TradingLib.Core
 
         /// <summary>
         /// 计算持仓明细的盯市盈亏
+        /// 如果没有结算价格 则以当前获得的最新价作为结算价 
         /// </summary>
         /// <param name="pos"></param>
         /// <returns></returns>
         public static decimal CalUnRealizedProfitByDate(this PositionDetail pos)
         {
+            IAccount account = TLCtxHelper.CmdAccount[pos.Account];
+            Position rawpos = account.GetPosition(pos.Symbol, pos.Side);
+            if (rawpos.SettlementPrice == null)
+            {
+                Util.Debug("postion:" + rawpos.GetPositionKey() + " have not got settlementprice,use lastprice:" + rawpos.LastPrice, QSEnumDebugLevel.WARNING);
+                rawpos.SettlementPrice = rawpos.LastPrice;
+            }
             //获得合约对象
             Symbol sym = pos.oSymbol != null ? pos.oSymbol : BasicTracker.SymbolTracker[pos.Symbol];
 

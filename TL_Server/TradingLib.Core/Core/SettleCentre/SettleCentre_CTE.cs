@@ -48,7 +48,7 @@ namespace TradingLib.Core
         /// <summary>
         /// 转储数据,将当天的交易信息 储存到历史交易信息表中
         /// </summary>
-        [TaskAttr("清算中心转储交易记录", 15, 30, 05, "清算中心转储交易记录")]
+        [TaskAttr("清算中心转储交易记录", 15, 50, 05, "清算中心转储交易记录")]
         [ContribCommandAttr(QSEnumCommandSource.CLI, "datastore", "datastore - datastore", "datastore")]
         public void Task_DataStore()
         {
@@ -73,7 +73,7 @@ namespace TradingLib.Core
         /// 非交易日不用进行结算
         /// 结算时间15:50 在15:50-16:00之间开机会导致无法找到对应的交易日
         /// </summary>
-        [TaskAttr("清算中心执行当日结算", 15, 32, 5, "清算中心执行当日结算")]
+        [TaskAttr("清算中心执行当日结算", 15, 55, 5, "清算中心执行当日结算")]
         [ContribCommandAttr(QSEnumCommandSource.CLI, "settle", "settle - clean the interday tmp table after reset", "清算中心结算交易帐户")]
         public void Task_SettleAccount()
         {
@@ -84,26 +84,11 @@ namespace TradingLib.Core
             Notify("结算交易账户[" + DateTime.Now.ToString() + "]", " ");
         }
 
-        //3.系统结算完毕后 清空日内临时交易记录表
-        /// <summary>
-        /// 结算后清空临时数据表 用于准备进入下一个交易日
-        /// 需要在重置前进行清空,清空临时表是以交易日来进行清空的，而清算中心重置后 交易日会发生改变导致无法清空日内记录表
-        /// </summary>
-        //[TaskAttr("清空日内交易记录[SQL]", 15, 58, 5, "清空日内交易缓存")]
-        //[ContribCommandAttr(QSEnumCommandSource.CLI, "cleanafterreset", "cleanafterreset - clean the interday tmp table after reset", "结算后清空日内交易临时数据表")]
-        //public void Task_CleanAfterReset()
-        //{
-            
-        //    if (IsNormal && !IsTradingday) return;
-
-
-        //}
-
         
-        //4.重置结算中心交易日信息 重置清算中心交易帐户 将昨日扎帐
+        //.重置结算中心交易日信息 重置清算中心交易帐户 将昨日扎帐
         //清算中心，风控中心，以及数据路由 成交路由都需要进行重置
         //开盘前需要重置
-        //[TaskAttr("重置结算中心-结算后", 16, 00, 5, "结算后重置结算中心")]
+        //通过参数 设定时间注入到任务系统
         [ContribCommandAttr(QSEnumCommandSource.CLI, "resetsc", "resetsc - reset settlecentre trading day", "重置结算中心")]
         public void Task_ResetTradingday()
         {

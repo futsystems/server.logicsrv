@@ -46,6 +46,8 @@ namespace TradingLib.Common
 
         public PositionTracker(string name) : base(name) { }
 
+
+
         //有新的合约建立持仓时,对外触发事件 传递symbol作为参数
         void PositionTracker_NewTxt(string txt, int idx)
         {
@@ -55,6 +57,7 @@ namespace TradingLib.Common
                 NewPositionEvent(this[idx]);
         }
 
+        #region 通过Position PositionDetail Trade更新对应持仓对象
         /// <summary>
         /// Create a new position, or overwrite existing position
         /// 用新的持仓对当前持仓进行覆盖
@@ -90,9 +93,12 @@ namespace TradingLib.Common
         { 
             Adjust(f); 
         }
+        #endregion
+
+
 
         /// <summary>
-        /// 获得一个Tick对象
+        /// 用Tick行情驱动持仓对象 实时更新持仓的行情数据用于获得动态浮动盈亏
         /// </summary>
         /// <param name="k"></param>
         public void GotTick(Tick k)
@@ -100,8 +106,8 @@ namespace TradingLib.Common
             //clearCentre中计算账户保证金,平仓盈利,浮动盈利等均需要遍历所有的position来进行计算,遍历的时候使用foreach(position p in positiontracker)
             //委托处理与tick是同步进行的，tick更新会调用gottick来遍历所有的position进行价格更新,这里出现2个线程同时操作一个对象。
             //因此gottick不能用Enumerator,使用toArray来进行遍历 避免冲突
-            Position[] parray = this.ToArray();
-            foreach (Position p in parray)
+            //Position[] parray = this.ToArray();
+            foreach (Position p in this)
             {
                 p.GotTick(k);
             }
@@ -130,6 +136,8 @@ namespace TradingLib.Common
         /// </summary>
         public string DefaultAccount { get { return _defaultacct; } set { _defaultacct = value; } }
 
+
+        #region 检索获得持仓对象
         /// <summary>
         /// get position given positions symbol (assumes default account)
         /// 查询某个symbol的position
@@ -185,6 +193,7 @@ namespace TradingLib.Common
                 return p;
             }
         }
+        #endregion
 
         public override Type TrackedType
         {
@@ -196,12 +205,13 @@ namespace TradingLib.Common
 
         decimal _totalclosedpl = 0;
         /// <summary>
-        /// gets sum of all closed pl for all positions
+        /// 累计平仓盈亏
         /// </summary>
         public decimal TotalClosedPL { get { return _totalclosedpl; } }
 
+
         /// <summary>
-        /// 累加所有浮动盈亏
+        /// 累计浮动盈亏
         /// </summary>
         public decimal TotalUnRealizedPL { get { return this.Sum(p => p.UnRealizedPL);}}
         
@@ -215,18 +225,20 @@ namespace TradingLib.Common
         /// <returns></returns>
         public decimal Adjust(Position newpos)
         {
-
+            //设定默认帐户
             if (_defaultacct == string.Empty)
                 _defaultacct = newpos.Account;
             int idx = getindex(newpos.Symbol + newpos.Account);
+
             //如果没有symbol+account对应的position则新增加一个仓位,或者用新仓位覆盖掉原来的仓位
             Position p = new PositionImpl(newpos);
             p.DirectionType = _directiontype;
-            if (idx < 0)
+
+            if (idx < 0)//如果没有对应持仓对象 则添加Position
             {
                 addindex(newpos.Symbol + newpos.Account, p);
             }
-            else
+            else//如果存在对应持仓对象 更新持仓对象 并将对应的ClosedPL反映到当前PositionTracker上去
             {
                 base[idx] = p;
                 _totalclosedpl += newpos.ClosedPL;//平仓盈亏进行累加合并
@@ -236,32 +248,29 @@ namespace TradingLib.Common
 
 
         /// <summary>
-        /// Adjust an existing position, or create new one if none exists.
-        /// 处理一笔成交,用于更新position,通过symbol+account形成唯一position标识符
+        /// 处理一笔成交,用于更新position状态,通过symbol+account形成唯一position标识符
         /// 对于新的持仓 是通过从成交转化成Position获得持仓
         /// </summary>
         /// <param name="fill"></param>
         /// <returns>any closed PL for adjustment</returns>
         public decimal Adjust(Trade fill)
         {
-            //LibUtil.Debug("adjust fill, key:" + fill.symbol + fill.Account);
-            int idx = getindex(fill.symbol + fill.Account);
-            //LibUtil.Debug("adjust fill, idx:" + idx.ToString());
-            decimal cpl = 0;
             //设定默认帐户
             if (_defaultacct == string.Empty)
                 _defaultacct = fill.Account;
 
-            if (idx < 0)
+            int idx = getindex(fill.symbol + fill.Account);
+            decimal cpl = 0;
+
+            if (idx < 0)//如果没有持仓对象 则创建一个空的持仓对象 并添加到Tracker
             {
-                //生成空的持仓数据 然后通过ajust(fill)统一通过fill来推动持仓更新
                 PositionImpl newpos = new PositionImpl(fill.Account,fill.symbol, this.DirectionType);
-                addindex(fill.symbol + fill.Account,newpos);//如果没有持仓 由最新成交产生持仓 
+                addindex(fill.symbol + fill.Account,newpos);
                 idx = getindex(fill.symbol + fill.Account);
             }
 
-            cpl += this[idx].Adjust(fill);//position.adjust(fill) 调用position来处理fill.形成closedpl
-            _totalclosedpl += cpl;//返回仓位变更产生的平仓利润,用于累加到系统
+            cpl += this[idx].Adjust(fill);//调用position来处理fill.形成closedpl
+            _totalclosedpl += cpl;//返回仓位变更产生的平仓利润,用于累加到Tracker
             return cpl;
         }
 
@@ -272,13 +281,12 @@ namespace TradingLib.Common
         /// <returns></returns>
         public decimal Adjust(PositionDetail pos)
         {
-            int idx = getindex(pos.Symbol + pos.Account);
-            //LibUtil.Debug("adjust fill, idx:" + idx.ToString());
-            decimal cpl = 0;
             //设定默认帐户
             if (_defaultacct == string.Empty)
                 _defaultacct = pos.Account;
 
+            int idx = getindex(pos.Symbol + pos.Account);
+            decimal cpl = 0;
             if (idx < 0)
             {
                 //生成空的持仓数据 然后通过ajust(fill)统一通过fill来推动持仓更新
