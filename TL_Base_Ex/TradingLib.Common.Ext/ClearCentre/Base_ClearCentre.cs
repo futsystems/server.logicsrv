@@ -77,7 +77,14 @@ namespace TradingLib.Common
         public ClearCentreBase(string name = "ClearCentreBase")
             : base(name)
         {
+            acctk.NewPositionEvent += new Action<Position>(acctk_NewPositionEvent);
+        }
 
+        //当帐户交易对象维护器产生持仓时，我们将持仓加入total维护其列表用于快速反问
+        void acctk_NewPositionEvent(Position obj)
+        {
+            Util.Debug("new postion created " + obj.GetPositionKey(), QSEnumDebugLevel.MUST);
+            totaltk.NewPosition(obj);
         }
 
 

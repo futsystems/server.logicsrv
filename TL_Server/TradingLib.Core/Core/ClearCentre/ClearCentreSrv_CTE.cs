@@ -343,7 +343,8 @@ namespace TradingLib.Core
             {
                 return "委托不存在";
             }
-            return string.Format("委托:{0} pending:{1} canceled:{2} complete:{3} tracked:{4}", SentOrder(id).ToString(), totaltk.OrderTracker.isPending(id), totaltk.OrderTracker.isCanceled(id), totaltk.OrderTracker.isCompleted(id), totaltk.OrderTracker.isTracked(id));
+            //return string.Format("委托:{0} pending:{1} canceled:{2} complete:{3} tracked:{4}", SentOrder(id).ToString(), totaltk.OrderTracker.isPending(id), totaltk.OrderTracker.isCanceled(id), totaltk.OrderTracker.isCompleted(id), totaltk.OrderTracker.isTracked(id));
+            return string.Empty;
         }
 
         /// <summary>
@@ -381,10 +382,10 @@ namespace TradingLib.Core
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("上次结算持仓:" + Environment.NewLine);
-            foreach (Position pos in this.TotalYdPositions)
-            {
-                sb.Append(pos.ToString() + Environment.NewLine);
-            }
+            //foreach (Position pos in this.TotalYdPositions)
+            //{
+            //    sb.Append(pos.ToString() + Environment.NewLine);
+            //}
             return sb.ToString();
         }
 

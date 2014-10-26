@@ -91,7 +91,7 @@ namespace TradingLib.Core
             //_prt.SendDebugEvent += new DebugDelegate(msgdebug);
 
             _prt.RestorePositionRounds(prlist);
-            _prt.SyncPositionHold(_clearcentre.TotalYdPositions.Where(pos=>!pos.isFlat).ToArray());
+            //_prt.SyncPositionHold(_clearcentre.TotalYdPositions.Where(pos=>!pos.isFlat).ToArray());
 
 
 

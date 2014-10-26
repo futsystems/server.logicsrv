@@ -111,10 +111,12 @@ namespace TradingLib.Core
         /// </summary>
         public int NextOrderSeq
         {
+            
             get
             {
                 lock (_orderseqobj)
                 {
+                    
                     if (enbaleRandom)
                     {
                         _maxorderseq += rand.Next(_steplow, _stephigh);

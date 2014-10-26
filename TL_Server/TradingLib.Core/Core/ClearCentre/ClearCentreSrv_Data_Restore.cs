@@ -56,8 +56,9 @@ namespace TradingLib.Core
                 //当将昨日持仓恢复到内存后需要恢复开启的持仓回合数据,当成交数据恢复时会同时更新持仓回合记录
                 //将positionround数据恢恢复到positionroundtracker
                 prt.RestorePositionRounds(prlist);
+                //??
                 //PR数据与持仓数据进行同步1.从数据库加载同步一次  2.保存到数据库同步一次
-                prt.SyncPositionHold(this.TotalYdPositions.Where(pos=>!pos.isFlat).ToArray());
+                //prt.SyncPositionHold(this.TotalYdPositions.Where(pos=>!pos.isFlat).ToArray());
 
 
                 foreach (Order o in olist)
@@ -73,12 +74,12 @@ namespace TradingLib.Core
                     this.GotCancel(oid);
                 }
 
-                foreach (Position p in this.TotalYdPositions)
-                {
-                    string key = PositionRound.GetPRKey(p);
-                    PositionRound pr = prt[key];
-                    debug("PH:" + p.Account + " " + p.Symbol + "  Size:" + p.Size + "    PR:" + (pr == null ? "NULL" : pr.HoldSize.ToString()), QSEnumDebugLevel.MUST);
-                }
+                //foreach (Position p in this.TotalYdPositions)
+                //{
+                //    string key = PositionRound.GetPRKey(p);
+                //    PositionRound pr = prt[key];
+                //    debug("PH:" + p.Account + " " + p.Symbol + "  Size:" + p.Size + "    PR:" + (pr == null ? "NULL" : pr.HoldSize.ToString()), QSEnumDebugLevel.MUST);
+                //}
             }
             catch (Exception ex)
             {
@@ -102,7 +103,7 @@ namespace TradingLib.Core
         /// </summary>
         void checkOrder()
         {
-            foreach (Order o in totaltk.OrderTracker)
+            //foreach (Order o in totaltk)
             {
                 ////委托的broker为空 且状态为placed 表明该委托为有问题的委托
                 //if (o.Broker == string.Empty && o.Status == QSEnumOrderStatus.Placed)

@@ -60,8 +60,9 @@ namespace TradingLib.Core
             this.IsInSettle = true;//标识结算中心处于结算状态
             
             //先将内存中的PR数据保存到数据库 在保存pr数据之前,先清空了当日的pr临时数据表(这里的清空 会造成 清空其他程序加载账户的数据 ？？)
-            this.BindPositionSettlePrice();//采集持仓结算价
-            this.SaveHoldInfo();//保存结算持仓数据 包括当前持仓和当前持仓对应的PositionRound数据
+            //this.BindPositionSettlePrice();//采集持仓结算价
+            //this.SaveHoldInfo();//保存结算持仓数据 包括当前持仓和当前持仓对应的PositionRound数据
+            this.SavePositionDetails();//保存持仓明细
             this.Dump2Log();//将委托 成交 撤单 PR数据保存到对应的log_表 所有的转储操作均是replace into不会存在重复操作
             Notify("保存交易数据[" + DateTime.Now.ToString() + "]", " ");
         }

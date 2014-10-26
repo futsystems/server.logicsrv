@@ -83,43 +83,43 @@ namespace TradingLib.Core
             //遍历所有需要检查的委托 停留在placed 或者 submited unknown
             foreach (Order o in _clearcentre.TotalOrders.Where(o => statuscheck(o, now)))
             {
-                int sentsize = _clearcentre.OrderTracker.Sent(o.id);
-                int fillsize = _clearcentre.OrderTracker.Filled(o.id);
-                bool iscancel = _clearcentre.OrderTracker.isCanceled(o.id);
-                bool iscomplete = _clearcentre.OrderTracker.isCompleted(o.id);
-                debug("OrderStatus:" + o.Status.ToString() + " SentSize:" + sentsize.ToString() + " FillSize:" + fillsize.ToString() + " IsCanceled:" + iscancel.ToString() + " IsComplete:" + iscomplete.ToString(), QSEnumDebugLevel.INFO);
+                //int sentsize = _clearcentre.OrderTracker.Sent(o.id);
+                //int fillsize = _clearcentre.OrderTracker.Filled(o.id);
+                //bool iscancel = _clearcentre.OrderTracker.isCanceled(o.id);
+                //bool iscomplete = _clearcentre.OrderTracker.isCompleted(o.id);
+                //debug("OrderStatus:" + o.Status.ToString() + " SentSize:" + sentsize.ToString() + " FillSize:" + fillsize.ToString() + " IsCanceled:" + iscancel.ToString() + " IsComplete:" + iscomplete.ToString(), QSEnumDebugLevel.INFO);
                 
-                Order tmp = new OrderImpl(o);
-                //异常合约
-                if(sentsize ==0)
-                {
-                    //标注委托状态
-                    tmp.Status = QSEnumOrderStatus.Reject;
-                    tmp.comment = "异常委托-拒绝";
-                    ReplyOrder(tmp);
-                }
-                //将全部成交或部分成交的委托进行补充处理
-                //全部成交
-                if (iscomplete)
-                {
-                    tmp.Status = QSEnumOrderStatus.Filled;
-                    tmp.comment = "异常委托-全部成交";
-                    ReplyOrder(tmp);
-                }
-                //部分成交
-                if (Math.Abs(fillsize) > 0 && Math.Abs(fillsize) < Math.Abs(sentsize))
-                {
-                    tmp.Status = QSEnumOrderStatus.Canceled;
-                    tmp.comment = "异常委托-部分成交";
-                    ReplyOrder(tmp);
+                //Order tmp = new OrderImpl(o);
+                ////异常合约
+                //if(sentsize ==0)
+                //{
+                //    //标注委托状态
+                //    tmp.Status = QSEnumOrderStatus.Reject;
+                //    tmp.comment = "异常委托-拒绝";
+                //    ReplyOrder(tmp);
+                //}
+                ////将全部成交或部分成交的委托进行补充处理
+                ////全部成交
+                //if (iscomplete)
+                //{
+                //    tmp.Status = QSEnumOrderStatus.Filled;
+                //    tmp.comment = "异常委托-全部成交";
+                //    ReplyOrder(tmp);
+                //}
+                ////部分成交
+                //if (Math.Abs(fillsize) > 0 && Math.Abs(fillsize) < Math.Abs(sentsize))
+                //{
+                //    tmp.Status = QSEnumOrderStatus.Canceled;
+                //    tmp.comment = "异常委托-部分成交";
+                //    ReplyOrder(tmp);
                     
-                }
-                if (fillsize == 0)
-                {
-                    tmp.Status =QSEnumOrderStatus.Reject;
-                    tmp.comment = "异常委托-拒绝";
-                    ReplyOrder(tmp);
-                }
+                //}
+                //if (fillsize == 0)
+                //{
+                //    tmp.Status =QSEnumOrderStatus.Reject;
+                //    tmp.comment = "异常委托-拒绝";
+                //    ReplyOrder(tmp);
+                //}
 
             }
         }

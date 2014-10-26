@@ -24,7 +24,6 @@ namespace TradingLib.Common
                 }
 
                 acctk.GotPosition(p);
-                totaltk.GotPosition(p);
                 onGotPosition(p);
             }
             catch (Exception ex)
@@ -57,7 +56,6 @@ namespace TradingLib.Common
                 }
 
                 acctk.GotPosition(p);
-                totaltk.GotPosition(p);
                 onGotPosition(p);
             }
             catch (Exception ex)
@@ -89,7 +87,6 @@ namespace TradingLib.Common
                 }
                 bool neworder = !totaltk.IsTracked(error.Order.id);
                 acctk.GotOrder(error.Order);
-                totaltk.GotOrder(new OrderImpl(error.Order));
                 onGotOrder(error.Order, neworder);
             }
             catch (Exception ex)
@@ -115,7 +112,10 @@ namespace TradingLib.Common
 
                 bool neworder = !totaltk.IsTracked(o.id);
                 acctk.GotOrder(o);
-                totaltk.GotOrder(new OrderImpl(o));
+                if (neworder)
+                {
+                    totaltk.NewOrder(o);
+                }
                 onGotOrder(o, neworder);
             }
             catch (Exception ex)
@@ -139,7 +139,6 @@ namespace TradingLib.Common
                 if (!HaveAccount(account)) return;
 
                 acctk.GotCancel(account, oid);
-                totaltk.GotCancel(oid);
                 onGotCancel(oid);
             }
             catch (Exception ex)
@@ -180,6 +179,7 @@ namespace TradingLib.Common
                 //decimal avgprice = pos.AvgPrice;
                 //累加持仓
                 acctk.GotFill(f);
+                totaltk.NewFill(f);//所有的成交都只有一次回报 都需要进行记录
                 pos = account.GetPosition(f.symbol, positionside);//acctk.GetPosition(f.Account, f.symbol, positionside);
                 int aftersize = pos.UnsignedSize;//查询该成交后数量
                 //当成交数据中f.commission<0表明清算中心没有计算手续费,若>=0表明已经计算过手续费 则不需要计算了
@@ -215,7 +215,7 @@ namespace TradingLib.Common
                 //生成持仓操作记录 同时结合beforeszie aftersize 设置fill PositionOperation,需要知道帐户的持仓信息才可以知道是开 加 减 平等信息
                 postrans = new PositionTransaction(f, symbol, beforesize, aftersize, pos.Highest,pos.Lowest);
                 f.PositionOperation = postrans.PosOperation;
-                totaltk.GotFill(f);
+                
 
                 //子类函数的onGotFill用于执行数据记录以及其他相关业务逻辑
                 onGotFill(f, postrans);
@@ -236,7 +236,6 @@ namespace TradingLib.Common
             try
             {
                 acctk.GotTick(k);
-                totaltk.GotTick(k);
             }
             catch (Exception ex)
             {

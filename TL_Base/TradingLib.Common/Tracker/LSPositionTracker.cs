@@ -47,6 +47,7 @@ namespace TradingLib.Common
         {
             //LibUtil.Debug("xxxxxxxxxxxxxxx lspositiontracker got a new long postion object");
             poslist.Add(pos);
+            NewPosition(pos);
             pos.NewPositionCloseDetailEvent += new Action<PositionCloseDetail>(NewPositionCloseDetail);
         }
 
@@ -54,6 +55,7 @@ namespace TradingLib.Common
         {
             //LibUtil.Debug("xxxxxxxxxxxxxxx lspositiontracker got a new short postion object");
             poslist.Add(pos);
+            NewPosition(pos);
             pos.NewPositionCloseDetailEvent += new Action<PositionCloseDetail>(NewPositionCloseDetail);
         }
 
@@ -259,6 +261,14 @@ namespace TradingLib.Common
                 NewPositionCloseDetailEvent(detail);
         }
         public event Action<PositionCloseDetail> NewPositionCloseDetailEvent;
+
+
+        void NewPosition(Position pos)
+        {
+            if (NewPositionEvent != null)
+                NewPositionEvent(pos);
+        }
+        public event Action<Position> NewPositionEvent;
 
     }
 }

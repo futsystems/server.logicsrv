@@ -35,6 +35,6 @@ namespace TradingLib.API
         /// <summary>
         /// 所有隔夜持仓
         /// </summary>
-        IEnumerable<Position> TotalYdPositions { get;}
+        //IEnumerable<Position> TotalYdPositions { get;}
     }
 }
