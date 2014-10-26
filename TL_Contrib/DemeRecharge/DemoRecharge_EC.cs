@@ -21,12 +21,12 @@ namespace DemeRecharge
         public void recharge(ISession session,string email)
         {
 
-            TLCtxHelper.Debug("客户端请求资金重置:" + session.ClientID);
+            Util.Debug("客户端请求资金重置:" + session.ClientID);
             int num=0;
             if (QryUserFollowersNumEvent != null)
                 num = QryUserFollowersNumEvent(email);
 
-            TLCtxHelper.Debug("User:" + email + "有粉丝:" + num.ToString() + "个");
+            Util.Debug("User:" + email + "有粉丝:" + num.ToString() + "个");
 
         }
 

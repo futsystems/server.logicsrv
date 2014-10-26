@@ -41,7 +41,7 @@ namespace ContribTemplate
             "make a demo contrib command request")]
         public void DemoContribRequest(ISession session, string name, decimal amount)
         {
-            TLCtxHelper.Debug("democontribrequest is called");
+            Util.Debug("democontribrequest is called");
             //Send(session, new { Name = name, Amount = amount });
         }
         [ContribCommandAttr(
@@ -53,7 +53,7 @@ namespace ContribTemplate
             )]
         public void demoeventhandler(string message)
         {
-            TLCtxHelper.Debug("EventHandler:"+message);
+            Util.Debug("EventHandler:"+message);
             //Send(session, "contrib response");
         }
 

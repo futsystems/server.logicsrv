@@ -28,7 +28,7 @@ namespace TradingLib.Contrib.CLI
         /// </summary>
         public void OnLoad()
         {
-            TLCtxHelper.Debug("CLIserver loading....");
+            Util.Debug("CLIserver loading....");
             _cfgdb = new ConfigDB(CLIServer.ContribName);
             if (!_cfgdb.HaveConfig("cmdport"))
             {
@@ -134,7 +134,7 @@ namespace TradingLib.Contrib.CLI
         [ContribCommandAttr(QSEnumCommandSource.CLI, "pcontrib", "pcontrib [contribId] - print contrib information", "")]
         public string PrintContrib(string contrib)
         {
-            TLCtxHelper.Debug(" run cli command:pcontrib");
+            Util.Debug(" run cli command:pcontrib");
             return TLCtxHelper.Ctx.PrintContrib(contrib);
         }
 

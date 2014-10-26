@@ -179,7 +179,7 @@ namespace TradingLib.Contrib.FinService
                 //
                 if (marginperplot <= MarginPerLotStop.AccountArgument.AsDecimal())
                 {
-                    TLCtxHelper.Debug("SPSpecialIF 触发强平  account:" + this.Account.ID + " now equity:" + nowequity.ToString() + " totalsize:" + totalsize.ToString() + " marginperlot:" + marginperplot + " stopline:" + MarginPerLotStop.AccountArgument.Value);
+                    Util.Debug("SPSpecialIF 触发强平  account:" + this.Account.ID + " now equity:" + nowequity.ToString() + " totalsize:" + totalsize.ToString() + " marginperlot:" + marginperplot + " stopline:" + MarginPerLotStop.AccountArgument.Value);
 
                     this.FireFlatPosition("福建股指专配");
                 }

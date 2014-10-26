@@ -54,7 +54,7 @@ namespace TradingLib.Common
 
         public object Execute(ISession session, string parameters, bool istnetstring = false)
         {
-            TLCtxHelper.Debug("Execute got parameters:" + parameters + " argsnum:"+_argslist.Count.ToString());
+            Util.Debug("Execute got parameters:" + parameters + " argsnum:" + _argslist.Count.ToString());
             string[] p = new string[] { };
             if (istnetstring)//tnetstring 传递参数列表
             {

@@ -24,13 +24,22 @@ namespace TradingLib.Common
 
 
         public static event ILogItemDel SendLogEvent;
+
         /// <summary>
         /// 控制台输出
+        /// 通过控制台打印日志输出
         /// </summary>
         /// <param name="msg"></param>
-        public static void ConsolePrint(string msg)
+        public static void ConsolePrint(ILogItem item)
         {
-            Console.WriteLine(msg);
+            StringBuilder sb = new StringBuilder();
+            sb.Append("[");
+            sb.Append(item.Level.ToString());
+            sb.Append("] ");
+            sb.Append(item.Programe);
+            sb.Append(":");
+            sb.Append(item.Message);
+            Console.WriteLine(sb.ToString());
         }
 
 
@@ -41,19 +50,31 @@ namespace TradingLib.Common
         public static void Debug(string msg, QSEnumDebugLevel level = QSEnumDebugLevel.INFO)
         {
             //如果给util绑定了sendlogevent事件处理器 则通过sendlogevent处理日志
+            ILogItem item = new LogItem(msg, level, PROGRAME);
+            Log(item);
+        }
+
+        /// <summary>
+        /// 处理日志
+        /// </summary>
+        /// <param name="item"></param>
+        public static void Log(ILogItem item)
+        {
+            //如果发送日志事件有绑定则发送日志 同时进行控制台打印
             if (SendLogEvent != null)
             {
-                ILogItem item = new LogItem(msg, level, PROGRAME);
+                //发送日志
                 SendLogEvent(item);
+
+                //显示台打印日志
+                ConsolePrint(item);
 
             }//如果没有绑定处理器 则通过控制台输出
             else
             {
-                string m = "[" + level.ToString() + "] " + PROGRAME + ":" + msg;
-                ConsolePrint(m);
+                ConsolePrint(item);
             }
         }
-
         
 
         static void debug(string msg)

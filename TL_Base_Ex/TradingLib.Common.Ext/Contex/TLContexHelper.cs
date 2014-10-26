@@ -231,10 +231,10 @@ namespace TradingLib.Common
         /// 全局标准输出入口,用于在屏幕或者信息面板输出系统内的日志信息
         /// </summary>
         /// <param name="msg"></param>
-        public static void Debug(string msg)
-        {
-            Util.Debug(msg);
-        }
+        //public static void Debug(string msg)
+        //{
+        //    Util.Debug(msg);
+        //}
 
         public static Profiler Profiler = new Profiler();
 
@@ -242,28 +242,13 @@ namespace TradingLib.Common
         /// 全局日志事件
         /// 绑定该事件可以获得系统所有对象的log输出
         /// </summary>
-        public static event ILogItemDel SendLogEvent = null;
-        static bool _consoleEnable = true;
-        public static bool ConsoleEnable { get { return _consoleEnable; } set { _consoleEnable = value; } }
-        public static void Log(ILogItem item)
-        {
-            //1.控制台输出
-            if (ConsoleEnable)
-            {
-                StringBuilder sb = new StringBuilder();
-                sb.Append("[");
-                sb.Append(item.Level.ToString());
-                sb.Append("] ");
-                sb.Append(item.Programe);
-                sb.Append(":");
-                sb.Append(item.Message);
-                Util.ConsolePrint(sb.ToString());
-            }
-
-            //2.通过委托对外触发日志事件 其他组件获得日志事件后可以对日志进行处理 比如通过网络发送，日志分析等
-            if (SendLogEvent != null)
-                SendLogEvent(item);
-        }
+        //public static event ILogItemDel SendLogEvent = null;
+        //static bool _consoleEnable = true;
+        //public static bool ConsoleEnable { get { return _consoleEnable; } set { _consoleEnable = value; } }
+        //public static void Log(ILogItem item)
+        //{
+        //    Util.Log(item);
+        //}
 
         /// <summary>
         /// 全局发送邮件事件

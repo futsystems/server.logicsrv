@@ -31,6 +31,39 @@ namespace TradingLib.ORM
 
     public class MSettlement:MBase
     {
+        #region 持仓明细
+
+        /// <summary>
+        /// 插入持仓明细
+        /// </summary>
+        /// <param name="?"></param>
+        /// <param name="settleday"></param>
+        /// <returns></returns>
+        public static bool InsertPositionDetail(PositionDetail p)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = String.Format("Insert into position_detail_hist (`account`,`opendate`,`opentime`,`tradingday`,`settleday`,`side`,`volume`,`openprice`,`tradeid`,`lastsettlementprice`,`settlementprice`,`closevolume`,`hedgeflag`,`margin`,`exchange`,`symbol`,`seccode`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}')", p.Account, p.OpenDate, p.OpenTime, p.Tradingday, p.Settleday, p.Side ? 1 : 0, p.Volume, p.OpenPrice, p.TradeID, p.LastSettlementPrice, p.SettlementPrice, p.CloseVolume, p.HedgeFlag, p.Margin, p.Exchange, p.Symbol, p.SecCode);
+                return db.Connection.Execute(query) > 0;
+            }
+        
+        }
+
+        /// <summary>
+        /// 插入平仓明细
+        /// </summary>
+        /// <param name="p"></param>
+        /// <returns></returns>
+        public static bool InsertPositionCloseDetail(PositionCloseDetail p)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = String.Format("Insert into position_close_detail (`account`,`settleday`,`side`,`opendate`,`opentime`,`closedate`,`closetime`,`openprice`,`lastsettlementprice`,`closeprice`,`closevolume`,`closeprofitbydate`,`exchange`,`symbol`,`seccode`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}')", p.Account, p.Settleday, p.Side ? 1 : 0, p.OpenDate, p.OpenTime, p.CloseDate, p.CloseTime, p.OpenPrice, p.LastSettlementPrice, p.ClosePrice, p.CloseVolume, p.CloseProfitByDate, p.Exchange, p.Symbol, p.SecCode);
+                return db.Connection.Execute(query) > 0;
+            }
+        }
+
+        #endregion
 
         /// <summary>
         /// 插入结算持仓
@@ -107,7 +140,7 @@ namespace TradingLib.ORM
                     settle.SettleTime = TLCtxHelper.Ctx.SettleCentre.SettleTime;//获得结算时间
 
                     //1.插入某账户的结算信息(当前财务信息)平仓盈亏,持仓盈亏,手续费,入金,出金,昨日权益,当前权益
-                    TLCtxHelper.Debug(string.Format("account:{0} lastequity:{1} nowequity:{2}", settle.Account, settle.LastEquity, settle.NowEquity));
+                    Util.Debug(string.Format("account:{0} lastequity:{1} nowequity:{2}", settle.Account, settle.LastEquity, settle.NowEquity));
                     string query = String.Format("Insert into log_settlement (`account`,`settleday`,`realizedpl`,`unrealizedpl`,`commission`,`cashin`,`cashout`,`lastequity`,`nowequity`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}')", settle.Account, settle.SettleDay, settle.RealizedPL, settle.UnRealizedPL, settle.Commission, settle.CashIn, settle.CashOut, settle.LastEquity, settle.NowEquity);
                     istransok =  istransok &&  (db.Connection.Execute(query) > 0);
 
@@ -170,38 +203,6 @@ namespace TradingLib.ORM
             }
         }
 
-
-
-        ///// <summary>
-        ///// 获得某交易帐户未确认结算
-        ///// </summary>
-        ///// <param name="account"></param>
-        ///// <returns></returns>
-        //public static Settlement SelectSettlementInfoUnconfirmed(string account,int tradingday)
-        //{
-        //    using (DBMySql db = new DBMySql())
-        //    {
-        //        string query = String.Format("SELECT * FROM log_settlement WHERE account = '{0}' AND confrim_timestamp = 0 AND settleday = {1}", account, tradingday);
-        //        Settlement settlement = db.Connection.Query<SettlementImpl>(query, null).SingleOrDefault();
-        //        return settlement;
-        //    }
-        //}
-
-        ///// <summary>
-        ///// 获得某个交易帐号最近一条结算记录
-        ///// </summary>
-        ///// <param name="account"></param>
-        ///// <returns></returns>
-        //public static Settlement SelectSettlementInfoUnconfirmed(string account)
-        //{
-        //    using (DBMySql db = new DBMySql())
-        //    {
-        //        string query = String.Format("SELECT * FROM log_settlement WHERE account = '{0}' AND confrim_timestamp = 0 ORDER BY  settleday DESC limit 1", account);
-        //        Settlement settlement = db.Connection.Query<SettlementImpl>(query, null).SingleOrDefault();
-        //        return settlement;
-        //    }
-        //}
-
         /// <summary>
         /// 查询某个交易帐号 某个交易日的结算单
         /// </summary>
@@ -248,22 +249,6 @@ namespace TradingLib.ORM
             }
         }
 
-
-        /// <summary>
-        /// 查询某个帐户某个交易日是否有结算确认
-        /// </summary>
-        /// <param name="day"></param>
-        /// <returns></returns>
-        //public static bool IsSettlementInfoConfirmed(string account,int day)
-        //{
-        //    using (DBMySql db = new DBMySql())
-        //    {
-        //        string query = string.Format("SELECT * FROM settlement_confirm WHERE account='{0}' AND settleday='{1}'", account, day);
-
-        //        return db.Connection.Query<settlementconfirm>(query, null).Count() > 0;
-        //    }
-        
-        //}
     }
 
     

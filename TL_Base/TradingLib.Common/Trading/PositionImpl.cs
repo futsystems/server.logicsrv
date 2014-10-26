@@ -495,6 +495,7 @@ namespace TradingLib.Common
             sb.Append("Trade Num:" + _tradelist.Count.ToString());
             sb.Append(Environment.NewLine);
 
+            /*
             //某个特定持仓已经按照交易帐号 交易合约进行了默认分组 只需要将对应的开仓成交和平仓成交进行逻辑处理
             sb.Append("Trade Open" + Environment.NewLine);
             foreach(Trade fill in _tradelist.Where(f=>f.IsEntryPosition))
@@ -517,18 +518,21 @@ namespace TradingLib.Common
                 sb.Append(string.Format("{0}  {1}  {2}  {3}", t.Item1, t.Item2, t.Item3, t.Item4) + Environment.NewLine);
             }
 
+            //将日内成交记录分组成开仓成交与平仓成交
             //开仓成交记录
             IEnumerable<Trade> trades_open = _tradelist.Where(f => f.IsEntryPosition);
             //平仓成交记录
             IEnumerable<Trade> trades_close = _tradelist.Where(f => !f.IsEntryPosition);
 
-            List<PositionDetail> details = trades_open.Select(f => f.ToPositionDetail()).ToList();
-            //计算持仓明细
-            //没有平仓汇总记录
-            if (result.Count() == 0)
+            //开仓成交记录直接形成持仓明细列表
+            List<PositionDetail> pos_today_open = trades_open.Select(f => f.ToPositionDetail()).ToList();
+
+            //计算当前持仓明细
+            //没有平仓成交记录
+            if (trades_close.Count() == 0)
             {
-                sb.Append("没有平仓成交汇总记录,所有的开仓成交记录形成当日新开仓记录" + Environment.NewLine);
-                foreach (PositionDetail pos in details)
+                sb.Append("没有平仓成交记录,所有的开仓成交记录形成当日新开仓记录" + Environment.NewLine);
+                foreach (PositionDetail pos in pos_today_open)
                 {
                     sb.Append(pos.GetPosDetailStr() + Environment.NewLine);
                 }
@@ -540,28 +544,26 @@ namespace TradingLib.Common
                 //用当日开仓成交记录形成持仓明细 再用平仓汇总记录去执行平仓
                 
                 List<PositionDetail> closed = new List<PositionDetail>();//已经平掉的开仓
+
                 foreach (Trade close in trades_close)//遍历所有平仓成交记录 用平仓成交记录去平开仓成交记录形成的持仓明细
                 {
                     sb.Append("取平仓成交:" + close.GetTradeDetail()+Environment.NewLine);
                     int remainsize = Math.Abs(close.xsize);
 
-                    foreach (PositionDetail pos in details)
+                    foreach (PositionDetail pos in pos_today_open)
                     {
-                        //如果持仓已经关闭则取下一条新开持仓记录
+                        //如果持仓已经关闭则取下一条新开持仓记录 
                         if (pos.IsClosed())
                         {
                             sb.Append("持仓:" + pos.GetPosDetailStr() + "已经全部平掉,取下一条持仓记录"+Environment.NewLine);
                             continue;
                         }
 
-                        //计算本次平仓数量
-                        int closesize = pos.HoldSize()> remainsize ? remainsize : pos.HoldSize();
-                        //持仓的平仓数量累加
-                        pos.CloseVolume += closesize;
-                        //剩余平仓数量递减
-                        remainsize -= closesize;
+                        PositionCloseDetail closedetail = pos.ClosePositon(close, ref remainsize);
 
-                        sb.Append("持仓跟新:" + pos.GetPosDetailStr() + "平仓数量为:" + closesize.ToString() + " 剩余平仓数量为:" + remainsize.ToString()+Environment.NewLine);
+                        sb.Append("获得平仓明细:" + closedetail.GetPositionCloseStr()+Environment.NewLine);
+                        sb.Append("持仓跟新:" + pos.GetPosDetailStr() + " 平仓量:" + closedetail.CloseVolume.ToString() + " 持仓量:" + remainsize.ToString()+Environment.NewLine);
+
                         //如果剩余平仓数量为0 则跳出持仓循环，取下一个平仓记录
                         if (remainsize == 0)
                         {
@@ -574,13 +576,14 @@ namespace TradingLib.Common
 
                 sb.Append(Environment.NewLine);
                 sb.Append("平仓后最新记录" + Environment.NewLine);
-                foreach (PositionDetail pos in details)
+                foreach (PositionDetail pos in pos_today_open.Where(pos=>!pos.IsClosed()))
                 {
                     sb.Append(pos.GetPosDetailStr() + Environment.NewLine);
                 }
 
                 
             }
+             * **/
             return sb.ToString();
             
 
@@ -588,20 +591,20 @@ namespace TradingLib.Common
             //return (this.oSymbol !=null ?this.oSymbol.FullName:this.Symbol) +" " + Size + "@" + AvgPrice.ToString("F2") + " UnPL:"+this.UnRealizedPL.ToString() + " RePL:"+this.ClosedPL.ToString() + "[" + Account + "] " +" SettlePrice:"+this.SettlePrice.ToString();
         }
         //account,symbol,offset,sizesum
-        IEnumerable<Tuple<string,string,QSEnumOffsetFlag,int>> demo(IEnumerable<Trade> trades)
-        {
-            var result = new List<Tuple<string,string,QSEnumOffsetFlag,int>>();
-            var q = from k in trades group k by k.symbol;
-            foreach (var g in q)
-            {
-                result.Add(new Tuple<string, string, QSEnumOffsetFlag, int>(
-                    "demo1",g.Key,QSEnumOffsetFlag.CLOSE,g.Sum(v=>v.xsize)
-                    ));
-            }
-            return result;
+        //IEnumerable<Tuple<string,string,QSEnumOffsetFlag,int>> demo(IEnumerable<Trade> trades)
+        //{
+        //    var result = new List<Tuple<string,string,QSEnumOffsetFlag,int>>();
+        //    var q = from k in trades group k by k.symbol;
+        //    foreach (var g in q)
+        //    {
+        //        result.Add(new Tuple<string, string, QSEnumOffsetFlag, int>(
+        //            "demo1",g.Key,QSEnumOffsetFlag.CLOSE,g.Sum(v=>v.xsize)
+        //            ));
+        //    }
+        //    return result;
 
-            //这里需要先按合约分组然后按
-        }
+        //    //这里需要先按合约分组然后按
+        //}
         /// <summary>
         /// 将持仓转换成Fill(account,symbol,price,size,time)等
         /// </summary>

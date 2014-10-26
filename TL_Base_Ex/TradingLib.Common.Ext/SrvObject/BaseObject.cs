@@ -33,7 +33,7 @@ namespace TradingLib.Common
             }
             catch (Exception ex)
             {
-                TLCtxHelper.Debug("BaseSrvObject init error:" + ex.ToString());
+                Util.Debug("BaseSrvObject init error:" + ex.ToString());
             }
         }
 

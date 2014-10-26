@@ -59,7 +59,7 @@ namespace TraddingSrvCLI
 
                 //throw (ex);
                 debug("error:" + ex.ToString());
-                TLCtxHelper.Debug(ex.ToString() + ex.StackTrace.ToString());
+                Util.Debug(ex.ToString() + ex.StackTrace.ToString());
                 //LibUtil.NewLog(PROGRAME, "main function error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
             }
             
@@ -70,7 +70,7 @@ namespace TraddingSrvCLI
         static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             Exception ex = (Exception)e.ExceptionObject;
-            TLCtxHelper.Debug(ex.ToString());
+            Util.Debug(ex.ToString());
             //LibUtil.NewLog(PROGRAME, "crash" + ex.ToString(), QSEnumDebugLevel.ERROR);
             //LibUtil.NewLog(PROGRAME, "crash" + ex.StackTrace.ToString(), QSEnumDebugLevel.ERROR); ;
 

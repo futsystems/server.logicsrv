@@ -70,7 +70,7 @@ namespace TradingLib.Contrib.WebPortal
                     if (m_Pages.Count > 0)
                     {
                         string rawurl = Context.Request.RawUrl.ToLower();
-                        TLCtxHelper.Debug("rawurl:" + rawurl);
+                        Util.Debug("rawurl:" + rawurl);
                         //以api开头的进入api查询系统
                         if (rawurl.StartsWith("/api"))
                         {
@@ -97,7 +97,7 @@ namespace TradingLib.Contrib.WebPortal
                                 }
                                 else
                                 {
-                                    TLCtxHelper.Debug("访问键值:" + cmdkey.ToString());
+                                    Util.Debug("访问键值:" + cmdkey.ToString());
                                     WebPage tmp = new WebPage("/", htmlwrapper(TLCtxHelper.Ctx.PrintHttpAPI(cmdkey)));
                                     Param = new KeyValuePair<HttpListenerContext, WebPage>(Context, tmp);
                                     /*
@@ -138,7 +138,7 @@ namespace TradingLib.Contrib.WebPortal
                             else if (path.Length == 2)
                             {
                                 //string message = path[1];
-                                //TLCtxHelper.Debug("Contrib:" + contribid.ToString());
+                                //Util.Debug("Contrib:" + contribid.ToString());
                                 //WebPage tmp = new WebPage("/", htmlwrapper(TLCtxHelper.Ctx.PrintContrib(contribid)));
                                 //Param = new KeyValuePair<HttpListenerContext, WebPage>(
                                 //Context, tmp);

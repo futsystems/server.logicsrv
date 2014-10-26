@@ -27,7 +27,7 @@ namespace TradingLib.Core
             festivallist.Clear();
             if (!File.Exists(filename))
             {
-                TLCtxHelper.Debug("There is no festival setted");
+                Util.Debug("There is no festival setted");
                 return;
             }
 
@@ -210,50 +210,50 @@ namespace TradingLib.Core
         public static int GetCurrentTradingday(int nowdate,int nowtime, int nexttradingday)
         {
             int tommorw = TradingCalendar.GetTomorrow(nowdate);//按今天获得明天
-            TLCtxHelper.Debug(string.Format("明天为:{0}", tommorw));
+            Util.Debug(string.Format("明天为:{0}", tommorw));
             int ctradingday = 0;
             //当前时间在结算时间之后16:00到24:00 结算之后则进入下一个交易日
             if (nowtime > settletime)
             {
-                TLCtxHelper.Debug(string.Format("当前时间在结算时间{0}之后", settletime));
+                Util.Debug(string.Format("当前时间在结算时间{0}之后", settletime));
                 //如果明天就是下一个交易日,则当前交易日为下一个交易日
                 if (tommorw == nexttradingday)
                 {
-                    TLCtxHelper.Debug("明天==下个交易日");
+                    Util.Debug("明天==下个交易日");
                     ctradingday = nexttradingday;
                 }
                 else//如果明天不是下一个交易日
                 {
-                    TLCtxHelper.Debug("明天不是下个交易日");
+                    Util.Debug("明天不是下个交易日");
                     //如果今天是周五且下个交易日为周一,则为正常周五夜盘交易,当前交易日为下一个交易日
                     if (TradingCalendar.IsNormalFriday(nowdate, nexttradingday))
                     {
-                        TLCtxHelper.Debug("正常周五,当前交易日就是下个交易日");
+                        Util.Debug("正常周五,当前交易日就是下个交易日");
                         ctradingday = nexttradingday;
                     }
                 }
             }
             else//时间在0到16:00
             {
-                TLCtxHelper.Debug(string.Format("当前时间在结算时间{0}之前", settletime));
+                Util.Debug(string.Format("当前时间在结算时间{0}之前", settletime));
                 //24:00之后在结算时间之前
                 //今天是下一个交易日则当前交易日为下一个交易日
                 if (nowdate == nexttradingday)
                 {
-                    TLCtxHelper.Debug("今天==下个交易日");
+                    Util.Debug("今天==下个交易日");
                     ctradingday = nexttradingday;
                 }
                 else
                 {
-                    TLCtxHelper.Debug("今天不是下个交易日");
+                    Util.Debug("今天不是下个交易日");
                     //如果是正常周末 在夜盘停盘前夜是属于交易日
                     if (TradingCalendar.IsNormalSaturday(nowdate, nexttradingday))
                     {
-                        TLCtxHelper.Debug("正常周六,当前交易日就是下个交易日");
+                        Util.Debug("正常周六,当前交易日就是下个交易日");
                         //且在夜盘收盘之前 则当前交易日为下一个交易日
                         if (nowtime <= nieghtclosetime)
                         {
-                            TLCtxHelper.Debug("正常周六,时间在夜盘收盘之前");
+                            Util.Debug("正常周六,时间在夜盘收盘之前");
                             ctradingday = nexttradingday;
                         }
                     }

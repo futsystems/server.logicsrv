@@ -192,7 +192,7 @@ namespace TradingLib.Core
             }
             catch (Exception ex)
             {
-                TLCtxHelper.Debug("ex:" + ex.ToString());
+                Util.Debug("ex:" + ex.ToString());
                 throw (new QSClearCentreInitError(ex, "ClearCentre初始化错误"));
             }
         }

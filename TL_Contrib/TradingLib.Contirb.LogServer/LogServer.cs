@@ -56,14 +56,15 @@ namespace TradingLib.Contirb.LogServer
             _port = _cfgdb["port"].AsInt();
             _savedebug = _cfgdb["logtofile"].AsBool();
 
-            TLCtxHelper.SendLogEvent += new ILogItemDel(NewLog);
+            Util.SendLogEvent += new ILogItemDel(NewLog);
+            
         }
         /// <summary>
         /// 销毁
         /// </summary>
         public void OnDestory()
         {
-            TLCtxHelper.SendLogEvent -= new ILogItemDel(NewLog);
+            Util.SendLogEvent -= new ILogItemDel(NewLog);
             base.Dispose();
             
 
@@ -142,14 +143,17 @@ namespace TradingLib.Contirb.LogServer
         /// <param name="l"></param>
         void SendLog(ILogItem l)
         {
-            if (l != null)
+            //debug("send log:" + l.ToString(),QSEnumDebugLevel.INFO);
+            if (l == null)
                 return;
             /**
              * 通过网路分发日志,方便在其他服务器上通过网络连接到日志服务器上获取实时日志
              * 
              * **/
             if (_logpub != null)
-                _logpub.Send(LogItem.Serialize(l), Encoding.UTF8);
+            {
+                _logpub.Send(l.ToString(), Encoding.UTF8);
+            }
         }
 
         
@@ -161,6 +165,7 @@ namespace TradingLib.Contirb.LogServer
                 {
                     pub.Bind("tcp://*:"+_port.ToString());
                     _logpub = pub;
+                    //debug("xxxxxxxxxxx start pubsrv..........", QSEnumDebugLevel.INFO);
                     while (_loggo)
                     {
                         while (logcache.hasItems)

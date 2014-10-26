@@ -18,7 +18,7 @@ namespace Lottoqq.UCenter
             false)]
         public void CTE_RegisterUser(ISession session, string uref, string password)
         {
-            TLCtxHelper.Debug("registeruser is called");
+            Util.Debug("registeruser is called");
             //Send(session, new { Name = name, Amount = amount });
             string retstr = _ucli.RegisterUser(uref, password);
             //将消息直接返回给客户端端

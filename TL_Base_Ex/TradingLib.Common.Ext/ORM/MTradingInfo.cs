@@ -138,11 +138,11 @@ namespace TradingLib.ORM
             using (DBMySql db = new DBMySql())
             {
                 string query = string.Format("SELECT * FROM  {0}  WHERE settleday >='{1}' AND settleday <='{2}'", "tmp_orders", begin, end);
-                //TLCtxHelper.Debug(query);
+                //Util.Debug(query);
                 List<Order> orders = db.Connection.Query<OrderImpl>(query).ToList<Order>();
 
                 string query2 = string.Format("SELECT * FROM  {0}  WHERE settleday >='{1}' AND settleday <='{2}'", "log_orders", begin, end);
-                //TLCtxHelper.Debug(query);
+                //Util.Debug(query);
                 List<Order> orders2 = db.Connection.Query<OrderImpl>(query2).ToList<Order>();
                 
                 //合并委托记录

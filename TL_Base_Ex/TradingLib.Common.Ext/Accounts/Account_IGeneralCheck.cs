@@ -56,7 +56,7 @@ namespace TradingLib.Common
 
             //可用资金大于需求资金则可以接受该委托
             decimal required = CalOrderFundRequired(o);
-            //TLCtxHelper.Debug("[CanFundTakeOrder Check] Fundavabile:" + avabile.ToString() + " Required:" + required);
+            //Util.Debug("[CanFundTakeOrder Check] Fundavabile:" + avabile.ToString() + " Required:" + required);
             if (required > avabile)
             {
                 msg = "资金不足";

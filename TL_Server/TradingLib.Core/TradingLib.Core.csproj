@@ -65,8 +65,10 @@
     <Compile Include="Base\HighLowTracker.cs" />
     <Compile Include="Base\ISessionUtils.cs" />
     <Compile Include="Base\Position2SettlePosition.cs" />
+    <Compile Include="Base\Utils\PositionDetailsUtil.cs" />
     <Compile Include="Base\TIFTracker.cs" />
     <Compile Include="Base\TLServer_Generic.cs" />
+    <Compile Include="Base\Utils\PositionUtil.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_AccountOperation.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_Interface.cs" />

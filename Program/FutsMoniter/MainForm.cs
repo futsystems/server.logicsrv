@@ -96,7 +96,7 @@ namespace FutsMoniter
 
         void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            e.Cancel = true;
+            //e.Cancel = true;
         }
 
 

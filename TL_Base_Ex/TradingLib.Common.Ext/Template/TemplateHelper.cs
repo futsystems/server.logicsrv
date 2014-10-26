@@ -30,8 +30,8 @@ using System.IO;
 //            if (t != null)
 //            {
 //                string content = TemplateRender(t, info);
-//                //TLCtxHelper.Debug("content:" + content);
-//                //TLCtxHelper.Debug(string.Format("account:{0} lastequity:{1} settleday:{2}", info.Account, info.LastEquity, info.SettleDay));
+//                //Util.Debug("content:" + content);
+//                //Util.Debug(string.Format("account:{0} lastequity:{1} settleday:{2}", info.Account, info.LastEquity, info.SettleDay));
 //                return content;
 //            }
 //            else
@@ -56,7 +56,7 @@ using System.IO;
 //            }
 //            catch (Exception ex)
 //            {
-//                TLCtxHelper.Debug("template render error:" + ex.ToString());
+//                Util.Debug("template render error:" + ex.ToString());
 //                return "";
 //            }
 //        }

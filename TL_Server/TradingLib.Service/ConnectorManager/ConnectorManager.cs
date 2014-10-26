@@ -110,7 +110,7 @@ namespace TradingLib.ServiceManager
 
         //void debug(string msg)
         //{
-        //    //TLCtxHelper.Debug(">>>Connector:" + msg);
+        //    //Util.Debug(">>>Connector:" + msg);
         //    this.debug(msg, QSEnumDebugLevel.INFO);
         //}
 
@@ -150,13 +150,13 @@ namespace TradingLib.ServiceManager
                 //绑定状态事件
                 broker.Connected += (IConnecter b) =>
                 {
-                    TLCtxHelper.Debug("Broker:" + b.GetType().FullName + " Connected");
+                    Util.Debug("Broker:" + b.GetType().FullName + " Connected");
                     if (BrokerConnectedEvent != null)
                         BrokerConnectedEvent(b);
                 };
                 broker.Disconnected += (IConnecter b) =>
                 {
-                    TLCtxHelper.Debug("Broker:" + b.GetType().FullName + " Disconnected");
+                    Util.Debug("Broker:" + b.GetType().FullName + " Disconnected");
                     if (BrokerDisconnectedEvent != null)
                         BrokerDisconnectedEvent(b);
                 };
@@ -183,13 +183,13 @@ namespace TradingLib.ServiceManager
 
                 datafeed.Connected += (IConnecter d) =>
                 {
-                    TLCtxHelper.Debug("DataFeed:" + d.GetType().FullName + " Connected");
+                    Util.Debug("DataFeed:" + d.GetType().FullName + " Connected");
                     if (DataFeedConnectedEvent != null)
                         DataFeedConnectedEvent(d);
                 };
                 datafeed.Disconnected += (IConnecter d) =>
                 {
-                    TLCtxHelper.Debug("DataFeed:" + d.GetType().FullName + " Disonnected");
+                    Util.Debug("DataFeed:" + d.GetType().FullName + " Disonnected");
                     if (DataFeedDisconnectedEvent != null)
                         DataFeedDisconnectedEvent(d);
                 };

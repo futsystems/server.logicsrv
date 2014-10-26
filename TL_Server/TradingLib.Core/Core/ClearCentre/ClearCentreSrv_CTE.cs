@@ -426,6 +426,7 @@ namespace TradingLib.Core
                 foreach (Position pos in acc.Positions)
                 {
                     sb.Append(pos.ToString() + Environment.NewLine);
+                    pos.SettlePosition();
                 }
 
                 return re + sb.ToString();

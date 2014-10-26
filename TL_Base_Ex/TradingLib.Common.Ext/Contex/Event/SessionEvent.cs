@@ -108,7 +108,7 @@ namespace TradingLib.Common
 
         internal void FireAuthUserEvent(T client,LoginRequest request,ref LoginResponse response)
         {
-            //TLCtxHelper.Debug("authuserevent binded :" + (AuthUserEvent != null).ToString());
+            //Util.Debug("authuserevent binded :" + (AuthUserEvent != null).ToString());
             if (AuthUserEvent != null)
                  AuthUserEvent(client, request, ref response);
             

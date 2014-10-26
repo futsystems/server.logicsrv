@@ -17,6 +17,7 @@ namespace TradingLib.Common
             this.Level = QSEnumDebugLevel.VERB;
             this.Programe = string.Empty;
             this.Time = 0;
+            this.Millisecond = 0;
         }
         public LogItem(string message, QSEnumDebugLevel level, string programe)
         {

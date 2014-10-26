@@ -127,7 +127,7 @@ namespace TraddingSrvCLI
             debug(">>> Wire Contrib Event....");
             TLCtxHelper.BindContribEvent();
 
-            //TLCtxHelper.Debug(string.Format("状态 上次结算日:{0} 当前交易日:{1} 当前日期:{2} 是否是交易日:{3} 是否处于历史结算:{4}",TLCtxHelper.Ctx.))
+            //Util.Debug(string.Format("状态 上次结算日:{0} 当前交易日:{1} 当前日期:{2} 是否是交易日:{3} 是否处于历史结算:{4}",TLCtxHelper.Ctx.))
             _status = QSEnumCoreThreadStatus.Started;
 
             Thread.Sleep(2000);

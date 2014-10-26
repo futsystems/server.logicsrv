@@ -347,7 +347,7 @@ namespace TradingLib.Core
             }
             catch (Exception ex)
             {
-                TLCtxHelper.Debug(Util.GlobalPrefix + ex.ToString());
+                Util.Debug(Util.GlobalPrefix + ex.ToString());
                 throw (new QSClearCentreLoadAccountError(ex, "ClearCentre加载账户:" + account + "异常"));
             }
         }

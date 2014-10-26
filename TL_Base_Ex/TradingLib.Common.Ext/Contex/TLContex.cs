@@ -230,17 +230,17 @@ namespace TradingLib.Common
 
         public void debug(string msg)
         {
-            TLCtxHelper.Debug(">>>>Context:" + msg);
+            Util.Debug(">>>>Context:" + msg);
         }
 
         public void debug(string msg, QSEnumDebugLevel level)
         {
-            TLCtxHelper.Debug(">>>>Context:" + msg);
+            Util.Debug(">>>>Context:" + msg);
         }
 
         void objlog(ILogItem item)
         {
-            TLCtxHelper.Log(item);
+            Util.Log(item);
         }
         void objemail(IEmail email)
         {
@@ -272,7 +272,7 @@ namespace TradingLib.Common
         }
         public void MessageExchangeHandler(ISession session, ContribRequest request)
         {
-            TLCtxHelper.Debug("****handle contribrequest:" + request.ToString());
+            Util.Debug("****handle contribrequest:" + request.ToString());
             CmdHandler(session, request.ModuleID, request.CMDStr, request.Parameters, messageRouterCmdMap);
         }
 
@@ -284,7 +284,7 @@ namespace TradingLib.Common
 
         public void MessageMgrHandler(ISession session,MGRContribRequest request)
         {
-            TLCtxHelper.Debug("****handle mgr contribrequest:" + request.ToString());
+            Util.Debug("****handle mgr contribrequest:" + request.ToString());
             CmdHandler(session, request.ModuleID, request.CMDStr, request.Parameters, messageMgrCmdMap);
 
         }
@@ -298,7 +298,7 @@ namespace TradingLib.Common
         public string MessageWebHandler(string module, string cmdstr, string parameters, bool istnetstring = false)
         {
             string key = ContribCommandKey(module, cmdstr);
-            TLCtxHelper.Debug("Handler webmessage, cmdkey:" + key);
+            Util.Debug("Handler webmessage, cmdkey:" + key);
             ContribCommand cmd=null;
             if(messageWebCmdMap.TryGetValue(key,out cmd))
             {
@@ -402,7 +402,7 @@ namespace TradingLib.Common
         /// <param name="parameters">调用该扩展模块所附带的参数(除session参数以为),所有扩展模块的函数调用均要包含session入口</param>
         void CmdHandler(ISession session, string contribid, string cmd, string parameters, ConcurrentDictionary<string, ContribCommand> cmdmap)
         {
-            TLCtxHelper.Debug("Contirb:" + contribid + " cmd:" + cmd + " args:" + parameters);
+            Util.Debug("Contirb:" + contribid + " cmd:" + cmd + " args:" + parameters);
             string cmdkey = ContribCommandKey(contribid, cmd);
 
             if (!IsContribRegisted(contribid) && !IsCoreRegisted(contribid))
@@ -684,7 +684,7 @@ namespace TradingLib.Common
                 ITask task = TaskInfo2ITask(obj, info);
                 if (task != null)
                 {
-                    //TLCtxHelper.Debug("注册任务:" + info.Attr.Name);
+                    //Util.Debug("注册任务:" + info.Attr.Name);
                     //将任务标识为某个BaseSrvObject对象,对象销毁时要自动注销任务
                     taskList.Add(task);
                 }
@@ -732,13 +732,13 @@ namespace TradingLib.Common
         /// <param name="componentId"></param>
         void ParseContribEventInfo(object obj, string componentId)
         {
-            //TLCtxHelper.Debug("~~~~~~~~~~~~~~~~~~Parse Event");
+            //Util.Debug("~~~~~~~~~~~~~~~~~~Parse Event");
             List<ContribEventInfo> list = PluginHelper.FindContribEvent(obj);
             foreach (ContribEventInfo info in list)
             {
 
                 string eventky = ContribEventKey(componentId, info.Attr.EventStr);
-                //TLCtxHelper.Debug("Event:" + eventky);
+                //Util.Debug("Event:" + eventky);
                 contribEventMap.TryAdd(eventky, info);
             }
         }
@@ -751,7 +751,7 @@ namespace TradingLib.Common
             {
 
                 string eventky = ContribEventKey(componentId, info.Attr.EventStr);
-                //TLCtxHelper.Debug("Event:" + eventky);
+                //Util.Debug("Event:" + eventky);
                 contribEventMap.TryRemove(eventky, out inforemoved);
             }
         }
@@ -822,7 +822,7 @@ namespace TradingLib.Common
                 }
                 else if(info.Attr.HandlerType == QSContribCommandHandleType.EventHandler) //事件
                 {
-                    //TLCtxHelper.Debug("!!!!!!!!!!!!!!!!!try to register event halder");
+                    //Util.Debug("!!!!!!!!!!!!!!!!!try to register event halder");
                     //源头source
                     string eventky = ContribEventKey(info.Attr.SourceContrib, info.Attr.EventStr);
                     //标识cmd
@@ -899,7 +899,7 @@ namespace TradingLib.Common
                 }
                 else if (info.Attr.HandlerType == QSContribCommandHandleType.EventHandler) //事件
                 {
-                    //TLCtxHelper.Debug("!!!!!!!!!!!!!!!!!try to register event halder");
+                    //Util.Debug("!!!!!!!!!!!!!!!!!try to register event halder");
                     //源头source
                     string eventky = ContribEventKey(info.Attr.SourceContrib, info.Attr.EventStr);
                     //标识cmd
@@ -1043,7 +1043,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public string PrintContrib(string contrib)
         {
-            TLCtxHelper.Debug("try to print contrib:" + contrib + " information");
+            Util.Debug("try to print contrib:" + contrib + " information");
             StringBuilder sb = new StringBuilder();
             IContrib c = ContribFinderName(contrib.ToUpper());
             if (c == null)
@@ -1069,7 +1069,7 @@ namespace TradingLib.Common
                 sb.Append(PrintCommandAPI(contrib, info.Attr.CmdStr));
             }
             sb.Append("TaskCommand:" + ExComConst.Line);
-            TLCtxHelper.Debug("it is run to here for print contrib");
+            Util.Debug("it is run to here for print contrib");
             return sb.ToString();
         }
         /// <summary>
@@ -1128,7 +1128,7 @@ namespace TradingLib.Common
             }
             catch (Exception ex)
             {
-                TLCtxHelper.Debug("服务端查询访问键值异常:" + ex.ToString());
+                Util.Debug("服务端查询访问键值异常:" + ex.ToString());
             }
             return "服务端访问异常";
         }
