@@ -585,6 +585,13 @@ namespace TradingLib.Common
             return cpl;
         }
 
+        void NewPositionCloseDetail(PositionCloseDetail closedetail)
+        {
+            _posclosedetaillist.Add(closedetail);
+            if (NewPositionCloseDetailEvent != null)
+                NewPositionCloseDetailEvent(closedetail);
+        }
+        public event Action<PositionCloseDetail> NewPositionCloseDetailEvent;
         void ClosePosition(Trade close)
         {
             if (close.IsEntryPosition) throw new Exception("entry trade can not close position");
@@ -607,7 +614,7 @@ namespace TradingLib.Common
                 PositionCloseDetail closedetail = p.ClosePositon(close, ref remainsize);
                 if (closedetail != null)
                 {
-                    _posclosedetaillist.Add(closedetail);
+                    NewPositionCloseDetail(closedetail);
                 }
             }
 
@@ -626,7 +633,7 @@ namespace TradingLib.Common
                 PositionCloseDetail closedetail = p.ClosePositon(close, ref remainsize);
                 if (closedetail != null)
                 {
-                    _posclosedetaillist.Add(closedetail);
+                    NewPositionCloseDetail(closedetail);
                 }
             }
 

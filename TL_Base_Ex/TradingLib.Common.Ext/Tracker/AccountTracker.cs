@@ -26,6 +26,13 @@ namespace TradingLib.Common
         //为每个账户映射一个TradeList用于记录实时的成交记录
         protected ConcurrentDictionary<string, ThreadSafeList<Trade>> TradeBook = new ConcurrentDictionary<string, ThreadSafeList<Trade>>();
 
+        void NewPositionCloseDetail(PositionCloseDetail detail)
+        {
+            if (NewPositionCloseDetailEvent != null)
+                NewPositionCloseDetailEvent(detail);
+        }
+        public event Action<PositionCloseDetail> NewPositionCloseDetailEvent;
+
         /// <summary>
         /// 获得所有帐户对象
         /// </summary>
@@ -112,6 +119,7 @@ namespace TradingLib.Common
             {
                 pt.DefaultAccount = account.ID;
                 PosBook.TryAdd(account.ID, pt);
+                pt.NewPositionCloseDetailEvent += new Action<PositionCloseDetail>(NewPositionCloseDetail);
             }
             baseacc.TKPosition = pt;
 

@@ -179,7 +179,8 @@ namespace TradingLib.Core
             {
                 //初始化异步储存组件
                 _asynLoger = new AsyncTransactionLoger();//获得交易信息数据库记录对象，用于记录委托，成交，取消等信息
-
+                //帐户交易数据维护器产生 平仓明细事件
+                acctk.NewPositionCloseDetailEvent += new Action<PositionCloseDetail>(acctk_NewPositionCloseDetailEvent);
                 //初始化PositionRound生成器
                 prt = new PositionRoundTracker();
                 prt.FindSymbolEvent += (sym) => { return BasicTracker.SymbolTracker[sym]; };// new FindSecurity(getMasterSecurity);
@@ -194,6 +195,18 @@ namespace TradingLib.Core
             {
                 Util.Debug("ex:" + ex.ToString());
                 throw (new QSClearCentreInitError(ex, "ClearCentre初始化错误"));
+            }
+        }
+
+        void acctk_NewPositionCloseDetailEvent(PositionCloseDetail obj)
+        {
+            if (_status == QSEnumClearCentreStatus.CCOPEN)
+            {
+                debug("平仓明细生成:" + obj.GetPositionCloseStr(), QSEnumDebugLevel.INFO);
+
+                obj.Settleday = TLCtxHelper.Ctx.SettleCentre.NextTradingday;
+                //异步保存平仓明细
+                _asynLoger.newPositionCloseDetail(obj);
             }
         }
 

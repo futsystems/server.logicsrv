@@ -306,7 +306,6 @@ namespace TradingLib.Common
         /// </summary>
         public event PositionDelegate NewPositionEvent;
 
-
     }
     
     /// <summary>

@@ -142,6 +142,10 @@ namespace TradingLib.API
         IEnumerable<PositionCloseDetail> PositionCloseDetail { get; }
 
         /// <summary>
+        /// 新的平仓明细生成事件
+        /// </summary>
+        event Action<PositionCloseDetail> NewPositionCloseDetailEvent;
+        /// <summary>
         /// 转换成等效成交
         /// </summary>
         /// <returns></returns>

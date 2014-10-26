@@ -47,12 +47,14 @@ namespace TradingLib.Common
         {
             //LibUtil.Debug("xxxxxxxxxxxxxxx lspositiontracker got a new long postion object");
             poslist.Add(pos);
+            pos.NewPositionCloseDetailEvent += new Action<PositionCloseDetail>(NewPositionCloseDetail);
         }
 
         void _stk_NewPositionEvent(Position pos)
         {
             //LibUtil.Debug("xxxxxxxxxxxxxxx lspositiontracker got a new short postion object");
             poslist.Add(pos);
+            pos.NewPositionCloseDetailEvent += new Action<PositionCloseDetail>(NewPositionCloseDetail);
         }
         /// <summary>
         /// 更新持仓管理器中的最新行情数据
@@ -262,6 +264,13 @@ namespace TradingLib.Common
             return poslist.GetEnumerator();
         }
         #endregion
+
+        void NewPositionCloseDetail(PositionCloseDetail detail)
+        {
+            if (NewPositionCloseDetailEvent != null)
+                NewPositionCloseDetailEvent(detail);
+        }
+        public event Action<PositionCloseDetail> NewPositionCloseDetailEvent;
 
     }
 }
