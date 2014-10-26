@@ -128,6 +128,23 @@ namespace TradingLib.Common
         }
 
         /// <summary>
+        /// 持仓成本
+        /// 今仓的持仓成本为 当日开仓价格 昨仓的平仓成本为 结算价格
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <returns></returns>
+        public static decimal HoldPrice(this PositionDetail pos)
+        {
+            if (!pos.IsHisPosition())
+            {
+                return pos.OpenPrice;//开仓价
+            }
+            else
+            {
+                return pos.LastSettlementPrice;//昨日结算价
+            }
+        }
+        /// <summary>
         /// 获得文字输出
         /// </summary>
         /// <param name="pos"></param>

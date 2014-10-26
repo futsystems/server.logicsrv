@@ -221,11 +221,26 @@ namespace TradingLib.Core
                 
                 ILocation location = new Location(request.FrontID,request.ClientID);
                 //转发昨日持仓信息
-                foreach (Position pos in account.YdPositions)
+                foreach (Position p in account.Positions)
                 {
-                    HoldPositionNotify notify = ResponseTemplate<HoldPositionNotify>.SrvSendNotifyResponse(location);
-                    notify.Position = pos.GenPositionEx();
-                    tl.TLSend(notify);
+                    if (p.PositionDetailYdRef.Count() != 0)
+                    {
+                        IEnumerable<Position> poslist = PositionImpl.FromPositionDetail(p.PositionDetailYdRef);
+                        foreach (Position pos in poslist)
+                        {
+                            HoldPositionNotify notify = ResponseTemplate<HoldPositionNotify>.SrvSendNotifyResponse(location);
+                            notify.Position = pos.GenPositionEx();
+                            tl.TLSend(notify);
+                        }
+                    }
+
+                    
+                }
+                foreach (PositionDetail pos in account.YdPositions)
+                {
+                    //HoldPositionNotify notify = ResponseTemplate<HoldPositionNotify>.SrvSendNotifyResponse(location);
+                    //notify.Position = pos.GenPositionEx();
+                    //tl.TLSend(notify);
                 }
                 //转发当日委托
                 foreach (Order o in account.Orders)

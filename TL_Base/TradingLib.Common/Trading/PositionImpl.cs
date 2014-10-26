@@ -430,42 +430,46 @@ namespace TradingLib.Common
                 _lowest = _lowest <= _last ? _lowest : _last;
             }
 
-            //从行情更新昨结算价
-            if (_lastsettlementprice == null && k.PreSettlement > 0 && (double)k.PreSettlement < double.MaxValue)
+            if (k.ex == "demo")//用于测试
             {
-                _lastsettlementprice = k.PreSettlement;
-                //更新所有持仓明细的昨日结算价格
-                //昨日持仓明细在YdRef保存的不用更新 该数据用于获得隔夜仓的成本即昨天的结算价为成本
-                foreach (PositionDetail p in this.PositionDetailTotal)
+                //从行情更新昨结算价
+                if (_lastsettlementprice == null && k.PreSettlement > 0 && (double)k.PreSettlement < double.MaxValue)
                 {
-                    p.LastSettlementPrice = k.PreSettlement;
+                    _lastsettlementprice = k.PreSettlement;
+                    //更新所有持仓明细的昨日结算价格
+                    //昨日持仓明细在YdRef保存的不用更新 该数据用于获得隔夜仓的成本即昨天的结算价为成本
+                    //只用更新新开仓的昨日结算价格 从历史持仓明细表中加载的持仓明细 会从结算价中获得上日结算价
+                    foreach (PositionDetail p in this.PositionDetailTodayNew)
+                    {
+                        p.LastSettlementPrice = k.PreSettlement;
+                    }
+                    //更新所有平仓明细的昨日结算价格
+                    foreach (PositionCloseDetail c in this.PositionCloseDetail)
+                    {
+                        c.LastSettlementPrice = k.PreSettlement;
+                    }
+                    Util.Debug("update presettlementprice for position[" + this.Account + "-" + this.Symbol + "] price:" + _lastsettlementprice.ToString(), QSEnumDebugLevel.MUST);
                 }
-                //更新所有平仓明细的昨日结算价格
-                foreach (PositionCloseDetail c in this.PositionCloseDetail)
+                //检查昨结算价格是否异常 如果获得了昨日结算价格 但是又和行情中的昨结算价格不一致则有异常
+                if (_lastsettlementprice != null && k.PreSettlement > 0 && k.PreSettlement != _lastsettlementprice)
                 {
-                    c.LastSettlementPrice = k.PreSettlement;
+                    Util.Debug("PreSettlement price error,it changed during trading", QSEnumDebugLevel.ERROR);
                 }
-                Util.Debug("update presettlementprice for position[" + this.Account + "-" + this.Symbol + "] price:" + _lastsettlementprice.ToString(), QSEnumDebugLevel.MUST);
-            }
-            //检查昨结算价格是否异常 如果获得了昨日结算价格 但是又和行情中的昨结算价格不一致则有异常
-            if (_lastsettlementprice != null && k.PreSettlement > 0 && k.PreSettlement != _lastsettlementprice)
-            {
-                Util.Debug("PreSettlement price error,it changed during trading", QSEnumDebugLevel.ERROR);
-            }
 
 
-            //从行情更新结算价格
-            if (_settlementprice == null && k.Settlement > 0 && (double)k.Settlement < double.MaxValue)
-            {
-                _settlementprice = k.Settlement;
-                //更新所有持仓明细的当日结算价格
-                foreach (PositionDetail p in this.PositionDetailTotal)
+                //从行情更新结算价格 更新所有持仓明细的行情
+                if (_settlementprice == null && k.Settlement > 0 && (double)k.Settlement < double.MaxValue)
                 {
-                    p.SettlementPrice = k.Settlement;
+                    _settlementprice = k.Settlement;
+                    //更新所有持仓明细的当日结算价格
+                    foreach (PositionDetail p in this.PositionDetailTotal)
+                    {
+                        p.SettlementPrice = k.Settlement;
+                    }
+                    Util.Debug("update settlementprice for position[" + this.Account + "-" + this.Symbol + "] price:" + _settlementprice.ToString(), QSEnumDebugLevel.MUST);
                 }
-                Util.Debug("update settlementprice for position[" + this.Account + "-" + this.Symbol + "] price:" + _settlementprice.ToString(), QSEnumDebugLevel.MUST);
+                //    _lastsettlementprice
             }
-            //    _lastsettlementprice
         }
 
         
@@ -669,6 +673,23 @@ namespace TradingLib.Common
         /// <returns></returns>
         public decimal Adjust(Trade t) 
         {
+            //如果合约为空 则默认pos的合约
+            if ((_sym == "") && t.isValid) _sym = t.symbol;
+            //合约不为空比较 当前持仓合约和adjusted pos的合约
+            if ((_sym != t.symbol)) throw new Exception("Failed because adjustment symbol did not match position symbol");
+            //如果osymbol为空则取默认pos的osymbol
+            if (_osymbol == null && t.oSymbol != null)
+            {
+                if (!t.symbol.Equals(this.Symbol)) throw new Exception("Failed because osymbol and symbol do not match");
+                _osymbol = t.oSymbol;
+            }
+
+            //帐户比较
+            if (_acct == "") _acct = t.Account;
+            if (_acct != t.Account) throw new Exception("Failed because adjustment account did not match position account.");
+
+
+
             //1.保存成交数据
             _tradelist.Add(t);
 
@@ -703,8 +724,21 @@ namespace TradingLib.Common
             }
 
             //3.调整持仓汇总的数量和价格
+            //更新持仓数量
+            this._size += adjust.xSize;
 
-
+            //持仓均价 由于平仓按先开先平的规则进行因此这里持仓均价为未平仓持仓明细部分的均价，而不是综合均价
+            if (this._size == 0)
+            {
+                this._price = 0;
+            }
+            else
+            {
+                this._price = _postotallist.Where(pos1 => !pos1.IsClosed()).Sum(pos2 => pos2.HoldSize() * pos2.HoldPrice()) /Math.Abs(this._size);
+                
+            }
+            Util.Debug("runing size:" + this._size.ToString() + " positiondetail size:" + _postotallist.Where(pos1 => !pos1.IsClosed()).Sum(pos2 => pos2.HoldSize()));
+            _closedpl += adjust.ClosedPL; // update running closed pl 更新平仓盈亏
             return adjust.ClosedPL;//返回平仓盈亏
         }
 
@@ -715,18 +749,55 @@ namespace TradingLib.Common
         /// <returns></returns>
         public decimal Adjust(PositionDetail d)
         {
-            if (NeedGenPositionDetails)
+            //如果合约为空 则默认pos的合约
+            if (_sym == "") _sym = d.Symbol;
+            //合约不为空比较 当前持仓合约和adjusted pos的合约
+            if ((_sym != d.Symbol)) throw new Exception("Failed because adjustment symbol did not match position symbol");
+            //如果osymbol为空则取默认pos的osymbol
+            if (_osymbol == null && d.oSymbol != null)
             {
-                _poshisreflist.Add(d);
-
-                PositionDetail pd = new PositionDetailImpl(d);//复制该持仓明细加入到对应的列表中 准备进行计算
-                _poshisnewlist.Add(pd);
-                _postotallist.Add(pd);
+                if (!d.Symbol.Equals(this.Symbol)) throw new Exception("Failed because osymbol and symbol do not match");
+                _osymbol = d.oSymbol;
             }
 
-            decimal cpl = Adjust(new PositionAdjust(d));
+            //帐户比较
+            if (_acct == "") _acct = d.Account;
+            if (_acct != d.Account) throw new Exception("Failed because adjustment account did not match position account.");
 
-            return cpl;
+            if (NeedGenPositionDetails)
+            {
+                //_openamount += t.GetAmount();
+                //_openvol += d.HoldSize();
+
+                _poshisreflist.Add(d);
+
+                //昨日持仓明细的结算价格  在今天加载后其昨日结算价格需要更新
+                PositionDetail pd = new PositionDetailImpl(d);//复制该持仓明细加入到对应的列表中 准备进行计算
+
+                //加载到今日持仓明细列表中的昨日持仓明细列表，需要将对应的昨日结算价格设定为昨日持仓明细的结算价格 并且不能被行情更新
+                pd.LastSettlementPrice = d.SettlementPrice;
+                //结算价格如何处理？默认就是昨天的结算价，如果没有获得正确的结算价就以昨天的结算价作价
+                //pd.SettlementPrice = 0;
+                _poshisnewlist.Add(pd);
+                _postotallist.Add(pd);
+                //按照持仓当前获得结算价格信息 更新结算价格信息 结算价格是收盘后由行情系统统一推送的，在有结算价之后不可能再有累加持仓明细的逻辑
+                //if (this.SettlementPrice != null) pd.SettlementPrice = (decimal)this.SettlementPrice;
+                //if (this.LastSettlementPrice != null) pd.LastSettlementPrice = (decimal)this.LastSettlementPrice;
+
+            }
+
+            this._size += d.Side ? d.HoldSize() : d.HoldSize() * -1;
+
+            if (this._size == 0)
+            {
+                this._price = 0;
+            }
+            else
+            {
+                //通过加权计算获得当前的持仓均价
+                this._price = _postotallist.Where(pos1 => !pos1.IsClosed()).Sum(pos2 => pos2.HoldSize() * pos2.HoldPrice()) / Math.Abs(this._size);
+            }   
+            return 0;
         }
         #endregion
 
@@ -878,14 +949,27 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="details"></param>
         /// <returns></returns>
-        public static Position FromPositionDetail(IEnumerable<PositionDetail> details)
+        public static IEnumerable<Position> FromPositionDetail(IEnumerable<PositionDetail> details)
         {
-            Position pos = new PositionImpl();
-            foreach (PositionDetail p in details)
+            List<Position> list = new List<Position>();
+
+            //分别按多空 形成持仓
+            Position longpos = new PositionImpl();
+            longpos.DirectionType = QSEnumPositionDirectionType.Long;
+            foreach (PositionDetail p in details.Where(pd=>pd.Side))
             {
-                pos.Adjust(p);
+                longpos.Adjust(p);
             }
-            return pos;
+            if (longpos.isValid) list.Add(longpos);
+
+            Position shortpos = new PositionImpl();
+            shortpos.DirectionType = QSEnumPositionDirectionType.Long;
+            foreach (PositionDetail p in details.Where(pd=>!pd.Side))
+            {
+                shortpos.Adjust(p);
+            }
+            if (shortpos.isValid) list.Add(shortpos);
+            return list;
         }
         #endregion
 

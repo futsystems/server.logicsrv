@@ -445,7 +445,7 @@ namespace TradingLib.Core
                 StringBuilder sb = new StringBuilder();
                 foreach (Position pos in acc.Positions)
                 {
-                    sb.Append("-------------" + pos.Account + " " + pos.Symbol + " " + pos.DirectionType.ToString() +" "+pos.UnsignedSize.ToString()+" -------------"+Environment.NewLine);
+                    sb.Append("-------------" + pos.Account + " " + pos.Symbol + " " + pos.DirectionType.ToString() +" "+pos.UnsignedSize.ToString()+" price:"+pos.AvgPrice.ToString()+" -------------"+Environment.NewLine);
                     sb.Append("昨日持仓明细" + Environment.NewLine);
                     foreach (PositionDetail p in pos.PositionDetailYdRef)
                     {

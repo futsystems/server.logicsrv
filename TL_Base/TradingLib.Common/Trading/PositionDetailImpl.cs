@@ -293,5 +293,48 @@ namespace TradingLib.Common
         public decimal UnRealizedProfitByDate { get; set; }
 
 
+        public string Serialize(PositionDetail p)
+        {
+            char d = ',';
+            StringBuilder sb = new StringBuilder();
+            sb.Append(p.Account);
+            sb.Append(d);
+            sb.Append(p.CloseProfitByDate);
+            sb.Append(d);
+            sb.Append(p.CloseVolume);
+            sb.Append(d);
+            sb.Append(p.Exchange);
+            sb.Append(d);
+            sb.Append(p.HedgeFlag);
+            sb.Append(d);
+            sb.Append(p.LastSettlementPrice);
+            sb.Append(d);
+            sb.Append(p.Margin);
+            sb.Append(d);
+            sb.Append(p.OpenDate);
+            sb.Append(d);
+            sb.Append(p.OpenPrice);
+            sb.Append(d);
+            sb.Append(p.OpenTime);
+            sb.Append(d);
+            sb.Append(p.SecCode);
+            sb.Append(d);
+            sb.Append(p.Settleday);
+            sb.Append(d);
+            sb.Append(p.SettlementPrice);
+            sb.Append(d);
+            sb.Append(p.Side);
+            sb.Append(d);
+            sb.Append(p.Symbol);
+            sb.Append(d);
+            sb.Append(p.TradeID);
+            sb.Append(d);
+            sb.Append(p.Tradingday);
+            sb.Append(d);
+            sb.Append(p.UnRealizedProfitByDate);
+            sb.Append(d);
+            sb.Append(p.Volume);
+            return sb.ToString();
+        }
     }
 }

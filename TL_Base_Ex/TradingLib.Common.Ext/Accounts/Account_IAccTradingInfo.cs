@@ -63,28 +63,26 @@ namespace TradingLib.Common
         /// </summary>
         public IEnumerable<Trade> Trades { get { return this.TKTrade; } }
 
-
-        /// <summary>
-        /// 昨日持仓维护器
-        /// </summary>
-        //public LSPositionTracker TKYdPosition { get; set; }
-
         /// <summary>
         /// 昨日持仓数据
         /// 用于管理端获得昨日持仓 当日成交 然后生成当前的交易持仓状态
         /// </summary>
-        public IEnumerable<Position> YdPositions 
+        public IEnumerable<PositionDetail> YdPositions 
         {
             //这里不用单独维护LSPositionTracker从当前持仓中获得昨日持仓明细然后生成Position
             get 
             {
-                List<Position> list = new List<Position>();
+                List<PositionDetail> list = new List<PositionDetail>();
                 foreach(Position p in this.Positions)
                 {
-                    if(p.PositionDetailYdRef.Count() != 0)
+                    foreach (PositionDetail pd in p.PositionDetailYdRef)
                     {
-                        list.Add(PositionImpl.FromPositionDetail(p.PositionDetailYdRef));
+                        list.Add(pd);
                     }
+                    //if(p.PositionDetailYdRef.Count() != 0)
+                    //{
+                    //    list.Add(PositionImpl.FromPositionDetail(p.PositionDetailYdRef));
+                    //}
                 }
                 return list;
             } 

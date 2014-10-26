@@ -47,7 +47,7 @@ namespace TradingLib.API
         /// <summary>
         /// 获得所有隔夜持仓数据
         /// </summary>
-        IEnumerable<Position> YdPositions { get; }
+        IEnumerable<PositionDetail> YdPositions { get; }
 
         /// <summary>
         /// 获得某个合约的持仓对象

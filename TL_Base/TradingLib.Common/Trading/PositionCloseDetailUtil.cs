@@ -51,7 +51,7 @@ namespace TradingLib.Common
             else
             {
                 //昨仓 平仓盈亏为昨结算-平仓价
-                point = (close.ClosePrice - close.LastSettlementPrice) * close.oSymbol.Multiple * (close.Side ? 1 : -1);
+                point = (close.ClosePrice - close.LastSettlementPrice) * close.CloseVolume * (close.Side ? 1 : -1);
             }
             return point;
         }
