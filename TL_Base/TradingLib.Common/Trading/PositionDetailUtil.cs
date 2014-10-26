@@ -59,8 +59,9 @@ namespace TradingLib.Common
             closedetail.oSymbol = f.oSymbol;
 
             //判断是否是昨仓还是今仓
-            pos.IsHisPosition();
+            //pos.IsHisPosition(); 
             //平仓盈亏需要判断是今仓还是昨仓
+            closedetail.CloseProfitByDate = closedetail.CalCloseProfitByDate(pos.IsHisPosition());
 
             return closedetail;
         }

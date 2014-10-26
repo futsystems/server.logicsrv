@@ -11,25 +11,51 @@ namespace TradingLib.Common
     {
 
         /// <summary>
+        /// 计算某个平仓明细的平仓盈亏
+        /// </summary>
+        /// <param name="close"></param>
+        /// <returns></returns>
+        public static decimal CalCloseProfitByDate(this PositionCloseDetail close,bool hispos)
+        {
+            //获得合约对象
+            //Symbol sym = close.oSymbol != null ? close.oSymbol : BasicTracker.SymbolTracker[close.Symbol];
+
+            decimal profit = 0;
+            //平今仓
+            if (!hispos)
+            {
+                //今仓 平仓盈亏为平仓价-平仓价
+                profit = (close.ClosePrice - close.OpenPrice) * close.CloseVolume * close.oSymbol.Multiple * (close.Side ? 1 : -1);
+            }
+            else
+            {
+                //昨仓 平仓盈亏为昨结算-平仓价
+                profit = (close.ClosePrice - close.LastSettlementPrice) * close.CloseVolume * close.oSymbol.Multiple * (close.Side ? 1 : -1);
+            }
+
+            return profit;
+        }
+
+        /// <summary>
         /// 判断是否是平历史持仓
         /// </summary>
         /// <param name="close"></param>
         /// <returns></returns>
-        public static bool IsCloseHist(this PositionCloseDetail close)
-        {
-            //如果交易日没有标注 表明该持平仓明细为平今仓 如果是平昨仓则tradingday会被赋值成历史持仓的开仓交易日信息
-            if (close.Tradingday == 0)
-            {
-                return false;
-            }
+        //public static bool IsCloseHist(this PositionCloseDetail close)
+        //{
+        //    //如果交易日没有标注 表明该持平仓明细为平今仓 如果是平昨仓则tradingday会被赋值成历史持仓的开仓交易日信息
+        //    if (close.Tradingday == 0)
+        //    {
+        //        return false;
+        //    }
 
-            //如果交易日等于对应的结算日则为平当日仓 否则为平历史仓
-            if (close.Tradingday == close.Settleday)
-            {
-                return false;
-            }
-            return true;
-        }
+        //    //如果交易日等于对应的结算日则为平当日仓 否则为平历史仓
+        //    if (close.Tradingday == close.Settleday)
+        //    {
+        //        return false;
+        //    }
+        //    return true;
+        //}
 
         /// <summary>
         /// 获得文字输出

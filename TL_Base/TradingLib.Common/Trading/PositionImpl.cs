@@ -708,12 +708,12 @@ namespace TradingLib.Common
             if (close.IsEntryPosition) throw new Exception("entry trade can not close position");
 
             int remainsize = close.UnsignedSize;
-
+            decimal closeprofit = 0;
             //先平历史持仓
             foreach (PositionDetail p in _poshisnewlist)
             {
                 //剩余数量为0跳出
-                if (remainsize == 0)
+                if (remainsize == 0) //这里假设有多余的持仓明细没有被平掉，而当前平仓成交已经使用完毕
                 {
                     break;
                 }
@@ -725,6 +725,7 @@ namespace TradingLib.Common
                 PositionCloseDetail closedetail = p.ClosePositon(close, ref remainsize);
                 if (closedetail != null)
                 {
+                    closeprofit += closedetail.CloseProfitByDate;
                     if (this.LastSettlementPrice != null)
                         closedetail.LastSettlementPrice = (decimal)this.LastSettlementPrice;
                     NewPositionCloseDetail(closedetail);
@@ -735,8 +736,8 @@ namespace TradingLib.Common
             foreach (PositionDetail p in _postodaynewlist)
             {
                 //剩余数量为0跳出
-                if (remainsize == 0)
-                {
+                if (remainsize == 0) //这里假设有多余的持仓明细没有被平掉，而当前平仓成交已经使用完毕
+                {   
                     break;
                 }
                 if (p.IsClosed())
@@ -746,10 +747,17 @@ namespace TradingLib.Common
                 PositionCloseDetail closedetail = p.ClosePositon(close, ref remainsize);
                 if (closedetail != null)
                 {
+                    closeprofit += closedetail.CloseProfitByDate;
                     if (this.LastSettlementPrice != null)
                         closedetail.LastSettlementPrice = (decimal)this.LastSettlementPrice;
                     NewPositionCloseDetail(closedetail);
                 }
+            }
+
+            //这里需要解决刚好平仓完毕的情况，遍历完毕所有持仓明细 并且平仓成交的剩余平仓量为0
+            if (remainsize == 0) //这里假设有多余的持仓明细没有被平掉，而当前平仓成交已经使用完毕
+            {   //设定利润
+                close.Profit = closeprofit;
             }
 
         }

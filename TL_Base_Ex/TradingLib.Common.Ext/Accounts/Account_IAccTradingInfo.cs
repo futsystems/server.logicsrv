@@ -57,6 +57,7 @@ namespace TradingLib.Common
         /// 成交维护器
         /// </summary>
         public ThreadSafeList<Trade> TKTrade { get; set; }
+
         /// <summary>
         /// 当日所有成交数据
         /// </summary>
@@ -66,7 +67,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 昨日持仓维护器
         /// </summary>
-        public LSPositionTracker TKYdPosition { get; set; }
+        //public LSPositionTracker TKYdPosition { get; set; }
 
         /// <summary>
         /// 昨日持仓数据
