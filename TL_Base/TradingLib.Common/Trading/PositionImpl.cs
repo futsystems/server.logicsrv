@@ -137,7 +137,9 @@ namespace TradingLib.Common
         int _time = 0;
         decimal _closedpl = 0;
         decimal _last = 0;
-        decimal _settleprice = 0;
+        //可空类型的结算价格
+        decimal? _settlementprice = null;
+        decimal? _lastsettlementprice = null;
 
         bool usebidask = false;
         Symbol _osymbol = null;
@@ -200,7 +202,7 @@ namespace TradingLib.Common
 
             _last = p.AvgPrice;
             _osymbol = p.oSymbol;
-            _settleprice = p.SettlePrice;
+            //_settleprice = p.SettlePrice;
             _directiontype = p.DirectionType;
         }
 
@@ -284,7 +286,6 @@ namespace TradingLib.Common
         public decimal UnRealizedPL{
             get 
             {
-                //if (!_gotTick) return 0;
                 return _size * (LastPrice - AvgPrice); 
             }
         }
@@ -293,12 +294,27 @@ namespace TradingLib.Common
         /// <summary>
         /// 结算价
         /// </summary>
-        public decimal SettlePrice{get{return _settleprice;}set{ _settleprice = value;}}
+        public decimal? SettlementPrice { get { return _settlementprice; } set { _settlementprice = value; } }
 
+        /// <summary>
+        /// 昨日结算价
+        /// </summary>
+        public decimal? LastSettlementPrice { get { return _lastsettlementprice; } set { _lastsettlementprice = value; } }
         /// <summary>
         /// 结算时盯市盈亏
         /// </summary>
-        public decimal SettleUnrealizedPL {get{return _size * (_settleprice - AvgPrice);}}
+        public decimal SettleUnrealizedPL 
+        { 
+            get 
+            {
+                if (_settlementprice == null)
+                    throw new Exception("position have not got settlement price");
+
+                decimal settleprice = (decimal)_settlementprice;
+                return _size * (settleprice - AvgPrice);
+            } 
+        
+            }
 
         /// <summary>
         /// 最高价
@@ -413,6 +429,41 @@ namespace TradingLib.Common
                 _lowest = _lowest <= _last ? _lowest : _last;
             }
 
+            //从行情更新昨结算价
+            if (_lastsettlementprice == null && k.PreSettlement > 0 && (double)k.PreSettlement < double.MaxValue)
+            {
+                _lastsettlementprice = k.PreSettlement;
+                //更新所有持仓明细的昨日结算价格
+                foreach (PositionDetail p in this.PositionDetailTotal)
+                {
+                    p.LastSettlementPrice = k.PreSettlement;
+                }
+                //更新所有平仓明细的昨日结算价格
+                foreach (PositionCloseDetail c in this.PositionCloseDetail)
+                {
+                    c.LastSettlementPrice = k.PreSettlement;
+                }
+                Util.Debug("update presettlementprice for position[" + this.Account + "-" + this.Symbol + "] price:" + _lastsettlementprice.ToString(), QSEnumDebugLevel.MUST);
+            }
+            //检查昨结算价格是否异常 如果获得了昨日结算价格 但是又和行情中的昨结算价格不一致则有异常
+            if (_lastsettlementprice != null && k.PreSettlement != _lastsettlementprice)
+            {
+                Util.Debug("PreSettlement price error,it changed during trading", QSEnumDebugLevel.ERROR);
+            }
+
+
+            //从行情更新结算价格
+            if (_settlementprice == null && k.Settlement > 0 && (double)k.Settlement < double.MaxValue)
+            {
+                _settlementprice = k.Settlement;
+                //更新所有持仓明细的当日结算价格
+                foreach (PositionDetail p in this.PositionDetailTotal)
+                {
+                    p.SettlementPrice = k.PreSettlement;
+                }
+                Util.Debug("update settlementprice for position[" + this.Account + "-" + this.Symbol + "] price:" + _settlementprice.ToString(), QSEnumDebugLevel.MUST);
+            }
+            //    _lastsettlementprice
         }
 
         
@@ -537,6 +588,9 @@ namespace TradingLib.Common
         /// <summary>
         /// Adjusts the position by applying a new trade or fill.
         /// 这里记录了日内所有成交,将成交叠加到持仓上形成最新的持仓状态
+        /// 在Net类型的持仓状态下 平仓明细会发生错误
+        /// 持有多头3手，空头1手，买入平仓1手时会报 持仓方向与成交方向不符的异常
+        /// 因为Net状态下 多空是混合在一起的,因此在closeposition中需要用方向进行分组
         /// </summary>
         /// <param name="t">The new fill you want this position to reflect.</param>
         /// <returns></returns>
@@ -551,16 +605,35 @@ namespace TradingLib.Common
             {
                 _openamount += t.GetAmount();
                 _openvol += t.UnsignedSize;
-                PositionDetail d = t.ToPositionDetail();
-                _postodaynewlist.Add(d);//插入今日新开仓持仓明细
-                _postotallist.Add(d);//插入到Totallist便于访问
+
+                if (NeedGenPositionDetails)
+                {
+                    //根据新开仓成交生成当日新开持仓明细
+                    PositionDetail d = t.ToPositionDetail();
+
+                    //按照持仓当前获得结算价格信息 更新结算价格信息
+                    if (this.SettlementPrice != null)
+                    {
+                        d.SettlementPrice = (decimal)this.SettlementPrice;
+                    }
+                    if (this.LastSettlementPrice != null)
+                    {
+                        d.LastSettlementPrice = (decimal)this.LastSettlementPrice;
+                    }
+
+                    _postodaynewlist.Add(d);//插入今日新开仓持仓明细
+                    _postotallist.Add(d);//插入到Totallist便于访问
+                }
             }
             else//平仓金额 数量累加
             {
                 _closeamount += t.GetAmount();
                 _closevol += t.UnsignedSize;
 
-                ClosePosition(t);//执行平仓操作
+                if (NeedGenPositionDetails)
+                {
+                    ClosePosition(t);//执行平仓操作
+                }
             }
             
             return cpl;
@@ -573,17 +646,39 @@ namespace TradingLib.Common
         /// <returns></returns>
         public decimal Adjust(PositionDetail d)
         {
-            _poshisreflist.Add(d);
+            if (NeedGenPositionDetails)
+            {
+                _poshisreflist.Add(d);
 
-            PositionDetail pd = new PositionDetailImpl(d);//复制该持仓明细加入到对应的列表中 准备进行计算
-            _poshisnewlist.Add(pd);
-            _postotallist.Add(pd);
-            
+                PositionDetail pd = new PositionDetailImpl(d);//复制该持仓明细加入到对应的列表中 准备进行计算
+                _poshisnewlist.Add(pd);
+                _postotallist.Add(pd);
+            }
 
             decimal cpl = Adjust(new PositionImpl(d, _directiontype));
 
             return cpl;
         }
+
+        /// <summary>
+        /// 判断是否需要生成持仓明细
+        /// </summary>
+        bool NeedGenPositionDetails
+        {
+            get
+            {
+                switch (this.DirectionType)
+                { 
+                    case QSEnumPositionDirectionType.Long:
+                    case QSEnumPositionDirectionType.Short:
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        }
+
+
 
         void NewPositionCloseDetail(PositionCloseDetail closedetail)
         {
@@ -592,6 +687,13 @@ namespace TradingLib.Common
                 NewPositionCloseDetailEvent(closedetail);
         }
         public event Action<PositionCloseDetail> NewPositionCloseDetailEvent;
+
+        
+        /// <summary>
+        /// 利用平仓成交平掉对应的持仓明细 按照先开先平或者平今平昨的平仓逻辑
+        /// 如果是净持仓 可能会导致逻辑异常 这里需要再分析一下
+        /// </summary>
+        /// <param name="close"></param>
         void ClosePosition(Trade close)
         {
             if (close.IsEntryPosition) throw new Exception("entry trade can not close position");
@@ -614,6 +716,8 @@ namespace TradingLib.Common
                 PositionCloseDetail closedetail = p.ClosePositon(close, ref remainsize);
                 if (closedetail != null)
                 {
+                    if (this.LastSettlementPrice != null)
+                        closedetail.LastSettlementPrice = (decimal)this.LastSettlementPrice;
                     NewPositionCloseDetail(closedetail);
                 }
             }
@@ -633,6 +737,8 @@ namespace TradingLib.Common
                 PositionCloseDetail closedetail = p.ClosePositon(close, ref remainsize);
                 if (closedetail != null)
                 {
+                    if (this.LastSettlementPrice != null)
+                        closedetail.LastSettlementPrice = (decimal)this.LastSettlementPrice;
                     NewPositionCloseDetail(closedetail);
                 }
             }

@@ -72,6 +72,8 @@ namespace TradingLib.Common
             return AcctList.Values.FirstOrDefault(t => (t.UserID == uid && t.Category == category));
         }
 
+
+
         internal void DropAccount(IAccount account)
         { 
             IAccount accremove = null;
@@ -123,6 +125,7 @@ namespace TradingLib.Common
             }
             baseacc.TKPosition = pt;
 
+            //这里单独给出两个一个昨日持仓维护器 用于获得交易帐户的昨日持仓数据，这里可以考虑从Position自带的昨日持仓明细获得昨日持仓汇总信息
             LSPositionTracker ydpt = new LSPositionTracker();
             if (!PosHold.ContainsKey(account.ID))
             {
@@ -140,14 +143,7 @@ namespace TradingLib.Common
 
         }
 
-        public void Clear()
-        {
-            OrdBook.Clear();
-            PosBook.Clear();
-            TradeBook.Clear();
-            PosHold.Clear();
-
-        }
+        
 
         public bool HaveAccount(string account)
         {
@@ -168,191 +164,20 @@ namespace TradingLib.Common
                 return false;
         }
 
-        /// <summary>
-        /// 返回某个帐户是否有持仓
-        /// </summary>
-        /// <param name="account"></param>
-        /// <returns></returns>
-        public bool AnyPosition(string account)
-        {
-            if (!HaveAccount(account)) return false;//如果没有该账户则直接返回
-            foreach (Position pos in this.GetPositionBook(account))//遍历该账户的所有仓位 若不是空仓则市价平仓
-            {
-                if (!pos.isFlat)
-                {
-                    return true;
-                }
-            }
-            
-            return false;
-        }
-
-        public bool HaveLongPosition(string account)
-        {
-            if (!HaveAccount(account)) return false;//如果没有该账户则直接返回
-            return this.GetPositionBook(account).HaveLongPosition;
-        }
-
-        public bool HaveShortPosition(string account)
-        {
-            if (!HaveAccount(account)) return false;//如果没有该账户则直接返回
-            return this.GetPositionBook(account).HaveShortPosition;
-        }
-
-
-        #region 获得帐户交易信息管理器
-        public ThreadSafeList<Trade> GetTradeBook(string account)
-        {
-            try
-            {
-                return TradeBook[account];
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
-        }
-
-        public OrderTracker GetOrderBook(string account)
-        {
-            try
-            {
-                return OrdBook[account];
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
-        }
-
-        public LSPositionTracker GetPositionBook(string account)
-        {
-            try
-            {
-                return PosBook[account];
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
-        }
-
-        public LSPositionTracker GetPositionHoldBook(string account)
-        {
-            try
-            {
-                return PosHold[account];
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
-        }
-
-        #endregion
-
-
-
-
-
-        #region 获得帐户交易信息
-        /// <summary>
-        /// 获得某个用户的所有隔夜持仓
-        /// </summary>
-        /// <param name="account"></param>
-        /// <returns></returns>
-        public Position[] GetPositionHold(string account)
-        {
-            List<Position> l = new List<Position>();
-            if (!HaveAccount(account)) return l.ToArray();
-            return PosHold[account].ToArray();
-        }
 
         /// <summary>
-        /// 获得某个用户的所有持仓
+        /// 清空数据
         /// </summary>
-        /// <param name="account"></param>
-        /// <returns></returns>
-        public Position[] GetPositions(string account)
+        public void Clear()
         {
-            List<Position> l = new List<Position>();
-            if (!HaveAccount(account)) return l.ToArray();
-            return PosBook[account].ToArray();
+            OrdBook.Clear();
+            PosBook.Clear();
+            TradeBook.Clear();
+            PosHold.Clear();
+
         }
 
-        /// <summary>
-        /// 返回净持仓
-        /// </summary>
-        /// <param name="account"></param>
-        /// <returns></returns>
-        public Position[] GetNetPositions(string account)
-        {
-            List<Position> l = new List<Position>();
-            if (!HaveAccount(account)) return l.ToArray();
-            return PosBook[account].ToNetArray();
-        }
-        /// <summary>
-        /// 获得某个帐户所有委托
-        /// </summary>
-        /// <param name="account"></param>
-        /// <returns></returns>
-        public Order[] GetOrders(string account)
-        {
-            List<Order> l = new List<Order>();
-            if (!HaveAccount(account)) return l.ToArray();
-            return OrdBook[account].ToArray();
-        }
 
-        /// <summary>
-        /// 获得某个帐户的所有成交
-        /// </summary>
-        /// <param name="account"></param>
-        /// <returns></returns>
-        public Trade[] GetTrades(string account)
-        {
-            ThreadSafeList<Trade> flist = new ThreadSafeList<Trade>();
-            if (!HaveAccount(account)) return flist.ToArray();
-            return TradeBook[account].ToArray();
-        }
-
-        /// <summary>
-        /// 获得某个帐户的所有取消
-        /// </summary>
-        /// <param name="account"></param>
-        /// <returns></returns>
-        public long[] GetCancels(string account)
-        {
-            List<long> clist = new List<long>();
-            if (!HaveAccount(account)) return clist.ToArray();
-            foreach (Order o in OrdBook[account])
-            {
-                if (OrdBook[account].isCanceled(o.id))
-                    clist.Add(o.id);
-            }
-            return clist.ToArray();
-        }
-
-        /// <summary>
-        /// 获得某个帐户某个合约的持仓
-        /// </summary>
-        /// <param name="account"></param>
-        /// <param name="symbol"></param>
-        /// <returns></returns>
-        internal Position GetPosition(string account, string symbol,bool side)
-        {
-            return PosBook[account][symbol, account, side];
-        }
-
-        /// <summary>
-        /// 如果不分方向 则获得的就是净持仓
-        /// </summary>
-        /// <param name="account"></param>
-        /// <param name="symbol"></param>
-        /// <returns></returns>
-        internal Position GetPosition(string account, string symbol)
-        {
-            return PosBook[account][symbol, account];
-        }
         /// <summary>
         /// 重置
         /// </summary>
@@ -368,9 +193,6 @@ namespace TradingLib.Common
             TradeBook[account.ID].Clear();
 
         }
-        #endregion
-
-
 
 
         #region 响应交易对象

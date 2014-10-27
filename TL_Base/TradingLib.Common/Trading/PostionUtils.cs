@@ -70,7 +70,7 @@ namespace TradingLib.Common
 
             //其余品种保证金按照结算价格计算
             if (p.oSymbol.Margin <= 1)
-                return p.UnsignedSize * p.SettlePrice * p.oSymbol.Multiple * p.oSymbol.Margin;
+                return p.UnsignedSize * (decimal)p.SettlementPrice * p.oSymbol.Multiple * p.oSymbol.Margin;
             else
                 return p.oSymbol.Margin * p.UnsignedSize;
         }
@@ -131,7 +131,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static decimal CalcSettlePositionValue(this Position p)
         {
-            return p.UnsignedSize * p.SettlePrice * p.oSymbol.Multiple;
+            return p.UnsignedSize * (decimal)p.SettlementPrice* p.oSymbol.Multiple;
         }
 
         

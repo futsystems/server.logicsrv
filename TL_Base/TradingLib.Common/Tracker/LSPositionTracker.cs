@@ -56,6 +56,8 @@ namespace TradingLib.Common
             poslist.Add(pos);
             pos.NewPositionCloseDetailEvent += new Action<PositionCloseDetail>(NewPositionCloseDetail);
         }
+
+        #region 响应交易对象数据
         /// <summary>
         /// 更新持仓管理器中的最新行情数据
         /// </summary>
@@ -121,6 +123,8 @@ namespace TradingLib.Common
             }
             _nettk.GotPosition(p);
         }
+        #endregion
+
 
         /// <summary>
         /// 清空记录的数据
@@ -134,6 +138,7 @@ namespace TradingLib.Common
         }
 
 
+        #region 获得对应的持仓数据
         public Position this[string symbol, bool side]
         {
             get
@@ -163,27 +168,8 @@ namespace TradingLib.Common
                 }
             }
         }
+        #endregion
 
-        public Position this[string symbol]
-        {
-            get
-            {
-                return _nettk[symbol, _defaultacct];
-            }
-        }
-        /// <summary>
-        /// 获得净持仓
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <param name="account"></param>
-        /// <returns></returns>
-        public Position this[string symbol, string account]
-        {
-            get
-            {
-                return _nettk[symbol, account];
-            }
-        }
 
         string _defaultacct = string.Empty;
         /// <summary>
@@ -264,6 +250,8 @@ namespace TradingLib.Common
             return poslist.GetEnumerator();
         }
         #endregion
+
+
 
         void NewPositionCloseDetail(PositionCloseDetail detail)
         {

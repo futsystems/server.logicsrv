@@ -17,7 +17,7 @@ namespace TradingLib.Core
             sp.Multiple = pos.oSymbol.Multiple;
             sp.SecurityCode = pos.oSymbol.SecurityFamily.Code;
             sp.Settleday = 0;
-            sp.SettlePrice = pos.SettlePrice;
+            sp.SettlePrice = (decimal)pos.SettlementPrice;
             sp.Size = pos.Size;
             sp.Symbol = pos.Symbol;
             sp.Margin = pos.CalcPositionSettleMargin();

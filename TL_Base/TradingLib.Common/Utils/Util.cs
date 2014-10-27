@@ -39,7 +39,37 @@ namespace TradingLib.Common
             sb.Append(item.Programe);
             sb.Append(":");
             sb.Append(item.Message);
+
+            Console.ForegroundColor = GetColor(item.Level);
             Console.WriteLine(sb.ToString());
+            Console.ForegroundColor = ConsoleColor.Gray;
+        }
+
+        /// <summary>
+        /// Get color for the specified log level
+        /// </summary>
+        /// <param name="level">Level for the log entry</param>
+        /// <returns>A <see cref="ConsoleColor"/> for the level</returns>
+        public static ConsoleColor GetColor(QSEnumDebugLevel level)
+        {
+            switch (level)
+            {
+                case QSEnumDebugLevel.VERB:
+                    return ConsoleColor.DarkGray;
+                case QSEnumDebugLevel.DEBUG:
+                    return ConsoleColor.Gray;
+                case QSEnumDebugLevel.INFO:
+                    return ConsoleColor.White;
+                case QSEnumDebugLevel.WARNING:
+                    return ConsoleColor.DarkMagenta;
+                case QSEnumDebugLevel.ERROR:
+                    return ConsoleColor.Magenta;
+                case QSEnumDebugLevel.MUST:
+                    return ConsoleColor.Blue;
+                //case LogLevel.Fatal:
+                //    return ConsoleColor.Red;
+            }
+            return ConsoleColor.Yellow;
         }
 
 

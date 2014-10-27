@@ -98,11 +98,14 @@ namespace TradingLib.Common
         /// 平仓量
         /// </summary>
         public int CloseVolume { get; set; }
+
+        //decimal _closeprofitbydate = 0;
         /// <summary>
         /// 盯市平仓盈亏
         /// 平当日仓 (开仓-平仓)*手数*乘数
         /// </summary>
-        public decimal CloseProfitByDate { get; set; }
+        public decimal CloseProfitByDate {get;set;}
+       
 
 
         /// <summary>

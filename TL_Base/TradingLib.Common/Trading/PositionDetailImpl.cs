@@ -100,7 +100,7 @@ namespace TradingLib.Common
             if (f.IsEntryPosition) throw new Exception("entry trade can not close postion");
             if (pos.Account != f.Account) throw new Exception("postion's account do not match with trade");
             if (pos.Symbol != f.symbol) throw new Exception("position's symbol do not math with trade");
-            if (pos.Side != f.PositionSide) throw new Exception("position's side do not math with trade's side");
+            if (pos.Side != f.PositionSide) throw new Exception(string.Format("position's side[{0}] do not math with trade's side[{1}]",pos.Side,f.PositionSide));
 
             int closesize = pos.HoldSize() >= remainsize ? remainsize : pos.HoldSize();
 
@@ -196,15 +196,14 @@ namespace TradingLib.Common
         public static string GetPositionDetailStr(this PositionDetail pos)
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append(pos.Account);
-            sb.Append(" ");
-            sb.Append(pos.Symbol);
+            sb.Append(pos.Account+"-"+pos.Symbol);
             sb.Append(" ");
             sb.Append(" T:" + pos.GetDateTime().ToString());
             sb.Append(" S:" + (pos.Side ? "Long" : "Short"));
             sb.Append(string.Format(" {0}@{1}", pos.Volume, pos.OpenPrice));
             sb.Append(" HoldSize:" + pos.HoldSize());
             sb.Append(" TradeID:" + pos.TradeID);
+            sb.Append(string.Format(" PreS:{0} S:{1}", pos.LastSettlementPrice, pos.SettlementPrice));
             return sb.ToString();
         }
 

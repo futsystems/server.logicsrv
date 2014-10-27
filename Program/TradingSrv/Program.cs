@@ -48,7 +48,7 @@ namespace TraddingSrvCLI
             try
             {
                 debug("*********");
-                
+                //debug(double.MaxValue.ToString());
                 CoreDaemon cd = new CoreDaemon();
                 cd.SendDebugEvent +=new DebugDelegate(debug);
                 cd.Start();

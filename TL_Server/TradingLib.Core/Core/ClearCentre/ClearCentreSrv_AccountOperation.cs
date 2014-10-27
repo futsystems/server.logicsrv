@@ -466,9 +466,9 @@ namespace TradingLib.Core
         #endregion
 
 
-        public IEnumerable<Position> GetPositions(string account)
-        {
-            return acctk.GetPositionBook(account);
-        }
+        //public IEnumerable<Position> GetPositions(string account)
+        //{
+        //    return acctk.GetPositionBook(account);
+        //}
     }
 }

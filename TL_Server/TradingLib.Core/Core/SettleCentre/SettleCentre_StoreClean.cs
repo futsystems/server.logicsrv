@@ -41,18 +41,18 @@ namespace TradingLib.Core
                 if (this.IsNormal)
                 {
                     //1.设定总统计持仓结算价
-                    pos.SettlePrice = pos.LastPrice;
+                    pos.SettlementPrice = pos.LastPrice;
                     //2.设定分帐户持仓结算价
                     IAccount account = _clearcentre[pos.Account];
-                    account.GetPosition(pos.Symbol, pos.isLong).SettlePrice = pos.SettlePrice;
+                    account.GetPosition(pos.Symbol, pos.isLong).SettlementPrice = pos.SettlementPrice;
                 }
                 else
                 {
                     //1.设定总统计持仓结算价
-                    pos.SettlePrice = pos.AvgPrice;
+                    pos.SettlementPrice = pos.AvgPrice;
                     //2.设定分帐户持仓结算价
                     IAccount account = _clearcentre[pos.Account];
-                    account.GetPosition(pos.Symbol, pos.isLong).SettlePrice = pos.SettlePrice;
+                    account.GetPosition(pos.Symbol, pos.isLong).SettlementPrice = pos.SettlementPrice;
                 }
             }
         }

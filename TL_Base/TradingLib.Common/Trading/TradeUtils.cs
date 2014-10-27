@@ -87,12 +87,13 @@ namespace TradingLib.Common
             pos.OpenDate = f.xdate;
             pos.OpenTime = f.xtime;
 
-            pos.Tradingday = f.xdate;//从新的开仓成交记录生成的持仓明细持仓日期为当前结算日
+            pos.Tradingday = 0;//从新的开仓成交记录生成的持仓明细持仓日期为当前结算日
 
             pos.Side = f.PositionSide;
             pos.Volume = Math.Abs(f.xsize);
             pos.OpenPrice = f.xprice;
             pos.TradeID = f.BrokerKey;//开仓明细中的开仓成交编号
+            pos.HedgeFlag = "";
             
 
             return pos;
