@@ -454,11 +454,11 @@ namespace TradingLib.Core
             k.trade=2404.0M;
             k.size=10;
             k.symbol="IF1411";
-            k.ask=2405.2M;
+            k.ask=2381.0M;
             k.os=10;
-            k.bid = 2405.0M;
+            k.bid = 2381.0M;
             k.bs =2;
-            k.Open= 2410.0M;
+            k.Open = 2381.0M;
             k.Low=2398.0M;
             k.High=2412.0M;
             k.Vol=2000;
