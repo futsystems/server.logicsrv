@@ -18,12 +18,12 @@ namespace TradingLib.Core
         /// </summary>
         public void CleanTempTable()
         {
-            debug(datacleanheader + "清空日内交易记录临时表", QSEnumDebugLevel.INFO);
+            debug(datacleanheader + "Clean Tmp_XXX Tables", QSEnumDebugLevel.INFO);
             ORM.MTradingInfo.ClearIntradayOrders(NextTradingday);
             ORM.MTradingInfo.ClearIntradayTrades(NextTradingday);
             ORM.MTradingInfo.ClearIntradayOrderActions(NextTradingday);
             ORM.MTradingInfo.ClearIntradayPosTransactions(NextTradingday);
-            debug(datacleanheader + "清空日内交易记录临时表完毕", QSEnumDebugLevel.INFO);
+            debug("Cleaned Success", QSEnumDebugLevel.INFO);
         }
 
 
@@ -57,7 +57,7 @@ namespace TradingLib.Core
         //    //}
         //}
 
-        string datastoreheader = "#####DataStore:";
+        
         //public void SaveHoldInfo()
         //{
         //    debug(datastoreheader + "保存结算持仓和结算回合记录到相关记录表", QSEnumDebugLevel.INFO);
@@ -74,13 +74,16 @@ namespace TradingLib.Core
         //    //debug(datastoreheader + "保存PR数据完毕", QSEnumDebugLevel.INFO);
         //}
 
+        string datastoreheader = "#####DataStore:";
         /// <summary>
-        /// 保存持仓明细
+        /// 1.保存持仓明细
         /// 将所有隔夜持仓明细保存到历史持仓明细表 用于下一个交易日生成对应的持仓状态
         /// 这里包含了持仓明细的盯市盈亏计算，该计算需要当日结算价
         /// </summary>
         public void SavePositionDetails()
         {
+            debug(datastoreheader + "Save PositionDetails....", QSEnumDebugLevel.MUST);
+            int i=0;
             //遍历所有交易帐户
             foreach (IAccount account in _clearcentre.Accounts)
             {
@@ -95,6 +98,7 @@ namespace TradingLib.Core
                         {
                             pd.Tradingday = TLCtxHelper.Ctx.SettleCentre.NextTradingday;
                         }
+
                         //结算日
                         pd.Settleday = TLCtxHelper.Ctx.SettleCentre.NextTradingday;
 
@@ -104,9 +108,11 @@ namespace TradingLib.Core
 
                         //保存持仓明细到数据库
                         ORM.MSettlement.InsertPositionDetail(pd);
+                        i++;
                     }   
                 }
             }
+            debug(string.Format("Saved {0} PositionDetails Successfull",i),QSEnumDebugLevel.INFO);
         }
 
         /// <summary>
@@ -114,7 +120,7 @@ namespace TradingLib.Core
         /// </summary>
         public void Dump2Log()
         {
-            debug(datastoreheader + "转储交易信息 委托 取消 成交",QSEnumDebugLevel.INFO);
+            debug(datastoreheader + "Dump TradingInfo(Order,Trade,OrderAction)",QSEnumDebugLevel.INFO);
             int onum, tnum, cnum, prnum;
 
             ORM.MTradingInfo.DumpIntradayOrders(out onum);
@@ -122,10 +128,10 @@ namespace TradingLib.Core
             ORM.MTradingInfo.DumpIntradayOrderActions(out cnum);
             ORM.MTradingInfo.DumpIntradayPosTransactions(out prnum);
 
-            debug("委托转储:" + onum.ToString(),QSEnumDebugLevel.INFO);
-            debug("成交转储:" + tnum.ToString(), QSEnumDebugLevel.INFO);
-            debug("委托操作转储:" + cnum.ToString(), QSEnumDebugLevel.INFO);
-            debug("交易回合转储:" + prnum.ToString(), QSEnumDebugLevel.INFO);
+            debug("Order       Saved:" + onum.ToString(),QSEnumDebugLevel.INFO);
+            debug("Trade       Saved:" + tnum.ToString(), QSEnumDebugLevel.INFO);
+            debug("OrderAction Saved:" + cnum.ToString(), QSEnumDebugLevel.INFO);
+            debug("PosTrans    Saved:" + prnum.ToString(), QSEnumDebugLevel.INFO);
         }
 
         #endregion

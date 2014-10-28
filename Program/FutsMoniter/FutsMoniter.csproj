@@ -278,6 +278,12 @@
     <Compile Include="Forms\fmPopMessage.Designer.cs">
       <DependentUpon>fmPopMessage.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\fmSettlement.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\fmSettlement.Designer.cs">
+      <DependentUpon>fmSettlement.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\fms\fmAccountconfig\fmAccountConfig_.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -598,6 +604,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\fmPopMessage.resx">
       <DependentUpon>fmPopMessage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\fmSettlement.resx">
+      <DependentUpon>fmSettlement.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\fms\fmAccountconfig\fmAccountConfig.resx">
       <DependentUpon>fmAccountConfig.cs</DependentUpon>

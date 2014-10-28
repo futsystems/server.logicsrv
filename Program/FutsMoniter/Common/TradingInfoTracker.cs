@@ -48,8 +48,8 @@ namespace TradingLib.Common
         public TradingInfoTracker()
         {
             OrderTracker = new OrderTracker();
-            PositionTracker = new LSPositionTracker();
-            HoldPositionTracker = new LSPositionTracker();
+            PositionTracker = new LSPositionTracker("");
+            HoldPositionTracker = new LSPositionTracker("");
             TradeTracker = new ThreadSafeList<Trade>();
             Account = new AccountLite();
         }

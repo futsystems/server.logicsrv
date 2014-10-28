@@ -308,7 +308,6 @@ namespace FutsMoniter
         }
         public void OnMGRTradeResponse(Trade f, bool islast)
         {
-            //histqryform
             histqryform.GotHistTrade(f, islast);
 
         }
@@ -324,7 +323,8 @@ namespace FutsMoniter
         }
         public void OnMGRSettlementResponse(RspMGRQrySettleResponse response)
         {
-            //histqryform.GotHistSettlement(response);
+            //Globals.Debug("mainform:" + response.SettlementContent);
+            settlementform.GotSettlement(response);
         }
         #endregion
 

@@ -36,6 +36,8 @@ namespace FutsMoniter
         BasicInfoTracker basicinfotracker;
         fmManagerCentre mgrform;
         fmAgentProfitReport agentprofitreportform;
+        //结算单查询窗口
+        fmSettlement settlementform = new fmSettlement();
         void ShowInfo(string msg)
         {
             if (ShowInfoHandler != null)

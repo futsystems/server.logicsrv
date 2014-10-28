@@ -55,16 +55,21 @@ namespace TradingLib.Core
             if (IsNormal && !IsTradingday) return;//结算中心正常 但不是交易日 不做记录转储
 
             //通过系统事件中继触发结算前事件
-            TLCtxHelper.EventSystem.FireBeforeSettleEvent(this,new SystemEventArgs());
+            try
+            {
+                TLCtxHelper.EventSystem.FireBeforeSettleEvent(this, new SystemEventArgs());
+            }
+            catch (Exception ex)
+            {
+                debug("BeforeSettleEvent Fired error:" + ex.ToString(), QSEnumDebugLevel.FATAL);
+            }
 
             this.IsInSettle = true;//标识结算中心处于结算状态
-            
-            //先将内存中的PR数据保存到数据库 在保存pr数据之前,先清空了当日的pr临时数据表(这里的清空 会造成 清空其他程序加载账户的数据 ？？)
-            //this.BindPositionSettlePrice();//采集持仓结算价
-            //this.SaveHoldInfo();//保存结算持仓数据 包括当前持仓和当前持仓对应的PositionRound数据
+            //保存当前持仓明细
             this.SavePositionDetails();//保存持仓明细
+            //保存交易日志 委托 成交 委托操作
             this.Dump2Log();//将委托 成交 撤单 PR数据保存到对应的log_表 所有的转储操作均是replace into不会存在重复操作
-            Notify("保存交易数据[" + DateTime.Now.ToString() + "]", " ");
+            
         }
 
         //2.执行帐户结算 生成结算记录,并更新帐户结算权益与结算时间 所有帐户结算完毕后更新系统最新结算日
@@ -81,7 +86,6 @@ namespace TradingLib.Core
             this.SettleAccount();
             //触发结算后记录
             TLCtxHelper.EventSystem.FireAfterSettleEvent(this, new SystemEventArgs());
-            Notify("结算交易账户[" + DateTime.Now.ToString() + "]", " ");
         }
 
         

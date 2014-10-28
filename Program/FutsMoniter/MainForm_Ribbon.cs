@@ -43,7 +43,7 @@ namespace FutsMoniter
             kryptonRibbonGroupButton_QueryExHist.Click += new EventHandler(kryptonRibbonGroupButton_QueryExHist_Click);
             kryptonRibbonGroupButton_QueryCashTransAccount.Click += new EventHandler(kryptonRibbonGroupButton_QueryCashTransAccount_Click);
             kryptonRibbonGroupButton_QueryCashTransAgent.Click += new EventHandler(kryptonRibbonGroupButton_QueryCashTransAgent_Click);
-
+            kryptonRibbonGroupButton_QuerySettleAccount.Click += new EventHandler(kryptonRibbonGroupButton_QuerySettleAccount_Click);
             kryptonRibbonGroupButton_QueryAgentProfit.Click += new EventHandler(kryptonRibbonGroupButton_QueryAgentProfit_Click);
             
             //柜员管理
@@ -57,6 +57,12 @@ namespace FutsMoniter
 
 
             kryptonRibbonGroupButton_payonline.Click += new EventHandler(kryptonRibbonGroupButton_payonline_Click);
+        }
+
+        void kryptonRibbonGroupButton_QuerySettleAccount_Click(object sender, EventArgs e)
+        {
+            if (securityform != null)
+                settlementform.Show();
         }
 
         void kryptonRibbonGroupButton_PermissionAgent_Click(object sender, EventArgs e)

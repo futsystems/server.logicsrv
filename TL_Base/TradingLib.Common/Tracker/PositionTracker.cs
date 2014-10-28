@@ -16,7 +16,7 @@ namespace TradingLib.Common
     public class PositionTracker : GenericTracker<Position>,GotFillIndicator,GotTickIndicator,IEnumerable<Position>
     {
         string _defaultacct = string.Empty;
-
+        public string DefaultAccount { get { return _defaultacct; } set { _defaultacct=value; } }
         /// <summary>
         /// 持仓维护器 持仓方向
         /// </summary>

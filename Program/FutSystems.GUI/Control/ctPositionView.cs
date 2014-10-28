@@ -165,6 +165,7 @@ namespace FutSystems.GUI
             //    if (UpdatePostionOffsetEvent != null)
             //        UpdatePostionOffsetEvent(args);
             //};
+            
         }
 
 
@@ -677,48 +678,63 @@ namespace FutSystems.GUI
 
             positiongrid.DoubleClick +=new EventHandler(positiongrid_DoubleClick);
             positiongrid.CellFormatting += new DataGridViewCellFormattingEventHandler(positiongrid_CellFormatting);
+            positiongrid.RowPrePaint += new DataGridViewRowPrePaintEventHandler(positiongrid_RowPrePaint);
+        }
+
+        void positiongrid_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        {
+            e.PaintParts = e.PaintParts ^ DataGridViewPaintParts.Focus;
         }
 
         void positiongrid_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            if(e.ColumnIndex == 2)
+            try
             {
-                string direction = positiongrid[DIRECTION, e.RowIndex].Value.ToString();
-                if (direction.Equals("多"))
+                if (e.ColumnIndex == 2)
                 {
-                    e.CellStyle.ForeColor = UIGlobals.LongSideColor;
-                    e.CellStyle.Font = UIGlobals.BoldFont;
+                    string direction = positiongrid[DIRECTION, e.RowIndex].Value.ToString();
+                    if (direction.Equals("多"))
+                    {
+                        e.CellStyle.ForeColor = UIGlobals.LongSideColor;
+                        e.CellStyle.Font = UIGlobals.BoldFont;
+                    }
+                    else if (direction.Equals("空"))
+                    {
+                        e.CellStyle.ForeColor = UIGlobals.ShortSideColor;
+                        e.CellStyle.Font = UIGlobals.BoldFont;
+                    }
+                    else
+                    {
+                        e.CellStyle.ForeColor = Color.Black;
+                        e.CellStyle.Font = UIGlobals.BoldFont;
+                    }
                 }
-                else if (direction.Equals("空"))
+
+                if (e.ColumnIndex == 7 || e.ColumnIndex == 8 || e.ColumnIndex == 9 || e.ColumnIndex == 10)
                 {
-                    e.CellStyle.ForeColor = UIGlobals.ShortSideColor;
-                    e.CellStyle.Font = UIGlobals.BoldFont;
-                }
-                else
-                {
-                    e.CellStyle.ForeColor = Color.Black;
-                    e.CellStyle.Font = UIGlobals.BoldFont;
+
+                    decimal v = 0;
+                    decimal.TryParse(positiongrid[e.ColumnIndex, e.RowIndex].Value.ToString(), out v);
+                    if (v > 0)
+                    {
+                        e.CellStyle.ForeColor = UIGlobals.LongSideColor;
+                        e.CellStyle.Font = UIGlobals.BoldFont;
+                    }
+                    else if (v < 0)
+                    {
+                        e.CellStyle.ForeColor = UIGlobals.ShortSideColor;
+                        e.CellStyle.Font = UIGlobals.BoldFont;
+                    }
+                    else
+                    {
+                        e.CellStyle.ForeColor = Color.Black;
+                        e.CellStyle.Font = UIGlobals.BoldFont;
+                    }
                 }
             }
-
-            if (e.ColumnIndex == 7 || e.ColumnIndex == 8 || e.ColumnIndex == 9 || e.ColumnIndex == 10)
+            catch (Exception ex)
             {
-                decimal v = decimal.Parse(positiongrid[e.ColumnIndex, e.RowIndex].Value.ToString());
-                if (v > 0)
-                {
-                    e.CellStyle.ForeColor = UIGlobals.LongSideColor;
-                    e.CellStyle.Font = UIGlobals.BoldFont;
-                }
-                else if (v < 0)
-                {
-                    e.CellStyle.ForeColor = UIGlobals.ShortSideColor;
-                    e.CellStyle.Font = UIGlobals.BoldFont;
-                }
-                else
-                {
-                    e.CellStyle.ForeColor = Color.Black;
-                    e.CellStyle.Font = UIGlobals.BoldFont;
-                }
+                debug("cell format error:" + ex.ToString());
             }
 
         }

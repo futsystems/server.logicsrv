@@ -243,7 +243,7 @@ namespace TradingLib.Core
             base.Dispose();
         }
 
-        
+        string settleheader = "#####SettleAccount:";
         /// <summary>
         /// 结算所有交易账户
         /// 结算分析
@@ -254,7 +254,7 @@ namespace TradingLib.Core
         /// </summary>
         public void SettleAccount()
         {
-            debug(string.Format("结算系统开始结算交易账户 当前交易日{0}",CurrentTradingday), QSEnumDebugLevel.INFO);
+            debug(string.Format(settleheader+"Start Settele Account,Current Tradingday:{0}",CurrentTradingday), QSEnumDebugLevel.INFO);
             foreach (IAccount acc in _clearcentre.Accounts)
             {
                 try
@@ -263,14 +263,14 @@ namespace TradingLib.Core
                 }
                 catch (Exception ex)
                 {
-                    debug(acc.ID + "结算出错:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                    debug(string.Format("SettleError,Account:{0} errors:{1}",acc.ID,ex.ToString()), QSEnumDebugLevel.ERROR);
                 }
             }
 
             //更新最近结算日
-            debug(string.Format("更新上次结算日为当前交易日{0}", CurrentTradingday), QSEnumDebugLevel.INFO);
+            debug(string.Format("Update lastsettleday as:{0}", CurrentTradingday), QSEnumDebugLevel.INFO);
             ORM.MSettlement.UpdateSettleday(CurrentTradingday);
-            debug("交易系统结算完毕=====================================", QSEnumDebugLevel.INFO);
+            debug("Settlement Done", QSEnumDebugLevel.INFO);
         }
 
 

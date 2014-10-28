@@ -54,7 +54,7 @@ namespace TradingLib.ORM
         /// </summary>
         /// <param name="tradingday"></param>
         /// <returns></returns>
-        public static IEnumerable<PositionDetailImpl> SelectPositionDetails(int tradingday)
+        public static IEnumerable<PositionDetail> SelectPositionDetails(int tradingday)
         {
             using (DBMySql db = new DBMySql())
             {
@@ -89,7 +89,7 @@ namespace TradingLib.ORM
             using (DBMySql db = new DBMySql())
             {
                 string query = string.Format("SELECT * FROM  log_position_close_detail WHERE settleday = {0}", tradingday);
-                return db.Connection.Query<PositionCloseDetail>(query);
+                return db.Connection.Query<PositionCloseDetailImpl>(query);
             }
         }
 
@@ -170,15 +170,18 @@ namespace TradingLib.ORM
                     settle.SettleTime = TLCtxHelper.Ctx.SettleCentre.SettleTime;//获得结算时间
 
                     //1.插入某账户的结算信息(当前财务信息)平仓盈亏,持仓盈亏,手续费,入金,出金,昨日权益,当前权益
-                    Util.Debug(string.Format("account:{0} lastequity:{1} nowequity:{2}", settle.Account, settle.LastEquity, settle.NowEquity));
+                    if (acc.LastEquity != acc.NowEquity)
+                    {
+                        Util.Debug(string.Format("account:{0} lastequity:{1} nowequity:{2}", settle.Account, settle.LastEquity, settle.NowEquity),QSEnumDebugLevel.DEBUG);
+                    }
                     string query = String.Format("Insert into log_settlement (`account`,`settleday`,`realizedpl`,`unrealizedpl`,`commission`,`cashin`,`cashout`,`lastequity`,`nowequity`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}')", settle.Account, settle.SettleDay, settle.RealizedPL, settle.UnRealizedPL, settle.Commission, settle.CashIn, settle.CashOut, settle.LastEquity, settle.NowEquity);
                     istransok =  istransok &&  (db.Connection.Execute(query) > 0);
 
-                    //3.更新账户表中的上期权益数据 将结算数据的当前权益更新为帐户的昨日权益
+                    //2.更新账户表中的上期权益数据 将结算数据的当前权益更新为帐户的昨日权益
                     query = String.Format("UPDATE accounts SET lastequity = '{0}' WHERE account = '{1}'", settle.NowEquity, settle.Account);
                     istransok = istransok && (db.Connection.Execute(query) >= 0);
 
-                    //4.更新账户结算时间,以后计算就只需要读取该账户这个时间段之后的交易信息并在当前权益基础上进行权益计算。
+                    //3.更新账户结算时间,以后计算就只需要读取该账户这个时间段之后的交易信息并在当前权益基础上进行权益计算。
                     query = String.Format("UPDATE accounts SET settledatetime= '{0}' WHERE account = '{1}'",Util.ToDateTime(settle.SettleDay,settle.SettleTime),settle.Account);
                     istransok = istransok && (db.Connection.Execute(query) >= 0);
 

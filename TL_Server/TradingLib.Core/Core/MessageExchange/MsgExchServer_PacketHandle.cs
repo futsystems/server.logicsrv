@@ -232,7 +232,6 @@ namespace TradingLib.Core
                 List<string> settlelist = SettlementFactory.GenSettlementFile(settlement,account);
                 for (int i = 0; i < settlelist.Count; i++)
                 {
-                    //debug(settlelist[i]);
                     RspQrySettleInfoResponse response = ResponseTemplate<RspQrySettleInfoResponse>.SrvSendRspResponse(request);
                     response.Tradingday = settlement.SettleDay;
                     response.TradingAccount = settlement.Account;

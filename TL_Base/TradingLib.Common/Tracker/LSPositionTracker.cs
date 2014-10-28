@@ -132,7 +132,7 @@ namespace TradingLib.Common
         /// <param name="account"></param>
         /// <param name="side"></param>
         /// <returns></returns>
-        Position this[string symbol, string account, bool side]
+        public Position this[string symbol, string account, bool side]
         {
             get
             {

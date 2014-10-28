@@ -325,7 +325,7 @@ namespace TradingLib.Common
             sb.Append(d);
             sb.Append(this.Tradingday);
             sb.Append(d);
-            sb.Append(this.SettlementContent);
+            sb.Append(this.SettlementContent.Replace('|', '*'));
             return sb.ToString();
         }
 
@@ -334,7 +334,7 @@ namespace TradingLib.Common
             string[] rec = content.Split(',');
             this.TradingAccount = rec[0];
             this.Tradingday = int.Parse(rec[1]);
-            this.SettlementContent = rec[2];
+            this.SettlementContent = rec[2].Replace('*', '|');
         }
     }
 }
