@@ -123,7 +123,7 @@ namespace TradingLib.Common
         /// </summary>
         public IEnumerable<Position> Positions{get{return _acc.Positions; } }
 
-        public IEnumerable<Position> PositionsNet { get { return _acc.PositionsNet; } }
+        //public IEnumerable<Position> PositionsNet { get { return _acc.PositionsNet; } }
 
         /// <summary>
         /// 多头持仓维护器
@@ -156,10 +156,10 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        public Position GetPositionNet(string symbol)
-        {
-            return _acc.GetPositionNet(symbol);
-        }
+        //public Position GetPositionNet(string symbol)
+        //{
+        //    return _acc.GetPositionNet(symbol);
+        //}
 
 
         public int CanOpenSize(Symbol symbol)

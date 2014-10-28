@@ -343,19 +343,7 @@ namespace TradingLib.API
         MgrSrv,
     }
 
-    /// <summary>
-    /// 枚举日志输出级别
-    /// </summary>
-    public enum QSEnumDebugLevel
-    { 
-        VERB=5,//verbose输出
-        DEBUG=4,//调试输出
-        INFO=3,//消息
-        WARNING=2,//警告
-        ERROR=1,//错误
-        MUST=0,//系统必须输出的信息
 
-    }
     /// <summary>
     /// 枚举 ticket信息的发布源
     /// </summary>

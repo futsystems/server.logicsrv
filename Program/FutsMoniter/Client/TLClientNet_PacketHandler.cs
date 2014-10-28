@@ -21,17 +21,18 @@ namespace TradingLib.Common
 
         void CliOnOldPositionNotify(HoldPositionNotify response)
         {
-            debug("got holdposition notify " + response.Position.ToString(), QSEnumDebugLevel.INFO);
-            PositionEx ap = response.Position;
+            debug("got holdposition notify " + response.PositionDetail.GetPositionDetailStr(), QSEnumDebugLevel.INFO);
+            PositionDetail pd = response.PositionDetail;
+            //PositionEx ap = response.Position;
 
-            Position pos = new PositionImpl(ap.Symbol, ap.AvgPrice, ap.Size, 0, ap.Account,ap.DirectionType);
+            //Position pos = new PositionImpl(ap.Symbol, ap.AvgPrice, ap.Size, 0, ap.Account,ap.DirectionType);
             //debug("symbol:" + pos.Symbol);
-            Symbol osym = Globals.BasicInfoTracker.GetSymbol(pos.Symbol);
+            //Symbol osym = Globals.BasicInfoTracker.GetSymbol(pd.Symbol);
             //debug("got osymbol:" + (osym != null).ToString(), QSEnumDebugLevel.INFO);
             //debug("got oposiont" + osym != null ? osym.Symbol : "not find", QSEnumDebugLevel.INFO);
-            pos.oSymbol = Globals.BasicInfoTracker.GetSymbol(pos.Symbol);
+            pd.oSymbol = Globals.BasicInfoTracker.GetSymbol(pd.Symbol);
             //debug("got postion symbol:" + pos.oSymbol.Symbol,QSEnumDebugLevel.INFO);
-            this.handler.OnHoldPosition(pos);
+            this.handler.OnHoldPosition(pd);
         }
         void CliOnOrderNotify(OrderNotify response)
         {

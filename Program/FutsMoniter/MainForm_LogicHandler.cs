@@ -179,7 +179,7 @@ namespace FutsMoniter
         /// 获得服务端昨日持仓回报
         /// </summary>
         /// <param name="pos"></param>
-        public void OnHoldPosition(Position pos)
+        public void OnHoldPosition(PositionDetail pos)
         {
             infotracker.GotHoldPosition(pos);
         }

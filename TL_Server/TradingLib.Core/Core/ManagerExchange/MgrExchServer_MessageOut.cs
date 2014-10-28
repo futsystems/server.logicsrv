@@ -223,25 +223,16 @@ namespace TradingLib.Core
                 //转发昨日持仓信息
                 foreach (Position p in account.Positions)
                 {
-                    if (p.PositionDetailYdRef.Count() != 0)
+                    foreach (PositionDetail pd in p.PositionDetailYdRef)
                     {
-                        IEnumerable<Position> poslist = PositionImpl.FromPositionDetail(p.PositionDetailYdRef);
-                        foreach (Position pos in poslist)
-                        {
-                            HoldPositionNotify notify = ResponseTemplate<HoldPositionNotify>.SrvSendNotifyResponse(location);
-                            notify.Position = pos.GenPositionEx();
-                            tl.TLSend(notify);
-                        }
+                        HoldPositionNotify notify = ResponseTemplate<HoldPositionNotify>.SrvSendNotifyResponse(location);
+                        notify.PositionDetail = pd;
+                        tl.TLSend(notify);
                     }
-
+                   
                     
                 }
-                foreach (PositionDetail pos in account.YdPositions)
-                {
-                    //HoldPositionNotify notify = ResponseTemplate<HoldPositionNotify>.SrvSendNotifyResponse(location);
-                    //notify.Position = pos.GenPositionEx();
-                    //tl.TLSend(notify);
-                }
+
                 //转发当日委托
                 foreach (Order o in account.Orders)
                 {

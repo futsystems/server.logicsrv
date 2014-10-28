@@ -115,12 +115,12 @@ namespace TradingLib.Core
         {
             debug("QryPosition :" + request.ToString(), QSEnumDebugLevel.INFO);
             Position[] positions = new Position[] { };
-            Position[] netpos = new Position[] { };
+            //Position[] netpos = new Position[] { };
 
             if (string.IsNullOrEmpty(request.Symbol))
             {
                 positions = account.Positions.ToArray();
-                netpos = account.PositionsNet.ToArray();
+                //netpos = account.PositionsNet.ToArray();
             }
             if (!string.IsNullOrEmpty(request.Symbol))
             {
@@ -128,20 +128,15 @@ namespace TradingLib.Core
             }
 
 
-            List<Position> poslist = new List<Position>();
-            poslist.AddRange(netpos);
-            poslist.AddRange(positions);
-            
-
-            debug("total num:" + poslist.Count.ToString(), QSEnumDebugLevel.INFO);
-            int totalnum = poslist.Count;
+            debug("total num:" + positions.Length.ToString(), QSEnumDebugLevel.INFO);
+            int totalnum = positions.Length;
             
             if (totalnum > 0)
             {
                 for (int i = 0; i < totalnum; i++)
                 {
                     RspQryPositionResponse response = ResponseTemplate<RspQryPositionResponse>.SrvSendRspResponse(request);
-                    response.PositionToSend = poslist[i].GenPositionEx();
+                    response.PositionToSend = positions[i].GenPositionEx();
                     //Trade[] trades = poslist[i].Trades;
                     //debug("Trades num:" + trades.Length.ToString());
                     CacheRspResponse(response, i == totalnum - 1);

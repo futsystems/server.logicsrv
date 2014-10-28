@@ -127,10 +127,10 @@ namespace TradingLib.Common
             baseacc.TKOrder = ot;
 
             //3.添加账户对应的仓位管理器
-            LSPositionTracker pt = new LSPositionTracker();
+            LSPositionTracker pt = new LSPositionTracker(account.ID);
             if (!PosBook.ContainsKey(account.ID))
             {
-                pt.DefaultAccount = account.ID;
+                //pt.DefaultAccount = account.ID;
                 PosBook.TryAdd(account.ID, pt);
                 pt.NewPositionCloseDetailEvent += new Action<PositionCloseDetail>(NewPositionCloseDetail);
                 pt.NewPositionEvent += new Action<Position>(NewPosition);
@@ -209,18 +209,6 @@ namespace TradingLib.Common
 
         #region 响应交易对象
         /// <summary>
-        /// 从数据库加载昨日持仓数据 然后加载到系统中 此时持仓需要加载到隔夜持仓管理器与当前累计持仓管理器
-        /// </summary>
-        /// <param name="pos"></param>
-        internal void GotPosition(Position pos)
-        {
-            //将昨持仓填充到对应交易账户的仓位管理器中
-            PosBook[pos.Account].GotPosition(pos);
-            //将昨日持仓填充到账户对应的昨日持仓管理器中
-            //PosHold[pos.Account].GotPosition(pos);
-        }
-
-        /// <summary>
         /// 从数据库加载昨日持仓明细数据 
         /// </summary>
         /// <param name="pos"></param>
@@ -228,12 +216,10 @@ namespace TradingLib.Common
         {
             //将昨持仓填充到对应交易账户的仓位管理器中
             PosBook[pos.Account].GotPosition(pos);
-            //将昨日持仓填充到账户对应的昨日持仓管理器中
-            //PosHold[pos.Account].GotPosition(pos);
         }
 
         /// <summary>
-        /// 获得委托 用于记录帐户记录
+        /// 记录委托
         /// </summary>
         /// <param name="order"></param>
         internal void GotOrder(Order order)
@@ -242,7 +228,7 @@ namespace TradingLib.Common
         }
 
         /// <summary>
-        /// 获得成交 用户记录成交记录并反映到当前持仓变化
+        /// 记录成交
         /// </summary>
         /// <param name="fill"></param>
         internal void GotFill(Trade fill)

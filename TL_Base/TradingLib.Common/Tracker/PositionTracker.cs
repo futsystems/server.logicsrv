@@ -13,42 +13,37 @@ namespace TradingLib.Common
     /// 管理交易仓位
     /// </summary>
     [Serializable]
-    public class PositionTracker : GenericTracker<Position>,GotPositionIndicator,GotFillIndicator,GotTickIndicator,IEnumerable<Position>
+    public class PositionTracker : GenericTracker<Position>,GotFillIndicator,GotTickIndicator,IEnumerable<Position>
     {
+        string _defaultacct = string.Empty;
+
         /// <summary>
-        /// 持仓维护器 维护持仓类别
+        /// 持仓维护器 持仓方向
         /// </summary>
         public QSEnumPositionDirectionType DirectionType { get { return _directiontype; } }
         protected QSEnumPositionDirectionType _directiontype = QSEnumPositionDirectionType.Net;
 
-        /// <summary>
-        /// 指定创建的持仓管理器类型
-        /// </summary>
-        /// <param name="type"></param>
-        public PositionTracker(QSEnumPositionDirectionType type) : this(5, type) { }
+        ///// <summary>
+        ///// 设定一个默认的PositionTracker其为Net类型的持仓管理
+        ///// </summary>
+        public PositionTracker() : this("",QSEnumPositionDirectionType.Net) { }
 
-        /// <summary>
-        /// 设定一个默认的PositionTracker其为Net类型的持仓管理
-        /// </summary>
-        public PositionTracker() : this(5,QSEnumPositionDirectionType.Net) { }
-
-        
-        
         /// <summary>
         /// create tracker with approximate # of positions
         /// </summary>
         /// <param name="estimatedPositions"></param>
-        public PositionTracker(int estimatedPositions,QSEnumPositionDirectionType type) : base(estimatedPositions,type.ToString()+"-POSITION",new PositionImpl()) 
+        public PositionTracker(string account,QSEnumPositionDirectionType type) 
+            : base(type.ToString()+"-POSITION")
         {
             _directiontype = type;
             NewTxt += new TextIdxDelegate(PositionTracker_NewTxt);
         }
 
-        public PositionTracker(string name) : base(name) { }
-
-
-
-        //有新的合约建立持仓时,对外触发事件 传递symbol作为参数
+        /// <summary>
+        /// 当有新的标签创建时 对外触发通知持仓对象的生成
+        /// </summary>
+        /// <param name="txt"></param>
+        /// <param name="idx"></param>
         void PositionTracker_NewTxt(string txt, int idx)
         {
             if (NewSymbol!= null)
@@ -58,25 +53,6 @@ namespace TradingLib.Common
         }
 
         #region 通过Position PositionDetail Trade更新对应持仓对象
-        /// <summary>
-        /// Create a new position, or overwrite existing position
-        /// 用新的持仓对当前持仓进行覆盖
-        /// </summary>
-        /// <param name="newpos"></param>
-        public void NewPosition(Position newpos)
-        {
-            Adjust(newpos);
-        }
-
-        /// <summary>
-        /// 获得一个持仓对象
-        /// </summary>
-        /// <param name="p"></param>
-        public void GotPosition(Position p) 
-        { 
-            Adjust(p); 
-        }
-
         /// <summary>
         /// 获得一个持仓明细数据 用于加载隔夜持仓数据 生成初始化持仓状态
         /// </summary>
@@ -121,20 +97,10 @@ namespace TradingLib.Common
         /// </summary>
         public override void Clear()
         {
-            //_defaultacct = string.Empty;
             base.Clear();
         }
 
-        string _defaultacct = string.Empty;
-        /// <summary>
-        /// Default account used when querying positions
-        /// (if never set by user, defaults to first account provided via adjust)
-        /// 默认交易帐户 默认情况下为空
-        /// 在没有任何成交的情况下 this[symbol] 会返回 symbol+empty 所对应的position
-        /// 当有成交进入后 会自动将第一个成交的account设定到Account  this[symbol] 会返回 symbol+account 所对应的position
-        /// 因此在组装accounttracker时 我们需要明确指定该positiontracker的account
-        /// </summary>
-        public string DefaultAccount { get { return _defaultacct; } set { _defaultacct = value; } }
+        
 
 
         #region 检索获得持仓对象
@@ -149,15 +115,15 @@ namespace TradingLib.Common
         { 
             get
             {
-                return this[symbol, DefaultAccount];
+                return this[symbol, _defaultacct];
             }
         }
 
         /// <summary>
         /// get a position in tracker given symbol and account
         /// 通过symbol,account来查询某个position
-        /// 如果没有对应的持仓会返回一个空的默认持仓
-        /// 此处持仓是通过合约symbol创建的因此没有对应oSymbol数据
+        /// 如果没有对应的持仓会返回一个空的默认持仓,此处并没有在PositionTracker加入该持仓
+        /// 此处持仓是通过合约symbol创建的因此没有对应oSymbol数据需要在获得PositionDetail或成交时候获得对应的Symbol数据
         /// </summary>
         /// <param name="symbol"></param>
         /// <param name="account"></param>
@@ -203,19 +169,6 @@ namespace TradingLib.Common
             }
         }
 
-        decimal _totalclosedpl = 0;
-        /// <summary>
-        /// 累计平仓盈亏
-        /// </summary>
-        public decimal TotalClosedPL { get { return _totalclosedpl; } }
-
-
-        /// <summary>
-        /// 累计浮动盈亏
-        /// </summary>
-        public decimal TotalUnRealizedPL { get { return this.Sum(p => p.UnRealizedPL);}}
-        
-
         /// <summary>
         /// 覆盖当前仓位或者新建一个仓位
         /// 当初始加载时 如果有持仓需要管理 则用储存的持仓数据填充当前持仓状态
@@ -223,28 +176,27 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="p"></param>
         /// <returns></returns>
-        public decimal Adjust(Position newpos)
-        {
-            //设定默认帐户
-            if (_defaultacct == string.Empty)
-                _defaultacct = newpos.Account;
-            int idx = getindex(newpos.Symbol + newpos.Account);
+        //public decimal Adjust(Position newpos)
+        //{
+        //    //设定默认帐户
+        //    if (_defaultacct == string.Empty)
+        //        _defaultacct = newpos.Account;
+        //    int idx = getindex(newpos.Symbol + newpos.Account);
 
-            //如果没有symbol+account对应的position则新增加一个仓位,或者用新仓位覆盖掉原来的仓位
-            Position p = new PositionImpl(newpos);
-            p.DirectionType = _directiontype;
+        //    //如果没有symbol+account对应的position则新增加一个仓位,或者用新仓位覆盖掉原来的仓位
+        //    Position p = new PositionImpl(newpos);
+        //    p.DirectionType = _directiontype;
 
-            if (idx < 0)//如果没有对应持仓对象 则添加Position
-            {
-                addindex(newpos.Symbol + newpos.Account, p);
-            }
-            else//如果存在对应持仓对象 更新持仓对象 并将对应的ClosedPL反映到当前PositionTracker上去
-            {
-                base[idx] = p;
-                _totalclosedpl += newpos.ClosedPL;//平仓盈亏进行累加合并
-            }
-            return 0;
-        }
+        //    if (idx < 0)//如果没有对应持仓对象 则添加Position
+        //    {
+        //        addindex(newpos.Symbol + newpos.Account, p);
+        //    }
+        //    else//如果存在对应持仓对象 更新持仓对象 并将对应的ClosedPL反映到当前PositionTracker上去
+        //    {
+        //        base[idx] = p;
+        //    }
+        //    return p.ClosedPL;
+        //}
 
 
         /// <summary>
@@ -258,7 +210,6 @@ namespace TradingLib.Common
             //设定默认帐户
             if (_defaultacct == string.Empty)
                 _defaultacct = fill.Account;
-
             int idx = getindex(fill.symbol + fill.Account);
             decimal cpl = 0;
 
@@ -270,7 +221,6 @@ namespace TradingLib.Common
             }
 
             cpl += this[idx].Adjust(fill);//调用position来处理fill.形成closedpl
-            _totalclosedpl += cpl;//返回仓位变更产生的平仓利润,用于累加到Tracker
             return cpl;
         }
 
@@ -284,19 +234,17 @@ namespace TradingLib.Common
             //设定默认帐户
             if (_defaultacct == string.Empty)
                 _defaultacct = pos.Account;
-
             int idx = getindex(pos.Symbol + pos.Account);
             decimal cpl = 0;
+
             if (idx < 0)
             {
-                //生成空的持仓数据 然后通过ajust(fill)统一通过fill来推动持仓更新
+                //生成空的持仓数据并添加到维护其 然后再用持仓对象去更形pos
                 PositionImpl newpos = new PositionImpl(pos.Account, pos.Symbol, this.DirectionType);
                 addindex(pos.Symbol + pos.Account, newpos);//如果没有持仓添加对应的持仓 该持仓数据0数据
                 idx = getindex(pos.Symbol + pos.Account);
             }
-
             cpl += this[idx].Adjust(pos);
-            _totalclosedpl += cpl;//返回仓位变更产生的平仓利润,用于累加到系统
             return cpl;
         }
 
@@ -316,78 +264,78 @@ namespace TradingLib.Common
 
     }
     
-    /// <summary>
-    /// track only position size
-    /// </summary>
-    public class PositionSizeTracker : PositionTracker, GenericTrackerInt
-    {
-        public PositionSizeTracker() : base("POSSIZE") 
-        {
+    ///// <summary>
+    ///// track only position size
+    ///// </summary>
+    //public class PositionSizeTracker : PositionTracker, GenericTrackerInt
+    //{
+    //    public PositionSizeTracker() : base("POSSIZE") 
+    //    {
             
-        }
-        public int getvalue(int idx) { return this[idx]; }
-        public int getvalue(string txt) { return this[txt]; }
-        public void setvalue(int idx, int v) { }
-        public int addindex(string txt, int v) { return getindex(txt); }
-        public new int this[int idx] { get { return base[idx].Size; } set {} }
-        public new int this[string txt] { get { return base[txt].Size; } set { } }
-    }
+    //    }
+    //    public int getvalue(int idx) { return this[idx]; }
+    //    public int getvalue(string txt) { return this[txt]; }
+    //    public void setvalue(int idx, int v) { }
+    //    public int addindex(string txt, int v) { return getindex(txt); }
+    //    public new int this[int idx] { get { return base[idx].Size; } set {} }
+    //    public new int this[string txt] { get { return base[txt].Size; } set { } }
+    //}
 
-    /// <summary>
-    /// track only position price
-    /// </summary>
-    public class PositionPriceTracker : PositionTracker, GenericTrackerDecimal
-    {
-        public PositionPriceTracker() : base("POSPRICE") { }
-        public decimal getvalue(int idx) { return this[idx]; }
-        public decimal getvalue(string txt) { return this[txt]; }
-        public void setvalue(int idx, decimal v) { }
-        public int addindex(string txt, decimal v) { return getindex(txt); }
-        public new decimal this[int idx] { get { return base[idx].AvgPrice; } set { } }
-        public new decimal this[string txt] { get { return base[txt].AvgPrice; } set { } }
-    }
+    ///// <summary>
+    ///// track only position price
+    ///// </summary>
+    //public class PositionPriceTracker : PositionTracker, GenericTrackerDecimal
+    //{
+    //    public PositionPriceTracker() : base("POSPRICE") { }
+    //    public decimal getvalue(int idx) { return this[idx]; }
+    //    public decimal getvalue(string txt) { return this[txt]; }
+    //    public void setvalue(int idx, decimal v) { }
+    //    public int addindex(string txt, decimal v) { return getindex(txt); }
+    //    public new decimal this[int idx] { get { return base[idx].AvgPrice; } set { } }
+    //    public new decimal this[string txt] { get { return base[txt].AvgPrice; } set { } }
+    //}
 
-    /// <summary>
-    /// track only whether position is flat
-    /// </summary>
-    public class FlatPositionTracker : PositionTracker, GenericTrackerBool
-    {
-        public FlatPositionTracker() : base("ISFLAT") { }
-        public bool getvalue(int idx) { return this[idx].isFlat; }
-        public bool getvalue(string txt) { return this[txt].isFlat; }
-        public void setvalue(int idx, bool v) {  }
-        public int addindex(string txt, bool v) { return getindex(txt); }
-    }
+    ///// <summary>
+    ///// track only whether position is flat
+    ///// </summary>
+    //public class FlatPositionTracker : PositionTracker, GenericTrackerBool
+    //{
+    //    public FlatPositionTracker() : base("ISFLAT") { }
+    //    public bool getvalue(int idx) { return this[idx].isFlat; }
+    //    public bool getvalue(string txt) { return this[txt].isFlat; }
+    //    public void setvalue(int idx, bool v) {  }
+    //    public int addindex(string txt, bool v) { return getindex(txt); }
+    //}
 
-    /// <summary>
-    /// track only whether position is long
-    /// </summary>
-    public class LongPositionTracker : PositionTracker, GenericTrackerBool
-    {
-        public LongPositionTracker() : base("ISLONG") 
-        {
-            _directiontype = QSEnumPositionDirectionType.Long;
-        }
-        public bool getvalue(int idx) { return this[idx].isLong; }
-        public bool getvalue(string txt) { return this[txt].isLong; }
-        public void setvalue(int idx, bool v) { }
-        public int addindex(string txt, bool v) { return getindex(txt); }
-    }
+    ///// <summary>
+    ///// track only whether position is long
+    ///// </summary>
+    //public class LongPositionTracker : PositionTracker, GenericTrackerBool
+    //{
+    //    public LongPositionTracker() : base("ISLONG") 
+    //    {
+    //        _directiontype = QSEnumPositionDirectionType.Long;
+    //    }
+    //    public bool getvalue(int idx) { return this[idx].isLong; }
+    //    public bool getvalue(string txt) { return this[txt].isLong; }
+    //    public void setvalue(int idx, bool v) { }
+    //    public int addindex(string txt, bool v) { return getindex(txt); }
+    //}
 
-    /// <summary>
-    /// track only whether position is short
-    /// </summary>
-    public class ShortPositionTracker : PositionTracker, GenericTrackerBool
-    {
-        public ShortPositionTracker() : base("ISSHORT") 
-        {
-            _directiontype = QSEnumPositionDirectionType.Short;
-        }
-        public bool getvalue(int idx) { return this[idx].isShort; }
-        public bool getvalue(string txt) { return this[txt].isShort; }
-        public void setvalue(int idx, bool v) { }
-        public int addindex(string txt, bool v) { return getindex(txt); }
-    }
+    ///// <summary>
+    ///// track only whether position is short
+    ///// </summary>
+    //public class ShortPositionTracker : PositionTracker, GenericTrackerBool
+    //{
+    //    public ShortPositionTracker() : base("ISSHORT") 
+    //    {
+    //        _directiontype = QSEnumPositionDirectionType.Short;
+    //    }
+    //    public bool getvalue(int idx) { return this[idx].isShort; }
+    //    public bool getvalue(string txt) { return this[txt].isShort; }
+    //    public void setvalue(int idx, bool v) { }
+    //    public int addindex(string txt, bool v) { return getindex(txt); }
+    //}
     
     
 }

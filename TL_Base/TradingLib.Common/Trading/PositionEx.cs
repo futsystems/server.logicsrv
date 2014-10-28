@@ -104,7 +104,7 @@ namespace TradingLib.Common
     }
 
     /// <summary>
-    /// PostionEx用于封装持仓信息
+    /// PostionEx用于封装持仓汇总信息
     /// 通知交易客户端或查询时回报交易客户端
     /// </summary>
     public  class PositionEx
@@ -113,10 +113,12 @@ namespace TradingLib.Common
         /// 帐户
         /// </summary>
         public string Account { get; set; }
+
         /// <summary>
         /// 合约
         /// </summary>
         public string Symbol { get; set; }
+
         /// <summary>
         /// 乘数
         /// </summary>
@@ -177,8 +179,6 @@ namespace TradingLib.Common
         /// </summary>
         public decimal CloseAVGPrice { get; set; }
 
-
-       
         /// <summary>
         /// 持仓描述类型
         /// </summary>

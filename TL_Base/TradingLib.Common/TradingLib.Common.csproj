@@ -166,7 +166,7 @@
     <Compile Include="Offset\PositionOffsetArgs.cs" />
     <Compile Include="Trading\Instrument.cs" />
     <Compile Include="Trading\OrderActionImpl.cs" />
-    <Compile Include="Trading\PostionUtils.cs" />
+    <Compile Include="Trading\PositionUtil.cs" />
     <Compile Include="Trading\Product.cs" />
     <Compile Include="Trading\SecurityFamilyImpl.cs" />
     <Compile Include="Trading\Settlement.cs" />

@@ -775,12 +775,12 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="trade"></param>
         /// <returns></returns>
-        public static string[] TradesToClosedPL(Trade trade)
-        {
-            List<Trade> trades = new List<Trade>();
-            trades.Add(trade);
-            return TradesToClosedPL(trades);
-        }
+        //public static string[] TradesToClosedPL(Trade trade)
+        //{
+        //    List<Trade> trades = new List<Trade>();
+        //    trades.Add(trade);
+        //    return TradesToClosedPL(trades);
+        //}
 
         /// <summary>
         /// Converts a list of trades to an array of comma-delimited string data also containing closedPL, suitable for output to file for reading by excel, R, matlab, etc.

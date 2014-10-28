@@ -48,11 +48,6 @@ namespace TradingLib.API
         bool isFlat { get; }
 
         /// <summary>
-        /// 平仓盈亏
-        /// </summary>
-        decimal ClosedPL { get; }
-
-        /// <summary>
         /// 平仓数量
         /// </summary>
         int FlatSize { get; }
@@ -77,13 +72,6 @@ namespace TradingLib.API
 
         #region 持仓的累加 用于累加持仓反应持仓变化
         /// <summary>
-        /// 累加持仓
-        /// </summary>
-        /// <param name="newPosition"></param>
-        /// <returns></returns>
-        //decimal Adjust(Position newPosition);
-
-        /// <summary>
         /// 用成交数据更新持仓状态
         /// </summary>
         /// <param name="newFill"></param>
@@ -91,7 +79,7 @@ namespace TradingLib.API
         decimal Adjust(Trade newFill);
 
         /// <summary>
-        /// 用持仓明细更新持仓状态
+        /// 用持仓明细更新持仓状态 用于从隔夜持仓初始化持仓状态
         /// </summary>
         /// <param name="newPositiondetail"></param>
         /// <returns></returns>
@@ -100,11 +88,23 @@ namespace TradingLib.API
         #endregion
 
         /// <summary>
+        /// 平仓盈亏点数
+        /// </summary>
+        decimal ClosedPL { get; }
+
+
+        /// <summary>
         /// 浮动盈亏点数
         /// </summary>
         decimal UnRealizedPL { get; }
 
+        /// <summary>
+        /// 结算 盯市盈亏
+        /// </summary>
+        decimal UnrealizedPLByDate { get; }
 
+
+        #region 行情与价格信息
         /// <summary>
         /// 持仓响应行情更新
         /// </summary>
@@ -135,6 +135,9 @@ namespace TradingLib.API
         /// 昨日结算价格
         /// </summary>
         decimal? LastSettlementPrice { get; set; }
+
+        #endregion
+
 
         #region 成交和相关明细数据
         /// <summary>
@@ -174,22 +177,7 @@ namespace TradingLib.API
 
         #endregion
 
-
-        /// <summary>
-        /// 转换成等效成交
-        /// </summary>
-        /// <returns></returns>
-        Trade ToTrade();
-
-       
-
-        /// <summary>
-        /// 结算时的盯市盈亏
-        /// </summary>
-        decimal SettleUnrealizedPL { get;}
-
-        
-
+        #region 日内交易统计
         /// <summary>
         /// 开仓金额
         /// </summary>
@@ -209,6 +197,8 @@ namespace TradingLib.API
         /// 平仓数量
         /// </summary>
         int CloseVolume { get; }
+        #endregion
+
     }
 
     public class InvalidPosition : Exception {}

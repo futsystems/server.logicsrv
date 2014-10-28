@@ -43,31 +43,31 @@ namespace TradingLib.Common
         /// 清算中心获得持仓数据
         /// </summary>
         /// <param name="p"></param>
-        internal void GotPosition(Position p)
-        {
-            try
-            {
-                if (!HaveAccount(p.Account)) return;
-                Symbol symbol = p.oSymbol;
-                if (symbol == null)
-                {
-                    debug("symbol:" + p.Symbol + " not exist in basictracker, dropit", QSEnumDebugLevel.ERROR);
-                    return;
-                }
+        //internal void GotPosition(Position p)
+        //{
+        //    try
+        //    {
+        //        if (!HaveAccount(p.Account)) return;
+        //        Symbol symbol = p.oSymbol;
+        //        if (symbol == null)
+        //        {
+        //            debug("symbol:" + p.Symbol + " not exist in basictracker, dropit", QSEnumDebugLevel.ERROR);
+        //            return;
+        //        }
 
-                acctk.GotPosition(p);
-                onGotPosition(p);
-            }
-            catch (Exception ex)
-            {
-                debug("处理隔夜持仓异常:" + ex.ToString(), QSEnumDebugLevel.ERROR);
-            }
-        }
+        //        acctk.GotPosition(p);
+        //        onGotPosition(p);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        debug("处理隔夜持仓异常:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+        //    }
+        //}
 
-        internal virtual void onGotPosition(Position p)
-        {
+        //internal virtual void onGotPosition(Position p)
+        //{
 
-        }
+        //}
 
         /// <summary>
         /// 响应委托错误

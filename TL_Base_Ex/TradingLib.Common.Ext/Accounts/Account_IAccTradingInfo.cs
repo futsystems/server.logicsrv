@@ -30,7 +30,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 获得当前净持仓
         /// </summary>
-        public IEnumerable<Position> PositionsNet { get { return this.TKPosition.NetPositionTracker; } }
+        //public IEnumerable<Position> PositionsNet { get { return this.TKPosition.NetPositionTracker; } }
 
         /// <summary>
         /// 多头持仓维护器
@@ -79,10 +79,6 @@ namespace TradingLib.Common
                     {
                         list.Add(pd);
                     }
-                    //if(p.PositionDetailYdRef.Count() != 0)
-                    //{
-                    //    list.Add(PositionImpl.FromPositionDetail(p.PositionDetailYdRef));
-                    //}
                 }
                 return list;
             } 
@@ -103,10 +99,10 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        public Position GetPositionNet(string symbol)
-        {
-            return this.TKPosition.NetPositionTracker[symbol];
-        }
+        //public Position GetPositionNet(string symbol)
+        //{
+        //    return this.TKPosition.NetPositionTracker[symbol];
+        //}
         #endregion
     }
 }

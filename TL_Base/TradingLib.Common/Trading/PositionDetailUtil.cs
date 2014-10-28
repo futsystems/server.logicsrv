@@ -23,13 +23,16 @@ namespace TradingLib.Common
             if (pos.Symbol != f.symbol) throw new Exception("position's symbol do not math with trade");
             if (pos.Side != f.PositionSide) throw new Exception(string.Format("position's side[{0}] do not math with trade's side[{1}]", pos.Side, f.PositionSide));
 
+            //计算平仓量
             int closesize = pos.HoldSize() >= remainsize ? remainsize : pos.HoldSize();
 
-            pos.CloseVolume += closesize;//持仓明细的平仓量累加
-            remainsize -= closesize;//剩余平仓量累减
+            //持仓明细的平仓量累加
+            pos.CloseVolume += closesize;
+            //剩余平仓量累减
+            remainsize -= closesize;
 
             PositionCloseDetail closedetail = new PositionCloseDetailImpl();
-
+            //生成平仓明细数据
             closedetail.Account = pos.Account;
             closedetail.Symbol = pos.Symbol;
 
@@ -58,11 +61,12 @@ namespace TradingLib.Common
             //传递合约信息
             closedetail.oSymbol = f.oSymbol;
 
-            //判断是否是昨仓还是今仓
-            //pos.IsHisPosition(); 
             //平仓盈亏需要判断是今仓还是昨仓
             closedetail.CloseProfitByDate = closedetail.CalCloseProfitByDate(pos.IsHisPosition());
             closedetail.ClosePointByDate = closedetail.CalClosePointByDate(pos.IsHisPosition());
+
+            //持仓明细的平仓盈亏累加
+            pos.CloseProfitByDate += closedetail.CloseProfitByDate;
             return closedetail;
         }
 
@@ -160,6 +164,8 @@ namespace TradingLib.Common
             sb.Append(" HoldSize:" + pos.HoldSize());
             sb.Append(" TradeID:" + pos.TradeID);
             sb.Append(string.Format(" PreS:{0} S:{1}", pos.LastSettlementPrice, pos.SettlementPrice));
+            sb.Append(string.Format(" PL:{0} UnPL:{1}", pos.CloseProfitByDate, pos.UnRealizedProfitByDate));
+            sb.Append(string.Format(" His:{0}", pos.IsHisPosition() ? "YdPos" : "TdPos"));
             return sb.ToString();
         }
 

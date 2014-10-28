@@ -22,7 +22,7 @@ namespace TradingLib.API
         /// <summary>
         /// 净持仓,将多空对冲后得到的持仓数据,也就是不支持锁仓的情况下的数据
         /// </summary>
-        IEnumerable<Position> PositionsNet { get; }
+        //IEnumerable<Position> PositionsNet { get; }
 
         /// <summary>
         /// 多头持仓维护器
@@ -61,7 +61,7 @@ namespace TradingLib.API
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        Position GetPositionNet(string symbol);
+        //Position GetPositionNet(string symbol);
         #endregion
     }
 }

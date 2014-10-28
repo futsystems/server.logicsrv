@@ -30,7 +30,7 @@ namespace TradingLib.API
         /// 获得服务端昨日持仓回报
         /// </summary>
         /// <param name="pos"></param>
-        void OnHoldPosition(Position pos);
+        void OnHoldPosition(PositionDetail pos);
 
         /// <summary>
         /// 获得服务端成交回报
