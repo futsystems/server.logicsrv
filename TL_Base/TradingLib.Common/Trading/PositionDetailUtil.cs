@@ -24,10 +24,12 @@ namespace TradingLib.Common
             if (pos.Side != f.PositionSide) throw new Exception(string.Format("position's side[{0}] do not math with trade's side[{1}]", pos.Side, f.PositionSide));
 
             //计算平仓量
-            int closesize = pos.HoldSize() >= remainsize ? remainsize : pos.HoldSize();
+            int closesize = pos.Volume >= remainsize ? remainsize : pos.Volume;
 
             //持仓明细的平仓量累加
             pos.CloseVolume += closesize;
+            //持仓量累减
+            pos.Volume -= closesize;
             //剩余平仓量累减
             remainsize -= closesize;
 
@@ -114,7 +116,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static bool IsClosed(this PositionDetail pos)
         {
-            if (pos.Volume == pos.CloseVolume)
+            if (pos.Volume==0)
             {
                 return true;
             }
@@ -126,10 +128,10 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="pos"></param>
         /// <returns></returns>
-        public static int HoldSize(this PositionDetail pos)
-        {
-            return pos.Volume - pos.CloseVolume;
-        }
+        //public static int HoldSize(this PositionDetail pos)
+        //{
+        //    return pos.Volume - pos.CloseVolume;
+        //}
 
         /// <summary>
         /// 持仓成本
@@ -161,7 +163,7 @@ namespace TradingLib.Common
             sb.Append(" T:" + pos.GetDateTime().ToString());
             sb.Append(" S:" + (pos.Side ? "Long" : "Short"));
             sb.Append(string.Format(" {0}@{1}", pos.Volume, pos.OpenPrice));
-            sb.Append(" HoldSize:" + pos.HoldSize());
+            sb.Append(" HoldSize:" + pos.Volume +" TotalSize:"+(pos.Volume+pos.CloseVolume).ToString());
             sb.Append(" TradeID:" + pos.TradeID);
             sb.Append(string.Format(" PreS:{0} S:{1}", pos.LastSettlementPrice, pos.SettlementPrice));
             sb.Append(string.Format(" PL:{0} UnPL:{1}", pos.CloseProfitByDate, pos.UnRealizedProfitByDate));

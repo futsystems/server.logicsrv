@@ -92,7 +92,7 @@ namespace TradingLib.Common
         /// <param name="p"></param>
         public void GotPosition(PositionDetail p)
         {
-            if (p.HoldSize() == 0) return;//无实际持仓
+            if (p.Volume == 0) return;//无实际持仓
             if (p.Side)
             {
                 _ltk.GotPosition(p);

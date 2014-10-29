@@ -474,13 +474,15 @@ namespace TradingLib.Core
                     {
                         sb.Append(p.GetPositionDetailStr() + Environment.NewLine);
                     }
-                    sb.Append("Sum Size:" + pos.PositionDetailTotal.Where(p => !p.IsClosed()).Sum(pd => pd.HoldSize()));
+                    sb.Append("Sum Size:" + pos.PositionDetailTotal.Where(p => !p.IsClosed()).Sum(pd => pd.Volume));
                     sb.Append(Environment.NewLine);
                     sb.Append("---------平仓明细--------------------------------------------------" + Environment.NewLine);
                     foreach (PositionCloseDetail p in pos.PositionCloseDetail)
                     {
                         sb.Append(p.GetPositionCloseStr() + Environment.NewLine);
                     }
+                    sb.Append("------持仓汇总------------" + Environment.NewLine);
+                    sb.Append(TradingLib.Mixins.LitJson.JsonMapper.ToJson(pos.GenPositionEx()) + Environment.NewLine);
                     sb.Append(Environment.NewLine);
                     sb.Append(Environment.NewLine);
                 }

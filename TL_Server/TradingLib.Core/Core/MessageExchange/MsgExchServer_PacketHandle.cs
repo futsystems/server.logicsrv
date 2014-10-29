@@ -127,7 +127,7 @@ namespace TradingLib.Core
                 positions = positions.Where(pos => pos.Symbol.Equals(request.Symbol)).ToArray();
             }
 
-
+            //Util.sleep(10000);//
             debug("total num:" + positions.Length.ToString(), QSEnumDebugLevel.INFO);
             int totalnum = positions.Length;
             
@@ -162,7 +162,11 @@ namespace TradingLib.Core
             List<PositionDetail> list = new List<PositionDetail>();
             foreach (Position p in account.Positions)
             {
-                foreach (PositionDetail pd in p.PositionDetailTotal)
+                foreach (PositionDetail pd in p.PositionDetailYdNew)
+                {
+                    list.Add(pd);
+                }
+                foreach (PositionDetail pd in p.PositionDetailTodayNew)
                 {
                     list.Add(pd);
                 }

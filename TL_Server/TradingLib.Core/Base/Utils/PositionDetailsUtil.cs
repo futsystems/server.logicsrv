@@ -34,12 +34,12 @@ namespace TradingLib.Core
             if (!pos.IsHisPosition())
             {
                 //今仓 盯市浮动盈亏 = 今结算 - 开仓价
-                profit = (pos.SettlementPrice - pos.OpenPrice) * pos.HoldSize() * sym.Multiple * (pos.Side ? 1 : -1);
+                profit = (pos.SettlementPrice - pos.OpenPrice) * pos.Volume * sym.Multiple * (pos.Side ? 1 : -1);
             }
             else
             {
                 //昨仓 盯市浮动盈亏 = 今结算 - 昨结算
-                profit = (pos.SettlementPrice - pos.LastSettlementPrice) * pos.HoldSize() * sym.Multiple * (pos.Side ? 1 : -1);
+                profit = (pos.SettlementPrice - pos.LastSettlementPrice) * pos.Volume * sym.Multiple * (pos.Side ? 1 : -1);
             }
 
             return profit;
@@ -52,14 +52,14 @@ namespace TradingLib.Core
             //异化合约按照固定金额来计算
             if (p.oSymbol.SecurityType == SecurityType.INNOV)
             {
-                return p.HoldSize() * (p.oSymbol.Margin + (p.oSymbol.ExtraMargin > 0 ? p.oSymbol.ExtraMargin : 0));//通过固定保证金来计算持仓保证金占用
+                return p.Volume * (p.oSymbol.Margin + (p.oSymbol.ExtraMargin > 0 ? p.oSymbol.ExtraMargin : 0));//通过固定保证金来计算持仓保证金占用
             }
 
             //其余品种保证金按照结算价格计算
             if (p.oSymbol.Margin <= 1)
-                return p.HoldSize() * (decimal)p.SettlementPrice * p.oSymbol.Multiple * p.oSymbol.Margin;
+                return p.Volume * (decimal)p.SettlementPrice * p.oSymbol.Multiple * p.oSymbol.Margin;
             else
-                return p.oSymbol.Margin * p.HoldSize();
+                return p.oSymbol.Margin * p.Volume;
         }
 
     }

@@ -333,7 +333,7 @@ namespace TradingLib.Core
                 foreach (PositionDetail pd in positiondetails)
                 {
                     i++;
-                    size += pd.HoldSize();
+                    size += pd.Volume;
                     unpl += 0;
                     unplbydate += pd.UnRealizedProfitByDate;
                     hmargin += pd.Margin;
@@ -345,7 +345,7 @@ namespace TradingLib.Core
                         padCenterEx(pd.OpenDate.ToString(), len_DATE),
                         padLeftEx("投", len_TBMM),
                         padLeftEx((pd.Side? "买" : " 卖"), len_TBMM),
-                        padRightEx(pd.HoldSize().ToString(), len_SIZE),
+                        padRightEx(pd.Volume.ToString(), len_SIZE),
                         padCenterEx(Util.FormatDecimal(pd.OpenPrice), len_PRICE),
                         padCenterEx(Util.FormatDecimal(pd.LastSettlementPrice), len_PRICE),
                         padCenterEx(Util.FormatDecimal(pd.SettlementPrice), len_PRICE),
@@ -411,16 +411,16 @@ namespace TradingLib.Core
                     if (list.Count > 0)
                     {
                         PositionDetail pd = list[0];
-                        int longsize = list.Where(pos=>pos.Side).Sum(pos=>pos.HoldSize());
-                        int shortsize = list.Where(pos => !pos.Side).Sum(pos => pos.HoldSize());
+                        int longsize = list.Where(pos => pos.Side).Sum(pos => pos.Volume);
+                        int shortsize = list.Where(pos => !pos.Side).Sum(pos => pos.Volume);
                         decimal settleunpl = list.Sum(pos => pos.UnRealizedProfitByDate);
                         decimal lmargin = list.Sum(pos => pos.Margin);
                         settlelist.Add(string.Format("|{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|",
                         padCenterEx(pd.Symbol, len_SYMBOL),
                         padRightEx(longsize.ToString(), len_SIZE),
-                        padRightEx(longsize == 0 ? "0" : Util.FormatDecimal(list.Where(pos => pos.Side).Sum(pos => pos.HoldSize() * pos.OpenPrice) / longsize), len_PRICE),
+                        padRightEx(longsize == 0 ? "0" : Util.FormatDecimal(list.Where(pos => pos.Side).Sum(pos => pos.Volume * pos.OpenPrice) / longsize), len_PRICE),
                         padRightEx(shortsize.ToString(), len_SIZE),
-                        padRightEx(longsize == 0 ? "0" : Util.FormatDecimal(list.Where(pos => !pos.Side).Sum(pos => pos.HoldSize() * pos.OpenPrice) /shortsize), len_PRICE),
+                        padRightEx(longsize == 0 ? "0" : Util.FormatDecimal(list.Where(pos => !pos.Side).Sum(pos => pos.Volume * pos.OpenPrice) / shortsize), len_PRICE),
                         padCenterEx(Util.FormatDecimal(pd.LastSettlementPrice), len_PRICE),
                         padCenterEx(Util.FormatDecimal(pd.SettlementPrice), len_PRICE),
                         padRightEx(Util.FormatDecimal(settleunpl), len_PROFIT),

@@ -20,7 +20,7 @@ namespace TradingLib.Common
             this.Symbol = detail.Symbol;
             this.oSymbol = detail.oSymbol;
             this.xPrice = detail.SettlementPrice;//持仓明细 将昨日结算时的持仓明细加载到内存恢复当日持仓状态，对应的价格为结算价格
-            this.xSize = detail.Side? detail.HoldSize() : -1 * detail.HoldSize();//positiondetail 不带方向
+            this.xSize = detail.Side ? detail.Volume : -1 * detail.Volume;//positiondetail 不带方向
             this.ClosedPL = 0;
         }
 
