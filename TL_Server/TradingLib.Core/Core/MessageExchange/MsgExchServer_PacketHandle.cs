@@ -159,10 +159,28 @@ namespace TradingLib.Core
         void SrvOnQryPositionDetail(QryPositionDetailRequest request, IAccount account)
         {
             debug("QryPositionDetail" + request.ToString(), QSEnumDebugLevel.INFO);
-
-            RspQryPositionDetailResponse response = ResponseTemplate<RspQryPositionDetailResponse>.SrvSendRspResponse(request);
-
-            CacheRspResponse(response);
+            List<PositionDetail> list = new List<PositionDetail>();
+            foreach (Position p in account.Positions)
+            {
+                foreach (PositionDetail pd in p.PositionDetailTotal)
+                {
+                    list.Add(pd);
+                }
+            }
+            if (list.Count > 0)
+            {
+                for (int i = 0; i < list.Count; i++)
+                {
+                    RspQryPositionDetailResponse response = ResponseTemplate<RspQryPositionDetailResponse>.SrvSendRspResponse(request);
+                    response.PositionDetailToSend = list[i];
+                    CacheRspResponse(response, i == list.Count - 1);
+                }
+            }
+            else
+            {   //发送空的持仓回报
+                RspQryPositionDetailResponse response = ResponseTemplate<RspQryPositionDetailResponse>.SrvSendRspResponse(request);
+                CacheRspResponse(response);
+            }
         }
 
         /// <summary>
@@ -205,7 +223,7 @@ namespace TradingLib.Core
             IAccountInfo info = account.ToAccountInfo();
             RspQryAccountInfoResponse response  = ResponseTemplate<RspQryAccountInfoResponse>.SrvSendRspResponse(request);
             response.AccInfo = info;
-            Util.sleep(500);
+            Util.sleep(2000);
             CachePacket(response);
         }
 
@@ -301,27 +319,18 @@ namespace TradingLib.Core
         /// 查询投资者信息
         /// </summary>
         /// <param name="request"></param>
-        void SrvOnQryInvestor(QryInvestorRequest request)
+        void SrvOnQryInvestor(QryInvestorRequest request, IAccount account)
         {
             debug("QryInvestor :" + request.ToString(), QSEnumDebugLevel.INFO);
             RspQryInvestorResponse response = ResponseTemplate<RspQryInvestorResponse>.SrvSendRspResponse(request);
 
             TrdClientInfo info = tl.GetClient(request.ClientID);
 
-            IAccount account = _clearcentre[info.Account];
-            if (account != null)
-            {
-                response.TradingAccount = request.Account;
-                response.Email = "xxxx@xxx.com";
-                //查询交易帐户时,如果token为空则生成帐户名否则传递Token
-                response.NickName = account.GetCustName();
+            response.TradingAccount = account.ID;
+            response.Email = "xxxx@xxx.com";
+            //查询交易帐户时,如果token为空则生成帐户名否则传递Token
+            response.NickName = account.GetCustName();
                 
-            }
-            else
-            {
-                response.RspInfo.FillError("TRADING_ACCOUNT_NOT_FOUND");
-               
-            }
             CacheRspResponse(response);
         }
 
@@ -515,7 +524,60 @@ namespace TradingLib.Core
             }
         }
 
+        /// <summary>
+        /// 查询合约手续费率
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="account"></param>
+        void SrvOnQryInstrumentCommissionRate(QryInstrumentCommissionRateRequest request, IAccount account)
+        {
+            debug("QryInstrumentCommissionRate:" + request.ToString(), QSEnumDebugLevel.DEBUG);
+            
+            //返回所有
+            if (string.IsNullOrEmpty(request.Symbol))
+            {
+                //
+            }
+            else
+            {
+                RspQryInstrumentCommissionRateResponse response = ResponseTemplate<RspQryInstrumentCommissionRateResponse>.SrvSendRspResponse(request);
+                Symbol sym = BasicTracker.SymbolTracker[request.Symbol];
+                if (sym == null)
+                {
+                    response.RspInfo.FillError("SYMBOL_NOT_EXISTED");
+                }
+                else
+                {
+                    sym.FillSymbolCommissionResponse(ref response);
+                }
+                CacheRspResponse(response);
+            }
+        }
 
+        void SrvOnQryInstrumentMarginRate(QryInstrumentMarginRateRequest request, IAccount account)
+        {
+            debug("QryInstrumentMarginRate:" + request.ToString(), QSEnumDebugLevel.DEBUG);
+            
+            if (string.IsNullOrEmpty(request.Symbol))
+            {
+
+            }
+            else 
+            {
+                RspQryInstrumentMarginRateResponse response = ResponseTemplate<RspQryInstrumentMarginRateResponse>.SrvSendRspResponse(request);
+                Symbol sym = BasicTracker.SymbolTracker[request.Symbol];
+                if (sym == null)
+                {
+                    response.RspInfo.FillError("SYMBOL_NOT_EXISTED");
+                }
+                else
+                {
+                    sym.FillSymbolMarginResponse(ref response);
+                }
+                CacheRspResponse(response);
+
+            }
+        }
 
         void tl_newPacketRequest(IPacket packet,ISession session)
         {
@@ -580,7 +642,7 @@ namespace TradingLib.Core
                 case MessageTypes.QRYINVESTOR://查询投资者信息
                     {
                         QryInvestorRequest request = packet as QryInvestorRequest;
-                        SrvOnQryInvestor(request);
+                        SrvOnQryInvestor(request, account);
                     }
                     break;
                 case MessageTypes.REQCHANGEPASS://请求修改交易帐户密码
@@ -620,7 +682,18 @@ namespace TradingLib.Core
                         SrvOnQryTransferSerial(request);
                     }
                     break;
-
+                case MessageTypes.QRYINSTRUMENTCOMMISSIONRATE://查询合约手续费率
+                    {
+                        QryInstrumentCommissionRateRequest request = packet as QryInstrumentCommissionRateRequest;
+                        SrvOnQryInstrumentCommissionRate(request, account);
+                    }
+                    break;
+                case MessageTypes.QRYINSTRUMENTMARGINRATE://查询合约保证金率
+                    {
+                        QryInstrumentMarginRateRequest request = packet as QryInstrumentMarginRateRequest;
+                        SrvOnQryInstrumentMarginRate(request,account);
+                    }
+                    break;
                 case MessageTypes.CONTRIBREQUEST://扩展请求
                     {
                         ContribRequest request = packet as ContribRequest;

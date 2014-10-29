@@ -299,41 +299,41 @@ namespace TradingLib.Common
             StringBuilder sb = new StringBuilder();
             sb.Append(p.Account);//0
             sb.Append(d);
-            sb.Append(p.CloseProfitByDate);//1
+            sb.Append(p.OpenDate);//1
             sb.Append(d);
-            sb.Append(p.CloseVolume);//2
+            sb.Append(p.OpenTime);//2
             sb.Append(d);
-            sb.Append(p.Exchange);//3
+            sb.Append(p.Tradingday);//3
             sb.Append(d);
-            sb.Append(p.HedgeFlag);//4
+            sb.Append(p.Settleday);//4
             sb.Append(d);
-            sb.Append(p.LastSettlementPrice);//5
+            sb.Append(p.Side);//5
             sb.Append(d);
-            sb.Append(p.Margin);//6
+            sb.Append(p.Volume);//6
             sb.Append(d);
-            sb.Append(p.OpenDate);//7
+            sb.Append(p.OpenPrice);//7
             sb.Append(d);
-            sb.Append(p.OpenPrice);//8
+            sb.Append(p.TradeID);//8
             sb.Append(d);
-            sb.Append(p.OpenTime);//9
+            sb.Append(p.LastSettlementPrice);//9
             sb.Append(d);
-            sb.Append(p.SecCode);//10
+            sb.Append(p.SettlementPrice);//10
             sb.Append(d);
-            sb.Append(p.Settleday);//11
+            sb.Append(p.CloseVolume);//11
             sb.Append(d);
-            sb.Append(p.SettlementPrice);//12
+            sb.Append(p.HedgeFlag);//12
             sb.Append(d);
-            sb.Append(p.Side);//13
+            sb.Append(p.Exchange);//13
             sb.Append(d);
             sb.Append(p.Symbol);//14
             sb.Append(d);
-            sb.Append(p.TradeID);//15
+            sb.Append(p.SecCode);//15
             sb.Append(d);
-            sb.Append(p.Tradingday);//16
+            sb.Append(p.Margin);//16
             sb.Append(d);
-            sb.Append(p.UnRealizedProfitByDate);//17
+            sb.Append(p.CloseProfitByDate);//17
             sb.Append(d);
-            sb.Append(p.Volume);//18
+            sb.Append(p.UnRealizedProfitByDate);//18
             return sb.ToString();
         }
 
@@ -342,24 +342,24 @@ namespace TradingLib.Common
             string[] rec = content.Split(',');
             PositionDetail p = new PositionDetailImpl();
             p.Account = rec[0];
-            p.CloseProfitByDate = decimal.Parse(rec[1]);
-            p.CloseVolume = int.Parse(rec[2]);
-            p.Exchange = rec[3];
-            p.HedgeFlag = rec[4];
-            p.LastSettlementPrice = decimal.Parse(rec[5]);
-            p.Margin = decimal.Parse(rec[6]);
-            p.OpenDate = int.Parse(rec[7]);
-            p.OpenPrice = decimal.Parse(rec[8]);
-            p.OpenTime = int.Parse(rec[9]);
-            p.SecCode = rec[10];
-            p.Settleday = int.Parse(rec[11]);
-            p.SettlementPrice = decimal.Parse(rec[12]);
-            p.Side = bool.Parse(rec[13]);
+            p.OpenDate = int.Parse(rec[1]);
+            p.OpenTime = int.Parse(rec[2]);
+            p.Tradingday = int.Parse(rec[3]);
+            p.Settleday = int.Parse(rec[4]);
+            p.Side = bool.Parse(rec[5]);
+            p.Volume = int.Parse(rec[6]);
+            p.OpenPrice = decimal.Parse(rec[7]);
+            p.TradeID = rec[8];
+            p.LastSettlementPrice = decimal.Parse(rec[9]);
+            p.SettlementPrice = decimal.Parse(rec[10]);
+            p.CloseVolume = int.Parse(rec[11]);
+            p.HedgeFlag = rec[12];
+            p.Exchange = rec[13];
             p.Symbol = rec[14];
-            p.TradeID = rec[15];
-            p.Tradingday = int.Parse(rec[16]);
-            p.UnRealizedProfitByDate = decimal.Parse(rec[17]);
-            p.Volume = int.Parse(rec[18]);
+            p.SecCode = rec[15];
+            p.Margin = decimal.Parse(rec[16]);
+            p.CloseProfitByDate = decimal.Parse(rec[17]);
+            p.UnRealizedProfitByDate = decimal.Parse(rec[18]);
             return p;
         }
     }

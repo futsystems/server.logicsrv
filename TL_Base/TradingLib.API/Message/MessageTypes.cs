@@ -85,7 +85,9 @@ namespace TradingLib.API
         QRYREGISTERBANKACCOUNT,//查询银期转账帐户
         QRYTRANSFERSERIAL,//查询转账流水
         QRYPOSITIONDETAIL,//查询持仓明细
-
+        QRYINSTRUMENTCOMMISSIONRATE,//查询合约手续费率
+        QRYINSTRUMENTMARGINRATE,//查询合约保证金率
+        
 
         DOMREQUEST,//请求DOM市场Level2数据
         IMBALANCEREQUEST,//imbalance..查询这个是什么意思
@@ -131,6 +133,11 @@ namespace TradingLib.API
         REGISTERBANKACCOUNTRESPONSE,//查询银期签约帐户回报
         TRANSFERSERIALRESPONSE,//查询转账流水回报
         POSITIONDETAILRESPONSE,//查询持仓明细回报
+        INSTRUMENTCOMMISSIONRATERESPONSE,//查询合约手续费率回报
+        INSTRUMENTMARGINRATERESPONSE,//查询合约保证金率回报
+        
+
+
 
         // END STANDARD MESSAGES
 

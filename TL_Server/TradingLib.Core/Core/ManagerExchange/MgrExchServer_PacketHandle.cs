@@ -617,25 +617,25 @@ namespace TradingLib.Core
         {
             debug(string.Format("管理员:{0} 请求查询历史持仓:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
 
-            IList<SettlePosition> positions = ORM.MTradingInfo.SelectHistPositions(request.TradingAccount, request.Settleday, request.Settleday);
+            //IList<SettlePosition> positions = ORM.MTradingInfo.SelectHistPositions(request.TradingAccount, request.Settleday, request.Settleday);
 
-            int totalnum = positions.Count;
-            if (totalnum > 0)
-            {
-                for (int i = 0; i < totalnum; i++)
-                {
-                    RspMGRQryPositionResponse response = ResponseTemplate<RspMGRQryPositionResponse>.SrvSendRspResponse(request);
-                    response.PostionToSend = positions[i];
-                    CacheRspResponse(response, i == totalnum - 1);
-                }
-            }
-            else
-            {
-                //返回空项目
-                RspMGRQryPositionResponse response = ResponseTemplate<RspMGRQryPositionResponse>.SrvSendRspResponse(request);
-                response.PostionToSend = new SettlePosition();
-                CacheRspResponse(response);
-            }
+            //int totalnum = positions.Count;
+            //if (totalnum > 0)
+            //{
+            //    for (int i = 0; i < totalnum; i++)
+            //    {
+            //        RspMGRQryPositionResponse response = ResponseTemplate<RspMGRQryPositionResponse>.SrvSendRspResponse(request);
+            //        response.PostionToSend = positions[i];
+            //        CacheRspResponse(response, i == totalnum - 1);
+            //    }
+            //}
+            //else
+            //{
+            //    //返回空项目
+            //    RspMGRQryPositionResponse response = ResponseTemplate<RspMGRQryPositionResponse>.SrvSendRspResponse(request);
+            //    response.PostionToSend = new SettlePosition();
+            //    CacheRspResponse(response);
+            //}
         }
 
 

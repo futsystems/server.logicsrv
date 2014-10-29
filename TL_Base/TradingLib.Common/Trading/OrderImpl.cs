@@ -18,6 +18,7 @@ namespace TradingLib.Common
         decimal _stopp=0;
         decimal _trail=0;
         int _virtowner = 0;
+        int _nRequest = 0;
 
         public int VirtualOwner { get { return _virtowner; } set { _virtowner = value; } }
         public new int UnsignedSize { get { return Math.Abs(_size); } }
@@ -90,6 +91,11 @@ namespace TradingLib.Common
         /// </summary>
         public string ForceCloseReason { get { return _forceclosereason; } set { _forceclosereason = value.Replace(',',' ').Replace('|',' ').Replace('^',' '); } }
 
+        /// <summary>
+        /// 客户端请求编号
+        /// </summary>
+        public int RequestID { get { return _nRequest; } set { _nRequest = value; } }
+
 
         public bool isMarket { get { return (price == 0) && (stopp == 0); } }
         public bool isLimit { get { return (price != 0); } }
@@ -141,14 +147,15 @@ namespace TradingLib.Common
             this.HedgeFlag = copythis.HedgeFlag;
             this.OrderSeq = copythis.OrderSeq;
             this.OrderExchID = copythis.OrderExchID;
-            
+            this.Filled = copythis.Filled;
+            this.FrontIDi = copythis.FrontIDi;
+            this.SessionIDi = copythis.SessionIDi;
+            this.RequestID = copythis.RequestID;
 
             //内部使用
             this.oSymbol = copythis.oSymbol;
-            this.Filled = copythis.Filled;
             this.OrderSource = copythis.OrderSource;
-            this.FrontIDi = copythis.FrontIDi;
-            this.SessionIDi = copythis.SessionIDi;
+            
         }
 
         public OrderImpl(string sym, bool side, int size, decimal p, decimal s, string c, int time, int date)
@@ -216,18 +223,7 @@ namespace TradingLib.Common
         #endregion
 
 
-
-        //public override string ToString()
-        //{
-        //    return ToString(2);
-        //}
-
-        //public string ToString(int decimals)
-        //{
-        //    if (this.isFilled) return base.ToString();
-
-        //    return (side ? "BUY" : "SELL") + " " + this.TotalSize.ToString() + " " + this.symbol + " @" + (isMarket ? "Mkt" : (isLimit ? this.price.ToString("N" + decimals.ToString()) : this.stopp.ToString("N" + decimals.ToString()) + "stp")) + " [" + this.Account + "] " + id.ToString() + (isLimit && isStop ? " stop: " + stopp.ToString("N" + decimals.ToString()) : string.Empty + " Filled:" + this.Filled.ToString() + " Status:" + Status.ToString() + " PostFlag:" + OffsetFlag.ToString() + " OrderRef:" + OrderRef.ToString() + " OrderSeq:" + OrderSeq.ToString() + " HedgeFlag:" + HedgeFlag.ToString() + " OrderExchID:" + OrderExchID.ToString());
-        //}
+        #region Fill section
 
         /// <summary>
         /// Fills this order with a tick
@@ -347,6 +343,9 @@ namespace TradingLib.Common
             return false;
         }
 
+        #endregion
+
+
         /// <summary>
         /// Serialize order as a string
         /// </summary>
@@ -398,7 +397,6 @@ namespace TradingLib.Common
             sb.Append(d);
             sb.Append(o.LocalID.ToString());
             sb.Append(d);
-            //sb.Append((int)o.Status);
             sb.Append(o.Status.ToString());
             sb.Append(d);
             sb.Append(o.OffsetFlag.ToString());
@@ -414,6 +412,12 @@ namespace TradingLib.Common
             sb.Append(o.OrderExchID);
             sb.Append(d);
             sb.Append(o.ForceCloseReason);
+            sb.Append(d);
+            sb.Append(o.FrontIDi);
+            sb.Append(d);
+            sb.Append(o.SessionIDi);
+            sb.Append(d);
+            sb.Append(o.RequestID);
             return sb.ToString();
         }
 
@@ -468,8 +472,10 @@ namespace TradingLib.Common
             o.HedgeFlag = rec[(int)OrderField.HedgeFlag];
             o.OrderSeq = int.Parse(rec[(int)OrderField.OrderSeq]);
             o.OrderExchID = rec[(int)OrderField.OrderExchID];
-            if(rec.Length >=29)
-                o.ForceCloseReason = rec[(int)OrderField.ForceReason];
+            o.ForceCloseReason = rec[(int)OrderField.ForceReason];
+            o.FrontIDi = int.Parse(rec[(int)OrderField.FrontID]);
+            o.SessionIDi = int.Parse(rec[(int)OrderField.SessionID]);
+            o.RequestID = int.Parse(rec[(int)OrderField.RequestID]);
             return o;
         }
 

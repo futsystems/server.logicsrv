@@ -160,8 +160,12 @@ namespace TradingLib.Common
                     //查询出入金流水记录
                     case MessageTypes.QRYTRANSFERSERIAL:
                         return RequestTemplate<QryTransferSerialRequest>.SrvRecvRequest(frontid, clientid, content);
-                    
-
+                    //查询合约手续费率
+                    case MessageTypes.QRYINSTRUMENTCOMMISSIONRATE:
+                        return RequestTemplate<QryInstrumentCommissionRateRequest>.SrvRecvRequest(frontid, clientid, content);
+                    //查询合约保证金率
+                    case MessageTypes.QRYINSTRUMENTMARGINRATE:
+                        return RequestTemplate<QryInstrumentMarginRateRequest>.SrvRecvRequest(frontid, clientid, content);
 
 
 
@@ -337,6 +341,11 @@ namespace TradingLib.Common
                     return ResponseTemplate<RspQryRegisterBankAccountResponse>.CliRecvResponse(content);
                 case MessageTypes.TRANSFERSERIALRESPONSE://查询出入金流水回报
                     return ResponseTemplate<RspQryTransferSerialResponse>.CliRecvResponse(content);
+                case MessageTypes.INSTRUMENTCOMMISSIONRATERESPONSE://查询合约手续费率
+                    return ResponseTemplate<RspQryInstrumentCommissionRateResponse>.CliRecvResponse(content);
+                case MessageTypes.INSTRUMENTMARGINRATERESPONSE://查询保证金率
+                    return ResponseTemplate<RspQryInstrumentMarginRateResponse>.CliRecvResponse(content);
+
                 case MessageTypes.TICKNOTIFY:
                     TickNotify ticknotify = new TickNotify();
                     ticknotify.Tick = TickImpl.Deserialize(content);

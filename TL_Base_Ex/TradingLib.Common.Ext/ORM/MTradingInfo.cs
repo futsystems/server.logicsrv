@@ -310,16 +310,16 @@ namespace TradingLib.ORM
         /// <param name="begin"></param>
         /// <param name="end"></param>
         /// <returns></returns>
-        public static IList<SettlePosition> SelectHistPositions(string account, int begin, int end)
-        {
-            using (DBMySql db = new DBMySql())
-            {
-                string query = string.Format("SELECT * FROM  {0}  WHERE settleday >='{1}' AND settleday <='{2}' AND account='{3}'", "hold_positions", begin, end, account);
-                List<SettlePosition> poslist = db.Connection.Query<SettlePosition>(query).ToList<SettlePosition>();
+        //public static IList<SettlePosition> SelectHistPositions(string account, int begin, int end)
+        //{
+        //    using (DBMySql db = new DBMySql())
+        //    {
+        //        string query = string.Format("SELECT * FROM  {0}  WHERE settleday >='{1}' AND settleday <='{2}' AND account='{3}'", "hold_positions", begin, end, account);
+        //        List<SettlePosition> poslist = db.Connection.Query<SettlePosition>(query).ToList<SettlePosition>();
 
-                return poslist;
-            }
-        }
+        //        return poslist;
+        //    }
+        //}
 
 
         static PositionRound PRInfo2PositionRound(positionroundinfo info)

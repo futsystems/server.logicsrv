@@ -105,7 +105,7 @@ namespace TradingLib.Common
 
     /// <summary>
     /// PostionEx用于封装持仓汇总信息
-    /// 通知交易客户端或查询时回报交易客户端
+    /// 将Position工作对象的持仓状态 封装成PositionEx用于接收客户端的查询
     /// </summary>
     public  class PositionEx
     {
@@ -135,7 +135,7 @@ namespace TradingLib.Common
         public int UnsignedSize { get; set; }
 
         /// <summary>
-        /// 持仓成本
+        /// 持仓成本 点数
         /// </summary>
         public decimal AvgPrice { get; set; }
 
@@ -149,6 +149,7 @@ namespace TradingLib.Common
         /// </summary>
         public int Size { get; set; }
 
+        #region 开平汇总
         /// <summary>
         /// 开仓量
         /// </summary>
@@ -179,13 +180,16 @@ namespace TradingLib.Common
         /// </summary>
         public decimal CloseAVGPrice { get; set; }
 
+        #endregion
+
+
         /// <summary>
         /// 持仓描述类型
         /// </summary>
         public QSEnumPositionDirectionType DirectionType { get; set; }
 
         /// <summary>
-        /// 平仓盈亏
+        /// 当日平仓盈亏金额
         /// </summary>
         public decimal CloseProfit { get; set; }
 
@@ -195,7 +199,7 @@ namespace TradingLib.Common
         public decimal PositionCost { get; set; }
 
         /// <summary>
-        /// 浮动盈亏点数
+        /// 当日浮动盈亏点数
         /// </summary>
         public decimal UnRealizedPL { get; set; }
 
@@ -203,6 +207,48 @@ namespace TradingLib.Common
         /// 浮动盈亏金额/持仓盈亏
         /// </summary>
         public decimal UnRealizedProfit { get; set; }
+
+        /********后期添加*******/
+        /// <summary>
+        /// 手续费
+        /// </summary>
+        public decimal Commission { get; set; }
+
+
+        /// <summary>
+        /// 今仓数量
+        /// </summary>
+        public int TodayPosition { get; set; }
+
+        /// <summary>
+        /// 昨仓数量
+        /// </summary>
+        public int YdPosition { get; set; }
+
+        //昨仓数量 + 今仓数量 = 总持仓数量 = UnsignedSize 
+
+        /// <summary>
+        /// 昨日结算价
+        /// </summary>
+        public decimal LastSettlementPrice { get; set; }
+
+
+        /// <summary>
+        /// 结算价
+        /// </summary>
+        public decimal SettlementPrice { get; set; }
+
+
+        /// <summary>
+        /// 盯市平仓盈亏
+        /// 每个持仓明细中有一个盯市平仓盈亏 用于结算时累计盯市盈亏
+        /// </summary>
+        public decimal CloseProfitByDate { get; set; }
+
+        /// <summary>
+        /// 交易日
+        /// </summary>
+        public int Tradingday { get; set; }
 
         public PositionEx()
         {
@@ -269,6 +315,20 @@ namespace TradingLib.Common
             sb.Append(p.UnRealizedPL.ToString());
             sb.Append(d);
             sb.Append(p.UnRealizedProfit.ToString());
+            sb.Append(d);
+            sb.Append(p.Commission);
+            sb.Append(d);
+            sb.Append(p.TodayPosition);
+            sb.Append(d);
+            sb.Append(p.YdPosition);
+            sb.Append(d);
+            sb.Append(p.LastSettlementPrice);
+            sb.Append(d);
+            sb.Append(p.SettlementPrice);
+            sb.Append(d);
+            sb.Append(p.CloseProfitByDate);
+            sb.Append(d);
+            sb.Append(p.Tradingday);
             return sb.ToString();
 
         }
@@ -297,6 +357,13 @@ namespace TradingLib.Common
             p.PositionCost = decimal.Parse(rec[16]);
             p.UnRealizedPL = decimal.Parse(rec[17]);
             p.UnRealizedProfit = decimal.Parse(rec[18]);
+            p.Commission = decimal.Parse(rec[19]);
+            p.TodayPosition = int.Parse(rec[20]);
+            p.YdPosition = int.Parse(rec[21]);
+            p.LastSettlementPrice = decimal.Parse(rec[22]);
+            p.SettlementPrice = decimal.Parse(rec[23]);
+            p.CloseProfitByDate = decimal.Parse(rec[24]);
+            p.Tradingday = int.Parse(rec[25]);
             return p;
         }
     }

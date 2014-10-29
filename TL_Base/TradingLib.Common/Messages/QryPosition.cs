@@ -97,16 +97,23 @@ namespace TradingLib.Common
         public QryPositionDetailRequest()
         {
             _type = MessageTypes.QRYPOSITIONDETAIL;
+            this.TradingAccount = string.Empty;
+            this.Symbol = string.Empty;
         }
 
+        public string TradingAccount { get; set; }
+
+        public string Symbol { get; set; }
         public override string ContentSerialize()
         {
-            return "";
+            return this.TradingAccount + "," + this.Symbol;
         }
 
         public override void ContentDeserialize(string contentstr)
         {
-            
+            string[] rec = contentstr.Split(',');
+            this.TradingAccount = rec[0];
+            this.Symbol = rec[1];
         }
     }
 
@@ -118,16 +125,19 @@ namespace TradingLib.Common
         public RspQryPositionDetailResponse()
         {
             _type = MessageTypes.POSITIONDETAILRESPONSE;
+            this.PositionDetailToSend = new PositionDetailImpl();
         }
+
+        public PositionDetail PositionDetailToSend { get; set; }
 
         public override string ResponseSerialize()
         {
-            return "";
+            return PositionDetailImpl.Serialize(this.PositionDetailToSend);
         }
 
         public override void ResponseDeserialize(string content)
         {
-            
+            this.PositionDetailToSend = PositionDetailImpl.Deserialize(content);
         }
     }
 }

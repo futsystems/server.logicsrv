@@ -175,6 +175,14 @@ namespace TradingLib.Common
 
             p.UnRealizedPL = pos.UnRealizedPL;
             p.UnRealizedProfit = p.UnRealizedPL * p.Multiple;
+
+            p.Commission = pos.Trades.Sum(f => f.Commission);
+            p.TodayPosition = pos.PositionDetailTodayNew.Where(pd => !pd.IsClosed()).Sum(pd => pd.HoldSize());//当日新开仓 持仓数量
+            p.YdPosition = pos.PositionDetailYdRef.Where(pd => !pd.IsClosed()).Sum(pd => pd.HoldSize());//昨仓数量
+            p.LastSettlementPrice = (pos.LastSettlementPrice!=null?(decimal)pos.LastSettlementPrice:0);
+            p.SettlementPrice = (pos.SettlementPrice != null?(decimal)pos.SettlementPrice:0);
+            p.CloseProfitByDate = 0;
+            p.Tradingday=0;
             return p;
         }
     }

@@ -444,6 +444,7 @@ namespace TradingLib.Common
                 //从行情更新昨结算价
                 if (_lastsettlementprice == null && k.PreSettlement > 0 && (double)k.PreSettlement < double.MaxValue)
                 {
+                    Util.Debug("tick:" + k.ToString() + " presettlement:" + k.PreSettlement.ToString());
                     _lastsettlementprice = k.PreSettlement;
                     //更新所有持仓明细的昨日结算价格
                     //昨日持仓明细在YdRef保存的不用更新 该数据用于获得隔夜仓的成本即昨天的结算价为成本
@@ -457,12 +458,13 @@ namespace TradingLib.Common
                     {
                         c.LastSettlementPrice = k.PreSettlement;
                     }
-                    Util.Debug("update presettlementprice for position[" + this.Account + "-" + this.Symbol + "] price:" + _lastsettlementprice.ToString(), QSEnumDebugLevel.MUST);
+                    Util.Debug("update presettlementprice for position[" + this.Account + "-" + this.Symbol + "] price:" + _lastsettlementprice.ToString() +" tick presettlement:"+k.PreSettlement.ToString(), QSEnumDebugLevel.MUST);
                 }
                 //检查昨结算价格是否异常 如果获得了昨日结算价格 但是又和行情中的昨结算价格不一致则有异常
                 if (_lastsettlementprice != null && k.PreSettlement > 0 && k.PreSettlement != _lastsettlementprice)
                 {
-                    Util.Debug("PreSettlement price error,it changed during trading", QSEnumDebugLevel.ERROR);
+                    //Util.Debug("tick:" + k.ToString() +" presettlement:"+k.PreSettlement.ToString());
+                    //Util.Debug("PreSettlement price error,it changed during trading,tick presetttle:"+k.PreSettlement.ToString() +" local presettlement:"+_lastsettlementprice.ToString(), QSEnumDebugLevel.ERROR);
                 }
 
 

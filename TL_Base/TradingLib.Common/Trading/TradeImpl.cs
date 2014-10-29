@@ -70,7 +70,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 交易所
         /// </summary>
-        public string Exchange { get { return oSymbol != null ? oSymbol.SecurityFamily.Exchange.Index:_ex; } set { _ex = value; } }
+        public string Exchange { get { return oSymbol != null ? oSymbol.SecurityFamily.Exchange.EXCode:_ex; } set { _ex = value; } }
 
         /// <summary>
         /// 货币

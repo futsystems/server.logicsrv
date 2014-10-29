@@ -529,7 +529,7 @@ namespace Broker.SIM
                         //检查全部成交还是部分成交
                         Trade fill = (Trade)o;
                         fill.Broker = this.GetType().FullName;
-                        fill.BrokerKey = NextFillSeq.ToString();
+                        fill.BrokerKey = NextFillSeq.ToString();//交易所成交编号
 
                         debug("PTT Server Filled: " + fill.GetTradeInfo(),QSEnumDebugLevel.INFO);
 

@@ -220,9 +220,12 @@ namespace TradingLib.Core
             //设定TotalSize为 第一次接受到委托时候的Size
             order.TotalSize = order.size;
 
-            //设定委托FrontID和SessioinID
+            //设定委托地址信息 FrontID和SessioinID
             order.FrontIDi = clientinfo.FrontIDi;
             order.SessionIDi = clientinfo.SessionIDi;
+
+            //设定RequestID
+            order.RequestID = request.RequestID;
 
             //对外层触发委托事件
             if (newSendOrderRequest != null)
