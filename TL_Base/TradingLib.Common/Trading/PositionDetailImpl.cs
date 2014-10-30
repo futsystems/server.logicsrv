@@ -201,7 +201,7 @@ namespace TradingLib.Common
 
 
         /// <summary>
-        /// 开仓价格
+        /// 开仓价格 记录开仓时的开仓价
         /// </summary>
         public decimal OpenPrice { get; set; }
        
@@ -222,9 +222,15 @@ namespace TradingLib.Common
         public decimal SettlementPrice { get; set; }
 
         /// <summary>
-        /// 平仓量
+        /// 平仓金额 记录当前交易日的平仓金额
+        /// </summary>
+        public decimal CloseAmount { get; set; }
+
+        /// <summary>
+        /// 平仓量 记录当前交易日的平仓数量 每次平仓产生时 平仓量累加
         /// </summary>
         public int CloseVolume { get; set; }
+
 
         /// <summary>
         /// 投机套保标识
@@ -288,7 +294,7 @@ namespace TradingLib.Common
 
 
         /// <summary>
-        /// 盯市平仓盈亏
+        /// 当有平仓发生时,累加属于该持仓明细的盈亏金额
         /// </summary>
         public decimal CloseProfitByDate { get; set; }
 
@@ -300,10 +306,7 @@ namespace TradingLib.Common
         /// </summary>
         public decimal UnRealizedProfitByDate { get; set; }
 
-        /// <summary>
-        /// 平仓金额
-        /// </summary>
-        public decimal CloseAmount { get; set; }
+        
 
         public static string Serialize(PositionDetail p)
         {

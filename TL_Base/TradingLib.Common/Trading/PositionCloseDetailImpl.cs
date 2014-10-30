@@ -57,6 +57,7 @@ namespace TradingLib.Common
         /// 方向
         /// </summary>
         public bool Side { get; set; }
+
         /// <summary>
         /// 开仓日期
         /// </summary>
@@ -73,6 +74,11 @@ namespace TradingLib.Common
         public string OpenTradeID { get; set; }
 
         /// <summary>
+        /// 开仓价格
+        /// </summary>
+        public decimal OpenPrice { get; set; }
+
+        /// <summary>
         /// 平仓日期
         /// </summary>
         public int CloseDate { get; set; }
@@ -86,20 +92,18 @@ namespace TradingLib.Common
         /// 平仓成交编号
         /// </summary>
         public string CloseTradeID { get; set; }
+
         /// <summary>
-        /// 开仓价格
+        /// 平仓价格
         /// </summary>
-        public decimal OpenPrice { get; set; }
+        public decimal ClosePrice { get; set; }
 
         /// <summary>
         /// 昨结算价
         /// </summary>
         public decimal LastSettlementPrice { get; set; }
 
-        /// <summary>
-        /// 平仓价格
-        /// </summary>
-        public decimal ClosePrice { get; set; }
+
 
 
         /// <summary>
@@ -107,7 +111,6 @@ namespace TradingLib.Common
         /// </summary>
         public int CloseVolume { get; set; }
 
-        //decimal _closeprofitbydate = 0;
         /// <summary>
         /// 盯市平仓盈亏金额
         /// 平当日仓 (开仓-平仓)*手数*乘数

@@ -63,7 +63,7 @@ namespace TradingLib.Common
             //传递合约信息
             closedetail.oSymbol = f.oSymbol;
 
-            //平仓盈亏需要判断是今仓还是昨仓
+            //计算平仓明细的平仓盈亏和点数 平仓盈亏需要判断是今仓还是昨仓
             closedetail.CloseProfitByDate = closedetail.CalCloseProfitByDate(pos.IsHisPosition());
             closedetail.ClosePointByDate = closedetail.CalClosePointByDate(pos.IsHisPosition());
 

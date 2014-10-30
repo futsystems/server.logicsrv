@@ -124,10 +124,7 @@ namespace TradingLib.Common
         /// </summary>
         public int Multiple { get; set; }
 
-        /// <summary>
-        /// 平仓盈亏点数
-        /// </summary>
-        public decimal ClosedPL{ get; set; }
+        
 
         /// <summary>
         /// 持仓数量
@@ -135,7 +132,7 @@ namespace TradingLib.Common
         public int UnsignedSize { get; set; }
 
         /// <summary>
-        /// 持仓成本 点数
+        /// 持仓均价 点数
         /// </summary>
         public decimal AvgPrice { get; set; }
 
@@ -188,15 +185,19 @@ namespace TradingLib.Common
         /// </summary>
         public QSEnumPositionDirectionType DirectionType { get; set; }
 
+
+        /// <summary>
+        /// 平仓盈亏点数 每次有平仓明细产生时，会累加平仓盈亏点数和对应的金额
+        /// 平仓明细中的平仓盈亏计算 1.今仓 开仓价- 平价价  2.昨仓 平仓价 - 昨结价
+        /// </summary>
+        public decimal ClosedPL { get; set; }
+
         /// <summary>
         /// 当日平仓盈亏金额
         /// </summary>
         public decimal CloseProfit { get; set; }
 
-        /// <summary>
-        /// 持仓成本金额
-        /// </summary>
-        public decimal PositionCost { get; set; }
+        
 
         /// <summary>
         /// 当日浮动盈亏点数
@@ -207,6 +208,13 @@ namespace TradingLib.Common
         /// 浮动盈亏金额/持仓盈亏
         /// </summary>
         public decimal UnRealizedProfit { get; set; }
+
+        /// <summary>
+        /// 持仓成本金额
+        /// </summary>
+        public decimal PositionCost { get; set; }
+
+
 
         /********后期添加*******/
         /// <summary>

@@ -75,6 +75,7 @@ namespace TradingLib.Core
 
         /// <summary>
         /// 查询成交
+        /// 
         /// </summary>
         /// <param name="request"></param>
         void SrvOnQryTrade(QryTradeRequest request, IAccount account)
@@ -167,10 +168,6 @@ namespace TradingLib.Core
                 {
                     list.Add(pd);
                 }
-                //foreach (PositionDetail pd in p.PositionDetailTodayNew)
-                //{
-                //    list.Add(pd);
-                //}
             }
             if (list.Count > 0)
             {

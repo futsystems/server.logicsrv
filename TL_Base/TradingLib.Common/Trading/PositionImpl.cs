@@ -772,25 +772,15 @@ namespace TradingLib.Common
             if (NeedGenPositionDetails)
             {
                 //恢复昨日持仓明 初始化当日持仓状态相当于是开仓
-                //_openamount += t.GetAmount();
-                //_openvol += d.HoldSize();
                 //1.加载历史持仓 历史持仓加载的时候要将历史信息去除 比如平仓量(属于昨天的信息) 开仓量也是数据昨天的信息
-
-                //d.Volume = d.Volume - d.CloseVolume;//当前持有量 = 开仓量 - 平仓量
-                //d.CloseVolume = 0;
-                //d.CloseProfitByDate = 0;
-                //d.UnRealizedProfitByDate = 0;
-                d.CloseVolume = 0;
+                d.CloseVolume = 0;//平仓数量
+                d.CloseAmount = 0;//平仓金额
+                d.CloseProfitByDate = 0;//平仓盈亏
                 _poshisreflist.Add(d);
 
                 //昨日持仓明细初始化当日持仓明细状态 设定“开仓价” 即昨日结算价 这个价格有持仓明细中的上日结算价格提供
                 PositionDetail pd = new PositionDetailImpl(d);
                 //加载到今日持仓明细列表中的昨日持仓明细列表，需要将对应的昨日结算价格设定为昨日持仓明细的结算价格 并且不能被行情更新
-                //pd.Volume = d.Volume - pd.CloseVolume;//当前持有量 = 开仓量 - 平仓量
-                //pd.CloseVolume = 0;
-                //pd.CloseProfitByDate = 0;
-                //pd.UnRealizedProfitByDate = 0;
-
                 pd.LastSettlementPrice = d.SettlementPrice;
                 pd.UnRealizedProfitByDate = 0;//重置盯市盈亏
                 //TODO
