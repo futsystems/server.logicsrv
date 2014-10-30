@@ -258,6 +258,11 @@ namespace TradingLib.Common
         /// </summary>
         public int Tradingday { get; set; }
 
+        /// <summary>
+        /// 开仓成本
+        /// </summary>
+        public decimal OpenCost { get; set; }
+
         public PositionEx()
         {
             Account = string.Empty;
@@ -280,6 +285,7 @@ namespace TradingLib.Common
             PositionCost = 0;
             UnRealizedPL = 0;
             UnRealizedProfit = 0;
+            OpenCost = 0;
         }
 
         public static string Serialize(PositionEx p)
@@ -337,6 +343,8 @@ namespace TradingLib.Common
             sb.Append(p.CloseProfitByDate);
             sb.Append(d);
             sb.Append(p.Tradingday);
+            sb.Append(d);
+            sb.Append(p.OpenCost);
             return sb.ToString();
 
         }
@@ -372,6 +380,7 @@ namespace TradingLib.Common
             p.SettlementPrice = decimal.Parse(rec[23]);
             p.CloseProfitByDate = decimal.Parse(rec[24]);
             p.Tradingday = int.Parse(rec[25]);
+            p.OpenCost = decimal.Parse(rec[26]);
             return p;
         }
     }

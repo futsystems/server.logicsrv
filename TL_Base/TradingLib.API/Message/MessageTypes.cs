@@ -27,10 +27,10 @@ namespace TradingLib.API
         OK = 0,//ok
         // END STATUS MESSAGES
 
-        /*
+        
         // START CUSTOM MESSAGES  - DO NOT REMOVE OR RENAME MESSAGES
         QRYENDPOINTCONNECTED = 1,//用于接入服务器查询 通过该接入服务器所连接的客户数,用于接入服务器 恢复unknow这样可以避免服务过载
-        CUSTOM2,
+        LOGICHEARTBEAT=2,//前置与逻辑服务器之间的心跳包
         CUSTOM3,
         CUSTOM4,
         CUSTOM5,
@@ -41,7 +41,7 @@ namespace TradingLib.API
         CUSTOM10,
        
         // END CUSTOM MESSAGES
-        **/
+        
 
 
         //////////////////////////////////////////////////////交易消息码///////////////////////////////////////////////////////////////////////////////////////////

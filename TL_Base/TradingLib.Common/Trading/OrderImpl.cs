@@ -473,9 +473,12 @@ namespace TradingLib.Common
             o.OrderSeq = int.Parse(rec[(int)OrderField.OrderSeq]);
             o.OrderExchID = rec[(int)OrderField.OrderExchID];
             o.ForceCloseReason = rec[(int)OrderField.ForceReason];
-            o.FrontIDi = int.Parse(rec[(int)OrderField.FrontID]);
-            o.SessionIDi = int.Parse(rec[(int)OrderField.SessionID]);
-            o.RequestID = int.Parse(rec[(int)OrderField.RequestID]);
+            if (rec.Length > 29)
+            {
+                o.FrontIDi = int.Parse(rec[(int)OrderField.FrontID]);
+                o.SessionIDi = int.Parse(rec[(int)OrderField.SessionID]);
+                o.RequestID = int.Parse(rec[(int)OrderField.RequestID]);
+            }
             return o;
         }
 

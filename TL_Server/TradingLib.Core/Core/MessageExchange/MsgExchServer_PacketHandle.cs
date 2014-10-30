@@ -82,7 +82,6 @@ namespace TradingLib.Core
         {
             debug("QryTrade :" + request.ToString(), QSEnumDebugLevel.INFO);
             Trade[] trades = new Trade[] { };
-            //IAccount account = _clearcentre[request.Account];
             if (string.IsNullOrEmpty(request.Symbol))
             {
                 trades = account.Trades.ToArray();

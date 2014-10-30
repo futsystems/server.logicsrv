@@ -436,6 +436,7 @@ namespace TradingLib.Core
                     {
 #if DEBUG
                         //v("frontend->backent");
+                        
 #endif
                         var zmsg = new ZMessage(e.Socket);
                         zmsg.Send(backend);
@@ -547,10 +548,23 @@ namespace TradingLib.Core
                 //通过zmessage frame数量判断,获得对应的地址信息
                 string front = string.Empty;
                 string address = string.Empty;
+                Message msg = Message.gotmessage(zmsg.Body);
                 //debug("Frames Count:" + zmsg.FrameCount.ToString() + " body:" + UTF8Encoding.Default.GetString(zmsg.Body) + " add:" + UTF8Encoding.Default.GetString(zmsg.Address),QSEnumDebugLevel.INFO);
                 //注意:进行地址有效性检查,如果有空地址 则直接返回。空地址会造成下道逻辑的错误
                 //带有2层地址,客户端从接入服务器登入
                 //if (TradingLib.Core.CoreGlobal.EnableAccess)//如果允许前置接入 则消息可以带有2层或者1层地址
+                if (msg.Type == MessageTypes.LOGICHEARTBEAT)
+                {
+                    if (zmsg.FrameCount == 3)
+                    {
+                        front = zmsg.AddressToString();//获得第一层地址
+                        zmsg.Unwrap();//分离第一层地址
+                        address = zmsg.AddressToString();
+                        //Util.Debug(string.Format("LogicHeartBeat from:{0} address:{1}",front,address),QSEnumDebugLevel.DEBUG);
+                    }
+                    return;
+                        
+                }
                 if(true)
                 {
                     if (zmsg.FrameCount == 3)
@@ -594,7 +608,7 @@ namespace TradingLib.Core
                 //}
 
                 //3.消息处理如果解析出来的消息是有效的则丢入处理流程进行处理，如果无效则不处理
-                Message msg = Message.gotmessage(zmsg.Body);
+                 
                 //debug(string.Format("[AsyncServerMQ] Worker_{0} Got Message,FrameCount:{1} Front:{2} Address:{3} Type:{4} Content:{5}", id, zmsg.FrameCount,front, address, msg.Type, msg.Content),QSEnumDebugLevel.INFO);
                 if(msg.isValid)
                     handleMessage(msg.Type, msg.Content,front,address);//处理消息按照消息类型进行消息路由,如果没有该消息则则会被系统过滤掉

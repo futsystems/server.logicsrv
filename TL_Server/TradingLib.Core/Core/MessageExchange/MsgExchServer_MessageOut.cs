@@ -280,6 +280,7 @@ namespace TradingLib.Core
                         tl.TLSend(prioritybuffer.Read());
                     }
 
+                    //当优先级的消息缓存没有消息的时候才发送其他消息
                     while (_packetcache.hasItems && (!prioritybuffer.HasItems))
                     {
                         tl.TLSend(_packetcache.Read());
