@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
+using TradingLib.Mixins.LitJson;
 
 
 namespace TradingLib.Common
@@ -106,6 +107,12 @@ namespace TradingLib.Common
     /// </summary>
     public class PositionDetailImpl:PositionDetail
     {
+
+        Position mainpos = null;
+        //public PositionDetailImpl(Position pos)
+        //{
+        //    mainpos = pos;
+        //}
 
         public PositionDetailImpl()
         {
@@ -227,6 +234,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 合约信息
         /// </summary>
+        [NoJsonExportAttr()]
         public Symbol oSymbol { get; set; }
 
         string _exchange = string.Empty;
@@ -292,6 +300,10 @@ namespace TradingLib.Common
         /// </summary>
         public decimal UnRealizedProfitByDate { get; set; }
 
+        /// <summary>
+        /// 平仓金额
+        /// </summary>
+        public decimal CloseAmount { get; set; }
 
         public static string Serialize(PositionDetail p)
         {
@@ -334,6 +346,8 @@ namespace TradingLib.Common
             sb.Append(p.CloseProfitByDate);//17
             sb.Append(d);
             sb.Append(p.UnRealizedProfitByDate);//18
+            sb.Append(d);
+            sb.Append(p.CloseAmount);
             return sb.ToString();
         }
 
@@ -360,6 +374,7 @@ namespace TradingLib.Common
             p.Margin = decimal.Parse(rec[16]);
             p.CloseProfitByDate = decimal.Parse(rec[17]);
             p.UnRealizedProfitByDate = decimal.Parse(rec[18]);
+            p.CloseAmount = decimal.Parse(rec[19]);
             return p;
         }
     }

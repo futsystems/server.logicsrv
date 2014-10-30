@@ -256,7 +256,7 @@ namespace TradingLib.Mixins.LitJson
                 if (p_info.Name == "Item")
                     continue;
 
-                NotExportAttr noexport = (NotExportAttr)Attribute.GetCustomAttribute(p_info, typeof(NotExportAttr));
+                NoJsonExportAttr noexport = (NoJsonExportAttr)Attribute.GetCustomAttribute(p_info, typeof(NoJsonExportAttr));
                 if (noexport != null)
                     continue;
                 //T attr = Attribute.GetCustomAttribute(p_info, typeof(T));

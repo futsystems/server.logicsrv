@@ -115,5 +115,11 @@ namespace TradingLib.API
         /// 在结算过程中 盯市浮动盈亏会计入结算单并反映在帐户权益上
         /// </summary>
         decimal UnRealizedProfitByDate { get; set; }
+
+
+        /// <summary>
+        /// 平仓金额
+        /// </summary>
+        decimal CloseAmount { get; set; }
     }
 }

@@ -73,7 +73,7 @@ namespace TradingLib.Common
         /// <summary>
         /// BaseManager用于标注该管理帐号隶属于哪个Agent,如果是系统级的管理帐户的话直接隶属于ROOT
         /// </summary>
-        [NotExportAttr()]
+        [NoJsonExportAttr()]
         public Manager BaseManager { get; set; }
 
 
@@ -85,7 +85,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 上级代理对象
         /// </summary>
-        [NotExportAttr()]
+        [NoJsonExportAttr()]
         public Manager ParentManager { get; set; }
 
 

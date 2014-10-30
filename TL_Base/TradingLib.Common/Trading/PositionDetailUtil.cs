@@ -67,8 +67,9 @@ namespace TradingLib.Common
             closedetail.CloseProfitByDate = closedetail.CalCloseProfitByDate(pos.IsHisPosition());
             closedetail.ClosePointByDate = closedetail.CalClosePointByDate(pos.IsHisPosition());
 
-            //持仓明细的平仓盈亏累加
+            //持仓明细的平仓盈亏累加 平仓金额累加
             pos.CloseProfitByDate += closedetail.CloseProfitByDate;
+            pos.CloseAmount += closesize * f.xprice * f.oSymbol.Multiple;
             return closedetail;
         }
 

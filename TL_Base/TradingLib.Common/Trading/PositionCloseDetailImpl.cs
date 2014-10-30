@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TradingLib.API;
+using TradingLib.Mixins.LitJson;
 
 
 namespace TradingLib.Common
@@ -122,6 +123,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 合约信息
         /// </summary>
+        [NoJsonExportAttr()]
         public Symbol oSymbol { get; set; }
 
         string _exchange = string.Empty;

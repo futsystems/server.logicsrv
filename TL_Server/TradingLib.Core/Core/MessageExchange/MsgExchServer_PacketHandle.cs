@@ -130,7 +130,7 @@ namespace TradingLib.Core
             //Util.sleep(10000);//
             debug("total num:" + positions.Length.ToString(), QSEnumDebugLevel.INFO);
             int totalnum = positions.Length;
-            
+
             if (totalnum > 0)
             {
                 for (int i = 0; i < totalnum; i++)
@@ -153,6 +153,7 @@ namespace TradingLib.Core
 
         /// <summary>
         /// 查询持仓明细
+        /// 注意查询持仓明细 是指查询昨日留仓持仓明细
         /// </summary>
         /// <param name="request"></param>
         /// <param name="account"></param>
@@ -162,14 +163,14 @@ namespace TradingLib.Core
             List<PositionDetail> list = new List<PositionDetail>();
             foreach (Position p in account.Positions)
             {
-                foreach (PositionDetail pd in p.PositionDetailYdNew)
+                foreach (PositionDetail pd in p.PositionDetailTotal)
                 {
                     list.Add(pd);
                 }
-                foreach (PositionDetail pd in p.PositionDetailTodayNew)
-                {
-                    list.Add(pd);
-                }
+                //foreach (PositionDetail pd in p.PositionDetailTodayNew)
+                //{
+                //    list.Add(pd);
+                //}
             }
             if (list.Count > 0)
             {

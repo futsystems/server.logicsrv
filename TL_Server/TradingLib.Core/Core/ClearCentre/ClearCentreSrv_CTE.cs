@@ -473,6 +473,7 @@ namespace TradingLib.Core
                     foreach (PositionDetail p in pos.PositionDetailTotal)
                     {
                         sb.Append(p.GetPositionDetailStr() + Environment.NewLine);
+                        sb.Append(TradingLib.Mixins.LitJson.JsonMapper.ToJson(p) + Environment.NewLine);
                     }
                     sb.Append("Sum Size:" + pos.PositionDetailTotal.Where(p => !p.IsClosed()).Sum(pd => pd.Volume));
                     sb.Append(Environment.NewLine);
