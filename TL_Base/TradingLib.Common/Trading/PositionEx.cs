@@ -145,21 +145,21 @@ namespace TradingLib.Common
         /// </summary>
         public int Size { get; set; }
 
-        #region 开平汇总
+        #region 当日开平汇总
         /// <summary>
-        /// 开仓量
+        /// 开仓量 
         /// </summary>
         public int OpenVolume { get; set; }
 
         /// <summary>
-        /// 开仓金额
+        /// 开仓金额 SUM（今日开仓数量 * 开仓价 * 合约乘数)
         /// </summary>
         public decimal OpenAmount { get; set; }
 
         /// <summary>
         /// 开仓均价
         /// </summary>
-        public decimal OpenAVGPrice { get; set; }
+        //public decimal OpenAVGPrice { get; set; }
 
         /// <summary>
         /// 平仓量
@@ -167,14 +167,14 @@ namespace TradingLib.Common
         public int CloseVolume { get; set; }
 
         /// <summary>
-        /// 平仓金额
+        /// 平仓金额 SUM（平仓数量 * 平仓价 * 合约乘数）
         /// </summary>
         public decimal CloseAmount { get; set; }
 
         /// <summary>
         /// 平仓均价
         /// </summary>
-        public decimal CloseAVGPrice { get; set; }
+        //public decimal CloseAVGPrice { get; set; }
 
         #endregion
 
@@ -208,14 +208,20 @@ namespace TradingLib.Common
         /// </summary>
         public decimal UnRealizedProfit { get; set; }
 
+
+
         /// <summary>
-        /// 持仓成本金额
+        /// 持仓成本
         /// </summary>
         public decimal PositionCost { get; set; }
 
 
+        /// <summary>
+        /// 开仓成本
+        /// </summary>
+        public decimal OpenCost { get; set; }
 
-        /********后期添加*******/
+
         /// <summary>
         /// 手续费
         /// </summary>
@@ -223,7 +229,7 @@ namespace TradingLib.Common
 
 
         /// <summary>
-        /// 今仓数量
+        /// 今仓数量 
         /// </summary>
         public int TodayPosition { get; set; }
 
@@ -232,13 +238,12 @@ namespace TradingLib.Common
         /// </summary>
         public int YdPosition { get; set; }
 
-        //昨仓数量 + 今仓数量 = 总持仓数量 = UnsignedSize 
+
 
         /// <summary>
         /// 昨日结算价
         /// </summary>
         public decimal LastSettlementPrice { get; set; }
-
 
         /// <summary>
         /// 结算价
@@ -253,7 +258,7 @@ namespace TradingLib.Common
         public decimal CloseProfitByDate { get; set; }
 
         /// <summary>
-        /// 逐比平仓盈亏
+        /// 逐笔平仓盈亏 
         /// </summary>
         public decimal CloseProfitByTrade { get; set; }
 
@@ -263,10 +268,7 @@ namespace TradingLib.Common
         /// </summary>
         public int Tradingday { get; set; }
 
-        /// <summary>
-        /// 开仓成本
-        /// </summary>
-        public decimal OpenCost { get; set; }
+        
 
         /// <summary>
         /// 保证金
