@@ -72,31 +72,5 @@ namespace TradingLib.Common
 
             return sb.ToString();
         }
-
-        /// <summary>
-        /// 形成新的开仓明细
-        /// </summary>
-        /// <param name="f"></param>
-        /// <returns></returns>
-        public static PositionDetail ToPositionDetail(this Trade f)
-        {
-            PositionDetail pos = new PositionDetailImpl();
-            pos.Account = f.Account;
-            pos.oSymbol = f.oSymbol;
-
-            pos.OpenDate = f.xdate;
-            pos.OpenTime = f.xtime;
-
-            pos.Tradingday = 0;//从新的开仓成交记录生成的持仓明细持仓日期为当前结算日
-
-            pos.Side = f.PositionSide;
-            pos.Volume = Math.Abs(f.xsize);
-            pos.OpenPrice = f.xprice;
-            pos.TradeID = f.BrokerKey;//开仓明细中的开仓成交编号
-            pos.HedgeFlag = "";
-            
-
-            return pos;
-        }
     }
 }

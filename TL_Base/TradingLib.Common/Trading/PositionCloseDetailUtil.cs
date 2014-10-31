@@ -10,61 +10,61 @@ namespace TradingLib.Common
     public static class PositionCloseDetailUtil
     {
 
-        /// <summary>
-        /// 计算平仓明细盯市平仓盈亏
-        /// </summary>
-        /// <param name="close"></param>
-        /// <returns></returns>
-        public static decimal CalCloseProfitByDate(this PositionCloseDetail close,bool hispos)
-        {
-            decimal profit = 0;
-            //平今仓
-            if (!hispos)
-            {
-                //今仓 平仓盈亏为平仓价-平仓价
-                profit = (close.ClosePrice - close.OpenPrice) * close.CloseVolume * close.oSymbol.Multiple * (close.Side ? 1 : -1);
-            }
-            else
-            {
-                //昨仓 平仓盈亏为昨结算-平仓价
-                profit = (close.ClosePrice - close.LastSettlementPrice) * close.CloseVolume * close.oSymbol.Multiple * (close.Side ? 1 : -1);
-            }
+        ///// <summary>
+        ///// 计算平仓明细盯市平仓盈亏
+        ///// </summary>
+        ///// <param name="close"></param>
+        ///// <returns></returns>
+        //public static decimal CalCloseProfitByDate(this PositionCloseDetail close,bool hispos)
+        //{
+        //    decimal profit = 0;
+        //    //平今仓
+        //    if (!hispos)
+        //    {
+        //        //今仓 平仓盈亏为平仓价-平仓价
+        //        profit = (close.ClosePrice - close.OpenPrice) * close.CloseVolume * close.oSymbol.Multiple * (close.Side ? 1 : -1);
+        //    }
+        //    else
+        //    {
+        //        //昨仓 平仓盈亏为昨结算-平仓价
+        //        profit = (close.ClosePrice - close.LastSettlementPrice) * close.CloseVolume * close.oSymbol.Multiple * (close.Side ? 1 : -1);
+        //    }
 
-            return profit;
-        }
+        //    return profit;
+        //}
 
-        /// <summary>
-        /// 计算平仓明细逐笔平仓盈亏
-        /// </summary>
-        /// <param name="close"></param>
-        /// <returns></returns>
-        public static decimal CalCloseProfitByTrade(this PositionCloseDetail close)
-        {
-            return (close.ClosePrice - close.OpenPrice) * close.CloseVolume * close.oSymbol.Multiple * (close.Side ? 1 : -1);
-        }
+        ///// <summary>
+        ///// 计算平仓明细逐笔平仓盈亏
+        ///// </summary>
+        ///// <param name="close"></param>
+        ///// <returns></returns>
+        //public static decimal CalCloseProfitByTrade(this PositionCloseDetail close)
+        //{
+        //    return (close.ClosePrice - close.OpenPrice) * close.CloseVolume * close.oSymbol.Multiple * (close.Side ? 1 : -1);
+        //}
 
-        /// <summary>
-        /// 计算平仓明细的平仓盈亏点数
-        /// </summary>
-        /// <param name="close"></param>
-        /// <param name="hispos"></param>
-        /// <returns></returns>
-        public static decimal CalClosePointByDate(this PositionCloseDetail close, bool hispos)
-        {
-            decimal point = 0;
-            //平今仓
-            if (!hispos)
-            {
-                //今仓 平仓盈亏为平仓价-平仓价
-                point = (close.ClosePrice - close.OpenPrice) * close.CloseVolume * (close.Side ? 1 : -1);
-            }
-            else
-            {
-                //昨仓 平仓盈亏为昨结算-平仓价
-                point = (close.ClosePrice - close.LastSettlementPrice) * close.CloseVolume * (close.Side ? 1 : -1);
-            }
-            return point;
-        }
+        ///// <summary>
+        ///// 计算平仓明细的平仓盈亏点数
+        ///// </summary>
+        ///// <param name="close"></param>
+        ///// <param name="hispos"></param>
+        ///// <returns></returns>
+        //public static decimal CalClosePointByDate(this PositionCloseDetail close, bool hispos)
+        //{
+        //    decimal point = 0;
+        //    //平今仓
+        //    if (!hispos)
+        //    {
+        //        //今仓 平仓盈亏为平仓价-平仓价
+        //        point = (close.ClosePrice - close.OpenPrice) * close.CloseVolume * (close.Side ? 1 : -1);
+        //    }
+        //    else
+        //    {
+        //        //昨仓 平仓盈亏为昨结算-平仓价
+        //        point = (close.ClosePrice - close.LastSettlementPrice) * close.CloseVolume * (close.Side ? 1 : -1);
+        //    }
+        //    return point;
+        //}
 
         /// <summary>
         /// 获得文字输出

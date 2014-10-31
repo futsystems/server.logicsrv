@@ -24,11 +24,6 @@ namespace TradingLib.API
         int OpenTime { get; set; }
 
         /// <summary>
-        /// 交易日
-        /// </summary>
-        int Tradingday { get; set; }
-
-        /// <summary>
         /// 结算日 表明该持仓明细记录属于哪个结算日
         /// </summary>
         int Settleday { get; set; }
@@ -37,6 +32,11 @@ namespace TradingLib.API
         /// 方向 多或空
         /// </summary>
         bool Side { get; set; }
+
+        /// <summary>
+        /// 是否是历史持仓
+        /// </summary>
+        bool IsHisPosition { get;set;}
 
         /// <summary>
         /// 数量
@@ -134,7 +134,6 @@ namespace TradingLib.API
         /// 浮动盈亏 逐笔
         /// </summary>
         decimal PositionProfitByTrade { get; set; }
-
 
     }
 }

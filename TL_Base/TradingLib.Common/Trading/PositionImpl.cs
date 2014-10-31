@@ -710,10 +710,7 @@ namespace TradingLib.Common
                 if (NeedGenPositionDetails)
                 {
                     //根据新开仓成交生成当日新开持仓明细
-                    PositionDetail d = t.ToPositionDetail();
-                    //按照持仓当前获得结算价格信息 更新结算价格信息
-                    if (this.LastSettlementPrice != null) d.LastSettlementPrice = (decimal)this.LastSettlementPrice;
-
+                    PositionDetail d = this.OpenPosition(t);
                     _postodaynewlist.Add(d);//插入今日新开仓持仓明细
                     _postotallist.Add(d);//插入到Totallist便于访问
                 }
@@ -771,22 +768,9 @@ namespace TradingLib.Common
 
             if (NeedGenPositionDetails)
             {
-                //恢复昨日持仓明 初始化当日持仓状态相当于是开仓
-                //1.加载历史持仓 历史持仓加载的时候要将历史信息去除 比如平仓量(属于昨天的信息) 开仓量也是数据昨天的信息
-                d.CloseVolume = 0;//平仓数量
-                d.CloseAmount = 0;//平仓金额
-                d.CloseProfitByDate = 0;//平仓盈亏
                 _poshisreflist.Add(d);
-
-                //昨日持仓明细初始化当日持仓明细状态 设定“开仓价” 即昨日结算价 这个价格有持仓明细中的上日结算价格提供
-                PositionDetail pd = new PositionDetailImpl(d);
-                //加载到今日持仓明细列表中的昨日持仓明细列表，需要将对应的昨日结算价格设定为昨日持仓明细的结算价格 并且不能被行情更新
-                pd.LastSettlementPrice = d.SettlementPrice;
-                pd.PositionProfitByDate = 0;//重置盯市盈亏
-                //TODO
-                //结算价格如何处理？默认就是昨天的结算价，如果没有获得正确的结算价就以昨天的结算价作价
-                //pd.SettlementPrice = 0;
-
+                //1.加载历史持仓
+                PositionDetail pd = LoadHisPosition(d);
                 _poshisnewlist.Add(pd);
                 _postotallist.Add(pd);
             }
@@ -860,7 +844,7 @@ namespace TradingLib.Common
                 try
                 {
                     //平仓明细
-                    closedetail = p.ClosePositon(close, ref remainsize);
+                    closedetail = this.ClosePosition(p,close,remainsize);
                 }
                 catch (Exception ex)
                 {
@@ -870,8 +854,7 @@ namespace TradingLib.Common
                 {
                     closeprofit += closedetail.CloseProfitByDate;//平仓盈亏金额
                     closepoint += closedetail.ClosePointByDate;
-                    if (this.LastSettlementPrice != null)
-                        closedetail.LastSettlementPrice = (decimal)this.LastSettlementPrice;
+                    remainsize -= closedetail.CloseVolume;
                     NewPositionCloseDetail(closedetail);
                 }
             }
@@ -888,7 +871,7 @@ namespace TradingLib.Common
                 try
                 {
                     //平仓明细
-                    closedetail = p.ClosePositon(close, ref remainsize);
+                    closedetail = this.ClosePosition(p, close,remainsize);
                 }
                 catch (Exception ex)
                 {
@@ -898,8 +881,7 @@ namespace TradingLib.Common
                 {
                     closeprofit += closedetail.CloseProfitByDate;
                     closepoint += closedetail.ClosePointByDate;
-                    if (this.LastSettlementPrice != null)
-                        closedetail.LastSettlementPrice = (decimal)this.LastSettlementPrice;
+                    remainsize -= closedetail.CloseVolume;
                     NewPositionCloseDetail(closedetail);
                 }
             }
@@ -919,6 +901,90 @@ namespace TradingLib.Common
         }
 
 
+
+        /// <summary>
+        /// 加载数据库的昨日持仓对象到工作状态
+        /// </summary>
+        /// <param name="p"></param>
+        /// <returns></returns>
+        PositionDetail LoadHisPosition(PositionDetail p)
+        {
+            PositionDetail pd = new PositionDetailImpl(this);
+            pd.Settleday = p.Settleday;//隔夜仓将 具体的持仓结算日期记录下来
+            pd.TradeID = p.TradeID;
+            pd.IsHisPosition = true;//如果是从数据库加载的positiondetail生成的持仓明细就是昨仓
+            pd.OpenDate = p.OpenDate;
+            pd.OpenTime = p.OpenTime;
+            pd.OpenPrice = p.OpenPrice;
+            pd.Side = p.Side;
+            pd.Volume = p.Volume;
+
+            //加载到今日持仓明细列表中的昨日持仓明细列表，需要将对应的昨日结算价格设定为昨日持仓明细的结算价格 并且不能被行情更新
+            pd.LastSettlementPrice = p.SettlementPrice;
+            pd.HedgeFlag = p.HedgeFlag;
+
+            //平仓统计数据归零  历史持仓加载的时候要将历史信息去除 比如平仓量(属于昨天的信息) 开仓量也是数据昨天的信息
+            pd.CloseAmount = 0;
+            pd.CloseVolume = 0;
+            pd.CloseProfitByDate = 0;
+            pd.CloseProfitByTrade = 0;
+            return pd;
+        }
+
+        /// <summary>
+        /// 执行开仓操作 返回一个新的持仓明细
+        /// </summary>
+        /// <param name="f"></param>
+        /// <returns></returns>
+        public  PositionDetail OpenPosition(Trade f)
+        {
+            PositionDetail pos = new PositionDetailImpl(this);
+            pos.Account = f.Account;
+            pos.oSymbol = f.oSymbol;
+            pos.IsHisPosition = false;//日内持仓
+
+            pos.OpenDate = f.xdate;
+            pos.OpenTime = f.xtime;
+            pos.LastSettlementPrice = this.LastSettlementPrice!=null?(decimal)this.LastSettlementPrice:f.xprice;//新开仓设定昨日结算价
+            pos.Settleday = 0;//
+            pos.Side = f.PositionSide;
+            pos.Volume = Math.Abs(f.xsize);
+            pos.OpenPrice = f.xprice;
+            pos.TradeID = f.BrokerKey;//开仓明细中的开仓成交编号
+            pos.HedgeFlag = "";
+
+
+            return pos;
+        }
+
+        /// <summary>
+        /// 执行平仓操作 返回平仓明细
+        /// </summary>
+        /// <param name="close"></param>
+        /// <returns></returns>
+        public PositionCloseDetail ClosePosition(PositionDetail pos, Trade f, int remainsize)
+        {
+            if (pos.IsClosed()) throw new Exception("can not close the closed position");
+            if (f.IsEntryPosition) throw new Exception("entry trade can not close postion");
+            if (pos.Account != f.Account) throw new Exception("postion's account do not match with trade");
+            if (pos.Symbol != f.symbol) throw new Exception("position's symbol do not math with trade");
+            if (pos.Side != f.PositionSide) throw new Exception(string.Format("position's side[{0}] do not math with trade's side[{1}]", pos.Side, f.PositionSide));
+
+            //计算平仓量
+            int closesize = pos.Volume >= remainsize ? remainsize : pos.Volume;
+
+            //生成平仓对象
+            PositionCloseDetail closedetail = new PositionCloseDetailImpl(pos, f, closesize);
+
+            //更新持仓明细的平仓汇总信息
+            pos.Volume -= closedetail.CloseVolume;
+            pos.CloseVolume += closedetail.CloseVolume;
+            pos.CloseAmount += closedetail.CloseAmount;
+            pos.CloseProfitByDate += closedetail.CloseProfitByDate;
+            pos.CloseProfitByTrade += closedetail.CloseProfitByTrade;
+
+            return closedetail;
+        }
 
         public override string ToString()
         {

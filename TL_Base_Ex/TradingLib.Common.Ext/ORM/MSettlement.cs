@@ -43,7 +43,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("Insert into log_position_detail_hist (`account`,`opendate`,`opentime`,`tradingday`,`settleday`,`side`,`volume`,`openprice`,`tradeid`,`lastsettlementprice`,`settlementprice`,`closevolume`,`hedgeflag`,`margin`,`exchange`,`symbol`,`seccode`,`unrealizedprofitbydate`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}','{17}')", p.Account, p.OpenDate, p.OpenTime, p.Tradingday, p.Settleday, p.Side ? 1 : 0, p.Volume, p.OpenPrice, p.TradeID, p.LastSettlementPrice, p.SettlementPrice, p.CloseVolume, p.HedgeFlag, p.Margin, p.Exchange, p.Symbol, p.SecCode,p.PositionProfitByDate);
+                string query = String.Format("Insert into log_position_detail_hist (`account`,`opendate`,`opentime`,`closeamount`,`settleday`,`side`,`volume`,`openprice`,`tradeid`,`lastsettlementprice`,`settlementprice`,`closevolume`,`hedgeflag`,`margin`,`exchange`,`symbol`,`seccode`,`closeprofitbydate`,`closeprofitbytrade`,`positionprofitbydate`,`positionprofitbytrade`,`ishisposition`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}','{17}','{18}','{19}','{20}','{21}')", p.Account, p.OpenDate, p.OpenTime, p.CloseAmount, p.Settleday, p.Side ? 1 : 0, p.Volume, p.OpenPrice, p.TradeID, p.LastSettlementPrice, p.SettlementPrice, p.CloseVolume, p.HedgeFlag, p.Margin, p.Exchange, p.Symbol, p.SecCode, p.CloseProfitByDate, p.CloseProfitByTrade, p.PositionProfitByDate, p.PositionProfitByTrade,p.IsHisPosition?1:0);
                 return db.Connection.Execute(query) > 0;
             }
         
@@ -74,7 +74,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("Insert into log_position_close_detail (`account`,`settleday`,`side`,`opendate`,`opentime`,`closedate`,`closetime`,`openprice`,`lastsettlementprice`,`closeprice`,`closevolume`,`closeprofitbydate`,`exchange`,`symbol`,`seccode`,`opentradeid`,`closetradeid`,`tradingday`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}','{17}')", p.Account, p.Settleday, p.Side ? 1 : 0, p.OpenDate, p.OpenTime, p.CloseDate, p.CloseTime, p.OpenPrice, p.LastSettlementPrice, p.ClosePrice, p.CloseVolume, p.CloseProfitByDate, p.Exchange, p.Symbol, p.SecCode, p.OpenTradeID, p.CloseTradeID,p.Tradingday);
+                string query = String.Format("Insert into log_position_close_detail (`account`,`settleday`,`side`,`opendate`,`opentime`,`closedate`,`closetime`,`openprice`,`lastsettlementprice`,`closeprice`,`closevolume`,`closeprofitbydate`,`exchange`,`symbol`,`seccode`,`opentradeid`,`closetradeid`,`closepointbydate`,`closeprofitbytrade`,`iscloseydpositoin`,`closeamount`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}','{17}','{18}','{19}','{20}')", p.Account, p.Settleday, p.Side ? 1 : 0, p.OpenDate, p.OpenTime, p.CloseDate, p.CloseTime, p.OpenPrice, p.LastSettlementPrice, p.ClosePrice, p.CloseVolume, p.CloseProfitByDate, p.Exchange, p.Symbol, p.SecCode, p.OpenTradeID, p.CloseTradeID, p.ClosePointByDate, p.CloseProfitByTrade, p.IsCloseYdPosition ? 1 : 0, p.CloseAmount);
                 return db.Connection.Execute(query) > 0;
             }
         }
@@ -94,21 +94,6 @@ namespace TradingLib.ORM
         }
 
         #endregion
-
-        /// <summary>
-        /// 插入结算持仓
-        /// </summary>
-        /// <param name="p"></param>
-        /// <param name="settleday"></param>
-        /// <returns></returns>
-        //public static bool InsertHoldPosition(SettlePosition p, int settleday)
-        //{
-        //    using (DBMySql db = new DBMySql())
-        //    {
-        //        string query = String.Format("Insert into hold_positions (`account`,`symbol`,`size`,`avgprice`,`settleday`,`settleprice`,`multiple`,`securitycode`,`margin`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}')", p.Account, p.Symbol, p.Size, p.AVGPrice, settleday, p.SettlePrice, p.Multiple, p.SecurityCode, p.Margin);
-        //        return db.Connection.Execute(query) > 0;
-        //    }
-        //}
 
         /// <summary>
         /// 插入结算持仓回合数据

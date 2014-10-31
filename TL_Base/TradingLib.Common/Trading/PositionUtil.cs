@@ -228,7 +228,7 @@ namespace TradingLib.Common
                 SUM（平昨量 *（昨结算价 - 平仓价）* 合约乘数）+SUM（平今量 *（开仓价 - 平仓价）* 合约乘数） -- 空头"	切过第二天后，平仓盈亏原值保留
              * */
             p.ClosePL = pos.ClosedPL;//点数
-            p.CloseProfit = pos.ClosedPL * pos.oSymbol.Multiple;//盈亏金额
+            p.CloseProfit = pos.ClosedPL * p.Multiple;//盈亏金额
 
             p.UnRealizedPL = pos.UnRealizedPL;
             p.UnRealizedProfit = p.UnRealizedPL * p.Multiple;
@@ -244,6 +244,7 @@ namespace TradingLib.Common
 
             //保证金
             p.Margin = pos.CalcPositionMargin();
+
             //持仓成交的手续费 累加所有成交的手续费
             p.Commission = pos.CalCommission();
 
@@ -251,7 +252,7 @@ namespace TradingLib.Common
             p.CloseProfitByDate = pos.CalCloseProfitByDate();
             p.CloseProfitByTrade = pos.CalCloseProfitByTrade();
 
-            p.LastSettlementPrice = (pos.LastSettlementPrice != null ? (decimal)pos.LastSettlementPrice : 0);
+            p.LastSettlementPrice = (pos.LastSettlementPrice != null ? (decimal)pos.LastSettlementPrice : 0);//获得的是持仓对象Position的昨日结算价格 这个价格是从行情产生的
             p.SettlementPrice = (pos.SettlementPrice != null ? (decimal)pos.SettlementPrice : 0);
 
 

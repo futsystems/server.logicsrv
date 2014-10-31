@@ -13,11 +13,6 @@ namespace TradingLib.API
         string Account { get; set; }
 
         /// <summary>
-        /// 开仓时 所在交易日
-        /// </summary>
-        int Tradingday { get; set; }
-
-        /// <summary>
         /// 结算日，平仓时所在结算日
         /// 通过交易日与结算日可以判断是今仓还是昨仓
         /// </summary>
@@ -28,6 +23,12 @@ namespace TradingLib.API
         /// 方向
         /// </summary>
         bool Side { get; set; }
+
+        /// <summary>
+        /// 平昨仓还是平今仓
+        /// </summary>
+        bool IsCloseYdPosition { get; set; }
+
         /// <summary>
         /// 开仓日期
         /// </summary>
@@ -80,6 +81,12 @@ namespace TradingLib.API
         int CloseVolume { get; set; }
 
         /// <summary>
+        /// 平仓金额
+        /// </summary>
+        decimal CloseAmount { get; set; }
+
+
+        /// <summary>
         /// 盯市平仓盈亏金额
         /// 平当日仓 (开仓-平仓)*手数*乘数
         /// </summary>
@@ -94,6 +101,8 @@ namespace TradingLib.API
         /// 盯市平仓盈亏点数
         /// </summary>
         decimal ClosePointByDate { get; set; }
+
+
         /// <summary>
         /// 合约信息
         /// </summary>

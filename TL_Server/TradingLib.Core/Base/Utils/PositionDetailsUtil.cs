@@ -31,7 +31,7 @@ namespace TradingLib.Core
 
             decimal profit = 0;
             //今日新开持仓
-            if (!pos.IsHisPosition())
+            if (!pos.IsHisPosition)
             {
                 //今仓 盯市浮动盈亏 = 今结算 - 开仓价
                 profit = (pos.SettlementPrice - pos.OpenPrice) * pos.Volume * sym.Multiple * (pos.Side ? 1 : -1);

@@ -9,87 +9,6 @@ using TradingLib.Mixins.LitJson;
 
 namespace TradingLib.Common
 {
-    //public class PositionDetailUtils
-    //{
-    //    /// <summary>
-    //    /// 历史持仓明细
-    //    /// </summary>
-    //    public IEnumerable<PositionDetail> Position_Hist { get; set; }
-
-    //    /// <summary>
-    //    /// 今日成交
-    //    /// </summary>
-    //    public IEnumerable<Trade> Trades_Today { get; set; }
-
-    //    /* 关于平仓明细
-    //     * 每一个平仓操作就会产生平仓明细
-    //     * 如果平仓的数量在某个持仓明细的职场数量之内，则生成一条平仓明细
-    //     * 如果平仓的数量跨越了多个持仓明细的持仓数量，则产生对应的多条平仓明细
-    //     * 
-    //     * 
-    //     * 
-    //     * 
-    //     * 
-    //     * 
-    //     * 
-    //     * 
-    //     * 
-    //     * */
-    //    /// <summary>
-    //    /// 将历史持仓明细 + 当日成交记录 =>当日持仓明细 和当日平仓明细
-    //    /// </summary>
-    ////    public IEnumerable<PositionDetail> CalPositonDetail(IEnumerable<PositionDetail> pos_hist,IEnumerable<Trade> trade_today,out PositionFlatDetail[] posflat)
-    ////    { 
-    ////        //对开仓成交进行时间排序，对平仓委托进行按合约分组累加
-    ////        TradeInfo[] trade_open = null;//trade_today.Where(f=>f.IsEntryPosition);
-    ////        TradeInfo[] trade_close = null;//trade_today.Where(f => !f.IsEntryPosition);
-
-    ////        List<PositionDetail> today_new_open = new List<PositionDetail>();//当日新开持仓
-    ////        List<PositionDetail> new_hist_pos = new List<PositionDetail>();//当日持仓明细
-            
-            
-    ////        //如果当日平仓成交分组为空 则trade_open即为新开仓 放入today_new_open
-    ////        if (trade_close.Length == 0)
-    ////        {
-
-    ////        }
-    ////        else
-    ////        {
-    ////            //如果不为空则便利所有平仓分组进行处理
-    ////            foreach (TradeInfo info in trade_close)
-    ////            {
-    ////                //判断成交信息是平今还是平昨
-    ////                if (info.OffsetFlag == QSEnumOffsetFlag.CLOSETODAY)
-    ////                {
-    ////                    //平今和trade_open进行处理
-    ////                    //1.合约月第一条开仓成交合约不一致，则开仓成交=>当日新开持仓
-
-    ////                    //2.如果相同，则有开仓也有平仓，比较数量
-    ////                        //如果平仓量大于开仓量，计算剩余平仓量，同时开仓成交下移一条
-
-    ////                        //如果平仓量小于开仓量，计算剩余开仓量，=>当日新开持仓
-    ////                }
-    ////                else
-    ////                {
-    ////                    //平昨和pos_hist进行处理
-                    
-    ////                }
-
-    ////                //将未处理的pos_hist和trade_open 放入new_hist_pos和today_new_open
-    ////                //两者合并就是当日综合持仓明细
-    ////            }
-    ////        }
-
-
-            
-    ////    }
-    //}
-
-
-
-    
-
-
     /// <summary>
     /// 持仓明细
     /// 结算时通过历史持仓,交易帐户的成交数据分组获得开仓记录，平仓记录(汇总)
@@ -107,25 +26,20 @@ namespace TradingLib.Common
     /// </summary>
     public class PositionDetailImpl:PositionDetail
     {
-
-        Position mainpos = null;
-        //public PositionDetailImpl(Position pos)
-        //{
-        //    mainpos = pos;
-        //}
-
+        /// <summary>
+        /// 默认构造函数 用于从数据库加载持仓明细对象
+        /// </summary>
         public PositionDetailImpl()
         {
             this.Account = string.Empty;
             this.Symbol = string.Empty;
             this.OpenDate = 0;
             this.OpenTime = 0;
-            this.Tradingday = 0;
             this.Side = true;
             this.Volume = 0;
             this.OpenPrice = 0;
             this.TradeID = string.Empty;
-            
+            this.IsHisPosition = false;
             this.LastSettlementPrice = 0M;
             this.SettlementPrice = 0M;
             this.CloseVolume = 0;
@@ -139,45 +53,61 @@ namespace TradingLib.Common
             this.PositionProfitByTrade = 0;
             this.CloseProfitByDate = 0;
             this.CloseProfitByTrade = 0;
-
         }
 
-        public PositionDetailImpl(PositionDetail p)
+        /// <summary>
+        /// 设定Position持仓对象的 持仓明细对象，用于形成工作内存数据
+        /// </summary>
+        /// <param name="pos"></param>
+        public PositionDetailImpl(Position pos)
         {
-            this.Account = p.Account;
-            this.Symbol = p.Symbol;
-            this.OpenDate = p.OpenDate;
-            this.OpenTime = p.OpenTime;
-            this.Tradingday = p.Tradingday;
-            this.Side = p.Side;
-            this.Volume = p.Volume;
-            this.OpenPrice = p.OpenPrice;
-            this.TradeID = p.TradeID;
+            Position = pos;
 
-            this.LastSettlementPrice = p.LastSettlementPrice;
-            this.SettlementPrice = p.SettlementPrice;
-            this.CloseVolume = p.CloseVolume;
-            this.HedgeFlag = p.HedgeFlag;
-            this.oSymbol = p.oSymbol;
-            this.Exchange = p.Exchange;
-            this.SecCode = p.SecCode;
-            this.Margin = p.Margin;
-            this.CloseProfitByDate = p.CloseProfitByDate;
-            this.CloseProfitByTrade = p.CloseProfitByTrade;
-            this.PositionProfitByDate = p.PositionProfitByDate;
-            this.PositionProfitByTrade = p.PositionProfitByTrade;
+            this.Account = pos.Account;
+            this.oSymbol = pos.oSymbol;
+            this.Side = true;
+            this.OpenDate = 0;
+            this.OpenTime = 0;
+            this.Volume = 0;
+            this.OpenPrice = 0;
+            this.TradeID = string.Empty;
+            this.IsHisPosition = false;
+            this.LastSettlementPrice = 0M;
+            
+            this.CloseVolume = 0;
+            this.CloseAmount = 0;
+            this.CloseProfitByDate = 0;
+            this.CloseProfitByTrade = 0;
         }
-        
+
+        /// <summary>
+        /// 结算日 表明该持仓明细记录属于哪个结算日 如果为0 表明是今仓，在结算时保存到数据库时 赋上当交易日信息
+        /// </summary>
+        public int Settleday { get; set; }
+
+        #region 开仓信息
+
+        /// <summary>
+        /// 是否是昨仓
+        /// 从数据库加载的持仓就是历史持仓
+        /// 由当天开仓成交生成的持仓就是今仓
+        /// </summary>
+        public  bool IsHisPosition { get; set; }
+
         /// <summary>
         /// 交易帐号
         /// </summary>
         public string Account { get; set; }
 
+        /// <summary>
+        /// 成交编号
+        /// </summary>
+        public string TradeID { get; set; }
+
          /// <summary>
         /// 开仓日期
         /// </summary>
         public int OpenDate { get; set; }
-
 
         /// <summary>
         /// 开仓时间
@@ -185,57 +115,70 @@ namespace TradingLib.Common
         public int OpenTime { get; set; }
 
         /// <summary>
-        /// 交易日
+        /// 开仓价格 记录开仓时的开仓价
         /// </summary>
-        public int Tradingday { get; set; }
+        public decimal OpenPrice { get; set; }
 
-        /// <summary>
-        /// 结算日 表明该持仓明细记录属于哪个结算日
-        /// </summary>
-        public int Settleday { get; set; }
 
         /// <summary>
         /// 方向 多或空
         /// </summary>
-        public bool Side {get;set;}
+        public bool Side { get; set; }
+        #endregion
 
         /// <summary>
-        /// 数量
+        /// 对应持仓信息
         /// </summary>
-        public int Volume { get; set; }
+        Position Position { get; set; }
 
 
-        /// <summary>
-        /// 开仓价格 记录开仓时的开仓价
-        /// </summary>
-        public decimal OpenPrice { get; set; }
-       
 
-        /// <summary>
-        /// 成交编号
-        /// </summary>
-        public string TradeID { get; set; }
+
+
+
 
         /// <summary>
         /// 昨结算价
         /// </summary>
         public decimal LastSettlementPrice { get; set; }
 
+        decimal? _settlementPrice;
         /// <summary>
         /// 今结算价
+        /// 通过实现动态结算价 可以在不同情况下获得不同的结算价格
+        /// 正常情况下，可以通过Position获得最新价 用于计算持仓盈亏
+        /// 当结算时,持仓获得了结算价,可以通结算价格计算结算时候的盯市盈亏或逐笔盈亏
         /// </summary>
-        public decimal SettlementPrice { get; set; }
+        public decimal SettlementPrice 
+        {
+            get
+            {
+                if (_settlementPrice != null)
+                    return (decimal)_settlementPrice;
+                else
+                { 
+                    //通过Position对价格的引用获得结算价格
+                    //如果持仓对象为空 则返回当前的开仓价格为结算价格
+                    if (Position == null)
+                        return this.OpenPrice;
+                    else
+                    {
+                        //如果持仓对象没有今日结算价格 则返回当前持仓的最新价格 否则返回对应的结算价格
+                        if (Position.SettlementPrice == null)
+                            return Position.LastPrice;
+                        else
+                            return (decimal)Position.SettlementPrice;
+                    }
+                }
+            }
+            set { _settlementPrice = value; }
+        
+        }
 
-        /// <summary>
-        /// 平仓金额 记录当前交易日的平仓金额
-        /// </summary>
-        public decimal CloseAmount { get; set; }
 
-        /// <summary>
-        /// 平仓量 记录当前交易日的平仓数量 每次平仓产生时 平仓量累加
-        /// </summary>
-        public int CloseVolume { get; set; }
+       
 
+        #region 合约基础类信息
 
         /// <summary>
         /// 投机套保标识
@@ -247,7 +190,6 @@ namespace TradingLib.Common
         /// </summary>
         [NoJsonExportAttr()]
         public Symbol oSymbol { get; set; }
-
         string _exchange = string.Empty;
         /// <summary>
         /// 交易所
@@ -290,36 +232,124 @@ namespace TradingLib.Common
                 _seccode = value;
             }
         }
+        #endregion
 
+
+        #region 由平仓时 进行累加的数据
+        /// <summary>
+        /// 数量
+        /// </summary>
+        public int Volume { get; set; }
 
         /// <summary>
-        /// 投资者保证金
+        /// 平仓金额 记录当前交易日的平仓金额
         /// </summary>
-        public decimal Margin { get; set; }
+        public decimal CloseAmount { get; set; }
 
+        /// <summary>
+        /// 平仓量 记录当前交易日的平仓数量 每次平仓产生时 平仓量累加
+        /// </summary>
+        public int CloseVolume { get; set; }
 
         /// <summary>
         /// 盯市平仓盈亏
         /// </summary>
-        public decimal CloseProfitByDate { get; set; }
-
+        public decimal CloseProfitByDate {get;set;}
+        
         /// <summary>
         /// 逐笔平仓盈亏
         /// </summary>
         public decimal CloseProfitByTrade { get; set; }
+        #endregion
 
+
+        #region 实时动态计算的数据
+
+        decimal? _positionProfitByDate;
         /// <summary>
         /// 盯市浮动盈亏
         /// </summary>
-        public decimal PositionProfitByDate { get; set; }
+        public decimal PositionProfitByDate 
+        {
+            get
+            {
+                if (_positionProfitByDate != null)
+                {
+                    return (decimal)_positionProfitByDate;
+                }
+                else
+                {
+                    if (this.oSymbol == null)
+                        return 0;
+                    else
+                    {
+                        return (this.SettlementPrice - this.PositionPrice()) * this.Volume * this.oSymbol.Multiple * (this.Side ? 1 : -1);
+                    }
+                }
+            }
+            set { _positionProfitByDate = value; }
+        }
 
+
+        decimal? _positionProfitByTrade;
         /// <summary>
-        /// 盯市浮动盈亏
+        /// 逐笔浮动盈亏
         /// </summary>
-        public decimal PositionProfitByTrade { get; set; }
+        public decimal PositionProfitByTrade 
+        {
+            get
+            {
+                if (_positionProfitByTrade != null)
+                    return (decimal)_positionProfitByTrade;
+                else
+                {
+                    if (this.oSymbol == null)
+                        return 0;
+                    return (this.SettlementPrice - this.OpenPrice) * this.Volume * this.oSymbol.Multiple * (this.Side ? 1 : -1);
+                }
+            }
+
+            set { _positionProfitByTrade = value; }
+        
+        }
+
+        decimal? _margin;
+        /// <summary>
+        /// 投资者保证金
+        /// </summary>
+        public decimal Margin
+        {
+            get 
+            {
+                if (_margin != null)
+                    return (decimal)_margin;
+                else
+                {
+                    if (oSymbol == null) return 0;
+                    //其余品种保证金按照最新价格计算
+                    if (oSymbol.Margin <= 1)
+                    {
+                        //需要判断价格的有效性
+                        return this.Volume * this.SettlementPrice * oSymbol.Multiple * oSymbol.Margin;
+                    }
+                    else
+                        return oSymbol.Margin * this.SettlementPrice;
+                }
+            }
+
+            set { _margin = value; }
+        }
+
+        #endregion
 
 
         
+
+
+        
+
+        
+
 
         public static string Serialize(PositionDetail p)
         {
@@ -331,7 +361,7 @@ namespace TradingLib.Common
             sb.Append(d);
             sb.Append(p.OpenTime);//2
             sb.Append(d);
-            sb.Append(p.Tradingday);//3
+            sb.Append("0");//3
             sb.Append(d);
             sb.Append(p.Settleday);//4
             sb.Append(d);
@@ -378,7 +408,7 @@ namespace TradingLib.Common
             p.Account = rec[0];
             p.OpenDate = int.Parse(rec[1]);
             p.OpenTime = int.Parse(rec[2]);
-            p.Tradingday = int.Parse(rec[3]);
+            //p.Tradingday = int.Parse(rec[3]);
             p.Settleday = int.Parse(rec[4]);
             p.Side = bool.Parse(rec[5]);
             p.Volume = int.Parse(rec[6]);

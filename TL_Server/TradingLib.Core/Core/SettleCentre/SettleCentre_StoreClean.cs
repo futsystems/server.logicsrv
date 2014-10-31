@@ -93,19 +93,9 @@ namespace TradingLib.Core
                     //遍历该未平仓持仓对象下的所有持仓明细
                     foreach (PositionDetail pd in pos.PositionDetailTotal.Where(pd => !pd.IsClosed()))
                     {
-                        //表明该持仓明细是今日新开仓持仓明细 交易日设定为当前交易日
-                        if (pd.Tradingday == 0)
-                        {
-                            pd.Tradingday = TLCtxHelper.Ctx.SettleCentre.NextTradingday;
-                        }
 
-                        //结算日
+                        //保存结算持仓明细时要将结算日更新为当前
                         pd.Settleday = TLCtxHelper.Ctx.SettleCentre.NextTradingday;
-
-                        //计算留仓保证金和盯市浮动盈亏
-                        pd.Margin = pd.CalMargin();
-                        pd.PositionProfitByDate = pd.CalUnRealizedProfitByDate();
-
                         //保存持仓明细到数据库
                         ORM.MSettlement.InsertPositionDetail(pd);
                         i++;
