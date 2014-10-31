@@ -25,18 +25,15 @@ namespace TradingLib.Common
 
             //计算平仓量
             int closesize = pos.Volume >= remainsize ? remainsize : pos.Volume;
-
-            //持仓明细的平仓量累加
-            pos.CloseVolume += closesize;
-            //持仓量累减
-            pos.Volume -= closesize;
-            //剩余平仓量累减
+            //剩余平仓量
             remainsize -= closesize;
 
             PositionCloseDetail closedetail = new PositionCloseDetailImpl();
             //生成平仓明细数据
+            //设定持仓主体信息
             closedetail.Account = pos.Account;
             closedetail.Symbol = pos.Symbol;
+            closedetail.oSymbol = f.oSymbol;
 
             //开仓所在交易日
             closedetail.Tradingday = pos.Tradingday;//如果是今仓则为0，在数据储存时候赋上具体的交易日信息
@@ -60,39 +57,24 @@ namespace TradingLib.Common
             closedetail.ClosePrice = f.xprice;
             closedetail.CloseVolume = closesize;
 
-            //传递合约信息
-            closedetail.oSymbol = f.oSymbol;
-
             //计算平仓明细的平仓盈亏和点数 平仓盈亏需要判断是今仓还是昨仓
             closedetail.CloseProfitByDate = closedetail.CalCloseProfitByDate(pos.IsHisPosition());
             closedetail.ClosePointByDate = closedetail.CalClosePointByDate(pos.IsHisPosition());
             closedetail.CloseProfitByTrade = closedetail.CalCloseProfitByTrade();
 
-            //持仓明细的平仓盈亏累加 平仓金额累加
+            //更新持仓汇总状态
+            //持仓明细的平仓量累加
+            pos.CloseVolume += closesize;
+            //持仓量累减
+            pos.Volume -= closesize;
+
+            //持仓汇总的平仓盈亏 盯市/逐笔/平仓金额累加
             pos.CloseProfitByDate += closedetail.CloseProfitByDate;
             pos.CloseAmount += closesize * f.xprice * f.oSymbol.Multiple;
             pos.CloseProfitByTrade += closedetail.CloseProfitByTrade;
             return closedetail;
         }
 
-
-        /// <summary>
-        /// 持仓价格
-        /// 这个价格有别于开仓价，在结算后持仓价=昨日结算价
-        /// </summary>
-        /// <param name="pos"></param>
-        /// <returns></returns>
-        public static decimal PositionPrice(this PositionDetail pos)
-        {
-            if (pos.IsHisPosition())
-            {
-                return pos.LastSettlementPrice;
-            }
-            else
-            {
-                return pos.OpenPrice;
-            }
-        }
         /// <summary>
         /// 判断是否是历史持仓
         /// </summary>
@@ -142,15 +124,6 @@ namespace TradingLib.Common
             return false;
         }
 
-        /// <summary>
-        /// 当前剩余持仓数量 开仓数量-平仓数量 即为该持仓当前持有的数量
-        /// </summary>
-        /// <param name="pos"></param>
-        /// <returns></returns>
-        //public static int HoldSize(this PositionDetail pos)
-        //{
-        //    return pos.Volume - pos.CloseVolume;
-        //}
 
         /// <summary>
         /// 持仓成本
@@ -158,7 +131,7 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="pos"></param>
         /// <returns></returns>
-        public static decimal HoldPrice(this PositionDetail pos)
+        public static decimal PositionPrice(this PositionDetail pos)
         {
             if (!pos.IsHisPosition())
             {

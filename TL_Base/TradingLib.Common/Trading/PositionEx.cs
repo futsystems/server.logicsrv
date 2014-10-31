@@ -110,6 +110,11 @@ namespace TradingLib.Common
     public  class PositionEx
     {
         /// <summary>
+        /// 交易日
+        /// </summary>
+        public int Tradingday { get; set; }
+
+        /// <summary>
         /// 帐户
         /// </summary>
         public string Account { get; set; }
@@ -128,7 +133,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 持仓数量
         /// </summary>
-        public int UnsignedSize { get; set; }
+        //public int UnsignedSize { get; set; }
 
         /// <summary>
         /// 持仓均价 点数
@@ -143,7 +148,14 @@ namespace TradingLib.Common
         /// <summary>
         /// 带方向的数量
         /// </summary>
-        public int Size { get; set; }
+        //public int Size { get; set; }
+
+        /// <summary>
+        /// 持仓描述类型
+        /// </summary>
+        public QSEnumPositionDirectionType DirectionType { get; set; }
+
+
 
         #region 当日开平汇总
         /// <summary>
@@ -157,11 +169,6 @@ namespace TradingLib.Common
         public decimal OpenAmount { get; set; }
 
         /// <summary>
-        /// 开仓均价
-        /// </summary>
-        //public decimal OpenAVGPrice { get; set; }
-
-        /// <summary>
         /// 平仓量
         /// </summary>
         public int CloseVolume { get; set; }
@@ -171,32 +178,20 @@ namespace TradingLib.Common
         /// </summary>
         public decimal CloseAmount { get; set; }
 
-        /// <summary>
-        /// 平仓均价
-        /// </summary>
-        //public decimal CloseAVGPrice { get; set; }
-
         #endregion
 
-
         /// <summary>
-        /// 持仓描述类型
-        /// </summary>
-        public QSEnumPositionDirectionType DirectionType { get; set; }
-
-
-        /// <summary>
-        /// 平仓盈亏点数 每次有平仓明细产生时，会累加平仓盈亏点数和对应的金额
+        /// 平仓盈亏点数
+        /// 
+        /// 每次有平仓明细产生时，会累加平仓盈亏点数和对应的金额
         /// 平仓明细中的平仓盈亏计算 1.今仓 开仓价- 平价价  2.昨仓 平仓价 - 昨结价
         /// </summary>
-        public decimal ClosedPL { get; set; }
+        public decimal ClosePL { get; set; }
 
         /// <summary>
         /// 当日平仓盈亏金额
         /// </summary>
         public decimal CloseProfit { get; set; }
-
-        
 
         /// <summary>
         /// 当日浮动盈亏点数
@@ -222,11 +217,8 @@ namespace TradingLib.Common
         public decimal OpenCost { get; set; }
 
 
-        /// <summary>
-        /// 手续费
-        /// </summary>
-        public decimal Commission { get; set; }
 
+        #region 持仓数量
 
         /// <summary>
         /// 今仓数量 
@@ -238,6 +230,12 @@ namespace TradingLib.Common
         /// </summary>
         public int YdPosition { get; set; }
 
+        /// <summary>
+        /// 持仓数量
+        /// </summary>
+        public int Position { get; set; }
+
+        #endregion
 
 
         /// <summary>
@@ -253,28 +251,23 @@ namespace TradingLib.Common
 
         /// <summary>
         /// 盯市平仓盈亏
-        /// 每个持仓明细中有一个盯市平仓盈亏 用于结算时累计盯市盈亏
         /// </summary>
         public decimal CloseProfitByDate { get; set; }
 
         /// <summary>
-        /// 逐笔平仓盈亏 
+        /// 逐笔平仓盈亏
         /// </summary>
         public decimal CloseProfitByTrade { get; set; }
-
-
-        /// <summary>
-        /// 交易日
-        /// </summary>
-        public int Tradingday { get; set; }
-
-        
 
         /// <summary>
         /// 保证金
         /// </summary>
         public decimal Margin { get; set; }
 
+        /// <summary>
+        /// 手续费
+        /// </summary>
+        public decimal Commission { get; set; }
 
 
         public PositionEx()
@@ -282,17 +275,17 @@ namespace TradingLib.Common
             Account = string.Empty;
             Symbol = string.Empty;
             Multiple = 1;
-            ClosedPL = 0;
-            UnsignedSize = 0;
+            //ClosedPL = 0;
+            Position = 0;
             AvgPrice = 0;
             Side = true;
-            Size = 0;
+            //Size = 0;
 
             OpenAmount = 0;
-            OpenAVGPrice = 0;
+            //OpenAVGPrice = 0;
             OpenVolume = 0;
             CloseAmount = 0;
-            CloseAVGPrice = 0;
+            //CloseAVGPrice = 0;
             CloseVolume = 0;
             DirectionType = QSEnumPositionDirectionType.BothSide;
             CloseProfit = 0;
@@ -315,25 +308,25 @@ namespace TradingLib.Common
             sb.Append(d);
             sb.Append(p.Multiple.ToString());
             sb.Append(d);
-            sb.Append(p.ClosedPL.ToString());
+            sb.Append(p.ClosePL);
             sb.Append(d);
-            sb.Append(p.UnsignedSize.ToString());
+            sb.Append(p.Position);
             sb.Append(d);
             sb.Append(p.AvgPrice.ToString());
             sb.Append(d);
             sb.Append(p.Side.ToString());
             sb.Append(d);
-            sb.Append(p.Size.ToString());
+            sb.Append("0");
             sb.Append(d);
             sb.Append(p.OpenAmount.ToString());
             sb.Append(d);
-            sb.Append(p.OpenAVGPrice.ToString());
+            sb.Append("0");
             sb.Append(d);
             sb.Append(p.OpenVolume.ToString());
             sb.Append(d);
             sb.Append(p.CloseAmount.ToString());
             sb.Append(d);
-            sb.Append(p.CloseAVGPrice.ToString());
+            sb.Append("0");
             sb.Append(d);
             sb.Append(p.CloseVolume.ToString());
             sb.Append(d);
@@ -365,8 +358,6 @@ namespace TradingLib.Common
             sb.Append(d);
             sb.Append(p.Margin);
             sb.Append(d);
-            //sb.Append(p.CloseProfitByDate);
-            //sb.Append(d);
             sb.Append(p.CloseProfitByTrade);
             return sb.ToString();
 
@@ -380,16 +371,16 @@ namespace TradingLib.Common
             p.Account = rec[0];
             p.Symbol = rec[1];
             p.Multiple = int.Parse(rec[2]);
-            p.ClosedPL = decimal.Parse(rec[3]);
-            p.UnsignedSize = int.Parse(rec[4]);
+            p.ClosePL = decimal.Parse(rec[3]);
+            p.Position = int.Parse(rec[4]);
             p.AvgPrice = decimal.Parse(rec[5]);
             p.Side = bool.Parse(rec[6]);
-            p.Size = int.Parse(rec[7]);
+            //p.Size = int.Parse(rec[7]);
             p.OpenAmount = decimal.Parse(rec[8]);
-            p.OpenAVGPrice = decimal.Parse(rec[9]);
+            //p.OpenAVGPrice = decimal.Parse(rec[9]);
             p.OpenVolume = int.Parse(rec[10]);
             p.CloseAmount = decimal.Parse(rec[11]);
-            p.CloseAVGPrice = decimal.Parse(rec[12]);
+            //p.CloseAVGPrice = decimal.Parse(rec[12]);
             p.CloseVolume = int.Parse(rec[13]);
             p.DirectionType = (QSEnumPositionDirectionType)Enum.Parse(typeof(QSEnumPositionDirectionType),rec[14]);
             p.CloseProfit = decimal.Parse(rec[15]);
@@ -405,7 +396,6 @@ namespace TradingLib.Common
             p.Tradingday = int.Parse(rec[25]);
             p.OpenCost = decimal.Parse(rec[26]);
             p.Margin = decimal.Parse(rec[27]);
-            //p.CloseProfitByDate = decimal.Parse(rec[28]);
             p.CloseProfitByTrade = decimal.Parse(rec[28]);
             return p;
         }

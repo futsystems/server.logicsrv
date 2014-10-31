@@ -92,7 +92,6 @@ namespace TradingLib.API
         /// </summary>
         decimal ClosedPL { get; }
 
-
         /// <summary>
         /// 浮动盈亏点数
         /// </summary>
@@ -177,7 +176,7 @@ namespace TradingLib.API
 
         #endregion
 
-        #region 日内交易统计
+        #region 日内开平统计
         /// <summary>
         /// 开仓金额
         /// </summary>

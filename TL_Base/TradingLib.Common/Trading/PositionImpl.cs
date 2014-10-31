@@ -740,7 +740,7 @@ namespace TradingLib.Common
             }
             else
             {
-                this._price = _postotallist.Where(pos1 => !pos1.IsClosed()).Sum(pos2 => pos2.Volume* pos2.HoldPrice()) / Math.Abs(this._size);
+                this._price = _postotallist.Where(pos1 => !pos1.IsClosed()).Sum(pos2 => pos2.Volume* pos2.PositionPrice()) / Math.Abs(this._size);
             }
             Util.Debug("runing size:" + this._size.ToString() + " positiondetail size:" + _postotallist.Where(pos1 => !pos1.IsClosed()).Sum(pos2 => pos2.Volume));
             _closedpl += cpl; // update running closed pl 更新平仓盈亏
@@ -800,7 +800,7 @@ namespace TradingLib.Common
             else
             {
                 //通过加权计算获得当前的持仓均价
-                this._price = _postotallist.Where(pos1 => !pos1.IsClosed()).Sum(pos2 => pos2.Volume * pos2.HoldPrice()) / Math.Abs(this._size);
+                this._price = _postotallist.Where(pos1 => !pos1.IsClosed()).Sum(pos2 => pos2.Volume * pos2.PositionPrice()) / Math.Abs(this._size);
             }   
             return 0;//开仓时 平仓成本为0
         }

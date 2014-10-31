@@ -75,6 +75,8 @@ namespace TradingLib.Common
             else
                 return p.oSymbol.Margin * p.UnsignedSize;
         }
+
+
         /// <summary>
         /// 计算平仓盈亏
         /// </summary>
@@ -141,7 +143,7 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="pos"></param>
         /// <returns></returns>
-        public static decimal GetCommission(this Position pos)
+        public static decimal CalCommission(this Position pos)
         {
             return pos.Trades.Sum(fill => fill.GetCommission());
         }
@@ -179,70 +181,78 @@ namespace TradingLib.Common
             p.Account = pos.Account;
             p.Symbol = pos.Symbol;
             p.Multiple = pos.oSymbol.Multiple;
-            p.UnsignedSize = pos.UnsignedSize;//总持仓数量
+            
             p.AvgPrice = pos.AvgPrice;//持仓均价
-            
-            p.Side = pos.isLong;
-            
-            p.Size = pos.Size;
+
+            if (pos.DirectionType == QSEnumPositionDirectionType.Long)
+            {
+                p.Side = true;
+            }
+            else if(pos.DirectionType == QSEnumPositionDirectionType.Short)
+            {
+                p.Side = false;
+            }
+
+            p.DirectionType = pos.DirectionType;
 
             /*
-             *  开仓金额	SUM（今日开仓数量 * 开仓价 * 合约乘数）	针对当前交易日的所有开仓
-                开仓成本	（上日持仓 + 今日持仓）* 开仓价 * 合约乘数	等于逐笔持仓成本
-                开仓均价	开仓成本/总持仓/合约乘数	
-
+             *  开仓金额=今日开仓数量 * 开仓价 * 合约乘数	                        针对当前交易日的所有开仓
              * */
             p.OpenAmount = pos.OpenAmount;
             p.OpenVolume = pos.OpenVolume;
-            p.OpenAVGPrice = pos.OpenVolume > 0 ? pos.OpenAmount / pos.oSymbol.Multiple / pos.OpenVolume : 0;
-
-            //平仓金额	SUM（平仓数量 * 平仓价 * 合约乘数）	针对当前交易日的所有平仓
+            
+            //平仓金额=平仓数量 * 平仓价 * 合约乘数                                针对当前交易日的所有平仓
             p.CloseAmount = pos.CloseAmount;
             p.CloseVolume = pos.CloseVolume;
-            p.CloseAVGPrice = pos.CloseVolume > 0 ? pos.CloseAmount / pos.oSymbol.Multiple / pos.CloseVolume : 0;
+            
 
             //持仓成本
             /* 
              持仓成本	上日持仓 * 昨结算价 * 合约乘数 + SUM（今日持仓 * 开仓价 * 合约乘数）
-             持仓均价	持仓成本/总持仓/合约乘数
+             持仓均价	持仓成本/总持仓/合约乘数 这里价格采用的持仓价，昨仓取的是昨日结算价
              * */
-            //p.PositionCost = p.UnsignedSize * p.AvgPrice * p.Multiple;//总持仓成本  还有一个是 开仓成本
             p.PositionCost = pos.PositionDetailTotal.Where(pd => !pd.IsClosed()).Sum(pd => pd.PositionPrice() * pd.Volume * p.Multiple);
+            
             //开仓成本
             /*
                 开仓成本	（上日持仓 + 今日持仓）* 开仓价 * 合约乘数	等于逐笔持仓成本
                 开仓均价	开仓成本/总持仓/合约乘数	
-                指当前持仓对应的开仓成本 平掉的持仓不用计算入内
+                指当前持仓对应的开仓成本 平掉的持仓不用计算入内 这里价格采用的是开仓价
             **/
             p.OpenCost = pos.PositionDetailTotal.Where(pd=>!pd.IsClosed()).Sum(pd => pd.OpenPrice * pd.Volume * p.Multiple);
-            p.DirectionType = pos.DirectionType;
+            
 
             /*
                 平仓盈亏	 按照不同的算法 计算出当日的平仓盈亏
                "SUM（平昨量 *（平仓价 - 昨结算价）* 合约乘数）+SUM（平今量 *（平仓价 - 开仓价）* 合约乘数） -- 多头
                 SUM（平昨量 *（昨结算价 - 平仓价）* 合约乘数）+SUM（平今量 *（开仓价 - 平仓价）* 合约乘数） -- 空头"	切过第二天后，平仓盈亏原值保留
              * */
-            p.ClosedPL = pos.ClosedPL;//点数
+            p.ClosePL = pos.ClosedPL;//点数
             p.CloseProfit = pos.ClosedPL * pos.oSymbol.Multiple;//盈亏金额
 
             p.UnRealizedPL = pos.UnRealizedPL;
             p.UnRealizedProfit = p.UnRealizedPL * p.Multiple;
 
-            p.Commission = pos.Trades.Sum(f => f.Commission);
-            //今仓
+
+            //总持仓数量 总的有效数量
+            p.Position = pos.UnsignedSize;
+            //今仓 有效数量 当日平仓会改变该数值
             p.TodayPosition = pos.PositionDetailTodayNew.Where(pd => !pd.IsClosed()).Sum(pd => pd.Volume);//当日新开仓 持仓数量
-            //昨仓 是初始状态的昨日持仓数量还是当前昨日持仓数量
-            // p.YdPosition = pos.PositionDetailYdNew.Where(pd => !pd.IsClosed()).Sum(pd => pd.Volume);//昨仓数量
+            //昨仓 是初始状态的昨日持仓数量 平仓后 不改变该数值
             p.YdPosition = pos.PositionDetailYdRef.Where(pd => !pd.IsClosed()).Sum(pd => pd.Volume);//昨仓数量
+
 
             //保证金
             p.Margin = pos.CalcPositionMargin();
+            //持仓成交的手续费 累加所有成交的手续费
+            p.Commission = pos.CalCommission();
 
-            p.LastSettlementPrice = (pos.LastSettlementPrice!=null?(decimal)pos.LastSettlementPrice:0);
-            p.SettlementPrice = (pos.SettlementPrice != null?(decimal)pos.SettlementPrice:0);
-
+            
             p.CloseProfitByDate = pos.CalCloseProfitByDate();
             p.CloseProfitByTrade = pos.CalCloseProfitByTrade();
+
+            p.LastSettlementPrice = (pos.LastSettlementPrice != null ? (decimal)pos.LastSettlementPrice : 0);
+            p.SettlementPrice = (pos.SettlementPrice != null ? (decimal)pos.SettlementPrice : 0);
 
 
 
