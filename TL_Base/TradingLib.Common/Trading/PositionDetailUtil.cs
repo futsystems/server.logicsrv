@@ -66,15 +66,33 @@ namespace TradingLib.Common
             //计算平仓明细的平仓盈亏和点数 平仓盈亏需要判断是今仓还是昨仓
             closedetail.CloseProfitByDate = closedetail.CalCloseProfitByDate(pos.IsHisPosition());
             closedetail.ClosePointByDate = closedetail.CalClosePointByDate(pos.IsHisPosition());
+            closedetail.CloseProfitByTrade = closedetail.CalCloseProfitByTrade();
 
             //持仓明细的平仓盈亏累加 平仓金额累加
             pos.CloseProfitByDate += closedetail.CloseProfitByDate;
             pos.CloseAmount += closesize * f.xprice * f.oSymbol.Multiple;
+            pos.CloseProfitByTrade += closedetail.CloseProfitByTrade;
             return closedetail;
         }
 
 
-
+        /// <summary>
+        /// 持仓价格
+        /// 这个价格有别于开仓价，在结算后持仓价=昨日结算价
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <returns></returns>
+        public static decimal PositionPrice(this PositionDetail pos)
+        {
+            if (pos.IsHisPosition())
+            {
+                return pos.LastSettlementPrice;
+            }
+            else
+            {
+                return pos.OpenPrice;
+            }
+        }
         /// <summary>
         /// 判断是否是历史持仓
         /// </summary>
@@ -167,7 +185,7 @@ namespace TradingLib.Common
             sb.Append(" HoldSize:" + pos.Volume +" TotalSize:"+(pos.Volume+pos.CloseVolume).ToString());
             sb.Append(" TradeID:" + pos.TradeID);
             sb.Append(string.Format(" PreS:{0} S:{1}", pos.LastSettlementPrice, pos.SettlementPrice));
-            sb.Append(string.Format(" PL:{0} UnPL:{1}", pos.CloseProfitByDate, pos.UnRealizedProfitByDate));
+            sb.Append(string.Format(" PL:{0} UnPL:{1}", pos.CloseProfitByDate, pos.PositionProfitByDate));
             sb.Append(string.Format(" His:{0}", pos.IsHisPosition() ? "YdPos" : "TdPos"));
             return sb.ToString();
         }

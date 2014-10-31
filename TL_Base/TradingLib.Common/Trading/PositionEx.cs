@@ -125,7 +125,6 @@ namespace TradingLib.Common
         public int Multiple { get; set; }
 
         
-
         /// <summary>
         /// 持仓数量
         /// </summary>
@@ -254,6 +253,12 @@ namespace TradingLib.Common
         public decimal CloseProfitByDate { get; set; }
 
         /// <summary>
+        /// 逐比平仓盈亏
+        /// </summary>
+        public decimal CloseProfitByTrade { get; set; }
+
+
+        /// <summary>
         /// 交易日
         /// </summary>
         public int Tradingday { get; set; }
@@ -262,6 +267,13 @@ namespace TradingLib.Common
         /// 开仓成本
         /// </summary>
         public decimal OpenCost { get; set; }
+
+        /// <summary>
+        /// 保证金
+        /// </summary>
+        public decimal Margin { get; set; }
+
+
 
         public PositionEx()
         {
@@ -286,6 +298,9 @@ namespace TradingLib.Common
             UnRealizedPL = 0;
             UnRealizedProfit = 0;
             OpenCost = 0;
+            Margin = 0;
+            CloseProfitByDate = 0;
+            CloseProfitByTrade = 0;
         }
 
         public static string Serialize(PositionEx p)
@@ -345,6 +360,12 @@ namespace TradingLib.Common
             sb.Append(p.Tradingday);
             sb.Append(d);
             sb.Append(p.OpenCost);
+            sb.Append(d);
+            sb.Append(p.Margin);
+            sb.Append(d);
+            //sb.Append(p.CloseProfitByDate);
+            //sb.Append(d);
+            sb.Append(p.CloseProfitByTrade);
             return sb.ToString();
 
         }
@@ -381,6 +402,9 @@ namespace TradingLib.Common
             p.CloseProfitByDate = decimal.Parse(rec[24]);
             p.Tradingday = int.Parse(rec[25]);
             p.OpenCost = decimal.Parse(rec[26]);
+            p.Margin = decimal.Parse(rec[27]);
+            //p.CloseProfitByDate = decimal.Parse(rec[28]);
+            p.CloseProfitByTrade = decimal.Parse(rec[28]);
             return p;
         }
     }

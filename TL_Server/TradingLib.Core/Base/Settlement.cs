@@ -335,7 +335,7 @@ namespace TradingLib.Core
                     i++;
                     size += pd.Volume;
                     unpl += 0;
-                    unplbydate += pd.UnRealizedProfitByDate;
+                    unplbydate += pd.PositionProfitByDate;
                     hmargin += pd.Margin;
 
                     settlelist.Add(string.Format("|{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|{10}|{11}|{12}|",
@@ -350,7 +350,7 @@ namespace TradingLib.Core
                         padCenterEx(Util.FormatDecimal(pd.LastSettlementPrice), len_PRICE),
                         padCenterEx(Util.FormatDecimal(pd.SettlementPrice), len_PRICE),
                         padRightEx(Util.FormatDecimal(0), len_PROFIT),
-                        padRightEx(Util.FormatDecimal(pd.UnRealizedProfitByDate), len_PROFIT),
+                        padRightEx(Util.FormatDecimal(pd.PositionProfitByDate), len_PROFIT),
                         padRightEx(Util.FormatDecimal(pd.Margin), len_MARGIN)
                         ));
                 }
@@ -413,7 +413,7 @@ namespace TradingLib.Core
                         PositionDetail pd = list[0];
                         int longsize = list.Where(pos => pos.Side).Sum(pos => pos.Volume);
                         int shortsize = list.Where(pos => !pos.Side).Sum(pos => pos.Volume);
-                        decimal settleunpl = list.Sum(pos => pos.UnRealizedProfitByDate);
+                        decimal settleunpl = list.Sum(pos => pos.PositionProfitByDate);
                         decimal lmargin = list.Sum(pos => pos.Margin);
                         settlelist.Add(string.Format("|{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|",
                         padCenterEx(pd.Symbol, len_SYMBOL),

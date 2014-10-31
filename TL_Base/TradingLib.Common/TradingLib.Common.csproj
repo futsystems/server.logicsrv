@@ -48,6 +48,7 @@
     <Compile Include="JsonObject\JsonProtocolManager.cs" />
     <Compile Include="Messages\Manager\MGRInsertTrade.cs" />
     <Compile Include="Messages\QryCommissionMargin.cs" />
+    <Compile Include="Messages\QryMarketData.cs" />
     <Compile Include="Messages\QryTransferSerial.cs" />
     <Compile Include="Other\LogItem.cs" />
     <Compile Include="Other\PermissionFieldAttr.cs" />

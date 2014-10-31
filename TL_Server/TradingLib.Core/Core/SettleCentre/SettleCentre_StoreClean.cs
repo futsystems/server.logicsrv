@@ -104,7 +104,7 @@ namespace TradingLib.Core
 
                         //计算留仓保证金和盯市浮动盈亏
                         pd.Margin = pd.CalMargin();
-                        pd.UnRealizedProfitByDate = pd.CalUnRealizedProfitByDate();
+                        pd.PositionProfitByDate = pd.CalUnRealizedProfitByDate();
 
                         //保存持仓明细到数据库
                         ORM.MSettlement.InsertPositionDetail(pd);

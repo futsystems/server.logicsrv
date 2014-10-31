@@ -11,7 +11,7 @@ namespace TradingLib.Common
     {
 
         /// <summary>
-        /// 计算平仓明细的平仓盈亏
+        /// 计算平仓明细盯市平仓盈亏
         /// </summary>
         /// <param name="close"></param>
         /// <returns></returns>
@@ -31,6 +31,16 @@ namespace TradingLib.Common
             }
 
             return profit;
+        }
+
+        /// <summary>
+        /// 计算平仓明细逐笔平仓盈亏
+        /// </summary>
+        /// <param name="close"></param>
+        /// <returns></returns>
+        public static decimal CalCloseProfitByTrade(this PositionCloseDetail close)
+        {
+            return (close.ClosePrice - close.OpenPrice) * close.CloseVolume * close.oSymbol.Multiple * (close.Side ? 1 : -1);
         }
 
         /// <summary>

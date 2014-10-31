@@ -135,8 +135,11 @@ namespace TradingLib.Common
             this.Exchange = string.Empty;
             this.SecCode = string.Empty;
             this.Margin = 0M;
+            this.PositionProfitByDate = 0;
+            this.PositionProfitByTrade = 0;
             this.CloseProfitByDate = 0;
-            this.UnRealizedProfitByDate = 0;
+            this.CloseProfitByTrade = 0;
+
         }
 
         public PositionDetailImpl(PositionDetail p)
@@ -160,7 +163,9 @@ namespace TradingLib.Common
             this.SecCode = p.SecCode;
             this.Margin = p.Margin;
             this.CloseProfitByDate = p.CloseProfitByDate;
-            this.UnRealizedProfitByDate = p.UnRealizedProfitByDate;
+            this.CloseProfitByTrade = p.CloseProfitByTrade;
+            this.PositionProfitByDate = p.PositionProfitByDate;
+            this.PositionProfitByTrade = p.PositionProfitByTrade;
         }
         
         /// <summary>
@@ -294,17 +299,25 @@ namespace TradingLib.Common
 
 
         /// <summary>
-        /// 当有平仓发生时,累加属于该持仓明细的盈亏金额
+        /// 盯市平仓盈亏
         /// </summary>
         public decimal CloseProfitByDate { get; set; }
 
         /// <summary>
-        /// 盯市浮动盈亏
-        /// 今仓 (开仓价格-结算价)*手数*乘数
-        /// 
-        /// 在结算过程中 盯市浮动盈亏会计入结算单并反映在帐户权益上
+        /// 逐笔平仓盈亏
         /// </summary>
-        public decimal UnRealizedProfitByDate { get; set; }
+        public decimal CloseProfitByTrade { get; set; }
+
+        /// <summary>
+        /// 盯市浮动盈亏
+        /// </summary>
+        public decimal PositionProfitByDate { get; set; }
+
+        /// <summary>
+        /// 盯市浮动盈亏
+        /// </summary>
+        public decimal PositionProfitByTrade { get; set; }
+
 
         
 
@@ -348,9 +361,13 @@ namespace TradingLib.Common
             sb.Append(d);
             sb.Append(p.CloseProfitByDate);//17
             sb.Append(d);
-            sb.Append(p.UnRealizedProfitByDate);//18
+            sb.Append(p.PositionProfitByDate);//18
             sb.Append(d);
             sb.Append(p.CloseAmount);
+            sb.Append(d);
+            sb.Append(p.CloseProfitByTrade);
+            sb.Append(d);
+            sb.Append(p.PositionProfitByTrade);
             return sb.ToString();
         }
 
@@ -376,8 +393,10 @@ namespace TradingLib.Common
             p.SecCode = rec[15];
             p.Margin = decimal.Parse(rec[16]);
             p.CloseProfitByDate = decimal.Parse(rec[17]);
-            p.UnRealizedProfitByDate = decimal.Parse(rec[18]);
+            p.PositionProfitByDate = decimal.Parse(rec[18]);
             p.CloseAmount = decimal.Parse(rec[19]);
+            p.CloseProfitByTrade = decimal.Parse(rec[20]);
+            p.PositionProfitByTrade = decimal.Parse(rec[21]);
             return p;
         }
     }

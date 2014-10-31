@@ -87,7 +87,7 @@ namespace TradingLib.API
         QRYPOSITIONDETAIL,//查询持仓明细
         QRYINSTRUMENTCOMMISSIONRATE,//查询合约手续费率
         QRYINSTRUMENTMARGINRATE,//查询合约保证金率
-        
+        QRYMARKETDATA,//查询市场行情
 
         DOMREQUEST,//请求DOM市场Level2数据
         IMBALANCEREQUEST,//imbalance..查询这个是什么意思
@@ -135,7 +135,7 @@ namespace TradingLib.API
         POSITIONDETAILRESPONSE,//查询持仓明细回报
         INSTRUMENTCOMMISSIONRATERESPONSE,//查询合约手续费率回报
         INSTRUMENTMARGINRATERESPONSE,//查询合约保证金率回报
-        
+        MARKETDATARESPONSE,//查询市场行情回报
 
 
 

@@ -66,6 +66,11 @@ namespace TradingLib.API
         decimal SettlementPrice { get; set; }
 
         /// <summary>
+        /// 平仓金额
+        /// </summary>
+        decimal CloseAmount { get; set; }
+
+        /// <summary>
         /// 平仓量
         /// </summary>
         int CloseVolume { get; set; }
@@ -105,21 +110,31 @@ namespace TradingLib.API
 
         /// <summary>
         /// 盯市平仓盈亏
+        ///  SUM（平昨量 *（平仓价 - 昨结算价）* 合约乘数）+SUM（平今量 *（平仓价 - 开仓价）* 合约乘数） -- 多头
+        ///  SUM（平昨量 *（昨结算价 - 平仓价）* 合约乘数）+SUM（平今量 *（开仓价 - 平仓价）* 合约乘数） -- 空头
         /// </summary>
         decimal CloseProfitByDate { get; set; }
 
         /// <summary>
-        /// 盯市浮动盈亏
+        /// 逐笔平仓盈亏 
+        /// SUM（平仓量 * （平仓价 - 开仓价）* 合约乘数） -- 多头
+        /// SUM（平仓量 * （开仓价 - 平仓价）* 合约乘数） -- 空头
+        /// </summary>
+        decimal CloseProfitByTrade { get; set; }
+
+        /// <summary>
+        /// 浮动盈亏 盯市
         /// 今仓 (开仓价格-结算价)*手数*乘数
         /// 
         /// 在结算过程中 盯市浮动盈亏会计入结算单并反映在帐户权益上
         /// </summary>
-        decimal UnRealizedProfitByDate { get; set; }
-
+        decimal PositionProfitByDate { get; set; }
 
         /// <summary>
-        /// 平仓金额
+        /// 浮动盈亏 逐笔
         /// </summary>
-        decimal CloseAmount { get; set; }
+        decimal PositionProfitByTrade { get; set; }
+
+
     }
 }

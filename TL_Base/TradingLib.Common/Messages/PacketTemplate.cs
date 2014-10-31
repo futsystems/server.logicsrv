@@ -166,7 +166,9 @@ namespace TradingLib.Common
                     //查询合约保证金率
                     case MessageTypes.QRYINSTRUMENTMARGINRATE:
                         return RequestTemplate<QryInstrumentMarginRateRequest>.SrvRecvRequest(frontid, clientid, content);
-
+                    //查询市场行情
+                    case MessageTypes.QRYMARKETDATA:
+                        return RequestTemplate<QryMarketDataRequest>.SrvRecvRequest(frontid, clientid, content);
 
 
                     #region manager
@@ -345,6 +347,8 @@ namespace TradingLib.Common
                     return ResponseTemplate<RspQryInstrumentCommissionRateResponse>.CliRecvResponse(content);
                 case MessageTypes.INSTRUMENTMARGINRATERESPONSE://查询保证金率
                     return ResponseTemplate<RspQryInstrumentMarginRateResponse>.CliRecvResponse(content);
+                case MessageTypes.MARKETDATARESPONSE://查询市场行情回报
+                    return ResponseTemplate<RspQryMarketDataResponse>.CliRecvResponse(content);
 
                 case MessageTypes.TICKNOTIFY:
                     TickNotify ticknotify = new TickNotify();

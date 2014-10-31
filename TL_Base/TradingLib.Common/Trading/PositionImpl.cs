@@ -782,7 +782,7 @@ namespace TradingLib.Common
                 PositionDetail pd = new PositionDetailImpl(d);
                 //加载到今日持仓明细列表中的昨日持仓明细列表，需要将对应的昨日结算价格设定为昨日持仓明细的结算价格 并且不能被行情更新
                 pd.LastSettlementPrice = d.SettlementPrice;
-                pd.UnRealizedProfitByDate = 0;//重置盯市盈亏
+                pd.PositionProfitByDate = 0;//重置盯市盈亏
                 //TODO
                 //结算价格如何处理？默认就是昨天的结算价，如果没有获得正确的结算价就以昨天的结算价作价
                 //pd.SettlementPrice = 0;

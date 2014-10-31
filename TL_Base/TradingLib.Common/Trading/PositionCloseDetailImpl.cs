@@ -31,6 +31,7 @@ namespace TradingLib.Common
             this.ClosePrice = 0;
             this.CloseVolume = 0;
             this.CloseProfitByDate = 0;
+            this.CloseProfitByTrade = 0;
             this.oSymbol = null;
             this.Exchange = string.Empty;
             this.Symbol = string.Empty;
@@ -117,7 +118,10 @@ namespace TradingLib.Common
         /// </summary>
         public decimal CloseProfitByDate {get;set;}
 
-
+        /// <summary>
+        /// 逐笔平仓盈亏金额
+        /// </summary>
+        public decimal CloseProfitByTrade { get; set; }
         /// <summary>
         /// 盯市平仓盈亏点数
         /// </summary>

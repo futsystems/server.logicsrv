@@ -86,6 +86,11 @@ namespace TradingLib.API
         decimal CloseProfitByDate { get; set; }
 
         /// <summary>
+        /// 逐笔平仓盈亏金额
+        /// </summary>
+        decimal CloseProfitByTrade { get; set; }
+
+        /// <summary>
         /// 盯市平仓盈亏点数
         /// </summary>
         decimal ClosePointByDate { get; set; }

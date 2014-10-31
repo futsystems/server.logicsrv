@@ -400,6 +400,7 @@ namespace TradingLib.Core
         void SrvOnQrySymbol(QrySymbolRequest request)
         {
             debug("QrySymbol:" + request.ToString(), QSEnumDebugLevel.INFO);
+            Util.sleep(1000);
             Instrument[] instruments = new Instrument[]{};
             if (request.SecurityType != SecurityType.NIL && string.IsNullOrEmpty(request.ExchID) && string.IsNullOrEmpty(request.Symbol) && string.IsNullOrEmpty(request.Security))
             {
@@ -580,6 +581,28 @@ namespace TradingLib.Core
             }
         }
 
+
+        /// <summary>
+        /// 查询市场行情处理
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="account"></param>
+        void SrvOnQryMarketData(QryMarketDataRequest request, IAccount account)
+        {
+            debug("QryMarketData:" + request.ToString(), QSEnumDebugLevel.DEBUG);
+
+            if (string.IsNullOrEmpty(request.Symbol))
+            {
+                Tick[] ticks = _datafeedRouter.GetTickSnapshot();
+                for (int i = 0; i < ticks.Length; i++)
+                {
+                    RspQryMarketDataResponse response = ResponseTemplate<RspQryMarketDataResponse>.SrvSendRspResponse(request);
+                    response.TickToSend = ticks[i];
+                    CacheRspResponse(response, i != ticks.Length - 1);
+                }
+            }
+            
+        }
         void tl_newPacketRequest(IPacket packet,ISession session)
         {
             IAccount account = _clearcentre[session.AccountID]; //获得对应的IAccount对象
@@ -693,6 +716,12 @@ namespace TradingLib.Core
                     {
                         QryInstrumentMarginRateRequest request = packet as QryInstrumentMarginRateRequest;
                         SrvOnQryInstrumentMarginRate(request,account);
+                    }
+                    break;
+                case MessageTypes.QRYMARKETDATA://查询市场行情
+                    {
+                        QryMarketDataRequest request = packet as QryMarketDataRequest;
+                        SrvOnQryMarketData(request, account);
                     }
                     break;
                 case MessageTypes.CONTRIBREQUEST://扩展请求
