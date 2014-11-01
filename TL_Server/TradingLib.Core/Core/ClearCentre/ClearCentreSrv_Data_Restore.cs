@@ -35,8 +35,10 @@ namespace TradingLib.Core
                     //这里累计NextTradingday的出入金数据 恢复到当前状态,结算之后的所有交易数据都归入以结算日为基础计算的下一个交易日
                     acc.Deposit(ORM.MAccount.CashInOfTradingDay(acc.ID,TLCtxHelper.Ctx.SettleCentre.NextTradingday));
                     acc.Withdraw(ORM.MAccount.CashOutOfTradingDay(acc.ID, TLCtxHelper.Ctx.SettleCentre.NextTradingday));
+                    //获得帐户昨日权益
                     acc.LastEquity = ORM.MAccount.GetSettleEquity(acc.ID,TLCtxHelper.Ctx.SettleCentre.LastSettleday);
                 }
+
                 debug("从数据库加载交易日:" + TLCtxHelper.Ctx.SettleCentre.NextTradingday.ToString() + " 交易数据", QSEnumDebugLevel.INFO);
                 IEnumerable<Order> olist = LoadOrderFromMysql();
                 IEnumerable<Trade> flist = LoadTradesFromMysql();
@@ -46,21 +48,21 @@ namespace TradingLib.Core
                 IEnumerable<PositionDetail> plist = LoadPositionFromMysql();//从数据得到昨持仓数据
                 IEnumerable<PositionRound> prlist = LoadPositionRoundFromMysql();//恢复开启的positionround数据
 
-
-                //从数据库恢复昨天持仓信息,账户resume也要将昨持仓数据正确加载进来 
+                //从数据库加载上日结算持仓信息 用于恢复当前持仓状态
                 foreach (PositionDetail p in plist)
                 {
                     this.GotPosition(p);
                 }
 
+                foreach (PositionRound pr in prlist)
+                {
+                    Util.Debug(pr.ToString(), QSEnumDebugLevel.VERB);
+                }
                 //当将昨日持仓恢复到内存后需要恢复开启的持仓回合数据,当成交数据恢复时会同时更新持仓回合记录
-                //将positionround数据恢恢复到positionroundtracker
                 prt.RestorePositionRounds(prlist);
-                //??
+
                 //PR数据与持仓数据进行同步1.从数据库加载同步一次  2.保存到数据库同步一次
-                //prt.SyncPositionHold(this.TotalYdPositions.Where(pos=>!pos.isFlat).ToArray());
-
-
+                prt.SyncPositionHold(this.TotalPositions.Where(pos=>!pos.isFlat));
                 foreach (Order o in olist)
                 {
                     this.GotOrder(o);
@@ -86,6 +88,7 @@ namespace TradingLib.Core
                 debug("restore mysql error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
                 throw (new QSClearCentreResotreError(ex, "清算中心从数据库恢复数据异常"));
             }
+
             //加载委托后进行矫正
             checkOrder();
             //获得最大报单引用 
@@ -165,10 +168,7 @@ namespace TradingLib.Core
         /// <returns></returns>
         public IEnumerable<PositionDetail> LoadPositionFromMysql()
         {
-            //debug("从数据库恢复昨持仓数据....", QSEnumDebugLevel.DEBUG);
             IEnumerable<PositionDetail> positions = ORM.MSettlement.SelectPositionDetails(TLCtxHelper.Ctx.SettleCentre.LastSettleday).Select(pos => { pos.oSymbol = BasicTracker.SymbolTracker[pos.Symbol]; return pos; });
-
-            //IEnumerable<Position> positions = ORM.MTradingInfo.SelectHoldPositions(TLCtxHelper.Ctx.SettleCentre.LastSettleday).Select(pos => { pos.oSymbol = BasicTracker.SymbolTracker[pos.Symbol]; return pos; });
             debug("数据库恢复前次结算持仓明细数据:" + positions.Count().ToString() + "条", QSEnumDebugLevel.INFO);
             return positions;
         }

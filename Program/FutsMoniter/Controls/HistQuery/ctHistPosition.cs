@@ -30,8 +30,8 @@ namespace FutsMoniter
         }
 
         //public Telerik.WinControls.UI.RadGridView Grid { get { return positiongrid; } }
-        delegate void SettlePositionDel(SettlePosition pos);
-        public void GotHistPosition(SettlePosition pos)
+        delegate void SettlePositionDel(PositionDetail pos);
+        public void GotHistPosition(PositionDetail pos)
         {
 
             if (InvokeRequired)
@@ -50,11 +50,11 @@ namespace FutsMoniter
 
                 //如果不存在,则我们将该account-symbol对插入映射列表我们的键用的是account_symbol配对
                 ;
-                int size = pos.Size;
+                int size = pos.Volume;
                 gt.Rows[i][DIRECTION] = true;//getDirection(size);
                 gt.Rows[i][SIZE] = Math.Abs(size);
                 //gt.Rows[i][CANFLATSIZE] = getCanFlatSize(pos);
-                gt.Rows[i][AVGPRICE] = pos.AVGPrice;
+                gt.Rows[i][AVGPRICE] = pos.OpenPrice;
                 gt.Rows[i][REALIZEDPL] = 0;
                 //if (guiSide == QSEnumGUISide.Client)
                 //    updatePositionStrategyImg(i);//更新界面图标

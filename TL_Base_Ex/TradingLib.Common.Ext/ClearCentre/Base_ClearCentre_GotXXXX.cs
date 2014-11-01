@@ -176,7 +176,7 @@ namespace TradingLib.Common
                 //获得对应的持仓
                 Position pos = account.GetPosition(f.symbol, positionside);//acctk.GetPosition(f.Account, f.symbol, positionside);
                 int beforesize = pos.UnsignedSize;
-                //decimal avgprice = pos.AvgPrice;
+                
                 //累加持仓
                 acctk.GotFill(f);
                 totaltk.NewFill(f);//所有的成交都只有一次回报 都需要进行记录
@@ -210,8 +210,6 @@ namespace TradingLib.Common
                     f.Commission = Calc.CalCommission(commissionrate, f);
                 }
                 
-                
-
                 //生成持仓操作记录 同时结合beforeszie aftersize 设置fill PositionOperation,需要知道帐户的持仓信息才可以知道是开 加 减 平等信息
                 postrans = new PositionTransaction(f, symbol, beforesize, aftersize, pos.Highest,pos.Lowest);
                 f.PositionOperation = postrans.PosOperation;

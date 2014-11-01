@@ -288,39 +288,6 @@ namespace TradingLib.ORM
             Position pos = new PositionImpl(fields.Symbol, fields.SettlePrice, fields.Size, 0, fields.Account,fields.Size>0?QSEnumPositionDirectionType.Long:QSEnumPositionDirectionType.Short);
             return pos;
         }
-        ///// <summary>
-        ///// 获得所有隔夜持仓生成对应的position 用于加载到持仓管理器
-        ///// </summary>
-        ///// <returns></returns>
-        //public static IEnumerable<Position> SelectHoldPositions(int lastsettleday)
-        //{
-        //    using (DBMySql db = new DBMySql())
-        //    {
-        //        string query = string.Format("SELECT * FROM  hold_positions WHERE settleday = {0}",lastsettleday);
-        //        IEnumerable<Position> positions = db.Connection.Query<positionfields>(query).Select(fields => posfields2position(fields));// (from fields in (db.Connection.Query<positionfields>(query).ToArray())
-        //                                     //select posfields2position(fields)).ToArray();
-        //        return positions;
-        //    }
-        //}
-
-
-        /// <summary>
-        /// 查询历史委托
-        /// </summary>
-        /// <param name="begin"></param>
-        /// <param name="end"></param>
-        /// <returns></returns>
-        //public static IList<SettlePosition> SelectHistPositions(string account, int begin, int end)
-        //{
-        //    using (DBMySql db = new DBMySql())
-        //    {
-        //        string query = string.Format("SELECT * FROM  {0}  WHERE settleday >='{1}' AND settleday <='{2}' AND account='{3}'", "hold_positions", begin, end, account);
-        //        List<SettlePosition> poslist = db.Connection.Query<SettlePosition>(query).ToList<SettlePosition>();
-
-        //        return poslist;
-        //    }
-        //}
-
 
         static PositionRound PRInfo2PositionRound(positionroundinfo info)
         {

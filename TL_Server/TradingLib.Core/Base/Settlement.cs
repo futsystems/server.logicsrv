@@ -497,19 +497,7 @@ namespace TradingLib.Core
             return ret;
         }
 
-        static Dictionary<string, List<SettlePosition>> GenPositionPairMap(IEnumerable<SettlePosition> poslist)
-        {
-            Dictionary<string, List<SettlePosition>> ret = new Dictionary<string, List<SettlePosition>>();
-            foreach (SettlePosition sp in poslist)
-            {
-                if (!ret.Keys.Contains(sp.SecurityCode))
-                {
-                    ret.Add(sp.SecurityCode, new List<SettlePosition>());
-                }
-                ret[sp.SecurityCode].Add(sp);
-            }
-            return ret;
-        }
+
         static string GetCombFlag(QSEnumOffsetFlag op)
         {
             if (op == QSEnumOffsetFlag.OPEN)

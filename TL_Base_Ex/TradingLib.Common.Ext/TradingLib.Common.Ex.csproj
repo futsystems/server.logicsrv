@@ -158,6 +158,7 @@
     <Compile Include="Tracker\ContrackBankTracker.cs" />
     <Compile Include="Tracker\ExchangeTracker.cs" />
     <Compile Include="Tracker\ManagerTracker.cs" />
+    <Compile Include="Tracker\PositionRoundTracker.cs" />
     <Compile Include="Tracker\SecurityTracker.cs" />
     <Compile Include="Tracker\MarketTimeTracker.cs" />
     <Compile Include="Tracker\SymbolBasketImpl.cs" />

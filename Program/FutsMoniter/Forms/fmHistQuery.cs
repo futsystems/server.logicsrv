@@ -67,7 +67,7 @@ namespace FutsMoniter
             }
         }
 
-        public void GotHistPosition(SettlePosition pos, bool islast)
+        public void GotHistPosition(PositionDetail pos, bool islast)
         {
             if (islast)
             {

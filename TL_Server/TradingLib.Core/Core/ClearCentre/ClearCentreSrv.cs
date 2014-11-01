@@ -185,8 +185,6 @@ namespace TradingLib.Core
                 acctk.NewPositionCloseDetailEvent += new Action<PositionCloseDetail>(acctk_NewPositionCloseDetailEvent);
                 //初始化PositionRound生成器
                 prt = new PositionRoundTracker();
-                prt.FindSymbolEvent += (sym) => { return BasicTracker.SymbolTracker[sym]; };// new FindSecurity(getMasterSecurity);
-
                 debug("Loading Accounts Infomation form database.....");
                 //加载账户信息
                 LoadAccount();

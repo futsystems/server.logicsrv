@@ -92,6 +92,8 @@ namespace TradingLib.Core
             }
 
             this.IsInSettle = true;//标识结算中心处于结算状态
+            //保存结算持仓对应的PR数据
+            this.SaveHoldInfo();
             //保存当前持仓明细
             this.SavePositionDetails();//保存持仓明细
             //保存交易日志 委托 成交 委托操作
@@ -155,8 +157,7 @@ namespace TradingLib.Core
             TLCtxHelper.EventSystem.FireBeforeSettleEvent(this, new SystemEventArgs());
 
             //A:储存当前数据
-            //this.BindPositionSettlePrice();//采集持仓结算价 结算价是自动推送的
-            //this.SaveHoldInfo();//保存结算持仓数据和对应的PR数据
+            this.SaveHoldInfo();//保存结算持仓数据和对应的PR数据
             this.SavePositionDetails();//保存持仓明细
             this.Dump2Log();//转储到历史记录表
 

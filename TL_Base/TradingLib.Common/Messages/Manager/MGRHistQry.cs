@@ -184,19 +184,19 @@ namespace TradingLib.Common
         public RspMGRQryPositionResponse()
         {
             _type = MessageTypes.MGRPOSITIONRESPONSE;
-            this.PostionToSend = new SettlePosition();
+            this.PostionToSend = new PositionDetailImpl();
         }
 
-        public SettlePosition PostionToSend { get; set; }
+        public PositionDetail PostionToSend { get; set; }
 
         public override string ResponseSerialize()
         {
-            return SettlePosition.Serialize(this.PostionToSend);
+            return PositionDetailImpl.Serialize(this.PostionToSend);
         }
 
         public override void ResponseDeserialize(string content)
         {
-            this.PostionToSend = SettlePosition.Deserialize(content);
+            this.PostionToSend = PositionDetailImpl.Deserialize(content);
         }
     }
 

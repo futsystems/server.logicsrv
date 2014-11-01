@@ -312,7 +312,7 @@ namespace FutsMoniter
 
         }
 
-        public void OnMGRPositionResponse(SettlePosition pos, bool islast)
+        public void OnMGRPositionResponse(PositionDetail pos, bool islast)
         {
             histqryform.GotHistPosition(pos, islast);
         }
