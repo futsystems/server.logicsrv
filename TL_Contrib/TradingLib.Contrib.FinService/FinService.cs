@@ -151,6 +151,8 @@ namespace TradingLib.Contrib.FinService
             if (GotFeeChargeItemEvent != null)
                 GotFeeChargeItemEvent(item);
         }
+
+        
     }
 
 
@@ -331,7 +333,7 @@ namespace TradingLib.Contrib.FinService
             item.serviceplan_fk = this.serviceplan_fk;
             item.Agent_fk = this.AgentID;
             item.Comment = comment;
-            item.Settleday = TLCtxHelper.CmdSettleCentre.CurrentTradingday;
+            item.Settleday = TLCtxHelper.CmdSettleCentre.NextTradingday;
             
 
             //定义了代理之间的分润计算

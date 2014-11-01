@@ -142,6 +142,18 @@ namespace TradingLib.API
 
     }
 
+    /// <summary>
+    /// 定义了行情传输过程中的内容类别
+    /// 根据不同的内容可以解析出不同的行情内容
+    /// 避免了每次都发送相同的内容 比如高开低收等不经常变化的变量
+    /// </summary>
+    public enum QSEnumTickContentType
+    { 
+        TC_TRADE,//成交信息 最新成交价 数量 成交交易所等
+        TC_QUOTE,//报价信息 买价 买量 卖价 卖量 深度等
+        TC_SNAPSHOT,//当前市场快照 成交信息 报价信息 高开低手
+    }
+
     public class InvalidTick : Exception { }
 
 }

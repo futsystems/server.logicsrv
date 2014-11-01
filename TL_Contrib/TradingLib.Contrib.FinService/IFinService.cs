@@ -24,12 +24,12 @@ namespace TradingLib.Contrib.FinService
     public interface IFinService
     {
         /// <summary>
-        /// 对应的服务计划ID
+        /// 对应服务计划ID
         /// </summary>
         int ServicePlanFK { get; set; }
 
         /// <summary>
-        /// 对应数据服务ID
+        /// 对应服务ID
         /// </summary>
         int ServiceID { get; set; }
 
@@ -137,7 +137,7 @@ namespace TradingLib.Contrib.FinService
         /// 服务调整
         /// 结算时按照权益重新计算配资额度等
         /// </summary>
-        void AdjustOmCashOperation(JsonWrapperCashOperation op);
+        void OnCashOperation(JsonWrapperCashOperation op);
     }
 
 

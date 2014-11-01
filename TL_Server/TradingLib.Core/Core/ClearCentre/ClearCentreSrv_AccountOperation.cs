@@ -132,13 +132,13 @@ namespace TradingLib.Core
         /// <param name="comment"></param>
         public override void CashOperation(string account, decimal amount,string transref, string comment)
         {
-            if (CoreUtil.IsSettle2Reset())
-            {
-                debug("Account:" + account + " 资金操作:" + amount.ToString() + " comment:" + comment + "被忽略", QSEnumDebugLevel.WARNING);
-                FutsRspError error = new FutsRspError();
-                error.FillError("CASHOPERATION_NOT_ALLOW_NOW");//当前时间不允许出入金
-                throw error;
-            }
+            //if (CoreUtil.IsSettle2Reset())
+            //{
+            //    debug("Account:" + account + " 资金操作:" + amount.ToString() + " comment:" + comment + "被忽略", QSEnumDebugLevel.WARNING);
+            //    FutsRspError error = new FutsRspError();
+            //    error.FillError("CASHOPERATION_NOT_ALLOW_NOW");//当前时间不允许出入金
+            //    throw error;
+            //}
 
             debug("CashOperation ID:" + account + " Amount:" + amount.ToString() + " Comment:" + comment, QSEnumDebugLevel.INFO);
             IAccount acc = this[account];

@@ -9,46 +9,68 @@ using TradingLib.Mixins.JsonObject;
 namespace TradingLib.Contrib.FinService
 {
     /// <summary>
+    /// 收取利息的配资计划
+    /// 业务逻辑如下:
+    /// 客户出资1000元，按相应的配资比例融出资金10000元 帐户累计可使用资金11000元
+    /// 客户入金时自动设定配资额度,亏损到强平线 执行强平,盘中不调整额度，盘后也不调整额度
     /// 覆写相关函数 实现对应的逻辑
     /// </summary>
-    public class SPHunanIF : ServicePlanBase
+    public class SPInterest : ServicePlanBase
     {
 
         /// <summary>
-        /// 回合收费
+        /// 单位资金成本 多少元/万元
         /// </summary>
-        [ArgumentAttribute("RoundCharge", "每个回合收费", EnumArgumentType.DECIMAL, true,150,50)]
-        public ArgumentPair RoundCharge { get; set; }
+        [ArgumentAttribute("FinRate", "每万元资金成本", EnumArgumentType.DECIMAL, true,10,10)]
+        public ArgumentPair FinRate { get; set; }
 
         /// <summary>
         /// 配资比例
         /// </summary>
-        [ArgumentAttribute("FinAmount", "配资额度", EnumArgumentType.DECIMAL, false, 0, 0)]
+        [ArgumentAttribute("FinAmount", "配资额度", EnumArgumentType.DECIMAL, true, 0, 0)]
         public ArgumentPair FinAmount { get; set; }
 
 
         /// <summary>
         /// 配资比例
         /// </summary>
-        [ArgumentAttribute("FinLever", "配资比例", EnumArgumentType.INT,false,25,25)]
+        [ArgumentAttribute("FinLever", "配资比例", EnumArgumentType.INT, true, 10, 10)]
         public ArgumentPair FinLever { get; set; }
         
 
         /// <summary>
-        /// 强平比例 配资金额的2%
+        /// 强平比例 亏损到安全本金20%时候 执行强平,1万配10万，亏损到2000时执行强平，强平比例为20%
+        /// 此比例 为安全本金的比例
         /// </summary>
-        [ArgumentAttribute("StopPect", "强平比例", EnumArgumentType.DECIMAL, false,0.02,0.02)]
+        [ArgumentAttribute("StopPect", "强平比例", EnumArgumentType.DECIMAL, true, 0.2, 0.2)]
         public ArgumentPair StopPect { get; set; }
 
 
 
-
-        public SPHunanIF()
+        /// <summary>
+        /// 获得当前配资金额对应的安全保证金金额
+        /// </summary>
+        /// <returns></returns>
+        decimal GetSafeMargin()
         {
-            SPNAME = "湖南股指专配";
-            _chargetype = EnumFeeChargeType.BYRound;//按交易回合计算费用
-            _collecttype = EnumFeeCollectType.CollectInTrading;//在交易过程中直接收取
+            return this.FinAmount.AccountArgument.AsDecimal()/ this.FinLever.AccountArgument.AsInt();
+        }
 
+        /// <summary>
+        /// 获得强平金额线
+        /// </summary>
+        /// <returns></returns>
+        decimal GetStopMargin()
+        {
+            return this.GetSafeMargin() * this.StopPect.AccountArgument.AsDecimal();
+        }
+
+
+        public SPInterest()
+        {
+            SPNAME = "固定利息";
+            _chargetype = EnumFeeChargeType.BYTime;//按时间收取
+            _collecttype = EnumFeeCollectType.CollectAfterSettle;//在系统结算后进行收取当日配资费用
         }
 
 
@@ -58,97 +80,43 @@ namespace TradingLib.Contrib.FinService
             if (this.FinAmount.AccountArgument.AsDecimal() == 0)
             {
                 decimal nowequity = this.Account.NowEquity;
-                decimal finamount = nowequity * this.FinLever.AccountArgument.AsInt();
-                if (nowequity > 0)
+                decimal stopmargin = this.GetStopMargin();
+
+                
+                if (nowequity <stopmargin)
                 {
-                    Util.Debug("帐户:" + this.Account.ID + "当前权益:" + nowequity.ToString() + "而配资额度为0，自动加载配资额度为:" + finamount.ToString());
-
-                    Argument newarg = new Argument()
-                    {
-                        Name = this.FinAmount.AccountArgument.Name,
-                        Type = this.FinAmount.AccountArgument.Type,
-                        Value = finamount.ToString(),
-                    };
-                    //调整配资额度
-                    FinTracker.ArgumentTracker.UpdateArgumentAccount(this.ServiceID, newarg);
-
-                    //更新内存参数
-                    FinServiceStub stub = FinTracker.FinServiceTracker[this.Account.ID];
-                    if (stub != null)
-                        stub.LoadArgument();
+                    Util.Debug(string.Format("帐户:{0} 当前权益:{1} 配资额度为:{2} 强平比例为:{3} 强平权益额度为:{4} 不满足本金要求,冻结交易帐户",this.Account.ID,nowequity,this.FinAmount.AccountArgument.AsDecimal(),this.StopPect.AccountArgument.AsDecimal(),stopmargin));
+                    this.Account.InactiveAccount();
                 }
             }
-        }
-        /// <summary>
-        /// 调整手续费
-        /// </summary>
-        /// <param name="t"></param>
-        /// <param name="pr"></param>
-        /// <returns></returns>
-        public override decimal OnAdjustCommission(Trade t, IPositionRound pr)
-        {
-            decimal commission = t.Commission;
-            //平仓操作才计算手续费
-            if (!t.IsEntryPosition)//平仓
-            {
-                if (pr.IsClosed)
-                {
-                    decimal profit = pr.Profit;//该次交易回合的盈利
-                    int size = pr.Size;//该次交易回合的成交手数
-
-                    //注:后期这里需要该进程每个帐号按其代理设定的费用标准进行收费
-                    commission = size * this.RoundCharge.AccountArgument.AsDecimal();
-                }
-                else
-                {
-                    commission = 0;
-                }
-            }
-            else
-            {
-                commission = 0;
-            }
-            return commission;
-        }
-
-
-        public override void OnTrade(Trade t)
-        {
-
         }
 
 
         /// <summary>
-        /// 响应持仓回合事件
-        /// 当一次开仓 平仓结束后触发该调用
+        /// 结算前执行费用计算 并形成扣费记录
         /// </summary>
-        /// <param name="round"></param>
-        public override void OnRound(IPositionRound round)
+        public override void OnSettle()
         {
-            if (!round.oSymbol.SecurityFamily.Code.Equals("IF"))
-            {
-                return;
-            }
-            decimal totalfee = 0;
-            decimal agentfee = 0;
-            
-            totalfee = round.Size * this.RoundCharge.AccountArgument.AsDecimal();
-            agentfee = round.Size * this.RoundCharge.AgentArgument.AsDecimal();
-
+            decimal finamount = this.FinAmount.AccountArgument.AsDecimal()/10000;
+            decimal totalfee =  finamount* this.FinRate.AccountArgument.AsDecimal();
+            decimal agentfee = finamount * this.FinRate.AgentArgument.AsDecimal();
             //进行直客收费记录
-            string comment = SPNAME + " 平仓时间:" + Util.ToTLDateTime(round.ExitTime).ToString();
+            string comment = SPNAME + " 额度:" + Util.FormatDecimal(this.FinAmount.AccountArgument.AsDecimal() / 10000) + "收费:" + Util.FormatDecimal(totalfee);
 
             //计算代理收费记录
             AgentCommissionDel func = (Manager agent, Manager parent) =>
             {
                 decimal fee = 0;
                 //代理的收费 - 代理的父代理的收费
-                decimal diff = FinTracker.ArgumentTracker.GetAgentArgument(agent.mgr_fk, this.ServicePlanFK, this.RoundCharge.AccountArgument.Name).AsDecimal() - FinTracker.ArgumentTracker.GetAgentArgument(parent.mgr_fk, this.ServicePlanFK, this.RoundCharge.AccountArgument.Name).AsDecimal();
-                fee = round.Size * diff;
+                decimal diff = FinTracker.ArgumentTracker.GetAgentArgument(agent.mgr_fk, this.ServicePlanFK, this.FinRate.AccountArgument.Name).AsDecimal() - FinTracker.ArgumentTracker.GetAgentArgument(parent.mgr_fk, this.ServicePlanFK, this.FinRate.AccountArgument.Name).AsDecimal();
+                fee = diff * finamount;
                 return fee;
             };
             FeeCharge(totalfee, agentfee, func, comment);
+            Util.Debug(SPNAME + " 帐户:" + this.Account.ID + " 额度:" + Util.FormatDecimal(finamount) + "万元 收费:" + Util.FormatDecimal(totalfee));
         }
+
+
 
 
 
@@ -166,15 +134,12 @@ namespace TradingLib.Contrib.FinService
 
             //当前权益
             decimal nowequity = this.Account.NowEquity;
-            //计算当前权益占配资资金的比例
-            decimal pect = nowequity / this.FinAmount.AccountArgument.AsDecimal();
-            decimal stoppect = this.StopPect.AccountArgument.AsDecimal();
-            //Util.Debug("finamount:" + finamount.ToString() + " nowequity:" + nowequity.ToString() + " pect:" + pect.ToString() + " stoppect:" + stoppect.ToString());
-                
+
+            decimal stopmargin = GetStopMargin();
             //如果当前资金只有  低于配资金额的2% 时候触发强平信号
-            if (pect < stoppect)
+            if (nowequity < stopmargin)
             {
-                //Util.Debug("finamount:" + finamount.ToString() + " nowequity:" + nowequity.ToString() + " pect:" + pect.ToString() + " stoppect:" + stoppect.ToString());
+                Util.Debug(string.Format("帐户:{0} 当前权益:{1} 配资额度为:{2} 强平比例为:{3} 强平权益额度为:{4} 不满足本金要求,执行强平并冻结交易帐户", this.Account.ID, nowequity, this.FinAmount.AccountArgument.AsDecimal(), this.StopPect.AccountArgument.AsDecimal(), stopmargin));
                 FireFlatPosition("湖南股指专配");       
             }
             
@@ -193,17 +158,9 @@ namespace TradingLib.Contrib.FinService
         /// <returns></returns>
         public override bool CanTradeSymbol(Symbol symbol, out string msg)
         {
-            //LibUtil.Debug("xxxxxxxxxxxxxxxxxxxx检查是否可以交易合约:" + symbol.Symbol);
+            //可以交易所有合约
             msg = string.Empty;
-            if (symbol.SecurityFamily.Code.Equals("IF"))
-            {
-                return true;
-            }
-            else
-            {
-                msg = "只允许交易:IF股指期货";
-                return false;
-            }
+            return true;
         }
 
         /// <summary>
@@ -220,15 +177,12 @@ namespace TradingLib.Contrib.FinService
             //如果是平仓委托 则直接返回
             if (!o.IsEntryPosition) return true;
 
-            //获得对应方向的持仓
-            Position pos = this.Account.GetPosition(o.symbol, o.PositionSide);
-
             //获得某个帐户交易某个合约的可用资金
             decimal avabile = GetFundAvabile(o.oSymbol);
 
             //可用资金大于需求资金则可以接受该委托
             decimal required = this.Account.CalOrderFundRequired(o,0);
-            Util.Debug("SPHunanIF Fundavabile:" + avabile.ToString() + " Required:" + required +" account avabile fund:"+this.Account.AvabileFunds.ToString());
+            Util.Debug("SPInterest Fundavabile:" + avabile.ToString() + " Required:" + required + " account avabile fund:" + this.Account.AvabileFunds.ToString());
             if (required > avabile)
             {
                 msg = "资金不足";
@@ -253,13 +207,14 @@ namespace TradingLib.Contrib.FinService
         }
 
         /// <summary>
-        /// 获得配资额度
+        /// 获得配资额度 传递到核心帐户对象 核心帐户可用资金 = 帐户当前权益 + 配资服务所提供的配资金额
         /// </summary>
         /// <returns></returns>
         public override decimal GetFinAmountAvabile()
         {
             return this.FinAmount.AccountArgument.AsDecimal();
         }
+
         /// <summary>
         /// 计算通过配资服务后某个合约的可开手数
         /// </summary>
@@ -267,10 +222,6 @@ namespace TradingLib.Contrib.FinService
         /// <returns></returns>
         public override int CanOpenSize(Symbol symbol)
         {
-            if (!symbol.SecurityFamily.Code.Equals("IF"))
-            {
-                return 0;
-            }
 
             decimal price = TLCtxHelper.CmdUtil.GetAvabilePrice(symbol);
 
@@ -284,15 +235,22 @@ namespace TradingLib.Contrib.FinService
         #endregion
 
 
+        /// <summary>
+        /// 自动跟随出入金操作 进行配资额度调整
+        /// 出金操作 则配资额度会调整为当前帐户权益对应配资比例的配资金额
+        /// 入金操作 如果超过了原来的安全保证金 则提高配资额度，否则就当是补充安全保证金
+        /// </summary>
+        /// <param name="op"></param>
         public override void OnCashOperation(JsonWrapperCashOperation op)
         {
             if (op.Status != QSEnumCashInOutStatus.CONFIRMED) return;//只针对产生作用的出入金进行调整
 
-            decimal nowequity = this.Account.NowEquity;
+            decimal nowequity = this.Account.NowEquity;//当前权益
 
-            decimal originMargin = this.FinAmount.AccountArgument.AsDecimal() / this.FinLever.AccountArgument.AsInt();//计算原始保证金
+            decimal finamount = this.FinAmount.AccountArgument.AsDecimal();//配资额度
 
-            decimal finamount = this.FinAmount.AccountArgument.AsDecimal();
+            decimal originMargin = finamount / this.FinLever.AccountArgument.AsInt();//计算原始保证金
+
             //入金
             if (op.Operation == QSEnumCashOperation.Deposit)
             {

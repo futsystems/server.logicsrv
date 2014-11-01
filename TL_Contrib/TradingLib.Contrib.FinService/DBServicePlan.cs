@@ -47,11 +47,12 @@ namespace TradingLib.Contrib.FinService
             }
             //如果数据库中不存在 则需要同步数据库信息 然后加入到内存映射
             else
-            { 
+            {
+                ServicePlanBase plane = (ServicePlanBase)Activator.CreateInstance(type);
                 DBServicePlan sp = new DBServicePlan();
                 sp.ClassName = type.FullName;
                 sp.Name = type.Name;
-                sp.Title="测试";
+                sp.Title = plane.ServicePaneName;
                 ORM.MServicePlan.InsertServicePlan(sp);
                 spidxmap.Add(sp.ID, sp);
                 spclassmap.Add(sp.ClassName, sp);

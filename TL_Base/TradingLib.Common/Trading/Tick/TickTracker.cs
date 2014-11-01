@@ -6,6 +6,9 @@ namespace TradingLib.Common
 {
     /// <summary>
     /// keep track of bid/ask and last data for symbols
+    /// 其实TickTracker维护了一个市场行情快照
+    /// 当不同的合约有成交数据 报价数据产生时,用于更新本地行情快照 将最新的数据更新到对应的字段
+    /// 当使用时 通过symbol进行索引 获得对应的行情快照
     /// </summary>
     public class TickTracker : GenericTrackerI, GotTickIndicator
     {
@@ -70,17 +73,17 @@ namespace TradingLib.Common
         public TickTracker(int estlabels)
         {
             _estlabels = estlabels;
-            bid = new GenericTracker<decimal>(_estlabels);
-            ask = new GenericTracker<decimal>(_estlabels);
-            last = new GenericTracker<decimal>(_estlabels);
-            bs = new GenericTracker<int>(_estlabels);
-            be = new GenericTracker<string>(_estlabels);
-            oe = new GenericTracker<string>(_estlabels);
-            os = new GenericTracker<int>(_estlabels);
-            ts = new GenericTracker<int>(_estlabels);
-            ex = new GenericTracker<string>(_estlabels);
-            date = new GenericTracker<int>(_estlabels);
-            time = new GenericTracker<int>(_estlabels);
+            bid = new GenericTracker<decimal>(_estlabels);//bid price
+            ask = new GenericTracker<decimal>(_estlabels);//ask price
+            last = new GenericTracker<decimal>(_estlabels);//last price
+            bs = new GenericTracker<int>(_estlabels);//bid size
+            be = new GenericTracker<string>(_estlabels);//bid exchange
+            oe = new GenericTracker<string>(_estlabels);//ask exchange
+            os = new GenericTracker<int>(_estlabels);//asksize 
+            ts = new GenericTracker<int>(_estlabels);//last size
+            ex = new GenericTracker<string>(_estlabels);//exchange
+            date = new GenericTracker<int>(_estlabels);//日期
+            time = new GenericTracker<int>(_estlabels);//时间
 
             open = new GenericTracker<decimal>(_estlabels);
             high = new GenericTracker<decimal>(_estlabels);
@@ -308,12 +311,15 @@ namespace TradingLib.Common
                 Tick k = new TickImpl(last.getlabel(idx));
                 k.Date = date[idx];
                 k.Time = time[idx];
+
                 k.Trade = last[idx];
                 k.Size = ts[idx];
                 k.Exchange = ex[idx];
+
                 k.BidPrice = bid[idx];
                 k.BidSize = bs[idx];
                 k.BidExchange = be[idx];
+
                 k.AskPrice = ask[idx];
                 k.AskSize = os[idx];
                 k.AskExchange = oe[idx];
@@ -330,6 +336,10 @@ namespace TradingLib.Common
             }
         }
 
+        /// <summary>
+        /// 返回所有行情Tick
+        /// </summary>
+        /// <returns></returns>
         public Tick[] GetTicks()
         {
             string[] syms = last.ToLabelArray();
@@ -357,55 +367,9 @@ namespace TradingLib.Common
                 int idx = last.getindex(sym);
                 if (idx < 0) return new TickImpl();
                 return this[idx];
-                /*
-                Tick k = new TickImpl(last.getlabel(idx));
-                k.date = date[idx];
-                k.time = time[idx];
-                k.trade = last[idx];
-                k.size = ts[idx];
-                k.ex = ex[idx];
-                k.bid = bid[idx];
-                k.bs = bs[idx];
-                k.be = be[idx];
-                k.ask = ask[idx];
-                k.os = os[idx];
-                k.oe = oe[idx];
-                return k;**/
             }
         }
-        /*
-        /// <summary>
-        /// update the tracker with a new tick
-        /// </summary>
-        /// <param name="k"></param>
-        /// <param name="idx"></param>
-        public void newTick(Tick k, int idx)
-        {
-            if (idx < 0) 
-                return;
-            // update date/time
-            time[idx] = k.time;
-            date[idx] = k.date;
-            // update bid/ask/last
-            if (k.isTrade)
-            {
-                last[idx] = k.trade;
-                ex[idx] = k.ex;
-                ts[idx] = k.size;
-            }
-            if (k.hasAsk)
-            {
-                ask[idx] = k.ask;
-                oe[idx] = k.oe;
-                os[idx] = k.os;
-            }
-            if (k.hasBid)
-            {
-                bid[idx] = k.bid;
-                bs[idx] = k.bs;
-                be[idx] = k.be;
-            }
-        }**/
+
         /// <summary>
         /// update the tracker with a new tick
         /// </summary>
@@ -479,6 +443,8 @@ namespace TradingLib.Common
             return true;
         }
     }
+
+
     /// <summary>
     /// track only bid price
     /// </summary>

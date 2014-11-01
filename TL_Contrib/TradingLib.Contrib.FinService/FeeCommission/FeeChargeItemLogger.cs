@@ -36,6 +36,10 @@ namespace TradingLib.Contrib.FinService
         int _delay = 0;
 
         /// <summary>
+        /// 当前计费缓存是否为空，在执行盘后收费的处理过程中要等待计费缓存全部写入数据库 完毕之后才可以进行 否则会漏掉记录
+        /// </summary>
+        public bool IsEmpty { get { return !_feechargecache.hasItems; } }
+        /// <summary>
         /// 异步交易信息记录系统拥有1000条的缓存数据,实验的时候发现插入数据错误,后来研究发现 插入数据的先后有关系
         /// 当我们在trade cache停留的时候 一致有新的交易被送进来，但是ordercache里面的order却没有发送到数据库 从而造成的问题就是 当trade里面出现对应的order时候 我们并没有插入到该order
         /// 因此我们在插入数据的时候要检查 Order是优先插入的 有了order我们才可以先交易。 因此Order被完全插入完毕后我们才开始插入交易数据

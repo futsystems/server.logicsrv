@@ -164,6 +164,20 @@ namespace TradingLib.Contrib.FinService
             }
 
             //2.检查当天所有的收费记录，对于结算后收取的 进行出入金操作 将盘后计算的配资费用通过出入金方式从帐户中扣除
+            //如果计费缓存不为空则等待计费记录写入数据库
+            while (!_chargelog.IsEmpty)
+            {
+                Util.sleep(500);
+            }
+
+            foreach (FeeChargeItem item in ORM.MFeeChargeItem.SelectFeeChargeItemAfterSettle())
+            {
+                Util.Debug("结算后采集计费:" + item.Comment);
+                if (item.CollectType == EnumFeeCollectType.CollectAfterSettle)
+                { 
+                    TLCtxHelper.CmdAccountCritical.CashOperation(item.Account, item.TotalFee * -1, "", item.Comment);
+                }
+            }
         }
 
 
@@ -175,6 +189,7 @@ namespace TradingLib.Contrib.FinService
         /// <param name="e"></param>
         void EventSystem_AfterSettleEvent(object sender, SystemEventArgs e)
         {
+            debug("核心系统结算完毕,结算后进行代理上财务结算，生成代理算记录", QSEnumDebugLevel.INFO);
             //1.结算代理商
             foreach (Manager mgr in BasicTracker.ManagerTracker.GetBaseManagers())
             {
@@ -199,7 +214,7 @@ namespace TradingLib.Contrib.FinService
             
             debug("配资本中心获得出入金事件,对配资服务进行调整", QSEnumDebugLevel.INFO);
 
-            stub.FinService.AdjustOmCashOperation(e.CashOperation);
+            stub.FinService.OnCashOperation(e.CashOperation);
         }
 
         /// <summary>

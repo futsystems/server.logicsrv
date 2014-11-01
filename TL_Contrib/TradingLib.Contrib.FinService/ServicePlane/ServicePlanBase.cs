@@ -25,6 +25,8 @@ namespace TradingLib.Contrib.FinService
     /// <param name="agentfee"></param>
     /// <param name="comment"></param>
     public delegate void FeeChargeDel(decimal totalfee, decimal agentfee, AgentCommissionDel func,string comment);
+
+   
     /// <summary>
     /// 所有服务计划的父类
     /// 用于定义服务计划的框架
@@ -34,6 +36,7 @@ namespace TradingLib.Contrib.FinService
         protected string SPNAME = "股指专项";
         public event FeeChargeDel GotFeeChargeEvent;
 
+        public string ServicePaneName { get { return this.SPNAME; } }
         public ServicePlanBase()
         {
 
@@ -301,7 +304,7 @@ namespace TradingLib.Contrib.FinService
         /// <summary>
         /// 调整配资服务
         /// </summary>
-        public virtual void AdjustOmCashOperation(JsonWrapperCashOperation op)
+        public virtual void OnCashOperation(JsonWrapperCashOperation op)
         {
 
         }

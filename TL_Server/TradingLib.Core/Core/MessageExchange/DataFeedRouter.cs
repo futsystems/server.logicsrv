@@ -172,6 +172,7 @@ namespace TradingLib.Core
         }
         /// <summary>
         /// 获得所有当前市场数据快照
+        /// 当前订阅的Basket mb 对应的Tick 行情由TickTracker维护
         /// </summary>
         /// <returns></returns>
         public Tick[] GetTickSnapshot()
@@ -184,7 +185,8 @@ namespace TradingLib.Core
                 foreach (string sym in syms)
                 {
                     Tick k = _ticktracker[sym];
-                    ticks.Add(k);
+                    if(k.isValid)
+                        ticks.Add(k);
                 }
                 return ticks.ToArray();
             }
