@@ -415,12 +415,22 @@ namespace TradingLib.Core
                         int shortsize = list.Where(pos => !pos.Side).Sum(pos => pos.Volume);
                         decimal settleunpl = list.Sum(pos => pos.PositionProfitByDate);
                         decimal lmargin = list.Sum(pos => pos.Margin);
+                        decimal longprice = 0;
+                        decimal shortprice = 0;
+                        if (longsize != 0)
+                        {
+                            longprice = list.Where(pos => pos.Side).Sum(pos => pos.Volume * pos.OpenPrice) / longsize;
+                        }
+                        if (shortsize != 0)
+                        {
+                            shortprice = list.Where(pos => !pos.Side).Sum(pos => pos.Volume * pos.OpenPrice) / shortsize;
+                        }
                         settlelist.Add(string.Format("|{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|",
                         padCenterEx(pd.Symbol, len_SYMBOL),
                         padRightEx(longsize.ToString(), len_SIZE),
-                        padRightEx(longsize == 0 ? "0" : Util.FormatDecimal(list.Where(pos => pos.Side).Sum(pos => pos.Volume * pos.OpenPrice) / longsize), len_PRICE),
+                        padRightEx(Util.FormatDecimal(longprice), len_PRICE),
                         padRightEx(shortsize.ToString(), len_SIZE),
-                        padRightEx(longsize == 0 ? "0" : Util.FormatDecimal(list.Where(pos => !pos.Side).Sum(pos => pos.Volume * pos.OpenPrice) / shortsize), len_PRICE),
+                        padRightEx(Util.FormatDecimal(shortprice), len_PRICE),
                         padCenterEx(Util.FormatDecimal(pd.LastSettlementPrice), len_PRICE),
                         padCenterEx(Util.FormatDecimal(pd.SettlementPrice), len_PRICE),
                         padRightEx(Util.FormatDecimal(settleunpl), len_PROFIT),

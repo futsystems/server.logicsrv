@@ -10,36 +10,65 @@ namespace TradingLib.Common
     public struct TickImpl : Tick
     {
         int _symidx;
+        internal long _datetime;
+        Symbol _Sec;
+        string _sym;//symbol
+        string _be;//bidexchange
+        string _oe;//askexchange
+        string _ex;//exchange
+        int _bs;//bidsize
+        int _os;//asksize
+        int _size;//size
+        int _depth;//depth
+
+        int _date;//date
+        int _time;//time
+        internal ulong _trade;//last trade price
+        internal ulong _bid;//bid price
+        internal ulong _ask;//ask price
+
+
         public int symidx { get { return _symidx; } set { _symidx = value; } }
         public string Symbol { get { return _sym; } set { _sym = value; } }
-        public int Size { get { return _size; } set { _size = value; } }
-        public int Depth { get { return _depth; } set { _depth = value; } }
+
         public int Date { get { return _date; } set { _date = value; } }
         public int Time { get { return _time; } set { _time = value; } }
         public long Datetime { get { return _datetime; } set { _datetime = value; } }
-        /// <summary>
-        /// normal bid size (size/100 for equities, /1 for others)
-        /// </summary>
+
+        public int Depth { get { return _depth; } set { _depth = value; } }
+        public int Size { get { return _size; } set { _size = value; } }
         public int BidSize { get { return _bs; } set { _bs = value; } }
-        /// <summary>
-        /// normal ask size (size/100 for equities, /1 for others)
-        /// </summary>
         public int AskSize { get { return _os; } set { _os = value; } }
+
         public decimal Trade { get { return _trade * Const.IPRECV; } set { _trade = (ulong)(value * Const.IPREC); } }
         public decimal BidPrice { get { return _bid * Const.IPRECV; } set { _bid = (ulong)(value * Const.IPREC); } }
         public decimal AskPrice { get { return _ask * Const.IPRECV; } set { _ask = (ulong)(value * Const.IPREC); } }
+
         public string Exchange { get { return _ex; } set { _ex = value; } }
         public string BidExchange { get { return _be; } set { _be = value; } }
         public string AskExchange { get { return _oe; } set { _oe = value; } }
+
+        //股票数量需要除以100，内部_bs _os _size是统一的数量
+        public int StockBidSize { get { return _bs * 100; } set { _bs = (int)((double)value / 100); } }
+        public int StockAskSize { get { return _os * 100; } set { _os = (int)((double)value / 100); } }
+        public int StockSize { get { return _size * 100; } set { _size = (int)(value / 100); } }
+       
+        
+
+
         public bool isIndex { get { return _size < 0; } }
 
         public bool hasBid { get { return (_bid != 0) && (_bs != 0); } }
         public bool hasAsk { get { return (_ask != 0) && (_os != 0); } }
         public bool isFullQuote { get { return hasBid && hasAsk; } }
         public bool isQuote { get { return (!isTrade && (hasBid || hasAsk)); } }
+
         public bool isTrade { get { return (_trade != 0) && (_size > 0); } }
+
         public bool hasTick { get { return (this.isTrade || hasBid || hasAsk); } }
+
         public bool isValid { get { return (_sym != "") && (isIndex || hasTick); } }
+
 
         public bool hasVol { get { return _vol != 0; } }
         public bool hasOI { get { return _oi != 0; } }
@@ -52,33 +81,10 @@ namespace TradingLib.Common
 
         public bool atHigh(decimal high) { return (isTrade && (_trade >= high)); }
         public bool atLow(decimal low) { return (isTrade && (_trade <= low)); }
-        /// <summary>
-        /// tick.bs*100 (only for equities)
-        /// </summary>
-        public int StockBidSize { get { return _bs * 100; } set { _bs = (int)((double)value / 100); } }
-        /// <summary>
-        /// tick.os*100 (only for equities)
-        /// </summary>
-        public int StockAskSize { get { return _os * 100; } set { _os = (int)((double)value / 100); } }
 
-        public int TradeSize { get { return ts * 100; } set { _size = (int)(value / 100); } }
-        public int ts { get { return _size / 100; } } // normalized to bs/os
-        internal long _datetime;
-        Symbol _Sec;
-        string _sym;
-        string _be;
-        string _oe;
-        string _ex;
-        int _bs;
-        int _os;
-        int _size;
-        int _depth;
 
-        int _date;
-        int _time;
-        internal ulong _trade;
-        internal ulong _bid;
-        internal ulong _ask;
+        
+
 
         public TickImpl(string symbol)
         {
