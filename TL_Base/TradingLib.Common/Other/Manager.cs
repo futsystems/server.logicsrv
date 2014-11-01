@@ -88,7 +88,10 @@ namespace TradingLib.Common
         [NoJsonExportAttr()]
         public Manager ParentManager { get; set; }
 
-
+        public override string ToString()
+        {
+            return string.Format("Manager[{0}]:{1} Type:{2} BaseFK:{3} ParentFK:{4}", this.ID, this.Login, this.Type, this.mgr_fk, this.parent_fk);
+        }
         public string Serialize()
         {
             StringBuilder sb = new StringBuilder();
