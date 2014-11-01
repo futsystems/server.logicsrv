@@ -235,19 +235,19 @@ namespace TradingLib.Common
         {
             //debug("~~~~~~~~order fill here2");
             if (!t.isTrade) return false;//fill with trade 
-            if (t.symbol != oSymbol.TickSymbol) return false;
+            if (t.Symbol != oSymbol.TickSymbol) return false;
             if (!fillOPG && TIF=="OPG") return false;
-            if ((isLimit && side && (t.trade <= price)) // buy limit
-                || (isLimit && !side && (t.trade >= price))// sell limit
-                || (isStop && side && (t.trade >= stopp)) // buy stop
-                || (isStop && !side && (t.trade <= stopp)) // sell stop
+            if ((isLimit && side && (t.Trade <= price)) // buy limit
+                || (isLimit && !side && (t.Trade >= price))// sell limit
+                || (isStop && side && (t.Trade >= stopp)) // buy stop
+                || (isStop && !side && (t.Trade <= stopp)) // sell stop
                 || isMarket)
             {
-                this.xprice = t.trade;
-                this.xsize = t.size >= UnsignedSize ? UnsignedSize : t.size;
+                this.xprice = t.Trade;
+                this.xsize = t.Size >= UnsignedSize ? UnsignedSize : t.Size;
                 this.xsize *= side ? 1 : -1;
-                this.xtime = t.time;
-                this.xdate = t.date;
+                this.xtime = t.Time;
+                this.xdate = t.Date;
                 return true;
             }
             return false;
@@ -270,14 +270,14 @@ namespace TradingLib.Common
             bool ok = side ? k.hasAsk : k.hasBid;
             if (!ok) return false;
             //debug("got here 1");
-            decimal p = side ? k.ask : k.bid;
+            decimal p = side ? k.AskPrice : k.BidPrice;
             //获得对应的ask bid size大小用于fill
             int s=0;
             if(this.SecurityType ==SecurityType.STK)
-                s = side ? k.AskSize : k.BidSize;
+                s = side ? k.StockAskSize : k.StockBidSize;
             else
-                s = side ? k.os : k.bs;
-            if (k.symbol != oSymbol.TickSymbol) return false;
+                s = side ? k.AskSize : k.BidSize;
+            if (k.Symbol != oSymbol.TickSymbol) return false;
             if (!fillOPG && TIF == "OPG") return false;
             if ((isLimit && side && (p <= price)) // buy limit
                 || (isLimit && !side && (p >= price))// sell limit
@@ -288,8 +288,8 @@ namespace TradingLib.Common
                 this.xprice = p;
                 this.xsize = /*1 * (side ? 1 : -1);**/(s >= UnsignedSize ? UnsignedSize : s) * (side ? 1 : -1);
                 //debug("askbid size:"+s.ToString()+"|");
-                this.xtime = k.time;
-                this.xdate = k.date;
+                this.xtime = k.Time;
+                this.xdate = k.Date;
                 return true;
             }
             return false;

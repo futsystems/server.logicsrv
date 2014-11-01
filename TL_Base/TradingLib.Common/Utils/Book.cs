@@ -70,30 +70,30 @@ namespace TradingLib.Common
             // ignore trades
             if (k.isTrade) return;
             // make sure depth is valid for this book
-            if ((k.depth < 0) || (k.depth >= maxbook)) return;
+            if ((k.Depth < 0) || (k.Depth >= maxbook)) return;
             if (Sym == null)
-                Sym = k.symbol;
+                Sym = k.Symbol;
             // make sure symbol matches
-            if (k.symbol != Sym) return;
+            if (k.Symbol != Sym) return;
             // if depth is zero, must be a new book
-            if (k.depth == 0) Reset();
+            if (k.Depth == 0) Reset();
             // update buy book
             if (k.hasBid)
             {
-                bidprice[k.depth] = k.bid;
-                bidsize[k.depth] = k.BidSize;
-                bidex[k.depth] = k.be;
-                if (k.depth > ActualDepth)
-                    ActualDepth = k.depth;
+                bidprice[k.Depth] = k.BidPrice;
+                bidsize[k.Depth] = k.StockBidSize;
+                bidex[k.Depth] = k.BidExchange;
+                if (k.Depth > ActualDepth)
+                    ActualDepth = k.Depth;
             }
             // update sell book
             if (k.hasAsk)
             {
-                askprice[k.depth] = k.ask;
-                asksize[k.depth] = k.AskSize;
-                askex[k.depth] = k.oe;
-                if (k.depth > ActualDepth)
-                    ActualDepth = k.depth;
+                askprice[k.Depth] = k.AskPrice;
+                asksize[k.Depth] = k.StockAskSize;
+                askex[k.Depth] = k.AskExchange;
+                if (k.Depth > ActualDepth)
+                    ActualDepth = k.Depth;
             }
         }
 

@@ -204,20 +204,20 @@ namespace TradingLib.Common
         public bool newTick(Tick k)
         {
             TickImpl t = (TickImpl)k;
-            if (_sym == "") _sym = t.symbol;
-            if (_sym != t.symbol) throw new InvalidTick();
+            if (_sym == "") _sym = t.Symbol;
+            if (_sym != t.Symbol) throw new InvalidTick();
             //if (_time == 0) { _time = t.time; bardate = t.date; }
-            if (_time == 0) { _time = bt(t.time); bardate = t.date;}
-            if (bardate != t.date) DAYEND = true;
+            if (_time == 0) { _time = bt(t.Time); bardate = t.Date; }
+            if (bardate != t.Date) DAYEND = true;
             else DAYEND = false;
             // check if this bar's tick//如果该bar不在改时间段中则return false
-            if ((bt(t.time) != _time) || (bardate!=t.date)) return false; 
+            if ((bt(t.Time) != _time) || (bardate != t.Date)) return false; 
             // if tick doesn't have trade or index, ignore
             if (!t.isTrade && !t.isIndex) return true; //我们只能通过trade来进行bar的形成，没有成交的ask bid不能作为bar数据
             tradesinbar++; // count it 累计该bar内的trade trade/ask/bid
             _new = tradesinbar == 1;//是否是新bar的标准  tradesinbar==1
             // only count volume on trades, not indicies
-            if (!t.isIndex) v += t.size; // add trade size to bar volume 如果不是质数 则bar的volume通过trades来进行累加
+            if (!t.isIndex) v += t.Size; // add trade size to bar volume 如果不是质数 则bar的volume通过trades来进行累加
             //更新bar的o h l c 数据
             if (o == 0) o = t._trade;//如果open为0 赋初值
             if (t._trade > h) h = t._trade;

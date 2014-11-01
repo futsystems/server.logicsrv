@@ -11,26 +11,26 @@ namespace TradingLib.Common
     {
         int _symidx;
         public int symidx { get { return _symidx; } set { _symidx = value; } }
-        public string symbol { get { return _sym; } set { _sym = value; } }
-        public int size { get { return _size; } set { _size = value; } }
-        public int depth { get { return _depth; } set { _depth = value; } }
-        public int date { get { return _date; } set { _date = value; } }
-        public int time { get { return _time; } set { _time = value; } }
-        public long datetime { get { return _datetime; } set { _datetime = value; } }
+        public string Symbol { get { return _sym; } set { _sym = value; } }
+        public int Size { get { return _size; } set { _size = value; } }
+        public int Depth { get { return _depth; } set { _depth = value; } }
+        public int Date { get { return _date; } set { _date = value; } }
+        public int Time { get { return _time; } set { _time = value; } }
+        public long Datetime { get { return _datetime; } set { _datetime = value; } }
         /// <summary>
         /// normal bid size (size/100 for equities, /1 for others)
         /// </summary>
-        public int bs { get { return _bs; } set { _bs = value; } }
+        public int BidSize { get { return _bs; } set { _bs = value; } }
         /// <summary>
         /// normal ask size (size/100 for equities, /1 for others)
         /// </summary>
-        public int os { get { return _os; } set { _os = value; } }
-        public decimal trade { get { return _trade * Const.IPRECV; } set { _trade = (ulong)(value * Const.IPREC); } }
-        public decimal bid { get { return _bid * Const.IPRECV; } set { _bid = (ulong)(value * Const.IPREC); } }
-        public decimal ask { get { return _ask * Const.IPRECV; } set { _ask = (ulong)(value * Const.IPREC); } }
-        public string ex { get { return _ex; } set { _ex = value; } }
-        public string be { get { return _be; } set { _be = value; } }
-        public string oe { get { return _oe; } set { _oe = value; } }
+        public int AskSize { get { return _os; } set { _os = value; } }
+        public decimal Trade { get { return _trade * Const.IPRECV; } set { _trade = (ulong)(value * Const.IPREC); } }
+        public decimal BidPrice { get { return _bid * Const.IPRECV; } set { _bid = (ulong)(value * Const.IPREC); } }
+        public decimal AskPrice { get { return _ask * Const.IPRECV; } set { _ask = (ulong)(value * Const.IPREC); } }
+        public string Exchange { get { return _ex; } set { _ex = value; } }
+        public string BidExchange { get { return _be; } set { _be = value; } }
+        public string AskExchange { get { return _oe; } set { _oe = value; } }
         public bool isIndex { get { return _size < 0; } }
 
         public bool hasBid { get { return (_bid != 0) && (_bs != 0); } }
@@ -55,11 +55,12 @@ namespace TradingLib.Common
         /// <summary>
         /// tick.bs*100 (only for equities)
         /// </summary>
-        public int BidSize { get { return _bs * 100; } set { _bs = (int)((double)value / 100); } }
+        public int StockBidSize { get { return _bs * 100; } set { _bs = (int)((double)value / 100); } }
         /// <summary>
         /// tick.os*100 (only for equities)
         /// </summary>
-        public int AskSize { get { return _os * 100; } set { _os = (int)((double)value / 100); } }
+        public int StockAskSize { get { return _os * 100; } set { _os = (int)((double)value / 100); } }
+
         public int TradeSize { get { return ts * 100; } set { _size = (int)(value / 100); } }
         public int ts { get { return _size / 100; } } // normalized to bs/os
         internal long _datetime;
@@ -110,24 +111,24 @@ namespace TradingLib.Common
         public static TickImpl Copy(Tick c)
         {
             TickImpl k = new TickImpl();
-            if (c.symbol != "") k.symbol = c.symbol;
-            k.time = c.time;
-            k.date = c.date;
-            k.datetime = c.datetime;
+            if (c.Symbol != "") k.Symbol = c.Symbol;
+            k.Time = c.Time;
+            k.Date = c.Date;
+            k.Datetime = c.Datetime;
 
-            k.size = c.size;
-            k.depth = c.depth;
-            k.trade = c.trade;
+            k.Size = c.Size;
+            k.Depth = c.Depth;
+            k.Trade = c.Trade;
 
-            k.bid = c.bid;
-            k.ask = c.ask;
+            k.BidPrice = c.BidPrice;
+            k.AskPrice = c.AskPrice;
             //k.bs = c.bs;
-            k.BidSize = c.BidSize;
-            k.AskSize = c.AskSize;
+            k.StockBidSize = c.StockBidSize;
+            k.StockAskSize = c.StockAskSize;
             //k.os = c.os;
-            k.be = c.be;
-            k.oe = c.oe;
-            k.ex = c.ex;
+            k.BidExchange = c.BidExchange;
+            k.AskExchange = c.AskExchange;
+            k.Exchange = c.Exchange;
             k.symidx = c.symidx;
 
             k.High = c.High;
@@ -150,65 +151,65 @@ namespace TradingLib.Common
         public static Tick Copy(TickImpl a, TickImpl b)
         {
             TickImpl k = new TickImpl();
-            if (b.symbol != a.symbol) return k; // don't combine different symbols
-            if (b.time < a.time) return k; // don't process old updates
-            k.time = b.time;
-            k.date = b.date;
-            k.datetime = b.datetime;
-            k.symbol = b.symbol;
-            k.depth = b.depth;
+            if (b.Symbol != a.Symbol) return k; // don't combine different symbols
+            if (b.Time < a.Time) return k; // don't process old updates
+            k.Time = b.Time;
+            k.Date = b.Date;
+            k.Datetime = b.Datetime;
+            k.Symbol = b.Symbol;
+            k.Depth = b.Depth;
             k.symidx = b.symidx;
             if (b.isTrade)
             {
-                k.trade = b.trade;
-                k.size = b.size;
-                k.ex = b.ex;
+                k.Trade = b.Trade;
+                k.Size = b.Size;
+                k.Exchange = b.Exchange;
                 //
-                k.bid = a.bid;
-                k.ask = a.ask;
-                k.os = a.os;
-                k.bs = a.bs;
-                k.be = a.be;
-                k.oe = a.oe;
+                k.BidPrice = a.BidPrice;
+                k.AskPrice = a.AskPrice;
+                k.AskSize = a.AskSize;
+                k.BidSize = a.BidSize;
+                k.BidExchange = a.BidExchange;
+                k.AskExchange = a.AskExchange;
             }
             if (b.hasAsk && b.hasBid)
             {
-                k.bid = b.bid;
-                k.ask = b.ask;
-                k.bs = b.bs;
-                k.os = b.os;
-                k.be = b.be;
-                k.oe = b.oe;
+                k.BidPrice = b.BidPrice;
+                k.AskPrice = b.AskPrice;
+                k.BidSize = b.BidSize;
+                k.AskSize = b.AskSize;
+                k.BidExchange = b.BidExchange;
+                k.AskExchange = b.AskExchange;
                 //
-                k.trade = a.trade;
-                k.size = a.size;
-                k.ex = a.ex;
+                k.Trade = a.Trade;
+                k.Size = a.Size;
+                k.Exchange = a.Exchange;
             }
             else if (b.hasAsk)
             {
-                k.ask = b.ask;
-                k.os = b.os;
-                k.oe = b.oe;
+                k.AskPrice = b.AskPrice;
+                k.AskSize = b.AskSize;
+                k.AskExchange = b.AskExchange;
                 //
-                k.bid = a.bid;
-                k.bs = a.bs;
-                k.be = a.be;
-                k.trade = a.trade;
-                k.size = a.size;
-                k.ex = a.ex;
+                k.BidPrice = a.BidPrice;
+                k.BidSize = a.BidSize;
+                k.BidExchange = a.BidExchange;
+                k.Trade = a.Trade;
+                k.Size = a.Size;
+                k.Exchange = a.Exchange;
             }
             else if (b.hasBid)
             {
-                k.bid = b.bid;
-                k.bs = b.bs;
-                k.be = b.be;
+                k.BidPrice = b.BidPrice;
+                k.BidSize = b.BidSize;
+                k.BidExchange = b.BidExchange;
                 //
-                k.ask = a.ask;
-                k.os = a.os;
-                k.oe = a.oe;
-                k.trade = a.trade;
-                k.size = a.size;
-                k.ex = a.ex;
+                k.AskPrice = a.AskPrice;
+                k.AskSize = a.AskSize;
+                k.AskExchange = a.AskExchange;
+                k.Trade = a.Trade;
+                k.Size = a.Size;
+                k.Exchange = a.Exchange;
             }
             return k;
         }
@@ -216,8 +217,8 @@ namespace TradingLib.Common
         public override string ToString()
         {
             if (!this.hasTick) return "";
-            if (this.isTrade) return symbol + " " + this.size + "@" + this.trade + " " + this.ex;
-            else return symbol + " " + this.bid + "x" + this.ask + " (" + this.bs + "x" + this.os + ") " + this.be + "x" + this.oe;
+            if (this.isTrade) return Symbol + " " + this.Size + "@" + this.Trade + " " + this.Exchange;
+            else return Symbol + " " + this.BidPrice + "x" + this.AskPrice + " (" + this.BidSize + "x" + this.AskSize + ") " + this.BidExchange + "x" + this.AskExchange;
         }
 
         //"Iu'I^3"A'U^O"o 1/4 'Ou"Atick"I^i"A?
@@ -245,33 +246,33 @@ namespace TradingLib.Common
         {
             const char d = ',';
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            sb.Append(t.symbol);
+            sb.Append(t.Symbol);
             sb.Append(d);
-            sb.Append(t.date);
+            sb.Append(t.Date);
             sb.Append(d);
-            sb.Append(t.time);
+            sb.Append(t.Time);
             sb.Append(d);
             // unused field
             sb.Append(d);
-            sb.Append(t.trade.ToString("G0"));
+            sb.Append(t.Trade.ToString("G0"));
             sb.Append(d);
-            sb.Append(t.size);
+            sb.Append(t.Size);
             sb.Append(d);
-            sb.Append(t.ex);
+            sb.Append(t.Exchange);
             sb.Append(d);
-            sb.Append(t.bid.ToString("G0"));
+            sb.Append(t.BidPrice.ToString("G0"));
             sb.Append(d);
-            sb.Append(t.ask.ToString("G0"));
+            sb.Append(t.AskPrice.ToString("G0"));
             sb.Append(d);
-            sb.Append(t.bs);
+            sb.Append(t.BidSize);
             sb.Append(d);
-            sb.Append(t.os);//10
+            sb.Append(t.AskSize);//10
             sb.Append(d);
-            sb.Append(t.be);
+            sb.Append(t.BidExchange);
             sb.Append(d);
-            sb.Append(t.oe);
+            sb.Append(t.AskExchange);
             sb.Append(d);
-            sb.Append(t.depth);
+            sb.Append(t.Depth);
             //后期加入
             sb.Append(d);
             sb.Append(t.Vol);//14
@@ -300,25 +301,25 @@ namespace TradingLib.Common
             Tick t = new TickImpl();
             decimal d = 0;
             int i = 0;
-            t.symbol = r[(int)TickField.symbol];
+            t.Symbol = r[(int)TickField.symbol];
             if (decimal.TryParse(r[(int)TickField.trade], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out d))
-                t.trade = d;
+                t.Trade = d;
             if (decimal.TryParse(r[(int)TickField.bid], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out d))
-                t.bid = d;
+                t.BidPrice = d;
             if (decimal.TryParse(r[(int)TickField.ask], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out d))
-                t.ask = d;
+                t.AskPrice = d;
             if (int.TryParse(r[(int)TickField.tsize], out i))
-                t.size = i;
+                t.Size = i;
             if (int.TryParse(r[(int)TickField.asksize], out i))
-                t.os = i;
+                t.AskSize = i;
             if (int.TryParse(r[(int)TickField.bidsize], out i))
-                t.bs = i;
+                t.BidSize = i;
             if (int.TryParse(r[(int)TickField.time], out i))
-                t.time = i;
+                t.Time = i;
             if (int.TryParse(r[(int)TickField.date], out i))
-                t.date = i;
+                t.Date = i;
             if (int.TryParse(r[(int)TickField.tdepth], out i))
-                t.depth = i;
+                t.Depth = i;
 
             if (int.TryParse(r[(int)TickField.vol], out i))
                 t.Vol = i;
@@ -340,54 +341,54 @@ namespace TradingLib.Common
 
 
 
-            t.ex = r[(int)TickField.tex];
-            t.be = r[(int)TickField.bidex];
-            t.oe = r[(int)TickField.askex];
-            t.datetime = t.date * 1000000 + t.time;
+            t.Exchange = r[(int)TickField.tex];
+            t.BidExchange = r[(int)TickField.bidex];
+            t.AskExchange = r[(int)TickField.askex];
+            t.Datetime = t.Date * 1000000 + t.Time;
             return t;
         }
 
         public void SetQuote(int date, int time, int sec, decimal bid, decimal ask, int bidsize, int asksize, string bidex, string askex)
         {
-            this.date = date;
-            this.time = time;
-            this.bid = bid;
-            this.ask = ask;
-            this.bs = bidsize;
-            this.os = asksize;
-            this.be = bidex;
-            this.oe = askex;
-            this.trade = 0;
-            this.size = 0;
-            this.depth = 0;
+            this.Date = date;
+            this.Time = time;
+            this.BidPrice = bid;
+            this.AskPrice = AskPrice;
+            this.BidSize = bidsize;
+            this.AskSize = asksize;
+            this.BidExchange = bidex;
+            this.AskExchange = askex;
+            this.Trade = 0;
+            this.Size = 0;
+            this.Depth = 0;
         }
         //overload with depth field
         public void SetQuote(int date, int time, int sec, decimal bid, decimal ask, int bidsize, int asksize, string bidex, string askex, int depth)
         {
-            this.date = date;
-            this.time = time;
-            this.bid = bid;
-            this.ask = ask;
-            this.bs = bidsize;
-            this.os = asksize;
-            this.be = bidex;
-            this.oe = askex;
-            this.trade = 0;
-            this.size = 0;
-            this.depth = depth;
+            this.Date = date;
+            this.Time = time;
+            this.BidPrice = bid;
+            this.AskPrice = AskPrice;
+            this.BidSize = bidsize;
+            this.AskSize = asksize;
+            this.BidExchange = bidex;
+            this.AskExchange = askex;
+            this.Trade = 0;
+            this.Size = 0;
+            this.Depth = depth;
         }
         //date, time, sec, Convert.ToDecimal(r[(int)T.PRICE]), isize, r[(int)T.EXCH]
         public void SetTrade(int date, int time, int sec, decimal price, int size, string exch)
         {
-            this.ex = exch;
-            this.date = date;
-            this.time = time;
-            this.trade = price;
-            this.size = size;
-            this.bid = 0;
-            this.ask = 0;
-            this.os = 0;
-            this.bs = 0;
+            this.Exchange = exch;
+            this.Date = date;
+            this.Time = time;
+            this.Trade = price;
+            this.Size = size;
+            this.BidPrice = 0;
+            this.AskPrice = 0;
+            this.AskSize = 0;
+            this.BidSize = 0;
         }
 
 
@@ -397,17 +398,17 @@ namespace TradingLib.Common
         public static TickImpl NewQuote(string sym, int date, int time, decimal bid, decimal ask, int bidsize, int asksize, string be, string oe)
         {
             TickImpl q = new TickImpl(sym);
-            q.date = date;
-            q.time = time;
-            q.bid = bid;
-            q.ask = ask;
-            q.be = be.Trim();
-            q.oe = oe.Trim();
-            q.AskSize = asksize;
-            q.BidSize = bidsize;
-            q.trade = 0;
-            q.size = 0;
-            q.depth = 0;
+            q.Date = date;
+            q.Time = time;
+            q.BidPrice = bid;
+            q.AskPrice = ask;
+            q.BidExchange = be.Trim();
+            q.AskExchange = oe.Trim();
+            q.StockAskSize = asksize;
+            q.StockBidSize = bidsize;
+            q.Trade = 0;
+            q.Size = 0;
+            q.Depth = 0;
             return q;
         }
         //methods overloaded with depth field
@@ -416,17 +417,17 @@ namespace TradingLib.Common
         public static TickImpl NewQuote(string sym, int date, int time, decimal bid, decimal ask, int bidsize, int asksize, string be, string oe, int depth)
         {
             TickImpl q = new TickImpl(sym);
-            q.date = date;
-            q.time = time;
-            q.bid = bid;
-            q.ask = ask;
-            q.be = be.Trim();
-            q.oe = oe.Trim();
-            q.AskSize = asksize;
-            q.BidSize = bidsize;
-            q.trade = 0;
-            q.size = 0;
-            q.depth = depth;
+            q.Date = date;
+            q.Time = time;
+            q.BidPrice = bid;
+            q.AskPrice = ask;
+            q.BidExchange = be.Trim();
+            q.AskExchange = oe.Trim();
+            q.StockAskSize = asksize;
+            q.StockBidSize = bidsize;
+            q.Trade = 0;
+            q.Size = 0;
+            q.Depth = depth;
             return q;
         }
 
@@ -434,12 +435,12 @@ namespace TradingLib.Common
         public static TickImpl NewTrade(string sym, int date, int time, decimal trade, int size, string ex)
         {
             TickImpl t = new TickImpl(sym);
-            t.date = date;
-            t.time = time;
-            t.trade = trade;
-            t.size = size;
-            t.ex = ex.Trim();
-            t.bid = 0;
+            t.Date = date;
+            t.Time = time;
+            t.Trade = trade;
+            t.Size = size;
+            t.Exchange = ex.Trim();
+            t.BidPrice = 0;
             return t;
         }
 

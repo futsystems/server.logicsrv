@@ -48,11 +48,11 @@ namespace TradingLib.Core
         private decimal somePrice(Tick k)
         {
             if (k.isTrade)
-                return k.trade;
+                return k.Trade;
             if (k.hasAsk)
-                return k.ask;
+                return k.AskPrice;
             if (k.hasBid)
-                return k.bid;
+                return k.BidPrice;
             else
                 return -1;
         }

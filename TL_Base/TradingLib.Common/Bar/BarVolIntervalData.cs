@@ -93,10 +93,10 @@ namespace TradingLib.Common
         public void newTick(Tick k)
         {
             // ignore quotes
-            if (k.trade == 0) return;
+            if (k.Trade == 0) return;
             // process data
             // if we have no bars or 
-            if ((curr_barid == -1) || (vols[curr_barid] + k.size > intervallength))
+            if ((curr_barid == -1) || (vols[curr_barid] + k.Size > intervallength))
             {
                 // create a new one
                 newbar();
@@ -105,29 +105,29 @@ namespace TradingLib.Common
                 // make it current
                 curr_barid++;
                 // set time
-                times[times.Count - 1] = k.time;
+                times[times.Count - 1] = k.Time;
                 // set date
-                dates[dates.Count - 1] = k.date;
+                dates[dates.Count - 1] = k.Date;
                 //set oadate
-                OADateTime[OADateTime.Count - 1] = Util.ToDateTime(k.date, k.time).ToOADate();
+                OADateTime[OADateTime.Count - 1] = Util.ToDateTime(k.Date, k.Time).ToOADate();
             }
             else _isRecentNew = false;
             // blend tick into bar
             // open
-            if (opens[Last()] == 0) opens[Last()] = k.trade;
+            if (opens[Last()] == 0) opens[Last()] = k.Trade;
             // high
-            if (k.trade > highs[Last()]) highs[Last()] = k.trade;
+            if (k.Trade > highs[Last()]) highs[Last()] = k.Trade;
             // low
-            if (k.trade < lows[Last()]) lows[Last()] = k.trade;
+            if (k.Trade < lows[Last()]) lows[Last()] = k.Trade;
             // close
-            closes[Last()] = k.trade;
+            closes[Last()] = k.Trade;
             // don't set volume for index
-            if (k.size >= 0)
-                vols[Last()] += k.size;
+            if (k.Size >= 0)
+                vols[Last()] += k.Size;
 
             // notify barlist
             if (_isRecentNew)
-                NewBar(k.symbol, intervallength);
+                NewBar(k.Symbol, intervallength);
         }
         public void newPoint(string symbol, decimal p, int time, int date, int size)
         {

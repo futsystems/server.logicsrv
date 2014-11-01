@@ -398,26 +398,26 @@ namespace FutSystems.GUI
             {
                 try
                 {
-                    string _fromat = getDisplayFormat(t.symbol);
+                    string _fromat = getDisplayFormat(t.Symbol);
                     //数据列中如果是该symbol则必须全比更新
                     for (int i = 0; i < gt.Rows.Count; i++)
                     {
                         //便利所有合约与tick.symbol相同的行
                         //debug("Ticktime"+t.time.ToString()+"symbol:" + gt.Rows[i][SYMBOL].ToString() + " side:" + gt.Rows[i][SIDE].ToString());
                         //debug("row idx:" + i.ToString() + " acc:" + gt.Rows[i][ACCOUNT].ToString() + " symbol:" + gt.Rows[i][SYMBOL].ToString() + " side:" + gt.Rows[i][SIDE].ToString() + " rowsnum:" + gt.Rows.Count.ToString());
-                        if (gt.Rows[i][SYMBOL].ToString() == t.symbol)
+                        if (gt.Rows[i][SYMBOL].ToString() == t.Symbol)
                         {
                             //记录该仓位所属账户
                             string acc = gt.Rows[i][ACCOUNT].ToString();
                             bool posside = bool.Parse(gt.Rows[i][SIDE].ToString());
-                            Position pos = pt[t.symbol, acc, posside];
+                            Position pos = pt[t.Symbol, acc, posside];
                             string key = pos.GetKey(posside);
                             decimal unrealizedpl = pos.UnRealizedPL;
                             //debug("accc-symbol-side:" + key);
                             //更新最新成交价
                             if (t.isTrade)
                             {
-                                gt.Rows[i][LASTPRICE] = string.Format(getDisplayFormat(t.symbol), t.trade);
+                                gt.Rows[i][LASTPRICE] = string.Format(getDisplayFormat(t.Symbol), t.Symbol);
                             }
                             //空仓 未平仓合约与 最新价格
                             if (pos.isFlat)

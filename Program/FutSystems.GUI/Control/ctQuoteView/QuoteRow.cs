@@ -128,23 +128,23 @@ namespace FutSystems.GUI
             //将数据更新到cell value中去
             if (k.isTrade)
             {
-                if (k.trade != this[QuoteListConst.LAST].Value)
+                if (k.Trade != this[QuoteListConst.LAST].Value)
                 {
                     if (RowID != QuoteTable.SelectedQuoteRow)
                     {
-                        this[QuoteListConst.LAST].CellStyle.FontColor = k.trade < k.PreSettlement ? _defaultQuoteStyle.DNColor : _defaultQuoteStyle.UPColor;
-                        cellChanged(QuoteListConst.LAST, k.trade > this[QuoteListConst.LAST].Value ? Color.Tomato : Color.SpringGreen);
+                        this[QuoteListConst.LAST].CellStyle.FontColor = k.Trade < k.PreSettlement ? _defaultQuoteStyle.DNColor : _defaultQuoteStyle.UPColor;
+                        cellChanged(QuoteListConst.LAST, k.Trade > this[QuoteListConst.LAST].Value ? Color.Tomato : Color.SpringGreen);
                         FlashLoaction();
                     }
-                    this[QuoteListConst.LAST].Value = k.trade;//更新单元各value
+                    this[QuoteListConst.LAST].Value = k.Trade;//更新单元各value
                     //Rectangle cellRectChanged = getChangedCellRect(QuoteListConst.LAST);//获得单元各更新区域
                     //QuoteTable.Invalidate(cellRectChanged);//请求quotelist更新该区域
                     //cellLocations.Write(RowID);
                 }     
             }
-            if (k.size != 0)
+            if (k.Size != 0)
             {
-                this[QuoteListConst.LASTSIZE].Value = k.size;
+                this[QuoteListConst.LASTSIZE].Value = k.Size;
                 //Rectangle cellRectChanged = getChangedCellRect(QuoteListConst.LASTSIZE);//获得单元各更新区域
                // QuoteTable.Invalidate(cellRectChanged);//请求quotelist更新该区域
             }
@@ -152,26 +152,26 @@ namespace FutSystems.GUI
             
             //更新当前的Tick数据
 
-            if (k.ask != this[QuoteListConst.ASK].Value)
+            if (k.AskPrice != this[QuoteListConst.ASK].Value)
             {
-                this[QuoteListConst.ASK].Value = k.ask;
-                this[QuoteListConst.ASK].CellStyle.FontColor = k.ask < k.PreSettlement ? _defaultQuoteStyle.DNColor : _defaultQuoteStyle.UPColor;
+                this[QuoteListConst.ASK].Value = k.AskPrice;
+                this[QuoteListConst.ASK].CellStyle.FontColor = k.AskPrice < k.PreSettlement ? _defaultQuoteStyle.DNColor : _defaultQuoteStyle.UPColor;
             }
-            if (k.bid != this[QuoteListConst.BID].Value)
+            if (k.BidPrice != this[QuoteListConst.BID].Value)
             {
-                this[QuoteListConst.BID].Value = k.bid;
-                this[QuoteListConst.BID].CellStyle.FontColor = k.bid < k.PreSettlement ? _defaultQuoteStyle.DNColor : _defaultQuoteStyle.UPColor;
+                this[QuoteListConst.BID].Value = k.BidPrice;
+                this[QuoteListConst.BID].CellStyle.FontColor = k.BidPrice < k.PreSettlement ? _defaultQuoteStyle.DNColor : _defaultQuoteStyle.UPColor;
             }
 
-            this[QuoteListConst.BIDSIZE].Value = k.bs;
-            this[QuoteListConst.ASKSIZE].Value = k.os;
+            this[QuoteListConst.BIDSIZE].Value = k.BidSize;
+            this[QuoteListConst.ASKSIZE].Value = k.AskSize;
 
 
             this[QuoteListConst.VOL].Value = k.Vol;
-            if ((k.trade - k.PreSettlement) != this[QuoteListConst.CHANGE].Value)
+            if ((k.Trade - k.PreSettlement) != this[QuoteListConst.CHANGE].Value)
             {
-                this[QuoteListConst.CHANGE].Value = k.trade - k.PreSettlement;
-                this[QuoteListConst.CHANGE].CellStyle.FontColor = (k.trade - k.PreSettlement) < 0 ? _defaultQuoteStyle.DNColor : _defaultQuoteStyle.UPColor;
+                this[QuoteListConst.CHANGE].Value = k.Trade - k.PreSettlement;
+                this[QuoteListConst.CHANGE].CellStyle.FontColor = (k.Trade - k.PreSettlement) < 0 ? _defaultQuoteStyle.DNColor : _defaultQuoteStyle.UPColor;
             }
 
             this[QuoteListConst.OI].Value = k.OpenInterest;

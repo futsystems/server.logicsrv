@@ -410,20 +410,20 @@ namespace TradingLib.Common
         {
             //动态的更新unrealizedpl，这样就不用再委托检查是频繁计算
             //更新最新的价格信息
-			if (k.symbol != (this.oSymbol!=null? this.oSymbol.TickSymbol:this.Symbol))//合约的行情比对或者模拟成交是按Tick进行的。应为异化合约只是合约代码和保证金手续费不同,异化合约依赖于底层合约
+            if (k.Symbol != (this.oSymbol != null ? this.oSymbol.TickSymbol : this.Symbol))//合约的行情比对或者模拟成交是按Tick进行的。应为异化合约只是合约代码和保证金手续费不同,异化合约依赖于底层合约
                 return;
             decimal nprice=0;
             if (usebidask)
             {
                 if (isLong && k.hasBid)//多头看买价
-                    nprice = k.bid;
+                    nprice = k.BidPrice;
                 if (isShort && k.hasAsk)//空头看卖价
-                    nprice = k.ask;
+                    nprice = k.AskPrice;
             }
             else
             {
                 if (k.isTrade)
-                    nprice = k.trade;
+                    nprice = k.Trade;
             }
             //position通过askbid来更新其对手价格然后得到last
             if (nprice != 0)

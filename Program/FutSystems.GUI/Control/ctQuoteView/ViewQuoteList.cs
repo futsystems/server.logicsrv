@@ -515,7 +515,7 @@ namespace FutSystems.GUI
         //得到新的Tick通过索引直接调用QuoteRow进行gottick更新单元格,然后按行进行数据更新
         public void GotTick(Tick k)
         {
-            int idx = symbol2idx(k.symbol);
+            int idx = symbol2idx(k.Symbol);
             if ((idx == -1) || (idx > Count)) return;
             if (spillTick != null)
                 spillTick(k);

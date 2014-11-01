@@ -461,12 +461,12 @@ namespace TradingLib.Common
             // make sure we have a symbol defined 
             if (!_valid)
             {
-                _symh = k.symbol.GetHashCode();
-                _sym = k.symbol;
+                _symh = k.Symbol.GetHashCode();
+                _sym = k.Symbol;
                 _valid = true;
             }
             // make sure tick is from our symbol
-            if (_symh != k.symbol.GetHashCode()) return;
+            if (_symh != k.Symbol.GetHashCode()) return;
             // add tick to every requested bar interval
             for (int i = 0; i < _intdata.Length; i++)
                 _intdata[i].newTick(k);
@@ -770,9 +770,9 @@ histperiod=daily&startdate=" + startdate + "&enddate=" + enddate + "&output=csv&
             else
             {
                 if (t.hasAsk && !_usebid)
-                    _fromepf.newPoint(t.symbol,t.ask, t.time, t.date, t.AskSize);
+                    _fromepf.newPoint(t.Symbol, t.AskPrice, t.Time, t.Date, t.StockAskSize);
                 else if (t.hasBid && _usebid)
-                    _fromepf.newPoint(t.symbol, t.bid, t.time, t.date, t.BidSize);
+                    _fromepf.newPoint(t.Symbol, t.BidPrice, t.Time, t.Date, t.StockBidSize);
             }
         }
         /// <summary>

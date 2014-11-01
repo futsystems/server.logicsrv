@@ -364,7 +364,7 @@ namespace TradingLib.Core
         /// <param name="tick">行情数据</param>
         public void SendTick(Tick k)
         {
-            string tickstr = k.symbol + "^" + TickImpl.Serialize(k);
+            string tickstr = k.Symbol + "^" + TickImpl.Serialize(k);
             //debug("tickstr:" + tickstr, QSEnumDebugLevel.INFO);
             _tickpub.Send(tickstr, Encoding.UTF8);
         }

@@ -372,7 +372,7 @@ namespace Broker.SIM
 
 
                     //2.成交检查 用Tick数据成交该委托 如果该委托与tick不一致则返回到未成交队列
-                    if (tick.symbol != o.symbol)
+                    if (tick.Symbol != o.symbol)
                     {
                         unfilled.Add(o);
                         continue;//如果该tick的合约与委托合约不一致则不用进行检查直接检查下一个委托
@@ -916,9 +916,9 @@ namespace Broker.SIM
         public LimitOrderQuoteStatus(Order o, Tick k)
         {
             Order = o;
-            decimal partprice = o.side ? k.bid : k.ask;
+            decimal partprice = o.side ? k.BidPrice : k.AskPrice;
             if (o.price >= partprice)
-                PendingSize = o.side ? k.bs : k.os;
+                PendingSize = o.side ? k.BidSize : k.AskSize;
             else
                 PendingSize = 0;
             //LibUtil.Debug("模拟成交记录委托盘口:" + Order.ToString() + " 盘口数量:" + PendingSize.ToString() + " 价格:" + partprice.ToString());
@@ -935,13 +935,13 @@ namespace Broker.SIM
         /// <param name="k"></param>
         public void GotTick(Tick k)
         {
-            if (k.symbol != Order.symbol) return;
-            if (k.trade == Order.price)
+            if (k.Symbol != Order.symbol) return;
+            if (k.Trade == Order.price)
             {
-                PendingSize = PendingSize - k.size;//如果成交价格等于该委托限价格,则从盘口厚度中减去该成交数量
+                PendingSize = PendingSize - k.Size;//如果成交价格等于该委托限价格,则从盘口厚度中减去该成交数量
                 //LibUtil.Debug("价格:" + Order.price.ToString() + " 成交:" + k.size.ToString() + " 修改盘口厚度:" + PendingSize.ToString());
             }
-            int secends = Util.FTDIFF(Order.time,k.time);
+            int secends = Util.FTDIFF(Order.time, k.Time);
             
             if (secends >60*60 && !s60)//30分钟后盘口撤单70%
             {
@@ -1038,7 +1038,7 @@ namespace Broker.SIM
                 //idx=2 2,1,0,3
                 //idx=1 1,0,3,2
                 bool side = o.side;
-                decimal price = o.side ? k.ask : k.bid;
+                decimal price = o.side ? k.AskPrice : k.BidPrice;
 
                 List<int> idlist = new List<int>();
                 //遍历管道内的所有 tick,查找最符合的tick，即当前盘口下主动买或者主动卖
@@ -1098,7 +1098,7 @@ namespace Broker.SIM
 
             bool pairticktrade(Tick k, decimal price)
             {
-                if (k.trade == price)
+                if (k.Trade == price)
                     return true;
                 return false;
             }
@@ -1114,7 +1114,7 @@ namespace Broker.SIM
                 //主动买
                 if (side)
                 {
-                    if (k.trade == k.ask && k.trade == price)//当前成交价 卖盘 与下委托时的盘口价格一致
+                    if (k.Trade == k.AskPrice && k.Trade == price)//当前成交价 卖盘 与下委托时的盘口价格一致
                     {
                         return true;
                     }
@@ -1122,7 +1122,7 @@ namespace Broker.SIM
                 }
                 else//主动卖
                 {
-                    if (k.trade == k.bid && k.trade == price)//当前成交价 买盘 与下委托时的盘口价格一致
+                    if (k.Trade == k.BidPrice && k.Trade == price)//当前成交价 买盘 与下委托时的盘口价格一致
                     {
                         return true;
                     }

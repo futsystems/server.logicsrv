@@ -399,7 +399,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static DateTime TLT2DT(Tick k)
         {
-            return ToDateTime(0, k.time);
+            return ToDateTime(0, k.Time);
         }
 
 
@@ -460,7 +460,7 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="t"></param>
         /// <returns></returns>
-        public static int TL2FT(Tick t) { return t.time; }
+        public static int TL2FT(Tick t) { return t.Time; }
         /// <summary>
         /// gets elapsed seconds between two fasttimes
         /// </summary>
