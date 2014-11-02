@@ -21,7 +21,7 @@ namespace TradingLib.Contrib.FinService.ORM
         /// <returns></returns>
         public static bool IsAgentSettled(int agentfk)
         {
-            return IsAgentSettled(agentfk, TLCtxHelper.CmdSettleCentre.CurrentTradingday);
+            return IsAgentSettled(agentfk, TLCtxHelper.CmdSettleCentre.NextTradingday);
         }
 
 
@@ -35,7 +35,7 @@ namespace TradingLib.Contrib.FinService.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("select count(*) from manager_settlement  where `mgr_fk` = '{0}' and `settleday` = '{1}'", agentfk, settleday);
+                string query = String.Format("select * from manager_settlement  where `mgr_fk` = '{0}' and `settleday` = '{1}'", agentfk, settleday);
                 return db.Connection.Query(query).Count() > 0;
             }
         }
