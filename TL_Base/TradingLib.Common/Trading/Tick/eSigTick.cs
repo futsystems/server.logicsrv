@@ -41,33 +41,33 @@ namespace TradingLib.Common
             if (r[(int)Q.TYPE] == TRADE)
             {
                 if (decimal.TryParse(r[(int)T.PRICE], out td))
-                    t.trade = td;
+                    t.Trade = td;
                 if (int.TryParse(r[(int)T.SIZE], out ti))
-                    t.size = ti;
-                t.ex = r[(int)T.EXCH];
+                    t.Size = ti;
+                t.Exchange = r[(int)T.EXCH];
             }
             else
             {
                 if (r.Length < 9) return t;
                 if (decimal.TryParse(r[(int)Q.BID], out td))
-                    t.bid = td;
+                    t.BidPrice = td;
                 if (decimal.TryParse(r[(int)Q.ASK], out td))
-                    t.ask = td;
+                    t.AskPrice = td;
                 if (int.TryParse(r[(int)Q.BIDSIZE], out ti))
-                    t.bs = ti;
+                    t.BidSize = ti;
                 if (int.TryParse(r[(int)Q.ASKSIZE], out ti))
-                    t.os = ti;
-                t.be = r[(int)Q.BIDEX];
-                t.oe = r[(int)Q.ASKEX];
+                    t.AskSize = ti;
+                t.BidExchange = r[(int)Q.BIDEX];
+                t.AskExchange = r[(int)Q.ASKEX];
             }
-            t.symbol = symbol;
+            t.Symbol = symbol;
             if (int.TryParse(r[(int)Q.TIME], out ti))
             {
-                t.time = ti;
+                t.Time = ti;
             }
             if (int.TryParse(r[(int)Q.DATE], out ti))
-                t.date = ti + 20000000;
-            t.datetime = ((long)t.date * 1000000) + (long)t.time;
+                t.Date = ti + 20000000;
+            t.Datetime = ((long)t.Date * 1000000) + (long)t.Time;
             return t;
         }
 
@@ -82,8 +82,8 @@ namespace TradingLib.Common
         public static string ToEPF(Tick t)
         {
             string s = "";
-            if (!t.isTrade) s = "Q," + epfdate(t.date) + "," + epftime(t.time) + "," + t.bid + "," + t.ask + "," + t.bs + "," + t.os + "," + t.be + "," + t.oe;
-            else s = "T," + epfdate(t.date) + "," + epftime(t.time) + "," + t.trade + "," + (t.size) + "," + t.ex;
+            if (!t.isTrade) s = "Q," + epfdate(t.Date) + "," + epftime(t.Time) + "," + t.BidPrice + "," + t.AskPrice + "," + t.BidSize + "," + t.AskSize + "," + t.BidExchange + "," + t.AskExchange;
+            else s = "T," + epfdate(t.Date) + "," + epftime(t.Time) + "," + t.Trade + "," + (t.Size) + "," + t.Exchange;
             return s;
         }
         /// <summary>

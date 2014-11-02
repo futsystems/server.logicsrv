@@ -165,7 +165,7 @@ namespace TradingLib.Common
         public void newTick(TickImpl k)
         {
             // make sure we have a header
-            if (!_hasheader) init(k.symbol, k.date, _path);
+            if (!_hasheader) init(k.Symbol, k.Date, _path);
             // get types
             bool t = k.isTrade;
             bool fq = k.isFullQuote;
@@ -177,61 +177,61 @@ namespace TradingLib.Common
             if (!fq && b) // bid only
             {
                 Write(TikConst.TickBid);
-                Write(k.date);
-                Write(k.time);
+                Write(k.Date);
+                Write(k.Time);
                 Write(k._bid);
-                Write(k.bs);
-                Write(k.be);
-                Write(k.depth);
+                Write(k.BidSize);
+                Write(k.BidExchange);
+                Write(k.Depth);
             }
             else if (!fq && a) // ask only
             {
                 Write(TikConst.TickAsk);
-                Write(k.date);
-                Write(k.time);
+                Write(k.Date);
+                Write(k.Time);
                 Write(k._ask);
-                Write(k.os);
-                Write(k.oe);
-                Write(k.depth);
+                Write(k.AskSize);
+                Write(k.AskExchange);
+                Write(k.Depth);
             }
             else if ((t && !fq) || i) // trade or index
             {
                 Write(TikConst.TickTrade);
-                Write(k.date);
-                Write(k.time);
+                Write(k.Date);
+                Write(k.Time);
                 Write(k._trade);
-                Write(k.size);
-                Write(k.ex);
+                Write(k.Depth);
+                Write(k.Exchange);
             }
             else if (t && fq) // full quote
             {
                 Write(TikConst.TickFull);
-                Write(k.date);
-                Write(k.time);
+                Write(k.Date);
+                Write(k.Time);
                 Write(k._trade);
-                Write(k.size);
-                Write(k.ex);
+                Write(k.Depth);
+                Write(k.Exchange);
                 Write(k._bid);
-                Write(k.bs);
-                Write(k.be);
+                Write(k.BidSize);
+                Write(k.BidExchange);
                 Write(k._ask);
-                Write(k.os);
-                Write(k.oe);
-                Write(k.depth);
+                Write(k.AskSize);
+                Write(k.AskExchange);
+                Write(k.Depth);
 
             }
             else if (!t && fq) // quote only
             {
                 Write(TikConst.TickQuote);
-                Write(k.date);
-                Write(k.time);
+                Write(k.Date);
+                Write(k.Time);
                 Write(k._bid);
-                Write(k.bs);
-                Write(k.be);
+                Write(k.BidSize);
+                Write(k.BidExchange);
                 Write(k._ask);
-                Write(k.os);
-                Write(k.oe);
-                Write(k.depth);
+                Write(k.AskSize);
+                Write(k.AskExchange);
+                Write(k.Depth);
             }
             // end tick
             Write(TikConst.EndTick);

@@ -130,6 +130,9 @@ namespace TradingLib.Common
                     //查询持仓
                     case MessageTypes.QRYPOSITION:
                         return RequestTemplate<QryPositionRequest>.SrvRecvRequest(frontid, clientid, content);
+                    //查询持仓明细
+                    case MessageTypes.QRYPOSITIONDETAIL:
+                        return RequestTemplate<QryPositionDetailRequest>.SrvRecvRequest(frontid, clientid, content);
                     //查询最大保单
                     case MessageTypes.QRYMAXORDERVOL:
                         return RequestTemplate<QryMaxOrderVolRequest>.SrvRecvRequest(frontid, clientid, content);
@@ -157,9 +160,15 @@ namespace TradingLib.Common
                     //查询出入金流水记录
                     case MessageTypes.QRYTRANSFERSERIAL:
                         return RequestTemplate<QryTransferSerialRequest>.SrvRecvRequest(frontid, clientid, content);
-                    
-
-
+                    //查询合约手续费率
+                    case MessageTypes.QRYINSTRUMENTCOMMISSIONRATE:
+                        return RequestTemplate<QryInstrumentCommissionRateRequest>.SrvRecvRequest(frontid, clientid, content);
+                    //查询合约保证金率
+                    case MessageTypes.QRYINSTRUMENTMARGINRATE:
+                        return RequestTemplate<QryInstrumentMarginRateRequest>.SrvRecvRequest(frontid, clientid, content);
+                    //查询市场行情
+                    case MessageTypes.QRYMARKETDATA:
+                        return RequestTemplate<QryMarketDataRequest>.SrvRecvRequest(frontid, clientid, content);
 
 
                     #region manager
@@ -255,6 +264,8 @@ namespace TradingLib.Common
                         return RequestTemplate<MGRUpdatePassRequest>.SrvRecvRequest(frontid, clientid, content);
                     case MessageTypes.MGRINSERTTRADE://请求插入成交
                         return RequestTemplate<MGRReqInsertTradeRequest>.SrvRecvRequest(frontid, clientid, content);
+                    case MessageTypes.MGRDELACCOUNT://请求删除帐户
+                        return RequestTemplate<MGRReqDelAccountRequest>.SrvRecvRequest(frontid, clientid, content);
                     #endregion
 
                     default:
@@ -303,6 +314,8 @@ namespace TradingLib.Common
                     return ResponseTemplate<RspQryTradeResponse>.CliRecvResponse(content);
                 case MessageTypes.POSITIONRESPONSE://持仓查询回报
                     return ResponseTemplate<RspQryPositionResponse>.CliRecvResponse(content);
+                case MessageTypes.POSITIONDETAILRESPONSE://查询持仓明细回报
+                    return ResponseTemplate<RspQryPositionDetailResponse>.CliRecvResponse(content);
                 case MessageTypes.SYMBOLRESPONSE://合约查询回报
                     return ResponseTemplate<RspQrySymbolResponse>.CliRecvResponse(content);
                 case MessageTypes.SETTLEINFORESPONSE://结算信息回报
@@ -330,6 +343,13 @@ namespace TradingLib.Common
                     return ResponseTemplate<RspQryRegisterBankAccountResponse>.CliRecvResponse(content);
                 case MessageTypes.TRANSFERSERIALRESPONSE://查询出入金流水回报
                     return ResponseTemplate<RspQryTransferSerialResponse>.CliRecvResponse(content);
+                case MessageTypes.INSTRUMENTCOMMISSIONRATERESPONSE://查询合约手续费率
+                    return ResponseTemplate<RspQryInstrumentCommissionRateResponse>.CliRecvResponse(content);
+                case MessageTypes.INSTRUMENTMARGINRATERESPONSE://查询保证金率
+                    return ResponseTemplate<RspQryInstrumentMarginRateResponse>.CliRecvResponse(content);
+                case MessageTypes.MARKETDATARESPONSE://查询市场行情回报
+                    return ResponseTemplate<RspQryMarketDataResponse>.CliRecvResponse(content);
+
                 case MessageTypes.TICKNOTIFY:
                     TickNotify ticknotify = new TickNotify();
                     ticknotify.Tick = TickImpl.Deserialize(content);
@@ -385,8 +405,8 @@ namespace TradingLib.Common
                     return ResponseTemplate<RspMGRQryCashResponse>.CliRecvResponse(content);
                 case MessageTypes.MGRSETTLEMENTRESPONSE://请求查询结算单回报
                     return ResponseTemplate<RspMGRQrySettleResponse>.CliRecvResponse(content);
-                case MessageTypes.MGRCHANGEACCOUNTPASSRESPONSE://请求修改帐户密码回报
-                    return ResponseTemplate<RspMGRChangeAccountPassResponse>.CliRecvResponse(content);
+                //case MessageTypes.MGRCHANGEACCOUNTPASSRESPONSE://请求修改帐户密码回报
+                //    return ResponseTemplate<RspMGRChangeAccountPassResponse>.CliRecvResponse(content);
                 case MessageTypes.MGRADDSECURITYRESPONSE://请求添加品种回报
                     return ResponseTemplate<RspMGRReqAddSecurityResponse>.CliRecvResponse(content);
                 case MessageTypes.MGRADDSYMBOLRESPONSE://请求添加合约回报

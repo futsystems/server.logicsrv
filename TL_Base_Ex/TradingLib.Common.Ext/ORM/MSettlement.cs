@@ -31,21 +31,69 @@ namespace TradingLib.ORM
 
     public class MSettlement:MBase
     {
+        #region 持仓明细
 
         /// <summary>
-        /// 插入结算持仓
+        /// 插入持仓明细
         /// </summary>
-        /// <param name="p"></param>
+        /// <param name="?"></param>
         /// <param name="settleday"></param>
         /// <returns></returns>
-        public static bool InsertHoldPosition(SettlePosition p, int settleday)
+        public static bool InsertPositionDetail(PositionDetail p)
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("Insert into hold_positions (`account`,`symbol`,`size`,`avgprice`,`settleday`,`settleprice`,`multiple`,`securitycode`,`margin`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}')", p.Account, p.Symbol, p.Size, p.AVGPrice, settleday, p.SettlePrice, p.Multiple, p.SecurityCode, p.Margin);
+                string query = String.Format("Insert into log_position_detail_hist (`account`,`opendate`,`opentime`,`closeamount`,`settleday`,`side`,`volume`,`openprice`,`tradeid`,`lastsettlementprice`,`settlementprice`,`closevolume`,`hedgeflag`,`margin`,`exchange`,`symbol`,`seccode`,`closeprofitbydate`,`closeprofitbytrade`,`positionprofitbydate`,`positionprofitbytrade`,`ishisposition`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}','{17}','{18}','{19}','{20}','{21}')", p.Account, p.OpenDate, p.OpenTime, p.CloseAmount, p.Settleday, p.Side ? 1 : 0, p.Volume, p.OpenPrice, p.TradeID, p.LastSettlementPrice, p.SettlementPrice, p.CloseVolume, p.HedgeFlag, p.Margin, p.Exchange, p.Symbol, p.SecCode, p.CloseProfitByDate, p.CloseProfitByTrade, p.PositionProfitByDate, p.PositionProfitByTrade,p.IsHisPosition?1:0);
+                return db.Connection.Execute(query) > 0;
+            }
+        
+        }
+
+        /// <summary>
+        /// 从数据库加载某个结算日所有历史持仓明细
+        /// </summary>
+        /// <param name="tradingday"></param>
+        /// <returns></returns>
+        public static IEnumerable<PositionDetail> SelectPositionDetails(int tradingday)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("SELECT * FROM  log_position_detail_hist WHERE settleday = {0}", tradingday);
+                return db.Connection.Query<PositionDetailImpl>(query);
+            }
+        }
+
+
+
+        /// <summary>
+        /// 插入平仓明细
+        /// </summary>
+        /// <param name="p"></param>
+        /// <returns></returns>
+        public static bool InsertPositionCloseDetail(PositionCloseDetail p)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = String.Format("Insert into log_position_close_detail (`account`,`settleday`,`side`,`opendate`,`opentime`,`closedate`,`closetime`,`openprice`,`lastsettlementprice`,`closeprice`,`closevolume`,`closeprofitbydate`,`exchange`,`symbol`,`seccode`,`opentradeid`,`closetradeid`,`closepointbydate`,`closeprofitbytrade`,`iscloseydpositoin`,`closeamount`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}','{17}','{18}','{19}','{20}')", p.Account, p.Settleday, p.Side ? 1 : 0, p.OpenDate, p.OpenTime, p.CloseDate, p.CloseTime, p.OpenPrice, p.LastSettlementPrice, p.ClosePrice, p.CloseVolume, p.CloseProfitByDate, p.Exchange, p.Symbol, p.SecCode, p.OpenTradeID, p.CloseTradeID, p.ClosePointByDate, p.CloseProfitByTrade, p.IsCloseYdPosition ? 1 : 0, p.CloseAmount);
                 return db.Connection.Execute(query) > 0;
             }
         }
+
+        /// <summary>
+        /// 查询某个交易日的所有平仓明细
+        /// </summary>
+        /// <param name="tradingday"></param>
+        /// <returns></returns>
+        public static IEnumerable<PositionCloseDetail> SelectPositionCloseDetail(int tradingday)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("SELECT * FROM  log_position_close_detail WHERE settleday = {0}", tradingday);
+                return db.Connection.Query<PositionCloseDetailImpl>(query);
+            }
+        }
+
+        #endregion
 
         /// <summary>
         /// 插入结算持仓回合数据
@@ -107,15 +155,18 @@ namespace TradingLib.ORM
                     settle.SettleTime = TLCtxHelper.Ctx.SettleCentre.SettleTime;//获得结算时间
 
                     //1.插入某账户的结算信息(当前财务信息)平仓盈亏,持仓盈亏,手续费,入金,出金,昨日权益,当前权益
-                    TLCtxHelper.Debug(string.Format("account:{0} lastequity:{1} nowequity:{2}", settle.Account, settle.LastEquity, settle.NowEquity));
+                    if (acc.LastEquity != acc.NowEquity)
+                    {
+                        Util.Debug(string.Format("account:{0} lastequity:{1} nowequity:{2}", settle.Account, settle.LastEquity, settle.NowEquity),QSEnumDebugLevel.DEBUG);
+                    }
                     string query = String.Format("Insert into log_settlement (`account`,`settleday`,`realizedpl`,`unrealizedpl`,`commission`,`cashin`,`cashout`,`lastequity`,`nowequity`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}')", settle.Account, settle.SettleDay, settle.RealizedPL, settle.UnRealizedPL, settle.Commission, settle.CashIn, settle.CashOut, settle.LastEquity, settle.NowEquity);
                     istransok =  istransok &&  (db.Connection.Execute(query) > 0);
 
-                    //3.更新账户表中的上期权益数据 将结算数据的当前权益更新为帐户的昨日权益
+                    //2.更新账户表中的上期权益数据 将结算数据的当前权益更新为帐户的昨日权益
                     query = String.Format("UPDATE accounts SET lastequity = '{0}' WHERE account = '{1}'", settle.NowEquity, settle.Account);
                     istransok = istransok && (db.Connection.Execute(query) >= 0);
 
-                    //4.更新账户结算时间,以后计算就只需要读取该账户这个时间段之后的交易信息并在当前权益基础上进行权益计算。
+                    //3.更新账户结算时间,以后计算就只需要读取该账户这个时间段之后的交易信息并在当前权益基础上进行权益计算。
                     query = String.Format("UPDATE accounts SET settledatetime= '{0}' WHERE account = '{1}'",Util.ToDateTime(settle.SettleDay,settle.SettleTime),settle.Account);
                     istransok = istransok && (db.Connection.Execute(query) >= 0);
 
@@ -170,38 +221,6 @@ namespace TradingLib.ORM
             }
         }
 
-
-
-        ///// <summary>
-        ///// 获得某交易帐户未确认结算
-        ///// </summary>
-        ///// <param name="account"></param>
-        ///// <returns></returns>
-        //public static Settlement SelectSettlementInfoUnconfirmed(string account,int tradingday)
-        //{
-        //    using (DBMySql db = new DBMySql())
-        //    {
-        //        string query = String.Format("SELECT * FROM log_settlement WHERE account = '{0}' AND confrim_timestamp = 0 AND settleday = {1}", account, tradingday);
-        //        Settlement settlement = db.Connection.Query<SettlementImpl>(query, null).SingleOrDefault();
-        //        return settlement;
-        //    }
-        //}
-
-        ///// <summary>
-        ///// 获得某个交易帐号最近一条结算记录
-        ///// </summary>
-        ///// <param name="account"></param>
-        ///// <returns></returns>
-        //public static Settlement SelectSettlementInfoUnconfirmed(string account)
-        //{
-        //    using (DBMySql db = new DBMySql())
-        //    {
-        //        string query = String.Format("SELECT * FROM log_settlement WHERE account = '{0}' AND confrim_timestamp = 0 ORDER BY  settleday DESC limit 1", account);
-        //        Settlement settlement = db.Connection.Query<SettlementImpl>(query, null).SingleOrDefault();
-        //        return settlement;
-        //    }
-        //}
-
         /// <summary>
         /// 查询某个交易帐号 某个交易日的结算单
         /// </summary>
@@ -233,7 +252,7 @@ namespace TradingLib.ORM
                 {
                     
                     string query = String.Format("UPDATE log_settlement SET confrim_timestamp='{0}' WHERE account = '{1}' AND settleday < '{2}'",timestamp, account, tradingday);
-                    istransok =  (db.Connection.Execute(query) > 0);
+                    istransok =  (db.Connection.Execute(query) >= 0);
 
                     query = String.Format("UPDATE accounts SET confrim_timestamp = '{0}' WHERE account = '{1}'",timestamp, account);
                     istransok = istransok && (db.Connection.Execute(query) > 0);
@@ -248,22 +267,6 @@ namespace TradingLib.ORM
             }
         }
 
-
-        /// <summary>
-        /// 查询某个帐户某个交易日是否有结算确认
-        /// </summary>
-        /// <param name="day"></param>
-        /// <returns></returns>
-        //public static bool IsSettlementInfoConfirmed(string account,int day)
-        //{
-        //    using (DBMySql db = new DBMySql())
-        //    {
-        //        string query = string.Format("SELECT * FROM settlement_confirm WHERE account='{0}' AND settleday='{1}'", account, day);
-
-        //        return db.Connection.Query<settlementconfirm>(query, null).Count() > 0;
-        //    }
-        
-        //}
     }
 
     

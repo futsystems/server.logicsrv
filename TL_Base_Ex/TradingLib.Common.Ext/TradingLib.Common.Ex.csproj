@@ -81,7 +81,9 @@
     <Compile Include="ClearCentre\Base_ClearCentre_.cs" />
     <Compile Include="ClearCentre\Base_ClearCentre_TotalInfo.cs" />
     <Compile Include="Client\TrdClientInfo.cs" />
+    <Compile Include="Contex\CoreUtil.cs" />
     <Compile Include="Contex\Event\CashOperationEvent.cs" />
+    <Compile Include="Contex\Event\SystemEvent.cs" />
     <Compile Include="ORM\MCashOpAccount.cs" />
     <Compile Include="SrvObject\ISessionTransUtils.cs" />
     <Compile Include="ORM\Config\ConfigItem.cs" />
@@ -156,6 +158,7 @@
     <Compile Include="Tracker\ContrackBankTracker.cs" />
     <Compile Include="Tracker\ExchangeTracker.cs" />
     <Compile Include="Tracker\ManagerTracker.cs" />
+    <Compile Include="Tracker\PositionRoundTracker.cs" />
     <Compile Include="Tracker\SecurityTracker.cs" />
     <Compile Include="Tracker\MarketTimeTracker.cs" />
     <Compile Include="Tracker\SymbolBasketImpl.cs" />

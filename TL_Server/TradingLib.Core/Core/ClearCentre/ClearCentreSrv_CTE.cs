@@ -343,7 +343,8 @@ namespace TradingLib.Core
             {
                 return "委托不存在";
             }
-            return string.Format("委托:{0} pending:{1} canceled:{2} complete:{3} tracked:{4}", SentOrder(id).ToString(), totaltk.OrderTracker.isPending(id), totaltk.OrderTracker.isCanceled(id), totaltk.OrderTracker.isCompleted(id), totaltk.OrderTracker.isTracked(id));
+            //return string.Format("委托:{0} pending:{1} canceled:{2} complete:{3} tracked:{4}", SentOrder(id).ToString(), totaltk.OrderTracker.isPending(id), totaltk.OrderTracker.isCanceled(id), totaltk.OrderTracker.isCompleted(id), totaltk.OrderTracker.isTracked(id));
+            return string.Empty;
         }
 
         /// <summary>
@@ -381,10 +382,10 @@ namespace TradingLib.Core
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("上次结算持仓:" + Environment.NewLine);
-            foreach (Position pos in this.TotalYdPositions)
-            {
-                sb.Append(pos.ToString() + Environment.NewLine);
-            }
+            //foreach (Position pos in this.TotalYdPositions)
+            //{
+            //    sb.Append(pos.ToString() + Environment.NewLine);
+            //}
             return sb.ToString();
         }
 
@@ -432,6 +433,65 @@ namespace TradingLib.Core
             }
             return "";
         }
+
+
+        [ContribCommandAttr(QSEnumCommandSource.CLI, "posdetail", "posdetail - print out position details", "")]
+        public string CTE_PrintPosDetails(string id)
+        {
+            IAccount acc = this[id];
+            if (acc != null)
+            {
+                string re = "";
+                StringBuilder sb = new StringBuilder();
+                foreach (Position pos in acc.Positions)
+                {
+                    sb.Append("持仓:"+pos.GetPositionKey() +" "+pos.ToString() + Environment.NewLine);
+                    //sb.Append("昨日持仓明细" + Environment.NewLine);
+                    //foreach (PositionDetail p in pos.PositionDetailYdRef)
+                    //{
+                    //    sb.Append(p.GetPositionDetailStr() + Environment.NewLine);
+                    //}
+
+                    //IEnumerable<PositionCloseDetail> closedetail = null;
+                    //IEnumerable<PositionDetail> nowdetails = pos.CalPositionDetail(out closedetail);
+
+                    //sb.Append("当前持仓明细" + Environment.NewLine);
+                    //foreach (PositionDetail p in nowdetails)
+                    //{
+                    //    sb.Append(p.GetPositionDetailStr() + Environment.NewLine);
+                    //}
+
+                    //sb.Append("当日平仓明细" + Environment.NewLine);
+
+                    //foreach (PositionCloseDetail p in closedetail)
+                    //{
+                    //    sb.Append(p.GetPositionCloseStr() + Environment.NewLine);
+                    //}
+
+                    //sb.Append("实时生成数据"+Environment.NewLine);
+                    sb.Append("---------持仓明细--------------------------------------------------" + Environment.NewLine);
+                    foreach (PositionDetail p in pos.PositionDetailTotal)
+                    {
+                        sb.Append(p.GetPositionDetailStr() + Environment.NewLine);
+                        sb.Append(TradingLib.Mixins.LitJson.JsonMapper.ToJson(p) + Environment.NewLine);
+                    }
+                    sb.Append("Sum Size:" + pos.PositionDetailTotal.Where(p => !p.IsClosed()).Sum(pd => pd.Volume));
+                    sb.Append(Environment.NewLine);
+                    sb.Append("---------平仓明细--------------------------------------------------" + Environment.NewLine);
+                    foreach (PositionCloseDetail p in pos.PositionCloseDetail)
+                    {
+                        sb.Append(p.GetPositionCloseStr() + Environment.NewLine);
+                    }
+                    sb.Append("------持仓汇总------------" + Environment.NewLine);
+                    sb.Append(TradingLib.Mixins.LitJson.JsonMapper.ToJson(pos.GenPositionEx()) + Environment.NewLine);
+                    sb.Append(Environment.NewLine);
+                    sb.Append(Environment.NewLine);
+                }
+                return sb.ToString();
+            }
+            return "";
+        }
+
 
         [ContribCommandAttr(QSEnumCommandSource.CLI, "accfutpos", "accfutpos - print out account fut postions", "")]
         public string CTE_Printfutpostions(string id)

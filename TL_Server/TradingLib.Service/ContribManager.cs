@@ -50,7 +50,7 @@ namespace TradingLib.ServiceManager
             }
             if (contribmap.Keys.Contains(className))
             {
-                TLCtxHelper.Debug("扩展模块:" + className + "已经加载,请勿重复加载");
+                Util.Debug("扩展模块:" + className + "已经加载,请勿重复加载");
                 return;
             }
 
@@ -115,7 +115,7 @@ namespace TradingLib.ServiceManager
                 }
                 catch (Exception ex)
                 {
-                    TLCtxHelper.Debug("start:" + key + "error:" + ex.ToString());
+                    Util.Debug("start:" + key + "error:" + ex.ToString());
                 }
             
             }
@@ -136,7 +136,7 @@ namespace TradingLib.ServiceManager
                 }
                 catch (Exception ex)
                 {
-                    TLCtxHelper.Debug("stop:" + key + "error:" + ex.ToString());
+                    Util.Debug("stop:" + key + "error:" + ex.ToString());
                 }
             }
         }

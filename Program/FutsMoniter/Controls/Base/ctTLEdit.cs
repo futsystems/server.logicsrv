@@ -60,5 +60,11 @@ namespace FutsMoniter
             }
             return true;
         }
+
+        public void DisableEdit()
+        {
+            argvalue.Enabled = false;
+            argvalue_label.Enabled = false;
+        }
     }
 }

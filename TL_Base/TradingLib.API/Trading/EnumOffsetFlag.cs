@@ -21,14 +21,15 @@ namespace TradingLib.API
         OPEN=1,
         [Description("平仓(减,平)")]
         CLOSE=2,
-        [Description("强平")]
-        FORCECLOSE=3,
-        [Description("强减")]
-        FORCEOFF=4,
         [Description("平今")]
-        CLOSETODAY=5,
+        CLOSETODAY = 3,
         [Description("平昨")]
-        CLOSEYESTERDAY=6,
+        CLOSEYESTERDAY = 4,
+        [Description("强平")]
+        FORCECLOSE=5,
+        [Description("强减")]
+        FORCEOFF=6,
+        
 
     }
 }

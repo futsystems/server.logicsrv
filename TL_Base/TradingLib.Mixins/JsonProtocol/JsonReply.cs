@@ -14,14 +14,12 @@ namespace TradingLib.Mixins
     /// </summary>
     public class JsonReply
     {
-        //public int Result;
         public int Code;
         public string Message;
         public object Playload;
 
         public JsonReply(int code, string message,object playload)
         {
-            //Result = result;
             Code = code;
             Message = message;
             Playload = playload;
@@ -98,10 +96,13 @@ namespace TradingLib.Mixins
             return this;
         }
 
+        /// <summary>
+        /// 填充jsonreply
+        /// </summary>
+        /// <param name="reply"></param>
+        /// <returns></returns>
         public ReplyWriter FillReply(JsonReply reply)
         { 
-            //this.WritePropertyName("Result");
-            //this.Write(reply.Result);
             this.WritePropertyName("Code");
             this.Write(reply.Code);
             this.WritePropertyName("Message");
@@ -109,27 +110,21 @@ namespace TradingLib.Mixins
 
             return this;
         }
-        /// <summary>
-        /// 填充jsonreply
-        /// </summary>
-        /// <param name="reply"></param>
-        /// <returns></returns>
-        public ReplyWriter FillReply(JsonData jsondata)
-        {
-            foreach (string key in jsondata.Keys)
-            {
-                this.WritePropertyName(key);
-                this.Write(jsondata[key].ToString());
-            }
-            /*
-            this.WritePropertyName("Result");
-            this.Write(reply.Result);
-            this.WritePropertyName("Code");
-            this.Write(reply.Code);
-            this.WritePropertyName("Message");
-            this.Write(reply.Message);**/
-            return this;
-        }
+
+        ///// <summary>
+        ///// 填充jsonreply
+        ///// </summary>
+        ///// <param name="reply"></param>
+        ///// <returns></returns>
+        //public ReplyWriter FillReply(JsonData jsondata)
+        //{
+        //    foreach (string key in jsondata.Keys)
+        //    {
+        //        this.WritePropertyName(key);
+        //        this.Write(jsondata[key].ToString());
+        //    }
+        //    return this;
+        //}
 
         /// <summary>
         /// 以字段objname将obj写入对象
@@ -145,7 +140,7 @@ namespace TradingLib.Mixins
         }
 
         /// <summary>
-        /// 以字段objname将objs写入对象
+        /// 以字段objname将obj数组写入对象
         /// </summary>
         /// <param name="objs"></param>
         /// <param name="objsname"></param>

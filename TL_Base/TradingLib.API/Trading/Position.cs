@@ -8,6 +8,11 @@ namespace TradingLib.API
     public interface Position
     {
         /// <summary>
+        /// 交易帐户
+        /// </summary>
+        string Account { get; }
+
+        /// <summary>
         /// 合约
         /// </summary>
         string Symbol { get; }
@@ -43,19 +48,9 @@ namespace TradingLib.API
         bool isFlat { get; }
 
         /// <summary>
-        /// 平仓盈亏
-        /// </summary>
-        decimal ClosedPL { get; }
-
-        /// <summary>
         /// 平仓数量
         /// </summary>
         int FlatSize { get; }
-        
-        /// <summary>
-        /// 交易帐户
-        /// </summary>
-        string Account { get; }
         
         /// <summary>
         /// 是否有效
@@ -63,25 +58,52 @@ namespace TradingLib.API
         bool isValid { get; }
 
         /// <summary>
-        /// 累加持仓
+        /// 对应的合约对象 可以通过合约对象获得更多相关数据
         /// </summary>
-        /// <param name="newPosition"></param>
-        /// <returns></returns>
-        decimal Adjust(Position newPosition);
+        Symbol oSymbol { get; set; }
 
         /// <summary>
-        /// 累加成交
+        /// 该持仓数据所描述的持仓类别
+        /// Positon提现了某个类型的持仓的当前状态，可以单独维护多头持仓，空头持仓，或者是净持仓
+        /// </summary>
+        QSEnumPositionDirectionType DirectionType { get; set; }
+
+
+
+        #region 持仓的累加 用于累加持仓反应持仓变化
+        /// <summary>
+        /// 用成交数据更新持仓状态
         /// </summary>
         /// <param name="newFill"></param>
         /// <returns></returns>
         decimal Adjust(Trade newFill);
-        
+
+        /// <summary>
+        /// 用持仓明细更新持仓状态 用于从隔夜持仓初始化持仓状态
+        /// </summary>
+        /// <param name="newPositiondetail"></param>
+        /// <returns></returns>
+        decimal Adjust(PositionDetail newPositiondetail);
+
+        #endregion
+
+        /// <summary>
+        /// 平仓盈亏点数
+        /// </summary>
+        decimal ClosedPL { get; }
+
         /// <summary>
         /// 浮动盈亏点数
         /// </summary>
         decimal UnRealizedPL { get; }
 
+        /// <summary>
+        /// 结算 盯市盈亏
+        /// </summary>
+        decimal UnrealizedPLByDate { get; }
 
+
+        #region 行情与价格信息
         /// <summary>
         /// 持仓响应行情更新
         /// </summary>
@@ -93,8 +115,6 @@ namespace TradingLib.API
         /// </summary>
         decimal LastPrice { get; }
         
-        
-        //position建立后的一些数据，仓位建立后出现的最高价与最低价
         /// <summary>
         /// 开仓以来最高价
         /// </summary>
@@ -106,37 +126,57 @@ namespace TradingLib.API
         decimal Lowest { get; set; }
 
         /// <summary>
-        /// 返回所有成交
+        /// 当日结算价格 用于收盘后获得结算价格 进行持仓结算
         /// </summary>
-        Trade[] Trades { get; }
+        decimal? SettlementPrice { get; set; }
 
         /// <summary>
-        /// 转换成等效成交
+        /// 昨日结算价格
         /// </summary>
-        /// <returns></returns>
-        Trade ToTrade();
+        decimal? LastSettlementPrice { get; set; }
+
+        #endregion
+
+
+        #region 成交和相关明细数据
+        /// <summary>
+        /// 返回日内所有成交数据
+        /// </summary>
+        IEnumerable<Trade> Trades { get; }
 
         /// <summary>
-        /// 持仓结算价,用于每日结算时设定结算价并获得当时盯市盈亏
+        /// 历史持仓明细 不做具体业务操作
         /// </summary>
-        decimal SettlePrice { get; set; }
+        IEnumerable<PositionDetail> PositionDetailYdRef { get; }
 
         /// <summary>
-        /// 结算时的盯市盈亏
+        /// 当前持仓明细 包括昨日与今日
         /// </summary>
-        decimal SettleUnrealizedPL { get;}
+        IEnumerable<PositionDetail> PositionDetailTotal { get; }
 
         /// <summary>
-        /// symbol assocated with this order,
-        /// symbol is trackered by basictracker
+        /// 昨日持仓明细更新 如果当日有平仓 且昨日持仓明细发生变化 通过这里的明细提现
         /// </summary>
-        Symbol oSymbol { get; set; }
+        IEnumerable<PositionDetail> PositionDetailYdNew { get; }
 
         /// <summary>
-        /// 该持仓数据所描述的持仓类别
+        /// 当日新开仓持仓明细
         /// </summary>
-        QSEnumPositionDirectionType DirectionType { get; set; }
+        IEnumerable<PositionDetail> PositionDetailTodayNew { get; }
 
+        /// <summary>
+        /// 当日平仓明细
+        /// </summary>
+        IEnumerable<PositionCloseDetail> PositionCloseDetail { get; }
+
+        /// <summary>
+        /// 新的平仓明细生成事件
+        /// </summary>
+        event Action<PositionCloseDetail> NewPositionCloseDetailEvent;
+
+        #endregion
+
+        #region 日内开平统计
         /// <summary>
         /// 开仓金额
         /// </summary>
@@ -156,6 +196,8 @@ namespace TradingLib.API
         /// 平仓数量
         /// </summary>
         int CloseVolume { get; }
+        #endregion
+
     }
 
     public class InvalidPosition : Exception {}

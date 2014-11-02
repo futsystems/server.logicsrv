@@ -115,23 +115,48 @@ namespace TradingLib.Core
             _riskcentre = rc;
         }
 
-
+        ConfigDB _cfgdb;
+        int resetTime = 40101;
+        bool _cleanTmp = false;
         public SettleCentre()
             :base(SettleCentre.CoreName)
         {
+            _cfgdb = new ConfigDB(SettleCentre.CoreName);
+
             //初始化置结算中心状态为未知
             SettleCentreStatus = QSEnumSettleCentreStatus.UNKNOWN;
 
             //初始化交易日信息
             InitTradingDay();
+
+            if (!_cfgdb.HaveConfig("ResetTime"))
+            {
+                _cfgdb.UpdateConfig("ResetTime", QSEnumCfgType.Int, 170101, "执行重置任务清空日内数据 系统帐户归位(170101)");
+            }
+            resetTime = _cfgdb["ResetTime"].AsInt();
+
+            if (!_cfgdb.HaveConfig("CleanTmpTable"))
+            {
+                _cfgdb.UpdateConfig("CleanTmpTable", QSEnumCfgType.Bool,false, "结算后重置系统是否情况日内临时表");
+            }
+            _cleanTmp = _cfgdb["CleanTmpTable"].AsBool();
+
+
+            //注入重置任务 用于在数据调整执行时间
+            DateTime t = Util.ToDateTime(Util.ToTLDate(DateTime.Now), resetTime);
+            TaskProc task = new TaskProc(this.UUID, "交易系统重置-" + resetTime.ToString(), t.Hour, t.Minute, t.Second, delegate() { Task_ResetTradingday(); });
+            TLCtxHelper.Ctx.InjectTask(task);
+
         }
 
-
+        
         /// <summary>
         /// 初始化交易日信息
         /// </summary>
         void InitTradingDay()
         {
+            
+
             //开发模式每天都有结算,运行模式按照交易日里进行结算
             debug("结算系统工作模式:" + (GlobalConfig.IsDevelop?"开发模式":"运行模式"), QSEnumDebugLevel.INFO);
 
@@ -189,6 +214,8 @@ namespace TradingLib.Core
                     SettleCentreStatus = QSEnumSettleCentreStatus.TRADINGDAY;//如果获得了当前交易日则当前为可交易日状态
                 }
             }
+
+
         }
         /// <summary>
         /// 重置结算信息
@@ -216,7 +243,7 @@ namespace TradingLib.Core
             base.Dispose();
         }
 
-        
+        string settleheader = "#####SettleAccount:";
         /// <summary>
         /// 结算所有交易账户
         /// 结算分析
@@ -227,7 +254,7 @@ namespace TradingLib.Core
         /// </summary>
         public void SettleAccount()
         {
-            debug(string.Format("结算系统开始结算交易账户 当前交易日{0}",CurrentTradingday), QSEnumDebugLevel.INFO);
+            debug(string.Format(settleheader+"Start Settele Account,Current Tradingday:{0}",CurrentTradingday), QSEnumDebugLevel.INFO);
             foreach (IAccount acc in _clearcentre.Accounts)
             {
                 try
@@ -236,14 +263,14 @@ namespace TradingLib.Core
                 }
                 catch (Exception ex)
                 {
-                    debug(acc.ID + "结算出错:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                    debug(string.Format("SettleError,Account:{0} errors:{1}",acc.ID,ex.ToString()), QSEnumDebugLevel.ERROR);
                 }
             }
 
             //更新最近结算日
-            debug(string.Format("更新上次结算日为当前交易日{0}", CurrentTradingday), QSEnumDebugLevel.INFO);
+            debug(string.Format("Update lastsettleday as:{0}", CurrentTradingday), QSEnumDebugLevel.INFO);
             ORM.MSettlement.UpdateSettleday(CurrentTradingday);
-            debug("交易系统结算完毕=====================================", QSEnumDebugLevel.INFO);
+            debug("Settlement Done", QSEnumDebugLevel.INFO);
         }
 
 

@@ -291,6 +291,15 @@ namespace TradingLib.Common
             SendPacket(request);
         }
 
+        public void ReqDelAccount(string account)
+        {
+            debug("请求删除交易帐号", QSEnumDebugLevel.INFO);
+            MGRReqDelAccountRequest request = RequestTemplate<MGRReqDelAccountRequest>.CliSendRequest(requestid++);
+            request.AccountToDelete = account;
+
+            SendPacket(request);
+        }
+
         public void ReqChangeAccountPass(string account, string pass)
         {
             debug("请求修改交易帐号密码", QSEnumDebugLevel.INFO);
@@ -302,7 +311,7 @@ namespace TradingLib.Common
             SendPacket(request);
         }
 
-        public void ReqChangeInverstorInfo(string account, string name,string broker,string bank,string bankac)
+        public void ReqChangeInverstorInfo(string account, string name, string broker, int bankfk, string bankac)
         {
             debug("请求修改投资者信息", QSEnumDebugLevel.INFO);
             MGRReqChangeInvestorRequest request = RequestTemplate<MGRReqChangeInvestorRequest>.CliSendRequest(requestid++);
@@ -310,7 +319,7 @@ namespace TradingLib.Common
             request.TradingAccount = account;
             request.Name = name;
             request.Broker = broker;
-            request.Bank = bank;
+            request.BankFK = bankfk;
             request.BankAC = bankac;
 
             SendPacket(request);
@@ -357,6 +366,7 @@ namespace TradingLib.Common
 
             SendPacket(request);
         }
+
         #endregion
 
 
@@ -798,7 +808,7 @@ namespace TradingLib.Common
         /// 查询某个代理的在一个时间段内的汇总
         /// </summary>
         /// <param name="settleday"></param>
-        public void ReqQrySummaryReport(int agentfk,int start,int end)
+        public void ReqQrySummaryReport(int agentfk, int start, int end)
         {
             this.ReqContribRequest("FinServiceCentre", "QrySummaryReport", agentfk.ToString() + "," + start.ToString() + "," + end.ToString());
         }
@@ -891,6 +901,52 @@ namespace TradingLib.Common
         }
 
 
+
+        #region 权限类操作
+
+        /// <summary>
+        /// 查询所有权限模板
+        /// </summary>
+        public void ReqQryPermmissionTemplateList()
+        {
+            debug("请求查询权限模板列表", QSEnumDebugLevel.INFO);
+
+            this.ReqContribRequest("MgrExchServer", "QueryPermmissionTemplateList", "");
+        }
+
+
+        /// <summary>
+        /// 更新某个权限模板
+        /// </summary>
+        /// <param name="jsonstr"></param>
+        public void ReqUpdatePermissionTemplate(string jsonstr)
+        {
+            debug("请求更新权限模板", QSEnumDebugLevel.INFO);
+
+            this.ReqContribRequest("MgrExchServer", "UpdatePermission", jsonstr);
+        }
+
+        /// <summary>
+        /// 查询某个管理员的代理权限
+        /// </summary>
+        /// <param name="managerid"></param>
+        public void ReqQryAgentPermission(int managerid)
+        {
+            this.ReqContribRequest("MgrExchServer", "QueryAgentPermission", managerid.ToString());
+        }
+
+        /// <summary>
+        /// 更新某个管理员的权限设置
+        /// </summary>
+        /// <param name="managerid"></param>
+        /// <param name="accessid"></param>
+        public void ReqUpdateAgentPermission(int managerid, int accessid)
+        {
+            this.ReqContribRequest("MgrExchServer", "UpdateAgentPermission", managerid.ToString()+","+accessid.ToString());
+        }
+        #endregion
+
+
         /// <summary>
         /// 调用某个模块 某个命令 某个参数 
         /// </summary>
@@ -919,7 +975,10 @@ namespace TradingLib.Common
 
             SendPacket(request);
         }
-        #endregion 
+
+        
+
+        #endregion
 
         #region 插入成交
         public void ReqInsertTrade(Trade f)

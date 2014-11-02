@@ -87,4 +87,57 @@ namespace TradingLib.Common
             PositionToSend = PositionEx.Deserialize(content);
         }
     }
+
+
+    /// <summary>
+    /// 持仓明细查询
+    /// </summary>
+    public class QryPositionDetailRequest : RequestPacket
+    {
+        public QryPositionDetailRequest()
+        {
+            _type = MessageTypes.QRYPOSITIONDETAIL;
+            this.TradingAccount = string.Empty;
+            this.Symbol = string.Empty;
+        }
+
+        public string TradingAccount { get; set; }
+
+        public string Symbol { get; set; }
+        public override string ContentSerialize()
+        {
+            return this.TradingAccount + "," + this.Symbol;
+        }
+
+        public override void ContentDeserialize(string contentstr)
+        {
+            string[] rec = contentstr.Split(',');
+            this.TradingAccount = rec[0];
+            this.Symbol = rec[1];
+        }
+    }
+
+    /// <summary>
+    /// 持仓明细查询回报
+    /// </summary>
+    public class RspQryPositionDetailResponse : RspResponsePacket
+    {
+        public RspQryPositionDetailResponse()
+        {
+            _type = MessageTypes.POSITIONDETAILRESPONSE;
+            this.PositionDetailToSend = new PositionDetailImpl();
+        }
+
+        public PositionDetail PositionDetailToSend { get; set; }
+
+        public override string ResponseSerialize()
+        {
+            return PositionDetailImpl.Serialize(this.PositionDetailToSend);
+        }
+
+        public override void ResponseDeserialize(string content)
+        {
+            this.PositionDetailToSend = PositionDetailImpl.Deserialize(content);
+        }
+    }
 }

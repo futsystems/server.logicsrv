@@ -147,12 +147,12 @@ namespace TradingLib.Common
         public void newTick(Tick k)
         {
             BarListImpl bl;
-            if (!_bdict.TryGetValue(k.symbol, out bl))
+            if (!_bdict.TryGetValue(k.Symbol, out bl))
             {
-                bl = new BarListImpl(k.symbol,_requested,_reqtype);
+                bl = new BarListImpl(k.Symbol, _requested, _reqtype);
                 bl.DefaultCustomInterval = _default;
                 bl.GotNewBar+=new SymBarIntervalDelegate(bl_GotNewBar);
-                _bdict.Add(k.symbol, bl);
+                _bdict.Add(k.Symbol, bl);
             }
             bl.newTick(k);
         }
@@ -184,7 +184,7 @@ namespace TradingLib.Common
         public void newBid(Tick k)
         {
             if (!k.hasBid) return;
-            newPoint(k.symbol, k.bid, k.time, k.date, k.BidSize);
+            newPoint(k.Symbol, k.BidPrice, k.Time, k.Date, k.StockBidSize);
         }
         /// <summary>
         /// build bar with ask data rather than trades
@@ -193,7 +193,7 @@ namespace TradingLib.Common
         public void newAsk(Tick k)
         {
             if (!k.hasAsk) return;
-            newPoint(k.symbol, k.ask, k.time, k.date, k.AskSize);
+            newPoint(k.Symbol, k.AskPrice, k.Time, k.Date, k.StockAskSize);
         }
     }
 }

@@ -56,7 +56,7 @@ namespace TradingLib.ORM
 
         public string Name { get; set; }
         public string Broker { get; set; }
-        public string BankID { get; set; }
+        public int? BankID { get; set; }
         public string BankAC { get; set; }
 
         public bool PosLock { get; set; }
@@ -172,11 +172,11 @@ namespace TradingLib.ORM
         /// <param name="account"></param>
         /// <param name="intraday"></param>
         /// <returns></returns>
-        public static bool UpdateInvestorInfo(string account, string name,string broker,string bank,string bankac)
+        public static bool UpdateInvestorInfo(string account, string name,string broker,int bankfk,string bankac)
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("UPDATE accounts SET name = '{0}',broker= '{1}' ,bankid='{2}', bankac='{3}' WHERE account = '{4}'", name, broker,bank, bankac, account);
+                string query = String.Format("UPDATE accounts SET name = '{0}',broker= '{1}' ,bankid='{2}', bankac='{3}' WHERE account = '{4}'", name, broker, bankfk, bankac, account);
                 return db.Connection.Execute(query) >= 0;
             }
         }
@@ -237,7 +237,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("Insert into log_cashtrans (`datetime`,`amount`,`comment`,`account`,`transref`,`settleday`) values('{0}','{1}','{2}','{3}','{4}','{5}')", DateTime.Now.ToString(), amount.ToString(), comment, account.ToString(),transref,TLCtxHelper.Ctx.SettleCentre.CurrentTradingday);
+                string query = String.Format("Insert into log_cashtrans (`datetime`,`amount`,`comment`,`account`,`transref`,`settleday`) values('{0}','{1}','{2}','{3}','{4}','{5}')", DateTime.Now.ToString(), amount.ToString(), comment, account.ToString(),transref,TLCtxHelper.Ctx.SettleCentre.NextTradingday);
                 return db.Connection.Execute(query) > 0;
             }
         }
@@ -364,8 +364,27 @@ namespace TradingLib.ORM
             }
         }
 
+        static string GetPrefix(QSEnumAccountCategory category)
+        {
+            switch (category)
+            {
+                case QSEnumAccountCategory.DEALER:
+                    return GlobalConfig.PrefixDealer;
+                case QSEnumAccountCategory.REAL:
+                    return GlobalConfig.PrefixReal;
+                case QSEnumAccountCategory.SIMULATION:
+                    return GlobalConfig.PrefixSim;
+                default:
+                    return GlobalConfig.PrefixSim;
+            }
+        }
         /// <summary>
         /// 获得某个类型的帐户的最大值
+        /// 正则搜索 select * from accounts where account REGEXP '^98'
+        ///  '^92[0-9]{4,10}$'
+        ///  以92开头其余为[0-9],长度在4-10之间{』表示的是除掉prefi的长度
+        ///  '^[A-Z]{2}55[0-9]{5}$'
+        ///  以大写A-Z2位开头 接55 其余是5位0-9数字的 正则匹配
         /// </summary>
         /// <param name="category"></param>
         /// <returns></returns>
@@ -373,11 +392,11 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-
+                string prefix = GetPrefix(category);
                 //如果该类别的交易帐户存在，则以递增的方式插入新帐户
                 if (HaveAnyAccount(category))
                 {
-                    string query = String.Format("select max(account) as AccountRef from accounts where account_category='{0}'", category.ToString());
+                    string query = "select max(account) as AccountRef from accounts where account  REGEXP '^"+prefix+"[0-9]{"+(GlobalConfig.DefaultAccountLen-prefix.Length).ToString()+"}$'";
                     MaxAccountRef acref = db.Connection.Query<MaxAccountRef>(query, null).Single<MaxAccountRef>();
                     if (!(acref == null || acref.AccountRef == null))
                     {
@@ -385,8 +404,9 @@ namespace TradingLib.ORM
                     }
                 }
                 //如果没有插入过交易帐户 则以类别字头进行插入
-                int code = (int)category;
-                return code * 10000;
+                int code = int.Parse(prefix);
+                int firstacc =  (code*(int)Math.Pow(10,GlobalConfig.DefaultAccountLen-prefix.Length));
+                return firstacc;
             }
         }
 
@@ -432,52 +452,82 @@ namespace TradingLib.ORM
             using (DBMySql db = new DBMySql())
             {
                 account = string.Empty;
-                try
+                //如果指定的交易帐号为空 则通过数据库内存放的帐号信息进行递增来获得当前添加帐号
+                if (string.IsNullOrEmpty(setaccount))
                 {
-                    //如果指定的交易帐号为空 则通过数据库内存放的帐号信息进行递增来获得当前添加帐号
-                    if (string.IsNullOrEmpty(setaccount))
+                    int acref = MaxAccountRef(category);
+                    //生成当前交易帐号
+                    account = (acref + 1).ToString();
+                }
+                else
+                {
+                    //查看是否已经存在该帐号
+                    if (ExistAccount(setaccount))
                     {
-                        int acref = MaxAccountRef(category);
-                        //生成当前交易帐号
-                        account = (acref + 1).ToString();
+                        throw new FutsRspError("已经存在帐户:" + setaccount);
+                            
                     }
                     else
                     {
-                        if (setaccount.StartsWith("9"))
-                        {
-                            TLCtxHelper.Debug("自定义帐号不能以9开头");
-                            return false;
-                        }
-                        if (ExistAccount(setaccount))
-                        {
-                            TLCtxHelper.Debug("设定的交易帐号:" + setaccount + "已经存在");
-                            return false;
-                        }
-                        else
-                        {
-                            account = setaccount;
-                        }
+                        account = setaccount;
                     }
-                    if (string.IsNullOrEmpty(pass))
-                    {
-                        pass = GlobalConfig.DefaultPassword;
-                    }
-                    //如果user_id为非0编号 表明是由前端web网站调用的添加帐号,因此需要检查user_id是否已经申请过帐号
-                    if (user_id != "0")
-                    { 
-                        if(HaveRequested(user_id, category))
-                        {
-                            TLCtxHelper.Ctx.debug(string.Format("UserID:{0} have already register account:{1}",user_id,category));
-                            return false;
-                        }
-                    }
-                    string query = String.Format("Insert into accounts (`account`,`user_id`,`createdtime`,`pass`,`account_category`,`settledatetime` ,`mgr_fk` ) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}')", account, user_id.ToString(), DateTime.Now.ToString(), pass, category, DateTime.Now - new TimeSpan(1, 0, 0, 0, 0),mgr_fk);
-                    return db.Connection.Execute(query) > 0;
                 }
-                catch (Exception ex)
+                if (string.IsNullOrEmpty(pass))
                 {
-                    return false;
+                    pass = GlobalConfig.DefaultPassword;
                 }
+
+                //如果user_id为非0编号 表明是由前端web网站调用的添加帐号,因此需要检查user_id是否已经申请过帐号
+                if (user_id != "0")
+                { 
+                    if(HaveRequested(user_id, category))
+                    {
+                        throw new FutsRspError("用户已经申请过交易帐户");
+                    }
+                }
+                string query = String.Format("Insert into accounts (`account`,`user_id`,`createdtime`,`pass`,`account_category`,`settledatetime` ,`mgr_fk` ) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}')", account, user_id.ToString(), DateTime.Now.ToString(), pass, category, DateTime.Now - new TimeSpan(1, 0, 0, 0, 0),mgr_fk);
+                return db.Connection.Execute(query) > 0;
+            }
+        }
+
+        /// <summary>
+        /// 数据库删除交易帐户 以及信息
+        /// </summary>
+        /// <param name="account"></param>
+        public static void DelAccount(string account)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string delquery = string.Empty;
+                delquery = string.Format("DELETE FROM accounts WHERE account = '{0}'", account);//删除帐户列表
+                db.Connection.Execute(delquery);
+                delquery = string.Format("DELETE FROM hold_positions WHERE account='{0}'", account);//删除隔夜持仓
+                db.Connection.Execute(delquery);
+                delquery = string.Format("DELETE FROM hold_postransactions WHERE account='{0}'", account);//删除隔夜持仓
+
+                db.Connection.Execute(delquery);
+                delquery = string.Format("DELETE FROM log_cashopreq WHERE account='{0}'", account);//删除出入金请求
+                db.Connection.Execute(delquery);
+                delquery = string.Format("DELETE FROM log_cashtrans WHERE account='{0}'", account);//删除出入金记录
+
+                db.Connection.Execute(delquery);
+                delquery = string.Format("DELETE FROM log_orderactions WHERE account='{0}'", account);//删除委托操作
+                db.Connection.Execute(delquery);
+                delquery = string.Format("DELETE FROM log_orders WHERE account='{0}'", account);//删除委托
+                db.Connection.Execute(delquery);
+                delquery = string.Format("DELETE FROM log_trades WHERE account='{0}'", account);//删除交易回合
+                db.Connection.Execute(delquery);
+                delquery = string.Format("DELETE FROM log_postransactions WHERE account='{0}'", account);//删除交易回合
+
+                db.Connection.Execute(delquery);
+                delquery = string.Format("DELETE FROM tmp_orderactions WHERE account='{0}'", account);//删除日内交易记录
+                db.Connection.Execute(delquery);
+                delquery = string.Format("DELETE FROM tmp_orders WHERE account='{0}'", account);//
+                db.Connection.Execute(delquery);
+                delquery = string.Format("DELETE FROM tmp_trades WHERE account='{0}'", account);//
+                db.Connection.Execute(delquery);
+                delquery = string.Format("DELETE FROM tmp_postransactions WHERE account='{0}'", account);//
+                db.Connection.Execute(delquery);
             }
         }
 
@@ -514,11 +564,11 @@ namespace TradingLib.ORM
             account.MAC = fields.MAC;
             account.Name = fields.Name;
             account.Broker = fields.Broker;
-            account.BankID = fields.BankID;
+            account.BankID = fields.BankID==null?0:(int)fields.BankID;
             account.BankAC = fields.BankAC;
             account.PosLock = fields.PosLock;
             account.Mgr_fk = fields.Mgr_fk;
-            //TLCtxHelper.Debug("fileds route:" + fields.Order_Router_Type.ToString() +" category:"+fields.Account_Category.ToString()) ;
+            //Util.Debug("fileds route:" + fields.Order_Router_Type.ToString() +" category:"+fields.Account_Category.ToString()) ;
             return account;
         }
 

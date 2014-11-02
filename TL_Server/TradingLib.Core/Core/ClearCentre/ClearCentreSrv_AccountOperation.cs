@@ -51,15 +51,15 @@ namespace TradingLib.Core
             AccountChanged(this[account]);
         }
 
-        public void UpdateInvestorInfo(string account, string name,string broker,string bank,string bankac)
+        public void UpdateInvestorInfo(string account, string name,string broker,int  bankfk,string bankac)
         {
             if (!HaveAccount(account)) return;
             IAccount acc = this[account];
             acc.Name = name;
             acc.Broker = broker;
             acc.BankAC = bankac;
-            acc.BankID = bank;
-            ORM.MAccount.UpdateInvestorInfo(account, name,broker,bank,bankac);
+            acc.BankID = bankfk;
+            ORM.MAccount.UpdateInvestorInfo(account, name, broker, bankfk, bankac);
             AccountChanged(this[account]);
         }
 
@@ -132,13 +132,13 @@ namespace TradingLib.Core
         /// <param name="comment"></param>
         public override void CashOperation(string account, decimal amount,string transref, string comment)
         {
-            if (CoreUtil.IsSettle2Reset())
-            {
-                debug("Account:" + account + " 资金操作:" + amount.ToString() + " comment:" + comment + "被忽略", QSEnumDebugLevel.WARNING);
-                FutsRspError error = new FutsRspError();
-                error.FillError("CASHOPERATION_NOT_ALLOW_NOW");//当前时间不允许出入金
-                throw error;
-            }
+            //if (CoreUtil.IsSettle2Reset())
+            //{
+            //    debug("Account:" + account + " 资金操作:" + amount.ToString() + " comment:" + comment + "被忽略", QSEnumDebugLevel.WARNING);
+            //    FutsRspError error = new FutsRspError();
+            //    error.FillError("CASHOPERATION_NOT_ALLOW_NOW");//当前时间不允许出入金
+            //    throw error;
+            //}
 
             debug("CashOperation ID:" + account + " Amount:" + amount.ToString() + " Comment:" + comment, QSEnumDebugLevel.INFO);
             IAccount acc = this[account];
@@ -347,7 +347,7 @@ namespace TradingLib.Core
             }
             catch (Exception ex)
             {
-                TLCtxHelper.Debug(Util.GlobalPrefix + ex.ToString());
+                Util.Debug(Util.GlobalPrefix + ex.ToString());
                 throw (new QSClearCentreLoadAccountError(ex, "ClearCentre加载账户:" + account + "异常"));
             }
         }
@@ -430,13 +430,45 @@ namespace TradingLib.Core
             return re;
         }
 
+
+        public void DelAccount(string account)
+        {
+            debug("清算中心删除交易帐户:" + account, QSEnumDebugLevel.INFO);
+            IAccount acc = this[account];
+            if (acc == null)
+            {
+                throw new FutsRspError("交易帐号不存在");
+            }
+
+            try
+            {
+                
+                //InactiveAccount(account);//冻结交易帐号
+                //删除数据库
+                ORM.MAccount.DelAccount(account);//删除数据库记录
+                DropAccount(acc);//删除内存记录
+                //对外触发交易帐户删除事件
+                if (AccountDelEvent != null)
+                    AccountDelEvent(account);
+                acc.Deleted = true;
+                AccountChanged(acc);
+
+                
+            }
+            catch (Exception ex)
+            {
+                debug("删除交易帐户错误:" + ex.ToString());
+                throw new FutsRspError("删除交易帐户异常，请手工删除相关信息");
+            }
+        }
+
         
         #endregion
 
 
-        public IEnumerable<Position> GetPositions(string account)
-        {
-            return acctk.GetPositionBook(account);
-        }
+        //public IEnumerable<Position> GetPositions(string account)
+        //{
+        //    return acctk.GetPositionBook(account);
+        //}
     }
 }

@@ -16,20 +16,21 @@ namespace TradingLib.Common
         /// </summary>
         public bool AnyPosition { get { return this.GetAnyPosition(); } }
 
+
         /// <summary>
         /// 持仓维护器
         /// </summary>
         public LSPositionTracker TKPosition { get; set; }
 
         /// <summary>
-        /// 当日所有持仓数据 包含已经平仓的数据
+        /// 当日所有持仓数据 包含已经平仓的持仓对象和有持仓的持仓对象
         /// </summary>
         public IEnumerable<Position> Positions { get { return this.TKPosition; } }
 
         /// <summary>
         /// 获得当前净持仓
         /// </summary>
-        public IEnumerable<Position> PositionsNet { get { return this.TKPosition.NetPositionTracker; } }
+        //public IEnumerable<Position> PositionsNet { get { return this.TKPosition.NetPositionTracker; } }
 
         /// <summary>
         /// 多头持仓维护器
@@ -56,21 +57,32 @@ namespace TradingLib.Common
         /// 成交维护器
         /// </summary>
         public ThreadSafeList<Trade> TKTrade { get; set; }
+
         /// <summary>
         /// 当日所有成交数据
         /// </summary>
         public IEnumerable<Trade> Trades { get { return this.TKTrade; } }
 
-
-        /// <summary>
-        /// 昨日持仓维护器
-        /// </summary>
-        public LSPositionTracker TKYdPosition { get; set; }
-
         /// <summary>
         /// 昨日持仓数据
+        /// 用于管理端获得昨日持仓 当日成交 然后生成当前的交易持仓状态
         /// </summary>
-        public IEnumerable<Position> YdPositions { get { return this.TKYdPosition; } }
+        public IEnumerable<PositionDetail> YdPositions 
+        {
+            //这里不用单独维护LSPositionTracker从当前持仓中获得昨日持仓明细然后生成Position
+            get 
+            {
+                List<PositionDetail> list = new List<PositionDetail>();
+                foreach(Position p in this.Positions)
+                {
+                    foreach (PositionDetail pd in p.PositionDetailYdRef)
+                    {
+                        list.Add(pd);
+                    }
+                }
+                return list;
+            } 
+        }
 
         /// <summary>
         /// 获得某个合约的持仓对象
@@ -87,10 +99,10 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        public Position GetPositionNet(string symbol)
-        {
-            return this.TKPosition.NetPositionTracker[symbol];
-        }
+        //public Position GetPositionNet(string symbol)
+        //{
+        //    return this.TKPosition.NetPositionTracker[symbol];
+        //}
         #endregion
     }
 }

@@ -9,6 +9,115 @@ using TradingLib.Common;
 
 namespace TradingLib.Core
 {
+    internal class PriorityBuffer<T>
+    {
+        const int buffersize = 1000;
+        public int Priority = 10;
+        public RingBuffer<T> Buffer = new RingBuffer<T>(buffersize);
+
+        /// <summary>
+        /// 放入一个对象
+        /// </summary>
+        /// <param name="obj"></param>
+        public void Write(T obj)
+        {
+            this.Buffer.Write(obj);
+        }
+
+        /// <summary>
+        /// 读取一个对象
+        /// </summary>
+        /// <returns></returns>
+        public T Read()
+        {
+            return this.Buffer.Read();
+        }
+
+        /// <summary>
+        /// 是否有内容
+        /// </summary>
+        public bool HasItems
+        {
+            get
+            {
+                return this.Buffer.hasItems;
+            }
+        }
+    }
+
+    internal class PriorityBufferSet
+    {
+        Dictionary<Type, PriorityBuffer<RspResponsePacket>> rspresponsemap = new Dictionary<Type, PriorityBuffer<RspResponsePacket>>();
+        SortedList<int, PriorityBuffer<RspResponsePacket>> prioritymap = new SortedList<int, PriorityBuffer<RspResponsePacket>>();
+
+        public void AddRspResponseType(int priority, Type t)
+        {
+            if (rspresponsemap.Keys.Contains(t))
+                throw new Exception("Type:" + t.ToString() + " already inserted");
+            if (prioritymap.Keys.Contains(priority))
+                throw new Exception("Priority:" + priority.ToString() + " already inserted");
+            PriorityBuffer<RspResponsePacket> buffer = new PriorityBuffer<RspResponsePacket>();
+            rspresponsemap.Add(t,buffer);
+            prioritymap.Add(priority, buffer);
+
+        }
+        /// <summary>
+        /// 如果返回False则表明该packet不由优先级队列维护 写入默认rsp缓存
+        /// 按照具体的类型写入不同的队列
+        /// </summary>
+        /// <param name="packet"></param>
+        /// <returns></returns>
+        public bool Write(RspResponsePacket packet)
+        {
+            //如果该RspResponse对象被优先级缓存列表维护 则写入对应的缓存 缓存在初始化时给定了具体的优先级，用优先级别对对象分组
+            Type t = packet.GetType();
+            if (rspresponsemap.Keys.Contains(t))
+            {
+                rspresponsemap[t].Write(packet);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 是否有对象需要发送
+        /// </summary>
+        public bool HasItems
+        {
+            get
+            {
+                foreach (PriorityBuffer<RspResponsePacket> b in rspresponsemap.Values)
+                {
+                    if (b.HasItems)
+                        return true;
+                }
+                return false;
+                
+            }
+        }
+
+        
+        /// <summary>
+        /// 按照优先级 读取最优先发送的消息
+        /// </summary>
+        /// <returns></returns>
+        public RspResponsePacket Read()
+        {
+            //按照优先队列 读取对一个队列中的对象
+            foreach (PriorityBuffer<RspResponsePacket> b in prioritymap.Values)
+            {
+                if (b.HasItems)
+                    return b.Read();
+            }
+            return null;
+        }
+        
+    }
+
+
     public partial class MsgExchServer
     {
 
@@ -96,6 +205,28 @@ namespace TradingLib.Core
             return new string[] { };
         }
 
+        PriorityBufferSet prioritybuffer = new PriorityBufferSet();
+        void InitPriorityBuffer()
+        {
+            prioritybuffer.AddRspResponseType(1, typeof(RspQryInvestorResponse));
+            prioritybuffer.AddRspResponseType(2, typeof(RspQrySymbolResponse));
+
+            //prioritybuffer.AddRspResponseType(3, typeof(RspQryTradeResponse));
+            //prioritybuffer.AddRspResponseType(4, typeof(RspQryOrderResponse));
+            //prioritybuffer.AddRspResponseType(5, typeof(RspQryPositionDetailResponse));
+            //prioritybuffer.AddRspResponseType(6, typeof(RspQryPositionResponse));
+            //prioritybuffer.AddRspResponseType(7, typeof(RspQryAccountInfoResponse));
+
+        }
+        RingBuffer<RspQryInvestorResponse> investorbuf = new RingBuffer<RspQryInvestorResponse>(buffize);//投资者查询缓存
+        RingBuffer<RspQrySymbolResponse> symbolbuf = new RingBuffer<RspQrySymbolResponse>(buffize);//合约查询缓存
+
+        RingBuffer<RspQryTradeResponse> rsptradebuf = new RingBuffer<RspQryTradeResponse>(buffize);//成交回报缓存
+        RingBuffer<RspQryOrderResponse> rsporderbuf = new RingBuffer<RspQryOrderResponse>(buffize);//委托回报缓存
+        RingBuffer<RspQryPositionResponse> rspposbuf = new RingBuffer<RspQryPositionResponse>(buffize);//持仓缓存
+        RingBuffer<RspQryPositionDetailResponse> rspposdetailbuf = new RingBuffer<RspQryPositionDetailResponse>(buffize);//持仓明细缓存
+        RingBuffer<RspQryAccountInfoResponse> rspaccountinfobuf = new RingBuffer<RspQryAccountInfoResponse>(buffize);//账户明细缓存
+
         /// <summary>
         /// 所有需要转发到客户端的消息均通过缓存进行，这样避免了多个线程同时操作一个ZeroMQ socket
         /// 所有发送消息的过程产生的异常将在这里进行捕捉
@@ -135,10 +266,26 @@ namespace TradingLib.Core
 
                     }
 
-                    while (_packetcache.hasItems)
+
+                    //while (investorbuf.hasItems)
+                    //{
+                    //    tl.TLSend(investorbuf.Read());
+                    //}
+                    //while (symbolbuf.hasItems && (!investorbuf.hasItems))
+                    //{
+                    //    tl.TLSend(symbolbuf.Read());
+                    //}
+                    while (prioritybuffer.HasItems)
+                    {
+                        tl.TLSend(prioritybuffer.Read());
+                    }
+
+                    //当优先级的消息缓存没有消息的时候才发送其他消息
+                    while (_packetcache.hasItems && (!prioritybuffer.HasItems))
                     {
                         tl.TLSend(_packetcache.Read());
                     }
+
 
                     //回报账户resume(客户端回复当日交易信息)
                     //while (_resuemcache.hasItems && !notokforresume())

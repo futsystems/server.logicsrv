@@ -48,8 +48,8 @@ namespace TradingLib.Common
         public TradingInfoTracker()
         {
             OrderTracker = new OrderTracker();
-            PositionTracker = new LSPositionTracker();
-            HoldPositionTracker = new LSPositionTracker();
+            PositionTracker = new LSPositionTracker("");
+            HoldPositionTracker = new LSPositionTracker("");
             TradeTracker = new ThreadSafeList<Trade>();
             Account = new AccountLite();
         }
@@ -89,7 +89,7 @@ namespace TradingLib.Common
         /// 获得隔夜持仓数据
         /// </summary>
         /// <param name="pos"></param>
-        public void GotHoldPosition(Position pos)
+        public void GotHoldPosition(PositionDetail pos)
         {
             if (Account.Account != pos.Account) return;
             

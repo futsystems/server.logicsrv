@@ -56,7 +56,7 @@ namespace TradingLib.Common
 
             //可用资金大于需求资金则可以接受该委托
             decimal required = CalOrderFundRequired(o);
-            //TLCtxHelper.Debug("[CanFundTakeOrder Check] Fundavabile:" + avabile.ToString() + " Required:" + required);
+            //Util.Debug("[CanFundTakeOrder Check] Fundavabile:" + avabile.ToString() + " Required:" + required);
             if (required > avabile)
             {
                 msg = "资金不足";
@@ -80,7 +80,7 @@ namespace TradingLib.Common
 
             decimal avabilefund = GetFundAvabile(symbol);
 
-            TLCtxHelper.Debug("QryCanOpenSize Fundavablie:" + avabilefund.ToString() + " Symbol:" + symbol.Symbol + " Price:" + price.ToString() + " Fundperlot:" + fundperlot.ToString());
+            Util.Debug("QryCanOpenSize Fundavablie:" + avabilefund.ToString() + " Symbol:" + symbol.Symbol + " Price:" + price.ToString() + " Fundperlot:" + fundperlot.ToString());
             return (int)(avabilefund/fundperlot);
         }
 

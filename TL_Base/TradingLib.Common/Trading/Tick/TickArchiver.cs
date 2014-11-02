@@ -35,22 +35,22 @@ namespace TradingLib.Common
         public bool newTick(Tick t)
         {
             if (_stopped) return false;
-            if ((t.symbol == null) || (t.symbol == "")) return false;
+            if ((t.Symbol == null) || (t.Symbol == "")) return false;
             TikWriter tw;
             // prepare last date of tick
             int lastdate = 0;
             // get last date
-            bool havedate = datedict.TryGetValue(t.symbol, out lastdate);
+            bool havedate = datedict.TryGetValue(t.Symbol, out lastdate);
             // if we don't have date, use present date
             if (!havedate)
             {
-                lastdate = t.date;
-                datedict.Add(t.symbol, t.date);
+                lastdate = t.Date;
+                datedict.Add(t.Symbol, t.Date);
             }
             // see if we need a new day
-            bool samedate = lastdate == t.date;
+            bool samedate = lastdate == t.Date;
             // see if we have stream already
-            bool havestream = filedict.TryGetValue(t.symbol, out tw);
+            bool havestream = filedict.TryGetValue(t.Symbol, out tw);
             // if no changes, just save tick
             if (samedate && havestream)
             {
@@ -75,22 +75,22 @@ namespace TradingLib.Common
                         catch (IOException) { }
                     }
                     // ensure file is writable
-                    string fn = TikWriter.SafeFilename(t.symbol, _path, t.date);
+                    string fn = TikWriter.SafeFilename(t.Symbol, _path, t.Date);
                     if (TikUtil.IsFileWritetable(fn))
                     {
                         // open new stream
-                        tw = new TikWriter(_path, t.symbol, t.date);
+                        tw = new TikWriter(_path, t.Symbol, t.Date);
                         // save tick
                         tw.newTick((TickImpl)t);
                         // save stream
                         if (!havestream)
-                            filedict.Add(t.symbol, tw);
+                            filedict.Add(t.Symbol, tw);
                         else
-                            filedict[t.symbol] = tw;
+                            filedict[t.Symbol] = tw;
                         // save date if changed
                         if (!samedate)
                         {
-                            datedict[t.symbol] = t.date;
+                            datedict[t.Symbol] = t.Date;
                         }
                     }
                 }

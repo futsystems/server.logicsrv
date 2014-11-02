@@ -258,6 +258,9 @@ namespace TradingLib.Core
                     //标注登入成功
                     clientinfo.AuthorizedSuccess();
 
+                    //获得界面访问权限列表
+                    response.UIAccess = UIAccessTracker.GetUIAccess(m);
+
                 }
                 else//如果管理端对象在内存中不存在 则返回登入失败
                 {

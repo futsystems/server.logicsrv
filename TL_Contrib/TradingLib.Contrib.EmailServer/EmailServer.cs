@@ -142,7 +142,7 @@ namespace TradingLib.Contrib.EmailSrv
         //[TaskAttr("测试定时任务2",0,0,15)]
         public void DemoTask()
         {
-            TLCtxHelper.Debug("i am here....");
+            Util.Debug("i am here....");
         }
 
         /*

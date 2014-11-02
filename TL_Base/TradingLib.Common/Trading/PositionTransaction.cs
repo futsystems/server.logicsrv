@@ -9,7 +9,6 @@ namespace TradingLib.Common
     /// <summary>
     /// 开仓或者平仓数据
     /// </summary>
-    [Serializable]
     public class PositionTransaction
     {
         /// <summary>

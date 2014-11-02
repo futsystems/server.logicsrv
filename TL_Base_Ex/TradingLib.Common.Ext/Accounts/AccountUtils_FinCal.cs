@@ -269,7 +269,7 @@ namespace TradingLib.Common
         {
             if (string.IsNullOrEmpty(account.Name))
             {
-                return Util.GetEnumDescription(account.Category) + "[" + account.ID + "]";
+                return  "帐号[" + account.ID + "]";
             }
             return account.Name;
         }
@@ -281,25 +281,6 @@ namespace TradingLib.Common
                 return GlobalConfig.DefaultBroker;
             }
             return account.Broker;
-        }
-
-        public static string GetCustBankID(this IAccount account)
-        {
-            if (string.IsNullOrEmpty(account.BankID))
-            {
-                return GlobalConfig.DefaultBankID;
-            }
-
-            return account.BankID;
-        }
-
-        public static string GetCustBankAC(this IAccount account)
-        {
-            if (string.IsNullOrEmpty(account.BankAC))
-            {
-                return GlobalConfig.DefaultBankAC;
-            }
-            return account.BankAC;
         }
     }
 }

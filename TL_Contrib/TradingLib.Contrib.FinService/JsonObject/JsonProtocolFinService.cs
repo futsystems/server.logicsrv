@@ -208,7 +208,7 @@ namespace TradingLib.Mixins.JsonObject
 
 
     /// <summary>
-    /// 统计汇总
+    /// 统计汇总 统计每天的汇总报表
     /// </summary>
     public class JsonWrapperToalReport
     {

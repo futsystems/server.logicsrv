@@ -5,11 +5,10 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using Telerik.WinControls;
 
 namespace FutSystems.GUI
 {
-    public partial class MessageForm : Telerik.WinControls.UI.RadForm
+    public partial class MessageForm : ComponentFactory.Krypton.Toolkit.KryptonForm
     {
         public MessageForm(string message,string title="提示")
         {

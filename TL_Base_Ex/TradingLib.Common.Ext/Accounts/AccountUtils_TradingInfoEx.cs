@@ -31,7 +31,7 @@ namespace TradingLib.Common
 
 
         /// <summary>
-        /// 获得当前所有持仓 数量不为0
+        /// 获得当前所有持仓 持仓数量不为0的持仓对象
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
@@ -49,6 +49,7 @@ namespace TradingLib.Common
         {
             return account.GetPositionsHold().Sum(pos => pos.UnsignedSize);
         }
+
         /// <summary>
         /// 获得某个合约上的所有待成交委托
         /// </summary>

@@ -6,9 +6,12 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using TradingLib.API;
+using TradingLib.Common;
 using FutSystems.GUI;
 using TradingLib.Mixins.LitJson;
 using TradingLib.Mixins.JsonObject;
+
 
 namespace FutsMoniter
 {
@@ -17,11 +20,16 @@ namespace FutsMoniter
         public ctAgentSPArgConfig()
         {
             InitializeComponent();
+            notice.Visible = false;
+            ctAgentList1.EnableSelf = false;
             if (Globals.CallbackCentreReady)
             {
                 Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryAgentSPArg", this.OnQrySPAgentArg);
             }
             this.Disposed += new EventHandler(ctAgentSPArgConfig_Disposed);
+            this.btnSubmit.Click +=new EventHandler(btnSubmit_Click);
+            ctAgentList1.AgentSelectedChangedEvent +=new VoidDelegate(ctAgentList1_AgentSelectedChangedEvent);
+            ctFinServicePlanList1.ServicePlanSelectedChangedEvent +=new VoidDelegate(ctFinServicePlanList1_ServicePlanSelectedChangedEvent);
         }
 
         void ctAgentSPArgConfig_Disposed(object sender, EventArgs e)
@@ -101,6 +109,15 @@ namespace FutsMoniter
                 ctTLEdit edit = new ctTLEdit();
                 edit.Argument = arg;
                 tableLayoutPanel.Controls.Add(edit);
+                if (ctAgentList1.CurrentAgentFK == Globals.BaseMGRFK)//如果是产看自己的主域设置则无法编辑
+                {
+                    edit.DisableEdit();
+                    notice.Visible = true;
+                }
+                else
+                {
+                    notice.Visible = false;
+                }
             }
         }
 
@@ -122,6 +139,5 @@ namespace FutsMoniter
         {
             Globals.TLClient.ReqQrySPAgentArg(ctAgentList1.CurrentAgentFK, ctFinServicePlanList1.CurrentServicePlanFK);
         }
-
     }
 }

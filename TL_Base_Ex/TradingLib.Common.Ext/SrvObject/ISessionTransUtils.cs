@@ -51,6 +51,37 @@ namespace TradingLib.Common
         }
 
         /// <summary>
+        /// 操作错误回报
+        /// 通过FutsRspErro携带具体的错误消息生成RspMGROperationResponse 发送给对应的客户端
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="error"></param>
+        public static void OperationError(this ISession session,FutsRspError error)
+        {
+            RspMGROperationResponse response = ResponseTemplate<RspMGROperationResponse>.SrvSendRspResponse(session);
+            response.RspInfo.Fill(error);
+
+            SendPacketMgr(session, response);
+        }
+
+        /// <summary>
+        /// 错误成功回报
+        /// 某种操作如果没有特定的回报类型,则通过通用Response进行回报 并携带具体的成功消息
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="successmessage"></param>
+        public static void OperationSuccess(this ISession session, string successmessage)
+        {
+            RspMGROperationResponse response = ResponseTemplate<RspMGROperationResponse>.SrvSendRspResponse(session);
+            response.RspInfo.ErrorMessage = successmessage;
+
+            SendPacketMgr(session, response);
+        }
+
+
+
+
+        /// <summary>
         /// 向一组管理端发送通知
         /// </summary>
         /// <param name="session"></param>

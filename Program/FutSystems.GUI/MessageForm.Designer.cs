@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MessageForm));
-            this.message = new Telerik.WinControls.UI.RadLabel();
-            this.btnOK = new Telerik.WinControls.UI.RadButton();
+            this.message = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.btnOK = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             ((System.ComponentModel.ISupportInitialize)(this.message)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnOK)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this)).BeginInit();
@@ -65,10 +65,10 @@
             // 
             // 
             // 
-            this.RootElement.ApplyShapeToControl = true;
+           // this.RootElement.ApplyShapeToControl = true;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "MessageForm";
-            this.ThemeName = "ControlDefault";
+            //this.ThemeName = "ControlDefault";
             ((System.ComponentModel.ISupportInitialize)(this.message)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnOK)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this)).EndInit();
@@ -79,7 +79,7 @@
 
         #endregion
 
-        private Telerik.WinControls.UI.RadLabel message;
-        private Telerik.WinControls.UI.RadButton btnOK;
+        private ComponentFactory.Krypton.Toolkit.KryptonLabel message;
+        private ComponentFactory.Krypton.Toolkit.KryptonButton btnOK;
     }
 }

@@ -100,7 +100,7 @@ namespace TradingLib.Core
         /// <summary>
         /// 客户端登入成功后回报消息事件
         /// </summary>
-        public event AccountIdDel NotifyLoginSuccessEvent;
+       // public event AccountIdDel NotifyLoginSuccessEvent;
 
         /// <summary>
         /// 客户端会话状态变化事件
@@ -192,6 +192,7 @@ namespace TradingLib.Core
 
         //Server将融合多个Broker和DataFeed通道
         //int _orderlimitsize = 0;
+        bool needConfirmSettlement = true;
         public MsgExchServer()
             : base(MsgExchServer.CoreName)
         {
@@ -251,12 +252,18 @@ namespace TradingLib.Core
                 }
                 commentOpened = _cfgdb["CommentOpened"].AsString();
 
+                if (!_cfgdb.HaveConfig("NeedConfirmSettlement"))
+                {
+                    _cfgdb.UpdateConfig("NeedConfirmSettlement", QSEnumCfgType.Bool,true, "是否需要确认结算单");
+                }
+                needConfirmSettlement = _cfgdb["NeedConfirmSettlement"].AsBool();
 
                 tl = new TLServer_Exch(CoreName,_cfgdb["TLServerIP"].AsString(), _cfgdb["TLPort"].AsInt(), true);
 
                 //tl = new TLServer_Exch("TradingServer", _cfgdb["TLServerIP"].AsString(), _cfgdb["TLPort"].AsInt());
                 //VerboseDebugging = _cfgdb["VerbDebug"].AsBool();
                 tl.ProviderName = Providers.QSPlatform;
+                tl.NumWorks = 5;
 
                 //设定日志输出
                 //tl.VerboseDebugging = false;
@@ -300,6 +307,8 @@ namespace TradingLib.Core
                         }
                         debug("客户端:" + c.Location.ClientID + " 登入状态:"+login.ToString(), QSEnumDebugLevel.INFO);
                     };
+                //初始化优先发送缓存对象
+                InitPriorityBuffer();
                 //启动消息服务
                 StartMessageRouter();
                 

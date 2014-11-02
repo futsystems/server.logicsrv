@@ -28,123 +28,98 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.radPanel1 = new Telerik.WinControls.UI.RadPanel();
-            this.radGroupBox1 = new Telerik.WinControls.UI.RadGroupBox();
+            this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
+            this.kryptonGroupBox3 = new ComponentFactory.Krypton.Toolkit.KryptonGroupBox();
+            this.btnSubmit = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.kryptonGroupBox2 = new ComponentFactory.Krypton.Toolkit.KryptonGroupBox();
+            this.tableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
+            this.kryptonGroupBox1 = new ComponentFactory.Krypton.Toolkit.KryptonGroupBox();
+            this.lbcollecttype = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.lbchargetype = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.kryptonLabel4 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.kryptonLabel3 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.lbsptitle = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.kryptonLabel1 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.notice = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.ctFinServicePlanList1 = new FutsMoniter.ctFinServicePlanList();
             this.ctAgentList1 = new FutsMoniter.ctAgentList();
-            this.btnSubmit = new Telerik.WinControls.UI.RadButton();
-            this.gparg = new Telerik.WinControls.UI.RadGroupBox();
-            this.tableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
-            this.radGroupBox2 = new Telerik.WinControls.UI.RadGroupBox();
-            this.radLabel2 = new Telerik.WinControls.UI.RadLabel();
-            this.lbcollecttype = new Telerik.WinControls.UI.RadLabel();
-            this.radLabel4 = new Telerik.WinControls.UI.RadLabel();
-            this.lbchargetype = new Telerik.WinControls.UI.RadLabel();
-            this.radLabel5 = new Telerik.WinControls.UI.RadLabel();
-            this.lbsptitle = new Telerik.WinControls.UI.RadLabel();
-            ((System.ComponentModel.ISupportInitialize)(this.radPanel1)).BeginInit();
-            this.radPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.radGroupBox1)).BeginInit();
-            this.radGroupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.btnSubmit)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gparg)).BeginInit();
-            this.gparg.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.radGroupBox2)).BeginInit();
-            this.radGroupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.lbcollecttype)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.lbchargetype)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel5)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.lbsptitle)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
+            this.kryptonPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.kryptonGroupBox3)).BeginInit();
+            this.kryptonGroupBox3.Panel.SuspendLayout();
+            this.kryptonGroupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.kryptonGroupBox2)).BeginInit();
+            this.kryptonGroupBox2.Panel.SuspendLayout();
+            this.kryptonGroupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.kryptonGroupBox1)).BeginInit();
+            this.kryptonGroupBox1.Panel.SuspendLayout();
+            this.kryptonGroupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // radPanel1
+            // kryptonPanel1
             // 
-            this.radPanel1.Controls.Add(this.radGroupBox1);
-            this.radPanel1.Controls.Add(this.gparg);
-            this.radPanel1.Controls.Add(this.radGroupBox2);
-            this.radPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.radPanel1.Location = new System.Drawing.Point(0, 0);
-            this.radPanel1.Name = "radPanel1";
-            this.radPanel1.Size = new System.Drawing.Size(614, 271);
-            this.radPanel1.TabIndex = 0;
-            ((Telerik.WinControls.Primitives.BorderPrimitive)(this.radPanel1.GetChildAt(0).GetChildAt(1))).Width = 0F;
+            this.kryptonPanel1.Controls.Add(this.kryptonGroupBox3);
+            this.kryptonPanel1.Controls.Add(this.kryptonGroupBox2);
+            this.kryptonPanel1.Controls.Add(this.kryptonGroupBox1);
+            this.kryptonPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.kryptonPanel1.Location = new System.Drawing.Point(0, 0);
+            this.kryptonPanel1.Name = "kryptonPanel1";
+            this.kryptonPanel1.Size = new System.Drawing.Size(672, 328);
+            this.kryptonPanel1.TabIndex = 0;
             // 
-            // radGroupBox1
+            // kryptonGroupBox3
             // 
-            this.radGroupBox1.AccessibleRole = System.Windows.Forms.AccessibleRole.Grouping;
-            this.radGroupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.kryptonGroupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.radGroupBox1.Controls.Add(this.ctFinServicePlanList1);
-            this.radGroupBox1.Controls.Add(this.ctAgentList1);
-            this.radGroupBox1.Controls.Add(this.btnSubmit);
-            this.radGroupBox1.HeaderText = "操 作";
-            this.radGroupBox1.Location = new System.Drawing.Point(428, 3);
-            this.radGroupBox1.Name = "radGroupBox1";
+            this.kryptonGroupBox3.Location = new System.Drawing.Point(446, 0);
+            this.kryptonGroupBox3.Name = "kryptonGroupBox3";
             // 
+            // kryptonGroupBox3.Panel
             // 
-            // 
-            this.radGroupBox1.RootElement.Padding = new System.Windows.Forms.Padding(2, 18, 2, 2);
-            this.radGroupBox1.Size = new System.Drawing.Size(183, 265);
-            this.radGroupBox1.TabIndex = 25;
-            this.radGroupBox1.Text = "操 作";
-            // 
-            // ctFinServicePlanList1
-            // 
-            this.ctFinServicePlanList1.Location = new System.Drawing.Point(5, 47);
-            this.ctFinServicePlanList1.Name = "ctFinServicePlanList1";
-            this.ctFinServicePlanList1.Size = new System.Drawing.Size(164, 22);
-            this.ctFinServicePlanList1.TabIndex = 31;
-            this.ctFinServicePlanList1.ServicePlanSelectedChangedEvent += new TradingLib.API.VoidDelegate(this.ctFinServicePlanList1_ServicePlanSelectedChangedEvent);
-            // 
-            // ctAgentList1
-            // 
-            this.ctAgentList1.Location = new System.Drawing.Point(7, 21);
-            this.ctAgentList1.Name = "ctAgentList1";
-            this.ctAgentList1.Size = new System.Drawing.Size(162, 20);
-            this.ctAgentList1.TabIndex = 1;
-            this.ctAgentList1.AgentSelectedChangedEvent += new TradingLib.API.VoidDelegate(this.ctAgentList1_AgentSelectedChangedEvent);
+            this.kryptonGroupBox3.Panel.Controls.Add(this.notice);
+            this.kryptonGroupBox3.Panel.Controls.Add(this.btnSubmit);
+            this.kryptonGroupBox3.Panel.Controls.Add(this.ctFinServicePlanList1);
+            this.kryptonGroupBox3.Panel.Controls.Add(this.ctAgentList1);
+            this.kryptonGroupBox3.Size = new System.Drawing.Size(226, 328);
+            this.kryptonGroupBox3.TabIndex = 2;
+            this.kryptonGroupBox3.Text = "操作";
+            this.kryptonGroupBox3.Values.Heading = "操作";
             // 
             // btnSubmit
             // 
             this.btnSubmit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSubmit.Location = new System.Drawing.Point(84, 214);
+            this.btnSubmit.Location = new System.Drawing.Point(137, 267);
             this.btnSubmit.Name = "btnSubmit";
-            this.btnSubmit.Size = new System.Drawing.Size(88, 36);
-            this.btnSubmit.TabIndex = 30;
-            this.btnSubmit.Text = "提交修改";
-            this.btnSubmit.Click += new System.EventHandler(this.btnSubmit_Click);
+            this.btnSubmit.Size = new System.Drawing.Size(70, 25);
+            this.btnSubmit.TabIndex = 2;
+            this.btnSubmit.Values.Text = "提 交";
             // 
-            // gparg
+            // kryptonGroupBox2
             // 
-            this.gparg.AccessibleRole = System.Windows.Forms.AccessibleRole.Grouping;
-            this.gparg.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.kryptonGroupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.gparg.Controls.Add(this.tableLayoutPanel);
-            this.gparg.HeaderText = "参数列表";
-            this.gparg.Location = new System.Drawing.Point(186, 3);
-            this.gparg.Name = "gparg";
+            this.kryptonGroupBox2.Location = new System.Drawing.Point(199, 0);
+            this.kryptonGroupBox2.Name = "kryptonGroupBox2";
             // 
+            // kryptonGroupBox2.Panel
             // 
-            // 
-            this.gparg.RootElement.Padding = new System.Windows.Forms.Padding(2, 18, 2, 2);
-            this.gparg.Size = new System.Drawing.Size(236, 265);
-            this.gparg.TabIndex = 24;
-            this.gparg.Text = "参数列表";
+            this.kryptonGroupBox2.Panel.Controls.Add(this.tableLayoutPanel);
+            this.kryptonGroupBox2.Size = new System.Drawing.Size(241, 325);
+            this.kryptonGroupBox2.TabIndex = 1;
+            this.kryptonGroupBox2.Text = "参数列表";
+            this.kryptonGroupBox2.Values.Heading = "参数列表";
             // 
             // tableLayoutPanel
             // 
-            this.tableLayoutPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel.BackColor = System.Drawing.Color.Transparent;
             this.tableLayoutPanel.ColumnCount = 1;
             this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 283F));
-            this.tableLayoutPanel.Location = new System.Drawing.Point(2, 18);
+            this.tableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel.Name = "tableLayoutPanel";
-            this.tableLayoutPanel.RowCount = 9;
+            this.tableLayoutPanel.RowCount = 10;
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
@@ -154,123 +129,145 @@
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanel.Size = new System.Drawing.Size(232, 216);
-            this.tableLayoutPanel.TabIndex = 11;
+            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel.Size = new System.Drawing.Size(237, 303);
+            this.tableLayoutPanel.TabIndex = 12;
             // 
-            // radGroupBox2
+            // kryptonGroupBox1
             // 
-            this.radGroupBox2.AccessibleRole = System.Windows.Forms.AccessibleRole.Grouping;
-            this.radGroupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.kryptonGroupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)));
-            this.radGroupBox2.Controls.Add(this.radLabel2);
-            this.radGroupBox2.Controls.Add(this.lbcollecttype);
-            this.radGroupBox2.Controls.Add(this.radLabel4);
-            this.radGroupBox2.Controls.Add(this.lbchargetype);
-            this.radGroupBox2.Controls.Add(this.radLabel5);
-            this.radGroupBox2.Controls.Add(this.lbsptitle);
-            this.radGroupBox2.HeaderText = "基本参数";
-            this.radGroupBox2.Location = new System.Drawing.Point(3, 3);
-            this.radGroupBox2.Name = "radGroupBox2";
+            this.kryptonGroupBox1.Location = new System.Drawing.Point(0, 0);
+            this.kryptonGroupBox1.Name = "kryptonGroupBox1";
             // 
+            // kryptonGroupBox1.Panel
             // 
-            // 
-            this.radGroupBox2.RootElement.Padding = new System.Windows.Forms.Padding(2, 18, 2, 2);
-            this.radGroupBox2.Size = new System.Drawing.Size(177, 265);
-            this.radGroupBox2.TabIndex = 23;
-            this.radGroupBox2.Text = "基本参数";
-            // 
-            // radLabel2
-            // 
-            this.radLabel2.Location = new System.Drawing.Point(5, 26);
-            this.radLabel2.Name = "radLabel2";
-            this.radLabel2.Size = new System.Drawing.Size(59, 16);
-            this.radLabel2.TabIndex = 10;
-            this.radLabel2.Text = "服务计划:";
+            this.kryptonGroupBox1.Panel.Controls.Add(this.lbcollecttype);
+            this.kryptonGroupBox1.Panel.Controls.Add(this.lbchargetype);
+            this.kryptonGroupBox1.Panel.Controls.Add(this.kryptonLabel4);
+            this.kryptonGroupBox1.Panel.Controls.Add(this.kryptonLabel3);
+            this.kryptonGroupBox1.Panel.Controls.Add(this.lbsptitle);
+            this.kryptonGroupBox1.Panel.Controls.Add(this.kryptonLabel1);
+            this.kryptonGroupBox1.Size = new System.Drawing.Size(193, 328);
+            this.kryptonGroupBox1.TabIndex = 0;
+            this.kryptonGroupBox1.Text = "基本参数";
+            this.kryptonGroupBox1.Values.Heading = "基本参数";
             // 
             // lbcollecttype
             // 
-            this.lbcollecttype.Location = new System.Drawing.Point(70, 70);
+            this.lbcollecttype.Location = new System.Drawing.Point(77, 65);
             this.lbcollecttype.Name = "lbcollecttype";
-            this.lbcollecttype.Size = new System.Drawing.Size(14, 16);
-            this.lbcollecttype.TabIndex = 15;
-            this.lbcollecttype.Text = "--";
-            // 
-            // radLabel4
-            // 
-            this.radLabel4.Location = new System.Drawing.Point(5, 48);
-            this.radLabel4.Name = "radLabel4";
-            this.radLabel4.Size = new System.Drawing.Size(59, 16);
-            this.radLabel4.TabIndex = 11;
-            this.radLabel4.Text = "计费方式:";
+            this.lbcollecttype.Size = new System.Drawing.Size(19, 18);
+            this.lbcollecttype.TabIndex = 5;
+            this.lbcollecttype.Values.Text = "--";
             // 
             // lbchargetype
             // 
-            this.lbchargetype.Location = new System.Drawing.Point(70, 48);
+            this.lbchargetype.Location = new System.Drawing.Point(77, 41);
             this.lbchargetype.Name = "lbchargetype";
-            this.lbchargetype.Size = new System.Drawing.Size(14, 16);
-            this.lbchargetype.TabIndex = 14;
-            this.lbchargetype.Text = "--";
+            this.lbchargetype.Size = new System.Drawing.Size(19, 18);
+            this.lbchargetype.TabIndex = 4;
+            this.lbchargetype.Values.Text = "--";
             // 
-            // radLabel5
+            // kryptonLabel4
             // 
-            this.radLabel5.Location = new System.Drawing.Point(5, 70);
-            this.radLabel5.Name = "radLabel5";
-            this.radLabel5.Size = new System.Drawing.Size(59, 16);
-            this.radLabel5.TabIndex = 12;
-            this.radLabel5.Text = "采集方式:";
+            this.kryptonLabel4.Location = new System.Drawing.Point(3, 65);
+            this.kryptonLabel4.Name = "kryptonLabel4";
+            this.kryptonLabel4.Size = new System.Drawing.Size(68, 18);
+            this.kryptonLabel4.TabIndex = 3;
+            this.kryptonLabel4.Values.Text = "采集方式:";
+            // 
+            // kryptonLabel3
+            // 
+            this.kryptonLabel3.Location = new System.Drawing.Point(3, 41);
+            this.kryptonLabel3.Name = "kryptonLabel3";
+            this.kryptonLabel3.Size = new System.Drawing.Size(68, 18);
+            this.kryptonLabel3.TabIndex = 2;
+            this.kryptonLabel3.Values.Text = "计费方式:";
             // 
             // lbsptitle
             // 
-            this.lbsptitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            this.lbsptitle.ForeColor = System.Drawing.Color.Crimson;
-            this.lbsptitle.Location = new System.Drawing.Point(70, 26);
+            this.lbsptitle.Location = new System.Drawing.Point(77, 17);
             this.lbsptitle.Name = "lbsptitle";
-            this.lbsptitle.Size = new System.Drawing.Size(14, 16);
-            this.lbsptitle.TabIndex = 13;
-            this.lbsptitle.Text = "--";
+            this.lbsptitle.Size = new System.Drawing.Size(19, 18);
+            this.lbsptitle.TabIndex = 1;
+            this.lbsptitle.Values.Text = "--";
+            // 
+            // kryptonLabel1
+            // 
+            this.kryptonLabel1.Location = new System.Drawing.Point(3, 17);
+            this.kryptonLabel1.Name = "kryptonLabel1";
+            this.kryptonLabel1.Size = new System.Drawing.Size(68, 18);
+            this.kryptonLabel1.TabIndex = 0;
+            this.kryptonLabel1.Values.Text = "服务计划:";
+            // 
+            // notice
+            // 
+            this.notice.Location = new System.Drawing.Point(7, 79);
+            this.notice.Name = "notice";
+            this.notice.Size = new System.Drawing.Size(160, 18);
+            this.notice.StateCommon.ShortText.Color1 = System.Drawing.Color.Maroon;
+            this.notice.TabIndex = 3;
+            this.notice.Values.Text = "当前数据为你的成本价格";
+            // 
+            // ctFinServicePlanList1
+            // 
+            this.ctFinServicePlanList1.Location = new System.Drawing.Point(7, 41);
+            this.ctFinServicePlanList1.Name = "ctFinServicePlanList1";
+            this.ctFinServicePlanList1.Size = new System.Drawing.Size(187, 21);
+            this.ctFinServicePlanList1.TabIndex = 1;
+            // 
+            // ctAgentList1
+            // 
+            this.ctAgentList1.EnableAny = false;
+            this.ctAgentList1.EnableDefaultBaseMGR = false;
+            this.ctAgentList1.EnableSelected = true;
+            this.ctAgentList1.EnableSelf = false;
+            this.ctAgentList1.Location = new System.Drawing.Point(3, 10);
+            this.ctAgentList1.Name = "ctAgentList1";
+            this.ctAgentList1.Size = new System.Drawing.Size(191, 25);
+            this.ctAgentList1.TabIndex = 0;
             // 
             // ctAgentSPArgConfig
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.radPanel1);
+            this.Controls.Add(this.kryptonPanel1);
             this.Name = "ctAgentSPArgConfig";
-            this.Size = new System.Drawing.Size(614, 271);
-            ((System.ComponentModel.ISupportInitialize)(this.radPanel1)).EndInit();
-            this.radPanel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.radGroupBox1)).EndInit();
-            this.radGroupBox1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.btnSubmit)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gparg)).EndInit();
-            this.gparg.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.radGroupBox2)).EndInit();
-            this.radGroupBox2.ResumeLayout(false);
-            this.radGroupBox2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.lbcollecttype)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.lbchargetype)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel5)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.lbsptitle)).EndInit();
+            this.Size = new System.Drawing.Size(672, 328);
+            ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).EndInit();
+            this.kryptonPanel1.ResumeLayout(false);
+            this.kryptonGroupBox3.Panel.ResumeLayout(false);
+            this.kryptonGroupBox3.Panel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.kryptonGroupBox3)).EndInit();
+            this.kryptonGroupBox3.ResumeLayout(false);
+            this.kryptonGroupBox2.Panel.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.kryptonGroupBox2)).EndInit();
+            this.kryptonGroupBox2.ResumeLayout(false);
+            this.kryptonGroupBox1.Panel.ResumeLayout(false);
+            this.kryptonGroupBox1.Panel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.kryptonGroupBox1)).EndInit();
+            this.kryptonGroupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private Telerik.WinControls.UI.RadPanel radPanel1;
-        private Telerik.WinControls.UI.RadGroupBox radGroupBox2;
-        private Telerik.WinControls.UI.RadLabel radLabel2;
-        private Telerik.WinControls.UI.RadLabel lbcollecttype;
-        private Telerik.WinControls.UI.RadLabel radLabel4;
-        private Telerik.WinControls.UI.RadLabel lbchargetype;
-        private Telerik.WinControls.UI.RadLabel radLabel5;
-        private Telerik.WinControls.UI.RadLabel lbsptitle;
-        private Telerik.WinControls.UI.RadGroupBox gparg;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel;
-        private Telerik.WinControls.UI.RadGroupBox radGroupBox1;
-        private ctFinServicePlanList ctFinServicePlanList1;
+        private ComponentFactory.Krypton.Toolkit.KryptonPanel kryptonPanel1;
+        private ComponentFactory.Krypton.Toolkit.KryptonGroupBox kryptonGroupBox1;
+        private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel1;
+        private ComponentFactory.Krypton.Toolkit.KryptonLabel lbsptitle;
+        private ComponentFactory.Krypton.Toolkit.KryptonLabel lbcollecttype;
+        private ComponentFactory.Krypton.Toolkit.KryptonLabel lbchargetype;
+        private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel4;
+        private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel3;
+        private ComponentFactory.Krypton.Toolkit.KryptonGroupBox kryptonGroupBox2;
+        private ComponentFactory.Krypton.Toolkit.KryptonGroupBox kryptonGroupBox3;
         private ctAgentList ctAgentList1;
-        private Telerik.WinControls.UI.RadButton btnSubmit;
+        private ctFinServicePlanList ctFinServicePlanList1;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel;
+        private ComponentFactory.Krypton.Toolkit.KryptonButton btnSubmit;
+        private ComponentFactory.Krypton.Toolkit.KryptonLabel notice;
     }
 }

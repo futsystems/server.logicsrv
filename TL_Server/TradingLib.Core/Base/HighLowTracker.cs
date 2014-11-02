@@ -38,7 +38,7 @@ namespace TradingLib.Core
         public bool newTick(Tick k)
         {
             if (!k.isTrade) return false;
-            return newPoint(k.symbol, k.trade);
+            return newPoint(k.Symbol, k.Trade);
         }
         /// <summary>
         /// sets high/low from tick, given an index
@@ -49,7 +49,7 @@ namespace TradingLib.Core
         public bool newTick(Tick k, int idx)
         {
             if (!k.isTrade) return false;
-            return newPoint(idx, k.trade);
+            return newPoint(idx, k.Trade);
         }
         /// <summary>
         /// set low from a point
@@ -105,7 +105,7 @@ namespace TradingLib.Core
         public bool newTick(Tick k)
         {
             if (!k.isTrade) return false;
-            return newPoint(k.symbol, k.trade);
+            return newPoint(k.Symbol, k.Trade);
         }
         /// <summary>
         /// sets high/low from tick, given an index
@@ -116,7 +116,7 @@ namespace TradingLib.Core
         public bool newTick(Tick k, int idx)
         {
             if (!k.isTrade) return false;
-            return newPoint(idx, k.trade);
+            return newPoint(idx, k.Trade);
         }
         /// <summary>
         /// set low from a point

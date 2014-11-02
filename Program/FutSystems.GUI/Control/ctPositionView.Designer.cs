@@ -28,188 +28,164 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.positiongrid = new Telerik.WinControls.UI.RadGridView();
-            this.radPanel1 = new Telerik.WinControls.UI.RadPanel();
-            this.isDoubleFlat = new Telerik.WinControls.UI.RadCheckBox();
-            this.btnCancel = new Telerik.WinControls.UI.RadButton();
-            this.btnReserve = new Telerik.WinControls.UI.RadButton();
-            this.btnFlatAll = new Telerik.WinControls.UI.RadButton();
-            this.btnFlat = new Telerik.WinControls.UI.RadButton();
-            this.btnShowAll = new Telerik.WinControls.UI.RadRadioButton();
-            this.btnShowHold = new Telerik.WinControls.UI.RadRadioButton();
-            this.num = new Telerik.WinControls.UI.RadLabel();
-            this.radLabel1 = new Telerik.WinControls.UI.RadLabel();
+            this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
+            this.positiongrid = new ComponentFactory.Krypton.Toolkit.KryptonDataGridView();
+            this.isDoubleFlat = new ComponentFactory.Krypton.Toolkit.KryptonCheckBox();
+            this.num = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.kryptonLabel1 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.btnCancel = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.btnReserve = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.btnFlatAll = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.btnFlat = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.btnShowAll = new ComponentFactory.Krypton.Toolkit.KryptonRadioButton();
+            this.btnShowHold = new ComponentFactory.Krypton.Toolkit.KryptonRadioButton();
+            ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
+            this.kryptonPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.positiongrid)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radPanel1)).BeginInit();
-            this.radPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.isDoubleFlat)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.btnCancel)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.btnReserve)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.btnFlatAll)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.btnFlat)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.btnShowAll)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.btnShowHold)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.num)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel1)).BeginInit();
             this.SuspendLayout();
+            // 
+            // kryptonPanel1
+            // 
+            this.kryptonPanel1.Controls.Add(this.positiongrid);
+            this.kryptonPanel1.Controls.Add(this.isDoubleFlat);
+            this.kryptonPanel1.Controls.Add(this.num);
+            this.kryptonPanel1.Controls.Add(this.kryptonLabel1);
+            this.kryptonPanel1.Controls.Add(this.btnCancel);
+            this.kryptonPanel1.Controls.Add(this.btnReserve);
+            this.kryptonPanel1.Controls.Add(this.btnFlatAll);
+            this.kryptonPanel1.Controls.Add(this.btnFlat);
+            this.kryptonPanel1.Controls.Add(this.btnShowAll);
+            this.kryptonPanel1.Controls.Add(this.btnShowHold);
+            this.kryptonPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.kryptonPanel1.Location = new System.Drawing.Point(0, 0);
+            this.kryptonPanel1.Name = "kryptonPanel1";
+            this.kryptonPanel1.Size = new System.Drawing.Size(872, 261);
+            this.kryptonPanel1.TabIndex = 2;
             // 
             // positiongrid
             // 
             this.positiongrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.positiongrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.positiongrid.Location = new System.Drawing.Point(0, 0);
             this.positiongrid.Name = "positiongrid";
-            this.positiongrid.Size = new System.Drawing.Size(694, 170);
-            this.positiongrid.TabIndex = 0;
-            this.positiongrid.Text = "radGridView1";
-            this.positiongrid.CellFormatting += new Telerik.WinControls.UI.CellFormattingEventHandler(this.positiongrid_CellFormatting);
-            this.positiongrid.ValueChanged += new System.EventHandler(this.positiongrid_ValueChanged);
-            this.positiongrid.DoubleClick += new System.EventHandler(this.positiongrid_DoubleClick);
-            // 
-            // radPanel1
-            // 
-            this.radPanel1.Controls.Add(this.num);
-            this.radPanel1.Controls.Add(this.radLabel1);
-            this.radPanel1.Controls.Add(this.isDoubleFlat);
-            this.radPanel1.Controls.Add(this.btnCancel);
-            this.radPanel1.Controls.Add(this.btnReserve);
-            this.radPanel1.Controls.Add(this.btnFlatAll);
-            this.radPanel1.Controls.Add(this.btnFlat);
-            this.radPanel1.Controls.Add(this.btnShowAll);
-            this.radPanel1.Controls.Add(this.btnShowHold);
-            this.radPanel1.Controls.Add(this.positiongrid);
-            this.radPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.radPanel1.Location = new System.Drawing.Point(0, 0);
-            this.radPanel1.Name = "radPanel1";
-            this.radPanel1.Size = new System.Drawing.Size(694, 195);
-            this.radPanel1.TabIndex = 1;
-            this.radPanel1.Text = "radPanel1";
+            this.positiongrid.RowTemplate.Height = 23;
+            this.positiongrid.Size = new System.Drawing.Size(872, 230);
+            this.positiongrid.TabIndex = 12;
             // 
             // isDoubleFlat
             // 
             this.isDoubleFlat.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.isDoubleFlat.Location = new System.Drawing.Point(395, 174);
+            this.isDoubleFlat.LabelStyle = ComponentFactory.Krypton.Toolkit.LabelStyle.NormalControl;
+            this.isDoubleFlat.Location = new System.Drawing.Point(403, 236);
             this.isDoubleFlat.Name = "isDoubleFlat";
-            this.isDoubleFlat.Size = new System.Drawing.Size(70, 16);
+            this.isDoubleFlat.Size = new System.Drawing.Size(78, 18);
             this.isDoubleFlat.TabIndex = 11;
             this.isDoubleFlat.Text = "双击平仓";
-            // 
-            // btnCancel
-            // 
-            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnCancel.Location = new System.Drawing.Point(329, 171);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(60, 22);
-            this.btnCancel.TabIndex = 10;
-            this.btnCancel.Text = "撤 单";
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
-            // 
-            // btnReserve
-            // 
-            this.btnReserve.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnReserve.Location = new System.Drawing.Point(263, 171);
-            this.btnReserve.Name = "btnReserve";
-            this.btnReserve.Size = new System.Drawing.Size(60, 22);
-            this.btnReserve.TabIndex = 9;
-            this.btnReserve.Text = "反 手";
-            this.btnReserve.Click += new System.EventHandler(this.btnReserve_Click);
-            // 
-            // btnFlatAll
-            // 
-            this.btnFlatAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnFlatAll.Location = new System.Drawing.Point(197, 171);
-            this.btnFlatAll.Name = "btnFlatAll";
-            this.btnFlatAll.Size = new System.Drawing.Size(60, 22);
-            this.btnFlatAll.TabIndex = 8;
-            this.btnFlatAll.Text = "全 平";
-            this.btnFlatAll.Click += new System.EventHandler(this.btnFlatAll_Click);
-            // 
-            // btnFlat
-            // 
-            this.btnFlat.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnFlat.Location = new System.Drawing.Point(131, 171);
-            this.btnFlat.Name = "btnFlat";
-            this.btnFlat.Size = new System.Drawing.Size(60, 22);
-            this.btnFlat.TabIndex = 7;
-            this.btnFlat.Text = "平 仓";
-            this.btnFlat.Click += new System.EventHandler(this.btnFlat_Click);
-            // 
-            // btnShowAll
-            // 
-            this.btnShowAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnShowAll.Location = new System.Drawing.Point(55, 174);
-            this.btnShowAll.Name = "btnShowAll";
-            this.btnShowAll.Size = new System.Drawing.Size(70, 16);
-            this.btnShowAll.TabIndex = 2;
-            this.btnShowAll.Text = "当日明细";
-            this.btnShowAll.ToggleStateChanged += new Telerik.WinControls.UI.StateChangedEventHandler(this.btnShowAll_ToggleStateChanged);
-            // 
-            // btnShowHold
-            // 
-            this.btnShowHold.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnShowHold.Location = new System.Drawing.Point(4, 174);
-            this.btnShowHold.Name = "btnShowHold";
-            this.btnShowHold.Size = new System.Drawing.Size(45, 16);
-            this.btnShowHold.TabIndex = 1;
-            this.btnShowHold.Text = "持仓";
-            this.btnShowHold.ToggleStateChanged += new Telerik.WinControls.UI.StateChangedEventHandler(this.btnShowHold_ToggleStateChanged);
+            this.isDoubleFlat.Values.Text = "双击平仓";
             // 
             // num
             // 
             this.num.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.num.Location = new System.Drawing.Point(633, 174);
+            this.num.Location = new System.Drawing.Point(846, 236);
             this.num.Name = "num";
-            this.num.Size = new System.Drawing.Size(14, 16);
-            this.num.TabIndex = 13;
-            this.num.Text = "--";
+            this.num.Size = new System.Drawing.Size(19, 18);
+            this.num.TabIndex = 10;
+            this.num.Values.Text = "--";
             // 
-            // radLabel1
+            // kryptonLabel1
             // 
-            this.radLabel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.radLabel1.Location = new System.Drawing.Point(568, 174);
-            this.radLabel1.Name = "radLabel1";
-            this.radLabel1.Size = new System.Drawing.Size(59, 16);
-            this.radLabel1.TabIndex = 12;
-            this.radLabel1.Text = "记录条数:";
+            this.kryptonLabel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.kryptonLabel1.Location = new System.Drawing.Point(757, 236);
+            this.kryptonLabel1.Name = "kryptonLabel1";
+            this.kryptonLabel1.Size = new System.Drawing.Size(68, 18);
+            this.kryptonLabel1.TabIndex = 9;
+            this.kryptonLabel1.Values.Text = "记录条数:";
+            // 
+            // btnCancel
+            // 
+            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnCancel.Location = new System.Drawing.Point(338, 233);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(59, 25);
+            this.btnCancel.TabIndex = 5;
+            this.btnCancel.Values.Text = "撤 单";
+            // 
+            // btnReserve
+            // 
+            this.btnReserve.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnReserve.Location = new System.Drawing.Point(273, 233);
+            this.btnReserve.Name = "btnReserve";
+            this.btnReserve.Size = new System.Drawing.Size(59, 25);
+            this.btnReserve.TabIndex = 4;
+            this.btnReserve.Values.Text = "反 手";
+            // 
+            // btnFlatAll
+            // 
+            this.btnFlatAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnFlatAll.Location = new System.Drawing.Point(208, 233);
+            this.btnFlatAll.Name = "btnFlatAll";
+            this.btnFlatAll.Size = new System.Drawing.Size(59, 25);
+            this.btnFlatAll.TabIndex = 3;
+            this.btnFlatAll.Values.Text = "全 平";
+            // 
+            // btnFlat
+            // 
+            this.btnFlat.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnFlat.Location = new System.Drawing.Point(143, 233);
+            this.btnFlat.Name = "btnFlat";
+            this.btnFlat.Size = new System.Drawing.Size(59, 25);
+            this.btnFlat.TabIndex = 2;
+            this.btnFlat.Values.Text = "平 仓";
+            // 
+            // btnShowAll
+            // 
+            this.btnShowAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnShowAll.Location = new System.Drawing.Point(60, 236);
+            this.btnShowAll.Name = "btnShowAll";
+            this.btnShowAll.Size = new System.Drawing.Size(77, 18);
+            this.btnShowAll.TabIndex = 1;
+            this.btnShowAll.Values.Text = "当日明细";
+            // 
+            // btnShowHold
+            // 
+            this.btnShowHold.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnShowHold.Location = new System.Drawing.Point(4, 236);
+            this.btnShowHold.Name = "btnShowHold";
+            this.btnShowHold.Size = new System.Drawing.Size(50, 18);
+            this.btnShowHold.TabIndex = 0;
+            this.btnShowHold.Values.Text = "持仓";
             // 
             // ctPositionView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.radPanel1);
+            this.Controls.Add(this.kryptonPanel1);
+            this.DoubleBuffered = true;
             this.Name = "ctPositionView";
-            this.Size = new System.Drawing.Size(694, 195);
+            this.Size = new System.Drawing.Size(872, 261);
             this.Load += new System.EventHandler(this.ctPositionView_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).EndInit();
+            this.kryptonPanel1.ResumeLayout(false);
+            this.kryptonPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.positiongrid)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radPanel1)).EndInit();
-            this.radPanel1.ResumeLayout(false);
-            this.radPanel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.isDoubleFlat)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.btnCancel)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.btnReserve)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.btnFlatAll)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.btnFlat)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.btnShowAll)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.btnShowHold)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.num)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel1)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private Telerik.WinControls.UI.RadGridView positiongrid;
-        private Telerik.WinControls.UI.RadPanel radPanel1;
-        private Telerik.WinControls.UI.RadRadioButton btnShowAll;
-        private Telerik.WinControls.UI.RadRadioButton btnShowHold;
-        private Telerik.WinControls.UI.RadButton btnFlatAll;
-        private Telerik.WinControls.UI.RadButton btnFlat;
-        private Telerik.WinControls.UI.RadButton btnReserve;
-        private Telerik.WinControls.UI.RadButton btnCancel;
-        private Telerik.WinControls.UI.RadCheckBox isDoubleFlat;
-        private Telerik.WinControls.UI.RadLabel num;
-        private Telerik.WinControls.UI.RadLabel radLabel1;
+        private ComponentFactory.Krypton.Toolkit.KryptonPanel kryptonPanel1;
+        private ComponentFactory.Krypton.Toolkit.KryptonButton btnCancel;
+        private ComponentFactory.Krypton.Toolkit.KryptonButton btnReserve;
+        private ComponentFactory.Krypton.Toolkit.KryptonButton btnFlatAll;
+        private ComponentFactory.Krypton.Toolkit.KryptonButton btnFlat;
+        private ComponentFactory.Krypton.Toolkit.KryptonRadioButton btnShowAll;
+        private ComponentFactory.Krypton.Toolkit.KryptonRadioButton btnShowHold;
+        private ComponentFactory.Krypton.Toolkit.KryptonLabel num;
+        private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel1;
+        private ComponentFactory.Krypton.Toolkit.KryptonCheckBox isDoubleFlat;
+        private ComponentFactory.Krypton.Toolkit.KryptonDataGridView positiongrid;
     }
 }

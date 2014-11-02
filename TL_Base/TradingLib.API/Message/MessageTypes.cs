@@ -27,10 +27,10 @@ namespace TradingLib.API
         OK = 0,//ok
         // END STATUS MESSAGES
 
-        /*
+        
         // START CUSTOM MESSAGES  - DO NOT REMOVE OR RENAME MESSAGES
         QRYENDPOINTCONNECTED = 1,//用于接入服务器查询 通过该接入服务器所连接的客户数,用于接入服务器 恢复unknow这样可以避免服务过载
-        CUSTOM2,
+        LOGICHEARTBEAT=2,//前置与逻辑服务器之间的心跳包
         CUSTOM3,
         CUSTOM4,
         CUSTOM5,
@@ -41,7 +41,7 @@ namespace TradingLib.API
         CUSTOM10,
        
         // END CUSTOM MESSAGES
-        **/
+        
 
 
         //////////////////////////////////////////////////////交易消息码///////////////////////////////////////////////////////////////////////////////////////////
@@ -84,7 +84,10 @@ namespace TradingLib.API
         QRYCONTRACTBANK,//查询签约银行
         QRYREGISTERBANKACCOUNT,//查询银期转账帐户
         QRYTRANSFERSERIAL,//查询转账流水
-
+        QRYPOSITIONDETAIL,//查询持仓明细
+        QRYINSTRUMENTCOMMISSIONRATE,//查询合约手续费率
+        QRYINSTRUMENTMARGINRATE,//查询合约保证金率
+        QRYMARKETDATA,//查询市场行情
 
         DOMREQUEST,//请求DOM市场Level2数据
         IMBALANCEREQUEST,//imbalance..查询这个是什么意思
@@ -129,6 +132,13 @@ namespace TradingLib.API
         CONTRACTBANKRESPONSE,//查询签约银行回报
         REGISTERBANKACCOUNTRESPONSE,//查询银期签约帐户回报
         TRANSFERSERIALRESPONSE,//查询转账流水回报
+        POSITIONDETAILRESPONSE,//查询持仓明细回报
+        INSTRUMENTCOMMISSIONRATERESPONSE,//查询合约手续费率回报
+        INSTRUMENTMARGINRATERESPONSE,//查询合约保证金率回报
+        MARKETDATARESPONSE,//查询市场行情回报
+
+
+
         // END STANDARD MESSAGES
 
 
@@ -195,7 +205,7 @@ namespace TradingLib.API
 
         MGRCONTRIBREQUEST,//管理扩展请求
         MGRINSERTTRADE,//插入成交
-
+        MGRDELACCOUNT,//删除交易帐户
 
 
 

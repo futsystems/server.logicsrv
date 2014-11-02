@@ -172,6 +172,7 @@ namespace TradingLib.Core
         }
         /// <summary>
         /// 获得所有当前市场数据快照
+        /// 当前订阅的Basket mb 对应的Tick 行情由TickTracker维护
         /// </summary>
         /// <returns></returns>
         public Tick[] GetTickSnapshot()
@@ -184,7 +185,8 @@ namespace TradingLib.Core
                 foreach (string sym in syms)
                 {
                     Tick k = _ticktracker[sym];
-                    ticks.Add(k);
+                    if(k.isValid)
+                        ticks.Add(k);
                 }
                 return ticks.ToArray();
             }
@@ -219,11 +221,11 @@ namespace TradingLib.Core
         private decimal somePrice(Tick k)
         {
             if (k.isTrade)
-                return k.trade;
+                return k.Trade;
             if (k.hasAsk)
-                return k.ask;
+                return k.AskPrice;
             if (k.hasBid)
-                return k.bid;
+                return k.BidPrice;
             else
                 return -1;
         }
@@ -448,42 +450,45 @@ namespace TradingLib.Core
             return _ticktracker[symbol];
         }
 
-        public void DemoTick()
+        public void DemoTick(decimal lastsettle,decimal settleprice)
         {
             Tick k = new TickImpl();
-            k.trade=2204.0M;
-            k.size=10;
-            k.symbol="IF1409";
-            k.ask=2205.2M;
-            k.os=10;
-            k.bid = 2205.0M;
-            k.bs =2;
-            k.Open= 2210.0M;
-            k.Low=2198.0M;
-            k.High=2212.0M;
+            k.Trade = 2404.0M;
+            k.Size = 10;
+            k.Symbol = "IF1411";
+            k.AskPrice=2381.0M;
+            k.AskSize=10;
+            k.BidPrice = 2381.0M;
+            k.BidSize = 2;
+            k.Open = 2381.0M;
+            k.Low=2398.0M;
+            k.High=2412.0M;
+            k.Exchange = "demo";
             k.Vol=2000;
             k.OpenInterest=100;
             k.PreOpenInterest=120;
-            k.date = Util.ToTLDate();
-            k.time = Util.ToTLTime();
+            k.Date = Util.ToTLDate();
+            k.Time = Util.ToTLTime();
+            k.PreSettlement = lastsettle;
+            k.Settlement = settleprice;
             GotTick(k);
 
             Tick k2 = new TickImpl();
-            k2.trade = 85.1M;
-            k2.size = 10;
-            k2.symbol = "IO1406-C-2150";
-            k2.ask = 85.4M;
-            k2.os = 10;
-            k2.bid = 85.3M;
-            k2.bs = 2;
+            k2.Trade = 85.1M;
+            k2.Size = 10;
+            k2.Symbol = "IO1406-C-2150";
+            k2.AskPrice = 85.4M;
+            k2.AskSize = 10;
+            k2.BidPrice = 85.3M;
+            k2.BidSize = 2;
             k2.Open = 84.0M;
             k2.Low = 80.0M;
             k2.High = 90M;
             k2.Vol = 2000;
             k2.OpenInterest = 100;
             k2.PreOpenInterest = 120;
-            k2.date = Util.ToTLDate();
-            k2.time = Util.ToTLTime();
+            k2.Date = Util.ToTLDate();
+            k2.Time = Util.ToTLTime();
 
             GotTick(k2);
 

@@ -15,10 +15,12 @@ namespace TradingLib.Common
         /// 获得某个交易帐号的所有可用配资额度
         /// </summary>
         public event AccountFinAmmountDel GetFinAmmountAvabileEvent;
+
         /// <summary>
-        /// 获得某个交易帐号总的配资额度
+        /// 获得某个交易帐号总的配资额度 用于提现在帐户可用资金
         /// </summary>
         public event AccountFinAmmountDel GetFinAmmountTotalEvent;
+
         /// <summary>
         /// 针对某笔交易调整交易手续费
         /// </summary>

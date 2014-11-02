@@ -51,6 +51,34 @@ namespace TradingLib.Contrib.FinService
 
         }
 
+
+        public override void OnInit()
+        {
+            //如果配资额度为0 则检查当前交易帐户 如果帐户有自己则按照比例自动配置上配资额度
+            if (this.FinAmount.AccountArgument.AsDecimal() == 0)
+            {
+                decimal nowequity = this.Account.NowEquity;
+                decimal finamount = nowequity * this.FinLever.AccountArgument.AsInt();
+                if (nowequity > 0)
+                {
+                    Util.Debug("帐户:" + this.Account.ID + "当前权益:" + nowequity.ToString() + "而配资额度为0，自动加载配资额度为:" + finamount.ToString());
+
+                    Argument newarg = new Argument()
+                    {
+                        Name = this.FinAmount.AccountArgument.Name,
+                        Type = this.FinAmount.AccountArgument.Type,
+                        Value = finamount.ToString(),
+                    };
+                    //调整配资额度
+                    FinTracker.ArgumentTracker.UpdateArgumentAccount(this.ServiceID, newarg);
+
+                    //更新内存参数
+                    FinServiceStub stub = FinTracker.FinServiceTracker[this.Account.ID];
+                    if (stub != null)
+                        stub.LoadArgument();
+                }
+            }
+        }
         /// <summary>
         /// 调整手续费
         /// </summary>
@@ -153,6 +181,8 @@ namespace TradingLib.Contrib.FinService
 
 
         }
+
+
         #region 交易业务逻辑部分
 
         /// <summary>
@@ -171,7 +201,7 @@ namespace TradingLib.Contrib.FinService
             }
             else
             {
-                msg = "配资服务[" + this.SPNAME + "]只能交易品种:IF";
+                msg = "只允许交易:IF股指期货";
                 return false;
             }
         }
@@ -218,9 +248,18 @@ namespace TradingLib.Contrib.FinService
         /// <returns></returns>
         public override decimal GetFundAvabile(Symbol symbol)
         {
-            return this.Account.AvabileFunds + this.FinAmount.AccountArgument.AsDecimal();
+            //帐户当前可用资金即为所有额度， 在帐户可用额度计算时 加上了配资扩展的额度 见GetFinAmountAvabile()
+            return this.Account.AvabileFunds;
         }
 
+        /// <summary>
+        /// 获得配资额度
+        /// </summary>
+        /// <returns></returns>
+        public override decimal GetFinAmountAvabile()
+        {
+            return this.FinAmount.AccountArgument.AsDecimal();
+        }
         /// <summary>
         /// 计算通过配资服务后某个合约的可开手数
         /// </summary>
@@ -228,20 +267,24 @@ namespace TradingLib.Contrib.FinService
         /// <returns></returns>
         public override int CanOpenSize(Symbol symbol)
         {
-            //decimal price = TLCtxHelper.Ctx.MessageExchange.GetAvabilePrice(symbol.Symbol);
+            if (!symbol.SecurityFamily.Code.Equals("IF"))
+            {
+                return 0;
+            }
 
-            //decimal fundperlot = Calc.CalFundRequired(symbol, price, 1);
+            decimal price = TLCtxHelper.CmdUtil.GetAvabilePrice(symbol);
 
-            //decimal avabilefund = GetFundAvabile(symbol);
+            decimal fundperlot = Calc.CalFundRequired(symbol, price, 1);
 
-            //TLCtxHelper.Debug("QryCanOpenSize Fundavablie:" + avabilefund.ToString() + " Symbol:" + symbol.Symbol + " Price:" + price.ToString() + " Fundperlot:" + fundperlot.ToString());
-            //return (int)(avabilefund / fundperlot);
-            return 0;
+            decimal avabilefund = GetFundAvabile(symbol);
+
+            Util.Debug("QryCanOpenSize Fundavablie:" + avabilefund.ToString() + " Symbol:" + symbol.Symbol + " Price:" + price.ToString() + " Fundperlot:" + fundperlot.ToString());
+            return (int)(avabilefund / fundperlot);
         }
         #endregion
 
 
-        public override void AdjustOmCashOperation(JsonWrapperCashOperation op)
+        public override void OnCashOperation(JsonWrapperCashOperation op)
         {
             if (op.Status != QSEnumCashInOutStatus.CONFIRMED) return;//只针对产生作用的出入金进行调整
 

@@ -69,7 +69,7 @@ namespace TradingLib.Contrib
         public void OnLoad()
         {
             
-            TLCtxHelper.Debug("RaceCentre start loading....");
+            Util.Debug("RaceCentre start loading....");
             //0.获得全局ctx对象
             //_clearcentre = TLCtxHelper.Ctx.ClearCentre;
 
@@ -144,9 +144,9 @@ namespace TradingLib.Contrib
         [MethodArgument("初始权益1101",QSEnumMethodArgumentType.Decimal,4,"报名参赛后,账户恢复的初始权益公式演示")]
         public void RaceFunction(ISession session, int num, string name, decimal va)
         {
-            TLCtxHelper.Debug("racefunction is called");
-            TLCtxHelper.Debug("sessionid:" + session.FrontID + "|" + session.SessionID);
-            TLCtxHelper.Debug("int:" + num.ToString() + " string:" + name.ToString() + " decimal:" + va.ToString());
+            Util.Debug("racefunction is called");
+            Util.Debug("sessionid:" + session.FrontID + "|" + session.SessionID);
+            Util.Debug("int:" + num.ToString() + " string:" + name.ToString() + " decimal:" + va.ToString());
             
             //race demo
             

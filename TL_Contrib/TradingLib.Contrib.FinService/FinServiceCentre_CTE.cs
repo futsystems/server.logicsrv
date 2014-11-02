@@ -262,15 +262,15 @@ namespace TradingLib.Contrib.FinService
         }
 
         /// <summary>
-        /// 查询某个交易日 代理商流水汇总
+        /// 查询某个交易日 代理商汇总记录
         /// </summary>
         /// <param name="session"></param>
         /// <param name="settleday"></param>
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryTotalReport", "QryTotalReport - query totalreport", "查询某日所有代理的汇总统计")]
         public void CTE_QryTotalReport(ISession session,int agent,int settleday)
         {
-            JsonWrapperToalReport[] reports = ORM.MServiceChargeReport.GenTotalReport(agent,settleday).Select((ret) => { return FillTotalReport(ret); }).ToArray();
-            SendJsonReplyMgr(session, reports);
+            JsonWrapperToalReport report = ORM.MServiceChargeReport.GenTotalReport(agent, settleday);
+            SendJsonReplyMgr(session, report);
         }
 
         /// <summary>
@@ -283,8 +283,8 @@ namespace TradingLib.Contrib.FinService
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QrySummaryReport", "QrySummaryReport - query summary report", "查询某个代理在一段时间内的汇总")]
         public void CTE_QrySummaryReport(ISession session, int agentfk,int start,int end)
         {
-            JsonWrapperToalReport[] reports = ORM.MServiceChargeReport.GenSummaryReportByDayRange(agentfk,start,end).Select((ret) => { return FillTotalReport(ret); }).ToArray();
-            SendJsonReplyMgr(session, reports);
+            JsonWrapperToalReport report = ORM.MServiceChargeReport.GenSummaryReportByDayRange(agentfk, start, end);
+            SendJsonReplyMgr(session, report);
         }
 
         /// <summary>
@@ -317,10 +317,12 @@ namespace TradingLib.Contrib.FinService
         JsonWrapperToalReport FillTotalReport(JsonWrapperToalReport report)
         {
             Manager m = BasicTracker.ManagerTracker[report.Agent_FK];
-            if(m!= null)
+            if (m != null)
+            {
                 report.AgentName = m.Name;
                 report.Mobile = m.Mobile;
                 report.QQ = m.QQ;
+            }
             return report;
         }
     }

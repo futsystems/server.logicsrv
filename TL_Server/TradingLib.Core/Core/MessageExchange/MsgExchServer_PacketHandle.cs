@@ -14,17 +14,36 @@ namespace TradingLib.Core
         void CacheRspResponse(RspResponsePacket packet,bool islat=true)
         {
             packet.IsLast = islat;
-            CachePacket(packet);
+            if (!prioritybuffer.Write(packet))//如果该回报不是由优先缓存发送，则写入常规缓存
+            {
+                CachePacket(packet);
+            }
+            else
+            {
+                debug("packet:"+packet.ToString()+"写入优先缓存",QSEnumDebugLevel.INFO);
+            }
+            //if (packet is RspQryInvestorResponse)
+            //{
+            //    investorbuf.Write(packet as RspQryInvestorResponse);
+            //}
+            //else if (packet is RspQrySymbolResponse)
+            //{
+            //    symbolbuf.Write(packet as RspQrySymbolResponse);
+            //}
+            //else
+            //{
+            //    CachePacket(packet);
+            //}
         }
         /// <summary>
         /// 查询委托
         /// </summary>
         /// <param name="request"></param>
-        void SrvOnQryOrder(QryOrderRequest request)
+        void SrvOnQryOrder(QryOrderRequest request,IAccount account)
         {
             debug("QryOrder :" + request.ToString(), QSEnumDebugLevel.INFO);
             Order[] orders = new Order[]{};
-            IAccount account = _clearcentre[request.Account];
+            //IAccount account = _clearcentre[request.Account];
 
 
             //合约为空 查询所有
@@ -56,13 +75,13 @@ namespace TradingLib.Core
 
         /// <summary>
         /// 查询成交
+        /// 
         /// </summary>
         /// <param name="request"></param>
-        void SrvOnQryTrade(QryTradeRequest request)
+        void SrvOnQryTrade(QryTradeRequest request, IAccount account)
         {
             debug("QryTrade :" + request.ToString(), QSEnumDebugLevel.INFO);
             Trade[] trades = new Trade[] { };
-            IAccount account = _clearcentre[request.Account];
             if (string.IsNullOrEmpty(request.Symbol))
             {
                 trades = account.Trades.ToArray();
@@ -92,38 +111,32 @@ namespace TradingLib.Core
         /// 查询持仓
         /// </summary>
         /// <param name="request"></param>
-        void SrvOnQryPosition(QryPositionRequest request)
+        void SrvOnQryPosition(QryPositionRequest request, IAccount account)
         {
             debug("QryPosition :" + request.ToString(), QSEnumDebugLevel.INFO);
             Position[] positions = new Position[] { };
-            Position[] netpos = new Position[] { };
-            IAccount account = _clearcentre[request.Account];
+            //Position[] netpos = new Position[] { };
 
             if (string.IsNullOrEmpty(request.Symbol))
             {
                 positions = account.Positions.ToArray();
-                netpos = account.PositionsNet.ToArray();
+                //netpos = account.PositionsNet.ToArray();
             }
             if (!string.IsNullOrEmpty(request.Symbol))
             {
                 positions = positions.Where(pos => pos.Symbol.Equals(request.Symbol)).ToArray();
             }
 
+            //Util.sleep(10000);//
+            debug("total num:" + positions.Length.ToString(), QSEnumDebugLevel.INFO);
+            int totalnum = positions.Length;
 
-            List<Position> poslist = new List<Position>();
-            poslist.AddRange(netpos);
-            poslist.AddRange(positions);
-            
-
-            debug("total num:" + poslist.Count.ToString(), QSEnumDebugLevel.INFO);
-            int totalnum = poslist.Count;
-            
             if (totalnum > 0)
             {
                 for (int i = 0; i < totalnum; i++)
                 {
                     RspQryPositionResponse response = ResponseTemplate<RspQryPositionResponse>.SrvSendRspResponse(request);
-                    response.PositionToSend = poslist[i].GenPositionEx();
+                    response.PositionToSend = positions[i].GenPositionEx();
                     //Trade[] trades = poslist[i].Trades;
                     //debug("Trades num:" + trades.Length.ToString());
                     CacheRspResponse(response, i == totalnum - 1);
@@ -133,6 +146,40 @@ namespace TradingLib.Core
             {
                 RspQryPositionResponse response = ResponseTemplate<RspQryPositionResponse>.SrvSendRspResponse(request);
                 response.PositionToSend = new PositionEx();
+                CacheRspResponse(response);
+            }
+        }
+
+
+        /// <summary>
+        /// 查询持仓明细
+        /// 注意查询持仓明细 是指查询昨日留仓持仓明细
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="account"></param>
+        void SrvOnQryPositionDetail(QryPositionDetailRequest request, IAccount account)
+        {
+            debug("QryPositionDetail" + request.ToString(), QSEnumDebugLevel.INFO);
+            List<PositionDetail> list = new List<PositionDetail>();
+            foreach (Position p in account.Positions)
+            {
+                foreach (PositionDetail pd in p.PositionDetailTotal)
+                {
+                    list.Add(pd);
+                }
+            }
+            if (list.Count > 0)
+            {
+                for (int i = 0; i < list.Count; i++)
+                {
+                    RspQryPositionDetailResponse response = ResponseTemplate<RspQryPositionDetailResponse>.SrvSendRspResponse(request);
+                    response.PositionDetailToSend = list[i];
+                    CacheRspResponse(response, i == list.Count - 1);
+                }
+            }
+            else
+            {   //发送空的持仓回报
+                RspQryPositionDetailResponse response = ResponseTemplate<RspQryPositionDetailResponse>.SrvSendRspResponse(request);
                 CacheRspResponse(response);
             }
         }
@@ -171,14 +218,13 @@ namespace TradingLib.Core
         }
 
 
-        void SrvOnQryAccountInfo(QryAccountInfoRequest request)
+        void SrvOnQryAccountInfo(QryAccountInfoRequest request, IAccount account)
         {
             debug("QryAccountInfo :" + request.ToString(), QSEnumDebugLevel.INFO);
-            IAccount account = _clearcentre[request.Account];
             IAccountInfo info = account.ToAccountInfo();
             RspQryAccountInfoResponse response  = ResponseTemplate<RspQryAccountInfoResponse>.SrvSendRspResponse(request);
             response.AccInfo = info;
-
+            Util.sleep(2000);
             CachePacket(response);
         }
 
@@ -205,7 +251,6 @@ namespace TradingLib.Core
                 List<string> settlelist = SettlementFactory.GenSettlementFile(settlement,account);
                 for (int i = 0; i < settlelist.Count; i++)
                 {
-                    //debug(settlelist[i]);
                     RspQrySettleInfoResponse response = ResponseTemplate<RspQrySettleInfoResponse>.SrvSendRspResponse(request);
                     response.Tradingday = settlement.SettleDay;
                     response.TradingAccount = settlement.Account;
@@ -229,11 +274,22 @@ namespace TradingLib.Core
             IAccount account = _clearcentre[request.Account];
             debug("confirm stamp:" + account.SettlementConfirmTimeStamp.ToString(), QSEnumDebugLevel.INFO);
 
-            //如果结算时间戳为0 则表明为新注册用户,新注册用户不用注册
-            DateTime confirmtime = Util.ToDateTime(account.SettlementConfirmTimeStamp);
+           
             response.TradingAccount = request.Account;
-            response.ConfirmDay = Util.ToTLDate(confirmtime);
-            response.ConfirmTime = Util.ToTLTime(confirmtime);
+            if (needConfirmSettlement)
+            {
+                //如果结算时间戳为0 则表明为新注册用户,新注册用户不用注册
+                DateTime confirmtime = Util.ToDateTime(account.SettlementConfirmTimeStamp);
+                response.ConfirmDay = Util.ToTLDate(confirmtime);
+                response.ConfirmTime = Util.ToTLTime(confirmtime);
+            }
+            else
+            {
+                DateTime confirmtime = DateTime.Now;
+                response.ConfirmDay = Util.ToTLDate(confirmtime);
+                response.ConfirmTime = Util.ToTLTime(confirmtime);
+                
+            }
 
             CachePacket(response);
         }
@@ -259,25 +315,24 @@ namespace TradingLib.Core
             CachePacket(response);
             
         }
-        void SrvOnQryInvestor(QryInvestorRequest request)
+
+        /// <summary>
+        /// 查询投资者信息
+        /// </summary>
+        /// <param name="request"></param>
+        void SrvOnQryInvestor(QryInvestorRequest request, IAccount account)
         {
             debug("QryInvestor :" + request.ToString(), QSEnumDebugLevel.INFO);
             RspQryInvestorResponse response = ResponseTemplate<RspQryInvestorResponse>.SrvSendRspResponse(request);
-            IAccount account = _clearcentre[request.Account];
-            if (account != null)
-            {
-                response.TradingAccount = request.Account;
-                response.Email = "xxxx@xxx.com";
-                //查询交易帐户时,如果token为空则生成帐户名否则传递Token
-                response.NickName = account.GetCustName();
+
+            TrdClientInfo info = tl.GetClient(request.ClientID);
+
+            response.TradingAccount = account.ID;
+            response.Email = "xxxx@xxx.com";
+            //查询交易帐户时,如果token为空则生成帐户名否则传递Token
+            response.NickName = account.GetCustName();
                 
-            }
-            else
-            {
-                response.RspInfo.FillError("TRADING_ACCOUNT_NOT_FOUND");
-               
-            }
-            CachePacket(response);
+            CacheRspResponse(response);
         }
 
         void SrvOnContribRequest(ContribRequest request,ISession session)
@@ -286,6 +341,10 @@ namespace TradingLib.Core
             TLCtxHelper.Ctx.MessageExchangeHandler(session, request);
         }
 
+        /// <summary>
+        /// 请求修改密码
+        /// </summary>
+        /// <param name="request"></param>
         void SrvOnReqChangePassword(ReqChangePasswordRequest request)
         {
             debug("ReqChangePassword:" + request.ToString(), QSEnumDebugLevel.INFO);
@@ -304,6 +363,10 @@ namespace TradingLib.Core
             CachePacket(response);
         }
 
+        /// <summary>
+        /// 查询通知
+        /// </summary>
+        /// <param name="request"></param>
         void SrvOnQryNotice(QryNoticeRequest request)
         {
             debug("QryNoticeRequest:" + request.ToString(), QSEnumDebugLevel.INFO);
@@ -314,11 +377,11 @@ namespace TradingLib.Core
             {
                 if (account.Category == QSEnumAccountCategory.SIMULATION)
                 {
-                    response.NoticeContent = string.IsNullOrEmpty(GlobalConfig.SimPrompt) ? ("欢迎使用" + GlobalConfig.VendorName + "模拟交易系统,部署环境:模拟") : GlobalConfig.SimPrompt;
+                    response.NoticeContent = string.IsNullOrEmpty(GlobalConfig.SimPrompt) ? ("欢迎使用" + GlobalConfig.VendorName + "交易系统") : GlobalConfig.SimPrompt;
                 }
                 else if (account.Category == QSEnumAccountCategory.REAL)
                 {
-                    response.NoticeContent = string.IsNullOrEmpty(GlobalConfig.RealPrompt) ? ("欢迎使用" + GlobalConfig.VendorName + "实盘交易系统,市场有风险,投资需谨慎!祝您交易愉快!") : GlobalConfig.RealPrompt;
+                    response.NoticeContent = string.IsNullOrEmpty(GlobalConfig.RealPrompt) ? ("欢迎使用" + GlobalConfig.VendorName + "交易系统,市场有风险,投资需谨慎!祝您交易愉快!") : GlobalConfig.RealPrompt;
                 }
             }
             //如果通知内容为空 则提供默认提示
@@ -330,9 +393,14 @@ namespace TradingLib.Core
 
         }
 
+        /// <summary>
+        /// 查询合约
+        /// </summary>
+        /// <param name="request"></param>
         void SrvOnQrySymbol(QrySymbolRequest request)
         {
             debug("QrySymbol:" + request.ToString(), QSEnumDebugLevel.INFO);
+            Util.sleep(1000);
             Instrument[] instruments = new Instrument[]{};
             if (request.SecurityType != SecurityType.NIL && string.IsNullOrEmpty(request.ExchID) && string.IsNullOrEmpty(request.Symbol) && string.IsNullOrEmpty(request.Security))
             {
@@ -362,6 +430,10 @@ namespace TradingLib.Core
             
         }
 
+        /// <summary>
+        /// 查询签约银行
+        /// </summary>
+        /// <param name="request"></param>
         void SrvOnQryContractBank(QryContractBankRequest request)
         {
             debug("QryContractBank:" + request.ToString(), QSEnumDebugLevel.INFO);
@@ -402,10 +474,14 @@ namespace TradingLib.Core
             {
                 RspQryRegisterBankAccountResponse response = ResponseTemplate<RspQryRegisterBankAccountResponse>.SrvSendRspResponse(request);
                 response.TradingAccount = account.ID;
-                response.BankAC = account.GetCustBankAC();//获得银行卡号 如果没有设置银行卡号码 会导致博易客户端频繁请求交易帐号信息
-                ContractBank bank = BasicTracker.ContractBankTracker[account.GetCustBankID()];
-                response.BankName = bank.Name;
-                response.BankID = bank.BrankID;
+                //如果对应的BankFK不为0 则传递设置的银行帐户信息
+                if (account.BankID != 0)
+                {
+                    response.BankAC = account.BankAC;//获得银行卡号 如果没有设置银行卡号码 会导致博易客户端频繁请求交易帐号信息
+                    ContractBank bank = BasicTracker.ContractBankTracker[account.BankID];
+                    response.BankName =  bank.Name;
+                    response.BankID = bank.BrankID;
+                }
                 CacheRspResponse(response);
             }
             else
@@ -416,6 +492,10 @@ namespace TradingLib.Core
             }
         }
 
+        /// <summary>
+        /// 查询出入金记录
+        /// </summary>
+        /// <param name="request"></param>
         void SrvOnQryTransferSerial(QryTransferSerialRequest request)
         {
             debug("QryTransferSerialRequest:" + request.ToString(), QSEnumDebugLevel.INFO);
@@ -432,7 +512,7 @@ namespace TradingLib.Core
                     response.Date = Util.ToTLDate(t.DateTime);
                     response.Time = Util.ToTLTime(t.DateTime);
                     response.TradingAccount = request.TradingAccount;
-                    response.BankAccount = account.GetCustBankAC();
+                    response.BankAccount = account.BankAC;
                     response.Amount = t.Amount;
                     response.TransRef = t.TransRef;
                     CacheRspResponse(response, i == totalnum - 1);
@@ -444,37 +524,119 @@ namespace TradingLib.Core
                 RspQryTransferSerialResponse response = ResponseTemplate<RspQryTransferSerialResponse>.SrvSendRspResponse(request);
                 CacheRspResponse(response);
             }
+        }
+
+        /// <summary>
+        /// 查询合约手续费率
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="account"></param>
+        void SrvOnQryInstrumentCommissionRate(QryInstrumentCommissionRateRequest request, IAccount account)
+        {
+            debug("QryInstrumentCommissionRate:" + request.ToString(), QSEnumDebugLevel.DEBUG);
+            
+            //返回所有
+            if (string.IsNullOrEmpty(request.Symbol))
+            {
+                //
+            }
+            else
+            {
+                RspQryInstrumentCommissionRateResponse response = ResponseTemplate<RspQryInstrumentCommissionRateResponse>.SrvSendRspResponse(request);
+                Symbol sym = BasicTracker.SymbolTracker[request.Symbol];
+                if (sym == null)
+                {
+                    response.RspInfo.FillError("SYMBOL_NOT_EXISTED");
+                }
+                else
+                {
+                    sym.FillSymbolCommissionResponse(ref response);
+                }
+                CacheRspResponse(response);
+            }
+        }
+
+        void SrvOnQryInstrumentMarginRate(QryInstrumentMarginRateRequest request, IAccount account)
+        {
+            debug("QryInstrumentMarginRate:" + request.ToString(), QSEnumDebugLevel.DEBUG);
+            
+            if (string.IsNullOrEmpty(request.Symbol))
+            {
+
+            }
+            else 
+            {
+                RspQryInstrumentMarginRateResponse response = ResponseTemplate<RspQryInstrumentMarginRateResponse>.SrvSendRspResponse(request);
+                Symbol sym = BasicTracker.SymbolTracker[request.Symbol];
+                if (sym == null)
+                {
+                    response.RspInfo.FillError("SYMBOL_NOT_EXISTED");
+                }
+                else
+                {
+                    sym.FillSymbolMarginResponse(ref response);
+                }
+                CacheRspResponse(response);
+
+            }
+        }
 
 
+        /// <summary>
+        /// 查询市场行情处理
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="account"></param>
+        void SrvOnQryMarketData(QryMarketDataRequest request, IAccount account)
+        {
+            debug("QryMarketData:" + request.ToString(), QSEnumDebugLevel.DEBUG);
+
+            if (string.IsNullOrEmpty(request.Symbol))
+            {
+                Tick[] ticks = _datafeedRouter.GetTickSnapshot();
+                for (int i = 0; i < ticks.Length; i++)
+                {
+                    RspQryMarketDataResponse response = ResponseTemplate<RspQryMarketDataResponse>.SrvSendRspResponse(request);
+                    response.TickToSend = ticks[i];
+                    CacheRspResponse(response, i != ticks.Length - 1);
+                }
+            }
+            
         }
         void tl_newPacketRequest(IPacket packet,ISession session)
         {
-
+            IAccount account = _clearcentre[session.AccountID]; //获得对应的IAccount对象
             switch (packet.Type)
             {
 
                 case MessageTypes.QRYORDER://查询委托
                     { 
                         QryOrderRequest request = packet as QryOrderRequest;
-                        SrvOnQryOrder(request);
+                        SrvOnQryOrder(request,account);
                     }
                     break;
                 case MessageTypes.QRYTRADE://查询成交
                     {
                         QryTradeRequest request = packet as QryTradeRequest;
-                        SrvOnQryTrade(request);
+                        SrvOnQryTrade(request,account);
                     }
                     break;
                 case MessageTypes.QRYPOSITION://查询持仓
                     {
                         QryPositionRequest request = packet as QryPositionRequest;
-                        SrvOnQryPosition(request);
+                        SrvOnQryPosition(request, account);
+                    }
+                    break;
+                case MessageTypes.QRYPOSITIONDETAIL://查询持仓明细
+                    {
+                        QryPositionDetailRequest request = packet as QryPositionDetailRequest;
+                        SrvOnQryPositionDetail(request, account);
                     }
                     break;
                 case MessageTypes.QRYACCOUNTINFO://查询帐户信息
                     {
                         QryAccountInfoRequest request = packet as QryAccountInfoRequest;
-                        SrvOnQryAccountInfo(request);
+                        SrvOnQryAccountInfo(request, account);
                     }
                     break;
                 case MessageTypes.QRYMAXORDERVOL://查询委托可开手数
@@ -504,7 +666,7 @@ namespace TradingLib.Core
                 case MessageTypes.QRYINVESTOR://查询投资者信息
                     {
                         QryInvestorRequest request = packet as QryInvestorRequest;
-                        SrvOnQryInvestor(request);
+                        SrvOnQryInvestor(request, account);
                     }
                     break;
                 case MessageTypes.REQCHANGEPASS://请求修改交易帐户密码
@@ -544,7 +706,24 @@ namespace TradingLib.Core
                         SrvOnQryTransferSerial(request);
                     }
                     break;
-
+                case MessageTypes.QRYINSTRUMENTCOMMISSIONRATE://查询合约手续费率
+                    {
+                        QryInstrumentCommissionRateRequest request = packet as QryInstrumentCommissionRateRequest;
+                        SrvOnQryInstrumentCommissionRate(request, account);
+                    }
+                    break;
+                case MessageTypes.QRYINSTRUMENTMARGINRATE://查询合约保证金率
+                    {
+                        QryInstrumentMarginRateRequest request = packet as QryInstrumentMarginRateRequest;
+                        SrvOnQryInstrumentMarginRate(request,account);
+                    }
+                    break;
+                case MessageTypes.QRYMARKETDATA://查询市场行情
+                    {
+                        QryMarketDataRequest request = packet as QryMarketDataRequest;
+                        SrvOnQryMarketData(request, account);
+                    }
+                    break;
                 case MessageTypes.CONTRIBREQUEST://扩展请求
                     {
                         ContribRequest request = packet as ContribRequest;

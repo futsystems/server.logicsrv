@@ -21,6 +21,7 @@ namespace TradingLib.API
         /// 获得当前结算时间
         /// </summary>
         int SettleTime { get; }
+
         /// <summary>
         /// 下个交易日
         /// </summary>
@@ -42,6 +43,8 @@ namespace TradingLib.API
         /// 正常工作状态下在交易完成后的一段时间内进行结算工作用于保存交易记录，生成结算记录和更新帐户结算权益
         /// </summary>
         bool IsInSettle { get; }
+
+
 
     }
 }

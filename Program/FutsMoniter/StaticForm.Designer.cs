@@ -38,7 +38,7 @@
             this.ClientSize = new System.Drawing.Size(298, 279);
             this.Name = "StaticForm";
             this.Text = "StaticForm";
-            this.ThemeName = "ControlDefault";
+            //this.ThemeName = "ControlDefault";
             ((System.ComponentModel.ISupportInitialize)(this)).EndInit();
             this.ResumeLayout(false);
 

@@ -11,7 +11,6 @@ namespace TradingLib.Common
 
         #region 【ITotalAccountInfo】 获得整体的交易信息
 
-        public OrderTracker OrderTracker { get { return totaltk.OrderTracker; } }
         ///// <summary>
         ///// 通过OrderId获得该Order
         ///// </summary>
@@ -22,25 +21,29 @@ namespace TradingLib.Common
             return totaltk.SentOrder(oid);
         }
 
+        public bool IsOrderTracked(long oid)
+        {
+            return totaltk.IsTracked(oid);
+        }
         /// <summary>
         /// 所有委托
         /// </summary>
-        public IEnumerable<Order> TotalOrders { get { return totaltk.OrderTracker; } }
+        public IEnumerable<Order> TotalOrders { get { return totaltk.TotalOrders; } }
 
         /// <summary>
         /// 所有持仓
         /// </summary>
-        public IEnumerable<Position> TotalPositions { get { return totaltk.PositionTracker; } }
+        public IEnumerable<Position> TotalPositions { get { return totaltk.TotalPositions; } }
 
         /// <summary>
         /// 所有成交
         /// </summary>
-        public IEnumerable<Trade> TotalTrades { get { return totaltk.TradeTracker; } }
+        public IEnumerable<Trade> TotalTrades { get { return totaltk.TotalTrades; } }
 
         /// <summary>
         /// 所有隔夜持仓
         /// </summary>
-        public IEnumerable<Position> TotalYdPositions { get { return totaltk.PositionHoldTracker; } }
+        //public IEnumerable<Position> TotalYdPositions { get { return totaltk.PositionHoldTracker; } }
         #endregion
 
     }

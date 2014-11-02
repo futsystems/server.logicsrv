@@ -5,58 +5,56 @@ using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
 using System.Windows.Forms;
-using Telerik.WinControls;
-using Telerik.WinControls.UI;
 using FutSystems.GUI;
-using Telerik.WinControls;
-using Telerik.WinControls.UI;
+
 
 
 namespace FutsMoniter.Controls
 {
     public partial class ctAccountMontier
     {
-        RadContextMenu menu = new RadContextMenu();
         void InitMenu()
         {
-            Telerik.WinControls.UI.RadMenuItem MenuItem_edit = new Telerik.WinControls.UI.RadMenuItem("编辑");
-            MenuItem_edit.Image = Properties.Resources.editAccount_16;
-            MenuItem_edit.Click += new EventHandler(EditAccount_Click);
-
-            //Telerik.WinControls.UI.RadMenuItem MenuItem_add = new Telerik.WinControls.UI.RadMenuItem("添加");
-            //MenuItem_add.Image = Properties.Resources.addAccount_16;
-            //MenuItem_add.Click += new EventHandler(AddAccount_Click);
-
-            Telerik.WinControls.UI.RadMenuItem MenuItem_changepass = new Telerik.WinControls.UI.RadMenuItem("修改密码");
-            //MenuItem_changepass.Image = Properties.Resources.addAccount_16;
-            MenuItem_changepass.Click += new EventHandler(ChangePass_Click);
-
-            Telerik.WinControls.UI.RadMenuItem MenuItem_changeinvestor = new Telerik.WinControls.UI.RadMenuItem("修改信息");
-            //MenuItem_changepass.Image = Properties.Resources.addAccount_16;
-            MenuItem_changeinvestor.Click += new EventHandler(ChangeInvestor_Click);
-
-            Telerik.WinControls.UI.RadMenuItem MenuItem_qryhist = new Telerik.WinControls.UI.RadMenuItem("历史记录");
-            //MenuItem_changepass.Image = Properties.Resources.addAccount_16;
-            MenuItem_qryhist.Click += new EventHandler(QryHist_Click);
-
-            //Telerik.WinControls.UI.RadMenuItem MenuItem_inserttrade = new Telerik.WinControls.UI.RadMenuItem("插入成交");
-            ////MenuItem_changepass.Image = Properties.Resources.addAccount_16;
-            //MenuItem_inserttrade.Click += new EventHandler(InsertTrade_Click);
-
-            menu.Items.Add(MenuItem_edit);
-            //menu.Items.Add(MenuItem_add);
-            menu.Items.Add(MenuItem_changepass);
-            menu.Items.Add(MenuItem_changeinvestor);
-            menu.Items.Add(MenuItem_qryhist);
-
             accountgrid.ContextMenuStrip = new ContextMenuStrip();
             accountgrid.ContextMenuStrip.Items.Add("编辑账户", Properties.Resources.editAccount, new EventHandler(EditAccount_Click));
             accountgrid.ContextMenuStrip.Items.Add("修改密码",null, new EventHandler(ChangePass_Click));
             accountgrid.ContextMenuStrip.Items.Add("修改信息", null, new EventHandler(ChangeInvestor_Click));
             accountgrid.ContextMenuStrip.Items.Add("历史查询", null, new EventHandler(QryHist_Click));
+            accountgrid.ContextMenuStrip.Items.Add("删除帐户", null, new EventHandler(DelAccount_Click));
 
 
         }
+
+        /// <summary>
+        /// 删除某个交易帐号
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void DelAccount_Click(object sender, EventArgs e)
+        {
+            IAccountLite account = GetVisibleAccount(CurrentAccount);
+            if (account != null)
+            {
+                if (fmConfirm.Show("确认删除交易帐户?") == DialogResult.Yes)
+                {
+                    Globals.TLClient.ReqDelAccount(account.Account);
+                    account.Deleted = true;//修改删除标识
+                    GotAccount(account);//更新界面数据
+                    RefreshAccountQuery();//刷新表格
+
+                }
+                else
+                {
+                    return;
+                }
+            }
+            else
+            {
+                fmConfirm.Show("请选择需要编辑的交易帐户！");
+            }
+        }
+
+
         /// <summary>
         /// 编辑某个交易帐号
         /// </summary>
@@ -86,7 +84,7 @@ namespace FutsMoniter.Controls
             IAccountLite account = GetVisibleAccount(CurrentAccount);
             if (account != null)
             {
-                ChangePassForm fm = new ChangePassForm();
+                fmChangePassword fm = new fmChangePassword();
                 fm.SetAccount(account.Account);
                 fm.ShowDialog();
 
@@ -107,8 +105,7 @@ namespace FutsMoniter.Controls
             IAccountLite account = GetVisibleAccount(CurrentAccount);
             if (account != null)
             {
-                ChangeInvestorForm fm = new ChangeInvestorForm();
-
+                fmChangeInvestor fm = new fmChangeInvestor();
                 fm.SetAccount(account);
                 fm.ShowDialog();
 

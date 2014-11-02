@@ -18,6 +18,7 @@ namespace TradingLib.Common
         decimal _stopp=0;
         decimal _trail=0;
         int _virtowner = 0;
+        int _nRequest = 0;
 
         public int VirtualOwner { get { return _virtowner; } set { _virtowner = value; } }
         public new int UnsignedSize { get { return Math.Abs(_size); } }
@@ -90,6 +91,11 @@ namespace TradingLib.Common
         /// </summary>
         public string ForceCloseReason { get { return _forceclosereason; } set { _forceclosereason = value.Replace(',',' ').Replace('|',' ').Replace('^',' '); } }
 
+        /// <summary>
+        /// 客户端请求编号
+        /// </summary>
+        public int RequestID { get { return _nRequest; } set { _nRequest = value; } }
+
 
         public bool isMarket { get { return (price == 0) && (stopp == 0); } }
         public bool isLimit { get { return (price != 0); } }
@@ -141,14 +147,15 @@ namespace TradingLib.Common
             this.HedgeFlag = copythis.HedgeFlag;
             this.OrderSeq = copythis.OrderSeq;
             this.OrderExchID = copythis.OrderExchID;
-            
+            this.Filled = copythis.Filled;
+            this.FrontIDi = copythis.FrontIDi;
+            this.SessionIDi = copythis.SessionIDi;
+            this.RequestID = copythis.RequestID;
 
             //内部使用
             this.oSymbol = copythis.oSymbol;
-            this.Filled = copythis.Filled;
             this.OrderSource = copythis.OrderSource;
-            this.FrontIDi = copythis.FrontIDi;
-            this.SessionIDi = copythis.SessionIDi;
+            
         }
 
         public OrderImpl(string sym, bool side, int size, decimal p, decimal s, string c, int time, int date)
@@ -216,18 +223,7 @@ namespace TradingLib.Common
         #endregion
 
 
-
-        //public override string ToString()
-        //{
-        //    return ToString(2);
-        //}
-
-        //public string ToString(int decimals)
-        //{
-        //    if (this.isFilled) return base.ToString();
-
-        //    return (side ? "BUY" : "SELL") + " " + this.TotalSize.ToString() + " " + this.symbol + " @" + (isMarket ? "Mkt" : (isLimit ? this.price.ToString("N" + decimals.ToString()) : this.stopp.ToString("N" + decimals.ToString()) + "stp")) + " [" + this.Account + "] " + id.ToString() + (isLimit && isStop ? " stop: " + stopp.ToString("N" + decimals.ToString()) : string.Empty + " Filled:" + this.Filled.ToString() + " Status:" + Status.ToString() + " PostFlag:" + OffsetFlag.ToString() + " OrderRef:" + OrderRef.ToString() + " OrderSeq:" + OrderSeq.ToString() + " HedgeFlag:" + HedgeFlag.ToString() + " OrderExchID:" + OrderExchID.ToString());
-        //}
+        #region Fill section
 
         /// <summary>
         /// Fills this order with a tick
@@ -239,19 +235,19 @@ namespace TradingLib.Common
         {
             //debug("~~~~~~~~order fill here2");
             if (!t.isTrade) return false;//fill with trade 
-            if (t.symbol != oSymbol.TickSymbol) return false;
+            if (t.Symbol != oSymbol.TickSymbol) return false;
             if (!fillOPG && TIF=="OPG") return false;
-            if ((isLimit && side && (t.trade <= price)) // buy limit
-                || (isLimit && !side && (t.trade >= price))// sell limit
-                || (isStop && side && (t.trade >= stopp)) // buy stop
-                || (isStop && !side && (t.trade <= stopp)) // sell stop
+            if ((isLimit && side && (t.Trade <= price)) // buy limit
+                || (isLimit && !side && (t.Trade >= price))// sell limit
+                || (isStop && side && (t.Trade >= stopp)) // buy stop
+                || (isStop && !side && (t.Trade <= stopp)) // sell stop
                 || isMarket)
             {
-                this.xprice = t.trade;
-                this.xsize = t.size >= UnsignedSize ? UnsignedSize : t.size;
+                this.xprice = t.Trade;
+                this.xsize = t.Size >= UnsignedSize ? UnsignedSize : t.Size;
                 this.xsize *= side ? 1 : -1;
-                this.xtime = t.time;
-                this.xdate = t.date;
+                this.xtime = t.Time;
+                this.xdate = t.Date;
                 return true;
             }
             return false;
@@ -274,14 +270,14 @@ namespace TradingLib.Common
             bool ok = side ? k.hasAsk : k.hasBid;
             if (!ok) return false;
             //debug("got here 1");
-            decimal p = side ? k.ask : k.bid;
+            decimal p = side ? k.AskPrice : k.BidPrice;
             //获得对应的ask bid size大小用于fill
             int s=0;
             if(this.SecurityType ==SecurityType.STK)
-                s = side ? k.AskSize : k.BidSize;
+                s = side ? k.StockAskSize : k.StockBidSize;
             else
-                s = side ? k.os : k.bs;
-            if (k.symbol != oSymbol.TickSymbol) return false;
+                s = side ? k.AskSize : k.BidSize;
+            if (k.Symbol != oSymbol.TickSymbol) return false;
             if (!fillOPG && TIF == "OPG") return false;
             if ((isLimit && side && (p <= price)) // buy limit
                 || (isLimit && !side && (p >= price))// sell limit
@@ -292,8 +288,8 @@ namespace TradingLib.Common
                 this.xprice = p;
                 this.xsize = /*1 * (side ? 1 : -1);**/(s >= UnsignedSize ? UnsignedSize : s) * (side ? 1 : -1);
                 //debug("askbid size:"+s.ToString()+"|");
-                this.xtime = k.time;
-                this.xdate = k.date;
+                this.xtime = k.Time;
+                this.xdate = k.Date;
                 return true;
             }
             return false;
@@ -347,6 +343,9 @@ namespace TradingLib.Common
             return false;
         }
 
+        #endregion
+
+
         /// <summary>
         /// Serialize order as a string
         /// </summary>
@@ -398,7 +397,6 @@ namespace TradingLib.Common
             sb.Append(d);
             sb.Append(o.LocalID.ToString());
             sb.Append(d);
-            //sb.Append((int)o.Status);
             sb.Append(o.Status.ToString());
             sb.Append(d);
             sb.Append(o.OffsetFlag.ToString());
@@ -414,6 +412,12 @@ namespace TradingLib.Common
             sb.Append(o.OrderExchID);
             sb.Append(d);
             sb.Append(o.ForceCloseReason);
+            sb.Append(d);
+            sb.Append(o.FrontIDi);
+            sb.Append(d);
+            sb.Append(o.SessionIDi);
+            sb.Append(d);
+            sb.Append(o.RequestID);
             return sb.ToString();
         }
 
@@ -468,8 +472,13 @@ namespace TradingLib.Common
             o.HedgeFlag = rec[(int)OrderField.HedgeFlag];
             o.OrderSeq = int.Parse(rec[(int)OrderField.OrderSeq]);
             o.OrderExchID = rec[(int)OrderField.OrderExchID];
-            if(rec.Length >=29)
-                o.ForceCloseReason = rec[(int)OrderField.ForceReason];
+            o.ForceCloseReason = rec[(int)OrderField.ForceReason];
+            if (rec.Length > 29)
+            {
+                o.FrontIDi = int.Parse(rec[(int)OrderField.FrontID]);
+                o.SessionIDi = int.Parse(rec[(int)OrderField.SessionID]);
+                o.RequestID = int.Parse(rec[(int)OrderField.RequestID]);
+            }
             return o;
         }
 

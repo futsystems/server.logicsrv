@@ -28,111 +28,88 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.radPanel1 = new Telerik.WinControls.UI.RadPanel();
-            this.opgrid = new Telerik.WinControls.UI.RadGridView();
-            this.ctGridExport1 = new FutsMoniter.ctGridExport();
-            this.btnFilterCancelOrReject = new Telerik.WinControls.UI.RadRadioButton();
-            this.btnFilterConfirmed = new Telerik.WinControls.UI.RadRadioButton();
-            this.btnFilterPending = new Telerik.WinControls.UI.RadRadioButton();
-            ((System.ComponentModel.ISupportInitialize)(this.radPanel1)).BeginInit();
-            this.radPanel1.SuspendLayout();
+            this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
+            this.btnFilterCancelOrReject = new ComponentFactory.Krypton.Toolkit.KryptonRadioButton();
+            this.btnFilterConfirmed = new ComponentFactory.Krypton.Toolkit.KryptonRadioButton();
+            this.btnFilterPending = new ComponentFactory.Krypton.Toolkit.KryptonRadioButton();
+            this.opgrid = new ComponentFactory.Krypton.Toolkit.KryptonDataGridView();
+            ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
+            this.kryptonPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.opgrid)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.btnFilterCancelOrReject)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.btnFilterConfirmed)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.btnFilterPending)).BeginInit();
             this.SuspendLayout();
             // 
-            // radPanel1
+            // kryptonPanel1
             // 
-            this.radPanel1.Controls.Add(this.opgrid);
-            this.radPanel1.Controls.Add(this.ctGridExport1);
-            this.radPanel1.Controls.Add(this.btnFilterCancelOrReject);
-            this.radPanel1.Controls.Add(this.btnFilterConfirmed);
-            this.radPanel1.Controls.Add(this.btnFilterPending);
-            this.radPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.radPanel1.Location = new System.Drawing.Point(0, 0);
-            this.radPanel1.Name = "radPanel1";
-            this.radPanel1.Size = new System.Drawing.Size(639, 356);
-            this.radPanel1.TabIndex = 0;
-            ((Telerik.WinControls.Primitives.BorderPrimitive)(this.radPanel1.GetChildAt(0).GetChildAt(1))).Width = 0F;
+            this.kryptonPanel1.Controls.Add(this.btnFilterCancelOrReject);
+            this.kryptonPanel1.Controls.Add(this.btnFilterConfirmed);
+            this.kryptonPanel1.Controls.Add(this.btnFilterPending);
+            this.kryptonPanel1.Controls.Add(this.opgrid);
+            this.kryptonPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.kryptonPanel1.Location = new System.Drawing.Point(0, 0);
+            this.kryptonPanel1.Name = "kryptonPanel1";
+            this.kryptonPanel1.Size = new System.Drawing.Size(826, 340);
+            this.kryptonPanel1.TabIndex = 0;
+            // 
+            // btnFilterCancelOrReject
+            // 
+            this.btnFilterCancelOrReject.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnFilterCancelOrReject.Location = new System.Drawing.Point(743, 310);
+            this.btnFilterCancelOrReject.Name = "btnFilterCancelOrReject";
+            this.btnFilterCancelOrReject.Size = new System.Drawing.Size(80, 18);
+            this.btnFilterCancelOrReject.TabIndex = 4;
+            this.btnFilterCancelOrReject.Values.Text = "取消/拒绝";
+            // 
+            // btnFilterConfirmed
+            // 
+            this.btnFilterConfirmed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnFilterConfirmed.Location = new System.Drawing.Point(674, 310);
+            this.btnFilterConfirmed.Name = "btnFilterConfirmed";
+            this.btnFilterConfirmed.Size = new System.Drawing.Size(63, 18);
+            this.btnFilterConfirmed.TabIndex = 3;
+            this.btnFilterConfirmed.Values.Text = "已确认";
+            // 
+            // btnFilterPending
+            // 
+            this.btnFilterPending.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnFilterPending.Location = new System.Drawing.Point(605, 310);
+            this.btnFilterPending.Name = "btnFilterPending";
+            this.btnFilterPending.Size = new System.Drawing.Size(63, 18);
+            this.btnFilterPending.TabIndex = 2;
+            this.btnFilterPending.Values.Text = "待处理";
             // 
             // opgrid
             // 
             this.opgrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.opgrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.opgrid.Location = new System.Drawing.Point(0, 0);
             this.opgrid.Name = "opgrid";
-            this.opgrid.Size = new System.Drawing.Size(639, 325);
-            this.opgrid.TabIndex = 8;
-            this.opgrid.Text = "radGridView1";
-            this.opgrid.CellFormatting += new Telerik.WinControls.UI.CellFormattingEventHandler(this.opgrid_CellFormatting);
-            this.opgrid.ContextMenuOpening += new Telerik.WinControls.UI.ContextMenuOpeningEventHandler(this.opgrid_ContextMenuOpening);
-            // 
-            // ctGridExport1
-            // 
-            this.ctGridExport1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.ctGridExport1.Grid = null;
-            this.ctGridExport1.Location = new System.Drawing.Point(3, 331);
-            this.ctGridExport1.Name = "ctGridExport1";
-            this.ctGridExport1.Size = new System.Drawing.Size(110, 24);
-            this.ctGridExport1.TabIndex = 7;
-            // 
-            // btnFilterCancelOrReject
-            // 
-            this.btnFilterCancelOrReject.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnFilterCancelOrReject.Location = new System.Drawing.Point(554, 336);
-            this.btnFilterCancelOrReject.Name = "btnFilterCancelOrReject";
-            this.btnFilterCancelOrReject.Size = new System.Drawing.Size(73, 16);
-            this.btnFilterCancelOrReject.TabIndex = 6;
-            this.btnFilterCancelOrReject.Text = "取消/拒绝";
-            this.btnFilterCancelOrReject.ToggleStateChanged += new Telerik.WinControls.UI.StateChangedEventHandler(this.btnFilterCancelOrReject_ToggleStateChanged);
-            // 
-            // btnFilterConfirmed
-            // 
-            this.btnFilterConfirmed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnFilterConfirmed.Location = new System.Drawing.Point(491, 336);
-            this.btnFilterConfirmed.Name = "btnFilterConfirmed";
-            this.btnFilterConfirmed.Size = new System.Drawing.Size(58, 16);
-            this.btnFilterConfirmed.TabIndex = 5;
-            this.btnFilterConfirmed.Text = "已确认";
-            this.btnFilterConfirmed.ToggleStateChanged += new Telerik.WinControls.UI.StateChangedEventHandler(this.btnFilterConfirmed_ToggleStateChanged);
-            // 
-            // btnFilterPending
-            // 
-            this.btnFilterPending.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnFilterPending.Location = new System.Drawing.Point(427, 336);
-            this.btnFilterPending.Name = "btnFilterPending";
-            this.btnFilterPending.Size = new System.Drawing.Size(58, 16);
-            this.btnFilterPending.TabIndex = 4;
-            this.btnFilterPending.Text = "待处理";
-            this.btnFilterPending.ToggleStateChanged += new Telerik.WinControls.UI.StateChangedEventHandler(this.btnFilterPending_ToggleStateChanged);
+            this.opgrid.RowTemplate.Height = 23;
+            this.opgrid.Size = new System.Drawing.Size(826, 300);
+            this.opgrid.TabIndex = 0;
             // 
             // ctCashOperation
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.radPanel1);
+            this.Controls.Add(this.kryptonPanel1);
             this.Name = "ctCashOperation";
-            this.Size = new System.Drawing.Size(639, 356);
-            ((System.ComponentModel.ISupportInitialize)(this.radPanel1)).EndInit();
-            this.radPanel1.ResumeLayout(false);
-            this.radPanel1.PerformLayout();
+            this.Size = new System.Drawing.Size(826, 340);
+            ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).EndInit();
+            this.kryptonPanel1.ResumeLayout(false);
+            this.kryptonPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.opgrid)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.btnFilterCancelOrReject)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.btnFilterConfirmed)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.btnFilterPending)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private Telerik.WinControls.UI.RadPanel radPanel1;
-        private Telerik.WinControls.UI.RadRadioButton btnFilterCancelOrReject;
-        private Telerik.WinControls.UI.RadRadioButton btnFilterConfirmed;
-        private Telerik.WinControls.UI.RadRadioButton btnFilterPending;
-        private ctGridExport ctGridExport1;
-        private Telerik.WinControls.UI.RadGridView opgrid;
+        private ComponentFactory.Krypton.Toolkit.KryptonPanel kryptonPanel1;
+        private ComponentFactory.Krypton.Toolkit.KryptonDataGridView opgrid;
+        private ComponentFactory.Krypton.Toolkit.KryptonRadioButton btnFilterCancelOrReject;
+        private ComponentFactory.Krypton.Toolkit.KryptonRadioButton btnFilterConfirmed;
+        private ComponentFactory.Krypton.Toolkit.KryptonRadioButton btnFilterPending;
     }
 }

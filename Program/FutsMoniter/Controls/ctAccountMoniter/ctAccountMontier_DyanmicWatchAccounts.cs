@@ -5,8 +5,6 @@ using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
 using System.Windows.Forms;
-using Telerik.WinControls;
-using Telerik.WinControls.UI;
 using FutSystems.GUI;
 
 namespace FutsMoniter.Controls
@@ -55,7 +53,6 @@ namespace FutsMoniter.Controls
         }
 
 
-
         private void accountgrid_Scroll(object sender, ScrollEventArgs e)
         {
             GridChanged();
@@ -65,7 +62,6 @@ namespace FutsMoniter.Controls
         {
             GridChanged();
         }
-
 
 
     }

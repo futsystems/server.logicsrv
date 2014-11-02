@@ -15,6 +15,7 @@ namespace TradingLib.Common
     public  class DBExchangeTracker
     {
         Dictionary<string, Exchange> exchagneIndexMap = new Dictionary<string, Exchange>();
+        Dictionary<string, Exchange> exchagneCodeMap = new Dictionary<string, Exchange>();
         Dictionary<int, Exchange> exchangeIdMap = new Dictionary<int, Exchange>();
 
         public DBExchangeTracker()
@@ -24,15 +25,19 @@ namespace TradingLib.Common
             {
                 exchagneIndexMap.Add(ex.Index, ex);
                 exchangeIdMap.Add(ex.ID, ex);
+                exchagneCodeMap.Add(ex.EXCode, ex);
             }
         }
 
         public string GetExchangeTitle(string index)
         {
             Exchange ex = null;
-            IExchange ee = null;
             
             if (exchagneIndexMap.TryGetValue(index, out ex))
+            {
+                return ex.Title;
+            }
+            if (exchagneCodeMap.TryGetValue(index, out ex))
             {
                 return ex.Title;
             }

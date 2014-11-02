@@ -1619,6 +1619,7 @@ this IDbConnection cnn, string sql, Func<TFirst, TSecond, TThird, TFourth, TRetu
 
             if (fieldCount <= startBound)
             {
+                //int i = 0;
                 throw new ArgumentException(MultiMapSplitExceptionMessage, "splitOn");
             }
 

@@ -95,7 +95,7 @@ namespace Lottoqq.Account
                     fundperlot = symbol.Margin + (symbol.ExtraMargin > 0 ? symbol.ExtraMargin : 0);
                 }
 
-                TLCtxHelper.Debug("Fundavabile:" + fundavabile.ToString() + " fundperlot:" + fundperlot.ToString());
+                Util.Debug("Fundavabile:" + fundavabile.ToString() + " fundperlot:" + fundperlot.ToString());
                 return (int)(fundavabile / fundperlot);
             }
             //配资服务通过配资服务查询可开手数

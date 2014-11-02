@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
 using TradingLib.API;
@@ -11,18 +12,17 @@ namespace TradingLib.Common
     /// </summary>
     public class TotalTracker
     {
-        public OrderTracker OrderTracker { get { return DefaultOrdTracker; } }
-        protected OrderTracker DefaultOrdTracker = new OrderTracker();
 
-        public LSPositionTracker PositionTracker { get { return DefaultPosTracker; } }
-        protected LSPositionTracker DefaultPosTracker = new LSPositionTracker();
 
-        public ThreadSafeList<Trade> TradeTracker { get { return DefaultTradeTracker; } }
-        protected ThreadSafeList<Trade> DefaultTradeTracker = new ThreadSafeList<Trade>();
+        ConcurrentDictionary<long, Order> ordermap = new ConcurrentDictionary<long, Order>();
+        ConcurrentDictionary<long, Trade> trademap = new ConcurrentDictionary<long, Trade>();
+        ConcurrentDictionary<string, Position> positionmap = new ConcurrentDictionary<string, Position>();
 
-        public LSPositionTracker PositionHoldTracker { get { return PositionsHold; } }
-        protected LSPositionTracker PositionsHold = new LSPositionTracker();//隔夜持仓数据
+        public IEnumerable<Order> TotalOrders { get { return ordermap.Values; } }
 
+        public IEnumerable<Trade> TotalTrades { get { return trademap.Values; } }
+
+        public IEnumerable<Position> TotalPositions { get { return positionmap.Values; } }
         /// <summary>
         /// 通过OrderId获得该Order
         /// </summary>
@@ -30,51 +30,54 @@ namespace TradingLib.Common
         /// <returns></returns>
         public Order SentOrder(long oid)
         {
-            return DefaultOrdTracker.SentOrder(oid);
-
-        }
-
-        public void GotPosition(Position pos)
-        {
-            //将昨持仓填充到总交易账户中去
-            DefaultPosTracker.GotPosition(pos);
-            //单独记录隔夜持仓
-            PositionsHold.GotPosition(pos);
+            Order o = null;
+            if (ordermap.TryGetValue(oid, out o))
+            {
+                return o;
+            }
+            return null;
         }
 
         public bool IsTracked(long id)
         {
-            return DefaultOrdTracker.isTracked(id);
+            return ordermap.Keys.Contains(id);
         }
 
-        public void GotOrder(Order o)
+        /// <summary>
+        /// 新持仓对象生成
+        /// </summary>
+        /// <param name="pos"></param>
+        public void NewPosition(Position pos)
         {
-            DefaultOrdTracker.GotOrder(o);
+            positionmap.TryAdd(pos.GetPositionKey(), pos);
         }
 
-        public void GotCancel(long id)
+
+        /// <summary>
+        /// 当有新的委托进入系统时记录该委托
+        /// </summary>
+        /// <param name="o"></param>
+        public void NewOrder(Order o)
         {
-            DefaultOrdTracker.GotCancel(id);
+            ordermap.TryAdd(o.id, o);
         }
 
-        public void GotFill(Trade fill)
+        /// <summary>
+        /// 新成交
+        /// </summary>
+        /// <param name="fill"></param>
+        public void NewFill(Trade fill)
         {
-            DefaultPosTracker.GotFill(fill);
-            DefaultOrdTracker.GotFill(fill);
-            DefaultTradeTracker.Add(fill);
+            trademap.TryAdd(fill.id, fill);
         }
 
-        public void GotTick(Tick k)
-        {
-            DefaultPosTracker.GotTick(k);
-        }
+
 
         public void Clear()
         {
-            DefaultOrdTracker.Clear();
-            DefaultTradeTracker.Clear();
-            DefaultPosTracker.Clear();
-            PositionsHold.Clear();
+            ordermap.Clear();
+            trademap.Clear();
+            positionmap.Clear();
         }
     }
 }

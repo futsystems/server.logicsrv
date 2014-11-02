@@ -25,6 +25,8 @@ namespace TradingLib.Contrib.FinService
     /// <param name="agentfee"></param>
     /// <param name="comment"></param>
     public delegate void FeeChargeDel(decimal totalfee, decimal agentfee, AgentCommissionDel func,string comment);
+
+   
     /// <summary>
     /// 所有服务计划的父类
     /// 用于定义服务计划的框架
@@ -34,6 +36,7 @@ namespace TradingLib.Contrib.FinService
         protected string SPNAME = "股指专项";
         public event FeeChargeDel GotFeeChargeEvent;
 
+        public string ServicePaneName { get { return this.SPNAME; } }
         public ServicePlanBase()
         {
 
@@ -59,6 +62,8 @@ namespace TradingLib.Contrib.FinService
         /// 服务ID
         /// </summary>
         public int ServiceID { get; set; }
+
+
         /// <summary>
         /// 按照即定的业务逻辑
         /// 当需要收费时触发收费事件
@@ -111,6 +116,15 @@ namespace TradingLib.Contrib.FinService
             //调用反射自动进行参数赋值
             FinTracker.ServicePlaneTracker.SetArgument(this, accountarg, agentarg);
 
+        }
+
+        /// <summary>
+        /// 配资服务初始化
+        /// 比如创建一个服务时 自动调整相关参数或者设定激活开关等
+        /// </summary>
+        public virtual void OnInit()
+        { 
+        
         }
 
         #region 事件响应 执行计费收集 这里可以进行进一步的扩展 针对不同的计费方式 监听不同的事件 进行计费
@@ -245,6 +259,11 @@ namespace TradingLib.Contrib.FinService
         {
             return 0;
         }
+
+        public virtual decimal GetFinAmountAvabile()
+        {
+            return 0;
+        }
         #endregion
 
 
@@ -285,7 +304,7 @@ namespace TradingLib.Contrib.FinService
         /// <summary>
         /// 调整配资服务
         /// </summary>
-        public virtual void AdjustOmCashOperation(JsonWrapperCashOperation op)
+        public virtual void OnCashOperation(JsonWrapperCashOperation op)
         {
 
         }

@@ -127,22 +127,6 @@ namespace TradingLib.Common
             }
         }
 
-
-
-
-        //void connecton_OnLoginResponse(RspMGRLoginResponse response)
-        //{
-            
-        //    debug(" got loginresponse:" + response.ToString(), QSEnumDebugLevel.DEBUG);
-        //    if (response.Authorized)
-        //    {
-        //        _account = response.Account;
-        //    }
-        //    debug("it is herexxxxxxxxxxxxxxxx", QSEnumDebugLevel.INFO);
-        //    if (OnLoginEvent != null)
-        //        OnLoginEvent(response);
-        //}
-
         void connecton_OnDataPubDisconnectEvent()
         {
             if (OnDataDisconnectEvent != null)

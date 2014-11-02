@@ -5,8 +5,6 @@ using System.Text;
 using System.Windows.Forms;
 using TradingLib.API;
 using TradingLib.Common;
-using Telerik.WinControls;
-using Telerik.WinControls.UI;
 using FutSystems.GUI;
 
 namespace FutsMoniter.Controls
@@ -16,6 +14,67 @@ namespace FutsMoniter.Controls
     /// </summary>
     public partial class ctAccountMontier
     {
+        public event Action<IAccountLite> AccountSelectedEvent;
+
+
+        /// <summary>
+        /// 双击事件响应 选中某个交易帐号
+        /// </summary>
+        /// <param name="account"></param>
+        void SelectAccount(IAccountLite account)
+        {
+            //设定当前选中帐号
+            accountselected = account;
+            //更新选中lable
+            lbCurrentAccount.Text = account.Account;
+            //清空当前日内交易记录
+            ClearTradingInfo();
+            //请求恢复日内交易记录
+            if (Globals.EnvReady)
+            {
+                Globals.TradingInfoTracker.RequetResume(account.Account);
+            }
+            //触发选中帐户事件 用于其它组件监听并进行相关操作
+            if (AccountSelectedEvent != null)
+                AccountSelectedEvent(account);
+        
+        }
+        DateTime _lastresumetime = DateTime.Now;
+        private void accountgrid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            //if (Globals.TradingInfoTracker.IsInResume)
+            //{
+            //    debug("处于恢复过程中，直接返回等候", QSEnumDebugLevel.INFO);
+            //    return;
+            //}
+
+            //if (DateTime.Now.Subtract(_lastresumetime).TotalSeconds <= 3)
+            //{
+            //    fmConfirm.Show("请不要频繁请求帐户日内数据");
+            //    return;
+            //}
+            _lastresumetime = DateTime.Now;
+            string account = CurrentAccount;
+            IAccountLite accountlite = null;
+            if (accountmap.TryGetValue(account, out accountlite))
+            {
+
+                //设定选中帐号
+                //accountselected = accountlite;
+                //ctFinService1.CurrentAccount = accountlite;
+                //lbCurrentAccount.Text = account;
+
+                //清空交易记录然后请求新的交易数据
+                SelectAccount(accountlite);
+
+                if (ctOrderSenderM1 != null)
+                {
+                    ctOrderSenderM1.SetAccount(accountlite);
+                }
+            }
+        }
+
+
 
         /// <summary>
         /// 清空交易记录
@@ -65,42 +124,6 @@ namespace FutsMoniter.Controls
                 debug("TradingInfoTracker 维护帐户与请求加载帐户不一致..", QSEnumDebugLevel.ERROR);
             }
 
-        }
-
-
-        /// <summary>
-        /// accountgrid双击某行
-        /// 获取该交易帐户日内交易数据
-        /// 避免多次双击
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void accountgrid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (Globals.TradingInfoTracker.IsInResume)
-            {
-                debug("处于恢复过程中，直接返回等候", QSEnumDebugLevel.INFO);
-                return;
-            }
-
-            string account = CurrentAccount;
-            IAccountLite accountlite = null;
-            if (accountmap.TryGetValue(account, out accountlite))
-            {
-                //设定选中帐号
-                accountselected = accountlite;
-                ctFinService1.CurrentAccount = accountlite;
-                lbCurrentAccount.Text = account;
-
-                //清空交易记录然后请求新的交易数据
-                ClearTradingInfo();
-                Globals.TradingInfoTracker.RequetResume(account);
-
-                if (ctOrderSenderM1 != null)
-                {
-                    ctOrderSenderM1.SetAccount(accountlite);
-                }
-            }
         }
     }
 }

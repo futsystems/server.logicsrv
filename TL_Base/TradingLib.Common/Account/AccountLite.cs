@@ -95,7 +95,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 银行
         /// </summary>
-        public string BankID { get; set; }
+        public int BankID { get; set; }
 
         /// <summary>
         /// 银行帐号
@@ -111,6 +111,11 @@ namespace TradingLib.Common
         /// 帐户所属管理员全局ID
         /// </summary>
         public int MGRID { get; set; }
+
+        /// <summary>
+        /// 是否已经删除
+        /// </summary>
+        public bool Deleted { get; set; }
         public static string Serialize(IAccountLite account)
         {
             StringBuilder sb = new StringBuilder();
@@ -154,6 +159,8 @@ namespace TradingLib.Common
             sb.Append(account.PosLock.ToString());
             sb.Append(d);
             sb.Append(account.MGRID.ToString());
+            sb.Append(d);
+            sb.Append(account.Deleted.ToString());
             return sb.ToString();
         }
 
@@ -177,10 +184,11 @@ namespace TradingLib.Common
             account.MoneyUsed = decimal.Parse(rec[13]);
             account.Name = rec[14];
             account.Broker = rec[15];
-            account.BankID = rec[16];
+            account.BankID = int.Parse(rec[16]);
             account.BankAC = rec[17];
             account.PosLock = bool.Parse(rec[18]);
             account.MGRID = int.Parse(rec[19]);
+            account.Deleted = bool.Parse(rec[20]);
             return account;
         }
     }

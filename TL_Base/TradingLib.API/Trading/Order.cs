@@ -24,66 +24,82 @@ namespace TradingLib.API
         /// time in force
         /// </summary>
         string TIF { get; set; }
+
         /// <summary>
         /// valid instruction
         /// </summary>
         OrderInstructionType ValidInstruct { get; set; }
+
         /// <summary>
         /// true if buy, otherwise sell
         /// </summary>
         bool side { get; set; }
+
         /// <summary>
         /// price of order. (0 for market)
         /// </summary>
         decimal price { get; set; }
+
         /// <summary>
         /// stop price if applicable
         /// </summary>
         decimal stopp { get; set; }
+
         /// <summary>
         /// trail amount if applicable
         /// </summary>
         decimal trail { get; set; }
+
         /// <summary>
         /// order comment
         /// </summary>
         string comment { get; set; }
+
         /// <summary>
         /// signed size of order (-100 = sell 100)
         /// </summary>
         int size { get; set; }
+
         /// <summary>
         /// order original total size
         /// </summary>
         int TotalSize { get; set; }
+
         /// <summary>
         /// unsigned size of order
         /// </summary>
         int UnsignedSize { get; }
+
         /// <summary>
         /// date in  date format (2010/03/05 = 20100305)
         /// </summary>
         int date { get; set; }
+
         /// <summary>
         /// time including seconds 1:35:07PM = 133507
         /// </summary>
         int time { get; set; }
+
         /// <summary>
         /// whether order has been filled
         /// </summary>
         bool isFilled { get; }
+
         /// <summary>
         /// limit order
         /// </summary>
         bool isLimit { get; }
+
         /// <summary>
         /// stop order
         /// </summary>
         bool isStop { get; }
+
         /// <summary>
         /// trail order
         /// </summary>
         bool isTrail { get; }
+
         /// <summary>
         /// market order
         /// </summary>
@@ -95,14 +111,17 @@ namespace TradingLib.API
         /// security type represented by order
         /// </summary>
         SecurityType SecurityType { get; set; }
+
         /// <summary>
         /// currency with which to place order
         /// </summary>
         CurrencyType Currency { get; set; }
+
         /// <summary>
         /// destination for order
         /// </summary>
         string Exchange { get; set; }
+
         /// <summary>
         /// more specific symbol name
         /// </summary>
@@ -128,18 +147,21 @@ namespace TradingLib.API
         /// <param name="o"></param>
         /// <returns></returns>
         bool Fill(Order o);
+
         /// <summary>
         /// try to fill order against trade
         /// </summary>
         /// <param name="t"></param>
         /// <returns></returns>
         bool Fill(Tick t);
+
         /// <summary>
         /// try to fill order against trade or bid/ask
         /// </summary>
         /// <param name="t"></param>
         /// <returns></returns>
         bool Fill(Tick t, bool bidask, bool fillopg);
+
         /// <summary>
         /// try to fill order as OPG order
         /// </summary>
@@ -147,10 +169,12 @@ namespace TradingLib.API
         /// <param name="fillOPG"></param>
         /// <returns></returns>
         bool Fill(Tick t, bool fillOPG);
+
         /// <summary>
         /// order is valid
         /// </summary>
         bool isValid { get; }
+
         /// <summary>
         /// owner/originator of this order
         /// </summary>
@@ -171,10 +195,12 @@ namespace TradingLib.API
         /// 获得该委托通过哪个交易通道发出
         /// </summary>
         string Broker { get; set; }
+
         /// <summary>
         /// 用于标示交易通道委托的唯一标石,用于向交易通道查询或者撤销委托时用到的序列
         /// </summary>
         string BrokerKey { get; set; }
+
         /// <summary>
         /// ID是交易系统分配的交易编号,BrokerKey是broker分配的编号,LocalID是本地发单分配的编号
         /// </summary>
@@ -246,6 +272,11 @@ namespace TradingLib.API
         /// 代表是多头操作还是空头操作
         /// </summary>
         bool PositionSide { get; }
+
+        /// <summary>
+        /// 对应客户端的请求ID 
+        /// </summary>
+        int RequestID { get; set; }
     }
 
     public class InvalidOrder : Exception { }

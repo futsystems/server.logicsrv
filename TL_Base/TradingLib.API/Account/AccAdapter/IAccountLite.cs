@@ -95,7 +95,7 @@ namespace TradingLib.API
         /// <summary>
         /// 银行
         /// </summary>
-        string BankID { get; set; }
+        int BankID { get; set; }
 
         /// <summary>
         /// 银行帐号
@@ -111,5 +111,10 @@ namespace TradingLib.API
         /// 所属管理员的ID
         /// </summary>
         int MGRID{ get; set; }
+
+        /// <summary>
+        /// 是否已经删除
+        /// </summary>
+        bool Deleted { get; set; }
     }
 }

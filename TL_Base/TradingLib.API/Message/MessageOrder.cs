@@ -35,5 +35,8 @@ namespace TradingLib.API
         OrderSeq,//委托流水
         OrderExchID,//交易所委托标识
         ForceReason,//强平原因
+        FrontID,//前置编号
+        SessionID,//回话编号
+        RequestID,//请求编号
     }
 }

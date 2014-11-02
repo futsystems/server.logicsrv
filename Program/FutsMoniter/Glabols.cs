@@ -5,41 +5,18 @@ using System.Text;
 using System.Drawing;
 using TradingLib.API;
 using TradingLib.Common;
+using TradingLib.Mixins.JsonObject;
 
 namespace FutsMoniter
 {
     
-    public class Globals
+    public partial class Globals
     {
-        static event  VoidDelegate InitFinishedEvent;
-
-        /// <summary>
-        /// 触发初始化完成事件 用于通知常驻界面资源进行界面更新
-        /// </summary>
-        public static void OnInitFinished()
-        {
-            if (InitFinishedEvent != null)
-                InitFinishedEvent();
-            Globals.EnvReady = true;
-        }
-
-        /// <summary>
-        /// 注册初始化完成事件回调
-        /// </summary>
-        /// <param name="callback"></param>
-        public static void RegInitCallback(VoidDelegate callback)
-        {
-            InitFinishedEvent += new VoidDelegate(callback);
-        }
+        
 
         public static ConfigFile Config = null;
 
-        /// <summary>
-        /// 当前状态是否就绪
-        /// 用于初始化过程中过滤界面的相关操作
-        /// 比如在tlclient未初始化时候进行请求操作等
-        /// </summary>
-        public static bool EnvReady = false;
+
 
         static Globals()
         { 
@@ -58,6 +35,14 @@ namespace FutsMoniter
         /// 登入回报 用于获得登入基本信息
         /// </summary>
         public static RspMGRLoginResponse LoginResponse { get; set; }
+
+        /// <summary>
+        /// 获得全局界面访问权限对象
+        /// </summary>
+        public static UIAccess UIAccess { get { return LoginResponse.UIAccess; } }
+
+
+
         /// <summary>
         /// 管理主域ID
         /// </summary>

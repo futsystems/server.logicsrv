@@ -235,7 +235,7 @@ namespace TradingLib.Common
     }
 
     /// <summary>
-    /// 隔夜持仓通知
+    /// 隔夜持仓明细通知
     /// 客户端如果通过交易数据累加获得当前数据则需要从隔夜持仓上叠加当日委托与成交来获得当前最新的交易状态
     /// 隔夜持仓通知 主要用于管理端恢复日内交易状态
     /// </summary>
@@ -244,17 +244,18 @@ namespace TradingLib.Common
         public HoldPositionNotify()
         {
             _type = MessageTypes.OLDPOSITIONNOTIFY;//持仓数据通知 用于获得隔夜持仓数据
+            this.PositionDetail = new PositionDetailImpl();
         }
 
-        public PositionEx Position { get; set; }
+        public PositionDetail PositionDetail { get; set; }
         public override string ContentSerialize()
         {
-            return PositionEx.Serialize(Position);
+            return PositionDetailImpl.Serialize(this.PositionDetail);
         }
 
         public override void ContentDeserialize(string contentstr)
         {
-            Position = PositionEx.Deserialize(contentstr);
+            this.PositionDetail = PositionDetailImpl.Deserialize(contentstr);
         }
 
     }

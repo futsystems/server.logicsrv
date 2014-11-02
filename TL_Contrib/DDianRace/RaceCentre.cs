@@ -44,7 +44,7 @@ namespace Lottoqq.Race
         /// </summary>
         public void OnLoad()
         {
-            TLCtxHelper.Debug("RaceCentre start loading....");
+            Util.Debug("RaceCentre start loading....");
             //0.获得全局ctx对象
             //_clearcentre = TLCtxHelper.Ctx.ClearCentre;
 

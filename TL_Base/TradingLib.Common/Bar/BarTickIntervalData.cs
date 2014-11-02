@@ -115,7 +115,7 @@ namespace TradingLib.Common
         public void newTick(Tick k) 
         { 
             // ignore quotes ask bid直接返回
-            if (k.trade == 0) return;
+            if (k.Trade == 0) return;
             // if we have no bars or we'll exceed our interval length w/this tick
             //如果当前bar序号为-1 或者ticks[] 为我们设定的区间大小,则新增一个bar
             if ((curr_barid == -1) || (ticks[curr_barid] == intervallength))
@@ -127,32 +127,32 @@ namespace TradingLib.Common
                 // make it current current序号递增
                 curr_barid++;
                 // set time
-                times[times.Count - 1] = k.time;
+                times[times.Count - 1] = k.Time;
                 // set date
-                dates[dates.Count - 1] = k.date;
+                dates[dates.Count - 1] = k.Date;
                 //set oadate
-                OADateTime[OADateTime.Count - 1] = Util.ToDateTime(k.date,k.time).ToOADate();
+                OADateTime[OADateTime.Count - 1] = Util.ToDateTime(k.Date, k.Time).ToOADate();
             }
             else _isRecentNew = false;
             // blend tick into bar
             // store value of Last
             int l = Last();
             // open
-            if (opens[l] == 0) opens[l] = k.trade;
+            if (opens[l] == 0) opens[l] = k.Trade;
             // high
-            if (k.trade > highs[l]) highs[l] = k.trade;
+            if (k.Trade > highs[l]) highs[l] = k.Trade;
             // low
-            if (k.trade < lows[l]) lows[l] = k.trade;
+            if (k.Trade < lows[l]) lows[l] = k.Trade;
             // close
-            closes[l] = k.trade;
+            closes[l] = k.Trade;
             // count ticks
             ticks[l]++;
             // don't set volume for index
-            if (k.size > 0)
-                vols[l] += k.size;            
+            if (k.Size > 0)
+                vols[l] += k.Size;            
             // notify barlist 如果是新bar则通知 barlist
             if (_isRecentNew)
-                NewBar(k.symbol, intervallength);
+                NewBar(k.Symbol, intervallength);
         }
         /// <summary>
         /// 通过数值p来生成bar

@@ -128,30 +128,30 @@ namespace TradingLib.Common
         /// <returns></returns>
         public bool newTick(Tick k) 
         {
-            _lasttime = k.time;
+            _lasttime = k.Time;
             //设定firsttime
             if (_firsttime < 0)
-                _firsttime = k.time;
+                _firsttime = k.Time;
             //在多少个tick之后 我们进行livecheck
             if (_livecheck && (_ticks++ > CheckLiveAfterTickCount))
             {
-                bool dmatch = k.date == Util.ToTLDate();
-                bool tmatch = Util.FTDIFF(k.time, Util.ToTLTime()) < CheckLiveMaxDelaySec;
+                bool dmatch = k.Date == Util.ToTLDate();
+                bool tmatch = Util.FTDIFF(k.Time, Util.ToTLTime()) < CheckLiveMaxDelaySec;
                 _islive = dmatch && tmatch;
                 _livecheck = false;
 
             }
             if ((AllsymbolsTicking != null) || (GotAlert != null) || (GotFirstTick != null))
             {
-                int last = k.time;
+                int last = k.Time;
                 // ensure we are storing per-symbol times
-                if (!_last.TryGetValue(k.symbol, out last))
+                if (!_last.TryGetValue(k.Symbol, out last))
                 {
-                    _last.Add(k.symbol, k.time);
+                    _last.Add(k.Symbol, k.Time);
                     //如果我们需要报告第一个tick，则我们触发firsttick事件
                     if (_alertonfirst) // if we're notifying when first tick arrives, do it.
                         if (GotFirstTick != null)
-                            GotFirstTick(k.symbol);
+                            GotFirstTick(k.Symbol);
                     if (_ast != null)
                     {
                         if (!alltrading && (_ast.Count == Count))
@@ -161,21 +161,21 @@ namespace TradingLib.Common
                                 AllsymbolsTicking(Util.ToTLTime());
                         }
                     }
-                    last = k.time;
+                    last = k.Time;
                     return false;
                 }
 
                 // if alerts requested, check for idle symbol
                 if (GotAlert != null)
                 {
-                    int span = Util.FTDIFF(last, k.time);
+                    int span = Util.FTDIFF(last, k.Time);
                     bool alert = span > _defaultwait;
                     if (alert)
-                        GotAlert(k.symbol);
+                        GotAlert(k.Symbol);
                     return alert;
                 }
                 // store time
-                _last[k.symbol] = k.time;
+                _last[k.Symbol] = k.Time;
             }
             return false; 
         }

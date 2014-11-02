@@ -32,25 +32,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ComponentFactory.Krypton.Toolkit, Version=4.4.0.0, Culture=neutral, PublicKeyToken=a87e673e9ecb6e8e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\kypton\ComponentFactory.Krypton.Toolkit.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Telerik.WinControls">
-      <HintPath>..\..\lib\Telerik\Telerik.WinControls.dll</HintPath>
-    </Reference>
-    <Reference Include="Telerik.WinControls.GridView">
-      <HintPath>..\..\lib\Telerik\Telerik.WinControls.GridView.dll</HintPath>
-    </Reference>
-    <Reference Include="Telerik.WinControls.UI">
-      <HintPath>..\..\lib\Telerik\Telerik.WinControls.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="TelerikCommon">
-      <HintPath>..\..\lib\Telerik\TelerikCommon.dll</HintPath>
-    </Reference>
+    <Reference Include="System.XML" />
     <Reference Include="TradingLib.API, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\TradingLib\TradingLib.API.dll</HintPath>
@@ -84,23 +74,11 @@
     <Compile Include="Control\ctDebug.Designer.cs">
       <DependentUpon>ctDebug.cs</DependentUpon>
     </Compile>
-    <Compile Include="Control\demo.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Control\demo.Designer.cs">
-      <DependentUpon>demo.cs</DependentUpon>
-    </Compile>
     <Compile Include="Control\ctOrderView.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Control\ctOrderView.Designer.cs">
       <DependentUpon>ctOrderView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Control\ctOrderSender.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Control\ctOrderSender.Designer.cs">
-      <DependentUpon>ctOrderSender.cs</DependentUpon>
     </Compile>
     <Compile Include="Control\ctPositionView.cs">
       <SubType>UserControl</SubType>
@@ -108,46 +86,13 @@
     <Compile Include="Control\ctPositionView.Designer.cs">
       <DependentUpon>ctPositionView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Control\ctQuoteView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Control\ctQuoteView.Designer.cs">
-      <DependentUpon>ctQuoteView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Control\ctAccountInfo.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Control\ctAccountInfo.Designer.cs">
-      <DependentUpon>ctAccountInfo.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Control\ctRaceInfo.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Control\ctRaceInfo.Designer.cs">
-      <DependentUpon>ctRaceInfo.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Control\ctSymbolSelect.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Control\ctSymbolSelect.Designer.cs">
-      <DependentUpon>ctSymbolSelect.cs</DependentUpon>
-    </Compile>
     <Compile Include="deledge.cs" />
-    <Compile Include="demo.cs" />
     <Compile Include="fmConfirm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="fmConfirm.Designer.cs">
       <DependentUpon>fmConfirm.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmPositionOffset.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmPositionOffset.Designer.cs">
-      <DependentUpon>frmPositionOffset.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Fut.Price\FutPriceEditorContentElement.cs" />
-    <Compile Include="Fut.Price\FutsPriceArrowButtonElement.cs" />
     <Compile Include="API\IOrderSender.cs" />
     <Compile Include="API\IOrderView.cs" />
     <Compile Include="API\ITradeView.cs" />
@@ -160,27 +105,16 @@
     <Compile Include="MessageForm.Designer.cs">
       <DependentUpon>MessageForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="MyPanel.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="MyPanelElement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Editor\StopLossEditor.cs" />
-    <Compile Include="tracker.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="UIGlobals.cs" />
     <Compile Include="UIUtil.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Control\ctAccountInfo.resx">
-      <DependentUpon>ctAccountInfo.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Control\ctQuoteView\ViewQuoteList.resx">
       <DependentUpon>ViewQuoteList.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -191,32 +125,14 @@
     <EmbeddedResource Include="Control\ctDebug.resx">
       <DependentUpon>ctDebug.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Control\demo.resx">
-      <DependentUpon>demo.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Control\ctOrderView.resx">
       <DependentUpon>ctOrderView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Control\ctOrderSender.resx">
-      <DependentUpon>ctOrderSender.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Control\ctPositionView.resx">
       <DependentUpon>ctPositionView.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Control\ctQuoteView.resx">
-      <DependentUpon>ctQuoteView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Control\ctRaceInfo.resx">
-      <DependentUpon>ctRaceInfo.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Control\ctSymbolSelect.resx">
-      <DependentUpon>ctSymbolSelect.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="fmConfirm.resx">
       <DependentUpon>fmConfirm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmPositionOffset.resx">
-      <DependentUpon>frmPositionOffset.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MessageForm.resx">
       <DependentUpon>MessageForm.cs</DependentUpon>

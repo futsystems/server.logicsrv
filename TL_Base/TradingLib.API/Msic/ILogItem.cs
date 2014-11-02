@@ -10,6 +10,7 @@ namespace TradingLib.API
     /// </summary>
     public interface ILogItem
     {
+        
         /// <summary>
         /// 日志产生时间
         /// </summary>

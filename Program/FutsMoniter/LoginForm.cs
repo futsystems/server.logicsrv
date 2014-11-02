@@ -8,13 +8,13 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using TradingLib.API;
-using Telerik.WinControls;
+
 using FutsMoniter.Common;
 using FutSystems.GUI;
 
 namespace FutsMoniter
 {
-    public partial class LoginForm : Telerik.WinControls.UI.ShapedForm
+    public partial class LoginForm : ComponentFactory.Krypton.Toolkit.KryptonForm
     {
         public event ServerLoginDel ServerLoginEvent;
         public event VoidDelegate ResetEvent;
@@ -24,20 +24,17 @@ namespace FutsMoniter
         {
             InitializeComponent();
 
-            ThemeResolutionService.ApplicationThemeName = Globals.Config["ThemeName"].AsString();
-            this.ThemeName = ThemeResolutionService.ApplicationThemeName;
+            mStart = starter;
+            btnLogin.Enabled = false;
+
+
             if (Globals.Config["HeaderImg"].AsString() == "OEM")
             {
                 imageheader.Image = Properties.Resources.header_oem;
             }
+            
 
-            if (Globals.Config["MessageColor"].AsString() == "Brown")
-            {
-                message.ForeColor = Color.Brown;
-            }
-
-            mStart = starter;
-            btnLogin.Enabled = false;
+           
             string[] addresses = Globals.Config["Servers"].AsString().Split(',');
             foreach (string s in addresses)
             {
@@ -45,6 +42,7 @@ namespace FutsMoniter
                     continue;
                 servers.Items.Add(s);
             }
+            servers.SelectedIndex = 0;
 
             if (addresses.Length == 1)
             {
@@ -54,19 +52,17 @@ namespace FutsMoniter
                 username.Location = new Point(username.Location.X, username.Location.Y - 20);
                 password.Location = new Point(password.Location.X, password.Location.Y - 20);
 
-                btnLogin.Location = new Point(btnLogin.Location.X, btnLogin.Location.Y + 11);
-                btnExit.Location = new Point(btnExit.Location.X, btnExit.Location.Y + 11);
+                //btnLogin.Location = new Point(btnLogin.Location.X, btnLogin.Location.Y + 11);
+                //btnExit.Location = new Point(btnExit.Location.X, btnExit.Location.Y + 11);
 
+
+                //隐藏服务端选择
                 label0.Visible = false;
                 servers.Visible = false;
                 servers.SelectedIndex = 0;
 
             }
-            
-            //servers.Items.Add("127.0.0.1");
-            //servers.Items.Add("logic_dev.huiky.com");
-            //servers.Items.Add("logic-sim.lottoqq.com");
-            InitBW();
+
             ckremberuser.Checked = Properties.Settings.Default.remberuser;
             ckremberpass.Checked = Properties.Settings.Default.remberpass;
             if (Properties.Settings.Default.remberuser)
@@ -78,6 +74,16 @@ namespace FutsMoniter
                 password.Text = Properties.Settings.Default.pass;
             }
 
+            
+            InitBW();
+            
+            WireEvent();
+        }
+
+        void WireEvent()
+        { 
+            btnLogin.Click +=new EventHandler(btnLogin_Click);
+            btnExit.Click += new EventHandler(btnExit_LinkClicked);
         }
 
 
@@ -93,7 +99,7 @@ namespace FutsMoniter
             }
         }
 
-        private void btnExit_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void btnExit_LinkClicked(object sender, EventArgs e)
         {
             System.Diagnostics.Process.GetCurrentProcess().Kill();
         }
@@ -118,12 +124,12 @@ namespace FutsMoniter
             }
             Properties.Settings.Default.Save();
 
-
+            string srvaddress = servers.SelectedItem.ToString();
             Globals.LoginStatus.Reset();
             new Thread(delegate() {
                 if (ServerLoginEvent != null)
                 {
-                    ServerLoginEvent(servers.SelectedText.ToString(), username.Text, password.Text);
+                    ServerLoginEvent(srvaddress, username.Text, password.Text);
                 }
             }).Start();
             this.btnLogin.Enabled = false;

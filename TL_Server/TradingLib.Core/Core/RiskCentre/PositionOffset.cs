@@ -164,7 +164,7 @@ namespace TradingLib.Core
             if (LossArgs != null && LossArgs.Enable)
             {
                 decimal hitprice = LossTakePrice;
-                if (k.trade <= hitprice)
+                if (k.Trade <= hitprice)
                 {
                     return true;
                 }
@@ -185,7 +185,7 @@ namespace TradingLib.Core
                     decimal hitprice = ProfitTakePrice;
                     if (hitprice > 0)
                     {
-                        if (k.trade <= hitprice)
+                        if (k.Trade <= hitprice)
                         {
                             return true;//执行止盈
                         }
@@ -194,7 +194,7 @@ namespace TradingLib.Core
                 else
                 {
                     decimal hitprice = ProfitTakePrice;
-                    if (k.trade >= hitprice)
+                    if (k.Trade >= hitprice)
                     {
                         return true;//执行止盈
                     }

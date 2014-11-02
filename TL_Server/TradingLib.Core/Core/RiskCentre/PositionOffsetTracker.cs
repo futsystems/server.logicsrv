@@ -106,7 +106,7 @@ namespace TradingLib.Core
 
         public void GotTick(Tick k)
         {
-            string sym = k.symbol;
+            string sym = k.Symbol;
 
             if(symbolPosOffsetMap.Keys.Contains(sym))
             {

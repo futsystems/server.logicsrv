@@ -88,7 +88,7 @@ namespace TradingLib.Contrib.FinService
 
             if (!_cfgdb.HaveConfig("AddFinServiceOnCreate"))
             {
-                _cfgdb.UpdateConfig("AddFinServiceOnCreate", QSEnumCfgType.Bool,true, "默认是否开通的配资服务");
+                _cfgdb.UpdateConfig("AddFinServiceOnCreate", QSEnumCfgType.Bool,false, "默认是否开通的配资服务");
             }
             _addservice = _cfgdb["AddFinServiceOnCreate"].AsBool();
 
@@ -104,12 +104,11 @@ namespace TradingLib.Contrib.FinService
             debug("Load Service Instance......", QSEnumDebugLevel.INFO);
             FinTracker.FinServiceTracker.ToArray();
 
-            //foreach (FinServiceStub fs in FinTracker.FinServiceTracker.ToArray())
-            //{
-            //    debug("finservice:" + fs.ToString(), QSEnumDebugLevel.INFO);
-            //    //fs.InitFinService();
-            //}
 
+            //配资资金查询事件
+            TLCtxHelper.ExContribEvent.GetFinAmmountAvabileEvent += new AccountFinAmmountDel(ExContribEvent_GetFinAmmountAvabileEvent);
+
+            //将服务的计费日志导出
             FinTracker.FinServiceTracker.GotFeeChargeItemEvent += new FeeChargeItemDel(_chargelog.newFeeChargeItem);
             //手续费调整事件
             TLCtxHelper.ExContribEvent.AdjustCommissionEvent += new AdjustCommissionDel(ExContribEvent_AdjustCommissionEvent);
@@ -121,9 +120,89 @@ namespace TradingLib.Contrib.FinService
             //帐户添加事件
             TLCtxHelper.EventAccount.AccountAddEvent += new AccountIdDel(EventAccount_AccountAddEvent);
 
+            //出入金事件
             TLCtxHelper.CashOperationEvent.CashOperationRequest += new EventHandler<CashOperationEventArgs>(CashOperationEvent_CashOperationRequest);
+
+            //结算前事件
+            TLCtxHelper.EventSystem.BeforeSettleEvent += new EventHandler<SystemEventArgs>(EventSystem_BeforeSettleEvent);
+
+            TLCtxHelper.EventSystem.AfterSettleEvent += new EventHandler<SystemEventArgs>(EventSystem_AfterSettleEvent);
+
+
+
         }
 
+        /// <summary>
+        /// 查询某个交易帐户的配资服务所扩展的配资资金
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        decimal ExContribEvent_GetFinAmmountAvabileEvent(string account)
+        {
+            FinServiceStub stub = FinTracker.FinServiceTracker[account];
+            if (stub == null) return 0;
+            return stub.FinService.GetFinAmountAvabile();
+        }
+
+
+
+        /// <summary>
+        /// 在帐户结算前 配资服务中按日收费部分
+        /// 比如收取利息 盈利分成需要生成服务收费记录并统一采集后对帐户作出入金操作以作扣费
+        /// 在扣费完成后执行结算 则将扣费记录对应的结算日内
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void EventSystem_BeforeSettleEvent(object sender, SystemEventArgs e)
+        {
+            debug("系统将进行结算,结算前配资中心执行交易帐户收费结算 用于收取盘后结算的费用", QSEnumDebugLevel.INFO);
+
+            //1.运行所有配资服务的结算响应回调 比如按每天收取利息 或者按盈利分红的计费模式
+            foreach (FinServiceStub stub in FinTracker.FinServiceTracker)
+            {
+                stub.FinService.OnSettle();//执行结算回调 比如盈利分红的收费 则在onsettle中执行计费与记录
+            }
+
+            //2.检查当天所有的收费记录，对于结算后收取的 进行出入金操作 将盘后计算的配资费用通过出入金方式从帐户中扣除
+            //如果计费缓存不为空则等待计费记录写入数据库
+            while (!_chargelog.IsEmpty)
+            {
+                Util.sleep(500);
+            }
+
+            foreach (FeeChargeItem item in ORM.MFeeChargeItem.SelectFeeChargeItemAfterSettle())
+            {
+                Util.Debug("结算后采集计费:" + item.Comment);
+                if (item.CollectType == EnumFeeCollectType.CollectAfterSettle)
+                { 
+                    TLCtxHelper.CmdAccountCritical.CashOperation(item.Account, item.TotalFee * -1, "", item.Comment);
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// 交易帐户结算后 执行代理结算 
+        /// 将代理当日的服务收费，代理佣金，出入金等记录形成结算记录插入并更新代理的Balance
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void EventSystem_AfterSettleEvent(object sender, SystemEventArgs e)
+        {
+            debug("核心系统结算完毕,结算后进行代理上财务结算，生成代理算记录", QSEnumDebugLevel.INFO);
+            //1.结算代理商
+            foreach (Manager mgr in BasicTracker.ManagerTracker.GetBaseManagers())
+            {
+                ORM.MAgentSettlement.SettleAgent(mgr);
+            }
+        }
+
+
+        /// <summary>
+        /// 响应出入金操作
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void CashOperationEvent_CashOperationRequest(object sender, CashOperationEventArgs e)
         {
             //出入金操作
@@ -135,7 +214,7 @@ namespace TradingLib.Contrib.FinService
             
             debug("配资本中心获得出入金事件,对配资服务进行调整", QSEnumDebugLevel.INFO);
 
-            stub.FinService.AdjustOmCashOperation(e.CashOperation);
+            stub.FinService.OnCashOperation(e.CashOperation);
         }
 
         /// <summary>

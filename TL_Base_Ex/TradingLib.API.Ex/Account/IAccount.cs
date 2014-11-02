@@ -76,7 +76,7 @@ namespace TradingLib.API
         /// <summary>
         /// 银行
         /// </summary>
-        string BankID { get; set; }
+        int BankID { get; set; }
 
         /// <summary>
         /// 银行帐号
@@ -137,6 +137,11 @@ namespace TradingLib.API
         /// 重置账户状态,用于每日造成开盘时,重置数据 
         /// </summary>
         void Reset();
+
+        /// <summary>
+        /// 删除标志，如果已经删除 则管理端不显示，下次启动不会加载
+        /// </summary>
+        bool Deleted { get; set; }
 
     }
 

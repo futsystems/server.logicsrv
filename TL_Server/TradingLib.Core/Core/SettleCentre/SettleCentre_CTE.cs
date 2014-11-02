@@ -6,6 +6,33 @@ using TradingLib.API;
 using TradingLib.Common;
 
 
+/* 进一步完善结算机制
+ * 目前结算 1.数据保存 结算持仓明细 当日交易记录 2.执行帐户结算 3.清空日内交易记录
+ * 持仓对象的 closedpl是按照持仓开平过程中产生的平仓盈亏的实时累加， 对应通过累加持仓明细的 平仓盈亏也是得到相同的金额
+ *           unrealizedpl 是按照最新价格计算的浮动盈亏，结算时需要计算 结算价格为基础的浮动盈亏
+ *           按持仓成本-结算价格 来计算盯市浮动盈亏
+ *           
+ *           累加持仓明细的 盯市浮动盈亏 也应该得到相同的金额，在持仓明细的盯市浮动盈亏的计算过程中，采的是动态结算价格，在交易过程中该价格是持仓对象的最新价格，当持仓结算后，其对应的价格是结算价格。
+ *           因此计算出来的浮动盈亏也是一致的。只是采用了2中不同的计算方式
+ *           
+ *           这里考虑结算过程中从 通常的财务计算过程分离，独立的去计算盯市浮动盈亏
+ *           把持仓的成本移动到结算价,同时将移动部分的浮动盈亏结算到交易帐户中，逐日结算制度
+ *           
+ *           这里需要细化结算过程
+ *           1.结算之前需要确认获得了所有结算价格
+ *           2.价格推送到系统持仓后，保存持仓明细（持仓明细会按结算价格进行计算当前的盯市浮动盈亏）保存数据
+ *           3.然后执行帐户结算，将帐户当日盈亏 手续费 出入金 盯市浮动盈亏 计算 形成结算记录
+ *           4.结算单实际上是某个时间节点 所记录的状态数据的在线。
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * */
 namespace TradingLib.Core
 {
     /// <summary>
@@ -48,17 +75,30 @@ namespace TradingLib.Core
         /// <summary>
         /// 转储数据,将当天的交易信息 储存到历史交易信息表中
         /// </summary>
-        [TaskAttr("清算中心转储交易记录", 15, 30, 05, "清算中心转储交易记录")]
+        [TaskAttr("清算中心转储交易记录", 15, 50, 05, "清算中心转储交易记录")]
         [ContribCommandAttr(QSEnumCommandSource.CLI, "datastore", "datastore - datastore", "datastore")]
         public void Task_DataStore()
-        {   
-            this.IsInSettle = true;//标识结算中心处于结算状态
+        {
             if (IsNormal && !IsTradingday) return;//结算中心正常 但不是交易日 不做记录转储
-            //先将内存中的PR数据保存到数据库 在保存pr数据之前,先清空了当日的pr临时数据表(这里的清空 会造成 清空其他程序加载账户的数据 ？？)
-            this.BindPositionSettlePrice();//采集持仓结算价
-            this.SaveHoldInfo();//保存结算持仓数据 包括当前持仓和当前持仓对应的PositionRound数据
+
+            //通过系统事件中继触发结算前事件
+            try
+            {
+                TLCtxHelper.EventSystem.FireBeforeSettleEvent(this, new SystemEventArgs());
+            }
+            catch (Exception ex)
+            {
+                debug("BeforeSettleEvent Fired error:" + ex.ToString(), QSEnumDebugLevel.FATAL);
+            }
+
+            this.IsInSettle = true;//标识结算中心处于结算状态
+            //保存结算持仓对应的PR数据
+            this.SaveHoldInfo();
+            //保存当前持仓明细
+            this.SavePositionDetails();//保存持仓明细
+            //保存交易日志 委托 成交 委托操作
             this.Dump2Log();//将委托 成交 撤单 PR数据保存到对应的log_表 所有的转储操作均是replace into不会存在重复操作
-            Notify("保存交易数据[" + DateTime.Now.ToString() + "]", " ");
+            
         }
 
         //2.执行帐户结算 生成结算记录,并更新帐户结算权益与结算时间 所有帐户结算完毕后更新系统最新结算日
@@ -67,38 +107,31 @@ namespace TradingLib.Core
         /// 非交易日不用进行结算
         /// 结算时间15:50 在15:50-16:00之间开机会导致无法找到对应的交易日
         /// </summary>
-        [TaskAttr("清算中心执行当日结算", 15, 32, 5, "清算中心执行当日结算")]
+        [TaskAttr("清算中心执行当日结算", 15, 55, 5, "清算中心执行当日结算")]
         [ContribCommandAttr(QSEnumCommandSource.CLI, "settle", "settle - clean the interday tmp table after reset", "清算中心结算交易帐户")]
         public void Task_SettleAccount()
         {
             if (IsNormal && !IsTradingday) return;
             this.SettleAccount();
-            Notify("结算交易账户[" + DateTime.Now.ToString() + "]", " ");
-        }
-
-        //3.系统结算完毕后 清空日内临时交易记录表
-        /// <summary>
-        /// 结算后清空临时数据表 用于准备进入下一个交易日
-        /// 需要在重置前进行清空,清空临时表是以交易日来进行清空的，而清算中心重置后 交易日会发生改变导致无法清空日内记录表
-        /// </summary>
-        [TaskAttr("清空日内交易记录[SQL]", 15, 58, 5, "清空日内交易缓存")]
-        [ContribCommandAttr(QSEnumCommandSource.CLI, "cleanafterreset", "cleanafterreset - clean the interday tmp table after reset", "结算后清空日内交易临时数据表")]
-        public void Task_CleanAfterReset()
-        {
-            if (IsNormal && !IsTradingday) return;
-            this.CleanTempTable();
+            //触发结算后记录
+            TLCtxHelper.EventSystem.FireAfterSettleEvent(this, new SystemEventArgs());
         }
 
         
-        //4.重置结算中心交易日信息 重置清算中心交易帐户 将昨日扎帐
+        //.重置结算中心交易日信息 重置清算中心交易帐户 将昨日扎帐
         //清算中心，风控中心，以及数据路由 成交路由都需要进行重置
         //开盘前需要重置
-        [TaskAttr("重置结算中心-结算后", 16, 00, 5, "结算后重置结算中心")]
+        //通过参数 设定时间注入到任务系统
         [ContribCommandAttr(QSEnumCommandSource.CLI, "resetsc", "resetsc - reset settlecentre trading day", "重置结算中心")]
         public void Task_ResetTradingday()
         {
             if (IsNormal && !IsTradingday) return;
-            debug("系统重置，清算中心重置帐户，风控中心重置规则", QSEnumDebugLevel.INFO);
+            debug("系统重置，清算中心重置帐户，风控中心重置规则 清空日内记录表", QSEnumDebugLevel.INFO);
+            TLCtxHelper.EventSystem.FireBeforeSettleResetEvent(this, new SystemEventArgs());
+            if (_cleanTmp)
+            {
+                this.CleanTempTable();
+            }
             //重置结算中心
             this.Reset();
 
@@ -109,6 +142,8 @@ namespace TradingLib.Core
             _riskcentre.Reset();
 
             this.IsInSettle = false;//标识系统结算完毕
+            TLCtxHelper.EventSystem.FireAfterSettleResetEvent(this, new SystemEventArgs());
+            
         }
 
         /// <summary>
@@ -118,16 +153,24 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.CLI, "settleround", "settleround - 执行一次结算并重置交易系统状态", "执行结算并重置系统状态")]
         public void HistSettleRound()
         {
+            //通过系统事件中继触发结算前事件
+            TLCtxHelper.EventSystem.FireBeforeSettleEvent(this, new SystemEventArgs());
+
             //A:储存当前数据
-            this.BindPositionSettlePrice();//采集持仓结算价
             this.SaveHoldInfo();//保存结算持仓数据和对应的PR数据
+            this.SavePositionDetails();//保存持仓明细
             this.Dump2Log();//转储到历史记录表
 
             //B:结算交易帐户形成结算记录
             this.SettleAccount();
+            TLCtxHelper.EventSystem.FireAfterSettleEvent(this, new SystemEventArgs());
 
+            TLCtxHelper.EventSystem.FireBeforeSettleResetEvent(this, new SystemEventArgs());
             //C:清空当日交易记录
-            this.CleanTempTable();
+            if (_cleanTmp)
+            {
+                this.CleanTempTable();
+            }
 
             //D:重置系统状态
             //重置结算中心 形成新的最后结算日 下一交易日和当前交易日数据
@@ -136,6 +179,8 @@ namespace TradingLib.Core
             _clearcentre.Reset();
             //重置风控中心，清空内存缓存数据
             _riskcentre.Reset();
+
+            TLCtxHelper.EventSystem.FireAfterSettleResetEvent(this, new SystemEventArgs());
         }
         #endregion
 

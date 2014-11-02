@@ -21,17 +21,18 @@ namespace TradingLib.Common
 
         void CliOnOldPositionNotify(HoldPositionNotify response)
         {
-            debug("got holdposition notify " + response.Position.ToString(), QSEnumDebugLevel.INFO);
-            PositionEx ap = response.Position;
+            debug("got holdposition notify " + response.PositionDetail.GetPositionDetailStr(), QSEnumDebugLevel.INFO);
+            PositionDetail pd = response.PositionDetail;
+            //PositionEx ap = response.Position;
 
-            Position pos = new PositionImpl(ap.Symbol, ap.AvgPrice, ap.Size, 0, ap.Account,ap.DirectionType);
+            //Position pos = new PositionImpl(ap.Symbol, ap.AvgPrice, ap.Size, 0, ap.Account,ap.DirectionType);
             //debug("symbol:" + pos.Symbol);
-            Symbol osym = Globals.BasicInfoTracker.GetSymbol(pos.Symbol);
+            //Symbol osym = Globals.BasicInfoTracker.GetSymbol(pd.Symbol);
             //debug("got osymbol:" + (osym != null).ToString(), QSEnumDebugLevel.INFO);
             //debug("got oposiont" + osym != null ? osym.Symbol : "not find", QSEnumDebugLevel.INFO);
-            pos.oSymbol = Globals.BasicInfoTracker.GetSymbol(pos.Symbol);
+            pd.oSymbol = Globals.BasicInfoTracker.GetSymbol(pd.Symbol);
             //debug("got postion symbol:" + pos.oSymbol.Symbol,QSEnumDebugLevel.INFO);
-            this.handler.OnHoldPosition(pos);
+            this.handler.OnHoldPosition(pd);
         }
         void CliOnOrderNotify(OrderNotify response)
         {
@@ -94,8 +95,9 @@ namespace TradingLib.Common
 
         void CliOnOperationResponse(RspMGROperationResponse response)
         {
-
-            this.handler.PopRspInfo(response.RspInfo);
+            //
+            debug("got operation response:" + response.ToString(),QSEnumDebugLevel.INFO);
+            //this.handler.PopRspInfo(response.RspInfo);
         }
 
         #region 查询
@@ -351,11 +353,11 @@ namespace TradingLib.Common
             this.handler.OnMGRSettlementResponse(response);
         }
 
-        void CliOnMGRChangePassResponse(RspMGRChangeAccountPassResponse response)
-        {
-            debug("got changepass response:" + response.ToString(), QSEnumDebugLevel.INFO);
+        //void CliOnMGRChangePassResponse(RspMGRChangeAccountPassResponse response)
+        //{
+        //    debug("got changepass response:" + response.ToString(), QSEnumDebugLevel.INFO);
 
-        }
+        //}
         void CliOnMGRAddSecurityResponse(RspMGRReqAddSecurityResponse response)
         {
             debug("got add security response:" + response.ToString(), QSEnumDebugLevel.INFO);
@@ -420,6 +422,30 @@ namespace TradingLib.Common
 
         void connecton_OnPacketEvent(IPacket packet)
         {
+            //需要在所有回报处理之前 检查是否需要进行错误提示或者正常返回的消息显示
+            if (packet is RspResponsePacket)
+            {
+                RspResponsePacket rsp = packet as RspResponsePacket;
+                
+                //错误回报 需要通过系统进行显示
+                if (rsp.RspInfo.ErrorID != 0)
+                {
+                    //对外显示错误消息
+                    this.handler.PopRspInfo(rsp.RspInfo);
+                }
+                else
+                {
+                    if (string.IsNullOrEmpty(rsp.RspInfo.ErrorMessage))
+                    {
+                        debug("操作成功 没有携带成功消息 静默", QSEnumDebugLevel.INFO);
+                    }
+                    else
+                    { 
+                        //对外显示成功消息
+                        this.handler.PopRspInfo(rsp.RspInfo);
+                    }
+                }
+            }
             switch (packet.Type)
             {
                 //Tick数据
@@ -519,9 +545,9 @@ namespace TradingLib.Common
                 case MessageTypes.MGRSETTLEMENTRESPONSE://查询结算单回报
                     CliOnMGRSettlementResponse(packet as RspMGRQrySettleResponse);
                     break;
-                case MessageTypes.MGRCHANGEACCOUNTPASSRESPONSE://修改密码回报
-                    CliOnMGRChangePassResponse(packet as RspMGRChangeAccountPassResponse);
-                    break;
+                //case MessageTypes.MGRCHANGEACCOUNTPASSRESPONSE://修改密码回报
+                //    CliOnMGRChangePassResponse(packet as RspMGRChangeAccountPassResponse);
+                //    break;
                 case MessageTypes.MGRADDSECURITYRESPONSE://添加品种回报
                     CliOnMGRAddSecurityResponse(packet as RspMGRReqAddSecurityResponse);
                     break;

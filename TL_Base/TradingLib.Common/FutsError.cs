@@ -13,6 +13,10 @@ namespace TradingLib.Common
         }
     }
 
+    /// <summary>
+    /// 回报异常 当操作产生异常时候 通过将异常封装到FutsRspError来向外层抛出报错信息
+    /// 
+    /// </summary>
     public class FutsRspError : Exception
     {
 
@@ -21,27 +25,48 @@ namespace TradingLib.Common
         public Exception RawException { get; set; }
         public FutsRspError()
         {
-            ErrorID = 0;
+            ErrorID = 1;
             ErrorMessage = string.Empty;
             RawException = new Exception("");
         }
-
+        /// <summary>
+        /// 从一个异常创建一个错误信息
+        /// </summary>
+        /// <param name="e"></param>
         public FutsRspError(Exception e)
         {
-            ErrorID = 0;
+            ErrorID = 1;
             ErrorMessage = string.Empty;
             RawException = e;
         }
         /// <summary>
-        /// 常规错误
-        /// 提供一个错误信息 生成对应的FutsRspError
+        /// 从一个错误信息创建一个FutsRspError
         /// </summary>
         /// <param name="error"></param>
-        /// <returns></returns>
-        public static FutsRspError GenericError(string errorMessage)
+        public FutsRspError(string error)
         {
-            return new FutsRspError() { ErrorID = 1, ErrorMessage = errorMessage };
+            ErrorID = 1;
+            ErrorMessage = error;
+            RawException = new Exception(error);
         }
+
+        
+
+        ///// <summary>
+        ///// 常规错误
+        ///// 提供一个错误信息 生成对应的FutsRspError
+        ///// </summary>
+        ///// <param name="error"></param>
+        ///// <returns></returns>
+        //public static FutsRspError GenericError(string errorMessage)
+        //{
+        //    return new FutsRspError() { ErrorID = 1, ErrorMessage = errorMessage };
+        //}
+
+        /// <summary>
+        /// 用自定义的XMLRspInfo填充错误信息
+        /// </summary>
+        /// <param name="error"></param>
         public void FillError(XMLRspInfo error)
         {
             ErrorID = error.Code;

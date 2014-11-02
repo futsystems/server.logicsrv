@@ -52,7 +52,7 @@ namespace Lottoqq.MJService
                 //如果未加载该帐户的秘籍服务 则进行加载并绑定
                 if (!HaveMJService(mj.Account.ID))
                 {
-                    //TLCtxHelper.Debug("--------------为帐户:" + mj.Account.ID + " 添加秘籍服务-------------------");
+                    //Util.Debug("--------------为帐户:" + mj.Account.ID + " 添加秘籍服务-------------------");
                     accountmjmap.TryAdd(mj.Account.ID, mj);
                     idxmjmap.TryAdd(mj.ID, mj);
 

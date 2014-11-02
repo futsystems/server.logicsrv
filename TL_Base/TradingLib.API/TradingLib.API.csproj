@@ -46,6 +46,7 @@
     <Compile Include="Message\ISession.cs" />
     <Compile Include="Message\ISessionUtils.cs" />
     <Compile Include="Msic\EnumCashOPSource.cs" />
+    <Compile Include="Msic\EnumDebugLevel.cs" />
     <Compile Include="Msic\EnumManagerType.cs" />
     <Compile Include="Msic\EnumCashOperation.cs" />
     <Compile Include="Msic\ILogItem.cs" />
@@ -102,6 +103,8 @@
     <Compile Include="Trading\BasicInfo\Symbol.cs" />
     <Compile Include="Trading\EnumOrderActionFlag.cs" />
     <Compile Include="Trading\EnumPosOperation.cs" />
+    <Compile Include="Trading\PositionCloseDetail.cs" />
+    <Compile Include="Trading\PositionDetail.cs" />
     <Compile Include="Trading\Settlement.cs" />
     <Compile Include="Trading\Tick.cs" />
     <Compile Include="Trading\Trade.cs" />

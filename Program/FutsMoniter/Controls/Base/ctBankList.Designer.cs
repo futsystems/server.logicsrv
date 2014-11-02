@@ -28,56 +28,51 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.radPanel1 = new Telerik.WinControls.UI.RadPanel();
-            this.radLabel5 = new Telerik.WinControls.UI.RadLabel();
-            this.cbbank = new Telerik.WinControls.UI.RadDropDownList();
-            ((System.ComponentModel.ISupportInitialize)(this.radPanel1)).BeginInit();
-            this.radPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel5)).BeginInit();
+            this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
+            this.kryptonLabel1 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.cbbank = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
+            ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
+            this.kryptonPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cbbank)).BeginInit();
             this.SuspendLayout();
             // 
-            // radPanel1
+            // kryptonPanel1
             // 
-            this.radPanel1.Controls.Add(this.radLabel5);
-            this.radPanel1.Controls.Add(this.cbbank);
-            this.radPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.radPanel1.Location = new System.Drawing.Point(0, 0);
-            this.radPanel1.Name = "radPanel1";
-            this.radPanel1.Size = new System.Drawing.Size(150, 20);
-            this.radPanel1.TabIndex = 0;
-            ((Telerik.WinControls.Primitives.BorderPrimitive)(this.radPanel1.GetChildAt(0).GetChildAt(1))).Width = 0F;
+            this.kryptonPanel1.Controls.Add(this.cbbank);
+            this.kryptonPanel1.Controls.Add(this.kryptonLabel1);
+            this.kryptonPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.kryptonPanel1.Location = new System.Drawing.Point(0, 0);
+            this.kryptonPanel1.Name = "kryptonPanel1";
+            this.kryptonPanel1.Size = new System.Drawing.Size(173, 23);
+            this.kryptonPanel1.TabIndex = 1;
             // 
-            // radLabel5
+            // kryptonLabel1
             // 
-            this.radLabel5.Location = new System.Drawing.Point(0, 0);
-            this.radLabel5.Name = "radLabel5";
-            this.radLabel5.Size = new System.Drawing.Size(34, 16);
-            this.radLabel5.TabIndex = 49;
-            this.radLabel5.Text = "银行:";
+            this.kryptonLabel1.Location = new System.Drawing.Point(4, 4);
+            this.kryptonLabel1.Name = "kryptonLabel1";
+            this.kryptonLabel1.Size = new System.Drawing.Size(41, 18);
+            this.kryptonLabel1.TabIndex = 0;
+            this.kryptonLabel1.Values.Text = "银行:";
             // 
             // cbbank
             // 
-            this.cbbank.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.cbbank.Location = new System.Drawing.Point(39, 0);
+            this.cbbank.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbbank.DropDownWidth = 122;
+            this.cbbank.Location = new System.Drawing.Point(51, 1);
             this.cbbank.Name = "cbbank";
-            this.cbbank.Size = new System.Drawing.Size(109, 18);
-            this.cbbank.TabIndex = 50;
-            this.cbbank.Text = "--";
-            this.cbbank.SelectedIndexChanged += new Telerik.WinControls.UI.Data.PositionChangedEventHandler(this.bank_SelectedIndexChanged);
-            ((Telerik.WinControls.Primitives.FillPrimitive)(this.cbbank.GetChildAt(0).GetChildAt(1))).BackColor = System.Drawing.SystemColors.Window;
+            this.cbbank.Size = new System.Drawing.Size(122, 21);
+            this.cbbank.TabIndex = 1;
             // 
             // ctBankList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.radPanel1);
+            this.Controls.Add(this.kryptonPanel1);
             this.Name = "ctBankList";
-            this.Size = new System.Drawing.Size(150, 20);
-            ((System.ComponentModel.ISupportInitialize)(this.radPanel1)).EndInit();
-            this.radPanel1.ResumeLayout(false);
-            this.radPanel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel5)).EndInit();
+            this.Size = new System.Drawing.Size(173, 23);
+            ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).EndInit();
+            this.kryptonPanel1.ResumeLayout(false);
+            this.kryptonPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cbbank)).EndInit();
             this.ResumeLayout(false);
 
@@ -85,8 +80,9 @@
 
         #endregion
 
-        private Telerik.WinControls.UI.RadPanel radPanel1;
-        private Telerik.WinControls.UI.RadLabel radLabel5;
-        private Telerik.WinControls.UI.RadDropDownList cbbank;
+        private ComponentFactory.Krypton.Toolkit.KryptonPanel kryptonPanel1;
+        private ComponentFactory.Krypton.Toolkit.KryptonComboBox cbbank;
+        private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel1;
+
     }
 }

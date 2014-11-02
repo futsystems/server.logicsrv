@@ -324,6 +324,8 @@ namespace TradingLib.Common
             return ClosePT(existing, adjust) * closedsize;
         }
 
+       
+
         /// <summary>
         /// Normalizes any order size to the minimum lot size specified by MinSize.
         /// </summary>

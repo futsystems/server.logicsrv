@@ -81,7 +81,7 @@ namespace TradingLib.Contrib.CLI
             try
             {
                 //Open a listener socket and accept a connections
-                TLCtxHelper.Debug("Telnet server start listening at:" + m_iPort.ToString());
+                Util.Debug("Telnet server start listening at:" + m_iPort.ToString());
                 m_ListeningSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 m_ListeningSocket.Bind(new System.Net.IPEndPoint(0, m_iPort));
                 m_ListeningSocket.Listen(1);
@@ -193,7 +193,7 @@ namespace TradingLib.Contrib.CLI
                     sCmd = sCmd.Replace("\n", "");
                     sCmd = sCmd.Replace("\r", "");
 
-                    TLCtxHelper.Debug("Cli Command str:" + sCmd);
+                    Util.Debug("Cli Command str:" + sCmd);
 
                     string[] cmdstrlsit = sCmd.Split(' ');
                     string cmd = "";
@@ -201,7 +201,7 @@ namespace TradingLib.Contrib.CLI
                     List<string> args = new List<string>();
                     foreach (string s in cmdstrlsit)
                     {
-                        //TLCtxHelper.Debug("CMDStr:" + s);
+                        //Util.Debug("CMDStr:" + s);
                         if (string.IsNullOrEmpty(s))
                             continue;
                         if (!gotcmd)
@@ -212,7 +212,7 @@ namespace TradingLib.Contrib.CLI
                         }
                         args.Add(s);
                     }
-                    //TLCtxHelper.Debug("CMD:"+cmd + "  arg:"+string.Join(",",args));
+                    //Util.Debug("CMD:"+cmd + "  arg:"+string.Join(",",args));
                     //退出连接
                     if (cmd.ToLower() != "exit")
                     {

@@ -59,7 +59,7 @@ namespace TradingLib.Common
             SequenceNo = 0;
             SettlementContent = string.Empty;
         }
-
+        
         public override string ResponseSerialize()
         {
             StringBuilder sb = new StringBuilder();

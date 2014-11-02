@@ -50,6 +50,7 @@
     <Compile Include="Contrib\ICommandAction.cs" />
     <Compile Include="Contrib\IContribPlugin.cs" />
     <Compile Include="Core\ISettleCentre.cs" />
+    <Compile Include="Core\IUtil.cs" />
     <Compile Include="Core\Task\EnumTaskType.cs" />
     <Compile Include="EnumInfoType.cs" />
     <Compile Include="Core\Task\ITask.cs" />

@@ -15,13 +15,14 @@ namespace TradingLib.Common
         private static TLCtxHelper defaultInstance;
         private TLContext ctx;
 
-        private IndicatorEvent m_IndicatorEvent;
+        private IndicatorEvent m_IndicatorEvent;//交易信息类
         private SessionEvent<TrdClientInfo> m_SessionEvent;
         private AccountEvent m_AccountEvent;
         private ExContribEvent m_ExContribEvent;
         private CashOperationEvent m_CashOperationEvent;
+        private SystemEvent m_SystemEvent;
 
-
+        private IUtil m_util;
         public static bool IsReady { get; set; }
 
         static TLCtxHelper()
@@ -100,6 +101,16 @@ namespace TradingLib.Common
             }
         }
 
+        public static SystemEvent EventSystem
+        {
+            get
+            {
+                if (defaultInstance.m_SystemEvent == null)
+                    defaultInstance.m_SystemEvent = new SystemEvent();
+                return defaultInstance.m_SystemEvent;
+            }
+        }
+
         /// <summary>
         /// 扩展模块强关系事件
         /// </summary>
@@ -127,6 +138,10 @@ namespace TradingLib.Common
         }
 
 
+
+        /// <summary>
+        /// 交易帐号类操作
+        /// </summary>
         public static IAccountOperation CmdAccount
         {
             get
@@ -135,14 +150,10 @@ namespace TradingLib.Common
             }
         }
 
-        //public static IAccountTradingInfo CmdTradingInfo
-        //{
-        //    get
-        //    {
-        //        return defaultInstance.ctx.ClearCentre as IAccountTradingInfo;
-        //    }
-        //}
 
+        /// <summary>
+        /// 交易帐号 操作
+        /// </summary>
         public static IAccountOperationCritical CmdAccountCritical
         {
             get
@@ -152,7 +163,7 @@ namespace TradingLib.Common
         }
 
         /// <summary>
-        /// 认真与出入金请求
+        /// 认证与出入金请求
         /// </summary>
         public static IAuthCashOperation CmdAuthCashOperation
         {
@@ -162,6 +173,9 @@ namespace TradingLib.Common
             }
         }
 
+        /// <summary>
+        /// 结算中心
+        /// </summary>
         public static ISettleCentre CmdSettleCentre
         {
             get
@@ -170,16 +184,10 @@ namespace TradingLib.Common
             }
         }
 
-        //public static IClearCentreOperation CmdClearCentre
-        //{
-        //    get
-        //    {
-        //        //TLCtxHelper.Debug("ClearCenter XXXX :" + (defaultInstance.ctx.ClearCentre is IClearCentreOperation).ToString());
-        //        //return defaultInstance.ctx.ClearCentre as IClearCentreOperation;
-        //        return defaultInstance.ctx.ClearCentre as IClearCentreOperation;
-        //    }
-        //}
 
+        /// <summary>
+        /// 风控中心
+        /// </summary>
         public static IRiskCentre CmdRiskCentre
         {
             get
@@ -187,6 +195,20 @@ namespace TradingLib.Common
                 return defaultInstance.ctx.RiskCentre as IRiskCentre;
             }
         }
+
+        /// <summary>
+        /// 辅助类操作函数
+        /// </summary>
+        public static IUtil CmdUtil
+        {
+            get
+            {
+                if (defaultInstance.m_util == null)
+                    defaultInstance.m_util = new CoreUtil();
+                return defaultInstance.m_util;
+            }
+        }
+
 
         /// <summary>
         /// 系统加载完毕后绑定扩展模块的事件
@@ -209,10 +231,10 @@ namespace TradingLib.Common
         /// 全局标准输出入口,用于在屏幕或者信息面板输出系统内的日志信息
         /// </summary>
         /// <param name="msg"></param>
-        public static void Debug(string msg)
-        {
-            Util.Debug(msg);
-        }
+        //public static void Debug(string msg)
+        //{
+        //    Util.Debug(msg);
+        //}
 
         public static Profiler Profiler = new Profiler();
 
@@ -220,28 +242,13 @@ namespace TradingLib.Common
         /// 全局日志事件
         /// 绑定该事件可以获得系统所有对象的log输出
         /// </summary>
-        public static event ILogItemDel SendLogEvent = null;
-        static bool _consoleEnable = true;
-        public static bool ConsoleEnable { get { return _consoleEnable; } set { _consoleEnable = value; } }
-        public static void Log(ILogItem item)
-        {
-            //1.控制台输出
-            if (ConsoleEnable)
-            {
-                StringBuilder sb = new StringBuilder();
-                sb.Append("[");
-                sb.Append(item.Level.ToString());
-                sb.Append("] ");
-                sb.Append(item.Programe);
-                sb.Append(":");
-                sb.Append(item.Message);
-                Util.ConsolePrint(sb.ToString());
-            }
-
-            //2.通过委托对外触发日志事件 其他组件获得日志事件后可以对日志进行处理 比如通过网络发送，日志分析等
-            if (SendLogEvent != null)
-                SendLogEvent(item);
-        }
+        //public static event ILogItemDel SendLogEvent = null;
+        //static bool _consoleEnable = true;
+        //public static bool ConsoleEnable { get { return _consoleEnable; } set { _consoleEnable = value; } }
+        //public static void Log(ILogItem item)
+        //{
+        //    Util.Log(item);
+        //}
 
         /// <summary>
         /// 全局发送邮件事件

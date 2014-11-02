@@ -10,7 +10,7 @@ namespace FutsMoniter.Common
     {
         LoginForm _loginform;
         MainForm mainfm;
-
+        //System.Windows.Forms.Form mainfm;
         //用于调用升级逻辑,然后再显示启动窗口与主窗口
         protected override bool onUpdate()
         {
@@ -39,6 +39,7 @@ namespace FutsMoniter.Common
             //Globals.Debug("执行登入操作 Server:" + server);
             _loginform.ShowMessage("执行登入交易帐户");
             mainfm.Login(server, user, pass);
+
         }
 
 
@@ -47,15 +48,15 @@ namespace FutsMoniter.Common
         protected override void OnCreateMainForm()
         {
             //在线程中创建主窗体,防止登入界面卡顿
-            new Thread(delegate()
-            {
+            //new Thread(delegate()
+            //{
                 _loginform.ShowMessage("初始化...");
                 mainfm = new MainForm(_loginform.ShowMessage);
                 this.PrimaryForm = mainfm;
                 _loginform.EnableLogin();
                 _loginform.ShowMessage("初始化完毕");
 
-            }).Start();
+            //}).Start();
         }
         protected override void SetSeconds()
         {

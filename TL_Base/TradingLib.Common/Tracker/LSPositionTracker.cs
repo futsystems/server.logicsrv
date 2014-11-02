@@ -10,8 +10,7 @@ namespace TradingLib.Common
     /// <summary>
     /// LSPosition Tracker
     /// 持仓维护器
-    /// 按持仓的多空方向进行维护
-    /// 可以进行锁仓操作
+    /// 按持仓的多空方向进行维护,每个方向的持仓维护其PositionTracker可以同时维护多个合约
     /// </summary>
     public class LSPositionTracker : IEnumerable<Position>
     {
@@ -26,34 +25,36 @@ namespace TradingLib.Common
         /// short position tracker
         /// </summary>
         PositionTracker _stk;
+        string _defaultacct = string.Empty;
 
-        public PositionTracker NetPositionTracker { get { return _nettk; } }
-        PositionTracker _nettk;
 
-        public LSPositionTracker()
+        public LSPositionTracker(string account)
         {
-            _ltk = new PositionTracker(QSEnumPositionDirectionType.Long);
+            _defaultacct = account;
+            _ltk = new PositionTracker(account,QSEnumPositionDirectionType.Long);
             _ltk.NewPositionEvent +=new PositionDelegate(_ltk_NewPositionEvent);
 
-            _stk = new PositionTracker(QSEnumPositionDirectionType.Short);
+            _stk = new PositionTracker(account,QSEnumPositionDirectionType.Short);
             _stk.NewPositionEvent +=new PositionDelegate(_stk_NewPositionEvent);
-
-            _nettk = new PositionTracker();
         }
 
         //由于多 空 分别在不同的poslist中生成并维护 为了方便对所有postion进行访问，在新的postion生成时我们在poslist内保存一个引用
         ThreadSafeList<Position> poslist = new ThreadSafeList<Position>();
         void _ltk_NewPositionEvent(Position pos)
         {
-            //LibUtil.Debug("xxxxxxxxxxxxxxx lspositiontracker got a new long postion object");
             poslist.Add(pos);
+            NewPosition(pos);
+            pos.NewPositionCloseDetailEvent += new Action<PositionCloseDetail>(NewPositionCloseDetail);
         }
 
         void _stk_NewPositionEvent(Position pos)
         {
-            //LibUtil.Debug("xxxxxxxxxxxxxxx lspositiontracker got a new short postion object");
             poslist.Add(pos);
+            NewPosition(pos);
+            pos.NewPositionCloseDetailEvent += new Action<PositionCloseDetail>(NewPositionCloseDetail);
         }
+
+        #region 响应交易对象数据
         /// <summary>
         /// 更新持仓管理器中的最新行情数据
         /// </summary>
@@ -62,7 +63,6 @@ namespace TradingLib.Common
         {
             _ltk.GotTick(k);
             _stk.GotTick(k);
-            _nettk.GotTick(k);
         }
 
         /// <summary>
@@ -82,24 +82,28 @@ namespace TradingLib.Common
             {
                 _stk.GotFill(f);
             }
-            _nettk.GotFill(f);
         }
 
+
         /// <summary>
-        /// 获得一个持仓记录
-        /// 用于恢复历史持仓时，恢复历史持仓数据
+        /// 获得一个持仓明细记录
+        /// 用于恢复历史持仓
         /// </summary>
         /// <param name="p"></param>
-        public void GotPosition(Position p)
+        public void GotPosition(PositionDetail p)
         {
-            //无持仓直接返回
-            if (p.isFlat) return;  
-            //多头持仓
-            if (p.isLong){_ltk.GotPosition(p);}
-            //空头持仓
-            else{_stk.GotPosition(p);}
-            _nettk.GotPosition(p);
+            if (p.Volume == 0) return;//无实际持仓
+            if (p.Side)
+            {
+                _ltk.GotPosition(p);
+            }
+            else
+            {
+                _stk.GotPosition(p);
+            }
         }
+        #endregion
+
 
         /// <summary>
         /// 清空记录的数据
@@ -108,11 +112,11 @@ namespace TradingLib.Common
         {
             _ltk.Clear();
             _stk.Clear();
-            _nettk.Clear();
             poslist.Clear();
         }
 
 
+        #region 获得对应的持仓数据
         public Position this[string symbol, bool side]
         {
             get
@@ -142,88 +146,7 @@ namespace TradingLib.Common
                 }
             }
         }
-
-        public Position this[string symbol]
-        {
-            get
-            {
-                return _nettk[symbol, _defaultacct];
-            }
-        }
-        /// <summary>
-        /// 获得净持仓
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <param name="account"></param>
-        /// <returns></returns>
-        public Position this[string symbol, string account]
-        {
-            get
-            {
-                return _nettk[symbol, account];
-            }
-        }
-
-        string _defaultacct = string.Empty;
-        /// <summary>
-        /// Default account used when querying positions
-        /// 默认交易帐户 默认情况下为空
-        /// 在没有任何成交的情况下 this[symbol] 会返回 symbol+empty 所对应的position
-        /// 当有成交进入后 会自动将第一个成交的account设定到Account  this[symbol] 会返回 symbol+account 所对应的position
-        /// 因此在组装accounttracker时 我们需要明确指定该positiontracker的account
-        /// </summary>
-        public string DefaultAccount 
-        { 
-            get { return _defaultacct; } 
-            set 
-            { 
-                _defaultacct = value;
-                _ltk.DefaultAccount = _defaultacct;
-                _stk.DefaultAccount = _defaultacct;
-                _nettk.DefaultAccount = _defaultacct;
-            } 
-        }
-
-        /// <summary>
-        /// 是否有多头持仓
-        /// 这里需要获得有持仓数量的持仓 不是内存中是否有持仓数据
-        /// </summary>
-        public bool HaveLongPosition
-        {
-            get
-            {
-                return _ltk.Where(p => p.isLong).Count() > 0;
-            }
-        }
-
-        /// <summary>
-        /// 是否有空头持仓
-        /// </summary>
-        public bool HaveShortPosition
-        {
-            get
-            {
-                return _stk.Where(p => p.isShort).Count() > 0;
-            }
-        }
-
-        /// <summary>
-        /// 获得多空持仓数组
-        /// </summary>
-        /// <returns></returns>
-        public Position[] ToArray()
-        {
-            return poslist.ToArray();
-        }
-
-        /// <summary>
-        /// 获得净持仓数组
-        /// </summary>
-        /// <returns></returns>
-        public Position[] ToNetArray()
-        {
-            return _nettk.ToArray();
-        }
+        #endregion
 
 
         #region Enumerator
@@ -237,12 +160,35 @@ namespace TradingLib.Common
             return GetEnumerator();
         }
 
-        //object m_lock = new object();
         public IEnumerator<Position> GetEnumerator()
         {
             return poslist.GetEnumerator();
         }
         #endregion
+
+
+        /// <summary>
+        /// 产生新的持仓对象
+        /// </summary>
+        /// <param name="detail"></param>
+        void NewPositionCloseDetail(PositionCloseDetail detail)
+        {
+            if (NewPositionCloseDetailEvent != null)
+                NewPositionCloseDetailEvent(detail);
+        }
+        public event Action<PositionCloseDetail> NewPositionCloseDetailEvent;
+
+
+        /// <summary>
+        /// 产生新的平仓明细
+        /// </summary>
+        /// <param name="pos"></param>
+        void NewPosition(Position pos)
+        {
+            if (NewPositionEvent != null)
+                NewPositionEvent(pos);
+        }
+        public event Action<Position> NewPositionEvent;
 
     }
 }

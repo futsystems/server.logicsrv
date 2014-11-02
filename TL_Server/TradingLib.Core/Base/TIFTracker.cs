@@ -117,9 +117,9 @@ namespace TradingLib.Core
         }
         public void newTick(Tick k)
         {
-            if (k.time > _lasttime)
+            if (k.Time > _lasttime)
             {
-                _lasttime = k.time;
+                _lasttime = k.Time;
                 checktifs();
             }
         }

@@ -101,6 +101,8 @@ namespace TradingLib.Core
         int _maxorderseq = 0;
         int startseq = 0;//起始流水号
         bool enbaleRandom = false;
+        int _steplow = 1;
+        int _stephigh = 10;
         Random rand = new Random();
         
         object _orderseqobj = new object();
@@ -109,12 +111,22 @@ namespace TradingLib.Core
         /// </summary>
         public int NextOrderSeq
         {
+            
             get
             {
                 lock (_orderseqobj)
                 {
-                    _maxorderseq += rand.Next(1, 10);
-                    return _maxorderseq;
+                    
+                    if (enbaleRandom)
+                    {
+                        _maxorderseq += rand.Next(_steplow, _stephigh);
+                        return _maxorderseq;
+                    }
+                    else
+                    {
+                        _maxorderseq += 1;
+                        return _maxorderseq;
+                    }
                 }
             }
         }
@@ -150,7 +162,18 @@ namespace TradingLib.Core
                 _cfgdb.UpdateConfig("RandomSeqEnable", QSEnumCfgType.Bool,true, "Broker流水号随机");
             }
             enbaleRandom = _cfgdb["RandomSeqEnable"].AsBool();
-            
+
+            if (!_cfgdb.HaveConfig("RandomStepLow"))
+            {
+                _cfgdb.UpdateConfig("RandomStepLow", QSEnumCfgType.Int, 50, "Broker流水号随机步长低值");
+            }
+            _steplow = _cfgdb["RandomStepLow"].AsInt();
+
+            if (!_cfgdb.HaveConfig("RandomStepHigh"))
+            {
+                _cfgdb.UpdateConfig("RandomStepHigh", QSEnumCfgType.Int,100, "Broker流水号随机步长高值");
+            }
+            _stephigh = _cfgdb["RandomStepHigh"].AsInt();
 
             //加载模式
             _loadmode = (QSEnumAccountLoadMode)Enum.Parse(typeof(QSEnumAccountLoadMode), _cfgdb["AccountLoadMode"].AsString());
@@ -158,11 +181,10 @@ namespace TradingLib.Core
             {
                 //初始化异步储存组件
                 _asynLoger = new AsyncTransactionLoger();//获得交易信息数据库记录对象，用于记录委托，成交，取消等信息
-
+                //帐户交易数据维护器产生 平仓明细事件
+                acctk.NewPositionCloseDetailEvent += new Action<PositionCloseDetail>(acctk_NewPositionCloseDetailEvent);
                 //初始化PositionRound生成器
                 prt = new PositionRoundTracker();
-                prt.FindSymbolEvent += (sym) => { return BasicTracker.SymbolTracker[sym]; };// new FindSecurity(getMasterSecurity);
-
                 debug("Loading Accounts Infomation form database.....");
                 //加载账户信息
                 LoadAccount();
@@ -171,8 +193,22 @@ namespace TradingLib.Core
             }
             catch (Exception ex)
             {
-                TLCtxHelper.Debug("ex:" + ex.ToString());
+                Util.Debug("ex:" + ex.ToString());
                 throw (new QSClearCentreInitError(ex, "ClearCentre初始化错误"));
+            }
+        }
+
+        void acctk_NewPositionCloseDetailEvent(PositionCloseDetail obj)
+        {
+            if (_status == QSEnumClearCentreStatus.CCOPEN)
+            {
+                debug("平仓明细生成:" + obj.GetPositionCloseStr(), QSEnumDebugLevel.INFO);
+                //设定该平仓明细所在结算日
+                obj.Settleday = TLCtxHelper.Ctx.SettleCentre.NextTradingday;
+                
+
+                //异步保存平仓明细
+                _asynLoger.newPositionCloseDetail(obj);
             }
         }
 

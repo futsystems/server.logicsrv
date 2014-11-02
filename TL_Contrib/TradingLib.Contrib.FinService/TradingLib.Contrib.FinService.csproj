@@ -54,6 +54,9 @@
       <HintPath>..\..\lib\TradingLib\TradingLib.Common.Ex.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="TradingLib.Core">
+      <HintPath>..\..\lib\TradingLib\TradingLib.Core.dll</HintPath>
+    </Reference>
     <Reference Include="TradingLib.Mixins">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\TradingLib\TradingLib.Mixins.dll</HintPath>
@@ -75,6 +78,7 @@
     <Compile Include="IFinService.cs" />
     <Compile Include="IFinServiceUtils.cs" />
     <Compile Include="JsonObject\JsonProtocolFinService.cs" />
+    <Compile Include="ORM\MAgentSettlement.cs" />
     <Compile Include="ORM\MArgumentBase.cs" />
     <Compile Include="ORM\MFeeChargeItem.cs" />
     <Compile Include="ORM\MFinService.cs" />
@@ -88,6 +92,7 @@
     <Compile Include="ServicePlane\SPCommission.cs" />
     <Compile Include="ServicePlane\SPHunanIF.cs" />
     <Compile Include="ServicePlane\SPSpecialIF.cs" />
+    <Compile Include="ServicePlane\SPInterest.cs" />
     <Compile Include="Tracker.cs" />
     <Compile Include="FinServiceCentre_OnXXXX.cs" />
     <Compile Include="FinServiceCentre_CTE.cs" />

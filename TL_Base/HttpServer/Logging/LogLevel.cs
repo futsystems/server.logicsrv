@@ -27,8 +27,8 @@ namespace HttpServer.Logging
         Warning,
 
         /// <summary>
-        /// Something that should not fail failed, but we can still keep
-        /// on going.
+        /// Something that should not fail failed, but we can still keep on going.
+        /// 
         /// </summary>
         Error,
 

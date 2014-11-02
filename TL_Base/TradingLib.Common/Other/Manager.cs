@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TradingLib.API;
+using TradingLib.Mixins.LitJson;
 
 namespace TradingLib.Common
 {
@@ -67,22 +68,30 @@ namespace TradingLib.Common
         /// </summary>
         public int mgr_fk { get; set; }
 
+        
+
+        /// <summary>
+        /// BaseManager用于标注该管理帐号隶属于哪个Agent,如果是系统级的管理帐户的话直接隶属于ROOT
+        /// </summary>
+        [NoJsonExportAttr()]
+        public Manager BaseManager { get; set; }
+
+
         /// <summary>
         /// 上级代理
         /// </summary>
         public int parent_fk { get; set; }
 
         /// <summary>
-        /// BaseManager用于标注该管理帐号隶属于哪个Agent,如果是系统级的管理帐户的话直接隶属于ROOT
-        /// </summary>
-        public Manager BaseManager { get; set; }
-
-        /// <summary>
         /// 上级代理对象
         /// </summary>
+        [NoJsonExportAttr()]
         public Manager ParentManager { get; set; }
 
-
+        public override string ToString()
+        {
+            return string.Format("Manager[{0}]:{1} Type:{2} BaseFK:{3} ParentFK:{4}", this.ID, this.Login, this.Type, this.mgr_fk, this.parent_fk);
+        }
         public string Serialize()
         {
             StringBuilder sb = new StringBuilder();

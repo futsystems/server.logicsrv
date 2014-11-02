@@ -10,29 +10,29 @@ namespace TradingLib.API
         /// <summary>
         /// symbol for tick
         /// </summary>
-        string symbol { get; set; } 
-        /// <summary>
-        /// tick time in 24 format (4:59pm => 1659)
-        /// </summary>
-        int time { get; set; }
+        string Symbol { get; set; }
+
         /// <summary>
         /// tick date
         /// </summary>
-        int date { get; set; }
+        int Date { get; set; }
+
+        /// <summary>
+        /// tick time in 24 format (4:59pm => 1659)
+        /// </summary>
+        int Time { get; set; }
+       
         /// <summary>
         /// date and time represented as long, eg 8:05pm on 4th of July:
         /// 200907042005.
         /// this is not guaranteed to be set.
         /// </summary>
-        long datetime { get; set; } // datetime as long
-        /// <summary>
-        /// size of last trade
-        /// </summary>
-        int size { get; set; } 
+        long Datetime { get; set; } // datetime as long
+        
         /// <summary>
         /// depth of last bid/ask quote
         /// </summary>
-        int depth { get; set; } 
+        int Depth { get; set; }
         /*
         /// <summary>
         /// long representation of last trade
@@ -47,46 +47,66 @@ namespace TradingLib.API
         /// </summary>
         ulong lask { get; set; }
          */
+        #region Trade
+        /// <summary>
+        /// size of last trade
+        /// </summary>
+        int Size { get; set; } 
         /// <summary>
         /// trade price
         /// </summary>
-        decimal trade { get; set; } 
-        /// <summary>
-        /// bid price
-        /// </summary>
-        decimal bid { get; set; } 
-        /// <summary>
-        /// offer price
-        /// </summary>
-        decimal ask { get; set; } 
-        /// <summary>
-        /// normal bid size (size/100 for equities, /1 for others)
-        /// </summary>
-        int bs { get; set; } 
-        /// <summary>
-        /// normal ask size (size/100 for equities, /1 for others)
-        /// </summary>
-        int os { get; set; } 
-        /// <summary>
-        /// tick.bs*100 (only for equities)
-        /// </summary>
-        int BidSize { get; set; } 
-        /// <summary>
-        /// tick.os*100 (only for equities)
-        /// </summary>
-        int AskSize { get; set; } 
-        /// <summary>
-        /// bid exchange
-        /// </summary>
-        string be { get; set; }
-        /// <summary>
-        /// ask exchange
-        /// </summary>
-        string oe { get; set; } 
+        decimal Trade { get; set; }
         /// <summary>
         /// trade exchange
         /// </summary>
-        string ex { get; set; } 
+        string Exchange { get; set; }
+        #endregion
+
+
+        #region Bid
+        /// <summary>
+        /// bid price
+        /// </summary>
+        decimal BidPrice { get; set; } 
+        
+        /// <summary>
+        /// normal bid size (size/100 for equities, /1 for others)
+        /// </summary>
+        int BidSize { get; set; } 
+
+        /// <summary>
+        /// tick.bs*100 (only for equities)
+        /// </summary>
+        int StockBidSize { get; set; }
+
+        /// <summary>
+        /// bid exchange
+        /// </summary>
+        string BidExchange { get; set; }
+        #endregion
+
+
+        #region Ask
+        /// <summary>
+        /// offer price
+        /// </summary>
+        decimal AskPrice { get; set; }
+        /// <summary>
+        /// normal ask size (size/100 for equities, /1 for others)
+        /// </summary>
+        int AskSize { get; set; } 
+        /// <summary>
+        /// tick.os*100 (only for equities)
+        /// </summary>
+        int StockAskSize { get; set; } 
+
+        /// <summary>
+        /// ask exchange
+        /// </summary>
+        string AskExchange { get; set; }
+        #endregion
+
+
         bool isTrade { get; }
         bool hasBid { get; }
         bool hasAsk { get; }
@@ -102,6 +122,7 @@ namespace TradingLib.API
         bool hasHigh { get; }
         bool hasLow { get; }
         bool hasPreOI { get; }
+
         /// <summary>
         /// index of symbol associated with this tick.
         /// this is not guaranteed to be set
@@ -119,6 +140,18 @@ namespace TradingLib.API
 
         //QSEnumTickType Type { get; set; }
 
+    }
+
+    /// <summary>
+    /// 定义了行情传输过程中的内容类别
+    /// 根据不同的内容可以解析出不同的行情内容
+    /// 避免了每次都发送相同的内容 比如高开低收等不经常变化的变量
+    /// </summary>
+    public enum QSEnumTickContentType
+    { 
+        TC_TRADE,//成交信息 最新成交价 数量 成交交易所等
+        TC_QUOTE,//报价信息 买价 买量 卖价 卖量 深度等
+        TC_SNAPSHOT,//当前市场快照 成交信息 报价信息 高开低手
     }
 
     public class InvalidTick : Exception { }

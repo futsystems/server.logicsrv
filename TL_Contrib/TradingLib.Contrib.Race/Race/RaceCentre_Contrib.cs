@@ -25,7 +25,7 @@ namespace TradingLib.Contrib
             )]
         public void RaceDemo(ISession session)
         {
-            TLCtxHelper.Debug("demo call is made");
+            Util.Debug("demo call is made");
             //向客户端发送消息
             //Send(session, "hello user");//race demo
             if (DemoEvent != null)

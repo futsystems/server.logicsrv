@@ -28,64 +28,63 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.agent = new Telerik.WinControls.UI.RadDropDownList();
-            this.radLabel5 = new Telerik.WinControls.UI.RadLabel();
-            this.radPanel1 = new Telerik.WinControls.UI.RadPanel();
+            this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
+            this.agent = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
+            this.kryptonLabel1 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
+            this.kryptonPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.agent)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel5)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radPanel1)).BeginInit();
-            this.radPanel1.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // kryptonPanel1
+            // 
+            this.kryptonPanel1.Controls.Add(this.agent);
+            this.kryptonPanel1.Controls.Add(this.kryptonLabel1);
+            this.kryptonPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.kryptonPanel1.Location = new System.Drawing.Point(0, 0);
+            this.kryptonPanel1.Name = "kryptonPanel1";
+            this.kryptonPanel1.Size = new System.Drawing.Size(183, 25);
+            this.kryptonPanel1.TabIndex = 50;
             // 
             // agent
             // 
-            this.agent.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.agent.Location = new System.Drawing.Point(50, 0);
+            this.agent.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.agent.DropDownWidth = 121;
+            this.agent.Location = new System.Drawing.Point(58, 2);
             this.agent.Name = "agent";
-            this.agent.Size = new System.Drawing.Size(109, 18);
-            this.agent.TabIndex = 48;
+            this.agent.Size = new System.Drawing.Size(121, 21);
+            this.agent.TabIndex = 1;
             this.agent.Text = "--";
-            this.agent.SelectedIndexChanged += new Telerik.WinControls.UI.Data.PositionChangedEventHandler(this.agent_SelectedIndexChanged);
-            ((Telerik.WinControls.Primitives.FillPrimitive)(this.agent.GetChildAt(0).GetChildAt(1))).BackColor = System.Drawing.SystemColors.Window;
+            this.agent.SelectedIndexChanged += new System.EventHandler(this.agent_SelectedIndexChanged);
             // 
-            // radLabel5
+            // kryptonLabel1
             // 
-            this.radLabel5.Location = new System.Drawing.Point(0, 2);
-            this.radLabel5.Name = "radLabel5";
-            this.radLabel5.Size = new System.Drawing.Size(47, 16);
-            this.radLabel5.TabIndex = 47;
-            this.radLabel5.Text = "代理商:";
-            // 
-            // radPanel1
-            // 
-            this.radPanel1.Controls.Add(this.radLabel5);
-            this.radPanel1.Controls.Add(this.agent);
-            this.radPanel1.Location = new System.Drawing.Point(0, 0);
-            this.radPanel1.Name = "radPanel1";
-            this.radPanel1.Size = new System.Drawing.Size(162, 20);
-            this.radPanel1.TabIndex = 49;
-            ((Telerik.WinControls.Primitives.BorderPrimitive)(this.radPanel1.GetChildAt(0).GetChildAt(1))).Width = 0F;
+            this.kryptonLabel1.Location = new System.Drawing.Point(3, 4);
+            this.kryptonLabel1.Name = "kryptonLabel1";
+            this.kryptonLabel1.Size = new System.Drawing.Size(55, 18);
+            this.kryptonLabel1.TabIndex = 0;
+            this.kryptonLabel1.Values.Text = "代理商:";
             // 
             // ctAgentList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.radPanel1);
+            this.Controls.Add(this.kryptonPanel1);
             this.Name = "ctAgentList";
-            this.Size = new System.Drawing.Size(162, 20);
+            this.Size = new System.Drawing.Size(183, 25);
+            ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).EndInit();
+            this.kryptonPanel1.ResumeLayout(false);
+            this.kryptonPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.agent)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radLabel5)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.radPanel1)).EndInit();
-            this.radPanel1.ResumeLayout(false);
-            this.radPanel1.PerformLayout();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private Telerik.WinControls.UI.RadDropDownList agent;
-        private Telerik.WinControls.UI.RadLabel radLabel5;
-        private Telerik.WinControls.UI.RadPanel radPanel1;
+        private ComponentFactory.Krypton.Toolkit.KryptonPanel kryptonPanel1;
+        private ComponentFactory.Krypton.Toolkit.KryptonComboBox agent;
+        private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel1;
+
     }
 }

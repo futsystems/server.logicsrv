@@ -44,6 +44,21 @@ namespace TradingLib.Common
             return string.Join(delimiter,trade);
         }
 
+        public static string GetTradeDetail(this Trade f)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append(f.Account + " " + f.symbol + " ");
+            sb.Append(" T:" + f.GetDateTime().ToString());
+            sb.Append(" " + f.OffsetFlag.ToString());
+            sb.Append(f.side ? " BOT" : " SOD");
+
+            sb.Append(" " + Math.Abs(f.xsize).ToString());
+            sb.Append("@" + f.oSymbol.FormatPrice(f.xprice));
+            sb.Append(" C:" + f.Commission.ToString());
+            sb.Append(" R:" + f.Broker + "/" + f.BrokerKey);
+
+            return sb.ToString();
+        }
         public static string GetTradeInfo(this Trade f)
         {
             StringBuilder sb = new StringBuilder();

@@ -260,7 +260,7 @@ namespace TradingLib.Common
         /// <param name="intface"></param>
         public void LoadImplementors(Type intface)
         {
-			//TLCtxHelper.Debug("loadimplementors:" + intface.ToString());
+			//Util.Debug("loadimplementors:" + intface.ToString());
 
             //可用type集合中不存在该interface
             if (!this.AvailableTypes.ContainsKey(intface))
@@ -304,14 +304,14 @@ namespace TradingLib.Common
                     foreach (string path in searchPathList)
                     {
 						string lpath = Util.GetPluginPath(path);
-						//TLCtxHelper.Debug("Search path:"+lpath);
+						//Util.Debug("Search path:"+lpath);
 						dllfilelist.AddRange(Directory.GetFiles(lpath, "*.dll"));
                     }
-					//TLCtxHelper.Debug("avabile dll files num:"+dllfilelist.Count.ToString());
+					//Util.Debug("avabile dll files num:"+dllfilelist.Count.ToString());
                     foreach (string dllfile in dllfilelist)
                     {
-                        //TLCtxHelper.Debug(ExUtil.SectionHeader(" Dll List "));
-						//TLCtxHelper.Debug("Dll File:" + dllfile);
+                        //Util.Debug(ExUtil.SectionHeader(" Dll List "));
+						//Util.Debug("Dll File:" + dllfile);
                         try
                         {
                             var assembly = Assembly.ReflectionOnlyLoadFrom(dllfile);
@@ -351,7 +351,7 @@ namespace TradingLib.Common
                         }
                         catch (Exception ex)
                         {
-                            TLCtxHelper.Debug("LoadImplementors error" + ex.ToString());
+                            Util.Debug("LoadImplementors error" + ex.ToString());
                         }
                     }
 
@@ -381,11 +381,11 @@ namespace TradingLib.Common
 
                                     //从该类别中获得客户自定义的插件属性
                                     //从TLObjectAttribute集成的特性属于插件体系
-                                    //TLCtxHelper.Debug("find tlobjectattribute for plugin");
+                                    //Util.Debug("find tlobjectattribute for plugin");
                                     TLObjectAttribute customAttribute = (TLObjectAttribute)Attribute.GetCustomAttribute(avabileType, typeof(TLObjectAttribute));
                                     if (customAttribute != null)//如果属性存在,则建立对应的plugininfo然后储存在插件数据结构中
                                     {
-                                        //TLCtxHelper.Debug("find tlobjectattribute for plugin");
+                                        //Util.Debug("find tlobjectattribute for plugin");
                                         if ((customAttribute.Id == null) || (customAttribute.Id.Length == 0))
                                         {
                                             customAttribute.Id = avabileType.FullName;
@@ -482,7 +482,7 @@ namespace TradingLib.Common
                     {
                         object obj2 = Enum.Parse(parameterType, str);
                         argument7.EnumValues[str] = Convert.ChangeType(obj2, Enum.GetUnderlyingType(parameterType));
-                        //TLCtxHelper.Debug("**************enum argument list,str:" + str + "  value:" + argument7.EnumValues[str].ToString());
+                        //Util.Debug("**************enum argument list,str:" + str + "  value:" + argument7.EnumValues[str].ToString());
                         //if (argument7.Value == null)
                         //{
                         //    argument7.Value = argument7.EnumValues[str];
@@ -574,7 +574,7 @@ namespace TradingLib.Common
                                 }
                             case QSEnumMethodArgumentType.Enum:
                                 {
-                                    //TLCtxHelper.Debug("--------- prase method ,type:" + argument.ArgType.ToString()+" value:"+argument.Value);
+                                    //Util.Debug("--------- prase method ,type:" + argument.ArgType.ToString()+" value:"+argument.Value);
                                     //Enum.TryParse<>(argument.Value,)
                                     int i = (int)argument.EnumValues[argument.Value.ToString()];
                                     objArray[argument.Order - 1] = Enum.ToObject(argument.ArgType,i);//Enum.ToObject(argument. [argument.Order - 1].ParameterType, argument.Value); ;//Enum.ToObject(argument.Order - 1].ParameterType, argument.Value);
@@ -607,7 +607,7 @@ namespace TradingLib.Common
             ParameterInfo[] parameters = method.GetParameters();
             if (args.Count != parameters.Length)
             {
-                TLCtxHelper.Debug("args count do not math method's parameters count");
+                Util.Debug("args count do not math method's parameters count");
 
             }
             object[] objArray = null;
@@ -678,7 +678,7 @@ namespace TradingLib.Common
                 T attr = (T)Attribute.GetCustomAttribute(mi, typeof(T));
                 if (attr != null)
                 {
-                    //TLCtxHelper.Debug(mi.Name);
+                    //Util.Debug(mi.Name);
                     list.Add(mi);
                 }
             }
@@ -747,7 +747,7 @@ namespace TradingLib.Common
                     List<MethodArgument> args = GetArgumentList(mi);
                     foreach (MethodArgument arg in args)
                     {
-                        TLCtxHelper.Debug(arg.ToString());
+                        Util.Debug(arg.ToString());
                     }**/
                 }
             }
@@ -814,8 +814,8 @@ namespace TradingLib.Common
             List<Type> types = new List<Type>();
             foreach (string dllfile in dllfilelist)
             {
-                //TLCtxHelper.Debug(ExUtil.SectionHeader(" Dll List "));
-                //TLCtxHelper.Debug("Dll File:" + dllfile);
+                //Util.Debug(ExUtil.SectionHeader(" Dll List "));
+                //Util.Debug("Dll File:" + dllfile);
                 try
                 {
                     var assembly = Assembly.ReflectionOnlyLoadFrom(dllfile);
@@ -844,7 +844,7 @@ namespace TradingLib.Common
                 }
                 catch (Exception ex)
                 {
-                    TLCtxHelper.Debug("GetImplementors error" + ex.ToString());
+                    Util.Debug("GetImplementors error" + ex.ToString());
                 }
             }
             return types;

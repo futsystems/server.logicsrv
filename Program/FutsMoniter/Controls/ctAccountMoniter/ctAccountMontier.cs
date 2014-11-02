@@ -10,14 +10,12 @@ using System.Threading;
 using System.Windows.Forms;
 using TradingLib.API;
 using TradingLib.Common;
-using Telerik.WinControls;
-using Telerik.WinControls.UI;
 using FutSystems.GUI;
 
 
 namespace FutsMoniter.Controls
 {
-    public partial class ctAccountMontier : UserControl
+    public partial class ctAccountMontier : UserControl,IEventBinder
     {
         #region 事件
         /// <summary>
@@ -31,7 +29,7 @@ namespace FutsMoniter.Controls
 
 
         const string PROGRAME = "AccountMontier";
-        AccountConfigForm fmaccountconfig = null;
+        fmAccountConfig fmaccountconfig = new fmAccountConfig();
         bool _loaded = false;
 
         Symbol _symbolselected = null;
@@ -40,43 +38,20 @@ namespace FutsMoniter.Controls
         {
             try
             {
-            InitializeComponent();
+                InitializeComponent();
 
-            Factory.IDataSourceFactory(accountType).BindDataSource(UIUtil.GetEnumValueObjects<QSEnumAccountCategory>(true));
-            Factory.IDataSourceFactory(routeType).BindDataSource(UIUtil.GetEnumValueObjects<QSEnumOrderTransferType>(true));
+                InitQueryAccountControl();
 
-            accexecute.Items.Add("<Any>");
-            accexecute.Items.Add("允许");
-            accexecute.Items.Add("冻结");
-            accexecute.SelectedIndex = 0;
+                InitAccountMoniterGrid();
 
-            Init();
-            InitAccountMoniterGrid();
-            Globals.RegInitCallback(this.OnInitFinished);
+                //注册回调
+                Globals.RegIEventHandler(this);
 
-            StartUpdate();
-            fmaccountconfig = new AccountConfigForm();
-            fmaccountconfig.SendDebugEvent += new DebugDelegate(msgdebug);
+                //StartUpdate();
+                _loaded = true;
+                this.Load += new EventHandler(ctAccountMontier_Load);
 
-            InitViewQuoteList();
-            _loaded = true;
 
-            
-                if (!Globals.Config["FinService"].AsBool())
-                {
-                    FinServicePage.Text = "开发中";
-                    FinServicePage.Enabled = false;
-                }
-                if (!Globals.Config["RaceService"].AsBool())
-                {
-                    RaceServicePage.Text = "开发中";
-                    FinServicePage.Enabled = false;
-                }
-                if (!Globals.Config["LottoService"].AsBool())
-                {
-                    LottoServicePage.Text = "开发中";
-                    LottoServicePage.Enabled = false;
-                }
             }
             catch (Exception ex)
             {
@@ -84,39 +59,16 @@ namespace FutsMoniter.Controls
             }
             
         }
-        
 
-        void Init()
+        void ctAccountMontier_Load(object sender, EventArgs e)
         {
-            //this.accountgrid.TableElement.VScrollBar.ValueChanged += new EventHandler(VScrollBar_ValueChanged);
+            WireEvents();
+            
+        }
 
-            try
-            {
-                ctOrderView1.SendDebugEvent += new DebugDelegate(msgdebug);
-                ctOrderView1.SendOrderCancel += new LongDelegate(CancelOrder);
-
-                ctPositionView1.SendDebugEvent += new DebugDelegate(msgdebug);
-                ctPositionView1.SendCancelEvent += new LongDelegate(CancelOrder);
-                ctPositionView1.SendOrderEvent += new OrderDelegate(SendOrder);
-
-                ctTradeView1.SendDebugEvent += new DebugDelegate(msgdebug);
-
-                ctAgentList1.AgentSelectedChangedEvent += new VoidDelegate(ctAgentList1_AgentSelectedChangedEvent);
-
-
-                Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryFinService", ctFinService1.OnQryFinService);
-                Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryFinServicePlan", ctFinService1.OnQryServicePlan);
-                Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "UpdateArguments", ctFinService1.OnQryFinService);
-                Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "ChangeServicePlane", ctFinService1.OnQryFinService);
-                Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "DeleteServicePlane", ctFinService1.OnQryFinService);
-
-                //初始化菜单
-                InitMenu();
-            }
-            catch (Exception ex)
-            { 
-                
-            }
+        public void Start()
+        {
+            StartUpdate();
         }
 
         #region  辅助函数
@@ -124,7 +76,7 @@ namespace FutsMoniter.Controls
         private string _format = "{0:F2}";
         private string decDisp(decimal d)
         {
-            return string.Format(_format, d);
+            return Util.FormatDecimal(d, _format);
         }
 
         public event DebugDelegate SendDebugEvent;
@@ -194,9 +146,7 @@ namespace FutsMoniter.Controls
 
         void InitViewQuoteList()
         {
-            viewQuoteList1.SymbolSelectedEvent += new SymbolDelegate(viewQuoteList1_SymbolSelectedEvent);
-            viewQuoteList1.SendDebugEvent += new DebugDelegate(Globals.Debug);
-            ctOrderSenderM1.SendOrderEvent += new OrderDelegate(SendOrder);
+            
         }
 
         void viewQuoteList1_SymbolSelectedEvent(Symbol symbol)
@@ -233,19 +183,79 @@ namespace FutsMoniter.Controls
         }
 
 
+        #region 界面事件触发
+
+        void WireEvents()
+        {
+            Globals.RegInitCallback(this.OnInitFinished);
+
+            //交易帐户过滤控件
+            accountType.SelectedIndexChanged +=new EventHandler(accountType_SelectedIndexChanged);
+            routeType.SelectedIndexChanged +=new EventHandler(routeType_SelectedIndexChanged);
+            accexecute.SelectedIndexChanged +=new EventHandler(accexecute_SelectedIndexChanged);
+            accLogin.CheckedChanged+=new EventHandler(accLogin_CheckedChanged);
+            acct.TextChanged+=new EventHandler(acct_TextChanged);
+            ctAgentList1.AgentSelectedChangedEvent+=new VoidDelegate(ctAgentList1_AgentSelectedChangedEvent);
+            acchodpos.CheckedChanged +=new EventHandler(acchodpos_CheckedChanged);
+            btnAddAccount.Click +=new EventHandler(btnAddAccount_Click);
+
+            //帐户表格事件
+            accountgrid.CellDoubleClick +=new DataGridViewCellEventHandler(accountgrid_CellDoubleClick);//双击单元格
+            accountgrid.CellFormatting +=new DataGridViewCellFormattingEventHandler(accountgrid_CellFormatting);//格式化单元格
+            accountgrid.SizeChanged +=new EventHandler(accountgrid_SizeChanged);//大小改变
+            accountgrid.Scroll +=new ScrollEventHandler(accountgrid_Scroll);//滚轮滚动
+            accountgrid.RowPrePaint += new DataGridViewRowPrePaintEventHandler(accountgrid_RowPrePaint);
+
+            //交易信息显示控件事件
+            ctOrderView1.SendDebugEvent += new DebugDelegate(msgdebug);
+            ctOrderView1.SendOrderCancel += new LongDelegate(CancelOrder);
+
+            ctPositionView1.SendDebugEvent += new DebugDelegate(msgdebug);
+            ctPositionView1.SendCancelEvent += new LongDelegate(CancelOrder);
+            ctPositionView1.SendOrderEvent += new OrderDelegate(SendOrder);
+
+            ctTradeView1.SendDebugEvent += new DebugDelegate(msgdebug);
+
+            viewQuoteList1.SymbolSelectedEvent += new SymbolDelegate(viewQuoteList1_SymbolSelectedEvent);
+            viewQuoteList1.SendDebugEvent += new DebugDelegate(Globals.Debug);
+            ctOrderSenderM1.SendOrderEvent += new OrderDelegate(SendOrder);
+
+
+
+            //绑定帐户选中事件
+
+            this.AccountSelectedEvent += new Action<IAccountLite>(ctFinService1.OnAccountSelected);
+        }
+
+
+       
+        
 
 
 
 
 
+        
 
+       
 
+       
 
+        private void ServiceTabHolder_SelectedPageChanged(object sender, EventArgs e)
+        {
+            //if (ServiceTabHolder.SelectedPage.Name.Equals("FinServicePage"))
+            //{
+            //    if (AccountSetlected != null)
+            //    {
+            //        Globals.TLClient.ReqQryFinService(AccountSetlected.Account);
+            //    }
 
+            //    //如果没有获得服务计划列表则请求服务计划列表
+            //    //ctFinService1.PrepareServicePlan();
+            //}
+        }
 
-
-
-
+        #endregion
 
 
 

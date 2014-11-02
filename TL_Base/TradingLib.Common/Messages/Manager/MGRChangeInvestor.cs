@@ -17,7 +17,7 @@ namespace TradingLib.Common
             this.TradingAccount = string.Empty;
             this.Name = string.Empty;
             this.Broker = string.Empty;
-            this.Bank = string.Empty;
+            this.BankFK = 0;
             this.BankAC = string.Empty;
         }
 
@@ -27,7 +27,7 @@ namespace TradingLib.Common
 
         public string Broker { get; set; }
 
-        public string Bank { get; set; }
+        public int BankFK { get; set; }
 
 
         public string BankAC { get; set; }
@@ -42,7 +42,7 @@ namespace TradingLib.Common
             sb.Append(d);
             sb.Append(this.Broker);
             sb.Append(d);
-            sb.Append(this.Bank);
+            sb.Append(this.BankFK);
             sb.Append(d);
             sb.Append(this.BankAC);
 
@@ -55,7 +55,7 @@ namespace TradingLib.Common
             this.TradingAccount = rec[0];
             this.Name = rec[1];
             this.Broker = rec[2];
-            this.Bank = rec[3];
+            this.BankFK = int.Parse(rec[3]);
             this.BankAC = rec[4];
         }
     }

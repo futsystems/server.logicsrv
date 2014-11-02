@@ -23,7 +23,7 @@ namespace TradingLib.Common
             this.MAC = string.Empty;
             this.Name = string.Empty;
             this.Broker = string.Empty;
-            this.BankID = "0";
+            this.BankID = 0;
             this.BankAC = string.Empty;
             this.CreatedTime = DateTime.Now;
             this.SettleDateTime = DateTime.Now;
@@ -31,7 +31,7 @@ namespace TradingLib.Common
             this.PosLock = false;
             this.Mgr_fk = 0;
             this.UserID = 0;
-
+            this.Deleted = false;
         
         }
 
@@ -80,7 +80,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 银行
         /// </summary>
-        public string BankID { get; set; }
+        public int BankID { get; set; }
 
         /// <summary>
         /// 银行帐号
@@ -168,6 +168,8 @@ namespace TradingLib.Common
             ClearOrderCheck();
             _rulitemloaded = false;
         }
+
+        public bool Deleted { get; set; }
 
 
         public string DisplayString

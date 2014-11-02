@@ -64,9 +64,12 @@
     <Compile Include="Base\CoreGlobal.cs" />
     <Compile Include="Base\HighLowTracker.cs" />
     <Compile Include="Base\ISessionUtils.cs" />
-    <Compile Include="Base\Position2SettlePosition.cs" />
+    <Compile Include="Base\Utils\PositionCloseDetailUtil.cs" />
+    <Compile Include="Base\Utils\PositionDetailsUtil.cs" />
     <Compile Include="Base\TIFTracker.cs" />
     <Compile Include="Base\TLServer_Generic.cs" />
+    <Compile Include="Base\Utils\PositionUtil.cs" />
+    <Compile Include="Base\Utils\SymbolUtils.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_AccountOperation.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_Interface.cs" />
@@ -78,6 +81,8 @@
     <Compile Include="Core\ClearCentre\ClearCentreSrv_AccountCashOperation.cs" />
     <Compile Include="Core\ManagerExchange\ContractBankUtils.cs" />
     <Compile Include="Core\ManagerExchange\ManagerRights.cs" />
+    <Compile Include="Core\ManagerExchange\ORM\MUIAccess.cs" />
+    <Compile Include="Core\ManagerExchange\UIAccessTracker.cs" />
     <Compile Include="Core\ManagerExchange\Utils\ManagerUtils_.cs" />
     <Compile Include="Core\ManagerExchange\Utils\ManagerUtils_Account.cs" />
     <Compile Include="Core\ManagerExchange\Utils\ManagerUtils.cs" />
@@ -90,7 +95,7 @@
     <Compile Include="Core\ManagerExchange\TLServer_MgrExch.cs" />
     <Compile Include="Core\ManagerExchange\MgrExchServer_.cs" />
     <Compile Include="Core\ManagerExchange\MgrExchServer_MessageOut.cs" />
-    <Compile Include="Core\ManagerExchange\MgrExchServer_PackentHandle.cs" />
+    <Compile Include="Core\ManagerExchange\MgrExchServer_PacketHandle.cs" />
     <Compile Include="Core\ManagerExchange\MgrExchServer_EventHandle.cs" />
     <Compile Include="Core\ManagerExchange\MgrExchServer_Task.cs" />
     <Compile Include="Core\ManagerExchange\MgrExchServer_Operation.cs" />
@@ -98,6 +103,9 @@
     <Compile Include="Core\ManagerExchange\MgrExchServer_CTE_CashOPAgent.cs" />
     <Compile Include="Core\ManagerExchange\Utils\ObjectsUtils.cs" />
     <Compile Include="Core\ManagerExchange\MgrExchServer_Notify.cs" />
+    <Compile Include="Core\ManagerExchange\Utils\ManagerUtils_Predicate.cs" />
+    <Compile Include="Core\ManagerExchange\Utils\ManagerUtils_ObjectWrapper.cs" />
+    <Compile Include="Core\ManagerExchange\MgrExchServer_PacketHandle_.cs" />
     <Compile Include="Core\MessageExchange\MsgExchServer_.cs" />
     <Compile Include="Core\MessageExchange\MsgExchServer_PacketHandle.cs" />
     <Compile Include="Core\MessageExchange\MsgExchServer_CTE.cs" />

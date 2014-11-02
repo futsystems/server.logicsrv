@@ -1082,10 +1082,10 @@ namespace TradingLib.Common
         //消息处理逻辑
         void handle(MessageTypes type, string msg)
         {
-            //if (type != MessageTypes.TICKHEARTBEAT && type != MessageTypes.MGRACCOUNTINFOLITENOTIFY && type != MessageTypes.TICKNOTIFY)
+            if (type != MessageTypes.TICKHEARTBEAT && type != MessageTypes.MGRACCOUNTINFOLITENOTIFY && type != MessageTypes.TICKNOTIFY)
             {
 
-                //debug("raw message type:" + type.ToString() + " message:" + msg, QSEnumDebugLevel.INFO);
+                debug("raw message type:" + type.ToString() + " message:" + msg, QSEnumDebugLevel.INFO);
             }
             IPacket packet = PacketHelper.CliRecvResponse(type, msg);
             switch (packet.Type)

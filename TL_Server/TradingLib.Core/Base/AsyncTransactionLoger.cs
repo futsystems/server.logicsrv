@@ -36,6 +36,7 @@ namespace TradingLib.Core
         RingBuffer<long> _ccache;
         RingBuffer<IPositionRound> _postranscache;
         RingBuffer<OrderAction> _oactioncache;
+        RingBuffer<PositionCloseDetail> _posclosecache;
         //RingBuffer<PositionRound> _postransopencache;
 
         public int OrderInCache { get { return _ocache.Count; } }
@@ -43,6 +44,7 @@ namespace TradingLib.Core
         public int CancleInCache { get { return _ccache.Count; } }
         public int OrderUpdateInCache { get { return _oupdatecache.Count; } }
         public int PosTransInCache { get { return _postranscache.Count; } }
+        public int PosCloseInCache { get { return _posclosecache.Count; } }
 
         /// <summary>
         /// fired when barrequest is read asychronously from buffer
@@ -269,6 +271,31 @@ namespace TradingLib.Core
                                 Thread.Sleep(_delay);
                             }
 
+                            while (_posclosecache.hasItems)
+                            {
+                                bool re = false;
+                                PositionCloseDetail close = _posclosecache.Read();
+                                try
+                                {
+                                    re = ORM.MSettlement.InsertPositionCloseDetail(close);
+                                }
+                                catch (Exception ex)
+                                {
+                                    debug(ex.ToString(), QSEnumDebugLevel.ERROR);
+                                }
+                                string s = "平仓明细日志:PositionCloseDetail Inserted:";// +oid.ToString();
+                                if (!re)
+                                {
+                                    _nrt++;
+                                    debug(s + " 失败", QSEnumDebugLevel.ERROR);
+                                }
+                                else
+                                {
+                                    debug(s + " 成功", QSEnumDebugLevel.INFO);
+                                }
+                                Thread.Sleep(_delay);
+                            }
+
 
 
                             // clear current flag signal
@@ -365,6 +392,12 @@ namespace TradingLib.Core
             _postranscache.Write(pr);
             newlog();
         }
+
+        public void newPositionCloseDetail(PositionCloseDetail pc)
+        {
+            _posclosecache.Write(pc);
+            newlog();
+        }
         private void newlog()
         {
             /*
@@ -423,6 +456,7 @@ namespace TradingLib.Core
             _ccache = new RingBuffer<long>(maxbr);
             _postranscache = new RingBuffer<IPositionRound>(maxbr);
             _oactioncache = new RingBuffer<OrderAction>(maxbr);
+            _posclosecache = new RingBuffer<PositionCloseDetail>(maxbr);
         }
 
         void _brcache_BufferOverrunEvent()

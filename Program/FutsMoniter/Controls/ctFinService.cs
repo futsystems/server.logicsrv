@@ -6,22 +6,50 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using TradingLib;
-using TradingLib.Mixins.JsonObject;
-using TradingLib.Mixins.LitJson;
-using FutSystems.GUI;
 using TradingLib.API;
 using TradingLib.Common;
+using TradingLib.Mixins.LitJson;
+using TradingLib.Mixins.JsonObject;
+using FutSystems.GUI;
+
 
 namespace FutsMoniter
 {
-    public partial class ctFinService : UserControl
+    public partial class ctFinService : UserControl, IEventBinder
     {
         public ctFinService()
         {
             InitializeComponent();
-            
+
+            btnChangeServicePlan.Click +=new EventHandler(btnChangeServicePlan_Click);
+            btnUpdateArgs.Click +=new EventHandler(btnUpdateArgs_Click);
+            btnDeleteFinService.Click +=new EventHandler(btnDeleteFinService_Click);
+
+            //执行事件订阅
+            Globals.RegIEventHandler(this);
         }
+
+        #region IEventBinder
+        public void OnInit()
+        {
+            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryFinService", this.OnQryFinService);//查询配资服务
+            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryFinServicePlan", this.OnQryServicePlan);//查询配资服务计划
+            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "UpdateArguments", this.OnQryFinService);//更新参数
+            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "ChangeServicePlane", this.OnQryFinService);//修改服务计划
+            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "DeleteServicePlane", this.OnQryFinService);//删除服务
+        }
+
+        public void OnDisposed()
+        {
+            Globals.CallBackCentre.UnRegisterCallback("FinServiceCentre", "QryFinService", this.OnQryFinService);//查询配资服务
+            Globals.CallBackCentre.UnRegisterCallback("FinServiceCentre", "QryFinServicePlan", this.OnQryServicePlan);//查询配资服务计划
+            Globals.CallBackCentre.UnRegisterCallback("FinServiceCentre", "UpdateArguments", this.OnQryFinService);//更新参数
+            Globals.CallBackCentre.UnRegisterCallback("FinServiceCentre", "ChangeServicePlane", this.OnQryFinService);//修改服务计划
+            Globals.CallBackCentre.UnRegisterCallback("FinServiceCentre", "DeleteServicePlane", this.OnQryFinService);//删除服务
+        }
+        #endregion
+
+
 
         JsonWrapperFinServiceStub finservice = null;
         JsonWrapperServicePlane[] serviceplans = null;
@@ -31,29 +59,41 @@ namespace FutsMoniter
         /// 设定当前交易帐号
         /// 交易帐号改变就需要查询该帐号的配资服务
         /// </summary>
-        public IAccountLite CurrentAccount
-        {
-            get
-            {
-                return _account;
-            }
-            set
-            {
-                _account = value;
-                finservice = null;
-                if (!Globals.EnvReady) return;
-                if (serviceplans == null)
-                {
-                    Globals.TLClient.ReqQryServicePlan();
-                }
+        //public IAccountLite CurrentAccount
+        //{
+        //    get
+        //    {
+        //        return _account;
+        //    }
+        //    set
+        //    {
+                
+        //    }
+        //}
 
-                if (_account != null)
-                {
-                    Globals.TLClient.ReqQryFinService(_account.Account);
-                }
+        /// <summary>
+        /// 响应交易帐户选中事件
+        /// </summary>
+        /// <param name="account"></param>
+        public void OnAccountSelected(IAccountLite account)
+        {
+            _account = account;
+            finservice = null;//重置配资服务
+
+            if (!Globals.EnvReady) return;
+            if (!Globals.UIAccess.fun_tab_finservice) return;
+            //如果服务计划没有获取 则请求服务计划
+            if (serviceplans == null)
+            {
+                Globals.TLClient.ReqQryServicePlan();
+            }
+            //请求交易帐户的配资服务
+            if (_account != null)
+            {
+                Globals.TLClient.ReqQryFinService(_account.Account);
             }
         }
-        
+
         public void PrepareServicePlan()
         {
             if (serviceplans == null)
@@ -74,7 +114,7 @@ namespace FutsMoniter
                 JsonWrapperFinServiceStub obj = TradingLib.Mixins.LitJson.JsonMapper.ToObject<JsonWrapperFinServiceStub>(jd["Playload"].ToJson());
                 GotFinServiceStub(obj);
                 finservice = obj;
-                
+
                 StubShow();
 
             }
@@ -144,7 +184,7 @@ namespace FutsMoniter
         void InitArgs(JsonWrapperArgument[] args)
         {
             tableLayoutPanel.Controls.Clear();
-            
+
             foreach (JsonWrapperArgument arg in args)
             {
                 ctTLEdit edit = new ctTLEdit();
@@ -158,7 +198,7 @@ namespace FutsMoniter
 
             if (finservice != null)
             {
-                foreach(Control c in tableLayoutPanel.Controls)
+                foreach (Control c in tableLayoutPanel.Controls)
                 {
                     ctTLEdit edit = c as ctTLEdit;
                     if (!edit.ParseArg())
@@ -187,11 +227,11 @@ namespace FutsMoniter
                 return;
             }
 
-            ServicePlanChangeForm fm = new ServicePlanChangeForm();
+            fmChangeServicePlan fm = new fmChangeServicePlan();
             fm.Text = btnChangeServicePlan.Text;
             fm.FinServiceStub = finservice;
             fm.Account = _account;
-            fm.SetServicePlans(serviceplans);
+            //fm.SetServicePlans(serviceplans);
             fm.ShowDialog();
         }
 
@@ -207,9 +247,5 @@ namespace FutsMoniter
                 Globals.TLClient.ReqDeleteFinService(_account.Account);
             }
         }
-
     }
-
-    
-
 }
