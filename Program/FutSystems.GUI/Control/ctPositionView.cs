@@ -50,6 +50,28 @@ namespace FutSystems.GUI
         }
 
 
+        //属性获得和设置
+        [DefaultValue(true)]
+        bool _enableoperation = true;
+        public bool EnableOperation
+        {
+            get
+            {
+                return _enableoperation;
+            }
+            set
+            {
+                _enableoperation = value;
+                btnCancel.Visible = _enableoperation;
+                btnFlat.Visible = _enableoperation;
+                btnFlatAll.Visible = _enableoperation;
+                btnReserve.Visible = _enableoperation;
+                btnCancel.Visible = _enableoperation;
+                isDoubleFlat.Visible = _enableoperation;
+            }
+        }
+
+
         Dictionary<string, string> secFromatMap = new Dictionary<string, string>();
         //通过symbil获得对应的价格显示格式
         string getDisplayFormat(Symbol sym)

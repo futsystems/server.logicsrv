@@ -38,6 +38,9 @@ namespace FutsMoniter.Controls
             funpageFinservice.Visible = Globals.UIAccess.fun_tab_finservice;
             funpageFinanceInfo.Visible = Globals.UIAccess.fun_tab_financeinfo;
 
+            ctOrderView1.EnableOperation = Globals.UIAccess.fun_info_operation;
+            ctPositionView1.EnableOperation = Globals.UIAccess.fun_info_operation;
+
         }
 
         public void OnDisposed()

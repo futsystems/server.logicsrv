@@ -23,6 +23,22 @@ namespace FutSystems.GUI
                 SendDebugEvent(msg);
         }
 
+        //属性获得和设置
+        [DefaultValue(true)]
+        bool _enableoperation = true;
+        public bool EnableOperation
+        {
+            get
+            {
+                return _enableoperation;
+            }
+            set
+            {
+                _enableoperation = value;
+                btnCancelAll.Visible = _enableoperation;
+                btnCancelOrder.Visible = _enableoperation;
+            }
+        }
 
         public event LongDelegate SendOrderCancel;
         string _defaultformat = "{0:F1}";

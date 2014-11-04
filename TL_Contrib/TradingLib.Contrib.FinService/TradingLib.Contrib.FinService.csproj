@@ -93,6 +93,7 @@
     <Compile Include="ServicePlane\SPHunanIF.cs" />
     <Compile Include="ServicePlane\SPSpecialIF.cs" />
     <Compile Include="ServicePlane\SPInterest.cs" />
+    <Compile Include="ServicePlane\SPBonus.cs" />
     <Compile Include="Tracker.cs" />
     <Compile Include="FinServiceCentre_OnXXXX.cs" />
     <Compile Include="FinServiceCentre_CTE.cs" />
