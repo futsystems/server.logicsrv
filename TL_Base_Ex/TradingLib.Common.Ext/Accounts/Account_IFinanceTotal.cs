@@ -83,7 +83,13 @@ namespace TradingLib.Common
         /// 总可用资金
         /// 常规计算的可用资金 + 扩展模块提供的配资资金
         /// </summary>
-        public decimal AvabileFunds { get { return TotalLiquidation - MoneyUsed + TLCtxHelper.ExContribEvent.GetFinAmmountAvabile(this.ID); } }//帐户总可用资金
+        public decimal AvabileFunds { get { return TotalLiquidation - MoneyUsed + this.Credit; } }//帐户总可用资金
+
+
+        /// <summary>
+        /// 帐户信用额度
+        /// </summary>
+        public decimal Credit { get { return TLCtxHelper.ExContribEvent.GetFinAmmountAvabile(this.ID); } }
         #endregion
 
 

@@ -234,7 +234,11 @@ namespace TradingLib.Common
         /// 总净值 帐户当前权益=总净值
         /// </summary>
         public decimal TotalLiquidation { get { return _acc.TotalLiquidation; } }
-       
+
+        /// <summary>
+        /// 信用额度
+        /// </summary>
+        public decimal Credit { get { return _acc.Credit; } }
         #endregion
 
         #region 【IAccCal】

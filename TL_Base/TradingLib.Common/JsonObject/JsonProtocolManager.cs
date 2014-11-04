@@ -714,5 +714,24 @@ namespace TradingLib.Mixins.JsonObject
         /// </summary>
         [PermissionFieldAttr("功能面板-财务信息", "查询帐户财务状况")]
         public bool fun_tab_financeinfo { get; set; }
+
+
+        /// <summary>
+        /// 是否可以添加实盘帐户
+        /// </summary>
+        [PermissionFieldAttr("帐户类别-实盘", "是否可以添加实盘帐户")]
+        public bool acctype_live { get; set; }
+
+        /// <summary>
+        /// 是否可以添加模拟帐户
+        /// </summary>
+        [PermissionFieldAttr("帐户类别-模拟", "是否可以添加模拟帐户")]
+        public bool acctype_sim { get; set; }
+
+        /// <summary>
+        /// 是否可以添加交易员帐户
+        /// </summary>
+        [PermissionFieldAttr("帐户类别-交易员", "是否可以添加交易员帐户")]
+        public bool acctype_dealer { get; set; }
     }
 }

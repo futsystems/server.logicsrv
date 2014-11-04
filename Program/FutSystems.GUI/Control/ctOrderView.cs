@@ -316,6 +316,7 @@ namespace FutSystems.GUI
 
         private void btnCancelOrder_Click(object sender, EventArgs e)
         {
+
             long oid = SelectedOrderID;
             if (oid == -1)
             {
@@ -349,22 +350,29 @@ namespace FutSystems.GUI
         }
         private void orderGrid_CellDoubleClick(object sender, EventArgs e)
         {
-            long oid = SelectedOrderID;
-            if (oid == -1)
+            try
             {
-                MessageForm.Show("请选择要撤销的委托");
-            }
-            else
-            {
-                if (ord.isPending(oid))
+                long oid = SelectedOrderID;
+                if (oid == -1)
                 {
-                    if (SendOrderCancel != null)
-                        SendOrderCancel(oid);
+                    MessageForm.Show("请选择要撤销的委托");
                 }
                 else
                 {
-                    MessageForm.Show("该委托无法撤销");
+                    if (ord.isPending(oid))
+                    {
+                        if (SendOrderCancel != null)
+                            SendOrderCancel(oid);
+                    }
+                    else
+                    {
+                        MessageForm.Show("该委托无法撤销");
+                    }
                 }
+            }
+            catch (Exception ex)
+            { 
+                
             }
         }
         #endregion
