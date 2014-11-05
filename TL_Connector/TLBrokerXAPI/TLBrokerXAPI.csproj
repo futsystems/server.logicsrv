@@ -2,20 +2,18 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{2245D6A3-5F3A-4B1A-9F1A-A837F9D1DDCA}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{A5D8B946-697E-4CE5-9C3A-6B8958C9C064}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TLXAPDemo</RootNamespace>
-    <AssemblyName>TLXAPDemo</AssemblyName>
+    <RootNamespace>TradingLib.BrokerXAPI</RootNamespace>
+    <AssemblyName>TLBrokerXAPI</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,8 +22,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -35,26 +32,29 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="TradingLib.API">
+      <HintPath>..\..\lib\TradingLib\TradingLib.API.dll</HintPath>
+    </Reference>
+    <Reference Include="TradingLib.Common">
+      <HintPath>..\..\lib\TradingLib\TradingLib.Common.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="1\DllInvoke.cs" />
+    <Compile Include="1\InvokeBase.cs" />
+    <Compile Include="Interop\Platform.Windows.cs" />
+    <Compile Include="Interop\TLBrokerProxy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\TL_Connector\QuantBox.XAPI\QuantBox.XAPI.csproj">
-      <Project>{6AA065F5-2E4A-4112-A3AE-1F75CAE42FFB}</Project>
-      <Name>QuantBox.XAPI</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\TL_Connector\TLBrokerXAPI\TLBrokerXAPI.csproj">
-      <Project>{A5D8B946-697E-4CE5-9C3A-6B8958C9C064}</Project>
-      <Name>TLBrokerXAPI</Name>
-    </ProjectReference>
+    <Compile Include="1\Proxy.cs" />
+    <Compile Include="Interop\SafeLibraryHandle.cs" />
+    <Compile Include="1\SoInvoke.cs" />
+    <Compile Include="Interop\TLBrokerWrapperProxy.cs" />
+    <Compile Include="Interop\UnmanagedLibrary.cs" />
+    <Compile Include="Interop\Struct.cs" />
+    <Compile Include="TLBroker.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

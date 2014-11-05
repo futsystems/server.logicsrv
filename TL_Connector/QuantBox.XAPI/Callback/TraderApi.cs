@@ -19,6 +19,7 @@ namespace QuantBox.XAPI.Callback
         internal TraderApi(string path1, Queue queue)
             : base(path1, queue)
         {
+
         }
 
         public void ReqQryInstrument(string szInstrument, string szExchange)

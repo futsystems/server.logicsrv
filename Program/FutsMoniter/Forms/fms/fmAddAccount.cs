@@ -53,7 +53,6 @@ namespace FutsMoniter
             }
 
             return list;
-            return list;
         }
 
         private void btnAddAccount_Click(object sender, EventArgs e)
