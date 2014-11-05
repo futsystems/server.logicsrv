@@ -16,7 +16,7 @@ namespace TradingLib.BrokerXAPI
         public TLBroker()
         {
             _wrapper = new TLBrokerWrapperProxy(@"lib\", @"TLBrokerWrapper.dll");
-            _broker = new TLBrokerProxy(@"lib\", @"TLBrokerCTP.dll");
+            _broker = new TLBrokerProxy(@"lib\CTP630\", @"TLBrokerCTP.dll");
             _wrapper.Register(_broker.Handle);
 
             _wrapper.OnRtnTradeEvent += new CBRtnTrade(_wrapper_OnRtnTradeEvent);

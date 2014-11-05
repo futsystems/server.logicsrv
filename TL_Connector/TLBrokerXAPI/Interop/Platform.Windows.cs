@@ -6,6 +6,18 @@ namespace TradingLib.BrokerXAPI.Interop
 {
     internal static partial class Platform
     {
+        [System.Flags]
+        public enum LoadLibraryFlags : uint
+        {
+            DONT_RESOLVE_DLL_REFERENCES = 0x00000001,
+            LOAD_IGNORE_CODE_AUTHZ_LEVEL = 0x00000010,
+            LOAD_LIBRARY_AS_DATAFILE = 0x00000002,
+            LOAD_LIBRARY_AS_DATAFILE_EXCLUSIVE = 0x00000040,
+            LOAD_LIBRARY_AS_IMAGE_RESOURCE = 0x00000020,
+            LOAD_WITH_ALTERED_SEARCH_PATH = 0x00000008
+        }
+
+
         public const string LibSuffix = ".dll";
 
         private const string KernelLib = "kernel32";
@@ -17,7 +29,8 @@ namespace TradingLib.BrokerXAPI.Interop
         /// <returns></returns>
         public static SafeLibraryHandle OpenHandle(string filename)
         {
-            return LoadLibrary(filename);
+            return LoadLibraryEx(filename, IntPtr.Zero, LoadLibraryFlags.LOAD_WITH_ALTERED_SEARCH_PATH);
+            //return LoadLibrary(filename);
         }
 
         /// <summary>
@@ -54,6 +67,10 @@ namespace TradingLib.BrokerXAPI.Interop
         [DllImport(KernelLib, CharSet = CharSet.Auto, BestFitMapping = false, SetLastError = true)]
         private static extern SafeLibraryHandle LoadLibrary(string fileName);
 
+        [DllImport(KernelLib, CharSet = CharSet.Auto, BestFitMapping = false, SetLastError = true)]
+        private static extern SafeLibraryHandle LoadLibraryEx(string lpFileName, IntPtr hReservedNull, LoadLibraryFlags dwFlags);
+
+
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
         [DllImport(KernelLib, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -61,5 +78,7 @@ namespace TradingLib.BrokerXAPI.Interop
 
         [DllImport(KernelLib)]
         private static extern IntPtr GetProcAddress(SafeLibraryHandle moduleHandle, string procname);
+
+
     }
 }
