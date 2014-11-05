@@ -98,6 +98,48 @@ namespace TradingLib.BrokerXAPI.Interop
 
 
     /// <summary>
+    /// 登入回报结构体
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public struct XRspUserLoginField
+    {
+        /// <summary>
+        /// 当前交易日
+        /// </summary>
+        public int Tradingday;
+
+        /// <summary>
+        /// 登入用户名
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
+        public string UserID;
+
+        /// <summary>
+        /// 预留字段1
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+        public string Field1;
+
+        /// <summary>
+        /// 预留字段2
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+        public string Field2;
+
+        /// <summary>
+        /// 错误代码
+        /// </summary>
+        public int ErrorID;
+
+        /// <summary>
+        /// 错误信息
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+        public string ErrorMsg;
+    }
+
+
+    /// <summary>
     /// 委托结构体
     /// </summary>
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
@@ -167,10 +209,22 @@ namespace TradingLib.BrokerXAPI.Interop
         public QSEnumOrderStatus OrderStatus;
 
         /// <summary>
-        /// 委托编号
+        /// 系统唯一委托编号
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
-        public string OrderID;
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
+        public string ID;
+
+        /// <summary>
+        /// 向远端发单时 生成的本地OrderRef 比如CTP 
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
+        public string LocalID;
+
+        /// <summary>
+        /// 远端交易所返回的编号
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
+        public string OrderSysID;
     }
 
 
@@ -222,7 +276,7 @@ namespace TradingLib.BrokerXAPI.Interop
         /// <summary>
         /// 成交编号
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
         public string TradeID;
     }
 
@@ -230,11 +284,38 @@ namespace TradingLib.BrokerXAPI.Interop
 
 
 
+    /// <summary>
+    /// 连接建立回调委托
+    /// </summary>
+    public delegate void CBOnConnected();
 
+    /// <summary>
+    /// 连接断开回调委托
+    /// </summary>
+    public delegate void CBOnDisconnected();
+
+    /// <summary>
+    /// 登入回调委托
+    /// </summary>
+    /// <param name="pRspUserLogin"></param>
+    public delegate void CBOnLogin(ref XRspUserLoginField pRspUserLogin);
 
     /// <summary>
     /// 成交回调委托
     /// </summary>
     /// <param name="pTrade"></param>
     public delegate void CBRtnTrade(ref XTradeField pTrade);
+
+    /// <summary>
+    /// 委托回调委托
+    /// </summary>
+    /// <param name="pOrder"></param>
+    public delegate void CBRtnOrder(ref XOrderField pOrder);
+
+    /// <summary>
+    /// 委托错误回调委托
+    /// </summary>
+    /// <param name="pOrder"></param>
+    /// <param name="pError"></param>
+    public delegate void CBRtnOrderError(ref XOrderField pOrder,ref XErrorField pError);
 }

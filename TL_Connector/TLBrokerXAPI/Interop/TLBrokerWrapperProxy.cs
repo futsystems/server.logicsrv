@@ -51,7 +51,14 @@ namespace TradingLib.BrokerXAPI.Interop
             _Disconnect = NativeLib.GetUnmanagedFunction<DisconnectProc>("Disconnect");
             _Login = NativeLib.GetUnmanagedFunction<LoginProc>("Login");
             _SendOrder = NativeLib.GetUnmanagedFunction<SendOrderProc>("SendOrder");
+
+
+            _RegOnConnected = NativeLib.GetUnmanagedFunction<RegOnConnectedProc>("RegOnConnected");
+            _RegOnDisconnected = NativeLib.GetUnmanagedFunction<RegOnDisconnectedProc>("RegOnDisconnected");
+            _RegOnLogin = NativeLib.GetUnmanagedFunction<RegOnLoginProc>("RegOnLogin");
             _RegRtnTrade = NativeLib.GetUnmanagedFunction<RegRtnTradeProc>("RegRtnTrade");
+            _RegRtnOrder = NativeLib.GetUnmanagedFunction<RegRtnOrderProc>("RegRtnOrder");
+            _RegRtnOrderError = NativeLib.GetUnmanagedFunction<RegRtnOrderErrorProc>("RegRtnOrderError");
         }
 
 
@@ -74,9 +81,14 @@ namespace TradingLib.BrokerXAPI.Interop
         public void Register(IntPtr pBroker)
         {
             _Register(this.Wrapper, pBroker);
+
             //注册完毕具体的broker对象后 绑定事件
-            Console.WriteLine("register broker and then bind event");
+            _RegOnConnected(this.Wrapper, FireOnConnected);
+            _RegOnDisconnected(this.Wrapper, FireOnDisconnected);
+            _RegOnLogin(this.Wrapper, FireOnLogin);
             _RegRtnTrade(this.Wrapper, FireRtnTrade);
+            _RegRtnOrder(this.Wrapper, FireRtnOrder);
+            _RegRtnOrderError(this.Wrapper, FireRtnOrderError);
         }
 
         /// <summary>
@@ -123,12 +135,43 @@ namespace TradingLib.BrokerXAPI.Interop
         /// <param name="pWrapper"></param>
         /// <param name="pOrder"></param>
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate void SendOrderProc(IntPtr pWrapper, ref XOrderField pOrder);
+        public delegate string SendOrderProc(IntPtr pWrapper, ref XOrderField pOrder);
         SendOrderProc _SendOrder;
-        public void SendOrder(ref XOrderField pOrder)
+        public string SendOrder(ref XOrderField pOrder)
         {
-            _SendOrder(this.Wrapper, ref pOrder);
+            return _SendOrder(this.Wrapper, ref pOrder);
         }
+
+
+
+        #region 注册回调函数接口
+        /// <summary>
+        /// 注册连接建立回调
+        /// </summary>
+        /// <param name="pWrapper"></param>
+        /// <param name="cb"></param>
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void RegOnConnectedProc(IntPtr pWrapper,CBOnConnected cb);
+        RegOnConnectedProc _RegOnConnected;
+
+
+        /// <summary>
+        /// 注册连接建立回调
+        /// </summary>
+        /// <param name="pWrapper"></param>
+        /// <param name="cb"></param>
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void RegOnDisconnectedProc(IntPtr pWrapper, CBOnDisconnected cb);
+        RegOnDisconnectedProc _RegOnDisconnected;
+
+        /// <summary>
+        /// 注册登入回调
+        /// </summary>
+        /// <param name="pWrapper"></param>
+        /// <param name="cb"></param>
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void RegOnLoginProc(IntPtr pWrapper, CBOnLogin cb);
+        RegOnLoginProc _RegOnLogin;
 
         /// <summary>
         /// 注册成交回报回调
@@ -138,9 +181,61 @@ namespace TradingLib.BrokerXAPI.Interop
         public delegate void RegRtnTradeProc(IntPtr pWrapper,CBRtnTrade cb);
         RegRtnTradeProc _RegRtnTrade;
 
+        /// <summary>
+        /// 注册委托回报回调
+        /// </summary>
+        /// <param name="pWrapper"></param>
+        /// <param name="cb"></param>
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void RegRtnOrderProc(IntPtr pWrapper, CBRtnOrder cb);
+        RegRtnOrderProc _RegRtnOrder;
+
+        /// <summary>
+        /// 注册委托错误回调
+        /// </summary>
+        /// <param name="pWrapper"></param>
+        /// <param name="cb"></param>
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void RegRtnOrderErrorProc(IntPtr pWrapper, CBRtnOrderError cb);
+        RegRtnOrderErrorProc _RegRtnOrderError;
+        #endregion
 
 
         #region 回调事件
+
+        public event CBOnConnected OnConnectedEvent;
+        /// <summary>
+        /// 触发连接建立事件
+        /// </summary>
+        void FireOnConnected()
+        {
+            if (OnConnectedEvent != null)
+                OnConnectedEvent();
+        }
+
+
+        public event CBOnDisconnected OnDisconnectedEvent;
+        /// <summary>
+        /// 触发连接断开事件
+        /// </summary>
+        void FireOnDisconnected()
+        {
+            if (OnDisconnectedEvent != null)
+                OnDisconnectedEvent();
+        }
+
+
+        public event CBOnLogin OnLoginEvent;
+        /// <summary>
+        /// 触发登入回报事件
+        /// </summary>
+        /// <param name="pRspUserLogin"></param>
+        void FireOnLogin(ref XRspUserLoginField pRspUserLogin)
+        {
+            if (OnLoginEvent != null)
+                OnLoginEvent(ref pRspUserLogin);
+        }
+
         public event CBRtnTrade OnRtnTradeEvent;
         /// <summary>
         /// 触发成交回调事件,其余事件监听者绑定到OnRtnTradeEvent事件
@@ -155,6 +250,30 @@ namespace TradingLib.BrokerXAPI.Interop
         }
 
 
+
+        public event CBRtnOrder OnRtnOrderEvent;
+        /// <summary>
+        /// 触发委托回调事件
+        /// </summary>
+        /// <param name="pOrder"></param>
+        void FireRtnOrder(ref XOrderField pOrder)
+        {
+            if (OnRtnOrderEvent != null)
+                OnRtnOrderEvent(ref pOrder);
+        }
+
+        public event CBRtnOrderError OnRtnOrderErrorEvent;
+        /// <summary>
+        /// 触发委托错误回调事件
+        /// </summary>
+        /// <param name="pOrder"></param>
+        /// <param name="pError"></param>
+        void FireRtnOrderError(ref XOrderField pOrder, ref XErrorField pError)
+        {
+            //Console.WriteLine("8888888888888888888888888");
+            if (OnRtnOrderErrorEvent != null)
+                OnRtnOrderErrorEvent(ref pOrder, ref pError);
+        }
         #endregion
 
 

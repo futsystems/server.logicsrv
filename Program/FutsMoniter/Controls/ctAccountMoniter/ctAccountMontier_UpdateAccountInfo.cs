@@ -62,23 +62,6 @@ namespace FutsMoniter.Controls
         BindingSource datasource = new BindingSource();
 
 
-        /// <summary>
-        /// validview 调整视图状态
-        /// 根据具体的权限状态进行调整
-        /// </summary>
-        public void ValidView()
-        {
-            if (!Globals.RightRouter)
-            {
-                //accountgrid.Columns[ROUTEIMG].IsVisible = false;
-            }
-            if (!Globals.RightAgent)
-            {
-                //accountgrid.Columns[AGENTCODE].IsVisible = false;
-            }
-
-            //fmaccountconfig.ValidView();
-        }
 
 
         /// <summary>
