@@ -42,7 +42,7 @@ namespace TradingLib.Common
             } 
         }
 
-        string _locakID;
+        string _locakID="0";
         public string LocalID { get { return _locakID; } set { _locakID = value; } }
 
         //委托状态 记录了委托过程

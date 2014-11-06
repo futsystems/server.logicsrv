@@ -397,8 +397,16 @@ namespace TradingLib.ServiceManager
         /// <returns></returns>
         IBroker _br_LookupBrokerEvent(string exchange)
         {
+            debug("选择实盘交易通道" + exchange, QSEnumDebugLevel.MUST);
             //debug("交易通道选择到这里");
             IBroker b;
+            string demo = "SW0021";
+            if (brokerInstList.TryGetValue(demo, out b) && IsBrokerLoaded(demo))
+            {
+                return b;
+            }
+            return null;
+
             string fullname;
             //从交易所名->交易通道全名映射中找到 交易通道全名
             if (ExchangeBrokerMap.TryGetValue(exchange, out fullname))

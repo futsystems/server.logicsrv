@@ -19,20 +19,51 @@ namespace TradingLib.BrokerXAPI.Interop
     /// <summary>
     /// 某个具体的Broker的封装Proxy
     /// </summary>
-    public class TLBrokerProxy
+    public class TLBrokerProxy:IDisposable
     {
         public static bool ValidBrokerProxy(string path,string dllname)
-        { 
+        {
+            TLBrokerProxy proxy=null;
             try
             {
-                TLBrokerProxy proxy = new TLBrokerProxy(path, dllname);
-                return true;
+                proxy = new TLBrokerProxy(path, dllname);
+                return true;                
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return false;
             }
+            finally
+            { 
+                if(proxy != null)
+                {
+                    proxy.Dispose();
+                }
+            }
+
         }
+
+        private bool _disposed;
+
+        public virtual void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (_Broker == IntPtr.Zero)
+                    return;
+                DestoryBroker(_Broker);
+            }
+
+            _disposed = true;
+        }
+
+
         private  readonly UnmanagedLibrary NativeLib;
 
         public IntPtr Handle { get { return _Broker; } }
@@ -55,6 +86,7 @@ namespace TradingLib.BrokerXAPI.Interop
         private  void AssignCommonDelegates()
         {
             CreateBroker = NativeLib.GetUnmanagedFunction<CreateBrokerProc>("CreateBroker");
+            DestoryBroker = NativeLib.GetUnmanagedFunction<DestoryBrokerProc>("DestoryBroker"); 
         }
 
         /// <summary>
@@ -64,6 +96,12 @@ namespace TradingLib.BrokerXAPI.Interop
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate IntPtr CreateBrokerProc();
         public CreateBrokerProc CreateBroker;
+
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate IntPtr DestoryBrokerProc(IntPtr pBroker);
+        public DestoryBrokerProc DestoryBroker;
+
 
         ///// <summary>
         ///// 字符串参数调用

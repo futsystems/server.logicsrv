@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
+using TradingLib.API;
+using TradingLib.Common;
 
 /*
  * 关于zmq的clr实现过程
@@ -19,20 +21,50 @@ namespace TradingLib.BrokerXAPI.Interop
     /// <summary>
     /// TLBrokerWrapper封装Proxy用于注入具体的Broker插件,形成通用的调用层
     /// </summary>
-    public class TLBrokerWrapperProxy
+    public class TLBrokerWrapperProxy : IDisposable
     {
         public static bool ValidWrapperProxy(string path,string dllname)
         {
+            TLBrokerWrapperProxy proxy = null;
             try
             {
-                TLBrokerWrapperProxy proxy = new TLBrokerWrapperProxy(path, dllname);
+                proxy = new TLBrokerWrapperProxy(path, dllname);
                 return true;
             }
             catch (Exception ex)
             {
                 return false;
             }
+            finally
+            {
+                if(proxy != null)
+                {
+                    proxy.Dispose();
+                }
+            }
         }
+
+        private bool _disposed;
+
+        public virtual void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (_Wrapper == IntPtr.Zero)
+                    return;
+                _DestoryBrokerWrapper(_Wrapper);
+            }
+
+            _disposed = true;
+        }
+
+
         private  readonly UnmanagedLibrary NativeLib;
 
         IntPtr _Wrapper = IntPtr.Zero;
@@ -58,6 +90,7 @@ namespace TradingLib.BrokerXAPI.Interop
         private  void AssignCommonDelegates()
         {
             _CreateBrokerWrapper = NativeLib.GetUnmanagedFunction<CreateBrokerWrapperProc>("CreateBrokerWrapper");
+            _DestoryBrokerWrapper = NativeLib.GetUnmanagedFunction<DestoryBrokerWrapperProc>("DestoryBrokerWrapper");
             _Register = NativeLib.GetUnmanagedFunction<RegisterProc>("Register");
             _Connect = NativeLib.GetUnmanagedFunction<ConnectProc>("Connect");
             _Disconnect = NativeLib.GetUnmanagedFunction<DisconnectProc>("Disconnect");
@@ -71,6 +104,9 @@ namespace TradingLib.BrokerXAPI.Interop
             _RegRtnTrade = NativeLib.GetUnmanagedFunction<RegRtnTradeProc>("RegRtnTrade");
             _RegRtnOrder = NativeLib.GetUnmanagedFunction<RegRtnOrderProc>("RegRtnOrder");
             _RegRtnOrderError = NativeLib.GetUnmanagedFunction<RegRtnOrderErrorProc>("RegRtnOrderError");
+
+            //_reCBOnConnected = FireOnConnected;
+            //_reOnRtnOrderErrorEvent = FireRtnOrderError;
         }
 
 
@@ -83,6 +119,10 @@ namespace TradingLib.BrokerXAPI.Interop
         public delegate IntPtr CreateBrokerWrapperProc();
         CreateBrokerWrapperProc _CreateBrokerWrapper;
 
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate IntPtr DestoryBrokerWrapperProc(IntPtr pWrapper);
+        DestoryBrokerWrapperProc _DestoryBrokerWrapper;
+
         /// <summary>
         /// 注册具体的Broker调用
         /// </summary>
@@ -90,17 +130,12 @@ namespace TradingLib.BrokerXAPI.Interop
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void RegisterProc(IntPtr pWrapper,IntPtr pBroker);
         RegisterProc _Register;
-        public void Register(IntPtr pBroker)
+        public void Register(TLBrokerProxy brokerproxy)
         {
-            _Register(this.Wrapper, pBroker);
+            _Register(this.Wrapper, brokerproxy.Handle);
 
-            //注册完毕具体的broker对象后 绑定事件
-            _RegOnConnected(this.Wrapper, FireOnConnected);
-            _RegOnDisconnected(this.Wrapper, FireOnDisconnected);
-            _RegOnLogin(this.Wrapper, FireOnLogin);
-            _RegRtnTrade(this.Wrapper, FireRtnTrade);
-            _RegRtnOrder(this.Wrapper, FireRtnOrder);
-            _RegRtnOrderError(this.Wrapper, FireRtnOrderError);
+            //注册完毕具体的broker对象后 绑定事件注意 直接用函数名来进行绑定会造成回调函数被回收导致c++调用回调时报错 要用原始的事件声明方式
+            //_RegOnConnected(this.Wrapper, FireOnConnected);
         }
 
         /// <summary>
@@ -214,77 +249,46 @@ namespace TradingLib.BrokerXAPI.Interop
 
 
         #region 回调事件
-
-        public event CBOnConnected OnConnectedEvent;
-        /// <summary>
-        /// 触发连接建立事件
-        /// </summary>
-        void FireOnConnected()
+        CBOnConnected cbBOnConnected;
+        public event CBOnConnected OnConnectedEvent
         {
-            if (OnConnectedEvent != null)
-                OnConnectedEvent();
+            add { cbBOnConnected += value; _RegOnConnected(this.Wrapper, cbBOnConnected); }
+            remove { cbBOnConnected -= value; _RegOnConnected(this.Wrapper, cbBOnConnected); }
         }
 
-
-        public event CBOnDisconnected OnDisconnectedEvent;
-        /// <summary>
-        /// 触发连接断开事件
-        /// </summary>
-        void FireOnDisconnected()
+        CBOnDisconnected cbOnDisconnected;
+        public event CBOnDisconnected OnDisconnectedEvent
         {
-            if (OnDisconnectedEvent != null)
-                OnDisconnectedEvent();
+            add { cbOnDisconnected += value; _RegOnDisconnected(this.Wrapper, cbOnDisconnected); }
+            remove { cbOnDisconnected -= value; _RegOnDisconnected(this.Wrapper, cbOnDisconnected); }
         }
 
-
-        public event CBOnLogin OnLoginEvent;
-        /// <summary>
-        /// 触发登入回报事件
-        /// </summary>
-        /// <param name="pRspUserLogin"></param>
-        void FireOnLogin(ref XRspUserLoginField pRspUserLogin)
+        CBOnLogin cbOnLogin;
+        public event CBOnLogin OnLoginEvent
         {
-            if (OnLoginEvent != null)
-                OnLoginEvent(ref pRspUserLogin);
+            add { cbOnLogin += value; _RegOnLogin(this.Wrapper, cbOnLogin); }
+            remove { cbOnLogin -= value; _RegOnLogin(this.Wrapper, cbOnLogin); }
         }
 
-        public event CBRtnTrade OnRtnTradeEvent;
-        /// <summary>
-        /// 触发成交回调事件,其余事件监听者绑定到OnRtnTradeEvent事件
-        /// 将触发函数指针绑定到c++对应的回调对象
-        /// </summary>
-        /// <param name="pTrade"></param>
-        void FireRtnTrade(ref XTradeField pTrade)
+        CBRtnTrade cbRtnTrade;
+        public event CBRtnTrade OnRtnTradeEvent
         {
-            //Console.WriteLine("it is here for trade event");
-            if (OnRtnTradeEvent != null)
-                OnRtnTradeEvent(ref pTrade);
+            add{cbRtnTrade += value;_RegRtnTrade(this.Wrapper,cbRtnTrade);}
+            remove { cbRtnTrade -= value; _RegRtnTrade(this.Wrapper, cbRtnTrade); }
         }
 
-
-
-        public event CBRtnOrder OnRtnOrderEvent;
-        /// <summary>
-        /// 触发委托回调事件
-        /// </summary>
-        /// <param name="pOrder"></param>
-        void FireRtnOrder(ref XOrderField pOrder)
+        CBRtnOrder cbRtnOrder;
+        public event CBRtnOrder OnRtnOrderEvent
         {
-            if (OnRtnOrderEvent != null)
-                OnRtnOrderEvent(ref pOrder);
+            add { cbRtnOrder += value; _RegRtnOrder(this.Wrapper, cbRtnOrder); }
+            remove { cbRtnOrder -= value; _RegRtnOrder(this.Wrapper, cbRtnOrder); }
         }
 
-        public event CBRtnOrderError OnRtnOrderErrorEvent;
-        /// <summary>
-        /// 触发委托错误回调事件
-        /// </summary>
-        /// <param name="pOrder"></param>
-        /// <param name="pError"></param>
-        void FireRtnOrderError(ref XOrderField pOrder, ref XErrorField pError)
+        CBRtnOrderError cbRtnOrderError;
+        public event CBRtnOrderError OnRtnOrderErrorEvent
         {
-            //Console.WriteLine("8888888888888888888888888");
-            if (OnRtnOrderErrorEvent != null)
-                OnRtnOrderErrorEvent(ref pOrder, ref pError);
+            add { cbRtnOrderError += value; _RegRtnOrderError(this.Wrapper, cbRtnOrderError); }
+            remove { cbRtnOrderError -= value; _RegRtnOrderError(this.Wrapper, cbRtnOrderError); }
         }
         #endregion
 

@@ -27,6 +27,8 @@ namespace TradingLib.ServiceManager
             }
             foreach (BrokerConfig cfg in ConnectorConfigTracker.BrokerConfigs)
             {
+                if (cfg.Interface == null)
+                    continue;
                 if (!cfg.Interface.IsValid)
                     continue;
                 debug("Config Token:" + cfg.Token + " Name:" + cfg.Name + " SrvIP:" + cfg.srvinfo_ipaddress + " LoginID:" + cfg.usrinfo_userid, QSEnumDebugLevel.INFO);
@@ -51,6 +53,8 @@ namespace TradingLib.ServiceManager
                 {
                     continue;
                 }
+
+                broker.SendLogItemEvent += new ILogItemDel(Util.Log);
 
                 //设定服务端连接信息和用户登入信息
                 broker.SetServerInfo(BrokerXAPIHelper.GenServerInfo(cfg));
@@ -78,6 +82,7 @@ namespace TradingLib.ServiceManager
                 //将broker的交易类事件绑定到路由内 然后通过路由转发到交易消息服务
                 BindBrokerIntoRouter(broker);
 
+                broker.Start();
             }
         
         }

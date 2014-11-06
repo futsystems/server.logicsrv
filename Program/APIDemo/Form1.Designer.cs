@@ -211,7 +211,7 @@
             this.loginid.Name = "loginid";
             this.loginid.Size = new System.Drawing.Size(91, 21);
             this.loginid.TabIndex = 14;
-            this.loginid.Text = "9280001";
+            this.loginid.Text = "6666";
             // 
             // label5
             // 
@@ -246,7 +246,7 @@
             this.sendorder_symbol.Name = "sendorder_symbol";
             this.sendorder_symbol.Size = new System.Drawing.Size(71, 21);
             this.sendorder_symbol.TabIndex = 27;
-            this.sendorder_symbol.Text = "IF1410";
+            this.sendorder_symbol.Text = "IF1411";
             // 
             // label9
             // 

@@ -22,14 +22,35 @@ namespace TradingLib.BrokerXAPI
         public XOrderField Order;
         public XErrorField Error;
     }
-    public class TLBroker : TLBrokerBase,IBroker
+    public class TLBroker : TLBrokerBase,IBroker,IDisposable
     {
         
 
         TLBrokerProxy _broker;
-        TLBrokerWrapperProxy _wrapper;
+        public TLBrokerWrapperProxy _wrapper;
 
         public IBrokerClearCentre ClearCentre { get; set; }
+
+
+        private bool _disposed;
+
+        public virtual void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                _broker.Dispose();
+                _wrapper.Dispose();
+            }
+
+            _disposed = true;
+        }
+
 
 
         #region 事件
@@ -81,6 +102,7 @@ namespace TradingLib.BrokerXAPI
             InitBroker();
             //建立服务端连接
             _wrapper.Connect(ref _srvinfo);
+            debug("it is here now ??????????????????????????????????????????????????????????",QSEnumDebugLevel.INFO);
             int i=0;
             while (!_connected && i < _waitnum)
             {
@@ -107,6 +129,11 @@ namespace TradingLib.BrokerXAPI
                 return;
             }
             debug("接口:" + this.BrokerToken + "登入成功,可以接受交易请求", QSEnumDebugLevel.MUST);
+
+            _working = true;
+            _notifythread = new Thread(ProcessCache);
+            _notifythread.IsBackground = true;
+            _notifythread.Start();
             //对外触发连接成功事件
             if (Connected != null)
                 Connected(this);
@@ -114,10 +141,10 @@ namespace TradingLib.BrokerXAPI
         }
         public void Stop()
         { 
-        
+            
         }
 
-        public bool IsLive { get { return true; } }
+        public bool IsLive { get { return _working; } }
 
 
         /// <summary>
@@ -157,6 +184,14 @@ namespace TradingLib.BrokerXAPI
         /// 交易所编号 委托 map
         /// </summary>
         ConcurrentDictionary<string, Order> exchange_order_map = new ConcurrentDictionary<string, Order>();
+        string GetExchKey(Order o)
+        {
+            return o.Exchange + ":" + o.OrderExchID;
+        }
+        string GetExchKey(ref XTradeField f)
+        {
+            return f.Exchange + ":" + f.OrderSysID;
+        }
         Order OrderExchID2Order(string sysid)
         {
             Order o = null;
@@ -191,7 +226,7 @@ namespace TradingLib.BrokerXAPI
             o.Broker = this.BrokerToken;
             //通过接口发送委托
             string localid = _wrapper.SendOrder(ref order);
-            bool success = string.IsNullOrEmpty(localid);
+            bool success = !string.IsNullOrEmpty(localid);
             if (success)
             {
                 //1.将委托加入到接口委托维护列表
@@ -252,15 +287,16 @@ namespace TradingLib.BrokerXAPI
             _broker = new TLBrokerProxy(_brokerPath, _brokerName);
 
             //2.注册接口到wrapper
-            _wrapper.Register(_broker.Handle);
+            _wrapper.Register(_broker);
 
             //3.绑定回调函数
-            _wrapper.OnRtnTradeEvent += new CBRtnTrade(_wrapper_OnRtnTradeEvent);
-            _wrapper.OnRtnOrderEvent += new CBRtnOrder(_wrapper_OnRtnOrderEvent);
             _wrapper.OnConnectedEvent += new CBOnConnected(_wrapper_OnConnectedEvent);
             _wrapper.OnDisconnectedEvent += new CBOnDisconnected(_wrapper_OnDisconnectedEvent);
             _wrapper.OnLoginEvent += new CBOnLogin(_wrapper_OnLoginEvent);
+
+            _wrapper.OnRtnOrderEvent += new CBRtnOrder(_wrapper_OnRtnOrderEvent);
             _wrapper.OnRtnOrderErrorEvent += new CBRtnOrderError(_wrapper_OnRtnOrderErrorEvent);
+            _wrapper.OnRtnTradeEvent += new CBRtnTrade(_wrapper_OnRtnTradeEvent);
         }
 
         const int buffersize=1000;
@@ -272,9 +308,12 @@ namespace TradingLib.BrokerXAPI
         RingBuffer<XOrderError> _ordererrorcache = new RingBuffer<XOrderError>();
 
         Thread _notifythread = null;
+        bool _working = false;
+
         ManualResetEvent _notifywaiting = new ManualResetEvent(false);
         void NewNotify()
         {
+            Util.Debug("notify wiaiting event ....", QSEnumDebugLevel.ERROR);
             if ((_notifythread != null) && (_notifythread.ThreadState == System.Threading.ThreadState.WaitSleepJoin))
             {
                 _notifywaiting.Set();
@@ -282,70 +321,88 @@ namespace TradingLib.BrokerXAPI
         }
         void ProcessCache()
         {
-            //发送委托回报
-            while (_ordercache.hasItems)
+            while (_working)
             {
-                XOrderField order = _ordercache.Read();//获得委托数据
-                //1.获得本地委托数据 更新相关状态后对外触发
-                Order o = LocalID2Order(order.LocalID);
-                if (o != null)//本地记录了该委托 更新数量 状态 并对外发送
+                try
                 {
-                    o.Status = order.OrderStatus;//更新委托状态
-                    o.comment = order.StatusMsg;//填充状态信息
-                    o.Filled = order.FilledSize;//成交数量
-                    o.size = order.UnfilledSize * (o.side ? 1 : -1);//更新当前数量
-
-                    o.OrderExchID = order.OrderSysID;//更新交易所委托编号
-                    
-                    if (o.Status == QSEnumOrderStatus.Submited)
-                    { 
-                        
+                    //发送委托回报
+                    while (_ordercache.hasItems)
+                    {
+                        Util.Debug("process order in cache....", QSEnumDebugLevel.ERROR);
+                        XOrderField order = _ordercache.Read();//获得委托数据
+                        //1.获得本地委托数据 更新相关状态后对外触发
+                        Order o = LocalID2Order(order.LocalID);
+                        if (o != null)//本地记录了该委托 更新数量 状态 并对外发送
+                        {
+                            o.Status = order.OrderStatus;//更新委托状态
+                            o.comment = order.StatusMsg;//填充状态信息
+                            o.Filled = order.FilledSize;//成交数量
+                            o.size = order.UnfilledSize * (o.side ? 1 : -1);//更新当前数量
+                            
+                            o.OrderExchID = order.OrderSysID;//更新交易所委托编号
+                            
+                            if (o.Status == QSEnumOrderStatus.Submited)
+                            {
+                                //提交到成交接口后 会获得对应的交易所委托编号 并将它放入交易所委托map
+                                string exchkey = GetExchKey(o);
+                                Order tmp = OrderExchID2Order(exchkey);
+                                if (tmp == null)
+                                {
+                                    exchange_order_map.TryAdd(exchkey, o);
+                                }
+                            }
+                            if (GotOrderEvent != null)
+                                GotOrderEvent(o);
+                        }
                     }
-                    if (GotOrderEvent != null)
-                        GotOrderEvent(o);
+                    //发送委托错误回报
+                    while (!_ordercache.hasItems && _ordererrorcache.hasItems)
+                    {
+
+                    }
+                    //发送成交回报
+                    while (!_ordererrorcache.hasItems && !_ordererrorcache.hasItems && _tradecache.hasItems)
+                    {
+                        XTradeField trade = _tradecache.Read();
+                        string exchkey = GetExchKey(ref trade);
+                        Order o = OrderExchID2Order(exchkey);
+                        //
+                        if (o != null)
+                        {
+                            Trade fill = (Trade)(new OrderImpl(o));
+                            fill.xsize = trade.Size * (trade.Side ? 1 : -1);
+                            fill.xprice = (decimal)trade.Price;
+
+                            fill.xdate = trade.Date;
+                            fill.xtime = trade.Time;
+
+                            fill.Broker = this.BrokerToken;
+                            fill.OrderExchID = o.OrderExchID;
+                            fill.BrokerKey = trade.TradeID;
+
+
+                            if (GotFillEvent != null)
+                                GotFillEvent(fill);
+                        }
+
+                    }
+                    // clear current flag signal
+                    _notifywaiting.Reset();
+                    // wait for a new signal to continue reading
+                    _notifywaiting.WaitOne(_sleep);
                 }
-            }
-            //发送委托错误回报
-            while (!_ordercache.hasItems && _ordererrorcache.hasItems)
-            { 
-            
-            }
-            //发送成交回报
-            while (!_ordererrorcache.hasItems && !_ordererrorcache.hasItems && _tradecache.hasItems)
-            {
-                XTradeField trade = _tradecache.Read();
-                string exchkey = trade.Exchange+":"+trade.OrderSysID;
-                Order o = OrderExchID2Order(exchkey);
-                if(o != null)
+                catch (Exception ex)
                 {
-                    Trade fill = new TradeImpl(o.symbol, (decimal)trade.Price, trade.Size);
-                    fill.Account = o.Account;
-                    fill.xdate = trade.Date;
-                    fill.xtime = trade.Time;
-                    fill.Broker = this.BrokerToken;
-                    fill.oSymbol = o.oSymbol;
-                    fill.OrderExchID = o.OrderExchID;
-                    fill.OffsetFlag = trade.OffsetFlag;
-                    fill.id = o.id;
-                    fill.BrokerKey = trade.TradeID;
-
-
-                    if (GotFillEvent != null)
-                        GotFillEvent(fill);
+                    Util.Debug("process cache error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
                 }
-
             }
-            // clear current flag signal
-            _notifywaiting.Reset();
-            // wait for a new signal to continue reading
-            _notifywaiting.WaitOne(_sleep);
         }
 
         #region 底层事件处理
         bool _connected = false;
         void _wrapper_OnConnectedEvent()
         {
-            Util.Debug("TLBroker connected... try to login", QSEnumDebugLevel.MUST);
+            Util.Debug("-----------TLBroker OnConnectedEvent-----------------------", QSEnumDebugLevel.WARNING);
             _connected = true;
             //请求登入
             _wrapper.Login(ref _usrinfo);
@@ -356,7 +413,7 @@ namespace TradingLib.BrokerXAPI
 
         void _wrapper_OnLoginEvent(ref XRspUserLoginField pRspUserLogin)
         {
-            Util.Debug("broker login replly,errorid:" + pRspUserLogin.ErrorID.ToString() + " errormessage:" + pRspUserLogin.ErrorMsg,QSEnumDebugLevel.MUST);
+            Util.Debug("-----------TLBroker OnLoginEvent-----------------------", QSEnumDebugLevel.WARNING);
             _loginreply = true;
             if (pRspUserLogin.ErrorID == 0)
             {
@@ -372,15 +429,14 @@ namespace TradingLib.BrokerXAPI
 
         void _wrapper_OnDisconnectedEvent()
         {
-            Util.Debug("TLBroker disconnected...", QSEnumDebugLevel.MUST);
+            Util.Debug("-----------TLBroker OnDisconnectedEvent-----------------------", QSEnumDebugLevel.WARNING);
         }
 
 
 
         void _wrapper_OnRtnOrderEvent(ref XOrderField pOrder)
         {
-            //Util.Debug("got order reply ???????????????????????????");
-
+            Util.Debug("-----------TLBroker OnRtnOrderEvent-----------------------", QSEnumDebugLevel.WARNING);
             //Util.Debug(" data:" + pOrder.Date + " exchange:" + pOrder.Exchange + " filledsize:" + pOrder.FilledSize.ToString() + " limitprice:" + pOrder.LimitPrice + " offsetflag:" + pOrder.OffsetFlag.ToString() + " orderid:" + pOrder.ID + " status:" + pOrder.OrderStatus.ToString() + " side:" + pOrder.Side + " stopprice:" + pOrder.StopPrice.ToString() + " symbol:" + pOrder.Symbol + " totalsize:" + pOrder.TotalSize.ToString() + " unfilledsize:" + pOrder.UnfilledSize.ToString() + " statusmsg:" + pOrder.StatusMsg);
             _ordercache.Write(pOrder);
             NewNotify();
@@ -388,6 +444,7 @@ namespace TradingLib.BrokerXAPI
 
         void _wrapper_OnRtnOrderErrorEvent(ref XOrderField pOrder, ref XErrorField pError)
         {
+            Util.Debug("-----------TLBroker OnRtnOrderErrorEvent-----------------------", QSEnumDebugLevel.WARNING);
             //Util.Debug("order localid:" + pOrder.LocalID + " errorid:" + pError.ErrorID.ToString() + " errmsg:" + pError.ErrorMsg, QSEnumDebugLevel.MUST);
             //Util.Debug(" data:" + pOrder.Date + " exchange:" + pOrder.Exchange + " filledsize:" + pOrder.FilledSize.ToString() + " limitprice:" + pOrder.LimitPrice + " offsetflag:" + pOrder.OffsetFlag.ToString() + " orderid:" + pOrder.ID + " status:" + pOrder.OrderStatus.ToString() + " side:" + pOrder.Side + " stopprice:" + pOrder.StopPrice.ToString() + " symbol:" + pOrder.Symbol + " totalsize:" + pOrder.TotalSize.ToString() + " unfilledsize:" + pOrder.UnfilledSize.ToString() + " statusmsg:" + pOrder.StatusMsg);
 
@@ -396,6 +453,7 @@ namespace TradingLib.BrokerXAPI
 
         void _wrapper_OnRtnTradeEvent(ref XTradeField pTrade)
         {
+            Util.Debug("-----------TLBroker OnRtnTradeEvent-----------------------", QSEnumDebugLevel.WARNING);
             //Console.WriteLine("got new trade..???????????????????????");
             //Util.Debug("tradefield commission:" + pTrade.Commission + " date:" + pTrade.Date.ToString() + " exchange:" + pTrade.Exchange + " offsetflag:" + pTrade.OffsetFlag.ToString() + " price:" + pTrade.Price.ToString() + " side:" + pTrade.Side.ToString() + " size:" + pTrade.Size.ToString() + " symbol:" + pTrade.Symbol + " time:" + pTrade.Time + " tradeid:" + pTrade.TradeID +" ordresysid:"+pTrade.OrderSysID +" date:"+pTrade.Date.ToString() +" time:"+pTrade.Time.ToString());
             _tradecache.Write(pTrade);
