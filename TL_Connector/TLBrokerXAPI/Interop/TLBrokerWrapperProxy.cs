@@ -21,6 +21,18 @@ namespace TradingLib.BrokerXAPI.Interop
     /// </summary>
     public class TLBrokerWrapperProxy
     {
+        public static bool ValidWrapperProxy(string path,string dllname)
+        {
+            try
+            {
+                TLBrokerWrapperProxy proxy = new TLBrokerWrapperProxy(path, dllname);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
         private  readonly UnmanagedLibrary NativeLib;
 
         IntPtr _Wrapper = IntPtr.Zero;

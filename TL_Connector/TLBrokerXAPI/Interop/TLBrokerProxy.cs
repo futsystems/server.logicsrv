@@ -21,6 +21,18 @@ namespace TradingLib.BrokerXAPI.Interop
     /// </summary>
     public class TLBrokerProxy
     {
+        public static bool ValidBrokerProxy(string path,string dllname)
+        { 
+            try
+            {
+                TLBrokerProxy proxy = new TLBrokerProxy(path, dllname);
+                return true;
+            }
+            catch(Exception ex)
+            {
+                return false;
+            }
+        }
         private  readonly UnmanagedLibrary NativeLib;
 
         public IntPtr Handle { get { return _Broker; } }

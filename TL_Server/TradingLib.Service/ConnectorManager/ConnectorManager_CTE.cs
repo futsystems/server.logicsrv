@@ -17,12 +17,12 @@ namespace TradingLib.ServiceManager
             sb.Append("-----------Brokers List------------" + "\r\n");
             foreach (IBroker b in brokerInstList.Values)
             {
-                sb.Append(b.GetType().Name.PadRight(10, ' ') + "Status:" + b.IsLive.ToString() + "\r\n");
+                sb.Append(this.GetBrokerToken(b).PadRight(20, ' ') + "Status:" + b.IsLive.ToString() + "\r\n");
             }
             sb.Append("-----------DataFeeds List---------" + "\r\n");
             foreach (IDataFeed f in datafeedInstList.Values)
             {
-                sb.Append(f.GetType().Name.PadRight(10, ' ') + "Status:" + f.IsLive.ToString() + "\r\n");
+                sb.Append(f.GetType().Name.PadRight(20, ' ') + "Status:" + f.IsLive.ToString() + "\r\n");
             }
             return sb.ToString();
         }

@@ -209,6 +209,13 @@ namespace TradingLib.BrokerXAPI.Interop
         public QSEnumOrderStatus OrderStatus;
 
         /// <summary>
+        /// 委托状态消息
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+        public string StatusMsg;
+
+
+        /// <summary>
         /// 系统唯一委托编号
         /// </summary>
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
@@ -278,6 +285,12 @@ namespace TradingLib.BrokerXAPI.Interop
         /// </summary>
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
         public string TradeID;
+
+        /// <summary>
+        /// 远端交易所返回的编号
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
+        public string OrderSysID;
     }
 
 

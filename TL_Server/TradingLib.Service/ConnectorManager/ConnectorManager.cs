@@ -5,7 +5,19 @@ using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Core;
+using TradingLib.BrokerXAPI;
 
+
+/*
+ * TLBrokerXAPI 实现IBroker 
+ * 在ConnectorManager 中从数据库加载Broker同时生成对应的帐户成交通道 加入到实盘成交列表
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * */
 namespace TradingLib.ServiceManager
 {
 
@@ -53,6 +65,18 @@ namespace TradingLib.ServiceManager
             routerbinded = true;
         }
 
+        string GetBrokerToken(IBroker broker)
+        {
+            //如果通过XAPI接口进行扩展的成交接口 则返回BrokerToken来作为唯一标识
+            if(broker is TLBrokerBase)
+            {
+                TLBrokerBase brokerbase = broker as TLBrokerBase;
+                return brokerbase.BrokerToken;
+            }
+            //其余扩展的Broker返回其类型名
+            return broker.GetType().FullName;
+             
+        }
         /// <summary>
         /// 加载路由
         /// </summary>
@@ -63,10 +87,17 @@ namespace TradingLib.ServiceManager
                 debug("未绑定数据与成交路由中心,请先绑定", QSEnumDebugLevel.ERROR);
                 return;
             }
+
+            
             //加载路由
             LoadConnector();
             //加载交易所列表
             LoadExchangeTable();
+
+
+            ValidBrokerInterface();
+            
+            LoadBrokerXAPI();
         }
         /// <summary>
         /// 查找某个交易路由
@@ -108,12 +139,6 @@ namespace TradingLib.ServiceManager
         public IDataFeed[] DataFeeds { get { return datafeedInstList.Values.ToArray(); } }
 
 
-        //void debug(string msg)
-        //{
-        //    //Util.Debug(">>>Connector:" + msg);
-        //    this.debug(msg, QSEnumDebugLevel.INFO);
-        //}
-
         //接口类型应映射表
         Dictionary<string, Type> brokermodule = new Dictionary<string, Type>();
         Dictionary<string, Type> datafeedmodule = new Dictionary<string, Type>();
@@ -128,7 +153,7 @@ namespace TradingLib.ServiceManager
         void LoadConnector()
         {
 
-            //获得当前插件connecter中所有可用的交易通道插件以及数据通道插件
+            //获得当前插件connecter中所有可用的交易通道插件以及数据通道插件 
             List<Type> brokerlist = PluginHelper.LoadBrokerType();//ConnecterHelper.GetBroker();
             List<Type> datafeedlist = PluginHelper.LoadDataFeedType(); // ConnecterHelper.GetDataFeed();
 
@@ -142,10 +167,10 @@ namespace TradingLib.ServiceManager
                 brokerInstList.Add(t.FullName, broker);
 
                 //绑定交易通道对外输出日志事件
-                broker.SendDebugEvent += (string message) =>
-                    {
-                        debug("BR["+t.FullName + "] " + message, QSEnumDebugLevel.INFO);
-                    };
+                //broker.SendDebugEvent += (string message) =>
+                //    {
+                //        debug("BR["+t.FullName + "] " + message, QSEnumDebugLevel.INFO);
+                //    };
 
                 //绑定状态事件
                 broker.Connected += (IConnecter b) =>
@@ -171,13 +196,14 @@ namespace TradingLib.ServiceManager
                 object[] args;
                 args = new object[] { };
                 IDataFeed datafeed = (IDataFeed)Activator.CreateInstance(t, args);
+
                 datafeedmodule.Add(t.FullName, t);
                 datafeedInstList.Add(t.FullName, datafeed);
                 //绑定数据通道对外输出日志以及状态更新
-                datafeed.SendDebugEvent += (string message) =>
-                    {
-                        debug("DR["+t.FullName + "] " + message, QSEnumDebugLevel.INFO);
-                    };
+                //datafeed.SendDebugEvent += (string message) =>
+                //    {
+                //        debug("DR["+t.FullName + "] " + message, QSEnumDebugLevel.INFO);
+                //    };
                     
 
 
@@ -203,20 +229,20 @@ namespace TradingLib.ServiceManager
         Dictionary<string, bool> brokerLoadedFlags = new Dictionary<string, bool>();
         Dictionary<string, bool> datafeedLoadedFlags = new Dictionary<string, bool>();
 
-        bool IsBrokerLoaded(string fullname)
+        bool IsBrokerLoaded(string token)
         {
             bool loaded = false;
-            if (!brokerLoadedFlags.TryGetValue(fullname, out loaded))
+            if (!brokerLoadedFlags.TryGetValue(token, out loaded))
             {
                 return false;
             }
             return loaded;
         }
 
-        bool IsDataFeedLoaded(string fullname)
+        bool IsDataFeedLoaded(string token)
         {
             bool loaded = false;
-            if (!datafeedLoadedFlags.TryGetValue(fullname, out loaded))
+            if (!datafeedLoadedFlags.TryGetValue(token, out loaded))
             {
                 return false;
             }
@@ -226,38 +252,40 @@ namespace TradingLib.ServiceManager
 
         void BindBrokerIntoRouter(IBroker broker)
         {
-            string fullname = broker.GetType().FullName;
-            if (IsBrokerLoaded(fullname))
+            string token = GetBrokerToken(broker);
+            if (IsBrokerLoaded(token))
             {
-                debug("Broker:"+fullname +" is loaded");
+                debug("Broker:" + token + " is loaded");
                 return;
             }
             else
             {
                 //将broker绑定到路由中心的事件
                 _brokerrouter.LoadBroker(broker);
-                if(brokerLoadedFlags.Keys.Contains(fullname))
-                    brokerLoadedFlags[fullname] = true;
-                else
-                    brokerLoadedFlags.Add(fullname,true);
+                brokerLoadedFlags[token] = true;
+                //if (brokerLoadedFlags.Keys.Contains(token))
+                //    brokerLoadedFlags[token] = true;
+                //else
+                //    brokerLoadedFlags.Add(token, true);
             }
         }
 
         void BindDataFeedIntoRouter(IDataFeed feed)
         {
-            string fullname = feed.GetType().FullName;
-            if (IsDataFeedLoaded(fullname))
+            string token = feed.GetType().FullName;//行情的 每种接口最多哦加载一个实例 不会像成交接口一样会加载多个
+            if (IsDataFeedLoaded(token))
             {
-                debug("DataFeed:" + fullname + " is loaded");
+                debug("DataFeed:" + token + " is loaded");
                 return;
             }
             else
             {
                 _datafeedrouter.LoadDataFeed(feed);
-                if (datafeedLoadedFlags.Keys.Contains(fullname))
-                    datafeedLoadedFlags[fullname] = true;
-                else
-                    datafeedLoadedFlags.Add(fullname, true);
+                datafeedLoadedFlags[token] = true;
+                //if (datafeedLoadedFlags.Keys.Contains(token))
+                //    datafeedLoadedFlags[token] = true;
+                //else
+                //    datafeedLoadedFlags.Add(token, true);
             }
         }
 

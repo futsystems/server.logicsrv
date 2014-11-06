@@ -2,6 +2,9 @@
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using TradingLib.API;
+using TradingLib.Common;
+
 
 namespace TradingLib.BrokerXAPI.Interop
 {
@@ -153,6 +156,7 @@ namespace TradingLib.BrokerXAPI.Interop
         {
             string fn = filename.EndsWith(Platform.LibSuffix) ? filename : filename + Platform.LibSuffix;
             string libPath = Path.GetFullPath(Path.Combine(dir, fn));
+            Util.Debug("libPath:" + libPath, QSEnumDebugLevel.MUST);
             return NullifyInvalidHandle(Platform.OpenHandle(libPath));
         }
 

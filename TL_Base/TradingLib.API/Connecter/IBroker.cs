@@ -21,11 +21,11 @@ namespace TradingLib.API
         void GotTick(Tick k);
 
 
-        /// <summary>
-        /// 通过panel来讲对应的监测窗口显示到对应的dockpanel
-        /// </summary>
-        /// <param name="panel"></param>
-        void Show(object panel);
+        ///// <summary>
+        ///// 通过panel来讲对应的监测窗口显示到对应的dockpanel
+        ///// </summary>
+        ///// <param name="panel"></param>
+        //void Show(object panel);
 
         //清算中心 用于交易通道查询当前的委托 仓位 以及其他相关数据
         IBrokerClearCentre ClearCentre { get; set; }

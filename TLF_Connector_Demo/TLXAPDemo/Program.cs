@@ -5,6 +5,8 @@ using System.Text;
 using System.Runtime.InteropServices;
 using TradingLib.BrokerXAPI.Interop;
 using TradingLib.BrokerXAPI;
+using TradingLib.API;
+using TradingLib.Common;
 
 
 namespace TLXAPDemo
@@ -38,8 +40,37 @@ namespace TLXAPDemo
 
             broker.demostructcall(ref field);
              * */
+            
+            TLBroker broker = new TLBroker(@"libbroker\CTP630\", "TLBrokerCTP.dll");
 
-            TLBroker broker = new TLBroker();
+            broker.SendLogItemEvent += new ILogItemDel(Util.Log);
+
+            XServerInfoField srvinfo = new XServerInfoField();
+            srvinfo.ServerAddress = "182.131.17.110";
+            srvinfo.ServerPort = 62205;
+            srvinfo.Field1 = "16377";//BrokerID
+            //srvinfo.ServerAddress = "gw-release-ctcc1.lottoqq.com";
+            //srvinfo.ServerPort = 40255;
+            srvinfo.Field1 = "8000";//BrokerID
+            srvinfo.Field2 = "xo";
+            srvinfo.Field3 = "helloworld";
+
+            broker.SetServerInfo(srvinfo);
+
+            XUserInfoField userinfo = new XUserInfoField();
+            userinfo.UserID = "70108058";
+            userinfo.Password = "123456";
+            //userinfo.UserID = "6666";
+            //userinfo.Password = "123456";
+            userinfo.Field1 = "16377";
+            userinfo.Field2 = "field2";
+
+            broker.SetUserInfo(userinfo);
+
+            broker.Start();
+
+
+            Util.sleep(500000);
         }
     }
 }

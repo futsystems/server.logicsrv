@@ -93,7 +93,7 @@ namespace FutsMoniter
                 int row = connectorgird.SelectedRows.Count > 0 ? connectorgird.SelectedRows[0].Index : -1;
                 if (row >= 0)
                 {
-                    return connectorgird[CLASSNAME, row].Value.ToString();
+                    return connectorgird[TITIE, row].Value.ToString();
                 }
                 else
                 {
@@ -155,7 +155,7 @@ namespace FutsMoniter
             }
             else
             {
-                int r = ConnectorIDx(c.ClassName);
+                int r = ConnectorIDx(c.ConnectorName);
                 if (r == -1)
                 {
                     gt.Rows.Add(c.ConnectorName);
@@ -164,14 +164,14 @@ namespace FutsMoniter
                     gt.Rows[i][STATUS] = c.Status;
                     gt.Rows[i][TYPE] = c.Type;
 
-                    connectormap.TryAdd(c.ClassName, c);
-                    connectorrowid.TryAdd(c.ClassName, i);
+                    connectormap.TryAdd(c.ConnectorName, c);
+                    connectorrowid.TryAdd(c.ConnectorName, i);
                 }
                 else
                 {
                     //更新状态
                     gt.Rows[r][STATUS] = c.Status;
-                    connectormap[c.ClassName] = c;
+                    connectormap[c.ConnectorName] = c;
                 }
 
             }

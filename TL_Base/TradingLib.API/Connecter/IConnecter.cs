@@ -6,7 +6,7 @@ using System.Text;
 
 namespace TradingLib.API
 {
-    public interface IConnecter:IService,IDebug
+    public interface IConnecter:IService
     {
         /// <summary>
         /// 连接标识
