@@ -43,19 +43,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="1\DllInvoke.cs" />
-    <Compile Include="1\InvokeBase.cs" />
+    <Compile Include="Delegates.cs" />
     <Compile Include="Interop\Platform.Windows.cs" />
     <Compile Include="Interop\TLBrokerProxy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="1\Proxy.cs" />
     <Compile Include="Interop\SafeLibraryHandle.cs" />
-    <Compile Include="1\SoInvoke.cs" />
     <Compile Include="Interop\TLBrokerWrapperProxy.cs" />
     <Compile Include="Interop\UnmanagedLibrary.cs" />
-    <Compile Include="Interop\Struct.cs" />
+    <Compile Include="Struct.cs" />
     <Compile Include="TLBroker.cs" />
     <Compile Include="TLBrokerBase.cs" />
+    <Compile Include="TLBrokerCTP.cs" />
     <Compile Include="XAPIHelper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

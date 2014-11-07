@@ -19,7 +19,7 @@ namespace TradingLib.BrokerXAPI.Interop
     /// <summary>
     /// 某个具体的Broker的封装Proxy
     /// </summary>
-    public class TLBrokerProxy:IDisposable
+    internal class TLBrokerProxy:IDisposable
     {
         public static bool ValidBrokerProxy(string path,string dllname)
         {

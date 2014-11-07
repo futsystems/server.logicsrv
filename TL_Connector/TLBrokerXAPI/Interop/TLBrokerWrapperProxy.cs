@@ -21,7 +21,7 @@ namespace TradingLib.BrokerXAPI.Interop
     /// <summary>
     /// TLBrokerWrapper封装Proxy用于注入具体的Broker插件,形成通用的调用层
     /// </summary>
-    public class TLBrokerWrapperProxy : IDisposable
+    internal class TLBrokerWrapperProxy : IDisposable
     {
         public static bool ValidWrapperProxy(string path,string dllname)
         {
@@ -186,6 +186,7 @@ namespace TradingLib.BrokerXAPI.Interop
         SendOrderProc _SendOrder;
         public string SendOrder(ref XOrderField pOrder)
         {
+            Util.Debug("BrokerProxy SendOrder",QSEnumDebugLevel.MUST);
             return _SendOrder(this.Wrapper, ref pOrder);
         }
 
@@ -195,6 +196,7 @@ namespace TradingLib.BrokerXAPI.Interop
         SendOrderActionProc _SendOrderAction;
         public bool SendOrderAction(ref XOrderActionField pAction)
         {
+            Util.Debug("BrokerProxy SendOrderAction",QSEnumDebugLevel.MUST);
             return _SendOrderAction(this.Wrapper, ref pAction);
         }
 

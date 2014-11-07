@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // 有关程序集的常规信息通过以下
 // 特性集控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("QuantBox.Demo")]
+[assembly: AssemblyTitle("TLBrokerCTP")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("QuantBox.Demo")]
+[assembly: AssemblyProduct("TLBrokerCTP")]
 [assembly: AssemblyCopyright("Copyright © Microsoft 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // 如果此项目向 COM 公开，则下列 GUID 用于类型库的 ID
-[assembly: Guid("53efa384-2a61-4d0e-9b06-47fab4b51d35")]
+[assembly: Guid("439f4d83-a1f9-4593-979e-40ef68f20d1f")]
 
 // 程序集的版本信息由下面四个值组成:
 //

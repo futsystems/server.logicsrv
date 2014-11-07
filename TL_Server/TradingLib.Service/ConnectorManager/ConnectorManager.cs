@@ -400,7 +400,7 @@ namespace TradingLib.ServiceManager
             debug("选择实盘交易通道" + exchange, QSEnumDebugLevel.MUST);
             //debug("交易通道选择到这里");
             IBroker b;
-            string demo = "HX8050";
+            string demo = "SW0021";
             if (brokerInstList.TryGetValue(demo, out b) && IsBrokerLoaded(demo))
             {
                 return b;

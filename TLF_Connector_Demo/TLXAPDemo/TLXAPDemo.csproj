@@ -50,10 +50,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\TL_Connector\QuantBox.XAPI\QuantBox.XAPI.csproj">
-      <Project>{6AA065F5-2E4A-4112-A3AE-1F75CAE42FFB}</Project>
-      <Name>QuantBox.XAPI</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\TL_Connector\TLBrokerXAPI\TLBrokerXAPI.csproj">
       <Project>{A5D8B946-697E-4CE5-9C3A-6B8958C9C064}</Project>
       <Name>TLBrokerXAPI</Name>

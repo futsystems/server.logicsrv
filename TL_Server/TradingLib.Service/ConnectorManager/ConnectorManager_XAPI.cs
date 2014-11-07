@@ -82,7 +82,7 @@ namespace TradingLib.ServiceManager
                 //将broker的交易类事件绑定到路由内 然后通过路由转发到交易消息服务
                 BindBrokerIntoRouter(broker);
 
-                broker.Start();
+                //broker.Start();
             }
         
         }

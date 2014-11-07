@@ -46,7 +46,7 @@ namespace TradingLib.ServiceManager
         }
 
 
-
+        [ContribCommandAttr(QSEnumCommandSource.CLI, "startbroker", "startbroker - 启动某个成交通道", "启动某个成交通道")]
         [ContribCommandAttr(QSEnumCommandSource.MessageWeb, "startbroker", "startbroker - 启动某个成交通道", "用于Web端停止某个某个交易通道")]
         public void StartBrokerViaName(string name)
         {
