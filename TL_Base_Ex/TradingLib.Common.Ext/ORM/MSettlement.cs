@@ -63,6 +63,19 @@ namespace TradingLib.ORM
             }
         }
 
+        /// <summary>
+        /// 从数据库加载某个交易帐号某个结算日的所有持仓明细
+        /// </summary>
+        /// <param name="tradingday"></param>
+        /// <returns></returns>
+        public static IEnumerable<PositionDetail> SelectPositionDetails(string account,int tradingday)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("SELECT * FROM  log_position_detail_hist WHERE settleday = '{0}' AND account='{1}'", tradingday,account);
+                return db.Connection.Query<PositionDetailImpl>(query);
+            }
+        }
 
 
         /// <summary>
@@ -92,6 +105,21 @@ namespace TradingLib.ORM
                 return db.Connection.Query<PositionCloseDetailImpl>(query);
             }
         }
+
+        /// <summary>
+        /// 查询某个交易日某个交易帐户的平仓明细
+        /// </summary>
+        /// <param name="tradingday"></param>
+        /// <returns></returns>
+        public static IEnumerable<PositionCloseDetail> SelectPositionCloseDetail(string account,int tradingday)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("SELECT * FROM  log_position_close_detail WHERE settleday = '{0}' AND account='{1}'", tradingday,account);
+                return db.Connection.Query<PositionCloseDetailImpl>(query);
+            }
+        }
+
 
         #endregion
 

@@ -294,7 +294,10 @@ namespace TradingLib.Common
             get
             {
                 if (_settlementprice == null)
-                    throw new Exception("position have not got settlement price");
+                {
+                    Util.Debug("position:" + this.GetPositionKey() + " have not got settlement price,will use lastprice", QSEnumDebugLevel.WARNING);
+                    _settlementprice = LastPrice;
+                }
 
                 decimal settleprice = (decimal)_settlementprice;
                 return _size * (settleprice - AvgPrice);
