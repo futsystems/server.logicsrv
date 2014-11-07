@@ -25,16 +25,16 @@ namespace TradingLib.Common
         {
             this.ClassName = string.Empty;
             this.Status = false;
-            this.ConnectorName = string.Empty;
-            this.Type = string.Empty;
+            this.Token = string.Empty;
+            this.Type = QSEnumConnectorType.Broker;
         }
 
         public ConnectorInfo(IBroker broker)
         {
             this.ClassName = broker.GetType().FullName;
             this.Status = broker.IsLive;
-            this.ConnectorName = broker.Title;
-            this.Type = "Broker";
+            this.Token = broker.Title;
+            this.Type = QSEnumConnectorType.Broker;
         }
         
 
@@ -42,8 +42,8 @@ namespace TradingLib.Common
         {
             this.ClassName = df.GetType().FullName;
             this.Status = df.IsLive;
-            this.ConnectorName = df.Title;
-            this.Type = "DataFeed";
+            this.Token = df.Title;
+            this.Type = QSEnumConnectorType.DataFeed;
         }
 
 
@@ -61,12 +61,12 @@ namespace TradingLib.Common
         /// <summary>
         /// 通道描述
         /// </summary>
-        public string ConnectorName { get; set; }
+        public string Token { get; set; }
 
         /// <summary>
         /// 通道类型
         /// </summary>
-        public string Type { get; set; }
+        public QSEnumConnectorType Type { get; set; }
 
         public  string Serialize()
         {
@@ -76,7 +76,7 @@ namespace TradingLib.Common
             sb.Append(d);
             sb.Append(this.Status.ToString());
             sb.Append(d);
-            sb.Append(this.ConnectorName.ToString());
+            sb.Append(this.Token);
             sb.Append(d);
             sb.Append(this.Type);
             return sb.ToString();
@@ -87,8 +87,8 @@ namespace TradingLib.Common
             string[] rec = content.Split(',');
             this.ClassName = rec[0];
             this.Status = bool.Parse(rec[1]);
-            this.ConnectorName = rec[2];
-            this.Type = rec[3];
+            this.Token = rec[2];
+            this.Type = (QSEnumConnectorType)Enum.Parse(typeof(QSEnumConnectorType), rec[3]);
         }
     }
 

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
 using System.IO;
@@ -10,27 +11,17 @@ using TradingLib.Common;
 
 namespace TradingLib.Core
 {
+    /// <summary>
+    /// 原来行情通道通过交易所进行路由识别
+    /// 比如订阅某个行情,按照其交易所找到设置中的行情通道 然后执行订阅
+    /// 对于这一步理论上设计比较好，不过目前所有的行情都是通过FastTick进行传送
+    /// FastTickSrv对接所有的行情源然后形成统一的订阅与传输格式对外传出，这样避免了在多点去维护不同的行情与订阅信息
+    /// 这里只要针对FastTick进行订阅就可以了
+    /// </summary>
     public class DataFeedRouter:BaseSrvObject
     {
-        public event LookupDataFeed LookupDataFeedEvent;
-       
-        /// <summary>
-        /// 通过交易所名称来查找行情通道对象
-        /// </summary>
-        /// <param name="exchange"></param>
-        /// <returns></returns>
-        IDataFeed lookupataFeed(string exchange)
+        public DataFeedRouter():base("DataFeedRouter")
         {
-            if (LookupDataFeedEvent != null)
-            {
-                return LookupDataFeedEvent(exchange);
-            }
-            return null;
-        }
-        private IClearCentreSrv _clearCentre;
-        public DataFeedRouter(IClearCentreSrv c):base("DataFeedRouter")
-        {
-            _clearCentre = c;
             _ticktracker = new TickTracker();
             asynctick = new AsyncResponse("DataFeedRouter");
             asynctick.GotTick += new TickDelegate(asynctick_GotTick);
@@ -43,6 +34,7 @@ namespace TradingLib.Core
 
         /// <summary>
         /// 加载行情通道
+        /// 绑定行情通道的 行情到达事件和行情连接事件
         /// </summary>
         /// <param name="datafeed"></param>
         public void LoadDataFeed(IDataFeed datafeed)
@@ -52,6 +44,33 @@ namespace TradingLib.Core
             datafeed.Connected += new IConnecterParamDel(datafeed_Connected);
             
         }
+
+
+        #region 获得某个合约的行情通道
+        /// <summary>
+        /// 获得某个合约的行情数据
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        IDataFeed GetDataFeed(Symbol symbol)
+        {
+            //如果默认的行情路由存在并且处于活动状态 则通过该行情通道订阅行情数据
+            if (TLCtxHelper.Ctx.RouterManager.DefaultDataFeed != null && TLCtxHelper.Ctx.RouterManager.DefaultDataFeed.IsLive)
+                return TLCtxHelper.Ctx.RouterManager.DefaultDataFeed;
+
+            //通过预设Selector逻辑 找到对应的行情通道
+            string dfname = "demo";
+            return GetDataFeedViaToken(dfname);
+        }
+
+        IDataFeed GetDataFeedViaToken(string token)
+        {
+            return TLCtxHelper.Ctx.RouterManager.FindDataFeed(token);
+        }
+        #endregion
+
+
+
         /// <summary>
         /// 某个datafeed连接成功事件
         /// datafeed内部维护了一个合约列表,当有数据接口连接成功时,向该接口注册由该接口维护的合约列表
@@ -59,22 +78,20 @@ namespace TradingLib.Core
         /// <param name="connecter"></param>
         void datafeed_Connected(string token)
         {
-            IDataFeed df = lookupataFeed(token);//connecter as IDataFeed;
-
+            IDataFeed df = GetDataFeedViaToken(token);//connecter as IDataFeed;
+            if (df == null || (!df.IsLive)) return;//如果通道为空 或 通道不处于工作状态则直接返回
             //通过查找本地需要注册的合约 当通道链接成功时进行注册
-            string[] syms = getDataFeedSymbols(df);
+            SymbolBasket basket = GetDataFeedSymbols(df);
 
             //如果通过该通道已注册的行情为0 则加载所有默认合约进行注册
-            if (syms.Length == 0)
+            if (basket.Count == 0)
             {
-                debug("查找所有需要注册的合约,进行初始化注册", QSEnumDebugLevel.INFO);
-                //如果是0个 则调用所有可用合约 然后进行注册
-                //遍历所有可用合约 然后判断需要这个通道进行注册的进行注册
+                debug(string.Format("DataFeed[{0}] 没有订阅过合约,查找所有需要注册的合约,进行初始化注册",df.Title), QSEnumDebugLevel.INFO);
                 SymbolBasket nb = new SymbolBasketImpl();
                 foreach (Symbol sym in BasicTracker.SymbolTracker.getBasketAvabile().ToArray())
                 {
-                    //IDataFeed d = SelectDataFeed(sym);
-                    //if (df.Equals(d))//需要当前的df进行比对 查找的d可能为空即某个合约没有绑定对应的行情通道
+                    IDataFeed d = GetDataFeed(sym);
+                    if (df.Equals(d))//需要当前的df进行比对 查找的d可能为空即某个合约没有绑定对应的行情通道
                     {
                         nb.Add(sym);
                     }
@@ -83,33 +100,31 @@ namespace TradingLib.Core
             }
             else//如果有对应的合约 则重新注册
             {
-                debug("数据接口:" + df.Title + "连接成功,注册对应的数据 " + string.Join(",", syms), QSEnumDebugLevel.INFO);
-                df.RegisterSymbols(syms);
+                debug("数据接口:" + df.Title + "连接成功,注册对应的数据 " + string.Join(",", basket.ToSymArray()), QSEnumDebugLevel.INFO);
+                df.RegisterSymbols(basket);
             }
         }
 
         /// <summary>
-        /// 获得已注册合约中 通过通道df进行注册的合约
+        /// 获得已注册合约中 获得某个通道的注册合约
         /// </summary>
         /// <param name="df"></param>
         /// <returns></returns>
-        string[] getDataFeedSymbols(IDataFeed df)
+        SymbolBasket GetDataFeedSymbols(IDataFeed df)
         {
-            List<string> symlist = new List<string>();
-            foreach (Symbol sec in mb)
-            {
-                IDataFeed d = SelectDataFeed(sec);
-                if (df.Equals(d))
-                {
-                    symlist.Add(sec.Symbol);
-                }
-            }
-            return symlist.ToArray();
+            if (datafeedbasktmap.Keys.Contains(df))
+                return datafeedbasktmap[df];
+            else
+                return new SymbolBasketImpl();
         }
 
         #region 本地向DataFeed发送数据请求
         //建立本地缓存basket如果包含了该security则不重复进行发送
         SymbolBasket mb;
+        /// <summary>
+        /// 用于维护通道与Basket 映射关系
+        /// </summary>
+        ConcurrentDictionary<IDataFeed, SymbolBasket> datafeedbasktmap = new ConcurrentDictionary<IDataFeed, SymbolBasket>();
         public void RegisterSymbols(SymbolBasket b)
         {
             if (b.Count <= 0) return;
@@ -117,12 +132,13 @@ namespace TradingLib.Core
             {
                 //遍历所有的security,然后选择对应的数据通道请求行情数据
                 debug("request market data to datafeed:" + string.Join(",", b.ToSymArray()), QSEnumDebugLevel.INFO);
+                //将请求的合约按行情通道进行分组,然后统一调用行情通道的订阅合约函数
                 Dictionary<IDataFeed, SymbolBasket> registermap = new Dictionary<IDataFeed, SymbolBasket>();
                 //遍历合约列表然后按照对应的接口进行分类,最后统一进行注册防止过度调用接口的注册函数[假设是多个接口 多个行情字头可能每个合约对应的数据接口都不一致]
                 foreach (Symbol sym in b.ToArray())
                 {
-                    //if (mb.HaveSymbol(sym.Symbol)) continue;//注册过的行情字头不再进行注册
-                    IDataFeed d = SelectDataFeed(sym);//通过合约查找对应的数据接口
+                    if (mb.HaveSymbol(sym.Symbol)) continue;//注册过的行情字头不再进行注册
+                    IDataFeed d = GetDataFeed(sym);//通过合约查找对应的数据接口
                     if (d != null)
                     {
                         if (registermap.Keys.Contains(d))
@@ -134,10 +150,8 @@ namespace TradingLib.Core
                             registermap[d] = new SymbolBasketImpl();
                             registermap[d].Add(sym);
                         }
-                        
                     }
                 }
-                //这里考虑是否需要建立单独的数据订阅线程,由统一的线程对外进行订阅
                 foreach (IDataFeed df in registermap.Keys)
                 {
                     if (!df.IsLive)
@@ -145,23 +159,16 @@ namespace TradingLib.Core
                         debug(PROGRAME + ":DataFeed[" + df.Title + "]  is not connected well, please make the connection first", QSEnumDebugLevel.WARNING);
                         continue;
                     }
-                    //如果是FastTick行情通道 则需要将行情订阅按CTP CTPOPT等具体的行情通道进行分拆
-                    if (df.GetType().FullName.Equals("DataFeed.FastTick.FastTick"))
+                    //调用行情通道订阅合约组
+                    df.RegisterSymbols(registermap[df]);
+                    //如果没有该通道键值 增加记录
+                    if(!datafeedbasktmap.Keys.Contains(df))
                     {
-                        Dictionary<QSEnumDataFeedTypes, SymbolBasket> map = SplitSymbolViaDataFeedType(registermap[df]);
-
-                        foreach (KeyValuePair<QSEnumDataFeedTypes, SymbolBasket> kv in map)
-                        {
-                            debug("FastTick RegisterSymbol Type:" + kv.Key.ToString() + " Syms:" + string.Join(",", kv.Value.ToSymArray()), QSEnumDebugLevel.INFO);
-                            df.RegisterSymbols(kv.Value.ToSymArray(), kv.Key);
-                        }
+                        datafeedbasktmap.TryAdd(df,new SymbolBasketImpl());
                     }
-                    else
-                    {
-                        df.RegisterSymbols(registermap[df].ToSymArray());
-                    }
+                    datafeedbasktmap[df].Add(registermap[df]);
                     //记录曾经注册过的合约
-                    mb.Add(registermap[df].ToSymArray());
+                    mb.Add(registermap[df]);
                 }
             }
             catch (Exception ex)
@@ -170,6 +177,16 @@ namespace TradingLib.Core
             }
 
         }
+
+
+        
+        
+
+
+        #endregion
+
+
+        #region 获得行情数据
         /// <summary>
         /// 获得所有当前市场数据快照
         /// 当前订阅的Basket mb 对应的Tick 行情由TickTracker维护
@@ -185,7 +202,7 @@ namespace TradingLib.Core
                 foreach (string sym in syms)
                 {
                     Tick k = _ticktracker[sym];
-                    if(k.isValid)
+                    if (k.isValid)
                         ticks.Add(k);
                 }
                 return ticks.ToArray();
@@ -195,6 +212,18 @@ namespace TradingLib.Core
                 return _ticktracker.GetTicks();
             }
         }
+
+        /// <summary>
+        /// 获得某个symbol的行情快照信息
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        public Tick GetTickSnapshot(string symbol)
+        {
+            return _ticktracker[symbol];
+        }
+
+
         /// <summary>
         /// 获得某个合约的有效价格
         /// 如果返回-1则价格无效
@@ -203,7 +232,7 @@ namespace TradingLib.Core
         /// <returns></returns>
         public decimal GetAvabilePrice(string symbol)
         {
-            Tick k = getSymbolTick(symbol);//获得当前合约的最新数据
+            Tick k = GetTickSnapshot(symbol);//获得当前合约的最新数据
             if (k == null) return -1;
 
             decimal price = somePrice(k);
@@ -229,109 +258,11 @@ namespace TradingLib.Core
             else
                 return -1;
         }
-
-        /*
-        public IDataFeed SelectDataFeed(Security sec)
-        {
-            
-            string ex = _clearCentre.getMasterSecurity(sec.Symbol).DestEx;//在清算中心通过symbol找到对应的品种，然后就可以得到其交易所代码
-            //debug("dataRouter需要找到交易所: "+ex+" 的交易通道");
-            return lookupataFeed(ex);
-        }
-        ***/
-        /// <summary>
-        /// 如果本地维护多个行情通道
-        /// 则会存在按照一定的逻辑设定 找到symbol对应的行情通道
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <returns></returns>
-        public IDataFeed SelectDataFeed(Symbol symbol)
-        {
-            string ex = symbol.Exchange;
-            return lookupataFeed(ex);
-        }
-
-        /// <summary>
-        /// 将某个合约对象按FastTick进行拆分
-        /// 所有的合约均通过FastTick行情通道进行订阅
-        /// </summary>
-        /// <param name="basket"></param>
-        /// <returns></returns>
-        Dictionary<QSEnumDataFeedTypes, SymbolBasket> SplitSymbolViaDataFeedType(SymbolBasket basket)
-        {
-            Dictionary<QSEnumDataFeedTypes, SymbolBasket> map = new Dictionary<QSEnumDataFeedTypes, SymbolBasket>();
-            foreach (Symbol sym in basket)
-            {
-                QSEnumDataFeedTypes type = Symbol2DataFeedType(sym);
-                if (map.Keys.Contains(type))
-                {
-                    map[type].Add(sym);
-                }
-                else
-                {
-                    map[type] = new SymbolBasketImpl();
-                    map[type].Add(sym);
-                }
-            }
-            return map;
-            
-        }
-        /// <summary>
-        /// 按照一定的逻辑获得合约在FastTick中的行情通道类型
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <returns></returns>
-        QSEnumDataFeedTypes Symbol2DataFeedType(Symbol symbol)
-        {
-            //国内期货合约通过CTP通道订阅
-            if (symbol.SecurityType == SecurityType.FUT && symbol.SecurityFamily.Exchange.Country == Country.CN)
-            {
-                return QSEnumDataFeedTypes.CTP;
-            }
-
-            //国内期权合约通过CTPOPT通道订阅
-            if (symbol.SecurityType == SecurityType.OPT && symbol.SecurityFamily.Exchange.Country == Country.CN)
-            {
-                return QSEnumDataFeedTypes.CTPOPT;
-            }
-            return QSEnumDataFeedTypes.CTP;
-        }
-        //public void RegisterSymbols(string[] symbols)
-        //{ 
-        //    //向对应的交易所所采用的数据通道注册订阅symbols数据
-        //}
-
         #endregion
 
-        AsyncResponse asynctick = null;
 
 
         #region 将行情快照保存到本地文件 用于服务器恢复是获得当前数据
-
-        /*
-        Thread _dfthread = null;
-        bool _dfgo = false;
-
-        void dfprocess()
-        {
-            while (_dfgo)
-            {
-                try
-                {
-                    //1.每隔多少时间缓存行情数据到文本文件
-                    SaveTickSnapshot();
-
-                    Thread.Sleep(200);
-                }
-                catch (Exception ex)
-                {
-                    debug("DataFeedRouter Process Error " + ex.ToString(), QSEnumDebugLevel.ERROR);
-                    Thread.Sleep(200);
-                }
-
-            }
-        }**/
-
         const string clientlistfn = @"cache\ticksnapshot";
         const string basketfn = @"cache\basket";
 
@@ -407,28 +338,6 @@ namespace TradingLib.Core
                 debug("Error In loadtick:" + ex.ToString(), QSEnumDebugLevel.ERROR);  
             }
         }
-        /*
-        public void Start()
-        {
-            //LibUtil.Debug("xxxxxxxxxxxxxxxxxxx启动datafeed 线程..........");
-            if (_dfgo) return;
-            _dfgo = true;
-            _dfthread = new Thread(dfprocess);
-            _dfthread.IsBackground = true;
-            _dfthread.Name = "DataFeed Router Thread";
-            _dfthread.Start();
-            ThreadTracker.Register(_dfthread);
-            //加载行情快照
-            LoadTickSnapshot();
-        }
-
-        public void Stop()
-        { 
-            if(!_dfgo) return;
-            _dfgo = false;
-            _dfthread.Abort();
-            _dfthread = null;
-        }**/
         #endregion
 
 
@@ -437,18 +346,10 @@ namespace TradingLib.Core
         /// 当有数据连接有数据到达
         /// </summary>
         public event TickDelegate GotTickEvent;
+
         private TickTracker _ticktracker = null;
-        public TickTracker TickTracker { get { return _ticktracker; } }
-        /// <summary>
-        /// 获得某个symbol的Ask Bid Trade信息
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <returns></returns>
-        public Tick getSymbolTick(string symbol)
-        {
-            //
-            return _ticktracker[symbol];
-        }
+        AsyncResponse asynctick = null;
+
 
         public void DemoTick(decimal lastsettle,decimal settleprice)
         {
@@ -493,6 +394,7 @@ namespace TradingLib.Core
             GotTick(k2);
 
         }
+
         /// <summary>
         /// 所有的数据接口将tick数据集中到datafeedrouter的gottick进行处理,datafeedrouter内建一个异步处理gottick的缓存
         /// df接口统一直接将tick数据发送到datafeedrouter的gottick,然后datafeedrouter在内建的缓存中进行异步处理tick
@@ -504,6 +406,7 @@ namespace TradingLib.Core
             //在asynctick中统一缓存然后由唯一的线程对外发送tick数据
             asynctick.newTick(k);
         }
+
         //通过建立asynctick 使得tick在微观级别上是单线程处理,在同一时刻排除了多个tick进入系统的可能
         //维持了其他基于tick数据操作的线程安全 因为有多个datafeed时完全有可能在同一时刻有2个线程在调用ontick函数
         void asynctick_GotTick(Tick k)
@@ -545,7 +448,7 @@ namespace TradingLib.Core
             debug(PROGRAME + ":try to restart datafeed",QSEnumDebugLevel.MUST);
             //重新启动数据连接
             //IDataFeed d = LookupDataFeedEvent("DataFeed.CTP.CTPMD");
-            IDataFeed d = LookupDataFeedEvent("DataFeed.FastTick.FastTick");
+            IDataFeed d = TLCtxHelper.Ctx.RouterManager.DefaultDataFeed;//LookupDataFeedEvent("DataFeed.FastTick.FastTick");
             if (d == null) return;
             d.Stop();
             Thread.Sleep(500);

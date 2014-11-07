@@ -66,7 +66,7 @@ namespace TradingLib.API
         /// </summary>
         /// <param name="symbols"></param>
         /// <param name="type"></param>
-        void RegisterSymbols(string[] symbols,QSEnumDataFeedTypes type = QSEnumDataFeedTypes.DEFAULT);
+        void RegisterSymbols(SymbolBasket basket);
 
 
     }

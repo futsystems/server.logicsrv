@@ -65,6 +65,7 @@ namespace TradingLib.Core
         IBroker GetSimBroker()
         {
             return TLCtxHelper.Ctx.RouterManager.DefaultSimBroker;
+            
         }
 
         TIFEngine _tifengine;
@@ -165,7 +166,7 @@ namespace TradingLib.Core
         {
             try
             {
-                return DataFeedRouter.TickTracker[symbol];
+                return DataFeedRouter.GetTickSnapshot(symbol);
             }
             catch (Exception ex)
             {

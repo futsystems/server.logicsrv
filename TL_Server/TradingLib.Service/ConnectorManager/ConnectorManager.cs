@@ -77,7 +77,7 @@ namespace TradingLib.ServiceManager
             _datafeedrouter = _dr;
 
             _br.LookupBrokerEvent += new LookupBroker(_br_LookupBrokerEvent);
-            _dr.LookupDataFeedEvent += new LookupDataFeed(_dr_LookupDataFeedEvent);
+            //_dr.LookupDataFeedEvent += new LookupDataFeed(_dr_LookupDataFeedEvent);
             routerbinded = true;
         }
 

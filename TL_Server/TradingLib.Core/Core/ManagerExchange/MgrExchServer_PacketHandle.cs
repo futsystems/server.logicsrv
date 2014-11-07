@@ -245,6 +245,7 @@ namespace TradingLib.Core
             if (b != null && !b.IsLive)
             {
                 b.Start();
+                session.OperationSuccess(string.Format("交易通道[{0}]已启动", b.Title));
             }
 
             RspMGRQryConnectorResponse response = ResponseTemplate<RspMGRQryConnectorResponse>.SrvSendRspResponse(request);
@@ -259,6 +260,7 @@ namespace TradingLib.Core
             if (b != null && b.IsLive)
             {
                 b.Stop();
+                session.OperationSuccess(string.Format("交易通道[{0}]已停止",b.Title));
             }
 
             RspMGRQryConnectorResponse response = ResponseTemplate<RspMGRQryConnectorResponse>.SrvSendRspResponse(request);
@@ -270,9 +272,11 @@ namespace TradingLib.Core
             debug(string.Format("管理员:{0} 请求启动行情通道:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
 
             IDataFeed d = TLCtxHelper.Ctx.RouterManager.FindDataFeed(request.FullName);
+
             if (d != null && !d.IsLive)
             {
                 d.Start();
+                session.OperationSuccess(string.Format("行情通道[{0}]已启动", d.Title));
             }
 
             RspMGRQryConnectorResponse response = ResponseTemplate<RspMGRQryConnectorResponse>.SrvSendRspResponse(request);
@@ -286,6 +290,7 @@ namespace TradingLib.Core
             if (d != null && d.IsLive)
             {
                 d.Stop();
+                session.OperationSuccess(string.Format("行情通道[{0}]已停止", d.Title));
             }
             RspMGRQryConnectorResponse response = ResponseTemplate<RspMGRQryConnectorResponse>.SrvSendRspResponse(request);
             response.Connector = new ConnectorInfo(d);

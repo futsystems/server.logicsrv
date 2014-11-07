@@ -397,6 +397,7 @@ namespace TradingLib.Core
                 return -1;
             }
             return _datafeedRouter.GetAvabilePrice(symbol);
+            return 0;
         }
         #endregion
 

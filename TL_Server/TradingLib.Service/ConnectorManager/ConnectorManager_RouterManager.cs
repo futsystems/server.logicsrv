@@ -44,6 +44,16 @@ namespace TradingLib.ServiceManager
             return null;
 
         }
+        public Tick GetTickSnapshot(string symbol)
+        {
+            return _datafeedrouter.GetTickSnapshot(symbol);
+        }
+
+        public IEnumerable<Tick> GetTickSnapshot()
+        {
+            return _datafeedrouter.GetTickSnapshot();
+        }
+
 
         /// <summary>
         /// 获得所有成交路由
