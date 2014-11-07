@@ -96,7 +96,7 @@ namespace TradingLib.BrokerXAPI.Interop
             _Disconnect = NativeLib.GetUnmanagedFunction<DisconnectProc>("Disconnect");
             _Login = NativeLib.GetUnmanagedFunction<LoginProc>("Login");
             _SendOrder = NativeLib.GetUnmanagedFunction<SendOrderProc>("SendOrder");
-
+            _SendOrderAction = NativeLib.GetUnmanagedFunction<SendOrderActionProc>("SendOrderAction");
 
             _RegOnConnected = NativeLib.GetUnmanagedFunction<RegOnConnectedProc>("RegOnConnected");
             _RegOnDisconnected = NativeLib.GetUnmanagedFunction<RegOnDisconnectedProc>("RegOnDisconnected");
@@ -190,6 +190,13 @@ namespace TradingLib.BrokerXAPI.Interop
         }
 
 
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate bool SendOrderActionProc(IntPtr pWrapper, ref XOrderActionField pAction);
+        SendOrderActionProc _SendOrderAction;
+        public bool SendOrderAction(ref XOrderActionField pAction)
+        {
+            return _SendOrderAction(this.Wrapper, ref pAction);
+        }
 
         #region 注册回调函数接口
         /// <summary>

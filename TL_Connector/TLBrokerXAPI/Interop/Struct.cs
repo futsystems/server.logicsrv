@@ -231,9 +231,65 @@ namespace TradingLib.BrokerXAPI.Interop
         /// 远端交易所返回的编号
         /// </summary>
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
-        public string OrderSysID;
+        public string OrderExchID;
     }
+    
+    /// <summary>
+    /// 委托操作
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public struct XOrderActionField
+    {
+        /// <summary>
+        /// 本地系统委托编号
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
+        public string ID;
 
+        /// <summary>
+        /// 相对于成交端 本地编号
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
+        public string LocalID;
+
+
+        /// <summary>
+        /// 交易所委托编号
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
+        public string OrderExchID;
+
+
+        /// <summary>
+        /// 委托操作标识
+        /// </summary>
+        public QSEnumOrderActionFlag ActionFlag;
+
+        /// <summary>
+        /// 交易所
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 10)]
+        public string Exchange;
+
+        /// <summary>
+        /// 合约
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
+        public string Symbol;
+
+        /// <summary>
+        /// 未成交数量
+        /// </summary>
+        public int Size;
+
+
+        /// <summary>
+        /// 价格
+        /// </summary>
+        public double Price;
+
+
+    }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public struct XTradeField

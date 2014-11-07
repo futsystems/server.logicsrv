@@ -224,7 +224,7 @@ namespace TradingLib.BrokerXAPI
             order.Symbol = o.symbol;
             order.Exchange = o.Exchange;
             order.Side = o.side;
-            order.TotalSize = o.TotalSize;
+            order.TotalSize = Math.Abs(o.TotalSize);
             order.FilledSize = 0;
             order.UnfilledSize = 0;
 
@@ -256,8 +256,39 @@ namespace TradingLib.BrokerXAPI
             }
         }
 
+        /// <summary>
+        /// 取消某个委托
+        /// </summary>
+        /// <param name="oid"></param>
         public void CancelOrder(long oid)
-        { 
+        {
+            Order o = PlatformID2Order(oid);
+            if (o != null)
+            {
+                XOrderActionField action = new XOrderActionField();
+                action.ActionFlag = QSEnumOrderActionFlag.Delete;
+                action.Exchange = o.Exchange;
+                action.ID = o.id.ToString();
+                action.LocalID = o.LocalID;
+                action.OrderExchID = o.OrderExchID;
+                action.Price = 0;
+                action.Size = 0;
+                action.Symbol = o.symbol;
+
+
+                if (_wrapper.SendOrderAction(ref action))
+                {
+                    
+                }
+                else
+                {
+                    debug("Cancel order fail,will notify to client");
+                }
+            }
+            else
+            {
+                Util.Debug("Order:" + oid.ToString() + " is not in platform_order_map in broker", QSEnumDebugLevel.WARNING);
+            }
             
         }
 
@@ -348,8 +379,8 @@ namespace TradingLib.BrokerXAPI
                             o.comment = order.StatusMsg;//填充状态信息
                             o.Filled = order.FilledSize;//成交数量
                             o.size = order.UnfilledSize * (o.side ? 1 : -1);//更新当前数量
-                            
-                            o.OrderExchID = order.OrderSysID;//更新交易所委托编号
+
+                            o.OrderExchID = order.OrderExchID;//更新交易所委托编号
 
                            
                             if (!string.IsNullOrEmpty(o.OrderExchID))//如果orderexchid存在 则加入对应的键值
@@ -381,6 +412,7 @@ namespace TradingLib.BrokerXAPI
                         //
                         if (o != null)
                         {
+                            Util.Debug("该成交是本地委托所属成交,进行回报处理", QSEnumDebugLevel.WARNING);
                             Trade fill = (Trade)(new OrderImpl(o));
                             fill.xsize = trade.Size * (trade.Side ? 1 : -1);
                             fill.xprice = (decimal)trade.Price;
