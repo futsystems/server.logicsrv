@@ -147,6 +147,7 @@ namespace TradingLib.BrokerXAPI
         public bool IsLive { get { return _working; } }
 
 
+        #region 委托索引map用于按不同的方式定位委托
         /// <summary>
         /// 本地系统委托ID与委托的map
         /// </summary>
@@ -165,9 +166,12 @@ namespace TradingLib.BrokerXAPI
             }
             return null;
         }
+
         ConcurrentDictionary<string, Order> localid_order_map = new ConcurrentDictionary<string, Order>();
         /// <summary>
         /// 通过成交对端localid查找委托
+        /// 本端向成交端提交委托时需要按一定的方式储存一个委托本地编号,用于远端定位
+        /// 具体来讲就是通过该编号可以按一定方法告知成交对端进行撤单
         /// </summary>
         /// <param name="localid"></param>
         /// <returns></returns>
@@ -180,6 +184,7 @@ namespace TradingLib.BrokerXAPI
             }
             return null;
         }
+
         /// <summary>
         /// 交易所编号 委托 map
         /// </summary>
@@ -192,7 +197,8 @@ namespace TradingLib.BrokerXAPI
         {
             return f.Exchange + ":" + f.OrderSysID;
         }
-        Order OrderExchID2Order(string sysid)
+
+        Order ExchKey2Order(string sysid)
         {
             Order o = null;
             if (exchange_order_map.TryGetValue(sysid, out o))
@@ -201,6 +207,10 @@ namespace TradingLib.BrokerXAPI
             }
             return null;
         }
+        #endregion
+
+
+
         public void SendOrder(Order o)
         {
             debug("TLBrokerXAP[" + this.BrokerToken + "]: " + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
@@ -340,16 +350,18 @@ namespace TradingLib.BrokerXAPI
                             o.size = order.UnfilledSize * (o.side ? 1 : -1);//更新当前数量
                             
                             o.OrderExchID = order.OrderSysID;//更新交易所委托编号
-                            
-                            if (o.Status == QSEnumOrderStatus.Submited)
+
+                           
+                            if (!string.IsNullOrEmpty(o.OrderExchID))//如果orderexchid存在 则加入对应的键值
                             {
-                                //提交到成交接口后 会获得对应的交易所委托编号 并将它放入交易所委托map
                                 string exchkey = GetExchKey(o);
-                                Order tmp = OrderExchID2Order(exchkey);
-                                if (tmp == null)
+                                Util.Debug("order exchange is not emty,try to insert into exch_order_map," + exchkey);
+                                //如果不存在该委托则加入该委托
+                                if (!exchange_order_map.Keys.Contains(exchkey))
                                 {
                                     exchange_order_map.TryAdd(exchkey, o);
                                 }
+                                
                             }
                             if (GotOrderEvent != null)
                                 GotOrderEvent(o);
@@ -365,7 +377,7 @@ namespace TradingLib.BrokerXAPI
                     {
                         XTradeField trade = _tradecache.Read();
                         string exchkey = GetExchKey(ref trade);
-                        Order o = OrderExchID2Order(exchkey);
+                        Order o = ExchKey2Order(exchkey);
                         //
                         if (o != null)
                         {
