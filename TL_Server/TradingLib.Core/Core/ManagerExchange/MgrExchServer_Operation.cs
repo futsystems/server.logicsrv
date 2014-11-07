@@ -74,9 +74,9 @@ namespace TradingLib.Core
             _ocache.Write(o);
         }
 
-        public void newErrorOrder(ErrorOrder order)
+        public void newOrderError(Order  order,RspInfo error)
         {
-            _errorordercache.Write(order);
+            _errorordercache.Write(new OrderErrorPack(order,error));
         }
 
         public void newTrade(Trade f)

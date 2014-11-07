@@ -173,7 +173,7 @@ namespace TradingLib.Core
         
         RingBuffer<Order> _ocache = new RingBuffer<Order>(buffize);//委托缓存
         //RingBuffer<long> _ccache = new RingBuffer<long>(buffize);//取消缓存
-        RingBuffer<ErrorOrderNotify> _errorordercache = new RingBuffer<ErrorOrderNotify>(buffize);//委托错误缓存
+        RingBuffer<OrderErrorPack> _errorordercache = new RingBuffer<OrderErrorPack>(buffize);//委托错误缓存
         RingBuffer<Trade> _fcache = new RingBuffer<Trade>(buffize);//成交缓存
         RingBuffer<PositionEx> _posupdatecache = new RingBuffer<PositionEx>(buffize);
         RingBuffer<IPacket> _packetcache = new RingBuffer<IPacket>(buffize);//数据包缓存队列
@@ -245,7 +245,12 @@ namespace TradingLib.Core
                     //转发委托错误
                     while (!_ocache.hasItems && _errorordercache.hasItems)
                     {
-                        tl.newOrderError(_errorordercache.Read());
+                        OrderErrorPack e = _errorordercache.Read();
+                        ErrorOrderNotify notify = ResponseTemplate<ErrorOrderNotify>.SrvSendNotifyResponse(e.Order.Account);
+                        notify.Order = e.Order;
+                        notify.RspInfo = e.RspInfo;
+
+                        tl.newOrderError(notify);
                     }
                     //发送成交
                     while (!_ocache.hasItems && _fcache.hasItems)

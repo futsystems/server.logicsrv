@@ -43,6 +43,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConnectorConfig.cs" />
     <Compile Include="Delegates.cs" />
     <Compile Include="Interop\Platform.Windows.cs" />
     <Compile Include="Interop\TLBrokerProxy.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="TLBroker.cs" />
     <Compile Include="TLBrokerBase.cs" />
     <Compile Include="TLBrokerCTP.cs" />
+    <Compile Include="TLDataFeedBase.cs" />
     <Compile Include="XAPIHelper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

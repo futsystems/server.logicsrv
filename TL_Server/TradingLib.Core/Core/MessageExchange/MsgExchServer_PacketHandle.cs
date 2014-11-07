@@ -197,12 +197,12 @@ namespace TradingLib.Core
             RspQryMaxOrderVolResponse response = ResponseTemplate<RspQryMaxOrderVolResponse>.SrvSendRspResponse(request);
             if(symbol == null)
             {
-                response.RspInfo.FillError("SYMBOL_NOT_EXISTED");
+                response.RspInfo.Fill("SYMBOL_NOT_EXISTED");
                 CachePacket(response);
             }
             if (account == null)
             {
-                response.RspInfo.FillError("TRADING_ACCOUNT_NOT_FOUND");
+                response.RspInfo.Fill("TRADING_ACCOUNT_NOT_FOUND");
                 CachePacket(response);
             }
             else
@@ -262,7 +262,7 @@ namespace TradingLib.Core
             {
                 RspQrySettleInfoResponse response = ResponseTemplate<RspQrySettleInfoResponse>.SrvSendRspResponse(request);
                 debug("can not find settlement for account:" + request.Account + " for settleday:" + request.Tradingday.ToString(), QSEnumDebugLevel.WARNING);
-                response.RspInfo.FillError("SELLTEINFO_NOT_FOUND");
+                response.RspInfo.Fill("SELLTEINFO_NOT_FOUND");
                 CachePacket(response);
             }
         }
@@ -353,7 +353,7 @@ namespace TradingLib.Core
             bool valid = _clearcentre.VaildAccount(request.Account,request.OldPassword);
             if(!valid)
             {
-                response.RspInfo.FillError("OLD_PASS_ERROR");
+                response.RspInfo.Fill("OLD_PASS_ERROR");
                 CachePacket(response);
                 return;
             }
@@ -487,7 +487,7 @@ namespace TradingLib.Core
             else
             {
                 RspQryRegisterBankAccountResponse response = ResponseTemplate<RspQryRegisterBankAccountResponse>.SrvSendRspResponse(request);
-                response.RspInfo.FillError("TRADING_ACCOUNT_NOT_FOUND");
+                response.RspInfo.Fill("TRADING_ACCOUNT_NOT_FOUND");
                 CacheRspResponse(response);
             }
         }
@@ -546,7 +546,7 @@ namespace TradingLib.Core
                 Symbol sym = BasicTracker.SymbolTracker[request.Symbol];
                 if (sym == null)
                 {
-                    response.RspInfo.FillError("SYMBOL_NOT_EXISTED");
+                    response.RspInfo.Fill("SYMBOL_NOT_EXISTED");
                 }
                 else
                 {
@@ -570,7 +570,7 @@ namespace TradingLib.Core
                 Symbol sym = BasicTracker.SymbolTracker[request.Symbol];
                 if (sym == null)
                 {
-                    response.RspInfo.FillError("SYMBOL_NOT_EXISTED");
+                    response.RspInfo.Fill("SYMBOL_NOT_EXISTED");
                 }
                 else
                 {

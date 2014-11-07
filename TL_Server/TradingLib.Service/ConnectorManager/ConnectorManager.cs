@@ -27,7 +27,7 @@ namespace TradingLib.ServiceManager
     /// </summary>
     public partial class ConnectorManager : BaseSrvObject, IServiceManager, IRouterManager
     {
-
+        const string SMGName = "ConnectorManager";
         //Broker或Datafeed连接与断开的事件
         public event IConnecterParamDel BrokerConnectedEvent;
         public event IConnecterParamDel BrokerDisconnectedEvent;
@@ -38,10 +38,28 @@ namespace TradingLib.ServiceManager
         BrokerRouter _brokerrouter;
         DataFeedRouter _datafeedrouter;
 
-        public string ServiceMgrName { get { return PROGRAME; } }
+        public string ServiceMgrName { get { return SMGName; } }
+
+        ConfigDB _cfgdb;
+        string _defaultSimBrokerToken = "SIMBROKER";
+        string _defaultDataFeedToken = "FASTTICK";
         public ConnectorManager()
-            : base("ConnectorManager")
+            : base(SMGName)
         {
+            //1.加载配置文件
+            _cfgdb = new ConfigDB(SMGName);
+            if (!_cfgdb.HaveConfig("DefaultSIMBroker"))
+            {
+                _cfgdb.UpdateConfig("DefaultSIMBroker", QSEnumCfgType.String,"SIMBROKER", "默认模拟成交配置名称");
+            }
+            _defaultSimBrokerToken = _cfgdb["DefaultSIMBroker"].AsString();
+
+            if (!_cfgdb.HaveConfig("DefaultDataFeed"))
+            {
+                _cfgdb.UpdateConfig("DefaultDataFeed", QSEnumCfgType.String, "FASTTICK", "默认行情通道配置名称");
+            }
+            _defaultDataFeedToken = _cfgdb["DefaultDataFeed"].AsString();
+
 
         }
 
@@ -59,8 +77,6 @@ namespace TradingLib.ServiceManager
             _datafeedrouter = _dr;
 
             _br.LookupBrokerEvent += new LookupBroker(_br_LookupBrokerEvent);
-            _br.LookupSimBrokerEvent += new LookupSimBroker(_br_LookupSimBrokerEvent);
-
             _dr.LookupDataFeedEvent += new LookupDataFeed(_dr_LookupDataFeedEvent);
             routerbinded = true;
         }
@@ -88,138 +104,69 @@ namespace TradingLib.ServiceManager
                 return;
             }
 
-            
             //加载路由
-            LoadConnector();
+            LoadConnectorType();
+
             //加载交易所列表
             LoadExchangeTable();
 
-
-            ValidBrokerInterface();
+            //验证通道接口有效性
+            ValidInterface();
             
-            LoadBrokerXAPI();
-        }
-        /// <summary>
-        /// 查找某个交易路由
-        /// </summary>
-        /// <param name="fullname"></param>
-        public IBroker FindBroker(string fullname)
-        {
-            debug("查找成交路由:" + fullname, QSEnumDebugLevel.INFO);
-            if (brokerInstList.Keys.Contains(fullname))
-            {
-                return brokerInstList[fullname];
-            }
-            return null;
-        }
-        /// <summary>
-        /// 查找某个数据路由
-        /// </summary>
-        /// <param name="fullname"></param>
-        public IDataFeed FindDataFeed(string fullname)
-        {
-            debug("查找数据路由:" + fullname, QSEnumDebugLevel.INFO);
-            if (datafeedInstList.Keys.Contains(fullname))
-            {
-                return datafeedInstList[fullname];
-            }
-            //debug("没查找到对应的数据路由",QSEnumDebugLevel.INFO);
-            return null;
-        
-        }
+            //加载成交接口
+            LoadXAPI();
 
-        /// <summary>
-        /// 获得所有成交路由
-        /// </summary>
-        public IBroker[] Brokers { get { return brokerInstList.Values.ToArray(); } }
+            //根据设置 设定默认模拟成交接口
+            _defaultsimbroker = FindBroker(_defaultSimBrokerToken);//_defaultSimBrokerToken 通过数据库设置
 
-        /// <summary>
-        /// 获得所有行情路由
-        /// </summary>
-        public IDataFeed[] DataFeeds { get { return datafeedInstList.Values.ToArray(); } }
+            _defaultdatafeed = FindDataFeed(_defaultDataFeedToken);//_defaultDataFeedToken通过数据库设置
+            
+        }
+        public void StartDefaultConnector()
+        {
+            if (_defaultdatafeed != null && !_defaultdatafeed.IsLive)
+                _defaultdatafeed.Start();
+            if (_defaultsimbroker != null && !_defaultsimbroker.IsLive)
+                _defaultsimbroker.Start();
+        }
 
 
         //接口类型应映射表
-        Dictionary<string, Type> brokermodule = new Dictionary<string, Type>();
-        Dictionary<string, Type> datafeedmodule = new Dictionary<string, Type>();
+        Dictionary<string, Type> xapidatafeedmodule = new Dictionary<string, Type>();
+        Dictionary<string, Type> xapibrokermodule = new Dictionary<string, Type>();
 
         //接口对象映射表
         Dictionary<string, IBroker> brokerInstList = new Dictionary<string, IBroker>();
         Dictionary<string, IDataFeed> datafeedInstList = new Dictionary<string, IDataFeed>();
 
         /// <summary>
-        /// 加载数据与成交Connector
+        /// 加载数据与成交Connector类型
         /// </summary>
-        void LoadConnector()
+        void LoadConnectorType()
         {
-
             //获得当前插件connecter中所有可用的交易通道插件以及数据通道插件 
             List<Type> brokerlist = PluginHelper.LoadBrokerType();//ConnecterHelper.GetBroker();
             List<Type> datafeedlist = PluginHelper.LoadDataFeedType(); // ConnecterHelper.GetDataFeed();
 
-            //加载成交路由
-            foreach (Type t in brokerlist)
+            foreach(Type t in brokerlist)
             {
-                object[] args;
-                args = new object[] { };
-                IBroker broker = (IBroker)Activator.CreateInstance(t, args);
-                brokermodule.Add(t.FullName, t);
-                brokerInstList.Add(t.FullName, broker);
-
-                //绑定交易通道对外输出日志事件
-                //broker.SendDebugEvent += (string message) =>
-                //    {
-                //        debug("BR["+t.FullName + "] " + message, QSEnumDebugLevel.INFO);
-                //    };
-
-                //绑定状态事件
-                broker.Connected += (IConnecter b) =>
+                debug("BrokerType:" + t.FullName, QSEnumDebugLevel.INFO);
+                if (typeof(TLBrokerBase).IsAssignableFrom(t))
                 {
-                    Util.Debug("Broker:" + b.GetType().FullName + " Connected");
-                    if (BrokerConnectedEvent != null)
-                        BrokerConnectedEvent(b);
-                };
-                broker.Disconnected += (IConnecter b) =>
-                {
-                    Util.Debug("Broker:" + b.GetType().FullName + " Disconnected");
-                    if (BrokerDisconnectedEvent != null)
-                        BrokerDisconnectedEvent(b);
-                };
-                //将broker的交易类事件绑定到路由内 然后通过路由转发到交易消息服务
-                BindBrokerIntoRouter(broker);
-
+                    debug("XAPI BrokerType:" + t.FullName +" Loaded.", QSEnumDebugLevel.INFO);
+                    xapibrokermodule.Add(t.FullName, t);
+                }
             }
 
             //加载数据路由
             foreach (Type t in datafeedlist)
             {
-                object[] args;
-                args = new object[] { };
-                IDataFeed datafeed = (IDataFeed)Activator.CreateInstance(t, args);
-
-                datafeedmodule.Add(t.FullName, t);
-                datafeedInstList.Add(t.FullName, datafeed);
-                //绑定数据通道对外输出日志以及状态更新
-                //datafeed.SendDebugEvent += (string message) =>
-                //    {
-                //        debug("DR["+t.FullName + "] " + message, QSEnumDebugLevel.INFO);
-                //    };
-                    
-
-
-                datafeed.Connected += (IConnecter d) =>
+                debug("DataFeedType:" + t.FullName, QSEnumDebugLevel.INFO);
+                if (typeof(TLDataFeedBase).IsAssignableFrom(t))
                 {
-                    Util.Debug("DataFeed:" + d.GetType().FullName + " Connected");
-                    if (DataFeedConnectedEvent != null)
-                        DataFeedConnectedEvent(d);
-                };
-                datafeed.Disconnected += (IConnecter d) =>
-                {
-                    Util.Debug("DataFeed:" + d.GetType().FullName + " Disonnected");
-                    if (DataFeedDisconnectedEvent != null)
-                        DataFeedDisconnectedEvent(d);
-                };
-                BindDataFeedIntoRouter(datafeed);
+                    debug("XAPI DataFeedType:" + t.FullName + " Loaded.", QSEnumDebugLevel.INFO);
+                    xapidatafeedmodule.Add(t.FullName, t);
+                }
             }
         }
 
@@ -263,10 +210,6 @@ namespace TradingLib.ServiceManager
                 //将broker绑定到路由中心的事件
                 _brokerrouter.LoadBroker(broker);
                 brokerLoadedFlags[token] = true;
-                //if (brokerLoadedFlags.Keys.Contains(token))
-                //    brokerLoadedFlags[token] = true;
-                //else
-                //    brokerLoadedFlags.Add(token, true);
             }
         }
 
@@ -282,10 +225,6 @@ namespace TradingLib.ServiceManager
             {
                 _datafeedrouter.LoadDataFeed(feed);
                 datafeedLoadedFlags[token] = true;
-                //if (datafeedLoadedFlags.Keys.Contains(token))
-                //    datafeedLoadedFlags[token] = true;
-                //else
-                //    datafeedLoadedFlags.Add(token, true);
             }
         }
 

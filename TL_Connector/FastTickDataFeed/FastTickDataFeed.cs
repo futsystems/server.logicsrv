@@ -6,33 +6,16 @@ using TradingLib.API;
 using TradingLib.Common;
 using System.Threading;
 using ZeroMQ;
+using TradingLib.BrokerXAPI;
 
 namespace DataFeed.FastTick
 {
        
 
-    public class FastTick : IDataFeed
+    public class FastTick :TLDataFeedBase,IDataFeed
     {
         TimeSpan timeout = new TimeSpan(0, 0, 5);
-        public string Title { get { return "FastTick数据通道"; } }
-        bool _verb = true;
-        public bool VerboseDebugging { get { return _verb; } set { _verb = value; } }
-        /// <summary>
-        /// 当数据服务器登入成功后调用
-        /// </summary>
-        public event IConnecterParamDel Connected;
-        /// <summary>
-        /// 当数据服务器断开后触发事件
-        /// </summary>
-        public event IConnecterParamDel Disconnected;
-        /// <summary>
-        /// 当有日志信息输出时调用
-        /// </summary>
-        public event DebugDelegate SendDebugEvent;
-        /// <summary>
-        /// 当数据服务得到一个新的tick时调用
-        /// </summary>
-        public event TickDelegate GotTickEvent;
+        
 
 		ConfigHelper cfg;
         string server;
@@ -54,27 +37,6 @@ namespace DataFeed.FastTick
             }
         }
 
-        bool _debugEnable = true;
-        public bool DebugEnable { get { return _debugEnable; } set { _debugEnable = value; } }
-        QSEnumDebugLevel _debuglevel = QSEnumDebugLevel.INFO;
-        public QSEnumDebugLevel DebugLevel { get { return _debuglevel; } set { _debuglevel = value; } }
-
-        /// <summary>
-        /// 判断日志级别 然后再进行输出
-        /// </summary>
-        /// <param name="msg"></param>
-        /// <param name="level"></param>
-        protected void debug(string msg, QSEnumDebugLevel level = QSEnumDebugLevel.DEBUG)
-        {
-            if ((int)level <= (int)_debuglevel && _debugEnable)
-                msgdebug("[" + level.ToString() + "] " + msg);
-        }
-
-        void msgdebug(string msg)
-        {
-            if (SendDebugEvent != null)
-                SendDebugEvent(msg);
-        }
 
         public void Stop()
         {
@@ -93,8 +55,7 @@ namespace DataFeed.FastTick
             {
                 _tickthread = null;
                 debug("FastTick Stopped successfull...", QSEnumDebugLevel.INFO);
-                if (Disconnected != null)
-                    Disconnected(this);
+                NotifyConnected();
 
             }
             else
@@ -157,8 +118,8 @@ namespace DataFeed.FastTick
                                 string symbol = p[0];
                                 string tickcontent = p[1];
                                 Tick k = TickImpl.Deserialize(tickcontent);
-                                if (GotTickEvent != null && k.isValid)
-                                    GotTickEvent(k);
+                                if (k.isValid)
+                                    NotifyTick(k);
                             }
                         }
                         catch (Exception ex)
@@ -169,8 +130,7 @@ namespace DataFeed.FastTick
                     var poller = new Poller(new List<ZmqSocket> { subscriber });
 
                     _tickreceiveruning = true;
-                    if (Connected!=null)
-                        Connected(this);
+                    NotifyConnected();
                     while (_tickgo)
                     {
                         try
@@ -194,8 +154,7 @@ namespace DataFeed.FastTick
                         }
                     }
                     _tickreceiveruning = false;
-                    if (Disconnected != null)
-                        Disconnected(this);
+                    NotifyDisconnected();
                 }
             }
         }

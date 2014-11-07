@@ -18,4 +18,17 @@ namespace TradingLib.API
         CTPOPT,//国内CTP期权 DataFeed
         IB,//外盘IBDataFeed
     };
+
+
+    public enum QSEnumConnectorType
+    { 
+        /// <summary>
+        /// 行情通道
+        /// </summary>
+        DataFeed,
+        /// <summary>
+        /// 成交通道
+        /// </summary>
+        Broker,
+    }
 }

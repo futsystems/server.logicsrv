@@ -352,7 +352,7 @@ namespace TradingLib.BrokerXAPI
 
 
 
-    internal class XOrderError
+    public class XOrderError
     {
         public XOrderError(XOrderField order, XErrorField error)
         {

@@ -57,9 +57,9 @@ namespace TradingLib.Core
         /// datafeed内部维护了一个合约列表,当有数据接口连接成功时,向该接口注册由该接口维护的合约列表
         /// </summary>
         /// <param name="connecter"></param>
-        void datafeed_Connected(IConnecter connecter)
+        void datafeed_Connected(string token)
         {
-            IDataFeed df = connecter as IDataFeed;
+            IDataFeed df = lookupataFeed(token);//connecter as IDataFeed;
 
             //通过查找本地需要注册的合约 当通道链接成功时进行注册
             string[] syms = getDataFeedSymbols(df);
@@ -73,8 +73,8 @@ namespace TradingLib.Core
                 SymbolBasket nb = new SymbolBasketImpl();
                 foreach (Symbol sym in BasicTracker.SymbolTracker.getBasketAvabile().ToArray())
                 {
-                    IDataFeed d = SelectDataFeed(sym);
-                    if (df.Equals(d))//需要当前的df进行比对 查找的d可能为空即某个合约没有绑定对应的行情通道
+                    //IDataFeed d = SelectDataFeed(sym);
+                    //if (df.Equals(d))//需要当前的df进行比对 查找的d可能为空即某个合约没有绑定对应的行情通道
                     {
                         nb.Add(sym);
                     }

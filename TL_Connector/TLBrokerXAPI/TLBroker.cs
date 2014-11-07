@@ -13,14 +13,12 @@ using TradingLib.Common;
 namespace TradingLib.BrokerXAPI
 {
 
-    public class TLBroker : TLBrokerBase,IBroker,IDisposable
+    public abstract class TLBroker :TLBrokerBase,IBroker,IDisposable
     {
-        
-
         TLBrokerProxy _broker;
         TLBrokerWrapperProxy _wrapper;
 
-        public IBrokerClearCentre ClearCentre { get; set; }
+        
 
 
         private bool _disposed;
@@ -44,42 +42,7 @@ namespace TradingLib.BrokerXAPI
 
 
 
-        #region 事件
-        /// <summary>
-        /// 当数据服务器登入成功后调用
-        /// </summary>
-        public event IConnecterParamDel Connected;
-        /// <summary>
-        /// 当数据服务器断开后触发事件
-        /// </summary>
-        public event IConnecterParamDel Disconnected;
 
-        /// <summary>
-        /// 当接口有成交数据时 对外触发
-        /// </summary>
-        public event FillDelegate GotFillEvent;
-        /// <summary>
-        /// 当接口有委托更新时 对外触发
-        /// </summary>
-        public event OrderDelegate GotOrderEvent;
-
-        /// <summary>
-        /// cancel acknowledgement, order is canceled
-        /// </summary>
-        public event LongDelegate GotCancelEvent;
-
-        /// <summary>
-        /// ordermessage acknowledgement
-        /// </summary>
-        public event OrderMessageDel GotOrderMessageEvent;
-
-
-        /// <summary>
-        /// 获得当前Tick的市场快照,模拟成交时需要获得当前市场快照用于进行取价操作
-        /// </summary>
-        public event GetSymbolTickDel GetSymbolTickEvent;
-
-        #endregion
 
 
 
@@ -120,8 +83,10 @@ namespace TradingLib.BrokerXAPI
             }
             debug("接口:" + this.BrokerToken + "登入成功,可以接受交易请求", QSEnumDebugLevel.MUST);
 
-            Resume();
+            //恢复该接口日内交易数据
+            OnResume();
 
+            //启动回报消息通知线程 在另外一个线程中将接口返回的回报进行处理
             _working = true;
             _notifythread = new Thread(ProcessCache);
             _notifythread.IsBackground = true;
@@ -129,8 +94,7 @@ namespace TradingLib.BrokerXAPI
 
 
             //对外触发连接成功事件
-            if (Connected != null)
-                Connected(this);
+
 
         }
         public virtual void Stop()
@@ -141,73 +105,6 @@ namespace TradingLib.BrokerXAPI
         public bool IsLive { get { return _working; } }
 
 
-        #region 委托索引map用于按不同的方式定位委托
-        /// <summary>
-        /// 本地系统委托ID与委托的map
-        /// </summary>
-        ConcurrentDictionary<long, Order> platformid_order_map = new ConcurrentDictionary<long, Order>();
-        /// <summary>
-        /// 通过本地系统id查找对应的委托
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        Order PlatformID2Order(long id)
-        {
-            Order o = null;
-            if (platformid_order_map.TryGetValue(id, out o))
-            {
-                return o;
-            }
-            return null;
-        }
-
-        ConcurrentDictionary<string, Order> localid_order_map = new ConcurrentDictionary<string, Order>();
-        /// <summary>
-        /// 通过成交对端localid查找委托
-        /// 本端向成交端提交委托时需要按一定的方式储存一个委托本地编号,用于远端定位
-        /// 具体来讲就是通过该编号可以按一定方法告知成交对端进行撤单
-        /// </summary>
-        /// <param name="localid"></param>
-        /// <returns></returns>
-        Order LocalID2Order(string localid)
-        {
-            Order o = null;
-            if (localid_order_map.TryGetValue(localid, out o))
-            {
-                return o;
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// 交易所编号 委托 map
-        /// </summary>
-        ConcurrentDictionary<string, Order> exchange_order_map = new ConcurrentDictionary<string, Order>();
-        string GetExchKey(Order o)
-        {
-            return o.Exchange + ":" + o.OrderExchID;
-        }
-        string GetExchKey(ref XTradeField f)
-        {
-            return f.Exchange + ":" + f.OrderSysID;
-        }
-        string GetExchKey(ref XOrderField o)
-        {
-            return o.Exchange + ":" + o.OrderExchID;
-        }
-
-        Order ExchKey2Order(string sysid)
-        {
-            Order o = null;
-            if (exchange_order_map.TryGetValue(sysid, out o))
-            {
-                return o;
-            }
-            return null;
-        }
-        #endregion
-
-
         #region 交易接口操作 下单 撤单
 
         /// <summary>
@@ -216,45 +113,7 @@ namespace TradingLib.BrokerXAPI
         /// <param name="o"></param>
         public virtual void SendOrder(Order o)
         {
-            debug("TLBrokerXAP[" + this.BrokerToken + "]: " + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
-            XOrderField order = new XOrderField();
-
-            order.ID = o.id.ToString();
-            order.Date = o.date;
-            order.Time = o.time;
-            order.Symbol = o.symbol;
-            order.Exchange = o.Exchange;
-            order.Side = o.side;
-            order.TotalSize = Math.Abs(o.TotalSize);
-            order.FilledSize = 0;
-            order.UnfilledSize = 0;
-
-            order.LimitPrice = (double)o.price;
-            order.StopPrice = 0;
-
-            order.OffsetFlag = o.OffsetFlag;
-
-            o.Broker = this.BrokerToken;
-            //通过接口发送委托
-            string localid = _wrapper.SendOrder(ref order);
-            bool success = !string.IsNullOrEmpty(localid);
-            if (success)
-            {
-                //1.将委托加入到接口委托维护列表
-                o.LocalID = localid;
-                //将委托复制后加入到接口维护的map中
-                Order lo = new OrderImpl(o);
-                platformid_order_map.TryAdd(o.id, lo);
-                localid_order_map.TryAdd(o.LocalID, lo);
-
-                debug("Send Order Success,LocalID:" + localid, QSEnumDebugLevel.INFO);
-
-            }
-            else
-            {
-                debug("Send Order Fail,will notify to client", QSEnumDebugLevel.WARNING);
-                o.Status = QSEnumOrderStatus.Reject;
-            }
+            
         }
 
         /// <summary>
@@ -263,36 +122,7 @@ namespace TradingLib.BrokerXAPI
         /// <param name="oid"></param>
         public virtual void CancelOrder(long oid)
         {
-            Order o = PlatformID2Order(oid);
-            if (o != null)
-            {
-                XOrderActionField action = new XOrderActionField();
-                action.ActionFlag = QSEnumOrderActionFlag.Delete;
-                
-                action.ID = o.id.ToString();
-                action.LocalID = o.LocalID;
-                string[] rec = o.OrderExchID.Split(':');
-
-                action.Exchange = rec[0];
-                action.OrderExchID = rec[1];
-                action.Price = 0;
-                action.Size = 0;
-                action.Symbol = o.symbol;
-
-
-                if (_wrapper.SendOrderAction(ref action))
-                {
-                    
-                }
-                else
-                {
-                    debug("Cancel order fail,will notify to client");
-                }
-            }
-            else
-            {
-                Util.Debug("Order:" + oid.ToString() + " is not in platform_order_map in broker", QSEnumDebugLevel.WARNING);
-            }
+            
             
         }
 
@@ -309,94 +139,50 @@ namespace TradingLib.BrokerXAPI
         /// 处理接口返回的委托
         /// </summary>
         /// <param name="order"></param>
-        public virtual void ProcessOrder(XOrderField order)
+        public virtual void ProcessOrder(ref XOrderField order)
         {
 
-            //1.获得本地委托数据 更新相关状态后对外触发
-            Order o = LocalID2Order(order.LocalID);
-            if (o != null)//本地记录了该委托 更新数量 状态 并对外发送
-            {
-                o.Status = order.OrderStatus;//更新委托状态
-                o.comment = order.StatusMsg;//填充状态信息
-                o.Filled = order.FilledSize;//成交数量
-                o.size = order.UnfilledSize * (o.side ? 1 : -1);//更新当前数量
-                o.Exchange = order.Exchange;
-                //o.OrderExchID = order.OrderExchID;//更新交易所委托编号
-
-
-                if (!string.IsNullOrEmpty(order.OrderExchID))//如果orderexchid存在 则加入对应的键值
-                {
-                    string exchkey = GetExchKey(ref order);//使用接口传递过来的Exchange信息来生成key
-                    o.OrderExchID = exchkey;
-                    Util.Debug("order exchange is not emty,try to insert into exch_order_map," + exchkey);
-                    //如果不存在该委托则加入该委托
-                    if (!exchange_order_map.Keys.Contains(exchkey))
-                    {
-                        exchange_order_map.TryAdd(exchkey, o);
-                    }
-
-                }
-                NotifyOrder(o);
-            }
+            
         }
 
         /// <summary>
         /// 处理接口返回的成交
         /// </summary>
         /// <param name="trade"></param>
-        public virtual void ProcessTrade(XTradeField trade)
+        public virtual void ProcessTrade(ref XTradeField trade)
         {
-            string exchkey = GetExchKey(ref trade);
-            Order o = ExchKey2Order(exchkey);
-            //
-            if (o != null)
-            {
-                Util.Debug("该成交是本地委托所属成交,进行回报处理", QSEnumDebugLevel.WARNING);
-                Trade fill = (Trade)(new OrderImpl(o));
-                fill.xsize = trade.Size * (trade.Side ? 1 : -1);
-                fill.xprice = (decimal)trade.Price;
+            
+        }
 
-                fill.xdate = trade.Date;
-                fill.xtime = trade.Time;
 
-                fill.Broker = this.BrokerToken;
-                fill.OrderExchID = o.OrderExchID;
-                fill.BrokerKey = trade.TradeID;
-
-                NotifyTrade(fill);
-            }
+        public virtual void ProcessOrderError(ref XOrderError error)
+        { 
+            
         }
 
         #endregion
 
 
 
-        string _brokerPath = "";
-        string _brokerName = "";
-        string _wrapperPath = "";
-        string _wrapperName = "";
+        
         /// <summary>
         /// 
         /// </summary>
         /// <param name="libPath">接口c++DLL目录</param>
         /// <param name="brokerLibPath">成交接口c++DLL目录</param>
         /// <param name="filename">c++DLL名称</param>
-        public TLBroker(string brokerPath, string brokerName, string wrapperPath="libbroker", string wrapperName = "TLBrokerWrapper.dll")
+        public TLBroker()
         {
 
-            Util.Debug("WrapperFileName:" + Path.Combine(new string[] { wrapperPath, wrapperName }));
-            Util.Debug("BrokerFileName:" + Path.Combine(new string[] { brokerPath, brokerName }));
-            _brokerPath = brokerPath;
-            _brokerName = brokerName;
-            _wrapperPath = wrapperPath;
-            _wrapperName = wrapperName;
         }
 
         void InitBroker()
         {
             //1.初始化非托管接口对象
-            _wrapper = new TLBrokerWrapperProxy(_wrapperPath, _wrapperName);
-            _broker = new TLBrokerProxy(_brokerPath, _brokerName);
+            Util.Debug("WrapperFileName:" + Path.Combine(new string[] { _cfg.Interface.libpath_wrapper, _cfg.Interface.libname_wrapper }));
+            Util.Debug("BrokerFileName:" + Path.Combine(new string[] { _cfg.Interface.libpath_broker, _cfg.Interface.libname_broker }));
+            _wrapper = new TLBrokerWrapperProxy(_cfg.Interface.libpath_wrapper, _cfg.Interface.libname_wrapper);
+            _broker = new TLBrokerProxy(_cfg.Interface.libpath_broker, _cfg.Interface.libname_broker);
 
             //2.注册接口到wrapper
             _wrapper.Register(_broker);
@@ -413,19 +199,20 @@ namespace TradingLib.BrokerXAPI
 
 
 
-
-
-
-        protected void NotifyOrder(Order o)
+        protected string WrapperSendOrder(ref XOrderField order)
         {
-            if (GotOrderEvent != null)
-                GotOrderEvent(o);
+            return _wrapper.SendOrder(ref order);
         }
-        protected void NotifyTrade(Trade f)
+
+        protected bool WrapperSendOrderAction(ref XOrderActionField action)
         {
-            if (GotFillEvent != null)
-                GotFillEvent(f);
+            return _wrapper.SendOrderAction(ref action);
         }
+
+
+
+
+
 
 
         #region 回报缓存
@@ -434,7 +221,7 @@ namespace TradingLib.BrokerXAPI
         //缓存
         RingBuffer<XOrderField> _ordercache = new RingBuffer<XOrderField>(buffersize);
         RingBuffer<XTradeField> _tradecache = new RingBuffer<XTradeField>(buffersize);
-        RingBuffer<XOrderError> _ordererrorcache = new RingBuffer<XOrderError>();
+        RingBuffer<XOrderError> _ordererrorcache = new RingBuffer<XOrderError>(buffersize);
 
         Thread _notifythread = null;
         bool _working = false;
@@ -460,18 +247,19 @@ namespace TradingLib.BrokerXAPI
                     {
                         Util.Debug("process order in cache....", QSEnumDebugLevel.ERROR);
                         XOrderField order = _ordercache.Read();//获得委托数据
-                        ProcessOrder(order);
+                        ProcessOrder(ref order);
                     }
                     //发送委托错误回报
                     while (!_ordercache.hasItems && _ordererrorcache.hasItems)
                     {
-
+                        XOrderError error = _ordererrorcache.Read();
+                        ProcessOrderError(ref error);
                     }
                     //发送成交回报
                     while (!_ordererrorcache.hasItems && !_ordererrorcache.hasItems && _tradecache.hasItems)
                     {
                         XTradeField trade = _tradecache.Read();
-                        ProcessTrade(trade);
+                        ProcessTrade(ref trade);
 
                     }
                     // clear current flag signal
@@ -537,7 +325,7 @@ namespace TradingLib.BrokerXAPI
             Util.Debug("-----------TLBroker OnRtnOrderErrorEvent-----------------------", QSEnumDebugLevel.WARNING);
             //Util.Debug("order localid:" + pOrder.LocalID + " errorid:" + pError.ErrorID.ToString() + " errmsg:" + pError.ErrorMsg, QSEnumDebugLevel.MUST);
             //Util.Debug(" data:" + pOrder.Date + " exchange:" + pOrder.Exchange + " filledsize:" + pOrder.FilledSize.ToString() + " limitprice:" + pOrder.LimitPrice + " offsetflag:" + pOrder.OffsetFlag.ToString() + " orderid:" + pOrder.ID + " status:" + pOrder.OrderStatus.ToString() + " side:" + pOrder.Side + " stopprice:" + pOrder.StopPrice.ToString() + " symbol:" + pOrder.Symbol + " totalsize:" + pOrder.TotalSize.ToString() + " unfilledsize:" + pOrder.UnfilledSize.ToString() + " statusmsg:" + pOrder.StatusMsg);
-
+            _ordererrorcache.Write(new XOrderError(pOrder, pError));
         }
 
 
@@ -552,35 +340,16 @@ namespace TradingLib.BrokerXAPI
         #endregion
 
 
-        #region 
-        //恢复日内交易数据
-        void Resume()
-        {
-            try
-            {
-                debug("从清算中心得到当天的委托数据并恢复到缓存中", QSEnumDebugLevel.INFO);
-                IEnumerable<Order> olist = ClearCentre.GetOrdersViaBroker(this.BrokerToken);
-                
-                foreach (Order o in olist)
-                {
-                    platformid_order_map.TryAdd(o.id, o);
 
-                    //如果有交易所编号
-                    if(!string.IsNullOrEmpty(o.OrderExchID))
-                    {
-                        exchange_order_map.TryAdd(GetExchKey(o), o);
-                    }
-                    if (!string.IsNullOrEmpty(o.LocalID))
-                    {
-                        localid_order_map.TryAdd(o.LocalID, o);
-                    }
-                }
-                debug(string.Format("load {0} orders form database.", olist.Count()), QSEnumDebugLevel.INFO);
-            }
-            catch (Exception ex)
-            {
-                debug("Resotore error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
-            }
+
+        #region
+
+        /// <summary>
+        /// 启动时登入成功后 恢复日内交易数据
+        /// </summary>
+        public virtual void OnResume()
+        {
+           
 
         }
         #endregion

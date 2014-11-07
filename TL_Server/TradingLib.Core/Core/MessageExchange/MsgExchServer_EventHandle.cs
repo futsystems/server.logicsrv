@@ -140,7 +140,7 @@ namespace TradingLib.Core
                     {
                         login = false;
                         response.Authorized = false;
-                        response.RspInfo.FillError("LOGINTYPE_NOT_SUPPORT");
+                        response.RspInfo.Fill("LOGINTYPE_NOT_SUPPORT");
                     }
                     else
                     {
@@ -166,7 +166,7 @@ namespace TradingLib.Core
                             else
                             {
                                 response.Authorized = false;
-                                response.RspInfo.FillError("SERVICE_NOT_VALID");
+                                response.RspInfo.Fill("SERVICE_NOT_VALID");
                                 servicevalid = false;
                             }
 
@@ -176,7 +176,7 @@ namespace TradingLib.Core
                                 if (account == null)
                                 {
                                     response.Authorized = false;
-                                    response.RspInfo.FillError("ACCOUNT_NOT_CREATED");
+                                    response.RspInfo.Fill("ACCOUNT_NOT_CREATED");
                                 }
                                 else
                                 {
@@ -201,7 +201,7 @@ namespace TradingLib.Core
                     }
                     else
                     {
-                        response.RspInfo.FillError("INVALID_LOGIN");
+                        response.RspInfo.Fill("INVALID_LOGIN");
                     }
                 }
                 //游客登入
@@ -222,14 +222,14 @@ namespace TradingLib.Core
                     else
                     {
                         response.Authorized = false;
-                        response.RspInfo.FillError("INVALID_LOGIN");
+                        response.RspInfo.Fill("INVALID_LOGIN");
                     }
                 
                 }
                 else
                 {
                     response.Authorized = false;
-                    response.RspInfo.FillError("LOGINTYPE_NOT_SUPPORT");
+                    response.RspInfo.Fill("LOGINTYPE_NOT_SUPPORT");
                 }
                 //对外触发登入事件
                 if (response.Authorized)
@@ -311,7 +311,7 @@ namespace TradingLib.Core
                         //委托不可撤销
                         ErrorOrderActionNotify notify = ResponseTemplate<ErrorOrderActionNotify>.SrvSendNotifyResponse(action.Account);
                         notify.OrderAction = action;
-                        notify.RspInfo.FillError("ORDER_CAN_NOT_BE_DELETE");
+                        notify.RspInfo.Fill("ORDER_CAN_NOT_BE_DELETE");
                         CachePacket(notify);
                     }
                 }
@@ -320,7 +320,7 @@ namespace TradingLib.Core
             {
                 ErrorOrderActionNotify notify = ResponseTemplate<ErrorOrderActionNotify>.SrvSendNotifyResponse(action.Account);
                 notify.OrderAction = action;
-                notify.RspInfo.FillError("ORDERACTION_BAD_FIELD");
+                notify.RspInfo.Fill("ORDERACTION_BAD_FIELD");
                 CachePacket(notify);
             }
 

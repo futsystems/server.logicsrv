@@ -12,13 +12,23 @@ namespace TradingLib.Common
     /// 成交接口配置
     /// 设定外部调用dll所在目录和文件名
     /// </summary>
-    public class BrokerInterface
+    public class ConnectorInterface
     {
         /// <summary>
         /// 数据库全局编号
         /// </summary>
         public int ID { get; set; }
 
+        /// <summary>
+        /// 接口类型名
+        /// </summary>
+        public string type_name { get; set; }
+
+        /// <summary>
+        /// 是否是XAPI统一接口
+        /// XAPI统一接口是统一将成交接口转换成标准C接口然后通过XAPI访问层统一调用访问
+        /// </summary>
+        public bool IsXAPI { get; set; }
         /// <summary>
         /// wrapper目录
         /// </summary>
@@ -48,13 +58,18 @@ namespace TradingLib.Common
         /// 名称
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// 通道类别
+        /// </summary>
+        public QSEnumConnectorType Type { get; set; }
     }
 
     /// <summary>
     /// 成交接口配置信息 
     /// 设定服务器地址 端口 登入用户名 和密码等相关参数
     /// </summary>
-    public class BrokerConfig
+    public class ConnectorConfig
     {
         /// <summary>
         /// 数据库编号
@@ -121,8 +136,8 @@ namespace TradingLib.Common
         /// </summary>
         public string Name { get; set; }
         
-        public BrokerInterface Interface { get; set; }
+        public ConnectorInterface Interface { get; set; }
 
-
+        
     }
 }

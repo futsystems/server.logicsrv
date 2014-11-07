@@ -88,7 +88,7 @@ namespace TradingLib.ServiceManager
             //交易服务回报风控中心
             _messageExchagne.GotTickEvent += new TickDelegate(_riskCentre.GotTick);
             _messageExchagne.GotCancelEvent += new LongDelegate(_riskCentre.GotCancel);
-            _messageExchagne.GotErrorOrderEvent += new ErrorOrderDel(_riskCentre.GotErrorOrder);
+            _messageExchagne.GotOrderErrorEvent += new OrderErrorDelegate(_riskCentre.GotOrderError);
             
             //风控中心从tradingsrv获得委托编号 提交委托 取消委托的操作
             _riskCentre.AssignOrderIDEvent += new AssignOrderIDDel(_messageExchagne.AssignOrderID);
@@ -177,7 +177,7 @@ namespace TradingLib.ServiceManager
            
             ////管理组件转发 交易服务器过来的委托 成交 取消 tick
             _messageExchagne.GotOrderEvent += new OrderDelegate(_managerExchange.newOrder);
-            _messageExchagne.GotErrorOrderEvent += new ErrorOrderDel(_managerExchange.newErrorOrder);
+            _messageExchagne.GotOrderErrorEvent += new OrderErrorDelegate(_managerExchange.newOrderError);
             //_messageExchagne.GotCancelEvent += new LongDelegate(_managerExchange.newCancel);
             _messageExchagne.GotFillEvent += new FillDelegate(_managerExchange.newTrade);
             _messageExchagne.GotTickEvent += new TickDelegate(_managerExchange.newTick);

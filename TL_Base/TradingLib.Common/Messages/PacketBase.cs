@@ -51,7 +51,7 @@ namespace TradingLib.Common
 
         public ErrorNotifyResponsePacket()
         {
-            RspInfo = new RspInfo();
+            RspInfo = new RspInfoImpl();
         }
 
         public sealed override string ContentSerialize()
@@ -60,7 +60,7 @@ namespace TradingLib.Common
             char d = '^';
             sb.Append(this.NotifySerialize());
             sb.Append(d);
-            sb.Append(RspInfo.Serialize());
+            sb.Append(RspInfoImpl.Serialize(this.RspInfo));
             return sb.ToString();
         }
 
@@ -72,7 +72,7 @@ namespace TradingLib.Common
                 string[] rec = contentstr.Split(d, 2);
 
                 //解析查询回报信息
-                RspInfo.Deserialize(rec[1]);
+                this.RspInfo = RspInfoImpl.Deserialize(rec[1]);
 
                 //解析具体的消息
                 this.NotifyDeserialize(rec[0]);
@@ -120,7 +120,7 @@ namespace TradingLib.Common
         public RspResponsePacket()
         {
             IsLast = true;
-            RspInfo = new RspInfo();
+            RspInfo = new RspInfoImpl();
         }
 
         /// <summary>
@@ -145,7 +145,7 @@ namespace TradingLib.Common
             sb.Append(d);
             sb.Append(IsLast.ToString());
             sb.Append(d);
-            sb.Append(RspInfo.Serialize());
+            sb.Append(RspInfoImpl.Serialize(this.RspInfo));
 
             return sb.ToString();
         }
@@ -167,7 +167,7 @@ namespace TradingLib.Common
                 IsLast = islast;
 
                 //解析查询回报信息
-                RspInfo.Deserialize(rec[2]);
+                this.RspInfo = RspInfoImpl.Deserialize(rec[2]);
 
                 //解析具体的消息
                 this.ResponseDeserialize(rec[0]);

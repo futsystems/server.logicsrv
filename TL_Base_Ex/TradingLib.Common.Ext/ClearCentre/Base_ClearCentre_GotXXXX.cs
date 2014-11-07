@@ -74,7 +74,7 @@ namespace TradingLib.Common
         /// 这里需要判断如果委托已经被记录过则继续响应委托事件 用于更新委托的状态
         /// </summary>
         /// <param name="error"></param>
-        internal void GotErrorOrder(ErrorOrder error)
+        internal void GotErrorOrder(OrderErrorPack error)
         {
             try
             {

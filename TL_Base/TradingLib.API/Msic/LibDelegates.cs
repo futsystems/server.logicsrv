@@ -69,7 +69,7 @@ namespace TradingLib.API
     public delegate void ChangeAccountPassDel(string oldpass, string newpass);//修改帐户密码
  
     //以Connecter为参数的函数调用 connecter在基础api中 用于客户自定义connecter
-    public delegate void IConnecterParamDel(IConnecter connecter);
+    public delegate void IConnecterParamDel(string tocken);
 
     //获得某个symbol的tick委托
     public delegate Tick GetSymbolTickDel(string symbol);

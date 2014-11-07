@@ -10,6 +10,23 @@ namespace TradingLib.ServiceManager
 {
     public partial class ConnectorManager
     {
+        [ContribCommandAttr(QSEnumCommandSource.CLI, "PrintCI", "Print Connector Interface - 输出当前成交接口类型", "输出当前成交接口类型")]
+        public string PrintBrokerInterface()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("-----------BrokerInterface List--------------" + Environment.NewLine);
+            foreach (ConnectorInterface itface in ConnectorConfigTracker.BrokerInterfaces)
+            {
+                sb.Append("Type:" + itface.type_name + " XAPI:" + itface.IsXAPI.ToString() + Environment.NewLine);
+            }
+            sb.Append("-----------DataFeedInterface List--------------" + Environment.NewLine);
+            foreach (ConnectorInterface itface in ConnectorConfigTracker.DataFeedInterfaces)
+            {
+                sb.Append("Type:" + itface.type_name + " XAPI:" + itface.IsXAPI.ToString() + Environment.NewLine);
+            }
+            return sb.ToString();
+        }
+
         [ContribCommandAttr(QSEnumCommandSource.CLI, "PrintConnector", "PrintConnector - 输出当前加载的数据与成交通道接口", "输出加载的成交与行情通道接口")]
         public string PrintConnector()
         {
@@ -48,57 +65,75 @@ namespace TradingLib.ServiceManager
 
         [ContribCommandAttr(QSEnumCommandSource.CLI, "startbroker", "startbroker - 启动某个成交通道", "启动某个成交通道")]
         [ContribCommandAttr(QSEnumCommandSource.MessageWeb, "startbroker", "startbroker - 启动某个成交通道", "用于Web端停止某个某个交易通道")]
-        public void StartBrokerViaName(string name)
+        public void StartBrokerViaToken(string name)
         {
             try
             {
-                //string fullname = "Broker.SIM.SIMTrader";
                 debug("启动成交通道:" + name, QSEnumDebugLevel.INFO);
                 IBroker b = FindBroker(name);
-                if (b != null && !b.IsLive)
+                if (b == null)
                 {
-                    b.Start();
+                    debug("can not find broker:" + name, QSEnumDebugLevel.WARNING);
+                    return;
                 }
+                if (b.IsLive)
+                {
+                    debug("Broker " + name + " already started", QSEnumDebugLevel.WARNING);
+                    return;
+                }
+                
+                b.Start();
             }
             catch (Exception ex)
             {
-                debug("start broker error:" + ex.ToString());
+                debug("start broker error:" + ex.ToString(),QSEnumDebugLevel.ERROR);
             }
         }
 
         [ContribCommandAttr(QSEnumCommandSource.MessageWeb, "stopbroker", "stopbroker - 停止某个成交通道", "用于Web端停止某个交易通道")]
-        public void StopBrokerViaName(string name)
+        public void StopBrokerViaToken(string name)
         {
             try
             {
-                //string fullname = "Broker.SIM.SIMTrader";
                 debug("停止成交通道:" + name, QSEnumDebugLevel.INFO);
                 IBroker b = FindBroker(name);
-                if (b != null && b.IsLive)
+                if (b == null)
                 {
-                    b.Stop();
+                    debug("can not find broker:" + name, QSEnumDebugLevel.WARNING);
+                    return;
                 }
+                if (!b.IsLive)
+                {
+                    debug("Broker " + name + " already stopped", QSEnumDebugLevel.WARNING);
+                    return;
+                }
+                b.Stop();
             }
             catch (Exception ex)
             {
-                debug("start broker error:" + ex.ToString());
+                debug("start broker error:" + ex.ToString(),QSEnumDebugLevel.ERROR);
             }
         }
-
+        
+        [ContribCommandAttr(QSEnumCommandSource.CLI, "startdatafeed", "startdatafeed - 启动某个数据通道", "用于Web端启动某个数据通道")]
         [ContribCommandAttr(QSEnumCommandSource.MessageWeb, "startdatafeed", "startdatafeed - 启动某个数据通道", "用于Web端启动某个数据通道")]
         public void StartDataFeedViaName(string name)
         {
             debug("启动数据通道:"+name, QSEnumDebugLevel.INFO);
             try
             {
-                string fullname = "DataFeed.FastTick.FastTick";
-
-                //debug("xxxxxxxxxxxxxxxxx", QSEnumDebugLevel.INFO);
                 IDataFeed d = FindDataFeed(name);
-                if (d != null && !d.IsLive)
+                if (d == null)
                 {
-                    d.Start();
+                    debug("can not find datafeed:" + name, QSEnumDebugLevel.WARNING);
+                    return;
                 }
+                if (d.IsLive)
+                {
+                    debug("DataFeed " + name + " already started", QSEnumDebugLevel.WARNING);
+                    return;
+                }
+                d.Start();
                
             }
             catch (Exception ex)

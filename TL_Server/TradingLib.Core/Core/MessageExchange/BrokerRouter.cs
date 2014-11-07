@@ -59,14 +59,12 @@ namespace TradingLib.Core
         }
 
         /// <summary>
-        /// 获得模拟交易通道
+        /// 获得模拟成交Broker
         /// </summary>
-        public event LookupSimBroker LookupSimBrokerEvent;
-        IBroker lookupSimBroker()
+        /// <returns></returns>
+        IBroker GetSimBroker()
         {
-            if (LookupSimBrokerEvent != null)
-                return LookupSimBrokerEvent();
-            return null;
+            return TLCtxHelper.Ctx.RouterManager.DefaultSimBroker;
         }
 
         TIFEngine _tifengine;
@@ -114,7 +112,7 @@ namespace TradingLib.Core
             
             //如果是模拟交易则通过模拟broker发送信息
             if (_clearCentre[o.Account].OrderRouteType == QSEnumOrderTransferType.SIM)
-                return lookupSimBroker();
+                return GetSimBroker();
             else
             {
                 string ex = o.oSymbol.SecurityFamily.Exchange.Index;//_clearCentre.getMasterSecurity(o.symbol).DestEx;//在清算中心通过symbol找到对应的品种，然后就可以得到其交易所代码
@@ -143,7 +141,7 @@ namespace TradingLib.Core
             broker.GotCancelEvent +=new LongDelegate(GotCancel);
             broker.GotFillEvent +=new FillDelegate(GotFill);
 
-            broker.GotOrderMessageEvent += new OrderMessageDel(GotOrderErrorNotify);
+            broker.GotOrderErrorEvent +=new OrderErrorDelegate(GotOrderError);
             //获得某个symbol的tick数据
             broker.GetSymbolTickEvent += new GetSymbolTickDel(broker_GetSymbolTickEvent);
             //数据路由中Tick事件驱动交易通道中由Tick部分
@@ -152,6 +150,8 @@ namespace TradingLib.Core
             broker.ClearCentre = new ClearCentreAdapterToBroker(_clearCentre);
             
         }
+
+        
 
         
 
@@ -174,19 +174,33 @@ namespace TradingLib.Core
             }
         }
 
+        public event OrderErrorDelegate GotOrderErrorEvent;
         /// <summary>
         /// 当交易通道有Order错误信息时,进行处理
         /// </summary>
-        public event ErrorOrderNotifyDel GotErrorOrderNotifyEvent;
+        void GotOrderError(Order order, RspInfo error)
+        {
+            debug("Reply ErrorOrder To MessageExch:" + order.GetOrderInfo() + " ErrorTitle:" + error.ErrorMessage, QSEnumDebugLevel.INFO);
+            _errorordernotifycache.Write(new OrderErrorPack(order,error));
+        }
+
+        /// <summary>
+        /// 发送内部产生的委托错误
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="errortitle"></param>
         void GotOrderErrorNotify(Order o, string errortitle)
         {
-            
-            debug("Reply ErrorOrder To MessageExch:" + o.ToString() + " ErrorTitle:" + errortitle, QSEnumDebugLevel.INFO);
-            ErrorOrderNotify notify = ResponseTemplate<ErrorOrderNotify>.SrvSendNotifyResponse(o.Account);
-            notify.Order = new OrderImpl(o);
-            notify.RspInfo.FillError(errortitle);
-            notify.Order.comment = notify.RspInfo.ErrorMessage;
-            _errorordernotifycache.Write(notify);
+            RspInfo info = RspInfoImpl.Fill(errortitle);
+            o.comment = info.ErrorMessage;
+            GotOrderError(o, info);
+
+            //debug("Reply ErrorOrder To MessageExch:" + o.ToString() + " ErrorTitle:" + errortitle, QSEnumDebugLevel.INFO);
+            //ErrorOrderNotify notify = ResponseTemplate<ErrorOrderNotify>.SrvSendNotifyResponse(o.Account);
+            //notify.Order = new OrderImpl(o);
+            //notify.RspInfo.Fill(errortitle);
+            //notify.Order.comment = notify.RspInfo.ErrorMessage;
+            //_errorordernotifycache.Write(notify);
         }
 
         /// <summary>
@@ -237,7 +251,7 @@ namespace TradingLib.Core
         RingBuffer<Order> _ordercache = new RingBuffer<Order>(buffersize);
         RingBuffer<long> _cancelcache = new RingBuffer<long>(buffersize);
         RingBuffer<Trade> _fillcache = new RingBuffer<Trade>(buffersize);//成交缓存
-        RingBuffer<ErrorOrderNotify> _errorordernotifycache = new RingBuffer<ErrorOrderNotify>(buffersize);//委托消息缓存
+        RingBuffer<OrderErrorPack> _errorordernotifycache = new RingBuffer<OrderErrorPack>(buffersize);//委托消息缓存
 
         Thread msgoutthread = null;
         bool msgoutgo = false;
@@ -273,9 +287,9 @@ namespace TradingLib.Core
                     //转发委托错误
                     while (_errorordernotifycache.hasItems & !_cancelcache.hasItems & !_ordercache.hasItems & !_fillcache.hasItems)
                     {
-                        ErrorOrderNotify notify = _errorordernotifycache.Read();
-                        if (GotErrorOrderNotifyEvent != null)
-                            GotErrorOrderNotifyEvent(notify);
+                        OrderErrorPack error = _errorordernotifycache.Read();
+                        if (GotOrderErrorEvent != null)
+                            GotOrderErrorEvent(error.Order, error.RspInfo);
                     }
                     Thread.Sleep(100);
                 }
@@ -437,7 +451,7 @@ namespace TradingLib.Core
             _ordHelper.Clear();
             _tifengine.Clear();
             //重启模拟交易
-            IBroker b = lookupSimBroker();
+            IBroker b = GetSimBroker();
             if (b == null) return;
             b.Stop();
             Thread.Sleep(1000);

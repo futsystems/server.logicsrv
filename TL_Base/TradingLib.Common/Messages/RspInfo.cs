@@ -20,54 +20,92 @@ namespace TradingLib.Common
     /// <param name="o"></param>
     /// <param name="info"></param>
     public delegate void ErrorOrderRspInoDel(Order o,string error);
-    /// <summary>
-    /// 回报消息
-    /// 用于向客户端回报错误提示
-    /// 正常查询内也会附带对应的回报消息,逻辑数据包会自行进行解析并形成对应的逻辑包
-    /// </summary>
-    public class RspInfo
-    {
-        /// <summary>
-        /// 设定具体的错误信息
-        /// </summary>
-        /// <param name="error"></param>
-        public void FillError(XMLRspInfo error)
+
+
+    public static class RspInfoUtils
+    { 
+        public static void Fill(this RspInfo info,XMLRspInfo xml)
         {
-            ErrorID = error.Code;
-            ErrorMessage = error.Message;
+            info.ErrorID = xml.Code;
+            info.ErrorMessage = xml.Message;
         }
 
-        /// <summary>
-        /// 通过异常来填充RspInfo
-        /// </summary>
-        /// <param name="error"></param>
-        public void Fill(FutsRspError error)
+        public static void Fill(this RspInfo info, FutsRspError error)
         {
-            ErrorID = error.ErrorID;
-            ErrorMessage = error.ErrorMessage;
+            info.ErrorID = error.ErrorID;
+            info.ErrorMessage = error.ErrorMessage;
         }
 
-        
 
         /// <summary>
         /// 通过key设定具体的错误信息
         /// </summary>
         /// <param name="error_key"></param>
-        public void FillError(string error_key)
+        public static void Fill(this RspInfo info, string error_key)
         {
-            this.FillError(XMLRspInfoHelper.Tracker[error_key]);
+            info.Fill(XMLRspInfoHelper.Tracker[error_key]);
         }
 
         /// <summary>
         /// 通过code设定具体的错误信息
         /// </summary>
         /// <param name="error_code"></param>
-        public void FillError(int error_code)
+        public static void Fill(this RspInfo info, int error_code)
         {
-            this.FillError(XMLRspInfoHelper.Tracker[error_code]);
+            info.Fill(XMLRspInfoHelper.Tracker[error_code]);
         }
 
-        public RspInfo()
+    }
+    /// <summary>
+    /// 回报消息
+    /// 用于向客户端回报错误提示
+    /// 正常查询内也会附带对应的回报消息,逻辑数据包会自行进行解析并形成对应的逻辑包
+    /// </summary>
+    public class RspInfoImpl:RspInfo
+    {
+        ///// <summary>
+        ///// 设定具体的错误信息
+        ///// </summary>
+        ///// <param name="error"></param>
+        //public void FillError(XMLRspInfo error)
+        //{
+        //    ErrorID = error.Code;
+        //    ErrorMessage = error.Message;
+        //}
+
+        ///// <summary>
+        ///// 通过异常来填充RspInfo
+        ///// </summary>
+        ///// <param name="error"></param>
+        //public void Fill(FutsRspError error)
+        //{
+        //    ErrorID = error.ErrorID;
+        //    ErrorMessage = error.ErrorMessage;
+        //}
+
+        
+
+        ///// <summary>
+        ///// 通过key设定具体的错误信息
+        ///// </summary>
+        ///// <param name="error_key"></param>
+        //public void FillError(string error_key)
+        //{
+        //    this.FillError(XMLRspInfoHelper.Tracker[error_key]);
+        //}
+
+        ///// <summary>
+        ///// 通过code设定具体的错误信息
+        ///// </summary>
+        ///// <param name="error_code"></param>
+        //public void FillError(int error_code)
+        //{
+        //    this.FillError(XMLRspInfoHelper.Tracker[error_code]);
+        //}
+
+
+
+        public RspInfoImpl()
         {
             ErrorID = 0;
             ErrorMessage = string.Empty;
@@ -77,24 +115,40 @@ namespace TradingLib.Common
 
         public string ErrorMessage { get; set; }
 
-
-        public string Serialize()
+        public static RspInfo Fill(string errorkey)
         {
-            return ErrorID.ToString() + "," + ErrorMessage.Replace(',', ' ');
+            RspInfo info = new RspInfoImpl();
+            info.Fill(errorkey);
+            return info;
         }
 
-        public void Deserialize(string str)
+        public static RspInfo Fill(int code)
         {
+            RspInfo info = new RspInfoImpl();
+            info.Fill(code);
+            return info;
+        }
+
+        public static string Serialize(RspInfo info)
+        {
+            return info.ErrorID.ToString() + "," + info.ErrorMessage.Replace(',', ' ');
+        }
+
+        public static RspInfo Deserialize(string str)
+        {
+            RspInfo info = new RspInfoImpl();
             string[] rec = str.Split(',');
             int errorid = 0;
             if (rec.Length < 2)
             {
                 int.TryParse(rec[0], out errorid);
-                return;
+                info.ErrorID = errorid;
+                return info;
             }
             int.TryParse(rec[0], out errorid);
-            ErrorID = errorid;
-            ErrorMessage = rec[1];
+            info.ErrorID = errorid;
+            info.ErrorMessage = rec[1];
+            return info;
         }
        
     }

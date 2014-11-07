@@ -22,7 +22,10 @@ namespace TradingLib.API
         /// <returns></returns>
         IDataFeed FindDataFeed(string fullname);
 
-
+        /// <summary>
+        /// 默认的模拟成交接口
+        /// </summary>
+        IBroker DefaultSimBroker { get; }
 
         /// <summary>
         /// 获得所有成交路由
