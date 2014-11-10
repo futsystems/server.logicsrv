@@ -47,26 +47,8 @@ namespace TradingLib.Core
     {
         public const string PROGRAM = "BrokerRouter";
 
-        /// <summary>
-        /// 获得交易所对应的交易通道 
-        /// </summary>
-        public event LookupBroker LookupBrokerEvent;
-        IBroker lookupBroker(string exchange)
-        {
-            if (LookupBrokerEvent != null)
-                return LookupBrokerEvent(exchange);
-            return null;
-        }
 
-        /// <summary>
-        /// 获得模拟成交Broker
-        /// </summary>
-        /// <returns></returns>
-        IBroker GetSimBroker()
-        {
-            return TLCtxHelper.Ctx.RouterManager.DefaultSimBroker;
-            
-        }
+
 
         TIFEngine _tifengine;
         private ClearCentre _clearCentre;
@@ -101,6 +83,23 @@ namespace TradingLib.Core
         }
 
         #region 通过Order选择对应的broker交易通道
+
+        #region 查找模拟或实盘成交通道
+        IBroker GetLiveBroker(Order o)
+        {
+            return TLCtxHelper.Ctx.RouterManager.DefaultLiveBroker;
+        }
+        /// <summary>
+        /// 获得模拟成交Broker
+        /// </summary>
+        /// <returns></returns>
+        IBroker GetSimBroker()
+        {
+            return TLCtxHelper.Ctx.RouterManager.DefaultSimBroker;
+        }
+        #endregion
+
+
         //通过Order或者orderId选择对应的Broker
         /// <summary>
         /// 查找委托对应的交易通道
@@ -110,14 +109,12 @@ namespace TradingLib.Core
         /// <returns></returns>
         public IBroker SelectBroker(Order o)
         {
-            
-            //如果是模拟交易则通过模拟broker发送信息
+            //如果设定的路由类别为模拟 则返回模拟成交接口 如果是路由类别为实盘 则通过BrokerSelector返回对应的路由
             if (_clearCentre[o.Account].OrderRouteType == QSEnumOrderTransferType.SIM)
                 return GetSimBroker();
             else
             {
-                string ex = o.oSymbol.SecurityFamily.Exchange.Index;//_clearCentre.getMasterSecurity(o.symbol).DestEx;//在清算中心通过symbol找到对应的品种，然后就可以得到其交易所代码
-                return lookupBroker(ex);
+                return GetLiveBroker(o);
             }
         }
 

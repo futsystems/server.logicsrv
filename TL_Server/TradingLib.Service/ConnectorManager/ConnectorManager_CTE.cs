@@ -34,33 +34,17 @@ namespace TradingLib.ServiceManager
             sb.Append("-----------Brokers List------------" + "\r\n");
             foreach (IBroker b in brokerInstList.Values)
             {
-                sb.Append(this.GetBrokerToken(b).PadRight(20, ' ') + "Status:" + b.IsLive.ToString() + "\r\n");
+                sb.Append(b.Token.PadRight(20, ' ') + "Status:" + b.IsLive.ToString() + "\r\n");
             }
             sb.Append("-----------DataFeeds List---------" + "\r\n");
             foreach (IDataFeed f in datafeedInstList.Values)
             {
-                sb.Append(f.GetType().Name.PadRight(20, ' ') + "Status:" + f.IsLive.ToString() + "\r\n");
+                sb.Append(f.Token.PadRight(20, ' ') + "Status:" + f.IsLive.ToString() + "\r\n");
             }
             return sb.ToString();
         }
 
-        [ContribCommandAttr(QSEnumCommandSource.CLI, "PrintRoute", "PrintRoute - 输出当前数据与成交路由表", "数据不同交易所所对应的成交与行情路由")]
-        public string PrintRouterMap()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append(ExUtil.SectionHeader(" BrokerRouter "));
-            foreach (string key in ExchangeBrokerMap.Keys)
-            {
-                sb.Append(key.PadRight(20, ' ') + ExchangeBrokerMap[key].PadRight(30, ' ') + ExComConst.Line);
-            }
 
-            sb.Append(ExUtil.SectionHeader(" DataFeedRouter "));
-            foreach (string key in ExchangeDataFeedMap.Keys)
-            {
-                sb.Append(key.PadRight(20, ' ') + ExchangeDataFeedMap[key].PadRight(30, ' ') + ExComConst.Line);
-            }
-            return sb.ToString();
-        }
 
 
         [ContribCommandAttr(QSEnumCommandSource.CLI, "startbroker", "startbroker - 启动某个成交通道", "启动某个成交通道")]
@@ -117,7 +101,7 @@ namespace TradingLib.ServiceManager
         
         [ContribCommandAttr(QSEnumCommandSource.CLI, "startdatafeed", "startdatafeed - 启动某个数据通道", "用于Web端启动某个数据通道")]
         [ContribCommandAttr(QSEnumCommandSource.MessageWeb, "startdatafeed", "startdatafeed - 启动某个数据通道", "用于Web端启动某个数据通道")]
-        public void StartDataFeedViaName(string name)
+        public void StartDataFeedViaToken(string name)
         {
             debug("启动数据通道:"+name, QSEnumDebugLevel.INFO);
             try
@@ -144,7 +128,7 @@ namespace TradingLib.ServiceManager
 
 
         [ContribCommandAttr(QSEnumCommandSource.MessageWeb, "stopdatafeed", "stopdatafeed - 停止某个数据通道", "用于Web端停止某个数据通道")]
-        public void StopDataFeedViaName(string name)
+        public void StopDataFeedViaToken(string name)
         {
             debug("停止数据通道:" + name, QSEnumDebugLevel.INFO);
             try
@@ -225,7 +209,7 @@ namespace TradingLib.ServiceManager
                 connector = c;
             }
 
-            public string Name { get { return connector.Title; } }
+            public string Name { get { return connector.Token; } }
             public string ClassName { get { return connector.GetType().FullName; } }
             public bool Status { get { return connector.IsLive; } }
             public string Type { get { return connector is IBroker ? "Broker" : "DataFeed"; } }

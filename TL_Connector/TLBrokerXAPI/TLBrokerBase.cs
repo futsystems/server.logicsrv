@@ -28,7 +28,7 @@ namespace TradingLib.BrokerXAPI
         protected void NotifyConnected()
         {
             if (Connected != null)
-                Connected(this.BrokerToken);
+                Connected(this.Token);
         }
         /// <summary>
         /// 当数据服务器断开后触发事件
@@ -37,7 +37,7 @@ namespace TradingLib.BrokerXAPI
         protected void NotifyDisconnected()
         {
             if (Disconnected != null)
-                Disconnected(this.BrokerToken);
+                Disconnected(this.Token);
         }
 
         /// <summary>
@@ -93,17 +93,12 @@ namespace TradingLib.BrokerXAPI
 
 
         #region 配置信息
-        public string Title { get { return this.BrokerToken; } }
-
-
 
         /// <summary>
         /// 获得成交接口唯一标识Token通过BrokerConfig中的Token进行标注
         /// </summary>
         /// <returns></returns>
-        public string BrokerToken { get { return _cfg.Token; } }
-
-        string _brokertoken = string.Empty;
+        public string Token { get { return _cfg.Token; } }
 
         protected ConnectorConfig _cfg;
 
@@ -159,7 +154,7 @@ namespace TradingLib.BrokerXAPI
         {
             if (_debugEnable && (int)level <= (int)_debuglevel && SendLogItemEvent != null)
             {
-                ILogItem item = new LogItem(msg, level, this.Title);
+                ILogItem item = new LogItem(msg, level, this.Token);
                 SendLogItemEvent(item);
             }
         }

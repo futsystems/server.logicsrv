@@ -294,11 +294,11 @@ namespace TradingLib.Common
                 to.Status = o.Status;//更新委托状态
                 to.Broker = o.Broker;//更新broker信息和ExchID
                 to.BrokerKey = o.BrokerKey;
-                to.OrderExchID = o.OrderExchID;
+                to.OrderSysID = o.OrderSysID;
                 to.comment = o.comment;//更新描述
 
                 to.size = o.size;//更新委托当前未成交数量
-                to.Filled = o.Filled;//更新成交数量
+                to.FilledSize = o.FilledSize;//更新成交数量
                 
                 
             }

@@ -11,6 +11,12 @@ namespace TradingLib.ServiceManager
 {
     public partial class ConnectorManager
     {
+
+        //接口对象映射表
+        Dictionary<string, IBroker> brokerInstList = new Dictionary<string, IBroker>();
+        Dictionary<string, IDataFeed> datafeedInstList = new Dictionary<string, IDataFeed>();
+
+
         /// <summary>
         /// 验证成交接口设置
         /// </summary>
@@ -125,12 +131,12 @@ namespace TradingLib.ServiceManager
                 };
                 broker.Disconnected += (string b) =>
                 {
-                    Util.Debug("Broker:" + broker.BrokerToken + " Disconnected",QSEnumDebugLevel.MUST);
+                    Util.Debug("Broker:" + broker.Token + " Disconnected",QSEnumDebugLevel.MUST);
                     if (BrokerDisconnectedEvent != null)
                         BrokerDisconnectedEvent(b);
                 };
                 //将broker的交易类事件绑定到路由内 然后通过路由转发到交易消息服务
-                BindBrokerIntoRouter(brokerinterface);
+                _brokerrouter.LoadBroker(brokerinterface);
             }
 
             foreach (ConnectorConfig cfg in ConnectorConfigTracker.DataFeedConfigs)
@@ -156,7 +162,7 @@ namespace TradingLib.ServiceManager
                     if (DataFeedDisconnectedEvent != null)
                         DataFeedDisconnectedEvent(d);
                 };
-                BindDataFeedIntoRouter(datafeedinterface);
+                _datafeedrouter.LoadDataFeed(datafeedinterface);
             }
         
         }

@@ -114,8 +114,8 @@ namespace TradingLib.Common
             sb.Append(" @" + (o.isMarket ? "Mkt" : (o.isLimit? Util.FormatDecimal(o.price): Util.FormatDecimal(o.price)+ "stp")));
             sb.Append(" ["+o.Account+"]");
             sb.Append(" ID:" + o.id.ToString());
-            sb.Append(" T:"+Math.Abs(o.TotalSize).ToString()+" F:"+o.Filled.ToString()+" R:"+o.UnsignedSize.ToString());
-            sb.Append(" Ref:" + o.OrderRef + " Seq:" + o.OrderSeq.ToString() + " ExchID:" + o.OrderExchID);
+            sb.Append(" T:"+Math.Abs(o.TotalSize).ToString()+" F:"+o.FilledSize.ToString()+" R:"+o.UnsignedSize.ToString());
+            sb.Append(" Ref:" + o.OrderRef + " Seq:" + o.OrderSeq.ToString() + " ExchID:" + o.OrderSysID);
             sb.Append(" Status:" + o.Status.ToString());
 
             return sb.ToString();
@@ -125,8 +125,8 @@ namespace TradingLib.Common
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("ID" + o.id.ToString());
-            sb.Append(" T:" + Math.Abs(o.TotalSize).ToString() + " F:" + o.Filled.ToString() + " R:" + o.UnsignedSize.ToString());
-            sb.Append(" Ref:" + o.OrderRef + " Seq:" + o.OrderSeq.ToString() + " ExchID:" + o.OrderExchID);
+            sb.Append(" T:" + Math.Abs(o.TotalSize).ToString() + " F:" + o.FilledSize.ToString() + " R:" + o.UnsignedSize.ToString());
+            sb.Append(" Ref:" + o.OrderRef + " Seq:" + o.OrderSeq.ToString() + " ExchID:" + o.OrderSysID);
             sb.Append(" Status:" + o.Status.ToString());
             return sb.ToString();
         }

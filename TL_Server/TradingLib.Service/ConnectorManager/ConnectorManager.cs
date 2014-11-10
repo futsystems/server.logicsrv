@@ -43,6 +43,7 @@ namespace TradingLib.ServiceManager
         ConfigDB _cfgdb;
         string _defaultSimBrokerToken = "SIMBROKER";
         string _defaultDataFeedToken = "FASTTICK";
+        string _defaultLiveBrokerToken = "LIVEBROKER";
         public ConnectorManager()
             : base(SMGName)
         {
@@ -60,6 +61,12 @@ namespace TradingLib.ServiceManager
             }
             _defaultDataFeedToken = _cfgdb["DefaultDataFeed"].AsString();
 
+            if (!_cfgdb.HaveConfig("DefaultLiveBroker"))
+            {
+                _cfgdb.UpdateConfig("DefaultLiveBroker", QSEnumCfgType.String, "LIVEBROKER", "默认实盘成交配置名称");
+            }
+            _defaultLiveBrokerToken = _cfgdb["DefaultLiveBroker"].AsString();
+
 
         }
 
@@ -76,23 +83,23 @@ namespace TradingLib.ServiceManager
             _brokerrouter = _br;
             _datafeedrouter = _dr;
 
-            _br.LookupBrokerEvent += new LookupBroker(_br_LookupBrokerEvent);
+            //_br.LookupBrokerEvent += new LookupBroker(_br_LookupBrokerEvent);
             //_dr.LookupDataFeedEvent += new LookupDataFeed(_dr_LookupDataFeedEvent);
             routerbinded = true;
         }
 
-        string GetBrokerToken(IBroker broker)
-        {
-            //如果通过XAPI接口进行扩展的成交接口 则返回BrokerToken来作为唯一标识
-            if(broker is TLBrokerBase)
-            {
-                TLBrokerBase brokerbase = broker as TLBrokerBase;
-                return brokerbase.BrokerToken;
-            }
-            //其余扩展的Broker返回其类型名
-            return broker.GetType().FullName;
+        //string GetBrokerToken(IBroker broker)
+        //{
+        //    //如果通过XAPI接口进行扩展的成交接口 则返回BrokerToken来作为唯一标识
+        //    if(broker is TLBrokerBase)
+        //    {
+        //        TLBrokerBase brokerbase = broker as TLBrokerBase;
+        //        return brokerbase.BrokerToken;
+        //    }
+        //    //其余扩展的Broker返回其类型名
+        //    return broker.GetType().FullName;
              
-        }
+        //}
         /// <summary>
         /// 加载路由
         /// </summary>
@@ -107,9 +114,6 @@ namespace TradingLib.ServiceManager
             //加载路由
             LoadConnectorType();
 
-            //加载交易所列表
-            LoadExchangeTable();
-
             //验证通道接口有效性
             ValidInterface();
             
@@ -120,24 +124,22 @@ namespace TradingLib.ServiceManager
             _defaultsimbroker = FindBroker(_defaultSimBrokerToken);//_defaultSimBrokerToken 通过数据库设置
 
             _defaultdatafeed = FindDataFeed(_defaultDataFeedToken);//_defaultDataFeedToken通过数据库设置
+
+            _defaultlivebroker = FindBroker(_defaultLiveBrokerToken);//_defaultLiveBrokerToken通过数据库设置
             
         }
         public void StartDefaultConnector()
         {
-            if (_defaultdatafeed != null && !_defaultdatafeed.IsLive)
-                _defaultdatafeed.Start();
-            if (_defaultsimbroker != null && !_defaultsimbroker.IsLive)
-                _defaultsimbroker.Start();
+            //启动默认通道
+            StartDataFeedViaToken(_defaultDataFeedToken);
+            StartBrokerViaToken(_defaultSimBrokerToken);
+            StartBrokerViaToken(_defaultLiveBrokerToken);
         }
 
 
         //接口类型应映射表
         Dictionary<string, Type> xapidatafeedmodule = new Dictionary<string, Type>();
         Dictionary<string, Type> xapibrokermodule = new Dictionary<string, Type>();
-
-        //接口对象映射表
-        Dictionary<string, IBroker> brokerInstList = new Dictionary<string, IBroker>();
-        Dictionary<string, IDataFeed> datafeedInstList = new Dictionary<string, IDataFeed>();
 
         /// <summary>
         /// 加载数据与成交Connector类型
@@ -171,196 +173,196 @@ namespace TradingLib.ServiceManager
         }
 
 
-        #region 交易 数据 Connector绑定标志,每个通道只需要绑定到Router一次
-        //交易通道加载标志
-        Dictionary<string, bool> brokerLoadedFlags = new Dictionary<string, bool>();
-        Dictionary<string, bool> datafeedLoadedFlags = new Dictionary<string, bool>();
+        //#region 交易 数据 Connector绑定标志,每个通道只需要绑定到Router一次
+        ////交易通道加载标志
+        ////Dictionary<string, bool> brokerLoadedFlags = new Dictionary<string, bool>();
+        ////Dictionary<string, bool> datafeedLoadedFlags = new Dictionary<string, bool>();
 
-        bool IsBrokerLoaded(string token)
-        {
-            bool loaded = false;
-            if (!brokerLoadedFlags.TryGetValue(token, out loaded))
-            {
-                return false;
-            }
-            return loaded;
-        }
+        ////bool IsBrokerLoaded(string token)
+        ////{
+        ////    bool loaded = false;
+        ////    if (!brokerLoadedFlags.TryGetValue(token, out loaded))
+        ////    {
+        ////        return false;
+        ////    }
+        ////    return loaded;
+        ////}
 
-        bool IsDataFeedLoaded(string token)
-        {
-            bool loaded = false;
-            if (!datafeedLoadedFlags.TryGetValue(token, out loaded))
-            {
-                return false;
-            }
-            return loaded;
-        }
-
-
-        void BindBrokerIntoRouter(IBroker broker)
-        {
-            string token = GetBrokerToken(broker);
-            if (IsBrokerLoaded(token))
-            {
-                debug("Broker:" + token + " is loaded");
-                return;
-            }
-            else
-            {
-                //将broker绑定到路由中心的事件
-                _brokerrouter.LoadBroker(broker);
-                brokerLoadedFlags[token] = true;
-            }
-        }
-
-        void BindDataFeedIntoRouter(IDataFeed feed)
-        {
-            string token = feed.GetType().FullName;//行情的 每种接口最多哦加载一个实例 不会像成交接口一样会加载多个
-            if (IsDataFeedLoaded(token))
-            {
-                debug("DataFeed:" + token + " is loaded");
-                return;
-            }
-            else
-            {
-                _datafeedrouter.LoadDataFeed(feed);
-                datafeedLoadedFlags[token] = true;
-            }
-        }
-
-        #endregion
+        ////bool IsDataFeedLoaded(string token)
+        ////{
+        ////    bool loaded = false;
+        ////    if (!datafeedLoadedFlags.TryGetValue(token, out loaded))
+        ////    {
+        ////        return false;
+        ////    }
+        ////    return loaded;
+        ////}
 
 
+        //void BindBrokerIntoRouter(IBroker broker)
+        //{
+        //    string token = GetBrokerToken(broker);
+        //    if (IsBrokerLoaded(token))
+        //    {
+        //        debug("Broker:" + token + " is loaded");
+        //        return;
+        //    }
+        //    else
+        //    {
+        //        //将broker绑定到路由中心的事件
+        //        _brokerrouter.LoadBroker(broker);
+        //        brokerLoadedFlags[token] = true;
+        //    }
+        //}
 
-        #region  加载交易所列表 维护交易所的数据路由与交易路由
-        Dictionary<string, string> ExchangeBrokerMap = new Dictionary<string, string>();
-        Dictionary<string, string> ExchangeDataFeedMap = new Dictionary<string, string>();
+        //void BindDataFeedIntoRouter(IDataFeed feed)
+        //{
+        //    string token = feed.GetType().FullName;//行情的 每种接口最多哦加载一个实例 不会像成交接口一样会加载多个
+        //    if (IsDataFeedLoaded(token))
+        //    {
+        //        debug("DataFeed:" + token + " is loaded");
+        //        return;
+        //    }
+        //    else
+        //    {
+        //        _datafeedrouter.LoadDataFeed(feed);
+        //        datafeedLoadedFlags[token] = true;
+        //    }
+        //}
 
-        //加载交易所交易路由与数据路由
-        public void LoadExchangeTable()
-        {
-            List<Exchange> lex = ExchangeTracker.getExchList();
-            foreach (Exchange x in lex)
-            {
-                addExchangeBroker(x);
-                addExchangeDataFeed(x);
-            }
-        }
+        //#endregion
 
-        //添加交易所交易路由
-        void addExchangeBroker(Exchange ex)
-        {
-            string broker = RouterTracker.getBrockerRoute(ex.Index);
-            updateExchangeBrokerMap(ex.Index, broker);
-        }
 
-        //添加加以所数据路由
-        void addExchangeDataFeed(Exchange ex)
-        {
-            string datafeed = RouterTracker.getDataFeedRoute(ex.Index);
-            updateExchangeDataFeedMap(ex.Index, datafeed);
-        }
 
-        //更新或添加交易所数据路由
-        void updateExchangeDataFeedMap(string exchange, string datafeed)
-        {
-            string s;
-            if (ExchangeDataFeedMap.TryGetValue(exchange, out s))
-                ExchangeDataFeedMap[exchange] = datafeed;
-            else
-                ExchangeDataFeedMap.Add(exchange, datafeed);
-        }
-        //更新或添加交易所交易路由
-        void updateExchangeBrokerMap(string exchange, string broker)
-        {
-            string s;
-            if (ExchangeBrokerMap.TryGetValue(exchange, out s))
-                ExchangeBrokerMap[exchange] = broker;
-            else
-                ExchangeBrokerMap.Add(exchange, broker);
-        }
+        //#region  加载交易所列表 维护交易所的数据路由与交易路由
+        //Dictionary<string, string> ExchangeBrokerMap = new Dictionary<string, string>();
+        //Dictionary<string, string> ExchangeDataFeedMap = new Dictionary<string, string>();
 
-        /// <summary>
-        /// 通过交易所编码查找数据通道
-        /// </summary>
-        /// <param name="exchange"></param>
-        /// <returns></returns>
-        IDataFeed _dr_LookupDataFeedEvent(string exchange)
-        {
-            IDataFeed d;
-            string fullname;
-            //特例,对应的类名来获得对应的实例
-            if (exchange == "DataFeed.FastTick.FastTick" || exchange == "DataFeed.CTP.CTPMD")
-            {
-                if (datafeedInstList.TryGetValue(exchange, out d) && IsDataFeedLoaded(exchange))
-                {
-                    return d;
-                }
-                else
-                    return null;
-            }
+        ////加载交易所交易路由与数据路由
+        //public void LoadExchangeTable()
+        //{
+        //    List<Exchange> lex = ExchangeTracker.getExchList();
+        //    foreach (Exchange x in lex)
+        //    {
+        //        addExchangeBroker(x);
+        //        addExchangeDataFeed(x);
+        //    }
+        //}
 
-            if (ExchangeDataFeedMap.TryGetValue(exchange, out fullname))
-            {
-                if (datafeedInstList.TryGetValue(fullname, out d) && IsDataFeedLoaded(fullname))
-                {
-                    return d;
-                }
-                else
-                    return null;
-            }
-            else
-                return null;
-        }
+        ////添加交易所交易路由
+        //void addExchangeBroker(Exchange ex)
+        //{
+        //    string broker = RouterTracker.getBrockerRoute(ex.Index);
+        //    updateExchangeBrokerMap(ex.Index, broker);
+        //}
 
-        /// <summary>
-        /// 查找模拟交易通道
-        /// </summary>
-        /// <returns></returns>
-        IBroker _br_LookupSimBrokerEvent()
-        {
-            IBroker b;
-            string fullname = "Broker.SIM.SIMTrader";
-            if (brokerInstList.TryGetValue(fullname, out b) && IsBrokerLoaded(fullname))
-            {
-                return b;
-            }
-            else
-                return null;
-        }
+        ////添加加以所数据路由
+        //void addExchangeDataFeed(Exchange ex)
+        //{
+        //    string datafeed = RouterTracker.getDataFeedRoute(ex.Index);
+        //    updateExchangeDataFeedMap(ex.Index, datafeed);
+        //}
 
-        /// <summary>
-        /// 通过交易所编号查找交易通道
-        /// </summary>
-        /// <param name="exchange"></param>
-        /// <returns></returns>
-        IBroker _br_LookupBrokerEvent(string exchange)
-        {
-            debug("选择实盘交易通道" + exchange, QSEnumDebugLevel.MUST);
-            //debug("交易通道选择到这里");
-            IBroker b;
-            string demo = "SW0021";
-            if (brokerInstList.TryGetValue(demo, out b) && IsBrokerLoaded(demo))
-            {
-                return b;
-            }
-            return null;
+        ////更新或添加交易所数据路由
+        //void updateExchangeDataFeedMap(string exchange, string datafeed)
+        //{
+        //    string s;
+        //    if (ExchangeDataFeedMap.TryGetValue(exchange, out s))
+        //        ExchangeDataFeedMap[exchange] = datafeed;
+        //    else
+        //        ExchangeDataFeedMap.Add(exchange, datafeed);
+        //}
+        ////更新或添加交易所交易路由
+        //void updateExchangeBrokerMap(string exchange, string broker)
+        //{
+        //    string s;
+        //    if (ExchangeBrokerMap.TryGetValue(exchange, out s))
+        //        ExchangeBrokerMap[exchange] = broker;
+        //    else
+        //        ExchangeBrokerMap.Add(exchange, broker);
+        //}
 
-            string fullname;
-            //从交易所名->交易通道全名映射中找到 交易通道全名
-            if (ExchangeBrokerMap.TryGetValue(exchange, out fullname))
-            {
-                if (brokerInstList.TryGetValue(fullname, out b) && IsBrokerLoaded(fullname))
-                {
-                    return b;
-                }
-                else
-                    return null;
-            }
-            else
-                return null;
-        }
-        #endregion
+        ///// <summary>
+        ///// 通过交易所编码查找数据通道
+        ///// </summary>
+        ///// <param name="exchange"></param>
+        ///// <returns></returns>
+        //IDataFeed _dr_LookupDataFeedEvent(string exchange)
+        //{
+        //    IDataFeed d;
+        //    string fullname;
+        //    //特例,对应的类名来获得对应的实例
+        //    if (exchange == "DataFeed.FastTick.FastTick" || exchange == "DataFeed.CTP.CTPMD")
+        //    {
+        //        if (datafeedInstList.TryGetValue(exchange, out d) && IsDataFeedLoaded(exchange))
+        //        {
+        //            return d;
+        //        }
+        //        else
+        //            return null;
+        //    }
+
+        //    if (ExchangeDataFeedMap.TryGetValue(exchange, out fullname))
+        //    {
+        //        if (datafeedInstList.TryGetValue(fullname, out d) && IsDataFeedLoaded(fullname))
+        //        {
+        //            return d;
+        //        }
+        //        else
+        //            return null;
+        //    }
+        //    else
+        //        return null;
+        //}
+
+        ///// <summary>
+        ///// 查找模拟交易通道
+        ///// </summary>
+        ///// <returns></returns>
+        //IBroker _br_LookupSimBrokerEvent()
+        //{
+        //    IBroker b;
+        //    string fullname = "Broker.SIM.SIMTrader";
+        //    if (brokerInstList.TryGetValue(fullname, out b) && IsBrokerLoaded(fullname))
+        //    {
+        //        return b;
+        //    }
+        //    else
+        //        return null;
+        //}
+
+        ///// <summary>
+        ///// 通过交易所编号查找交易通道
+        ///// </summary>
+        ///// <param name="exchange"></param>
+        ///// <returns></returns>
+        //IBroker _br_LookupBrokerEvent(string exchange)
+        //{
+        //    debug("选择实盘交易通道" + exchange, QSEnumDebugLevel.MUST);
+        //    //debug("交易通道选择到这里");
+        //    IBroker b;
+        //    string demo = "SW0021";
+        //    if (brokerInstList.TryGetValue(demo, out b) && IsBrokerLoaded(demo))
+        //    {
+        //        return b;
+        //    }
+        //    return null;
+
+        //    string fullname;
+        //    //从交易所名->交易通道全名映射中找到 交易通道全名
+        //    if (ExchangeBrokerMap.TryGetValue(exchange, out fullname))
+        //    {
+        //        if (brokerInstList.TryGetValue(fullname, out b) && IsBrokerLoaded(fullname))
+        //        {
+        //            return b;
+        //        }
+        //        else
+        //            return null;
+        //    }
+        //    else
+        //        return null;
+        //}
+        //#endregion
 
 
         public override void Dispose()

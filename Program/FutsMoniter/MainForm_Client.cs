@@ -85,11 +85,11 @@ namespace FutsMoniter
                             ShowInfo("初始化行情报表");
                             InitSymbol2View();
 
-                            //设定全局登入状态 显示主界面
-                            Globals.LoginStatus.IsInitSuccess = true;
-
                             //触发初始化完成事件
                             Globals.OnInitFinished();
+
+                            //设定全局登入状态 显示主界面
+                            Globals.LoginStatus.IsInitSuccess = true;
 
                             
 

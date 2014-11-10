@@ -7,15 +7,35 @@ namespace TradingLib.API
     /// </summary>
     public interface Order
     {
+        #region 帐户 时间 合约 指令
         /// <summary>
-        /// symbol of order
+        /// account to place inventory if order is executed
+        /// </summary>
+        string Account { get; set; }
+
+        /// <summary>
+        /// 系统内部编号long
+        /// </summary>
+        long id { get; set; }
+
+        /// <summary>
+        /// 委托提交日期 date in  date format (2010/03/05 = 20100305)
+        /// </summary>
+        int date { get; set; }
+
+        /// <summary>
+        /// 委托提交时间 time including seconds 1:35:07PM = 133507
+        /// </summary>
+        int time { get; set; }
+
+
+        /// <summary>
+        /// 合约字头
         /// </summary>
         string symbol { get; set; }
 
         /// <summary>
-        /// symbol assocated with this order,
-        /// symbol is trackered by basictracker
-        /// symbol对象 fuwu
+        /// 合约对象
         /// </summary>
         Symbol oSymbol { get; set; }
 
@@ -26,9 +46,45 @@ namespace TradingLib.API
         string TIF { get; set; }
 
         /// <summary>
-        /// valid instruction
+        /// valid instruction 委托指令 MOC,IOC 等委托扩展指令
         /// </summary>
         OrderInstructionType ValidInstruct { get; set; }
+
+        /// <summary>
+        /// 开平标志
+        /// </summary>
+        QSEnumOffsetFlag OffsetFlag { get; set; }
+
+        /// <summary>
+        /// 投机/套保标识
+        /// </summary>
+        string HedgeFlag { get; set; }
+        #endregion
+
+
+
+        #region 数量 方向 价格
+        /// <summary>
+        /// signed size of order (-100 = sell 100)
+        /// 委托数量根据成交情况会发生变化 带方向
+        /// </summary>
+        int size { get; set; }
+
+        /// <summary>
+        /// 初始委托总数量 带方向
+        /// </summary>
+        int TotalSize { get; set; }
+
+        /// <summary>
+        /// 已成交数量 绝对值
+        /// </summary>
+        int FilledSize { get; set; }
+
+        /// <summary>
+        /// unsigned size of order
+        /// </summary>
+        int UnsignedSize { get; }
+
 
         /// <summary>
         /// true if buy, otherwise sell
@@ -50,36 +106,53 @@ namespace TradingLib.API
         /// </summary>
         decimal trail { get; set; }
 
+        #endregion
+
+        #region 委托其他属性
+        /// <summary>
+        /// 品种类别
+        /// </summary>
+        SecurityType SecurityType { get; set; }
+
+        /// <summary>
+        /// 货币类别
+        /// </summary>
+        CurrencyType Currency { get; set; }
+
+        /// <summary>
+        /// 交易所
+        /// </summary>
+        string Exchange { get; set; }
+
+        /// <summary>
+        /// 该委托触发来源
+        /// </summary>
+        QSEnumOrderSource OrderSource { get; set; }
+
+        /// <summary>
+        /// 是否强平
+        /// </summary>
+        bool ForceClose { get; set; }
+
+        /// <summary>
+        /// 强平原因
+        /// </summary>
+        string ForceCloseReason { get; set; }
+
+        /// <summary>
+        /// 委托状态
+        /// </summary>
+        QSEnumOrderStatus Status { get; set; }
+
         /// <summary>
         /// order comment
         /// </summary>
         string comment { get; set; }
 
-        /// <summary>
-        /// signed size of order (-100 = sell 100)
-        /// </summary>
-        int size { get; set; }
+        #endregion
 
-        /// <summary>
-        /// order original total size
-        /// </summary>
-        int TotalSize { get; set; }
 
-        /// <summary>
-        /// unsigned size of order
-        /// </summary>
-        int UnsignedSize { get; }
-
-        /// <summary>
-        /// date in  date format (2010/03/05 = 20100305)
-        /// </summary>
-        int date { get; set; }
-
-        /// <summary>
-        /// time including seconds 1:35:07PM = 133507
-        /// </summary>
-        int time { get; set; }
-
+        #region 委托相关判定操作
         /// <summary>
         /// whether order has been filled
         /// </summary>
@@ -105,42 +178,15 @@ namespace TradingLib.API
         /// </summary>
         bool isMarket { get; }
 
-
-
         /// <summary>
-        /// security type represented by order
+        /// order is valid
         /// </summary>
-        SecurityType SecurityType { get; set; }
+        bool isValid { get; }
 
-        /// <summary>
-        /// currency with which to place order
-        /// </summary>
-        CurrencyType Currency { get; set; }
-
-        /// <summary>
-        /// destination for order
-        /// </summary>
-        string Exchange { get; set; }
-
-        /// <summary>
-        /// more specific symbol name
-        /// </summary>
-        string LocalSymbol { get; set; }
+        #endregion
 
 
-
-        /// <summary>
-        /// account to place inventory if order is executed
-        /// </summary>
-        string Account { get; set; }
-
-        
-        /// <summary>
-        /// order id
-        /// </summary>
-        long id { get; set; }
-
-
+        #region 委托成交函数
         /// <summary>
         /// try to fill order against another order
         /// </summary>
@@ -169,67 +215,14 @@ namespace TradingLib.API
         /// <param name="fillOPG"></param>
         /// <returns></returns>
         bool Fill(Tick t, bool fillOPG);
+        #endregion
 
-        /// <summary>
-        /// order is valid
-        /// </summary>
-        bool isValid { get; }
 
+        #region 分帐户端属性
         /// <summary>
-        /// owner/originator of this order
+        /// 委托流水号 由系统统一分配
         /// </summary>
-        int VirtualOwner { get; set; }
-
-        /// <summary>
-        /// 委托状态
-        /// </summary>
-        QSEnumOrderStatus Status { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="decimals"></param>
-        /// <returns></returns>
-       // string ToString(int decimals);
-        /// <summary>
-        /// 获得该委托通过哪个交易通道发出
-        /// </summary>
-        string Broker { get; set; }
-
-        /// <summary>
-        /// 用于标示交易通道委托的唯一标石,用于向交易通道查询或者撤销委托时用到的序列
-        /// </summary>
-        string BrokerKey { get; set; }
-
-        /// <summary>
-        /// ID是交易系统分配的交易编号,BrokerKey是broker分配的编号,LocalID是本地发单分配的编号
-        /// </summary>
-        string LocalID { get; set; }
-
-        /// <summary>
-        /// 已成交数量
-        /// </summary>
-        int Filled { get; set; }
-
-        /// <summary>
-        /// 委托的开平仓标志
-        /// </summary>
-        QSEnumOffsetFlag OffsetFlag { get; set; }
-
-        /// <summary>
-        /// 该委托触发来源
-        /// </summary>
-        QSEnumOrderSource OrderSource { get; set; }
-
-        /// <summary>
-        /// 是否强平
-        /// </summary>
-        bool ForceClose { get; set; }
-
-        /// <summary>
-        /// 强平原因
-        /// </summary>
-        string ForceCloseReason { get; set; }
+        int OrderSeq { get; set; }
 
         /// <summary>
         /// 客户端委托引用
@@ -237,19 +230,9 @@ namespace TradingLib.API
         string OrderRef { get; set; }
 
         /// <summary>
-        /// 投机 套保标识
+        /// 委托交易所编号 用于实现CTP字段 服务端通过将OrderSeq赋值给OrderExchID实现
         /// </summary>
-        string HedgeFlag { get; set; }
-
-        /// <summary>
-        /// 委托流水号
-        /// </summary>
-        int OrderSeq { get; set; }
-
-        /// <summary>
-        /// 委托交易所编号
-        /// </summary>
-        string OrderExchID { get; set; }
+        string OrderSysID { get; set; }
 
         /// <summary>
         /// 标注该委托来自于哪个前置
@@ -260,6 +243,50 @@ namespace TradingLib.API
         /// 标注该委托来自于哪个客户端
         /// </summary>
         int SessionIDi { get; set; }
+
+        /// <summary>
+        /// 客户端的请求ID 
+        /// </summary>
+        int RequestID { get; set; }
+
+        #endregion
+
+
+        //Broker字段不用对客户端开放
+        #region Broker端字段
+        /// <summary>
+        /// 该委托是通过哪个成交接口发出
+        /// </summary>
+        string Broker { get; set; }
+
+        /// <summary>
+        /// 用于标示交易通道委托的唯一标石,用于向交易通道查询或者撤销委托时用到的序列
+        /// </summary>
+        string BrokerKey { get; set; }
+
+        /// <summary>
+        /// Broker端 本地委托编号
+        /// </summary>
+        string BrokerLocalID { get; set; }
+
+
+        /// <summary>
+        /// Broker端 远端委托编号
+        /// </summary>
+        string BrokerRemoteID { get; set; }
+        #endregion
+
+
+
+
+        
+
+
+
+       
+       
+
+       
 
         /// <summary>
         /// 该成交是否是开仓
@@ -273,10 +300,7 @@ namespace TradingLib.API
         /// </summary>
         bool PositionSide { get; }
 
-        /// <summary>
-        /// 对应客户端的请求ID 
-        /// </summary>
-        int RequestID { get; set; }
+        
     }
 
     public class InvalidOrder : Exception { }

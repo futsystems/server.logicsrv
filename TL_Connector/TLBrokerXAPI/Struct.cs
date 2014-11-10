@@ -17,7 +17,14 @@ using TradingLib.Common;
  * 
  * 
  * 
+ * 关于本地交易帐户委托与接口侧委托的关系
+ * 如果本地委托与接口侧委托是一对一的关系,则可以通过扩展原有委托字段来实现信息的共同存储，由于我们想设计成智能路由模式,即存在拆单的问题
+ * 则Broker侧的委托 需要重新构建,即将本地帐户的委托映射成多条Broker侧的委托
  * 
+ * Broker侧的委托 需要抽象出来形成统一的委托形式
+ * 
+ * BrokerOrder
+ * ID,Date,Time,Token,Side,Size,Symbol,Exchange,LimitPrice,StopPrice,TrailPrice,TIF,OrderType,TotalSize,FilledSize,UnFilledSize,LocalID,RemoteID
  * 
  * 
  * 

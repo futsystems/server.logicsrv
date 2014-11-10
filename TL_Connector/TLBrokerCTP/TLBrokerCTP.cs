@@ -24,12 +24,6 @@ namespace Broker.Live
     /// </summary>
     public class TLBrokerCTP:TLBroker
     {
-        //public TLBrokerCTP(BrokerInterface itface)
-        //    :base(itface.libpath_broker,itface.libname_broker,itface.libpath_wrapper,itface.libname_wrapper)
-        //{ 
-
-            
-        //}
 
         #region 委托索引map用于按不同的方式定位委托
         /// <summary>
@@ -75,7 +69,7 @@ namespace Broker.Live
         ConcurrentDictionary<string, Order> exchange_order_map = new ConcurrentDictionary<string, Order>();
         string GetExchKey(Order o)
         {
-            return o.Exchange + ":" + o.OrderExchID;
+            return o.Exchange + ":" + o.OrderSysID;
         }
         string GetExchKey(ref XTradeField f)
         {
@@ -103,20 +97,20 @@ namespace Broker.Live
             try
             {
                 debug("从清算中心得到当天的委托数据并恢复到缓存中", QSEnumDebugLevel.INFO);
-                IEnumerable<Order> olist = ClearCentre.GetOrdersViaBroker(this.BrokerToken);
+                IEnumerable<Order> olist = ClearCentre.GetOrdersViaBroker(this.Token);
 
                 foreach (Order o in olist)
                 {
                     platformid_order_map.TryAdd(o.id, o);
 
                     //如果有交易所编号
-                    if (!string.IsNullOrEmpty(o.OrderExchID))
+                    if (!string.IsNullOrEmpty(o.OrderSysID))
                     {
                         exchange_order_map.TryAdd(GetExchKey(o), o);
                     }
-                    if (!string.IsNullOrEmpty(o.LocalID))
+                    if (!string.IsNullOrEmpty(o.BrokerLocalID))
                     {
-                        localid_order_map.TryAdd(o.LocalID, o);
+                        localid_order_map.TryAdd(o.BrokerLocalID, o);
                     }
                 }
                 debug(string.Format("load {0} orders form database.", olist.Count()), QSEnumDebugLevel.INFO);
@@ -129,7 +123,7 @@ namespace Broker.Live
 
         public override void SendOrder(Order o)
         {
-            debug("TLBrokerXAP[" + this.BrokerToken + "]: " + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
+            debug("TLBrokerXAP[" + this.Token + "]: " + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
             XOrderField order = new XOrderField();
 
             order.ID = o.id.ToString();
@@ -147,18 +141,18 @@ namespace Broker.Live
 
             order.OffsetFlag = o.OffsetFlag;
 
-            o.Broker = this.BrokerToken;
+            o.Broker = this.Token;
             //通过接口发送委托
             string localid = WrapperSendOrder(ref order);
             bool success = !string.IsNullOrEmpty(localid);
             if (success)
             {
                 //1.将委托加入到接口委托维护列表
-                o.LocalID = localid;
+                o.BrokerLocalID = localid;
                 //将委托复制后加入到接口维护的map中
                 Order lo = new OrderImpl(o);
                 platformid_order_map.TryAdd(o.id, lo);
-                localid_order_map.TryAdd(o.LocalID, lo);
+                localid_order_map.TryAdd(o.BrokerLocalID, lo);
 
                 debug("Send Order Success,LocalID:" + localid, QSEnumDebugLevel.INFO);
 
@@ -180,8 +174,8 @@ namespace Broker.Live
                 action.ActionFlag = QSEnumOrderActionFlag.Delete;
 
                 action.ID = o.id.ToString();
-                action.LocalID = o.LocalID;
-                string[] rec = o.OrderExchID.Split(':');
+                action.LocalID = o.BrokerLocalID;
+                string[] rec = o.OrderSysID.Split(':');
 
                 action.Exchange = rec[0];
                 action.OrderExchID = rec[1];
@@ -213,7 +207,7 @@ namespace Broker.Live
             {
                 o.Status = order.OrderStatus;//更新委托状态
                 o.comment = order.StatusMsg;//填充状态信息
-                o.Filled = order.FilledSize;//成交数量
+                o.FilledSize = order.FilledSize;//成交数量
                 o.size = order.UnfilledSize * (o.side ? 1 : -1);//更新当前数量
                 o.Exchange = order.Exchange;
                 //o.OrderExchID = order.OrderExchID;//更新交易所委托编号
@@ -222,7 +216,7 @@ namespace Broker.Live
                 if (!string.IsNullOrEmpty(order.OrderExchID))//如果orderexchid存在 则加入对应的键值
                 {
                     string exchkey = GetExchKey(ref order);//使用接口传递过来的Exchange信息来生成key
-                    o.OrderExchID = exchkey;
+                    o.OrderSysID = exchkey;
                     Util.Debug("order exchange is not emty,try to insert into exch_order_map," + exchkey);
                     //如果不存在该委托则加入该委托
                     if (!exchange_order_map.Keys.Contains(exchkey))
@@ -250,8 +244,8 @@ namespace Broker.Live
                 fill.xdate = trade.Date;
                 fill.xtime = trade.Time;
 
-                fill.Broker = this.BrokerToken;
-                fill.OrderExchID = o.OrderExchID;
+                fill.Broker = this.Token;
+                fill.OrderSysID = o.OrderSysID;
                 fill.BrokerKey = trade.TradeID;
 
                 NotifyTrade(fill);

@@ -32,6 +32,12 @@ namespace TradingLib.API
         /// </summary>
         IDataFeed DefaultDataFeed { get; }
 
+
+        /// <summary>
+        /// 默认实盘成交通道
+        /// </summary>
+        IBroker DefaultLiveBroker { get; }
+
         /// <summary>
         /// 获得某个合约的行情快照
         /// </summary>

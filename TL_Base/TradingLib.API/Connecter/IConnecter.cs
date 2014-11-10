@@ -11,7 +11,7 @@ namespace TradingLib.API
         /// <summary>
         /// 连接标识
         /// </summary>
-        string Title { get; }
+        string Token { get; }
         /// <summary>
         /// 连接成功事件
         /// </summary>

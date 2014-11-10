@@ -126,7 +126,7 @@ namespace TradingLib.API
         /// <summary>
         /// 委托交易所编号
         /// </summary>
-        string OrderExchID { get; set; }
+        string OrderSysID { get; set; }
 
         /// <summary>
         /// 开平标志

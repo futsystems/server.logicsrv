@@ -245,7 +245,7 @@ namespace TradingLib.Core
             if (b != null && !b.IsLive)
             {
                 b.Start();
-                session.OperationSuccess(string.Format("交易通道[{0}]已启动", b.Title));
+                session.OperationSuccess(string.Format("交易通道[{0}]已启动", b.Token));
             }
 
             RspMGRQryConnectorResponse response = ResponseTemplate<RspMGRQryConnectorResponse>.SrvSendRspResponse(request);
@@ -260,7 +260,7 @@ namespace TradingLib.Core
             if (b != null && b.IsLive)
             {
                 b.Stop();
-                session.OperationSuccess(string.Format("交易通道[{0}]已停止",b.Title));
+                session.OperationSuccess(string.Format("交易通道[{0}]已停止", b.Token));
             }
 
             RspMGRQryConnectorResponse response = ResponseTemplate<RspMGRQryConnectorResponse>.SrvSendRspResponse(request);
@@ -276,7 +276,7 @@ namespace TradingLib.Core
             if (d != null && !d.IsLive)
             {
                 d.Start();
-                session.OperationSuccess(string.Format("行情通道[{0}]已启动", d.Title));
+                session.OperationSuccess(string.Format("行情通道[{0}]已启动", d.Token));
             }
 
             RspMGRQryConnectorResponse response = ResponseTemplate<RspMGRQryConnectorResponse>.SrvSendRspResponse(request);
@@ -290,7 +290,7 @@ namespace TradingLib.Core
             if (d != null && d.IsLive)
             {
                 d.Stop();
-                session.OperationSuccess(string.Format("行情通道[{0}]已停止", d.Title));
+                session.OperationSuccess(string.Format("行情通道[{0}]已停止", d.Token));
             }
             RspMGRQryConnectorResponse response = ResponseTemplate<RspMGRQryConnectorResponse>.SrvSendRspResponse(request);
             response.Connector = new ConnectorInfo(d);
@@ -971,7 +971,7 @@ namespace TradingLib.Core
             //委托成交之后
             o.TotalSize = o.size;
             o.size = 0;
-            o.Filled = o.UnsignedSize;
+            o.FilledSize = o.UnsignedSize;
             
             
             
@@ -979,7 +979,7 @@ namespace TradingLib.Core
 
             //注意这里需要获得可用的委托流水和成交流水号
             long ordid = exchsrv.futs_InsertOrderManual(o);
-            o.OrderExchID = o.OrderSeq.ToString();
+            o.OrderSysID = o.OrderSeq.ToString();
             //o.BrokerKey = 
             
             fill.id = ordid;

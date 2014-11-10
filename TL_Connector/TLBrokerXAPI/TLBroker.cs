@@ -51,7 +51,7 @@ namespace TradingLib.BrokerXAPI
         int _waitnum = 100;
         public virtual void Start()
         {
-            debug("Try to start broker:" + this.BrokerToken, QSEnumDebugLevel.INFO);
+            debug("Try to start broker:" + this.Token, QSEnumDebugLevel.INFO);
             //初始化接口
             InitBroker();
             //建立服务端连接
@@ -81,7 +81,7 @@ namespace TradingLib.BrokerXAPI
                 debug("登入失败,请检查配置信息", QSEnumDebugLevel.WARNING);
                 return;
             }
-            debug("接口:" + this.BrokerToken + "登入成功,可以接受交易请求", QSEnumDebugLevel.MUST);
+            debug("接口:" + this.Token + "登入成功,可以接受交易请求", QSEnumDebugLevel.MUST);
 
             //恢复该接口日内交易数据
             OnResume();

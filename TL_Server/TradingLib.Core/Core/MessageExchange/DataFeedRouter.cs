@@ -86,7 +86,7 @@ namespace TradingLib.Core
             //如果通过该通道已注册的行情为0 则加载所有默认合约进行注册
             if (basket.Count == 0)
             {
-                debug(string.Format("DataFeed[{0}] 没有订阅过合约,查找所有需要注册的合约,进行初始化注册",df.Title), QSEnumDebugLevel.INFO);
+                debug(string.Format("DataFeed[{0}] 没有订阅过合约,查找所有需要注册的合约,进行初始化注册",df.Token), QSEnumDebugLevel.INFO);
                 SymbolBasket nb = new SymbolBasketImpl();
                 foreach (Symbol sym in BasicTracker.SymbolTracker.getBasketAvabile().ToArray())
                 {
@@ -100,7 +100,7 @@ namespace TradingLib.Core
             }
             else//如果有对应的合约 则重新注册
             {
-                debug("数据接口:" + df.Title + "连接成功,注册对应的数据 " + string.Join(",", basket.ToSymArray()), QSEnumDebugLevel.INFO);
+                debug("数据接口:" + df.Token + "连接成功,注册对应的数据 " + string.Join(",", basket.ToSymArray()), QSEnumDebugLevel.INFO);
                 df.RegisterSymbols(basket);
             }
         }
@@ -156,7 +156,7 @@ namespace TradingLib.Core
                 {
                     if (!df.IsLive)
                     {
-                        debug(PROGRAME + ":DataFeed[" + df.Title + "]  is not connected well, please make the connection first", QSEnumDebugLevel.WARNING);
+                        debug(PROGRAME + ":DataFeed[" + df.Token + "]  is not connected well, please make the connection first", QSEnumDebugLevel.WARNING);
                         continue;
                     }
                     //调用行情通道订阅合约组

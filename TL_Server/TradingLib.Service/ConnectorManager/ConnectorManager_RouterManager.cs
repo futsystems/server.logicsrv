@@ -13,6 +13,8 @@ namespace TradingLib.ServiceManager
         IBroker _defaultsimbroker = null;
         public IBroker DefaultSimBroker { get { return _defaultsimbroker; } }
 
+        IBroker _defaultlivebroker = null;
+        public IBroker DefaultLiveBroker { get { return _defaultlivebroker; } }
 
         IDataFeed _defaultdatafeed = null;
         public IDataFeed DefaultDataFeed { get { return _defaultdatafeed; } }

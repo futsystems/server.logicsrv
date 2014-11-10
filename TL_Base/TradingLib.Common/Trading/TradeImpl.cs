@@ -33,7 +33,7 @@ namespace TradingLib.Common
         string _orderref = "";//对应的委托引用
         string _hedgeflag = "";//对应的投机套保标识
         int _orderseq = 0;//委托流水号
-        string _orderexchid = "";//交易所委托编号
+        string _orderSysID = "";//交易所委托编号
         
 
         public Symbol oSymbol { get { return _osymbol; } set { _osymbol = value; } }
@@ -173,7 +173,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 委托交易所编号
         /// </summary>
-        public string OrderExchID { get { return _orderexchid; } set { _orderexchid = value; } }
+        public string OrderSysID { get { return _orderSysID; } set { _orderSysID = value; } }
 
 
         /// <summary>
@@ -271,7 +271,7 @@ namespace TradingLib.Common
             OrderRef = copytrade.OrderRef;
             HedgeFlag = copytrade.HedgeFlag;
             OrderSeq = copytrade.OrderSeq;
-            OrderExchID = copytrade.OrderExchID;
+            OrderSysID = copytrade.OrderSysID;
             OffsetFlag = copytrade.OffsetFlag;
         }
         #endregion
@@ -336,7 +336,7 @@ namespace TradingLib.Common
             sb.Append(t.OrderRef); sb.Append(d);
             sb.Append(t.HedgeFlag); sb.Append(d);
             sb.Append(t.OrderSeq.ToString()); sb.Append(d);
-            sb.Append(t.OrderExchID); sb.Append(d);
+            sb.Append(t.OrderSysID); sb.Append(d);
             sb.Append(t.OffsetFlag.ToString());
 
             return sb.ToString();
@@ -374,7 +374,7 @@ namespace TradingLib.Common
             t.OrderRef = rec[(int)TradeField.OrderRef];
             t.HedgeFlag = rec[(int)TradeField.HedgeFlag];
             t.OrderSeq = int.Parse(rec[(int)TradeField.OrderSeq]);
-            t.OrderExchID = rec[(int)TradeField.OrderExchID];
+            t.OrderSysID = rec[(int)TradeField.OrderExchID];
             t.OffsetFlag = (QSEnumOffsetFlag)Enum.Parse(typeof(QSEnumOffsetFlag),rec[(int)TradeField.OffsetFlag]);
             return t;
         }

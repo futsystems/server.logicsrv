@@ -22,18 +22,11 @@ namespace TradingLib.BrokerXAPI
             _cfg = cfg;
         }
 
-        public string Title { get { return this.Token; } }
-
-
-
-
         /// <summary>
         /// 获得成交接口唯一标识Token通过BrokerConfig中的Token进行标注
         /// </summary>
         /// <returns></returns>
         public string Token { get { return _cfg.Token; } }
-
-        string _token = string.Empty;
 
         /// <summary>
         /// 当数据服务器登入成功后调用
@@ -97,7 +90,7 @@ namespace TradingLib.BrokerXAPI
         {
             if (_debugEnable && (int)level <= (int)_debuglevel && SendLogItemEvent != null)
             {
-                ILogItem item = new LogItem(msg, level, this.Title);
+                ILogItem item = new LogItem(msg, level, this.Token);
                 SendLogItemEvent(item);
             }
         }

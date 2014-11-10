@@ -278,13 +278,13 @@ namespace Broker.SIM
                         {
                             o.Status = QSEnumOrderStatus.PartFilled;//标识 部分成交
                             o.size = (o.UnsignedSize - fill.UnsignedSize) * (o.side ? 1 : -1);
-                            o.Filled += fill.UnsignedSize;//将成交的数量累加到委托中的 filled标识段
+                            o.FilledSize += fill.UnsignedSize;//将成交的数量累加到委托中的 filled标识段
                             unfilled.Add(o);
                         }
                         else
                         {
                             o.Status = QSEnumOrderStatus.Filled;//标识 全部成交
-                            o.Filled += fill.UnsignedSize;
+                            o.FilledSize += fill.UnsignedSize;
                         }
                         //委托成交后 回报委托最新状态
                         _ocache.Write(new OrderImpl(o));
@@ -418,14 +418,14 @@ namespace Broker.SIM
                         {
                             o.Status = QSEnumOrderStatus.PartFilled;//标识 部分成交
                             o.size = (o.UnsignedSize - fill.UnsignedSize) * (o.side ? 1 : -1);
-                            o.Filled += fill.UnsignedSize;//将成交的数量累加到委托中的 filled标识段
+                            o.FilledSize += fill.UnsignedSize;//将成交的数量累加到委托中的 filled标识段
                             unfilled.Add(o);
                         }
                         else
                         {
                             o.Status = QSEnumOrderStatus.Filled;//标识 全部成交
                             o.size = (o.UnsignedSize - fill.UnsignedSize) * (o.side ? 1 : -1);//此时o.unsigendsize-fill.unsignedsize ==0委托手数为0
-                            o.Filled += fill.UnsignedSize;
+                            o.FilledSize += fill.UnsignedSize;
 
                             //如果模拟实盘成交奥 则委托全部成交时我们删除该委托的盘口跟踪
                             if(o.isLimit && this._simLimitReal)
@@ -530,7 +530,7 @@ namespace Broker.SIM
             debug("PTT Server Queue Order: " + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
             //模拟交易对新提交上来的order进行复制后保留,原来的order形成事件触发.这样本地的order fill process对order信息的修改就不会影响到对外触发事件的order.
             o.Status = QSEnumOrderStatus.Opened;//标识 委托状态为open,等待成交
-            o.OrderExchID = o.OrderSeq.ToString();//当委托处于Opened的状态时,我们模拟交易所将委托标识填入 当扯单时,我们可以通过交易帐号和交易所委托编号找到对应的委托
+            o.OrderSysID = o.OrderSeq.ToString();//当委托处于Opened的状态时,我们模拟交易所将委托标识填入 当扯单时,我们可以通过交易帐号和交易所委托编号找到对应的委托
             Order oc = new OrderImpl(o);
             aq.Enqueue(oc);//放入委托队列
 

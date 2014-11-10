@@ -42,8 +42,22 @@ namespace TradingLib.Common
             } 
         }
 
-        string _locakID="0";
-        public string LocalID { get { return _locakID; } set { _locakID = value; } }
+
+        #region Broker端的本地编号
+        string _brokerLocalID="0";
+        /// <summary>
+        /// Broker端的本地编号
+        /// </summary>
+        public string BrokerLocalID { get { return _brokerLocalID; } set { _brokerLocalID = value; } }
+
+        string _brokerRemoteID = "";
+        /// <summary>
+        /// Broker端的远端编号
+        /// </summary>
+        public string BrokerRemoteID { get { return _brokerRemoteID; } set { _brokerRemoteID = value; } }
+
+        #endregion
+
 
         //委托状态 记录了委托过程
         QSEnumOrderStatus _status=QSEnumOrderStatus.Unknown;
@@ -62,7 +76,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 成交手数
         /// </summary>
-        public int Filled { get { return _filled; } set { _filled = value; } }
+        public int FilledSize { get { return _filled; } set { _filled = value; } }
 
 
         int _frontidi = 0;
@@ -133,12 +147,13 @@ namespace TradingLib.Common
             this.size = copythis.size;
             this.TotalSize = copythis.TotalSize;
             this.time = copythis.time;
-            this.LocalSymbol = copythis.LocalSymbol;
+            //this.LocalSymbol = copythis.LocalSymbol;
             this.id = copythis.id;
             this.TIF = copythis.TIF;
             this.Broker = copythis.Broker;
             this.BrokerKey = copythis.BrokerKey;
-            this.LocalID = copythis.LocalID;
+            this.BrokerLocalID = copythis.BrokerLocalID;
+            this.BrokerRemoteID = copythis.BrokerRemoteID;
             this.Status = copythis.Status;
             this.OffsetFlag = copythis.OffsetFlag;
             this.OrderRef = copythis.OrderRef;
@@ -146,8 +161,8 @@ namespace TradingLib.Common
             this.ForceCloseReason = copythis.ForceCloseReason;
             this.HedgeFlag = copythis.HedgeFlag;
             this.OrderSeq = copythis.OrderSeq;
-            this.OrderExchID = copythis.OrderExchID;
-            this.Filled = copythis.Filled;
+            this.OrderSysID = copythis.OrderSysID;
+            this.FilledSize = copythis.FilledSize;
             this.FrontIDi = copythis.FrontIDi;
             this.SessionIDi = copythis.SessionIDi;
             this.RequestID = copythis.RequestID;
@@ -377,7 +392,7 @@ namespace TradingLib.Common
             sb.Append(d);
             sb.Append(o.Currency.ToString());
             sb.Append(d);
-            sb.Append(o.LocalSymbol.ToString());
+            sb.Append("unused");
             sb.Append(d);
             sb.Append(o.id.ToString());
             sb.Append(d);
@@ -387,7 +402,7 @@ namespace TradingLib.Common
             sb.Append(d);
             sb.Append(o.time.ToString());
             sb.Append(d);
-            sb.Append(o.Filled.ToString());
+            sb.Append(o.FilledSize.ToString());
             sb.Append(d);
             sb.Append(o.trail.ToString());
             sb.Append(d);
@@ -395,7 +410,7 @@ namespace TradingLib.Common
             sb.Append(d);
             sb.Append(o.BrokerKey);
             sb.Append(d);
-            sb.Append(o.LocalID.ToString());
+            sb.Append(o.BrokerLocalID.ToString());
             sb.Append(d);
             sb.Append(o.Status.ToString());
             sb.Append(d);
@@ -409,7 +424,7 @@ namespace TradingLib.Common
             sb.Append(d);
             sb.Append(o.OrderSeq.ToString());
             sb.Append(d);
-            sb.Append(o.OrderExchID);
+            sb.Append(o.OrderSysID);
             sb.Append(d);
             sb.Append(o.ForceCloseReason);
             sb.Append(d);
@@ -447,7 +462,7 @@ namespace TradingLib.Common
             o.comment = rec[(int)OrderField.Comment];
             o.Account = rec[(int)OrderField.Account];
             o.Exchange = rec[(int)OrderField.Exchange];
-            o.LocalSymbol = rec[(int)OrderField.LocalSymbol];
+            //o.LocalSymbol = rec[(int)OrderField.LocalSymbol];
             o.Currency = (CurrencyType)Enum.Parse(typeof(CurrencyType), rec[(int)OrderField.Currency]);
             o.SecurityType = (SecurityType)Enum.Parse(typeof(SecurityType), rec[(int)OrderField.Security]);
             o.id = Convert.ToInt64(rec[(int)OrderField.OrderID]);
@@ -459,11 +474,11 @@ namespace TradingLib.Common
             o.time = Convert.ToInt32(rec[(int)OrderField.oTime]);
             o.Broker = rec[(int)OrderField.Broker];
             o.BrokerKey = rec[(int)OrderField.BrokerKey];
-            o.LocalID = rec[(int)OrderField.LocalID];
+            o.BrokerLocalID = rec[(int)OrderField.LocalID];
             o.Status = (QSEnumOrderStatus)Enum.Parse(typeof(QSEnumOrderStatus), rec[(int)OrderField.Status]);
             int f=0;
             int.TryParse(rec[(int)OrderField.oFilled],out f);
-            o.Filled = f;
+            o.FilledSize = f;
 
             o.OffsetFlag = (QSEnumOffsetFlag)Enum.Parse(typeof(QSEnumOffsetFlag), rec[(int)OrderField.PostFlag]);
 
@@ -471,7 +486,7 @@ namespace TradingLib.Common
             o.ForceClose = bool.Parse(rec[(int)OrderField.ForceClose]);
             o.HedgeFlag = rec[(int)OrderField.HedgeFlag];
             o.OrderSeq = int.Parse(rec[(int)OrderField.OrderSeq]);
-            o.OrderExchID = rec[(int)OrderField.OrderExchID];
+            o.OrderSysID = rec[(int)OrderField.OrderExchID];
             o.ForceCloseReason = rec[(int)OrderField.ForceReason];
             if (rec.Length > 29)
             {

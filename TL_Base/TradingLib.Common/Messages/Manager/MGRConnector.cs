@@ -33,7 +33,7 @@ namespace TradingLib.Common
         {
             this.ClassName = broker.GetType().FullName;
             this.Status = broker.IsLive;
-            this.Token = broker.Title;
+            this.Token = broker.Token;
             this.Type = QSEnumConnectorType.Broker;
         }
         
@@ -42,7 +42,7 @@ namespace TradingLib.Common
         {
             this.ClassName = df.GetType().FullName;
             this.Status = df.IsLive;
-            this.Token = df.Title;
+            this.Token = df.Token;
             this.Type = QSEnumConnectorType.DataFeed;
         }
 

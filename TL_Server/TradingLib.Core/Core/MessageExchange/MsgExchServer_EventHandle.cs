@@ -272,7 +272,7 @@ namespace TradingLib.Core
                 debug("通过orderref或者orderexchid查找委托 orderref:" + action.OrderRef, QSEnumDebugLevel.INFO);
                 foreach (Order tmp in account.Orders)
                 {
-                    if ((tmp.OrderRef == action.OrderRef && tmp.FrontIDi == action.FrontID && tmp.SessionIDi == action.SessionID)|| (tmp.OrderExchID == action.OrderExchID))
+                    if ((tmp.OrderRef == action.OrderRef && tmp.FrontIDi == action.FrontID && tmp.SessionIDi == action.SessionID) || (tmp.OrderSysID == action.OrderExchID))
                     {
                         o = tmp;
                     }

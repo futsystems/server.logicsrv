@@ -212,7 +212,7 @@ namespace DataFeed.FastTick
 
                     //通过FastTickServer的管理端口 请求FastTickServer向行情源订阅行情数据,Publisher的订阅是内部的一个分发订阅 不会产生向行情源订阅实际数据
                     string requeststr = (kv.Key.ToString() + ":" + symlist);
-                    debug(Title + ":注册市场数据 " + requeststr, QSEnumDebugLevel.INFO);
+                    debug(Token + ":注册市场数据 " + requeststr, QSEnumDebugLevel.INFO);
                     Send(TradingLib.API.MessageTypes.MGRREGISTERSYMBOLS, requeststr);
                 }
 
