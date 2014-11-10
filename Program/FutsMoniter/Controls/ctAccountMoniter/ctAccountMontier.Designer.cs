@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.kryptonSplitContainer1 = new ComponentFactory.Krypton.Toolkit.KryptonSplitContainer();
             this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
             this.lbCurrentAccount = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
@@ -64,8 +64,8 @@
             this.ctFinService1 = new FutsMoniter.ctFinService();
             this.funpageFinanceInfo = new ComponentFactory.Krypton.Navigator.KryptonPage();
             this.kryptonPanel2 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
-            this.ctFinanceInfo1 = new FutsMoniter.ctFinanceInfo();
             this.btnQueryFinanceInfo = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.ctFinanceInfo1 = new FutsMoniter.ctFinanceInfo();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonSplitContainer1)).BeginInit();
             this.kryptonSplitContainer1.Panel1.SuspendLayout();
             this.kryptonSplitContainer1.Panel2.SuspendLayout();
@@ -295,8 +295,8 @@
             this.accountgrid.AllowUserToAddRows = false;
             this.accountgrid.AllowUserToDeleteRows = false;
             this.accountgrid.AllowUserToResizeRows = false;
-            dataGridViewCellStyle3.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.accountgrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.accountgrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.accountgrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
@@ -362,6 +362,7 @@
             // ctOrderView1
             // 
             this.ctOrderView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ctOrderView1.EnableOperation = true;
             this.ctOrderView1.Location = new System.Drawing.Point(0, 0);
             this.ctOrderView1.Name = "ctOrderView1";
             this.ctOrderView1.OrderTracker = null;
@@ -405,6 +406,7 @@
             // ctPositionView1
             // 
             this.ctPositionView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ctPositionView1.EnableOperation = true;
             this.ctPositionView1.Location = new System.Drawing.Point(0, 0);
             this.ctPositionView1.Name = "ctPositionView1";
             this.ctPositionView1.OrderTracker = null;
@@ -424,7 +426,7 @@
             this.funpagePlaceOrder,
             this.funpageFinservice,
             this.funpageFinanceInfo});
-            this.kryptonNavigator2.SelectedIndex = 2;
+            this.kryptonNavigator2.SelectedIndex = 0;
             this.kryptonNavigator2.Size = new System.Drawing.Size(513, 341);
             this.kryptonNavigator2.TabIndex = 0;
             this.kryptonNavigator2.Text = "kryptonNavigator2";
@@ -445,7 +447,8 @@
             // 
             // ctOrderSenderM1
             // 
-            this.ctOrderSenderM1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.ctOrderSenderM1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.ctOrderSenderM1.Location = new System.Drawing.Point(0, 252);
             this.ctOrderSenderM1.Name = "ctOrderSenderM1";
             this.ctOrderSenderM1.Size = new System.Drawing.Size(511, 64);
@@ -521,13 +524,6 @@
             this.kryptonPanel2.Size = new System.Drawing.Size(511, 316);
             this.kryptonPanel2.TabIndex = 0;
             // 
-            // ctFinanceInfo1
-            // 
-            this.ctFinanceInfo1.Location = new System.Drawing.Point(3, 3);
-            this.ctFinanceInfo1.Name = "ctFinanceInfo1";
-            this.ctFinanceInfo1.Size = new System.Drawing.Size(365, 165);
-            this.ctFinanceInfo1.TabIndex = 0;
-            // 
             // btnQueryFinanceInfo
             // 
             this.btnQueryFinanceInfo.Location = new System.Drawing.Point(409, 278);
@@ -535,6 +531,13 @@
             this.btnQueryFinanceInfo.Size = new System.Drawing.Size(90, 25);
             this.btnQueryFinanceInfo.TabIndex = 1;
             this.btnQueryFinanceInfo.Values.Text = "刷 新";
+            // 
+            // ctFinanceInfo1
+            // 
+            this.ctFinanceInfo1.Location = new System.Drawing.Point(3, 3);
+            this.ctFinanceInfo1.Name = "ctFinanceInfo1";
+            this.ctFinanceInfo1.Size = new System.Drawing.Size(365, 165);
+            this.ctFinanceInfo1.TabIndex = 0;
             // 
             // ctAccountMontier
             // 

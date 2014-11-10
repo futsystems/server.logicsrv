@@ -82,13 +82,16 @@ namespace FutsMoniter
                             this.Text = Globals.Config["CopName"].AsString() + " " + Globals.Config["Version"].AsString() + "           柜员用户名:" + Globals.Manager.Login + " 名称:" + Globals.Manager.Name + " 类型:" + Util.GetEnumDescription(Globals.Manager.Type);
 
                             //如果不是总平台柜员 隐藏
-
-                            ctAccountMontier1.ValidView();
                             ShowInfo("初始化行情报表");
                             InitSymbol2View();
+
+                            //设定全局登入状态 显示主界面
                             Globals.LoginStatus.IsInitSuccess = true;
+
                             //触发初始化完成事件
                             Globals.OnInitFinished();
+
+                            
 
                         }
                     }

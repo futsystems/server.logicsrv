@@ -245,6 +245,7 @@ namespace TradingLib.Core
             if (b != null && !b.IsLive)
             {
                 b.Start();
+                session.OperationSuccess(string.Format("交易通道[{0}]已启动", b.Title));
             }
 
             RspMGRQryConnectorResponse response = ResponseTemplate<RspMGRQryConnectorResponse>.SrvSendRspResponse(request);
@@ -259,6 +260,7 @@ namespace TradingLib.Core
             if (b != null && b.IsLive)
             {
                 b.Stop();
+                session.OperationSuccess(string.Format("交易通道[{0}]已停止",b.Title));
             }
 
             RspMGRQryConnectorResponse response = ResponseTemplate<RspMGRQryConnectorResponse>.SrvSendRspResponse(request);
@@ -270,9 +272,11 @@ namespace TradingLib.Core
             debug(string.Format("管理员:{0} 请求启动行情通道:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
 
             IDataFeed d = TLCtxHelper.Ctx.RouterManager.FindDataFeed(request.FullName);
+
             if (d != null && !d.IsLive)
             {
                 d.Start();
+                session.OperationSuccess(string.Format("行情通道[{0}]已启动", d.Title));
             }
 
             RspMGRQryConnectorResponse response = ResponseTemplate<RspMGRQryConnectorResponse>.SrvSendRspResponse(request);
@@ -286,6 +290,7 @@ namespace TradingLib.Core
             if (d != null && d.IsLive)
             {
                 d.Stop();
+                session.OperationSuccess(string.Format("行情通道[{0}]已停止", d.Title));
             }
             RspMGRQryConnectorResponse response = ResponseTemplate<RspMGRQryConnectorResponse>.SrvSendRspResponse(request);
             response.Connector = new ConnectorInfo(d);
@@ -735,7 +740,7 @@ namespace TradingLib.Core
             {
 
                 RspMGRQrySecurityResponse response = ResponseTemplate<RspMGRQrySecurityResponse>.SrvSendRspResponse(request);
-                response.RspInfo.FillError("SECURITY_EXIST");
+                response.RspInfo.Fill("SECURITY_EXIST");
                 CacheRspResponse(response);
             }
             if (sec.Tradeable)
@@ -759,7 +764,7 @@ namespace TradingLib.Core
             else
             {
                 RspMGRReqAddSymbolResponse response = ResponseTemplate<RspMGRReqAddSymbolResponse>.SrvSendRspResponse(request);
-                response.RspInfo.FillError("SYMBOL_EXIST");
+                response.RspInfo.Fill("SYMBOL_EXIST");
                 CacheRspResponse(response);
             }
             if (symbol.Tradeable)
@@ -925,7 +930,7 @@ namespace TradingLib.Core
             else
             {
                 RspMGROperationResponse response = ResponseTemplate<RspMGROperationResponse>.SrvSendRspResponse(request);
-                response.RspInfo.FillError("MGR_PASS_ERROR");
+                response.RspInfo.Fill("MGR_PASS_ERROR");
                 CacheRspResponse(response);
             }
         }
@@ -939,14 +944,14 @@ namespace TradingLib.Core
             fill.oSymbol = BasicTracker.SymbolTracker[fill.symbol];
             if (fill.oSymbol == null)
             {
-                response.RspInfo.FillError("SYMBOL_NOT_EXISTED");
+                response.RspInfo.Fill("SYMBOL_NOT_EXISTED");
                 CacheRspResponse(response);
                 return;
             }
             IAccount account = clearcentre[fill.Account];
             if (account == null)
             {
-                response.RspInfo.FillError("交易帐号不存在");
+                response.RspInfo.Fill("交易帐号不存在");
                 CacheRspResponse(response);
                 return;
             }

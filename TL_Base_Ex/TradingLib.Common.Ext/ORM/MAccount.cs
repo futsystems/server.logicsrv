@@ -501,8 +501,8 @@ namespace TradingLib.ORM
                 string delquery = string.Empty;
                 delquery = string.Format("DELETE FROM accounts WHERE account = '{0}'", account);//删除帐户列表
                 db.Connection.Execute(delquery);
-                delquery = string.Format("DELETE FROM hold_positions WHERE account='{0}'", account);//删除隔夜持仓
-                db.Connection.Execute(delquery);
+                //delquery = string.Format("DELETE FROM hold_positions WHERE account='{0}'", account);//删除隔夜持仓
+                //db.Connection.Execute(delquery);
                 delquery = string.Format("DELETE FROM hold_postransactions WHERE account='{0}'", account);//删除隔夜持仓
 
                 db.Connection.Execute(delquery);

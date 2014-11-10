@@ -21,7 +21,8 @@ namespace TradingLib.API
     public delegate void FillDelegate(Trade t);
 
     public delegate void OrderActionDelegate(OrderAction o);
-    public delegate void OrderDelegate(Order o);
+    public delegate void OrderDelegate(Order order);
+    public delegate void OrderErrorDelegate(Order order,RspInfo error);
 
     public delegate void OrderSourceDelegate(Order o, int source);
     public delegate void LongSourceDelegate(long val, int source);

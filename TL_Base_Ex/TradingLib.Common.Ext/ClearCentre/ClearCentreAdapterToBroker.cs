@@ -23,6 +23,15 @@ namespace TradingLib.Common
 
         public IEnumerable<Order> GetOrdersViaBroker(string broker)
         {
+            Util.Debug("Broker:" + broker, QSEnumDebugLevel.INFO);
+            foreach (Order o in _clearcentre.TotalOrders)
+            {
+                if (o.Broker.Equals(broker))
+                {
+
+                    string b = o.Broker;
+                }
+            }
             return _clearcentre.TotalOrders.Where(o => o.Broker.Equals(broker));
         }
 

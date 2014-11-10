@@ -240,13 +240,13 @@ namespace TradingLib.Core
         /// 否则超时后 会出现强平系统无法正常撤单的问题。而无法正常撤单则没有撤单回报,导致强平系统一直试图撤单
         /// </summary>
         /// <param name="error"></param>
-        public void GotErrorOrder(ErrorOrder error)
+        public void GotOrderError(Order order,RspInfo info)
         {
-            debug("~~~~~~~~~~~~~~~~~~~~~ riskcentre got errororder orderid:" + error.Order.id.ToString(), QSEnumDebugLevel.INFO);
+            debug("~~~~~~~~~~~~~~~~~~~~~ riskcentre got errororder orderid:" + order.id.ToString(), QSEnumDebugLevel.INFO);
             foreach (RiskTaskSet ps in posflatlist)
             {
                 //如果委托被拒绝 并且委托ID是本地发送过去的ID 则将positionflatset的委托ID置0
-                if (ps.OrderID == error.Order.id && error.Order.Status == QSEnumOrderStatus.Reject)
+                if (ps.OrderID == order.id && order.Status == QSEnumOrderStatus.Reject)
                     ps.OrderID = 0;
             }
 

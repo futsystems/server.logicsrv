@@ -40,14 +40,17 @@ namespace TradingLib.API
         /// 委托正确回报时回报客户端
         /// </summary>
         event OrderDelegate GotOrderEvent;
+
+        /// <summary>
+        /// 委托错误回报
+        /// </summary>
+        event OrderErrorDelegate GotOrderErrorEvent;
+
         /// <summary>
         /// 撤单正确回报时回报客户端
         /// </summary>
         event LongDelegate GotCancelEvent;
-        /// <summary>
-        /// 某个委托回报相应的委托信息
-        /// </summary>
-        event OrderMessageDel GotOrderMessageEvent;
+
 
     }
 
@@ -63,7 +66,7 @@ namespace TradingLib.API
         /// </summary>
         /// <param name="symbols"></param>
         /// <param name="type"></param>
-        void RegisterSymbols(string[] symbols,QSEnumDataFeedTypes type = QSEnumDataFeedTypes.DEFAULT);
+        void RegisterSymbols(SymbolBasket basket);
 
 
     }

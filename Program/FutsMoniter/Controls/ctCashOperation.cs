@@ -12,6 +12,7 @@ using TradingLib.Common;
 using FutSystems.GUI;
 using TradingLib.Mixins.LitJson;
 using TradingLib.Mixins.JsonObject;
+using FutsMoniter.Common;
 
 
 namespace FutsMoniter
@@ -29,7 +30,7 @@ namespace FutsMoniter
         Account,
     }
 
-    public partial class ctCashOperation : UserControl
+    public partial class ctCashOperation : UserControl, IEventBinder
     {
 
         ContextMenuStrip menu = new ContextMenuStrip();
@@ -423,7 +424,11 @@ namespace FutsMoniter
         #endregion
 
         void WireEvent()
-        { 
+        {
+            //全局事件回调
+            Globals.RegIEventHandler(this);
+
+
             btnFilterPending.Click +=new EventHandler(btnFilterPending_Click);//过滤
             btnFilterConfirmed.Click +=new EventHandler(btnFilterConfirmed_Click);//
             btnFilterCancelOrReject.Click+=new EventHandler(btnFilterCancelOrReject_Click);//
@@ -433,6 +438,21 @@ namespace FutsMoniter
             opgrid.CellFormatting += new DataGridViewCellFormattingEventHandler(opgrid_CellFormatting);
             this.Load += new EventHandler(ctCashOperation_Load);
         }
+
+        public void OnInit()
+        {
+            if (!Globals.Manager.RightRootDomain())
+            {
+                this.menu.Items[0].Visible = false;
+                this.menu.Items[1].Visible = false;
+            }
+        }
+
+        public void OnDisposed()
+        {
+           
+        }
+
 
         void opgrid_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {

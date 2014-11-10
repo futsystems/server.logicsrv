@@ -111,8 +111,6 @@ namespace TradingLib.Common
         }
     }
 
-
-    public delegate void ErrorOrderNotifyDel(ErrorOrderNotify notify);
     /// <summary>
     /// 委托插入错误回报通知
     /// </summary>

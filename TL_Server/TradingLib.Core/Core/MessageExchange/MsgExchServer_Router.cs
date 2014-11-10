@@ -102,7 +102,8 @@ namespace TradingLib.Core
             _brokerRouter.GotCancelEvent += new LongDelegate(_br_GotCancelEvent);
             _brokerRouter.GotFillEvent += new FillDelegate(_br_GotFillEvent);
             _brokerRouter.GotOrderEvent += new OrderDelegate(_br_GotOrderEvent);
-            _brokerRouter.GotErrorOrderNotifyEvent += new ErrorOrderNotifyDel(_br_GotOrderErrorNotify);//路由中心返回的委托错误均要通知到清算中心进行委托更新
+            _brokerRouter.GotOrderErrorEvent += new OrderErrorDelegate(_br_GotOrderErrorEvent);//路由中心返回的委托错误均要通知到清算中心进行委托更新
+            //+= new ErrorOrderNotifyDel(_br_GotOrderErrorNotify);
         }
 
         public void UnBindBrokerRouter(BrokerRouter brokerrouter)
@@ -112,7 +113,7 @@ namespace TradingLib.Core
                 _brokerRouter.GotCancelEvent -= new LongDelegate(_br_GotCancelEvent);
                 _brokerRouter.GotFillEvent -= new FillDelegate(_br_GotFillEvent);
                 _brokerRouter.GotOrderEvent -= new OrderDelegate(_br_GotOrderEvent);
-                _brokerRouter.GotErrorOrderNotifyEvent -= new ErrorOrderNotifyDel(_br_GotOrderErrorNotify);
+                _brokerRouter.GotOrderErrorEvent -= new OrderErrorDelegate(_br_GotOrderErrorEvent);
             }
             _brokerRouter = null;
         }
@@ -125,9 +126,9 @@ namespace TradingLib.Core
         /// 响应路由中心委托错误回报
         /// </summary>
         /// <param name="notify"></param>
-        void _br_GotOrderErrorNotify(ErrorOrderNotify notify)
+        void _br_GotOrderErrorEvent(Order order, RspInfo info)
         {
-            handler_GotOrderErrorNotify(notify);
+            handler_GotOrderErrorEvent(order,info);
         }
 
         
@@ -137,21 +138,21 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="notify"></param>
         /// <param name="neednotify"></param>
-        void handler_GotOrderErrorNotify(ErrorOrderNotify notify,bool needlog=true)
+        void handler_GotOrderErrorEvent(Order order,RspInfo info, bool needlog = true)
         {
-            ErrorOrder order = new ErrorOrder(notify.Order, notify.RspInfo);
-
+            //ErrorOrder order = new ErrorOrder(notify.Order, notify.RspInfo);
+            OrderErrorPack pack = new OrderErrorPack(order, info);
             //清算中心响应委托错误回报
             //如果需要记录该委托错误 则需要调用清算中心的goterrororder进行处理
             if (needlog)
             {
-                _clearcentre.GotErrorOrder(order);
+                _clearcentre.GotErrorOrder(pack);
             }
             //放入缓存通知客户端
-            _errorordercache.Write(notify);
-            if (GotErrorOrderEvent != null)
+            _errorordercache.Write(pack);
+            if (GotOrderErrorEvent != null)
             {
-                GotErrorOrderEvent(order);
+                GotOrderErrorEvent(order,info);
             }
         }
 

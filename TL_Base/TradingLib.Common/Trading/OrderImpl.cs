@@ -42,8 +42,8 @@ namespace TradingLib.Common
             } 
         }
 
-        long _locakID;
-        public long LocalID { get { return _locakID; } set { _locakID = value; } }
+        string _locakID="0";
+        public string LocalID { get { return _locakID; } set { _locakID = value; } }
 
         //委托状态 记录了委托过程
         QSEnumOrderStatus _status=QSEnumOrderStatus.Unknown;
@@ -459,7 +459,7 @@ namespace TradingLib.Common
             o.time = Convert.ToInt32(rec[(int)OrderField.oTime]);
             o.Broker = rec[(int)OrderField.Broker];
             o.BrokerKey = rec[(int)OrderField.BrokerKey];
-            o.LocalID = Convert.ToInt64(rec[(int)OrderField.LocalID]);
+            o.LocalID = rec[(int)OrderField.LocalID];
             o.Status = (QSEnumOrderStatus)Enum.Parse(typeof(QSEnumOrderStatus), rec[(int)OrderField.Status]);
             int f=0;
             int.TryParse(rec[(int)OrderField.oFilled],out f);

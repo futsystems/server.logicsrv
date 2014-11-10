@@ -1263,6 +1263,7 @@ namespace Broker.CTP
                 f.xprice = xprice;
                 f.xdate = Util.ToTLDate(dtime);
                 f.xtime = Util.ToTLTime(dtime);
+
                 f.Broker = this.GetType().FullName;
                 f.BrokerKey = pTrade.TradeID;
                 debug(Title+":new fill:" + f.ToString());

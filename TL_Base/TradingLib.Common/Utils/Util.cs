@@ -149,6 +149,15 @@ namespace TradingLib.Common
             }
         }
 
+        /// <summary>
+        /// 以Json格式输出对象信息
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static string PrintObj(object obj)
+        {
+            return TradingLib.Mixins.LitJson.JsonMapper.ToJson(obj);
+        }
         ///// <summary>
         ///// 格式化输出数字
         ///// </summary>

@@ -83,6 +83,7 @@ namespace TradingLib.Common
 
         #endregion
 
+        public decimal Credit { get; set; }//信用额度
 
 
         /// <summary>
@@ -193,7 +194,8 @@ namespace TradingLib.Common
             sb.Append(info.Margin.ToString());
             sb.Append(d);
             sb.Append(info.MarginFrozen.ToString());
-           
+            sb.Append(d);
+            sb.Append(info.Credit);
             return sb.ToString();
         }
 
@@ -260,6 +262,7 @@ namespace TradingLib.Common
 
                 a.Margin = decimal.Parse(r[46]);
                 a.MarginFrozen = decimal.Parse(r[47]);
+                a.Credit = decimal.Parse(r[48]);
             }
             return a;
         }

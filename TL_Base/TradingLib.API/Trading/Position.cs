@@ -100,7 +100,7 @@ namespace TradingLib.API
         /// <summary>
         /// 结算 盯市盈亏
         /// </summary>
-        decimal UnrealizedPLByDate { get; }
+        //decimal UnrealizedPLByDate { get; }
 
 
         #region 行情与价格信息

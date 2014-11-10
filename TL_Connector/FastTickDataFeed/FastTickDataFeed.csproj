@@ -41,6 +41,9 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="TLBrokerXAPI">
+      <HintPath>..\..\lib\TradingLib\TLBrokerXAPI.dll</HintPath>
+    </Reference>
     <Reference Include="TradingLib.API">
       <HintPath>..\..\lib\TradingLib\TradingLib.API.dll</HintPath>
       <Private>False</Private>
@@ -51,7 +54,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="config.cs" />
     <Compile Include="FastTickDataFeed.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -62,11 +64,10 @@
   </Target>
 	-->
   <Target Name="AfterBuild">
-		<ItemGroup>
+    <ItemGroup>
       <OutFiles Include="$(OutputPath)\$(AssemblyName).dll" />
     </ItemGroup>
     <Copy SourceFiles="@(OutFiles)" DestinationFolder="..\..\lib\TradingLib\Connector" SkipUnchangedFiles="true" />
-	<Copy SourceFiles="@(OutFiles)" DestinationFolder="..\..\Platform\TradingSrv\Connector" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(OutFiles)" DestinationFolder="..\..\Platform\TradingSrv\Connector" SkipUnchangedFiles="true" />
   </Target>
-  
 </Project>

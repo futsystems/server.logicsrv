@@ -14,10 +14,9 @@ namespace TradingLib.Core
         /// 指定是否需要通知清算中心或者管理中心
         /// </summary>
         /// <param name="notify"></param>
-        void ReplyErrorOrder(ErrorOrderNotify notify,bool needlog = true)
+        void ReplyErrorOrder(Order order,RspInfo info,bool needlog = true)
         {
-            handler_GotOrderErrorNotify(notify,needlog);
-            
+            handler_GotOrderErrorEvent(order, info, needlog);
         }
 
         /// <summary>
@@ -106,10 +105,11 @@ namespace TradingLib.Core
                 if (!_riskcentre.TrckerOrderAccount(o, out acc))
                 {
                     o.Status = QSEnumOrderStatus.Reject;
-                    ErrorOrderNotify order = ResponseTemplate<ErrorOrderNotify>.SrvSendNotifyResponse(o.Account);
-                    order.Order = o;
-                    order.RspInfo.FillError("TRADING_ACCOUNT_NOT_FOUND");
-                    ReplyErrorOrder(order,false);
+                    //ErrorOrderNotify order = ResponseTemplate<ErrorOrderNotify>.SrvSendNotifyResponse(o.Account);
+                    //order.Order = o;
+                    //order.RspInfo.Fill("TRADING_ACCOUNT_NOT_FOUND");
+
+                    ReplyErrorOrder(o, RspInfoImpl.Fill("TRADING_ACCOUNT_NOT_FOUND"), false);
                     return;
                 }
 
@@ -122,12 +122,14 @@ namespace TradingLib.Core
                     if (!_riskcentre.CheckOrderStep1(ref o, acc, out needlog,out errortitle, inter))
                     {
                         o.Status = QSEnumOrderStatus.Reject;
-                        ErrorOrderNotify order = ResponseTemplate<ErrorOrderNotify>.SrvSendNotifyResponse(o.Account);
-                        order.Order = o;
-                        order.RspInfo.FillError(errortitle);
-                        o.comment = "风控拒绝:" + order.RspInfo.ErrorMessage;
-                        ReplyErrorOrder(order,needlog);
-                        debug("委托(" + o.id.ToString() + ")被拒绝,ErrorID:" + order.RspInfo.ErrorID.ToString() + " ErrorMesssage:" + order.RspInfo.ErrorMessage +" needlog:"+needlog.ToString(),QSEnumDebugLevel.WARNING);
+                        //ErrorOrderNotify order = ResponseTemplate<ErrorOrderNotify>.SrvSendNotifyResponse(o.Account);
+                        //order.Order = o;
+                        //order.RspInfo.Fill(errortitle);
+
+                        RspInfo info = RspInfoImpl.Fill(errortitle);
+                        o.comment = "风控拒绝:" + info.ErrorMessage;
+                        ReplyErrorOrder(o, info, needlog);
+                        debug("委托(" + o.id.ToString() + ")被拒绝,ErrorID:" + errortitle + " ErrorMesssage:" + info.ErrorMessage+" needlog:" + needlog.ToString(), QSEnumDebugLevel.WARNING);
                         return;
                     }
                 }
@@ -146,13 +148,17 @@ namespace TradingLib.Core
                         if (!riskcheckresuslt)
                         {
                             o.Status = QSEnumOrderStatus.Reject;
-                            ErrorOrderNotify order = ResponseTemplate<ErrorOrderNotify>.SrvSendNotifyResponse(o.Account);
-                            order.Order = o;
-                            order.RspInfo.FillError("RISKCENTRE_CHECK_ERROR");
-                            order.RspInfo.ErrorMessage = string.IsNullOrEmpty(msg) ? order.RspInfo.ErrorMessage : msg;//错误代码替换
-                            o.comment = "风控拒绝:"+order.RspInfo.ErrorMessage;
-                            ReplyErrorOrder(order);
-                            debug("委托(" + o.id.ToString() + ")被拒绝,ErrorID:" + order.RspInfo.ErrorID.ToString() + " ErrorMesssage:" + order.RspInfo.ErrorMessage, QSEnumDebugLevel.WARNING);
+                            //ErrorOrderNotify order = ResponseTemplate<ErrorOrderNotify>.SrvSendNotifyResponse(o.Account);
+                            //order.Order = o;
+                            //order.RspInfo.Fill("RISKCENTRE_CHECK_ERROR");
+                            //order.RspInfo.ErrorMessage = string.IsNullOrEmpty(msg) ? order.RspInfo.ErrorMessage : msg;//错误代码替换
+                            
+                            RspInfo info = RspInfoImpl.Fill("RISKCENTRE_CHECK_ERROR");
+                            info.ErrorMessage = string.IsNullOrEmpty(msg) ? info.ErrorMessage : msg;//错误代码替换
+                            o.comment = "风控拒绝:" + info.ErrorMessage;
+                            ReplyErrorOrder(o,info);
+
+                            debug("委托(" + o.id.ToString() + ")被拒绝,ErrorID:" + info.ErrorID.ToString() + " ErrorMesssage:" + info.ErrorMessage, QSEnumDebugLevel.WARNING);
                             return;
                         }
                     }

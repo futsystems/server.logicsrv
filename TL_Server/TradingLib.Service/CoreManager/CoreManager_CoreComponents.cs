@@ -88,7 +88,7 @@ namespace TradingLib.ServiceManager
             //交易服务回报风控中心
             _messageExchagne.GotTickEvent += new TickDelegate(_riskCentre.GotTick);
             _messageExchagne.GotCancelEvent += new LongDelegate(_riskCentre.GotCancel);
-            _messageExchagne.GotErrorOrderEvent += new ErrorOrderDel(_riskCentre.GotErrorOrder);
+            _messageExchagne.GotOrderErrorEvent += new OrderErrorDelegate(_riskCentre.GotOrderError);
             
             //风控中心从tradingsrv获得委托编号 提交委托 取消委托的操作
             _riskCentre.AssignOrderIDEvent += new AssignOrderIDDel(_messageExchagne.AssignOrderID);
@@ -123,17 +123,17 @@ namespace TradingLib.ServiceManager
         private void InitDataFeedRouter()
         {
             debug("4.1初始化DataFeedRouter");
-            _datafeedRouter = new DataFeedRouter(_clearCentre);
+            _datafeedRouter = new DataFeedRouter();
             _messageExchagne.BindDataRouter(_datafeedRouter);
 
             //绑定清算中心的Tick查询函数,用于清算中心查询合约可开仓数量
-            _clearCentre.newSymbolTickRequest += new GetSymbolTickDel(_datafeedRouter.getSymbolTick);
+            _clearCentre.newSymbolTickRequest += new GetSymbolTickDel(_datafeedRouter.GetTickSnapshot);
         }
         void DestoryDataFeedRouter()
         {
             _messageExchagne.UnBindDataRouter(_datafeedRouter);
 
-            _clearCentre.newSymbolTickRequest -= new GetSymbolTickDel(_datafeedRouter.getSymbolTick);
+            _clearCentre.newSymbolTickRequest -= new GetSymbolTickDel(_datafeedRouter.GetTickSnapshot);
             _datafeedRouter.Dispose();
         }
 
@@ -177,7 +177,7 @@ namespace TradingLib.ServiceManager
            
             ////管理组件转发 交易服务器过来的委托 成交 取消 tick
             _messageExchagne.GotOrderEvent += new OrderDelegate(_managerExchange.newOrder);
-            _messageExchagne.GotErrorOrderEvent += new ErrorOrderDel(_managerExchange.newErrorOrder);
+            _messageExchagne.GotOrderErrorEvent += new OrderErrorDelegate(_managerExchange.newOrderError);
             //_messageExchagne.GotCancelEvent += new LongDelegate(_managerExchange.newCancel);
             _messageExchagne.GotFillEvent += new FillDelegate(_managerExchange.newTrade);
             _messageExchagne.GotTickEvent += new TickDelegate(_managerExchange.newTick);

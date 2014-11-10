@@ -35,7 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>moniter0.ico</ApplicationIcon>
+    <ApplicationIcon>moniter-oem.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="clrzmq">

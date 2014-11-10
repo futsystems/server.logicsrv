@@ -46,13 +46,13 @@ namespace FutsMoniter
         void StopConnector_Click(object sender, EventArgs e)
         {
             ConnectorInfo connector = GetVisibleConnector(CurrentConnector);
-            if (connector.Type.Equals("Broker"))
+            if (connector.Type == QSEnumConnectorType.Broker)
             {
-                Globals.TLClient.ReqStopBroker(connector.ClassName);
+                Globals.TLClient.ReqStopBroker(connector.Token);
             }
-            else if (connector.Type.Equals("DataFeed"))
+            else if (connector.Type == QSEnumConnectorType.DataFeed)
             {
-                Globals.TLClient.ReqStopDataFeed(connector.ClassName);
+                Globals.TLClient.ReqStopDataFeed(connector.Token);
             }
             else
             {
@@ -68,13 +68,13 @@ namespace FutsMoniter
         void StartConnector_Click(object sender, EventArgs e)
         {
             ConnectorInfo connector = GetVisibleConnector(CurrentConnector);
-            if (connector.Type.Equals("Broker"))
+            if (connector.Type == QSEnumConnectorType.Broker)
             {
-                Globals.TLClient.ReqStartBroker(connector.ClassName);
+                Globals.TLClient.ReqStartBroker(connector.Token);
             }
-            else if (connector.Type.Equals("DataFeed"))
+            else if (connector.Type == QSEnumConnectorType.DataFeed)
             {
-                Globals.TLClient.ReqStartDataFeed(connector.ClassName);
+                Globals.TLClient.ReqStartDataFeed(connector.Token);
             }
             else
             {
@@ -93,7 +93,7 @@ namespace FutsMoniter
                 int row = connectorgird.SelectedRows.Count > 0 ? connectorgird.SelectedRows[0].Index : -1;
                 if (row >= 0)
                 {
-                    return connectorgird[CLASSNAME, row].Value.ToString();
+                    return connectorgird[TITIE, row].Value.ToString();
                 }
                 else
                 {
@@ -155,23 +155,23 @@ namespace FutsMoniter
             }
             else
             {
-                int r = ConnectorIDx(c.ClassName);
+                int r = ConnectorIDx(c.Token);
                 if (r == -1)
                 {
-                    gt.Rows.Add(c.ConnectorName);
+                    gt.Rows.Add(c.Token);
                     int i = gt.Rows.Count - 1;
                     gt.Rows[i][CLASSNAME] = c.ClassName;
                     gt.Rows[i][STATUS] = c.Status;
                     gt.Rows[i][TYPE] = c.Type;
 
-                    connectormap.TryAdd(c.ClassName, c);
-                    connectorrowid.TryAdd(c.ClassName, i);
+                    connectormap.TryAdd(c.Token, c);
+                    connectorrowid.TryAdd(c.Token, i);
                 }
                 else
                 {
                     //更新状态
                     gt.Rows[r][STATUS] = c.Status;
-                    connectormap[c.ClassName] = c;
+                    connectormap[c.Token] = c;
                 }
 
             }

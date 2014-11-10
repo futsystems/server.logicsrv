@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TradingLib.API
 {
-    public enum QSEnumOrderActionFlag
+    public enum QSEnumOrderActionFlag:byte
     {
         Delete=0,//删除委托
     }

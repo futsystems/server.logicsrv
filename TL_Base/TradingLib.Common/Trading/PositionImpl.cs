@@ -289,18 +289,21 @@ namespace TradingLib.Common
         // <summary>
         /// 结算时盯市浮动盈亏
         /// </summary>
-        public decimal UnrealizedPLByDate
-        {
-            get
-            {
-                if (_settlementprice == null)
-                    throw new Exception("position have not got settlement price");
+        //public decimal UnrealizedPLByDate
+        //{
+        //    get
+        //    {
+        //        if (_settlementprice == null)
+        //        {
+        //            Util.Debug("position:" + this.GetPositionKey() + " have not got settlement price,will use lastprice", QSEnumDebugLevel.WARNING);
+        //            _settlementprice = LastPrice;
+        //        }
 
-                decimal settleprice = (decimal)_settlementprice;
-                return _size * (settleprice - AvgPrice);
-            }
+        //        decimal settleprice = (decimal)_settlementprice;
+        //        return _size * (settleprice - AvgPrice);
+        //    }
 
-        }
+        //}
 
         #region 价格信息
         /// <summary>
@@ -448,7 +451,7 @@ namespace TradingLib.Common
                     _lastsettlementprice = k.PreSettlement;
                     //更新所有持仓明细的昨日结算价格
                     //昨日持仓明细在YdRef保存的不用更新 该数据用于获得隔夜仓的成本即昨天的结算价为成本
-                    //只用更新新开仓的昨日结算价格 从历史持仓明细表中加载的持仓明细 会从结算价中获得上日结算价
+                    //只用更新新开仓的昨日结算价格 从历史持仓明细表中加载的持仓明细 会从结算价中获得上日结算价 如果结算价异常以收盘价结算，但是加载时又根据行情来更新昨日结算价，则会造成持仓价格变动 金额帐户盈亏计算不准确的问题
                     foreach (PositionDetail p in this.PositionDetailTodayNew)
                     {
                         p.LastSettlementPrice = k.PreSettlement;

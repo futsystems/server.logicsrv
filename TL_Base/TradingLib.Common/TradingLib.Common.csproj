@@ -44,6 +44,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Trading\OrderError.cs" />
     <Compile Include="JsonObject\JsonObjectBase.cs" />
     <Compile Include="JsonObject\JsonProtocolManager.cs" />
     <Compile Include="Messages\Manager\MGRInsertTrade.cs" />
@@ -155,7 +156,6 @@
     <Compile Include="Utils\safelist\SafeEnumerable.cs" />
     <Compile Include="Utils\safelist\SafeEnumerator.cs" />
     <Compile Include="Utils\safelist\SafeList.cs" />
-    <Compile Include="Trading\OrderError.cs" />
     <Compile Include="Trading\OrderUtils.cs" />
     <Compile Include="Trading\PositionEx.cs" />
     <Compile Include="Trading\CashTransaction.cs" />

@@ -255,6 +255,11 @@ namespace TradingLib.Contrib.FinService
         /// 类名
         /// </summary>
         public string ClassName { get; set; }
+
+        /// <summary>
+        /// 是否有效
+        /// </summary>
+        public bool Active { get; set; }
     }
 
     public static class DBServicePlanUtils

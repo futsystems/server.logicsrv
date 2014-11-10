@@ -6,44 +6,22 @@ using TradingLib.API;
 using TradingLib.Common;
 using System.Threading;
 using ZeroMQ;
+using TradingLib.BrokerXAPI;
 
 namespace DataFeed.FastTick
 {
        
 
-    public class FastTick : IDataFeed
+    public class FastTick :TLDataFeedBase,IDataFeed
     {
         TimeSpan timeout = new TimeSpan(0, 0, 5);
-        public string Title { get { return "FastTick数据通道"; } }
-        bool _verb = true;
-        public bool VerboseDebugging { get { return _verb; } set { _verb = value; } }
-        /// <summary>
-        /// 当数据服务器登入成功后调用
-        /// </summary>
-        public event IConnecterParamDel Connected;
-        /// <summary>
-        /// 当数据服务器断开后触发事件
-        /// </summary>
-        public event IConnecterParamDel Disconnected;
-        /// <summary>
-        /// 当有日志信息输出时调用
-        /// </summary>
-        public event DebugDelegate SendDebugEvent;
-        /// <summary>
-        /// 当数据服务得到一个新的tick时调用
-        /// </summary>
-        public event TickDelegate GotTickEvent;
+        
+        string server="127.0.0.1";
+		int port=6000;
+		int reqport=6001;
 
-		ConfigHelper cfg;
-        string server;
-		int port;
-		int reqport;
         public FastTick()
         {
-			cfg = new ConfigHelper(CfgConstDFFastTick.XMLFN);
-			server = cfg.GetConfig(CfgConstDFFastTick.Server);
-			port = int.Parse(cfg.GetConfig(CfgConstDFFastTick.Port));
-			reqport = int.Parse(cfg.GetConfig(CfgConstDFFastTick.ReqPort));
 			
         }
         public bool IsLive
@@ -54,27 +32,6 @@ namespace DataFeed.FastTick
             }
         }
 
-        bool _debugEnable = true;
-        public bool DebugEnable { get { return _debugEnable; } set { _debugEnable = value; } }
-        QSEnumDebugLevel _debuglevel = QSEnumDebugLevel.INFO;
-        public QSEnumDebugLevel DebugLevel { get { return _debuglevel; } set { _debuglevel = value; } }
-
-        /// <summary>
-        /// 判断日志级别 然后再进行输出
-        /// </summary>
-        /// <param name="msg"></param>
-        /// <param name="level"></param>
-        protected void debug(string msg, QSEnumDebugLevel level = QSEnumDebugLevel.DEBUG)
-        {
-            if ((int)level <= (int)_debuglevel && _debugEnable)
-                msgdebug("[" + level.ToString() + "] " + msg);
-        }
-
-        void msgdebug(string msg)
-        {
-            if (SendDebugEvent != null)
-                SendDebugEvent(msg);
-        }
 
         public void Stop()
         {
@@ -93,8 +50,7 @@ namespace DataFeed.FastTick
             {
                 _tickthread = null;
                 debug("FastTick Stopped successfull...", QSEnumDebugLevel.INFO);
-                if (Disconnected != null)
-                    Disconnected(this);
+                NotifyConnected();
 
             }
             else
@@ -106,6 +62,12 @@ namespace DataFeed.FastTick
 
         public void Start()
         {
+            server = _cfg.srvinfo_ipaddress;
+            port = _cfg.srvinfo_port;
+            int outreq = 6661;
+            int.TryParse(_cfg.srvinfo_field1,out outreq);
+            reqport = outreq;
+
             if (_tickgo) return;
             _tickgo = true;
             _tickthread = new Thread(TickHandler);
@@ -157,8 +119,8 @@ namespace DataFeed.FastTick
                                 string symbol = p[0];
                                 string tickcontent = p[1];
                                 Tick k = TickImpl.Deserialize(tickcontent);
-                                if (GotTickEvent != null && k.isValid)
-                                    GotTickEvent(k);
+                                if (k.isValid)
+                                    NotifyTick(k);
                             }
                         }
                         catch (Exception ex)
@@ -169,8 +131,7 @@ namespace DataFeed.FastTick
                     var poller = new Poller(new List<ZmqSocket> { subscriber });
 
                     _tickreceiveruning = true;
-                    if (Connected!=null)
-                        Connected(this);
+                    NotifyConnected();
                     while (_tickgo)
                     {
                         try
@@ -194,8 +155,7 @@ namespace DataFeed.FastTick
                         }
                     }
                     _tickreceiveruning = false;
-                    if (Disconnected != null)
-                        Disconnected(this);
+                    NotifyDisconnected();
                 }
             }
         }
@@ -231,29 +191,87 @@ namespace DataFeed.FastTick
         /// 注册市场数据
         /// </summary>
         /// <param name="symbols"></param>
-        public void RegisterSymbols(string[] symbols,QSEnumDataFeedTypes type = QSEnumDataFeedTypes.DEFAULT)
+        public void RegisterSymbols(SymbolBasket symbols)
         {
             try
             {
-                debug("regist symbols" + string.Join(",", symbols) + "to fast tick");
-                //将合约字头逐个向publisher进行订阅
-                foreach (string s in symbols)
+                //将合约按照行情源类型进行分组
+                Dictionary<QSEnumDataFeedTypes, List<Symbol>> map = SplitSymbolViaDataFeedType(symbols);
+
+                foreach (KeyValuePair<QSEnumDataFeedTypes, List<Symbol>> kv in map)
                 {
-                    string prefix = s + "^";
-                    _subscriber.Subscribe(Encoding.UTF8.GetBytes(prefix));//subscribe对应的symbol字头用于获得tick数据
+                    string symlist = string.Join(",", kv.Value.Select(sym=>sym.Symbol));
+                    debug("FastTick RegisterSymbol Type:" + kv.Key.ToString() + " Syms:" + symlist, QSEnumDebugLevel.INFO);
+                    
+                    //将合约字头逐个向publisher进行订阅
+                    foreach (Symbol s in kv.Value)
+                    {
+                        string prefix = s.Symbol + "^";
+                        _subscriber.Subscribe(Encoding.UTF8.GetBytes(prefix));//subscribe对应的symbol字头用于获得tick数据
+                    }
+
+                    //通过FastTickServer的管理端口 请求FastTickServer向行情源订阅行情数据,Publisher的订阅是内部的一个分发订阅 不会产生向行情源订阅实际数据
+                    string requeststr = (kv.Key.ToString() + ":" + symlist);
+                    debug(Title + ":注册市场数据 " + requeststr, QSEnumDebugLevel.INFO);
+                    Send(TradingLib.API.MessageTypes.MGRREGISTERSYMBOLS, requeststr);
                 }
 
-                //通过FastTickServer的管理端口 请求FastTickServer向行情源订阅行情数据,Publisher的订阅是内部的一个分发订阅 不会产生向行情源订阅实际数据
-                string sym = string.Join(",", symbols);
-                string requeststr = (type == QSEnumDataFeedTypes.DEFAULT ? sym : (type.ToString() + ":" + sym));
-                debug(Title+":注册市场数据 " + requeststr,QSEnumDebugLevel.INFO);
-                Send(TradingLib.API.MessageTypes.MGRREGISTERSYMBOLS, requeststr);
+                
             }
             catch (Exception ex)
             {
                 debug(":请求市场数据异常" + ex.ToString(), QSEnumDebugLevel.ERROR);
             }
         }
+
+        /// <summary>
+        /// 将某个合约对象按FastTick进行拆分
+        /// 所有的合约均通过FastTick行情通道进行订阅
+        /// </summary>
+        /// <param name="basket"></param>
+        /// <returns></returns>
+        Dictionary<QSEnumDataFeedTypes,List<Symbol>> SplitSymbolViaDataFeedType(SymbolBasket basket)
+        {
+            Dictionary<QSEnumDataFeedTypes, List<Symbol>> map = new Dictionary<QSEnumDataFeedTypes, List<Symbol>>();
+            foreach (Symbol sym in basket)
+            {
+                QSEnumDataFeedTypes type = Symbol2DataFeedType(sym);
+                if (map.Keys.Contains(type))
+                {
+                    map[type].Add(sym);
+                }
+                else
+                {
+                    map[type] = new List<Symbol>();
+                    map[type].Add(sym);
+                }
+            }
+            return map;
+
+        }
+
+        /// <summary>
+        /// 按照一定的逻辑获得合约在FastTick中的行情通道类型
+        /// 通过合约判断该行情从哪个FastTick 通道中进行注册
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        QSEnumDataFeedTypes Symbol2DataFeedType(Symbol symbol)
+        {
+            //国内期货合约通过CTP通道订阅
+            if (symbol.SecurityType == SecurityType.FUT && symbol.SecurityFamily.Exchange.Country == Country.CN)
+            {
+                return QSEnumDataFeedTypes.CTP;
+            }
+
+            //国内期权合约通过CTPOPT通道订阅
+            if (symbol.SecurityType == SecurityType.OPT && symbol.SecurityFamily.Exchange.Country == Country.CN)
+            {
+                return QSEnumDataFeedTypes.CTPOPT;
+            }
+            return QSEnumDataFeedTypes.CTP;
+        }
+
 
     }
 }

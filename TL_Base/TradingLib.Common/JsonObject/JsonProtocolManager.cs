@@ -623,6 +623,11 @@ namespace TradingLib.Mixins.JsonObject
         [PermissionFieldAttr("帐户编辑-帐户设置", "设置帐户属性")]
         public bool moniter_tab_config { get; set; }
 
+        /// <summary>
+        /// 帐户编辑-设置-帐户冻结
+        /// </summary>
+        [PermissionFieldAttr("帐户编辑-帐户设置-冻结", "帐户属性tab页中的冻结操作按钮")]
+        public bool moniter_tab_config_inactive { get; set; }
 
         /// <summary>
         /// 帐户编辑-财务
@@ -682,6 +687,11 @@ namespace TradingLib.Mixins.JsonObject
 
 
         /// <summary>
+        /// 日内持仓明细查看模块中的平仓或反手操作
+        /// </summary>
+        [PermissionFieldAttr("交易记录监控-交易类操作", "后台平仓或反手")]
+        public bool fun_info_operation { get; set; }
+        /// <summary>
         /// 下单面板
         /// </summary>
         [PermissionFieldAttr("功能面板-下单面板", "管理端执行下单操作")]
@@ -704,5 +714,24 @@ namespace TradingLib.Mixins.JsonObject
         /// </summary>
         [PermissionFieldAttr("功能面板-财务信息", "查询帐户财务状况")]
         public bool fun_tab_financeinfo { get; set; }
+
+
+        /// <summary>
+        /// 是否可以添加实盘帐户
+        /// </summary>
+        [PermissionFieldAttr("帐户类别-实盘", "是否可以添加实盘帐户")]
+        public bool acctype_live { get; set; }
+
+        /// <summary>
+        /// 是否可以添加模拟帐户
+        /// </summary>
+        [PermissionFieldAttr("帐户类别-模拟", "是否可以添加模拟帐户")]
+        public bool acctype_sim { get; set; }
+
+        /// <summary>
+        /// 是否可以添加交易员帐户
+        /// </summary>
+        [PermissionFieldAttr("帐户类别-交易员", "是否可以添加交易员帐户")]
+        public bool acctype_dealer { get; set; }
     }
 }

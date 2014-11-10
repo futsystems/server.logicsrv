@@ -97,14 +97,14 @@ namespace TradingLib.Common
             return p.UnRealizedPL * p.oSymbol.Multiple;
         }
 
-        /// <summary>
-        /// 计算持仓的结算浮动盈亏 按照设定的结算价作为计算依据
+        /// 计算结算时 持仓汇总的盯市盈亏 这里累加所有持仓明细的浮动盈亏获得
         /// </summary>
         /// <param name="p"></param>
         /// <returns></returns>
         public static decimal CalcSettleUnRealizedPL(this Position p)
         {
-            return p.UnrealizedPLByDate * p.oSymbol.Multiple;
+            return p.PositionDetailTotal.Where(pos => !pos.IsClosed()).Sum(pos => pos.PositionProfitByDate);
+            //return p.UnrealizedPLByDate * p.oSymbol.Multiple;
         }
 
         /// <summary>

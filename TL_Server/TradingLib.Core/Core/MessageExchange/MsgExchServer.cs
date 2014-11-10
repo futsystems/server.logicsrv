@@ -66,7 +66,7 @@ namespace TradingLib.Core
         public event TickDelegate GotTickEvent;
         
         public event OrderDelegate GotOrderEvent;
-        public event ErrorOrderDel GotErrorOrderEvent;
+        public event OrderErrorDelegate GotOrderErrorEvent;
 
         public event LongDelegate GotCancelEvent;
         public event FillDelegate GotFillEvent;
@@ -397,6 +397,7 @@ namespace TradingLib.Core
                 return -1;
             }
             return _datafeedRouter.GetAvabilePrice(symbol);
+            return 0;
         }
         #endregion
 

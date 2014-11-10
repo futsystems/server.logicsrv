@@ -204,7 +204,7 @@ namespace TradingLib.API
         /// <summary>
         /// ID是交易系统分配的交易编号,BrokerKey是broker分配的编号,LocalID是本地发单分配的编号
         /// </summary>
-        long LocalID { get; set; }
+        string LocalID { get; set; }
 
         /// <summary>
         /// 已成交数量

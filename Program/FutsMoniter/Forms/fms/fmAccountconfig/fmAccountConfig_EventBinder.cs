@@ -15,6 +15,8 @@ namespace FutsMoniter
             Globals.Debug("fmAccountConfig init called @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 
             pageConfig.Visible = Globals.UIAccess.moniter_tab_config;
+            btnExecute.Visible = Globals.UIAccess.moniter_tab_config_inactive;
+
             pageFinance.Visible = Globals.UIAccess.moniter_tab_finance;
             pageOrderCheck.Visible = Globals.UIAccess.moniter_tab_orderrule;
             pageAccountCheck.Visible = Globals.UIAccess.moniter_tab_accountrule;

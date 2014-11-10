@@ -130,9 +130,9 @@ namespace TradingLib.Core
             //成交明细
             IList<Trade> trades = ORM.MTradingInfo.SelectHistTrades(s.Account, s.SettleDay, s.SettleDay);
             //持仓明细
-            IEnumerable<PositionDetail> positiondetails = ORM.MSettlement.SelectPositionDetails(s.SettleDay);
+            IEnumerable<PositionDetail> positiondetails = ORM.MSettlement.SelectPositionDetails(s.Account,s.SettleDay);
             //平仓明细
-            IEnumerable<PositionCloseDetail> positionclose = ORM.MSettlement.SelectPositionCloseDetail(s.SettleDay);
+            IEnumerable<PositionCloseDetail> positionclose = ORM.MSettlement.SelectPositionCloseDetail(s.Account,s.SettleDay);
 
 
             decimal margin = positiondetails.Sum(pos => pos.Margin);

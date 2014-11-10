@@ -22,7 +22,28 @@ namespace TradingLib.API
         /// <returns></returns>
         IDataFeed FindDataFeed(string fullname);
 
+        /// <summary>
+        /// 默认的模拟成交接口
+        /// </summary>
+        IBroker DefaultSimBroker { get; }
 
+        /// <summary>
+        /// 默认行情通道
+        /// </summary>
+        IDataFeed DefaultDataFeed { get; }
+
+        /// <summary>
+        /// 获得某个合约的行情快照
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        Tick GetTickSnapshot(string symbol);
+
+        /// <summary>
+        /// 获得所有市场数据行情快照
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<Tick> GetTickSnapshot(); 
 
         /// <summary>
         /// 获得所有成交路由

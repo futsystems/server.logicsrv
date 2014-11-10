@@ -70,7 +70,10 @@ namespace TradingLib.Common
             Account = rec[0];
             Symbol = rec[1];
             Side = bool.Parse(rec[2]);
-            OffsetFlag = (QSEnumOffsetFlag)Enum.Parse(typeof(QSEnumOffsetFlag), rec[3]);
+            QSEnumOffsetFlag offset = QSEnumOffsetFlag.OPEN;
+            Enum.TryParse<QSEnumOffsetFlag>(rec[3], out offset);//(QSEnumOffsetFlag)Enum.TryParse(typeof(QSEnumOffsetFlag), rec[2]);
+            OffsetFlag = offset;
+           
         }
 
 
@@ -126,7 +129,9 @@ namespace TradingLib.Common
             string[] rec = content.Split(',');
             Symbol = rec[0];
             Side = bool.Parse(rec[1]);
-            OffsetFlag = (QSEnumOffsetFlag)Enum.Parse(typeof(QSEnumOffsetFlag), rec[2]);
+            QSEnumOffsetFlag offset = QSEnumOffsetFlag.OPEN;
+            Enum.TryParse<QSEnumOffsetFlag>(rec[2], out offset);//(QSEnumOffsetFlag)Enum.TryParse(typeof(QSEnumOffsetFlag), rec[2]);
+            OffsetFlag = offset;
             MaxVol = int.Parse(rec[3]);
         }
     }

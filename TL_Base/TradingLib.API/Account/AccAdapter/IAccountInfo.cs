@@ -37,6 +37,10 @@ namespace TradingLib.API
         /// </summary>
         decimal MarginFrozen { get; set; }
 
+        /// <summary>
+        /// 信用额度
+        /// </summary>
+        decimal Credit { get; set; }
 
         #region 多品种交易 账户财务数据
         decimal FutMarginUsed { get; set; }//期货占用保证金
@@ -75,6 +79,7 @@ namespace TradingLib.API
         decimal InnovMoneyUsed { get; set; }//异化合约资金占用
         decimal InnovAvabileFunds { get; set; }//异化合约可用资金
         #endregion
+
 
     }
 }

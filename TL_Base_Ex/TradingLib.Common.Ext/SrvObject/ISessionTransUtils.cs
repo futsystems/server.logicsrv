@@ -59,6 +59,7 @@ namespace TradingLib.Common
         public static void OperationError(this ISession session,FutsRspError error)
         {
             RspMGROperationResponse response = ResponseTemplate<RspMGROperationResponse>.SrvSendRspResponse(session);
+            
             response.RspInfo.Fill(error);
 
             SendPacketMgr(session, response);

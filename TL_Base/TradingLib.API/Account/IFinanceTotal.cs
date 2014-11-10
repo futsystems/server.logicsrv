@@ -80,5 +80,9 @@ namespace TradingLib.API
         /// </summary>
         decimal AvabileFunds { get; }//帐户总可用资金
 
+        /// <summary>
+        /// 信用金额
+        /// </summary>
+        decimal Credit { get; }
     }
 }
