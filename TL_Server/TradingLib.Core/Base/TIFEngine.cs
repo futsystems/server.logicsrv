@@ -99,9 +99,9 @@ namespace TradingLib.Core
             long id = fill.id;
             TIFInfo tifinfo = tiflist.FindByOrderID(id);
             if (tifinfo == null) return;
-            tifinfo.FilledSize += Math.Abs(fill.xsize);
+            tifinfo.FilledSize += Math.Abs(fill.xSize);
             // get symbol
-            string sym = fill.symbol;
+            string sym = fill.Symbol;
             // see if completed
             if (tifinfo.FilledSize == tifinfo.SentSize)
             {
@@ -132,18 +132,18 @@ namespace TradingLib.Core
         {
             // get tif from order
             int tif = 0;
-            if (int.TryParse(o.TIF, out tif))
-                SendOrderTIF(o, tif);
-            else
+            //if (int.TryParse(o.TIF, out tif))
+            //    SendOrderTIF(o, tif);
+            //else
                 SendOrderTIF(o, 0);
         }
 
         public void SendOrderTIF(Order o, int TIF)
         {
             // update time
-            if ((o.time != 0) && (o.time > _lasttime))
-                _lasttime = o.time;
-            if ((o.time == 0) && (_lasttime == 0))
+            if ((o.Time != 0) && (o.Time > _lasttime))
+                _lasttime = o.Time;
+            if ((o.Time == 0) && (_lasttime == 0))
             {
                 debug("[TIFEngine]No time available!  Can't enforce tif!");
                 return;
@@ -156,7 +156,7 @@ namespace TradingLib.Core
             // 如果TIF引擎没有该委托,则我们生成tifinfo并将其放置到insertOrder缓存中
             if (!tiflist.HaveOrder(o.id))
             {
-                debug("[TIFEngine]tracking tif for: " + o.id + " " + o.symbol + " tif:" + o.TIF);
+                debug("[TIFEngine]tracking tif for: " + o.id + " " + o.Symbol + " tif:" + o.TimeInForce);
                 TIFInfo tifinfo = new TIFInfo(o.id, _lasttime, TIF, o.UnsignedSize, 0);
                 insertOrder.Write(tifinfo);
             }

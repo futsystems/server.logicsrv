@@ -33,10 +33,10 @@ namespace TradingLib.Common
             this.OpenPrice = pd.OpenPrice;
 
             //设定平仓时间
-            this.CloseDate = f.xdate;
-            this.CloseTime = f.xtime;
+            this.CloseDate = f.xDate;
+            this.CloseTime = f.xTime;
             this.CloseTradeID = f.BrokerKey;
-            this.ClosePrice = f.xprice;
+            this.ClosePrice = f.xPrice;
             this.CloseVolume = closesize; 
         }
         public PositionCloseDetailImpl()

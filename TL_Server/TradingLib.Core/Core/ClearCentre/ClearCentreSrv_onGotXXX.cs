@@ -77,7 +77,7 @@ namespace TradingLib.Core
                     f.Commission = onAdjuestCommission(f,pr);   
                 }
                 IAccount account = this[f.Account];
-                Position pos = account.GetPosition(f.symbol, f.PositionSide);
+                Position pos = account.GetPosition(f.Symbol, f.PositionSide);
                 //如果交易中心处于开启状态 则对外触发包含交易手续费的fill回报 通过tradingserver向管理端与交易客户端发送
                 if (_status == QSEnumClearCentreStatus.CCOPEN)
                 {

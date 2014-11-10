@@ -162,7 +162,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public  bool TrckerOrderSymbol(Order o)
         {
-            string sym = o.symbol;
+            string sym = o.Symbol;
             Symbol symbol = this[sym];
             if (symbol == null)
             {

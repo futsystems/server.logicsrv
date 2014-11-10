@@ -56,7 +56,7 @@ namespace TradingLib.Common
         /// <param name="idx"></param>
         void orders_NewTxt(string txt, int idx)
         {
-            int sentsize = (orders[idx].side? 1 : -1) * Math.Abs(orders[idx].TotalSize);//通过totalsize来获得委托的原始数量 size为委托的剩余数量
+            int sentsize = (orders[idx].Side ? 1 : -1) * Math.Abs(orders[idx].TotalSize);//通过totalsize来获得委托的原始数量 size为委托的剩余数量
             v(txt + " sentsize: " + sentsize + " after: " + orders[idx].ToString());
             unknownsent.addindex(txt, false);
             sent.addindex(txt, sentsize);//第一次委托到达时候记录该委托数量为发送数量sentsize
@@ -275,7 +275,7 @@ namespace TradingLib.Common
             r = r + 1;
             if (o.id == 0)
             {
-                debug(o.symbol + " can't track order with blank id!: " + o.ToString());
+                debug(o.Symbol + " can't track order with blank id!: " + o.ToString());
                 return;
             }
             //debug("order:" + o.ToString() + " is tracked");
@@ -295,14 +295,14 @@ namespace TradingLib.Common
                 to.Broker = o.Broker;//更新broker信息和ExchID
                 to.BrokerKey = o.BrokerKey;
                 to.OrderSysID = o.OrderSysID;
-                to.comment = o.comment;//更新描述
+                to.Comment = o.Comment;//更新描述
 
-                to.size = o.size;//更新委托当前未成交数量
+                to.Size = o.Size;//更新委托当前未成交数量
                 to.FilledSize = o.FilledSize;//更新成交数量
                 
                 
             }
-            v(o.symbol + " order ack: " + o);
+            v(o.Symbol + " order ack: " + o);
             debug("Order Tracker got order:"+r.ToString());
         }
         /// <summary>
@@ -348,7 +348,7 @@ namespace TradingLib.Common
         {
             if (f.id == 0)
             {
-                debug(f.symbol + " can't track order with blank id!: " + f.ToString());
+                debug(f.Symbol + " can't track order with blank id!: " + f.ToString());
                 return;
             }
             
@@ -361,11 +361,11 @@ namespace TradingLib.Common
                 unknownsent[idx] = true;
             }
             //累加某个委托的filled数量
-            filled[idx] += (f.side ? 1 : -1) *Math.Abs(f.xsize);
+            filled[idx] += (f.Side ? 1 : -1) * Math.Abs(f.xSize);
             //fix sentsize on unknown 当由于某些原因，委托没有被记录到,而产生了不对应的成交,则我们根据成交来反向形成对应的委托
             if (FixSentSizeOnUnknown && unknownsent[idx])
                 sent[idx] = filled[idx];
-            v(f.symbol + " filled size: " + filled[idx] + " after: " + f.ToString());
+            v(f.Symbol + " filled size: " + filled[idx] + " after: " + f.ToString());
         }
 
         bool _noverb = true;

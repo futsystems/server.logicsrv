@@ -114,12 +114,12 @@ namespace TradingLib.Common
         /// <summary>
         /// 时间
         /// </summary>
-        public DateTime Time { get { return Util.ToDateTime(Trade.xdate, Trade.xtime); } }
+        public DateTime Time { get { return Util.ToDateTime(Trade.xDate, Trade.xTime); } }
 
         /// <summary>
         /// 数量
         /// </summary>
-        public int Size { get { return Trade.xsize; } }
+        public int Size { get { return Trade.xSize; } }
 
         /// <summary>
         /// 合约乘数
@@ -129,7 +129,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 价格
         /// </summary>
-        public decimal Price { get { return Trade.xprice; } }
+        public decimal Price { get { return Trade.xPrice; } }
         /// <summary>
         /// 手续费
         /// </summary>

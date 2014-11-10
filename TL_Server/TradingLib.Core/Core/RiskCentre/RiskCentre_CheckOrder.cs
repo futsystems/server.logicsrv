@@ -115,8 +115,8 @@ namespace TradingLib.Core
 
             //4.开仓标识与锁仓权限检查
             //4.1自动开平标识识别
-            bool havelong = account.GetHaveLongPosition(o.symbol);
-            bool haveshort = account.GetHaveShortPosition(o.symbol);
+            bool havelong = account.GetHaveLongPosition(o.Symbol);
+            bool haveshort = account.GetHaveShortPosition(o.Symbol);
             //自动判定开平标识
             if (o.OffsetFlag == QSEnumOffsetFlag.UNKNOWN)
             {
@@ -126,7 +126,7 @@ namespace TradingLib.Core
                 }
                 else if (havelong)//多头
                 {
-                    if (o.side)
+                    if (o.Side)
                     {
                         o.OffsetFlag = QSEnumOffsetFlag.OPEN;
                     }
@@ -137,7 +137,7 @@ namespace TradingLib.Core
                 }
                 else if (haveshort)//空头
                 {
-                    if (o.side)
+                    if (o.Side)
                     {
                         o.OffsetFlag = QSEnumOffsetFlag.CLOSE;
                     }
@@ -159,7 +159,7 @@ namespace TradingLib.Core
             bool orderside = o.PositionSide;
 
             //反待成交开仓委托
-            bool othersideentry = account.GetPendingEntrySize(o.symbol,!orderside) > 0;
+            bool othersideentry = account.GetPendingEntrySize(o.Symbol, !orderside) > 0;
 
             //开仓操作
             if (o.IsEntryPosition)
@@ -197,7 +197,7 @@ namespace TradingLib.Core
 
             //6.委托价格检查
             //6.1查看数据通道是否有对应的合约价格
-            decimal avabileprice = TLCtxHelper.Ctx.MessageExchange.GetAvabilePrice(o.symbol);
+            decimal avabileprice = TLCtxHelper.Ctx.MessageExchange.GetAvabilePrice(o.Symbol);
             if (avabileprice <= 0)
             {
                 errortitle = "SYMBOL_TICK_ERROR";//市场旱情异常
@@ -207,7 +207,7 @@ namespace TradingLib.Core
             //6.2检查价格是否在涨跌幅度内
             if (o.isLimit || o.isStop)
             {
-                decimal targetprice = o.isLimit ? o.price : o.stopp;
+                decimal targetprice = o.isLimit ? o.LimitPrice : o.StopPrice;
                 decimal diff = Math.Abs(targetprice - avabileprice);
                 //如果价格超过涨跌幅 则回报操作
                 if ((diff / avabileprice) > 0.1M)
@@ -298,7 +298,7 @@ namespace TradingLib.Core
 
                 //4 委托开仓 平仓项目检查
                 //通过account symbol 以及委托的持仓操作方向查找对应的position
-                Position pos = account.GetPosition(o.symbol, o.PositionSide);//当前对应持仓
+                Position pos = account.GetPosition(o.Symbol, o.PositionSide);//当前对应持仓
                 //检查该委托是否是开仓委托
                 bool entryposition = o.IsEntryPosition;
                 //debug("Order[" + o.id.ToString() + "]" + " try to " + (o.IsEntryPosition ? "开仓" : "平仓") + " 操作方向:" + (o.PositionSide ? "多头持仓" : "空头"), QSEnumDebugLevel.INFO);
@@ -315,7 +315,7 @@ namespace TradingLib.Core
                 else//平仓执行数量检查
                 {
                     //获得该帐户 该合约 该持仓方向的待成交平仓委托
-                    int pendingExitSize =account.GetPendingExitSize(o.symbol, o.PositionSide);
+                    int pendingExitSize = account.GetPendingExitSize(o.Symbol, o.PositionSide);
                     //当前持仓数量
                     int pos_size = pos.UnsignedSize;
                     //当前委托数量

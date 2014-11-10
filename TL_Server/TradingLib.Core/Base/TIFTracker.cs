@@ -94,9 +94,9 @@ namespace TradingLib.Core
             if (!_ididx.TryGetValue(id, out idx))
                 return;
             // mark as filled
-            filledsize[idx] += Math.Abs(fill.xsize);
+            filledsize[idx] += Math.Abs(fill.xSize);
             // get symbol
-            string sym = fill.symbol;
+            string sym = fill.Symbol;
             // see if completed
             if (filledsize[idx] == sentsize[idx])
             {
@@ -131,19 +131,19 @@ namespace TradingLib.Core
         public void SendOrder(Order o)
         {
             // get tif from order
-            int tif = 0;
-            if (int.TryParse(o.TIF, out tif))
-                SendOrderTIF(o, tif);
-            else
+            //int tif = 0;
+            //if (int.TryParse(o.TIF, out tif))
+            //    SendOrderTIF(o, tif);
+            //else
                 SendOrderTIF(o, 0);
         }
 
         public void SendOrderTIF(Order o, int TIF)
         {
             // update time
-            if ((o.time != 0) && (o.time > _lasttime))
-                _lasttime = o.time;
-            if ((o.time == 0) && (_lasttime == 0))
+            if ((o.Time != 0) && (o.Time > _lasttime))
+                _lasttime = o.Time;
+            if ((o.Time == 0) && (_lasttime == 0))
             {
                 debug("No time available!  Can't enforce tif!");
                 return;
@@ -160,17 +160,17 @@ namespace TradingLib.Core
             // add it if we don't
             if (!_ididx.TryGetValue(o.id, out idx))
             {
-                debug("tracking tif for: " + o.id + " " + o.symbol);
-                int sidx = getindex(o.symbol);
+                debug("tracking tif for: " + o.id + " " + o.Symbol);
+                int sidx = getindex(o.Symbol);
                 if (sidx < 0)
-                    addindex(o.symbol, o.id);
+                    addindex(o.Symbol, o.id);
                 else
                     this[sidx] = o.id;
                 _ididx.Add(o.id, _tifs.Count);
                 _senttime.Add(_lasttime);
                 _tifs.Add(_tif);
                 _id.Add(o.id);
-                sym.Add(o.symbol);
+                sym.Add(o.Symbol);
                 sentsize.Add(o.UnsignedSize);
                 filledsize.Add(0);
             }

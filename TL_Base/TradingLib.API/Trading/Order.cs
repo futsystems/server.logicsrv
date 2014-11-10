@@ -9,46 +9,40 @@ namespace TradingLib.API
     {
         #region 帐户 时间 合约 指令
         /// <summary>
-        /// account to place inventory if order is executed
-        /// </summary>
-        string Account { get; set; }
-
-        /// <summary>
         /// 系统内部编号long
         /// </summary>
         long id { get; set; }
 
         /// <summary>
+        /// account to place inventory if order is executed
+        /// </summary>
+        string Account { get; set; }
+
+        /// <summary>
         /// 委托提交日期 date in  date format (2010/03/05 = 20100305)
         /// </summary>
-        int date { get; set; }
+        int Date { get; set; }
 
         /// <summary>
         /// 委托提交时间 time including seconds 1:35:07PM = 133507
         /// </summary>
-        int time { get; set; }
+        int Time { get; set; }
 
 
         /// <summary>
         /// 合约字头
         /// </summary>
-        string symbol { get; set; }
+        string Symbol { get; set; }
 
         /// <summary>
         /// 合约对象
         /// </summary>
         Symbol oSymbol { get; set; }
 
-
         /// <summary>
-        /// time in force
+        /// TIF设置 MOC,IOC 等委托扩展指令
         /// </summary>
-        string TIF { get; set; }
-
-        /// <summary>
-        /// valid instruction 委托指令 MOC,IOC 等委托扩展指令
-        /// </summary>
-        OrderInstructionType ValidInstruct { get; set; }
+        QSEnumTimeInForce TimeInForce { get; set; }
 
         /// <summary>
         /// 开平标志
@@ -58,7 +52,8 @@ namespace TradingLib.API
         /// <summary>
         /// 投机/套保标识
         /// </summary>
-        string HedgeFlag { get; set; }
+        QSEnumHedgeFlag HedgeFlag { get; set; }
+
         #endregion
 
 
@@ -68,7 +63,7 @@ namespace TradingLib.API
         /// signed size of order (-100 = sell 100)
         /// 委托数量根据成交情况会发生变化 带方向
         /// </summary>
-        int size { get; set; }
+        int Size { get; set; }
 
         /// <summary>
         /// 初始委托总数量 带方向
@@ -89,17 +84,17 @@ namespace TradingLib.API
         /// <summary>
         /// true if buy, otherwise sell
         /// </summary>
-        bool side { get; set; }
+        bool Side { get; set; }
 
         /// <summary>
         /// price of order. (0 for market)
         /// </summary>
-        decimal price { get; set; }
+        decimal LimitPrice { get; set; }
 
         /// <summary>
         /// stop price if applicable
         /// </summary>
-        decimal stopp { get; set; }
+        decimal StopPrice { get; set; }
 
         /// <summary>
         /// trail amount if applicable
@@ -147,7 +142,7 @@ namespace TradingLib.API
         /// <summary>
         /// order comment
         /// </summary>
-        string comment { get; set; }
+        string Comment { get; set; }
 
         #endregion
 

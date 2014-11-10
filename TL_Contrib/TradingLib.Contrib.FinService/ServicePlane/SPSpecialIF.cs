@@ -226,7 +226,7 @@ namespace TradingLib.Contrib.FinService
                 bool positoinside = o.PositionSide;
                 //获得对应的持仓数据
                 //Position  = TLCtxHelper.CmdAccount[o.Account].GetPosition(o.symbol, positoinside);
-                int poszie = Account.GetPositionSize(o.symbol);
+                int poszie = Account.GetPositionSize(o.Symbol);
                 decimal nowequity = this.Account.NowEquity;
 
                 int frozensize = this.Account.Orders.Where(od => od.IsEntryPosition &&od.IsPending()).Sum(od=>od.UnsignedSize);

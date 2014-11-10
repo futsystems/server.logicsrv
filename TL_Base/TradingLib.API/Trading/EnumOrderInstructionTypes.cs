@@ -8,7 +8,7 @@ namespace TradingLib.API
     /// <summary>
     /// list of accepted special order instructions
     /// </summary>
-    public enum OrderInstructionType
+    public enum QSEnumTimeInForce
     {
         Invalid = -2,
         /// <summary>

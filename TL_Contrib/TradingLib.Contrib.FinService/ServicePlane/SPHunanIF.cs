@@ -221,7 +221,7 @@ namespace TradingLib.Contrib.FinService
             if (!o.IsEntryPosition) return true;
 
             //获得对应方向的持仓
-            Position pos = this.Account.GetPosition(o.symbol, o.PositionSide);
+            Position pos = this.Account.GetPosition(o.Symbol, o.PositionSide);
 
             //获得某个帐户交易某个合约的可用资金
             decimal avabile = GetFundAvabile(o.oSymbol);

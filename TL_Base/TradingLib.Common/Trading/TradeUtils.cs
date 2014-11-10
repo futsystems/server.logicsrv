@@ -11,7 +11,7 @@ namespace TradingLib.Common
 
         public static long GetDateTime(this Trade f)
         {
-            return Util.ToTLDateTime(f.xdate, f.xtime);
+            return Util.ToTLDateTime(f.xDate, f.xTime);
         }
 
         public static decimal GetCommission(this Trade f)
@@ -29,7 +29,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static decimal GetAmount(this Trade f)
         {
-            return Math.Abs(f.xsize)* f.xprice * f.oSymbol.Multiple;
+            return Math.Abs(f.xSize) * f.xPrice * f.oSymbol.Multiple;
         }
 
         /// <summary>
@@ -40,20 +40,20 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static string GetTradStr(this Trade f, string delimiter=",")
         {
-            string[] trade = new string[] { f.xdate.ToString(), f.xtime.ToString(), f.symbol, (f.side ? "BUY" : "SELL"), f.UnsignedSize.ToString(), f.oSymbol.FormatPrice(f.xprice), f.comment };
+            string[] trade = new string[] { f.xDate.ToString(), f.xTime.ToString(), f.Symbol, (f.Side ? "BUY" : "SELL"), f.UnsignedSize.ToString(), f.oSymbol.FormatPrice(f.xPrice), f.Comment };
             return string.Join(delimiter,trade);
         }
 
         public static string GetTradeDetail(this Trade f)
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append(f.Account + " " + f.symbol + " ");
+            sb.Append(f.Account + " " + f.Symbol + " ");
             sb.Append(" T:" + f.GetDateTime().ToString());
             sb.Append(" " + f.OffsetFlag.ToString());
-            sb.Append(f.side ? " BOT" : " SOD");
+            sb.Append(f.Side ? " BOT" : " SOD");
 
-            sb.Append(" " + Math.Abs(f.xsize).ToString());
-            sb.Append("@" + f.oSymbol.FormatPrice(f.xprice));
+            sb.Append(" " + Math.Abs(f.xSize).ToString());
+            sb.Append("@" + f.oSymbol.FormatPrice(f.xPrice));
             sb.Append(" C:" + f.Commission.ToString());
             sb.Append(" R:" + f.Broker + "/" + f.BrokerKey);
 
@@ -62,11 +62,11 @@ namespace TradingLib.Common
         public static string GetTradeInfo(this Trade f)
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append(f.side ? "BOT" : "SOD");
+            sb.Append(f.Side ? "BOT" : "SOD");
             sb.Append(" "+f.OffsetFlag.ToString());
-            sb.Append(" " + Math.Abs(f.xsize).ToString());
-            sb.Append(" "+f.symbol);
-            sb.Append("  @" + f.oSymbol.FormatPrice(f.xprice));
+            sb.Append(" " + Math.Abs(f.xSize).ToString());
+            sb.Append(" " + f.Symbol);
+            sb.Append("  @" + f.oSymbol.FormatPrice(f.xPrice));
             sb.Append(" C:"+f.Commission.ToString());
             sb.Append(" R:" + f.Broker+"/"+f.BrokerKey);
 

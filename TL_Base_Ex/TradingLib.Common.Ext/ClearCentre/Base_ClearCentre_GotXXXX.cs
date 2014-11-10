@@ -82,7 +82,7 @@ namespace TradingLib.Common
                 Symbol symbol = error.Order.oSymbol;
                 if (symbol == null)
                 {
-                    debug("symbol:" + error.Order.symbol + " not exist in basictracker, dropit", QSEnumDebugLevel.ERROR);
+                    debug("symbol:" + error.Order.Symbol + " not exist in basictracker, dropit", QSEnumDebugLevel.ERROR);
                     return;
                 }
                 bool neworder = !totaltk.IsTracked(error.Order.id);
@@ -106,7 +106,7 @@ namespace TradingLib.Common
                 Symbol symbol = o.oSymbol;
                 if (symbol == null)
                 {
-                    debug("symbol:" + o.symbol + " not exist in basictracker, dropit", QSEnumDebugLevel.ERROR);
+                    debug("symbol:" + o.Symbol + " not exist in basictracker, dropit", QSEnumDebugLevel.ERROR);
                     return;
                 }
 
@@ -164,7 +164,7 @@ namespace TradingLib.Common
                 Symbol symbol = f.oSymbol;
                 if (symbol == null)
                 {
-                    debug("symbol:" + f.symbol + " not exist in basictracker, dropit", QSEnumDebugLevel.ERROR);
+                    debug("symbol:" + f.Symbol + " not exist in basictracker, dropit", QSEnumDebugLevel.ERROR);
                     return;
                 }
 
@@ -174,13 +174,13 @@ namespace TradingLib.Common
                 PositionTransaction postrans = null;
 
                 //获得对应的持仓
-                Position pos = account.GetPosition(f.symbol, positionside);//acctk.GetPosition(f.Account, f.symbol, positionside);
+                Position pos = account.GetPosition(f.Symbol, positionside);//acctk.GetPosition(f.Account, f.symbol, positionside);
                 int beforesize = pos.UnsignedSize;
                 
                 //累加持仓
                 acctk.GotFill(f);
                 totaltk.NewFill(f);//所有的成交都只有一次回报 都需要进行记录
-                pos = account.GetPosition(f.symbol, positionside);//acctk.GetPosition(f.Account, f.symbol, positionside);
+                pos = account.GetPosition(f.Symbol, positionside);//acctk.GetPosition(f.Account, f.symbol, positionside);
                 int aftersize = pos.UnsignedSize;//查询该成交后数量
                 //当成交数据中f.commission<0表明清算中心没有计算手续费,若>=0表明已经计算过手续费 则不需要计算了
                 if (f.Commission < 0)
@@ -197,7 +197,7 @@ namespace TradingLib.Common
                         //进行特殊手续费判定并设定对应的手续费费率
                         //如果对应的合约是单边计费的或者有特殊计费方式的合约，则我们单独计算该部分费用,注这里还需要加入一个日内交易的判断,暂时不做(当前交易均为日内)
                         //获得平仓手续费特例
-                        if (CommissionHelper.AnyCommissionSetting(SymbolHelper.genSecurityCode(f.symbol), out commissionrate))
+                        if (CommissionHelper.AnyCommissionSetting(SymbolHelper.genSecurityCode(f.Symbol), out commissionrate))
                         {
                             //debug("合约:" + SymbolHelper.genSecurityCode(f.symbol) + "日内手续费费差异", QSEnumDebugLevel.MUST);
                         }

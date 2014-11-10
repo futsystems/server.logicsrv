@@ -188,21 +188,21 @@ namespace TradingLib.Core
                 foreach (Trade t in trades)
                 {
                     i++;
-                    size += Math.Abs(t.xsize);
-                    tunover += BasicTracker.SecurityTracker.GetMultiple(t.SecurityCode) * t.xprice * Math.Abs(t.xsize);
+                    size += Math.Abs(t.xSize);
+                    tunover += BasicTracker.SecurityTracker.GetMultiple(t.SecurityCode) * t.xPrice * Math.Abs(t.xSize);
                     commission += t.Commission;
                     profit += t.Profit;
 
                     settlelist.Add(string.Format("|{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|{10}|{11}|{12}|",
-                        padCenterEx(t.xdate.ToString(), len_DATE),
+                        padCenterEx(t.xDate.ToString(), len_DATE),
                         padCenterEx(BasicTracker.ExchagneTracker.GetExchangeTitle(t.Exchange), len_EXCH),
                         padCenterEx(BasicTracker.SecurityTracker.GetSecurityName(t.SecurityCode), len_SECURITY),
-                        padCenterEx(t.symbol, len_SYMBOL),
-                        padLeftEx((t.xsize > 0 ? "买" : " 卖"), len_TBMM),
+                        padCenterEx(t.Symbol, len_SYMBOL),
+                        padLeftEx((t.xSize > 0 ? "买" : " 卖"), len_TBMM),
                         padLeftEx("投", len_TBMM),
-                        padCenterEx(Util.FormatDecimal(t.xprice), len_PRICE),
+                        padCenterEx(Util.FormatDecimal(t.xPrice), len_PRICE),
                         padRightEx(t.UnsignedSize.ToString(), len_SIZE),
-                        padRightEx(Util.FormatDecimal(BasicTracker.SecurityTracker.GetMultiple(t.SecurityCode) * t.xprice * Math.Abs(t.xsize)), len_TURNOVER),
+                        padRightEx(Util.FormatDecimal(BasicTracker.SecurityTracker.GetMultiple(t.SecurityCode) * t.xPrice * Math.Abs(t.xSize)), len_TURNOVER),
                         padLeftEx(GetCombFlag(t.OffsetFlag), len_TBMM),
                         padRightEx(Util.FormatDecimal(t.Commission), len_PRICE),
                         padRightEx(Util.FormatDecimal(t.Profit), len_COMMISSION),

@@ -210,14 +210,14 @@ namespace TradingLib.Common
             //设定默认帐户
             if (_defaultacct == string.Empty)
                 _defaultacct = fill.Account;
-            int idx = getindex(fill.symbol + fill.Account);
+            int idx = getindex(fill.Symbol + fill.Account);
             decimal cpl = 0;
 
             if (idx < 0)//如果没有持仓对象 则创建一个空的持仓对象 并添加到Tracker
             {
-                PositionImpl newpos = new PositionImpl(fill.Account,fill.symbol, this.DirectionType);
-                addindex(fill.symbol + fill.Account,newpos);
-                idx = getindex(fill.symbol + fill.Account);
+                PositionImpl newpos = new PositionImpl(fill.Account, fill.Symbol, this.DirectionType);
+                addindex(fill.Symbol + fill.Account, newpos);
+                idx = getindex(fill.Symbol + fill.Account);
             }
 
             cpl += this[idx].Adjust(fill);//调用position来处理fill.形成closedpl

@@ -73,8 +73,8 @@ namespace TradingLib.Core
         {
             try
             {
-                o.date = Util.ToTLDate(DateTime.Now);
-                o.time = Util.ToTLTime(DateTime.Now);
+                o.Date = Util.ToTLDate(DateTime.Now);
+                o.Time = Util.ToTLTime(DateTime.Now);
 
                 if (newSendOrderRequest != null)
                     newSendOrderRequest(o);

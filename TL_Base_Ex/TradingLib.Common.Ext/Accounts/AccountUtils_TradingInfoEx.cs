@@ -58,7 +58,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static IEnumerable<Order> GetPendingOrders(this IAccount account, string symbol)
         {
-            return account.Orders.Where(o => o.IsPending() && o.symbol.Equals(symbol));
+            return account.Orders.Where(o => o.IsPending() && o.Symbol.Equals(symbol));
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static IEnumerable<Order> GetPendingEntryOrders(this IAccount account, string symbol, bool positionside)
         {
-            return account.Orders.Where(o => (o.symbol.Equals(symbol)) && o.IsPending() && (o.PositionSide == positionside) && (o.IsEntryPosition));
+            return account.Orders.Where(o => (o.Symbol.Equals(symbol)) && o.IsPending() && (o.PositionSide == positionside) && (o.IsEntryPosition));
         }
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static IEnumerable<Order> GetPendingExitOrders(this IAccount account, string symbol, bool positionside)
         {
-            return account.Orders.Where(o => (o.symbol.Equals(symbol)) && o.IsPending() && (o.PositionSide == positionside) && (!o.IsEntryPosition));
+            return account.Orders.Where(o => (o.Symbol.Equals(symbol)) && o.IsPending() && (o.PositionSide == positionside) && (!o.IsEntryPosition));
         }
 
         /// <summary>

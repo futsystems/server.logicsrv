@@ -121,7 +121,7 @@ namespace TradingLib.Core
         {
             debug("获得取消回报.." + oid.ToString(), QSEnumDebugLevel.INFO);
             Order o = _clearcentre.SentOrder(oid);
-            string key = o.Account + "-" + o.symbol;
+            string key = o.Account + "-" + o.Symbol;
             if (keyPosOffsetMap.Keys.Contains(key))
             {
                 PositionOffset po = keyPosOffsetMap[key];
@@ -293,7 +293,7 @@ namespace TradingLib.Core
             o.Account = pos.Account;
             o.OffsetFlag = QSEnumOffsetFlag.CLOSE;
             o.OrderSource = QSEnumOrderSource.SRVPOSITIONOFFSET;
-            o.comment =comment;
+            o.Comment = comment;
 
             //绑定委托编号
             if (AssignOrderIDEvent != null)

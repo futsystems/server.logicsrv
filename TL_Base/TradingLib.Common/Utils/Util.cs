@@ -811,13 +811,13 @@ namespace TradingLib.Common
             foreach (TradeImpl t in tradelist)
             {
                 string r = t.GetTradStr() + delimiter;
-                string s = t.symbol;
+                string s = t.Symbol;
                 decimal cpl = 0;
                 decimal opl = 0;
                 int csize = 0;
                 cpl = pt.Adjust(t);
-                opl = Calc.OpenPL(t.xprice, pt[s]); // get any leftover open pl
-                if (cpl != 0) csize = t.xsize; // if we closed any pl, get the size
+                opl = Calc.OpenPL(t.xPrice, pt[s]); // get any leftover open pl
+                if (cpl != 0) csize = t.xSize; // if we closed any pl, get the size
                 string[] pl = new string[] { opl.ToString("f2", System.Globalization.CultureInfo.InvariantCulture), cpl.ToString("f2", System.Globalization.CultureInfo.InvariantCulture), pt[s].Size.ToString(System.Globalization.CultureInfo.InvariantCulture), csize.ToString(System.Globalization.CultureInfo.InvariantCulture), pt[s].AvgPrice.ToString("f2", System.Globalization.CultureInfo.InvariantCulture) };
                 r += string.Join(delimiter.ToString(), pl);
                 rowoutput.Add(r);

@@ -308,8 +308,8 @@ namespace TradingLib.Common
             if (!existing.isValid || !adjust.isValid) 
                 throw new Exception("Invalid position provided. (existing:" + existing.ToString() + " adjustment:" + adjust.ToString());
             if (existing.isFlat) return 0; // nothing to close
-            if (existing.isLong == adjust.side) return 0; // if we're adding, nothing to close
-            return existing.isLong ? adjust.xprice- existing.AvgPrice: existing.AvgPrice- adjust.xprice;
+            if (existing.isLong == adjust.Side) return 0; // if we're adding, nothing to close
+            return existing.isLong ? adjust.xPrice - existing.AvgPrice : existing.AvgPrice - adjust.xPrice;
         }
 
         /// <summary>
@@ -320,7 +320,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static decimal ClosePL(Position existing, Trade adjust)
         {
-            int closedsize = Math.Abs(adjust.xsize) > existing.UnsignedSize ? existing.UnsignedSize : Math.Abs(adjust.xsize);
+            int closedsize = Math.Abs(adjust.xSize) > existing.UnsignedSize ? existing.UnsignedSize : Math.Abs(adjust.xSize);
             return ClosePT(existing, adjust) * closedsize;
         }
 
@@ -2797,7 +2797,7 @@ namespace TradingLib.Common
         {
             decimal c = 0;
             if (commissionrate < 1)//百分比计算费率
-                c = commissionrate * fill.xprice * fill.UnsignedSize * fill.oSymbol.Multiple;
+                c = commissionrate * fill.xPrice * fill.UnsignedSize * fill.oSymbol.Multiple;
             else
                 c = commissionrate * fill.UnsignedSize;
             return c;

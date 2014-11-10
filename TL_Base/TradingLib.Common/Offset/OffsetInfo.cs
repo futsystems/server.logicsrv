@@ -50,12 +50,12 @@ namespace TradingLib.Common
         public bool isStopCurrent(Position p)
         {
             Order s = Calc.PositionStop(p, this);
-            return (s.size == SentStopSize);
+            return (s.Size == SentStopSize);
         }
         public bool isProfitCurrent(Position p)
         {
             Order l = Calc.PositionProfit(p, this);
-            return (l.size == SentProfitSize);
+            return (l.Size == SentProfitSize);
         }
         public bool hasProfit { get { return ProfitId != 0; } }
         public bool hasStop { get { return StopId != 0; } }

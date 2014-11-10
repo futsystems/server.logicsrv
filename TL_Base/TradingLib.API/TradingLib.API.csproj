@@ -56,6 +56,7 @@
     <Compile Include="Reply\IReply.cs" />
     <Compile Include="Reply\ReplyType.cs" />
     <Compile Include="Trading\EnumAccountCategoy.cs" />
+    <Compile Include="Trading\EnumHedgeFlag.cs" />
     <Compile Include="Trading\EnumOrderType.cs" />
     <Compile Include="Account\AccAdapter\IAccountExp.cs" />
     <Compile Include="Account\AccAdapter\IAccountInfo.cs" />

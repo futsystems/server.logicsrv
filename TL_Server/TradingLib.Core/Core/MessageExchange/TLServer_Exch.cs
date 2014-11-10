@@ -214,11 +214,11 @@ namespace TradingLib.Core
             order.OrderSource = QSEnumOrderSource.CLIENT;
 
             //设定委托达到服务器时间
-            order.date = Util.ToTLDate();
-            order.time = Util.ToTLTime();
+            order.Date = Util.ToTLDate();
+            order.Time = Util.ToTLTime();
 
             //设定TotalSize为 第一次接受到委托时候的Size
-            order.TotalSize = order.size;
+            order.TotalSize = order.Size;
 
             //设定委托地址信息 FrontID和SessioinID
             order.FrontIDi = clientinfo.FrontIDi;

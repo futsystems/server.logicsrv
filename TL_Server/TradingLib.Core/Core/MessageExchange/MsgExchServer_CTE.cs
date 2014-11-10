@@ -129,7 +129,7 @@ namespace TradingLib.Core
             //委托状态为placed submited 并且 时间超过5秒，则该委托需要进入异常检查
             if (o.Status == QSEnumOrderStatus.Placed || o.Status == QSEnumOrderStatus.Submited || o.Status == QSEnumOrderStatus.Unknown)
             {
-                if (now.Subtract(Util.ToDateTime(o.date, o.time)).TotalSeconds >= 5)
+                if (now.Subtract(Util.ToDateTime(o.Date, o.Time)).TotalSeconds >= 5)
                 {
                     return true;
                 }

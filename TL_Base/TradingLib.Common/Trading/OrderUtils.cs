@@ -11,7 +11,7 @@ namespace TradingLib.Common
 
         public static long GetDateTime(this Order o)
         {
-            return Util.ToTLDateTime(o.date, o.time);
+            return Util.ToTLDateTime(o.Date, o.Time);
         }
         /// <summary>
         /// 判断委托是否处于pending状态
@@ -42,9 +42,9 @@ namespace TradingLib.Common
                 if (price < 0)
                     return defaultfundrequired;
 
-                if (Math.Abs(o.price - price) / price > 0.1M)
+                if (Math.Abs(o.LimitPrice - price) / price > 0.1M)
                     return Calc.CalFundRequired(symbol, price, o.UnsignedSize);
-                return Calc.CalFundRequired(symbol, o.stopp, o.UnsignedSize);//o.UnsignedSize * o.stopp * symbol.Margin * symbol.Multiple;
+                return Calc.CalFundRequired(symbol, o.StopPrice, o.UnsignedSize);//o.UnsignedSize * o.stopp * symbol.Margin * symbol.Multiple;
             }
 
             //期货资金占用计算
@@ -65,16 +65,16 @@ namespace TradingLib.Common
                     if (o.isLimit)
                     {
 
-                        if (Math.Abs(o.price - price) / price > 0.1M)//如果价格偏差在10以外 则以当前的价格来计算保证金 10%以内则以 设定的委托价格来计算保证金
+                        if (Math.Abs(o.LimitPrice - price) / price > 0.1M)//如果价格偏差在10以外 则以当前的价格来计算保证金 10%以内则以 设定的委托价格来计算保证金
                             return Calc.CalFundRequired(symbol, price, o.UnsignedSize);//o.unsignedSize标识剩余委托数量来求保证金占用size为0的委托 保证金占用为0 这里不是按totalsize来进行的
-                        return Calc.CalFundRequired(symbol, o.price, o.UnsignedSize);
+                        return Calc.CalFundRequired(symbol, o.LimitPrice, o.UnsignedSize);
                     }
                     //追价委托用追价价格计算保证金占用
                     if (o.isStop)
                     {
-                        if (Math.Abs(o.stopp - price) / price > 0.1M)
+                        if (Math.Abs(o.StopPrice - price) / price > 0.1M)
                             return Calc.CalFundRequired(symbol, price, o.UnsignedSize);
-                        return Calc.CalFundRequired(symbol, o.stopp, o.UnsignedSize);//o.UnsignedSize * o.stopp * symbol.Margin * symbol.Multiple;
+                        return Calc.CalFundRequired(symbol, o.StopPrice, o.UnsignedSize);//o.UnsignedSize * o.stopp * symbol.Margin * symbol.Multiple;
                     }
                     else
                         //如果便利的委托类型未知 则发挥保证金为最大
@@ -107,11 +107,11 @@ namespace TradingLib.Common
         { 
             //123342 953 [INFO] BrokerRouter:Reply Order To MessageExch |BUY 1 IF1409 @Mkt [9280007] 635474179608593751 Filled:0 Status:Submited PostFlag:OPEN OrderRef: OrderSeq:1011 HedgeFlag: OrderExchID:
             StringBuilder sb = new StringBuilder();
-            sb.Append(o.side?"Buy":"Sell");
+            sb.Append(o.Side ? "Buy" : "Sell");
             sb.Append(" "+o.OffsetFlag.ToString());
             sb.Append(" "+Math.Abs(o.TotalSize).ToString());
-            sb.Append(" "+o.symbol);
-            sb.Append(" @" + (o.isMarket ? "Mkt" : (o.isLimit? Util.FormatDecimal(o.price): Util.FormatDecimal(o.price)+ "stp")));
+            sb.Append(" " + o.Symbol);
+            sb.Append(" @" + (o.isMarket ? "Mkt" : (o.isLimit ? Util.FormatDecimal(o.LimitPrice) : Util.FormatDecimal(o.LimitPrice) + "stp")));
             sb.Append(" ["+o.Account+"]");
             sb.Append(" ID:" + o.id.ToString());
             sb.Append(" T:"+Math.Abs(o.TotalSize).ToString()+" F:"+o.FilledSize.ToString()+" R:"+o.UnsignedSize.ToString());

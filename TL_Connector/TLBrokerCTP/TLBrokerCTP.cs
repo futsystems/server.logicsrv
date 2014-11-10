@@ -127,16 +127,16 @@ namespace Broker.Live
             XOrderField order = new XOrderField();
 
             order.ID = o.id.ToString();
-            order.Date = o.date;
-            order.Time = o.time;
-            order.Symbol = o.symbol;
+            order.Date = o.Date;
+            order.Time = o.Time;
+            order.Symbol = o.Symbol;
             order.Exchange = o.Exchange;
-            order.Side = o.side;
+            order.Side = o.Side;
             order.TotalSize = Math.Abs(o.TotalSize);
             order.FilledSize = 0;
             order.UnfilledSize = 0;
 
-            order.LimitPrice = (double)o.price;
+            order.LimitPrice = (double)o.LimitPrice;
             order.StopPrice = 0;
 
             order.OffsetFlag = o.OffsetFlag;
@@ -181,7 +181,7 @@ namespace Broker.Live
                 action.OrderExchID = rec[1];
                 action.Price = 0;
                 action.Size = 0;
-                action.Symbol = o.symbol;
+                action.Symbol = o.Symbol;
 
 
                 if (WrapperSendOrderAction(ref action))
@@ -206,9 +206,9 @@ namespace Broker.Live
             if (o != null)//本地记录了该委托 更新数量 状态 并对外发送
             {
                 o.Status = order.OrderStatus;//更新委托状态
-                o.comment = order.StatusMsg;//填充状态信息
+                o.Comment = order.StatusMsg;//填充状态信息
                 o.FilledSize = order.FilledSize;//成交数量
-                o.size = order.UnfilledSize * (o.side ? 1 : -1);//更新当前数量
+                o.Size = order.UnfilledSize * (o.Side ? 1 : -1);//更新当前数量
                 o.Exchange = order.Exchange;
                 //o.OrderExchID = order.OrderExchID;//更新交易所委托编号
 
@@ -238,11 +238,11 @@ namespace Broker.Live
             {
                 Util.Debug("该成交是本地委托所属成交,进行回报处理", QSEnumDebugLevel.WARNING);
                 Trade fill = (Trade)(new OrderImpl(o));
-                fill.xsize = trade.Size * (trade.Side ? 1 : -1);
-                fill.xprice = (decimal)trade.Price;
+                fill.xSize = trade.Size * (trade.Side ? 1 : -1);
+                fill.xPrice = (decimal)trade.Price;
 
-                fill.xdate = trade.Date;
-                fill.xtime = trade.Time;
+                fill.xDate = trade.Date;
+                fill.xTime = trade.Time;
 
                 fill.Broker = this.Token;
                 fill.OrderSysID = o.OrderSysID;
@@ -263,7 +263,7 @@ namespace Broker.Live
                 info.ErrorMessage = error.Error.ErrorMsg;
 
                 o.Status = QSEnumOrderStatus.Reject;
-                o.comment = info.ErrorMessage;
+                o.Comment = info.ErrorMessage;
 
                 NotifyOrderError(o, info);
             }

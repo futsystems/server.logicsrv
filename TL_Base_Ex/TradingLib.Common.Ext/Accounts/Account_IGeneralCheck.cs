@@ -49,7 +49,7 @@ namespace TradingLib.Common
             if (!o.IsEntryPosition) return true;
 
             //获得对应方向的持仓
-            Position pos = GetPosition(o.symbol,o.PositionSide);
+            Position pos = GetPosition(o.Symbol, o.PositionSide);
 
             //获得某个帐户交易某个合约的可用资金
             decimal avabile = GetFundAvabile(o.oSymbol);
@@ -97,7 +97,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public virtual decimal CalOrderFundRequired(Order o,decimal defaultvalue=0)
         {
-            decimal price = TLCtxHelper.Ctx.MessageExchange.GetAvabilePrice(o.symbol);
+            decimal price = TLCtxHelper.Ctx.MessageExchange.GetAvabilePrice(o.Symbol);
             return o.CalFundRequired(price, defaultvalue);
         }
 

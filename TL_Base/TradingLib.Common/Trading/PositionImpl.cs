@@ -686,13 +686,13 @@ namespace TradingLib.Common
         public decimal Adjust(Trade t) 
         {
             //如果合约为空 则默认pos的合约
-            if ((_sym == "") && t.isValid) _sym = t.symbol;
+            if ((_sym == "") && t.isValid) _sym = t.Symbol;
             //合约不为空比较 当前持仓合约和adjusted pos的合约
-            if ((_sym != t.symbol)) throw new Exception("Failed because adjustment symbol did not match position symbol");
+            if ((_sym != t.Symbol)) throw new Exception("Failed because adjustment symbol did not match position symbol");
             //如果osymbol为空则取默认pos的osymbol
             if (_osymbol == null && t.oSymbol != null)
             {
-                if (!t.symbol.Equals(this.Symbol)) throw new Exception("Failed because osymbol and symbol do not match");
+                if (!t.Symbol.Equals(this.Symbol)) throw new Exception("Failed because osymbol and symbol do not match");
                 _osymbol = t.oSymbol;
             }
 
@@ -731,7 +731,7 @@ namespace TradingLib.Common
 
             //3.调整持仓汇总的数量和价格
             //更新持仓数量
-            this._size += t.xsize;
+            this._size += t.xSize;
 
             //持仓均价 由于平仓按先开先平的规则进行因此这里持仓均价为未平仓持仓明细部分的均价，而不是综合均价
             if (this._size == 0)
@@ -946,13 +946,13 @@ namespace TradingLib.Common
             pos.oSymbol = f.oSymbol;
             pos.IsHisPosition = false;//日内持仓
 
-            pos.OpenDate = f.xdate;
-            pos.OpenTime = f.xtime;
-            pos.LastSettlementPrice = this.LastSettlementPrice!=null?(decimal)this.LastSettlementPrice:f.xprice;//新开仓设定昨日结算价
+            pos.OpenDate = f.xDate;
+            pos.OpenTime = f.xTime;
+            pos.LastSettlementPrice = this.LastSettlementPrice != null ? (decimal)this.LastSettlementPrice : f.xPrice;//新开仓设定昨日结算价
             pos.Settleday = 0;//
             pos.Side = f.PositionSide;
-            pos.Volume = Math.Abs(f.xsize);
-            pos.OpenPrice = f.xprice;
+            pos.Volume = Math.Abs(f.xSize);
+            pos.OpenPrice = f.xPrice;
             pos.TradeID = f.BrokerKey;//开仓明细中的开仓成交编号
             pos.HedgeFlag = "";
 
@@ -970,7 +970,7 @@ namespace TradingLib.Common
             if (pos.IsClosed()) throw new Exception("can not close the closed position");
             if (f.IsEntryPosition) throw new Exception("entry trade can not close postion");
             if (pos.Account != f.Account) throw new Exception("postion's account do not match with trade");
-            if (pos.Symbol != f.symbol) throw new Exception("position's symbol do not math with trade");
+            if (pos.Symbol != f.Symbol) throw new Exception("position's symbol do not math with trade");
             if (pos.Side != f.PositionSide) throw new Exception(string.Format("position's side[{0}] do not math with trade's side[{1}]", pos.Side, f.PositionSide));
 
             //计算平仓量

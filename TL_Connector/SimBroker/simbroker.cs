@@ -161,7 +161,7 @@ namespace Broker.SIM
             {
                 _quotestatus.Remove(o.id);
                 //debug("限价委托 记录盘口....", QSEnumDebugLevel.MUST);
-                Tick tick = FindTickSnapshot(o.symbol);
+                Tick tick = FindTickSnapshot(o.Symbol);
                 if (tick != null && tick.isValid)
                 {
                     _quotestatus.Add(o.id, new LimitOrderQuoteStatus(o, tick));
@@ -252,7 +252,7 @@ namespace Broker.SIM
 
 
                     //2.成交检查 用Tick数据成交该委托 如果该委托与tick不一致则返回到未成交队列
-                    if (tick.Symbol != o.symbol)
+                    if (tick.Symbol != o.Symbol)
                     {
                         unfilled.Add(o);
                         continue;//如果该tick的合约与委托合约不一致则不用进行检查直接检查下一个委托
@@ -277,7 +277,7 @@ namespace Broker.SIM
                         if (partial)
                         {
                             o.Status = QSEnumOrderStatus.PartFilled;//标识 部分成交
-                            o.size = (o.UnsignedSize - fill.UnsignedSize) * (o.side ? 1 : -1);
+                            o.Size = (o.UnsignedSize - fill.UnsignedSize) * (o.Side ? 1 : -1);
                             o.FilledSize += fill.UnsignedSize;//将成交的数量累加到委托中的 filled标识段
                             unfilled.Add(o);
                         }
@@ -417,14 +417,14 @@ namespace Broker.SIM
                         if (partial)
                         {
                             o.Status = QSEnumOrderStatus.PartFilled;//标识 部分成交
-                            o.size = (o.UnsignedSize - fill.UnsignedSize) * (o.side ? 1 : -1);
+                            o.Size = (o.UnsignedSize - fill.UnsignedSize) * (o.Side ? 1 : -1);
                             o.FilledSize += fill.UnsignedSize;//将成交的数量累加到委托中的 filled标识段
                             unfilled.Add(o);
                         }
                         else
                         {
                             o.Status = QSEnumOrderStatus.Filled;//标识 全部成交
-                            o.size = (o.UnsignedSize - fill.UnsignedSize) * (o.side ? 1 : -1);//此时o.unsigendsize-fill.unsignedsize ==0委托手数为0
+                            o.Size = (o.UnsignedSize - fill.UnsignedSize) * (o.Side ? 1 : -1);//此时o.unsigendsize-fill.unsignedsize ==0委托手数为0
                             o.FilledSize += fill.UnsignedSize;
 
                             //如果模拟实盘成交奥 则委托全部成交时我们删除该委托的盘口跟踪
@@ -806,9 +806,9 @@ namespace Broker.SIM
         public LimitOrderQuoteStatus(Order o, Tick k)
         {
             Order = o;
-            decimal partprice = o.side ? k.BidPrice : k.AskPrice;
-            if (o.price >= partprice)
-                PendingSize = o.side ? k.BidSize : k.AskSize;
+            decimal partprice = o.Side ? k.BidPrice : k.AskPrice;
+            if (o.LimitPrice >= partprice)
+                PendingSize = o.Side ? k.BidSize : k.AskSize;
             else
                 PendingSize = 0;
             //LibUtil.Debug("模拟成交记录委托盘口:" + Order.ToString() + " 盘口数量:" + PendingSize.ToString() + " 价格:" + partprice.ToString());
@@ -825,13 +825,13 @@ namespace Broker.SIM
         /// <param name="k"></param>
         public void GotTick(Tick k)
         {
-            if (k.Symbol != Order.symbol) return;
-            if (k.Trade == Order.price)
+            if (k.Symbol != Order.Symbol) return;
+            if (k.Trade == Order.LimitPrice)
             {
                 PendingSize = PendingSize - k.Size;//如果成交价格等于该委托限价格,则从盘口厚度中减去该成交数量
                 //LibUtil.Debug("价格:" + Order.price.ToString() + " 成交:" + k.size.ToString() + " 修改盘口厚度:" + PendingSize.ToString());
             }
-            int secends = Util.FTDIFF(Order.time, k.Time);
+            int secends = Util.FTDIFF(Order.Time, k.Time);
             
             if (secends >60*60 && !s60)//30分钟后盘口撤单70%
             {
@@ -927,8 +927,8 @@ namespace Broker.SIM
                 //idx=3 3,2,1,0
                 //idx=2 2,1,0,3
                 //idx=1 1,0,3,2
-                bool side = o.side;
-                decimal price = o.side ? k.AskPrice : k.BidPrice;
+                bool side = o.Side;
+                decimal price = o.Side ? k.AskPrice : k.BidPrice;
 
                 List<int> idlist = new List<int>();
                 //遍历管道内的所有 tick,查找最符合的tick，即当前盘口下主动买或者主动卖

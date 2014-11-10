@@ -190,7 +190,7 @@ namespace TradingLib.Core
         void GotOrderErrorNotify(Order o, string errortitle)
         {
             RspInfo info = RspInfoImpl.Fill(errortitle);
-            o.comment = info.ErrorMessage;
+            o.Comment = info.ErrorMessage;
             GotOrderError(o, info);
 
             //debug("Reply ErrorOrder To MessageExch:" + o.ToString() + " ErrorTitle:" + errortitle, QSEnumDebugLevel.INFO);
@@ -363,9 +363,9 @@ namespace TradingLib.Core
         void broker_sendorder(Order o)
         {
             //检查TIF设定，然后根据需要是否要通过TIFEngine来处理Order
-            switch (o.TIF)
+            switch (o.TimeInForce)
             {
-                case "DAY":
+                case QSEnumTimeInForce.DAY:
                     route_SendOrder(o);
                     break;
                 default:

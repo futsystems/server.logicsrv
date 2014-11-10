@@ -127,7 +127,7 @@ namespace TradingLib.Core
                         //order.RspInfo.Fill(errortitle);
 
                         RspInfo info = RspInfoImpl.Fill(errortitle);
-                        o.comment = "风控拒绝:" + info.ErrorMessage;
+                        o.Comment = "风控拒绝:" + info.ErrorMessage;
                         ReplyErrorOrder(o, info, needlog);
                         debug("委托(" + o.id.ToString() + ")被拒绝,ErrorID:" + errortitle + " ErrorMesssage:" + info.ErrorMessage+" needlog:" + needlog.ToString(), QSEnumDebugLevel.WARNING);
                         return;
@@ -155,7 +155,7 @@ namespace TradingLib.Core
                             
                             RspInfo info = RspInfoImpl.Fill("RISKCENTRE_CHECK_ERROR");
                             info.ErrorMessage = string.IsNullOrEmpty(msg) ? info.ErrorMessage : msg;//错误代码替换
-                            o.comment = "风控拒绝:" + info.ErrorMessage;
+                            o.Comment = "风控拒绝:" + info.ErrorMessage;
                             ReplyErrorOrder(o,info);
 
                             debug("委托(" + o.id.ToString() + ")被拒绝,ErrorID:" + info.ErrorID.ToString() + " ErrorMesssage:" + info.ErrorMessage, QSEnumDebugLevel.WARNING);

@@ -13,7 +13,7 @@ namespace TradingLib.Common
         public MOCOrder(string symbol, bool side, int size)
             : base(symbol, side, System.Math.Abs(size))
         {
-            this.TIF = "MOC";
+            this.TimeInForce = QSEnumTimeInForce.MOC;
             this.Exchange = "NYSE";
         }
     }

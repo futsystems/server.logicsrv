@@ -18,7 +18,7 @@ namespace TradingLib.Common
         {
             
             //查找 持仓方向为设定方向 并且为开仓操作的委托 累加 将所有委托的数量进行累加
-            return tracker.Where(o =>(o.symbol.Equals(symbol))&& o.IsPending() && (o.PositionSide == positionside) && (o.IsEntryPosition)).Sum(o => o.UnsignedSize);
+            return tracker.Where(o => (o.Symbol.Equals(symbol)) && o.IsPending() && (o.PositionSide == positionside) && (o.IsEntryPosition)).Sum(o => o.UnsignedSize);
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static int GetPendingExitSize(this OrderTracker tracker,string symbol,bool positionside)
         {
-            return tracker.Where(o => (o.symbol.Equals(symbol)) && o.IsPending() && (o.PositionSide == positionside) && (!o.IsEntryPosition)).Sum(o => o.UnsignedSize);
+            return tracker.Where(o => (o.Symbol.Equals(symbol)) && o.IsPending() && (o.PositionSide == positionside) && (!o.IsEntryPosition)).Sum(o => o.UnsignedSize);
         }
 
         

@@ -579,7 +579,7 @@ namespace TradingLib.Core
                 {
                     RspMGRQryOrderResponse response = ResponseTemplate<RspMGRQryOrderResponse>.SrvSendRspResponse(request);
                     response.OrderToSend = orders[i];
-                    response.OrderToSend.side = response.OrderToSend.TotalSize > 0 ? true : false;
+                    response.OrderToSend.Side = response.OrderToSend.TotalSize > 0 ? true : false;
                     CacheRspResponse(response, i == totalnum - 1);
                 }
             }
@@ -605,7 +605,7 @@ namespace TradingLib.Core
                 {
                     RspMGRQryTradeResponse response = ResponseTemplate<RspMGRQryTradeResponse>.SrvSendRspResponse(request);
                     response.TradeToSend = trades[i];
-                    response.TradeToSend.side = response.TradeToSend.xsize > 0 ? true : false;
+                    response.TradeToSend.Side = response.TradeToSend.xSize > 0 ? true : false;
                     CacheRspResponse(response, i == totalnum - 1);
                 }
             }
@@ -941,7 +941,7 @@ namespace TradingLib.Core
             RspMGROperationResponse response = ResponseTemplate<RspMGROperationResponse>.SrvSendRspResponse(request);
 
             Trade fill = request.TradeToSend;
-            fill.oSymbol = BasicTracker.SymbolTracker[fill.symbol];
+            fill.oSymbol = BasicTracker.SymbolTracker[fill.Symbol];
             if (fill.oSymbol == null)
             {
                 response.RspInfo.Fill("SYMBOL_NOT_EXISTED");
@@ -958,19 +958,19 @@ namespace TradingLib.Core
 
             fill.Broker = "Broker.SIM.SIMTrader";
 
-            Order o = new MarketOrder(fill.symbol, fill.side, fill.UnsignedSize);
+            Order o = new MarketOrder(fill.Symbol, fill.Side, fill.UnsignedSize);
 
             o.oSymbol = fill.oSymbol;
             o.Account = fill.Account;
-            o.date = fill.xdate;
-            o.time = Util.ToTLTime(Util.ToDateTime(fill.xdate, fill.xtime) - new TimeSpan(0, 0, 1));
+            o.Date = fill.xDate;
+            o.Time = Util.ToTLTime(Util.ToDateTime(fill.xDate, fill.xTime) - new TimeSpan(0, 0, 1));
             o.Status = QSEnumOrderStatus.Filled;
             o.OffsetFlag = fill.OffsetFlag;
             o.Broker = fill.Broker;
 
             //委托成交之后
-            o.TotalSize = o.size;
-            o.size = 0;
+            o.TotalSize = o.Size;
+            o.Size = 0;
             o.FilledSize = o.UnsignedSize;
             
             

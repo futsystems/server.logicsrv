@@ -74,7 +74,7 @@ namespace TradingLib.Common
         {
             bool entryposition = f.IsEntryPosition;
             //开仓 多头 /平仓 空头
-            if ((f.IsEntryPosition && f.side) || ((!f.IsEntryPosition) && (!f.side)))
+            if ((f.IsEntryPosition && f.Side) || ((!f.IsEntryPosition) && (!f.Side)))
             {
                 _ltk.GotFill(f);
             }

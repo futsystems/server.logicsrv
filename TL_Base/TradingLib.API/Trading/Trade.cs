@@ -5,37 +5,38 @@ namespace TradingLib.API
     public interface Trade
     {
         /// <summary>
+        /// 成交所属交易帐号
+        /// </summary>
+        string Account { get; set; }
+        /// <summary>
         /// id of trade
         /// </summary>
         long id { get; set; }
         /// <summary>
         /// 合约
         /// </summary>
-        string symbol { get; set; }
+        string Symbol { get; set; }
         /// <summary>
         /// 成交数量
         /// </summary>
-        int xsize { get; set; }
+        int xSize { get; set; }
         /// <summary>
         /// 成交价格
         /// </summary>
-        decimal xprice { get; set; }
+        decimal xPrice { get; set; }
         /// <summary>
         /// 成交时间
         /// </summary>
-        int xtime { get; set; }
+        int xTime { get; set; }
         /// <summary>
         /// 成交日期
         /// </summary>
-        int xdate { get; set; }
+        int xDate { get; set; }
         /// <summary>
         /// 成交方向
         /// </summary>
-        bool side { get; set; }
-        /// <summary>
-        /// 成交所属交易帐号
-        /// </summary>
-        string Account { get; set; }
+        bool Side { get; set; }
+       
 
 
 
@@ -81,7 +82,7 @@ namespace TradingLib.API
         /// <summary>
         /// 成交备注
         /// </summary>
-        string comment { get; set; }
+        string Comment { get; set; }
 
         /// <summary>
         /// 手续费
@@ -116,7 +117,7 @@ namespace TradingLib.API
         /// <summary>
         /// 投机 套保标识
         /// </summary>
-        string HedgeFlag { get; set; }
+        QSEnumHedgeFlag HedgeFlag { get; set; }
 
         /// <summary>
         /// 委托流水号

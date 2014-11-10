@@ -143,7 +143,7 @@ namespace TradingLib.Core
         public IEnumerable<Trade> LoadTradesFromMysql()
         {
             //填充对象oSymbol
-            IEnumerable<Trade> trades =  ORM.MTradingInfo.SelectTrades().Select(f => { f.oSymbol = BasicTracker.SymbolTracker[f.symbol]; return f; });
+            IEnumerable<Trade> trades = ORM.MTradingInfo.SelectTrades().Select(f => { f.oSymbol = BasicTracker.SymbolTracker[f.Symbol]; return f; });
             debug("数据库恢复前次结算以来成交数据:" + trades.Count().ToString() + "条", QSEnumDebugLevel.INFO);
             return trades;
         }
@@ -157,7 +157,7 @@ namespace TradingLib.Core
         /// <returns></returns>
         public IEnumerable<Order> LoadOrderFromMysql()
         {
-            IEnumerable<Order> orders = ORM.MTradingInfo.SelectOrders().Select(o => { o.oSymbol = BasicTracker.SymbolTracker[o.symbol]; return o; });
+            IEnumerable<Order> orders = ORM.MTradingInfo.SelectOrders().Select(o => { o.oSymbol = BasicTracker.SymbolTracker[o.Symbol]; return o; });
             debug("数据库恢复前次结算以来委托数据:" + orders.Count().ToString() + "条", QSEnumDebugLevel.INFO);
             return orders;
         }

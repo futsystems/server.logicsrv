@@ -1,4 +1,5 @@
 using System;
+using TradingLib.API;
 
 namespace TradingLib.Common
 {
@@ -40,25 +41,25 @@ namespace TradingLib.Common
     /// </summary>
     public class BuyOPG : OrderImpl
     {
-        public BuyOPG(string sym, int size, decimal price, string comment) : base(sym,true,size,price,0,comment,0,0) { TIF = "OPG"; }
+        public BuyOPG(string sym, int size, decimal price, string comment) : base(sym, true, size, price, 0, comment, 0, 0) { TimeInForce = QSEnumTimeInForce.OPG; }
         public BuyOPG(string sym, int size,decimal price) : this(sym,size,price,"") {}
-        public BuyOPG(string sym, int size, decimal price, long orderid) : base(sym, true, size, price, 0, string.Empty, 0, 0,orderid) { TIF = "OPG"; }
+        public BuyOPG(string sym, int size, decimal price, long orderid) : base(sym, true, size, price, 0, string.Empty, 0, 0, orderid) { TimeInForce = QSEnumTimeInForce.OPG; }
 
     }
 
     public class SellOPG : OrderImpl
     {
-        public SellOPG(string sym, int size, decimal price, string comment) : base(sym, false, size, price, 0, comment, 0, 0) { TIF = "OPG"; }
+        public SellOPG(string sym, int size, decimal price, string comment) : base(sym, false, size, price, 0, comment, 0, 0) { TimeInForce = QSEnumTimeInForce.OPG; }
         public SellOPG(string sym, int size, decimal price) : this(sym, size, price, "") { }
-        public SellOPG(string sym, int size, decimal price, long orderid) : base(sym, false, size, price, 0, string.Empty, 0, 0,orderid) { TIF = "OPG"; }
+        public SellOPG(string sym, int size, decimal price, long orderid) : base(sym, false, size, price, 0, string.Empty, 0, 0, orderid) { TimeInForce = QSEnumTimeInForce.OPG; }
 
     }
 
     public class OPGOrder : OrderImpl
     {
-        public OPGOrder(string sym, bool side, int size, decimal price, string comment) : base(sym, side, size, price, 0, comment, 0, 0) { TIF = "OPG"; }
+        public OPGOrder(string sym, bool side, int size, decimal price, string comment) : base(sym, side, size, price, 0, comment, 0, 0) { TimeInForce = QSEnumTimeInForce.OPG; }
         public OPGOrder(string sym, bool side, int size, decimal price) : this(sym, side, size, price, "") { }
-        public OPGOrder(string sym, bool side, int size, decimal price, long orderid) : base(sym, side, size, price, 0, string.Empty, 0, 0, orderid) { TIF = "OPG"; }
+        public OPGOrder(string sym, bool side, int size, decimal price, long orderid) : base(sym, side, size, price, 0, string.Empty, 0, 0, orderid) { TimeInForce = QSEnumTimeInForce.OPG; }
     }
 
 

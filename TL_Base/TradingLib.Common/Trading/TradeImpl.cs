@@ -31,7 +31,7 @@ namespace TradingLib.Common
         decimal _commission = -1;//默认手续费为-1,若为-1表明没有计算过手续费
         Symbol _osymbol = null;
         string _orderref = "";//对应的委托引用
-        string _hedgeflag = "";//对应的投机套保标识
+        QSEnumHedgeFlag _hedgeflag = QSEnumHedgeFlag.Speculation;//对应的投机套保标识
         int _orderseq = 0;//委托流水号
         string _orderSysID = "";//交易所委托编号
         
@@ -85,14 +85,16 @@ namespace TradingLib.Common
         /// <summary>
         /// 合约
         /// </summary>
-        public string symbol { get { return _sym; } set { _sym = value; } }
+        public string Symbol { get { return _sym; } set { _sym = value; } }
 
         /// <summary>
         /// 成交方向
         /// </summary>
-        public bool side { get { return _side; } set{_side =value; }}
+        public bool Side { get { return _side; } set{_side =value; }}
 
-        public string comment { get { return _comment; } 
+        public string Comment
+        {
+            get { return _comment; } 
             
             set {
 
@@ -116,28 +118,28 @@ namespace TradingLib.Common
         /// <summary>
         /// 成交数量
         /// </summary>
-        public int xsize { get { return _xsize; } set { _xsize = value; } }
+        public int xSize { get { return _xsize; } set { _xsize = value; } }
 
         /// <summary>
         /// 成交价格
         /// </summary>
-        public decimal xprice { get { return _xprice; } set { _xprice = value; } }
+        public decimal xPrice { get { return _xprice; } set { _xprice = value; } }
 
         /// <summary>
         /// 成交日期
         /// </summary>
-        public int xdate { get { return _xdate; } set { _xdate = value; } }
+        public int xDate { get { return _xdate; } set { _xdate = value; } }
 
         /// <summary>
         /// 成交时间
         /// </summary>
-        public int xtime { get { return _xtime; } set { _xtime = value; } }
+        public int xTime { get { return _xtime; } set { _xtime = value; } }
 
         /// <summary>
         /// 是否有成交 
         /// Order继承自Trade 通过xprice和xsize进行判断是否有成交 xprice xsize均不为0 则表明有有效成交
         /// </summary>
-        public bool isFilled { get { return (xprice * xsize) != 0; } }
+        public bool isFilled { get { return (xPrice * xSize) != 0; } }
 
         /// <summary>
         /// 手续费
@@ -161,7 +163,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 投机 套保标识
         /// </summary>
-        public string HedgeFlag { get { return _hedgeflag; } set { _hedgeflag = value; } }
+        public QSEnumHedgeFlag HedgeFlag { get { return _hedgeflag; } set { _hedgeflag = value; } }
 
         
         /// <summary>
@@ -210,7 +212,7 @@ namespace TradingLib.Common
             get
             { 
                 bool entrypostion = IsEntryPosition;
-                if ((entrypostion && this.side) || ((!entrypostion) && (!this.side)))
+                if ((entrypostion && this.Side) || ((!entrypostion) && (!this.Side)))
                 {
                     return true;
                 }
@@ -229,13 +231,13 @@ namespace TradingLib.Common
         public TradeImpl(string sym, decimal fillprice, int fillsize, DateTime tradedate) : this(sym, fillprice, fillsize, Util.ToTLDate(tradedate), Util.DT2FT(tradedate)) { }
         public TradeImpl(string sym, decimal fillprice, int fillsize, int filldate, int filltime)
         {
-            if (sym != null) symbol = sym;
+            if (sym != null) Symbol = sym;
             if ((fillsize == 0) || (fillprice == 0)) throw new Exception("Invalid trade: Zero price or size provided.");
-            xtime = filltime;
-            xdate = filldate;
-            xsize = fillsize;
-            xprice = fillprice;
-            side = (fillsize > 0);
+            xTime = filltime;
+            xDate = filldate;
+            xSize = fillsize;
+            xPrice = fillprice;
+            Side = (fillsize > 0);
         }
 
 
@@ -243,15 +245,15 @@ namespace TradingLib.Common
         public TradeImpl(Trade copytrade)
         {
             // copy constructor, for copying using by-value (rather than by default of by-reference)
-            
-            xdate = copytrade.xdate;
-            xtime = copytrade.xtime;
 
-            symbol = copytrade.symbol;
-            side = copytrade.side;
-            xsize = copytrade.xsize;
-            xprice = copytrade.xprice;
-            comment = copytrade.comment;
+            xDate = copytrade.xDate;
+            xTime = copytrade.xTime;
+
+            Symbol = copytrade.Symbol;
+            Side = copytrade.Side;
+            xSize = copytrade.xSize;
+            xPrice = copytrade.xPrice;
+            Comment = copytrade.Comment;
 
             accountid = copytrade.Account;
             type = copytrade.SecurityType;
@@ -279,12 +281,12 @@ namespace TradingLib.Common
         /// <summary>
         /// 获得价格
         /// </summary>
-        public virtual decimal Price { get { return xprice; } }
+        public virtual decimal Price { get { return xPrice; } }
 
         /// <summary>
         /// 判断有效成交
         /// </summary>
-        public virtual bool isValid { get { return (xsize != 0) && (xprice != 0) && (xtime+xdate != 0) && (symbol != null) && (symbol!=""); } }
+        public virtual bool isValid { get { return (xSize != 0) && (xPrice != 0) && (xTime + xDate != 0) && (Symbol != null) && (Symbol != ""); } }
 
 
         //public override string ToString()
@@ -312,14 +314,14 @@ namespace TradingLib.Common
         {
             const char d = ',';
             StringBuilder sb = new StringBuilder();
-            sb.Append(t.xdate.ToString()); sb.Append(d);
-            sb.Append(t.xtime.ToString()); sb.Append(d);
+            sb.Append(t.xDate.ToString()); sb.Append(d);
+            sb.Append(t.xTime.ToString()); sb.Append(d);
             sb.Append(d);
-            sb.Append(t.symbol); sb.Append(d);
-            sb.Append(t.side.ToString()); sb.Append(d);
-            sb.Append(t.xsize.ToString()); sb.Append(d);
-            sb.Append(t.xprice.ToString()); sb.Append(d);
-            sb.Append(t.comment); sb.Append(d);
+            sb.Append(t.Symbol); sb.Append(d);
+            sb.Append(t.Side.ToString()); sb.Append(d);
+            sb.Append(t.xSize.ToString()); sb.Append(d);
+            sb.Append(t.xPrice.ToString()); sb.Append(d);
+            sb.Append(t.Comment); sb.Append(d);
 
             sb.Append(t.Account); sb.Append(d);
             sb.Append(t.SecurityType); sb.Append(d);
@@ -357,9 +359,9 @@ namespace TradingLib.Common
             string sym = rec[(int)TradeField.Symbol];
 
             t = new TradeImpl(sym, xprice, size);
-            t.xdate = Convert.ToInt32(rec[(int)TradeField.xDate], System.Globalization.CultureInfo.InvariantCulture);
-            t.xtime = Convert.ToInt32(rec[(int)TradeField.xTime], System.Globalization.CultureInfo.InvariantCulture);
-            t.comment = rec[(int)TradeField.Comment];
+            t.xDate = Convert.ToInt32(rec[(int)TradeField.xDate], System.Globalization.CultureInfo.InvariantCulture);
+            t.xTime = Convert.ToInt32(rec[(int)TradeField.xTime], System.Globalization.CultureInfo.InvariantCulture);
+            t.Comment = rec[(int)TradeField.Comment];
             t.Account = rec[(int)TradeField.Account];
             t.LocalSymbol = rec[(int)TradeField.LocalSymbol];
             t.id = Convert.ToInt64(rec[(int)TradeField.ID], System.Globalization.CultureInfo.InvariantCulture);
@@ -372,7 +374,7 @@ namespace TradingLib.Common
             t.PositionOperation = (QSEnumPosOperation)Enum.Parse(typeof(QSEnumPosOperation), rec[(int)TradeField.PositionOperatoin]);
             t.Profit = decimal.Parse(rec[(int)TradeField.Profit]);
             t.OrderRef = rec[(int)TradeField.OrderRef];
-            t.HedgeFlag = rec[(int)TradeField.HedgeFlag];
+            t.HedgeFlag = (QSEnumHedgeFlag)Enum.Parse(typeof(QSEnumHedgeFlag),rec[(int)TradeField.HedgeFlag]);
             t.OrderSeq = int.Parse(rec[(int)TradeField.OrderSeq]);
             t.OrderSysID = rec[(int)TradeField.OrderExchID];
             t.OffsetFlag = (QSEnumOffsetFlag)Enum.Parse(typeof(QSEnumOffsetFlag),rec[(int)TradeField.OffsetFlag]);

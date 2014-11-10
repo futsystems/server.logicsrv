@@ -95,7 +95,7 @@ namespace TradingLib.Core
                     RspQryTradeResponse response = ResponseTemplate<RspQryTradeResponse>.SrvSendRspResponse(request);
                     response.TradeToSend = trades[i];
 
-                    debug("转发当日成交:" + trades[i].ToString() + " side:" + trades[i].side.ToString(), QSEnumDebugLevel.INFO);
+                    debug("转发当日成交:" + trades[i].ToString() + " side:" + trades[i].Side.ToString(), QSEnumDebugLevel.INFO);
                     CacheRspResponse(response, i == totalnum - 1);
                 }
             }

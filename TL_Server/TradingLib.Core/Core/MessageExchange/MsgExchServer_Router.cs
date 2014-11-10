@@ -174,22 +174,22 @@ namespace TradingLib.Core
             switch (o.Status)
             { 
                 case QSEnumOrderStatus.Filled:
-                    o.comment = o.comment +" "+commentFilled;
+                    o.Comment = o.Comment + " " + commentFilled;
                     break;
                 case QSEnumOrderStatus.PartFilled:
-                    o.comment = o.comment + " " + commentPartFilled;
+                    o.Comment = o.Comment + " " + commentPartFilled;
                     break;
                 case QSEnumOrderStatus.Canceled:
-                    o.comment = o.comment + " " + commentCanceled;
+                    o.Comment = o.Comment + " " + commentCanceled;
                     break;
                 case QSEnumOrderStatus.Placed:
-                    o.comment = o.comment + " " + commentPlaced;
+                    o.Comment = o.Comment + " " + commentPlaced;
                     break;
                 case QSEnumOrderStatus.Submited:
-                    o.comment = o.comment + " " + commentSubmited;
+                    o.Comment = o.Comment + " " + commentSubmited;
                     break;
                 case QSEnumOrderStatus.Opened:
-                    o.comment = o.comment + " " + commentOpened;
+                    o.Comment = o.Comment + " " + commentOpened;
                     break;
                 default:
                     break;
@@ -223,7 +223,7 @@ namespace TradingLib.Core
             //Position netpost =account.GetPositionNet(t.symbol);
             //_posupdatecache.Write(netpost.GenPositionEx());
             //获得持仓明细数据
-            Position pos = account.GetPosition(t.symbol, t.PositionSide);
+            Position pos = account.GetPosition(t.Symbol, t.PositionSide);
             _posupdatecache.Write(pos.GenPositionEx());
      
         }

@@ -27,10 +27,10 @@ namespace TradingLib.Common
         public PositionAdjust(Trade fill)
         {
             this.Account = fill.Account;
-            this.Symbol = fill.symbol;
+            this.Symbol = fill.Symbol;
             this.oSymbol = fill.oSymbol;
-            this.xPrice = fill.xprice;
-            this.xSize = fill.xsize;
+            this.xPrice = fill.xPrice;
+            this.xSize = fill.xSize;
             this.ClosedPL = 0;
         }
 
