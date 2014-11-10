@@ -124,10 +124,9 @@ namespace TradingLib.Core
             }
             if (!string.IsNullOrEmpty(request.Symbol))
             {
-                positions = positions.Where(pos => pos.Symbol.Equals(request.Symbol)).ToArray();
+                positions = account.Positions.Where(pos => pos.Symbol.Equals(request.Symbol)).ToArray();
             }
 
-            //Util.sleep(10000);//
             debug("total num:" + positions.Length.ToString(), QSEnumDebugLevel.INFO);
             int totalnum = positions.Length;
 
@@ -137,8 +136,6 @@ namespace TradingLib.Core
                 {
                     RspQryPositionResponse response = ResponseTemplate<RspQryPositionResponse>.SrvSendRspResponse(request);
                     response.PositionToSend = positions[i].GenPositionEx();
-                    //Trade[] trades = poslist[i].Trades;
-                    //debug("Trades num:" + trades.Length.ToString());
                     CacheRspResponse(response, i == totalnum - 1);
                 }
             }

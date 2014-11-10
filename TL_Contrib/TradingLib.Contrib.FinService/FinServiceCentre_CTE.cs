@@ -257,7 +257,7 @@ namespace TradingLib.Contrib.FinService
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryFinServicePlan", "QryFinServicePlan - query serviceplane", "查询所有服务计划列表")]
         public void CTE_QryFinServicePlan(ISession session)
         {
-            JsonWrapperServicePlane[] splist = FinTracker.ServicePlaneTracker.ServicePlans.Select(sp => sp.ToJsonWrapperServicePlane()).ToArray();
+            JsonWrapperServicePlane[] splist = FinTracker.ServicePlaneTracker.ServicePlans.Where(sp=>sp.Active).Select(sp => sp.ToJsonWrapperServicePlane()).ToArray();
             SendJsonReplyMgr(session, splist);
         }
 

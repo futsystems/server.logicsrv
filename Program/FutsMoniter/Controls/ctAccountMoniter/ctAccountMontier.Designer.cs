@@ -447,7 +447,8 @@
             // 
             // ctOrderSenderM1
             // 
-            this.ctOrderSenderM1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.ctOrderSenderM1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.ctOrderSenderM1.Location = new System.Drawing.Point(0, 252);
             this.ctOrderSenderM1.Name = "ctOrderSenderM1";
             this.ctOrderSenderM1.Size = new System.Drawing.Size(511, 64);

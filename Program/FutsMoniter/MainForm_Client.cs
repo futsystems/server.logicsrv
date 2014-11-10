@@ -84,12 +84,14 @@ namespace FutsMoniter
                             //如果不是总平台柜员 隐藏
                             ShowInfo("初始化行情报表");
                             InitSymbol2View();
-                            
-                            //触发初始化完成事件
-                            Globals.OnInitFinished();
 
                             //设定全局登入状态 显示主界面
                             Globals.LoginStatus.IsInitSuccess = true;
+
+                            //触发初始化完成事件
+                            Globals.OnInitFinished();
+
+                            
 
                         }
                     }

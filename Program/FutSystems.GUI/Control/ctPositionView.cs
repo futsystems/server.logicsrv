@@ -439,7 +439,7 @@ namespace FutSystems.GUI
                             //更新最新成交价
                             if (t.isTrade)
                             {
-                                gt.Rows[i][LASTPRICE] = string.Format(getDisplayFormat(t.Symbol), t.Symbol);
+                                gt.Rows[i][LASTPRICE] = string.Format(getDisplayFormat(t.Symbol), t.Trade);
                             }
                             //空仓 未平仓合约与 最新价格
                             if (pos.isFlat)
