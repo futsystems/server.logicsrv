@@ -35,6 +35,11 @@ namespace TradingLib.API
         string Symbol { get; set; }
 
         /// <summary>
+        /// 本地合约编号 用于多交易所时 合约字段冲突时 本地合约唯一标识
+        /// </summary>
+        string LocalSymbol { get; set; }
+
+        /// <summary>
         /// 合约对象
         /// </summary>
         Symbol oSymbol { get; set; }
@@ -105,6 +110,11 @@ namespace TradingLib.API
 
         #region 委托其他属性
         /// <summary>
+        /// 交易所
+        /// </summary>
+        string Exchange { get; set; }
+
+        /// <summary>
         /// 品种类别
         /// </summary>
         SecurityType SecurityType { get; set; }
@@ -113,11 +123,6 @@ namespace TradingLib.API
         /// 货币类别
         /// </summary>
         CurrencyType Currency { get; set; }
-
-        /// <summary>
-        /// 交易所
-        /// </summary>
-        string Exchange { get; set; }
 
         /// <summary>
         /// 该委托触发来源
@@ -213,7 +218,7 @@ namespace TradingLib.API
         #endregion
 
 
-        #region 分帐户端属性
+        #region 分帐户端属性 模拟CTP字段
         /// <summary>
         /// 委托流水号 由系统统一分配
         /// </summary>
@@ -226,6 +231,7 @@ namespace TradingLib.API
 
         /// <summary>
         /// 委托交易所编号 用于实现CTP字段 服务端通过将OrderSeq赋值给OrderExchID实现
+        /// 与交易所字段组合使用 形成委托一ID
         /// </summary>
         string OrderSysID { get; set; }
 
@@ -247,28 +253,22 @@ namespace TradingLib.API
         #endregion
 
 
-        //Broker字段不用对客户端开放
-        #region Broker端字段
+        
+        #region Broker端字段 抽象成近端ID和远端ID
         /// <summary>
         /// 该委托是通过哪个成交接口发出
         /// </summary>
         string Broker { get; set; }
 
         /// <summary>
-        /// 用于标示交易通道委托的唯一标石,用于向交易通道查询或者撤销委托时用到的序列
-        /// </summary>
-        string BrokerKey { get; set; }
-
-        /// <summary>
         /// Broker端 本地委托编号
         /// </summary>
-        string BrokerLocalID { get; set; }
-
+        string BrokerLocalOrderID { get; set; }
 
         /// <summary>
         /// Broker端 远端委托编号
         /// </summary>
-        string BrokerRemoteID { get; set; }
+        string BrokerRemoteOrderID { get; set; }
         #endregion
 
 

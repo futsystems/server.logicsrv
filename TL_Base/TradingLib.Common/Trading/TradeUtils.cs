@@ -40,7 +40,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static string GetTradStr(this Trade f, string delimiter=",")
         {
-            string[] trade = new string[] { f.xDate.ToString(), f.xTime.ToString(), f.Symbol, (f.Side ? "BUY" : "SELL"), f.UnsignedSize.ToString(), f.oSymbol.FormatPrice(f.xPrice), f.Comment };
+            string[] trade = new string[] { f.xDate.ToString(), f.xTime.ToString(), f.Symbol, (f.Side ? "BUY" : "SELL"), f.UnsignedSize.ToString(), f.oSymbol.FormatPrice(f.xPrice)};
             return string.Join(delimiter,trade);
         }
 
@@ -55,7 +55,7 @@ namespace TradingLib.Common
             sb.Append(" " + Math.Abs(f.xSize).ToString());
             sb.Append("@" + f.oSymbol.FormatPrice(f.xPrice));
             sb.Append(" C:" + f.Commission.ToString());
-            sb.Append(" R:" + f.Broker + "/" + f.BrokerKey);
+            sb.Append(" R:" + f.Broker + "/" + f.TradeID);
 
             return sb.ToString();
         }
@@ -68,7 +68,7 @@ namespace TradingLib.Common
             sb.Append(" " + f.Symbol);
             sb.Append("  @" + f.oSymbol.FormatPrice(f.xPrice));
             sb.Append(" C:"+f.Commission.ToString());
-            sb.Append(" R:" + f.Broker+"/"+f.BrokerKey);
+            sb.Append(" R:" + f.Broker+"/"+f.TradeID);
 
             return sb.ToString();
         }

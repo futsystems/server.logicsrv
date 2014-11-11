@@ -487,7 +487,7 @@ namespace FutSystems.GUI
             else
             {
                 bool posside = o.PositionSide;
-                Position pos = pt[o.symbol, o.Account, posside];
+                Position pos = pt[o.Symbol, o.Account, posside];
                 //通过account_symbol键对找到对应的行
                 int posidx = positionidx(pos.GetKey(posside));
                 string _fromat = getDisplayFormat(pos.Symbol);
@@ -523,9 +523,9 @@ namespace FutSystems.GUI
                 Order o = _ot.SentOrder(oid);
                 if (o == null || !o.isValid) return;
                 bool posside = o.PositionSide;
-                Position pos = pt[o.symbol, o.Account,posside];
+                Position pos = pt[o.Symbol, o.Account,posside];
                 //通过account_symbol键对找到对应的行
-                int posidx = positionidx(o.Account + "_" + o.symbol);
+                int posidx = positionidx(o.Account + "_" + o.Symbol);
                 string _fromat = getDisplayFormat(pos.Symbol);
                 if ((posidx > -1) && (posidx < gt.Rows.Count))
                 {
@@ -550,7 +550,7 @@ namespace FutSystems.GUI
             {
                 
                 bool posside = t.PositionSide;//每个成交可以确定仓位操作方向比如是多头操作(买入1手开仓 卖出1手平仓) 还是空头操作(卖出1手开仓 买入1手平仓)
-                Position pos = pt[t.symbol, t.Account, posside];//获得对应持仓数据
+                Position pos = pt[t.Symbol, t.Account, posside];//获得对应持仓数据
                 //通过account_symbol键对找到对应的行
                 string key = pos.GetKey(posside);
                 int posidx = positionidx(key);
@@ -811,7 +811,7 @@ namespace FutSystems.GUI
             }
             foreach (Order o in OrderTracker)
             {
-                if ((o.symbol == sym) && (OrderTracker.isPending(o.id)))
+                if ((o.Symbol == sym) && (OrderTracker.isPending(o.id)))
                 {
                     CancelOrder(o.id);
                 }

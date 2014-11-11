@@ -206,7 +206,7 @@ namespace TradingLib.Core
                         padLeftEx(GetCombFlag(t.OffsetFlag), len_TBMM),
                         padRightEx(Util.FormatDecimal(t.Commission), len_PRICE),
                         padRightEx(Util.FormatDecimal(t.Profit), len_COMMISSION),
-                        padRightEx(t.BrokerKey, len_SEQID)
+                        padRightEx(t.TradeID, len_SEQID)
                         
                         ));
                 }

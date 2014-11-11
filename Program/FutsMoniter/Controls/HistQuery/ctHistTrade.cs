@@ -37,16 +37,16 @@ namespace FutsMoniter
                 //tradeGrid.Rows.Add(t.id, Util.ToDateTime(t.xdate, t.xtime).ToString("HH:mm:ss"), t.symbol, (t.side ? "买" : "卖"), t.xsize, string.Format(getDisplayFormat(t.symbol), t.xprice), string.Format(_defaultformat, t.Commission), Util.GetEnumDescription(t.PositionOperation), t.Account); // if we accept trade, add it to list
                 //tradeGrid.Refresh();
                 tb.Rows[i][ID] = t.id;
-                tb.Rows[i][DATETIME] = Util.ToDateTime(t.xdate, t.xtime).ToString("HH:mm:ss");
-                tb.Rows[i][SYMBOL] = t.symbol;
-                tb.Rows[i][SIDE] = (t.side ? "买入" : "   卖出");
-                tb.Rows[i][SIZE] = Math.Abs(t.xsize);
-                tb.Rows[i][PRICE] = string.Format(_defaultformat, t.xprice);
+                tb.Rows[i][DATETIME] = Util.ToDateTime(t.xDate, t.xTime).ToString("HH:mm:ss");
+                tb.Rows[i][SYMBOL] = t.Symbol;
+                tb.Rows[i][SIDE] = (t.Side ? "买入" : "   卖出");
+                tb.Rows[i][SIZE] = Math.Abs(t.xSize);
+                tb.Rows[i][PRICE] = string.Format(_defaultformat, t.xPrice);
                 tb.Rows[i][COMMISSION] = string.Format(_defaultformat, t.Commission);
                 tb.Rows[i][OPERATION] = Util.GetEnumDescription(t.PositionOperation);
                 tb.Rows[i][ACCOUNT] = t.Account;
                 tb.Rows[i][PROFIT] = string.Format(_defaultformat, t.Profit);
-                tb.Rows[i][FILLID] = t.BrokerKey;
+                tb.Rows[i][FILLID] = t.TradeID;
                 tb.Rows[i][ORDERREF] = t.OrderSeq;
                 //toUpdateRow();
                 //tb.Rows.Add(new object[] { t.id, Util.ToDateTime(t.xdate, t.xtime).ToString("HH:mm:ss"), t.symbol, (t.side ? "买" : "卖"), t.xsize, string.Format(getDisplayFormat(t.symbol), t.xprice), string.Format(_defaultformat, t.Commission), Util.GetEnumDescription(t.PositionOperation), t.Account });

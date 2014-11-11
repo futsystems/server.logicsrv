@@ -166,18 +166,85 @@ namespace TradingLib.Core
 
 
         TLServer_Exch tl;
-        /// <summary>
-        /// 主要将底层交易消息暴露给外层，用于实时修改日志级别
-        /// </summary>
-        //public IDebug TrdService { get { return tl; } }
+
         //委托编号生成器
-        IdTracker _idt = new IdTracker();
+        IdTracker _orderIDTracker = new IdTracker();
+
+        //委托流水号
+        int _maxOrderSeq = 0;//当前最大委托流水
+        int _startOrderSeq = 0;//起始流水号
+        bool _enbaleRandomOrderSeq = false;//是否随机委托流水号
+        int _stepOrderSeqLow = 1;//步长最小值
+        int _stepOrderSeqHigh = 10;//步长最大值
+        Random _orderRandom = new Random(100);
+
+        object _orderseqobj = new object();
+        /// <summary>
+        /// 获得委托流水号
+        /// </summary>
+        public int NextOrderSeq
+        {
+
+            get
+            {
+                lock (_orderseqobj)
+                {
+
+                    if (_enbaleRandomOrderSeq)
+                    {
+                        _maxOrderSeq += _orderRandom.Next(_stepOrderSeqLow, _stepOrderSeqHigh);
+                        return _maxOrderSeq;
+                    }
+                    else
+                    {
+                        _maxOrderSeq += 1;
+                        return _maxOrderSeq;
+                    }
+                }
+            }
+        }
+
+        //成交流水号
+        int _maxTradeID = 0;//当前最大委托流水
+        int _startTradeID = 0;//起始流水号
+        bool _enbaleRandomTradeID = false;//是否随机委托流水号
+        int _stepTradeIDLow = 1;//步长最小值
+        int _stepTradeIDHigh = 10;//步长最大值
+        Random _tradeRandom = new Random(200);
+
+        object _tradeseqobj = new object();
+        /// <summary>
+        /// 获得委托流水号
+        /// </summary>
+        public int NextTradeID
+        {
+
+            get
+            {
+                lock (_tradeseqobj)
+                {
+
+                    if (_enbaleRandomTradeID)
+                    {
+                        _maxTradeID += _tradeRandom.Next(_stepTradeIDLow, _stepTradeIDHigh);
+                        return _maxTradeID;
+                    }
+                    else
+                    {
+                        _maxTradeID += 1;
+                        return _maxTradeID;
+                    }
+                }
+            }
+        }
+
+
+
+
 
         //交易路由管理器以及数据路由管理器
         BrokerRouter _brokerRouter = null;
         DataFeedRouter _datafeedRouter = null;
-
-        
 
         public string CoreId { get { return this.PROGRAME; } }
 
@@ -215,6 +282,59 @@ namespace TradingLib.Core
                 {
                     _cfgdb.UpdateConfig("VerbDebug", QSEnumCfgType.Bool,false.ToString(), "是否输出verb日志");
                 }
+
+                #region 委托流水号
+                if (!_cfgdb.HaveConfig("StartOrderSeq"))
+                {
+                    _cfgdb.UpdateConfig("StartOrderSeq", QSEnumCfgType.Int, 1000, "默认起始委托流水号");
+                }
+                _startOrderSeq = _cfgdb["StartOrderSeq"].AsInt();
+
+                if (!_cfgdb.HaveConfig("RandomOrderSeqEnable"))
+                {
+                    _cfgdb.UpdateConfig("RandomOrderSeqEnable", QSEnumCfgType.Bool, true, "启用委托流水号随机");
+                }
+                _enbaleRandomOrderSeq = _cfgdb["RandomOrderSeqEnable"].AsBool();
+
+                if (!_cfgdb.HaveConfig("OrderSeqStepLow"))
+                {
+                    _cfgdb.UpdateConfig("OrderSeqStepLow", QSEnumCfgType.Int, 50, "委托流水号随机步长低值");
+                }
+                _stepOrderSeqLow = _cfgdb["OrderSeqStepLow"].AsInt();
+
+                if (!_cfgdb.HaveConfig("OrderSeqStepHigh"))
+                {
+                    _cfgdb.UpdateConfig("OrderSeqStepHigh", QSEnumCfgType.Int, 100, "委托流水号随机步长高值");
+                }
+                _stepOrderSeqHigh = _cfgdb["OrderSeqStepHigh"].AsInt();
+                #endregion
+
+                #region 成交编号
+                if (!_cfgdb.HaveConfig("StartTradeID"))
+                {
+                    _cfgdb.UpdateConfig("StartTradeID", QSEnumCfgType.Int, 2000, "默认起始成交编号");
+                }
+                _startTradeID = _cfgdb["StartTradeID"].AsInt();
+
+                if (!_cfgdb.HaveConfig("RandomTradeIDEnable"))
+                {
+                    _cfgdb.UpdateConfig("RandomTradeIDEnable", QSEnumCfgType.Bool, true, "启用成交编号随机");
+                }
+                _enbaleRandomTradeID = _cfgdb["RandomTradeIDEnable"].AsBool();
+
+                if (!_cfgdb.HaveConfig("TradeIDStepLow"))
+                {
+                    _cfgdb.UpdateConfig("TradeIDStepLow", QSEnumCfgType.Int, 50, "成交编号号随机步长低值");
+                }
+                _stepTradeIDLow = _cfgdb["TradeIDStepLow"].AsInt();
+
+                if (!_cfgdb.HaveConfig("TradeIDStepHigh"))
+                {
+                    _cfgdb.UpdateConfig("TradeIDStepHigh", QSEnumCfgType.Int, 150, "成交编号随机步长高值");
+                }
+                _stepTradeIDHigh = _cfgdb["TradeIDStepHigh"].AsInt();
+                #endregion
+
 
                 if (!_cfgdb.HaveConfig("CommentFilled"))
                 {
@@ -307,6 +427,16 @@ namespace TradingLib.Core
                         }
                         debug("客户端:" + c.Location.ClientID + " 登入状态:"+login.ToString(), QSEnumDebugLevel.INFO);
                     };
+
+                int maxorderseq = ORM.MTradingInfo.MaxOrderSeq();
+                _maxOrderSeq = maxorderseq > _startOrderSeq ? maxorderseq : _startOrderSeq;
+                debug("Max OrderSeq:" + _maxOrderSeq, QSEnumDebugLevel.INFO);
+
+                int maxtradeid = ORM.MTradingInfo.MaxTradeID();
+                _maxTradeID = maxtradeid > _startTradeID ? maxtradeid : _startTradeID;
+                debug("Max TradeID:" + _maxTradeID, QSEnumDebugLevel.INFO);
+
+
                 //初始化优先发送缓存对象
                 InitPriorityBuffer();
                 //启动消息服务

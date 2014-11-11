@@ -94,7 +94,7 @@ namespace TradingLib.Contrib.FinService
             decimal agentfee = agentcommission - commission;
 
             //进行收费记录
-            string comment = SPNAME + " Seq:" +t.BrokerKey +" Time:"+t.GetDateTime().ToString();
+            string comment = SPNAME + " Seq:" +t.TradeID +" Time:"+t.GetDateTime().ToString();
             FeeCharge(totalfee, agentfee,null, comment);
 
             return accountcommission;

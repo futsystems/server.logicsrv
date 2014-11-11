@@ -208,6 +208,12 @@ namespace TradingLib.Core
 
 
         #region 成交回报处理
+        public void AssignTradeID(ref Trade f)
+        { 
+            //系统本地给成交赋日内唯一流水号 成交端的TradeID由接口负责
+            f.TradeID = this.NextTradeID.ToString();
+        }
+
         /// <summary>
         /// 用于向客户端发送结算完手续费的成交
         /// </summary>
@@ -228,8 +234,15 @@ namespace TradingLib.Core
      
         }
 
+        /// <summary>
+        /// 响应成交路由返回的成交回报
+        /// </summary>
+        /// <param name="t"></param>
         void _br_GotFillEvent(Trade t)
         {
+            //设定系统内成交编号
+            AssignTradeID(ref t);
+
             //在BrokerRouter->GotFillEvent->ClearCentre.GotFill->adjustcommission->this.GotCommissionFill调用链 形成每笔成交手续费的计算 当计算完毕后 再向客户端进行发送
             //清算中心响应成交回报
             _clearcentre.GotFill(t);//注这里的成交没有结算手续费,成交部分我们需要在结算中心结算结算完手续费后再向客户端发送

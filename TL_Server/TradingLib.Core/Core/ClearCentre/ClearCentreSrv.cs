@@ -98,38 +98,7 @@ namespace TradingLib.Core
         string defaultpass { get { return _cfgdb["DefaultPass"].AsString(); } }
 
 
-        int _maxorderseq = 0;
-        int startseq = 0;//起始流水号
-        bool enbaleRandom = false;
-        int _steplow = 1;
-        int _stephigh = 10;
-        Random rand = new Random();
-        
-        object _orderseqobj = new object();
-        /// <summary>
-        /// 获得委托流水号
-        /// </summary>
-        public int NextOrderSeq
-        {
-            
-            get
-            {
-                lock (_orderseqobj)
-                {
-                    
-                    if (enbaleRandom)
-                    {
-                        _maxorderseq += rand.Next(_steplow, _stephigh);
-                        return _maxorderseq;
-                    }
-                    else
-                    {
-                        _maxorderseq += 1;
-                        return _maxorderseq;
-                    }
-                }
-            }
-        }
+ 
 
         public ClearCentre():
             base("ClearCentre")
@@ -151,29 +120,7 @@ namespace TradingLib.Core
                 _cfgdb.UpdateConfig("AccountLoadMode", QSEnumCfgType.String,QSEnumAccountLoadMode.ALL, "清算中心加载帐户类别");
             }
 
-            if (!_cfgdb.HaveConfig("StartBrokerSeq"))
-            {
-                _cfgdb.UpdateConfig("StartBrokerSeq", QSEnumCfgType.Int,1000, "起始Broker流水号");
-            }
-            startseq = _cfgdb["StartBrokerSeq"].AsInt();
 
-            if (!_cfgdb.HaveConfig("RandomSeqEnable"))
-            {
-                _cfgdb.UpdateConfig("RandomSeqEnable", QSEnumCfgType.Bool,true, "Broker流水号随机");
-            }
-            enbaleRandom = _cfgdb["RandomSeqEnable"].AsBool();
-
-            if (!_cfgdb.HaveConfig("RandomStepLow"))
-            {
-                _cfgdb.UpdateConfig("RandomStepLow", QSEnumCfgType.Int, 50, "Broker流水号随机步长低值");
-            }
-            _steplow = _cfgdb["RandomStepLow"].AsInt();
-
-            if (!_cfgdb.HaveConfig("RandomStepHigh"))
-            {
-                _cfgdb.UpdateConfig("RandomStepHigh", QSEnumCfgType.Int,100, "Broker流水号随机步长高值");
-            }
-            _stephigh = _cfgdb["RandomStepHigh"].AsInt();
 
             //加载模式
             _loadmode = (QSEnumAccountLoadMode)Enum.Parse(typeof(QSEnumAccountLoadMode), _cfgdb["AccountLoadMode"].AsString());

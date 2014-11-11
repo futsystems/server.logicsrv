@@ -14,7 +14,9 @@ namespace Broker.Live
      * 
      * 
      * 
+     * 发单时获得近端编号并设定
      * 
+     * 获得委托回报时候 获得远端编号并设定本地的OrderSysID
      * 
      * 
      * 
@@ -22,7 +24,7 @@ namespace Broker.Live
     /// <summary>
     /// 
     /// </summary>
-    public class TLBrokerCTP:TLBroker
+    public class TLBrokerCTPDirect:TLBroker
     {
 
         #region 委托索引map用于按不同的方式定位委托
@@ -45,7 +47,7 @@ namespace Broker.Live
             return null;
         }
 
-        ConcurrentDictionary<string, Order> localid_order_map = new ConcurrentDictionary<string, Order>();
+        ConcurrentDictionary<string, Order> localOrderID_map = new ConcurrentDictionary<string, Order>();
         /// <summary>
         /// 通过成交对端localid查找委托
         /// 本端向成交端提交委托时需要按一定的方式储存一个委托本地编号,用于远端定位
@@ -56,7 +58,7 @@ namespace Broker.Live
         Order LocalID2Order(string localid)
         {
             Order o = null;
-            if (localid_order_map.TryGetValue(localid, out o))
+            if (localOrderID_map.TryGetValue(localid, out o))
             {
                 return o;
             }
@@ -66,24 +68,11 @@ namespace Broker.Live
         /// <summary>
         /// 交易所编号 委托 map
         /// </summary>
-        ConcurrentDictionary<string, Order> exchange_order_map = new ConcurrentDictionary<string, Order>();
-        string GetExchKey(Order o)
-        {
-            return o.Exchange + ":" + o.OrderSysID;
-        }
-        string GetExchKey(ref XTradeField f)
-        {
-            return f.Exchange + ":" + f.OrderSysID;
-        }
-        string GetExchKey(ref XOrderField o)
-        {
-            return o.Exchange + ":" + o.OrderExchID;
-        }
-
-        Order ExchKey2Order(string sysid)
+        ConcurrentDictionary<string, Order> remoteOrderID_map = new ConcurrentDictionary<string, Order>();
+        Order RemoteID2Order(string sysid)
         {
             Order o = null;
-            if (exchange_order_map.TryGetValue(sysid, out o))
+            if (remoteOrderID_map.TryGetValue(sysid, out o))
             {
                 return o;
             }
@@ -101,16 +90,17 @@ namespace Broker.Live
 
                 foreach (Order o in olist)
                 {
+                    //平台ID编号
                     platformid_order_map.TryAdd(o.id, o);
-
-                    //如果有交易所编号
-                    if (!string.IsNullOrEmpty(o.OrderSysID))
+                    //远端编号
+                    if (!string.IsNullOrEmpty(o.BrokerRemoteOrderID))
                     {
-                        exchange_order_map.TryAdd(GetExchKey(o), o);
+                        remoteOrderID_map.TryAdd(o.BrokerRemoteOrderID, o);
                     }
-                    if (!string.IsNullOrEmpty(o.BrokerLocalID))
+                    //近端编号
+                    if (!string.IsNullOrEmpty(o.BrokerLocalOrderID))
                     {
-                        localid_order_map.TryAdd(o.BrokerLocalID, o);
+                        localOrderID_map.TryAdd(o.BrokerLocalOrderID, o);
                     }
                 }
                 debug(string.Format("load {0} orders form database.", olist.Count()), QSEnumDebugLevel.INFO);
@@ -142,17 +132,22 @@ namespace Broker.Live
             order.OffsetFlag = o.OffsetFlag;
 
             o.Broker = this.Token;
-            //通过接口发送委托
+
+
+            //通过接口发送委托,如果成功会返回接口对应逻辑的本地委托编号 否则就是发送失败
             string localid = WrapperSendOrder(ref order);
             bool success = !string.IsNullOrEmpty(localid);
             if (success)
             {
-                //1.将委托加入到接口委托维护列表
-                o.BrokerLocalID = localid;
+                //1.发送委托时设定本地委托编号
+                o.BrokerLocalOrderID = localid;
+
                 //将委托复制后加入到接口维护的map中
                 Order lo = new OrderImpl(o);
+                //系统ID委托map
                 platformid_order_map.TryAdd(o.id, lo);
-                localid_order_map.TryAdd(o.BrokerLocalID, lo);
+                //近端ID委托map
+                localOrderID_map.TryAdd(o.BrokerLocalOrderID, lo);
 
                 debug("Send Order Success,LocalID:" + localid, QSEnumDebugLevel.INFO);
 
@@ -174,11 +169,9 @@ namespace Broker.Live
                 action.ActionFlag = QSEnumOrderActionFlag.Delete;
 
                 action.ID = o.id.ToString();
-                action.LocalID = o.BrokerLocalID;
-                string[] rec = o.OrderSysID.Split(':');
-
-                action.Exchange = rec[0];
-                action.OrderExchID = rec[1];
+                action.BrokerLocalOrderID = o.BrokerLocalOrderID;
+                action.BrokerRemoteOrderID = o.BrokerRemoteOrderID;
+                action.Exchange = o.Exchange;
                 action.Price = 0;
                 action.Size = 0;
                 action.Symbol = o.Symbol;
@@ -202,26 +195,28 @@ namespace Broker.Live
         public override void ProcessOrder(ref XOrderField order)
         {
             //1.获得本地委托数据 更新相关状态后对外触发
-            Order o = LocalID2Order(order.LocalID);
+            Order o = LocalID2Order(order.BrokerLocalOrderID);
             if (o != null)//本地记录了该委托 更新数量 状态 并对外发送
             {
+                //更新委托
                 o.Status = order.OrderStatus;//更新委托状态
                 o.Comment = order.StatusMsg;//填充状态信息
                 o.FilledSize = order.FilledSize;//成交数量
                 o.Size = order.UnfilledSize * (o.Side ? 1 : -1);//更新当前数量
-                o.Exchange = order.Exchange;
+                //o.Exchange = order.Exchange;
                 //o.OrderExchID = order.OrderExchID;//更新交易所委托编号
 
 
-                if (!string.IsNullOrEmpty(order.OrderExchID))//如果orderexchid存在 则加入对应的键值
+                if (!string.IsNullOrEmpty(order.BrokerRemoteOrderID))//如果远端编号存在 则设定远端编号 同时入map
                 {
-                    string exchkey = GetExchKey(ref order);//使用接口传递过来的Exchange信息来生成key
-                    o.OrderSysID = exchkey;
-                    Util.Debug("order exchange is not emty,try to insert into exch_order_map," + exchkey);
+                    o.BrokerRemoteOrderID = order.BrokerRemoteOrderID;
+                    //按照不同接口的实现 从RemoteOrderID中获得对应的OrderSysID
+                    o.OrderSysID = order.BrokerRemoteOrderID.Split(':')[1];
                     //如果不存在该委托则加入该委托
-                    if (!exchange_order_map.Keys.Contains(exchkey))
+                    if (!remoteOrderID_map.Keys.Contains(order.BrokerRemoteOrderID))
                     {
-                        exchange_order_map.TryAdd(exchkey, o);
+                        Util.Debug("order remoteid is set,put into map, remoteid:" + order.BrokerRemoteOrderID);
+                        remoteOrderID_map.TryAdd(order.BrokerRemoteOrderID, o);
                     }
 
                 }
@@ -231,22 +226,24 @@ namespace Broker.Live
 
         public override void ProcessTrade(ref XTradeField trade)
         {
-            string exchkey = GetExchKey(ref trade);
-            Order o = ExchKey2Order(exchkey);
+            //CTP接口的成交通过远端编号与委托进行关联
+            Order o = RemoteID2Order(trade.BrokerRemoteOrderID);
             //
+            Util.Debug("trade info,localid:" + trade.BrokerLocalOrderID + " remoteid:" + trade.BrokerRemoteOrderID, QSEnumDebugLevel.INFO);
             if (o != null)
             {
                 Util.Debug("该成交是本地委托所属成交,进行回报处理", QSEnumDebugLevel.WARNING);
                 Trade fill = (Trade)(new OrderImpl(o));
+
+                //设定价格 数量 以及日期信息
                 fill.xSize = trade.Size * (trade.Side ? 1 : -1);
                 fill.xPrice = (decimal)trade.Price;
 
                 fill.xDate = trade.Date;
                 fill.xTime = trade.Time;
-
-                fill.Broker = this.Token;
-                fill.OrderSysID = o.OrderSysID;
-                fill.BrokerKey = trade.TradeID;
+                //远端成交编号
+                fill.BrokerTradeID = trade.BrokerTradeID;
+                //其余委托类的相关字段在Order处理中获得
 
                 NotifyTrade(fill);
             }
@@ -254,8 +251,8 @@ namespace Broker.Live
 
         public override void ProcessOrderError(ref XOrderError error)
         {
-            Util.Debug("some error accor in order:" + error.Order.LocalID, QSEnumDebugLevel.WARNING);
-            Order o = LocalID2Order(error.Order.LocalID);
+            Util.Debug("some error accor in order:" + error.Order.BrokerLocalOrderID, QSEnumDebugLevel.WARNING);
+            Order o = LocalID2Order(error.Order.BrokerLocalOrderID);
             if (o != null)
             {
                 RspInfo info = new RspInfoImpl();

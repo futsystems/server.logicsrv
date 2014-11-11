@@ -209,8 +209,10 @@ namespace TradingLib.Core
                 return;
             }
 
+            
             //标注来自客户端的原始委托
             Order order = new OrderImpl(request.Order);//复制委托传入到逻辑层
+            order.id = 0;
             order.OrderSource = QSEnumOrderSource.CLIENT;
 
             //设定委托达到服务器时间
@@ -220,11 +222,9 @@ namespace TradingLib.Core
             //设定TotalSize为 第一次接受到委托时候的Size
             order.TotalSize = order.Size;
 
-            //设定委托地址信息 FrontID和SessioinID
+            //设定分帐户端信息
             order.FrontIDi = clientinfo.FrontIDi;
             order.SessionIDi = clientinfo.SessionIDi;
-
-            //设定RequestID
             order.RequestID = request.RequestID;
 
             //对外层触发委托事件

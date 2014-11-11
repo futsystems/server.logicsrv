@@ -38,14 +38,14 @@ namespace TradingLib.Common
         {
             debug("got order notify:" + response.Order.ToString(), QSEnumDebugLevel.INFO);
             Order o = response.Order;
-            o.oSymbol = Globals.BasicInfoTracker.GetSymbol(o.symbol);
+            o.oSymbol = Globals.BasicInfoTracker.GetSymbol(o.Symbol);
             this.handler.OnOrder(o);
         }
         void CliOnTradeNotify(TradeNotify response)
         {
             debug("got trade notify:" + response.Trade.ToString(), QSEnumDebugLevel.INFO);
             Trade f = response.Trade;
-            f.oSymbol = Globals.BasicInfoTracker.GetSymbol(f.symbol);
+            f.oSymbol = Globals.BasicInfoTracker.GetSymbol(f.Symbol);
             this.handler.OnTrade(response.Trade);
         }
 

@@ -232,13 +232,13 @@ namespace TradingLib.BrokerXAPI
         /// 向远端发单时 生成的本地OrderRef 比如CTP 
         /// </summary>
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
-        public string LocalID;
+        public string BrokerLocalOrderID;
 
         /// <summary>
         /// 远端交易所返回的编号
         /// </summary>
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
-        public string OrderExchID;
+        public string BrokerRemoteOrderID;
     }
     
     /// <summary>
@@ -257,14 +257,14 @@ namespace TradingLib.BrokerXAPI
         /// 相对于成交端 本地编号
         /// </summary>
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
-        public string LocalID;
+        public string BrokerLocalOrderID;
 
 
         /// <summary>
         /// 交易所委托编号
         /// </summary>
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
-        public string OrderExchID;
+        public string BrokerRemoteOrderID;
 
 
         /// <summary>
@@ -347,13 +347,19 @@ namespace TradingLib.BrokerXAPI
         /// 成交编号
         /// </summary>
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
-        public string TradeID;
+        public string BrokerTradeID;
 
         /// <summary>
-        /// 远端交易所返回的编号
+        /// 近端委托编号
         /// </summary>
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
-        public string OrderSysID;
+        public string BrokerLocalOrderID;
+
+        /// <summary>
+        /// 远端委托编号
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
+        public string BrokerRemoteOrderID;
     }
 
 

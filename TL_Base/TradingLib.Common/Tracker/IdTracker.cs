@@ -194,7 +194,6 @@ namespace TradingLib.Common
         public bool NextOverflows { get { return _nextid >= _maxid; } }
 
         public event TradingLib.API.DebugDelegate SendDebugEvent;
-        //public event TradingLib.API.DebugDelegate
         protected void debug(string msg)
         {
             if (SendDebugEvent != null)

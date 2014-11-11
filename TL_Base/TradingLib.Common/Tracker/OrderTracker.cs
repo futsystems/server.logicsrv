@@ -293,7 +293,9 @@ namespace TradingLib.Common
                 Order to = orders[idx];
                 to.Status = o.Status;//更新委托状态
                 to.Broker = o.Broker;//更新broker信息和ExchID
-                to.BrokerKey = o.BrokerKey;
+                to.BrokerRemoteOrderID = o.BrokerRemoteOrderID;
+                to.BrokerLocalOrderID = o.BrokerLocalOrderID;
+
                 to.OrderSysID = o.OrderSysID;
                 to.Comment = o.Comment;//更新描述
 

@@ -6,69 +6,83 @@ namespace TradingLib.Common
 {
     /// <summary>
     /// Specify an order to buy or sell a quantity of a security.
+    /// 由委托产生成交
+    /// 1.调用order.fill(tick) order.fill(order)的方式来触发成交,
+    /// 2.当有成交产生时会填写order内部字段 xDate xTime xPrice xSize
+    /// 其余属性Trade和Order均相同
+    /// 3.交由其他组件填充其他书信字段比如BrokerSide,AccountSide相关属性
     /// </summary>
-    [Serializable]
     public class OrderImpl : TradeImpl, Order
     {
-
-        public QSEnumTimeInForce TimeInForce 
-        { 
-            get 
-            {
-                return _tif;
-            }
-            set 
-            {
-                _tif = value;
-            }
-        }
-        QSEnumTimeInForce _tif = QSEnumTimeInForce.DAY;
-
-
-        int  _date, _time,_size,_totalsize;
-        decimal _price=0;
-        decimal _stopp=0;
-        decimal _trail=0;
-        int _virtowner = 0;
-        int _nRequest = 0;
-
-        public int VirtualOwner { get { return _virtowner; } set { _virtowner = value; } }
-        public new int UnsignedSize { get { return Math.Abs(_size); } }
         
-        public decimal trail { get { return _trail; } set { _trail = value; } }
 
-        public int TotalSize { get { return _totalsize; } set { _totalsize = value; } }
-        public int Size { get { return _size; } set { _size = value; } }
-        public decimal LimitPrice { get { return _price; } set { _price = value; } }
-        public decimal StopPrice { get { return _stopp; } set { _stopp = value; } }
+        int _date = 0;
+        /// <summary>
+        /// 日期
+        /// </summary>
         public int Date { get { return _date; } set { _date = value; } }
+
+        int _time = 0;
+        /// <summary>
+        /// 时间
+        /// </summary>
         public int Time { get { return _time; } set { _time = value; } }
 
+
+        QSEnumTimeInForce _tif = QSEnumTimeInForce.DAY;
+        /// <summary>
+        /// TIF指令
+        /// </summary>
+        public QSEnumTimeInForce TimeInForce { get { return _tif; } set { _tif = value; } }
+
+        int _size = 0;
+        /// <summary>
+        /// 剩余当前数量
+        /// </summary>
+        public int Size { get { return _size; } set { _size = value; } }
+
+        int _totalsize;
+        /// <summary>
+        /// 所有数量
+        /// </summary>
+        public int TotalSize { get { return _totalsize; } set { _totalsize = value; } }
+
+        int _filled = 0;
+        /// <summary>
+        /// 成交手数
+        /// </summary>
+        public int FilledSize { get { return _filled; } set { _filled = value; } }
+
+        /// <summary>
+        /// 当前委托数量 无符号
+        /// </summary>
+        public new int UnsignedSize { get { return Math.Abs(_size); } }
+
+        decimal _price=0;
+        /// <summary>
+        /// Limit价格
+        /// </summary>
+        public decimal LimitPrice { get { return _price; } set { _price = value; } }
+
+
+        decimal _stopp=0;
+        /// <summary>
+        /// Stop价格
+        /// </summary>
+        public decimal StopPrice { get { return _stopp; } set { _stopp = value; } }
+
+        decimal _trail=0;
+        /// <summary>
+        /// trail
+        /// </summary>
+        public decimal trail { get { return _trail; } set { _trail = value; } }
         
-        public new bool isValid 
-        { 
-            get 
-            { 
-                if (isFilled) return base.isValid;
-                return (Symbol != null) && (TotalSize != 0); 
-            } 
-        }
 
-
-        #region Broker端的本地编号
-        string _brokerLocalID="0";
+        QSEnumOrderSource _ordersource = QSEnumOrderSource.UNKNOWN;
         /// <summary>
-        /// Broker端的本地编号
+        /// 委托来源
         /// </summary>
-        public string BrokerLocalID { get { return _brokerLocalID; } set { _brokerLocalID = value; } }
-
-        string _brokerRemoteID = "";
-        /// <summary>
-        /// Broker端的远端编号
-        /// </summary>
-        public string BrokerRemoteID { get { return _brokerRemoteID; } set { _brokerRemoteID = value; } }
-
-        #endregion
+        public QSEnumOrderSource OrderSource { get { return _ordersource; } set { _ordersource = value; } }
 
 
         //委托状态 记录了委托过程
@@ -77,31 +91,6 @@ namespace TradingLib.Common
         /// 委托状态
         /// </summary>
         public QSEnumOrderStatus Status { get { return _status; } set { _status = value; } }
-
-        QSEnumOrderSource _ordersource = QSEnumOrderSource.UNKNOWN;
-        /// <summary>
-        /// 委托来源
-        /// </summary>
-        public QSEnumOrderSource OrderSource { get { return _ordersource; } set { _ordersource = value; } }
-
-        int _filled = 0;
-        /// <summary>
-        /// 成交手数
-        /// </summary>
-        public int FilledSize { get { return _filled; } set { _filled = value; } }
-
-
-        int _frontidi = 0;
-        /// <summary>
-        /// 标注该委托来自于哪个前置
-        /// </summary>
-        public int FrontIDi { get { return _frontidi; } set { _frontidi = value; } }
-
-        int _sessionidi = 0;
-        /// <summary>
-        /// 标注该委托来自于哪个客户端
-        /// </summary>
-        public int SessionIDi { get { return _sessionidi; } set { _sessionidi = value; } }
 
 
         bool _isforceclose = false;
@@ -115,26 +104,71 @@ namespace TradingLib.Common
         /// <summary>
         /// 强平原因
         /// </summary>
-        public string ForceCloseReason { get { return _forceclosereason; } set { _forceclosereason = value.Replace(',',' ').Replace('|',' ').Replace('^',' '); } }
+        public string ForceCloseReason { get { return _forceclosereason; } set { _forceclosereason = value.Replace(',', ' ').Replace('|', ' ').Replace('^', ' '); } }
 
+        string _comment = string.Empty;
+        /// <summary>
+        /// 备注/状态信息
+        /// </summary>
+        public string Comment
+        {
+            get { return _comment; }
+
+            set
+            {
+                //关于comment的赋值逻辑
+                //1.判断设定的value是否是空或者空格
+                if (string.IsNullOrWhiteSpace(value)) return;
+                //2.判断comment有效长度
+                if (value.Length <= 2) return;
+                //3.替换comment中出现的协议保留字段, | ^(|分割请求编号 ^ 分割内容 islast rspinfo ,分割具体的内容)
+                string tmp = value.Replace(",", " ").Replace("|", " ").Replace("^", " ");//替换特殊符号 , ^ |
+                _comment = tmp;
+
+            }
+        }
+
+        
+
+
+
+        #region 判定函数
+        public new bool isValid
+        {
+            get
+            {
+                if (isFilled) return base.isValid;//如果已经成交 则返回Trade的valid判定
+                return (Symbol != null) && (TotalSize != 0);
+            }
+        }
+        public bool isMarket { get { return (LimitPrice == 0) && (StopPrice == 0); } }
+        public bool isLimit { get { return (LimitPrice != 0); } }
+        public bool isStop { get { return (StopPrice != 0); } }
+        public bool isTrail { get { return trail != 0; } }
+        #endregion
+
+
+        #region 分帐户端属性
+
+        int _frontidi = 0;
+        /// <summary>
+        /// 标注该委托来自于哪个前置
+        /// </summary>
+        public int FrontIDi { get { return _frontidi; } set { _frontidi = value; } }
+
+        int _sessionIDi = 0;
+        /// <summary>
+        /// 回话编号
+        /// </summary>
+        public int SessionIDi { get { return _sessionIDi; } set { _sessionIDi = value; } }
+
+        int _nRequest = 0;
         /// <summary>
         /// 客户端请求编号
         /// </summary>
         public int RequestID { get { return _nRequest; } set { _nRequest = value; } }
 
-
-        public bool isMarket { get { return (LimitPrice == 0) && (StopPrice == 0); } }
-        public bool isLimit { get { return (LimitPrice != 0); } }
-        public bool isStop { get { return (StopPrice != 0); } }
-        public bool isTrail { get { return trail != 0; } }
-        public int SignedSize { get { return Math.Abs(Size) * (Side ? 1 : -1); } }
-        public override decimal Price
-        {
-            get
-            {
-                return isStop ? StopPrice : LimitPrice; 
-            }
-        }
+        #endregion
 
         #region 构造函数
         public OrderImpl() : base() { }
@@ -146,44 +180,48 @@ namespace TradingLib.Common
         /// <param name="copythis"></param>
         public OrderImpl(Order copythis)
         {
-            this.Symbol = copythis.Symbol;
-            this.StopPrice = copythis.StopPrice;
-            this.Comment = copythis.Comment;
-            this.Currency = copythis.Currency;
-            this.Account= copythis.Account;
+            this.id = copythis.id;
+            this.Account = copythis.Account;
             this.Date = copythis.Date;
-            this.Exchange= copythis.Exchange;
-            this.LimitPrice = copythis.LimitPrice;
-            this.SecurityType = copythis.SecurityType;
-            this.Side = copythis.Side;
+            this.Time = copythis.Time;
+
+            this.Symbol = copythis.Symbol;
+            this.LocalSymbol = copythis.LocalSymbol;
+            this.oSymbol = copythis.oSymbol;
+
+            this.TimeInForce = copythis.TimeInForce;
+
+            this.OffsetFlag = copythis.OffsetFlag;
+            this.HedgeFlag = copythis.HedgeFlag;
+
             this.Size = copythis.Size;
             this.TotalSize = copythis.TotalSize;
-            this.Time = copythis.Time;
-            //this.LocalSymbol = copythis.LocalSymbol;
-            this.id = copythis.id;
-            //this.TIF = copythis.TIF;
-            this.TimeInForce = copythis.TimeInForce;
-            this.Broker = copythis.Broker;
-            this.BrokerKey = copythis.BrokerKey;
-            this.BrokerLocalID = copythis.BrokerLocalID;
-            this.BrokerRemoteID = copythis.BrokerRemoteID;
-            this.Status = copythis.Status;
-            this.OffsetFlag = copythis.OffsetFlag;
-            this.OrderRef = copythis.OrderRef;
+            this.FilledSize = copythis.FilledSize;
+            this.Side = copythis.Side;
+            this.LimitPrice = copythis.LimitPrice;
+            this.StopPrice = copythis.StopPrice;
+            this.trail = copythis.trail;
+
+            this.Exchange= copythis.Exchange;
+            this.SecurityType = copythis.SecurityType;
+            this.Currency = copythis.Currency;
+            this.OrderSource = copythis.OrderSource;
             this.ForceClose = copythis.ForceClose;
             this.ForceCloseReason = copythis.ForceCloseReason;
-            this.HedgeFlag = copythis.HedgeFlag;
-            this.OrderSeq = copythis.OrderSeq;
-            this.OrderSysID = copythis.OrderSysID;
-            this.FilledSize = copythis.FilledSize;
-            this.FrontIDi = copythis.FrontIDi;
-            this.SessionIDi = copythis.SessionIDi;
-            this.RequestID = copythis.RequestID;
 
-            //内部使用
-            this.oSymbol = copythis.oSymbol;
-            this.OrderSource = copythis.OrderSource;
-            
+            this.Status = copythis.Status;
+            this.Comment = copythis.Comment;
+
+            this.Broker = copythis.Broker;
+            this.BrokerLocalOrderID = copythis.BrokerLocalOrderID;
+            this.BrokerRemoteOrderID = copythis.BrokerRemoteOrderID;
+
+            this.OrderSeq = copythis.OrderSeq;
+            this.OrderRef = copythis.OrderRef;
+            this.OrderSysID = copythis.OrderSysID;
+            this.SessionIDi = copythis.SessionIDi;
+            this.FrontIDi = copythis.FrontIDi;
+            this.RequestID = copythis.RequestID;
         }
 
         public OrderImpl(string sym, bool side, int size, decimal p, decimal s, string c, int time, int date)
@@ -254,14 +292,14 @@ namespace TradingLib.Common
         #region Fill section
 
         /// <summary>
-        /// Fills this order with a tick
+        /// Fills this order with a tick(trade price)
+        /// 用最新成交价去成交一个委托
         /// </summary>
         /// <param name="t"></param>
         /// <returns></returns>
         public bool Fill(Tick t) { return Fill(t, false); }
         public bool Fill(Tick t, bool fillOPG)
         {
-            //debug("~~~~~~~~order fill here2");
             if (!t.isTrade) return false;//fill with trade 
             if (t.Symbol != oSymbol.TickSymbol) return false;
             if (!fillOPG && TimeInForce == QSEnumTimeInForce.OPG) return false;
@@ -280,8 +318,10 @@ namespace TradingLib.Common
             }
             return false;
         }
+
         /// <summary>
         /// fill against bid and ask rather than trade
+        /// 
         /// </summary>
         /// <param name="k"></param>
         /// <param name="smart"></param>
@@ -289,8 +329,6 @@ namespace TradingLib.Common
         /// <returns></returns>
         public bool Fill(Tick k, bool bidask, bool fillOPG)
         {
-            //debug("~~~~~~~~order fill here");
-            //debug("~~~~~~~~bidask:" + bidask.ToString());
             //如果不使用askbid来fill trade我们就使用成交价格来fill
             if (!bidask)
                 return Fill(k, fillOPG);
@@ -314,7 +352,7 @@ namespace TradingLib.Common
                 || isMarket)
             {
                 this.xPrice = p;
-                this.xSize = /*1 * (side ? 1 : -1);**/(s >= UnsignedSize ? UnsignedSize : s) * (Side ? 1 : -1);
+                this.xSize = (s >= UnsignedSize ? UnsignedSize : s) * (Side ? 1 : -1);
                 //debug("askbid size:"+s.ToString()+"|");
                 this.xTime = k.Time;
                 this.xDate = k.Date;
@@ -362,7 +400,7 @@ namespace TradingLib.Common
                 || isMarket)
             {
                 this.xPrice = o.isLimit ? o.LimitPrice : o.StopPrice;
-                if (xPrice == 0) xPrice = isLimit ? Price : StopPrice;
+                if (xPrice == 0) xPrice = isLimit ? LimitPrice : StopPrice;
                 this.xSize = o.UnsignedSize >= UnsignedSize ? UnsignedSize : o.UnsignedSize;
                 this.xTime = o.Time;
                 this.xDate = o.Date;
@@ -421,9 +459,9 @@ namespace TradingLib.Common
             sb.Append(d);
             sb.Append(o.Broker);
             sb.Append(d);
-            sb.Append(o.BrokerKey);
+            sb.Append(o.BrokerRemoteOrderID);
             sb.Append(d);
-            sb.Append(o.BrokerLocalID.ToString());
+            sb.Append(o.BrokerLocalOrderID);
             sb.Append(d);
             sb.Append(o.Status.ToString());
             sb.Append(d);
@@ -486,8 +524,8 @@ namespace TradingLib.Common
             o.Date = Convert.ToInt32(rec[(int)OrderField.oDate]);
             o.Time = Convert.ToInt32(rec[(int)OrderField.oTime]);
             o.Broker = rec[(int)OrderField.Broker];
-            o.BrokerKey = rec[(int)OrderField.BrokerKey];
-            o.BrokerLocalID = rec[(int)OrderField.LocalID];
+            o.BrokerRemoteOrderID = rec[(int)OrderField.BrokerKey];
+            o.BrokerLocalOrderID = rec[(int)OrderField.LocalID];
             o.Status = (QSEnumOrderStatus)Enum.Parse(typeof(QSEnumOrderStatus), rec[(int)OrderField.Status]);
             int f=0;
             int.TryParse(rec[(int)OrderField.oFilled],out f);

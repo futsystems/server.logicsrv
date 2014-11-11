@@ -119,11 +119,11 @@ namespace FutSystems.GUI
             }
             if(o.isLimit)
             {
-                return "限价:" + o.price.ToString();
+                return "限价:" + o.LimitPrice.ToString();
             }
             if (o.isStop)
             {
-                return "Stop:" + o.stopp.ToString();
+                return "Stop:" + o.StopPrice.ToString();
             }
             return "未知";
         }
@@ -144,33 +144,33 @@ namespace FutSystems.GUI
                         orderidxmap.TryAdd(o.id, i);
 
                         tb.Rows[i][ID] = o.id;
-                        tb.Rows[i][DATETIME] = Util.ToDateTime(o.date, o.time).ToString("HH:mm:ss");
-                        tb.Rows[i][SYMBOL] = o.symbol;
-                        tb.Rows[i][DIRECTION] = o.side ? "1" : "-1";
-                        tb.Rows[i][OPERATION] = o.side ? "买入" : "   卖出";
+                        tb.Rows[i][DATETIME] = Util.ToDateTime(o.Date, o.Time).ToString("HH:mm:ss");
+                        tb.Rows[i][SYMBOL] = o.Symbol;
+                        tb.Rows[i][DIRECTION] = o.Side ? "1" : "-1";
+                        tb.Rows[i][OPERATION] = o.Side ? "买入" : "   卖出";
                         tb.Rows[i][SIZE] = Math.Abs(o.TotalSize);
                         tb.Rows[i][PRICE] = GetOrderPrice(o);
-                        tb.Rows[i][FILLED] = Math.Abs(o.Filled);
+                        tb.Rows[i][FILLED] = Math.Abs(o.FilledSize);
                         tb.Rows[i][STATUS] = o.Status;
                         tb.Rows[i][STATUSSTR] = Util.GetEnumDescription(o.Status);
                         tb.Rows[i][ORDERREF] = o.OrderRef;
                         tb.Rows[i][EXCHANGE] = o.Exchange;
-                        tb.Rows[i][EXCHORDERID] = o.OrderExchID;
+                        tb.Rows[i][EXCHORDERID] = o.OrderSysID;
                         tb.Rows[i][ACCOUNT] = o.Account;
-                        tb.Rows[i][COMMENT] = o.comment;
+                        tb.Rows[i][COMMENT] = o.Comment;
                         tb.Rows[i][FORCECLOSE] = o.ForceClose?"强平":"";
                         tb.Rows[i][FORCEREASON] = o.ForceCloseReason;
                         num.Text = orderGrid.RowCount.ToString();
                     }
                     else
                     {
-                        tb.Rows[i][FILLED] = o.Filled;
+                        tb.Rows[i][FILLED] = o.FilledSize;
                         tb.Rows[i][STATUS] = o.Status;
                         tb.Rows[i][STATUSSTR] = Util.GetEnumDescription(o.Status);
                         tb.Rows[i][ORDERREF] = o.OrderRef;
                         tb.Rows[i][EXCHANGE] = o.Exchange;
-                        tb.Rows[i][EXCHORDERID] = o.OrderExchID;
-                        tb.Rows[i][COMMENT] = o.comment;
+                        tb.Rows[i][EXCHORDERID] = o.OrderSysID;
+                        tb.Rows[i][COMMENT] = o.Comment;
                         tb.Rows[i][FORCECLOSE] = o.ForceClose ? "强平" : "";
                         tb.Rows[i][FORCEREASON] = o.ForceCloseReason;
                     }

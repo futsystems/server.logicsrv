@@ -7,6 +7,12 @@ using TradingLib.Common;
 
 namespace TradingLib.Core
 {
+    /// <summary>
+    /// 委托编号
+    /// 从委托进入系统的第一个入口 
+    /// 设定委托唯一编号id和日内流水OrderSeq
+    /// 
+    /// </summary>
     public partial class MsgExchServer
     {
         /// <summary>
@@ -70,17 +76,17 @@ namespace TradingLib.Core
         public void AssignOrderID(ref Order o)
         {
             if (o.id <= 0)
-                o.id = _idt.AssignId;
+                o.id = _orderIDTracker.AssignId;
             //如果委托编号已经被记录,则重新获得委托编号(防止产生重复委托编号)
-          
+            
             //委托编号唯一性检查 如果清算中心已经维护过该委托编号 则重新设定委托编号
-            while (_clearcentre.IsOrderTracked(o.id))
-            {
-                o.id = _idt.AssignId;
-            }
+            //while (_clearcentre.IsOrderTracked(o.id))
+            //{
+            //    o.id = _orderIDTracker.AssignId;
+            //}
 
             //获得本地递增流水号
-            o.OrderSeq = _clearcentre.NextOrderSeq;
+            o.OrderSeq = this.NextOrderSeq;
         }
 
 
@@ -101,6 +107,7 @@ namespace TradingLib.Core
             {
                 //给委托绑定唯一的委托编号
                 AssignOrderID(ref o);
+
                 IAccount acc = null;
                 if (!_riskcentre.TrckerOrderAccount(o, out acc))
                 {

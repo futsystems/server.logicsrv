@@ -93,9 +93,7 @@ namespace TradingLib.Core
             checkOrder();
             //获得最大报单引用 
             
-            int maxorder = ORM.MTradingInfo.MaxOrderSeq();
-            _maxorderseq = maxorder > startseq ? maxorder : startseq;
-            debug("Max order seq:" + _maxorderseq, QSEnumDebugLevel.INFO);
+            
             Status = QSEnumClearCentreStatus.CCRESTOREFINISH;
         }
 

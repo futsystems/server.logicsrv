@@ -7,181 +7,139 @@ namespace TradingLib.Common
     /// <summary>
     /// A trade or execution of a stock order.  Also called a fill.
     /// </summary>
-    [Serializable]
     public class TradeImpl : Trade
     {
+        #region 基础属性
         long _id = 0;//对应的委托编号
-        CurrencyType cur = CurrencyType.USD;
-        string _localsymbol = string.Empty;
-        string accountid = string.Empty;
-        string _securitycode = string.Empty;//交易品种代码
-        SecurityType type = SecurityType.NIL;
-        string _sym = string.Empty;
-        bool _side = true;//方向
-        string _comment = string.Empty;
-        int _xsize = 0;//成交数量
-        int _xdate = 0;//日期
-        int _xtime = 0;//时间
-        decimal _xprice = 0;//成交价格
-
-        QSEnumOffsetFlag _posflag = QSEnumOffsetFlag.UNKNOWN; //默认情况是无开平标识,不对开平做出逻辑检验
-        string _ex = string.Empty;//交易所代码
-
-        decimal _profit = 0;//平仓盈亏 这里的平仓盈亏不含手续费
-        decimal _commission = -1;//默认手续费为-1,若为-1表明没有计算过手续费
-        Symbol _osymbol = null;
-        string _orderref = "";//对应的委托引用
-        QSEnumHedgeFlag _hedgeflag = QSEnumHedgeFlag.Speculation;//对应的投机套保标识
-        int _orderseq = 0;//委托流水号
-        string _orderSysID = "";//交易所委托编号
-        
-
-        public Symbol oSymbol { get { return _osymbol; } set { _osymbol = value; } }
-        public int UnsignedSize { get { return Math.Abs(_xsize); } }
         public long id { get { return _id; } set { _id = value; } }
-        public string LocalSymbol { 
-            get 
-            {
-                if (string.IsNullOrEmpty(_localsymbol))
-                {
-                    if (oSymbol != null)
-                        return oSymbol.Symbol;
-                }
-                return _localsymbol;
-            } 
-            set { _localsymbol = value; } 
-        
-        }
 
-
-
-        //如果存在oSymbol则从oSymnbol获得对应需要的数据
-
-        /// <summary>
-        /// 品种code
-        /// </summary>
-        public string SecurityCode { get { return oSymbol != null ? oSymbol.SecurityFamily.Code : _securitycode; } set { _securitycode = value; } }
-
-        /// <summary>
-        /// 品种
-        /// </summary>
-        public SecurityType SecurityType    { get { return oSymbol != null ? oSymbol.SecurityFamily.Type : type;} set { type = value; } }
-
-        /// <summary>
-        /// 交易所
-        /// </summary>
-        public string Exchange { get { return oSymbol != null ? oSymbol.SecurityFamily.Exchange.EXCode:_ex; } set { _ex = value; } }
-
-        /// <summary>
-        /// 货币
-        /// </summary>
-        public CurrencyType Currency { get { return oSymbol != null ? oSymbol.SecurityFamily.Currency : cur; } set { cur = value; } }
-
+        string _acct = string.Empty;
         /// <summary>
         /// 交易账号
         /// </summary>
-        public string Account { get { return accountid; } set { accountid = value; } }
+        public string Account { get { return _acct; } set { _acct = value; } }
 
+        int _xdate = 0;
+        /// <summary>
+        /// 成交日期
+        /// </summary>
+        public int xDate { get { return _xdate; } set { _xdate = value; } }
+
+        int _xtime = 0;
+        /// <summary>
+        /// 成交时间
+        /// </summary>
+        public int xTime { get { return _xtime; } set { _xtime = value; } }
+
+
+        string _sym = string.Empty;
         /// <summary>
         /// 合约
         /// </summary>
         public string Symbol { get { return _sym; } set { _sym = value; } }
 
+        string _localsymbol = string.Empty;
+        /// <summary>
+        /// 本地合约编号
+        /// </summary>
+        public string LocalSymbol { get { return _localsymbol; } set { _localsymbol = value; } }
+
+        Symbol _osymbol = null;
+        /// <summary>
+        /// 合约对象
+        /// </summary>
+        public Symbol oSymbol { get { return _osymbol; } set { _osymbol = value; } }
+
+
+        bool _side = true;
         /// <summary>
         /// 成交方向
         /// </summary>
-        public bool Side { get { return _side; } set{_side =value; }}
+        public bool Side { get { return _side; } set { _side = value; } }
 
-        public string Comment
-        {
-            get { return _comment; } 
-            
-            set {
-
-                //关于comment的赋值逻辑
-                //1.判断设定的value是否是空或者空格
-                if (string.IsNullOrWhiteSpace(value)) return;
-                //2.判断comment有效长度
-                if (value.Length <= 2) return;
-                //3.替换comment中出现的协议保留字段, | ^(|分割请求编号 ^ 分割内容 islast rspinfo ,分割具体的内容)
-                string tmp = value.Replace(","," ").Replace("|"," ").Replace("^"," ");//替换特殊符号 , ^ |
-                //if (string.IsNullOrWhiteSpace(_comment)) 
-                //{ 
-                //    _comment = tmp; 
-                //    return; 
-                //}
-                _comment = /*_comment +"_"+**/tmp; //用于衔接多个comment,在系统运行过程中不同的组件会给委托赋上某标签
-            
-            } }
-
-
+        int _xsize = 0;
         /// <summary>
         /// 成交数量
         /// </summary>
         public int xSize { get { return _xsize; } set { _xsize = value; } }
 
         /// <summary>
+        /// 数量绝对值
+        /// </summary>
+        public int UnsignedSize { get { return Math.Abs(_xsize); } }
+
+        decimal _xprice = 0;
+        /// <summary>
         /// 成交价格
         /// </summary>
         public decimal xPrice { get { return _xprice; } set { _xprice = value; } }
 
+        QSEnumOffsetFlag _posflag = QSEnumOffsetFlag.UNKNOWN;
         /// <summary>
-        /// 成交日期
+        /// 开平标识
         /// </summary>
-        public int xDate { get { return _xdate; } set { _xdate = value; } }
+        public QSEnumOffsetFlag OffsetFlag { get { return _posflag; } set { _posflag = value; } }
 
-        /// <summary>
-        /// 成交时间
-        /// </summary>
-        public int xTime { get { return _xtime; } set { _xtime = value; } }
-
-        /// <summary>
-        /// 是否有成交 
-        /// Order继承自Trade 通过xprice和xsize进行判断是否有成交 xprice xsize均不为0 则表明有有效成交
-        /// </summary>
-        public bool isFilled { get { return (xPrice * xSize) != 0; } }
-
-        /// <summary>
-        /// 手续费
-        /// </summary>
-        public decimal Commission { get { return _commission; } set { _commission = value; } }
-
-
-        
-        /// <summary>
-        /// 平仓盈亏
-        /// </summary>
-        public decimal Profit { get { return _profit; } set { _profit = value; } }
-        
-        /// <summary>
-        /// 客户端委托引用
-        /// </summary>
-        public string OrderRef { get { return _orderref; } set { _orderref = value; } }
-
-
-        
+        QSEnumHedgeFlag _hedgeflag = QSEnumHedgeFlag.Speculation;
         /// <summary>
         /// 投机 套保标识
         /// </summary>
         public QSEnumHedgeFlag HedgeFlag { get { return _hedgeflag; } set { _hedgeflag = value; } }
 
-        
+        decimal _commission = -1;//默认手续费为-1,若为-1表明没有计算过手续费
         /// <summary>
-        /// 委托流水号
+        /// 手续费
         /// </summary>
-        public int OrderSeq { get { return _orderseq; } set { _orderseq = value; } }
+        public decimal Commission { get { return _commission; } set { _commission = value; } }
 
-        
+        decimal _profit = 0;
         /// <summary>
-        /// 委托交易所编号
+        /// 平仓盈亏
         /// </summary>
-        public string OrderSysID { get { return _orderSysID; } set { _orderSysID = value; } }
+        public decimal Profit { get { return _profit; } set { _profit = value; } }
 
+        #endregion
+
+
+        #region 其余成交属性
+        //如果存在oSymbol则从oSymnbol获得对应需要的数据
+        string _ex = string.Empty;
+        /// <summary>
+        /// 交易所
+        /// </summary>
+        public string Exchange { get { return oSymbol != null ? oSymbol.SecurityFamily.Exchange.EXCode : _ex; } set { _ex = value; } }
+
+        SecurityType type = SecurityType.NIL;
+        /// <summary>
+        /// 品种
+        /// </summary>
+        public SecurityType SecurityType    { get { return oSymbol != null ? oSymbol.SecurityFamily.Type : type;} set { type = value; } }
+
+        string _securitycode = string.Empty;
+        /// <summary>
+        /// 品种code
+        /// </summary>
+        public string SecurityCode { get { return oSymbol != null ? oSymbol.SecurityFamily.Code : _securitycode; } set { _securitycode = value; } }
+
+        CurrencyType cur = CurrencyType.USD;
+        /// <summary>
+        /// 货币
+        /// </summary>
+        public CurrencyType Currency { get { return oSymbol != null ? oSymbol.SecurityFamily.Currency : cur; } set { cur = value; } }
+
+        #endregion
+
+        #region 判定属性
+        /// <summary>
+        /// 判断有效成交
+        /// </summary>
+        public virtual bool isValid { get { return (xSize != 0) && (xPrice != 0) && (xTime + xDate != 0) && (Symbol != null) && (Symbol != ""); } }
 
         /// <summary>
-        /// 开平标识
+        /// 判定是否有成交
+        /// Order继承自Trade 通过xprice和xsize进行判断是否有成交 xprice xsize均不为0 则表明有有效成交
         /// </summary>
-        public QSEnumOffsetFlag OffsetFlag { get { return _posflag; } set { _posflag = value; } }
+        public bool isFilled { get { return (xPrice * xSize) != 0; } }
 
         /// <summary>
         /// 是否是开仓
@@ -204,13 +162,14 @@ namespace TradingLib.Common
                 }
             }
         }
+
         /// <summary>
         /// 持仓方向
         /// </summary>
-        public bool PositionSide 
+        public bool PositionSide
         {
             get
-            { 
+            {
                 bool entrypostion = IsEntryPosition;
                 if ((entrypostion && this.Side) || ((!entrypostion) && (!this.Side)))
                 {
@@ -220,9 +179,72 @@ namespace TradingLib.Common
                 {
                     return false;
                 }
-            
+
             }
         }
+        #endregion
+
+        QSEnumPosOperation _posop;
+        public QSEnumPosOperation PositionOperation { get { return _posop; } set { _posop = value; } }
+
+
+        #region Broker端属性
+        string _broker = string.Empty;
+        /// <summary>
+        /// Broker标识
+        /// </summary>
+        public string Broker { get { return _broker; } set { _broker = value; } }
+
+        /// <summary>
+        /// Broker端 本地委托编号
+        /// 系统有2种方式将成交与委托联系起来
+        /// 1.近端委托编号进行关联 自己按一定方式维护唯一编号,成交端发送成交回报时按该编号关联委托
+        /// 2.远端委托编号进行关联 由成交端在委托回报中设定远端委托编号,成交端发送成交回报时候按该编号关联委托
+        /// </summary>
+        string _brokerLocalOrderID = string.Empty;
+        public string BrokerLocalOrderID { get { return _brokerLocalOrderID; } set { _brokerLocalOrderID = value; } }
+
+        /// <summary>
+        /// Broker端 远端委托编号
+        /// </summary>
+        string _brokerRemoteOrderID = string.Empty;
+        public string BrokerRemoteOrderID { get { return _brokerRemoteOrderID; } set { _brokerRemoteOrderID = value; } }
+
+        /// <summary>
+        /// Broker端的成交编号 由Broker按一定规则赋值
+        /// </summary>
+        string _brokerTradeID = string.Empty;
+        public string BrokerTradeID { get { return _brokerTradeID; } set { _brokerTradeID = value; } }
+        #endregion
+
+        #region 分帐户端属性
+
+        string _tradeID = string.Empty;
+        /// <summary>
+        /// 成交编号
+        /// </summary>
+        public string TradeID { get { return _tradeID; } set { _tradeID = value; } }
+
+        int _orderseq = 0;
+        /// <summary>
+        /// 委托流水号
+        /// </summary>
+        public int OrderSeq { get { return _orderseq; } set { _orderseq = value; } }
+
+        string _orderref = "";//对应的委托引用
+        /// <summary>
+        /// 客户端委托引用
+        /// </summary>
+        public string OrderRef { get { return _orderref; } set { _orderref = value; } }
+
+        string _orderSysID = "";
+        /// <summary>
+        /// 委托交易所编号
+        /// </summary>
+        public string OrderSysID { get { return _orderSysID; } set { _orderSysID = value; } }
+
+        #endregion
+
 
 
         #region 成交构造函数
@@ -246,66 +268,44 @@ namespace TradingLib.Common
         {
             // copy constructor, for copying using by-value (rather than by default of by-reference)
 
-            xDate = copytrade.xDate;
-            xTime = copytrade.xTime;
+            this.id = copytrade.id;
+            this.Account = copytrade.Account;
+            this.xDate = copytrade.xDate;
+            this.xTime = copytrade.xTime;
 
-            Symbol = copytrade.Symbol;
-            Side = copytrade.Side;
-            xSize = copytrade.xSize;
-            xPrice = copytrade.xPrice;
-            Comment = copytrade.Comment;
+            this.Symbol = copytrade.Symbol;
+            this.LocalSymbol = copytrade.LocalSymbol;
+            this.oSymbol = copytrade.oSymbol;//成交复制时 同时复制对应的合约对象 所有委托引用同一份合约对象
 
-            accountid = copytrade.Account;
-            type = copytrade.SecurityType;
+            this.Side = copytrade.Side;
+            this.xSize = copytrade.xSize;
+            this.xPrice = copytrade.xPrice;
+            this.OffsetFlag = copytrade.OffsetFlag;
+            this.HedgeFlag = copytrade.HedgeFlag;
+            this.Commission = copytrade.Commission;
+            this.Profit = copytrade.Profit;
+            
+            this.Exchange = copytrade.Exchange;
+            this.SecurityType = copytrade.SecurityType;
+            this.SecurityCode = copytrade.SecurityCode;
+            this.Currency = copytrade.Currency;
 
-            _osymbol = copytrade.oSymbol;//成交复制时 同时复制对应的合约对象 所有委托引用同一份合约对象
-            cur = copytrade.Currency;
-            _localsymbol = copytrade.LocalSymbol;
-            id = copytrade.id;
-            _ex = copytrade.Exchange;
-            _profit = copytrade.Profit;
+            this.PositionOperation = copytrade.PositionOperation;
 
-            Broker = copytrade.Broker;
-            BrokerKey = copytrade.BrokerKey;
-            Commission = copytrade.Commission;
-            PositionOperation = copytrade.PositionOperation;
+            this.Broker = copytrade.Broker;
+            this.BrokerLocalOrderID = copytrade.BrokerLocalOrderID;
+            this.BrokerRemoteOrderID = copytrade.BrokerRemoteOrderID;
+            this.BrokerTradeID = copytrade.BrokerTradeID;
 
-            OrderRef = copytrade.OrderRef;
-            HedgeFlag = copytrade.HedgeFlag;
-            OrderSeq = copytrade.OrderSeq;
-            OrderSysID = copytrade.OrderSysID;
-            OffsetFlag = copytrade.OffsetFlag;
+            this.OrderRef = copytrade.OrderRef;
+            this.OrderSeq = copytrade.OrderSeq;
+            this.OrderSysID = copytrade.OrderSysID;
+            this.TradeID = copytrade.TradeID;
         }
         #endregion
 
-        /// <summary>
-        /// 获得价格
-        /// </summary>
-        public virtual decimal Price { get { return xPrice; } }
-
-        /// <summary>
-        /// 判断有效成交
-        /// </summary>
-        public virtual bool isValid { get { return (xSize != 0) && (xPrice != 0) && (xTime + xDate != 0) && (Symbol != null) && (Symbol != ""); } }
 
 
-        //public override string ToString()
-        //{
-        //    return xdate.ToString() + "-" + xtime.ToString() + " [" + Account.ToString() +"]"+ (side ? " BOT" : " SOD") + " " + Math.Abs(xsize).ToString() + " " + (this.oSymbol != null ? this.oSymbol.FullName : this.symbol)  + "  @" + xprice.ToString() + " C:" + Commission.ToString() + " Via:" + Broker + "/" + BrokerKey + " OP:" + _posop.ToString();
-
-        //}
-        
-        //public string ToString(bool includeid) { return ToString(',', includeid); }
-        //public string ToString(char delimiter) { return ToString(delimiter, true); }
-        //public string ToString(char delimiter,bool includeid)
-        //{
-        //    int usize = Math.Abs(xsize);
-        //    string[] trade = new string[] { xdate.ToString(System.Globalization.CultureInfo.InvariantCulture), xtime.ToString(System.Globalization.CultureInfo.InvariantCulture), symbol, (side ? "BUY" : "SELL"), usize.ToString(System.Globalization.CultureInfo.InvariantCulture), xprice.ToString("F2", System.Globalization.CultureInfo.InvariantCulture), Account ,Broker,Commission.ToString(),this.PositionOperation.ToString()};
-        //    if (!includeid)
-        //        return string.Join(delimiter.ToString(), trade);
-        //    return string.Join(delimiter.ToString(), trade) + delimiter + id;
-        //}
-       
         /// <summary>
         /// Serialize trade as a string
         /// </summary>
@@ -321,7 +321,7 @@ namespace TradingLib.Common
             sb.Append(t.Side.ToString()); sb.Append(d);
             sb.Append(t.xSize.ToString()); sb.Append(d);
             sb.Append(t.xPrice.ToString()); sb.Append(d);
-            sb.Append(t.Comment); sb.Append(d);
+            sb.Append(""); sb.Append(d);
 
             sb.Append(t.Account); sb.Append(d);
             sb.Append(t.SecurityType); sb.Append(d);
@@ -331,7 +331,7 @@ namespace TradingLib.Common
             sb.Append(t.Exchange); sb.Append(d);
 
             sb.Append(t.Broker); sb.Append(d);
-            sb.Append(t.BrokerKey); sb.Append(d);
+            sb.Append(t.TradeID); sb.Append(d);
             sb.Append(t.Commission); sb.Append(d);
             sb.Append(t.PositionOperation.ToString()); sb.Append(d);
             sb.Append(t.Profit.ToString()); sb.Append(d);
@@ -361,7 +361,7 @@ namespace TradingLib.Common
             t = new TradeImpl(sym, xprice, size);
             t.xDate = Convert.ToInt32(rec[(int)TradeField.xDate], System.Globalization.CultureInfo.InvariantCulture);
             t.xTime = Convert.ToInt32(rec[(int)TradeField.xTime], System.Globalization.CultureInfo.InvariantCulture);
-            t.Comment = rec[(int)TradeField.Comment];
+            //t.Comment = rec[(int)TradeField.Comment];
             t.Account = rec[(int)TradeField.Account];
             t.LocalSymbol = rec[(int)TradeField.LocalSymbol];
             t.id = Convert.ToInt64(rec[(int)TradeField.ID], System.Globalization.CultureInfo.InvariantCulture);
@@ -369,7 +369,7 @@ namespace TradingLib.Common
             t.Currency = (CurrencyType)Enum.Parse(typeof(CurrencyType), rec[(int)TradeField.Currency]);
             t.SecurityType = (SecurityType)Enum.Parse(typeof(SecurityType), rec[(int)TradeField.Security]);
             t.Broker = rec[(int)TradeField.Broker];
-            t.BrokerKey = rec[(int)TradeField.BrokerKey];
+            t.TradeID = rec[(int)TradeField.BrokerKey];
             t.Commission = decimal.Parse(rec[(int)TradeField.Commission]);
             t.PositionOperation = (QSEnumPosOperation)Enum.Parse(typeof(QSEnumPosOperation), rec[(int)TradeField.PositionOperatoin]);
             t.Profit = decimal.Parse(rec[(int)TradeField.Profit]);
@@ -381,20 +381,10 @@ namespace TradingLib.Common
             return t;
         }
 
-        //记录该成交的落地broker信息
-        string _broker;
-        /// <summary>
-        /// Broker标识
-        /// </summary>
-        public string Broker { get { return _broker; } set { _broker = value; } }
-        string _brokerkey;
-        /// <summary>
-        /// Broker唯一序号
-        /// </summary>
-        public string BrokerKey { get { return _brokerkey; } set { _brokerkey = value; } }
 
-        QSEnumPosOperation _posop;
-        public QSEnumPosOperation PositionOperation { get { return _posop; } set { _posop = value; } }
+
+       
+
     }
 
 

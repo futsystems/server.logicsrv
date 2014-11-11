@@ -35,7 +35,7 @@ namespace TradingLib.Common
             //设定平仓时间
             this.CloseDate = f.xDate;
             this.CloseTime = f.xTime;
-            this.CloseTradeID = f.BrokerKey;
+            this.CloseTradeID = f.TradeID;
             this.ClosePrice = f.xPrice;
             this.CloseVolume = closesize; 
         }

@@ -122,21 +122,21 @@ namespace FutsMoniter
             Order work = new OrderImpl(_symbol.Symbol, 0);
             work.Account = _account.Account;
             work.LocalSymbol = _symbol.Symbol;
-            work.side = f;
-            work.size = Math.Abs((int)size.Value);
+            work.Side = f;
+            work.Size = Math.Abs((int)size.Value);
             work.OffsetFlag = (QSEnumOffsetFlag)cboffsetflag.SelectedValue;
             if (ismarket)
             {
-                work.price = 0;
-                work.stopp = 0;
+                work.LimitPrice = 0;
+                work.StopPrice = 0;
             }
             else
             {
                 bool islimit = this.islimit;
                 decimal limit = islimit ? (decimal)(price.Value) : 0;
                 decimal stop = !islimit ? (decimal)(price.Value) : 0;
-                work.price = limit;
-                work.stopp = stop;
+                work.LimitPrice = limit;
+                work.StopPrice = stop;
             }
             work.id = 0;
             SendOrder(work);

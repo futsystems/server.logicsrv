@@ -270,7 +270,7 @@ namespace Broker.SIM
                         //检查全部成交还是部分成交
                         Trade fill = (Trade)o;
                         fill.Broker = this.GetType().FullName;
-                        fill.BrokerKey = "000000";
+                        fill.TradeID = "000000";
                         debug("PTT Server filled: " + fill.ToString(), QSEnumDebugLevel.INFO);
 
                         bool partial = fill.UnsignedSize != o.UnsignedSize;//如果是部分成交 则需要将剩余未成交的委托 返还到委托队列
@@ -380,7 +380,6 @@ namespace Broker.SIM
 
                     Tick tick = FindTickSnapshot(o.oSymbol.TickSymbol);
 
-                    //if ((tick==null) || (!tick.isValid)) continue; tick无效时 不能直接返回,需要继续处理 否则委托会在这里丢失,后面根据是否成交来决定是否将委托放入unfilled
                     //如果是挂单 并且需要模拟实盘进行成交
                     if (tick != null && tick.isValid)
                     {
@@ -408,8 +407,8 @@ namespace Broker.SIM
                     {
                         //检查全部成交还是部分成交
                         Trade fill = (Trade)o;
-                        fill.Broker = this.GetType().FullName;
-                        fill.BrokerKey = NextFillSeq.ToString();//交易所成交编号
+                        //生成成交编号
+                        fill.BrokerTradeID = NextFillSeq.ToString();//交易所成交编号 Broker端的成交编号
 
                         debug("PTT Server Filled: " + fill.GetTradeInfo(),QSEnumDebugLevel.INFO);
 
@@ -514,13 +513,22 @@ namespace Broker.SIM
 
         /// <summary>
         /// 接收brokerrouter路由过来的委托
+        /// 模拟成交接口的相关字段规则
+        /// Broker 为模拟成交接口的Token
+        /// BrokerLocalOrderID 成交端的本地编号为空
+        /// BrokerRemoteOrderID 成交端的对端编号在委托入队列时 设定为系统内部设定的OrderSeq
+        /// 
+        /// OrderSysID 设定为BrokerRemoteOrderID
+        /// 
+        /// 成交时 由Order产生Trade,Trade中的Broker属性以及Order属性均来自于委托的相关字段 模拟成交接口需要赋值一个模拟的递增成交编号
         /// </summary>
         /// <param name="o"></param>
         public void SendOrder(Order o)
         {
             debug("PTT Server Got Order: " + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
-            o.Broker = this.GetType().FullName;//提交到Broker的委托 均会设置Broker名称
-            o.BrokerKey = "000000";
+            o.Broker = this.Token;//提交到Broker的委托 均会设置Broker名称
+            //提交委托时 设定localorderid remoteorderid
+            o.BrokerLocalOrderID = "";
             _orderinCache.Write(new OrderImpl(o));//复制委托 委托的模拟成交变化不会改变初始委托数据
 
         }
@@ -530,7 +538,10 @@ namespace Broker.SIM
             debug("PTT Server Queue Order: " + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
             //模拟交易对新提交上来的order进行复制后保留,原来的order形成事件触发.这样本地的order fill process对order信息的修改就不会影响到对外触发事件的order.
             o.Status = QSEnumOrderStatus.Opened;//标识 委托状态为open,等待成交
-            o.OrderSysID = o.OrderSeq.ToString();//当委托处于Opened的状态时,我们模拟交易所将委托标识填入 当扯单时,我们可以通过交易帐号和交易所委托编号找到对应的委托
+            //将委托置入队列时 相当于交易所接受了委托 设定brokerremoteorderid
+            o.BrokerRemoteOrderID = o.OrderSeq.ToString();//模拟成交接口中 远端委托编号 与 系统内设定的委托流水相同
+            //成交接口从远端返回成交回报会带会RemoteOrderID(成交侧的委托编号) 在模拟成交接口中 将该编号赋给分帐户端的OrderSysID //当委托处于Opened的状态时,我们模拟交易所将委托标识填入 当扯单时,我们可以通过交易帐号和交易所委托编号找到对应的委托
+            o.OrderSysID = o.BrokerRemoteOrderID;
             Order oc = new OrderImpl(o);
             aq.Enqueue(oc);//放入委托队列
 
@@ -686,7 +697,7 @@ namespace Broker.SIM
                 //debug("------------------------------------------------------1", QSEnumDebugLevel.INFO);
                 IEnumerable<Trade> trades = this.ClearCentre.GetTradesViaBroker(this.GetType().FullName);
                 //tryparse用于避免非数字brokerkey造成的异常
-                _fillseq = trades.Count() > 0 ? trades.Max(f => { int seq = 0; int.TryParse(f.BrokerKey, out seq); return seq; }) : _fillseq;
+                _fillseq = trades.Count() > 0 ? trades.Max(f => { int seq = 0; int.TryParse(f.TradeID, out seq); return seq; }) : _fillseq;
                 //debug("------------------------------------------------------2", QSEnumDebugLevel.INFO);
                 debug("Max Fill Seq:" + _fillseq.ToString(), QSEnumDebugLevel.INFO);
             }

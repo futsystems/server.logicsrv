@@ -984,7 +984,7 @@ namespace TradingLib.Core
             
             fill.id = ordid;
             fill.OrderSeq = o.OrderSeq;
-            fill.BrokerKey = "xxxxx";//随机产生的成交编号
+            fill.TradeID = "xxxxx";//随机产生的成交编号
 
             Util.sleep(100);
             exchsrv.futs_InsertTradeManual(fill);

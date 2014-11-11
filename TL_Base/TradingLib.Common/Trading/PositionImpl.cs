@@ -953,7 +953,7 @@ namespace TradingLib.Common
             pos.Side = f.PositionSide;
             pos.Volume = Math.Abs(f.xSize);
             pos.OpenPrice = f.xPrice;
-            pos.TradeID = f.BrokerKey;//开仓明细中的开仓成交编号
+            pos.TradeID = f.TradeID;//开仓明细中的开仓成交编号
             pos.HedgeFlag = "";
 
 

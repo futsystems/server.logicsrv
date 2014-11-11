@@ -71,8 +71,8 @@ namespace FutsMoniter
                 bool side = cbside.SelectedIndex == 0 ? true : false;
                 QSEnumOffsetFlag flag = cboffsetflag.SelectedIndex == 0 ? QSEnumOffsetFlag.OPEN : QSEnumOffsetFlag.CLOSE;
                 Trade f = new TradeImpl(sym, xprice, xsize * (side ? 1 : -1));
-                f.xdate = Util.ToTLDate();
-                f.xtime = Util.ToTLTime(t);
+                f.xDate = Util.ToTLDate();
+                f.xTime = Util.ToTLTime(t);
                 f.OffsetFlag = flag;
 
                 f.Account = account.Text;
