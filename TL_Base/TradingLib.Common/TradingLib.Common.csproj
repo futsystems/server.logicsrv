@@ -44,6 +44,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Tracker\BrokerTracker.cs" />
     <Compile Include="Trading\OrderError.cs" />
     <Compile Include="JsonObject\JsonObjectBase.cs" />
     <Compile Include="JsonObject\JsonProtocolManager.cs" />

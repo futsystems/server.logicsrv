@@ -130,11 +130,11 @@ namespace Broker.Live
             order.StopPrice = 0;
 
             order.OffsetFlag = o.OffsetFlag;
-
+            
             o.Broker = this.Token;
 
 
-            //通过接口发送委托,如果成功会返回接口对应逻辑的本地委托编号 否则就是发送失败
+            //通过接口发送委托,如果成功会返回接口对应逻辑的近端委托编号 否则就是发送失败
             string localid = WrapperSendOrder(ref order);
             bool success = !string.IsNullOrEmpty(localid);
             if (success)
@@ -148,7 +148,6 @@ namespace Broker.Live
                 platformid_order_map.TryAdd(o.id, lo);
                 //近端ID委托map
                 localOrderID_map.TryAdd(o.BrokerLocalOrderID, lo);
-
                 debug("Send Order Success,LocalID:" + localid, QSEnumDebugLevel.INFO);
 
             }
@@ -203,10 +202,8 @@ namespace Broker.Live
                 o.Comment = order.StatusMsg;//填充状态信息
                 o.FilledSize = order.FilledSize;//成交数量
                 o.Size = order.UnfilledSize * (o.Side ? 1 : -1);//更新当前数量
-                //o.Exchange = order.Exchange;
-                //o.OrderExchID = order.OrderExchID;//更新交易所委托编号
 
-
+                //更新RemoteOrderId/OrderSysID
                 if (!string.IsNullOrEmpty(order.BrokerRemoteOrderID))//如果远端编号存在 则设定远端编号 同时入map
                 {
                     o.BrokerRemoteOrderID = order.BrokerRemoteOrderID;
