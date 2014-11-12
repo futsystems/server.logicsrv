@@ -18,19 +18,46 @@ namespace TradingLib.API
     {
         [Description("提交至清算中心")]
         Placed=0,
-        [Description("提交至Broker")]
-        Submited=1,
-        [Description("等待成交")]
-        Opened=2,
-        [Description("成交")]
-        Filled=3,
-        [Description("部分成交")]
-        PartFilled=4,
-        [Description("取消")]
-        Canceled=5,
-        [Description("拒绝")]
-        Reject=6,
-        [Description("未知")]
-        Unknown=9,
+
+        /// <summary>
+        /// 委托已经通过接口正常提交,但是没有获得成交端的任何返回,成交侧可能拒绝也可能接受
+        /// 在其他系统中，如果Submited是表明该委托已经处于待成交状态,那么该状态对应于PendingSubmited
+        /// </summary>
+        [Description("提交至Broker")]Submited=1,
+
+        /// <summary>
+        /// 表明委托已经被成交侧接受,处于待成交状态
+        /// </summary>
+        [Description("等待成交")]Opened=2,
+
+        /// <summary>
+        /// 委托被全部成交
+        /// </summary>
+        [Description("成交")]Filled=3,
+
+        /// <summary>
+        /// 委托被部分成交
+        /// </summary>
+        [Description("部分成交")]PartFilled=4,
+
+        /// <summary>
+        /// 委托被取消
+        /// </summary>
+        [Description("取消")]Canceled=5,
+
+        /// <summary>
+        /// 委托被拒绝
+        /// </summary>
+        [Description("拒绝")]Reject=6,
+
+        /// <summary>
+        /// 如果是系统模拟的委托,则返回预提交状态，当模拟的委托条件触发,提交到成交侧时,状态更新为Submited
+        /// </summary>
+        [Description("预提交状态")]PreSubmited = 10,
+
+        /// <summary>
+        /// 状态未知
+        /// </summary>
+        [Description("未知")]Unknown=9,
     }
 }

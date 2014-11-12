@@ -9,18 +9,18 @@ using TradingLib.BrokerXAPI;
 
 namespace Broker.Live
 {
-    /*
-      * 如何处理好接口的统一调用
-      * 
-      * 
-      * 
-      * 发单时获得近端编号并设定
-      * 
-      * 获得委托回报时候 获得远端编号并设定本地的OrderSysID
-      * 
-      * 
-      * 
-      * **/
+/*
+ * 关于委托状态
+ * 分帐户侧通过接口SendOrder后 如果正常返回则Order处于Submited状态
+ * 
+ * 成交侧则表明已经通过接口提交了委托,但是接口还没有任何返回
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * */
     /// <summary>
     /// 净持仓下单模式
     /// 需要结合当前接口的持仓状态将原来的委托进行分拆 改变开平方向，从而达到净持仓的下单目的
@@ -256,24 +256,24 @@ namespace Broker.Live
         IdTracker _sonidtk = new IdTracker(2);
 
         #region 委托索引map用于按不同的方式定位委托
-        /// <summary>
-        /// 本地系统委托ID与委托的map
-        /// </summary>
-        ConcurrentDictionary<long, Order> platformid_order_map = new ConcurrentDictionary<long, Order>();
-        /// <summary>
-        /// 通过本地系统id查找对应的委托
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        Order PlatformID2Order(long id)
-        {
-            Order o = null;
-            if (platformid_order_map.TryGetValue(id, out o))
-            {
-                return o;
-            }
-            return null;
-        }
+        ///// <summary>
+        ///// 本地系统委托ID与委托的map
+        ///// </summary>
+        //ConcurrentDictionary<long, Order> platformid_order_map = new ConcurrentDictionary<long, Order>();
+        ///// <summary>
+        ///// 通过本地系统id查找对应的委托
+        ///// </summary>
+        ///// <param name="id"></param>
+        ///// <returns></returns>
+        //Order PlatformID2Order(long id)
+        //{
+        //    Order o = null;
+        //    if (platformid_order_map.TryGetValue(id, out o))
+        //    {
+        //        return o;
+        //    }
+        //    return null;
+        //}
 
         ConcurrentDictionary<string, Order> localOrderID_map = new ConcurrentDictionary<string, Order>();
         /// <summary>
@@ -388,12 +388,29 @@ namespace Broker.Live
             //2.统一发送子委托
             foreach (Order order in sonOrders)
             {
-                sonFathOrder_Map.TryAdd(order.id, o);//保存子委托到父委托映射关系
+                sonFathOrder_Map.TryAdd(order.id, fathOrder);//保存子委托到父委托映射关系
                 SendSunOrder(order);
             }
+            //如果对应的子委托有正常提交的,那么父委托就是处于提交状态
+            if (sonOrders.Any(so => so.Status == QSEnumOrderStatus.Submited))
+            {
+                fathOrder.Status = QSEnumOrderStatus.Submited;
+            }
+            //如果子委托状态为拒绝,则父委托的状态也为拒绝
+            if (sonOrders.All(so => so.Status == QSEnumOrderStatus.Reject))
+            {
+                fathOrder.Status = QSEnumOrderStatus.Reject;
+            }
+            //如果分拆的子委托一个被拒绝， 一个被接受如何处理？
+
             Util.Debug("父子委托关系链条 "+o.id +"->["+string.Join(",",sonOrders.Select(so=>so.id))+"]",QSEnumDebugLevel.INFO);
         }
 
+        /// <summary>
+        /// 发送子委托
+        /// 委托状态要么是Submited,要么是reject
+        /// </summary>
+        /// <param name="o"></param>
         void SendSunOrder(Order o)
         {
             debug("XAP[" + this.Token + "] Send SonOrder: " + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
@@ -422,13 +439,12 @@ namespace Broker.Live
             bool success = !string.IsNullOrEmpty(localid);
             if (success)
             {
+                //0.更新子委托状态为Submited状态 表明已经通过接口提交
+                o.Status = QSEnumOrderStatus.Submited;
                 //1.发送委托时设定本地委托编号
                 o.BrokerLocalOrderID = localid;
-
                 //将委托复制后加入到接口维护的map中
                 Order lo = new OrderImpl(o);
-                //系统ID委托map
-                //platformid_order_map.TryAdd(o.id, lo);
                 //近端ID委托map
                 localOrderID_map.TryAdd(o.BrokerLocalOrderID, lo);
 
@@ -439,8 +455,9 @@ namespace Broker.Live
             }
             else
             {
-                debug("Send Order Fail,will notify to client", QSEnumDebugLevel.WARNING);
                 o.Status = QSEnumOrderStatus.Reject;
+                debug("Send Order Fail,will notify to client", QSEnumDebugLevel.WARNING);
+                
             }
         }
 
@@ -501,7 +518,6 @@ namespace Broker.Live
             Order o = LocalID2Order(order.BrokerLocalOrderID);
             if (o != null)//本地记录了该委托 更新数量 状态 并对外发送
             {
-                
                 //更新委托
                 o.Status = order.OrderStatus;//更新委托状态
                 o.Comment = order.StatusMsg;//填充状态信息
@@ -517,7 +533,7 @@ namespace Broker.Live
                     //如果不存在该委托则加入该委托
                     if (!remoteOrderID_map.Keys.Contains(order.BrokerRemoteOrderID))
                     {
-                        Util.Debug("order remoteid is set,put into map, remoteid:" + order.BrokerRemoteOrderID);
+                        Util.Debug(string.Format("OrderRemoteID:{0},put into map",order.BrokerRemoteOrderID),QSEnumDebugLevel.INFO);
                         remoteOrderID_map.TryAdd(order.BrokerRemoteOrderID, o);
                     }
 
@@ -525,6 +541,9 @@ namespace Broker.Live
                 Util.Debug("更新子委托:" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
                 tk.GotOrder(o);
 
+                //如果子委托是submited则不用更新组合状态
+                bool needupdatestatus = (o.Status != QSEnumOrderStatus.Submited);
+                if (!needupdatestatus) return;//如果不需要更新委托状态 直接返回
 
                 //更新子委托数据完毕后 通过子委托找到父委托 然后转换状态并发送
                 Order fatherOrder = SonID2FatherOrder(o.id);//获得父委托
@@ -533,30 +552,46 @@ namespace Broker.Live
                 //更新父委托状态
                 fatherOrder.FilledSize = sonOrders.Sum(so => so.FilledSize);//累加成交数量
                 fatherOrder.Size = sonOrders.Sum(so => so.UnsignedSize) * (o.Side ? 1 : -1);//累加未成交数量
+                //fatherOrder.Comment = "";//填入状态信息
 
+                //更新委托组合状态
+                //由于通过接口提交委托时的状态就是submited或reject,因此submited在这里不用考虑
                 //filled + filled = filled //所有成交 父委托成交
+
+                //partfill + filled= partfill //任意部分成交 父委托部分成交
+                //partfill + partfill =partfill
+                //partfill + reject = partfill 
+                //partfill + cancel = cancel //取消一个子委托
+
 
                 //open + open = 待成交 //
                 //filled +open=>patfill //
                 //open + reject = open
 
-                //partfilled + filled= partfill //任意部分成交 父委托部分成交
-                //partfill + partfill =partfill
-                //partfill + reject = partfill 
 
-                QSEnumOrderStatus fstatus = QSEnumOrderStatus.Unknown;
+
+                QSEnumOrderStatus fstatus = fatherOrder.Status;
+                //子委托全部成交 则父委托为全部成交
                 if (sonOrders.All(so => so.Status == QSEnumOrderStatus.Filled))
                     fstatus = QSEnumOrderStatus.Filled;
-                else if (sonOrders.All(so => so.Status == QSEnumOrderStatus.Opened))
+                //子委托任一待成交,则父委托为待成交
+                else if (sonOrders.Any(so => so.Status == QSEnumOrderStatus.Opened))
                     fstatus = QSEnumOrderStatus.Opened;
+                //子委托全部拒绝,则父委托为拒绝
                 else if (sonOrders.All(so => so.Status == QSEnumOrderStatus.Reject))
                     fstatus = QSEnumOrderStatus.Reject;
+                //子委托有任一取消,则父委托为取消
                 else if(sonOrders.Any(so=>so.Status == QSEnumOrderStatus.Canceled))
                     fstatus = QSEnumOrderStatus.Canceled;
+
+                //子委托有一个委托为部分成交
                 else if (sonOrders.Any(so => so.Status == QSEnumOrderStatus.PartFilled))
                 {
+                    //另一个委托为取消，则父委托为取消
                     if (sonOrders.Any(so => so.Status == QSEnumOrderStatus.Canceled))
                         fstatus = QSEnumOrderStatus.Canceled;
+
+                    //另一个委托为拒绝,则父委托为取消
                     //if (sonOrders.Any(so => so.Status == QSEnumOrderStatus.Reject))
                     fstatus = QSEnumOrderStatus.PartFilled;
                 }

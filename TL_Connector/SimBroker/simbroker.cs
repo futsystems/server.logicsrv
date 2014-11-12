@@ -529,6 +529,7 @@ namespace Broker.SIM
             o.Broker = this.Token;//提交到Broker的委托 均会设置Broker名称
             //提交委托时 设定localorderid remoteorderid
             o.BrokerLocalOrderID = "";
+            o.Status = QSEnumOrderStatus.Submited;
             _orderinCache.Write(new OrderImpl(o));//复制委托 委托的模拟成交变化不会改变初始委托数据
 
         }

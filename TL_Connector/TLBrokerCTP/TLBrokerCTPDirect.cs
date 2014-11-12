@@ -148,13 +148,15 @@ namespace Broker.Live
                 platformid_order_map.TryAdd(o.id, lo);
                 //近端ID委托map
                 localOrderID_map.TryAdd(o.BrokerLocalOrderID, lo);
+                o.Status = QSEnumOrderStatus.Submited;
                 debug("Send Order Success,LocalID:" + localid, QSEnumDebugLevel.INFO);
 
             }
             else
             {
-                debug("Send Order Fail,will notify to client", QSEnumDebugLevel.WARNING);
                 o.Status = QSEnumOrderStatus.Reject;
+                debug("Send Order Fail,will notify to client", QSEnumDebugLevel.WARNING);
+                
             }
         }
 

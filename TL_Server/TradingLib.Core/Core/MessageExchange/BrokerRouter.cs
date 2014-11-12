@@ -70,13 +70,13 @@ namespace TradingLib.Core
             _clearCentre = c;
             _tifengine = new TIFEngine();
             //_tifengine.SendDebugEvent +=new DebugDelegate(msgdebug);
-            _tifengine.SendOrderEvent += new OrderDelegate(route_SendOrder);
+            //_tifengine.SendOrderEvent += new OrderDelegate(route_SendOrder);
             _tifengine.SendCancelEvent += new LongDelegate(route_CancelOrder);
             
 
             _ordHelper = new OrderTransactionHelper("BrokerRouter");
             //_ordHelper.SendDebugEvent +=new DebugDelegate(msgdebug);
-            _ordHelper.SendOrderEvent += new OrderDelegate(broker_sendorder);
+            //_ordHelper.SendOrderEvent += new OrderDelegate(broker_sendorder);
            
 
             StartProcessMsgOut();
@@ -343,13 +343,26 @@ namespace TradingLib.Core
                 {
                     //按照委托方式发送委托直接发送或通过本地委托模拟器进行发送
                     debug("Send  Order To Broker Side:" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
-                    broker_sendorder(o);
-                    //调用broker_sendorder对外发送委托 如果委托状态为拒绝 则表明委托被broker_send部分拒绝了，我们不用再标记委托状态为submited 因此不用再进入下一步
-                    if (o.Status != QSEnumOrderStatus.Reject)
+                    string errorTitle = string.Empty;
+                    bool ret= broker_sendorder(o,out errorTitle);
+                    //如果委托正常提交 则对外回报委托
+                    if (ret)
                     {
-                        o.Status = QSEnumOrderStatus.Submited;//委托状态修正为 已经提交到Broker
                         GotOrder(o);
                     }
+                    //如果提交委托异常,则回报委托错误
+                    else
+                    {
+                        GotOrderErrorNotify(o, errorTitle);
+                    }
+                    //调用broker_sendorder对外发送委托 如果委托状态为拒绝 则表明委托被broker_send部分拒绝了，我们不用再标记委托状态为submited 因此不用再进入下一步
+                    //if (o.Status != QSEnumOrderStatus.Reject)
+                    //{
+                    //    //o.Status = QSEnumOrderStatus.Submited;//委托状态修正为 已经提交到Broker
+                    //    GotOrder(o);
+                    //}
+                    //
+                    //GotOrder(o);
                 }
             }
             catch (Exception ex)
@@ -360,40 +373,56 @@ namespace TradingLib.Core
         }
 
 
-        void broker_sendorder(Order o)
+        bool broker_sendorder(Order o,out string errorTitle)
         {
+            return route_SendOrder(o, out errorTitle);
+
             //检查TIF设定，然后根据需要是否要通过TIFEngine来处理Order
-            switch (o.TimeInForce)
-            {
-                case QSEnumTimeInForce.DAY:
-                    route_SendOrder(o);
-                    break;
-                default:
-                    _tifengine.SendOrder(o);//问题1:相关交易通道没有开启但是我们已经将委托交由TIFEngine管理，会产生屡次取消或者取消错误
-                    break;
-            }
+            //switch (o.TimeInForce)
+            //{
+            //    case QSEnumTimeInForce.DAY:
+            //        return route_SendOrder(o,out errorTitle);
+            //    default:
+            //        _tifengine.SendOrder(o);//问题1:相关交易通道没有开启但是我们已经将委托交由TIFEngine管理，会产生屡次取消或者取消错误
+            //        break;
+            //}
         }
 
-        void route_SendOrder(Order o)
+        bool route_SendOrder(Order o,out string errorTitle)
         {
+            errorTitle = string.Empty;
             try
             {
                 IBroker broker = SelectBroker(o);
                 if (broker != null && broker.IsLive)
                 {
                     broker.SendOrder(o);
+                    //接口侧提交委托异常
+                    if (o.Status == QSEnumOrderStatus.Reject)
+                    {
+                        errorTitle = "EXECUTION_BROKER_PLACEORDER_ERROR";
+                        return false;
+                    }
+                    return true;
                 }
                 else
                 {
                     //如果没有交易通道则拒绝该委托
                     o.Status = QSEnumOrderStatus.Reject;
-                    GotOrderErrorNotify(o, "EXECUTION_BROKER_NOT_FOUND");
+                    errorTitle = "EXECUTION_BROKER_NOT_FOUND";
                     debug("没有可以交易的通道 |" + o.ToString(), QSEnumDebugLevel.WARNING);
+                    return false;
+                    //GotOrderErrorNotify(o, "EXECUTION_BROKER_NOT_FOUND");
+                    //
                 }
             }
             catch (Exception ex)
             {
                 debug(PROGRAM + ":向broker发送委托错误:" + ex.ToString() + ex.StackTrace.ToString(), QSEnumDebugLevel.ERROR);
+                o.Status = QSEnumOrderStatus.Reject;
+                errorTitle = "EXECUTION_BROKER_PLACEORDER_ERROR";
+                return false;
+                
             }
         }
 
