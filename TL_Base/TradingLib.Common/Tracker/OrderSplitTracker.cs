@@ -8,7 +8,7 @@ using TradingLib.API;
 using TradingLib.Common;
 
 
-namespace TradingLib.Common.Tracker
+namespace TradingLib.Common
 {
     
     /// <summary>
@@ -22,6 +22,12 @@ namespace TradingLib.Common.Tracker
     /// </summary>
     public class OrderSplitTracker
     {
+        string _token = string.Empty;
+        public OrderSplitTracker(string name)
+        {
+            _token = name;
+        }
+        string Token { get { return _token; } }
         //保存父委托
         ConcurrentDictionary<long, Order> fatherOrder_Map = new ConcurrentDictionary<long, Order>();
         Order FatherID2Order(long id)
@@ -141,6 +147,7 @@ namespace TradingLib.Common.Tracker
         /// <param name="fathOrder"></param>
         public void SendFatherOrder(Order fathOrder)
         {
+            Util.Debug("OrderSplitTracker[" + this.Token + "] Send FatherOrder:" + fathOrder.GetOrderInfo(), QSEnumDebugLevel.INFO);
             //1.分拆委托
             List<Order> sonOrders = SplitOrder(fathOrder);//分拆该委托
 
@@ -178,7 +185,7 @@ namespace TradingLib.Common.Tracker
 
             if (fatherOrder != null)
             {
-                //Util.Debug("XAP[" + this.Token + "] 取消父委托:" + fatherOrder.GetOrderInfo(), QSEnumDebugLevel.INFO);
+                Util.Debug("OrderSplitTracker[" + this.Token + "] 取消父委托:" + fatherOrder.GetOrderInfo(), QSEnumDebugLevel.INFO);
                 List<Order> sonOrders = FatherID2SonOrders(fatherOrder.id);//获得子委托
 
                 //如果子委托状态处于pending状态 则发送取消
@@ -296,13 +303,21 @@ namespace TradingLib.Common.Tracker
         public void GotSonOrderError(Order o, RspInfo error)
         {
             Order fatherOrder = SonID2FatherOrder(o.id);//获得父委托
+            List<Order> sonOrders = FatherID2SonOrders(fatherOrder.id);//获得所有子委托
+
             RspInfo info = new RspInfoImpl();
             info.ErrorID = error.ErrorID;
             info.ErrorMessage = error.ErrorMessage;
 
-            fatherOrder.Status = QSEnumOrderStatus.Reject;
+            //所有子委托为拒绝则父委托为拒绝
+            if (sonOrders.All(so => so.Status == QSEnumOrderStatus.Reject))
+            {
+                fatherOrder.Status = QSEnumOrderStatus.Reject;
+            }
+            //如果部分拒绝如何？另一部分处于成交状态，或者等待成就状态
+            //fatherOrder.Status = QSEnumOrderStatus.Reject;
             fatherOrder.Comment = info.ErrorMessage;
-
+            Util.Debug("更新父委托:" + fatherOrder.GetOrderInfo(), QSEnumDebugLevel.INFO);
             GotFatherOrderError(fatherOrder, info);
         }
 
