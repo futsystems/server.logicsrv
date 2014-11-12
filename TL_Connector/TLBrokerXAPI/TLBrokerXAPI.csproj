@@ -54,7 +54,6 @@
     <Compile Include="Struct.cs" />
     <Compile Include="TLBroker.cs" />
     <Compile Include="TLBrokerBase.cs" />
-    <Compile Include="TLBrokerCTP.cs" />
     <Compile Include="TLDataFeedBase.cs" />
     <Compile Include="XAPIHelper.cs" />
   </ItemGroup>

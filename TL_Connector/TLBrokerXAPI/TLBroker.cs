@@ -176,7 +176,7 @@ namespace TradingLib.BrokerXAPI
 
         }
 
-        void InitBroker()
+        public virtual void InitBroker()
         {
             //1.初始化非托管接口对象
             Util.Debug("WrapperFileName:" + Path.Combine(new string[] { _cfg.Interface.libpath_wrapper, _cfg.Interface.libname_wrapper }));

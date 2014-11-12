@@ -33,10 +33,10 @@ namespace Broker.Live
         /// </summary>
         BrokerTracker tk = null;
 
-        public TLBrokerCTPSplit()
+        public override void InitBroker()
         {
+            base.InitBroker();
             tk = new BrokerTracker(this);
-        
         }
 
         /// <summary>
@@ -53,13 +53,15 @@ namespace Broker.Live
             bool posside = o.PositionSide;//持仓操作方向 是在多头操作 还是在空头操作
 
             int longsize = tk.GetPosition(o.Symbol, true).UnsignedSize;
-            int shortsize = tk.GetPosition(o.Symbol, true).UnsignedSize;
+            int shortsize = tk.GetPosition(o.Symbol,false).UnsignedSize;
 
             IEnumerable<Order> longEntryOrders = tk.GetPendingEntryOrders(o.Symbol, true);
             IEnumerable<Order> shortEntryOrders = tk.GetPendingEntryOrders(o.Symbol, false);
             IEnumerable<Order> longExitOrders = tk.GetPendingExitOrders(o.Symbol, true);
             IEnumerable<Order> shortExitOrders = tk.GetPendingExitOrders(o.Symbol, false);
 
+
+            Util.Debug("当前持仓数量 多头:" + longsize.ToString() + " 空头:" + shortsize.ToString() + " 委托操作持仓方向:" + (posside ? "多头" : "空头") + " 开平:" + (isEntry ? "开" : "平") + " 方向:" + (side ? "买入" : "卖出") + " 数量:" + o.UnsignedSize.ToString(), QSEnumDebugLevel.INFO);
 
             //如果当前没有持仓
             if (longsize == 0 && shortsize == 0)
@@ -70,24 +72,23 @@ namespace Broker.Live
                 {
                     neworder.OffsetFlag = QSEnumOffsetFlag.OPEN;
                 }
-
-                o.Account = this.Token;
-                olist.Add(o);
+                olist.Add(neworder);
             }
-            
+
+            #region 持仓多头
             //当前持有多头持仓
             if (longsize > 0)
             {
                 //当前委托为 多头持仓操作
                 if (posside)
                 {
-                    //开仓操作 原有委托方向不变
+                    //买入开仓操作 原有委托方向不变
                     if (isEntry)
                     {
                         Order neworder = new OrderImpl(o);
                         olist.Add(neworder);
                     }
-                    else//平仓操作 检查数量是否足够，如果足够 则直接平仓
+                    else//卖出平仓操作 检查数量是否足够，如果足够 则直接平仓
                     {
                         if (o.UnsignedSize <= longsize)
                         {
@@ -149,17 +150,21 @@ namespace Broker.Live
                         neworder.OffsetFlag = QSEnumOffsetFlag.OPEN;
                         olist.Add(neworder);
                     }
-                    
                 }
+
             }
+            #endregion
+
+
+            #region 持仓空头
             //当前持有空头持仓
-            else
+            if(shortsize>0)
             {
                 if (posside)//多头持仓操作
                 {
                     if (isEntry)//买入开仓
                     {
-                        if (o.UnsignedSize < shortsize)//数量小于当前空头持仓 则直接买入平仓
+                        if (o.UnsignedSize <= shortsize)//数量小于当前空头持仓 则直接买入平仓
                         {
                             Order neworder = new OrderImpl(o);
                             neworder.OffsetFlag = QSEnumOffsetFlag.CLOSE;//变成买入平仓
@@ -202,7 +207,7 @@ namespace Broker.Live
                     }
                     else//买入平仓
                     {
-                        if (o.UnsignedSize < shortsize)//数量小于当前空头持仓 则直接买入平仓
+                        if (o.UnsignedSize <= shortsize)//数量小于当前空头持仓 则直接买入平仓
                         {
                             Order neworder = new OrderImpl(o);
                             neworder.OffsetFlag = QSEnumOffsetFlag.CLOSE;//变成买入平仓
@@ -230,21 +235,25 @@ namespace Broker.Live
                     }
                 }
             }
+            #endregion
 
+            //重置子委托的相关属性
             foreach (Order order in olist)
             {
-                o.Broker = this.Token;
-                o.BrokerLocalOrderID = "";
-                o.BrokerRemoteOrderID = "";
-                o.OrderSeq = 0;
-                o.OrderRef = "";
+                order.Broker = this.Token;
+                order.id = _sonidtk.AssignId;
+
+                order.BrokerLocalOrderID = "";
+                order.BrokerRemoteOrderID = "";
+                order.OrderSeq = 0;
+                order.OrderRef = "";
                 //重置委托相关状态
+                order.Account = this.Token;
             }
 
             return olist;
-
-        
         }
+        IdTracker _sonidtk = new IdTracker(2);
 
         #region 委托索引map用于按不同的方式定位委托
         /// <summary>
@@ -332,19 +341,25 @@ namespace Broker.Live
 
         //保存父委托
         ConcurrentDictionary<long, Order> fatherOrder_Map = new ConcurrentDictionary<long, Order>();
-
-        //保存子委托
-        ConcurrentDictionary<long, Order> soneOrder_Map = new ConcurrentDictionary<long, Order>();
+        Order FatherID2Order(long id)
+        {
+            if (fatherOrder_Map.Keys.Contains(id))
+            {
+                return fatherOrder_Map[id];
+            }
+            return null;
+        }
 
         //用于通过父委托ID找到对应的子委托
         ConcurrentDictionary<long, List<Order>> fatherSonOrder_Map = new ConcurrentDictionary<long, List<Order>>();//父子子委托映射关系
         //通过父委托ID找到对应的子委托对
-        List<Order> FathID2SonOrders(long id)
+        List<Order> FatherID2SonOrders(long id)
         {
             if (fatherSonOrder_Map.Keys.Contains(id))
                 return fatherSonOrder_Map[id];
             return null;
         }
+
         //用于通过子委托ID找到对应的父委托
         ConcurrentDictionary<long, Order> sonFathOrder_Map = new ConcurrentDictionary<long, Order>();
         /// <summary>
@@ -361,25 +376,27 @@ namespace Broker.Live
 
         public override void SendOrder(Order o)
         {
+            Util.Debug("XAP[" + this.Token + "] Send FatherOrder:" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
+            //1.分拆委托
             Order fathOrder = o;
             List<Order> sonOrders = SplitOrder(fathOrder);//分拆该委托
 
+            //将委托加入映射map
             fatherOrder_Map.TryAdd(o.id, fathOrder);//保存付委托映射关系
             fatherSonOrder_Map.TryAdd(o.id, sonOrders);//保存父委托到子委托映射关系
 
+            //2.统一发送子委托
             foreach (Order order in sonOrders)
             {
-                sonFathOrder_Map.TryAdd(o.id, order);//保存子委托到父委托映射关系
+                sonFathOrder_Map.TryAdd(order.id, o);//保存子委托到父委托映射关系
                 SendSunOrder(order);
             }
-            //统一发送子委托
-
-            
+            Util.Debug("父子委托关系链条 "+o.id +"->["+string.Join(",",sonOrders.Select(so=>so.id))+"]",QSEnumDebugLevel.INFO);
         }
 
         void SendSunOrder(Order o)
         {
-            debug("TLBrokerXAP[" + this.Token + "]: " + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
+            debug("XAP[" + this.Token + "] Send SonOrder: " + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
             XOrderField order = new XOrderField();
 
             order.ID = o.id.ToString();
@@ -414,6 +431,9 @@ namespace Broker.Live
                 //platformid_order_map.TryAdd(o.id, lo);
                 //近端ID委托map
                 localOrderID_map.TryAdd(o.BrokerLocalOrderID, lo);
+
+                //交易信息维护器获得委托
+                tk.GotOrder(o);
                 debug("Send Order Success,LocalID:" + localid, QSEnumDebugLevel.INFO);
 
             }
@@ -427,33 +447,51 @@ namespace Broker.Live
 
         public override void CancelOrder(long oid)
         {
-            Order o = PlatformID2Order(oid);
-            if (o != null)
+            Order fatherOrder = FatherID2Order(oid);
+
+            if (fatherOrder != null)
             {
-                XOrderActionField action = new XOrderActionField();
-                action.ActionFlag = QSEnumOrderActionFlag.Delete;
+                Util.Debug("XAP[" + this.Token + "] 取消父委托:" + fatherOrder.GetOrderInfo(), QSEnumDebugLevel.INFO);
+                List<Order> sonOrders = FatherID2SonOrders(fatherOrder.id);//获得子委托
 
-                action.ID = o.id.ToString();
-                action.BrokerLocalOrderID = o.BrokerLocalOrderID;
-                action.BrokerRemoteOrderID = o.BrokerRemoteOrderID;
-                action.Exchange = o.Exchange;
-                action.Price = 0;
-                action.Size = 0;
-                action.Symbol = o.Symbol;
-
-
-                if (WrapperSendOrderAction(ref action))
+                //如果子委托状态处于pending状态 则发送取消
+                foreach (Order o in sonOrders)
                 {
-
+                    if (o.IsPending())
+                    {
+                        CancelSunOrder(o);
+                    }
                 }
-                else
-                {
-                    debug("Cancel order fail,will notify to client");
-                }
+               
             }
             else
             {
                 Util.Debug("Order:" + oid.ToString() + " is not in platform_order_map in broker", QSEnumDebugLevel.WARNING);
+            }
+        }
+
+        void CancelSunOrder(Order o)
+        {
+            Util.Debug("XAP[" + this.Token + "] 取消子委托:" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
+            XOrderActionField action = new XOrderActionField();
+            action.ActionFlag = QSEnumOrderActionFlag.Delete;
+
+            action.ID = o.id.ToString();
+            action.BrokerLocalOrderID = o.BrokerLocalOrderID;
+            action.BrokerRemoteOrderID = o.BrokerRemoteOrderID;
+            action.Exchange = o.Exchange;
+            action.Price = 0;
+            action.Size = 0;
+            action.Symbol = o.Symbol;
+
+
+            if (WrapperSendOrderAction(ref action))
+            {
+
+            }
+            else
+            {
+                debug("Cancel order fail,will notify to client");
             }
         }
 
@@ -463,6 +501,7 @@ namespace Broker.Live
             Order o = LocalID2Order(order.BrokerLocalOrderID);
             if (o != null)//本地记录了该委托 更新数量 状态 并对外发送
             {
+                
                 //更新委托
                 o.Status = order.OrderStatus;//更新委托状态
                 o.Comment = order.StatusMsg;//填充状态信息
@@ -483,9 +522,13 @@ namespace Broker.Live
                     }
 
                 }
+                Util.Debug("更新子委托:" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
+                tk.GotOrder(o);
+
+
                 //更新子委托数据完毕后 通过子委托找到父委托 然后转换状态并发送
                 Order fatherOrder = SonID2FatherOrder(o.id);//获得父委托
-                List<Order> sonOrders = FathID2SonOrders(fatherOrder.id);//获得委托对
+                List<Order> sonOrders = FatherID2SonOrders(fatherOrder.id);//获得子委托
 
                 //更新父委托状态
                 fatherOrder.FilledSize = sonOrders.Sum(so => so.FilledSize);//累加成交数量
@@ -508,6 +551,8 @@ namespace Broker.Live
                     fstatus = QSEnumOrderStatus.Opened;
                 else if (sonOrders.All(so => so.Status == QSEnumOrderStatus.Reject))
                     fstatus = QSEnumOrderStatus.Reject;
+                else if(sonOrders.Any(so=>so.Status == QSEnumOrderStatus.Canceled))
+                    fstatus = QSEnumOrderStatus.Canceled;
                 else if (sonOrders.Any(so => so.Status == QSEnumOrderStatus.PartFilled))
                 {
                     if (sonOrders.Any(so => so.Status == QSEnumOrderStatus.Canceled))
@@ -515,22 +560,8 @@ namespace Broker.Live
                     //if (sonOrders.Any(so => so.Status == QSEnumOrderStatus.Reject))
                     fstatus = QSEnumOrderStatus.PartFilled;
                 }
-                
-                //filled + reject = cancel//成交 拒绝 父委托取消
-
-                ////任何一个委托拒绝则父委托状态拒绝
-                //if (sonOrders.Any(so => so.Status == QSEnumOrderStatus.Reject))
-                //{
-                //    fatherOrder.Status = QSEnumOrderStatus.Reject;
-                //}
-                //if(sonOrders.All(so))
-                ////任一个状态处于Open则
-                //if (sonOrders.Any(so => so.Status == QSEnumOrderStatus.PartFilled)||sonOrders.Any(so=>so.Status == QSEnumOrderStatus.Opened) )
-                //{
-                //    fatherOrder.Status = QSEnumOrderStatus.PartFilled;
-                //}
-
                 fatherOrder.Status = fstatus;
+                Util.Debug("更新父委托:" + fatherOrder.GetOrderInfo(), QSEnumDebugLevel.INFO);
                 NotifyOrder(fatherOrder);
             }
         }
@@ -544,7 +575,23 @@ namespace Broker.Live
             if (o != null)
             {
                 Util.Debug("该成交是本地委托所属成交,进行回报处理", QSEnumDebugLevel.WARNING);
-                Trade fill = (Trade)(new OrderImpl(o));
+
+                //子委托对应的成交
+                Trade sonfill = (Trade)(new OrderImpl(o));
+                //设定价格 数量 以及日期信息
+                sonfill.xSize = trade.Size * (trade.Side ? 1 : -1);
+                sonfill.xPrice = (decimal)trade.Price;
+
+                sonfill.xDate = trade.Date;
+                sonfill.xTime = trade.Time;
+                //远端成交编号
+                sonfill.BrokerTradeID = trade.BrokerTradeID;
+                Util.Debug("获得子成交:" + sonfill.GetTradeDetail(), QSEnumDebugLevel.INFO);
+                tk.GotFill(sonfill);
+
+                //付委托对应的成交
+                Order fatherOrder = SonID2FatherOrder(o.id);//获得父委托
+                Trade fill = (Trade)(new OrderImpl(fatherOrder));
 
                 //设定价格 数量 以及日期信息
                 fill.xSize = trade.Size * (trade.Side ? 1 : -1);
@@ -553,9 +600,9 @@ namespace Broker.Live
                 fill.xDate = trade.Date;
                 fill.xTime = trade.Time;
                 //远端成交编号
-                fill.BrokerTradeID = trade.BrokerTradeID;
+                //fill.BrokerTradeID = trade.BrokerTradeID;
                 //其余委托类的相关字段在Order处理中获得
-
+                Util.Debug("获得父成交:" + fill.GetTradeDetail(), QSEnumDebugLevel.INFO);
                 NotifyTrade(fill);
             }
         }
@@ -566,14 +613,15 @@ namespace Broker.Live
             Order o = LocalID2Order(error.Order.BrokerLocalOrderID);
             if (o != null)
             {
+                Order fatherOrder = SonID2FatherOrder(o.id);//获得父委托
                 RspInfo info = new RspInfoImpl();
                 info.ErrorID = error.Error.ErrorID;
                 info.ErrorMessage = error.Error.ErrorMsg;
 
-                o.Status = QSEnumOrderStatus.Reject;
-                o.Comment = info.ErrorMessage;
+                fatherOrder.Status = QSEnumOrderStatus.Reject;
+                fatherOrder.Comment = info.ErrorMessage;
 
-                NotifyOrderError(o, info);
+                NotifyOrderError(fatherOrder, info);
             }
         }
     }
