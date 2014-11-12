@@ -9,6 +9,21 @@ using TradingLib.BrokerXAPI;
 
 namespace Broker.Live
 {
+    /*
+     * 关于路由选择
+     * 开仓委托有自主选择委托的功能
+     * 平仓委托则需要按照对应持仓的Broker来决定需要发送到那个成交接口
+     * 那如何知道当前所平持仓呢？如果当前持仓横跨了几个成交接口，那如何处理，是否需要在BrokerRouter侧再进行一次委托拆分？这样应该是太过于复杂了
+     * 平仓时，我们获得当前所平持仓明细的Broker，从而就知道该委托应该发送到哪个Broker去平仓
+     * 应为建立持仓明细时，开仓成交中有对应的Broker数据，表明该成就是从哪个Broker获得的成交
+     * 
+     * 关于委托分拆，我们需要建立更为抽象可用的分拆机制
+     * 父委托-子委托，然后父委托进去，子委出来，子委托获得回报后，对应有父委托的回报
+     * 
+     * 
+     * 
+     * 
+     * **/
 /*
  * 关于委托状态
  * 分帐户侧通过接口SendOrder后 如果正常返回则Order处于Submited状态
@@ -24,6 +39,10 @@ namespace Broker.Live
     /// <summary>
     /// 净持仓下单模式
     /// 需要结合当前接口的持仓状态将原来的委托进行分拆 改变开平方向，从而达到净持仓的下单目的
+    /// 状态一
+    /// 持有多头2手，挂单卖开2手，系统判断后 转换成  卖平2手，此时系统可挂平仓单量为0
+    /// 此时买开没有问题，
+    /// 
     /// </summary>
     public class TLBrokerCTPSplit : TLBroker
     {
@@ -39,12 +58,30 @@ namespace Broker.Live
             tk = new BrokerTracker(this);
         }
 
+        IdTracker _sonidtk = new IdTracker(2);
+
+        /// <summary>
+        /// 直接发送委托
+        /// 不分拆委托进行保证金降低
+        /// </summary>
+        /// <param name="o"></param>
+        /// <returns></returns>
+        List<Order> DirectOrder(Order o)
+        {
+            List<Order> olist = new List<Order>();
+            Order neworder = new OrderImpl(o);
+            olist.Add(neworder);
+
+            ResetOrder(ref olist);
+
+            return olist;
+        }
         /// <summary>
         /// 将原始的分帐户侧委托分拆转义
         /// </summary>
         /// <param name="o"></param>
         /// <returns></returns>
-        public List<Order> SplitOrder(Order o)
+        List<Order> SplitOrder(Order o)
         {
             List<Order> olist = new List<Order>();
 
@@ -59,11 +96,14 @@ namespace Broker.Live
             IEnumerable<Order> shortEntryOrders = tk.GetPendingEntryOrders(o.Symbol, false);
             IEnumerable<Order> longExitOrders = tk.GetPendingExitOrders(o.Symbol, true);
             IEnumerable<Order> shortExitOrders = tk.GetPendingExitOrders(o.Symbol, false);
+            int longPendingEntrySize = longEntryOrders.Sum(po => po.UnsignedSize);
+            int longPendingExitSize = longExitOrders.Sum(po => po.UnsignedSize);
+            int shortPendingEntrySize = shortEntryOrders.Sum(po => po.UnsignedSize);
+            int shortPendingExitSize = shortExitOrders.Sum(po => po.UnsignedSize);
 
+            Util.Debug("当前持仓数量 多头:" + longsize.ToString() + " 空头:" + shortsize.ToString() +"待买开:"+longPendingEntrySize.ToString() +" 待卖平:"+longPendingExitSize.ToString()+" 待卖开:"+shortPendingEntrySize.ToString() +" 待买平"+shortPendingExitSize.ToString()+ " 委托操作持仓方向:" + (posside ? "多头" : "空头") + " 开平:" + (isEntry ? "开" : "平") + " 方向:" + (side ? "买入" : "卖出") + " 数量:" + o.UnsignedSize.ToString(), QSEnumDebugLevel.INFO);
 
-            Util.Debug("当前持仓数量 多头:" + longsize.ToString() + " 空头:" + shortsize.ToString() + " 委托操作持仓方向:" + (posside ? "多头" : "空头") + " 开平:" + (isEntry ? "开" : "平") + " 方向:" + (side ? "买入" : "卖出") + " 数量:" + o.UnsignedSize.ToString(), QSEnumDebugLevel.INFO);
-
-            //如果当前没有持仓
+            //如果当前没有持仓 则直接开仓
             if (longsize == 0 && shortsize == 0)
             {
                 Order neworder = new OrderImpl(o);
@@ -74,10 +114,48 @@ namespace Broker.Live
                 }
                 olist.Add(neworder);
             }
+            /*
+             * 持有2手多单,卖开2手转成卖平2手
+             * 
+             * 卖开/卖平，就不为能再转成卖平，需要转换成卖开
+             * 
+             * 此时再下买开，则需要跳转到空的方向去平，而不是直接判断多头方向，
+             * 系统需要往保证金减少的方向进行
+             * 并且委托只能在一个方向进行拆单
+             * 
+             * 规则2
+             * 多头2手
+             * 空头5手
+             * 
+             * 此时空头操作，买平2手，如果按照原来的逻辑，则进入多头检查，结果就是变成买开2手，这个逻辑要调整
+             * 要进入保证金多的方向进行检查
+             * 
+             * 如果进入空头部分检查，直接买平，如果空头有挂单，无可平持仓，则买开
+             * 
+             * */
+            int longcanexit = longsize - longPendingExitSize;//当前持有的多头持仓数量 - 处于挂单状态的卖平数量 = 当前可以挂卖平数量
+            int shortcanexit = shortsize - shortPendingExitSize;//当前持有的空头持仓数量 - 处于挂单状态的买平数量 = 当前可以挂买平数量
+           
+            //如果同时持有多头和空头 则需要判断进入哪个持仓方向进行拆单
+            if (longsize > 0 && shortsize > 0)
+            {
+                //买入操作 希望进入空头判定 转换成买平操作
+                if (side)
+                {
+                    goto SHORTSIDE;
+                }
+                else//卖出操作 进入多头判定 转换成卖平操作
+                { 
+                    goto LONGSIDE;
+                }
+            }
+            
+
 
             #region 持仓多头
-            //当前持有多头持仓
-            if (longsize > 0)
+            //当前持有多头持仓 可以挂买开 卖平
+        LONGSIDE:
+            if (longsize > 0 && olist.Count==0)
             {
                 //当前委托为 多头持仓操作
                 if (posside)
@@ -88,30 +166,39 @@ namespace Broker.Live
                         Order neworder = new OrderImpl(o);
                         olist.Add(neworder);
                     }
-                    else//卖出平仓操作 检查数量是否足够，如果足够 则直接平仓
+                    else//卖出平仓操作 
                     {
-                        if (o.UnsignedSize <= longsize)
+                        if (longcanexit > 0)//如果有可平持仓
+                        {
+                            if (o.UnsignedSize <= longcanexit) //检查数量是否足够，如果足够 则直接平仓
+                            {
+                                Order neworder = new OrderImpl(o);
+                                olist.Add(neworder);
+                            }
+                            else //否则拆单
+                            {
+                                //第一条委托平掉原来的持仓
+                                Order neworder1 = new OrderImpl(o);
+                                neworder1.TotalSize = -1 * longcanexit;
+                                neworder1.Size = neworder1.TotalSize;
+                                neworder1.OffsetFlag = QSEnumOffsetFlag.CLOSE;
+
+
+                                //第二条委托反向 卖出开仓
+                                Order neworder2 = new OrderImpl(o);
+                                neworder2.TotalSize = -1 * (o.UnsignedSize - neworder1.UnsignedSize);
+                                neworder2.Size = neworder2.TotalSize;
+                                neworder2.OffsetFlag = QSEnumOffsetFlag.OPEN;
+                                //
+                                olist.Add(neworder1);
+                                olist.Add(neworder2);
+                            }
+                        }
+                        else//已经被挂单占用 没有可平手数，则全部转换成开仓
                         {
                             Order neworder = new OrderImpl(o);
+                            neworder.OffsetFlag = QSEnumOffsetFlag.OPEN;
                             olist.Add(neworder);
-                        }
-                        else
-                        {
-                            //第一条委托平掉原来的持仓
-                            Order neworder1 = new OrderImpl(o);
-                            neworder1.TotalSize = -1 * longsize;
-                            neworder1.Size = neworder1.TotalSize;
-                            neworder1.OffsetFlag = QSEnumOffsetFlag.CLOSE;
-
-                            //第二条委托反向 卖出开仓
-                            Order neworder2 = new OrderImpl(o);
-                            neworder2.TotalSize = -1 * (o.UnsignedSize - neworder1.UnsignedSize);
-                            neworder2.Size = neworder2.TotalSize;
-                            neworder2.OffsetFlag = QSEnumOffsetFlag.OPEN;
-
-                            //
-                            olist.Add(neworder1);
-                            olist.Add(neworder2);
                         }
                     }
                 }
@@ -119,29 +206,37 @@ namespace Broker.Live
                 {
                     if (isEntry)//卖出开仓
                     {
-                        if (o.UnsignedSize <= longsize)
+                        if (longcanexit > 0)
+                        {
+                            if (o.UnsignedSize <= longcanexit)
+                            {
+                                Order neworder = new OrderImpl(o);
+                                neworder.OffsetFlag = QSEnumOffsetFlag.CLOSE;//变成卖出平仓
+                                olist.Add(neworder);
+                            }
+                            else
+                            {
+                                //第一条委托平掉原来的持仓
+                                Order neworder1 = new OrderImpl(o);
+                                neworder1.TotalSize = -1 * longcanexit;
+                                neworder1.Size = neworder1.TotalSize;
+                                neworder1.OffsetFlag = QSEnumOffsetFlag.CLOSE;
+
+                                //第二条委托反向 卖出开仓
+                                Order neworder2 = new OrderImpl(o);
+                                neworder2.TotalSize = -1 * (o.UnsignedSize - neworder1.UnsignedSize);
+                                neworder2.Size = neworder2.TotalSize;
+                                neworder2.OffsetFlag = QSEnumOffsetFlag.OPEN;
+
+                                //
+                                olist.Add(neworder1);
+                                olist.Add(neworder2);
+                            }
+                        }
+                        else//卖出开仓,直接开仓
                         {
                             Order neworder = new OrderImpl(o);
-                            neworder.OffsetFlag = QSEnumOffsetFlag.CLOSE;//变成卖出平仓
                             olist.Add(neworder);
-                        }
-                        else
-                        {
-                            //第一条委托平掉原来的持仓
-                            Order neworder1 = new OrderImpl(o);
-                            neworder1.TotalSize = -1 * longsize;
-                            neworder1.Size = neworder1.TotalSize;
-                            neworder1.OffsetFlag = QSEnumOffsetFlag.CLOSE;
-
-                            //第二条委托反向 卖出开仓
-                            Order neworder2 = new OrderImpl(o);
-                            neworder2.TotalSize = -1 * (o.UnsignedSize - neworder1.UnsignedSize);
-                            neworder2.Size = neworder2.TotalSize;
-                            neworder2.OffsetFlag = QSEnumOffsetFlag.OPEN;
-
-                            //
-                            olist.Add(neworder1);
-                            olist.Add(neworder2);
                         }
                     }
                     else //买入平仓
@@ -155,38 +250,46 @@ namespace Broker.Live
             }
             #endregion
 
-
             #region 持仓空头
+        SHORTSIDE:
             //当前持有空头持仓
-            if(shortsize>0)
+            if (shortsize > 0 && olist.Count == 0)
             {
                 if (posside)//多头持仓操作
                 {
                     if (isEntry)//买入开仓
                     {
-                        if (o.UnsignedSize <= shortsize)//数量小于当前空头持仓 则直接买入平仓
+                        if (shortcanexit > 0)
+                        {
+                            if (o.UnsignedSize <= shortcanexit)//数量小于当前空头持仓 则直接买入平仓
+                            {
+                                Order neworder = new OrderImpl(o);
+                                neworder.OffsetFlag = QSEnumOffsetFlag.CLOSE;//变成买入平仓
+                                olist.Add(neworder);
+                            }
+                            else
+                            {
+                                //第一条委托平掉原来的持仓
+                                Order neworder1 = new OrderImpl(o);
+                                neworder1.TotalSize = shortcanexit;
+                                neworder1.Size = neworder1.TotalSize;
+                                neworder1.OffsetFlag = QSEnumOffsetFlag.CLOSE;
+
+                                //第二条委托反向 买入开仓
+                                Order neworder2 = new OrderImpl(o);
+                                neworder2.TotalSize = (o.UnsignedSize - neworder1.UnsignedSize);
+                                neworder2.Size = neworder2.TotalSize;
+                                neworder2.OffsetFlag = QSEnumOffsetFlag.OPEN;
+
+                                //
+                                olist.Add(neworder1);
+                                olist.Add(neworder2);
+                            }
+                        }
+                        else//没有空头持仓可以平 则直接开多仓
                         {
                             Order neworder = new OrderImpl(o);
-                            neworder.OffsetFlag = QSEnumOffsetFlag.CLOSE;//变成买入平仓
                             olist.Add(neworder);
-                        }
-                        else
-                        {
-                            //第一条委托平掉原来的持仓
-                            Order neworder1 = new OrderImpl(o);
-                            neworder1.TotalSize = shortsize;
-                            neworder1.Size = neworder1.TotalSize;
-                            neworder1.OffsetFlag = QSEnumOffsetFlag.CLOSE;
-
-                            //第二条委托反向 买入开仓
-                            Order neworder2 = new OrderImpl(o);
-                            neworder2.TotalSize = (o.UnsignedSize - neworder1.UnsignedSize);
-                            neworder2.Size = neworder2.TotalSize;
-                            neworder2.OffsetFlag = QSEnumOffsetFlag.OPEN;
-
-                            //
-                            olist.Add(neworder1);
-                            olist.Add(neworder2);
                         }
 
                     }
@@ -207,29 +310,38 @@ namespace Broker.Live
                     }
                     else//买入平仓
                     {
-                        if (o.UnsignedSize <= shortsize)//数量小于当前空头持仓 则直接买入平仓
+                        if (shortcanexit > 0)
+                        {
+                            if (o.UnsignedSize <= shortcanexit)//数量小于当前空头持仓 则直接买入平仓
+                            {
+                                Order neworder = new OrderImpl(o);
+                                neworder.OffsetFlag = QSEnumOffsetFlag.CLOSE;//变成买入平仓
+                                olist.Add(neworder);
+                            }
+                            else
+                            {
+                                //第一条委托平掉原来的持仓
+                                Order neworder1 = new OrderImpl(o);
+                                neworder1.TotalSize = shortcanexit;
+                                neworder1.Size = neworder1.TotalSize;
+                                neworder1.OffsetFlag = QSEnumOffsetFlag.CLOSE;
+
+                                //第二条委托反向 买入开仓
+                                Order neworder2 = new OrderImpl(o);
+                                neworder2.TotalSize = (o.UnsignedSize - neworder1.UnsignedSize);
+                                neworder2.Size = neworder2.TotalSize;
+                                neworder2.OffsetFlag = QSEnumOffsetFlag.OPEN;
+
+                                //
+                                olist.Add(neworder1);
+                                olist.Add(neworder2);
+                            }
+                        }
+                        else//空头没有持仓可以平，则直接转换成开仓
                         {
                             Order neworder = new OrderImpl(o);
-                            neworder.OffsetFlag = QSEnumOffsetFlag.CLOSE;//变成买入平仓
+                            neworder.OffsetFlag = QSEnumOffsetFlag.OPEN;
                             olist.Add(neworder);
-                        }
-                        else
-                        {
-                            //第一条委托平掉原来的持仓
-                            Order neworder1 = new OrderImpl(o);
-                            neworder1.TotalSize = shortsize;
-                            neworder1.Size = neworder1.TotalSize;
-                            neworder1.OffsetFlag = QSEnumOffsetFlag.CLOSE;
-
-                            //第二条委托反向 买入开仓
-                            Order neworder2 = new OrderImpl(o);
-                            neworder2.TotalSize = (o.UnsignedSize - neworder1.UnsignedSize);
-                            neworder2.Size = neworder2.TotalSize;
-                            neworder2.OffsetFlag = QSEnumOffsetFlag.OPEN;
-
-                            //
-                            olist.Add(neworder1);
-                            olist.Add(neworder2);
                         }
                         
                     }
@@ -237,6 +349,17 @@ namespace Broker.Live
             }
             #endregion
 
+            ResetOrder(ref olist);
+
+            return olist;
+        }
+
+        /// <summary>
+        /// 重置子委托相关字段
+        /// </summary>
+        /// <param name="olist"></param>
+        void ResetOrder(ref List<Order> olist)
+        {
             //重置子委托的相关属性
             foreach (Order order in olist)
             {
@@ -247,66 +370,15 @@ namespace Broker.Live
                 order.BrokerRemoteOrderID = "";
                 order.OrderSeq = 0;
                 order.OrderRef = "";
+                if (order.OffsetFlag == QSEnumOffsetFlag.CLOSE)
+                {
+                    order.OffsetFlag = QSEnumOffsetFlag.CLOSETODAY;
+                }
                 //重置委托相关状态
                 order.Account = this.Token;
             }
-
-            return olist;
         }
-        IdTracker _sonidtk = new IdTracker(2);
-
-        #region 委托索引map用于按不同的方式定位委托
-        ///// <summary>
-        ///// 本地系统委托ID与委托的map
-        ///// </summary>
-        //ConcurrentDictionary<long, Order> platformid_order_map = new ConcurrentDictionary<long, Order>();
-        ///// <summary>
-        ///// 通过本地系统id查找对应的委托
-        ///// </summary>
-        ///// <param name="id"></param>
-        ///// <returns></returns>
-        //Order PlatformID2Order(long id)
-        //{
-        //    Order o = null;
-        //    if (platformid_order_map.TryGetValue(id, out o))
-        //    {
-        //        return o;
-        //    }
-        //    return null;
-        //}
-
-        ConcurrentDictionary<string, Order> localOrderID_map = new ConcurrentDictionary<string, Order>();
-        /// <summary>
-        /// 通过成交对端localid查找委托
-        /// 本端向成交端提交委托时需要按一定的方式储存一个委托本地编号,用于远端定位
-        /// 具体来讲就是通过该编号可以按一定方法告知成交对端进行撤单
-        /// </summary>
-        /// <param name="localid"></param>
-        /// <returns></returns>
-        Order LocalID2Order(string localid)
-        {
-            Order o = null;
-            if (localOrderID_map.TryGetValue(localid, out o))
-            {
-                return o;
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// 交易所编号 委托 map
-        /// </summary>
-        ConcurrentDictionary<string, Order> remoteOrderID_map = new ConcurrentDictionary<string, Order>();
-        Order RemoteID2Order(string sysid)
-        {
-            Order o = null;
-            if (remoteOrderID_map.TryGetValue(sysid, out o))
-            {
-                return o;
-            }
-            return null;
-        }
-        #endregion
+        
 
 
         public override void OnResume()
@@ -339,6 +411,39 @@ namespace Broker.Live
             //}
         }
 
+
+        #region 委托索引map用于按不同的方式定位委托
+        ConcurrentDictionary<string, Order> localOrderID_map = new ConcurrentDictionary<string, Order>();
+        /// <summary>
+        /// 通过成交对端localid查找委托
+        /// 本端向成交端提交委托时需要按一定的方式储存一个委托本地编号,用于远端定位
+        /// 具体来讲就是通过该编号可以按一定方法告知成交对端进行撤单
+        /// </summary>
+        /// <param name="localid"></param>
+        /// <returns></returns>
+        Order LocalID2Order(string localid)
+        {
+            Order o = null;
+            if (localOrderID_map.TryGetValue(localid, out o))
+            {
+                return o;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 交易所编号 委托 map
+        /// </summary>
+        ConcurrentDictionary<string, Order> remoteOrderID_map = new ConcurrentDictionary<string, Order>();
+        Order RemoteID2Order(string sysid)
+        {
+            Order o = null;
+            if (remoteOrderID_map.TryGetValue(sysid, out o))
+            {
+                return o;
+            }
+            return null;
+        }
         //保存父委托
         ConcurrentDictionary<long, Order> fatherOrder_Map = new ConcurrentDictionary<long, Order>();
         Order FatherID2Order(long id)
@@ -373,6 +478,7 @@ namespace Broker.Live
                 return sonFathOrder_Map[id];
             return null;
         }
+        #endregion
 
         public override void SendOrder(Order o)
         {
@@ -496,7 +602,7 @@ namespace Broker.Live
             action.ID = o.id.ToString();
             action.BrokerLocalOrderID = o.BrokerLocalOrderID;
             action.BrokerRemoteOrderID = o.BrokerRemoteOrderID;
-            action.Exchange = o.Exchange;
+            action.Exchange = o.BrokerRemoteOrderID.Split(':')[0];//从RemoeOrderID获得交易所信息
             action.Price = 0;
             action.Size = 0;
             action.Symbol = o.Symbol;
@@ -548,6 +654,8 @@ namespace Broker.Live
                 //更新子委托数据完毕后 通过子委托找到父委托 然后转换状态并发送
                 Order fatherOrder = SonID2FatherOrder(o.id);//获得父委托
                 List<Order> sonOrders = FatherID2SonOrders(fatherOrder.id);//获得子委托
+
+                fatherOrder.OrderSysID = fatherOrder.OrderSeq.ToString();//父委托OrderSysID编号 取系统的OrderSeq
 
                 //更新父委托状态
                 fatherOrder.FilledSize = sonOrders.Sum(so => so.FilledSize);//累加成交数量
@@ -648,14 +756,29 @@ namespace Broker.Live
             Order o = LocalID2Order(error.Order.BrokerLocalOrderID);
             if (o != null)
             {
+                //
+                o.Status = QSEnumOrderStatus.Reject;
+                o.Comment = error.Error.ErrorMsg;
+                Util.Debug("更新子委托:" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
+                tk.GotOrder(o);
+
                 Order fatherOrder = SonID2FatherOrder(o.id);//获得父委托
+                List<Order> sonOrders = FatherID2SonOrders(fatherOrder.id);//获得所有子委托
+                
+
                 RspInfo info = new RspInfoImpl();
                 info.ErrorID = error.Error.ErrorID;
                 info.ErrorMessage = error.Error.ErrorMsg;
 
-                fatherOrder.Status = QSEnumOrderStatus.Reject;
+                //所有子委托为拒绝则父委托为拒绝
+                if (sonOrders.All(so => so.Status == QSEnumOrderStatus.Reject))
+                {
+                    fatherOrder.Status = QSEnumOrderStatus.Reject;
+                }
+                //如果部分拒绝如何？另一部分处于成交状态，或者等待成就状态
+                //fatherOrder.Status = QSEnumOrderStatus.Reject;
                 fatherOrder.Comment = info.ErrorMessage;
-
+                Util.Debug("更新父委托:" + fatherOrder.GetOrderInfo(), QSEnumDebugLevel.INFO);
                 NotifyOrderError(fatherOrder, info);
             }
         }

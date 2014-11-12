@@ -268,8 +268,7 @@ namespace TradingLib.Core
             }
             else 
             {
-
-                debug("通过orderref或者orderexchid查找委托 orderref:" + action.OrderRef, QSEnumDebugLevel.INFO);
+                debug("OrderAction OrderRef:" + action.OrderRef + " Front:" + action.FrontID.ToString() + " Session:" + action.SessionID.ToString() + " OrderSysID:" + action.OrderExchID, QSEnumDebugLevel.INFO);
                 foreach (Order tmp in account.Orders)
                 {
                     if ((tmp.OrderRef == action.OrderRef && tmp.FrontIDi == action.FrontID && tmp.SessionIDi == action.SessionID) || (tmp.OrderSysID == action.OrderExchID))
@@ -318,6 +317,7 @@ namespace TradingLib.Core
             }
             else//委托操作所指定的委托不存在 委托操作字段错误
             {
+                Util.Debug("对应委托没有找到", QSEnumDebugLevel.WARNING);
                 ErrorOrderActionNotify notify = ResponseTemplate<ErrorOrderActionNotify>.SrvSendNotifyResponse(action.Account);
                 notify.OrderAction = action;
                 notify.RspInfo.Fill("ORDERACTION_BAD_FIELD");
