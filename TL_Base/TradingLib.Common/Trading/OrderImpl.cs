@@ -222,6 +222,9 @@ namespace TradingLib.Common
             this.SessionIDi = copythis.SessionIDi;
             this.FrontIDi = copythis.FrontIDi;
             this.RequestID = copythis.RequestID;
+
+            this.FatherID = copythis.FatherID;
+            this.Breed = copythis.Breed;
         }
 
         public OrderImpl(string sym, bool side, int size, decimal p, decimal s, string c, int time, int date)

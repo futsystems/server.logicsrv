@@ -19,6 +19,9 @@ namespace TradingLib.Common
     /// 该组件实现了将某个委托按一定逻辑分拆后下发到子委托操作端
     /// 然后从子委托操作端获得回报处理后，再处理成父委托回报对外输出
     /// 
+    /// 父委托编号->父委托
+    /// 父委托编号->子委托列表
+    /// 子委托编号->父委托
     /// </summary>
     public class OrderSplitTracker
     {
@@ -182,12 +185,10 @@ namespace TradingLib.Common
         public void CancelFatherOrder(long oid)
         {
             Order fatherOrder = FatherID2Order(oid);
-
             if (fatherOrder != null)
             {
                 Util.Debug("OrderSplitTracker[" + this.Token + "] 取消父委托:" + fatherOrder.GetOrderInfo(), QSEnumDebugLevel.INFO);
                 List<Order> sonOrders = FatherID2SonOrders(fatherOrder.id);//获得子委托
-
                 //如果子委托状态处于pending状态 则发送取消
                 foreach (Order o in sonOrders)
                 {
@@ -196,7 +197,6 @@ namespace TradingLib.Common
                         CancelSonOrder(o);
                     }
                 }
-
             }
             else
             {
@@ -213,34 +213,17 @@ namespace TradingLib.Common
         /// <param name="o"></param>
         public void GotSonOrder(Order o)
         {
-
             //更新子委托数据完毕后 通过子委托找到父委托 然后转换状态并发送
             Order fatherOrder = SonID2FatherOrder(o.id);//获得父委托
-            List<Order> sonOrders = FatherID2SonOrders(fatherOrder.id);//获得子委托
-
+            List<Order> sonOrders = FatherID2SonOrders(fatherOrder.id);//获得子委托列表
+            
             fatherOrder.OrderSysID = fatherOrder.OrderSeq.ToString();//父委托OrderSysID编号 取系统的OrderSeq
 
-            //更新父委托状态
+            //更新父委托状态 成交数量 状态 以及 状态信息
             fatherOrder.FilledSize = sonOrders.Sum(so => so.FilledSize);//累加成交数量
             fatherOrder.Size = sonOrders.Sum(so => so.UnsignedSize) * (o.Side ? 1 : -1);//累加未成交数量
             //fatherOrder.Comment = "";//填入状态信息
-
-            //更新委托组合状态
-            //由于通过接口提交委托时的状态就是submited或reject,因此submited在这里不用考虑
-            //filled + filled = filled //所有成交 父委托成交
-
-            //partfill + filled= partfill //任意部分成交 父委托部分成交
-            //partfill + partfill =partfill
-            //partfill + reject = partfill 
-            //partfill + cancel = cancel //取消一个子委托
-
-
-            //open + open = 待成交 //
-            //filled +open=>patfill //
-            //open + reject = open
-
-
-
+            //组合状态
             QSEnumOrderStatus fstatus = fatherOrder.Status;
             //子委托全部成交 则父委托为全部成交
             if (sonOrders.All(so => so.Status == QSEnumOrderStatus.Filled))
@@ -254,7 +237,6 @@ namespace TradingLib.Common
             //子委托有任一取消,则父委托为取消
             else if (sonOrders.Any(so => so.Status == QSEnumOrderStatus.Canceled))
                 fstatus = QSEnumOrderStatus.Canceled;
-
             //子委托有一个委托为部分成交
             else if (sonOrders.Any(so => so.Status == QSEnumOrderStatus.PartFilled))
             {
@@ -269,6 +251,10 @@ namespace TradingLib.Common
             fatherOrder.Status = fstatus;
             Util.Debug("更新父委托:" + fatherOrder.GetOrderInfo(), QSEnumDebugLevel.INFO);
             GotFatherOrder(fatherOrder);
+            if (fatherOrder.Status == QSEnumOrderStatus.Canceled)
+            {
+                GotFatherCancel(fatherOrder.id);
+            }
         }
 
         /// <summary>
@@ -277,9 +263,8 @@ namespace TradingLib.Common
         /// <param name="f"></param>
         public void GotSonFill(Trade f)
         {
-            long sonid = f.id;//从成交获得对应的本地son委托回报
             //付委托对应的成交
-            Order fatherOrder = SonID2FatherOrder(sonid);//获得父委托
+            Order fatherOrder = SonID2FatherOrder(f.id);//获得父委托
             Trade fill = (Trade)(new OrderImpl(fatherOrder));
 
             //设定价格 数量 以及日期信息
@@ -287,7 +272,7 @@ namespace TradingLib.Common
             fill.xPrice = (decimal)f.xPrice;
 
             fill.xDate = f.xDate;
-            fill.xTime = f.xDate;
+            fill.xTime = f.xTime;
             //远端成交编号
             //fill.BrokerTradeID = trade.BrokerTradeID;
             //其余委托类的相关字段在Order处理中获得
@@ -309,6 +294,7 @@ namespace TradingLib.Common
             info.ErrorID = error.ErrorID;
             info.ErrorMessage = error.ErrorMessage;
 
+            bool isrejected = (fatherOrder.Status == QSEnumOrderStatus.Reject);
             //所有子委托为拒绝则父委托为拒绝
             if (sonOrders.All(so => so.Status == QSEnumOrderStatus.Reject))
             {
@@ -318,7 +304,9 @@ namespace TradingLib.Common
             //fatherOrder.Status = QSEnumOrderStatus.Reject;
             fatherOrder.Comment = info.ErrorMessage;
             Util.Debug("更新父委托:" + fatherOrder.GetOrderInfo(), QSEnumDebugLevel.INFO);
-            GotFatherOrderError(fatherOrder, info);
+            //父委托已经对外回报过拒绝则不再对外回报
+            if (!isrejected)
+                GotFatherOrderError(fatherOrder, info);
         }
 
         #endregion

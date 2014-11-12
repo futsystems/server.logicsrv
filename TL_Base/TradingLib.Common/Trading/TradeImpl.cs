@@ -246,6 +246,20 @@ namespace TradingLib.Common
         #endregion
 
 
+        #region 委托分解属性
+        long _fatherID = 0;
+        /// <summary>
+        /// 父委托编号
+        /// </summary>
+        public long FatherID { get { return _fatherID; } set { _fatherID = value; } }
+
+        QSEnumOrderBreedType _breed= QSEnumOrderBreedType.ACCT;
+        /// <summary>
+        /// 委托分解源
+        /// </summary>
+        public QSEnumOrderBreedType Breed { get { return _breed; } set { _breed = value; } }
+
+        #endregion
 
         #region 成交构造函数
         public TradeImpl() { }
@@ -301,6 +315,9 @@ namespace TradingLib.Common
             this.OrderSeq = copytrade.OrderSeq;
             this.OrderSysID = copytrade.OrderSysID;
             this.TradeID = copytrade.TradeID;
+
+            this.FatherID = copytrade.FatherID;
+            this.Breed = copytrade.Breed;
         }
         #endregion
 

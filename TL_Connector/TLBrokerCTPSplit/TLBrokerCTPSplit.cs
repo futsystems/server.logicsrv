@@ -43,6 +43,9 @@ namespace Broker.Live
     /// 持有多头2手，挂单卖开2手，系统判断后 转换成  卖平2手，此时系统可挂平仓单量为0
     /// 此时买开没有问题，
     /// 
+    /// 在实盘成交侧 帐户侧委托通过分拆发送或直接发送的模式向接口发单，在发单过程成分帐户侧的交易记录由清算中心记录
+    /// 成交侧的委托也需要记录到数据库,在接口加载时从数据库加载成交侧的交易数据
+    /// 
     /// </summary>
     public class TLBrokerCTPSplit : TLBroker
     {
@@ -85,7 +88,7 @@ namespace Broker.Live
             Order neworder = new OrderImpl(o);
             olist.Add(neworder);
 
-            ResetOrder(ref olist);
+            ResetOrder(o,ref olist);
 
             return olist;
         }
@@ -362,7 +365,7 @@ namespace Broker.Live
             }
             #endregion
 
-            ResetOrder(ref olist);
+            ResetOrder(o,ref olist);
 
             return olist;
         }
@@ -371,11 +374,16 @@ namespace Broker.Live
         /// 重置子委托相关字段
         /// </summary>
         /// <param name="olist"></param>
-        void ResetOrder(ref List<Order> olist)
+        void ResetOrder(Order fatherorder,ref List<Order> olist)
         {
             //重置子委托的相关属性
             foreach (Order order in olist)
             {
+                //设定分解后委托父ID
+                order.FatherID = fatherorder.id;
+                //设定当前分解源
+                order.Breed = QSEnumOrderBreedType.BROKER;
+
                 order.Broker = this.Token;
                 order.id = _sonidtk.AssignId;
 
@@ -383,13 +391,18 @@ namespace Broker.Live
                 order.BrokerRemoteOrderID = "";
                 order.OrderSeq = 0;
                 order.OrderRef = "";
+                order.FrontIDi = 0;
+                order.SessionIDi = 0;
                 if (order.OffsetFlag == QSEnumOffsetFlag.CLOSE)
                 {
                     order.OffsetFlag = QSEnumOffsetFlag.CLOSETODAY;
                 }
+                
                 //重置委托相关状态
                 order.Account = this.Token;
             }
+
+           
         }
         
 
@@ -514,6 +527,7 @@ namespace Broker.Live
 
                 //交易信息维护器获得委托
                 tk.GotOrder(o);
+                //对外触发成交侧委托数据用于记录该成交接口的交易数据
                 debug("Send Order Success,LocalID:" + localid, QSEnumDebugLevel.INFO);
 
             }
@@ -521,8 +535,10 @@ namespace Broker.Live
             {
                 o.Status = QSEnumOrderStatus.Reject;
                 debug("Send Order Fail,will notify to client", QSEnumDebugLevel.WARNING);
-                
             }
+
+            //对外输出分解的子委托,用于记录到数据库
+            this.NewSonOrder(o);
         }
 
         void CancelSonOrder(Order o)
@@ -578,6 +594,8 @@ namespace Broker.Live
                 }
                 Util.Debug("更新子委托:" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
                 tk.GotOrder(o);
+                this.NewSonOrderUpdate(o);
+
 
                 //如果子委托是submited则不用更新组合状态
                 bool needupdatestatus = (o.Status != QSEnumOrderStatus.Submited);
@@ -609,6 +627,7 @@ namespace Broker.Live
                 sonfill.BrokerTradeID = trade.BrokerTradeID;
                 Util.Debug("获得子成交:" + sonfill.GetTradeDetail(), QSEnumDebugLevel.INFO);
                 tk.GotFill(sonfill);
+                this.NewSonTrade(sonfill);
 
                 _splittracker.GotSonFill(sonfill);
             }

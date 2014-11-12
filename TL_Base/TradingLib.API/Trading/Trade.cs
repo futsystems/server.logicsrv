@@ -193,6 +193,18 @@ namespace TradingLib.API
         #endregion
 
 
+        #region 委托分解属性
+        /// <summary>
+        /// 父委托编号
+        /// </summary>
+        long FatherID { get; set; }
+
+        /// <summary>
+        /// 委托分解源
+        /// </summary>
+        QSEnumOrderBreedType Breed { get; set; }
+
+        #endregion
 
         
 

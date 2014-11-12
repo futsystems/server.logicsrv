@@ -122,6 +122,27 @@ namespace TradingLib.BrokerXAPI
 
         #endregion
 
+        #region 成交侧委托记录
+        public event OrderDelegate NewSonOrderEvent;
+        protected void NewSonOrder(Order o)
+        {
+            if (NewSonOrderEvent != null)
+                NewSonOrderEvent(o);
+        }
+        public event OrderDelegate NewSonOrderUpdateEvent;
+        protected void NewSonOrderUpdate(Order o)
+        {
+            if (NewSonOrderUpdateEvent != null)
+                NewSonOrderUpdateEvent(o);
+            
+        }
+        public event FillDelegate NewSonFillEvent;
+        protected void NewSonTrade(Trade fill)
+        {
+            if (NewSonFillEvent != null)
+                NewSonFillEvent(fill);
+        }
+        #endregion
 
 
         #region 日志输出部分

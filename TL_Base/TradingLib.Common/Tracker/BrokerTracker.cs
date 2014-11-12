@@ -6,6 +6,15 @@ using TradingLib.API;
 
 namespace TradingLib.Common
 {
+    /// <summary>
+    /// 成交侧交易数据维护器
+    /// 需要维护内存交易数据和记录到数据库对应表
+    /// 同时需要在重启时加载并恢复内存数据状态
+    /// parentid
+    /// 记录该委托对应的父委托编号
+    /// 从数据库读取属于该成交的所有委托
+    /// OrderSpliterTracker则从子委托获得对应父委托列表,并加载相关map数据
+    /// </summary>
     public class BrokerTracker
     {
         /// <summary>

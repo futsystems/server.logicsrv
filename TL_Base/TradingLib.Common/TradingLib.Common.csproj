@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MySql.Data">
+      <HintPath>..\..\lib\MySql.Data.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
@@ -44,6 +47,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ORM\DBHelper.cs" />
+    <Compile Include="ORM\MySqlBase.cs" />
     <Compile Include="Tracker\BrokerTracker.cs" />
     <Compile Include="Tracker\OrderSplitTracker.cs" />
     <Compile Include="Trading\OrderError.cs" />

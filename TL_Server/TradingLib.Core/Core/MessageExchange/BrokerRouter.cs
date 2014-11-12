@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 
 using TradingLib.API;
-
 using TradingLib.Common;
+using TradingLib.BrokerXAPI;
 
 using System.Threading;
 
@@ -146,12 +146,38 @@ namespace TradingLib.Core
             DataFeedRouter.GotTickEvent += new TickDelegate(broker.GotTick);
             //将清算中心绑定到交易通道
             broker.ClearCentre = new ClearCentreAdapterToBroker(_clearCentre);
-            
+
+            if (broker is TLBrokerBase)
+            {
+                TLBrokerBase brokerbase = broker as TLBrokerBase;
+                brokerbase.NewSonOrderEvent += new OrderDelegate(brokerbase_NewSonOrderEvent);
+                brokerbase.NewSonOrderUpdateEvent += new OrderDelegate(brokerbase_NewSonOrderUpdateEvent);
+                brokerbase.NewSonFillEvent += new FillDelegate(brokerbase_NewSonFillEvent);
+            }
         }
 
-        
+        #region 保存从成交侧返回的子委托
+        void brokerbase_NewSonFillEvent(Trade t)
+        {
+            _clearCentre.LogTrade(t);
+        }
 
-        
+        void brokerbase_NewSonOrderUpdateEvent(Order o)
+        {
+            _clearCentre.LogOrderUpdate(o);
+        }
+
+        void brokerbase_NewSonOrderEvent(Order o)
+        {
+            _clearCentre.LogOrder(o);
+        }
+        #endregion
+
+
+
+
+
+
 
         #region Broker向本地回报操作
         /// <summary>
@@ -337,12 +363,15 @@ namespace TradingLib.Core
         {
             try
             {
-                
                 //检查通过,则通过该broker发送委托 拒绝的委托通过 ordermessage对外发送
                 if (o.Status != QSEnumOrderStatus.Reject)
                 {
                     //按照委托方式发送委托直接发送或通过本地委托模拟器进行发送
                     debug("Send  Order To Broker Side:" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
+                    //这里需要针对委托进行判断 如果需要拆分 则将委托拆分成多个委托然后统一对外提交
+                    //模拟成交不用拆分 实盘委托拆分，如何在多个成交帐户间进行路由，是否也需要像单帐户一样，做单边趋势
+                    //比如帐户A有多头，则卖出操作优先路由到A帐户进行平仓，帐户B有空头,则买入操作优先路由到B帐户进行平仓
+                    //在帐户A中的买入委托 是否必须在A帐户中进行平仓？还是可以在B帐户中进行平仓(如果A帐户和B帐户都是启用净持仓)
                     string errorTitle = string.Empty;
                     bool ret= broker_sendorder(o,out errorTitle);
                     //如果委托正常提交 则对外回报委托
@@ -375,6 +404,7 @@ namespace TradingLib.Core
 
         bool broker_sendorder(Order o,out string errorTitle)
         {
+            //如果是内部模拟的委托类型则通过委托模拟器发送 其余则通过实际路由发送
             return route_SendOrder(o, out errorTitle);
 
             //检查TIF设定，然后根据需要是否要通过TIFEngine来处理Order
@@ -393,6 +423,7 @@ namespace TradingLib.Core
             errorTitle = string.Empty;
             try
             {
+                //委托路由选择
                 IBroker broker = SelectBroker(o);
                 if (broker != null && broker.IsLive)
                 {

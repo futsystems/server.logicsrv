@@ -33,9 +33,6 @@
     <DelaySign>true</DelaySign>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MySql.Data">
-      <HintPath>..\..\lib\MySql.Data.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
@@ -90,13 +87,11 @@
     <Compile Include="ORM\Config\ConfigDB.cs" />
     <Compile Include="ORM\Config\GlobalConfig.cs" />
     <Compile Include="ORM\MConfig.cs" />
-    <Compile Include="ORM\DBHelper.cs" />
     <Compile Include="ORM\MAccount.cs" />
     <Compile Include="ORM\MManager.cs" />
     <Compile Include="ORM\MRuleItem.cs" />
     <Compile Include="ORM\MSettlement.cs" />
     <Compile Include="ORM\MTradingInfo.cs" />
-    <Compile Include="ORM\MySqlBase.cs" />
     <Compile Include="Profile\Profiler.cs" />
     <Compile Include="Profile\SectionStackEntry.cs" />
     <Compile Include="Profile\SectionStats.cs" />
