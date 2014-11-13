@@ -7,19 +7,97 @@ using TradingLib.API;
 
 namespace TradingLib.Common
 {
-    /// <summary>
-    /// 时段
-    /// </summary>
-    public class MktTimeEntry
+
+    public class MktTime
     {
+        public MktTime(int starttime, int stoptime)
+        {
+            this.StartTime = starttime;
+            this.EndTime = stoptime;
+        }
+        public MktTime()
+        {
+            this.StartTime = 0;
+            this.EndTime = 0;
+        }
+        /// <summary>
+        /// 距离该时间段开始还有多少秒
+        /// </summary>
+        /// <param name="threshold"></param>
+        /// <returns></returns>
+        public int StartDiff
+        {
+            get
+            {
+                int diff = Util.FTDIFF(Util.ToTLTime(), this.StartTime);
+                if (diff < 0)
+                    diff += 86400;
+                return diff;
+            }
+        }
+        public bool CrossSpan(MktTime t)
+        {
+            if (IsInSpan(t.StartTime) || IsInSpan(t.EndTime))
+                return true;
+            if (t.IsInSpan(this.StartTime) || t.IsInSpan(this.EndTime))
+                return true;
+            return false;
+        }
+
+        public bool IsInSpan(MktTime t)
+        {
+            if (this.IsInSpan(t.StartTime) && this.IsInSpan(t.EndTime))
+                return true;
+            return false;
+        }
+
+        public static MktTime UnionSpan(MktTime t1, MktTime t2)
+        {
+            return new MktTime(Math.Min(t1.StartTime, t2.StartTime), Math.Max(t1.EndTime, t2.EndTime));
+        }
+        public bool IsInSpan(int time)
+        {
+            if (time >= this.StartTime && time < this.EndTime)
+                return true;
+            return false;
+        }
         /// <summary>
         /// 开始时间
         /// </summary>
         public int StartTime { get; set; }
+
         /// <summary>
         /// 结束时间
         /// </summary>
         public int EndTime { get; set; }
+
+        public override string ToString()
+        {
+            return "TimeSpan Start:" + this.StartTime.ToString() + " - End:" + this.EndTime.ToString();
+        }
+    }
+
+    /// <summary>
+    /// 时段
+    /// </summary>
+    public class MktTimeEntry : MktTime
+    {
+
+        public bool SameTimeSpan(MktTimeEntry obj)
+        {
+            MktTimeEntry other = obj;
+            if (other.StartTime == this.StartTime && other.EndTime == this.EndTime)
+                return true;
+            return false;
+        }
+        /// <summary>
+        /// 开始时间
+        /// </summary>
+        //public int StartTime { get; set; }
+        /// <summary>
+        /// 结束时间
+        /// </summary>
+        //public int EndTime { get; set; }
 
         /// <summary>
         /// 开始强平时间

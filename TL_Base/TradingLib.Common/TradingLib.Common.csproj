@@ -139,6 +139,7 @@
     <Compile Include="Other\ContractBank.cs" />
     <Compile Include="Other\Manager.cs" />
     <Compile Include="Other\SystemStatus.cs" />
+    <Compile Include="Utils\TimeOutSocket.cs" />
     <Compile Include="Utils\XMLRspInfo.cs" />
     <Compile Include="Account\AccountInfo.cs" />
     <Compile Include="Account\AccountInfoLite.cs" />

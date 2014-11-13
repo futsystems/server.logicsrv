@@ -1,5 +1,7 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Collections;
 using TradingLib.API;
 using System.Threading;
@@ -13,7 +15,7 @@ namespace TradingLib.Common
     {
         public void GotTick(Tick k) { newTick(k); }
         public bool isValid { get { return _continue; } }
-        private bool _alertonfirst = true;
+        
         /// <summary>
         ///  returns count of symbols that have ticked at least once
         /// </summary>
@@ -34,12 +36,6 @@ namespace TradingLib.Common
             }
         }
 
-        bool _ismassalertcleared = false;
-        /// <summary>
-        /// will be true if mass alerted existed previously and was cleared.
-        /// this value can only be checked once as it will reset to false once read
-        /// </summary>
-        public bool isMassAlertCleared { get { bool v = _ismassalertcleared; if (v) _ismassalertcleared = !v; return v; } }
 
         public IEnumerator GetEnumerator()
         {
@@ -47,28 +43,41 @@ namespace TradingLib.Common
                 yield return s;
         }
         private Dictionary<string, int> _last = new Dictionary<string, int>();
-        /// <summary>
-        /// alert thrown when no ticks have arrived since AlertThreshold.
-        /// Time of last tick is provided.
-        /// </summary>
-        public event Int32Delegate GotMassAlert;
+
+
+
         /// <summary>
         /// alert thrown when AlertThreshold is exceeded for a symbol
         /// </summary>
         public event SymDelegate GotAlert;
+
         /// <summary>
-        /// alert thrown when first tick arrives for symbol
+        /// 当行情有延误时触发
+        /// </summary>
+        //public event SymDelegate GotTickDelayed;
+
+
+        /// <summary>
+        /// 当某个合约第一个行情达到
         /// </summary>
         public event SymDelegate GotFirstTick;
+        private bool _alertonfirst = true;
+        /// <summary>
+        /// 某个合约第一个行情到达时候是否进行通知
+        /// </summary>
         public bool FireFirstTick { get { return _alertonfirst; } set { _alertonfirst = value; } }
-        private int _defaultwait = 180;
+
+
+        private int _defaultwait = 5;
         /// <summary>
         /// minimum threshold in seconds when no tick updates have been received for a single symbol, alerts can be thrown.
+        /// 多少时间内某个合约没有收到行情则报警
         /// </summary>
         public int AlertThreshold { get { return _defaultwait; } set { _defaultwait = value; } }
 
         /// <summary>
         /// gets list of symbols that have never had ticks pass through watcher
+        /// 从未收到过行情的合约
         /// </summary>
         public string SymbolsNeverTicked
         {
@@ -86,6 +95,7 @@ namespace TradingLib.Common
         }
         /// <summary>
         /// gets stringified symbols which have had ticks pass through the watcher
+        /// 收到过行情的合约
         /// </summary>
         public string SymbolsTicked
         {
@@ -99,16 +109,13 @@ namespace TradingLib.Common
             }
         }
 
-        int _defaultmass = 60;
-        /// <summary>
-        /// minimum threshold when no ticks have been received for many symbols
-        /// </summary>
-        public int MassAlertThreshold { get { return _defaultmass; } set { _defaultmass = value; } }
+
 
         System.ComponentModel.BackgroundWorker _bw = null;
         volatile int _lasttime = 0;
         /// <summary>
         /// most recent time received
+        /// 最新行情时间
         /// </summary>
         public int RecentTime { get { return _lasttime; } }
 
@@ -120,6 +127,18 @@ namespace TradingLib.Common
 
         int _firsttime = 0;
         public int TickStartTime { get { return _firsttime; } }
+
+
+        /// <summary>
+        /// 判断某个Tick是否有延迟
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        //public bool IsTickDelay(Tick k,int timewait=5)
+        //{
+        //    int span = Util.FTDIFF(_lasttime, k.Time);
+        //    return span > _defaultwait;
+        //}
         /// <summary>
         /// Watches the specified tick.
         /// Alerts if wait time exceeded.
@@ -128,30 +147,42 @@ namespace TradingLib.Common
         /// <returns></returns>
         public bool newTick(Tick k) 
         {
+            //最近行情时间
             _lasttime = k.Time;
+
             //设定firsttime
             if (_firsttime < 0)
                 _firsttime = k.Time;
-            //在多少个tick之后 我们进行livecheck
+
+            //需要进行livecheck 并且收到的行情数量大于我们设定的tick数 进行行情检查
             if (_livecheck && (_ticks++ > CheckLiveAfterTickCount))
             {
-                bool dmatch = k.Date == Util.ToTLDate();
-                bool tmatch = Util.FTDIFF(k.Time, Util.ToTLTime()) < CheckLiveMaxDelaySec;
+                bool dmatch = k.Date == Util.ToTLDate();//行情日期一致
+                bool tmatch = Util.FTDIFF(_lasttime, Util.ToTLTime()) < CheckLiveMaxDelaySec;//行情时间在我们设定的延迟范围内
+                //日期和时间均吻合,则表明当前行情系统在线
                 _islive = dmatch && tmatch;
+                Util.Debug("TickStream live check status:"+_islive.ToString(), QSEnumDebugLevel.MUST);
                 _livecheck = false;
-
             }
+
+            //这里需要排除历史行情快照的加载
+            //是否所有合约都有行情数据          单个合约行情警报         单个行情首个Tick通知
             if ((AllsymbolsTicking != null) || (GotAlert != null) || (GotFirstTick != null))
             {
                 int last = k.Time;
+                //检查是否已经记录该合约的信息
                 // ensure we are storing per-symbol times
-                if (!_last.TryGetValue(k.Symbol, out last))
+                if (!_last.TryGetValue(k.Symbol,out last))
                 {
+                    //1.添加该合约的时间记录
                     _last.Add(k.Symbol, k.Time);
-                    //如果我们需要报告第一个tick，则我们触发firsttick事件
+
+                    //2.如果我们需要报告第一个tick，则我们触发firsttick事件
                     if (_alertonfirst) // if we're notifying when first tick arrives, do it.
                         if (GotFirstTick != null)
                             GotFirstTick(k.Symbol);
+
+                    //2.如果外部ticktracker不为空 则比较是否已经包含了所有symbol
                     if (_ast != null)
                     {
                         if (!alltrading && (_ast.Count == Count))
@@ -165,25 +196,32 @@ namespace TradingLib.Common
                     return false;
                 }
 
-                // if alerts requested, check for idle symbol
+                // store time 保存该合约的时间
+                _last[k.Symbol] = k.Time;
+
+                // if alerts requested, check for idle symbol 
+                //如果行情当前时间与本地保存的上一次行情时间间隔大于阀值，触发报警
                 if (GotAlert != null)
                 {
                     int span = Util.FTDIFF(last, k.Time);
-                    bool alert = span > _defaultwait;
+                    bool alert = span > this.AlertThreshold;
                     if (alert)
                         GotAlert(k.Symbol);
                     return alert;
                 }
-                // store time
-                _last[k.Symbol] = k.Time;
+
+                
             }
             return false; 
         }
+
+        #region SendAlerts 内部主动发起的发送警报
         /// <summary>
         /// send alerts for idle symbols using current time as comparison point
         /// </summary>
         /// <returns></returns>
         public int SendAlerts() { return SendAlerts(DateTime.Now); }
+
         /// <summary>
         /// Sends the alerts for tickstreams who have gone idle based on the provided datetime.
         /// </summary>
@@ -192,6 +230,7 @@ namespace TradingLib.Common
         {
             return SendAlerts(Util.DT2FT(time), _defaultwait);
         }
+
         /// <summary>
         /// sends alerts for i
         /// </summary>
@@ -209,27 +248,40 @@ namespace TradingLib.Common
         public int SendAlerts(int time, int AlertSecondsWithoutTick) 
         {
             int c = 0;
-            foreach (string sym in _last.Keys)
+            foreach (string sym in _last.Keys.ToArray())
+            {
                 if (GotAlert != null)
-                    if (Util.FTDIFF(_last[sym], time) > AlertSecondsWithoutTick)
+                {
+                    int ticktime = _last[sym];
+                    if (Util.FTDIFF(ticktime, time) > AlertSecondsWithoutTick)
                     {
+                        Util.Debug("time:" + time.ToString() + " sym lasttime:" + _last[sym].ToString(), QSEnumDebugLevel.WARNING);
                         c++;
                         GotAlert(sym);
                     }
+                }
+            }
             return c;
         }
+
+        #endregion
+
+
 
         bool _continue = true;
 
         public event Int32Delegate PollProcess;
         long _pollint = 0;
+        //默认1秒检查一次行情通道情况
         public const int DEFAULTPOLLINT = 1000;
         public int BackgroundPollInterval { get { return (int)_pollint; } set { _pollint = (long)Math.Abs(value); if (_pollint == 0) Stop(); } }
+        
         public TickWatcher(int BackgroundPollIntervalms) : this(BackgroundPollIntervalms,null) { }
         public TickWatcher() : this(DEFAULTPOLLINT,null) { }
         public TickWatcher(bool islive) : this(islive ? DEFAULTPOLLINT : 0, null) { }
         public TickWatcher(bool islive, GenericTrackerI symtracker) : this(islive ? DEFAULTPOLLINT : 0, symtracker) { }
         public TickWatcher(GenericTrackerI symboltracker) : this(DEFAULTPOLLINT, symboltracker) { }
+
         /// <summary>
         /// creates a tickwatcher and polls specificed millseconds
         /// if timer has expired, sends alert.
@@ -260,19 +312,13 @@ namespace TradingLib.Common
             }
         }
 
-        bool _alerting = false;
-        /// <summary>
-        /// whether mass alert is firing or not
-        /// </summary>
-        public bool isMassAlerting { get { return _alerting; } }
+
 
         bool sentmissingfirstticks = false;
-        bool _stop = true;
-        int _stoptime = 0;
-        int _starttime = 0;
+
         bool alltrading = false;
-        bool massalert = false;
-        int _lastmass = 0;
+        //bool massalert = false;
+        //int _lastmass = 0;
         GenericTrackerI _ast = null;
         /// <summary>
         /// gets reference to active symbol tracker
@@ -280,13 +326,105 @@ namespace TradingLib.Common
         public GenericTrackerI ActiveSymbolTracker { get { return _ast; } }
 
         public event Int32Delegate StarttimeAndMissingTicks;
+
+        /// <summary>
+        /// 如果所有合约行情均到到 对外触发
+        /// </summary>
         public event Int32Delegate AllsymbolsTicking;
-        public event Int32Delegate StopTime;
 
-        public bool useStartAndStop { get { return _starttime * _stoptime != 0; } }
+        int _stoptime = 0;
+        int _starttime = 0;
+        /// <summary>
+        /// 是否在时间段内报警
+        /// </summary>
+        public bool TimeSpanSetted { get { return _starttime + _stoptime != 0; } }
 
+        /// <summary>
+        /// 开始报警时间
+        /// </summary>
         public int StartAlertTime { get { return _starttime; } set { _starttime = value; } }
+
+        /// <summary>
+        /// 停止报警时间
+        /// </summary>
         public int StopAlertTime { get { return _stoptime; } set { _stoptime = value; } }
+
+        int _defaultmass = 10;
+        /// <summary>
+        /// minimum threshold when no ticks have been received for many symbols
+        /// 多少秒内没有收到任何行情
+        /// </summary>
+        public int MassAlertThreshold { get { return _defaultmass; } set { _defaultmass = value; } }
+
+
+        bool _ismassalertcleared = false;
+        /// <summary>
+        /// will be true if mass alerted existed previously and was cleared.
+        /// this value can only be checked once as it will reset to false once read
+        /// 如果之前有过行情中断报警并且报警被取消过 该值读取后就归位
+        /// </summary>
+        public bool isMassAlertCleared { get { bool v = _ismassalertcleared; if (v) _ismassalertcleared = !v; return v; } }
+
+        bool _alerting = false;
+        /// <summary>
+        /// 是否处于MassAlert报警状态中
+        /// </summary>
+        public bool isMassAlerting { get { return _alerting; } }
+
+        /// <summary>
+        /// alert thrown when no ticks have arrived since AlertThreshold.
+        /// Time of last tick is provided.
+        /// 如果上次行情以来 在设定时间段内没有任何行情则报警
+        /// </summary>
+        public event Int32Delegate GotMassAlert;
+
+        /// <summary>
+        /// 如果报警后，又有行情到达，则报警取消
+        /// </summary>
+        public event Int32Delegate GotMassAlertCleard;
+
+        int _setspantime = 0;
+        /// <summary>
+        /// 整体的交易时间段
+        /// 90000-113000
+        /// 130000 - 151500
+        /// </summary>
+        /// <param name="starttime"></param>
+        /// <param name="stopttime"></param>
+        public void UpdateTimeSpan(int starttime,int stopttime)
+        {
+            _starttime = starttime;
+            _stoptime = stopttime;
+            _setspantime = Util.ToTLTime();//记录设定时间
+        }
+
+        /// <summary>
+        /// 是否在设定的时间段内
+        /// </summary>
+        bool IsInTimeSpan
+        {
+            get
+            {
+                int now = Util.ToTLTime();
+                if (now >= _starttime && now < _stoptime)
+                    return true;
+                return false;
+            }
+        }
+        /// <summary>
+        /// 重置当处于非行情时间段时候，重置相关属性
+        /// </summary>
+        public void Reset()
+        {
+            _starttime = 0;
+            _stoptime = 0;
+            _lasttime = 0;
+
+            _islive = false;
+            _livecheck = true;//重新做行情激活检查
+            _ticks = -1;
+        }
+
         void _bw_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
             while (_continue)
@@ -295,55 +433,76 @@ namespace TradingLib.Common
                     break;
                 if (PollProcess != null)
                     PollProcess(_lasttime);
-                if ((GotMassAlert != null) && (_defaultmass != 0) && (_lasttime!=0))
+                //如果启动后没有获得任何旱情 recenttime为0，这里需要加入机制 用于触发当没有任何行情到达时 触发massalert
+                //Util.Debug("行情检查,MassAlertThreshold:" + this.MassAlertThreshold.ToString() + " RecentTime:" + this.RecentTime.ToString() + " StartTime:" + this.StartAlertTime.ToString() + " StopTime:" + this.StopAlertTime.ToString(), QSEnumDebugLevel.INFO);
+                //合约整体异常    批量合约数值  最近行情到达时间
+                //需要对外触发行情异常警报
+                if (GotMassAlert != null)
                 {
-                    int span = Util.FTDIFF(_lasttime, Util.DT2FT(DateTime.Now));
-                    bool alert = (span > _defaultmass) && 
-                        (!useStartAndStop 
-                        || ((_lasttime>=_starttime) && (_lasttime<=_stoptime)));
-                    if (alert && !_alerting)
+                    if(this.TimeSpanSetted && this.IsInTimeSpan && this.MassAlertThreshold!=0)//设定了起止时间 当前处于该时间段内 设定了MassAlertThreshold
                     {
-                        _alerting = true;
-                        GotMassAlert(_lasttime);
-                    }
-                    else if (!alert && _alerting)
-                    {
-                        _alerting = false;
-                        _ismassalertcleared = true;
+                        int span = 0;
+                        if (_lasttime == 0)//如果没有行情过来 则判断离start多少时间
+                        {
+                            //有可能是盘中启动 设定的timesapn 这里以设定时的时间为准
+                            span = Util.FTDIFF(_starttime>_setspantime?_starttime:_setspantime, Util.ToTLTime());
+                        }
+                        else//如果有行情过来更新过lasttime,则比较_lasttime
+                        {
+                            span = Util.FTDIFF(_lasttime, Util.ToTLTime());
+                        }
+
+                        bool alert = (span > this.MassAlertThreshold);
+                        if (alert && !_alerting)//需要报警并且没有触发过报警则对外报警
+                        {
+                            _alerting = true;
+                            GotMassAlert(_lasttime);
+                        }
+                        else if (!alert && _alerting)//massalert不需要报警 且当前处于报警状态，则取消报警
+                        {
+                            _alerting = false;
+                            _ismassalertcleared = true;
+                            GotMassAlertCleard(_lasttime);
+                        }
                     }
                 }
-                if (!alltrading && !sentmissingfirstticks 
-                    && (_starttime!=0) && (_lasttime > _starttime))
+                //行情处于激活状态 需要检查行情的延迟状态
+                //if (isLive)
+                //{
+                //    //用当前最新行情时间作为标准 去判断维护列表中的合约 合约的最后更新时间与当前最新Tick时间差超过设定范围，认为该行情处于异常状态
+                //    SendAlerts(_lasttime);
+                //}
+
+                //有开始时间，且最近时间大于开时间，且StarttimeAndMissingTicks没有触发过，
+                if (!alltrading && !sentmissingfirstticks && (_starttime!=0) && (_lasttime > _starttime))
                 {
                     sentmissingfirstticks = true;
                     if (StarttimeAndMissingTicks != null)
                         StarttimeAndMissingTicks(Util.ToTLTime());
                 }
-
-                if (_stop && (_stoptime!=0) && (_lasttime >= _stoptime))
-                {
-                    _stop = false;
-                    Stop();
-                    if (StopTime != null)
-                        StopTime(_lasttime);
-                    return;
-                }
                 System.Threading.Thread.Sleep((int)_pollint);
             }
         }
 
-        int _livecheckafterXticks = 1;
+        int _livecheckafterXticks = 10;
         /// <summary>
         /// wait to do live test after X ticks have arrived
+        ///多少个行情数据到达后检查行情整体工作情况
         /// </summary>
         public int CheckLiveAfterTickCount { get { return _livecheckafterXticks; } set { _livecheckafterXticks = value; } }
-        int _livetickdelaymax = 60;
+
+        int _livetickdelaymax = 5;
         /// <summary>
         /// if a tick is within this many seconds of current system time on same day, tick stream is considered live and reports can be sent
+        /// 
         /// </summary>
         public int CheckLiveMaxDelaySec { get { return _livetickdelaymax; } set { _livetickdelaymax = value; } }
+
         bool _livecheck = true;
         bool _islive = false;
+        /// <summary>
+        /// 当前行情系统是否在线
+        /// </summary>
         public bool isLive { get { return _islive; } }
 
 

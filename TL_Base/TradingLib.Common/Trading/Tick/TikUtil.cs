@@ -181,6 +181,5 @@ namespace TradingLib.Common
                 k.AddRange(BarImpl.ToTick(b));
             return k.ToArray();
         }
-
     }
 }

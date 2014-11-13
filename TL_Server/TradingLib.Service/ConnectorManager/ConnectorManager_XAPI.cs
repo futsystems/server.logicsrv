@@ -125,13 +125,13 @@ namespace TradingLib.ServiceManager
                 //绑定状态事件
                 broker.Connected += (string b) =>
                 {
-                    Util.Debug("Broker:" + b + " Connected",QSEnumDebugLevel.MUST);
+                    debug("Broker[" + b + "] Connected", QSEnumDebugLevel.INFO);
                     if (BrokerConnectedEvent != null)
                         BrokerConnectedEvent(b);
                 };
                 broker.Disconnected += (string b) =>
                 {
-                    Util.Debug("Broker:" + broker.Token + " Disconnected",QSEnumDebugLevel.MUST);
+                    debug("Broker[" + b + "] Disconnected", QSEnumDebugLevel.WARNING);
                     if (BrokerDisconnectedEvent != null)
                         BrokerDisconnectedEvent(b);
                 };
@@ -152,13 +152,13 @@ namespace TradingLib.ServiceManager
 
                 datafeed.Connected += (string d) =>
                 {
-                    Util.Debug("DataFeed:" + d.GetType().FullName + " Connected");
+                    debug("DataFeed[" + d + "] Connected",QSEnumDebugLevel.INFO);
                     if (DataFeedConnectedEvent != null)
                         DataFeedConnectedEvent(d);
                 };
                 datafeed.Disconnected += (string d) =>
                 {
-                    Util.Debug("DataFeed:" + d.GetType().FullName + " Disonnected");
+                    debug("DataFeed[" + d + "] Disonnected",QSEnumDebugLevel.WARNING);
                     if (DataFeedDisconnectedEvent != null)
                         DataFeedDisconnectedEvent(d);
                 };

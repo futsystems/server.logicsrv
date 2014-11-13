@@ -88,6 +88,56 @@ namespace TradingLib.Common
             return list.ToArray();
         }
 
-        
+        /// <summary>
+        /// 获得所有开市 时间段
+        /// 9:00-11:30
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public List<MktTime> GetMarketTimes()
+        {
+            List<MktTimeEntry> entrylist = new List<MktTimeEntry>();
+            foreach (MarketTime mt in idxsessionmap.Values)
+            {
+                foreach (MktTimeEntry ent in mt.MktTimeEntries)
+                {
+                    if (entrylist.Any(s => s.SameTimeSpan(ent)))
+                        continue;
+                    entrylist.Add(ent as MktTimeEntry);
+                }
+            }
+            //时间段如果有价差 则取并集，没有交叉则单独计算
+
+            List<MktTime> list = entrylist.Select(ent=>new MktTime(ent.StartTime,ent.EndTime)).ToList();
+            List<MktTime> listtodelete = new List<MktTime>();
+            for (int i = 0; i < list.Count; i++)
+            {
+                for (int j = 0; i < list.Count; i++)
+                {
+                    if (j == i)
+                        continue;
+                    if (list[i].IsInSpan(list[j]))
+                        listtodelete.Add(list[j]);
+                }
+            }
+
+           
+            //MktTime t1 = list[0];
+
+            //for (int i = 1; i < list.Count; i++)
+            //{
+            //    if (t1.CrossSpan(list[i]))
+            //    {
+            //        list[0] = MktTime.UnionSpan(t1, list[i]);
+            //        listtodelete.Add(list[i]);
+            //    }
+            //}
+            foreach (MktTime t in listtodelete)
+            {
+                list.Remove(t);
+            }
+            return list;
+        }
     }
+
 }

@@ -10,6 +10,8 @@ using System.Xml.Serialization;
 using System.Text;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Net;
+using System.Net.Sockets;
 
 namespace TradingLib.Common
 {
@@ -1166,6 +1168,71 @@ namespace TradingLib.Common
             return (o != null) && (o.GetType() == typeof(T));
         }
         #endregion
+
+
+
+
+
+        #region network
+
+        public static bool IsServerPortOpened(string address, int port,int sectimeout)
+        {
+            try
+            {
+                IPHostEntry iphostentry = iphostentry = Dns.GetHostEntry(address);//获得主机信息
+                //使用指定的IP地址和端口号实例化IPEndPoint对象
+                IPEndPoint IPEPoint = new IPEndPoint(iphostentry.AddressList[0], port);
+
+                TcpClient socket = TimeOutSocket.Connect(IPEPoint, sectimeout*1000);
+                
+                if(socket != null)
+                {
+                    return true;
+                }
+                return false;
+                //Util.Debug("try to connect to server:" + address + " Port:" + port.ToString(), QSEnumDebugLevel.INFO);
+                //using (TcpClient socket = TimeOutSocket.Connect(IPEPoint,3))//调用上面自定义的方法，使用指定的服务器和端口实例化一个Socket对象
+                //{
+                //    if (socket == null)
+                //        return false;
+                //    socket.Close();
+                //    return true;
+                //}
+                
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public static Socket ConnectSocket(string server, int port)
+        {
+            Socket socket = null;
+            IPHostEntry iphostentry = null;
+            iphostentry = Dns.GetHostEntry(server);//获得主机信息
+            foreach (IPAddress address in iphostentry.AddressList)
+            {
+                //使用指定的IP地址和端口号实例化IPEndPoint对象
+                IPEndPoint IPEPoint = new IPEndPoint(address, port);
+                //使用Socket的构造函数实例化一个Socket对象，以用来连接远程主机
+                Socket newSocket = new Socket(IPEPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                newSocket.Connect(IPEPoint);//调用Connect方法连接远程主机
+                if (newSocket.Connected)//判断是否连接
+                {
+                    socket = newSocket;
+                    break;
+                }
+                else
+                {
+                    continue;
+                }
+            }
+            return socket;
+        }
+
+        #endregion
+
     }
 
 
@@ -1208,6 +1275,7 @@ namespace TradingLib.Common
             AvgPrice,
         }
     
+
 
 
     

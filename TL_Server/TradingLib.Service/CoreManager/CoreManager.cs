@@ -120,7 +120,7 @@ namespace TradingLib.ServiceManager
 
             //2.从缓存文件恢复当时行情快照,这样就可以恢复整个交易快照 包括平仓盈亏与持仓盈亏//并加载行情快照,需要在系统从数据库加载交易记录之后进行
             _datafeedRouter.Start();
-            //_datafeedRouter.LoadTickSnapshot();
+            _datafeedRouter.LoadTickSnapshot();
 
             _brokerRouter.Start();
 

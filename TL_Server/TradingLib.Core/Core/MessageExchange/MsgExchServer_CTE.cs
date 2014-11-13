@@ -35,6 +35,44 @@ namespace TradingLib.Core
             return "DemoTick Send";
         }
 
+        [CoreCommandAttr(QSEnumCommandSource.CLI,
+                            "printtick",
+                            "printtick - print tick snapshot in memory",
+                            "打印当前系统的行情快照")]
+        public string PrintTickSnapshot()
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (Tick k in _datafeedRouter.GetTickSnapshot())
+            {
+                if(k!= null && k.isValid)
+                    sb.Append(TickImpl.Serialize(k)+Environment.NewLine);
+            }
+            return sb.ToString();
+        }
+
+        [CoreCommandAttr(QSEnumCommandSource.CLI,
+                            "printtimespans",
+                            "printtimespans - print timespans",
+                            "打印当前市场交易小节")]
+        public string PrintTimeSpans()
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (MktTime ent in BasicTracker.MarketTimeTracker.GetMarketTimes())
+            {
+                sb.Append("Start:" + ent.StartTime.ToString() + " - End:" + ent.EndTime.ToString() + Environment.NewLine);
+            }
+            return sb.ToString();
+        }
+
+         [CoreCommandAttr(QSEnumCommandSource.CLI,
+                            "excludesym",
+                            "excludesym - 排除行情系统的合约",
+                            "从行情系统排除某个合约")]
+        public void ExcludeSymbol(string symbol)
+        {
+            _datafeedRouter.ExcludeSymbol(symbol);
+        }
+
 
         [CoreCommandAttr(QSEnumCommandSource.CLI,
                             "regsymbols",

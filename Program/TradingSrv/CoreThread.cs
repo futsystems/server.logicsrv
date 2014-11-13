@@ -135,7 +135,7 @@ namespace TraddingSrvCLI
             debug(">>Start Broker and DataFeed");
             //connectorMgr.StartDataFeedViaName("DataFeed.FastTick.FastTick");
             //connectorMgr.StartBrokerViaName("Broker.SIM.SIMTrader");
-            connectorMgr.StartDefaultConnector();
+            //connectorMgr.StartDefaultConnector();
             //coreMgr.OpenClearCentre();
             Thread.Sleep(2000);
             TLCtxHelper.IsReady = true;

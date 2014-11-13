@@ -61,7 +61,7 @@ namespace TradingLib.ORM
 
     internal class tradeid
     {
-        public int MaxTradeID { get; set; }
+        public string MaxTradeID { get; set; }
     }
     public class MTradingInfo:MBase
     {
@@ -113,9 +113,13 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("SELECT MAX(tradeid) as MaxTradeID FROM tmp_trades WHERE settleday = {0}", TLCtxHelper.Ctx.SettleCentre.NextTradingday);
+                string query = string.Format("SELECT MAX(tradeid) as MaxTradeID FROM tmp_trades WHERE settleday = {0} AND breed='{1}'", TLCtxHelper.Ctx.SettleCentre.NextTradingday,QSEnumOrderBreedType.ACCT);
                 tradeid id = db.Connection.Query<tradeid>(query).SingleOrDefault();
-                return id.MaxTradeID;
+                int maxid = 0;
+                if (int.TryParse(id.MaxTradeID, out maxid))
+                    return maxid;
+                else
+                    return 0;
             }
         }
         /// <summary>
