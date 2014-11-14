@@ -48,6 +48,7 @@
     <Compile Include="Message\RspInfo.cs" />
     <Compile Include="Msic\EnumCashOPSource.cs" />
     <Compile Include="Msic\EnumDebugLevel.cs" />
+    <Compile Include="Msic\EnumLogicStatus.cs" />
     <Compile Include="Msic\EnumManagerType.cs" />
     <Compile Include="Msic\EnumCashOperation.cs" />
     <Compile Include="Msic\ILogItem.cs" />

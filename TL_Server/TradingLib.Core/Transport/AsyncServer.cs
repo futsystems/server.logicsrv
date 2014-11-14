@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
 using ZeroMQ;
@@ -424,7 +425,7 @@ namespace TradingLib.Core
                     //管理服务器只开一个线程用于处理消息 通过设置worknum实现
                     for (int workerid = 0; workerid <_worknum; workerid++)
                     {
-                        workers.Add(new Thread(MessageTranslate));
+                        workers.Add(new Thread(MessageWorkerProc));
                         workers[workerid].IsBackground = true;
                         workers[workerid].Name = "MessageDealWorker#" + workerid.ToString()+"@" + PROGRAME;;
                         object[] o = new object[] { context, workerid };
@@ -440,6 +441,7 @@ namespace TradingLib.Core
 #endif
                         var zmsg = new ZMessage(e.Socket);
                         zmsg.Send(backend);
+                        
                     };
                     //backend过来的信息我们路由到frontend上去
                     backend.ReceiveReady += (s, e) =>
@@ -501,18 +503,18 @@ namespace TradingLib.Core
         /// 在worker后端的操作需要保证线程安全
         /// </summary>
         /// <param name="olist"></param>
-        private void MessageTranslate(object olist)
+        private void MessageWorkerProc(object olist)
         {
             object[] list = olist as object[];
-            int id = int.Parse(list[1].ToString());
             ZmqContext wctx = (ZmqContext)list[0];
+            int id = int.Parse(list[1].ToString());
             using (ZmqSocket worker = wctx.CreateSocket(SocketType.DEALER))
             {
                 //将worker连接到backend用于接收由backend中继转发过来的信息
                 worker.Connect("inproc://backend");
                 worker.ReceiveReady += (s, e) =>
                     {
-                        WorkerMessageProc(worker, id);
+                        MessageProcess(worker, id);
                     };
                 var poller = new Poller(new List<ZmqSocket> { worker });
 
@@ -530,15 +532,17 @@ namespace TradingLib.Core
                     }
                     catch (ZmqException e)
                     {
-                        debug(string.Format("worker {0} look up error:",id) + e.ToString());
+                        debug(string.Format("worker {0} proc error:",id) + e.ToString());
                     }
                 }
             }
         }
+        
+        //ConcurrentDictionary<string,>
 
         ZeromqThroughPut zmqTP;//流控管理器,用于跟踪所有客户端连接的消息流
         //Worker消息处理函数
-        void WorkerMessageProc(ZmqSocket worker, int id)
+        void MessageProcess(ZmqSocket worker, int id)
         {
             try
             {
@@ -549,18 +553,34 @@ namespace TradingLib.Core
                 string front = string.Empty;
                 string address = string.Empty;
                 Message msg = Message.gotmessage(zmsg.Body);
+
                 //debug("Frames Count:" + zmsg.FrameCount.ToString() + " body:" + UTF8Encoding.Default.GetString(zmsg.Body) + " add:" + UTF8Encoding.Default.GetString(zmsg.Address),QSEnumDebugLevel.INFO);
                 //注意:进行地址有效性检查,如果有空地址 则直接返回。空地址会造成下道逻辑的错误
                 //带有2层地址,客户端从接入服务器登入
                 //if (TradingLib.Core.CoreGlobal.EnableAccess)//如果允许前置接入 则消息可以带有2层或者1层地址
-                if (msg.Type == MessageTypes.LOGICHEARTBEAT)
+                //如果消息类型是前置发送到交易逻辑服务的心跳
+                if (msg.Type == MessageTypes.LOGICLIVEREQUEST)
                 {
                     if (zmsg.FrameCount == 3)
                     {
                         front = zmsg.AddressToString();//获得第一层地址
                         zmsg.Unwrap();//分离第一层地址
                         address = zmsg.AddressToString();
-                        //Util.Debug(string.Format("LogicHeartBeat from:{0} address:{1}",front,address),QSEnumDebugLevel.DEBUG);
+
+                        LogicLiveRequest request = (LogicLiveRequest)PacketHelper.SrvRecvRequest(msg.Type, msg.Content, front, address);
+                        
+                        Util.Debug(string.Format("LogicHeartBeat from:{0} address:{1}",front,address),QSEnumDebugLevel.DEBUG);
+                        LogicLiveResponse response = ResponseTemplate<LogicLiveResponse>.SrvSendRspResponse(request);
+
+                        ZMessage reply = new ZMessage(response.Data);
+                        //将消息地址与消息绑定，通过outputChanel发送出去,这样frontend就会根据消息地址自动的将消息发送给对应的客户端
+                        reply.Wrap(Encoding.UTF8.GetBytes(address), null);
+                        //如果front不为空或者null,则我们再继续添加路由地址
+                        if (!string.IsNullOrEmpty(front))
+                        {
+                            reply.Wrap(Encoding.UTF8.GetBytes(front), null);
+                        }
+                        reply.Send(worker);
                     }
                     return;
                         

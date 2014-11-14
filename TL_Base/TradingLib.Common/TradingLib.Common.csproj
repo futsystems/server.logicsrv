@@ -47,6 +47,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Messages\LogicFront.cs" />
     <Compile Include="ORM\DBHelper.cs" />
     <Compile Include="ORM\MySqlBase.cs" />
     <Compile Include="Tracker\BrokerTracker.cs" />

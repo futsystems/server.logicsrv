@@ -86,11 +86,11 @@ namespace DataFeed.FastTick
             {
                 //如果第一个服务地址异常 则反转服务器连接顺序
                 _switch = !_switch;
-                debug("Server:" + server + "is not avabile,try another server.", QSEnumDebugLevel.WARNING);
+                debug("Server:" + server + " is not avabile,try another server.", QSEnumDebugLevel.WARNING);
                 Util.sleep(1000);
                 if (Util.IsServerPortOpened(server2, port, _timeout))
                 {
-                    debug("Server:" + server2 + " is avabile,user it", QSEnumDebugLevel.INFO);
+                    debug("Server:" + server2 + " is avabile,use it", QSEnumDebugLevel.INFO);
                     server = server2;
                 }
                 else

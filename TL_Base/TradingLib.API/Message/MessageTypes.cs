@@ -30,9 +30,9 @@ namespace TradingLib.API
         
         // START CUSTOM MESSAGES  - DO NOT REMOVE OR RENAME MESSAGES
         QRYENDPOINTCONNECTED = 1,//用于接入服务器查询 通过该接入服务器所连接的客户数,用于接入服务器 恢复unknow这样可以避免服务过载
-        LOGICHEARTBEAT=2,//前置与逻辑服务器之间的心跳包
-        CUSTOM3,
-        CUSTOM4,
+        LOGICLIVEREQUEST=2,//前置与逻辑服务器之间的心跳包
+        LOGICLIVERESPONSE = 3,//当服务端收到逻辑心跳包后,服务端会返回一个Response告知服务端Router端处可工作状态
+        UPDATECLIENTFRONTID=4,//重启前置后，由于前置编号发生变化，需要更新原来交易客户端回话的前置地址，否则后期的通讯将会被丢弃
         CUSTOM5,
         CUSTOM6,
         CUSTOM7,

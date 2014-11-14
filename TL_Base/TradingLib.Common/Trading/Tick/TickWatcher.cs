@@ -452,6 +452,7 @@ namespace TradingLib.Common
                             span = Util.FTDIFF(_lasttime, Util.ToTLTime());
                         }
 
+                        //注意这里如果报警没有得到正常处理,以后的报警如何处理？是否允许多次尝试的机会？
                         bool alert = (span > this.MassAlertThreshold);
                         if (alert && !_alerting)//需要报警并且没有触发过报警则对外报警
                         {

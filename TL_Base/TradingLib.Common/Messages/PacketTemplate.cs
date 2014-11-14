@@ -67,6 +67,9 @@ namespace TradingLib.Common
             {
                 switch (type)
                 {
+                    //逻辑活动请求
+                    case MessageTypes.LOGICLIVEREQUEST:
+                        return RequestTemplate<LogicLiveRequest>.SrvRecvRequest(frontid, clientid, content);
                     //客户端注册
                     case MessageTypes.REGISTERCLIENT:
                         return RequestTemplate<RegisterClientRequest>.SrvRecvRequest(frontid, clientid, content);
@@ -282,6 +285,8 @@ namespace TradingLib.Common
         {
             switch (type)
             { 
+                case MessageTypes.LOGICLIVERESPONSE:
+                    return ResponseTemplate<LogicLiveResponse>.CliRecvResponse(content);
                 case MessageTypes.FEATURERESPONSE:
                     return ResponseTemplate<FeatureResponse>.CliRecvResponse(content);
                 case MessageTypes.VERSIONRESPONSE:
