@@ -64,11 +64,12 @@
   
   <Target Name="Base">
     <MSBuild Projects="TL_Base\TradingLib.API\TradingLib.API.csproj" Properties="Configuration=$(Configuration);" />
-		<MSBuild Projects="TL_Base\TradingLib.Common\TradingLib.Common.csproj" Properties="Configuration=$(Configuration);" />
-		<MSBuild Projects="TL_Base\TradingLib.Mixins\TradingLib.Mixins.csproj" Properties="Configuration=$(Configuration);" />
+	<MSBuild Projects="TL_Base\TradingLib.Mixins\TradingLib.Mixins.csproj" Properties="Configuration=$(Configuration);" />
+	<MSBuild Projects="TL_Base\TradingLib.Common\TradingLib.Common.csproj" Properties="Configuration=$(Configuration);" />
 	
-		<MSBuild Projects="TL_Base_Ex\TradingLib.API.Ex\TradingLib.API.Ex.csproj" Properties="Configuration=$(Configuration);" />
-		<MSBuild Projects="TL_Base_Ex\TradingLib.Common.Ext\TradingLib.Common.Ex.csproj" Properties="Configuration=$(Configuration);" />
+
+	<MSBuild Projects="TL_Base_Ex\TradingLib.API.Ex\TradingLib.API.Ex.csproj" Properties="Configuration=$(Configuration);" />
+	<MSBuild Projects="TL_Base_Ex\TradingLib.Common.Ext\TradingLib.Common.Ex.csproj" Properties="Configuration=$(Configuration);" />
   </Target>
 
   <Target Name="Server">
