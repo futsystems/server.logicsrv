@@ -197,26 +197,26 @@ namespace TradingLib.Core
 
             //6.委托价格检查
             //6.1查看数据通道是否有对应的合约价格
-            decimal avabileprice = TLCtxHelper.Ctx.MessageExchange.GetAvabilePrice(o.Symbol);
-            if (avabileprice <= 0)
+
+            bool symlive = TLCtxHelper.Ctx.MessageExchange.IsSymbolTickLive(o.Symbol);
+            if (!symlive)
             {
                 errortitle = "SYMBOL_TICK_ERROR";//市场旱情异常
                 return false;
             }
 
             //6.2检查价格是否在涨跌幅度内
-            if (o.isLimit || o.isStop)
-            {
-                decimal targetprice = o.isLimit ? o.LimitPrice : o.StopPrice;
-                decimal diff = Math.Abs(targetprice - avabileprice);
-                //如果价格超过涨跌幅 则回报操作
-                if ((diff / avabileprice) > 0.1M)
-                {
-                    errortitle = "ORDERPRICE_OVERT_LIMIT";//保单价格超过涨跌幅
-                    return false;
-                }
-
-            }
+            //if (o.isLimit || o.isStop)
+            //{
+            //    decimal targetprice = o.isLimit ? o.LimitPrice : o.StopPrice;
+            //    decimal diff = Math.Abs(targetprice - avabileprice);
+            //    //如果价格超过涨跌幅 则回报操作
+            //    if ((diff / avabileprice) > 0.1M)
+            //    {
+            //        errortitle = "ORDERPRICE_OVERT_LIMIT";//保单价格超过涨跌幅
+            //        return false;
+            //    }
+            //}
             return true;
 
         }

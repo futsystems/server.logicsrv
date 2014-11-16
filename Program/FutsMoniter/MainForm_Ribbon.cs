@@ -83,7 +83,11 @@ namespace FutsMoniter
 
         void kryptonRibbonGroupButton_payonline_Click(object sender, EventArgs e)
         {
-            Utils.OpenURL("http://www.baidu.com");
+            string url = Globals.Config["CashURL"].AsString();
+            if (!string.IsNullOrEmpty(url))
+            {
+                Utils.OpenURL(url);
+            }
         }
 
 

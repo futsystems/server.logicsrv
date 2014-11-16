@@ -428,7 +428,10 @@ namespace TradingLib.Contrib.FinService
             return _finservice.CanOpenSize(symbol);
         }
 
-
+        public CommissionConfig GetCommissionConfig(Symbol symbol)
+        {
+            return _finservice.GetCommissionConfig(symbol);
+        }
         /// <summary>
         /// 获得某个合约的可用资金
         /// 1万配资10完的配资服务 需要返回不同于帐户资金的资金

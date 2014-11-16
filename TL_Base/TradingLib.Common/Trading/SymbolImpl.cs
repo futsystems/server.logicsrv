@@ -369,7 +369,6 @@ namespace TradingLib.Common
 
 
 
-
         public static string Serialize(Symbol symbol)
         {
             List<string> p = new List<string>();

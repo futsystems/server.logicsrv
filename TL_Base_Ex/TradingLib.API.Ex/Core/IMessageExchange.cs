@@ -33,5 +33,19 @@ namespace TradingLib.API
         /// <returns></returns>
         decimal GetAvabilePrice(string symbol);
 
+        /// <summary>
+        /// 获得市场快照
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        Tick GetTickSnapshot(string symbol);
+
+
+        /// <summary>
+        /// 判定合约行情是否处于live状态
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        bool IsSymbolTickLive(string symbol);
     }
 }

@@ -74,6 +74,7 @@
     <Compile Include="Accounts\AccountUtils_FinCal.cs" />
     <Compile Include="Accounts\AccountUtils_TradingInfoEx.cs" />
     <Compile Include="Accounts\Account_IAccTradingInfo.cs" />
+    <Compile Include="Accounts\Account_IAccConfig.cs" />
     <Compile Include="ClearCentre\Base_ClearCentre_GotXXXX.cs" />
     <Compile Include="ClearCentre\Base_ClearCentre_.cs" />
     <Compile Include="ClearCentre\Base_ClearCentre_TotalInfo.cs" />

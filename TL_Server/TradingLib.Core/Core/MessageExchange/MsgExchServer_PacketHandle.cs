@@ -525,6 +525,8 @@ namespace TradingLib.Core
 
         /// <summary>
         /// 查询合约手续费率
+        /// 这里可以通过传递特殊的参数来影响每个交易帐户的手续费
+        /// 同时在扩展模块中 可以调整对应的手续费
         /// </summary>
         /// <param name="request"></param>
         /// <param name="account"></param>
@@ -545,10 +547,8 @@ namespace TradingLib.Core
                 {
                     response.RspInfo.Fill("SYMBOL_NOT_EXISTED");
                 }
-                else
-                {
-                    sym.FillSymbolCommissionResponse(ref response);
-                }
+                CommissionConfig cfg = account.GetCommissionConfig(sym);
+                response.FillCommissionCfg(cfg);
                 CacheRspResponse(response);
             }
         }

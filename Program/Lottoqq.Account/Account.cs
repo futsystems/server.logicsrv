@@ -16,6 +16,22 @@ namespace Lottoqq.Account
         }
 
         /// <summary>
+        /// 如果有配资服务，则调用服务的手续费参数，如果没有给定参数则通过返回默认的手续费参数
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        public override CommissionConfig GetCommissionConfig(Symbol symbol)
+        {
+            CommissionConfig cfg = null;
+            IAccountService service = null;
+            //如果有配资服务 则调用配资服务的手续费设置
+            if (GetService("FinService", out service))
+            {
+                cfg= service.GetCommissionConfig(symbol);
+            }
+            return cfg!=null?cfg:base.GetCommissionConfig(symbol);
+        }
+        /// <summary>
         /// 判断帐户是否有权交易某个合约
         /// </summary>
         /// <param name="symbol"></param>

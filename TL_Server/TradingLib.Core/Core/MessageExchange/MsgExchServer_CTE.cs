@@ -73,6 +73,15 @@ namespace TradingLib.Core
             _datafeedRouter.ExcludeSymbol(symbol);
         }
 
+         [CoreCommandAttr(QSEnumCommandSource.CLI,
+                    "includesym",
+                    "includesym - 包含行情系统的合约",
+                    "从行情系统包含某个合约")]
+         public void IncludeSymbol(string symbol)
+         {
+             _datafeedRouter.IncludeSymbol(symbol);
+         }
+
 
         [CoreCommandAttr(QSEnumCommandSource.CLI,
                             "regsymbols",

@@ -32,12 +32,14 @@
             this.argvalue = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
             this.argvalue_label = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.argtitle = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.argboolcheck = new ComponentFactory.Krypton.Toolkit.KryptonCheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // kryptonPanel1
             // 
+            this.kryptonPanel1.Controls.Add(this.argboolcheck);
             this.kryptonPanel1.Controls.Add(this.argvalue);
             this.kryptonPanel1.Controls.Add(this.argvalue_label);
             this.kryptonPanel1.Controls.Add(this.argtitle);
@@ -70,6 +72,15 @@
             this.argtitle.TabIndex = 0;
             this.argtitle.Values.Text = "--";
             // 
+            // argboolcheck
+            // 
+            this.argboolcheck.LabelStyle = ComponentFactory.Krypton.Toolkit.LabelStyle.NormalControl;
+            this.argboolcheck.Location = new System.Drawing.Point(115, 5);
+            this.argboolcheck.Name = "argboolcheck";
+            this.argboolcheck.Size = new System.Drawing.Size(19, 13);
+            this.argboolcheck.TabIndex = 3;
+            this.argboolcheck.Values.Text = "";
+            // 
             // ctTLEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -90,6 +101,7 @@
         private ComponentFactory.Krypton.Toolkit.KryptonTextBox argvalue;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel argvalue_label;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel argtitle;
+        private ComponentFactory.Krypton.Toolkit.KryptonCheckBox argboolcheck;
 
     }
 }

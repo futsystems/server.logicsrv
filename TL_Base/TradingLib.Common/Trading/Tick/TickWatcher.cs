@@ -43,9 +43,24 @@ namespace TradingLib.Common
                 yield return s;
         }
         private Dictionary<string, int> _last = new Dictionary<string, int>();
+        //private Dictionary<string, bool> _lastlive = new Dictionary<string, bool>();
 
 
-
+        int _symboletickdelay = 5;
+        public int SymbolIdleSpan { get { return _symboletickdelay; } set { _symboletickdelay = value; } }
+        public bool IsSymbolTickLive(string symbol)
+        {
+            int lasttick = 0;
+            if (_last.TryGetValue(symbol, out lasttick))
+            {
+                int span = Util.FTDIFF(lasttick, this.RecentTime);
+                return span > _symboletickdelay ? false : true; //判断该行情的最后一次Tick时间和当前最新Tick时间，如果超过设定范围则该合约的tick出现idle状态 
+            }
+            else //如果没有记录过该合约 则该合约处于非活动状态
+            {
+                return false;
+            }
+        }
         /// <summary>
         /// alert thrown when AlertThreshold is exceeded for a symbol
         /// </summary>

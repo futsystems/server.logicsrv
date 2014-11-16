@@ -213,6 +213,16 @@ namespace TradingLib.Contrib.FinService
          * 
          * 
          * */
+
+        /// <summary>
+        /// 默认返回空 这样就会调用默认的手续费 如果有对手续费进行异化的配资服务，则返回对应的参数
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        public virtual CommissionConfig GetCommissionConfig(Symbol symbol)
+        {
+            return null;
+        }
         /// <summary>
         /// 检查合约交易权限
         /// </summary>

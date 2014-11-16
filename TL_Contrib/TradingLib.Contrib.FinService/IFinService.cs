@@ -83,6 +83,13 @@ namespace TradingLib.Contrib.FinService
         #region 交易业务逻辑部分
 
         /// <summary>
+        /// 返回某个合约的手续费参数
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        CommissionConfig GetCommissionConfig(Symbol symbol);
+
+        /// <summary>
         /// 检查合约交易权限
         /// </summary>
         /// <param name="symbol"></param>

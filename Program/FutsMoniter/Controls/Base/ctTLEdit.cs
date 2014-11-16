@@ -21,17 +21,30 @@ namespace FutsMoniter
             set { 
                 _argument = value;
                 argtitle.Text = _argument.ArgTitle;
+                //如果不可编辑
                 if (!Argument.Editable)
                 {
                     argvalue.Visible = false;
+                    argboolcheck.Visible = false;
                     argvalue_label.Visible = true;
                     argvalue_label.Text = _argument.ArgValue;
                 }
                 else
                 {
-                    argvalue.Visible = true;
+                    if (_argument.ArgType.Equals("BOOLEAN"))
+                    {
+                        argboolcheck.Visible = true;
+                        argvalue.Visible = false;
+                        argboolcheck.Checked = _argument.ArgValue.Equals("True") ? true : false;
+                    }
+                    else
+                    {
+                        argvalue.Visible = true;
+                        argboolcheck.Visible = false;
+                        argvalue.Text = _argument.ArgValue;
+                    }
                     argvalue_label.Visible = false;
-                    argvalue.Text = _argument.ArgValue;
+                    
                 }
                 
             } 
@@ -55,8 +68,15 @@ namespace FutsMoniter
             }
             else
             {
-
-                _argument.ArgValue = argvalue.Text;
+                if (_argument.ArgType.Equals("BOOLEAN"))
+                {
+                    _argument.ArgValue = argboolcheck.Checked ? "True" : "False";
+                }
+                else
+                {
+                    _argument.ArgValue = argvalue.Text;
+                }
+                
             }
             return true;
         }

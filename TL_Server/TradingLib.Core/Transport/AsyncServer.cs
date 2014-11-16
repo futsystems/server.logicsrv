@@ -569,7 +569,7 @@ namespace TradingLib.Core
 
                         LogicLiveRequest request = (LogicLiveRequest)PacketHelper.SrvRecvRequest(msg.Type, msg.Content, front, address);
                         
-                        Util.Debug(string.Format("LogicHeartBeat from:{0} address:{1}",front,address),QSEnumDebugLevel.DEBUG);
+                        //Util.Debug(string.Format("LogicHeartBeat from:{0} address:{1}",front,address),QSEnumDebugLevel.DEBUG);
                         LogicLiveResponse response = ResponseTemplate<LogicLiveResponse>.SrvSendRspResponse(request);
 
                         ZMessage reply = new ZMessage(response.Data);

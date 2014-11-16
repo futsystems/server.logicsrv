@@ -514,6 +514,26 @@ namespace TradingLib.Core
         }
 
 
+        /// <summary>
+        /// 获得某个合约的市场快照
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        public Tick GetTickSnapshot(string symbol)
+        {
+            return _datafeedRouter.GetTickSnapshot(symbol);
+        }
+
+        /// <summary>
+        /// 判断某个合约当前行情是否处于live状态
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        public bool IsSymbolTickLive(string symbol)
+        {
+            return _datafeedRouter.IsTickLive(symbol);
+        }
+
 
         /// <summary>
         /// 获得某个合约的有效价格

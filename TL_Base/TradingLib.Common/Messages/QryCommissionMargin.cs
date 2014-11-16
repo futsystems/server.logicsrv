@@ -104,6 +104,20 @@ namespace TradingLib.Common
         public decimal CloseTodayRatioByVolume { get; set; }
 
 
+        public void FillCommissionCfg(CommissionConfig cfg)
+        {
+            this.TradingAccount = cfg.Account;
+            this.Symbol = cfg.Symbol;
+            this.OpenRatioByMoney = cfg.OpenRatioByMoney;
+            this.OpenRatioByVolume = cfg.OpenRatioByVolume;
+            //this.CloseRatioByMoney = cfg.close;
+            this.CloseRatioByMoney = cfg.CloseRatioByMoney;
+            this.CloseRatioByVolume = cfg.CloseRatioByVolume;
+            this.CloseTodayRatioByMoney = cfg.CloseTodayRatioByMoney;
+            this.CloseTodayRatioByVolume = cfg.CloseTodayRatioByVolume;
+           // this.CloseTodayRatioByVolume = cfg.close
+
+        }
         public override string ResponseSerialize()
         {
             StringBuilder sb = new StringBuilder();

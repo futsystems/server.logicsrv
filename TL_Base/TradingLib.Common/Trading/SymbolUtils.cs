@@ -18,5 +18,19 @@ namespace TradingLib.Common
         {
             return price.ToString();
         }
+
+
+        public static CommissionConfig GetCommissionConfig(this Symbol sym)
+        {
+            CommissionConfig cfg = new CommissionConfigImpl();
+            cfg.Symbol = sym.Symbol;
+            cfg.OpenRatioByMoney = sym.EntryCommission < 1 ? sym.EntryCommission : 0;
+            cfg.OpenRatioByVolume = sym.EntryCommission > 1 ? sym.EntryCommission : 0;
+            cfg.CloseRatioByVolume = sym.ExitCommission > 1 ? sym.ExitCommission : 0;
+            cfg.CloseRatioByMoney = sym.ExitCommission < 1 ? sym.ExitCommission : 0;
+            cfg.CloseTodayRatioByMoney = sym.ExitCommission < 1 ? sym.ExitCommission : 0;
+            cfg.CloseTodayRatioByVolume = sym.ExitCommission > 1 ? sym.ExitCommission : 0;
+            return cfg;
+        }
     }
 }

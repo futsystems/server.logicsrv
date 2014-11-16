@@ -24,7 +24,7 @@ namespace TradingLib.API
     /// IAccRiskCheck:交易帐户风控规则检查,添加删除委托风控规则或帐户风控规则
     /// IAccOperation:交易帐户操作接口
     /// </summary>
-    public interface IAccount : IFinanceTotal,IAccCal, IAccTradingInfo, IAccOperation,IGeneralCheck,IAccRiskCheck
+    public interface IAccount : IFinanceTotal,IAccCal, IAccTradingInfo, IAccOperation,IGeneralCheck,IAccRiskCheck,IAccConfig
     {
 
         #region 交易帐号服务类相关操作

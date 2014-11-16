@@ -100,6 +100,15 @@ namespace TradingLib.API
         decimal GetFundAvabile(Symbol symbol);
 
         /// <summary>
+        /// 获得某个合约的手续费设置
+        /// 返回null则用默认手续费
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        CommissionConfig GetCommissionConfig(Symbol symbol);
+        
+
+        /// <summary>
         /// 当前服务是否可用
         /// </summary>
         bool IsAvabile { get; }

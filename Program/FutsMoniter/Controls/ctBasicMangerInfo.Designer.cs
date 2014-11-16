@@ -31,7 +31,6 @@
             this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
             this.kryptonGroupBox1 = new ComponentFactory.Krypton.Toolkit.KryptonGroupBox();
             this.btnChangePass = new ComponentFactory.Krypton.Toolkit.KryptonButton();
-            this.kryptonButton2 = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.lbqq = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.lbmobile = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.lbrole = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
@@ -69,7 +68,6 @@
             // kryptonGroupBox1.Panel
             // 
             this.kryptonGroupBox1.Panel.Controls.Add(this.btnChangePass);
-            this.kryptonGroupBox1.Panel.Controls.Add(this.kryptonButton2);
             this.kryptonGroupBox1.Panel.Controls.Add(this.lbqq);
             this.kryptonGroupBox1.Panel.Controls.Add(this.lbmobile);
             this.kryptonGroupBox1.Panel.Controls.Add(this.lbrole);
@@ -95,15 +93,6 @@
             this.btnChangePass.Size = new System.Drawing.Size(90, 25);
             this.btnChangePass.TabIndex = 13;
             this.btnChangePass.Values.Text = "修改密码";
-            // 
-            // kryptonButton2
-            // 
-            this.kryptonButton2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.kryptonButton2.Location = new System.Drawing.Point(649, 8);
-            this.kryptonButton2.Name = "kryptonButton2";
-            this.kryptonButton2.Size = new System.Drawing.Size(90, 25);
-            this.kryptonButton2.TabIndex = 12;
-            this.kryptonButton2.Values.Text = "修改信息";
             // 
             // lbqq
             // 
@@ -224,7 +213,6 @@
         private ComponentFactory.Krypton.Toolkit.KryptonPanel kryptonPanel1;
         private ComponentFactory.Krypton.Toolkit.KryptonGroupBox kryptonGroupBox1;
         private ComponentFactory.Krypton.Toolkit.KryptonButton btnChangePass;
-        private ComponentFactory.Krypton.Toolkit.KryptonButton kryptonButton2;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel lbqq;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel lbmobile;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel lbrole;

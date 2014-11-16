@@ -17,6 +17,12 @@ namespace TradingLib.Contrib.FinService
         /// <summary>
         /// 回合收费
         /// </summary>
+        [ArgumentAttribute("ChargeOnEntry", "是否是开仓收费", EnumArgumentType.BOOLEAN, true, true, true)]
+        public ArgumentPair ChargeOnEntry { get; set; }
+
+        /// <summary>
+        /// 回合收费
+        /// </summary>
         [ArgumentAttribute("RoundCharge", "每个回合收费", EnumArgumentType.DECIMAL, true,150,50)]
         public ArgumentPair RoundCharge { get; set; }
 
@@ -87,34 +93,67 @@ namespace TradingLib.Contrib.FinService
         /// <returns></returns>
         public override decimal OnAdjustCommission(Trade t, IPositionRound pr)
         {
-            decimal commission = t.Commission;
-            //平仓操作才计算手续费
-            if (!t.IsEntryPosition)//平仓
-            {
-                if (pr.IsClosed)
-                {
-                    decimal profit = pr.Profit;//该次交易回合的盈利
-                    int size = pr.Size;//该次交易回合的成交手数
+            //decimal commission = t.Commission;
+            ////平仓操作才计算手续费
+            //if (!t.IsEntryPosition)//平仓
+            //{
+            //    if (pr.IsClosed)
+            //    {
+            //        decimal profit = pr.Profit;//该次交易回合的盈利
+            //        int size = pr.Size;//该次交易回合的成交手数
 
-                    //注:后期这里需要该进程每个帐号按其代理设定的费用标准进行收费
-                    commission = size * this.RoundCharge.AccountArgument.AsDecimal();
-                }
-                else
-                {
-                    commission = 0;
-                }
-            }
-            else
+            //        //注:后期这里需要该进程每个帐号按其代理设定的费用标准进行收费
+            //        commission = size * this.RoundCharge.AccountArgument.AsDecimal();
+            //    }
+            //    else
+            //    {
+            //        commission = 0;
+            //    }
+            //}
+            //else
+            //{
+            //    commission = 0;
+            //}
+            //return commission;
+
+            ////只对股指IF进行处理
+            //if (!t.oSymbol.SecurityFamily.Code.Equals("IF"))
+            //{
+            //    return;
+            //}
+
+            decimal commission = 0;
+            //开仓收费并且当前成交为开仓  开仓不收费(平仓收费)且当前成交为平仓
+            if ((this.ChargeOnEntry.AccountArgument.AsBool() && t.IsEntryPosition) || ((!this.ChargeOnEntry.AccountArgument.AsBool()) && (!t.IsEntryPosition)))
             {
-                commission = 0;
+                decimal totalfee = 0;
+                decimal agentfee = 0;
+
+                totalfee = t.UnsignedSize * this.RoundCharge.AccountArgument.AsDecimal();
+                agentfee = t.UnsignedSize * this.RoundCharge.AgentArgument.AsDecimal();
+                commission = totalfee;//按指定的收费逻辑进行收费 并设定成交手续费
+                //进行直客收费记录
+                string comment = SPNAME + " 收费时间:" + t.GetDateTime().ToString() + " TradeID:" + t.TradeID;
+
+                //计算代理收费记录
+                AgentCommissionDel func = (Manager agent, Manager parent) =>
+                {
+                    decimal fee = 0;
+                    //代理的收费 - 代理的父代理的收费
+                    decimal diff = FinTracker.ArgumentTracker.GetAgentArgument(agent.mgr_fk, this.ServicePlanFK, this.RoundCharge.AccountArgument.Name).AsDecimal() - FinTracker.ArgumentTracker.GetAgentArgument(parent.mgr_fk, this.ServicePlanFK, this.RoundCharge.AccountArgument.Name).AsDecimal();
+                    fee = t.UnsignedSize * diff;
+                    return fee;
+                };
+                FeeCharge(totalfee, agentfee, func, comment);
             }
             return commission;
+
         }
 
 
         public override void OnTrade(Trade t)
         {
-
+            
         }
 
 
@@ -125,29 +164,29 @@ namespace TradingLib.Contrib.FinService
         /// <param name="round"></param>
         public override void OnRound(IPositionRound round)
         {
-            if (!round.oSymbol.SecurityFamily.Code.Equals("IF"))
-            {
-                return;
-            }
-            decimal totalfee = 0;
-            decimal agentfee = 0;
+            //if (!round.oSymbol.SecurityFamily.Code.Equals("IF"))
+            //{
+            //    return;
+            //}
+            //decimal totalfee = 0;
+            //decimal agentfee = 0;
             
-            totalfee = round.Size * this.RoundCharge.AccountArgument.AsDecimal();
-            agentfee = round.Size * this.RoundCharge.AgentArgument.AsDecimal();
+            //totalfee = round.Size * this.RoundCharge.AccountArgument.AsDecimal();
+            //agentfee = round.Size * this.RoundCharge.AgentArgument.AsDecimal();
 
-            //进行直客收费记录
-            string comment = SPNAME + " 平仓时间:" + Util.ToTLDateTime(round.ExitTime).ToString();
+            ////进行直客收费记录
+            //string comment = SPNAME + " 平仓时间:" + Util.ToTLDateTime(round.ExitTime).ToString();
 
-            //计算代理收费记录
-            AgentCommissionDel func = (Manager agent, Manager parent) =>
-            {
-                decimal fee = 0;
-                //代理的收费 - 代理的父代理的收费
-                decimal diff = FinTracker.ArgumentTracker.GetAgentArgument(agent.mgr_fk, this.ServicePlanFK, this.RoundCharge.AccountArgument.Name).AsDecimal() - FinTracker.ArgumentTracker.GetAgentArgument(parent.mgr_fk, this.ServicePlanFK, this.RoundCharge.AccountArgument.Name).AsDecimal();
-                fee = round.Size * diff;
-                return fee;
-            };
-            FeeCharge(totalfee, agentfee, func, comment);
+            ////计算代理收费记录
+            //AgentCommissionDel func = (Manager agent, Manager parent) =>
+            //{
+            //    decimal fee = 0;
+            //    //代理的收费 - 代理的父代理的收费
+            //    decimal diff = FinTracker.ArgumentTracker.GetAgentArgument(agent.mgr_fk, this.ServicePlanFK, this.RoundCharge.AccountArgument.Name).AsDecimal() - FinTracker.ArgumentTracker.GetAgentArgument(parent.mgr_fk, this.ServicePlanFK, this.RoundCharge.AccountArgument.Name).AsDecimal();
+            //    fee = round.Size * diff;
+            //    return fee;
+            //};
+            //FeeCharge(totalfee, agentfee, func, comment);
         }
 
 
@@ -185,6 +224,28 @@ namespace TradingLib.Contrib.FinService
 
         #region 交易业务逻辑部分
 
+        public override CommissionConfig GetCommissionConfig(Symbol symbol)
+        {
+            if (!symbol.SecurityFamily.Code.Equals("IF"))
+            {
+                return null;
+            }
+            CommissionConfig cfg = new CommissionConfigImpl();
+            cfg.Account = this.Account.ID;
+            cfg.Symbol = symbol.Symbol;
+
+            //开仓收费
+            if (this.ChargeOnEntry.AccountArgument.AsBool())
+            {
+                cfg.OpenRatioByVolume = this.RoundCharge.AccountArgument.AsDecimal();//每手开仓收多少
+            }
+            else
+            {
+                cfg.CloseRatioByVolume = this.RoundCharge.AccountArgument.AsDecimal();//每手p平仓收多少
+                cfg.CloseTodayRatioByVolume = cfg.CloseRatioByVolume;
+            }
+            return cfg;
+        }
         /// <summary>
         /// 检查合约交易权限
         /// </summary>
