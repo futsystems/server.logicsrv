@@ -62,7 +62,7 @@ namespace TradingLib.ORM
                     istransok = db.Connection.Execute(query) > 0;
 
                     decimal amount = op.Operation == QSEnumCashOperation.Deposit ? op.Amount : op.Amount * -1;
-                    string query2 = String.Format("Insert into log_cashtrans (`datetime`,`amount`,`comment`,`account`,`transref`,`settleday`) values('{0}','{1}','{2}','{3}','{4}','{5}')", DateTime.Now.ToString(), amount.ToString(),op.Source.ToString(),op.Account, op.Ref, TLCtxHelper.Ctx.SettleCentre.NextTradingday);
+                    string query2 = String.Format("Insert into log_cashtrans (`datetime`,`amount`,`comment`,`account`,`transref`,`settleday`) values('{0}','{1}','{2}','{3}','{4}','{5}')", Util.ToTLDateTime(), amount.ToString(),op.Source.ToString(),op.Account, op.Ref, TLCtxHelper.Ctx.SettleCentre.NextTradingday);
 
                     istransok = istransok && db.Connection.Execute(query2) > 0;
                     if (istransok)

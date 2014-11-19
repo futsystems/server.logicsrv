@@ -195,7 +195,7 @@ namespace TradingLib.ORM
                     istransok = istransok && (db.Connection.Execute(query) >= 0);
 
                     //3.更新账户结算时间,以后计算就只需要读取该账户这个时间段之后的交易信息并在当前权益基础上进行权益计算。
-                    query = String.Format("UPDATE accounts SET settledatetime= '{0}' WHERE account = '{1}'",Util.ToDateTime(settle.SettleDay,settle.SettleTime),settle.Account);
+                    query = String.Format("UPDATE accounts SET settledatetime= '{0}' WHERE account = '{1}'",Util.ToTLDateTime(settle.SettleDay,settle.SettleTime),settle.Account);
                     istransok = istransok && (db.Connection.Execute(query) >= 0);
 
                     //如果所有操作均正确,则提交数据库transactoin

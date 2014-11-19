@@ -485,7 +485,7 @@ namespace TradingLib.ORM
                         throw new FutsRspError("用户已经申请过交易帐户");
                     }
                 }
-                string query = String.Format("Insert into accounts (`account`,`user_id`,`createdtime`,`pass`,`account_category`,`settledatetime` ,`mgr_fk` ) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}')", account, user_id.ToString(), DateTime.Now.ToString(), pass, category, DateTime.Now - new TimeSpan(1, 0, 0, 0, 0),mgr_fk);
+                string query = String.Format("Insert into accounts (`account`,`user_id`,`createdtime`,`pass`,`account_category`,`settledatetime` ,`mgr_fk` ) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}')", account, user_id.ToString(), Util.ToTLDateTime(), pass, category, Util.ToTLDateTime(DateTime.Now - new TimeSpan(1, 0, 0, 0, 0)), mgr_fk);
                 return db.Connection.Execute(query) > 0;
             }
         }

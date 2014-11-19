@@ -33,8 +33,8 @@ namespace TradingLib.API
         LOGICLIVEREQUEST=2,//前置与逻辑服务器之间的心跳包
         LOGICLIVERESPONSE = 3,//当服务端收到逻辑心跳包后,服务端会返回一个Response告知服务端Router端处可工作状态
         UPDATECLIENTFRONTID=4,//重启前置后，由于前置编号发生变化，需要更新原来交易客户端回话的前置地址，否则后期的通讯将会被丢弃
-        CUSTOM5,
-        CUSTOM6,
+        FRONTSTATUSREQUEST=5,//前置机工作状态请求
+        FRONTSTATUSRESPONSE=6,//前置机工作状态回报
         CUSTOM7,
         CUSTOM8,
         CUSTOM9,

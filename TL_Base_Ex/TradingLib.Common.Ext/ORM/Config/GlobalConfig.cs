@@ -84,6 +84,11 @@ namespace TradingLib.Common
                 config.UpdateConfig("DealerPrefix", QSEnumCfgType.String, "55", "交易员帐户前缀");
             }
 
+            if (!config.HaveConfig("StartDefaultConnector"))
+            {
+                config.UpdateConfig("StartDefaultConnector", QSEnumCfgType.Bool,true, "启动时同步启动默认通道");
+            }
+
         }
 
         /// <summary>
@@ -227,6 +232,17 @@ namespace TradingLib.Common
             get
             {
                 return defaultinstance.config["RealPrompt"].AsString();
+            }
+        }
+
+        /// <summary>
+        /// 是否需要同步启动默认通道
+        /// </summary>
+        public static bool NeedStartDefaultConnector
+        {
+            get
+            {
+                return defaultinstance.config["StartDefaultConnector"].AsBool();
             }
         }
     }
