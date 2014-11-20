@@ -26,7 +26,8 @@ namespace FutsMoniter
             margin.Value = -1;
             extramargin.Value = -1;
             maintancemargin.Value = -1;
-
+            gp_option.Visible = Globals.UIAccess.sectype_option;
+            gp_lotto.Visible = Globals.UIAccess.sectype_lotto;
             _loaded = true;
             WireEvent();
 

@@ -733,5 +733,29 @@ namespace TradingLib.Mixins.JsonObject
         /// </summary>
         [PermissionFieldAttr("帐户类别-交易员", "是否可以添加交易员帐户")]
         public bool acctype_dealer { get; set; }
+
+        /// <summary>
+        /// 是否可以添加期权合约
+        /// </summary>
+        [PermissionFieldAttr("品种类别-期权", "是否可以添加期权合约")]
+        public bool sectype_option { get; set; }
+
+        /// <summary>
+        /// 是否可以添加乐透合约
+        /// </summary>
+        [PermissionFieldAttr("品种类别-乐透", "是否可以添加乐透合约")]
+        public bool sectype_lotto { get; set; }
+
+        /// <summary>
+        /// 是否可以添加股票
+        /// </summary>
+        [PermissionFieldAttr("品种类别-股票", "是否可以交易股票")]
+        public bool sectype_stock { get; set; }
+
+        /// <summary>
+        /// 是否可以交易期货
+        /// </summary>
+        [PermissionFieldAttr("品种类别-期货", "是否可以交易期货")]
+        public bool sectype_fut { get; set; }
     }
 }

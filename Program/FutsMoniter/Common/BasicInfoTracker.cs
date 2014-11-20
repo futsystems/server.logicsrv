@@ -528,6 +528,21 @@ namespace TradingLib.Common
             }
             foreach (Exchange ex in exchangemap.Values)
             {
+                if (ex.EXCode.Equals("INNOVEX"))
+                {
+                    if (!Globals.UIAccess.sectype_lotto)
+                        continue;
+                }
+                if (ex.EXCode.Equals("SSE"))
+                {
+                    if (!Globals.UIAccess.sectype_stock)
+                        continue;
+                }
+                if (ex.EXCode.Equals("SZSE"))
+                {
+                    if (!Globals.UIAccess.sectype_stock)
+                        continue;
+                }
                 ValueObject<int> vo = new ValueObject<int>();
                 vo.Name = ex.Name;
                 vo.Value = ex.ID;
@@ -575,6 +590,34 @@ namespace TradingLib.Common
             }
             return list;
         }
+
+        public ArrayList GetSecTyeCombList(bool isany = false)
+        {
+            ArrayList list = new ArrayList();
+            if (isany)
+            {
+                ValueObject<SecurityType> vo = new ValueObject<SecurityType>();
+                vo.Name = "Any";
+                vo.Value = (SecurityType)(Enum.GetValues(typeof(SecurityType)).GetValue(0));
+                list.Add(vo);
+            }
+            if(Globals.UIAccess.sectype_fut)
+            {
+                ValueObject<SecurityType> vo = new ValueObject<SecurityType>();
+                vo.Name = Util.GetEnumDescription(SecurityType.FUT);
+                vo.Value = SecurityType.FUT;
+                list.Add(vo);
+            }
+            if(Globals.UIAccess.sectype_stock)
+            {
+                 ValueObject<SecurityType> vo = new ValueObject<SecurityType>();
+                vo.Name = Util.GetEnumDescription(SecurityType.STK);
+                vo.Value = SecurityType.STK;
+                list.Add(vo);
+            }
+            return list;
+        }
+
 
         public ArrayList GetExpireMonth()
         {

@@ -4,11 +4,30 @@ using System.Linq;
 using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
+using TradingLib.Mixins;
+using TradingLib.Mixins.LitJson;
 
 namespace TradingLib.Core
 {
     public partial class MsgExchServer
     {
+
+        #region 状态类查询
+        [CoreCommandAttr(QSEnumCommandSource.MessageWeb,
+                            "qrydatafeedrouterstatus",
+                            "qrydatafeedrouterstatus - query datafeed router status",
+                            "查询行情路由状态")]
+        public string Status_DataFeedRouter()
+        {
+            DataFeedRouterStatus status = _datafeedRouter.GetRouterStatus();
+            ReplyWriter writer = new ReplyWriter();
+            string json = writer.Start().FillReply(Mixins.JsonReply.GenericSuccess()).FillPlayload(status).End().ToString();
+            debug("got json router status:" + json, QSEnumDebugLevel.INFO);
+            return json;
+        }
+
+        #endregion
+
         [CoreCommandAttr(QSEnumCommandSource.CLI,
                             "pconnlist",
                             "pconnlist - print client connection list",

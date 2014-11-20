@@ -20,8 +20,11 @@ namespace TradingLib.Common
 
         public DBSymbolTracker()
         {
+            //加载所有合约 这里需要判断合约是否过期
             foreach (SymbolImpl sym in ORM.MBasicInfo.SelectSymbol())
             {
+                if (sym.IsExpired)
+                    continue;
                 symcodemap[sym.Symbol] = sym;
                 idxcodemap[sym.ID] = sym;
             }
@@ -186,38 +189,13 @@ namespace TradingLib.Common
             }
         }
 
-        
-        ///// <summary>
-        ///// 获得某个时间段上的所有合约
-        ///// </summary>
-        ///// <param name="mt"></param>
-        ///// <returns></returns>
-        //public Symbol[] GetSymbolsViaMarketTime(MarketTime mt)
-        //{
-        //    return idxcodemap.Values.Where(s => IsSymbolWithMarketTime(s, mt)).ToArray();
-        //}
-
-        ///// <summary>
-        ///// 判断合约是否绑定在某个市场交易时间对象上
-        ///// </summary>
-        ///// <param name="sym"></param>
-        ///// <param name="mt"></param>
-        ///// <returns></returns>
-        //bool IsSymbolWithMarketTime(Symbol sym, MarketTime mt)
-        //{
-        //    if (sym.SecurityFamily != null && sym.SecurityFamily.MarketTime != null)
-        //    {
-        //        if (sym.SecurityFamily.MarketTime.Equals(mt))
-        //            return true;
-        //    }
-        //    return false;
-        //}
+       
 
 
         public void UpdateSymbol(SymbolImpl sym)
         {
             SymbolImpl target = null;
-            if (symcodemap.TryGetValue(sym.Symbol, out target))
+            if (symcodemap.TryGetValue(sym.Symbol, out target))//已经存在该合约
             {
 
                 target.EntryCommission = sym._entrycommission;
@@ -226,7 +204,8 @@ namespace TradingLib.Common
                 target.ExtraMargin = sym._extramargin;
                 target.MaintanceMargin = sym._maintancemargin;
                 target.Tradeable = sym.Tradeable;//更新交易标识
-
+                target.ExpireMonth = sym.ExpireMonth;
+                target.ExpireDate = sym.ExpireDate;
                 Instrument inst = instrumentmap[sym.Symbol];
                 if (inst != null)
                 {
@@ -234,11 +213,13 @@ namespace TradingLib.Common
                     inst.ExitCommission = sym._exitcommission;
                     inst.Margin = sym.Margin;
                     inst.Tradeable = sym.Tradeable;
+                    inst.ExpireMonth = sym.ExpireMonth;
+                    inst.ExpireDate = sym.ExpireDate;
                 }
                 ORM.MBasicInfo.UpdateSymbol(target);
 
             }
-            else
+            else//不存在该合约
             {
                 target = new SymbolImpl();
                 target.Symbol = sym.Symbol;

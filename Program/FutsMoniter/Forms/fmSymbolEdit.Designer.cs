@@ -30,12 +30,12 @@
         {
             this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
             this.btnSubmit = new ComponentFactory.Krypton.Toolkit.KryptonButton();
-            this.kryptonGroupBox3 = new ComponentFactory.Krypton.Toolkit.KryptonGroupBox();
+            this.gp_lotto = new ComponentFactory.Krypton.Toolkit.KryptonGroupBox();
             this.kryptonLabel15 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel14 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.cblottolevel = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
             this.cbulsymbol = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
-            this.kryptonGroupBox2 = new ComponentFactory.Krypton.Toolkit.KryptonGroupBox();
+            this.gp_option = new ComponentFactory.Krypton.Toolkit.KryptonGroupBox();
             this.kryptonLabel12 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel6 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.strike = new ComponentFactory.Krypton.Toolkit.KryptonNumericUpDown();
@@ -63,14 +63,14 @@
             this.kryptonLabel1 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonGroupBox3)).BeginInit();
-            this.kryptonGroupBox3.Panel.SuspendLayout();
-            this.kryptonGroupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gp_lotto)).BeginInit();
+            this.gp_lotto.Panel.SuspendLayout();
+            this.gp_lotto.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cblottolevel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cbulsymbol)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonGroupBox2)).BeginInit();
-            this.kryptonGroupBox2.Panel.SuspendLayout();
-            this.kryptonGroupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gp_option)).BeginInit();
+            this.gp_option.Panel.SuspendLayout();
+            this.gp_option.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cboptionside)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonGroupBox1)).BeginInit();
             this.kryptonGroupBox1.Panel.SuspendLayout();
@@ -83,8 +83,8 @@
             // kryptonPanel1
             // 
             this.kryptonPanel1.Controls.Add(this.btnSubmit);
-            this.kryptonPanel1.Controls.Add(this.kryptonGroupBox3);
-            this.kryptonPanel1.Controls.Add(this.kryptonGroupBox2);
+            this.kryptonPanel1.Controls.Add(this.gp_lotto);
+            this.kryptonPanel1.Controls.Add(this.gp_option);
             this.kryptonPanel1.Controls.Add(this.kryptonLabel5);
             this.kryptonPanel1.Controls.Add(this.kryptonLabel4);
             this.kryptonPanel1.Controls.Add(this.kryptonLabel3);
@@ -109,20 +109,21 @@
             this.btnSubmit.TabIndex = 11;
             this.btnSubmit.Values.Text = "提 交";
             // 
-            // kryptonGroupBox3
+            // gp_lotto
             // 
-            this.kryptonGroupBox3.Location = new System.Drawing.Point(13, 405);
-            this.kryptonGroupBox3.Name = "kryptonGroupBox3";
+            this.gp_lotto.Location = new System.Drawing.Point(13, 405);
+            this.gp_lotto.Name = "gp_lotto";
             // 
-            // kryptonGroupBox3.Panel
+            // gp_lotto.Panel
             // 
-            this.kryptonGroupBox3.Panel.Controls.Add(this.kryptonLabel15);
-            this.kryptonGroupBox3.Panel.Controls.Add(this.kryptonLabel14);
-            this.kryptonGroupBox3.Panel.Controls.Add(this.cblottolevel);
-            this.kryptonGroupBox3.Panel.Controls.Add(this.cbulsymbol);
-            this.kryptonGroupBox3.Size = new System.Drawing.Size(411, 77);
-            this.kryptonGroupBox3.TabIndex = 10;
-            this.kryptonGroupBox3.Text = "Caption";
+            this.gp_lotto.Panel.Controls.Add(this.kryptonLabel15);
+            this.gp_lotto.Panel.Controls.Add(this.kryptonLabel14);
+            this.gp_lotto.Panel.Controls.Add(this.cblottolevel);
+            this.gp_lotto.Panel.Controls.Add(this.cbulsymbol);
+            this.gp_lotto.Size = new System.Drawing.Size(411, 77);
+            this.gp_lotto.TabIndex = 10;
+            this.gp_lotto.Text = "乐透合约";
+            this.gp_lotto.Values.Heading = "乐透合约";
             // 
             // kryptonLabel15
             // 
@@ -156,21 +157,21 @@
             this.cbulsymbol.Size = new System.Drawing.Size(183, 21);
             this.cbulsymbol.TabIndex = 11;
             // 
-            // kryptonGroupBox2
+            // gp_option
             // 
-            this.kryptonGroupBox2.Location = new System.Drawing.Point(12, 312);
-            this.kryptonGroupBox2.Name = "kryptonGroupBox2";
+            this.gp_option.Location = new System.Drawing.Point(12, 312);
+            this.gp_option.Name = "gp_option";
             // 
-            // kryptonGroupBox2.Panel
+            // gp_option.Panel
             // 
-            this.kryptonGroupBox2.Panel.Controls.Add(this.kryptonLabel12);
-            this.kryptonGroupBox2.Panel.Controls.Add(this.kryptonLabel6);
-            this.kryptonGroupBox2.Panel.Controls.Add(this.strike);
-            this.kryptonGroupBox2.Panel.Controls.Add(this.cboptionside);
-            this.kryptonGroupBox2.Size = new System.Drawing.Size(412, 86);
-            this.kryptonGroupBox2.TabIndex = 9;
-            this.kryptonGroupBox2.Text = "期权设置";
-            this.kryptonGroupBox2.Values.Heading = "期权设置";
+            this.gp_option.Panel.Controls.Add(this.kryptonLabel12);
+            this.gp_option.Panel.Controls.Add(this.kryptonLabel6);
+            this.gp_option.Panel.Controls.Add(this.strike);
+            this.gp_option.Panel.Controls.Add(this.cboptionside);
+            this.gp_option.Size = new System.Drawing.Size(412, 86);
+            this.gp_option.TabIndex = 9;
+            this.gp_option.Text = "期权设置";
+            this.gp_option.Values.Heading = "期权设置";
             // 
             // kryptonLabel12
             // 
@@ -485,16 +486,16 @@
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).EndInit();
             this.kryptonPanel1.ResumeLayout(false);
             this.kryptonPanel1.PerformLayout();
-            this.kryptonGroupBox3.Panel.ResumeLayout(false);
-            this.kryptonGroupBox3.Panel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonGroupBox3)).EndInit();
-            this.kryptonGroupBox3.ResumeLayout(false);
+            this.gp_lotto.Panel.ResumeLayout(false);
+            this.gp_lotto.Panel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gp_lotto)).EndInit();
+            this.gp_lotto.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.cblottolevel)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cbulsymbol)).EndInit();
-            this.kryptonGroupBox2.Panel.ResumeLayout(false);
-            this.kryptonGroupBox2.Panel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonGroupBox2)).EndInit();
-            this.kryptonGroupBox2.ResumeLayout(false);
+            this.gp_option.Panel.ResumeLayout(false);
+            this.gp_option.Panel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gp_option)).EndInit();
+            this.gp_option.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.cboptionside)).EndInit();
             this.kryptonGroupBox1.Panel.ResumeLayout(false);
             this.kryptonGroupBox1.Panel.PerformLayout();
@@ -530,12 +531,12 @@
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel5;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel4;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel3;
-        private ComponentFactory.Krypton.Toolkit.KryptonGroupBox kryptonGroupBox2;
+        private ComponentFactory.Krypton.Toolkit.KryptonGroupBox gp_option;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel12;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel6;
         private ComponentFactory.Krypton.Toolkit.KryptonNumericUpDown strike;
         private ComponentFactory.Krypton.Toolkit.KryptonComboBox cboptionside;
-        private ComponentFactory.Krypton.Toolkit.KryptonGroupBox kryptonGroupBox3;
+        private ComponentFactory.Krypton.Toolkit.KryptonGroupBox gp_lotto;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel13;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel15;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel14;

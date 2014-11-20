@@ -78,6 +78,30 @@ namespace TradingLib.Core
 
         }
 
+        /// <summary>
+        /// 获得路由状态
+        /// </summary>
+        /// <returns></returns>
+        public DataFeedRouterStatus GetRouterStatus()
+        {
+            DataFeedRouterStatus status = new DataFeedRouterStatus();
+
+            if (TLCtxHelper.Ctx.RouterManager.DefaultDataFeed == null)//如果行情通道不存在 则为false
+            {
+                status.IsDefaultDataFeedLive = false;
+            }
+            else
+            {
+                status.IsDefaultDataFeedLive = TLCtxHelper.Ctx.RouterManager.DefaultDataFeed.IsLive;//如果行情通道存在 则设定DefaultDataFeed的当前工作状态
+            }
+
+            status.MassAlert = _tickwatcher.isMassAlerting;//是否处于报警状态
+            status.IsTickSpan = _tickwatcher.TimeSpanSetted;//是否设定了行情有效时间段
+
+            return status;
+
+        }
+        
         #region 行情自我诊断与维护系统
 
         /* 行情监控系统
@@ -160,6 +184,7 @@ namespace TradingLib.Core
         {
             debug("行情系统报警," +"最后一个行情时间:"+_tickwatcher.RecentTime.ToString()+" 在:"+_tickwatcher.MassAlertThreshold.ToString()+"秒内，没有收到过任何行情"  , QSEnumDebugLevel.WARNING);
             
+            /* 如果我们在夜盘没有订阅任何数据 则接口会一直重启
             IDataFeed df = TLCtxHelper.Ctx.RouterManager.DefaultDataFeed;
             debug("Reconnect Default DataFeed:"+df.Token, QSEnumDebugLevel.INFO);
             if (df != null)
@@ -171,7 +196,7 @@ namespace TradingLib.Core
                 }
                 df.Start();
             }
-
+            **/
         }
 
         /// <summary>

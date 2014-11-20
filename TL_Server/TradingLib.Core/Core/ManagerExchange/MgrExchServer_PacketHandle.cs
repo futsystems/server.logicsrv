@@ -445,7 +445,7 @@ namespace TradingLib.Core
             SymbolImpl sym = request.Symbol;
             BasicTracker.SymbolTracker.UpdateSymbol(sym);
             RspMGRQrySymbolResponse response = ResponseTemplate<RspMGRQrySymbolResponse>.SrvSendRspResponse(request);
-            response.Symbol = BasicTracker.SymbolTracker[sym.ID] as SymbolImpl;
+            response.Symbol = BasicTracker.SymbolTracker[sym.Symbol] as SymbolImpl;
             CacheRspResponse(response);
             if (sym.Tradeable)
             {

@@ -132,7 +132,7 @@ namespace FutsMoniter
                     SecurityFamilyImpl sec = Globals.BasicInfoTracker.GetSecurity(inst.ProductID);
                     sym.security_fk = sec != null ? sec.ID : 0;
                     sym.Tradeable = defaulttradeable.Checked;//false;//inst.IsTrading == 1 ? true : false;//是否可交易
-
+                    
                     if (GotSymbolImplEvent != null)
                     {
                         GotSymbolImplEvent(sym, i == instrumentlist.Count - 1);

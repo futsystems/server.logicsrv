@@ -117,7 +117,7 @@ namespace TradingLib.ORM
             using (DBMySql db = new DBMySql())
             {
                 //TLCtxHelper.Ctx.debug("orm update mktimefk:" + sec.MarketTimeFK.ToString() + " exchangefk:" + sec.ExchangeFK.ToString() + " underfk:" + sec.UnderLayingFK.ToString());
-                string query = string.Format("UPDATE info_symbols SET entrycommission='{0}',exitcommission='{1}',margin='{2}',extramargin='{3}',maintancemargin='{4}' ,tradeable='{5}' WHERE id='{6}'",sym._entrycommission,sym._extramargin,sym._margin,sym._extramargin,sym._maintancemargin,sym.Tradeable?1:0,sym.ID);
+                string query = string.Format("UPDATE info_symbols SET entrycommission='{0}',exitcommission='{1}',margin='{2}',extramargin='{3}',maintancemargin='{4}' ,expiremonth='{5}',expiredate='{6}',tradeable='{7}' WHERE id='{8}'", sym._entrycommission, sym._extramargin, sym._margin, sym._extramargin, sym._maintancemargin,sym.ExpireMonth,sym.ExpireDate, sym.Tradeable ? 1 : 0, sym.ID);
                 return db.Connection.Execute(query) >= 0;
             }
         }

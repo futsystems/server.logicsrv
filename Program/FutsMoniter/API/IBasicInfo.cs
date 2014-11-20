@@ -101,6 +101,7 @@ namespace TradingLib.API
         ArrayList GetExchangeCombList(bool isany=false);
         ArrayList GetMarketTimeCombList(bool isany = false);
         ArrayList GetSecurityCombList(bool isany = false);
+        ArrayList GetSecTyeCombList(bool isany = false);
         ArrayList GetSecurityCombListViaExchange(int id);
         ArrayList GetExpireMonth();
         ArrayList GetBaseManagerCombList(bool all=false,bool includeself=true);

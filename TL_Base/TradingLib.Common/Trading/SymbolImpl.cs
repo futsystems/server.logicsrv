@@ -268,21 +268,10 @@ namespace TradingLib.Common
 
         public string Exchange { get { return SecurityFamily != null ? SecurityFamily.Exchange.Index : ""; } }
 
-        //public bool HasExchange
-        //{
-        //    get
-        //    {
-        //        if (SecurityFamily != null && SecurityFamily.Exchange != null)
-        //            return true;
-        //        else
-        //            return false;
-        //    }
-        //}
-
 
         bool _tradeable = false;
         /// <summary>
-        /// 是否可交易
+        /// 是否可交易 设置中设定的可交易标识
         /// </summary>
         public bool Tradeable
         {
@@ -350,12 +339,31 @@ namespace TradingLib.Common
         /// </summary>
         public bool IsValid
         {
-
             get
             {
                 if (SecurityFamily == null) return false;
 
                 return true;
+            }
+        }
+
+        /// <summary>
+        /// 判断该合约是否过期
+        /// </summary>
+        public bool IsExpired
+        {
+            get 
+            {
+                if (this.ExpireDate == 0)
+                {
+                    //如果没有结算日信息则不过气
+                    return false;
+                }
+                else
+                {
+                    return Util.ToTLDate() > this.ExpireDate ? true : false;
+                }
+            
             }
         }
 
