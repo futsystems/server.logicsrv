@@ -173,6 +173,7 @@ namespace TraddingSrvCLI
             connectorMgr.Dispose();
             coreMgr.Dispose();
             GC.Collect();
+            debug("******************************corethread stopped **********************************");
             _status = QSEnumCoreThreadStatus.Stopped;
         }
     }

@@ -165,6 +165,13 @@ namespace TraddingSrvCLI
         /// </summary>
         int _opposite_starting_time = 0;
 
+
+        /// <summary>
+        /// 等待对方启动时间
+        /// </summary>
+        int _opposite_starting_wait_time = 20;
+        
+
         /// <summary>
         /// 请求次数
         /// </summary>
@@ -174,104 +181,114 @@ namespace TraddingSrvCLI
             while (keepgo)
             {
                 //如果处于从机状态 则向主服务端查询状态,如果状态异常则将核心线程对象启动进入主机模式
-                if (!this.master)
+                CoreThreadStatus status=null;
+                #region 请求对方主机状态
+                string request = TradingLib.Mixins.JsonRequest.Request("Status").ToJson();
+                reqsockt.Send(request, Encoding.UTF8);
+                string rep = reqsockt.Receive(Encoding.UTF8, _reqtimeout);
+
+                if (string.IsNullOrEmpty(rep))
                 {
-                    string request = TradingLib.Mixins.JsonRequest.Request("Status").ToJson();
-                    reqsockt.Send(request, Encoding.UTF8);
-                    string rep = reqsockt.Receive(Encoding.UTF8, _reqtimeout);
-                    CoreThreadStatus status;
-                    if (string.IsNullOrEmpty(rep))
+                    //debug("send request:"+request +" timeout!");
+                    //debug("Close bad req socket and init it");
+                    reqsockt.Close();
+                    reqsockt = ctx.CreateSocket(SocketType.REQ);
+                    reqsockt.Connect(_oppositrepaddress);
+                    //请求状态超时 则累加超时计数器
+                    debug("request opposite's status timeout");
+                    _timoutcnt++;
+                }
+                else
+                {
+
+                    //如果有数据返回则 重置计数器
+                    _timoutcnt = 0;
+                    TradingLib.Mixins.JsonReply reply = TradingLib.Mixins.LitJson.JsonMapper.ToObject<TradingLib.Mixins.JsonReply>(rep);
+                    if (reply.Code == 0)
                     {
-                        //debug("send request:"+request +" timeout!");
-                        //debug("Close bad req socket and init it");
-                        reqsockt.Close();
-                        reqsockt = ctx.CreateSocket(SocketType.REQ);
-                        reqsockt.Connect(_oppositrepaddress);
-                        //请求状态超时 则累加超时计数器
-                        debug("request opposite's status timeout");
-                        _timoutcnt++;
+                        TradingLib.Mixins.LitJson.JsonData data = TradingLib.Mixins.JsonReply.ParseJsonReplyData(rep);
+                        status = TradingLib.Mixins.JsonReply.ParsePlayload<CoreThreadStatus>(data);
+                        debug("reply status:" + status.Status.ToString());
+
+                        //记录回报时间
+                        _lasttime = Util.ToTLDateTime();
+                        if (firstboot)
+                        {
+                            _requestcnt++;
+                        }
+                        if (_requestcnt > 0)
+                        {
+                            firstboot = false;
+                            _requestcnt = 0;
+                        }
+
+
                     }
                     else
                     {
-                        #region 对方主机有数据返回
-                        //如果有数据返回则 重置计数器
-                        _timoutcnt = 0;
-                        TradingLib.Mixins.JsonReply reply = TradingLib.Mixins.LitJson.JsonMapper.ToObject<TradingLib.Mixins.JsonReply>(rep);
-                        if (reply.Code == 0)
+                        debug("opposite server excute query error:" + reply.Message);
+                    }
+
+
+                }
+                #endregion
+
+                
+                if (!this.master)
+                {
+                    if (status != null)
+                    {
+                        #region 判断对方主机状态
+                        //根据远程的状态判断本地操作
+                        switch (status.Status)
                         {
-                            TradingLib.Mixins.LitJson.JsonData data = TradingLib.Mixins.JsonReply.ParseJsonReplyData(rep);
-                            status = TradingLib.Mixins.JsonReply.ParsePlayload<CoreThreadStatus>(data);
-                            debug("reply status:" + status.Status.ToString());
-
-                            //记录回报时间
-                            _lasttime = Util.ToTLDateTime();
-                            if (firstboot)
-                            {
-                                _requestcnt++;
-                            }
-                            if (_requestcnt > 0)
-                            {
-                                firstboot = false;
-                                _requestcnt = 0;
-                            }
-
-                            #region 判断对方主机状态
-                            //根据远程的状态判断本地操作
-                            switch (status.Status)
-                            {
-                                case QSEnumCoreThreadStatus.Started://对方处于 已启动状态 则本地继续守护
-                                    {
-                                        if (_opposite_starting)
-                                        {
-                                            _opposite_starting = false;
-                                            int span = Util.FTDIFF(_opposite_starting_time,Util.ToTLTime());
-                                            debug(string.Format("opposit server started by {0} secends",span));
-                                        }
-                                        break;
-                                    }
-                                case QSEnumCoreThreadStatus.Standby://对方处于 待机状态
-                                    {
-                                        //准备协商进行接管和启动 现实中几乎不会遇到同时获得到对方待机的问题，应为系统启动总有先后，后启动的系统会获得到对方待机然后处于立即启动的状态
-                                        //接管系统
-                                        debug("opposite server standby,we take over system");
-                                        TakeOver();
-                                        break;
-                                    }
-                                case QSEnumCoreThreadStatus.Starting://对方处于 启动状态，则等待对方启动成功 需要设置时间差
-                                    {
-                                        WaitOppositStarting();
-                                        //等待对方启动成功
-                                        break;
-                                    }
-                                case QSEnumCoreThreadStatus.Stopped://对方处于 已停止 进入启动状态
+                            case QSEnumCoreThreadStatus.Started://对方处于 已启动状态 则本地继续守护
+                                {
+                                    //如果记录过对方启动开始 输出对方启动时间长短
+                                    if (_opposite_starting)
                                     {
                                         _opposite_starting = false;
-                                        //_opposite_starting_time = Util.ToTLTime();
-                                        break;
+                                        int span = Util.FTDIFF(_opposite_starting_time, Util.ToTLTime());
+                                        debug(string.Format("opposit server started by {0} secends", span));
                                     }
-                                case QSEnumCoreThreadStatus.Stopping://对方处于 停止中 进入启动状态
-                                    {
-                                        _opposite_starting = false;
-                                        break;
-                                    }
-                                case QSEnumCoreThreadStatus.TakingOver://对方处于 接管状态 等待
-                                    {
-                                        WaitOppositStarting();
-                                        break;
-                                    }
-                            }
-                            #endregion
-                        }
-                        else
-                        {
-                            debug("opposite server excute query error:" + reply.Message);
+                                    break;
+                                }
+                            case QSEnumCoreThreadStatus.Standby://对方处于 待机状态
+                                {
+                                    //准备协商进行接管和启动 现实中几乎不会遇到同时获得到对方待机的问题，应为系统启动总有先后，后启动的系统会获得到对方待机然后处于立即启动的状态
+                                    //接管系统
+                                    debug("opposite server standby,we take over system");
+                                    TakeOver();
+                                    break;
+                                }
+                            case QSEnumCoreThreadStatus.Starting://对方处于 启动状态，则等待对方启动成功 需要设置时间差
+                                {
+                                    WaitOppositStarting();
+                                    //等待对方启动成功
+                                    break;
+                                }
+                            case QSEnumCoreThreadStatus.Stopped://对方处于 已停止 进入启动状态
+                                {
+                                    _opposite_starting = false;
+                                    //_opposite_starting_time = Util.ToTLTime();
+                                    break;
+                                }
+                            case QSEnumCoreThreadStatus.Stopping://对方处于 停止中 进入启动状态
+                                {
+                                    _opposite_starting = false;
+                                    break;
+                                }
+                            case QSEnumCoreThreadStatus.TakingOver://对方处于 接管状态 等待
+                                {
+                                    WaitOppositStarting();
+                                    break;
+                                }
                         }
                         #endregion
-
                     }
 
                     #region 请求状态超时 处理
-                    if (_timoutcnt >= _maxtimoutcnt || (firstboot && _timoutcnt>=_firstbootmaxtimeoutcnt))
+                    if (_timoutcnt >= _maxtimoutcnt || (firstboot && _timoutcnt >= _firstbootmaxtimeoutcnt))
                     {
                         debug(string.Format("reqeust  status {0} times, still no response,we will takeholder the system,", _timoutcnt));
                         //接管系统
@@ -283,7 +300,7 @@ namespace TraddingSrvCLI
                     //如果对方主机处于启动中 则需要判断时间超过20秒没有正常启动则自己接管系统
                     if (_opposite_starting)
                     {
-                        if (Util.FTDIFF(_opposite_starting_time, Util.ToTLTime()) > 20)
+                        if (Util.FTDIFF(_opposite_starting_time, Util.ToTLTime()) >= _opposite_starting_wait_time)
                         {
                             debug("opposite server is in starting for 20 secends, maybe some error,we will take over");
                             //接管系统
@@ -294,8 +311,30 @@ namespace TraddingSrvCLI
                     #endregion
 
                 }
-
-
+                else//如果是当前是主机模式
+                {
+                    if (status != null)
+                    {
+                        //如果对方主机状态正常 则不采取错误 如果状态有冲突 要协商后关闭一方主机
+                        switch (status.Status)
+                        {
+                            case QSEnumCoreThreadStatus.Started:
+                                {
+                                    if (corethread.Status == QSEnumCoreThreadStatus.Started)
+                                    {
+                                        debug("opposite started, we shut down ourself.");
+                                        corethread.Stop();
+                                        this.master = false;
+                                    }
+                                    
+                                    break;
+                                }
+                            default:
+                                debug("opposit status:" + status.Status.ToString());
+                                break;
+                        }
+                    }
+                }
                 Thread.Sleep(_statusfreq * 1000);  
             }
         }
