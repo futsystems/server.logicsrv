@@ -220,11 +220,20 @@ namespace TraddingSrvCLI
                             switch (status.Status)
                             {
                                 case QSEnumCoreThreadStatus.Started://对方处于 已启动状态 则本地继续守护
-                                    break;
+                                    {
+                                        if (_opposite_starting)
+                                        {
+                                            _opposite_starting = false;
+                                            int span = Util.FTDIFF(_opposite_starting_time,Util.ToTLTime());
+                                            debug(string.Format("opposit server started by {0} secends",span));
+                                        }
+                                        break;
+                                    }
                                 case QSEnumCoreThreadStatus.Standby://对方处于 待机状态
                                     {
                                         //准备协商进行接管和启动
                                         //接管系统
+                                        debug("opposite server standby,we take over system");
                                         TakeOver();
                                         break;
                                     }
@@ -242,7 +251,6 @@ namespace TraddingSrvCLI
                                         _opposite_starting_time = Util.ToTLTime();
                                         break;
                                     }
-
                                 case QSEnumCoreThreadStatus.Stopping://对方处于 停止中 进入启动状态
                                     {
                                         _opposite_starting = false;
