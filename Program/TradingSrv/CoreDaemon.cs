@@ -42,11 +42,6 @@ namespace TraddingSrvCLI
         /// </summary>
         TakingOver=105,
 
-        /// <summary>
-        /// 状态未知
-        /// </summary>
-        Unknown=110,
-
 
     }
 
@@ -161,6 +156,16 @@ namespace TraddingSrvCLI
         bool firstboot = true;
 
         /// <summary>
+        /// 对方主机处于启动中 用于记录启动时间
+        /// </summary>
+        bool _opposite_starting = false;
+
+        /// <summary>
+        /// 记录对方开始启动的时间
+        /// </summary>
+        int _opposite_starting_time = 0;
+
+        /// <summary>
         /// 请求次数
         /// </summary>
         int _requestcnt = 0;
@@ -188,6 +193,7 @@ namespace TraddingSrvCLI
                     }
                     else
                     {
+                        #region 对方主机有数据返回
                         //如果有数据返回则 重置计数器
                         _timoutcnt = 0;
                         TradingLib.Mixins.JsonReply reply = TradingLib.Mixins.LitJson.JsonMapper.ToObject<TradingLib.Mixins.JsonReply>(rep);
@@ -208,34 +214,103 @@ namespace TraddingSrvCLI
                                 firstboot = false;
                                 _requestcnt = 0;
                             }
+
+                            #region 判断对方主机状态
+                            //根据远程的状态判断本地操作
+                            switch (status.Status)
+                            {
+                                case QSEnumCoreThreadStatus.Started://对方处于 已启动状态 则本地继续守护
+                                    break;
+                                case QSEnumCoreThreadStatus.Standby://对方处于 待机状态
+                                    {
+                                        //准备协商进行接管和启动
+                                        //接管系统
+                                        TakeOver();
+                                        break;
+                                    }
+                                case QSEnumCoreThreadStatus.Starting://对方处于 启动状态，则等待对方启动成功 需要设置时间差
+                                    {
+                                        _opposite_starting = true;
+                                        _opposite_starting_time = Util.ToTLTime();
+
+                                        //等待对方启动成功
+                                        break;
+                                    }
+                                case QSEnumCoreThreadStatus.Stopped://对方处于 已停止 进入启动状态
+                                    {
+                                        _opposite_starting = false;
+                                        _opposite_starting_time = Util.ToTLTime();
+                                        break;
+                                    }
+
+                                case QSEnumCoreThreadStatus.Stopping://对方处于 停止中 进入启动状态
+                                    {
+                                        _opposite_starting = false;
+                                        break;
+                                    }
+                                case QSEnumCoreThreadStatus.TakingOver://对方处于 接管状态 等待
+                                    {
+                                        _opposite_starting = true;
+                                        _opposite_starting_time = Util.ToTLTime();
+                                        break;
+                                    }
+
+                            }
+                            #endregion
                         }
                         else
                         {
                             debug("opposite server excute query error:" + reply.Message);
                         }
+                        #endregion
+
                     }
 
+                    #region 请求状态超时 处理
                     if (_timoutcnt >= _maxtimoutcnt || (firstboot && _timoutcnt>=_firstbootmaxtimeoutcnt))
                     {
                         debug(string.Format("reqeust  status {0} times, still no response,we will takeholder the system,", _timoutcnt));
-                        //设定核心线程对象状态为 接管状态
-                        corethread.Status = QSEnumCoreThreadStatus.TakingOver;
+                        //接管系统
+                        TakeOver();
+                    }
+                    #endregion
 
-                        //处理本地相关工作
-                        //设置本地主从标识 系统进入主机模式
-                        this.master = true;
-
-                        //启动核心线程对象
-                        corethread.Start();
+                    #region 启动中状态处理
+                    //如果对方主机处于启动中 则需要判断时间超过20秒没有正常启动则自己接管系统
+                    if (_opposite_starting)
+                    {
+                        if (Util.FTDIFF(_opposite_starting_time, Util.ToTLTime()) > 20)
+                        {
+                            debug("opposite server is in starting for 20 secends, maybe some error,we will take over");
+                            //接管系统
+                            TakeOver();
+                        }
 
                     }
+                    #endregion
+
                 }
 
 
-                Thread.Sleep(_statusfreq*1000);
+                Thread.Sleep(_statusfreq * 1000);  
             }
         }
 
+        /// <summary>
+        /// 接管系统
+        /// </summary>
+        void TakeOver()
+        {
+            //设定核心线程对象状态为 接管状态
+            corethread.Status = QSEnumCoreThreadStatus.TakingOver;
+
+            //处理本地相关工作
+            //设置本地主从标识 系统进入主机模式
+            this.master = true;
+
+            //启动核心线程对象
+            corethread.Start();
+        }
 
         public void Start()
         {
