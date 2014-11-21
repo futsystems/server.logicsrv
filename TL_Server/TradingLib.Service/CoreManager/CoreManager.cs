@@ -67,8 +67,8 @@ namespace TradingLib.ServiceManager
         /// </summary>
         public void Init()
         {
-			Console.WriteLine ("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx core init");
-            debug("Init Core Modules....", QSEnumDebugLevel.INFO);
+            Util.InitStatus(this.PROGRAME, true);
+            //debug("Init Core Modules....", QSEnumDebugLevel.INFO);
             #region 加载核心模块
             debug("[INIT CORE] SettleCentre", QSEnumDebugLevel.INFO);
             InitSettleCentre();//初始化结算中心
@@ -109,39 +109,45 @@ namespace TradingLib.ServiceManager
         /// </summary>
         public void Start()
         {
-            debug("Start Core Modules ....", QSEnumDebugLevel.INFO);
+            Util.StartStatus(this.PROGRAME, true);
+            //debug("Start Core Modules ....", QSEnumDebugLevel.INFO);
 
             #region 启动核心模块
+            _settleCentre.Start();
+
+            _riskCentre.Start();
             //以下为启动服务的过程
             //只有配资等相关数据加载完毕，才可以获得正确手续费数据 
             //1.从数据库恢复当日交易数据
-            debug("[START CORE] ClearCentre",QSEnumDebugLevel.INFO);
+            //debug("[START CORE] ClearCentre",QSEnumDebugLevel.INFO);
             _clearCentre.Start();
 
             //2.从缓存文件恢复当时行情快照,这样就可以恢复整个交易快照 包括平仓盈亏与持仓盈亏//并加载行情快照,需要在系统从数据库加载交易记录之后进行
+            //debug("[START CORE] DataFeedRouter", QSEnumDebugLevel.INFO);
             _datafeedRouter.Start();
             _datafeedRouter.LoadTickSnapshot();
 
+            //debug("[START CORE] BrokerRouter", QSEnumDebugLevel.INFO);
             _brokerRouter.Start();
 
 
             //启动管理消息交换服务
-            debug("[START CORE] MgrMsgExchServer",QSEnumDebugLevel.INFO);
+            //debug("[START CORE] MgrMsgExchServer",QSEnumDebugLevel.INFO);
             _managerExchange.Start();
 
             //启动web端消息响应服务
-            debug("[START CORE] WebMsgExchServer",QSEnumDebugLevel.INFO);
+            //debug("[START CORE] WebMsgExchServer", QSEnumDebugLevel.INFO);
             _webmsgExchange.Start();
 
-            debug("Restore Client Connection....",QSEnumDebugLevel.INFO);
+            //debug("Restore Client Connection....",QSEnumDebugLevel.INFO);
             _messageExchagne.RestoreSession();//恢复客户端连接
             //我们需要在其他服务均启动成功后才启动tradingserver接收外部传入的数据请求，否则外部数据请求产生的操作会调用其他组件，造成服务奔溃。
 
-            debug("[START CORE] MsgExchServer", QSEnumDebugLevel.INFO);            
+            //debug("[START CORE] MsgExchServer", QSEnumDebugLevel.INFO);            
             _messageExchagne.Start();//交易服务启动
 
             //启动任务中心 任务中心会保存相关信息到缓存,在缓存没有正确加载前,我们不执行定时任务
-            debug("[START CORE] TaskCentre", QSEnumDebugLevel.INFO);
+            //debug("[START CORE] TaskCentre", QSEnumDebugLevel.INFO);
             _taskcentre.Start();
 
             #endregion
@@ -152,20 +158,24 @@ namespace TradingLib.ServiceManager
 
         public void Stop()
         {
-            debug("Stop Core Modules....", QSEnumDebugLevel.INFO);
+            Util.StopStatus(this.PROGRAME,true);
             _taskcentre.Stop();//timer 停止
 
             _messageExchagne.Stop();//正常停止
 
-            _webmsgExchange.Stop();
+            _webmsgExchange.Stop();//web消息接口
 
-            //_managerExchange.Stop();//与message类似
+            _managerExchange.Stop();//与message类似
 
-            _datafeedRouter.Stop();
-            _brokerRouter.Stop();
+            _brokerRouter.Stop();//成交路由
 
-            _clearCentre.Stop();
+            _datafeedRouter.Stop();//行情路由
 
+            _clearCentre.Stop();//清算中心
+
+            _riskCentre.Stop();//风控中心
+
+            _settleCentre.Stop();//结算中心
 
 
             
@@ -217,6 +227,7 @@ namespace TradingLib.ServiceManager
         /// </summary>
         public void WireCtxEvent()
         {
+            Util.StatusSection(this.PROGRAME, "CTXEVENT", QSEnumInfoColor.INFOGREEN,true);
             //EventIndicator
             //获得市场行情
             _messageExchagne.GotTickEvent += new TickDelegate(TLCtxHelper.EventIndicator.FireTickEvent);

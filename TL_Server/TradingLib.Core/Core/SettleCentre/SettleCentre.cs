@@ -228,13 +228,13 @@ namespace TradingLib.Core
         }
 
         public void Start()
-        { 
-        
+        {
+            Util.StartStatus(this.PROGRAME);
         }
 
         public void Stop()
-        { 
-        
+        {
+            Util.StopStatus(this.PROGRAME);
         }
 
 

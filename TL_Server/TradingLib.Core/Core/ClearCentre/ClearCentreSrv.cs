@@ -211,7 +211,7 @@ namespace TradingLib.Core
         //}
         public void Start()
         {
-            debug("启动清算中心...", QSEnumDebugLevel.INFO);
+            Util.StartStatus(this.PROGRAME);
             _asynLoger.Start();
             //加载交易帐户
             //LoadAccount();
@@ -221,7 +221,7 @@ namespace TradingLib.Core
 
         public void Stop()
         {
-            debug("停止清算中心....", QSEnumDebugLevel.INFO);
+            Util.StopStatus(this.PROGRAME);
             _asynLoger.Stop();
         }
 

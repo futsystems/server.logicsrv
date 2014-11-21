@@ -14,7 +14,7 @@ namespace TradingLib.ServiceManager
     {
         private void InitSettleCentre()
         {
-            debug("初始化结算中心");
+            debug("0.初始化结算中心");
             _settleCentre = new SettleCentre();
         }
 
@@ -61,9 +61,6 @@ namespace TradingLib.ServiceManager
         }
 
 
-       
-
-
         //初始化风控中心
         private void InitRiskCentre()
         {
@@ -74,13 +71,8 @@ namespace TradingLib.ServiceManager
             _messageExchagne.RiskCentre = _riskCentre;
             _settleCentre.BindRiskCentre(_riskCentre);
 
-            //2.清算中心激活某个账户 调用风控中心重置该账户规则
-            _clearCentre.AccountActiveEvent += (string account) =>
-            {
-                //风控中心重新加载风控规则 解决账户检查规则触发后,状态没复位,账户激活后规则失效的问题
-                _riskCentre.ResetRuleSet(account);
-            };
-
+            //2.清算中心激活某个账户 调用风控中心重置该账户规则 解决账户检查规则触发后,状态没复位,账户激活后规则失效的问题
+            _clearCentre.AccountActiveEvent += new AccountIdDel(_riskCentre.ResetRuleSet);
 
             //4.风控中心记录客户端的登入 登出情况
             //_messageExchagne.SendLoginInfoEvent += new LoginInfoDel(_riskCentre.GotLoginInfo);
@@ -105,14 +97,19 @@ namespace TradingLib.ServiceManager
             //4.风控中心记录客户端的登入 登出情况
             //_messageExchagne.SendLoginInfoEvent -= new LoginInfoDel(_riskCentre.GotLoginInfo);
 
+            _clearCentre.AccountActiveEvent -= new AccountIdDel(_riskCentre.ResetRuleSet);
+
             //交易服务行情驱动风控中心
             _messageExchagne.GotTickEvent -= new TickDelegate(_riskCentre.GotTick);
             _messageExchagne.GotCancelEvent -= new LongDelegate(_riskCentre.GotCancel);
+            _messageExchagne.GotOrderErrorEvent -= new OrderErrorDelegate(_riskCentre.GotOrderError);
 
             //风控中心从tradingsrv获得委托编号 提交委托 取消委托的操作
             _riskCentre.AssignOrderIDEvent -= new AssignOrderIDDel(_messageExchagne.AssignOrderID);
             _riskCentre.newSendOrderRequest -= new OrderDelegate(_messageExchagne.SendOrder);
             _riskCentre.newOrderCancelRequest -= new LongDelegate(_messageExchagne.CancelOrder);
+
+            _clearCentre.PositionRoundClosedEvent -= new PositionRoundClosedDel(_riskCentre.GotPostionRoundClosed);
 
             //绑定风控中心
             _messageExchagne.RiskCentre = null;
@@ -122,7 +119,7 @@ namespace TradingLib.ServiceManager
         //初始化datafeedrouter
         private void InitDataFeedRouter()
         {
-            debug("4.1初始化DataFeedRouter");
+            debug("4.初始化DataFeedRouter");
             _datafeedRouter = new DataFeedRouter();
             _messageExchagne.BindDataRouter(_datafeedRouter);
 
@@ -136,16 +133,6 @@ namespace TradingLib.ServiceManager
             _clearCentre.newSymbolTickRequest -= new GetSymbolTickDel(_datafeedRouter.GetTickSnapshot);
             _datafeedRouter.Dispose();
         }
-
-        ////初始化fastticksrv管理端
-        //private void InitFastTickMgr()
-        //{
-        //    debug("4.2初始化FastTickServer Mgr");
-        //    //_ftmgrclient = new FastTickSrvMgrClient(config.TickMgrSrvAddress, config.TickMgrSrvPort);
-        //    //服务端触发注册市场数据 调用 ftmgrclient.registsymbols
-        //    //_srv.RegisterSymbolEvent += new BasketDel(_ftmgrclient.RegistSymbols);
-        //    //_ftmgrclient.Start();
-        //}
 
         //初始化brokerselector
         private void InitBrokerRouter()
@@ -193,22 +180,27 @@ namespace TradingLib.ServiceManager
         }
         private void DestoryMgrExchSrv()
         {
+            _managerExchange.SendOrderEvent -= new OrderDelegate(_messageExchagne.SendOrderInternal);
+            _managerExchange.SendOrderCancelEvent -= new LongDelegate(_messageExchagne.CancelOrder);
+
             ////管理组件转发 交易服务器过来的委托 成交 取消 tick
-            //_messageExchagne.GotOrderEvent -= new OrderDelegate(_managerExchange.newOrder);
-            //_messageExchagne.GotCancelEvent -= new LongDelegate(_managerExchange.newCancel);
-            //_messageExchagne.GotFillEvent -= new FillDelegate(_managerExchange.newTrade);
-            //_messageExchagne.GotTickEvent -= new TickDelegate(_managerExchange.newTick);
+            _messageExchagne.GotOrderEvent -= new OrderDelegate(_managerExchange.newOrder);
+            _messageExchagne.GotOrderErrorEvent -= new OrderErrorDelegate(_managerExchange.newOrderError);
+            //_messageExchagne.GotCancelEvent += new LongDelegate(_managerExchange.newCancel);
+            _messageExchagne.GotFillEvent -= new FillDelegate(_managerExchange.newTrade);
+            _messageExchagne.GotTickEvent -= new TickDelegate(_managerExchange.newTick);
 
             ////转发账户登入状态信息
-            //_messageExchagne.SendLoginInfoEvent -= new LoginInfoDel(_managerExchange.newSessionUpdate);
-
-            ////
+            _messageExchagne.ClientLoginInfoEvent -= new ClientLoginInfoDelegate<TrdClientInfo>(_managerExchange.newSessionUpdate);
 
             ////帐户变动事件，当帐户设置或者相关属性发生变动时 触发该事件
-            //_clearCentre.AccountChangedEvent -= new AccountSettingChangedDel(_managerExchange.newAccountChanged);
-
-            //_managerExchange.Dispose();
+            _clearCentre.AccountChangedEvent -= new AccountSettingChangedDel(_managerExchange.newAccountChanged);
+            ////添加帐户
+            _clearCentre.AccountAddEvent -= new AccountIdDel(_managerExchange.newAccountAdded);
+           
+            _managerExchange.Dispose();
         }
+
         void InitWebMsgExchSrv()
         {
             debug("7.初始化WebMsgExchSrv");

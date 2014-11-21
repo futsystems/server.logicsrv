@@ -105,6 +105,7 @@ namespace TradingLib.ServiceManager
         /// </summary>
         public void Init()
         {
+            Util.InitStatus(this.PROGRAME, true);
             if (!routerbinded)
             {
                 debug("未绑定数据与成交路由中心,请先绑定", QSEnumDebugLevel.ERROR);
@@ -130,6 +131,7 @@ namespace TradingLib.ServiceManager
         }
         public void StartDefaultConnector()
         {
+            Util.StatusSection(this.PROGRAME, "STARTCONNECTOR", QSEnumInfoColor.INFODARKRED,true);
             //启动默认通道
             StartDataFeedViaToken(_defaultDataFeedToken);
             StartBrokerViaToken(_defaultSimBrokerToken);

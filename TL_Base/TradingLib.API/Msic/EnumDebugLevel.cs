@@ -25,26 +25,43 @@ namespace TradingLib.API
         MUST = 5,//系统必须输出的信息
         [Description("致命错误信息")]
         FATAL = 4,//Something failed, and we cannot handle it properly.
+    }
+
+    public enum QSEnumInfoColor
+    {
+        /// <summary>
+        /// 白色
+        /// </summary>
+        INFOWHITE,
 
         /// <summary>
         /// 红色信息
         /// </summary>
-        COLORREAD=100,
+        INFOREAD,
 
         /// <summary>
-        /// 绿色信息
+        /// 蓝色信息
         /// </summary>
-        COLORBLUE=101,
+        INFOBLUE,
 
         /// <summary>
         /// 黄色信息
         /// </summary>
-        COLORYELLOW=102,
+        INFOYELLOW,
 
         /// <summary>
         /// 灰色
         /// </summary>
-        COLORGREY=103,
+        INFOGRAY,
 
+        /// <summary>
+        /// 绿色
+        /// </summary>
+        INFOGREEN,
+
+        /// <summary>
+        /// 红色
+        /// </summary>
+        INFODARKRED,
     }
 }

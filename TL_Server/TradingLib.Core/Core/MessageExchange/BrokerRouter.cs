@@ -519,6 +519,7 @@ namespace TradingLib.Core
 
         public void Start()
         {
+            Util.StartStatus(this.PROGRAME);
             StartProcessMsgOut();
             _ordHelper.Start();
             _tifengine.Start();
@@ -527,7 +528,7 @@ namespace TradingLib.Core
 
         public void Stop()
         {
-
+            Util.StopStatus(this.PROGRAME);
             _ordHelper.Stop();
             _tifengine.Stop();
             StopProcessMsgOut();

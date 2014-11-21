@@ -195,6 +195,7 @@ namespace TradingLib.Core
 
         public void Start()
         {
+            Util.StartStatus(this.PROGRAME);
             debug("webmsgexch start....", QSEnumDebugLevel.INFO);
             _repserver.Start();
             _pubserver.Start();
@@ -203,6 +204,7 @@ namespace TradingLib.Core
 
         public void Stop()
         {
+            Util.StopStatus(this.PROGRAME);
             _repserver.Stop();
             _pubserver.Stop();
             _repservertnetstring.Stop();

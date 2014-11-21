@@ -16,7 +16,7 @@ namespace TradingLib.Core
     /// </summary>
     public partial class TaskCentre:BaseSrvObject,ICore
     {
-        const string CoreName = "MsgExch";
+        const string CoreName = "TaskCentre";
         public static Log Logger = new Log("TaskCentre_Error", true, true, Util.ProgramData(CoreName), true);//日志组件
 
         System.Timers.Timer _timer = null;
@@ -31,6 +31,7 @@ namespace TradingLib.Core
         /// </summary>
         public void Start()
         {
+            Util.StartStatus(this.PROGRAME);
             if (_timer == null)
             {
                 _timer = new System.Timers.Timer();
@@ -47,6 +48,7 @@ namespace TradingLib.Core
         /// </summary>
         public void Stop()
         {
+            Util.StopStatus(this.PROGRAME);
             if (_timer != null)
             {
                 _timer.Stop();

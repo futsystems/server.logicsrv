@@ -47,6 +47,112 @@ namespace TradingLib.Common
             Console.ForegroundColor = ConsoleColor.Gray;
         }
 
+        public static void LoadStatus(string body, bool samecolor = false)
+        {
+            StatusSection(body, "LOAD",QSEnumInfoColor.INFOGREEN, samecolor);
+        }
+        public static void InitStatus(string body, bool samecolor = false)
+        {
+            StatusSection(body, "INIT", QSEnumInfoColor.INFOGREEN, samecolor);
+        }
+
+        public static void DestoryStatus(string body, bool samecolor = false)
+        {
+            StatusSection(body, "DESTORY", QSEnumInfoColor.INFODARKRED, samecolor);
+        }
+
+        /// <summary>
+        /// 开始信息
+        /// </summary>
+        /// <param name="body"></param>
+        public static void StartStatus(string body,bool samecolor=false)
+        {
+            StatusSection(body, "START",QSEnumInfoColor.INFOGREEN, samecolor);
+        }
+
+        /// <summary>
+        /// 停止信息
+        /// </summary>
+        /// <param name="body"></param>
+        public static void StopStatus(string body,bool samecolor = false)
+        {
+            StatusSection(body, "STOP", QSEnumInfoColor.INFODARKRED, samecolor);
+        }
+
+        public static void StatusSection(string body, string status, QSEnumInfoColor color,bool samecolor = false)
+        {
+            Console.WriteLine();
+            Console.WriteLine("".PadLeft(Console.LargestWindowWidth / 2 - 1, '.'));
+            ConsoleColorStatus(body, string.Format("[{0}]", status), samecolor ? color : QSEnumInfoColor.INFOWHITE, color);
+            Console.WriteLine();
+        }
+
+        public static void PrintVersion()
+        {
+            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("".PadLeft(Console.LargestWindowWidth / 2 - 1, '.'));
+            //Version:0.65
+            ConsoleColorStatus(string.Format(". Version:{0}", "0.65"), ".", QSEnumInfoColor.INFOGREEN, QSEnumInfoColor.INFOGREEN);
+            ConsoleColorStatus(string.Format(". LastUpdate:{0}", "20141123"), ".", QSEnumInfoColor.INFOGREEN, QSEnumInfoColor.INFOGREEN);
+            ConsoleColorStatus(string.Format(". Author:{0}", "QianBo"), ".", QSEnumInfoColor.INFOGREEN, QSEnumInfoColor.INFOGREEN);
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("".PadLeft(Console.LargestWindowWidth / 2 - 1, '.'));
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.Gray;
+            
+            
+
+
+        }
+        public static void ConsoleColorStatus(string msg,string rightmsg,QSEnumInfoColor colorl= QSEnumInfoColor.INFOWHITE,QSEnumInfoColor colorr=QSEnumInfoColor.INFOWHITE, int lefpad=0)
+        {
+            if (colorl == colorr)
+            {
+                int len = Console.LargestWindowWidth / 2;
+                int len2 = (len - msg.Length - lefpad);
+                string s = msg.PadLeft(msg.Length + lefpad) + rightmsg.PadLeft(len2 - 1);
+
+                Console.ForegroundColor = GetColor(colorl);
+                Console.WriteLine(s);
+                Console.ForegroundColor = ConsoleColor.Gray;
+            }
+            else
+            {
+                int len = Console.LargestWindowWidth / 2;
+                int len2 = (len - msg.Length - lefpad);
+                Console.ForegroundColor = GetColor(colorl);
+                Console.Write(msg.PadLeft(msg.Length + lefpad));
+                Console.ForegroundColor = GetColor(colorr);
+                Console.Write(rightmsg.PadLeft(len2 - 1));
+                Console.Write(Environment.NewLine);
+                Console.ForegroundColor = ConsoleColor.Gray;
+            }
+        }
+
+        public static ConsoleColor GetColor(QSEnumInfoColor color)
+        {
+            switch(color)
+            {
+                case QSEnumInfoColor.INFOBLUE:
+                    return ConsoleColor.Blue;
+                case QSEnumInfoColor.INFODARKRED:
+                    return ConsoleColor.DarkRed;
+                case QSEnumInfoColor.INFOGREEN:
+                    return ConsoleColor.Green;
+                case QSEnumInfoColor.INFOGRAY:
+                    return ConsoleColor.Gray;
+                case QSEnumInfoColor.INFOREAD:
+                    return ConsoleColor.Red;
+                case QSEnumInfoColor.INFOWHITE:
+                    return ConsoleColor.White;
+                case QSEnumInfoColor.INFOYELLOW:
+                    return ConsoleColor.Yellow;
+                default:
+                    return ConsoleColor.White;
+            }
+        }
         /// <summary>
         /// Get color for the specified log level
         /// </summary>
@@ -69,14 +175,7 @@ namespace TradingLib.Common
                 case QSEnumDebugLevel.MUST:
                     return ConsoleColor.Blue;
 
-                case QSEnumDebugLevel.COLORBLUE:
-                    return ConsoleColor.Black;
-                case QSEnumDebugLevel.COLORGREY:
-                    return ConsoleColor.Gray;
-                case QSEnumDebugLevel.COLORREAD:
-                    return ConsoleColor.Red;
-                case QSEnumDebugLevel.COLORYELLOW:
-                    return ConsoleColor.Yellow;
+               
                 //case LogLevel.Fatal:
                 //    return ConsoleColor.Red;
             }

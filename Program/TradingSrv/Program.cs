@@ -22,7 +22,14 @@ namespace TraddingSrvCLI
         {
             Console.WriteLine(message);
         }
-        
+
+        static void printleft(string msg, string msg1)
+        {
+            int len = Console.LargestWindowWidth / 2;
+            int len2 = (len - msg.Length);
+            string s =msg +msg1.PadLeft(len2-1);
+            Console.WriteLine(s);
+        }
         static void Main(string[] args)
         {
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);

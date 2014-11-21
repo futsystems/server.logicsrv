@@ -29,7 +29,7 @@ namespace TradingLib.ServiceManager
         /// </summary>
         public void Init()
         {
-
+            Util.InitStatus(this.PROGRAME, true);
             //1.从配置文件中加载扩展模块列表
             List<string> contribList = ContribListHelper.GetContribList();
 
@@ -68,6 +68,7 @@ namespace TradingLib.ServiceManager
         /// </summary>
         public void Load()
         {
+            Util.LoadStatus(this.PROGRAME, true);
             foreach (string key in contribmap.Keys)
             {
                 debug("[LOAD CONTRIB] " + key,QSEnumDebugLevel.INFO);
@@ -86,6 +87,7 @@ namespace TradingLib.ServiceManager
         /// </summary>
         public void Destory()
         {
+            Util.DestoryStatus(this.PROGRAME, true);
             foreach (string key in contribmap.Keys)
             {
                 debug("[RELEASE CONTRIB] " + key, QSEnumDebugLevel.INFO);
@@ -105,7 +107,7 @@ namespace TradingLib.ServiceManager
         /// </summary>
         public void Start()
         {
-            debug("Start contrib modules....", QSEnumDebugLevel.INFO);
+            Util.StartStatus(this.PROGRAME, true);
             foreach (string key in contribmap.Keys)
             {
                 debug(string.Format("[START CONTRIB] {0}", key), QSEnumDebugLevel.INFO);
@@ -126,7 +128,7 @@ namespace TradingLib.ServiceManager
         /// </summary>
         public void Stop()
         {
-            debug("Stop contrib modules....", QSEnumDebugLevel.INFO);
+            Util.StopStatus(this.PROGRAME, true);
             foreach (string key in contribmap.Keys)
             {
                 debug(string.Format("[STOP CONTRIB] {0}", key), QSEnumDebugLevel.INFO);

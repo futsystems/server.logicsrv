@@ -684,11 +684,13 @@ namespace TradingLib.Core
 
         public void Start()
         {
+            Util.StartStatus(this.PROGRAME);
             asynctick.Start();
         }
 
         public void Stop()
         {
+            Util.StopStatus(this.PROGRAME);
             asynctick.Stop();
             
         }

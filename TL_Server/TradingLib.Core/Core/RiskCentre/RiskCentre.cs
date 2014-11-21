@@ -406,6 +406,15 @@ namespace TradingLib.Core
 
         #endregion
 
+        public void Start()
+        {
+            Util.StartStatus(this.PROGRAME);
+        }
+
+        public void Stop()
+        {
+            Util.StopStatus(this.PROGRAME);
+        }
 
         public override void Dispose()
         {

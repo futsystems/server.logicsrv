@@ -22,12 +22,17 @@ namespace TraddingSrvCLI
         /// </summary>
         public QSEnumCoreThreadStatus Status { get { return _status; } set { _status = value; } }
 
-        public event DebugDelegate SendDebugEvent;
-        void debug(string msg)
+
+        /// <summary>
+        /// 输出日志
+        /// </summary>
+        /// <param name="message"></param>
+        static void debug(string message)
         {
-            if (SendDebugEvent != null)
-                SendDebugEvent(msg);
+            Console.WriteLine(message);
         }
+
+
         Thread thread = null;
         bool go = false;
 
@@ -68,7 +73,7 @@ namespace TraddingSrvCLI
         public void Stop()
         {
             _status = QSEnumCoreThreadStatus.Stopping;
-            debug("Stop core thread......");
+            debug("CoreThread Starting....");
             if (!go)
             {
                 _status = QSEnumCoreThreadStatus.Stopped;
@@ -78,100 +83,75 @@ namespace TraddingSrvCLI
             int mainwait = 0;
             while (thread.IsAlive && mainwait < 120)
             {
-                debug(string.Format("#{0} wait corethread stopping....", mainwait));
+                //debug(string.Format("#{0} wait corethread stopping....", mainwait));
                 Thread.Sleep(1000);
                 mainwait++;
             }
             thread.Abort();
-            debug("it is here");
             thread = null;
         }
-        bool firstload = true;
         public void Run()
         {
-            //lib 初始化 文件夹以及相关全局设置信息
-            if (firstload)
-            {
-                firstload = false;
-            }
-
             ////////////////////////////////// Init & Load Section
-            debug(">>> Init DB Configuration....");
+            Util.StatusSection("Database", "INIT", QSEnumInfoColor.INFOGREEN, true);
             //读取配置文件 初始化数据库参数 系统其余设置均从数据库中加载
             ConfigFile _configFile = ConfigFile.GetConfigFile();
-            //设定数据库
             DBHelper.InitDBConfig(_configFile["DBAddress"].AsString(), _configFile["DBPort"].AsInt(), _configFile["DBName"].AsString(), _configFile["DBUser"].AsString(), _configFile["DBPass"].AsString());
 
-            debug(">>> Init Core Module Manager....");
             //1.核心模块管理器,加载核心服务组件
             CoreManager coreMgr = new CoreManager();
             coreMgr.Init();
 
-            debug(">>> Init Connector Manger....");
             //2.路由管理器,绑定核心部分的数据与成交路由,并加载Connector
             ConnectorManager connectorMgr = new ConnectorManager();
             connectorMgr.BindRouter(coreMgr.BrokerRouter, coreMgr.DataFeedRouter);
             connectorMgr.Init();
 
-            //绑定数据与行情通道查询回调
-            //coreMgr.FindBrokerEvent += new FindBrokerDel(connectorMgr.FindBroker);
-            //coreMgr.FindDataFeedEvent += new FindDataFeedDel(connectorMgr.FindDataFeed);
-
-            debug(">>> Init Contrib Module Manager....");
             //3.扩展模块管理器 加载扩展模块,启动扩展模块
             ContribManager contribMgr = new ContribManager();
             contribMgr.Init();
-
-            debug(">>> Load Contrib Module Manager....");
             contribMgr.Load();
 
 
             ////////////////////////////////// Stat Section
             //0.启动扩展服务
-            debug(">>> Start Contrib Module Manager....");
             contribMgr.Start();
 
             //1.待所有服务器启动完毕后 启动核心服务
-            debug(">>> Start Core Module Manager....");
             coreMgr.Start();
 
             //2.绑定核心服务事件到CTX访问界面
-            debug(">>> Wire Ctx Event....");
             coreMgr.WireCtxEvent();
 
-            debug(">>> Set DebugConfig....");
-            coreMgr.ApplyDebugConfig();
-            coreMgr.DebugAll();
+            //debug(">>> Set DebugConfig....");
+            //coreMgr.ApplyDebugConfig();
+            //coreMgr.DebugAll();
             //3.绑定扩展模块调用事件
-            debug(">>> Wire Contrib Event....");
             TLCtxHelper.BindContribEvent();
 
-            
-            Thread.Sleep(2000);
+            //4.启动默认通道
             if (GlobalConfig.NeedStartDefaultConnector)
             {
-                debug(">>Start Broker and DataFeed");
+                Thread.Sleep(1000);
                 connectorMgr.StartDefaultConnector();
             }
-
-
-            Thread.Sleep(2000);
+            //最后确认主备机服务状态，并启用全局状态标识，所有的消息接收需要该标识打开,否则不接受任何操作类的消息
             TLCtxHelper.IsReady = true;
+
             //启动完毕
             _status = QSEnumCoreThreadStatus.Started;
-
+            Util.PrintVersion();
             while (go)
             {
-                //debug("go status:" + go.ToString());
                 Thread.Sleep(1000);
             }
 
-            coreMgr.Stop();
-            contribMgr.Stop();
-
-            contribMgr.Destory();
-            connectorMgr.Dispose();
-            coreMgr.Dispose();
+            coreMgr.Stop();//内核停止
+            contribMgr.Stop();//扩展停止
+                                //连接件停止
+            contribMgr.Destory();//扩展销毁
+            connectorMgr.Dispose();//连接器销毁
+            coreMgr.Dispose();//内核销毁
             GC.Collect();
             debug("******************************corethread stopped **********************************");
             _status = QSEnumCoreThreadStatus.Stopped;
