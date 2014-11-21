@@ -68,6 +68,15 @@ namespace TradingLib.Common
                     return ConsoleColor.Magenta;
                 case QSEnumDebugLevel.MUST:
                     return ConsoleColor.Blue;
+
+                case QSEnumDebugLevel.COLORBLUE:
+                    return ConsoleColor.Black;
+                case QSEnumDebugLevel.COLORGREY:
+                    return ConsoleColor.Gray;
+                case QSEnumDebugLevel.COLORREAD:
+                    return ConsoleColor.Red;
+                case QSEnumDebugLevel.COLORYELLOW:
+                    return ConsoleColor.Yellow;
                 //case LogLevel.Fatal:
                 //    return ConsoleColor.Red;
             }

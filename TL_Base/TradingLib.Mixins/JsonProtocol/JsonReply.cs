@@ -18,6 +18,12 @@ namespace TradingLib.Mixins
         public string Message;
         public object Playload;
 
+        public JsonReply()
+        {
+            Code = 0;
+            Message = string.Empty;
+            Playload = null;
+        }
         public JsonReply(int code, string message,object playload)
         {
             Code = code;
@@ -62,6 +68,28 @@ namespace TradingLib.Mixins
                 message = "Success:" + code;
             }
             return new JsonReply(code, message,null);
+        }
+
+        /// <summary>
+        /// 从返回的json字符串中获得playload对象
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="jsonreply"></param>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        public static T ParsePlayload<T>(JsonData data,string field="Playload")
+        { 
+            return TradingLib.Mixins.LitJson.JsonMapper.ToObject<T>(data[field].ToJson());
+        }
+
+        /// <summary>
+        /// 从返回的json字符串解析成JsonData
+        /// </summary>
+        /// <param name="jsonreply"></param>
+        /// <returns></returns>
+        public static JsonData ParseJsonReplyData(string jsonreply)
+        {
+            return TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonreply);
         }
     }
 

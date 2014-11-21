@@ -88,11 +88,12 @@ namespace TradingLib.Common
             {
                 inst++;
                 string inststring = inst < 0 ? string.Empty : "." + inst.ToString(); 
-#if UNIX
-                fn = path + "/" + logname + (dateinlogname ? "." + _date : "") + inststring + ".txt";
-#else
-				fn = path + "\\" + logname + (dateinlogname ? "." + _date : "") + inststring + ".txt";
-#endif
+//#if UNIX
+//                fn = path + "/" + logname + (dateinlogname ? "." + _date : "") + inststring + ".txt";
+//#else
+//                fn = path + "\\" + logname + (dateinlogname ? "." + _date : "") + inststring + ".txt";
+//#endif
+                fn = Path.Combine(new string[] { path, logname })+(dateinlogname ? "." + _date : "") + inststring + ".txt";
 			} while (!TikUtil.IsFileWritetable(fn));
             return fn;
         }

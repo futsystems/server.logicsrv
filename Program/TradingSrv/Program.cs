@@ -16,53 +16,30 @@ namespace TraddingSrvCLI
     class Program
     {
 
-        //private static string padRightEx(string str, int totalByteCount)
-        //{
-        //    Encoding coding = Encoding.GetEncoding("gb2312");
-        //    int dcount = 0;
-        //    foreach (char ch in str.ToCharArray())
-        //    {
-        //        if (coding.GetByteCount(ch.ToString()) == 2)
-        //            dcount++;
-        //    }
-        //    string w = str.PadRight(totalByteCount - dcount);
-        //    return w;
-        //}
-
-        //public static string FieldName(string field, int width)
-        //{
-        //    return padRightEx(field, width);
-        //}
-
-
-        const string PROGRAME = "TraddingSrvCLI";
+        const string PROGRAME = "LogicSrv";
 
         static void debug(string message)
         {
             Console.WriteLine(message);
         }
+        
         static void Main(string[] args)
         {
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
-
             try
             {
-                debug("*********");
-                //debug(double.MaxValue.ToString());
+                debug("********* start core daemon *********");
                 CoreDaemon cd = new CoreDaemon();
-                cd.SendDebugEvent +=new DebugDelegate(debug);
+                //cd.SendDebugEvent +=new DebugDelegate(debug);
+                //启动核心守护
                 cd.Start();
                 
             }
             catch (Exception ex)
             {
-
-                //throw (ex);
                 debug("error:" + ex.ToString());
                 Util.Debug(ex.ToString() + ex.StackTrace.ToString());
-                //LibUtil.NewLog(PROGRAME, "main function error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
             }
-            
         }
 
  
@@ -71,9 +48,6 @@ namespace TraddingSrvCLI
         {
             Exception ex = (Exception)e.ExceptionObject;
             Util.Debug(ex.ToString());
-            //LibUtil.NewLog(PROGRAME, "crash" + ex.ToString(), QSEnumDebugLevel.ERROR);
-            //LibUtil.NewLog(PROGRAME, "crash" + ex.StackTrace.ToString(), QSEnumDebugLevel.ERROR); ;
-
         }
     }
 

@@ -436,6 +436,7 @@ namespace Broker.SIM
                         Trade nf = new TradeImpl(fill);
                         //关于这里复制后再发出order，这里的process循环 fill order. fill是对order的一个引用，后面修改的数据会覆盖到前面的数据,而gotfillevent触发的时候可能是在另外一个线程中
                         //运行的比如发送回client,或者记录信息等。这样就行程了多个线程对一个对象的访问可能会存在数据部同步的问题。
+                        debug("cache fill:" + nf.GetTradeDetail(), QSEnumDebugLevel.WARNING);
                         _fcache.Write(nf);
                     }
                 }
@@ -644,13 +645,13 @@ namespace Broker.SIM
                 {
                     while (_ocache.hasItems)
                     {
-                        //debug("PPT fire order Event.............", QSEnumDebugLevel.INFO);
+                        debug("PPT fire order Event.............", QSEnumDebugLevel.INFO);
                         Order o = _ocache.Read();
                         NotifyOrder(o);
                     }
                     while (!_ocache.hasItems && _fcache.hasItems)
                     {
-                        //debug("PPT fire Trade Event.............", QSEnumDebugLevel.INFO);
+                        debug("PPT fire Trade Event.............", QSEnumDebugLevel.INFO);
                         Trade f = _fcache.Read();
                         NotifyTrade(f);
 

@@ -25,5 +25,26 @@ namespace TradingLib.API
         MUST = 5,//系统必须输出的信息
         [Description("致命错误信息")]
         FATAL = 4,//Something failed, and we cannot handle it properly.
+
+        /// <summary>
+        /// 红色信息
+        /// </summary>
+        COLORREAD=100,
+
+        /// <summary>
+        /// 绿色信息
+        /// </summary>
+        COLORBLUE=101,
+
+        /// <summary>
+        /// 黄色信息
+        /// </summary>
+        COLORYELLOW=102,
+
+        /// <summary>
+        /// 灰色
+        /// </summary>
+        COLORGREY=103,
+
     }
 }

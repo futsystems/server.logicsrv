@@ -15,8 +15,11 @@ namespace TraddingSrvCLI
     public class CoreThread
     {
 
-        QSEnumCoreThreadStatus _status = QSEnumCoreThreadStatus.Stopped;
+        QSEnumCoreThreadStatus _status = QSEnumCoreThreadStatus.Standby;
 
+        /// <summary>
+        /// 核心线程状态标识
+        /// </summary>
         public QSEnumCoreThreadStatus Status { get { return _status; } set { _status = value; } }
 
         public event DebugDelegate SendDebugEvent;
@@ -27,6 +30,25 @@ namespace TraddingSrvCLI
         }
         Thread thread = null;
         bool go = false;
+
+        public CoreThread()
+        { 
+            
+        }
+
+
+        /// <summary>
+        /// 核心状态
+        /// </summary>
+        internal CoreThreadStatus CoreStatus
+        {
+            get
+            {
+                CoreThreadStatus _st = new CoreThreadStatus();
+                _st.Status = _status;
+                return _st;
+            }
+        }
         public void Start()
         {
             _status = QSEnumCoreThreadStatus.Starting;
@@ -70,9 +92,6 @@ namespace TraddingSrvCLI
             //lib 初始化 文件夹以及相关全局设置信息
             if (firstload)
             {
-                //Util.SendDebugEvent += new DebugDelegate(debug);
-                //TLCtxHelper.SendDebugEvent += new DebugDelegate(debug);//将全局DebugEvent绑定到当前输出
-                //TLCtxHelper.ConsoleEnable = false;
                 firstload = false;
             }
 
@@ -127,9 +146,7 @@ namespace TraddingSrvCLI
             debug(">>> Wire Contrib Event....");
             TLCtxHelper.BindContribEvent();
 
-            //Util.Debug(string.Format("状态 上次结算日:{0} 当前交易日:{1} 当前日期:{2} 是否是交易日:{3} 是否处于历史结算:{4}",TLCtxHelper.Ctx.))
-            _status = QSEnumCoreThreadStatus.Started;
-
+            
             Thread.Sleep(2000);
             if (GlobalConfig.NeedStartDefaultConnector)
             {
@@ -137,13 +154,11 @@ namespace TraddingSrvCLI
                 connectorMgr.StartDefaultConnector();
             }
 
+
             Thread.Sleep(2000);
             TLCtxHelper.IsReady = true;
-            //日志
-            //var filter = new LogFilter();
-            //filter.AddStandardRules();
-            //LogFactory.Assign(new ConsoleLogFactory(filter));
-            //ILogger _logger = LogFactory.CreateLogger(typeof (HttpContext));
+            //启动完毕
+            _status = QSEnumCoreThreadStatus.Started;
 
             while (go)
             {
