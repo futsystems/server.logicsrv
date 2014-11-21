@@ -231,7 +231,7 @@ namespace TraddingSrvCLI
                                     }
                                 case QSEnumCoreThreadStatus.Standby://对方处于 待机状态
                                     {
-                                        //准备协商进行接管和启动
+                                        //准备协商进行接管和启动 现实中几乎不会遇到同时获得到对方待机的问题，应为系统启动总有先后，后启动的系统会获得到对方待机然后处于立即启动的状态
                                         //接管系统
                                         debug("opposite server standby,we take over system");
                                         TakeOver();
@@ -239,16 +239,14 @@ namespace TraddingSrvCLI
                                     }
                                 case QSEnumCoreThreadStatus.Starting://对方处于 启动状态，则等待对方启动成功 需要设置时间差
                                     {
-                                        _opposite_starting = true;
-                                        _opposite_starting_time = Util.ToTLTime();
-
+                                        WaitOppositStarting();
                                         //等待对方启动成功
                                         break;
                                     }
                                 case QSEnumCoreThreadStatus.Stopped://对方处于 已停止 进入启动状态
                                     {
                                         _opposite_starting = false;
-                                        _opposite_starting_time = Util.ToTLTime();
+                                        //_opposite_starting_time = Util.ToTLTime();
                                         break;
                                     }
                                 case QSEnumCoreThreadStatus.Stopping://对方处于 停止中 进入启动状态
@@ -258,11 +256,9 @@ namespace TraddingSrvCLI
                                     }
                                 case QSEnumCoreThreadStatus.TakingOver://对方处于 接管状态 等待
                                     {
-                                        _opposite_starting = true;
-                                        _opposite_starting_time = Util.ToTLTime();
+                                        WaitOppositStarting();
                                         break;
                                     }
-
                             }
                             #endregion
                         }
@@ -301,6 +297,18 @@ namespace TraddingSrvCLI
 
 
                 Thread.Sleep(_statusfreq * 1000);  
+            }
+        }
+
+        /// <summary>
+        /// 记录标识等待对方主机启动
+        /// </summary>
+        void WaitOppositStarting()
+        {
+            if (!_opposite_starting)
+            {
+                _opposite_starting = true;
+                _opposite_starting_time = Util.ToTLTime();
             }
         }
 
