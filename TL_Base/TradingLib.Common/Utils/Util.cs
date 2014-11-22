@@ -78,11 +78,18 @@ namespace TradingLib.Common
         {
             StatusSection(body, "STOP", QSEnumInfoColor.INFODARKRED, samecolor);
         }
-
+        public static int GetAvabileConsoleWidth()
+        {
+            int width = Console.LargestWindowWidth;
+            if (width > 0 & width < 1000)
+                return width;
+            else
+                return 100;
+        }
         public static void StatusSection(string body, string status, QSEnumInfoColor color,bool samecolor = false)
         {
             Console.WriteLine();
-            Console.WriteLine("".PadLeft(Console.LargestWindowWidth / 2 - 1, '.'));
+            Console.WriteLine("".PadLeft(GetAvabileConsoleWidth()/ 2 - 1, '.'));
             ConsoleColorStatus(body, string.Format("[{0}]", status), samecolor ? color : QSEnumInfoColor.INFOWHITE, color);
             Console.WriteLine();
         }
@@ -91,13 +98,13 @@ namespace TradingLib.Common
         {
             Console.WriteLine();
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("".PadLeft(Console.LargestWindowWidth / 2 - 1, '.'));
+            Console.WriteLine("".PadLeft(GetAvabileConsoleWidth() / 2 - 1, '.'));
             //Version:0.65
             ConsoleColorStatus(string.Format(". Version:{0}", "0.65"), ".", QSEnumInfoColor.INFOGREEN, QSEnumInfoColor.INFOGREEN);
             ConsoleColorStatus(string.Format(". LastUpdate:{0}", "20141123"), ".", QSEnumInfoColor.INFOGREEN, QSEnumInfoColor.INFOGREEN);
             ConsoleColorStatus(string.Format(". Author:{0}", "QianBo"), ".", QSEnumInfoColor.INFOGREEN, QSEnumInfoColor.INFOGREEN);
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("".PadLeft(Console.LargestWindowWidth / 2 - 1, '.'));
+            Console.WriteLine("".PadLeft(GetAvabileConsoleWidth() / 2 - 1, '.'));
             Console.WriteLine();
             Console.WriteLine();
             Console.ForegroundColor = ConsoleColor.Gray;
@@ -110,7 +117,7 @@ namespace TradingLib.Common
         {
             if (colorl == colorr)
             {
-                int len = Console.LargestWindowWidth / 2;
+                int len = GetAvabileConsoleWidth()/ 2;
                 int len2 = (len - msg.Length - lefpad);
                 string s = msg.PadLeft(msg.Length + lefpad) + rightmsg.PadLeft(len2 - 1);
 
@@ -120,7 +127,7 @@ namespace TradingLib.Common
             }
             else
             {
-                int len = Console.LargestWindowWidth / 2;
+                int len = GetAvabileConsoleWidth() / 2;
                 int len2 = (len - msg.Length - lefpad);
                 Console.ForegroundColor = GetColor(colorl);
                 Console.Write(msg.PadLeft(msg.Length + lefpad));

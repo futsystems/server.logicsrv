@@ -18,7 +18,7 @@ namespace TradingLib.Core
     /// </summary>
     public class AsyncServer:BaseSrvObject, ITransport
     {
-        const int TimoutSecend = 5;
+        const int TimoutSecend = 1;
 
         /// <summary>
         /// 系统默认Poller超时时间
@@ -173,6 +173,7 @@ namespace TradingLib.Core
             debug(string.Format("Stop Names REQ  Service[{0}]",PROGRAME),QSEnumDebugLevel.INFO);
             _namesgo = false;
             int namewait=0;
+
             while (IsNameServerAlive && namewait <10)
             {
                 debug(string.Format("#{0} wait name req server stopping....",namewait),QSEnumDebugLevel.INFO);

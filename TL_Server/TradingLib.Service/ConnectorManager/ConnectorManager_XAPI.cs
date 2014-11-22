@@ -28,6 +28,7 @@ namespace TradingLib.ServiceManager
              * 目前XAPI体系的接口 通过实现一个具体的TLBrokerBase 填充具体的功能操作 同时底层通过XAPI Proxy加载对应的c++dll实现 因此
              * 接口验证需要检查c# plugin是否存在 同时具体的c++ dll是否加载成功 如果失败则不加载对应的BrokerConfig
              **/
+            debug("Valid connecotr config(interface and config)", QSEnumDebugLevel.INFO);
             foreach (ConnectorInterface itface in ConnectorConfigTracker.BrokerInterfaces)
             {
                 
@@ -39,7 +40,7 @@ namespace TradingLib.ServiceManager
                 if (ret)
                     itface.IsValid = true;
 
-                debug(string.Format("Broker Interface[{0}] C# Plugin[{1}]:{2} C++ Dll:{3} Valid:{4}", itface.Name, itface.type_name, cs_success, cpp_success, ret), QSEnumDebugLevel.MUST);
+                debug(string.Format("Broker Interface[{0}] C# Plugin[{1}]:{2} C++ Dll:{3} Valid:{4}", itface.Name, itface.type_name, cs_success, cpp_success, ret), QSEnumDebugLevel.INFO);
             }
             foreach (ConnectorConfig cfg in ConnectorConfigTracker.BrokerConfigs)
             {
@@ -47,7 +48,7 @@ namespace TradingLib.ServiceManager
                     continue;
                 if (!cfg.Interface.IsValid)
                     continue;
-                debug(string.Format("Broker Config[{0}] Name:{1} SrvIP:{2} LoginID{3}", cfg.Token, cfg.Name, cfg.srvinfo_ipaddress, cfg.usrinfo_userid), QSEnumDebugLevel.MUST);
+                debug(string.Format("Broker Config[{0}] Name:{1} SrvIP:{2} LoginID{3}", cfg.Token, cfg.Name, cfg.srvinfo_ipaddress, cfg.usrinfo_userid), QSEnumDebugLevel.INFO);
             }
 
             foreach (ConnectorInterface itface in ConnectorConfigTracker.DataFeedInterfaces)
@@ -60,7 +61,7 @@ namespace TradingLib.ServiceManager
                 if (ret)
                     itface.IsValid = true;
 
-                debug(string.Format("DataFeed Interface[{0}] C# Plugin[{1}]:{2} C++ Dll:{3} Valid:{4}", itface.Name, itface.type_name, cs_success, cpp_success, ret), QSEnumDebugLevel.MUST);
+                debug(string.Format("DataFeed Interface[{0}] C# Plugin[{1}]:{2} C++ Dll:{3} Valid:{4}", itface.Name, itface.type_name, cs_success, cpp_success, ret), QSEnumDebugLevel.INFO);
             }
             foreach (ConnectorConfig cfg in ConnectorConfigTracker.DataFeedConfigs)
             {
@@ -68,7 +69,7 @@ namespace TradingLib.ServiceManager
                     continue;
                 if (!cfg.Interface.IsValid)
                     continue;
-                debug(string.Format("DataFeed Config[{0}] Name:{1} SrvIP:{2} LoginID{3}", cfg.Token, cfg.Name, cfg.srvinfo_ipaddress, cfg.usrinfo_userid), QSEnumDebugLevel.MUST);
+                debug(string.Format("DataFeed Config[{0}] Name:{1} SrvIP:{2} LoginID{3}", cfg.Token, cfg.Name, cfg.srvinfo_ipaddress, cfg.usrinfo_userid), QSEnumDebugLevel.INFO);
             }
 
         }

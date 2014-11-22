@@ -132,7 +132,6 @@ namespace TradingLib.Core
                 acctk.NewPositionCloseDetailEvent += new Action<PositionCloseDetail>(acctk_NewPositionCloseDetailEvent);
                 //初始化PositionRound生成器
                 prt = new PositionRoundTracker();
-                debug("Loading Accounts Infomation form database.....");
                 //加载账户信息
                 LoadAccount();
 
@@ -204,18 +203,10 @@ namespace TradingLib.Core
 
 
         #region 启动 停止 销毁
-        //public void InitAccount()
-        //{
-        //    //加载所有帐户
-        //    this.LoadAccount();
-        //}
         public void Start()
         {
             Util.StartStatus(this.PROGRAME);
             _asynLoger.Start();
-            //加载交易帐户
-            //LoadAccount();
-            //从数据库恢复日内交易信息
             RestoreFromMysql();
         }
 

@@ -320,7 +320,7 @@ namespace TradingLib.Core
         /// <param name="accID"></param>
         private void LoadAccount(string account = null)
         {
-            debug("加载帐户数据...", QSEnumDebugLevel.INFO);
+            debug("Loading accounts form database.....", QSEnumDebugLevel.INFO);
             try
             {
                 IList<IAccount> accountlist = new List<IAccount>();

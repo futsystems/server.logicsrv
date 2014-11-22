@@ -116,10 +116,6 @@ namespace TradingLib.Contrib.FinService
             Util.Debug(SPNAME + " 帐户:" + this.Account.ID + " 额度:" + Util.FormatDecimal(finamount) + "万元 收费:" + Util.FormatDecimal(totalfee));
         }
 
-
-
-
-
         /// <summary>
         /// 执行风控规则
         /// 自由资金小于配资金额的2%执行强平

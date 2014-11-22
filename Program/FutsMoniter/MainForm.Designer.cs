@@ -117,6 +117,7 @@
             this.tabAgent,
             this.tabFinance,
             this.tabHistQuery});
+            this.TabRibbon.SelectedContext = null;
             this.TabRibbon.SelectedTab = this.tabBasicConfig;
             this.TabRibbon.Size = new System.Drawing.Size(1284, 111);
             this.TabRibbon.TabIndex = 0;

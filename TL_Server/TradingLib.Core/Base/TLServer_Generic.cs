@@ -104,7 +104,7 @@ namespace TradingLib.Core
         /// <summary>
         /// 底层启动多少个工作线程用于处理客户端消息
         /// </summary>
-        public int NumWorks { get { return _numWorkers; } set { _numWorkers = value; } }
+        public int NumWorkers { get { return _numWorkers; } set { _numWorkers = value; } }
 
 
 
@@ -317,15 +317,15 @@ namespace TradingLib.Core
             {
                 if (_started) return;
                 Stop();
-                debug("Starting " + PROGRAME + " server...", QSEnumDebugLevel.MUST);
+                debug("Starting " + PROGRAME + " server...", QSEnumDebugLevel.INFO);
 
                 int attempts = 0;
                 while (!_started && (attempts++ < retries))
                 {
-                    debug("Try to start server at: " + _serveraddress + ":" + _port.ToString(), QSEnumDebugLevel.MUST);
+                    debug("Try to start server at: " + _serveraddress + ":" + _port.ToString(), QSEnumDebugLevel.INFO);
                     try
                     {   //注意从外层传入服务器监听地址
-                        _trans = new AsyncServer(PROGRAME, _serveraddress, _port, this.NumWorks, this.EnableTPTracker, false);
+                        _trans = new AsyncServer(PROGRAME, _serveraddress, _port, this.NumWorkers, this.EnableTPTracker, false);
                         //_trans.SendDebugEvent += new DebugDelegate(msgdebug);
                         _trans.GotTLMessageEvent += new HandleTLMessageDel(basehandle);
                         _trans.ProviderName = ProviderName;//将TLServerProviderName传递给传输层,用于客户端的名称查询
@@ -365,7 +365,7 @@ namespace TradingLib.Core
             if (!_started) return;
             try
             {
-                debug("Soping " + PROGRAME + " server...", QSEnumDebugLevel.MUST);
+                debug("Soping " + PROGRAME + " server...", QSEnumDebugLevel.INFO);
                 //停止行情线程
                 stoptickthread();
                 //停止底层传输

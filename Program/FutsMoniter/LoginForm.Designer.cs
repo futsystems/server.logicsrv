@@ -166,10 +166,6 @@
             this.btnExit.TabIndex = 31;
             this.btnExit.Values.Text = "退 出";
             // 
-            // kryptonPalette1
-            // 
-            this.kryptonPalette1.BasePaletteMode = ComponentFactory.Krypton.Toolkit.PaletteMode.Office2010Silver;
-            // 
             // kryptonManager1
             // 
             this.kryptonManager1.GlobalPalette = this.kryptonPalette1;

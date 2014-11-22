@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -57,8 +57,6 @@ namespace TradingLib.Contrib.FinService
     [ContribAttr(FinServiceCentre.ContribName, "FinServiceCentre期货配资扩展", "用于提供配资业务逻辑")]
     public partial class FinServiceCentre : ContribSrvObject, IContrib
     {
-
-
         const string ContribName = "FinServiceCentre";
         FeeChargeItemLogger _chargelog = new FeeChargeItemLogger();
         ConfigDB _cfgdb;
@@ -71,6 +69,7 @@ namespace TradingLib.Contrib.FinService
 
         string _defaultspclassname = "TradingLib.Contrib.FinService.SPSpecialIF";
         bool _addservice = true;
+
         /// <summary>
         /// 加载
         /// </summary>
@@ -88,7 +87,7 @@ namespace TradingLib.Contrib.FinService
 
             if (!_cfgdb.HaveConfig("AddFinServiceOnCreate"))
             {
-                _cfgdb.UpdateConfig("AddFinServiceOnCreate", QSEnumCfgType.Bool,false, "默认是否开通的配资服务");
+                _cfgdb.UpdateConfig("AddFinServiceOnCreate", QSEnumCfgType.Bool, false, "默认是否开通的配资服务");
             }
             _addservice = _cfgdb["AddFinServiceOnCreate"].AsBool();
 
@@ -129,6 +128,30 @@ namespace TradingLib.Contrib.FinService
             TLCtxHelper.EventSystem.AfterSettleEvent += new EventHandler<SystemEventArgs>(EventSystem_AfterSettleEvent);
 
 
+
+        }
+
+        /// <summary>
+        /// 销毁
+        /// </summary>
+        public void OnDestory()
+        {
+
+        }
+        /// <summary>
+        /// 启动
+        /// </summary>
+        public void Start()
+        {
+            _chargelog.Start();
+
+        }
+
+        /// <summary>
+        /// 停止
+        /// </summary>
+        public void Stop()
+        {
 
         }
 
@@ -174,7 +197,7 @@ namespace TradingLib.Contrib.FinService
             {
                 Util.Debug("结算后采集计费:" + item.Comment);
                 if (item.CollectType == EnumFeeCollectType.CollectAfterSettle)
-                { 
+                {
                     TLCtxHelper.CmdAccountCritical.CashOperation(item.Account, item.TotalFee * -1, "", item.Comment);
                 }
             }
@@ -207,11 +230,11 @@ namespace TradingLib.Contrib.FinService
         {
             //出入金操作
             string account = e.CashOperation.Account;
-            if(string.IsNullOrEmpty(account)) return;//如果不是交易帐户的出入金
+            if (string.IsNullOrEmpty(account)) return;//如果不是交易帐户的出入金
             FinServiceStub stub = FinTracker.FinServiceTracker[account];
-            if(stub == null) return;//不存在对应的配资服务
+            if (stub == null) return;//不存在对应的配资服务
 
-            
+
             debug("配资本中心获得出入金事件,对配资服务进行调整", QSEnumDebugLevel.INFO);
 
             stub.FinService.OnCashOperation(e.CashOperation);
@@ -225,48 +248,17 @@ namespace TradingLib.Contrib.FinService
         /// <param name="account"></param>
         void EventAccount_AccountAddEvent(string account)
         {
-            if(_addservice)
+            if (_addservice)
             {
                 DBServicePlan sp = FinTracker.ServicePlaneTracker[_defaultspclassname];
                 IAccount acc = TLCtxHelper.CmdAccount[account];
                 //如果是实盘帐号则默认给他开通配资服务
-                if (acc != null && sp!=null && (acc.Category == QSEnumAccountCategory.REAL|| acc.Category == QSEnumAccountCategory.DEALER))
+                if (acc != null && sp != null && (acc.Category == QSEnumAccountCategory.REAL || acc.Category == QSEnumAccountCategory.DEALER))
                 {
                     //如果帐户存在并且服务计划存在 则为该帐户添加对应的配资服务
-                    FinTracker.FinServiceTracker.AddFinService(account,sp.ID);
+                    FinTracker.FinServiceTracker.AddFinService(account, sp.ID);
                 }
             }
-        }
-
-
-
-
-
-
-        
-
-        /// <summary>
-        /// 销毁
-        /// </summary>
-        public void OnDestory()
-        {
-
-        }
-        /// <summary>
-        /// 启动
-        /// </summary>
-        public void Start()
-        {
-            _chargelog.Start();
-
-        }
-
-        /// <summary>
-        /// 停止
-        /// </summary>
-        public void Stop()
-        {
-
-        }
+        } 
     }
 }
