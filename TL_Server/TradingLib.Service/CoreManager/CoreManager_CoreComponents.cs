@@ -206,9 +206,9 @@ namespace TradingLib.ServiceManager
             debug("7.初始化WebMsgExchSrv");
             _webmsgExchange = new WebMsgExchServer(_messageExchagne, _clearCentre, _riskCentre);
 
-            _messageExchagne.GotTickEvent += new TickDelegate(_webmsgExchange.NewTick);
+            //_messageExchagne.GotTickEvent += new TickDelegate(_webmsgExchange.NewTick);
             //帐户设置变动向web端推送消息
-            _clearCentre.AccountChangedEvent +=new AccountSettingChangedDel(_webmsgExchange.NewAccountSettingUpdate);
+            //_clearCentre.AccountChangedEvent +=new AccountSettingChangedDel(_webmsgExchange.NewAccountSettingUpdate);
             
             //转发账户登入状态信息
             //_messageExchagne.SendLoginInfoEvent += new LoginInfoDel(_webmsgExchange.NewSessionUpdate);
@@ -216,11 +216,11 @@ namespace TradingLib.ServiceManager
         }
         private void DestoryWebMsgExchSrv()
         {
-            _messageExchagne.GotTickEvent -= new TickDelegate(_webmsgExchange.NewTick);
+            //_messageExchagne.GotTickEvent -= new TickDelegate(_webmsgExchange.NewTick);
 
 
             //帐户设置变动向web端推送消息
-            _clearCentre.AccountChangedEvent -= new AccountSettingChangedDel(_webmsgExchange.NewAccountSettingUpdate);
+            //_clearCentre.AccountChangedEvent -= new AccountSettingChangedDel(_webmsgExchange.NewAccountSettingUpdate);
 
             //转发账户登入状态信息
             //_messageExchagne.SendLoginInfoEvent -= new LoginInfoDel(_webmsgExchange.NewSessionUpdate);

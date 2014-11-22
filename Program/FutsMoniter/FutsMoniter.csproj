@@ -38,9 +38,6 @@
     <ApplicationIcon>moniter-oem.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="clrzmq">
-      <HintPath>..\..\lib\clrzmq.dll</HintPath>
-    </Reference>
     <Reference Include="ComponentFactory.Krypton.Navigator, Version=4.4.0.0, Culture=neutral, PublicKeyToken=a87e673e9ecb6e8e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\kypton\ComponentFactory.Krypton.Navigator.dll</HintPath>
@@ -63,6 +60,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Win\FutSystems.GUI.dll</HintPath>
     </Reference>
+    <Reference Include="NetMQ, Version=3.3.0.11, Culture=neutral, PublicKeyToken=a6decef4ddc58b3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\NetMQ.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -82,6 +83,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\IEventBinder.cs" />
+    <Compile Include="Client\AsyncClient_MQ.cs" />
     <Compile Include="Common\ManagerUtils.cs" />
     <Compile Include="Controls\Base\ctTLPermissionEdit.cs">
       <SubType>UserControl</SubType>
