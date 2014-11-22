@@ -178,7 +178,10 @@ namespace TradingLib.ServiceManager
 
         public override void Dispose()
         {
+            Util.DestoryStatus(this.PROGRAME, true);
             base.Dispose();
+
+
         }
 
     }

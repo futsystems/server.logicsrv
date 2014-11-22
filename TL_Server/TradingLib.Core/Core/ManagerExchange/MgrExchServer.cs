@@ -74,6 +74,7 @@ namespace TradingLib.Core
 
         public override void Dispose()
         {
+            Util.DestoryStatus(this.PROGRAME);
             base.Dispose();
             tl.Dispose();
             tl = null;

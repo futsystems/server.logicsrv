@@ -52,8 +52,15 @@ namespace TradingLib.Core
             if (_timer != null)
             {
                 _timer.Stop();
-                _timer = null;
             }
+        }
+
+        public override void Dispose()
+        {
+            Util.DestoryStatus(this.PROGRAME);
+            base.Dispose();
+            _timer.Elapsed -= new System.Timers.ElapsedEventHandler(TimeEvent);
+            _timer = null;
         }
 
         void TimeEvent(object source, System.Timers.ElapsedEventArgs e)

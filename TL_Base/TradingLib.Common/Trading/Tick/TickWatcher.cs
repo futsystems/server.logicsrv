@@ -307,8 +307,8 @@ namespace TradingLib.Common
         {
             _ast = symboltracker;
             _pollint = (long)Math.Abs(BackgroundPollIntervalms);
-            if (_pollint != 0)
-                Start();
+            //if (_pollint != 0)
+            //    Start();
         }
 
         public void Start()

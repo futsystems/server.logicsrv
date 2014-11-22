@@ -15,28 +15,16 @@ namespace TradingLib.ServiceManager
 {
     public delegate void LoadConnecter(BrokerRouter br,DataFeedRouter dr);
 
-    public partial class CoreManager : BaseSrvObject, IServiceManager
+    public partial class CoreManager : BaseSrvObject, IServiceManager,IDisposable
     {
 
         DebugConfig dconfig;//日志设置信息
-
-        //public DebugConfig DebugConfig { get { return dconfig; } }
-
         public string ServiceMgrName { get { return PROGRAME; } }
         public CoreManager()
             :base("CoreManager")
         {
             dconfig = new DebugConfig();
         }
-        /*
-        public void Dispose()
-        {
-            Console.WriteLine("dispose is called");
-        }
-         ~CoreManager()
-        {
-            Console.WriteLine("coremanager dispose....");
-        }**/
         //============ 服务组件 ===============================
         //核心服务
         private BrokerRouter _brokerRouter;//交易通道路由
@@ -183,20 +171,16 @@ namespace TradingLib.ServiceManager
 
         public override void Dispose()
         {
-            debug("Release Core Modules....", QSEnumDebugLevel.INFO);
+            Util.DestoryStatus(this.PROGRAME, true);
             base.Dispose();
-            
-            Console.WriteLine("cormgr is dispose");
-            
+
             DestoryTaskCentre();
 
             debug("销毁WebMsgExchSrv", QSEnumDebugLevel.INFO);
             DestoryWebMsgExchSrv();
 
-
             debug("销毁MgrExchSrv", QSEnumDebugLevel.INFO);
             DestoryMgrExchSrv();
-
 
             debug("销毁RiskCentre", QSEnumDebugLevel.INFO);
             DestoryRiskCentre();
@@ -208,17 +192,16 @@ namespace TradingLib.ServiceManager
             DestoryClearCentre();
 
             DestoryDataFeedRouter();
+
             DestoryBrokerRouter();
 
             debug("销毁MsgExchSrv", QSEnumDebugLevel.INFO);
             DestoryMsgExchSrv();
 
-
-
             //底层静态对象释放
-            BasicTracker.Release();//是否底层对象维护器
-            PluginHelper.Release();//释放插件维护器
-            TLCtxHelper.Release();
+            BasicTracker.DisposeInstance();//是否底层对象维护器
+            PluginHelper.DisposeInstance();//释放插件维护器
+            TLCtxHelper.DisposeInstance();
         }
 
         /// <summary>

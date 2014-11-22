@@ -455,7 +455,7 @@ namespace TradingLib.Core
 
         public override void Dispose()
         {
-            //debug("Dispose..", QSEnumDebugLevel.COLORYELLOW);
+            Util.DestoryStatus(this.PROGRAME);
             base.Dispose();
             tl.Dispose();
             tl = null;

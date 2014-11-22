@@ -418,11 +418,9 @@ namespace TradingLib.Core
 
         public override void Dispose()
         {
-            _posoffsetracker.Dispose();
-
-            debug("RiskCentre Dispose Called",QSEnumDebugLevel.INFO);
+            Util.DestoryStatus(this.PROGRAME);
             base.Dispose();
-
+            _posoffsetracker.Dispose();
             
         }
     }

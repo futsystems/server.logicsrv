@@ -219,8 +219,8 @@ namespace TradingLib.Core
 
         public override void Dispose()
         {
+            Util.DestoryStatus(this.PROGRAME);
             base.Dispose();
-            debug("ClearCentre Dispose Called", QSEnumDebugLevel.INFO);
             acctk.Dispose();
             _asynLoger.Dispose();
         }

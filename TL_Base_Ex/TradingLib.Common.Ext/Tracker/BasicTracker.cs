@@ -7,7 +7,7 @@ using TradingLib.API;
 
 namespace TradingLib.Common
 {
-    public class BasicTracker
+    public class BasicTracker:IDisposable
     {
 
         static BasicTracker defaultinstance;
@@ -30,6 +30,24 @@ namespace TradingLib.Common
         
         }
 
+        public void Dispose()
+        {
+            // Do something here
+            Util.Debug("xxxxxxxxx basictracker disposed.....");
+        }
+
+        public static void DisposeInstance()
+        {
+            if (defaultinstance != null)
+            {
+                defaultinstance.extracker = null;
+                defaultinstance.mktimetracker = null;
+                defaultinstance.setracker = null;
+                defaultinstance.symtracker = null;
+                defaultinstance.Dispose();
+                defaultinstance = null;
+            }
+        }
         /// <summary>
         /// 管理员对象管理器
         /// </summary>
@@ -107,12 +125,12 @@ namespace TradingLib.Common
             }
         }
 
-        public static void Release()
-        {
-            defaultinstance.extracker = null;
-            defaultinstance.mktimetracker = null;
-            defaultinstance.setracker = null;
-            defaultinstance.symtracker = null;
-        }
+        //public static void Release()
+        //{
+        //    defaultinstance.extracker = null;
+        //    defaultinstance.mktimetracker = null;
+        //    defaultinstance.setracker = null;
+        //    defaultinstance.symtracker = null;
+        //}
     }
 }

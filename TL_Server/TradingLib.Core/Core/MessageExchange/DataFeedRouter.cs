@@ -686,18 +686,26 @@ namespace TradingLib.Core
         {
             Util.StartStatus(this.PROGRAME);
             asynctick.Start();
+            _tickwatcher.Start();
         }
 
         public void Stop()
         {
             Util.StopStatus(this.PROGRAME);
             asynctick.Stop();
-            
+            _tickwatcher.Stop();
         }
 
         public override void Dispose()
         {
+            Util.DestoryStatus(this.PROGRAME);
             base.Dispose();
+            asynctick.GotTick -= new TickDelegate(asynctick_GotTick);
+            _tickwatcher.GotAlert -= new SymDelegate(_tickwatcher_GotAlert);
+            _tickwatcher.GotFirstTick -= new SymDelegate(_tickwatcher_GotFirstTick);
+
+            _tickwatcher.GotMassAlert -= new Int32Delegate(_tickwatcher_GotMassAlert);
+            _tickwatcher.GotMassAlertCleard -= new Int32Delegate(_tickwatcher_GotMassAlertCleard);
         }
 
     }

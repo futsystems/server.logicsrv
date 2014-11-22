@@ -13,7 +13,7 @@ namespace TradingLib.ServiceManager
     /// 扩展模块管理器
     /// 用于
     /// </summary>
-    public class ContribManager : BaseSrvObject, IServiceManager
+    public class ContribManager : BaseSrvObject, IServiceManager,IDisposable
     {
         //List<string> contribList = new List<string>();
         ConcurrentDictionary<string, IContrib> contribmap = new ConcurrentDictionary<string, IContrib>();

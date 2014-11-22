@@ -98,61 +98,64 @@ namespace TraddingSrvCLI
             ConfigFile _configFile = ConfigFile.GetConfigFile();
             DBHelper.InitDBConfig(_configFile["DBAddress"].AsString(), _configFile["DBPort"].AsInt(), _configFile["DBName"].AsString(), _configFile["DBUser"].AsString(), _configFile["DBPass"].AsString());
 
-            //1.核心模块管理器,加载核心服务组件
-            CoreManager coreMgr = new CoreManager();
-            coreMgr.Init();
-
-            //2.路由管理器,绑定核心部分的数据与成交路由,并加载Connector
-            ConnectorManager connectorMgr = new ConnectorManager();
-            connectorMgr.BindRouter(coreMgr.BrokerRouter, coreMgr.DataFeedRouter);
-            connectorMgr.Init();
-
-            //3.扩展模块管理器 加载扩展模块,启动扩展模块
-            ContribManager contribMgr = new ContribManager();
-            contribMgr.Init();
-            contribMgr.Load();
-
-
-            ////////////////////////////////// Stat Section
-            //0.启动扩展服务
-            contribMgr.Start();
-
-            //1.待所有服务器启动完毕后 启动核心服务
-            coreMgr.Start();
-
-            //2.绑定核心服务事件到CTX访问界面
-            coreMgr.WireCtxEvent();
-
-            //debug(">>> Set DebugConfig....");
-            //coreMgr.ApplyDebugConfig();
-            //coreMgr.DebugAll();
-            //3.绑定扩展模块调用事件
-            TLCtxHelper.BindContribEvent();
-
-            //4.启动默认通道
-            if (GlobalConfig.NeedStartDefaultConnector)
+            using (var coreMgr = new CoreManager())//1.核心模块管理器,加载核心服务组件
             {
-                Thread.Sleep(1000);
-                connectorMgr.StartDefaultConnector();
-            }
-            //最后确认主备机服务状态，并启用全局状态标识，所有的消息接收需要该标识打开,否则不接受任何操作类的消息
-            TLCtxHelper.IsReady = true;
+                coreMgr.Init();
 
-            //启动完毕
-            _status = QSEnumCoreThreadStatus.Started;
-            Util.PrintVersion();
-            while (go)
-            {
-                Thread.Sleep(1000);
-            }
+                using (var connectorMgr = new ConnectorManager())//2.路由管理器,绑定核心部分的数据与成交路由,并加载Connector
+                {
+                    connectorMgr.BindRouter(coreMgr.BrokerRouter, coreMgr.DataFeedRouter);
+                    connectorMgr.Init();
 
-            coreMgr.Stop();//内核停止
-            contribMgr.Stop();//扩展停止
-                                //连接件停止
-            contribMgr.Destory();//扩展销毁
-            connectorMgr.Dispose();//连接器销毁
-            coreMgr.Dispose();//内核销毁
-            GC.Collect();
+                    using (var contribMgr = new ContribManager())//3.扩展模块管理器 加载扩展模块,启动扩展模块
+                    {
+                        contribMgr.Init();
+                        contribMgr.Load();
+
+                        ////////////////////////////////// Stat Section
+                        //0.启动扩展服务
+                        contribMgr.Start();
+
+                        //1.待所有服务器启动完毕后 启动核心服务
+                        coreMgr.Start();
+
+                        //2.绑定核心服务事件到CTX访问界面
+                        coreMgr.WireCtxEvent();
+
+                        //debug(">>> Set DebugConfig....");
+                        //coreMgr.ApplyDebugConfig();
+                        //coreMgr.DebugAll();
+                        //3.绑定扩展模块调用事件
+                        TLCtxHelper.BindContribEvent();
+                        //4.启动默认通道
+                        if (GlobalConfig.NeedStartDefaultConnector)
+                        {
+                            Thread.Sleep(1000);
+                            connectorMgr.StartDefaultConnector();
+                        }
+
+                        //最后确认主备机服务状态，并启用全局状态标识，所有的消息接收需要该标识打开,否则不接受任何操作类的消息
+                        TLCtxHelper.IsReady = true;
+
+                        //启动完毕
+                        _status = QSEnumCoreThreadStatus.Started;
+                        Util.PrintVersion();
+                        while (go)
+                        {
+                            Thread.Sleep(1000);
+                        }
+
+                        coreMgr.Stop();//内核停止
+                        contribMgr.Stop();//扩展停止
+                        
+                        //连接件停止
+                        //contribMgr.Destory();//扩展销毁
+                        //connectorMgr.Dispose();//连接器销毁
+                        //coreMgr.Dispose();//内核销毁
+                        //GC.Collect();
+                    }
+                }
+            }
             debug("******************************corethread stopped **********************************");
             _status = QSEnumCoreThreadStatus.Stopped;
         }
