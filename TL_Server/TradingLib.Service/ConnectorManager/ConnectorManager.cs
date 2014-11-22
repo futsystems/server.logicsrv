@@ -25,7 +25,7 @@ namespace TradingLib.ServiceManager
     /// 路由通道管理器
     /// 加载对应的路由通道类型 然后按照设定生成对应的路由并进行管理
     /// </summary>
-    public partial class ConnectorManager : BaseSrvObject, IServiceManager, IRouterManager
+    public partial class ConnectorManager : BaseSrvObject, IServiceManager, IRouterManager,IDisposable
     {
         const string SMGName = "ConnectorManager";
         //Broker或Datafeed连接与断开的事件
