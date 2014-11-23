@@ -297,6 +297,21 @@ namespace TradingLib.Common
         }
 
         /// <summary>
+        /// 获得小数点位
+        /// </summary>
+        /// <param name="pricetick"></param>
+        /// <returns></returns>
+        public static int GetDecimalPlace(decimal pricetick)
+        {
+            //1 0.2
+            string[] p = pricetick.ToString().Split('.');
+            if (p.Length <= 1)
+                return 0;
+            else
+                return p[1].ToCharArray().Length;
+        }
+
+        /// <summary>
         /// 是否在时间段内
         /// </summary>
         /// <param name="start"></param>

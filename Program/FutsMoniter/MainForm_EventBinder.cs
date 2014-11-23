@@ -79,6 +79,7 @@ namespace FutsMoniter
                 kryptonRibbonGroupButton_FinanceManagement.Visible = Globals.UIAccess.nav_finance_fincentre;
                 kryptonRibbonGroupButton_payonline.Visible = Globals.UIAccess.nav_finance_payonline;
                 kryptonRibbonGroupButton_CasherManagement.Visible = Globals.UIAccess.nav_finance_cashercentre;
+                kryptonRibbonGroupButton_AccountCashreq.Visible = Globals.UIAccess.nav_finance_accountcashreq;
             }
 
             if (!Globals.UIAccess.nav_report)

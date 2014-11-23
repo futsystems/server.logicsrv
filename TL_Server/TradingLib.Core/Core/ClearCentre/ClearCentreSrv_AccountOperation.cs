@@ -388,6 +388,12 @@ namespace TradingLib.Core
         //}
 
         /// <summary>
+        /// 交易帐号只能是数字或字母
+        /// </summary>
+        System.Text.RegularExpressions.Regex regaccount = new System.Text.RegularExpressions.Regex(@"^[A-Za-z0-9-]+$");
+        
+
+        /// <summary>
         /// 为某个user_id添加某个类型的帐号 密码为pass
         /// 默认mgr_fk为0 如果为0则通过ManagerTracker获得Root的mgr_fk 将默认帐户统一挂在Root用户下
         /// </summary>
@@ -398,6 +404,19 @@ namespace TradingLib.Core
         public bool AddAccount(out string account, string user_id,string setaccount,string pass, QSEnumAccountCategory type,int mgr_fk=0)
         {
             debug("清算中心为user:" + user_id + " 添加交易帐号到主柜员ID:"+mgr_fk.ToString(), QSEnumDebugLevel.INFO);
+            
+            //如果给定了交易帐号 则我们需要检查交易帐号是否是字母或数字
+            if (!string.IsNullOrEmpty(setaccount))
+            {
+                if (!regaccount.IsMatch(setaccount))
+                {
+                    throw new FutsRspError("交易帐号只能包含数字,字母,-");
+                }
+                if (setaccount.Length > 20)
+                {
+                    throw new FutsRspError("交易帐号长度不能超过20位");
+                }
+            }
             account = null;
             mgr_fk  = (mgr_fk == 0 ? BasicTracker.ManagerTracker.GetRootFK() : mgr_fk);
             bool re = ORM.MAccount.AddAccount(out account, user_id, setaccount,pass, type,mgr_fk);

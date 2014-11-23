@@ -14,29 +14,44 @@ using TradingLib.Mixins.JsonObject;
 
 namespace FutsMoniter
 {
-    public partial class fmAgentCashOperation : ComponentFactory.Krypton.Toolkit.KryptonForm
+    public partial class fmAccountCashOperation : ComponentFactory.Krypton.Toolkit.KryptonForm
     {
         int mgrfk = 0;
         bool loaded = false;
-        public fmAgentCashOperation()
+        public fmAccountCashOperation()
         {
             InitializeComponent();
             Factory.IDataSourceFactory(cashoptype).BindDataSource(UIUtil.GetEnumValueObjects<QSEnumCashOperation>());
             if (Globals.EnvReady)
             {
                 mgrfk = (int)Globals.BaseMGRFK;
-                lbmgrfk.Text = mgrfk.ToString();
+                //lbmgrfk.Text = mgrfk.ToString();
             }
-            message.Visible = false;
+            
             loaded = true;
+            cashoptype.SelectedIndexChanged += new EventHandler(cashoptype_SelectedIndexChanged);
         }
 
-        decimal avabile = 0;
-        
-        public void SetAvabileBalance(decimal amount)
+        void cashoptype_SelectedIndexChanged(object sender, EventArgs e)
         {
-            avabile = amount;
+            QSEnumCashOperation op = (QSEnumCashOperation)cashoptype.SelectedValue;
+            if (op == QSEnumCashOperation.WithDraw)
+            {
+                ctReceivableBankList1.Visible = false;
+            }
+            else
+            {
+                ctReceivableBankList1.Visible = true;
+            }
+            
         }
+
+        //decimal avabile = 0;
+        
+        //public void SetAvabileBalance(decimal amount)
+        //{
+        //    avabile = amount;
+        //}
 
 
         private void btnSubmit_Click(object sender, EventArgs e)
@@ -48,23 +63,31 @@ namespace FutsMoniter
                 fmConfirm.Show("请输入有效金额!");
                 return;
             }
-            if (a > avabile && op == QSEnumCashOperation.WithDraw)
+            //if (a > avabile && op == QSEnumCashOperation.WithDraw)
+            //{
+            //    fmConfirm.Show("最大提现金额:"+avabile.ToString());
+            //    return;
+            //}
+            if (op == QSEnumCashOperation.Deposit && ctReceivableBankList1.BankSelected==0)
             {
-                fmConfirm.Show("最大提现金额:"+avabile.ToString());
+                ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show("请选择入金银行信息");
                 return;
             }
 
             if (fmConfirm.Show("确认 " + Util.GetEnumDescription(op) + " " + a.ToString() + " ?") == System.Windows.Forms.DialogResult.Yes)
             { 
                 JsonWrapperCashOperation request = new JsonWrapperCashOperation();
+
+                request.Account = account.Text;
                 request.Amount = a;
                 request.Operation = op;
                 request.DateTime = Util.ToTLDateTime();
-                Globals.TLClient.ReqRequestCashOperation(TradingLib.Mixins.LitJson.JsonMapper.ToJson(request));
+                request.RecvInfo = op == QSEnumCashOperation.Deposit ? ctReceivableBankList1.RecvInfo : "";
+                Globals.TLClient.ReqRequestAccountCashOperation(TradingLib.Mixins.LitJson.JsonMapper.ToJson(request));
             }
             this.Close();
         }
 
-       
+      
     }
 }

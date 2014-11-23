@@ -337,8 +337,9 @@ namespace TradingLib.Core
                     }
                 }
 
-                //执行操作 并捕获异常 产生异常则给出错误回报
 
+
+                //执行操作 并捕获异常 产生异常则给出错误回报
                 bool re = clearcentre.AddAccount(out outaccount, request.UserID.ToString(), request.AccountID, request.Password, request.Category, request.MgrID);//将交易帐户加入到主域
                 if (re)
                 {
@@ -845,7 +846,10 @@ namespace TradingLib.Core
                  {
                      throw new FutsRspError("无权添加管理员类型:" + Util.GetEnumDescription(m.Type));
                  }
-
+                 if (BasicTracker.ManagerTracker[m.Login] != null)
+                 {
+                     throw new FutsRspError("柜员登入ID不能重复:"+m.Login);
+                 }
                  BasicTracker.ManagerTracker.UpdateManager(m);
                  RspMGRQryManagerResponse response = ResponseTemplate<RspMGRQryManagerResponse>.SrvSendRspResponse(request);
                  response.ManagerToSend = m;

@@ -69,6 +69,7 @@
             this.kryptonRibbonGroupTriple10 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupTriple();
             this.kryptonRibbonGroupButton_FinanceManagement = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
             this.kryptonRibbonGroupButton_payonline = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
+            this.kryptonRibbonGroupButton_AccountCashreq = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
             this.kryptonRibbonGroup12 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroup();
             this.kryptonRibbonGroupTriple13 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupTriple();
             this.kryptonRibbonGroupButton_CasherManagement = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
@@ -117,8 +118,7 @@
             this.tabAgent,
             this.tabFinance,
             this.tabHistQuery});
-            this.TabRibbon.SelectedContext = null;
-            this.TabRibbon.SelectedTab = this.tabBasicConfig;
+            this.TabRibbon.SelectedTab = this.tabFinance;
             this.TabRibbon.Size = new System.Drawing.Size(1284, 111);
             this.TabRibbon.TabIndex = 0;
             // 
@@ -320,7 +320,8 @@
             // 
             this.kryptonRibbonGroupTriple10.Items.AddRange(new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupItem[] {
             this.kryptonRibbonGroupButton_FinanceManagement,
-            this.kryptonRibbonGroupButton_payonline});
+            this.kryptonRibbonGroupButton_payonline,
+            this.kryptonRibbonGroupButton_AccountCashreq});
             // 
             // kryptonRibbonGroupButton_FinanceManagement
             // 
@@ -333,6 +334,11 @@
             this.kryptonRibbonGroupButton_payonline.ImageLarge = ((System.Drawing.Image)(resources.GetObject("kryptonRibbonGroupButton_payonline.ImageLarge")));
             this.kryptonRibbonGroupButton_payonline.TextLine1 = "在线出入金";
             this.kryptonRibbonGroupButton_payonline.ToolTipBody = "交易帐户在线入金或出金";
+            // 
+            // kryptonRibbonGroupButton_AccountCashreq
+            // 
+            this.kryptonRibbonGroupButton_AccountCashreq.ImageLarge = ((System.Drawing.Image)(resources.GetObject("kryptonRibbonGroupButton_AccountCashreq.ImageLarge")));
+            this.kryptonRibbonGroupButton_AccountCashreq.TextLine1 = "交易帐户";
             // 
             // kryptonRibbonGroup12
             // 
@@ -528,6 +534,7 @@
         private System.Windows.Forms.ToolTip popmessage;
         private Controls.ctAccountMontier ctAccountMontier1;
         private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton_PermissionTemplate;
+        private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton_AccountCashreq;
 
     }
 }

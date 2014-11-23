@@ -21,6 +21,9 @@ namespace FutsMoniter
             Factory.IDataSourceFactory(type).BindDataSource(Utils.GetManagerTypeCBList());
         }
 
+
+        System.Text.RegularExpressions.Regex reglogin = new System.Text.RegularExpressions.Regex(@"^[A-Za-z0-9]+$");
+        
         Manager manger = null;
         public Manager Manager
         {
@@ -59,6 +62,11 @@ namespace FutsMoniter
                 Manager m = new Manager();
                 m.Type = (QSEnumManagerType)type.SelectedValue;
                 m.Login = this.login.Text;
+                if ((!reglogin.IsMatch(m.Login)) || m.Login.Length>20)
+                {
+                    fmConfirm.Show("登入ID只能包含数字和字母");
+                    return;
+                }
                 m.Name = this.name.Text;
                 m.Mobile = this.mobile.Text;
                 m.QQ = this.qq.Text;

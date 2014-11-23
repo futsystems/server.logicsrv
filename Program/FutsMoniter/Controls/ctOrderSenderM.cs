@@ -68,7 +68,9 @@ namespace FutsMoniter
         public void SetSymbol(Symbol sym)
         {
             _symbol = sym;
-            symbol.Text = _symbol.Symbol; 
+            symbol.Text = _symbol.Symbol;
+            int decimalplace = Util.GetDecimalPlace(sym.SecurityFamily.PriceTick);
+            price.DecimalPlaces = decimalplace;
         }
 
         private void btnBuy_Click(object sender, EventArgs e)

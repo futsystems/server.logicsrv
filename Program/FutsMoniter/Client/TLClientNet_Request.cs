@@ -637,6 +637,14 @@ namespace TradingLib.Common
         }
 
         /// <summary>
+        /// 查询收款银行
+        /// </summary>
+        public void ReqQryReceiveableBank()
+        {
+            this.ReqContribRequest("MgrExchServer", "QryReceiveableBank", "");
+        }
+
+        /// <summary>
         /// 查询代理对应的支付信息
         /// </summary>
         /// <param name="agentfk"></param>

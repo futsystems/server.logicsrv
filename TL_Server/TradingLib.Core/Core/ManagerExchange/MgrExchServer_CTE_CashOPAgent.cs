@@ -13,6 +13,7 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryAgentPaymentInfo", "QryAgentPaymentInfo - query payment Info", "查询代理支付信息")]
         public void CTE_QryPaymentInfo(ISession session, int agentfk)
         {
+            debug("查询代理支付信息", QSEnumDebugLevel.INFO);
             Manager manger = BasicTracker.ManagerTracker[agentfk];
             JsonWrapperAgentPaymentInfo info = manger.GetPaymentInfo();
             session.SendJsonReplyMgr(info);
@@ -22,6 +23,8 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryAgentCashOperationTotal", "QryAgentCashOperationTotal - query agent pending cash operation", "查询所有代理待处理委托")]
         public void CTE_QryAgentCashOperationTotal(ISession session)
         {
+            debug("查询代理所有出入金请求记录", QSEnumDebugLevel.INFO);
+            //查询所有代理出入金记录
             Manager manger = session.GetManager();
             if (manger != null)
             {

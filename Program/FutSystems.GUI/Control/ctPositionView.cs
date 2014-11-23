@@ -781,12 +781,12 @@ namespace FutSystems.GUI
             Position pos = CurrentPositoin;
             if (pos == null)
             {
-                MessageForm.Show("请选择持仓");
+                ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show("请选择持仓");
                 return;
             }
             if (pos.isFlat)
             {
-                MessageForm.Show("该合约没有持仓");
+                ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show("该合约没有持仓");
                 return;
             }
             FlatPosition(CurrentPositoin);
@@ -806,7 +806,7 @@ namespace FutSystems.GUI
             string sym = CurrentSymbol;
             if (string.IsNullOrEmpty(sym))
             {
-                MessageForm.Show("请选中持仓");
+                ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show("请选中持仓");
                 return;
             }
             foreach (Order o in OrderTracker)
@@ -831,7 +831,7 @@ namespace FutSystems.GUI
             }
             else
             {
-                MessageForm.Show("请选择有效持仓!");
+                ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show("请选择有效持仓!");
             }
         }
 

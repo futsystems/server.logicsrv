@@ -29,6 +29,14 @@
         private void InitializeComponent()
         {
             this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
+            this.btnInsertTrade = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.btnSell = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.btnBuy = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.price = new ComponentFactory.Krypton.Toolkit.KryptonNumericUpDown();
+            this.size = new ComponentFactory.Krypton.Toolkit.KryptonNumericUpDown();
+            this.kryptonLabel7 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.kryptonLabel8 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.cboffsetflag = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
             this.cbordertype = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
             this.kryptonLabel6 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel5 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
@@ -36,18 +44,10 @@
             this.kryptonLabel4 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.account = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel1 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.cboffsetflag = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
-            this.kryptonLabel7 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.kryptonLabel8 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.size = new ComponentFactory.Krypton.Toolkit.KryptonNumericUpDown();
-            this.price = new ComponentFactory.Krypton.Toolkit.KryptonNumericUpDown();
-            this.btnBuy = new ComponentFactory.Krypton.Toolkit.KryptonButton();
-            this.btnSell = new ComponentFactory.Krypton.Toolkit.KryptonButton();
-            this.btnInsertTrade = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.cbordertype)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cboffsetflag)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cbordertype)).BeginInit();
             this.SuspendLayout();
             // 
             // kryptonPanel1
@@ -72,6 +72,79 @@
             this.kryptonPanel1.Name = "kryptonPanel1";
             this.kryptonPanel1.Size = new System.Drawing.Size(616, 57);
             this.kryptonPanel1.TabIndex = 1;
+            // 
+            // btnInsertTrade
+            // 
+            this.btnInsertTrade.Location = new System.Drawing.Point(544, 4);
+            this.btnInsertTrade.Name = "btnInsertTrade";
+            this.btnInsertTrade.Size = new System.Drawing.Size(66, 48);
+            this.btnInsertTrade.StateCommon.Content.ShortText.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnInsertTrade.TabIndex = 14;
+            this.btnInsertTrade.Values.Text = "插 入";
+            // 
+            // btnSell
+            // 
+            this.btnSell.Location = new System.Drawing.Point(472, 4);
+            this.btnSell.Name = "btnSell";
+            this.btnSell.Size = new System.Drawing.Size(66, 48);
+            this.btnSell.StateCommon.Content.ShortText.Color1 = System.Drawing.Color.LimeGreen;
+            this.btnSell.StateCommon.Content.ShortText.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnSell.TabIndex = 13;
+            this.btnSell.Values.Text = "买 出";
+            // 
+            // btnBuy
+            // 
+            this.btnBuy.Location = new System.Drawing.Point(400, 4);
+            this.btnBuy.Name = "btnBuy";
+            this.btnBuy.Size = new System.Drawing.Size(66, 48);
+            this.btnBuy.StateCommon.Content.ShortText.Color1 = System.Drawing.Color.Crimson;
+            this.btnBuy.StateCommon.Content.ShortText.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnBuy.TabIndex = 12;
+            this.btnBuy.Values.Text = "买 入";
+            // 
+            // price
+            // 
+            this.price.Location = new System.Drawing.Point(320, 32);
+            this.price.Maximum = new decimal(new int[] {
+            100000,
+            0,
+            0,
+            0});
+            this.price.Name = "price";
+            this.price.Size = new System.Drawing.Size(74, 20);
+            this.price.TabIndex = 11;
+            // 
+            // size
+            // 
+            this.size.Location = new System.Drawing.Point(320, 4);
+            this.size.Name = "size";
+            this.size.Size = new System.Drawing.Size(74, 20);
+            this.size.TabIndex = 10;
+            // 
+            // kryptonLabel7
+            // 
+            this.kryptonLabel7.Location = new System.Drawing.Point(281, 34);
+            this.kryptonLabel7.Name = "kryptonLabel7";
+            this.kryptonLabel7.Size = new System.Drawing.Size(41, 18);
+            this.kryptonLabel7.TabIndex = 9;
+            this.kryptonLabel7.Values.Text = "价格:";
+            // 
+            // kryptonLabel8
+            // 
+            this.kryptonLabel8.Location = new System.Drawing.Point(281, 7);
+            this.kryptonLabel8.Name = "kryptonLabel8";
+            this.kryptonLabel8.Size = new System.Drawing.Size(41, 18);
+            this.kryptonLabel8.TabIndex = 8;
+            this.kryptonLabel8.Values.Text = "数量:";
+            // 
+            // cboffsetflag
+            // 
+            this.cboffsetflag.DropDownWidth = 89;
+            this.cboffsetflag.Location = new System.Drawing.Point(159, 31);
+            this.cboffsetflag.Name = "cboffsetflag";
+            this.cboffsetflag.Size = new System.Drawing.Size(116, 21);
+            this.cboffsetflag.TabIndex = 7;
+            this.cboffsetflag.Text = "--";
             // 
             // cbordertype
             // 
@@ -132,74 +205,6 @@
             this.kryptonLabel1.TabIndex = 0;
             this.kryptonLabel1.Values.Text = "帐户:";
             // 
-            // cboffsetflag
-            // 
-            this.cboffsetflag.DropDownWidth = 89;
-            this.cboffsetflag.Location = new System.Drawing.Point(159, 31);
-            this.cboffsetflag.Name = "cboffsetflag";
-            this.cboffsetflag.Size = new System.Drawing.Size(116, 21);
-            this.cboffsetflag.TabIndex = 7;
-            this.cboffsetflag.Text = "--";
-            // 
-            // kryptonLabel7
-            // 
-            this.kryptonLabel7.Location = new System.Drawing.Point(281, 34);
-            this.kryptonLabel7.Name = "kryptonLabel7";
-            this.kryptonLabel7.Size = new System.Drawing.Size(41, 18);
-            this.kryptonLabel7.TabIndex = 9;
-            this.kryptonLabel7.Values.Text = "价格:";
-            // 
-            // kryptonLabel8
-            // 
-            this.kryptonLabel8.Location = new System.Drawing.Point(281, 7);
-            this.kryptonLabel8.Name = "kryptonLabel8";
-            this.kryptonLabel8.Size = new System.Drawing.Size(41, 18);
-            this.kryptonLabel8.TabIndex = 8;
-            this.kryptonLabel8.Values.Text = "数量:";
-            // 
-            // size
-            // 
-            this.size.Location = new System.Drawing.Point(320, 4);
-            this.size.Name = "size";
-            this.size.Size = new System.Drawing.Size(74, 20);
-            this.size.TabIndex = 10;
-            // 
-            // price
-            // 
-            this.price.Location = new System.Drawing.Point(320, 32);
-            this.price.Name = "price";
-            this.price.Size = new System.Drawing.Size(74, 20);
-            this.price.TabIndex = 11;
-            // 
-            // btnBuy
-            // 
-            this.btnBuy.Location = new System.Drawing.Point(400, 4);
-            this.btnBuy.Name = "btnBuy";
-            this.btnBuy.Size = new System.Drawing.Size(66, 48);
-            this.btnBuy.StateCommon.Content.ShortText.Color1 = System.Drawing.Color.Crimson;
-            this.btnBuy.StateCommon.Content.ShortText.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnBuy.TabIndex = 12;
-            this.btnBuy.Values.Text = "买 入";
-            // 
-            // btnSell
-            // 
-            this.btnSell.Location = new System.Drawing.Point(472, 4);
-            this.btnSell.Name = "btnSell";
-            this.btnSell.Size = new System.Drawing.Size(66, 48);
-            this.btnSell.StateCommon.Content.ShortText.Color1 = System.Drawing.Color.LimeGreen;
-            this.btnSell.StateCommon.Content.ShortText.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnSell.TabIndex = 13;
-            this.btnSell.Values.Text = "买 出";
-            // 
-            // btnInsertTrade
-            // 
-            this.btnInsertTrade.Location = new System.Drawing.Point(544, 4);
-            this.btnInsertTrade.Name = "btnInsertTrade";
-            this.btnInsertTrade.Size = new System.Drawing.Size(66, 48);
-            this.btnInsertTrade.StateCommon.Content.ShortText.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnInsertTrade.TabIndex = 14;
-            this.btnInsertTrade.Values.Text = "插 入";
-            // 
             // ctOrderSenderM
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -210,8 +215,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).EndInit();
             this.kryptonPanel1.ResumeLayout(false);
             this.kryptonPanel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.cbordertype)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cboffsetflag)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cbordertype)).EndInit();
             this.ResumeLayout(false);
 
         }

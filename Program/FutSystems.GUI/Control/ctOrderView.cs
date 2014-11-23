@@ -320,7 +320,7 @@ namespace FutSystems.GUI
             long oid = SelectedOrderID;
             if (oid == -1)
             {
-                MessageForm.Show("请选择要撤销的委托");
+                ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show("请选择要撤销的委托");
             }
             else
             {
@@ -331,7 +331,7 @@ namespace FutSystems.GUI
                 }
                 else
                 {
-                    MessageForm.Show("该委托无法撤销");
+                    ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show("该委托无法撤销");
                 }
             }
         }
@@ -355,7 +355,7 @@ namespace FutSystems.GUI
                 long oid = SelectedOrderID;
                 if (oid == -1)
                 {
-                    MessageForm.Show("请选择要撤销的委托");
+                    ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show("请选择要撤销的委托");
                 }
                 else
                 {
@@ -366,7 +366,7 @@ namespace FutSystems.GUI
                     }
                     else
                     {
-                        MessageForm.Show("该委托无法撤销");
+                        ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show("该委托无法撤销");
                     }
                 }
             }

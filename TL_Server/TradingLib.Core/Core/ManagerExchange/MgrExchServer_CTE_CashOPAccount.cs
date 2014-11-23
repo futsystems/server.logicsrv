@@ -24,10 +24,22 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryAccountCashOperationTotal", "QryAccountCashOperationTotal - query account pending cash operation", "查询所有交易帐户待处理委托")]
         public void CTE_QryAccountCashOperationTotal(ISession session)
         {
+            debug("查询交易帐户所有出入金请求记录", QSEnumDebugLevel.INFO);
             Manager manger = session.GetManager();
             if (manger != null)
             {
-                JsonWrapperCashOperation[] ops = ORM.MCashOpAccount.GetAccountLatestCashOperationTotal().ToArray();
+
+                JsonWrapperCashOperation[] ops = new JsonWrapperCashOperation[] { };
+                IEnumerable <JsonWrapperCashOperation>  list = ORM.MCashOpAccount.GetAccountLatestCashOperationTotal();
+                if (manger.RightRootDomain())
+                {
+                    ops = list.ToArray();
+                }
+                else //如果不是root则过滤 代理商只能看到有权限的交易帐号的出入金请求
+                { 
+                    ops = list.Where(op=>manger.RightAccessAccount(clearcentre[op.Account])).ToArray();
+                }
+                
                 session.SendJsonReplyMgr(ops);
             }
         }
@@ -129,6 +141,56 @@ namespace TradingLib.Core
             {
                 JsonWrapperCasnTrans[] trans = ORM.MCashOpAccount.SelectAccountCashTrans(account, start, end).ToArray();
                 session.SendJsonReplyMgr(trans);
+            }
+        }
+
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "RequestAccountCashOperation", "RequestAccountCashOperation -rquest deposit or withdraw", "请求交易帐户出入金操作", true)]
+        public void CTE_RequestAccountCashOperation(ISession session, string playload)
+        {
+            try
+            {
+                debug("管理员请求交易帐户出入金:" + playload, QSEnumDebugLevel.INFO);
+                Manager manger = session.GetManager();
+                if (manger != null)
+                {
+                    JsonWrapperCashOperation request = Mixins.LitJson.JsonMapper.ToObject<JsonWrapperCashOperation>(playload);
+                    if (request != null)
+                    {
+                        //request.mgr_fk = manger.mgr_fk;
+                        //检查请求的交易帐号
+                        if (string.IsNullOrEmpty(request.Account))
+                        {
+                            throw new FutsRspError("请设定交易帐号");
+                        }
+                        IAccount account = clearcentre[request.Account];
+                        if (account == null)
+                        {
+                            throw new FutsRspError(string.Format("交易帐号[{0}]不存在", request.Account));
+                        }
+                        if (!manger.RightAccessAccount(account))
+                        {
+                            throw new FutsRspError(string.Format("无权操作交易帐户[{0}]", request.Account));
+                        }
+
+                        request.DateTime = Util.ToTLDateTime();
+                        request.Ref = cashopref.AssignId.ToString();
+                        request.Source = QSEnumCashOPSource.Manual;
+                        request.Status = QSEnumCashInOutStatus.PENDING;
+
+                        ORM.MCashOpAccount.InsertAccountCashOperation(request);
+
+                        //通过事件中继触发事件
+                        TLCtxHelper.CashOperationEvent.FireCashOperation(this, QSEnumCashOpEventType.Request, request);
+
+                        session.OperationSuccess("提交交易帐户出入金成功");
+                    }
+                    //debug("update agent bank account: id:" + bankaccount.Bank.ID + " name:" + bankaccount.Bank.Name, QSEnumDebugLevel.INFO);
+                }
+            }
+            catch (FutsRspError ex)//捕获到FutsRspError则向管理端发送对应回报
+            {
+                session.OperationError(ex);
             }
         }
 

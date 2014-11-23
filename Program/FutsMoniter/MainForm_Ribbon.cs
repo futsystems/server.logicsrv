@@ -54,10 +54,12 @@ namespace FutsMoniter
             //财务管理
             kryptonRibbonGroupButton_FinanceManagement.Click += new EventHandler(kryptonRibbonGroupButton_FinanceManagement_Click);
             kryptonRibbonGroupButton_CasherManagement.Click += new EventHandler(kryptonRibbonGroupButton_CasherManagement_Click);
-
+            kryptonRibbonGroupButton_AccountCashreq.Click += new EventHandler(kryptonRibbonGroupButton_AccountCashreq_Click);
 
             kryptonRibbonGroupButton_payonline.Click += new EventHandler(kryptonRibbonGroupButton_payonline_Click);
         }
+
+
 
         void kryptonRibbonGroupButton_QuerySettleAccount_Click(object sender, EventArgs e)
         {
@@ -118,6 +120,13 @@ namespace FutsMoniter
             fmFinanceCentre fm = new fmFinanceCentre();
             fm.Show();
         }
+
+        void kryptonRibbonGroupButton_AccountCashreq_Click(object sender, EventArgs e)
+        {
+            fmAccountCashReq fm = new fmAccountCashReq();
+            fm.Show();
+        }
+
 
         #region 柜员管理
         void kryptonRibbonGroupButton_AgentCost_Click(object sender, EventArgs e)

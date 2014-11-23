@@ -43,8 +43,6 @@ namespace FutsMoniter
                 InitTable();
                 BindToTable();
 
-
-
                 menu.Items.Add("确认", Properties.Resources.editAccount, new EventHandler(Confirm_Click));
                 menu.Items.Add("拒绝", Properties.Resources.editAccount, new EventHandler(Reject_Click));
                 menu.Items.Add("取消", Properties.Resources.editAccount, new EventHandler(Cancel_Click));

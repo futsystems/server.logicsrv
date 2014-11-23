@@ -471,16 +471,15 @@ namespace FutSystems.GUI
                 return "{0:F" + p[1].ToCharArray().Length.ToString() + "}";
             
         }
+
         public static int getDecimalPlace(decimal pricetick)
         {
-            
             //1 0.2
             string[] p = pricetick.ToString().Split('.');
             if (p.Length <= 1)
                 return 0;
             else
                 return p[1].ToCharArray().Length;
-
         }
 
         public static void genListBoxServerAddress(ref ListBox lb,bool isdev=true,bool isreal=true)

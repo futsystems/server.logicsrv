@@ -43,6 +43,7 @@ namespace TradingLib.Core
         /// <returns></returns>
         public static bool RightAccessAccount(this Manager mgr, IAccount account)
         {
+            if (account == null) return false;
             if (mgr.RightRootDomain()) return true;
             //如果交易帐户直接属于该Manager的域 则有权限
             if (mgr.GetBaseMGR().Equals(account.Mgr_fk))

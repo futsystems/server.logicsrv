@@ -19,6 +19,18 @@ namespace TradingLib.Core
         }
 
 
+        /// <summary>
+        /// 查询收款银行列表
+        /// </summary>
+        /// <param name="session"></param>
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryReceiveableBank", "QryReceiveableBank - query QryReceiveableBank", "查询收款银行银行列表")]
+        public void CTE_QryReceiveableBank(ISession session)
+        {
+            JsonWrapperReceivableAccount[] splist = BasicTracker.ContractBankTracker.ReceivableAccounts.ToArray();
+            //BasicTracker.ContractBankTracker.ReceivableAccounts.Select(a => a.ToDrop()).ToList();
+            session.SendJsonReplyMgr(splist);
+        }
+
 
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryFinanceInfo", "QryFinanceInfo - query agent finance", "查询代理财务信息")]

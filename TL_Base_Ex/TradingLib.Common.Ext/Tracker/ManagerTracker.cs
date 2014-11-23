@@ -49,6 +49,7 @@ namespace TradingLib.Common
             //添加
             if (mgr.ID == 0)
             {
+                
                 ORM.MManager.InsertManager(mgr);
                 //添加到内存
                 managermap[mgr.Login] = mgr;
