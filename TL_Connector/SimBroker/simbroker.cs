@@ -615,7 +615,25 @@ namespace Broker.SIM
         }
 
 
-        
+        #region 成交接口交易数据
+        /// <summary>
+        /// 获得成交接口所有委托
+        /// </summary>
+        public IEnumerable<Order> Orders { get { return new List<Order>(); } }
+
+        /// <summary>
+        /// 获得成交接口所有成交
+        /// </summary>
+        public IEnumerable<Trade> Trades { get { return new List<Trade>(); } }
+
+        /// <summary>
+        /// 获得成交接口所有持仓
+        /// </summary>
+        public IEnumerable<Position> Positions { get { return new List<Position>(); } }
+
+
+        #endregion
+
 
 
 

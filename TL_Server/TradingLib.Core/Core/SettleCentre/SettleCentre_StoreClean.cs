@@ -75,7 +75,30 @@ namespace TradingLib.Core
                     }   
                 }
             }
-            debug(string.Format("Saved {0} PositionDetails Successfull",i),QSEnumDebugLevel.INFO);
+            debug(string.Format("Saved {0} Account PositionDetails Successfull",i),QSEnumDebugLevel.INFO);
+
+            i = 0;
+            //遍历所有成交接口
+            foreach (IBroker broker in TLCtxHelper.Ctx.RouterManager.Brokers)
+            {
+                //遍历成交接口有持仓的 持仓，将该持仓的持仓明细保存到数据库
+                foreach (Position pos in broker.Positions.Where(p => !p.isFlat))
+                {
+                    foreach (PositionDetail pd in pos.PositionDetailTotal.Where(pd => !pd.IsClosed()))
+                    {
+                        //保存结算持仓明细时要将结算日更新为当前
+                        pd.Settleday = TLCtxHelper.Ctx.SettleCentre.NextTradingday;
+                        //设定标识
+                        pd.Broker = broker.Token;
+                        pd.Breed = QSEnumOrderBreedType.BROKER;
+
+                        //保存持仓明细到数据库
+                        ORM.MSettlement.InsertPositionDetail(pd);
+                        i++;
+                    }   
+                }
+            }
+            debug(string.Format("Saved {0} Broker PositionDetails Successfull", i), QSEnumDebugLevel.INFO);
         }
 
         /// <summary>

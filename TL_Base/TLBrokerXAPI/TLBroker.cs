@@ -18,7 +18,24 @@ namespace TradingLib.BrokerXAPI
         TLBrokerProxy _broker;
         TLBrokerWrapperProxy _wrapper;
 
-        
+        #region 成交接口交易数据
+        /// <summary>
+        /// 获得成交接口所有委托
+        /// </summary>
+        public virtual IEnumerable<Order> Orders { get { return new List<Order>(); } }
+
+        /// <summary>
+        /// 获得成交接口所有成交
+        /// </summary>
+        public virtual IEnumerable<Trade> Trades { get { return new List<Trade>(); } }
+
+        /// <summary>
+        /// 获得成交接口所有持仓
+        /// </summary>
+        public virtual IEnumerable<Position> Positions { get { return new List<Position>(); } }
+
+
+        #endregion
 
 
         private bool _disposed;
