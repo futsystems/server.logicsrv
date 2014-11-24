@@ -92,10 +92,7 @@ namespace TradingLib.BrokerXAPI
             _notifythread.IsBackground = true;
             _notifythread.Start();
 
-
             //对外触发连接成功事件
-
-
         }
         public virtual void Stop()
         { 
@@ -105,7 +102,7 @@ namespace TradingLib.BrokerXAPI
         public bool IsLive { get { return _working; } }
 
 
-        #region 交易接口操作 下单 撤单
+        #region 交易接口操作 下单 撤单 与回报处理
 
         /// <summary>
         /// 通过成交接口提交委托
@@ -154,7 +151,10 @@ namespace TradingLib.BrokerXAPI
             
         }
 
-
+        /// <summary>
+        /// 处理接口返回的错误
+        /// </summary>
+        /// <param name="error"></param>
         public virtual void ProcessOrderError(ref XOrderError error)
         { 
             
@@ -227,9 +227,13 @@ namespace TradingLib.BrokerXAPI
         bool _working = false;
 
         ManualResetEvent _notifywaiting = new ManualResetEvent(false);
+
+        /// <summary>
+        /// 通知处理线程 有新的交易回报
+        /// </summary>
         void NewNotify()
         {
-            Util.Debug("notify wiaiting event ....", QSEnumDebugLevel.ERROR);
+            //Util.Debug("notify wiaiting event ....", QSEnumDebugLevel.ERROR);
             if ((_notifythread != null) && (_notifythread.ThreadState == System.Threading.ThreadState.WaitSleepJoin))
             {
                 _notifywaiting.Set();
@@ -245,7 +249,7 @@ namespace TradingLib.BrokerXAPI
                     //发送委托回报
                     while (_ordercache.hasItems)
                     {
-                        Util.Debug("process order in cache....", QSEnumDebugLevel.ERROR);
+                        //Util.Debug("process order in cache....", QSEnumDebugLevel.ERROR);
                         XOrderField order = _ordercache.Read();//获得委托数据
                         ProcessOrder(ref order);
                     }

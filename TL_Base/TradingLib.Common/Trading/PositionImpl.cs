@@ -185,6 +185,7 @@ namespace TradingLib.Common
             _closedpl = closedpl; 
             _acct = account;
             _directiontype = type;
+            
             if (!this.isValid) throw new Exception("Can't construct invalid position!"); 
         }
 
@@ -403,7 +404,6 @@ namespace TradingLib.Common
         /// </summary>
         public int CloseVolume { get { return _closevol ; } }
 
-
         #region 行情驱动部分
         bool _gotTick = false;
         /// <summary>
@@ -566,114 +566,6 @@ namespace TradingLib.Common
 
 
         #region 用Positon PositionDetail Trade更新当前持仓
-        // returns any closed PL calculated on position basis (not per share)
-        /// <summary>
-        /// 将新的仓位变化合并到当前仓位(Trade->Position)
-        /// </summary>
-        /// <param name="pos">The position adjustment to apply.</param>
-        /// <returns></returns>
-        //decimal Adjust(Position pos)
-        //{
-        //    //如果合约为空 则默认pos的合约
-        //    if ((_sym == "") && pos.isValid) _sym = pos.Symbol;
-        //    //合约不为空比较 当前持仓合约和adjusted pos的合约
-        //    if ((_sym!= pos.Symbol)) throw new Exception("Failed because adjustment symbol did not match position symbol");
-        //    //如果osymbol为空则取默认pos的osymbol
-        //    if (_osymbol == null)
-        //    {
-        //        if (!pos.Symbol.Equals(this.Symbol)) throw new Exception("Failed because osymbol and symbol do not match");
-        //        _osymbol = pos.oSymbol;
-        //    }
-
-        //    //帐户比较
-        //    if (_acct == "") _acct = pos.Account;
-        //    if (_acct != pos.Account) throw new Exception("Failed because adjustment account did not match position account.");
-            
-        //    if (!pos.isValid) throw new Exception("Invalid position adjustment, existing:" + this.ToString() + " adjustment:" + pos.ToString());
-        //    if (pos.isFlat) return 0; // nothing to do
-        //    bool oldside = isLong;
-        //    decimal pl = Calc.ClosePL(this,pos.ToTrade());//平仓盈亏
-        //    if (this.isFlat) this._price = pos.AvgPrice; // if we're leaving flat just copy price 原来空仓 现在开仓，则价格为当前仓位价
-        //    else if ((pos.isLong && this.isLong) || (!pos.isLong && !this.isLong)) // sides match, adding so adjust price,同方向加仓 则计算均价
-        //        this._price = ((this._price * this._size) + (pos.AvgPrice * pos.Size)) / (pos.Size+ this.Size);
-        //    this._size += pos.Size; // adjust the size//数量直接累加
-        //    if (oldside != isLong) _price = pos.AvgPrice; // this is for when broker allows flipping sides in one trade//原来的方向与现在的方向相反,(平仓后直接反向建仓),价格为新仓位均价格
-        //    if (this.isFlat)// if we're flat after adjusting, size price back to zero//如果是平仓操作 价格归0
-        //    {
-        //        _price = 0; 
-        //        //如果持仓为0 则重置最高 最低 仓位归0后,最高 最低也要归0,否则最高 最低参数会影响策略的运行
-        //        _highest = decimal.MinValue;
-        //        _lowest = decimal.MaxValue;
-        //    }
-        //    _closedpl += pl; // update running closed pl 传入合约数据,直接得到累计的平仓盈亏额
-        //    return pl;
-        //}
-
-        /// <summary>
-        /// 通过adjust调整持仓汇总的数量和价格
-        /// </summary>
-        /// <param name="adjust"></param>
-        /// <returns></returns>
-        //decimal Adjust(PositionAdjust adjust)
-        //{
-
-        //    //如果合约为空 则默认pos的合约
-        //    if ((_sym == "") && adjust.IsValid) _sym = adjust.Symbol;
-        //    //合约不为空比较 当前持仓合约和adjusted pos的合约
-        //    if ((_sym != adjust.Symbol)) throw new Exception("Failed because adjustment symbol did not match position symbol");
-        //    //如果osymbol为空则取默认pos的osymbol
-        //    if (_osymbol == null && adjust.oSymbol!=null)
-        //    {
-        //        if (!adjust.Symbol.Equals(this.Symbol)) throw new Exception("Failed because osymbol and symbol do not match");
-        //        _osymbol = adjust.oSymbol;
-        //    }
-
-        //    //帐户比较
-        //    if (_acct == "") _acct = adjust.Account;
-        //    if (_acct != adjust.Account) throw new Exception("Failed because adjustment account did not match position account.");
-
-        //    if (!adjust.IsValid) throw new Exception("Invalid position adjustment, existing:" + this.ToString() + " adjustment:" + adjust.ToString());
-
-        //    bool oldside = isLong;//保存当前持仓方向
-
-        //    //这里我们按照先开先平的原则返回对应持仓的平仓盈亏 或者按照综合均价来计算平仓盈亏
-        //    //decimal pl =//Calc.ClosePL(this, pos.ToTrade());//平仓盈亏
-
-        //    //计算价格
-        //    if (this.isFlat)
-        //    {
-        //        this._price = adjust.xPrice; //原来空仓 现在通过持仓调整开仓，则价格为当前持仓调整的价格
-        //    }
-        //    // 方向相同则为加仓 计算均价格
-        //    else if ((adjust.IsLong && this.isLong) || (adjust.IsShort && this.isShort))
-        //    {
-        //        this._price = ((this._price * this._size) + (adjust.xSize * adjust.xPrice)) / (adjust.xSize + this.Size);
-        //    }
-
-        //    //计算数量
-        //    this._size += adjust.xSize;
-
-        //    //持仓方向发生了变化
-        //    if (oldside != isLong)
-        //    {
-        //        _price = adjust.xPrice; // this is for when broker allows flipping sides in one trade//原来的方向与现在的方向相反,(平仓后直接反向建仓),价格为新仓位均价格
-        //    }
-
-        //    //如果持仓刚好平掉
-        //    if (this.isFlat)// if we're flat after adjusting, size price back to zero//如果是平仓操作 价格归0
-        //    {
-        //        _price = 0;
-        //        //如果持仓为0 则重置最高 最低 仓位归0后,最高 最低也要归0,否则最高 最低参数会影响策略的运行
-        //        _highest = decimal.MinValue;
-        //        _lowest = decimal.MaxValue;
-        //    }
-
-
-        //    _closedpl += adjust.ClosedPL; // update running closed pl 更新平仓盈亏
-        //    return adjust.ClosedPL;
-
-        //}
-
         /// <summary>
         /// Adjusts the position by applying a new trade or fill.
         /// 这里记录了日内所有成交,用成交更新持仓状态

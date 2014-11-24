@@ -33,11 +33,41 @@ namespace TradingLib.Common
         ThreadSafeList<Trade> _tradeTk = null;
 
         IBroker _broker = null;
+
+        #region 持仓创建事件和平仓明细事件
+        void NewPositionCloseDetail(PositionCloseDetail detail)
+        {
+            //在接口侧 数据暴露源头 设定平仓明细的Broker值 和 Breed类型
+            /* Broker和Breed字段只是用于数据区分,不涉及具体的业务逻辑关系
+             * 字段标注后方便从数据库加载到对应的对象中
+             * 
+             * **/
+            detail.Broker = _broker.Token;
+            detail.Breed = QSEnumOrderBreedType.BROKER;
+            if (NewPositionCloseDetailEvent != null)
+                NewPositionCloseDetailEvent(detail);
+        }
+        public event Action<PositionCloseDetail> NewPositionCloseDetailEvent;
+
+
+        void NewPosition(Position pos)
+        {
+            if (NewPositionEvent != null)
+                NewPositionEvent(pos);
+        }
+        public event Action<Position> NewPositionEvent;
+
+        #endregion
+
         public BrokerTracker(IBroker broker)
         {
             _broker = broker;
             _orderTk = new OrderTracker();
             _positionTk = new LSPositionTracker(broker.Token);
+            //对外触发持仓生成和平仓明细事件
+            _positionTk.NewPositionCloseDetailEvent += new Action<PositionCloseDetail>(NewPositionCloseDetail);
+            _positionTk.NewPositionEvent += new Action<Position>(NewPosition);
+
             _tradeTk = new ThreadSafeList<Trade>();
         }
 

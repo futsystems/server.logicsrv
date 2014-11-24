@@ -123,6 +123,19 @@ namespace TradingLib.API
         /// 品种代码
         /// </summary>
         string SecCode {get;set;}
-      
+
+        /// <summary>
+        /// 接口Token如果是接口侧的平仓明细则有BrokerToken字段
+        /// 分帐户侧没有Broker
+        /// </summary>
+        string Broker { get; set; }
+
+        /// <summary>
+        /// 数据来源
+        /// 1.分帐户侧
+        /// 2.接口侧
+        /// 3.路由侧
+        /// </summary>
+        QSEnumOrderBreedType Breed { get; set; }
     }
 }

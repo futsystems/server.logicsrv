@@ -198,12 +198,12 @@ namespace TradingLib.Core
             //6.委托价格检查
             //6.1查看数据通道是否有对应的合约价格
 
-            bool symlive = TLCtxHelper.Ctx.MessageExchange.IsSymbolTickLive(o.Symbol);
-            if (!symlive)
-            {
-                errortitle = "SYMBOL_TICK_ERROR";//市场旱情异常
-                return false;
-            }
+            //bool symlive = TLCtxHelper.Ctx.MessageExchange.IsSymbolTickLive(o.Symbol);
+            //if (!symlive)
+            //{
+            //    errortitle = "SYMBOL_TICK_ERROR";//市场旱情异常
+            //    return false;
+            //}
 
             //6.2检查价格是否在涨跌幅度内
             //if (o.isLimit || o.isStop)

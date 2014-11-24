@@ -59,18 +59,36 @@ namespace Broker.Live
         {
             base.InitBroker();
             tk = new BrokerTracker(this);
+            
             //_splittracker = 
             _splittracker = new OrderSplitTracker(this.Token);
+            
 
+            //委托分拆器发送子委托通过接口发送
             _splittracker.SendSonOrderEvent += new OrderDelegate(SendSonOrder);
+            //委托分拆器发送取消委托通过接口取消
             _splittracker.CancelSonOrderEvent += new OrderDelegate(CancelSonOrder);
+
+            //委托分拆器请求分拆委托,调用本地实现的分拆逻辑SplitOrder
             _splittracker.SplitOrdereEvent += new Func<Order, List<Order>>(SplitOrder);
 
+            //委托分拆器更新父委托 本地对外通知父委托更新
             _splittracker.GotFatherOrderEvent += new OrderDelegate(NotifyOrder);
             //_splittracker.GotFatherCancelEvent += 
+            //委托分拆器更新成交 本地对外通知成交更新
             _splittracker.GotFatherFillEvent += new FillDelegate(NotifyTrade);
+            //委托分拆器更新错误 本地对外通知错误更新
             _splittracker.GotFatherOrderErrorEvent += new OrderErrorDelegate(NotifyOrderError);
 
+        }
+
+        /// <summary>
+        /// 记录从Broker交易信息维护器产生的平仓明细
+        /// </summary>
+        /// <param name="obj"></param>
+        void tk_NewPositionCloseDetailEvent(PositionCloseDetail obj)
+        {
+            this.LogBrokerPositionClose(obj);
         }
 
         IdTracker _sonidtk = new IdTracker(2);
@@ -406,35 +424,95 @@ namespace Broker.Live
         }
         
 
-
+        /// <summary>
+        /// 恢复日内交易状态
+        /// 从数据库加载昨日持仓数据 和当日交易数据并填充到 成交接口维护器中 用于恢复日内交易状态
+        /// </summary>
         public override void OnResume()
         {
-            //try
-            //{
-            //    debug("从清算中心得到当天的委托数据并恢复到缓存中", QSEnumDebugLevel.INFO);
-            //    IEnumerable<Order> olist = ClearCentre.GetOrdersViaBroker(this.Token);
+            try
+            {
+                debug("Resume trading info from clearcentre....", QSEnumDebugLevel.INFO);
+                IEnumerable<Order> orderlist = ClearCentre.SelectBrokerOrders(this.Token);
+                IEnumerable<Trade> tradelist = ClearCentre.SelectBrokerTrades(this.Token);
+                IEnumerable<PositionDetail> positiondetaillist = ClearCentre.SelectBrokerPositionDetails(this.Token);
 
-            //    foreach (Order o in olist)
-            //    {
-            //        //平台ID编号
-            //        platformid_order_map.TryAdd(o.id, o);
-            //        //远端编号
-            //        if (!string.IsNullOrEmpty(o.BrokerRemoteOrderID))
-            //        {
-            //            remoteOrderID_map.TryAdd(o.BrokerRemoteOrderID, o);
-            //        }
-            //        //近端编号
-            //        if (!string.IsNullOrEmpty(o.BrokerLocalOrderID))
-            //        {
-            //            localOrderID_map.TryAdd(o.BrokerLocalOrderID, o);
-            //        }
-            //    }
-            //    debug(string.Format("load {0} orders form database.", olist.Count()), QSEnumDebugLevel.INFO);
-            //}
-            //catch (Exception ex)
-            //{
-            //    debug("Resotore error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
-            //}
+                //恢复隔夜持仓数据
+                foreach (PositionDetail pd in positiondetaillist)
+                {
+                    tk.GotPosition(pd);
+                }
+                debug(string.Format("Resumed {0} Positions", positiondetaillist.Count()), QSEnumDebugLevel.INFO);
+                //恢复日内委托
+                foreach (Order o in orderlist)
+                {
+                    if(!string.IsNullOrEmpty(o.BrokerLocalOrderID))//BrokerLocalOrderID不为空
+                    {
+                        if (!localOrderID_map.Keys.Contains(o.BrokerLocalOrderID))
+                        {
+                            localOrderID_map.TryAdd(o.BrokerLocalOrderID, o);
+                        }
+                        else
+                        {
+                            debug("Duplicate BrokerLocalOrderID,Order:" + o.GetOrderInfo(), QSEnumDebugLevel.WARNING);
+                        }
+                    }
+                    if (!string.IsNullOrEmpty(o.BrokerRemoteOrderID))//BrokerRemoteOrderID不为空
+                    {
+                        if (!remoteOrderID_map.Keys.Contains(o.BrokerRemoteOrderID))
+                        {
+                            remoteOrderID_map.TryAdd(o.BrokerRemoteOrderID, o);
+                        }
+                        else
+                        {
+                            debug("Duplicate BrokerRemoteOrderID,Order:" + o.GetOrderInfo(), QSEnumDebugLevel.WARNING);
+                        }
+                    }
+                    tk.GotOrder(o);
+
+                }
+                debug(string.Format("Resumed {0} Orders", orderlist.Count()),QSEnumDebugLevel.INFO);
+                //恢复日内成交
+                foreach (Trade t in tradelist)
+                {
+                    tk.GotFill(t);
+                }
+                debug(string.Format("Resumed {0} Trades", tradelist.Count()),QSEnumDebugLevel.INFO);
+                List<FatherSonOrderPair> pairs = GetOrderPairs(orderlist);
+                foreach(FatherSonOrderPair pair in pairs)
+                {
+                    _splittracker.ResumeOrder(pair);
+                }
+
+                //数据恢复完毕后再绑定平仓明细事件
+                tk.NewPositionCloseDetailEvent += new Action<PositionCloseDetail>(tk_NewPositionCloseDetailEvent);
+
+            }
+            catch (Exception ex)
+            { 
+                
+            }
+        }
+
+        List<FatherSonOrderPair> GetOrderPairs(IEnumerable<Order> sonOrders)
+        {
+            Dictionary<long, FatherSonOrderPair> pairmap = new Dictionary<long, FatherSonOrderPair>();
+            foreach (Order o in sonOrders)
+            {
+                Order father = ClearCentre.SentOrder(o.FatherID);
+                //如果存在父委托
+                if (father != null)
+                {
+                    //如果不存在该父委托 则增加
+                    if (!pairmap.Keys.Contains(father.id))
+                    {
+                        pairmap[father.id] = new FatherSonOrderPair(father);
+                    }
+                    //将子委托加入到列表
+                    pairmap[father.id].SonOrders.Add(o);
+                }
+            }
+            return pairmap.Values.ToList();
         }
 
 
@@ -483,9 +561,20 @@ namespace Broker.Live
         }
 
 
+
+        public override void GotTick(Tick k)
+        {
+            base.GotTick(k);
+            if (this.IsLive)
+            {
+                //行情驱动brokertracker用于更新成交侧持仓
+                tk.GotTick(k);
+            }
+        }
         /// <summary>
         /// 发送子委托
         /// 委托状态要么是Submited,要么是reject
+        /// 如果底层发单异常,则返回的localid为空 以该字段是否为空来判断底层是否发单异常
         /// </summary>
         /// <param name="o"></param>
         void SendSonOrder(Order o)
@@ -538,7 +627,7 @@ namespace Broker.Live
             }
 
             //对外输出分解的子委托,用于记录到数据库
-            this.NewSonOrder(o);
+            this.LogBrokerOrder(o);
         }
 
         void CancelSonOrder(Order o)
@@ -587,14 +676,14 @@ namespace Broker.Live
                     //如果不存在该委托则加入该委托
                     if (!remoteOrderID_map.Keys.Contains(order.BrokerRemoteOrderID))
                     {
-                        Util.Debug(string.Format("OrderRemoteID:{0},put into map",order.BrokerRemoteOrderID),QSEnumDebugLevel.INFO);
+                        //Util.Debug(string.Format("OrderRemoteID:{0},put into map",order.BrokerRemoteOrderID),QSEnumDebugLevel.INFO);
                         remoteOrderID_map.TryAdd(order.BrokerRemoteOrderID, o);
                     }
 
                 }
                 Util.Debug("更新子委托:" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
                 tk.GotOrder(o);
-                this.NewSonOrderUpdate(o);
+                this.LogBrokerOrderUpdate(o);
 
 
                 //如果子委托是submited则不用更新组合状态
@@ -610,11 +699,10 @@ namespace Broker.Live
             //CTP接口的成交通过远端编号与委托进行关联
             Order o = RemoteID2Order(trade.BrokerRemoteOrderID);
             //
-            Util.Debug("trade info,localid:" + trade.BrokerLocalOrderID + " remoteid:" + trade.BrokerRemoteOrderID, QSEnumDebugLevel.INFO);
+            //Util.Debug("trade info,localid:" + trade.BrokerLocalOrderID + " remoteid:" + trade.BrokerRemoteOrderID, QSEnumDebugLevel.INFO);
             if (o != null)
             {
-                Util.Debug("该成交是本地委托所属成交,进行回报处理", QSEnumDebugLevel.WARNING);
-
+                //Util.Debug("该成交是本地委托所属成交,进行回报处理", QSEnumDebugLevel.WARNING);
                 //子委托对应的成交
                 Trade sonfill = (Trade)(new OrderImpl(o));
                 //设定价格 数量 以及日期信息
@@ -623,11 +711,13 @@ namespace Broker.Live
 
                 sonfill.xDate = trade.Date;
                 sonfill.xTime = trade.Time;
-                //远端成交编号
+                //远端成交编号 在成交侧 需要将该字读填入TradeID 成交明细以TradeID来标识成交记录
                 sonfill.BrokerTradeID = trade.BrokerTradeID;
+                sonfill.TradeID = trade.BrokerTradeID;
+
                 Util.Debug("获得子成交:" + sonfill.GetTradeDetail(), QSEnumDebugLevel.INFO);
                 tk.GotFill(sonfill);
-                this.NewSonTrade(sonfill);
+                this.LogBrokerTrade(sonfill);
 
                 _splittracker.GotSonFill(sonfill);
             }

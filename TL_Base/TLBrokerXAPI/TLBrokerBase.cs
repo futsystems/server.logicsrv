@@ -122,26 +122,35 @@ namespace TradingLib.BrokerXAPI
 
         #endregion
 
-        #region 成交侧委托记录
-        public event OrderDelegate NewSonOrderEvent;
-        protected void NewSonOrder(Order o)
+        #region 成交侧 交易记录通过事件向外暴露 然后异步更新到数据库
+        public event OrderDelegate NewBrokerOrderEvent;
+        protected void LogBrokerOrder(Order o)
         {
-            if (NewSonOrderEvent != null)
-                NewSonOrderEvent(o);
+            if (NewBrokerOrderEvent != null)
+                NewBrokerOrderEvent(o);
         }
-        public event OrderDelegate NewSonOrderUpdateEvent;
-        protected void NewSonOrderUpdate(Order o)
+        public event OrderDelegate NewBrokerOrderUpdateEvent;
+        protected void LogBrokerOrderUpdate(Order o)
         {
-            if (NewSonOrderUpdateEvent != null)
-                NewSonOrderUpdateEvent(o);
+            if (NewBrokerOrderUpdateEvent != null)
+                NewBrokerOrderUpdateEvent(o);
             
         }
-        public event FillDelegate NewSonFillEvent;
-        protected void NewSonTrade(Trade fill)
+        public event FillDelegate NewBrokerFillEvent;
+        protected void LogBrokerTrade(Trade fill)
         {
-            if (NewSonFillEvent != null)
-                NewSonFillEvent(fill);
+            if (NewBrokerFillEvent != null)
+                NewBrokerFillEvent(fill);
         }
+
+        public event Action<PositionCloseDetail> NewBrokerPositionCloseDetailEvent;
+        protected void LogBrokerPositionClose(PositionCloseDetail detail)
+        {
+            if (NewBrokerPositionCloseDetailEvent != null)
+                NewBrokerPositionCloseDetailEvent(detail);
+        }
+        
+
         #endregion
 
 

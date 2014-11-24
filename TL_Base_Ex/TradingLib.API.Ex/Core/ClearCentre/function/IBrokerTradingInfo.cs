@@ -18,5 +18,27 @@ namespace TradingLib.API
         /// <returns></returns>
         IList<Order> getOrders(IBroker broker);
 
+        /// <summary>
+        /// 获得日内成交接口的所有委托
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        IEnumerable<Order> SelectBrokerOrders(string token);
+
+
+        /// <summary>
+        /// 获得日内成交接口的所有成交
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        IEnumerable<Trade> SelectBrokerTrades(string token);
+
+        /// <summary>
+        /// 获得成交接口上个结算日所有持仓数据
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        IEnumerable<PositionDetail> SelectBrokerPositionDetails(string token);
+
     }
 }

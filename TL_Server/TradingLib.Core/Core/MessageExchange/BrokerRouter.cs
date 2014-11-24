@@ -150,26 +150,34 @@ namespace TradingLib.Core
             if (broker is TLBrokerBase)
             {
                 TLBrokerBase brokerbase = broker as TLBrokerBase;
-                brokerbase.NewSonOrderEvent += new OrderDelegate(brokerbase_NewSonOrderEvent);
-                brokerbase.NewSonOrderUpdateEvent += new OrderDelegate(brokerbase_NewSonOrderUpdateEvent);
-                brokerbase.NewSonFillEvent += new FillDelegate(brokerbase_NewSonFillEvent);
+                brokerbase.NewBrokerOrderEvent += new OrderDelegate(brokerbase_NewBrokerOrderEvent);
+                brokerbase.NewBrokerOrderUpdateEvent += new OrderDelegate(brokerbase_NewBrokerOrderUpdateEvent);
+                brokerbase.NewBrokerFillEvent += new FillDelegate(brokerbase_NewBrokerFillEvent);
+                brokerbase.NewBrokerPositionCloseDetailEvent += new Action<PositionCloseDetail>(brokerbase_NewBrokerPositionCloseDetailEvent);
             }
         }
 
-        #region 保存从成交侧返回的子委托
-        void brokerbase_NewSonFillEvent(Trade t)
+        
+
+        #region 保存从成交侧返回的成交信息
+        void brokerbase_NewBrokerPositionCloseDetailEvent(PositionCloseDetail obj)
         {
-            _clearCentre.LogTrade(t);
+            _clearCentre.LogBrokerPositionCloseDetail(obj);
         }
 
-        void brokerbase_NewSonOrderUpdateEvent(Order o)
+        void brokerbase_NewBrokerFillEvent(Trade t)
         {
-            _clearCentre.LogOrderUpdate(o);
+            _clearCentre.LogBrokerTrade(t);
         }
 
-        void brokerbase_NewSonOrderEvent(Order o)
+        void brokerbase_NewBrokerOrderUpdateEvent(Order o)
         {
-            _clearCentre.LogOrder(o);
+            _clearCentre.LogBrokerOrderUpdate(o);
+        }
+
+        void brokerbase_NewBrokerOrderEvent(Order o)
+        {
+            _clearCentre.LogBrokerOrder(o);
         }
         #endregion
 

@@ -10,7 +10,18 @@ using TradingLib.Common;
 
 namespace TradingLib.Common
 {
-    
+
+    public class FatherSonOrderPair
+    {
+        public FatherSonOrderPair(Order father)
+        {
+            this.FatherOrder = father;
+            this.SonOrders = new List<Order>();
+        }
+        public Order FatherOrder { get; set; }
+
+        public List<Order> SonOrders { get; set; }
+    }
     /// <summary>
     /// 委托分拆管理器
     /// 用于将某个委托分拆成多个委托然后对外处理
@@ -64,6 +75,21 @@ namespace TradingLib.Common
             if (sonFathOrder_Map.Keys.Contains(id))
                 return sonFathOrder_Map[id];
             return null;
+        }
+
+        /// <summary>
+        /// 恢复父子委托关系
+        /// </summary>
+        /// <param name="father"></param>
+        /// <param name="sonOrders"></param>
+        public void ResumeOrder(FatherSonOrderPair pair)
+        {
+            fatherOrder_Map.TryAdd(pair.FatherOrder.id, pair.FatherOrder);
+            fatherSonOrder_Map.TryAdd(pair.FatherOrder.id, pair.SonOrders);
+            foreach(Order o in pair.SonOrders)
+            {
+                sonFathOrder_Map.TryAdd(o.id, pair.FatherOrder);
+            }
         }
 
         #region 对外发送子委托操作

@@ -38,7 +38,13 @@ namespace TradingLib.Common
             this.CloseTradeID = f.TradeID;
             this.ClosePrice = f.xPrice;
             this.CloseVolume = closesize; 
+
+            //this.Broker=
         }
+
+        /// <summary>
+        /// 默认构造函数
+        /// </summary>
         public PositionCloseDetailImpl()
         {
             this.Account = string.Empty;
@@ -67,6 +73,9 @@ namespace TradingLib.Common
             this.Exchange = string.Empty;
             this.Symbol = string.Empty;
             this.SecCode = string.Empty;
+
+            this.Broker = string.Empty;//默认broker为空
+            this.Breed = QSEnumOrderBreedType.ACCT;//默认为分帐户侧
         }
 
         /// <summary>
@@ -291,5 +300,20 @@ namespace TradingLib.Common
                 _seccode = value;
             }
         }
+
+
+        /// <summary>
+        /// 接口Token如果是接口侧的平仓明细则有BrokerToken字段
+        /// 分帐户侧没有Broker
+        /// </summary>
+        public string Broker { get; set; }
+
+        /// <summary>
+        /// 数据来源
+        /// 1.分帐户侧
+        /// 2.接口侧
+        /// 3.路由侧
+        /// </summary>
+        public QSEnumOrderBreedType Breed { get; set; }
     }
 }

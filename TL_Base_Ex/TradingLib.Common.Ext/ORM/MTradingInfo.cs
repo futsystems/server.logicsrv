@@ -159,20 +159,31 @@ namespace TradingLib.ORM
         }
 
         /// <summary>
+        /// 恢复日内Broker侧委托数据
+        /// </summary>
+        /// <returns></returns>
+        public static IList<Order> SelectBrokerOrders()
+        {
+            int settleday = TLCtxHelper.Ctx.SettleCentre.NextTradingday;
+            return SelectOrders(settleday, settleday,QSEnumOrderBreedType.BROKER);
+        }
+
+
+        /// <summary>
         /// 搜索某个结算时间段的委托记录
         /// </summary>
         /// <param name="begin"></param>
         /// <param name="end"></param>
         /// <returns></returns>
-        public static IList<Order> SelectOrders(int begin, int end)
+        public static IList<Order> SelectOrders(int begin, int end,QSEnumOrderBreedType breed= QSEnumOrderBreedType.ACCT)
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("SELECT * FROM  {0}  WHERE settleday >='{1}' AND settleday <='{2}'", "tmp_orders", begin, end);
+                string query = string.Format("SELECT * FROM  {0}  WHERE settleday >='{1}' AND settleday <='{2}' AND breed='{3}'", "tmp_orders", begin, end, breed);
                 //Util.Debug(query);
                 List<Order> orders = db.Connection.Query<OrderImpl>(query).ToList<Order>();
 
-                string query2 = string.Format("SELECT * FROM  {0}  WHERE settleday >='{1}' AND settleday <='{2}'", "log_orders", begin, end);
+                string query2 = string.Format("SELECT * FROM  {0}  WHERE settleday >='{1}' AND settleday <='{2}' AND breed='{3}'", "log_orders", begin, end, breed);
                 //Util.Debug(query);
                 List<Order> orders2 = db.Connection.Query<OrderImpl>(query2).ToList<Order>();
                 
@@ -201,6 +212,8 @@ namespace TradingLib.ORM
                 return orders2;
             }
         }
+
+
         /// <summary>
         /// 插入成交数据
         /// </summary>
@@ -228,19 +241,29 @@ namespace TradingLib.ORM
         }
 
         /// <summary>
+        /// 获得最近结算日的所有成交侧 成交数据
+        /// </summary>
+        /// <returns></returns>
+        public static IList<Trade> SelectBrokerTrades()
+        {
+            int settleday = TLCtxHelper.Ctx.SettleCentre.NextTradingday;
+            return SelectTrades(settleday, settleday,QSEnumOrderBreedType.BROKER);
+        }
+
+        /// <summary>
         /// 搜索某个时间段的委托记录
         /// </summary>
         /// <param name="begin"></param>
         /// <param name="end"></param>
         /// <returns></returns>
-        public static IList<Trade> SelectTrades(int begin, int end)
+        public static IList<Trade> SelectTrades(int begin, int end,QSEnumOrderBreedType breed= QSEnumOrderBreedType.ACCT)
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("SELECT * FROM  {0}  WHERE settleday >='{1}' AND settleday <='{2}'", "tmp_trades", begin, end);
+                string query = string.Format("SELECT * FROM  {0}  WHERE settleday >='{1}' AND settleday <='{2}' AND breed='{3}'", "tmp_trades", begin, end, breed);
                 List<Trade> trades = db.Connection.Query<TradeImpl>(query).ToList<Trade>();
 
-                string query2 = string.Format("SELECT * FROM  {0}  WHERE settleday >='{1}' AND settleday <='{2}'", "log_trades", begin, end);
+                string query2 = string.Format("SELECT * FROM  {0}  WHERE settleday >='{1}' AND settleday <='{2}' AND breed='{3}'", "log_trades", begin, end, breed);
                 List<Trade> trades2 = db.Connection.Query<TradeImpl>(query2).ToList<Trade>();
 
                 trades.AddRange(trades2);
