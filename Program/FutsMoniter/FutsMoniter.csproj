@@ -274,6 +274,18 @@
     <Compile Include="Forms\fmAgentPermission.Designer.cs">
       <DependentUpon>fmAgentPermission.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\fmConnectorCfg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\fmConnectorCfg.Designer.cs">
+      <DependentUpon>fmConnectorCfg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\fmConnectorEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\fmConnectorEdit.Designer.cs">
+      <DependentUpon>fmConnectorEdit.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\fmHistQueryCashTrans.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -627,6 +639,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\fmAgentPermission.resx">
       <DependentUpon>fmAgentPermission.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\fmConnectorCfg.resx">
+      <DependentUpon>fmConnectorCfg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\fmConnectorEdit.resx">
+      <DependentUpon>fmConnectorEdit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\fmHistQueryCashTrans.resx">
       <DependentUpon>fmHistQueryCashTrans.cs</DependentUpon>

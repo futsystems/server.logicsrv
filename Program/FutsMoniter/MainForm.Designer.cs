@@ -43,6 +43,7 @@
             this.kryptonRibbonGroup2 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroup();
             this.kryptonRibbonGroupTriple2 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupTriple();
             this.kryptonRibbonGroupButton_RouterList = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
+            this.kryptonRibbonGroupButton_interfacelist = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
             this.kryptonRibbonGroup3 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroup();
             this.kryptonRibbonGroupTriple3 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupTriple();
             this.kryptonRibbonGroupButton_SystemStatus = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
@@ -90,7 +91,7 @@
             this.kryptonRibbonGroupButton1 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
             this.popmessage = new System.Windows.Forms.ToolTip(this.components);
             this.ctAccountMontier1 = new FutsMoniter.Controls.ctAccountMontier();
-            this.kryptonRibbonGroupButton_interfacelist = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
+            this.kryptonRibbonGroupButton_connectorlist = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
             ((System.ComponentModel.ISupportInitialize)(this.TabRibbon)).BeginInit();
             this.SuspendLayout();
             // 
@@ -119,7 +120,6 @@
             this.tabAgent,
             this.tabFinance,
             this.tabHistQuery});
-            this.TabRibbon.SelectedContext = null;
             this.TabRibbon.SelectedTab = this.tabSystem;
             this.TabRibbon.Size = new System.Drawing.Size(1284, 111);
             this.TabRibbon.TabIndex = 0;
@@ -181,12 +181,17 @@
             // 
             this.kryptonRibbonGroupTriple2.Items.AddRange(new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupItem[] {
             this.kryptonRibbonGroupButton_RouterList,
-            this.kryptonRibbonGroupButton_interfacelist});
+            this.kryptonRibbonGroupButton_interfacelist,
+            this.kryptonRibbonGroupButton_connectorlist});
             // 
             // kryptonRibbonGroupButton_RouterList
             // 
             this.kryptonRibbonGroupButton_RouterList.ImageLarge = ((System.Drawing.Image)(resources.GetObject("kryptonRibbonGroupButton_RouterList.ImageLarge")));
             this.kryptonRibbonGroupButton_RouterList.TextLine1 = "路由列表";
+            // 
+            // kryptonRibbonGroupButton_interfacelist
+            // 
+            this.kryptonRibbonGroupButton_interfacelist.TextLine1 = "接口管理";
             // 
             // kryptonRibbonGroup3
             // 
@@ -457,9 +462,9 @@
             this.ctAccountMontier1.Size = new System.Drawing.Size(1284, 582);
             this.ctAccountMontier1.TabIndex = 2;
             // 
-            // kryptonRibbonGroupButton_interfacelist
+            // kryptonRibbonGroupButton_connectorlist
             // 
-            this.kryptonRibbonGroupButton_interfacelist.TextLine1 = "接口管理";
+            this.kryptonRibbonGroupButton_connectorlist.TextLine1 = "通道管理";
             // 
             // MainForm
             // 
@@ -543,6 +548,7 @@
         private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton_PermissionTemplate;
         private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton_AccountCashreq;
         private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton_interfacelist;
+        private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton_connectorlist;
 
     }
 }

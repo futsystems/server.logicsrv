@@ -29,20 +29,50 @@ namespace FutsMoniter
 
         void fmInterface_Load(object sender, EventArgs e)
         {
-            Globals.RegIEventHandler(this);
+            WireEvent();
+            Factory.IDataSourceFactory(interfaceType).BindDataSource(UIUtil.genEnumList<QSEnumConnectorType>());
             Globals.TLClient.ReqQryInterface();
         }
 
+        void WireEvent()
+        {
+            Globals.RegIEventHandler(this);
+            interfacegrid.RowPrePaint += new DataGridViewRowPrePaintEventHandler(grid_RowPrePaint);
+            interfacegrid.DoubleClick += new EventHandler(interfacegrid_DoubleClick);
+            isxapi.CheckedChanged += new EventHandler(isxapi_CheckedChanged);
+            btnUpdate.Click += new EventHandler(btnUpdate_Click);
+        }
+
+        void btnUpdate_Click(object sender, EventArgs e)
+        {
+            ConnectorInterface itface = new ConnectorInterface();
+            itface.ID = int.Parse(id.Text);
+            itface.IsXAPI = isxapi.Checked;
+            itface.libname_broker = broker_name.Text;
+            itface.libpath_broker = broker_path.Text;
+            itface.libname_wrapper = wrapper_name.Text;
+            itface.libpath_wrapper = wrapper_path.Text;
+            itface.Name = name.Text;
+            itface.Type = (QSEnumConnectorType)interfaceType.SelectedValue;
+            itface.type_name = typename.Text;
+
+            Globals.TLClient.ReqUpdateInterface(TradingLib.Mixins.LitJson.JsonMapper.ToJson(itface));
+        }
+
+        
+
+        
+
         public void OnInit()
         {
-            Globals.CallBackCentre.RegisterCallback("ConnectorManager", "QryAccountCashOperationTotal", this.OnQryInterface);//查询交易帐户出入金请求
+            Globals.CallBackCentre.RegisterCallback("ConnectorManager", "QryInterface", this.OnQryInterface);//查询交易帐户出入金请求
             //Globals.CallBackCentre.RegisterCallback("MgrExchServer", "NotifyCashOperation", this.OnNotifyCashOperation);
 
         }
 
         public void OnDisposed()
         {
-            Globals.CallBackCentre.UnRegisterCallback("ConnectorManager", "QryAccountCashOperationTotal", this.OnQryInterface);//查询交易帐户出入金请求
+            Globals.CallBackCentre.UnRegisterCallback("ConnectorManager", "QryInterface", this.OnQryInterface);//查询交易帐户出入金请求
             //Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "NotifyCashOperation", this.OnNotifyCashOperation);
 
         }
@@ -53,16 +83,37 @@ namespace FutsMoniter
             int code = int.Parse(jd["Code"].ToString());
             if (code == 0)
             {
-                ConnectorInterface[] objs =TradingLib.Mixins.JsonReply.ParsePlayload<ConnectorInterface[]>(jd["Playload"].ToJson());
+                ConnectorInterface[] objs =TradingLib.Mixins.JsonReply.ParsePlayload<ConnectorInterface[]>(jd);
                 foreach (ConnectorInterface op in objs)
                 {
-                    //ctCashOperationAccount.GotJsonWrapperCashOperation(op);
                     InvokeGotInterface(op);
                 }
             }
             else//如果没有配资服
             {
 
+            }
+        }
+
+        //得到当前选择的行号
+        private ConnectorInterface CurrentInterface
+        {
+            get
+            {
+                int row = interfacegrid.SelectedRows.Count > 0 ? interfacegrid.SelectedRows[0].Index : -1;
+                if (row >= 0)
+                {
+                    int id= int.Parse(interfacegrid[0, row].Value.ToString());
+
+                    if (interfacemap.Keys.Contains(id))
+                        return interfacemap[id];
+                    else
+                        return null;
+                }
+                else
+                {
+                    return null;
+                }
             }
         }
 
@@ -118,6 +169,33 @@ namespace FutsMoniter
             }
         }
 
+        void grid_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        {
+            e.PaintParts = e.PaintParts ^ DataGridViewPaintParts.Focus;
+        }
+
+        void interfacegrid_DoubleClick(object sender, EventArgs e)
+        {
+            ConnectorInterface itface = CurrentInterface;
+            if (itface != null)
+            {
+                id.Text = itface.ID.ToString();
+                name.Text = itface.Name;
+                typename.Text = itface.type_name;
+                isxapi.Checked = itface.IsXAPI;
+                wrapper_path.Text = itface.libpath_wrapper;
+                wrapper_name.Text = itface.libname_wrapper;
+                broker_path.Text = itface.libpath_broker;
+                broker_name.Text = itface.libname_broker;
+            }
+        }
+        void isxapi_CheckedChanged(object sender, EventArgs e)
+        {
+            wrapper_name.Enabled = isxapi.Checked;
+            wrapper_path.Enabled = isxapi.Checked;
+            broker_name.Enabled = isxapi.Checked;
+            broker_path.Enabled = isxapi.Checked;
+        }
 
         #region 表格
         #region 显示字段
@@ -186,6 +264,10 @@ namespace FutsMoniter
             datasource.DataSource = gt;
             grid.DataSource = datasource;
 
+            grid.Columns[ID].Width = 50;
+            grid.Columns[NAME].Width = 120;
+            grid.Columns[ISXAPI].Width =50;
+            grid.Columns[TYPE].Width = 50;
             /*
             datasource.Sort = ACCOUNT + " ASC";
             

@@ -22,6 +22,27 @@ namespace TradingLib.ServiceManager
             _defaultinstance = new ConnectorConfigTracker();
         }
 
+        public void UpdateInterface(ConnectorInterface itface)
+        {
+            ConnectorInterface target = null;
+            if (interfacemap.TryGetValue(itface.ID, out target))
+            {
+                //更新
+                target.IsXAPI = itface.IsXAPI;
+                target.libname_broker = itface.libname_broker;
+                target.libname_wrapper = itface.libname_wrapper;
+                target.libpath_broker = itface.libpath_broker;
+                target.libpath_wrapper = itface.libpath_wrapper;
+                target.Name = itface.Name;
+                target.Type = itface.Type;
+                target.type_name = itface.type_name;
+
+            }
+            else
+            { 
+            
+            }
+        }
 
         private ConnectorConfigTracker()
         {
@@ -117,6 +138,13 @@ namespace TradingLib.ServiceManager
             }
         }
 
+        public static IEnumerable<ConnectorConfig> ConnecotrConfigs
+        {
+            get
+            {
+                return _defaultinstance.configidxmap.Values;
+            }
+        }
         /// <summary>
         /// 返回所有接口
         /// </summary>

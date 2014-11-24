@@ -62,7 +62,7 @@ namespace TradingLib.BrokerXAPI
         }
 
 
-        int _waitnum = 100;
+        int _waitnum = 10;
         /// <summary>
         /// 启动接口
         /// 启动接口时,同时进行非托管资源的创建 也就是每次启动时都是新的接口实例
@@ -99,7 +99,7 @@ namespace TradingLib.BrokerXAPI
                 debug("登入失败,请检查配置信息", QSEnumDebugLevel.WARNING);
                 return;
             }
-            debug("接口:" + this.Token + "登入成功,可以接受交易请求", QSEnumDebugLevel.MUST);
+            debug("接口:" + this.Token + "登入成功,可以接受交易请求", QSEnumDebugLevel.INFO);
 
             //恢复该接口日内交易数据
             OnResume();
