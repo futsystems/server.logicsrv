@@ -77,6 +77,16 @@ namespace TradingLib.Common
             return null;
         }
 
+
+        /// <summary>
+        /// 清空内存状态
+        /// </summary>
+        public void Clear()
+        {
+            fatherOrder_Map.Clear();
+            fatherSonOrder_Map.Clear();
+            sonFathOrder_Map.Clear();
+        }
         /// <summary>
         /// 恢复父子委托关系
         /// </summary>

@@ -5,6 +5,7 @@ using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.LitJson;
+using TradingLib.Core;
 
 namespace TradingLib.ServiceManager
 {
@@ -45,7 +46,18 @@ namespace TradingLib.ServiceManager
         }
 
 
-
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryInterface", "QryInterface - query interface setted in system", "查询所有接口设置")]
+        public void QueryInterface(ISession session)
+        {
+            debug("查询所有接口设置", QSEnumDebugLevel.INFO);
+            //查询所有代理出入金记录
+            Manager manger = session.GetManager();
+            if (manger != null)
+            {
+                ConnectorInterface[] ops = ConnectorConfigTracker.Interfaces.ToArray();
+                session.SendJsonReplyMgr(ops);
+            }
+        }
 
         [ContribCommandAttr(QSEnumCommandSource.CLI, "startbroker", "startbroker - 启动某个成交通道", "启动某个成交通道")]
         [ContribCommandAttr(QSEnumCommandSource.MessageWeb, "startbroker", "startbroker - 启动某个成交通道", "用于Web端停止某个某个交易通道")]

@@ -50,22 +50,23 @@ namespace TradingLib.BrokerXAPI
         {
             if (!_disposed)
             {
-                _broker.Dispose();
-                _wrapper.Dispose();
+                //_broker.Dispose();
+                //_wrapper.Dispose();
+                if (_working)
+                {
+                    Stop();
+                }
             }
 
             _disposed = true;
         }
 
 
-
-
-
-
-
-        
-
         int _waitnum = 100;
+        /// <summary>
+        /// 启动接口
+        /// 启动接口时,同时进行非托管资源的创建 也就是每次启动时都是新的接口实例
+        /// </summary>
         public virtual void Start()
         {
             debug("Try to start broker:" + this.Token, QSEnumDebugLevel.INFO);
@@ -111,15 +112,63 @@ namespace TradingLib.BrokerXAPI
 
             //对外触发连接成功事件
         }
+
         public virtual void Stop()
-        { 
-            
+        {
+            if (!this.IsLive) return;
+            _working = false;
+            //停止消息发送线程
+            Util.WaitThreadStop(_notifythread);
+
+            //断开底层接口连接
+            _wrapper.Disconnect();
+            _wrapper.Dispose();
+            _broker.Dispose();
+
+            _wrapper = null;
+            _broker = null;
+            _connected = false;
+            _loginreply = false;
+            _loginsuccess = false;
+
+            this.DestoryBroker();
         }
 
         public bool IsLive { get { return _working; } }
 
+        #region 交易接口生成与销毁
+        public virtual void InitBroker()
+        {
+            //1.初始化非托管接口对象
+            Util.Debug("WrapperFileName:" + Path.Combine(new string[] { _cfg.Interface.libpath_wrapper, _cfg.Interface.libname_wrapper }));
+            Util.Debug("BrokerFileName:" + Path.Combine(new string[] { _cfg.Interface.libpath_broker, _cfg.Interface.libname_broker }));
+            _wrapper = new TLBrokerWrapperProxy(_cfg.Interface.libpath_wrapper, _cfg.Interface.libname_wrapper);
+            _broker = new TLBrokerProxy(_cfg.Interface.libpath_broker, _cfg.Interface.libname_broker);
 
-        #region 交易接口操作 下单 撤单 与回报处理
+            //2.注册接口到wrapper
+            _wrapper.Register(_broker);
+
+            //3.绑定回调函数
+            _wrapper.OnConnectedEvent += new CBOnConnected(_wrapper_OnConnectedEvent);
+            _wrapper.OnDisconnectedEvent += new CBOnDisconnected(_wrapper_OnDisconnectedEvent);
+            _wrapper.OnLoginEvent += new CBOnLogin(_wrapper_OnLoginEvent);
+
+            _wrapper.OnRtnOrderEvent += new CBRtnOrder(_wrapper_OnRtnOrderEvent);
+            _wrapper.OnRtnOrderErrorEvent += new CBRtnOrderError(_wrapper_OnRtnOrderErrorEvent);
+            _wrapper.OnRtnTradeEvent += new CBRtnTrade(_wrapper_OnRtnTradeEvent);
+        }
+
+        /// <summary>
+        /// 执行对象销毁
+        /// </summary>
+        public virtual void DestoryBroker()
+        {
+            
+
+        }
+        #endregion
+
+        #region 交易接口操作 下单 撤单 与回报处理 子类覆写
 
         /// <summary>
         /// 通过成交接口提交委托
@@ -177,9 +226,19 @@ namespace TradingLib.BrokerXAPI
             
         }
 
+
+        /// <summary>
+        /// 启动时登入成功后 恢复日内交易数据
+        /// </summary>
+        public virtual void OnResume()
+        {
+
+
+        }
+
+
+
         #endregion
-
-
 
         
         /// <summary>
@@ -193,29 +252,8 @@ namespace TradingLib.BrokerXAPI
 
         }
 
-        public virtual void InitBroker()
-        {
-            //1.初始化非托管接口对象
-            Util.Debug("WrapperFileName:" + Path.Combine(new string[] { _cfg.Interface.libpath_wrapper, _cfg.Interface.libname_wrapper }));
-            Util.Debug("BrokerFileName:" + Path.Combine(new string[] { _cfg.Interface.libpath_broker, _cfg.Interface.libname_broker }));
-            _wrapper = new TLBrokerWrapperProxy(_cfg.Interface.libpath_wrapper, _cfg.Interface.libname_wrapper);
-            _broker = new TLBrokerProxy(_cfg.Interface.libpath_broker, _cfg.Interface.libname_broker);
 
-            //2.注册接口到wrapper
-            _wrapper.Register(_broker);
-
-            //3.绑定回调函数
-            _wrapper.OnConnectedEvent += new CBOnConnected(_wrapper_OnConnectedEvent);
-            _wrapper.OnDisconnectedEvent += new CBOnDisconnected(_wrapper_OnDisconnectedEvent);
-            _wrapper.OnLoginEvent += new CBOnLogin(_wrapper_OnLoginEvent);
-
-            _wrapper.OnRtnOrderEvent += new CBRtnOrder(_wrapper_OnRtnOrderEvent);
-            _wrapper.OnRtnOrderErrorEvent += new CBRtnOrderError(_wrapper_OnRtnOrderErrorEvent);
-            _wrapper.OnRtnTradeEvent += new CBRtnTrade(_wrapper_OnRtnTradeEvent);
-        }
-
-
-
+        #region 底层wrapper发送委托或取消委托
         protected string WrapperSendOrder(ref XOrderField order)
         {
             return _wrapper.SendOrder(ref order);
@@ -225,12 +263,7 @@ namespace TradingLib.BrokerXAPI
         {
             return _wrapper.SendOrderAction(ref action);
         }
-
-
-
-
-
-
+        #endregion
 
         #region 回报缓存
         const int buffersize=1000;
@@ -293,9 +326,9 @@ namespace TradingLib.BrokerXAPI
                     Util.Debug("process cache error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
                 }
             }
+            Util.Debug("Notify thread stopped...");
         }
         #endregion
-
 
         #region Proxy底层事件处理
         bool _connected = false;
@@ -362,18 +395,6 @@ namespace TradingLib.BrokerXAPI
 
 
 
-
-        #region
-
-        /// <summary>
-        /// 启动时登入成功后 恢复日内交易数据
-        /// </summary>
-        public virtual void OnResume()
-        {
-           
-
-        }
-        #endregion
 
 
     }

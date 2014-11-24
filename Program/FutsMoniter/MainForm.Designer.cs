@@ -90,6 +90,7 @@
             this.kryptonRibbonGroupButton1 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
             this.popmessage = new System.Windows.Forms.ToolTip(this.components);
             this.ctAccountMontier1 = new FutsMoniter.Controls.ctAccountMontier();
+            this.kryptonRibbonGroupButton_interfacelist = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
             ((System.ComponentModel.ISupportInitialize)(this.TabRibbon)).BeginInit();
             this.SuspendLayout();
             // 
@@ -118,7 +119,8 @@
             this.tabAgent,
             this.tabFinance,
             this.tabHistQuery});
-            this.TabRibbon.SelectedTab = this.tabFinance;
+            this.TabRibbon.SelectedContext = null;
+            this.TabRibbon.SelectedTab = this.tabSystem;
             this.TabRibbon.Size = new System.Drawing.Size(1284, 111);
             this.TabRibbon.TabIndex = 0;
             // 
@@ -178,7 +180,8 @@
             // kryptonRibbonGroupTriple2
             // 
             this.kryptonRibbonGroupTriple2.Items.AddRange(new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupItem[] {
-            this.kryptonRibbonGroupButton_RouterList});
+            this.kryptonRibbonGroupButton_RouterList,
+            this.kryptonRibbonGroupButton_interfacelist});
             // 
             // kryptonRibbonGroupButton_RouterList
             // 
@@ -454,6 +457,10 @@
             this.ctAccountMontier1.Size = new System.Drawing.Size(1284, 582);
             this.ctAccountMontier1.TabIndex = 2;
             // 
+            // kryptonRibbonGroupButton_interfacelist
+            // 
+            this.kryptonRibbonGroupButton_interfacelist.TextLine1 = "接口管理";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -535,6 +542,7 @@
         private Controls.ctAccountMontier ctAccountMontier1;
         private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton_PermissionTemplate;
         private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton_AccountCashreq;
+        private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton_interfacelist;
 
     }
 }

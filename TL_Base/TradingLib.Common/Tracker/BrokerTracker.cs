@@ -71,6 +71,13 @@ namespace TradingLib.Common
             _tradeTk = new ThreadSafeList<Trade>();
         }
 
+        public void Clear()
+        {
+            Util.Debug(string.Format("Clear BrokerTracker for:{0}", this._broker.Token));
+            _orderTk.Clear();
+            _positionTk.Clear();
+            _tradeTk.Clear();
+        }
 
         /// <summary>
         /// 获得某个合约的多头持仓

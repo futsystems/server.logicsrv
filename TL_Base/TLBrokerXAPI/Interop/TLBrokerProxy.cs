@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
+using TradingLib.API;
+using TradingLib.Common;
 
 /*
  * 关于zmq的clr实现过程
@@ -47,6 +49,7 @@ namespace TradingLib.BrokerXAPI.Interop
 
         public virtual void Dispose()
         {
+            Util.DestoryStatus("TLBrokerProxy");
             Dispose(true);
             GC.SuppressFinalize(this);
         }

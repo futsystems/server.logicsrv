@@ -135,6 +135,17 @@ namespace TradingLib.ServiceManager
                 return _defaultinstance.interfacemap.Values.Where(itf => itf.Type == QSEnumConnectorType.DataFeed);
             }
         }
+
+        /// <summary>
+        /// 获得所有接口设置
+        /// </summary>
+        public static IEnumerable<ConnectorInterface> Interfaces
+        {
+            get
+            {
+                return _defaultinstance.interfacemap.Values;
+            }
+        }
         
     }
 }

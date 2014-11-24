@@ -628,6 +628,14 @@ namespace TradingLib.Common
 
         #region 扩展请求
 
+        #region 行情与成交接口部分
+
+        public void ReqQryInterface()
+        {
+            this.ReqContribRequest("ConnectorManager", "QryInterface", "");
+        }
+        #endregion
+
         /// <summary>
         /// 查询银行列表
         /// </summary>

@@ -280,6 +280,12 @@
     <Compile Include="Forms\fmHistQueryCashTrans.Designer.cs">
       <DependentUpon>fmHistQueryCashTrans.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\fmInterface.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\fmInterface.Designer.cs">
+      <DependentUpon>fmInterface.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\fmPermissionTemplate.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -624,6 +630,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\fmHistQueryCashTrans.resx">
       <DependentUpon>fmHistQueryCashTrans.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\fmInterface.resx">
+      <DependentUpon>fmInterface.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\fmPermissionTemplate.resx">
       <DependentUpon>fmPermissionTemplate.cs</DependentUpon>

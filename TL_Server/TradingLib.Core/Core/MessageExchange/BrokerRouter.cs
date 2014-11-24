@@ -72,13 +72,10 @@ namespace TradingLib.Core
             //_tifengine.SendDebugEvent +=new DebugDelegate(msgdebug);
             //_tifengine.SendOrderEvent += new OrderDelegate(route_SendOrder);
             _tifengine.SendCancelEvent += new LongDelegate(route_CancelOrder);
-            
 
             _ordHelper = new OrderTransactionHelper("BrokerRouter");
             //_ordHelper.SendDebugEvent +=new DebugDelegate(msgdebug);
             //_ordHelper.SendOrderEvent += new OrderDelegate(broker_sendorder);
-           
-
             StartProcessMsgOut();
         }
 
@@ -226,13 +223,6 @@ namespace TradingLib.Core
             RspInfo info = RspInfoImpl.Fill(errortitle);
             o.Comment = info.ErrorMessage;
             GotOrderError(o, info);
-
-            //debug("Reply ErrorOrder To MessageExch:" + o.ToString() + " ErrorTitle:" + errortitle, QSEnumDebugLevel.INFO);
-            //ErrorOrderNotify notify = ResponseTemplate<ErrorOrderNotify>.SrvSendNotifyResponse(o.Account);
-            //notify.Order = new OrderImpl(o);
-            //notify.RspInfo.Fill(errortitle);
-            //notify.Order.comment = notify.RspInfo.ErrorMessage;
-            //_errorordernotifycache.Write(notify);
         }
 
         /// <summary>

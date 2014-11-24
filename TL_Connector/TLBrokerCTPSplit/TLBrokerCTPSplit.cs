@@ -75,15 +75,16 @@ namespace Broker.Live
         /// </summary>
         BrokerTracker tk = null;
 
+        /// <summary>
+        /// 初始化接口 停止后再次启动不会调用该函数
+        /// </summary>
         public override void InitBroker()
         {
             base.InitBroker();
             tk = new BrokerTracker(this);
-            
-            //_splittracker = 
-            _splittracker = new OrderSplitTracker(this.Token);
-            
 
+            #region 初始化委托拆分维护器 绑定事件
+            _splittracker = new OrderSplitTracker(this.Token);
             //委托分拆器发送子委托通过接口发送
             _splittracker.SendSonOrderEvent += new OrderDelegate(SendSonOrder);
             //委托分拆器发送取消委托通过接口取消
@@ -99,6 +100,7 @@ namespace Broker.Live
             _splittracker.GotFatherFillEvent += new FillDelegate(NotifyTrade);
             //委托分拆器更新错误 本地对外通知错误更新
             _splittracker.GotFatherOrderErrorEvent += new OrderErrorDelegate(NotifyOrderError);
+            #endregion
 
         }
 
@@ -112,8 +114,9 @@ namespace Broker.Live
         }
 
         IdTracker _sonidtk = new IdTracker(2);
-
         OrderSplitTracker _splittracker= null;
+
+        #region 委托拆分逻辑
         /// <summary>
         /// 直接发送委托
         /// 不分拆委托进行保证金降低
@@ -442,8 +445,28 @@ namespace Broker.Live
 
            
         }
-        
+        #endregion
 
+
+        /// <summary>
+        /// 停止时候要重置接口状态
+        /// </summary>
+        public override void  DestoryBroker()
+        {
+            Util.Debug("DestoryBroker ...............");
+            //清空接口交易状态维护器
+            tk.Clear();
+            tk = null;
+
+            //清空委托拆分器状态
+            _splittracker.Clear();
+            _splittracker = null;
+
+            //清空委托map
+            localOrderID_map.Clear();
+            remoteOrderID_map.Clear();
+
+        }
         /// <summary>
         /// 恢复日内交易状态
         /// 从数据库加载昨日持仓数据 和当日交易数据并填充到 成交接口维护器中 用于恢复日内交易状态
@@ -579,8 +602,6 @@ namespace Broker.Live
         {
             _splittracker.CancelFatherOrder(oid);
         }
-
-
 
         public override void GotTick(Tick k)
         {

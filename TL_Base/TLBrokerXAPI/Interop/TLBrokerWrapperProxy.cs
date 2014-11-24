@@ -48,6 +48,7 @@ namespace TradingLib.BrokerXAPI.Interop
 
         public virtual void Dispose()
         {
+            Util.DestoryStatus("TLBrokerWrapperProxy");
             Dispose(true);
             GC.SuppressFinalize(this);
         }
