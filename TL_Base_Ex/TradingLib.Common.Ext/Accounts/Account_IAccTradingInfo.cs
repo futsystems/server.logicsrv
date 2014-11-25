@@ -28,11 +28,6 @@ namespace TradingLib.Common
         public IEnumerable<Position> Positions { get { return this.TKPosition; } }
 
         /// <summary>
-        /// 获得当前净持仓
-        /// </summary>
-        //public IEnumerable<Position> PositionsNet { get { return this.TKPosition.NetPositionTracker; } }
-
-        /// <summary>
         /// 多头持仓维护器
         /// </summary>
         public IEnumerable<Position> PositionsLong { get { return this.TKPosition.LongPositionTracker; } }
@@ -47,6 +42,47 @@ namespace TradingLib.Common
         /// 委托维护器
         /// </summary>
         public OrderTracker TKOrder { get; set; }
+
+        /// <summary>
+        /// 返回维护器所发送的委托数量
+        /// </summary>
+        /// <param name="oid"></param>
+        /// <returns></returns>
+        public int SentSize(long oid)
+        {
+            return TKOrder.Sent(oid);
+        }
+
+        /// <summary>
+        /// 返回维护其所维护的成交数量
+        /// </summary>
+        /// <param name="oid"></param>
+        /// <returns></returns>
+        public int FilledSize(long oid)
+        {
+            return TKOrder.Filled(oid);
+        }
+
+        /// <summary>
+        /// 是否已经取消
+        /// </summary>
+        /// <param name="oid"></param>
+        /// <returns></returns>
+        public bool IsCanceled(long oid)
+        {
+            return TKOrder.isCanceled(oid);
+        }
+
+        /// <summary>
+        /// 是否已经完成
+        /// </summary>
+        /// <param name="oid"></param>
+        /// <returns></returns>
+        public bool IsComplate(long oid)
+        {
+            return TKOrder.isCompleted(oid);
+        }
+
         /// <summary>
         /// 当日所有委托数据 
         /// </summary>

@@ -25,6 +25,21 @@ namespace TradingLib.Common
             return false;
         }
 
+        /// <summary>
+        /// 判断某个委托是否可以被撤销
+        /// 通过Broker提交的委托 状态为Opened或者PartFilled这样的委托可以通过Broker进行撤单
+        /// 这里有一个时间间隙
+        /// MsgExch通过Broker.sendorder后的委托状态为Submited,在Submited和Broker返回接受后委托跟新为Opened之间有一个很小的时间间隙
+        /// 在这个间隙内委托无法撤销,系统不确定委托是否正常提交到broker 提交到broker后的最终状态就是Opened或者Reject
+        /// </summary>
+        /// <param name="o"></param>
+        /// <returns></returns>
+        public static bool CanCancel(this Order o)
+        {
+            if (o.Status == QSEnumOrderStatus.Opened || o.Status == QSEnumOrderStatus.PartFilled)
+                return true;
+            return false;
+        }
 
         /// <summary>
         /// 
@@ -103,7 +118,7 @@ namespace TradingLib.Common
 
 
 
-        public static string GetOrderInfo(this Order o)
+        public static string GetOrderInfo(this Order o,bool brokerside = false)
         { 
             //123342 953 [INFO] BrokerRouter:Reply Order To MessageExch |BUY 1 IF1409 @Mkt [9280007] 635474179608593751 Filled:0 Status:Submited PostFlag:OPEN OrderRef: OrderSeq:1011 HedgeFlag: OrderExchID:
             StringBuilder sb = new StringBuilder();
@@ -115,11 +130,19 @@ namespace TradingLib.Common
             sb.Append(" ["+o.Account+"]");
             sb.Append(" ID:" + o.id.ToString());
             sb.Append(" T:"+Math.Abs(o.TotalSize).ToString()+" F:"+o.FilledSize.ToString()+" R:"+o.UnsignedSize.ToString());
-            sb.Append(" Ref:" + o.OrderRef + " Seq:" + o.OrderSeq.ToString() + " ExchID:" + o.OrderSysID);
+            if (brokerside)
+            {
+                sb.Append(" Broker:" + o.Broker + " LocalID:" + o.BrokerLocalOrderID + " RemoteID:" + o.BrokerRemoteOrderID);
+            }
+            else
+            {
+                sb.Append(" Ref:" + o.OrderRef + " Seq:" + o.OrderSeq.ToString() + " ExchID:" + o.OrderSysID);
+            }
             sb.Append(" Status:" + o.Status.ToString());
 
             return sb.ToString();
         }
+
 
         public static string GetOrderStatus(this Order o)
         {

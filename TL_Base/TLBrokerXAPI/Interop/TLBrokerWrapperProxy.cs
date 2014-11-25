@@ -105,9 +105,8 @@ namespace TradingLib.BrokerXAPI.Interop
             _RegRtnTrade = NativeLib.GetUnmanagedFunction<RegRtnTradeProc>("RegRtnTrade");
             _RegRtnOrder = NativeLib.GetUnmanagedFunction<RegRtnOrderProc>("RegRtnOrder");
             _RegRtnOrderError = NativeLib.GetUnmanagedFunction<RegRtnOrderErrorProc>("RegRtnOrderError");
+            _RegRtnOrderActionError = NativeLib.GetUnmanagedFunction<RegRtnOrderActionErrorProc>("RegRtnOrderActionError");
 
-            //_reCBOnConnected = FireOnConnected;
-            //_reOnRtnOrderErrorEvent = FireRtnOrderError;
         }
 
 
@@ -255,6 +254,15 @@ namespace TradingLib.BrokerXAPI.Interop
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void RegRtnOrderErrorProc(IntPtr pWrapper, CBRtnOrderError cb);
         RegRtnOrderErrorProc _RegRtnOrderError;
+
+        /// <summary>
+        /// 注册委托操作错误回调
+        /// </summary>
+        /// <param name="pWrapper"></param>
+        /// <param name="cb"></param>
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void RegRtnOrderActionErrorProc(IntPtr pWrapper, CBRtnOrderActionError cb);
+        RegRtnOrderActionErrorProc _RegRtnOrderActionError;
         #endregion
 
 
@@ -299,6 +307,13 @@ namespace TradingLib.BrokerXAPI.Interop
         {
             add { cbRtnOrderError += value; _RegRtnOrderError(this.Wrapper, cbRtnOrderError); }
             remove { cbRtnOrderError -= value; _RegRtnOrderError(this.Wrapper, cbRtnOrderError); }
+        }
+
+        CBRtnOrderActionError cbRtnOrderActionError;
+        public event CBRtnOrderActionError OnRtnOrderActionErrorEvent
+        {
+            add { cbRtnOrderActionError += value; _RegRtnOrderActionError(this.Wrapper, cbRtnOrderActionError); }
+            remove { cbRtnOrderActionError -= value; _RegRtnOrderActionError(this.Wrapper, cbRtnOrderActionError); }
         }
         #endregion
 

@@ -80,6 +80,16 @@ namespace TradingLib.BrokerXAPI
         }
 
         /// <summary>
+        /// 向外通知委托操作错误
+        /// </summary>
+        public event OrderActionErrorDelegate GotOrderActionErrorEvent;
+        protected void NotifyOrderOrderActionError(OrderAction acton, RspInfo info)
+        {
+            if (GotOrderActionErrorEvent != null)
+                GotOrderActionErrorEvent(acton, info);
+        }
+
+        /// <summary>
         /// 获得当前Tick的市场快照,模拟成交时需要获得当前市场快照用于进行取价操作
         /// </summary>
         public event GetSymbolTickDel GetSymbolTickEvent;

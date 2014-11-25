@@ -59,6 +59,11 @@ namespace TradingLib.Common
         /// </summary>
         public string Symbol { get; set; }
 
+        /// <summary>
+        /// 请求 ID
+        /// </summary>
+        public int RequestID { get; set; }
+
         public static string Serialize(OrderAction action)
         {
             StringBuilder sb = new StringBuilder();
@@ -80,6 +85,8 @@ namespace TradingLib.Common
             sb.Append(action.OrderExchID);
             sb.Append(d);
             sb.Append(action.Symbol);
+            sb.Append(d);
+            sb.Append(action.RequestID);
             return sb.ToString();
         }
 
@@ -96,6 +103,10 @@ namespace TradingLib.Common
             action.Exchagne = rec[6];
             action.OrderExchID = rec[7];
             action.Symbol = rec[8];
+            if (rec.Length > 9)
+            {
+                action.RequestID = int.Parse(rec[9]);
+            }
             return action;
         }
     }

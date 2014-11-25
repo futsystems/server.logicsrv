@@ -144,7 +144,7 @@ namespace TraddingSrvCLI
                         {
                             Thread.Sleep(1000);
                         }
-
+                        TLCtxHelper.IsReady = false;
                         coreMgr.Stop();//内核停止
                         contribMgr.Stop();//扩展停止
                         
@@ -157,6 +157,7 @@ namespace TraddingSrvCLI
                 }
             }
             debug("******************************corethread stopped **********************************");
+            
             _status = QSEnumCoreThreadStatus.Stopped;
         }
     }

@@ -113,22 +113,6 @@ namespace TradingLib.Common
             return o.IsPending();
         }
 
-        /// <summary>
-        /// 判断某个委托是否可以被撤销
-        /// 通过Broker提交的委托
-        /// 状态为Opened或者PartFilled这样的委托可以通过Broker进行撤单
-        /// 这里有一个时间间隙
-        /// MsgExch通过Broker.sendorder后的委托状态为Submited,在Submited和Broker返回接受后委托跟新为Opened之间有一个很小的时间间隙
-        /// 在这个间隙内委托无法撤销,系统不确定委托是否正常提交到broker 提交到broker后的最终状态就是Opened或者Reject
-        /// </summary>
-        /// <param name="o"></param>
-        /// <returns></returns>
-        public static bool CanCancel(Order o)
-        {
-            if (o.Status == QSEnumOrderStatus.Opened || o.Status == QSEnumOrderStatus.PartFilled)
-                return true;
-            return false;
-        }
 
         /// <summary>
         /// 查看某个Order是否完全成交

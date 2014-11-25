@@ -155,8 +155,11 @@ namespace TradingLib.BrokerXAPI
 
             _wrapper.OnRtnOrderEvent += new CBRtnOrder(_wrapper_OnRtnOrderEvent);
             _wrapper.OnRtnOrderErrorEvent += new CBRtnOrderError(_wrapper_OnRtnOrderErrorEvent);
+            _wrapper.OnRtnOrderActionErrorEvent += new CBRtnOrderActionError(_wrapper_OnRtnOrderActionErrorEvent);
             _wrapper.OnRtnTradeEvent += new CBRtnTrade(_wrapper_OnRtnTradeEvent);
         }
+
+        
 
         /// <summary>
         /// 执行对象销毁
@@ -226,6 +229,16 @@ namespace TradingLib.BrokerXAPI
             
         }
 
+        /// <summary>
+        /// 处理接口返回的委托操作错误
+        /// </summary>
+        /// <param name="error"></param>
+        public virtual void ProcessOrderActionError(ref XOrderActionError error)
+        {
+        
+        }
+
+
 
         /// <summary>
         /// 启动时登入成功后 恢复日内交易数据
@@ -272,6 +285,7 @@ namespace TradingLib.BrokerXAPI
         RingBuffer<XOrderField> _ordercache = new RingBuffer<XOrderField>(buffersize);
         RingBuffer<XTradeField> _tradecache = new RingBuffer<XTradeField>(buffersize);
         RingBuffer<XOrderError> _ordererrorcache = new RingBuffer<XOrderError>(buffersize);
+        RingBuffer<XOrderActionError> _orderactionerrorcache = new RingBuffer<XOrderActionError>(buffersize);
 
         Thread _notifythread = null;
         bool _working = false;
@@ -309,6 +323,12 @@ namespace TradingLib.BrokerXAPI
                         XOrderError error = _ordererrorcache.Read();
                         ProcessOrderError(ref error);
                     }
+                    //发送委托操作错误回报
+                    while (!_ordercache.hasItems && _orderactionerrorcache.hasItems)
+                    {
+                        XOrderActionError error = _orderactionerrorcache.Read();
+                        ProcessOrderActionError(ref error);
+                    }
                     //发送成交回报
                     while (!_ordererrorcache.hasItems && !_ordererrorcache.hasItems && _tradecache.hasItems)
                     {
@@ -316,6 +336,7 @@ namespace TradingLib.BrokerXAPI
                         ProcessTrade(ref trade);
 
                     }
+
                     // clear current flag signal
                     _notifywaiting.Reset();
                     // wait for a new signal to continue reading
@@ -381,7 +402,11 @@ namespace TradingLib.BrokerXAPI
             //Util.Debug(" data:" + pOrder.Date + " exchange:" + pOrder.Exchange + " filledsize:" + pOrder.FilledSize.ToString() + " limitprice:" + pOrder.LimitPrice + " offsetflag:" + pOrder.OffsetFlag.ToString() + " orderid:" + pOrder.ID + " status:" + pOrder.OrderStatus.ToString() + " side:" + pOrder.Side + " stopprice:" + pOrder.StopPrice.ToString() + " symbol:" + pOrder.Symbol + " totalsize:" + pOrder.TotalSize.ToString() + " unfilledsize:" + pOrder.UnfilledSize.ToString() + " statusmsg:" + pOrder.StatusMsg);
             _ordererrorcache.Write(new XOrderError(pOrder, pError));
         }
-
+        void _wrapper_OnRtnOrderActionErrorEvent(ref XOrderActionField pOrderAction, ref XErrorField pError)
+        {
+            Util.Debug("-----------TLBroker OrderActionErrorEvent-----------------------", QSEnumDebugLevel.WARNING);
+            _orderactionerrorcache.Write(new XOrderActionError(pOrderAction, pError));
+        }
 
         void _wrapper_OnRtnTradeEvent(ref XTradeField pTrade)
         {

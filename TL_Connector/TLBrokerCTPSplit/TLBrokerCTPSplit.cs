@@ -620,7 +620,7 @@ namespace Broker.Live
         /// <param name="o"></param>
         void SendSonOrder(Order o)
         {
-            debug("XAP[" + this.Token + "] Send SonOrder: " + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
+            debug("XAP[" + this.Token + "] Send SonOrder: " + o.GetOrderInfo(true), QSEnumDebugLevel.INFO);
             XOrderField order = new XOrderField();
 
             order.ID = o.id.ToString();
@@ -673,7 +673,7 @@ namespace Broker.Live
 
         void CancelSonOrder(Order o)
         {
-            Util.Debug("XAP[" + this.Token + "] 取消子委托:" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
+            Util.Debug("XAP[" + this.Token + "] 取消子委托:" + o.GetOrderInfo(true), QSEnumDebugLevel.INFO);
             XOrderActionField action = new XOrderActionField();
             action.ActionFlag = QSEnumOrderActionFlag.Delete;
 
@@ -711,18 +711,23 @@ namespace Broker.Live
                 //更新RemoteOrderId/OrderSysID
                 if (!string.IsNullOrEmpty(order.BrokerRemoteOrderID))//如果远端编号存在 则设定远端编号 同时入map
                 {
-                    o.BrokerRemoteOrderID = order.BrokerRemoteOrderID;
-                    //按照不同接口的实现 从RemoteOrderID中获得对应的OrderSysID
-                    o.OrderSysID = order.BrokerRemoteOrderID.Split(':')[1];
-                    //如果不存在该委托则加入该委托
-                    if (!remoteOrderID_map.Keys.Contains(order.BrokerRemoteOrderID))
+                    string[] ret = order.BrokerRemoteOrderID.Split(':');
+                    //需要设定了OrderSysID 否则只是Exch:空格 
+                    if (!string.IsNullOrEmpty(ret[1]))
                     {
-                        //Util.Debug(string.Format("OrderRemoteID:{0},put into map",order.BrokerRemoteOrderID),QSEnumDebugLevel.INFO);
-                        remoteOrderID_map.TryAdd(order.BrokerRemoteOrderID, o);
+                        o.BrokerRemoteOrderID = order.BrokerRemoteOrderID;
+                        //按照不同接口的实现 从RemoteOrderID中获得对应的OrderSysID
+                        o.OrderSysID = ret[1];
+                        //如果不存在该委托则加入该委托
+                        if (!remoteOrderID_map.Keys.Contains(order.BrokerRemoteOrderID))
+                        {
+                            remoteOrderID_map.TryAdd(order.BrokerRemoteOrderID, o);
+                        }
                     }
+                   
 
                 }
-                Util.Debug("更新子委托:" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
+                Util.Debug("更新子委托:" + o.GetOrderInfo(true), QSEnumDebugLevel.INFO);
                 tk.GotOrder(o);
                 this.LogBrokerOrderUpdate(o);
 
@@ -773,14 +778,39 @@ namespace Broker.Live
                 //
                 o.Status = QSEnumOrderStatus.Reject;
                 o.Comment = error.Error.ErrorMsg;
-                Util.Debug("更新子委托:" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
+                Util.Debug("更新子委托:" + o.GetOrderInfo(true), QSEnumDebugLevel.INFO);
                 tk.GotOrder(o);
+                this.LogBrokerOrderUpdate(o);//更新日志
 
                 RspInfo info = new RspInfoImpl();
                 info.ErrorID = error.Error.ErrorID;
                 info.ErrorMessage = error.Error.ErrorMsg;
 
                 _splittracker.GotSonOrderError(o, info);
+
+            }
+        }
+
+        public override void ProcessOrderActionError(ref XOrderActionError error)
+        {
+            Util.Debug("some error happend in order action",QSEnumDebugLevel.WARNING);
+            Util.Debug("remoteid:" + error.OrderAction.BrokerRemoteOrderID + " local: " + error.OrderAction.BrokerLocalOrderID + " errorid:" + error.Error.ErrorID.ToString() + " message:" + error.Error.ErrorMsg);
+            Order o = LocalID2Order(error.OrderAction.BrokerLocalOrderID);
+            if (o != null)
+            {
+                //委托已经被撤销 不能再撤
+                if (error.Error.ErrorID == 26)
+                {
+                    o.Status = QSEnumOrderStatus.Canceled;
+                    o.Comment = error.Error.ErrorMsg;
+                    Util.Debug("更新子委托:" + o.GetOrderInfo(true), QSEnumDebugLevel.INFO);
+
+                    tk.GotOrder(o); //Broker交易信息管理器
+
+                    this.LogBrokerOrderUpdate(o);//委托跟新 更新到数据库
+
+                    _splittracker.GotSonOrder(o);//委托分拆器获得子委托,用于对外更新父委托 这里采用委托更新还是委托操作错误更新，再研究
+                }
             }
         }
     }

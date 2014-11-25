@@ -40,4 +40,12 @@ namespace TradingLib.BrokerXAPI
     /// <param name="pOrder"></param>
     /// <param name="pError"></param>
     public delegate void CBRtnOrderError(ref XOrderField pOrder, ref XErrorField pError);
+
+
+    /// <summary>
+    /// 委托操作错误回调委托
+    /// </summary>
+    /// <param name="pOrderAction"></param>
+    /// <param name="pError"></param>
+    public delegate void CBRtnOrderActionError(ref XOrderActionField pOrderAction,ref XErrorField pError);
 }

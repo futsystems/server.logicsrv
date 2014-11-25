@@ -375,4 +375,16 @@ namespace TradingLib.BrokerXAPI
         public XOrderField Order;
         public XErrorField Error;
     }
+
+    public class XOrderActionError
+    {
+        public XOrderActionError(XOrderActionField orderAction, XErrorField error)
+        {
+            this.OrderAction = orderAction;
+            this.Error = error;
+        }
+
+        public XOrderActionField OrderAction;
+        public XErrorField Error;
+    }
 }

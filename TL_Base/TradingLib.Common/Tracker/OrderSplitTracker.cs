@@ -285,6 +285,7 @@ namespace TradingLib.Common
                 fstatus = QSEnumOrderStatus.PartFilled;
             }
             fatherOrder.Status = fstatus;
+            fatherOrder.Comment = o.Comment;
             Util.Debug("更新父委托:" + fatherOrder.GetOrderInfo(), QSEnumDebugLevel.INFO);
             GotFatherOrder(fatherOrder);
             if (fatherOrder.Status == QSEnumOrderStatus.Canceled)

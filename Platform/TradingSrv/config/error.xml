@@ -22,6 +22,7 @@
 
 <error id="POSITION_OVER_CLOSE_AUTO_CANCEL" value="16" prompt="市价平仓溢出,系统自动扯单并平仓"/>
 <error id="ORDER_CAN_NOT_BE_DELETE" value="17" prompt="委托无法撤消"/>
+<error id="ORDER_IN_PRESTAGE" value="171" prompt="处理中,无法撤销"/>
 <error id="ORDERACTION_BAD_FIELD" value="18" prompt="委托操作字段有误"/>
 <error id="EXECUTION_BROKER_NOT_FOUND" value="19" prompt="交易通道未连接"/>
 <error id="EXECUTION_BROKER_PLACEORDER_ERROR" value="108" prompt="交易通道提交委托异常"/>

@@ -47,6 +47,11 @@ namespace TradingLib.API
         event OrderErrorDelegate GotOrderErrorEvent;
 
         /// <summary>
+        /// 委托操作错误回报
+        /// </summary>
+        event OrderActionErrorDelegate GotOrderActionErrorEvent;
+
+        /// <summary>
         /// 撤单正确回报时回报客户端
         /// </summary>
         event LongDelegate GotCancelEvent;

@@ -174,22 +174,22 @@ namespace TradingLib.Core
             switch (o.Status)
             { 
                 case QSEnumOrderStatus.Filled:
-                    o.Comment = o.Comment + " " + commentFilled;
+                    o.Comment = string.IsNullOrEmpty(o.Comment)?commentFilled:o.Comment;
                     break;
                 case QSEnumOrderStatus.PartFilled:
-                    o.Comment = o.Comment + " " + commentPartFilled;
+                    o.Comment = string.IsNullOrEmpty(o.Comment)?commentPartFilled:o.Comment;
                     break;
                 case QSEnumOrderStatus.Canceled:
-                    o.Comment = o.Comment + " " + commentCanceled;
+                    o.Comment = string.IsNullOrEmpty(o.Comment)?commentCanceled:o.Comment;
                     break;
                 case QSEnumOrderStatus.Placed:
-                    o.Comment = o.Comment + " " + commentPlaced;
+                    o.Comment = string.IsNullOrEmpty(o.Comment)?commentPlaced:o.Comment;
                     break;
                 case QSEnumOrderStatus.Submited:
-                    o.Comment = o.Comment + " " + commentSubmited;
+                    o.Comment = string.IsNullOrEmpty(o.Comment)?commentSubmited:o.Comment;
                     break;
                 case QSEnumOrderStatus.Opened:
-                    o.Comment = o.Comment + " " + commentOpened;
+                    o.Comment = string.IsNullOrEmpty(o.Comment)?commentOpened:o.Comment;
                     break;
                 default:
                     break;
