@@ -7,8 +7,12 @@ using System.Reflection;
 
 namespace TradingLib.Common
 {
+    /// <summary>
+    /// 对象过滤器
+    /// </summary>
     public abstract class ObjectFilter
     {
+
         /* filter operators */
         protected const int EQUAL = 1;
         protected const int APPROX = 2;
@@ -54,9 +58,9 @@ namespace TradingLib.Common
         /// <summary>
         /// 初始化过滤器,由于使用泛型模板,无法通过无参new()直接初始化对象,new出对象后通过调用init 进行初始化
         /// </summary>
-        /// <param name="operation"></param>
-        /// <param name="attr"></param>
-        /// <param name="value"></param>
+        /// <param name="operation">操作符</param>
+        /// <param name="attr">属性/字段</param>
+        /// <param name="value">值</param>
         public void Init(int operation, string attr, object value)
         {
             this.op = operation;

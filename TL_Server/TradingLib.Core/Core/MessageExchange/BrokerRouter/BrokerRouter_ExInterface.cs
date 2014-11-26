@@ -131,6 +131,21 @@ namespace TradingLib.Core
             }
         }
 
+        void BrokerCancelOrder(Order o)
+        {
+            IBroker broker = SelectBroker(o);
+            if (broker != null && broker.IsLive)
+            {
+                broker.CancelOrder(o.id);
+            }
+            else
+            {
+                //如果没有交易通道则拒绝该委托
+                o.Status = QSEnumOrderStatus.Reject;
+                GotOrderErrorNotify(o, "EXECUTION_BROKER_NOT_FOUND");
+                debug(PROGRAM + ":没有可以交易的通道 |" + o.ToString(), QSEnumDebugLevel.WARNING);
+            }
+        }
         /// <summary>
         /// 向broker取消一个order
         /// </summary>
@@ -156,19 +171,16 @@ namespace TradingLib.Core
             {
                 //debug("取消委托到这里...", QSEnumDebugLevel.MUST);
                 Order o = _clearCentre.SentOrder(val);//通过orderID在清算中心找到对应的Order
-                IBroker broker = SelectBroker(o);
-                if (broker != null && broker.IsLive)
+                bool splited = this.IsOrderSplited(o);//判断委托是否被分拆
+                if (!splited)
                 {
-                    //debug("取消委托到这里...broker.cancelorder", QSEnumDebugLevel.MUST);
-                    broker.CancelOrder(o.id);
+                    BrokerCancelOrder(o);
                 }
-                else
+                else //如果委托分拆过则通过分拆器取消委托
                 {
-                    //如果没有交易通道则拒绝该委托
-                    o.Status = QSEnumOrderStatus.Reject;
-                    GotOrderErrorNotify(o, "EXECUTION_BROKER_NOT_FOUND");
-                    debug(PROGRAM + ":没有可以交易的通道 |" + o.ToString(), QSEnumDebugLevel.WARNING);
+                    _splittracker.CancelFatherOrder(val);//
                 }
+            
             }
             catch (Exception ex)
             {
@@ -176,12 +188,6 @@ namespace TradingLib.Core
             }
         }
 
-        public IBroker SelectBroker(long oid)
-        {
-            //如果是模拟交易则通过模拟broker发送信息
-            Order o = _clearCentre.SentOrder(oid);//通过orderID在清算中心找到对应的Order
-            return SelectBroker(o);
-        }
         #endregion
     }
 }

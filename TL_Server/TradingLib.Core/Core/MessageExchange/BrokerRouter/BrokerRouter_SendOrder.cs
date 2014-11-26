@@ -181,7 +181,8 @@ namespace TradingLib.Core
 
         void CancelSonOrderEvent(Order order)
         {
-            //throw new NotImplementedException();
+            debug("委托分拆器调用BrokerSendOrder取消委托:" + order.GetOrderInfo(), QSEnumDebugLevel.INFO);
+            BrokerCancelOrder(order);
         }
 
         /// <summary>
@@ -190,7 +191,7 @@ namespace TradingLib.Core
         /// <param name="order"></param>
         void SendSonOrderEvent(Order order)
         {
-            debug("委托分拆器调用broker_sendorder发送委托:" + order.GetOrderInfo(), QSEnumDebugLevel.INFO);
+            debug("委托分拆器调用BrokerSendOrder发送委托:" + order.GetOrderInfo(), QSEnumDebugLevel.INFO);
             string error=string.Empty;
             BrokerSendOrder(order, out error);
         }
