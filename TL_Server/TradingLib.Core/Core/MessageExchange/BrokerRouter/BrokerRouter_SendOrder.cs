@@ -171,12 +171,12 @@ namespace TradingLib.Core
             //_splittracker.SplitOrdereEvent += new Func<Order, List<Order>>(SplitOrder);
 
             //委托分拆器更新父委托 本地对外通知父委托更新
-            _splittracker.GotFatherOrderEvent += new OrderDelegate(GotOrder);
+            _splittracker.GotFatherOrderEvent += new OrderDelegate(Broker_GotOrder);
             //_splittracker.GotFatherCancelEvent += 
             //委托分拆器更新成交 本地对外通知成交更新
-            _splittracker.GotFatherFillEvent += new FillDelegate(GotFill);
+            _splittracker.GotFatherFillEvent += new FillDelegate(Broker_GotFill);
             //委托分拆器更新错误 本地对外通知错误更新
-            _splittracker.GotFatherOrderErrorEvent += new OrderErrorDelegate(GotOrderError);
+            _splittracker.GotFatherOrderErrorEvent += new OrderErrorDelegate(Broker_GotOrderError);
         }
 
         void CancelSonOrderEvent(Order order)

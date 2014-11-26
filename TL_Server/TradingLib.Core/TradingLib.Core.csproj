@@ -111,7 +111,12 @@
     <Compile Include="Core\ManagerExchange\Utils\ManagerUtils_ObjectWrapper.cs" />
     <Compile Include="Core\ManagerExchange\MgrExchServer_PacketHandle_.cs" />
     <Compile Include="Core\MessageExchange\BrokerRouter\BrokerRouter_.cs" />
-    <Compile Include="Core\MessageExchange\BrokerRouter\BrokerRouter_ExitPosition.cs" />
+    <Compile Include="Core\MessageExchange\BrokerRouter\BrokerRouter_SendOrder.cs" />
+    <Compile Include="Core\MessageExchange\BrokerRouter\BrokerRouter_LoadBroker.cs" />
+    <Compile Include="Core\MessageExchange\BrokerRouter\BrokerRouter_MessageOut.cs" />
+    <Compile Include="Core\MessageExchange\BrokerRouter\BrokerRouter_OnBrokerXXX.cs" />
+    <Compile Include="Core\MessageExchange\BrokerRouter\BrokerRouter_BrokerSelector.cs" />
+    <Compile Include="Core\MessageExchange\BrokerRouter\BrokerRouter_ExInterface.cs" />
     <Compile Include="Core\MessageExchange\MsgExchServer_.cs" />
     <Compile Include="Core\MessageExchange\MsgExchServer_PacketHandle.cs" />
     <Compile Include="Core\MessageExchange\MsgExchServer_CTE.cs" />
