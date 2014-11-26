@@ -263,19 +263,19 @@ namespace TradingLib.Common
             //组合状态
             QSEnumOrderStatus fstatus = fatherOrder.Status;
             //子委托全部成交 则父委托为全部成交
-            if (sonOrders.All(so => so.Status == QSEnumOrderStatus.Filled))
+            if (sonOrders.All(so => so.Status == QSEnumOrderStatus.Filled))//所有filled则为filled
                 fstatus = QSEnumOrderStatus.Filled;
             //子委托任一待成交,则父委托为待成交
-            else if (sonOrders.Any(so => so.Status == QSEnumOrderStatus.Opened))
+            else if (sonOrders.Any(so => so.Status == QSEnumOrderStatus.Opened))//任何一个委托为opened则为open
                 fstatus = QSEnumOrderStatus.Opened;
             //子委托全部拒绝,则父委托为拒绝
-            else if (sonOrders.All(so => so.Status == QSEnumOrderStatus.Reject))
+            else if (sonOrders.All(so => so.Status == QSEnumOrderStatus.Reject))//所有拒绝则为拒绝
                 fstatus = QSEnumOrderStatus.Reject;
             //子委托有任一取消,则父委托为取消
-            else if (sonOrders.Any(so => so.Status == QSEnumOrderStatus.Canceled))
+            else if (sonOrders.Any(so => so.Status == QSEnumOrderStatus.Canceled))//任何一个取消则为取消
                 fstatus = QSEnumOrderStatus.Canceled;
             //子委托有一个委托为部分成交
-            else if (sonOrders.Any(so => so.Status == QSEnumOrderStatus.PartFilled))
+            else if (sonOrders.Any(so => so.Status == QSEnumOrderStatus.PartFilled))//部分成交
             {
                 //另一个委托为取消，则父委托为取消
                 if (sonOrders.Any(so => so.Status == QSEnumOrderStatus.Canceled))
@@ -285,8 +285,19 @@ namespace TradingLib.Common
                 //if (sonOrders.Any(so => so.Status == QSEnumOrderStatus.Reject))
                 fstatus = QSEnumOrderStatus.PartFilled;
             }
+
+           
             fatherOrder.Status = fstatus;
+            if (fatherOrder.Status == QSEnumOrderStatus.Opened)//任何一个委托为opened则为open 规则补充
+            {
+                if (Math.Abs(fatherOrder.Size) != fatherOrder.UnsignedSize)//没有任何平仓则为open其余为partfill
+                {
+                    fatherOrder.Status = QSEnumOrderStatus.PartFilled;
+                }
+            }
+
             fatherOrder.Comment = o.Comment;
+
             Util.Debug("更新父委托:" + fatherOrder.GetOrderInfo(), QSEnumDebugLevel.INFO);
             GotFatherOrder(fatherOrder);
             if (fatherOrder.Status == QSEnumOrderStatus.Canceled)

@@ -82,6 +82,7 @@ namespace Broker.Live
         {
             base.InitBroker();
             tk = new BrokerTracker(this);
+            _sonidtk = new IdTracker(IdTracker.ConnectorOwnerIDStart + _cfg.ID);//用数据库ID作为委托编号生成器预留10个id用于系统其他地方使用
 
             #region 初始化委托拆分维护器 绑定事件
             _splittracker = new OrderSplitTracker(this.Token);
@@ -113,7 +114,7 @@ namespace Broker.Live
             this.LogBrokerPositionClose(obj);
         }
 
-        IdTracker _sonidtk = new IdTracker(2);
+        IdTracker _sonidtk = null;
         OrderSplitTracker _splittracker= null;
 
         #region 委托拆分逻辑
