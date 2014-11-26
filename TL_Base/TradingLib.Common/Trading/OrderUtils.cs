@@ -130,15 +130,16 @@ namespace TradingLib.Common
             sb.Append(" ["+o.Account+"]");
             sb.Append(" ID:" + o.id.ToString());
             sb.Append(" T:"+Math.Abs(o.TotalSize).ToString()+" F:"+o.FilledSize.ToString()+" R:"+o.UnsignedSize.ToString());
+            sb.Append(" Broker:" + o.Broker + " Breed:" + o.Breed.ToString());
             if (brokerside)
             {
-                sb.Append(" Broker:" + o.Broker + " LocalID:" + o.BrokerLocalOrderID + " RemoteID:" + o.BrokerRemoteOrderID);
+                sb.Append(" " + o.BrokerLocalOrderID + " RemoteID:" + o.BrokerRemoteOrderID);
             }
             else
             {
                 sb.Append(" Ref:" + o.OrderRef + " Seq:" + o.OrderSeq.ToString() + " ExchID:" + o.OrderSysID);
             }
-            sb.Append(" Status:" + o.Status.ToString());
+            sb.Append(" Status:" + o.Status.ToString() +" FatherID:"+o.FatherID.ToString());
 
             return sb.ToString();
         }

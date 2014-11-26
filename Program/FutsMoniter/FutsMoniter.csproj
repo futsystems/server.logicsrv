@@ -35,7 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>moniter-oem.ico</ApplicationIcon>
+    <ApplicationIcon>moniter0.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ComponentFactory.Krypton.Navigator, Version=4.4.0.0, Culture=neutral, PublicKeyToken=a87e673e9ecb6e8e, processorArchitecture=MSIL">
@@ -52,9 +52,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\kypton\ComponentFactory.Krypton.Toolkit.dll</HintPath>
       <Private>True</Private>
-    </Reference>
-    <Reference Include="CTP">
-      <HintPath>..\..\lib\CTP.dll</HintPath>
     </Reference>
     <Reference Include="FutSystems.GUI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -791,6 +788,10 @@
   <ItemGroup>
     <None Include="images\message_error.png" />
     <None Include="images\message_success.png" />
+    <None Include="images\stop.png" />
+    <None Include="images\start.png" />
+    <None Include="images\start16.jpg" />
+    <None Include="images\stop16.jpg" />
     <Content Include="moniter-oem.ico" />
     <Content Include="moniter.ico" />
     <Content Include="moniter0.ico" />

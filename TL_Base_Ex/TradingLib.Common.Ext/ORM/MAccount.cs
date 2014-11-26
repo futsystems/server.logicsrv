@@ -61,6 +61,7 @@ namespace TradingLib.ORM
 
         public bool PosLock { get; set; }
         public int Mgr_fk { get; set; }
+        public int rg_fk { get; set; }
 
     }
 
@@ -568,6 +569,7 @@ namespace TradingLib.ORM
             account.BankAC = fields.BankAC;
             account.PosLock = fields.PosLock;
             account.Mgr_fk = fields.Mgr_fk;
+            account.RG_FK = fields.rg_fk;
             //Util.Debug("fileds route:" + fields.Order_Router_Type.ToString() +" category:"+fields.Account_Category.ToString()) ;
             return account;
         }

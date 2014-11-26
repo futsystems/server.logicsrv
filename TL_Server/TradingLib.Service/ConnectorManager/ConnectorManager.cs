@@ -121,6 +121,8 @@ namespace TradingLib.ServiceManager
             //加载成交接口
             LoadXAPI();
 
+            //初始化路由组
+            InitRouterGroup();
             //根据设置 设定默认模拟成交接口
             _defaultsimbroker = FindBroker(_defaultSimBrokerToken);//_defaultSimBrokerToken 通过数据库设置
 
@@ -129,6 +131,8 @@ namespace TradingLib.ServiceManager
             _defaultlivebroker = FindBroker(_defaultLiveBrokerToken);//_defaultLiveBrokerToken通过数据库设置
             
         }
+
+
         public void StartDefaultConnector()
         {
             Util.StatusSection(this.PROGRAME, "STARTCONNECTOR", QSEnumInfoColor.INFODARKRED,true);

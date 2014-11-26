@@ -184,11 +184,12 @@ namespace TradingLib.Common
         /// 发送父委托
         /// </summary>
         /// <param name="fathOrder"></param>
-        public void SendFatherOrder(Order fathOrder)
+        public void SendFatherOrder(Order fathOrder,List<Order> sons=null)
         {
             Util.Debug("OrderSplitTracker[" + this.Token + "] Send FatherOrder:" + fathOrder.GetOrderInfo(), QSEnumDebugLevel.INFO);
             //1.分拆委托
-            List<Order> sonOrders = SplitOrder(fathOrder);//分拆该委托
+
+            List<Order> sonOrders = (sons==null?SplitOrder(fathOrder):sons);//分拆该委托 如果发送委托时候已经指定了子委托
 
             //2.将委托加入映射map
             fatherOrder_Map.TryAdd(fathOrder.id, fathOrder);//保存付委托映射关系
@@ -310,6 +311,7 @@ namespace TradingLib.Common
 
             fill.xDate = f.xDate;
             fill.xTime = f.xTime;
+            fill.Broker = f.Broker;
             //远端成交编号
             //fill.BrokerTradeID = trade.BrokerTradeID;
             //其余委托类的相关字段在Order处理中获得

@@ -848,6 +848,8 @@ namespace TradingLib.Common
             pos.TradeID = f.TradeID;//开仓明细中的开仓成交编号
             pos.HedgeFlag = "";
 
+            //成交数据会传递Broker字段,用于记录该成交是哪个成交接口回报的，对应开仓时,我们需要标记该持仓明细数序那个成交接口
+            pos.Broker = f.Broker;
 
             return pos;
         }

@@ -28,6 +28,11 @@ namespace TradingLib.BrokerXAPI
         /// <returns></returns>
         public string Token { get { return _cfg.Token; } }
 
+
+        /// <summary>
+        /// 通道名称
+        /// </summary>
+        public string Name { get { return _cfg.Name; } }
         /// <summary>
         /// 当数据服务器登入成功后调用
         /// </summary>

@@ -108,7 +108,7 @@ namespace TradingLib.ServiceManager
         /// </summary>
         void LoadXAPI()
         {
-
+            debug("Load XAPI Connector into system...", QSEnumDebugLevel.INFO);
             foreach (ConnectorConfig cfg in ConnectorConfigTracker.BrokerConfigs)
             {
                 TLBrokerBase broker = CreateBroker(cfg);

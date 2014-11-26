@@ -46,49 +46,7 @@ namespace TradingLib.ServiceManager
         }
 
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryInterface", "QryInterface - query interface setted in system", "查询所有接口设置")]
-        public void CTE_QueryInterface(ISession session)
-        {
-            debug("查询所有接口设置", QSEnumDebugLevel.INFO);
-            Manager manger = session.GetManager();
-            if (manger.RightRootDomain())
-            {
-                ConnectorInterface[] ops = ConnectorConfigTracker.Interfaces.ToArray();
-                session.SendJsonReplyMgr(ops);
-            }
-        }
-
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryConnectorConfig", "QryConnectorConfig - query broker config", "查询所有通道设置")]
-        public void CTE_QueryConnectorConfig(ISession session)
-        {
-            debug("查询所有通道设置", QSEnumDebugLevel.INFO);
-            Manager manger = session.GetManager();
-            if (manger.RightRootDomain())
-            {
-                ConnectorConfig[] ops = ConnectorConfigTracker.ConnecotrConfigs.ToArray();
-                session.SendJsonReplyMgr(ops);
-            }
-        }
-
-
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateInterface", "UpdateInterface - Update interface setted in system", "更新接口设置",true)]
-        public void CTE_UpdateInterface(ISession session,string json)
-        {
-            try
-            {
-                debug("更新接口设置:" + json, QSEnumDebugLevel.INFO);
-                Manager manger = session.GetManager();
-                if (manger.RightRootDomain())
-                {
-                    ConnectorInterface itface = TradingLib.Mixins.LitJson.JsonMapper.ToObject<ConnectorInterface>(json);
-                    ORM.MConnector.UpdateConnectorInterface(itface);
-                }
-            }
-            catch (Exception ex)
-            {
-                session.OperationSuccess("更新接口设置成功");
-            }
-        }
+        
 
         [ContribCommandAttr(QSEnumCommandSource.CLI, "startbroker", "startbroker - 启动某个成交通道", "启动某个成交通道")]
         [ContribCommandAttr(QSEnumCommandSource.MessageWeb, "startbroker", "startbroker - 启动某个成交通道", "用于Web端停止某个某个交易通道")]
@@ -220,44 +178,42 @@ namespace TradingLib.ServiceManager
             }
         }
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageWeb, "qryconnector", "qryconnector - 查询所有通道信息与状态", "用于Web端查询查询所有通道信息与状态")]
-        public string QryConnector()
-        {
-            List<ConnectorWrapper> list = new List<ConnectorWrapper>();
-            foreach (IBroker b in brokerInstList.Values)
-            {
-                list.Add(new ConnectorWrapper(b as IConnecter));
-            }
+        //[ContribCommandAttr(QSEnumCommandSource.MessageWeb, "qryconnector", "qryconnector - 查询所有通道信息与状态", "用于Web端查询查询所有通道信息与状态")]
+        //public string QryConnector()
+        //{
+        //    List<ConnectorWrapper> list = new List<ConnectorWrapper>();
+        //    foreach (IBroker b in brokerInstList.Values)
+        //    {
+        //        list.Add(new ConnectorWrapper(b as IConnecter));
+        //    }
 
-            foreach (IDataFeed d in datafeedInstList.Values)
-            {
-                list.Add(new ConnectorWrapper(d as IConnecter));
-            }
+        //    foreach (IDataFeed d in datafeedInstList.Values)
+        //    {
+        //        list.Add(new ConnectorWrapper(d as IConnecter));
+        //    }
 
-            JsonWriter w = ReplyHelper.NewJWriterSuccess();
-            ReplyHelper.FillJWriter(list.ToArray(), w);
-            ReplyHelper.EndWriter(w);
+        //    JsonWriter w = ReplyHelper.NewJWriterSuccess();
+        //    ReplyHelper.FillJWriter(list.ToArray(), w);
+        //    ReplyHelper.EndWriter(w);
 
-            return w.ToString();
-            
-        }
+        //    return w.ToString();
+        //}
 
        
 
-        internal class ConnectorWrapper
-        {
-            IConnecter connector;
-            public ConnectorWrapper(IConnecter c)
-            {
-                connector = c;
-            }
+        //internal class ConnectorWrapper
+        //{
+        //    IConnecter connector;
+        //    public ConnectorWrapper(IConnecter c)
+        //    {
+        //        connector = c;
+        //    }
 
-            public string Name { get { return connector.Token; } }
-            public string ClassName { get { return connector.GetType().FullName; } }
-            public bool Status { get { return connector.IsLive; } }
-            public string Type { get { return connector is IBroker ? "Broker" : "DataFeed"; } }
-              
-        }
+        //    public string Name { get { return connector.Token; } }
+        //    public string ClassName { get { return connector.GetType().FullName; } }
+        //    public bool Status { get { return connector.IsLive; } }
+        //    public string Type { get { return connector is IBroker ? "Broker" : "DataFeed"; } }
+        //}
 
     }
 }

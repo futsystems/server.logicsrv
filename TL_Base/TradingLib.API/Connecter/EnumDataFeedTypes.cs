@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.ComponentModel;
 
 namespace TradingLib.API
 {
@@ -25,10 +26,12 @@ namespace TradingLib.API
         /// <summary>
         /// 行情通道
         /// </summary>
+        [Description("行情")]
         DataFeed,
         /// <summary>
         /// 成交通道
         /// </summary>
+        [Description("交易")]
         Broker,
     }
 }

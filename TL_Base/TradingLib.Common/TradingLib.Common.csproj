@@ -50,7 +50,10 @@
     <Compile Include="Messages\LogicFront.cs" />
     <Compile Include="ORM\DBHelper.cs" />
     <Compile Include="ORM\MySqlBase.cs" />
+    <Compile Include="Other\BrokerStatus.cs" />
     <Compile Include="Other\ConnectorConfig.cs" />
+    <Compile Include="Other\ConnectorInfo.cs" />
+    <Compile Include="Other\RouterGroup.cs" />
     <Compile Include="Other\Status.cs" />
     <Compile Include="Tracker\BrokerTracker.cs" />
     <Compile Include="Tracker\OrderSplitTracker.cs" />

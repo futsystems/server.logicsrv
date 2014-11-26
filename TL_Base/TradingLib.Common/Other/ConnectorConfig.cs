@@ -63,6 +63,11 @@ namespace TradingLib.Common
         /// 通道类别
         /// </summary>
         public QSEnumConnectorType Type { get; set; }
+
+        /// <summary>
+        /// 域ID
+        /// </summary>
+        public int Domain_ID { get; set; }
     }
 
     /// <summary>

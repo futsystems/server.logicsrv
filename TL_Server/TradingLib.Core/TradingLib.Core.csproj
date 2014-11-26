@@ -110,6 +110,8 @@
     <Compile Include="Core\ManagerExchange\Utils\ManagerUtils_Predicate.cs" />
     <Compile Include="Core\ManagerExchange\Utils\ManagerUtils_ObjectWrapper.cs" />
     <Compile Include="Core\ManagerExchange\MgrExchServer_PacketHandle_.cs" />
+    <Compile Include="Core\MessageExchange\BrokerRouter\BrokerRouter_.cs" />
+    <Compile Include="Core\MessageExchange\BrokerRouter\BrokerRouter_ExitPosition.cs" />
     <Compile Include="Core\MessageExchange\MsgExchServer_.cs" />
     <Compile Include="Core\MessageExchange\MsgExchServer_PacketHandle.cs" />
     <Compile Include="Core\MessageExchange\MsgExchServer_CTE.cs" />
@@ -120,7 +122,7 @@
     <Compile Include="Core\MessageExchange\MsgExchServer_Order.cs" />
     <Compile Include="Core\RiskCentre\PositionOffset.cs" />
     <Compile Include="Core\RiskCentre\PositionOffsetTracker.cs" />
-    <Compile Include="Core\MessageExchange\BrokerRouter.cs" />
+    <Compile Include="Core\MessageExchange\BrokerRouter\BrokerRouter.cs" />
     <Compile Include="Core\MessageExchange\DataFeedRouter.cs" />
     <Compile Include="Core\RiskCentre\RiskCentre_CheckAccount.cs" />
     <Compile Include="Core\RiskCentre\RiskCentre_CTE.cs" />

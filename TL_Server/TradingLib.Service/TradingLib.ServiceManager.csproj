@@ -69,7 +69,9 @@
     <Compile Include="ConnectorManager\ConnectorManager_XAPI.cs" />
     <Compile Include="ConnectorManager\ConntorConfigTracker.cs" />
     <Compile Include="ConnectorManager\ORM\MConnector.cs" />
-    <Compile Include="ConnectorManager\ConnectorManager_RouterManager.cs" />
+    <Compile Include="ConnectorManager\ConnectorManager_IRouterManager.cs" />
+    <Compile Include="ConnectorManager\ConnectorManager_RouterMgr.cs" />
+    <Compile Include="ConnectorManager\ConnectorManager_RouterGroup.cs" />
     <Compile Include="ContribManager\ContribManager.cs" />
     <Compile Include="CoreManager\CoreManager_CTE.cs" />
     <Compile Include="DebugConfig.cs" />

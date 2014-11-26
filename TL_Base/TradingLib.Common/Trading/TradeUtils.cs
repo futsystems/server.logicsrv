@@ -55,7 +55,8 @@ namespace TradingLib.Common
             sb.Append(" " + Math.Abs(f.xSize).ToString());
             sb.Append("@" + f.oSymbol.FormatPrice(f.xPrice));
             sb.Append(" C:" + f.Commission.ToString());
-            sb.Append(" R:" + f.Broker + "/" + f.TradeID);
+            sb.Append(string.Format("Broker:{0} BLocalID:{1} BRemoteID:{2} TradeID:{3} OrderSysID:{4} Breed:{5}", f.Broker, f.BrokerLocalOrderID, f.BrokerRemoteOrderID, f.TradeID, f.OrderSysID, f.Breed));
+            //sb.Append(" R:" + f.Broker + "/" + f.TradeID);
 
             return sb.ToString();
         }

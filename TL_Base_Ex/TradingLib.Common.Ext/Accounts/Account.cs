@@ -113,6 +113,11 @@ namespace TradingLib.Common
         public int Mgr_fk { get; set; }
 
         /// <summary>
+        /// 路由组ID 用于将某个帐户绑定到某个路由组上面,然后这组用户下单就会下单路由组内的成交接口上
+        /// </summary>
+        public int RG_FK { get; set; }
+
+        /// <summary>
         /// 与交易帐号所绑定的全局UserID
         /// </summary>
         public int UserID { get; set; }
