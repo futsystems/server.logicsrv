@@ -33,7 +33,7 @@ namespace TradingLib.ServiceManager
                     }
 
                 }
-                //rg.Start();
+                rg.Start();
             }
         }
     }

@@ -257,16 +257,20 @@ namespace TradingLib.Common
             fatherOrder.OrderSysID = fatherOrder.OrderSeq.ToString();//父委托OrderSysID编号 取系统的OrderSeq
 
             //更新父委托状态 成交数量 状态 以及 状态信息
+            int lastfilledsize = fatherOrder.FilledSize;
             fatherOrder.FilledSize = sonOrders.Sum(so => so.FilledSize);//累加成交数量
             fatherOrder.Size = sonOrders.Sum(so => so.UnsignedSize) * (o.Side ? 1 : -1);//累加未成交数量
             //fatherOrder.Comment = "";//填入状态信息
+
+            QSEnumOrderStatus oldstatus = fatherOrder.Status;//原始委托状态
+            bool fillsizechanged = lastfilledsize != fatherOrder.FilledSize;//成交数量变化
             //组合状态
             QSEnumOrderStatus fstatus = fatherOrder.Status;
             //子委托全部成交 则父委托为全部成交
-            if (sonOrders.All(so => so.Status == QSEnumOrderStatus.Filled))//所有filled则为filled
-                fstatus = QSEnumOrderStatus.Filled;
+            //if (sonOrders.All(so => so.Status == QSEnumOrderStatus.Filled))//所有filled则为filled
+            //    fstatus = QSEnumOrderStatus.Filled;
             //子委托任一待成交,则父委托为待成交
-            else if (sonOrders.Any(so => so.Status == QSEnumOrderStatus.Opened))//任何一个委托为opened则为open
+            if (sonOrders.Any(so => so.Status == QSEnumOrderStatus.Opened))//任何一个委托为opened则为open
                 fstatus = QSEnumOrderStatus.Opened;
             //子委托全部拒绝,则父委托为拒绝
             else if (sonOrders.All(so => so.Status == QSEnumOrderStatus.Reject))//所有拒绝则为拒绝
@@ -275,31 +279,48 @@ namespace TradingLib.Common
             else if (sonOrders.Any(so => so.Status == QSEnumOrderStatus.Canceled))//任何一个取消则为取消
                 fstatus = QSEnumOrderStatus.Canceled;
             //子委托有一个委托为部分成交
-            else if (sonOrders.Any(so => so.Status == QSEnumOrderStatus.PartFilled))//部分成交
-            {
-                //另一个委托为取消，则父委托为取消
-                if (sonOrders.Any(so => so.Status == QSEnumOrderStatus.Canceled))
-                    fstatus = QSEnumOrderStatus.Canceled;
+            //else if (sonOrders.Any(so => so.Status == QSEnumOrderStatus.PartFilled))//部分成交
+            //{
+            //    //另一个委托为取消，则父委托为取消
+            //    if (sonOrders.Any(so => so.Status == QSEnumOrderStatus.Canceled))
+            //        fstatus = QSEnumOrderStatus.Canceled;
 
-                //另一个委托为拒绝,则父委托为取消
-                //if (sonOrders.Any(so => so.Status == QSEnumOrderStatus.Reject))
-                fstatus = QSEnumOrderStatus.PartFilled;
-            }
+            //    //另一个委托为拒绝,则父委托为取消
+            //    //if (sonOrders.Any(so => so.Status == QSEnumOrderStatus.Reject))
+            //    fstatus = QSEnumOrderStatus.PartFilled;
+            //}
 
            
             fatherOrder.Status = fstatus;
-            if (fatherOrder.Status == QSEnumOrderStatus.Opened)//任何一个委托为opened则为open 规则补充
+            fatherOrder.Comment = o.Comment;
+            if (fatherOrder.Status != QSEnumOrderStatus.Canceled && fatherOrder.Status != QSEnumOrderStatus.Reject)
             {
-                if (Math.Abs(fatherOrder.Size) != fatherOrder.UnsignedSize)//没有任何平仓则为open其余为partfill
+                Util.Debug("fater order in pending stage,filledsize:" + fatherOrder.FilledSize.ToString() + " totalsize:" + fatherOrder.TotalSize.ToString(), QSEnumDebugLevel.INFO);
+                if (fatherOrder.FilledSize == 0)//成交数量为0 则为open状态
+                {
+                    fatherOrder.Status = QSEnumOrderStatus.Opened;
+                }
+                else if (fatherOrder.FilledSize < Math.Abs(fatherOrder.TotalSize)) //成交数量小于总数量 则为partfilled
                 {
                     fatherOrder.Status = QSEnumOrderStatus.PartFilled;
                 }
+                else //成交数量等于总数量 则为filled
+                {
+                    fatherOrder.Status = QSEnumOrderStatus.Filled;
+                }
             }
 
-            fatherOrder.Comment = o.Comment;
-
             Util.Debug("更新父委托:" + fatherOrder.GetOrderInfo(), QSEnumDebugLevel.INFO);
-            GotFatherOrder(fatherOrder);
+            //委托状态没有变化 并且 成交数量也没有变化
+            if (oldstatus == fatherOrder.Status && !fillsizechanged)
+            {
+                Util.Debug("FatherOrder do not chagen,will not notify client");
+            }
+            else
+            {
+                GotFatherOrder(fatherOrder);
+            }
+
             if (fatherOrder.Status == QSEnumOrderStatus.Canceled)
             {
                 GotFatherCancel(fatherOrder.id);

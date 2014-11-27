@@ -101,6 +101,7 @@ namespace TradingLib.Core
             {
 
                 debug("PositionDetails to be closed are in diferent broker,send order via spliter.", QSEnumDebugLevel.INFO);
+                splitedordermap.TryAdd(o.id, o);
                 _splittracker.SendFatherOrder(o, SplitOrder(o, brokerclosemap));
                 return true;
             }
