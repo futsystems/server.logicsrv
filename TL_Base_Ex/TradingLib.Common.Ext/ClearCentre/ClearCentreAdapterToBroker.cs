@@ -59,9 +59,17 @@ namespace TradingLib.Common
         }
 
 
-        public Order SentOrder(long id)
+        public Order SentOrder(long id,QSEnumOrderBreedType type = QSEnumOrderBreedType.ACCT)
         {
-            return _clearcentre.SentOrder(id);
+            if (type == QSEnumOrderBreedType.ACCT)
+            {
+                return _clearcentre.SentOrder(id);
+            }
+            if (type == QSEnumOrderBreedType.ROUTER)
+            {
+                return TLCtxHelper.Ctx.MessageExchange.SentRouterOrder(id);
+            }
+            return null;
         }
         /// <summary>
         /// 获得日内成交接口的所有委托

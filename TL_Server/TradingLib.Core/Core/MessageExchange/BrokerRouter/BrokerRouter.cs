@@ -103,7 +103,7 @@ namespace TradingLib.Core
             StartProcessMsgOut();
             _ordHelper.Start();
             _tifengine.Start();
-
+            ResumeRouterOrder();
         }
 
         public void Stop()

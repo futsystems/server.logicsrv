@@ -194,6 +194,8 @@ namespace TradingLib.API
 
 
         #region 委托分解属性
+
+        QSEnumOrderBreedType ?FatherBreed { get; set; }
         /// <summary>
         /// 父委托编号
         /// </summary>

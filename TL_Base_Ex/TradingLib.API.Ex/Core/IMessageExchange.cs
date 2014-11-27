@@ -47,5 +47,13 @@ namespace TradingLib.API
         /// <param name="symbol"></param>
         /// <returns></returns>
         bool IsSymbolTickLive(string symbol);
+
+
+        /// <summary>
+        /// 获得某个Router分解委托
+        /// </summary>
+        /// <param name="val"></param>
+        /// <returns></returns>
+        Order SentRouterOrder(long val);
     }
 }

@@ -14,6 +14,25 @@ namespace TradingLib.Core
         /// 记录委托数据
         /// </summary>
         /// <param name="o"></param>
+        internal void LogRouterOrder(Order o)
+        {
+            _asynLoger.newOrder(o);
+        }
+
+        /// <summary>
+        /// 记录委托更新数据
+        /// </summary>
+        /// <param name="o"></param>
+        internal void LogRouterOrderUpdate(Order o)
+        {
+            _asynLoger.updateOrder(o);
+        }
+
+
+        /// <summary>
+        /// 记录委托数据
+        /// </summary>
+        /// <param name="o"></param>
         internal void LogBrokerOrder(Order o)
         {
             _asynLoger.newOrder(o);
@@ -81,6 +100,15 @@ namespace TradingLib.Core
         public IEnumerable<PositionDetail> SelectBrokerPositionDetails(string token)
         {
             return ORM.MSettlement.SelectBrokerPositionDetails(TLCtxHelper.Ctx.SettleCentre.LastSettleday).Where(p => p.Broker.Equals(token)).Select(pos => { pos.oSymbol = BasicTracker.SymbolTracker[pos.Symbol]; return pos; });
+        }
+
+        /// <summary>
+        /// 获得路由侧所有分解委托
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Order> SelectRouterOrders()
+        {
+            return ORM.MTradingInfo.SelectRouterOrders();
         }
     }
 }

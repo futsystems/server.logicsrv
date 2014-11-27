@@ -223,6 +223,7 @@ namespace TradingLib.Common
             this.FrontIDi = copythis.FrontIDi;
             this.RequestID = copythis.RequestID;
 
+            this.FatherBreed = copythis.FatherBreed;
             this.FatherID = copythis.FatherID;
             this.Breed = copythis.Breed;
         }

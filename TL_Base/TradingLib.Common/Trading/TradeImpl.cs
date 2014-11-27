@@ -247,6 +247,15 @@ namespace TradingLib.Common
 
 
         #region 委托分解属性
+
+        QSEnumOrderBreedType? _fatherbreed = null;
+        
+        /// <summary>
+        /// 分解父源
+        /// </summary>
+        public QSEnumOrderBreedType? FatherBreed { get { return _fatherbreed; } set { _fatherbreed = value; } }
+        
+        
         long _fatherID = 0;
         /// <summary>
         /// 父委托编号
@@ -316,6 +325,7 @@ namespace TradingLib.Common
             this.OrderSysID = copytrade.OrderSysID;
             this.TradeID = copytrade.TradeID;
 
+            this.FatherBreed = copytrade.FatherBreed;
             this.FatherID = copytrade.FatherID;
             this.Breed = copytrade.Breed;
         }

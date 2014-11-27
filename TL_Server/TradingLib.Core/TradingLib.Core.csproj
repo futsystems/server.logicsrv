@@ -82,7 +82,7 @@
     <Compile Include="Core\ClearCentre\ClearCentreSrv_CTE.cs" />
     <Compile Include="Core\ClearCentre\JsonWrapperClearCentre.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_AccountCashOperation.cs" />
-    <Compile Include="Core\ClearCentre\ClearCentreSrv_Broker.cs" />
+    <Compile Include="Core\ClearCentre\ClearCentreSrv_LogRestore.cs" />
     <Compile Include="Core\ManagerExchange\ContractBankUtils.cs" />
     <Compile Include="Core\ManagerExchange\ManagerRights.cs" />
     <Compile Include="Core\ManagerExchange\ORM\MUIAccess.cs" />

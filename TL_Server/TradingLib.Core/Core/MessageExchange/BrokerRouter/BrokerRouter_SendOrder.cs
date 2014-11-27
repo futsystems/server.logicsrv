@@ -19,6 +19,23 @@ namespace TradingLib.Core
     public partial class BrokerRouter
     {
 
+        //路由侧之需要记录委托关系,路由侧不需要记录成交 用于恢复交易状态，路由侧只需要恢复委托 保存中间分解路径
+        public event OrderDelegate NewRouterOrderEvent;
+        protected void LogRouterOrder(Order o)
+        {
+            if (NewRouterOrderEvent != null)
+                NewRouterOrderEvent(o);
+        }
+        public event OrderDelegate NewRouterOrderUpdateEvent;
+        protected void LogRouterOrderUpdate(Order o)
+        {
+            if (NewRouterOrderUpdateEvent != null)
+                NewRouterOrderUpdateEvent(o);
+
+        }
+
+
+
         bool SendOrderOut(Order o,out string errorTitle)
         { 
             IAccount account = _clearCentre[o.Account];
@@ -139,6 +156,60 @@ namespace TradingLib.Core
         }
 
         /// <summary>
+        /// 查找某个路由侧委托
+        /// </summary>
+        /// <param name="val"></param>
+        /// <returns></returns>
+        public Order SentRouterOrder(long val)
+        {
+            return _splittracker.SentSonOrder(val);
+        }
+
+        /// <summary>
+        /// 从数据库恢复日内委托数据
+        /// 该函数需要在清算中心数据加载后才可以被调用,否则我们无法获得到对应的父委托(分帐户侧数据)
+        /// </summary>
+        void ResumeRouterOrder()
+        {
+            debug("resume router roder....",QSEnumDebugLevel.INFO);
+            //从数据库恢复子委托数据
+            IEnumerable<Order> orderlist = TLCtxHelper.Ctx.ClearCentre.SelectRouterOrders();
+            //生成父子委托对
+            List<FatherSonOrderPair> pairs = GetOrderPairs(orderlist);
+            //恢复到分解器
+            foreach (FatherSonOrderPair pair in pairs)
+            {
+                _splittracker.ResumeOrder(pair);
+                //将父委托记录到本地缓存
+                splitedordermap.TryAdd(pair.FatherOrder.id, pair.FatherOrder);
+            }
+            debug("resumed router order num:" + splitedordermap.Count.ToString(), QSEnumDebugLevel.INFO);
+        }
+
+        List<FatherSonOrderPair> GetOrderPairs(IEnumerable<Order> sonOrders)
+        {
+            Dictionary<long, FatherSonOrderPair> pairmap = new Dictionary<long, FatherSonOrderPair>();
+            foreach (Order o in sonOrders)
+            {
+                //路由侧委托都是从帐户侧分解的 这里不用判断
+                Order father = TLCtxHelper.Ctx.ClearCentre.SentOrder(o.FatherID);
+                   
+                //如果存在父委托
+                if (father != null)
+                {
+                    //如果不存在该父委托 则增加
+                    if (!pairmap.Keys.Contains(father.id))
+                    {
+                        pairmap[father.id] = new FatherSonOrderPair(father);
+                    }
+                    //将子委托加入到列表
+                    pairmap[father.id].SonOrders.Add(o);
+                }
+            }
+            return pairmap.Values.ToList();
+        }
+
+        /// <summary>
         /// 记录拆分的父亲委托
         /// </summary>
         ConcurrentDictionary<long, Order> splitedordermap = new ConcurrentDictionary<long, Order>();
@@ -217,6 +288,7 @@ namespace TradingLib.Core
 
                 //设定分解后委托父ID
                 neworder.FatherID = o.id;//标注该委托的父委托为原始委托ID
+                neworder.FatherBreed = o.Breed;
                 //设定当前分解源
                 neworder.Breed = QSEnumOrderBreedType.ROUTER;
 
@@ -232,6 +304,7 @@ namespace TradingLib.Core
                 //重置委托相关状态
                 //neworder.Account = key;拆分后委托Account不变,否则该委托无法通过帐户路由去找到对应的数据
                 orderlist.Add(neworder);
+                LogRouterOrder(neworder);//记录分解的委托
             }
             return orderlist;
         }

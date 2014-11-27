@@ -423,6 +423,7 @@ namespace Broker.Live
             {
                 //设定分解后委托父ID
                 order.FatherID = fatherorder.id;
+                order.FatherBreed = fatherorder.Breed;
                 //设定当前分解源
                 order.Breed = QSEnumOrderBreedType.BROKER;
 
@@ -543,7 +544,19 @@ namespace Broker.Live
             Dictionary<long, FatherSonOrderPair> pairmap = new Dictionary<long, FatherSonOrderPair>();
             foreach (Order o in sonOrders)
             {
-                Order father = ClearCentre.SentOrder(o.FatherID);
+                Order father = null;
+                if (o.FatherBreed != null)
+                { 
+                    QSEnumOrderBreedType bt = (QSEnumOrderBreedType)o.FatherBreed;
+                    if (bt == QSEnumOrderBreedType.ACCT)//如果直接分帐户侧分解 从清算中查找该委托
+                    {
+                        father = ClearCentre.SentOrder(o.FatherID);
+                    }
+                    if (bt == QSEnumOrderBreedType.ROUTER)
+                    { 
+                        
+                    }
+                }
                 //如果存在父委托
                 if (father != null)
                 {

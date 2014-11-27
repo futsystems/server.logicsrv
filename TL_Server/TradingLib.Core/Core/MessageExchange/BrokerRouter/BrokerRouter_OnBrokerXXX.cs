@@ -55,6 +55,7 @@ namespace TradingLib.Core
             if (order.Breed == QSEnumOrderBreedType.ROUTER)
             {
                 debug("Reply ErrorOrder To Spliter:" + order.GetOrderInfo() + " ErrorTitle:" + error.ErrorMessage, QSEnumDebugLevel.INFO);
+                LogRouterOrderUpdate(order);//更新路由侧委托
                 _splittracker.GotSonOrderError(order, error);
             }
             debug("Reply ErrorOrder To MessageExch:" + order.GetOrderInfo() + " ErrorTitle:" + error.ErrorMessage, QSEnumDebugLevel.INFO);
@@ -93,6 +94,7 @@ namespace TradingLib.Core
                 if (o.Breed == QSEnumOrderBreedType.ROUTER)
                 {
                     debug("Reply Order To Spliter:" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
+                    LogRouterOrderUpdate(o);//更新路由侧委托
                     _splittracker.GotSonOrder(o);
                     return;
                 }

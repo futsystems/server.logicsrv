@@ -43,7 +43,8 @@ namespace TradingLib.API
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Order SentOrder(long id); 
+        Order SentOrder(long id,QSEnumOrderBreedType type = QSEnumOrderBreedType.ACCT); 
+
 
         /// <summary>
         /// 获得日内成交接口的所有委托

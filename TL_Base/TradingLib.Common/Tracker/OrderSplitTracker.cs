@@ -53,6 +53,7 @@ namespace TradingLib.Common
             return null;
         }
 
+
         //用于通过父委托ID找到对应的子委托
         ConcurrentDictionary<long, List<Order>> fatherSonOrder_Map = new ConcurrentDictionary<long, List<Order>>();//父子子委托映射关系
         //通过父委托ID找到对应的子委托对
@@ -77,7 +78,23 @@ namespace TradingLib.Common
             return null;
         }
 
+        //子委托id与子委托映射
+        ConcurrentDictionary<long, Order> sonOrder_Map = new ConcurrentDictionary<long, Order>();
+        Order SoneID2SonOrder(long id)
+        {
+            if (sonOrder_Map.Keys.Contains(id))
+                return sonOrder_Map[id];
+            return null;
+        }
 
+        /// <summary>
+        /// 获得通过该分解器发送的某个子委托
+        /// </summary>
+        /// <param name="id"></param>
+        public Order SentSonOrder(long id)
+        {
+            return SoneID2SonOrder(id);
+        }
         /// <summary>
         /// 清空内存状态
         /// </summary>
@@ -86,6 +103,7 @@ namespace TradingLib.Common
             fatherOrder_Map.Clear();
             fatherSonOrder_Map.Clear();
             sonFathOrder_Map.Clear();
+            sonOrder_Map.Clear();
         }
         /// <summary>
         /// 恢复父子委托关系
@@ -99,6 +117,7 @@ namespace TradingLib.Common
             foreach(Order o in pair.SonOrders)
             {
                 sonFathOrder_Map.TryAdd(o.id, pair.FatherOrder);
+                sonOrder_Map.TryAdd(o.id, o);
             }
         }
 
