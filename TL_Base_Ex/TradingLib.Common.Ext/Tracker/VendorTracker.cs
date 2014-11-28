@@ -25,7 +25,7 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Vendor this[int id]
+        public VendorImpl this[int id]
         {
             get
             {
@@ -38,7 +38,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 获得所有实盘帐户对象
         /// </summary>
-        public IEnumerable<Vendor> Vendors
+        public IEnumerable<VendorImpl> Vendors
         {
             get
             {

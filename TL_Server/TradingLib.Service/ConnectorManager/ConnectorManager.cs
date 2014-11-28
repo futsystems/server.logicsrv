@@ -152,7 +152,7 @@ namespace TradingLib.ServiceManager
             debug("Start RouterGroup ....", QSEnumDebugLevel.INFO);
             foreach (RouterGroup rg in BasicTracker.RouterGroupTracker.RouterGroups)
             {
-                rg.Start();
+                //rg.Start();
             }
 
         }

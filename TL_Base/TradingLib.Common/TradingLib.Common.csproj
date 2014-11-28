@@ -56,7 +56,7 @@
     <Compile Include="Vendor\IBrokerUtils.cs" />
     <Compile Include="Vendor\PositionMetricImpl.cs" />
     <Compile Include="Vendor\PositionMetricHelper.cs" />
-    <Compile Include="Vendor\RouterGroup.cs" />
+    <Compile Include="Vendor\RouterGroupImpl.cs" />
     <Compile Include="Other\Status.cs" />
     <Compile Include="Tracker\BrokerTracker.cs" />
     <Compile Include="Tracker\OrderSplitTracker.cs" />

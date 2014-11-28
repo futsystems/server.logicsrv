@@ -110,6 +110,7 @@
     <Compile Include="Core\ManagerExchange\Utils\ManagerUtils_Predicate.cs" />
     <Compile Include="Core\ManagerExchange\Utils\ManagerUtils_ObjectWrapper.cs" />
     <Compile Include="Core\ManagerExchange\MgrExchServer_PacketHandle_.cs" />
+    <Compile Include="Core\ManagerExchange\MgrExchServer_CTE_Vendor.cs" />
     <Compile Include="Core\MessageExchange\BrokerRouter\BrokerRouter_.cs" />
     <Compile Include="Core\MessageExchange\BrokerRouter\BrokerRouter_SendOrder.cs" />
     <Compile Include="Core\MessageExchange\BrokerRouter\BrokerRouter_LoadBroker.cs" />

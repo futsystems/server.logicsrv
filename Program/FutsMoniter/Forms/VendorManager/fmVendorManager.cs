@@ -15,15 +15,24 @@ using TradingLib.Mixins.LitJson;
 
 namespace FutsMoniter
 {
-    public partial class fmConnectorCfg : ComponentFactory.Krypton.Toolkit.KryptonForm,IEventBinder
+    public partial class fmVendorManager : ComponentFactory.Krypton.Toolkit.KryptonForm,IEventBinder
     {
-        public fmConnectorCfg()
+        public fmVendorManager()
         {
             InitializeComponent();
             SetPreferences();
             InitTable();
             BindToTable();
 
+            SetPreferences_Vendor();
+            InitTable_Vendor();
+            BindToTable_Vendor();
+
+            SetPreferences_RouterItem();
+            InitTable_RouterItem();
+            BindToTable_RouterItem();
+
+            Factory.IDataSourceFactory(cbrgstrategytype).BindDataSource(UIUtil.genEnumList<QSEnumRouterStrategy>());
             this.Load += new EventHandler(fmConnectorCfg_Load);
         }
 
@@ -31,29 +40,43 @@ namespace FutsMoniter
         {
             WireEvent();
 
-            Globals.TLClient.ReqQryConnectorConfig();
+            
+            Globals.TLClient.ReqQryVendor();
         }
 
         void WireEvent()
         {
             Globals.RegIEventHandler(this);
             configgrid.DoubleClick +=new EventHandler(configgrid_DoubleClick);
-            configgrid.RowPrePaint +=new DataGridViewRowPrePaintEventHandler(configgrid_RowPrePaint);
+            configgrid.RowPrePaint +=new DataGridViewRowPrePaintEventHandler(RowPrePaint);
+
+            vendorgrid.RowPrePaint += new DataGridViewRowPrePaintEventHandler(RowPrePaint);
+            routeritemgrid.RowPrePaint +=new DataGridViewRowPrePaintEventHandler(RowPrePaint);
+            ctRouterGroupList1.RouterGroupSelectedChangedEvent += new TradingLib.API.VoidDelegate(ctRouterGroupList1_RouterGroupSelectedChangedEvent);
+        
+            //ctRouterGroupList1.RouterGroupSelectedChangedEvent +=new TradingLib.API.VoidDelegate(ctRouterGroupList1_RouterGroupSelectedChangedEvent);
         }
+
+
+
+
         public void OnInit()
         {
             Globals.CallBackCentre.RegisterCallback("ConnectorManager", "QryConnectorConfig", this.OnQryConnectorConfig);//查询交易帐户出入金请求
-            //Globals.CallBackCentre.RegisterCallback("MgrExchServer", "NotifyCashOperation", this.OnNotifyCashOperation);
+            Globals.CallBackCentre.RegisterCallback("MgrExchServer", "QryVendor", this.OnQryVendor);
+            Globals.CallBackCentre.RegisterCallback("ConnectorManager", "QryRouterItem", this.OnQryRouterItem);
 
         }
 
         public void OnDisposed()
         {
             Globals.CallBackCentre.UnRegisterCallback("ConnectorManager", "QryConnectorConfig", this.OnQryConnectorConfig);//查询交易帐户出入金请求
-            //Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "NotifyCashOperation", this.OnNotifyCashOperation);
+            Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "QryVendor", this.OnQryVendor);
+            Globals.CallBackCentre.UnRegisterCallback("ConnectorManager", "QryRouterItem", this.OnQryRouterItem);
 
         }
 
+        bool _gotconnector = false;
         void OnQryConnectorConfig(string jsonstr)
         {
             JsonData jd = TradingLib.Mixins.JsonReply.ParseJsonReplyData(jsonstr);
@@ -65,6 +88,7 @@ namespace FutsMoniter
                 {
                     InvokeGotConnector(op);
                 }
+                _gotconnector = true;
             }
             else//如果没有配资服
             {
@@ -95,7 +119,7 @@ namespace FutsMoniter
         }
 
 
-        void configgrid_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        void RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
         {
             e.PaintParts = e.PaintParts ^ DataGridViewPaintParts.Focus;
         }
@@ -110,6 +134,8 @@ namespace FutsMoniter
                 fm.Show();
             }
         }
+
+
         ConcurrentDictionary<int, ConnectorConfig> connectormap = new ConcurrentDictionary<int, ConnectorConfig>();
         ConcurrentDictionary<int, int> connectorrowid = new ConcurrentDictionary<int, int>();
 
@@ -153,6 +179,24 @@ namespace FutsMoniter
                     gt.Rows[i][USR1] = c.usrinfo_field1;
                     gt.Rows[i][USR2] = c.usrinfo_field2;
                     gt.Rows[i][INTERFACE] = c.interface_fk;
+                    string vtitle=string.Empty;
+                    if(c.vendor_id==0)
+                    {
+                        vtitle = "未绑定";
+                    }
+                    else
+                    {
+                        VendorSetting setting = ID2VendorSetting(c.vendor_id);
+                        if (setting == null)
+                        {
+                            vtitle = "绑定异常";
+                        }
+                        else
+                        {
+                            vtitle = setting.Name;
+                        }
+                    }
+                    gt.Rows[i][VENDORACCOUNT] = vtitle;
 
                     connectorrowid.TryAdd(c.ID, i);
                     connectormap.TryAdd(c.ID, c);
@@ -171,7 +215,7 @@ namespace FutsMoniter
         #region 表格
         #region 显示字段
 
-        const string ID = "全局ID";
+        const string ID = "通道ID";
         const string SRVADDRESS = "服务器地址";
         const string SRVPORT = "端口";
         const string SRV1 = "参数1";
@@ -184,7 +228,8 @@ namespace FutsMoniter
         const string INTERFACE = "接口";
         const string TOKEN = "标识";
         const string NAME = "名称";
-
+        const string VENDORACCOUNT = "帐户";
+        const string ISBINDED = "Binded";
 
         #endregion
 
@@ -232,7 +277,8 @@ namespace FutsMoniter
             gt.Columns.Add(USR2);//1
 
             gt.Columns.Add(INTERFACE);//1
-            
+            gt.Columns.Add(VENDORACCOUNT);
+            gt.Columns.Add(ISBINDED);
             
 
         }
@@ -246,6 +292,13 @@ namespace FutsMoniter
 
             datasource.DataSource = gt;
             grid.DataSource = datasource;
+            grid.Columns[SRV1].Visible = false;
+            grid.Columns[SRV2].Visible = false;
+            grid.Columns[SRV3].Visible = false;
+            grid.Columns[PASSWORD].Visible = false;
+            grid.Columns[USR1].Visible = false;
+            grid.Columns[USR2].Visible = false;
+
 
             //grid.Columns[ID].Width = 50;
             //grid.Columns[NAME].Width = 120;

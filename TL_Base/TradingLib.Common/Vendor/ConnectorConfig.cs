@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
+using TradingLib.Mixins.LitJson;
 
 
 namespace TradingLib.Common
@@ -149,6 +150,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 接口
         /// </summary>
+        [NoJsonExportAttr()]
         public ConnectorInterface Interface { get; set; }
 
 

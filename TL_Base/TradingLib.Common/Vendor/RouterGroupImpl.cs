@@ -4,14 +4,12 @@ using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
 using TradingLib.API;
+using TradingLib.Mixins.LitJson;
 
 namespace TradingLib.Common
 {
 
-    /// <summary>
-    /// 路由与路由组映射关系
-    /// </summary>
-    public class RouterItemImpl : RouterItem
+    public class RouterItemSetting
     {
         /// <summary>
         /// 全局序号
@@ -28,24 +26,10 @@ namespace TradingLib.Common
         /// </summary>
         public int routegroup_id { get; set; }
 
-
-        RouterGroup _routegroup = null;
-
-        /// <summary>
-        /// 路由组ID 所属路由组
-        /// </summary>
-        public RouterGroup RouteGroup { get { return _routegroup; } set { _routegroup = value; } }
-
         /// <summary>
         /// 实盘帐号ID
         /// </summary>
         public int vendor_id { get; set; }
-
-        Vendor _vendor = null;
-        /// <summary>
-        /// 实盘帐号对象
-        /// </summary>
-        public Vendor Vendor { get { return _vendor; } set { _vendor = value; } }
 
         /// <summary>
         /// 接受委托规则
@@ -56,15 +40,72 @@ namespace TradingLib.Common
         /// 是否激活
         /// </summary>
         public bool Active { get; set; }
+
+    }
+    /// <summary>
+    /// 路由与路由组映射关系
+    /// </summary>
+    public class RouterItemImpl : RouterItemSetting,RouterItem
+    {
+        RouterGroup _routegroup = null;
+        /// <summary>
+        /// 路由组ID 所属路由组
+        /// </summary>
+        [NoJsonExportAttr()]
+        public RouterGroup RouteGroup { get { return _routegroup; } set { _routegroup = value; } }
+        Vendor _vendor = null;
+        /// <summary>
+        /// 实盘帐号对象
+        /// </summary>
+        [NoJsonExportAttr()]
+        public Vendor Vendor { get { return _vendor; } set { _vendor = value; } }
     }
 
 
-    public class RouterGroupImpl : RouterGroup
+    public class RouterGroupSetting
+    {
+        /// <summary>
+        /// 全局ID
+        /// </summary>
+        public int ID { get; set; }
+
+        /// <summary>
+        /// 路由组名称
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// 策略名 决定了该成交路由组工作运行策略
+        /// </summary>
+        public QSEnumRouterStrategy Strategy { get; set; }
+
+        /// <summary>
+        /// 域ID
+        /// </summary>
+        public int Domain_ID { get; set; }
+
+
+        /// <summary>
+        /// 描述
+        /// </summary>
+        public string Description { get; set; }
+        
+    }
+
+    public class RouterGroupImpl : RouterGroupSetting, RouterGroup
     {
         ConcurrentDictionary<int, RouterItem> routeritemmap = new ConcurrentDictionary<int, RouterItem>();
-        //ConcurrentDictionary<string, Vendor> vendoermap = new ConcurrentDictionary<string, Vendor>();
-        //ConcurrentDictionary<string, int> prioritymap = new ConcurrentDictionary<string, int>();
 
+        /// <summary>
+        /// 返回所有路由项目
+        /// </summary>
+        public IEnumerable<RouterItem> RouterItems
+        {
+            get
+            {
+                return routeritemmap.Values;
+            }
+        }
 
         public IEnumerable<Vendor> GetVendors()
         {
@@ -223,31 +264,7 @@ namespace TradingLib.Common
             //prioritymap.TryRemove(broker.Token, out ri);
         }
 
-        /// <summary>
-        /// 全局ID
-        /// </summary>
-        public int ID { get; set; }
-
-        /// <summary>
-        /// 路由组名称
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// 策略名 决定了该成交路由组工作运行策略
-        /// </summary>
-        public QSEnumRouterStrategy Strategy { get; set; }
-
-        /// <summary>
-        /// 域ID
-        /// </summary>
-        public int Domain_ID { get; set; }
-
-
-        /// <summary>
-        /// 描述
-        /// </summary>
-        public string Description { get; set; }
+       
 
     }
 }

@@ -37,6 +37,11 @@ namespace TradingLib.API
         void RemoveRouterItem(RouterItem item);
 
         /// <summary>
+        /// 路由项目
+        /// </summary>
+        IEnumerable<RouterItem> RouterItems { get; }
+
+        /// <summary>
         /// 全局ID
         /// </summary>
         int ID { get; set; }

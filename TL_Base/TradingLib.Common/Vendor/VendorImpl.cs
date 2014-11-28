@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TradingLib.API;
+using TradingLib.Mixins.LitJson;
 
 namespace TradingLib.Common
 {
-    /// <summary>
-    /// 实盘帐户对象
-    /// </summary>
-    public class VendorImpl : Vendor
+
+    public class VendorSetting
     {
         /// <summary>
         /// 数据库编号
@@ -45,13 +44,24 @@ namespace TradingLib.Common
         /// </summary>
         public decimal MarginLimit { get; set; }
 
-       
+        /// <summary>
+        /// 通道标识，在绑定Broker时设定
+        /// 解绑时置空
+        /// </summary>
+        public string BrokerToken { get; set; }
+    }
+    /// <summary>
+    /// 实盘帐户对象
+    /// </summary>
+    public class VendorImpl : VendorSetting,Vendor
+    {
 
         IBroker _broker = null;
         /// <summary>
         /// 该实盘帐户对应的Broker对象 Broker对象用于业务操作 比如下单，撤单等
         /// 实盘帐户对象维护了逻辑部分的数据比如资金,是否可用等。Broker只是底层的业务对象
         /// </summary>
+        [NoJsonExportAttr()]
         public IBroker Broker { get { return _broker; } }
 
 
@@ -62,6 +72,7 @@ namespace TradingLib.Common
         public void BindBroker(IBroker broker)
         {
             _broker = broker;
+            this.BrokerToken = broker.Token;
         }
     }
 }

@@ -81,7 +81,14 @@
   <ItemGroup>
     <Compile Include="API\IEventBinder.cs" />
     <Compile Include="Client\AsyncClient_MQ.cs" />
+    <Compile Include="Client\TLClientNet_Request_Connector.cs" />
     <Compile Include="Common\ManagerUtils.cs" />
+    <Compile Include="Controls\Base\ctRouterGroupList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\Base\ctRouterGroupList.Designer.cs">
+      <DependentUpon>ctRouterGroupList.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Base\ctTLPermissionEdit.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -271,11 +278,17 @@
     <Compile Include="Forms\fmAgentPermission.Designer.cs">
       <DependentUpon>fmAgentPermission.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\fmConnectorCfg.cs">
+    <Compile Include="Forms\VendorManager\fmRouterItem.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\fmConnectorCfg.Designer.cs">
-      <DependentUpon>fmConnectorCfg.cs</DependentUpon>
+    <Compile Include="Forms\VendorManager\fmRouterItem.Designer.cs">
+      <DependentUpon>fmRouterItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\VendorManager\fmVendorManager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\VendorManager\fmVendorManager.Designer.cs">
+      <DependentUpon>fmVendorManager.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\fmConnectorEdit.cs">
       <SubType>Form</SubType>
@@ -496,9 +509,7 @@
     <Compile Include="Forms\fmSymbolEdit.Designer.cs">
       <DependentUpon>fmSymbolEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\fms\fmSyncCTPSymbols.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="Forms\fms\fmSyncCTPSymbols.cs" />
     <Compile Include="Forms\fms\fmSyncCTPSymbols.Designer.cs">
       <DependentUpon>fmSyncCTPSymbols.cs</DependentUpon>
     </Compile>
@@ -513,6 +524,15 @@
     </Compile>
     <Compile Include="Forms\fms\fmAccountCashOperation.Designer.cs">
       <DependentUpon>fmAccountCashOperation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\VendorManager\fmVendorManager_.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\VendorManager\fmVendorManager_Vendor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\VendorManager\fmVendorManager_RouterGroup.cs">
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Glabols.cs" />
     <Compile Include="Globals_.cs" />
@@ -568,6 +588,9 @@
     </Compile>
     <Compile Include="Utils.cs" />
     <Compile Include="Globals_RegEvent.cs" />
+    <EmbeddedResource Include="Controls\Base\ctRouterGroupList.resx">
+      <DependentUpon>ctRouterGroupList.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\Base\ctTLPermissionEdit.resx">
       <DependentUpon>ctTLPermissionEdit.cs</DependentUpon>
     </EmbeddedResource>
@@ -637,8 +660,11 @@
     <EmbeddedResource Include="Forms\fmAgentPermission.resx">
       <DependentUpon>fmAgentPermission.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\fmConnectorCfg.resx">
-      <DependentUpon>fmConnectorCfg.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\VendorManager\fmRouterItem.resx">
+      <DependentUpon>fmRouterItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\VendorManager\fmVendorManager.resx">
+      <DependentUpon>fmVendorManager.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\fmConnectorEdit.resx">
       <DependentUpon>fmConnectorEdit.cs</DependentUpon>

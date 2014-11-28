@@ -62,7 +62,7 @@ namespace FutsMoniter
 
         void kryptonRibbonGroupButton_connectorlist_Click(object sender, EventArgs e)
         {
-            fmConnectorCfg fm = new fmConnectorCfg();
+            fmVendorManager fm = new fmVendorManager();
             fm.Show();
         }
 

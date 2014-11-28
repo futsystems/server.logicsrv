@@ -55,8 +55,8 @@ namespace TradingLib.ServiceManager
             }
         }
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryRouterGroup", "QryRouterGroup - query routegroup", "查询路由组", true)]
-        public void CTE_UpdateInterface(ISession session)
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryRouterGroup", "QryRouterGroup - query routegroup", "查询路由组")]
+        public void CTE_QryRouterGroup(ISession session)
         {
             try
             {
@@ -72,6 +72,32 @@ namespace TradingLib.ServiceManager
                 session.OperationSuccess("更新接口设置成功");
             }
         }
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryRouterItem", "QryRouterItem - query routeitem", "查询路由")]
+        public void CTE_QryRouteItem(ISession session, int rgid)
+        {
+            try
+            {
+                Manager manger = session.GetManager();
+
+                if (manger.RightRootDomain())
+                {
+                    RouterGroup rg = BasicTracker.RouterGroupTracker[rgid];
+                    if (rg == null)
+                    {
+                        throw new FutsRspError("查询路由组不存在");
+                    }
+                    RouterItem[] items = rg.RouterItems.ToArray();
+                    session.SendJsonReplyMgr(items);
+                }
+            }
+            catch (FutsRspError ex)
+            {
+                session.OperationError(ex);
+            }
+        }
+
+
 
 
     }
