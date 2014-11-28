@@ -631,6 +631,33 @@ namespace Broker.SIM
         /// </summary>
         public IEnumerable<Position> Positions { get { return new List<Position>(); } }
 
+        /// <summary>
+        /// 返回所有持仓状态统计数据
+        /// </summary>
+        public  IEnumerable<PositionMetric> PositionMetrics { get { return new List<PositionMetric>(); } }
+
+        /// <summary>
+        /// 获得某个合约的持仓状态统计数据
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        public  PositionMetric GetPositionMetric(string symbol)
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// 返回持仓预计调整量
+        /// </summary>
+        /// <param name="o"></param>
+        /// <returns></returns>
+        public  int GetPositionAdjustment(Order o)
+        {
+            if (o.IsEntryPosition)
+                return o.UnsignedSize;
+            else
+                return o.UnsignedSize * -1;
+        }
 
         #endregion
 

@@ -38,5 +38,25 @@ namespace TradingLib.API
         /// 获得成交接口所有持仓
         /// </summary>
         IEnumerable<Position> Positions { get; }
+
+        /// <summary>
+        /// 返回所有持仓状态统计数据
+        /// </summary>
+        IEnumerable<PositionMetric> PositionMetrics { get; }
+
+        /// <summary>
+        /// 获得某个合约的持仓状态统计数据
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        PositionMetric GetPositionMetric(string symbol);
+
+        /// <summary>
+        /// 计算开仓委托提交后预计持仓增加量
+        /// 返回0标识不增加或则减少
+        /// </summary>
+        /// <param name="o"></param>
+        /// <returns></returns>
+        int GetPositionAdjustment(Order o);
     }
 }

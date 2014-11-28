@@ -67,6 +67,54 @@ namespace Broker.Live
         /// </summary>
         public override IEnumerable<Position> Positions { get { return tk.Positions; } }
 
+        public override int GetPositionAdjustment(Order o)
+        {
+            
+            //return base.GetPositionAdjustment(o);
+            PositionMetric metric = GetPositionMetric(o.Symbol);
+            PositionAdjustmentResult adjust = PositionMetricHelper.GenPositionAdjustmentResult(metric, o);
+            int increment=0;
+            if (o.oSymbol.SecurityFamily.Code.Equals("IF"))
+            {
+                increment = PositionMetricHelper.GenPositionIncrement(metric, adjust, true);
+            }
+            else
+            {
+                increment = PositionMetricHelper.GenPositionIncrement(metric, adjust, true);
+            }
+
+            return increment;
+        }
+
+        public override PositionMetric GetPositionMetric(string symbol)
+        {
+            PositionMetricImpl mertic = new PositionMetricImpl(symbol);
+
+            mertic.LongHoldSize = tk.GetPosition(symbol, true).UnsignedSize;
+            mertic.ShortHoldSize = tk.GetPosition(symbol, false).UnsignedSize;
+
+            IEnumerable<Order> longEntryOrders = tk.GetPendingEntryOrders(symbol, true);
+            IEnumerable<Order> shortEntryOrders = tk.GetPendingEntryOrders(symbol, false);
+            IEnumerable<Order> longExitOrders = tk.GetPendingExitOrders(symbol, true);
+            IEnumerable<Order> shortExitOrders = tk.GetPendingExitOrders(symbol, false);
+            mertic.LongPendingEntrySize = longEntryOrders.Sum(po => po.UnsignedSize);
+            mertic.LongPendingExitSize = longExitOrders.Sum(po => po.UnsignedSize);
+            mertic.ShortPendingEntrySize = shortEntryOrders.Sum(po => po.UnsignedSize);
+            mertic.ShortPendingExitSize = shortExitOrders.Sum(po => po.UnsignedSize);
+
+            return mertic;
+        }
+
+        /// <summary>
+        /// 获得所有持仓统计数据
+        /// </summary>
+        public override IEnumerable<PositionMetric> PositionMetrics
+        {
+            get
+            {
+                return base.PositionMetrics;
+            }
+        }
         #endregion
 
 
