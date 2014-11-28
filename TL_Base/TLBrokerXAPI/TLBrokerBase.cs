@@ -116,9 +116,10 @@ namespace TradingLib.BrokerXAPI
         public string Name { get { return _cfg.Name; } }
 
         /// <summary>
-        /// 通道当前是否可用
+        /// 获得该通道连接的数据库全局ID,用于实现与Broker进行绑定
         /// </summary>
-        public virtual bool Avabile { get { return true; } }
+        public int VendorID { get { return _cfg.vendor_id; } }
+
 
         protected ConnectorConfig _cfg;
 

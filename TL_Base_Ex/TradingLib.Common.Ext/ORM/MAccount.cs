@@ -493,6 +493,7 @@ namespace TradingLib.ORM
 
         /// <summary>
         /// 数据库删除交易帐户 以及信息
+        /// 删除帐户数据要彻底否则如果出现同名帐户，会出现错乱
         /// </summary>
         /// <param name="account"></param>
         public static void DelAccount(string account)
@@ -505,13 +506,12 @@ namespace TradingLib.ORM
                 //delquery = string.Format("DELETE FROM hold_positions WHERE account='{0}'", account);//删除隔夜持仓
                 //db.Connection.Execute(delquery);
                 delquery = string.Format("DELETE FROM hold_postransactions WHERE account='{0}'", account);//删除隔夜持仓
-
                 db.Connection.Execute(delquery);
                 delquery = string.Format("DELETE FROM log_cashopreq WHERE account='{0}'", account);//删除出入金请求
                 db.Connection.Execute(delquery);
                 delquery = string.Format("DELETE FROM log_cashtrans WHERE account='{0}'", account);//删除出入金记录
-
                 db.Connection.Execute(delquery);
+
                 delquery = string.Format("DELETE FROM log_orderactions WHERE account='{0}'", account);//删除委托操作
                 db.Connection.Execute(delquery);
                 delquery = string.Format("DELETE FROM log_orders WHERE account='{0}'", account);//删除委托
@@ -519,8 +519,13 @@ namespace TradingLib.ORM
                 delquery = string.Format("DELETE FROM log_trades WHERE account='{0}'", account);//删除交易回合
                 db.Connection.Execute(delquery);
                 delquery = string.Format("DELETE FROM log_postransactions WHERE account='{0}'", account);//删除交易回合
-
                 db.Connection.Execute(delquery);
+
+                delquery = string.Format("DELETE FROM log_position_close_detail WHERE account='{0}'", account);//删除平仓明细
+                db.Connection.Execute(delquery);
+                delquery = string.Format("DELETE FROM log_position_detail_hist WHERE account='{0}'", account);//删除持仓明细
+                db.Connection.Execute(delquery);
+
                 delquery = string.Format("DELETE FROM tmp_orderactions WHERE account='{0}'", account);//删除日内交易记录
                 db.Connection.Execute(delquery);
                 delquery = string.Format("DELETE FROM tmp_orders WHERE account='{0}'", account);//

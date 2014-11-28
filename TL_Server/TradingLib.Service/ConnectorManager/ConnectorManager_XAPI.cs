@@ -12,10 +12,21 @@ namespace TradingLib.ServiceManager
     public partial class ConnectorManager
     {
 
+        /// <summary>
+        /// 从通道编号获得通道对象
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        //IBroker ConnectorID2Broker(int id)
+        //{
+        //    if (brokerConnectorIDmap.Keys.Contains(id))
+        //        return brokerConnectorIDmap[id];
+        //    return null;
+        //}
         //接口对象映射表
         Dictionary<string, IBroker> brokerInstList = new Dictionary<string, IBroker>();
         Dictionary<string, IDataFeed> datafeedInstList = new Dictionary<string, IDataFeed>();
-
+        //Dictionary<int, IBroker> brokerConnectorIDmap = new Dictionary<int, IBroker>();
 
         /// <summary>
         /// 验证成交接口设置
@@ -120,8 +131,17 @@ namespace TradingLib.ServiceManager
                 broker.SendLogItemEvent += new ILogItemDel(Util.Log);
                 //设定brokerconfg
                 broker.SetBrokerConfig(cfg);
+               
+
+
                 IBroker brokerinterface = broker as IBroker;
                 brokerInstList.Add(cfg.Token, brokerinterface);
+
+                Vendor vendor = BasicTracker.VendorTracker[broker.VendorID];//获得该通道设定的VendorID
+                if (vendor != null)
+                    (vendor as VendorImpl).BindBroker(brokerinterface);
+
+                //brokerConnectorIDmap.Add(broker.ConnectorID, brokerinterface);
 
                 //绑定状态事件
                 broker.Connected += (string b) =>

@@ -55,6 +55,24 @@ namespace TradingLib.ServiceManager
             }
         }
 
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryRouterGroup", "QryRouterGroup - query routegroup", "查询路由组", true)]
+        public void CTE_UpdateInterface(ISession session)
+        {
+            try
+            {
+                Manager manger = session.GetManager();
+                if (manger.RightRootDomain())
+                {
+                    RouterGroup[] ops = BasicTracker.RouterGroupTracker.RouterGroups.ToArray();
+                    session.SendJsonReplyMgr(ops);
+                }
+            }
+            catch (Exception ex)
+            {
+                session.OperationSuccess("更新接口设置成功");
+            }
+        }
+
 
     }
 }

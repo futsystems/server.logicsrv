@@ -38,11 +38,5 @@ namespace TradingLib.API
         /// 获得成交接口所有持仓
         /// </summary>
         IEnumerable<Position> Positions { get; }
-
-
-        /// <summary>
-        /// 当前是否可以用于开仓，在参数设置时，可以给定持仓比例达到%多少时，不可用于开仓
-        /// </summary>
-        bool Avabile { get; }
     }
 }

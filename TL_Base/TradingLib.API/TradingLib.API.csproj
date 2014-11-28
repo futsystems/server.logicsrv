@@ -41,6 +41,8 @@
     <Compile Include="Account\IAccTradingInfo.cs" />
     <Compile Include="Account\IAccConfig.cs" />
     <Compile Include="Account\IFinanceTotal.cs" />
+    <Compile Include="Connecter\RouterItem.cs" />
+    <Compile Include="Vendor\IVendor.cs" />
     <Compile Include="Connecter\EnumDataFeedTypes.cs" />
     <Compile Include="Connecter\RouterGroup.cs" />
     <Compile Include="Message\ILocation.cs" />

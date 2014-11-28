@@ -21,6 +21,7 @@ namespace TradingLib.Common
         DBContractBankTracker banktracker;
 
         RouterGrouperTracker rgtracker;
+        VendorTracker vendortracker;
         static BasicTracker()
         {
             defaultinstance = new BasicTracker();
@@ -137,6 +138,19 @@ namespace TradingLib.Common
                 if (defaultinstance.rgtracker == null)
                     defaultinstance.rgtracker = new RouterGrouperTracker();
                 return defaultinstance.rgtracker;
+            }
+        }
+
+        /// <summary>
+        /// 获得实盘帐户维护器
+        /// </summary>
+        public static VendorTracker VendorTracker
+        {
+            get
+            {
+                if (defaultinstance.vendortracker == null)
+                    defaultinstance.vendortracker = new VendorTracker();
+                return defaultinstance.vendortracker;
             }
         }
         //public static void Release()

@@ -68,6 +68,11 @@ namespace TradingLib.Common
         /// 域ID
         /// </summary>
         public int Domain_ID { get; set; }
+
+        /// <summary>
+        /// 实盘帐户对象ID
+        /// </summary>
+        public int Vendor_ID { get; set; }
     }
 
     /// <summary>
@@ -141,8 +146,16 @@ namespace TradingLib.Common
         /// </summary>
         public string Name { get; set; }
         
+        /// <summary>
+        /// 接口
+        /// </summary>
         public ConnectorInterface Interface { get; set; }
 
+
+        /// <summary>
+        /// 对应的实盘帐户全局ID
+        /// </summary>
+        public int vendor_id { get; set; }
         
     }
 }

@@ -21,20 +21,20 @@ namespace TradingLib.API
         /// 获得默认开仓Broker
         /// </summary>
         /// <returns></returns>
-        IBroker GetBroker(Order o);
+        IBroker GetBroker(Order o,decimal margintouse);
 
         /// <summary>
         /// 将路由添加到路由组
         /// </summary>
         /// <param name="broker"></param>
         /// <param name="priority"></param>
-        void AppendBroker(IBroker broker, int priority);
+        void AppendRouterItem(RouterItem item);
 
         /// <summary>
         /// 将路由从路由组删除
         /// </summary>
         /// <param name="broker"></param>
-        void RemoveBroker(IBroker broker);
+        void RemoveRouterItem(RouterItem item);
 
         /// <summary>
         /// 全局ID
@@ -49,7 +49,7 @@ namespace TradingLib.API
         /// <summary>
         /// 路由策略
         /// </summary>
-        string Strategy { get; set; }
+        QSEnumRouterStrategy Strategy { get; set; }
 
         /// <summary>
         /// 主域ID

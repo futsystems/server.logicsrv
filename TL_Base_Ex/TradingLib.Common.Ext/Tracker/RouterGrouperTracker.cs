@@ -14,31 +14,56 @@ namespace TradingLib.Common
     /// </summary>
     public class RouterGrouperTracker
     {
-        ConcurrentDictionary<int, RouterGroup> routergroupmap = new ConcurrentDictionary<int, RouterGroup>();
-        ConcurrentDictionary<int, RouterConnecterMap> routerconnectormap = new ConcurrentDictionary<int, RouterConnecterMap>();
+        ConcurrentDictionary<int, RouterGroupImpl> routergroupmap = new ConcurrentDictionary<int, RouterGroupImpl>();
+        ConcurrentDictionary<int, RouterItemImpl> routeritemmap = new ConcurrentDictionary<int, RouterItemImpl>();
 
         public RouterGrouperTracker()
         {
-            foreach (RouterGroup rg in ORM.MRouterGroup.SelectRouterGroup())
+            foreach (RouterGroupImpl rg in ORM.MRouterGroup.SelectRouterGroup())
             {
                 routergroupmap.TryAdd(rg.ID, rg);
             }
 
-            foreach (RouterConnecterMap rm in ORM.MRouterGroup.SelectRouterConnectorMap())
+            foreach (RouterItemImpl item in ORM.MRouterGroup.SelectRouterItem())
             {
-                routerconnectormap.TryAdd(rm.ID, rm);
+                routeritemmap.TryAdd(item.ID, item);
+
+                RouterGroupImpl group = null;
+                routergroupmap.TryGetValue(item.routegroup_id,out group);
+                if(group != null)
+                {
+                    item.RouteGroup = group;//绑定路由条目的RouterGroup
+                    group.AppendRouterItem(item);//实现双向绑定
+                }
+                //绑定实盘帐户对象
+                item.Vendor = BasicTracker.VendorTracker[item.vendor_id];//绑定路由条目的Vendor
+                
             }
         }
+
+        /// <summary>
+        /// 获得某个RouterGroup
+        /// </summary>
+        /// <param name="rgid"></param>
+        /// <returns></returns>
+        //public RouterGroup GetRouterGroup(int rgid)
+        //{
+        //    if (routergroupmap.Keys.Contains(rgid))
+        //        return routergroupmap[rgid];
+        //    return null;
+        //}
+
+        
 
         /// <summary>
         /// 获得某个路由组所有通道映射
         /// </summary>
         /// <param name="rgid"></param>
         /// <returns></returns>
-        public IEnumerable<RouterConnecterMap> GetRouterConnectorMap(int rgid)
-        {
-            return routerconnectormap.Values.Where(rm => rm.routegroup_id == rgid);
-        }
+        //public IEnumerable<RouterItem> GetRouterItem(int rgid)
+        //{
+        //    return routeritemmap.Values.Where(rm => rm.routegroup_id == rgid);
+        //}
 
         
         /// <summary>
@@ -50,8 +75,8 @@ namespace TradingLib.Common
         {
             get
             { 
-                RouterGroup rg =null;
-                if (routergroupmap.TryGetValue(id, out rg))
+                RouterGroupImpl rg =null;
+                if (routergroupmap.TryGetValue(id,out rg))
                 {
                     return rg;
                 }
@@ -67,6 +92,17 @@ namespace TradingLib.Common
             get
             {
                 return routergroupmap.Values;
+            }
+        }
+
+        /// <summary>
+        /// 返回所有路由项目
+        /// </summary>
+        public IEnumerable<RouterItemImpl> RouterItems
+        {
+            get
+            {
+                return routeritemmap.Values;
             }
         }
     }

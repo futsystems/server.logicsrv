@@ -550,11 +550,11 @@ namespace Broker.Live
                     QSEnumOrderBreedType bt = (QSEnumOrderBreedType)o.FatherBreed;
                     if (bt == QSEnumOrderBreedType.ACCT)//如果直接分帐户侧分解 从清算中查找该委托
                     {
-                        father = ClearCentre.SentOrder(o.FatherID);
+                        father = ClearCentre.SentOrder(o.FatherID,QSEnumOrderBreedType.ACCT);
                     }
                     if (bt == QSEnumOrderBreedType.ROUTER)
-                    { 
-                        
+                    {
+                        father = ClearCentre.SentOrder(o.FatherID, QSEnumOrderBreedType.ROUTER);
                     }
                 }
                 //如果存在父委托

@@ -123,6 +123,10 @@ namespace TradingLib.ServiceManager
 
             //初始化路由组
             InitRouterGroup();
+
+            //初始化Vendoer通道对象
+            InitVendor();
+
             //根据设置 设定默认模拟成交接口
             _defaultsimbroker = FindBroker(_defaultSimBrokerToken);//_defaultSimBrokerToken 通过数据库设置
 
@@ -133,13 +137,24 @@ namespace TradingLib.ServiceManager
         }
 
 
-        public void StartDefaultConnector()
+        public void Start()
         {
             Util.StatusSection(this.PROGRAME, "STARTCONNECTOR", QSEnumInfoColor.INFODARKRED,true);
-            //启动默认通道
-            StartDataFeedViaToken(_defaultDataFeedToken);
-            StartBrokerViaToken(_defaultSimBrokerToken);
-            StartBrokerViaToken(_defaultLiveBrokerToken);
+            //4.启动默认通道
+            if (GlobalConfig.NeedStartDefaultConnector)
+            {
+                //启动默认通道
+                StartDataFeedViaToken(_defaultDataFeedToken);
+                StartBrokerViaToken(_defaultSimBrokerToken);
+                StartBrokerViaToken(_defaultLiveBrokerToken);
+            }
+
+            debug("Start RouterGroup ....", QSEnumDebugLevel.INFO);
+            foreach (RouterGroup rg in BasicTracker.RouterGroupTracker.RouterGroups)
+            {
+                rg.Start();
+            }
+
         }
 
 
