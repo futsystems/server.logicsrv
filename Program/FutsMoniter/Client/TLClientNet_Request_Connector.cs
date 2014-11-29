@@ -26,6 +26,13 @@ namespace TradingLib.Common
         }
 
         /// <summary>
+        /// 更新接口设置 包含新增与更新
+        /// </summary>
+        public void ReqUpdateConnectorConfig(string json)
+        {
+            this.ReqContribRequest("ConnectorManager", "UpdateConnectorConfig", json);
+        }
+        /// <summary>
         /// 更新接口设置
         /// </summary>
         /// <param name="json"></param>
@@ -59,6 +66,24 @@ namespace TradingLib.Common
             this.ReqContribRequest("ConnectorManager", "QryRouterItem", rgid.ToString());
         }
 
+        /// <summary>
+        /// 绑定通道到帐户
+        /// </summary>
+        /// <param name="cid"></param>
+        /// <param name="vid"></param>
+        public void ReqBindVendor(int cid, int vid)
+        {
+            this.ReqContribRequest("ConnectorManager", "BindVendor",cid.ToString()+","+vid.ToString());
+        }
+
+        /// <summary>
+        /// 解绑
+        /// </summary>
+        /// <param name="cid"></param>
+        public void ReqUnBindVendor(int cid)
+        {
+            this.ReqContribRequest("ConnectorManager", "UnBindVendor", cid.ToString());
+        }
         #endregion
 
     }

@@ -131,10 +131,19 @@ namespace TradingLib.BrokerXAPI
         {
             _cfg = cfg;
 
+            
+           
+        }
+
+        /// <summary>
+        /// 启动时每次从_cfg生成启动所需参数，这样修改参数后重启就可以生效，避免多次调用SetBrokerconfig
+        /// cfg是通过引用来传递的，因此可以实时修改
+        /// </summary>
+        protected void ParseConfigInfo()
+        {
             //从配置文件生成对应的服务器连接信息和用户登入信息 用于连接服务器并登入
             _srvinfo = XAPIHelper.GenServerInfo(_cfg);
             _usrinfo = XAPIHelper.GenUserInfo(_cfg);
-
         }
 
 

@@ -58,5 +58,11 @@ namespace TradingLib.API
         /// <param name="o"></param>
         /// <returns></returns>
         int GetPositionAdjustment(Order o);
+
+        /// <summary>
+        /// 启动 并输出msg
+        /// </summary>
+        /// <param name="msg"></param>
+        bool Start(out string msg);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
+using System.Collections;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
@@ -17,6 +18,23 @@ namespace FutsMoniter
 {
     public partial class fmVendorManager
     {
+
+        void OnNotifyVendorBind(string jsonstr)
+        {
+            JsonData jd = TradingLib.Mixins.JsonReply.ParseJsonReplyData(jsonstr);
+            int code = int.Parse(jd["Code"].ToString());
+            if (code == 0)
+            {
+                VendorSetting obj = TradingLib.Mixins.JsonReply.ParsePlayload<VendorSetting>(jd);
+                InvokeGotVendor(obj);
+              
+            }
+            else//如果没有配资服
+            {
+
+            }
+        }
+
 
         bool _gotvendor = false;
         void OnQryVendor(string jsonstr)
@@ -48,6 +66,23 @@ namespace FutsMoniter
                 return vendormap[id];
             return null;
         }
+
+        public ArrayList GetVendorCBList()
+        {
+            ArrayList list = new ArrayList();
+            foreach (VendorSetting item in vendormap.Values)
+            {
+                if (!string.IsNullOrEmpty(item.BrokerToken))
+                    continue;
+                ValueObject<VendorSetting> vo = new ValueObject<VendorSetting>();
+                vo.Name = item.Name;
+                vo.Value = item;
+                list.Add(vo);
+            }
+            return list;
+        }
+
+
         ConcurrentDictionary<int, VendorSetting> vendormap = new ConcurrentDictionary<int, VendorSetting>();
         ConcurrentDictionary<int, int> vendorrowid = new ConcurrentDictionary<int, int>();
 
@@ -92,8 +127,9 @@ namespace FutsMoniter
                 else
                 {
                     //更新状态
-                    //gt.Rows[r][STATUS] = c.Status;
-                    //connectormap[c.Token] = c;
+
+                    vendorgt.Rows[r][BINDEDBROKER] = string.IsNullOrEmpty(vendor.BrokerToken) ? "未绑定" : vendor.BrokerToken;
+                    vendormap[vendor.ID]= vendor;
                 }
 
             }
@@ -136,6 +172,9 @@ namespace FutsMoniter
             grid.StateCommon.Background.Color1 = Color.WhiteSmoke;
             grid.StateCommon.Background.Color2 = Color.WhiteSmoke;
 
+            //grid.ContextMenuStrip = new ContextMenuStrip();
+            //grid.ContextMenuStrip.Items.Add("绑定通道", null, new EventHandler(BindConnector_Click));
+            //grid.ContextMenuStrip.Items.Add("解绑通道", null, new EventHandler(UnBindConnector_Click));
         }
 
         //初始化Account显示空格

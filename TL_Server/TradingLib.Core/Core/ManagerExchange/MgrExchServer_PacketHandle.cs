@@ -244,8 +244,16 @@ namespace TradingLib.Core
             IBroker b = TLCtxHelper.Ctx.RouterManager.FindBroker(request.FullName);
             if (b != null && !b.IsLive)
             {
-                b.Start();
-                session.OperationSuccess(string.Format("交易通道[{0}]已启动", b.Token));
+                string msg = string.Empty;
+                bool success = b.Start(out msg);
+                if (success)
+                {
+                    session.OperationSuccess(string.Format("交易通道[{0}]已启动", b.Token));
+                }
+                else
+                {
+                    session.OperationError(new FutsRspError(msg));
+                }
             }
 
             RspMGRQryConnectorResponse response = ResponseTemplate<RspMGRQryConnectorResponse>.SrvSendRspResponse(request);
@@ -259,6 +267,17 @@ namespace TradingLib.Core
             IBroker b = TLCtxHelper.Ctx.RouterManager.FindBroker(request.FullName);
             if (b != null && b.IsLive)
             {
+                //string msg = string.Empty;
+                //bool success = b.Start(out msg);
+                //if (success)
+                //{
+                //    session.OperationSuccess(string.Format("交易通道[{0}]已启动", b.Token));
+                //}
+                //else
+                //{
+                //    session.OperationError(new FutsRspError(msg));
+                //}
+
                 b.Stop();
                 session.OperationSuccess(string.Format("交易通道[{0}]已停止", b.Token));
             }

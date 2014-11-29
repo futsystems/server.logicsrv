@@ -515,7 +515,6 @@ namespace Broker.Live
             //清空委托map
             localOrderID_map.Clear();
             remoteOrderID_map.Clear();
-
         }
         /// <summary>
         /// 恢复日内交易状态

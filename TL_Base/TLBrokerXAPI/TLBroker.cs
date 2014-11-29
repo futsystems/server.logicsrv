@@ -63,13 +63,24 @@ namespace TradingLib.BrokerXAPI
 
 
         int _waitnum = 10;
+
+
+        public virtual void Start()
+        {
+            string msg = string.Empty;
+            bool success = this.Start(out msg);
+            Util.Debug("Start Broker:" + this.Token + " " + (success ? "成功" : "失败") + " msg:" + msg,success==false?QSEnumDebugLevel.ERROR:QSEnumDebugLevel.INFO);
+        }
         /// <summary>
         /// 启动接口
         /// 启动接口时,同时进行非托管资源的创建 也就是每次启动时都是新的接口实例
         /// </summary>
-        public virtual void Start()
+        public virtual bool Start(out string msg)
         {
+            msg = string.Empty;
             debug("Try to start broker:" + this.Token, QSEnumDebugLevel.INFO);
+            //初始化参数
+            ParseConfigInfo();
             //初始化接口
             InitBroker();
             //建立服务端连接
@@ -77,29 +88,40 @@ namespace TradingLib.BrokerXAPI
             int i=0;
             while (!_connected && i < _waitnum)
             {
+                i++;
+                Util.Debug(string.Format("#{0} wait connected....",i));
                 Util.sleep(500);
             }
             if (!_connected)
             {
-                debug("接口连接服务端失败,请检查配置信息", QSEnumDebugLevel.ERROR);
-                return;
+                msg = "接口连接服务端失败,请检查配置信息";
+                debug(msg, QSEnumDebugLevel.ERROR);
+                ResetResource();
+                return false;
             }
+
             i=0;
             while (!_loginreply && i < _waitnum)
             {
+                i++;
+                Util.Debug(string.Format("#{0} wait logined....", i));
                 Util.sleep(500);
             }
             if (!_loginreply)
             {
-                debug("登入回报异常,请检查配置信息", QSEnumDebugLevel.ERROR);
-                return;
+                msg = "登入回报异常,请检查配置信息";
+                debug(msg, QSEnumDebugLevel.ERROR);
+                ResetResource();
+                return false;
             }
             if (!_loginsuccess)
             {
-                debug("登入失败,请检查配置信息", QSEnumDebugLevel.WARNING);
-                return;
+                msg = "登入失败,请检查配置信息";
+                debug(msg, QSEnumDebugLevel.WARNING);
+                ResetResource();
+                return false;
             }
-            debug("接口:" + this.Token + "登入成功,可以接受交易请求", QSEnumDebugLevel.INFO);
+            
 
             //恢复该接口日内交易数据
             OnResume();
@@ -110,16 +132,15 @@ namespace TradingLib.BrokerXAPI
             _notifythread.IsBackground = true;
             _notifythread.Start();
 
+            msg = "接口:" + this.Token + "登入成功,可以接受交易请求";
+            debug(msg, QSEnumDebugLevel.INFO);
+            return true;
             //对外触发连接成功事件
         }
 
-        public virtual void Stop()
+        void ResetResource()
         {
-            if (!this.IsLive) return;
-            _working = false;
-            //停止消息发送线程
-            Util.WaitThreadStop(_notifythread);
-
+            Util.Debug("Release Broker c++ resoure and reset start status",QSEnumDebugLevel.INFO);
             //断开底层接口连接
             _wrapper.Disconnect();
             _wrapper.Dispose();
@@ -130,6 +151,15 @@ namespace TradingLib.BrokerXAPI
             _connected = false;
             _loginreply = false;
             _loginsuccess = false;
+        }
+        public virtual void Stop()
+        {
+            if (!this.IsLive) return;
+            _working = false;
+            //停止消息发送线程
+            Util.WaitThreadStop(_notifythread);
+
+            ResetResource();
 
             this.DestoryBroker();
         }

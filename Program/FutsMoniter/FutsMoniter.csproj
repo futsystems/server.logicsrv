@@ -290,10 +290,10 @@
     <Compile Include="Forms\VendorManager\fmVendorManager.Designer.cs">
       <DependentUpon>fmVendorManager.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\fmConnectorEdit.cs">
+    <Compile Include="Forms\VendorManager\fmConnectorEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\fmConnectorEdit.Designer.cs">
+    <Compile Include="Forms\VendorManager\fmConnectorEdit.Designer.cs">
       <DependentUpon>fmConnectorEdit.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\fmHistQueryCashTrans.cs">
@@ -534,6 +534,15 @@
     <Compile Include="Forms\VendorManager\fmVendorManager_RouterGroup.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\VendorManager\fmVendorManager_Connector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\VendorManager\fmVendorSelect.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\VendorManager\fmVendorSelect.Designer.cs">
+      <DependentUpon>fmVendorSelect.cs</DependentUpon>
+    </Compile>
     <Compile Include="Glabols.cs" />
     <Compile Include="Globals_.cs" />
     <Compile Include="JsonObject\JsonProtocolFinService.cs" />
@@ -666,7 +675,7 @@
     <EmbeddedResource Include="Forms\VendorManager\fmVendorManager.resx">
       <DependentUpon>fmVendorManager.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\fmConnectorEdit.resx">
+    <EmbeddedResource Include="Forms\VendorManager\fmConnectorEdit.resx">
       <DependentUpon>fmConnectorEdit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\fmHistQueryCashTrans.resx">
@@ -776,6 +785,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\fms\fmAccountCashOperation.resx">
       <DependentUpon>fmAccountCashOperation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\VendorManager\fmVendorSelect.resx">
+      <DependentUpon>fmVendorSelect.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

@@ -74,5 +74,14 @@ namespace TradingLib.Common
             _broker = broker;
             this.BrokerToken = broker.Token;
         }
+
+        /// <summary>
+        /// 解绑通道
+        /// </summary>
+        public void UnBindBroker()
+        {
+            _broker = null;
+            this.BrokerToken = string.Empty;
+        }
     }
 }

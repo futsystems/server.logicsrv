@@ -79,7 +79,29 @@ namespace TradingLib.Common
             SendPacketMgr(session, response);
         }
 
+        /// <summary>
+        /// 通知管理端
+        /// 给出通知对象,模块名，操作码，通知地址
+        /// 默认通知地址为null,则表明是通知给session
+        /// </summary>
+        /// <param name="op"></param>
+        public static void NotifyMgr(this ISession session,object obj,string module,string cmdstr,IEnumerable<ILocation> targets=null)
+        {
+            //通知方式 request获得对应的判断谓词 用于判断哪个客户端需要通知，然后再投影获得对应的地址集合
+            NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(targets==null?new ILocation[]{session.GetLocation()}:targets);
+            response.ModuleID = module;
+            response.CMDStr = cmdstr;
+            response.Result = new Mixins.ReplyWriter().Start().FillReply(Mixins.JsonReply.GenericSuccess()).FillPlayload(obj).End().ToString();
+            session.SendPacketMgr(response);
+        }
 
+        public static ILocation GetLocation(this ISession session)
+        {
+            ILocation location = new Location();
+            location.ClientID = session.ClientID;
+            location.FrontID = session.FrontID;
+            return location;
+        }
 
 
         /// <summary>

@@ -12,21 +12,9 @@ namespace TradingLib.ServiceManager
     public partial class ConnectorManager
     {
 
-        /// <summary>
-        /// 从通道编号获得通道对象
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        //IBroker ConnectorID2Broker(int id)
-        //{
-        //    if (brokerConnectorIDmap.Keys.Contains(id))
-        //        return brokerConnectorIDmap[id];
-        //    return null;
-        //}
         //接口对象映射表
         Dictionary<string, IBroker> brokerInstList = new Dictionary<string, IBroker>();
         Dictionary<string, IDataFeed> datafeedInstList = new Dictionary<string, IDataFeed>();
-        //Dictionary<int, IBroker> brokerConnectorIDmap = new Dictionary<int, IBroker>();
 
         /// <summary>
         /// 验证成交接口设置
@@ -114,6 +102,54 @@ namespace TradingLib.ServiceManager
             TLDataFeedBase datafeed = (TLDataFeedBase)Activator.CreateInstance(t);
             return datafeed;
         }
+
+        //void BindConnectorWithVendor(ConnectorConfig cfg)
+        //{ 
+            
+        //}
+        /// <summary>
+        /// 从ConnectorConfig加载Broker通道
+        /// </summary>
+        /// <param name="cfg"></param>
+        void LoadBrokerConnector(ConnectorConfig cfg)
+        {
+            debug(string.Format("Load broker connector[{0}] name:{1}", cfg.Token, cfg.Name), QSEnumDebugLevel.INFO);
+            //1.生成BrokerBase
+            TLBrokerBase broker = CreateBroker(cfg);
+            if (broker == null)
+                return;
+
+            //2.绑定底层事件和设定Broker设置
+            //绑定日志事件
+            broker.SendLogItemEvent += new ILogItemDel(Util.Log);
+            //设定brokerconfg
+            broker.SetBrokerConfig(cfg);
+
+            //3.转换成Broker 注接口验证时已经保证了 broker对应的interface类型是实现IBroker接口的
+            IBroker brokerinterface = broker as IBroker;
+            brokerInstList.Add(cfg.Token, brokerinterface);
+
+            //4.绑定Broker
+            Vendor vendor = BasicTracker.VendorTracker[broker.VendorID];//获得该通道设定的VendorID
+            if (vendor != null)
+                (vendor as VendorImpl).BindBroker(brokerinterface);
+
+            //5.绑定状态事件
+            broker.Connected += (string b) =>
+            {
+                debug("Broker[" + b + "] Connected", QSEnumDebugLevel.INFO);
+                if (BrokerConnectedEvent != null)
+                    BrokerConnectedEvent(b);
+            };
+            broker.Disconnected += (string b) =>
+            {
+                debug("Broker[" + b + "] Disconnected", QSEnumDebugLevel.WARNING);
+                if (BrokerDisconnectedEvent != null)
+                    BrokerDisconnectedEvent(b);
+            };
+            //6.将broker的交易类事件绑定到路由内 然后通过路由转发到交易消息服务
+            _brokerrouter.LoadBroker(brokerinterface);
+        }
         /// <summary>
         /// 加载BrokerXAPI底层成交接口
         /// </summary>
@@ -122,42 +158,7 @@ namespace TradingLib.ServiceManager
             debug("Load XAPI Connector into system...", QSEnumDebugLevel.INFO);
             foreach (ConnectorConfig cfg in ConnectorConfigTracker.BrokerConfigs)
             {
-                TLBrokerBase broker = CreateBroker(cfg);
-                if (broker == null)
-                    continue;
-
-                //注接口验证时已经保证了 broker对应的interface类型是实现IBroker接口的
-                //绑定日志事件
-                broker.SendLogItemEvent += new ILogItemDel(Util.Log);
-                //设定brokerconfg
-                broker.SetBrokerConfig(cfg);
-               
-
-
-                IBroker brokerinterface = broker as IBroker;
-                brokerInstList.Add(cfg.Token, brokerinterface);
-
-                Vendor vendor = BasicTracker.VendorTracker[broker.VendorID];//获得该通道设定的VendorID
-                if (vendor != null)
-                    (vendor as VendorImpl).BindBroker(brokerinterface);
-
-                //brokerConnectorIDmap.Add(broker.ConnectorID, brokerinterface);
-
-                //绑定状态事件
-                broker.Connected += (string b) =>
-                {
-                    debug("Broker[" + b + "] Connected", QSEnumDebugLevel.INFO);
-                    if (BrokerConnectedEvent != null)
-                        BrokerConnectedEvent(b);
-                };
-                broker.Disconnected += (string b) =>
-                {
-                    debug("Broker[" + b + "] Disconnected", QSEnumDebugLevel.WARNING);
-                    if (BrokerDisconnectedEvent != null)
-                        BrokerDisconnectedEvent(b);
-                };
-                //将broker的交易类事件绑定到路由内 然后通过路由转发到交易消息服务
-                _brokerrouter.LoadBroker(brokerinterface);
+                LoadBrokerConnector(cfg);
             }
 
             foreach (ConnectorConfig cfg in ConnectorConfigTracker.DataFeedConfigs)

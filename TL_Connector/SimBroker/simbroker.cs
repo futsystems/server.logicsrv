@@ -764,11 +764,21 @@ namespace Broker.SIM
             NotifyDisconnected();
         }
 
+        public void Start()
+        { 
+            string msg = string.Empty;
+            bool success = this.Start(out msg);
+        }
         /*
          注意:在系统托管过程中会停止或重启服务,这里需要注意不能重启多个ptengine或者procout否则会造成数据错误
          */
-        public void Start()
+        public bool Start(out string msg)
         {
+            msg = string.Empty;
+
+            //初始化参数
+            ParseConfigInfo();
+
             //加载配置参数 所有参数用,序列化后放入服务器参数第一字段
             string[] rec = _srvinfo.Field1.Split(',');
             if (rec.Length == 3)
@@ -791,6 +801,7 @@ namespace Broker.SIM
             _working = true;
             Restore();
             NotifyConnected();
+            return true;
         }
 
         public bool IsLive

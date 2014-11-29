@@ -174,6 +174,66 @@ namespace TradingLib.ServiceManager
                 return _defaultinstance.interfacemap.Values;
             }
         }
-        
+
+
+        #region 添加或更新通道
+        public static void UpdateConnectorConfig(ConnectorConfig cfg)
+        {
+            ConnectorConfig target = null;
+            //存在该ID则更新
+            if (_defaultinstance.configidxmap.TryGetValue(cfg.ID,out target))
+            {
+                target.Name = cfg.Name;
+                target.srvinfo_ipaddress = cfg.srvinfo_ipaddress;
+                target.srvinfo_port = cfg.srvinfo_port;
+                target.srvinfo_field1 = cfg.srvinfo_field1;
+                target.srvinfo_field2 = cfg.srvinfo_field2;
+                target.srvinfo_field3 = cfg.srvinfo_field3;
+
+                target.usrinfo_userid = cfg.usrinfo_userid;
+                target.usrinfo_password = cfg.usrinfo_password;
+                target.usrinfo_field1 = cfg.usrinfo_field1;
+                target.usrinfo_field2 = cfg.usrinfo_field2;
+                target.Name = cfg.Name;
+                ORM.MConnector.UpdateConnectorConfig(target);
+            }
+            //添加
+            else
+            {
+
+                target = new ConnectorConfig();
+                target.srvinfo_ipaddress = cfg.srvinfo_ipaddress;
+                target.srvinfo_port = cfg.srvinfo_port;
+                target.srvinfo_field1 = cfg.srvinfo_field1;
+                target.srvinfo_field2 = cfg.srvinfo_field2;
+                target.srvinfo_field3 = cfg.srvinfo_field3;
+                target.usrinfo_userid = cfg.usrinfo_userid;
+                target.usrinfo_password = cfg.usrinfo_password;
+
+                target.usrinfo_field1 = cfg.usrinfo_field1;
+                target.usrinfo_field2 = cfg.usrinfo_field2;
+
+                target.Name = cfg.Name;
+
+                target.interface_fk = cfg.interface_fk;
+                target.Token = cfg.Token;
+                ORM.MConnector.InsertConnectorConfig(target);
+
+                int itfaceidx = cfg.interface_fk;
+                ConnectorInterface itface = _defaultinstance.getBrokerInterface(itfaceidx);
+                if (itface == null)
+                    return;
+                //itface.IsValid = false;//默认设置为false,需要后段程序通过验证加载成功然后再设置成True
+                cfg.Interface = itface;
+                _defaultinstance.configidxmap.Add(target.ID, target);
+                _defaultinstance.configmap.Add(target.Token, target);
+                
+
+            }
+            
+        }
+
+        #endregion
+
     }
 }
