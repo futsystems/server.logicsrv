@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using TradingLib.Mixins.LitJson;
 
 namespace TradingLib.Common
 {
@@ -83,6 +84,11 @@ namespace TradingLib.Common
         public void ReqUnBindVendor(int cid)
         {
             this.ReqContribRequest("ConnectorManager", "UnBindVendor", cid.ToString());
+        }
+
+        public void ReqUpdateVendor(VendorSetting vendor)
+        {
+            this.ReqContribRequest("ConnectorManager", "UpdateVendor",TradingLib.Mixins.LitJson.JsonMapper.ToJson(vendor));
         }
         #endregion
 

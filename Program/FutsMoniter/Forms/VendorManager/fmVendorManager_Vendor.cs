@@ -81,6 +81,27 @@ namespace FutsMoniter
             }
             return list;
         }
+        //得到当前选择的行号
+        private VendorSetting CurrentVendorSetting
+        {
+            get
+            {
+                int row = vendorgrid.SelectedRows.Count > 0 ? vendorgrid.SelectedRows[0].Index : -1;
+                if (row >= 0)
+                {
+                    int id = int.Parse(vendorgrid[0, row].Value.ToString());
+
+                    if (vendormap.Keys.Contains(id))
+                        return vendormap[id];
+                    else
+                        return null;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
 
 
         ConcurrentDictionary<int, VendorSetting> vendormap = new ConcurrentDictionary<int, VendorSetting>();
@@ -128,6 +149,10 @@ namespace FutsMoniter
                 {
                     //更新状态
 
+                    vendorgt.Rows[r][VENDORNAME] = vendor.Name;
+                    vendorgt.Rows[r][FUTCOMPANY] = vendor.FutCompany;
+                    vendorgt.Rows[r][LASTEQUITY] = vendor.LastEquity;
+                    vendorgt.Rows[r][MARGINLIMIT] = vendor.MarginLimit;
                     vendorgt.Rows[r][BINDEDBROKER] = string.IsNullOrEmpty(vendor.BrokerToken) ? "未绑定" : vendor.BrokerToken;
                     vendormap[vendor.ID]= vendor;
                 }
@@ -172,9 +197,9 @@ namespace FutsMoniter
             grid.StateCommon.Background.Color1 = Color.WhiteSmoke;
             grid.StateCommon.Background.Color2 = Color.WhiteSmoke;
 
-            //grid.ContextMenuStrip = new ContextMenuStrip();
-            //grid.ContextMenuStrip.Items.Add("绑定通道", null, new EventHandler(BindConnector_Click));
-            //grid.ContextMenuStrip.Items.Add("解绑通道", null, new EventHandler(UnBindConnector_Click));
+            grid.ContextMenuStrip = new ContextMenuStrip();
+            grid.ContextMenuStrip.Items.Add("添加帐户", null, new EventHandler(AddVendor_Click));
+            grid.ContextMenuStrip.Items.Add("修改帐户", null, new EventHandler(EditVendor_Click));
         }
 
         //初始化Account显示空格
@@ -224,7 +249,23 @@ namespace FutsMoniter
 
 
         #endregion
+        void AddVendor_Click(object sender, EventArgs e)
+        {
+            fmVendorEdit fm = new fmVendorEdit();
+            fm.Show();
 
-
+        }
+        void EditVendor_Click(object sender, EventArgs e)
+        {
+            VendorSetting setting = CurrentVendorSetting;
+            if(setting == null)
+            {
+                ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show("请选择帐户设置");
+                return;
+            }
+            fmVendorEdit fm = new fmVendorEdit();
+            fm.SetVendorSetting(setting);
+            fm.Show();
+        }
     }
 }

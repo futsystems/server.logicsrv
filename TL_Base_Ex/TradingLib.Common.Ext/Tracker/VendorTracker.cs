@@ -45,5 +45,39 @@ namespace TradingLib.Common
                 return vendoermap.Values;
             }
         }
+
+        /// <summary>
+        /// 更新Vendor
+        /// </summary>
+        /// <param name="vendor"></param>
+        public void UpdateVendor(VendorSetting vendor)
+        {
+            VendorImpl target = null;
+            //更新
+            if (vendoermap.TryGetValue(vendor.ID, out target))
+            {
+                target.MarginLimit = vendor.MarginLimit;
+                target.LastEquity = vendor.LastEquity;
+                target.FutCompany = vendor.FutCompany;
+                target.Description = vendor.Description;
+
+                ORM.MRouterGroup.UpdateVendor(target);
+
+            }
+            else//添加
+            {
+                target = new VendorImpl();
+                target.MarginLimit = vendor.MarginLimit;
+                target.LastEquity = vendor.LastEquity;
+                target.FutCompany = vendor.FutCompany;
+                target.Description = vendor.Description;
+                target.Name = vendor.Name;
+
+                ORM.MRouterGroup.InsertVendor(target);
+
+                vendoermap.TryAdd(target.ID, target);
+            
+            }
+        }
     }
 }

@@ -36,6 +36,40 @@ namespace TradingLib.ServiceManager
             }
         }
 
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateVendor", "UpdateVendor - update vendor", "更新Vendor设置", true)]
+        public void CTE_UpdateVendor(ISession session, string json)
+        {
+            try
+            {
+                Manager manger = session.GetManager();
+                if (manger.RightRootDomain())
+                {
+                    VendorSetting vendor = TradingLib.Mixins.LitJson.JsonMapper.ToObject<VendorSetting>(json);
+                    bool isadd = vendor.ID == 0;
+                    if (string.IsNullOrEmpty(vendor.Name))
+                    {
+                        throw new FutsRspError("帐户名称不能为空");
+                    }
+                    if (vendor.MarginLimit == 0)
+                    {
+                        throw new FutsRspError("请设置资金限额规则");
+                    }
+
+                    //1.更新内存数据和数据库数据
+                    BasicTracker.VendorTracker.UpdateVendor(vendor);
+
+                    session.NotifyMgr(BasicTracker.VendorTracker[vendor.ID] as VendorSetting, this.ServiceMgrName, "NotifyVendor");
+                    session.OperationSuccess("更新帐户成功");
+
+                }
+            }
+            catch (FutsRspError ex)
+            {
+                session.OperationError(ex);
+            }
+        }
+
+
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateConnectorConfig", "UpdateConnectorConfig - update connector config", "更新通道设置",true)]
         public void CTE_UpdateConnectorConfig(ISession session,string json)
         {
@@ -184,7 +218,7 @@ namespace TradingLib.ServiceManager
                     ORM.MConnector.UpdateConnectorConfigVendor(cfg);
 
                     //4.给出对应的对象通知和回报
-                    session.NotifyMgr(vendor as VendorSetting, this.ServiceMgrName, "NotifyVendorBind");
+                    session.NotifyMgr(vendor as VendorSetting, this.ServiceMgrName, "NotifyVendor");
                     session.NotifyMgr(cfg, this.ServiceMgrName, "NotifyConnectorCfg");
                     session.OperationSuccess("通道解绑成功");
 
@@ -252,7 +286,7 @@ namespace TradingLib.ServiceManager
                     vendor.BindBroker(broker);
 
                     //4.给出对应的对象通知和回报
-                    session.NotifyMgr(vendor as VendorSetting, this.ServiceMgrName, "NotifyVendorBind");
+                    session.NotifyMgr(vendor as VendorSetting, this.ServiceMgrName, "NotifyVendor");
                     session.NotifyMgr(cfg, this.ServiceMgrName, "NotifyConnectorCfg");
                     session.OperationSuccess("通道绑定成功");
                    

@@ -284,6 +284,12 @@
     <Compile Include="Forms\VendorManager\fmRouterItem.Designer.cs">
       <DependentUpon>fmRouterItem.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\VendorManager\fmVendorEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\VendorManager\fmVendorEdit.Designer.cs">
+      <DependentUpon>fmVendorEdit.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\VendorManager\fmVendorManager.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -671,6 +677,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\VendorManager\fmRouterItem.resx">
       <DependentUpon>fmRouterItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\VendorManager\fmVendorEdit.resx">
+      <DependentUpon>fmVendorEdit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\VendorManager\fmVendorManager.resx">
       <DependentUpon>fmVendorManager.cs</DependentUpon>
