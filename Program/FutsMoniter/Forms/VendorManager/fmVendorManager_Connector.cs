@@ -249,6 +249,7 @@ namespace FutsMoniter
             grid.ContextMenuStrip = new ContextMenuStrip();
             grid.ContextMenuStrip.Items.Add("添加通道", null, new EventHandler(AddConnector_Click));
             grid.ContextMenuStrip.Items.Add("修改通道", null, new EventHandler(EditConnector_Click));
+            grid.ContextMenuStrip.Items.Add(new System.Windows.Forms.ToolStripSeparator());
             grid.ContextMenuStrip.Items.Add("绑定通道", null, new EventHandler(BindConnector_Click));
             grid.ContextMenuStrip.Items.Add("解绑通道", null, new EventHandler(UnBindConnector_Click));
             
