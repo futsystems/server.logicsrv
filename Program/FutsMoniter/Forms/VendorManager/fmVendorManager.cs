@@ -57,9 +57,21 @@ namespace FutsMoniter
             vendorgrid.RowPrePaint += new DataGridViewRowPrePaintEventHandler(RowPrePaint);
             routeritemgrid.RowPrePaint +=new DataGridViewRowPrePaintEventHandler(RowPrePaint);
             ctRouterGroupList1.RouterGroupSelectedChangedEvent += new TradingLib.API.VoidDelegate(ctRouterGroupList1_RouterGroupSelectedChangedEvent);
-        
+
+            btnUpdateRouterGroup.Click += new EventHandler(btnUpdateRouterGroup_Click);
+            tabholder.SelectedPageChanged += new EventHandler(tabholder_SelectedPageChanged);
             //ctRouterGroupList1.RouterGroupSelectedChangedEvent +=new TradingLib.API.VoidDelegate(ctRouterGroupList1_RouterGroupSelectedChangedEvent);
         }
+
+        void tabholder_SelectedPageChanged(object sender, EventArgs e)
+        {
+            if (tabholder.SelectedPage == this.pageroutergroup)
+            {
+                RefreshRouterItem();
+            }
+        }
+
+
 
 
 
@@ -72,6 +84,8 @@ namespace FutsMoniter
             Globals.CallBackCentre.RegisterCallback("ConnectorManager", "QryInterface", this.OnQryInterface);
             Globals.CallBackCentre.RegisterCallback("ConnectorManager", "NotifyConnectorCfg", this.OnNotifyConnectorConfig);
             Globals.CallBackCentre.RegisterCallback("ConnectorManager", "NotifyVendor", this.OnNotifyVendorBind);
+            Globals.CallBackCentre.RegisterCallback("ConnectorManager", "NotifyRouterItem", this.OnNotifyRouterItem);
+            Globals.CallBackCentre.RegisterCallback("ConnectorManager", "NotifyRouterGroup", this.OnNotifyRouterGroup);
 
         }
 
@@ -83,6 +97,7 @@ namespace FutsMoniter
             Globals.CallBackCentre.UnRegisterCallback("ConnectorManager", "QryInterface", this.OnQryInterface);
             Globals.CallBackCentre.UnRegisterCallback("ConnectorManager", "NotifyConnectorCfg", this.OnNotifyConnectorConfig);
             Globals.CallBackCentre.UnRegisterCallback("ConnectorManager", "NotifyVendor", this.OnNotifyVendorBind);
+            Globals.CallBackCentre.UnRegisterCallback("ConnectorManager", "NotifyRouterItem", this.OnNotifyRouterItem);
 
         }
 

@@ -37,6 +37,7 @@
             this.kryptonLabel3 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel2 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel1 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.ctRouterGroupList1 = new FutsMoniter.Controls.Base.ctRouterGroupList();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.accountType)).BeginInit();
@@ -44,6 +45,7 @@
             // 
             // kryptonPanel1
             // 
+            this.kryptonPanel1.Controls.Add(this.ctRouterGroupList1);
             this.kryptonPanel1.Controls.Add(this.btnAddAccount);
             this.kryptonPanel1.Controls.Add(this.password);
             this.kryptonPanel1.Controls.Add(this.account);
@@ -55,13 +57,13 @@
             this.kryptonPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.kryptonPanel1.Location = new System.Drawing.Point(0, 0);
             this.kryptonPanel1.Name = "kryptonPanel1";
-            this.kryptonPanel1.Size = new System.Drawing.Size(253, 193);
+            this.kryptonPanel1.Size = new System.Drawing.Size(253, 219);
             this.kryptonPanel1.TabIndex = 0;
             // 
             // btnAddAccount
             // 
             this.btnAddAccount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAddAccount.Location = new System.Drawing.Point(135, 156);
+            this.btnAddAccount.Location = new System.Drawing.Point(135, 182);
             this.btnAddAccount.Name = "btnAddAccount";
             this.btnAddAccount.Size = new System.Drawing.Size(106, 25);
             this.btnAddAccount.TabIndex = 7;
@@ -126,11 +128,19 @@
             this.kryptonLabel1.TabIndex = 0;
             this.kryptonLabel1.Values.Text = "帐户类别:";
             // 
+            // ctRouterGroupList1
+            // 
+            this.ctRouterGroupList1.Location = new System.Drawing.Point(24, 126);
+            this.ctRouterGroupList1.Name = "ctRouterGroupList1";
+            this.ctRouterGroupList1.RouterGroudSelected = null;
+            this.ctRouterGroupList1.Size = new System.Drawing.Size(199, 28);
+            this.ctRouterGroupList1.TabIndex = 1;
+            // 
             // fmAddAccount
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(253, 193);
+            this.ClientSize = new System.Drawing.Size(253, 219);
             this.Controls.Add(this.kryptonPanel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MaximizeBox = false;
@@ -158,5 +168,6 @@
         private ComponentFactory.Krypton.Toolkit.KryptonTextBox password;
         private ComponentFactory.Krypton.Toolkit.KryptonTextBox account;
         private ComponentFactory.Krypton.Toolkit.KryptonButton btnAddAccount;
+        private Controls.Base.ctRouterGroupList ctRouterGroupList1;
     }
 }

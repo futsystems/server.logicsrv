@@ -12,6 +12,7 @@ namespace TradingLib.ServiceManager
 {
     public partial class ConnectorManager
     {
+        #region Interface
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryInterface", "QryInterface - query interface setted in system", "查询所有接口设置")]
         public void CTE_QueryInterface(ISession session)
         {
@@ -24,6 +25,28 @@ namespace TradingLib.ServiceManager
             }
         }
 
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateInterface", "UpdateInterface - Update interface setted in system", "更新接口设置", true)]
+        public void CTE_UpdateInterface(ISession session, string json)
+        {
+            try
+            {
+                debug("更新接口设置:" + json, QSEnumDebugLevel.INFO);
+                Manager manger = session.GetManager();
+                if (manger.RightRootDomain())
+                {
+                    ConnectorInterface itface = TradingLib.Mixins.LitJson.JsonMapper.ToObject<ConnectorInterface>(json);
+                    ORM.MConnector.UpdateConnectorInterface(itface);
+                }
+            }
+            catch (Exception ex)
+            {
+                session.OperationSuccess("更新接口设置成功");
+            }
+        }
+        #endregion
+
+
+        #region ConnectorConfig
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryConnectorConfig", "QryConnectorConfig - query broker config", "查询所有通道设置")]
         public void CTE_QueryConnectorConfig(ISession session)
         {
@@ -36,42 +59,8 @@ namespace TradingLib.ServiceManager
             }
         }
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateVendor", "UpdateVendor - update vendor", "更新Vendor设置", true)]
-        public void CTE_UpdateVendor(ISession session, string json)
-        {
-            try
-            {
-                Manager manger = session.GetManager();
-                if (manger.RightRootDomain())
-                {
-                    VendorSetting vendor = TradingLib.Mixins.LitJson.JsonMapper.ToObject<VendorSetting>(json);
-                    bool isadd = vendor.ID == 0;
-                    if (string.IsNullOrEmpty(vendor.Name))
-                    {
-                        throw new FutsRspError("帐户名称不能为空");
-                    }
-                    if (vendor.MarginLimit == 0)
-                    {
-                        throw new FutsRspError("请设置资金限额规则");
-                    }
-
-                    //1.更新内存数据和数据库数据
-                    BasicTracker.VendorTracker.UpdateVendor(vendor);
-
-                    session.NotifyMgr(BasicTracker.VendorTracker[vendor.ID] as VendorSetting, this.ServiceMgrName, "NotifyVendor");
-                    session.OperationSuccess("更新帐户成功");
-
-                }
-            }
-            catch (FutsRspError ex)
-            {
-                session.OperationError(ex);
-            }
-        }
-
-
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateConnectorConfig", "UpdateConnectorConfig - update connector config", "更新通道设置",true)]
-        public void CTE_UpdateConnectorConfig(ISession session,string json)
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateConnectorConfig", "UpdateConnectorConfig - update connector config", "更新通道设置", true)]
+        public void CTE_UpdateConnectorConfig(ISession session, string json)
         {
             try
             {
@@ -112,7 +101,7 @@ namespace TradingLib.ServiceManager
                         LoadBrokerConnector(cfg);
                     }
                     else
-                    { 
+                    {
                         //重新设定参数并停止接口然后再启动接口
                     }
 
@@ -126,27 +115,15 @@ namespace TradingLib.ServiceManager
                 session.OperationError(ex);
             }
         }
+        #endregion
 
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateInterface", "UpdateInterface - Update interface setted in system", "更新接口设置", true)]
-        public void CTE_UpdateInterface(ISession session, string json)
-        {
-            try
-            {
-                debug("更新接口设置:" + json, QSEnumDebugLevel.INFO);
-                Manager manger = session.GetManager();
-                if (manger.RightRootDomain())
-                {
-                    ConnectorInterface itface = TradingLib.Mixins.LitJson.JsonMapper.ToObject<ConnectorInterface>(json);
-                    ORM.MConnector.UpdateConnectorInterface(itface);
-                }
-            }
-            catch (Exception ex)
-            {
-                session.OperationSuccess("更新接口设置成功");
-            }
-        }
 
+
+
+
+
+        #region 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryRouterGroup", "QryRouterGroup - query routegroup", "查询路由组")]
         public void CTE_QryRouterGroup(ISession session)
         {
@@ -164,6 +141,33 @@ namespace TradingLib.ServiceManager
                 session.OperationSuccess("更新接口设置成功");
             }
         }
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateRouterGroup", "UpdateRouterGroup - update routegroup", "更新路由组",true)]
+        public void CTE_QryRouterGroup(ISession session,string jsonstr)
+        {
+            try
+            {
+                Manager manger = session.GetManager();
+                if (manger.RightRootDomain())
+                {
+                    RouterGroupSetting group = TradingLib.Mixins.LitJson.JsonMapper.ToObject<RouterGroupSetting>(jsonstr);
+
+                    BasicTracker.RouterGroupTracker.UpdateRouterGroup(group);
+
+                    session.NotifyMgr(group, this.ServiceMgrName, "NotifyRouterGroup");
+                    session.OperationSuccess("更新通道设置成功");
+                }
+            }
+            catch (Exception ex)
+            {
+                session.OperationSuccess("更新接口设置成功");
+            }
+        }
+
+
+        #endregion
+
+        #region RouterItem
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryRouterItem", "QryRouterItem - query routeitem", "查询路由")]
         public void CTE_QryRouteItem(ISession session, int rgid)
@@ -188,6 +192,87 @@ namespace TradingLib.ServiceManager
                 session.OperationError(ex);
             }
         }
+
+       
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateRouterItem", "UpdateRouterItem - update routeitem", "更新路由项目", true)]
+        public void CTE_UpdateRouterItem(ISession session, string json)
+        {
+            try
+            {
+                Manager manger = session.GetManager();
+                if (manger.RightRootDomain())
+                {
+                    RouterItemSetting item = TradingLib.Mixins.LitJson.JsonMapper.ToObject<RouterItemSetting>(json);
+                    bool isadd = item.ID == 0;
+
+                    Vendor vendor = BasicTracker.VendorTracker[item.vendor_id];
+                    RouterGroup group = BasicTracker.RouterGroupTracker[item.routegroup_id];
+                    if (vendor == null)
+                    {
+                        throw new FutsRspError("指定的Vendor不存在");
+                    }
+                    if (group == null)
+                    {
+                        throw new FutsRspError("指定的路由组不存在");
+                    }
+
+                    //如果是增加路由项目,则组内不能添加相同的帐户
+                    if (isadd && group.RouterItems.Any(r => r.Vendor != null && r.Vendor.ID == vendor.ID))
+                    {
+                        throw new FutsRspError("组内已经存在该路由");
+                    }
+                    
+
+                    //2.更新参数
+                    BasicTracker.RouterGroupTracker.UpdateRouterItem(item);
+                    
+                    session.NotifyMgr(item, this.ServiceMgrName, "NotifyRouterItem");
+                    session.OperationSuccess("更新路由项目成功");
+                }
+            }
+            catch (FutsRspError ex)
+            {
+                session.OperationError(ex);
+            }
+        }
+        #endregion
+
+
+        #region Vendor
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateVendor", "UpdateVendor - update vendor", "更新Vendor设置", true)]
+        public void CTE_UpdateVendor(ISession session, string json)
+        {
+            try
+            {
+                Manager manger = session.GetManager();
+                if (manger.RightRootDomain())
+                {
+                    VendorSetting vendor = TradingLib.Mixins.LitJson.JsonMapper.ToObject<VendorSetting>(json);
+                    bool isadd = vendor.ID == 0;
+                    if (string.IsNullOrEmpty(vendor.Name))
+                    {
+                        throw new FutsRspError("帐户名称不能为空");
+                    }
+                    if (vendor.MarginLimit == 0)
+                    {
+                        throw new FutsRspError("请设置资金限额规则");
+                    }
+
+                    //1.更新内存数据和数据库数据
+                    BasicTracker.VendorTracker.UpdateVendor(vendor);
+
+                    session.NotifyMgr(BasicTracker.VendorTracker[vendor.ID] as VendorSetting, this.ServiceMgrName, "NotifyVendor");
+                    session.OperationSuccess("更新帐户成功");
+
+                }
+            }
+            catch (FutsRspError ex)
+            {
+                session.OperationError(ex);
+            }
+        }
+
+
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UnBindVendor", "UnBindVendor - unbind vendor", "解绑通道")]
         public void CTE_BindVendor(ISession session, int cid)
@@ -297,6 +382,7 @@ namespace TradingLib.ServiceManager
                 session.OperationError(ex);
             }
         }
+        #endregion
 
 
 

@@ -67,12 +67,12 @@ namespace FutsMoniter
             return null;
         }
 
-        public ArrayList GetVendorCBList()
+        public ArrayList GetVendorCBList(bool notbind = true)
         {
             ArrayList list = new ArrayList();
             foreach (VendorSetting item in vendormap.Values)
             {
-                if (!string.IsNullOrEmpty(item.BrokerToken))
+                if (notbind && !string.IsNullOrEmpty(item.BrokerToken))
                     continue;
                 ValueObject<VendorSetting> vo = new ValueObject<VendorSetting>();
                 vo.Name = item.Name;
@@ -81,6 +81,22 @@ namespace FutsMoniter
             }
             return list;
         }
+
+        public ArrayList GetVendorIDCBList(bool notbind = true)
+        {
+            ArrayList list = new ArrayList();
+            foreach (VendorSetting item in vendormap.Values)
+            {
+                if (notbind && !string.IsNullOrEmpty(item.BrokerToken))
+                    continue;
+                ValueObject<int> vo = new ValueObject<int>();
+                vo.Name = item.Name;
+                vo.Value = item.ID;
+                list.Add(vo);
+            }
+            return list;
+        }
+
         //得到当前选择的行号
         private VendorSetting CurrentVendorSetting
         {

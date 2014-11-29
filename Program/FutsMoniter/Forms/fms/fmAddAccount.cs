@@ -20,6 +20,26 @@ namespace FutsMoniter
         {
             InitializeComponent();
             Factory.IDataSourceFactory(accountType).BindDataSource(GetAccountTypeCombList());
+            this.Load += new EventHandler(fmAddAccount_Load);
+        }
+
+        void fmAddAccount_Load(object sender, EventArgs e)
+        {
+            accountType.SelectedIndexChanged +=new EventHandler(accountType_SelectedIndexChanged);
+            accountType_SelectedIndexChanged(null, null);
+        }
+
+        void accountType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            QSEnumAccountCategory cat = (QSEnumAccountCategory)accountType.SelectedValue;
+            if (cat == QSEnumAccountCategory.REAL)
+            {
+                ctRouterGroupList1.Visible = true;
+            }
+            else
+            {
+                ctRouterGroupList1.Visible = false;
+            }
         }
 
         /// <summary>
@@ -58,12 +78,13 @@ namespace FutsMoniter
         private void btnAddAccount_Click(object sender, EventArgs e)
         {
             QSEnumAccountCategory acccat = (QSEnumAccountCategory)accountType.SelectedValue;
+            int gid = (acccat == QSEnumAccountCategory.REAL ? ctRouterGroupList1.RouterGroudSelected.ID : 0);
             string accid = account.Text;
             string pass = password.Text;
             int mgrid = ctAgentList1.CurrentAgentFK;
             if (fmConfirm.Show("确认添加交易帐号?") == System.Windows.Forms.DialogResult.Yes)
             {
-                Globals.TLClient.ReqAddAccount(acccat, accid, pass, mgrid, 0);
+                Globals.TLClient.ReqAddAccount(acccat, accid, pass, mgrid, 0,gid);
                 this.Close();
             }
         }

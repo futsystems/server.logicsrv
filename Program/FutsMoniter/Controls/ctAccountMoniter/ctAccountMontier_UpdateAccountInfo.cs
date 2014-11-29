@@ -56,6 +56,8 @@ namespace FutsMoniter.Controls
         const string NAME = "姓名";
         const string POSLOK = "锁仓权限";
         const string DELETE = "DELETE";
+        const string ROUTERGROUP = "Group";
+        const string ROUTERGROUPSTR = "路由组";
 
 
         DataTable gt = new DataTable();
@@ -118,6 +120,8 @@ namespace FutsMoniter.Controls
             gt.Columns.Add(AGENTMGRFK);//21
             gt.Columns.Add(POSLOK);//22
             gt.Columns.Add(DELETE);
+            gt.Columns.Add(ROUTERGROUP);
+            gt.Columns.Add(ROUTERGROUPSTR);
             
         }
 
@@ -348,6 +352,8 @@ namespace FutsMoniter.Controls
                         gt.Rows[i][NAME] = account.Name;
                         gt.Rows[i][POSLOK] = account.PosLock ? "有" : "无";
                         gt.Rows[i][DELETE] = account.Deleted;
+                        gt.Rows[i][ROUTERGROUP] = account.RG_ID;
+
                         accountmap.TryAdd(account.Account, account);
                         accountrowmap.TryAdd(account.Account, i);
                         //debug("got account:" + account.Account, QSEnumDebugLevel.INFO);

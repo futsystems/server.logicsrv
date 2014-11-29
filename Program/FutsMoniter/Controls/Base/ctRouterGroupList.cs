@@ -62,9 +62,23 @@ namespace FutsMoniter.Controls.Base
             Globals.CallBackCentre.UnRegisterCallback("ConnectorManager", "QryRouterGroup", this.OnQryRouterGroup);
         }
 
+        public void OnNotifyRouterGroup(string json)
+        {
+            JsonData jd = TradingLib.Mixins.JsonReply.ParseJsonReplyData(json);
+            int code = int.Parse(jd["Code"].ToString());
+            if (code == 0)
+            {
+                RouterGroupSetting rg = TradingLib.Mixins.JsonReply.ParsePlayload<RouterGroupSetting>(jd);
+                rgmap[rg.ID] = rg;
+                InvokeGotRouterGroup(rgmap.Values.ToArray());
+            }
+            else//如果没有配资服
+            {
+
+            }
+        }
         void OnQryRouterGroup(string json)
         {
-            Globals.Debug("it is here ----------------");
             JsonData jd = TradingLib.Mixins.JsonReply.ParseJsonReplyData(json);
             int code = int.Parse(jd["Code"].ToString());
             if (code == 0)
@@ -89,7 +103,7 @@ namespace FutsMoniter.Controls.Base
                 ArrayList list = new ArrayList();
                 foreach (RouterGroupSetting rg in rglist)
                 {
-                    rgmap.Add(rg.ID, rg);
+                    rgmap[rg.ID]=rg;
                     ValueObject<int> vo = new ValueObject<int>
                     {
                         

@@ -360,6 +360,8 @@ namespace TradingLib.Core
 
                 //执行操作 并捕获异常 产生异常则给出错误回报
                 bool re = clearcentre.AddAccount(out outaccount, request.UserID.ToString(), request.AccountID, request.Password, request.Category, request.MgrID);//将交易帐户加入到主域
+                //更新路由组
+                clearcentre.UpdateRouterGroup(outaccount, request.RouterGroup_ID);
                 if (re)
                 {
                     session.OperationSuccess("新增帐户:" + outaccount + "成功");

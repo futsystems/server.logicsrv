@@ -21,6 +21,11 @@ namespace FutsMoniter
         //选中某个路由组
         void ctRouterGroupList1_RouterGroupSelectedChangedEvent()
         {
+            RefreshRouterItem();
+        }
+
+        void RefreshRouterItem()
+        {
             itemgt.Clear();
             itemmap.Clear();
             itemrowid.Clear();
@@ -37,6 +42,24 @@ namespace FutsMoniter
             }
         }
 
+        void OnNotifyRouterGroup(string jsonstr)
+        {
+            ctRouterGroupList1.OnNotifyRouterGroup(jsonstr);
+        }
+        void OnNotifyRouterItem(string jsonstr)
+        {
+            JsonData jd = TradingLib.Mixins.JsonReply.ParseJsonReplyData(jsonstr);
+            int code = int.Parse(jd["Code"].ToString());
+            if (code == 0)
+            {
+                RouterItemSetting obj = TradingLib.Mixins.JsonReply.ParsePlayload<RouterItemSetting>(jd);
+                InvokeGotItem(obj);
+            }
+            else//如果没有配资服
+            {
+
+            }
+        }
 
         bool _gotitem = false;
         void OnQryRouterItem(string jsonstr)
@@ -58,12 +81,27 @@ namespace FutsMoniter
             }
         }
 
-        //VendorSetting ID2VendorSetting(int id)
-        //{
-        //    if (vendormap.Keys.Contains(id))
-        //        return vendormap[id];
-        //    return null;
-        //}
+        //得到当前选择的行号
+        private RouterItemSetting CurrentRouterItem
+        {
+            get
+            {
+                int row = routeritemgrid.SelectedRows.Count > 0 ? routeritemgrid.SelectedRows[0].Index : -1;
+                if (row >= 0)
+                {
+                    int id = int.Parse(routeritemgrid[0, row].Value.ToString());
+
+                    if (itemmap.Keys.Contains(id))
+                        return itemmap[id];
+                    else
+                        return null;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
         ConcurrentDictionary<int, RouterItemSetting> itemmap = new ConcurrentDictionary<int, RouterItemSetting>();
         ConcurrentDictionary<int, int> itemrowid = new ConcurrentDictionary<int, int>();
 
@@ -78,6 +116,21 @@ namespace FutsMoniter
             {
                 return rowid;
             }
+        }
+
+        string GetVendorTitle(int id)
+        {
+            VendorSetting setting = ID2VendorSetting(id);
+            string vtitle = string.Empty;
+            if (setting == null)
+            {
+                vtitle = "异常";
+            }
+            else
+            {
+                vtitle = setting.Name;
+            }
+            return vtitle;
         }
         void InvokeGotItem(RouterItemSetting item)
         {
@@ -94,17 +147,8 @@ namespace FutsMoniter
                     int i = itemgt.Rows.Count - 1;
 
                     itemgt.Rows[i][GROUPID] = item.routegroup_id;
-                    VendorSetting setting = ID2VendorSetting(item.vendor_id);
-                    string vtitle = string.Empty;
-                    if (setting == null)
-                    {
-                        vtitle = "异常";
-                    }
-                    else
-                    {
-                        vtitle = setting.Name;
-                    }
-                    itemgt.Rows[i][ITEMVENDOR] = vtitle;
+
+                    itemgt.Rows[i][ITEMVENDOR] = GetVendorTitle(item.vendor_id);
                     itemgt.Rows[i][RULE] = item.rule;
                     itemgt.Rows[i][PRIORITY] = item.priority;
                     itemgt.Rows[i][ACTIVE] = item.Active?"激活":"冻结";
@@ -117,11 +161,21 @@ namespace FutsMoniter
                 else
                 {
                     //更新状态
-                    //gt.Rows[r][STATUS] = c.Status;
-                    //connectormap[c.Token] = c;
+                    itemgt.Rows[r][ITEMVENDOR] = GetVendorTitle(item.vendor_id);
+                    itemgt.Rows[r][RULE] = item.rule;
+                    itemgt.Rows[r][PRIORITY] = item.priority;
+                    itemgt.Rows[r][ACTIVE] = item.Active ? "激活" : "冻结";
+                    itemmap[item.ID] = item;
                 }
 
             }
+        }
+        void btnUpdateRouterGroup_Click(object sender, EventArgs e)
+        {
+            RouterGroupSetting group = ctRouterGroupList1.RouterGroudSelected;
+            group.Strategy = (QSEnumRouterStrategy)cbrgstrategytype.SelectedValue;
+            group.Description = rgdescrption.Text;
+            
         }
 
         #region 表格
@@ -161,6 +215,11 @@ namespace FutsMoniter
             grid.StateCommon.Background.Color1 = Color.WhiteSmoke;
             grid.StateCommon.Background.Color2 = Color.WhiteSmoke;
 
+            grid.ContextMenuStrip = new ContextMenuStrip();
+            grid.ContextMenuStrip.Items.Add("添加路由", null, new EventHandler(AddRouterItem_Click));
+            grid.ContextMenuStrip.Items.Add("修改路由", null, new EventHandler(EditRouterItem_Click));
+            grid.ContextMenuStrip.Items.Add("添加路由组", null, new EventHandler(AddRouterGroup_Click));
+
         }
 
         //初始化Account显示空格
@@ -193,6 +252,36 @@ namespace FutsMoniter
 
 
         #endregion
+
+        void AddRouterGroup_Click(object sender, EventArgs e)
+        {
+            fmRouterGroupEdit fm = new fmRouterGroupEdit();
+            fm.Show();
+        }
+        void AddRouterItem_Click(object sender, EventArgs e)
+        {
+            RouterGroupSetting rg = ctRouterGroupList1.RouterGroudSelected;
+            fmRouterItem fm = new fmRouterItem();
+            fm.SetRouterGroup(rg);
+            fm.SetVendorCBList(GetVendorIDCBList(false));
+            fm.Show();
+        }
+        void EditRouterItem_Click(object sender, EventArgs e)
+        {
+            RouterItemSetting item = CurrentRouterItem;
+            if (item == null)
+            {
+                ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show("请选择路由项目");
+                return;
+            }
+            fmRouterItem fm = new fmRouterItem();
+            RouterGroupSetting rg = ctRouterGroupList1.RouterGroudSelected;
+            fm.SetRouterGroup(rg);
+            fm.SetVendorCBList(GetVendorIDCBList(false));
+            fm.SetRouterItemSetting(item);
+            fm.Show();
+        }
+
 
     }
 }

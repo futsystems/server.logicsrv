@@ -124,6 +124,21 @@ namespace TradingLib.ORM
         }
 
         /// <summary>
+        /// 更新路由组
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="gid"></param>
+        /// <returns></returns>
+        public static bool UpdateRouterGroup(string account,int gid)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = String.Format("UPDATE accounts SET rg_fk = '{0}' WHERE account = '{1}'", gid, account);
+                return db.Connection.Execute(query) >= 0;
+            }
+        }
+
+        /// <summary>
         /// 更新账户类型
         /// </summary>
         /// <param name="account"></param>

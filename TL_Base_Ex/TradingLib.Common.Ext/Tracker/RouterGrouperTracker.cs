@@ -105,5 +105,74 @@ namespace TradingLib.Common
                 return routeritemmap.Values;
             }
         }
+
+
+        public void UpdateRouterGroup(RouterGroupSetting rg)
+        {
+            RouterGroupImpl target = null;
+            if (routergroupmap.TryGetValue(rg.ID, out target))
+            {
+                target.Description = rg.Description;
+                target.Strategy = rg.Strategy;
+                target.Name = rg.Name;
+                ORM.MRouterGroup.UpdateRouterGroup(target);
+            }
+            else
+            {
+                target = new RouterGroupImpl();
+                target.Description = rg.Description;
+                target.Domain_ID = rg.Domain_ID;
+                target.Name = rg.Name;
+                target.Strategy = rg.Strategy;
+
+                ORM.MRouterGroup.InsertRouterGroup(target);
+                rg.ID = target.ID;
+
+                routergroupmap.TryAdd(target.ID, target);
+
+            }
+        }
+        /// <summary>
+        /// 更新路由项目
+        /// 添加路由有 路由组ID和帐户ID均不可变,只能修改激活状态，规则，优先级
+        /// </summary>
+        /// <param name="item"></param>
+        public void UpdateRouterItem(RouterItemSetting item)
+        {
+            RouterItemImpl target = null;
+            if (routeritemmap.TryGetValue(item.ID,out target))
+            {
+                target.Active = item.Active;
+                target.priority = item.priority;
+                target.rule = item.rule;
+                ORM.MRouterGroup.UpdateRouterItem(target);
+            }
+            else
+            {
+                target = new RouterItemImpl();
+
+                target.Active = item.Active;
+                target.priority = item.priority;
+                target.routegroup_id = item.routegroup_id;
+                target.rule = item.rule;
+                target.vendor_id = item.vendor_id;
+
+                ORM.MRouterGroup.InsertRouterItem(target);
+
+                //加入内存
+                routeritemmap.TryAdd(target.ID, target);
+                item.ID = target.ID;
+
+                RouterGroupImpl group = null;
+                routergroupmap.TryGetValue(item.routegroup_id, out group);
+                if (group != null)
+                {
+                    target.RouteGroup = group;//绑定路由条目的RouterGroup
+                    group.AppendRouterItem(target);//实现双向绑定
+                }
+                //绑定实盘帐户对象
+                target.Vendor = BasicTracker.VendorTracker[target.vendor_id];//绑定路由条目的Vendor
+            }
+        }
     }
 }

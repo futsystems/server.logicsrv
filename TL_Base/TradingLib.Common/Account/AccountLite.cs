@@ -116,6 +116,11 @@ namespace TradingLib.Common
         /// 是否已经删除
         /// </summary>
         public bool Deleted { get; set; }
+
+        /// <summary>
+        /// 路由组
+        /// </summary>
+        public int RG_ID { get; set; }
         public static string Serialize(IAccountLite account)
         {
             StringBuilder sb = new StringBuilder();
@@ -161,6 +166,8 @@ namespace TradingLib.Common
             sb.Append(account.MGRID.ToString());
             sb.Append(d);
             sb.Append(account.Deleted.ToString());
+            sb.Append(d);
+            sb.Append(account.RG_ID);
             return sb.ToString();
         }
 
@@ -189,6 +196,7 @@ namespace TradingLib.Common
             account.PosLock = bool.Parse(rec[18]);
             account.MGRID = int.Parse(rec[19]);
             account.Deleted = bool.Parse(rec[20]);
+            account.RG_ID = int.Parse(rec[21]);
             return account;
         }
     }

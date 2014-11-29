@@ -278,7 +278,7 @@ namespace TradingLib.Common
             SendPacket(request);
         }
 
-        public void ReqAddAccount(QSEnumAccountCategory category, string account, string pass, int mgrid,int userid)
+        public void ReqAddAccount(QSEnumAccountCategory category, string account, string pass, int mgrid,int userid,int routergroupid)
         {
             debug("请求添加交易帐号", QSEnumDebugLevel.INFO);
             MGRAddAccountRequest request = RequestTemplate<MGRAddAccountRequest>.CliSendRequest(requestid++);
@@ -287,7 +287,7 @@ namespace TradingLib.Common
             request.Password = pass;
             request.UserID = userid;
             request.MgrID = mgrid;
-
+            request.RouterGroup_ID = routergroupid;
             SendPacket(request);
         }
 

@@ -97,6 +97,14 @@ namespace TradingLib.Core
             AccountChanged(this[account]);
         }
 
+        public void UpdateRouterGroup(string account, int gid)
+        {
+            if (!HaveAccount(account)) return;
+            this[account].RG_FK = gid;
+            ORM.MAccount.UpdateRouterGroup(account, gid);
+            AccountChanged(this[account]);
+
+        }
         /// <summary>
         /// 激活某个交易账户 允许其进行交易
         /// 某个账户激活后需要调用风控中心重新加载该账户的风控规则，使得风控规则复位

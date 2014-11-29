@@ -278,6 +278,12 @@
     <Compile Include="Forms\fmAgentPermission.Designer.cs">
       <DependentUpon>fmAgentPermission.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\VendorManager\fmRouterGroupEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\VendorManager\fmRouterGroupEdit.Designer.cs">
+      <DependentUpon>fmRouterGroupEdit.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\VendorManager\fmRouterItem.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -674,6 +680,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\fmAgentPermission.resx">
       <DependentUpon>fmAgentPermission.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\VendorManager\fmRouterGroupEdit.resx">
+      <DependentUpon>fmRouterGroupEdit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\VendorManager\fmRouterItem.resx">
       <DependentUpon>fmRouterItem.cs</DependentUpon>

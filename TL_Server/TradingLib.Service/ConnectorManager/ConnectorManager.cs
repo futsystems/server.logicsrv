@@ -124,8 +124,6 @@ namespace TradingLib.ServiceManager
             //初始化路由组
             InitRouterGroup();
 
-            //初始化Vendoer通道对象
-            InitVendor();
 
             //根据设置 设定默认模拟成交接口
             _defaultsimbroker = FindBroker(_defaultSimBrokerToken);//_defaultSimBrokerToken 通过数据库设置

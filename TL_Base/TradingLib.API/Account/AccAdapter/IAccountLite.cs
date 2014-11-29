@@ -116,5 +116,11 @@ namespace TradingLib.API
         /// 是否已经删除
         /// </summary>
         bool Deleted { get; set; }
+
+
+        /// <summary>
+        /// 路由组编号
+        /// </summary>
+        int RG_ID { get; set; }
     }
 }

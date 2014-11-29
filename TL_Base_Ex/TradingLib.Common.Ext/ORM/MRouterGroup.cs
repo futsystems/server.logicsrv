@@ -56,6 +56,24 @@ namespace TradingLib.ORM
             }
         }
 
+        public static void UpdateRouterGroup(RouterGroupImpl group)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("UPDATE router_group SET strategy='{0}',description='{1}' WHERE id='{4}'", group.Strategy, group.Description);
+                db.Connection.Execute(query);
+            }
+        }
+
+        public static void InsertRouterGroup(RouterGroupImpl group)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = String.Format("Insert into router_group (`name`,`strategy`,`description`,`domain_id`) VALUES ('{0}','{1}','{2}','{3}')", group.Name,group.Strategy,group.Description,group.Domain_ID);
+                db.Connection.Execute(query);
+                SetIdentity(db.Connection, id => group.ID = id, "id", "router_group");
+            }
+        }
         /// <summary>
         /// 从数据库加载所有路由映射关系
         /// </summary>
@@ -68,6 +86,35 @@ namespace TradingLib.ORM
                 return db.Connection.Query<RouterItemImpl>(query);
             }
         }
+
+        /// <summary>
+        /// 更新路由项目
+        /// </summary>
+        /// <param name="item"></param>
+        public static void UpdateRouterItem(RouterItemImpl item)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("UPDATE router_items SET priority='{0}',rule='{1}' ,active='{2}'  WHERE id='{3}'", item.priority, item.rule, item.Active?1:0, item.ID);
+                db.Connection.Execute(query);
+            }
+        }
+
+        /// <summary>
+        /// 插入路由项目
+        /// </summary>
+        /// <param name="item"></param>
+        public static void InsertRouterItem(RouterItemImpl item)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = String.Format("Insert into router_items (`routegroup_id`,`vendor_id`,`priority`,`rule`,`active`) VALUES ('{0}','{1}','{2}','{3}','{4}')", item.routegroup_id, item.vendor_id, item.priority, item.rule, item.Active ? 1 : 0);
+                db.Connection.Execute(query);
+                SetIdentity(db.Connection, id => item.ID = id, "id", "router_items");
+            }
+        }
+
+
     }
 
     

@@ -29,14 +29,14 @@
         private void InitializeComponent()
         {
             this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
-            this.kryptonNavigator1 = new ComponentFactory.Krypton.Navigator.KryptonNavigator();
+            this.tabholder = new ComponentFactory.Krypton.Navigator.KryptonNavigator();
             this.kryptonPage3 = new ComponentFactory.Krypton.Navigator.KryptonPage();
             this.kryptonPanel4 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
             this.vendorgrid = new ComponentFactory.Krypton.Toolkit.KryptonDataGridView();
             this.kryptonPage1 = new ComponentFactory.Krypton.Navigator.KryptonPage();
             this.kryptonPanel2 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
             this.configgrid = new ComponentFactory.Krypton.Toolkit.KryptonDataGridView();
-            this.kryptonPage2 = new ComponentFactory.Krypton.Navigator.KryptonPage();
+            this.pageroutergroup = new ComponentFactory.Krypton.Navigator.KryptonPage();
             this.kryptonPanel3 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
             this.kryptonGroupBox2 = new ComponentFactory.Krypton.Toolkit.KryptonGroupBox();
             this.ctRouterGroupList1 = new FutsMoniter.Controls.Base.ctRouterGroupList();
@@ -48,13 +48,13 @@
             this.kryptonLabel3 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel2 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel1 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.kryptonButton1 = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.btnUpdateRouterGroup = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.kryptonGroupBox1 = new ComponentFactory.Krypton.Toolkit.KryptonGroupBox();
             this.routeritemgrid = new ComponentFactory.Krypton.Toolkit.KryptonDataGridView();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonNavigator1)).BeginInit();
-            this.kryptonNavigator1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tabholder)).BeginInit();
+            this.tabholder.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPage3)).BeginInit();
             this.kryptonPage3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel4)).BeginInit();
@@ -65,8 +65,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel2)).BeginInit();
             this.kryptonPanel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.configgrid)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonPage2)).BeginInit();
-            this.kryptonPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pageroutergroup)).BeginInit();
+            this.pageroutergroup.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel3)).BeginInit();
             this.kryptonPanel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonGroupBox2)).BeginInit();
@@ -81,28 +81,28 @@
             // 
             // kryptonPanel1
             // 
-            this.kryptonPanel1.Controls.Add(this.kryptonNavigator1);
+            this.kryptonPanel1.Controls.Add(this.tabholder);
             this.kryptonPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.kryptonPanel1.Location = new System.Drawing.Point(0, 0);
             this.kryptonPanel1.Name = "kryptonPanel1";
             this.kryptonPanel1.Size = new System.Drawing.Size(757, 277);
             this.kryptonPanel1.TabIndex = 0;
             // 
-            // kryptonNavigator1
+            // tabholder
             // 
-            this.kryptonNavigator1.Bar.TabStyle = ComponentFactory.Krypton.Toolkit.TabStyle.LowProfile;
-            this.kryptonNavigator1.Button.CloseButtonDisplay = ComponentFactory.Krypton.Navigator.ButtonDisplay.Hide;
-            this.kryptonNavigator1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.kryptonNavigator1.Location = new System.Drawing.Point(0, 0);
-            this.kryptonNavigator1.Name = "kryptonNavigator1";
-            this.kryptonNavigator1.Pages.AddRange(new ComponentFactory.Krypton.Navigator.KryptonPage[] {
+            this.tabholder.Bar.TabStyle = ComponentFactory.Krypton.Toolkit.TabStyle.LowProfile;
+            this.tabholder.Button.CloseButtonDisplay = ComponentFactory.Krypton.Navigator.ButtonDisplay.Hide;
+            this.tabholder.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabholder.Location = new System.Drawing.Point(0, 0);
+            this.tabholder.Name = "tabholder";
+            this.tabholder.Pages.AddRange(new ComponentFactory.Krypton.Navigator.KryptonPage[] {
             this.kryptonPage3,
             this.kryptonPage1,
-            this.kryptonPage2});
-            this.kryptonNavigator1.SelectedIndex = 0;
-            this.kryptonNavigator1.Size = new System.Drawing.Size(757, 277);
-            this.kryptonNavigator1.TabIndex = 0;
-            this.kryptonNavigator1.Text = "kryptonNavigator1";
+            this.pageroutergroup});
+            this.tabholder.SelectedIndex = 0;
+            this.tabholder.Size = new System.Drawing.Size(757, 277);
+            this.tabholder.TabIndex = 0;
+            this.tabholder.Text = "kryptonNavigator1";
             // 
             // kryptonPage3
             // 
@@ -168,18 +168,18 @@
             this.configgrid.Size = new System.Drawing.Size(755, 252);
             this.configgrid.TabIndex = 0;
             // 
-            // kryptonPage2
+            // pageroutergroup
             // 
-            this.kryptonPage2.AutoHiddenSlideSize = new System.Drawing.Size(200, 200);
-            this.kryptonPage2.Controls.Add(this.kryptonPanel3);
-            this.kryptonPage2.Flags = 65534;
-            this.kryptonPage2.LastVisibleSet = true;
-            this.kryptonPage2.MinimumSize = new System.Drawing.Size(50, 50);
-            this.kryptonPage2.Name = "kryptonPage2";
-            this.kryptonPage2.Size = new System.Drawing.Size(755, 252);
-            this.kryptonPage2.Text = "路由设置";
-            this.kryptonPage2.ToolTipTitle = "Page ToolTip";
-            this.kryptonPage2.UniqueName = "0CCCD0C2F3D046D97890E53782B35AAE";
+            this.pageroutergroup.AutoHiddenSlideSize = new System.Drawing.Size(200, 200);
+            this.pageroutergroup.Controls.Add(this.kryptonPanel3);
+            this.pageroutergroup.Flags = 65534;
+            this.pageroutergroup.LastVisibleSet = true;
+            this.pageroutergroup.MinimumSize = new System.Drawing.Size(50, 50);
+            this.pageroutergroup.Name = "pageroutergroup";
+            this.pageroutergroup.Size = new System.Drawing.Size(755, 252);
+            this.pageroutergroup.Text = "路由设置";
+            this.pageroutergroup.ToolTipTitle = "Page ToolTip";
+            this.pageroutergroup.UniqueName = "0CCCD0C2F3D046D97890E53782B35AAE";
             // 
             // kryptonPanel3
             // 
@@ -209,7 +209,7 @@
             this.kryptonGroupBox2.Panel.Controls.Add(this.kryptonLabel3);
             this.kryptonGroupBox2.Panel.Controls.Add(this.kryptonLabel2);
             this.kryptonGroupBox2.Panel.Controls.Add(this.kryptonLabel1);
-            this.kryptonGroupBox2.Panel.Controls.Add(this.kryptonButton1);
+            this.kryptonGroupBox2.Panel.Controls.Add(this.btnUpdateRouterGroup);
             this.kryptonGroupBox2.Size = new System.Drawing.Size(278, 253);
             this.kryptonGroupBox2.TabIndex = 1;
             this.kryptonGroupBox2.Text = "路由组设置";
@@ -230,7 +230,6 @@
             this.rgdescrption.Name = "rgdescrption";
             this.rgdescrption.Size = new System.Drawing.Size(187, 55);
             this.rgdescrption.TabIndex = 16;
-            this.rgdescrption.Text = "kryptonTextBox2";
             // 
             // cbrgstrategytype
             // 
@@ -242,6 +241,7 @@
             // 
             // rgname
             // 
+            this.rgname.Enabled = false;
             this.rgname.Location = new System.Drawing.Point(105, 61);
             this.rgname.Name = "rgname";
             this.rgname.Size = new System.Drawing.Size(140, 21);
@@ -287,13 +287,13 @@
             this.kryptonLabel1.TabIndex = 9;
             this.kryptonLabel1.Values.Text = "路由组全局ID:";
             // 
-            // kryptonButton1
+            // btnUpdateRouterGroup
             // 
-            this.kryptonButton1.Location = new System.Drawing.Point(197, 196);
-            this.kryptonButton1.Name = "kryptonButton1";
-            this.kryptonButton1.Size = new System.Drawing.Size(67, 25);
-            this.kryptonButton1.TabIndex = 8;
-            this.kryptonButton1.Values.Text = "更新";
+            this.btnUpdateRouterGroup.Location = new System.Drawing.Point(197, 196);
+            this.btnUpdateRouterGroup.Name = "btnUpdateRouterGroup";
+            this.btnUpdateRouterGroup.Size = new System.Drawing.Size(67, 25);
+            this.btnUpdateRouterGroup.TabIndex = 8;
+            this.btnUpdateRouterGroup.Values.Text = "更新";
             // 
             // kryptonGroupBox1
             // 
@@ -334,8 +334,8 @@
             this.Text = "交易帐户管理";
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).EndInit();
             this.kryptonPanel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonNavigator1)).EndInit();
-            this.kryptonNavigator1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.tabholder)).EndInit();
+            this.tabholder.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPage3)).EndInit();
             this.kryptonPage3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel4)).EndInit();
@@ -346,8 +346,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel2)).EndInit();
             this.kryptonPanel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.configgrid)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonPage2)).EndInit();
-            this.kryptonPage2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pageroutergroup)).EndInit();
+            this.pageroutergroup.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel3)).EndInit();
             this.kryptonPanel3.ResumeLayout(false);
             this.kryptonGroupBox2.Panel.ResumeLayout(false);
@@ -366,15 +366,15 @@
         #endregion
 
         private ComponentFactory.Krypton.Toolkit.KryptonPanel kryptonPanel1;
-        private ComponentFactory.Krypton.Navigator.KryptonNavigator kryptonNavigator1;
+        private ComponentFactory.Krypton.Navigator.KryptonNavigator tabholder;
         private ComponentFactory.Krypton.Navigator.KryptonPage kryptonPage1;
-        private ComponentFactory.Krypton.Navigator.KryptonPage kryptonPage2;
+        private ComponentFactory.Krypton.Navigator.KryptonPage pageroutergroup;
         private ComponentFactory.Krypton.Toolkit.KryptonPanel kryptonPanel2;
         private ComponentFactory.Krypton.Toolkit.KryptonPanel kryptonPanel3;
         private ComponentFactory.Krypton.Toolkit.KryptonDataGridView configgrid;
         private ComponentFactory.Krypton.Toolkit.KryptonGroupBox kryptonGroupBox1;
         private ComponentFactory.Krypton.Toolkit.KryptonGroupBox kryptonGroupBox2;
-        private ComponentFactory.Krypton.Toolkit.KryptonButton kryptonButton1;
+        private ComponentFactory.Krypton.Toolkit.KryptonButton btnUpdateRouterGroup;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel1;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel3;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel2;

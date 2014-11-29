@@ -90,6 +90,24 @@ namespace TradingLib.Common
         {
             this.ReqContribRequest("ConnectorManager", "UpdateVendor",TradingLib.Mixins.LitJson.JsonMapper.ToJson(vendor));
         }
+
+        /// <summary>
+        /// 更新路由项目
+        /// </summary>
+        /// <param name="item"></param>
+        public void ReqUpdateRouterItem(RouterItemSetting item)
+        { 
+            this.ReqContribRequest("ConnectorManager", "UpdateRouterItem",TradingLib.Mixins.LitJson.JsonMapper.ToJson(item));
+        }
+
+        /// <summary>
+        /// 更新路由组
+        /// </summary>
+        /// <param name="group"></param>
+        public void ReqUpdateRouterGroup(RouterGroupSetting group)
+        {
+            this.ReqContribRequest("ConnectorManager", "UpdateRouterGroup", TradingLib.Mixins.LitJson.JsonMapper.ToJson(group));
+        }
         #endregion
 
     }
