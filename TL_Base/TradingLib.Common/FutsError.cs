@@ -13,6 +13,8 @@ namespace TradingLib.Common
         }
     }
 
+
+
     /// <summary>
     /// 回报异常 当操作产生异常时候 通过将异常封装到FutsRspError来向外层抛出报错信息
     /// 

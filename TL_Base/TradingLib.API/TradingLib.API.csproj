@@ -44,6 +44,7 @@
     <Compile Include="Connecter\PositionMetric.cs" />
     <Compile Include="Connecter\RouterItem.cs" />
     <Compile Include="Domain\Domain.cs" />
+    <Compile Include="Domain\DomainPartion.cs" />
     <Compile Include="Vendor\IVendor.cs" />
     <Compile Include="Connecter\EnumDataFeedTypes.cs" />
     <Compile Include="Connecter\RouterGroup.cs" />

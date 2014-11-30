@@ -332,7 +332,6 @@ namespace TradingLib.Core
             try
             {
                 debug(string.Format("管理员:{0} 请求添加交易帐号:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
-                string outaccount = string.Empty;
                 //如果不是Root权限的Manager需要进行执行权限检查
                 if (!manager.RightRootDomain())
                 {
@@ -348,6 +347,7 @@ namespace TradingLib.Core
                     {
                         //如果是在自己的主域中添加交易帐户 则需要检查帐户数量
                         int limit = manager.BaseManager.AccLimit;
+                        
                         int cnt = TLCtxHelper.CmdAccount.Accounts.Where(acc => acc.Mgr_fk == manager.GetBaseMGR()).Count();
                         if (cnt > limit)
                         {
@@ -356,20 +356,20 @@ namespace TradingLib.Core
                     }
                 }
 
+                AccountCreation create = new AccountCreation();
+                create.Account = request.AccountID;
+                create.Category = request.Category;
+                create.Password = request.Password;
+                create.RouteGroup = BasicTracker.RouterGroupTracker[request.RouterGroup_ID];
+                create.RouterType = QSEnumOrderTransferType.SIM;
+                create.UserID = request.UserID;
+                create.Domain = manager.Domain;
+                create.BaseManager = manager.BaseManager;
 
 
                 //执行操作 并捕获异常 产生异常则给出错误回报
-                bool re = clearcentre.AddAccount(out outaccount, request.UserID.ToString(), request.AccountID, request.Password, request.Category, request.MgrID);//将交易帐户加入到主域
-                //更新路由组
-                clearcentre.UpdateRouterGroup(outaccount, request.RouterGroup_ID);
-                if (re)
-                {
-                    session.OperationSuccess("新增帐户:" + outaccount + "成功");
-                }
-                else
-                {
-                    throw new FutsRspError("清算中心添加帐户失败");
-                }
+                clearcentre.AddAccount(ref create);//将交易帐户加入到主域
+                session.OperationSuccess("新增帐户:" + create.Account + "成功");
             }
             catch (FutsRspError ex)//捕获到FutsRspError则向管理端发送对应回报
             {

@@ -47,10 +47,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Domain\DomainUtils.cs" />
     <Compile Include="Messages\LogicFront.cs" />
     <Compile Include="ORM\DBHelper.cs" />
     <Compile Include="ORM\MySqlBase.cs" />
-    <Compile Include="Other\DomainImpl.cs" />
+    <Compile Include="Domain\DomainImpl.cs" />
     <Compile Include="Vendor\BrokerStatus.cs" />
     <Compile Include="Vendor\ConnectorConfig.cs" />
     <Compile Include="Vendor\ConnectorInfo.cs" />

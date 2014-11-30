@@ -433,7 +433,7 @@ namespace TradingLib.ORM
         /// <param name="user_id"></param>
         /// <param name="category"></param>
         /// <returns></returns>
-        private static bool HaveRequested(string user_id, QSEnumAccountCategory category = QSEnumAccountCategory.DEALER)
+        private static bool HaveRequested(int user_id, QSEnumAccountCategory category = QSEnumAccountCategory.DEALER)
         {
             using (DBMySql db = new DBMySql())
             {
@@ -463,46 +463,41 @@ namespace TradingLib.ORM
         /// <param name="pass"></param>
         /// <param name="category"></param>
         /// <returns></returns>
-        public static bool AddAccount(out string account, string user_id = "0",string setaccount="", string pass = "123456", QSEnumAccountCategory category = QSEnumAccountCategory.DEALER,int mgr_fk=0)
+        public static bool AddAccount(ref AccountCreation create)
         {
             
             using (DBMySql db = new DBMySql())
             {
-                account = string.Empty;
-                //如果指定的交易帐号为空 则通过数据库内存放的帐号信息进行递增来获得当前添加帐号
-                if (string.IsNullOrEmpty(setaccount))
+                //检查交易帐号 如果指定的交易帐号为空 则通过数据库内存放的帐号信息进行递增来获得当前添加帐号
+                if (string.IsNullOrEmpty(create.Account))
                 {
-                    int acref = MaxAccountRef(category);
+                    int acref = MaxAccountRef(create.Category);
                     //生成当前交易帐号
-                    account = (acref + 1).ToString();
+                    create.Account = (acref + 1).ToString();
                 }
                 else
                 {
                     //查看是否已经存在该帐号
-                    if (ExistAccount(setaccount))
+                    if (ExistAccount(create.Account))
                     {
-                        throw new FutsRspError("已经存在帐户:" + setaccount);
-                            
-                    }
-                    else
-                    {
-                        account = setaccount;
+                        throw new FutsRspError("已经存在帐户:" + create.Account);  
                     }
                 }
-                if (string.IsNullOrEmpty(pass))
+                if (string.IsNullOrEmpty(create.Password))
                 {
-                    pass = GlobalConfig.DefaultPassword;
+                    create.Password= GlobalConfig.DefaultPassword;
                 }
 
                 //如果user_id为非0编号 表明是由前端web网站调用的添加帐号,因此需要检查user_id是否已经申请过帐号
-                if (user_id != "0")
-                { 
-                    if(HaveRequested(user_id, category))
+                if (create.UserID != 0)
+                {
+                    if (HaveRequested(create.UserID, create.Category))
                     {
                         throw new FutsRspError("用户已经申请过交易帐户");
                     }
                 }
-                string query = String.Format("Insert into accounts (`account`,`user_id`,`createdtime`,`pass`,`account_category`,`settledatetime` ,`mgr_fk` ) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}')", account, user_id.ToString(), Util.ToTLDateTime(), pass, category, Util.ToTLDateTime(DateTime.Now - new TimeSpan(1, 0, 0, 0, 0)), mgr_fk);
+
+                string query = String.Format("Insert into accounts (`account`,`pass`,`account_category`,`order_route_type`,`createdtime`,`settledatetime`,`user_id`,`mgr_fk`,`rg_fk`,`domain_id` ) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}')",create.Account,create.Password,create.Category,create.RouterType, Util.ToTLDateTime(),Util.ToTLDateTime(DateTime.Now - new TimeSpan(1, 0, 0, 0, 0)),create.UserID,create.BaseManager.ID,create.RouteGroup==null?0:create.RouteGroup.ID,create.Domain.ID);
                 return db.Connection.Execute(query) > 0;
             }
         }

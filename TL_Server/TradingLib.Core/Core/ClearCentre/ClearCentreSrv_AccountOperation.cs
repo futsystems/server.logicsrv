@@ -275,18 +275,11 @@ namespace TradingLib.Core
             if (acc == null)
             {
                 debug("与MAC地址绑定的帐号不存在", QSEnumDebugLevel.INFO);
-                bool re = this.AddAccount(out account, "0", "", "123456", QSEnumAccountCategory.SIMULATION);
-                if (re)
-                {
-                    this.BindAccountMAC(account, mac);
-                    debug("创建帐号成功 account:" + account + " mac:" + mac, QSEnumDebugLevel.INFO);
-                    return account;
-                }
-                else
-                {
-                    debug("创建帐号失败", QSEnumDebugLevel.INFO);
-                    return null;
-                }
+                AccountCreation create = new AccountCreation();
+                this.AddAccount(ref create);
+                this.BindAccountMAC(account, mac);
+                debug("创建帐号成功 account:" + account + " mac:" + mac, QSEnumDebugLevel.INFO);
+                return account;
             }
             else
             {
@@ -409,52 +402,63 @@ namespace TradingLib.Core
         /// <param name="type"></param>
         /// <param name="pass"></param>
         /// <returns></returns>
-        public bool AddAccount(out string account, string user_id,string setaccount,string pass, QSEnumAccountCategory type,int mgr_fk=0)
+        public void AddAccount(ref AccountCreation create)
         {
-            debug("清算中心为user:" + user_id + " 添加交易帐号到主柜员ID:"+mgr_fk.ToString(), QSEnumDebugLevel.INFO);
-            
-            //如果给定了交易帐号 则我们需要检查交易帐号是否是字母或数字
-            if (!string.IsNullOrEmpty(setaccount))
+            debug("清算中心为user:" + create.UserID.ToString() + " 添加交易帐号到主柜员ID:" + create.BaseManager.ID.ToString(), QSEnumDebugLevel.INFO);
+
+            if (create.Domain == null)
             {
-                if (!regaccount.IsMatch(setaccount))
+                throw new FutsRspError("帐户所属域参数不正确");
+            }
+            if (create.BaseManager == null)
+            {
+                throw new FutsRspError("帐户所属柜员参数不正确");
+            }
+
+            //如果给定了交易帐号 则我们需要检查交易帐号是否是字母或数字
+            if (!string.IsNullOrEmpty(create.Account))
+            {
+                if (!regaccount.IsMatch(create.Account))
                 {
                     throw new FutsRspError("交易帐号只能包含数字,字母,-");
                 }
-                if (setaccount.Length > 20)
+                if (create.Account.Length > 20)
                 {
                     throw new FutsRspError("交易帐号长度不能超过20位");
                 }
             }
-            account = null;
-            mgr_fk  = (mgr_fk == 0 ? BasicTracker.ManagerTracker.GetRootFK() : mgr_fk);
-            bool re = ORM.MAccount.AddAccount(out account, user_id, setaccount,pass, type,mgr_fk);
+
+            if (create.BaseManager == null)
+            {
+                throw new FutsRspError("帐户对应的管理员不能为空");
+            }
+
+            ORM.MAccount.AddAccount(ref create);
 
             //如果添加成功则将该账户加载到内存
-            if (re)
+            //加载该账户数据
+            LoadAccount(create.Account);
+
+            switch (create.Category)
             {
-                //加载该账户数据
-                LoadAccount(account);
-
-                switch (type)
-                {
-                    //如果是模拟交易帐号则重置资金到模拟初始资金
-                    case QSEnumAccountCategory.SIMULATION:
-                    case QSEnumAccountCategory.DEALER:
-                        {
-                            //初始化账户权益资金
-                            ResetEquity(account, simAmount);
-                            break;
-                        }
-                    default:
+                //如果是模拟交易帐号则重置资金到模拟初始资金
+                case QSEnumAccountCategory.SIMULATION:
+                case QSEnumAccountCategory.DEALER:
+                    {
+                        //初始化账户权益资金
+                        ResetEquity(create.Account, simAmount);
                         break;
-
-                }
-                //对外触发交易帐号添加事件
-                if (this.AccountAddEvent != null)
-                    this.AccountAddEvent(account);
+                    }
+                default:
+                    break;
 
             }
-            return re;
+            //对外触发交易帐号添加事件
+            if (this.AccountAddEvent != null)
+                this.AccountAddEvent(create.Account);
+
+            
+            //return re;
         }
 
 

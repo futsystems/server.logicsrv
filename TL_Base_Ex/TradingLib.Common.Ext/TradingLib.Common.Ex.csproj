@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="Accounts\Account.cs" />
     <Compile Include="Accounts\AccountAdapterToExp.cs" />
+    <Compile Include="Accounts\AccountCreation.cs" />
     <Compile Include="Accounts\AccountFilter.cs" />
     <Compile Include="Accounts\AccountUtils_ObjectWrapper.cs" />
     <Compile Include="Accounts\AccountUtils_xx.cs" />
@@ -167,6 +168,7 @@
     <Compile Include="Tracker\SymbolTracker.cs" />
     <Compile Include="Tracker\TotalTracker.cs" />
     <Compile Include="Tracker\VendorTracker.cs" />
+    <Compile Include="Utils\IDomainUtils.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

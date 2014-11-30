@@ -19,53 +19,53 @@ namespace TradingLib.Core
         #region 【帐户参数修改】
 
         #region 添加或删除帐户
-        [ContribCommandAttr(QSEnumCommandSource.MessageWeb, "addaccount", "addaccount - 某个用户添加某个类别的交易帐号", "某个用户添加某个类别的交易帐号")]
-        [CoreCommandAttr(QSEnumCommandSource.CLI,"addaccount","addaccount - clearcentre add a new account","清算中心增加一个交易帐号")]
-        [MethodArgument("", QSEnumMethodArgumentType.Integer, 1, "UCenter用户id")]
-        [MethodArgument("", QSEnumMethodArgumentType.String, 2, "指定交易帐户号码,如果采用系统递增的号码则为空,指定的号码不能以9开头")]
-        [MethodArgument("", QSEnumMethodArgumentType.String, 3, "指定交易帐户密码,如果采用随机Miami,则设置为空")]
-        [MethodArgument("", QSEnumMethodArgumentType.Enum, 4, "交易帐户类别类别 DEALER(交易员) SIMULATION(模拟帐号) REAL(实盘帐号)")]
-        public string CTE_AddAccount(int userid,string setaccount,string pass,QSEnumAccountCategory type)
-        {
-            string npass=pass;
-            if (string.IsNullOrEmpty(pass))
-            {
-                npass = ExUtil.GenAccountPass();
-            }
-            string account = null;
-            bool re = this.AddAccount(out account,userid.ToString(),setaccount,npass, type);
-            if (re)
-            {
-                JsonWriter w = ReplyHelper.NewJWriterSuccess();
-                w.WritePropertyName("Account");
-                w.Write(account);
-                ReplyHelper.EndWriter(w);
-                return w.ToString();
-            }
+        //[ContribCommandAttr(QSEnumCommandSource.MessageWeb, "addaccount", "addaccount - 某个用户添加某个类别的交易帐号", "某个用户添加某个类别的交易帐号")]
+        //[CoreCommandAttr(QSEnumCommandSource.CLI,"addaccount","addaccount - clearcentre add a new account","清算中心增加一个交易帐号")]
+        //[MethodArgument("", QSEnumMethodArgumentType.Integer, 1, "UCenter用户id")]
+        //[MethodArgument("", QSEnumMethodArgumentType.String, 2, "指定交易帐户号码,如果采用系统递增的号码则为空,指定的号码不能以9开头")]
+        //[MethodArgument("", QSEnumMethodArgumentType.String, 3, "指定交易帐户密码,如果采用随机Miami,则设置为空")]
+        //[MethodArgument("", QSEnumMethodArgumentType.Enum, 4, "交易帐户类别类别 DEALER(交易员) SIMULATION(模拟帐号) REAL(实盘帐号)")]
+        //public string CTE_AddAccount(int userid,string setaccount,string pass,QSEnumAccountCategory type)
+        //{
+        //    string npass=pass;
+        //    if (string.IsNullOrEmpty(pass))
+        //    {
+        //        npass = ExUtil.GenAccountPass();
+        //    }
+        //    string account = null;
+        //    bool re = this.AddAccount(out account,userid.ToString(),setaccount,npass, type);
+        //    if (re)
+        //    {
+        //        JsonWriter w = ReplyHelper.NewJWriterSuccess();
+        //        w.WritePropertyName("Account");
+        //        w.Write(account);
+        //        ReplyHelper.EndWriter(w);
+        //        return w.ToString();
+        //    }
 
-            return ReplyHelper.Error_ServerSide;
-        }
+        //    return ReplyHelper.Error_ServerSide;
+        //}
 
 
-        [CoreCommandAttr(QSEnumCommandSource.CLI, "addbatchacc", "addbatchacc - clearcentre add batch accounts", "清算中心增加一批交易帐号")]
-        public string CTE_AddAccountCli()
-        {
-            string npass = "123456";
-            string account = null;
-            bool re = this.AddAccount(out account,"0","", npass,QSEnumAccountCategory.DEALER);
-            if (!string.IsNullOrEmpty(account))
-            {
-                JsonWriter w = ReplyHelper.NewJWriterSuccess();
-                w.WritePropertyName("Account");
-                w.Write(account);
-                w.WritePropertyName("Pass");
-                w.Write(npass);
-                ReplyHelper.EndWriter(w);
-                return w.ToString();
-            }
+        //[CoreCommandAttr(QSEnumCommandSource.CLI, "addbatchacc", "addbatchacc - clearcentre add batch accounts", "清算中心增加一批交易帐号")]
+        //public string CTE_AddAccountCli()
+        //{
+        //    string npass = "123456";
+        //    string account = null;
+        //    bool re = this.AddAccount(out account,"0","", npass,QSEnumAccountCategory.DEALER);
+        //    if (!string.IsNullOrEmpty(account))
+        //    {
+        //        JsonWriter w = ReplyHelper.NewJWriterSuccess();
+        //        w.WritePropertyName("Account");
+        //        w.Write(account);
+        //        w.WritePropertyName("Pass");
+        //        w.Write(npass);
+        //        ReplyHelper.EndWriter(w);
+        //        return w.ToString();
+        //    }
 
-            return ReplyHelper.Error_ServerSide;
-        }
+        //    return ReplyHelper.Error_ServerSide;
+        //}
 
 
         
