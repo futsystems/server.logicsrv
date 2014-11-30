@@ -16,12 +16,12 @@ namespace TradingLib.ServiceManager
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("-----------BrokerInterface List--------------" + Environment.NewLine);
-            foreach (ConnectorInterface itface in ConnectorConfigTracker.BrokerInterfaces)
+            foreach (ConnectorInterface itface in BasicTracker.ConnectorConfigTracker.BrokerInterfaces)
             {
                 sb.Append("Type:" + itface.type_name + " XAPI:" + itface.IsXAPI.ToString() + Environment.NewLine);
             }
             sb.Append("-----------DataFeedInterface List--------------" + Environment.NewLine);
-            foreach (ConnectorInterface itface in ConnectorConfigTracker.DataFeedInterfaces)
+            foreach (ConnectorInterface itface in BasicTracker.ConnectorConfigTracker.DataFeedInterfaces)
             {
                 sb.Append("Type:" + itface.type_name + " XAPI:" + itface.IsXAPI.ToString() + Environment.NewLine);
             }

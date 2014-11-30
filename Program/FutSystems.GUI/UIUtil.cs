@@ -218,30 +218,30 @@ namespace FutSystems.GUI
             return list;
         }
 
-        public static ArrayList genExchangeList()
-        {
-            return genExchangeList(false);
-        }
-        public static ArrayList genExchangeList(bool isany)
-        {
-            ArrayList list = new ArrayList();
-            if (isany)
-            {
-                ValueObject<Exchange> vo = new ValueObject<Exchange>();
-                vo.Name = ANY;
-                vo.Value = new Exchange(); ;
-                list.Add(vo);
+        //public static ArrayList genExchangeList()
+        //{
+        //    return genExchangeList(false);
+        //}
+        //public static ArrayList genExchangeList(bool isany)
+        //{
+        //    ArrayList list = new ArrayList();
+        //    if (isany)
+        //    {
+        //        ValueObject<Exchange> vo = new ValueObject<Exchange>();
+        //        vo.Name = ANY;
+        //        vo.Value = new Exchange(); ;
+        //        list.Add(vo);
 
-            }
-            foreach (Exchange e in ExchangeTracker.getExchList())
-            {
-                ValueObject<Exchange> vo = new ValueObject<Exchange>();
-                vo.Name = e.Name;
-                vo.Value = e;
-                list.Add(vo);
-            }
-            return list;
-        }
+        //    }
+        //    foreach (Exchange e in ExchangeTracker.getExchList())
+        //    {
+        //        ValueObject<Exchange> vo = new ValueObject<Exchange>();
+        //        vo.Name = e.Name;
+        //        vo.Value = e;
+        //        list.Add(vo);
+        //    }
+        //    return list;
+        //}
 
         public static ArrayList genEnumList<T>()
         {
@@ -370,61 +370,61 @@ namespace FutSystems.GUI
             cb.ValueMember = "Value";
         }
 
-        public static void genComboBoxExchange(ref ComboBox cb)
-        {
-            genComboBoxExchange(ref cb, false);
-        }
-        public static void genComboBoxExchange(ref ComboBox cb,bool isany)
-        {
-            ArrayList list = new ArrayList();
-            if (isany)
-            {
-                ValueObject<Exchange> vo = new ValueObject<Exchange>();
-                vo.Name = ANY;
-                vo.Value = new Exchange(); ;
-                list.Add(vo);
+        //public static void genComboBoxExchange(ref ComboBox cb)
+        //{
+        //    genComboBoxExchange(ref cb, false);
+        //}
+        //public static void genComboBoxExchange(ref ComboBox cb,bool isany)
+        //{
+        //    ArrayList list = new ArrayList();
+        //    if (isany)
+        //    {
+        //        ValueObject<Exchange> vo = new ValueObject<Exchange>();
+        //        vo.Name = ANY;
+        //        vo.Value = new Exchange(); ;
+        //        list.Add(vo);
                 
-            }
-            foreach (Exchange e in ExchangeTracker.getExchList())
-            {
-                ValueObject<Exchange> vo = new ValueObject<Exchange>();
-                vo.Name = e.Name;
-                vo.Value = e;
-                list.Add(vo);
-            }
-            cb.DataSource = list;
-            cb.DisplayMember = "Name";
-            cb.ValueMember = "Value";
-        }
+        //    }
+        //    foreach (Exchange e in ExchangeTracker.getExchList())
+        //    {
+        //        ValueObject<Exchange> vo = new ValueObject<Exchange>();
+        //        vo.Name = e.Name;
+        //        vo.Value = e;
+        //        list.Add(vo);
+        //    }
+        //    cb.DataSource = list;
+        //    cb.DisplayMember = "Name";
+        //    cb.ValueMember = "Value";
+        //}
 
-        public static void genExchangeList(ref CheckedListBox ck)
-        {
-            ArrayList list = new ArrayList();
-             foreach (Exchange e in ExchangeTracker.getExchList())
-            {
-                ValueObject<Exchange> vo = new ValueObject<Exchange>();
-                vo.Name = e.Name;
-                vo.Value = e;
-                list.Add(vo);
-            }
-            ck.DataSource = list;
-            ck.DisplayMember = "Name";
-            ck.ValueMember = "Value";
-        }
-        public static void genExchangeList(ref ListBox ck)
-        {
-            ArrayList list = new ArrayList();
-            foreach (Exchange e in ExchangeTracker.getExchList())
-            {
-                ValueObject<Exchange> vo = new ValueObject<Exchange>();
-                vo.Name = e.Name;
-                vo.Value = e;
-                list.Add(vo);
-            }
-            ck.DataSource = list;
-            ck.DisplayMember = "Name";
-            ck.ValueMember = "Value";
-        }
+        //public static void genExchangeList(ref CheckedListBox ck)
+        //{
+        //    ArrayList list = new ArrayList();
+        //     foreach (Exchange e in ExchangeTracker.getExchList())
+        //    {
+        //        ValueObject<Exchange> vo = new ValueObject<Exchange>();
+        //        vo.Name = e.Name;
+        //        vo.Value = e;
+        //        list.Add(vo);
+        //    }
+        //    ck.DataSource = list;
+        //    ck.DisplayMember = "Name";
+        //    ck.ValueMember = "Value";
+        //}
+        //public static void genExchangeList(ref ListBox ck)
+        //{
+        //    ArrayList list = new ArrayList();
+        //    foreach (Exchange e in ExchangeTracker.getExchList())
+        //    {
+        //        ValueObject<Exchange> vo = new ValueObject<Exchange>();
+        //        vo.Name = e.Name;
+        //        vo.Value = e;
+        //        list.Add(vo);
+        //    }
+        //    ck.DataSource = list;
+        //    ck.DisplayMember = "Name";
+        //    ck.ValueMember = "Value";
+        //}
 
 
         public static void genTickList(ref ComboBox cb)

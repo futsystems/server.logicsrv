@@ -62,6 +62,7 @@ namespace TradingLib.ORM
         public bool PosLock { get; set; }
         public int Mgr_fk { get; set; }
         public int rg_fk { get; set; }
+        public int domain_id { get; set; }
 
     }
 
@@ -590,6 +591,9 @@ namespace TradingLib.ORM
             account.PosLock = fields.PosLock;
             account.Mgr_fk = fields.Mgr_fk;
             account.RG_FK = fields.rg_fk;
+            
+            //绑定对应的域
+            (account as AccountBase).Domain = BasicTracker.DomainTracker[fields.domain_id];
             //Util.Debug("fileds route:" + fields.Order_Router_Type.ToString() +" category:"+fields.Account_Category.ToString()) ;
             return account;
         }

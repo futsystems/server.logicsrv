@@ -21,6 +21,8 @@ namespace TradingLib.Common
             {
                 managermap[m.Login] = m;
                 mgridmap[m.ID] = m;
+
+                m.Domain = BasicTracker.DomainTracker[m.domain_id];
             }
             foreach (Manager m in mlist)
             {
@@ -88,9 +90,13 @@ namespace TradingLib.Common
         /// <returns></returns>
         public IEnumerable<Manager> GetManagers(Manager mgr)
         {
-            if (mgr.Type == QSEnumManagerType.ROOT)
+            if (mgr.Type == QSEnumManagerType.SUPERROOT)
             {
                 return managermap.Values;
+            }
+            else if (mgr.Type == QSEnumManagerType.ROOT)
+            {
+                return managermap.Values.Where(m=>m.domain_id == mgr.domain_id);
             }
             else
             { 

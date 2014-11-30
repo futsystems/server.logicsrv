@@ -83,7 +83,11 @@
     <Compile Include="Contex\Event\CashOperationEvent.cs" />
     <Compile Include="Contex\Event\SystemEvent.cs" />
     <Compile Include="ORM\MCashOpAccount.cs" />
+    <Compile Include="ORM\MConnector.cs" />
+    <Compile Include="ORM\MDomain.cs" />
     <Compile Include="ORM\MRouterGroup.cs" />
+    <Compile Include="Tracker\ConntorConfigTracker.cs" />
+    <Compile Include="Tracker\DomainTracker.cs" />
     <Compile Include="Tracker\RouterGrouperTracker.cs" />
     <Compile Include="SrvObject\ISessionTransUtils.cs" />
     <Compile Include="ORM\Config\ConfigItem.cs" />
@@ -164,9 +168,7 @@
     <Compile Include="Tracker\TotalTracker.cs" />
     <Compile Include="Tracker\VendorTracker.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Vendor\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

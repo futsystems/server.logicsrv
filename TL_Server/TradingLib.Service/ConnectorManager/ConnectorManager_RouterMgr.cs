@@ -20,7 +20,7 @@ namespace TradingLib.ServiceManager
             Manager manger = session.GetManager();
             if (manger.RightRootDomain())
             {
-                ConnectorInterface[] ops = ConnectorConfigTracker.Interfaces.ToArray();
+                ConnectorInterface[] ops = BasicTracker.ConnectorConfigTracker.Interfaces.ToArray();
                 session.SendJsonReplyMgr(ops);
             }
         }
@@ -54,7 +54,7 @@ namespace TradingLib.ServiceManager
             Manager manger = session.GetManager();
             if (manger.RightRootDomain())
             {
-                ConnectorConfig[] ops = ConnectorConfigTracker.ConnecotrConfigs.ToArray();
+                ConnectorConfig[] ops = BasicTracker.ConnectorConfigTracker.ConnecotrConfigs.ToArray();
                 session.SendJsonReplyMgr(ops);
             }
         }
@@ -77,18 +77,18 @@ namespace TradingLib.ServiceManager
                     {
                         throw new FutsRspError("Token不能为空");
                     }
-                    if (ConnectorConfigTracker.GetBrokerInterface(cfg.interface_fk) == null)
+                    if (BasicTracker.ConnectorConfigTracker.GetBrokerInterface(cfg.interface_fk) == null)
                     {
                         throw new FutsRspError("请选择有效接口");
                     }
                     //添加ConnectorConfig 需要Token保持唯一
-                    if (cfg.ID == 0 && ConnectorConfigTracker.GetBrokerConfig(cfg.Token) != null)
+                    if (cfg.ID == 0 && BasicTracker.ConnectorConfigTracker.GetBrokerConfig(cfg.Token) != null)
                     {
                         throw new FutsRspError("同名Token已经存在");
                     }
 
                     //2.更新参数
-                    ConnectorConfigTracker.UpdateConnectorConfig(cfg);
+                    BasicTracker.ConnectorConfigTracker.UpdateConnectorConfig(cfg);
 
                     //3.更新或加载Broker
                     if (isadd)
@@ -283,7 +283,7 @@ namespace TradingLib.ServiceManager
 
                 if (manger.RightRootDomain())
                 {
-                    ConnectorConfig cfg = ConnectorConfigTracker.GetBrokerConfig(cid);
+                    ConnectorConfig cfg = BasicTracker.ConnectorConfigTracker.GetBrokerConfig(cid);
                     if (cfg == null)
                     {
                         throw new FutsRspError("通道不存在");
@@ -325,7 +325,7 @@ namespace TradingLib.ServiceManager
 
                 if (manger.RightRootDomain())
                 {
-                    ConnectorConfig cfg = ConnectorConfigTracker.GetBrokerConfig(cid);
+                    ConnectorConfig cfg = BasicTracker.ConnectorConfigTracker.GetBrokerConfig(cid);
                     if (cfg == null)
                     {
                         throw new FutsRspError("通道不存在");

@@ -7,7 +7,7 @@ using TradingLib.API;
 using TradingLib.Common;
 
 
-namespace TradingLib.ServiceManager
+namespace TradingLib.Common
 {
     public class ConnectorConfigTracker
     {
@@ -16,11 +16,11 @@ namespace TradingLib.ServiceManager
         Dictionary<string, ConnectorConfig> configmap = new Dictionary<string, ConnectorConfig>();
         Dictionary<int, ConnectorConfig> configidxmap = new Dictionary<int, ConnectorConfig>();
 
-        static ConnectorConfigTracker _defaultinstance = null;
-        static ConnectorConfigTracker()
-        {
-            _defaultinstance = new ConnectorConfigTracker();
-        }
+        //static ConnectorConfigTracker _defaultinstance = null;
+        //static ConnectorConfigTracker()
+        //{
+        //    _defaultinstance = new ConnectorConfigTracker();
+        //}
 
         public void UpdateInterface(ConnectorInterface itface)
         {
@@ -44,7 +44,7 @@ namespace TradingLib.ServiceManager
             }
         }
 
-        private ConnectorConfigTracker()
+        public ConnectorConfigTracker()
         {
             IEnumerable<ConnectorInterface> interfacelist = ORM.MConnector.SelectBrokerInterface();
             foreach (ConnectorInterface itface in interfacelist)
@@ -56,17 +56,23 @@ namespace TradingLib.ServiceManager
             foreach (ConnectorConfig cfg in confglist)
             {
                 int itfaceidx = cfg.interface_fk;
-                ConnectorInterface itface = getBrokerInterface(itfaceidx);
+                ConnectorInterface itface = GetBrokerInterface(itfaceidx);
                 if (itface == null)
                     continue;
                 itface.IsValid = false;//默认设置为false,需要后段程序通过验证加载成功然后再设置成True
                 cfg.Interface = itface;
                 configidxmap.Add(cfg.ID, cfg);
                 configmap.Add(cfg.Token, cfg);
+                cfg.Domain = BasicTracker.DomainTracker[cfg.domain_id];
             }
         }
 
-        ConnectorInterface getBrokerInterface(int id)
+        /// <summary>
+        /// 通过ID查找获得对应的成交接口
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public  ConnectorInterface GetBrokerInterface(int id)
         {
             ConnectorInterface itface = null;
             if (interfacemap.TryGetValue(id, out itface))
@@ -75,22 +81,8 @@ namespace TradingLib.ServiceManager
             }
             return null;
         }
-        /// <summary>
-        /// 通过ID查找获得对应的成交接口
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public static ConnectorInterface GetBrokerInterface(int id)
-        {
-            ConnectorInterface itface = null;
-            if (_defaultinstance.interfacemap.TryGetValue(id, out itface))
-            {
-                return itface;
-            }
-            return null;
-        }
 
-        ConnectorConfig getBrokerConfig(int id)
+        public  ConnectorConfig GetBrokerConfig(int id)
         {
             ConnectorConfig cfg = null;
             if (configidxmap.TryGetValue(id, out cfg))
@@ -98,14 +90,9 @@ namespace TradingLib.ServiceManager
                 return cfg;
             }
             return null;
-            
-        }
-        public static ConnectorConfig GetBrokerConfig(int id)
-        {
-            return _defaultinstance.getBrokerConfig(id);
         }
 
-        ConnectorConfig getBrokerConfig(string token)
+        public ConnectorConfig GetBrokerConfig(string token)
         {
             ConnectorConfig cfg = null;
             if (configmap.TryGetValue(token, out cfg))
@@ -114,74 +101,70 @@ namespace TradingLib.ServiceManager
             }
             return null;
         }
-        public static ConnectorConfig GetBrokerConfig(string token)
-        {
-            return _defaultinstance.getBrokerConfig(token);
-        }
 
         /// <summary>
         /// 返回所有交易接口设置
         /// </summary>
-        public static IEnumerable<ConnectorConfig> BrokerConfigs
+        public  IEnumerable<ConnectorConfig> BrokerConfigs
         {
             get
             {
-                return _defaultinstance.configmap.Values.Where(cfg=>cfg.Interface !=null).Where(cfg=>cfg.Interface.Type == QSEnumConnectorType.Broker);
+                return configmap.Values.Where(cfg=>cfg.Interface !=null).Where(cfg=>cfg.Interface.Type == QSEnumConnectorType.Broker);
             }
         }
 
-        public static IEnumerable<ConnectorConfig> DataFeedConfigs
+        public IEnumerable<ConnectorConfig> DataFeedConfigs
         {
             get
             {
-                return _defaultinstance.configmap.Values.Where(cfg => cfg.Interface != null).Where(cfg => cfg.Interface.Type == QSEnumConnectorType.DataFeed);
+                return configmap.Values.Where(cfg => cfg.Interface != null).Where(cfg => cfg.Interface.Type == QSEnumConnectorType.DataFeed);
             }
         }
 
-        public static IEnumerable<ConnectorConfig> ConnecotrConfigs
+        public IEnumerable<ConnectorConfig> ConnecotrConfigs
         {
             get
             {
-                return _defaultinstance.configidxmap.Values;
+                return configidxmap.Values;
             }
         }
         /// <summary>
         /// 返回所有接口
         /// </summary>
-        public static IEnumerable<ConnectorInterface> BrokerInterfaces
+        public  IEnumerable<ConnectorInterface> BrokerInterfaces
         {
             get
             {
-                return _defaultinstance.interfacemap.Values.Where(itf => itf.Type == QSEnumConnectorType.Broker);
+                return interfacemap.Values.Where(itf => itf.Type == QSEnumConnectorType.Broker);
             }
         }
 
-        public static IEnumerable<ConnectorInterface> DataFeedInterfaces
+        public IEnumerable<ConnectorInterface> DataFeedInterfaces
         {
             get
             {
-                return _defaultinstance.interfacemap.Values.Where(itf => itf.Type == QSEnumConnectorType.DataFeed);
+                return interfacemap.Values.Where(itf => itf.Type == QSEnumConnectorType.DataFeed);
             }
         }
 
         /// <summary>
         /// 获得所有接口设置
         /// </summary>
-        public static IEnumerable<ConnectorInterface> Interfaces
+        public IEnumerable<ConnectorInterface> Interfaces
         {
             get
             {
-                return _defaultinstance.interfacemap.Values;
+                return interfacemap.Values;
             }
         }
 
 
         #region 添加或更新通道
-        public static void UpdateConnectorConfig(ConnectorConfig cfg)
+        public void UpdateConnectorConfig(ConnectorConfig cfg)
         {
             ConnectorConfig target = null;
             //存在该ID则更新
-            if (_defaultinstance.configidxmap.TryGetValue(cfg.ID,out target))
+            if (configidxmap.TryGetValue(cfg.ID,out target))
             {
                 target.Name = cfg.Name;
                 target.srvinfo_ipaddress = cfg.srvinfo_ipaddress;
@@ -220,13 +203,13 @@ namespace TradingLib.ServiceManager
                 ORM.MConnector.InsertConnectorConfig(target);
 
                 int itfaceidx = cfg.interface_fk;
-                ConnectorInterface itface = _defaultinstance.getBrokerInterface(itfaceidx);
+                ConnectorInterface itface = this.GetBrokerInterface(itfaceidx);
                 if (itface == null)
                     return;
                 //itface.IsValid = false;//默认设置为false,需要后段程序通过验证加载成功然后再设置成True
                 cfg.Interface = itface;
-                _defaultinstance.configidxmap.Add(target.ID, target);
-                _defaultinstance.configmap.Add(target.Token, target);
+                configidxmap.Add(target.ID, target);
+                configmap.Add(target.Token, target);
                 
 
             }

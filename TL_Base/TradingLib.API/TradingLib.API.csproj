@@ -43,6 +43,7 @@
     <Compile Include="Account\IFinanceTotal.cs" />
     <Compile Include="Connecter\PositionMetric.cs" />
     <Compile Include="Connecter\RouterItem.cs" />
+    <Compile Include="Domain\Domain.cs" />
     <Compile Include="Vendor\IVendor.cs" />
     <Compile Include="Connecter\EnumDataFeedTypes.cs" />
     <Compile Include="Connecter\RouterGroup.cs" />
@@ -54,7 +55,7 @@
     <Compile Include="Msic\EnumCashOPSource.cs" />
     <Compile Include="Msic\EnumDebugLevel.cs" />
     <Compile Include="Msic\EnumLogicStatus.cs" />
-    <Compile Include="Msic\EnumManagerType.cs" />
+    <Compile Include="Manager\EnumManagerType.cs" />
     <Compile Include="Msic\EnumCashOperation.cs" />
     <Compile Include="Msic\ILogItem.cs" />
     <Compile Include="Msic\QSEnumRouterStrategy.cs" />

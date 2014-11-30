@@ -49,6 +49,13 @@ namespace TradingLib.Common
         /// 解绑时置空
         /// </summary>
         public string BrokerToken { get; set; }
+
+        /// <summary>
+        /// 域ID
+        /// </summary>
+        public int domain_id { get; set; }
+
+        public Domain Domain { get; internal set; }
     }
     /// <summary>
     /// 实盘帐户对象

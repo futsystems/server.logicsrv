@@ -28,9 +28,8 @@ namespace TradingLib.ServiceManager
              * 接口验证需要检查c# plugin是否存在 同时具体的c++ dll是否加载成功 如果失败则不加载对应的BrokerConfig
              **/
             debug("Valid connecotr config(interface and config)", QSEnumDebugLevel.INFO);
-            foreach (ConnectorInterface itface in ConnectorConfigTracker.BrokerInterfaces)
+            foreach (ConnectorInterface itface in BasicTracker.ConnectorConfigTracker.BrokerInterfaces)
             {
-                
                 bool cs_success = false;
                 cs_success = xapibrokermodule.Keys.Contains(itface.type_name);
                 bool cpp_success = itface.IsXAPI?BrokerXAPIHelper.ValidBrokerInterface(itface):true;
@@ -41,7 +40,7 @@ namespace TradingLib.ServiceManager
 
                 debug(string.Format("Broker Interface[{0}] C# Plugin[{1}]:{2} C++ Dll:{3} Valid:{4}", itface.Name, itface.type_name, cs_success, cpp_success, ret), QSEnumDebugLevel.INFO);
             }
-            foreach (ConnectorConfig cfg in ConnectorConfigTracker.BrokerConfigs)
+            foreach (ConnectorConfig cfg in BasicTracker.ConnectorConfigTracker.BrokerConfigs)
             {
                 if (cfg.Interface == null)
                     continue;
@@ -50,7 +49,7 @@ namespace TradingLib.ServiceManager
                 debug(string.Format("Broker Config[{0}] Name:{1} SrvIP:{2} LoginID{3}", cfg.Token, cfg.Name, cfg.srvinfo_ipaddress, cfg.usrinfo_userid), QSEnumDebugLevel.INFO);
             }
 
-            foreach (ConnectorInterface itface in ConnectorConfigTracker.DataFeedInterfaces)
+            foreach (ConnectorInterface itface in BasicTracker.ConnectorConfigTracker.DataFeedInterfaces)
             {
                 bool cs_success = false;
                 cs_success = xapidatafeedmodule.Keys.Contains(itface.type_name);
@@ -62,7 +61,7 @@ namespace TradingLib.ServiceManager
 
                 debug(string.Format("DataFeed Interface[{0}] C# Plugin[{1}]:{2} C++ Dll:{3} Valid:{4}", itface.Name, itface.type_name, cs_success, cpp_success, ret), QSEnumDebugLevel.INFO);
             }
-            foreach (ConnectorConfig cfg in ConnectorConfigTracker.DataFeedConfigs)
+            foreach (ConnectorConfig cfg in BasicTracker.ConnectorConfigTracker.DataFeedConfigs)
             {
                 if (cfg.Interface == null)
                     continue;
@@ -156,12 +155,12 @@ namespace TradingLib.ServiceManager
         void LoadXAPI()
         {
             debug("Load XAPI Connector into system...", QSEnumDebugLevel.INFO);
-            foreach (ConnectorConfig cfg in ConnectorConfigTracker.BrokerConfigs)
+            foreach (ConnectorConfig cfg in BasicTracker.ConnectorConfigTracker.BrokerConfigs)
             {
                 LoadBrokerConnector(cfg);
             }
 
-            foreach (ConnectorConfig cfg in ConnectorConfigTracker.DataFeedConfigs)
+            foreach (ConnectorConfig cfg in BasicTracker.ConnectorConfigTracker.DataFeedConfigs)
             {
                 TLDataFeedBase datafeed = CreateDataFeed(cfg);
                 if (datafeed == null)

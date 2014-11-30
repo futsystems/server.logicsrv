@@ -22,6 +22,7 @@ namespace TradingLib.Common
             foreach (RouterGroupImpl rg in ORM.MRouterGroup.SelectRouterGroup())
             {
                 routergroupmap.TryAdd(rg.ID, rg);
+                rg.Domain = BasicTracker.DomainTracker[rg.domain_id];
             }
 
             foreach (RouterItemImpl item in ORM.MRouterGroup.SelectRouterItem())
@@ -121,7 +122,7 @@ namespace TradingLib.Common
             {
                 target = new RouterGroupImpl();
                 target.Description = rg.Description;
-                target.Domain_ID = rg.Domain_ID;
+                target.domain_id = rg.domain_id;
                 target.Name = rg.Name;
                 target.Strategy = rg.Strategy;
 

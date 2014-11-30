@@ -82,9 +82,12 @@ namespace TradingLib.Common
         /// <summary>
         /// 域ID
         /// </summary>
-        public int Domain_ID { get; set; }
+        public int domain_id { get; set; }
 
-
+        /// <summary>
+        /// 域
+        /// </summary>
+        public Domain Domain { get; internal set; }
         /// <summary>
         /// 描述
         /// </summary>

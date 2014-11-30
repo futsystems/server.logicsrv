@@ -118,7 +118,11 @@ namespace TradingLib.API
         /// </summary>
         int RG_FK { get; set; }
 
-        
+        /// <summary>
+        /// 域ID
+        /// </summary>
+        Domain Domain { get;}
+
         /// <summary>
         /// 该帐号所绑定的全局UserID
         /// </summary>

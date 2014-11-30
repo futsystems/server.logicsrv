@@ -17,6 +17,7 @@ namespace TradingLib.Common
             foreach (VendorImpl v in ORM.MRouterGroup.SelectVendor())
             {
                 vendoermap.TryAdd(v.ID, v);
+                v.Domain = BasicTracker.DomainTracker[v.domain_id];
             }
         }
 

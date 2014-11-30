@@ -77,14 +77,22 @@ namespace FutsMoniter
 
         private void btnAddAccount_Click(object sender, EventArgs e)
         {
+            int grid = 0;
             QSEnumAccountCategory acccat = (QSEnumAccountCategory)accountType.SelectedValue;
-            int gid = (acccat == QSEnumAccountCategory.REAL ? ctRouterGroupList1.RouterGroudSelected.ID : 0);
+            try
+            {
+                grid = (acccat == QSEnumAccountCategory.REAL ? ctRouterGroupList1.RouterGroudSelected.ID : 0);
+            }
+            catch (Exception ex)
+            { 
+                
+            }
             string accid = account.Text;
             string pass = password.Text;
             int mgrid = ctAgentList1.CurrentAgentFK;
             if (fmConfirm.Show("确认添加交易帐号?") == System.Windows.Forms.DialogResult.Yes)
             {
-                Globals.TLClient.ReqAddAccount(acccat, accid, pass, mgrid, 0,gid);
+                Globals.TLClient.ReqAddAccount(acccat, accid, pass, mgrid, 0,grid);
                 this.Close();
             }
         }

@@ -22,6 +22,10 @@ namespace TradingLib.Common
 
         RouterGrouperTracker rgtracker;
         VendorTracker vendortracker;
+
+        DomainTracker domaintracker;
+
+        ConnectorConfigTracker connectorcfgtracker;
         static BasicTracker()
         {
             defaultinstance = new BasicTracker();
@@ -151,6 +155,32 @@ namespace TradingLib.Common
                 if (defaultinstance.vendortracker == null)
                     defaultinstance.vendortracker = new VendorTracker();
                 return defaultinstance.vendortracker;
+            }
+        }
+
+        /// <summary>
+        /// 域维护器
+        /// </summary>
+        public static DomainTracker DomainTracker
+        {
+            get
+            {
+                if (defaultinstance.domaintracker == null)
+                    defaultinstance.domaintracker = new DomainTracker();
+                return defaultinstance.domaintracker;
+            }
+        }
+
+        /// <summary>
+        /// 通道参数维护器
+        /// </summary>
+        public static ConnectorConfigTracker ConnectorConfigTracker
+        {
+            get
+            {
+                if (defaultinstance.connectorcfgtracker == null)
+                    defaultinstance.connectorcfgtracker = new ConnectorConfigTracker();
+                return defaultinstance.connectorcfgtracker;
             }
         }
         //public static void Release()

@@ -50,9 +50,11 @@
     <Compile Include="Messages\LogicFront.cs" />
     <Compile Include="ORM\DBHelper.cs" />
     <Compile Include="ORM\MySqlBase.cs" />
+    <Compile Include="Other\DomainImpl.cs" />
     <Compile Include="Vendor\BrokerStatus.cs" />
     <Compile Include="Vendor\ConnectorConfig.cs" />
     <Compile Include="Vendor\ConnectorInfo.cs" />
+    <Compile Include="Vendor\ConnectorInterface.cs" />
     <Compile Include="Vendor\IBrokerUtils.cs" />
     <Compile Include="Vendor\PositionMetricImpl.cs" />
     <Compile Include="Vendor\PositionMetricHelper.cs" />
@@ -234,8 +236,6 @@
     <Compile Include="Trading\TradeUtils.cs" />
     <Compile Include="Vendor\VendorImpl.cs" />
     <Compile Include="Vendor\VendorUtils.cs" />
-    <Compile Include="XMLTracker\ExchangeTracer.cs" />
-    <Compile Include="XMLTracker\RouterTracker.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

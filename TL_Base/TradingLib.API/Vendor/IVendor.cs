@@ -50,5 +50,10 @@ namespace TradingLib.API
         /// </summary>
         decimal MarginLimit { get; set; }
 
+        /// <summary>
+        /// 域
+        /// </summary>
+        Domain Domain { get; }
+
     }
 }

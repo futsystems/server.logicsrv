@@ -69,7 +69,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("Insert into router_group (`name`,`strategy`,`description`,`domain_id`) VALUES ('{0}','{1}','{2}','{3}')", group.Name,group.Strategy,group.Description,group.Domain_ID);
+                string query = String.Format("Insert into router_group (`name`,`strategy`,`description`,`domain_id`) VALUES ('{0}','{1}','{2}','{3}')", group.Name,group.Strategy,group.Description,group.domain_id);
                 db.Connection.Execute(query);
                 SetIdentity(db.Connection, id => group.ID = id, "id", "router_group");
             }

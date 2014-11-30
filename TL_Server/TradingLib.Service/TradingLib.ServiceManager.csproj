@@ -67,8 +67,6 @@
     <Compile Include="ConnectorManager\ConnectorManager_.cs" />
     <Compile Include="ConnectorManager\ConnectorManager_CTE.cs" />
     <Compile Include="ConnectorManager\ConnectorManager_XAPI.cs" />
-    <Compile Include="ConnectorManager\ConntorConfigTracker.cs" />
-    <Compile Include="ConnectorManager\ORM\MConnector.cs" />
     <Compile Include="ConnectorManager\ConnectorManager_IRouterManager.cs" />
     <Compile Include="ConnectorManager\ConnectorManager_RouterMgr.cs" />
     <Compile Include="ConnectorManager\ConnectorManager_RouterGroup.cs" />
@@ -79,7 +77,9 @@
     <Compile Include="CoreManager\CoreManager.cs" />
     <Compile Include="CoreManager\CoreManager_CoreComponents.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="ConnectorManager\ORM\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
