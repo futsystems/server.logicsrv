@@ -83,7 +83,7 @@ namespace FutsMoniter
             Globals.CallBackCentre.RegisterCallback("ConnectorManager", "QryRouterItem", this.OnQryRouterItem);
             Globals.CallBackCentre.RegisterCallback("ConnectorManager", "QryInterface", this.OnQryInterface);
             Globals.CallBackCentre.RegisterCallback("ConnectorManager", "NotifyConnectorCfg", this.OnNotifyConnectorConfig);
-            Globals.CallBackCentre.RegisterCallback("ConnectorManager", "NotifyVendor", this.OnNotifyVendorBind);
+            Globals.CallBackCentre.RegisterCallback("MgrExchServer", "NotifyVendor", this.OnNotifyVendorBind);
             Globals.CallBackCentre.RegisterCallback("ConnectorManager", "NotifyRouterItem", this.OnNotifyRouterItem);
             Globals.CallBackCentre.RegisterCallback("ConnectorManager", "NotifyRouterGroup", this.OnNotifyRouterGroup);
 
@@ -96,7 +96,7 @@ namespace FutsMoniter
             Globals.CallBackCentre.UnRegisterCallback("ConnectorManager", "QryRouterItem", this.OnQryRouterItem);
             Globals.CallBackCentre.UnRegisterCallback("ConnectorManager", "QryInterface", this.OnQryInterface);
             Globals.CallBackCentre.UnRegisterCallback("ConnectorManager", "NotifyConnectorCfg", this.OnNotifyConnectorConfig);
-            Globals.CallBackCentre.UnRegisterCallback("ConnectorManager", "NotifyVendor", this.OnNotifyVendorBind);
+            Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "NotifyVendor", this.OnNotifyVendorBind);
             Globals.CallBackCentre.UnRegisterCallback("ConnectorManager", "NotifyRouterItem", this.OnNotifyRouterItem);
 
         }
@@ -123,6 +123,7 @@ namespace FutsMoniter
 
         ConcurrentDictionary<int, ConnectorInterface> interfacemap = new ConcurrentDictionary<int, ConnectorInterface>();
         bool _gotinterface = false;
+
         void OnQryInterface(string jsonstr)
         {
             JsonData jd = TradingLib.Mixins.JsonReply.ParseJsonReplyData(jsonstr);

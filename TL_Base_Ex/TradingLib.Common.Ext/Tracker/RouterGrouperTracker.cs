@@ -88,7 +88,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 返回所有路由组
         /// </summary>
-        public IEnumerable<RouterGroup> RouterGroups
+        public IEnumerable<RouterGroupImpl> RouterGroups
         {
             get
             {
@@ -125,6 +125,8 @@ namespace TradingLib.Common
                 target.domain_id = rg.domain_id;
                 target.Name = rg.Name;
                 target.Strategy = rg.Strategy;
+                //绑定Domain
+                target.Domain = BasicTracker.DomainTracker[target.domain_id];
 
                 ORM.MRouterGroup.InsertRouterGroup(target);
                 rg.ID = target.ID;

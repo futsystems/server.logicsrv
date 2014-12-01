@@ -73,9 +73,11 @@ namespace TradingLib.Common
                 target.FutCompany = vendor.FutCompany;
                 target.Description = vendor.Description;
                 target.Name = vendor.Name;
+                target.domain_id = vendor.domain_id;
+                target.Domain = BasicTracker.DomainTracker[target.domain_id];
 
                 ORM.MRouterGroup.InsertVendor(target);
-
+                vendor.ID = target.ID;//更新ID参数
                 vendoermap.TryAdd(target.ID, target);
             
             }

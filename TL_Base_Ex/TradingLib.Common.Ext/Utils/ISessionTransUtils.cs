@@ -95,6 +95,17 @@ namespace TradingLib.Common
             session.SendPacketMgr(response);
         }
 
+        public static void NotifyMgr(this ISession session, string cmdstr, object obj, IEnumerable<ILocation> targets = null)
+        {
+            //通知方式 request获得对应的判断谓词 用于判断哪个客户端需要通知，然后再投影获得对应的地址集合
+            NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(targets == null ? new ILocation[] { session.GetLocation() } : targets);
+            response.ModuleID = session.ContirbID;
+            response.CMDStr = cmdstr;
+            response.Result = new Mixins.ReplyWriter().Start().FillReply(Mixins.JsonReply.GenericSuccess()).FillPlayload(obj).End().ToString();
+            session.SendPacketMgr(response);
+        }
+
+
         public static ILocation GetLocation(this ISession session)
         {
             ILocation location = new Location();

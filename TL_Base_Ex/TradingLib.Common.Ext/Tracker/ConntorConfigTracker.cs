@@ -200,7 +200,11 @@ namespace TradingLib.Common
 
                 target.interface_fk = cfg.interface_fk;
                 target.Token = cfg.Token;
+                target.domain_id = cfg.domain_id;
+                target.Domain = BasicTracker.DomainTracker[target.domain_id];
+
                 ORM.MConnector.InsertConnectorConfig(target);
+                cfg.ID = target.ID;
 
                 int itfaceidx = cfg.interface_fk;
                 ConnectorInterface itface = this.GetBrokerInterface(itfaceidx);

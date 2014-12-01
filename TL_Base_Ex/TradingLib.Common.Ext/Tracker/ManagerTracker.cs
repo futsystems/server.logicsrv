@@ -83,6 +83,17 @@ namespace TradingLib.Common
         {
             return managermap.Values.Where(m => m.mgr_fk == m.ID);
         }
+
+        /// <summary>
+        /// 所有管理员
+        /// </summary>
+        public IEnumerable<Manager> Managers
+        {
+            get
+            {
+                return managermap.Values;
+            }
+        }
         /// <summary>
         /// 查询某个管理员可以查询的管理员列表
         /// </summary>

@@ -55,7 +55,7 @@ namespace TradingLib.Common
         /// </summary>
         public int domain_id { get; set; }
 
-        public Domain Domain { get; internal set; }
+        
     }
     /// <summary>
     /// 实盘帐户对象
@@ -70,6 +70,12 @@ namespace TradingLib.Common
         /// </summary>
         [NoJsonExportAttr()]
         public IBroker Broker { get { return _broker; } }
+
+        /// <summary>
+        /// 所属域
+        /// </summary>
+        [NoJsonExportAttr()]
+        public Domain Domain { get; internal set; }
 
 
         /// <summary>

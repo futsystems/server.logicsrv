@@ -70,7 +70,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("Insert into connector_broker_config (`srvinfo_ipaddress`,`srvinfo_port`,`srvinfo_field1`,`srvinfo_field2`,`srvinfo_field3`,`usrinfo_userid`,`usrinfo_password`,`usrinfo_field1`,`usrinfo_field2`,`interface_fk`,`token`,`name`) VALUES ('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}')", cfg.srvinfo_ipaddress, cfg.srvinfo_port, cfg.srvinfo_field1, cfg.srvinfo_field2, cfg.srvinfo_field3, cfg.usrinfo_userid, cfg.usrinfo_password, cfg.usrinfo_field1, cfg.usrinfo_field2,cfg.interface_fk, cfg.Token, cfg.Name);
+                string query = String.Format("Insert into connector_broker_config (`srvinfo_ipaddress`,`srvinfo_port`,`srvinfo_field1`,`srvinfo_field2`,`srvinfo_field3`,`usrinfo_userid`,`usrinfo_password`,`usrinfo_field1`,`usrinfo_field2`,`interface_fk`,`token`,`name`,`domain_id`) VALUES ('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}')", cfg.srvinfo_ipaddress, cfg.srvinfo_port, cfg.srvinfo_field1, cfg.srvinfo_field2, cfg.srvinfo_field3, cfg.usrinfo_userid, cfg.usrinfo_password, cfg.usrinfo_field1, cfg.usrinfo_field2, cfg.interface_fk, cfg.Token, cfg.Name,cfg.Domain.ID);
                 db.Connection.Execute(query);
                 SetIdentity(db.Connection, id => cfg.ID = id, "id", "connector_broker_config");
             }

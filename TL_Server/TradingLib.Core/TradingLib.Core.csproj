@@ -86,6 +86,12 @@
     <Compile Include="Core\ManagerExchange\ContractBankUtils.cs" />
     <Compile Include="Core\ManagerExchange\ManagerRights.cs" />
     <Compile Include="Core\ManagerExchange\ORM\MUIAccess.cs" />
+    <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_Manager.cs" />
+    <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_QryTradingInfo.cs" />
+    <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_BasicInfo.cs" />
+    <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_Connector.cs" />
+    <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_RuleSet.cs" />
+    <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_Account.cs" />
     <Compile Include="Core\ManagerExchange\UIAccessTracker.cs" />
     <Compile Include="Core\ManagerExchange\Utils\ManagerUtils_.cs" />
     <Compile Include="Core\ManagerExchange\Utils\ManagerUtils_Account.cs" />
@@ -110,7 +116,7 @@
     <Compile Include="Core\ManagerExchange\Utils\ManagerUtils_Predicate.cs" />
     <Compile Include="Core\ManagerExchange\Utils\ManagerUtils_ObjectWrapper.cs" />
     <Compile Include="Core\ManagerExchange\MgrExchServer_PacketHandle_.cs" />
-    <Compile Include="Core\ManagerExchange\MgrExchServer_CTE_Vendor.cs" />
+    <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_Vendor.cs" />
     <Compile Include="Core\ManagerExchange\Utils\ManagerUtils_DomainObject.cs" />
     <Compile Include="Core\MessageExchange\BrokerRouter\BrokerRouter_.cs" />
     <Compile Include="Core\MessageExchange\BrokerRouter\BrokerRouter_SendOrder.cs" />

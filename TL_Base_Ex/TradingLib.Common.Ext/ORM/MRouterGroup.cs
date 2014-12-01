@@ -29,7 +29,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("Insert into vendors (`name`,`futcompany`,`lastequity`,`description`,`marginlimit`,`settledatetime`) VALUES ('{0}','{1}','{2}','{3}','{4}','{5}')", vendor.Name, vendor.FutCompany, vendor.LastEquity, vendor.Description, vendor.MarginLimit, Util.ToTLDateTime(DateTime.Now - new TimeSpan(1, 0, 0, 0, 0)));
+                string query = String.Format("Insert into vendors (`name`,`futcompany`,`lastequity`,`description`,`marginlimit`,`settledatetime`,`domain_id`) VALUES ('{0}','{1}','{2}','{3}','{4}','{5}','{6}')", vendor.Name, vendor.FutCompany, vendor.LastEquity, vendor.Description, vendor.MarginLimit, Util.ToTLDateTime(DateTime.Now - new TimeSpan(1, 0, 0, 0, 0)),vendor.Domain.ID);
                 db.Connection.Execute(query);
                 SetIdentity(db.Connection, id => vendor.ID = id, "id", "vendors");
             }

@@ -75,6 +75,7 @@ namespace FutsMoniter
                 if (fmConfirm.Show("确认添加通道设置?") == System.Windows.Forms.DialogResult.Yes)
                 {
                     Globals.TLClient.ReqUpdateConnectorConfig(TradingLib.Mixins.LitJson.JsonMapper.ToJson(cfg));
+                    this.Close();
                 }
             }
             else
@@ -93,8 +94,9 @@ namespace FutsMoniter
                 if (fmConfirm.Show("确认修改通道设置?") == System.Windows.Forms.DialogResult.Yes)
                 {
                     Globals.TLClient.ReqUpdateConnectorConfig(TradingLib.Mixins.LitJson.JsonMapper.ToJson(_cfg));
+                    this.Close();
                 }
-                this.Close();
+                
             }
         }
     }

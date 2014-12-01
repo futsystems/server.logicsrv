@@ -84,10 +84,7 @@ namespace TradingLib.Common
         /// </summary>
         public int domain_id { get; set; }
 
-        /// <summary>
-        /// 域
-        /// </summary>
-        public Domain Domain { get; internal set; }
+        
         /// <summary>
         /// 描述
         /// </summary>
@@ -98,6 +95,11 @@ namespace TradingLib.Common
     public class RouterGroupImpl : RouterGroupSetting, RouterGroup
     {
         ConcurrentDictionary<int, RouterItem> routeritemmap = new ConcurrentDictionary<int, RouterItem>();
+
+        /// <summary>
+        /// 域
+        /// </summary>
+        public Domain Domain { get; internal set; }
 
         /// <summary>
         /// 返回所有路由项目

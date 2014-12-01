@@ -88,7 +88,7 @@ namespace TradingLib.Common
 
         public void ReqUpdateVendor(VendorSetting vendor)
         {
-            this.ReqContribRequest("ConnectorManager", "UpdateVendor",TradingLib.Mixins.LitJson.JsonMapper.ToJson(vendor));
+            this.ReqContribRequest("MgrExchServer", "UpdateVendor", TradingLib.Mixins.LitJson.JsonMapper.ToJson(vendor));
         }
 
         /// <summary>

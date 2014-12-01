@@ -31,14 +31,17 @@ namespace FutsMoniter
             itemrowid.Clear();
 
             RouterGroupSetting setting = ctRouterGroupList1.RouterGroudSelected;
-            rgid.Text = setting.ID.ToString();
-            rgname.Text = setting.Name;
-            rgdescrption.Text = setting.Description;
-            cbrgstrategytype.SelectedValue = setting.Strategy;
-
-            if (Globals.EnvReady)
+            if (setting != null)
             {
-                Globals.TLClient.ReqQryRouterItem(setting.ID);
+                rgid.Text = setting.ID.ToString();
+                rgname.Text = setting.Name;
+                rgdescrption.Text = setting.Description;
+                cbrgstrategytype.SelectedValue = setting.Strategy;
+
+                if (Globals.EnvReady)
+                {
+                    Globals.TLClient.ReqQryRouterItem(setting.ID);
+                }
             }
         }
 

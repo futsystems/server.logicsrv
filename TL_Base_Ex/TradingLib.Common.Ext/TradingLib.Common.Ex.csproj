@@ -90,7 +90,7 @@
     <Compile Include="Tracker\ConntorConfigTracker.cs" />
     <Compile Include="Tracker\DomainTracker.cs" />
     <Compile Include="Tracker\RouterGrouperTracker.cs" />
-    <Compile Include="SrvObject\ISessionTransUtils.cs" />
+    <Compile Include="Utils\ISessionTransUtils.cs" />
     <Compile Include="ORM\Config\ConfigItem.cs" />
     <Compile Include="ORM\Config\ConfigDB.cs" />
     <Compile Include="ORM\Config\GlobalConfig.cs" />
@@ -168,7 +168,7 @@
     <Compile Include="Tracker\SymbolTracker.cs" />
     <Compile Include="Tracker\TotalTracker.cs" />
     <Compile Include="Tracker\VendorTracker.cs" />
-    <Compile Include="Utils\IDomainUtils.cs" />
+    <Compile Include="Utils\DomainUtils.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
