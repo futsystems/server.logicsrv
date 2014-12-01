@@ -40,8 +40,20 @@ namespace TradingLib.Common
         }
     }
 
-    public class RspMGRLoginResponse : RspResponsePacket
+    public class MgrLoginResponse
     {
+        public MgrLoginResponse()
+        {
+            LoginID = string.Empty;
+            Name = string.Empty;
+            ManagerType = QSEnumManagerType.MONITER;
+            Mobile = string.Empty;
+            QQ = string.Empty;
+            MGRID = 0;
+            BaseMGRFK = 0;
+            UIAccess = new UIAccess();
+            Domain = new DomainImpl();
+        }
         /// <summary>
         /// 登入ID
         /// </summary>
@@ -82,61 +94,35 @@ namespace TradingLib.Common
         public int MGRID { get; set; }
 
         /// <summary>
-        /// 界面权限
+        /// 界面授权权限
         /// </summary>
         public UIAccess UIAccess { get; set; }
+
+        /// <summary>
+        /// 域对象
+        /// </summary>
+        public DomainImpl Domain { get; set; }
+    }
+    public class RspMGRLoginResponse : RspResponsePacket
+    {
+        
 
 
         public RspMGRLoginResponse()
         {
             _type = MessageTypes.MGRLOGINRESPONSE;
-            LoginID = string.Empty;
-            Name = string.Empty;
-            ManagerType = QSEnumManagerType.MONITER;
-            Mobile = string.Empty;
-            QQ = string.Empty;
-            MGRID = 0;
-            BaseMGRFK = 0;
-            UIAccess = new UIAccess();
+            LoginResponse = new MgrLoginResponse();
         }
 
+        public MgrLoginResponse LoginResponse { get; set; }
         public override string ResponseSerialize()
         {
-            StringBuilder sb = new StringBuilder();
-            char d = ',';
-            sb.Append(this.LoginID);
-            sb.Append(d);
-            sb.Append(this.Name);
-            sb.Append(d);
-            sb.Append(this.ManagerType.ToString());
-            sb.Append(d);
-            sb.Append(this.Mobile);
-            sb.Append(d);
-            sb.Append(this.QQ);
-            sb.Append(d);
-            sb.Append(this.Authorized.ToString());
-            sb.Append(d);
-            sb.Append(this.BaseMGRFK.ToString());
-            sb.Append(d);
-            sb.Append(this.MGRID.ToString());
-            sb.Append(d);
-            sb.Append(this.UIAccess.ToJson());
-            return sb.ToString();
-            
+            return TradingLib.LitJson.JsonMapper.ToJson(this.LoginResponse);
         }
 
         public override void ResponseDeserialize(string content)
         {
-            string[] rec = content.Split(new char[]{','},9);
-            this.LoginID = rec[0];//1
-            this.Name = rec[1];
-            this.ManagerType = (QSEnumManagerType)Enum.Parse(typeof(QSEnumManagerType), rec[2]);
-            this.Mobile = rec[3];
-            this.QQ = rec[4];
-            this.Authorized = bool.Parse(rec[5]);
-            this.BaseMGRFK = int.Parse(rec[6]);
-            this.MGRID = int.Parse(rec[7]);
-            this.UIAccess = Mixins.LitJson.JsonMapper.ToObject<UIAccess>(rec[8]);
+            this.LoginResponse = TradingLib.LitJson.JsonMapper.ToObject<MgrLoginResponse>(content);
         }
     }
 }

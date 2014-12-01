@@ -79,7 +79,7 @@ namespace FutsMoniter
                         }
                         else
                         {
-                            this.Text = Globals.Config["CopName"].AsString() + " " + Globals.Config["Version"].AsString() + "           柜员用户名:" + Globals.Manager.Login + " 名称:" + Globals.Manager.Name + " 类型:" + Util.GetEnumDescription(Globals.Manager.Type);
+                            this.Text = string.Format("柜台系统-{0}    登入名:{1}    姓名:{2}    柜员类别:{3}", Globals.LoginResponse.Domain.Name, Globals.LoginResponse.LoginID, Globals.LoginResponse.Name, Util.GetEnumDescription(Globals.LoginResponse.ManagerType));// Globals.Config["CopName"].AsString() + " " + Globals.Config["Version"].AsString() + "           柜员用户名:" + Globals.Manager.Login + " 名称:" + Globals.Manager.Name + " 类型:" + Util.GetEnumDescription(Globals.Manager.Type);
 
                             //如果不是总平台柜员 隐藏
                             ShowInfo("初始化行情报表");
@@ -134,15 +134,15 @@ namespace FutsMoniter
         {
             debug("获得登入回报:" + response.ToString());
             _gotloginrep = true;
-            if (response.Authorized)
+            if (response.LoginResponse.Authorized)
             {
                 //登入的时候会的mgr_fk用于获得对应的编号
                 //如果是代理 则 通过mgr_fk获得对应的Manager对象
                 //如果是代理的员工 则服务端只会返回该员工的编号
                 _logined = true;
-                Globals.LoginResponse = response;
-                Globals.MGRID = response.MGRID;//保存管理端登入获得的全局ID用于获取Manager列表时 绑定对应的Manager
-                Globals.BaseMGRFK = response.BaseMGRFK;
+                Globals.LoginResponse = response.LoginResponse;
+                Globals.MGRID = response.LoginResponse.MGRID;//保存管理端登入获得的全局ID用于获取Manager列表时 绑定对应的Manager
+                Globals.BaseMGRFK = response.LoginResponse.BaseMGRFK;
             }
             else
             {

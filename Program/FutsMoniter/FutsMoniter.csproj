@@ -267,6 +267,12 @@
     <Compile Include="Controls\ctAccountMoniter\ctAccountMontier.Designer.cs">
       <DependentUpon>ctAccountMontier.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Domain\fmDomainInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Domain\fmDomainInfo.Designer.cs">
+      <DependentUpon>fmDomainInfo.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\fmAccountCashReq.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -687,6 +693,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\ctAccountMoniter\ctAccountMontier.resx">
       <DependentUpon>ctAccountMontier.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Domain\fmDomainInfo.resx">
+      <DependentUpon>fmDomainInfo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\fmAccountCashReq.resx">
       <DependentUpon>fmAccountCashReq.cs</DependentUpon>

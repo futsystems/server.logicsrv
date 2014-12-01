@@ -27,7 +27,11 @@ namespace FutsMoniter
         public void OnInit()
         {
             Globals.Debug("Evinited success @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-            
+
+            //超级Root可以显示域管理窗口
+            kryptonContextMenuItem_Domain.Visible = Globals.LoginResponse.Domain.Super;
+            kryptonRibbonGroupButton_interfacelist.Visible = Globals.LoginResponse.Domain.Super;
+
 
             kryptonRibbonQATButton_debug.Visible = Globals.UIAccess.fm_debug;
 

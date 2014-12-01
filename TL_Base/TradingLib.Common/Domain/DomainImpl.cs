@@ -77,5 +77,11 @@ namespace TradingLib.Common
         /// </summary>
         public int RouterItemLimit { get; set; }
 
+        /// <summary>
+        /// 接口列表
+        /// </summary>
+        public string InterfaceList { get; set; }
+
+
     }
 }

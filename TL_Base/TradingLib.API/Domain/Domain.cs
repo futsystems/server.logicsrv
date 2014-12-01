@@ -84,6 +84,10 @@ namespace TradingLib.API
         /// </summary>
         int RouterItemLimit { get; set; }
 
+        /// <summary>
+        /// 接口列表
+        /// </summary>
+        string InterfaceList { get; set; }
 
         #endregion
 

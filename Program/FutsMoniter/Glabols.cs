@@ -34,7 +34,7 @@ namespace FutsMoniter
         /// <summary>
         /// 登入回报 用于获得登入基本信息
         /// </summary>
-        public static RspMGRLoginResponse LoginResponse { get; set; }
+        public static MgrLoginResponse LoginResponse { get; set; }
 
         /// <summary>
         /// 获得全局界面访问权限对象

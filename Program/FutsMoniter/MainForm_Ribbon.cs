@@ -18,7 +18,7 @@ namespace FutsMoniter
             //系统菜单
             kryptonContextMenuItem_exit.Click += new EventHandler(kryptonContextMenuItem_exit_Click);
             kryptonContextMenuItem_Domain.Click += new EventHandler(kryptonContextMenuItem_Domain_Click);
-
+            kryptonContextMenuItem_DomainInfo.Click += new EventHandler(kryptonContextMenuItem_DomainInfo_Click);
 
 
             kryptonRibbonQATButton_debug.Click += new EventHandler(kryptonRibbonQATButton_debug_Click);
@@ -63,6 +63,13 @@ namespace FutsMoniter
             kryptonRibbonGroupButton_AccountCashreq.Click += new EventHandler(kryptonRibbonGroupButton_AccountCashreq_Click);
 
             kryptonRibbonGroupButton_payonline.Click += new EventHandler(kryptonRibbonGroupButton_payonline_Click);
+        }
+
+        void kryptonContextMenuItem_DomainInfo_Click(object sender, EventArgs e)
+        {
+            fmDomainInfo fm = new fmDomainInfo();
+            fm.SetDomain(Globals.LoginResponse.Domain);
+            fm.ShowDialog();
         }
 
         void kryptonContextMenuItem_Domain_Click(object sender, EventArgs e)

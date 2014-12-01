@@ -70,6 +70,12 @@ namespace TradingLib.Common
         }
 
 
+        public static IEnumerable<ConnectorInterface> GetInterface(this Domain domain)
+        { 
+            //List<int> idlist = domain.InterfaceList.Split(",");
+            //return BasicTracker.ConnectorConfigTracker.Interfaces.Where()
+        }
+
         /// <summary>
         /// 获得域内所有路由组
         /// </summary>
