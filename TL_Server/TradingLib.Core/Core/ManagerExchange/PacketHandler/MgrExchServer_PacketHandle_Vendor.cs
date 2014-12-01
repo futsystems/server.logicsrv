@@ -12,8 +12,12 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryVendor", "QryVendor - query vendor", "查询实盘帐户列表")]
         public void CTE_QryVendor(ISession session)
         {
-            VendorSetting[] vendorlist = session.GetManager().Domain.GetVendors().ToArray();// BasicTracker.VendorTracker.Vendors.ToArray();
-            session.SendJsonReplyMgr(vendorlist);
+            Manager manger = session.GetManager();
+            if (manger.RightRootDomain())
+            {
+                VendorSetting[] vendorlist = session.GetManager().Domain.GetVendors().ToArray();// BasicTracker.VendorTracker.Vendors.ToArray();
+                session.SendJsonReplyMgr(vendorlist);
+            }
         }
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateVendor", "UpdateVendor - update vendor", "更新Vendor设置", true)]

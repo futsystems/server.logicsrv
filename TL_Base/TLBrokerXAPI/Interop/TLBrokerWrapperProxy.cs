@@ -132,10 +132,17 @@ namespace TradingLib.BrokerXAPI.Interop
         RegisterProc _Register;
         public void Register(TLBrokerProxy brokerproxy)
         {
-            _Register(this.Wrapper, brokerproxy.Handle);
+            try
+            {
+                _Register(this.Wrapper, brokerproxy.Handle);
 
-            //注册完毕具体的broker对象后 绑定事件注意 直接用函数名来进行绑定会造成回调函数被回收导致c++调用回调时报错 要用原始的事件声明方式
-            //_RegOnConnected(this.Wrapper, FireOnConnected);
+                //注册完毕具体的broker对象后 绑定事件注意 直接用函数名来进行绑定会造成回调函数被回收导致c++调用回调时报错 要用原始的事件声明方式
+                //_RegOnConnected(this.Wrapper, FireOnConnected);
+            }
+            catch (Exception ex)
+            {
+                Util.Debug("Register BrokerProxy Error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+            }
         }
 
         /// <summary>
@@ -147,7 +154,14 @@ namespace TradingLib.BrokerXAPI.Interop
         ConnectProc _Connect;
         public void Connect(ref XServerInfoField pServerInfo)
         {
-            _Connect(this.Wrapper, ref pServerInfo);
+            try
+            {
+                _Connect(this.Wrapper, ref pServerInfo);
+            }
+            catch (Exception ex)
+            {
+                Util.Debug("Connect Broker Error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+            }
         }
 
         /// <summary>
@@ -159,7 +173,14 @@ namespace TradingLib.BrokerXAPI.Interop
         DisconnectProc _Disconnect;
         public void Disconnect()
         {
-            _Disconnect(this.Wrapper);
+            try
+            {
+                _Disconnect(this.Wrapper);
+            }
+            catch (Exception ex)
+            {
+                Util.Debug("Disconnect Broker Error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+            }
         }
 
 
@@ -173,7 +194,14 @@ namespace TradingLib.BrokerXAPI.Interop
         LoginProc _Login;
         public void Login(ref XUserInfoField pUserInfo)
         {
-            _Login(this.Wrapper,ref pUserInfo);
+            try
+            {
+                _Login(this.Wrapper, ref pUserInfo);
+            }
+            catch (Exception ex)
+            {
+                Util.Debug("Login Error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+            }
         }
 
         /// <summary>
@@ -186,8 +214,16 @@ namespace TradingLib.BrokerXAPI.Interop
         SendOrderProc _SendOrder;
         public string SendOrder(ref XOrderField pOrder)
         {
-            Util.Debug("BrokerProxy SendOrder",QSEnumDebugLevel.MUST);
-            return _SendOrder(this.Wrapper, ref pOrder);
+            try
+            {
+                Util.Debug("BrokerProxy SendOrder", QSEnumDebugLevel.MUST);
+                return _SendOrder(this.Wrapper, ref pOrder);
+            }
+            catch (Exception ex)
+            {
+                Util.Debug("SendOrder Error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                return string.Empty;
+            }
         }
 
 
@@ -196,8 +232,16 @@ namespace TradingLib.BrokerXAPI.Interop
         SendOrderActionProc _SendOrderAction;
         public bool SendOrderAction(ref XOrderActionField pAction)
         {
-            Util.Debug("BrokerProxy SendOrderAction",QSEnumDebugLevel.MUST);
-            return _SendOrderAction(this.Wrapper, ref pAction);
+            try
+            {
+                Util.Debug("BrokerProxy SendOrderAction", QSEnumDebugLevel.MUST);
+                return _SendOrderAction(this.Wrapper, ref pAction);
+            }
+            catch (Exception ex)
+            {
+                Util.Debug("SendOrderAction Error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                return false;
+            }
         }
 
         #region 注册回调函数接口

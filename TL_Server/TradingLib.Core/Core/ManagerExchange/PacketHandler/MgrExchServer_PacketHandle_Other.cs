@@ -27,11 +27,9 @@ namespace TradingLib.Core
         public void CTE_QryReceiveableBank(ISession session)
         {
             Manager manager = session.GetManager();
-
             if (manager != null)
             {
-                JsonWrapperReceivableAccount[] splist = manager.Domain.GetReceiveableAccount().ToArray();//BasicTracker.ContractBankTracker.ReceivableAccounts.ToArray();
-                    //BasicTracker.ContractBankTracker.ReceivableAccounts.Select(a => a.ToDrop()).ToList();
+                JsonWrapperReceivableAccount[] splist = manager.Domain.GetReceiveableAccount().ToArray();
                 session.SendJsonReplyMgr(splist);
             }
         }
@@ -42,7 +40,7 @@ namespace TradingLib.Core
         public void CTE_QryFinanceInfo(ISession session)
         {
             Manager manger = session.GetManager();
-            if (manger != null)
+            if (manger !=null)
             {
                 JsonWrapperAgentFinanceInfo info = manger.GetAgentFinanceInfo();
                 session.SendJsonReplyMgr(info);

@@ -9,32 +9,38 @@ namespace TradingLib.Core
 {
     public partial class MgrExchServer
     {
-
-
-
         void SrvOnMGRQryOrder(MGRQryOrderRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求查询历史委托:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
-
-            IList<Order> orders = ORM.MTradingInfo.SelectHistOrders(request.TradingAccount, request.Settleday, request.Settleday);
-
-            int totalnum = orders.Count;
-            if (totalnum > 0)
+            try
             {
-                for (int i = 0; i < totalnum; i++)
+                debug(string.Format("管理员:{0} 请求查询历史委托:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
+
+                //权限验证
+                manager.ValidRightRead(request.TradingAccount);
+
+                IList<Order> orders = ORM.MTradingInfo.SelectHistOrders(request.TradingAccount, request.Settleday, request.Settleday);
+                int totalnum = orders.Count;
+                if (totalnum > 0)
                 {
+                    for (int i = 0; i < totalnum; i++)
+                    {
+                        RspMGRQryOrderResponse response = ResponseTemplate<RspMGRQryOrderResponse>.SrvSendRspResponse(request);
+                        response.OrderToSend = orders[i];
+                        response.OrderToSend.Side = response.OrderToSend.TotalSize > 0 ? true : false;
+                        CacheRspResponse(response, i == totalnum - 1);
+                    }
+                }
+                else
+                {
+                    //返回空项目
                     RspMGRQryOrderResponse response = ResponseTemplate<RspMGRQryOrderResponse>.SrvSendRspResponse(request);
-                    response.OrderToSend = orders[i];
-                    response.OrderToSend.Side = response.OrderToSend.TotalSize > 0 ? true : false;
-                    CacheRspResponse(response, i == totalnum - 1);
+                    response.OrderToSend = new OrderImpl();
+                    CacheRspResponse(response);
                 }
             }
-            else
+            catch (FutsRspError ex)
             {
-                //返回空项目
-                RspMGRQryOrderResponse response = ResponseTemplate<RspMGRQryOrderResponse>.SrvSendRspResponse(request);
-                response.OrderToSend = new OrderImpl();
-                CacheRspResponse(response);
+                session.OperationError(ex);
             }
         }
 
@@ -42,25 +48,34 @@ namespace TradingLib.Core
         {
             debug(string.Format("管理员:{0} 请求查询历史成交:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
 
-            IList<Trade> trades = ORM.MTradingInfo.SelectHistTrades(request.TradingAccount, request.Settleday, request.Settleday);
-
-            int totalnum = trades.Count;
-            if (totalnum > 0)
+            try
             {
-                for (int i = 0; i < totalnum; i++)
+                //权限验证
+                manager.ValidRightRead(request.TradingAccount);
+
+                IList<Trade> trades = ORM.MTradingInfo.SelectHistTrades(request.TradingAccount, request.Settleday, request.Settleday);
+                int totalnum = trades.Count;
+                if (totalnum > 0)
                 {
+                    for (int i = 0; i < totalnum; i++)
+                    {
+                        RspMGRQryTradeResponse response = ResponseTemplate<RspMGRQryTradeResponse>.SrvSendRspResponse(request);
+                        response.TradeToSend = trades[i];
+                        response.TradeToSend.Side = response.TradeToSend.xSize > 0 ? true : false;
+                        CacheRspResponse(response, i == totalnum - 1);
+                    }
+                }
+                else
+                {
+                    //返回空项目
                     RspMGRQryTradeResponse response = ResponseTemplate<RspMGRQryTradeResponse>.SrvSendRspResponse(request);
-                    response.TradeToSend = trades[i];
-                    response.TradeToSend.Side = response.TradeToSend.xSize > 0 ? true : false;
-                    CacheRspResponse(response, i == totalnum - 1);
+                    response.TradeToSend = new TradeImpl();
+                    CacheRspResponse(response);
                 }
             }
-            else
+            catch (FutsRspError ex)
             {
-                //返回空项目
-                RspMGRQryTradeResponse response = ResponseTemplate<RspMGRQryTradeResponse>.SrvSendRspResponse(request);
-                response.TradeToSend = new TradeImpl();
-                CacheRspResponse(response);
+                session.OperationError(ex);
             }
         }
 
@@ -93,24 +108,33 @@ namespace TradingLib.Core
         {
             debug(string.Format("管理员:{0} 请求查询出入金记录:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
 
-            IList<CashTransaction> cts = ORM.MAccount.SelectHistCashTransaction(request.TradingAccount, request.Settleday, request.Settleday);
-
-            int totalnum = cts.Count;
-            if (totalnum > 0)
+            try
             {
-                for (int i = 0; i < totalnum; i++)
+                //权限验证
+                manager.ValidRightRead(request.TradingAccount);
+
+                IList<CashTransaction> cts = ORM.MAccount.SelectHistCashTransaction(request.TradingAccount, request.Settleday, request.Settleday);
+                int totalnum = cts.Count;
+                if (totalnum > 0)
                 {
+                    for (int i = 0; i < totalnum; i++)
+                    {
+                        RspMGRQryCashResponse response = ResponseTemplate<RspMGRQryCashResponse>.SrvSendRspResponse(request);
+                        response.CashTransToSend = cts[i];
+                        CacheRspResponse(response, i == totalnum - 1);
+                    }
+                }
+                else
+                {
+                    //返回空项目
                     RspMGRQryCashResponse response = ResponseTemplate<RspMGRQryCashResponse>.SrvSendRspResponse(request);
-                    response.CashTransToSend = cts[i];
-                    CacheRspResponse(response, i == totalnum - 1);
+                    response.CashTransToSend = new CashTransaction();
+                    CacheRspResponse(response);
                 }
             }
-            else
+            catch (FutsRspError ex)
             {
-                //返回空项目
-                RspMGRQryCashResponse response = ResponseTemplate<RspMGRQryCashResponse>.SrvSendRspResponse(request);
-                response.CashTransToSend = new CashTransaction();
-                CacheRspResponse(response);
+                session.OperationError(ex);
             }
         }
 
@@ -118,20 +142,29 @@ namespace TradingLib.Core
         {
             debug(string.Format("管理员:{0} 请求查询结算记录:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
 
-            IAccount account = clearcentre[request.TradingAccount];
-
-            Settlement settlement = ORM.MSettlement.SelectSettlement(request.TradingAccount, request.Settleday);
-            if (settlement != null)
+            try
             {
-                List<string> settlelist = SettlementFactory.GenSettlementFile(settlement, account);
-                for (int i = 0; i < settlelist.Count; i++)
+                //权限验证
+                manager.ValidRightRead(request.TradingAccount);
+
+                IAccount account = clearcentre[request.TradingAccount];
+                Settlement settlement = ORM.MSettlement.SelectSettlement(request.TradingAccount, request.Settleday);
+                if (settlement != null)
                 {
-                    RspMGRQrySettleResponse response = ResponseTemplate<RspMGRQrySettleResponse>.SrvSendRspResponse(request);
-                    response.Tradingday = settlement.SettleDay;
-                    response.TradingAccount = settlement.Account;
-                    response.SettlementContent = settlelist[i] + "\n";
-                    CacheRspResponse(response, i == settlelist.Count - 1);
+                    List<string> settlelist = SettlementFactory.GenSettlementFile(settlement, account);
+                    for (int i = 0; i < settlelist.Count; i++)
+                    {
+                        RspMGRQrySettleResponse response = ResponseTemplate<RspMGRQrySettleResponse>.SrvSendRspResponse(request);
+                        response.Tradingday = settlement.SettleDay;
+                        response.TradingAccount = settlement.Account;
+                        response.SettlementContent = settlelist[i] + "\n";
+                        CacheRspResponse(response, i == settlelist.Count - 1);
+                    }
                 }
+            }
+            catch (FutsRspError ex)
+            {
+                session.OperationError(ex);
             }
         }
 
