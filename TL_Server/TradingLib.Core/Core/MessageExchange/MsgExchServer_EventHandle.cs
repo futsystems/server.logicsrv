@@ -133,6 +133,8 @@ namespace TradingLib.Core
             {
                 bool login = false;
                 debug("Got login request:" + request.LoginID + "|" + request.Passwd +" Type:"+request.LoginType.ToString(), QSEnumDebugLevel.INFO);
+                
+                IAccount account=null;
                 //如果没有用户认证事件的绑定 则调用清算中心的帐号验证进行验证，否则通过认证事件的绑定进行认证
                 if (request.LoginType == 0)
                 {
@@ -153,7 +155,7 @@ namespace TradingLib.Core
                             response.LoginID = request.LoginID;
 
                             debug("logined:" + response.LoginID + " userid:" + response.UserID.ToString(), QSEnumDebugLevel.INFO);
-                            IAccount account = null;
+                            
                             bool servicevalid = true;
                             if (request.ServiceType == 0)
                             {
@@ -196,7 +198,7 @@ namespace TradingLib.Core
                     {
                         response.LoginID = request.LoginID;
                         response.Account = request.LoginID;
-                        IAccount account = _clearcentre[request.LoginID];
+                        account = _clearcentre[request.LoginID];
                         response.AccountType = account.Category;
                     }
                     else
@@ -208,15 +210,15 @@ namespace TradingLib.Core
                 else if (request.LoginType == 2)
                 {
                     string MAC = request.MAC;
-                    string account = _clearcentre.ValidAccountViaMAC(MAC);
-                    if (!string.IsNullOrEmpty(account))
+                    string accid = _clearcentre.ValidAccountViaMAC(MAC);
+                    if (!string.IsNullOrEmpty(accid))
                     {
                         debug("MAC认证通过,MAC:" + MAC + " account:" + account);
                         response.Authorized = true;
                         response.LoginID = MAC;
-                        response.Account = account;
-                        IAccount acc = _clearcentre[account];
-                        response.AccountType = acc.Category;
+                        response.Account = accid;
+                        account = _clearcentre[accid];
+                        response.AccountType = account.Category;
 
                     }
                     else
@@ -231,6 +233,13 @@ namespace TradingLib.Core
                     response.Authorized = false;
                     response.RspInfo.Fill("LOGINTYPE_NOT_SUPPORT");
                 }
+                if (account.Domain.DateExpired > 0 && account.Domain.DateExpired < Util.ToTLDate())//域过期
+                {
+                    clientinfo.AuthorizedFail();
+                    response.Authorized = false;
+                    response.RspInfo.Fill("PLATFORM_EXPIRED");
+                }
+                
                 //对外触发登入事件
                 if (response.Authorized)
                 {

@@ -53,22 +53,28 @@ namespace TradingLib.Common
             {
                 
                 ORM.MManager.InsertManager(mgr);
+
                 //添加到内存
                 managermap[mgr.Login] = mgr;
                 mgridmap[mgr.ID] = mgr;
+
+                //绑定BaseManger和ParentManager
                 mgr.BaseManager = this[mgr.mgr_fk];
                 mgr.ParentManager = this[mgr.parent_fk];
+                //绑定域
+                mgr.Domain = BasicTracker.DomainTracker[mgr.domain_id];
             }
             else//更新
             {
                 Manager target = null;
                 if (mgridmap.TryGetValue(mgr.ID, out target))
                 {
-                    target.Type = mgr.Type;
+                    //只能修改Name QQ Mobile AccLimit
                     target.Name = mgr.Name;
                     target.Mobile = mgr.Mobile;
                     target.QQ = mgr.QQ;
                     target.AccLimit = mgr.AccLimit;
+
                     ORM.MManager.UpdateManager(target);
                 }
             }

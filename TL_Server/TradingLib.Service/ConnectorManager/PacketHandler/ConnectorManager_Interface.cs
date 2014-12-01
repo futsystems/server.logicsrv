@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
-using TradingLib.BrokerXAPI;
-using TradingLib.LitJson;
 using TradingLib.Core;
+using TradingLib.LitJson;
 
 namespace TradingLib.ServiceManager
 {
@@ -44,14 +43,5 @@ namespace TradingLib.ServiceManager
             }
         }
         #endregion
-
-
-
-
-
-
-
-
-
     }
 }

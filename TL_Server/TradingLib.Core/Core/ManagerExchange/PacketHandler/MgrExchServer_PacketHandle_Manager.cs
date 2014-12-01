@@ -68,7 +68,12 @@ namespace TradingLib.Core
                 {
                     throw new FutsRspError("柜员登入ID不能重复:" + m.Login);
                 }
+                if (m.Login.StartsWith("root"))
+                {
+                    throw new FutsRspError("系统保留字段root,不能用柜员登入名");
+                }
                 BasicTracker.ManagerTracker.UpdateManager(m);
+
                 RspMGRQryManagerResponse response = ResponseTemplate<RspMGRQryManagerResponse>.SrvSendRspResponse(request);
                 response.ManagerToSend = m;
                 CacheRspResponse(response);

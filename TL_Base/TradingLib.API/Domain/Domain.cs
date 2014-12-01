@@ -49,10 +49,7 @@ namespace TradingLib.API
         string Email { get; set; }
 
 
-        /// <summary>
-        /// 帐户数目限制
-        /// </summary>
-        int AccLimit { get; set; }
+        
 
 
         /// <summary>
@@ -65,5 +62,30 @@ namespace TradingLib.API
         /// 创建日
         /// </summary>
         int DateCreated { get; set; }
+
+        /// <summary>
+        /// 是否是超级域
+        /// </summary>
+        bool Super { get; set; }
+
+        #region limit
+        /// <summary>
+        /// 帐户数目限制
+        /// </summary>
+        int AccLimit { get; set; }
+
+        /// <summary>
+        /// 路由组数量限制
+        /// </summary>
+        int RouterGroupLimit { get; set; }
+
+        /// <summary>
+        /// 路由组内路由项目数量限制
+        /// </summary>
+        int RouterItemLimit { get; set; }
+
+
+        #endregion
+
     }
 }

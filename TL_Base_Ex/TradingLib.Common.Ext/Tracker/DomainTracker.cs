@@ -37,5 +37,59 @@ namespace TradingLib.Common
                 return null;
             }
         }
+
+        /// <summary>
+        /// 返回所有域
+        /// </summary>
+        public IEnumerable<DomainImpl> Domains
+        {
+            get
+            {
+                return domainmap.Values;
+            }
+        }
+
+        public void UpdateDomain(DomainImpl domain)
+        {
+            DomainImpl target = null;
+            if (domainmap.TryGetValue(domain.ID, out target))//更新
+            {
+                target.LinkMan = domain.LinkMan;
+                target.Mobile = domain.Mobile;
+                target.Name = domain.Name;
+                target.Email = domain.Email;
+                target.QQ = domain.QQ;
+
+                //target.Super = domain.Super;
+                target.DateExpired = domain.DateExpired;
+
+                target.AccLimit = domain.AccLimit;
+                target.RouterGroupLimit = domain.RouterGroupLimit;
+                target.RouterItemLimit = domain.RouterItemLimit;
+
+                ORM.MDomain.UpdateDomain(target);
+                
+            }
+            else
+            {
+                target = new DomainImpl();
+                target.LinkMan = domain.LinkMan;
+                target.Mobile = domain.Mobile;
+                target.Name = domain.Name;
+                target.Email = domain.Email;
+                target.QQ = domain.QQ;
+
+                //target.Super = domain.Super;
+                target.DateExpired = target.DateExpired;
+
+                target.AccLimit = target.AccLimit;
+                target.RouterGroupLimit = domain.RouterGroupLimit;
+                target.RouterItemLimit = domain.RouterItemLimit;
+
+                ORM.MDomain.InsertDomain(target);
+                domain.ID = target.ID;
+                domainmap.TryAdd(target.ID, target);
+            }
+        }
     }
 }

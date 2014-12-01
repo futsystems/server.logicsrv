@@ -45,8 +45,8 @@ namespace TradingLib.ServiceManager
                     ORM.MConnector.UpdateConnectorConfigVendor(cfg);
 
                     //4.给出对应的对象通知和回报
-                    session.NotifyMgr(vendor as VendorSetting, this.ServiceMgrName, "NotifyVendor");
-                    session.NotifyMgr(cfg, this.ServiceMgrName, "NotifyConnectorCfg");
+                    session.NotifyMgr("NotifyVendor",vendor as VendorSetting);
+                    session.NotifyMgr("NotifyConnectorCfg",cfg);
                     session.OperationSuccess("通道解绑成功");
 
                 }
@@ -113,8 +113,8 @@ namespace TradingLib.ServiceManager
                     vendor.BindBroker(broker);
 
                     //4.给出对应的对象通知和回报
-                    session.NotifyMgr(vendor as VendorSetting, this.ServiceMgrName, "NotifyVendor");
-                    session.NotifyMgr(cfg, this.ServiceMgrName, "NotifyConnectorCfg");
+                    session.NotifyMgr("NotifyVendor",vendor as VendorSetting);
+                    session.NotifyMgr("NotifyConnectorCfg",cfg);
                     session.OperationSuccess("通道绑定成功");
 
                 }

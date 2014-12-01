@@ -36,6 +36,7 @@ namespace TradingLib.ServiceManager
                 {
                     ConnectorConfig cfg = TradingLib.Mixins.LitJson.JsonMapper.ToObject<ConnectorConfig>(json);
                     bool isadd = cfg.ID == 0;
+
                     if (string.IsNullOrEmpty(cfg.Name))
                     {
                         throw new FutsRspError("名称不能为空");
@@ -65,7 +66,7 @@ namespace TradingLib.ServiceManager
                     //3.更新或加载Broker
                     if (isadd)
                     {
-                        if (!cfg.Interface.IsValid)
+                        if (!config.Interface.IsValid)
                         {
                             throw new FutsRspError("接口状态异常");
                         }
@@ -122,7 +123,14 @@ namespace TradingLib.ServiceManager
                 Manager manger = session.GetManager();
                 if (manger.RightRootDomain())
                 {
+                    
                     RouterGroupSetting group = TradingLib.Mixins.LitJson.JsonMapper.ToObject<RouterGroupSetting>(jsonstr);
+                    bool isadd = group.ID == 0;
+                    if (isadd && manger.Domain.GetRouterGroups().Count() >= manger.Domain.RouterGroupLimit)
+                    {
+                        throw new FutsRspError("路由组数目达到上限:" + manger.Domain.RouterGroupLimit.ToString());
+                    }
+                    
                     group.domain_id = manger.Domain.ID;
 
                     BasicTracker.RouterGroupTracker.UpdateRouterGroup(group);
@@ -131,9 +139,9 @@ namespace TradingLib.ServiceManager
                     session.OperationSuccess("更新通道设置成功");
                 }
             }
-            catch (Exception ex)
+            catch (FutsRspError ex)
             {
-                session.OperationSuccess("更新接口设置成功");
+                session.OperationError(ex);
             }
         }
 
@@ -187,6 +195,11 @@ namespace TradingLib.ServiceManager
                     if (group == null)
                     {
                         throw new FutsRspError("指定的路由组不存在");
+                    }
+
+                    if (isadd && group.RouterItems.Count() >= manger.Domain.RouterItemLimit)
+                    {
+                        throw new FutsRspError("路由组内路由项目达到上限:" + manger.Domain.RouterItemLimit.ToString());
                     }
 
                     //如果是增加路由项目,则组内不能添加相同的帐户

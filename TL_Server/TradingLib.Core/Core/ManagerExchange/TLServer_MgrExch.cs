@@ -230,6 +230,7 @@ namespace TradingLib.Core
         void SrvOnMGRLoginRequest(MGRLoginRequest request)
         {
             debug("got login request:" + request.ToString(), QSEnumDebugLevel.INFO);
+
             MgrClientInfo clientinfo = _clients[request.ClientID];
             
             bool re = ORM.MManager.ValidManager(request.LoginID, request.Passwd);
@@ -245,26 +246,35 @@ namespace TradingLib.Core
                 Manager m = BasicTracker.ManagerTracker[request.LoginID];
                 if (m != null)
                 {
-                    response.LoginID = m.Login;
-                    response.Mobile = m.Mobile;
-                    response.Name = m.Name;
-                    response.QQ = m.QQ;
-                    response.ManagerType = m.Type;
-                    response.MGRID = m.ID;//mgrid
-                    response.BaseMGRFK = m.mgr_fk;//主域id
+                    if (m.Domain.DateExpired>0 && m.Domain.DateExpired < Util.ToTLDate())//域过期
+                    {
+                        clientinfo.AuthorizedFail();
+                        response.Authorized = false;
+                    }
+                    else
+                    {
+                        response.LoginID = m.Login;
+                        response.Mobile = m.Mobile;
+                        response.Name = m.Name;
+                        response.QQ = m.QQ;
+                        response.ManagerType = m.Type;
+                        response.MGRID = m.ID;//mgrid
+                        response.BaseMGRFK = m.mgr_fk;//主域id
 
-                    //将Manger信息绑定到对应的clientinfo
-                    clientinfo.BindManger(m);
-                    //标注登入成功
-                    clientinfo.AuthorizedSuccess();
+                        //将Manger信息绑定到对应的clientinfo
+                        clientinfo.BindManger(m);
+                        //标注登入成功
+                        clientinfo.AuthorizedSuccess();
 
-                    //获得界面访问权限列表
-                    response.UIAccess = UIAccessTracker.GetUIAccess(m);
+                        //获得界面访问权限列表
+                        response.UIAccess = UIAccessTracker.GetUIAccess(m);
+                    }
 
                 }
                 else//如果管理端对象在内存中不存在 则返回登入失败
                 {
                     clientinfo.AuthorizedFail();
+                    response.Authorized = false;
                 }
                 
             }

@@ -15,7 +15,12 @@ namespace FutsMoniter
         /// </summary>
         void WireRibbon()
         {
+            //系统菜单
             kryptonContextMenuItem_exit.Click += new EventHandler(kryptonContextMenuItem_exit_Click);
+            kryptonContextMenuItem_Domain.Click += new EventHandler(kryptonContextMenuItem_Domain_Click);
+
+
+
             kryptonRibbonQATButton_debug.Click += new EventHandler(kryptonRibbonQATButton_debug_Click);
             //kryptonContextMenuItem_exit.Click +=new EventHandler(kryptonContextMenuItem_exit_Click);
 
@@ -58,6 +63,12 @@ namespace FutsMoniter
             kryptonRibbonGroupButton_AccountCashreq.Click += new EventHandler(kryptonRibbonGroupButton_AccountCashreq_Click);
 
             kryptonRibbonGroupButton_payonline.Click += new EventHandler(kryptonRibbonGroupButton_payonline_Click);
+        }
+
+        void kryptonContextMenuItem_Domain_Click(object sender, EventArgs e)
+        {
+            fmDomain fm = new fmDomain();
+            fm.Show();
         }
 
         void kryptonRibbonGroupButton_connectorlist_Click(object sender, EventArgs e)

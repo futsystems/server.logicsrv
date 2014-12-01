@@ -59,5 +59,23 @@ namespace TradingLib.Common
         /// 创建日
         /// </summary>
         public int DateCreated { get; set; }
+
+
+        /// <summary>
+        /// 是否是超级域
+        /// </summary>
+        public bool Super { get; set; }
+
+
+        /// <summary>
+        /// 路由组数量限制
+        /// </summary>
+        public int RouterGroupLimit { get; set; }
+
+        /// <summary>
+        /// 路由组内路由项目数量限制
+        /// </summary>
+        public int RouterItemLimit { get; set; }
+
     }
 }

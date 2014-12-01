@@ -211,7 +211,7 @@ namespace TradingLib.Common
                 if (itface == null)
                     return;
                 //itface.IsValid = false;//默认设置为false,需要后段程序通过验证加载成功然后再设置成True
-                cfg.Interface = itface;
+                target.Interface = itface;
                 configidxmap.Add(target.ID, target);
                 configmap.Add(target.Token, target);
                 

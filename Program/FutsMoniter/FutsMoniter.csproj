@@ -82,6 +82,7 @@
     <Compile Include="API\IEventBinder.cs" />
     <Compile Include="Client\AsyncClient_MQ.cs" />
     <Compile Include="Client\TLClientNet_Request_Connector.cs" />
+    <Compile Include="Client\TLClientNet_Request_Domain.cs" />
     <Compile Include="Common\ManagerUtils.cs" />
     <Compile Include="Controls\Base\ctRouterGroupList.cs">
       <SubType>UserControl</SubType>
@@ -277,6 +278,18 @@
     </Compile>
     <Compile Include="Forms\fmAgentPermission.Designer.cs">
       <DependentUpon>fmAgentPermission.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Domain\fmDomain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Domain\fmDomain.Designer.cs">
+      <DependentUpon>fmDomain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Domain\fmDomainEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Domain\fmDomainEdit.Designer.cs">
+      <DependentUpon>fmDomainEdit.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\VendorManager\fmRouterGroupEdit.cs">
       <SubType>Form</SubType>
@@ -681,6 +694,12 @@
     <EmbeddedResource Include="Forms\fmAgentPermission.resx">
       <DependentUpon>fmAgentPermission.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Domain\fmDomain.resx">
+      <DependentUpon>fmDomain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Domain\fmDomainEdit.resx">
+      <DependentUpon>fmDomainEdit.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\VendorManager\fmRouterGroupEdit.resx">
       <DependentUpon>fmRouterGroupEdit.cs</DependentUpon>
     </EmbeddedResource>
@@ -809,6 +828,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="xxtobedelete\OperationReportForm.resx">
       <DependentUpon>OperationReportForm.cs</DependentUpon>

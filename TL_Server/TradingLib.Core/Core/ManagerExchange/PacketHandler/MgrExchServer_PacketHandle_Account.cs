@@ -28,6 +28,12 @@ namespace TradingLib.Core
             try
             {
                 debug(string.Format("管理员:{0} 请求添加交易帐号:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
+                //域帐户数目检查
+                if (manager.Domain.GetAccounts().Count() >= manager.Domain.AccLimit)
+                {
+                    throw new FutsRspError("帐户数目达到上限:" + manager.Domain.AccLimit.ToString());
+                }
+
                 //如果不是Root权限的Manager需要进行执行权限检查
                 if (!manager.RightRootDomain())
                 {

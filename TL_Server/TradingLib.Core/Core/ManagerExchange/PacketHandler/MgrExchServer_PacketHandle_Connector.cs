@@ -23,11 +23,15 @@ namespace TradingLib.Core
                 responselist.Add(response);
             }
 
-            foreach (IDataFeed d in TLCtxHelper.Ctx.RouterManager.DataFeeds)
+            //只有超级域才推行情通道,用于行情通道的操作
+            if (manager.Domain.Super)
             {
-                RspMGRQryConnectorResponse response = ResponseTemplate<RspMGRQryConnectorResponse>.SrvSendRspResponse(request);
-                response.Connector = new ConnectorInfo(d);
-                responselist.Add(response);
+                foreach (IDataFeed d in TLCtxHelper.Ctx.RouterManager.DataFeeds)
+                {
+                    RspMGRQryConnectorResponse response = ResponseTemplate<RspMGRQryConnectorResponse>.SrvSendRspResponse(request);
+                    response.Connector = new ConnectorInfo(d);
+                    responselist.Add(response);
+                }
             }
 
             int totalnum = responselist.Count;
