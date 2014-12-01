@@ -82,6 +82,19 @@ namespace TradingLib.Common
         /// </summary>
         public string InterfaceList { get; set; }
 
+        /// <summary>
+        /// 代理模块
+        /// </summary>
+        public bool Module_Agent { get; set; }
 
+        /// <summary>
+        /// 配资模块
+        /// </summary>
+        public bool Module_FinService { get; set; }
+
+        /// <summary>
+        /// 在线出入金模块
+        /// </summary>
+        public bool Module_PayOnline { get; set; }
     }
 }

@@ -66,6 +66,11 @@ namespace TradingLib.Common
                 target.AccLimit = domain.AccLimit;
                 target.RouterGroupLimit = domain.RouterGroupLimit;
                 target.RouterItemLimit = domain.RouterItemLimit;
+                target.InterfaceList = domain.InterfaceList;
+
+                target.Module_Agent = domain.Module_Agent;
+                target.Module_FinService = domain.Module_FinService;
+                target.Module_PayOnline = domain.Module_PayOnline;
 
                 ORM.MDomain.UpdateDomain(target);
                 
@@ -85,6 +90,11 @@ namespace TradingLib.Common
                 target.AccLimit = target.AccLimit;
                 target.RouterGroupLimit = domain.RouterGroupLimit;
                 target.RouterItemLimit = domain.RouterItemLimit;
+                target.InterfaceList = domain.InterfaceList;
+
+                target.Module_Agent = domain.Module_Agent;
+                target.Module_FinService = domain.Module_FinService;
+                target.Module_PayOnline = domain.Module_PayOnline;
 
                 ORM.MDomain.InsertDomain(target);
                 domain.ID = target.ID;

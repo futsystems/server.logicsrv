@@ -26,9 +26,14 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryReceiveableBank", "QryReceiveableBank - query QryReceiveableBank", "查询收款银行银行列表")]
         public void CTE_QryReceiveableBank(ISession session)
         {
-            JsonWrapperReceivableAccount[] splist = BasicTracker.ContractBankTracker.ReceivableAccounts.ToArray();
-            //BasicTracker.ContractBankTracker.ReceivableAccounts.Select(a => a.ToDrop()).ToList();
-            session.SendJsonReplyMgr(splist);
+            Manager manager = session.GetManager();
+
+            if (manager != null)
+            {
+                JsonWrapperReceivableAccount[] splist = manager.Domain.GetReceiveableAccount().ToArray();//BasicTracker.ContractBankTracker.ReceivableAccounts.ToArray();
+                    //BasicTracker.ContractBankTracker.ReceivableAccounts.Select(a => a.ToDrop()).ToList();
+                session.SendJsonReplyMgr(splist);
+            }
         }
 
 

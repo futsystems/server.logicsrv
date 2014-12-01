@@ -101,7 +101,7 @@
     <Compile Include="Core\ManagerExchange\MgrClientInfo.cs" />
     <Compile Include="Core\ManagerExchange\MgrExchServer.cs" />
     <Compile Include="Base\Settlement.cs" />
-    <Compile Include="Core\ManagerExchange\MgrExchServer_CTE.cs" />
+    <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_Other.cs" />
     <Compile Include="Core\ManagerExchange\ORM\MAgentFinance.cs" />
     <Compile Include="Core\ManagerExchange\TLServer_MgrExch.cs" />
     <Compile Include="Core\ManagerExchange\MgrExchServer_.cs" />
@@ -110,8 +110,8 @@
     <Compile Include="Core\ManagerExchange\MgrExchServer_EventHandle.cs" />
     <Compile Include="Core\ManagerExchange\MgrExchServer_Task.cs" />
     <Compile Include="Core\ManagerExchange\MgrExchServer_Operation.cs" />
-    <Compile Include="Core\ManagerExchange\MgrExchServer_CTE_CashOPAccount.cs" />
-    <Compile Include="Core\ManagerExchange\MgrExchServer_CTE_CashOPAgent.cs" />
+    <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_CashOPAccount.cs" />
+    <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_CashOPAgent.cs" />
     <Compile Include="Core\ManagerExchange\Utils\ObjectsUtils.cs" />
     <Compile Include="Core\ManagerExchange\MgrExchServer_Notify.cs" />
     <Compile Include="Core\ManagerExchange\Utils\ManagerUtils_Predicate.cs" />

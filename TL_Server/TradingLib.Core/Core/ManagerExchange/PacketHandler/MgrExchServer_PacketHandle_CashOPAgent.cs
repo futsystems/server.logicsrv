@@ -28,7 +28,7 @@ namespace TradingLib.Core
             Manager manger = session.GetManager();
             if (manger != null)
             {
-                JsonWrapperCashOperation[] ops = ORM.MAgentFinance.GetAgentLatestCashOperationTotal().ToArray();
+                JsonWrapperCashOperation[] ops = manger.Domain.GetAgentCashOperation().ToArray();
                 session.SendJsonReplyMgr(ops);
             }
         }

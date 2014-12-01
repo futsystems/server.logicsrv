@@ -23,16 +23,7 @@ namespace TradingLib.ServiceManager
             Manager manger = session.GetManager();
             if (manger.RightRootDomain())
             {
-
-                ConnectorInterface[] ops = new ConnectorInterface[] { };
-                if (manger.Domain.Super)
-                {
-                    ops = BasicTracker.ConnectorConfigTracker.Interfaces.ToArray();
-                }
-                else
-                { 
-                    
-                }
+                ConnectorInterface[] ops = manger.Domain.GetInterface().ToArray();
                 session.SendJsonReplyMgr(ops);
             }
         }

@@ -36,6 +36,8 @@ namespace FutSystems.GUI
                 return new ListBox2IDataSource(obj as ListBox);
             else if (obj is ComboBox)
                 return new ComboBox2IDataSource(obj as ComboBox);
+            else if (obj is CheckedListBox)
+                return new CheckedListBox2IDataSource(obj as CheckedListBox);
             return new Invalid2IDataSource(); ;
         }
     }
@@ -90,6 +92,29 @@ namespace FutSystems.GUI
         }
     }
 
+    public class CheckedListBox2IDataSource : IDataSource
+    {
+        CheckedListBox _clb;
+        public CheckedListBox2IDataSource(CheckedListBox c)
+        {
+            _clb = c;
+        }
+        public object DataSource { get { return _clb.DataSource; } set { _clb.DataSource = value; } }
+        public string DisplayMember { get { return _clb.DisplayMember; } set { _clb.DisplayMember = value; } }
+        public string ValueMember { get { return _clb.ValueMember; } set { _clb.ValueMember = value; } }
+
+        /// <summary>
+        /// 绑定对应的数据
+        /// </summary>
+        /// <param name="list"></param>
+        public void BindDataSource(ArrayList list)
+        {
+            this.DataSource = list;
+            this.ValueMember = "Value";
+            this.DisplayMember = "Name";
+
+        }
+    }
     public class KryptonListBox2IDataSource : IDataSource
     {
         KryptonListBox _lc;

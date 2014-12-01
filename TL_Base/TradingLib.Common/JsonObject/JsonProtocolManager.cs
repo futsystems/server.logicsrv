@@ -320,6 +320,11 @@ namespace TradingLib.Mixins.JsonObject
         /// 分行地址
         /// </summary>
         public string Branch { get; set; }
+
+        /// <summary>
+        /// 域ID
+        /// </summary>
+        public int Domain_ID { get; set; }
     }
 
 

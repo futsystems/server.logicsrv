@@ -30,7 +30,7 @@ namespace TradingLib.Core
             {
 
                 JsonWrapperCashOperation[] ops = new JsonWrapperCashOperation[] { };
-                IEnumerable <JsonWrapperCashOperation>  list = ORM.MCashOpAccount.GetAccountLatestCashOperationTotal();
+                IEnumerable<JsonWrapperCashOperation> list = manger.Domain.GetAccountCashOperation();
                 if (manger.RightRootDomain())
                 {
                     ops = list.ToArray();

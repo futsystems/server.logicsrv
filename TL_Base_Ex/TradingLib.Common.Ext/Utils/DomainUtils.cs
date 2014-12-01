@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TradingLib.API;
+using TradingLib.Mixins.JsonObject;
 
 
 namespace TradingLib.Common
@@ -28,6 +29,88 @@ namespace TradingLib.Common
         {
             return TLCtxHelper.CmdAccount.Accounts.Where(acc => acc.Domain.Equals(domain));
         }
+
+        /// <summary>
+        /// 查询域内交易帐户出入金操作请求
+        /// </summary>
+        /// <param name="domain"></param>
+        /// <returns></returns>
+        public static IEnumerable<TradingLib.Mixins.JsonObject.JsonWrapperCashOperation> GetAccountCashOperation(this Domain domain)
+        {
+            return ORM.MCashOpAccount.GetAccountLatestCashOperationTotal().Where(op => domain.IsAccountInDomain(op.Account));
+        }
+
+        /// <summary>
+        /// 查询域内所有代理出入金操作请求
+        /// </summary>
+        /// <param name="domain"></param>
+        /// <returns></returns>
+        public static IEnumerable<TradingLib.Mixins.JsonObject.JsonWrapperCashOperation> GetAgentCashOperation(this Domain domain)
+        {
+            return ORM.MAgentFinance.GetAgentLatestCashOperationTotal().Where(op => domain.IsManagerInDomain(op.mgr_fk));
+        }
+
+
+
+
+
+        public static bool IsManagerInDomain(this Domain doman, string manger)
+        {
+            Manager mgr = BasicTracker.ManagerTracker[manger];
+            return doman.IsManagerInDomain(mgr);
+        }
+
+        public static bool IsManagerInDomain(this Domain domain, int mgr_fk)
+        {
+            Manager mgr = BasicTracker.ManagerTracker[mgr_fk];
+            return domain.IsManagerInDomain(mgr);
+        }
+
+        /// <summary>
+        /// 某个Manger是否在某个域内
+        /// </summary>
+        /// <param name="domain"></param>
+        /// <param name="mgr"></param>
+        /// <returns></returns>
+        public static bool IsManagerInDomain(this Domain domain, Manager mgr)
+        {
+            if (mgr == null) return false;
+            return mgr.domain_id.Equals(domain.ID);
+        }
+        /// <summary>
+        /// 交易帐户是否在某个域内
+        /// </summary>
+        /// <param name="domain"></param>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public static bool IsAccountInDomain(this Domain domain,string account)
+        {
+            IAccount acc = TLCtxHelper.CmdAccount[account];
+            return domain.IsAccountInDomain(acc);
+        }
+
+        /// <summary>
+        /// 交易帐户是否在某个域内
+        /// </summary>
+        /// <param name="domain"></param>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public static bool IsAccountInDomain(this Domain domain, IAccount account)
+        {
+            if (account == null) return false;
+            return account.Domain.ID.Equals(domain.ID);
+        }
+
+        /// <summary>
+        /// 获得本域所有收款银行
+        /// </summary>
+        /// <param name="domain"></param>
+        /// <returns></returns>
+        public static IEnumerable<JsonWrapperReceivableAccount> GetReceiveableAccount(this Domain domain)
+        {
+            return ORM.MBasicInfo.SelectReceivableBanks().Where(b => b.Domain_ID.Equals(domain.ID));
+        }
+
 
         /// <summary>
         /// 获得域内Vendor
@@ -69,11 +152,24 @@ namespace TradingLib.Common
             return BasicTracker.ConnectorConfigTracker.ConnecotrConfigs.Where(cfg => cfg.domain_id == domain.ID);
         }
 
-
+        /// <summary>
+        /// 获得域可以设置的Interface
+        /// 超级管理员可以获得所有接口
+        /// 分区管理员只能获得设置范围内的接口
+        /// </summary>
+        /// <param name="domain"></param>
+        /// <returns></returns>
         public static IEnumerable<ConnectorInterface> GetInterface(this Domain domain)
-        { 
-            //List<int> idlist = domain.InterfaceList.Split(",");
-            //return BasicTracker.ConnectorConfigTracker.Interfaces.Where()
+        {
+            if (domain.Super)
+            {
+                return BasicTracker.ConnectorConfigTracker.Interfaces;
+            }
+            else
+            {
+                int[] idlist = domain.InterfaceList.Split(',').Select(s => int.Parse(s)).ToArray();
+                return BasicTracker.ConnectorConfigTracker.Interfaces.Where(itface => idlist.Contains(itface.ID));
+            }
         }
 
         /// <summary>
