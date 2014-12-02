@@ -18,7 +18,7 @@ namespace FutsMoniter
         public fmManagerEdit()
         {
             InitializeComponent();
-            Factory.IDataSourceFactory(type).BindDataSource(Utils.GetManagerTypeCBList());
+            Factory.IDataSourceFactory(type).BindDataSource(MoniterUtil.GetManagerTypeCBList());
         }
 
 

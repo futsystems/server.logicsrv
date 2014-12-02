@@ -119,7 +119,7 @@ namespace FutsMoniter
             string url = Globals.Config["CashURL"].AsString();
             if (!string.IsNullOrEmpty(url))
             {
-                Utils.OpenURL(url);
+                MoniterUtil.OpenURL(url);
             }
         }
 

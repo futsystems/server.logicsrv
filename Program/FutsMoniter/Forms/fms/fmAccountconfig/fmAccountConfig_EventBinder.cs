@@ -14,16 +14,19 @@ namespace FutsMoniter
         {
             Globals.Debug("fmAccountConfig init called @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 
-            pageConfig.Visible = Globals.UIAccess.moniter_tab_config;
-            btnExecute.Visible = Globals.UIAccess.moniter_tab_config_inactive;
+            if (!Globals.LoginResponse.Domain.Super)
+            {
+                pageConfig.Visible = Globals.UIAccess.moniter_tab_config;
+                btnExecute.Visible = Globals.UIAccess.moniter_tab_config_inactive;
 
-            pageFinance.Visible = Globals.UIAccess.moniter_tab_finance;
-            pageOrderCheck.Visible = Globals.UIAccess.moniter_tab_orderrule;
-            pageAccountCheck.Visible = Globals.UIAccess.moniter_tab_accountrule;
-            pageMarginCommission.Visible = Globals.UIAccess.moniter_tab_margincommissoin;
+                pageFinance.Visible = Globals.UIAccess.moniter_tab_finance;
+                pageOrderCheck.Visible = Globals.UIAccess.moniter_tab_orderrule;
+                pageAccountCheck.Visible = Globals.UIAccess.moniter_tab_accountrule;
+                pageMarginCommission.Visible = Globals.UIAccess.moniter_tab_margincommissoin;
 
-            panelAccCategory.Visible = Globals.UIAccess.moniter_acctype;
-            panelRouter.Visible = Globals.UIAccess.moniter_router;
+                ctAccountType1.Visible= Globals.UIAccess.moniter_acctype;
+                ctRouterType1.Visible = Globals.UIAccess.moniter_router;
+            }
         }
 
         public void OnDisposed()

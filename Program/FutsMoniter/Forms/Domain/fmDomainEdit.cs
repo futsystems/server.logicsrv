@@ -137,6 +137,8 @@ namespace FutsMoniter
             module_agent.Checked = _domain.Module_Agent;
             module_finservice.Checked = _domain.Module_FinService;
             module_payonline.Checked = _domain.Module_PayOnline;
+            router_live.Checked = _domain.Router_Live;
+            router_sim.Checked = _domain.Router_Sim;
 
             this.Text = "编辑域分区:" + _domain.Name;
 
@@ -161,6 +163,9 @@ namespace FutsMoniter
                 _domain.Module_Agent = module_agent.Checked;
                 _domain.Module_FinService = module_finservice.Checked;
                 _domain.Module_PayOnline = module_payonline.Checked;
+
+                _domain.Router_Live = router_live.Checked;
+                _domain.Router_Sim = router_sim.Checked;
 
                 //MessageBox.Show(_domain.InterfaceList);
                 if (fmConfirm.Show("确认更新分区设置?") == System.Windows.Forms.DialogResult.Yes)
@@ -188,6 +193,14 @@ namespace FutsMoniter
                 _domain.Module_FinService = module_finservice.Checked;
                 _domain.Module_PayOnline = module_payonline.Checked;
 
+                _domain.Router_Live = router_live.Checked;
+                _domain.Router_Sim = router_sim.Checked;
+
+                if ( (!_domain.Router_Live)&& (!_domain.Router_Sim))
+                {
+                    ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show("需启用1种或全部成交方式");
+                    return;
+                }
                 if (fmConfirm.Show("确认添加分区?") == System.Windows.Forms.DialogResult.Yes)
                 {
                     Globals.TLClient.ReqUpdateDomain(_domain);

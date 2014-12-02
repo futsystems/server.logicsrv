@@ -18,15 +18,15 @@ namespace FutsMoniter.Controls
             {
                 if (!Globals.UIAccess.moniter_acctype)
                 {
-                    lbcategory.Visible = false;
-                    accountType.Visible = false;
+                    //lbcategory.Visible = false;
+                    ctAccountType1.Visible = false;
+                    //ctAccountType1.Visible = false;
                     accountgrid.Columns[CATEGORYSTR].Visible = false;
                 }
 
                 if (!Globals.UIAccess.moniter_router)
                 {
-                    lbroutetype.Visible = false;
-                    routeType.Visible = false;
+                    ctRouterType1.Visible = false;
                     accountgrid.Columns[ROUTEIMG].Visible = false;
                 }
 

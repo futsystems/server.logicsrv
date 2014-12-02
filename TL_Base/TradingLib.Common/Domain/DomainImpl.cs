@@ -96,5 +96,18 @@ namespace TradingLib.Common
         /// 在线出入金模块
         /// </summary>
         public bool Module_PayOnline { get; set; }
+
+
+        /// <summary>
+        /// 实盘路由
+        /// </summary>
+        public bool Router_Live { get; set; }
+
+        /// <summary>
+        /// 模拟路由
+        /// </summary>
+        public bool Router_Sim { get; set; }
+
+
     }
 }

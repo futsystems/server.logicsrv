@@ -55,7 +55,7 @@ namespace FutsMoniter.Controls
             }
             catch (Exception ex)
             {
-                //MessageBox.Show("error ex:" + ex.ToString());
+                MessageBox.Show("error ex:" + ex.ToString());
             }
             
         }
@@ -187,11 +187,12 @@ namespace FutsMoniter.Controls
 
         void WireEvents()
         {
-            Globals.RegInitCallback(this.OnInitFinished);
+            //Globals.RegInitCallback(this.OnInitFinished);
 
             //交易帐户过滤控件
-            accountType.SelectedIndexChanged +=new EventHandler(accountType_SelectedIndexChanged);
-            routeType.SelectedIndexChanged +=new EventHandler(routeType_SelectedIndexChanged);
+            ctAccountType1.AccountTypeSelectedChangedEvent += new VoidDelegate(ctAccountType1_AccountTypeSelectedChangedEvent);
+            ctRouterType1.RouterTypeSelectedChangedEvent += new VoidDelegate(ctRouterType1_RouterTypeSelectedChangedEvent);
+            
             accexecute.SelectedIndexChanged +=new EventHandler(accexecute_SelectedIndexChanged);
             accLogin.CheckedChanged+=new EventHandler(accLogin_CheckedChanged);
             acct.TextChanged+=new EventHandler(acct_TextChanged);
@@ -226,6 +227,10 @@ namespace FutsMoniter.Controls
 
             this.AccountSelectedEvent += new Action<IAccountLite>(ctFinService1.OnAccountSelected);
         }
+
+
+
+
 
 
        

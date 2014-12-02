@@ -29,12 +29,9 @@
         private void InitializeComponent()
         {
             this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
-            this.btnSubmit = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.kryptonNavigator1 = new ComponentFactory.Krypton.Navigator.KryptonNavigator();
             this.kryptonPage1 = new ComponentFactory.Krypton.Navigator.KryptonPage();
-            this.kryptonPage2 = new ComponentFactory.Krypton.Navigator.KryptonPage();
             this.kryptonPanel2 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
-            this.kryptonPanel3 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
             this.kryptonLabel8 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.datecreated = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel1 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
@@ -49,6 +46,8 @@
             this.name = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
             this.kryptonLabel6 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.domainid = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.kryptonPage2 = new ComponentFactory.Krypton.Navigator.KryptonPage();
+            this.kryptonPanel3 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
             this.kryptonLabel16 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel15 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel14 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
@@ -65,19 +64,24 @@
             this.interfacelist = new System.Windows.Forms.CheckedListBox();
             this.kryptonPage4 = new ComponentFactory.Krypton.Navigator.KryptonPage();
             this.kryptonPanel5 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
-            this.module_agent = new ComponentFactory.Krypton.Toolkit.KryptonCheckBox();
-            this.module_finservice = new ComponentFactory.Krypton.Toolkit.KryptonCheckBox();
             this.module_payonline = new ComponentFactory.Krypton.Toolkit.KryptonCheckBox();
+            this.module_finservice = new ComponentFactory.Krypton.Toolkit.KryptonCheckBox();
+            this.module_agent = new ComponentFactory.Krypton.Toolkit.KryptonCheckBox();
+            this.btnSubmit = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.kryptonPage5 = new ComponentFactory.Krypton.Navigator.KryptonPage();
+            this.kryptonPanel6 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
+            this.router_live = new ComponentFactory.Krypton.Toolkit.KryptonCheckBox();
+            this.router_sim = new ComponentFactory.Krypton.Toolkit.KryptonCheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonNavigator1)).BeginInit();
             this.kryptonNavigator1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPage1)).BeginInit();
             this.kryptonPage1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonPage2)).BeginInit();
-            this.kryptonPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel2)).BeginInit();
             this.kryptonPanel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.kryptonPage2)).BeginInit();
+            this.kryptonPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel3)).BeginInit();
             this.kryptonPanel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPage3)).BeginInit();
@@ -88,6 +92,10 @@
             this.kryptonPage4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel5)).BeginInit();
             this.kryptonPanel5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.kryptonPage5)).BeginInit();
+            this.kryptonPage5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel6)).BeginInit();
+            this.kryptonPanel6.SuspendLayout();
             this.SuspendLayout();
             // 
             // kryptonPanel1
@@ -99,16 +107,6 @@
             this.kryptonPanel1.Name = "kryptonPanel1";
             this.kryptonPanel1.Size = new System.Drawing.Size(431, 284);
             this.kryptonPanel1.TabIndex = 0;
-            // 
-            // btnSubmit
-            // 
-            this.btnSubmit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSubmit.Location = new System.Drawing.Point(329, 247);
-            this.btnSubmit.Name = "btnSubmit";
-            this.btnSubmit.Size = new System.Drawing.Size(90, 25);
-            this.btnSubmit.TabIndex = 14;
-            this.btnSubmit.Values.Text = "提 交";
-            this.btnSubmit.Click += new System.EventHandler(this.btnSubmit_Click);
             // 
             // kryptonNavigator1
             // 
@@ -123,8 +121,9 @@
             this.kryptonPage1,
             this.kryptonPage2,
             this.kryptonPage3,
-            this.kryptonPage4});
-            this.kryptonNavigator1.SelectedIndex = 3;
+            this.kryptonPage4,
+            this.kryptonPage5});
+            this.kryptonNavigator1.SelectedIndex = 4;
             this.kryptonNavigator1.Size = new System.Drawing.Size(431, 234);
             this.kryptonNavigator1.TabIndex = 15;
             this.kryptonNavigator1.Text = "kryptonNavigator1";
@@ -141,19 +140,6 @@
             this.kryptonPage1.Text = "基本信息";
             this.kryptonPage1.ToolTipTitle = "Page ToolTip";
             this.kryptonPage1.UniqueName = "5C90A9005BC644E2D29AC6D492D487C2";
-            // 
-            // kryptonPage2
-            // 
-            this.kryptonPage2.AutoHiddenSlideSize = new System.Drawing.Size(200, 200);
-            this.kryptonPage2.Controls.Add(this.kryptonPanel3);
-            this.kryptonPage2.Flags = 65534;
-            this.kryptonPage2.LastVisibleSet = true;
-            this.kryptonPage2.MinimumSize = new System.Drawing.Size(50, 50);
-            this.kryptonPage2.Name = "kryptonPage2";
-            this.kryptonPage2.Size = new System.Drawing.Size(429, 209);
-            this.kryptonPage2.Text = "柜台容量";
-            this.kryptonPage2.ToolTipTitle = "Page ToolTip";
-            this.kryptonPage2.UniqueName = "706FF21E681A48AF15A824D1A3FC88EB";
             // 
             // kryptonPanel2
             // 
@@ -176,25 +162,6 @@
             this.kryptonPanel2.Name = "kryptonPanel2";
             this.kryptonPanel2.Size = new System.Drawing.Size(429, 209);
             this.kryptonPanel2.TabIndex = 0;
-            // 
-            // kryptonPanel3
-            // 
-            this.kryptonPanel3.Controls.Add(this.kryptonLabel16);
-            this.kryptonPanel3.Controls.Add(this.kryptonLabel15);
-            this.kryptonPanel3.Controls.Add(this.kryptonLabel14);
-            this.kryptonPanel3.Controls.Add(this.routeritemlimit);
-            this.kryptonPanel3.Controls.Add(this.routergrouplimit);
-            this.kryptonPanel3.Controls.Add(this.acclimit);
-            this.kryptonPanel3.Controls.Add(this.kryptonLabel13);
-            this.kryptonPanel3.Controls.Add(this.kryptonLabel12);
-            this.kryptonPanel3.Controls.Add(this.kryptonLabel11);
-            this.kryptonPanel3.Controls.Add(this.dateexpired);
-            this.kryptonPanel3.Controls.Add(this.kryptonLabel10);
-            this.kryptonPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.kryptonPanel3.Location = new System.Drawing.Point(0, 0);
-            this.kryptonPanel3.Name = "kryptonPanel3";
-            this.kryptonPanel3.Size = new System.Drawing.Size(429, 209);
-            this.kryptonPanel3.TabIndex = 14;
             // 
             // kryptonLabel8
             // 
@@ -302,6 +269,38 @@
             this.domainid.Size = new System.Drawing.Size(19, 18);
             this.domainid.TabIndex = 20;
             this.domainid.Values.Text = "--";
+            // 
+            // kryptonPage2
+            // 
+            this.kryptonPage2.AutoHiddenSlideSize = new System.Drawing.Size(200, 200);
+            this.kryptonPage2.Controls.Add(this.kryptonPanel3);
+            this.kryptonPage2.Flags = 65534;
+            this.kryptonPage2.LastVisibleSet = true;
+            this.kryptonPage2.MinimumSize = new System.Drawing.Size(50, 50);
+            this.kryptonPage2.Name = "kryptonPage2";
+            this.kryptonPage2.Size = new System.Drawing.Size(429, 209);
+            this.kryptonPage2.Text = "柜台容量";
+            this.kryptonPage2.ToolTipTitle = "Page ToolTip";
+            this.kryptonPage2.UniqueName = "706FF21E681A48AF15A824D1A3FC88EB";
+            // 
+            // kryptonPanel3
+            // 
+            this.kryptonPanel3.Controls.Add(this.kryptonLabel16);
+            this.kryptonPanel3.Controls.Add(this.kryptonLabel15);
+            this.kryptonPanel3.Controls.Add(this.kryptonLabel14);
+            this.kryptonPanel3.Controls.Add(this.routeritemlimit);
+            this.kryptonPanel3.Controls.Add(this.routergrouplimit);
+            this.kryptonPanel3.Controls.Add(this.acclimit);
+            this.kryptonPanel3.Controls.Add(this.kryptonLabel13);
+            this.kryptonPanel3.Controls.Add(this.kryptonLabel12);
+            this.kryptonPanel3.Controls.Add(this.kryptonLabel11);
+            this.kryptonPanel3.Controls.Add(this.dateexpired);
+            this.kryptonPanel3.Controls.Add(this.kryptonLabel10);
+            this.kryptonPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.kryptonPanel3.Location = new System.Drawing.Point(0, 0);
+            this.kryptonPanel3.Name = "kryptonPanel3";
+            this.kryptonPanel3.Size = new System.Drawing.Size(429, 209);
+            this.kryptonPanel3.TabIndex = 14;
             // 
             // kryptonLabel16
             // 
@@ -487,15 +486,15 @@
             this.kryptonPanel5.Size = new System.Drawing.Size(429, 209);
             this.kryptonPanel5.TabIndex = 0;
             // 
-            // module_agent
+            // module_payonline
             // 
-            this.module_agent.LabelStyle = ComponentFactory.Krypton.Toolkit.LabelStyle.NormalControl;
-            this.module_agent.Location = new System.Drawing.Point(17, 11);
-            this.module_agent.Name = "module_agent";
-            this.module_agent.Size = new System.Drawing.Size(78, 18);
-            this.module_agent.TabIndex = 0;
-            this.module_agent.Text = "代理模块";
-            this.module_agent.Values.Text = "代理模块";
+            this.module_payonline.LabelStyle = ComponentFactory.Krypton.Toolkit.LabelStyle.NormalControl;
+            this.module_payonline.Location = new System.Drawing.Point(17, 58);
+            this.module_payonline.Name = "module_payonline";
+            this.module_payonline.Size = new System.Drawing.Size(119, 18);
+            this.module_payonline.TabIndex = 2;
+            this.module_payonline.Text = "在线出入金模块";
+            this.module_payonline.Values.Text = "在线出入金模块";
             // 
             // module_finservice
             // 
@@ -507,15 +506,68 @@
             this.module_finservice.Text = "配资模块";
             this.module_finservice.Values.Text = "配资模块";
             // 
-            // module_payonline
+            // module_agent
             // 
-            this.module_payonline.LabelStyle = ComponentFactory.Krypton.Toolkit.LabelStyle.NormalControl;
-            this.module_payonline.Location = new System.Drawing.Point(17, 58);
-            this.module_payonline.Name = "module_payonline";
-            this.module_payonline.Size = new System.Drawing.Size(119, 18);
-            this.module_payonline.TabIndex = 2;
-            this.module_payonline.Text = "在线出入金模块";
-            this.module_payonline.Values.Text = "在线出入金模块";
+            this.module_agent.LabelStyle = ComponentFactory.Krypton.Toolkit.LabelStyle.NormalControl;
+            this.module_agent.Location = new System.Drawing.Point(17, 11);
+            this.module_agent.Name = "module_agent";
+            this.module_agent.Size = new System.Drawing.Size(78, 18);
+            this.module_agent.TabIndex = 0;
+            this.module_agent.Text = "代理模块";
+            this.module_agent.Values.Text = "代理模块";
+            // 
+            // btnSubmit
+            // 
+            this.btnSubmit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSubmit.Location = new System.Drawing.Point(329, 247);
+            this.btnSubmit.Name = "btnSubmit";
+            this.btnSubmit.Size = new System.Drawing.Size(90, 25);
+            this.btnSubmit.TabIndex = 14;
+            this.btnSubmit.Values.Text = "提 交";
+            this.btnSubmit.Click += new System.EventHandler(this.btnSubmit_Click);
+            // 
+            // kryptonPage5
+            // 
+            this.kryptonPage5.AutoHiddenSlideSize = new System.Drawing.Size(200, 200);
+            this.kryptonPage5.Controls.Add(this.kryptonPanel6);
+            this.kryptonPage5.Flags = 65534;
+            this.kryptonPage5.LastVisibleSet = true;
+            this.kryptonPage5.MinimumSize = new System.Drawing.Size(50, 50);
+            this.kryptonPage5.Name = "kryptonPage5";
+            this.kryptonPage5.Size = new System.Drawing.Size(429, 209);
+            this.kryptonPage5.Text = "路由类别";
+            this.kryptonPage5.ToolTipTitle = "Page ToolTip";
+            this.kryptonPage5.UniqueName = "09404FB13E7847A3E39A6465894CD0A8";
+            // 
+            // kryptonPanel6
+            // 
+            this.kryptonPanel6.Controls.Add(this.router_live);
+            this.kryptonPanel6.Controls.Add(this.router_sim);
+            this.kryptonPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.kryptonPanel6.Location = new System.Drawing.Point(0, 0);
+            this.kryptonPanel6.Name = "kryptonPanel6";
+            this.kryptonPanel6.Size = new System.Drawing.Size(429, 209);
+            this.kryptonPanel6.TabIndex = 0;
+            // 
+            // router_live
+            // 
+            this.router_live.LabelStyle = ComponentFactory.Krypton.Toolkit.LabelStyle.NormalControl;
+            this.router_live.Location = new System.Drawing.Point(11, 33);
+            this.router_live.Name = "router_live";
+            this.router_live.Size = new System.Drawing.Size(78, 18);
+            this.router_live.TabIndex = 3;
+            this.router_live.Text = "实盘交易";
+            this.router_live.Values.Text = "实盘交易";
+            // 
+            // router_sim
+            // 
+            this.router_sim.LabelStyle = ComponentFactory.Krypton.Toolkit.LabelStyle.NormalControl;
+            this.router_sim.Location = new System.Drawing.Point(11, 10);
+            this.router_sim.Name = "router_sim";
+            this.router_sim.Size = new System.Drawing.Size(78, 18);
+            this.router_sim.TabIndex = 2;
+            this.router_sim.Text = "模拟交易";
+            this.router_sim.Values.Text = "模拟交易";
             // 
             // fmDomainEdit
             // 
@@ -536,11 +588,11 @@
             this.kryptonNavigator1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPage1)).EndInit();
             this.kryptonPage1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonPage2)).EndInit();
-            this.kryptonPage2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel2)).EndInit();
             this.kryptonPanel2.ResumeLayout(false);
             this.kryptonPanel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.kryptonPage2)).EndInit();
+            this.kryptonPage2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel3)).EndInit();
             this.kryptonPanel3.ResumeLayout(false);
             this.kryptonPanel3.PerformLayout();
@@ -553,6 +605,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel5)).EndInit();
             this.kryptonPanel5.ResumeLayout(false);
             this.kryptonPanel5.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.kryptonPage5)).EndInit();
+            this.kryptonPage5.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel6)).EndInit();
+            this.kryptonPanel6.ResumeLayout(false);
+            this.kryptonPanel6.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -599,5 +656,9 @@
         private ComponentFactory.Krypton.Toolkit.KryptonCheckBox module_agent;
         private ComponentFactory.Krypton.Toolkit.KryptonCheckBox module_finservice;
         private ComponentFactory.Krypton.Toolkit.KryptonCheckBox module_payonline;
+        private ComponentFactory.Krypton.Navigator.KryptonPage kryptonPage5;
+        private ComponentFactory.Krypton.Toolkit.KryptonPanel kryptonPanel6;
+        private ComponentFactory.Krypton.Toolkit.KryptonCheckBox router_live;
+        private ComponentFactory.Krypton.Toolkit.KryptonCheckBox router_sim;
     }
 }

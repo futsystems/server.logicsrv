@@ -84,11 +84,23 @@
     <Compile Include="Client\TLClientNet_Request_Connector.cs" />
     <Compile Include="Client\TLClientNet_Request_Domain.cs" />
     <Compile Include="Common\ManagerUtils.cs" />
+    <Compile Include="Controls\Base\ctAccountType.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\Base\ctAccountType.Designer.cs">
+      <DependentUpon>ctAccountType.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Base\ctRouterGroupList.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Controls\Base\ctRouterGroupList.Designer.cs">
       <DependentUpon>ctRouterGroupList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Base\ctRouterType.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\Base\ctRouterType.Designer.cs">
+      <DependentUpon>ctRouterType.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\Base\ctTLPermissionEdit.cs">
       <SubType>UserControl</SubType>
@@ -628,8 +640,14 @@
     </Compile>
     <Compile Include="Utils.cs" />
     <Compile Include="Globals_RegEvent.cs" />
+    <EmbeddedResource Include="Controls\Base\ctAccountType.resx">
+      <DependentUpon>ctAccountType.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\Base\ctRouterGroupList.resx">
       <DependentUpon>ctRouterGroupList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\Base\ctRouterType.resx">
+      <DependentUpon>ctRouterType.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\Base\ctTLPermissionEdit.resx">
       <DependentUpon>ctTLPermissionEdit.cs</DependentUpon>

@@ -24,7 +24,7 @@ namespace FutsMoniter
             BindToTable();
 
             Factory.IDataSourceFactory(cbsecurity).BindDataSource(UIUtil.GetEnumValueObjects<SecurityType>(true));
-            Factory.IDataSourceFactory(cbtradeable).BindDataSource(Utils.GetTradeableCBList(true));
+            Factory.IDataSourceFactory(cbtradeable).BindDataSource(MoniterUtil.GetTradeableCBList(true));
 
             WireEvent();
         }

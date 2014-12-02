@@ -15,11 +15,11 @@ namespace FutsMoniter
         {
             Globals.Debug("Manager Name:" + Globals.Manager.Name + " BaseFK:" + Globals.Manager.mgr_fk + " MgrType:" + Globals.Manager.Type.ToString());
 
-            if (!Globals.Manager.RightRootDomain())
-            {
-                //btnGPSystem.Enabled = false;
-                //btnGPSymbol.Enabled = false;
-            }
+            //if (!Globals.Manager.RightRootDomain())
+            //{
+            //    //btnGPSystem.Enabled = false;
+            //    //btnGPSymbol.Enabled = false;
+            //}
 
         }
 

@@ -33,9 +33,8 @@ namespace FutsMoniter
                     this.Text = "交易帐户编辑[" + _account.Account + "]";
                     intraday.Checked = _account.IntraDay;
                     intraday.Text = _account.IntraDay ? "日内" : "隔夜";
-                    accountType.SelectedValue = _account.Category;
-                    routeType.SelectedValue = _account.OrderRouteType;
-
+                    ctAccountType1.AccountType = _account.Category;
+                    ctRouterType1.RouterType = _account.OrderRouteType;
 
                     btnExecute.Text = _account.Execute ? "冻 结" : "激 活";
                     btnExecute.ForeColor = Color.Red;
@@ -51,10 +50,7 @@ namespace FutsMoniter
         public fmAccountConfig()
         {
             InitializeComponent();
-
-
-            Factory.IDataSourceFactory(accountType).BindDataSource(UIUtil.GetEnumValueObjects<QSEnumAccountCategory>());
-            Factory.IDataSourceFactory(routeType).BindDataSource(UIUtil.GetEnumValueObjects<QSEnumOrderTransferType>());
+            //Factory.IDataSourceFactory(routeType).BindDataSource(UIUtil.GetEnumValueObjects<QSEnumOrderTransferType>());
             cashop_type.Items.Add("入金");
             cashop_type.Items.Add("出金");
 
@@ -156,13 +152,13 @@ namespace FutsMoniter
                 {
                     Globals.TLClient.ReqUpdateAccountIntraday(_account.Account, intraday.Checked);
                 }
-                if ((QSEnumAccountCategory)accountType.SelectedValue != _account.Category)
+                if (ctAccountType1.AccountType != _account.Category)
                 {
-                    Globals.TLClient.ReqUpdateAccountCategory(_account.Account, (QSEnumAccountCategory)accountType.SelectedValue);
+                    Globals.TLClient.ReqUpdateAccountCategory(_account.Account,ctAccountType1.AccountType);
                 }
-                if ((QSEnumOrderTransferType)routeType.SelectedValue != _account.OrderRouteType)
+                if (ctRouterType1.RouterType != _account.OrderRouteType)
                 {
-                    Globals.TLClient.ReqUpdateRouteType(_account.Account, (QSEnumOrderTransferType)routeType.SelectedValue);
+                    Globals.TLClient.ReqUpdateRouteType(_account.Account, ctRouterType1.RouterType);
                 }
                 if (poslock.Checked != _account.PosLock)
                 {
@@ -233,5 +229,6 @@ namespace FutsMoniter
             //    cashoppanel.Visible = false;
             //}
         }
+
     }
 }

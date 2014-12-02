@@ -28,14 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.kryptonSplitContainer1 = new ComponentFactory.Krypton.Toolkit.KryptonSplitContainer();
             this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
+            this.ctRouterType1 = new FutsMoniter.Controls.Base.ctRouterType();
+            this.ctAccountType1 = new FutsMoniter.Controls.Base.ctAccountType();
             this.lbCurrentAccount = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel7 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.btnAddAccount = new ComponentFactory.Krypton.Toolkit.KryptonButton();
-            this.routeType = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
-            this.lbroutetype = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.num = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel4 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.acchodpos = new ComponentFactory.Krypton.Toolkit.KryptonCheckBox();
@@ -45,8 +45,6 @@
             this.ctAgentList1 = new FutsMoniter.ctAgentList();
             this.accexecute = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
             this.kryptonLabel2 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.accountType = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
-            this.lbcategory = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.accountgrid = new ComponentFactory.Krypton.Toolkit.KryptonDataGridView();
             this.kryptonSplitContainer2 = new ComponentFactory.Krypton.Toolkit.KryptonSplitContainer();
             this.kryptonNavigator1 = new ComponentFactory.Krypton.Navigator.KryptonNavigator();
@@ -72,9 +70,7 @@
             this.kryptonSplitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.routeType)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.accexecute)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.accountType)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.accountgrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonSplitContainer2)).BeginInit();
             this.kryptonSplitContainer2.Panel1.SuspendLayout();
@@ -122,11 +118,11 @@
             // 
             // kryptonPanel1
             // 
+            this.kryptonPanel1.Controls.Add(this.ctRouterType1);
+            this.kryptonPanel1.Controls.Add(this.ctAccountType1);
             this.kryptonPanel1.Controls.Add(this.lbCurrentAccount);
             this.kryptonPanel1.Controls.Add(this.kryptonLabel7);
             this.kryptonPanel1.Controls.Add(this.btnAddAccount);
-            this.kryptonPanel1.Controls.Add(this.routeType);
-            this.kryptonPanel1.Controls.Add(this.lbroutetype);
             this.kryptonPanel1.Controls.Add(this.num);
             this.kryptonPanel1.Controls.Add(this.kryptonLabel4);
             this.kryptonPanel1.Controls.Add(this.acchodpos);
@@ -136,13 +132,27 @@
             this.kryptonPanel1.Controls.Add(this.ctAgentList1);
             this.kryptonPanel1.Controls.Add(this.accexecute);
             this.kryptonPanel1.Controls.Add(this.kryptonLabel2);
-            this.kryptonPanel1.Controls.Add(this.accountType);
-            this.kryptonPanel1.Controls.Add(this.lbcategory);
             this.kryptonPanel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.kryptonPanel1.Location = new System.Drawing.Point(0, 0);
             this.kryptonPanel1.Name = "kryptonPanel1";
             this.kryptonPanel1.Size = new System.Drawing.Size(1380, 28);
             this.kryptonPanel1.TabIndex = 31;
+            // 
+            // ctRouterType1
+            // 
+            this.ctRouterType1.EnableAny = true;
+            this.ctRouterType1.Location = new System.Drawing.Point(712, 1);
+            this.ctRouterType1.Name = "ctRouterType1";
+            this.ctRouterType1.Size = new System.Drawing.Size(156, 25);
+            this.ctRouterType1.TabIndex = 17;
+            // 
+            // ctAccountType1
+            // 
+            this.ctAccountType1.EnableAny = true;
+            this.ctAccountType1.Location = new System.Drawing.Point(874, 0);
+            this.ctAccountType1.Name = "ctAccountType1";
+            this.ctAccountType1.Size = new System.Drawing.Size(179, 26);
+            this.ctAccountType1.TabIndex = 16;
             // 
             // lbCurrentAccount
             // 
@@ -172,25 +182,6 @@
             this.btnAddAccount.Size = new System.Drawing.Size(90, 25);
             this.btnAddAccount.TabIndex = 13;
             this.btnAddAccount.Values.Text = "添加帐户";
-            // 
-            // routeType
-            // 
-            this.routeType.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.routeType.DropDownWidth = 121;
-            this.routeType.Location = new System.Drawing.Point(818, 2);
-            this.routeType.Name = "routeType";
-            this.routeType.Size = new System.Drawing.Size(121, 21);
-            this.routeType.TabIndex = 12;
-            this.routeType.Text = "--";
-            // 
-            // lbroutetype
-            // 
-            this.lbroutetype.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lbroutetype.Location = new System.Drawing.Point(744, 3);
-            this.lbroutetype.Name = "lbroutetype";
-            this.lbroutetype.Size = new System.Drawing.Size(68, 18);
-            this.lbroutetype.TabIndex = 11;
-            this.lbroutetype.Values.Text = "路由通道:";
             // 
             // num
             // 
@@ -271,32 +262,13 @@
             this.kryptonLabel2.TabIndex = 2;
             this.kryptonLabel2.Values.Text = "状态:";
             // 
-            // accountType
-            // 
-            this.accountType.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.accountType.DropDownWidth = 121;
-            this.accountType.Location = new System.Drawing.Point(987, 2);
-            this.accountType.Name = "accountType";
-            this.accountType.Size = new System.Drawing.Size(121, 21);
-            this.accountType.TabIndex = 1;
-            this.accountType.Text = "--";
-            // 
-            // lbcategory
-            // 
-            this.lbcategory.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lbcategory.Location = new System.Drawing.Point(945, 4);
-            this.lbcategory.Name = "lbcategory";
-            this.lbcategory.Size = new System.Drawing.Size(41, 18);
-            this.lbcategory.TabIndex = 0;
-            this.lbcategory.Values.Text = "类别:";
-            // 
             // accountgrid
             // 
             this.accountgrid.AllowUserToAddRows = false;
             this.accountgrid.AllowUserToDeleteRows = false;
             this.accountgrid.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.accountgrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.accountgrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle4;
             this.accountgrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
@@ -554,9 +526,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).EndInit();
             this.kryptonPanel1.ResumeLayout(false);
             this.kryptonPanel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.routeType)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.accexecute)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.accountType)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.accountgrid)).EndInit();
             this.kryptonSplitContainer2.Panel1.ResumeLayout(false);
             this.kryptonSplitContainer2.Panel2.ResumeLayout(false);
@@ -590,8 +560,6 @@
         private ComponentFactory.Krypton.Toolkit.KryptonPanel kryptonPanel1;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel7;
         private ComponentFactory.Krypton.Toolkit.KryptonButton btnAddAccount;
-        private ComponentFactory.Krypton.Toolkit.KryptonComboBox routeType;
-        private ComponentFactory.Krypton.Toolkit.KryptonLabel lbroutetype;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel num;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel4;
         private ComponentFactory.Krypton.Toolkit.KryptonCheckBox acchodpos;
@@ -601,8 +569,6 @@
         private ctAgentList ctAgentList1;
         private ComponentFactory.Krypton.Toolkit.KryptonComboBox accexecute;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel2;
-        private ComponentFactory.Krypton.Toolkit.KryptonComboBox accountType;
-        private ComponentFactory.Krypton.Toolkit.KryptonLabel lbcategory;
         private ComponentFactory.Krypton.Toolkit.KryptonDataGridView accountgrid;
         private ComponentFactory.Krypton.Toolkit.KryptonSplitContainer kryptonSplitContainer2;
         private ComponentFactory.Krypton.Navigator.KryptonNavigator kryptonNavigator1;
@@ -623,6 +589,8 @@
         private ComponentFactory.Krypton.Toolkit.KryptonPanel kryptonPanel2;
         private ctFinanceInfo ctFinanceInfo1;
         private ComponentFactory.Krypton.Toolkit.KryptonButton btnQueryFinanceInfo;
+        private Base.ctAccountType ctAccountType1;
+        private Base.ctRouterType ctRouterType1;
 
         //private Telerik.WinControls.UI.RadPageViewPage LottoServicePage;
 

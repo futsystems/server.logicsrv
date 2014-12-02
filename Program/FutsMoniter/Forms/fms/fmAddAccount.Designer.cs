@@ -29,36 +29,41 @@
         private void InitializeComponent()
         {
             this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
+            this.ctRouterGroupList1 = new FutsMoniter.Controls.Base.ctRouterGroupList();
             this.btnAddAccount = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.password = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
             this.account = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
-            this.accountType = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
             this.ctAgentList1 = new FutsMoniter.ctAgentList();
             this.kryptonLabel3 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel2 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.kryptonLabel1 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.ctRouterGroupList1 = new FutsMoniter.Controls.Base.ctRouterGroupList();
+            this.ctAccountType1 = new FutsMoniter.Controls.Base.ctAccountType();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.accountType)).BeginInit();
             this.SuspendLayout();
             // 
             // kryptonPanel1
             // 
+            this.kryptonPanel1.Controls.Add(this.ctAccountType1);
             this.kryptonPanel1.Controls.Add(this.ctRouterGroupList1);
             this.kryptonPanel1.Controls.Add(this.btnAddAccount);
             this.kryptonPanel1.Controls.Add(this.password);
             this.kryptonPanel1.Controls.Add(this.account);
-            this.kryptonPanel1.Controls.Add(this.accountType);
             this.kryptonPanel1.Controls.Add(this.ctAgentList1);
             this.kryptonPanel1.Controls.Add(this.kryptonLabel3);
             this.kryptonPanel1.Controls.Add(this.kryptonLabel2);
-            this.kryptonPanel1.Controls.Add(this.kryptonLabel1);
             this.kryptonPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.kryptonPanel1.Location = new System.Drawing.Point(0, 0);
             this.kryptonPanel1.Name = "kryptonPanel1";
             this.kryptonPanel1.Size = new System.Drawing.Size(253, 219);
             this.kryptonPanel1.TabIndex = 0;
+            // 
+            // ctRouterGroupList1
+            // 
+            this.ctRouterGroupList1.Location = new System.Drawing.Point(24, 126);
+            this.ctRouterGroupList1.Name = "ctRouterGroupList1";
+            this.ctRouterGroupList1.RouterGroudSelected = null;
+            this.ctRouterGroupList1.Size = new System.Drawing.Size(199, 28);
+            this.ctRouterGroupList1.TabIndex = 1;
             // 
             // btnAddAccount
             // 
@@ -83,15 +88,6 @@
             this.account.Name = "account";
             this.account.Size = new System.Drawing.Size(121, 21);
             this.account.TabIndex = 5;
-            // 
-            // accountType
-            // 
-            this.accountType.DropDownWidth = 121;
-            this.accountType.Location = new System.Drawing.Point(86, 12);
-            this.accountType.Name = "accountType";
-            this.accountType.Size = new System.Drawing.Size(121, 21);
-            this.accountType.TabIndex = 4;
-            this.accountType.Text = "--";
             // 
             // ctAgentList1
             // 
@@ -120,21 +116,13 @@
             this.kryptonLabel2.TabIndex = 1;
             this.kryptonLabel2.Values.Text = "帐号:";
             // 
-            // kryptonLabel1
+            // ctAccountType1
             // 
-            this.kryptonLabel1.Location = new System.Drawing.Point(12, 12);
-            this.kryptonLabel1.Name = "kryptonLabel1";
-            this.kryptonLabel1.Size = new System.Drawing.Size(68, 18);
-            this.kryptonLabel1.TabIndex = 0;
-            this.kryptonLabel1.Values.Text = "帐户类别:";
-            // 
-            // ctRouterGroupList1
-            // 
-            this.ctRouterGroupList1.Location = new System.Drawing.Point(24, 126);
-            this.ctRouterGroupList1.Name = "ctRouterGroupList1";
-            this.ctRouterGroupList1.RouterGroudSelected = null;
-            this.ctRouterGroupList1.Size = new System.Drawing.Size(199, 28);
-            this.ctRouterGroupList1.TabIndex = 1;
+            this.ctAccountType1.EnableAny = false;
+            this.ctAccountType1.Location = new System.Drawing.Point(35, 4);
+            this.ctAccountType1.Name = "ctAccountType1";
+            this.ctAccountType1.Size = new System.Drawing.Size(156, 29);
+            this.ctAccountType1.TabIndex = 8;
             // 
             // fmAddAccount
             // 
@@ -152,7 +140,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).EndInit();
             this.kryptonPanel1.ResumeLayout(false);
             this.kryptonPanel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.accountType)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -160,14 +147,13 @@
         #endregion
 
         private ComponentFactory.Krypton.Toolkit.KryptonPanel kryptonPanel1;
-        private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel1;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel2;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel3;
-        private ComponentFactory.Krypton.Toolkit.KryptonComboBox accountType;
         private ctAgentList ctAgentList1;
         private ComponentFactory.Krypton.Toolkit.KryptonTextBox password;
         private ComponentFactory.Krypton.Toolkit.KryptonTextBox account;
         private ComponentFactory.Krypton.Toolkit.KryptonButton btnAddAccount;
         private Controls.Base.ctRouterGroupList ctRouterGroupList1;
+        private Controls.Base.ctAccountType ctAccountType1;
     }
 }

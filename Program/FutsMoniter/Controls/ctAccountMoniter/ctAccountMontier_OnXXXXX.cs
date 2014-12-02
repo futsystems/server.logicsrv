@@ -152,23 +152,23 @@ namespace FutsMoniter.Controls
         }
 
 
-        void OnInitFinished()
-        {
-            if (InvokeRequired)
-            {
-                Invoke(new VoidDelegate(OnInitFinished), new object[] { });
-            }
-            else
-            {
-                //调整非超级管理员试图
-                if (!Globals.Manager.RightRootDomain())
-                {
-                    this.routeType.Visible = false;
-                    this.lbroutetype.Visible = false;
+        //void OnInitFinished()
+        //{
+        //    if (InvokeRequired)
+        //    {
+        //        Invoke(new VoidDelegate(OnInitFinished), new object[] { });
+        //    }
+        //    else
+        //    {
+        //        //调整非超级管理员试图
+        //        if (!Globals.Manager.RightRootDomain())
+        //        {
+        //            this.routeType.Visible = false;
+        //            this.lbroutetype.Visible = false;
 
-                    //accountgrid.Columns[ROUTEIMG].Visible = false;//禁止显示路由列
-                }
-            }
-        }
+        //            //accountgrid.Columns[ROUTEIMG].Visible = false;//禁止显示路由列
+        //        }
+        //    }
+        //}
     }
 }

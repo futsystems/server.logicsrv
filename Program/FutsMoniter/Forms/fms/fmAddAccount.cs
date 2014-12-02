@@ -19,19 +19,20 @@ namespace FutsMoniter
         public fmAddAccount()
         {
             InitializeComponent();
-            Factory.IDataSourceFactory(accountType).BindDataSource(GetAccountTypeCombList());
+            //Factory.IDataSourceFactory(accountType).BindDataSource(MoniterUtil.GetAccountTypeCombList());
             this.Load += new EventHandler(fmAddAccount_Load);
         }
 
         void fmAddAccount_Load(object sender, EventArgs e)
         {
-            accountType.SelectedIndexChanged +=new EventHandler(accountType_SelectedIndexChanged);
-            accountType_SelectedIndexChanged(null, null);
+            //accountType.SelectedIndexChanged +=new EventHandler(accountType_SelectedIndexChanged);
+            ctAccountType1.AccountTypeSelectedChangedEvent += new VoidDelegate(ctAccountType1_AccountTypeSelectedChangedEvent);
+            ctAccountType1_AccountTypeSelectedChangedEvent();
         }
 
-        void accountType_SelectedIndexChanged(object sender, EventArgs e)
+        void ctAccountType1_AccountTypeSelectedChangedEvent()
         {
-            QSEnumAccountCategory cat = (QSEnumAccountCategory)accountType.SelectedValue;
+            QSEnumAccountCategory cat = ctAccountType1.AccountType;
             if (cat == QSEnumAccountCategory.REAL)
             {
                 ctRouterGroupList1.Visible = true;
@@ -42,43 +43,10 @@ namespace FutsMoniter
             }
         }
 
-        /// <summary>
-        /// 返回manger选择项
-        /// 用于创建用户
-        /// </summary>
-        /// <returns></returns>
-        public ArrayList GetAccountTypeCombList(bool all = false, bool includeself = true)
-        {
-            ArrayList list = new ArrayList();
-            if (Globals.UIAccess.acctype_sim)
-            {
-                ValueObject<QSEnumAccountCategory> vo = new ValueObject<QSEnumAccountCategory>();
-                vo.Name = Util.GetEnumDescription(QSEnumAccountCategory.SIMULATION);
-                vo.Value = QSEnumAccountCategory.SIMULATION;
-                list.Add(vo);
-            }
-            if (Globals.UIAccess.acctype_live)
-            {
-                ValueObject<QSEnumAccountCategory> vo = new ValueObject<QSEnumAccountCategory>();
-                vo.Name = Util.GetEnumDescription(QSEnumAccountCategory.REAL);
-                vo.Value = QSEnumAccountCategory.REAL;
-                list.Add(vo);
-            }
-            if (Globals.UIAccess.acctype_dealer)
-            {
-                ValueObject<QSEnumAccountCategory> vo = new ValueObject<QSEnumAccountCategory>();
-                vo.Name = Util.GetEnumDescription(QSEnumAccountCategory.DEALER);
-                vo.Value = QSEnumAccountCategory.DEALER;
-                list.Add(vo);
-            }
-
-            return list;
-        }
-
         private void btnAddAccount_Click(object sender, EventArgs e)
         {
             int grid = 0;
-            QSEnumAccountCategory acccat = (QSEnumAccountCategory)accountType.SelectedValue;
+            QSEnumAccountCategory acccat = ctAccountType1.AccountType;
             try
             {
                 grid = (acccat == QSEnumAccountCategory.REAL ? ctRouterGroupList1.RouterGroudSelected.ID : 0);
