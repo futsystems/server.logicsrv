@@ -406,14 +406,21 @@ namespace TradingLib.Core
 
         #endregion
 
+        public void Start()
+        {
+            Util.StartStatus(this.PROGRAME);
+        }
+
+        public void Stop()
+        {
+            Util.StopStatus(this.PROGRAME);
+        }
 
         public override void Dispose()
         {
-            _posoffsetracker.Dispose();
-
-            debug("RiskCentre Dispose Called",QSEnumDebugLevel.INFO);
+            Util.DestoryStatus(this.PROGRAME);
             base.Dispose();
-
+            _posoffsetracker.Dispose();
             
         }
     }

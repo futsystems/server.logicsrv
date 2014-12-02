@@ -57,5 +57,10 @@ namespace TradingLib.API
         /// 合约
         /// </summary>
         string Symbol { get; set; }
+
+        /// <summary>
+        /// 请求 ID
+        /// </summary>
+        int RequestID { get; set; }
     }
 }

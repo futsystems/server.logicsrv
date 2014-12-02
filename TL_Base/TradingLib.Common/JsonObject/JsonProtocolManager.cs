@@ -320,6 +320,11 @@ namespace TradingLib.Mixins.JsonObject
         /// 分行地址
         /// </summary>
         public string Branch { get; set; }
+
+        /// <summary>
+        /// 域ID
+        /// </summary>
+        public int Domain_ID { get; set; }
     }
 
 
@@ -553,6 +558,8 @@ namespace TradingLib.Mixins.JsonObject
         [PermissionFieldAttr("导航-在线出入金", "方位平台在线出入金平台")]
         public bool nav_finance_payonline { get; set; }
 
+        [PermissionFieldAttr("导航-帐户出入金", "交易帐户出入金请求")]
+        public bool nav_finance_accountcashreq { get; set; }
         /// <summary>
         /// 财务管理-出纳管理
         /// </summary>

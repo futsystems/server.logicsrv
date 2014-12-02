@@ -5,6 +5,7 @@ using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.LitJson;
+using TradingLib.Core;
 
 namespace TradingLib.ServiceManager
 {
@@ -15,12 +16,12 @@ namespace TradingLib.ServiceManager
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("-----------BrokerInterface List--------------" + Environment.NewLine);
-            foreach (ConnectorInterface itface in ConnectorConfigTracker.BrokerInterfaces)
+            foreach (ConnectorInterface itface in BasicTracker.ConnectorConfigTracker.BrokerInterfaces)
             {
                 sb.Append("Type:" + itface.type_name + " XAPI:" + itface.IsXAPI.ToString() + Environment.NewLine);
             }
             sb.Append("-----------DataFeedInterface List--------------" + Environment.NewLine);
-            foreach (ConnectorInterface itface in ConnectorConfigTracker.DataFeedInterfaces)
+            foreach (ConnectorInterface itface in BasicTracker.ConnectorConfigTracker.DataFeedInterfaces)
             {
                 sb.Append("Type:" + itface.type_name + " XAPI:" + itface.IsXAPI.ToString() + Environment.NewLine);
             }
@@ -45,7 +46,7 @@ namespace TradingLib.ServiceManager
         }
 
 
-
+        
 
         [ContribCommandAttr(QSEnumCommandSource.CLI, "startbroker", "startbroker - 启动某个成交通道", "启动某个成交通道")]
         [ContribCommandAttr(QSEnumCommandSource.MessageWeb, "startbroker", "startbroker - 启动某个成交通道", "用于Web端停止某个某个交易通道")]
@@ -177,44 +178,63 @@ namespace TradingLib.ServiceManager
             }
         }
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageWeb, "qryconnector", "qryconnector - 查询所有通道信息与状态", "用于Web端查询查询所有通道信息与状态")]
-        public string QryConnector()
-        {
-            List<ConnectorWrapper> list = new List<ConnectorWrapper>();
-            foreach (IBroker b in brokerInstList.Values)
-            {
-                list.Add(new ConnectorWrapper(b as IConnecter));
-            }
+        //[ContribCommandAttr(QSEnumCommandSource.MessageWeb, "qryconnector", "qryconnector - 查询所有通道信息与状态", "用于Web端查询查询所有通道信息与状态")]
+        //public string QryConnector()
+        //{
+        //    List<ConnectorWrapper> list = new List<ConnectorWrapper>();
+        //    foreach (IBroker b in brokerInstList.Values)
+        //    {
+        //        list.Add(new ConnectorWrapper(b as IConnecter));
+        //    }
 
-            foreach (IDataFeed d in datafeedInstList.Values)
-            {
-                list.Add(new ConnectorWrapper(d as IConnecter));
-            }
+        //    foreach (IDataFeed d in datafeedInstList.Values)
+        //    {
+        //        list.Add(new ConnectorWrapper(d as IConnecter));
+        //    }
 
-            JsonWriter w = ReplyHelper.NewJWriterSuccess();
-            ReplyHelper.FillJWriter(list.ToArray(), w);
-            ReplyHelper.EndWriter(w);
+        //    JsonWriter w = ReplyHelper.NewJWriterSuccess();
+        //    ReplyHelper.FillJWriter(list.ToArray(), w);
+        //    ReplyHelper.EndWriter(w);
 
-            return w.ToString();
-            
-        }
+        //    return w.ToString();
+        //}
 
        
 
-        internal class ConnectorWrapper
+        //internal class ConnectorWrapper
+        //{
+        //    IConnecter connector;
+        //    public ConnectorWrapper(IConnecter c)
+        //    {
+        //        connector = c;
+        //    }
+
+        //    public string Name { get { return connector.Token; } }
+        //    public string ClassName { get { return connector.GetType().FullName; } }
+        //    public bool Status { get { return connector.IsLive; } }
+        //    public string Type { get { return connector is IBroker ? "Broker" : "DataFeed"; } }
+        //}
+
+
+        #region Vendor RouterGroup
+        [ContribCommandAttr(QSEnumCommandSource.CLI, "vendorstatus", "vendorstatus - print status of vendor", "输出某个实盘帐户状态")]
+        public string PrintConnector(int vid)
         {
-            IConnecter connector;
-            public ConnectorWrapper(IConnecter c)
+            StringBuilder sb = new StringBuilder();
+            Vendor vendor = BasicTracker.VendorTracker[vid];
+            if (vendor == null)
             {
-                connector = c;
+                return "vendor:" + vid.ToString() + " do not exist";
             }
-
-            public string Name { get { return connector.Token; } }
-            public string ClassName { get { return connector.GetType().FullName; } }
-            public bool Status { get { return connector.IsLive; } }
-            public string Type { get { return connector is IBroker ? "Broker" : "DataFeed"; } }
-              
+            sb.Append(string.Format("ID:{0} Name:{1} FutCompany:{2} LastEquity:{3}", vendor.ID, vendor.Name, vendor.FutCompany, vendor.LastEquity)+Environment.NewLine);
+            if(vendor.Broker != null)
+            {
+                IBroker broker = vendor.Broker;
+                sb.Append(string.Format("Broker:{0} Margin:{1} RealizedPL:{2} UnRealizedPL:{3}", broker.Token, vendor.CalMargin(), vendor.CalRealizedPL(), vendor.CalUnRealizedPL()));
+            
+            }
+            return sb.ToString();
         }
-
+        #endregion
     }
 }

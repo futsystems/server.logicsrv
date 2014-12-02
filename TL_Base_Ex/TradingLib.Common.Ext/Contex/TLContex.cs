@@ -115,6 +115,10 @@ namespace TradingLib.Common
             return (coreIdUUIDMap.Keys.Contains(coreid.ToUpper()));
         }
 
+        bool IsServiceManagerRegisted(string srvmgrid)
+        {
+            return (serviceMgrIdUUIDMap.Keys.Contains(srvmgrid.ToUpper()));
+        }
         /// <summary>
         /// 通过contribId找到其对应的IContirb插件对象
         /// </summary>
@@ -405,7 +409,7 @@ namespace TradingLib.Common
             Util.Debug("Contirb:" + contribid + " cmd:" + cmd + " args:" + parameters);
             string cmdkey = ContribCommandKey(contribid, cmd);
 
-            if (!IsContribRegisted(contribid) && !IsCoreRegisted(contribid))
+            if (!IsContribRegisted(contribid) && !IsCoreRegisted(contribid) &&!IsServiceManagerRegisted(contribid))
             {
                 debug("Error:Module[" + contribid + "] do not registed");
                 return;
@@ -425,6 +429,7 @@ namespace TradingLib.Common
 
         internal void BindContribEvent()
         {
+            Util.StatusSection("CTX", "CONTRIBEVENT", QSEnumInfoColor.INFOGREEN, true);
             debug("Binding ContribEvent with ContribCommand(Handler)");
             foreach (string key in contribEventMap.Keys)
             {
@@ -530,7 +535,7 @@ namespace TradingLib.Common
                 if (obj is IServiceManager)
                 { 
                     IServiceManager mgr = obj as IServiceManager;
-                    serviceMgrIdUUIDMap.TryRemove(mgr.ServiceMgrName, out uuidremoved);
+                    serviceMgrIdUUIDMap.TryRemove(mgr.ServiceMgrName.ToUpper(), out uuidremoved);
                     UnParseCommandInfo(obj, mgr.ServiceMgrName);
 
                     if (obj is IRouterManager)
@@ -543,7 +548,7 @@ namespace TradingLib.Common
                 if (obj is ICore)
                 {
                     ICore core = obj as ICore;
-                    coreIdUUIDMap.TryRemove(core.CoreId, out uuidremoved);
+                    coreIdUUIDMap.TryRemove(core.CoreId.ToUpper(), out uuidremoved);
 
                     UnParseCommandInfo(obj, core.CoreId);
                 }
@@ -624,7 +629,7 @@ namespace TradingLib.Common
                 if (obj is IServiceManager)
                 {
                     IServiceManager mgr = obj as IServiceManager;
-                    serviceMgrIdUUIDMap.TryAdd(mgr.ServiceMgrName, srvobj.UUID);
+                    serviceMgrIdUUIDMap.TryAdd(mgr.ServiceMgrName.ToUpper(), srvobj.UUID);
                     ParseCommandInfo(obj, mgr.ServiceMgrName);
                     if (obj is IRouterManager)
                     {

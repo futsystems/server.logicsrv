@@ -56,6 +56,8 @@ namespace FutsMoniter.Controls
         const string NAME = "姓名";
         const string POSLOK = "锁仓权限";
         const string DELETE = "DELETE";
+        const string ROUTERGROUP = "Group";
+        const string ROUTERGROUPSTR = "路由组";
 
 
         DataTable gt = new DataTable();
@@ -118,6 +120,8 @@ namespace FutsMoniter.Controls
             gt.Columns.Add(AGENTMGRFK);//21
             gt.Columns.Add(POSLOK);//22
             gt.Columns.Add(DELETE);
+            gt.Columns.Add(ROUTERGROUP);
+            gt.Columns.Add(ROUTERGROUPSTR);
             
         }
 
@@ -317,10 +321,9 @@ namespace FutsMoniter.Controls
             {
                 try
                 {
-                    int r = accountIdx(account.Account);
+                    int r = accountIdx(account.Account);//管理端是以account为唯一键值,应该不会出现重复？？
                     if (r == -1)//datatable不存在该行，我们则增加该行
                     {
-                        //debug("add account row ......................xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:" + account.Account +" lastequity:"+account.LastEquity.ToString(), QSEnumDebugLevel.INFO);
                         gt.Rows.Add(account.Account);
                         int i = gt.Rows.Count - 1;
                         gt.Rows[i][ROUTE] = account.OrderRouteType.ToString();
@@ -331,7 +334,7 @@ namespace FutsMoniter.Controls
                         gt.Rows[i][LOGINSTATUS] = getLoginStatus(false);
                         gt.Rows[i][LOGINSTATUSIMG] = getLoginStatusImage(false);
                         gt.Rows[i][ADDRESS] = "";
-                        gt.Rows[i][LASTEQUITY] = decDisp(account.LastEquity);//decDisp(account.LastEquity);
+                        gt.Rows[i][LASTEQUITY] = decDisp(account.LastEquity);
 
                         gt.Rows[i][NOWEQUITY] = decDisp(account.NowEquity);
                         gt.Rows[i][MARGIN] = decDisp(0);
@@ -349,6 +352,8 @@ namespace FutsMoniter.Controls
                         gt.Rows[i][NAME] = account.Name;
                         gt.Rows[i][POSLOK] = account.PosLock ? "有" : "无";
                         gt.Rows[i][DELETE] = account.Deleted;
+                        gt.Rows[i][ROUTERGROUP] = account.RG_ID;
+
                         accountmap.TryAdd(account.Account, account);
                         accountrowmap.TryAdd(account.Account, i);
                         //debug("got account:" + account.Account, QSEnumDebugLevel.INFO);

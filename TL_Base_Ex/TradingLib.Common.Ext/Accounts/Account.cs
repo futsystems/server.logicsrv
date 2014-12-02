@@ -108,9 +108,19 @@ namespace TradingLib.Common
         public bool PosLock { get; set; }
 
         /// <summary>
-        /// 隶属柜员ID
+        /// 代理商ID
         /// </summary>
         public int Mgr_fk { get; set; }
+
+        /// <summary>
+        /// 路由组ID 用于将某个帐户绑定到某个路由组上面,然后这组用户下单就会下单路由组内的成交接口上
+        /// </summary>
+        public int RG_FK { get; set; }
+
+        /// <summary>
+        /// 域ID
+        /// </summary>
+        public Domain Domain { get; internal set; }
 
         /// <summary>
         /// 与交易帐号所绑定的全局UserID

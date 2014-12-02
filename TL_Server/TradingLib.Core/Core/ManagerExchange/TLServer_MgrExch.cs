@@ -230,41 +230,52 @@ namespace TradingLib.Core
         void SrvOnMGRLoginRequest(MGRLoginRequest request)
         {
             debug("got login request:" + request.ToString(), QSEnumDebugLevel.INFO);
+
             MgrClientInfo clientinfo = _clients[request.ClientID];
             
             bool re = ORM.MManager.ValidManager(request.LoginID, request.Passwd);
 
             RspMGRLoginResponse response = ResponseTemplate<RspMGRLoginResponse>.SrvSendRspResponse(request);
             response.IsLast = true;
-            response.Authorized = re;
+            response.LoginResponse.Authorized = re;
             
             //如果验证通过返回具体的管理信息
-            if (response.Authorized)
+            if (response.LoginResponse.Authorized)
             {
                 //通过登入名在内存中获得对应的Manager对象 然后将该Manager对象的数据复制到ClientInfo上
                 Manager m = BasicTracker.ManagerTracker[request.LoginID];
                 if (m != null)
                 {
-                    response.LoginID = m.Login;
-                    response.Mobile = m.Mobile;
-                    response.Name = m.Name;
-                    response.QQ = m.QQ;
-                    response.ManagerType = m.Type;
-                    response.MGRID = m.ID;//mgrid
-                    response.BaseMGRFK = m.mgr_fk;//主域id
+                    if (m.Domain.DateExpired>0 && m.Domain.DateExpired < Util.ToTLDate())//域过期
+                    {
+                        clientinfo.AuthorizedFail();
+                        response.LoginResponse.Authorized = false;
+                    }
+                    else
+                    {
+                        response.LoginResponse.LoginID = m.Login;
+                        response.LoginResponse.Mobile = m.Mobile;
+                        response.LoginResponse.Name = m.Name;
+                        response.LoginResponse.QQ = m.QQ;
+                        response.LoginResponse.ManagerType = m.Type;
+                        response.LoginResponse.MGRID = m.ID;//mgrid
+                        response.LoginResponse.BaseMGRFK = m.mgr_fk;//主域id
 
-                    //将Manger信息绑定到对应的clientinfo
-                    clientinfo.BindManger(m);
-                    //标注登入成功
-                    clientinfo.AuthorizedSuccess();
+                        //将Manger信息绑定到对应的clientinfo
+                        clientinfo.BindManger(m);
+                        //标注登入成功
+                        clientinfo.AuthorizedSuccess();
 
-                    //获得界面访问权限列表
-                    response.UIAccess = UIAccessTracker.GetUIAccess(m);
+                        //获得界面访问权限列表
+                        response.LoginResponse.UIAccess = UIAccessTracker.GetUIAccess(m);
+                        response.LoginResponse.Domain = m.Domain as DomainImpl;
+                    }
 
                 }
                 else//如果管理端对象在内存中不存在 则返回登入失败
                 {
                     clientinfo.AuthorizedFail();
+                    response.LoginResponse.Authorized = false;
                 }
                 
             }

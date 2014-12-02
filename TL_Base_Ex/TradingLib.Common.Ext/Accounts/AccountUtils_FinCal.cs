@@ -41,6 +41,7 @@ namespace TradingLib.Common
         #endregion
 
 
+
         #region 计算期货财务数据
         public static decimal CalFutMargin(this IAccount account)
         {

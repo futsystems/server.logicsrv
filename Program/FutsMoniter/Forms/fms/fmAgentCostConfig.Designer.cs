@@ -31,15 +31,15 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(fmAgentCostConfig));
             this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
             this.kryptonNavigator1 = new ComponentFactory.Krypton.Navigator.KryptonNavigator();
-            this.kryptonPage1 = new ComponentFactory.Krypton.Navigator.KryptonPage();
+            this.tabfinservice = new ComponentFactory.Krypton.Navigator.KryptonPage();
             this.ctAgentSPArgConfig1 = new FutsMoniter.ctAgentSPArgConfig();
             this.kryptonPage2 = new ComponentFactory.Krypton.Navigator.KryptonPage();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonNavigator1)).BeginInit();
             this.kryptonNavigator1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonPage1)).BeginInit();
-            this.kryptonPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tabfinservice)).BeginInit();
+            this.tabfinservice.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPage2)).BeginInit();
             this.SuspendLayout();
             // 
@@ -61,25 +61,25 @@
             this.kryptonNavigator1.Location = new System.Drawing.Point(0, 0);
             this.kryptonNavigator1.Name = "kryptonNavigator1";
             this.kryptonNavigator1.Pages.AddRange(new ComponentFactory.Krypton.Navigator.KryptonPage[] {
-            this.kryptonPage1,
+            this.tabfinservice,
             this.kryptonPage2});
             this.kryptonNavigator1.SelectedIndex = 0;
             this.kryptonNavigator1.Size = new System.Drawing.Size(754, 376);
             this.kryptonNavigator1.TabIndex = 0;
             this.kryptonNavigator1.Text = "kryptonNavigator1";
             // 
-            // kryptonPage1
+            // tabfinservice
             // 
-            this.kryptonPage1.AutoHiddenSlideSize = new System.Drawing.Size(200, 200);
-            this.kryptonPage1.Controls.Add(this.ctAgentSPArgConfig1);
-            this.kryptonPage1.Flags = 65534;
-            this.kryptonPage1.LastVisibleSet = true;
-            this.kryptonPage1.MinimumSize = new System.Drawing.Size(50, 50);
-            this.kryptonPage1.Name = "kryptonPage1";
-            this.kryptonPage1.Size = new System.Drawing.Size(752, 351);
-            this.kryptonPage1.Text = "配资服务";
-            this.kryptonPage1.ToolTipTitle = "Page ToolTip";
-            this.kryptonPage1.UniqueName = "FE71B6601FDF4A65F997DE7C05BEBACE";
+            this.tabfinservice.AutoHiddenSlideSize = new System.Drawing.Size(200, 200);
+            this.tabfinservice.Controls.Add(this.ctAgentSPArgConfig1);
+            this.tabfinservice.Flags = 65534;
+            this.tabfinservice.LastVisibleSet = true;
+            this.tabfinservice.MinimumSize = new System.Drawing.Size(50, 50);
+            this.tabfinservice.Name = "tabfinservice";
+            this.tabfinservice.Size = new System.Drawing.Size(752, 351);
+            this.tabfinservice.Text = "配资服务";
+            this.tabfinservice.ToolTipTitle = "Page ToolTip";
+            this.tabfinservice.UniqueName = "FE71B6601FDF4A65F997DE7C05BEBACE";
             // 
             // ctAgentSPArgConfig1
             // 
@@ -118,8 +118,8 @@
             this.kryptonPanel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.kryptonNavigator1)).EndInit();
             this.kryptonNavigator1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonPage1)).EndInit();
-            this.kryptonPage1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.tabfinservice)).EndInit();
+            this.tabfinservice.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPage2)).EndInit();
             this.ResumeLayout(false);
 
@@ -129,7 +129,7 @@
 
         private ComponentFactory.Krypton.Toolkit.KryptonPanel kryptonPanel1;
         private ComponentFactory.Krypton.Navigator.KryptonNavigator kryptonNavigator1;
-        private ComponentFactory.Krypton.Navigator.KryptonPage kryptonPage1;
+        private ComponentFactory.Krypton.Navigator.KryptonPage tabfinservice;
         private ComponentFactory.Krypton.Navigator.KryptonPage kryptonPage2;
         private ctAgentSPArgConfig ctAgentSPArgConfig1;
     }

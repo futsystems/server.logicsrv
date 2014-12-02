@@ -70,6 +70,7 @@ namespace TradingLib.Common
                 return pos.LastSettlementPrice;//昨日结算价
             }
         }
+
         /// <summary>
         /// 获得文字输出
         /// </summary>
@@ -78,7 +79,7 @@ namespace TradingLib.Common
         public static string GetPositionDetailStr(this PositionDetail pos)
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append(pos.Account + "-" + pos.Symbol);
+            sb.Append(string.Format("{0}-{1} [{2}]",pos.Account,pos.Symbol,pos.Broker));
             sb.Append(" ");
             sb.Append(" T:" + pos.GetDateTime().ToString());
             sb.Append(" S:" + (pos.Side ? "Long" : "Short"));

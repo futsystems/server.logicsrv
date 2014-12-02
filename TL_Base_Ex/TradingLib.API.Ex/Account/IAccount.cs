@@ -112,6 +112,17 @@ namespace TradingLib.API
         /// </summary>
         int Mgr_fk { get; set; }
 
+
+        /// <summary>
+        /// 路由组ID 用于将某个帐户绑定到某个路由组上面,然后这组用户下单就会下单路由组内的成交接口上
+        /// </summary>
+        int RG_FK { get; set; }
+
+        /// <summary>
+        /// 域ID
+        /// </summary>
+        Domain Domain { get;}
+
         /// <summary>
         /// 该帐号所绑定的全局UserID
         /// </summary>

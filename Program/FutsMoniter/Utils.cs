@@ -12,8 +12,76 @@ namespace FutsMoniter
 {
     public delegate void SymbolImplDel(SymbolImpl sym,bool islast);
 
-    public class Utils
+    public class MoniterUtil
     {
+
+        public static ArrayList GetRouterTypeCombList(bool any = false)
+        {
+            ArrayList list = new ArrayList();
+            if (any)
+            {
+                ValueObject<QSEnumOrderTransferType> vo = new ValueObject<QSEnumOrderTransferType>();
+                vo.Name = "<Any>";
+                vo.Value = (QSEnumOrderTransferType)(Enum.GetValues(typeof(QSEnumOrderTransferType)).GetValue(0));
+                list.Add(vo);
+            }
+            if (Globals.LoginResponse.Domain.Super || (Globals.LoginResponse.Domain.Router_Sim && Globals.UIAccess.acctype_sim))
+            {
+                ValueObject<QSEnumOrderTransferType> vo = new ValueObject<QSEnumOrderTransferType>();
+                vo.Name = Util.GetEnumDescription(QSEnumOrderTransferType.SIM);
+                vo.Value = QSEnumOrderTransferType.SIM;
+                list.Add(vo);
+            }
+            if (Globals.LoginResponse.Domain.Super || (Globals.LoginResponse.Domain.Router_Live&& Globals.UIAccess.acctype_live))
+            {
+                ValueObject<QSEnumOrderTransferType> vo = new ValueObject<QSEnumOrderTransferType>();
+                vo.Name = Util.GetEnumDescription(QSEnumOrderTransferType.LIVE);
+                vo.Value = QSEnumOrderTransferType.LIVE;
+                list.Add(vo);
+            }
+            return list;
+        }
+        /// <summary>
+        /// 返回帐户类别
+        /// </summary>
+        /// <param name="all"></param>
+        /// <param name="includeself"></param>
+        /// <returns></returns>
+        public static ArrayList GetAccountTypeCombList(bool any=false)
+        {
+            ArrayList list = new ArrayList();
+            if (any)
+            {
+                ValueObject<QSEnumAccountCategory> vo = new ValueObject<QSEnumAccountCategory>();
+                vo.Name = "<Any>";
+                vo.Value = (QSEnumAccountCategory)(Enum.GetValues(typeof(QSEnumAccountCategory)).GetValue(0));
+                list.Add(vo);
+            }
+            if (Globals.LoginResponse.Domain.Super || (Globals.LoginResponse.Domain.Router_Sim && Globals.UIAccess.acctype_sim))
+            {
+                ValueObject<QSEnumAccountCategory> vo = new ValueObject<QSEnumAccountCategory>();
+                vo.Name = Util.GetEnumDescription(QSEnumAccountCategory.SIMULATION);
+                vo.Value = QSEnumAccountCategory.SIMULATION;
+                list.Add(vo);
+            }
+            if (Globals.LoginResponse.Domain.Super || (Globals.LoginResponse.Domain.Router_Live && Globals.UIAccess.acctype_live))
+            {
+                ValueObject<QSEnumAccountCategory> vo = new ValueObject<QSEnumAccountCategory>();
+                vo.Name = Util.GetEnumDescription(QSEnumAccountCategory.REAL);
+                vo.Value = QSEnumAccountCategory.REAL;
+                list.Add(vo);
+            }
+
+            if (Globals.UIAccess.acctype_dealer)
+            {
+                ValueObject<QSEnumAccountCategory> vo = new ValueObject<QSEnumAccountCategory>();
+                vo.Name = Util.GetEnumDescription(QSEnumAccountCategory.DEALER);
+                vo.Value = QSEnumAccountCategory.DEALER;
+                list.Add(vo);
+            }
+
+            return list;
+        }
 
         /// <summary>
         /// 使用默认的浏览器打开指定的url地址
@@ -22,7 +90,7 @@ namespace FutsMoniter
         /// <param name="e"></param>
         public static void OpenURL(string url = "http://www.baidu.com")
         {
-            string BrowserPath = Utils.GetDefaultWebBrowserFilePath();
+            string BrowserPath = MoniterUtil.GetDefaultWebBrowserFilePath();
             string gotoUrl = url;
             if (!gotoUrl.StartsWith("http://"))
             {

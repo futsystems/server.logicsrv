@@ -892,11 +892,11 @@ namespace TradingLib.Common
         /// </summary>
         void Unsubscribe_sub(string symbol)
         {
-            if (_mqcli != null && _mqcli.isConnected)
-            {
-                _mqcli.Unsubscribe(symbol);
+            //if (_mqcli != null && _mqcli.isConnected)
+            //{
+            //    _mqcli.Unsubscribe(symbol);
 
-            }
+            //}
         }
         /// <summary>
         /// sub 向 pub注销所有数据请求

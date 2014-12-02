@@ -26,4 +26,42 @@ namespace TradingLib.API
         [Description("致命错误信息")]
         FATAL = 4,//Something failed, and we cannot handle it properly.
     }
+
+    public enum QSEnumInfoColor
+    {
+        /// <summary>
+        /// 白色
+        /// </summary>
+        INFOWHITE,
+
+        /// <summary>
+        /// 红色信息
+        /// </summary>
+        INFOREAD,
+
+        /// <summary>
+        /// 蓝色信息
+        /// </summary>
+        INFOBLUE,
+
+        /// <summary>
+        /// 黄色信息
+        /// </summary>
+        INFOYELLOW,
+
+        /// <summary>
+        /// 灰色
+        /// </summary>
+        INFOGRAY,
+
+        /// <summary>
+        /// 绿色
+        /// </summary>
+        INFOGREEN,
+
+        /// <summary>
+        /// 红色
+        /// </summary>
+        INFODARKRED,
+    }
 }

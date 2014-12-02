@@ -77,7 +77,7 @@ namespace TradingLib.API
         /// <param name="pass"></param>
         /// <param name="type"></param>
         /// <returns></returns>
-        bool AddAccount(out string account, string user_id, string setaccount,string pass, QSEnumAccountCategory type,int mgr_fk);
+       // bool AddAccount(out string account, string user_id, string setaccount,string pass, QSEnumAccountCategory type,int mgr_fk);
 
         /// <summary>
         /// 验证某交易账户
@@ -109,7 +109,6 @@ namespace TradingLib.API
         bool CashOperationSafe(string accid, decimal ammount, string comment, out string msg);
 
 
-        //IEnumerable<Position> GetPositions(string account);
-
+        IEnumerable<Order> SelectRouterOrders();
     }
 }

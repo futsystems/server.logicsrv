@@ -7,6 +7,7 @@ using System.ComponentModel;
 namespace TradingLib.API
 {
 
+    
     public enum QSEnumResumeStatus
     { 
         BEGIN,//开始恢复数据

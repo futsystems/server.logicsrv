@@ -13,7 +13,7 @@ namespace TradingLib.Common
     /// <summary>
     /// 单例对写
     /// </summary>
-    public class PluginHelper
+    public class PluginHelper:IDisposable
     {
         private static PluginHelper DefaultInstance;
         private PluginFinderWrapper wrapper;
@@ -24,12 +24,25 @@ namespace TradingLib.Common
         {
             DefaultInstance = new PluginHelper();
         }
-        public PluginHelper()
+        private PluginHelper()
         {
             this.wrapper = new PluginFinderWrapper();
         }
 
+        public void Dispose()
+        { 
+            
+        }
 
+        public static void DisposeInstance()
+        {
+            //if (DefaultInstance != null)
+            //{
+            //    DefaultInstance.wrapper = null;
+            //    DefaultInstance.Dispose();
+            //    DefaultInstance = null;
+            //}
+        }
 
         public static PluginFinderWrapper GetWrapper()
         {
@@ -170,10 +183,6 @@ namespace TradingLib.Common
         {
             return GetWrapper().GetImplementors(path, needtype);
         }
-        public static void Release()
-        {
-            DefaultInstance.wrapper = null;
-            
-        }
+
     }
 }

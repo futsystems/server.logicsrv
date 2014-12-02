@@ -16,6 +16,7 @@ namespace TradingLib.Common
             this.Password = string.Empty;
             this.UserID = 0;
             this.MgrID = 0;
+            this.RouterGroup_ID = 0;
         }
 
         /// <summary>
@@ -44,6 +45,12 @@ namespace TradingLib.Common
         /// 每个Manager可以开始多个管理帐户，是以Root或Agent标识的管理来跟踪ID
         /// </summary>
         public int MgrID { get; set; }
+
+        /// <summary>
+        /// 路由组，路由组用与实盘帐户交易时 进行成交路由选择
+        /// </summary>
+        public int RouterGroup_ID { get; set; }
+
         public override string ContentSerialize()
         {
             StringBuilder sb = new StringBuilder();
@@ -57,6 +64,8 @@ namespace TradingLib.Common
             sb.Append(this.UserID.ToString());
             sb.Append(d);
             sb.Append(this.MgrID.ToString());
+            sb.Append(d);
+            sb.Append(this.RouterGroup_ID);
             return sb.ToString();
         }
 
@@ -68,6 +77,7 @@ namespace TradingLib.Common
             this.Password = rec[2];
             this.UserID = int.Parse(rec[3]);
             this.MgrID = int.Parse(rec[4]);
+            this.RouterGroup_ID = int.Parse(rec[5]);
         }
     }
 

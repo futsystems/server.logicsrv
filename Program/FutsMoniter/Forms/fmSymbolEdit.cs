@@ -300,7 +300,7 @@ namespace FutsMoniter
                 SecurityFamilyImpl sec = CurrentSecurity;
                 if (sec == null) return;
 
-                symbol.Text = Utils.GenSymbol(sec, month);
+                symbol.Text = MoniterUtil.GenSymbol(sec, month);
             }
             catch (Exception ex)
             {

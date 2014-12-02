@@ -24,16 +24,28 @@ namespace FutsMoniter
             InitTable();
             BindToTable();
 
-            //connectorgird.ContextMenuStrip = menu;
-            menu.Items.Add("启动", null, new EventHandler(StartConnector_Click));
-            menu.Items.Add("停止", null, new EventHandler(StopConnector_Click));
-            //connectorgird.ContextMenuStrip.Items.Add("修改信息", null, new EventHandler(ChangeInvestor_Click));
-            //connectorgird.ContextMenuStrip.Items.Add("历史查询", null, new EventHandler(QryHist_Click));
-
-            connectorgird.CellMouseClick += new DataGridViewCellMouseEventHandler(connectorgird_CellMouseClick);
             this.FormClosing +=new FormClosingEventHandler(fmRouterMoniter_FormClosing);
+            this.Load += new EventHandler(fmRouterMoniter_Load);
         }
 
+        void fmRouterMoniter_Load(object sender, EventArgs e)
+        {
+            WireEvent();
+        }
+
+        void WireEvent()
+        {
+            menu.Items.Add("启动", null, new EventHandler(StartConnector_Click));
+            menu.Items.Add("停止", null, new EventHandler(StopConnector_Click));
+            connectorgird.CellMouseClick += new DataGridViewCellMouseEventHandler(connectorgird_CellMouseClick);
+            connectorgird.RowPrePaint += new DataGridViewRowPrePaintEventHandler(connectorgird_RowPrePaint);
+
+        }
+
+        void connectorgird_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        {
+            e.PaintParts = e.PaintParts ^ DataGridViewPaintParts.Focus;
+        }
         void connectorgird_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (e.Button == System.Windows.Forms.MouseButtons.Right)
@@ -93,7 +105,7 @@ namespace FutsMoniter
                 int row = connectorgird.SelectedRows.Count > 0 ? connectorgird.SelectedRows[0].Index : -1;
                 if (row >= 0)
                 {
-                    return connectorgird[TITIE, row].Value.ToString();
+                    return connectorgird[TOKEN, row].Value.ToString();
                 }
                 else
                 {
@@ -160,9 +172,11 @@ namespace FutsMoniter
                 {
                     gt.Rows.Add(c.Token);
                     int i = gt.Rows.Count - 1;
-                    gt.Rows[i][CLASSNAME] = c.ClassName;
-                    gt.Rows[i][STATUS] = c.Status;
-                    gt.Rows[i][TYPE] = c.Type;
+                    gt.Rows[i][NAME] = c.Name;
+                    gt.Rows[i][TYPE] = Util.GetEnumDescription(c.Type);
+                    gt.Rows[i][STATUS] = c.IsLive;
+                    gt.Rows[i][STATUSIMG] = GetStatusImage(c.IsLive);
+                    
 
                     connectormap.TryAdd(c.Token, c);
                     connectorrowid.TryAdd(c.Token, i);
@@ -170,20 +184,27 @@ namespace FutsMoniter
                 else
                 {
                     //更新状态
-                    gt.Rows[r][STATUS] = c.Status;
+                    gt.Rows[r][STATUS] = c.IsLive;
+                    gt.Rows[r][STATUSIMG] = GetStatusImage(c.IsLive);
                     connectormap[c.Token] = c;
                 }
 
             }
         }
 
+        Image GetStatusImage(bool live)
+        {
+            return live ? (Image)Properties.Resources.start16 : (Image)Properties.Resources.stop16;
+        }
+
         #region 表格
         #region 显示字段
 
-        const string TITIE = "名称";
-        const string CLASSNAME = "对象全名";
-        const string TYPE = "路由类被";
-        const string STATUS = "状态";
+        const string TOKEN = "Token";
+        const string NAME= "名称";
+        const string TYPE = "路由类别";
+        const string STATUS = "Status";
+        const string STATUSIMG = "状态";
 
         #endregion
 
@@ -216,14 +237,11 @@ namespace FutsMoniter
         //初始化Account显示空格
         private void InitTable()
         {
-            gt.Columns.Add(TITIE);//0
-            gt.Columns.Add(CLASSNAME);//1
-            //gt.Columns.Add(TYPE, typeof(Image));//2
-
+            gt.Columns.Add(TOKEN);//0
+            gt.Columns.Add(NAME);//1
             gt.Columns.Add(TYPE);//3
-            //gt.Columns.Add(EXECUTEIMG, typeof(Image));//4
-            //gt.Columns.Add(PROFITLOSSIMG, typeof(Image));//5
             gt.Columns.Add(STATUS);//6
+            gt.Columns.Add(STATUSIMG, typeof(Image));//6
         }
 
         /// <summary>
@@ -234,8 +252,8 @@ namespace FutsMoniter
             ComponentFactory.Krypton.Toolkit.KryptonDataGridView grid = connectorgird;
 
             datasource.DataSource = gt;
-            connectorgird.DataSource = datasource;
-
+            grid.DataSource = datasource;
+            grid.Columns[STATUS].Visible = false;
             /*
             datasource.Sort = ACCOUNT + " ASC";
             
@@ -261,7 +279,7 @@ namespace FutsMoniter
         ContextMenuStrip GetRightMenu()
         {
             ConnectorInfo connector = GetVisibleConnector(CurrentConnector);
-            if (connector.Status)
+            if (connector.IsLive)
             {
                 menu.Items[0].Enabled = false;
                 menu.Items[1].Enabled = true;

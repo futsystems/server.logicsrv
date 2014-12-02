@@ -19,51 +19,48 @@ namespace FutsMoniter
         public fmAddAccount()
         {
             InitializeComponent();
-            Factory.IDataSourceFactory(accountType).BindDataSource(GetAccountTypeCombList());
+            //Factory.IDataSourceFactory(accountType).BindDataSource(MoniterUtil.GetAccountTypeCombList());
+            this.Load += new EventHandler(fmAddAccount_Load);
         }
 
-        /// <summary>
-        /// 返回manger选择项
-        /// 用于创建用户
-        /// </summary>
-        /// <returns></returns>
-        public ArrayList GetAccountTypeCombList(bool all = false, bool includeself = true)
+        void fmAddAccount_Load(object sender, EventArgs e)
         {
-            ArrayList list = new ArrayList();
-            if (Globals.UIAccess.acctype_sim)
-            {
-                ValueObject<QSEnumAccountCategory> vo = new ValueObject<QSEnumAccountCategory>();
-                vo.Name = Util.GetEnumDescription(QSEnumAccountCategory.SIMULATION);
-                vo.Value = QSEnumAccountCategory.SIMULATION;
-                list.Add(vo);
-            }
-            if (Globals.UIAccess.acctype_live)
-            {
-                ValueObject<QSEnumAccountCategory> vo = new ValueObject<QSEnumAccountCategory>();
-                vo.Name = Util.GetEnumDescription(QSEnumAccountCategory.REAL);
-                vo.Value = QSEnumAccountCategory.REAL;
-                list.Add(vo);
-            }
-            if (Globals.UIAccess.acctype_dealer)
-            {
-                ValueObject<QSEnumAccountCategory> vo = new ValueObject<QSEnumAccountCategory>();
-                vo.Name = Util.GetEnumDescription(QSEnumAccountCategory.DEALER);
-                vo.Value = QSEnumAccountCategory.DEALER;
-                list.Add(vo);
-            }
+            //accountType.SelectedIndexChanged +=new EventHandler(accountType_SelectedIndexChanged);
+            ctAccountType1.AccountTypeSelectedChangedEvent += new VoidDelegate(ctAccountType1_AccountTypeSelectedChangedEvent);
+            ctAccountType1_AccountTypeSelectedChangedEvent();
+        }
 
-            return list;
+        void ctAccountType1_AccountTypeSelectedChangedEvent()
+        {
+            QSEnumAccountCategory cat = ctAccountType1.AccountType;
+            if (cat == QSEnumAccountCategory.REAL)
+            {
+                ctRouterGroupList1.Visible = true;
+            }
+            else
+            {
+                ctRouterGroupList1.Visible = false;
+            }
         }
 
         private void btnAddAccount_Click(object sender, EventArgs e)
         {
-            QSEnumAccountCategory acccat = (QSEnumAccountCategory)accountType.SelectedValue;
+            int grid = 0;
+            QSEnumAccountCategory acccat = ctAccountType1.AccountType;
+            try
+            {
+                grid = (acccat == QSEnumAccountCategory.REAL ? ctRouterGroupList1.RouterGroudSelected.ID : 0);
+            }
+            catch (Exception ex)
+            { 
+                
+            }
             string accid = account.Text;
             string pass = password.Text;
             int mgrid = ctAgentList1.CurrentAgentFK;
             if (fmConfirm.Show("确认添加交易帐号?") == System.Windows.Forms.DialogResult.Yes)
             {
-                Globals.TLClient.ReqAddAccount(acccat, accid, pass, mgrid, 0);
+                Globals.TLClient.ReqAddAccount(acccat, accid, pass, mgrid, 0,grid);
                 this.Close();
             }
         }

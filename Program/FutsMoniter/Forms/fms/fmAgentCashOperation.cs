@@ -65,19 +65,6 @@ namespace FutsMoniter
             this.Close();
         }
 
-        //private void cashoptype_SelectedIndexChanged(object sender, Telerik.WinControls.UI.Data.PositionChangedEventArgs e)
-        //{
-        //    if (!loaded) return;
-        //    QSEnumCashOperation op = (QSEnumCashOperation)cashoptype.SelectedValue;
-        //    if (op == QSEnumCashOperation.Deposit)
-        //    {
-        //        message.Visible = false;
-        //    }
-        //    else
-        //    {
-        //        message.Visible = true;
-        //        message.Text = "最大提现额度:" + Util.FormatDecimal(avabile);
-        //    }
-        //}
+       
     }
 }

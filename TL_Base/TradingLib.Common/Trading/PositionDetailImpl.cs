@@ -53,6 +53,10 @@ namespace TradingLib.Common
             this.PositionProfitByTrade = 0;
             this.CloseProfitByDate = 0;
             this.CloseProfitByTrade = 0;
+
+            //默认broker为空,数据来源为分帐户侧
+            this.Broker = string.Empty;
+            this.Breed = QSEnumOrderBreedType.ACCT;
         }
 
         /// <summary>
@@ -343,8 +347,20 @@ namespace TradingLib.Common
         #endregion
 
 
-        
 
+        /// <summary>
+        /// 接口Token如果是接口侧的平仓明细则有BrokerToken字段
+        /// 分帐户侧没有Broker
+        /// </summary>
+        public string Broker { get; set; }
+
+        /// <summary>
+        /// 数据来源
+        /// 1.分帐户侧
+        /// 2.接口侧
+        /// 3.路由侧
+        /// </summary>
+        public QSEnumOrderBreedType Breed { get; set; }
 
         
 

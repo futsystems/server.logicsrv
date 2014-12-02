@@ -68,7 +68,7 @@ namespace TradingLib.Contrib.FinService
 
         public SPBonus()
         {
-            SPNAME = "固定利息";
+            SPNAME = "盈利分红";
             _chargetype = EnumFeeChargeType.BYTime;//按时间收取
             _collecttype = EnumFeeCollectType.CollectAfterSettle;//在系统结算后进行收取当日配资费用
         }

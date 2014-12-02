@@ -104,6 +104,22 @@ namespace TradingLib.Core
             _brokerRouter.GotOrderEvent += new OrderDelegate(_br_GotOrderEvent);
             _brokerRouter.GotOrderErrorEvent += new OrderErrorDelegate(_br_GotOrderErrorEvent);//路由中心返回的委托错误均要通知到清算中心进行委托更新
             //+= new ErrorOrderNotifyDel(_br_GotOrderErrorNotify);
+            _brokerRouter.NewRouterOrderEvent += new OrderDelegate(_br_NewRouterOrderEvent);
+            _brokerRouter.NewRouterOrderUpdateEvent += new OrderDelegate(_br_NewRouterOrderUpdateEvent);
+        }
+
+        public Order SentRouterOrder(long val)
+        {
+            return _brokerRouter.SentRouterOrder(val);
+        }
+        void _br_NewRouterOrderUpdateEvent(Order order)
+        {
+            _clearcentre.LogRouterOrderUpdate(order);
+        }
+
+        void _br_NewRouterOrderEvent(Order order)
+        {
+            _clearcentre.LogRouterOrder(order);
         }
 
         public void UnBindBrokerRouter(BrokerRouter brokerrouter)
@@ -114,6 +130,8 @@ namespace TradingLib.Core
                 _brokerRouter.GotFillEvent -= new FillDelegate(_br_GotFillEvent);
                 _brokerRouter.GotOrderEvent -= new OrderDelegate(_br_GotOrderEvent);
                 _brokerRouter.GotOrderErrorEvent -= new OrderErrorDelegate(_br_GotOrderErrorEvent);
+                _brokerRouter.NewRouterOrderEvent -= new OrderDelegate(_br_NewRouterOrderEvent);
+                _brokerRouter.NewRouterOrderUpdateEvent -= new OrderDelegate(_br_NewRouterOrderUpdateEvent);
             }
             _brokerRouter = null;
         }
@@ -174,22 +192,22 @@ namespace TradingLib.Core
             switch (o.Status)
             { 
                 case QSEnumOrderStatus.Filled:
-                    o.Comment = o.Comment + " " + commentFilled;
+                    o.Comment = string.IsNullOrEmpty(o.Comment)?commentFilled:o.Comment;
                     break;
                 case QSEnumOrderStatus.PartFilled:
-                    o.Comment = o.Comment + " " + commentPartFilled;
+                    o.Comment = string.IsNullOrEmpty(o.Comment)?commentPartFilled:o.Comment;
                     break;
                 case QSEnumOrderStatus.Canceled:
-                    o.Comment = o.Comment + " " + commentCanceled;
+                    o.Comment = string.IsNullOrEmpty(o.Comment)?commentCanceled:o.Comment;
                     break;
                 case QSEnumOrderStatus.Placed:
-                    o.Comment = o.Comment + " " + commentPlaced;
+                    o.Comment = string.IsNullOrEmpty(o.Comment)?commentPlaced:o.Comment;
                     break;
                 case QSEnumOrderStatus.Submited:
-                    o.Comment = o.Comment + " " + commentSubmited;
+                    o.Comment = string.IsNullOrEmpty(o.Comment)?commentSubmited:o.Comment;
                     break;
                 case QSEnumOrderStatus.Opened:
-                    o.Comment = o.Comment + " " + commentOpened;
+                    o.Comment = string.IsNullOrEmpty(o.Comment)?commentOpened:o.Comment;
                     break;
                 default:
                     break;

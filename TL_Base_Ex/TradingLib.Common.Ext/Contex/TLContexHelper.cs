@@ -10,7 +10,7 @@ namespace TradingLib.Common
     /// <summary>
     /// 单例全局上下文
     /// </summary>
-    public class TLCtxHelper
+    public class TLCtxHelper:IDisposable
     {
         private static TLCtxHelper defaultInstance;
         private TLContext ctx;
@@ -42,14 +42,24 @@ namespace TradingLib.Common
             this.m_CashOperationEvent = new CashOperationEvent();
         }
 
-        public static void Release()
+        public void Dispose()
+        { 
+        
+        }
+
+        public static void DisposeInstance()
         {
-            defaultInstance.ctx = null;
-            defaultInstance.m_AccountEvent = null;
-            defaultInstance.m_ExContribEvent = null;
-            defaultInstance.m_IndicatorEvent = null;
-            defaultInstance.m_SessionEvent = null;
-            defaultInstance.m_CashOperationEvent = null;
+            if (defaultInstance != null)
+            {
+                defaultInstance.ctx = null;
+                defaultInstance.m_AccountEvent = null;
+                defaultInstance.m_ExContribEvent = null;
+                defaultInstance.m_IndicatorEvent = null;
+                defaultInstance.m_SessionEvent = null;
+                defaultInstance.m_CashOperationEvent = null;
+                //defaultInstance.Dispose();
+                //defaultInstance = null;
+            }
         }
 
         public static TLContext Ctx

@@ -58,41 +58,50 @@ namespace TradingLib.Common
             return acc.GetPosition(symbol, side);
         }
 
-        /// <summary>
-        /// 检查某个委托对应的未成交委托数量
-        /// </summary>
-        /// <param name="o"></param>
-        /// <returns></returns>
-        //public int getUnfilledSizeExceptStop(Order o)
-        //{
-        //    return _clearcentre.getUnfilledSizeExceptStop(o);
-        //}
 
-        /// <summary>
-        /// 获得与某委托方向相反的未成交委托
-        /// </summary>
-        /// <param name="o"></param>
-        /// <returns></returns>
-        //public long[] getPendingOrders(Order o)
-        //{
-        //    return _clearcentre.getPendingOrders(o);
-        //}
-
-        //public int getPositionHoldSize(string account, string symbol)
-        //{
-        //    return _clearcentre.getPositionHoldSize(account, symbol);
-        //}
-
-        /// <summary>
-        /// 检查某个委托是否是Pending状态，simbroker 如果委托处于pending状态则需要被加载到成交引擎中去
-        /// 
-        /// </summary>
-        /// <param name="o"></param>
-        /// <returns></returns>
-        public bool IsPending(Order o)
+        public Order SentOrder(long id,QSEnumOrderBreedType type = QSEnumOrderBreedType.ACCT)
         {
-            return o.IsPending();
+            if (type == QSEnumOrderBreedType.ACCT)
+            {
+                return _clearcentre.SentOrder(id);
+            }
+            if (type == QSEnumOrderBreedType.ROUTER)
+            {
+                return TLCtxHelper.Ctx.MessageExchange.SentRouterOrder(id);
+            }
+            return null;
         }
+        /// <summary>
+        /// 获得日内成交接口的所有委托
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public IEnumerable<Order> SelectBrokerOrders(string token)
+        {
+            return _clearcentre.SelectBrokerOrders(token);
+        }
+
+
+        /// <summary>
+        /// 获得日内成交接口的所有成交
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public IEnumerable<Trade> SelectBrokerTrades(string token)
+        {
+            return _clearcentre.SelectBrokerTrades(token);
+        }
+
+        /// <summary>
+        /// 获得成交接口上个结算日所有持仓数据
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public IEnumerable<PositionDetail> SelectBrokerPositionDetails(string token)
+        {
+            return _clearcentre.SelectBrokerPositionDetails(token);
+        }
+
     }
 
 

@@ -158,7 +158,7 @@ namespace TradingLib.Core
             
 
             //开发模式每天都有结算,运行模式按照交易日里进行结算
-            debug("结算系统工作模式:" + (GlobalConfig.IsDevelop?"开发模式":"运行模式"), QSEnumDebugLevel.INFO);
+            debug("System running under " + (GlobalConfig.IsDevelop?"develop":"production"), QSEnumDebugLevel.INFO);
 
             IsInSettle = false;
             //从数据库获得上次结算日
@@ -228,18 +228,19 @@ namespace TradingLib.Core
         }
 
         public void Start()
-        { 
-        
+        {
+            Util.StartStatus(this.PROGRAME);
         }
 
         public void Stop()
-        { 
-        
+        {
+            Util.StopStatus(this.PROGRAME);
         }
 
 
         public override void Dispose()
         {
+            Util.DestoryStatus(this.PROGRAME);
             base.Dispose();
         }
 

@@ -22,7 +22,7 @@ namespace FutsMoniter
             BindToTable();
 
             Factory.IDataSourceFactory(cbsecurity).BindDataSource(UIUtil.GetEnumValueObjects<SecurityType>(true));
-            Factory.IDataSourceFactory(cbtradeable).BindDataSource(Utils.GetTradeableCBList(true));
+            Factory.IDataSourceFactory(cbtradeable).BindDataSource(MoniterUtil.GetTradeableCBList(true));
 
             WireEvent();
             //_load = true;
@@ -389,10 +389,10 @@ namespace FutsMoniter
 
         private void btnSyncSymbols_Click(object sender, EventArgs e)
         {
-            fmSyncCTPSymbols fm = new fmSyncCTPSymbols();
-            fm.GotSymbolImplEvent += new FutsMoniter.SymbolImplDel(fm_GotSymbolImplEvent);
-            //fm.ShowDialog();
-            fm.Show();
+            //fmSyncCTPSymbols fm = new fmSyncCTPSymbols();
+            //fm.GotSymbolImplEvent += new FutsMoniter.SymbolImplDel(fm_GotSymbolImplEvent);
+            ////fm.ShowDialog();
+            //fm.Show();
         }
 
         void fm_GotSymbolImplEvent(SymbolImpl sym, bool islast)

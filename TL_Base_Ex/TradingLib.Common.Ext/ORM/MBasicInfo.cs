@@ -160,7 +160,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                const string query = "select a.id, a.name , a.bank_ac ,a.branch ,b.name as bankname from info_receivable_bankac a JOIN info_contract_bank b where a.bank_id = b.id";
+                const string query = "select a.id, a.name , a.bank_ac ,a.branch ,a.domain_id,b.name as bankname from info_receivable_bankac a JOIN info_contract_bank b where a.bank_id = b.id";
                 IEnumerable<JsonWrapperReceivableAccount> result = db.Connection.Query<JsonWrapperReceivableAccount>(query);
                 return result;
             }

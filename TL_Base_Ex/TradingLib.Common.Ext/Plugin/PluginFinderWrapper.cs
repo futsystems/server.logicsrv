@@ -9,7 +9,7 @@ using TradingLib.Common;
 
 namespace TradingLib.Common
 {
-    public class PluginFinderWrapper
+    public class PluginFinderWrapper:IDisposable
     {
         public PluginFinder finder;
         private AppDomain finderDomain;
@@ -35,6 +35,15 @@ namespace TradingLib.Common
                 }
             }
         }
+
+        public void Dispose()
+        {
+            if (finder != null)
+            {
+                finder = null;
+            }
+        }
+
 
         public List<Type> LoadBrokerType()
         {

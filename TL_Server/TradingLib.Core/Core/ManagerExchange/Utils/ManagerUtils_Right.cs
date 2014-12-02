@@ -43,6 +43,8 @@ namespace TradingLib.Core
         /// <returns></returns>
         public static bool RightAccessAccount(this Manager mgr, IAccount account)
         {
+            if (account == null) return false;
+            if (!mgr.Domain.IsAccountInDomain(account)) return false;//不在同一个域
             if (mgr.RightRootDomain()) return true;
             //如果交易帐户直接属于该Manager的域 则有权限
             if (mgr.GetBaseMGR().Equals(account.Mgr_fk))
@@ -57,16 +59,22 @@ namespace TradingLib.Core
             return false;
         }
 
+        public static bool RightAgentParent(this Manager mgr, int mgrfk)
+        {
+            Manager manager = BasicTracker.ManagerTracker[mgrfk];
+            return mgr.RightAgentParent(manager);
+        }
         /// <summary>
         /// 判断mgrfk是否是Manager的子代理或者子子xx代理，代理A对发展的代理A1 以及代理A1发展的代理A11都具有控制权限
         /// </summary>
         /// <param name="mgr"></param>
         /// <param name="mgrkf"></param>
         /// <returns></returns>
-        public static bool RightAgentParent(this Manager mgr, int mgrfk)
+        public static bool RightAgentParent(this Manager mgr, Manager submgr )
         {
-            Manager manager = BasicTracker.ManagerTracker[mgrfk];
-            Manager agent = manager.BaseManager;//获得主域代理
+            if(submgr == null) return false;
+            if(mgr.Domain.IsManagerInDomain(submgr)) return false;//不在同一域
+            Manager agent = submgr.BaseManager;//获得主域代理
 
             if (agent == null) return false;
             while (!agent.RightRootDomain())//只要不是Root域 则进行递归
@@ -94,5 +102,21 @@ namespace TradingLib.Core
             }
             return false;
         }
+
+
+        #region 权限验证 抛出异常
+        public static void ValidRightRead(this Manager mgr, string accid)
+        {
+            IAccount account = TLCtxHelper.CmdAccount[accid];
+            mgr.ValidRightRead(account);
+        }
+
+        public static void ValidRightRead(this Manager mgr, IAccount account)
+        {
+            if (!mgr.RightAccessAccount(account)) throw new FutsRspError("无权查看该帐户");
+        }
+        #endregion
+
+
     }
 }

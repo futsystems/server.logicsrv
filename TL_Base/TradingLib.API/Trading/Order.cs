@@ -274,6 +274,14 @@ namespace TradingLib.API
 
 
         #region 委托分解属性
+
+        /// <summary>
+        /// 委托分解父源
+        /// 表明该委托是分解的那个源的委托
+        /// 如果分帐户侧委托在路由出分解则 则成交侧分解的就是路由侧的委托
+        /// </summary>
+        QSEnumOrderBreedType ?FatherBreed { get; set; }
+
         /// <summary>
         /// 父委托编号
         /// </summary>

@@ -383,7 +383,7 @@ namespace TradingLib.Core
                 //tl = new TLServer_Exch("TradingServer", _cfgdb["TLServerIP"].AsString(), _cfgdb["TLPort"].AsInt());
                 //VerboseDebugging = _cfgdb["VerbDebug"].AsBool();
                 tl.ProviderName = Providers.QSPlatform;
-                tl.NumWorks = 5;
+                tl.NumWorkers = 5;
 
                 //设定日志输出
                 //tl.VerboseDebugging = false;
@@ -455,6 +455,7 @@ namespace TradingLib.Core
 
         public override void Dispose()
         {
+            Util.DestoryStatus(this.PROGRAME);
             base.Dispose();
             tl.Dispose();
             tl = null;
@@ -557,7 +558,8 @@ namespace TradingLib.Core
         /// </summary>
         public void Start()
         {
-            debug("##########启动交易服务###################",QSEnumDebugLevel.INFO);
+            Util.StartStatus(this.PROGRAME);
+            //debug("##########启动交易服务###################",QSEnumDebugLevel.INFO);
             try
             {
                 tl.Start();
@@ -583,8 +585,7 @@ namespace TradingLib.Core
         /// </summary>
         public void Stop()
         {
-            // request thread be stopped
-            debug("##########停止交易服务###################", QSEnumDebugLevel.INFO);
+            Util.StopStatus(this.PROGRAME);
             if (tl != null && tl.IsLive)
             {
                 tl.Stop();

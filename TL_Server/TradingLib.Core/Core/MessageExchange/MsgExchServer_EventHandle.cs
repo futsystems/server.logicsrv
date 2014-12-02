@@ -98,7 +98,7 @@ namespace TradingLib.Core
                 if (o.IsPending())
                 {
                     //如果委托状态表面需要通过broker来取消委托 则通过broker来进行撤单
-                    if (OrderTracker.CanCancel(o))//opened partfilled
+                    if (o.CanCancel())//opened partfilled
                     {
                         _brokerRouter.CancelOrder(o.id);
                     }
@@ -133,6 +133,8 @@ namespace TradingLib.Core
             {
                 bool login = false;
                 debug("Got login request:" + request.LoginID + "|" + request.Passwd +" Type:"+request.LoginType.ToString(), QSEnumDebugLevel.INFO);
+                
+                IAccount account=null;
                 //如果没有用户认证事件的绑定 则调用清算中心的帐号验证进行验证，否则通过认证事件的绑定进行认证
                 if (request.LoginType == 0)
                 {
@@ -153,7 +155,7 @@ namespace TradingLib.Core
                             response.LoginID = request.LoginID;
 
                             debug("logined:" + response.LoginID + " userid:" + response.UserID.ToString(), QSEnumDebugLevel.INFO);
-                            IAccount account = null;
+                            
                             bool servicevalid = true;
                             if (request.ServiceType == 0)
                             {
@@ -196,7 +198,7 @@ namespace TradingLib.Core
                     {
                         response.LoginID = request.LoginID;
                         response.Account = request.LoginID;
-                        IAccount account = _clearcentre[request.LoginID];
+                        account = _clearcentre[request.LoginID];
                         response.AccountType = account.Category;
                     }
                     else
@@ -208,15 +210,15 @@ namespace TradingLib.Core
                 else if (request.LoginType == 2)
                 {
                     string MAC = request.MAC;
-                    string account = _clearcentre.ValidAccountViaMAC(MAC);
-                    if (!string.IsNullOrEmpty(account))
+                    string accid = _clearcentre.ValidAccountViaMAC(MAC);
+                    if (!string.IsNullOrEmpty(accid))
                     {
                         debug("MAC认证通过,MAC:" + MAC + " account:" + account);
                         response.Authorized = true;
                         response.LoginID = MAC;
-                        response.Account = account;
-                        IAccount acc = _clearcentre[account];
-                        response.AccountType = acc.Category;
+                        response.Account = accid;
+                        account = _clearcentre[accid];
+                        response.AccountType = account.Category;
 
                     }
                     else
@@ -231,6 +233,13 @@ namespace TradingLib.Core
                     response.Authorized = false;
                     response.RspInfo.Fill("LOGINTYPE_NOT_SUPPORT");
                 }
+                if (account.Domain.DateExpired > 0 && account.Domain.DateExpired < Util.ToTLDate())//域过期
+                {
+                    clientinfo.AuthorizedFail();
+                    response.Authorized = false;
+                    response.RspInfo.Fill("PLATFORM_EXPIRED");
+                }
+                
                 //对外触发登入事件
                 if (response.Authorized)
                 {
@@ -268,7 +277,7 @@ namespace TradingLib.Core
             }
             else 
             {
-                debug("OrderAction OrderRef:" + action.OrderRef + " Front:" + action.FrontID.ToString() + " Session:" + action.SessionID.ToString() + " OrderSysID:" + action.OrderExchID, QSEnumDebugLevel.INFO);
+                debug("OrderAction OrderRef:" + action.OrderRef + " Front:" + action.FrontID.ToString() + " Session:" + action.SessionID.ToString() + " OrderSysID:" + action.OrderExchID +" OrderRef:"+action.OrderRef +" Request:"+action.RequestID, QSEnumDebugLevel.INFO);
                 foreach (Order tmp in account.Orders)
                 {
                     if ((tmp.OrderRef == action.OrderRef && tmp.FrontIDi == action.FrontID && tmp.SessionIDi == action.SessionID) || (tmp.OrderSysID == action.OrderExchID))
@@ -287,7 +296,7 @@ namespace TradingLib.Core
                     if (o.IsPending())
                     {
                         //如果委托状态表面需要通过broker来取消委托 则通过broker来进行撤单
-                        if (OrderTracker.CanCancel(o))//opened partfilled
+                        if (o.CanCancel())//opened partfilled
                         {
                             //委托操作回报
                             OrderActionNotify notify = ResponseTemplate<OrderActionNotify>.SrvSendNotifyResponse(action.Account);
@@ -296,14 +305,16 @@ namespace TradingLib.Core
                             //通过brokerrouter取消委托
                             _brokerRouter.CancelOrder(o.id);
                         }
-                        else if (o.Status == QSEnumOrderStatus.Submited)//已经通过broker提交 该状态无法立即撤单 需要等待委托状态更新为Opened或者 被定时程序发现是一个错误委托
+                        //处于中间状态Placed或Submited由系统单独逻辑进行定时检查 用于清除处于未知状态的委托
+                        else if (o.Status == QSEnumOrderStatus.Submited || o.Status == QSEnumOrderStatus.Placed)//已经通过broker提交 该状态无法立即撤单 需要等待委托状态更新为Opened或者 被定时程序发现是一个错误委托
                         {
-                            debug("委托:" + o.id.ToString() + "处于Submited,等待broker返回", QSEnumDebugLevel.INFO);
+                            debug(string.Format("委托:{0} 处于:{1},等待broker返回",o.id,o.Status), QSEnumDebugLevel.INFO);
+                            ErrorOrderActionNotify notify = ResponseTemplate<ErrorOrderActionNotify>.SrvSendNotifyResponse(action.Account);
+                            notify.OrderAction = action;
+                            notify.RspInfo.Fill("ORDER_IN_PRESTAGE");
+                            CachePacket(notify);
                         }
-                        else if (o.Status == QSEnumOrderStatus.Placed)//
-                        {
-                            debug("委托:" + o.id.ToString() + "处于Placed,等待系统返回", QSEnumDebugLevel.INFO);
-                        }
+                        
                     }
                     else
                     {

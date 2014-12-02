@@ -293,18 +293,25 @@ namespace TradingLib.Contrib.FinService
         /// <param name="reason"></param>
         protected virtual void FireFlatPosition(string reason)
         {
-            //如果5秒内触发过2此强平信号，则认为该计算是正确的 可以排除第一次计算出现当前权益为负数的情况[待查]
-            if (DateTime.Now.Subtract(_firetime).TotalSeconds < _timediff)
+            try
             {
-                Util.Debug("5秒内触发2次强平信号,执行强平");
-                this.Account.FlatPosition(QSEnumOrderSource.RISKCENTREACCOUNTRULE, "配资服务强平:" + reason);
-                this.Account.InactiveAccount();
+                //如果5秒内触发过2此强平信号，则认为该计算是正确的 可以排除第一次计算出现当前权益为负数的情况[待查]
+                if (DateTime.Now.Subtract(_firetime).TotalSeconds < _timediff)
+                {
+                    Util.Debug("5秒内触发2次强平信号,执行强平");
+                    this.Account.FlatPosition(QSEnumOrderSource.RISKCENTREACCOUNTRULE, "配资服务强平:" + reason);
+                    this.Account.InactiveAccount();
+                }
+                else
+                {
+                    Util.Debug("距离上次触发时间超过5秒,重置触发时间");
+                    //如果离上一次触发大于5秒，则重置促发时间
+                    _firetime = DateTime.Now;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                Util.Debug("距离上次触发时间超过5秒,重置触发时间");
-                //如果离上一次触发大于5秒，则重置促发时间
-                _firetime = DateTime.Now;
+                Util.Debug("ServicePlan flat postion error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
             }
                 
         }

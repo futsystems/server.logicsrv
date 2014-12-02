@@ -15,8 +15,8 @@ namespace FutsMoniter.Controls
         /// </summary>
         void InitQueryAccountControl()
         {
-            Factory.IDataSourceFactory(accountType).BindDataSource(UIUtil.GetEnumValueObjects<QSEnumAccountCategory>(true));
-            Factory.IDataSourceFactory(routeType).BindDataSource(UIUtil.GetEnumValueObjects<QSEnumOrderTransferType>(true));
+            //Factory.IDataSourceFactory(accountType).BindDataSource(MoniterUtil.GetAccountTypeCombList(true));
+            //Factory.IDataSourceFactory(routeType).BindDataSource(MoniterUtil.GetRouterTypeCombList(true));
 
             accexecute.Items.Add("<Any>");
             accexecute.Items.Add("允许");
@@ -30,16 +30,17 @@ namespace FutsMoniter.Controls
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void accountType_SelectedIndexChanged(object sender, EventArgs e)
+        void ctAccountType1_AccountTypeSelectedChangedEvent()
         {
             RefreshAccountQuery();
         }
+
         /// <summary>
         /// 路由类别选择
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void routeType_SelectedIndexChanged(object sender, EventArgs e)
+        void ctRouterType1_RouterTypeSelectedChangedEvent()
         {
             RefreshAccountQuery();
         }
@@ -92,18 +93,18 @@ namespace FutsMoniter.Controls
         {
             if (!_loaded) return;
             string acctype = string.Empty;
-            if (accountType.SelectedIndex == 0)
+            if (ctAccountType1.SelectedIndex == 0)
             {
                 acctype = "*";
             }
             else
             {
-                acctype = accountType.SelectedValue.ToString();
+                acctype = ctAccountType1.AccountType.ToString();
             }
-
+            
             string strFilter = string.Empty;
             //帐户类别
-            if (accountType.SelectedIndex == 0)
+            if (ctAccountType1.SelectedIndex == 0)
             {
                 strFilter = string.Format(CATEGORY + " > '{0}'", acctype);
             }
@@ -115,9 +116,9 @@ namespace FutsMoniter.Controls
             strFilter = string.Format(strFilter + " and " + DELETE + " ='{0}'", false);
 
             //路由
-            if (routeType.SelectedIndex != 0)
+            if (ctRouterType1.SelectedIndex != 0)
             {
-                strFilter = string.Format(strFilter + " and " + ROUTE + " = '{0}'", routeType.SelectedValue.ToString());
+                strFilter = string.Format(strFilter + " and " + ROUTE + " = '{0}'", ctRouterType1.RouterType.ToString());
             }
 
             if (accexecute.SelectedIndex != 0)

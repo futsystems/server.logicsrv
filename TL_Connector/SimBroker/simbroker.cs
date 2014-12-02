@@ -436,6 +436,7 @@ namespace Broker.SIM
                         Trade nf = new TradeImpl(fill);
                         //关于这里复制后再发出order，这里的process循环 fill order. fill是对order的一个引用，后面修改的数据会覆盖到前面的数据,而gotfillevent触发的时候可能是在另外一个线程中
                         //运行的比如发送回client,或者记录信息等。这样就行程了多个线程对一个对象的访问可能会存在数据部同步的问题。
+                        debug("cache fill:" + nf.GetTradeDetail(), QSEnumDebugLevel.WARNING);
                         _fcache.Write(nf);
                     }
                 }
@@ -614,7 +615,52 @@ namespace Broker.SIM
         }
 
 
-        
+        #region 成交接口交易数据
+        /// <summary>
+        /// 获得成交接口所有委托
+        /// </summary>
+        public IEnumerable<Order> Orders { get { return new List<Order>(); } }
+
+        /// <summary>
+        /// 获得成交接口所有成交
+        /// </summary>
+        public IEnumerable<Trade> Trades { get { return new List<Trade>(); } }
+
+        /// <summary>
+        /// 获得成交接口所有持仓
+        /// </summary>
+        public IEnumerable<Position> Positions { get { return new List<Position>(); } }
+
+        /// <summary>
+        /// 返回所有持仓状态统计数据
+        /// </summary>
+        public  IEnumerable<PositionMetric> PositionMetrics { get { return new List<PositionMetric>(); } }
+
+        /// <summary>
+        /// 获得某个合约的持仓状态统计数据
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        public  PositionMetric GetPositionMetric(string symbol)
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// 返回持仓预计调整量
+        /// </summary>
+        /// <param name="o"></param>
+        /// <returns></returns>
+        public  int GetPositionAdjustment(Order o)
+        {
+            if (o.IsEntryPosition)
+                return o.UnsignedSize;
+            else
+                return o.UnsignedSize * -1;
+        }
+
+        #endregion
+
 
 
 
@@ -644,13 +690,13 @@ namespace Broker.SIM
                 {
                     while (_ocache.hasItems)
                     {
-                        //debug("PPT fire order Event.............", QSEnumDebugLevel.INFO);
+                        debug("PPT fire order Event.............", QSEnumDebugLevel.INFO);
                         Order o = _ocache.Read();
                         NotifyOrder(o);
                     }
                     while (!_ocache.hasItems && _fcache.hasItems)
                     {
-                        //debug("PPT fire Trade Event.............", QSEnumDebugLevel.INFO);
+                        debug("PPT fire Trade Event.............", QSEnumDebugLevel.INFO);
                         Trade f = _fcache.Read();
                         NotifyTrade(f);
 
@@ -718,11 +764,21 @@ namespace Broker.SIM
             NotifyDisconnected();
         }
 
+        public void Start()
+        { 
+            string msg = string.Empty;
+            bool success = this.Start(out msg);
+        }
         /*
          注意:在系统托管过程中会停止或重启服务,这里需要注意不能重启多个ptengine或者procout否则会造成数据错误
          */
-        public void Start()
+        public bool Start(out string msg)
         {
+            msg = string.Empty;
+
+            //初始化参数
+            ParseConfigInfo();
+
             //加载配置参数 所有参数用,序列化后放入服务器参数第一字段
             string[] rec = _srvinfo.Field1.Split(',');
             if (rec.Length == 3)
@@ -745,6 +801,7 @@ namespace Broker.SIM
             _working = true;
             Restore();
             NotifyConnected();
+            return true;
         }
 
         public bool IsLive

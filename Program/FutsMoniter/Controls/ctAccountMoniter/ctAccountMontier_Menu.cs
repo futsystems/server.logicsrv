@@ -17,9 +17,12 @@ namespace FutsMoniter.Controls
         {
             accountgrid.ContextMenuStrip = new ContextMenuStrip();
             accountgrid.ContextMenuStrip.Items.Add("编辑账户", Properties.Resources.editAccount, new EventHandler(EditAccount_Click));
+            accountgrid.ContextMenuStrip.Items.Add(new System.Windows.Forms.ToolStripSeparator());
             accountgrid.ContextMenuStrip.Items.Add("修改密码",null, new EventHandler(ChangePass_Click));
             accountgrid.ContextMenuStrip.Items.Add("修改信息", null, new EventHandler(ChangeInvestor_Click));
+            accountgrid.ContextMenuStrip.Items.Add(new System.Windows.Forms.ToolStripSeparator());
             accountgrid.ContextMenuStrip.Items.Add("历史查询", null, new EventHandler(QryHist_Click));
+            accountgrid.ContextMenuStrip.Items.Add(new System.Windows.Forms.ToolStripSeparator());
             accountgrid.ContextMenuStrip.Items.Add("删除帐户", null, new EventHandler(DelAccount_Click));
 
 

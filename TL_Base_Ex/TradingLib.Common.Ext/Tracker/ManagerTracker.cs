@@ -21,6 +21,8 @@ namespace TradingLib.Common
             {
                 managermap[m.Login] = m;
                 mgridmap[m.ID] = m;
+
+                m.Domain = BasicTracker.DomainTracker[m.domain_id];
             }
             foreach (Manager m in mlist)
             {
@@ -49,23 +51,30 @@ namespace TradingLib.Common
             //添加
             if (mgr.ID == 0)
             {
+                
                 ORM.MManager.InsertManager(mgr);
+
                 //添加到内存
                 managermap[mgr.Login] = mgr;
                 mgridmap[mgr.ID] = mgr;
+
+                //绑定BaseManger和ParentManager
                 mgr.BaseManager = this[mgr.mgr_fk];
                 mgr.ParentManager = this[mgr.parent_fk];
+                //绑定域
+                mgr.Domain = BasicTracker.DomainTracker[mgr.domain_id];
             }
             else//更新
             {
                 Manager target = null;
                 if (mgridmap.TryGetValue(mgr.ID, out target))
                 {
-                    target.Type = mgr.Type;
+                    //只能修改Name QQ Mobile AccLimit
                     target.Name = mgr.Name;
                     target.Mobile = mgr.Mobile;
                     target.QQ = mgr.QQ;
                     target.AccLimit = mgr.AccLimit;
+
                     ORM.MManager.UpdateManager(target);
                 }
             }
@@ -80,6 +89,17 @@ namespace TradingLib.Common
         {
             return managermap.Values.Where(m => m.mgr_fk == m.ID);
         }
+
+        /// <summary>
+        /// 所有管理员
+        /// </summary>
+        public IEnumerable<Manager> Managers
+        {
+            get
+            {
+                return managermap.Values;
+            }
+        }
         /// <summary>
         /// 查询某个管理员可以查询的管理员列表
         /// </summary>
@@ -87,9 +107,13 @@ namespace TradingLib.Common
         /// <returns></returns>
         public IEnumerable<Manager> GetManagers(Manager mgr)
         {
-            if (mgr.Type == QSEnumManagerType.ROOT)
+            if (mgr.Type == QSEnumManagerType.SUPERROOT)
             {
                 return managermap.Values;
+            }
+            else if (mgr.Type == QSEnumManagerType.ROOT)
+            {
+                return managermap.Values.Where(m=>m.domain_id == mgr.domain_id);
             }
             else
             { 

@@ -15,7 +15,12 @@ namespace FutsMoniter
         /// </summary>
         void WireRibbon()
         {
+            //系统菜单
             kryptonContextMenuItem_exit.Click += new EventHandler(kryptonContextMenuItem_exit_Click);
+            kryptonContextMenuItem_Domain.Click += new EventHandler(kryptonContextMenuItem_Domain_Click);
+            kryptonContextMenuItem_DomainInfo.Click += new EventHandler(kryptonContextMenuItem_DomainInfo_Click);
+
+
             kryptonRibbonQATButton_debug.Click += new EventHandler(kryptonRibbonQATButton_debug_Click);
             //kryptonContextMenuItem_exit.Click +=new EventHandler(kryptonContextMenuItem_exit_Click);
 
@@ -25,7 +30,8 @@ namespace FutsMoniter
 
             //路由列表
             kryptonRibbonGroupButton_RouterList.Click += new EventHandler(kryptonRibbonGroupButton_RouterList_Click);
-            
+            kryptonRibbonGroupButton_interfacelist.Click += new EventHandler(kryptonRibbonGroupButton_interfacelist_Click);
+            kryptonRibbonGroupButton_connectorlist.Click += new EventHandler(kryptonRibbonGroupButton_connectorlist_Click);
             //系统状态
             kryptonRibbonGroupButton_SystemStatus.Click += new EventHandler(kryptonRibbonGroupButton_SystemStatus_Click);
 
@@ -54,10 +60,37 @@ namespace FutsMoniter
             //财务管理
             kryptonRibbonGroupButton_FinanceManagement.Click += new EventHandler(kryptonRibbonGroupButton_FinanceManagement_Click);
             kryptonRibbonGroupButton_CasherManagement.Click += new EventHandler(kryptonRibbonGroupButton_CasherManagement_Click);
-
+            kryptonRibbonGroupButton_AccountCashreq.Click += new EventHandler(kryptonRibbonGroupButton_AccountCashreq_Click);
 
             kryptonRibbonGroupButton_payonline.Click += new EventHandler(kryptonRibbonGroupButton_payonline_Click);
         }
+
+        void kryptonContextMenuItem_DomainInfo_Click(object sender, EventArgs e)
+        {
+            fmDomainInfo fm = new fmDomainInfo();
+            fm.SetDomain(Globals.LoginResponse.Domain);
+            fm.ShowDialog();
+        }
+
+        void kryptonContextMenuItem_Domain_Click(object sender, EventArgs e)
+        {
+            fmDomain fm = new fmDomain();
+            fm.Show();
+        }
+
+        void kryptonRibbonGroupButton_connectorlist_Click(object sender, EventArgs e)
+        {
+            fmVendorManager fm = new fmVendorManager();
+            fm.Show();
+        }
+
+        void kryptonRibbonGroupButton_interfacelist_Click(object sender, EventArgs e)
+        {
+            fmInterface fm = new fmInterface();
+            fm.Show();
+        }
+
+
 
         void kryptonRibbonGroupButton_QuerySettleAccount_Click(object sender, EventArgs e)
         {
@@ -86,7 +119,7 @@ namespace FutsMoniter
             string url = Globals.Config["CashURL"].AsString();
             if (!string.IsNullOrEmpty(url))
             {
-                Utils.OpenURL(url);
+                MoniterUtil.OpenURL(url);
             }
         }
 
@@ -118,6 +151,13 @@ namespace FutsMoniter
             fmFinanceCentre fm = new fmFinanceCentre();
             fm.Show();
         }
+
+        void kryptonRibbonGroupButton_AccountCashreq_Click(object sender, EventArgs e)
+        {
+            fmAccountCashReq fm = new fmAccountCashReq();
+            fm.Show();
+        }
+
 
         #region 柜员管理
         void kryptonRibbonGroupButton_AgentCost_Click(object sender, EventArgs e)

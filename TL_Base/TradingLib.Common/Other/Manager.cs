@@ -20,6 +20,7 @@ namespace TradingLib.Common
             AccLimit = 0;
             mgr_fk = 0;
             BaseManager = null;
+            domain_id = 0;
 
         }
 
@@ -87,6 +88,15 @@ namespace TradingLib.Common
         /// </summary>
         [NoJsonExportAttr()]
         public Manager ParentManager { get; set; }
+
+        /// <summary>
+        /// 域ID
+        /// </summary>
+        public int domain_id { get; set; }
+
+
+        [NoJsonExportAttr()]
+        public Domain Domain { get; internal set; }
 
         public override string ToString()
         {

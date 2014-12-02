@@ -198,6 +198,19 @@ namespace TradingLib.API
         int CloseVolume { get; }
         #endregion
 
+        //#region 委托分解属性
+        ///// <summary>
+        ///// 父委托编号
+        ///// </summary>
+        //string Broker { get; set; }
+
+        ///// <summary>
+        ///// 委托分解源
+        ///// </summary>
+        //QSEnumOrderBreedType Breed { get; set; }
+
+        //#endregion
+
     }
 
     public class InvalidPosition : Exception {}

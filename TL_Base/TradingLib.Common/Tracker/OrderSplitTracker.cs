@@ -10,7 +10,18 @@ using TradingLib.Common;
 
 namespace TradingLib.Common
 {
-    
+
+    public class FatherSonOrderPair
+    {
+        public FatherSonOrderPair(Order father)
+        {
+            this.FatherOrder = father;
+            this.SonOrders = new List<Order>();
+        }
+        public Order FatherOrder { get; set; }
+
+        public List<Order> SonOrders { get; set; }
+    }
     /// <summary>
     /// 委托分拆管理器
     /// 用于将某个委托分拆成多个委托然后对外处理
@@ -42,6 +53,7 @@ namespace TradingLib.Common
             return null;
         }
 
+
         //用于通过父委托ID找到对应的子委托
         ConcurrentDictionary<long, List<Order>> fatherSonOrder_Map = new ConcurrentDictionary<long, List<Order>>();//父子子委托映射关系
         //通过父委托ID找到对应的子委托对
@@ -64,6 +76,49 @@ namespace TradingLib.Common
             if (sonFathOrder_Map.Keys.Contains(id))
                 return sonFathOrder_Map[id];
             return null;
+        }
+
+        //子委托id与子委托映射
+        ConcurrentDictionary<long, Order> sonOrder_Map = new ConcurrentDictionary<long, Order>();
+        Order SoneID2SonOrder(long id)
+        {
+            if (sonOrder_Map.Keys.Contains(id))
+                return sonOrder_Map[id];
+            return null;
+        }
+
+        /// <summary>
+        /// 获得通过该分解器发送的某个子委托
+        /// </summary>
+        /// <param name="id"></param>
+        public Order SentSonOrder(long id)
+        {
+            return SoneID2SonOrder(id);
+        }
+        /// <summary>
+        /// 清空内存状态
+        /// </summary>
+        public void Clear()
+        {
+            fatherOrder_Map.Clear();
+            fatherSonOrder_Map.Clear();
+            sonFathOrder_Map.Clear();
+            sonOrder_Map.Clear();
+        }
+        /// <summary>
+        /// 恢复父子委托关系
+        /// </summary>
+        /// <param name="father"></param>
+        /// <param name="sonOrders"></param>
+        public void ResumeOrder(FatherSonOrderPair pair)
+        {
+            fatherOrder_Map.TryAdd(pair.FatherOrder.id, pair.FatherOrder);
+            fatherSonOrder_Map.TryAdd(pair.FatherOrder.id, pair.SonOrders);
+            foreach(Order o in pair.SonOrders)
+            {
+                sonFathOrder_Map.TryAdd(o.id, pair.FatherOrder);
+                sonOrder_Map.TryAdd(o.id, o);
+            }
         }
 
         #region 对外发送子委托操作
@@ -148,11 +203,12 @@ namespace TradingLib.Common
         /// 发送父委托
         /// </summary>
         /// <param name="fathOrder"></param>
-        public void SendFatherOrder(Order fathOrder)
+        public void SendFatherOrder(Order fathOrder,List<Order> sons=null)
         {
             Util.Debug("OrderSplitTracker[" + this.Token + "] Send FatherOrder:" + fathOrder.GetOrderInfo(), QSEnumDebugLevel.INFO);
             //1.分拆委托
-            List<Order> sonOrders = SplitOrder(fathOrder);//分拆该委托
+
+            List<Order> sonOrders = (sons==null?SplitOrder(fathOrder):sons);//分拆该委托 如果发送委托时候已经指定了子委托
 
             //2.将委托加入映射map
             fatherOrder_Map.TryAdd(fathOrder.id, fathOrder);//保存付委托映射关系
@@ -220,37 +276,70 @@ namespace TradingLib.Common
             fatherOrder.OrderSysID = fatherOrder.OrderSeq.ToString();//父委托OrderSysID编号 取系统的OrderSeq
 
             //更新父委托状态 成交数量 状态 以及 状态信息
+            int lastfilledsize = fatherOrder.FilledSize;
             fatherOrder.FilledSize = sonOrders.Sum(so => so.FilledSize);//累加成交数量
             fatherOrder.Size = sonOrders.Sum(so => so.UnsignedSize) * (o.Side ? 1 : -1);//累加未成交数量
             //fatherOrder.Comment = "";//填入状态信息
+
+            QSEnumOrderStatus oldstatus = fatherOrder.Status;//原始委托状态
+            bool fillsizechanged = lastfilledsize != fatherOrder.FilledSize;//成交数量变化
             //组合状态
             QSEnumOrderStatus fstatus = fatherOrder.Status;
             //子委托全部成交 则父委托为全部成交
-            if (sonOrders.All(so => so.Status == QSEnumOrderStatus.Filled))
-                fstatus = QSEnumOrderStatus.Filled;
+            //if (sonOrders.All(so => so.Status == QSEnumOrderStatus.Filled))//所有filled则为filled
+            //    fstatus = QSEnumOrderStatus.Filled;
             //子委托任一待成交,则父委托为待成交
-            else if (sonOrders.Any(so => so.Status == QSEnumOrderStatus.Opened))
+            if (sonOrders.Any(so => so.Status == QSEnumOrderStatus.Opened))//任何一个委托为opened则为open
                 fstatus = QSEnumOrderStatus.Opened;
             //子委托全部拒绝,则父委托为拒绝
-            else if (sonOrders.All(so => so.Status == QSEnumOrderStatus.Reject))
+            else if (sonOrders.All(so => so.Status == QSEnumOrderStatus.Reject))//所有拒绝则为拒绝
                 fstatus = QSEnumOrderStatus.Reject;
             //子委托有任一取消,则父委托为取消
-            else if (sonOrders.Any(so => so.Status == QSEnumOrderStatus.Canceled))
+            else if (sonOrders.Any(so => so.Status == QSEnumOrderStatus.Canceled))//任何一个取消则为取消
                 fstatus = QSEnumOrderStatus.Canceled;
             //子委托有一个委托为部分成交
-            else if (sonOrders.Any(so => so.Status == QSEnumOrderStatus.PartFilled))
-            {
-                //另一个委托为取消，则父委托为取消
-                if (sonOrders.Any(so => so.Status == QSEnumOrderStatus.Canceled))
-                    fstatus = QSEnumOrderStatus.Canceled;
+            //else if (sonOrders.Any(so => so.Status == QSEnumOrderStatus.PartFilled))//部分成交
+            //{
+            //    //另一个委托为取消，则父委托为取消
+            //    if (sonOrders.Any(so => so.Status == QSEnumOrderStatus.Canceled))
+            //        fstatus = QSEnumOrderStatus.Canceled;
 
-                //另一个委托为拒绝,则父委托为取消
-                //if (sonOrders.Any(so => so.Status == QSEnumOrderStatus.Reject))
-                fstatus = QSEnumOrderStatus.PartFilled;
-            }
+            //    //另一个委托为拒绝,则父委托为取消
+            //    //if (sonOrders.Any(so => so.Status == QSEnumOrderStatus.Reject))
+            //    fstatus = QSEnumOrderStatus.PartFilled;
+            //}
+
+           
             fatherOrder.Status = fstatus;
+            fatherOrder.Comment = o.Comment;
+            if (fatherOrder.Status != QSEnumOrderStatus.Canceled && fatherOrder.Status != QSEnumOrderStatus.Reject)
+            {
+                Util.Debug("fater order in pending stage,filledsize:" + fatherOrder.FilledSize.ToString() + " totalsize:" + fatherOrder.TotalSize.ToString(), QSEnumDebugLevel.INFO);
+                if (fatherOrder.FilledSize == 0)//成交数量为0 则为open状态
+                {
+                    fatherOrder.Status = QSEnumOrderStatus.Opened;
+                }
+                else if (fatherOrder.FilledSize < Math.Abs(fatherOrder.TotalSize)) //成交数量小于总数量 则为partfilled
+                {
+                    fatherOrder.Status = QSEnumOrderStatus.PartFilled;
+                }
+                else //成交数量等于总数量 则为filled
+                {
+                    fatherOrder.Status = QSEnumOrderStatus.Filled;
+                }
+            }
+
             Util.Debug("更新父委托:" + fatherOrder.GetOrderInfo(), QSEnumDebugLevel.INFO);
-            GotFatherOrder(fatherOrder);
+            //委托状态没有变化 并且 成交数量也没有变化
+            if (oldstatus == fatherOrder.Status && !fillsizechanged)
+            {
+                Util.Debug("FatherOrder do not chagen,will not notify client");
+            }
+            else
+            {
+                GotFatherOrder(fatherOrder);
+            }
+
             if (fatherOrder.Status == QSEnumOrderStatus.Canceled)
             {
                 GotFatherCancel(fatherOrder.id);
@@ -273,6 +362,7 @@ namespace TradingLib.Common
 
             fill.xDate = f.xDate;
             fill.xTime = f.xTime;
+            fill.Broker = f.Broker;
             //远端成交编号
             //fill.BrokerTradeID = trade.BrokerTradeID;
             //其余委托类的相关字段在Order处理中获得

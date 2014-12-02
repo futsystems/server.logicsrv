@@ -41,7 +41,7 @@ namespace TradingLib.Core
             }
 
             tl = new TLServer_MgrExch(_cfgdb["TLServerIP"].AsString(), _cfgdb["TLPort"].AsInt(), false);
-
+            tl.NumWorkers = 1;
             //tl.NumWorkers = 1;
             //tl.EnableTPTracker = false;
 
@@ -72,7 +72,15 @@ namespace TradingLib.Core
         }
 
 
+        public override void Dispose()
+        {
+            Util.DestoryStatus(this.PROGRAME);
+            base.Dispose();
+            tl.Dispose();
+            tl = null;
 
+            StopMessageRouter();
+        }
 
 
 
@@ -83,8 +91,8 @@ namespace TradingLib.Core
         public void Start()
         {
             //StartMessageOut();
-
-            debug("##########启动 Manager Server###################", QSEnumDebugLevel.INFO);
+            Util.StartStatus(this.PROGRAME);
+            //debug("##########启动 Manager Server###################", QSEnumDebugLevel.INFO);
             try
             {
                 tl.Start();
@@ -105,9 +113,7 @@ namespace TradingLib.Core
         }
         public void Stop()
         {
-            //StopMessageRouter();
-
-            debug("#########停止 Manager Server ##########", QSEnumDebugLevel.INFO);
+            Util.StopStatus(this.PROGRAME);
             if (tl != null && tl.IsLive)
             {
                 tl.Stop();

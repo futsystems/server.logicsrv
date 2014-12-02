@@ -22,8 +22,8 @@ namespace FutsMoniter
         public ctOrderSenderM()
         {
             InitializeComponent();
-            Factory.IDataSourceFactory(cboffsetflag).BindDataSource(Utils.GetOffsetCBList());
-            Factory.IDataSourceFactory(cbordertype).BindDataSource(Utils.GetOrderTypeCBList());
+            Factory.IDataSourceFactory(cboffsetflag).BindDataSource(MoniterUtil.GetOffsetCBList());
+            Factory.IDataSourceFactory(cbordertype).BindDataSource(MoniterUtil.GetOrderTypeCBList());
             try
             {
                 WireEvent();
@@ -68,7 +68,9 @@ namespace FutsMoniter
         public void SetSymbol(Symbol sym)
         {
             _symbol = sym;
-            symbol.Text = _symbol.Symbol; 
+            symbol.Text = _symbol.Symbol;
+            int decimalplace = Util.GetDecimalPlace(sym.SecurityFamily.PriceTick);
+            price.DecimalPlaces = decimalplace;
         }
 
         private void btnBuy_Click(object sender, EventArgs e)

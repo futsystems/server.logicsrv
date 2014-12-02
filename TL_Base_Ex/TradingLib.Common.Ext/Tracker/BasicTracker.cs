@@ -7,7 +7,7 @@ using TradingLib.API;
 
 namespace TradingLib.Common
 {
-    public class BasicTracker
+    public class BasicTracker:IDisposable
     {
 
         static BasicTracker defaultinstance;
@@ -20,6 +20,12 @@ namespace TradingLib.Common
 
         DBContractBankTracker banktracker;
 
+        RouterGrouperTracker rgtracker;
+        VendorTracker vendortracker;
+
+        DomainTracker domaintracker;
+
+        ConnectorConfigTracker connectorcfgtracker;
         static BasicTracker()
         {
             defaultinstance = new BasicTracker();
@@ -30,6 +36,25 @@ namespace TradingLib.Common
         
         }
 
+        public void Dispose()
+        {
+            // Do something here
+            Util.Debug("xxxxxxxxx basictracker disposed.....");
+        }
+
+        public static void DisposeInstance()
+        {
+            if (defaultinstance != null)
+            {
+                defaultinstance.extracker = null;
+                defaultinstance.mktimetracker = null;
+                defaultinstance.setracker = null;
+                defaultinstance.symtracker = null;
+                defaultinstance.rgtracker = null;
+                defaultinstance.Dispose();
+                defaultinstance = null;
+            }
+        }
         /// <summary>
         /// 管理员对象管理器
         /// </summary>
@@ -107,12 +132,63 @@ namespace TradingLib.Common
             }
         }
 
-        public static void Release()
+        /// <summary>
+        /// 获得路由组维护器
+        /// </summary>
+        public static RouterGrouperTracker RouterGroupTracker
         {
-            defaultinstance.extracker = null;
-            defaultinstance.mktimetracker = null;
-            defaultinstance.setracker = null;
-            defaultinstance.symtracker = null;
+            get
+            {
+                if (defaultinstance.rgtracker == null)
+                    defaultinstance.rgtracker = new RouterGrouperTracker();
+                return defaultinstance.rgtracker;
+            }
         }
+
+        /// <summary>
+        /// 获得实盘帐户维护器
+        /// </summary>
+        public static VendorTracker VendorTracker
+        {
+            get
+            {
+                if (defaultinstance.vendortracker == null)
+                    defaultinstance.vendortracker = new VendorTracker();
+                return defaultinstance.vendortracker;
+            }
+        }
+
+        /// <summary>
+        /// 域维护器
+        /// </summary>
+        public static DomainTracker DomainTracker
+        {
+            get
+            {
+                if (defaultinstance.domaintracker == null)
+                    defaultinstance.domaintracker = new DomainTracker();
+                return defaultinstance.domaintracker;
+            }
+        }
+
+        /// <summary>
+        /// 通道参数维护器
+        /// </summary>
+        public static ConnectorConfigTracker ConnectorConfigTracker
+        {
+            get
+            {
+                if (defaultinstance.connectorcfgtracker == null)
+                    defaultinstance.connectorcfgtracker = new ConnectorConfigTracker();
+                return defaultinstance.connectorcfgtracker;
+            }
+        }
+        //public static void Release()
+        //{
+        //    defaultinstance.extracker = null;
+        //    defaultinstance.mktimetracker = null;
+        //    defaultinstance.setracker = null;
+        //    defaultinstance.symtracker = null;
+        //}
     }
 }

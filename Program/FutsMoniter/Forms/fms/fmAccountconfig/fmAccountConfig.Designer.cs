@@ -35,10 +35,6 @@
             this.btnExecute = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.kryptonGroupBox1 = new ComponentFactory.Krypton.Toolkit.KryptonGroupBox();
             this.btnUpdate = new ComponentFactory.Krypton.Toolkit.KryptonButton();
-            this.routeType = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
-            this.kryptonLabel4 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.accountType = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
-            this.kryptonLabel3 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.poslock = new ComponentFactory.Krypton.Toolkit.KryptonCheckBox();
             this.kryptonLabel2 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel1 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
@@ -47,6 +43,7 @@
             this.kryptonPanel3 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
             this.kryptonGroupBox3 = new ComponentFactory.Krypton.Toolkit.KryptonGroupBox();
             this.btnUpdateAccountInfo = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.ctFinanceInfo1 = new FutsMoniter.ctFinanceInfo();
             this.kryptonGroupBox2 = new ComponentFactory.Krypton.Toolkit.KryptonGroupBox();
             this.btnCashOperation = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.cashop_comment = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
@@ -74,9 +71,8 @@
             this.accountRuleClassList = new ComponentFactory.Krypton.Toolkit.KryptonListBox();
             this.accountRuleItemList = new ComponentFactory.Krypton.Toolkit.KryptonListBox();
             this.pageMarginCommission = new ComponentFactory.Krypton.Navigator.KryptonPage();
-            this.panelAccCategory = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
-            this.panelRouter = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
-            this.ctFinanceInfo1 = new FutsMoniter.ctFinanceInfo();
+            this.ctAccountType1 = new FutsMoniter.Controls.Base.ctAccountType();
+            this.ctRouterType1 = new FutsMoniter.Controls.Base.ctRouterType();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pagenav)).BeginInit();
@@ -88,8 +84,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.kryptonGroupBox1)).BeginInit();
             this.kryptonGroupBox1.Panel.SuspendLayout();
             this.kryptonGroupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.routeType)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.accountType)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pageFinance)).BeginInit();
             this.pageFinance.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel3)).BeginInit();
@@ -110,10 +104,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel5)).BeginInit();
             this.kryptonPanel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pageMarginCommission)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.panelAccCategory)).BeginInit();
-            this.panelAccCategory.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.panelRouter)).BeginInit();
-            this.panelRouter.SuspendLayout();
             this.SuspendLayout();
             // 
             // kryptonPanel1
@@ -186,8 +176,8 @@
             // 
             // kryptonGroupBox1.Panel
             // 
-            this.kryptonGroupBox1.Panel.Controls.Add(this.panelRouter);
-            this.kryptonGroupBox1.Panel.Controls.Add(this.panelAccCategory);
+            this.kryptonGroupBox1.Panel.Controls.Add(this.ctRouterType1);
+            this.kryptonGroupBox1.Panel.Controls.Add(this.ctAccountType1);
             this.kryptonGroupBox1.Panel.Controls.Add(this.btnUpdate);
             this.kryptonGroupBox1.Panel.Controls.Add(this.poslock);
             this.kryptonGroupBox1.Panel.Controls.Add(this.kryptonLabel2);
@@ -206,38 +196,6 @@
             this.btnUpdate.Size = new System.Drawing.Size(70, 25);
             this.btnUpdate.TabIndex = 8;
             this.btnUpdate.Values.Text = "更 新";
-            // 
-            // routeType
-            // 
-            this.routeType.DropDownWidth = 127;
-            this.routeType.Location = new System.Drawing.Point(75, 0);
-            this.routeType.Name = "routeType";
-            this.routeType.Size = new System.Drawing.Size(127, 21);
-            this.routeType.TabIndex = 7;
-            // 
-            // kryptonLabel4
-            // 
-            this.kryptonLabel4.Location = new System.Drawing.Point(0, 3);
-            this.kryptonLabel4.Name = "kryptonLabel4";
-            this.kryptonLabel4.Size = new System.Drawing.Size(68, 18);
-            this.kryptonLabel4.TabIndex = 6;
-            this.kryptonLabel4.Values.Text = "路由类别:";
-            // 
-            // accountType
-            // 
-            this.accountType.DropDownWidth = 127;
-            this.accountType.Location = new System.Drawing.Point(78, 4);
-            this.accountType.Name = "accountType";
-            this.accountType.Size = new System.Drawing.Size(127, 21);
-            this.accountType.TabIndex = 5;
-            // 
-            // kryptonLabel3
-            // 
-            this.kryptonLabel3.Location = new System.Drawing.Point(3, 7);
-            this.kryptonLabel3.Name = "kryptonLabel3";
-            this.kryptonLabel3.Size = new System.Drawing.Size(68, 18);
-            this.kryptonLabel3.TabIndex = 4;
-            this.kryptonLabel3.Values.Text = "帐户类别:";
             // 
             // poslock
             // 
@@ -323,6 +281,13 @@
             this.btnUpdateAccountInfo.Size = new System.Drawing.Size(87, 33);
             this.btnUpdateAccountInfo.TabIndex = 1;
             this.btnUpdateAccountInfo.Values.Text = "刷 新";
+            // 
+            // ctFinanceInfo1
+            // 
+            this.ctFinanceInfo1.Location = new System.Drawing.Point(1, 3);
+            this.ctFinanceInfo1.Name = "ctFinanceInfo1";
+            this.ctFinanceInfo1.Size = new System.Drawing.Size(347, 163);
+            this.ctFinanceInfo1.TabIndex = 0;
             // 
             // kryptonGroupBox2
             // 
@@ -581,30 +546,21 @@
             this.pageMarginCommission.ToolTipTitle = "Page ToolTip";
             this.pageMarginCommission.UniqueName = "CB1FD1C4F2D74E6E96BD0F2D1DC08E66";
             // 
-            // panelAccCategory
+            // ctAccountType1
             // 
-            this.panelAccCategory.Controls.Add(this.kryptonLabel3);
-            this.panelAccCategory.Controls.Add(this.accountType);
-            this.panelAccCategory.Location = new System.Drawing.Point(7, 57);
-            this.panelAccCategory.Name = "panelAccCategory";
-            this.panelAccCategory.Size = new System.Drawing.Size(218, 31);
-            this.panelAccCategory.TabIndex = 10;
+            this.ctAccountType1.EnableAny = false;
+            this.ctAccountType1.Location = new System.Drawing.Point(33, 59);
+            this.ctAccountType1.Name = "ctAccountType1";
+            this.ctAccountType1.Size = new System.Drawing.Size(156, 29);
+            this.ctAccountType1.TabIndex = 0;
             // 
-            // panelRouter
+            // ctRouterType1
             // 
-            this.panelRouter.Controls.Add(this.kryptonLabel4);
-            this.panelRouter.Controls.Add(this.routeType);
-            this.panelRouter.Location = new System.Drawing.Point(7, 94);
-            this.panelRouter.Name = "panelRouter";
-            this.panelRouter.Size = new System.Drawing.Size(219, 24);
-            this.panelRouter.TabIndex = 10;
-            // 
-            // ctFinanceInfo1
-            // 
-            this.ctFinanceInfo1.Location = new System.Drawing.Point(1, 3);
-            this.ctFinanceInfo1.Name = "ctFinanceInfo1";
-            this.ctFinanceInfo1.Size = new System.Drawing.Size(347, 163);
-            this.ctFinanceInfo1.TabIndex = 0;
+            this.ctRouterType1.EnableAny = false;
+            this.ctRouterType1.Location = new System.Drawing.Point(11, 87);
+            this.ctRouterType1.Name = "ctRouterType1";
+            this.ctRouterType1.Size = new System.Drawing.Size(156, 27);
+            this.ctRouterType1.TabIndex = 9;
             // 
             // fmAccountConfig
             // 
@@ -631,8 +587,6 @@
             this.kryptonGroupBox1.Panel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonGroupBox1)).EndInit();
             this.kryptonGroupBox1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.routeType)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.accountType)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pageFinance)).EndInit();
             this.pageFinance.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel3)).EndInit();
@@ -657,12 +611,6 @@
             this.kryptonPanel5.ResumeLayout(false);
             this.kryptonPanel5.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pageMarginCommission)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.panelAccCategory)).EndInit();
-            this.panelAccCategory.ResumeLayout(false);
-            this.panelAccCategory.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.panelRouter)).EndInit();
-            this.panelRouter.ResumeLayout(false);
-            this.panelRouter.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -682,10 +630,6 @@
         private ComponentFactory.Krypton.Toolkit.KryptonCheckBox intraday;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel2;
         private ComponentFactory.Krypton.Toolkit.KryptonCheckBox poslock;
-        private ComponentFactory.Krypton.Toolkit.KryptonComboBox routeType;
-        private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel4;
-        private ComponentFactory.Krypton.Toolkit.KryptonComboBox accountType;
-        private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel3;
         private ComponentFactory.Krypton.Toolkit.KryptonButton btnUpdate;
         private ComponentFactory.Krypton.Toolkit.KryptonButton btnExecute;
         private ComponentFactory.Krypton.Toolkit.KryptonPanel kryptonPanel3;
@@ -716,7 +660,7 @@
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel12;
         private ComponentFactory.Krypton.Toolkit.KryptonListBox accountRuleClassList;
         private ComponentFactory.Krypton.Toolkit.KryptonListBox accountRuleItemList;
-        private ComponentFactory.Krypton.Toolkit.KryptonPanel panelAccCategory;
-        private ComponentFactory.Krypton.Toolkit.KryptonPanel panelRouter;
+        private Controls.Base.ctRouterType ctRouterType1;
+        private Controls.Base.ctAccountType ctAccountType1;
     }
 }
