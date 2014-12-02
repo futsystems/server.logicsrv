@@ -84,6 +84,7 @@ namespace FutsMoniter
             Globals.CallBackCentre.RegisterCallback("ConnectorManager", "QryInterface", this.OnQryInterface);
             Globals.CallBackCentre.RegisterCallback("ConnectorManager", "NotifyConnectorCfg", this.OnNotifyConnectorConfig);
             Globals.CallBackCentre.RegisterCallback("MgrExchServer", "NotifyVendor", this.OnNotifyVendorBind);
+            Globals.CallBackCentre.RegisterCallback("ConnectorManager", "NotifyVendor", this.OnNotifyVendorBind);
             Globals.CallBackCentre.RegisterCallback("ConnectorManager", "NotifyRouterItem", this.OnNotifyRouterItem);
             Globals.CallBackCentre.RegisterCallback("ConnectorManager", "NotifyRouterGroup", this.OnNotifyRouterGroup);
 
@@ -98,7 +99,8 @@ namespace FutsMoniter
             Globals.CallBackCentre.UnRegisterCallback("ConnectorManager", "NotifyConnectorCfg", this.OnNotifyConnectorConfig);
             Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "NotifyVendor", this.OnNotifyVendorBind);
             Globals.CallBackCentre.UnRegisterCallback("ConnectorManager", "NotifyRouterItem", this.OnNotifyRouterItem);
-
+            Globals.CallBackCentre.UnRegisterCallback("ConnectorManager", "NotifyVendor", this.OnNotifyVendorBind);
+            
         }
 
         ConnectorInterface ID2Interface(int id)
@@ -151,6 +153,7 @@ namespace FutsMoniter
         {
             e.PaintParts = e.PaintParts ^ DataGridViewPaintParts.Focus;
         }
+
 
 
 

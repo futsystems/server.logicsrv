@@ -87,9 +87,9 @@ namespace TradingLib.Common
                 target.QQ = domain.QQ;
 
                 //target.Super = domain.Super;
-                target.DateExpired = target.DateExpired;
+                target.DateExpired = domain.DateExpired;
 
-                target.AccLimit = target.AccLimit;
+                target.AccLimit = domain.AccLimit;
                 target.RouterGroupLimit = domain.RouterGroupLimit;
                 target.RouterItemLimit = domain.RouterItemLimit;
                 target.InterfaceList = domain.InterfaceList;

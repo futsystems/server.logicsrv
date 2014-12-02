@@ -154,7 +154,7 @@ namespace FutsMoniter
                     itemgt.Rows[i][ITEMVENDOR] = GetVendorTitle(item.vendor_id);
                     itemgt.Rows[i][RULE] = item.rule;
                     itemgt.Rows[i][PRIORITY] = item.priority;
-                    itemgt.Rows[i][ACTIVE] = item.Active?"激活":"冻结";
+                    itemgt.Rows[i][ACTIVE] = item.Active ? "允许" : "禁止";
 
 
 
@@ -167,7 +167,7 @@ namespace FutsMoniter
                     itemgt.Rows[r][ITEMVENDOR] = GetVendorTitle(item.vendor_id);
                     itemgt.Rows[r][RULE] = item.rule;
                     itemgt.Rows[r][PRIORITY] = item.priority;
-                    itemgt.Rows[r][ACTIVE] = item.Active ? "激活" : "冻结";
+                    itemgt.Rows[r][ACTIVE] = item.Active ? "允许" : "禁止";
                     itemmap[item.ID] = item;
                 }
 
@@ -178,7 +178,10 @@ namespace FutsMoniter
             RouterGroupSetting group = ctRouterGroupList1.RouterGroudSelected;
             group.Strategy = (QSEnumRouterStrategy)cbrgstrategytype.SelectedValue;
             group.Description = rgdescrption.Text;
-            
+            if (fmConfirm.Show("确认更新路由组信息?") == System.Windows.Forms.DialogResult.Yes)
+            {
+                Globals.TLClient.ReqUpdateRouterGroup(group);
+            }
         }
 
         #region 表格
@@ -189,7 +192,7 @@ namespace FutsMoniter
         const string ITEMVENDOR = "帐户";
         const string RULE = "规则";
         const string PRIORITY = "优先级";
-        const string ACTIVE = "激活";
+        const string ACTIVE = "允许开仓";
 
 
         #endregion
@@ -219,9 +222,12 @@ namespace FutsMoniter
             grid.StateCommon.Background.Color2 = Color.WhiteSmoke;
 
             grid.ContextMenuStrip = new ContextMenuStrip();
+           
+            
+            grid.ContextMenuStrip.Items.Add("添加路由组", null, new EventHandler(AddRouterGroup_Click));
+            grid.ContextMenuStrip.Items.Add(new System.Windows.Forms.ToolStripSeparator());
             grid.ContextMenuStrip.Items.Add("添加路由", null, new EventHandler(AddRouterItem_Click));
             grid.ContextMenuStrip.Items.Add("修改路由", null, new EventHandler(EditRouterItem_Click));
-            grid.ContextMenuStrip.Items.Add("添加路由组", null, new EventHandler(AddRouterGroup_Click));
 
         }
 

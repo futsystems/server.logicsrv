@@ -99,7 +99,7 @@
             this.kryptonPage3,
             this.kryptonPage1,
             this.pageroutergroup});
-            this.tabholder.SelectedIndex = 0;
+            this.tabholder.SelectedIndex = 2;
             this.tabholder.Size = new System.Drawing.Size(757, 277);
             this.tabholder.TabIndex = 0;
             this.tabholder.Text = "kryptonNavigator1";
@@ -294,6 +294,7 @@
             this.btnUpdateRouterGroup.Size = new System.Drawing.Size(67, 25);
             this.btnUpdateRouterGroup.TabIndex = 8;
             this.btnUpdateRouterGroup.Values.Text = "更新";
+            this.btnUpdateRouterGroup.Click += new System.EventHandler(this.btnUpdateRouterGroup_Click);
             // 
             // kryptonGroupBox1
             // 

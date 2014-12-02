@@ -116,6 +116,10 @@ namespace TradingLib.Common
         {
             return routeritemmap.Values.Where(r => r.Vendor != null).Select(r => r.Vendor);
         }
+        public IEnumerable<Vendor> GetVendorsForOpen()
+        {
+            return routeritemmap.Values.Where(r => r.Active).Where(r => r.Vendor != null).Select(r => r.Vendor);
+        }
 
         /// <summary>
         /// 按优先级别排序获得RouterItem中的Vendor
@@ -148,7 +152,7 @@ namespace TradingLib.Common
         IBroker StochasticBroker(Order o, decimal margintouse)
         {
             //目前实现优随机可用选择
-            IBroker[] brokers = GetVendors().Where(v => v.IsBrokerAvabile()).Where(v => v.AcceptEntryOrder(o, margintouse)).Select(v => v.Broker).ToArray();
+            IBroker[] brokers = GetVendorsForOpen().Where(v => v.IsBrokerAvabile()).Where(v => v.AcceptEntryOrder(o, margintouse)).Select(v => v.Broker).ToArray();
             if (brokers.Length < 1)
             {
                 return null;
@@ -160,7 +164,7 @@ namespace TradingLib.Common
 
         IBroker PriorityBroker(Order o, decimal margintouse)
         {
-            IBroker[] brokers = GetVendorsSorted().Where(v => v.IsBrokerAvabile()).Where(v => v.AcceptEntryOrder(o, margintouse)).Select(v => v.Broker).ToArray();
+            IBroker[] brokers = GetVendorsForOpen().Where(v => v.IsBrokerAvabile()).Where(v => v.AcceptEntryOrder(o, margintouse)).Select(v => v.Broker).ToArray();
             if (brokers.Length < 1)
             {
                 return null;

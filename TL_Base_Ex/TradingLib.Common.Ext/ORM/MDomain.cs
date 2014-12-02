@@ -37,6 +37,7 @@ namespace TradingLib.ORM
             using (DBMySql db = new DBMySql())
             {
                 string query = String.Format("Insert into domain (`name`,`linkman`,`mobile`,`qq`,`email`,`dateexpired`,`acclimit`,`routergrouplimit`,`routeritemlimit`,`datecreated`,`interfacelist`,`module_agent`,`module_finservice`,`module_payonline`,`router_live`,`router_sim`) VALUES ('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}')", domain.Name, domain.LinkMan, domain.Mobile, domain.QQ, domain.Email, domain.DateExpired, domain.AccLimit, domain.RouterGroupLimit, domain.RouterItemLimit, Util.ToTLDate(), domain.InterfaceList, domain.Module_Agent ? 1 : 0, domain.Module_FinService ? 1 : 0, domain.Module_PayOnline ? 1 : 0,domain.Router_Live?1:0,domain.Router_Sim?1:0);
+                Util.Debug(query);
                 db.Connection.Execute(query);
                 SetIdentity(db.Connection, id => domain.ID = id, "id", "domain");
             }
