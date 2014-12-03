@@ -57,7 +57,6 @@
       <OutFiles Include="$(OutputPath)\$(AssemblyName).dll" />
     </ItemGroup>
     <Copy SourceFiles="@(OutFiles)" DestinationFolder="..\..\..\lib\TradingLib\RuleSet" SkipUnchangedFiles="true" />
-	<Copy SourceFiles="@(OutFiles)" DestinationFolder="..\..\..\Platform\TradingSrv\RuleSet" SkipUnchangedFiles="true" />
   </Target>
   
 </Project>

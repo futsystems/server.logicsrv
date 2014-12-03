@@ -1,6 +1,18 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench />
+  <MonoDevelop.Ide.Workbench ActiveDocument="TL_Base/TLBrokerXAPI/Interop/TLBrokerProxy.cs">
+    <Files>
+      <File FileName="TL_Base/TLBrokerXAPI/Interop/Platform.Windows.cs" Line="1" Column="1" />
+      <File FileName="TL_Base/TLBrokerXAPI/Interop/Platform.Unix.cs" Line="16" Column="53" />
+      <File FileName="TL_Base/TLBrokerXAPI/Interop/TLBrokerProxy.cs" Line="79" Column="45" />
+      <File FileName="TL_Server/TradingLib.Service/ConnectorManager/ConnectorManager_XAPI.cs" Line="35" Column="87" />
+      <File FileName="TL_Server/TradingLib.Service/ConnectorManager/BrokerXAPIHelper.cs" Line="23" Column="51" />
+      <File FileName="TL_Base/TLBrokerXAPI/XAPIHelper.cs" Line="24" Column="53" />
+      <File FileName="TL_Base/TLBrokerXAPI/Interop/TLBrokerWrapperProxy.cs" Line="77" Column="39" />
+      <File FileName="TL_Base/TLBrokerXAPI/Interop/UnmanagedLibrary.cs" Line="160" Column="60" />
+      <File FileName="TL_Base/TLBrokerXAPI/Interop/SafeLibraryHandle.cs" Line="15" Column="10" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

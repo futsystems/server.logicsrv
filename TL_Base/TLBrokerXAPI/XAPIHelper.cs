@@ -21,8 +21,10 @@ namespace TradingLib.BrokerXAPI
         /// <returns></returns>
         public static bool ValidBrokerInterface(string brokerPath,string brokerName,string wrapperPath,string wrapperName)
         {
+			bool re2 = TLBrokerWrapperProxy.ValidWrapperProxy(wrapperPath, wrapperName);
+
             bool re1 = TLBrokerProxy.ValidBrokerProxy(brokerPath, brokerName);
-            bool re2 = TLBrokerWrapperProxy.ValidWrapperProxy(wrapperPath, wrapperName);
+            
             if (re1 && re2) return true;
             return false;
         }

@@ -522,7 +522,7 @@ namespace TradingLib.Core
             {
                 //LibUtil.Debug("##############load ticksnapshot...................");
                 //实例化一个文件流--->与写入文件相关联  
-                using (FileStream fs = new FileStream(_snapshotcahefile, FileMode.Open))
+				using (FileStream fs = new FileStream(_snapshotcahefile, FileMode.OpenOrCreate))
                 {
                     //实例化一个StreamWriter-->与fs相关联  
                     using (StreamReader sw = new StreamReader(fs))

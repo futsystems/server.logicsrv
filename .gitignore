@@ -9,6 +9,7 @@
 #排除.sdf
 *.sdf
 
+
 #排除目录
 /output
 /lib/Win
@@ -21,6 +22,7 @@
 /Platform/TLDataBase
 
 /publish
+/package
 /cache
 
 #排除子目录中的bin obj debug release

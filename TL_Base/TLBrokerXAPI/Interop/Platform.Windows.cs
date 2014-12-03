@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !UNIX
+using System;
 using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 
@@ -82,3 +83,4 @@ namespace TradingLib.BrokerXAPI.Interop
 
     }
 }
+#endif

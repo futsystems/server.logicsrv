@@ -75,7 +75,9 @@ namespace TradingLib.BrokerXAPI.Interop
         public TLBrokerProxy(string path, string dllname)
         {
             //1.加载dll
+			Util.Debug ("strat to load Nativelib ......", QSEnumDebugLevel.WARNING);
             NativeLib = new UnmanagedLibrary(path, dllname);
+			Util.Debug ("loaded Nativelib ......", QSEnumDebugLevel.WARNING);
             //2.绑定导出函数到委托
             AssignCommonDelegates();
 
