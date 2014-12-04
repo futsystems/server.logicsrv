@@ -283,7 +283,10 @@ namespace TradingLib.Core
             {
                 clientinfo.AuthorizedFail();
             }
-
+            if (!response.LoginResponse.Authorized)
+            {
+                debug("Manager:" + request.LoginID + " Login failed", QSEnumDebugLevel.WARNING);
+            }
             SendOutPacket(response);
             
             

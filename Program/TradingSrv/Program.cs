@@ -8,6 +8,7 @@ using TradingLib.API;
 using TradingLib.Common;
 using System.IO;
 using System.Text;
+using TradingLib.BrokerXAPI;
 
 
 
@@ -32,6 +33,18 @@ namespace TraddingSrvCLI
         }
         static void Main(string[] args)
         {
+            debug("intsize:" + sizeof(int).ToString() + " doublesize:" + sizeof(double).ToString() + " boolsize:" + sizeof(bool).ToString());
+            debug("OrderSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XOrderField)).ToString());
+            debug("TradeSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XTradeField)).ToString());
+            debug("ErrorSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XErrorField)).ToString());
+            //XServerInfoField
+            debug("XServerInfoFieldSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XServerInfoField)).ToString());
+            //XUserInfoField
+            debug("XUserInfoFieldSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XUserInfoField)).ToString());
+            debug("XRspUserLoginFieldSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XRspUserLoginField)).ToString());
+            debug("XOrderActionFieldSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XOrderActionField)).ToString());
+            
+
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
             try
             {

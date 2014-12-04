@@ -58,7 +58,7 @@ namespace TradingLib.BrokerXAPI
         /// <summary>
         /// 服务地址
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 512)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
         public string ServerAddress;
 
         /// <summary>
@@ -66,13 +66,13 @@ namespace TradingLib.BrokerXAPI
         /// </summary>
         public int ServerPort;
 
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
         public string Field1;
 
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
         public string Field2;
 
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
         public string Field3;
 
     }
@@ -95,10 +95,10 @@ namespace TradingLib.BrokerXAPI
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 40)]
         public string Password;
 
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
         public string Field1;
 
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
         public string Field2;
 
     }
@@ -124,13 +124,13 @@ namespace TradingLib.BrokerXAPI
         /// <summary>
         /// 预留字段1
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
         public string Field1;
 
         /// <summary>
         /// 预留字段2
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
         public string Field2;
 
         /// <summary>
@@ -155,12 +155,12 @@ namespace TradingLib.BrokerXAPI
         /// <summary>
         /// 日期
         /// </summary>
-        public int Date;
+        public int Date;//4
 
         /// <summary>
         /// 时间
         /// </summary>
-        public int Time;
+        public int Time;//4
 
         /// <summary>
         /// 合约
@@ -177,44 +177,45 @@ namespace TradingLib.BrokerXAPI
         /// <summary>
         /// 方向
         /// </summary>
-        public bool Side;
+        public bool Side;//4
 
         /// <summary>
         /// 委托数量
         /// </summary>
-        public int TotalSize;
+        public int TotalSize;//4
 
         /// <summary>
         /// 成交数量
         /// </summary>
-        public int FilledSize;
+        public int FilledSize;//4
 
         /// <summary>
         /// 未成交数量
         /// </summary>
-        public int UnfilledSize;
+        public int UnfilledSize;//4
 
         /// <summary>
         /// limit价格
         /// </summary>
-        public double LimitPrice;
+        public double LimitPrice;//8
 
         /// <summary>
         /// stop价格
         /// </summary>
-        public double StopPrice;
+        public double StopPrice;//8
 
         /// <summary>
         /// 开平标识
         /// </summary>
-        public QSEnumOffsetFlag OffsetFlag;
+        public QSEnumOffsetFlag OffsetFlag;//1
 
 
         /// <summary>
         /// 委托状态
         /// </summary>
-        public QSEnumOrderStatus OrderStatus;
+        public QSEnumOrderStatus OrderStatus;//1
 
+        //316 + 30 + 40 + 2 = 386
         /// <summary>
         /// 委托状态消息
         /// </summary>
@@ -270,7 +271,7 @@ namespace TradingLib.BrokerXAPI
         /// <summary>
         /// 委托操作标识
         /// </summary>
-        public QSEnumOrderActionFlag ActionFlag;
+        public QSEnumOrderActionFlag ActionFlag;//1
 
         /// <summary>
         /// 交易所
@@ -287,13 +288,13 @@ namespace TradingLib.BrokerXAPI
         /// <summary>
         /// 未成交数量
         /// </summary>
-        public int Size;
+        public int Size;//4
 
 
         /// <summary>
         /// 价格
         /// </summary>
-        public double Price;
+        public double Price;//8
 
 
     }
@@ -301,9 +302,9 @@ namespace TradingLib.BrokerXAPI
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public struct XTradeField
     {
-        public int Date;
+        public int Date;//4
 
-        public int Time;
+        public int Time;//4
 
         /// <summary>
         /// 合约
@@ -325,23 +326,23 @@ namespace TradingLib.BrokerXAPI
         /// <summary>
         /// 成交手数
         /// </summary>
-        public int Size;
+        public int Size;//4
 
 
         /// <summary>
         /// 成交价格
         /// </summary>
-        public double Price;
+        public double Price;//8
 
         /// <summary>
         /// 开平标识
         /// </summary>
-        public QSEnumOffsetFlag OffsetFlag;
+        public QSEnumOffsetFlag OffsetFlag;//1
 
         /// <summary>
         /// 手续费
         /// </summary>
-        public double Commission;
+        public double Commission;//8
 
         /// <summary>
         /// 成交编号
