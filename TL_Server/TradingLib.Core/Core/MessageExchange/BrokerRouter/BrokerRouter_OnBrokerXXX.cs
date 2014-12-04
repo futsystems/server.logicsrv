@@ -52,6 +52,7 @@ namespace TradingLib.Core
         /// </summary>
         void Broker_GotOrderError(Order order, RspInfo error)
         {
+            debug("router got order error", QSEnumDebugLevel.ERROR);
             if (order.Breed == QSEnumOrderBreedType.ROUTER)
             {
                 debug("Reply ErrorOrder To Spliter:" + order.GetOrderInfo() + " ErrorTitle:" + error.ErrorMessage, QSEnumDebugLevel.INFO);
@@ -68,6 +69,7 @@ namespace TradingLib.Core
         /// </summary>
         void Broker_GotFill(Trade fill)
         {
+            debug("router got fill", QSEnumDebugLevel.ERROR);
             if (fill != null && fill.isValid)
             {
                 if (fill.Breed == QSEnumOrderBreedType.ROUTER)
@@ -88,6 +90,7 @@ namespace TradingLib.Core
 
         void Broker_GotOrder(Order o)
         {
+            debug("router got order", QSEnumDebugLevel.ERROR);
             if (o != null && o.isValid)
             {
                 //这里需要判断,该委托回报是拆分过的子委托还是分帐户侧的委托 如果是拆分过的委托则需要回报给拆分器

@@ -46,6 +46,7 @@ namespace TradingLib.BrokerXAPI
         public event FillDelegate GotFillEvent;
         protected void NotifyTrade(Trade f)
         {
+            Util.Debug("brokerbase notify trade outside........", QSEnumDebugLevel.WARNING);
             if (GotFillEvent != null)
                 GotFillEvent(f);
         }
@@ -56,6 +57,7 @@ namespace TradingLib.BrokerXAPI
         public event OrderDelegate GotOrderEvent;
         protected void NotifyOrder(Order o)
         {
+            Util.Debug("brokerbase notify order outside........", QSEnumDebugLevel.WARNING);
             if (GotOrderEvent != null)
                 GotOrderEvent(o);
         }
