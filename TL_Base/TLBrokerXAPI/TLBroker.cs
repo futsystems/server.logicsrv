@@ -423,7 +423,7 @@ namespace TradingLib.BrokerXAPI
         {
             Util.Debug("-----------TLBroker OnRtnOrderEvent-----------------------", QSEnumDebugLevel.WARNING);
             Util.Debug("~~~~~OrderSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XOrderField)), QSEnumDebugLevel.WARNING);
-            Util.Debug("intsize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(int)).ToString() + " doublesize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(double)).ToString() + " enumsize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(QSEnumOffsetFlag)).ToString(), QSEnumDebugLevel.WARNING);
+            Util.Debug("intsize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(int)).ToString() + " doublesize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(double)).ToString() + " enumsize:" + sizeof(QSEnumOffsetFlag).ToString(), QSEnumDebugLevel.WARNING);
             //Util.Debug(" data:" + pOrder.Date + " exchange:" + pOrder.Exchange + " filledsize:" + pOrder.FilledSize.ToString() + " limitprice:" + pOrder.LimitPrice + " offsetflag:" + pOrder.OffsetFlag.ToString() + " orderid:" + pOrder.ID + " status:" + pOrder.OrderStatus.ToString() + " side:" + pOrder.Side + " stopprice:" + pOrder.StopPrice.ToString() + " symbol:" + pOrder.Symbol + " totalsize:" + pOrder.TotalSize.ToString() + " unfilledsize:" + pOrder.UnfilledSize.ToString() + " statusmsg:" + pOrder.StatusMsg);
             _ordercache.Write(pOrder);
             NewNotify();
