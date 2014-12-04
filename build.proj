@@ -124,7 +124,6 @@
 		<MakeDir Directories="$(PackageDir)\Connector" />
 		<MakeDir Directories="$(PackageDir)\Account" />
 		<MakeDir Directories="$(PackageDir)\RuleSet" />
-		<MakeDir Directories="$(PackageDir)\config" />
 		<Copy SourceFiles="@(BuildFilesBase)" DestinationFolder="$(PackageDir)" ContinueOnError="false" />
 		<Copy SourceFiles="@(BuildFilesContrib)" DestinationFolder="$(PackageDir)\Contrib" ContinueOnError="false" />
 		<Copy SourceFiles="@(BuildFilesConnector)" DestinationFolder="$(PackageDir)\Connector" ContinueOnError="false" />

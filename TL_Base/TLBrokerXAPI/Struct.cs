@@ -153,6 +153,11 @@ namespace TradingLib.BrokerXAPI
     public struct XOrderField
     {
         /// <summary>
+        /// 成交数量
+        /// </summary>
+        public int FilledSize;//4
+
+        /// <summary>
         /// 日期
         /// </summary>
         public int Date;//4
@@ -183,11 +188,6 @@ namespace TradingLib.BrokerXAPI
         /// 委托数量
         /// </summary>
         public int TotalSize;//4
-
-        /// <summary>
-        /// 成交数量
-        /// </summary>
-        public int FilledSize;//4
 
         /// <summary>
         /// 未成交数量
