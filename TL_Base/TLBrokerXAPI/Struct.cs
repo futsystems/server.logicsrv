@@ -34,7 +34,7 @@ namespace TradingLib.BrokerXAPI
     /// <summary>
     /// 错误消息结构体
     /// </summary>
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi,Pack=1)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public struct XErrorField
     {
         /// <summary>
@@ -52,7 +52,7 @@ namespace TradingLib.BrokerXAPI
     /// <summary>
     /// 服务端连接信息结构体
     /// </summary>
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public struct XServerInfoField
     {
         /// <summary>
@@ -80,7 +80,7 @@ namespace TradingLib.BrokerXAPI
     /// <summary>
     /// 登入信息结构体
     /// </summary>
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public struct XUserInfoField
     {
         /// <summary>
@@ -107,7 +107,7 @@ namespace TradingLib.BrokerXAPI
     /// <summary>
     /// 登入回报结构体
     /// </summary>
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public struct XRspUserLoginField
     {
         /// <summary>
@@ -152,10 +152,7 @@ namespace TradingLib.BrokerXAPI
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
     public struct XOrderField
     {
-        /// <summary>
-        /// 成交数量
-        /// </summary>
-        public int FilledSize;//4
+        
 
         /// <summary>
         /// 日期
@@ -168,26 +165,14 @@ namespace TradingLib.BrokerXAPI
         public int Time;//4
 
         /// <summary>
-        /// 合约
-        /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
-        public string Symbol;
-
-        /// <summary>
-        /// 交易所
-        /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 10)]
-        public string Exchange;
-
-        /// <summary>
-        /// 方向
-        /// </summary>
-        public bool Side;//4
-
-        /// <summary>
         /// 委托数量
         /// </summary>
         public int TotalSize;//4
+
+        /// <summary>
+        /// 成交数量
+        /// </summary>
+        public int FilledSize;//4
 
         /// <summary>
         /// 未成交数量
@@ -205,17 +190,34 @@ namespace TradingLib.BrokerXAPI
         public double StopPrice;//8
 
         /// <summary>
+        /// 方向
+        /// </summary>
+        public bool Side;//4
+
+        /// <summary>
         /// 开平标识
         /// </summary>
         public QSEnumOffsetFlag OffsetFlag;//1
-
 
         /// <summary>
         /// 委托状态
         /// </summary>
         public QSEnumOrderStatus OrderStatus;//1
 
-        //316 + 30 + 40 + 2 = 386
+        /// <summary>
+        /// 合约
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
+        public string Symbol;
+
+        /// <summary>
+        /// 交易所
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 10)]
+        public string Exchange;
+
+
+
         /// <summary>
         /// 委托状态消息
         /// </summary>
@@ -245,7 +247,7 @@ namespace TradingLib.BrokerXAPI
     /// <summary>
     /// 委托操作
     /// </summary>
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public struct XOrderActionField
     {
         /// <summary>
@@ -299,7 +301,7 @@ namespace TradingLib.BrokerXAPI
 
     }
 
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public struct XTradeField
     {
         public int Date;//4
