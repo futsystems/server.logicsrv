@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-		<OperatingPlatform Condition="'$(OperatingPlatform)' == ''">Windows</OperatingPlatform>
+    <OperatingPlatform Condition="'$(OperatingPlatform)' == ''">Windows</OperatingPlatform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{A5D8B946-697E-4CE5-9C3A-6B8958C9C064}</ProjectGuid>
@@ -20,7 +20,7 @@
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants Condition="'$(OperatingPlatform)' == ''">TRACE;DEBUG</DefineConstants>
-		<DefineConstants Condition="'$(OperatingPlatform)' == 'Unix'">TRACE;DEBUG;UNIX</DefineConstants>
+    <DefineConstants Condition="'$(OperatingPlatform)' == 'Unix'">TRACE;DEBUG;UNIX</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -29,7 +29,7 @@
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants Condition="'$(OperatingPlatform)' == ''">TRACE;</DefineConstants>
-		<DefineConstants Condition="'$(OperatingPlatform)' == 'Unix'">TRACE;UNIX</DefineConstants>
+    <DefineConstants Condition="'$(OperatingPlatform)' == 'Unix'">TRACE;UNIX</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -43,6 +43,10 @@
     </Reference>
     <Reference Include="TradingLib.Common">
       <HintPath>..\..\lib\TradingLib\TradingLib.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="TradingLib.Mixins, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\TradingLib\TradingLib.Mixins.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
