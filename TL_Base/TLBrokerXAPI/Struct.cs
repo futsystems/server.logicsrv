@@ -34,7 +34,7 @@ namespace TradingLib.BrokerXAPI
     /// <summary>
     /// 错误消息结构体
     /// </summary>
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi,Pack=1)]
     public struct XErrorField
     {
         /// <summary>
@@ -52,7 +52,7 @@ namespace TradingLib.BrokerXAPI
     /// <summary>
     /// 服务端连接信息结构体
     /// </summary>
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
     public struct XServerInfoField
     {
         /// <summary>
@@ -80,7 +80,7 @@ namespace TradingLib.BrokerXAPI
     /// <summary>
     /// 登入信息结构体
     /// </summary>
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
     public struct XUserInfoField
     {
         /// <summary>
@@ -107,7 +107,7 @@ namespace TradingLib.BrokerXAPI
     /// <summary>
     /// 登入回报结构体
     /// </summary>
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
     public struct XRspUserLoginField
     {
         /// <summary>
@@ -149,7 +149,7 @@ namespace TradingLib.BrokerXAPI
     /// <summary>
     /// 委托结构体
     /// </summary>
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
     public struct XOrderField
     {
         /// <summary>
@@ -245,7 +245,7 @@ namespace TradingLib.BrokerXAPI
     /// <summary>
     /// 委托操作
     /// </summary>
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
     public struct XOrderActionField
     {
         /// <summary>
@@ -299,7 +299,7 @@ namespace TradingLib.BrokerXAPI
 
     }
 
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
     public struct XTradeField
     {
         public int Date;//4
