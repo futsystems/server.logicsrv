@@ -130,7 +130,6 @@
 
 		<Copy SourceFiles="@(LibFiles)" DestinationFolder="$(PackageDir)" ContinueOnError="false" />
 		<Copy SourceFiles="@(BuildFilesExecute)" DestinationFolder="$(PackageDir)" ContinueOnError="false" />
-		<Copy SourceFiles="@(ConfigFiles)" DestinationFolder="$(PackageDir)\config" ContinueOnError="false" />
 	</Target>
 
 

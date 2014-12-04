@@ -703,14 +703,13 @@ namespace Broker.Live
 
 
             //通过接口发送委托,如果成功会返回接口对应逻辑的近端委托编号 否则就是发送失败
-            string localid = WrapperSendOrder(ref order);
-            bool success = !string.IsNullOrEmpty(localid);
+            bool success = WrapperSendOrder(ref order);
             if (success)
             {
                 //0.更新子委托状态为Submited状态 表明已经通过接口提交
                 o.Status = QSEnumOrderStatus.Submited;
                 //1.发送委托时设定本地委托编号
-                o.BrokerLocalOrderID = localid;
+                o.BrokerLocalOrderID = order.BrokerLocalOrderID;
                 //将委托复制后加入到接口维护的map中
                 Order lo = new OrderImpl(o);
                 //近端ID委托map
@@ -719,7 +718,7 @@ namespace Broker.Live
                 //交易信息维护器获得委托
                 tk.GotOrder(o);
                 //对外触发成交侧委托数据用于记录该成交接口的交易数据
-                debug("Send Order Success,LocalID:" + localid, QSEnumDebugLevel.INFO);
+                debug("Send Order Success,LocalID:" + order.BrokerLocalOrderID, QSEnumDebugLevel.INFO);
 
             }
             else

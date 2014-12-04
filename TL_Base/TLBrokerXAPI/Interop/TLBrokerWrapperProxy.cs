@@ -212,9 +212,9 @@ namespace TradingLib.BrokerXAPI.Interop
         /// <param name="pWrapper"></param>
         /// <param name="pOrder"></param>
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate string SendOrderProc(IntPtr pWrapper, ref XOrderField pOrder);
+        public delegate bool SendOrderProc(IntPtr pWrapper, ref XOrderField pOrder);
         SendOrderProc _SendOrder;
-        public string SendOrder(ref XOrderField pOrder)
+        public bool SendOrder(ref XOrderField pOrder)
         {
             try
             {
@@ -224,7 +224,7 @@ namespace TradingLib.BrokerXAPI.Interop
             catch (Exception ex)
             {
                 Util.Debug("SendOrder Error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
-                return string.Empty;
+                return false;
             }
         }
 

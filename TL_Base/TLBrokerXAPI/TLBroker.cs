@@ -297,7 +297,7 @@ namespace TradingLib.BrokerXAPI
 
 
         #region 底层wrapper发送委托或取消委托
-        protected string WrapperSendOrder(ref XOrderField order)
+        protected bool WrapperSendOrder(ref XOrderField order)
         {
             return _wrapper.SendOrder(ref order);
         }

@@ -135,12 +135,11 @@ namespace Broker.Live
 
 
             //通过接口发送委托,如果成功会返回接口对应逻辑的近端委托编号 否则就是发送失败
-            string localid = WrapperSendOrder(ref order);
-            bool success = !string.IsNullOrEmpty(localid);
+            bool success = WrapperSendOrder(ref order);
             if (success)
             {
                 //1.发送委托时设定本地委托编号
-                o.BrokerLocalOrderID = localid;
+                o.BrokerLocalOrderID = order.BrokerLocalOrderID;
 
                 //将委托复制后加入到接口维护的map中
                 Order lo = new OrderImpl(o);
@@ -149,7 +148,7 @@ namespace Broker.Live
                 //近端ID委托map
                 localOrderID_map.TryAdd(o.BrokerLocalOrderID, lo);
                 o.Status = QSEnumOrderStatus.Submited;
-                debug("Send Order Success,LocalID:" + localid, QSEnumDebugLevel.INFO);
+                debug("Send Order Success,LocalID:" + order.BrokerLocalOrderID, QSEnumDebugLevel.INFO);
 
             }
             else
