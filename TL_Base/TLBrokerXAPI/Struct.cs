@@ -253,52 +253,49 @@ namespace TradingLib.BrokerXAPI
     public struct XOrderActionField
     {
         /// <summary>
-        /// 本地系统委托编号
-        /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
-        public string ID;
-
-        /// <summary>
-        /// 相对于成交端 本地编号
-        /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
-        public string BrokerLocalOrderID;
-
-
-        /// <summary>
-        /// 交易所委托编号
-        /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
-        public string BrokerRemoteOrderID;
-
-
-        /// <summary>
-        /// 委托操作标识
-        /// </summary>
-        public QSEnumOrderActionFlag ActionFlag;//1
-
-        /// <summary>
-        /// 交易所
-        /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 10)]
-        public string Exchange;
-
-        /// <summary>
-        /// 合约
-        /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
-        public string Symbol;
-
-        /// <summary>
         /// 未成交数量
         /// </summary>
         public int Size;//4
-
 
         /// <summary>
         /// 价格
         /// </summary>
         public double Price;//8
+
+        /// <summary>
+        /// 本地系统委托编号
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 24)]
+        public string ID;
+
+        /// <summary>
+        /// 相对于成交端 本地编号
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 24)]
+        public string BrokerLocalOrderID;
+
+        /// <summary>
+        /// 交易所委托编号
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 24)]
+        public string BrokerRemoteOrderID;
+
+        /// <summary>
+        /// 交易所
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 12)]
+        public string Exchange;
+
+        /// <summary>
+        /// 合约
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 24)]
+        public string Symbol;
+
+        /// <summary>
+        /// 委托操作标识
+        /// </summary>
+        public QSEnumOrderActionFlag ActionFlag;//1
 
 
     }
@@ -311,27 +308,9 @@ namespace TradingLib.BrokerXAPI
         public int Time;//4
 
         /// <summary>
-        /// 合约
-        /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
-        public string Symbol;
-
-        /// <summary>
-        /// 交易所
-        /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 10)]
-        public string Exchange;
-
-        /// <summary>
-        /// 方向
-        /// </summary>
-        public bool Side;
-
-        /// <summary>
         /// 成交手数
         /// </summary>
         public int Size;//4
-
 
         /// <summary>
         /// 成交价格
@@ -339,32 +318,49 @@ namespace TradingLib.BrokerXAPI
         public double Price;//8
 
         /// <summary>
-        /// 开平标识
-        /// </summary>
-        public QSEnumOffsetFlag OffsetFlag;//1
-
-        /// <summary>
         /// 手续费
         /// </summary>
         public double Commission;//8
 
         /// <summary>
+        /// 合约
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 24)]
+        public string Symbol;
+
+        /// <summary>
+        /// 交易所
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 12)]
+        public string Exchange;
+
+        /// <summary>
         /// 成交编号
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 24)]
         public string BrokerTradeID;
 
         /// <summary>
         /// 近端委托编号
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 24)]
         public string BrokerLocalOrderID;
 
         /// <summary>
         /// 远端委托编号
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 24)]
         public string BrokerRemoteOrderID;
+
+        /// <summary>
+        /// 开平标识
+        /// </summary>
+        public QSEnumOffsetFlag OffsetFlag;//1
+
+        /// <summary>
+        /// 方向
+        /// </summary>
+        public bool Side;
     }
 
 
