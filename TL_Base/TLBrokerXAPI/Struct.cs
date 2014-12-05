@@ -230,11 +230,6 @@ namespace TradingLib.BrokerXAPI
         public string BrokerRemoteOrderID;
 
         /// <summary>
-        /// 方向 //400
-        /// </summary>
-        public bool Side;//1
-
-        /// <summary>
         /// 开平标识
         /// </summary>
         public QSEnumOffsetFlag OffsetFlag;//1
@@ -243,6 +238,12 @@ namespace TradingLib.BrokerXAPI
         /// 委托状态
         /// </summary>
         public QSEnumOrderStatus OrderStatus;//1
+
+        /// <summary>
+        /// 方向 //400
+        /// </summary>
+        public bool Side;//1
+
     }
     
     /// <summary>

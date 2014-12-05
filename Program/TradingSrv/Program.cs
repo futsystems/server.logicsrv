@@ -54,61 +54,61 @@ namespace TraddingSrvCLI
         /// <summary>
         /// stop价格
         /// </summary>
-        //public double StopPrice;//8
+        public double StopPrice;//8
         ////36
         ///// <summary>
         ///// 合约
         ///// </summary>
-        //[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 24)]
-        //public string Symbol;
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 24)]
+        public string Symbol;
 
         ///// <summary>
         ///// 交易所
         ///// </summary>
-        //[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 12)]
-        //public string Exchange;
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 12)]
+        public string Exchange;
 
 
 
         ///// <summary>
         ///// 委托状态消息
         ///// </summary>
-        //[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
-        //public string StatusMsg;
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+        public string StatusMsg;
 
 
-        ///// <summary>
-        ///// 系统唯一委托编号
-        ///// </summary>
-        //[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 24)]
-        //public string ID;
+        /// <summary>
+        /// 系统唯一委托编号
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 24)]
+        public string ID;
 
-        ///// <summary>
-        ///// 向远端发单时 生成的本地OrderRef 比如CTP 
-        ///// </summary>
-        //[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 24)]
-        //public string BrokerLocalOrderID;
+        /// <summary>
+        /// 向远端发单时 生成的本地OrderRef 比如CTP 
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 24)]
+        public string BrokerLocalOrderID;
 
-        ///// <summary>
-        ///// 远端交易所返回的编号
-        ///// </summary>
-        //[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 24)]
-        //public string BrokerRemoteOrderID;
+        /// <summary>
+        /// 远端交易所返回的编号
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 24)]
+        public string BrokerRemoteOrderID;
 
-        ///// <summary>
-        ///// 方向 //400
-        ///// </summary>
-        //public bool Side;//1
+        /// <summary>
+        /// 开平标识
+        /// </summary>
+        public QSEnumOffsetFlag OffsetFlag;//1
 
-        ///// <summary>
-        ///// 开平标识
-        ///// </summary>
-        //public QSEnumOffsetFlag OffsetFlag;//1
+        /// <summary>
+        /// 委托状态
+        /// </summary>
+        public QSEnumOrderStatus OrderStatus;//1
 
-        ///// <summary>
-        ///// 委托状态
-        ///// </summary>
-        //public QSEnumOrderStatus OrderStatus;//1
+        /// <summary>
+        /// 方向 //400
+        /// </summary>
+        public bool Side;//1
     }
 
     class Program
