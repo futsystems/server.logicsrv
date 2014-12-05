@@ -148,8 +148,9 @@ namespace TradingLib.BrokerXAPI
 
     /// <summary>
     /// 委托结构体
+    /// .net mono 默认对齐是2字节对齐
     /// </summary>
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public struct XOrderField
     {
         
@@ -229,7 +230,7 @@ namespace TradingLib.BrokerXAPI
         public string BrokerRemoteOrderID;
 
         /// <summary>
-        /// 方向
+        /// 方向 //400
         /// </summary>
         public bool Side;//1
 
