@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(fmVendorManager));
             this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
             this.tabholder = new ComponentFactory.Krypton.Navigator.KryptonNavigator();
             this.kryptonPage3 = new ComponentFactory.Krypton.Navigator.KryptonPage();
@@ -92,6 +93,7 @@
             // 
             this.tabholder.Bar.TabStyle = ComponentFactory.Krypton.Toolkit.TabStyle.LowProfile;
             this.tabholder.Button.CloseButtonDisplay = ComponentFactory.Krypton.Navigator.ButtonDisplay.Hide;
+            this.tabholder.Button.ContextButtonDisplay = ComponentFactory.Krypton.Navigator.ButtonDisplay.Hide;
             this.tabholder.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabholder.Location = new System.Drawing.Point(0, 0);
             this.tabholder.Name = "tabholder";
@@ -99,7 +101,7 @@
             this.kryptonPage3,
             this.kryptonPage1,
             this.pageroutergroup});
-            this.tabholder.SelectedIndex = 1;
+            this.tabholder.SelectedIndex = 0;
             this.tabholder.Size = new System.Drawing.Size(757, 277);
             this.tabholder.TabIndex = 0;
             this.tabholder.Text = "kryptonNavigator1";
@@ -329,6 +331,7 @@
             this.ClientSize = new System.Drawing.Size(757, 277);
             this.Controls.Add(this.kryptonPanel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "fmVendorManager";

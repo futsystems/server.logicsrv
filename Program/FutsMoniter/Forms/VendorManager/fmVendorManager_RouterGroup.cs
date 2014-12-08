@@ -192,7 +192,7 @@ namespace FutsMoniter
         const string ITEMVENDOR = "帐户";
         const string RULE = "规则";
         const string PRIORITY = "优先级";
-        const string ACTIVE = "允许开仓";
+        const string ACTIVE = "开仓";
 
 
         #endregion
@@ -256,6 +256,10 @@ namespace FutsMoniter
 
             grid.Columns[GROUPID].Visible = false;
 
+            grid.Columns[ROUTERITEMID].Width = 50;
+            grid.Columns[ITEMVENDOR].Width = 120;
+            grid.Columns[PRIORITY].Width = 50;
+            grid.Columns[ACTIVE].Width = 50;
             
         }
 

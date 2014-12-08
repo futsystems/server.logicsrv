@@ -313,7 +313,6 @@ namespace TradingLib.API
         /// 代表是多头操作还是空头操作
         /// </summary>
         bool PositionSide { get; }
-
         
     }
 

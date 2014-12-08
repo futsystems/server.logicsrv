@@ -57,26 +57,11 @@ namespace TradingLib.Core
             }
         }
 
-        void SrvOnMGRUpdateSecurity(MGRUpdateSecurityRequest request, ISession session, Manager manager)
-        {
-            debug(string.Format("管理员:{0} 请求更新品种:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
-
-            SecurityFamilyImpl sec = request.SecurityFaimly;
-            BasicTracker.SecurityTracker.UpdateSecurity(sec);
-            RspMGRQrySecurityResponse response = ResponseTemplate<RspMGRQrySecurityResponse>.SrvSendRspResponse(request);
-            response.SecurityFaimly = BasicTracker.SecurityTracker[sec.ID] as SecurityFamilyImpl;
-            CacheRspResponse(response);
-
-            if (sec.Tradeable)
-            {
-                exchsrv.RegisterSymbol(BasicTracker.SecurityTracker[sec.Code]);
-            }
-        }
-
+        
         void SrvOnMGRQrySymbol(MGRQrySymbolRequest request, ISession session, Manager manager)
         {
             debug(string.Format("管理员:{0} 请求查询合约:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
-            Symbol[] symlis = BasicTracker.SymbolTracker.Symbols;
+            Symbol[] symlis = manager.Domain.GetSymbols().ToArray();
             int totalnum = symlis.Length;
             if (totalnum > 0)
             {
@@ -95,68 +80,113 @@ namespace TradingLib.Core
             }
         }
 
+        void SrvOnMGRUpdateSecurity(MGRUpdateSecurityRequest request, ISession session, Manager manager)
+        {
+            debug(string.Format("管理员:{0} 请求更新品种:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
+
+            SecurityFamilyImpl sec = request.SecurityFaimly;
+            BasicTracker.SecurityTracker.UpdateSecurity(sec);
+            RspMGRQrySecurityResponse response = ResponseTemplate<RspMGRQrySecurityResponse>.SrvSendRspResponse(request);
+            response.SecurityFaimly = BasicTracker.SecurityTracker[sec.ID] as SecurityFamilyImpl;
+            CacheRspResponse(response);
+
+            if (sec.Tradeable)
+            {
+                //exchsrv.RegisterSymbol(BasicTracker.SymbolTracker[manager.domain_id,sec.Code].Symbol);
+            }
+        }
+
+
+
         void SrvOnMGRUpdateSymbol(MGRUpdateSymbolRequest request, ISession session, Manager manager)
         {
             debug(string.Format("管理员:{0} 请求更新合约:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
-            SymbolImpl sym = request.Symbol;
-            BasicTracker.SymbolTracker.UpdateSymbol(sym);
-            RspMGRQrySymbolResponse response = ResponseTemplate<RspMGRQrySymbolResponse>.SrvSendRspResponse(request);
-            response.Symbol = BasicTracker.SymbolTracker[sym.Symbol] as SymbolImpl;
-            CacheRspResponse(response);
-            if (sym.Tradeable)
+            try
             {
-                exchsrv.RegisterSymbol(sym.Symbol);
+                SymbolImpl sym = request.Symbol;
+
+                manager.Domain.UpdateSymbol(sym);
+                RspMGRQrySymbolResponse response = ResponseTemplate<RspMGRQrySymbolResponse>.SrvSendRspResponse(request);
+                response.Symbol = manager.Domain.GetSymbol(sym.Symbol);
+                CacheRspResponse(response);
+
+                if (sym.Tradeable)
+                {
+                    exchsrv.RegisterSymbol(sym.Symbol);
+                }
+            }
+            catch (FutsRspError ex)
+            {
+                session.OperationError(ex);
             }
         }
 
 
         void SrvOnMGRReqAddSecurity(MGRReqAddSecurityRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求添加品种:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
-
-            SecurityFamilyImpl sec = request.SecurityFaimly;
-            if (BasicTracker.SecurityTracker[sec.Code] == null)
+            try
             {
-                BasicTracker.SecurityTracker.UpdateSecurity(sec);
+                debug(string.Format("管理员:{0} 请求添加品种:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
 
-                RspMGRQrySecurityResponse response = ResponseTemplate<RspMGRQrySecurityResponse>.SrvSendRspResponse(request);
-                response.SecurityFaimly = BasicTracker.SecurityTracker[sec.Code] as SecurityFamilyImpl;
-                CacheRspResponse(response);
+                SecurityFamilyImpl sec = request.SecurityFaimly;
+                if (BasicTracker.SecurityTracker[sec.Code] == null)
+                {
+                    BasicTracker.SecurityTracker.UpdateSecurity(sec);
+
+                    RspMGRQrySecurityResponse response = ResponseTemplate<RspMGRQrySecurityResponse>.SrvSendRspResponse(request);
+                    response.SecurityFaimly = BasicTracker.SecurityTracker[sec.Code] as SecurityFamilyImpl;
+                    CacheRspResponse(response);
+                }
+                else
+                {
+
+                    RspMGRQrySecurityResponse response = ResponseTemplate<RspMGRQrySecurityResponse>.SrvSendRspResponse(request);
+                    response.RspInfo.Fill("SECURITY_EXIST");
+                    CacheRspResponse(response);
+                }
+                if (sec.Tradeable)
+                {
+                    //exchsrv.RegisterSymbol(BasicTracker.SecurityTracker[sec.Code]);
+                }
             }
-            else
+            catch (FutsRspError ex)
             {
-
-                RspMGRQrySecurityResponse response = ResponseTemplate<RspMGRQrySecurityResponse>.SrvSendRspResponse(request);
-                response.RspInfo.Fill("SECURITY_EXIST");
-                CacheRspResponse(response);
-            }
-            if (sec.Tradeable)
-            {
-                exchsrv.RegisterSymbol(BasicTracker.SecurityTracker[sec.Code]);
+                session.OperationError(ex);
             }
         }
 
         void SrvOnMGRReqAddSymbol(MGRReqAddSymbolRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求添加合约:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
-            SymbolImpl symbol = request.Symbol;
-            if (BasicTracker.SymbolTracker[symbol.Symbol] == null)
+            try
             {
-                BasicTracker.SymbolTracker.UpdateSymbol(symbol);
+                debug(string.Format("管理员:{0} 请求添加合约:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
+                
+                
+                
+                SymbolImpl symbol = request.Symbol;
+                if (manager.Domain.GetSymbol(symbol.Symbol) == null)
+                {
+                    symbol.Domain_ID = manager.domain_id;
+                    manager.Domain.UpdateSymbol(symbol);
 
-                RspMGRReqAddSymbolResponse response = ResponseTemplate<RspMGRReqAddSymbolResponse>.SrvSendRspResponse(request);
-                response.Symbol = BasicTracker.SymbolTracker[symbol.Symbol] as SymbolImpl;
-                CacheRspResponse(response);
+                    RspMGRReqAddSymbolResponse response = ResponseTemplate<RspMGRReqAddSymbolResponse>.SrvSendRspResponse(request);
+                    response.Symbol = manager.Domain.GetSymbol(symbol.Symbol);
+                    CacheRspResponse(response);
+                }
+                else
+                {
+                    RspMGRReqAddSymbolResponse response = ResponseTemplate<RspMGRReqAddSymbolResponse>.SrvSendRspResponse(request);
+                    response.RspInfo.Fill("SYMBOL_EXIST");
+                    CacheRspResponse(response);
+                }
+                if (symbol.Tradeable)
+                {
+                    exchsrv.RegisterSymbol(request.Symbol.Symbol);
+                }
             }
-            else
+            catch (FutsRspError ex)
             {
-                RspMGRReqAddSymbolResponse response = ResponseTemplate<RspMGRReqAddSymbolResponse>.SrvSendRspResponse(request);
-                response.RspInfo.Fill("SYMBOL_EXIST");
-                CacheRspResponse(response);
-            }
-            if (symbol.Tradeable)
-            {
-                exchsrv.RegisterSymbol(request.Symbol.Symbol);
+                session.OperationError(ex);
             }
         }
 

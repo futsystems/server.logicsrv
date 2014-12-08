@@ -789,8 +789,6 @@ namespace Broker.Live
                             remoteOrderID_map.TryAdd(order.BrokerRemoteOrderID, o);
                         }
                     }
-                   
-
                 }
                 Util.Debug("更新子委托:" + o.GetOrderInfo(true), QSEnumDebugLevel.INFO);
                 tk.GotOrder(o);

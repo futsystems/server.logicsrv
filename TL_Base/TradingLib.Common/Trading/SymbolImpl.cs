@@ -279,6 +279,8 @@ namespace TradingLib.Common
             set { _tradeable = value; }
         }
 
+        int _domainid = 0;
+        public int Domain_ID { get { return _domainid; } set { _domainid = value; } }
 
         /// <summary>
         /// 检查合约是否是开市时间

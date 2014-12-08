@@ -78,7 +78,7 @@ namespace TradingLib.Core
         /// <returns></returns>
         public IEnumerable<Order> SelectBrokerOrders(string token)
         {
-            return ORM.MTradingInfo.SelectBrokerOrders().Where(o => o.Broker.Equals(token)).Select(o => { o.oSymbol = BasicTracker.SymbolTracker[o.Symbol]; return o; });
+            return ORM.MTradingInfo.SelectBrokerOrders().Where(o => o.Broker.Equals(token)).Select(o => { o.oSymbol = GetAccountSymbol(o.Account,o.Symbol); return o; });
         }
 
 
@@ -89,7 +89,7 @@ namespace TradingLib.Core
         /// <returns></returns>
         public IEnumerable<Trade> SelectBrokerTrades(string token)
         {
-            return ORM.MTradingInfo.SelectBrokerTrades().Where(t => t.Broker.Equals(token)).Select(t => { t.oSymbol = BasicTracker.SymbolTracker[t.Symbol]; return t; });
+            return ORM.MTradingInfo.SelectBrokerTrades().Where(t => t.Broker.Equals(token)).Select(t => { t.oSymbol = GetAccountSymbol(t.Account, t.Symbol); return t; });
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace TradingLib.Core
         /// <returns></returns>
         public IEnumerable<PositionDetail> SelectBrokerPositionDetails(string token)
         {
-            return ORM.MSettlement.SelectBrokerPositionDetails(TLCtxHelper.Ctx.SettleCentre.LastSettleday).Where(p => p.Broker.Equals(token)).Select(pos => { pos.oSymbol = BasicTracker.SymbolTracker[pos.Symbol]; return pos; });
+            return ORM.MSettlement.SelectBrokerPositionDetails(TLCtxHelper.Ctx.SettleCentre.LastSettleday).Where(p => p.Broker.Equals(token)).Select(pos => { pos.oSymbol =  GetAccountSymbol(pos.Account,pos.Symbol); return pos; });
         }
 
         /// <summary>
@@ -108,7 +108,9 @@ namespace TradingLib.Core
         /// <returns></returns>
         public IEnumerable<Order> SelectRouterOrders()
         {
-            return ORM.MTradingInfo.SelectRouterOrders();
+            return ORM.MTradingInfo.SelectRouterOrders().Select(ro => { ro.oSymbol = GetAccountSymbol(ro.Symbol, ro.Symbol); return ro; });
         }
+
+ 
     }
 }

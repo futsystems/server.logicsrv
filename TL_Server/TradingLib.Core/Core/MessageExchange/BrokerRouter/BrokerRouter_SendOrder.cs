@@ -34,8 +34,6 @@ namespace TradingLib.Core
 
         }
 
-
-
         bool SendOrderOut(Order o,out string errorTitle)
         { 
             IAccount account = _clearCentre[o.Account];
@@ -92,6 +90,7 @@ namespace TradingLib.Core
                 {
                     brokerclosemap.Add(positiondetail.Broker, 0);
                 }
+
                 poslisttoclose.Add(positiondetail);
                 //平仓量 如果提交的平仓量>当前持仓明细 则取持仓明细的所有持仓量
                 int closeamount = tocloseize > positiondetail.Volume ? positiondetail.Volume : tocloseize;
@@ -116,7 +115,6 @@ namespace TradingLib.Core
             }
             else
             {
-
                 debug("PositionDetails to be closed are in diferent broker,send order via spliter.", QSEnumDebugLevel.INFO);
                 splitedordermap.TryAdd(o.id, o);
                 _splittracker.SendFatherOrder(o, SplitOrder(o, brokerclosemap));

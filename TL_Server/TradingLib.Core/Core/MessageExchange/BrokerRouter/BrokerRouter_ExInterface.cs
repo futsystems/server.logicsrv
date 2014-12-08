@@ -104,6 +104,7 @@ namespace TradingLib.Core
                 IBroker broker = SelectBroker(o);
                 if (broker != null && broker.IsLive)
                 {
+                    o.Broker = broker.Token;//通过Broker发送委托时,将Token设定到委托对应字段
                     broker.SendOrder(o);
                     //接口侧提交委托异常
                     if (o.Status == QSEnumOrderStatus.Reject)

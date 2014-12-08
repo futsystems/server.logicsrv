@@ -72,14 +72,14 @@ namespace TradingLib.Common
         /// 通过合约字头增加某个合约对象,如果不存在该合约对象则不增加
         /// </summary>
         /// <param name="sym"></param>
-        public void Add(string sym) 
-        { 
-            Symbol osym = BasicTracker.SymbolTracker[sym];
-            if(osym != null)
-            {
-                Add(osym); 
-            }
-        }
+        //public void Add(string sym) 
+        //{ 
+        //    Symbol osym = BasicTracker.SymbolTracker[sym];
+        //    if(osym != null)
+        //    {
+        //        Add(osym); 
+        //    }
+        //}
         /// <summary>
         /// adds a security if not already present
         /// 如果某个合约对象不存在 则增加该合约
@@ -114,12 +114,12 @@ namespace TradingLib.Common
         /// <summary>
         /// 通过合约字段列表 增加合约
         /// </summary>
-        /// <param name="syms"></param>
-        public void Add(string[] syms)
-        {
-            for (int i = 0; i < syms.Length; i++)
-                this.Add(syms[i]);
-        }
+        ///// <param name="syms"></param>
+        //public void Add(string[] syms)
+        //{
+        //    for (int i = 0; i < syms.Length; i++)
+        //        this.Add(syms[i]);
+        //}
         /// <summary>
         /// removes all elements of baskets that match.
         /// unmatching elements are ignored
@@ -167,28 +167,28 @@ namespace TradingLib.Common
 
 
         //序列化basket
-        public static string Serialize(SymbolBasket b)
-        {
-            List<string> s = new List<string>();
-            for (int i = 0; i < b.Count; i++) s.Add(b[i].Symbol);
-            return string.Join(",", s.ToArray());
-        }
-        //反序列化basket
-        public static SymbolBasketImpl Deserialize(string serialBasket)
-        {
-            SymbolBasketImpl mb = new SymbolBasketImpl();
-            if ((serialBasket == null) || (serialBasket == "")) return mb;
-            string[] r = serialBasket.Split(',');//字符串,分割 通过SecurityImpl进行解析
-            for (int i = 0; i < r.Length; i++)
-            {
-                if (r[i] == "") continue;
-                string[] syms = r[i].Split(' ');
-                Symbol sec = BasicTracker.SymbolTracker[syms[0]];//SecurityImpl.Parse(r[i]);
-                if (sec!= null)
-                    mb.Add(sec);
-            }
-            return mb;
-        }
+        //public static string Serialize(SymbolBasket b)
+        //{
+        //    List<string> s = new List<string>();
+        //    for (int i = 0; i < b.Count; i++) s.Add(b[i].Symbol);
+        //    return string.Join(",", s.ToArray());
+        //}
+        ////反序列化basket
+        //public static SymbolBasketImpl Deserialize(string serialBasket)
+        //{
+        //    SymbolBasketImpl mb = new SymbolBasketImpl();
+        //    if ((serialBasket == null) || (serialBasket == "")) return mb;
+        //    string[] r = serialBasket.Split(',');//字符串,分割 通过SecurityImpl进行解析
+        //    for (int i = 0; i < r.Length; i++)
+        //    {
+        //        if (r[i] == "") continue;
+        //        string[] syms = r[i].Split(' ');
+        //        Symbol sec = BasicTracker.SymbolTracker[syms[0]];//SecurityImpl.Parse(r[i]);
+        //        if (sec!= null)
+        //            mb.Add(sec);
+        //    }
+        //    return mb;
+        //}
         /*
         public static Basket FromFile(string filename)
         {
@@ -217,8 +217,8 @@ namespace TradingLib.Common
             
         
             * **/
-        public override string ToString() { return Serialize(this); }
-        public static SymbolBasketImpl FromString(string serialbasket) { return Deserialize(serialbasket); }
+        //public override string ToString() { return Serialize(this); }
+        //public static SymbolBasketImpl FromString(string serialbasket) { return Deserialize(serialbasket); }
         public IEnumerator GetEnumerator() { foreach (SymbolImpl s in symbols) yield return s; }
 
         //获得Security数组

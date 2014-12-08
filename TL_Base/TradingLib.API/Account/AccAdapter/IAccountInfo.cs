@@ -5,6 +5,9 @@ using System.Text;
 
 namespace TradingLib.API
 {
+    /// <summary>
+    /// 帐户财务信息
+    /// </summary>
     public interface IAccountInfo
     {
         string Account { get; set; }

@@ -226,6 +226,8 @@ namespace TradingLib.Common
             this.FatherBreed = copythis.FatherBreed;
             this.FatherID = copythis.FatherID;
             this.Breed = copythis.Breed;
+
+            //this.Domain_ID = copythis.Domain_ID;
         }
 
         public OrderImpl(string sym, bool side, int size, decimal p, decimal s, string c, int time, int date)

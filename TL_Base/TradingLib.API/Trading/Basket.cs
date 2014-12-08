@@ -35,8 +35,8 @@ namespace TradingLib.API
         Symbol this[int index] { get; set; }
         Symbol this[string sym] { get; set; }
         int Count { get; }
-        void Add(string symbol);
-        void Add(string[] symbols);
+        //void Add(string symbol);
+        //void Add(string[] symbols);
         void Add(Symbol newsymbol);
         void Add(SymbolBasket newbasket);
         void Remove(SymbolBasket subtractbasket);

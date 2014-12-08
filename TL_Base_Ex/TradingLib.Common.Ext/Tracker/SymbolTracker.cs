@@ -7,21 +7,88 @@ using TradingLib.API;
 
 namespace TradingLib.Common
 {
+    public class SymbolTracker
+    {
+        Dictionary<int, DBSymbolTracker> domainsymboltracker = new Dictionary<int, DBSymbolTracker>();
+        public SymbolTracker()
+        {
+            //加载所有Domain的合约数据
+            foreach (Domain domain in BasicTracker.DomainTracker.Domains)
+            {
+                if (!domainsymboltracker.Keys.Contains(domain.ID))
+                {
+                    domainsymboltracker.Add(domain.ID, new DBSymbolTracker(domain));
+                }
+            }
+        }
+
+        /// <summary>
+        /// 获得某个域的DBSymbolTracker
+        /// </summary>
+        /// <param name="domain_id"></param>
+        /// <returns></returns>
+        internal DBSymbolTracker this[int domain_id]
+        {
+            get
+            {
+                DBSymbolTracker tracker = null;
+                if (domainsymboltracker.TryGetValue(domain_id, out tracker))
+                {
+                    return tracker;
+                }
+                return null;
+            }
+        }
+        /// <summary>
+        /// 获得某个域下某个symbol
+        /// </summary>
+        /// <param name="domin_id"></param>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        internal SymbolImpl this[int domain_id, string symbol]
+        {
+            get
+            {
+                DBSymbolTracker tracker = null;
+                if (domainsymboltracker.TryGetValue(domain_id, out tracker))
+                {
+                    return tracker[symbol];
+                }
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 更新域的某个合约
+        /// </summary>
+        /// <param name="domain_id"></param>
+        /// <param name="sym"></param>
+        internal void UpdateSymbol(int domain_id, SymbolImpl sym)
+        {
+            DBSymbolTracker tracker = null;
+            if (!domainsymboltracker.TryGetValue(domain_id, out tracker))
+            {
+                domainsymboltracker.Add(domain_id, new DBSymbolTracker(BasicTracker.DomainTracker[domain_id]));
+            }
+            domainsymboltracker[domain_id].UpdateSymbol(sym);
+        }
+    
+    }
     /// <summary>
     /// 合约管理器用于获得合约对象
     /// 合约管理器从数据库加载并维护了所有合约列表,委托,成交,持仓均是通过对合约的引用来实现合约数据的索引
-    /// 
     /// </summary>
     public class DBSymbolTracker
     {
         Dictionary<string, SymbolImpl> symcodemap = new Dictionary<string, SymbolImpl>();
         Dictionary<int, SymbolImpl> idxcodemap = new Dictionary<int, SymbolImpl>();
-        Dictionary<string,Instrument> instrumentmap = new Dictionary<string,Instrument>();
 
-        public DBSymbolTracker()
+        Domain _domain = null;
+        public DBSymbolTracker(Domain domain)
         {
+            _domain = domain;
             //加载所有合约 这里需要判断合约是否过期
-            foreach (SymbolImpl sym in ORM.MBasicInfo.SelectSymbol())
+            foreach (SymbolImpl sym in ORM.MBasicInfo.SelectSymbol(domain.ID))
             {
                 if (sym.IsExpired)
                     continue;
@@ -36,48 +103,15 @@ namespace TradingLib.Common
                 sym.UnderlayingSymbol = this[sym.underlayingsymbol_fk];
                 sym.SecurityFamily = BasicTracker.SecurityTracker[sym.security_fk];
             }
-
-           
-
-            foreach (SymbolImpl sym in symcodemap.Values)
-            {
-                instrumentmap[sym.Symbol] = Instrument.Symbol2Instrument(sym);
-            }
         }
 
-
-        public Instrument[] GetInstrumentByType(SecurityType type)
-        {
-            return instrumentmap.Values.Where(inst => inst.SecurityType == type).ToArray();
-        }
-
-        /// <summary>
-        /// 获得某个合约
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <returns></returns>
-        public Instrument GetInstrument(string symbol)
-        {
-            Instrument inst = null;
-            instrumentmap.TryGetValue(symbol, out inst);
-            return inst;
-        }
-
-        /// <summary>
-        /// 获得所有合约
-        /// </summary>
-        /// <returns></returns>
-        public Instrument[] GetAllInstrument()
-        {
-            return instrumentmap.Values.ToArray();
-        }
 
         /// <summary>
         /// 通过合约代码获得合约对象
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        public Symbol this[string symbol]
+        public SymbolImpl this[string symbol]
         {
             get
             {
@@ -93,6 +127,28 @@ namespace TradingLib.Common
             }
         }
 
+        /// <summary>
+        /// 通过数据库全局ID获得合约对象
+        /// </summary>
+        /// <param name="idx"></param>
+        /// <returns></returns>
+        public SymbolImpl this[int idx]
+        {
+            get
+            {
+                SymbolImpl sym = null;
+                if (idxcodemap.TryGetValue(idx, out sym))
+                {
+                    return sym;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
+
         
         /// <summary>
         /// 所有可交易的合约
@@ -101,7 +157,6 @@ namespace TradingLib.Common
         /// <returns></returns>
         public SymbolBasket getBasketAvabile()
         {
-           
             SymbolBasket basket = new SymbolBasketImpl();
             foreach (Symbol s in symcodemap.Values.Where(s => s.IsTradeable).ToArray())
             {
@@ -111,6 +166,11 @@ namespace TradingLib.Common
             
         }
 
+        /// <summary>
+        /// 获得某个品种的所有合约
+        /// </summary>
+        /// <param name="sec"></param>
+        /// <returns></returns>
         public SymbolBasket GetBasketAvabileViaSecurity(SecurityFamily sec)
         {
             SymbolBasket basket = new SymbolBasketImpl();
@@ -136,26 +196,7 @@ namespace TradingLib.Common
             return false;
         }
 
-        /// <summary>
-        /// 通过数据库全局ID获得合约对象
-        /// </summary>
-        /// <param name="idx"></param>
-        /// <returns></returns>
-        public Symbol this[int idx]
-        {
-            get
-            {
-                SymbolImpl sym = null;
-                if (idxcodemap.TryGetValue(idx, out sym))
-                {
-                    return sym;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-        }
+
 
         /// <summary>
         /// 给委托绑定具体的合约对象 用于系统运行时候的快速合约获取
@@ -163,25 +204,25 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="o"></param>
         /// <returns></returns>
-        public  bool TrckerOrderSymbol(Order o)
-        {
-            string sym = o.Symbol;
-            Symbol symbol = this[sym];
-            if (symbol == null)
-            {
-                return false;
-            }
-            else
-            {
-                o.oSymbol = symbol;
-                return true;
-            }
-        }
+        //public  bool TrckerOrderSymbol(Order o)
+        //{
+        //    string sym = o.Symbol;
+        //    Symbol symbol = this[sym];
+        //    if (symbol == null)
+        //    {
+        //        return false;
+        //    }
+        //    else
+        //    {
+        //        o.oSymbol = symbol;
+        //        return true;
+        //    }
+        //}
 
         /// <summary>
         /// 返回所有维护的合约
         /// </summary>
-        public Symbol[] Symbols
+        public IEnumerable<SymbolImpl> Symbols
         {
             get
             {
@@ -206,16 +247,7 @@ namespace TradingLib.Common
                 target.Tradeable = sym.Tradeable;//更新交易标识
                 target.ExpireMonth = sym.ExpireMonth;
                 target.ExpireDate = sym.ExpireDate;
-                Instrument inst = instrumentmap[sym.Symbol];
-                if (inst != null)
-                {
-                    inst.EntryCommission = sym._entrycommission;
-                    inst.ExitCommission = sym._exitcommission;
-                    inst.Margin = sym.Margin;
-                    inst.Tradeable = sym.Tradeable;
-                    inst.ExpireMonth = sym.ExpireMonth;
-                    inst.ExpireDate = sym.ExpireDate;
-                }
+
                 ORM.MBasicInfo.UpdateSymbol(target);
 
             }
@@ -240,13 +272,12 @@ namespace TradingLib.Common
                 target.underlayingsymbol_fk = sym.underlayingsymbol_fk;
                 target.UnderlayingSymbol = BasicTracker.SecurityTracker[target.underlayingsymbol_fk] as SymbolImpl;
                 target.Tradeable = sym.Tradeable;//更新交易标识
-                
+                target.Domain_ID = sym.Domain_ID;//更新域
 
                 ORM.MBasicInfo.InsertSymbol(target);
                 
                 symcodemap[target.Symbol] = target;
                 idxcodemap[target.ID] = target;
-                instrumentmap[sym.Symbol] = Instrument.Symbol2Instrument(target);
 
                 sym.ID = target.ID;
                 

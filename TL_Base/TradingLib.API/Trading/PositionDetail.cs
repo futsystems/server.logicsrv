@@ -152,5 +152,6 @@ namespace TradingLib.API
         /// 3.路由侧
         /// </summary>
         QSEnumOrderBreedType Breed { get; set; }
+
     }
 }

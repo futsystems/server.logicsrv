@@ -202,12 +202,17 @@ namespace TradingLib.Core
                 return;
             }
 
+            //IAccount account = TLCtxHelper.CmdAccount[request.Order.Account];
+
+
             //标注来自客户端的原始委托
             Order order = new OrderImpl(request.Order);//复制委托传入到逻辑层
             order.OrderSource = QSEnumOrderSource.QSMONITER;
             order.TotalSize = order.Size;
             order.Date = Util.ToTLDate();
             order.Time = Util.ToTLTime();
+            //order.Domain_ID = account.Domain.ID;
+
             //对外层触发委托事件
             if (newSendOrderRequest != null)
                 newSendOrderRequest(order);

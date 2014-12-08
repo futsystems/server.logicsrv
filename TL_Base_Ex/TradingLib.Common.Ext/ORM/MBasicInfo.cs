@@ -101,11 +101,16 @@ namespace TradingLib.ORM
             }
         }
 
-        public static IEnumerable<SymbolImpl> SelectSymbol()
+        /// <summary>
+        /// 获得某个domain的所有域ID
+        /// </summary>
+        /// <param name="domainid"></param>
+        /// <returns></returns>
+        public static IEnumerable<SymbolImpl> SelectSymbol(int domainid)
         {
             using (DBMySql db = new DBMySql())
             {
-                const string query = "SELECT * FROM info_symbols";
+                string query = string.Format("SELECT * FROM info_symbols WHERE domain_id={0}",domainid);
                 IEnumerable<SymbolImpl> result = db.Connection.Query<SymbolImpl>(query);
                 return result;
             }
@@ -128,7 +133,7 @@ namespace TradingLib.ORM
             {
                 
                 //string query = string.Format("INSERT INTO info_symbols (`symbol`,`entrycommission`,`exitcommission`,`margin`,`extramargin`,`maintancemargin`,`strike`,`optionside`,`expiremonth`,`expiredate`,`security_fk``underlaying_fk`,`underlayingsymbol_fk`,`tradeable`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}')", sym.Symbol, sym.EntryCommission, sym.ExitCommission, sym.Margin, sym.ExtraMargin, sym.MaintanceMargin, sym.Strike, sym.OptionSide, sym.ExpireMonth, sym.ExpireDate, sym.security_fk, sym.underlaying_fk, sym.underlayingsymbol_fk, sym.Tradeable ? 1 : 0);
-                string query = string.Format("INSERT INTO info_symbols (`symbol`,`entrycommission`,`exitcommission`,`margin`,`extramargin`,`maintancemargin`,`strike`,`optionside`,`expiremonth`,`expiredate`,`security_fk`,`underlaying_fk`,`underlayingsymbol_fk`,`tradeable`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}')", sym.Symbol, sym._entrycommission, sym._exitcommission, sym._margin, sym._extramargin, sym._maintancemargin, sym.Strike, sym.OptionSide, sym.ExpireMonth, sym.ExpireDate, sym.security_fk, sym.underlaying_fk, sym.underlayingsymbol_fk, sym.Tradeable ? 1 : 0);
+                string query = string.Format("INSERT INTO info_symbols (`symbol`,`entrycommission`,`exitcommission`,`margin`,`extramargin`,`maintancemargin`,`strike`,`optionside`,`expiremonth`,`expiredate`,`security_fk`,`underlaying_fk`,`underlayingsymbol_fk`,`tradeable`,`domain_id`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}')", sym.Symbol, sym._entrycommission, sym._exitcommission, sym._margin, sym._extramargin, sym._maintancemargin, sym.Strike, sym.OptionSide, sym.ExpireMonth, sym.ExpireDate, sym.security_fk, sym.underlaying_fk, sym.underlayingsymbol_fk, sym.Tradeable ? 1 : 0, sym.Domain_ID);
                 
                 //TLCtxHelper.Ctx.debug("query:" + query);
                 int row = db.Connection.Execute(query);

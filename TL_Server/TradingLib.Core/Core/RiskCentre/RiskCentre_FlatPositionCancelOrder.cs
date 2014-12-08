@@ -562,7 +562,8 @@ namespace TradingLib.Core
                 AssignOrderIDEvent(ref o);
 
             //绑定合约对象
-            BasicTracker.SymbolTracker.TrckerOrderSymbol(o);
+            IAccount account = _clearcentre[pos.Account];
+            account.TrckerOrderSymbol(ref o);
 
             set.FlatSent = true;
             set.FireCount++;

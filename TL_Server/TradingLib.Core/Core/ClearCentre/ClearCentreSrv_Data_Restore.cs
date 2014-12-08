@@ -115,6 +115,15 @@ namespace TradingLib.Core
             }
         }
 
+
+        Symbol GetAccountSymbol(string account, string symbol)
+        {
+            IAccount acc = this[account];
+            if (acc == null) return null;
+            return acc.GetSymbol(symbol);
+        }
+
+
         /// <summary>
         /// 从数据库导出取消记录
         /// </summary>
@@ -141,7 +150,7 @@ namespace TradingLib.Core
         public IEnumerable<Trade> LoadTradesFromMysql()
         {
             //填充对象oSymbol
-            IEnumerable<Trade> trades = ORM.MTradingInfo.SelectTrades().Select(f => { f.oSymbol = BasicTracker.SymbolTracker[f.Symbol]; return f; });
+            IEnumerable<Trade> trades = ORM.MTradingInfo.SelectTrades().Select(f => { f.oSymbol = GetAccountSymbol(f.Account, f.Symbol); return f; });
             debug("数据库恢复前次结算以来成交数据:" + trades.Count().ToString() + "条", QSEnumDebugLevel.INFO);
             return trades;
         }
@@ -155,7 +164,7 @@ namespace TradingLib.Core
         /// <returns></returns>
         public IEnumerable<Order> LoadOrderFromMysql()
         {
-            IEnumerable<Order> orders = ORM.MTradingInfo.SelectOrders().Select(o => { o.oSymbol = BasicTracker.SymbolTracker[o.Symbol]; return o; });
+            IEnumerable<Order> orders = ORM.MTradingInfo.SelectOrders().Select(o => { o.oSymbol = GetAccountSymbol(o.Account, o.Symbol); return o; });
             debug("数据库恢复前次结算以来委托数据:" + orders.Count().ToString() + "条", QSEnumDebugLevel.INFO);
             return orders;
         }
@@ -166,7 +175,7 @@ namespace TradingLib.Core
         /// <returns></returns>
         public IEnumerable<PositionDetail> LoadPositionFromMysql()
         {
-            IEnumerable<PositionDetail> positions = ORM.MSettlement.SelectPositionDetails(TLCtxHelper.Ctx.SettleCentre.LastSettleday).Select(pos => { pos.oSymbol = BasicTracker.SymbolTracker[pos.Symbol]; return pos; });
+            IEnumerable<PositionDetail> positions = ORM.MSettlement.SelectPositionDetails(TLCtxHelper.Ctx.SettleCentre.LastSettleday).Select(pos => { pos.oSymbol = GetAccountSymbol(pos.Account, pos.Symbol); return pos; });
             debug("数据库恢复前次结算持仓明细数据:" + positions.Count().ToString() + "条", QSEnumDebugLevel.INFO);
             return positions;
         }

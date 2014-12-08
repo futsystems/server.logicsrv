@@ -112,6 +112,7 @@ namespace FutsMoniter
                 _cfg.usrinfo_field1 = uf1.Text;
                 _cfg.usrinfo_field2 = uf2.Text;
                 _cfg.Name = name.Text;
+                _cfg.NeedVendor = true;
                 if (fmConfirm.Show("确认修改通道设置?") == System.Windows.Forms.DialogResult.Yes)
                 {
                     Globals.TLClient.ReqUpdateConnectorConfig(TradingLib.Mixins.LitJson.JsonMapper.ToJson(_cfg));

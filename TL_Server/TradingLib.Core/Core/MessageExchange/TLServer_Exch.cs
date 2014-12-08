@@ -208,6 +208,8 @@ namespace TradingLib.Core
                 debug("客户端对应的帐户:" + cinfo.Account + " 与委托帐户:" + request.Order.Account + " 不符合", QSEnumDebugLevel.ERROR);
                 return;
             }
+            //IAccount account = TLCtxHelper.CmdAccount[cinfo.Account];
+
 
             
             //标注来自客户端的原始委托
@@ -227,6 +229,7 @@ namespace TradingLib.Core
             order.SessionIDi = clientinfo.SessionIDi;
             order.RequestID = request.RequestID;
 
+            //order.Domain_ID = account.Domain.ID;
             //对外层触发委托事件
             if (newSendOrderRequest != null)
                 newSendOrderRequest(order);

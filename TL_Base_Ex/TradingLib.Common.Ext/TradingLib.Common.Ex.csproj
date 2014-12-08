@@ -76,6 +76,7 @@
     <Compile Include="Accounts\AccountUtils_TradingInfoEx.cs" />
     <Compile Include="Accounts\Account_IAccTradingInfo.cs" />
     <Compile Include="Accounts\Account_IAccConfig.cs" />
+    <Compile Include="Accounts\AccountUtils_BasicInfo.cs" />
     <Compile Include="ClearCentre\Base_ClearCentre_GotXXXX.cs" />
     <Compile Include="ClearCentre\Base_ClearCentre_.cs" />
     <Compile Include="ClearCentre\Base_ClearCentre_TotalInfo.cs" />
@@ -92,6 +93,7 @@
     <Compile Include="Tracker\ConntorConfigTracker.cs" />
     <Compile Include="Tracker\DomainTracker.cs" />
     <Compile Include="Tracker\RouterGrouperTracker.cs" />
+    <Compile Include="Utils\Domain\DomainUtils_Basic.cs" />
     <Compile Include="Utils\ISessionTransUtils.cs" />
     <Compile Include="ORM\Config\ConfigItem.cs" />
     <Compile Include="ORM\Config\ConfigDB.cs" />
@@ -170,7 +172,7 @@
     <Compile Include="Tracker\SymbolTracker.cs" />
     <Compile Include="Tracker\TotalTracker.cs" />
     <Compile Include="Tracker\VendorTracker.cs" />
-    <Compile Include="Utils\DomainUtils.cs" />
+    <Compile Include="Utils\Domain\DomainUtils.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

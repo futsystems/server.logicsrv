@@ -276,14 +276,14 @@ namespace TradingLib.Core
             {
                 debug(string.Format("DataFeed[{0}] have not registed any symbol,register all symbol we trade",df.Token), QSEnumDebugLevel.INFO);
                 SymbolBasket nb = new SymbolBasketImpl();
-                foreach (Symbol sym in BasicTracker.SymbolTracker.getBasketAvabile().ToArray())
-                {
-                    IDataFeed d = GetDataFeed(sym);
-                    if (df.Equals(d))//需要当前的df进行比对 查找的d可能为空即某个合约没有绑定对应的行情通道
-                    {
-                        nb.Add(sym);
-                    }
-                }
+                //foreach (Symbol sym in BasicTracker.SymbolTracker.getBasketAvabile().ToArray())
+                //{
+                //    IDataFeed d = GetDataFeed(sym);
+                //    if (df.Equals(d))//需要当前的df进行比对 查找的d可能为空即某个合约没有绑定对应的行情通道
+                //    {
+                //        nb.Add(sym);
+                //    }
+                //}
                 this.RegisterSymbols(nb);
             }
             else//如果有对应的合约 则重新注册

@@ -298,8 +298,9 @@ namespace TradingLib.Core
             //绑定委托编号
             if (AssignOrderIDEvent != null)
                 AssignOrderIDEvent(ref o);
-            
-            BasicTracker.SymbolTracker.TrckerOrderSymbol(o);
+            IAccount account = _clearcentre[pos.Account];
+            account.TrckerOrderSymbol(ref o);
+            //BasicTracker.SymbolTracker.TrckerOrderSymbol(o.Domain_ID,o);
             
             //Security _sec = _clearcentre.getMasterSecurity(o.symbol);
             //if (_sec == null)
