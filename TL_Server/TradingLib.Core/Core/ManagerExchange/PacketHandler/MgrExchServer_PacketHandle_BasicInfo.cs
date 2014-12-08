@@ -44,16 +44,21 @@ namespace TradingLib.Core
         void SrvOnMGRQrySecurity(MGRQrySecurityRequest request, ISession session, Manager manager)
         {
             debug(string.Format("管理员:{0} 请求查询品种:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
-            SecurityFamily[] seclist = BasicTracker.SecurityTracker.Securities;
+            SecurityFamilyImpl[] seclist = manager.Domain.GetSecurityFamilies().ToArray();
             int totalnum = seclist.Length;
-            //debug("security totalnum:" + totalnum, QSEnumDebugLevel.INFO);
-            for (int i = 0; i < totalnum; i++)
+            if (totalnum > 0)
             {
-
+                for (int i = 0; i < totalnum; i++)
+                {
+                    RspMGRQrySecurityResponse response = ResponseTemplate<RspMGRQrySecurityResponse>.SrvSendRspResponse(request);
+                    response.SecurityFaimly = seclist[i];
+                    CacheRspResponse(response, i == totalnum - 1);
+                }
+            }
+            else
+            {
                 RspMGRQrySecurityResponse response = ResponseTemplate<RspMGRQrySecurityResponse>.SrvSendRspResponse(request);
-                response.SecurityFaimly = seclist[i] as SecurityFamilyImpl;
-                //debug("sec:" + response.ToString(), QSEnumDebugLevel.INFO);
-                CacheRspResponse(response, i == totalnum - 1);
+                CacheRspResponse(response);
             }
         }
 
@@ -82,17 +87,32 @@ namespace TradingLib.Core
 
         void SrvOnMGRUpdateSecurity(MGRUpdateSecurityRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求更新品种:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
-
-            SecurityFamilyImpl sec = request.SecurityFaimly;
-            BasicTracker.SecurityTracker.UpdateSecurity(sec);
-            RspMGRQrySecurityResponse response = ResponseTemplate<RspMGRQrySecurityResponse>.SrvSendRspResponse(request);
-            response.SecurityFaimly = BasicTracker.SecurityTracker[sec.ID] as SecurityFamilyImpl;
-            CacheRspResponse(response);
-
-            if (sec.Tradeable)
+            try
             {
-                //exchsrv.RegisterSymbol(BasicTracker.SymbolTracker[manager.domain_id,sec.Code].Symbol);
+                debug(string.Format("管理员:{0} 请求更新品种:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
+
+                if (!manager.RightRootDomain())
+                {
+                    throw new FutsRspError("无权更新品种数据");
+                }
+
+                SecurityFamilyImpl sec = request.SecurityFaimly;
+                manager.Domain.UpdateSecurity(sec);
+
+                RspMGRQrySecurityResponse response = ResponseTemplate<RspMGRQrySecurityResponse>.SrvSendRspResponse(request);
+                response.SecurityFaimly = manager.Domain.GetSecurityFamily(sec.ID);
+
+                CacheRspResponse(response);
+
+                if (sec.Tradeable)
+                {
+                    //exchsrv.RegisterSymbol(BasicTracker.SymbolTracker[manager.domain_id,sec.Code].Symbol);
+                }
+                session.OperationSuccess("品种数据更新成功");
+            }
+            catch (FutsRspError ex)
+            {
+                session.OperationError(ex);
             }
         }
 
@@ -100,20 +120,27 @@ namespace TradingLib.Core
 
         void SrvOnMGRUpdateSymbol(MGRUpdateSymbolRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求更新合约:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
             try
             {
+                debug(string.Format("管理员:{0} 请求更新合约:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
+           
+                if (!manager.RightRootDomain())
+                {
+                    throw new FutsRspError("无权更新合约数据");
+                }
+
                 SymbolImpl sym = request.Symbol;
 
                 manager.Domain.UpdateSymbol(sym);
                 RspMGRQrySymbolResponse response = ResponseTemplate<RspMGRQrySymbolResponse>.SrvSendRspResponse(request);
-                response.Symbol = manager.Domain.GetSymbol(sym.Symbol);
+                response.Symbol = manager.Domain.GetSymbol(sym.ID);
                 CacheRspResponse(response);
 
                 if (sym.Tradeable)
                 {
                     exchsrv.RegisterSymbol(sym.Symbol);
                 }
+                session.OperationSuccess("合约数据更新成功");
             }
             catch (FutsRspError ex)
             {
@@ -128,13 +155,18 @@ namespace TradingLib.Core
             {
                 debug(string.Format("管理员:{0} 请求添加品种:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
 
-                SecurityFamilyImpl sec = request.SecurityFaimly;
-                if (BasicTracker.SecurityTracker[sec.Code] == null)
+                if (!manager.RightRootDomain())
                 {
-                    BasicTracker.SecurityTracker.UpdateSecurity(sec);
+                    throw new FutsRspError("无权添加品种数据");
+                }
+
+                SecurityFamilyImpl sec = request.SecurityFaimly;
+                if (manager.Domain.GetSecurityFamily(sec.Code) == null)
+                {
+                    manager.Domain.UpdateSecurity(sec);
 
                     RspMGRQrySecurityResponse response = ResponseTemplate<RspMGRQrySecurityResponse>.SrvSendRspResponse(request);
-                    response.SecurityFaimly = BasicTracker.SecurityTracker[sec.Code] as SecurityFamilyImpl;
+                    response.SecurityFaimly = manager.Domain.GetSecurityFamily(sec.Code);
                     CacheRspResponse(response);
                 }
                 else
@@ -160,13 +192,15 @@ namespace TradingLib.Core
             try
             {
                 debug(string.Format("管理员:{0} 请求添加合约:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
-                
-                
-                
+
+                if (!manager.RightRootDomain())
+                {
+                    throw new FutsRspError("无权添加合约数据");
+                }
+
                 SymbolImpl symbol = request.Symbol;
                 if (manager.Domain.GetSymbol(symbol.Symbol) == null)
                 {
-                    symbol.Domain_ID = manager.domain_id;
                     manager.Domain.UpdateSymbol(symbol);
 
                     RspMGRReqAddSymbolResponse response = ResponseTemplate<RspMGRReqAddSymbolResponse>.SrvSendRspResponse(request);
@@ -192,6 +226,120 @@ namespace TradingLib.Core
 
         #endregion
 
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "SyncSecInfo", "SyncSecInfo - sync  sec", "同步品种数据")]
+        public void CTE_SyncSecInfo(ISession session)
+        {
+            try
+            {
+                Manager manager = session.GetManager();
+                debug(string.Format("管理员{0} 同步品种数据",manager.Login), QSEnumDebugLevel.INFO);
+
+                if (!manager.RightRootDomain())
+                {
+                    throw new FutsRspError("无权同步品种数据");
+                }
+                //
+                if (manager.Domain.Super)
+                {
+                    throw new FutsRspError("超级域不支持同步,请手工维护数据");
+                }
+
+                Domain domain = BasicTracker.DomainTracker.SuperDomain;
+                if (domain != null)
+                {
+                    foreach (SecurityFamilyImpl sec in domain.GetSecurityFamilies())
+                    {
+                        manager.Domain.SyncSecurity(sec);
+                    }
+                }
+                else
+                {
+                    throw new FutsRspError("没有可以同步的主域");
+                }
+
+                session.OperationSuccess("同步品种数据完成");
+
+                SecurityFamilyImpl[] seclist = manager.Domain.GetSecurityFamilies().ToArray();
+                int totalnum = seclist.Length;
+                if (totalnum > 0)
+                {
+                    for (int i = 0; i < totalnum; i++)
+                    {
+                        RspMGRQrySecurityResponse response = ResponseTemplate<RspMGRQrySecurityResponse>.SrvSendRspResponse(session);
+                        response.SecurityFaimly = seclist[i];
+                        CacheRspResponse(response, i == totalnum - 1);
+                    }
+                }
+                else
+                {
+                    RspMGRQrySecurityResponse response = ResponseTemplate<RspMGRQrySecurityResponse>.SrvSendRspResponse(session);
+                    CacheRspResponse(response);
+                }
+
+            }
+            catch (FutsRspError ex)
+            {
+                session.OperationError(ex);
+            }
+        }
+
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "SyncSymbol", "SyncSymbol - sync  symbol", "同步合约数据")]
+        public void CTE_SyncSymbol(ISession session)
+        {
+            try
+            {
+                Manager manager = session.GetManager();
+                debug(string.Format("管理员{0} 同步合约数据", manager.Login), QSEnumDebugLevel.INFO);
+
+                if (!manager.RightRootDomain())
+                {
+                    throw new FutsRspError("无权同步合约数据");
+                }
+                //
+                if (manager.Domain.Super)
+                {
+                    throw new FutsRspError("超级域不支持同步,请手工维护数据");
+                }
+
+                Domain domain = BasicTracker.DomainTracker.SuperDomain;
+                if (domain != null)
+                {
+                    foreach (SymbolImpl sym in domain.GetSymbols())
+                    {
+                        manager.Domain.SyncSymbol(sym);
+                    }
+                }
+                else
+                {
+                    throw new FutsRspError("没有可以同步的主域");
+                }
+
+                session.OperationSuccess("同步合约数据完成");
+                Symbol[] symlis = manager.Domain.GetSymbols().ToArray();
+                int totalnum = symlis.Length;
+                if (totalnum > 0)
+                {
+                    for (int i = 0; i < totalnum; i++)
+                    {
+                        RspMGRQrySymbolResponse response = ResponseTemplate<RspMGRQrySymbolResponse>.SrvSendRspResponse(session);
+                        response.Symbol = symlis[i] as SymbolImpl;
+
+                        CacheRspResponse(response, i == totalnum - 1);
+                    }
+                }
+                else
+                {
+                    RspMGRQrySymbolResponse response = ResponseTemplate<RspMGRQrySymbolResponse>.SrvSendRspResponse(session);
+                    CacheRspResponse(response);
+                }
+
+            }
+            catch (FutsRspError ex)
+            {
+                session.OperationError(ex);
+            }
+        }
 
     }
 }

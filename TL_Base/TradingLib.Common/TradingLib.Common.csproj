@@ -52,6 +52,7 @@
     <Compile Include="ORM\DBHelper.cs" />
     <Compile Include="ORM\MySqlBase.cs" />
     <Compile Include="Domain\DomainImpl.cs" />
+    <Compile Include="Trading\SecurityUtils.cs" />
     <Compile Include="Vendor\ConnectorStatus.cs" />
     <Compile Include="Vendor\ConnectorConfig.cs" />
     <Compile Include="Vendor\ConnectorInfo.cs" />

@@ -111,7 +111,9 @@ namespace FutsMoniter
                 {
                     int i = r;
                     //获得当前实例
+                    
                     SecurityFamilyImpl target = Globals.BasicInfoTracker.GetSecurity(sec.ID);
+                    //MessageBox.Show("got security target code:" + target.Code + " seccode:" + sec.Code);
                     if (target != null)
                     {
                         //1.更新当前实例
@@ -261,6 +263,9 @@ namespace FutsMoniter
             grid.Columns[UNDERLAYINGID].Visible = false;
             grid.Columns[MARKETTIMEID].Visible = false;
             grid.Columns[TRADEABLE].Visible = false;
+
+            grid.Columns[EXTRAMARGIN].Visible = false;
+            grid.Columns[MAINTANCEMARGIN].Visible = false;
         }
 
 
@@ -355,9 +360,17 @@ namespace FutsMoniter
 
             secgrid.DoubleClick +=new EventHandler(secgrid_DoubleClick);
             btnAddSecurity.Click +=new EventHandler(btnAddSecurity_Click);
-
+            btnSyncSec.Click += new EventHandler(btnSyncSec_Click);
             secgrid.RowPrePaint += new DataGridViewRowPrePaintEventHandler(secgrid_RowPrePaint);
             this.FormClosing +=new FormClosingEventHandler(fmSecurity_FormClosing);
+        }
+
+        void btnSyncSec_Click(object sender, EventArgs e)
+        {
+            if (fmConfirm.Show("确认同步品种信息？") == System.Windows.Forms.DialogResult.Yes)
+            {
+                Globals.TLClient.ReqSyncSecurity();
+            }
         }
 
         void secgrid_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)

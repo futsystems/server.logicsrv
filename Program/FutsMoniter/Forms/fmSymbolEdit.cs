@@ -69,7 +69,7 @@ namespace FutsMoniter
                 symbol.Enabled = false;
 
                 Factory.IDataSourceFactory(cbexpiremonth).BindDataSource(Globals.BasicInfoTracker.GetExpireMonth());
-                cbexpiremonth.SelectedText = _symbol.ExpireMonth.ToString();
+                cbexpiremonth.SelectedValue = _symbol.ExpireMonth;
                 cbexpiremonth.Enabled = false;
 
                 if (_symbol.SecurityFamily.Type != SecurityType.OPT)
@@ -96,7 +96,7 @@ namespace FutsMoniter
 
                 this.tradeable.Checked = _symbol.Tradeable;
                 //this.tradeable.Text = this.tradeable.Checked ? "可交易" : "不可交易";
-
+                this.expiredate.Value = (_symbol.ExpireDate == 0 ? Util.ToDateTime(_symbol.ExpireMonth*100+30,0) : Util.ToDateTime(_symbol.ExpireDate, 0));
 
             }
         }
@@ -112,7 +112,7 @@ namespace FutsMoniter
                 _symbol.ExtraMargin = extramargin.Value;
                 _symbol.MaintanceMargin = maintancemargin.Value;
                 _symbol.Tradeable = tradeable.Checked;
-
+                _symbol.ExpireDate = Util.ToTLDate(this.expiredate.Value);
                 Globals.TLClient.ReqUpdateSymbol(_symbol);
             }
             else
@@ -127,6 +127,7 @@ namespace FutsMoniter
                 target.Margin = margin.Value;
                 target.ExtraMargin = extramargin.Value;
                 target.MaintanceMargin = maintancemargin.Value;
+                target.ExpireDate = Util.ToTLDate(this.expiredate.Value);
 
                 SecurityFamilyImpl sec = CurrentSecurity;
                 if (sec == null)
@@ -208,7 +209,7 @@ namespace FutsMoniter
             cbexchange.SelectedIndexChanged += new EventHandler(cbexchange_SelectedIndexChanged);
             cbsecurity.SelectedIndexChanged += new EventHandler(cbsecurity_SelectedIndexChanged);
             cbexpiremonth.SelectedIndexChanged += new EventHandler(cbexpiremonth_SelectedIndexChanged);
-
+            
             btnSubmit.Click +=new EventHandler(btnSubmit_Click);
         }
 
@@ -301,6 +302,9 @@ namespace FutsMoniter
                 if (sec == null) return;
 
                 symbol.Text = MoniterUtil.GenSymbol(sec, month);
+                //MessageBox.Show(month.ToString());
+                this.expiredate.Value = Util.ToDateTime(month * 100 + 30, 0);
+
             }
             catch (Exception ex)
             {

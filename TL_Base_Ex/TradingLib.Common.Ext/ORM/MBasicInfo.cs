@@ -63,13 +63,11 @@ namespace TradingLib.ORM
         /// 返回帐户类别列表
         /// </summary>
         /// <returns></returns>
-        public static IEnumerable<SecurityFamilyImpl> SelectSecurity()
+        public static IEnumerable<SecurityFamilyImpl> SelectSecurity(int domainid)
         {
             using (DBMySql db = new DBMySql())
             {
-                //const string query = "SELECT a.id,a.code,a.name,a.currency,a.type,a.multiple,a.pricetick,a.tradeable,a.underlaying_fk,a.entrycommission,a.exitcommission,a.margin,a.extramargin,a.maintancemargin,a.exchange_fk,a.mkttime_fk FROM info_security a";
-                //IEnumerable<SecurityFamilyImpl> result = db.Connection.Query<SecurityFamilyImpl, SecForigenKey, SecurityFamilyImpl>(query, (sec, fk) => { sec.Exchange = BasicTracker.ExchagneTracker[fk.exchange_fk]; sec.MarketTime = BasicTracker.MarketTimeTracker[fk.mkttime_fk]; return sec; }, null, null, false, "exchange_fk", null, null).ToArray(); ;
-                const string query = "SELECT * FROM info_security";
+                string query = string.Format("SELECT * FROM info_security WHERE domain_id={0}",domainid);
                 IEnumerable<SecurityFamilyImpl> result = db.Connection.Query<SecurityFamilyImpl>(query, null);
                 return result;
             }
@@ -93,7 +91,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("INSERT INTO info_security (`code`,`name`,`currency`,`type`,`multiple`,`pricetick`,`underlaying_fk`,`entrycommission`,`exitcommission`,`margin`,`extramargin`,`maintancemargin`,`exchange_fk`,`mkttime_fk`,`tradeable`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}')", sec.Code, sec.Name, sec.Currency, sec.Type, sec.Multiple, sec.PriceTick, sec.UnderLayingFK, sec.EntryCommission, sec.ExitCommission, sec.Margin, sec.ExtraMargin, sec.MaintanceMargin, sec.ExchangeFK, sec.MarketTimeFK, sec.Tradeable ? 1 : 0);
+                string query = string.Format("INSERT INTO info_security (`code`,`name`,`currency`,`type`,`multiple`,`pricetick`,`underlaying_fk`,`entrycommission`,`exitcommission`,`margin`,`extramargin`,`maintancemargin`,`exchange_fk`,`mkttime_fk`,`tradeable`,`domain_id`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}')", sec.Code, sec.Name, sec.Currency, sec.Type, sec.Multiple, sec.PriceTick, sec.UnderLayingFK, sec.EntryCommission, sec.ExitCommission, sec.Margin, sec.ExtraMargin, sec.MaintanceMargin, sec.ExchangeFK, sec.MarketTimeFK, sec.Tradeable ? 1 : 0,sec.Domain_ID);
                 int row =  db.Connection.Execute(query);
                 SetIdentity(db.Connection, id => sec.ID = id, "id", "info_security");
 

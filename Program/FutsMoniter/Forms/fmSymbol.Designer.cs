@@ -74,11 +74,11 @@
             // 
             // btnSyncSymbols
             // 
-            this.btnSyncSymbols.Location = new System.Drawing.Point(844, 4);
+            this.btnSyncSymbols.Location = new System.Drawing.Point(826, 4);
             this.btnSyncSymbols.Name = "btnSyncSymbols";
-            this.btnSyncSymbols.Size = new System.Drawing.Size(90, 25);
+            this.btnSyncSymbols.Size = new System.Drawing.Size(108, 25);
             this.btnSyncSymbols.TabIndex = 13;
-            this.btnSyncSymbols.Values.Text = "CTP同步";
+            this.btnSyncSymbols.Values.Text = "同步合约数据";
             // 
             // kryptonLabel3
             // 

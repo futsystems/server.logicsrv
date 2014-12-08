@@ -21,6 +21,17 @@ namespace TradingLib.Common
         }
 
         /// <summary>
+        /// 返回超级域
+        /// </summary>
+        public DomainImpl SuperDomain
+        {
+            get
+            {
+                return domainmap.Values.Where(mgr => mgr.Super).FirstOrDefault();
+            }
+            
+        }
+        /// <summary>
         /// 按DomainID返回对应的域
         /// </summary>
         /// <param name="id"></param>

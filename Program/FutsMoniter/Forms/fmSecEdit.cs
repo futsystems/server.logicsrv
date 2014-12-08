@@ -49,13 +49,12 @@ namespace FutsMoniter
                 entrycommission.Value = _sec.EntryCommission;
                 exitcommission.Value = _sec.ExitCommission;
                 margin.Value = _sec.Margin;
-                extramargin.Value = _sec.Margin;
+                extramargin.Value = _sec.ExtraMargin;
                 maintancemargin.Value = _sec.MaintanceMargin;
                 exchange.SelectedValue = _sec.exchange_fk;
                 underlay.SelectedValue = _sec.underlaying_fk;
                 markettime.SelectedValue = _sec.mkttime_fk;
                 tradeable.Checked = _sec.Tradeable;
-                //tradeable.Text = this.tradeable.Checked ? "可交易" : "不可交易";
 
             }
         }
@@ -103,6 +102,7 @@ namespace FutsMoniter
                 target.ExtraMargin = extramargin.Value;
                 target.MaintanceMargin = maintancemargin.Value;
                 target.exchange_fk = (int)exchange.SelectedValue;
+
                 target.underlaying_fk = (int)underlay.SelectedValue;
                 target.mkttime_fk = (int)markettime.SelectedValue;
                 target.Tradeable = tradeable.Checked;

@@ -430,73 +430,7 @@ namespace TradingLib.Common
         }
         #endregion
 
-        #region 基础数据维护
-        public void ReqQryExchange()
-        {
-            debug("请求查询交易所列表", QSEnumDebugLevel.INFO);
-            MGRQryExchangeRequuest request = RequestTemplate<MGRQryExchangeRequuest>.CliSendRequest(requestid++);
 
-            SendPacket(request);
-        }
-
-        public void ReqQryMarketTime()
-        {
-            debug("请求查询市场时间列表", QSEnumDebugLevel.INFO);
-            MGRQryMarketTimeRequest request = RequestTemplate<MGRQryMarketTimeRequest>.CliSendRequest(requestid++);
-
-            SendPacket(request);
-        }
-        public void ReqQrySecurity()
-        {
-            debug("请求查询品种列表", QSEnumDebugLevel.INFO);
-            MGRQrySecurityRequest request = RequestTemplate<MGRQrySecurityRequest>.CliSendRequest(requestid ++);
-
-            SendPacket(request);
-        }
-        public void ReqUpdateSecurity(SecurityFamilyImpl sec)
-        {
-            debug("请求更新品种信息", QSEnumDebugLevel.INFO);
-            MGRUpdateSecurityRequest request = RequestTemplate<MGRUpdateSecurityRequest>.CliSendRequest(requestid++);
-            request.SecurityFaimly = sec;
-
-            SendPacket(request);
-        }
-
-        public void ReqAddSecurity(SecurityFamilyImpl sec)
-        {
-            debug("请求添加品种信息", QSEnumDebugLevel.INFO);
-            MGRReqAddSecurityRequest request = RequestTemplate<MGRReqAddSecurityRequest>.CliSendRequest(requestid++);
-            request.SecurityFaimly = sec;
-
-            SendPacket(request);
-        }
-
-        public void ReqQrySymbol()
-        {
-            debug("请求查询合约列表", QSEnumDebugLevel.INFO);
-            MGRQrySymbolRequest request = RequestTemplate<MGRQrySymbolRequest>.CliSendRequest(requestid++);
-
-            SendPacket(request);
-        }
-
-        public void ReqUpdateSymbol(SymbolImpl sym)
-        {
-            debug("请求更新合约", QSEnumDebugLevel.INFO);
-            MGRUpdateSymbolRequest request = RequestTemplate<MGRUpdateSymbolRequest>.CliSendRequest(requestid++);
-            request.Symbol = sym;
-
-            SendPacket(request);
-        }
-
-        public void ReqAddSymbol(SymbolImpl sym)
-        {
-            debug("请求添加合约", QSEnumDebugLevel.INFO);
-            MGRReqAddSymbolRequest request = RequestTemplate<MGRReqAddSymbolRequest>.CliSendRequest(requestid++);
-            request.Symbol = sym;
-
-            SendPacket(request);
-        }
-        #endregion
 
 
         #region 风控规则操作

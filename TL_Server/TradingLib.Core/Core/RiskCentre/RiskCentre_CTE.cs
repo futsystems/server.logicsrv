@@ -293,12 +293,13 @@ namespace TradingLib.Core
          [CoreCommandAttr(QSEnumCommandSource.CLI, "sectime", "sectime - sectime", "查看某个品种的市场时间")]
          public string CTE_SymbolMarketTime(string code)
          {
-             SecurityFamily sec = BasicTracker.SecurityTracker[code];
-             if (sec == null)
-             {
-                 return "品种不存在";
-             }
-             return sec.IsMarketTime.ToString();
+             //SecurityFamily sec = BasicTracker.SecurityTracker[code];
+             //if (sec == null)
+             //{
+             //    return "品种不存在";
+             //}
+             //return sec.IsMarketTime.ToString();
+             return "";
          }
          [CoreCommandAttr(QSEnumCommandSource.CLI, "symtime", "symtime - symtime", "查看某个合约的市场时间")]
          public string CTE_SecurityMarketTime(string symbol)

@@ -225,8 +225,13 @@ namespace FutsMoniter
             //grid.Columns[EXCHANGEID].IsVisible = false;
             grid.Columns[UNDERLAYINGID].Visible = false;
             grid.Columns[UNDERLAYINGSYMBOLID].Visible = false;
+
             grid.Columns[EXCHANGEID].Visible = false;
             grid.Columns[TRADEABLE].Visible = false;
+
+            grid.Columns[EXTRAMARGIN].Visible = false;
+            grid.Columns[MAINTANCEMARGIN].Visible = false;
+            grid.Columns[UNDERLAYINGSYMBOL].Visible = false;
         }
 
 
@@ -389,10 +394,10 @@ namespace FutsMoniter
 
         private void btnSyncSymbols_Click(object sender, EventArgs e)
         {
-            //fmSyncCTPSymbols fm = new fmSyncCTPSymbols();
-            //fm.GotSymbolImplEvent += new FutsMoniter.SymbolImplDel(fm_GotSymbolImplEvent);
-            ////fm.ShowDialog();
-            //fm.Show();
+            if (fmConfirm.Show("确认同步合约数据?") == System.Windows.Forms.DialogResult.Yes)
+            {
+                Globals.TLClient.ReqSyncSymbol();
+            }
         }
 
         void fm_GotSymbolImplEvent(SymbolImpl sym, bool islast)

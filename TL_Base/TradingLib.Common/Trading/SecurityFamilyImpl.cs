@@ -91,8 +91,16 @@ namespace TradingLib.Common
         /// </summary>
         public decimal MaintanceMargin { get; set; }
 
+        int _domainid = 0;
+        public int Domain_ID { get { return _domainid; } set { _domainid = value; } }
 
-
+        public bool IsValid
+        {
+            get
+            {
+                return (!string.IsNullOrEmpty(this.Code));
+            }
+        }
         public override string ToString()
         {
             return ID.ToString() + " Code:" + Code.ToString() + " Name:" + Name.ToString() + " Currency:" + Currency.ToString() + " Exch:" + Util.SafeToString(Exchange) + " Mutil:" + Multiple.ToString() + " PriceTick:" + PriceTick.ToString() + " Tradeable:" + Tradeable.ToString() + " Underlaying:" + Util.SafeToString(UnderLaying) + " EntryC:" + EntryCommission.ToString() + " ExitC:" + ExitCommission.ToString() + " Margin:" + Margin.ToString() + " underlaying_fk:" + Util.SafeToString(underlaying_fk); 

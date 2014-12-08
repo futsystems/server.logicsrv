@@ -65,8 +65,9 @@ namespace FutsMoniter
 
         public void OnMGRSecurityResponse(SecurityFamilyImpl sec, bool islast)
         {
-            if (basicinfotracker != null)
+            if (basicinfotracker != null && sec.IsValid)
             {
+                //Util.Debug("security is valid and got it ....................................", QSEnumDebugLevel.WARNING);
                 basicinfotracker.GotSecurity(sec);
             }
 

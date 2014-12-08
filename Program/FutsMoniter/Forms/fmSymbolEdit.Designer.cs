@@ -61,6 +61,8 @@
             this.cbexchange = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
             this.symbol = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel1 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.kryptonLabel2 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.expiredate = new ComponentFactory.Krypton.Toolkit.KryptonDateTimePicker();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gp_lotto)).BeginInit();
@@ -82,6 +84,8 @@
             // 
             // kryptonPanel1
             // 
+            this.kryptonPanel1.Controls.Add(this.expiredate);
+            this.kryptonPanel1.Controls.Add(this.kryptonLabel2);
             this.kryptonPanel1.Controls.Add(this.btnSubmit);
             this.kryptonPanel1.Controls.Add(this.gp_lotto);
             this.kryptonPanel1.Controls.Add(this.gp_option);
@@ -97,13 +101,13 @@
             this.kryptonPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.kryptonPanel1.Location = new System.Drawing.Point(0, 0);
             this.kryptonPanel1.Name = "kryptonPanel1";
-            this.kryptonPanel1.Size = new System.Drawing.Size(442, 538);
+            this.kryptonPanel1.Size = new System.Drawing.Size(442, 549);
             this.kryptonPanel1.TabIndex = 0;
             // 
             // btnSubmit
             // 
             this.btnSubmit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSubmit.Location = new System.Drawing.Point(370, 501);
+            this.btnSubmit.Location = new System.Drawing.Point(370, 514);
             this.btnSubmit.Name = "btnSubmit";
             this.btnSubmit.Size = new System.Drawing.Size(60, 25);
             this.btnSubmit.TabIndex = 11;
@@ -111,16 +115,20 @@
             // 
             // gp_lotto
             // 
-            this.gp_lotto.Location = new System.Drawing.Point(13, 405);
+            this.gp_lotto.Location = new System.Drawing.Point(14, 378);
             this.gp_lotto.Name = "gp_lotto";
             // 
             // gp_lotto.Panel
             // 
             this.gp_lotto.Panel.Controls.Add(this.kryptonLabel15);
             this.gp_lotto.Panel.Controls.Add(this.kryptonLabel14);
+            this.gp_lotto.Panel.Controls.Add(this.kryptonLabel11);
             this.gp_lotto.Panel.Controls.Add(this.cblottolevel);
             this.gp_lotto.Panel.Controls.Add(this.cbulsymbol);
-            this.gp_lotto.Size = new System.Drawing.Size(411, 77);
+            this.gp_lotto.Panel.Controls.Add(this.kryptonLabel10);
+            this.gp_lotto.Panel.Controls.Add(this.extramargin);
+            this.gp_lotto.Panel.Controls.Add(this.maintancemargin);
+            this.gp_lotto.Size = new System.Drawing.Size(411, 130);
             this.gp_lotto.TabIndex = 10;
             this.gp_lotto.Text = "乐透合约";
             this.gp_lotto.Values.Heading = "乐透合约";
@@ -159,7 +167,7 @@
             // 
             // gp_option
             // 
-            this.gp_option.Location = new System.Drawing.Point(12, 312);
+            this.gp_option.Location = new System.Drawing.Point(13, 286);
             this.gp_option.Name = "gp_option";
             // 
             // gp_option.Panel
@@ -211,11 +219,11 @@
             // 
             // kryptonLabel5
             // 
-            this.kryptonLabel5.Location = new System.Drawing.Point(50, 99);
+            this.kryptonLabel5.Location = new System.Drawing.Point(64, 103);
             this.kryptonLabel5.Name = "kryptonLabel5";
-            this.kryptonLabel5.Size = new System.Drawing.Size(55, 18);
+            this.kryptonLabel5.Size = new System.Drawing.Size(41, 18);
             this.kryptonLabel5.TabIndex = 8;
-            this.kryptonLabel5.Values.Text = "到期日:";
+            this.kryptonLabel5.Values.Text = "月份:";
             // 
             // kryptonLabel4
             // 
@@ -235,24 +243,20 @@
             // 
             // kryptonGroupBox1
             // 
-            this.kryptonGroupBox1.Location = new System.Drawing.Point(12, 118);
+            this.kryptonGroupBox1.Location = new System.Drawing.Point(12, 146);
             this.kryptonGroupBox1.Name = "kryptonGroupBox1";
             // 
             // kryptonGroupBox1.Panel
             // 
             this.kryptonGroupBox1.Panel.Controls.Add(this.kryptonLabel13);
             this.kryptonGroupBox1.Panel.Controls.Add(this.tradeable);
-            this.kryptonGroupBox1.Panel.Controls.Add(this.kryptonLabel11);
-            this.kryptonGroupBox1.Panel.Controls.Add(this.kryptonLabel10);
-            this.kryptonGroupBox1.Panel.Controls.Add(this.maintancemargin);
             this.kryptonGroupBox1.Panel.Controls.Add(this.exitcommission);
             this.kryptonGroupBox1.Panel.Controls.Add(this.kryptonLabel9);
             this.kryptonGroupBox1.Panel.Controls.Add(this.kryptonLabel8);
             this.kryptonGroupBox1.Panel.Controls.Add(this.kryptonLabel7);
             this.kryptonGroupBox1.Panel.Controls.Add(this.margin);
-            this.kryptonGroupBox1.Panel.Controls.Add(this.extramargin);
             this.kryptonGroupBox1.Panel.Controls.Add(this.entrycommission);
-            this.kryptonGroupBox1.Size = new System.Drawing.Size(412, 188);
+            this.kryptonGroupBox1.Size = new System.Drawing.Size(412, 134);
             this.kryptonGroupBox1.TabIndex = 5;
             this.kryptonGroupBox1.Text = "基础设置";
             this.kryptonGroupBox1.Values.Heading = "基础设置";
@@ -268,7 +272,7 @@
             // tradeable
             // 
             this.tradeable.LabelStyle = ComponentFactory.Krypton.Toolkit.LabelStyle.NormalControl;
-            this.tradeable.Location = new System.Drawing.Point(101, 140);
+            this.tradeable.Location = new System.Drawing.Point(101, 79);
             this.tradeable.Name = "tradeable";
             this.tradeable.Size = new System.Drawing.Size(78, 18);
             this.tradeable.TabIndex = 36;
@@ -277,7 +281,7 @@
             // 
             // kryptonLabel11
             // 
-            this.kryptonLabel11.Location = new System.Drawing.Point(13, 107);
+            this.kryptonLabel11.Location = new System.Drawing.Point(8, 85);
             this.kryptonLabel11.Name = "kryptonLabel11";
             this.kryptonLabel11.Size = new System.Drawing.Size(82, 18);
             this.kryptonLabel11.TabIndex = 35;
@@ -285,7 +289,7 @@
             // 
             // kryptonLabel10
             // 
-            this.kryptonLabel10.Location = new System.Drawing.Point(13, 81);
+            this.kryptonLabel10.Location = new System.Drawing.Point(8, 59);
             this.kryptonLabel10.Name = "kryptonLabel10";
             this.kryptonLabel10.Size = new System.Drawing.Size(82, 18);
             this.kryptonLabel10.TabIndex = 34;
@@ -299,7 +303,7 @@
             0,
             0,
             262144});
-            this.maintancemargin.Location = new System.Drawing.Point(101, 105);
+            this.maintancemargin.Location = new System.Drawing.Point(96, 83);
             this.maintancemargin.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -392,7 +396,7 @@
             0,
             0,
             262144});
-            this.extramargin.Location = new System.Drawing.Point(101, 79);
+            this.extramargin.Location = new System.Drawing.Point(96, 57);
             this.extramargin.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -470,11 +474,26 @@
             this.kryptonLabel1.TabIndex = 0;
             this.kryptonLabel1.Values.Text = "合约:";
             // 
+            // kryptonLabel2
+            // 
+            this.kryptonLabel2.Location = new System.Drawing.Point(50, 127);
+            this.kryptonLabel2.Name = "kryptonLabel2";
+            this.kryptonLabel2.Size = new System.Drawing.Size(55, 18);
+            this.kryptonLabel2.TabIndex = 12;
+            this.kryptonLabel2.Values.Text = "到期日:";
+            // 
+            // expiredate
+            // 
+            this.expiredate.Location = new System.Drawing.Point(115, 126);
+            this.expiredate.Name = "expiredate";
+            this.expiredate.Size = new System.Drawing.Size(183, 20);
+            this.expiredate.TabIndex = 13;
+            // 
             // fmSymbolEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(442, 538);
+            this.ClientSize = new System.Drawing.Size(442, 549);
             this.Controls.Add(this.kryptonPanel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MaximizeBox = false;
@@ -543,5 +562,7 @@
         private ComponentFactory.Krypton.Toolkit.KryptonComboBox cblottolevel;
         private ComponentFactory.Krypton.Toolkit.KryptonComboBox cbulsymbol;
         private ComponentFactory.Krypton.Toolkit.KryptonButton btnSubmit;
+        private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel2;
+        private ComponentFactory.Krypton.Toolkit.KryptonDateTimePicker expiredate;
     }
 }

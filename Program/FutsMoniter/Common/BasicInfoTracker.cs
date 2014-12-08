@@ -190,6 +190,7 @@ namespace TradingLib.Common
                 target.Tradeable = symbol.Tradeable;
 
                 notify = target;
+                
 
             }
             else //添加

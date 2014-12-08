@@ -35,7 +35,7 @@ namespace FutsMoniter
             //超级管理员可以开启或者关闭清算中心
             kryptonRibbonGroupButton_OpenClearCentre.Visible = Globals.LoginResponse.Domain.Super;
             kryptonRibbonGroupButton_CloseClearCentre.Visible = Globals.LoginResponse.Domain.Super;
-            kryptonRibbonQATButton_debug.Visible = Globals.LoginResponse.Domain.Super;
+            kryptonRibbonQATButton_debug.Visible = true;// Globals.LoginResponse.Domain.Super;
 
 
             if (!Globals.LoginResponse.Domain.Super)

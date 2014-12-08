@@ -58,6 +58,19 @@ namespace TradingLib.Common
             }
         }
 
+        internal SymbolImpl this[int domain_id, int  idx]
+        {
+            get
+            {
+                DBSymbolTracker tracker = null;
+                if (domainsymboltracker.TryGetValue(domain_id, out tracker))
+                {
+                    return tracker[idx];
+                }
+                return null;
+            }
+        }
+
         /// <summary>
         /// 更新域的某个合约
         /// </summary>
@@ -72,7 +85,16 @@ namespace TradingLib.Common
             }
             domainsymboltracker[domain_id].UpdateSymbol(sym);
         }
-    
+
+        internal void SyncSymbol(Domain domain, SymbolImpl sym)
+        {
+            DBSymbolTracker tracker = null;
+            if (!domainsymboltracker.TryGetValue(domain.ID, out tracker))
+            {
+                domainsymboltracker.Add(domain.ID, new DBSymbolTracker(domain));
+            }
+            domainsymboltracker[domain.ID].SyncSymbol(sym);
+        }
     }
     /// <summary>
     /// 合约管理器用于获得合约对象
@@ -101,7 +123,7 @@ namespace TradingLib.Common
             {
                 sym.ULSymbol = this[sym.underlaying_fk];
                 sym.UnderlayingSymbol = this[sym.underlayingsymbol_fk];
-                sym.SecurityFamily = BasicTracker.SecurityTracker[sym.security_fk];
+                sym.SecurityFamily = BasicTracker.SecurityTracker[sym.Domain_ID,sym.security_fk];
             }
         }
 
@@ -230,8 +252,81 @@ namespace TradingLib.Common
             }
         }
 
-       
 
+        public void SyncSymbol(SymbolImpl sym)
+        {
+            SymbolImpl target = null;
+            if (symcodemap.TryGetValue(sym.Symbol, out target))//已经存在该合约
+            {
+
+                target.Symbol = sym.Symbol;
+                target.Domain_ID = _domain.ID;//更新域
+
+                //target.EntryCommission = sym._entrycommission;
+                //target.ExitCommission = sym._exitcommission;
+                //target.Margin = sym._margin;
+                //target.ExtraMargin = sym._extramargin;
+                //target.MaintanceMargin = sym._maintancemargin;
+                target.Strike = sym.Strike;
+                target.OptionSide = sym.OptionSide;
+                target.ExpireMonth = sym.ExpireMonth;
+                target.ExpireDate = sym.ExpireDate;
+
+                SecurityFamilyImpl sec = BasicTracker.SecurityTracker[target.Domain_ID, sym.SecurityFamily.Code];
+                target.SecurityFamily = sec;
+                target.security_fk = sec != null ? sec.ID : 0;
+
+                SymbolImpl ulsymbol = BasicTracker.SymbolTracker[target.Domain_ID, sym.ULSymbol != null ? sym.ULSymbol.Symbol : ""];
+                target.underlaying_fk = ulsymbol!=null?ulsymbol.ID:0;
+                target.ULSymbol =ulsymbol;
+
+                SymbolImpl layingsymbol = BasicTracker.SymbolTracker[target.Domain_ID, sym.UnderlayingSymbol != null ? sym.UnderlayingSymbol.Symbol : ""];
+                target.underlayingsymbol_fk = layingsymbol!=null?layingsymbol.underlayingsymbol_fk:0;
+                target.UnderlayingSymbol = layingsymbol;
+                //target.Tradeable = sym.Tradeable;//更新交易标识
+
+                ORM.MBasicInfo.UpdateSymbol(target);
+
+            }
+            else//不存在该合约
+            {
+                target = new SymbolImpl();
+                target.Symbol = sym.Symbol;
+                target.Domain_ID = _domain.ID;//更新域
+
+                target.EntryCommission = sym._entrycommission;
+                target.ExitCommission = sym._exitcommission;
+                target.Margin = sym._margin;
+                target.ExtraMargin = sym._extramargin;
+                target.MaintanceMargin = sym._maintancemargin;
+                target.Strike = sym.Strike;
+                target.OptionSide = sym.OptionSide;
+                target.ExpireMonth = sym.ExpireMonth;
+                target.ExpireDate = sym.ExpireDate;
+
+
+                SecurityFamilyImpl sec = BasicTracker.SecurityTracker[target.Domain_ID, sym.SecurityFamily.Code];
+                target.SecurityFamily = sec;
+                target.security_fk = sec!=null?sec.ID:0;
+
+                SymbolImpl ulsymbol = BasicTracker.SymbolTracker[target.Domain_ID, sym.ULSymbol != null ? sym.ULSymbol.Symbol : ""];
+                target.underlaying_fk = ulsymbol != null ? ulsymbol.ID : 0;
+                target.ULSymbol = ulsymbol;
+
+                SymbolImpl layingsymbol = BasicTracker.SymbolTracker[target.Domain_ID, sym.UnderlayingSymbol != null ? sym.UnderlayingSymbol.Symbol : ""];
+                target.underlayingsymbol_fk = layingsymbol != null ? layingsymbol.underlayingsymbol_fk : 0;
+                target.UnderlayingSymbol = layingsymbol;
+
+                target.Tradeable = sym.Tradeable;//更新交易标识
+
+
+                ORM.MBasicInfo.InsertSymbol(target);
+
+                symcodemap[target.Symbol] = target;
+                idxcodemap[target.ID] = target;
+
+            }
+        }
 
         public void UpdateSymbol(SymbolImpl sym)
         {
@@ -255,7 +350,7 @@ namespace TradingLib.Common
             {
                 target = new SymbolImpl();
                 target.Symbol = sym.Symbol;
-
+                target.Domain_ID = sym.Domain_ID;//更新域
                 target.EntryCommission = sym._entrycommission;
                 target.ExitCommission = sym._exitcommission;
                 target.Margin = sym._margin;
@@ -266,13 +361,13 @@ namespace TradingLib.Common
                 target.ExpireMonth = sym.ExpireMonth;
                 target.ExpireDate = sym.ExpireDate;
                 target.security_fk = sym.security_fk;
-                target.SecurityFamily = BasicTracker.SecurityTracker[target.security_fk];
+                target.SecurityFamily = BasicTracker.SecurityTracker[target.Domain_ID,target.security_fk];
                 target.underlaying_fk = sym.underlaying_fk;
-                target.ULSymbol = BasicTracker.SecurityTracker[target.underlaying_fk] as SymbolImpl;
+                target.ULSymbol = BasicTracker.SymbolTracker[target.Domain_ID,target.underlaying_fk] as SymbolImpl;
                 target.underlayingsymbol_fk = sym.underlayingsymbol_fk;
-                target.UnderlayingSymbol = BasicTracker.SecurityTracker[target.underlayingsymbol_fk] as SymbolImpl;
+                target.UnderlayingSymbol = BasicTracker.SymbolTracker[target.Domain_ID, target.underlayingsymbol_fk] as SymbolImpl;
                 target.Tradeable = sym.Tradeable;//更新交易标识
-                target.Domain_ID = sym.Domain_ID;//更新域
+                
 
                 ORM.MBasicInfo.InsertSymbol(target);
                 

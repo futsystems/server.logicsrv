@@ -21,6 +21,11 @@ namespace TradingLib.Common
             return sym;
         }
 
+        public static SecurityFamily GetSecurity(this IAccount account,string code)
+        {
+            SecurityFamily sec = account.Domain.GetSecurityFamily(code);
+            return sec;
+        }
         /// <summary>
         /// 获得某个帐户所有可交易合约
         /// </summary>

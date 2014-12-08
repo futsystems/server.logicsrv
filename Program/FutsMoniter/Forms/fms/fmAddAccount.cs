@@ -55,6 +55,11 @@ namespace FutsMoniter
             { 
                 
             }
+            if (acccat == QSEnumAccountCategory.REAL && grid == 0)
+            {
+                ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show("请选择路由组");
+                return;
+            }
             string accid = account.Text;
             string pass = password.Text;
             int mgrid = ctAgentList1.CurrentAgentFK;

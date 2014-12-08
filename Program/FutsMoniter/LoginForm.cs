@@ -89,7 +89,7 @@ namespace FutsMoniter
 
         public void ShowMessage(string msg)
         {
-            if (message.InvokeRequired)
+            if (InvokeRequired)
             {
                 Invoke(new DebugDelegate(ShowMessage), new object[] { msg });
             }

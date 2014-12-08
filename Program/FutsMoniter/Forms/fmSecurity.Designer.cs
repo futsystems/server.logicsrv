@@ -38,6 +38,7 @@
             this.cbsecurity = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
             this.kryptonLabel1 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.secgrid = new ComponentFactory.Krypton.Toolkit.KryptonDataGridView();
+            this.btnSyncSec = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cbtradeable)).BeginInit();
@@ -48,6 +49,7 @@
             // 
             // kryptonPanel1
             // 
+            this.kryptonPanel1.Controls.Add(this.btnSyncSec);
             this.kryptonPanel1.Controls.Add(this.btnAddSecurity);
             this.kryptonPanel1.Controls.Add(this.cbtradeable);
             this.kryptonPanel1.Controls.Add(this.kryptonLabel3);
@@ -131,6 +133,15 @@
             this.secgrid.Size = new System.Drawing.Size(1055, 615);
             this.secgrid.TabIndex = 0;
             // 
+            // btnSyncSec
+            // 
+            this.btnSyncSec.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSyncSec.Location = new System.Drawing.Point(858, 4);
+            this.btnSyncSec.Name = "btnSyncSec";
+            this.btnSyncSec.Size = new System.Drawing.Size(98, 25);
+            this.btnSyncSec.TabIndex = 8;
+            this.btnSyncSec.Values.Text = "同步品种数据";
+            // 
             // fmSecurity
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -163,5 +174,6 @@
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel3;
         private ComponentFactory.Krypton.Toolkit.KryptonComboBox cbtradeable;
         private ComponentFactory.Krypton.Toolkit.KryptonButton btnAddSecurity;
+        private ComponentFactory.Krypton.Toolkit.KryptonButton btnSyncSec;
     }
 }

@@ -12,9 +12,11 @@ namespace TradingLib.Common
 
         static BasicTracker defaultinstance;
         DBExchangeTracker extracker;
-        DBSecurityTracker setracker;
-        SymbolTracker symtracker;
         DBMarketTimeTracker mktimetracker;
+
+        SecurityTracker setracker;
+        SymbolTracker symtracker;
+        
 
         DBManagerTracker mgrtracker;
 
@@ -83,12 +85,12 @@ namespace TradingLib.Common
         /// <summary>
         /// 证券品种管理器
         /// </summary>
-        public static DBSecurityTracker SecurityTracker
+        public static SecurityTracker SecurityTracker
         {
             get
             {
                 if (defaultinstance.setracker == null)
-                    defaultinstance.setracker = new DBSecurityTracker();
+                    defaultinstance.setracker = new SecurityTracker();
                 return defaultinstance.setracker;
             }
         }
