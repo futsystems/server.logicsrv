@@ -104,5 +104,11 @@ namespace TradingLib.Common
         [NoJsonExportAttr()]
         public Domain Domain { get; internal set; }
 
+
+        /// <summary>
+        /// 是否需要绑定Vendor
+        /// </summary>
+        public bool NeedVendor { get; set; }
+
     }
 }

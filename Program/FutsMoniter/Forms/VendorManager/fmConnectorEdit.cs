@@ -55,6 +55,27 @@ namespace FutsMoniter
 
         private void btnSubmit_Click(object sender, EventArgs e)
         {
+            if (!InputReg.ConnectorToken.IsMatch(token.Text))
+            {
+                ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show("通道Token只允许使用字母,数字和-");
+                return;
+            }
+            if (!InputReg.ServerPort.IsMatch(port.Text))
+            {
+                ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show("服务器端口之允许正整数");
+                return;
+            }
+            System.Net.IPAddress outip;
+            if (!System.Net.IPAddress.TryParse(address.Text,out outip))
+            {
+                ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show("请输入有效的IP地址");
+                return;
+            }
+            if (string.IsNullOrEmpty(name.Text))
+            {
+                ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show("通道名称不能为空");
+                return;
+            }
             //新增
             if (_cfg == null)
             {

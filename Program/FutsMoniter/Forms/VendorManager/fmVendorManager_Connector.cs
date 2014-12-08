@@ -47,6 +47,47 @@ namespace FutsMoniter
                     InvokeGotConnector(op);
                 }
                 _gotconnector = true;
+                if (!_gotstatus)
+                {
+                    Globals.TLClient.ReqQryConnectorStatus();
+                }
+            }
+            else//如果没有配资服
+            {
+
+            }
+        }
+
+        bool _gotstatus = false;
+        void OnQryConnectorStatus(string jsonstr)
+        {
+            JsonData jd = TradingLib.Mixins.JsonReply.ParseJsonReplyData(jsonstr);
+            int code = int.Parse(jd["Code"].ToString());
+            if (code == 0)
+            {
+                ConnectorStatus[] objs = TradingLib.Mixins.JsonReply.ParsePlayload<ConnectorStatus[]>(jd);
+                foreach (ConnectorStatus op in objs)
+                {
+                    InvokeGotConnectorStatus(op);
+                }
+                _gotstatus = true;
+            }
+            else//如果没有配资服
+            {
+
+            }
+        }
+
+        void OnNotifyConnectorStatus(string jsonstr)
+        {
+            JsonData jd = TradingLib.Mixins.JsonReply.ParseJsonReplyData(jsonstr);
+            int code = int.Parse(jd["Code"].ToString());
+            if (code == 0)
+            {
+                ConnectorStatus obj = TradingLib.Mixins.JsonReply.ParsePlayload<ConnectorStatus>(jd);
+
+                InvokeGotConnectorStatus(obj);
+                _gotstatus = true;
             }
             else//如果没有配资服
             {
@@ -127,9 +168,34 @@ namespace FutsMoniter
             return title;
         }
 
+        bool GetVendorBindStatus(ConnectorConfig c)
+        {
+            string vtitle = string.Empty;
+            if (c.vendor_id == 0)
+            {
+                return false;
+            }
+            else
+            {
+                VendorSetting setting = ID2VendorSetting(c.vendor_id);
+                if (setting == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+        }
+
         string GetVendorTitle(ConnectorConfig c)
         {
             string vtitle = string.Empty;
+            if (!c.NeedVendor)
+            {
+                return "";
+            }
             if (c.vendor_id == 0)
             {
                 vtitle = "未绑定";
@@ -147,6 +213,40 @@ namespace FutsMoniter
                 }
             }
             return vtitle;
+        }
+
+        Image GetStatusImage(QSEnumConnectorStatus status)
+        {
+            if (status == QSEnumConnectorStatus.Start)
+            {
+                return (Image)Properties.Resources.start16;
+            }
+            else if (status == QSEnumConnectorStatus.Stop)
+            {
+                return (Image)Properties.Resources.stop16;
+            }
+            return (Image)Properties.Resources.start16;
+        }
+
+
+        void InvokeGotConnectorStatus(ConnectorStatus status)
+        {
+            if(InvokeRequired)
+            {
+                Invoke(new Action<ConnectorStatus>(InvokeGotConnectorStatus),new object[]{status});
+            }
+            else
+            {
+                int r = ConnectorIdx(status.ID);
+                if (r == -1)
+                {
+                }
+                else
+                {
+                    gt.Rows[r][CONSTATUS] = status.Status;
+                    gt.Rows[r][CONSTATUSIMG] = GetStatusImage(status.Status);
+                }
+            }
         }
         void InvokeGotConnector(ConnectorConfig c)
         {
@@ -174,9 +274,11 @@ namespace FutsMoniter
                     gt.Rows[i][PASSWORD] = c.usrinfo_password;
                     gt.Rows[i][USR1] = c.usrinfo_field1;
                     gt.Rows[i][USR2] = c.usrinfo_field2;
+                    
                     gt.Rows[i][INTERFACE] = GetInterfaceTite(c.interface_fk);
 
                     gt.Rows[i][VENDORACCOUNT] = GetVendorTitle(c);
+                    gt.Rows[i][ISBINDED] = GetVendorBindStatus(c);
 
                     connectorrowid.TryAdd(c.ID, i);
                     connectormap.TryAdd(c.ID, c);
@@ -195,6 +297,7 @@ namespace FutsMoniter
                     gt.Rows[r][USR2] = c.usrinfo_field2;
                     gt.Rows[r][NAME] = c.Name;
                     gt.Rows[r][VENDORACCOUNT] = GetVendorTitle(c);
+                    gt.Rows[r][ISBINDED] = GetVendorBindStatus(c);
                     connectormap[c.ID] = c;
                 }
 
@@ -210,16 +313,17 @@ namespace FutsMoniter
         const string SRV1 = "参数1";
         const string SRV2 = "参数2";
         const string SRV3 = "参数3";
-        const string USERID = "用户名";
+        const string USERID = "交易帐号";
         const string PASSWORD = "密码";
         const string USR1 = "参数1/U";
         const string USR2 = "参数2/U";
         const string INTERFACE = "接口";
         const string TOKEN = "标识";
         const string NAME = "名称";
-        const string VENDORACCOUNT = "帐户";
+        const string VENDORACCOUNT = "实盘帐户";
         const string ISBINDED = "Binded";
-
+        const string CONSTATUS="status";
+        const string CONSTATUSIMG = "状态";
         #endregion
 
         DataTable gt = new DataTable();
@@ -246,14 +350,94 @@ namespace FutsMoniter
             grid.StateCommon.Background.Color1 = Color.WhiteSmoke;
             grid.StateCommon.Background.Color2 = Color.WhiteSmoke;
 
-            grid.ContextMenuStrip = new ContextMenuStrip();
-            grid.ContextMenuStrip.Items.Add("添加通道", null, new EventHandler(AddConnector_Click));
-            grid.ContextMenuStrip.Items.Add("修改通道", null, new EventHandler(EditConnector_Click));
-            grid.ContextMenuStrip.Items.Add(new System.Windows.Forms.ToolStripSeparator());
-            grid.ContextMenuStrip.Items.Add("绑定通道", null, new EventHandler(BindConnector_Click));
-            grid.ContextMenuStrip.Items.Add("解绑通道", null, new EventHandler(UnBindConnector_Click));
+            //grid.ContextMenuStrip = new ContextMenuStrip();
+
+            routergridmenu = new ContextMenuStrip();
+            routergridmenu.Items.Add("添加通道", null, new EventHandler(AddConnector_Click));
+            routergridmenu.Items.Add("修改通道", null, new EventHandler(EditConnector_Click));
+            routergridmenu.Items.Add(new System.Windows.Forms.ToolStripSeparator());
+            routergridmenu.Items.Add("绑定通道", null, new EventHandler(BindConnector_Click));
+            routergridmenu.Items.Add("解绑通道", null, new EventHandler(UnBindConnector_Click));
+            routergridmenu.Items.Add(new System.Windows.Forms.ToolStripSeparator());
+            routergridmenu.Items.Add("启动通道", null, new EventHandler(StartConnector_Click));
+            routergridmenu.Items.Add("停止通道", null, new EventHandler(StopConnector_Click));
+
+        }
+
+        ContextMenuStrip routergridmenu = null;
+        
+
+        void configgrid_MouseClick(object sender, MouseEventArgs e)
+        {
+            //throw new NotImplementedException();
+            if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+                GetConnectorGridRightMenu().Show(Control.MousePosition);
+            }
+        }
+        ContextMenuStrip GetConnectorGridRightMenu()
+        {
+            ConnectorConfig cfg = CurrentConnectorConfig;
+            int r = ConnectorIdx(cfg.ID);
+            if (r > 0)
+            {
+                bool isvendorbinded = false;
+                if (cfg.NeedVendor)
+                {
+                    isvendorbinded = bool.Parse(gt.Rows[r][ISBINDED].ToString());
+                    routergridmenu.Items[3].Visible = true;
+                    routergridmenu.Items[4].Visible = true;
+                    if (isvendorbinded)
+                    {
+                        routergridmenu.Items[3].Enabled = false;
+                        routergridmenu.Items[4].Enabled = true;
+                    }
+                    else
+                    {
+                        routergridmenu.Items[3].Enabled = true;
+                        routergridmenu.Items[4].Enabled = false;
+                    }
+
+                }
+                else
+                {
+                    routergridmenu.Items[3].Visible = false;
+                    routergridmenu.Items[4].Visible = false;
+                }
+                if (isvendorbinded || !cfg.NeedVendor)
+                {
+                    routergridmenu.Items[6].Enabled = true;
+                    routergridmenu.Items[7].Enabled = true;
+                     QSEnumConnectorStatus status = (QSEnumConnectorStatus)Enum.Parse(typeof(QSEnumConnectorStatus),gt.Rows[r][CONSTATUS].ToString());
+                     switch (status)
+                     {
+                         case QSEnumConnectorStatus.Start:
+                             {
+                                 routergridmenu.Items[6].Enabled = false;
+                                 break;
+                             }
+                         case QSEnumConnectorStatus.Stop:
+                             {
+                                 routergridmenu.Items[7].Enabled = false;
+                                 break;
+                             }
+                         default:
+                             {
+                                 routergridmenu.Items[6].Enabled = false;
+                                 routergridmenu.Items[7].Enabled = false;
+                                 break;
+                             }
+                     }
+                }
+                else
+                {   //如果通道没有绑定 则启动停止不可用
+                    routergridmenu.Items[6].Enabled = false;
+                    routergridmenu.Items[7].Enabled = false;
+                }
+            }
             
 
+            return routergridmenu;
         }
 
         //初始化Account显示空格
@@ -276,7 +460,8 @@ namespace FutsMoniter
             gt.Columns.Add(INTERFACE);//1
             gt.Columns.Add(VENDORACCOUNT);
             gt.Columns.Add(ISBINDED);
-
+            gt.Columns.Add(CONSTATUS);
+            gt.Columns.Add(CONSTATUSIMG,typeof(Image));
 
         }
 
@@ -295,6 +480,18 @@ namespace FutsMoniter
             grid.Columns[PASSWORD].Visible = false;
             grid.Columns[USR1].Visible = false;
             grid.Columns[USR2].Visible = false;
+            grid.Columns[SRVADDRESS].Visible = false;
+            grid.Columns[SRVPORT].Visible = false;
+            grid.Columns[ISBINDED].Visible = false;
+            grid.Columns[CONSTATUS].Visible = false;
+
+            grid.Columns[ID].Width = 50;
+
+            grid.Columns[TOKEN].Width =100;
+            grid.Columns[NAME].Width = 130;
+            grid.Columns[USERID].Width = 100;
+            grid.Columns[INTERFACE].Width = 150;
+            grid.Columns[CONSTATUSIMG].Width = 40;
         }
 
 
@@ -377,5 +574,34 @@ namespace FutsMoniter
                 Globals.TLClient.ReqUnBindVendor(cfg.ID);
             }
         }
+
+        void StartConnector_Click(object sender, EventArgs e)
+        {
+            ConnectorConfig cfg = CurrentConnectorConfig;
+            if (cfg == null)
+            {
+                ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show("请选择通道");
+            }
+
+            if (fmConfirm.Show(string.Format("确认启动通道:{0}", cfg.Token)) == System.Windows.Forms.DialogResult.Yes)
+            {
+                Globals.TLClient.ReqStartConnector(cfg.ID);
+            }
+        }
+
+        void StopConnector_Click(object sender, EventArgs e)
+        {
+            ConnectorConfig cfg = CurrentConnectorConfig;
+            if (cfg == null)
+            {
+                ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show("请选择通道");
+            }
+
+            if (fmConfirm.Show(string.Format("确认停止通道:{0}", cfg.Token)) == System.Windows.Forms.DialogResult.Yes)
+            {
+                Globals.TLClient.ReqStopConnector(cfg.ID);
+            }
+        }
+
     }
 }

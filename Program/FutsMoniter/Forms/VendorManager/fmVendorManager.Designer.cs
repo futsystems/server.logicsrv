@@ -99,7 +99,7 @@
             this.kryptonPage3,
             this.kryptonPage1,
             this.pageroutergroup});
-            this.tabholder.SelectedIndex = 2;
+            this.tabholder.SelectedIndex = 1;
             this.tabholder.Size = new System.Drawing.Size(757, 277);
             this.tabholder.TabIndex = 0;
             this.tabholder.Text = "kryptonNavigator1";
@@ -145,7 +145,7 @@
             this.kryptonPage1.MinimumSize = new System.Drawing.Size(50, 50);
             this.kryptonPage1.Name = "kryptonPage1";
             this.kryptonPage1.Size = new System.Drawing.Size(755, 252);
-            this.kryptonPage1.Text = "通道列表";
+            this.kryptonPage1.Text = "通道设置";
             this.kryptonPage1.ToolTipTitle = "Page ToolTip";
             this.kryptonPage1.UniqueName = "34020F663F5E46D4FCA15E785DF5FA30";
             // 

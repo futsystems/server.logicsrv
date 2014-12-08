@@ -303,8 +303,14 @@ namespace TradingLib.BrokerXAPI
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public struct XTradeField
     {
+        /// <summary>
+        /// 日期
+        /// </summary>
         public int Date;//4
 
+        /// <summary>
+        /// 时间
+        /// </summary>
         public int Time;//4
 
         /// <summary>

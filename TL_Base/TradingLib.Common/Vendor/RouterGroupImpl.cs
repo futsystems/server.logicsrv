@@ -112,10 +112,19 @@ namespace TradingLib.Common
             }
         }
 
+        /// <summary>
+        /// 返回所有Vendor
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<Vendor> GetVendors()
         {
             return routeritemmap.Values.Where(r => r.Vendor != null).Select(r => r.Vendor);
         }
+
+        /// <summary>
+        /// 返回所有可用开仓的Vendor
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<Vendor> GetVendorsForOpen()
         {
             return routeritemmap.Values.Where(r => r.Active).Where(r => r.Vendor != null).Select(r => r.Vendor);
@@ -158,8 +167,9 @@ namespace TradingLib.Common
                 return null;
             }
             int idx = rd.Next(0, brokers.Length);
-
-            return brokers[idx];
+            IBroker broker = brokers[idx];
+            Util.Debug(string.Format("Stochastic Strategy Select Broker[{0}]", broker.Token), QSEnumDebugLevel.WARNING);
+            return broker;
         }
 
         IBroker PriorityBroker(Order o, decimal margintouse)
@@ -169,8 +179,9 @@ namespace TradingLib.Common
             {
                 return null;
             }
-            Util.Debug("----------------- prioritybroker token:" + brokers[0].Token, QSEnumDebugLevel.WARNING);
-            return brokers[0];//排序结果的第一个
+            IBroker broker = brokers[0];
+            Util.Debug(string.Format("Priority Strategy Select Broker[{0}]",broker.Token), QSEnumDebugLevel.WARNING);
+            return broker;
         }
         /// <summary>
         /// 返回默认的开仓通道，根据策略给出当前可用的开仓通道
@@ -180,7 +191,6 @@ namespace TradingLib.Common
         {
             if (this.Strategy == QSEnumRouterStrategy.Priority)
             {
-                Util.Debug("use priority strategy to select broker..", QSEnumDebugLevel.WARNING);
                 return PriorityBroker(o, margintouse);
             }
             else if(this.Strategy == QSEnumRouterStrategy.Stochastic)

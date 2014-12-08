@@ -12,5 +12,6 @@ namespace FutsMoniter
 {
     public partial class fmVendorManager
     {
+        
     }
 }

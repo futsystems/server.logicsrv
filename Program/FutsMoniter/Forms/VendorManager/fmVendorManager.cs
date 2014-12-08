@@ -53,6 +53,7 @@ namespace FutsMoniter
             Globals.RegIEventHandler(this);
             configgrid.DoubleClick +=new EventHandler(configgrid_DoubleClick);
             configgrid.RowPrePaint +=new DataGridViewRowPrePaintEventHandler(RowPrePaint);
+            configgrid.MouseClick += new MouseEventHandler(configgrid_MouseClick);
 
             vendorgrid.RowPrePaint += new DataGridViewRowPrePaintEventHandler(RowPrePaint);
             routeritemgrid.RowPrePaint +=new DataGridViewRowPrePaintEventHandler(RowPrePaint);
@@ -62,6 +63,8 @@ namespace FutsMoniter
             tabholder.SelectedPageChanged += new EventHandler(tabholder_SelectedPageChanged);
             //ctRouterGroupList1.RouterGroupSelectedChangedEvent +=new TradingLib.API.VoidDelegate(ctRouterGroupList1_RouterGroupSelectedChangedEvent);
         }
+
+
 
         void tabholder_SelectedPageChanged(object sender, EventArgs e)
         {
@@ -88,6 +91,9 @@ namespace FutsMoniter
             Globals.CallBackCentre.RegisterCallback("ConnectorManager", "NotifyRouterItem", this.OnNotifyRouterItem);
             Globals.CallBackCentre.RegisterCallback("ConnectorManager", "NotifyRouterGroup", this.OnNotifyRouterGroup);
 
+            Globals.CallBackCentre.RegisterCallback("ConnectorManager", "QryConnectorStatus", this.OnQryConnectorStatus);
+            Globals.CallBackCentre.RegisterCallback("ConnectorManager", "NotifyConnectorStatus", this.OnNotifyConnectorStatus);
+
         }
 
         public void OnDisposed()
@@ -100,8 +106,13 @@ namespace FutsMoniter
             Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "NotifyVendor", this.OnNotifyVendorBind);
             Globals.CallBackCentre.UnRegisterCallback("ConnectorManager", "NotifyRouterItem", this.OnNotifyRouterItem);
             Globals.CallBackCentre.UnRegisterCallback("ConnectorManager", "NotifyVendor", this.OnNotifyVendorBind);
-            
+
+            Globals.CallBackCentre.UnRegisterCallback("ConnectorManager", "QryConnectorStatus", this.OnQryConnectorStatus);
+            Globals.CallBackCentre.UnRegisterCallback("ConnectorManager", "NotifyConnectorStatus", this.OnNotifyConnectorStatus);
+
         }
+
+
 
         ConnectorInterface ID2Interface(int id)
         {

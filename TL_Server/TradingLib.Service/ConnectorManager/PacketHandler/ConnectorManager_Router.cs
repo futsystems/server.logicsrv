@@ -9,6 +9,14 @@ using TradingLib.LitJson;
 
 namespace TradingLib.ServiceManager
 {
+    internal enum QSEnumConnectorOperation
+    { 
+        Start,//启动
+
+        Stop,//停止
+    }
+    internal delegate void AsyncConnectorOperationDel(ISession session, ConnectorConfig cfg, QSEnumConnectorOperation op);
+
     public partial class ConnectorManager
     {
 
@@ -25,6 +33,58 @@ namespace TradingLib.ServiceManager
                 session.SendJsonReplyMgr(ops);
             }
         }
+
+
+        ConnectorStatus GetConnectorStatus(ConnectorConfig cfg)
+        {
+            ConnectorStatus status = new ConnectorStatus();
+            status.ID = cfg.ID;
+            status.Token = cfg.Token;
+
+            //接口有效
+            if (cfg.Interface != null && cfg.Interface.IsValid)
+            {
+                IConnecter connector = null;
+                if (cfg.Interface.Type == QSEnumConnectorType.Broker)
+                {
+                    connector = this.FindBroker(cfg.Token);
+                }
+                else
+                {
+                    connector = this.FindDataFeed(cfg.Token);
+                }
+                if (connector != null)
+                {
+                    status.Status = connector.IsLive ? QSEnumConnectorStatus.Start : QSEnumConnectorStatus.Stop;
+                }
+                else
+                {
+                    status.Status = QSEnumConnectorStatus.LoadError;//通道加载异常
+                }
+
+            }
+            else
+            {
+                status.Status = QSEnumConnectorStatus.InterfaceError;//底层接口异常
+            }
+            return status;
+        }
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryConnectorStatus", "QryConnectorStatus - query connector status", "查询所有通道状态")]
+        public void CTE_QueryConnectorStatus(ISession session)
+        {
+            debug("查询所有通道状态", QSEnumDebugLevel.INFO);
+            Manager manger = session.GetManager();
+            if (manger.RightRootDomain())
+            {
+                //获得域内所有通道设置
+                ConnectorStatus[] ops = manger.Domain.GetConnectorConfigs().Select(cfg => GetConnectorStatus(cfg)).ToArray();// BasicTracker.ConnectorConfigTracker.ConnecotrConfigs.ToArray();
+                session.SendJsonReplyMgr(ops);
+            }
+        }
+
+
+
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateConnectorConfig", "UpdateConnectorConfig - update connector config", "更新通道设置", true)]
         public void CTE_UpdateConnectorConfig(ISession session, string json)

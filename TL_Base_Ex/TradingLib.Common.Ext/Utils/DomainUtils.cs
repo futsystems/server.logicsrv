@@ -10,6 +10,25 @@ namespace TradingLib.Common
 {
     public static class DomainUtils
     {
+
+        /// <summary>
+        /// 返回某个域的所有管理员地址
+        /// </summary>
+        /// <param name="domain"></param>
+        /// <returns></returns>
+        public static IEnumerable<ILocation> GetRootLocations(this Domain domain)
+        { 
+            Predicate<Manager> p = null;
+            p =(mgr)=>{
+                if(mgr.Domain != null && mgr.domain_id == domain.ID && mgr.Type == QSEnumManagerType.ROOT)
+                {
+                    return true;
+                }
+                else
+                    return false;
+            };
+            return TLCtxHelper.Ctx.MessageMgr.GetNotifyTargets(p);
+        }
         /// <summary>
         /// 获得某个域的Root Manager
         /// </summary>

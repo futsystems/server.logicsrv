@@ -588,6 +588,7 @@
     </Compile>
     <Compile Include="Glabols.cs" />
     <Compile Include="Globals_.cs" />
+    <Compile Include="InputReg.cs" />
     <Compile Include="JsonObject\JsonProtocolFinService.cs" />
     <Compile Include="LoginForm.cs">
       <SubType>Form</SubType>

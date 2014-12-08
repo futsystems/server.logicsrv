@@ -240,6 +240,9 @@ namespace FutsMoniter
             vendordatasource.DataSource = vendorgt;
             grid.DataSource = vendordatasource;
 
+            grid.Columns[VENDORID].Width = 50;
+            grid.Columns[VENDORNAME].Width = 120;
+            grid.Columns[FUTCOMPANY].Width = 150;
             //grid.Columns[ID].Width = 50;
             //grid.Columns[NAME].Width = 120;
             //grid.Columns[ISXAPI].Width = 50;

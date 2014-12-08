@@ -166,13 +166,18 @@ namespace Broker.Live
         OrderSplitTracker _splittracker= null;
 
         #region 委托拆分逻辑
+
+        List<Order> SplitOrder(Order o)
+        {
+            return SP_SplitOrder(o);
+        }
         /// <summary>
         /// 直接发送委托
         /// 不分拆委托进行保证金降低
         /// </summary>
         /// <param name="o"></param>
         /// <returns></returns>
-        List<Order> DirectOrder(Order o)
+        List<Order> SP_DirectOrder(Order o)
         {
             List<Order> olist = new List<Order>();
             Order neworder = new OrderImpl(o);
@@ -187,7 +192,7 @@ namespace Broker.Live
         /// </summary>
         /// <param name="o"></param>
         /// <returns></returns>
-        List<Order> SplitOrder(Order o)
+        List<Order> SP_SplitOrder(Order o)
         {
             List<Order> olist = new List<Order>();
 

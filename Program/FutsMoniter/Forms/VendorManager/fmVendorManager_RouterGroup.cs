@@ -228,8 +228,10 @@ namespace FutsMoniter
             grid.ContextMenuStrip.Items.Add(new System.Windows.Forms.ToolStripSeparator());
             grid.ContextMenuStrip.Items.Add("添加路由", null, new EventHandler(AddRouterItem_Click));
             grid.ContextMenuStrip.Items.Add("修改路由", null, new EventHandler(EditRouterItem_Click));
+            grid.ContextMenuStrip.Items.Add(new System.Windows.Forms.ToolStripSeparator());
 
         }
+        
 
         //初始化Account显示空格
         private void InitTable_RouterItem()
@@ -254,6 +256,7 @@ namespace FutsMoniter
 
             grid.Columns[GROUPID].Visible = false;
 
+            
         }
 
 

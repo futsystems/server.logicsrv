@@ -133,7 +133,7 @@ namespace TradingLib.Core
 
         void BrokerCancelOrder(Order o)
         {
-            IBroker broker = SelectBroker(o);
+            IBroker broker = SelectBroker(o,true);
             if (broker != null && broker.IsLive)
             {
                 broker.CancelOrder(o.id);
