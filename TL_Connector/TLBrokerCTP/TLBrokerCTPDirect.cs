@@ -686,7 +686,7 @@ namespace Broker.Live
         /// <param name="o"></param>
         void SendSonOrder(Order o)
         {
-            debug("XAP[" + this.Token + "] Send SonOrder: " + o.GetOrderInfo(true), QSEnumDebugLevel.INFO);
+            debug("XAPI[" + this.Token + "] Send SonOrder: " + o.GetOrderInfo(true), QSEnumDebugLevel.INFO);
             XOrderField order = new XOrderField();
 
             order.ID = o.id.ToString();
@@ -789,8 +789,6 @@ namespace Broker.Live
                             remoteOrderID_map.TryAdd(order.BrokerRemoteOrderID, o);
                         }
                     }
-
-
                 }
                 Util.Debug("更新子委托:" + o.GetOrderInfo(true), QSEnumDebugLevel.INFO);
                 tk.GotOrder(o);
@@ -836,11 +834,10 @@ namespace Broker.Live
 
         public override void ProcessOrderError(ref XOrderError error)
         {
-            Util.Debug("some error accor in order:" + error.Order.BrokerLocalOrderID, QSEnumDebugLevel.WARNING);
+            debug(string.Format("OrderError LocalID:{0} RemoteID:{1} ErrorID:{2} ErrorMsg:{3}", error.Order.BrokerLocalOrderID, error.Order.BrokerRemoteOrderID, error.Error.ErrorID, error.Error.ErrorMsg), QSEnumDebugLevel.ERROR);
             Order o = LocalID2Order(error.Order.BrokerLocalOrderID);
             if (o != null)
             {
-                //
                 o.Status = QSEnumOrderStatus.Reject;
                 o.Comment = error.Error.ErrorMsg;
                 Util.Debug("更新子委托:" + o.GetOrderInfo(true), QSEnumDebugLevel.INFO);
@@ -852,14 +849,18 @@ namespace Broker.Live
                 info.ErrorMessage = error.Error.ErrorMsg;
 
                 _splittracker.GotSonOrderError(o, info);
+                //平仓量超过持仓量
+                if (error.Error.ErrorID == 30)
+                {
+
+                }
 
             }
         }
 
         public override void ProcessOrderActionError(ref XOrderActionError error)
         {
-            Util.Debug("some error happend in order action", QSEnumDebugLevel.WARNING);
-            Util.Debug("remoteid:" + error.OrderAction.BrokerRemoteOrderID + " local: " + error.OrderAction.BrokerLocalOrderID + " errorid:" + error.Error.ErrorID.ToString() + " message:" + error.Error.ErrorMsg);
+            debug(string.Format("OrderActionError LocalID:{0} RemoteID:{1} ErrorID:{2} ErrorMsg:{3}", error.OrderAction.BrokerLocalOrderID, error.OrderAction.BrokerRemoteOrderID, error.Error.ErrorID, error.Error.ErrorMsg), QSEnumDebugLevel.ERROR);
             Order o = LocalID2Order(error.OrderAction.BrokerLocalOrderID);
             if (o != null)
             {
@@ -875,6 +876,10 @@ namespace Broker.Live
                     this.LogBrokerOrderUpdate(o);//委托跟新 更新到数据库
 
                     _splittracker.GotSonOrder(o);//委托分拆器获得子委托,用于对外更新父委托 这里采用委托更新还是委托操作错误更新，再研究
+                }
+                else
+                {
+
                 }
             }
         }

@@ -35,7 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>moniter-oem.ico</ApplicationIcon>
+    <ApplicationIcon>moniter0.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ComponentFactory.Krypton.Navigator, Version=4.4.0.0, Culture=neutral, PublicKeyToken=a87e673e9ecb6e8e, processorArchitecture=MSIL">
@@ -517,12 +517,6 @@
     <Compile Include="Forms\fms\fmPaySlipAgent.Designer.cs">
       <DependentUpon>fmPaySlipAgent.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\fms\fmRouterMoniter.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\fms\fmRouterMoniter.Designer.cs">
-      <DependentUpon>fmRouterMoniter.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\fms\fmRuleSetConfig.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -824,9 +818,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\fms\fmPaySlipAgent.resx">
       <DependentUpon>fmPaySlipAgent.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\fms\fmRouterMoniter.resx">
-      <DependentUpon>fmRouterMoniter.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\fms\fmRuleSetConfig.resx">
       <DependentUpon>fmRuleSetConfig.cs</DependentUpon>

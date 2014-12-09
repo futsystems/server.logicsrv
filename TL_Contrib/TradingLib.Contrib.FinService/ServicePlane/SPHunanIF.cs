@@ -29,21 +29,21 @@ namespace TradingLib.Contrib.FinService
         /// <summary>
         /// 配资比例
         /// </summary>
-        [ArgumentAttribute("FinAmount", "配资额度", EnumArgumentType.DECIMAL, false, 0, 0)]
+        [ArgumentAttribute("FinAmount", "配资额度", EnumArgumentType.DECIMAL, true, 0, 0)]
         public ArgumentPair FinAmount { get; set; }
 
 
         /// <summary>
         /// 配资比例
         /// </summary>
-        [ArgumentAttribute("FinLever", "配资比例", EnumArgumentType.INT,false,25,25)]
+        [ArgumentAttribute("FinLever", "配资比例", EnumArgumentType.INT, true, 25, 25)]
         public ArgumentPair FinLever { get; set; }
         
 
         /// <summary>
         /// 强平比例 配资金额的2%
         /// </summary>
-        [ArgumentAttribute("StopPect", "强平比例", EnumArgumentType.DECIMAL, false,0.02,0.02)]
+        [ArgumentAttribute("StopPect", "强平比例", EnumArgumentType.DECIMAL, true, 0.02, 0.02)]
         public ArgumentPair StopPect { get; set; }
 
 

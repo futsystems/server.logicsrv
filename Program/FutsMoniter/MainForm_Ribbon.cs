@@ -246,11 +246,11 @@ namespace FutsMoniter
 
         void kryptonRibbonGroupButton_RouterList_Click(object sender, EventArgs e)
         {
-            if (routerform != null)
-            {
-                routerform.Show();
-                Globals.TLClient.ReqQryConnector();
-            }
+            //if (routerform != null)
+            //{
+            //    routerform.Show();
+            //    Globals.TLClient.ReqQryConnector();
+            //}
         }
 
 

@@ -35,11 +35,11 @@ namespace TradingLib.Common
             //posincrement = increment;
 
             decimal marginwilluse = margintouse / o.UnsignedSize * increment;//按比例计算实际使用的保证金
-
-            Util.Debug("Order Need Margin:" + margintouse.ToString() + " Position Increment:" + increment.ToString() + " MarginWillUse:" + marginwilluse.ToString(), QSEnumDebugLevel.WARNING);
-            if (increment <= 0) return true;
             //这里需要考虑到净持仓,如果可以进行净持仓操作,则需要按规则下到净持仓里面,而不受保证金占用
             decimal marginused = v.CalMargin() + v.CalMarginFrozen();//计算当前使用保证金
+
+            Util.Debug(string.Format("Vendor:{0} MarginUsedNow:{1} OrderMargin:{2} PositionIncrement:{3} MarginWillUse:{4}",v.Name,marginused,margintouse,increment, marginwilluse), QSEnumDebugLevel.WARNING);
+            if (increment <= 0) return true;
 
             //当前已经使用的保证金 + 即将使用的保证金 需要小于我们设定的保证金限额
             if (v.MarginLimit > 1)
@@ -48,7 +48,7 @@ namespace TradingLib.Common
             }
             else
             {
-                return true;
+                return true;//marginused + marginwilluse/;
             }
         }
 

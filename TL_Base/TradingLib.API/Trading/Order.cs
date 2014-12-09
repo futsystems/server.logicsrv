@@ -295,8 +295,10 @@ namespace TradingLib.API
         #endregion
 
 
-
-
+        /// <summary>
+        /// 本地CopyID
+        /// </summary>
+        int CopyID { get; set; }
 
 
 

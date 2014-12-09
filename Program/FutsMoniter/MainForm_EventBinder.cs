@@ -46,7 +46,7 @@ namespace FutsMoniter
                 }
                 else
                 {
-                    kryptonRibbonGroupButton_RouterList.Visible = Globals.UIAccess.nav_system_router;
+                    //kryptonRibbonGroupButton_RouterList.Visible = Globals.UIAccess.nav_system_router;
                     kryptonRibbonGroupButton_SystemStatus.Visible = Globals.UIAccess.nav_system_corestatus;
                 }
 

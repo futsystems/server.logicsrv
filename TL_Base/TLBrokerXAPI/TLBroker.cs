@@ -299,13 +299,13 @@ namespace TradingLib.BrokerXAPI
         #region 底层wrapper发送委托或取消委托
         protected bool WrapperSendOrder(ref XOrderField order)
         {
-            Util.Debug("~~~~~OrderSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XOrderField)));
+            //Util.Debug("~~~~~OrderSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XOrderField)));
             return _wrapper.SendOrder(ref order);
         }
 
         protected bool WrapperSendOrderAction(ref XOrderActionField action)
         {
-            Util.Debug("~~~~~OrderSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XOrderActionField)));
+            //Util.Debug("~~~~~OrderSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XOrderActionField)));
             return _wrapper.SendOrderAction(ref action);
         }
         #endregion
@@ -422,7 +422,7 @@ namespace TradingLib.BrokerXAPI
         void _wrapper_OnRtnOrderEvent(ref XOrderField pOrder)
         {
             Util.Debug("-----------TLBroker OnRtnOrderEvent-----------------------", QSEnumDebugLevel.WARNING);
-            Util.Debug(" date:" + pOrder.Date + "time:"+pOrder.Time + " exchange:" + pOrder.Exchange + " filledsize:" + pOrder.FilledSize.ToString() + " limitprice:" + pOrder.LimitPrice + " offsetflag:" + pOrder.OffsetFlag.ToString() + " orderid:" + pOrder.ID + " status:" + pOrder.OrderStatus.ToString() + " side:" + pOrder.Side + " stopprice:" + pOrder.StopPrice.ToString() + " symbol:" + pOrder.Symbol + " totalsize:" + pOrder.TotalSize.ToString() + " unfilledsize:" + pOrder.UnfilledSize.ToString() + " statusmsg:" + pOrder.StatusMsg);
+            //Util.Debug(" date:" + pOrder.Date + "time:"+pOrder.Time + " exchange:" + pOrder.Exchange + " filledsize:" + pOrder.FilledSize.ToString() + " limitprice:" + pOrder.LimitPrice + " offsetflag:" + pOrder.OffsetFlag.ToString() + " orderid:" + pOrder.ID + " status:" + pOrder.OrderStatus.ToString() + " side:" + pOrder.Side + " stopprice:" + pOrder.StopPrice.ToString() + " symbol:" + pOrder.Symbol + " totalsize:" + pOrder.TotalSize.ToString() + " unfilledsize:" + pOrder.UnfilledSize.ToString() + " statusmsg:" + pOrder.StatusMsg);
             
             _ordercache.Write(pOrder);
             NewNotify();
@@ -431,27 +431,29 @@ namespace TradingLib.BrokerXAPI
         void _wrapper_OnRtnOrderErrorEvent(ref XOrderField pOrder, ref XErrorField pError)
         {
             Util.Debug("-----------TLBroker OnRtnOrderErrorEvent-----------------------", QSEnumDebugLevel.WARNING);
-            Util.Debug("~~~~~ErrorSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XErrorField)), QSEnumDebugLevel.WARNING);
-            Util.Debug("order localid:" + pOrder.BrokerLocalOrderID + " errorid:" + pError.ErrorID.ToString() + " errmsg:" + pError.ErrorMsg, QSEnumDebugLevel.MUST);
-            Util.Debug(" data:" + pOrder.Date + " exchange:" + pOrder.Exchange + " filledsize:" + pOrder.FilledSize.ToString() + " limitprice:" + pOrder.LimitPrice + " offsetflag:" + pOrder.OffsetFlag.ToString() + " orderid:" + pOrder.ID + " status:" + pOrder.OrderStatus.ToString() + " side:" + pOrder.Side + " stopprice:" + pOrder.StopPrice.ToString() + " symbol:" + pOrder.Symbol + " totalsize:" + pOrder.TotalSize.ToString() + " unfilledsize:" + pOrder.UnfilledSize.ToString() + " statusmsg:" + pOrder.StatusMsg);
+            //Util.Debug("~~~~~ErrorSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XErrorField)), QSEnumDebugLevel.WARNING);
+            //Util.Debug("order localid:" + pOrder.BrokerLocalOrderID + " errorid:" + pError.ErrorID.ToString() + " errmsg:" + pError.ErrorMsg, QSEnumDebugLevel.MUST);
+            //Util.Debug(" data:" + pOrder.Date + " exchange:" + pOrder.Exchange + " filledsize:" + pOrder.FilledSize.ToString() + " limitprice:" + pOrder.LimitPrice + " offsetflag:" + pOrder.OffsetFlag.ToString() + " orderid:" + pOrder.ID + " status:" + pOrder.OrderStatus.ToString() + " side:" + pOrder.Side + " stopprice:" + pOrder.StopPrice.ToString() + " symbol:" + pOrder.Symbol + " totalsize:" + pOrder.TotalSize.ToString() + " unfilledsize:" + pOrder.UnfilledSize.ToString() + " statusmsg:" + pOrder.StatusMsg);
             
             _ordererrorcache.Write(new XOrderError(pOrder, pError));
+            NewNotify();
         }
         void _wrapper_OnRtnOrderActionErrorEvent(ref XOrderActionField pOrderAction, ref XErrorField pError)
         {
             Util.Debug("-----------TLBroker OrderActionErrorEvent-----------------------", QSEnumDebugLevel.WARNING);
-            Util.Debug("~~~~~OrderActionSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XOrderActionField)), QSEnumDebugLevel.WARNING);
+            //Util.Debug("~~~~~OrderActionSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XOrderActionField)), QSEnumDebugLevel.WARNING);
            
             _orderactionerrorcache.Write(new XOrderActionError(pOrderAction, pError));
+            NewNotify();
         }
 
         void _wrapper_OnRtnTradeEvent(ref XTradeField pTrade)
         {
             Util.Debug("-----------TLBroker OnRtnTradeEvent-----------------------", QSEnumDebugLevel.WARNING);
-            Util.Debug("~~~~~TradeSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XTradeField)), QSEnumDebugLevel.WARNING);
+            //Util.Debug("~~~~~TradeSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XTradeField)), QSEnumDebugLevel.WARNING);
             //Util.Debug("Trade:" + TradingLib.Mixins.LitJson.JsonMapper.ToJson(pTrade), QSEnumDebugLevel.WARNING);
             //Console.WriteLine("got new trade..???????????????????????");
-            Util.Debug("tradefield commission:" + pTrade.Commission + " date:" + pTrade.Date.ToString() + " exchange:" + pTrade.Exchange + " offsetflag:" + pTrade.OffsetFlag.ToString() + " price:" + pTrade.Price.ToString() + " side:" + pTrade.Side.ToString() + " size:" + pTrade.Size.ToString() + " symbol:" + pTrade.Symbol + " time:" + pTrade.Time + " tradeid:" + pTrade.BrokerTradeID +" ordresysid:"+pTrade.BrokerRemoteOrderID +" date:"+pTrade.Date.ToString() +" time:"+pTrade.Time.ToString());
+            //Util.Debug("tradefield commission:" + pTrade.Commission + " date:" + pTrade.Date.ToString() + " exchange:" + pTrade.Exchange + " offsetflag:" + pTrade.OffsetFlag.ToString() + " price:" + pTrade.Price.ToString() + " side:" + pTrade.Side.ToString() + " size:" + pTrade.Size.ToString() + " symbol:" + pTrade.Symbol + " time:" + pTrade.Time + " tradeid:" + pTrade.BrokerTradeID +" ordresysid:"+pTrade.BrokerRemoteOrderID +" date:"+pTrade.Date.ToString() +" time:"+pTrade.Time.ToString());
             _tradecache.Write(pTrade);
             NewNotify();
         }

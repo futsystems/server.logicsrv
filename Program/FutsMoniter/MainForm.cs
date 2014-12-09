@@ -26,7 +26,7 @@ namespace FutsMoniter
         string _servers = "127.0.0.1";
 
         DebugForm debugform = new DebugForm();
-        fmRouterMoniter routerform;
+        //fmRouterMoniter routerform;
         fmExchange exchangeform;
         fmMarketTime markettimeform;
         fmSecurity securityform;
@@ -120,7 +120,7 @@ namespace FutsMoniter
 
 
 
-            routerform = new fmRouterMoniter();
+            //routerform = new fmRouterMoniter();
             exchangeform = new fmExchange();
             markettimeform = new fmMarketTime();
             securityform = new fmSecurity();

@@ -46,7 +46,7 @@ namespace TradingLib.BrokerXAPI
         public event FillDelegate GotFillEvent;
         protected void NotifyTrade(Trade f)
         {
-            Util.Debug("brokerbase notify trade outside........", QSEnumDebugLevel.WARNING);
+            debug("Notify Trade:" + f.GetTradeDetail(), QSEnumDebugLevel.INFO);
             if (GotFillEvent != null)
                 GotFillEvent(f);
         }
@@ -57,7 +57,7 @@ namespace TradingLib.BrokerXAPI
         public event OrderDelegate GotOrderEvent;
         protected void NotifyOrder(Order o)
         {
-            Util.Debug("brokerbase notify order outside........", QSEnumDebugLevel.WARNING);
+            debug("Notify Order:" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
             if (GotOrderEvent != null)
                 GotOrderEvent(o);
         }
@@ -68,15 +68,18 @@ namespace TradingLib.BrokerXAPI
         public event LongDelegate GotCancelEvent;
         protected void NotifyCancel(long oid)
         {
+            debug("Notify Cancel:" + oid.ToString(), QSEnumDebugLevel.INFO);
             if (GotCancelEvent != null)
                 GotCancelEvent(oid);
         }
+
         /// <summary>
         /// ordermessage acknowledgement
         /// </summary>
         public event OrderErrorDelegate GotOrderErrorEvent;
         protected void NotifyOrderError(Order o, RspInfo info)
         {
+            debug("Notify OrderError:" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
             if (GotOrderErrorEvent != null)
                 GotOrderErrorEvent(o, info);
         }
@@ -87,6 +90,7 @@ namespace TradingLib.BrokerXAPI
         public event OrderActionErrorDelegate GotOrderActionErrorEvent;
         protected void NotifyOrderOrderActionError(OrderAction acton, RspInfo info)
         {
+            debug("Notify OrderActionError:", QSEnumDebugLevel.INFO);
             if (GotOrderActionErrorEvent != null)
                 GotOrderActionErrorEvent(acton, info);
         }

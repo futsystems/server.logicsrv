@@ -112,32 +112,16 @@ namespace TradingLib.Common
             }
         }
 
+        #region 获得平仓Broker
         /// <summary>
         /// 返回所有Vendor
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Vendor> GetVendors()
+        IEnumerable<Vendor> GetVendors()
         {
             return routeritemmap.Values.Where(r => r.Vendor != null).Select(r => r.Vendor);
         }
 
-        /// <summary>
-        /// 返回所有可用开仓的Vendor
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<Vendor> GetVendorsForOpen()
-        {
-            return routeritemmap.Values.Where(r => r.Active).Where(r => r.Vendor != null).Select(r => r.Vendor);
-        }
-
-        /// <summary>
-        /// 按优先级别排序获得RouterItem中的Vendor
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<Vendor> GetVendorsSorted()
-        {
-            return routeritemmap.Values.Where(r => r.Vendor != null).OrderBy(r => r.priority).Select(r => r.Vendor);
-        }
         /// <summary>
         /// 获得IBroker成交路由
         /// 路由选择主体逻辑
@@ -155,8 +139,29 @@ namespace TradingLib.Common
                 return null;
         }
 
+        #endregion
+
+
+        #region 获得开仓Broker
         Random rd = new Random(Util.ToTLTime());
 
+        /// <summary>
+        /// 返回所有可用开仓的Vendor
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<Vendor> GetVendorsForOpen()
+        {
+            return routeritemmap.Values.Where(r => r.Active).Where(r => r.Vendor != null).Select(r => r.Vendor);
+        }
+
+        /// <summary>
+        /// 按优先级别排序获得可开仓Vendor
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<Vendor> GetVendorsForOpenSorted()
+        {
+            return routeritemmap.Values.Where(r => r.Active).Where(r => r.Vendor != null).OrderBy(r => r.priority).Select(r => r.Vendor);
+        }
 
         IBroker StochasticBroker(Order o, decimal margintouse)
         {
@@ -174,7 +179,7 @@ namespace TradingLib.Common
 
         IBroker PriorityBroker(Order o, decimal margintouse)
         {
-            IBroker[] brokers = GetVendorsForOpen().Where(v => v.IsBrokerAvabile()).Where(v => v.AcceptEntryOrder(o, margintouse)).Select(v => v.Broker).ToArray();
+            IBroker[] brokers = GetVendorsForOpenSorted().Where(v => v.IsBrokerAvabile()).Where(v => v.AcceptEntryOrder(o, margintouse)).Select(v => v.Broker).ToArray();
             if (brokers.Length < 1)
             {
                 return null;
@@ -203,6 +208,9 @@ namespace TradingLib.Common
             }
            
         }
+        #endregion
+
+
 
         public void Start()
         {

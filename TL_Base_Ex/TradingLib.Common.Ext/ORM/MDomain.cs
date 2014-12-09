@@ -27,7 +27,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("UPDATE domain SET name='{0}' ,linkman='{1}',mobile='{2}',qq='{3}',email='{4}',dateexpired='{5}',acclimit='{6}',routergrouplimit='{7}',routeritemlimit='{8}',interfacelist='{9}',module_agent='{10}',module_finservice='{11}',module_payonline='{12}',router_live='{13}',router_sim='{14}'  WHERE id='{14}'", domain.Name, domain.LinkMan, domain.Mobile, domain.QQ, domain.Email, domain.DateExpired, domain.AccLimit, domain.RouterGroupLimit, domain.RouterItemLimit, domain.InterfaceList, domain.Module_Agent ? 1 : 0, domain.Module_FinService ? 1 : 0, domain.Module_PayOnline ? 1 : 0, domain.Router_Live ? 1 : 0, domain.Router_Sim ? 1 : 0, domain.ID);
+                string query = string.Format("UPDATE domain SET name='{0}' ,linkman='{1}',mobile='{2}',qq='{3}',email='{4}',dateexpired='{5}',acclimit='{6}',routergrouplimit='{7}',routeritemlimit='{8}',interfacelist='{9}',module_agent='{10}',module_finservice='{11}',module_payonline='{12}',router_live='{13}',router_sim='{14}'  WHERE id='{15}'", domain.Name, domain.LinkMan, domain.Mobile, domain.QQ, domain.Email, domain.DateExpired, domain.AccLimit, domain.RouterGroupLimit, domain.RouterItemLimit, domain.InterfaceList, domain.Module_Agent ? 1 : 0, domain.Module_FinService ? 1 : 0, domain.Module_PayOnline ? 1 : 0, domain.Router_Live ? 1 : 0, domain.Router_Sim ? 1 : 0, domain.ID);
                 db.Connection.Execute(query);
             }
         }

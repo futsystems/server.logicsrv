@@ -34,7 +34,7 @@ namespace TradingLib.Common
 
 
         /// <summary>
-        /// 强平帐户持仓
+        /// 强平帐户所有持仓
         /// </summary>
         /// <param name="source"></param>
         /// <param name="comment"></param>

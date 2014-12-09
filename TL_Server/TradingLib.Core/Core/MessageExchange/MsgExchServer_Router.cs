@@ -103,7 +103,6 @@ namespace TradingLib.Core
             _brokerRouter.GotFillEvent += new FillDelegate(_br_GotFillEvent);
             _brokerRouter.GotOrderEvent += new OrderDelegate(_br_GotOrderEvent);
             _brokerRouter.GotOrderErrorEvent += new OrderErrorDelegate(_br_GotOrderErrorEvent);//路由中心返回的委托错误均要通知到清算中心进行委托更新
-            //+= new ErrorOrderNotifyDel(_br_GotOrderErrorNotify);
             _brokerRouter.NewRouterOrderEvent += new OrderDelegate(_br_NewRouterOrderEvent);
             _brokerRouter.NewRouterOrderUpdateEvent += new OrderDelegate(_br_NewRouterOrderUpdateEvent);
         }
@@ -158,7 +157,6 @@ namespace TradingLib.Core
         /// <param name="neednotify"></param>
         void handler_GotOrderErrorEvent(Order order,RspInfo info, bool needlog = true)
         {
-            //ErrorOrder order = new ErrorOrder(notify.Order, notify.RspInfo);
             OrderErrorPack pack = new OrderErrorPack(order, info);
             //清算中心响应委托错误回报
             //如果需要记录该委托错误 则需要调用清算中心的goterrororder进行处理
@@ -187,8 +185,6 @@ namespace TradingLib.Core
 
         void handler_GotOrderEvent(Order o)
         {
-            
-
             switch (o.Status)
             { 
                 case QSEnumOrderStatus.Filled:

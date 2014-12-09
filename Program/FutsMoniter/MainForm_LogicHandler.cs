@@ -15,10 +15,10 @@ namespace FutsMoniter
         #region 系统管理类回调
         public void OnMGRConnectorResponse(ConnectorInfo c, bool islast)
         {
-            if (routerform != null)
-            {
-                routerform.GotConnector(c, islast);
-            }
+            //if (routerform != null)
+            //{
+            //    routerform.GotConnector(c, islast);
+            //}
         }
 
 

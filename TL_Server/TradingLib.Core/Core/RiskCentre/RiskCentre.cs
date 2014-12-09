@@ -223,14 +223,12 @@ namespace TradingLib.Core
                             {
                                 ps.CancelDone = true;
                             }
-                            
                         }
                         break;
                     default:
                         break;
                 }
             }
-
             _posoffsetracker.GotCancel(oid);
         }
 
@@ -242,7 +240,7 @@ namespace TradingLib.Core
         /// <param name="error"></param>
         public void GotOrderError(Order order,RspInfo info)
         {
-            debug("~~~~~~~~~~~~~~~~~~~~~ riskcentre got errororder orderid:" + order.id.ToString(), QSEnumDebugLevel.INFO);
+            debug("Got Orrder Error ID:" + order.id.ToString(), QSEnumDebugLevel.INFO);
             foreach (RiskTaskSet ps in posflatlist)
             {
                 //如果委托被拒绝 并且委托ID是本地发送过去的ID 则将positionflatset的委托ID置0
@@ -271,7 +269,6 @@ namespace TradingLib.Core
             string key = pos.GetPositionKey();
 
             RiskTaskSet[] list = posflatlist.Where(task => task.TaskType == QSEnumTaskType.FlatPosition && task.Position.GetPositionKey().Equals(key)).ToArray();
-
 
             foreach (RiskTaskSet tmp in list)
             {
