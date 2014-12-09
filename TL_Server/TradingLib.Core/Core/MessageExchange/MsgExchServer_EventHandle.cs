@@ -36,16 +36,11 @@ namespace TradingLib.Core
         /// 注册某个合约的行情数据
         /// </summary>
         /// <param name="symbol"></param>
-        public void RegisterSymbol(string sym)
+        public void RegisterSymbol(Symbol sym)
         {
-            //debug("Register Symbol Market Data:" + sym, QSEnumDebugLevel.INFO);
-            //SymbolBasket b = new SymbolBasketImpl();
-            //Symbol symbol = BasicTracker.SymbolTracker[sym];
-            //if (symbol != null)
-            //{
-            //    b.Add(symbol);
-            //    _datafeedRouter.RegisterSymbols(b);
-            //}
+            debug("Register Symbol Market Data:" + sym.Symbol, QSEnumDebugLevel.INFO);
+            SymbolBasket b = new SymbolBasketImpl(sym);
+            _datafeedRouter.RegisterSymbols(b);
             
         }
 

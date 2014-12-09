@@ -29,7 +29,7 @@ namespace TradingLib.ServiceManager
                             }
                         case QSEnumConnectorOperation.Stop:
                             {
-                                ophandler = (cfg.Interface.Type == QSEnumConnectorType.Broker ? new Action<string>(StopBroker) : new Action<string>(StopBroker));
+                                ophandler = (cfg.Interface.Type == QSEnumConnectorType.Broker ? new Action<string>(StopBroker) : new Action<string>(StopDataFeed));
                                 break;
                             }
                         default:
@@ -154,9 +154,6 @@ namespace TradingLib.ServiceManager
                     {
                         throw new FutsRspError("无权操作该通道");
                     }
-                    //获得域内所有通道设置
-                    //ConnectorStatus[] ops = manger.Domain.GetConnectorConfigs().Select(cfg => GetConnectorStatus(cfg)).ToArray();// BasicTracker.ConnectorConfigTracker.ConnecotrConfigs.ToArray();
-                    //session.SendJsonReplyMgr(ops);
                 }
             }
             catch (FutsRspError ex)
@@ -187,9 +184,6 @@ namespace TradingLib.ServiceManager
                     {
                         throw new FutsRspError("无权操作该通道");
                     }
-                    //获得域内所有通道设置
-                    //ConnectorStatus[] ops = manger.Domain.GetConnectorConfigs().Select(cfg => GetConnectorStatus(cfg)).ToArray();// BasicTracker.ConnectorConfigTracker.ConnecotrConfigs.ToArray();
-                    //session.SendJsonReplyMgr(ops);
                 }
             }
             catch (FutsRspError ex)

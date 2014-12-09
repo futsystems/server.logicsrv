@@ -71,6 +71,21 @@ namespace TradingLib.Common
             }
         }
 
+        internal SymbolBasket BasketAvabile
+        {
+            get
+            {
+                int domain_id = GlobalConfig.MainDomain;
+                DBSymbolTracker tracker = null;
+                if (domainsymboltracker.TryGetValue(domain_id, out tracker))
+                {
+                    return tracker.GetBasketAvabile();
+                }
+                return new SymbolBasketImpl(); ;
+            }
+
+        }
+
         /// <summary>
         /// 更新域的某个合约
         /// </summary>
@@ -177,7 +192,7 @@ namespace TradingLib.Common
         /// 这里的可用 应该按照合约到期日进行判断,合约过期后就不需要在订阅
         /// </summary>
         /// <returns></returns>
-        public SymbolBasket getBasketAvabile()
+        public SymbolBasket GetBasketAvabile()
         {
             SymbolBasket basket = new SymbolBasketImpl();
             foreach (Symbol s in symcodemap.Values.Where(s => s.IsTradeable).ToArray())

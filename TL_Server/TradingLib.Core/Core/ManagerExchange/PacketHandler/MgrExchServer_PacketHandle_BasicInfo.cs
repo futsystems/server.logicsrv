@@ -106,7 +106,7 @@ namespace TradingLib.Core
 
                 if (sec.Tradeable)
                 {
-                    //exchsrv.RegisterSymbol(BasicTracker.SymbolTracker[manager.domain_id,sec.Code].Symbol);
+                    exchsrv.RegisterSymbol(BasicTracker.SymbolTracker[manager.domain_id,sec.Code]);
                 }
                 session.OperationSuccess("品种数据更新成功");
             }
@@ -138,7 +138,7 @@ namespace TradingLib.Core
 
                 if (sym.Tradeable)
                 {
-                    exchsrv.RegisterSymbol(sym.Symbol);
+                    exchsrv.RegisterSymbol(sym);
                 }
                 session.OperationSuccess("合约数据更新成功");
             }
@@ -215,7 +215,7 @@ namespace TradingLib.Core
                 }
                 if (symbol.Tradeable)
                 {
-                    exchsrv.RegisterSymbol(request.Symbol.Symbol);
+                    exchsrv.RegisterSymbol(manager.Domain.GetSymbol(symbol.Symbol));
                 }
             }
             catch (FutsRspError ex)
