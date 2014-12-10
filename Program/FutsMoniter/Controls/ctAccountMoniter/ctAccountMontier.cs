@@ -198,6 +198,7 @@ namespace FutsMoniter.Controls
             acct.TextChanged+=new EventHandler(acct_TextChanged);
             ctAgentList1.AgentSelectedChangedEvent+=new VoidDelegate(ctAgentList1_AgentSelectedChangedEvent);
             acchodpos.CheckedChanged +=new EventHandler(acchodpos_CheckedChanged);
+            ctRouterGroupList1.RouterGroupSelectedChangedEvent += new VoidDelegate(ctRouterGroupList1_RouterGroupSelectedChangedEvent);
             btnAddAccount.Click +=new EventHandler(btnAddAccount_Click);
 
             //帐户表格事件
@@ -222,11 +223,20 @@ namespace FutsMoniter.Controls
             ctOrderSenderM1.SendOrderEvent += new OrderDelegate(SendOrder);
 
 
-
+            //路由组初始化完毕
+            ctRouterGroupList1.RouterGroupInitEvent += new VoidDelegate(ctRouterGroupList1_RouterGroupInitEvent);
             //绑定帐户选中事件
+            AccountSelectedEvent += new Action<IAccountLite>(ctFinService1.OnAccountSelected);
+            //财务信息绑定帐户设置时间
+            AccountSelectedEvent += ctFinanceInfo1.SetAccount;
 
-            this.AccountSelectedEvent += new Action<IAccountLite>(ctFinService1.OnAccountSelected);
         }
+
+        
+
+
+
+
 
 
 

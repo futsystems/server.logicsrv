@@ -208,8 +208,6 @@ namespace TradingLib.API
 
         #endregion
 
-        
-
        
     }
 

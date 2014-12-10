@@ -28,22 +28,27 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static bool AcceptEntryOrder(this Vendor v,Order o,decimal margintouse)
         {
+            //posincrement = o.UnsignedSize;
             if(v.Broker == null) return false;
+            //获得通道下完该委托后预期持仓变动
             int increment = v.Broker.GetPositionAdjustment(o);
-            if (increment <= 0) return true;
+            //posincrement = increment;
+
             decimal marginwilluse = margintouse / o.UnsignedSize * increment;//按比例计算实际使用的保证金
             //这里需要考虑到净持仓,如果可以进行净持仓操作,则需要按规则下到净持仓里面,而不受保证金占用
             decimal marginused = v.CalMargin() + v.CalMarginFrozen();//计算当前使用保证金
 
+            Util.Debug(string.Format("Vendor:{0} MarginUsedNow:{1} OrderMargin:{2} PositionIncrement:{3} MarginWillUse:{4}",v.Name,marginused,margintouse,increment, marginwilluse), QSEnumDebugLevel.WARNING);
+            if (increment <= 0) return true;
+
             //当前已经使用的保证金 + 即将使用的保证金 需要小于我们设定的保证金限额
             if (v.MarginLimit > 1)
             {
-                //Util.Debug("Marginused:" + marginused.ToString() + " MarginToUse:" + margintouse.ToString() + " MarginLimit:" + v.MarginLimit.ToString(), QSEnumDebugLevel.WARNING);
                 return marginused + marginwilluse < v.MarginLimit;
             }
             else
             {
-                return true;
+                return true;//marginused + marginwilluse/;
             }
         }
 

@@ -185,12 +185,10 @@ namespace TradingLib.Core
         /// 查询可开手数
         /// </summary>
         /// <param name="request"></param>
-        void SrvOnQryMaxOrderVol(QryMaxOrderVolRequest request)
+        void SrvOnQryMaxOrderVol(QryMaxOrderVolRequest request, IAccount account)
         {
             debug("QryMaxOrderVol :" + request.ToString(), QSEnumDebugLevel.INFO);
-            
-            IAccount account = _clearcentre[request.Account];
-            Symbol symbol = BasicTracker.SymbolTracker[request.Symbol];
+            Symbol symbol = account.GetSymbol(request.Symbol);
             RspQryMaxOrderVolResponse response = ResponseTemplate<RspQryMaxOrderVolResponse>.SrvSendRspResponse(request);
             if(symbol == null)
             {
@@ -394,7 +392,7 @@ namespace TradingLib.Core
         /// 查询合约
         /// </summary>
         /// <param name="request"></param>
-        void SrvOnQrySymbol(QrySymbolRequest request)
+        void SrvOnQrySymbol(QrySymbolRequest request,IAccount account)
         {
             debug("QrySymbol:" + request.ToString(), QSEnumDebugLevel.INFO);
             Util.sleep(1000);
@@ -402,13 +400,13 @@ namespace TradingLib.Core
             if (request.SecurityType != SecurityType.NIL && string.IsNullOrEmpty(request.ExchID) && string.IsNullOrEmpty(request.Symbol) && string.IsNullOrEmpty(request.Security))
             {
                 debug("it is here a", QSEnumDebugLevel.INFO);
-                instruments = BasicTracker.SymbolTracker.GetInstrumentByType(request.SecurityType).Where(s=>s.Tradeable).ToArray();  
+                instruments =account.GetInstruments(request.SecurityType).ToArray();  
             }
             //如果所有字段为空 则为查询所有合约列表
             if (request.SecurityType == SecurityType.NIL && string.IsNullOrEmpty(request.ExchID) && string.IsNullOrEmpty(request.Symbol) && string.IsNullOrEmpty(request.Security))
             {
                 debug("it is here b", QSEnumDebugLevel.INFO);
-                instruments  = BasicTracker.SymbolTracker.GetAllInstrument();
+                instruments = account.GetInstruments().ToArray();
             }
 
             if (instruments.Length > 0)
@@ -544,7 +542,7 @@ namespace TradingLib.Core
             else
             {
                 RspQryInstrumentCommissionRateResponse response = ResponseTemplate<RspQryInstrumentCommissionRateResponse>.SrvSendRspResponse(request);
-                Symbol sym = BasicTracker.SymbolTracker[request.Symbol];
+                Symbol sym = account.GetSymbol(request.Symbol);
                 if (sym == null)
                 {
                     response.RspInfo.Fill("SYMBOL_NOT_EXISTED");
@@ -566,7 +564,7 @@ namespace TradingLib.Core
             else 
             {
                 RspQryInstrumentMarginRateResponse response = ResponseTemplate<RspQryInstrumentMarginRateResponse>.SrvSendRspResponse(request);
-                Symbol sym = BasicTracker.SymbolTracker[request.Symbol];
+                Symbol sym = account.GetSymbol(request.Symbol);
                 if (sym == null)
                 {
                     response.RspInfo.Fill("SYMBOL_NOT_EXISTED");
@@ -641,7 +639,7 @@ namespace TradingLib.Core
                 case MessageTypes.QRYMAXORDERVOL://查询委托可开手数
                     {
                         QryMaxOrderVolRequest request = packet as QryMaxOrderVolRequest;
-                        SrvOnQryMaxOrderVol(request);
+                        SrvOnQryMaxOrderVol(request,account);
                     }
                     break;
                 case MessageTypes.QRYSETTLEINFO://查询结算信息
@@ -683,7 +681,7 @@ namespace TradingLib.Core
                 case MessageTypes.QRYSYMBOL://查询合约列表
                     {
                         QrySymbolRequest request = packet as QrySymbolRequest;
-                        SrvOnQrySymbol(request);
+                        SrvOnQrySymbol(request, account);
                     }
                     break;
                 case MessageTypes.QRYCONTRACTBANK://查询签约银行

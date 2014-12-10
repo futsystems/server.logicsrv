@@ -6,7 +6,7 @@ using TradingLib.API;
 using TradingLib.Common;
 
 
-namespace FutsMoniter.Common
+namespace TradingLib.Common
 {
     public static class ManagerUtils
     {
@@ -25,5 +25,24 @@ namespace FutsMoniter.Common
         
         }
 
+        /// <summary>
+        /// 是否是管理员
+        /// </summary>
+        /// <param name="mgr"></param>
+        /// <returns></returns>
+        public static bool IsRoot(this Manager mgr)
+        {
+            return mgr.Type == QSEnumManagerType.ROOT;
+        }
+
+        public static bool IsAgent(this Manager mgr)
+        {
+            return mgr.Type == QSEnumManagerType.AGENT;
+        }
+
+        public static bool IsAgentDomain(this Manager mgr)
+        {
+            return mgr.Type == QSEnumManagerType.AGENT || mgr.BaseManager.Type == QSEnumManagerType.AGENT;
+        }
     }
 }

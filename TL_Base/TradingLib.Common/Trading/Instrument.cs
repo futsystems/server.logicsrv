@@ -161,24 +161,6 @@ namespace TradingLib.Common
             return instrument;
         }
 
-        public static Instrument Symbol2Instrument(Symbol symbol)
-        {
-            Instrument instrument = new Instrument();
-            instrument.Symbol = symbol.Symbol;
-            instrument.Name = symbol.SecurityFamily.Name;
-            instrument.Security = symbol.SecurityFamily.Code;
-            instrument.ExchangeID = symbol.SecurityFamily.Exchange.EXCode;
-            instrument.EntryCommission = symbol.EntryCommission;
-            instrument.ExitCommission = symbol.ExitCommission;
-            instrument.Margin = symbol.Margin;
-            instrument.SecurityType = symbol.SecurityType;
-            instrument.Multiple = symbol.Multiple;
-            instrument.PriceTick = symbol.SecurityFamily.PriceTick;
-            //instrument.ExpireMonth = symbol.ExpireMonth;
-            instrument.ExpireDate = symbol.ExpireDate;
-            instrument.Tradeable = symbol.IsTradeable;
-            return instrument;
-        }
 
     }
 }

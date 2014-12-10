@@ -158,6 +158,7 @@ namespace TradingLib.BrokerXAPI.Interop
         {
             try
             {
+                Util.Debug("~~~~~XServerInfoFieldSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XServerInfoField)));
                 _Connect(this.Wrapper, ref pServerInfo);
             }
             catch (Exception ex)
@@ -198,6 +199,7 @@ namespace TradingLib.BrokerXAPI.Interop
         {
             try
             {
+                Util.Debug("~~~~~XUserInfoFieldSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XUserInfoField)));
                 _Login(this.Wrapper, ref pUserInfo);
             }
             catch (Exception ex)

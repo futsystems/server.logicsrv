@@ -46,7 +46,6 @@ namespace TradingLib.Core
         public static Predicate<Manager> GetNotifyPredicate(this JsonWrapperCashOperation op)
         {
             Predicate<Manager> func=null;
-
             //如果是交易帐户的出入金记录
             if (op.IsForAccount())
             {   

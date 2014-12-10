@@ -57,6 +57,7 @@ namespace TradingLib.Common
             //默认broker为空,数据来源为分帐户侧
             this.Broker = string.Empty;
             this.Breed = QSEnumOrderBreedType.ACCT;
+            this.Domain_ID = 0;
         }
 
         /// <summary>
@@ -82,6 +83,7 @@ namespace TradingLib.Common
             this.CloseAmount = 0;
             this.CloseProfitByDate = 0;
             this.CloseProfitByTrade = 0;
+            //this.Domain_ID = pos.Domain_ID;
         }
 
         /// <summary>
@@ -362,8 +364,11 @@ namespace TradingLib.Common
         /// </summary>
         public QSEnumOrderBreedType Breed { get; set; }
 
-        
 
+        /// <summary>
+        /// 域ID
+        /// </summary>
+        public int Domain_ID { get; set; }
         
 
 

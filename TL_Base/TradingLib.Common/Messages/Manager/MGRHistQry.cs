@@ -54,18 +54,25 @@ namespace TradingLib.Common
         public RspMGRQryOrderResponse()
         {
             _type = MessageTypes.MGRORDERRESPONSE;
-            this.OrderToSend = new OrderImpl();
+            this.OrderToSend = null;
         }
 
         public Order OrderToSend { get; set; }
 
         public override string ResponseSerialize()
         {
+            if (this.OrderToSend == null)
+                return string.Empty;
             return OrderImpl.Serialize(this.OrderToSend);
         }
 
         public override void ResponseDeserialize(string content)
         {
+            if (string.IsNullOrEmpty(content))
+            {
+                this.OrderToSend = null;
+                return;
+            }
             this.OrderToSend = OrderImpl.Deserialize(content);
         }
     }
@@ -118,18 +125,25 @@ namespace TradingLib.Common
         public RspMGRQryTradeResponse()
         {
             _type = MessageTypes.MGRTRADERESPONSE;
-            this.TradeToSend = new TradeImpl();
+            this.TradeToSend = null;
         }
 
         public Trade TradeToSend { get; set; }
 
         public override string ResponseSerialize()
         {
+            if (this.TradeToSend == null)
+                return string.Empty;
             return TradeImpl.Serialize(this.TradeToSend);
         }
 
         public override void ResponseDeserialize(string content)
         {
+            if (string.IsNullOrEmpty(content))
+            {
+                this.TradeToSend = null;
+                return;
+            }
             this.TradeToSend = TradeImpl.Deserialize(content);
         }
     }

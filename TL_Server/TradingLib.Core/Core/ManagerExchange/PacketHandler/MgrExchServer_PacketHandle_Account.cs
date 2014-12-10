@@ -12,6 +12,7 @@ namespace TradingLib.Core
 
         #region Account
 
+
         /// <summary>
         /// @请求添加交易帐户
         /// 服务端操作采用如下方式进行
@@ -28,6 +29,7 @@ namespace TradingLib.Core
             try
             {
                 debug(string.Format("管理员:{0} 请求添加交易帐号:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
+                
                 //域帐户数目检查
                 if (manager.Domain.GetAccounts().Count() >= manager.Domain.AccLimit)
                 {
@@ -45,25 +47,24 @@ namespace TradingLib.Core
                             throw new FutsRspError("无权在该管理域开设帐户");
                         }
                     }
-                    else
-                    {
-                        //如果是在自己的主域中添加交易帐户 则需要检查帐户数量
-                        int limit = manager.BaseManager.AccLimit;
-
-                        int cnt = TLCtxHelper.CmdAccount.Accounts.Where(acc => acc.Mgr_fk == manager.GetBaseMGR()).Count();
-                        if (cnt > limit)
-                        {
-                            throw new FutsRspError("可开帐户数量超过限制:" + limit.ToString());
-                        }
-                    }
                 }
+
+                //Manager帐户数量限制 如果是在自己的主域中添加交易帐户 则需要检查帐户数量
+                int limit = manager.BaseManager.AccLimit;
+
+                int cnt = manager.GetVisibleAccount().Count();//获得该manger下属的所有帐户数目
+                if (cnt >= limit)
+                {
+                    throw new FutsRspError("可开帐户数量超过限制:" + limit.ToString());
+                }
+
 
                 AccountCreation create = new AccountCreation();
                 create.Account = request.AccountID;
                 create.Category = request.Category;
                 create.Password = request.Password;
                 create.RouteGroup = BasicTracker.RouterGroupTracker[request.RouterGroup_ID];
-                create.RouterType = QSEnumOrderTransferType.SIM;
+                create.RouterType = request.Category == QSEnumAccountCategory.SIMULATION ? QSEnumOrderTransferType.SIM : QSEnumOrderTransferType.LIVE;
                 create.UserID = request.UserID;
                 create.Domain = manager.Domain;
                 create.BaseManager = manager.BaseManager;
@@ -326,6 +327,69 @@ namespace TradingLib.Core
 
         #endregion
 
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryAccountInfo", "QryAccountInfo - query account", "查询帐户信息")]
+        public void CTE_QryDomain(ISession session,string account)
+        {
+            try
+            {
+                Manager manager = session.GetManager();
+                IAccount acc = clearcentre[account];
+                if (manager.RightAccessAccount(acc))
+                {
+                    session.SendJsonReplyMgr(acc.ToAccountInfo());
+                }
+                else
+                {
+                    throw new FutsRspError("无权查看该帐户信息");
+                }
+            }
+            catch (FutsRspError ex)
+            {
+                session.OperationError(ex);
+            }
+        }
+
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountRouterGroup", "UpdateAccountRouterGroup - update account router group", "更新帐户路由组信息")]
+        public void CTE_QryDomain(ISession session,string account,int gid)
+        {
+            try
+            {
+                Manager manager = session.GetManager();
+                if (!manager.RightRootDomain())
+                {
+                    throw new FutsRspError("无权修改帐户路由组设置");
+                }
+
+                IAccount acc = clearcentre[account];
+                if (acc == null)
+                {
+                    throw new FutsRspError("交易帐户不存在");
+                }
+
+                if (!manager.RightAccessAccount(acc))
+                {
+                    throw new FutsRspError("无权修改该交易帐户");
+                }
+
+                RouterGroup rg = manager.Domain.GetRouterGroup(gid);
+                if (rg == null)
+                {
+                    throw new FutsRspError("指定路由组不存在");
+                }
+
+                //更新路由组
+                clearcentre.UpdateRouterGroup(account, rg);
+                session.OperationSuccess("更新帐户路由组成功");
+
+
+
+            }
+            catch (FutsRspError ex)
+            {
+                session.OperationError(ex);
+            }
+        }
 
     }
 }

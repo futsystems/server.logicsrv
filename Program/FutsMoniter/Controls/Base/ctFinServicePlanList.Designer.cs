@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
-            this.kryptonLabel1 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.cbServicePlan = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
+            this.kryptonLabel1 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cbServicePlan)).BeginInit();
@@ -46,22 +46,24 @@
             this.kryptonPanel1.Size = new System.Drawing.Size(187, 21);
             this.kryptonPanel1.TabIndex = 33;
             // 
+            // cbServicePlan
+            // 
+            this.cbServicePlan.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbServicePlan.DropDownWidth = 121;
+            this.cbServicePlan.Location = new System.Drawing.Point(78, 0);
+            this.cbServicePlan.Name = "cbServicePlan";
+            this.cbServicePlan.Size = new System.Drawing.Size(109, 21);
+            this.cbServicePlan.TabIndex = 1;
+            // 
             // kryptonLabel1
             // 
-            this.kryptonLabel1.Location = new System.Drawing.Point(0, 2);
+            this.kryptonLabel1.Location = new System.Drawing.Point(0, 3);
             this.kryptonLabel1.Name = "kryptonLabel1";
             this.kryptonLabel1.Size = new System.Drawing.Size(68, 18);
             this.kryptonLabel1.TabIndex = 0;
             this.kryptonLabel1.Values.Text = "服务计划:";
-            // 
-            // cbServicePlan
-            // 
-            this.cbServicePlan.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.cbServicePlan.DropDownWidth = 121;
-            this.cbServicePlan.Location = new System.Drawing.Point(66, 0);
-            this.cbServicePlan.Name = "cbServicePlan";
-            this.cbServicePlan.Size = new System.Drawing.Size(121, 21);
-            this.cbServicePlan.TabIndex = 1;
             // 
             // ctFinServicePlanList
             // 

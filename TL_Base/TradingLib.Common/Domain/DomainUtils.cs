@@ -11,18 +11,18 @@ namespace TradingLib.Common
 
     }
 
-    public static class DomainObjectSet
-    {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="set"></param>
-        /// <param name="domain"></param>
-        /// <returns></returns>
-        public static IEnumerable<IDomainPartition> SameDomain(this IEnumerable<IDomainPartition> set, Domain domain)
-        {
-            return set.Where(obj => obj.Domain.Equals(domain));
-        }
+    //public static class DomainObjectSet
+    //{
+    //    /// <summary>
+    //    /// 
+    //    /// </summary>
+    //    /// <param name="set"></param>
+    //    /// <param name="domain"></param>
+    //    /// <returns></returns>
+    //    public static IEnumerable<IDomainPartition> SameDomain(this IEnumerable<IDomainPartition> set, Domain domain)
+    //    {
+    //        return set.Where(obj => obj.Domain.Equals(domain));
+    //    }
     
-    }
+    //}
 }

@@ -24,8 +24,6 @@ namespace TradingLib.ORM
 
     public class MUIAccess:MBase
     {
-
-       
         /// <summary>
         /// 从数据库加载所有界面权限
         /// </summary>
@@ -68,6 +66,11 @@ namespace TradingLib.ORM
                     query += pi.Name + "='" + pi.GetValue(access, null).ToString() + ((i != propertyInfos.Length - 1) ? "'," : "");
                     continue;
                 }
+                if (pi.Name.Equals("domain_id"))
+                {
+                    query += pi.Name + "='" + pi.GetValue(access, null).ToString() + ((i != propertyInfos.Length - 1) ? "'," : "");
+                    continue;
+                }
                 if (pi.Name.Equals("desp"))
                 {
                     query += pi.Name + "='" + pi.GetValue(access, null).ToString() + ((i != propertyInfos.Length - 1) ? "'," : "");
@@ -101,6 +104,11 @@ namespace TradingLib.ORM
                 if (pi.Name.Equals("name"))
                 {
                     query += "'"+pi.GetValue(access, null).ToString()+"'" + ((i != propertyInfos.Length - 1) ? "," : ")");
+                    continue;
+                }
+                if (pi.Name.Equals("domain_id"))
+                {
+                    query += "'" + pi.GetValue(access, null).ToString() + "'" + ((i != propertyInfos.Length - 1) ? "," : ")");
                     continue;
                 }
                 if (pi.Name.Equals("desp"))

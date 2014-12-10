@@ -21,6 +21,17 @@ namespace TradingLib.Common
         }
 
         /// <summary>
+        /// 返回超级域
+        /// </summary>
+        public DomainImpl SuperDomain
+        {
+            get
+            {
+                return domainmap.Values.Where(mgr => mgr.Super).FirstOrDefault();
+            }
+            
+        }
+        /// <summary>
         /// 按DomainID返回对应的域
         /// </summary>
         /// <param name="id"></param>
@@ -67,8 +78,11 @@ namespace TradingLib.Common
                 target.RouterGroupLimit = domain.RouterGroupLimit;
                 target.RouterItemLimit = domain.RouterItemLimit;
                 target.InterfaceList = domain.InterfaceList;
+                target.FinSPList = domain.FinSPList;
 
                 target.Module_Agent = domain.Module_Agent;
+                target.Module_SubAgent = domain.Module_SubAgent;
+
                 target.Module_FinService = domain.Module_FinService;
                 target.Module_PayOnline = domain.Module_PayOnline;
                 target.Router_Live = domain.Router_Live;
@@ -93,8 +107,9 @@ namespace TradingLib.Common
                 target.RouterGroupLimit = domain.RouterGroupLimit;
                 target.RouterItemLimit = domain.RouterItemLimit;
                 target.InterfaceList = domain.InterfaceList;
-
+                target.FinSPList = domain.FinSPList;
                 target.Module_Agent = domain.Module_Agent;
+                target.Module_SubAgent = domain.Module_SubAgent;
                 target.Module_FinService = domain.Module_FinService;
                 target.Module_PayOnline = domain.Module_PayOnline;
                 target.Router_Live = domain.Router_Live;

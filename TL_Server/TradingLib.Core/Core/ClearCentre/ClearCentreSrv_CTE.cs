@@ -515,27 +515,28 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.CLI, "symbol", "symbol - xxxxx print out symbol information", "")]
         public string CTE_PrintSymnbol(string symbol)
         {
-            Symbol sym = BasicTracker.SymbolTracker[symbol];
-            if (sym == null)
-            {
-                return "Symbol:" + symbol + " not exist";
-            }
-            else
-            {
-                StringBuilder sb = new StringBuilder();
-                sb.Append("Symbol:".PadRight(10, ' ') + sym.Symbol+ExComConst.Line);
-                sb.Append("TickSymbol".PadRight(10, ' ') + sym.TickSymbol + ExComConst.Line);
-                sb.Append("Type:".PadRight(10, ' ') + sym.SecurityType.ToString() + ExComConst.Line);
-                sb.Append("Currency:".PadRight(10, ' ') + sym.Currency.ToString() + ExComConst.Line);
-                sb.Append("Exchange:".PadRight(10, ' ') + sym.Exchange.ToString() + ExComConst.Line);
-                sb.Append("Multiple:".PadRight(10, ' ') + sym.Multiple.ToString() + ExComConst.Line);
-                sb.Append("Margin:".PadRight(10, ' ') + sym.Margin.ToString() + ExComConst.Line);
-                sb.Append("ExtraMargin:".PadRight(10, ' ') + sym.ExtraMargin.ToString() + ExComConst.Line);
-                sb.Append("MaintanceMargin:".PadRight(10, ' ') + sym.MaintanceMargin.ToString() + ExComConst.Line);
-                sb.Append("EntyC:".PadRight(10, ' ') + sym.EntryCommission.ToString() + ExComConst.Line);
-                sb.Append("ExitC:".PadRight(10, ' ') + sym.ExitCommission.ToString() + ExComConst.Line);
-                return sb.ToString();
-            }
+            //Symbol sym = BasicTracker.SymbolTracker[1,symbol];
+            //if (sym == null)
+            //{
+            //    return "Symbol:" + symbol + " not exist";
+            //}
+            //else
+            //{
+            //    StringBuilder sb = new StringBuilder();
+            //    sb.Append("Symbol:".PadRight(10, ' ') + sym.Symbol+ExComConst.Line);
+            //    sb.Append("TickSymbol".PadRight(10, ' ') + sym.TickSymbol + ExComConst.Line);
+            //    sb.Append("Type:".PadRight(10, ' ') + sym.SecurityType.ToString() + ExComConst.Line);
+            //    sb.Append("Currency:".PadRight(10, ' ') + sym.Currency.ToString() + ExComConst.Line);
+            //    sb.Append("Exchange:".PadRight(10, ' ') + sym.Exchange.ToString() + ExComConst.Line);
+            //    sb.Append("Multiple:".PadRight(10, ' ') + sym.Multiple.ToString() + ExComConst.Line);
+            //    sb.Append("Margin:".PadRight(10, ' ') + sym.Margin.ToString() + ExComConst.Line);
+            //    sb.Append("ExtraMargin:".PadRight(10, ' ') + sym.ExtraMargin.ToString() + ExComConst.Line);
+            //    sb.Append("MaintanceMargin:".PadRight(10, ' ') + sym.MaintanceMargin.ToString() + ExComConst.Line);
+            //    sb.Append("EntyC:".PadRight(10, ' ') + sym.EntryCommission.ToString() + ExComConst.Line);
+            //    sb.Append("ExitC:".PadRight(10, ' ') + sym.ExitCommission.ToString() + ExComConst.Line);
+            //    return sb.ToString();
+            //}
+            return "";
         }
         #endregion
     }

@@ -68,9 +68,10 @@
     <Compile Include="ConnectorManager\ConnectorManager_CTE.cs" />
     <Compile Include="ConnectorManager\ConnectorManager_XAPI.cs" />
     <Compile Include="ConnectorManager\ConnectorManager_IRouterManager.cs" />
-    <Compile Include="ConnectorManager\PacketHandler\ConnectorManager_Interface.cs" />
-    <Compile Include="ConnectorManager\PacketHandler\ConnectorManager_Router.cs" />
-    <Compile Include="ConnectorManager\PacketHandler\ConnectorManager_Vendor.cs" />
+    <Compile Include="ConnectorManager\PacketHandler\ConnectorManager_Handler_ConnectorOperation.cs" />
+    <Compile Include="ConnectorManager\PacketHandler\ConnectorManager_Handler_Interface.cs" />
+    <Compile Include="ConnectorManager\PacketHandler\ConnectorManager_Handler_Router.cs" />
+    <Compile Include="ConnectorManager\PacketHandler\ConnectorManager_Handler_Vendor.cs" />
     <Compile Include="ContribManager\ContribManager.cs" />
     <Compile Include="CoreManager\CoreManager_CTE.cs" />
     <Compile Include="DebugConfig.cs" />

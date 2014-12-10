@@ -35,6 +35,7 @@
             this.btnChangeServicePlan = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.btnChangeStatus = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.kryptonGroupBox2 = new ComponentFactory.Krypton.Toolkit.KryptonGroupBox();
+            this.tableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.kryptonGroupBox1 = new ComponentFactory.Krypton.Toolkit.KryptonGroupBox();
             this.lbcollecttype = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.lbchargetype = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
@@ -46,7 +47,6 @@
             this.kryptonLabel3 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel2 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel1 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.tableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonGroupBox3)).BeginInit();
@@ -91,7 +91,7 @@
             // 
             // btnDeleteFinService
             // 
-            this.btnDeleteFinService.Location = new System.Drawing.Point(13, 106);
+            this.btnDeleteFinService.Location = new System.Drawing.Point(13, 75);
             this.btnDeleteFinService.Name = "btnDeleteFinService";
             this.btnDeleteFinService.Size = new System.Drawing.Size(90, 25);
             this.btnDeleteFinService.TabIndex = 3;
@@ -99,7 +99,7 @@
             // 
             // btnUpdateArgs
             // 
-            this.btnUpdateArgs.Location = new System.Drawing.Point(13, 75);
+            this.btnUpdateArgs.Location = new System.Drawing.Point(13, 44);
             this.btnUpdateArgs.Name = "btnUpdateArgs";
             this.btnUpdateArgs.Size = new System.Drawing.Size(90, 25);
             this.btnUpdateArgs.TabIndex = 2;
@@ -107,7 +107,7 @@
             // 
             // btnChangeServicePlan
             // 
-            this.btnChangeServicePlan.Location = new System.Drawing.Point(13, 44);
+            this.btnChangeServicePlan.Location = new System.Drawing.Point(13, 13);
             this.btnChangeServicePlan.Name = "btnChangeServicePlan";
             this.btnChangeServicePlan.Size = new System.Drawing.Size(90, 25);
             this.btnChangeServicePlan.TabIndex = 1;
@@ -115,11 +115,12 @@
             // 
             // btnChangeStatus
             // 
-            this.btnChangeStatus.Location = new System.Drawing.Point(13, 13);
+            this.btnChangeStatus.Location = new System.Drawing.Point(13, 106);
             this.btnChangeStatus.Name = "btnChangeStatus";
             this.btnChangeStatus.Size = new System.Drawing.Size(90, 25);
             this.btnChangeStatus.TabIndex = 0;
             this.btnChangeStatus.Values.Text = "冻 结";
+            this.btnChangeStatus.Visible = false;
             // 
             // kryptonGroupBox2
             // 
@@ -136,6 +137,28 @@
             this.kryptonGroupBox2.TabIndex = 1;
             this.kryptonGroupBox2.Text = "参数列表";
             this.kryptonGroupBox2.Values.Heading = "参数列表";
+            // 
+            // tableLayoutPanel
+            // 
+            this.tableLayoutPanel.BackColor = System.Drawing.Color.Transparent;
+            this.tableLayoutPanel.ColumnCount = 1;
+            this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 257F));
+            this.tableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.tableLayoutPanel.Name = "tableLayoutPanel";
+            this.tableLayoutPanel.RowCount = 9;
+            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel.Size = new System.Drawing.Size(257, 238);
+            this.tableLayoutPanel.TabIndex = 12;
             // 
             // kryptonGroupBox1
             // 
@@ -240,28 +263,6 @@
             this.kryptonLabel1.Size = new System.Drawing.Size(68, 18);
             this.kryptonLabel1.TabIndex = 0;
             this.kryptonLabel1.Values.Text = "交易帐户:";
-            // 
-            // tableLayoutPanel
-            // 
-            this.tableLayoutPanel.BackColor = System.Drawing.Color.Transparent;
-            this.tableLayoutPanel.ColumnCount = 1;
-            this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 232F));
-            this.tableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
-            this.tableLayoutPanel.Name = "tableLayoutPanel";
-            this.tableLayoutPanel.RowCount = 9;
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanel.Size = new System.Drawing.Size(257, 238);
-            this.tableLayoutPanel.TabIndex = 12;
             // 
             // ctFinService
             // 

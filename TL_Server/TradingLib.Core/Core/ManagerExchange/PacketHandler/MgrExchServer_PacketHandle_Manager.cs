@@ -50,10 +50,16 @@ namespace TradingLib.Core
             {
                 debug(string.Format("管理员:{0} 请求添加管理员:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
 
+                //开启代理模块 并且 是超级管理员 或者 是代理同时可以开设下级代理
+                if (!(manager.Domain.Module_Agent && (manager.IsRoot() || (manager.IsAgent() && manager.Domain.Module_SubAgent))))
+                {
+                    throw new FutsRspError("无权开设下级代理");
+                }
 
                 Manager m = request.ManagerToSend;
                 //1.添加的Manager的父代理为当前管理员的mgr_fk 
                 m.parent_fk = manager.mgr_fk;
+                m.domain_id = manager.domain_id;
 
                 //只有添加代理用户时才从数据库创建主域ID MgrFK,其余员工角色和当前管理员的主域ID一致
                 if (m.Type != QSEnumManagerType.AGENT && m.Type != QSEnumManagerType.ROOT)

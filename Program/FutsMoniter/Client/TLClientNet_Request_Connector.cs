@@ -27,6 +27,14 @@ namespace TradingLib.Common
         }
 
         /// <summary>
+        /// 查询所有通道状态
+        /// </summary>
+        public void ReqQryConnectorStatus()
+        {
+            this.ReqContribRequest("ConnectorManager", "QryConnectorStatus", "");
+        }
+
+        /// <summary>
         /// 更新接口设置 包含新增与更新
         /// </summary>
         public void ReqUpdateConnectorConfig(string json)
@@ -41,6 +49,25 @@ namespace TradingLib.Common
         {
             this.ReqContribRequest("ConnectorManager", "UpdateInterface", json);
         }
+
+        /// <summary>
+        /// 请求启动通道
+        /// </summary>
+        /// <param name="id"></param>
+        public void ReqStartConnector(int id)
+        {
+            this.ReqContribRequest("ConnectorManager", "StartConnector",id.ToString());
+        }
+
+        /// <summary>
+        /// 请求停止通道
+        /// </summary>
+        /// <param name="id"></param>
+        public void ReqStopConnector(int id)
+        {
+            this.ReqContribRequest("ConnectorManager", "StopConnector", id.ToString());
+        }
+
 
         /// <summary>
         /// 更新接口设置

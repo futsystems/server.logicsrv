@@ -37,14 +37,6 @@ namespace TradingLib.Common
             { 
                 case QSEnumAccountCategory.REAL:
                     return true;
-                case QSEnumAccountCategory.DEALER:
-                    //未参赛 淘汰 初赛 复赛的选手是模拟盘
-                    //if (account.RaceStatus == QSEnumAccountRaceStatus.ELIMINATE || account.RaceStatus == QSEnumAccountRaceStatus.INPRERACE || account.RaceStatus == QSEnumAccountRaceStatus.INSEMIRACE || account.RaceStatus == QSEnumAccountRaceStatus.NORACE)
-                    {
-                        return false;
-                    }
-                    //return true;
-
                 default:
                     return false;
             }

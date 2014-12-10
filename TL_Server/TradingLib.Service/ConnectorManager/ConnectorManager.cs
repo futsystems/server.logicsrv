@@ -43,7 +43,6 @@ namespace TradingLib.ServiceManager
         ConfigDB _cfgdb;
         string _defaultSimBrokerToken = "SIMBROKER";
         string _defaultDataFeedToken = "FASTTICK";
-        string _defaultLiveBrokerToken = "LIVEBROKER";
         public ConnectorManager()
             : base(SMGName)
         {
@@ -61,13 +60,6 @@ namespace TradingLib.ServiceManager
             }
             _defaultDataFeedToken = _cfgdb["DefaultDataFeed"].AsString();
 
-            if (!_cfgdb.HaveConfig("DefaultLiveBroker"))
-            {
-                _cfgdb.UpdateConfig("DefaultLiveBroker", QSEnumCfgType.String, "LIVEBROKER", "默认实盘成交配置名称");
-            }
-            _defaultLiveBrokerToken = _cfgdb["DefaultLiveBroker"].AsString();
-
-
         }
 
 
@@ -82,24 +74,9 @@ namespace TradingLib.ServiceManager
         {
             _brokerrouter = _br;
             _datafeedrouter = _dr;
-
-            //_br.LookupBrokerEvent += new LookupBroker(_br_LookupBrokerEvent);
-            //_dr.LookupDataFeedEvent += new LookupDataFeed(_dr_LookupDataFeedEvent);
             routerbinded = true;
         }
 
-        //string GetBrokerToken(IBroker broker)
-        //{
-        //    //如果通过XAPI接口进行扩展的成交接口 则返回BrokerToken来作为唯一标识
-        //    if(broker is TLBrokerBase)
-        //    {
-        //        TLBrokerBase brokerbase = broker as TLBrokerBase;
-        //        return brokerbase.BrokerToken;
-        //    }
-        //    //其余扩展的Broker返回其类型名
-        //    return broker.GetType().FullName;
-             
-        //}
         /// <summary>
         /// 加载路由
         /// </summary>
@@ -121,14 +98,10 @@ namespace TradingLib.ServiceManager
             //加载成交接口
             LoadXAPI();
 
-
             //根据设置 设定默认模拟成交接口
             _defaultsimbroker = FindBroker(_defaultSimBrokerToken);//_defaultSimBrokerToken 通过数据库设置
 
             _defaultdatafeed = FindDataFeed(_defaultDataFeedToken);//_defaultDataFeedToken通过数据库设置
-
-            _defaultlivebroker = FindBroker(_defaultLiveBrokerToken);//_defaultLiveBrokerToken通过数据库设置
-            
         }
 
 
@@ -141,10 +114,9 @@ namespace TradingLib.ServiceManager
                 //启动默认通道
                 StartDataFeedViaToken(_defaultDataFeedToken);
                 StartBrokerViaToken(_defaultSimBrokerToken);
-                StartBrokerViaToken(_defaultLiveBrokerToken);
             }
 
-            debug("Start RouterGroup ....", QSEnumDebugLevel.INFO);
+            //debug("Start RouterGroup ....", QSEnumDebugLevel.INFO);
             foreach (RouterGroup rg in BasicTracker.RouterGroupTracker.RouterGroups)
             {
                 //rg.Start();

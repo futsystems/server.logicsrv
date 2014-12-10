@@ -20,7 +20,7 @@ namespace TradingLib.Core
         /// <summary>
         /// 向Broker发送Order,TradingServer统一通过 BrokerRouter 发送委托,BrokerRouter 则在本地按一定的规则找到对应的
         /// 交易接口将委托发送出去
-        /// 
+        /// SendOrder->RouterSendOrder->[EngineSendOrder,BrokerSendOrder,XBrokerSendOrder]
         /// </summary>
         /// <param name="o"></param>
         public void SendOrder(Order o)
@@ -98,12 +98,14 @@ namespace TradingLib.Core
         /// <returns></returns>
         bool BrokerSendOrder(Order o, out string errorTitle)
         {
+            debug("BrokerSendOrder select broker and send through broker", QSEnumDebugLevel.INFO);
             errorTitle = string.Empty;
             try
             {
                 IBroker broker = SelectBroker(o);
                 if (broker != null && broker.IsLive)
                 {
+                    o.Broker = broker.Token;//通过Broker发送委托时,将Token设定到委托对应字段
                     broker.SendOrder(o);
                     //接口侧提交委托异常
                     if (o.Status == QSEnumOrderStatus.Reject)
@@ -118,7 +120,7 @@ namespace TradingLib.Core
                     //如果没有交易通道则拒绝该委托
                     o.Status = QSEnumOrderStatus.Reject;
                     errorTitle = "EXECUTION_BROKER_NOT_FOUND";
-                    debug("没有可以交易的通道 |" + o.ToString(), QSEnumDebugLevel.WARNING);
+                    debug("没有可以交易的通道 |" + o.GetOrderInfo(), QSEnumDebugLevel.WARNING);
                     return false;
                 }
             }
@@ -133,7 +135,7 @@ namespace TradingLib.Core
 
         void BrokerCancelOrder(Order o)
         {
-            IBroker broker = SelectBroker(o);
+            IBroker broker = SelectBroker(o,true);
             if (broker != null && broker.IsLive)
             {
                 broker.CancelOrder(o.id);

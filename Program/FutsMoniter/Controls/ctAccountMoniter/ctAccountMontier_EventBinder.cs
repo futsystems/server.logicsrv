@@ -5,6 +5,7 @@ using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
 using FutSystems.GUI;
+using TradingLib.Mixins.LitJson;
 
 namespace FutsMoniter.Controls
 {
@@ -45,13 +46,19 @@ namespace FutsMoniter.Controls
 
                 //模块限制
                 funpageFinservice.Visible = Globals.LoginResponse.Domain.Module_FinService;
+
+                
             }
+
+            //Globals.CallBackCentre.RegisterCallback("MgrExchServer", "QryAccountInfo", this.OnQryAccountInfo);
         }
 
         public void OnDisposed()
-        { 
-        
+        {
+            //Globals.CallBackCentre.RegisterCallback("MgrExchServer", "QryAccountInfo", this.OnQryAccountInfo);
         }
+
+
         
     }
 }

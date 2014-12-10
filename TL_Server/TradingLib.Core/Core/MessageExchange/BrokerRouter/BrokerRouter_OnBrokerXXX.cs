@@ -52,14 +52,22 @@ namespace TradingLib.Core
         /// </summary>
         void Broker_GotOrderError(Order order, RspInfo error)
         {
-            if (order.Breed == QSEnumOrderBreedType.ROUTER)
+            if (order != null && order.isValid)
             {
-                debug("Reply ErrorOrder To Spliter:" + order.GetOrderInfo() + " ErrorTitle:" + error.ErrorMessage, QSEnumDebugLevel.INFO);
-                LogRouterOrderUpdate(order);//更新路由侧委托
-                _splittracker.GotSonOrderError(order, error);
+                if (order.Breed == QSEnumOrderBreedType.ROUTER)
+                {
+                    debug("Reply ErrorOrder To Spliter:" + order.GetOrderInfo() + " ErrorTitle:" + error.ErrorMessage, QSEnumDebugLevel.INFO);
+                    LogRouterOrderUpdate(order);//更新路由侧委托
+                    _splittracker.GotSonOrderError(order, error);
+                    return;
+                }
+                debug("Reply ErrorOrder To MessageExch:" + order.GetOrderInfo() + " ErrorTitle:" + error.ErrorMessage, QSEnumDebugLevel.INFO);
+                _errorordernotifycache.Write(new OrderErrorPack(order, error));
             }
-            debug("Reply ErrorOrder To MessageExch:" + order.GetOrderInfo() + " ErrorTitle:" + error.ErrorMessage, QSEnumDebugLevel.INFO);
-            _errorordernotifycache.Write(new OrderErrorPack(order, error));
+            else
+            {
+                debug("Got Invalid OrderError", QSEnumDebugLevel.ERROR);
+            }
         }
 
 
@@ -78,6 +86,10 @@ namespace TradingLib.Core
                 }
                 debug("Reply Fill To MessageExch:" + fill.GetTradeInfo(), QSEnumDebugLevel.INFO);
                 _fillcache.Write(new TradeImpl(fill));
+            }
+            else
+            {
+                debug("Got Invalid Fill", QSEnumDebugLevel.ERROR);
             }
         }
 
@@ -98,8 +110,13 @@ namespace TradingLib.Core
                     _splittracker.GotSonOrder(o);
                     return;
                 }
-                debug("Reply Order To MessageExch:" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
-                _ordercache.Write(new OrderImpl(o));
+                Order no = new OrderImpl(o);
+                debug("Reply Order To MessageExch:" + no.GetOrderInfo(), QSEnumDebugLevel.INFO);
+                _ordercache.Write(no);
+            }
+            else
+            {
+                debug("Got Invalid Order", QSEnumDebugLevel.ERROR);
             }
         }
 
@@ -109,6 +126,7 @@ namespace TradingLib.Core
 
         void Broker_GotCancel(long oid)
         {
+            
             debug("Reply Cancel To MessageExch:" + oid.ToString());
             _cancelcache.Write(oid);
         }

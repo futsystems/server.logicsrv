@@ -83,9 +83,19 @@ namespace TradingLib.Common
         public string InterfaceList { get; set; }
 
         /// <summary>
+        /// 配资服务计划列表
+        /// </summary>
+        public string FinSPList { get; set; }
+
+        /// <summary>
         /// 代理模块
         /// </summary>
         public bool Module_Agent { get; set; }
+
+        /// <summary>
+        /// 是否支持多级代理
+        /// </summary>
+        public bool Module_SubAgent { get; set; }
 
         /// <summary>
         /// 配资模块

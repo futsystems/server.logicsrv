@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using TradingLib.Common;
 
 
 namespace TradingLib.API
@@ -14,5 +15,11 @@ namespace TradingLib.API
         /// <param name="packet"></param>
         void Send(IPacket packet);
 
+        /// <summary>
+        /// 获得某个通知列表
+        /// </summary>
+        /// <param name="predictate"></param>
+        /// <returns></returns>
+        IEnumerable<ILocation> GetNotifyTargets(Predicate<Manager> predictate);
     }
 }

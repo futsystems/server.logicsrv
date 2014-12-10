@@ -19,7 +19,7 @@ namespace FutsMoniter
             kryptonContextMenuItem_exit.Click += new EventHandler(kryptonContextMenuItem_exit_Click);
             kryptonContextMenuItem_Domain.Click += new EventHandler(kryptonContextMenuItem_Domain_Click);
             kryptonContextMenuItem_DomainInfo.Click += new EventHandler(kryptonContextMenuItem_DomainInfo_Click);
-
+            kryptonContextMenuItem_changepass.Click += new EventHandler(kryptonContextMenuItem_changepass_Click);
 
             kryptonRibbonQATButton_debug.Click += new EventHandler(kryptonRibbonQATButton_debug_Click);
             //kryptonContextMenuItem_exit.Click +=new EventHandler(kryptonContextMenuItem_exit_Click);
@@ -29,7 +29,6 @@ namespace FutsMoniter
             kryptonRibbonGroupButton_CloseClearCentre.Click += new EventHandler(kryptonRibbonGroupButton_CloseClearCentre_Click);
 
             //路由列表
-            kryptonRibbonGroupButton_RouterList.Click += new EventHandler(kryptonRibbonGroupButton_RouterList_Click);
             kryptonRibbonGroupButton_interfacelist.Click += new EventHandler(kryptonRibbonGroupButton_interfacelist_Click);
             kryptonRibbonGroupButton_connectorlist.Click += new EventHandler(kryptonRibbonGroupButton_connectorlist_Click);
             //系统状态
@@ -63,6 +62,19 @@ namespace FutsMoniter
             kryptonRibbonGroupButton_AccountCashreq.Click += new EventHandler(kryptonRibbonGroupButton_AccountCashreq_Click);
 
             kryptonRibbonGroupButton_payonline.Click += new EventHandler(kryptonRibbonGroupButton_payonline_Click);
+            kryptonRibbonGroupButton_ReceiveBank.Click += new EventHandler(kryptonRibbonGroupButton_ReceiveBank_Click);
+        }
+
+        void kryptonContextMenuItem_changepass_Click(object sender, EventArgs e)
+        {
+            fmChangePasswordAgent fm = new fmChangePasswordAgent();
+            fm.ShowDialog();
+        }
+
+        void kryptonRibbonGroupButton_ReceiveBank_Click(object sender, EventArgs e)
+        {
+            fmRecvBankManager fm = new fmRecvBankManager();
+            fm.Show();
         }
 
         void kryptonContextMenuItem_DomainInfo_Click(object sender, EventArgs e)
@@ -246,11 +258,11 @@ namespace FutsMoniter
 
         void kryptonRibbonGroupButton_RouterList_Click(object sender, EventArgs e)
         {
-            if (routerform != null)
-            {
-                routerform.Show();
-                Globals.TLClient.ReqQryConnector();
-            }
+            //if (routerform != null)
+            //{
+            //    routerform.Show();
+            //    Globals.TLClient.ReqQryConnector();
+            //}
         }
 
 

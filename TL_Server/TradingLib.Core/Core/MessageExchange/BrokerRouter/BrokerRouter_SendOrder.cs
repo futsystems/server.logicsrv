@@ -34,8 +34,6 @@ namespace TradingLib.Core
 
         }
 
-
-
         bool SendOrderOut(Order o,out string errorTitle)
         { 
             IAccount account = _clearCentre[o.Account];
@@ -53,19 +51,7 @@ namespace TradingLib.Core
             else //平仓委托需要判断是否需要拆分委托
             {
                 //平仓委托通过分析判断后对外发送
-                return XBrokerSendOrder(o, out errorTitle);
-                //List<Order> orderlist = XSendOrders(o);
-                
-                ////如果委托没有分拆则直接发送
-                //if (orderlist.Count == 1)
-                //{
-                //    return broker_sendorder(o, out errorTitle);
-                //}
-                //else //委托分拆,则通过委托拆分器进行发送
-                //{
-                //    debug("splitordertracker is not finished...", QSEnumDebugLevel.ERROR);
-                //    return false;
-                //}
+                return XBrokerSendOrder(o, out errorTitle);//是否需要拆解委托
             }
         }
 
@@ -76,6 +62,7 @@ namespace TradingLib.Core
         /// <param name="o"></param>
         bool XBrokerSendOrder(Order o,out string errorTitle)
         {
+            debug("XBrokerSendOrder check if need split the order", QSEnumDebugLevel.INFO);
             IAccount account = _clearCentre[o.Account];
             Position pos = account.GetPosition(o.Symbol, o.PositionSide);//获得该委托对应预操作的持仓对象
 
@@ -92,6 +79,7 @@ namespace TradingLib.Core
                 {
                     brokerclosemap.Add(positiondetail.Broker, 0);
                 }
+
                 poslisttoclose.Add(positiondetail);
                 //平仓量 如果提交的平仓量>当前持仓明细 则取持仓明细的所有持仓量
                 int closeamount = tocloseize > positiondetail.Volume ? positiondetail.Volume : tocloseize;
@@ -116,43 +104,11 @@ namespace TradingLib.Core
             }
             else
             {
-
                 debug("PositionDetails to be closed are in diferent broker,send order via spliter.", QSEnumDebugLevel.INFO);
                 splitedordermap.TryAdd(o.id, o);
                 _splittracker.SendFatherOrder(o, SplitOrder(o, brokerclosemap));
                 return true;
             }
-
-
-            //bool needsplit = false;
-            //string broker = string.Empty;
-            //if (brokerclosemap.Count == 1)
-            //{
-            //    broker = brokerclosemap.Keys.First();
-            //    debug("PositionDetails to be closed are  in same broker,no need to split order.", QSEnumDebugLevel.INFO);
-            //}
-            //else
-            //{
-            //    needsplit = true;
-            //    debug("PositionDetails to be closed are in diferent broker,need to split order.", QSEnumDebugLevel.INFO);
-            //}
-            
-            ////如果不需要拆分委托 则直接返回原始委托
-            //if (!needsplit)
-            //{   
-            //    List<Order> orderlist = new List<Order>();
-            //    o.Broker = broker;
-            //    orderlist.Add(o);//
-            //    return broker_sendorder(o, out errorTitle);
-            //}
-            //else//如果需要拆分委托则返回拆分后的委托
-            //{
-            //    //通过spliter发送父委托
-            //    splitedordermap.TryAdd(o.id, o);
-            //    debug("send order via spliter...", QSEnumDebugLevel.WARNING);
-            //    _splittracker.SendFatherOrder(o, SplitOrder(o, brokerclosemap));
-            //    return null;
-            //}
         }
 
         /// <summary>

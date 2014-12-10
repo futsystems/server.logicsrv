@@ -139,7 +139,7 @@ namespace TradingLib.Common
             {
                 sb.Append(" Ref:" + o.OrderRef + " Seq:" + o.OrderSeq.ToString() + " ExchID:" + o.OrderSysID);
             }
-            sb.Append(" Status:" + o.Status.ToString() +" FatherID:"+o.FatherID.ToString());
+            sb.Append(" Status:" + o.Status.ToString() +" FatherID:"+o.FatherID.ToString() +" CopyID:"+o.CopyID.ToString());
 
             return sb.ToString();
         }
@@ -148,10 +148,10 @@ namespace TradingLib.Common
         public static string GetOrderStatus(this Order o)
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("ID" + o.id.ToString());
+            sb.Append(" ID:" + o.id.ToString());
             sb.Append(" T:" + Math.Abs(o.TotalSize).ToString() + " F:" + o.FilledSize.ToString() + " R:" + o.UnsignedSize.ToString());
             sb.Append(" Ref:" + o.OrderRef + " Seq:" + o.OrderSeq.ToString() + " ExchID:" + o.OrderSysID);
-            sb.Append(" Status:" + o.Status.ToString());
+            sb.Append(" Status:" + o.Status.ToString() + " CopyID:" + o.CopyID.ToString());
             return sb.ToString();
         }
     }

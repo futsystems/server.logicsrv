@@ -58,7 +58,7 @@ namespace TradingLib.BrokerXAPI
         /// <summary>
         /// 服务地址
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 512)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
         public string ServerAddress;
 
         /// <summary>
@@ -66,13 +66,13 @@ namespace TradingLib.BrokerXAPI
         /// </summary>
         public int ServerPort;
 
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
         public string Field1;
 
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
         public string Field2;
 
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
         public string Field3;
 
     }
@@ -95,10 +95,10 @@ namespace TradingLib.BrokerXAPI
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 40)]
         public string Password;
 
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
         public string Field1;
 
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
         public string Field2;
 
     }
@@ -124,13 +124,13 @@ namespace TradingLib.BrokerXAPI
         /// <summary>
         /// 预留字段1
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
         public string Field1;
 
         /// <summary>
         /// 预留字段2
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 100)]
         public string Field2;
 
         /// <summary>
@@ -148,72 +148,61 @@ namespace TradingLib.BrokerXAPI
 
     /// <summary>
     /// 委托结构体
+    /// .net mono 默认对齐是2字节对齐
     /// </summary>
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public struct XOrderField
     {
+        
+
         /// <summary>
         /// 日期
         /// </summary>
-        public int Date;
+        public int Date;//4
 
         /// <summary>
         /// 时间
         /// </summary>
-        public int Time;
+        public int Time;//4
 
+        /// <summary>
+        /// 委托数量
+        /// </summary>
+        public int TotalSize;//4
+
+        /// <summary>
+        /// 成交数量
+        /// </summary>
+        public int FilledSize;//4
+
+        /// <summary>
+        /// 未成交数量
+        /// </summary>
+        public int UnfilledSize;//4
+
+        /// <summary>
+        /// limit价格
+        /// </summary>
+        public double LimitPrice;//8
+
+        /// <summary>
+        /// stop价格
+        /// </summary>
+        public double StopPrice;//8
+        //36
         /// <summary>
         /// 合约
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 24)]
         public string Symbol;
 
         /// <summary>
         /// 交易所
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 10)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 12)]
         public string Exchange;
 
-        /// <summary>
-        /// 方向
-        /// </summary>
-        public bool Side;
 
-        /// <summary>
-        /// 委托数量
-        /// </summary>
-        public int TotalSize;
-
-        /// <summary>
-        /// 成交数量
-        /// </summary>
-        public int FilledSize;
-
-        /// <summary>
-        /// 未成交数量
-        /// </summary>
-        public int UnfilledSize;
-
-        /// <summary>
-        /// limit价格
-        /// </summary>
-        public double LimitPrice;
-
-        /// <summary>
-        /// stop价格
-        /// </summary>
-        public double StopPrice;
-
-        /// <summary>
-        /// 开平标识
-        /// </summary>
-        public QSEnumOffsetFlag OffsetFlag;
-
-
-        /// <summary>
-        /// 委托状态
-        /// </summary>
-        public QSEnumOrderStatus OrderStatus;
 
         /// <summary>
         /// 委托状态消息
@@ -225,20 +214,36 @@ namespace TradingLib.BrokerXAPI
         /// <summary>
         /// 系统唯一委托编号
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 24)]
         public string ID;
 
         /// <summary>
         /// 向远端发单时 生成的本地OrderRef 比如CTP 
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 24)]
         public string BrokerLocalOrderID;
 
         /// <summary>
         /// 远端交易所返回的编号
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 24)]
         public string BrokerRemoteOrderID;
+
+        /// <summary>
+        /// 开平标识
+        /// </summary>
+        public QSEnumOffsetFlag OffsetFlag;//1
+
+        /// <summary>
+        /// 委托状态
+        /// </summary>
+        public QSEnumOrderStatus OrderStatus;//1
+
+        /// <summary>
+        /// 方向 //400
+        /// </summary>
+        public bool Side;//1
+
     }
     
     /// <summary>
@@ -248,52 +253,49 @@ namespace TradingLib.BrokerXAPI
     public struct XOrderActionField
     {
         /// <summary>
+        /// 未成交数量
+        /// </summary>
+        public int Size;//4
+
+        /// <summary>
+        /// 价格
+        /// </summary>
+        public double Price;//8
+
+        /// <summary>
         /// 本地系统委托编号
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 24)]
         public string ID;
 
         /// <summary>
         /// 相对于成交端 本地编号
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 24)]
         public string BrokerLocalOrderID;
-
 
         /// <summary>
         /// 交易所委托编号
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 24)]
         public string BrokerRemoteOrderID;
-
-
-        /// <summary>
-        /// 委托操作标识
-        /// </summary>
-        public QSEnumOrderActionFlag ActionFlag;
 
         /// <summary>
         /// 交易所
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 10)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 12)]
         public string Exchange;
 
         /// <summary>
         /// 合约
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 24)]
         public string Symbol;
 
         /// <summary>
-        /// 未成交数量
+        /// 委托操作标识
         /// </summary>
-        public int Size;
-
-
-        /// <summary>
-        /// 价格
-        /// </summary>
-        public double Price;
+        public QSEnumOrderActionFlag ActionFlag;//1
 
 
     }
@@ -301,65 +303,70 @@ namespace TradingLib.BrokerXAPI
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     public struct XTradeField
     {
-        public int Date;
+        /// <summary>
+        /// 日期
+        /// </summary>
+        public int Date;//4
 
-        public int Time;
+        /// <summary>
+        /// 时间
+        /// </summary>
+        public int Time;//4
+
+        /// <summary>
+        /// 成交手数
+        /// </summary>
+        public int Size;//4
+
+        /// <summary>
+        /// 成交价格
+        /// </summary>
+        public double Price;//8
+
+        /// <summary>
+        /// 手续费
+        /// </summary>
+        public double Commission;//8
 
         /// <summary>
         /// 合约
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 24)]
         public string Symbol;
 
         /// <summary>
         /// 交易所
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 10)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 12)]
         public string Exchange;
-
-        /// <summary>
-        /// 方向
-        /// </summary>
-        public bool Side;
-
-        /// <summary>
-        /// 成交手数
-        /// </summary>
-        public int Size;
-
-
-        /// <summary>
-        /// 成交价格
-        /// </summary>
-        public double Price;
-
-        /// <summary>
-        /// 开平标识
-        /// </summary>
-        public QSEnumOffsetFlag OffsetFlag;
-
-        /// <summary>
-        /// 手续费
-        /// </summary>
-        public double Commission;
 
         /// <summary>
         /// 成交编号
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 24)]
         public string BrokerTradeID;
 
         /// <summary>
         /// 近端委托编号
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 24)]
         public string BrokerLocalOrderID;
 
         /// <summary>
         /// 远端委托编号
         /// </summary>
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 20)]
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 24)]
         public string BrokerRemoteOrderID;
+
+        /// <summary>
+        /// 开平标识
+        /// </summary>
+        public QSEnumOffsetFlag OffsetFlag;//1
+
+        /// <summary>
+        /// 方向
+        /// </summary>
+        public bool Side;
     }
 
 

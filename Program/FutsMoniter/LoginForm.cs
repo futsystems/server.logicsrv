@@ -84,12 +84,14 @@ namespace FutsMoniter
         { 
             btnLogin.Click +=new EventHandler(btnLogin_Click);
             btnExit.Click += new EventHandler(btnExit_LinkClicked);
+            this.AcceptButton = btnLogin;
+            //this.CancelButton = btnExit;
         }
 
 
         public void ShowMessage(string msg)
         {
-            if (message.InvokeRequired)
+            if (InvokeRequired)
             {
                 Invoke(new DebugDelegate(ShowMessage), new object[] { msg });
             }

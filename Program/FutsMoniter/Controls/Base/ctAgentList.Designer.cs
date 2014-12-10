@@ -43,23 +43,25 @@
             this.kryptonPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.kryptonPanel1.Location = new System.Drawing.Point(0, 0);
             this.kryptonPanel1.Name = "kryptonPanel1";
-            this.kryptonPanel1.Size = new System.Drawing.Size(183, 25);
+            this.kryptonPanel1.Size = new System.Drawing.Size(211, 21);
             this.kryptonPanel1.TabIndex = 50;
             // 
             // agent
             // 
-            this.agent.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.agent.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.agent.DropDownWidth = 121;
-            this.agent.Location = new System.Drawing.Point(58, 2);
+            this.agent.Location = new System.Drawing.Point(65, 0);
             this.agent.Name = "agent";
-            this.agent.Size = new System.Drawing.Size(121, 21);
+            this.agent.Size = new System.Drawing.Size(146, 21);
             this.agent.TabIndex = 1;
             this.agent.Text = "--";
             this.agent.SelectedIndexChanged += new System.EventHandler(this.agent_SelectedIndexChanged);
             // 
             // kryptonLabel1
             // 
-            this.kryptonLabel1.Location = new System.Drawing.Point(3, 4);
+            this.kryptonLabel1.Location = new System.Drawing.Point(0, 3);
             this.kryptonLabel1.Name = "kryptonLabel1";
             this.kryptonLabel1.Size = new System.Drawing.Size(55, 18);
             this.kryptonLabel1.TabIndex = 0;
@@ -71,7 +73,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.kryptonPanel1);
             this.Name = "ctAgentList";
-            this.Size = new System.Drawing.Size(183, 25);
+            this.Size = new System.Drawing.Size(211, 21);
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).EndInit();
             this.kryptonPanel1.ResumeLayout(false);
             this.kryptonPanel1.PerformLayout();

@@ -82,6 +82,14 @@ namespace TradingLib.Common
             return null;
         }
 
+        public Domain GetBrokerDomain(string token)
+        {
+            ConnectorConfig cfg = GetBrokerConfig(token);
+            if (cfg != null)
+                return cfg.Domain;
+            return null;
+        }
+
         public  ConnectorConfig GetBrokerConfig(int id)
         {
             ConnectorConfig cfg = null;
@@ -101,6 +109,7 @@ namespace TradingLib.Common
             }
             return null;
         }
+
 
         /// <summary>
         /// 返回所有交易接口设置

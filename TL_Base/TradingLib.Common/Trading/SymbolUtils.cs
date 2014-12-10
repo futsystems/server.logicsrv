@@ -20,6 +20,8 @@ namespace TradingLib.Common
         }
 
 
+        
+
         public static CommissionConfig GetCommissionConfig(this Symbol sym)
         {
             CommissionConfig cfg = new CommissionConfigImpl();

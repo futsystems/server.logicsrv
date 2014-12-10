@@ -37,8 +37,8 @@ namespace TradingLib.Common
             this.CloseTime = f.xTime;
             this.CloseTradeID = f.TradeID;
             this.ClosePrice = f.xPrice;
-            this.CloseVolume = closesize; 
-
+            this.CloseVolume = closesize;
+            //this.Domain_ID = pd.Domain_ID;
             //this.Broker=
         }
 
@@ -76,6 +76,7 @@ namespace TradingLib.Common
 
             this.Broker = string.Empty;//默认broker为空
             this.Breed = QSEnumOrderBreedType.ACCT;//默认为分帐户侧
+            this.Domain_ID = 0;
         }
 
         /// <summary>
@@ -315,5 +316,11 @@ namespace TradingLib.Common
         /// 3.路由侧
         /// </summary>
         public QSEnumOrderBreedType Breed { get; set; }
+
+
+        /// <summary>
+        /// 域ID
+        /// </summary>
+        public int Domain_ID { get; set; }
     }
 }

@@ -293,22 +293,24 @@ namespace TradingLib.Core
          [CoreCommandAttr(QSEnumCommandSource.CLI, "sectime", "sectime - sectime", "查看某个品种的市场时间")]
          public string CTE_SymbolMarketTime(string code)
          {
-             SecurityFamily sec = BasicTracker.SecurityTracker[code];
-             if (sec == null)
-             {
-                 return "品种不存在";
-             }
-             return sec.IsMarketTime.ToString();
+             //SecurityFamily sec = BasicTracker.SecurityTracker[code];
+             //if (sec == null)
+             //{
+             //    return "品种不存在";
+             //}
+             //return sec.IsMarketTime.ToString();
+             return "";
          }
          [CoreCommandAttr(QSEnumCommandSource.CLI, "symtime", "symtime - symtime", "查看某个合约的市场时间")]
          public string CTE_SecurityMarketTime(string symbol)
          {
-             Symbol sym = BasicTracker.SymbolTracker[symbol];
-             if (sym == null)
-             {
-                 return "品种不存在";
-             }
-             return sym.IsMarketTime.ToString();
+             //Symbol sym = BasicTracker.SymbolTracker[1,symbol];
+             //if (sym == null)
+             //{
+             //    return "品种不存在";
+             //}
+             //return sym.IsMarketTime.ToString();
+             return "";
          }
 
          [CoreCommandAttr(QSEnumCommandSource.CLI, "demoflat", "demoflat - demoflat", "强平某个帐户的持仓，先撤单，然后再强平")]

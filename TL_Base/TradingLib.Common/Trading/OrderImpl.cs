@@ -168,6 +168,11 @@ namespace TradingLib.Common
         /// </summary>
         public int RequestID { get { return _nRequest; } set { _nRequest = value; } }
 
+        int _copyid = 0;
+        /// <summary>
+        /// 标识Copy引用
+        /// </summary>
+        public int CopyID { get { return _copyid; } set { _copyid = value; } }
         #endregion
 
         #region 构造函数
@@ -180,6 +185,7 @@ namespace TradingLib.Common
         /// <param name="copythis"></param>
         public OrderImpl(Order copythis)
         {
+            Util.Debug("Order Copyed:" + copythis.GetOrderInfo(), QSEnumDebugLevel.WARNING);
             this.id = copythis.id;
             this.Account = copythis.Account;
             this.Date = copythis.Date;
@@ -226,6 +232,8 @@ namespace TradingLib.Common
             this.FatherBreed = copythis.FatherBreed;
             this.FatherID = copythis.FatherID;
             this.Breed = copythis.Breed;
+
+            this.CopyID = copythis.CopyID + 1;
         }
 
         public OrderImpl(string sym, bool side, int size, decimal p, decimal s, string c, int time, int date)

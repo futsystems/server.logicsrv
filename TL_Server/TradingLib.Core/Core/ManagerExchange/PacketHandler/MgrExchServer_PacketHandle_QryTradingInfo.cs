@@ -34,7 +34,7 @@ namespace TradingLib.Core
                 {
                     //返回空项目
                     RspMGRQryOrderResponse response = ResponseTemplate<RspMGRQryOrderResponse>.SrvSendRspResponse(request);
-                    response.OrderToSend = new OrderImpl();
+                    //response.OrderToSend = new OrderImpl();
                     CacheRspResponse(response);
                 }
             }
@@ -69,7 +69,7 @@ namespace TradingLib.Core
                 {
                     //返回空项目
                     RspMGRQryTradeResponse response = ResponseTemplate<RspMGRQryTradeResponse>.SrvSendRspResponse(request);
-                    response.TradeToSend = new TradeImpl();
+                    //response.TradeToSend = new TradeImpl();
                     CacheRspResponse(response);
                 }
             }

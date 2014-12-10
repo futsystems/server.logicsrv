@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections;
-using System.Collections;
 using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Data;
@@ -14,6 +13,7 @@ using TradingLib.Common;
 using FutSystems.GUI;
 using TradingLib.Mixins;
 using TradingLib.Mixins.LitJson;
+using TradingLib.Mixins.JsonObject;
 
 namespace FutsMoniter
 {
@@ -32,24 +32,44 @@ namespace FutsMoniter
             if (Globals.EnvReady)
             {
                 Globals.TLClient.ReqQryInterface();
+                Globals.TLClient.ReqQryServicePlan();
             }
         }
 
         void WireEvent()
         {
             Globals.RegIEventHandler(this);
+            module_finservice.CheckedChanged += new EventHandler(module_finservice_CheckedChanged);
+            module_agent.CheckedChanged += new EventHandler(module_agent_CheckedChanged);
+        }
+
+        void module_agent_CheckedChanged(object sender, EventArgs e)
+        {
+            module_subagent.Enabled = module_agent.Checked;
+            if (!module_agent.Checked)
+            {
+                module_subagent.Checked = false;
+            }
+        }
+
+        void module_finservice_CheckedChanged(object sender, EventArgs e)
+        {
+            splisttab.Enabled = module_finservice.Checked;
         }
 
         public void OnInit()
         {
             Globals.CallBackCentre.RegisterCallback("ConnectorManager", "QryInterface", this.OnQryInterface);
+            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryFinServicePlan", this.OnQryFinServicePlan);
         }
 
         public void OnDisposed()
         {
             Globals.CallBackCentre.UnRegisterCallback("ConnectorManager", "QryInterface", this.OnQryInterface);
+            Globals.CallBackCentre.UnRegisterCallback("FinServiceCentre", "QryFinServicePlan", this.OnQryFinServicePlan);
         }
 
+        #region 底层成交接口
         ArrayList GetInterfaceList()
         {
             ArrayList list = new System.Collections.ArrayList();
@@ -117,6 +137,79 @@ namespace FutsMoniter
 
             }
         }
+        #endregion
+
+
+        #region 配资服务计划
+        string GetSPListString()
+        {
+            List<string> list = new List<string>();
+            foreach (object obj in finsplist.CheckedItems)
+            {
+                ValueObject<int> item = (ValueObject<int>)obj;
+                list.Add(item.Value.ToString());
+            }
+            return string.Join(",", list.ToArray());
+        }
+
+        void SetSPList(string list)
+        {
+            IEnumerable<int> clist = list.Split(',').Select(v => int.Parse(v));
+            for (int i = 0; i < interfacelist.Items.Count; i++)
+            {
+                ValueObject<int> item = (ValueObject<int>)finsplist.Items[i];
+                if (clist.Contains(item.Value))
+                {
+                    finsplist.SetItemChecked(i, true);
+                }
+            }
+        }
+
+        ArrayList GetSPList()
+        {
+            ArrayList list = new System.Collections.ArrayList();
+            foreach (JsonWrapperServicePlane it in servicePlanMap.Values)
+            {
+                ValueObject<int> vo = new ValueObject<int>();
+                vo.Name = string.Format("{0}[{1}]", it.Title, it.Name);
+                vo.Value = it.ID;
+                list.Add(vo);
+            }
+            return list;
+        }
+
+        ConcurrentDictionary<int, JsonWrapperServicePlane> servicePlanMap = new ConcurrentDictionary<int, JsonWrapperServicePlane>();
+        bool _gotsplist = false;
+        void OnQryFinServicePlan(string jsonstr)
+        {
+            //MessageBox.Show(jsonstr);
+            JsonData jd = TradingLib.Mixins.JsonReply.ParseJsonReplyData(jsonstr);
+            int code = int.Parse(jd["Code"].ToString());
+            if (code == 0)
+            {
+                //Globals.Debug("domain edit got serviceplane ...........");
+                JsonWrapperServicePlane[] objs = TradingLib.Mixins.JsonReply.ParsePlayload<JsonWrapperServicePlane[]>(jd);
+                foreach (JsonWrapperServicePlane sp in objs)
+                {
+                    if (!servicePlanMap.Keys.Contains(sp.ID))
+                    {
+                        servicePlanMap.TryAdd(sp.ID, sp);
+                    }
+                }
+                _gotsplist = true;
+
+                Factory.IDataSourceFactory(finsplist).BindDataSource(GetSPList());
+                if (_domain != null)
+                {
+                    SetSPList(_domain.FinSPList);
+                }
+            }
+            else//如果没有配资服
+            {
+
+            }
+        }
+        #endregion
 
         DomainImpl _domain = null;
         public void SetDomain(DomainImpl domain)
@@ -135,10 +228,13 @@ namespace FutsMoniter
             routeritemlimit.Value = _domain.RouterItemLimit == 0 ? routeritemlimit.Maximum : _domain.RouterItemLimit;
 
             module_agent.Checked = _domain.Module_Agent;
+            module_subagent.Checked = !module_agent.Checked ? false : _domain.Module_SubAgent;
+
             module_finservice.Checked = _domain.Module_FinService;
             module_payonline.Checked = _domain.Module_PayOnline;
             router_live.Checked = _domain.Router_Live;
             router_sim.Checked = _domain.Router_Sim;
+            splisttab.Enabled = _domain.Module_FinService;
 
             this.Text = "编辑域分区:" + _domain.Name;
 
@@ -159,15 +255,17 @@ namespace FutsMoniter
                 _domain.RouterGroupLimit = (int)routergrouplimit.Value;
                 _domain.RouterItemLimit = (int)routeritemlimit.Value;
                 _domain.InterfaceList = GetInterfaceListString();
+                _domain.FinSPList = GetSPListString();
 
                 _domain.Module_Agent = module_agent.Checked;
+                _domain.Module_SubAgent = module_agent.Checked?module_subagent.Checked:false;
+
                 _domain.Module_FinService = module_finservice.Checked;
                 _domain.Module_PayOnline = module_payonline.Checked;
 
                 _domain.Router_Live = router_live.Checked;
                 _domain.Router_Sim = router_sim.Checked;
 
-                //MessageBox.Show(_domain.InterfaceList);
                 if (fmConfirm.Show("确认更新分区设置?") == System.Windows.Forms.DialogResult.Yes)
                 {
                     Globals.TLClient.ReqUpdateDomain(_domain);
@@ -188,8 +286,11 @@ namespace FutsMoniter
                 _domain.RouterGroupLimit = (int)routergrouplimit.Value;
                 _domain.RouterItemLimit = (int)routeritemlimit.Value;
                 _domain.InterfaceList = GetInterfaceListString();
+                _domain.FinSPList = GetSPListString();
 
                 _domain.Module_Agent = module_agent.Checked;
+                _domain.Module_SubAgent = module_agent.Checked ? module_subagent.Checked : false;
+
                 _domain.Module_FinService = module_finservice.Checked;
                 _domain.Module_PayOnline = module_payonline.Checked;
 

@@ -60,26 +60,13 @@ namespace TradingLib.Common
             }
 
         }
-        //List<Security> symbols = new List<Security>();//储存security的列表
         ThreadSafeList<Symbol> symbols = new ThreadSafeList<Symbol>();
         string _name = "";
         public string Name { get { return _name; } set { _name = value; } }
         public int Count { get { return symbols.Count; } }
         public bool HasSymbol { get { return symbols.Count > 0; } }
 
-        /// <summary>
-        /// adds a security if not already present
-        /// 通过合约字头增加某个合约对象,如果不存在该合约对象则不增加
-        /// </summary>
-        /// <param name="sym"></param>
-        public void Add(string sym) 
-        { 
-            Symbol osym = BasicTracker.SymbolTracker[sym];
-            if(osym != null)
-            {
-                Add(osym); 
-            }
-        }
+        
         /// <summary>
         /// adds a security if not already present
         /// 如果某个合约对象不存在 则增加该合约
@@ -111,15 +98,7 @@ namespace TradingLib.Common
             for (int i = 0; i < mb.Count; i++)
                 this.Add(mb[i]);
         }
-        /// <summary>
-        /// 通过合约字段列表 增加合约
-        /// </summary>
-        /// <param name="syms"></param>
-        public void Add(string[] syms)
-        {
-            for (int i = 0; i < syms.Length; i++)
-                this.Add(syms[i]);
-        }
+        
         /// <summary>
         /// removes all elements of baskets that match.
         /// unmatching elements are ignored
@@ -135,6 +114,7 @@ namespace TradingLib.Common
             for (int i = remove.Count - 1; i >= 0; i--)
                 symbols.RemoveAt(remove[i]);
         }
+
         /// <summary>
         /// remove single symbol from basket
         /// </summary>
@@ -165,60 +145,6 @@ namespace TradingLib.Common
         /// </summary>
         public void Clear() { symbols.Clear(); }
 
-
-        //序列化basket
-        public static string Serialize(SymbolBasket b)
-        {
-            List<string> s = new List<string>();
-            for (int i = 0; i < b.Count; i++) s.Add(b[i].Symbol);
-            return string.Join(",", s.ToArray());
-        }
-        //反序列化basket
-        public static SymbolBasketImpl Deserialize(string serialBasket)
-        {
-            SymbolBasketImpl mb = new SymbolBasketImpl();
-            if ((serialBasket == null) || (serialBasket == "")) return mb;
-            string[] r = serialBasket.Split(',');//字符串,分割 通过SecurityImpl进行解析
-            for (int i = 0; i < r.Length; i++)
-            {
-                if (r[i] == "") continue;
-                string[] syms = r[i].Split(' ');
-                Symbol sec = BasicTracker.SymbolTracker[syms[0]];//SecurityImpl.Parse(r[i]);
-                if (sec!= null)
-                    mb.Add(sec);
-            }
-            return mb;
-        }
-        /*
-        public static Basket FromFile(string filename)
-        {
-            try
-            {
-                StreamReader sr = new StreamReader(filename);
-                string file = sr.ReadToEnd();
-                sr.Close();
-                string[] syms = file.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                BasketImpl b = new BasketImpl(syms);
-                b.Name = Path.GetFileNameWithoutExtension(filename);
-                return b;
-            }
-            catch { }
-            return new BasketImpl();
-        }
-
-        public static void ToFile(Basket b, string filename) { ToFile(b, filename, false); }
-        public static void ToFile(Basket b, string filename, bool append)
-        {
-            StreamWriter sw = new StreamWriter(filename, append);
-            for (int i = 0; i < b.Count; i++)
-                sw.WriteLine(b[i].Symbol);
-            sw.Close();
-        }
-            
-        
-            * **/
-        public override string ToString() { return Serialize(this); }
-        public static SymbolBasketImpl FromString(string serialbasket) { return Deserialize(serialbasket); }
         public IEnumerator GetEnumerator() { foreach (SymbolImpl s in symbols) yield return s; }
 
         //获得Security数组

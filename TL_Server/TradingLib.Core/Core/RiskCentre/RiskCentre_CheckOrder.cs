@@ -88,7 +88,7 @@ namespace TradingLib.Core
 
             //3 合约检查
             //3.1合约是否存在
-            if (!BasicTracker.SymbolTracker.TrckerOrderSymbol(o))
+            if (!account.TrckerOrderSymbol(ref o))
             {
                 errortitle = "SYMBOL_NOT_EXISTED";//合约不存在
                 needlog = false;

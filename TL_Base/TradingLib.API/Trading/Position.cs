@@ -209,8 +209,6 @@ namespace TradingLib.API
         ///// </summary>
         //QSEnumOrderBreedType Breed { get; set; }
 
-        //#endregion
-
     }
 
     public class InvalidPosition : Exception {}

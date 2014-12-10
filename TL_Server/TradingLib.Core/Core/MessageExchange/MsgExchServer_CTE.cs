@@ -109,7 +109,7 @@ namespace TradingLib.Core
         public string CTE_RegisterSymbols()
         {
 
-            _datafeedRouter.RegisterSymbols(BasicTracker.SymbolTracker.getBasketAvabile());
+            //_datafeedRouter.RegisterSymbols(BasicTracker.SymbolTracker.getBasketAvabile());
 
             return "registed";
 

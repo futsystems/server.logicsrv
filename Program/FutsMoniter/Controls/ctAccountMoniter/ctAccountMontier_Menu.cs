@@ -23,11 +23,27 @@ namespace FutsMoniter.Controls
             accountgrid.ContextMenuStrip.Items.Add(new System.Windows.Forms.ToolStripSeparator());
             accountgrid.ContextMenuStrip.Items.Add("历史查询", null, new EventHandler(QryHist_Click));
             accountgrid.ContextMenuStrip.Items.Add(new System.Windows.Forms.ToolStripSeparator());
-            accountgrid.ContextMenuStrip.Items.Add("删除帐户", null, new EventHandler(DelAccount_Click));
+            accountgrid.ContextMenuStrip.Items.Add("修改路由组", Properties.Resources.changerouter, new EventHandler(UpdateRouterGroup_Click));
+            accountgrid.ContextMenuStrip.Items.Add(new System.Windows.Forms.ToolStripSeparator());
+            accountgrid.ContextMenuStrip.Items.Add("删除帐户", Properties.Resources.deleteaccount, new EventHandler(DelAccount_Click));
 
 
         }
 
+        void UpdateRouterGroup_Click(object sender, EventArgs e)
+        {
+            IAccountLite account = GetVisibleAccount(CurrentAccount);
+            if (account != null)
+            {
+                fmChangeRouter fm = new fmChangeRouter();
+                fm.SetAccount(account);
+                fm.Show();
+            }
+            else
+            {
+                fmConfirm.Show("请选择需要编辑的交易帐户！");
+            }
+        }
         /// <summary>
         /// 删除某个交易帐号
         /// </summary>

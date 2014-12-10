@@ -63,14 +63,16 @@ namespace TradingLib.Core
             RspMGROperationResponse response = ResponseTemplate<RspMGROperationResponse>.SrvSendRspResponse(request);
 
             Trade fill = request.TradeToSend;
-            fill.oSymbol = BasicTracker.SymbolTracker[fill.Symbol];
+            IAccount account = clearcentre[fill.Account];
+            fill.oSymbol = account.GetSymbol(fill.Symbol);
+
             if (fill.oSymbol == null)
             {
                 response.RspInfo.Fill("SYMBOL_NOT_EXISTED");
                 CacheRspResponse(response);
                 return;
             }
-            IAccount account = clearcentre[fill.Account];
+            
             if (account == null)
             {
                 response.RspInfo.Fill("交易帐号不存在");

@@ -210,14 +210,15 @@ namespace TradingLib.Common
 
             List<Order> sonOrders = (sons==null?SplitOrder(fathOrder):sons);//分拆该委托 如果发送委托时候已经指定了子委托
 
+            Order fo = new OrderImpl(fathOrder);
             //2.将委托加入映射map
-            fatherOrder_Map.TryAdd(fathOrder.id, fathOrder);//保存付委托映射关系
-            fatherSonOrder_Map.TryAdd(fathOrder.id, sonOrders);//保存父委托到子委托映射关系
+            fatherOrder_Map.TryAdd(fo.id, fo);//保存付委托映射关系
+            fatherSonOrder_Map.TryAdd(fo.id, sonOrders);//保存父委托到子委托映射关系
 
             //2.统一发送子委托
             foreach (Order order in sonOrders)
             {
-                sonFathOrder_Map.TryAdd(order.id, fathOrder);//保存子委托到父委托映射关系
+                sonFathOrder_Map.TryAdd(order.id, fo);//保存子委托到父委托映射关系
                 SendSonOrder(order);
             }
             //3.更新父委托状态
@@ -231,7 +232,10 @@ namespace TradingLib.Common
             {
                 fathOrder.Status = QSEnumOrderStatus.Reject;
             }
-            Util.Debug("父子委托关系链条 " + fathOrder.id + "->[" + string.Join(",", sonOrders.Select(so => so.id)) + "]", QSEnumDebugLevel.INFO);
+            //同步本地状态
+            fo.Status = fathOrder.Status;
+
+            Util.Debug("父子委托关系链条 " + fathOrder.id + "->[" + string.Join(",", sonOrders.Select(so => so.id)) + "] CopyID:"+fo.CopyID.ToString(), QSEnumDebugLevel.INFO);
         }
 
         /// <summary>

@@ -36,16 +36,11 @@ namespace TradingLib.Core
         /// 注册某个合约的行情数据
         /// </summary>
         /// <param name="symbol"></param>
-        public void RegisterSymbol(string sym)
+        public void RegisterSymbol(Symbol sym)
         {
-            debug("Register Symbol Market Data:" + sym, QSEnumDebugLevel.INFO);
-            SymbolBasket b = new SymbolBasketImpl();
-            Symbol symbol = BasicTracker.SymbolTracker[sym];
-            if (symbol != null)
-            {
-                b.Add(symbol);
-                _datafeedRouter.RegisterSymbols(b);
-            }
+            debug("Register Symbol Market Data:" + sym.Symbol, QSEnumDebugLevel.INFO);
+            SymbolBasket b = new SymbolBasketImpl(sym);
+            _datafeedRouter.RegisterSymbols(b);
             
         }
 
@@ -53,12 +48,12 @@ namespace TradingLib.Core
         /// 注册某个品种的所有可交易合约的行情数据
         /// </summary>
         /// <param name="sec"></param>
-        public void RegisterSymbol(SecurityFamily sec)
-        {
-            debug("Register security's market data:" + sec.Code, QSEnumDebugLevel.INFO);
-            SymbolBasket b = BasicTracker.SymbolTracker.GetBasketAvabileViaSecurity(sec);
-            _datafeedRouter.RegisterSymbols(b);
-        }
+        //public void RegisterSymbol(SecurityFamily sec)
+        //{
+        //    debug("Register security's market data:" + sec.Code, QSEnumDebugLevel.INFO);
+        //    SymbolBasket b = BasicTracker.SymbolTracker.GetBasketAvabileViaSecurity(sec);
+        //    _datafeedRouter.RegisterSymbols(b);
+        //}
 
         //服务端启动时,统一请求列表中的数据,具体客户端需求的数据根据需要发送。
         //注册symbol数据机制,客户端维护本地basket,需要向服务端请求symbol数据时,统一将整个basket的symbol信息向服务端请求。
@@ -69,10 +64,10 @@ namespace TradingLib.Core
             {
                 //市场数据时IF1302 CN_XXXX FUT这样的字符串,我们需要将他们反序列化成secuirty获得准确的symbol取字头然后才可以得到正确的security
                 debug("Got Market data request : " + client + " " + mbstring, QSEnumDebugLevel.DEBUG);
-                SymbolBasket b = SymbolBasketImpl.FromString(mbstring);
+                //SymbolBasket b = SymbolBasketImpl.FromString(mbstring);
                 //FastTickMgrRegisterSymbol(b);
                 //用于tradingServer注册获得数据 用于模拟成交以及 财务计算/客户端是直接连接到tick pub获得数据
-                _datafeedRouter.RegisterSymbols(b);//数据路由向不同的数据接口提交数据注册
+                //_datafeedRouter.RegisterSymbols(b);//数据路由向不同的数据接口提交数据注册
             }
             catch (Exception ex)
             {

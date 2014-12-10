@@ -63,13 +63,11 @@ namespace TradingLib.ORM
         /// 返回帐户类别列表
         /// </summary>
         /// <returns></returns>
-        public static IEnumerable<SecurityFamilyImpl> SelectSecurity()
+        public static IEnumerable<SecurityFamilyImpl> SelectSecurity(int domainid)
         {
             using (DBMySql db = new DBMySql())
             {
-                //const string query = "SELECT a.id,a.code,a.name,a.currency,a.type,a.multiple,a.pricetick,a.tradeable,a.underlaying_fk,a.entrycommission,a.exitcommission,a.margin,a.extramargin,a.maintancemargin,a.exchange_fk,a.mkttime_fk FROM info_security a";
-                //IEnumerable<SecurityFamilyImpl> result = db.Connection.Query<SecurityFamilyImpl, SecForigenKey, SecurityFamilyImpl>(query, (sec, fk) => { sec.Exchange = BasicTracker.ExchagneTracker[fk.exchange_fk]; sec.MarketTime = BasicTracker.MarketTimeTracker[fk.mkttime_fk]; return sec; }, null, null, false, "exchange_fk", null, null).ToArray(); ;
-                const string query = "SELECT * FROM info_security";
+                string query = string.Format("SELECT * FROM info_security WHERE domain_id={0}",domainid);
                 IEnumerable<SecurityFamilyImpl> result = db.Connection.Query<SecurityFamilyImpl>(query, null);
                 return result;
             }
@@ -93,7 +91,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("INSERT INTO info_security (`code`,`name`,`currency`,`type`,`multiple`,`pricetick`,`underlaying_fk`,`entrycommission`,`exitcommission`,`margin`,`extramargin`,`maintancemargin`,`exchange_fk`,`mkttime_fk`,`tradeable`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}')", sec.Code, sec.Name, sec.Currency, sec.Type, sec.Multiple, sec.PriceTick, sec.UnderLayingFK, sec.EntryCommission, sec.ExitCommission, sec.Margin, sec.ExtraMargin, sec.MaintanceMargin, sec.ExchangeFK, sec.MarketTimeFK, sec.Tradeable ? 1 : 0);
+                string query = string.Format("INSERT INTO info_security (`code`,`name`,`currency`,`type`,`multiple`,`pricetick`,`underlaying_fk`,`entrycommission`,`exitcommission`,`margin`,`extramargin`,`maintancemargin`,`exchange_fk`,`mkttime_fk`,`tradeable`,`domain_id`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}')", sec.Code, sec.Name, sec.Currency, sec.Type, sec.Multiple, sec.PriceTick, sec.UnderLayingFK, sec.EntryCommission, sec.ExitCommission, sec.Margin, sec.ExtraMargin, sec.MaintanceMargin, sec.ExchangeFK, sec.MarketTimeFK, sec.Tradeable ? 1 : 0,sec.Domain_ID);
                 int row =  db.Connection.Execute(query);
                 SetIdentity(db.Connection, id => sec.ID = id, "id", "info_security");
 
@@ -101,11 +99,16 @@ namespace TradingLib.ORM
             }
         }
 
-        public static IEnumerable<SymbolImpl> SelectSymbol()
+        /// <summary>
+        /// 获得某个domain的所有域ID
+        /// </summary>
+        /// <param name="domainid"></param>
+        /// <returns></returns>
+        public static IEnumerable<SymbolImpl> SelectSymbol(int domainid)
         {
             using (DBMySql db = new DBMySql())
             {
-                const string query = "SELECT * FROM info_symbols";
+                string query = string.Format("SELECT * FROM info_symbols WHERE domain_id={0}",domainid);
                 IEnumerable<SymbolImpl> result = db.Connection.Query<SymbolImpl>(query);
                 return result;
             }
@@ -128,7 +131,7 @@ namespace TradingLib.ORM
             {
                 
                 //string query = string.Format("INSERT INTO info_symbols (`symbol`,`entrycommission`,`exitcommission`,`margin`,`extramargin`,`maintancemargin`,`strike`,`optionside`,`expiremonth`,`expiredate`,`security_fk``underlaying_fk`,`underlayingsymbol_fk`,`tradeable`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}')", sym.Symbol, sym.EntryCommission, sym.ExitCommission, sym.Margin, sym.ExtraMargin, sym.MaintanceMargin, sym.Strike, sym.OptionSide, sym.ExpireMonth, sym.ExpireDate, sym.security_fk, sym.underlaying_fk, sym.underlayingsymbol_fk, sym.Tradeable ? 1 : 0);
-                string query = string.Format("INSERT INTO info_symbols (`symbol`,`entrycommission`,`exitcommission`,`margin`,`extramargin`,`maintancemargin`,`strike`,`optionside`,`expiremonth`,`expiredate`,`security_fk`,`underlaying_fk`,`underlayingsymbol_fk`,`tradeable`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}')", sym.Symbol, sym._entrycommission, sym._exitcommission, sym._margin, sym._extramargin, sym._maintancemargin, sym.Strike, sym.OptionSide, sym.ExpireMonth, sym.ExpireDate, sym.security_fk, sym.underlaying_fk, sym.underlayingsymbol_fk, sym.Tradeable ? 1 : 0);
+                string query = string.Format("INSERT INTO info_symbols (`symbol`,`entrycommission`,`exitcommission`,`margin`,`extramargin`,`maintancemargin`,`strike`,`optionside`,`expiremonth`,`expiredate`,`security_fk`,`underlaying_fk`,`underlayingsymbol_fk`,`tradeable`,`domain_id`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}')", sym.Symbol, sym._entrycommission, sym._exitcommission, sym._margin, sym._extramargin, sym._maintancemargin, sym.Strike, sym.OptionSide, sym.ExpireMonth, sym.ExpireDate, sym.security_fk, sym.underlaying_fk, sym.underlayingsymbol_fk, sym.Tradeable ? 1 : 0, sym.Domain_ID);
                 
                 //TLCtxHelper.Ctx.debug("query:" + query);
                 int row = db.Connection.Execute(query);
@@ -160,9 +163,36 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                const string query = "select a.id, a.name , a.bank_ac ,a.branch ,a.domain_id,b.name as bankname from info_receivable_bankac a JOIN info_contract_bank b where a.bank_id = b.id";
+                const string query = "select a.id, a.name , a.bank_ac ,a.branch ,a.domain_id,a.bank_id,b.name as bankname from info_receivable_bankac a JOIN info_contract_bank b where a.bank_id = b.id";
                 IEnumerable<JsonWrapperReceivableAccount> result = db.Connection.Query<JsonWrapperReceivableAccount>(query);
                 return result;
+            }
+        }
+
+        /// <summary>
+        /// 更新收款银行信息
+        /// </summary>
+        /// <param name="bank"></param>
+        public static void UpdateRecvBank(JsonWrapperReceivableAccount bank)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("UPDATE info_receivable_bankac SET bank_id='{0}',name='{1}',bank_ac='{2}',branch='{3}' WHERE id='{4}'", bank.Bank_ID, bank.Name, bank.Bank_AC, bank.Branch, bank.ID);
+                db.Connection.Execute(query);
+            }
+        }
+
+        /// <summary>
+        /// 插入收款银行信息
+        /// </summary>
+        /// <param name="bank"></param>
+        public static void InsertRecvBank(JsonWrapperReceivableAccount bank)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("INSERT INTO info_receivable_bankac (`bank_id`,`name`,`bank_ac`,`branch`,`domain_id`) VALUES ( '{0}','{1}','{2}','{3}','{4}')", bank.Bank_ID, bank.Name, bank.Bank_AC, bank.Branch, bank.Domain_ID);
+                db.Connection.Execute(query);
+                SetIdentity(db.Connection, id => bank.ID = id, "id", "info_receivable_bankac");
             }
         }
     }

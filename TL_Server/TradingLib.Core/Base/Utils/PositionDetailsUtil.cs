@@ -27,7 +27,7 @@ namespace TradingLib.Core
                 rawpos.SettlementPrice = rawpos.LastPrice;
             }
             //获得合约对象
-            Symbol sym = pos.oSymbol != null ? pos.oSymbol : BasicTracker.SymbolTracker[pos.Symbol];
+            Symbol sym = pos.oSymbol;// != null ? pos.oSymbol : BasicTracker.SymbolTracker[pos.Symbol];
 
             decimal profit = 0;
             //今日新开持仓

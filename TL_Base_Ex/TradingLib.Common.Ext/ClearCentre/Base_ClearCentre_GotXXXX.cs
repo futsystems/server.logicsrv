@@ -19,7 +19,7 @@ namespace TradingLib.Common
                 Symbol symbol = p.oSymbol;
                 if (symbol == null)
                 {
-                    debug("symbol:" + p.Symbol + " not exist in basictracker, dropit", QSEnumDebugLevel.ERROR);
+                    debug("symbol:" + p.Symbol + " not exist in basictracker, drop positiondetail", QSEnumDebugLevel.ERROR);
                     return;
                 }
 
@@ -37,38 +37,6 @@ namespace TradingLib.Common
 
         }
 
-
-        //注为了记录隔夜尺长 分账户与总账户的隔夜持仓要单独放置即要体现在当前持仓总又要体现在隔夜持仓中
-        /// <summary>
-        /// 清算中心获得持仓数据
-        /// </summary>
-        /// <param name="p"></param>
-        //internal void GotPosition(Position p)
-        //{
-        //    try
-        //    {
-        //        if (!HaveAccount(p.Account)) return;
-        //        Symbol symbol = p.oSymbol;
-        //        if (symbol == null)
-        //        {
-        //            debug("symbol:" + p.Symbol + " not exist in basictracker, dropit", QSEnumDebugLevel.ERROR);
-        //            return;
-        //        }
-
-        //        acctk.GotPosition(p);
-        //        onGotPosition(p);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        debug("处理隔夜持仓异常:" + ex.ToString(), QSEnumDebugLevel.ERROR);
-        //    }
-        //}
-
-        //internal virtual void onGotPosition(Position p)
-        //{
-
-        //}
-
         /// <summary>
         /// 响应委托错误
         /// 这里需要判断如果委托已经被记录过则继续响应委托事件 用于更新委托的状态
@@ -82,7 +50,7 @@ namespace TradingLib.Common
                 Symbol symbol = error.Order.oSymbol;
                 if (symbol == null)
                 {
-                    debug("symbol:" + error.Order.Symbol + " not exist in basictracker, dropit", QSEnumDebugLevel.ERROR);
+                    debug("symbol:" + error.Order.Symbol + " not exist in basictracker, drop errororder", QSEnumDebugLevel.ERROR);
                     return;
                 }
                 bool neworder = !totaltk.IsTracked(error.Order.id);
@@ -106,7 +74,7 @@ namespace TradingLib.Common
                 Symbol symbol = o.oSymbol;
                 if (symbol == null)
                 {
-                    debug("symbol:" + o.Symbol + " not exist in basictracker, dropit", QSEnumDebugLevel.ERROR);
+                    debug("symbol:" + o.Symbol + " not exist in basictracker, drop order", QSEnumDebugLevel.ERROR);
                     return;
                 }
 
@@ -164,7 +132,7 @@ namespace TradingLib.Common
                 Symbol symbol = f.oSymbol;
                 if (symbol == null)
                 {
-                    debug("symbol:" + f.Symbol + " not exist in basictracker, dropit", QSEnumDebugLevel.ERROR);
+                    debug("symbol:" + f.Symbol + " not exist in basictracker, drop trade", QSEnumDebugLevel.ERROR);
                     return;
                 }
 

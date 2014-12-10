@@ -325,13 +325,19 @@ namespace TradingLib.Common
         void CliOnMGROrderResponse(RspMGRQryOrderResponse response)
         {
             debug("got historder response:" + response.ToString(), QSEnumDebugLevel.INFO);
-            this.handler.OnMGROrderResponse(response.OrderToSend, response.IsLast);
+            //if (response.OrderToSend.isValid)
+            {
+                this.handler.OnMGROrderResponse(response.OrderToSend, response.IsLast);
+            }
         }
 
         void CliOnMGRTradeResponse(RspMGRQryTradeResponse response)
         {
             debug("got histtrade response:" + response.ToString(), QSEnumDebugLevel.INFO);
-            this.handler.OnMGRTradeResponse(response.TradeToSend, response.IsLast);
+            //if (response.TradeToSend.isValid)
+            {
+                this.handler.OnMGRTradeResponse(response.TradeToSend, response.IsLast);
+            }
         }
 
 

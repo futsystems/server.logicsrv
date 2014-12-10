@@ -62,14 +62,16 @@ namespace TradingLib.Core
 
         /// <summary>
         /// 通过谓词顾虑出当前通知地址
+        /// 需要提供的参数就是Manager对应的谓词，用于判断是否需要通知该Manager
         /// </summary>
         /// <param name="predictate"></param>
         /// <returns></returns>
-        IEnumerable<ILocation> GetNotifyTargets(Predicate<Manager> predictate)
+        public IEnumerable<ILocation> GetNotifyTargets(Predicate<Manager> predictate)
         {
             //1.过滤没有绑定Manager的custinfoex                2.通过谓词过滤Manager              3.投影成地址
             return this.NotifyTarges.Where(c=>c.Manager!=null).Where(e => predictate(e.Manager)).Select(info => info.Location).ToArray();
         }
+
 
 
 
@@ -100,5 +102,7 @@ namespace TradingLib.Core
             response.Result = new Mixins.ReplyWriter().Start().FillReply(Mixins.JsonReply.GenericSuccess()).FillPlayload(mgr).End().ToString();
             CachePacket(response);
         }
+
+        
     }
 }

@@ -21,13 +21,44 @@ namespace TradingLib.Common
                 bankmap[b.BrankID] = b;
                 bankidxmap[b.ID] = b;
             }
-            _receivableAccounts = ORM.MBasicInfo.SelectReceivableBanks();
-            foreach (JsonWrapperReceivableAccount a in _receivableAccounts)
+            foreach (JsonWrapperReceivableAccount a in ORM.MBasicInfo.SelectReceivableBanks())
             {
                 recvaccidxmap.Add(a.ID, a);
             }
         }
 
+        public void UpdateRecvBank(JsonWrapperReceivableAccount recvbank)
+        {
+            JsonWrapperReceivableAccount target = null;
+            //更新
+            if (recvaccidxmap.TryGetValue(recvbank.ID, out target))
+            {
+                //target.Domain_ID = recvbank.Domain_ID;
+                target.Name = recvbank.Name;
+                target.Bank_AC = recvbank.Bank_AC;
+                target.Branch = recvbank.Branch;
+
+                target.Bank_ID = recvbank.Bank_ID;
+
+                ORM.MBasicInfo.UpdateRecvBank(target);
+                target.BankName = this[target.Bank_ID].Name;
+            }
+            else
+            {
+                target = new JsonWrapperReceivableAccount();
+                target.Bank_AC = recvbank.Bank_AC;
+                target.Bank_ID = recvbank.Bank_ID;
+                target.BankName = this[target.Bank_ID].Name;
+                target.Branch = recvbank.Branch;
+                target.Domain_ID = recvbank.Domain_ID;
+                target.Name = recvbank.Name;
+
+                ORM.MBasicInfo.InsertRecvBank(target);
+                recvbank.ID = target.ID;//外传数据库全局ID
+                recvaccidxmap[target.ID] = target;
+
+            }
+        }
         /// <summary>
         /// 从收款银行编号获得对应的收款银行信息
         /// </summary>
@@ -42,6 +73,12 @@ namespace TradingLib.Common
             }
             return null;
         }
+
+        /// <summary>
+        /// 获取银行对象
+        /// </summary>
+        /// <param name="bankid"></param>
+        /// <returns></returns>
         public ContractBank this[string bankid]
         {
             get
@@ -64,14 +101,18 @@ namespace TradingLib.Common
             }
         }
 
-        IEnumerable<JsonWrapperReceivableAccount> _receivableAccounts = null;
+        /// <summary>
+        /// 所有收款银行列表
+        /// </summary>
         public IEnumerable<JsonWrapperReceivableAccount> ReceivableAccounts
         {
             get
             {
-                return _receivableAccounts;
+                return recvaccidxmap.Values;
             }
         }
+
+
         public string DefaultBankID
         {
             get

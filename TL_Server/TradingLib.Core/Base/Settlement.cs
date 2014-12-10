@@ -187,22 +187,23 @@ namespace TradingLib.Core
  
                 foreach (Trade t in trades)
                 {
+                    SecurityFamily sym = account.GetSecurity(t.SecurityCode);
                     i++;
                     size += Math.Abs(t.xSize);
-                    tunover += BasicTracker.SecurityTracker.GetMultiple(t.SecurityCode) * t.xPrice * Math.Abs(t.xSize);
+                    tunover += sym.GetMultiple() * t.xPrice * Math.Abs(t.xSize);
                     commission += t.Commission;
                     profit += t.Profit;
 
                     settlelist.Add(string.Format("|{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|{10}|{11}|{12}|",
                         padCenterEx(t.xDate.ToString(), len_DATE),
                         padCenterEx(BasicTracker.ExchagneTracker.GetExchangeTitle(t.Exchange), len_EXCH),
-                        padCenterEx(BasicTracker.SecurityTracker.GetSecurityName(t.SecurityCode), len_SECURITY),
+                        padCenterEx(sym.GetSecurityName(), len_SECURITY),
                         padCenterEx(t.Symbol, len_SYMBOL),
                         padLeftEx((t.xSize > 0 ? "买" : " 卖"), len_TBMM),
                         padLeftEx("投", len_TBMM),
                         padCenterEx(Util.FormatDecimal(t.xPrice), len_PRICE),
                         padRightEx(t.UnsignedSize.ToString(), len_SIZE),
-                        padRightEx(Util.FormatDecimal(BasicTracker.SecurityTracker.GetMultiple(t.SecurityCode) * t.xPrice * Math.Abs(t.xSize)), len_TURNOVER),
+                        padRightEx(Util.FormatDecimal(sym.GetMultiple() * t.xPrice * Math.Abs(t.xSize)), len_TURNOVER),
                         padLeftEx(GetCombFlag(t.OffsetFlag), len_TBMM),
                         padRightEx(Util.FormatDecimal(t.Commission), len_PRICE),
                         padRightEx(Util.FormatDecimal(t.Profit), len_COMMISSION),
@@ -262,13 +263,14 @@ namespace TradingLib.Core
 
                 foreach (PositionCloseDetail t in positionclose)
                 {
+                    SecurityFamily sym = account.GetSecurity(t.SecCode);
                     i++;
                     size += t.CloseVolume;
                     profit += t.CloseProfitByDate;
                     settlelist.Add(string.Format("|{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|{10}|", 
                         padCenterEx(t.CloseDate.ToString(), len_DATE),
                         padCenterEx(BasicTracker.ExchagneTracker.GetExchangeTitle(t.Exchange), len_EXCH),
-                        padCenterEx(BasicTracker.SecurityTracker.GetSecurityName(t.SecCode), len_SECURITY),
+                        padCenterEx(sym.GetSecurityName(), len_SECURITY),
                         padCenterEx(t.Symbol, len_SYMBOL),
                         padCenterEx(t.OpenDate.ToString(), len_DATE),
                         padLeftEx((t.Side ? "买" : " 卖"), len_TBMM),
@@ -332,6 +334,7 @@ namespace TradingLib.Core
                 settlelist.Add(sline);
                 foreach (PositionDetail pd in positiondetails)
                 {
+                    SecurityFamily sym = account.GetSecurity(pd.SecCode);
                     i++;
                     size += pd.Volume;
                     unpl += 0;
@@ -340,7 +343,7 @@ namespace TradingLib.Core
 
                     settlelist.Add(string.Format("|{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|{10}|{11}|{12}|",
                         padCenterEx(BasicTracker.ExchagneTracker.GetExchangeTitle(pd.Exchange), len_EXCH),
-                        padCenterEx(BasicTracker.SecurityTracker.GetSecurityName(pd.SecCode), len_SECURITY),
+                        padCenterEx(sym.GetSecurityName(), len_SECURITY),
                         padCenterEx(pd.Symbol, len_SYMBOL),
                         padCenterEx(pd.OpenDate.ToString(), len_DATE),
                         padLeftEx("投", len_TBMM),

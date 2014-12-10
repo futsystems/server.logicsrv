@@ -15,10 +15,10 @@ namespace FutsMoniter
         #region 系统管理类回调
         public void OnMGRConnectorResponse(ConnectorInfo c, bool islast)
         {
-            if (routerform != null)
-            {
-                routerform.GotConnector(c, islast);
-            }
+            //if (routerform != null)
+            //{
+            //    routerform.GotConnector(c, islast);
+            //}
         }
 
 
@@ -65,8 +65,9 @@ namespace FutsMoniter
 
         public void OnMGRSecurityResponse(SecurityFamilyImpl sec, bool islast)
         {
-            if (basicinfotracker != null)
+            if (basicinfotracker != null && sec.IsValid)
             {
+                //Util.Debug("security is valid and got it ....................................", QSEnumDebugLevel.WARNING);
                 basicinfotracker.GotSecurity(sec);
             }
 

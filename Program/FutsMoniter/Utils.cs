@@ -57,14 +57,14 @@ namespace FutsMoniter
                 vo.Value = (QSEnumAccountCategory)(Enum.GetValues(typeof(QSEnumAccountCategory)).GetValue(0));
                 list.Add(vo);
             }
-            if (Globals.LoginResponse.Domain.Super || (Globals.LoginResponse.Domain.Router_Sim && Globals.UIAccess.acctype_sim))
+            if (Globals.Domain.Super || (Globals.Domain.Router_Sim && Globals.UIAccess.acctype_sim))
             {
                 ValueObject<QSEnumAccountCategory> vo = new ValueObject<QSEnumAccountCategory>();
                 vo.Name = Util.GetEnumDescription(QSEnumAccountCategory.SIMULATION);
                 vo.Value = QSEnumAccountCategory.SIMULATION;
                 list.Add(vo);
             }
-            if (Globals.LoginResponse.Domain.Super || (Globals.LoginResponse.Domain.Router_Live && Globals.UIAccess.acctype_live))
+            if (Globals.Domain.Super || (Globals.Domain.Router_Live && Globals.UIAccess.acctype_live))
             {
                 ValueObject<QSEnumAccountCategory> vo = new ValueObject<QSEnumAccountCategory>();
                 vo.Name = Util.GetEnumDescription(QSEnumAccountCategory.REAL);
@@ -72,13 +72,13 @@ namespace FutsMoniter
                 list.Add(vo);
             }
 
-            if (Globals.UIAccess.acctype_dealer)
-            {
-                ValueObject<QSEnumAccountCategory> vo = new ValueObject<QSEnumAccountCategory>();
-                vo.Name = Util.GetEnumDescription(QSEnumAccountCategory.DEALER);
-                vo.Value = QSEnumAccountCategory.DEALER;
-                list.Add(vo);
-            }
+            //if (Globals.UIAccess.acctype_dealer)
+            //{
+            //    ValueObject<QSEnumAccountCategory> vo = new ValueObject<QSEnumAccountCategory>();
+            //    vo.Name = Util.GetEnumDescription(QSEnumAccountCategory.DEALER);
+            //    vo.Value = QSEnumAccountCategory.DEALER;
+            //    list.Add(vo);
+            //}
 
             return list;
         }

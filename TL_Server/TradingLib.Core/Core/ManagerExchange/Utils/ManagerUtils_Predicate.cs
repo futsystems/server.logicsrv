@@ -22,7 +22,6 @@ namespace TradingLib.Core
 
             func = (mgr) =>
             {
-                
                 //该custinfoex 绑定了管理端
                 if (mgr == null) return false;
                 //如果有Root域的管理端登入 则需要通知

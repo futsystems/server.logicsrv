@@ -8,27 +8,78 @@ using System.Text;
 using System.Windows.Forms;
 using TradingLib.API;
 using TradingLib.Common;
+using TradingLib.Mixins.LitJson;
 
 
 namespace FutsMoniter
 {
-    public partial class ctFinanceInfo : UserControl
+    public partial class ctFinanceInfo : UserControl,IEventBinder
     {
         public ctFinanceInfo()
         {
             InitializeComponent();
+            this.Load += new EventHandler(ctFinanceInfo_Load);
         }
 
-        //string _format="{0:F2}"
-        delegate void IAccountInfoDel(IAccountInfo info);
+        void ctFinanceInfo_Load(object sender, EventArgs e)
+        {
+            Globals.RegIEventHandler(this);
+            this.btnSubmit.Click += new EventHandler(btnSubmit_Click);
+        }
+
+        void btnSubmit_Click(object sender, EventArgs e)
+        {
+            if (_account == null)
+            {
+                ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show("请设定帐户");
+                return;
+            }
+
+            Globals.TLClient.ReqQryAccountInfo2(_account.Account);
+        }
+
+        public void OnInit()
+        {
+            Globals.CallBackCentre.RegisterCallback("MgrExchServer", "QryAccountInfo", this.OnQryAccountInfo);
+        }
+
+        public void OnDisposed()
+        {
+            Globals.CallBackCentre.RegisterCallback("MgrExchServer", "QryAccountInfo", this.OnQryAccountInfo);
+        }
+
+        void OnQryAccountInfo(string json)
+        {
+            JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(json);
+            int code = int.Parse(jd["Code"].ToString());
+            if (code == 0)
+            {
+                IAccountInfo obj = TradingLib.Mixins.JsonReply.ParsePlayload<AccountInfo>(jd);
+                this.GotAccountInfo(obj);
+            }
+            else//如果没有配资服
+            {
+
+            }
+        }
+
+
+        IAccountLite _account = null;
+        public void SetAccount(IAccountLite ac)
+        {
+            _account = ac;
+            account.Text = _account.Account;
+            
+        }
         public void GotAccountInfo(IAccountInfo info)
         {
             if (InvokeRequired)
             {
-                Invoke(new IAccountInfoDel(GotAccountInfo), new object[] { info });
+                Invoke(new Action<IAccountInfo>(GotAccountInfo), new object[] { info });
             }
             else
             {
+                account.Text = info.Account;
                 lastequtiy.Text = Util.FormatDecimal(info.LastEquity);
                 realizedpl.Text = Util.FormatDecimal(info.RealizedPL);
                 unrealizedpl.Text = Util.FormatDecimal(info.UnRealizedPL);
@@ -41,5 +92,7 @@ namespace FutsMoniter
                 marginfrozen.Text = Util.FormatDecimal(info.MarginFrozen);
             }
         }
+
+
     }
 }

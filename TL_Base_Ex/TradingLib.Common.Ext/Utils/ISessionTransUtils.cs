@@ -11,6 +11,21 @@ namespace TradingLib.Common
     public static class ISessionTransUtils
     {
         /// <summary>
+        /// 获得Sessoin对应的Manager
+        /// 如果是ClientManager则返回null
+        /// </summary>
+        /// <param name="session"></param>
+        /// <returns></returns>
+        public static Manager GetManager(this ISession session)
+        {
+            if (session.IsManager() && session is Client2Session)
+            {
+                return (session as Client2Session).Manager;
+            }
+            return null;
+        }
+
+        /// <summary>
         /// 发送客户端逻辑数据包
         /// </summary>
         /// <param name="session"></param>
@@ -95,6 +110,14 @@ namespace TradingLib.Common
             session.SendPacketMgr(response);
         }
 
+        /// <summary>
+        /// 向某地址列表发送通知 如果地址列表为null,则发送到ISession对应的地址
+        /// 
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="cmdstr"></param>
+        /// <param name="obj"></param>
+        /// <param name="targets"></param>
         public static void NotifyMgr(this ISession session, string cmdstr, object obj, IEnumerable<ILocation> targets = null)
         {
             //通知方式 request获得对应的判断谓词 用于判断哪个客户端需要通知，然后再投影获得对应的地址集合

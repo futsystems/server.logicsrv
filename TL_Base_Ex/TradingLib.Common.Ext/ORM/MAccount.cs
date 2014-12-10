@@ -212,6 +212,21 @@ namespace TradingLib.ORM
                 return db.Connection.Execute(query) >= 0;
             }
         }
+
+        /// <summary>
+        /// 更新路由组信息
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        //public static bool UpdateRouterGroup(string account, int rgid)
+        //{
+        //    using (DBMySql db = new DBMySql())
+        //    {
+        //        string query = String.Format("UPDATE accounts SET rg_fk = '{0}' WHERE account = '{1}'", rgid, account);
+        //        return db.Connection.Execute(query) >= 0;
+        //    }
+        //}
         /// <summary>
         /// 更新帐户的锁仓权限
         /// </summary>
@@ -385,8 +400,6 @@ namespace TradingLib.ORM
         {
             switch (category)
             {
-                case QSEnumAccountCategory.DEALER:
-                    return GlobalConfig.PrefixDealer;
                 case QSEnumAccountCategory.REAL:
                     return GlobalConfig.PrefixReal;
                 case QSEnumAccountCategory.SIMULATION:
@@ -433,7 +446,7 @@ namespace TradingLib.ORM
         /// <param name="user_id"></param>
         /// <param name="category"></param>
         /// <returns></returns>
-        private static bool HaveRequested(int user_id, QSEnumAccountCategory category = QSEnumAccountCategory.DEALER)
+        private static bool HaveRequested(int user_id, QSEnumAccountCategory category = QSEnumAccountCategory.SIMULATION)
         {
             using (DBMySql db = new DBMySql())
             {

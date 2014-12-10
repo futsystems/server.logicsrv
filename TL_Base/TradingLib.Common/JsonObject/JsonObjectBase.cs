@@ -6,7 +6,7 @@ using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Mixins.LitJson;
 
-namespace TradingLib.Mixins.JsonObject
+namespace TradingLib.Common
 {
     public class JsonObjectBase
     {

@@ -168,6 +168,7 @@ namespace TradingLib.Common
             _last = 0;
             _highest = 0;
             _lowest = 0;
+            
         }
 
         public PositionImpl(string account, string symbol, QSEnumPositionDirectionType type)
@@ -185,7 +186,6 @@ namespace TradingLib.Common
             _closedpl = closedpl; 
             _acct = account;
             _directiontype = type;
-            
             if (!this.isValid) throw new Exception("Can't construct invalid position!"); 
         }
 
@@ -564,6 +564,11 @@ namespace TradingLib.Common
         }
         #endregion
 
+        int _domain_id = 0;
+        /// <summary>
+        /// 域ID
+        /// </summary>
+        public int Domain_ID { get{return _domain_id;} set{_domain_id=value;} }
 
         #region 用Positon PositionDetail Trade更新当前持仓
         /// <summary>
@@ -814,6 +819,7 @@ namespace TradingLib.Common
             pd.Side = p.Side;
             pd.Volume = p.Volume;
 
+
             //加载到今日持仓明细列表中的昨日持仓明细列表，需要将对应的昨日结算价格设定为昨日持仓明细的结算价格 并且不能被行情更新
             pd.LastSettlementPrice = p.SettlementPrice;
             pd.HedgeFlag = p.HedgeFlag;
@@ -850,6 +856,7 @@ namespace TradingLib.Common
 
             //成交数据会传递Broker字段,用于记录该成交是哪个成交接口回报的，对应开仓时,我们需要标记该持仓明细数序那个成交接口
             pos.Broker = f.Broker;
+            //pos.Domain_ID = f.Domain_ID;
 
             return pos;
         }
@@ -880,6 +887,7 @@ namespace TradingLib.Common
             pos.CloseProfitByDate += closedetail.CloseProfitByDate;
             pos.CloseProfitByTrade += closedetail.CloseProfitByTrade;
 
+            //pos.Domain_ID = pos.Domain_ID;
             return closedetail;
         }
 

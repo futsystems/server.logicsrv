@@ -43,22 +43,22 @@
             this.kryptonPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.kryptonPanel1.Location = new System.Drawing.Point(0, 0);
             this.kryptonPanel1.Name = "kryptonPanel1";
-            this.kryptonPanel1.Size = new System.Drawing.Size(203, 28);
+            this.kryptonPanel1.Size = new System.Drawing.Size(190, 21);
             this.kryptonPanel1.TabIndex = 0;
             // 
             // cbrglist
             // 
-            this.cbrglist.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.cbrglist.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.cbrglist.DropDownWidth = 136;
-            this.cbrglist.Location = new System.Drawing.Point(64, 3);
+            this.cbrglist.Location = new System.Drawing.Point(65, 0);
             this.cbrglist.Name = "cbrglist";
-            this.cbrglist.Size = new System.Drawing.Size(136, 21);
+            this.cbrglist.Size = new System.Drawing.Size(126, 21);
             this.cbrglist.TabIndex = 1;
             // 
             // kryptonLabel1
             // 
-            this.kryptonLabel1.Location = new System.Drawing.Point(3, 6);
+            this.kryptonLabel1.Location = new System.Drawing.Point(0, 3);
             this.kryptonLabel1.Name = "kryptonLabel1";
             this.kryptonLabel1.Size = new System.Drawing.Size(55, 18);
             this.kryptonLabel1.TabIndex = 0;
@@ -70,7 +70,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.kryptonPanel1);
             this.Name = "ctRouterGroupList";
-            this.Size = new System.Drawing.Size(203, 28);
+            this.Size = new System.Drawing.Size(190, 21);
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).EndInit();
             this.kryptonPanel1.ResumeLayout(false);
             this.kryptonPanel1.PerformLayout();

@@ -121,6 +121,7 @@ namespace TradingLib.Common
         /// 路由组
         /// </summary>
         public int RG_ID { get; set; }
+
         public static string Serialize(IAccountLite account)
         {
             StringBuilder sb = new StringBuilder();

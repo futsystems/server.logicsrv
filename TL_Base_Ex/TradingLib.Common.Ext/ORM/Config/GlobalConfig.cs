@@ -89,8 +89,22 @@ namespace TradingLib.Common
                 config.UpdateConfig("StartDefaultConnector", QSEnumCfgType.Bool,true, "启动时同步启动默认通道");
             }
 
+            if (!config.HaveConfig("MainDomain"))
+            {
+                config.UpdateConfig("MainDomain", QSEnumCfgType.Int,1, "主域,该域可以管理其他分区,同时负责维护合约");
+            }
         }
 
+        /// <summary>
+        /// 全局主域
+        /// </summary>
+        public static int MainDomain
+        {
+            get
+            {
+                return defaultinstance.config["MainDomain"].AsInt();
+            }
+        }
         /// <summary>
         /// 默认帐户长度
         /// </summary>

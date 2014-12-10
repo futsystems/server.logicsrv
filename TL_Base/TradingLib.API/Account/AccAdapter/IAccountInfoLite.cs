@@ -5,7 +5,9 @@ using System.Text;
 
 namespace TradingLib.API
 {
-    
+    /// <summary>
+    /// 帐户盘中动态信息 保证金，平仓盈亏，浮动盈亏等
+    /// </summary>
     public interface IAccountInfoLite
     {
         string Account { get; set; }

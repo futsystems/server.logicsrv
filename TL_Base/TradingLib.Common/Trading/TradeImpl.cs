@@ -268,6 +268,10 @@ namespace TradingLib.Common
         /// </summary>
         public QSEnumOrderBreedType Breed { get { return _breed; } set { _breed = value; } }
 
+        /// <summary>
+        /// 域ID
+        /// </summary>
+        //public int Domain_ID { get; set; }
         #endregion
 
         #region 成交构造函数
@@ -283,6 +287,7 @@ namespace TradingLib.Common
             xSize = fillsize;
             xPrice = fillprice;
             Side = (fillsize > 0);
+            //Domain_ID = 0;
         }
 
 
@@ -328,6 +333,9 @@ namespace TradingLib.Common
             this.FatherBreed = copytrade.FatherBreed;
             this.FatherID = copytrade.FatherID;
             this.Breed = copytrade.Breed;
+
+            //this.Domain_ID = copytrade.Domain_ID;
+
         }
         #endregion
 

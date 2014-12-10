@@ -402,13 +402,9 @@ namespace TradingLib.Core
 
         bool HaveFlatAllTask(string accid)
         {
-            foreach (RiskTaskSet task in posflatlist)
-            {
-                if (task.Account == accid && task.TaskType == QSEnumTaskType.FlatAllPositions)
-                    return true;
-            }
-            return false;
+            return posflatlist.Any(task => task.Account.Equals(accid) && task.TaskType == QSEnumTaskType.FlatAllPositions);
         }
+
         /// <summary>
         /// 平掉某个账户的所有仓位(风控里面的 强平并冻结账户)
         /// 注,这里需要封装发单方式,若系统还有未成交的合约,我们需要先撤掉所有委托,然后再发新的委托
@@ -422,16 +418,14 @@ namespace TradingLib.Core
         /// <param name="comment"></param>
         public void FlatPosition(string accid, QSEnumOrderSource source, string closereason = "系统强平")
         {
-            //debug("平掉账户:" + accid + "所有仓位", QSEnumDebugLevel.INFO);
+            //如果已经有该帐户的强平任务 则直接返回
             if (HaveFlatAllTask(accid))
             {
-                //debug("有未完成强平任务在队列中,直接返回", QSEnumDebugLevel.INFO);
                 return;
             }
             
+            //为该帐户生成
             IAccount account = _clearcentre[accid];
-            //if (IsAccountInFlatAllTask(accid)) return;//强平所有持仓时需要冻结交易帐户
-
             if (account != null)
             {
                 List<long> olist = account.GetPendingOrders().Select(o => o.id).ToList();
@@ -441,6 +435,7 @@ namespace TradingLib.Core
                 posflatlist.Add(ps);
             }
         }
+
 
         /// <summary>
         /// 平掉某个持仓
@@ -562,7 +557,8 @@ namespace TradingLib.Core
                 AssignOrderIDEvent(ref o);
 
             //绑定合约对象
-            BasicTracker.SymbolTracker.TrckerOrderSymbol(o);
+            IAccount account = _clearcentre[pos.Account];
+            account.TrckerOrderSymbol(ref o);
 
             set.FlatSent = true;
             set.FireCount++;
@@ -707,12 +703,6 @@ namespace TradingLib.Core
                                             CancelOrder(ps.OrderID);
                                         }
                                         ps.FlatFailNoticed = true;
-                                        //强迫异常后冻结交易帐户 等待处理 这里需要对外触发事件 相关扩展模块监听后进行通知
-                                        //IAccount account = _clearcentre[ps.Position.Account];
-                                        //if (account != null)
-                                        //{
-                                        //    account.InactiveAccount();
-                                        //}
                                         //对外进行未正常平仓报警
                                         if (GotFlatFailedEvent != null)
                                         {
@@ -812,6 +802,7 @@ namespace TradingLib.Core
 
 
             }
+
             bool chg = false;
             //将新生成的任务和要删除的添加到队列或从队列中删除
             foreach (RiskTaskSet ps in addlist)
@@ -820,12 +811,14 @@ namespace TradingLib.Core
                 debug("插入任务:" + ps.ToString(), QSEnumDebugLevel.INFO);
                 posflatlist.Add(ps);
             }
+
             foreach (RiskTaskSet ps in removelist)
             {
                 chg = true;
                 debug("删除任务:" + ps.ToString(), QSEnumDebugLevel.INFO);
                 posflatlist.Remove(ps);
             }
+
             if (chg)
             {
                 debug("XXXXXXXXXXXXXXXXX task changed XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",QSEnumDebugLevel.INFO);
@@ -834,7 +827,6 @@ namespace TradingLib.Core
                     debug(ps.ToString(), QSEnumDebugLevel.INFO);
                 }
             }
-            
         }
 
         /// <summary>
