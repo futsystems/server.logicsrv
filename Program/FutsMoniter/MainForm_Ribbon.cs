@@ -63,6 +63,13 @@ namespace FutsMoniter
             kryptonRibbonGroupButton_AccountCashreq.Click += new EventHandler(kryptonRibbonGroupButton_AccountCashreq_Click);
 
             kryptonRibbonGroupButton_payonline.Click += new EventHandler(kryptonRibbonGroupButton_payonline_Click);
+            kryptonRibbonGroupButton_ReceiveBank.Click += new EventHandler(kryptonRibbonGroupButton_ReceiveBank_Click);
+        }
+
+        void kryptonRibbonGroupButton_ReceiveBank_Click(object sender, EventArgs e)
+        {
+            fmRecvBankManager fm = new fmRecvBankManager();
+            fm.Show();
         }
 
         void kryptonContextMenuItem_DomainInfo_Click(object sender, EventArgs e)

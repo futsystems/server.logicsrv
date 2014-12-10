@@ -119,15 +119,7 @@ namespace TradingLib.Common
             return account.Domain.ID.Equals(domain.ID);
         }
 
-        /// <summary>
-        /// 获得本域所有收款银行
-        /// </summary>
-        /// <param name="domain"></param>
-        /// <returns></returns>
-        public static IEnumerable<JsonWrapperReceivableAccount> GetReceiveableAccount(this Domain domain)
-        {
-            return ORM.MBasicInfo.SelectReceivableBanks().Where(b => b.Domain_ID.Equals(domain.ID));
-        }
+        
 
 
         /// <summary>

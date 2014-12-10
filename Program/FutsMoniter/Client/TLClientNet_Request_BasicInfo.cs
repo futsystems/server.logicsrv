@@ -3,13 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TradingLib.API;
-
+using TradingLib.Mixins.JsonObject;
 
 namespace TradingLib.Common
 {
     public partial class TLClientNet
     {
         #region 基础数据维护
+
+        public void ReqUpdateRecvBank(JsonWrapperReceivableAccount bank)
+        {
+            this.ReqContribRequest("MgrExchServer", "UpdateReceiveableBank",TradingLib.Mixins.LitJson.JsonMapper.ToJson(bank)); 
+        }
         /// <summary>
         /// 请求同步品种
         /// </summary>

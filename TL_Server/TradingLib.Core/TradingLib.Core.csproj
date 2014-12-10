@@ -86,6 +86,7 @@
     <Compile Include="Core\ManagerExchange\ContractBankUtils.cs" />
     <Compile Include="Core\ManagerExchange\ManagerRights.cs" />
     <Compile Include="Core\ManagerExchange\ORM\MUIAccess.cs" />
+    <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_RecvBank.cs" />
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_Permission.cs" />
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_Domain.cs" />
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_Manager.cs" />

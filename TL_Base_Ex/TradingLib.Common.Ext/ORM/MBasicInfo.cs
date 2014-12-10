@@ -163,9 +163,36 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                const string query = "select a.id, a.name , a.bank_ac ,a.branch ,a.domain_id,b.name as bankname from info_receivable_bankac a JOIN info_contract_bank b where a.bank_id = b.id";
+                const string query = "select a.id, a.name , a.bank_ac ,a.branch ,a.domain_id,a.bank_id,b.name as bankname from info_receivable_bankac a JOIN info_contract_bank b where a.bank_id = b.id";
                 IEnumerable<JsonWrapperReceivableAccount> result = db.Connection.Query<JsonWrapperReceivableAccount>(query);
                 return result;
+            }
+        }
+
+        /// <summary>
+        /// 更新收款银行信息
+        /// </summary>
+        /// <param name="bank"></param>
+        public static void UpdateRecvBank(JsonWrapperReceivableAccount bank)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("UPDATE info_receivable_bankac SET bank_id='{0}',name='{1}',bank_ac='{2}',branch='{3}' WHERE id='{4}'", bank.Bank_ID, bank.Name, bank.Bank_AC, bank.Branch, bank.ID);
+                db.Connection.Execute(query);
+            }
+        }
+
+        /// <summary>
+        /// 插入收款银行信息
+        /// </summary>
+        /// <param name="bank"></param>
+        public static void InsertRecvBank(JsonWrapperReceivableAccount bank)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("INSERT INTO info_receivable_bankac (`bank_id`,`name`,`bank_ac`,`branch`,`domain_id`) VALUES ( '{0}','{1}','{2}','{3}','{4}')", bank.Bank_ID, bank.Name, bank.Bank_AC, bank.Branch, bank.Domain_ID);
+                db.Connection.Execute(query);
+                SetIdentity(db.Connection, id => bank.ID = id, "id", "info_receivable_bankac");
             }
         }
     }

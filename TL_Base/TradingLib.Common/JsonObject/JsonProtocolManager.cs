@@ -302,6 +302,11 @@ namespace TradingLib.Mixins.JsonObject
         public int ID { get; set; }
 
         /// <summary>
+        /// 银行ID
+        /// </summary>
+        public int Bank_ID { get; set; }
+
+        /// <summary>
         /// 银行名称
         /// </summary>
         public string BankName { get; set; }
