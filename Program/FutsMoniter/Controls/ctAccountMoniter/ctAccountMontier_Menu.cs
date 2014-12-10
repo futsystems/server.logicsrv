@@ -23,9 +23,9 @@ namespace FutsMoniter.Controls
             accountgrid.ContextMenuStrip.Items.Add(new System.Windows.Forms.ToolStripSeparator());
             accountgrid.ContextMenuStrip.Items.Add("历史查询", null, new EventHandler(QryHist_Click));
             accountgrid.ContextMenuStrip.Items.Add(new System.Windows.Forms.ToolStripSeparator());
-            accountgrid.ContextMenuStrip.Items.Add("修改路由组", null, new EventHandler(UpdateRouterGroup_Click));
+            accountgrid.ContextMenuStrip.Items.Add("修改路由组", Properties.Resources.changerouter, new EventHandler(UpdateRouterGroup_Click));
             accountgrid.ContextMenuStrip.Items.Add(new System.Windows.Forms.ToolStripSeparator());
-            accountgrid.ContextMenuStrip.Items.Add("删除帐户", null, new EventHandler(DelAccount_Click));
+            accountgrid.ContextMenuStrip.Items.Add("删除帐户", Properties.Resources.deleteaccount, new EventHandler(DelAccount_Click));
 
 
         }

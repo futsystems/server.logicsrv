@@ -25,7 +25,6 @@ namespace FutsMoniter
         {
             if (_account != null)
             {
-                //MessageBox.Show(ctRouterGroupList1.GetRrouterGroupName(account.RG_ID));
                 cutrgname.Text = ctRouterGroupList1.GetRrouterGroupName(_account.RG_ID);
             }
         }

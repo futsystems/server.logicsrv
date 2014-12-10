@@ -898,6 +898,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="resources\deleteaccount.png" />
+    <None Include="resources\changerouter.png" />
     <None Include="images\message_error.png" />
     <None Include="images\message_success.png" />
     <None Include="images\stop.png" />

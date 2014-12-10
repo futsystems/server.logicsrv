@@ -147,6 +147,8 @@ namespace TradingLib.Core
             AccountChanged(this[account]);
             
         }
+
+
         /// <summary>
         /// 交易账户的资金操作
         /// </summary>
