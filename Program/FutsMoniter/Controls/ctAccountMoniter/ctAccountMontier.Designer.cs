@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.kryptonSplitContainer1 = new ComponentFactory.Krypton.Toolkit.KryptonSplitContainer();
             this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
             this.ctRouterType1 = new FutsMoniter.Controls.Base.ctRouterType();
@@ -62,7 +62,6 @@
             this.ctFinService1 = new FutsMoniter.ctFinService();
             this.funpageFinanceInfo = new ComponentFactory.Krypton.Navigator.KryptonPage();
             this.kryptonPanel2 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
-            this.btnQueryFinanceInfo = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.ctFinanceInfo1 = new FutsMoniter.ctFinanceInfo();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonSplitContainer1)).BeginInit();
             this.kryptonSplitContainer1.Panel1.SuspendLayout();
@@ -267,8 +266,8 @@
             this.accountgrid.AllowUserToAddRows = false;
             this.accountgrid.AllowUserToDeleteRows = false;
             this.accountgrid.AllowUserToResizeRows = false;
-            dataGridViewCellStyle4.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.accountgrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.accountgrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.accountgrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
@@ -398,7 +397,7 @@
             this.funpagePlaceOrder,
             this.funpageFinservice,
             this.funpageFinanceInfo});
-            this.kryptonNavigator2.SelectedIndex = 0;
+            this.kryptonNavigator2.SelectedIndex = 2;
             this.kryptonNavigator2.Size = new System.Drawing.Size(513, 341);
             this.kryptonNavigator2.TabIndex = 0;
             this.kryptonNavigator2.Text = "kryptonNavigator2";
@@ -488,7 +487,6 @@
             // 
             // kryptonPanel2
             // 
-            this.kryptonPanel2.Controls.Add(this.btnQueryFinanceInfo);
             this.kryptonPanel2.Controls.Add(this.ctFinanceInfo1);
             this.kryptonPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.kryptonPanel2.Location = new System.Drawing.Point(0, 0);
@@ -496,19 +494,12 @@
             this.kryptonPanel2.Size = new System.Drawing.Size(511, 316);
             this.kryptonPanel2.TabIndex = 0;
             // 
-            // btnQueryFinanceInfo
-            // 
-            this.btnQueryFinanceInfo.Location = new System.Drawing.Point(409, 278);
-            this.btnQueryFinanceInfo.Name = "btnQueryFinanceInfo";
-            this.btnQueryFinanceInfo.Size = new System.Drawing.Size(90, 25);
-            this.btnQueryFinanceInfo.TabIndex = 1;
-            this.btnQueryFinanceInfo.Values.Text = "刷 新";
-            // 
             // ctFinanceInfo1
             // 
-            this.ctFinanceInfo1.Location = new System.Drawing.Point(3, 3);
+            this.ctFinanceInfo1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ctFinanceInfo1.Location = new System.Drawing.Point(0, 0);
             this.ctFinanceInfo1.Name = "ctFinanceInfo1";
-            this.ctFinanceInfo1.Size = new System.Drawing.Size(365, 165);
+            this.ctFinanceInfo1.Size = new System.Drawing.Size(511, 316);
             this.ctFinanceInfo1.TabIndex = 0;
             // 
             // ctAccountMontier
@@ -588,7 +579,6 @@
         private ComponentFactory.Krypton.Navigator.KryptonPage funpageFinanceInfo;
         private ComponentFactory.Krypton.Toolkit.KryptonPanel kryptonPanel2;
         private ctFinanceInfo ctFinanceInfo1;
-        private ComponentFactory.Krypton.Toolkit.KryptonButton btnQueryFinanceInfo;
         private Base.ctAccountType ctAccountType1;
         private Base.ctRouterType ctRouterType1;
 

@@ -11,6 +11,21 @@ namespace TradingLib.Common
     public static class ISessionTransUtils
     {
         /// <summary>
+        /// 获得Sessoin对应的Manager
+        /// 如果是ClientManager则返回null
+        /// </summary>
+        /// <param name="session"></param>
+        /// <returns></returns>
+        public static Manager GetManager(this ISession session)
+        {
+            if (session.IsManager() && session is Client2Session)
+            {
+                return (session as Client2Session).Manager;
+            }
+            return null;
+        }
+
+        /// <summary>
         /// 发送客户端逻辑数据包
         /// </summary>
         /// <param name="session"></param>

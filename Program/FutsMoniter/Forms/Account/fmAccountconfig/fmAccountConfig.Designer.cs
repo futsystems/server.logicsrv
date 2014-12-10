@@ -34,6 +34,8 @@
             this.kryptonPanel2 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
             this.btnExecute = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.kryptonGroupBox1 = new ComponentFactory.Krypton.Toolkit.KryptonGroupBox();
+            this.ctRouterType1 = new FutsMoniter.Controls.Base.ctRouterType();
+            this.ctAccountType1 = new FutsMoniter.Controls.Base.ctAccountType();
             this.btnUpdate = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.poslock = new ComponentFactory.Krypton.Toolkit.KryptonCheckBox();
             this.kryptonLabel2 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
@@ -42,7 +44,6 @@
             this.pageFinance = new ComponentFactory.Krypton.Navigator.KryptonPage();
             this.kryptonPanel3 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
             this.kryptonGroupBox3 = new ComponentFactory.Krypton.Toolkit.KryptonGroupBox();
-            this.btnUpdateAccountInfo = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.ctFinanceInfo1 = new FutsMoniter.ctFinanceInfo();
             this.kryptonGroupBox2 = new ComponentFactory.Krypton.Toolkit.KryptonGroupBox();
             this.btnCashOperation = new ComponentFactory.Krypton.Toolkit.KryptonButton();
@@ -71,8 +72,6 @@
             this.accountRuleClassList = new ComponentFactory.Krypton.Toolkit.KryptonListBox();
             this.accountRuleItemList = new ComponentFactory.Krypton.Toolkit.KryptonListBox();
             this.pageMarginCommission = new ComponentFactory.Krypton.Navigator.KryptonPage();
-            this.ctAccountType1 = new FutsMoniter.Controls.Base.ctAccountType();
-            this.ctRouterType1 = new FutsMoniter.Controls.Base.ctRouterType();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pagenav)).BeginInit();
@@ -112,7 +111,7 @@
             this.kryptonPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.kryptonPanel1.Location = new System.Drawing.Point(0, 0);
             this.kryptonPanel1.Name = "kryptonPanel1";
-            this.kryptonPanel1.Size = new System.Drawing.Size(662, 258);
+            this.kryptonPanel1.Size = new System.Drawing.Size(662, 276);
             this.kryptonPanel1.TabIndex = 0;
             // 
             // pagenav
@@ -131,7 +130,7 @@
             this.pageAccountCheck,
             this.pageMarginCommission});
             this.pagenav.SelectedIndex = 0;
-            this.pagenav.Size = new System.Drawing.Size(662, 258);
+            this.pagenav.Size = new System.Drawing.Size(662, 276);
             this.pagenav.TabIndex = 0;
             this.pagenav.Text = "kryptonNavigator1";
             // 
@@ -143,7 +142,7 @@
             this.pageConfig.LastVisibleSet = true;
             this.pageConfig.MinimumSize = new System.Drawing.Size(50, 50);
             this.pageConfig.Name = "pageConfig";
-            this.pageConfig.Size = new System.Drawing.Size(660, 233);
+            this.pageConfig.Size = new System.Drawing.Size(660, 251);
             this.pageConfig.Text = "帐户属性";
             this.pageConfig.ToolTipTitle = "Page ToolTip";
             this.pageConfig.UniqueName = "D367EF93336341E647A23D5A85D51813";
@@ -155,13 +154,13 @@
             this.kryptonPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.kryptonPanel2.Location = new System.Drawing.Point(0, 0);
             this.kryptonPanel2.Name = "kryptonPanel2";
-            this.kryptonPanel2.Size = new System.Drawing.Size(660, 233);
+            this.kryptonPanel2.Size = new System.Drawing.Size(660, 251);
             this.kryptonPanel2.TabIndex = 0;
             // 
             // btnExecute
             // 
             this.btnExecute.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnExecute.Location = new System.Drawing.Point(537, 6);
+            this.btnExecute.Location = new System.Drawing.Point(537, 24);
             this.btnExecute.Name = "btnExecute";
             this.btnExecute.Size = new System.Drawing.Size(112, 50);
             this.btnExecute.TabIndex = 9;
@@ -183,15 +182,31 @@
             this.kryptonGroupBox1.Panel.Controls.Add(this.kryptonLabel2);
             this.kryptonGroupBox1.Panel.Controls.Add(this.kryptonLabel1);
             this.kryptonGroupBox1.Panel.Controls.Add(this.intraday);
-            this.kryptonGroupBox1.Size = new System.Drawing.Size(247, 228);
+            this.kryptonGroupBox1.Size = new System.Drawing.Size(247, 246);
             this.kryptonGroupBox1.TabIndex = 0;
             this.kryptonGroupBox1.Text = "基本属性";
             this.kryptonGroupBox1.Values.Heading = "基本属性";
             // 
+            // ctRouterType1
+            // 
+            this.ctRouterType1.EnableAny = false;
+            this.ctRouterType1.Location = new System.Drawing.Point(11, 87);
+            this.ctRouterType1.Name = "ctRouterType1";
+            this.ctRouterType1.Size = new System.Drawing.Size(156, 27);
+            this.ctRouterType1.TabIndex = 9;
+            // 
+            // ctAccountType1
+            // 
+            this.ctAccountType1.EnableAny = false;
+            this.ctAccountType1.Location = new System.Drawing.Point(33, 59);
+            this.ctAccountType1.Name = "ctAccountType1";
+            this.ctAccountType1.Size = new System.Drawing.Size(156, 29);
+            this.ctAccountType1.TabIndex = 0;
+            // 
             // btnUpdate
             // 
             this.btnUpdate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnUpdate.Location = new System.Drawing.Point(160, 174);
+            this.btnUpdate.Location = new System.Drawing.Point(160, 192);
             this.btnUpdate.Name = "btnUpdate";
             this.btnUpdate.Size = new System.Drawing.Size(70, 25);
             this.btnUpdate.TabIndex = 8;
@@ -241,7 +256,7 @@
             this.pageFinance.LastVisibleSet = true;
             this.pageFinance.MinimumSize = new System.Drawing.Size(50, 50);
             this.pageFinance.Name = "pageFinance";
-            this.pageFinance.Size = new System.Drawing.Size(660, 233);
+            this.pageFinance.Size = new System.Drawing.Size(660, 251);
             this.pageFinance.Text = "财务管理";
             this.pageFinance.ToolTipTitle = "Page ToolTip";
             this.pageFinance.UniqueName = "492F64897BF240DB05883BD68624F2CE";
@@ -253,40 +268,29 @@
             this.kryptonPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.kryptonPanel3.Location = new System.Drawing.Point(0, 0);
             this.kryptonPanel3.Name = "kryptonPanel3";
-            this.kryptonPanel3.Size = new System.Drawing.Size(660, 233);
+            this.kryptonPanel3.Size = new System.Drawing.Size(660, 251);
             this.kryptonPanel3.TabIndex = 0;
             // 
             // kryptonGroupBox3
             // 
-            this.kryptonGroupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
             this.kryptonGroupBox3.AutoSize = true;
+            this.kryptonGroupBox3.Dock = System.Windows.Forms.DockStyle.Left;
             this.kryptonGroupBox3.Location = new System.Drawing.Point(0, 0);
             this.kryptonGroupBox3.Name = "kryptonGroupBox3";
             // 
             // kryptonGroupBox3.Panel
             // 
-            this.kryptonGroupBox3.Panel.Controls.Add(this.btnUpdateAccountInfo);
             this.kryptonGroupBox3.Panel.Controls.Add(this.ctFinanceInfo1);
-            this.kryptonGroupBox3.Size = new System.Drawing.Size(355, 232);
+            this.kryptonGroupBox3.Size = new System.Drawing.Size(357, 251);
             this.kryptonGroupBox3.TabIndex = 3;
             this.kryptonGroupBox3.Text = "财务信息";
             this.kryptonGroupBox3.Values.Heading = "财务信息";
             // 
-            // btnUpdateAccountInfo
-            // 
-            this.btnUpdateAccountInfo.Location = new System.Drawing.Point(261, 172);
-            this.btnUpdateAccountInfo.Name = "btnUpdateAccountInfo";
-            this.btnUpdateAccountInfo.Size = new System.Drawing.Size(87, 33);
-            this.btnUpdateAccountInfo.TabIndex = 1;
-            this.btnUpdateAccountInfo.Values.Text = "刷 新";
-            // 
             // ctFinanceInfo1
             // 
-            this.ctFinanceInfo1.Location = new System.Drawing.Point(1, 3);
+            this.ctFinanceInfo1.Location = new System.Drawing.Point(3, 3);
             this.ctFinanceInfo1.Name = "ctFinanceInfo1";
-            this.ctFinanceInfo1.Size = new System.Drawing.Size(347, 163);
+            this.ctFinanceInfo1.Size = new System.Drawing.Size(347, 223);
             this.ctFinanceInfo1.TabIndex = 0;
             // 
             // kryptonGroupBox2
@@ -308,7 +312,7 @@
             this.kryptonGroupBox2.Panel.Controls.Add(this.kryptonLabel6);
             this.kryptonGroupBox2.Panel.Controls.Add(this.cashop_type);
             this.kryptonGroupBox2.Panel.Controls.Add(this.kryptonLabel5);
-            this.kryptonGroupBox2.Size = new System.Drawing.Size(296, 230);
+            this.kryptonGroupBox2.Size = new System.Drawing.Size(296, 248);
             this.kryptonGroupBox2.TabIndex = 2;
             this.kryptonGroupBox2.Text = "出入金";
             this.kryptonGroupBox2.Values.Heading = "出入金";
@@ -396,7 +400,7 @@
             this.pageOrderCheck.LastVisibleSet = true;
             this.pageOrderCheck.MinimumSize = new System.Drawing.Size(50, 50);
             this.pageOrderCheck.Name = "pageOrderCheck";
-            this.pageOrderCheck.Size = new System.Drawing.Size(660, 233);
+            this.pageOrderCheck.Size = new System.Drawing.Size(660, 251);
             this.pageOrderCheck.Text = "委托规则";
             this.pageOrderCheck.ToolTipTitle = "Page ToolTip";
             this.pageOrderCheck.UniqueName = "4EFE1B2BEB22429A75BE5624BE5AAD1C";
@@ -412,7 +416,7 @@
             this.kryptonPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.kryptonPanel4.Location = new System.Drawing.Point(0, 0);
             this.kryptonPanel4.Name = "kryptonPanel4";
-            this.kryptonPanel4.Size = new System.Drawing.Size(660, 233);
+            this.kryptonPanel4.Size = new System.Drawing.Size(660, 251);
             this.kryptonPanel4.TabIndex = 0;
             // 
             // btnDelOrderRule
@@ -469,7 +473,7 @@
             this.pageAccountCheck.LastVisibleSet = true;
             this.pageAccountCheck.MinimumSize = new System.Drawing.Size(50, 50);
             this.pageAccountCheck.Name = "pageAccountCheck";
-            this.pageAccountCheck.Size = new System.Drawing.Size(660, 233);
+            this.pageAccountCheck.Size = new System.Drawing.Size(660, 251);
             this.pageAccountCheck.Text = "帐户规则";
             this.pageAccountCheck.ToolTipTitle = "Page ToolTip";
             this.pageAccountCheck.UniqueName = "4080C8819A02492855A9978B69F0DAEB";
@@ -485,7 +489,7 @@
             this.kryptonPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.kryptonPanel5.Location = new System.Drawing.Point(0, 0);
             this.kryptonPanel5.Name = "kryptonPanel5";
-            this.kryptonPanel5.Size = new System.Drawing.Size(660, 233);
+            this.kryptonPanel5.Size = new System.Drawing.Size(660, 251);
             this.kryptonPanel5.TabIndex = 1;
             // 
             // btnDelAccountRule
@@ -541,32 +545,16 @@
             this.pageMarginCommission.LastVisibleSet = true;
             this.pageMarginCommission.MinimumSize = new System.Drawing.Size(50, 50);
             this.pageMarginCommission.Name = "pageMarginCommission";
-            this.pageMarginCommission.Size = new System.Drawing.Size(660, 233);
+            this.pageMarginCommission.Size = new System.Drawing.Size(660, 251);
             this.pageMarginCommission.Text = "保证金手续费";
             this.pageMarginCommission.ToolTipTitle = "Page ToolTip";
             this.pageMarginCommission.UniqueName = "CB1FD1C4F2D74E6E96BD0F2D1DC08E66";
-            // 
-            // ctAccountType1
-            // 
-            this.ctAccountType1.EnableAny = false;
-            this.ctAccountType1.Location = new System.Drawing.Point(33, 59);
-            this.ctAccountType1.Name = "ctAccountType1";
-            this.ctAccountType1.Size = new System.Drawing.Size(156, 29);
-            this.ctAccountType1.TabIndex = 0;
-            // 
-            // ctRouterType1
-            // 
-            this.ctRouterType1.EnableAny = false;
-            this.ctRouterType1.Location = new System.Drawing.Point(11, 87);
-            this.ctRouterType1.Name = "ctRouterType1";
-            this.ctRouterType1.Size = new System.Drawing.Size(156, 27);
-            this.ctRouterType1.TabIndex = 9;
             // 
             // fmAccountConfig
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(662, 258);
+            this.ClientSize = new System.Drawing.Size(662, 276);
             this.Controls.Add(this.kryptonPanel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MaximizeBox = false;
@@ -634,7 +622,6 @@
         private ComponentFactory.Krypton.Toolkit.KryptonButton btnExecute;
         private ComponentFactory.Krypton.Toolkit.KryptonPanel kryptonPanel3;
         private ctFinanceInfo ctFinanceInfo1;
-        private ComponentFactory.Krypton.Toolkit.KryptonButton btnUpdateAccountInfo;
         private ComponentFactory.Krypton.Toolkit.KryptonGroupBox kryptonGroupBox2;
         private ComponentFactory.Krypton.Toolkit.KryptonGroupBox kryptonGroupBox3;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel5;

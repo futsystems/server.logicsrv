@@ -44,7 +44,6 @@ namespace TradingLib.Core
                         toadd.QQ = domain.QQ;
                         toadd.Type = QSEnumManagerType.ROOT;
                         toadd.AccLimit = domain.AccLimit;
-
                         //设定域ID
                         toadd.domain_id = domain.ID;
                         //更新管理员信息

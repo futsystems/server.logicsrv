@@ -29,7 +29,6 @@ namespace FutsMoniter
             kryptonRibbonGroupButton_CloseClearCentre.Click += new EventHandler(kryptonRibbonGroupButton_CloseClearCentre_Click);
 
             //路由列表
-            kryptonRibbonGroupButton_RouterList.Click += new EventHandler(kryptonRibbonGroupButton_RouterList_Click);
             kryptonRibbonGroupButton_interfacelist.Click += new EventHandler(kryptonRibbonGroupButton_interfacelist_Click);
             kryptonRibbonGroupButton_connectorlist.Click += new EventHandler(kryptonRibbonGroupButton_connectorlist_Click);
             //系统状态

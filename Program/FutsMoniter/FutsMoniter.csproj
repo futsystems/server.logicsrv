@@ -86,6 +86,7 @@
     <Compile Include="Client\TLClientNet_Request_Connector.cs" />
     <Compile Include="Client\TLClientNet_Request_Domain.cs" />
     <Compile Include="Client\TLClientNet_Request_BasicInfo.cs" />
+    <Compile Include="Client\TLClientNet_Request_Account.cs" />
     <Compile Include="Common\ManagerUtils.cs" />
     <Compile Include="Controls\Base\ctAccountType.cs">
       <SubType>UserControl</SubType>

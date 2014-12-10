@@ -67,11 +67,14 @@
             this.module_payonline = new ComponentFactory.Krypton.Toolkit.KryptonCheckBox();
             this.module_finservice = new ComponentFactory.Krypton.Toolkit.KryptonCheckBox();
             this.module_agent = new ComponentFactory.Krypton.Toolkit.KryptonCheckBox();
-            this.btnSubmit = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.kryptonPage5 = new ComponentFactory.Krypton.Navigator.KryptonPage();
             this.kryptonPanel6 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
             this.router_live = new ComponentFactory.Krypton.Toolkit.KryptonCheckBox();
             this.router_sim = new ComponentFactory.Krypton.Toolkit.KryptonCheckBox();
+            this.btnSubmit = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.splisttab = new ComponentFactory.Krypton.Navigator.KryptonPage();
+            this.kryptonPanel7 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
+            this.finsplist = new System.Windows.Forms.CheckedListBox();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonNavigator1)).BeginInit();
@@ -96,6 +99,10 @@
             this.kryptonPage5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel6)).BeginInit();
             this.kryptonPanel6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splisttab)).BeginInit();
+            this.splisttab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel7)).BeginInit();
+            this.kryptonPanel7.SuspendLayout();
             this.SuspendLayout();
             // 
             // kryptonPanel1
@@ -122,6 +129,7 @@
             this.kryptonPage2,
             this.kryptonPage3,
             this.kryptonPage4,
+            this.splisttab,
             this.kryptonPage5});
             this.kryptonNavigator1.SelectedIndex = 4;
             this.kryptonNavigator1.Size = new System.Drawing.Size(431, 234);
@@ -516,16 +524,6 @@
             this.module_agent.Text = "代理模块";
             this.module_agent.Values.Text = "代理模块";
             // 
-            // btnSubmit
-            // 
-            this.btnSubmit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSubmit.Location = new System.Drawing.Point(329, 247);
-            this.btnSubmit.Name = "btnSubmit";
-            this.btnSubmit.Size = new System.Drawing.Size(90, 25);
-            this.btnSubmit.TabIndex = 14;
-            this.btnSubmit.Values.Text = "提 交";
-            this.btnSubmit.Click += new System.EventHandler(this.btnSubmit_Click);
-            // 
             // kryptonPage5
             // 
             this.kryptonPage5.AutoHiddenSlideSize = new System.Drawing.Size(200, 200);
@@ -569,6 +567,47 @@
             this.router_sim.Text = "模拟交易";
             this.router_sim.Values.Text = "模拟交易";
             // 
+            // btnSubmit
+            // 
+            this.btnSubmit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSubmit.Location = new System.Drawing.Point(329, 247);
+            this.btnSubmit.Name = "btnSubmit";
+            this.btnSubmit.Size = new System.Drawing.Size(90, 25);
+            this.btnSubmit.TabIndex = 14;
+            this.btnSubmit.Values.Text = "提 交";
+            this.btnSubmit.Click += new System.EventHandler(this.btnSubmit_Click);
+            // 
+            // splisttab
+            // 
+            this.splisttab.AutoHiddenSlideSize = new System.Drawing.Size(200, 200);
+            this.splisttab.Controls.Add(this.kryptonPanel7);
+            this.splisttab.Flags = 65534;
+            this.splisttab.LastVisibleSet = true;
+            this.splisttab.MinimumSize = new System.Drawing.Size(50, 50);
+            this.splisttab.Name = "splisttab";
+            this.splisttab.Size = new System.Drawing.Size(429, 209);
+            this.splisttab.Text = "配资服务计划";
+            this.splisttab.ToolTipTitle = "Page ToolTip";
+            this.splisttab.UniqueName = "869E22AB444D4BCEB5848E6D403DEEEF";
+            // 
+            // kryptonPanel7
+            // 
+            this.kryptonPanel7.Controls.Add(this.finsplist);
+            this.kryptonPanel7.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.kryptonPanel7.Location = new System.Drawing.Point(0, 0);
+            this.kryptonPanel7.Name = "kryptonPanel7";
+            this.kryptonPanel7.Size = new System.Drawing.Size(429, 209);
+            this.kryptonPanel7.TabIndex = 0;
+            // 
+            // finsplist
+            // 
+            this.finsplist.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.finsplist.FormattingEnabled = true;
+            this.finsplist.Location = new System.Drawing.Point(0, 0);
+            this.finsplist.Name = "finsplist";
+            this.finsplist.Size = new System.Drawing.Size(429, 209);
+            this.finsplist.TabIndex = 1;
+            // 
             // fmDomainEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -610,6 +649,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel6)).EndInit();
             this.kryptonPanel6.ResumeLayout(false);
             this.kryptonPanel6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splisttab)).EndInit();
+            this.splisttab.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel7)).EndInit();
+            this.kryptonPanel7.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -660,5 +703,8 @@
         private ComponentFactory.Krypton.Toolkit.KryptonPanel kryptonPanel6;
         private ComponentFactory.Krypton.Toolkit.KryptonCheckBox router_live;
         private ComponentFactory.Krypton.Toolkit.KryptonCheckBox router_sim;
+        private ComponentFactory.Krypton.Navigator.KryptonPage splisttab;
+        private ComponentFactory.Krypton.Toolkit.KryptonPanel kryptonPanel7;
+        private System.Windows.Forms.CheckedListBox finsplist;
     }
 }

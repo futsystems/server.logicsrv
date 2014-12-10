@@ -25,17 +25,16 @@ namespace FutsMoniter.Controls
         }
 
 
+
         /// <summary>
-        /// Grid右键菜单
+        /// 查询帐户财务信息
         /// </summary>
         /// <param name="sender"></param>
-        ///// <param name="e"></param>
-        //private void accountgrid_ContextMenuOpening(object sender, Telerik.WinControls.UI.ContextMenuOpeningEventArgs e)
-        //{
-        //    e.ContextMenu = menu.DropDown;
-        //}
-
-
+        /// <param name="e"></param>
+        void btnQueryFinanceInfo_Click(object sender, EventArgs e)
+        {
+           
+        }
 
     }
 }

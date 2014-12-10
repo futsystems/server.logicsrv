@@ -90,6 +90,11 @@ namespace TradingLib.API
         string InterfaceList { get; set; }
 
         /// <summary>
+        /// 配资服务计划列表
+        /// </summary>
+        string FinSPList { get; set; }
+
+        /// <summary>
         /// 代理模块
         /// </summary>
         bool Module_Agent { get; set; }

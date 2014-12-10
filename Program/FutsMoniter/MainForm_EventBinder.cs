@@ -32,9 +32,12 @@ namespace FutsMoniter
             kryptonContextMenuItem_Domain.Visible = Globals.LoginResponse.Domain.Super;
             //超级管理员可以显示接口设置窗口
             kryptonRibbonGroupButton_interfacelist.Visible = Globals.LoginResponse.Domain.Super;
+            
             //超级管理员可以开启或者关闭清算中心
             kryptonRibbonGroupButton_OpenClearCentre.Visible = Globals.LoginResponse.Domain.Super;
             kryptonRibbonGroupButton_CloseClearCentre.Visible = Globals.LoginResponse.Domain.Super;
+            kryptonRibbonGroup1.Visible = Globals.LoginResponse.Domain.Super;
+
             kryptonRibbonQATButton_debug.Visible = true;// Globals.LoginResponse.Domain.Super;
 
 

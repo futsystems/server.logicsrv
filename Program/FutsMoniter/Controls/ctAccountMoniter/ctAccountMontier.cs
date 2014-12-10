@@ -224,9 +224,13 @@ namespace FutsMoniter.Controls
 
 
             //绑定帐户选中事件
+            AccountSelectedEvent += new Action<IAccountLite>(ctFinService1.OnAccountSelected);
+            //财务信息绑定帐户设置时间
+            AccountSelectedEvent += ctFinanceInfo1.SetAccount;
 
-            this.AccountSelectedEvent += new Action<IAccountLite>(ctFinService1.OnAccountSelected);
         }
+
+
 
 
 

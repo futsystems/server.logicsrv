@@ -78,6 +78,7 @@ namespace TradingLib.Common
                 target.RouterGroupLimit = domain.RouterGroupLimit;
                 target.RouterItemLimit = domain.RouterItemLimit;
                 target.InterfaceList = domain.InterfaceList;
+                target.FinSPList = domain.FinSPList;
 
                 target.Module_Agent = domain.Module_Agent;
                 target.Module_FinService = domain.Module_FinService;
@@ -104,7 +105,7 @@ namespace TradingLib.Common
                 target.RouterGroupLimit = domain.RouterGroupLimit;
                 target.RouterItemLimit = domain.RouterItemLimit;
                 target.InterfaceList = domain.InterfaceList;
-
+                target.FinSPList = domain.FinSPList;
                 target.Module_Agent = domain.Module_Agent;
                 target.Module_FinService = domain.Module_FinService;
                 target.Module_PayOnline = domain.Module_PayOnline;

@@ -12,6 +12,7 @@ namespace TradingLib.Core
 
         #region Account
 
+
         /// <summary>
         /// @请求添加交易帐户
         /// 服务端操作采用如下方式进行
@@ -326,6 +327,26 @@ namespace TradingLib.Core
 
         #endregion
 
-
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryAccountInfo", "QryAccountInfo - query account", "查询帐户信息")]
+        public void CTE_QryDomain(ISession session,string account)
+        {
+            try
+            {
+                Manager manager = session.GetManager();
+                IAccount acc = clearcentre[account];
+                if (manager.RightAccessAccount(acc))
+                {
+                    session.SendJsonReplyMgr(acc.ToAccountInfo());
+                }
+                else
+                {
+                    throw new FutsRspError("无权查看该帐户信息");
+                }
+            }
+            catch (FutsRspError ex)
+            {
+                session.OperationError(ex);
+            }
+        }
     }
 }

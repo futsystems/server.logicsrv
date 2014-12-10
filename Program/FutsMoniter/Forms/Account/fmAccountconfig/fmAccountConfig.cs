@@ -43,7 +43,7 @@ namespace FutsMoniter
                     poslock.Checked = _account.PosLock;
                     poslock.Text = _account.PosLock ? "允许" : "禁止";
 
-                    
+                    ctFinanceInfo1.SetAccount(_account);
                 }
             } 
         }
@@ -65,7 +65,7 @@ namespace FutsMoniter
 
             this.FormClosing +=new FormClosingEventHandler(fmAccountConfig_FormClosing);
 
-            this.btnUpdateAccountInfo.Click +=new EventHandler(btnUpdateAccountInfo_Click);//更新财务信息
+            //this.btnUpdateAccountInfo.Click +=new EventHandler(btnUpdateAccountInfo_Click);//更新财务信息
             this.btnCashOperation.Click +=new EventHandler(btnCashOperation_Click);//出入金按钮
             this.btnExecute.Click +=new EventHandler(btnExecute_Click);//冻结 激活
             this.btnUpdate.Click +=new EventHandler(btnUpdate_Click);//更新属性设置
@@ -89,10 +89,11 @@ namespace FutsMoniter
 
 
 
-        private void btnUpdateAccountInfo_Click(object sender, EventArgs e)
-        {
-            Globals.TLClient.ReqQryAccountInfo(_account.Account);
-        }
+        //private void btnUpdateAccountInfo_Click(object sender, EventArgs e)
+        //{
+
+        //    Globals.TLClient.ReqQryAccountInfo(_account.Account);
+        //}
 
 
 

@@ -44,7 +44,6 @@
             this.kryptonRibbonGroupButton_CloseClearCentre = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
             this.kryptonRibbonGroup2 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroup();
             this.kryptonRibbonGroupTriple2 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupTriple();
-            this.kryptonRibbonGroupButton_RouterList = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
             this.kryptonRibbonGroupButton_interfacelist = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
             this.kryptonRibbonGroupButton_connectorlist = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
             this.kryptonRibbonGroup3 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroup();
@@ -125,8 +124,7 @@
             this.tabAgent,
             this.tabFinance,
             this.tabHistQuery});
-            this.TabRibbon.SelectedContext = null;
-            this.TabRibbon.SelectedTab = this.tabFinance;
+            this.TabRibbon.SelectedTab = this.tabSystem;
             this.TabRibbon.Size = new System.Drawing.Size(1284, 111);
             this.TabRibbon.TabIndex = 0;
             // 
@@ -196,14 +194,8 @@
             // kryptonRibbonGroupTriple2
             // 
             this.kryptonRibbonGroupTriple2.Items.AddRange(new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupItem[] {
-            this.kryptonRibbonGroupButton_RouterList,
             this.kryptonRibbonGroupButton_interfacelist,
             this.kryptonRibbonGroupButton_connectorlist});
-            // 
-            // kryptonRibbonGroupButton_RouterList
-            // 
-            this.kryptonRibbonGroupButton_RouterList.ImageLarge = ((System.Drawing.Image)(resources.GetObject("kryptonRibbonGroupButton_RouterList.ImageLarge")));
-            this.kryptonRibbonGroupButton_RouterList.TextLine1 = "路由列表";
             // 
             // kryptonRibbonGroupButton_interfacelist
             // 
@@ -520,7 +512,6 @@
         private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton_CloseClearCentre;
         private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroup kryptonRibbonGroup2;
         private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupTriple kryptonRibbonGroupTriple2;
-        private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton_RouterList;
         private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroup kryptonRibbonGroup3;
         private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupTriple kryptonRibbonGroupTriple3;
         private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton_SystemStatus;
