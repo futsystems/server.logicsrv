@@ -24,7 +24,7 @@ namespace FutsMoniter
                 pageAccountCheck.Visible = Globals.UIAccess.moniter_tab_accountrule;
                 pageMarginCommission.Visible = Globals.UIAccess.moniter_tab_margincommissoin;
 
-                ctAccountType1.Visible= Globals.UIAccess.moniter_acctype;
+                //ctAccountType1.Visible= Globals.UIAccess.moniter_acctype;
                 ctRouterType1.Visible = Globals.UIAccess.moniter_router;
             }
         }

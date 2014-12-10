@@ -11,7 +11,7 @@ namespace TradingLib.Common
         public MGRAddAccountRequest()
         {
             _type = MessageTypes.MGRADDACCOUNT;
-            this.Category = QSEnumAccountCategory.DEALER;
+            this.Category = QSEnumAccountCategory.SIMULATION;
             this.AccountID = string.Empty;
             this.Password = string.Empty;
             this.UserID = 0;

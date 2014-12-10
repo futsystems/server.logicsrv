@@ -12,7 +12,7 @@ using FutSystems.GUI;
 
 namespace FutsMoniter
 {
-    public partial class fmSymbol : ComponentFactory.Krypton.Toolkit.KryptonForm
+    public partial class fmSymbol : ComponentFactory.Krypton.Toolkit.KryptonForm,IEventBinder
     {
         public fmSymbol()
         {
@@ -325,9 +325,19 @@ namespace FutsMoniter
 
         }
 
+        public void OnInit()
+        {
+            btnAddSymbol.Visible = Globals.Manager.IsRoot();
+            btnSyncSymbols.Visible = Globals.Manager.IsRoot();
+        }
+        public void OnDisposed()
+        { 
+        
+        }
 
         void WireEvent()
-        { 
+        {
+            Globals.RegIEventHandler(this);
             this.FormClosing +=new FormClosingEventHandler(fmSymbol_FormClosing);
 
             cbsecurity.SelectedIndexChanged += new EventHandler(cbsecurity_SelectedIndexChanged);
@@ -371,6 +381,7 @@ namespace FutsMoniter
 
         private void symgrid_DoubleClick(object sender, EventArgs e)
         {
+            if (!Globals.Manager.IsRoot()) return;
             SymbolImpl symbol = GetVisibleSymbol(CurrentSymbolID);
             if (symbol != null)
             {

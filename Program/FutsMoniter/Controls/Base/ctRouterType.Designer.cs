@@ -48,12 +48,13 @@
             // 
             // routeType
             // 
-            this.routeType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.routeType.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.routeType.DropDownWidth = 121;
-            this.routeType.Location = new System.Drawing.Point(70, 0);
+            this.routeType.Location = new System.Drawing.Point(78, 0);
             this.routeType.Name = "routeType";
-            this.routeType.Size = new System.Drawing.Size(86, 21);
+            this.routeType.Size = new System.Drawing.Size(78, 21);
             this.routeType.TabIndex = 16;
             this.routeType.Text = "--";
             // 

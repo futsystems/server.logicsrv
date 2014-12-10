@@ -40,6 +40,16 @@ namespace FutsMoniter
         {
             Globals.RegIEventHandler(this);
             module_finservice.CheckedChanged += new EventHandler(module_finservice_CheckedChanged);
+            module_agent.CheckedChanged += new EventHandler(module_agent_CheckedChanged);
+        }
+
+        void module_agent_CheckedChanged(object sender, EventArgs e)
+        {
+            module_subagent.Enabled = module_agent.Checked;
+            if (!module_agent.Checked)
+            {
+                module_subagent.Checked = false;
+            }
         }
 
         void module_finservice_CheckedChanged(object sender, EventArgs e)
@@ -218,6 +228,8 @@ namespace FutsMoniter
             routeritemlimit.Value = _domain.RouterItemLimit == 0 ? routeritemlimit.Maximum : _domain.RouterItemLimit;
 
             module_agent.Checked = _domain.Module_Agent;
+            module_subagent.Checked = !module_agent.Checked ? false : _domain.Module_SubAgent;
+
             module_finservice.Checked = _domain.Module_FinService;
             module_payonline.Checked = _domain.Module_PayOnline;
             router_live.Checked = _domain.Router_Live;
@@ -246,13 +258,14 @@ namespace FutsMoniter
                 _domain.FinSPList = GetSPListString();
 
                 _domain.Module_Agent = module_agent.Checked;
+                _domain.Module_SubAgent = module_agent.Checked?module_subagent.Checked:false;
+
                 _domain.Module_FinService = module_finservice.Checked;
                 _domain.Module_PayOnline = module_payonline.Checked;
 
                 _domain.Router_Live = router_live.Checked;
                 _domain.Router_Sim = router_sim.Checked;
 
-                //MessageBox.Show(_domain.InterfaceList);
                 if (fmConfirm.Show("确认更新分区设置?") == System.Windows.Forms.DialogResult.Yes)
                 {
                     Globals.TLClient.ReqUpdateDomain(_domain);
@@ -274,7 +287,10 @@ namespace FutsMoniter
                 _domain.RouterItemLimit = (int)routeritemlimit.Value;
                 _domain.InterfaceList = GetInterfaceListString();
                 _domain.FinSPList = GetSPListString();
+
                 _domain.Module_Agent = module_agent.Checked;
+                _domain.Module_SubAgent = module_agent.Checked ? module_subagent.Checked : false;
+
                 _domain.Module_FinService = module_finservice.Checked;
                 _domain.Module_PayOnline = module_payonline.Checked;
 

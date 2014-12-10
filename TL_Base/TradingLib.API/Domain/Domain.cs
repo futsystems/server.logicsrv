@@ -100,6 +100,11 @@ namespace TradingLib.API
         bool Module_Agent { get; set; }
 
         /// <summary>
+        /// 是否支持多级代理
+        /// </summary>
+        bool Module_SubAgent{get;set;}
+
+        /// <summary>
         /// 配资模块
         /// </summary>
         bool Module_FinService { get; set; }

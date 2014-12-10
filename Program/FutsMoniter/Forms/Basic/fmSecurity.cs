@@ -13,7 +13,7 @@ using FutSystems.GUI;
 
 namespace FutsMoniter
 {
-    public partial class fmSecurity : ComponentFactory.Krypton.Toolkit.KryptonForm
+    public partial class fmSecurity : ComponentFactory.Krypton.Toolkit.KryptonForm,IEventBinder
     {
         public fmSecurity()
         {
@@ -351,9 +351,19 @@ namespace FutsMoniter
         }
 
 
+        public void OnInit()
+        {
+            btnSyncSec.Visible = Globals.Manager.IsRoot();
+            btnAddSecurity.Visible = Globals.Manager.IsRoot();
+        }
 
+        public void OnDisposed()
+        {
+
+        }
         void WireEvent()
         {
+            Globals.RegIEventHandler(this);
             cbsecurity.SelectedIndexChanged += new EventHandler(cbsecurity_SelectedIndexChanged);
             cbexchange.SelectedIndexChanged += new EventHandler(cbexchange_SelectedIndexChanged);
             cbtradeable.SelectedIndexChanged += new EventHandler(cbtradeable_SelectedIndexChanged);
@@ -362,7 +372,8 @@ namespace FutsMoniter
             btnAddSecurity.Click +=new EventHandler(btnAddSecurity_Click);
             btnSyncSec.Click += new EventHandler(btnSyncSec_Click);
             secgrid.RowPrePaint += new DataGridViewRowPrePaintEventHandler(secgrid_RowPrePaint);
-            this.FormClosing +=new FormClosingEventHandler(fmSecurity_FormClosing);
+            this.FormClosing += new FormClosingEventHandler(fmSecurity_FormClosing);
+
         }
 
         void btnSyncSec_Click(object sender, EventArgs e)
@@ -402,6 +413,7 @@ namespace FutsMoniter
 
         private void secgrid_DoubleClick(object sender, EventArgs e)
         {
+            if (!Globals.Manager.IsRoot()) return;
             SecurityFamilyImpl sec = GetVisibleSecurity(CurrentSecurityID);
             if (sec != null)
             {

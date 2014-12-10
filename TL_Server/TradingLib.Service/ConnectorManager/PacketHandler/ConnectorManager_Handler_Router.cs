@@ -163,15 +163,12 @@ namespace TradingLib.ServiceManager
             try
             {
                 Manager manger = session.GetManager();
-                if (manger.RightRootDomain())
-                {
-                    RouterGroupSetting[] ops = manger.Domain.GetRouterGroups().ToArray();// BasicTracker.RouterGroupTracker.RouterGroups.ToArray();
-                    session.SendJsonReplyMgr(ops);
-                }
+                RouterGroupSetting[] ops = manger.Domain.GetRouterGroups().ToArray();// BasicTracker.RouterGroupTracker.RouterGroups.ToArray();
+                session.SendJsonReplyMgr(ops);
             }
-            catch (Exception ex)
+            catch (FutsRspError ex)
             {
-                session.OperationSuccess("更新接口设置成功");
+                session.OperationError(ex);
             }
         }
 

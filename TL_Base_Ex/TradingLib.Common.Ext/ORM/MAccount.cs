@@ -400,8 +400,6 @@ namespace TradingLib.ORM
         {
             switch (category)
             {
-                case QSEnumAccountCategory.DEALER:
-                    return GlobalConfig.PrefixDealer;
                 case QSEnumAccountCategory.REAL:
                     return GlobalConfig.PrefixReal;
                 case QSEnumAccountCategory.SIMULATION:
@@ -448,7 +446,7 @@ namespace TradingLib.ORM
         /// <param name="user_id"></param>
         /// <param name="category"></param>
         /// <returns></returns>
-        private static bool HaveRequested(int user_id, QSEnumAccountCategory category = QSEnumAccountCategory.DEALER)
+        private static bool HaveRequested(int user_id, QSEnumAccountCategory category = QSEnumAccountCategory.SIMULATION)
         {
             using (DBMySql db = new DBMySql())
             {

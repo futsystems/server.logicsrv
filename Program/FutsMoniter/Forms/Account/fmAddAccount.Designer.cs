@@ -58,29 +58,32 @@
             this.kryptonPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.kryptonPanel1.Location = new System.Drawing.Point(0, 0);
             this.kryptonPanel1.Name = "kryptonPanel1";
-            this.kryptonPanel1.Size = new System.Drawing.Size(353, 242);
+            this.kryptonPanel1.Size = new System.Drawing.Size(353, 204);
             this.kryptonPanel1.TabIndex = 0;
             // 
             // ctAccountType1
             // 
+            this.ctAccountType1.AccountType = TradingLib.API.QSEnumAccountCategory.SIMULATION;
             this.ctAccountType1.EnableAny = false;
-            this.ctAccountType1.Location = new System.Drawing.Point(35, 4);
+            this.ctAccountType1.Location = new System.Drawing.Point(39, 13);
             this.ctAccountType1.Name = "ctAccountType1";
-            this.ctAccountType1.Size = new System.Drawing.Size(156, 29);
+            this.ctAccountType1.Size = new System.Drawing.Size(168, 21);
+            this.ctAccountType1.SmallSpace = false;
             this.ctAccountType1.TabIndex = 8;
             // 
             // ctRouterGroupList1
             // 
-            this.ctRouterGroupList1.Location = new System.Drawing.Point(24, 134);
+            this.ctRouterGroupList1.EnableAny = false;
+            this.ctRouterGroupList1.Location = new System.Drawing.Point(23, 125);
             this.ctRouterGroupList1.Name = "ctRouterGroupList1";
             this.ctRouterGroupList1.RouterGroudSelected = null;
-            this.ctRouterGroupList1.Size = new System.Drawing.Size(199, 28);
+            this.ctRouterGroupList1.Size = new System.Drawing.Size(184, 23);
             this.ctRouterGroupList1.TabIndex = 1;
             // 
             // btnAddAccount
             // 
             this.btnAddAccount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAddAccount.Location = new System.Drawing.Point(235, 205);
+            this.btnAddAccount.Location = new System.Drawing.Point(235, 167);
             this.btnAddAccount.Name = "btnAddAccount";
             this.btnAddAccount.Size = new System.Drawing.Size(106, 25);
             this.btnAddAccount.TabIndex = 7;
@@ -89,16 +92,16 @@
             // 
             // password
             // 
-            this.password.Location = new System.Drawing.Point(86, 66);
+            this.password.Location = new System.Drawing.Point(89, 66);
             this.password.Name = "password";
-            this.password.Size = new System.Drawing.Size(121, 21);
+            this.password.Size = new System.Drawing.Size(118, 21);
             this.password.TabIndex = 6;
             // 
             // account
             // 
-            this.account.Location = new System.Drawing.Point(86, 39);
+            this.account.Location = new System.Drawing.Point(89, 39);
             this.account.Name = "account";
-            this.account.Size = new System.Drawing.Size(121, 21);
+            this.account.Size = new System.Drawing.Size(118, 21);
             this.account.TabIndex = 5;
             // 
             // ctAgentList1
@@ -107,9 +110,9 @@
             this.ctAgentList1.EnableDefaultBaseMGR = true;
             this.ctAgentList1.EnableSelected = true;
             this.ctAgentList1.EnableSelf = true;
-            this.ctAgentList1.Location = new System.Drawing.Point(24, 103);
+            this.ctAgentList1.Location = new System.Drawing.Point(23, 94);
             this.ctAgentList1.Name = "ctAgentList1";
-            this.ctAgentList1.Size = new System.Drawing.Size(183, 25);
+            this.ctAgentList1.Size = new System.Drawing.Size(184, 25);
             this.ctAgentList1.TabIndex = 3;
             // 
             // kryptonLabel3
@@ -130,7 +133,7 @@
             // 
             // kryptonLabel1
             // 
-            this.kryptonLabel1.Location = new System.Drawing.Point(227, 39);
+            this.kryptonLabel1.Location = new System.Drawing.Point(213, 42);
             this.kryptonLabel1.Name = "kryptonLabel1";
             this.kryptonLabel1.Size = new System.Drawing.Size(123, 18);
             this.kryptonLabel1.TabIndex = 9;
@@ -138,7 +141,7 @@
             // 
             // kryptonLabel4
             // 
-            this.kryptonLabel4.Location = new System.Drawing.Point(227, 70);
+            this.kryptonLabel4.Location = new System.Drawing.Point(213, 70);
             this.kryptonLabel4.Name = "kryptonLabel4";
             this.kryptonLabel4.Size = new System.Drawing.Size(110, 18);
             this.kryptonLabel4.TabIndex = 10;
@@ -148,7 +151,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(353, 242);
+            this.ClientSize = new System.Drawing.Size(353, 204);
             this.Controls.Add(this.kryptonPanel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MaximizeBox = false;
@@ -175,7 +178,7 @@
         private ComponentFactory.Krypton.Toolkit.KryptonButton btnAddAccount;
         private Controls.Base.ctRouterGroupList ctRouterGroupList1;
         private Controls.Base.ctAccountType ctAccountType1;
-        private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel4;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel1;
+        private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel4;
     }
 }

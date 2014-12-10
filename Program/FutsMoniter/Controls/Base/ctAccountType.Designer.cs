@@ -59,7 +59,7 @@
             this.accountType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.accountType.DropDownWidth = 127;
-            this.accountType.Location = new System.Drawing.Point(50, 0);
+            this.accountType.Location = new System.Drawing.Point(51, 0);
             this.accountType.Name = "accountType";
             this.accountType.Size = new System.Drawing.Size(114, 21);
             this.accountType.TabIndex = 7;

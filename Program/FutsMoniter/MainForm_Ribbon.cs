@@ -19,7 +19,7 @@ namespace FutsMoniter
             kryptonContextMenuItem_exit.Click += new EventHandler(kryptonContextMenuItem_exit_Click);
             kryptonContextMenuItem_Domain.Click += new EventHandler(kryptonContextMenuItem_Domain_Click);
             kryptonContextMenuItem_DomainInfo.Click += new EventHandler(kryptonContextMenuItem_DomainInfo_Click);
-
+            kryptonContextMenuItem_changepass.Click += new EventHandler(kryptonContextMenuItem_changepass_Click);
 
             kryptonRibbonQATButton_debug.Click += new EventHandler(kryptonRibbonQATButton_debug_Click);
             //kryptonContextMenuItem_exit.Click +=new EventHandler(kryptonContextMenuItem_exit_Click);
@@ -63,6 +63,12 @@ namespace FutsMoniter
 
             kryptonRibbonGroupButton_payonline.Click += new EventHandler(kryptonRibbonGroupButton_payonline_Click);
             kryptonRibbonGroupButton_ReceiveBank.Click += new EventHandler(kryptonRibbonGroupButton_ReceiveBank_Click);
+        }
+
+        void kryptonContextMenuItem_changepass_Click(object sender, EventArgs e)
+        {
+            fmChangePasswordAgent fm = new fmChangePasswordAgent();
+            fm.ShowDialog();
         }
 
         void kryptonRibbonGroupButton_ReceiveBank_Click(object sender, EventArgs e)

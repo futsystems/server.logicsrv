@@ -23,6 +23,26 @@ namespace TradingLib.Common
         }
 
         /// <summary>
+        /// 是否是管理员
+        /// </summary>
+        /// <param name="mgr"></param>
+        /// <returns></returns>
+        public static bool IsRoot(this Manager mgr)
+        {
+            return mgr.Type == QSEnumManagerType.ROOT;
+        }
+
+        /// <summary>
+        /// 是否是代理
+        /// </summary>
+        /// <param name="mgr"></param>
+        /// <returns></returns>
+        public static bool IsAgent(this Manager mgr)
+        {
+            return mgr.Type == QSEnumManagerType.AGENT;
+        }
+
+        /// <summary>
         /// 返回某个交易帐户的主域FK
         /// </summary>
         /// <param name="mgr"></param>

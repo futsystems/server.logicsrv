@@ -81,6 +81,8 @@ namespace TradingLib.Common
                 target.FinSPList = domain.FinSPList;
 
                 target.Module_Agent = domain.Module_Agent;
+                target.Module_SubAgent = domain.Module_SubAgent;
+
                 target.Module_FinService = domain.Module_FinService;
                 target.Module_PayOnline = domain.Module_PayOnline;
                 target.Router_Live = domain.Router_Live;
@@ -107,6 +109,7 @@ namespace TradingLib.Common
                 target.InterfaceList = domain.InterfaceList;
                 target.FinSPList = domain.FinSPList;
                 target.Module_Agent = domain.Module_Agent;
+                target.Module_SubAgent = domain.Module_SubAgent;
                 target.Module_FinService = domain.Module_FinService;
                 target.Module_PayOnline = domain.Module_PayOnline;
                 target.Router_Live = domain.Router_Live;

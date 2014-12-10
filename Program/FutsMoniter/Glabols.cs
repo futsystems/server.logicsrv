@@ -41,7 +41,10 @@ namespace FutsMoniter
         /// </summary>
         public static UIAccess UIAccess { get { return LoginResponse.UIAccess; } }
 
-
+        /// <summary>
+        /// 域信息
+        /// </summary>
+        public static Domain Domain { get { return LoginResponse.Domain; } }
 
         /// <summary>
         /// 管理主域ID

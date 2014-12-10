@@ -64,7 +64,7 @@ namespace TradingLib.Core
                 create.Category = request.Category;
                 create.Password = request.Password;
                 create.RouteGroup = BasicTracker.RouterGroupTracker[request.RouterGroup_ID];
-                create.RouterType = QSEnumOrderTransferType.SIM;
+                create.RouterType = request.Category == QSEnumAccountCategory.SIMULATION ? QSEnumOrderTransferType.SIM : QSEnumOrderTransferType.LIVE;
                 create.UserID = request.UserID;
                 create.Domain = manager.Domain;
                 create.BaseManager = manager.BaseManager;

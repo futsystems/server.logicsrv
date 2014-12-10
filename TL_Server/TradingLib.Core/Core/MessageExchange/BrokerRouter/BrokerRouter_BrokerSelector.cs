@@ -38,10 +38,15 @@ namespace TradingLib.Core
             //如果设定的路由类别为模拟 则返回模拟成交接口 如果是路由类别为实盘 则通过RouterGroup返回对应的路由
             if (account.OrderRouteType == QSEnumOrderTransferType.SIM)
             {
-                return GetSimBroker();
+                //如果没有模拟交易权限 则返回null;
+                return account.Domain.Router_Sim?GetSimBroker():null;
             }//实盘路由通过RouterGroup返回
             else
             {
+                //没有实盘交易权限
+                if (!account.Domain.Router_Live)
+                    return null;
+
                 RouterGroup rg = BasicTracker.RouterGroupTracker[account.RG_FK]; //这里需要做个鉴权 帐户设置的路由组的domain_id与帐户所属domain_id一致
                 //没有设定路由组则返回null
                 if (rg == null)

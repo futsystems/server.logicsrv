@@ -51,7 +51,7 @@
             this.cbrglist.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.cbrglist.DropDownWidth = 136;
-            this.cbrglist.Location = new System.Drawing.Point(64, 0);
+            this.cbrglist.Location = new System.Drawing.Point(65, 0);
             this.cbrglist.Name = "cbrglist";
             this.cbrglist.Size = new System.Drawing.Size(126, 21);
             this.cbrglist.TabIndex = 1;

@@ -33,7 +33,7 @@ namespace FutsMoniter
                     this.Text = "交易帐户编辑[" + _account.Account + "]";
                     intraday.Checked = _account.IntraDay;
                     intraday.Text = _account.IntraDay ? "日内" : "隔夜";
-                    ctAccountType1.AccountType = _account.Category;
+                    //ctAccountType1.AccountType = _account.Category;
                     ctRouterType1.RouterType = _account.OrderRouteType;
 
                     btnExecute.Text = _account.Execute ? "冻 结" : "激 活";
@@ -152,10 +152,6 @@ namespace FutsMoniter
                 if (intraday.Checked != _account.IntraDay)
                 {
                     Globals.TLClient.ReqUpdateAccountIntraday(_account.Account, intraday.Checked);
-                }
-                if (ctAccountType1.AccountType != _account.Category)
-                {
-                    Globals.TLClient.ReqUpdateAccountCategory(_account.Account,ctAccountType1.AccountType);
                 }
                 if (ctRouterType1.RouterType != _account.OrderRouteType)
                 {

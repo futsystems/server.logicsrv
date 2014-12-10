@@ -35,6 +35,7 @@
             this.kryptonContextMenuItem_exit = new ComponentFactory.Krypton.Toolkit.KryptonContextMenuItem();
             this.kryptonContextMenuItem_Domain = new ComponentFactory.Krypton.Toolkit.KryptonContextMenuItem();
             this.kryptonContextMenuItem_DomainInfo = new ComponentFactory.Krypton.Toolkit.KryptonContextMenuItem();
+            this.kryptonContextMenuItem_changepass = new ComponentFactory.Krypton.Toolkit.KryptonContextMenuItem();
             this.buttonSpecAppMenu1 = new ComponentFactory.Krypton.Ribbon.ButtonSpecAppMenu();
             this.buttonSpecAppMenu2 = new ComponentFactory.Krypton.Ribbon.ButtonSpecAppMenu();
             this.tabSystem = new ComponentFactory.Krypton.Ribbon.KryptonRibbonTab();
@@ -108,7 +109,8 @@
             this.TabRibbon.RibbonAppButton.AppButtonMenuItems.AddRange(new ComponentFactory.Krypton.Toolkit.KryptonContextMenuItemBase[] {
             this.kryptonContextMenuItem_exit,
             this.kryptonContextMenuItem_Domain,
-            this.kryptonContextMenuItem_DomainInfo});
+            this.kryptonContextMenuItem_DomainInfo,
+            this.kryptonContextMenuItem_changepass});
             this.TabRibbon.RibbonAppButton.AppButtonShowRecentDocs = false;
             this.TabRibbon.RibbonAppButton.AppButtonSpecs.AddRange(new ComponentFactory.Krypton.Ribbon.ButtonSpecAppMenu[] {
             this.buttonSpecAppMenu1,
@@ -124,7 +126,8 @@
             this.tabAgent,
             this.tabFinance,
             this.tabHistQuery});
-            this.TabRibbon.SelectedTab = this.tabSystem;
+            this.TabRibbon.SelectedContext = null;
+            this.TabRibbon.SelectedTab = this.tabHistQuery;
             this.TabRibbon.Size = new System.Drawing.Size(1284, 111);
             this.TabRibbon.TabIndex = 0;
             // 
@@ -146,6 +149,11 @@
             // 
             this.kryptonContextMenuItem_DomainInfo.Image = ((System.Drawing.Image)(resources.GetObject("kryptonContextMenuItem_DomainInfo.Image")));
             this.kryptonContextMenuItem_DomainInfo.Text = "柜台信息";
+            // 
+            // kryptonContextMenuItem_changepass
+            // 
+            this.kryptonContextMenuItem_changepass.Image = ((System.Drawing.Image)(resources.GetObject("kryptonContextMenuItem_changepass.Image")));
+            this.kryptonContextMenuItem_changepass.Text = "修改密码";
             // 
             // buttonSpecAppMenu1
             // 
@@ -567,6 +575,7 @@
         private ComponentFactory.Krypton.Toolkit.KryptonContextMenuItem kryptonContextMenuItem_Domain;
         private ComponentFactory.Krypton.Toolkit.KryptonContextMenuItem kryptonContextMenuItem_DomainInfo;
         private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton_ReceiveBank;
+        private ComponentFactory.Krypton.Toolkit.KryptonContextMenuItem kryptonContextMenuItem_changepass;
 
     }
 }

@@ -25,7 +25,7 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="c"></param>
         /// <returns></returns>
-        public static GeneralStatistic GetFinStatForSim(IClearCentreBase c, QSEnumAccountCategory cat = QSEnumAccountCategory.DEALER)
+        public static GeneralStatistic GetFinStatForSim(IClearCentreBase c, QSEnumAccountCategory cat = QSEnumAccountCategory.SIMULATION)
         {
             GeneralStatistic s = new GeneralStatistic();
             IEnumerable<IAccount> list = 

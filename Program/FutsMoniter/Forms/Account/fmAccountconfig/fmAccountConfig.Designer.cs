@@ -35,7 +35,6 @@
             this.btnExecute = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.kryptonGroupBox1 = new ComponentFactory.Krypton.Toolkit.KryptonGroupBox();
             this.ctRouterType1 = new FutsMoniter.Controls.Base.ctRouterType();
-            this.ctAccountType1 = new FutsMoniter.Controls.Base.ctAccountType();
             this.btnUpdate = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.poslock = new ComponentFactory.Krypton.Toolkit.KryptonCheckBox();
             this.kryptonLabel2 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
@@ -176,7 +175,6 @@
             // kryptonGroupBox1.Panel
             // 
             this.kryptonGroupBox1.Panel.Controls.Add(this.ctRouterType1);
-            this.kryptonGroupBox1.Panel.Controls.Add(this.ctAccountType1);
             this.kryptonGroupBox1.Panel.Controls.Add(this.btnUpdate);
             this.kryptonGroupBox1.Panel.Controls.Add(this.poslock);
             this.kryptonGroupBox1.Panel.Controls.Add(this.kryptonLabel2);
@@ -190,18 +188,10 @@
             // ctRouterType1
             // 
             this.ctRouterType1.EnableAny = false;
-            this.ctRouterType1.Location = new System.Drawing.Point(11, 87);
+            this.ctRouterType1.Location = new System.Drawing.Point(10, 63);
             this.ctRouterType1.Name = "ctRouterType1";
             this.ctRouterType1.Size = new System.Drawing.Size(156, 27);
             this.ctRouterType1.TabIndex = 9;
-            // 
-            // ctAccountType1
-            // 
-            this.ctAccountType1.EnableAny = false;
-            this.ctAccountType1.Location = new System.Drawing.Point(33, 59);
-            this.ctAccountType1.Name = "ctAccountType1";
-            this.ctAccountType1.Size = new System.Drawing.Size(156, 29);
-            this.ctAccountType1.TabIndex = 0;
             // 
             // btnUpdate
             // 
@@ -648,6 +638,5 @@
         private ComponentFactory.Krypton.Toolkit.KryptonListBox accountRuleClassList;
         private ComponentFactory.Krypton.Toolkit.KryptonListBox accountRuleItemList;
         private Controls.Base.ctRouterType ctRouterType1;
-        private Controls.Base.ctAccountType ctAccountType1;
     }
 }
