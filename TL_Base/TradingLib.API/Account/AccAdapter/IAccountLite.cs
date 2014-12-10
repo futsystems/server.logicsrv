@@ -122,5 +122,6 @@ namespace TradingLib.API
         /// 路由组编号
         /// </summary>
         int RG_ID { get; set; }
+
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Data;
@@ -276,10 +277,21 @@ namespace FutsMoniter
         }
         void AddRouterItem_Click(object sender, EventArgs e)
         {
+            ArrayList list = GetVendorIDCBList(false);
+            if (list.Count == 0)
+            {
+                ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show("没有可用实盘帐户");
+                return;
+            }
             RouterGroupSetting rg = ctRouterGroupList1.RouterGroudSelected;
+            if (rg == null)
+            {
+                ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show("请先添加路由组");
+                return;
+            }
             fmRouterItem fm = new fmRouterItem();
             fm.SetRouterGroup(rg);
-            fm.SetVendorCBList(GetVendorIDCBList(false));
+            fm.SetVendorCBList(list);
             fm.Show();
         }
         void EditRouterItem_Click(object sender, EventArgs e)

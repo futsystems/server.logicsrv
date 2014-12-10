@@ -48,35 +48,43 @@ namespace TradingLib.Common
 
         public void UpdateManager(Manager mgr)
         {
+            Manager target = null;
             //添加
-            if (mgr.ID == 0)
+            if (!mgridmap.TryGetValue(mgr.ID, out target))
             {
-                
-                ORM.MManager.InsertManager(mgr);
+                target = new Manager();
+                target.AccLimit = mgr.AccLimit;
+                target.domain_id = mgr.domain_id;
+                target.Login = mgr.Login;
+                target.mgr_fk = mgr.mgr_fk;
+                target.Mobile = mgr.Mobile;
+                target.Name = mgr.Name;
+                target.parent_fk = mgr.parent_fk;
+                target.QQ = mgr.QQ;
+                target.Type = mgr.Type;
+                target.User_Id = mgr.User_Id;
+
+                ORM.MManager.InsertManager(target);
 
                 //添加到内存
-                managermap[mgr.Login] = mgr;
-                mgridmap[mgr.ID] = mgr;
+                managermap[target.Login] = target;
+                mgridmap[target.ID] = target;
 
                 //绑定BaseManger和ParentManager
-                mgr.BaseManager = this[mgr.mgr_fk];
-                mgr.ParentManager = this[mgr.parent_fk];
+                target.BaseManager = this[target.mgr_fk];
+                target.ParentManager = this[target.parent_fk];
                 //绑定域
-                mgr.Domain = BasicTracker.DomainTracker[mgr.domain_id];
+                target.Domain = BasicTracker.DomainTracker[target.domain_id];
             }
             else//更新
             {
-                Manager target = null;
-                if (mgridmap.TryGetValue(mgr.ID, out target))
-                {
-                    //只能修改Name QQ Mobile AccLimit
-                    target.Name = mgr.Name;
-                    target.Mobile = mgr.Mobile;
-                    target.QQ = mgr.QQ;
-                    target.AccLimit = mgr.AccLimit;
+                //只能修改Name QQ Mobile AccLimit
+                target.Name = mgr.Name;
+                target.Mobile = mgr.Mobile;
+                target.QQ = mgr.QQ;
+                target.AccLimit = mgr.AccLimit;
 
-                    ORM.MManager.UpdateManager(target);
-                }
+                ORM.MManager.UpdateManager(target);
             }
         }
 

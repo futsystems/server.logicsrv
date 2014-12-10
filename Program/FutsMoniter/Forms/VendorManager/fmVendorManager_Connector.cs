@@ -219,13 +219,13 @@ namespace FutsMoniter
         {
             if (status == QSEnumConnectorStatus.Start)
             {
-                return (Image)Properties.Resources.start16;
+                return (Image)Properties.Resources.online;
             }
             else if (status == QSEnumConnectorStatus.Stop)
             {
-                return (Image)Properties.Resources.stop16;
+                return (Image)Properties.Resources.offline;
             }
-            return (Image)Properties.Resources.start16;
+            return (Image)Properties.Resources.offline;
         }
 
 
@@ -353,14 +353,14 @@ namespace FutsMoniter
             //grid.ContextMenuStrip = new ContextMenuStrip();
 
             routergridmenu = new ContextMenuStrip();
-            routergridmenu.Items.Add("添加通道", null, new EventHandler(AddConnector_Click));
-            routergridmenu.Items.Add("修改通道", null, new EventHandler(EditConnector_Click));
+            routergridmenu.Items.Add("添加通道", null, new EventHandler(AddConnector_Click));//0
+            routergridmenu.Items.Add("修改通道", null, new EventHandler(EditConnector_Click));//1
             routergridmenu.Items.Add(new System.Windows.Forms.ToolStripSeparator());
-            routergridmenu.Items.Add("绑定通道", null, new EventHandler(BindConnector_Click));
-            routergridmenu.Items.Add("解绑通道", null, new EventHandler(UnBindConnector_Click));
+            routergridmenu.Items.Add("绑定通道", null, new EventHandler(BindConnector_Click));//3
+            routergridmenu.Items.Add("解绑通道", null, new EventHandler(UnBindConnector_Click));//4
             routergridmenu.Items.Add(new System.Windows.Forms.ToolStripSeparator());
-            routergridmenu.Items.Add("启动通道", null, new EventHandler(StartConnector_Click));
-            routergridmenu.Items.Add("停止通道", null, new EventHandler(StopConnector_Click));
+            routergridmenu.Items.Add("启动通道", null, new EventHandler(StartConnector_Click));//6
+            routergridmenu.Items.Add("停止通道", null, new EventHandler(StopConnector_Click));//7
 
         }
 
@@ -378,6 +378,16 @@ namespace FutsMoniter
         ContextMenuStrip GetConnectorGridRightMenu()
         {
             ConnectorConfig cfg = CurrentConnectorConfig;
+            if (cfg == null)
+            {
+                routergridmenu.Items[0].Visible = true;
+                routergridmenu.Items[1].Visible = false;
+                routergridmenu.Items[3].Visible = false;
+                routergridmenu.Items[4].Visible = false;
+                routergridmenu.Items[6].Visible = false;
+                routergridmenu.Items[7].Visible = false;
+                return routergridmenu;
+            }
             int r = ConnectorIdx(cfg.ID);
             if (r > 0)
             {

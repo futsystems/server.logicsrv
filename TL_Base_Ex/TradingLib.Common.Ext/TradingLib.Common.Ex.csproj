@@ -93,6 +93,8 @@
     <Compile Include="Tracker\ConntorConfigTracker.cs" />
     <Compile Include="Tracker\DomainTracker.cs" />
     <Compile Include="Tracker\RouterGrouperTracker.cs" />
+    <Compile Include="Tracker\UIAccessTracker.cs" />
+    <Compile Include="Utils\Domain\DomainUtils_Permission.cs" />
     <Compile Include="Utils\Domain\DomainUtils_Basic.cs" />
     <Compile Include="Utils\ISessionTransUtils.cs" />
     <Compile Include="ORM\Config\ConfigItem.cs" />
@@ -173,6 +175,7 @@
     <Compile Include="Tracker\TotalTracker.cs" />
     <Compile Include="Tracker\VendorTracker.cs" />
     <Compile Include="Utils\Domain\DomainUtils.cs" />
+    <Compile Include="Utils\Manager\ManagerUtils_Right.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

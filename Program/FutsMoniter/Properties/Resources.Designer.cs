@@ -207,23 +207,9 @@ namespace FutsMoniter.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap start16 {
-            get {
-                object obj = ResourceManager.GetObject("start16", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
         internal static System.Drawing.Bitmap stop {
             get {
                 object obj = ResourceManager.GetObject("stop", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap stop16 {
-            get {
-                object obj = ResourceManager.GetObject("stop16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -84,6 +84,8 @@ namespace FutsMoniter
         { 
             btnLogin.Click +=new EventHandler(btnLogin_Click);
             btnExit.Click += new EventHandler(btnExit_LinkClicked);
+            this.AcceptButton = btnLogin;
+            //this.CancelButton = btnExit;
         }
 
 

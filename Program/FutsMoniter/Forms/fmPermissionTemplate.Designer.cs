@@ -179,7 +179,7 @@
             this.btnSaveAs.Name = "btnSaveAs";
             this.btnSaveAs.Size = new System.Drawing.Size(89, 30);
             this.btnSaveAs.TabIndex = 3;
-            this.btnSaveAs.Values.Text = "另存为";
+            this.btnSaveAs.Values.Text = "新建模板";
             // 
             // btnSubmit
             // 
@@ -187,7 +187,7 @@
             this.btnSubmit.Name = "btnSubmit";
             this.btnSubmit.Size = new System.Drawing.Size(89, 30);
             this.btnSubmit.TabIndex = 2;
-            this.btnSubmit.Values.Text = "保 存";
+            this.btnSubmit.Values.Text = "更新模板";
             // 
             // pmlist
             // 

@@ -36,6 +36,12 @@ namespace TradingLib.Common
                 {
                     return tracker;
                 }
+                Domain domain = BasicTracker.DomainTracker[domain_id];
+                if (domain != null)
+                {
+                    domainsymboltracker[domain_id] = new DBSymbolTracker(domain);
+                    return domainsymboltracker[domain_id];
+                }
                 return null;
             }
         }

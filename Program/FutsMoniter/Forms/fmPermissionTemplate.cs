@@ -40,39 +40,54 @@ namespace FutsMoniter
         void btnSaveAs_Click(object sender, EventArgs e)
         {
             UIAccess access = new UIAccess();
-            access.id = int.Parse(pmlist.SelectedValue.ToString());
-
-            foreach (string key in permissionmap.Keys)
+            if (fmConfirm.Show("确认保存权限模板为:" + pmname.Text+"?") == System.Windows.Forms.DialogResult.Yes)
             {
-                ctTLPermissionEdit edit = permissioneditmap[key];
-                PermissionField field = permissionmap[key];
+                if (string.IsNullOrEmpty(pmname.Text))
+                {
+                    ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show("请输入模板名称");
+                    return;
+                }
+                foreach (string key in permissionmap.Keys)
+                {
+                    ctTLPermissionEdit edit = permissioneditmap[key];
+                    PermissionField field = permissionmap[key];
 
-                //设置值
-                field.Info.SetValue(access, edit.Value, null);
+                    //设置值
+                    field.Info.SetValue(access, edit.Value, null);
+                }
+                access.id = 0;//用于新建，设置id为0
+                access.name = pmname.Text;
+                access.desp = pmdesp.Text;
+                Globals.TLClient.ReqUpdatePermissionTemplate(access.ToJson());
             }
-            access.id = 0;//用于新建，设置id为0
-            access.name = pmname.Text;
-            access.desp = pmdesp.Text;
-            Globals.TLClient.ReqUpdatePermissionTemplate(access.ToJson());
         }
 
         void btnSubmit_Click(object sender, EventArgs e)
         {
-            UIAccess access = new UIAccess();
-            access.id = int.Parse(pmlist.SelectedValue.ToString());
-
-            foreach (string key in permissionmap.Keys)
+            if (fmConfirm.Show("确认更新权限模板?") == System.Windows.Forms.DialogResult.Yes)
             {
-                ctTLPermissionEdit edit = permissioneditmap[key];
-                PermissionField field = permissionmap[key];
-                
-                //设置值
-                field.Info.SetValue(access,edit.Value,null);
-            }
-            access.name = pmname.Text;
-            access.desp = pmdesp.Text;
+                UIAccess access = new UIAccess();
+                int id = 0;
+                int.TryParse(pmlist.SelectedValue.ToString(), out id);
+                access.id = id;
+                if (access.id == 0)
+                {
+                    ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show("没有选中权限模板");
+                    return;
+                }
+                foreach (string key in permissionmap.Keys)
+                {
+                    ctTLPermissionEdit edit = permissioneditmap[key];
+                    PermissionField field = permissionmap[key];
 
-            Globals.TLClient.ReqUpdatePermissionTemplate(access.ToJson());
+                    //设置值
+                    field.Info.SetValue(access, edit.Value, null);
+                }
+                access.name = pmname.Text;
+                access.desp = pmdesp.Text;
+
+                Globals.TLClient.ReqUpdatePermissionTemplate(access.ToJson());
+            }
         }
 
 

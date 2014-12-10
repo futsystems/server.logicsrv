@@ -272,26 +272,27 @@ namespace TradingLib.Core
                         clientinfo.AuthorizedSuccess();
 
                         //获得界面访问权限列表
-                        response.LoginResponse.UIAccess = UIAccessTracker.GetUIAccess(m);
+                        response.LoginResponse.UIAccess = BasicTracker.UIAccessTracker.GetUIAccess(m);
                         response.LoginResponse.Domain = m.Domain as DomainImpl;
                     }
 
                 }
                 else//如果管理端对象在内存中不存在 则返回登入失败
                 {
-                    clientinfo.AuthorizedFail();
                     response.LoginResponse.Authorized = false;
+                    clientinfo.AuthorizedFail();
                 }
-                
             }
             else
             {
                 clientinfo.AuthorizedFail();
             }
+
             if (!response.LoginResponse.Authorized)
             {
                 debug("Manager:" + request.LoginID + " Login failed", QSEnumDebugLevel.WARNING);
             }
+
             SendOutPacket(response);
             
             

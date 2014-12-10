@@ -38,6 +38,7 @@
     <ApplicationIcon>moniter0.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ComponentFactory.Krypton.Docking, Version=4.4.0.0, Culture=neutral, PublicKeyToken=a87e673e9ecb6e8e" />
     <Reference Include="ComponentFactory.Krypton.Navigator, Version=4.4.0.0, Culture=neutral, PublicKeyToken=a87e673e9ecb6e8e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\kypton\ComponentFactory.Krypton.Navigator.dll</HintPath>
@@ -53,6 +54,7 @@
       <HintPath>..\..\lib\kypton\ComponentFactory.Krypton.Toolkit.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="ComponentFactory.Krypton.Workspace, Version=4.4.0.0, Culture=neutral, PublicKeyToken=a87e673e9ecb6e8e" />
     <Reference Include="FutSystems.GUI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Win\FutSystems.GUI.dll</HintPath>
@@ -309,6 +311,12 @@
     </Compile>
     <Compile Include="Forms\Domain\fmDomainEdit.Designer.cs">
       <DependentUpon>fmDomainEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\PositionsMetric\fmPositionMetricMoniter.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PositionsMetric\fmPositionMetricMoniter.Designer.cs">
+      <DependentUpon>fmPositionMetricMoniter.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\VendorManager\fmRouterGroupEdit.cs">
       <SubType>Form</SubType>
@@ -722,6 +730,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Domain\fmDomainEdit.resx">
       <DependentUpon>fmDomainEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PositionsMetric\fmPositionMetricMoniter.resx">
+      <DependentUpon>fmPositionMetricMoniter.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\VendorManager\fmRouterGroupEdit.resx">
       <DependentUpon>fmRouterGroupEdit.cs</DependentUpon>

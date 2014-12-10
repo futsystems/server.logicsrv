@@ -33,6 +33,13 @@ namespace TradingLib.Common
                 {
                     return tracker;
                 }
+                //如果当前内存中不存在DBSercurityTracker且该Domain存在则添加
+                Domain domain = BasicTracker.DomainTracker[domain_id];
+                if (domain != null)
+                {
+                    domainsecboltracker[domain_id] = new DBSecurityTracker(domain);
+                    return domainsecboltracker[domain_id];
+                }
                 return null;
             }
         }

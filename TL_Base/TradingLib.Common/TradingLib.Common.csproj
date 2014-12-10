@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Domain\DomainUtils.cs" />
+    <Compile Include="Manager\UIAccess.cs" />
     <Compile Include="Messages\LogicFront.cs" />
     <Compile Include="ORM\DBHelper.cs" />
     <Compile Include="ORM\MySqlBase.cs" />
@@ -73,7 +74,7 @@
     <Compile Include="Messages\QryMarketData.cs" />
     <Compile Include="Messages\QryTransferSerial.cs" />
     <Compile Include="Other\LogItem.cs" />
-    <Compile Include="Other\PermissionFieldAttr.cs" />
+    <Compile Include="Manager\PermissionFieldAttr.cs" />
     <Compile Include="Trading\PositionAdjust.cs" />
     <Compile Include="Trading\PositionCloseDetailImpl.cs" />
     <Compile Include="Trading\PositionCloseDetailUtil.cs" />
@@ -151,7 +152,7 @@
     <Compile Include="Messages\Version.cs" />
     <Compile Include="Other\ClientInfo.cs" />
     <Compile Include="Other\ContractBank.cs" />
-    <Compile Include="Other\Manager.cs" />
+    <Compile Include="Manager\Manager.cs" />
     <Compile Include="Other\SystemStatus.cs" />
     <Compile Include="Utils\TimeOutSocket.cs" />
     <Compile Include="Utils\XMLRspInfo.cs" />

@@ -10,8 +10,6 @@ namespace TradingLib.Common
 {
     public static partial class DomainUtils
     {
-        
-
         /// <summary>
         /// 返回某个域的所有管理员地址
         /// </summary>

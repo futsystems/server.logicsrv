@@ -28,6 +28,8 @@ namespace TradingLib.Common
         DomainTracker domaintracker;
 
         ConnectorConfigTracker connectorcfgtracker;
+
+        UIAccessTracker uiaccesstracker;
         static BasicTracker()
         {
             defaultinstance = new BasicTracker();
@@ -53,6 +55,7 @@ namespace TradingLib.Common
                 defaultinstance.setracker = null;
                 defaultinstance.symtracker = null;
                 defaultinstance.rgtracker = null;
+                defaultinstance.uiaccesstracker = null;
                 defaultinstance.Dispose();
                 defaultinstance = null;
             }
@@ -183,6 +186,19 @@ namespace TradingLib.Common
                 if (defaultinstance.connectorcfgtracker == null)
                     defaultinstance.connectorcfgtracker = new ConnectorConfigTracker();
                 return defaultinstance.connectorcfgtracker;
+            }
+        }
+
+        /// <summary>
+        /// 获得权限维护器
+        /// </summary>
+        public static UIAccessTracker UIAccessTracker
+        {
+            get
+            {
+                if (defaultinstance.uiaccesstracker == null)
+                    defaultinstance.uiaccesstracker = new UIAccessTracker();
+                return defaultinstance.uiaccesstracker;
             }
         }
         //public static void Release()
