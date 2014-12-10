@@ -40,7 +40,7 @@ namespace FutsMoniter
 
             if (islast)
             {
-                if (!string.IsNullOrEmpty(o.Account))
+                if (o!=null)
                 {
                     ctHistOrder1.GotHistOrder(o);
                 }
@@ -55,7 +55,7 @@ namespace FutsMoniter
         {
             if (islast)
             {
-                if (!string.IsNullOrEmpty(f.Account))
+                if (f!=null)
                 {
                     ctHistTrade1.GotHistFill(f);
                 }

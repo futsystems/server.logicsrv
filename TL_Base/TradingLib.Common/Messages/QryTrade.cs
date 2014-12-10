@@ -108,7 +108,6 @@ namespace TradingLib.Common
         public RspQryTradeResponse()
             : this(null, true)
         {
-        
         }
         public RspQryTradeResponse(Trade trade, bool islast)
         {
