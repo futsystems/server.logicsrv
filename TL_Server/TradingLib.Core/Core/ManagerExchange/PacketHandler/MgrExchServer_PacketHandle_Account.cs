@@ -348,5 +348,48 @@ namespace TradingLib.Core
                 session.OperationError(ex);
             }
         }
+
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountRouterGroup", "UpdateAccountRouterGroup - update account router group", "更新帐户路由组信息")]
+        public void CTE_QryDomain(ISession session,string account,int gid)
+        {
+            try
+            {
+                Manager manager = session.GetManager();
+                if (!manager.RightRootDomain())
+                {
+                    throw new FutsRspError("无权修改帐户路由组设置");
+                }
+
+                IAccount acc = clearcentre[account];
+                if (acc == null)
+                {
+                    throw new FutsRspError("交易帐户不存在");
+                }
+
+                if (!manager.RightAccessAccount(acc))
+                {
+                    throw new FutsRspError("无权修改该交易帐户");
+                }
+
+                RouterGroup rg = manager.Domain.GetRouterGroup(gid);
+                if (rg == null)
+                {
+                    throw new FutsRspError("指定路由组不存在");
+                }
+
+                //更新路由组
+                clearcentre.UpdateRouterGroup(account, rg);
+                session.OperationSuccess("更新帐户路由组成功");
+
+
+
+            }
+            catch (FutsRspError ex)
+            {
+                session.OperationError(ex);
+            }
+        }
+
     }
 }

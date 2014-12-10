@@ -30,7 +30,7 @@ namespace FutsMoniter.Controls.Base
             WireEvent();
             if (Globals.EnvReady)
             {
-                if (!_gotdata)//请求银行列表
+                if (!_gotrglist)
                 {
                     Globals.TLClient.ReqQryRouterGroup();
                 }
@@ -43,18 +43,35 @@ namespace FutsMoniter.Controls.Base
             cbrglist.SelectedIndexChanged += new EventHandler(rglist_SelectedIndexChanged);
         }
 
-        bool _gotdata = false;
+        //bool _gotdata = false;
         void rglist_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (RouterGroupSelectedChangedEvent != null && _gotdata)
+            if (RouterGroupSelectedChangedEvent != null && _gotrglist)
             {
                 RouterGroupSelectedChangedEvent();
             }
         }
 
+        //属性获得和设置
+        [DefaultValue(false)]
+        bool _enableany = false;
+        public bool EnableAny
+        {
+            get
+            {
+                return _enableany;
+            }
+            set
+            {
+                _enableany = value;
+            }
+        }
+
+
         public void OnInit()
         {
             Globals.CallBackCentre.RegisterCallback("ConnectorManager", "QryRouterGroup", this.OnQryRouterGroup);
+            Globals.CallBackCentre.RegisterCallback("ConnectorManager", "NotifyRouterGroup", this.OnNotifyRouterGroup);
         }
 
         public void OnDisposed()
@@ -62,6 +79,7 @@ namespace FutsMoniter.Controls.Base
             Globals.CallBackCentre.UnRegisterCallback("ConnectorManager", "QryRouterGroup", this.OnQryRouterGroup);
         }
 
+        
         public void OnNotifyRouterGroup(string json)
         {
             JsonData jd = TradingLib.Mixins.JsonReply.ParseJsonReplyData(json);
@@ -77,6 +95,9 @@ namespace FutsMoniter.Controls.Base
 
             }
         }
+        public event VoidDelegate RouterGroupInitEvent;
+            
+        bool _gotrglist = false;
         void OnQryRouterGroup(string json)
         {
             JsonData jd = TradingLib.Mixins.JsonReply.ParseJsonReplyData(json);
@@ -84,12 +105,40 @@ namespace FutsMoniter.Controls.Base
             if (code == 0)
             {
                 RouterGroupSetting[] objlist = TradingLib.Mixins.JsonReply.ParsePlayload<RouterGroupSetting[]>(jd);
+                
+                foreach(RouterGroupSetting obj in objlist)
+                {
+                    rgmap[obj.ID] = obj;
+                }
                 this.InvokeGotRouterGroup(objlist);
+                if (!_gotrglist)
+                {
+                    _gotrglist = true;
+                    //对外触发初始化事件
+                    if (RouterGroupInitEvent != null)
+                        RouterGroupInitEvent();
+                }
             }
             else//如果没有配资服
             {
 
             }
+        }
+
+        /// <summary>
+        /// 获得某个路由组对应的名称
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public string GetRrouterGroupName(int id)
+        {
+            Globals.Debug("rg ID....:" + id.ToString());
+            RouterGroupSetting rg= null;
+            if (rgmap.TryGetValue(id, out rg))
+            {
+                return rg.Name;
+            }
+            return "";
         }
         Dictionary<int, RouterGroupSetting> rgmap = new Dictionary<int, RouterGroupSetting>();
         void InvokeGotRouterGroup(RouterGroupSetting[] rglist)
@@ -101,25 +150,54 @@ namespace FutsMoniter.Controls.Base
             else
             {
                 ArrayList list = new ArrayList();
+                if (EnableAny)
+                {
+                    ValueObject<int> vo = new ValueObject<int>();
+                    vo.Name = "<Any>";
+                    vo.Value = 0;
+                    list.Add(vo);
+                }
+
                 foreach (RouterGroupSetting rg in rglist)
                 {
-                    rgmap[rg.ID]=rg;
                     ValueObject<int> vo = new ValueObject<int>
                     {
-                        
                         Name = string.Format("{0}-{1}",rg.Name,rg.ID),
                         Value = rg.ID,
                     };
-                    Globals.Debug("it is here ----------------:"+rg.Name +" rg.id:"+rg.ID.ToString());
+                    //Globals.Debug("it is here ----------------:"+rg.Name +" rg.id:"+rg.ID.ToString());
                     list.Add(vo);
                 }
 
                 Factory.IDataSourceFactory(cbrglist).BindDataSource(list);
-                _gotdata = true;
+                //_gotdata = true;
             }
         }
 
+        public int SelectedIndex
+        {
+            get
+            {
+                return cbrglist.SelectedIndex;
+            }
+        }
         int _rgselected = 0;
+
+        public int SelectedRouterGroupID
+        {
+            get
+            {
+                try
+                {
+                    return int.Parse(cbrglist.SelectedValue.ToString());
+                }
+                catch (Exception ex)
+                {
+                    return 0;
+                }
+            }
+
+        }
         public RouterGroupSetting RouterGroudSelected
         {
            get

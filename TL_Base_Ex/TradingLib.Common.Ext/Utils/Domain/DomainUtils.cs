@@ -192,5 +192,15 @@ namespace TradingLib.Common
             return BasicTracker.RouterGroupTracker.RouterGroups.Where(rg => rg.domain_id == domain.ID);
         }
 
+        /// <summary>
+        /// 查找域下某个路由组
+        /// </summary>
+        /// <param name="domain"></param>
+        /// <param name="rgid"></param>
+        /// <returns></returns>
+        public static RouterGroupImpl GetRouterGroup(this Domain domain, int rgid)
+        {
+            return domain.GetRouterGroups().FirstOrDefault(rg => rg.ID == rgid);
+        }
     }
 }

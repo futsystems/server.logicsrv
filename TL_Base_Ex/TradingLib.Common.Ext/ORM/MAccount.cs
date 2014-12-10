@@ -212,6 +212,21 @@ namespace TradingLib.ORM
                 return db.Connection.Execute(query) >= 0;
             }
         }
+
+        /// <summary>
+        /// 更新路由组信息
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        //public static bool UpdateRouterGroup(string account, int rgid)
+        //{
+        //    using (DBMySql db = new DBMySql())
+        //    {
+        //        string query = String.Format("UPDATE accounts SET rg_fk = '{0}' WHERE account = '{1}'", rgid, account);
+        //        return db.Connection.Execute(query) >= 0;
+        //    }
+        //}
         /// <summary>
         /// 更新帐户的锁仓权限
         /// </summary>

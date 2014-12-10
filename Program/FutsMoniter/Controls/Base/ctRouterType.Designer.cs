@@ -43,21 +43,23 @@
             this.kryptonPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.kryptonPanel1.Location = new System.Drawing.Point(0, 0);
             this.kryptonPanel1.Name = "kryptonPanel1";
-            this.kryptonPanel1.Size = new System.Drawing.Size(156, 27);
+            this.kryptonPanel1.Size = new System.Drawing.Size(156, 21);
             this.kryptonPanel1.TabIndex = 0;
             // 
             // routeType
             // 
+            this.routeType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.routeType.DropDownWidth = 121;
-            this.routeType.Location = new System.Drawing.Point(68, 3);
+            this.routeType.Location = new System.Drawing.Point(70, 0);
             this.routeType.Name = "routeType";
-            this.routeType.Size = new System.Drawing.Size(84, 21);
+            this.routeType.Size = new System.Drawing.Size(86, 21);
             this.routeType.TabIndex = 16;
             this.routeType.Text = "--";
             // 
             // lbroutetype
             // 
-            this.lbroutetype.Location = new System.Drawing.Point(-1, 3);
+            this.lbroutetype.Location = new System.Drawing.Point(0, 3);
             this.lbroutetype.Name = "lbroutetype";
             this.lbroutetype.Size = new System.Drawing.Size(68, 18);
             this.lbroutetype.TabIndex = 15;
@@ -69,7 +71,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.kryptonPanel1);
             this.Name = "ctRouterType";
-            this.Size = new System.Drawing.Size(156, 27);
+            this.Size = new System.Drawing.Size(156, 21);
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).EndInit();
             this.kryptonPanel1.ResumeLayout(false);
             this.kryptonPanel1.PerformLayout();

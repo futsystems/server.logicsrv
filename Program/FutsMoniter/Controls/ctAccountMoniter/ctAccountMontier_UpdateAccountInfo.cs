@@ -151,9 +151,10 @@ namespace FutsMoniter.Controls
             accountgrid.Columns[AGENTMGRFK].Visible = false;
             accountgrid.Columns[CATEGORY].Visible = false;
             accountgrid.Columns[DELETE].Visible = false;
+            accountgrid.Columns[ROUTERGROUP].Visible = false;
 
             accountgrid.Columns[ACCOUNT].Width = 100;
-            accountgrid.Columns[ROUTEIMG].Width = 20;
+            accountgrid.Columns[ROUTEIMG].Width = 30;
             accountgrid.Columns[EXECUTEIMG].Width = 20;
             accountgrid.Columns[PROFITLOSSIMG].Width = 20;
             accountgrid.Columns[LOGINSTATUSIMG].Width = 20;
@@ -353,6 +354,7 @@ namespace FutsMoniter.Controls
                         gt.Rows[i][POSLOK] = account.PosLock ? "有" : "无";
                         gt.Rows[i][DELETE] = account.Deleted;
                         gt.Rows[i][ROUTERGROUP] = account.RG_ID;
+                        gt.Rows[i][ROUTERGROUPSTR] = ctRouterGroupList1.GetRrouterGroupName(account.RG_ID);
 
                         accountmap.TryAdd(account.Account, account);
                         accountrowmap.TryAdd(account.Account, i);
@@ -375,6 +377,10 @@ namespace FutsMoniter.Controls
                         gt.Rows[r][AGENTCODE] = mgr.Login + " - " + mgr.Name;
                         gt.Rows[r][NAME] = account.Name;
                         gt.Rows[r][DELETE] = account.Deleted;
+
+                        gt.Rows[r][ROUTERGROUP] = account.RG_ID;
+                        gt.Rows[r][ROUTERGROUPSTR] = ctRouterGroupList1.GetRrouterGroupName(account.RG_ID);
+
                     }
 
                 }
@@ -484,6 +490,18 @@ namespace FutsMoniter.Controls
         void accountgrid_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
         {
             e.PaintParts = e.PaintParts ^ DataGridViewPaintParts.Focus;
+        }
+
+
+        void ctRouterGroupList1_RouterGroupInitEvent()
+        {
+            int gid=0;
+            for (int i = 0; i < gt.Rows.Count; i++)
+            {
+                int.TryParse(gt.Rows[i][ROUTERGROUP].ToString(),out gid);
+                gt.Rows[i][ROUTERGROUPSTR] = ctRouterGroupList1.GetRrouterGroupName(gid);
+
+            }
         }
 
 

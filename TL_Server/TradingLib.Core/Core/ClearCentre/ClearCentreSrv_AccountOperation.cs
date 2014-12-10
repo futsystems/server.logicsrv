@@ -132,6 +132,21 @@ namespace TradingLib.Core
                 AccountInActiveEvent(id);
             AccountChanged(this[id]);
         }
+
+        /// <summary>
+        /// 更新帐户路由组
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="rg"></param>
+        public void UpdateRouterGroup(string account,RouterGroup rg)
+        {
+            debug("修改帐户路由组为:" + rg.Name,QSEnumDebugLevel.INFO);
+            if (!HaveAccount(account)) return;
+            this[account].RG_FK = rg.ID;
+            ORM.MAccount.UpdateRouterGroup(account, rg.ID);
+            AccountChanged(this[account]);
+            
+        }
         /// <summary>
         /// 交易账户的资金操作
         /// </summary>

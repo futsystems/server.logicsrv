@@ -28,9 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.kryptonSplitContainer1 = new ComponentFactory.Krypton.Toolkit.KryptonSplitContainer();
             this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
+            this.ctRouterGroupList1 = new FutsMoniter.Controls.Base.ctRouterGroupList();
             this.ctRouterType1 = new FutsMoniter.Controls.Base.ctRouterType();
             this.ctAccountType1 = new FutsMoniter.Controls.Base.ctAccountType();
             this.lbCurrentAccount = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
@@ -117,6 +118,7 @@
             // 
             // kryptonPanel1
             // 
+            this.kryptonPanel1.Controls.Add(this.ctRouterGroupList1);
             this.kryptonPanel1.Controls.Add(this.ctRouterType1);
             this.kryptonPanel1.Controls.Add(this.ctAccountType1);
             this.kryptonPanel1.Controls.Add(this.lbCurrentAccount);
@@ -137,20 +139,31 @@
             this.kryptonPanel1.Size = new System.Drawing.Size(1380, 28);
             this.kryptonPanel1.TabIndex = 31;
             // 
+            // ctRouterGroupList1
+            // 
+            this.ctRouterGroupList1.EnableAny = true;
+            this.ctRouterGroupList1.Location = new System.Drawing.Point(990, 2);
+            this.ctRouterGroupList1.Name = "ctRouterGroupList1";
+            this.ctRouterGroupList1.RouterGroudSelected = null;
+            this.ctRouterGroupList1.Size = new System.Drawing.Size(140, 21);
+            this.ctRouterGroupList1.TabIndex = 18;
+            // 
             // ctRouterType1
             // 
             this.ctRouterType1.EnableAny = true;
-            this.ctRouterType1.Location = new System.Drawing.Point(712, 1);
+            this.ctRouterType1.Location = new System.Drawing.Point(680, 2);
             this.ctRouterType1.Name = "ctRouterType1";
             this.ctRouterType1.Size = new System.Drawing.Size(156, 25);
             this.ctRouterType1.TabIndex = 17;
             // 
             // ctAccountType1
             // 
+            this.ctAccountType1.AccountType = TradingLib.API.QSEnumAccountCategory.SIMULATION;
             this.ctAccountType1.EnableAny = true;
-            this.ctAccountType1.Location = new System.Drawing.Point(874, 0);
+            this.ctAccountType1.Location = new System.Drawing.Point(842, 2);
             this.ctAccountType1.Name = "ctAccountType1";
-            this.ctAccountType1.Size = new System.Drawing.Size(179, 26);
+            this.ctAccountType1.Size = new System.Drawing.Size(142, 20);
+            this.ctAccountType1.SmallSpace = false;
             this.ctAccountType1.TabIndex = 16;
             // 
             // lbCurrentAccount
@@ -176,15 +189,15 @@
             // btnAddAccount
             // 
             this.btnAddAccount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAddAccount.Location = new System.Drawing.Point(1114, 2);
+            this.btnAddAccount.Location = new System.Drawing.Point(1136, 2);
             this.btnAddAccount.Name = "btnAddAccount";
-            this.btnAddAccount.Size = new System.Drawing.Size(90, 25);
+            this.btnAddAccount.Size = new System.Drawing.Size(68, 25);
             this.btnAddAccount.TabIndex = 13;
             this.btnAddAccount.Values.Text = "添加帐户";
             // 
             // num
             // 
-            this.num.Location = new System.Drawing.Point(687, 4);
+            this.num.Location = new System.Drawing.Point(632, 4);
             this.num.Name = "num";
             this.num.Size = new System.Drawing.Size(19, 18);
             this.num.TabIndex = 10;
@@ -192,7 +205,7 @@
             // 
             // kryptonLabel4
             // 
-            this.kryptonLabel4.Location = new System.Drawing.Point(622, 4);
+            this.kryptonLabel4.Location = new System.Drawing.Point(567, 4);
             this.kryptonLabel4.Name = "kryptonLabel4";
             this.kryptonLabel4.Size = new System.Drawing.Size(68, 18);
             this.kryptonLabel4.TabIndex = 9;
@@ -201,7 +214,7 @@
             // acchodpos
             // 
             this.acchodpos.LabelStyle = ComponentFactory.Krypton.Toolkit.LabelStyle.NormalControl;
-            this.acchodpos.Location = new System.Drawing.Point(565, 4);
+            this.acchodpos.Location = new System.Drawing.Point(510, 4);
             this.acchodpos.Name = "acchodpos";
             this.acchodpos.Size = new System.Drawing.Size(51, 18);
             this.acchodpos.TabIndex = 8;
@@ -211,7 +224,7 @@
             // accLogin
             // 
             this.accLogin.LabelStyle = ComponentFactory.Krypton.Toolkit.LabelStyle.NormalControl;
-            this.accLogin.Location = new System.Drawing.Point(508, 4);
+            this.accLogin.Location = new System.Drawing.Point(453, 4);
             this.accLogin.Name = "accLogin";
             this.accLogin.Size = new System.Drawing.Size(51, 18);
             this.accLogin.TabIndex = 7;
@@ -220,14 +233,14 @@
             // 
             // acct
             // 
-            this.acct.Location = new System.Drawing.Point(401, 2);
+            this.acct.Location = new System.Drawing.Point(346, 2);
             this.acct.Name = "acct";
             this.acct.Size = new System.Drawing.Size(100, 21);
             this.acct.TabIndex = 6;
             // 
             // kryptonLabel3
             // 
-            this.kryptonLabel3.Location = new System.Drawing.Point(364, 4);
+            this.kryptonLabel3.Location = new System.Drawing.Point(309, 4);
             this.kryptonLabel3.Name = "kryptonLabel3";
             this.kryptonLabel3.Size = new System.Drawing.Size(41, 18);
             this.kryptonLabel3.TabIndex = 5;
@@ -239,7 +252,7 @@
             this.ctAgentList1.EnableDefaultBaseMGR = true;
             this.ctAgentList1.EnableSelected = true;
             this.ctAgentList1.EnableSelf = true;
-            this.ctAgentList1.Location = new System.Drawing.Point(178, 0);
+            this.ctAgentList1.Location = new System.Drawing.Point(123, 0);
             this.ctAgentList1.Name = "ctAgentList1";
             this.ctAgentList1.Size = new System.Drawing.Size(181, 26);
             this.ctAgentList1.TabIndex = 4;
@@ -249,7 +262,7 @@
             this.accexecute.DropDownWidth = 121;
             this.accexecute.Location = new System.Drawing.Point(51, 2);
             this.accexecute.Name = "accexecute";
-            this.accexecute.Size = new System.Drawing.Size(121, 21);
+            this.accexecute.Size = new System.Drawing.Size(70, 21);
             this.accexecute.TabIndex = 3;
             this.accexecute.Text = "--";
             // 
@@ -266,8 +279,8 @@
             this.accountgrid.AllowUserToAddRows = false;
             this.accountgrid.AllowUserToDeleteRows = false;
             this.accountgrid.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.accountgrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.accountgrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle2;
             this.accountgrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
@@ -581,6 +594,7 @@
         private ctFinanceInfo ctFinanceInfo1;
         private Base.ctAccountType ctAccountType1;
         private Base.ctRouterType ctRouterType1;
+        private Base.ctRouterGroupList ctRouterGroupList1;
 
         //private Telerik.WinControls.UI.RadPageViewPage LottoServicePage;
 

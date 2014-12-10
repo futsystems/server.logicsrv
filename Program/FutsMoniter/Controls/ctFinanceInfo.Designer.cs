@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
+            this.btnSubmit = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.account = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel5 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.marginfrozen = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
@@ -51,7 +52,6 @@
             this.kryptonLabel3 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel2 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel1 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.btnSubmit = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             this.SuspendLayout();
@@ -87,6 +87,15 @@
             this.kryptonPanel1.Size = new System.Drawing.Size(398, 227);
             this.kryptonPanel1.TabIndex = 0;
             // 
+            // btnSubmit
+            // 
+            this.btnSubmit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSubmit.Location = new System.Drawing.Point(311, 189);
+            this.btnSubmit.Name = "btnSubmit";
+            this.btnSubmit.Size = new System.Drawing.Size(68, 25);
+            this.btnSubmit.TabIndex = 22;
+            this.btnSubmit.Values.Text = "刷 新";
+            // 
             // account
             // 
             this.account.Location = new System.Drawing.Point(91, 7);
@@ -106,7 +115,6 @@
             // 
             // marginfrozen
             // 
-            this.marginfrozen.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.marginfrozen.Location = new System.Drawing.Point(289, 157);
             this.marginfrozen.Name = "marginfrozen";
             this.marginfrozen.Size = new System.Drawing.Size(19, 18);
@@ -115,7 +123,6 @@
             // 
             // nowequity
             // 
-            this.nowequity.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.nowequity.Location = new System.Drawing.Point(289, 133);
             this.nowequity.Name = "nowequity";
             this.nowequity.Size = new System.Drawing.Size(19, 18);
@@ -124,7 +131,6 @@
             // 
             // cashout
             // 
-            this.cashout.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.cashout.Location = new System.Drawing.Point(289, 109);
             this.cashout.Name = "cashout";
             this.cashout.Size = new System.Drawing.Size(19, 18);
@@ -133,7 +139,6 @@
             // 
             // netprofit
             // 
-            this.netprofit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.netprofit.Location = new System.Drawing.Point(289, 85);
             this.netprofit.Name = "netprofit";
             this.netprofit.Size = new System.Drawing.Size(19, 18);
@@ -142,7 +147,6 @@
             // 
             // unrealizedpl
             // 
-            this.unrealizedpl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.unrealizedpl.Location = new System.Drawing.Point(289, 61);
             this.unrealizedpl.Name = "unrealizedpl";
             this.unrealizedpl.Size = new System.Drawing.Size(19, 18);
@@ -167,7 +171,6 @@
             // 
             // kryptonLabel13
             // 
-            this.kryptonLabel13.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.kryptonLabel13.Location = new System.Drawing.Point(201, 157);
             this.kryptonLabel13.Name = "kryptonLabel13";
             this.kryptonLabel13.Size = new System.Drawing.Size(82, 18);
@@ -176,7 +179,6 @@
             // 
             // kryptonLabel12
             // 
-            this.kryptonLabel12.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.kryptonLabel12.Location = new System.Drawing.Point(215, 133);
             this.kryptonLabel12.Name = "kryptonLabel12";
             this.kryptonLabel12.Size = new System.Drawing.Size(68, 18);
@@ -185,7 +187,6 @@
             // 
             // kryptonLabel11
             // 
-            this.kryptonLabel11.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.kryptonLabel11.Location = new System.Drawing.Point(242, 109);
             this.kryptonLabel11.Name = "kryptonLabel11";
             this.kryptonLabel11.Size = new System.Drawing.Size(41, 18);
@@ -194,7 +195,6 @@
             // 
             // kryptonLabel10
             // 
-            this.kryptonLabel10.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.kryptonLabel10.Location = new System.Drawing.Point(228, 85);
             this.kryptonLabel10.Name = "kryptonLabel10";
             this.kryptonLabel10.Size = new System.Drawing.Size(55, 18);
@@ -203,7 +203,6 @@
             // 
             // kryptonLabel9
             // 
-            this.kryptonLabel9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.kryptonLabel9.Location = new System.Drawing.Point(215, 61);
             this.kryptonLabel9.Name = "kryptonLabel9";
             this.kryptonLabel9.Size = new System.Drawing.Size(68, 18);
@@ -273,15 +272,6 @@
             this.kryptonLabel1.Size = new System.Drawing.Size(68, 18);
             this.kryptonLabel1.TabIndex = 0;
             this.kryptonLabel1.Values.Text = "昨日权益:";
-            // 
-            // btnSubmit
-            // 
-            this.btnSubmit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSubmit.Location = new System.Drawing.Point(311, 189);
-            this.btnSubmit.Name = "btnSubmit";
-            this.btnSubmit.Size = new System.Drawing.Size(68, 25);
-            this.btnSubmit.TabIndex = 22;
-            this.btnSubmit.Values.Text = "刷 新";
             // 
             // ctFinanceInfo
             // 

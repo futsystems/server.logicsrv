@@ -84,7 +84,10 @@ namespace FutsMoniter.Controls
         {
             RefreshAccountQuery();
         }
-
+        void ctRouterGroupList1_RouterGroupSelectedChangedEvent()
+        {
+            RefreshAccountQuery();
+        }
 
         /// <summary>
         /// 刷新帐户筛选结果
@@ -133,6 +136,11 @@ namespace FutsMoniter.Controls
                 }
             }
 
+            //路由组筛选
+            if (ctRouterGroupList1.SelectedIndex != 0)
+            {
+                strFilter = string.Format(strFilter + " and " + ROUTERGROUP + " = '{0}'", ctRouterGroupList1.SelectedRouterGroupID);
+            }
 
             if (accLogin.Checked)
             {

@@ -16,5 +16,15 @@ namespace TradingLib.Common
         {
             this.ReqContribRequest("MgrExchServer", "QryAccountInfo", account);
         }
+
+        /// <summary>
+        /// 修改交易帐户路由组
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="rgid"></param>
+        public void ReqUpdateRouterGroup(string account,int rgid)
+        {
+            this.ReqContribRequest("MgrExchServer", "UpdateAccountRouterGroup", account+","+rgid.ToString());
+        }
     }
 }

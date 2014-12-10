@@ -217,6 +217,12 @@
     <Compile Include="Controls\ctFinService.Designer.cs">
       <DependentUpon>ctFinService.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Account\fmChangeRouter.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Account\fmChangeRouter.Designer.cs">
+      <DependentUpon>fmChangeRouter.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\DebugForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -690,6 +696,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\ctFinService.resx">
       <DependentUpon>ctFinService.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Account\fmChangeRouter.resx">
+      <DependentUpon>fmChangeRouter.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DebugForm.resx">
       <DependentUpon>DebugForm.cs</DependentUpon>
