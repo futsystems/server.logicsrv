@@ -66,7 +66,7 @@
     <Compile Include="Tracker\BrokerTracker.cs" />
     <Compile Include="Tracker\OrderSplitTracker.cs" />
     <Compile Include="Trading\CommissionConfigImpl.cs" />
-    <Compile Include="Trading\OrderError.cs" />
+    <Compile Include="Trading\ErrorPack.cs" />
     <Compile Include="JsonObject\JsonObjectBase.cs" />
     <Compile Include="JsonObject\JsonProtocolManager.cs" />
     <Compile Include="Messages\Manager\MGRInsertTrade.cs" />

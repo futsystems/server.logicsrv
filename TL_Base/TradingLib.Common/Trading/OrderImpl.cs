@@ -116,12 +116,7 @@ namespace TradingLib.Common
 
             set
             {
-                //关于comment的赋值逻辑
-                //1.判断设定的value是否是空或者空格
-                if (string.IsNullOrWhiteSpace(value)) return;
-                //2.判断comment有效长度
-                if (value.Length <= 2) return;
-                //3.替换comment中出现的协议保留字段, | ^(|分割请求编号 ^ 分割内容 islast rspinfo ,分割具体的内容)
+                //替换comment中出现的协议保留字段, | ^(|分割请求编号 ^ 分割内容 islast rspinfo ,分割具体的内容)
                 string tmp = value.Replace(",", " ").Replace("|", " ").Replace("^", " ");//替换特殊符号 , ^ |
                 _comment = tmp;
 
@@ -185,7 +180,7 @@ namespace TradingLib.Common
         /// <param name="copythis"></param>
         public OrderImpl(Order copythis)
         {
-            Util.Debug("Order Copyed:" + copythis.GetOrderInfo(), QSEnumDebugLevel.WARNING);
+            //Util.Debug("Order Copyed:" + copythis.GetOrderInfo(), QSEnumDebugLevel.WARNING);
             this.id = copythis.id;
             this.Account = copythis.Account;
             this.Date = copythis.Date;

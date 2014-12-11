@@ -60,6 +60,7 @@ namespace TradingLib.Common
             debug(string.Format("got order error:{0} message:{1} order:{2}", response.RspInfo.ErrorID, response.RspInfo.ErrorMessage, OrderImpl.Serialize(response.Order)));
 
             this.handler.PopRspInfo(response.RspInfo);
+            this.handler.OnOrder(response.Order);
         }
 
 

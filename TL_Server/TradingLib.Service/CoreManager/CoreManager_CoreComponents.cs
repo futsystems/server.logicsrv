@@ -43,7 +43,7 @@ namespace TradingLib.ServiceManager
             _clearCentre = new ClearCentre();
 
             //tradingserver得到成交后发送给clearcentre处理，计算完手续费后再通过tradingserver回报给客户端
-            _clearCentre.GotCommissionFill += new FillDelegate(_messageExchagne.newCommissionFill);
+            //_clearCentre.GotCommissionFill += new FillDelegate(_messageExchagne.newCommissionFill);
 
             //将清算中心传递给tradingserver
             _messageExchagne.ClearCentre = _clearCentre;
@@ -55,7 +55,7 @@ namespace TradingLib.ServiceManager
         private void DestoryClearCentre()
         {
             //tradingserver得到成交后发送给clearcentre处理，计算完手续费后再通过tradingserver回报给客户端
-            _clearCentre.GotCommissionFill -= new FillDelegate(_messageExchagne.newCommissionFill);
+            //_clearCentre.GotCommissionFill -= new FillDelegate(_messageExchagne.newCommissionFill);
             //_messageExchagne.ClearCentre = null;
             _clearCentre.Dispose();
         }
@@ -74,12 +74,9 @@ namespace TradingLib.ServiceManager
             //2.清算中心激活某个账户 调用风控中心重置该账户规则 解决账户检查规则触发后,状态没复位,账户激活后规则失效的问题
             _clearCentre.AccountActiveEvent += new AccountIdDel(_riskCentre.ResetRuleSet);
 
-            //4.风控中心记录客户端的登入 登出情况
-            //_messageExchagne.SendLoginInfoEvent += new LoginInfoDel(_riskCentre.GotLoginInfo);
-
             //交易服务回报风控中心
             _messageExchagne.GotTickEvent += new TickDelegate(_riskCentre.GotTick);
-            _messageExchagne.GotCancelEvent += new LongDelegate(_riskCentre.GotCancel);
+            _messageExchagne.GotOrderEvent +=new OrderDelegate(_riskCentre.GotOrder);
             _messageExchagne.GotOrderErrorEvent += new OrderErrorDelegate(_riskCentre.GotOrderError);
             
             //风控中心从tradingsrv获得委托编号 提交委托 取消委托的操作
@@ -101,7 +98,7 @@ namespace TradingLib.ServiceManager
 
             //交易服务行情驱动风控中心
             _messageExchagne.GotTickEvent -= new TickDelegate(_riskCentre.GotTick);
-            _messageExchagne.GotCancelEvent -= new LongDelegate(_riskCentre.GotCancel);
+            _messageExchagne.GotOrderEvent -= new OrderDelegate(_riskCentre.GotOrder);
             _messageExchagne.GotOrderErrorEvent -= new OrderErrorDelegate(_riskCentre.GotOrderError);
 
             //风控中心从tradingsrv获得委托编号 提交委托 取消委托的操作

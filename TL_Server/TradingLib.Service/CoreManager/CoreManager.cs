@@ -217,10 +217,10 @@ namespace TradingLib.ServiceManager
             //获得底层委托回报
             _messageExchagne.GotOrderEvent += new OrderDelegate(TLCtxHelper.EventIndicator.FireOrderEvent);
             //获得底层成交回报 //系统内的成交回报是清算中心处理过手续费的成交
-            _clearCentre.GotCommissionFill += new FillDelegate(TLCtxHelper.EventIndicator.FireFillEvent);
-            //_messageExchagne.GotFillEvent += new FillDelegate(TLCtxHelper.EventIndicator.FireFillEvent);
+            //_clearCentre.GotCommissionFill += new FillDelegate(TLCtxHelper.EventIndicator.FireFillEvent);
+            _messageExchagne.GotFillEvent += new FillDelegate(TLCtxHelper.EventIndicator.FireFillEvent);
             //获得底层取消委托回报
-            _messageExchagne.GotCancelEvent += new LongDelegate(TLCtxHelper.EventIndicator.FireCancelEvent);
+            //_messageExchagne.GotCancelEvent += new LongDelegate(TLCtxHelper.EventIndicator.FireCancelEvent);
             //获得底层持仓回合回报
             _clearCentre.PositionRoundClosedEvent += new PositionRoundClosedDel(TLCtxHelper.EventIndicator.FirePositionRoundClosed);
 

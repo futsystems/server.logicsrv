@@ -74,7 +74,7 @@ namespace TradingLib.Core
         /// <summary>
         /// 对外触发带手续费的成交回报
         /// </summary>
-        public event FillDelegate GotCommissionFill;
+        //public event FillDelegate GotCommissionFill;
 
         #endregion
 

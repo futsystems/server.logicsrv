@@ -33,7 +33,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static IEnumerable<Symbol> GetSymbols(this IAccount account)
         {
-            return account.Domain.GetSymbols();
+            return account.Domain.GetSymbols().Where(sym=>sym.IsTradeable);
         }
 
         public static IEnumerable<Instrument> GetInstruments(this IAccount account)

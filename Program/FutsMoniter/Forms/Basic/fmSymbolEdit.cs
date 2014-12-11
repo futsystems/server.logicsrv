@@ -113,6 +113,7 @@ namespace FutsMoniter
                 _symbol.MaintanceMargin = maintancemargin.Value;
                 _symbol.Tradeable = tradeable.Checked;
                 _symbol.ExpireDate = Util.ToTLDate(this.expiredate.Value);
+                MessageBox.Show("it is here");
                 Globals.TLClient.ReqUpdateSymbol(_symbol);
             }
             else

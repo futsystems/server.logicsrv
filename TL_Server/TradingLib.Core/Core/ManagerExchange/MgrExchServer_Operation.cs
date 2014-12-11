@@ -70,7 +70,6 @@ namespace TradingLib.Core
 
         public void newOrder(Order o)
         {
-            //debug("got order ,and write it into cache.....", QSEnumDebugLevel.INFO);
             _ocache.Write(o);
         }
 

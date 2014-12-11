@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
+            this.picbox = new System.Windows.Forms.PictureBox();
             this.title = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.message = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.picbox = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picbox)).BeginInit();
@@ -47,6 +47,15 @@
             this.kryptonPanel1.Name = "kryptonPanel1";
             this.kryptonPanel1.Size = new System.Drawing.Size(244, 87);
             this.kryptonPanel1.TabIndex = 0;
+            // 
+            // picbox
+            // 
+            this.picbox.BackColor = System.Drawing.Color.Transparent;
+            this.picbox.Location = new System.Drawing.Point(31, 12);
+            this.picbox.Name = "picbox";
+            this.picbox.Size = new System.Drawing.Size(24, 24);
+            this.picbox.TabIndex = 3;
+            this.picbox.TabStop = false;
             // 
             // title
             // 
@@ -65,15 +74,6 @@
             this.message.TabIndex = 2;
             this.message.Values.Text = "message";
             // 
-            // picbox
-            // 
-            this.picbox.BackColor = System.Drawing.Color.Transparent;
-            this.picbox.Location = new System.Drawing.Point(31, 12);
-            this.picbox.Name = "picbox";
-            this.picbox.Size = new System.Drawing.Size(24, 24);
-            this.picbox.TabIndex = 3;
-            this.picbox.TabStop = false;
-            // 
             // fmPopMessage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -85,6 +85,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "fmPopMessage";
+            this.TopMost = true;
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).EndInit();
             this.kryptonPanel1.ResumeLayout(false);
             this.kryptonPanel1.PerformLayout();
