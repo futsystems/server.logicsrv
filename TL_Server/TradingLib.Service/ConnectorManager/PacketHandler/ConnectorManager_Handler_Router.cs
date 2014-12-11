@@ -9,13 +9,6 @@ using TradingLib.LitJson;
 
 namespace TradingLib.ServiceManager
 {
-    internal enum QSEnumConnectorOperation
-    { 
-        Start,//启动
-
-        Stop,//停止
-    }
-    internal delegate void AsyncConnectorOperationDel(ISession session, ConnectorConfig cfg, QSEnumConnectorOperation op);
 
     public partial class ConnectorManager
     {

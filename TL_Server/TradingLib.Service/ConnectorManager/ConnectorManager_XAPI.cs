@@ -80,9 +80,9 @@ namespace TradingLib.ServiceManager
         /// <returns></returns>
         TLBrokerBase CreateBroker(ConnectorConfig cfg)
         {
-            if ((cfg.Interface == null) || (!cfg.Interface.IsValid) || (cfg.Interface.Type == QSEnumConnectorType.DataFeed))
+            if (!cfg.IsValid || (cfg.Interface.Type == QSEnumConnectorType.DataFeed))
             { 
-                Util.Debug(string.Format("Broker Config[{0}] is not valid,can not load that",cfg.Token),QSEnumDebugLevel.WARNING);
+                debug(string.Format("Broker Config[{0}] is not valid,can not load that",cfg.Token),QSEnumDebugLevel.WARNING);
                 return null;
             }
             Type t = xapibrokermodule[cfg.Interface.type_name];
@@ -90,11 +90,16 @@ namespace TradingLib.ServiceManager
             return broker;
         }
 
+        /// <summary>
+        /// 从某个接口配置文件创建DataFeed
+        /// </summary>
+        /// <param name="cfg"></param>
+        /// <returns></returns>
         TLDataFeedBase CreateDataFeed(ConnectorConfig cfg)
         {
-            if ((cfg.Interface == null) || (!cfg.Interface.IsValid) || (cfg.Interface.Type == QSEnumConnectorType.Broker))
+            if (!cfg.IsValid || (cfg.Interface.Type == QSEnumConnectorType.Broker))
             {
-                Util.Debug(string.Format("DataFeed Config[{0}] is not valid,can not load that", cfg.Token), QSEnumDebugLevel.WARNING);
+                debug(string.Format("DataFeed Config[{0}] is not valid,can not load that", cfg.Token), QSEnumDebugLevel.WARNING);
                 return null;
             }
             Type t = xapidatafeedmodule[cfg.Interface.type_name];
@@ -102,10 +107,6 @@ namespace TradingLib.ServiceManager
             return datafeed;
         }
 
-        //void BindConnectorWithVendor(ConnectorConfig cfg)
-        //{ 
-            
-        //}
         /// <summary>
         /// 从ConnectorConfig加载Broker通道
         /// </summary>
@@ -124,14 +125,14 @@ namespace TradingLib.ServiceManager
             //设定brokerconfg
             broker.SetBrokerConfig(cfg);
 
-            //3.转换成Broker 注接口验证时已经保证了 broker对应的interface类型是实现IBroker接口的
+            //3.转换成Broker 注接口验证时已经保证了 broker对应的interface类型是实现IBroker接口的 这里需要检查是否重复加载
             IBroker brokerinterface = broker as IBroker;
             brokerInstList.Add(cfg.Token, brokerinterface);
 
             //4.绑定Broker
-            Vendor vendor = BasicTracker.VendorTracker[broker.VendorID];//获得该通道设定的VendorID
+            VendorImpl vendor = BasicTracker.VendorTracker[broker.VendorID];//获得该通道设定的VendorID
             if (vendor != null)
-                (vendor as VendorImpl).BindBroker(brokerinterface);
+                vendor.BindBroker(brokerinterface);
 
             //5.绑定状态事件
             broker.Connected += (string b) =>
@@ -149,6 +150,7 @@ namespace TradingLib.ServiceManager
             //6.将broker的交易类事件绑定到路由内 然后通过路由转发到交易消息服务
             _brokerrouter.LoadBroker(brokerinterface);
         }
+
         /// <summary>
         /// 加载BrokerXAPI底层成交接口
         /// </summary>

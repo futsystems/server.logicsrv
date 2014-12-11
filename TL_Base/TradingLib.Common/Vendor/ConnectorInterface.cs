@@ -49,6 +49,7 @@ namespace TradingLib.Common
 
         /// <summary>
         /// 是否有效
+        /// 加载时验证接口后进行设置
         /// </summary>
         public bool IsValid { get; set; }
 
