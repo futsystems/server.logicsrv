@@ -179,11 +179,8 @@ namespace FutsMoniter
 
         void kryptonRibbonGroupButton_AgentManagement_Click(object sender, EventArgs e)
         {
-            if (mgrform == null)
-            {
-                mgrform = new fmManagerCentre();
-            }
-            mgrform.Show();
+            fmManagerCentre fm = new fmManagerCentre();
+            fm.Show();
         }
 
         #endregion

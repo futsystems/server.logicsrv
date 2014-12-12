@@ -68,6 +68,8 @@ namespace TradingLib.API
         IEnumerable<MarketTime> MarketTimes { get; }
 
         IEnumerable<Exchange> Exchanges { get; }
+
+        IEnumerable<Manager> Managers { get; }
         /// <summary>
         /// 获得所有可交易合约
         /// </summary>

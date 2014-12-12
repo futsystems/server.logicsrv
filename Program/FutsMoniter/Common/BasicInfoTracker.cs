@@ -403,6 +403,8 @@ namespace TradingLib.Common
             }
         
         }
+
+        public IEnumerable<Manager> Managers { get { return managermap.Values; } }
         public SymbolImpl[] Symbols
         {
             get

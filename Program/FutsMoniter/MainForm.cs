@@ -30,7 +30,7 @@ namespace FutsMoniter
         fmHistQuery histqryform;
         BasicInfoTracker basicinfotracker;
 
-        fmManagerCentre mgrform;
+        //fmManagerCentre mgrform;
         fmAgentProfitReport agentprofitreportform;
 
         //结算单查询窗口
@@ -68,9 +68,6 @@ namespace FutsMoniter
             //设定对外消息显示输出
             ShowInfoHandler = showinfo;
 
-
-            ///ThemeResolutionService.ApplicationThemeName = Globals.Config["ThemeName"].AsString();
-
             if (Globals.Config["HeaderImg"].AsString().Equals("OEM"))
             {
                 this.Icon = Properties.Resources.moniter_oem;
@@ -95,7 +92,7 @@ namespace FutsMoniter
 
         void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            //e.Cancel = true;
+            e.Cancel = true;
         }
 
 
@@ -116,12 +113,7 @@ namespace FutsMoniter
             Globals.RegisterBasicInfoTracker(basicinfotracker);
 
             histqryform = new fmHistQuery();
-
-            mgrform = new fmManagerCentre();
-
             agentprofitreportform = new fmAgentProfitReport();
-
-            basicinfotracker.GotManagerEvent += new ManagerDel(mgrform.GotManager);
 
             Globals.SendDebugEvent += new DebugDelegate(debug);
 

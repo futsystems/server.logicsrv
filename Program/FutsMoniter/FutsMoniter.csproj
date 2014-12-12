@@ -624,9 +624,6 @@
     <Compile Include="MainForm_.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainForm_BasicInfo.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="MainForm_Client.cs">
       <SubType>Form</SubType>
     </Compile>

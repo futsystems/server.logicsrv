@@ -86,8 +86,8 @@ namespace FutsMoniter
                             InitSymbol2View();
 
                             //触发初始化完成事件
+                            ShowInfo("初始化延迟加载组件");
                             Globals.OnInitFinished();
-
                             //设定全局登入状态 显示主界面
                             Globals.LoginStatus.IsInitSuccess = true;
 

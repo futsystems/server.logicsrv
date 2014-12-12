@@ -12,7 +12,7 @@ using FutSystems.GUI;
 
 namespace FutsMoniter
 {
-    public partial class fmManagerCentre : ComponentFactory.Krypton.Toolkit.KryptonForm
+    public partial class fmManagerCentre : ComponentFactory.Krypton.Toolkit.KryptonForm,IEventBinder
     {
         public fmManagerCentre()
         {
@@ -22,15 +22,33 @@ namespace FutsMoniter
             BindToTable();
 
 
-            mgrgrid.ContextMenuStrip = new System.Windows.Forms.ContextMenuStrip();
-            mgrgrid.ContextMenuStrip.Items.Add("编辑", null, new EventHandler(EditManager_Click));
-            mgrgrid.ContextMenuStrip.Items.Add("添加", null, new EventHandler(AddManager_Click));
+            
 
-            this.FormClosing += new FormClosingEventHandler(fmManagerCentre_FormClosing);
-            this.mgrgrid.RowPrePaint += new DataGridViewRowPrePaintEventHandler(mgrgrid_RowPrePaint);
+            this.Load += new EventHandler(fmManagerCentre_Load);
+            
 
         }
 
+        void fmManagerCentre_Load(object sender, EventArgs e)
+        {
+            Globals.RegIEventHandler(this);
+            this.FormClosing += new FormClosingEventHandler(fmManagerCentre_FormClosing);
+            this.mgrgrid.RowPrePaint += new DataGridViewRowPrePaintEventHandler(mgrgrid_RowPrePaint);
+            foreach (Manager m in Globals.BasicInfoTracker.Managers)
+            {
+                this.GotManager(m);
+            }
+        }
+
+        public void OnInit()
+        {
+            Globals.BasicInfoTracker.GotManagerEvent += new ManagerDel(GotManager);
+        }
+
+        public void OnDisposed()
+        {
+            Globals.BasicInfoTracker.GotManagerEvent -= new ManagerDel(GotManager);
+        }
         void mgrgrid_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
         {
             e.PaintParts = e.PaintParts ^ DataGridViewPaintParts.Focus;
@@ -130,6 +148,12 @@ namespace FutsMoniter
             grid.StateCommon.Background.Color1 = Color.WhiteSmoke;
             grid.StateCommon.Background.Color2 = Color.WhiteSmoke;
 
+
+            grid.ContextMenuStrip = new System.Windows.Forms.ContextMenuStrip();
+
+            grid.ContextMenuStrip.Items.Add("添加", null, new EventHandler(AddManager_Click));
+            grid.ContextMenuStrip.Items.Add("编辑", null, new EventHandler(EditManager_Click));
+
         }
 
         //初始化Account显示空格
@@ -170,7 +194,6 @@ namespace FutsMoniter
         }
 
         Dictionary<int, int> mgridmap = new Dictionary<int, int>();
-        //Dictionary<int, Exchange> exchangemap = new Dictionary<int, Exchange>();
 
         int MangerIdx(int id)
         {
