@@ -498,16 +498,6 @@ namespace TradingLib.Common
         #endregion
 
 
-        #region 系统状态
-
-        public void ReqQrySystemStatus()
-        {
-            MGRQrySystemStatusRequest request = RequestTemplate<MGRQrySystemStatusRequest>.CliSendRequest(requestid++);
-
-            SendPacket(request);
-        }
-        #endregion
-
 
 
         #region 历史记录查询

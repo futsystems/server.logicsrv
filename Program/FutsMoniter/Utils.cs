@@ -7,6 +7,7 @@ using TradingLib.API;
 using TradingLib.Common;
 using FutSystems.GUI;
 using Microsoft.Win32;
+using TradingLib.Mixins.LitJson;
 
 namespace FutsMoniter
 {
@@ -14,6 +15,21 @@ namespace FutsMoniter
 
     public class MoniterUtil
     {
+        public static T ParseJsonResponse<T>(string json)
+        {
+            JsonData jd = TradingLib.Mixins.JsonReply.ParseJsonReplyData(json);
+            int code = int.Parse(jd["Code"].ToString());
+            if (code == 0)
+            {
+                T obj= TradingLib.Mixins.JsonReply.ParsePlayload<T>(jd);
+                return obj;
+            }
+            else
+            {
+                return default(T);
+            }
+        }
+
 
         public static ArrayList GetRouterTypeCombList(bool any = false)
         {

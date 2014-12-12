@@ -29,6 +29,10 @@
         private void InitializeComponent()
         {
             this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
+            this.btnSubmit = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.symbolset = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
+            this.kryptonGroupBox1 = new ComponentFactory.Krypton.Toolkit.KryptonGroupBox();
+            this.description = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
             this.argvalue = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
             this.comparetype = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
             this.rulecheckargname = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
@@ -38,16 +42,12 @@
             this.kryptonLabel3 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel2 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel1 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.kryptonGroupBox1 = new ComponentFactory.Krypton.Toolkit.KryptonGroupBox();
-            this.symbolset = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
-            this.btnSubmit = new ComponentFactory.Krypton.Toolkit.KryptonButton();
-            this.description = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.comparetype)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonGroupBox1)).BeginInit();
             this.kryptonGroupBox1.Panel.SuspendLayout();
             this.kryptonGroupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.comparetype)).BeginInit();
             this.SuspendLayout();
             // 
             // kryptonPanel1
@@ -69,6 +69,46 @@
             this.kryptonPanel1.Name = "kryptonPanel1";
             this.kryptonPanel1.Size = new System.Drawing.Size(280, 359);
             this.kryptonPanel1.TabIndex = 0;
+            // 
+            // btnSubmit
+            // 
+            this.btnSubmit.Location = new System.Drawing.Point(198, 219);
+            this.btnSubmit.Name = "btnSubmit";
+            this.btnSubmit.Size = new System.Drawing.Size(70, 25);
+            this.btnSubmit.TabIndex = 11;
+            this.btnSubmit.Values.Text = "提 交";
+            // 
+            // symbolset
+            // 
+            this.symbolset.Location = new System.Drawing.Point(13, 140);
+            this.symbolset.Multiline = true;
+            this.symbolset.Name = "symbolset";
+            this.symbolset.Size = new System.Drawing.Size(255, 73);
+            this.symbolset.TabIndex = 10;
+            // 
+            // kryptonGroupBox1
+            // 
+            this.kryptonGroupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.kryptonGroupBox1.Location = new System.Drawing.Point(3, 250);
+            this.kryptonGroupBox1.Name = "kryptonGroupBox1";
+            // 
+            // kryptonGroupBox1.Panel
+            // 
+            this.kryptonGroupBox1.Panel.Controls.Add(this.description);
+            this.kryptonGroupBox1.Size = new System.Drawing.Size(274, 106);
+            this.kryptonGroupBox1.TabIndex = 9;
+            this.kryptonGroupBox1.Text = "规则说明";
+            this.kryptonGroupBox1.Values.Heading = "规则说明";
+            // 
+            // description
+            // 
+            this.description.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.description.Location = new System.Drawing.Point(0, 0);
+            this.description.Multiline = true;
+            this.description.Name = "description";
+            this.description.Size = new System.Drawing.Size(270, 84);
+            this.description.TabIndex = 11;
             // 
             // argvalue
             // 
@@ -141,46 +181,6 @@
             this.kryptonLabel1.TabIndex = 0;
             this.kryptonLabel1.Values.Text = "风控规则:";
             // 
-            // kryptonGroupBox1
-            // 
-            this.kryptonGroupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.kryptonGroupBox1.Location = new System.Drawing.Point(3, 250);
-            this.kryptonGroupBox1.Name = "kryptonGroupBox1";
-            // 
-            // kryptonGroupBox1.Panel
-            // 
-            this.kryptonGroupBox1.Panel.Controls.Add(this.description);
-            this.kryptonGroupBox1.Size = new System.Drawing.Size(274, 106);
-            this.kryptonGroupBox1.TabIndex = 9;
-            this.kryptonGroupBox1.Text = "规则说明";
-            this.kryptonGroupBox1.Values.Heading = "规则说明";
-            // 
-            // symbolset
-            // 
-            this.symbolset.Location = new System.Drawing.Point(13, 140);
-            this.symbolset.Multiline = true;
-            this.symbolset.Name = "symbolset";
-            this.symbolset.Size = new System.Drawing.Size(255, 73);
-            this.symbolset.TabIndex = 10;
-            // 
-            // btnSubmit
-            // 
-            this.btnSubmit.Location = new System.Drawing.Point(198, 219);
-            this.btnSubmit.Name = "btnSubmit";
-            this.btnSubmit.Size = new System.Drawing.Size(70, 25);
-            this.btnSubmit.TabIndex = 11;
-            this.btnSubmit.Values.Text = "提 交";
-            // 
-            // description
-            // 
-            this.description.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.description.Location = new System.Drawing.Point(0, 0);
-            this.description.Multiline = true;
-            this.description.Name = "description";
-            this.description.Size = new System.Drawing.Size(270, 84);
-            this.description.TabIndex = 11;
-            // 
             // fmRuleSetConfig
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -193,14 +193,15 @@
             this.Name = "fmRuleSetConfig";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "风控项设置";
+            this.TopMost = true;
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).EndInit();
             this.kryptonPanel1.ResumeLayout(false);
             this.kryptonPanel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.comparetype)).EndInit();
             this.kryptonGroupBox1.Panel.ResumeLayout(false);
             this.kryptonGroupBox1.Panel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonGroupBox1)).EndInit();
             this.kryptonGroupBox1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.comparetype)).EndInit();
             this.ResumeLayout(false);
 
         }

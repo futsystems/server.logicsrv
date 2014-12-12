@@ -80,18 +80,43 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "ConfirmCashOperation", "ConfirmCashOperation -confirm deposit or withdraw", "确认出入金操作请求", true)]
         public void CTE_ConfirmCashOperation(ISession session, string playload)
         {
-            debug("确认出入金操作请求", QSEnumDebugLevel.INFO);
-            Manager manger = session.GetManager();
-            if (manger != null)
+            try
             {
+                debug("确认出入金操作请求", QSEnumDebugLevel.INFO);
+                Manager manger = session.GetManager();
                 JsonWrapperCashOperation request = Mixins.LitJson.JsonMapper.ToObject<JsonWrapperCashOperation>(playload);
-                if (request != null)
+                
+                HandlerMixins.Valid_ObjectNotNull(request);
+
+                //if (request.Status != QSEnumCashInOutStatus.PENDING)
+                //{
+                //    throw new FutsRspError("出入金请求状态异常");
+                //}
+
+                ////出金执行金额检查
+                //if (op.Operation == QSEnumCashOperation.WithDraw)
+                //{
+                //    if (account.NowEquity < op.Amount)
+                //    {
+                //        throw new FutsRspError("出入金额度大于帐户权益");
+                //    }
+                //}
+
+                //执行时间检查 
+                if (TLCtxHelper.Ctx.SettleCentre.IsInSettle)
                 {
-                    ORM.MAgentFinance.ConfirmAgentCashOperation(request);
-                    session.SendJsonReplyMgr(request);
-                    //通过事件中继触发事件
-                    TLCtxHelper.CashOperationEvent.FireCashOperation(this, QSEnumCashOpEventType.Confirm, request);
+                    throw new FutsRspError("系统正在结算,禁止出入金操作");
                 }
+
+                ORM.MAgentFinance.ConfirmAgentCashOperation(request);
+                session.SendJsonReplyMgr(request);
+                //通过事件中继触发事件
+                TLCtxHelper.CashOperationEvent.FireCashOperation(this, QSEnumCashOpEventType.Confirm, request);
+                
+            }
+            catch (FutsRspError ex)
+            {
+                session.OperationError(ex);
             }
         }
 

@@ -249,11 +249,8 @@ namespace FutsMoniter
 
         void kryptonRibbonGroupButton_SystemStatus_Click(object sender, EventArgs e)
         {
-            if (systemstatusfrom != null)
-            {
-                systemstatusfrom.Show();
-                Globals.TLClient.ReqQrySystemStatus();
-            }
+            fmCoreStatus fm = new fmCoreStatus();
+            fm.Show();
         }
 
         void kryptonRibbonGroupButton_RouterList_Click(object sender, EventArgs e)

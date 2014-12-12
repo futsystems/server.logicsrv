@@ -142,7 +142,7 @@ namespace TradingLib.Core
             _cleanTmp = _cfgdb["CleanTmpTable"].AsBool();
 
 
-            //注入重置任务 用于在数据调整执行时间
+            //注入重置任务 可以在数据指定重置时间
             DateTime t = Util.ToDateTime(Util.ToTLDate(DateTime.Now), resetTime);
             TaskProc task = new TaskProc(this.UUID, "交易系统重置-" + resetTime.ToString(), t.Hour, t.Minute, t.Second, delegate() { Task_ResetTradingday(); });
             TLCtxHelper.Ctx.InjectTask(task);
@@ -155,7 +155,6 @@ namespace TradingLib.Core
         /// </summary>
         void InitTradingDay()
         {
-            
 
             //开发模式每天都有结算,运行模式按照交易日里进行结算
             debug("System running under " + (GlobalConfig.IsDevelop?"develop":"production"), QSEnumDebugLevel.INFO);

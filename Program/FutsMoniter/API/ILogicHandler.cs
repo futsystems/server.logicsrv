@@ -182,7 +182,7 @@ namespace TradingLib.API
         /// </summary>
         /// <param name="status"></param>
         /// <param name="islast"></param>
-        void OnMGRSytstemStatus(SystemStatus status, bool islast);
+        //void OnMGRSytstemStatus(SystemStatus status, bool islast);
         #endregion
 
 

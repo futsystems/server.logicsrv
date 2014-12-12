@@ -98,7 +98,8 @@ namespace TradingLib.ServiceManager
                     {
                         throw new FutsRspError("Token不能为空");
                     }
-                    if (BasicTracker.ConnectorConfigTracker.GetBrokerInterface(cfg.interface_fk) == null)
+                    ConnectorInterface itface = BasicTracker.ConnectorConfigTracker.GetBrokerInterface(cfg.interface_fk);
+                    if ( itface== null)
                     {
                         throw new FutsRspError("请选择有效接口");
                     }
@@ -110,14 +111,18 @@ namespace TradingLib.ServiceManager
 
                     //设定Domain
                     cfg.domain_id = manger.Domain.ID;
-
+                    //添加的通道为交易通道则都需要Vendor
+                    if (itface.Type == QSEnumConnectorType.Broker)
+                    {
+                        cfg.NeedVendor = true;
+                    }
                     
                     //2.更新参数
                     BasicTracker.ConnectorConfigTracker.UpdateConnectorConfig(cfg);
                     //
                     ConnectorConfig config = BasicTracker.ConnectorConfigTracker.GetBrokerConfig(cfg.ID);
                     //3.更新或加载Broker
-                    if (isadd)
+                    if (isadd)//如果是新增通道接口 则加载
                     {
                         if (!config.Interface.IsValid)
                         {
@@ -125,14 +130,20 @@ namespace TradingLib.ServiceManager
                         }
 
                         LoadBrokerConnector(config);
+
+
+                        
+
                     }
                     else
                     {
                         //重新设定参数并停止接口然后再启动接口
                     }
 
-
-                    session.NotifyMgr(config, this.ServiceMgrName, "NotifyConnectorCfg");
+                    //通知通道设置
+                    session.NotifyMgr("NotifyConnectorCfg", config);
+                    //通知通道状态
+                    session.NotifyMgr("NotifyConnectorStatus", GetConnectorStatus(config));
                     session.OperationSuccess("更新通道设置成功");
                 }
             }

@@ -31,7 +31,7 @@ namespace FutsMoniter
         fmMarketTime markettimeform;
         fmSecurity securityform;
         fmSymbol symbolform;
-        fmCoreStatus systemstatusfrom;
+        //fmCoreStatus systemstatusfrom;
         fmHistQuery histqryform;
         BasicInfoTracker basicinfotracker;
         fmManagerCentre mgrform;
@@ -125,7 +125,7 @@ namespace FutsMoniter
             markettimeform = new fmMarketTime();
             securityform = new fmSecurity();
             symbolform = new fmSymbol();
-            systemstatusfrom = new fmCoreStatus();
+            //systemstatusfrom = new fmCoreStatus();
             histqryform = new fmHistQuery();
 
             mgrform = new fmManagerCentre();

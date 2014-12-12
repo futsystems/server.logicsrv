@@ -316,11 +316,11 @@ namespace TradingLib.Common
             this.handler.OnMGRRulteItemDelete(response.RuleItem, response.IsLast);
         }
 
-        void CliOnMGRystemStatus(RspMGRQrySystemStatusResponse response)
-        {
-            debug("got systemstatus response:" + response.ToString(), QSEnumDebugLevel.INFO);
-            this.handler.OnMGRSytstemStatus(response.Status, response.IsLast);
-        }
+        //void CliOnMGRystemStatus(RspMGRQrySystemStatusResponse response)
+        //{
+        //    debug("got systemstatus response:" + response.ToString(), QSEnumDebugLevel.INFO);
+        //    this.handler.OnMGRSytstemStatus(response.Status, response.IsLast);
+        //}
 
 
         void CliOnMGROrderResponse(RspMGRQryOrderResponse response)
@@ -534,9 +534,9 @@ namespace TradingLib.Common
                 case MessageTypes.MGRDELRULEITEMRESPONSE://删除风控项回报
                     CliOnMGRDelRule(packet as RspMGRDelRuleItemResponse);
                     break;
-                case MessageTypes.MGRSYSTEMSTATUSRESPONSE://查询系统状态回报
-                    CliOnMGRystemStatus(packet as RspMGRQrySystemStatusResponse);
-                    break;
+                //case MessageTypes.MGRSYSTEMSTATUSRESPONSE://查询系统状态回报
+                //    CliOnMGRystemStatus(packet as RspMGRQrySystemStatusResponse);
+                //    break;
                 case MessageTypes.MGRORDERRESPONSE://查询委托回报
                     CliOnMGROrderResponse(packet as RspMGRQryOrderResponse);
                     break;

@@ -55,26 +55,40 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "ConfirmAccountCashOperation", "ConfirmCashOperation -confirm deposit or withdraw", "确认出入金操作请求", true)]
         public void CTE_ConfirmAccountCashOperation(ISession session, string playload)
         {
-            debug("确认出入金操作请求", QSEnumDebugLevel.INFO);
-            Manager manger = session.GetManager();
-            if (manger != null)
+            try
             {
-                
+                debug("确认出入金操作请求", QSEnumDebugLevel.INFO);
+                Manager manger = session.GetManager();
+                if (!manger.IsRoot())
+                {
+                    throw new FutsRspError("无权确认出入金请求");
+                }
+
                 JsonWrapperCashOperation request = Mixins.LitJson.JsonMapper.ToObject<JsonWrapperCashOperation>(playload);
+                
                 if (request != null)
                 {
-                    //如果是出金则需要进行资金检查
-                    if (request.Operation == QSEnumCashOperation.WithDraw)
-                    { 
-                        
+                    IAccount account = clearcentre[request.Account];
+                    if (!manger.RightAccessAccount(account))
+                    {
+                        throw new FutsRspError("无权访问帐户:" + account.ID);
                     }
+
+                    
+
+                    //调用清算中心出入金确认操作
                     TLCtxHelper.CmdAuthCashOperation.ConfirmCashOperation(request.Ref);
+
                     //重新从数据库加载数据 返回当前记录的数据
                     request = ORM.MCashOpAccount.GetAccountCashOperation(request.Ref);
                     session.SendJsonReplyMgr(request);
                     //通过事件中继触发事件
                     TLCtxHelper.CashOperationEvent.FireCashOperation(this, QSEnumCashOpEventType.Confirm, request);
                 }
+            }
+            catch (FutsRspError ex)
+            {
+                session.OperationError(ex);
             }
         }
 

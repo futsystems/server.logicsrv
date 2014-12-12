@@ -104,25 +104,7 @@ namespace TradingLib.Core
 
         }
 
-        void SrvOnMGRQrySystemStatus(MGRQrySystemStatusRequest request, ISession session, Manager manager)
-        {
-            debug(string.Format("管理员:{0} 请求查询系统状态:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
-            RspMGRQrySystemStatusResponse response = ResponseTemplate<RspMGRQrySystemStatusResponse>.SrvSendRspResponse(request);
 
-            SystemStatus status = new SystemStatus();
-            status.CurrentTradingday = TLCtxHelper.Ctx.SettleCentre.CurrentTradingday;
-            status.IsClearCentreOpen = clearcentre.Status == QSEnumClearCentreStatus.CCOPEN;
-            status.IsSettleNormal = TLCtxHelper.Ctx.SettleCentre.IsNormal;
-            status.IsTradingday = TLCtxHelper.Ctx.SettleCentre.IsTradingday;
-            status.LastSettleday = TLCtxHelper.Ctx.SettleCentre.LastSettleday;
-            status.NextTradingday = TLCtxHelper.Ctx.SettleCentre.NextTradingday;
-            status.TotalAccountNum = clearcentre.Accounts.Length;
-            status.MarketOpenCheck = TLCtxHelper.Ctx.RiskCentre.MarketOpenTimeCheck;
-            status.IsDevMode = GlobalConfig.IsDevelop;
-            response.Status = status;
-
-            CacheRspResponse(response);
-        }
 
         #endregion 
     }

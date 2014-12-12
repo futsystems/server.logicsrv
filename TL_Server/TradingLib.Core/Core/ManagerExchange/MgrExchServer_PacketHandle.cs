@@ -256,11 +256,11 @@ namespace TradingLib.Core
                         SrvOnMGRDelRuleItem(packet as MGRDelRuleItemRequest, session, manager);
                         break;
                     }
-                case MessageTypes.MGRQRYSYSTEMSTATUS://请求系统状态
-                    {
-                        SrvOnMGRQrySystemStatus(packet as MGRQrySystemStatusRequest, session, manager);
-                        break;
-                    }
+                //case MessageTypes.MGRQRYSYSTEMSTATUS://请求系统状态
+                //    {
+                //        SrvOnMGRQrySystemStatus(packet as MGRQrySystemStatusRequest, session, manager);
+                //        break;
+                //    }
                 case MessageTypes.MGRQRYORDER://请求查询历史委托
                     {
                         SrvOnMGRQryOrder(packet as MGRQryOrderRequest, session, manager);

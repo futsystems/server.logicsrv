@@ -81,6 +81,8 @@ namespace TradingLib.Core
         {
             if (IsNormal && !IsTradingday) return;//结算中心正常 但不是交易日 不做记录转储
 
+            this.IsInSettle = true;//标识结算中心处于结算状态
+
             //通过系统事件中继触发结算前事件
             try
             {
@@ -91,7 +93,7 @@ namespace TradingLib.Core
                 debug("BeforeSettleEvent Fired error:" + ex.ToString(), QSEnumDebugLevel.FATAL);
             }
 
-            this.IsInSettle = true;//标识结算中心处于结算状态
+            
             //保存结算持仓对应的PR数据
             this.SaveHoldInfo();
             //保存当前持仓明细
@@ -115,6 +117,12 @@ namespace TradingLib.Core
             this.SettleAccount();
             //触发结算后记录
             TLCtxHelper.EventSystem.FireAfterSettleEvent(this, new SystemEventArgs());
+
+            //结算后 重置结算中心 如果交易日没有发生变化，则出入金还会停留在上个结算日，而上个结算日已经结算，因此该出入金记录会被丢失 
+            //出入金拒绝窗口就是结算时间段
+            this.Reset();
+
+            this.IsInSettle = false;//标识系统结算完毕
         }
 
         
@@ -128,10 +136,13 @@ namespace TradingLib.Core
             if (IsNormal && !IsTradingday) return;
             debug("系统重置，清算中心重置帐户，风控中心重置规则 清空日内记录表", QSEnumDebugLevel.INFO);
             TLCtxHelper.EventSystem.FireBeforeSettleResetEvent(this, new SystemEventArgs());
+            
+            //清空日内交易记录
             if (_cleanTmp)
             {
                 this.CleanTempTable();
             }
+
             //重置结算中心
             this.Reset();
 
@@ -141,7 +152,6 @@ namespace TradingLib.Core
             //重置风控中心，清空内存缓存数据
             _riskcentre.Reset();
 
-            this.IsInSettle = false;//标识系统结算完毕
             TLCtxHelper.EventSystem.FireAfterSettleResetEvent(this, new SystemEventArgs());
             
         }

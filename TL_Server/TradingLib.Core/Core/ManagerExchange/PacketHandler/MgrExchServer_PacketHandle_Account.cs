@@ -192,29 +192,30 @@ namespace TradingLib.Core
 
         void SrvOnMGRCashOperation(MGRCashOperationRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求出入金操作:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
-            IAccount account = clearcentre[request.Account];
-            if (account != null)
+            try
             {
-                try
-                {
-                    clearcentre.CashOperation(request.Account, request.Amount, request.TransRef, request.Comment);
+                debug(string.Format("管理员:{0} 请求出入金操作:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
+                IAccount account = clearcentre[request.Account];
+                HandlerMixins.Valid_ObjectNotNull(account);
 
-                }
-                catch (FutsRspError ex)
+                Manager manger = session.GetManager();
+                
+                if (!manager.RightAccessAccount(account))
                 {
-                    RspMGROperationResponse response = ResponseTemplate<RspMGROperationResponse>.SrvSendRspResponse(request);
-                    response.RspInfo.ErrorID = ex.ErrorID;
-                    response.RspInfo.ErrorMessage = ex.ErrorMessage;
-
-                    CachePacket(response);
-                    return;
+                    throw new FutsRspError("无权操作该帐户");
                 }
+
+                //执行出入金操作
+                clearcentre.CashOperation(request.Account, request.Amount, request.TransRef, request.Comment);
 
                 //出入金操作后返回帐户信息更新
                 RspMGRQryAccountInfoResponse notify = ResponseTemplate<RspMGRQryAccountInfoResponse>.SrvSendRspResponse(request);
                 notify.AccountInfoToSend = account.ToAccountInfo();
                 CachePacket(notify);
+            }
+            catch (FutsRspError ex)
+            {
+                session.OperationError(ex);
             }
         }
 

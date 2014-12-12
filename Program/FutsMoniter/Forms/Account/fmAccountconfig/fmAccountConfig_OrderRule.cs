@@ -105,7 +105,7 @@ namespace FutsMoniter
                 fmRuleSetConfig fm = new fmRuleSetConfig();
                 fm.Account = _account;
                 fm.RuleClass = (RuleClassItem)orderRuleClassList.SelectedValue;
-                fm.Show();
+                fm.ShowDialog();
             }
         }
         /// <summary>
@@ -120,7 +120,7 @@ namespace FutsMoniter
                 fmRuleSetConfig fm = new fmRuleSetConfig();
                 fm.Account = _account;
                 fm.Rule = (RuleItem)orderRuleItemList.SelectedValue;
-                fm.Show();
+                fm.ShowDialog();
 
             }
         }

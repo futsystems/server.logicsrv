@@ -54,39 +54,56 @@ namespace TradingLib.Core
         /// <returns></returns>
         public bool ConfirmCashOperation(string opref)
         {
-            try
+
+            JsonWrapperCashOperation op = ORM.MCashOpAccount.GetAccountCashOperation(opref);
+            IAccount account = this[op.Account];
+            if (account == null)
             {
-                JsonWrapperCashOperation op = ORM.MCashOpAccount.GetAccountCashOperation(opref);
-                IAccount account = this[op.Account];
-                if (account == null)
-                    return false;
-                //出入金记录不存在 不是入金操作 或不处于待处理状态 则直接返回
-                if (op == null /*|| op.Operation != QSEnumCashOperation.Deposit **/|| op.Status != QSEnumCashInOutStatus.PENDING) return false;
-                //decimal amount = op.Operation== QSEnumCashOperation.Deposit? op.Amount : op.Amount*-1;
-                //bool ret ORM.MAccount.CashOperation(op.Account, amount, opref, "Online Deposit");
-                bool ret = ORM.MCashOpAccount.ConfirmAccountCashOperation(op);
-                
-                //如果数据库操作正常 则同步内存数据
-                if (ret)
-                {
-                    if (op.Operation == QSEnumCashOperation.Deposit)
-                    {
-                        account.Deposit(op.Amount);
-                    }
-                    else
-                    {
-                        account.Withdraw(op.Amount);
-                    }
-                }
-                debug("Account:" + op.Account + " 确认入金:" + op.Amount.ToString() + " 成功!");
-                return true;
-            }
-            catch (Exception ex)
-            {
-                debug("confirm cashoperatoin online error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
-                return false;
+                throw new FutsRspError("交易帐户不存在");
             }
 
+            if(op ==null)
+            {
+                throw new FutsRspError("出入金请求不存在");
+            }
+
+            if(op.Status != QSEnumCashInOutStatus.PENDING)
+            {
+                throw new FutsRspError("出入金请求状态异常");
+            }
+
+            //出金执行金额检查
+            if (op.Operation == QSEnumCashOperation.WithDraw)
+            {
+                if (account.NowEquity < op.Amount)
+                {
+                    throw new FutsRspError("出金额度大于帐户权益");
+                }
+            }
+
+            //执行时间检查 
+            if (TLCtxHelper.Ctx.SettleCentre.IsInSettle)
+            {
+                throw new FutsRspError("系统正在结算,禁止出入金操作");
+            }
+
+            //执行数据库操作
+            bool ret = ORM.MCashOpAccount.ConfirmAccountCashOperation(op);
+            
+            //如果数据库操作正常 则同步内存数据
+            if (ret)
+            {
+                if (op.Operation == QSEnumCashOperation.Deposit)
+                {
+                    account.Deposit(op.Amount);
+                }
+                else
+                {
+                    account.Withdraw(op.Amount);
+                }
+            }
+            debug("Account:" + op.Account + " 确认入金:" + op.Amount.ToString() + " 成功!");
+            return true;
         }
     }
 }

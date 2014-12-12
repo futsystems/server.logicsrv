@@ -291,14 +291,14 @@ namespace FutsMoniter
 
 
         #region 系统状态与通知类
-        public void OnMGRSytstemStatus(SystemStatus status, bool islast)
-        {
-            if (systemstatusfrom != null)
-            {
-                systemstatusfrom.GotSystemStatus(status);
-            }
+        //public void OnMGRSytstemStatus(SystemStatus status, bool islast)
+        //{
+        //    if (systemstatusfrom != null)
+        //    {
+        //        systemstatusfrom.GotSystemStatus(status);
+        //    }
 
-        }
+        //}
         #endregion
 
 

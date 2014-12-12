@@ -248,6 +248,7 @@ namespace TradingLib.Common
 
         }
 
+
         /// <summary>
         /// 安全的调用输出某个对象的ToString
         /// 需要先判断obj是否是null
