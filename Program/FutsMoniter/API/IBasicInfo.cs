@@ -10,6 +10,14 @@ namespace TradingLib.API
 {
     public interface IBasicInfo
     {
+        #region
+        event MarketTimeDel GotMarketTimeEvent;
+        event ExchangeDel GotExchangeEvent;
+        event SecurityDel GotSecurityEvent;
+        event SymbolDel GotSymbolEvent;
+        event ManagerDel GotManagerEvent;
+
+        #endregion
         /// <summary>
         /// 通过全局ID获得市场时间对象
         /// </summary>
@@ -57,6 +65,9 @@ namespace TradingLib.API
         /// </summary>
         SymbolImpl[] Symbols { get; }
 
+        IEnumerable<MarketTime> MarketTimes { get; }
+
+        IEnumerable<Exchange> Exchanges { get; }
         /// <summary>
         /// 获得所有可交易合约
         /// </summary>

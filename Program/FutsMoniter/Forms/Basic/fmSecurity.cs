@@ -25,8 +25,20 @@ namespace FutsMoniter
 
             Factory.IDataSourceFactory(cbsecurity).BindDataSource(UIUtil.GetEnumValueObjects<SecurityType>(true));
             Factory.IDataSourceFactory(cbtradeable).BindDataSource(MoniterUtil.GetTradeableCBList(true));
+            Factory.IDataSourceFactory(cbexchange).BindDataSource(Globals.BasicInfoTracker.GetExchangeCombList(true));
+  
+            this.Load += new EventHandler(fmSecurity_Load);
+        }
 
+        void fmSecurity_Load(object sender, EventArgs e)
+        {
             WireEvent();
+
+            foreach (SecurityFamilyImpl sec in Globals.BasicInfoTracker.Securities)
+            {
+                InvokGotSecurity(sec);
+            }
+
         }
 
         public bool AnySecurity
@@ -54,10 +66,6 @@ namespace FutsMoniter
             }
         }
 
-        public void GotSecurity(SecurityFamilyImpl sec)
-        {
-            InvokGotSecurity(sec);
-        }
 
         string GetTradeableTitle(bool tradeable)
         {
@@ -355,11 +363,13 @@ namespace FutsMoniter
         {
             btnSyncSec.Visible = Globals.Manager.IsRoot();
             btnAddSecurity.Visible = Globals.Manager.IsRoot();
+
+            Globals.BasicInfoTracker.GotSecurityEvent += new SecurityDel(InvokGotSecurity);
         }
 
         public void OnDisposed()
         {
-
+            Globals.BasicInfoTracker.GotSecurityEvent -= new SecurityDel(InvokGotSecurity);
         }
         void WireEvent()
         {
@@ -372,7 +382,7 @@ namespace FutsMoniter
             btnAddSecurity.Click +=new EventHandler(btnAddSecurity_Click);
             btnSyncSec.Click += new EventHandler(btnSyncSec_Click);
             secgrid.RowPrePaint += new DataGridViewRowPrePaintEventHandler(secgrid_RowPrePaint);
-            this.FormClosing += new FormClosingEventHandler(fmSecurity_FormClosing);
+
 
         }
 
@@ -389,17 +399,6 @@ namespace FutsMoniter
             e.PaintParts = e.PaintParts ^ DataGridViewPaintParts.Focus;
         }
 
-        private void fmSecurity_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            e.Cancel = true;
-            this.Hide();
-        }
-
-
-        public void ReBindExchangeCombList()
-        {
-            Factory.IDataSourceFactory(cbexchange).BindDataSource(Globals.BasicInfoTracker.GetExchangeCombList(true));
-        }
 
         private void cbsecurity_SelectedIndexChanged(object sender, EventArgs e)
         {

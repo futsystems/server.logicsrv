@@ -44,17 +44,6 @@ namespace FutsMoniter
             }
             if (islast && !_basicinfodone)
             {
-                //绑定交易所列表
-                if (securityform != null)
-                {
-                    securityform.ReBindExchangeCombList();
-                }
-                if (symbolform != null)
-                {
-                    symbolform.ReBindExchangeCombList();
-                }
-
-                //
                 ShowInfo("交易所查询完毕,查询品种信息");
                 Globals.TLClient.ReqQrySecurity();
 

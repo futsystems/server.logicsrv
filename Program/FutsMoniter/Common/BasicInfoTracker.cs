@@ -419,6 +419,9 @@ namespace TradingLib.Common
             }
         }
 
+        public IEnumerable<MarketTime> MarketTimes { get { return markettimemap.Values; } }
+
+        public IEnumerable<Exchange> Exchanges { get { return exchangemap.Values; } }
         public RuleClassItem[] GetOrderRuleClass()
         {
             return orderruleclassmap.Values.ToArray();

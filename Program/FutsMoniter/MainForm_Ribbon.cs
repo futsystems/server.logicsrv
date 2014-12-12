@@ -106,7 +106,6 @@ namespace FutsMoniter
 
         void kryptonRibbonGroupButton_QuerySettleAccount_Click(object sender, EventArgs e)
         {
-            if (securityform != null)
                 settlementform.Show();
         }
 
@@ -268,51 +267,27 @@ namespace FutsMoniter
         #region 基础数据
         void kryptonRibbonGroupButton_Exchange_Click(object sender, EventArgs e)
         {
-            if (exchangeform != null)
-            {
-                exchangeform.Show();
-                //如果没有交易所数据则请求交易所数据
-                if (!exchangeform.AnyExchange)
-                {
-                    Globals.TLClient.ReqQryExchange();
-                }
-            }
+            fmExchange fm = new fmExchange();
+            fm.Show();
         }
 
         void kryptonRibbonGroupButton_Mktime_Click(object sender, EventArgs e)
         {
-            if (markettimeform != null)
-            {
-                markettimeform.Show();
-                if (!markettimeform.AnyMarketTime)
-                {
-                    Globals.TLClient.ReqQryMarketTime();
-                }
-            }
+            fmMarketTime fm = new fmMarketTime();
+            fm.Show();
+         
         }
 
         void kryptonRibbonGroupButton_Symbol_Click(object sender, EventArgs e)
         {
-            if (symbolform != null)
-            {
-                symbolform.Show();
-                if (!symbolform.AnySymbol)
-                {
-                    Globals.TLClient.ReqQrySymbol();
-                }
-            }
+            fmSymbol fm = new fmSymbol();
+            fm.Show();
         }
 
         void kryptonRibbonGroupButton_Security_Click(object sender, EventArgs e)
         {
-            if (securityform != null)
-            {
-                securityform.Show();
-                if (!securityform.AnySecurity)
-                {
-                    Globals.TLClient.ReqQrySecurity();
-                }
-            }
+            fmSecurity fm = new fmSecurity();
+            fm.Show();
         }
 
 

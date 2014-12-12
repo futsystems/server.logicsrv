@@ -187,7 +187,6 @@ namespace FutsMoniter
 
         public void GotManager(Manager manger)
         {
-            //Globals.Debug("got manager %%%%%%%%%%%%%%%%%%%%%%5 name:"+manger.Name);
             //如果获得的ManagerID和登入回报的ID一致 则表明该Manger是自己 在列表中不显示
             if (manger.ID.Equals(Globals.LoginResponse.MGRID)) return;
             if (InvokeRequired)

@@ -26,16 +26,13 @@ namespace FutsMoniter
         string _servers = "127.0.0.1";
 
         DebugForm debugform = new DebugForm();
-        //fmRouterMoniter routerform;
-        fmExchange exchangeform;
-        fmMarketTime markettimeform;
-        fmSecurity securityform;
-        fmSymbol symbolform;
-        //fmCoreStatus systemstatusfrom;
+
         fmHistQuery histqryform;
         BasicInfoTracker basicinfotracker;
+
         fmManagerCentre mgrform;
         fmAgentProfitReport agentprofitreportform;
+
         //结算单查询窗口
         fmSettlement settlementform = new fmSettlement();
         void ShowInfo(string msg)
@@ -118,25 +115,11 @@ namespace FutsMoniter
             basicinfotracker = new BasicInfoTracker();
             Globals.RegisterBasicInfoTracker(basicinfotracker);
 
-
-
-            //routerform = new fmRouterMoniter();
-            exchangeform = new fmExchange();
-            markettimeform = new fmMarketTime();
-            securityform = new fmSecurity();
-            symbolform = new fmSymbol();
-            //systemstatusfrom = new fmCoreStatus();
             histqryform = new fmHistQuery();
 
             mgrform = new fmManagerCentre();
 
             agentprofitreportform = new fmAgentProfitReport();
-
-            //基础数据窗口维护了基础数据 当有基础数据到达时候需要通知窗体 窗体进行加载和现实
-            basicinfotracker.GotMarketTimeEvent += new MarketTimeDel(markettimeform.GotMarketTime);
-            basicinfotracker.GotExchangeEvent += new ExchangeDel(exchangeform.GotExchange);
-            basicinfotracker.GotSecurityEvent += new SecurityDel(securityform.GotSecurity);
-            basicinfotracker.GotSymbolEvent += new SymbolDel(symbolform.GotSymbol);
 
             basicinfotracker.GotManagerEvent += new ManagerDel(mgrform.GotManager);
 

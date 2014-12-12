@@ -23,9 +23,18 @@ namespace FutsMoniter
 
             Factory.IDataSourceFactory(cbsecurity).BindDataSource(UIUtil.GetEnumValueObjects<SecurityType>(true));
             Factory.IDataSourceFactory(cbtradeable).BindDataSource(MoniterUtil.GetTradeableCBList(true));
+            Factory.IDataSourceFactory(cbexchange).BindDataSource(Globals.BasicInfoTracker.GetExchangeCombList(true));
 
+            this.Load += new EventHandler(fmSymbol_Load);
+        }
+
+        void fmSymbol_Load(object sender, EventArgs e)
+        {
             WireEvent();
-            //_load = true;
+            foreach (SymbolImpl sym in Globals.BasicInfoTracker.Symbols)
+            {
+                InvokeGotSymbol(sym);
+            }
         }
 
         public bool AnySymbol
@@ -51,11 +60,6 @@ namespace FutsMoniter
             {
                 return -1;
             }
-        }
-
-        public void GotSymbol(SymbolImpl sym)
-        {
-            InvokeGotSymbol(sym);
         }
 
         string GetTradeableTitle(bool tradeable)
@@ -329,16 +333,18 @@ namespace FutsMoniter
         {
             btnAddSymbol.Visible = Globals.Manager.IsRoot();
             btnSyncSymbols.Visible = Globals.Manager.IsRoot();
+            Globals.Debug("绑定获得合约事件");
+            Globals.BasicInfoTracker.GotSymbolEvent += new SymbolDel(InvokeGotSymbol);
         }
         public void OnDisposed()
-        { 
-        
+        {
+            Globals.Debug("释放事件绑定");
+            Globals.BasicInfoTracker.GotSymbolEvent -= new SymbolDel(InvokeGotSymbol);
         }
 
         void WireEvent()
         {
             Globals.RegIEventHandler(this);
-            this.FormClosing +=new FormClosingEventHandler(fmSymbol_FormClosing);
 
             cbsecurity.SelectedIndexChanged += new EventHandler(cbsecurity_SelectedIndexChanged);
             cbexchange.SelectedIndexChanged += new EventHandler(cbexchange_SelectedIndexChanged);
@@ -358,16 +364,7 @@ namespace FutsMoniter
   
 
 
-        private void fmSymbol_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            e.Cancel = true;
-            this.Hide();
-        }
 
-        public void ReBindExchangeCombList()
-        {
-            Factory.IDataSourceFactory(cbexchange).BindDataSource(Globals.BasicInfoTracker.GetExchangeCombList(true));
-        }
 
         private void cbsecurity_SelectedIndexChanged(object sender, EventArgs e)
         {
