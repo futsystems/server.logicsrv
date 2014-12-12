@@ -21,7 +21,6 @@ namespace TradingLib.Common
         /// </summary>
         public string ClassName { get; set; }
 
-
         /// <summary>
         /// 检查变量名称
         /// </summary>
@@ -62,6 +61,15 @@ namespace TradingLib.Common
         /// </summary>
         public Type RuleClassType { get; set; }
 
+        /// <summary>
+        /// 默认关系
+        /// </summary>
+        public QSEnumCompareType DefaultCompare { get; set; }
+
+        /// <summary>
+        /// 默认值
+        /// </summary>
+        public string DefaultValue { get; set; }
 
         public string Serialize()
         {
@@ -82,6 +90,10 @@ namespace TradingLib.Common
             sb.Append(this.ValueName);
             sb.Append(d);
             sb.Append(this.Type.ToString());
+            sb.Append(d);
+            sb.Append(this.DefaultCompare.ToString());
+            sb.Append(d);
+            sb.Append(this.DefaultValue.ToArray());
 
             return sb.ToString();
         }
@@ -97,19 +109,25 @@ namespace TradingLib.Common
             this.CanSetSymbols = bool.Parse(rec[5]);
             this.ValueName = rec[6];
             this.Type = (QSEnumRuleType)Enum.Parse(typeof(QSEnumRuleType), rec[7]);
+            this.DefaultCompare = (QSEnumCompareType)Enum.Parse(typeof(QSEnumCompareType), rec[8]);
+            this.DefaultValue = rec[9];
         }
 
         /// <summary>
         /// 生成风控规则实例对象
+        /// 传入一条RuleItem记录 生成对应的IRule规则对象
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
         public IRule GenerateRuleInstance(RuleItem item)
         {
+            //通过类型RuleClassType生成对象
             IRule t = (IRule)Activator.CreateInstance(this.RuleClassType);
+            //然后将参数item设置到IRule
             t.FromRuleItem(item);
             return t;
         }
+
         /// <summary>
         /// 验证设定
         /// </summary>
@@ -118,6 +136,11 @@ namespace TradingLib.Common
         /// <returns></returns>
         public bool ValidSetting(RuleItem item, out string msg)
         {
+            //RuleBase rb = (RuleBase)Activator.CreateInstance(this.RuleClassType);
+
+            //object [] list = new object[]{item,msg};
+            //bool re = (bool)this.RuleClassType.InvokeMember("ValidSetting",BindingFlags.FlattenHierarchy | BindingFlags.Public | BindingFlags.Static |BindingFlags.InvokeMethod, null, null, list)
+
             msg = "";
             return true;
         }
@@ -133,6 +156,7 @@ namespace TradingLib.Common
         public static RuleClassItem Type2RuleClassItem(Type t)
         {
             RuleClassItem item = new RuleClassItem();
+            //判断规则类型
             if (typeof(IOrderCheck).IsAssignableFrom(t))
             {
                 item.Type = QSEnumRuleType.OrderRule;
@@ -154,7 +178,9 @@ namespace TradingLib.Common
             item.CanSetCompare = (bool)t.InvokeMember("CanSetCompare", BindingFlags.FlattenHierarchy | BindingFlags.Public | BindingFlags.Static | BindingFlags.GetProperty, null, null, null);
             item.CanSetSymbols = (bool)t.InvokeMember("CanSetSymbols", BindingFlags.FlattenHierarchy | BindingFlags.Public | BindingFlags.Static | BindingFlags.GetProperty, null, null, null);
             item.ValueName = (string)t.InvokeMember("ValueName", BindingFlags.FlattenHierarchy | BindingFlags.Public | BindingFlags.Static | BindingFlags.GetProperty, null, null, null);
-
+            item.DefaultValue = (string)t.InvokeMember("DefaultValue", BindingFlags.FlattenHierarchy | BindingFlags.Public | BindingFlags.Static | BindingFlags.GetProperty, null, null, null);
+            item.DefaultCompare = (QSEnumCompareType)t.InvokeMember("DefaultCompare", BindingFlags.FlattenHierarchy | BindingFlags.Public | BindingFlags.Static | BindingFlags.GetProperty, null, null, null);
+            
             
             item.RuleClassType = t;
             return item;

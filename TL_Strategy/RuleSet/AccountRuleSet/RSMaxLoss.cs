@@ -70,7 +70,7 @@ namespace AccountRuleSet
         }
         public static new string Description
         {
-            get { return "当最大损失大于设定数额时,系统将强平仓位并禁止账户交易"; }
+            get { return "当最大亏损(包含手续费)大于设定数额时,系统将强平仓位并禁止账户交易"; }
         }
 
         /// <summary>
@@ -78,20 +78,41 @@ namespace AccountRuleSet
         /// </summary>
         public static new string ValueName { get { return "检查变量"; } }
 
+        /// <summary>
+        /// 不用设置比较关系
+        /// </summary>
+        public static new bool CanSetCompare { get { return false; } }
+
+        /// <summary>
+        /// 默认比较关系大于等于
+        /// </summary>
+        public static new QSEnumCompareType DefaultCompare { get { return QSEnumCompareType.GreaterEqual; } }
+        
+        /// <summary>
+        /// 不用设置品种集合
+        /// </summary>
+        public static new bool CanSetSymbols { get { return false; } }
+
         //用于验证客户端的输入值是否正确
         public static new bool ValidSetting(RuleItem item, out string msg)
         {
             try
             {
-                //Convert.ToDecimal(_rawvalue);
+                decimal v = decimal.Parse(item.Value);
+                if (v < 0)
+                {
+                    msg = "请去掉负号";
+                    return false;
+                }
+                msg = "";
+                return true;
             }
             catch (Exception ex)
             {
                 msg = "请设定有效数值";
                 return false;
             }
-            msg = "";
-            return true;
+            
         }
 
         #endregion

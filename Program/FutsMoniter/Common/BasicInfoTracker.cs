@@ -53,6 +53,8 @@ namespace TradingLib.Common
         Dictionary<int, SecurityFamilyImpl> securitymap = new Dictionary<int, SecurityFamilyImpl>();
         Dictionary<int, SymbolImpl> symbolmap = new Dictionary<int, SymbolImpl>();
         Dictionary<string, SymbolImpl> symbolnammap = new Dictionary<string, SymbolImpl>();
+
+
         Dictionary<int, Manager> managermap = new Dictionary<int, Manager>();
 
         Dictionary<string, RuleClassItem> orderruleclassmap = new Dictionary<string, RuleClassItem>();
@@ -117,6 +119,10 @@ namespace TradingLib.Common
             }
         }
 
+        /// <summary>
+        /// 获得品种信息
+        /// </summary>
+        /// <param name="sec"></param>
         public void GotSecurity(SecurityFamilyImpl sec)
         {
             SecurityFamilyImpl target = null;
@@ -161,7 +167,10 @@ namespace TradingLib.Common
             }
         }
 
-
+        /// <summary>
+        /// 获得合约信息
+        /// </summary>
+        /// <param name="symbol"></param>
         public void GotSymbol(SymbolImpl symbol)
         {
             SymbolImpl target = null;

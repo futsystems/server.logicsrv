@@ -30,11 +30,11 @@ namespace TradingLib.Common
         /// </summary>
         public int ID { get; set; }
 
-
         /// <summary>
         /// 交易帐号
         /// </summary>
         public string Account { get; set; }
+
         /// <summary>
         /// 风控规则名称
         /// </summary>
@@ -66,8 +66,12 @@ namespace TradingLib.Common
         /// </summary>
         public QSEnumRuleType RuleType { get; set; }
 
-
+        /// <summary>
+        /// 规则描述
+        /// </summary>
         public string RuleDescription { get; set; }
+
+        #region 序列化与反序列化
         public string Serialize()
         {
             StringBuilder sb = new StringBuilder();
@@ -106,7 +110,13 @@ namespace TradingLib.Common
             this.RuleType = (QSEnumRuleType)Enum.Parse(typeof(QSEnumRuleType), rec[7]);
             this.RuleDescription = rec[8];
         }
+        #endregion
 
+        /// <summary>
+        /// 从一条规则IRule生成对应的RuleItem
+        /// </summary>
+        /// <param name="rule"></param>
+        /// <returns></returns>
         public static RuleItem IRule2RuleItem(IRule rule)
         {
             RuleItem item = new RuleItem();
@@ -115,6 +125,8 @@ namespace TradingLib.Common
             item.Enable = rule.Enable;
             item.ID = rule.ID;
             item.RuleName = rule.GetType().FullName;
+
+            //判断规则类型 委托检查或帐户检查
             Type t = rule.GetType();
             if(typeof(IOrderCheck).IsAssignableFrom(t))
             {
@@ -124,6 +136,7 @@ namespace TradingLib.Common
             {
                 item.RuleType = QSEnumRuleType.AccountRule;
             }
+
             item.SymbolSet = rule.SymbolSet;
             item.Value = rule.Value;
             item.RuleDescription = rule.RuleDescription;//规则描述
