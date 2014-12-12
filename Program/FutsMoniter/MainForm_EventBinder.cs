@@ -42,10 +42,10 @@ namespace FutsMoniter
             kryptonRibbonGroup1.Visible = Globals.LoginResponse.Domain.Super;
 
             //日志窗口
-            kryptonRibbonQATButton_debug.Visible = true;// Globals.LoginResponse.Domain.Super;
+            kryptonRibbonQATButton_debug.Visible = Globals.LoginResponse.Domain.Super;
 
             //超级管理员 可以查看所有界面
-            if (!Globals.LoginResponse.Domain.Super)
+            if (!(Globals.LoginResponse.Domain.Super&&Globals.Manager.IsRoot()))
             {
                 //系统管理
                 if (!Globals.UIAccess.nav_system || (!Globals.Manager.IsRoot()))//只有管理员才可以查看

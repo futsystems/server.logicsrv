@@ -81,7 +81,7 @@ namespace FutsMoniter
             finservice = null;//重置配资服务
 
             if (!Globals.EnvReady) return;
-            if (!Globals.UIAccess.fun_tab_finservice) return;
+            if (!Globals.Domain.Module_FinService) return;
             //如果服务计划没有获取 则请求服务计划
             if (serviceplans == null)
             {
