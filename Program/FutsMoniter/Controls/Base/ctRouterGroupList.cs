@@ -70,13 +70,13 @@ namespace FutsMoniter.Controls.Base
 
         public void OnInit()
         {
-            Globals.CallBackCentre.RegisterCallback("ConnectorManager", "QryRouterGroup", this.OnQryRouterGroup);
-            Globals.CallBackCentre.RegisterCallback("ConnectorManager", "NotifyRouterGroup", this.OnNotifyRouterGroup);
+            Globals.LogicEvent.RegisterCallback("ConnectorManager", "QryRouterGroup", this.OnQryRouterGroup);
+            Globals.LogicEvent.RegisterCallback("ConnectorManager", "NotifyRouterGroup", this.OnNotifyRouterGroup);
         }
 
         public void OnDisposed()
         {
-            Globals.CallBackCentre.UnRegisterCallback("ConnectorManager", "QryRouterGroup", this.OnQryRouterGroup);
+            Globals.LogicEvent.UnRegisterCallback("ConnectorManager", "QryRouterGroup", this.OnQryRouterGroup);
         }
 
         

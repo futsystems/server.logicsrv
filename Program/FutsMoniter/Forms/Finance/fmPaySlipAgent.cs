@@ -14,33 +14,41 @@ using TradingLib.Mixins.JsonObject;
 
 namespace FutsMoniter
 {
-    public partial class fmPaySlipAgent : ComponentFactory.Krypton.Toolkit.KryptonForm
+    public partial class fmPaySlipAgent : ComponentFactory.Krypton.Toolkit.KryptonForm,IEventBinder
     {
         public fmPaySlipAgent()
         {
             InitializeComponent();
-            if (Globals.CallbackCentreReady)
-            {
-                //Globals.CallBackCentre.RegisterCallback("MgrExchServer", "QryFinanceInfo", this.OnQryAgentFinanceInfo);
-                Globals.CallBackCentre.RegisterCallback("MgrExchServer", "QryAgentPaymentInfo", this.OnQryAgentPaymentInfo);
-            }
-            this.FormClosing += new FormClosingEventHandler(PaySlipForm_FormClosing);
+
             lbdatetime.Text = DateTime.Now.ToString("yy-MM-dd HH:mm:ss");
             if (Globals.EnvReady)
             {
                 lbmanager.Text = Globals.Manager.Login;
             }
+            this.Load += new EventHandler(fmPaySlipAgent_Load);
+        }
 
+        void fmPaySlipAgent_Load(object sender, EventArgs e)
+        {
+            Globals.RegIEventHandler(this);
+        }
+
+        public void OnInit()
+        {
+
+            Globals.LogicEvent.RegisterCallback("MgrExchServer", "QryAgentPaymentInfo", this.OnQryAgentPaymentInfo);
+        }
+
+        public void OnDisposed()
+        {
+            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "QryAgentPaymentInfo", this.OnQryAgentPaymentInfo);
         }
 
         string GetFileName()
         {
             return "付-" + DateTime.Now.ToString("yyMMdd") + "-" + lbagentname.Text + "-" + lbref.Text + "-" + lbamount.Text;
         }
-        void PaySlipForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "QryAgentPaymentInfo", this.OnQryAgentPaymentInfo);
-        }
+
 
         JsonWrapperCashOperation op = null;
 

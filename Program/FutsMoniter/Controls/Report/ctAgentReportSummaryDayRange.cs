@@ -30,12 +30,12 @@ namespace FutsMoniter
 
         public void OnInit()
         {
-            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryTotalReportDayRange", this.OnTotalReport);
+            Globals.LogicEvent.RegisterCallback("FinServiceCentre", "QryTotalReportDayRange", this.OnTotalReport);
         }
 
         public void OnDisposed()
         {
-            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryTotalReportDayRange", this.OnTotalReport);
+            Globals.LogicEvent.RegisterCallback("FinServiceCentre", "QryTotalReportDayRange", this.OnTotalReport);
         }
 
 
@@ -174,7 +174,7 @@ namespace FutsMoniter
         void OnInitFinished()
         {
             //Factory.IDataSourceFactory(agent).BindDataSource(Globals.BasicInfoTracker.GetBaseManagerCombList());
-            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryTotalReportDayRange", this.OnTotalReport);
+            Globals.LogicEvent.RegisterCallback("FinServiceCentre", "QryTotalReportDayRange", this.OnTotalReport);
         }
 
 

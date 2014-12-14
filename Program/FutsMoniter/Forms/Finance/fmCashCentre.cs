@@ -15,63 +15,63 @@ using TradingLib.Mixins.JsonObject;
 
 namespace FutsMoniter
 {
-    public partial class fmCashCentre : ComponentFactory.Krypton.Toolkit.KryptonForm
+    public partial class fmCashCentre : ComponentFactory.Krypton.Toolkit.KryptonForm,IEventBinder
     {
         public fmCashCentre()
         {
             InitializeComponent();
 
-            if (Globals.CallbackCentreReady)
-            {
-
-                Globals.CallBackCentre.RegisterCallback("MgrExchServer", "QryAgentCashOperationTotal", this.OnQryAgentCashOperationTotal);//查询代理出入金请求
-                Globals.CallBackCentre.RegisterCallback("MgrExchServer", "QryAccountCashOperationTotal", this.OnQryAccountCashOperationTotal);//查询交易帐户出入金请求
-
-                Globals.CallBackCentre.RegisterCallback("MgrExchServer", "RequestCashOperation", this.OnAccountCashOperation);
-                Globals.CallBackCentre.RegisterCallback("MgrExchServer", "ConfirmCashOperation", this.OnAccountCashOperation);
-                Globals.CallBackCentre.RegisterCallback("MgrExchServer", "CancelCashOperation", this.OnAccountCashOperation);
-                Globals.CallBackCentre.RegisterCallback("MgrExchServer", "RejectCashOperation", this.OnAccountCashOperation);
-
-                Globals.CallBackCentre.RegisterCallback("MgrExchServer", "ConfirmAccountCashOperation", this.OnAccountCashOperation);
-                Globals.CallBackCentre.RegisterCallback("MgrExchServer", "CancelAccountCashOperation", this.OnAccountCashOperation);
-                Globals.CallBackCentre.RegisterCallback("MgrExchServer", "RejectAccountCashOperation", this.OnAccountCashOperation);
-
-                Globals.CallBackCentre.RegisterCallback("MgrExchServer", "NotifyCashOperation", this.OnNotifyCashOperation);
-
-            }
-            this.FormClosing += new FormClosingEventHandler(CasherMangerForm_FormClosing);
             this.Load += new EventHandler(CasherMangerForm_Load);
 
         }
 
         void CasherMangerForm_Load(object sender, EventArgs e)
         {
-            if (Globals.EnvReady)
-            {
-                Globals.TLClient.ReqQryAgentCashopOperationTotal();
-                Globals.TLClient.ReqQryAccountCashopOperationTotal();
-            }
+            Globals.RegIEventHandler(this);
         }
 
-        void CasherMangerForm_FormClosing(object sender, FormClosingEventArgs e)
+
+
+        public void OnInit()
         {
-            Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "QryAgentCashOperationTotal", this.OnQryAgentCashOperationTotal);
-            Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "QryAccountCashOperationTotal", this.OnQryAccountCashOperationTotal);//查询交易帐户出入金请求
 
+            Globals.LogicEvent.RegisterCallback("MgrExchServer", "QryAgentCashOperationTotal", this.OnQryAgentCashOperationTotal);//查询代理出入金请求
+            Globals.LogicEvent.RegisterCallback("MgrExchServer", "QryAccountCashOperationTotal", this.OnQryAccountCashOperationTotal);//查询交易帐户出入金请求
 
-            Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "RequestCashOperation", this.OnAccountCashOperation);
-            Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "ConfirmCashOperation", this.OnAccountCashOperation);
-            Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "CancelCashOperation", this.OnAccountCashOperation);
-            Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "RejectCashOperation", this.OnAccountCashOperation);
+            Globals.LogicEvent.RegisterCallback("MgrExchServer", "RequestCashOperation", this.OnAccountCashOperation);
+            Globals.LogicEvent.RegisterCallback("MgrExchServer", "ConfirmCashOperation", this.OnAccountCashOperation);
+            Globals.LogicEvent.RegisterCallback("MgrExchServer", "CancelCashOperation", this.OnAccountCashOperation);
+            Globals.LogicEvent.RegisterCallback("MgrExchServer", "RejectCashOperation", this.OnAccountCashOperation);
 
-            Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "ConfirmAccountCashOperation", this.OnAccountCashOperation);
-            Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "CancelAccountCashOperation", this.OnAccountCashOperation);
-            Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "RejectAccountCashOperation", this.OnAccountCashOperation);
+            Globals.LogicEvent.RegisterCallback("MgrExchServer", "ConfirmAccountCashOperation", this.OnAccountCashOperation);
+            Globals.LogicEvent.RegisterCallback("MgrExchServer", "CancelAccountCashOperation", this.OnAccountCashOperation);
+            Globals.LogicEvent.RegisterCallback("MgrExchServer", "RejectAccountCashOperation", this.OnAccountCashOperation);
 
-            Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "NotifyCashOperation", this.OnNotifyCashOperation);
+            Globals.LogicEvent.RegisterCallback("MgrExchServer", "NotifyCashOperation", this.OnNotifyCashOperation);
 
+            Globals.TLClient.ReqQryAgentCashopOperationTotal();
+            Globals.TLClient.ReqQryAccountCashopOperationTotal();
         }
 
+        public void OnDisposed()
+        {
+            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "QryAgentCashOperationTotal", this.OnQryAgentCashOperationTotal);
+            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "QryAccountCashOperationTotal", this.OnQryAccountCashOperationTotal);//查询交易帐户出入金请求
+
+
+            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "RequestCashOperation", this.OnAccountCashOperation);
+            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "ConfirmCashOperation", this.OnAccountCashOperation);
+            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "CancelCashOperation", this.OnAccountCashOperation);
+            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "RejectCashOperation", this.OnAccountCashOperation);
+
+            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "ConfirmAccountCashOperation", this.OnAccountCashOperation);
+            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "CancelAccountCashOperation", this.OnAccountCashOperation);
+            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "RejectAccountCashOperation", this.OnAccountCashOperation);
+
+            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "NotifyCashOperation", this.OnNotifyCashOperation);
+
+            
+        }
 
         void OnQryAgentCashOperationTotal(string jsonstr)
         {

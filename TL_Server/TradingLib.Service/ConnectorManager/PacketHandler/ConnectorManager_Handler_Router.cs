@@ -196,7 +196,7 @@ namespace TradingLib.ServiceManager
 
                     BasicTracker.RouterGroupTracker.UpdateRouterGroup(group);
 
-                    session.NotifyMgr(group, this.ServiceMgrName, "NotifyRouterGroup");
+                    session.NotifyMgr("NotifyRouterGroup",group);
                     session.OperationSuccess("更新通道设置成功");
                 }
             }
@@ -273,7 +273,7 @@ namespace TradingLib.ServiceManager
                     //2.更新参数
                     BasicTracker.RouterGroupTracker.UpdateRouterItem(item);
 
-                    session.NotifyMgr(item, this.ServiceMgrName, "NotifyRouterItem");
+                    session.NotifyMgr("NotifyRouterItem",item);
                     session.OperationSuccess("更新路由项目成功");
                 }
             }

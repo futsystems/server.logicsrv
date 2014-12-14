@@ -30,7 +30,7 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="session"></param>
         /// <param name="packet"></param>
-        public static void SendPacket(this ISession session,IPacket packet)
+        private static void SendPacket(this ISession session,IPacket packet)
         {
             TLCtxHelper.Ctx.MessageExchange.Send(packet);
         }
@@ -40,10 +40,12 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="session"></param>
         /// <param name="packet"></param>
-        public static void SendPacketMgr(this ISession session, IPacket packet)
+        private static void SendPacketMgr(this ISession session, IPacket packet)
         {
             TLCtxHelper.Ctx.MessageMgr.Send(packet);
         }
+
+
 
         /// <summary>
         /// 向管理端发送一个jsonreply回报
@@ -65,6 +67,7 @@ namespace TradingLib.Common
             SendPacketMgr(session, response);
         }
 
+
         /// <summary>
         /// 操作错误回报
         /// 通过FutsRspErro携带具体的错误消息生成RspMGROperationResponse 发送给对应的客户端
@@ -77,7 +80,7 @@ namespace TradingLib.Common
             
             response.RspInfo.Fill(error);
 
-            SendPacketMgr(session, response);
+            session.SendPacketMgr(response);
         }
 
         /// <summary>
@@ -91,28 +94,12 @@ namespace TradingLib.Common
             RspMGROperationResponse response = ResponseTemplate<RspMGROperationResponse>.SrvSendRspResponse(session);
             response.RspInfo.ErrorMessage = successmessage;
 
-            SendPacketMgr(session, response);
-        }
-
-        /// <summary>
-        /// 通知管理端
-        /// 给出通知对象,模块名，操作码，通知地址
-        /// 默认通知地址为null,则表明是通知给session
-        /// </summary>
-        /// <param name="op"></param>
-        public static void NotifyMgr(this ISession session,object obj,string module,string cmdstr,IEnumerable<ILocation> targets=null)
-        {
-            //通知方式 request获得对应的判断谓词 用于判断哪个客户端需要通知，然后再投影获得对应的地址集合
-            NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(targets==null?new ILocation[]{session.GetLocation()}:targets);
-            response.ModuleID = module;
-            response.CMDStr = cmdstr;
-            response.Result = new Mixins.ReplyWriter().Start().FillReply(Mixins.JsonReply.GenericSuccess()).FillPlayload(obj).End().ToString();
             session.SendPacketMgr(response);
         }
 
+
         /// <summary>
         /// 向某地址列表发送通知 如果地址列表为null,则发送到ISession对应的地址
-        /// 
         /// </summary>
         /// <param name="session"></param>
         /// <param name="cmdstr"></param>
@@ -129,6 +116,7 @@ namespace TradingLib.Common
         }
 
 
+
         public static ILocation GetLocation(this ISession session)
         {
             ILocation location = new Location();
@@ -137,23 +125,6 @@ namespace TradingLib.Common
             return location;
         }
 
-
-        /// <summary>
-        /// 向一组管理端发送通知
-        /// </summary>
-        /// <param name="session"></param>
-        /// <param name="reply"></param>
-        /// <param name="locations"></param>
-        /// <param name="islast"></param>
-        //public static void SendJsonNotifyMgr(this ISession session, string notifyname, TradingLib.Mixins.JsonReply reply, ILocation[] locations, bool islast = true)
-        //{
-        //    NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(locations);
-        //    response.ModuleID = session.ContirbID;
-        //    response.CMDStr = notifyname;
-        //    response.Result = new Mixins.ReplyWriter().Start().FillReply(reply).End().ToString();
-
-        //    SendPacketMgr(session, response);
-        //}
         /// <summary>
         /// 向管理端发送一个jsonwrapper对象
         /// </summary>
@@ -170,24 +141,5 @@ namespace TradingLib.Common
 
             SendPacketMgr(session, response);
         }
-
-
-        /// <summary>
-        /// 向一组管理端发送通知
-        /// </summary>
-        /// <param name="session"></param>
-        /// <param name="obj"></param>
-        /// <param name="locations"></param>
-        /// <param name="islast"></param>
-        //public static void SendJsonNotifyMgr(ISession session,string notifyname, object obj,ILocation[] locations, bool islast = true)
-        //{
-        //    NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(locations);
-        //    response.ModuleID = session.ContirbID;
-        //    response.CMDStr = notifyname;
-        //    response.Result = new Mixins.ReplyWriter().Start().FillReply(Mixins.JsonReply.GenericSuccess()).FillPlayload(obj).End().ToString();
-
-        //    SendPacketMgr(session, response);
-        //}
-
     }
 }

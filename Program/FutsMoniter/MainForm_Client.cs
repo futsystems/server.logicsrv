@@ -62,14 +62,14 @@ namespace FutsMoniter
 
                     s = ".";
                     now = DateTime.Now;
-                    while (!_basicinfodone && (DateTime.Now - now).TotalSeconds < 10)
+                    while (!_ctx.BasicInfoDone && (DateTime.Now - now).TotalSeconds < 10)
                     {
                         ShowInfo("查询基本数据中" + s);
                         Thread.Sleep(500);
                         s += ".";
                     }
                     //_basicinfodone由帐户加载过程中通过最后一个帐户信息带有的Islast进行设定
-                    if (_basicinfodone)
+                    if (_ctx.BasicInfoDone)
                     {
                         if (Globals.Manager == null)
                         {
@@ -120,7 +120,7 @@ namespace FutsMoniter
             tlclient.OnConnectEvent += new VoidDelegate(tlclient_OnConnectEvent);
             tlclient.OnDisconnectEvent += new VoidDelegate(tlclient_OnDisconnectEvent);
             tlclient.OnLoginEvent += new RspMGRLoginResponseDel(tlclient_OnLoginEvent);
-            tlclient.BindLogicHandler(this);
+            tlclient.BindLogicHandler(Globals.LogicHandler);
             Globals.RegisterClient(tlclient);
             _gotloginrep = false;
             _logined = false;

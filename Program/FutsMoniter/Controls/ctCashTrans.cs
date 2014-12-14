@@ -74,11 +74,11 @@ namespace FutsMoniter
             //绑定事件
             if (ViewType == CashOpViewType.Account)
             {
-                Globals.CallBackCentre.RegisterCallback("MgrExchServer", "QueryAccountCashTrans", this.OnQryCashTrans);
+                Globals.LogicEvent.RegisterCallback("MgrExchServer", "QueryAccountCashTrans", this.OnQryCashTrans);
             }
             else
             {
-                Globals.CallBackCentre.RegisterCallback("MgrExchServer", "QueryAgentCashTrans", this.OnQryCashTrans);
+                Globals.LogicEvent.RegisterCallback("MgrExchServer", "QueryAgentCashTrans", this.OnQryCashTrans);
             }
         }
 
@@ -86,11 +86,11 @@ namespace FutsMoniter
         {
             if (ViewType == CashOpViewType.Account)
             {
-                Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "QueryAccountCashTrans", this.OnQryCashTrans);
+                Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "QueryAccountCashTrans", this.OnQryCashTrans);
             }
             else
             {
-                Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "QueryAgentCashTrans", this.OnQryCashTrans);
+                Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "QueryAgentCashTrans", this.OnQryCashTrans);
             }
         }
 

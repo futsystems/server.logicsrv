@@ -40,12 +40,12 @@ namespace FutsMoniter
 
         public void OnInit()
         {
-            Globals.CallBackCentre.RegisterCallback("MgrExchServer", "QryAccountInfo", this.OnQryAccountInfo);
+            Globals.LogicEvent.RegisterCallback("MgrExchServer", "QryAccountInfo", this.OnQryAccountInfo);
         }
 
         public void OnDisposed()
         {
-            Globals.CallBackCentre.RegisterCallback("MgrExchServer", "QryAccountInfo", this.OnQryAccountInfo);
+            Globals.LogicEvent.RegisterCallback("MgrExchServer", "QryAccountInfo", this.OnQryAccountInfo);
         }
 
         void OnQryAccountInfo(string json)

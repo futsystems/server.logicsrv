@@ -51,8 +51,8 @@ namespace FutsMoniter
 
         public void OnInit()
         {
-            Globals.CallBackCentre.RegisterCallback("MgrExchServer", "QueryPermmissionTemplateList", OnPermissionTemplate);
-            Globals.CallBackCentre.RegisterCallback("MgrExchServer", "QueryAgentPermission", OnAgentPermission);
+            Globals.LogicEvent.RegisterCallback("MgrExchServer", "QueryPermmissionTemplateList", OnPermissionTemplate);
+            Globals.LogicEvent.RegisterCallback("MgrExchServer", "QueryAgentPermission", OnAgentPermission);
 
             
 
@@ -65,8 +65,8 @@ namespace FutsMoniter
 
         public void OnDisposed()
         {
-            Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "QueryPermmissionTemplateList", OnPermissionTemplate);
-            Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "QueryAgentPermission", OnAgentPermission);
+            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "QueryPermmissionTemplateList", OnPermissionTemplate);
+            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "QueryAgentPermission", OnAgentPermission);
         }
 
 

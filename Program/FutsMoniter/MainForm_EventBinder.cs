@@ -25,6 +25,11 @@ namespace FutsMoniter
 
         }
 
+        void OnRspInfo(TradingLib.API.RspInfo info)
+        {
+            //将RspInfo写入缓存 等待后台线程进行处理
+            infobuffer.Write(info);
+        }
 
         public void OnInit()
         {
@@ -43,6 +48,8 @@ namespace FutsMoniter
 
             //日志窗口
             kryptonRibbonQATButton_debug.Visible = Globals.LoginResponse.Domain.Super;
+
+            Globals.LogicEvent.GotRspInfoEvent += new Action<TradingLib.API.RspInfo>(OnRspInfo);
 
             //超级管理员 可以查看所有界面
             if (!(Globals.LoginResponse.Domain.Super&&Globals.Manager.IsRoot()))

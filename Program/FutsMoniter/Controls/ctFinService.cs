@@ -32,20 +32,20 @@ namespace FutsMoniter
         #region IEventBinder
         public void OnInit()
         {
-            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryFinService", this.OnQryFinService);//查询配资服务
-            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryFinServicePlan", this.OnQryServicePlan);//查询配资服务计划
-            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "UpdateArguments", this.OnQryFinService);//更新参数
-            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "ChangeServicePlane", this.OnQryFinService);//修改服务计划
-            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "DeleteServicePlane", this.OnQryFinService);//删除服务
+            Globals.LogicEvent.RegisterCallback("FinServiceCentre", "QryFinService", this.OnQryFinService);//查询配资服务
+            Globals.LogicEvent.RegisterCallback("FinServiceCentre", "QryFinServicePlan", this.OnQryServicePlan);//查询配资服务计划
+            Globals.LogicEvent.RegisterCallback("FinServiceCentre", "UpdateArguments", this.OnQryFinService);//更新参数
+            Globals.LogicEvent.RegisterCallback("FinServiceCentre", "ChangeServicePlane", this.OnQryFinService);//修改服务计划
+            Globals.LogicEvent.RegisterCallback("FinServiceCentre", "DeleteServicePlane", this.OnQryFinService);//删除服务
         }
 
         public void OnDisposed()
         {
-            Globals.CallBackCentre.UnRegisterCallback("FinServiceCentre", "QryFinService", this.OnQryFinService);//查询配资服务
-            Globals.CallBackCentre.UnRegisterCallback("FinServiceCentre", "QryFinServicePlan", this.OnQryServicePlan);//查询配资服务计划
-            Globals.CallBackCentre.UnRegisterCallback("FinServiceCentre", "UpdateArguments", this.OnQryFinService);//更新参数
-            Globals.CallBackCentre.UnRegisterCallback("FinServiceCentre", "ChangeServicePlane", this.OnQryFinService);//修改服务计划
-            Globals.CallBackCentre.UnRegisterCallback("FinServiceCentre", "DeleteServicePlane", this.OnQryFinService);//删除服务
+            Globals.LogicEvent.UnRegisterCallback("FinServiceCentre", "QryFinService", this.OnQryFinService);//查询配资服务
+            Globals.LogicEvent.UnRegisterCallback("FinServiceCentre", "QryFinServicePlan", this.OnQryServicePlan);//查询配资服务计划
+            Globals.LogicEvent.UnRegisterCallback("FinServiceCentre", "UpdateArguments", this.OnQryFinService);//更新参数
+            Globals.LogicEvent.UnRegisterCallback("FinServiceCentre", "ChangeServicePlane", this.OnQryFinService);//修改服务计划
+            Globals.LogicEvent.UnRegisterCallback("FinServiceCentre", "DeleteServicePlane", this.OnQryFinService);//删除服务
         }
         #endregion
 

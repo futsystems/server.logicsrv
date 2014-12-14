@@ -40,12 +40,12 @@ namespace FutsMoniter
         }
         public void OnInit()
         {
-            Globals.CallBackCentre.RegisterCallback("MgrExchServer", "QryReceiveableBank", this.OnQryBank);
+            Globals.LogicEvent.RegisterCallback("MgrExchServer", "QryReceiveableBank", this.OnQryBank);
         }
 
         public void OnDisposed()
         {
-            Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "QryReceiveableBank", this.OnQryBank);
+            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "QryReceiveableBank", this.OnQryBank);
         }
 
 

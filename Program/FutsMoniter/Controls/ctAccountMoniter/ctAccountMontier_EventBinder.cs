@@ -14,6 +14,26 @@ namespace FutsMoniter.Controls
 
         public void OnInit()
         {
+            //加载帐户
+            foreach (IAccountLite account in Globals.LogicHandler.Accounts)
+            {
+                InvokeGotAccount(account);
+            }
+
+            //帐户事件
+            Globals.LogicEvent.GotAccountEvent += new Action<IAccountLite>(GotAccount);
+            Globals.LogicEvent.GotFinanceInfoLiteEvent += new Action<IAccountInfoLite>(GotAccountInfoLite);
+            Globals.LogicEvent.GotAccountChangedEvent += new Action<IAccountLite>(GotAccountChanged);
+            Globals.LogicEvent.GotSessionUpdateEvent += new Action<NotifyMGRSessionUpdateNotify>(GotSessionUpdate);
+            Globals.LogicEvent.GotResumeResponseEvent += new Action<RspMGRResumeAccountResponse>(GotResumeResponse);
+            
+            //交易事件
+            Globals.LogicEvent.GotTickEvent += new TickDelegate(GotTick);
+            Globals.LogicEvent.GotOrderEvent +=new OrderDelegate(GotOrder);
+            Globals.LogicEvent.GotFillEvent += new FillDelegate(GotTrade);
+
+
+
             Globals.Debug("ctAccountMontier init called @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
             if (!Globals.LoginResponse.Domain.Super)
             {
@@ -46,16 +66,14 @@ namespace FutsMoniter.Controls
 
                 //模块限制
                 funpageFinservice.Visible = Globals.LoginResponse.Domain.Module_FinService;
-
-                
             }
 
-            //Globals.CallBackCentre.RegisterCallback("MgrExchServer", "QryAccountInfo", this.OnQryAccountInfo);
+            //Globals.LogicEvent.RegisterCallback("MgrExchServer", "QryAccountInfo", this.OnQryAccountInfo);
         }
 
         public void OnDisposed()
         {
-            //Globals.CallBackCentre.RegisterCallback("MgrExchServer", "QryAccountInfo", this.OnQryAccountInfo);
+            //Globals.LogicEvent.RegisterCallback("MgrExchServer", "QryAccountInfo", this.OnQryAccountInfo);
         }
 
 

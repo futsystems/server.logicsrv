@@ -306,7 +306,7 @@ namespace TradingLib.Common
                 target.ExtraMargin = sec.ExtraMargin;
                 target.MaintanceMargin = sec.MaintanceMargin;
                 target.Tradeable = sec.Tradeable;
-
+ 
                 //数据库更新
                 ORM.MBasicInfo.UpdateSecurity(target);
             }

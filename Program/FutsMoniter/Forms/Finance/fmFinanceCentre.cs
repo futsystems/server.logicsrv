@@ -14,29 +14,13 @@ using FutSystems.GUI;
 
 namespace FutsMoniter
 {
-    public partial class fmFinanceCentre : ComponentFactory.Krypton.Toolkit.KryptonForm
+    public partial class fmFinanceCentre : ComponentFactory.Krypton.Toolkit.KryptonForm,IEventBinder
     {
          bool _gotdata = false;
         decimal _avabile = 0;
         public fmFinanceCentre()
         {
             InitializeComponent();
-            if (Globals.CallbackCentreReady)
-            {
-                Globals.CallBackCentre.RegisterCallback("MgrExchServer", "QryFinanceInfo", this.OnQryAgentFinanceInfo);
-                Globals.CallBackCentre.RegisterCallback("MgrExchServer", "QryFinanceInfoLite", this.OnQryAgentFinanceInfoLite);
-                Globals.CallBackCentre.RegisterCallback("MgrExchServer", "UpdateAgentBankAccount", this.OnUpdateAgentBankInfo);
-
-                Globals.CallBackCentre.RegisterCallback("MgrExchServer", "RequestCashOperation", this.OnCashOperation);
-                Globals.CallBackCentre.RegisterCallback("MgrExchServer", "ConfirmCashOperation", this.OnCashOperation);
-                Globals.CallBackCentre.RegisterCallback("MgrExchServer", "CancelCashOperation", this.OnCashOperation);
-                Globals.CallBackCentre.RegisterCallback("MgrExchServer", "RejectCashOperation", this.OnCashOperation);
-                
-
-                Globals.CallBackCentre.RegisterCallback("MgrExchServer", "NotifyCashOperation", this.OnNotifyCashOperation);
-                
-            }
-            this.FormClosing += new FormClosingEventHandler(FinanceMangerForm_FormClosing);
             this.Load += new EventHandler(FinanceMangerForm_Load);
             this.btnCashOperation.Click +=new EventHandler(btnCashOperation_Click);
             this.btnChangeBankAccount.Click +=new EventHandler(btnChangeBankAccount_Click);
@@ -44,28 +28,40 @@ namespace FutsMoniter
 
         void FinanceMangerForm_Load(object sender, EventArgs e)
         {
-            if (Globals.EnvReady)
-            {
-                Globals.TLClient.ReqQryAgentFinanceInfo();
-            }
+            Globals.RegIEventHandler(this);
         }
 
-        void FinanceMangerForm_FormClosing(object sender, FormClosingEventArgs e)
+        public void OnInit()
         {
-            if (Globals.CallbackCentreReady)
-            {
-                Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "QryFinanceInfo", this.OnQryAgentFinanceInfo);
-                Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "UpdateAgentBankAccount", this.OnUpdateAgentBankInfo);
-                Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "RequestCashOperation", this.OnCashOperation);
-                Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "ConfirmCashOperation", this.OnCashOperation);
-                Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "CancelCashOperation", this.OnCashOperation);
-                Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "RejectCashOperation", this.OnCashOperation);
-                Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "QryFinanceInfoLite", this.OnQryAgentFinanceInfoLite);
+            Globals.LogicEvent.RegisterCallback("MgrExchServer", "QryFinanceInfo", this.OnQryAgentFinanceInfo);
+            Globals.LogicEvent.RegisterCallback("MgrExchServer", "QryFinanceInfoLite", this.OnQryAgentFinanceInfoLite);
+            Globals.LogicEvent.RegisterCallback("MgrExchServer", "UpdateAgentBankAccount", this.OnUpdateAgentBankInfo);
 
-                Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "NotifyCashOperation", this.OnNotifyCashOperation);
+            Globals.LogicEvent.RegisterCallback("MgrExchServer", "RequestCashOperation", this.OnCashOperation);
+            Globals.LogicEvent.RegisterCallback("MgrExchServer", "ConfirmCashOperation", this.OnCashOperation);
+            Globals.LogicEvent.RegisterCallback("MgrExchServer", "CancelCashOperation", this.OnCashOperation);
+            Globals.LogicEvent.RegisterCallback("MgrExchServer", "RejectCashOperation", this.OnCashOperation);
+
+
+            Globals.LogicEvent.RegisterCallback("MgrExchServer", "NotifyCashOperation", this.OnNotifyCashOperation);
                 
-            }
+            
         }
+
+        public void OnDisposed()
+        {
+            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "QryFinanceInfo", this.OnQryAgentFinanceInfo);
+            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "UpdateAgentBankAccount", this.OnUpdateAgentBankInfo);
+            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "RequestCashOperation", this.OnCashOperation);
+            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "ConfirmCashOperation", this.OnCashOperation);
+            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "CancelCashOperation", this.OnCashOperation);
+            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "RejectCashOperation", this.OnCashOperation);
+            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "QryFinanceInfoLite", this.OnQryAgentFinanceInfoLite);
+
+            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "NotifyCashOperation", this.OnNotifyCashOperation);
+                
+        }
+
 
 
         /// <summary>

@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{908E3D8C-A9D0-4296-91B7-EB8909A66CB8}</ProjectGuid>
@@ -14,7 +14,7 @@
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
@@ -25,8 +25,17 @@
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\FutsMoniter2\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release-OEM|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\FutsMoniter2\</OutputPath>
@@ -35,7 +44,28 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>moniter0.ico</ApplicationIcon>
+    <ApplicationIcon>moniter_terminal2.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug-OEM|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\Platform\FutsMoniter\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;OEM</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisLogFile>..\..\Platform\FutsMoniter\FutsMoniter.exe.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisRuleDirectories>;C:\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup>
+    <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ComponentFactory.Krypton.Docking, Version=4.4.0.0, Culture=neutral, PublicKeyToken=a87e673e9ecb6e8e" />
@@ -82,13 +112,36 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\IEventBinder.cs" />
+    <Compile Include="API\ILogicHandler\ILogicHandler_.cs" />
+    <Compile Include="API\ILogicHandler\ILogicHandler_Contrib.cs" />
+    <Compile Include="API\ILogicHandler\ILogicHandler_Basic.cs" />
+    <Compile Include="API\ILogicHandler\ILogicHandler_Rule.cs" />
+    <Compile Include="API\ILogicHandler\ILogicHandler_Trading.cs" />
+    <Compile Include="API\ILogicHandler\ILogicHandler_Account.cs" />
     <Compile Include="Client\AsyncClient_MQ.cs" />
     <Compile Include="Client\TLClientNet_Request_Connector.cs" />
     <Compile Include="Client\TLClientNet_Request_Domain.cs" />
     <Compile Include="Client\TLClientNet_Request_BasicInfo.cs" />
     <Compile Include="Client\TLClientNet_Request_Account.cs" />
     <Compile Include="Client\TLClientNet_Request_Msic.cs" />
+    <Compile Include="Common\BasicInfoTracker\BasicInfoTracker_.cs" />
+    <Compile Include="Common\BasicInfoTracker\BasicInfoTracker_BasicInfo.cs" />
+    <Compile Include="Common\BasicInfoTracker\BasicInfoTracker_Rule.cs" />
+    <Compile Include="Common\BasicInfoTracker\BasicInfoTracker_Manager.cs" />
+    <Compile Include="Common\Ctx\CtxEvent_.cs" />
+    <Compile Include="Common\Ctx\CtxEvent_Account.cs" />
+    <Compile Include="Common\Ctx\CtxEvent_Trading.cs" />
+    <Compile Include="Common\Ctx\CtxEvent_Other.cs" />
     <Compile Include="Common\IBasicInfoUtils.cs" />
+    <Compile Include="Common\Ctx\Ctx.cs" />
+    <Compile Include="Common\Ctx\CtxHandler_.cs" />
+    <Compile Include="Common\Ctx\CtxHandler_BasicInfo.cs" />
+    <Compile Include="Common\Ctx\CtxHandler_Manager.cs" />
+    <Compile Include="Common\Ctx\CtxHandler_Trading.cs" />
+    <Compile Include="Common\Ctx\CtxHandler_Account.cs" />
+    <Compile Include="Common\Ctx\CtxHandler_Rule.cs" />
+    <Compile Include="Common\Ctx\CtxHandler_Contrib.cs" />
+    <Compile Include="Common\Ctx\CtxHandler_HistQuery.cs" />
     <Compile Include="Common\ManagerUtils.cs" />
     <Compile Include="Controls\Base\ctAccountType.cs">
       <SubType>UserControl</SubType>
@@ -257,7 +310,7 @@
     </Compile>
     <Compile Include="API\Delegate.cs" />
     <Compile Include="API\IBasicInfo.cs" />
-    <Compile Include="API\ICallback.cs" />
+    <Compile Include="API\ICallBack\ICallback.cs" />
     <Compile Include="Controls\ctAccountMoniter\ctAccountMoniter_ServiceHolder.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -273,8 +326,8 @@
     <Compile Include="Controls\Base\ctTLEdit.Designer.cs">
       <DependentUpon>ctTLEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Common\BasicInfoTracker.cs" />
-    <Compile Include="API\ILogicHandler.cs" />
+    <Compile Include="Common\BasicInfoTracker\BasicInfoTracker.cs" />
+    <Compile Include="API\ILogicHandler\ILogicHandler.cs" />
     <Compile Include="Client\AsyncClient.cs" />
     <Compile Include="Client\TLClientNet.cs" />
     <Compile Include="Client\TLClientNet_PacketHandler.cs" />
@@ -897,6 +950,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="moniter_terminal.ico" />
+    <Content Include="moniter_terminal2.ico" />
+    <None Include="resources\moniter_terminal.ico" />
     <None Include="resources\deleteaccount.png" />
     <None Include="resources\changerouter.png" />
     <None Include="images\message_error.png" />

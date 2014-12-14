@@ -30,6 +30,7 @@ namespace TradingLib.Common
         /// <param name="sym"></param>
         public static void UpdateSymbol(this Domain domain, SymbolImpl sym)
         {
+            sym.Domain_ID = domain.ID;
             BasicTracker.SymbolTracker.UpdateSymbol(domain.ID, sym);
         }
 

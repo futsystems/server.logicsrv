@@ -138,13 +138,13 @@ namespace FutsMoniter
                 }
             }
 
-            Globals.CallBackCentre.RegisterCallback("MgrExchServer", "NotifyManagerUpdate", OnManagerNotify);
+            Globals.LogicEvent.RegisterCallback("MgrExchServer", "NotifyManagerUpdate", OnManagerNotify);
             _gotdata = true;
         }
 
         public void OnDisposed()
         {
-            Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "NotifyManagerUpdate", OnManagerNotify);
+            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "NotifyManagerUpdate", OnManagerNotify);
         }
 
 

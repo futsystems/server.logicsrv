@@ -11,7 +11,7 @@ using TradingLib.Common;
 
 namespace FutsMoniter
 {
-    public partial class MainForm : ComponentFactory.Krypton.Toolkit.KryptonForm, ILogicHandler, ICallbackCentre,IEventBinder
+    public partial class MainForm : ComponentFactory.Krypton.Toolkit.KryptonForm,IEventBinder
     {
 
         Log logfile = null;
@@ -20,7 +20,7 @@ namespace FutsMoniter
         bool _connected = false;
         bool _logined = false;
         bool _gotloginrep = false;
-        bool _basicinfodone = false;//基本数据是否已经查询完毕
+       // bool _basicinfodone = false;//基本数据是否已经查询完毕
         event DebugDelegate ShowInfoHandler;
 
         string _servers = "127.0.0.1";
@@ -28,7 +28,7 @@ namespace FutsMoniter
         DebugForm debugform = new DebugForm();
 
         fmHistQuery histqryform;
-        BasicInfoTracker basicinfotracker;
+        //BasicInfoTracker basicinfotracker;
 
         //fmManagerCentre mgrform;
         fmAgentProfitReport agentprofitreportform;
@@ -50,14 +50,16 @@ namespace FutsMoniter
             logfile.GotDebug(msg);
         }
 
-        TradingInfoTracker infotracker;
+        //TradingInfoTracker infotracker;
         System.Threading.Timer _timer;
+        Ctx _ctx;
         public MainForm(DebugDelegate showinfo)
         {
             //绑定回调函数
-            Globals.RegisterCallBackCentre(this);
+            //Globals.RegisterCallBackCentre(this);
 
-            
+            _ctx = new Ctx();
+            _ctx.InitStatusEvent += new Action<string>(ShowInfo);
 
             //初始化界面控件
             InitializeComponent();
@@ -70,7 +72,7 @@ namespace FutsMoniter
 
             if (Globals.Config["HeaderImg"].AsString().Equals("OEM"))
             {
-                this.Icon = Properties.Resources.moniter_oem;
+                this.Icon = Properties.Resources.moniter_terminal;
             }
 
 
@@ -106,11 +108,13 @@ namespace FutsMoniter
             ctAccountMontier1.SendDebugEvent += new DebugDelegate(debug);
             ctAccountMontier1.QryAccountHistEvent += new IAccountLiteDel(ctAccountMontier1_QryAccountHistEvent);
 
-            infotracker = new TradingInfoTracker();
-            Globals.RegisterInfoTracker(infotracker);
+            
+            //Globals.RegisterLogicHandler
+            //infotracker = new TradingInfoTracker();
+            //Globals.RegisterInfoTracker(infotracker);
 
-            basicinfotracker = new BasicInfoTracker();
-            Globals.RegisterBasicInfoTracker(basicinfotracker);
+            //basicinfotracker = new BasicInfoTracker();
+           // Globals.RegisterBasicInfoTracker(basicinfotracker);
 
             histqryform = new fmHistQuery();
             agentprofitreportform = new fmAgentProfitReport();
@@ -134,9 +138,9 @@ namespace FutsMoniter
             //停止tlclient
             tlclient.Stop();
             //清空基础数据
-            basicinfotracker.Clear();
+            //basicinfotracker.Clear();
             //清空实时交易记录
-            infotracker.Clear();
+            //infotracker.Clear();
         }
 
 

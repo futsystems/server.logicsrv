@@ -31,18 +31,18 @@ namespace FutsMoniter
 
         public void OnInit()
         {
-            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryTotalReport", this.OnTotalReport);
+            Globals.LogicEvent.RegisterCallback("FinServiceCentre", "QryTotalReport", this.OnTotalReport);
         }
 
         public void OnDisposed()
         {
-            Globals.CallBackCentre.UnRegisterCallback("FinServiceCentre", "QryTotalReport", this.OnTotalReport);
+            Globals.LogicEvent.UnRegisterCallback("FinServiceCentre", "QryTotalReport", this.OnTotalReport);
         }
 
 
         void OnInitFinished()
         {
-            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryTotalReport", this.OnTotalReport);
+            Globals.LogicEvent.RegisterCallback("FinServiceCentre", "QryTotalReport", this.OnTotalReport);
         }
 
 

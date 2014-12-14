@@ -24,7 +24,6 @@ namespace FutsMoniter
             else if (item.RuleType == QSEnumRuleType.AccountRule)
             {
                 InvokeGotAccountRuleItemDel(item, islast);
-
             }
         }
         /// <summary>

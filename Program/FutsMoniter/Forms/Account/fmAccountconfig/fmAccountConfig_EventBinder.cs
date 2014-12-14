@@ -13,7 +13,7 @@ namespace FutsMoniter
         public void OnInit()
         {
             Globals.Debug("fmAccountConfig init called @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-
+            
             if (!Globals.LoginResponse.Domain.Super)
             {
                 pageConfig.Visible = Globals.UIAccess.moniter_tab_config;

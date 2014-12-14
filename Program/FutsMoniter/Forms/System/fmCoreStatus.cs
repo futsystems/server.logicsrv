@@ -52,12 +52,12 @@ namespace FutsMoniter
 
         public void OnInit()
         {
-            Globals.CallBackCentre.RegisterCallback("MgrExchServer", "QrySystemStatus", this.OnQrySystemStatus);
+            Globals.LogicEvent.RegisterCallback("MgrExchServer", "QrySystemStatus", this.OnQrySystemStatus);
         }
 
         public void OnDisposed()
         {
-            Globals.CallBackCentre.UnRegisterCallback("MgrExchServer", "QrySystemStatus", this.OnQrySystemStatus);
+            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "QrySystemStatus", this.OnQrySystemStatus);
         }
         void OnQrySystemStatus(string json)
         {

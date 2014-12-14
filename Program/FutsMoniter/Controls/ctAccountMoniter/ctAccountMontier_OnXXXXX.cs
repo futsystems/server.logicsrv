@@ -21,17 +21,49 @@ namespace FutsMoniter.Controls
             return false;
         }
 
-        public void GotTick(Tick k)
+       
+
+        
+
+        void GotTick(Tick k)
         {
-            //debug("account montier got tick:" + k.ToString(), QSEnumDebugLevel.INFO);
             ctPositionView1.GotTick(k);
             viewQuoteList1.GotTick(k);
         }
+
+        /// <summary>
+        /// 获得服务端转发的委托
+        /// </summary>
+        /// <param name="o"></param>
+        void GotOrder(Order o)
+        {
+            debug("accountmoniter got order, accountselected:" + AccountSetlected.Account, QSEnumDebugLevel.INFO);
+            if (IsCurrentAccount(o.Account) && Globals.TradingInfoTracker.IsReady(o.Account))
+            {
+                Globals.Debug("view control got order");
+                ctOrderView1.GotOrder(o);
+                ctPositionView1.GotOrder(o);
+            }
+        }
+
+        /// <summary>
+        /// 获得服务端转发的成交
+        /// </summary>
+        /// <param name="f"></param>
+        void GotTrade(Trade f)
+        {
+            if (IsCurrentAccount(f.Account) && Globals.TradingInfoTracker.IsReady(f.Account))
+            {
+                ctTradeView1.GotFill(f);
+                ctPositionView1.GotFill(f);
+            }
+        }
+
         /// <summary>
         /// 获得服务端的帐户信息
         /// </summary>
         /// <param name="account"></param>
-        public void GotAccount(IAccountLite account)
+        void GotAccount(IAccountLite account)
         {
             if (string.IsNullOrEmpty(account.Account))
                 return;
@@ -43,43 +75,28 @@ namespace FutsMoniter.Controls
         /// 获得交易帐户的财务状态信息
         /// </summary>
         /// <param name="info"></param>
-        public void GotAccountInfoLite(IAccountInfoLite info)
+        void GotAccountInfoLite(IAccountInfoLite info)
         {
             accountinfocache.Write(info);
         }
 
         /// <summary>
-        /// 获得服务端转发的委托
+        /// 响应帐户变动事件
         /// </summary>
-        /// <param name="o"></param>
-        public void GotOrder(Order o)
+        /// <param name="account"></param>
+        public void GotAccountChanged(IAccountLite account)
         {
-            debug("accountmoniter got order, accountselected:" + AccountSetlected.Account, QSEnumDebugLevel.INFO);
-            if (IsCurrentAccount(o.Account) && Globals.TradingInfoTracker.IsReady(o.Account))
-            {
-                ctOrderView1.GotOrder(o);
-                ctPositionView1.GotOrder(o);
-            }
+            accountcache.Write(account);
+            fmaccountconfig.GotAccountChanged(account);
+
         }
 
-        /// <summary>
-        /// 获得服务端转发的成交
-        /// </summary>
-        /// <param name="f"></param>
-        public void GotTrade(Trade f)
-        {
-            if (IsCurrentAccount(f.Account) && Globals.TradingInfoTracker.IsReady(f.Account))
-            {
-                ctTradeView1.GotFill(f);
-                ctPositionView1.GotFill(f);
-            }
-        }
 
         /// <summary>
         /// 获得恢复交易帐户交易数据的开始和结束回报
         /// </summary>
         /// <param name="response"></param>
-        public void GotMGRResumeResponse(RspMGRResumeAccountResponse response)
+        public void GotResumeResponse(RspMGRResumeAccountResponse response)
         {
             if (response.IsBegin)
             {
@@ -110,30 +127,12 @@ namespace FutsMoniter.Controls
         /// 获得客户端登入 退出状态更新
         /// </summary>
         /// <param name="notify"></param>
-        public void GotMGRSessionUpdate(NotifyMGRSessionUpdateNotify notify)
+        public void GotSessionUpdate(NotifyMGRSessionUpdateNotify notify)
         {
             sessionupdatecache.Write(notify);
         }
 
-        /// <summary>
-        /// 获得交易帐户财务信息
-        /// </summary>
-        /// <param name="accountinfo"></param>
-        public void GotAccountInfo(IAccountInfo accountinfo)
-        {
-            fmaccountconfig.GotAccountInfo(accountinfo);
-        }
-
-        /// <summary>
-        /// 响应帐户变动事件
-        /// </summary>
-        /// <param name="account"></param>
-        public void GotAccountChanged(IAccountLite account)
-        {
-            accountcache.Write(account);
-            fmaccountconfig.GotAccountChanged(account);
-
-        }
+        
 
 
         /// <summary>
@@ -151,24 +150,5 @@ namespace FutsMoniter.Controls
             fmaccountconfig.GotRuleItemDel(item, islast);
         }
 
-
-        //void OnInitFinished()
-        //{
-        //    if (InvokeRequired)
-        //    {
-        //        Invoke(new VoidDelegate(OnInitFinished), new object[] { });
-        //    }
-        //    else
-        //    {
-        //        //调整非超级管理员试图
-        //        if (!Globals.Manager.RightRootDomain())
-        //        {
-        //            this.routeType.Visible = false;
-        //            this.lbroutetype.Visible = false;
-
-        //            //accountgrid.Columns[ROUTEIMG].Visible = false;//禁止显示路由列
-        //        }
-        //    }
-        //}
     }
 }

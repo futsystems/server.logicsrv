@@ -98,7 +98,7 @@ namespace TradingLib.Common
         {
             //
             debug("got operation response:" + response.ToString(),QSEnumDebugLevel.INFO);
-            //this.handler.PopRspInfo(response.RspInfo);
+            this.handler.PopRspInfo(response.RspInfo);
         }
 
         #region 查询
@@ -265,7 +265,7 @@ namespace TradingLib.Common
         void CliOnMGRQryConnector(RspMGRQryConnectorResponse response)
         {
             debug("got connector response:" + response.ToString(), QSEnumDebugLevel.INFO);
-            this.handler.OnMGRConnectorResponse(response.Connector, response.IsLast);
+            //this.handler.OnMGRConnectorResponse(response.Connector, response.IsLast);
         }
 
         void CliOnMGRExchange(RspMGRQryExchangeResponse response)
@@ -345,13 +345,13 @@ namespace TradingLib.Common
         void CliOnMGRPositionResponse(RspMGRQryPositionResponse response)
         {
             debug("got histpostion response:" + response.ToString(), QSEnumDebugLevel.INFO);
-            this.handler.OnMGRPositionResponse(response.PostionToSend, response.IsLast);
+            //this.handler.OnMGRPositionResponse(response.PostionToSend, response.IsLast);
         }
 
         void CliOnMGRCashTransactionResponse(RspMGRQryCashResponse response)
         {
             debug("got cashtransaction response:" + response.ToString(), QSEnumDebugLevel.INFO);
-            this.handler.OnMGRCashTransactionResponse(response.CashTransToSend, response.IsLast);
+            //this.handler.OnMGRCashTransactionResponse(response.CashTransToSend, response.IsLast);
         }
 
         void CliOnMGRSettlementResponse(RspMGRQrySettleResponse response)

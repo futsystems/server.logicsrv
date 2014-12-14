@@ -38,13 +38,13 @@ namespace FutsMoniter
 
         public void OnInit()
         {
-            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryTotalReportDayRange", this.OnTotalReport);
+            Globals.LogicEvent.RegisterCallback("FinServiceCentre", "QryTotalReportDayRange", this.OnTotalReport);
 
         }
 
         public void OnDisposed()
         {
-            Globals.CallBackCentre.UnRegisterCallback("FinServiceCentre", "QryTotalReportDayRange", this.OnTotalReport);
+            Globals.LogicEvent.UnRegisterCallback("FinServiceCentre", "QryTotalReportDayRange", this.OnTotalReport);
         }
 
 

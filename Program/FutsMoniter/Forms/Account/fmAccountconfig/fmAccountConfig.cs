@@ -89,13 +89,6 @@ namespace FutsMoniter
 
 
 
-        //private void btnUpdateAccountInfo_Click(object sender, EventArgs e)
-        //{
-
-        //    Globals.TLClient.ReqQryAccountInfo(_account.Account);
-        //}
-
-
 
 
 
