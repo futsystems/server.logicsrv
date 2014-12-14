@@ -16,7 +16,7 @@ using TradingLib.Mixins.JsonObject;
 
 namespace FutsMoniter
 {
-    public partial class ctAgentReportOneDay : UserControl
+    public partial class ctAgentReportOneDay : UserControl,IEventBinder
     {
         public ctAgentReportOneDay()
         {
@@ -24,23 +24,21 @@ namespace FutsMoniter
             SetPreferences();
             InitTable();
             BindToTable();
-           // ctGridExport1.Grid = totalgrid;
-
             q_settleday.Value = DateTime.Now;
 
-            Globals.RegInitCallback(OnInitFinished);
-            if (Globals.EnvReady)
-            {
-                Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryTotalReport", this.OnTotalReport);
-            }
-            this.Disposed += new EventHandler(ctProfitReportOneDay_Disposed);
             this.btnQryReport.Click +=new EventHandler(btnQryReport_Click);
         }
 
-        void ctProfitReportOneDay_Disposed(object sender, EventArgs e)
+        public void OnInit()
+        {
+            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryTotalReport", this.OnTotalReport);
+        }
+
+        public void OnDisposed()
         {
             Globals.CallBackCentre.UnRegisterCallback("FinServiceCentre", "QryTotalReport", this.OnTotalReport);
         }
+
 
         void OnInitFinished()
         {

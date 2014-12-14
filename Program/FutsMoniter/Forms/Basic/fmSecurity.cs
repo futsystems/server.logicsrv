@@ -364,12 +364,12 @@ namespace FutsMoniter
             btnSyncSec.Visible = Globals.Manager.IsRoot();
             btnAddSecurity.Visible = Globals.Manager.IsRoot();
 
-            Globals.BasicInfoTracker.GotSecurityEvent += new SecurityDel(InvokGotSecurity);
+            Globals.BasicInfoTracker.GotSecurityEvent +=new Action<SecurityFamilyImpl>(InvokGotSecurity);
         }
 
         public void OnDisposed()
         {
-            Globals.BasicInfoTracker.GotSecurityEvent -= new SecurityDel(InvokGotSecurity);
+            Globals.BasicInfoTracker.GotSecurityEvent -= new Action<SecurityFamilyImpl>(InvokGotSecurity);
         }
         void WireEvent()
         {

@@ -42,12 +42,12 @@ namespace FutsMoniter
 
         public void OnInit()
         {
-            Globals.BasicInfoTracker.GotManagerEvent += new ManagerDel(GotManager);
+            Globals.BasicInfoTracker.GotManagerEvent += new Action<Manager>(GotManager);
         }
 
         public void OnDisposed()
         {
-            Globals.BasicInfoTracker.GotManagerEvent -= new ManagerDel(GotManager);
+            Globals.BasicInfoTracker.GotManagerEvent -= new Action<Manager>(GotManager);
         }
         void mgrgrid_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
         {
@@ -214,7 +214,7 @@ namespace FutsMoniter
             if (manger.ID.Equals(Globals.LoginResponse.MGRID)) return;
             if (InvokeRequired)
             {
-                Invoke(new ManagerDel(GotManager), new object[] { manger });
+                Invoke(new Action<Manager>(GotManager), new object[] { manger });
             }
             else
             {

@@ -11,11 +11,11 @@ namespace TradingLib.API
     public interface IBasicInfo
     {
         #region
-        event MarketTimeDel GotMarketTimeEvent;
-        event ExchangeDel GotExchangeEvent;
-        event SecurityDel GotSecurityEvent;
-        event SymbolDel GotSymbolEvent;
-        event ManagerDel GotManagerEvent;
+        event Action<MarketTime> GotMarketTimeEvent;
+        event Action<Exchange> GotExchangeEvent;
+        event Action<SecurityFamilyImpl> GotSecurityEvent;
+        event Action<SymbolImpl> GotSymbolEvent;
+        event Action<Manager> GotManagerEvent;
 
         #endregion
         /// <summary>
@@ -55,30 +55,38 @@ namespace TradingLib.API
         /// <param name="symbol"></param>
         /// <returns></returns>
         SymbolImpl GetSymbol(string symbol);
+
         /// <summary>
         /// 获得所有品种数组
         /// </summary>
-        SecurityFamilyImpl[] Securities { get; }
+        IEnumerable<SecurityFamilyImpl> Securities { get; }
 
         /// <summary>
         /// 获得所有合约数组
         /// </summary>
-        SymbolImpl[] Symbols { get; }
+        IEnumerable<SymbolImpl> Symbols { get; }
 
         IEnumerable<MarketTime> MarketTimes { get; }
 
         IEnumerable<Exchange> Exchanges { get; }
 
         IEnumerable<Manager> Managers { get; }
+
         /// <summary>
         /// 获得所有可交易合约
         /// </summary>
-        SymbolImpl[] SymbolsTradable { get; }
+        //SymbolImpl[] SymbolsTradable { get; }
         /// <summary>
         ///  获得委托风控规则数组
         /// </summary>
         /// <returns></returns>
-        //RuleClassItem[] GetOrderRuleClass();
+        IEnumerable<RuleClassItem> OrderRuleClass{get;}
+
+        /// <summary>
+        /// 获得帐户风控规则数组
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<RuleClassItem> AccountRuleClass{get;}
 
         /// <summary>
         /// 获得某个风控规则RuleClass
@@ -101,23 +109,8 @@ namespace TradingLib.API
         /// <param name="item"></param>
         /// <returns></returns>
         RuleClassItem GetRuleItemClass(RuleItem item);
-        /// <summary>
-        /// 获得帐户风控规则数组
-        /// </summary>
-        /// <returns></returns>
-        RuleClassItem[] GetAccountRuleClass();
+        
 
         Manager GetManager(int mgrid);
-        ArrayList GetOrderRuleClassListItems();
-        ArrayList GetAccountRuleClassListItems();
-
-        ArrayList GetExchangeCombList(bool isany=false);
-        ArrayList GetMarketTimeCombList(bool isany = false);
-        ArrayList GetSecurityCombList(bool isany = false);
-        ArrayList GetSecTyeCombList(bool isany = false);
-        ArrayList GetSecurityCombListViaExchange(int id);
-        ArrayList GetExpireMonth();
-        ArrayList GetBaseManagerCombList(bool all=false,bool includeself=true);
-        
     }
 }

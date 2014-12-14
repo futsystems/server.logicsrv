@@ -14,7 +14,7 @@ using TradingLib.Mixins.JsonObject;
 
 namespace FutsMoniter
 {
-    public partial class ctAgentReportSummaryDayRange : UserControl
+    public partial class ctAgentReportSummaryDayRange : UserControl,IEventBinder
     {
         public ctAgentReportSummaryDayRange()
         {
@@ -22,23 +22,22 @@ namespace FutsMoniter
             SetPreferences();
             InitTable();
             BindToTable();
-            //ctGridExport1.Grid = totalgrid;
-            Globals.RegInitCallback(OnInitFinished);
-            if (Globals.EnvReady)
-            {
-                Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryTotalReportDayRange", this.OnTotalReport);
-            }
-            this.Disposed += new EventHandler(ctProfitReportDayRange_Disposed);
 
             start.Value = Convert.ToDateTime(DateTime.Today.AddMonths(-1).ToString("yyyy-MM-01") + " 0:00:00");
             end.Value = DateTime.Now;
 
         }
 
-        void ctProfitReportDayRange_Disposed(object sender, EventArgs e)
+        public void OnInit()
         {
             Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryTotalReportDayRange", this.OnTotalReport);
         }
+
+        public void OnDisposed()
+        {
+            Globals.CallBackCentre.RegisterCallback("FinServiceCentre", "QryTotalReportDayRange", this.OnTotalReport);
+        }
+
 
         public void Clear()
         {

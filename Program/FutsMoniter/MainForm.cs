@@ -145,7 +145,7 @@ namespace FutsMoniter
 
         void InitSymbol2View()
         {
-            foreach (Symbol sym in Globals.BasicInfoTracker.SymbolsTradable)
+            foreach (Symbol sym in Globals.BasicInfoTracker.GetSymbolTradable())
             {
                 ctAccountMontier1.AddSymbol(sym);
                 //Globals.Debug("symbol:" + sym.Symbol);

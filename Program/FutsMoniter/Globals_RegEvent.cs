@@ -26,6 +26,7 @@ namespace FutsMoniter
         /// <summary>
         /// 触发初始化完成事件 用于通知常驻界面资源进行界面更新
         /// 初始化分水岭 在执行OnInitFinished之前生成的对象 订阅OnInitFinished会得到触发，同时由于通过判断EnvReady来进行订阅的，即初始化之后的产生的对象 会通过EnvReady进行订阅
+        /// 初始化成功后 会调用OnInitFinished
         /// </summary>
         public static void OnInitFinished()
         {
@@ -40,7 +41,7 @@ namespace FutsMoniter
         /// 如果初始化过程已经完成，则直接执行该函数
         /// </summary>
         /// <param name="callback"></param>
-        public static void RegInitCallback(VoidDelegate callback)
+        static void RegInitCallback(VoidDelegate callback)
         {
             if (!Globals.EnvReady)
             {
@@ -53,7 +54,10 @@ namespace FutsMoniter
         }
 
 
-
+        /// <summary>
+        /// 注册EventHandler用于执行事件注册与延迟加载
+        /// </summary>
+        /// <param name="control"></param>
         public static void RegIEventHandler(object control)
         {
             if (control is UserControl)

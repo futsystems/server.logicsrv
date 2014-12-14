@@ -11,12 +11,6 @@ using TradingLib.Mixins.LitJson;
 namespace TradingLib.Common
 {
 
-    public delegate void MarketTimeDel(MarketTime mt);
-    public delegate void ExchangeDel(Exchange ex);
-    public delegate void SecurityDel(SecurityFamilyImpl sec);
-    public delegate void SymbolDel(SymbolImpl sym);
-    public delegate void ManagerDel(Manager manger);
-
     public class BasicInfoTracker:IBasicInfo
     {
         public BasicInfoTracker()
@@ -34,6 +28,7 @@ namespace TradingLib.Common
                 GotManager(obj);
             }
         }
+
         public void Clear()
         {
             markettimemap.Clear();
@@ -46,35 +41,62 @@ namespace TradingLib.Common
             _firstloadfinish = false;
         }
 
+        /// <summary>
+        /// 初始化基础数据标识
+        /// 第一次加载所有数据时不对外触发事件,在初始化之后再次获得相关对象需要触发事件
+        /// </summary>
         bool _firstloadfinish = false;
 
+        #region 事件
+        public event Action<MarketTime> GotMarketTimeEvent;
+        public event Action<Exchange> GotExchangeEvent;
+        public event Action<SecurityFamilyImpl> GotSecurityEvent;
+        public event Action<SymbolImpl> GotSymbolEvent;
+        public event Action<Manager> GotManagerEvent;
+        #endregion
+
+        /// <summary>
+        /// 市场时间段map
+        /// </summary>
         Dictionary<int, MarketTime> markettimemap = new Dictionary<int, MarketTime>();
+        /// <summary>
+        /// 交易所map
+        /// </summary>
         Dictionary<int, Exchange> exchangemap = new Dictionary<int, Exchange>();
+        /// <summary>
+        /// 品种map
+        /// </summary>
         Dictionary<int, SecurityFamilyImpl> securitymap = new Dictionary<int, SecurityFamilyImpl>();
+        /// <summary>
+        /// 合约map
+        /// </summary>
         Dictionary<int, SymbolImpl> symbolmap = new Dictionary<int, SymbolImpl>();
+        /// <summary>
+        /// 合约名称map
+        /// </summary>
         Dictionary<string, SymbolImpl> symbolnammap = new Dictionary<string, SymbolImpl>();
-
-
+        /// <summary>
+        /// 主管理员map
+        /// </summary>
         Dictionary<int, Manager> managermap = new Dictionary<int, Manager>();
-
+        /// <summary>
+        /// 委托风控map
+        /// </summary>
         Dictionary<string, RuleClassItem> orderruleclassmap = new Dictionary<string, RuleClassItem>();
+        /// <summary>
+        /// 帐户风控map
+        /// </summary>
         Dictionary<string, RuleClassItem> accountruleclassmap = new Dictionary<string, RuleClassItem>();
 
 
-        public event MarketTimeDel GotMarketTimeEvent;
-        public event ExchangeDel GotExchangeEvent;
-        public event SecurityDel GotSecurityEvent;
-        public event SymbolDel GotSymbolEvent;
-        public event ManagerDel GotManagerEvent;
+        
 
 
         #region 获得服务端相关对象数据
         public void GotMarketTime(MarketTime mt)
         {
-            
             MarketTime target = null;
             MarketTime notify = null;
-            
             if (markettimemap.TryGetValue(mt.ID,out target))
             {
                 //更新
@@ -199,8 +221,6 @@ namespace TradingLib.Common
                 target.Tradeable = symbol.Tradeable;
 
                 notify = target;
-                
-
             }
             else //添加
             {
@@ -210,7 +230,6 @@ namespace TradingLib.Common
                 symbol.UnderlayingSymbol = this.GetSymbol(symbol.underlayingsymbol_fk);
                 symbolnammap[symbol.Symbol] = symbol;
                 notify = symbol;
-
             }
 
             if (_firstloadfinish && GotSymbolEvent != null)
@@ -239,7 +258,6 @@ namespace TradingLib.Common
 
         public void GotManager(Manager manager)
         {
-            //Globals.Debug("basicinfotracker got manger:" + manager.ID.ToString());
             Manager target = null;
             Manager notify = null;
             //如果本地已经有该Manager则进行信息更新
@@ -291,46 +309,45 @@ namespace TradingLib.Common
             }
             _firstloadfinish = true;
 
-            
             //第一次数据加载时候不进行数据触发 待所有数据到达后在进行界面数据触发
-            foreach (MarketTime mt in markettimemap.Values)
-            {
-                if (GotMarketTimeEvent != null)
-                {
-                    GotMarketTimeEvent(mt);
-                }
-            }
+            //foreach (MarketTime mt in markettimemap.Values)
+            //{
+            //    if (GotMarketTimeEvent != null)
+            //    {
+            //        GotMarketTimeEvent(mt);
+            //    }
+            //}
 
-            foreach (Exchange ex in exchangemap.Values)
-            {
-                if (GotExchangeEvent != null)
-                {
-                    GotExchangeEvent(ex);
-                }
-            }
+            //foreach (Exchange ex in exchangemap.Values)
+            //{
+            //    if (GotExchangeEvent != null)
+            //    {
+            //        GotExchangeEvent(ex);
+            //    }
+            //}
 
-            foreach (SecurityFamilyImpl sec in securitymap.Values)
-            {
-                if (GotSecurityEvent != null)
-                {
-                    GotSecurityEvent(sec);
-                }
-            }
+            //foreach (SecurityFamilyImpl sec in securitymap.Values)
+            //{
+            //    if (GotSecurityEvent != null)
+            //    {
+            //        GotSecurityEvent(sec);
+            //    }
+            //}
 
-            foreach (SymbolImpl sym in symbolmap.Values)
-            {
-                if (GotSymbolEvent != null)
-                {
-                    GotSymbolEvent(sym);
-                }
-            }
-            foreach (Manager manger in managermap.Values)
-            {
-                if (GotManagerEvent != null)
-                {
-                    GotManagerEvent(manger);
-                }
-            }
+            //foreach (SymbolImpl sym in symbolmap.Values)
+            //{
+            //    if (GotSymbolEvent != null)
+            //    {
+            //        GotSymbolEvent(sym);
+            //    }
+            //}
+            //foreach (Manager manger in managermap.Values)
+            //{
+            //    if (GotManagerEvent != null)
+            //    {
+            //        GotManagerEvent(manger);
+            //    }
+            //}
         }
 
         
@@ -395,17 +412,24 @@ namespace TradingLib.Common
             return null;
         }
 
-        public SecurityFamilyImpl[] Securities 
+        public IEnumerable<SecurityFamilyImpl> Securities 
         {
             get
             {
-                return securitymap.Values.ToArray();
+                return securitymap.Values;
             }
         
         }
 
-        public IEnumerable<Manager> Managers { get { return managermap.Values; } }
-        public SymbolImpl[] Symbols
+        public IEnumerable<Manager> Managers 
+        { 
+            get
+            { 
+                return managermap.Values; 
+            }
+        }
+
+        public IEnumerable<SymbolImpl> Symbols
         {
             get
             {
@@ -413,20 +437,43 @@ namespace TradingLib.Common
             }
         }
 
-        public SymbolImpl[] SymbolsTradable
+        //public IEnumerable<SymbolImpl> SymbolsTradable
+        //{
+        //    get
+        //    {
+        //        return symbolmap.Values.Where(sym => sym.IsTradeable);
+        //    }
+        //}
+
+        public IEnumerable<MarketTime> MarketTimes 
+        { 
+            get 
+            { 
+                return markettimemap.Values; 
+            } 
+        }
+
+        public IEnumerable<Exchange> Exchanges 
+        { 
+            get 
+            { 
+                return exchangemap.Values; 
+            } 
+        }
+        public IEnumerable<RuleClassItem> OrderRuleClass
         {
             get
             {
-                return symbolmap.Values.Where(sym => sym.IsTradeable).ToArray();//.OrderBy
+                return orderruleclassmap.Values;
             }
         }
 
-        public IEnumerable<MarketTime> MarketTimes { get { return markettimemap.Values; } }
-
-        public IEnumerable<Exchange> Exchanges { get { return exchangemap.Values; } }
-        public RuleClassItem[] GetOrderRuleClass()
+        public IEnumerable<RuleClassItem> AccountRuleClass
         {
-            return orderruleclassmap.Values.ToArray();
+            get
+            {
+                return accountruleclassmap.Values;
+            }
         }
 
         public RuleClassItem GetOrderRuleClass(string classname)
@@ -487,194 +534,6 @@ namespace TradingLib.Common
 
 
 
-        public ArrayList GetOrderRuleClassListItems()
-        {
-            ArrayList list = new ArrayList();
-            foreach (RuleClassItem item in orderruleclassmap.Values)
-            {
-                ValueObject<RuleClassItem> vo = new ValueObject<RuleClassItem>();
-                vo.Name = item.Title;
-                vo.Value = item;
-                list.Add(vo);
-            }
-            return list;
-        }
-
-        public ArrayList GetAccountRuleClassListItems()
-        {
-            ArrayList list = new ArrayList();
-
-            foreach (RuleClassItem item in accountruleclassmap.Values)
-            {
-                ValueObject<RuleClassItem> vo = new ValueObject<RuleClassItem>();
-                vo.Name = item.Title;
-                vo.Value = item;
-                list.Add(vo);
-            }
-            return list;
-        }
-        /// <summary>
-        /// 获得某个交易所的所有品种
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public ArrayList GetSecurityCombListViaExchange(int id)
-        {
-            ArrayList list = new ArrayList();
-            foreach (SecurityFamilyImpl sec in securitymap.Values.Where(ex => (ex != null && ((ex.Exchange as Exchange).ID == id))).ToArray())
-            {
-                ValueObject<int> vo = new ValueObject<int>();
-                vo.Name = sec.Code + "-" + sec.Name;
-                vo.Value = sec.ID;
-                list.Add(vo);
-            }
-            return list;
-        }
-
-        public ArrayList GetExchangeCombList(bool isany = false)
-        {
-            ArrayList list = new ArrayList();
-            if (isany)
-            {
-                ValueObject<int> vo1 = new ValueObject<int>();
-                vo1.Name = "<Any>";
-                vo1.Value = 0;
-                list.Add(vo1);
-            }
-            foreach (Exchange ex in exchangemap.Values)
-            {
-                if (ex.EXCode.Equals("INNOVEX"))
-                {
-                    if (!Globals.UIAccess.sectype_lotto)
-                        continue;
-                }
-                if (ex.EXCode.Equals("SSE"))
-                {
-                    if (!Globals.UIAccess.sectype_stock)
-                        continue;
-                }
-                if (ex.EXCode.Equals("SZSE"))
-                {
-                    if (!Globals.UIAccess.sectype_stock)
-                        continue;
-                }
-                ValueObject<int> vo = new ValueObject<int>();
-                vo.Name = ex.Name;
-                vo.Value = ex.ID;
-                list.Add(vo);
-            }
-            return list;
-        }
-
-        public ArrayList GetMarketTimeCombList(bool isany = false)
-        {
-            ArrayList list = new ArrayList();
-            if (isany)
-            {
-                ValueObject<int> vo1 = new ValueObject<int>();
-                vo1.Name = "<Any>";
-                vo1.Value = 0;
-                list.Add(vo1);
-            }
-            foreach (MarketTime mt in markettimemap.Values)
-            {
-                ValueObject<int> vo = new ValueObject<int>();
-                vo.Name = mt.Name;
-                vo.Value = mt.ID;
-                list.Add(vo);
-            }
-            return list;
-        }
-
-        public ArrayList GetSecurityCombList(bool isany = false)
-        {
-            ArrayList list = new ArrayList();
-            if (isany)
-            {
-                ValueObject<int> vo1 = new ValueObject<int>();
-                vo1.Name = "<Any>";
-                vo1.Value = 0;
-                list.Add(vo1);
-            }
-            foreach (Exchange ex in exchangemap.Values)
-            {
-                ValueObject<int> vo = new ValueObject<int>();
-                vo.Name = ex.Name;
-                vo.Value = ex.ID;
-                list.Add(vo);
-            }
-            return list;
-        }
-
-        public ArrayList GetSecTyeCombList(bool isany = false)
-        {
-            ArrayList list = new ArrayList();
-            if (isany)
-            {
-                ValueObject<SecurityType> vo = new ValueObject<SecurityType>();
-                vo.Name = "Any";
-                vo.Value = (SecurityType)(Enum.GetValues(typeof(SecurityType)).GetValue(0));
-                list.Add(vo);
-            }
-            if(Globals.UIAccess.sectype_fut)
-            {
-                ValueObject<SecurityType> vo = new ValueObject<SecurityType>();
-                vo.Name = Util.GetEnumDescription(SecurityType.FUT);
-                vo.Value = SecurityType.FUT;
-                list.Add(vo);
-            }
-            if(Globals.UIAccess.sectype_stock)
-            {
-                 ValueObject<SecurityType> vo = new ValueObject<SecurityType>();
-                vo.Name = Util.GetEnumDescription(SecurityType.STK);
-                vo.Value = SecurityType.STK;
-                list.Add(vo);
-            }
-            return list;
-        }
-
-
-        public ArrayList GetExpireMonth()
-        {
-            ArrayList list = new ArrayList();
-            DateTime lastday = Convert.ToDateTime(DateTime.Now.AddMonths(1).ToString("yyyy-MM-01")).AddDays(-1);
-            for (int i = 0; i < 12; i++)
-            {
-                ValueObject<int> vo = new ValueObject<int>();
-                vo.Name = lastday.AddMonths(i).ToString("yyyyMM");
-                vo.Value = Convert.ToInt32(vo.Name);
-                list.Add(vo);
-            }
-            return list;
-        }
-
-        /// <summary>
-        /// 返回manger选择项
-        /// 用于创建用户
-        /// </summary>
-        /// <returns></returns>
-        public ArrayList GetBaseManagerCombList(bool all = false, bool includeself = true)
-        {
-            ArrayList list = new ArrayList();
-
-            if (all)
-            {
-                list.Add(new ValueObject<int> { Name = "所有", Value = 0 });
-            }
-            foreach (Manager m in managermap.Values.Where(g=>(g.Type== QSEnumManagerType.ROOT||g.Type== QSEnumManagerType.AGENT) ))
-            {
-                if (!includeself && m.mgr_fk == Globals.BaseMGRFK)
-                {
-                    continue;
-                }
-                //Globals.Debug("get agentlist:" + includeself.ToString() + " mgrfk:" + m.mgr_fk.ToString() + " basemgrfk:" + Globals.BaseMGRFK.ToString());
-                ValueObject<int> vo1 = new ValueObject<int>();
-                vo1.Name = m.Name + " - " + m.mgr_fk;
-                vo1.Value = m.mgr_fk;
-                list.Add(vo1);
-                
-            }
-            return list;
-        }
+        
     }
 }

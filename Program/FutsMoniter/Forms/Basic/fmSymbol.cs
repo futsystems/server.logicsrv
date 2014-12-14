@@ -334,12 +334,12 @@ namespace FutsMoniter
             btnAddSymbol.Visible = Globals.Manager.IsRoot();
             btnSyncSymbols.Visible = Globals.Manager.IsRoot();
             Globals.Debug("绑定获得合约事件");
-            Globals.BasicInfoTracker.GotSymbolEvent += new SymbolDel(InvokeGotSymbol);
+            Globals.BasicInfoTracker.GotSymbolEvent += new Action<SymbolImpl>(InvokeGotSymbol);
         }
         public void OnDisposed()
         {
             Globals.Debug("释放事件绑定");
-            Globals.BasicInfoTracker.GotSymbolEvent -= new SymbolDel(InvokeGotSymbol);
+            Globals.BasicInfoTracker.GotSymbolEvent -= new Action<SymbolImpl>(InvokeGotSymbol);
         }
 
         void WireEvent()
