@@ -213,6 +213,12 @@
     <Compile Include="Controls\ctAccountMoniter\ctAccountMontier_AccountHolder.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Controls\ctPositionMertic.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ctPositionMertic.Designer.cs">
+      <DependentUpon>ctPositionMertic.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\HistQuery\ctHistOrder.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -688,15 +694,11 @@
     <Compile Include="MainForm_Client.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainForm_ContribCallBack.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="MainForm_ContribCallBack.cs" />
     <Compile Include="MainForm_EventBinder.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainForm_LogicHandler.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="MainForm_LogicHandler.cs" />
     <Compile Include="MainForm_PopMessage.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -725,6 +727,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\ctCashOperation.resx">
       <DependentUpon>ctCashOperation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ctPositionMertic.resx">
+      <DependentUpon>ctPositionMertic.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\HistQuery\ctHistOrder.resx">
       <DependentUpon>ctHistOrder.cs</DependentUpon>

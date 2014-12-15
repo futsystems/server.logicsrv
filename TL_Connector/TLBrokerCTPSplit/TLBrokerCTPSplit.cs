@@ -67,6 +67,7 @@ namespace Broker.Live
         /// </summary>
         public override IEnumerable<Position> Positions { get { return tk.Positions; } }
 
+
         public override int GetPositionAdjustment(Order o)
         {
             
@@ -101,7 +102,7 @@ namespace Broker.Live
             mertic.LongPendingExitSize = longExitOrders.Sum(po => po.UnsignedSize);
             mertic.ShortPendingEntrySize = shortEntryOrders.Sum(po => po.UnsignedSize);
             mertic.ShortPendingExitSize = shortExitOrders.Sum(po => po.UnsignedSize);
-
+            mertic.Token = this.Token;
             return mertic;
         }
 
@@ -112,7 +113,12 @@ namespace Broker.Live
         {
             get
             {
-                return base.PositionMetrics;
+                List<PositionMetric> pmlist = new List<PositionMetric>();
+                foreach (string sym in WorkingSymbols)
+                {
+                    pmlist.Add(GetPositionMetric(sym));
+                }
+                return pmlist;
             }
         }
         #endregion
@@ -849,27 +855,30 @@ namespace Broker.Live
             Order o = LocalID2Order(error.Order.BrokerLocalOrderID);
             if (o != null)
             {
-                o.Status = QSEnumOrderStatus.Reject;
-                o.Comment = error.Error.ErrorMsg;
-                Util.Debug("更新子委托:" + o.GetOrderInfo(true), QSEnumDebugLevel.INFO);
-                tk.GotOrder(o);
-                //更新接口侧委托
-                this.LogBrokerOrderUpdate(o);//更新日志
+                if (o.Status != QSEnumOrderStatus.Reject)//如果委托已经处于拒绝状态 则不用处理 接口可能会产生多次错误回报
+                {
+                    o.Status = QSEnumOrderStatus.Reject;
+                    o.Comment = error.Error.ErrorMsg;
+                    Util.Debug("更新子委托:" + o.GetOrderInfo(true), QSEnumDebugLevel.INFO);
+                    tk.GotOrder(o);
+                    //更新接口侧委托
+                    this.LogBrokerOrderUpdate(o);//更新日志
 
-                RspInfo info = new RspInfoImpl();
-                info.ErrorID = error.Error.ErrorID;
-                info.ErrorMessage = error.Error.ErrorMsg;
+                    RspInfo info = new RspInfoImpl();
+                    info.ErrorID = error.Error.ErrorID;
+                    info.ErrorMessage = error.Error.ErrorMsg;
 
-                _splittracker.GotSonOrderError(o, info);
-                //平仓量超过持仓量
-                if (error.Error.ErrorID == 30)
-                { 
-                    
-                }
-                //资金不足
-                if (error.Error.ErrorID == 31)
-                { 
-                
+                    _splittracker.GotSonOrderError(o, info);
+                    //平仓量超过持仓量
+                    if (error.Error.ErrorID == 30)
+                    {
+
+                    }
+                    //资金不足
+                    if (error.Error.ErrorID == 31)
+                    {
+
+                    }
                 }
 
             }

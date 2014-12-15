@@ -107,7 +107,7 @@ namespace TradingLib.ServiceManager
         public void Start()
         {
             Util.StatusSection(this.PROGRAME, "STARTCONNECTOR", QSEnumInfoColor.INFODARKRED,true);
-            //4.启动默认通道
+            //1.启动默认通道
             if (GlobalConfig.NeedStartDefaultConnector)
             {
                 //启动默认通道
@@ -115,10 +115,27 @@ namespace TradingLib.ServiceManager
                 StartBrokerViaToken(_defaultSimBrokerToken);
             }
 
-            //debug("Start RouterGroup ....", QSEnumDebugLevel.INFO);
-            foreach (RouterGroup rg in BasicTracker.RouterGroupTracker.RouterGroups)
+            //2.启动实盘通道
+            //把有效域内绑定的实盘帐户对应的通道启动起来
+            if (TLCtxHelper.Ctx.SettleCentre.IsTradingday)//如果是交易日则需要启动实盘通道
             {
-                //rg.Start();
+                foreach (Domain domain in BasicTracker.DomainTracker.Domains)
+                {
+
+                    if (domain.IsExpired())
+                        continue;
+
+                    foreach(RouterGroup rg in domain.GetRouterGroups())
+                    {
+                        foreach (RouterItem item in rg.RouterItems)
+                        {
+                            if (item.Vendor != null && item.Vendor.Broker!=null && !item.Vendor.Broker.IsLive)
+                            {
+                                item.Vendor.Broker.Start();
+                            }
+                        }
+                    }
+                }
             }
 
         }

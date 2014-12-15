@@ -11,6 +11,34 @@ namespace TradingLib.Common
         #region 行情与成交接口部分
 
         /// <summary>
+        /// 注册通道统计
+        /// </summary>
+        /// <param name="vid"></param>
+        public void ReqRegBrokerPM(int vid)
+        {
+            this.ReqContribRequest("MgrExchServer", "RegBrokerPM", vid.ToString());
+        }
+
+        /// <summary>
+        /// 清空注册列表
+        /// </summary>
+        /// <param name="vid"></param>
+        public void ReqClearBrokerPM()
+        {
+            this.ReqContribRequest("MgrExchServer", "ClearBrokerPM", "");
+        }
+
+        /// <summary>
+        /// 注销通道统计
+        /// </summary>
+        /// <param name="vid"></param>
+        public void ReqUnregBrokerPM(int vid)
+        {
+            this.ReqContribRequest("MgrExchServer", "UnregBrokerPM", vid.ToString());
+        }
+
+
+        /// <summary>
         /// 查询接口设置
         /// </summary>
         public void ReqQryInterface()

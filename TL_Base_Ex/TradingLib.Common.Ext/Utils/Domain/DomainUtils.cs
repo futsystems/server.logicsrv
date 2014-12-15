@@ -10,6 +10,17 @@ namespace TradingLib.Common
 {
     public static partial class DomainUtils
     {
+        
+        /// <summary>
+        /// 判定该域是否过期
+        /// </summary>
+        /// <param name="domain"></param>
+        /// <returns></returns>
+        public static bool IsExpired(this Domain domain)
+        {
+            //设置了有效的过期时间并且过期日小于当前日期，则过期
+            return domain.DateExpired > 0 && domain.DateExpired < Util.ToTLDate();
+        }
         /// <summary>
         /// 返回某个域的所有管理员地址
         /// </summary>

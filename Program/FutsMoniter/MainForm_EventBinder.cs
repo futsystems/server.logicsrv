@@ -41,9 +41,11 @@ namespace FutsMoniter
             //接口设置
             kryptonRibbonGroupButton_interfacelist.Visible = Globals.LoginResponse.Domain.Super;
             
-            //开启或者关闭清算中心
+            //系统 开启关闭清算中心 默认行情和交易通道
             kryptonRibbonGroupButton_OpenClearCentre.Visible = Globals.LoginResponse.Domain.Super || Globals.Domain.Dedicated;
             kryptonRibbonGroupButton_CloseClearCentre.Visible = Globals.LoginResponse.Domain.Super || Globals.Domain.Dedicated;
+            kryptonRibbonGroupButton_tickpaper.Visible = Globals.Domain.Super || Globals.Domain.Dedicated;
+            //ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show("defaultrouter:" + kryptonRibbonGroupButton_tickpaper.Visible.ToString());
             kryptonRibbonGroup1.Visible = Globals.LoginResponse.Domain.Super || Globals.Domain.Dedicated;
 
             //日志窗口
@@ -62,7 +64,7 @@ namespace FutsMoniter
                 else
                 {
                     //kryptonRibbonGroupButton_RouterList.Visible = Globals.UIAccess.nav_system_router;
-                    kryptonRibbonGroupButton_tickpaper.Visible = Globals.Domain.Super || Globals.Domain.Dedicated;
+                    
                     kryptonRibbonGroupButton_connectorlist.Visible = Globals.Manager.IsRoot();//实盘帐号
 
                     kryptonRibbonGroupButton_SystemStatus.Visible = Globals.Manager.IsRoot();//系统状态
@@ -182,9 +184,8 @@ namespace FutsMoniter
                 if(!Globals.Domain.Router_Live)
                 {
                     kryptonRibbonGroupButton_connectorlist.Visible = false;
-
-                    kryptonRibbonGroup2.Visible = kryptonRibbonGroupButton_connectorlist.Visible;
                 }
+
             }
                  
         }

@@ -24,6 +24,15 @@ namespace TradingLib.Core
                         notify.InfoLite = acc.ToAccountInfoLite();
                         CachePacket(notify);
                     }
+
+                    foreach (IBroker broker in cst.WatchBrokers)
+                    {
+                        NotifyMGRContribNotify notify = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(cst.Location);
+                        notify.ModuleID = this.CoreId;
+                        notify.CMDStr = "NotifyBrokerPM";
+                        notify.Result = new Mixins.ReplyWriter().Start().FillReply(Mixins.JsonReply.GenericSuccess()).FillPlayload(broker.PositionMetrics.ToArray()).End().ToString();
+                        CachePacket(notify);
+                    }
                 }
             }
             catch (Exception ex)

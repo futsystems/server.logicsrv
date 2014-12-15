@@ -430,6 +430,12 @@ namespace TradingLib.Common
         {
             Order fatherOrder = SonID2FatherOrder(o.id);//获得父委托
             List<Order> sonOrders = FatherID2SonOrders(fatherOrder.id);//获得所有子委托
+            Order sonorder = SonID2SonOrder(o.id);
+            //更新委托
+            sonorder.Status = o.Status;//更新委托状态
+            sonorder.Comment = o.Comment;//填充状态信息
+            sonorder.FilledSize = o.FilledSize;//成交数量
+            sonorder.Size = o.Size;//更新委托当前数量
 
             RspInfo info = new RspInfoImpl();
             info.ErrorID = error.ErrorID;

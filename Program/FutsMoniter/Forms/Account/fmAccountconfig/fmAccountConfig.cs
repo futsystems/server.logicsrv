@@ -52,8 +52,7 @@ namespace FutsMoniter
         {
             InitializeComponent();
 
-            cashop_type.Items.Add("入金");
-            cashop_type.Items.Add("出金");
+            
 
             this.Load += new EventHandler(fmAccountConfig_Load);
             
@@ -64,6 +63,9 @@ namespace FutsMoniter
             //绑定事件
             WireEvent();
 
+            cashop_type.Items.Add("入金");
+            cashop_type.Items.Add("出金");
+            cashop_type.SelectedIndex = 0;
             Factory.IDataSourceFactory(orderRuleClassList).BindDataSource(Globals.BasicInfoTracker.GetOrderRuleClassListItems());
             Factory.IDataSourceFactory(accountRuleClassList).BindDataSource(Globals.BasicInfoTracker.GetAccountRuleClassListItems());
                 
