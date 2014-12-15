@@ -31,6 +31,7 @@ namespace FutsMoniter
             //路由列表
             kryptonRibbonGroupButton_interfacelist.Click += new EventHandler(kryptonRibbonGroupButton_interfacelist_Click);
             kryptonRibbonGroupButton_connectorlist.Click += new EventHandler(kryptonRibbonGroupButton_connectorlist_Click);
+            kryptonRibbonGroupButton_tickpaper.Click += new EventHandler(kryptonRibbonGroupButton_tickpaper_Click);
             //系统状态
             kryptonRibbonGroupButton_SystemStatus.Click += new EventHandler(kryptonRibbonGroupButton_SystemStatus_Click);
 
@@ -63,6 +64,12 @@ namespace FutsMoniter
 
             kryptonRibbonGroupButton_payonline.Click += new EventHandler(kryptonRibbonGroupButton_payonline_Click);
             kryptonRibbonGroupButton_ReceiveBank.Click += new EventHandler(kryptonRibbonGroupButton_ReceiveBank_Click);
+        }
+
+        void kryptonRibbonGroupButton_tickpaper_Click(object sender, EventArgs e)
+        {
+            fmDefaultConnector fm = new fmDefaultConnector();
+            fm.Show();
         }
 
         void kryptonContextMenuItem_changepass_Click(object sender, EventArgs e)
@@ -106,7 +113,8 @@ namespace FutsMoniter
 
         void kryptonRibbonGroupButton_QuerySettleAccount_Click(object sender, EventArgs e)
         {
-                settlementform.Show();
+            fmSettlement fm = new fmSettlement();
+            fm.Show();
         }
 
         void kryptonRibbonGroupButton_PermissionAgent_Click(object sender, EventArgs e)
@@ -190,18 +198,14 @@ namespace FutsMoniter
         #region 历史记录
         void kryptonRibbonGroupButton_QueryAgentProfit_Click(object sender, EventArgs e)
         {
-            if (agentprofitreportform != null)
-            {
-                agentprofitreportform.Show();
-            }
+            fmAgentProfitReport fm = new fmAgentProfitReport();
+            fm.Show();
         }
 
         void kryptonRibbonGroupButton_QueryExHist_Click(object sender, EventArgs e)
         {
-            if (histqryform != null)
-            {
-                histqryform.Show();
-            }
+            fmHistQuery fm = new fmHistQuery();
+            fm.Show();
         }
 
         void kryptonRibbonGroupButton_QueryCashTransAccount_Click(object sender, EventArgs e)
@@ -332,11 +336,9 @@ namespace FutsMoniter
         #region 事件处理
         void ctAccountMontier1_QryAccountHistEvent(IAccountLite account)
         {
-            if (histqryform != null)
-            {
-                histqryform.SetAccount(account.Account);
-                histqryform.Show();
-            }
+            fmHistQuery fm = new fmHistQuery();
+            fm.SetAccount(account.Account);
+            fm.Show();
         }
         #endregion
 

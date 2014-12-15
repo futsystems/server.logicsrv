@@ -27,6 +27,27 @@ namespace TradingLib.ServiceManager
             }
         }
 
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryDefaultConnectorConfig", "QryDefaultConnectorConfig - query broker config", "查询默认通道设置 行情通道与模拟成交")]
+        public void CTE_QueryDefaultConnectorConfig(ISession session)
+        {
+            try
+            {
+                debug("查询默认通道设置", QSEnumDebugLevel.INFO);
+                Manager manger = session.GetManager();
+                if (manger.Domain.Super || manger.Domain.Dedicated)
+                {
+                    //获得域内所有通道设置
+                    ConnectorConfig[] ops = manger.Domain.GetDefaultConnectorConfigs().ToArray();// BasicTracker.ConnectorConfigTracker.ConnecotrConfigs.ToArray();
+                    session.SendJsonReplyMgr(ops);
+                }
+            }
+            catch (FutsRspError ex)
+            {
+                session.OperationError(ex);
+            }
+        }
+
+
 
         ConnectorStatus GetConnectorStatus(ConnectorConfig cfg)
         {
@@ -72,6 +93,19 @@ namespace TradingLib.ServiceManager
             {
                 //获得域内所有通道设置
                 ConnectorStatus[] ops = manger.Domain.GetConnectorConfigs().Select(cfg => GetConnectorStatus(cfg)).ToArray();// BasicTracker.ConnectorConfigTracker.ConnecotrConfigs.ToArray();
+                session.SendJsonReplyMgr(ops);
+            }
+        }
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryDefaultConnectorStatus", "QryDefaultConnectorStatus - query connector status", "查询所有通道状态")]
+        public void CTE_QryDefaultConnectorStatus(ISession session)
+        {
+            debug("查询所有通道状态", QSEnumDebugLevel.INFO);
+            Manager manger = session.GetManager();
+            if (manger.RightRootDomain())
+            {
+                //获得域内所有通道设置
+                ConnectorStatus[] ops = manger.Domain.GetDefaultConnectorConfigs().Select(cfg => GetConnectorStatus(cfg)).ToArray();// BasicTracker.ConnectorConfigTracker.ConnecotrConfigs.ToArray();
                 session.SendJsonReplyMgr(ops);
             }
         }

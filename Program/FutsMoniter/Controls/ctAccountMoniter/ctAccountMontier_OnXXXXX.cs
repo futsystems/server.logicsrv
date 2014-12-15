@@ -87,8 +87,6 @@ namespace FutsMoniter.Controls
         public void GotAccountChanged(IAccountLite account)
         {
             accountcache.Write(account);
-            fmaccountconfig.GotAccountChanged(account);
-
         }
 
 
@@ -130,24 +128,6 @@ namespace FutsMoniter.Controls
         public void GotSessionUpdate(NotifyMGRSessionUpdateNotify notify)
         {
             sessionupdatecache.Write(notify);
-        }
-
-        
-
-
-        /// <summary>
-        /// 帐户风控规则项目回报
-        /// </summary>
-        /// <param name="item"></param>
-        /// <param name="islast"></param>
-        public void GotRuleItem(RuleItem item, bool islast)
-        {
-            fmaccountconfig.GotRuleItem(item, islast);
-        }
-
-        public void GotRuleItemDel(RuleItem item, bool islast)
-        {
-            fmaccountconfig.GotRuleItemDel(item, islast);
         }
 
     }

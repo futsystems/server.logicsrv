@@ -209,9 +209,9 @@ namespace TradingLib.Core
                 clearcentre.CashOperation(request.Account, request.Amount, request.TransRef, request.Comment);
 
                 //出入金操作后返回帐户信息更新
-                RspMGRQryAccountInfoResponse notify = ResponseTemplate<RspMGRQryAccountInfoResponse>.SrvSendRspResponse(request);
-                notify.AccountInfoToSend = account.ToAccountInfo();
-                CachePacket(notify);
+                session.NotifyMgr("NotifyAccountFinInfo", account.ToAccountInfo());
+                session.OperationSuccess("出入金操作成功");
+
             }
             catch (FutsRspError ex)
             {
@@ -328,8 +328,8 @@ namespace TradingLib.Core
 
         #endregion
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryAccountInfo", "QryAccountInfo - query account", "查询帐户信息")]
-        public void CTE_QryDomain(ISession session,string account)
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryAccountFinInfo", "QryAccountFinInfo - query account", "查询帐户信息")]
+        public void CTE_QryAccountFinInfo(ISession session, string account)
         {
             try
             {

@@ -217,14 +217,14 @@ namespace TradingLib.Common
             SendPacket(request);
         }
 
-        public void ReqQryAccountInfo(string account)
-        {
-            debug("请求查询交易帐号 Account:" + account + " 信息", QSEnumDebugLevel.INFO);
-            MGRQryAccountInfoRequest request = RequestTemplate<MGRQryAccountInfoRequest>.CliSendRequest(requestid++);
-            request.Account = account;
+        //public void ReqQryAccountInfo(string account)
+        //{
+        //    debug("请求查询交易帐号 Account:" + account + " 信息", QSEnumDebugLevel.INFO);
+        //    MGRQryAccountInfoRequest request = RequestTemplate<MGRQryAccountInfoRequest>.CliSendRequest(requestid++);
+        //    request.Account = account;
 
-            SendPacket(request);
-        }
+        //    SendPacket(request);
+        //}
 
         public void ReqCashOperation(string account, decimal amount, string transref, string comment)
         {

@@ -68,6 +68,11 @@ namespace TradingLib.API
         /// </summary>
         bool Super { get; set; }
 
+        /// <summary>
+        /// 独立安装标识
+        /// </summary>
+        bool Dedicated { get; set; }
+
         #region limit
         /// <summary>
         /// 帐户数目限制

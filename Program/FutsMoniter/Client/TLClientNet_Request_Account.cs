@@ -12,9 +12,9 @@ namespace TradingLib.Common
         /// 查询交易帐户信息
         /// </summary>
         /// <param name="account"></param>
-        public void ReqQryAccountInfo2(string account)
+        public void ReqQryAccountFinInfo(string account)
         {
-            this.ReqContribRequest("MgrExchServer", "QryAccountInfo", account);
+            this.ReqContribRequest("MgrExchServer", "QryAccountFinInfo", account);
         }
 
         /// <summary>

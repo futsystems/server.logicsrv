@@ -14,6 +14,11 @@ namespace TradingLib.Common
     public partial class Ctx
     {
 
+        public event Action<RuleItem, bool> GotRuleItemEvent;
+
+        public event Action<RuleItem> GotRuleItemUpdateEvemt;
+
+        public event Action<RuleItem> GotRuleItemDeleteEvent;
 
         /// <summary>
         /// 帐户风控规则项目回报
@@ -21,8 +26,9 @@ namespace TradingLib.Common
         /// <param name="item"></param>
         /// <param name="islast"></param>
         public void OnMGRRuleItemResponse(RuleItem item, bool islast)
-        { 
-        
+        {
+            if (GotRuleItemEvent != null)
+                GotRuleItemEvent(item, islast);
         }
 
 
@@ -32,8 +38,9 @@ namespace TradingLib.Common
         /// <param name="item"></param>
         /// <param name="islast"></param>
         public void OnMGRRuleItemUpdate(RuleItem item, bool islast)
-        { 
-        
+        {
+            if (GotRuleItemUpdateEvemt != null)
+                GotRuleItemUpdateEvemt(item);
         }
 
         /// <summary>
@@ -42,8 +49,9 @@ namespace TradingLib.Common
         /// <param name="item"></param>
         /// <param name="islast"></param>
         public void OnMGRRulteItemDelete(RuleItem item, bool islast)
-        { 
-            
+        {
+            if (GotRuleItemDeleteEvent != null)
+                GotRuleItemDeleteEvent(item);
         }
 
     }

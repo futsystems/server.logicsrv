@@ -27,11 +27,24 @@ namespace TradingLib.Common
         }
 
         /// <summary>
+        /// 查询默认通道
+        /// </summary>
+        public void ReqQryDefaultConnectorConfig()
+        {
+            this.ReqContribRequest("ConnectorManager", "QryDefaultConnectorConfig", "");
+        }
+
+        /// <summary>
         /// 查询所有通道状态
         /// </summary>
         public void ReqQryConnectorStatus()
         {
             this.ReqContribRequest("ConnectorManager", "QryConnectorStatus", "");
+        }
+
+        public void ReqQryDefaultConnectorStatus()
+        {
+            this.ReqContribRequest("ConnectorManager", "QryDefaultConnectorStatus", "");
         }
 
         /// <summary>

@@ -12,19 +12,31 @@ using TradingLib.Common;
 
 namespace FutsMoniter
 {
-    public partial class fmSettlement : ComponentFactory.Krypton.Toolkit.KryptonForm
+    public partial class fmSettlement : ComponentFactory.Krypton.Toolkit.KryptonForm,IEventBinder
     {
         public fmSettlement()
         {
             InitializeComponent();
-            this.FormClosing += new FormClosingEventHandler(fmSettlement_FormClosing);
+            this.Load += new EventHandler(fmSettlement_Load);
+            
         }
 
-        void fmSettlement_FormClosing(object sender, FormClosingEventArgs e)
+        void fmSettlement_Load(object sender, EventArgs e)
         {
-            e.Cancel = true;
-            this.Hide();
+            Globals.RegIEventHandler(this);
         }
+
+        public void OnInit()
+        {
+            Globals.LogicEvent.GotSettlementEvent += new Action<RspMGRQrySettleResponse>(GotSettlement);
+        }
+
+        public void OnDisposed()
+        {
+            Globals.LogicEvent.GotSettlementEvent -= new Action<RspMGRQrySettleResponse>(GotSettlement);
+        }
+
+
         StringBuilder sb = new StringBuilder();
         public void GotSettlement(RspMGRQrySettleResponse response)
         {
@@ -35,12 +47,12 @@ namespace FutsMoniter
             }
             
         }
-        delegate void del1(string text);
+
         void UpdateSettlebox(string content)
         {
             if (this.settlebox.InvokeRequired)
             {
-                this.Invoke(new del1(UpdateSettlebox), new object[] { content });
+                this.Invoke(new Action<string>(UpdateSettlebox), new object[] { content });
             }
             else
             {
@@ -61,12 +73,7 @@ namespace FutsMoniter
                 return;
             }
             string ac = account.Text;
-            //if (!(DateTime.Now.Subtract(lastqrytime).TotalSeconds >5))
-            //{
-            //    fmConfirm.Show("请不要频繁查询,每隔5秒查询一次!");
-            //    return;
-            //}
-            
+           
             lastqrytime = DateTime.Now;
 
             Globals.TLClient.ReqQryHistSettlement(ac, Settleday);

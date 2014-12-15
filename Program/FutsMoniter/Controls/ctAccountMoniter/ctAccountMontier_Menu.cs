@@ -84,8 +84,9 @@ namespace FutsMoniter.Controls
             IAccountLite account = GetVisibleAccount(CurrentAccount);
             if (account != null)
             {
-                fmaccountconfig.Account = account;
-                fmaccountconfig.Show();//.ShowDialog();
+                fmAccountConfig fm = new fmAccountConfig();
+                fm.SetAccount(account);
+                fm.Show();//.ShowDialog();
             }
             else
             {

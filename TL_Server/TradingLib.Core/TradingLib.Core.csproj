@@ -85,7 +85,6 @@
     <Compile Include="Core\ClearCentre\ClearCentreSrv_LogRestore.cs" />
     <Compile Include="Core\ManagerExchange\ContractBankUtils.cs" />
     <Compile Include="Core\ManagerExchange\ManagerRights.cs" />
-    <Compile Include="Core\ManagerExchange\ORM\MUIAccess.cs" />
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_Msic.cs" />
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_RecvBank.cs" />
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_Permission.cs" />
@@ -105,7 +104,6 @@
     <Compile Include="Core\ManagerExchange\MgrExchServer.cs" />
     <Compile Include="Base\Settlement.cs" />
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_Other.cs" />
-    <Compile Include="Core\ManagerExchange\ORM\MAgentFinance.cs" />
     <Compile Include="Core\ManagerExchange\TLServer_MgrExch.cs" />
     <Compile Include="Core\ManagerExchange\MgrExchServer_.cs" />
     <Compile Include="Core\ManagerExchange\MgrExchServer_MessageOut.cs" />

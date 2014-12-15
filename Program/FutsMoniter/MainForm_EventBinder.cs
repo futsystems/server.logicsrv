@@ -42,9 +42,9 @@ namespace FutsMoniter
             kryptonRibbonGroupButton_interfacelist.Visible = Globals.LoginResponse.Domain.Super;
             
             //开启或者关闭清算中心
-            kryptonRibbonGroupButton_OpenClearCentre.Visible = Globals.LoginResponse.Domain.Super;
-            kryptonRibbonGroupButton_CloseClearCentre.Visible = Globals.LoginResponse.Domain.Super;
-            kryptonRibbonGroup1.Visible = Globals.LoginResponse.Domain.Super;
+            kryptonRibbonGroupButton_OpenClearCentre.Visible = Globals.LoginResponse.Domain.Super || Globals.Domain.Dedicated;
+            kryptonRibbonGroupButton_CloseClearCentre.Visible = Globals.LoginResponse.Domain.Super || Globals.Domain.Dedicated;
+            kryptonRibbonGroup1.Visible = Globals.LoginResponse.Domain.Super || Globals.Domain.Dedicated;
 
             //日志窗口
             kryptonRibbonQATButton_debug.Visible = Globals.LoginResponse.Domain.Super;
@@ -62,7 +62,7 @@ namespace FutsMoniter
                 else
                 {
                     //kryptonRibbonGroupButton_RouterList.Visible = Globals.UIAccess.nav_system_router;
-                    
+                    kryptonRibbonGroupButton_tickpaper.Visible = Globals.Domain.Super || Globals.Domain.Dedicated;
                     kryptonRibbonGroupButton_connectorlist.Visible = Globals.Manager.IsRoot();//实盘帐号
 
                     kryptonRibbonGroupButton_SystemStatus.Visible = Globals.Manager.IsRoot();//系统状态

@@ -14,6 +14,14 @@ namespace FutsMoniter
         {
             Globals.Debug("fmAccountConfig init called @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
             
+            //绑定事件
+            Globals.LogicEvent.GotRuleItemEvent += new Action<RuleItem, bool>(OnRuleItem);//查询风控规则回报
+            Globals.LogicEvent.GotRuleItemUpdateEvemt += new Action<RuleItem>(OnRuleItemUpdate);//风控规则更新
+            Globals.LogicEvent.GotRuleItemDeleteEvent += new Action<RuleItem>(OnRuleItemDel);//风控规则删除
+
+            Globals.LogicEvent.GotAccountChangedEvent += new Action<IAccountLite>(OnAccountChanged);//帐户更新
+
+
             if (!Globals.LoginResponse.Domain.Super)
             {
                 pageConfig.Visible = Globals.UIAccess.moniter_tab_config;
@@ -31,6 +39,11 @@ namespace FutsMoniter
 
         public void OnDisposed()
         {
+            Globals.LogicEvent.GotRuleItemEvent -= new Action<RuleItem, bool>(OnRuleItem);//查询风控规则回报
+            Globals.LogicEvent.GotRuleItemUpdateEvemt -= new Action<RuleItem>(OnRuleItemUpdate);//风控规则更新
+            Globals.LogicEvent.GotRuleItemDeleteEvent -= new Action<RuleItem>(OnRuleItemDel);//风控规则删除
+
+            Globals.LogicEvent.GotAccountChangedEvent -= new Action<IAccountLite>(OnAccountChanged);//帐户更新
 
         }
         

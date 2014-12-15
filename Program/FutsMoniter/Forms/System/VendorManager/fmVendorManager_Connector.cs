@@ -389,7 +389,7 @@ namespace FutsMoniter
                 return routergridmenu;
             }
             int r = ConnectorIdx(cfg.ID);
-            if (r > 0)
+            if (r >= 0)
             {
                 bool isvendorbinded = false;
                 //需要绑定Vendor

@@ -16,7 +16,7 @@ namespace FutsMoniter
         /// <summary>
         /// 委托风控项
         /// </summary>
-        Dictionary<int, RuleItem> ruleitemmap = new Dictionary<int, RuleItem>();
+        Dictionary<int, RuleItem> orderruleitemmap = new Dictionary<int, RuleItem>();
 
         delegate void RuleItemDel(RuleItem item, bool islast);
 
@@ -29,9 +29,9 @@ namespace FutsMoniter
             else
             {
                 debug("remote ruleitem,id:" + item.ID + " rule desp:" + item.RuleDescription);
-                if (ruleitemmap.Keys.Contains(item.ID))
+                if (orderruleitemmap.Keys.Contains(item.ID))
                 {
-                    ruleitemmap.Remove(item.ID);
+                    orderruleitemmap.Remove(item.ID);
                 }
                 if (islast)
                 {
@@ -49,9 +49,9 @@ namespace FutsMoniter
             {
                 if (item.ID == 0 || string.IsNullOrEmpty(item.Account))
                     return;
-                if (ruleitemmap.Keys.Contains(item.ID))
+                if (orderruleitemmap.Keys.Contains(item.ID))
                 {
-                    RuleItem target = ruleitemmap[item.ID];
+                    RuleItem target = orderruleitemmap[item.ID];
                     target.Account = item.Account;
                     target.Compare = item.Compare;
                     target.Enable = item.Enable;
@@ -64,7 +64,7 @@ namespace FutsMoniter
                 }
                 else
                 {
-                    ruleitemmap.Add(item.ID, item);
+                    orderruleitemmap.Add(item.ID, item);
                 }
                 if (islast)//当最后一个回报时刷新数据
                 {
@@ -81,7 +81,7 @@ namespace FutsMoniter
         public ArrayList GetOrderRuleItemList()
         {
             ArrayList list = new ArrayList();
-            foreach (RuleItem item in ruleitemmap.Values)
+            foreach (RuleItem item in orderruleitemmap.Values)
             {
                 ValueObject<RuleItem> vo = new ValueObject<RuleItem>();
                 vo.Name = item.RuleDescription;

@@ -20,21 +20,13 @@ namespace FutsMoniter
         bool _connected = false;
         bool _logined = false;
         bool _gotloginrep = false;
-       // bool _basicinfodone = false;//基本数据是否已经查询完毕
+
         event DebugDelegate ShowInfoHandler;
 
         string _servers = "127.0.0.1";
 
         DebugForm debugform = new DebugForm();
 
-        fmHistQuery histqryform;
-        //BasicInfoTracker basicinfotracker;
-
-        //fmManagerCentre mgrform;
-        fmAgentProfitReport agentprofitreportform;
-
-        //结算单查询窗口
-        fmSettlement settlementform = new fmSettlement();
         void ShowInfo(string msg)
         {
             if (ShowInfoHandler != null)
@@ -45,12 +37,12 @@ namespace FutsMoniter
 
         void debug(string msg)
         {
-            //ctDebug1.GotDebug(msg);
+
             debugform.GotDebug(msg);
             logfile.GotDebug(msg);
         }
 
-        //TradingInfoTracker infotracker;
+
         System.Threading.Timer _timer;
         Ctx _ctx;
         public MainForm(DebugDelegate showinfo)
@@ -63,7 +55,6 @@ namespace FutsMoniter
 
             //初始化界面控件
             InitializeComponent();
-
 
             logfile = new Log(Globals.Config["LogFileName"].AsString(), true, true, "log", true);//日志组件
 
@@ -109,15 +100,6 @@ namespace FutsMoniter
             ctAccountMontier1.QryAccountHistEvent += new IAccountLiteDel(ctAccountMontier1_QryAccountHistEvent);
 
             
-            //Globals.RegisterLogicHandler
-            //infotracker = new TradingInfoTracker();
-            //Globals.RegisterInfoTracker(infotracker);
-
-            //basicinfotracker = new BasicInfoTracker();
-           // Globals.RegisterBasicInfoTracker(basicinfotracker);
-
-            histqryform = new fmHistQuery();
-            agentprofitreportform = new fmAgentProfitReport();
 
             Globals.SendDebugEvent += new DebugDelegate(debug);
 

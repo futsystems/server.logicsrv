@@ -9,6 +9,7 @@ namespace TradingLib.API
 {
     public interface ICallbackCentre
     {
+        #region 帐户类事件
         /// <summary>
         /// 交易帐号
         /// </summary>
@@ -36,8 +37,12 @@ namespace TradingLib.API
         /// 恢复日内交易数据事件
         /// </summary>
         event Action<RspMGRResumeAccountResponse> GotResumeResponseEvent;
+        
+        #endregion
 
 
+
+        #region 交易事件
         /// <summary>
         /// 行情事件
         /// </summary>
@@ -53,12 +58,35 @@ namespace TradingLib.API
         /// </summary>
         event FillDelegate GotFillEvent;
 
+        #endregion
+
+
 
         /// <summary>
         /// 操作回报
         /// </summary>
         event Action<RspInfo> GotRspInfoEvent;
 
+
+        #region 风控规则
+        event Action<RuleItem, bool> GotRuleItemEvent;
+
+        event Action<RuleItem> GotRuleItemUpdateEvemt;
+
+        event Action<RuleItem> GotRuleItemDeleteEvent;
+
+        #endregion
+
+
+        #region 客户交易历史查询
+
+        event Action<Order, bool> GotHistOrderEvent;
+        event Action<Trade, bool> GotHistTradeEvent;
+        event Action<RspMGRQrySettleResponse> GotSettlementEvent;
+
+        #endregion
+
+        #region Contrib 扩展指令
         /// <summary>
         /// 注册回调函数
         /// </summary>
@@ -75,6 +103,8 @@ namespace TradingLib.API
         /// <param name="cmd"></param>
         /// <param name="del"></param>
         void UnRegisterCallback(string module, string cmd, JsonReplyDel del);
+        #endregion
+
 
     }
 }

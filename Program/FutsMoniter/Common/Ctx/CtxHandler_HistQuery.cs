@@ -13,21 +13,30 @@ namespace TradingLib.Common
     /// </summary>
     public partial class Ctx
     {
+        public event Action<Order, bool> GotHistOrderEvent;
+        public event Action<Trade, bool> GotHistTradeEvent;
+        public event Action<RspMGRQrySettleResponse> GotSettlementEvent;
+
         #region 历史记录查询
+
         public void OnMGROrderResponse(Order o, bool islast)
-        { 
-            
+        {
+            if (GotHistOrderEvent != null)
+                GotHistOrderEvent(o, islast);
         }
+
         public void OnMGRTradeResponse(Trade f, bool islast)
-        { 
-        
+        {
+            if (GotHistTradeEvent != null)
+                GotHistTradeEvent(f, islast);
         }
-        //void OnMGRPositionResponse(PositionDetail pos, bool islast);
-        //void OnMGRCashTransactionResponse(CashTransaction c, bool islast);
+
         public void OnMGRSettlementResponse(RspMGRQrySettleResponse response)
-        { 
-            
+        {
+            if (GotSettlementEvent != null)
+                GotSettlementEvent(response);
         }
+
         #endregion
 
 

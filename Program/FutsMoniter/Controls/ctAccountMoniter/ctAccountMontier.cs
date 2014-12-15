@@ -29,7 +29,7 @@ namespace FutsMoniter.Controls
 
 
         const string PROGRAME = "AccountMontier";
-        fmAccountConfig fmaccountconfig = new fmAccountConfig();
+        //fmAccountConfig fmaccountconfig = new fmAccountConfig();
         bool _loaded = false;
 
         Symbol _symbolselected = null;

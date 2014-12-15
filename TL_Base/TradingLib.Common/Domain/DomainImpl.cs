@@ -66,6 +66,10 @@ namespace TradingLib.Common
         /// </summary>
         public bool Super { get; set; }
 
+        /// <summary>
+        /// 独立安装标识
+        /// </summary>
+        public bool Dedicated { get; set; }
 
         /// <summary>
         /// 路由组数量限制

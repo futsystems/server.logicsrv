@@ -35,17 +35,19 @@ namespace FutsMoniter
                 return;
             }
 
-            Globals.TLClient.ReqQryAccountInfo2(_account.Account);
+            Globals.TLClient.ReqQryAccountFinInfo(_account.Account);
         }
 
         public void OnInit()
         {
-            Globals.LogicEvent.RegisterCallback("MgrExchServer", "QryAccountInfo", this.OnQryAccountInfo);
+            Globals.LogicEvent.RegisterCallback("MgrExchServer", "QryAccountFinInfo", this.OnQryAccountInfo);
+            Globals.LogicEvent.RegisterCallback("MgrExchServer", "NotifyAccountFinInfo", this.OnQryAccountInfo);
         }
 
         public void OnDisposed()
         {
-            Globals.LogicEvent.RegisterCallback("MgrExchServer", "QryAccountInfo", this.OnQryAccountInfo);
+            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "QryAccountFinInfo", this.OnQryAccountInfo);
+            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "NotifyAccountFinInfo", this.OnQryAccountInfo);
         }
 
         void OnQryAccountInfo(string json)

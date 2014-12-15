@@ -24,48 +24,56 @@ namespace FutsMoniter
 
             
         }
-        public IAccountLite Account { get { return _account; } 
-            set 
-            { 
-                _account = value;
-                if (_account != null)
-                {
-                    this.Text = "交易帐户编辑[" + _account.Account + "]";
-                    intraday.Checked = _account.IntraDay;
-                    intraday.Text = _account.IntraDay ? "日内" : "隔夜";
-                    //ctAccountType1.AccountType = _account.Category;
-                    ctRouterType1.RouterType = _account.OrderRouteType;
 
-                    btnExecute.Text = _account.Execute ? "冻 结" : "激 活";
-                    btnExecute.ForeColor = Color.Red;
+        public void SetAccount(IAccountLite account)
+        {
+            _account = account;
+            if (_account != null)
+            {
+                this.Text = "交易帐户编辑[" + _account.Account + "]";
+                intraday.Checked = _account.IntraDay;
+                intraday.Text = _account.IntraDay ? "日内" : "隔夜";
+                //ctAccountType1.AccountType = _account.Category;
+                ctRouterType1.RouterType = _account.OrderRouteType;
+
+                btnExecute.Text = _account.Execute ? "冻 结" : "激 活";
+                btnExecute.ForeColor = Color.Red;
 
 
-                    poslock.Checked = _account.PosLock;
-                    poslock.Text = _account.PosLock ? "允许" : "禁止";
+                poslock.Checked = _account.PosLock;
+                poslock.Text = _account.PosLock ? "允许" : "禁止";
 
-                    ctFinanceInfo1.SetAccount(_account);
-                }
-            } 
+                ctFinanceInfo1.SetAccount(_account);
+            }
         }
+
+
         public fmAccountConfig()
         {
             InitializeComponent();
-            //Factory.IDataSourceFactory(routeType).BindDataSource(UIUtil.GetEnumValueObjects<QSEnumOrderTransferType>());
+
             cashop_type.Items.Add("入金");
             cashop_type.Items.Add("出金");
 
+            this.Load += new EventHandler(fmAccountConfig_Load);
+            
+        }
 
+        void fmAccountConfig_Load(object sender, EventArgs e)
+        {
             //绑定事件
             WireEvent();
+
+            Factory.IDataSourceFactory(orderRuleClassList).BindDataSource(Globals.BasicInfoTracker.GetOrderRuleClassListItems());
+            Factory.IDataSourceFactory(accountRuleClassList).BindDataSource(Globals.BasicInfoTracker.GetAccountRuleClassListItems());
+                
+        
         }
 
         void WireEvent()
         {
             Globals.RegIEventHandler(this);
 
-            this.FormClosing +=new FormClosingEventHandler(fmAccountConfig_FormClosing);
-
-            //this.btnUpdateAccountInfo.Click +=new EventHandler(btnUpdateAccountInfo_Click);//更新财务信息
             this.btnCashOperation.Click +=new EventHandler(btnCashOperation_Click);//出入金按钮
             this.btnExecute.Click +=new EventHandler(btnExecute_Click);//冻结 激活
             this.btnUpdate.Click +=new EventHandler(btnUpdate_Click);//更新属性设置
@@ -75,17 +83,11 @@ namespace FutsMoniter
             this.btnDelAccountRule.Click +=new EventHandler(btnDelAccountRule_Click);
             this.btnDelOrderRule.Click +=new EventHandler(btnDelOrderRule_Click);
             this.pagenav.SelectedPageChanged += new EventHandler(pagenav_SelectedPageChanged);
+
+
         }
 
 
-
-
-
-        private void fmAccountConfig_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            e.Cancel = true;
-            this.Hide();
-        }
 
 
 
@@ -189,17 +191,15 @@ namespace FutsMoniter
 
             if (pagenav.SelectedPage.Name.Equals("pageOrderCheck"))
             {
-                Factory.IDataSourceFactory(orderRuleClassList).BindDataSource(Globals.BasicInfoTracker.GetOrderRuleClassListItems());
                 Globals.TLClient.ReqQryRuleItem(_account.Account, QSEnumRuleType.OrderRule);
             }
             else if (pagenav.SelectedPage.Name.Equals("pageAccountCheck"))
             {
-                Factory.IDataSourceFactory(accountRuleClassList).BindDataSource(Globals.BasicInfoTracker.GetAccountRuleClassListItems());
                 Globals.TLClient.ReqQryRuleItem(_account.Account, QSEnumRuleType.AccountRule);
             }
             else if (pagenav.SelectedPage.Name.Equals("pageFinance"))
             {
-                Globals.TLClient.ReqQryAccountInfo(_account.Account);
+                Globals.TLClient.ReqQryAccountFinInfo(_account.Account);
             }
 
             
