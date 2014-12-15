@@ -98,6 +98,11 @@ namespace TradingLib.Common
         [NoJsonExportAttr()]
         public Domain Domain { get; internal set; }
 
+        /// <summary>
+        /// 激活状态
+        /// </summary>
+        public bool Active { get; set; }
+
         public override string ToString()
         {
             return string.Format("Manager[{0}]:{1} Type:{2} BaseFK:{3} ParentFK:{4}", this.ID, this.Login, this.Type, this.mgr_fk, this.parent_fk);
@@ -124,6 +129,8 @@ namespace TradingLib.Common
             sb.Append(p.AccLimit.ToString());
             sb.Append(d);
             sb.Append(p.mgr_fk.ToString());
+            sb.Append(d);
+            sb.Append(p.Active.ToString());
             return sb.ToString();
         }
 
@@ -139,6 +146,7 @@ namespace TradingLib.Common
             this.QQ=rec[6];
             this.AccLimit = int.Parse(rec[7]);
             this.mgr_fk= int.Parse(rec[8]);
+            this.Active = bool.Parse(rec[9]);
         }
     }
 }

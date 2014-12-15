@@ -22,6 +22,7 @@ namespace TradingLib.Common
                 target.Mobile = manager.Mobile;
                 target.Name = manager.Name;
                 target.QQ = manager.QQ;
+                target.Active = manager.Active;
                 notify = target;
             }
             else//否则添加该Manager

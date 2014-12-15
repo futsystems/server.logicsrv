@@ -65,6 +65,7 @@ namespace TradingLib.Common
                 target.User_Id = mgr.User_Id;
 
                 ORM.MManager.InsertManager(target);
+                mgr.ID = target.ID;
 
                 //添加到内存
                 managermap[target.Login] = target;

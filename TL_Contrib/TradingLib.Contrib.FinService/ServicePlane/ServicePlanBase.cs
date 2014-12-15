@@ -175,18 +175,6 @@ namespace TradingLib.Contrib.FinService
         #endregion
 
 
-
-        /// <summary>
-        /// 调整收费项目
-        /// </summary>
-        /// <param name="fill"></param>
-        /// <param name="positionround"></param>
-        /// <returns></returns>
-        //public virtual decimal AdjustCommission(Trade fill, IPositionRound positionround)
-        //{
-        //    return fill.Commission;
-        //}
-
         /// <summary>
         /// 获得可用配资额度，用于在标准资金上加入可用资金额度 实现配资逻辑
         /// </summary>
@@ -324,6 +312,14 @@ namespace TradingLib.Contrib.FinService
         public virtual void OnCashOperation(JsonWrapperCashOperation op)
         {
 
+        }
+
+        /// <summary>
+        /// 参数修改后调用该回调函数 用于根据参数修改进行相关数据的自动更新
+        /// </summary>
+        public virtual void OnArgumentChanged()
+        { 
+        
         }
     }
 }

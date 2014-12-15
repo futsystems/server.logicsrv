@@ -22,8 +22,15 @@ namespace FutsMoniter
         {
             InitializeComponent();
             //如果已经初始化完成 则直接读取数据填充 否则将资金放入事件回调中
+
+            this.Load += new EventHandler(ctBankList_Load);
             
-            this.cbbank.SelectedIndexChanged +=new EventHandler(cbbank_SelectedIndexChanged);
+        }
+
+        void ctBankList_Load(object sender, EventArgs e)
+        {
+            Globals.RegIEventHandler(this);
+            this.cbbank.SelectedIndexChanged += new EventHandler(cbbank_SelectedIndexChanged);
         }
 
         public void OnInit()

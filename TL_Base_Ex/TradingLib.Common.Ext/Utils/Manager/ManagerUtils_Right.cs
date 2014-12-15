@@ -102,7 +102,7 @@ namespace TradingLib.Common
         public static bool RightAgentParent(this Manager mgr, Manager submgr)
         {
             if (submgr == null) return false;
-            if (mgr.Domain.IsManagerInDomain(submgr)) return false;//不在同一域
+            if (!mgr.Domain.IsManagerInDomain(submgr)) return false;//不在同一域
             Manager agent = submgr.BaseManager;//获得主域代理
 
             if (agent == null) return false;

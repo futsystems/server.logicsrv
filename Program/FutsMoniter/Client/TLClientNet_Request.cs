@@ -340,6 +340,15 @@ namespace TradingLib.Common
 
         #region 管理员管理
 
+        public void ReqActiveManger(int mgrid)
+        {
+            this.ReqContribRequest("MgrExchServer", "ActiveManager",mgrid.ToString());
+        }
+        public void ReqInactiveManger(int mgrid)
+        {
+            this.ReqContribRequest("MgrExchServer", "InactiveManager", mgrid.ToString());
+        }
+
         public void ReqQryManager()
         {
             debug("请求查询管理员列表", QSEnumDebugLevel.INFO);
@@ -356,6 +365,16 @@ namespace TradingLib.Common
 
             SendPacket(request);
         }
+
+        public void ReqAddManager(Manager manger)
+        {
+            debug("请求添加管理员", QSEnumDebugLevel.INFO);
+            MGRReqAddManagerRequest request = RequestTemplate<MGRReqAddManagerRequest>.CliSendRequest(requestid++);
+            request.ManagerToSend = manger;
+
+            SendPacket(request);
+        }
+
 
         public void ReqUpdatePass(string oldpass, string pass)
         {

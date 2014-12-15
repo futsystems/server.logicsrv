@@ -70,6 +70,21 @@ namespace TradingLib.ORM
             }
         }
 
+        /// <summary>
+        /// 更新管理员激活或冻结
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="active"></param>
+        /// <returns></returns>
+        public static bool UpdateManagerActive(int id,bool active)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = String.Format("UPDATE manager SET active = '{0}' WHERE id = '{1}'",active?1:0, id);
+                return db.Connection.Execute(query) >= 0;
+            }
+        }
+
         public static bool UpdateManager(Manager manager)
         {
             using (DBMySql db = new DBMySql())
@@ -78,6 +93,8 @@ namespace TradingLib.ORM
                 return db.Connection.Execute(query) >= 0;
             }
         }
+
+
 
         public static bool InsertManager(Manager manger)
         {

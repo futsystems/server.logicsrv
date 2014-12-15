@@ -217,7 +217,15 @@ namespace TradingLib.Core
                     response.Authorized = false;
                     response.RspInfo.Fill("LOGINTYPE_NOT_SUPPORT");
                 }
-                if (account.Domain.DateExpired > 0 && account.Domain.DateExpired < Util.ToTLDate())//域过期
+                
+                if (account.Domain.IsExpired())//域过期
+                {
+                    clientinfo.AuthorizedFail();
+                    response.Authorized = false;
+                    response.RspInfo.Fill("PLATFORM_EXPIRED");
+                }
+                Manager mgr = BasicTracker.ManagerTracker[account.Mgr_fk];
+                if (mgr == null || (!mgr.Active))
                 {
                     clientinfo.AuthorizedFail();
                     response.Authorized = false;

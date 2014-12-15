@@ -27,7 +27,7 @@ namespace TradingLib.Contrib.FinService
         /// <summary>
         /// 配资比例
         /// </summary>
-        [ArgumentAttribute("FinAmount", "配资额度", EnumArgumentType.DECIMAL, true, 0, 0)]
+        [ArgumentAttribute("FinAmount", "配资额度", EnumArgumentType.DECIMAL, false, 0, 0)]
         public ArgumentPair FinAmount { get; set; }
 
 
@@ -73,7 +73,7 @@ namespace TradingLib.Contrib.FinService
             _collecttype = EnumFeeCollectType.CollectAfterSettle;//在系统结算后进行收取当日配资费用
         }
 
-
+        int oldfinlever = 0;
         public override void OnInit()
         {
             //如果配资额度为0 则检查当前交易帐户 如果帐户有自己则按照比例自动配置上配资额度
@@ -87,6 +87,32 @@ namespace TradingLib.Contrib.FinService
                 {
                     Util.Debug(string.Format("帐户:{0} 当前权益:{1} 配资额度为:{2} 强平比例为:{3} 强平权益额度为:{4} 不满足本金要求,冻结交易帐户",this.Account.ID,nowequity,this.FinAmount.AccountArgument.AsDecimal(),this.StopPect.AccountArgument.AsDecimal(),stopmargin));
                     this.Account.InactiveAccount();
+                }
+            }
+
+            //如果配资额度为0 则检查当前交易帐户 如果帐户有自己则按照比例自动配置上配资额度
+            if (this.FinAmount.AccountArgument.AsDecimal() == 0)
+            {
+                decimal nowequity = this.Account.NowEquity;
+                oldfinlever = this.FinLever.AccountArgument.AsInt();
+                decimal finamount = nowequity * oldfinlever;
+                if (nowequity > 0)
+                {
+                    Util.Debug("帐户:" + this.Account.ID + "当前权益:" + nowequity.ToString() + "而配资额度为0，自动加载配资额度为:" + finamount.ToString());
+
+                    Argument newarg = new Argument()
+                    {
+                        Name = this.FinAmount.AccountArgument.Name,
+                        Type = this.FinAmount.AccountArgument.Type,
+                        Value = finamount.ToString(),
+                    };
+                    //调整配资额度
+                    FinTracker.ArgumentTracker.UpdateArgumentAccount(this.ServiceID, newarg);
+
+                    //更新内存参数
+                    FinServiceStub stub = FinTracker.FinServiceTracker[this.Account.ID];
+                    if (stub != null)
+                        stub.LoadArgument();
                 }
             }
         }
@@ -283,6 +309,37 @@ namespace TradingLib.Contrib.FinService
             FinServiceStub stub = FinTracker.FinServiceTracker[this.Account.ID];
             if (stub != null)
                 stub.LoadArgument();
+        }
+
+
+        public override void OnArgumentChanged()
+        {
+            int newlever = this.FinLever.AccountArgument.AsInt();
+            if (newlever != oldfinlever)
+            {
+                Util.Debug("初始配资比例:" + oldfinlever.ToString() + " 新配资比例:" + newlever.ToString());
+                //进行动态调整额度
+                decimal oldamount = this.FinAmount.AccountArgument.AsDecimal();
+                if (oldamount > 0)
+                {
+                    decimal newamount = oldamount / oldfinlever * newlever;
+                    Argument newarg = new Argument()
+                    {
+                        Name = this.FinAmount.AccountArgument.Name,
+                        Type = this.FinAmount.AccountArgument.Type,
+                        Value = newamount.ToString(),
+                    };
+                    //调整配资额度
+                    FinTracker.ArgumentTracker.UpdateArgumentAccount(this.ServiceID, newarg);
+
+                    //更新内存参数
+                    FinServiceStub stub = FinTracker.FinServiceTracker[this.Account.ID];
+                    if (stub != null)
+                        stub.LoadArgument();
+                }
+                oldfinlever = newlever;
+
+            }
         }
     }
 }

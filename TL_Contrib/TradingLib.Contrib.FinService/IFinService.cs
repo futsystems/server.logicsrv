@@ -145,6 +145,11 @@ namespace TradingLib.Contrib.FinService
         /// 结算时按照权益重新计算配资额度等
         /// </summary>
         void OnCashOperation(JsonWrapperCashOperation op);
+
+        /// <summary>
+        /// 响应参数变化
+        /// </summary>
+        void OnArgumentChanged();
     }
 
 

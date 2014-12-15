@@ -251,7 +251,7 @@ namespace TradingLib.Core
                 Manager m = BasicTracker.ManagerTracker[request.LoginID];
                 if (m != null)
                 {
-                    if (m.Domain.DateExpired>0 && m.Domain.DateExpired < Util.ToTLDate())//域过期
+                    if (m.Domain.IsExpired() || (!m.Active))//域过期
                     {
                         clientinfo.AuthorizedFail();
                         response.LoginResponse.Authorized = false;

@@ -23,8 +23,15 @@ namespace FutsMoniter
         {
             InitializeComponent();
 
-            cbServicePlan.SelectedIndexChanged+=new EventHandler(cbServicePlan_SelectedIndexChanged);
+            this.Load += new EventHandler(ctFinServicePlanList_Load);
             
+            
+        }
+
+        void ctFinServicePlanList_Load(object sender, EventArgs e)
+        {
+            Globals.RegIEventHandler(this);
+            cbServicePlan.SelectedIndexChanged += new EventHandler(cbServicePlan_SelectedIndexChanged);
         }
 
         public void OnInit()

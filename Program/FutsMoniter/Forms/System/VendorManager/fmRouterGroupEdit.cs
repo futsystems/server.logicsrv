@@ -30,7 +30,16 @@ namespace FutsMoniter
             rg.Description = rgdescrption.Text;
             rg.Name = rgname.Text;
             rg.Strategy = (QSEnumRouterStrategy)cbrgstrategytype.SelectedValue;
-
+            if (string.IsNullOrEmpty(rg.Name))
+            {
+                ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show("请填写路由组名称");
+                return;
+            }
+            if (!InputReg.RouterGroupName.IsMatch(rg.Name))
+            {
+                ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show("路由组名只能包含数字,字母和-");
+                return;
+            }
             if (fmConfirm.Show("确认添加路由组?") == System.Windows.Forms.DialogResult.Yes)
             {
                 Globals.TLClient.ReqUpdateRouterGroup(rg);

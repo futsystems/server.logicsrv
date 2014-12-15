@@ -61,7 +61,8 @@
             this.ClientSize = new System.Drawing.Size(711, 416);
             this.Controls.Add(this.kryptonPanel1);
             this.Name = "fmPositionMetricMoniter";
-            this.Text = "fmPositionMetricMoniter";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "持仓统计数据";
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).EndInit();
             this.kryptonPanel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pmholder)).EndInit();

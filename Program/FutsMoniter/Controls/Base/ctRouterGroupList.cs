@@ -28,13 +28,6 @@ namespace FutsMoniter.Controls.Base
         void ctRouterGroupList_Load(object sender, EventArgs e)
         {
             WireEvent();
-            if (Globals.EnvReady)
-            {
-                if (!_gotrglist)
-                {
-                    Globals.TLClient.ReqQryRouterGroup();
-                }
-            }
         }
 
         void WireEvent()
@@ -72,6 +65,7 @@ namespace FutsMoniter.Controls.Base
         {
             Globals.LogicEvent.RegisterCallback("ConnectorManager", "QryRouterGroup", this.OnQryRouterGroup);
             Globals.LogicEvent.RegisterCallback("ConnectorManager", "NotifyRouterGroup", this.OnNotifyRouterGroup);
+            Globals.TLClient.ReqQryRouterGroup();
         }
 
         public void OnDisposed()

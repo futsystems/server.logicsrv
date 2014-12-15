@@ -88,8 +88,36 @@ namespace FutsMoniter
             }
         }
 
+        void ActiveManager_Click(object sender, EventArgs e)
+        {
+            int id = CurrentManagerID;
+            Manager manger = Globals.BasicInfoTracker.GetManager(id);
+            if (manger == null)
+            {
+                ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show("请选择管理员");
+                return;
+            }
+            if (fmConfirm.Show("确认激活管理员:" + manger.Login)== System.Windows.Forms.DialogResult.Yes)
+            {
+                Globals.TLClient.ReqActiveManger(manger.ID);
+            }
+        }
 
+        void InactiveManager_Click(object sender, EventArgs e)
+        {
+            int id = CurrentManagerID;
+            Manager manger = Globals.BasicInfoTracker.GetManager(id);
+            if (manger == null)
+            {
+                ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show("请选择管理员");
+                return;
+            }
 
+            if (fmConfirm.Show("确认冻结管理员:" + manger.Login) == System.Windows.Forms.DialogResult.Yes)
+            {
+                Globals.TLClient.ReqInactiveManger(manger.ID);
+            }
+        }
         //得到当前选择的行号
         private int CurrentManagerID
         {
@@ -107,6 +135,16 @@ namespace FutsMoniter
             }
         }
 
+        Image getStatusImage(bool execute)
+        {
+            if (execute)
+                return (Image)Properties.Resources.account_go;
+            else
+                return (Image)Properties.Resources.account_stop;
+
+        }
+
+
 
         #region 显示字段
 
@@ -120,7 +158,7 @@ namespace FutsMoniter
         const string ACCNUMLIMIT = "帐户数量限制";
 
         const string MGRFK = "管理域ID";
-
+        const string STATUS = "状态";
 
         #endregion
 
@@ -153,6 +191,8 @@ namespace FutsMoniter
 
             grid.ContextMenuStrip.Items.Add("添加", null, new EventHandler(AddManager_Click));
             grid.ContextMenuStrip.Items.Add("编辑", null, new EventHandler(EditManager_Click));
+            grid.ContextMenuStrip.Items.Add("激活管理员", null, new EventHandler(ActiveManager_Click));
+            grid.ContextMenuStrip.Items.Add("冻结管理员", null, new EventHandler(InactiveManager_Click));
 
         }
 
@@ -168,6 +208,8 @@ namespace FutsMoniter
             gt.Columns.Add(QQ);//
             gt.Columns.Add(ACCNUMLIMIT);//
             gt.Columns.Add(MGRFK);//
+
+            gt.Columns.Add(STATUS,typeof(Image));//
         }
 
         /// <summary>
@@ -218,11 +260,12 @@ namespace FutsMoniter
             }
             else
             {
+                Globals.Debug("got mangaer:" + manger.ID.ToString());
                 int r = MangerIdx(manger.ID);
                 //添加
                 if (r == -1)
                 {
-                    //Globals.Debug("add row");
+                    Globals.Debug("add row");
                     gt.Rows.Add(manger.ID);
                     int i = gt.Rows.Count - 1;
                     gt.Rows[i][LOGIN] = manger.Login;
@@ -234,12 +277,13 @@ namespace FutsMoniter
                     gt.Rows[i][ACCNUMLIMIT] = manger.Type == QSEnumManagerType.AGENT ? manger.AccLimit.ToString() : "";
                     gt.Rows[i][MGRFK] = manger.mgr_fk;
 
-                    //mgridmap.Add(manger.ID, ex);
+                    gt.Rows[i][STATUS] = getStatusImage(manger.Active);
                     mgridmap.Add(manger.ID, i);//记录全局ID和table序号的映射
 
                 }
                 else
                 {
+                    Globals.Debug("update manager:" + manger.Active.ToString());
                     int i = r;
                     gt.Rows[i][LOGIN] = manger.Login;
                     gt.Rows[i][MGRTYPESTR] = Util.GetEnumDescription(manger.Type);
@@ -249,6 +293,7 @@ namespace FutsMoniter
                     gt.Rows[i][QQ] = manger.QQ;
                     gt.Rows[i][ACCNUMLIMIT] = manger.AccLimit;
                     gt.Rows[i][MGRFK] = manger.mgr_fk;
+                    gt.Rows[i][STATUS] = getStatusImage(manger.Active);
 
                 }
             }
