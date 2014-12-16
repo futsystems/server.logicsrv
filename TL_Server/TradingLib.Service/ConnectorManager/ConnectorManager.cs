@@ -107,38 +107,14 @@ namespace TradingLib.ServiceManager
         public void Start()
         {
             Util.StatusSection(this.PROGRAME, "STARTCONNECTOR", QSEnumInfoColor.INFODARKRED,true);
-            //1.启动默认通道
-            if (GlobalConfig.NeedStartDefaultConnector)
-            {
-                //启动默认通道
-                StartDataFeedViaToken(_defaultDataFeedToken);
-                StartBrokerViaToken(_defaultSimBrokerToken);
-            }
-
-            //2.启动实盘通道
-            //把有效域内绑定的实盘帐户对应的通道启动起来
             if (TLCtxHelper.Ctx.SettleCentre.IsTradingday)//如果是交易日则需要启动实盘通道
             {
-                foreach (Domain domain in BasicTracker.DomainTracker.Domains)
-                {
-
-                    if (domain.IsExpired())
-                        continue;
-
-                    foreach(RouterGroup rg in domain.GetRouterGroups())
-                    {
-                        foreach (RouterItem item in rg.RouterItems)
-                        {
-                            if (item.Vendor != null && item.Vendor.Broker!=null && !item.Vendor.Broker.IsLive)
-                            {
-                                item.Vendor.Broker.Start();
-                            }
-                        }
-                    }
-                }
+                debug("正常交易日,启动所有通道", QSEnumDebugLevel.INFO);
+                StartConnector();
             }
-
         }
+
+
 
 
         //接口类型应映射表

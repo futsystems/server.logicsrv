@@ -226,6 +226,7 @@ namespace FutsMoniter
             acclimit.Value = _domain.AccLimit==0?acclimit.Maximum:_domain.AccLimit;
             routergrouplimit.Value = _domain.RouterGroupLimit == 0 ? routergrouplimit.Maximum : _domain.RouterGroupLimit;
             routeritemlimit.Value = _domain.RouterItemLimit == 0 ? routeritemlimit.Maximum : _domain.RouterItemLimit;
+            vendorlimit.Value = _domain.VendorLimit;
 
             module_agent.Checked = _domain.Module_Agent;
             module_subagent.Checked = !module_agent.Checked ? false : _domain.Module_SubAgent;
@@ -254,6 +255,8 @@ namespace FutsMoniter
                 _domain.AccLimit = (int)acclimit.Value;
                 _domain.RouterGroupLimit = (int)routergrouplimit.Value;
                 _domain.RouterItemLimit = (int)routeritemlimit.Value;
+                _domain.VendorLimit = (int)vendorlimit.Value;
+
                 _domain.InterfaceList = GetInterfaceListString();
                 _domain.FinSPList = GetSPListString();
 
@@ -285,6 +288,9 @@ namespace FutsMoniter
                 _domain.AccLimit = (int)acclimit.Value;
                 _domain.RouterGroupLimit = (int)routergrouplimit.Value;
                 _domain.RouterItemLimit = (int)routeritemlimit.Value;
+                _domain.VendorLimit = (int)vendorlimit.Value;
+
+
                 _domain.InterfaceList = GetInterfaceListString();
                 _domain.FinSPList = GetSPListString();
 

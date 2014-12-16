@@ -265,30 +265,57 @@ namespace TradingLib.Contrib.FinService
         #endregion
 
 
-        #region 风控规则
-
+        #region 帐户风控规则
+        /// <summary>
+        /// 风控检查，如果风控正常则返回true 风控异常则返回false
+        /// </summary>
+        /// <returns></returns>
+        public virtual bool RiskCheck(out string msg)
+        {
+            msg = string.Empty;
+            return true;
+        }
+        /// <summary>
+        /// 用于执行帐户检查,当触发风控规则时候执行相应动作
+        /// </summary>
         public virtual void CheckAccount()
         {
-
+            if (!_flatsent)//如果触发过强平 则不进行风控检查
+            {
+                string msg = string.Empty;
+                bool risk = RiskCheck(out msg);
+                //风控异常
+                if (!risk)
+                {
+                    FireFlatPosition(msg);
+                }
+            }
         }
 
         DateTime _firetime = DateTime.Now;
         int _timediff = 5;
+        bool _flatsent = false;
+        public bool ForceClose
+        {
+            get { return _flatsent; }
+        }
         /// <summary>
         /// 触发强平，这里启用了过滤
         /// 在4秒内 触发2次执行强平，防止第一次计算错误造成误差
         /// </summary>
         /// <param name="reason"></param>
-        protected virtual void FireFlatPosition(string reason)
+        void FireFlatPosition(string reason)
         {
             try
             {
                 //如果5秒内触发过2此强平信号，则认为该计算是正确的 可以排除第一次计算出现当前权益为负数的情况[待查]
                 if (DateTime.Now.Subtract(_firetime).TotalSeconds < _timediff)
                 {
+                    
                     Util.Debug("5秒内触发2次强平信号,执行强平");
                     this.Account.FlatPosition(QSEnumOrderSource.RISKCENTREACCOUNTRULE, "配资服务强平:" + reason);
                     this.Account.InactiveAccount();
+                    _flatsent = true;
                 }
                 else
                 {
@@ -319,7 +346,17 @@ namespace TradingLib.Contrib.FinService
         /// </summary>
         public virtual void OnArgumentChanged()
         { 
-        
+            
+        }
+
+        /// <summary>
+        /// 响应帐户激活事件
+        /// 执行强平后，会将帐户冻结，如果帐户重新入金则需要激活配资服务的风控
+        /// </summary>
+        public virtual void OnAccountActive(string account)
+        {
+            Util.Debug("帐户:" + account + " 激活，重置服务相关状态", QSEnumDebugLevel.INFO);
+            _flatsent = false;//重置强平触发标识
         }
     }
 }

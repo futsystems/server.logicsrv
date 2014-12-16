@@ -410,7 +410,7 @@ namespace Broker.SIM
                         //生成成交编号
                         fill.BrokerTradeID = NextFillSeq.ToString();//交易所成交编号 Broker端的成交编号
 
-                        debug("PTT Server Filled: " + fill.GetTradeInfo(),QSEnumDebugLevel.INFO);
+                        debug("PTT Server Filled: " + fill.GetTradeDetail(), QSEnumDebugLevel.INFO);
 
                         bool partial = fill.UnsignedSize != o.UnsignedSize;//如果是部分成交 则需要将剩余未成交的委托 返还到委托队列
                         if (partial)
@@ -436,7 +436,7 @@ namespace Broker.SIM
                         Trade nf = new TradeImpl(fill);
                         //关于这里复制后再发出order，这里的process循环 fill order. fill是对order的一个引用，后面修改的数据会覆盖到前面的数据,而gotfillevent触发的时候可能是在另外一个线程中
                         //运行的比如发送回client,或者记录信息等。这样就行程了多个线程对一个对象的访问可能会存在数据部同步的问题。
-                        debug("cache fill:" + nf.GetTradeDetail(), QSEnumDebugLevel.WARNING);
+                        //debug("cache fill:" + nf.GetTradeDetail(), QSEnumDebugLevel.WARNING);
                         _fcache.Write(nf);
                     }
                 }
@@ -527,7 +527,6 @@ namespace Broker.SIM
         public void SendOrder(Order o)
         {
             debug("PTT Server Got Order: " + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
-            o.Broker = this.Token;//提交到Broker的委托 均会设置Broker名称
             //提交委托时 设定localorderid remoteorderid
             o.BrokerLocalOrderID = "";
             o.Status = QSEnumOrderStatus.Submited;
@@ -540,10 +539,13 @@ namespace Broker.SIM
             debug("PTT Server Queue Order: " + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
             //模拟交易对新提交上来的order进行复制后保留,原来的order形成事件触发.这样本地的order fill process对order信息的修改就不会影响到对外触发事件的order.
             o.Status = QSEnumOrderStatus.Opened;//标识 委托状态为open,等待成交
-            //将委托置入队列时 相当于交易所接受了委托 设定brokerremoteorderid
-            o.BrokerRemoteOrderID = o.OrderSeq.ToString();//模拟成交接口中 远端委托编号 与 系统内设定的委托流水相同
-            //成交接口从远端返回成交回报会带会RemoteOrderID(成交侧的委托编号) 在模拟成交接口中 将该编号赋给分帐户端的OrderSysID //当委托处于Opened的状态时,我们模拟交易所将委托标识填入 当扯单时,我们可以通过交易帐号和交易所委托编号找到对应的委托
+            //将委托置入队列时 相当于交易所接受了委托 设定BrokerRemoteOrderID
+            //模拟成交接口中 远端委托编号 与 系统内设定的委托流水相同
+            o.BrokerRemoteOrderID = o.OrderSeq.ToString();
+            //成交接口发送委托到交易所，交易所会返回RemoteOrderID(成交侧的远端委托编号)
+            //此处远端编号与BrokerRemoteOrderID一致
             o.OrderSysID = o.BrokerRemoteOrderID;
+            
             Order oc = new OrderImpl(o);
             aq.Enqueue(oc);//放入委托队列
 
@@ -690,13 +692,13 @@ namespace Broker.SIM
                 {
                     while (_ocache.hasItems)
                     {
-                        debug("PPT fire order Event.............", QSEnumDebugLevel.INFO);
+                        //debug("PPT fire order Event.............", QSEnumDebugLevel.INFO);
                         Order o = _ocache.Read();
                         NotifyOrder(o);
                     }
                     while (!_ocache.hasItems && _fcache.hasItems)
                     {
-                        debug("PPT fire Trade Event.............", QSEnumDebugLevel.INFO);
+                        //debug("PPT fire Trade Event.............", QSEnumDebugLevel.INFO);
                         Trade f = _fcache.Read();
                         NotifyTrade(f);
 
@@ -726,8 +728,9 @@ namespace Broker.SIM
         {
             try
             {
-                debug("从清算中心得到当天的委托数据并恢复到缓存中", QSEnumDebugLevel.INFO);
-                IEnumerable<Order> olist = this.ClearCentre.GetOrdersViaBroker(this.GetType().FullName);
+                debug("从清算中心加载模拟交易记录", QSEnumDebugLevel.INFO);
+                //模拟委托直接加载分帐户侧委托
+                IEnumerable<Order> olist = this.ClearCentre.GetOrdersViaBroker(this.Token);//加载
                 lock (aq)
                 {
                     foreach (Order o in olist)
@@ -741,12 +744,11 @@ namespace Broker.SIM
                         }
                     }
                 }
-                //debug("------------------------------------------------------1", QSEnumDebugLevel.INFO);
-                IEnumerable<Trade> trades = this.ClearCentre.GetTradesViaBroker(this.GetType().FullName);
+
+                IEnumerable<Trade> trades = this.ClearCentre.GetTradesViaBroker(this.Token);
                 //tryparse用于避免非数字brokerkey造成的异常
-                _fillseq = trades.Count() > 0 ? trades.Max(f => { int seq = 0; int.TryParse(f.TradeID, out seq); return seq; }) : _fillseq;
-                //debug("------------------------------------------------------2", QSEnumDebugLevel.INFO);
-                debug("Max Fill Seq:" + _fillseq.ToString(), QSEnumDebugLevel.INFO);
+                _fillseq = trades.Count() > 0 ? trades.Max(f => { int seq = 0; int.TryParse(f.BrokerTradeID, out seq); return seq; }) : _fillseq;
+                debug("Order Cnt:"+olist.Count().ToString() +" Trade Cnt:"+trades.Count().ToString()+" Max Fill Seq:" + _fillseq.ToString(), QSEnumDebugLevel.INFO);
             }
             catch (Exception ex)
             {

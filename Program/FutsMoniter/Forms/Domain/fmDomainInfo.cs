@@ -33,7 +33,7 @@ namespace FutsMoniter
             acclimt.Text = domain.AccLimit.ToString();
             routergrouplimit.Text = domain.RouterGroupLimit.ToString();
             routeritemlimit.Text = domain.RouterItemLimit.ToString();
-
+            vendorlimit.Text = domain.VendorLimit.ToString();
             router_live.Text = ModuleStatus(domain.Router_Live);
             router_sim.Text = ModuleStatus(domain.Router_Sim);
 

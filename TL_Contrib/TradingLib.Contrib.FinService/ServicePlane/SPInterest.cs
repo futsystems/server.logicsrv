@@ -146,13 +146,14 @@ namespace TradingLib.Contrib.FinService
         /// 执行风控规则
         /// 自由资金小于配资金额的2%执行强平
         /// </summary>
-        public override void CheckAccount()
+        public override bool RiskCheck(out string msg)
         {
+            msg = string.Empty;
             //没有持仓直接返回
-            if (!this.Account.GetAnyPosition()) return;
+            if (!this.Account.GetAnyPosition()) return true;
             //检查当前配资额度,如果配资额度<=0表明没有配资额度，不用检查，即便使用帐户也是自由资金
             decimal finamount = this.FinAmount.AccountArgument.AsDecimal();
-            if (finamount <= 0) return;
+            if (finamount <= 0) return true;
 
             //当前权益
             decimal nowequity = this.Account.NowEquity;
@@ -162,11 +163,10 @@ namespace TradingLib.Contrib.FinService
             if (nowequity < stopmargin)
             {
                 Util.Debug(string.Format("帐户:{0} 当前权益:{1} 配资额度为:{2} 强平比例为:{3} 强平权益额度为:{4} 不满足本金要求,执行强平并冻结交易帐户", this.Account.ID, nowequity, this.FinAmount.AccountArgument.AsDecimal(), this.StopPect.AccountArgument.AsDecimal(), stopmargin));
-                FireFlatPosition("湖南股指专配");       
+                msg = "固定利息,自有资金小于最低保证金";
+                return false;
             }
-            
-
-
+            return true;
         }
 
 

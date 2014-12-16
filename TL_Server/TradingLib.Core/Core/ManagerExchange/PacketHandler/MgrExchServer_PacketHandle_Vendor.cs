@@ -39,6 +39,11 @@ namespace TradingLib.Core
                         throw new FutsRspError("请设置资金限额规则");
                     }
 
+                    if (isadd && manger.Domain.VendorLimit >=  manger.Domain.GetVendors().Count())
+                    {
+                        throw new FutsRspError("实盘帐户数目达到上限:" + manger.Domain.VendorLimit.ToString());
+                    }
+
                     //设置域ID
                     vendor.domain_id = manger.Domain.ID;
 

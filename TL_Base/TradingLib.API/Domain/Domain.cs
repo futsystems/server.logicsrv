@@ -90,6 +90,11 @@ namespace TradingLib.API
         int RouterItemLimit { get; set; }
 
         /// <summary>
+        /// 实盘帐户数量限制
+        /// </summary>
+        int VendorLimit { get; set; }
+
+        /// <summary>
         /// 接口列表
         /// </summary>
         string InterfaceList { get; set; }

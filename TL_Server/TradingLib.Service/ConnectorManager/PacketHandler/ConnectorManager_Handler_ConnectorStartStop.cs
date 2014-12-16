@@ -125,7 +125,6 @@ namespace TradingLib.ServiceManager
                 throw new FutsRspError("通道已启动");
             }
             df.Start();
-
         }
         void StopDataFeed(string token)
         {

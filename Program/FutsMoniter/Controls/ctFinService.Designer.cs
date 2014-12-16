@@ -47,6 +47,8 @@
             this.kryptonLabel3 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel2 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel1 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.lbforceclose = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.kryptonLabel7 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonGroupBox3)).BeginInit();
@@ -169,6 +171,8 @@
             // 
             // kryptonGroupBox1.Panel
             // 
+            this.kryptonGroupBox1.Panel.Controls.Add(this.lbforceclose);
+            this.kryptonGroupBox1.Panel.Controls.Add(this.kryptonLabel7);
             this.kryptonGroupBox1.Panel.Controls.Add(this.lbcollecttype);
             this.kryptonGroupBox1.Panel.Controls.Add(this.lbchargetype);
             this.kryptonGroupBox1.Panel.Controls.Add(this.lbstatus);
@@ -264,6 +268,22 @@
             this.kryptonLabel1.TabIndex = 0;
             this.kryptonLabel1.Values.Text = "交易帐户:";
             // 
+            // lbforceclose
+            // 
+            this.lbforceclose.Location = new System.Drawing.Point(77, 134);
+            this.lbforceclose.Name = "lbforceclose";
+            this.lbforceclose.Size = new System.Drawing.Size(19, 18);
+            this.lbforceclose.TabIndex = 11;
+            this.lbforceclose.Values.Text = "--";
+            // 
+            // kryptonLabel7
+            // 
+            this.kryptonLabel7.Location = new System.Drawing.Point(3, 134);
+            this.kryptonLabel7.Name = "kryptonLabel7";
+            this.kryptonLabel7.Size = new System.Drawing.Size(68, 18);
+            this.kryptonLabel7.TabIndex = 10;
+            this.kryptonLabel7.Values.Text = "强平状态:";
+            // 
             // ctFinService
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -308,5 +328,7 @@
         private ComponentFactory.Krypton.Toolkit.KryptonButton btnUpdateArgs;
         private ComponentFactory.Krypton.Toolkit.KryptonButton btnChangeServicePlan;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel;
+        private ComponentFactory.Krypton.Toolkit.KryptonLabel lbforceclose;
+        private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel7;
     }
 }

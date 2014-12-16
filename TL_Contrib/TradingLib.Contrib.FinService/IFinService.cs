@@ -48,6 +48,10 @@ namespace TradingLib.Contrib.FinService
         /// </summary>
         Dictionary<string, Argument> AccountArgumentMap { get; }
 
+        /// <summary>
+        /// 是否被强平
+        /// </summary>
+        bool ForceClose { get; }
 
         #region 响应交易事件
         /// <summary>
@@ -129,7 +133,6 @@ namespace TradingLib.Contrib.FinService
         decimal GetFinAmountAvabile();
         #endregion
 
-        #region 风控部分,每个配资服务都有强平规则，当触发到什么条件的时候进行强平
 
         /// <summary>
         /// 执行定时帐户检查 
@@ -137,7 +140,6 @@ namespace TradingLib.Contrib.FinService
         /// 执行强平
         /// </summary>
         void CheckAccount();
-        #endregion
 
 
         /// <summary>
@@ -150,6 +152,12 @@ namespace TradingLib.Contrib.FinService
         /// 响应参数变化
         /// </summary>
         void OnArgumentChanged();
+
+        /// <summary>
+        /// 响应帐户激活事件
+        /// </summary>
+        /// <param name="account"></param>
+        void OnAccountActive(string account);
     }
 
 

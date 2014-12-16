@@ -159,11 +159,12 @@ namespace TradingLib.Contrib.FinService
 
 
         /// <summary>
-        /// 执行风控规则
+        /// 风控规则
         /// 股指当平均每手资金降低到800元时候执行强平
         /// </summary>
-        public override void CheckAccount()
+        public override bool  RiskCheck(out string msg)
         {
+            msg = string.Empty;
             //当前资金
             decimal nowequity = this.Account.NowEquity;
             int totalsize = 0;
@@ -176,15 +177,14 @@ namespace TradingLib.Contrib.FinService
             {
                 //当每手资金小于设定的强平金额时执行强平
                 decimal marginperplot = nowequity / totalsize;
-                //
                 if (marginperplot <= MarginPerLotStop.AccountArgument.AsDecimal())
                 {
                     Util.Debug("SPSpecialIF 触发强平  account:" + this.Account.ID + " now equity:" + nowequity.ToString() + " totalsize:" + totalsize.ToString() + " marginperlot:" + marginperplot + " stopline:" + MarginPerLotStop.AccountArgument.Value);
-
-                    this.FireFlatPosition("福建股指专配");
+                    msg = "大富翁股指专配";
+                    return false;
                 }
             }
-
+            return true;
         }
 
 

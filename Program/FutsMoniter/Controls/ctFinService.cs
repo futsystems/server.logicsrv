@@ -55,21 +55,6 @@ namespace FutsMoniter
         JsonWrapperServicePlane[] serviceplans = null;
 
         IAccountLite _account = null;
-        /// <summary>
-        /// 设定当前交易帐号
-        /// 交易帐号改变就需要查询该帐号的配资服务
-        /// </summary>
-        //public IAccountLite CurrentAccount
-        //{
-        //    get
-        //    {
-        //        return _account;
-        //    }
-        //    set
-        //    {
-                
-        //    }
-        //}
 
         /// <summary>
         /// 响应交易帐户选中事件
@@ -154,7 +139,7 @@ namespace FutsMoniter
                 this.lbstatus.Text = stub.Active ? "激活" : "冻结";
                 this.lbchargetype.Text = stub.FinService.ChargeType;
                 this.lbcollecttype.Text = stub.FinService.CollectType;
-
+                this.lbforceclose.Text = stub.ForceClose ? "触发" : "未触发";
                 InitArgs(stub.FinService.Arguments);
             }
         }
