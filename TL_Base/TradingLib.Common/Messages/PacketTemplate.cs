@@ -199,16 +199,16 @@ namespace TradingLib.Common
                         return RequestTemplate<MGRReqOpenClearCentreRequest>.SrvRecvRequest(frontid, clientid, content);
                     case MessageTypes.MGRCLOSECLEARCENTRE://请求关闭清算中心
                         return RequestTemplate<MGRReqCloseClearCentreRequest>.SrvRecvRequest(frontid, clientid, content);
-                    case MessageTypes.MGRQRYCONNECTOR://请求查询通道列表
-                        return RequestTemplate<MGRQryConnectorRequest>.SrvRecvRequest(frontid, clientid, content);
-                    case MessageTypes.MGRSTARTBROKER://请求启动成交通道
-                        return RequestTemplate<MGRReqStartBrokerRequest>.SrvRecvRequest(frontid, clientid, content);
-                    case MessageTypes.MGRSTOPBROKER://请求停止成交通道
-                        return RequestTemplate<MGRReqStopBrokerRequest>.SrvRecvRequest(frontid, clientid, content);
-                    case MessageTypes.MGRSTARTDATAFEED://请求启动行情通道
-                        return RequestTemplate<MGRReqStartDataFeedRequest>.SrvRecvRequest(frontid,clientid,content);
-                    case MessageTypes.MGRSTOPDATAFEED://请求停止行情通道
-                        return RequestTemplate<MGRReqStopDataFeedRequest>.SrvRecvRequest(frontid, clientid, content);
+                    //case MessageTypes.MGRQRYCONNECTOR://请求查询通道列表
+                    //    return RequestTemplate<MGRQryConnectorRequest>.SrvRecvRequest(frontid, clientid, content);
+                    //case MessageTypes.MGRSTARTBROKER://请求启动成交通道
+                    //    return RequestTemplate<MGRReqStartBrokerRequest>.SrvRecvRequest(frontid, clientid, content);
+                    //case MessageTypes.MGRSTOPBROKER://请求停止成交通道
+                    //    return RequestTemplate<MGRReqStopBrokerRequest>.SrvRecvRequest(frontid, clientid, content);
+                    //case MessageTypes.MGRSTARTDATAFEED://请求启动行情通道
+                    //    return RequestTemplate<MGRReqStartDataFeedRequest>.SrvRecvRequest(frontid,clientid,content);
+                    //case MessageTypes.MGRSTOPDATAFEED://请求停止行情通道
+                    //    return RequestTemplate<MGRReqStopDataFeedRequest>.SrvRecvRequest(frontid, clientid, content);
                     case MessageTypes.MGRADDACCOUNT://请求添加交易帐号
                         return RequestTemplate<MGRAddAccountRequest>.SrvRecvRequest(frontid, clientid, content);
                     case MessageTypes.MGRQRYEXCHANGE://请求查询交易所
@@ -380,8 +380,8 @@ namespace TradingLib.Common
                     return ResponseTemplate<RspMGRQryAccountInfoResponse>.CliRecvResponse(content);
                 case MessageTypes.MGRACCOUNTCHANGEUPDATE://帐户变动回报
                     return ResponseTemplate<NotifyMGRAccountChangeUpdateResponse>.CliRecvResponse(content);
-                case MessageTypes.MGRCONNECTORRESPONSE://查询通道回报
-                    return ResponseTemplate<RspMGRQryConnectorResponse>.CliRecvResponse(content);
+                //case MessageTypes.MGRCONNECTORRESPONSE://查询通道回报
+                //    return ResponseTemplate<RspMGRQryConnectorResponse>.CliRecvResponse(content);
                 case MessageTypes.MGREXCHANGERESPONSE://查询交易所回报
                     return ResponseTemplate<RspMGRQryExchangeResponse>.CliRecvResponse(content);
                 case MessageTypes.MGRMARKETTIMERESPONSE://查询交易时间段回报

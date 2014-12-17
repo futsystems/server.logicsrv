@@ -107,7 +107,7 @@
     <Compile Include="Messages\Manager\MGRChangePass.cs" />
     <Compile Include="Messages\Manager\MGRChangeInvestor.cs" />
     <Compile Include="Messages\Manager\MGRClearCentre.cs" />
-    <Compile Include="Messages\Manager\MGRConnector.cs" />
+    <Compile Include="Messages\Manager\delete\MGRConnector.cs" />
     <Compile Include="Messages\Manager\MGRContrib.cs" />
     <Compile Include="Messages\Manager\MGRHistQry.cs" />
     <Compile Include="Messages\Manager\MGRManager.cs" />

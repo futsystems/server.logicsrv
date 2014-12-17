@@ -262,11 +262,11 @@ namespace TradingLib.Common
 
 
         #region 系统操作回报
-        void CliOnMGRQryConnector(RspMGRQryConnectorResponse response)
-        {
-            debug("got connector response:" + response.ToString(), QSEnumDebugLevel.INFO);
-            //this.handler.OnMGRConnectorResponse(response.Connector, response.IsLast);
-        }
+        //void CliOnMGRQryConnector(RspMGRQryConnectorResponse response)
+        //{
+        //    debug("got connector response:" + response.ToString(), QSEnumDebugLevel.INFO);
+        //    //this.handler.OnMGRConnectorResponse(response.Connector, response.IsLast);
+        //}
 
         void CliOnMGRExchange(RspMGRQryExchangeResponse response)
         {
@@ -487,9 +487,9 @@ namespace TradingLib.Common
                 case MessageTypes.MGRACCOUNTCHANGEUPDATE://交易客户端更改通知
                     CliOnMGRAccountChangeUpdaet(packet as NotifyMGRAccountChangeUpdateResponse);
                     break;
-                case MessageTypes.MGRCONNECTORRESPONSE://通道列表回报
-                    CliOnMGRQryConnector(packet as RspMGRQryConnectorResponse);
-                    break;
+                //case MessageTypes.MGRCONNECTORRESPONSE://通道列表回报
+                //    CliOnMGRQryConnector(packet as RspMGRQryConnectorResponse);
+                //    break;
                 case MessageTypes.MGREXCHANGERESPONSE://交易所列表回报
                     CliOnMGRExchange(packet as RspMGRQryExchangeResponse);
                     break;

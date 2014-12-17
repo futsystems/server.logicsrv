@@ -198,31 +198,31 @@ namespace TradingLib.Core
                         SrvOnMGRCloseClearCentre(packet as MGRReqCloseClearCentreRequest, session, manager);
                         break;
                     }
-                case MessageTypes.MGRQRYCONNECTOR://查询通道列表
-                    {
-                        SrvOnMGRQryConnector(packet as MGRQryConnectorRequest, session, manager);
-                        break;
-                    }
-                case MessageTypes.MGRSTARTBROKER://请求启动成交通道
-                    {
-                        SrvOnMGRStartBroker(packet as MGRReqStartBrokerRequest, session, manager);
-                        break;
-                    }
-                case MessageTypes.MGRSTOPBROKER://请求停止成交通道
-                    {
-                        SrvOnMGRStopBroker(packet as MGRReqStopBrokerRequest, session, manager);
-                        break;
-                    }
-                case MessageTypes.MGRSTARTDATAFEED://请求启动行情通道
-                    {
-                        SrvOnMGRStartDataFeed(packet as MGRReqStartDataFeedRequest, session, manager);
-                        break;
-                    }
-                case MessageTypes.MGRSTOPDATAFEED://请求停止行情通道
-                    {
-                        SrvOnMGRStopDataFeed(packet as MGRReqStopDataFeedRequest, session, manager);
-                        break;
-                    }
+                //case MessageTypes.MGRQRYCONNECTOR://查询通道列表
+                //    {
+                //        SrvOnMGRQryConnector(packet as MGRQryConnectorRequest, session, manager);
+                //        break;
+                //    }
+                //case MessageTypes.MGRSTARTBROKER://请求启动成交通道
+                //    {
+                //        SrvOnMGRStartBroker(packet as MGRReqStartBrokerRequest, session, manager);
+                //        break;
+                //    }
+                //case MessageTypes.MGRSTOPBROKER://请求停止成交通道
+                //    {
+                //        SrvOnMGRStopBroker(packet as MGRReqStopBrokerRequest, session, manager);
+                //        break;
+                //    }
+                //case MessageTypes.MGRSTARTDATAFEED://请求启动行情通道
+                //    {
+                //        SrvOnMGRStartDataFeed(packet as MGRReqStartDataFeedRequest, session, manager);
+                //        break;
+                //    }
+                //case MessageTypes.MGRSTOPDATAFEED://请求停止行情通道
+                //    {
+                //        SrvOnMGRStopDataFeed(packet as MGRReqStopDataFeedRequest, session, manager);
+                //        break;
+                //    }
                 case MessageTypes.MGRADDACCOUNT://请求添加交易帐号
                     {
                         SrvOnMGRAddAccount(packet as MGRAddAccountRequest, session, manager);
