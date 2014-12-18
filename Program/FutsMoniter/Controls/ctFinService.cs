@@ -20,10 +20,16 @@ namespace FutsMoniter
         public ctFinService()
         {
             InitializeComponent();
+            this.Load += new EventHandler(ctFinService_Load);
+        }
 
-            btnChangeServicePlan.Click +=new EventHandler(btnChangeServicePlan_Click);
-            btnUpdateArgs.Click +=new EventHandler(btnUpdateArgs_Click);
-            btnDeleteFinService.Click +=new EventHandler(btnDeleteFinService_Click);
+        void ctFinService_Load(object sender, EventArgs e)
+        {
+            NoStubShow();
+
+            btnChangeServicePlan.Click += new EventHandler(btnChangeServicePlan_Click);
+            btnUpdateArgs.Click += new EventHandler(btnUpdateArgs_Click);
+            btnDeleteFinService.Click += new EventHandler(btnDeleteFinService_Click);
 
             //执行事件订阅
             Globals.RegIEventHandler(this);
@@ -36,7 +42,7 @@ namespace FutsMoniter
             Globals.LogicEvent.RegisterCallback("FinServiceCentre", "QryFinServicePlan", this.OnQryServicePlan);//查询配资服务计划
             Globals.LogicEvent.RegisterCallback("FinServiceCentre", "UpdateArguments", this.OnQryFinService);//更新参数
             Globals.LogicEvent.RegisterCallback("FinServiceCentre", "ChangeServicePlane", this.OnQryFinService);//修改服务计划
-            Globals.LogicEvent.RegisterCallback("FinServiceCentre", "DeleteServicePlane", this.OnQryFinService);//删除服务
+            Globals.LogicEvent.RegisterCallback("FinServiceCentre", "DeleteServicePlane", this.OnDeleteFinService);//删除服务
             Globals.LogicEvent.GotAccountSelectedEvent += new Action<IAccountLite>(OnAccountSelected);
         }
 
@@ -46,7 +52,7 @@ namespace FutsMoniter
             Globals.LogicEvent.UnRegisterCallback("FinServiceCentre", "QryFinServicePlan", this.OnQryServicePlan);//查询配资服务计划
             Globals.LogicEvent.UnRegisterCallback("FinServiceCentre", "UpdateArguments", this.OnQryFinService);//更新参数
             Globals.LogicEvent.UnRegisterCallback("FinServiceCentre", "ChangeServicePlane", this.OnQryFinService);//修改服务计划
-            Globals.LogicEvent.UnRegisterCallback("FinServiceCentre", "DeleteServicePlane", this.OnQryFinService);//删除服务
+            Globals.LogicEvent.UnRegisterCallback("FinServiceCentre", "DeleteServicePlane", this.OnDeleteFinService);//删除服务
             Globals.LogicEvent.GotAccountSelectedEvent -= new Action<IAccountLite>(OnAccountSelected);
       
         }
@@ -65,51 +71,42 @@ namespace FutsMoniter
         /// <param name="account"></param>
         void OnAccountSelected(IAccountLite account)
         {
+            if (account == null) return;
             _account = account;
             finservice = null;//重置配资服务
+            NoStubShow();
 
-            if (!Globals.EnvReady) return;
             if (!Globals.Domain.Module_FinService) return;
+
             //如果服务计划没有获取 则请求服务计划
             if (serviceplans == null)
             {
                 Globals.TLClient.ReqQryServicePlan();
             }
+
             //请求交易帐户的配资服务
-            if (_account != null)
-            {
-                Globals.TLClient.ReqQryFinService(_account.Account);
-            }
+            Globals.TLClient.ReqQryFinService(_account.Account);
         }
 
-        public void PrepareServicePlan()
+        void OnDeleteFinService(string json)
         {
-            if (serviceplans == null)
-            {
-                Globals.TLClient.ReqQryServicePlan();
-            }
-        }
-
-
-        public void OnQryFinService(string jsonstr)
-        {
-            Globals.Debug("ctFinService got json ret:" + jsonstr);
-
-            JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
-            int code = int.Parse(jd["Code"].ToString());
-            if (code == 0)
-            {
-                JsonWrapperFinServiceStub obj = TradingLib.Mixins.LitJson.JsonMapper.ToObject<JsonWrapperFinServiceStub>(jd["Playload"].ToJson());
-                GotFinServiceStub(obj);
-                finservice = obj;
-
-                StubShow();
-
-            }
-            else//如果没有配资服
+            JsonWrapperFinServiceStub stub = MoniterUtils.ParseJsonResponse<JsonWrapperFinServiceStub>(json);
+            if (stub == null)
             {
                 finservice = null;
                 NoStubShow();
+            }
+        }
+
+
+        void OnQryFinService(string jsonstr)
+        {
+            JsonWrapperFinServiceStub obj = MoniterUtils.ParseJsonResponse<JsonWrapperFinServiceStub>(jsonstr);
+            if (obj != null)
+            {
+                GotFinServiceStub(obj);
+                finservice = obj;
+                StubShow();
             }
         }
 
@@ -117,23 +114,17 @@ namespace FutsMoniter
         /// 获得服务计划
         /// </summary>
         /// <param name="jsonstr"></param>
-        public void OnQryServicePlan(string jsonstr)
+        void OnQryServicePlan(string jsonstr)
         {
-            Globals.Debug("ctFinService got json ret:" + jsonstr);
-            JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
-            int code = int.Parse(jd["Code"].ToString());
-            if (code == 0)
-            {
-                serviceplans = TradingLib.Mixins.LitJson.JsonMapper.ToObject<JsonWrapperServicePlane[]>(jd["Playload"].ToJson());
-            }
+            JsonWrapperServicePlane[] splist = MoniterUtils.ParseJsonResponse<JsonWrapperServicePlane[]>(jsonstr);
+            serviceplans =splist;
         }
 
-        delegate void JsonWrapperFinServiceStubDel(JsonWrapperFinServiceStub stub);
         void GotFinServiceStub(JsonWrapperFinServiceStub stub)
         {
             if (InvokeRequired)
             {
-                Invoke(new JsonWrapperFinServiceStubDel(GotFinServiceStub), new object[] { stub });
+                Invoke(new Action<JsonWrapperFinServiceStub>(GotFinServiceStub), new object[] { stub });
             }
             else
             {
@@ -146,6 +137,9 @@ namespace FutsMoniter
                 InitArgs(stub.FinService.Arguments);
             }
         }
+
+
+
         void NoStubShow()
         {
             this.lbaccount.Text = "--";
@@ -169,6 +163,8 @@ namespace FutsMoniter
             btnDeleteFinService.Enabled = true;
         }
 
+
+
         void InitArgs(JsonWrapperArgument[] args)
         {
             tableLayoutPanel.Controls.Clear();
@@ -181,6 +177,8 @@ namespace FutsMoniter
             }
         }
 
+
+        #region 事件
         private void btnUpdateArgs_Click(object sender, EventArgs e)
         {
 
@@ -235,5 +233,7 @@ namespace FutsMoniter
                 Globals.TLClient.ReqDeleteFinService(_account.Account);
             }
         }
+        #endregion
+
     }
 }

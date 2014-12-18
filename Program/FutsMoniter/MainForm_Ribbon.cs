@@ -100,7 +100,7 @@ namespace FutsMoniter
         {
 
             kryptonDockingManager.HideAllPages();
-            kryptonDockableWorkspace.HideAllPages();
+            //kryptonDockableWorkspace.HideAllPages();
         }
 
         void kryptonRibbonGroupButton_FinInfo_Click(object sender, EventArgs e)

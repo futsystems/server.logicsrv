@@ -17,16 +17,6 @@ namespace FutsMoniter
 {
     public partial class ctAccountMontier : UserControl,IEventBinder
     {
-        //#region 事件
-        ///// <summary>
-        ///// 触发查询历史记录用于调用外部查询窗口
-        ///// </summary>
-        //public event IAccountLiteDel QryAccountHistEvent;
-
-        //#endregion
-
-        
-
 
         const string PROGRAME = "AccountMontier";
         //fmAccountConfig fmaccountconfig = new fmAccountConfig();
@@ -39,10 +29,6 @@ namespace FutsMoniter
             try
             {
                 InitializeComponent();
-
-                InitQueryAccountControl();
-
-                InitAccountMoniterGrid();
 
                 this.Load += new EventHandler(ctAccountMontier_Load);
 
@@ -57,6 +43,18 @@ namespace FutsMoniter
 
         void ctAccountMontier_Load(object sender, EventArgs e)
         {
+            accexecute.Items.Add("<Any>");
+            accexecute.Items.Add("允许");
+            accexecute.Items.Add("冻结");
+            accexecute.SelectedIndex = 0;
+
+            SetPreferences();
+            InitTable();
+            BindToTable();
+
+            //初始表格右键化右键菜单
+            InitMenu();
+
             WireEvents();
             
         }
@@ -65,6 +63,60 @@ namespace FutsMoniter
         {
             StartUpdate();
         }
+
+
+        private void accountgrid_Click(object sender, EventArgs e)
+        {
+            debug("grid mouse clicked...", QSEnumDebugLevel.INFO);
+
+        }
+
+
+
+        private void accountgrid_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            try
+            {
+
+            }
+            catch (Exception ex)
+            { 
+                
+            }
+        }
+
+        void WireEvents()
+        {
+            
+
+            //交易帐户过滤控件
+            ctAccountType1.AccountTypeSelectedChangedEvent += new VoidDelegate(ctAccountType1_AccountTypeSelectedChangedEvent);
+            ctRouterType1.RouterTypeSelectedChangedEvent += new VoidDelegate(ctRouterType1_RouterTypeSelectedChangedEvent);
+            accexecute.SelectedIndexChanged +=new EventHandler(accexecute_SelectedIndexChanged);
+            accLogin.CheckedChanged+=new EventHandler(accLogin_CheckedChanged);
+            acct.TextChanged+=new EventHandler(acct_TextChanged);
+            ctAgentList1.AgentSelectedChangedEvent+=new VoidDelegate(ctAgentList1_AgentSelectedChangedEvent);
+            acchodpos.CheckedChanged +=new EventHandler(acchodpos_CheckedChanged);
+            ctRouterGroupList1.RouterGroupSelectedChangedEvent += new VoidDelegate(ctRouterGroupList1_RouterGroupSelectedChangedEvent);
+            
+
+            //帐户表格事件
+            accountgrid.CellDoubleClick +=new DataGridViewCellEventHandler(accountgrid_CellDoubleClick);//双击单元格
+            accountgrid.CellFormatting +=new DataGridViewCellFormattingEventHandler(accountgrid_CellFormatting);//格式化单元格
+            accountgrid.SizeChanged +=new EventHandler(accountgrid_SizeChanged);//大小改变
+            accountgrid.Scroll +=new ScrollEventHandler(accountgrid_Scroll);//滚轮滚动
+            accountgrid.RowPrePaint += new DataGridViewRowPrePaintEventHandler(accountgrid_RowPrePaint);
+
+            //路由组初始化完毕
+            ctRouterGroupList1.RouterGroupInitEvent += new VoidDelegate(ctRouterGroupList1_RouterGroupInitEvent);
+
+            //绑定事件
+            btnAddAccount.Click += new EventHandler(btnAddAccount_Click);
+
+            Globals.RegIEventHandler(this);
+        }
+
+
 
         #region  辅助函数
 
@@ -113,109 +165,6 @@ namespace FutsMoniter
 
 
         #endregion
-
-
-
-
-
-        
-
-        
-
-        private void accountgrid_Click(object sender, EventArgs e)
-        {
-            debug("grid mouse clicked...", QSEnumDebugLevel.INFO);
-
-        }
-
-
-
-        private void accountgrid_DataError(object sender, DataGridViewDataErrorEventArgs e)
-        {
-            try
-            {
-
-            }
-            catch (Exception ex)
-            { 
-                
-            }
-        }
-
-
-        #region 界面事件触发
-
-        void WireEvents()
-        {
-            
-
-            //交易帐户过滤控件
-            ctAccountType1.AccountTypeSelectedChangedEvent += new VoidDelegate(ctAccountType1_AccountTypeSelectedChangedEvent);
-            ctRouterType1.RouterTypeSelectedChangedEvent += new VoidDelegate(ctRouterType1_RouterTypeSelectedChangedEvent);
-            accexecute.SelectedIndexChanged +=new EventHandler(accexecute_SelectedIndexChanged);
-            accLogin.CheckedChanged+=new EventHandler(accLogin_CheckedChanged);
-            acct.TextChanged+=new EventHandler(acct_TextChanged);
-            ctAgentList1.AgentSelectedChangedEvent+=new VoidDelegate(ctAgentList1_AgentSelectedChangedEvent);
-            acchodpos.CheckedChanged +=new EventHandler(acchodpos_CheckedChanged);
-            ctRouterGroupList1.RouterGroupSelectedChangedEvent += new VoidDelegate(ctRouterGroupList1_RouterGroupSelectedChangedEvent);
-            
-
-            //帐户表格事件
-            accountgrid.CellDoubleClick +=new DataGridViewCellEventHandler(accountgrid_CellDoubleClick);//双击单元格
-            accountgrid.CellFormatting +=new DataGridViewCellFormattingEventHandler(accountgrid_CellFormatting);//格式化单元格
-            accountgrid.SizeChanged +=new EventHandler(accountgrid_SizeChanged);//大小改变
-            accountgrid.Scroll +=new ScrollEventHandler(accountgrid_Scroll);//滚轮滚动
-            accountgrid.RowPrePaint += new DataGridViewRowPrePaintEventHandler(accountgrid_RowPrePaint);
-
-            //路由组初始化完毕
-            ctRouterGroupList1.RouterGroupInitEvent += new VoidDelegate(ctRouterGroupList1_RouterGroupInitEvent);
-
-            //绑定事件
-            btnAddAccount.Click += new EventHandler(btnAddAccount_Click);
-
-            Globals.RegIEventHandler(this);
-        }
-
-        
-
-
-
-
-
-
-
-
-
-
-       
-        
-
-
-
-
-
-        
-
-       
-
-       
-
-        private void ServiceTabHolder_SelectedPageChanged(object sender, EventArgs e)
-        {
-            //if (ServiceTabHolder.SelectedPage.Name.Equals("FinServicePage"))
-            //{
-            //    if (AccountSetlected != null)
-            //    {
-            //        Globals.TLClient.ReqQryFinService(AccountSetlected.Account);
-            //    }
-
-            //    //如果没有获得服务计划列表则请求服务计划列表
-            //    //ctFinService1.PrepareServicePlan();
-            //}
-        }
-
-        #endregion
-
 
 
     }

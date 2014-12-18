@@ -20,14 +20,11 @@ namespace FutsMoniter
                 InvokeGotAccount(account);
             }
 
-
             //帐户事件
             Globals.LogicEvent.GotAccountEvent += new Action<IAccountLite>(GotAccount);
             Globals.LogicEvent.GotFinanceInfoLiteEvent += new Action<IAccountInfoLite>(GotAccountInfoLite);
             Globals.LogicEvent.GotAccountChangedEvent += new Action<IAccountLite>(GotAccountChanged);
             Globals.LogicEvent.GotSessionUpdateEvent += new Action<NotifyMGRSessionUpdateNotify>(GotSessionUpdate);
-            //Globals.LogicEvent.GotResumeResponseEvent += new Action<RspMGRResumeAccountResponse>(GotResumeResponse);
-
 
             Globals.Debug("ctAccountMontier init called @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
             if (!Globals.LoginResponse.Domain.Super)

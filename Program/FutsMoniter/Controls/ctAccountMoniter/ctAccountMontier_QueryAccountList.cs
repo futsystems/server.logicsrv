@@ -10,19 +10,7 @@ namespace FutsMoniter
 {
     public partial class ctAccountMontier
     {
-        /// <summary>
-        /// 初始化顾虑帐户控件
-        /// </summary>
-        void InitQueryAccountControl()
-        {
-            //Factory.IDataSourceFactory(accountType).BindDataSource(MoniterUtil.GetAccountTypeCombList(true));
-            //Factory.IDataSourceFactory(routeType).BindDataSource(MoniterUtil.GetRouterTypeCombList(true));
 
-            accexecute.Items.Add("<Any>");
-            accexecute.Items.Add("允许");
-            accexecute.Items.Add("冻结");
-            accexecute.SelectedIndex = 0;
-        }
         #region 过滤帐户列表
 
         /// <summary>
@@ -32,6 +20,7 @@ namespace FutsMoniter
         /// <param name="e"></param>
         void ctAccountType1_AccountTypeSelectedChangedEvent()
         {
+            Util.Debug("account type changed");
             RefreshAccountQuery();
         }
 

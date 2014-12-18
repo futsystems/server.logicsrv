@@ -124,17 +124,6 @@ namespace FutsMoniter
             gt.Columns.Add(ROUTERGROUPSTR);
             
         }
-
-        void InitAccountMoniterGrid()
-        {
-            SetPreferences();
-            InitTable();
-            BindToTable();
-
-            //初始表格右键化右键菜单
-            InitMenu();
-
-        }
         
         /// <summary>
         /// 绑定数据表格到grid
@@ -283,7 +272,6 @@ namespace FutsMoniter
 
         void StartUpdate()
         {
-            //MessageBox.Show("start update");
             if (_accountgo) return;
             _accountgo = true;
             _accountthread = new Thread(acccountproc);

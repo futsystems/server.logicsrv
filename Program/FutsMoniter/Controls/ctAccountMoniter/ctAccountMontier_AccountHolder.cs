@@ -45,7 +45,6 @@ namespace FutsMoniter
         //得到当前选择的行号
         private string CurrentAccount
         {
-
             get
             {
                 int row =  (accountgrid.SelectedRows.Count > 0 ? accountgrid.SelectedRows[0].Index : -1);

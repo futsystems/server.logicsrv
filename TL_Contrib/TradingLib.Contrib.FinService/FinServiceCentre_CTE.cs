@@ -210,8 +210,6 @@ namespace TradingLib.Contrib.FinService
             if (acc == null)
             {
                 throw new FutsRspError("交易帐号不存在");
-                //SendJsonReplyMgr(session, Mixins.JsonReply.GenericError(1, "交易帐号不存在"));
-                //return;
             }
 
             FinServiceStub stub = FinTracker.FinServiceTracker[account];
@@ -227,10 +225,8 @@ namespace TradingLib.Contrib.FinService
             if (stub2 == null)
             {
                 throw new FutsRspError("无有效配资服务");
-                //SendJsonReplyMgr(session, Mixins.JsonReply.GenericError(1, "无有效配资服务"));
-                return;
             }
-            SendJsonReplyMgr(session, stub2.ToJsonWrapperFinServiceStub());
+            session.ReplyMgr(stub2.ToJsonWrapperFinServiceStub());
 
         }
 
@@ -242,8 +238,6 @@ namespace TradingLib.Contrib.FinService
             if (acc == null)
             {
                 throw new FutsRspError("交易帐号不存在");
-                //SendJsonReplyMgr(session, Mixins.JsonReply.GenericError(1, "交易帐号不存在"));
-                return;
             }
 
             FinServiceStub stub = FinTracker.FinServiceTracker[account];
@@ -252,17 +246,12 @@ namespace TradingLib.Contrib.FinService
             {
                 FinTracker.FinServiceTracker.DeleteFinService(stub);
             }
-
-
             //通知当前服务
             FinServiceStub stub2 = FinTracker.FinServiceTracker[account];
             if (stub2 == null)
             {
-                //throw new FutsRspError("无有效配资服务");
-                //SendJsonReplyMgr(session, Mixins.JsonReply.GenericError(1, "无有效配资服务"));
-                //return;
+                session.ReplyMgr(null);
             }
-            SendJsonReplyMgr(session, stub2.ToJsonWrapperFinServiceStub());
         }
 
 
