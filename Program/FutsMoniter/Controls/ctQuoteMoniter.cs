@@ -62,9 +62,13 @@ namespace FutsMoniter
                     vq.addSecurity(s);
                 }
             }
+            //订阅行情
+            Globals.LogicEvent.GotTickEvent += new TickDelegate(GotTick);
+        }
 
-            //绑定事件
-            //Globals.LogicEvent.GotAccountSelectedEvent += new Action<IAccountLite>(OnAccountSelected);
+        public void OnDisposed()
+        {
+            Globals.LogicEvent.GotTickEvent -= new TickDelegate(GotTick);
         }
 
         void SelectSymbol(Symbol symbol)
@@ -83,9 +87,6 @@ namespace FutsMoniter
             }
         }
 
-        public void OnDisposed()
-        { 
-            
-        }
+
     }
 }

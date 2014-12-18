@@ -12,16 +12,14 @@ namespace FutsMoniter
     {
 
 
-
+        /// <summary>
+        /// 登入成功基础数据加载完毕后再执行OnInit
+        /// </summary>
         public void OnInit()
         {
             Globals.Debug("Set control visable via UIAccess");
 
-            //登入基础数据初始化完成后 加载page
-            InitPage();
-
-            //操作回报消息 弹窗提示
-            Globals.LogicEvent.GotRspInfoEvent += new Action<TradingLib.API.RspInfo>(OnRspInfo);
+            //根据权限设置界面菜单权限
 
             //日志窗口
             kryptonRibbonQATButton_debug.Visible = Globals.LoginResponse.Domain.Super;
@@ -131,10 +129,6 @@ namespace FutsMoniter
 
 
                 //域权限最终控制
-
-                //代理管理
-                //tabAgent.Visible = !Globals.LoginResponse.Domain.Module_Agent ? false : tabAgent.Visible;
-                
                 //代理模块禁止
                 if (!Globals.Domain.Module_Agent)
                 {
@@ -170,6 +164,14 @@ namespace FutsMoniter
                     kryptonRibbonGroupButton_connectorlist.Visible = false;
                 }
             }
+
+            //登入基础数据初始化完成后 加载page
+            InitPage();
+
+            //初始化后台woker用于弹窗提示
+            InitBW();
+            //操作回报消息 弹窗提示
+            Globals.LogicEvent.GotRspInfoEvent += new Action<TradingLib.API.RspInfo>(OnRspInfo);
                  
         }
         public void OnDisposed()

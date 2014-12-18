@@ -55,7 +55,8 @@ namespace FutsMoniter
             Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "QryAccountFinInfo", this.OnQryAccountInfo);
             Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "NotifyAccountFinInfo", this.OnQryAccountInfo);
             Globals.LogicEvent.GotAccountSelectedEvent -= new Action<IAccountLite>(OnAccountSelected);
-        }
+            Globals.Debug("ctFinanceInfo disposed...");
+         }
 
         void OnQryAccountInfo(string json)
         {

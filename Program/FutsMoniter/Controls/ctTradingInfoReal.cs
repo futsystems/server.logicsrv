@@ -12,7 +12,7 @@ using TradingLib.Common;
 
 namespace FutsMoniter
 {
-    public partial class ctTradingInfoReal : UserControl,IEventBinder
+    public partial class ctTradingInfoReal : UserControl, IEventBinder
     {
         public ctTradingInfoReal()
         {
@@ -24,7 +24,7 @@ namespace FutsMoniter
         {
             Globals.Debug(msg);
         }
-        
+
 
 
         void ctTradingInfoReal_Load(object sender, EventArgs e)
@@ -39,9 +39,6 @@ namespace FutsMoniter
 
             ctTradeView1.SendDebugEvent += new DebugDelegate(debug);
 
-            //viewQuoteList1.SymbolSelectedEvent += new SymbolDelegate(viewQuoteList1_SymbolSelectedEvent);
-            //viewQuoteList1.SendDebugEvent += new DebugDelegate(Globals.Debug);
-            //ctOrderSenderM1.SendOrderEvent += new OrderDelegate(SendOrder);
             Globals.RegIEventHandler(this);
         }
 
@@ -53,10 +50,6 @@ namespace FutsMoniter
             Globals.LogicEvent.GotFillEvent += new FillDelegate(GotTrade);
 
             Globals.LogicEvent.GotResumeResponseEvent += new Action<RspMGRResumeAccountResponse>(OnResume);
-
-            //funpagePlaceOrder.Visible = Globals.UIAccess.fun_tab_placeorder;
-            //funpageFinservice.Visible = Globals.UIAccess.fun_tab_finservice;
-            //funpageFinanceInfo.Visible = Globals.UIAccess.fun_tab_financeinfo;
 
             ctOrderView1.EnableOperation = Globals.UIAccess.fun_info_operation;
             ctPositionView1.EnableOperation = Globals.UIAccess.fun_info_operation;
@@ -71,13 +64,18 @@ namespace FutsMoniter
             Globals.LogicEvent.GotFillEvent -= new FillDelegate(GotTrade);
 
             Globals.LogicEvent.GotResumeResponseEvent -= new Action<RspMGRResumeAccountResponse>(OnResume);
-      
+            Globals.Debug("ctTradingInfoReal disposed");
         }
         IAccountLite _account = null;
-        public IAccountLite CurrentAccount { get { return _account; } }
+        IAccountLite CurrentAccount { get { return _account; } }
+        /// <summary>
+        /// 判断是否是当前选中帐户
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
         bool IsCurrentAccount(string account)
         {
-            if (CurrentAccount != null) return false;
+            if (CurrentAccount == null) return false;
             if (CurrentAccount.Account.Equals(account)) return true;
             return false;
         }
@@ -164,9 +162,7 @@ namespace FutsMoniter
                 {
                     ctTradeView1.GotFill(f);
                     ctPositionView1.GotFill(f);
-                    //ctOrderView1
                 }
-
             }
             else
             {
@@ -180,17 +176,15 @@ namespace FutsMoniter
         {
             ctPositionView1.GotTick(k);
         }
-        
+
         /// <summary>
         /// 获得服务端转发的委托
         /// </summary>
         /// <param name="o"></param>
         void GotOrder(Order o)
         {
-            //debug("accountmoniter got order, accountselected:" + AccountSetlected.Account, QSEnumDebugLevel.INFO);
             if (IsCurrentAccount(o.Account) && Globals.TradingInfoTracker.IsReady(o.Account))
             {
-                Globals.Debug("view control got order");
                 ctOrderView1.GotOrder(o);
                 ctPositionView1.GotOrder(o);
             }
@@ -218,6 +212,7 @@ namespace FutsMoniter
             actoin.OrderID = oid;
             SendOrderAction(actoin);
         }
+
         void SendOrderAction(OrderAction action)
         {
             Globals.TLClient.ReqOrderAction(action);

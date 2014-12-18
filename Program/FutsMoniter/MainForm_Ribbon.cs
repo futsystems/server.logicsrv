@@ -73,9 +73,62 @@ namespace FutsMoniter
             //视窗管理
             //帐户监控
             kryptonRibbonGroupButton_accountlist.Click += new EventHandler(kryptonRibbonGroupButton_accountlist_Click);
+            //交易信息
             kryptonRibbonGroupButton_tradinginforeal.Click += new EventHandler(kryptonRibbonGroupButton_tradinginforeal_Click);
+            //行情与下单
             kryptonRibbonGroupButton_tickorder.Click += new EventHandler(kryptonRibbonGroupButton_tickorder_Click);
+            //配资模块
+            kryptonRibbonGroupButton_FinService.Click += new EventHandler(kryptonRibbonGroupButton_FinService_Click);
+            //财务信息
+            kryptonRibbonGroupButton_FinInfo.Click += new EventHandler(kryptonRibbonGroupButton_FinInfo_Click);
+
+            kryptonRibbonGroupButton_HiddenAll.Click += new EventHandler(kryptonRibbonGroupButton_HiddenAll_Click);
+            kryptonRibbonGroupButton_ShowAll.Click += new EventHandler(kryptonRibbonGroupButton_ShowAll_Click);
+            
             kryptonRibbonGroupButton_SaveConfig.Click += new EventHandler(kryptonRibbonGroupButton_SaveConfig_Click);
+        
+        }
+
+        void kryptonRibbonGroupButton_ShowAll_Click(object sender, EventArgs e)
+        {
+            kryptonDockingManager.ShowAllPages();
+            
+            kryptonDockableWorkspace.ShowAllPages();
+        }
+
+        void kryptonRibbonGroupButton_HiddenAll_Click(object sender, EventArgs e)
+        {
+
+            kryptonDockingManager.HideAllPages();
+            kryptonDockableWorkspace.HideAllPages();
+        }
+
+        void kryptonRibbonGroupButton_FinInfo_Click(object sender, EventArgs e)
+        {
+            KryptonPage page = NewFinService();
+            if (page != null)
+            {
+                kryptonDockingManager.AddDockspace("Control", DockingEdge.Bottom, new KryptonPage[] { page });
+            }
+            else
+            {
+                Globals.Debug("帐户财务窗口已存在");
+                kryptonDockingManager.ShowPage(PAGE_ACCINFO);
+            }
+        }
+
+        void kryptonRibbonGroupButton_FinService_Click(object sender, EventArgs e)
+        {
+            KryptonPage page = NewAccFinInfo();
+            if (page != null)
+            {
+                kryptonDockingManager.AddDockspace("Control", DockingEdge.Bottom, new KryptonPage[] { page });
+            }
+            else
+            {
+                Globals.Debug("配资模块窗口已存在");
+                kryptonDockingManager.ShowPage(PAGE_FINSERVICE);
+            }
         }
 
         void kryptonRibbonGroupButton_SaveConfig_Click(object sender, EventArgs e)
@@ -90,6 +143,11 @@ namespace FutsMoniter
             {
                 kryptonDockingManager.AddDockspace("Control", DockingEdge.Bottom, new KryptonPage[] { page });
             }
+            else
+            {
+                Globals.Debug("报价窗口已存在");
+                kryptonDockingManager.ShowPage(PAGE_QUOTE);
+            }
         }
 
         void kryptonRibbonGroupButton_tradinginforeal_Click(object sender, EventArgs e)
@@ -99,6 +157,11 @@ namespace FutsMoniter
             {
                 kryptonDockingManager.AddDockspace("Control", DockingEdge.Bottom, new KryptonPage[] { page });
             }
+            else
+            {
+                Globals.Debug("交易信息窗口已存在");
+                kryptonDockingManager.ShowPage(PAGE_TRADINGINFO);
+            }
         }
 
         void kryptonRibbonGroupButton_accountlist_Click(object sender, EventArgs e)
@@ -107,6 +170,11 @@ namespace FutsMoniter
             if (page != null)
             {
                 kryptonDockingManager.AddToWorkspace("Workspace", new KryptonPage[] { page });
+            }
+            else
+            {
+                Globals.Debug("帐户监控窗口已存在");
+                kryptonDockingManager.ShowPage(PAGE_ACCMONITER);
             }
         }
 
