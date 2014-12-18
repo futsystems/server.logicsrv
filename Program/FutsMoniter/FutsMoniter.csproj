@@ -92,10 +92,6 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="ComponentFactory.Krypton.Workspace, Version=4.4.0.0, Culture=neutral, PublicKeyToken=a87e673e9ecb6e8e" />
-    <Reference Include="FutSystems.GUI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\Win\FutSystems.GUI.dll</HintPath>
-    </Reference>
     <Reference Include="NetMQ, Version=3.3.0.11, Culture=neutral, PublicKeyToken=a6decef4ddc58b3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\NetMQ.dll</HintPath>
@@ -245,6 +241,12 @@
     </Compile>
     <Compile Include="Controls\ctQuoteMoniter.Designer.cs">
       <DependentUpon>ctQuoteMoniter.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ctTradingInfoReal.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ctTradingInfoReal.Designer.cs">
+      <DependentUpon>ctTradingInfoReal.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\HistQuery\ctHistOrder.cs">
       <SubType>UserControl</SubType>
@@ -761,6 +763,9 @@
     <EmbeddedResource Include="Controls\ctQuoteMoniter.resx">
       <DependentUpon>ctQuoteMoniter.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ctTradingInfoReal.resx">
+      <DependentUpon>ctTradingInfoReal.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\HistQuery\ctHistOrder.resx">
       <DependentUpon>ctHistOrder.cs</DependentUpon>
     </EmbeddedResource>
@@ -1028,7 +1033,12 @@
     <None Include="resources\account_go.png" />
     <None Include="resources\Router-simuate.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\FutSystems.GUI\FutSystems.GUI.csproj">
+      <Project>{C87A245F-E926-4027-96BC-A6BFC40AA8E6}</Project>
+      <Name>FutSystems.GUI</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

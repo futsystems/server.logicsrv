@@ -6,6 +6,10 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.Threading;
+using ComponentFactory.Krypton.Toolkit;
+using ComponentFactory.Krypton.Navigator;
+using ComponentFactory.Krypton.Workspace;
+using ComponentFactory.Krypton.Docking;
 using TradingLib.API;
 using TradingLib.Common;
 
@@ -78,9 +82,41 @@ namespace FutsMoniter
             Globals.RegIEventHandler(this);
         }
 
+        private int _count = 1;
+        private KryptonPage NewPage(string name, int image, Control content)
+        {
+            // Create new page with title and image
+            KryptonPage p = new KryptonPage();
+            p.Text = name + _count.ToString();
+            p.TextTitle = name + _count.ToString();
+            p.TextDescription = name + _count.ToString();
+            p.UniqueName = p.Text;
+            //p.ImageSmall = imageListSmall.Images[image];
+
+            // Add the control for display inside the page
+            content.Dock = DockStyle.Fill;
+            p.Controls.Add(content);
+
+            _count++;
+            return p;
+        }
+
+        private KryptonPage NewQuote()
+        {
+            return NewPage("Quote",2, new ctQuoteMoniter());
+        }
+
+        private ComponentFactory.Krypton.Docking.KryptonDockingManager kryptonDockingManager;
         void MainForm_Load(object sender, EventArgs e)
         {
-            
+            // Setup docking functionality
+            kryptonDockingManager = new KryptonDockingManager();
+            KryptonDockingWorkspace w = kryptonDockingManager.ManageWorkspace(kryptonDockableWorkspace);
+            kryptonDockingManager.ManageControl(mainpanel, w);
+            kryptonDockingManager.ManageFloating(this);
+
+            kryptonDockingManager.AddDockspace("Control", DockingEdge.Left, new KryptonPage[] { NewQuote() });
+
         }
 
         void MainForm_FormClosing(object sender, FormClosingEventArgs e)

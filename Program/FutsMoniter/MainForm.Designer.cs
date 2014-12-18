@@ -47,6 +47,7 @@
             this.kryptonRibbonGroupTriple2 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupTriple();
             this.kryptonRibbonGroupButton_interfacelist = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
             this.kryptonRibbonGroupButton_connectorlist = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
+            this.kryptonRibbonGroupButton_tickpaper = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
             this.kryptonRibbonGroup3 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroup();
             this.kryptonRibbonGroupTriple3 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupTriple();
             this.kryptonRibbonGroupButton_SystemStatus = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
@@ -95,8 +96,12 @@
             this.kryptonRibbonGroupButton1 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
             this.popmessage = new System.Windows.Forms.ToolTip(this.components);
             this.ctAccountMontier1 = new FutsMoniter.Controls.ctAccountMontier();
-            this.kryptonRibbonGroupButton_tickpaper = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
+            this.kryptonDockableWorkspace = new ComponentFactory.Krypton.Docking.KryptonDockableWorkspace();
+            this.mainpanel = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
             ((System.ComponentModel.ISupportInitialize)(this.TabRibbon)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.kryptonDockableWorkspace)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.mainpanel)).BeginInit();
+            this.mainpanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // TabRibbon
@@ -215,6 +220,11 @@
             // 
             this.kryptonRibbonGroupButton_connectorlist.ImageLarge = ((System.Drawing.Image)(resources.GetObject("kryptonRibbonGroupButton_connectorlist.ImageLarge")));
             this.kryptonRibbonGroupButton_connectorlist.TextLine1 = "实盘帐户";
+            // 
+            // kryptonRibbonGroupButton_tickpaper
+            // 
+            this.kryptonRibbonGroupButton_tickpaper.ImageLarge = ((System.Drawing.Image)(resources.GetObject("kryptonRibbonGroupButton_tickpaper.ImageLarge")));
+            this.kryptonRibbonGroupButton_tickpaper.TextLine1 = "行情与模拟成交";
             // 
             // kryptonRibbonGroup3
             // 
@@ -485,23 +495,44 @@
             // 
             this.ctAccountMontier1.DebugEnable = true;
             this.ctAccountMontier1.DebugLevel = TradingLib.API.QSEnumDebugLevel.INFO;
-            this.ctAccountMontier1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ctAccountMontier1.Location = new System.Drawing.Point(0, 111);
+            this.ctAccountMontier1.Location = new System.Drawing.Point(32, 0);
             this.ctAccountMontier1.Name = "ctAccountMontier1";
-            this.ctAccountMontier1.Size = new System.Drawing.Size(1284, 582);
+            this.ctAccountMontier1.Size = new System.Drawing.Size(252, 136);
             this.ctAccountMontier1.TabIndex = 2;
             // 
-            // kryptonRibbonGroupButton_tickpaper
+            // kryptonDockableWorkspace
             // 
-            this.kryptonRibbonGroupButton_tickpaper.ImageLarge = ((System.Drawing.Image)(resources.GetObject("kryptonRibbonGroupButton_tickpaper.ImageLarge")));
-            this.kryptonRibbonGroupButton_tickpaper.TextLine1 = "行情与模拟成交";
+            this.kryptonDockableWorkspace.AutoHiddenHost = false;
+            this.kryptonDockableWorkspace.CompactFlags = ((ComponentFactory.Krypton.Workspace.CompactFlags)(((ComponentFactory.Krypton.Workspace.CompactFlags.RemoveEmptyCells | ComponentFactory.Krypton.Workspace.CompactFlags.RemoveEmptySequences)
+                        | ComponentFactory.Krypton.Workspace.CompactFlags.PromoteLeafs)));
+            this.kryptonDockableWorkspace.Location = new System.Drawing.Point(304, 28);
+            this.kryptonDockableWorkspace.Name = "kryptonDockableWorkspace";
+            // 
+            // 
+            // 
+            this.kryptonDockableWorkspace.Root.UniqueName = "63131E53D7AF42D465A56982E95AFFBD";
+            this.kryptonDockableWorkspace.Root.WorkspaceControl = this.kryptonDockableWorkspace;
+            this.kryptonDockableWorkspace.ShowMaximizeButton = false;
+            this.kryptonDockableWorkspace.Size = new System.Drawing.Size(366, 333);
+            this.kryptonDockableWorkspace.TabIndex = 3;
+            this.kryptonDockableWorkspace.TabStop = true;
+            // 
+            // mainpanel
+            // 
+            this.mainpanel.Controls.Add(this.kryptonDockableWorkspace);
+            this.mainpanel.Controls.Add(this.ctAccountMontier1);
+            this.mainpanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mainpanel.Location = new System.Drawing.Point(0, 111);
+            this.mainpanel.Name = "mainpanel";
+            this.mainpanel.Size = new System.Drawing.Size(1284, 582);
+            this.mainpanel.TabIndex = 4;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1284, 715);
-            this.Controls.Add(this.ctAccountMontier1);
+            this.Controls.Add(this.mainpanel);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.TabRibbon);
             this.DoubleBuffered = true;
@@ -510,12 +541,17 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)(this.TabRibbon)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.kryptonDockableWorkspace)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.mainpanel)).EndInit();
+            this.mainpanel.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
+
+        
 
         private ComponentFactory.Krypton.Ribbon.KryptonRibbon TabRibbon;
         private System.Windows.Forms.StatusStrip statusStrip1;
@@ -583,6 +619,8 @@
         private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton_ReceiveBank;
         private ComponentFactory.Krypton.Toolkit.KryptonContextMenuItem kryptonContextMenuItem_changepass;
         private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton_tickpaper;
+        private ComponentFactory.Krypton.Docking.KryptonDockableWorkspace kryptonDockableWorkspace;
+        private ComponentFactory.Krypton.Toolkit.KryptonPanel mainpanel;
 
     }
 }

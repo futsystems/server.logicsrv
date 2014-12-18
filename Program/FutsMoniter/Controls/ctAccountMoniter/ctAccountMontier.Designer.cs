@@ -28,10 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.kryptonSplitContainer1 = new ComponentFactory.Krypton.Toolkit.KryptonSplitContainer();
             this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
-            this.ctRouterGroupList1 = new FutsMoniter.Controls.Base.ctRouterGroupList();
             this.ctRouterType1 = new FutsMoniter.Controls.Base.ctRouterType();
             this.ctAccountType1 = new FutsMoniter.Controls.Base.ctAccountType();
             this.lbCurrentAccount = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
@@ -50,20 +49,21 @@
             this.kryptonSplitContainer2 = new ComponentFactory.Krypton.Toolkit.KryptonSplitContainer();
             this.kryptonNavigator1 = new ComponentFactory.Krypton.Navigator.KryptonNavigator();
             this.kryptonPage1 = new ComponentFactory.Krypton.Navigator.KryptonPage();
-            this.ctOrderView1 = new FutSystems.GUI.ctOrderView();
             this.kryptonPage2 = new ComponentFactory.Krypton.Navigator.KryptonPage();
-            this.ctTradeView1 = new FutSystems.GUI.Control.ctTradeView();
             this.kryptonPage3 = new ComponentFactory.Krypton.Navigator.KryptonPage();
-            this.ctPositionView1 = new FutSystems.GUI.ctPositionView();
             this.kryptonNavigator2 = new ComponentFactory.Krypton.Navigator.KryptonNavigator();
             this.funpagePlaceOrder = new ComponentFactory.Krypton.Navigator.KryptonPage();
             this.ctOrderSenderM1 = new FutsMoniter.ctOrderSenderM();
-            this.viewQuoteList1 = new FutSystems.GUI.ViewQuoteList();
             this.funpageFinservice = new ComponentFactory.Krypton.Navigator.KryptonPage();
             this.ctFinService1 = new FutsMoniter.ctFinService();
             this.funpageFinanceInfo = new ComponentFactory.Krypton.Navigator.KryptonPage();
             this.kryptonPanel2 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
             this.ctFinanceInfo1 = new FutsMoniter.ctFinanceInfo();
+            this.ctOrderView1 = new FutSystems.GUI.ctOrderView();
+            this.ctTradeView1 = new FutSystems.GUI.Control.ctTradeView();
+            this.ctPositionView1 = new FutSystems.GUI.ctPositionView();
+            this.viewQuoteList1 = new FutSystems.GUI.ViewQuoteList();
+            this.ctRouterGroupList1 = new FutsMoniter.Controls.Base.ctRouterGroupList();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonSplitContainer1)).BeginInit();
             this.kryptonSplitContainer1.Panel1.SuspendLayout();
             this.kryptonSplitContainer1.Panel2.SuspendLayout();
@@ -138,15 +138,6 @@
             this.kryptonPanel1.Name = "kryptonPanel1";
             this.kryptonPanel1.Size = new System.Drawing.Size(1380, 28);
             this.kryptonPanel1.TabIndex = 31;
-            // 
-            // ctRouterGroupList1
-            // 
-            this.ctRouterGroupList1.EnableAny = true;
-            this.ctRouterGroupList1.Location = new System.Drawing.Point(990, 2);
-            this.ctRouterGroupList1.Name = "ctRouterGroupList1";
-            this.ctRouterGroupList1.RouterGroudSelected = null;
-            this.ctRouterGroupList1.Size = new System.Drawing.Size(140, 21);
-            this.ctRouterGroupList1.TabIndex = 18;
             // 
             // ctRouterType1
             // 
@@ -279,8 +270,8 @@
             this.accountgrid.AllowUserToAddRows = false;
             this.accountgrid.AllowUserToDeleteRows = false;
             this.accountgrid.AllowUserToResizeRows = false;
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.accountgrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle6.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.accountgrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle6;
             this.accountgrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
@@ -325,7 +316,7 @@
             this.kryptonPage1,
             this.kryptonPage2,
             this.kryptonPage3});
-            this.kryptonNavigator1.SelectedIndex = 0;
+            this.kryptonNavigator1.SelectedIndex = 2;
             this.kryptonNavigator1.Size = new System.Drawing.Size(862, 341);
             this.kryptonNavigator1.TabIndex = 0;
             this.kryptonNavigator1.Text = "kryptonNavigator1";
@@ -343,16 +334,6 @@
             this.kryptonPage1.ToolTipTitle = "Page ToolTip";
             this.kryptonPage1.UniqueName = "3A1F623954024C2EE4B851C956244833";
             // 
-            // ctOrderView1
-            // 
-            this.ctOrderView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ctOrderView1.EnableOperation = true;
-            this.ctOrderView1.Location = new System.Drawing.Point(0, 0);
-            this.ctOrderView1.Name = "ctOrderView1";
-            this.ctOrderView1.OrderTracker = null;
-            this.ctOrderView1.Size = new System.Drawing.Size(860, 316);
-            this.ctOrderView1.TabIndex = 1;
-            // 
             // kryptonPage2
             // 
             this.kryptonPage2.AutoHiddenSlideSize = new System.Drawing.Size(200, 200);
@@ -361,18 +342,10 @@
             this.kryptonPage2.LastVisibleSet = true;
             this.kryptonPage2.MinimumSize = new System.Drawing.Size(50, 50);
             this.kryptonPage2.Name = "kryptonPage2";
-            this.kryptonPage2.Size = new System.Drawing.Size(598, 316);
+            this.kryptonPage2.Size = new System.Drawing.Size(860, 316);
             this.kryptonPage2.Text = "成 交";
             this.kryptonPage2.ToolTipTitle = "Page ToolTip";
             this.kryptonPage2.UniqueName = "ABF27A8790C443F1FC80ECB534A2BDBD";
-            // 
-            // ctTradeView1
-            // 
-            this.ctTradeView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ctTradeView1.Location = new System.Drawing.Point(0, 0);
-            this.ctTradeView1.Name = "ctTradeView1";
-            this.ctTradeView1.Size = new System.Drawing.Size(598, 316);
-            this.ctTradeView1.TabIndex = 1;
             // 
             // kryptonPage3
             // 
@@ -387,17 +360,6 @@
             this.kryptonPage3.ToolTipTitle = "Page ToolTip";
             this.kryptonPage3.UniqueName = "C8373CC7545A417AA5AA2333BD716ADE";
             // 
-            // ctPositionView1
-            // 
-            this.ctPositionView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ctPositionView1.EnableOperation = true;
-            this.ctPositionView1.Location = new System.Drawing.Point(0, 0);
-            this.ctPositionView1.Name = "ctPositionView1";
-            this.ctPositionView1.OrderTracker = null;
-            this.ctPositionView1.PositionTracker = null;
-            this.ctPositionView1.Size = new System.Drawing.Size(860, 316);
-            this.ctPositionView1.TabIndex = 1;
-            // 
             // kryptonNavigator2
             // 
             this.kryptonNavigator2.Bar.TabStyle = ComponentFactory.Krypton.Toolkit.TabStyle.LowProfile;
@@ -410,7 +372,7 @@
             this.funpagePlaceOrder,
             this.funpageFinservice,
             this.funpageFinanceInfo});
-            this.kryptonNavigator2.SelectedIndex = 0;
+            this.kryptonNavigator2.SelectedIndex = 2;
             this.kryptonNavigator2.Size = new System.Drawing.Size(513, 341);
             this.kryptonNavigator2.TabIndex = 0;
             this.kryptonNavigator2.Text = "kryptonNavigator2";
@@ -437,32 +399,6 @@
             this.ctOrderSenderM1.Name = "ctOrderSenderM1";
             this.ctOrderSenderM1.Size = new System.Drawing.Size(511, 64);
             this.ctOrderSenderM1.TabIndex = 2;
-            // 
-            // viewQuoteList1
-            // 
-            this.viewQuoteList1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.viewQuoteList1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.viewQuoteList1.DNColor = System.Drawing.Color.Green;
-            this.viewQuoteList1.HeaderBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.viewQuoteList1.HeaderFont = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.viewQuoteList1.HeaderFontColor = System.Drawing.Color.Turquoise;
-            this.viewQuoteList1.Location = new System.Drawing.Point(2, 3);
-            this.viewQuoteList1.MenuEnable = false;
-            this.viewQuoteList1.Name = "viewQuoteList1";
-            this.viewQuoteList1.QuoteBackColor1 = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.viewQuoteList1.QuoteBackColor2 = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.viewQuoteList1.QuoteFont = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
-            this.viewQuoteList1.QuoteViewWidth = 1030;
-            this.viewQuoteList1.SelectedQuoteRow = -1;
-            this.viewQuoteList1.Size = new System.Drawing.Size(507, 251);
-            this.viewQuoteList1.SymbolFont = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
-            this.viewQuoteList1.SymbolFontColor = System.Drawing.Color.Green;
-            this.viewQuoteList1.TabIndex = 1;
-            this.viewQuoteList1.TableLineColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.viewQuoteList1.Text = "viewQuoteList1";
-            this.viewQuoteList1.UPColor = System.Drawing.Color.Red;
             // 
             // funpageFinservice
             // 
@@ -514,6 +450,70 @@
             this.ctFinanceInfo1.Name = "ctFinanceInfo1";
             this.ctFinanceInfo1.Size = new System.Drawing.Size(511, 316);
             this.ctFinanceInfo1.TabIndex = 0;
+            // 
+            // ctOrderView1
+            // 
+            this.ctOrderView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ctOrderView1.EnableOperation = true;
+            this.ctOrderView1.Location = new System.Drawing.Point(0, 0);
+            this.ctOrderView1.Name = "ctOrderView1";
+            this.ctOrderView1.OrderTracker = null;
+            this.ctOrderView1.Size = new System.Drawing.Size(860, 316);
+            this.ctOrderView1.TabIndex = 1;
+            // 
+            // ctTradeView1
+            // 
+            this.ctTradeView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ctTradeView1.Location = new System.Drawing.Point(0, 0);
+            this.ctTradeView1.Name = "ctTradeView1";
+            this.ctTradeView1.Size = new System.Drawing.Size(860, 316);
+            this.ctTradeView1.TabIndex = 1;
+            // 
+            // ctPositionView1
+            // 
+            this.ctPositionView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ctPositionView1.EnableOperation = true;
+            this.ctPositionView1.Location = new System.Drawing.Point(0, 0);
+            this.ctPositionView1.Name = "ctPositionView1";
+            this.ctPositionView1.OrderTracker = null;
+            this.ctPositionView1.PositionTracker = null;
+            this.ctPositionView1.Size = new System.Drawing.Size(860, 316);
+            this.ctPositionView1.TabIndex = 1;
+            // 
+            // viewQuoteList1
+            // 
+            this.viewQuoteList1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.viewQuoteList1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.viewQuoteList1.DNColor = System.Drawing.Color.Green;
+            this.viewQuoteList1.HeaderBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.viewQuoteList1.HeaderFont = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.viewQuoteList1.HeaderFontColor = System.Drawing.Color.Turquoise;
+            this.viewQuoteList1.Location = new System.Drawing.Point(2, 3);
+            this.viewQuoteList1.MenuEnable = false;
+            this.viewQuoteList1.Name = "viewQuoteList1";
+            this.viewQuoteList1.QuoteBackColor1 = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.viewQuoteList1.QuoteBackColor2 = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.viewQuoteList1.QuoteFont = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
+            this.viewQuoteList1.QuoteViewWidth = 1030;
+            this.viewQuoteList1.SelectedQuoteRow = -1;
+            this.viewQuoteList1.Size = new System.Drawing.Size(507, 251);
+            this.viewQuoteList1.SymbolFont = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
+            this.viewQuoteList1.SymbolFontColor = System.Drawing.Color.Green;
+            this.viewQuoteList1.TabIndex = 1;
+            this.viewQuoteList1.TableLineColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.viewQuoteList1.Text = "viewQuoteList1";
+            this.viewQuoteList1.UPColor = System.Drawing.Color.Red;
+            // 
+            // ctRouterGroupList1
+            // 
+            this.ctRouterGroupList1.EnableAny = false;
+            this.ctRouterGroupList1.Location = new System.Drawing.Point(991, 3);
+            this.ctRouterGroupList1.Name = "ctRouterGroupList1";
+            this.ctRouterGroupList1.RouterGroudSelected = null;
+            this.ctRouterGroupList1.Size = new System.Drawing.Size(190, 21);
+            this.ctRouterGroupList1.TabIndex = 18;
             // 
             // ctAccountMontier
             // 
