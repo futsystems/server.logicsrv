@@ -333,14 +333,14 @@ namespace FutsMoniter
         #endregion
 
 
-        #region 事件处理
-        void ctAccountMontier1_QryAccountHistEvent(IAccountLite account)
-        {
-            fmHistQuery fm = new fmHistQuery();
-            fm.SetAccount(account.Account);
-            fm.Show();
-        }
-        #endregion
+        //#region 事件处理
+        //void ctAccountMontier1_QryAccountHistEvent(IAccountLite account)
+        //{
+        //    fmHistQuery fm = new fmHistQuery();
+        //    fm.SetAccount(account.Account);
+        //    fm.Show();
+        //}
+        //#endregion
 
         #region 报表
         private void btnAgentProfit_Click(object sender, EventArgs e)

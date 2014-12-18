@@ -240,6 +240,12 @@
     <Compile Include="Controls\ctPositionMertic.Designer.cs">
       <DependentUpon>ctPositionMertic.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ctQuoteMoniter.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ctQuoteMoniter.Designer.cs">
+      <DependentUpon>ctQuoteMoniter.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\HistQuery\ctHistOrder.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -751,6 +757,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\ctPositionMertic.resx">
       <DependentUpon>ctPositionMertic.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ctQuoteMoniter.resx">
+      <DependentUpon>ctQuoteMoniter.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\HistQuery\ctHistOrder.resx">
       <DependentUpon>ctHistOrder.cs</DependentUpon>

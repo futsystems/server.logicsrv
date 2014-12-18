@@ -21,11 +21,22 @@ namespace FutsMoniter
             SetPreferences();
             InitTable();
             BindToTable();
+            this.Load += new EventHandler(ctHistOrder_Load);
 
         }
 
-        //public Telerik.WinControls.UI.RadGridView Grid { get { return orderGrid; } }
+        void ctHistOrder_Load(object sender, EventArgs e)
+        {
+            orderGrid.RowPrePaint += new DataGridViewRowPrePaintEventHandler(orderGrid_RowPrePaint);
+            orderGrid.CellFormatting += new DataGridViewCellFormattingEventHandler(orderGrid_CellFormatting);
+        }
 
+
+
+        void orderGrid_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        {
+            e.PaintParts = e.PaintParts ^ DataGridViewPaintParts.Focus;
+        }
         public void Clear()
         {
             orderGrid.DataSource = null;
@@ -44,7 +55,9 @@ namespace FutsMoniter
         const string STATUS = "挂单状态";
         const string STATUSSTR = "状态";
         const string ORDERREF = "本地编号";
-        const string EXCHORDERID = "交易所编号";
+        const string COMMENT = "备注";
+        const string FORCECLOSE = "强平";
+        const string ORDERSEQ = "委托流水号";
         const string EXCHANGE = "交易所";
         const string ACCOUNT = "账户";
 
@@ -90,9 +103,11 @@ namespace FutsMoniter
                     tb.Rows[i][FILLED] = Math.Abs(o.FilledSize);
                     tb.Rows[i][STATUS] = o.Status;
                     tb.Rows[i][STATUSSTR] = Util.GetEnumDescription(o.Status);
+                    tb.Rows[i][COMMENT] = o.Comment;
                     tb.Rows[i][ORDERREF] = o.OrderRef;
                     tb.Rows[i][EXCHANGE] = o.Exchange;
-                    tb.Rows[i][EXCHORDERID] = o.OrderSysID;
+                    tb.Rows[i][ORDERSEQ] = o.OrderSeq;
+                    tb.Rows[i][FORCECLOSE] = o.ForceClose ? "强平:" + o.ForceCloseReason : "";
                 }
                 catch (Exception ex)
                 {
@@ -138,11 +153,15 @@ namespace FutsMoniter
             tb.Columns.Add(FILLED);
             tb.Columns.Add(STATUS);
             tb.Columns.Add(STATUSSTR);
+            tb.Columns.Add(COMMENT);
+            tb.Columns.Add(FORCECLOSE);
             tb.Columns.Add(ORDERREF);
             tb.Columns.Add(EXCHANGE);
-            tb.Columns.Add(EXCHORDERID);
+            tb.Columns.Add(ORDERSEQ);
             //tb.Columns.Add(ACCOUNT);
         }
+
+
         /// <summary>
         /// 绑定数据表格到grid
         /// </summary>
@@ -163,39 +182,26 @@ namespace FutsMoniter
 
         }
 
-        //private void orderGrid_CellFormatting(object sender, Telerik.WinControls.UI.CellFormattingEventArgs e)
-        //{
-        //    try
-        //    {
-        //        if (e.CellElement.RowInfo is GridViewDataRowInfo)
-        //        {
-        //            if (e.CellElement.ColumnInfo.Name == OPERATION)
-        //            {
-        //                object direction = e.CellElement.RowInfo.Cells[DIRECTION].Value;
-        //                if (direction.ToString().Equals("1"))
-        //                {
-        //                    e.CellElement.ForeColor = UIGlobals.LongSideColor;
-        //                    e.CellElement.Font = UIGlobals.BoldFont;
-        //                }
-        //                else
-        //                {
-        //                    e.CellElement.ForeColor = UIGlobals.ShortSideColor;
-        //                    e.CellElement.Font = UIGlobals.BoldFont;
-        //                }
-        //            }
+        void orderGrid_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
 
-        //            if (e.CellElement.ColumnInfo.Name == SYMBOL)
-        //            {
-        //                //e.CellElement.Font = UIGlobals.BoldFont;
-        //            }
-
-        //        }
-
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //    }
-        //}
+            if (e.ColumnIndex == 4)
+            {
+                e.CellStyle.Font = UIGlobals.BoldFont;
+                string op = orderGrid[3, e.RowIndex].Value.ToString();
+                if (op.Equals("1"))
+                {
+                    e.CellStyle.ForeColor = UIGlobals.LongSideColor;
+                }
+                else
+                {
+                    e.CellStyle.ForeColor = UIGlobals.ShortSideColor;
+                }
+            }
+            //if (e.ColumnIndex == 5 || e.ColumnIndex == 6)
+            //{
+            //    e.CellStyle.Font = UIGlobals.BoldFont;
+            //}
+        }
     }
 }

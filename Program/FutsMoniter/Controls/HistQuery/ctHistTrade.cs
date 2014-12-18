@@ -21,6 +21,35 @@ namespace FutsMoniter
             SetPreferences();
             InitTable();
             BindToTable();
+            this.Load += new EventHandler(ctHistTrade_Load);
+        }
+
+        void ctHistTrade_Load(object sender, EventArgs e)
+        {
+            tradeGrid.RowPrePaint += new DataGridViewRowPrePaintEventHandler(tradeGrid_RowPrePaint);
+            tradeGrid.CellFormatting += new DataGridViewCellFormattingEventHandler(tradeGrid_CellFormatting);
+        }
+
+        void tradeGrid_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.ColumnIndex == 3)
+            {
+                e.CellStyle.Font = UIGlobals.BoldFont;
+                string op = tradeGrid[3, e.RowIndex].Value.ToString();
+                if (op.Equals("买入"))
+                {
+                    e.CellStyle.ForeColor = UIGlobals.LongSideColor;
+                }
+                else
+                {
+                    e.CellStyle.ForeColor = UIGlobals.ShortSideColor;
+                }
+            }
+        }
+
+        void tradeGrid_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        {
+            e.PaintParts = e.PaintParts ^ DataGridViewPaintParts.Focus;
         }
 
         //public Telerik.WinControls.UI.RadGridView Grid { get { return tradeGrid; } }

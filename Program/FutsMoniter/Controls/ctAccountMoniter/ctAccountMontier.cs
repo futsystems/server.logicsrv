@@ -17,13 +17,13 @@ namespace FutsMoniter.Controls
 {
     public partial class ctAccountMontier : UserControl,IEventBinder
     {
-        #region 事件
-        /// <summary>
-        /// 触发查询历史记录用于调用外部查询窗口
-        /// </summary>
-        public event IAccountLiteDel QryAccountHistEvent;
+        //#region 事件
+        ///// <summary>
+        ///// 触发查询历史记录用于调用外部查询窗口
+        ///// </summary>
+        //public event IAccountLiteDel QryAccountHistEvent;
 
-        #endregion
+        //#endregion
 
         
 

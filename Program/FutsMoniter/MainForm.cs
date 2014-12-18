@@ -100,7 +100,7 @@ namespace FutsMoniter
         {
 
             ctAccountMontier1.SendDebugEvent += new DebugDelegate(debug);
-            ctAccountMontier1.QryAccountHistEvent += new IAccountLiteDel(ctAccountMontier1_QryAccountHistEvent);
+            //ctAccountMontier1.QryAccountHistEvent += new IAccountLiteDel(ctAccountMontier1_QryAccountHistEvent);
 
             
 
@@ -134,11 +134,7 @@ namespace FutsMoniter
 
         void InitSymbol2View()
         {
-            foreach (Symbol sym in Globals.BasicInfoTracker.GetSymbolTradable())
-            {
-                ctAccountMontier1.AddSymbol(sym);
-                //Globals.Debug("symbol:" + sym.Symbol);
-            }
+            
         }
 
 

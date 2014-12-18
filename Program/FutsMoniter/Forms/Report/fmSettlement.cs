@@ -36,6 +36,10 @@ namespace FutsMoniter
             Globals.LogicEvent.GotSettlementEvent -= new Action<RspMGRQrySettleResponse>(GotSettlement);
         }
 
+        public void SetAccount(string acc)
+        {
+            account.Text = acc;
+        }
 
         StringBuilder sb = new StringBuilder();
         public void GotSettlement(RspMGRQrySettleResponse response)

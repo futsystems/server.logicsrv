@@ -121,7 +121,7 @@ namespace FutsMoniter.Controls.Base
         /// <returns></returns>
         public string GetRrouterGroupName(int id)
         {
-            Globals.Debug("rg ID....:" + id.ToString());
+            //Globals.Debug("rg ID....:" + id.ToString());
             RouterGroupSetting rg= null;
             if (rgmap.TryGetValue(id, out rg))
             {

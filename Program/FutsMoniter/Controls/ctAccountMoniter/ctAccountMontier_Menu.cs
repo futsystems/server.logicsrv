@@ -21,7 +21,8 @@ namespace FutsMoniter.Controls
             accountgrid.ContextMenuStrip.Items.Add("修改密码",null, new EventHandler(ChangePass_Click));
             accountgrid.ContextMenuStrip.Items.Add("修改信息", null, new EventHandler(ChangeInvestor_Click));
             accountgrid.ContextMenuStrip.Items.Add(new System.Windows.Forms.ToolStripSeparator());
-            accountgrid.ContextMenuStrip.Items.Add("历史查询", null, new EventHandler(QryHist_Click));
+            accountgrid.ContextMenuStrip.Items.Add("交易记录查询", null, new EventHandler(QryHist_Click));
+            accountgrid.ContextMenuStrip.Items.Add("结算单查询", null, new EventHandler(QrySettlement_Click));
             accountgrid.ContextMenuStrip.Items.Add(new System.Windows.Forms.ToolStripSeparator());
             accountgrid.ContextMenuStrip.Items.Add("修改路由组", Properties.Resources.changerouter, new EventHandler(UpdateRouterGroup_Click));
             accountgrid.ContextMenuStrip.Items.Add(new System.Windows.Forms.ToolStripSeparator());
@@ -146,8 +147,27 @@ namespace FutsMoniter.Controls
             IAccountLite account = GetVisibleAccount(CurrentAccount);
             if (account != null)
             {
-                if (QryAccountHistEvent != null)
-                    QryAccountHistEvent(account);
+                //if (QryAccountHistEvent != null)
+                //    QryAccountHistEvent(account);
+                fmHistQuery fm = new fmHistQuery();
+                fm.SetAccount(account.Account);
+                fm.Show();
+
+            }
+            else
+            {
+                fmConfirm.Show("请选择需要查询的交易帐户！");
+            }
+        }
+
+        void QrySettlement_Click(object sender, EventArgs e)
+        {
+            IAccountLite account = GetVisibleAccount(CurrentAccount);
+            if (account != null)
+            {
+                fmSettlement fm = new fmSettlement();
+                fm.SetAccount(account.Account);
+                fm.Show();
 
             }
             else

@@ -20,6 +20,15 @@ namespace FutsMoniter.Controls
                 InvokeGotAccount(account);
             }
 
+            //加载合约列表
+            Globals.Debug("加载合约列表~~~~~~~~~~~~~~~~");
+            foreach (Symbol sym in Globals.BasicInfoTracker.GetSymbolTradable())
+            {
+                Globals.Debug("symbol:" + sym.Symbol);
+                viewQuoteList1.addSecurity(sym);
+            }
+
+
             //帐户事件
             Globals.LogicEvent.GotAccountEvent += new Action<IAccountLite>(GotAccount);
             Globals.LogicEvent.GotFinanceInfoLiteEvent += new Action<IAccountInfoLite>(GotAccountInfoLite);

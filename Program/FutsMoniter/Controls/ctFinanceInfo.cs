@@ -52,7 +52,7 @@ namespace FutsMoniter
 
         void OnQryAccountInfo(string json)
         {
-            IAccountInfo obj = MoniterUtils.ParseJsonResponse<IAccountInfo>(json);
+            IAccountInfo obj = MoniterUtils.ParseJsonResponse<AccountInfo>(json);
             if (obj != null)
             {
                 this.GotAccountInfo(obj);

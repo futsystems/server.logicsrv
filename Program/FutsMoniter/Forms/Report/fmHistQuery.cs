@@ -108,13 +108,22 @@ namespace FutsMoniter
         }
 
         DateTime lastqrytime = DateTime.Now;
+        bool _first = true;
         private void btnQryHist_Click(object sender, EventArgs e)
         {
-            if (!(DateTime.Now.Subtract(lastqrytime).TotalSeconds > 10))
+            if (_first)
             {
-                fmConfirm.Show("请不要频繁查询,每隔10秒查询一次!");
-                return;
+                _first = false;
             }
+            else
+            {
+                if (!(DateTime.Now.Subtract(lastqrytime).TotalSeconds > 5))
+                {
+                    fmConfirm.Show("请不要频繁查询,每隔5秒查询一次!");
+                    return;
+                }
+            }
+
             lastqrytime = DateTime.Now;
             //清空当前数据
             ctHistOrder1.Clear();
