@@ -167,7 +167,6 @@ namespace FutsMoniter
 
             //登入基础数据初始化完成后 加载page
             InitPage();
-
             //初始化后台woker用于弹窗提示
             InitBW();
             //操作回报消息 弹窗提示

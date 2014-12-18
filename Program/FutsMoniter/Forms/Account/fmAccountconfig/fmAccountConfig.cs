@@ -28,23 +28,7 @@ namespace FutsMoniter
         public void SetAccount(IAccountLite account)
         {
             _account = account;
-            if (_account != null)
-            {
-                this.Text = "交易帐户编辑[" + _account.Account + "]";
-                intraday.Checked = _account.IntraDay;
-                intraday.Text = _account.IntraDay ? "日内" : "隔夜";
-                //ctAccountType1.AccountType = _account.Category;
-                ctRouterType1.RouterType = _account.OrderRouteType;
-
-                btnExecute.Text = _account.Execute ? "冻 结" : "激 活";
-                btnExecute.ForeColor = Color.Red;
-
-
-                poslock.Checked = _account.PosLock;
-                poslock.Text = _account.PosLock ? "允许" : "禁止";
-
-                //ctFinanceInfo1.SetAccount(_account);
-            }
+            
         }
 
 

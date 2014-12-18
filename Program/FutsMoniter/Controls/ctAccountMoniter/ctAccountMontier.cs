@@ -19,11 +19,6 @@ namespace FutsMoniter
     {
 
         const string PROGRAME = "AccountMontier";
-        //fmAccountConfig fmaccountconfig = new fmAccountConfig();
-        bool _loaded = false;
-
-        Symbol _symbolselected = null;
-        Symbol SymbolSelected { get { return _symbolselected; } }
         public ctAccountMontier()
         {
             try
@@ -31,8 +26,6 @@ namespace FutsMoniter
                 InitializeComponent();
 
                 this.Load += new EventHandler(ctAccountMontier_Load);
-
-
             }
             catch (Exception ex)
             {
@@ -59,16 +52,11 @@ namespace FutsMoniter
             
         }
 
-        public void Start()
-        {
-            StartUpdate();
-        }
 
 
         private void accountgrid_Click(object sender, EventArgs e)
         {
             debug("grid mouse clicked...", QSEnumDebugLevel.INFO);
-
         }
 
 
@@ -87,8 +75,6 @@ namespace FutsMoniter
 
         void WireEvents()
         {
-            
-
             //交易帐户过滤控件
             ctAccountType1.AccountTypeSelectedChangedEvent += new VoidDelegate(ctAccountType1_AccountTypeSelectedChangedEvent);
             ctRouterType1.RouterTypeSelectedChangedEvent += new VoidDelegate(ctRouterType1_RouterTypeSelectedChangedEvent);

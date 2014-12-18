@@ -26,7 +26,7 @@ namespace FutsMoniter
 
         void fmRecvBankEdit_Load(object sender, EventArgs e)
         {
-            this.Text = "添加银行帐号";
+            
             WireEvent();
         }
 
@@ -69,13 +69,16 @@ namespace FutsMoniter
         JsonWrapperReceivableAccount _bank;
         public void SetRecvBank(JsonWrapperReceivableAccount bank)
         {
+            this.Text = "编辑银行帐号";
+
             _bank = bank;
 
             id.Text = bank.ID.ToString();
             name.Text = bank.Name;
             branch.Text = bank.Branch;
             bankac.Text = bank.Bank_AC;
-            this.Text = "编辑银行帐号";
+            ctBankList1.BankSelected = _bank.Bank_ID;
+            
         }
 
 

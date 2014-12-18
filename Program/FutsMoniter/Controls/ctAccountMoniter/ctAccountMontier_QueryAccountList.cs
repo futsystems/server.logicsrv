@@ -20,7 +20,6 @@ namespace FutsMoniter
         /// <param name="e"></param>
         void ctAccountType1_AccountTypeSelectedChangedEvent()
         {
-            Util.Debug("account type changed");
             RefreshAccountQuery();
         }
 
@@ -83,7 +82,6 @@ namespace FutsMoniter
         /// </summary>
         void RefreshAccountQuery()
         {
-            if (!_loaded) return;
             string acctype = string.Empty;
             if (ctAccountType1.SelectedIndex == 0)
             {

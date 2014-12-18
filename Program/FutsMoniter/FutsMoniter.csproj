@@ -338,9 +338,6 @@
     <Compile Include="API\Delegate.cs" />
     <Compile Include="API\IBasicInfo.cs" />
     <Compile Include="API\ICallBack\ICallback.cs" />
-    <Compile Include="Controls\ctAccountMoniter\ctAccountMoniter_ServiceHolder.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Include="Controls\ctOrderSenderM.cs">
       <SubType>UserControl</SubType>
     </Compile>

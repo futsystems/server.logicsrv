@@ -150,7 +150,7 @@
             this.MinimizeBox = false;
             this.Name = "fmRecvBankEdit";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "收款银行管理";
+            this.Text = "添加收款银行帐户";
             this.TopMost = true;
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).EndInit();
             this.kryptonPanel1.ResumeLayout(false);
