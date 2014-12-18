@@ -13,6 +13,12 @@ namespace TradingLib.API
         IEnumerable<IAccountLite> Accounts { get; }
 
         /// <summary>
+        /// 响应客户选择事件
+        /// </summary>
+        /// <param name="account"></param>
+        void OnAccountSelected(IAccountLite account);
+
+        /// <summary>
         /// 响应客户端交易帐户回报
         /// </summary>
         /// <param name="account"></param>

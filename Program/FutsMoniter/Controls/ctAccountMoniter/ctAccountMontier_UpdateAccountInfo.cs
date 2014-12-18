@@ -11,7 +11,7 @@ using TradingLib.API;
 using TradingLib.Common;
 using FutSystems.GUI;
 
-namespace FutsMoniter.Controls
+namespace FutsMoniter
 {
     /// <summary>
     /// 更新交易帐户的信息

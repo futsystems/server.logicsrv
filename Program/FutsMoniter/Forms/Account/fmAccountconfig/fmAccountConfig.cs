@@ -43,7 +43,7 @@ namespace FutsMoniter
                 poslock.Checked = _account.PosLock;
                 poslock.Text = _account.PosLock ? "允许" : "禁止";
 
-                ctFinanceInfo1.SetAccount(_account);
+                //ctFinanceInfo1.SetAccount(_account);
             }
         }
 

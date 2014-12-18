@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
@@ -46,19 +47,24 @@ namespace FutsMoniter
             logfile.GotDebug(msg);
         }
 
-
-        System.Threading.Timer _timer;
         Ctx _ctx;
+        private ComponentFactory.Krypton.Docking.KryptonDockingManager kryptonDockingManager;
+
         public MainForm(DebugDelegate showinfo)
         {
-            //绑定回调函数
-            //Globals.RegisterCallBackCentre(this);
+            //初始化界面控件
+            InitializeComponent();
+
+            // Setup docking functionality
+            kryptonDockingManager = new KryptonDockingManager();
+            KryptonDockingWorkspace w = kryptonDockingManager.ManageWorkspace(kryptonDockableWorkspace);
+            kryptonDockingManager.ManageControl(mainpanel, w);
+            kryptonDockingManager.ManageFloating(this);
+
+            Globals.SendDebugEvent += new DebugDelegate(debug);
 
             _ctx = new Ctx();
             _ctx.InitStatusEvent += new Action<string>(ShowInfo);
-
-            //初始化界面控件
-            InitializeComponent();
 
             logfile = new Log(Globals.Config["LogFileName"].AsString(), true, true, "log", true);//日志组件
 
@@ -70,54 +76,101 @@ namespace FutsMoniter
                 this.Icon = Properties.Resources.moniter_terminal;
             }
 
-
-            Init();
-            _timer = new System.Threading.Timer(FakeOutStatus, null, 800, 150);
-
-            InitBW();
-            this.FormClosing += new FormClosingEventHandler(MainForm_FormClosing);
             this.Load += new EventHandler(MainForm_Load);
-            ctAccountMontier1.Start();
-
-            Globals.RegIEventHandler(this);
+            this.FormClosing += new FormClosingEventHandler(MainForm_FormClosing);
         }
 
+        #region page
         private int _count = 1;
-        private KryptonPage NewPage(string name, int image, Control content)
+        private KryptonPage NewPage(string name,string title ,int image, Control content)
         {
+            if (existpage(name))
+            {
+                return null;
+            }
             // Create new page with title and image
             KryptonPage p = new KryptonPage();
-            p.Text = name + _count.ToString();
-            p.TextTitle = name + _count.ToString();
-            p.TextDescription = name + _count.ToString();
-            p.UniqueName = p.Text;
+            p.Text = title;
+            p.TextTitle = title;
+            p.TextDescription = title;
+            p.UniqueName = name;
             //p.ImageSmall = imageListSmall.Images[image];
-
+            //ContentFlags contentFlags = new ContentFlags(p)
             // Add the control for display inside the page
             content.Dock = DockStyle.Fill;
             p.Controls.Add(content);
 
+            pagemap.Add(name, p);
             _count++;
             return p;
         }
 
+        Dictionary<string, KryptonPage> pagemap = new Dictionary<string, KryptonPage>();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        void InitPage()
+        {
+            kryptonDockingManager.AddDockspace("Control", DockingEdge.Bottom, new KryptonPage[] { NewTradingInfoReal() });
+            kryptonDockingManager.AddDockspace("Control", DockingEdge.Bottom, new KryptonPage[] { NewFinService(), NewAccFinInfo(), NewQuote() });
+            kryptonDockingManager.AddToWorkspace("Workspace", new KryptonPage[] { NewAccMoniter() });
+
+
+            if (System.IO.File.Exists("config.xml"))
+            {
+                //kryptonDockingManager.LoadConfigFromFile("config.xml");
+            }
+        }
+        private void UpdateCell(KryptonWorkspaceCell cell)
+        {
+            cell.NavigatorMode = NavigatorMode.BarTabGroup;
+        }
+
+
+        bool existpage(string name)
+        {
+            return pagemap.Keys.Contains(name);
+        }
         private KryptonPage NewQuote()
         {
-            return NewPage("Quote",2, new ctQuoteMoniter());
+            
+            return NewPage("quote","报价与下单",2, new ctQuoteMoniter());
         }
 
-        private ComponentFactory.Krypton.Docking.KryptonDockingManager kryptonDockingManager;
+        private KryptonPage NewTradingInfoReal()
+        {
+            return NewPage("tradinginfo","交易记录", 2, new ctTradingInfoReal());
+        }
+
+        private KryptonPage NewFinService()
+        {
+            return NewPage("finservice","配资服务", 2, new ctFinService());
+        }
+
+        private KryptonPage NewAccFinInfo()
+        {
+            return NewPage("accfininfo","财务信息", 2, new ctFinanceInfo());
+        }
+
+        private KryptonPage NewAccMoniter()
+        {
+            return NewPage("accmoniter","帐户监控", 2, new ctAccountMontier());
+        }
+        #endregion
+        
+
+        
         void MainForm_Load(object sender, EventArgs e)
         {
-            // Setup docking functionality
-            kryptonDockingManager = new KryptonDockingManager();
-            KryptonDockingWorkspace w = kryptonDockingManager.ManageWorkspace(kryptonDockableWorkspace);
-            kryptonDockingManager.ManageControl(mainpanel, w);
-            kryptonDockingManager.ManageFloating(this);
+            InitBW();
 
-            kryptonDockingManager.AddDockspace("Control", DockingEdge.Left, new KryptonPage[] { NewQuote() });
+            WireRibbon();
 
+            Globals.RegIEventHandler(this);
         }
+
+
 
         void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -126,32 +179,6 @@ namespace FutsMoniter
                 e.Cancel = true;
             }
         }
-
-
-
-       
-
-
-        public void Init()
-        {
-
-            ctAccountMontier1.SendDebugEvent += new DebugDelegate(debug);
-            //ctAccountMontier1.QryAccountHistEvent += new IAccountLiteDel(ctAccountMontier1_QryAccountHistEvent);
-
-            
-
-            Globals.SendDebugEvent += new DebugDelegate(debug);
-
-            if (!Globals.Config["Agent"].AsBool())
-            {
-                //btnGPAgent.Enabled = false;
-            }
-
-            WireRibbon();
-
-        }
-
-
 
 
         public void Reset()
@@ -168,45 +195,8 @@ namespace FutsMoniter
 
 
 
-        void InitSymbol2View()
-        {
-            
-        }
 
 
-
-
-
-
-
-
-
-
-
-        void StatusMessage(string message)
-        {
-            if (InvokeRequired)
-            {
-                Invoke(new StringParamDelegate(StatusMessage), new object[] { message });
-            }
-            else
-            {
-                //toolStripStatusLabel1.Opacity = 1;
-                //toolStripStatusLabel1.Text = message;
-            }
-        }
-
-        void FakeOutStatus(object obj)
-        {
-            //double o = toolStripStatusLabel1.Opacity - 0.05;
-            //toolStripStatusLabel1.Opacity = o >= 0 ? o : 0;
-        }
-
-        private void radMenuItem1_Click(object sender, EventArgs e)
-        {
-            //MainForm2 mf = new MainForm2();
-            //mf.Show();
-        }
 
     }
 }

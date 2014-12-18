@@ -13,7 +13,7 @@ using TradingLib.Common;
 using FutSystems.GUI;
 
 
-namespace FutsMoniter.Controls
+namespace FutsMoniter
 {
     public partial class ctAccountMontier : UserControl,IEventBinder
     {
@@ -44,11 +44,6 @@ namespace FutsMoniter.Controls
 
                 InitAccountMoniterGrid();
 
-                //注册回调
-                //Globals.RegIEventHandler(this);
-
-                //StartUpdate();
-                _loaded = true;
                 this.Load += new EventHandler(ctAccountMontier_Load);
 
 
@@ -134,41 +129,6 @@ namespace FutsMoniter.Controls
         }
 
 
-        
-        
-
-
-        
-
-
-        #region 行情部分
-
-
-        void InitViewQuoteList()
-        {
-            
-        }
-
-        void viewQuoteList1_SymbolSelectedEvent(Symbol symbol)
-        {
-            _symbolselected = symbol;
-            ctOrderSenderM1.SetSymbol(symbol);
-        }
-
-
-        public void AddSymbol(Symbol symbol)
-        {
-            if (symbol == null) return;
-            Globals.Debug("viewquotelist1 null:" + (viewQuoteList1 == null).ToString());
-            viewQuoteList1.addSecurity(symbol);
-        }
-
-        #endregion
-
-        private void radButton1_Click(object sender, EventArgs e)
-        {
-            Globals.TLClient.ReqWatchAccount(GetVisualAccounts());
-        }
 
         private void accountgrid_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
@@ -187,7 +147,7 @@ namespace FutsMoniter.Controls
 
         void WireEvents()
         {
-            Globals.RegIEventHandler(this);
+            
 
             //交易帐户过滤控件
             ctAccountType1.AccountTypeSelectedChangedEvent += new VoidDelegate(ctAccountType1_AccountTypeSelectedChangedEvent);
@@ -207,30 +167,13 @@ namespace FutsMoniter.Controls
             accountgrid.Scroll +=new ScrollEventHandler(accountgrid_Scroll);//滚轮滚动
             accountgrid.RowPrePaint += new DataGridViewRowPrePaintEventHandler(accountgrid_RowPrePaint);
 
-            //交易信息显示控件事件
-            ctOrderView1.SendDebugEvent += new DebugDelegate(msgdebug);
-            ctOrderView1.SendOrderCancel += new LongDelegate(CancelOrder);
-
-            ctPositionView1.SendDebugEvent += new DebugDelegate(msgdebug);
-            ctPositionView1.SendCancelEvent += new LongDelegate(CancelOrder);
-            ctPositionView1.SendOrderEvent += new OrderDelegate(SendOrder);
-
-            ctTradeView1.SendDebugEvent += new DebugDelegate(msgdebug);
-
-            viewQuoteList1.SymbolSelectedEvent += new SymbolDelegate(viewQuoteList1_SymbolSelectedEvent);
-            viewQuoteList1.SendDebugEvent += new DebugDelegate(Globals.Debug);
-            ctOrderSenderM1.SendOrderEvent += new OrderDelegate(SendOrder);
-
             //路由组初始化完毕
             ctRouterGroupList1.RouterGroupInitEvent += new VoidDelegate(ctRouterGroupList1_RouterGroupInitEvent);
-            //绑定帐户选中事件
-            AccountSelectedEvent += new Action<IAccountLite>(ctFinService1.OnAccountSelected);
-            //财务信息绑定帐户设置时间
-            AccountSelectedEvent += ctFinanceInfo1.SetAccount;
+
             //绑定事件
             btnAddAccount.Click += new EventHandler(btnAddAccount_Click);
-            
 
+            Globals.RegIEventHandler(this);
         }
 
         

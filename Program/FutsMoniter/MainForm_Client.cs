@@ -83,7 +83,7 @@ namespace FutsMoniter
 
                             //如果不是总平台柜员 隐藏
                             ShowInfo("初始化行情报表");
-                            InitSymbol2View();
+                            //InitSymbol2View();
 
                             //触发初始化完成事件
                             ShowInfo("初始化延迟加载组件");

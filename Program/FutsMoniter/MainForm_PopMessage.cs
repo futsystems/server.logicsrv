@@ -17,6 +17,18 @@ namespace FutsMoniter
         System.ComponentModel.BackgroundWorker bg;
 
         RingBuffer<RspInfo> infobuffer = new RingBuffer<RspInfo>(1000);
+
+
+        /// <summary>
+        /// 将需要弹出的消息放入缓存
+        /// </summary>
+        /// <param name="info"></param>
+        void OnRspInfo(TradingLib.API.RspInfo info)
+        {
+            //将RspInfo写入缓存 等待后台线程进行处理
+            infobuffer.Write(info);
+        }
+
         void InitBW()
         {
             bg = new BackgroundWorker();

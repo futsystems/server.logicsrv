@@ -6,7 +6,7 @@ using TradingLib.API;
 using TradingLib.Common;
 using FutSystems.GUI;
 
-namespace FutsMoniter.Controls
+namespace FutsMoniter
 {
     public partial class ctAccountMontier
     {

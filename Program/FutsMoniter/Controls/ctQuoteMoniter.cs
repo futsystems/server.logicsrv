@@ -47,7 +47,12 @@ namespace FutsMoniter
                 
         }
         public void OnInit()
-        { 
+        {
+            quote_cffex.SymbolSelectedEvent += new SymbolDelegate(SelectSymbol);
+            quote_czce.SymbolSelectedEvent += new SymbolDelegate(SelectSymbol);
+            quote_dce.SymbolSelectedEvent += new SymbolDelegate(SelectSymbol);
+            quote_shfe.SymbolSelectedEvent += new SymbolDelegate(SelectSymbol);
+
             //初始化合约列表
             foreach (Symbol s in Globals.BasicInfoTracker.GetSymbolTradable())
             {
@@ -59,8 +64,14 @@ namespace FutsMoniter
             }
 
             //绑定事件
-
+            //Globals.LogicEvent.GotAccountSelectedEvent += new Action<IAccountLite>(OnAccountSelected);
         }
+
+        void SelectSymbol(Symbol symbol)
+        {
+            ctOrderSenderM1.SetSymbol(symbol);
+        }
+
 
         public void GotTick(Tick k)
         {

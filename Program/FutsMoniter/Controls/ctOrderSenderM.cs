@@ -37,11 +37,20 @@ namespace FutsMoniter
         public void OnInit()
         {
             btnInsertTrade.Visible = Globals.UIAccess.fun_tab_placeorder_insert;
+            Globals.LogicEvent.GotAccountSelectedEvent += new Action<IAccountLite>(OnAccountSelected);
         }
 
-        public void OnDisposed()
-        { 
         
+
+        public void OnDisposed()
+        {
+            Globals.LogicEvent.GotAccountSelectedEvent -= new Action<IAccountLite>(OnAccountSelected);
+        }
+
+        
+        void OnAccountSelected(IAccountLite obj)
+        {
+            this.SetAccount(obj);
         }
 
         /// <summary>
@@ -49,17 +58,26 @@ namespace FutsMoniter
         /// </summary>
         void WireEvent()
         {
-            Globals.RegIEventHandler(this);
+            
             btnBuy.Click +=new EventHandler(btnBuy_Click);
             btnSell.Click +=new EventHandler(btnSell_Click);
             btnInsertTrade.Click +=new EventHandler(btnInsertTrade_Click);
+            this.SendOrderEvent += new OrderDelegate(SendOrderOut);
+            Globals.RegIEventHandler(this);
+
+        }
+
+        void SendOrderOut(Order o)
+        {
+            o.Account = _account.Account;
+            Globals.TLClient.ReqOrderInsert(o);
         }
 
         /// <summary>
         /// 绑定帐户
         /// </summary>
         /// <param name="acc"></param>
-        public void SetAccount(IAccountLite acc)
+        void SetAccount(IAccountLite acc)
         {
             _account = acc;
             account.Text = _account.Account;

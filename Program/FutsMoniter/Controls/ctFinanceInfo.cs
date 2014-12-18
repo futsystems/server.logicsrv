@@ -34,7 +34,6 @@ namespace FutsMoniter
                 ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show("请设定帐户");
                 return;
             }
-
             Globals.TLClient.ReqQryAccountFinInfo(_account.Account);
         }
 
@@ -42,12 +41,20 @@ namespace FutsMoniter
         {
             Globals.LogicEvent.RegisterCallback("MgrExchServer", "QryAccountFinInfo", this.OnQryAccountInfo);
             Globals.LogicEvent.RegisterCallback("MgrExchServer", "NotifyAccountFinInfo", this.OnQryAccountInfo);
+            Globals.LogicEvent.GotAccountSelectedEvent += new Action<IAccountLite>(OnAccountSelected);
+        }
+
+        void OnAccountSelected(IAccountLite obj)
+        {
+            _account = obj;
+            account.Text = _account.Account;
         }
 
         public void OnDisposed()
         {
             Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "QryAccountFinInfo", this.OnQryAccountInfo);
             Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "NotifyAccountFinInfo", this.OnQryAccountInfo);
+            Globals.LogicEvent.GotAccountSelectedEvent -= new Action<IAccountLite>(OnAccountSelected);
         }
 
         void OnQryAccountInfo(string json)
@@ -65,12 +72,7 @@ namespace FutsMoniter
 
 
         IAccountLite _account = null;
-        public void SetAccount(IAccountLite ac)
-        {
-            _account = ac;
-            account.Text = _account.Account;
-            
-        }
+
         public void GotAccountInfo(IAccountInfo info)
         {
             if (InvokeRequired)

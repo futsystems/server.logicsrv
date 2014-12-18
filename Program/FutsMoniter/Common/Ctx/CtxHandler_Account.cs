@@ -20,6 +20,16 @@ namespace TradingLib.Common
         Dictionary<string, IAccountLite> accountmap = new Dictionary<string, IAccountLite>();
 
         public IEnumerable<IAccountLite> Accounts { get { return accountmap.Values; } }
+
+        /// <summary>
+        /// 事件中继响应帐户选择事件
+        /// </summary>
+        /// <param name="account"></param>
+        public void OnAccountSelected(IAccountLite account)
+        {
+            if (GotAccountSelectedEvent != null)
+                GotAccountSelectedEvent(account);
+        }
         /// <summary>
         /// 响应客户端交易帐户回报
         /// </summary>

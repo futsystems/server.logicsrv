@@ -1,4 +1,4 @@
-﻿namespace FutsMoniter.Controls
+﻿namespace FutsMoniter
 {
     partial class ctTradingInfoReal
     {

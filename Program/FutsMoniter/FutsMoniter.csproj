@@ -203,9 +203,6 @@
     <Compile Include="Controls\ctAccountMoniter\ctAccountMontier_QueryAccountList.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ctAccountMoniter\ctAccountMontier_Resume.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Include="Controls\ctAccountMoniter\ctAccountMontier_.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -215,16 +212,10 @@
     <Compile Include="Controls\ctAccountMoniter\ctAccountMontier_OnXXXXX.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ctAccountMoniter\ctAccountMontier_Event.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\ctAccountMoniter\ctAccountMontier_SendCancelOrder.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Include="Controls\ctAccountMoniter\ctAccountMontier_DyanmicWatchAccounts.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ctAccountMoniter\ctAccountMontier_Menu.cs">
+    <Compile Include="Controls\ctAccountMoniter\ctAccountMontier_Event.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Controls\ctAccountMoniter\ctAccountMontier_AccountHolder.cs">
@@ -723,11 +714,9 @@
     <Compile Include="MainForm_Client.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainForm_ContribCallBack.cs" />
-    <Compile Include="MainForm_EventBinder.cs">
+    <Compile Include="MainForm_OnInit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainForm_LogicHandler.cs" />
     <Compile Include="MainForm_PopMessage.cs">
       <SubType>Form</SubType>
     </Compile>

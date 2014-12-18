@@ -37,6 +37,7 @@
             this.quote_czce = new FutSystems.GUI.ViewQuoteList();
             this.kryptonPage4 = new ComponentFactory.Krypton.Navigator.KryptonPage();
             this.quote_shfe = new FutSystems.GUI.ViewQuoteList();
+            this.ctOrderSenderM1 = new FutsMoniter.ctOrderSenderM();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonNavigator1)).BeginInit();
             this.kryptonNavigator1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPage1)).BeginInit();
@@ -51,10 +52,12 @@
             // 
             // kryptonNavigator1
             // 
+            this.kryptonNavigator1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.kryptonNavigator1.Bar.TabStyle = ComponentFactory.Krypton.Toolkit.TabStyle.LowProfile;
             this.kryptonNavigator1.Button.CloseButtonDisplay = ComponentFactory.Krypton.Navigator.ButtonDisplay.Hide;
             this.kryptonNavigator1.Button.ContextButtonDisplay = ComponentFactory.Krypton.Navigator.ButtonDisplay.Hide;
-            this.kryptonNavigator1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.kryptonNavigator1.Location = new System.Drawing.Point(0, 0);
             this.kryptonNavigator1.Name = "kryptonNavigator1";
             this.kryptonNavigator1.Pages.AddRange(new ComponentFactory.Krypton.Navigator.KryptonPage[] {
@@ -63,7 +66,7 @@
             this.page3,
             this.kryptonPage4});
             this.kryptonNavigator1.SelectedIndex = 3;
-            this.kryptonNavigator1.Size = new System.Drawing.Size(634, 355);
+            this.kryptonNavigator1.Size = new System.Drawing.Size(631, 301);
             this.kryptonNavigator1.TabIndex = 0;
             this.kryptonNavigator1.Text = "kryptonNavigator1";
             // 
@@ -186,7 +189,7 @@
             this.kryptonPage4.LastVisibleSet = true;
             this.kryptonPage4.MinimumSize = new System.Drawing.Size(50, 50);
             this.kryptonPage4.Name = "kryptonPage4";
-            this.kryptonPage4.Size = new System.Drawing.Size(632, 330);
+            this.kryptonPage4.Size = new System.Drawing.Size(629, 276);
             this.kryptonPage4.Text = "上商所";
             this.kryptonPage4.ToolTipTitle = "Page ToolTip";
             this.kryptonPage4.UniqueName = "7C9669E362BF4CD0E29A3058CF3869C0";
@@ -207,7 +210,7 @@
             this.quote_shfe.QuoteFont = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
             this.quote_shfe.QuoteViewWidth = 1030;
             this.quote_shfe.SelectedQuoteRow = -1;
-            this.quote_shfe.Size = new System.Drawing.Size(632, 330);
+            this.quote_shfe.Size = new System.Drawing.Size(629, 276);
             this.quote_shfe.SymbolFont = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
             this.quote_shfe.SymbolFontColor = System.Drawing.Color.Green;
             this.quote_shfe.TabIndex = 2;
@@ -215,10 +218,19 @@
             this.quote_shfe.Text = "viewQuoteList1";
             this.quote_shfe.UPColor = System.Drawing.Color.Red;
             // 
+            // ctOrderSenderM1
+            // 
+            this.ctOrderSenderM1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.ctOrderSenderM1.Location = new System.Drawing.Point(0, 298);
+            this.ctOrderSenderM1.Name = "ctOrderSenderM1";
+            this.ctOrderSenderM1.Size = new System.Drawing.Size(634, 57);
+            this.ctOrderSenderM1.TabIndex = 1;
+            // 
             // ctQuoteMoniter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.ctOrderSenderM1);
             this.Controls.Add(this.kryptonNavigator1);
             this.Name = "ctQuoteMoniter";
             this.Size = new System.Drawing.Size(634, 355);
@@ -247,5 +259,6 @@
         private FutSystems.GUI.ViewQuoteList quote_czce;
         private FutSystems.GUI.ViewQuoteList quote_dce;
         private FutSystems.GUI.ViewQuoteList quote_cffex;
+        private ctOrderSenderM ctOrderSenderM1;
     }
 }

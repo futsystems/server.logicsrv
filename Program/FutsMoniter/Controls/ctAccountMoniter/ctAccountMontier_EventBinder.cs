@@ -7,7 +7,7 @@ using TradingLib.Common;
 using FutSystems.GUI;
 using TradingLib.Mixins.LitJson;
 
-namespace FutsMoniter.Controls
+namespace FutsMoniter
 {
     public partial class ctAccountMontier
     {
@@ -20,27 +20,13 @@ namespace FutsMoniter.Controls
                 InvokeGotAccount(account);
             }
 
-            //加载合约列表
-            Globals.Debug("加载合约列表~~~~~~~~~~~~~~~~");
-            foreach (Symbol sym in Globals.BasicInfoTracker.GetSymbolTradable())
-            {
-                Globals.Debug("symbol:" + sym.Symbol);
-                viewQuoteList1.addSecurity(sym);
-            }
-
 
             //帐户事件
             Globals.LogicEvent.GotAccountEvent += new Action<IAccountLite>(GotAccount);
             Globals.LogicEvent.GotFinanceInfoLiteEvent += new Action<IAccountInfoLite>(GotAccountInfoLite);
             Globals.LogicEvent.GotAccountChangedEvent += new Action<IAccountLite>(GotAccountChanged);
             Globals.LogicEvent.GotSessionUpdateEvent += new Action<NotifyMGRSessionUpdateNotify>(GotSessionUpdate);
-            Globals.LogicEvent.GotResumeResponseEvent += new Action<RspMGRResumeAccountResponse>(GotResumeResponse);
-            
-            //交易事件
-            Globals.LogicEvent.GotTickEvent += new TickDelegate(GotTick);
-            Globals.LogicEvent.GotOrderEvent +=new OrderDelegate(GotOrder);
-            Globals.LogicEvent.GotFillEvent += new FillDelegate(GotTrade);
-
+            //Globals.LogicEvent.GotResumeResponseEvent += new Action<RspMGRResumeAccountResponse>(GotResumeResponse);
 
 
             Globals.Debug("ctAccountMontier init called @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
@@ -66,18 +52,8 @@ namespace FutsMoniter.Controls
                 accountgrid.ContextMenuStrip.Items[3].Visible = Globals.UIAccess.moniter_menu_queryhist;
                 accountgrid.ContextMenuStrip.Items[4].Visible = Globals.UIAccess.moniter_menu_delaccount;
 
-                funpagePlaceOrder.Visible = Globals.UIAccess.fun_tab_placeorder;
-                funpageFinservice.Visible = Globals.UIAccess.fun_tab_finservice;
-                funpageFinanceInfo.Visible = Globals.UIAccess.fun_tab_financeinfo;
-
-                ctOrderView1.EnableOperation = Globals.UIAccess.fun_info_operation;
-                ctPositionView1.EnableOperation = Globals.UIAccess.fun_info_operation;
-
-                //模块限制
-                funpageFinservice.Visible = Globals.LoginResponse.Domain.Module_FinService;
             }
-
-            //Globals.LogicEvent.RegisterCallback("MgrExchServer", "QryAccountInfo", this.OnQryAccountInfo);
+            this.Start();
         }
 
         public void OnDisposed()

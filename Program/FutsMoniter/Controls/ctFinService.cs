@@ -37,6 +37,7 @@ namespace FutsMoniter
             Globals.LogicEvent.RegisterCallback("FinServiceCentre", "UpdateArguments", this.OnQryFinService);//更新参数
             Globals.LogicEvent.RegisterCallback("FinServiceCentre", "ChangeServicePlane", this.OnQryFinService);//修改服务计划
             Globals.LogicEvent.RegisterCallback("FinServiceCentre", "DeleteServicePlane", this.OnQryFinService);//删除服务
+            Globals.LogicEvent.GotAccountSelectedEvent += new Action<IAccountLite>(OnAccountSelected);
         }
 
         public void OnDisposed()
@@ -46,6 +47,8 @@ namespace FutsMoniter
             Globals.LogicEvent.UnRegisterCallback("FinServiceCentre", "UpdateArguments", this.OnQryFinService);//更新参数
             Globals.LogicEvent.UnRegisterCallback("FinServiceCentre", "ChangeServicePlane", this.OnQryFinService);//修改服务计划
             Globals.LogicEvent.UnRegisterCallback("FinServiceCentre", "DeleteServicePlane", this.OnQryFinService);//删除服务
+            Globals.LogicEvent.GotAccountSelectedEvent -= new Action<IAccountLite>(OnAccountSelected);
+      
         }
         #endregion
 
@@ -60,7 +63,7 @@ namespace FutsMoniter
         /// 响应交易帐户选中事件
         /// </summary>
         /// <param name="account"></param>
-        public void OnAccountSelected(IAccountLite account)
+        void OnAccountSelected(IAccountLite account)
         {
             _account = account;
             finservice = null;//重置配资服务

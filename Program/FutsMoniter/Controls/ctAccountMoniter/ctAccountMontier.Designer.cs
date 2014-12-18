@@ -1,4 +1,4 @@
-﻿namespace FutsMoniter.Controls
+﻿namespace FutsMoniter
 {
     partial class ctAccountMontier
     {
@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            this.kryptonSplitContainer1 = new ComponentFactory.Krypton.Toolkit.KryptonSplitContainer();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
+            this.ctRouterGroupList1 = new FutsMoniter.Controls.Base.ctRouterGroupList();
             this.ctRouterType1 = new FutsMoniter.Controls.Base.ctRouterType();
             this.ctAccountType1 = new FutsMoniter.Controls.Base.ctAccountType();
             this.lbCurrentAccount = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
@@ -46,75 +46,14 @@
             this.accexecute = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
             this.kryptonLabel2 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.accountgrid = new ComponentFactory.Krypton.Toolkit.KryptonDataGridView();
-            this.kryptonSplitContainer2 = new ComponentFactory.Krypton.Toolkit.KryptonSplitContainer();
-            this.kryptonNavigator1 = new ComponentFactory.Krypton.Navigator.KryptonNavigator();
-            this.kryptonPage1 = new ComponentFactory.Krypton.Navigator.KryptonPage();
-            this.kryptonPage2 = new ComponentFactory.Krypton.Navigator.KryptonPage();
-            this.kryptonPage3 = new ComponentFactory.Krypton.Navigator.KryptonPage();
-            this.kryptonNavigator2 = new ComponentFactory.Krypton.Navigator.KryptonNavigator();
-            this.funpagePlaceOrder = new ComponentFactory.Krypton.Navigator.KryptonPage();
-            this.ctOrderSenderM1 = new FutsMoniter.ctOrderSenderM();
-            this.funpageFinservice = new ComponentFactory.Krypton.Navigator.KryptonPage();
-            this.ctFinService1 = new FutsMoniter.ctFinService();
-            this.funpageFinanceInfo = new ComponentFactory.Krypton.Navigator.KryptonPage();
             this.kryptonPanel2 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
-            this.ctFinanceInfo1 = new FutsMoniter.ctFinanceInfo();
-            this.ctOrderView1 = new FutSystems.GUI.ctOrderView();
-            this.ctTradeView1 = new FutSystems.GUI.Control.ctTradeView();
-            this.ctPositionView1 = new FutSystems.GUI.ctPositionView();
-            this.viewQuoteList1 = new FutSystems.GUI.ViewQuoteList();
-            this.ctRouterGroupList1 = new FutsMoniter.Controls.Base.ctRouterGroupList();
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonSplitContainer1)).BeginInit();
-            this.kryptonSplitContainer1.Panel1.SuspendLayout();
-            this.kryptonSplitContainer1.Panel2.SuspendLayout();
-            this.kryptonSplitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.accexecute)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.accountgrid)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonSplitContainer2)).BeginInit();
-            this.kryptonSplitContainer2.Panel1.SuspendLayout();
-            this.kryptonSplitContainer2.Panel2.SuspendLayout();
-            this.kryptonSplitContainer2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonNavigator1)).BeginInit();
-            this.kryptonNavigator1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonPage1)).BeginInit();
-            this.kryptonPage1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonPage2)).BeginInit();
-            this.kryptonPage2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonPage3)).BeginInit();
-            this.kryptonPage3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonNavigator2)).BeginInit();
-            this.kryptonNavigator2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.funpagePlaceOrder)).BeginInit();
-            this.funpagePlaceOrder.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.funpageFinservice)).BeginInit();
-            this.funpageFinservice.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.funpageFinanceInfo)).BeginInit();
-            this.funpageFinanceInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel2)).BeginInit();
             this.kryptonPanel2.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // kryptonSplitContainer1
-            // 
-            this.kryptonSplitContainer1.Cursor = System.Windows.Forms.Cursors.Default;
-            this.kryptonSplitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.kryptonSplitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.kryptonSplitContainer1.Name = "kryptonSplitContainer1";
-            this.kryptonSplitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // kryptonSplitContainer1.Panel1
-            // 
-            this.kryptonSplitContainer1.Panel1.Controls.Add(this.kryptonPanel1);
-            this.kryptonSplitContainer1.Panel1.Controls.Add(this.accountgrid);
-            // 
-            // kryptonSplitContainer1.Panel2
-            // 
-            this.kryptonSplitContainer1.Panel2.Controls.Add(this.kryptonSplitContainer2);
-            this.kryptonSplitContainer1.Size = new System.Drawing.Size(1380, 638);
-            this.kryptonSplitContainer1.SplitterDistance = 292;
-            this.kryptonSplitContainer1.TabIndex = 1;
             // 
             // kryptonPanel1
             // 
@@ -138,6 +77,15 @@
             this.kryptonPanel1.Name = "kryptonPanel1";
             this.kryptonPanel1.Size = new System.Drawing.Size(1380, 28);
             this.kryptonPanel1.TabIndex = 31;
+            // 
+            // ctRouterGroupList1
+            // 
+            this.ctRouterGroupList1.EnableAny = false;
+            this.ctRouterGroupList1.Location = new System.Drawing.Point(991, 3);
+            this.ctRouterGroupList1.Name = "ctRouterGroupList1";
+            this.ctRouterGroupList1.RouterGroudSelected = null;
+            this.ctRouterGroupList1.Size = new System.Drawing.Size(190, 21);
+            this.ctRouterGroupList1.TabIndex = 18;
             // 
             // ctRouterType1
             // 
@@ -270,288 +218,45 @@
             this.accountgrid.AllowUserToAddRows = false;
             this.accountgrid.AllowUserToDeleteRows = false;
             this.accountgrid.AllowUserToResizeRows = false;
-            dataGridViewCellStyle6.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.accountgrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.accountgrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle2;
             this.accountgrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.accountgrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.accountgrid.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.accountgrid.Location = new System.Drawing.Point(0, 29);
+            this.accountgrid.Location = new System.Drawing.Point(0, 28);
             this.accountgrid.Name = "accountgrid";
             this.accountgrid.ReadOnly = true;
             this.accountgrid.RowHeadersVisible = false;
             this.accountgrid.RowTemplate.Height = 23;
             this.accountgrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.accountgrid.Size = new System.Drawing.Size(1380, 263);
+            this.accountgrid.Size = new System.Drawing.Size(1377, 607);
             this.accountgrid.TabIndex = 30;
-            // 
-            // kryptonSplitContainer2
-            // 
-            this.kryptonSplitContainer2.Cursor = System.Windows.Forms.Cursors.Default;
-            this.kryptonSplitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.kryptonSplitContainer2.Location = new System.Drawing.Point(0, 0);
-            this.kryptonSplitContainer2.Name = "kryptonSplitContainer2";
-            // 
-            // kryptonSplitContainer2.Panel1
-            // 
-            this.kryptonSplitContainer2.Panel1.Controls.Add(this.kryptonNavigator1);
-            // 
-            // kryptonSplitContainer2.Panel2
-            // 
-            this.kryptonSplitContainer2.Panel2.Controls.Add(this.kryptonNavigator2);
-            this.kryptonSplitContainer2.Size = new System.Drawing.Size(1380, 341);
-            this.kryptonSplitContainer2.SplitterDistance = 862;
-            this.kryptonSplitContainer2.TabIndex = 0;
-            // 
-            // kryptonNavigator1
-            // 
-            this.kryptonNavigator1.Bar.TabStyle = ComponentFactory.Krypton.Toolkit.TabStyle.LowProfile;
-            this.kryptonNavigator1.Button.ButtonDisplayLogic = ComponentFactory.Krypton.Navigator.ButtonDisplayLogic.None;
-            this.kryptonNavigator1.Button.CloseButtonDisplay = ComponentFactory.Krypton.Navigator.ButtonDisplay.Hide;
-            this.kryptonNavigator1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.kryptonNavigator1.Location = new System.Drawing.Point(0, 0);
-            this.kryptonNavigator1.Name = "kryptonNavigator1";
-            this.kryptonNavigator1.Pages.AddRange(new ComponentFactory.Krypton.Navigator.KryptonPage[] {
-            this.kryptonPage1,
-            this.kryptonPage2,
-            this.kryptonPage3});
-            this.kryptonNavigator1.SelectedIndex = 2;
-            this.kryptonNavigator1.Size = new System.Drawing.Size(862, 341);
-            this.kryptonNavigator1.TabIndex = 0;
-            this.kryptonNavigator1.Text = "kryptonNavigator1";
-            // 
-            // kryptonPage1
-            // 
-            this.kryptonPage1.AutoHiddenSlideSize = new System.Drawing.Size(200, 200);
-            this.kryptonPage1.Controls.Add(this.ctOrderView1);
-            this.kryptonPage1.Flags = 65534;
-            this.kryptonPage1.LastVisibleSet = true;
-            this.kryptonPage1.MinimumSize = new System.Drawing.Size(50, 50);
-            this.kryptonPage1.Name = "kryptonPage1";
-            this.kryptonPage1.Size = new System.Drawing.Size(860, 316);
-            this.kryptonPage1.Text = "委 托";
-            this.kryptonPage1.ToolTipTitle = "Page ToolTip";
-            this.kryptonPage1.UniqueName = "3A1F623954024C2EE4B851C956244833";
-            // 
-            // kryptonPage2
-            // 
-            this.kryptonPage2.AutoHiddenSlideSize = new System.Drawing.Size(200, 200);
-            this.kryptonPage2.Controls.Add(this.ctTradeView1);
-            this.kryptonPage2.Flags = 65534;
-            this.kryptonPage2.LastVisibleSet = true;
-            this.kryptonPage2.MinimumSize = new System.Drawing.Size(50, 50);
-            this.kryptonPage2.Name = "kryptonPage2";
-            this.kryptonPage2.Size = new System.Drawing.Size(860, 316);
-            this.kryptonPage2.Text = "成 交";
-            this.kryptonPage2.ToolTipTitle = "Page ToolTip";
-            this.kryptonPage2.UniqueName = "ABF27A8790C443F1FC80ECB534A2BDBD";
-            // 
-            // kryptonPage3
-            // 
-            this.kryptonPage3.AutoHiddenSlideSize = new System.Drawing.Size(200, 200);
-            this.kryptonPage3.Controls.Add(this.ctPositionView1);
-            this.kryptonPage3.Flags = 65534;
-            this.kryptonPage3.LastVisibleSet = true;
-            this.kryptonPage3.MinimumSize = new System.Drawing.Size(50, 50);
-            this.kryptonPage3.Name = "kryptonPage3";
-            this.kryptonPage3.Size = new System.Drawing.Size(860, 316);
-            this.kryptonPage3.Text = "持 仓";
-            this.kryptonPage3.ToolTipTitle = "Page ToolTip";
-            this.kryptonPage3.UniqueName = "C8373CC7545A417AA5AA2333BD716ADE";
-            // 
-            // kryptonNavigator2
-            // 
-            this.kryptonNavigator2.Bar.TabStyle = ComponentFactory.Krypton.Toolkit.TabStyle.LowProfile;
-            this.kryptonNavigator2.Button.ButtonDisplayLogic = ComponentFactory.Krypton.Navigator.ButtonDisplayLogic.None;
-            this.kryptonNavigator2.Button.CloseButtonDisplay = ComponentFactory.Krypton.Navigator.ButtonDisplay.Hide;
-            this.kryptonNavigator2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.kryptonNavigator2.Location = new System.Drawing.Point(0, 0);
-            this.kryptonNavigator2.Name = "kryptonNavigator2";
-            this.kryptonNavigator2.Pages.AddRange(new ComponentFactory.Krypton.Navigator.KryptonPage[] {
-            this.funpagePlaceOrder,
-            this.funpageFinservice,
-            this.funpageFinanceInfo});
-            this.kryptonNavigator2.SelectedIndex = 2;
-            this.kryptonNavigator2.Size = new System.Drawing.Size(513, 341);
-            this.kryptonNavigator2.TabIndex = 0;
-            this.kryptonNavigator2.Text = "kryptonNavigator2";
-            // 
-            // funpagePlaceOrder
-            // 
-            this.funpagePlaceOrder.AutoHiddenSlideSize = new System.Drawing.Size(200, 200);
-            this.funpagePlaceOrder.Controls.Add(this.ctOrderSenderM1);
-            this.funpagePlaceOrder.Controls.Add(this.viewQuoteList1);
-            this.funpagePlaceOrder.Flags = 65534;
-            this.funpagePlaceOrder.LastVisibleSet = true;
-            this.funpagePlaceOrder.MinimumSize = new System.Drawing.Size(50, 50);
-            this.funpagePlaceOrder.Name = "funpagePlaceOrder";
-            this.funpagePlaceOrder.Size = new System.Drawing.Size(511, 316);
-            this.funpagePlaceOrder.Text = "下 单";
-            this.funpagePlaceOrder.ToolTipTitle = "Page ToolTip";
-            this.funpagePlaceOrder.UniqueName = "C5BB317C1F0C4524AD8455465B31C0CC";
-            // 
-            // ctOrderSenderM1
-            // 
-            this.ctOrderSenderM1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.ctOrderSenderM1.Location = new System.Drawing.Point(0, 252);
-            this.ctOrderSenderM1.Name = "ctOrderSenderM1";
-            this.ctOrderSenderM1.Size = new System.Drawing.Size(511, 64);
-            this.ctOrderSenderM1.TabIndex = 2;
-            // 
-            // funpageFinservice
-            // 
-            this.funpageFinservice.AutoHiddenSlideSize = new System.Drawing.Size(200, 200);
-            this.funpageFinservice.Controls.Add(this.ctFinService1);
-            this.funpageFinservice.Flags = 65534;
-            this.funpageFinservice.LastVisibleSet = true;
-            this.funpageFinservice.MinimumSize = new System.Drawing.Size(50, 50);
-            this.funpageFinservice.Name = "funpageFinservice";
-            this.funpageFinservice.Size = new System.Drawing.Size(511, 316);
-            this.funpageFinservice.Text = "配资服务";
-            this.funpageFinservice.ToolTipTitle = "Page ToolTip";
-            this.funpageFinservice.UniqueName = "4934DB25BB2847FA13ACE069B5CEFE09";
-            // 
-            // ctFinService1
-            // 
-            this.ctFinService1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ctFinService1.Location = new System.Drawing.Point(0, 0);
-            this.ctFinService1.Name = "ctFinService1";
-            this.ctFinService1.Size = new System.Drawing.Size(511, 316);
-            this.ctFinService1.TabIndex = 2;
-            // 
-            // funpageFinanceInfo
-            // 
-            this.funpageFinanceInfo.AutoHiddenSlideSize = new System.Drawing.Size(200, 200);
-            this.funpageFinanceInfo.Controls.Add(this.kryptonPanel2);
-            this.funpageFinanceInfo.Flags = 65534;
-            this.funpageFinanceInfo.LastVisibleSet = true;
-            this.funpageFinanceInfo.MinimumSize = new System.Drawing.Size(50, 50);
-            this.funpageFinanceInfo.Name = "funpageFinanceInfo";
-            this.funpageFinanceInfo.Size = new System.Drawing.Size(511, 316);
-            this.funpageFinanceInfo.Text = "财务信息";
-            this.funpageFinanceInfo.ToolTipTitle = "Page ToolTip";
-            this.funpageFinanceInfo.UniqueName = "6DEE542A2042499BEC8B3ABD001B1BDF";
             // 
             // kryptonPanel2
             // 
-            this.kryptonPanel2.Controls.Add(this.ctFinanceInfo1);
+            this.kryptonPanel2.Controls.Add(this.accountgrid);
+            this.kryptonPanel2.Controls.Add(this.kryptonPanel1);
             this.kryptonPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.kryptonPanel2.Location = new System.Drawing.Point(0, 0);
             this.kryptonPanel2.Name = "kryptonPanel2";
-            this.kryptonPanel2.Size = new System.Drawing.Size(511, 316);
-            this.kryptonPanel2.TabIndex = 0;
-            // 
-            // ctFinanceInfo1
-            // 
-            this.ctFinanceInfo1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ctFinanceInfo1.Location = new System.Drawing.Point(0, 0);
-            this.ctFinanceInfo1.Name = "ctFinanceInfo1";
-            this.ctFinanceInfo1.Size = new System.Drawing.Size(511, 316);
-            this.ctFinanceInfo1.TabIndex = 0;
-            // 
-            // ctOrderView1
-            // 
-            this.ctOrderView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ctOrderView1.EnableOperation = true;
-            this.ctOrderView1.Location = new System.Drawing.Point(0, 0);
-            this.ctOrderView1.Name = "ctOrderView1";
-            this.ctOrderView1.OrderTracker = null;
-            this.ctOrderView1.Size = new System.Drawing.Size(860, 316);
-            this.ctOrderView1.TabIndex = 1;
-            // 
-            // ctTradeView1
-            // 
-            this.ctTradeView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ctTradeView1.Location = new System.Drawing.Point(0, 0);
-            this.ctTradeView1.Name = "ctTradeView1";
-            this.ctTradeView1.Size = new System.Drawing.Size(860, 316);
-            this.ctTradeView1.TabIndex = 1;
-            // 
-            // ctPositionView1
-            // 
-            this.ctPositionView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ctPositionView1.EnableOperation = true;
-            this.ctPositionView1.Location = new System.Drawing.Point(0, 0);
-            this.ctPositionView1.Name = "ctPositionView1";
-            this.ctPositionView1.OrderTracker = null;
-            this.ctPositionView1.PositionTracker = null;
-            this.ctPositionView1.Size = new System.Drawing.Size(860, 316);
-            this.ctPositionView1.TabIndex = 1;
-            // 
-            // viewQuoteList1
-            // 
-            this.viewQuoteList1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.viewQuoteList1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.viewQuoteList1.DNColor = System.Drawing.Color.Green;
-            this.viewQuoteList1.HeaderBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.viewQuoteList1.HeaderFont = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.viewQuoteList1.HeaderFontColor = System.Drawing.Color.Turquoise;
-            this.viewQuoteList1.Location = new System.Drawing.Point(2, 3);
-            this.viewQuoteList1.MenuEnable = false;
-            this.viewQuoteList1.Name = "viewQuoteList1";
-            this.viewQuoteList1.QuoteBackColor1 = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.viewQuoteList1.QuoteBackColor2 = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.viewQuoteList1.QuoteFont = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
-            this.viewQuoteList1.QuoteViewWidth = 1030;
-            this.viewQuoteList1.SelectedQuoteRow = -1;
-            this.viewQuoteList1.Size = new System.Drawing.Size(507, 251);
-            this.viewQuoteList1.SymbolFont = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
-            this.viewQuoteList1.SymbolFontColor = System.Drawing.Color.Green;
-            this.viewQuoteList1.TabIndex = 1;
-            this.viewQuoteList1.TableLineColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.viewQuoteList1.Text = "viewQuoteList1";
-            this.viewQuoteList1.UPColor = System.Drawing.Color.Red;
-            // 
-            // ctRouterGroupList1
-            // 
-            this.ctRouterGroupList1.EnableAny = false;
-            this.ctRouterGroupList1.Location = new System.Drawing.Point(991, 3);
-            this.ctRouterGroupList1.Name = "ctRouterGroupList1";
-            this.ctRouterGroupList1.RouterGroudSelected = null;
-            this.ctRouterGroupList1.Size = new System.Drawing.Size(190, 21);
-            this.ctRouterGroupList1.TabIndex = 18;
+            this.kryptonPanel2.Size = new System.Drawing.Size(1380, 638);
+            this.kryptonPanel2.TabIndex = 2;
             // 
             // ctAccountMontier
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.kryptonSplitContainer1);
+            this.Controls.Add(this.kryptonPanel2);
             this.DoubleBuffered = true;
             this.Name = "ctAccountMontier";
             this.Size = new System.Drawing.Size(1380, 638);
-            this.kryptonSplitContainer1.Panel1.ResumeLayout(false);
-            this.kryptonSplitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonSplitContainer1)).EndInit();
-            this.kryptonSplitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).EndInit();
             this.kryptonPanel1.ResumeLayout(false);
             this.kryptonPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.accexecute)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.accountgrid)).EndInit();
-            this.kryptonSplitContainer2.Panel1.ResumeLayout(false);
-            this.kryptonSplitContainer2.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonSplitContainer2)).EndInit();
-            this.kryptonSplitContainer2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonNavigator1)).EndInit();
-            this.kryptonNavigator1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonPage1)).EndInit();
-            this.kryptonPage1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonPage2)).EndInit();
-            this.kryptonPage2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonPage3)).EndInit();
-            this.kryptonPage3.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonNavigator2)).EndInit();
-            this.kryptonNavigator2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.funpagePlaceOrder)).EndInit();
-            this.funpagePlaceOrder.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.funpageFinservice)).EndInit();
-            this.funpageFinservice.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.funpageFinanceInfo)).EndInit();
-            this.funpageFinanceInfo.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel2)).EndInit();
             this.kryptonPanel2.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -560,7 +265,6 @@
 
         #endregion
 
-        private ComponentFactory.Krypton.Toolkit.KryptonSplitContainer kryptonSplitContainer1;
         private ComponentFactory.Krypton.Toolkit.KryptonPanel kryptonPanel1;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel7;
         private ComponentFactory.Krypton.Toolkit.KryptonButton btnAddAccount;
@@ -574,27 +278,12 @@
         private ComponentFactory.Krypton.Toolkit.KryptonComboBox accexecute;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel2;
         private ComponentFactory.Krypton.Toolkit.KryptonDataGridView accountgrid;
-        private ComponentFactory.Krypton.Toolkit.KryptonSplitContainer kryptonSplitContainer2;
-        private ComponentFactory.Krypton.Navigator.KryptonNavigator kryptonNavigator1;
-        private ComponentFactory.Krypton.Navigator.KryptonPage kryptonPage1;
-        private FutSystems.GUI.ctOrderView ctOrderView1;
-        private ComponentFactory.Krypton.Navigator.KryptonPage kryptonPage2;
-        private FutSystems.GUI.Control.ctTradeView ctTradeView1;
-        private ComponentFactory.Krypton.Navigator.KryptonPage kryptonPage3;
-        private FutSystems.GUI.ctPositionView ctPositionView1;
-        private ComponentFactory.Krypton.Navigator.KryptonNavigator kryptonNavigator2;
-        private ComponentFactory.Krypton.Navigator.KryptonPage funpagePlaceOrder;
-        private ctOrderSenderM ctOrderSenderM1;
-        private FutSystems.GUI.ViewQuoteList viewQuoteList1;
-        private ComponentFactory.Krypton.Navigator.KryptonPage funpageFinservice;
-        private ctFinService ctFinService1;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel lbCurrentAccount;
-        private ComponentFactory.Krypton.Navigator.KryptonPage funpageFinanceInfo;
+
+        private FutsMoniter.Controls.Base.ctAccountType ctAccountType1;
+        private FutsMoniter.Controls.Base.ctRouterType ctRouterType1;
+        private FutsMoniter.Controls.Base.ctRouterGroupList ctRouterGroupList1;
         private ComponentFactory.Krypton.Toolkit.KryptonPanel kryptonPanel2;
-        private ctFinanceInfo ctFinanceInfo1;
-        private Base.ctAccountType ctAccountType1;
-        private Base.ctRouterType ctRouterType1;
-        private Base.ctRouterGroupList ctRouterGroupList1;
 
         //private Telerik.WinControls.UI.RadPageViewPage LottoServicePage;
 

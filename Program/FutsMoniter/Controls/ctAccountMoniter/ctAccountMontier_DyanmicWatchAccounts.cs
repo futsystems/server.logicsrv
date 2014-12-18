@@ -7,7 +7,7 @@ using TradingLib.Common;
 using System.Windows.Forms;
 using FutSystems.GUI;
 
-namespace FutsMoniter.Controls
+namespace FutsMoniter
 {
     /// <summary>
     /// 动态更新观察者列表

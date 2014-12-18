@@ -10,6 +10,12 @@ namespace TradingLib.API
     public interface ICallbackCentre
     {
         #region 帐户类事件
+
+        /// <summary>
+        /// 获得帐户选中事件
+        /// </summary>
+        event Action<IAccountLite> GotAccountSelectedEvent;
+
         /// <summary>
         /// 交易帐号
         /// </summary>

@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
+using ComponentFactory.Krypton.Toolkit;
+using ComponentFactory.Krypton.Navigator;
+using ComponentFactory.Krypton.Workspace;
+using ComponentFactory.Krypton.Docking;
 using FutSystems.GUI;
 using TradingLib.API;
 using Microsoft.Win32;
@@ -64,6 +69,45 @@ namespace FutsMoniter
 
             kryptonRibbonGroupButton_payonline.Click += new EventHandler(kryptonRibbonGroupButton_payonline_Click);
             kryptonRibbonGroupButton_ReceiveBank.Click += new EventHandler(kryptonRibbonGroupButton_ReceiveBank_Click);
+
+            //视窗管理
+            //帐户监控
+            kryptonRibbonGroupButton_accountlist.Click += new EventHandler(kryptonRibbonGroupButton_accountlist_Click);
+            kryptonRibbonGroupButton_tradinginforeal.Click += new EventHandler(kryptonRibbonGroupButton_tradinginforeal_Click);
+            kryptonRibbonGroupButton_tickorder.Click += new EventHandler(kryptonRibbonGroupButton_tickorder_Click);
+            kryptonRibbonGroupButton_SaveConfig.Click += new EventHandler(kryptonRibbonGroupButton_SaveConfig_Click);
+        }
+
+        void kryptonRibbonGroupButton_SaveConfig_Click(object sender, EventArgs e)
+        {
+            kryptonDockingManager.SaveConfigToFile("config.xml");
+        }
+
+        void kryptonRibbonGroupButton_tickorder_Click(object sender, EventArgs e)
+        {
+            KryptonPage page = NewQuote();
+            if (page != null)
+            {
+                kryptonDockingManager.AddDockspace("Control", DockingEdge.Bottom, new KryptonPage[] { page });
+            }
+        }
+
+        void kryptonRibbonGroupButton_tradinginforeal_Click(object sender, EventArgs e)
+        {
+            KryptonPage page = NewTradingInfoReal();
+            if (page != null)
+            {
+                kryptonDockingManager.AddDockspace("Control", DockingEdge.Bottom, new KryptonPage[] { page });
+            }
+        }
+
+        void kryptonRibbonGroupButton_accountlist_Click(object sender, EventArgs e)
+        {
+            KryptonPage page = NewAccMoniter();
+            if (page != null)
+            {
+                kryptonDockingManager.AddToWorkspace("Workspace", new KryptonPage[] { page });
+            }
         }
 
         void kryptonRibbonGroupButton_tickpaper_Click(object sender, EventArgs e)
@@ -223,11 +267,6 @@ namespace FutsMoniter
         #endregion
 
 
-
-
-
-
-
         #region 系统管理
 
         void kryptonRibbonGroupButton_CloseClearCentre_Click(object sender, EventArgs e)
@@ -331,16 +370,6 @@ namespace FutsMoniter
 
         }
         #endregion
-
-
-        //#region 事件处理
-        //void ctAccountMontier1_QryAccountHistEvent(IAccountLite account)
-        //{
-        //    fmHistQuery fm = new fmHistQuery();
-        //    fm.SetAccount(account.Account);
-        //    fm.Show();
-        //}
-        //#endregion
 
         #region 报表
         private void btnAgentProfit_Click(object sender, EventArgs e)

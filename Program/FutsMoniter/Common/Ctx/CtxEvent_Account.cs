@@ -14,6 +14,11 @@ namespace TradingLib.Common
     public partial class Ctx
     {
         /// <summary>
+        /// 响应帐户选择事件
+        /// </summary>
+        public event Action<IAccountLite> GotAccountSelectedEvent;
+
+        /// <summary>
         /// 交易帐号
         /// </summary>
         public event Action<IAccountLite> GotAccountEvent;
