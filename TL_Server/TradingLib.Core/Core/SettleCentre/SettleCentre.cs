@@ -115,6 +115,13 @@ namespace TradingLib.Core
             _riskcentre = rc;
         }
 
+        MsgExchServer _exchsrv = null;
+        public void BindExchSrv(MsgExchServer srv)
+        {
+            _exchsrv = srv;
+        }
+
+
         ConfigDB _cfgdb;
         int resetTime = 40101;
         bool _cleanTmp = false;

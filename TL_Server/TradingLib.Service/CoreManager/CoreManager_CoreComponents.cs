@@ -28,6 +28,7 @@ namespace TradingLib.ServiceManager
         {
             debug("1.初始化MsgExchServer");
             _messageExchagne = new MsgExchServer();
+            _settleCentre.BindExchSrv(_messageExchagne);
         }
 
 

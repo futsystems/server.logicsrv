@@ -248,11 +248,11 @@ namespace TradingLib.Common
         /// 总平仓数量
         /// </summary>
         public int ExitSize { get { return _exitsize; } set { _exitsize = value; } }
-        DateTime _exittime;
+        DateTime? _exittime;
         /// <summary>
         /// 平仓时间
         /// </summary>
-        public DateTime ExitTime { get { return _exittime; } set { _exittime = value; } }
+        public DateTime? ExitTime { get { return _exittime; } set { _exittime = value; } }
 
         decimal _exitprice;
         /// <summary>

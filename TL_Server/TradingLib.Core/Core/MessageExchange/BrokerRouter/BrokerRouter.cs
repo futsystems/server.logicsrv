@@ -88,12 +88,12 @@ namespace TradingLib.Core
         {
             _ordHelper.Clear();
             _tifengine.Clear();
-            //重启模拟交易
-            IBroker b = GetSimBroker();
-            if (b == null) return;
-            b.Stop();
-            Thread.Sleep(1000);
-            b.Start();
+            //重启模拟交易 
+            //IBroker b = GetSimBroker();
+            //if (b == null) return;
+            //b.Stop();
+            //Thread.Sleep(1000);
+            //b.Start();
 
         }
 

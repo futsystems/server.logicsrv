@@ -667,18 +667,6 @@ namespace TradingLib.Core
             //_ticktracker.Clear();
             //清除当前订阅列表 
             mb.Clear();
-
-            //在重置过程中 重启行情通道没有意义，行情如果中断，行情通道自动重启
-            /*
-            debug(PROGRAME + ":try to restart datafeed",QSEnumDebugLevel.MUST);
-            //重新启动数据连接
-            //IDataFeed d = LookupDataFeedEvent("DataFeed.CTP.CTPMD");
-            IDataFeed d = TLCtxHelper.Ctx.RouterManager.DefaultDataFeed;//LookupDataFeedEvent("DataFeed.FastTick.FastTick");
-            if (d == null) return;
-            d.Stop();
-            Thread.Sleep(500);
-            d.Start();**/
-
         }
         #endregion 
 

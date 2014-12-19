@@ -131,7 +131,7 @@ namespace TradingLib.Contrib.FinService
             }
             
             //进行直客收费记录
-            string comment = SPNAME + " 平仓时间:" + Util.ToTLDateTime(round.ExitTime).ToString();
+            string comment = SPNAME + " 平仓时间:" + round.ExitTime!=null?Util.ToTLDateTime((DateTime)round.ExitTime).ToString():"无有效时间";
             
             //计算代理收费记录
             AgentCommissionDel func = (Manager agent, Manager parent) =>

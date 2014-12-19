@@ -115,8 +115,8 @@ namespace TradingLib.Core
 
         }
 
-        [TaskAttr("重置行情与成交路由", 16, 00, 5, "重置行情与成交路由")]
-        public void Task_ResetRouter()
+        //[TaskAttr("重置行情与成交路由", 16, 00, 5, "重置行情与成交路由")]
+        public void Reset()
         {
             debug("重置行情与成交路由", QSEnumDebugLevel.INFO);
             _brokerRouter.Reset();

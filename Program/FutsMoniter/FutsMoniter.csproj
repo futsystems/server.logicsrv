@@ -44,7 +44,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>moniter0.ico</ApplicationIcon>
+    <ApplicationIcon>resources\moniter_terminal.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug-OEM|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -216,9 +216,6 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Controls\PageControl\ctAccountMoniter\ctAccountMontier_Event.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\PageControl\ctAccountMoniter\ctAccountMontier_AccountHolder.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Controls\ctPositionMertic.cs">

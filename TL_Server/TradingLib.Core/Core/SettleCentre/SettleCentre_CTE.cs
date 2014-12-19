@@ -69,7 +69,7 @@ namespace TradingLib.Core
         //}
         //#endregion
 
-
+        bool settled = false;
         #region 大结算过程
         //1.采集结算价格 保存结算持仓与日内交易记录
         /// <summary>
@@ -103,13 +103,15 @@ namespace TradingLib.Core
             
         }
 
+
         //2.执行帐户结算 生成结算记录,并更新帐户结算权益与结算时间 所有帐户结算完毕后更新系统最新结算日
         /// <summary>
         /// 定时结算交易账户任务
         /// 非交易日不用进行结算
         /// 结算时间15:50 在15:50-16:00之间开机会导致无法找到对应的交易日
+        /// 4点结算 否则在结算中心初始化交易日过程中会导致交易日判定不准确，交易日判定是以结算时间为界限，结算前是当前交易日，结算后就是下一交易日
         /// </summary>
-        [TaskAttr("清算中心执行当日结算", 15, 55, 5, "清算中心执行当日结算")]
+        [TaskAttr("清算中心执行当日结算", 16,0,0, "清算中心执行当日结算")]
         [ContribCommandAttr(QSEnumCommandSource.CLI, "settle", "settle - clean the interday tmp table after reset", "清算中心结算交易帐户")]
         public void Task_SettleAccount()
         {
@@ -121,7 +123,7 @@ namespace TradingLib.Core
             //结算后 重置结算中心 如果交易日没有发生变化，则出入金还会停留在上个结算日，而上个结算日已经结算，因此该出入金记录会被丢失 
             //出入金拒绝窗口就是结算时间段
             this.Reset();
-
+            settled = true;//当日结算过 当日结算过则需要重置交易系统
             this.IsInSettle = false;//标识系统结算完毕
         }
 
@@ -131,9 +133,11 @@ namespace TradingLib.Core
         //开盘前需要重置
         //通过参数 设定时间注入到任务系统
         [ContribCommandAttr(QSEnumCommandSource.CLI, "resetsc", "resetsc - reset settlecentre trading day", "重置结算中心")]
+        //[TaskAttr("交易系统重置", 16,55,5, "清算中心执行当日结算")]
         public void Task_ResetTradingday()
         {
-            if (IsNormal && !IsTradingday) return;
+            //debug("重置交易系统 isnaormal:"+IsNormal.ToString() +" istradingday:"+IsTradingday.ToString(),QSEnumDebugLevel.INFO);
+            if (!settled) return;//没有结算就不重置交易系统
             debug("系统重置，清算中心重置帐户，风控中心重置规则 清空日内记录表", QSEnumDebugLevel.INFO);
             TLCtxHelper.EventSystem.FireBeforeSettleResetEvent(this, new SystemEventArgs());
             
@@ -143,15 +147,15 @@ namespace TradingLib.Core
                 this.CleanTempTable();
             }
 
-            //重置结算中心 用于滚动交易日
-            this.Reset();
-
             //15:50分结算帐户完毕后 4点从数据库重新加载帐户权益数据,此时数据库加载的数据是按结算重置后加载的日期信息 即结算日向前滚动一日
             _clearcentre.Reset();
-
             //重置风控中心，清空内存缓存数据
             _riskcentre.Reset();
+            //重置消息交换中心
+            _exchsrv.Reset();
+            //重置管理交换中心
 
+            //重置任务中心
             TLCtxHelper.EventSystem.FireAfterSettleResetEvent(this, new SystemEventArgs());
             
         }
@@ -189,7 +193,11 @@ namespace TradingLib.Core
             _clearcentre.Reset();
             //重置风控中心，清空内存缓存数据
             _riskcentre.Reset();
+            //重置消息交换中心
+            _exchsrv.Reset();
+            //重置管理交换中心
 
+            //重置任务中心
             TLCtxHelper.EventSystem.FireAfterSettleResetEvent(this, new SystemEventArgs());
         }
         #endregion

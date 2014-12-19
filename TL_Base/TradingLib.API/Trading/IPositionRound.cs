@@ -64,7 +64,7 @@ namespace TradingLib.API
         /// <summary>
         /// 平仓时间
         /// </summary>
-        DateTime ExitTime { get; }
+        DateTime? ExitTime { get; }
 
         /// <summary>
         /// 平仓数量

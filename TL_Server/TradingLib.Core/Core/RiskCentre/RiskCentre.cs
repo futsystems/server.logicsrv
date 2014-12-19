@@ -395,12 +395,18 @@ namespace TradingLib.Core
         /// </summary>
         public void Reset()
         {
-            debug("重置风控中心", QSEnumDebugLevel.INFO);
+            debug("风控中心重置", QSEnumDebugLevel.INFO);
             //清空帐户的止盈止损参数设置
             _posoffsetracker.Clear();
 
             //清空帐户当日登入信息
             trackermap.Clear();
+
+            //清空强平任务队列
+            posflatlist.Clear();
+
+            //清空帐户风控检查帐户列表
+            activeaccount.Clear();
 
             Notify("风控中心重置(结算后)[" + DateTime.Now.ToShortDateString() + "]", " ");
         }

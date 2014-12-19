@@ -15,15 +15,15 @@ namespace TradingLib.Core
         /// <summary>
         /// 数据检验
         /// </summary>
-        [TaskAttr("帐户风控实时检查", 5, "帐户风控实时检查")]
+        [TaskAttr("帐户风控实时检查",1, "帐户风控实时检查")]
         public void Task_DataCheck()
         {
-            //debug("帐户风控检查", QSEnumDebugLevel.INFO);
             foreach (IAccount account in activeaccount.Values)
             {
                 this.CheckAccount(account);
             }
         }
+
         #region 风控设置与操作
         [ContribCommandAttr(QSEnumCommandSource.MessageWeb, "qryrulecfg", "qryrulecfg - 查询某个风控规则设置", "查询某个风控规则设置")]
         public string CTE_QryRuleSetting(string ruletype)
@@ -342,19 +342,8 @@ namespace TradingLib.Core
          #endregion
 
 
-
-
-
-
-
-
-
-
-
-
-
          
-         [TaskAttr("2秒检查待平持仓",1, "调度系统每1秒检查一次待平仓列表")]
+         [TaskAttr("检查强平任务队列",1, "调度系统每秒检查强平任务队列")]
          public void Task_ProcessPositionFlatSet()
          {
              this.ProcessPositionFlat();

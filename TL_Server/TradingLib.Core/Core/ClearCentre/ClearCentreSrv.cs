@@ -180,14 +180,14 @@ namespace TradingLib.Core
         {
             Status = QSEnumClearCentreStatus.CCRESET;
             
-            //清空账户交易记录
-            debug("重置交易账户", QSEnumDebugLevel.INFO);
+            //清空分帐户维护器交易记录
+            debug("清算中心重置", QSEnumDebugLevel.INFO);
             foreach (IAccount a in this.Accounts)
             {
                 acctk.ResetAccount(a);
             }
 
-            //清空总计的交易合约
+            //清空总维护器数据
             totaltk.Clear();
 
             //清空positionround tracker 数据 准备初始化数据
@@ -196,7 +196,6 @@ namespace TradingLib.Core
             //从数据中恢复数据用于得到当前最新状态包含持仓,PR,出入金等数据
             RestoreFromMysql();
 
-            Notify("清算中心重置(结算后)[" + DateTime.Now.ToShortDateString() + "]", " ");
             Status = QSEnumClearCentreStatus.CCRESETFINISH;
         }
 

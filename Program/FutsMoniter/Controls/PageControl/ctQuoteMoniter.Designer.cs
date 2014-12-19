@@ -189,8 +189,8 @@
             this.kryptonPage4.LastVisibleSet = true;
             this.kryptonPage4.MinimumSize = new System.Drawing.Size(50, 50);
             this.kryptonPage4.Name = "kryptonPage4";
-            this.kryptonPage4.Size = new System.Drawing.Size(629, 276);
-            this.kryptonPage4.Text = "上商所";
+            this.kryptonPage4.Size = new System.Drawing.Size(632, 273);
+            this.kryptonPage4.Text = "上期所";
             this.kryptonPage4.ToolTipTitle = "Page ToolTip";
             this.kryptonPage4.UniqueName = "7C9669E362BF4CD0E29A3058CF3869C0";
             // 
@@ -210,7 +210,7 @@
             this.quote_shfe.QuoteFont = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
             this.quote_shfe.QuoteViewWidth = 1030;
             this.quote_shfe.SelectedQuoteRow = -1;
-            this.quote_shfe.Size = new System.Drawing.Size(629, 276);
+            this.quote_shfe.Size = new System.Drawing.Size(632, 273);
             this.quote_shfe.SymbolFont = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
             this.quote_shfe.SymbolFontColor = System.Drawing.Color.Green;
             this.quote_shfe.TabIndex = 2;
