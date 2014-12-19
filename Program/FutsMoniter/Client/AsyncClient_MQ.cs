@@ -112,12 +112,11 @@ namespace TradingLib.Common
             try
             {
                 debug("___________________AnsyncClient Stop Thread and Socket....", QSEnumDebugLevel.INFO);
-                bool a = StopMessageReciver();
+                bool a = StopRecvThread();
                 bool b = StopTickReciver();
-                debug("___________________Stop Task Report: " + "[MessageThread Stop]:" + a.ToString() + "  [TickThread Stop]:" + b.ToString(), QSEnumDebugLevel.INFO);
+                bool c = StopSendThread();
+                debug("___________________Stop Task Report: " + "[MessageThread Stop]:" + a.ToString() + "  [TickThread Stop]:" + b.ToString()+"  [SendThread Stop]:" + b.ToString(), QSEnumDebugLevel.INFO);
 
-                msggo = false;
-                Util.WaitThreadStop(_msgthread, 10);
             }
             catch (Exception ex)
             {
@@ -154,25 +153,13 @@ namespace TradingLib.Common
             }
         }
 
-
-        #region 管理通道
-        Thread _cliThread = null;
-        NetMQSocket _client = null;
-        Poller _msgpoller = null;
-        bool _started = false;
-
         /// <summary>
         /// 启动客户端连接
         /// </summary>
         public void Start()
         {
-            if (_started)
-                return;
-            v("[AsyncClient] starting ....");
-            _cliThread = new Thread(new ThreadStart(MessageTranslate));
-            _cliThread.IsBackground = true;
-            _cliThread.Start();
-
+            //启动数据接收线程
+            StartRecvThread();
             int _wait = 0;
             while (!isConnected && (_wait++ < 5))
             {
@@ -180,22 +167,30 @@ namespace TradingLib.Common
                 Thread.Sleep(500);
                 debug(PROGRAME + "#:" + _wait.ToString() + "Starting....");
             }
-            //注意这里是通过启动线程来运行底层传输的，Start返回后 后台的传输线程并没有完全启动完毕
-            //这里我们需要有一个循环用于等待启动完毕 _started = true;放在启动函数里面
-            //bool ok = false;
 
-            if (!isConnected)
-                throw new QSAsyncClientError();
-            else
-                debug(PROGRAME + ":Started successfull");
-
-            //启动消息处理线程
-            _msgthread = new Thread(procmessageout);
-            _msgthread.IsBackground = true;
-            msggo = true;
-            _msgthread.Start();
+            //启动数据发送线程
+            StartSendThread();
         }
-        bool StopMessageReciver()
+
+
+        #region 管理通道
+        Thread _cliThread = null;
+        NetMQSocket _client = null;
+        Poller _msgpoller = null;
+        bool _started = false;
+
+        void StartRecvThread()
+        {
+            if (_started)
+                return;
+            v("[AsyncClient] starting ....");
+            _cliThread = new Thread(new ThreadStart(MessageTranslate));
+            _cliThread.IsBackground = true;
+            _cliThread.Start();
+            
+        }
+
+        bool StopRecvThread()
         {
             if (!_started)
                 return true;
@@ -206,11 +201,13 @@ namespace TradingLib.Common
                 debug("#:" + _wait.ToString() + "  AsynClient is stoping...." + "MessageThread Status:" + _cliThread.IsAlive.ToString(), QSEnumDebugLevel.INFO);
                 if (_msgpoller.IsStarted)//如果poller处于启动状态 则停止poller
                 {
-                    debug("stop msgpoller");
+                    //debug("stop msgpoller");
                     _msgpoller.Stop();
                 }
                 Thread.Sleep(1000);
             }
+
+
             if (!_cliThread.IsAlive)
             {
                 _cliThread = null;
@@ -221,7 +218,7 @@ namespace TradingLib.Common
             return false;
         }
 
-
+        TimeSpan timeout = new TimeSpan(0, 0, 2);
         //消息翻译线程,当socket有新的数据进来时候,我们将数据转换成TL交易协议的内部信息,并触发SendTLMessage事件,从而TLClient可以用于调用对应的处理逻辑对信息进行处理
         private void MessageTranslate()
         {
@@ -240,7 +237,7 @@ namespace TradingLib.Common
                     {
                         lock (_client)
                         {
-                            NetMQMessage zmsg = e.Socket.ReceiveMessage();
+                            NetMQMessage zmsg = e.Socket.ReceiveMessage(timeout);
                             Message msg = Message.gotmessage(zmsg.Last.Buffer);
                             handleMessage(msg.Type, msg.Content);
                         }
@@ -248,11 +245,12 @@ namespace TradingLib.Common
 
                     using (var poller = new Poller())
                     {
-                        poller.AddSocket(_client);
                         _msgpoller = poller;
+                        poller.AddSocket(_client);
                         //当我们运行到这里的时候才可以认为服务启动完毕
                         _started = true;
                         poller.Start();
+                        _client.Disconnect(cstr);
                         _client.Close();
                         _client = null;
                     }
@@ -309,7 +307,7 @@ namespace TradingLib.Common
                 debug("#:" + _wait.ToString() + "  AsynClient[Tick Reciver] is stoping...." + "TickThread Status:" + _tickthread.IsAlive.ToString());
                 if (_tickpoller.IsStarted)
                 {
-                    debug("tick poller stop");
+                    //debug("tick poller stop");
                     _tickpoller.Stop();
                 }
                 Thread.Sleep(1000);
@@ -322,7 +320,6 @@ namespace TradingLib.Common
             }
             debug("Some Error Happend In Stoping TickThread", QSEnumDebugLevel.ERROR);
             return false;
-
         }
 
         private void TickHandler()
@@ -364,7 +361,6 @@ namespace TradingLib.Common
                         poller.AddSocket(subscriber);
                         _tickreceiveruning = true;
                         poller.Start();
-                        debug("tick stopxxxxxxxxxxxxxxxxxxxxxxxx");
                         subscriber.Close();
                         subscriber = null;
                     }
@@ -375,37 +371,49 @@ namespace TradingLib.Common
 
         #endregion
 
+
+        #region 消息发送线程
+
         /// <summary>
-        /// 用于检查某个ip地址是否提供有效服务,没有有效服务端则引发QSNoServerException异常,如果有数据或交易服务 则服务器会返回一个Provider名称 用于标识服务器
+        /// 启动消息发送线程
         /// </summary>
-        /// <param name="ip"></param>
-        /// <param name="port"></param>
-        /// <param name="debug"></param>
-        /// <returns></returns>
-        public static string HelloServer(string ip, int port, DebugDelegate debug)
+        void StartSendThread()
         {
-            debug("[AsyncClient]Start say hello to server...");
-            using (NetMQContext context = NetMQContext.Create())
-            {
-                using (NetMQSocket requester = context.CreateRequestSocket())
-                {
-                    string cstr = "tcp://" + ip + ":" + (port + 1).ToString();
-                    requester.Connect(cstr);
-
-                    BrokerNameRequest package = new BrokerNameRequest();
-                    package.SetRequestID(10001);
-                    requester.Send(package.Data);
-
-                    NetMQMessage msg = requester.ReceiveMessage(new TimeSpan(0, 0, Const.SOCKETREPLAYTIMEOUT));
-                    TradingLib.Common.Message message = TradingLib.Common.Message.gotmessage(msg.Last.Buffer);
-                    BrokerNameResponse br = ResponseTemplate<BrokerNameResponse>.CliRecvResponse(message.Content);
-                    debug("response:" + br.ToString());
-                    return ((int)br.Provider).ToString();
-                }
-            }
+            if (msggo) return;
+            //启动消息处理线程
+            _msgthread = new Thread(procmessageout);
+            _msgthread.IsBackground = true;
+            msggo = true;
+            _msgthread.Start();
         }
 
-
+        /// <summary>
+        /// 停止消息发送线程
+        /// </summary>
+        bool StopSendThread()
+        {
+            if (!msggo) return true;
+            debug("Stop Client Send Thread....");
+            int _wait = 0;
+            while (_msgthread.IsAlive && (_wait++ < 5))
+            {
+                //等待1秒,当后台正式启动完毕后方可有进入下面的程序端运行
+                debug("#:" + _wait.ToString() + "  AsynClient[Message Sender] is stoping...." + "SenderThread Status:" + _msgthread.IsAlive.ToString());
+                if (_msgthread.IsAlive)
+                {
+                    msggo = false;
+                }
+                Thread.Sleep(1000);
+            }
+            if (!_msgthread.IsAlive)
+            {
+                _msgthread = null;
+                debug("SenderThread Stopped successfull...", QSEnumDebugLevel.INFO);
+                return true;
+            }
+            debug("Some Error Happend In Stoping SenderThread", QSEnumDebugLevel.ERROR);
+            return false;
+        }
         //发送byte信息
         public void Send(byte[] msg)
         {
@@ -436,6 +444,59 @@ namespace TradingLib.Common
                 catch (Exception ex)
                 {
                     debug("client send message out error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                }
+            }
+            //debug("SendThread stop to here");
+        }
+        #endregion
+
+
+        /// <summary>
+        /// 用于检查某个ip地址是否提供有效服务,没有有效服务端则引发QSNoServerException异常,如果有数据或交易服务 则服务器会返回一个Provider名称 用于标识服务器
+        /// </summary>
+        /// <param name="ip"></param>
+        /// <param name="port"></param>
+        /// <param name="debug"></param>
+        /// <returns></returns>
+        public static string HelloServer(string ip, int port, DebugDelegate debug)
+        {
+            debug("[AsyncClient]Start say hello to server...");
+            using (NetMQContext context = NetMQContext.Create())
+            {
+                using (NetMQSocket requester = context.CreateRequestSocket())
+                {
+                    string cstr = "tcp://" + ip + ":" + (port + 1).ToString();
+                    requester.Options.ReceiveTimeout = new TimeSpan(0,0,2);
+                    requester.Connect(cstr);
+                    BrokerNameResponse br=null;
+                    requester.ReceiveReady += (s, e) =>
+                    {
+                        NetMQMessage msg = requester.ReceiveMessage(new TimeSpan(0, 0, 2));
+
+                        TradingLib.Common.Message message = TradingLib.Common.Message.gotmessage(msg.Last.Buffer);
+                        br= ResponseTemplate<BrokerNameResponse>.CliRecvResponse(message.Content);
+                        debug("response:" + br.ToString());
+                        
+                    };
+
+                    using (var poller = new Poller())
+                    {
+                        poller.AddSocket(requester);
+                        BrokerNameRequest package = new BrokerNameRequest();
+                        package.SetRequestID(10001);
+                        requester.Send(package.Data);
+                        //debug("send to here");
+                        poller.PollOnce();
+                        //debug("polled once");
+                    }
+                    requester.Disconnect(cstr);
+                    requester.Close();
+                    //debug("socket closed....");
+                    if (br == null)
+                    {
+                        throw new QSNoServerException();
+                    }
+                    return ((int)br.Provider).ToString();
                 }
             }
         }

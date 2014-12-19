@@ -228,7 +228,7 @@ namespace TradingLib.Common
                     {
                         if (isHeartbeatOk)
                         {
-                            //debug(PROGRAME + ":heartbeat request at: " + DateTime.Now.ToString()+" _heartbeatdeadat:"+_heartbeatdeadat.ToString() + " _diff:"+diff.ToString());
+                            debug(PROGRAME + ":heartbeat request at: " + DateTime.Now.ToString()+" _heartbeatdeadat:"+_heartbeatdeadat.ToString() + " _diff:"+diff.ToString(),QSEnumDebugLevel.INFO);
                             //当得到响应请求后,_recvheartbeat = !_recvheartbeat; 因此在发送了一个hearbeatrequest后 在没有得到服务器反馈前不会再次重新发送
                             _requestheartbeat = !_recvheartbeat;
                             //发送请求心跳响应

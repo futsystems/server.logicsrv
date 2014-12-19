@@ -430,6 +430,11 @@ namespace FutSystems.GUI
         }
 
         /// <summary>
+        /// 返回所有当前加载的合约
+        /// </summary>
+        public IEnumerable<Symbol> Symbols { get { return symmap.Values; } }
+
+        /// <summary>
         /// 增加一个合约到显示列表
         /// </summary>
         /// <param name="sec"></param>

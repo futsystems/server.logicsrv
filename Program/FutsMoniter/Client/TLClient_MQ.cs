@@ -43,7 +43,7 @@ namespace TradingLib.Common
         AsyncClient _mqcli = null;//通讯client组件
         int _tickerrors = 0;//tick数据处理错误计数
         int port = Const.TLDEFAULTBASEPORT;//默认服务端口
-        int _wait = 5;//后台检测连接状态频率
+        int _wait = 1000;//后台检测连接状态频率
         public const int DEFAULTWAIT = Const.DEFAULTWAIT;//心跳检测线程检测频率
 
         int heartbeatperiod = Const.HEARTBEATPERIOD;//向服务端发送心跳信息间隔
@@ -219,6 +219,7 @@ namespace TradingLib.Common
             //int p = (int)e.Argument;
             while (_started)
             {
+
                 // 获得当前时间
                 long now = DateTime.Now.Ticks;
                 //计算上次heartbeat以来的时间间隔
@@ -244,7 +245,7 @@ namespace TradingLib.Common
                             if (_reconnectreq == false)
                             {
                                 _reconnectreq = true;//请求重新连接标识,避免重复请求连接
-                                debug(PROGRAME + ":heartbeat is dead, reconnecting at: " + DateTime.Now.ToString(),QSEnumDebugLevel.ERROR);
+                                //debug(PROGRAME + ":heartbeat is dead, reconnecting at: " + DateTime.Now.ToString());
                                 new Thread(reconnect).Start();
                             }
                         }
@@ -256,7 +257,7 @@ namespace TradingLib.Common
                     }
                 }
                 //注等待要放在最后,否则有些情况下停止了服务_started = false,但是刚才检查过了在等待，从而进入上面的检查过程，stop连接后 自动重连。
-                Thread.Sleep(_wait * 10);//每隔多少秒检查心跳时间MS
+                Thread.Sleep(_wait);//每隔多少秒检查心跳时间MS
                
             }
         }
@@ -340,7 +341,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 启动服务
         /// </summary>
-        public void Start()
+        public void Start(bool retry=false)
         {
             
             debug(PROGRAME + ":Start to connect to server....",QSEnumDebugLevel.INFO);
@@ -348,7 +349,7 @@ namespace TradingLib.Common
             bool _modesuccess = false;
             int _retry = 0;
             Stop();
-            while (_modesuccess == false && _retry < _modeRetries)
+            while (_modesuccess == false && _retry < (retry?_modeRetries:1))
             {
                 _retry++;
                 debug(PROGRAME + ":attempting connect to server... retry times:" + _retry.ToString());
@@ -358,8 +359,8 @@ namespace TradingLib.Common
             }
             if (!_modesuccess)
             {
-                debug(PROGRAME + ":网络故障,无法连接到服务器");
-                throw new QSAsyncClientError();
+                debug(PROGRAME + ":网络故障,无法连接到服务器",QSEnumDebugLevel.ERROR);
+                //throw new QSAsyncClientError();
             } 
         }
         /// <summary>
@@ -387,12 +388,13 @@ namespace TradingLib.Common
             debug(PROGRAME + ":Stop TLCLient_MQ....",QSEnumDebugLevel.INFO);
             try
             {
+                
                 StopTickWatcher();//停止tick监控
                 StopBW();//停止后台心跳监控
                 StopHeartBeat();//停止心跳发送
                 if (_mqcli!=null && _mqcli.isConnected) //如果实现已经stop了brokerfeed 会造成服务器循环相应。应该将_stated放在这里进行相应
                 {
-
+                    debug("stop go to here");
                     try
                     {
                         UnregisterClientRequest req = RequestTemplate<UnregisterClientRequest>.CliSendRequest(0);
@@ -456,20 +458,6 @@ namespace TradingLib.Common
                     markdisconnect();
                 }
                 bool acceptable = true;////false;
-                /*
-                try
-                {
-                    string r = AsyncClient.RequestAccept(avabileip[providerindex], port,"127.0.0.1" ,v);
-                    if (r.Equals("OK"))
-                        acceptable = true;
-                }
-                catch (QSNoServerException ex)
-                {
-                    debug(_skip + "Request accept error" + ex.ToString());
-                    //如果在查询服务端的时候出现错误则跳过该IP检查,并进行下一个IP的服务端检查
-                    acceptable = false;
-                }
-                **/
                 if (acceptable)
                 {
                     //实例化asyncClient并绑定对已的函数
@@ -635,6 +623,7 @@ namespace TradingLib.Common
             //3.如果连接到对应的服务器成功 启动心跳维护线程与心跳发送线程
             if (ok)
             {
+                debug("connected ok, try to start thread");
                 StartBW();
                 StartHartBeat();
             }

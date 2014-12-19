@@ -93,30 +93,29 @@
             this.kryptonRibbonGroupTriple8 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupTriple();
             this.kryptonRibbonGroupButton_QueryAgentProfit = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
             this.kryptonRibbonTab1 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonTab();
-            this.kryptonRibbonGroup13 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroup();
-            this.kryptonRibbonGroupTriple12 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupTriple();
-            this.kryptonRibbonGroupButton_accountlist = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
-            this.kryptonRibbonGroupButton_tradinginforeal = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
-            this.kryptonRibbonGroupButton_tickorder = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
-            this.kryptonRibbonGroupTriple14 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupTriple();
-            this.kryptonRibbonGroupButton_FinService = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
-            this.kryptonRibbonGroupButton_FinInfo = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
-            this.kryptonRibbonGroupButton4 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
             this.kryptonRibbonGroup11 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroup();
             this.kryptonRibbonGroupTriple15 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupTriple();
             this.kryptonRibbonGroupButton_SaveConfig = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
-            this.kryptonRibbonGroupButton6 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
-            this.kryptonRibbonGroupButton7 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
+            this.kryptonRibbonGroupTriple16 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupTriple();
+            this.kryptonRibbonGroupButton_ShowAll = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
+            this.kryptonRibbonGroupButton_HiddenAll = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
+            this.kryptonRibbonGroupButton_Reset = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.lbServerAddress = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel3 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.lbSrvVersion = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel4 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.StatusMsg = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel6 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.lbConnected = new System.Windows.Forms.ToolStripStatusLabel();
             this.kryptonRibbonGroupButton1 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
             this.popmessage = new System.Windows.Forms.ToolTip(this.components);
             this.kryptonDockableWorkspace = new ComponentFactory.Krypton.Docking.KryptonDockableWorkspace();
             this.mainpanel = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
-            this.kryptonRibbonGroupTriple16 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupTriple();
-            this.kryptonRibbonGroupButton_ShowAll = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
-            this.kryptonRibbonGroupButton_HiddenAll = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
-            this.kryptonRibbonGroupButton5 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
             ((System.ComponentModel.ISupportInitialize)(this.TabRibbon)).BeginInit();
+            this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonDockableWorkspace)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.mainpanel)).BeginInit();
             this.mainpanel.SuspendLayout();
@@ -151,8 +150,7 @@
             this.tabFinance,
             this.tabHistQuery,
             this.kryptonRibbonTab1});
-            this.TabRibbon.SelectedContext = null;
-            this.TabRibbon.SelectedTab = this.kryptonRibbonTab1;
+            this.TabRibbon.SelectedTab = this.tabSystem;
             this.TabRibbon.Size = new System.Drawing.Size(1284, 111);
             this.TabRibbon.TabIndex = 0;
             // 
@@ -500,80 +498,123 @@
             // kryptonRibbonTab1
             // 
             this.kryptonRibbonTab1.Groups.AddRange(new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroup[] {
-            this.kryptonRibbonGroup13,
             this.kryptonRibbonGroup11});
-            this.kryptonRibbonTab1.Text = "窗口";
-            // 
-            // kryptonRibbonGroup13
-            // 
-            this.kryptonRibbonGroup13.Items.AddRange(new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupContainer[] {
-            this.kryptonRibbonGroupTriple12,
-            this.kryptonRibbonGroupTriple14});
-            // 
-            // kryptonRibbonGroupTriple12
-            // 
-            this.kryptonRibbonGroupTriple12.Items.AddRange(new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupItem[] {
-            this.kryptonRibbonGroupButton_accountlist,
-            this.kryptonRibbonGroupButton_tradinginforeal,
-            this.kryptonRibbonGroupButton_tickorder});
-            // 
-            // kryptonRibbonGroupButton_accountlist
-            // 
-            this.kryptonRibbonGroupButton_accountlist.TextLine1 = "帐户监控";
-            // 
-            // kryptonRibbonGroupButton_tradinginforeal
-            // 
-            this.kryptonRibbonGroupButton_tradinginforeal.TextLine1 = "交易数据";
-            // 
-            // kryptonRibbonGroupButton_tickorder
-            // 
-            this.kryptonRibbonGroupButton_tickorder.TextLine1 = "行情与下单";
-            // 
-            // kryptonRibbonGroupTriple14
-            // 
-            this.kryptonRibbonGroupTriple14.Items.AddRange(new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupItem[] {
-            this.kryptonRibbonGroupButton_FinService,
-            this.kryptonRibbonGroupButton_FinInfo,
-            this.kryptonRibbonGroupButton4});
-            // 
-            // kryptonRibbonGroupButton_FinService
-            // 
-            this.kryptonRibbonGroupButton_FinService.TextLine1 = "配置模块";
-            // 
-            // kryptonRibbonGroupButton_FinInfo
-            // 
-            this.kryptonRibbonGroupButton_FinInfo.TextLine1 = "财务信息";
+            this.kryptonRibbonTab1.Text = "窗口与布局";
             // 
             // kryptonRibbonGroup11
             // 
             this.kryptonRibbonGroup11.Items.AddRange(new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupContainer[] {
             this.kryptonRibbonGroupTriple15,
             this.kryptonRibbonGroupTriple16});
+            this.kryptonRibbonGroup11.TextLine1 = "窗口布局";
             // 
             // kryptonRibbonGroupTriple15
             // 
             this.kryptonRibbonGroupTriple15.Items.AddRange(new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupItem[] {
-            this.kryptonRibbonGroupButton_SaveConfig,
-            this.kryptonRibbonGroupButton6,
-            this.kryptonRibbonGroupButton7});
+            this.kryptonRibbonGroupButton_SaveConfig});
             // 
             // kryptonRibbonGroupButton_SaveConfig
             // 
+            this.kryptonRibbonGroupButton_SaveConfig.ImageLarge = ((System.Drawing.Image)(resources.GetObject("kryptonRibbonGroupButton_SaveConfig.ImageLarge")));
             this.kryptonRibbonGroupButton_SaveConfig.TextLine1 = "保存";
             // 
-            // kryptonRibbonGroupButton7
+            // kryptonRibbonGroupTriple16
             // 
-            this.kryptonRibbonGroupButton7.Click += new System.EventHandler(this.kryptonRibbonGroupButton7_Click);
+            this.kryptonRibbonGroupTriple16.Items.AddRange(new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupItem[] {
+            this.kryptonRibbonGroupButton_ShowAll,
+            this.kryptonRibbonGroupButton_HiddenAll,
+            this.kryptonRibbonGroupButton_Reset});
+            // 
+            // kryptonRibbonGroupButton_ShowAll
+            // 
+            this.kryptonRibbonGroupButton_ShowAll.ImageLarge = ((System.Drawing.Image)(resources.GetObject("kryptonRibbonGroupButton_ShowAll.ImageLarge")));
+            this.kryptonRibbonGroupButton_ShowAll.TextLine1 = "显示所有";
+            // 
+            // kryptonRibbonGroupButton_HiddenAll
+            // 
+            this.kryptonRibbonGroupButton_HiddenAll.ImageLarge = ((System.Drawing.Image)(resources.GetObject("kryptonRibbonGroupButton_HiddenAll.ImageLarge")));
+            this.kryptonRibbonGroupButton_HiddenAll.TextLine1 = "隐藏所有";
+            // 
+            // kryptonRibbonGroupButton_Reset
+            // 
+            this.kryptonRibbonGroupButton_Reset.ImageLarge = ((System.Drawing.Image)(resources.GetObject("kryptonRibbonGroupButton_Reset.ImageLarge")));
+            this.kryptonRibbonGroupButton_Reset.TextLine1 = "重置布局";
             // 
             // statusStrip1
             // 
             this.statusStrip1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabel1,
+            this.lbServerAddress,
+            this.toolStripStatusLabel3,
+            this.toolStripStatusLabel2,
+            this.lbSrvVersion,
+            this.toolStripStatusLabel4,
+            this.StatusMsg,
+            this.toolStripStatusLabel6,
+            this.lbConnected});
             this.statusStrip1.Location = new System.Drawing.Point(0, 693);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.ManagerRenderMode;
             this.statusStrip1.Size = new System.Drawing.Size(1284, 22);
             this.statusStrip1.TabIndex = 1;
             this.statusStrip1.Text = "statusStrip1";
+            // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(58, 17);
+            this.toolStripStatusLabel1.Text = "柜台地址:";
+            // 
+            // lbServerAddress
+            // 
+            this.lbServerAddress.Name = "lbServerAddress";
+            this.lbServerAddress.Size = new System.Drawing.Size(15, 17);
+            this.lbServerAddress.Text = "--";
+            // 
+            // toolStripStatusLabel3
+            // 
+            this.toolStripStatusLabel3.Name = "toolStripStatusLabel3";
+            this.toolStripStatusLabel3.Size = new System.Drawing.Size(15, 17);
+            this.toolStripStatusLabel3.Text = "--";
+            this.toolStripStatusLabel3.Visible = false;
+            // 
+            // toolStripStatusLabel2
+            // 
+            this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
+            this.toolStripStatusLabel2.Size = new System.Drawing.Size(70, 17);
+            this.toolStripStatusLabel2.Text = "服务端版本:";
+            // 
+            // lbSrvVersion
+            // 
+            this.lbSrvVersion.Name = "lbSrvVersion";
+            this.lbSrvVersion.Size = new System.Drawing.Size(72, 17);
+            this.lbSrvVersion.Text = "MR0.7-RC3";
+            // 
+            // toolStripStatusLabel4
+            // 
+            this.toolStripStatusLabel4.Name = "toolStripStatusLabel4";
+            this.toolStripStatusLabel4.Size = new System.Drawing.Size(15, 17);
+            this.toolStripStatusLabel4.Text = "--";
+            this.toolStripStatusLabel4.Visible = false;
+            // 
+            // StatusMsg
+            // 
+            this.StatusMsg.Name = "StatusMsg";
+            this.StatusMsg.Size = new System.Drawing.Size(943, 17);
+            this.StatusMsg.Spring = true;
+            // 
+            // toolStripStatusLabel6
+            // 
+            this.toolStripStatusLabel6.Name = "toolStripStatusLabel6";
+            this.toolStripStatusLabel6.Size = new System.Drawing.Size(34, 17);
+            this.toolStripStatusLabel6.Text = "连接:";
+            // 
+            // lbConnected
+            // 
+            this.lbConnected.Image = global::FutsMoniter.Properties.Resources.offline;
+            this.lbConnected.Name = "lbConnected";
+            this.lbConnected.Size = new System.Drawing.Size(16, 17);
             // 
             // kryptonRibbonGroupButton1
             // 
@@ -606,21 +647,6 @@
             this.mainpanel.Size = new System.Drawing.Size(1284, 582);
             this.mainpanel.TabIndex = 4;
             // 
-            // kryptonRibbonGroupTriple16
-            // 
-            this.kryptonRibbonGroupTriple16.Items.AddRange(new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupItem[] {
-            this.kryptonRibbonGroupButton_ShowAll,
-            this.kryptonRibbonGroupButton_HiddenAll,
-            this.kryptonRibbonGroupButton5});
-            // 
-            // kryptonRibbonGroupButton_ShowAll
-            // 
-            this.kryptonRibbonGroupButton_ShowAll.TextLine1 = "显示所有";
-            // 
-            // kryptonRibbonGroupButton_HiddenAll
-            // 
-            this.kryptonRibbonGroupButton_HiddenAll.TextLine1 = "隐藏所有";
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -635,6 +661,8 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)(this.TabRibbon)).EndInit();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonDockableWorkspace)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.mainpanel)).EndInit();
             this.mainpanel.ResumeLayout(false);
@@ -715,24 +743,22 @@
         private ComponentFactory.Krypton.Docking.KryptonDockableWorkspace kryptonDockableWorkspace;
         private ComponentFactory.Krypton.Toolkit.KryptonPanel mainpanel;
         private ComponentFactory.Krypton.Ribbon.KryptonRibbonTab kryptonRibbonTab1;
-        private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroup kryptonRibbonGroup13;
-        private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupTriple kryptonRibbonGroupTriple12;
-        private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton_accountlist;
-        private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton_tradinginforeal;
-        private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton_tickorder;
-        private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupTriple kryptonRibbonGroupTriple14;
-        private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton_FinService;
-        private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton_FinInfo;
-        private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton4;
         private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroup kryptonRibbonGroup11;
         private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupTriple kryptonRibbonGroupTriple15;
         private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton_SaveConfig;
-        private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton6;
-        private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton7;
         private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupTriple kryptonRibbonGroupTriple16;
         private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton_ShowAll;
         private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton_HiddenAll;
-        private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton5;
+        private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton_Reset;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private System.Windows.Forms.ToolStripStatusLabel lbServerAddress;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
+        private System.Windows.Forms.ToolStripStatusLabel lbSrvVersion;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel3;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel4;
+        private System.Windows.Forms.ToolStripStatusLabel StatusMsg;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel6;
+        private System.Windows.Forms.ToolStripStatusLabel lbConnected;
 
     }
 }

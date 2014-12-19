@@ -37,6 +37,12 @@ namespace FutsMoniter
 
         void btnSubmit_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(name.Text) || string.IsNullOrEmpty(bankac.Text) || string.IsNullOrEmpty(branch.Text))
+            {
+                ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show("请输入有效银行帐户信息");
+                return;
+            }
+
             if (_bank == null)
             {
                 if (fmConfirm.Show("确认添加银行帐号?") == System.Windows.Forms.DialogResult.Yes)

@@ -16,19 +16,65 @@ using TradingLib.Mixins.LitJson;
 
 namespace FutsMoniter
 {
-    public partial class fmConnectorEdit : ComponentFactory.Krypton.Toolkit.KryptonForm
+    public partial class fmConnectorEdit : ComponentFactory.Krypton.Toolkit.KryptonForm, IEventBinder
     {
         public fmConnectorEdit()
         {
             InitializeComponent();
             this.Text = "添加交易通道";
+            btnSubmit.Enabled = false;
+
+            this.Load += new EventHandler(fmConnectorEdit_Load);
+            tokenvalid.Visible = false;
+        }
+        public void OnInit()
+        {
+            Globals.LogicEvent.RegisterCallback("ConnectorManager", "QryTokenValid", this.OnQryTokenValid);
+
+        }
+
+        public void OnDisposed()
+        {
+            Globals.LogicEvent.UnRegisterCallback("ConnectorManager", "QryTokenValid", this.OnQryTokenValid);
+        }
+
+        void OnQryTokenValid(string json)
+        {
+            bool valid = MoniterUtils.ParseJsonResponse<bool>(json);
+            if (valid)
+            {
+                btnSubmit.Enabled = true;
+                tokenvalid.Text = "标识可用";
+            }
+            else
+            {
+                btnSubmit.Enabled = false;
+                tokenvalid.Text = "标识不可用";
+            }
+        }
+
+        void fmConnectorEdit_Load(object sender, EventArgs e)
+        {
+            Globals.RegIEventHandler(this);
+            token.Leave += new EventHandler(token_Leave);
+        }
+
+        void token_Leave(object sender, EventArgs e)
+        {
+            if (isadd)
+            {
+                tokenvalid.Text = "查询中";
+                tokenvalid.Visible = true;
+                Globals.TLClient.ReqQryTokenValid(token.Text);
+            }
         }
 
         public void SetInterfaceCBList(ArrayList list)
         {
             Factory.IDataSourceFactory(cbinterfacelist).BindDataSource(list);
-            
+
         }
+        bool isadd = true;
         ConnectorConfig _cfg;
         public void SetConnectorConfig(ConnectorConfig cfg)
         {
@@ -51,6 +97,9 @@ namespace FutsMoniter
             token.Enabled = false;
             cbinterfacelist.Enabled = false;
 
+            isadd = false;
+            btnSubmit.Enabled = true;
+
         }
 
         private void btnSubmit_Click(object sender, EventArgs e)
@@ -66,7 +115,7 @@ namespace FutsMoniter
                 return;
             }
             System.Net.IPAddress outip;
-            if (!System.Net.IPAddress.TryParse(address.Text,out outip))
+            if (!System.Net.IPAddress.TryParse(address.Text, out outip))
             {
                 ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show("请输入有效的IP地址");
                 return;
@@ -118,7 +167,7 @@ namespace FutsMoniter
                     Globals.TLClient.ReqUpdateConnectorConfig(TradingLib.Mixins.LitJson.JsonMapper.ToJson(_cfg));
                     this.Close();
                 }
-                
+
             }
         }
     }

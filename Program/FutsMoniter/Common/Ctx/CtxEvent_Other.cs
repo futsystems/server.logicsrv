@@ -16,5 +16,10 @@ namespace TradingLib.Common
 
         public event Action<RspInfo> GotRspInfoEvent;
 
+        /// <summary>
+        /// 基础数据加载完毕
+        /// </summary>
+        public event VoidDelegate GotBasicInfoDoneEvent;
+
     }
 }

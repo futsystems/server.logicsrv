@@ -24,8 +24,13 @@ namespace TradingLib.Common
             RegisterCallback("MgrExchServer", "QryManager", OnQryManager);
         }
 
-        
 
+        public void Clear()
+        {
+            _basicinfodone = false;
+            basicinfotracker.Clear();
+            infotracker.Clear();
+        }
 
         public void PopRspInfo(RspInfo info)
         {

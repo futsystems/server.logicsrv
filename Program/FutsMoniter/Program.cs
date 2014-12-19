@@ -39,8 +39,6 @@ namespace FutsMoniter
         {
             Exception ex = (Exception)e.ExceptionObject;
             MessageBox.Show(ex.ToString());
-
-
         }
 
         static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)

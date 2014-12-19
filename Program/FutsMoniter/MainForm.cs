@@ -20,10 +20,12 @@ namespace FutsMoniter
     {
 
         Log logfile = null;
+        LogServer logsrv = null;
 
         TLClientNet tlclient;
         bool _connected = false;
         bool _logined = false;
+        string _loginfailreason = string.Empty;
         bool _gotloginrep = false;
 
         event DebugDelegate ShowInfoHandler;
@@ -37,14 +39,15 @@ namespace FutsMoniter
             if (ShowInfoHandler != null)
                 ShowInfoHandler(msg);
             logfile.GotDebug(msg);
+            logsrv.NeLog(msg);
         }
 
 
         void debug(string msg)
         {
-
             debugform.GotDebug(msg);
             logfile.GotDebug(msg);
+            logsrv.NeLog(msg);
         }
 
         Ctx _ctx;
@@ -65,9 +68,11 @@ namespace FutsMoniter
 
             _ctx = new Ctx();
             _ctx.InitStatusEvent += new Action<string>(ShowInfo);
+            _ctx.GotBasicInfoDoneEvent += new VoidDelegate(_ctx_GotBasicInfoDoneEvent);
 
             logfile = new Log(Globals.Config["LogFileName"].AsString(), true, true, "log", true);//日志组件
-
+            logsrv = new LogServer();
+            logsrv.Start();
             //设定对外消息显示输出
             ShowInfoHandler = showinfo;
 
@@ -80,37 +85,11 @@ namespace FutsMoniter
             this.FormClosing += new FormClosingEventHandler(MainForm_FormClosing);
         }
 
+
+
         #region page
 
-        private int _count = 1;
-        private KryptonPage NewPage(string name,string title ,int image, Control content)
-        {
-            if (existpage(name))
-            {
-                return null;
-            }
-            // Create new page with title and image
-            KryptonPage p = new KryptonPage();
-            p.Text = title;
-            p.TextTitle = title;
-            p.TextDescription = title;
-            p.UniqueName = name;
-            //p.ImageSmall = imageListSmall.Images[image];
-            //ContentFlags contentFlags = new ContentFlags(p)
-            // Add the control for display inside the page
-            content.Dock = DockStyle.Fill;
-            p.Controls.Add(content);
-            
-            //content.Disposed += new EventHandler(content_Disposed);
-            pagemap.Add(name, p);
-            
-            //销毁一个页面
-            //kryptonDockingManager.RemovePage(p.UniqueName, true);
-            
-            //p.Disposed += new EventHandler(p_Disposed);
-            _count++;
-            return p;
-        }
+        
 
         void p_Disposed(object sender, EventArgs e)
         {
@@ -122,8 +101,7 @@ namespace FutsMoniter
             Globals.Debug("Content control disposed....");
         }
 
-        Dictionary<string, KryptonPage> pagemap = new Dictionary<string, KryptonPage>();
-
+        
         void WireEvent()
         {
             kryptonDockingManager.DockableWorkspaceCellAdding += new EventHandler<DockableWorkspaceCellEventArgs>(kryptonDockingManager_DockableWorkspaceCellAdding);
@@ -251,67 +229,7 @@ namespace FutsMoniter
         }
 
 
-        /// <summary>
-        /// 
-        /// </summary>
-        void InitPage()
-        {
-            kryptonDockingManager.AddToWorkspace("Workspace", new KryptonPage[] { NewAccMoniter() });
-            kryptonDockingManager.AddDockspace("Control", DockingEdge.Bottom, new KryptonPage[] { NewTradingInfoReal() });
-            //kryptonDockingManager.AddDockspace("Control")
-            kryptonDockingManager.AddDockspace("Control", DockingEdge.Right, new KryptonPage[] { NewQuote(), NewAccFinInfo(), NewFinService() });
-
-
-            if (System.IO.File.Exists("config.xml"))
-            {
-                kryptonDockingManager.LoadConfigFromFile("config.xml");
-            }
-        }
-
-
-
-
-
-        private void UpdateCell(KryptonWorkspaceCell cell)
-        {
-            cell.NavigatorMode = NavigatorMode.BarTabGroup;
-        }
-
-        const string PAGE_FINSERVICE = "FINSERVICE";
-        const string PAGE_QUOTE = "QUOTE";
-        const string PAGE_TRADINGINFO = "TRADINGINFO";
-        const string PAGE_ACCINFO = "ACCINFO";
-        const string PAGE_ACCMONITER = "ACCMONITER";
-            
-        bool existpage(string name)
-        {
-            return pagemap.Keys.Contains(name);
-        }
-        private KryptonPage NewQuote()
-        {
-
-            return NewPage(PAGE_QUOTE, "报价与下单", 2, new ctQuoteMoniter());
-        }
-
-        private KryptonPage NewTradingInfoReal()
-        {
-            return NewPage(PAGE_TRADINGINFO, "交易记录", 2, new ctTradingInfoReal());
-        }
-
-        private KryptonPage NewFinService()
-        {
-            return NewPage(PAGE_FINSERVICE, "配资服务", 2, new ctFinService());
-        }
-
-        private KryptonPage NewAccFinInfo()
-        {
-            return NewPage(PAGE_ACCINFO, "财务信息", 2, new ctFinanceInfo());
-        }
-
-        private KryptonPage NewAccMoniter()
-        {
-            return NewPage(PAGE_ACCMONITER, "帐户监控", 2, new ctAccountMontier());
-        }
+        
         #endregion
         
 
@@ -340,6 +258,7 @@ namespace FutsMoniter
         public void Reset()
         {
             //停止tlclient
+            debug("MainForm Reset");
             tlclient.Stop();
             //清空基础数据
             //basicinfotracker.Clear();

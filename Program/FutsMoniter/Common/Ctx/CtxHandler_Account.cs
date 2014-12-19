@@ -45,6 +45,8 @@ namespace TradingLib.Common
             if (islast)
             {
                 _basicinfodone = true;
+                if (GotBasicInfoDoneEvent != null)
+                    GotBasicInfoDoneEvent();
             }
         }
 

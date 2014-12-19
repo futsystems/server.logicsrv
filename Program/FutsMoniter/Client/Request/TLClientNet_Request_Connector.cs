@@ -30,6 +30,15 @@ namespace TradingLib.Common
         }
 
         /// <summary>
+        /// 查询通道是否可用
+        /// </summary>
+        /// <param name="token"></param>
+        public void ReqQryTokenValid(string token)
+        {
+            this.ReqContribRequest("ConnectorManager", "QryTokenValid",token);
+        }
+
+        /// <summary>
         /// 查询默认通道
         /// </summary>
         public void ReqQryDefaultConnectorConfig()

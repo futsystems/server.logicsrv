@@ -13,13 +13,22 @@ namespace FutsMoniter
     /// </summary>
     public partial class Globals
     {
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static void Reset()
+        {
+
+            EnvReady = false;    
+        }
+
         /// <summary>
         /// 当前状态是否就绪
         /// 用于初始化过程中过滤界面的相关操作
         /// 比如在tlclient未初始化时候进行请求操作等
         /// </summary>
         public static bool EnvReady = false;
-
 
         static event VoidDelegate InitFinishedEvent;
 

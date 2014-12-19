@@ -43,7 +43,11 @@ namespace TradingLib.API
         /// 恢复日内交易数据事件
         /// </summary>
         event Action<RspMGRResumeAccountResponse> GotResumeResponseEvent;
-        
+
+        /// <summary>
+        /// 基础数据加载完毕
+        /// </summary>
+        event VoidDelegate GotBasicInfoDoneEvent;
         #endregion
 
 

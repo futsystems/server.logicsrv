@@ -27,6 +27,17 @@ namespace TradingLib.ServiceManager
             }
         }
 
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryTokenValid", "QryTokenValid - query token valid", "检查通道是否可用")]
+        public void CTE_QueryConnectorConfig(ISession session,string token)
+        {
+            Manager manger = session.GetManager();
+            if (manger.RightRootDomain())
+            {
+                bool valid = !BasicTracker.ConnectorConfigTracker.ConnecotrConfigs.Any(c => c.Token.Equals(token));
+                session.ReplyMgr(valid);
+            }
+        }
+
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryDefaultConnectorConfig", "QryDefaultConnectorConfig - query broker config", "查询默认通道设置 行情通道与模拟成交")]
         public void CTE_QueryDefaultConnectorConfig(ISession session)
         {

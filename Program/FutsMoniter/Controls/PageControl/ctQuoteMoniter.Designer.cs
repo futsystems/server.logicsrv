@@ -65,8 +65,8 @@
             this.page2,
             this.page3,
             this.kryptonPage4});
-            this.kryptonNavigator1.SelectedIndex = 3;
-            this.kryptonNavigator1.Size = new System.Drawing.Size(631, 301);
+            this.kryptonNavigator1.SelectedIndex = 0;
+            this.kryptonNavigator1.Size = new System.Drawing.Size(634, 298);
             this.kryptonNavigator1.TabIndex = 0;
             this.kryptonNavigator1.Text = "kryptonNavigator1";
             // 
@@ -78,7 +78,7 @@
             this.kryptonPage1.LastVisibleSet = true;
             this.kryptonPage1.MinimumSize = new System.Drawing.Size(50, 50);
             this.kryptonPage1.Name = "kryptonPage1";
-            this.kryptonPage1.Size = new System.Drawing.Size(632, 330);
+            this.kryptonPage1.Size = new System.Drawing.Size(632, 273);
             this.kryptonPage1.Text = "中金所";
             this.kryptonPage1.ToolTipTitle = "Page ToolTip";
             this.kryptonPage1.UniqueName = "753A6023F7944749C39663B5E9CBB80C";
@@ -99,7 +99,7 @@
             this.quote_cffex.QuoteFont = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
             this.quote_cffex.QuoteViewWidth = 1030;
             this.quote_cffex.SelectedQuoteRow = -1;
-            this.quote_cffex.Size = new System.Drawing.Size(632, 330);
+            this.quote_cffex.Size = new System.Drawing.Size(632, 273);
             this.quote_cffex.SymbolFont = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
             this.quote_cffex.SymbolFontColor = System.Drawing.Color.Green;
             this.quote_cffex.TabIndex = 2;

@@ -12,9 +12,16 @@ namespace FutsMoniter
     partial class MainForm
     {
 
+        bool everlogined = false;
+        string _username = string.Empty;
+        string _password = string.Empty;
         public void Login(string server, string username, string pass)
         {
             _servers = server;
+            _username = username;
+            _password = pass;
+
+            lbServerAddress.Text = server;
             //在后台线程执行客户端tlclient初始化
             new Thread(InitClient).Start();
 
@@ -55,6 +62,8 @@ namespace FutsMoniter
             {
                 if (_logined)
                 {
+                    everlogined = true;//曾经登入成功
+
                     ShowInfo("登入成功,请求下载帐户列表");
 
                     //查询基础数据
@@ -82,7 +91,7 @@ namespace FutsMoniter
                             this.Text = string.Format("柜台系统-{0}    登入名:{1}    姓名:{2}    柜员类别:{3}", Globals.LoginResponse.Domain.Name, Globals.LoginResponse.LoginID, Globals.LoginResponse.Name, Util.GetEnumDescription(Globals.LoginResponse.ManagerType));// Globals.Config["CopName"].AsString() + " " + Globals.Config["Version"].AsString() + "           柜员用户名:" + Globals.Manager.Login + " 名称:" + Globals.Manager.Name + " 类型:" + Util.GetEnumDescription(Globals.Manager.Type);
 
                             //如果不是总平台柜员 隐藏
-                            ShowInfo("初始化行情报表");
+                            //ShowInfo("初始化行情报表");
                             //InitSymbol2View();
 
                             //触发初始化完成事件
@@ -104,7 +113,7 @@ namespace FutsMoniter
                 else
                 {
                     ShowInfo("登入失败!");
-                    Globals.LoginStatus.SetInitMessage("登入失败");
+                    Globals.LoginStatus.SetInitMessage("登入失败:"+_loginfailreason);
                     return;
                 }
             }
@@ -147,18 +156,57 @@ namespace FutsMoniter
             else
             {
                 _logined = false;
+                _loginfailreason = response.RspInfo.ErrorMessage;
+            }
+
+            if (everlogined)
+            {
+                //查询基础数据
+                Globals.TLClient.ReqQryMarketTime();
             }
         }
 
         void tlclient_OnDisconnectEvent()
         {
             _connected = false;
+            _logined = false;
+
+            //显示通道断开
+            lbConnected.Image = Properties.Resources.offline;
+
+            //销毁所有Page
+            DestoryPage();
+
+            StatusMsg.Text = "网络中断,请退出软件后重新登入!";
+
+            //////清空数据
+            //_ctx.Clear();
+
+            //////重置全局数据
+            //Globals.Reset();
         }
 
+        void _ctx_GotBasicInfoDoneEvent()
+        {
+        //    if (relogin)
+        //    {
+        //        InitPage();
 
+        //        ShowAllPage();
+        //    }
+        }
+
+        bool relogin = false;
         void tlclient_OnConnectEvent()
         {
             _connected = true;
+            lbConnected.Image = Properties.Resources.online;
+            //if (everlogined)
+            //{
+            //    debug("短线后重新登入");
+            //    relogin = true;
+            //    tlclient.ReqLogin(_username, _password);
+            //}
         }
 
 

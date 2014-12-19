@@ -232,12 +232,14 @@ namespace TradingLib.Core
                 newOrderActionRequest(request.OrderAction);
         }
 
+
         void SrvOnMGRLoginRequest(MGRLoginRequest request)
         {
             debug("got login request:" + request.ToString(), QSEnumDebugLevel.INFO);
 
             MgrClientInfo clientinfo = _clients[request.ClientID];
             
+            //数据库密码验证
             bool re = ORM.MManager.ValidManager(request.LoginID, request.Passwd);
 
             RspMGRLoginResponse response = ResponseTemplate<RspMGRLoginResponse>.SrvSendRspResponse(request);
@@ -251,10 +253,19 @@ namespace TradingLib.Core
                 Manager m = BasicTracker.ManagerTracker[request.LoginID];
                 if (m != null)
                 {
-                    if (m.Domain.IsExpired() || (!m.Active))//域过期
+                    if (!m.Active)
                     {
                         clientinfo.AuthorizedFail();
                         response.LoginResponse.Authorized = false;
+                        response.RspInfo.ErrorID = 1;
+                        response.RspInfo.ErrorMessage = "管理员未激活";
+                    }
+                    if (m.Domain.IsExpired())//域过期
+                    {
+                        clientinfo.AuthorizedFail();
+                        response.LoginResponse.Authorized = false;
+                        response.RspInfo.ErrorID = 1;
+                        response.RspInfo.ErrorMessage = "柜台授权过期";
                     }
                     else
                     {
@@ -281,10 +292,14 @@ namespace TradingLib.Core
                 {
                     response.LoginResponse.Authorized = false;
                     clientinfo.AuthorizedFail();
+                    response.RspInfo.ErrorID = 1;
+                    response.RspInfo.ErrorMessage = "管理员不存在";
                 }
             }
             else
             {
+                response.RspInfo.ErrorID = 1;
+                response.RspInfo.ErrorMessage = "用户名或密码错误";
                 clientinfo.AuthorizedFail();
             }
 

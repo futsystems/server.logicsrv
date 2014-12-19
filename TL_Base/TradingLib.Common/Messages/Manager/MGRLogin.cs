@@ -58,6 +58,7 @@ namespace TradingLib.Common
         /// 登入ID
         /// </summary>
         public string LoginID { get; set; }
+
         /// <summary>
         /// 姓名
         /// </summary>

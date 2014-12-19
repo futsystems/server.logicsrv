@@ -68,23 +68,23 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static IEnumerable<TradingLib.Mixins.JsonObject.JsonWrapperCashOperation> GetAgentCashOperation(this Domain domain)
         {
-            return ORM.MAgentFinance.GetAgentLatestCashOperationTotal().Where(op => domain.IsManagerInDomain(op.mgr_fk));
+            return ORM.MAgentFinance.GetAgentLatestCashOperationTotal().Where(op => domain.IsInDomain(op.mgr_fk));
         }
 
 
 
 
 
-        public static bool IsManagerInDomain(this Domain doman, string manger)
+        public static bool IsInDomain(this Domain doman, string manger)
         {
             Manager mgr = BasicTracker.ManagerTracker[manger];
-            return doman.IsManagerInDomain(mgr);
+            return doman.IsInDomain(mgr);
         }
 
-        public static bool IsManagerInDomain(this Domain domain, int mgr_fk)
+        public static bool IsInDomain(this Domain domain, int mgr_fk)
         {
             Manager mgr = BasicTracker.ManagerTracker[mgr_fk];
-            return domain.IsManagerInDomain(mgr);
+            return domain.IsInDomain(mgr);
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace TradingLib.Common
         /// <param name="domain"></param>
         /// <param name="mgr"></param>
         /// <returns></returns>
-        public static bool IsManagerInDomain(this Domain domain, Manager mgr)
+        public static bool IsInDomain(this Domain domain, Manager mgr)
         {
             if (mgr == null) return false;
             return mgr.domain_id.Equals(domain.ID);

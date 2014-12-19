@@ -108,17 +108,18 @@ namespace TradingLib.ORM
                 if (manger.Type == QSEnumManagerType.AGENT || manger.Type == QSEnumManagerType.ROOT)
                 {
                     manger.mgr_fk = manger.ID;
-                    query = String.Format("UPDATE manager SET mgr_fk='{0}' WHERE id='{1}'", manger.mgr_fk, manger.ID);
-                    db.Connection.Execute(query);
                 }
+                query = String.Format("UPDATE manager SET mgr_fk='{0}' WHERE id='{1}'", manger.mgr_fk, manger.ID);
+                db.Connection.Execute(query);
 
                 //Root没有父域,父域ID与自身域ID一致
                 if (manger.Type == QSEnumManagerType.ROOT)
                 {
                     manger.parent_fk = manger.ID;
-                    query = String.Format("UPDATE manager SET parent_fk='{0}' WHERE id='{1}'", manger.parent_fk, manger.ID);
-                    db.Connection.Execute(query);
                 }
+                //更新Parent_fk 注插入时没有写入Parent_fk,因此这个语句不能放在上面的条件内
+                query = String.Format("UPDATE manager SET parent_fk='{0}' WHERE id='{1}'", manger.parent_fk, manger.ID);
+                db.Connection.Execute(query);
                 
 
                 return true;

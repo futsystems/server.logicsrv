@@ -50,6 +50,7 @@
             this.kryptonLabel4 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel5 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonGroupBox1 = new ComponentFactory.Krypton.Toolkit.KryptonGroupBox();
+            this.pass = new ComponentFactory.Krypton.Toolkit.KryptonMaskedTextBox();
             this.uf2 = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
             this.uf1 = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
             this.username = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
@@ -57,7 +58,7 @@
             this.kryptonLabel10 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel9 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel8 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.pass = new ComponentFactory.Krypton.Toolkit.KryptonMaskedTextBox();
+            this.tokenvalid = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonGroupBox2)).BeginInit();
@@ -77,12 +78,12 @@
             this.kryptonPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.kryptonPanel1.Location = new System.Drawing.Point(0, 0);
             this.kryptonPanel1.Name = "kryptonPanel1";
-            this.kryptonPanel1.Size = new System.Drawing.Size(329, 494);
+            this.kryptonPanel1.Size = new System.Drawing.Size(384, 494);
             this.kryptonPanel1.TabIndex = 0;
             // 
             // btnSubmit
             // 
-            this.btnSubmit.Location = new System.Drawing.Point(227, 457);
+            this.btnSubmit.Location = new System.Drawing.Point(282, 457);
             this.btnSubmit.Name = "btnSubmit";
             this.btnSubmit.Size = new System.Drawing.Size(90, 25);
             this.btnSubmit.TabIndex = 9;
@@ -99,6 +100,7 @@
             // 
             // kryptonGroupBox2.Panel
             // 
+            this.kryptonGroupBox2.Panel.Controls.Add(this.tokenvalid);
             this.kryptonGroupBox2.Panel.Controls.Add(this.kryptonLabel13);
             this.kryptonGroupBox2.Panel.Controls.Add(this.name);
             this.kryptonGroupBox2.Panel.Controls.Add(this.id);
@@ -117,7 +119,7 @@
             this.kryptonGroupBox2.Panel.Controls.Add(this.kryptonLabel6);
             this.kryptonGroupBox2.Panel.Controls.Add(this.kryptonLabel4);
             this.kryptonGroupBox2.Panel.Controls.Add(this.kryptonLabel5);
-            this.kryptonGroupBox2.Size = new System.Drawing.Size(329, 292);
+            this.kryptonGroupBox2.Size = new System.Drawing.Size(384, 292);
             this.kryptonGroupBox2.TabIndex = 8;
             this.kryptonGroupBox2.Text = "服务信息";
             this.kryptonGroupBox2.Values.Heading = "服务信息";
@@ -276,10 +278,18 @@
             this.kryptonGroupBox1.Panel.Controls.Add(this.kryptonLabel10);
             this.kryptonGroupBox1.Panel.Controls.Add(this.kryptonLabel9);
             this.kryptonGroupBox1.Panel.Controls.Add(this.kryptonLabel8);
-            this.kryptonGroupBox1.Size = new System.Drawing.Size(329, 149);
+            this.kryptonGroupBox1.Size = new System.Drawing.Size(384, 149);
             this.kryptonGroupBox1.TabIndex = 7;
             this.kryptonGroupBox1.Text = "登入信息";
             this.kryptonGroupBox1.Values.Heading = "登入信息";
+            // 
+            // pass
+            // 
+            this.pass.Location = new System.Drawing.Point(129, 40);
+            this.pass.Name = "pass";
+            this.pass.PasswordChar = '*';
+            this.pass.Size = new System.Drawing.Size(150, 21);
+            this.pass.TabIndex = 15;
             // 
             // uf2
             // 
@@ -334,19 +344,19 @@
             this.kryptonLabel8.TabIndex = 7;
             this.kryptonLabel8.Values.Text = "登入名:";
             // 
-            // pass
+            // tokenvalid
             // 
-            this.pass.Location = new System.Drawing.Point(129, 40);
-            this.pass.Name = "pass";
-            this.pass.PasswordChar = '*';
-            this.pass.Size = new System.Drawing.Size(150, 22);
-            this.pass.TabIndex = 15;
+            this.tokenvalid.Location = new System.Drawing.Point(286, 64);
+            this.tokenvalid.Name = "tokenvalid";
+            this.tokenvalid.Size = new System.Drawing.Size(19, 18);
+            this.tokenvalid.TabIndex = 22;
+            this.tokenvalid.Values.Text = "--";
             // 
             // fmConnectorEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(329, 494);
+            this.ClientSize = new System.Drawing.Size(384, 494);
             this.Controls.Add(this.kryptonPanel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
@@ -401,5 +411,6 @@
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel13;
         private ComponentFactory.Krypton.Toolkit.KryptonTextBox name;
         private ComponentFactory.Krypton.Toolkit.KryptonMaskedTextBox pass;
+        private ComponentFactory.Krypton.Toolkit.KryptonLabel tokenvalid;
     }
 }

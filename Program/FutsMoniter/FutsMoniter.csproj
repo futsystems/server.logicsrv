@@ -191,7 +191,7 @@
     <Compile Include="Controls\Base\ctReceivableBankList.Designer.cs">
       <DependentUpon>ctReceivableBankList.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ctAccountMoniter\ctAccountMontier_EventBinder.cs">
+    <Compile Include="Controls\PageControl\ctAccountMoniter\ctAccountMontier_EventBinder.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Controls\ctCashOperation.cs">
@@ -200,25 +200,25 @@
     <Compile Include="Controls\ctCashOperation.Designer.cs">
       <DependentUpon>ctCashOperation.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ctAccountMoniter\ctAccountMontier_QueryAccountList.cs">
+    <Compile Include="Controls\PageControl\ctAccountMoniter\ctAccountMontier_QueryAccountList.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ctAccountMoniter\ctAccountMontier_.cs">
+    <Compile Include="Controls\PageControl\ctAccountMoniter\ctAccountMontier_.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ctAccountMoniter\ctAccountMontier_UpdateAccountInfo.cs">
+    <Compile Include="Controls\PageControl\ctAccountMoniter\ctAccountMontier_UpdateAccountInfo.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ctAccountMoniter\ctAccountMontier_OnXXXXX.cs">
+    <Compile Include="Controls\PageControl\ctAccountMoniter\ctAccountMontier_OnXXXXX.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ctAccountMoniter\ctAccountMontier_DyanmicWatchAccounts.cs">
+    <Compile Include="Controls\PageControl\ctAccountMoniter\ctAccountMontier_DyanmicWatchAccounts.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ctAccountMoniter\ctAccountMontier_Event.cs">
+    <Compile Include="Controls\PageControl\ctAccountMoniter\ctAccountMontier_Event.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ctAccountMoniter\ctAccountMontier_AccountHolder.cs">
+    <Compile Include="Controls\PageControl\ctAccountMoniter\ctAccountMontier_AccountHolder.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Controls\ctPositionMertic.cs">
@@ -227,16 +227,16 @@
     <Compile Include="Controls\ctPositionMertic.Designer.cs">
       <DependentUpon>ctPositionMertic.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ctQuoteMoniter.cs">
+    <Compile Include="Controls\PageControl\ctQuoteMoniter.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ctQuoteMoniter.Designer.cs">
+    <Compile Include="Controls\PageControl\ctQuoteMoniter.Designer.cs">
       <DependentUpon>ctQuoteMoniter.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ctTradingInfoReal.cs">
+    <Compile Include="Controls\PageControl\ctTradingInfoReal.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ctTradingInfoReal.Designer.cs">
+    <Compile Include="Controls\PageControl\ctTradingInfoReal.Designer.cs">
       <DependentUpon>ctTradingInfoReal.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\HistQuery\ctHistOrder.cs">
@@ -287,16 +287,16 @@
     <Compile Include="Controls\ctCashTrans.Designer.cs">
       <DependentUpon>ctCashTrans.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ctFinanceInfo.cs">
+    <Compile Include="Controls\PageControl\ctFinanceInfo.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ctFinanceInfo.Designer.cs">
+    <Compile Include="Controls\PageControl\ctFinanceInfo.Designer.cs">
       <DependentUpon>ctFinanceInfo.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ctFinService.cs">
+    <Compile Include="Controls\PageControl\ctFinService.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ctFinService.Designer.cs">
+    <Compile Include="Controls\PageControl\ctFinService.Designer.cs">
       <DependentUpon>ctFinService.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Account\fmChangeRouter.cs">
@@ -352,7 +352,6 @@
     </Compile>
     <Compile Include="Common\BasicInfoTracker\BasicInfoTracker.cs" />
     <Compile Include="API\ILogicHandler\ILogicHandler.cs" />
-    <Compile Include="Client\AsyncClient.cs" />
     <Compile Include="Client\TLClientNet.cs" />
     <Compile Include="Client\TLClientNet_PacketHandler.cs" />
     <Compile Include="Client\TLClient_MQ.cs" />
@@ -362,10 +361,10 @@
     <Compile Include="Common\Delegate.cs" />
     <Compile Include="Common\Starter.cs" />
     <Compile Include="Common\TradingInfoTracker.cs" />
-    <Compile Include="Controls\ctAccountMoniter\ctAccountMontier.cs">
+    <Compile Include="Controls\PageControl\ctAccountMoniter\ctAccountMontier.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\ctAccountMoniter\ctAccountMontier.Designer.cs">
+    <Compile Include="Controls\PageControl\ctAccountMoniter\ctAccountMontier.Designer.cs">
       <DependentUpon>ctAccountMontier.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Domain\fmDomainInfo.cs">
@@ -699,6 +698,7 @@
     <Compile Include="LoginForm.Designer.cs">
       <DependentUpon>LoginForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="LogServer.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -725,6 +725,9 @@
     <Compile Include="Common\SplashScreenApplication.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="Globals_RegEvent.cs" />
+    <Compile Include="MainForm_Page.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <EmbeddedResource Include="Controls\Base\ctAccountType.resx">
       <DependentUpon>ctAccountType.cs</DependentUpon>
     </EmbeddedResource>
@@ -746,10 +749,10 @@
     <EmbeddedResource Include="Controls\ctPositionMertic.resx">
       <DependentUpon>ctPositionMertic.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ctQuoteMoniter.resx">
+    <EmbeddedResource Include="Controls\PageControl\ctQuoteMoniter.resx">
       <DependentUpon>ctQuoteMoniter.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ctTradingInfoReal.resx">
+    <EmbeddedResource Include="Controls\PageControl\ctTradingInfoReal.resx">
       <DependentUpon>ctTradingInfoReal.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\HistQuery\ctHistOrder.resx">
@@ -776,10 +779,10 @@
     <EmbeddedResource Include="Controls\ctCashTrans.resx">
       <DependentUpon>ctCashTrans.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ctFinanceInfo.resx">
+    <EmbeddedResource Include="Controls\PageControl\ctFinanceInfo.resx">
       <DependentUpon>ctFinanceInfo.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ctFinService.resx">
+    <EmbeddedResource Include="Controls\PageControl\ctFinService.resx">
       <DependentUpon>ctFinService.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Account\fmChangeRouter.resx">
@@ -806,7 +809,7 @@
     <EmbeddedResource Include="Controls\Base\ctTLEdit.resx">
       <DependentUpon>ctTLEdit.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ctAccountMoniter\ctAccountMontier.resx">
+    <EmbeddedResource Include="Controls\PageControl\ctAccountMoniter\ctAccountMontier.resx">
       <DependentUpon>ctAccountMontier.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Domain\fmDomainInfo.resx">
