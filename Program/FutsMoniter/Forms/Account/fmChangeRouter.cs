@@ -18,16 +18,16 @@ namespace FutsMoniter
         {
             InitializeComponent();
             this.Load += new EventHandler(fmChangeRouter_Load);
-            this.ctRouterGroupList1.RouterGroupInitEvent += new VoidDelegate(ctRouterGroupList1_RouterGroupInitEvent);
+            //this.ctRouterGroupList1.RouterGroupInitEvent += new VoidDelegate(ctRouterGroupList1_RouterGroupInitEvent);
         }
 
-        void ctRouterGroupList1_RouterGroupInitEvent()
-        {
-            if (_account != null)
-            {
-                cutrgname.Text = ctRouterGroupList1.GetRrouterGroupName(_account.RG_ID);
-            }
-        }
+        //void ctRouterGroupList1_RouterGroupInitEvent()
+        //{
+        //    if (_account != null)
+        //    {
+        //        cutrgname.Text = ctRouterGroupList1.GetRrouterGroupName(_account.RG_ID);
+        //    }
+        //}
 
         void fmChangeRouter_Load(object sender, EventArgs e)
         {
@@ -49,7 +49,8 @@ namespace FutsMoniter
         {
             _account = account;
             this.Text = string.Format("修改帐户[{0}]路由组设置", _account.Account);
-            
+            RouterGroupSetting rg = Globals.BasicInfoTracker.GetRouterGroup(_account.RG_ID);
+            cutrgname.Text = (rg != null ? rg.Name : "未设置");
         }
 
 

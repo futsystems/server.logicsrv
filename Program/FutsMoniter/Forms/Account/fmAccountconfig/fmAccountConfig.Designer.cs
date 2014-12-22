@@ -190,6 +190,7 @@
             this.ctRouterType1.EnableAny = false;
             this.ctRouterType1.Location = new System.Drawing.Point(10, 63);
             this.ctRouterType1.Name = "ctRouterType1";
+            this.ctRouterType1.RouterType = TradingLib.API.QSEnumOrderTransferType.LIVE;
             this.ctRouterType1.Size = new System.Drawing.Size(156, 27);
             this.ctRouterType1.TabIndex = 9;
             // 

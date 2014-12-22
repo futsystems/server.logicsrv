@@ -51,8 +51,12 @@ namespace FutsMoniter
 
             Globals.LogicEvent.GotResumeResponseEvent += new Action<RspMGRResumeAccountResponse>(OnResume);
 
-            ctOrderView1.EnableOperation = Globals.UIAccess.fun_info_operation;
-            ctPositionView1.EnableOperation = Globals.UIAccess.fun_info_operation;
+            if (!Globals.Domain.Super)
+            {
+                //管理员可以执行平仓操作
+                ctOrderView1.EnableOperation = Globals.Manager.IsRoot() || Globals.UIAccess.r_execution;
+                ctPositionView1.EnableOperation = Globals.Manager.IsRoot() || Globals.UIAccess.r_execution;
+            }
 
         }
 

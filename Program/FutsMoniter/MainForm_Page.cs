@@ -27,7 +27,7 @@ namespace FutsMoniter
         {
             kryptonDockingManager.AddToWorkspace("Workspace", new KryptonPage[] { NewAccMoniter() });
             kryptonDockingManager.AddDockspace("Control", DockingEdge.Bottom, new KryptonPage[] { NewTradingInfoReal() });
-            kryptonDockingManager.AddDockspace("Control", DockingEdge.Right, new KryptonPage[] { NewQuote(), NewAccFinInfo(), NewFinService() });
+            kryptonDockingManager.AddDockspace("Control", DockingEdge.Right, GetModulePage());
 
 
             if (System.IO.File.Exists("config.xml"))
@@ -36,6 +36,18 @@ namespace FutsMoniter
             }
         }
 
+        KryptonPage[] GetModulePage()
+        {
+            List<KryptonPage> pagelist = new List<KryptonPage>();
+            pagelist.Add(NewQuote());
+            pagelist.Add(NewAccFinInfo());
+            //如果域有配资模块权限则加载配资模块面板
+            if (Globals.Domain.Module_FinService)
+            {
+                pagelist.Add(NewFinService());
+            }
+            return pagelist.ToArray();
+        }
         void DestoryPage()
         {
             //隐藏所有Page

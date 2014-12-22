@@ -61,7 +61,7 @@
             this.ctAgentList1.EnableDefaultBaseMGR = true;
             this.ctAgentList1.EnableSelected = true;
             this.ctAgentList1.EnableSelf = true;
-            this.ctAgentList1.Location = new System.Drawing.Point(12, 63);
+            this.ctAgentList1.Location = new System.Drawing.Point(12, 36);
             this.ctAgentList1.Name = "ctAgentList1";
             this.ctAgentList1.Size = new System.Drawing.Size(190, 21);
             this.ctAgentList1.TabIndex = 13;
@@ -86,18 +86,16 @@
             // 
             this.ctAccountType1.AccountType = TradingLib.API.QSEnumAccountCategory.SIMULATION;
             this.ctAccountType1.EnableAny = true;
-            this.ctAccountType1.Location = new System.Drawing.Point(27, 36);
+            this.ctAccountType1.Location = new System.Drawing.Point(0, 90);
             this.ctAccountType1.Name = "ctAccountType1";
-            this.ctAccountType1.Size = new System.Drawing.Size(175, 21);
-            this.ctAccountType1.SmallSpace = false;
+            this.ctAccountType1.Size = new System.Drawing.Size(202, 21);
             this.ctAccountType1.TabIndex = 9;
             // 
             // ctRouterGroupList1
             // 
             this.ctRouterGroupList1.EnableAny = true;
-            this.ctRouterGroupList1.Location = new System.Drawing.Point(12, 117);
+            this.ctRouterGroupList1.Location = new System.Drawing.Point(12, 63);
             this.ctRouterGroupList1.Name = "ctRouterGroupList1";
-            this.ctRouterGroupList1.RouterGroup = null;
             this.ctRouterGroupList1.RouterGroupID = 0;
             this.ctRouterGroupList1.Size = new System.Drawing.Size(190, 21);
             this.ctRouterGroupList1.TabIndex = 8;
@@ -105,8 +103,9 @@
             // ctRouterType1
             // 
             this.ctRouterType1.EnableAny = true;
-            this.ctRouterType1.Location = new System.Drawing.Point(0, 90);
+            this.ctRouterType1.Location = new System.Drawing.Point(0, 117);
             this.ctRouterType1.Name = "ctRouterType1";
+            this.ctRouterType1.RouterType = TradingLib.API.QSEnumOrderTransferType.LIVE;
             this.ctRouterType1.Size = new System.Drawing.Size(202, 21);
             this.ctRouterType1.TabIndex = 7;
             // 

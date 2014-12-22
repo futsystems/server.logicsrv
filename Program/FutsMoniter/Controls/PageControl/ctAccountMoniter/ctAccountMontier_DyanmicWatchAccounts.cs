@@ -32,13 +32,14 @@ namespace FutsMoniter
         List<string> GetVisualAccounts()
         {
             List<string> accountlist = new List<string>();
+            if (accountgrid.RowCount == 0) return accountlist;
+
             int _startrow = accountgrid.FirstDisplayedCell.RowIndex;
             int _rownum = accountgrid.DisplayedRowCount(true);
             for(int i=0;i<_rownum;i++)
             {
                 accountlist.Add(accountgrid[0, _startrow + i].Value.ToString());
             }
-            Globals.Debug("accounts:" + string.Join(",", accountlist.ToArray()));
             return accountlist;
         }
 
@@ -48,7 +49,11 @@ namespace FutsMoniter
         void SwtWathAccounts()
         {
             if ((!_watchchanged) || (DateTime.Now - _gridChangeTime).TotalSeconds < _freshdeay) return;//如果没有发生变化 并且时间没有超过2秒，则不用设置观察更新
-            Globals.TLClient.ReqWatchAccount(GetVisualAccounts());
+            List<string> acclist = GetVisualAccounts();
+            if (acclist.Count > 0)
+            {
+                Globals.TLClient.ReqWatchAccount(GetVisualAccounts());
+            }
             _watchchanged = false;
         }
 

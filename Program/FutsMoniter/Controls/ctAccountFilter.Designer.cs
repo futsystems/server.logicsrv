@@ -72,7 +72,6 @@
             this.ctAccountType1.Location = new System.Drawing.Point(30, 74);
             this.ctAccountType1.Name = "ctAccountType1";
             this.ctAccountType1.Size = new System.Drawing.Size(175, 21);
-            this.ctAccountType1.SmallSpace = false;
             this.ctAccountType1.TabIndex = 3;
             // 
             // ctRouterGroupList1
@@ -80,7 +79,6 @@
             this.ctRouterGroupList1.EnableAny = false;
             this.ctRouterGroupList1.Location = new System.Drawing.Point(15, 128);
             this.ctRouterGroupList1.Name = "ctRouterGroupList1";
-            this.ctRouterGroupList1.RouterGroup = null;
             this.ctRouterGroupList1.Size = new System.Drawing.Size(190, 21);
             this.ctRouterGroupList1.TabIndex = 2;
             // 

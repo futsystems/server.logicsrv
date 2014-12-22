@@ -44,7 +44,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>moniter0.ico</ApplicationIcon>
+    <ApplicationIcon>resources\moniter_terminal.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug-OEM|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -146,6 +146,7 @@
     <Compile Include="Common\BasicInfoTracker\BasicInfoTracker_BasicInfo.cs" />
     <Compile Include="Common\BasicInfoTracker\BasicInfoTracker_Rule.cs" />
     <Compile Include="Common\BasicInfoTracker\BasicInfoTracker_Manager.cs" />
+    <Compile Include="Common\BasicInfoTracker\BasicInfoTracker_RouterGroup.cs" />
     <Compile Include="Common\Ctx\CtxEvent_.cs" />
     <Compile Include="Common\Ctx\CtxEvent_Account.cs" />
     <Compile Include="Common\Ctx\CtxEvent_Trading.cs" />
@@ -197,7 +198,7 @@
     <Compile Include="Controls\ctAccountFilter.Designer.cs">
       <DependentUpon>ctAccountFilter.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\PageControl\ctAccountMoniter\ctAccountMontier_EventBinder.cs">
+    <Compile Include="Controls\PageControl\ctAccountMoniter\ctAccountMontier_OnInit.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Controls\ctCashOperation.cs">

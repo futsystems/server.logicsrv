@@ -18,7 +18,7 @@ namespace TradingLib.API
         [Description("模拟交易帐号")]
         SIMULATION,
         [Description("实盘交易帐号")]
-        REAL = 968,
+        REAL,
 
     }
 }

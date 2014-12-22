@@ -22,20 +22,6 @@ namespace FutsMoniter.Controls.Base
             this.Load += new EventHandler(ctAccountType_Load);
         }
 
-        //属性获得和设置
-        [DefaultValue(true)]
-        bool _smallspace = false;
-        public bool SmallSpace
-        {
-            get
-            {
-                return _smallspace;
-            }
-            set
-            {
-                _smallspace = value;
-            }
-        }
 
         //属性获得和设置
         [DefaultValue(true)]
@@ -71,12 +57,19 @@ namespace FutsMoniter.Controls.Base
                 }
                 catch (Exception ex)
                 {
-                    return QSEnumAccountCategory.SIMULATION;
+                    return 0;
                 }
             }
+
             set
             {
-                accountType.SelectedValue = value;
+                try
+                {
+                    accountType.SelectedIndex = 1;
+                }
+                catch (Exception ex)
+                {
+                }
             }
         }
 
@@ -84,10 +77,6 @@ namespace FutsMoniter.Controls.Base
         {
             Globals.RegIEventHandler(this);
             accountType.SelectedIndexChanged += new EventHandler(accountType_SelectedIndexChanged);
-            if (SmallSpace)
-            {
-                accountType.Location = new Point(kryptonLabel3.Location.X + kryptonLabel3.Width +200, accountType.Location.Y);
-            }
         }
 
         void accountType_SelectedIndexChanged(object sender, EventArgs e)

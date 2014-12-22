@@ -22,6 +22,7 @@ namespace TradingLib.Common
             Globals.RegisterCTX(this);
 
             RegisterCallback("MgrExchServer", "QryManager", OnQryManager);
+            RegisterCallback("ConnectorManager", "QryRouterGroup", OnQryRouterGroup);
         }
 
 

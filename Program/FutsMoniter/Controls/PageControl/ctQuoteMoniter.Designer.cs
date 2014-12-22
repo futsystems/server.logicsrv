@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.kryptonNavigator1 = new ComponentFactory.Krypton.Navigator.KryptonNavigator();
+            this.quotenav = new ComponentFactory.Krypton.Navigator.KryptonNavigator();
             this.kryptonPage1 = new ComponentFactory.Krypton.Navigator.KryptonPage();
             this.quote_cffex = new FutSystems.GUI.ViewQuoteList();
             this.page2 = new ComponentFactory.Krypton.Navigator.KryptonPage();
@@ -38,8 +38,8 @@
             this.kryptonPage4 = new ComponentFactory.Krypton.Navigator.KryptonPage();
             this.quote_shfe = new FutSystems.GUI.ViewQuoteList();
             this.ctOrderSenderM1 = new FutsMoniter.ctOrderSenderM();
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonNavigator1)).BeginInit();
-            this.kryptonNavigator1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.quotenav)).BeginInit();
+            this.quotenav.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPage1)).BeginInit();
             this.kryptonPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.page2)).BeginInit();
@@ -50,25 +50,25 @@
             this.kryptonPage4.SuspendLayout();
             this.SuspendLayout();
             // 
-            // kryptonNavigator1
+            // quotenav
             // 
-            this.kryptonNavigator1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.quotenav.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.kryptonNavigator1.Bar.TabStyle = ComponentFactory.Krypton.Toolkit.TabStyle.LowProfile;
-            this.kryptonNavigator1.Button.CloseButtonDisplay = ComponentFactory.Krypton.Navigator.ButtonDisplay.Hide;
-            this.kryptonNavigator1.Button.ContextButtonDisplay = ComponentFactory.Krypton.Navigator.ButtonDisplay.Hide;
-            this.kryptonNavigator1.Location = new System.Drawing.Point(0, 0);
-            this.kryptonNavigator1.Name = "kryptonNavigator1";
-            this.kryptonNavigator1.Pages.AddRange(new ComponentFactory.Krypton.Navigator.KryptonPage[] {
+            this.quotenav.Bar.TabStyle = ComponentFactory.Krypton.Toolkit.TabStyle.LowProfile;
+            this.quotenav.Button.CloseButtonDisplay = ComponentFactory.Krypton.Navigator.ButtonDisplay.Hide;
+            this.quotenav.Button.ContextButtonDisplay = ComponentFactory.Krypton.Navigator.ButtonDisplay.Hide;
+            this.quotenav.Location = new System.Drawing.Point(0, 0);
+            this.quotenav.Name = "quotenav";
+            this.quotenav.Pages.AddRange(new ComponentFactory.Krypton.Navigator.KryptonPage[] {
             this.kryptonPage1,
             this.page2,
             this.page3,
             this.kryptonPage4});
-            this.kryptonNavigator1.SelectedIndex = 0;
-            this.kryptonNavigator1.Size = new System.Drawing.Size(634, 298);
-            this.kryptonNavigator1.TabIndex = 0;
-            this.kryptonNavigator1.Text = "kryptonNavigator1";
+            this.quotenav.SelectedIndex = 0;
+            this.quotenav.Size = new System.Drawing.Size(634, 298);
+            this.quotenav.TabIndex = 0;
+            this.quotenav.Text = "kryptonNavigator1";
             // 
             // kryptonPage1
             // 
@@ -231,11 +231,11 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.ctOrderSenderM1);
-            this.Controls.Add(this.kryptonNavigator1);
+            this.Controls.Add(this.quotenav);
             this.Name = "ctQuoteMoniter";
             this.Size = new System.Drawing.Size(634, 355);
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonNavigator1)).EndInit();
-            this.kryptonNavigator1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.quotenav)).EndInit();
+            this.quotenav.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPage1)).EndInit();
             this.kryptonPage1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.page2)).EndInit();
@@ -250,7 +250,7 @@
 
         #endregion
 
-        private ComponentFactory.Krypton.Navigator.KryptonNavigator kryptonNavigator1;
+        private ComponentFactory.Krypton.Navigator.KryptonNavigator quotenav;
         private ComponentFactory.Krypton.Navigator.KryptonPage kryptonPage1;
         private ComponentFactory.Krypton.Navigator.KryptonPage page2;
         private ComponentFactory.Krypton.Navigator.KryptonPage page3;

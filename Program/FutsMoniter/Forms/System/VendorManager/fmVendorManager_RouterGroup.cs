@@ -46,10 +46,12 @@ namespace FutsMoniter
             }
         }
 
-        void OnNotifyRouterGroup(string jsonstr)
-        {
-            ctRouterGroupList1.OnNotifyRouterGroup(jsonstr);
-        }
+        //void OnNotifyRouterGroup(string jsonstr)
+        //{
+        //    ctRouterGroupList1.OnNotifyRouterGroup(jsonstr);
+        //}
+
+
         void OnNotifyRouterItem(string jsonstr)
         {
             RouterItemSetting obj = MoniterUtils.ParseJsonResponse<RouterItemSetting>(jsonstr);

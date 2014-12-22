@@ -20,7 +20,8 @@ namespace FutsMoniter
     {
 
         Log logfile = null;
-        LogServer logsrv = null;
+        
+        //LogServer logsrv = null;
 
         TLClientNet tlclient;
         bool _connected = false;
@@ -39,7 +40,7 @@ namespace FutsMoniter
             if (ShowInfoHandler != null)
                 ShowInfoHandler(msg);
             logfile.GotDebug(msg);
-            logsrv.NeLog(msg);
+            //logsrv.NeLog(msg);
         }
 
 
@@ -47,7 +48,7 @@ namespace FutsMoniter
         {
             debugform.GotDebug(msg);
             logfile.GotDebug(msg);
-            logsrv.NeLog(msg);
+            //logsrv.NeLog(msg);
         }
 
         Ctx _ctx;
@@ -71,8 +72,9 @@ namespace FutsMoniter
             _ctx.GotBasicInfoDoneEvent += new VoidDelegate(_ctx_GotBasicInfoDoneEvent);
 
             logfile = new Log(Globals.Config["LogFileName"].AsString(), true, true, "log", true);//日志组件
-            logsrv = new LogServer();
-            logsrv.Start();
+            
+            //logsrv = new LogServer();
+            //logsrv.Start();
             //设定对外消息显示输出
             ShowInfoHandler = showinfo;
 

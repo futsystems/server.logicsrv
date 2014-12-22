@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using TradingLib.API;
+using TradingLib.Common;
+using FutsMoniter.Common;
 
 
 namespace FutsMoniter
@@ -23,14 +25,16 @@ namespace FutsMoniter
             accexecute.SelectedIndex = 0;
             this.Load += new EventHandler(fmAcctFilter_Load);
         }
-
+        /// <summary>
+        /// 所有ct组件初始化完毕后才会调用OnInit 这样才可以正常的将参数显示到界面 如果组件没有OnInit成功，则对应的SelectedValue无法正常的显示到界面
+        /// </summary>
         public void OnInit()
         {
-            //MessageBox.Show("accecut:" + _args.AcctExecute.ToString());
             if (_args.AcctExecuteEnable)
             {
                 accexecute.SelectedIndex = _args.AcctExecute ? 1 : 2;
             }
+
             if (_args.AcctTypeEnable)
             {
                 ctAccountType1.AccountType = _args.AcctType;
@@ -40,14 +44,29 @@ namespace FutsMoniter
             {
                 ctAgentList1.CurrentAgentFK = _args.AgentID;
             }
+
             if (_args.OrderRouterTypeEnable)
             {
                 ctRouterType1.RouterType = _args.OrderRouterType;
             }
 
-            if (_args.AgentEnable)
+            if (_args.RouterGroupEnable)
             {
-                ctAgentList1.CurrentAgentFK = _args.AgentID;
+                ctRouterGroupList1.RouterGroupID = _args.RouterGroupID;
+            }
+
+            if (!Globals.Domain.Super)
+            {
+                ctRouterType1.Visible = Globals.Manager.IsRoot();
+                ctAccountType1.Visible = Globals.Manager.IsRoot();
+                //有实盘交易权限的才需要查看路由组
+                ctRouterGroupList1.Visible = Globals.Domain.Router_Live;
+                
+
+                if (!Globals.Manager.IsRoot())
+                {
+                    this.Height = this.Height - (ctRouterType1.Height + 5) * (2+(!Globals.Domain.Router_Live?1:0));
+                }
             }
         }
 
@@ -63,8 +82,6 @@ namespace FutsMoniter
         internal void SetFilterArgs(ref FilterArgs args)
         {
             _args = args;
-            
-        
         }
         void fmAcctFilter_Load(object sender, EventArgs e)
         {
@@ -75,8 +92,28 @@ namespace FutsMoniter
             ctAgentList1.AgentSelectedChangedEvent += new VoidDelegate(ctAgentList1_AgentSelectedChangedEvent);
             ctRouterType1.RouterTypeSelectedChangedEvent += new VoidDelegate(ctRouterType1_RouterTypeSelectedChangedEvent);
             ctRouterGroupList1.RouterGroupSelectedChangedEvent += new VoidDelegate(ctRouterGroupList1_RouterGroupSelectedChangedEvent);
+            //kryptonPanel1.Paint += new PaintEventHandler(kryptonPanel1_Paint);
+            
             Globals.RegIEventHandler(this);
         }
+
+        //void kryptonPanel1_Paint(object sender, PaintEventArgs e)
+        //{
+        //    ControlPaint.DrawBorder(e.Graphics,
+        //                        kryptonPanel1.ClientRectangle,
+        //                        Color.LightSeaGreen,         //left
+        //                       5,
+        //                        ButtonBorderStyle.Solid,
+        //                        Color.LightSeaGreen,         //top
+        //                        5,
+        //                        ButtonBorderStyle.Solid,
+        //                        Color.LightSeaGreen,        //right
+        //                        5,
+        //                        ButtonBorderStyle.Solid,
+        //                        Color.LightSeaGreen,        //bottom
+        //                        5,
+        //                        ButtonBorderStyle.Solid);
+        //}
 
         void ctRouterGroupList1_RouterGroupSelectedChangedEvent()
         {
@@ -89,6 +126,7 @@ namespace FutsMoniter
                 _args.RouterGroupEnable = true;
                 _args.RouterGroupID = ctRouterGroupList1.RouterGroupID;
             }
+            FilterAccount();
         }
 
         void ctRouterType1_RouterTypeSelectedChangedEvent()

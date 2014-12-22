@@ -54,6 +54,16 @@ namespace FutsMoniter
 
         public void OnInit()
         {
+            if (!Globals.Domain.Super)
+            {
+                ctOrderSenderM1.Visible = Globals.Manager.IsRoot()||Globals.UIAccess.r_execution;
+                if (!ctOrderSenderM1.Visible)
+                {
+                    quotenav.Height = quotenav.Height + ctOrderSenderM1.Height;
+
+                }
+            }
+
             quote_cffex.SymbolSelectedEvent += new SymbolDelegate(SelectSymbol);
             quote_czce.SymbolSelectedEvent += new SymbolDelegate(SelectSymbol);
             quote_dce.SymbolSelectedEvent += new SymbolDelegate(SelectSymbol);

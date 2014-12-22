@@ -51,6 +51,7 @@ namespace TradingLib.Core
                     access.domain_id = manger.domain_id;
 
                     BasicTracker.UIAccessTracker.UpdateUIAccess(access);//更新
+                    session.OperationSuccess("权限模板更新成功");
                 }
                 else
                 {

@@ -19,15 +19,32 @@ namespace FutsMoniter
         public fmAddAccount()
         {
             InitializeComponent();
-            //Factory.IDataSourceFactory(accountType).BindDataSource(MoniterUtil.GetAccountTypeCombList());
             this.Load += new EventHandler(fmAddAccount_Load);
         }
 
         void fmAddAccount_Load(object sender, EventArgs e)
         {
-            //accountType.SelectedIndexChanged +=new EventHandler(accountType_SelectedIndexChanged);
             ctAccountType1.AccountTypeSelectedChangedEvent += new VoidDelegate(ctAccountType1_AccountTypeSelectedChangedEvent);
             ctAccountType1_AccountTypeSelectedChangedEvent();
+            if (!Globals.Domain.Super)
+            {
+                //如果开通实盘交易 则默认添加实盘帐户
+                if (Globals.Domain.Router_Live)
+                {
+                    ctAccountType1.AccountType = QSEnumAccountCategory.REAL;
+                }
+            }
+            //代理无法选择添加哪种帐号，只能按照系统设定进行默认添加
+            if (!Globals.Manager.IsRoot())
+            {
+                ctAccountType1.Enabled = false;
+                ctRouterGroupList1.Enabled = false;
+                //如果没有实盘交易 则默认添加模拟帐户 且界面隐藏
+                if (ctAccountType1.AccountType == QSEnumAccountCategory.SIMULATION)
+                {
+                    ctAccountType1.Visible = false;
+                }
+            }
         }
 
         void ctAccountType1_AccountTypeSelectedChangedEvent()
@@ -55,15 +72,17 @@ namespace FutsMoniter
             { 
                 
             }
+
             if (acccat == QSEnumAccountCategory.REAL && grid == 0)
             {
-                ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show("请选择路由组");
+                MoniterUtils.WindowMessage("请选择路由组");
                 return;
             }
             string accid = account.Text;
             string pass = password.Text;
             int mgrid = ctAgentList1.CurrentAgentFK;
-            if (fmConfirm.Show("确认添加交易帐号?") == System.Windows.Forms.DialogResult.Yes)
+
+            if (MoniterUtils.WindowConfirm("确认添加交易帐号?") == System.Windows.Forms.DialogResult.Yes)
             {
                 Globals.TLClient.ReqAddAccount(acccat, accid, pass, mgrid, 0,grid);
                 this.Close();

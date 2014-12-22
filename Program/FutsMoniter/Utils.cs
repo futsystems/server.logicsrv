@@ -20,6 +20,12 @@ namespace FutsMoniter
             return ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show(message, title, System.Windows.Forms.MessageBoxButtons.YesNo);
         }
 
+        public static System.Windows.Forms.DialogResult WindowMessage(string message, string title = "提示")
+        {
+            return ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show(message, title, System.Windows.Forms.MessageBoxButtons.OK);
+        }
+
+
         public static T ParseJsonResponse<T>(string json)
         {
             JsonReply<T> reply = JsonReply.ParseReply<T>(json);
@@ -41,17 +47,17 @@ namespace FutsMoniter
             {
                 ValueObject<QSEnumOrderTransferType> vo = new ValueObject<QSEnumOrderTransferType>();
                 vo.Name = "<Any>";
-                vo.Value = (QSEnumOrderTransferType)(Enum.GetValues(typeof(QSEnumOrderTransferType)).GetValue(0));
+                vo.Value = (QSEnumOrderTransferType)(-1);
                 list.Add(vo);
             }
-            if (Globals.LoginResponse.Domain.Super || (Globals.LoginResponse.Domain.Router_Sim && Globals.UIAccess.acctype_sim))
+            if (Globals.LoginResponse.Domain.Super || (Globals.LoginResponse.Domain.Router_Sim))
             {
                 ValueObject<QSEnumOrderTransferType> vo = new ValueObject<QSEnumOrderTransferType>();
                 vo.Name = Util.GetEnumDescription(QSEnumOrderTransferType.SIM);
                 vo.Value = QSEnumOrderTransferType.SIM;
                 list.Add(vo);
             }
-            if (Globals.LoginResponse.Domain.Super || (Globals.LoginResponse.Domain.Router_Live&& Globals.UIAccess.acctype_live))
+            if (Globals.LoginResponse.Domain.Super || (Globals.LoginResponse.Domain.Router_Live))
             {
                 ValueObject<QSEnumOrderTransferType> vo = new ValueObject<QSEnumOrderTransferType>();
                 vo.Name = Util.GetEnumDescription(QSEnumOrderTransferType.LIVE);
@@ -73,32 +79,26 @@ namespace FutsMoniter
             {
                 ValueObject<QSEnumAccountCategory> vo = new ValueObject<QSEnumAccountCategory>();
                 vo.Name = "<Any>";
-                vo.Value = (QSEnumAccountCategory)(Enum.GetValues(typeof(QSEnumAccountCategory)).GetValue(0));
+                vo.Value = (QSEnumAccountCategory)(-1);
                 list.Add(vo);
             }
-            if (Globals.Domain.Super || (Globals.Domain.Router_Sim && Globals.UIAccess.acctype_sim))
+
+            //根据域实盘和模拟权限来控制显示的帐户类型列表
+            if (Globals.Domain.Super || (Globals.Domain.Router_Sim))
             {
                 ValueObject<QSEnumAccountCategory> vo = new ValueObject<QSEnumAccountCategory>();
                 vo.Name = Util.GetEnumDescription(QSEnumAccountCategory.SIMULATION);
                 vo.Value = QSEnumAccountCategory.SIMULATION;
                 list.Add(vo);
             }
-            if (Globals.Domain.Super || (Globals.Domain.Router_Live && Globals.UIAccess.acctype_live))
+
+            if (Globals.Domain.Super || (Globals.Domain.Router_Live))
             {
                 ValueObject<QSEnumAccountCategory> vo = new ValueObject<QSEnumAccountCategory>();
                 vo.Name = Util.GetEnumDescription(QSEnumAccountCategory.REAL);
                 vo.Value = QSEnumAccountCategory.REAL;
                 list.Add(vo);
             }
-
-            //if (Globals.UIAccess.acctype_dealer)
-            //{
-            //    ValueObject<QSEnumAccountCategory> vo = new ValueObject<QSEnumAccountCategory>();
-            //    vo.Name = Util.GetEnumDescription(QSEnumAccountCategory.DEALER);
-            //    vo.Value = QSEnumAccountCategory.DEALER;
-            //    list.Add(vo);
-            //}
-
             return list;
         }
 

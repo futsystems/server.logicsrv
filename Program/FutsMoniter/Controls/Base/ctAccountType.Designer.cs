@@ -50,18 +50,18 @@
             // 
             this.kryptonLabel3.Location = new System.Drawing.Point(0, 3);
             this.kryptonLabel3.Name = "kryptonLabel3";
-            this.kryptonLabel3.Size = new System.Drawing.Size(41, 18);
+            this.kryptonLabel3.Size = new System.Drawing.Size(68, 18);
             this.kryptonLabel3.TabIndex = 6;
-            this.kryptonLabel3.Values.Text = "类别:";
+            this.kryptonLabel3.Values.Text = "帐户类型:";
             // 
             // accountType
             // 
             this.accountType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.accountType.DropDownWidth = 127;
-            this.accountType.Location = new System.Drawing.Point(51, 0);
+            this.accountType.Location = new System.Drawing.Point(78, 0);
             this.accountType.Name = "accountType";
-            this.accountType.Size = new System.Drawing.Size(114, 21);
+            this.accountType.Size = new System.Drawing.Size(86, 21);
             this.accountType.TabIndex = 7;
             // 
             // ctAccountType

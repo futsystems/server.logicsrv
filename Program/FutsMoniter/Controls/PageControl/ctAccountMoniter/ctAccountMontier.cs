@@ -24,7 +24,9 @@ namespace FutsMoniter
             try
             {
                 InitializeComponent();
-
+                SetPreferences();
+                InitTable();
+                BindToTable();
                 this.Load += new EventHandler(ctAccountMontier_Load);
             }
             catch (Exception ex)
@@ -36,14 +38,7 @@ namespace FutsMoniter
 
         void ctAccountMontier_Load(object sender, EventArgs e)
         {
-            //accexecute.Items.Add("<Any>");
-            //accexecute.Items.Add("允许");
-            //accexecute.Items.Add("冻结");
-            //accexecute.SelectedIndex = 0;
-
-            SetPreferences();
-            InitTable();
-            BindToTable();
+            
 
             //初始表格右键化右键菜单
             InitMenu();
@@ -160,6 +155,7 @@ namespace FutsMoniter
 
         void fm_FilterArgsChangedEvent()
         {
+            //MessageBox.Show("filter changed");
             RefreshAccountQuery();
         }
 

@@ -150,6 +150,7 @@
             this.tabFinance,
             this.tabHistQuery,
             this.kryptonRibbonTab1});
+            this.TabRibbon.SelectedContext = null;
             this.TabRibbon.SelectedTab = this.tabSystem;
             this.TabRibbon.Size = new System.Drawing.Size(1284, 111);
             this.TabRibbon.TabIndex = 0;
@@ -589,7 +590,7 @@
             // 
             this.lbSrvVersion.Name = "lbSrvVersion";
             this.lbSrvVersion.Size = new System.Drawing.Size(72, 17);
-            this.lbSrvVersion.Text = "MR0.7-RC3";
+            this.lbSrvVersion.Text = "MR0.7-RC4";
             // 
             // toolStripStatusLabel4
             // 

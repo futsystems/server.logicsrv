@@ -27,8 +27,6 @@ namespace FutsMoniter
             accountgrid.ContextMenuStrip.Items.Add("修改路由组", Properties.Resources.changerouter, new EventHandler(UpdateRouterGroup_Click));
             accountgrid.ContextMenuStrip.Items.Add(new System.Windows.Forms.ToolStripSeparator());
             accountgrid.ContextMenuStrip.Items.Add("删除帐户", Properties.Resources.deleteaccount, new EventHandler(DelAccount_Click));
-
-
         }
 
         void UpdateRouterGroup_Click(object sender, EventArgs e)
@@ -198,7 +196,7 @@ namespace FutsMoniter
                 return;
             }
 
-            if (DateTime.Now.Subtract(_lastresumetime).TotalSeconds <= 3)
+            if (DateTime.Now.Subtract(_lastresumetime).TotalSeconds <= 1)
             {
                 ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show("请不要频繁请求帐户日内数据");
                 return;

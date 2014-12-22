@@ -64,7 +64,7 @@
             this.lbroutetype.Name = "lbroutetype";
             this.lbroutetype.Size = new System.Drawing.Size(68, 18);
             this.lbroutetype.TabIndex = 15;
-            this.lbroutetype.Values.Text = "路由通道:";
+            this.lbroutetype.Values.Text = "路由类别:";
             // 
             // ctRouterType
             // 

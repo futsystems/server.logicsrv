@@ -55,7 +55,7 @@ namespace FutsMoniter
         const string AGENTCODE = "代理编号";
         const string AGENTMGRFK = "AGENTMGRFK";
         const string NAME = "姓名";
-        const string POSLOK = "锁仓权限";
+        const string POSLOK = "锁仓";
         const string DELETE = "DELETE";
         const string ROUTERGROUP = "Group";
         const string ROUTERGROUPSTR = "路由组";
@@ -145,11 +145,13 @@ namespace FutsMoniter
 
             accountgrid.Columns[ACCOUNT].Width = 100;
             accountgrid.Columns[ROUTEIMG].Width = 30;
-            accountgrid.Columns[EXECUTEIMG].Width = 20;
-            accountgrid.Columns[PROFITLOSSIMG].Width = 20;
-            accountgrid.Columns[LOGINSTATUSIMG].Width = 20;
+            accountgrid.Columns[EXECUTEIMG].Width = 30;
+            accountgrid.Columns[PROFITLOSSIMG].Width = 30;
+            accountgrid.Columns[LOGINSTATUSIMG].Width = 30;
             accountgrid.Columns[ADDRESS].Width = 120;
-            accountgrid.Columns[HOLDSIZE].Width = 20;
+            accountgrid.Columns[HOLDSIZE].Width = 30;
+            accountgrid.Columns[INTRADAY].Width = 90;
+
              for (int i = 0; i < gt.Columns.Count; i++)
             {
                 accountgrid.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
@@ -392,10 +394,11 @@ namespace FutsMoniter
                         gt.Rows[i][AGENTCODE] = mgr.Login + " - " + mgr.Name;
                         gt.Rows[i][AGENTMGRFK] = account.MGRID;
                         gt.Rows[i][NAME] = account.Name;
-                        gt.Rows[i][POSLOK] = account.PosLock ? "有" : "无";
+                        gt.Rows[i][POSLOK] = account.PosLock ? "有权" : "无权";
                         gt.Rows[i][DELETE] = account.Deleted;
-                        //gt.Rows[i][ROUTERGROUP] = account.RG_ID;
-                        //gt.Rows[i][ROUTERGROUPSTR] = ctRouterGroupList1.GetRrouterGroupName(account.RG_ID);
+                        gt.Rows[i][ROUTERGROUP] = account.RG_ID;
+                        RouterGroupSetting rg = Globals.BasicInfoTracker.GetRouterGroup(account.RG_ID);
+                        gt.Rows[i][ROUTERGROUPSTR] = rg != null ? rg.Name : "";
 
                         accountmap.TryAdd(account.Account, account);
                         accountrowmap.TryAdd(account.Account, i);
@@ -412,15 +415,16 @@ namespace FutsMoniter
                         gt.Rows[r][CATEGORYSTR] = Util.GetEnumDescription(account.Category);
                         gt.Rows[r][CATEGORY] = account.Category.ToString();
                         gt.Rows[r][INTRADAY] = account.IntraDay ? "日内" : "隔夜";
-                        gt.Rows[r][POSLOK] = account.PosLock ? "有" : "无";
+                        gt.Rows[r][POSLOK] = account.PosLock ? "有权" : "无权";
 
                         ManagerSetting mgr = Globals.BasicInfoTracker.GetManager(account.MGRID);
                         gt.Rows[r][AGENTCODE] = mgr.Login + " - " + mgr.Name;
                         gt.Rows[r][NAME] = account.Name;
                         gt.Rows[r][DELETE] = account.Deleted;
 
-                        //gt.Rows[r][ROUTERGROUP] = account.RG_ID;
-                        //gt.Rows[r][ROUTERGROUPSTR] = ctRouterGroupList1.GetRrouterGroupName(account.RG_ID);
+                        gt.Rows[r][ROUTERGROUP] = account.RG_ID;
+                        RouterGroupSetting rg = Globals.BasicInfoTracker.GetRouterGroup(account.RG_ID);
+                        gt.Rows[r][ROUTERGROUPSTR] = rg != null ? rg.Name : "";
 
                     }
 
@@ -532,19 +536,6 @@ namespace FutsMoniter
         {
             e.PaintParts = e.PaintParts ^ DataGridViewPaintParts.Focus;
         }
-
-
-        void ctRouterGroupList1_RouterGroupInitEvent()
-        {
-            int gid=0;
-            for (int i = 0; i < gt.Rows.Count; i++)
-            {
-                int.TryParse(gt.Rows[i][ROUTERGROUP].ToString(),out gid);
-                gt.Rows[i][ROUTERGROUPSTR] = ctRouterGroupList1.GetRrouterGroupName(gid);
-
-            }
-        }
-
 
     }
 }

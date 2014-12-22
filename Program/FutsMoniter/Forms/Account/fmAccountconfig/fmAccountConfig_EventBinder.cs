@@ -22,19 +22,20 @@ namespace FutsMoniter
 
             Globals.LogicEvent.GotAccountChangedEvent += new Action<IAccountLite>(OnAccountChanged);//帐户更新
 
-
-            if (!Globals.LoginResponse.Domain.Super)
+            if (!Globals.Domain.Super)
             {
-                pageConfig.Visible = Globals.UIAccess.moniter_tab_config;
-                btnExecute.Visible = Globals.UIAccess.moniter_tab_config_inactive;
+                ctRouterType1.Visible = Globals.Manager.IsRoot();//管理员可以设置帐户路由类别
 
-                pageFinance.Visible = Globals.UIAccess.moniter_tab_finance;
-                pageOrderCheck.Visible = Globals.UIAccess.moniter_tab_orderrule;
-                pageAccountCheck.Visible = Globals.UIAccess.moniter_tab_accountrule;
-                pageMarginCommission.Visible = Globals.UIAccess.moniter_tab_margincommissoin;
+                //pageConfig.Visible = Globals.UIAccess.moniter_tab_config;
+                btnExecute.Visible = Globals.Manager.IsRoot() || Globals.UIAccess.r_block;
 
-                //ctAccountType1.Visible= Globals.UIAccess.moniter_acctype;
-                ctRouterType1.Visible = Globals.UIAccess.moniter_router;
+                //管理员可以进行财务操作
+                pageFinance.Visible = Globals.Manager.IsRoot();
+                //pageOrderCheck.Visible = Globals.UIAccess.moniter_tab_orderrule;
+                //pageAccountCheck.Visible = Globals.UIAccess.moniter_tab_accountrule;
+
+                pageMarginCommission.Visible = false;
+                
             }
 
             //执行延迟加载 只有当延迟加载的空间加载完毕后才可以将数据显示到界面否则相关字段显示错误
