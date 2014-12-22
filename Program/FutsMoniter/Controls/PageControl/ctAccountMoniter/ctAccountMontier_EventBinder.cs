@@ -19,6 +19,8 @@ namespace FutsMoniter
             {
                 InvokeGotAccount(account);
             }
+            //更新帐户数目
+            UpdateAccountNum();
 
             //帐户事件
             Globals.LogicEvent.GotAccountEvent += new Action<IAccountLite>(GotAccount);
@@ -31,14 +33,14 @@ namespace FutsMoniter
                 if (!Globals.UIAccess.moniter_acctype)
                 {
                     //lbcategory.Visible = false;
-                    ctAccountType1.Visible = false;
+                    //ctAccountType1.Visible = false;
                     //ctAccountType1.Visible = false;
                     accountgrid.Columns[CATEGORYSTR].Visible = false;
                 }
 
                 if (!Globals.UIAccess.moniter_router)
                 {
-                    ctRouterType1.Visible = false;
+                    //ctRouterType1.Visible = false;
                     accountgrid.Columns[ROUTEIMG].Visible = false;
                 }
 

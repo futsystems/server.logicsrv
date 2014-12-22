@@ -36,10 +36,10 @@ namespace FutsMoniter
 
         void ctAccountMontier_Load(object sender, EventArgs e)
         {
-            accexecute.Items.Add("<Any>");
-            accexecute.Items.Add("允许");
-            accexecute.Items.Add("冻结");
-            accexecute.SelectedIndex = 0;
+            //accexecute.Items.Add("<Any>");
+            //accexecute.Items.Add("允许");
+            //accexecute.Items.Add("冻结");
+            //accexecute.SelectedIndex = 0;
 
             SetPreferences();
             InitTable();
@@ -76,25 +76,17 @@ namespace FutsMoniter
         void WireEvents()
         {
             //交易帐户过滤控件
-            ctAccountType1.AccountTypeSelectedChangedEvent += new VoidDelegate(ctAccountType1_AccountTypeSelectedChangedEvent);
-            ctRouterType1.RouterTypeSelectedChangedEvent += new VoidDelegate(ctRouterType1_RouterTypeSelectedChangedEvent);
-            accexecute.SelectedIndexChanged +=new EventHandler(accexecute_SelectedIndexChanged);
             accLogin.CheckedChanged+=new EventHandler(accLogin_CheckedChanged);
             acct.TextChanged+=new EventHandler(acct_TextChanged);
-            ctAgentList1.AgentSelectedChangedEvent+=new VoidDelegate(ctAgentList1_AgentSelectedChangedEvent);
             acchodpos.CheckedChanged +=new EventHandler(acchodpos_CheckedChanged);
-            ctRouterGroupList1.RouterGroupSelectedChangedEvent += new VoidDelegate(ctRouterGroupList1_RouterGroupSelectedChangedEvent);
             
-
+            btnAcctFilter.Click +=new EventHandler(btnAcctFilter_Click);
             //帐户表格事件
             accountgrid.CellDoubleClick +=new DataGridViewCellEventHandler(accountgrid_CellDoubleClick);//双击单元格
             accountgrid.CellFormatting +=new DataGridViewCellFormattingEventHandler(accountgrid_CellFormatting);//格式化单元格
             accountgrid.SizeChanged +=new EventHandler(accountgrid_SizeChanged);//大小改变
             accountgrid.Scroll +=new ScrollEventHandler(accountgrid_Scroll);//滚轮滚动
             accountgrid.RowPrePaint += new DataGridViewRowPrePaintEventHandler(accountgrid_RowPrePaint);
-
-            //路由组初始化完毕
-            ctRouterGroupList1.RouterGroupInitEvent += new VoidDelegate(ctRouterGroupList1_RouterGroupInitEvent);
 
             //绑定事件
             btnAddAccount.Click += new EventHandler(btnAddAccount_Click);
@@ -151,6 +143,25 @@ namespace FutsMoniter
 
 
         #endregion
+
+        private void btnAcctFilter_Click(object sender, EventArgs e)
+        {
+            Globals.Debug("clicked");
+
+            fmAcctFilter fm = new fmAcctFilter();
+            fm.SetFilterArgs(ref filterArgs);
+            fm.FilterArgsChangedEvent += new VoidDelegate(fm_FilterArgsChangedEvent);
+            Point p = this.PointToScreen(btnAcctFilter.Location);
+            p.X = p.X + btnAcctFilter.Width + 5;
+            p.Y = p.Y + btnAcctFilter.Height + 5;
+            fm.Location = p;
+            fm.Show();
+        }
+
+        void fm_FilterArgsChangedEvent()
+        {
+            RefreshAccountQuery();
+        }
 
 
     }

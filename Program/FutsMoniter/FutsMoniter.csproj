@@ -44,7 +44,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>resources\moniter_terminal.ico</ApplicationIcon>
+    <ApplicationIcon>moniter0.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug-OEM|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -191,6 +191,12 @@
     <Compile Include="Controls\Base\ctReceivableBankList.Designer.cs">
       <DependentUpon>ctReceivableBankList.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ctAccountFilter.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ctAccountFilter.Designer.cs">
+      <DependentUpon>ctAccountFilter.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\PageControl\ctAccountMoniter\ctAccountMontier_EventBinder.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -223,6 +229,12 @@
     </Compile>
     <Compile Include="Controls\ctPositionMertic.Designer.cs">
       <DependentUpon>ctPositionMertic.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PageControl\ctAccountMoniter\fmAcctFilter.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\PageControl\ctAccountMoniter\fmAcctFilter.Designer.cs">
+      <DependentUpon>fmAcctFilter.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\PageControl\ctQuoteMoniter.cs">
       <SubType>UserControl</SubType>
@@ -740,11 +752,17 @@
     <EmbeddedResource Include="Controls\Base\ctReceivableBankList.resx">
       <DependentUpon>ctReceivableBankList.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ctAccountFilter.resx">
+      <DependentUpon>ctAccountFilter.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\ctCashOperation.resx">
       <DependentUpon>ctCashOperation.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\ctPositionMertic.resx">
       <DependentUpon>ctPositionMertic.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\PageControl\ctAccountMoniter\fmAcctFilter.resx">
+      <DependentUpon>fmAcctFilter.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\PageControl\ctQuoteMoniter.resx">
       <DependentUpon>ctQuoteMoniter.cs</DependentUpon>

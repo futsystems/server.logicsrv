@@ -97,7 +97,7 @@ namespace FutsMoniter
         {
             InitializeComponent();
 
-            Globals.RegIEventHandler(this);
+            
             this.Load += new EventHandler(ctAgentList_Load);
         }
 
@@ -114,6 +114,7 @@ namespace FutsMoniter
 
         void ctAgentList_Load(object sender, EventArgs e)
         {
+            Globals.RegIEventHandler(this);
             if (!_enableselected)
             {
                 agent.Enabled = false;
@@ -160,10 +161,42 @@ namespace FutsMoniter
         {
             get
             {
-                return int.Parse(agent.SelectedValue.ToString());
+                try
+                {
+                    return int.Parse(agent.SelectedValue.ToString());
+                }
+                catch (Exception ex)
+                {
+                    return 0;
+                }
+            }
+            set
+            {
+                try
+                {
+                    agent.SelectedValue = value;
+                }
+                catch (Exception ex)
+                { 
+                
+                }
             }
         }
 
+        public int SelectedIndex
+        {
+            get
+            {
+                try
+                {
+                    return agent.SelectedIndex;
+                }
+                catch (Exception ex)
+                {
+                    return 0;
+                }
+            }
+        }
         private void agent_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (AgentSelectedChangedEvent != null && _gotdata)

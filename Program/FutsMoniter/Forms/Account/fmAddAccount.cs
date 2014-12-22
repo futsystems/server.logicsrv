@@ -49,7 +49,7 @@ namespace FutsMoniter
             QSEnumAccountCategory acccat = ctAccountType1.AccountType;
             try
             {
-                grid = (acccat == QSEnumAccountCategory.REAL ? ctRouterGroupList1.RouterGroudSelected.ID : 0);
+                grid = (acccat == QSEnumAccountCategory.REAL ? ctRouterGroupList1.RouterGroup.ID : 0);
             }
             catch (Exception ex)
             { 

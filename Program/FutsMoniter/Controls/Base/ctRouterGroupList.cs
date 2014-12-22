@@ -172,7 +172,7 @@ namespace FutsMoniter.Controls.Base
         }
         int _rgselected = 0;
 
-        public int SelectedRouterGroupID
+        public int RouterGroupID
         {
             get
             {
@@ -185,9 +185,20 @@ namespace FutsMoniter.Controls.Base
                     return 0;
                 }
             }
+            set
+            {
+                try
+                {
+                    cbrglist.SelectedValue = value;
+                }
+                catch (Exception ex)
+                { 
+                    
+                }
+            }
 
         }
-        public RouterGroupSetting RouterGroudSelected
+        public RouterGroupSetting RouterGroup
         {
            get
             {

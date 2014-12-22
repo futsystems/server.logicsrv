@@ -36,10 +36,10 @@ namespace FutsMoniter
 
         void btnSubmit_Click(object sender, EventArgs e)
         {
-            string msg = string.Format("确认修改帐户路由组为:{0}?(修改前请确认帐户没有持仓和挂单)", ctRouterGroupList1.RouterGroudSelected.Name);
+            string msg = string.Format("确认修改帐户路由组为:{0}?(修改前请确认帐户没有持仓和挂单)", ctRouterGroupList1.RouterGroup.Name);
             if (ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show(msg,"确认操作",MessageBoxButtons.YesNo,MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
             {
-                Globals.TLClient.ReqUpdateRouterGroup(_account.Account, ctRouterGroupList1.SelectedRouterGroupID);
+                Globals.TLClient.ReqUpdateRouterGroup(_account.Account, ctRouterGroupList1.RouterGroupID);
                 this.Close();
             }
         }

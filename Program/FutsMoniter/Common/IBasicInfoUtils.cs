@@ -191,7 +191,7 @@ namespace TradingLib.Common
 
             if (all)
             {
-                list.Add(new ValueObject<int> { Name = "所有", Value = 0 });
+                list.Add(new ValueObject<int> { Name = "<Any>", Value = 0 });
             }
             foreach (ManagerSetting m in info.Managers.Where(g => (g.Type == QSEnumManagerType.ROOT || g.Type == QSEnumManagerType.AGENT)))
             {

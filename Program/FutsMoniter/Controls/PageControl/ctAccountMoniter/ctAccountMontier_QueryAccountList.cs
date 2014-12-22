@@ -8,8 +8,34 @@ using FutSystems.GUI;
 
 namespace FutsMoniter
 {
+    internal class FilterArgs
+    {
+        //帐户状态 冻结 激活
+        public bool AcctExecuteEnable = false;
+        public bool AcctExecute = false;
+
+        //帐户类别
+        public bool AcctTypeEnable = false;
+        public QSEnumAccountCategory AcctType = QSEnumAccountCategory.REAL;
+
+        //所属代理商
+        public bool AgentEnable = false;
+        public int AgentID = 0;
+
+        //路由通道类别
+        public bool OrderRouterTypeEnable = false;
+        public QSEnumOrderTransferType OrderRouterType = QSEnumOrderTransferType.SIM;
+
+
+        //路由组
+        public bool RouterGroupEnable = false;
+        public int RouterGroupID = 0;
+
+
+    }
     public partial class ctAccountMontier
     {
+        FilterArgs filterArgs = new FilterArgs();
 
         #region 过滤帐户列表
 
@@ -18,20 +44,20 @@ namespace FutsMoniter
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void ctAccountType1_AccountTypeSelectedChangedEvent()
-        {
-            RefreshAccountQuery();
-        }
+        //void ctAccountType1_AccountTypeSelectedChangedEvent()
+        //{
+        //    RefreshAccountQuery();
+        //}
 
         /// <summary>
         /// 路由类别选择
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void ctRouterType1_RouterTypeSelectedChangedEvent()
-        {
-            RefreshAccountQuery();
-        }
+        //void ctRouterType1_RouterTypeSelectedChangedEvent()
+        //{
+        //    RefreshAccountQuery();
+        //}
         /// <summary>
         /// 帐户可交易选择
         /// </summary>
@@ -63,19 +89,19 @@ namespace FutsMoniter
         /// <summary>
         /// 代理列表选择
         /// </summary>
-        private void ctAgentList1_AgentSelectedChangedEvent()
-        {
-            RefreshAccountQuery();
-        }
+        //private void ctAgentList1_AgentSelectedChangedEvent()
+        //{
+        //    RefreshAccountQuery();
+        //}
 
         private void acchodpos_CheckedChanged(object sender, EventArgs args)
         {
             RefreshAccountQuery();
         }
-        void ctRouterGroupList1_RouterGroupSelectedChangedEvent()
-        {
-            RefreshAccountQuery();
-        }
+        //void ctRouterGroupList1_RouterGroupSelectedChangedEvent()
+        //{
+        //    RefreshAccountQuery();
+        //}
 
         /// <summary>
         /// 刷新帐户筛选结果
@@ -83,18 +109,19 @@ namespace FutsMoniter
         void RefreshAccountQuery()
         {
             string acctype = string.Empty;
-            if (ctAccountType1.SelectedIndex == 0)
+            if (!filterArgs.AcctTypeEnable)
             {
                 acctype = "*";
             }
             else
             {
-                acctype = ctAccountType1.AccountType.ToString();
+                acctype = filterArgs.AcctType.ToString();
             }
             
             string strFilter = string.Empty;
+
             //帐户类别
-            if (ctAccountType1.SelectedIndex == 0)
+            if (!filterArgs.AcctTypeEnable)
             {
                 strFilter = string.Format(CATEGORY + " > '{0}'", acctype);
             }
@@ -106,48 +133,46 @@ namespace FutsMoniter
             strFilter = string.Format(strFilter + " and " + DELETE + " ='{0}'", false);
 
             //路由
-            if (ctRouterType1.SelectedIndex != 0)
+            if (filterArgs.OrderRouterTypeEnable)
             {
-                strFilter = string.Format(strFilter + " and " + ROUTE + " = '{0}'", ctRouterType1.RouterType.ToString());
+                strFilter = string.Format(strFilter + " and " + ROUTE + " = '{0}'", filterArgs.OrderRouterType);
             }
 
-            if (accexecute.SelectedIndex != 0)
+            //帐户状态
+            if (filterArgs.AcctExecuteEnable)
             {
-                if (accexecute.SelectedIndex == 1)
-                {
-                    strFilter = string.Format(strFilter + " and " + EXECUTE + " = '{0}'", getExecuteStatus(true));
-                }
-                if (accexecute.SelectedIndex == 2)
-                {
-                    strFilter = string.Format(strFilter + " and " + EXECUTE + " = '{0}'", getExecuteStatus(false));
-                }
+                strFilter = string.Format(strFilter + " and " + EXECUTE + " = '{0}'", getExecuteStatus(filterArgs.AcctExecute));
             }
 
             //路由组筛选
-            if (ctRouterGroupList1.SelectedIndex != 0)
+            if (filterArgs.RouterGroupEnable)
             {
-                strFilter = string.Format(strFilter + " and " + ROUTERGROUP + " = '{0}'", ctRouterGroupList1.SelectedRouterGroupID);
+                strFilter = string.Format(strFilter + " and " + ROUTERGROUP + " = '{0}'", filterArgs.RouterGroupID);
             }
 
+            if (filterArgs.AgentEnable)
+            {
+                strFilter = string.Format(strFilter + " and " + AGENTMGRFK + " = '{0}'", filterArgs.AgentID);
+            }
+
+            //登入
             if (accLogin.Checked)
             {
                 strFilter = string.Format(strFilter + " and " + LOGINSTATUS + " = '{0}'", getLoginStatus(true));
             }
+            //持仓
             if (acchodpos.Checked)
             {
                 strFilter = string.Format(strFilter + " and " + HOLDSIZE + " > 0");
             }
-
+            //帐户检索
             string acctstr = acct.Text;
             if (!string.IsNullOrEmpty(acctstr))
             {
                 strFilter = string.Format(strFilter + " and " + ACCOUNT + " like '{0}*'", acctstr);
             }
 
-            if (ctAgentList1.CurrentAgentFK != 0)
-            {
-                strFilter = string.Format(strFilter + " and " + AGENTMGRFK + " = '{0}'", ctAgentList1.CurrentAgentFK);
-            }
+
             debug("strfilter:" + strFilter, QSEnumDebugLevel.INFO);
             datasource.Filter = strFilter;
 

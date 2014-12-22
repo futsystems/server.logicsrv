@@ -205,6 +205,7 @@ namespace FutsMoniter
         //通过行号得该行的Security
         IAccountLite GetVisibleAccount(string account)
         {
+            //MessageBox.Show("account:" + account + " haveaccount:" + HaveAccount(account).ToString());
             if (HaveAccount(account))
                 return accountmap[account];
             return null;
@@ -393,12 +394,12 @@ namespace FutsMoniter
                         gt.Rows[i][NAME] = account.Name;
                         gt.Rows[i][POSLOK] = account.PosLock ? "有" : "无";
                         gt.Rows[i][DELETE] = account.Deleted;
-                        gt.Rows[i][ROUTERGROUP] = account.RG_ID;
-                        gt.Rows[i][ROUTERGROUPSTR] = ctRouterGroupList1.GetRrouterGroupName(account.RG_ID);
+                        //gt.Rows[i][ROUTERGROUP] = account.RG_ID;
+                        //gt.Rows[i][ROUTERGROUPSTR] = ctRouterGroupList1.GetRrouterGroupName(account.RG_ID);
 
                         accountmap.TryAdd(account.Account, account);
                         accountrowmap.TryAdd(account.Account, i);
-                        //debug("got account:" + account.Account, QSEnumDebugLevel.INFO);
+                        Globals.Debug("got account:" + account.Account);
                     }
                     else //如果存在表面是进行修改
                     {
@@ -418,8 +419,8 @@ namespace FutsMoniter
                         gt.Rows[r][NAME] = account.Name;
                         gt.Rows[r][DELETE] = account.Deleted;
 
-                        gt.Rows[r][ROUTERGROUP] = account.RG_ID;
-                        gt.Rows[r][ROUTERGROUPSTR] = ctRouterGroupList1.GetRrouterGroupName(account.RG_ID);
+                        //gt.Rows[r][ROUTERGROUP] = account.RG_ID;
+                        //gt.Rows[r][ROUTERGROUPSTR] = ctRouterGroupList1.GetRrouterGroupName(account.RG_ID);
 
                     }
 
