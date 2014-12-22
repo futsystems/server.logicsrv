@@ -1006,7 +1006,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="moniter_terminal.ico" />
-    <Content Include="moniter_terminal2.ico" />
     <None Include="resources\moniter_terminal.ico" />
     <None Include="resources\deleteaccount.png" />
     <None Include="resources\changerouter.png" />
@@ -1016,8 +1015,6 @@
     <None Include="images\start.png" />
     <None Include="images\start16.jpg" />
     <None Include="images\stop16.jpg" />
-    <Content Include="moniter-oem.ico" />
-    <Content Include="moniter.ico" />
     <Content Include="moniter0.ico" />
     <None Include="resources\moniter-oem.ico" />
     <None Include="resources\header.jpg" />
