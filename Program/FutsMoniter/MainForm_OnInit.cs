@@ -50,15 +50,17 @@ namespace FutsMoniter
                     //管理员可以查看实盘帐户列表和系统状态
                     kryptonRibbonGroupButton_connectorlist.Visible = Globals.Manager.IsRoot();//实盘帐号
                     kryptonRibbonGroupButton_SystemStatus.Visible = Globals.Manager.IsRoot();//系统状态
+
+                    //权限模板 管理员查看
+                    kryptonRibbonGroupButton_permissiontmp.Visible = Globals.Manager.IsRoot();
+                    kryptonRibbonGroup13.Visible = kryptonRibbonGroupButton_permissiontmp.Visible;
                 }
 
                 //------------------------基础数据 -------------------------------------------------------
                 //基础数据 代理也可见 且不用设置权限限制
 
 
-                //权限模板 管理员查看
-                kryptonRibbonGroupButton_PermissionTemplate.Visible = Globals.Manager.IsRoot();
-                kryptonRibbonGroup5.Visible = kryptonRibbonGroupButton_PermissionTemplate.Visible;
+                
                 //}
 
                 
@@ -88,8 +90,8 @@ namespace FutsMoniter
                 //代理模块
                 if (!Globals.Domain.Module_Agent)//没有代理模块
                 {
-                    
-                    kryptonRibbonGroupButton_PermissionTemplate.Visible = false;//权限模板设置
+
+                    kryptonRibbonGroupButton_permissiontmp.Visible = false;//权限模板设置
 
                     //-----------------------柜员管理----------------------------------------
                     kryptonRibbonGroupButton_AgentCost.Visible = false;//代理资费设置
@@ -127,6 +129,8 @@ namespace FutsMoniter
                 }
             }
 
+            //更新过期提醒
+            SetExpireStatus();
             //登入基础数据初始化完成后 加载page
             InitPage();
             //初始化后台woker用于弹窗提示

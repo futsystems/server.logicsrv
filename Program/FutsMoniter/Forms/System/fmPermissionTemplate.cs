@@ -26,15 +26,16 @@ namespace FutsMoniter
             InitializeComponent();
             
             InitLaylout();
-            if (Globals.EnvReady)
-            {
-                Globals.TLClient.ReqQryPermmissionTemplateList();
-            }
-            Globals.RegIEventHandler(this);
+
+            this.Load += new EventHandler(fmPermissionTemplate_Load);
+        }
+
+        void fmPermissionTemplate_Load(object sender, EventArgs e)
+        {
             pmlist.SelectedIndexChanged += new EventHandler(pmlist_SelectedIndexChanged);
             btnSubmit.Click += new EventHandler(btnSubmit_Click);
             btnSaveAs.Click += new EventHandler(btnSaveAs_Click);
-
+            Globals.RegIEventHandler(this);
         }
 
         void btnSaveAs_Click(object sender, EventArgs e)
@@ -90,13 +91,11 @@ namespace FutsMoniter
             }
         }
 
-
-
-
         void pmlist_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!_loaded) return;
             int id = int.Parse(pmlist.SelectedValue.ToString());
+            if (id == 0) return;
             UIAccess access = accessmap[id];
             
             if (access != null)
@@ -118,44 +117,73 @@ namespace FutsMoniter
 
         public void OnInit()
         {
-            Globals.LogicEvent.RegisterCallback("MgrExchServer", "QueryPermmissionTemplateList", OnPermissionTemplate);
+            Globals.LogicEvent.RegisterCallback("MgrExchServer", "NotifyUIAccess", OnNotifyPermissionTemplate);
+            Globals.LogicEvent.RegisterCallback("MgrExchServer", "QueryPermmissionTemplateList", OnQryPermissionTemplate);
+            
+            Globals.TLClient.ReqQryPermmissionTemplateList();
         }
 
         public void OnDisposed()
         {
-            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "QueryPermmissionTemplateList", OnPermissionTemplate);
+            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "NotifyUIAccess", OnNotifyPermissionTemplate);
+            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "QueryPermmissionTemplateList", OnQryPermissionTemplate);
+            
         }
 
-        bool _loaded = false;
-        void OnPermissionTemplate(string jsonstr)
+        void OnNotifyPermissionTemplate(string json)
         {
-            JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
-            int code = int.Parse(jd["Code"].ToString());
-            if (code == 0)
+            UIAccess obj = MoniterUtils.ParseJsonResponse<UIAccess>(json);
+            if (obj != null)
             {
-                UIAccess[] objs = TradingLib.Mixins.LitJson.JsonMapper.ToObject<UIAccess[]>(jd["Playload"].ToJson());
+                GotUIAccess(obj);
+                pmlist_SelectedIndexChanged(null, null);
+            }
+        }
+
+
+        bool _loaded = false;
+        void OnQryPermissionTemplate(string jsonstr)
+        {
+            UIAccess[] objs = MoniterUtils.ParseJsonResponse<UIAccess[]>(jsonstr);
+            if (objs != null)
+            {
                 foreach (UIAccess access in objs)
                 {
                     GotUIAccess(access);
                 }
 
                 Factory.IDataSourceFactory(pmlist).BindDataSource(GetPermissionTemplateListCB());
+                pmlist.SelectedIndex = 0;
                 _loaded = true;
             }
-            
         }
+
 
         Dictionary<int, UIAccess> accessmap = new Dictionary<int, UIAccess>();
         void GotUIAccess(UIAccess access)
         {
-            accessmap.Add(access.id, access);
+            if (accessmap.Keys.Contains(access.id))
+            {
+                accessmap[access.id] = access;
+            }
+            else
+            {
+                accessmap.Add(access.id, access);
+                Factory.IDataSourceFactory(pmlist).BindDataSource(GetPermissionTemplateListCB());
+                pmlist.SelectedIndex = 0;
+            }
         }
 
 
         ArrayList GetPermissionTemplateListCB()
         {
             ArrayList list = new ArrayList();
-            
+
+            ValueObject<int> va = new ValueObject<int>();
+            va.Name = "<请选择>";
+            va.Value = 0;
+            list.Add(va);
+
             foreach(UIAccess access in accessmap.Values)
             {
                 ValueObject<int> vo = new ValueObject<int>();
@@ -164,6 +192,7 @@ namespace FutsMoniter
                 vo.Value = access.id;
                 list.Add(vo);
             }
+
             return list;
         }
 
@@ -171,6 +200,7 @@ namespace FutsMoniter
 
         Dictionary<string, PermissionField> permissionmap = new Dictionary<string, PermissionField>();
         Dictionary<string, ctTLPermissionEdit> permissioneditmap = new Dictionary<string, ctTLPermissionEdit>();
+
         void InitLaylout()
         {
             Type type = typeof(UIAccess);

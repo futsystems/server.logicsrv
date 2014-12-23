@@ -22,18 +22,25 @@ namespace FutsMoniter
         {
             InitializeComponent();
 
-            Globals.RegIEventHandler(this);
+            this.Load += new EventHandler(fmAgentPermission_Load);
             
+        }
+
+        void fmAgentPermission_Load(object sender, EventArgs e)
+        {
+            ctAgentList3.AgentSelectedChangedEvent += new VoidDelegate(ctAgentList1_AgentSelectedChangedEvent);
+            pmlist.SelectedIndexChanged += new EventHandler(pmlist_SelectedIndexChanged);
+            btnSubmit.Click += new EventHandler(btnSubmit_Click);
+            Globals.RegIEventHandler(this);
         }
 
         void btnSubmit_Click(object sender, EventArgs e)
         {
-            //MessageBox.Show("pmlist null:" + (pmlist.SelectedValue == null).ToString());
-            int idx = int.Parse(pmlist.SelectedValue.ToString());
-            //MessageBox.Show("pmlist sel:" + idx.ToString());
-            
-            //MessageBox.Show(" agent sel:" + ctAgentList1.CurrentAgentFK.ToString());
-            Globals.TLClient.ReqUpdateAgentPermission(ctAgentList3.CurrentAgentFK, idx);
+            if (MoniterUtils.WindowConfirm("确认更新的代理的权限模板?") == System.Windows.Forms.DialogResult.Yes)
+            {
+                int idx = int.Parse(pmlist.SelectedValue.ToString());
+                Globals.TLClient.ReqUpdateAgentPermission(ctAgentList3.CurrentAgentFK, idx);
+            }
         }
 
         void pmlist_SelectedIndexChanged(object sender, EventArgs e)
@@ -53,12 +60,11 @@ namespace FutsMoniter
         {
             Globals.LogicEvent.RegisterCallback("MgrExchServer", "QueryPermmissionTemplateList", OnPermissionTemplate);
             Globals.LogicEvent.RegisterCallback("MgrExchServer", "QueryAgentPermission", OnAgentPermission);
+            Globals.LogicEvent.RegisterCallback("MgrExchServer", "NotifyAgentPermission", OnAgentPermission);
 
             
 
-            ctAgentList3.AgentSelectedChangedEvent += new VoidDelegate(ctAgentList1_AgentSelectedChangedEvent);
-            pmlist.SelectedIndexChanged += new EventHandler(pmlist_SelectedIndexChanged);
-            btnSubmit.Click += new EventHandler(btnSubmit_Click);
+
 
             Globals.TLClient.ReqQryPermmissionTemplateList();
         }
@@ -74,27 +80,23 @@ namespace FutsMoniter
         {
             JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
             int code = int.Parse(jd["Code"].ToString());
-            if (code == 0)
+            UIAccess obj = MoniterUtils.ParseJsonResponse<UIAccess>(jsonstr);
+            if (obj != null)
+            {   
+                pmcurrent.Text = obj.name;
+            }
+            else
             {
-                if (jd["Playload"] == null)
-                {
-                    pmcurrent.Text = "未设置";
-                }
-                else
-                {
-                    UIAccess obj = TradingLib.Mixins.LitJson.JsonMapper.ToObject<UIAccess>(jd["Playload"].ToJson());
-                    pmcurrent.Text = obj.name;
-                }
+                pmcurrent.Text = "未设置";
             }
         }
+
         bool _loaded = false;
         void OnPermissionTemplate(string jsonstr)
         {
-            JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
-            int code = int.Parse(jd["Code"].ToString());
-            if (code == 0)
+            UIAccess[] objs = MoniterUtils.ParseJsonResponse<UIAccess[]>(jsonstr);
+            if (objs!= null)
             {
-                UIAccess[] objs = TradingLib.Mixins.LitJson.JsonMapper.ToObject<UIAccess[]>(jd["Playload"].ToJson());
                 foreach (UIAccess access in objs)
                 {
                     GotUIAccess(access);

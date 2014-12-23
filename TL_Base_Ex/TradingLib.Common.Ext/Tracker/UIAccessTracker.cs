@@ -64,6 +64,18 @@ namespace TradingLib.Common
         }
 
 
+        public UIAccess this[int id]
+        {
+            get
+            {
+                UIAccess access = null;
+                if (uiaccessmap.TryGetValue(id, out access))
+                {
+                    return access;
+                }
+                return null;
+            }
+        }
         /// <summary>
         /// 获得某个管理员的UIAccess的优先顺序
         /// 1.如果有指定的权限则使用该权限
@@ -193,10 +205,12 @@ namespace TradingLib.Common
                 manageruiidxmap[managerid] = accessid;
                 ORM.MUIAccess.UpdateManagerPermissionSet(managerid, accessid);
             }
-
-            //新增
-            manageruiidxmap[managerid] = accessid;
-            ORM.MUIAccess.InsertManagerPermissionSet(managerid, accessid);
+            else
+            {
+                //新增
+                manageruiidxmap[managerid] = accessid;
+                ORM.MUIAccess.InsertManagerPermissionSet(managerid, accessid);
+            }
         }
 
         /// <summary>

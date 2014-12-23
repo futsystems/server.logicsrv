@@ -473,10 +473,10 @@
     <Compile Include="Forms\System\fmInterface.Designer.cs">
       <DependentUpon>fmInterface.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Basic\fmPermissionTemplate.cs">
+    <Compile Include="Forms\System\fmPermissionTemplate.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Basic\fmPermissionTemplate.Designer.cs">
+    <Compile Include="Forms\System\fmPermissionTemplate.Designer.cs">
       <DependentUpon>fmPermissionTemplate.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\fmPopMessage.cs">
@@ -876,7 +876,7 @@
     <EmbeddedResource Include="Forms\System\fmInterface.resx">
       <DependentUpon>fmInterface.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Basic\fmPermissionTemplate.resx">
+    <EmbeddedResource Include="Forms\System\fmPermissionTemplate.resx">
       <DependentUpon>fmPermissionTemplate.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\fmPopMessage.resx">

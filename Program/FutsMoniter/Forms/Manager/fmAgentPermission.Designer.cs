@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(fmAgentPermission));
             this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
+            this.ctAgentList3 = new FutsMoniter.ctAgentList();
             this.btnSubmit = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.pmcurrent = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel3 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
@@ -37,7 +38,6 @@
             this.kryptonLabel2 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.pmlist = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
             this.kryptonLabel1 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.ctAgentList3 = new FutsMoniter.ctAgentList();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pmlist)).BeginInit();
@@ -58,6 +58,18 @@
             this.kryptonPanel1.Name = "kryptonPanel1";
             this.kryptonPanel1.Size = new System.Drawing.Size(253, 272);
             this.kryptonPanel1.TabIndex = 0;
+            // 
+            // ctAgentList3
+            // 
+            this.ctAgentList3.CurrentAgentFK = 0;
+            this.ctAgentList3.EnableAny = false;
+            this.ctAgentList3.EnableDefaultBaseMGR = true;
+            this.ctAgentList3.EnableSelected = true;
+            this.ctAgentList3.EnableSelf = false;
+            this.ctAgentList3.Location = new System.Drawing.Point(22, 12);
+            this.ctAgentList3.Name = "ctAgentList3";
+            this.ctAgentList3.Size = new System.Drawing.Size(192, 25);
+            this.ctAgentList3.TabIndex = 10;
             // 
             // btnSubmit
             // 
@@ -115,17 +127,6 @@
             this.kryptonLabel1.Size = new System.Drawing.Size(68, 18);
             this.kryptonLabel1.TabIndex = 3;
             this.kryptonLabel1.Values.Text = "权限模板:";
-            // 
-            // ctAgentList3
-            // 
-            this.ctAgentList3.EnableAny = false;
-            this.ctAgentList3.EnableDefaultBaseMGR = true;
-            this.ctAgentList3.EnableSelected = true;
-            this.ctAgentList3.EnableSelf = true;
-            this.ctAgentList3.Location = new System.Drawing.Point(22, 12);
-            this.ctAgentList3.Name = "ctAgentList3";
-            this.ctAgentList3.Size = new System.Drawing.Size(192, 25);
-            this.ctAgentList3.TabIndex = 10;
             // 
             // fmAgentPermission
             // 

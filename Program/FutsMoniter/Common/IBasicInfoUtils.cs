@@ -193,6 +193,7 @@ namespace TradingLib.Common
             {
                 list.Add(new ValueObject<int> { Name = "<Any>", Value = 0 });
             }
+            //从柜员列表中获得管理员或代理域
             foreach (ManagerSetting m in info.Managers.Where(g => (g.Type == QSEnumManagerType.ROOT || g.Type == QSEnumManagerType.AGENT)))
             {
                 if (!includeself && m.mgr_fk == Globals.BaseMGRFK)
