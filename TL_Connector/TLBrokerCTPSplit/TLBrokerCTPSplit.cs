@@ -869,10 +869,29 @@ namespace Broker.Live
                     info.ErrorMessage = error.Error.ErrorMsg;
 
                     _splittracker.GotSonOrderError(o, info);
-                    //平仓量超过持仓量
+                    //平仓量超过持仓量 只能修复 在主帐户对应方向执行买入操作 形成对应的持仓 这样就可以让分帐户侧成功平仓
                     if (error.Error.ErrorID == 30)
                     {
+                        //平仓缺失智能补单 这个功能可以在接口设置中进行参数化设置。同理 在撤单过程中，如果有委托已经撤除 也需要智能的进行本地同步
+                        XOrderField norder = new XOrderField();
 
+                        norder.ID = o.id.ToString();
+                        norder.Date = Util.ToTLDate();
+                        norder.Time = Util.ToTLTime();
+                        norder.Symbol = o.Symbol;
+                        norder.Exchange = o.Exchange;
+                        norder.Side = !o.Side;
+                        norder.TotalSize = Math.Abs(o.TotalSize);
+                        norder.FilledSize = 0;
+                        norder.UnfilledSize = 0;
+
+                        norder.LimitPrice = 0;
+                        norder.StopPrice = 0;
+
+                        norder.OffsetFlag = QSEnumOffsetFlag.OPEN;//开仓
+                        
+                        bool success = WrapperSendOrder(ref norder);
+                        debug(string.Format("平仓量超过持仓量,主帐户侧持仓缺失,下单进行补仓 市价{0} {1} 手 {2} {3}", norder.Side ? "买入" : "卖出", norder.TotalSize, norder.Symbol, success ? "成功" : "失败"), QSEnumDebugLevel.WARNING);
                     }
                     //资金不足
                     if (error.Error.ErrorID == 31)
