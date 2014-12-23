@@ -44,7 +44,10 @@ namespace FutsMoniter
         FutSystems.GUI.ViewQuoteList GetViewQuote(SecurityFamily sec)
         {
             if (sec == null) return null;
+            if (sec.Exchange == null) return null;
+
             FutSystems.GUI.ViewQuoteList vq = null;
+            
             if (viewquotemap.TryGetValue(sec.Exchange.EXCode, out vq))
             {
                 return vq;
@@ -54,6 +57,16 @@ namespace FutsMoniter
 
         public void OnInit()
         {
+            if (!Globals.Domain.Super)
+            {
+                ctOrderSenderM1.Visible = Globals.Manager.IsRoot()||Globals.UIAccess.r_execution;
+                if (!ctOrderSenderM1.Visible)
+                {
+                    quotenav.Height = quotenav.Height + ctOrderSenderM1.Height;
+
+                }
+            }
+
             quote_cffex.SymbolSelectedEvent += new SymbolDelegate(SelectSymbol);
             quote_czce.SymbolSelectedEvent += new SymbolDelegate(SelectSymbol);
             quote_dce.SymbolSelectedEvent += new SymbolDelegate(SelectSymbol);

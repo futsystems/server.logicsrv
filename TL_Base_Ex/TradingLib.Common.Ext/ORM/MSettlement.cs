@@ -46,15 +46,14 @@ namespace TradingLib.ORM
                 string query = String.Format("Insert into log_position_detail_hist (`account`,`opendate`,`opentime`,`closeamount`,`settleday`,`side`,`volume`,`openprice`,`tradeid`,`lastsettlementprice`,`settlementprice`,`closevolume`,`hedgeflag`,`margin`,`exchange`,`symbol`,`seccode`,`closeprofitbydate`,`closeprofitbytrade`,`positionprofitbydate`,`positionprofitbytrade`,`ishisposition`,`broker`,`breed`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}','{17}','{18}','{19}','{20}','{21}','{22}','{23}')", p.Account, p.OpenDate, p.OpenTime, p.CloseAmount, p.Settleday, p.Side ? 1 : 0, p.Volume, p.OpenPrice, p.TradeID, p.LastSettlementPrice, p.SettlementPrice, p.CloseVolume, p.HedgeFlag, p.Margin, p.Exchange, p.Symbol, p.SecCode, p.CloseProfitByDate, p.CloseProfitByTrade, p.PositionProfitByDate, p.PositionProfitByTrade, p.IsHisPosition ? 1 : 0,p.Broker,p.Breed);
                 return db.Connection.Execute(query) > 0;
             }
-        
         }
 
         /// <summary>
-        /// 从数据库加载某个结算日所有历史持仓明细
+        /// 获得分帐户侧所有持仓明细
         /// </summary>
         /// <param name="tradingday"></param>
         /// <returns></returns>
-        public static IEnumerable<PositionDetail> SelectPositionDetails(int tradingday)
+        public static IEnumerable<PositionDetail> SelectAccountPositionDetails(int tradingday)
         {
             using (DBMySql db = new DBMySql())
             {
@@ -63,6 +62,11 @@ namespace TradingLib.ORM
             }
         }
 
+        /// <summary>
+        /// 获得接口侧所有持仓明细数据
+        /// </summary>
+        /// <param name="tradingday"></param>
+        /// <returns></returns>
         public static IEnumerable<PositionDetail> SelectBrokerPositionDetails(int tradingday)
         {
             using (DBMySql db = new DBMySql())
@@ -74,7 +78,7 @@ namespace TradingLib.ORM
 
 
         /// <summary>
-        /// 从数据库加载某个交易帐号某个结算日的所有持仓明细
+        /// 从数据库加载某个交易帐号或通道的持仓明细某个结算日的所有持仓明细
         /// </summary>
         /// <param name="tradingday"></param>
         /// <returns></returns>

@@ -63,11 +63,11 @@ namespace FutsMoniter.Common
             //在线程中创建主窗体,防止登入界面卡顿
             //new Thread(delegate()
             //{
-                _loginform.ShowMessage("初始化...");
+                //_loginform.ShowMessage("初始化...");
                 mainfm = new MainForm(_loginform.ShowMessage);
                 this.PrimaryForm = mainfm;
                 _loginform.EnableLogin();
-                _loginform.ShowMessage("初始化完毕");
+                //_loginform.ShowMessage("初始化完毕");
 
             //}).Start();
         }

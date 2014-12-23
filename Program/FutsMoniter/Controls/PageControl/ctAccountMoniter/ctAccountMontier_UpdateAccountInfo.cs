@@ -55,7 +55,7 @@ namespace FutsMoniter
         const string AGENTCODE = "代理编号";
         const string AGENTMGRFK = "AGENTMGRFK";
         const string NAME = "姓名";
-        const string POSLOK = "锁仓权限";
+        const string POSLOK = "锁仓";
         const string DELETE = "DELETE";
         const string ROUTERGROUP = "Group";
         const string ROUTERGROUPSTR = "路由组";
@@ -145,11 +145,13 @@ namespace FutsMoniter
 
             accountgrid.Columns[ACCOUNT].Width = 100;
             accountgrid.Columns[ROUTEIMG].Width = 30;
-            accountgrid.Columns[EXECUTEIMG].Width = 20;
-            accountgrid.Columns[PROFITLOSSIMG].Width = 20;
-            accountgrid.Columns[LOGINSTATUSIMG].Width = 20;
+            accountgrid.Columns[EXECUTEIMG].Width = 30;
+            accountgrid.Columns[PROFITLOSSIMG].Width = 30;
+            accountgrid.Columns[LOGINSTATUSIMG].Width = 30;
             accountgrid.Columns[ADDRESS].Width = 120;
-            accountgrid.Columns[HOLDSIZE].Width = 20;
+            accountgrid.Columns[HOLDSIZE].Width = 30;
+            accountgrid.Columns[INTRADAY].Width = 90;
+
              for (int i = 0; i < gt.Columns.Count; i++)
             {
                 accountgrid.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
@@ -205,6 +207,7 @@ namespace FutsMoniter
         //通过行号得该行的Security
         IAccountLite GetVisibleAccount(string account)
         {
+            //MessageBox.Show("account:" + account + " haveaccount:" + HaveAccount(account).ToString());
             if (HaveAccount(account))
                 return accountmap[account];
             return null;
@@ -365,6 +368,7 @@ namespace FutsMoniter
                     int r = accountIdx(account.Account);//管理端是以account为唯一键值,应该不会出现重复？？
                     if (r == -1)//datatable不存在该行，我们则增加该行
                     {
+                        //Globals.Debug("account:" + account.Account + " login:" + account.IsLogin.ToString() + " IPAddress:" + account.IPAddress);
                         gt.Rows.Add(account.Account);
                         int i = gt.Rows.Count - 1;
                         gt.Rows[i][ROUTE] = account.OrderRouteType.ToString();
@@ -372,9 +376,18 @@ namespace FutsMoniter
                         gt.Rows[i][EXECUTE] = getExecuteStatus(account.Execute);
                         gt.Rows[i][EXECUTEIMG] = getExecuteStatusImage(account.Execute);
                         gt.Rows[i][PROFITLOSSIMG] = getProfitLossImage(0);
-                        gt.Rows[i][LOGINSTATUS] = getLoginStatus(false);
-                        gt.Rows[i][LOGINSTATUSIMG] = getLoginStatusImage(false);
-                        gt.Rows[i][ADDRESS] = "";
+
+                        gt.Rows[i][LOGINSTATUS] = getLoginStatus(account.IsLogin);
+                        gt.Rows[i][LOGINSTATUSIMG] = getLoginStatusImage(account.IsLogin);
+                        if (account.IsLogin)
+                        {
+                            gt.Rows[i][ADDRESS] = account.IPAddress;
+                        }
+                        else
+                        {
+                            gt.Rows[i][ADDRESS] = "";
+                        }
+
                         gt.Rows[i][LASTEQUITY] = decDisp(account.LastEquity);
 
                         gt.Rows[i][NOWEQUITY] = decDisp(account.NowEquity);
@@ -391,14 +404,16 @@ namespace FutsMoniter
                         gt.Rows[i][AGENTCODE] = mgr.Login + " - " + mgr.Name;
                         gt.Rows[i][AGENTMGRFK] = account.MGRID;
                         gt.Rows[i][NAME] = account.Name;
-                        gt.Rows[i][POSLOK] = account.PosLock ? "有" : "无";
+                        gt.Rows[i][POSLOK] = account.PosLock ? "有权" : "无权";
                         gt.Rows[i][DELETE] = account.Deleted;
                         gt.Rows[i][ROUTERGROUP] = account.RG_ID;
-                        gt.Rows[i][ROUTERGROUPSTR] = ctRouterGroupList1.GetRrouterGroupName(account.RG_ID);
+                        RouterGroupSetting rg = Globals.BasicInfoTracker.GetRouterGroup(account.RG_ID);
+                        gt.Rows[i][ROUTERGROUPSTR] = rg != null ? rg.Name : "";
+
 
                         accountmap.TryAdd(account.Account, account);
                         accountrowmap.TryAdd(account.Account, i);
-                        //debug("got account:" + account.Account, QSEnumDebugLevel.INFO);
+                        //Globals.Debug("got account:" + account.Account);
                     }
                     else //如果存在表面是进行修改
                     {
@@ -411,7 +426,7 @@ namespace FutsMoniter
                         gt.Rows[r][CATEGORYSTR] = Util.GetEnumDescription(account.Category);
                         gt.Rows[r][CATEGORY] = account.Category.ToString();
                         gt.Rows[r][INTRADAY] = account.IntraDay ? "日内" : "隔夜";
-                        gt.Rows[r][POSLOK] = account.PosLock ? "有" : "无";
+                        gt.Rows[r][POSLOK] = account.PosLock ? "有权" : "无权";
 
                         ManagerSetting mgr = Globals.BasicInfoTracker.GetManager(account.MGRID);
                         gt.Rows[r][AGENTCODE] = mgr.Login + " - " + mgr.Name;
@@ -419,7 +434,8 @@ namespace FutsMoniter
                         gt.Rows[r][DELETE] = account.Deleted;
 
                         gt.Rows[r][ROUTERGROUP] = account.RG_ID;
-                        gt.Rows[r][ROUTERGROUPSTR] = ctRouterGroupList1.GetRrouterGroupName(account.RG_ID);
+                        RouterGroupSetting rg = Globals.BasicInfoTracker.GetRouterGroup(account.RG_ID);
+                        gt.Rows[r][ROUTERGROUPSTR] = rg != null ? rg.Name : "";
 
                     }
 
@@ -531,19 +547,6 @@ namespace FutsMoniter
         {
             e.PaintParts = e.PaintParts ^ DataGridViewPaintParts.Focus;
         }
-
-
-        void ctRouterGroupList1_RouterGroupInitEvent()
-        {
-            int gid=0;
-            for (int i = 0; i < gt.Rows.Count; i++)
-            {
-                int.TryParse(gt.Rows[i][ROUTERGROUP].ToString(),out gid);
-                gt.Rows[i][ROUTERGROUPSTR] = ctRouterGroupList1.GetRrouterGroupName(gid);
-
-            }
-        }
-
 
     }
 }

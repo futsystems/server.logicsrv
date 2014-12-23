@@ -512,14 +512,23 @@ namespace TradingLib.Core
             return null;
         }
 
-        public TrdClientInfo FirstClientInfoForAccount(string account)
+        /// <summary>
+        /// 返回某个交易帐户所有终端
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public IEnumerable<ClientInfoBase> ClientsForAccount(string account)
         {
-            TrdClientInfo[] list = tl.ClientsForAccount(account);
-            if (list.Length > 0)
-                return list[0];
-            else
-                return null;
+            return tl.ClientsForAccount(account);
         }
+        //public TrdClientInfo FirstClientInfoForAccount(string account)
+        //{
+        //    TrdClientInfo[] list = tl.ClientsForAccount(account);
+        //    if (list.Length > 0)
+        //        return list[0];
+        //    else
+        //        return null;
+        //}
 
         /// <summary>
         /// 恢复交易连接数据

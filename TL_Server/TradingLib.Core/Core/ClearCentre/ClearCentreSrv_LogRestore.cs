@@ -71,6 +71,8 @@ namespace TradingLib.Core
         
         }
 
+
+        #region 获得接口侧日内交易数据
         /// <summary>
         /// 获得某个成交接口所有日内交易数据
         /// 接口侧的委托分解，有可能是帐户侧也有可能是路由侧分解的子委托，因此需要通过调用符合方法找到对应的委托
@@ -142,5 +144,8 @@ namespace TradingLib.Core
             }
             return null;
         }
+
+        #endregion
+
     }
 }

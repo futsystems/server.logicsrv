@@ -380,7 +380,7 @@ namespace TradingLib.Common
         void CliOnMGRManagerResponse(RspMGRQryManagerResponse response)
         {
             debug("got manager response:" + response.ToString());
-            this.handler.OnMGRMangerResponse(response.ManagerToSend, response.IsLast);
+            //this.handler.OnMGRMangerResponse(response.ManagerToSend, response.IsLast);
         }
         #endregion
 

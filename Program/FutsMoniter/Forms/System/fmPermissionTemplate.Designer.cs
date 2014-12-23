@@ -55,7 +55,7 @@
             this.kryptonPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.kryptonPanel1.Location = new System.Drawing.Point(0, 0);
             this.kryptonPanel1.Name = "kryptonPanel1";
-            this.kryptonPanel1.Size = new System.Drawing.Size(775, 659);
+            this.kryptonPanel1.Size = new System.Drawing.Size(775, 454);
             this.kryptonPanel1.TabIndex = 0;
             // 
             // laylout
@@ -118,7 +118,7 @@
             this.laylout.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.laylout.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.laylout.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.laylout.Size = new System.Drawing.Size(775, 502);
+            this.laylout.Size = new System.Drawing.Size(775, 297);
             this.laylout.TabIndex = 1;
             // 
             // kryptonGroupBox1
@@ -175,9 +175,9 @@
             // 
             // btnSaveAs
             // 
-            this.btnSaveAs.Location = new System.Drawing.Point(662, 96);
+            this.btnSaveAs.Location = new System.Drawing.Point(662, 87);
             this.btnSaveAs.Name = "btnSaveAs";
-            this.btnSaveAs.Size = new System.Drawing.Size(89, 30);
+            this.btnSaveAs.Size = new System.Drawing.Size(90, 40);
             this.btnSaveAs.TabIndex = 3;
             this.btnSaveAs.Values.Text = "新建模板";
             // 
@@ -185,7 +185,7 @@
             // 
             this.btnSubmit.Location = new System.Drawing.Point(662, 9);
             this.btnSubmit.Name = "btnSubmit";
-            this.btnSubmit.Size = new System.Drawing.Size(89, 30);
+            this.btnSubmit.Size = new System.Drawing.Size(90, 40);
             this.btnSubmit.TabIndex = 2;
             this.btnSubmit.Values.Text = "更新模板";
             // 
@@ -210,7 +210,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(775, 659);
+            this.ClientSize = new System.Drawing.Size(775, 454);
             this.Controls.Add(this.kryptonPanel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;

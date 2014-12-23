@@ -142,7 +142,14 @@ namespace FutsMoniter
         
         public void EnableLogin()
         {
-            btnLogin.Enabled = true;
+            if (InvokeRequired)
+            {
+                Invoke(new VoidDelegate(EnableLogin), new object[] { });
+            }
+            else
+            {
+                btnLogin.Enabled = true;
+            }
         }
 
         void Reset()

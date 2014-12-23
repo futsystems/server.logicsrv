@@ -127,6 +127,9 @@ namespace TradingLib.Common
         /// </summary>
         public bool Router_Sim { get; set; }
 
-
+        /// <summary>
+        /// 调试插入成交
+        /// </summary>
+        public bool Misc_InsertTrade { get; set; }
     }
 }

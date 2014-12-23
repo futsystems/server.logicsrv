@@ -62,7 +62,7 @@ namespace TradingLib.API
         /// </summary>
         /// <param name="manger"></param>
         /// <param name="islast"></param>
-        void OnMGRMangerResponse(Manager manger, bool islast);
+        //void OnMGRMangerResponse(Manager manger, bool islast);
         #endregion
     }
 }

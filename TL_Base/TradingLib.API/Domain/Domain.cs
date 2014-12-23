@@ -134,6 +134,10 @@ namespace TradingLib.API
         /// </summary>
         bool Router_Sim { get; set; }
 
+        /// <summary>
+        /// 调试插入成交
+        /// </summary>
+        bool Misc_InsertTrade { get; set; }
         #endregion
 
     }

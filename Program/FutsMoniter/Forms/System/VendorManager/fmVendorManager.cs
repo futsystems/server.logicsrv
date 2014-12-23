@@ -98,7 +98,7 @@ namespace FutsMoniter
             Globals.LogicEvent.RegisterCallback("MgrExchServer", "NotifyVendor", this.OnNotifyVendorBind);
             Globals.LogicEvent.RegisterCallback("ConnectorManager", "NotifyVendor", this.OnNotifyVendorBind);
             Globals.LogicEvent.RegisterCallback("ConnectorManager", "NotifyRouterItem", this.OnNotifyRouterItem);
-            Globals.LogicEvent.RegisterCallback("ConnectorManager", "NotifyRouterGroup", this.OnNotifyRouterGroup);
+            //Globals.LogicEvent.RegisterCallback("ConnectorManager", "NotifyRouterGroup", this.OnNotifyRouterGroup);
 
             Globals.LogicEvent.RegisterCallback("ConnectorManager", "QryConnectorStatus", this.OnQryConnectorStatus);
             Globals.LogicEvent.RegisterCallback("ConnectorManager", "NotifyConnectorStatus", this.OnNotifyConnectorStatus);

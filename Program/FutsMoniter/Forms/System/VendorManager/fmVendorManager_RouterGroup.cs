@@ -31,7 +31,7 @@ namespace FutsMoniter
             itemmap.Clear();
             itemrowid.Clear();
 
-            RouterGroupSetting setting = ctRouterGroupList1.RouterGroudSelected;
+            RouterGroupSetting setting = ctRouterGroupList1.RouterGroup;
             if (setting != null)
             {
                 rgid.Text = setting.ID.ToString();
@@ -46,10 +46,12 @@ namespace FutsMoniter
             }
         }
 
-        void OnNotifyRouterGroup(string jsonstr)
-        {
-            ctRouterGroupList1.OnNotifyRouterGroup(jsonstr);
-        }
+        //void OnNotifyRouterGroup(string jsonstr)
+        //{
+        //    ctRouterGroupList1.OnNotifyRouterGroup(jsonstr);
+        //}
+
+
         void OnNotifyRouterItem(string jsonstr)
         {
             RouterItemSetting obj = MoniterUtils.ParseJsonResponse<RouterItemSetting>(jsonstr);
@@ -172,7 +174,7 @@ namespace FutsMoniter
         }
         void btnUpdateRouterGroup_Click(object sender, EventArgs e)
         {
-            RouterGroupSetting group = ctRouterGroupList1.RouterGroudSelected;
+            RouterGroupSetting group = ctRouterGroupList1.RouterGroup;
             group.Strategy = (QSEnumRouterStrategy)cbrgstrategytype.SelectedValue;
             group.Description = rgdescrption.Text;
             if (fmConfirm.Show("确认更新路由组信息?") == System.Windows.Forms.DialogResult.Yes)
@@ -279,7 +281,7 @@ namespace FutsMoniter
                 ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show("没有可用实盘帐户");
                 return;
             }
-            RouterGroupSetting rg = ctRouterGroupList1.RouterGroudSelected;
+            RouterGroupSetting rg = ctRouterGroupList1.RouterGroup;
             if (rg == null)
             {
                 ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show("请先添加路由组");
@@ -299,7 +301,7 @@ namespace FutsMoniter
                 return;
             }
             fmRouterItem fm = new fmRouterItem();
-            RouterGroupSetting rg = ctRouterGroupList1.RouterGroudSelected;
+            RouterGroupSetting rg = ctRouterGroupList1.RouterGroup;
             fm.SetRouterGroup(rg);
             fm.SetVendorCBList(GetVendorIDCBList(false));
             fm.SetRouterItemSetting(item);

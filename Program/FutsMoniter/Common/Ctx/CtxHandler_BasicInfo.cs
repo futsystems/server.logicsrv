@@ -119,24 +119,41 @@ namespace TradingLib.Common
                     basicinfotracker.GotManager(mgr);
                 }
             }
+
             if(!BasicInfoDone)
             {
-                Status("基础信息下载完成,下载帐户信息");
-                Globals.TLClient.ReqQryAccountList();
+                Status("柜员信息下载完成,下载路由组信息");
+                Globals.TLClient.ReqQryRouterGroup();
             }
         }
 
-        public void OnMGRMangerResponse(Manager manger, bool islast)
-        {
-            basicinfotracker.GotManager(manger);
-            if (islast && !BasicInfoDone)
+        //public void OnMGRMangerResponse(Manager manger, bool islast)
+        //{
+        //    basicinfotracker.GotManager(manger);
+        //    if (islast && !BasicInfoDone)
+        //    {
+        //        Status("基础信息下载完成,下载帐户信息");
+        //        Globals.TLClient.ReqQryAccountList();
+        //    }
+        //}
+
+        public void OnQryRouterGroup(string jsonstr)
+        { 
+            RouterGroupSetting[] rglist = MoniterUtils.ParseJsonResponse<RouterGroupSetting[]>(jsonstr);
+            if (rglist != null)
             {
-                Status("基础信息下载完成,下载帐户信息");
+                foreach (RouterGroupSetting rg in rglist)
+                {
+                    basicinfotracker.GotRouterGroup(rg);
+                }
+            }
+            if (!BasicInfoDone)
+            {
+                Status("路由组信息下载完成,下载帐户信息");
+                Globals.Debug("********************************* routergroup done, try to qry account list");
                 Globals.TLClient.ReqQryAccountList();
             }
         }
-
-
 
 
 

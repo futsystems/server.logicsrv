@@ -75,23 +75,36 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\update\Beetle.dll</HintPath>
     </Reference>
-    <Reference Include="ComponentFactory.Krypton.Docking, Version=4.4.0.0, Culture=neutral, PublicKeyToken=a87e673e9ecb6e8e" />
-    <Reference Include="ComponentFactory.Krypton.Navigator, Version=4.4.0.0, Culture=neutral, PublicKeyToken=a87e673e9ecb6e8e, processorArchitecture=MSIL">
+    <Reference Include="ComponentFactory.Krypton.Design, Version=4.4.0.0, Culture=neutral, PublicKeyToken=dc91bbef911870e2, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\kypton\ComponentFactory.Krypton.Design.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ComponentFactory.Krypton.Docking, Version=4.4.0.0, Culture=neutral, PublicKeyToken=dc91bbef911870e2, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\kypton\ComponentFactory.Krypton.Docking.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ComponentFactory.Krypton.Navigator, Version=4.4.0.0, Culture=neutral, PublicKeyToken=dc91bbef911870e2, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\kypton\ComponentFactory.Krypton.Navigator.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ComponentFactory.Krypton.Ribbon, Version=4.4.0.0, Culture=neutral, PublicKeyToken=a87e673e9ecb6e8e, processorArchitecture=MSIL">
+    <Reference Include="ComponentFactory.Krypton.Ribbon, Version=4.4.0.0, Culture=neutral, PublicKeyToken=dc91bbef911870e2, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\kypton\ComponentFactory.Krypton.Ribbon.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ComponentFactory.Krypton.Toolkit, Version=4.4.0.0, Culture=neutral, PublicKeyToken=a87e673e9ecb6e8e, processorArchitecture=MSIL">
+    <Reference Include="ComponentFactory.Krypton.Toolkit, Version=4.4.0.0, Culture=neutral, PublicKeyToken=dc91bbef911870e2, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\kypton\ComponentFactory.Krypton.Toolkit.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ComponentFactory.Krypton.Workspace, Version=4.4.0.0, Culture=neutral, PublicKeyToken=a87e673e9ecb6e8e" />
+    <Reference Include="ComponentFactory.Krypton.Workspace, Version=4.4.0.0, Culture=neutral, PublicKeyToken=dc91bbef911870e2, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\kypton\ComponentFactory.Krypton.Workspace.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="NetMQ, Version=3.3.0.11, Culture=neutral, PublicKeyToken=a6decef4ddc58b3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\NetMQ.dll</HintPath>
@@ -146,6 +159,7 @@
     <Compile Include="Common\BasicInfoTracker\BasicInfoTracker_BasicInfo.cs" />
     <Compile Include="Common\BasicInfoTracker\BasicInfoTracker_Rule.cs" />
     <Compile Include="Common\BasicInfoTracker\BasicInfoTracker_Manager.cs" />
+    <Compile Include="Common\BasicInfoTracker\BasicInfoTracker_RouterGroup.cs" />
     <Compile Include="Common\Ctx\CtxEvent_.cs" />
     <Compile Include="Common\Ctx\CtxEvent_Account.cs" />
     <Compile Include="Common\Ctx\CtxEvent_Trading.cs" />
@@ -191,7 +205,13 @@
     <Compile Include="Controls\Base\ctReceivableBankList.Designer.cs">
       <DependentUpon>ctReceivableBankList.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\PageControl\ctAccountMoniter\ctAccountMontier_EventBinder.cs">
+    <Compile Include="Controls\ctAccountFilter.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ctAccountFilter.Designer.cs">
+      <DependentUpon>ctAccountFilter.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PageControl\ctAccountMoniter\ctAccountMontier_OnInit.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Controls\ctCashOperation.cs">
@@ -223,6 +243,12 @@
     </Compile>
     <Compile Include="Controls\ctPositionMertic.Designer.cs">
       <DependentUpon>ctPositionMertic.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PageControl\ctAccountMoniter\fmAcctFilter.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\PageControl\ctAccountMoniter\fmAcctFilter.Designer.cs">
+      <DependentUpon>fmAcctFilter.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\PageControl\ctQuoteMoniter.cs">
       <SubType>UserControl</SubType>
@@ -460,10 +486,10 @@
     <Compile Include="Forms\System\fmInterface.Designer.cs">
       <DependentUpon>fmInterface.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Basic\fmPermissionTemplate.cs">
+    <Compile Include="Forms\System\fmPermissionTemplate.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Basic\fmPermissionTemplate.Designer.cs">
+    <Compile Include="Forms\System\fmPermissionTemplate.Designer.cs">
       <DependentUpon>fmPermissionTemplate.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\fmPopMessage.cs">
@@ -740,11 +766,17 @@
     <EmbeddedResource Include="Controls\Base\ctReceivableBankList.resx">
       <DependentUpon>ctReceivableBankList.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ctAccountFilter.resx">
+      <DependentUpon>ctAccountFilter.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\ctCashOperation.resx">
       <DependentUpon>ctCashOperation.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\ctPositionMertic.resx">
       <DependentUpon>ctPositionMertic.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\PageControl\ctAccountMoniter\fmAcctFilter.resx">
+      <DependentUpon>fmAcctFilter.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\PageControl\ctQuoteMoniter.resx">
       <DependentUpon>ctQuoteMoniter.cs</DependentUpon>
@@ -857,7 +889,7 @@
     <EmbeddedResource Include="Forms\System\fmInterface.resx">
       <DependentUpon>fmInterface.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Basic\fmPermissionTemplate.resx">
+    <EmbeddedResource Include="Forms\System\fmPermissionTemplate.resx">
       <DependentUpon>fmPermissionTemplate.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\fmPopMessage.resx">
@@ -987,7 +1019,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="moniter_terminal.ico" />
-    <Content Include="moniter_terminal2.ico" />
     <None Include="resources\moniter_terminal.ico" />
     <None Include="resources\deleteaccount.png" />
     <None Include="resources\changerouter.png" />
@@ -997,8 +1028,6 @@
     <None Include="images\start.png" />
     <None Include="images\start16.jpg" />
     <None Include="images\stop16.jpg" />
-    <Content Include="moniter-oem.ico" />
-    <Content Include="moniter.ico" />
     <Content Include="moniter0.ico" />
     <None Include="resources\moniter-oem.ico" />
     <None Include="resources\header.jpg" />

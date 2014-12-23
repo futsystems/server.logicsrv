@@ -19,34 +19,34 @@ namespace FutsMoniter
             {
                 InvokeGotAccount(account);
             }
+            //更新帐户数目
+            UpdateAccountNum();
 
             //帐户事件
             Globals.LogicEvent.GotAccountEvent += new Action<IAccountLite>(GotAccount);
             Globals.LogicEvent.GotFinanceInfoLiteEvent += new Action<IAccountInfoLite>(GotAccountInfoLite);
             Globals.LogicEvent.GotAccountChangedEvent += new Action<IAccountLite>(GotAccountChanged);
             Globals.LogicEvent.GotSessionUpdateEvent += new Action<NotifyMGRSessionUpdateNotify>(GotSessionUpdate);
+            
 
-            if (!Globals.LoginResponse.Domain.Super)
+            if (!Globals.Domain.Super)
             {
-                if (!Globals.UIAccess.moniter_acctype)
-                {
-                    //lbcategory.Visible = false;
-                    ctAccountType1.Visible = false;
-                    //ctAccountType1.Visible = false;
-                    accountgrid.Columns[CATEGORYSTR].Visible = false;
-                }
+                //只有管理员可以查看路由类别
+                accountgrid.Columns[ROUTEIMG].Visible = Globals.Manager.IsRoot();
+                //管理员可以查看帐户类别
+                accountgrid.Columns[CATEGORYSTR].Visible = Globals.Manager.IsRoot();
 
-                if (!Globals.UIAccess.moniter_router)
-                {
-                    ctRouterType1.Visible = false;
-                    accountgrid.Columns[ROUTEIMG].Visible = false;
-                }
+                //如果有实盘交易权限则可以查看路由组
+                accountgrid.Columns[ROUTERGROUPSTR].Visible = Globals.Domain.Router_Live;
 
-                accountgrid.ContextMenuStrip.Items[0].Visible = Globals.UIAccess.moniter_menu_editaccount;
-                accountgrid.ContextMenuStrip.Items[1].Visible = Globals.UIAccess.moniter_menu_changepass;
-                accountgrid.ContextMenuStrip.Items[2].Visible = Globals.UIAccess.moniter_menu_changeinvestor;
-                accountgrid.ContextMenuStrip.Items[3].Visible = Globals.UIAccess.moniter_menu_queryhist;
-                accountgrid.ContextMenuStrip.Items[4].Visible = Globals.UIAccess.moniter_menu_delaccount;
+                //只有管理员可以修改路由组和删除交易帐户
+                if (!Globals.Manager.IsRoot())
+                {
+                    accountgrid.ContextMenuStrip.Items[7].Visible = false;
+                    accountgrid.ContextMenuStrip.Items[8].Visible = false;
+                    accountgrid.ContextMenuStrip.Items[9].Visible = false;
+                    accountgrid.ContextMenuStrip.Items[10].Visible = false;
+                }
 
             }
             //启动更新线程

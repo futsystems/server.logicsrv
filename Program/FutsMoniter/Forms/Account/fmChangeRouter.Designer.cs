@@ -54,7 +54,6 @@
             this.ctRouterGroupList1.EnableAny = false;
             this.ctRouterGroupList1.Location = new System.Drawing.Point(48, 39);
             this.ctRouterGroupList1.Name = "ctRouterGroupList1";
-            this.ctRouterGroupList1.RouterGroudSelected = null;
             this.ctRouterGroupList1.Size = new System.Drawing.Size(190, 21);
             this.ctRouterGroupList1.TabIndex = 0;
             // 

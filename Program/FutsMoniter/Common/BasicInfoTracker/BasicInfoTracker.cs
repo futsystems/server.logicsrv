@@ -17,12 +17,29 @@ namespace TradingLib.Common
             
         }
 
+        /// <summary>
+        /// 响应管理员修改或增加通知
+        /// </summary>
+        /// <param name="jsonstr"></param>
         void OnManagerNotify(string jsonstr)
         {
             ManagerSetting mgr = MoniterUtils.ParseJsonResponse<ManagerSetting>(jsonstr);
             if(mgr != null)
             {
                 GotManager(mgr);
+            }
+        }
+
+        /// <summary>
+        /// 响应路由组修改或增加通知
+        /// </summary>
+        /// <param name="jsonstr"></param>
+        void OnRouterGroupNotify(string jsonstr)
+        {
+            RouterGroupSetting rg = MoniterUtils.ParseJsonResponse<RouterGroupSetting>(jsonstr);
+            if (rg != null)
+            {
+                GotRouterGroup(rg);
             }
         }
 
@@ -50,6 +67,7 @@ namespace TradingLib.Common
         public event Action<SecurityFamilyImpl> GotSecurityEvent;
         public event Action<SymbolImpl> GotSymbolEvent;
         public event Action<ManagerSetting> GotManagerEvent;
+        public event Action<RouterGroupSetting> GotRouterGroupEvent;
         #endregion
 
 
@@ -75,6 +93,7 @@ namespace TradingLib.Common
         public void OnFinishLoad()
         {
             Globals.LogicEvent.RegisterCallback("MgrExchServer", "NotifyManagerUpdate", OnManagerNotify);
+            Globals.LogicEvent.RegisterCallback("ConnectorManager", "NotifyRouterGroup", OnRouterGroupNotify);
 
             foreach (SecurityFamilyImpl target in securitymap.Values)
             {

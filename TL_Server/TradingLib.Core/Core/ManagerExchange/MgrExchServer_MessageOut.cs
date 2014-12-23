@@ -187,7 +187,6 @@ namespace TradingLib.Core
                         tl.TLSend(packet);
                     }
                     Thread.Sleep(100);
-
                 }
                 catch (Exception ex)
                 {
@@ -247,12 +246,6 @@ namespace TradingLib.Core
                     //debug("转发当日成交:" + f.ToString() +" side:"+f.side.ToString(), QSEnumDebugLevel.INFO);
                     tl.TLSend(notify);
                 }
-                //转发当日取消
-                //foreach (long oid in clearcentre.getCancels(acc))
-                //{
-                //    //tl.RestoreCancel(_clearcentre.SentOrder(oid), resume.Source);
-                //}
-
                 //3.发送恢复数据结束标识
                 response.ResumeStatus = QSEnumResumeStatus.END;
                 tl.TLSend(response);

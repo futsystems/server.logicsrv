@@ -77,13 +77,13 @@
             this.toolStripMenuItem1,
             this.退出xToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(115, 76);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(113, 76);
             // 
             // 显示ToolStripMenuItem
             // 
             this.显示ToolStripMenuItem.Image = global::Ant.Server.Properties.Resources._1330161772_display;
             this.显示ToolStripMenuItem.Name = "显示ToolStripMenuItem";
-            this.显示ToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.显示ToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.显示ToolStripMenuItem.Text = "显示";
             this.显示ToolStripMenuItem.Click += new System.EventHandler(this.显示ToolStripMenuItem_Click);
             // 
@@ -91,20 +91,20 @@
             // 
             this.关于ToolStripMenuItem.Image = global::Ant.Server.Properties.Resources.About;
             this.关于ToolStripMenuItem.Name = "关于ToolStripMenuItem";
-            this.关于ToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.关于ToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.关于ToolStripMenuItem.Text = "关于";
             this.关于ToolStripMenuItem.Click += new System.EventHandler(this.关于ToolStripMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(111, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(109, 6);
             // 
             // 退出xToolStripMenuItem
             // 
             this.退出xToolStripMenuItem.Image = global::Ant.Server.Properties.Resources._1330161383_exit;
             this.退出xToolStripMenuItem.Name = "退出xToolStripMenuItem";
-            this.退出xToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.退出xToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.退出xToolStripMenuItem.Text = "退出(&x)";
             this.退出xToolStripMenuItem.Click += new System.EventHandler(this.退出xToolStripMenuItem_Click);
             // 

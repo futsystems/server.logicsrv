@@ -28,19 +28,18 @@ namespace FutsMoniter
 
         void fmDomainEdit_Load(object sender, EventArgs e)
         {
-            WireEvent();
-            if (Globals.EnvReady)
-            {
-                Globals.TLClient.ReqQryInterface();
-                Globals.TLClient.ReqQryServicePlan();
-            }
-        }
-
-        void WireEvent()
-        {
-            Globals.RegIEventHandler(this);
             module_finservice.CheckedChanged += new EventHandler(module_finservice_CheckedChanged);
             module_agent.CheckedChanged += new EventHandler(module_agent_CheckedChanged);
+            router_live.CheckedChanged += new EventHandler(router_CheckedChanged);
+            router_sim.CheckedChanged += new EventHandler(router_CheckedChanged);
+            Globals.RegIEventHandler(this);
+        }
+
+        //路由选择变动事件
+        void router_CheckedChanged(object sender, EventArgs e)
+        {
+            //实盘通道列表只有在实盘交易权限开启时可以选
+            intfaceTab.Enabled = router_live.Checked;
         }
 
         void module_agent_CheckedChanged(object sender, EventArgs e)
@@ -61,6 +60,10 @@ namespace FutsMoniter
         {
             Globals.LogicEvent.RegisterCallback("ConnectorManager", "QryInterface", this.OnQryInterface);
             Globals.LogicEvent.RegisterCallback("FinServiceCentre", "QryFinServicePlan", this.OnQryFinServicePlan);
+            
+            //请求操作可以放在OnInit调用内，这样所有回调注册或初始化操作均已经完成
+            Globals.TLClient.ReqQryInterface();
+            Globals.TLClient.ReqQryServicePlan();
         }
 
         public void OnDisposed()
@@ -69,12 +72,16 @@ namespace FutsMoniter
             Globals.LogicEvent.UnRegisterCallback("FinServiceCentre", "QryFinServicePlan", this.OnQryFinServicePlan);
         }
 
+
         #region 底层成交接口
         ArrayList GetInterfaceList()
         {
             ArrayList list = new System.Collections.ArrayList();
             foreach (ConnectorInterface it in interfacemap.Values)
             {
+                //不选择行情接口
+                if (it.Type == QSEnumConnectorType.DataFeed)
+                    continue;
                 ValueObject<int> vo = new ValueObject<int>();
                 vo.Name = it.Name;
                 vo.Value = it.ID;
@@ -237,6 +244,16 @@ namespace FutsMoniter
 
         private void btnSubmit_Click(object sender, EventArgs e)
         {
+            if (!(router_live.Checked || router_sim.Checked))
+            {
+                MoniterUtils.WindowMessage("必须选择一种路由模式或全选");
+                return;
+            }
+            if (router_live.Checked && string.IsNullOrEmpty(GetInterfaceListString()))
+            {
+                MoniterUtils.WindowMessage("实盘交易必须选择支持的接口列表");
+                return;
+            }
             if (_domain != null)
             {
                 _domain.Name = name.Text;

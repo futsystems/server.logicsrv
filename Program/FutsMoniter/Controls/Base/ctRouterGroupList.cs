@@ -32,14 +32,14 @@ namespace FutsMoniter.Controls.Base
 
         void WireEvent()
         {
-            Globals.RegIEventHandler(this);
+            
             cbrglist.SelectedIndexChanged += new EventHandler(rglist_SelectedIndexChanged);
+            Globals.RegIEventHandler(this);
         }
 
-        //bool _gotdata = false;
         void rglist_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (RouterGroupSelectedChangedEvent != null && _gotrglist)
+            if (RouterGroupSelectedChangedEvent != null)
             {
                 RouterGroupSelectedChangedEvent();
             }
@@ -63,105 +63,53 @@ namespace FutsMoniter.Controls.Base
 
         public void OnInit()
         {
-            Globals.LogicEvent.RegisterCallback("ConnectorManager", "QryRouterGroup", this.OnQryRouterGroup);
-            Globals.LogicEvent.RegisterCallback("ConnectorManager", "NotifyRouterGroup", this.OnNotifyRouterGroup);
-            Globals.TLClient.ReqQryRouterGroup();
+            ReloadRouterGroupList();
+            Globals.BasicInfoTracker.GotRouterGroupEvent += new Action<RouterGroupSetting>(BasicInfoTracker_GotRouterGroupEvent);
+
+        }
+
+        void BasicInfoTracker_GotRouterGroupEvent(RouterGroupSetting obj)
+        {
+            ReloadRouterGroupList();
         }
 
         public void OnDisposed()
         {
-            Globals.LogicEvent.UnRegisterCallback("ConnectorManager", "QryRouterGroup", this.OnQryRouterGroup);
+            Globals.BasicInfoTracker.GotRouterGroupEvent -= new Action<RouterGroupSetting>(BasicInfoTracker_GotRouterGroupEvent);
         }
 
         
-        public void OnNotifyRouterGroup(string json)
-        {
-            RouterGroupSetting rg = MoniterUtils.ParseJsonResponse<RouterGroupSetting>(json);
-            if (rg != null)
-            {
-                rgmap[rg.ID] = rg;
-                InvokeGotRouterGroup(rgmap.Values.ToArray());
-            }
-            else//如果没有配资服
-            {
 
-            }
-        }
-        public event VoidDelegate RouterGroupInitEvent;
-            
-        bool _gotrglist = false;
-        void OnQryRouterGroup(string json)
-        {
-            RouterGroupSetting[] objs = MoniterUtils.ParseJsonResponse<RouterGroupSetting[]>(json);
-            if (objs != null)
-            {
-                foreach(RouterGroupSetting obj in objs)
-                {
-                    rgmap[obj.ID] = obj;
-                }
-                this.InvokeGotRouterGroup(objs);
-                if (!_gotrglist)
-                {
-                    _gotrglist = true;
-                    //对外触发初始化事件
-                    if (RouterGroupInitEvent != null)
-                        RouterGroupInitEvent();
-                }
-            }
-            else//如果没有配资服
-            {
-
-            }
-        }
 
         /// <summary>
-        /// 获得某个路由组对应的名称
+        /// 加载路由组列表
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public string GetRrouterGroupName(int id)
+        void ReloadRouterGroupList()
         {
-            //Globals.Debug("rg ID....:" + id.ToString());
-            RouterGroupSetting rg= null;
-            if (rgmap.TryGetValue(id, out rg))
+            ArrayList list = new ArrayList();
+            if (EnableAny)
             {
-                return rg.Name;
+                ValueObject<int> vo = new ValueObject<int>();
+                vo.Name = "<Any>";
+                vo.Value = 0;
+                list.Add(vo);
             }
-            return "";
-        }
-        Dictionary<int, RouterGroupSetting> rgmap = new Dictionary<int, RouterGroupSetting>();
-        void InvokeGotRouterGroup(RouterGroupSetting[] rglist)
-        {
-            if (InvokeRequired)
+
+            foreach (RouterGroupSetting rg in Globals.BasicInfoTracker.RouterGroups)
             {
-                Invoke(new Action<RouterGroupSetting[]>(InvokeGotRouterGroup), new object[] { rglist });
+                ValueObject<int> vo = new ValueObject<int>
+                {
+                    Name = string.Format("{0}-{1}", rg.Name, rg.ID),
+                    Value = rg.ID,
+                };
+                list.Add(vo);
             }
-            else
+            if (list.Count > 0)//如果list为空则绑定下拉列表时会出错
             {
-                ArrayList list = new ArrayList();
-                if (EnableAny)
-                {
-                    ValueObject<int> vo = new ValueObject<int>();
-                    vo.Name = "<Any>";
-                    vo.Value = 0;
-                    list.Add(vo);
-                }
-
-                foreach (RouterGroupSetting rg in rglist)
-                {
-                    ValueObject<int> vo = new ValueObject<int>
-                    {
-                        Name = string.Format("{0}-{1}",rg.Name,rg.ID),
-                        Value = rg.ID,
-                    };
-                    //Globals.Debug("it is here ----------------:"+rg.Name +" rg.id:"+rg.ID.ToString());
-                    list.Add(vo);
-                }
-
                 Factory.IDataSourceFactory(cbrglist).BindDataSource(list);
-                //_gotdata = true;
             }
         }
+
 
         public int SelectedIndex
         {
@@ -170,9 +118,8 @@ namespace FutsMoniter.Controls.Base
                 return cbrglist.SelectedIndex;
             }
         }
-        int _rgselected = 0;
 
-        public int SelectedRouterGroupID
+        public int RouterGroupID
         {
             get
             {
@@ -185,34 +132,33 @@ namespace FutsMoniter.Controls.Base
                     return 0;
                 }
             }
+            set
+            {
+                try
+                {
+                    cbrglist.SelectedValue = value;
+                }
+                catch (Exception ex)
+                { 
+                    
+                }
+            }
 
         }
-        public RouterGroupSetting RouterGroudSelected
+
+
+        public RouterGroupSetting RouterGroup
         {
            get
             {
                 try
                 {
                     int rgid =  int.Parse(cbrglist.SelectedValue.ToString());
-                    if (rgmap.Keys.Contains(rgid))
-                        return rgmap[rgid];
-                    return null;
+                    return Globals.BasicInfoTracker.GetRouterGroup(rgid);
                 }
                 catch (Exception ex)
                 {
                     return null;
-                }
-            }
-            set
-            {
-                try
-                {
-                    _rgselected = value.ID;
-                    cbrglist.SelectedValue = value.ID;
-                }
-                catch (Exception ex)
-                { 
-                    
                 }
             }
         }

@@ -16,7 +16,7 @@ namespace TradingLib.API
         event Action<SecurityFamilyImpl> GotSecurityEvent;
         event Action<SymbolImpl> GotSymbolEvent;
         event Action<ManagerSetting> GotManagerEvent;
-
+        event Action<RouterGroupSetting> GotRouterGroupEvent;
         #endregion
         /// <summary>
         /// 通过全局ID获得市场时间对象
@@ -72,6 +72,7 @@ namespace TradingLib.API
 
         IEnumerable<ManagerSetting> Managers { get; }
 
+        IEnumerable<RouterGroupSetting> RouterGroups { get; }
         /// <summary>
         /// 获得所有可交易合约
         /// </summary>
@@ -110,7 +111,18 @@ namespace TradingLib.API
         /// <returns></returns>
         RuleClassItem GetRuleItemClass(RuleItem item);
 
-
+        /// <summary>
+        /// 获得某个柜员
+        /// </summary>
+        /// <param name="mgrid"></param>
+        /// <returns></returns>
         ManagerSetting GetManager(int mgrid);
+
+        /// <summary>
+        /// 获得某个路由组
+        /// </summary>
+        /// <param name="rgid"></param>
+        /// <returns></returns>
+        RouterGroupSetting GetRouterGroup(int rgid);
     }
 }

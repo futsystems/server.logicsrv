@@ -59,11 +59,25 @@ namespace FutsMoniter.Controls.Base
         {
             get
             {
-                return (QSEnumOrderTransferType)routeType.SelectedValue;
+                try
+                {
+                    return (QSEnumOrderTransferType)routeType.SelectedValue;
+                }
+                catch(Exception ex)
+                {
+                    return 0;
+                }
             }
             set
             {
-                routeType.SelectedValue = value;
+                try
+                {
+                    routeType.SelectedValue = value;
+                }
+                catch (Exception ex)
+                { 
+                
+                }
             }
         }
 

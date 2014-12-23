@@ -18,16 +18,16 @@ namespace FutsMoniter
         {
             InitializeComponent();
             this.Load += new EventHandler(fmChangeRouter_Load);
-            this.ctRouterGroupList1.RouterGroupInitEvent += new VoidDelegate(ctRouterGroupList1_RouterGroupInitEvent);
+            //this.ctRouterGroupList1.RouterGroupInitEvent += new VoidDelegate(ctRouterGroupList1_RouterGroupInitEvent);
         }
 
-        void ctRouterGroupList1_RouterGroupInitEvent()
-        {
-            if (_account != null)
-            {
-                cutrgname.Text = ctRouterGroupList1.GetRrouterGroupName(_account.RG_ID);
-            }
-        }
+        //void ctRouterGroupList1_RouterGroupInitEvent()
+        //{
+        //    if (_account != null)
+        //    {
+        //        cutrgname.Text = ctRouterGroupList1.GetRrouterGroupName(_account.RG_ID);
+        //    }
+        //}
 
         void fmChangeRouter_Load(object sender, EventArgs e)
         {
@@ -36,10 +36,10 @@ namespace FutsMoniter
 
         void btnSubmit_Click(object sender, EventArgs e)
         {
-            string msg = string.Format("确认修改帐户路由组为:{0}?(修改前请确认帐户没有持仓和挂单)", ctRouterGroupList1.RouterGroudSelected.Name);
+            string msg = string.Format("确认修改帐户路由组为:{0}?(修改前请确认帐户没有持仓和挂单)", ctRouterGroupList1.RouterGroup.Name);
             if (ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show(msg,"确认操作",MessageBoxButtons.YesNo,MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
             {
-                Globals.TLClient.ReqUpdateRouterGroup(_account.Account, ctRouterGroupList1.SelectedRouterGroupID);
+                Globals.TLClient.ReqUpdateRouterGroup(_account.Account, ctRouterGroupList1.RouterGroupID);
                 this.Close();
             }
         }
@@ -49,7 +49,8 @@ namespace FutsMoniter
         {
             _account = account;
             this.Text = string.Format("修改帐户[{0}]路由组设置", _account.Account);
-            
+            RouterGroupSetting rg = Globals.BasicInfoTracker.GetRouterGroup(_account.RG_ID);
+            cutrgname.Text = (rg != null ? rg.Name : "未设置");
         }
 
 

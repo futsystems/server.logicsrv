@@ -40,6 +40,8 @@ namespace FutsMoniter
             //系统状态
             kryptonRibbonGroupButton_SystemStatus.Click += new EventHandler(kryptonRibbonGroupButton_SystemStatus_Click);
 
+            //设置
+            kryptonRibbonGroupButton_permissiontmp.Click += new EventHandler(kryptonRibbonGroupButton_permissiontmp_Click);
 
             //基础数据
             kryptonRibbonGroupButton_Mktime.Click += new EventHandler(kryptonRibbonGroupButton_Mktime_Click);
@@ -47,7 +49,7 @@ namespace FutsMoniter
 
             kryptonRibbonGroupButton_Security.Click += new EventHandler(kryptonRibbonGroupButton_Security_Click);
             kryptonRibbonGroupButton_Symbol.Click += new EventHandler(kryptonRibbonGroupButton_Symbol_Click);
-            kryptonRibbonGroupButton_PermissionTemplate.Click += new EventHandler(kryptonRibbonGroupButton_PermissionTemplate_Click);
+            //kryptonRibbonGroupButton_PermissionTemplate.Click += new EventHandler(kryptonRibbonGroupButton_PermissionTemplate_Click);
 
 
             //历史记录
@@ -89,6 +91,12 @@ namespace FutsMoniter
             kryptonRibbonGroupButton_Reset.Click += new EventHandler(kryptonRibbonGroupButton_Reset_Click);
             kryptonRibbonGroupButton_SaveConfig.Click += new EventHandler(kryptonRibbonGroupButton_SaveConfig_Click);
         
+        }
+
+        void kryptonRibbonGroupButton_permissiontmp_Click(object sender, EventArgs e)
+        {
+            fmPermissionTemplate fm = new fmPermissionTemplate();
+            fm.Show();
         }
 
         void kryptonRibbonGroupButton_Reset_Click(object sender, EventArgs e)
@@ -178,11 +186,7 @@ namespace FutsMoniter
             fm.Show();//.ShowDialog();
         }
 
-        void kryptonRibbonGroupButton_PermissionTemplate_Click(object sender, EventArgs e)
-        {
-            fmPermissionTemplate fm = new fmPermissionTemplate();
-            fm.Show();
-        }
+
 
 
 

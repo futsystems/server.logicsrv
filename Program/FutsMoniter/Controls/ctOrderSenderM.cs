@@ -22,22 +22,26 @@ namespace FutsMoniter
         public ctOrderSenderM()
         {
             InitializeComponent();
-            Factory.IDataSourceFactory(cboffsetflag).BindDataSource(MoniterUtils.GetOffsetCBList());
-            Factory.IDataSourceFactory(cbordertype).BindDataSource(MoniterUtils.GetOrderTypeCBList());
-            try
-            {
-                WireEvent();
-            }
-            catch (Exception ex)
-            { 
-            
-            }
+            this.Load += new EventHandler(ctOrderSenderM_Load);
+        }
+
+        void ctOrderSenderM_Load(object sender, EventArgs e)
+        {
+            btnBuy.Click += new EventHandler(btnBuy_Click);
+            btnSell.Click += new EventHandler(btnSell_Click);
+            btnInsertTrade.Click += new EventHandler(btnInsertTrade_Click);
+            this.SendOrderEvent += new OrderDelegate(SendOrderOut);
+            Globals.RegIEventHandler(this);
         }
 
         public void OnInit()
         {
-            btnInsertTrade.Visible = Globals.UIAccess.fun_tab_placeorder_insert;
+            //btnInsertTrade.Visible = Globals.UIAccess.fun_tab_placeorder_insert;
             Globals.LogicEvent.GotAccountSelectedEvent += new Action<IAccountLite>(OnAccountSelected);
+            Factory.IDataSourceFactory(cboffsetflag).BindDataSource(MoniterUtils.GetOffsetCBList());
+            Factory.IDataSourceFactory(cbordertype).BindDataSource(MoniterUtils.GetOrderTypeCBList());
+
+            btnInsertTrade.Visible = Globals.Domain.Misc_InsertTrade&&Globals.Manager.IsRoot();
         }
 
         
@@ -51,20 +55,6 @@ namespace FutsMoniter
         void OnAccountSelected(IAccountLite obj)
         {
             this.SetAccount(obj);
-        }
-
-        /// <summary>
-        /// 绑定事件
-        /// </summary>
-        void WireEvent()
-        {
-            
-            btnBuy.Click +=new EventHandler(btnBuy_Click);
-            btnSell.Click +=new EventHandler(btnSell_Click);
-            btnInsertTrade.Click +=new EventHandler(btnInsertTrade_Click);
-            this.SendOrderEvent += new OrderDelegate(SendOrderOut);
-            Globals.RegIEventHandler(this);
-
         }
 
         void SendOrderOut(Order o)

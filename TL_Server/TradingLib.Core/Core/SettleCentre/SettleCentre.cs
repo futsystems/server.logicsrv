@@ -125,6 +125,7 @@ namespace TradingLib.Core
         ConfigDB _cfgdb;
         int resetTime = 40101;
         bool _cleanTmp = false;
+        bool _settleWithLatestPrice = false;
         public SettleCentre()
             :base(SettleCentre.CoreName)
         {
@@ -136,23 +137,47 @@ namespace TradingLib.Core
             //初始化交易日信息
             InitTradingDay();
 
+            if (!_cfgdb.HaveConfig("SettleTime"))
+            {
+                _cfgdb.UpdateConfig("SettleTime", QSEnumCfgType.Int, 160000, "执行结算,将当日交易与出入金记录进行结转");
+            }
+            TradingCalendar.SettleTime = _cfgdb["SettleTime"].AsInt();
+
+            //重置时间
             if (!_cfgdb.HaveConfig("ResetTime"))
             {
-                _cfgdb.UpdateConfig("ResetTime", QSEnumCfgType.Int, 170101, "执行重置任务清空日内数据 系统帐户归位(170101)");
+                _cfgdb.UpdateConfig("ResetTime", QSEnumCfgType.Int, 170101, "执行重置任务清空日内数据 系统帐户归位");
             }
             resetTime = _cfgdb["ResetTime"].AsInt();
 
+            //结算价
+            if (!_cfgdb.HaveConfig("SettleWithLatestPrice"))
+            {
+                _cfgdb.UpdateConfig("SettleWithLatestPrice", QSEnumCfgType.Bool,false, "是否已最新价来结算持仓盯市盈亏");
+            }
+            resetTime = _cfgdb["SettleWithLatestPrice"].AsInt();
+
+            //是否清空日内临时表
             if (!_cfgdb.HaveConfig("CleanTmpTable"))
             {
                 _cfgdb.UpdateConfig("CleanTmpTable", QSEnumCfgType.Bool,false, "结算后重置系统是否情况日内临时表");
             }
-            _cleanTmp = _cfgdb["CleanTmpTable"].AsBool();
+            _settleWithLatestPrice = _cfgdb["CleanTmpTable"].AsBool();
 
+            //注入交易记录转储任务 结算前5分钟 保存交易记录
+            DateTime storetime = Util.ToDateTime(Util.ToTLDate(DateTime.Now), TradingCalendar.SettleTime)-new TimeSpan(0,5,0);
+            TaskProc taskstore = new TaskProc(this.UUID, "交易系统转储交易记录-" + resetTime.ToString(), storetime.Hour, storetime.Minute, storetime.Second, delegate() { Task_DataStore(); });
+            TLCtxHelper.Ctx.InjectTask(taskstore);
+
+            //注入结算任务 可以在数据指定重置时间
+            DateTime settletime = Util.ToDateTime(Util.ToTLDate(DateTime.Now), TradingCalendar.SettleTime);
+            TaskProc tasksettle = new TaskProc(this.UUID, "交易系统结算-" + resetTime.ToString(), settletime.Hour, settletime.Minute, settletime.Second, delegate() { Task_SettleAccount(); });
+            TLCtxHelper.Ctx.InjectTask(tasksettle);
 
             //注入重置任务 可以在数据指定重置时间
-            DateTime t = Util.ToDateTime(Util.ToTLDate(DateTime.Now), resetTime);
-            TaskProc task = new TaskProc(this.UUID, "交易系统重置-" + resetTime.ToString(), t.Hour, t.Minute, t.Second, delegate() { Task_ResetTradingday(); });
-            TLCtxHelper.Ctx.InjectTask(task);
+            DateTime resttime = Util.ToDateTime(Util.ToTLDate(DateTime.Now), resetTime);
+            TaskProc taskreset = new TaskProc(this.UUID, "交易系统重置-" + resetTime.ToString(), resttime.Hour, resttime.Minute, resttime.Second, delegate() { Task_ResetTradingday(); });
+            TLCtxHelper.Ctx.InjectTask(taskreset);
 
         }
 

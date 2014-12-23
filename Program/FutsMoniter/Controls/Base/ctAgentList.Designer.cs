@@ -65,7 +65,7 @@
             this.kryptonLabel1.Name = "kryptonLabel1";
             this.kryptonLabel1.Size = new System.Drawing.Size(55, 18);
             this.kryptonLabel1.TabIndex = 0;
-            this.kryptonLabel1.Values.Text = "代理商:";
+            this.kryptonLabel1.Values.Text = "管理域:";
             // 
             // ctAgentList
             // 

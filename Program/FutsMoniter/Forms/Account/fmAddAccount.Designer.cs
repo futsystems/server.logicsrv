@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
+            this.kryptonLabel4 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.kryptonLabel1 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.ctAccountType1 = new FutsMoniter.Controls.Base.ctAccountType();
             this.ctRouterGroupList1 = new FutsMoniter.Controls.Base.ctRouterGroupList();
             this.btnAddAccount = new ComponentFactory.Krypton.Toolkit.KryptonButton();
@@ -37,8 +39,6 @@
             this.ctAgentList1 = new FutsMoniter.ctAgentList();
             this.kryptonLabel3 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel2 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.kryptonLabel1 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.kryptonLabel4 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             this.SuspendLayout();
@@ -61,14 +61,29 @@
             this.kryptonPanel1.Size = new System.Drawing.Size(353, 204);
             this.kryptonPanel1.TabIndex = 0;
             // 
+            // kryptonLabel4
+            // 
+            this.kryptonLabel4.Location = new System.Drawing.Point(213, 70);
+            this.kryptonLabel4.Name = "kryptonLabel4";
+            this.kryptonLabel4.Size = new System.Drawing.Size(110, 18);
+            this.kryptonLabel4.TabIndex = 10;
+            this.kryptonLabel4.Values.Text = "默认密码:123456";
+            // 
+            // kryptonLabel1
+            // 
+            this.kryptonLabel1.Location = new System.Drawing.Point(213, 42);
+            this.kryptonLabel1.Name = "kryptonLabel1";
+            this.kryptonLabel1.Size = new System.Drawing.Size(123, 18);
+            this.kryptonLabel1.TabIndex = 9;
+            this.kryptonLabel1.Values.Text = "不填,系统自动分配";
+            // 
             // ctAccountType1
             // 
             this.ctAccountType1.AccountType = TradingLib.API.QSEnumAccountCategory.SIMULATION;
             this.ctAccountType1.EnableAny = false;
-            this.ctAccountType1.Location = new System.Drawing.Point(39, 13);
+            this.ctAccountType1.Location = new System.Drawing.Point(12, 12);
             this.ctAccountType1.Name = "ctAccountType1";
-            this.ctAccountType1.Size = new System.Drawing.Size(168, 21);
-            this.ctAccountType1.SmallSpace = false;
+            this.ctAccountType1.Size = new System.Drawing.Size(195, 21);
             this.ctAccountType1.TabIndex = 8;
             // 
             // ctRouterGroupList1
@@ -76,7 +91,7 @@
             this.ctRouterGroupList1.EnableAny = false;
             this.ctRouterGroupList1.Location = new System.Drawing.Point(23, 125);
             this.ctRouterGroupList1.Name = "ctRouterGroupList1";
-            this.ctRouterGroupList1.RouterGroudSelected = null;
+            this.ctRouterGroupList1.RouterGroupID = 0;
             this.ctRouterGroupList1.Size = new System.Drawing.Size(184, 23);
             this.ctRouterGroupList1.TabIndex = 1;
             // 
@@ -106,6 +121,7 @@
             // 
             // ctAgentList1
             // 
+            this.ctAgentList1.CurrentAgentFK = 0;
             this.ctAgentList1.EnableAny = false;
             this.ctAgentList1.EnableDefaultBaseMGR = true;
             this.ctAgentList1.EnableSelected = true;
@@ -130,22 +146,6 @@
             this.kryptonLabel2.Size = new System.Drawing.Size(41, 18);
             this.kryptonLabel2.TabIndex = 1;
             this.kryptonLabel2.Values.Text = "帐号:";
-            // 
-            // kryptonLabel1
-            // 
-            this.kryptonLabel1.Location = new System.Drawing.Point(213, 42);
-            this.kryptonLabel1.Name = "kryptonLabel1";
-            this.kryptonLabel1.Size = new System.Drawing.Size(123, 18);
-            this.kryptonLabel1.TabIndex = 9;
-            this.kryptonLabel1.Values.Text = "不填,系统自动分配";
-            // 
-            // kryptonLabel4
-            // 
-            this.kryptonLabel4.Location = new System.Drawing.Point(213, 70);
-            this.kryptonLabel4.Name = "kryptonLabel4";
-            this.kryptonLabel4.Size = new System.Drawing.Size(110, 18);
-            this.kryptonLabel4.TabIndex = 10;
-            this.kryptonLabel4.Values.Text = "默认密码:123456";
             // 
             // fmAddAccount
             // 

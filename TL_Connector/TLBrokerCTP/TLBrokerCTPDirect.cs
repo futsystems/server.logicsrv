@@ -67,6 +67,7 @@ namespace Broker.Live
         /// </summary>
         public override IEnumerable<Position> Positions { get { return tk.Positions; } }
 
+
         public override int GetPositionAdjustment(Order o)
         {
 
@@ -101,7 +102,7 @@ namespace Broker.Live
             mertic.LongPendingExitSize = longExitOrders.Sum(po => po.UnsignedSize);
             mertic.ShortPendingEntrySize = shortEntryOrders.Sum(po => po.UnsignedSize);
             mertic.ShortPendingExitSize = shortExitOrders.Sum(po => po.UnsignedSize);
-
+            mertic.Token = this.Token;
             return mertic;
         }
 
@@ -112,7 +113,12 @@ namespace Broker.Live
         {
             get
             {
-                return base.PositionMetrics;
+                List<PositionMetric> pmlist = new List<PositionMetric>();
+                foreach (string sym in WorkingSymbols)
+                {
+                    pmlist.Add(GetPositionMetric(sym));
+                }
+                return pmlist;
             }
         }
         #endregion
@@ -849,27 +855,49 @@ namespace Broker.Live
             Order o = LocalID2Order(error.Order.BrokerLocalOrderID);
             if (o != null)
             {
-                o.Status = QSEnumOrderStatus.Reject;
-                o.Comment = error.Error.ErrorMsg;
-                Util.Debug("更新子委托:" + o.GetOrderInfo(true), QSEnumDebugLevel.INFO);
-                tk.GotOrder(o);
-                //更新接口侧委托
-                this.LogBrokerOrderUpdate(o);//更新日志
-
-                RspInfo info = new RspInfoImpl();
-                info.ErrorID = error.Error.ErrorID;
-                info.ErrorMessage = error.Error.ErrorMsg;
-
-                _splittracker.GotSonOrderError(o, info);
-                //平仓量超过持仓量
-                if (error.Error.ErrorID == 30)
+                if (o.Status != QSEnumOrderStatus.Reject)//如果委托已经处于拒绝状态 则不用处理 接口可能会产生多次错误回报
                 {
+                    o.Status = QSEnumOrderStatus.Reject;
+                    o.Comment = error.Error.ErrorMsg;
+                    Util.Debug("更新子委托:" + o.GetOrderInfo(true), QSEnumDebugLevel.INFO);
+                    tk.GotOrder(o);
+                    //更新接口侧委托
+                    this.LogBrokerOrderUpdate(o);//更新日志
 
-                }
-                //资金不足
-                if (error.Error.ErrorID == 31)
-                {
+                    RspInfo info = new RspInfoImpl();
+                    info.ErrorID = error.Error.ErrorID;
+                    info.ErrorMessage = error.Error.ErrorMsg;
 
+                    _splittracker.GotSonOrderError(o, info);
+                    //平仓量超过持仓量 只能修复 在主帐户对应方向执行买入操作 形成对应的持仓 这样就可以让分帐户侧成功平仓
+                    if (error.Error.ErrorID == 30)
+                    {
+                        //平仓缺失智能补单 这个功能可以在接口设置中进行参数化设置。同理 在撤单过程中，如果有委托已经撤除 也需要智能的进行本地同步
+                        XOrderField norder = new XOrderField();
+
+                        norder.ID = o.id.ToString();
+                        norder.Date = Util.ToTLDate();
+                        norder.Time = Util.ToTLTime();
+                        norder.Symbol = o.Symbol;
+                        norder.Exchange = o.Exchange;
+                        norder.Side = !o.Side;
+                        norder.TotalSize = Math.Abs(o.TotalSize);
+                        norder.FilledSize = 0;
+                        norder.UnfilledSize = 0;
+
+                        norder.LimitPrice = 0;
+                        norder.StopPrice = 0;
+
+                        norder.OffsetFlag = QSEnumOffsetFlag.OPEN;//开仓
+
+                        bool success = WrapperSendOrder(ref norder);
+                        debug(string.Format("平仓量超过持仓量,主帐户侧持仓缺失,下单进行补仓 市价{0} {1} 手 {2} {3}", norder.Side ? "买入" : "卖出", norder.TotalSize, norder.Symbol, success ? "成功" : "失败"), QSEnumDebugLevel.WARNING);
+                    }
+                    //资金不足
+                    if (error.Error.ErrorID == 31)
+                    {
+
+                    }
                 }
 
             }

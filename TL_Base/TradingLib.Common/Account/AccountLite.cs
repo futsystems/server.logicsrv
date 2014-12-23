@@ -122,6 +122,16 @@ namespace TradingLib.Common
         /// </summary>
         public int RG_ID { get; set; }
 
+        /// <summary>
+        /// 是否处于登入状态
+        /// </summary>
+        public bool IsLogin { get; set; }
+
+        /// <summary>
+        /// 登入地址
+        /// </summary>
+        public string IPAddress { get; set; }
+
         public static string Serialize(IAccountLite account)
         {
             StringBuilder sb = new StringBuilder();
@@ -169,6 +179,10 @@ namespace TradingLib.Common
             sb.Append(account.Deleted.ToString());
             sb.Append(d);
             sb.Append(account.RG_ID);
+            sb.Append(d);
+            sb.Append(account.IsLogin);
+            sb.Append(d);
+            sb.Append(account.IPAddress);
             return sb.ToString();
         }
 
@@ -198,6 +212,8 @@ namespace TradingLib.Common
             account.MGRID = int.Parse(rec[19]);
             account.Deleted = bool.Parse(rec[20]);
             account.RG_ID = int.Parse(rec[21]);
+            account.IsLogin = bool.Parse(rec[22]);
+            account.IPAddress = rec[23];
             return account;
         }
     }
