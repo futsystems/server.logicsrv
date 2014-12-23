@@ -44,7 +44,10 @@ namespace FutsMoniter
         FutSystems.GUI.ViewQuoteList GetViewQuote(SecurityFamily sec)
         {
             if (sec == null) return null;
+            if (sec.Exchange == null) return null;
+
             FutSystems.GUI.ViewQuoteList vq = null;
+            
             if (viewquotemap.TryGetValue(sec.Exchange.EXCode, out vq))
             {
                 return vq;
