@@ -37,12 +37,17 @@ namespace FutsMoniter
             //代理无法选择添加哪种帐号，只能按照系统设定进行默认添加
             if (!Globals.Manager.IsRoot())
             {
-                ctAccountType1.Enabled = false;
                 ctRouterGroupList1.Enabled = false;
-                //如果没有实盘交易 则默认添加模拟帐户 且界面隐藏
-                if (ctAccountType1.AccountType == QSEnumAccountCategory.SIMULATION)
+
+                //如果代理不允许添加模拟帐号
+                if (!Globals.UIAccess.r_simacc)
                 {
-                    ctAccountType1.Visible = false;
+                    ctAccountType1.Enabled = false;
+                    //如果没有实盘交易 则默认添加模拟帐户 且界面隐藏
+                    if (ctAccountType1.AccountType == QSEnumAccountCategory.SIMULATION)
+                    {
+                        ctAccountType1.Visible = false;
+                    }
                 }
             }
         }

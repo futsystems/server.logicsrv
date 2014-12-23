@@ -363,5 +363,14 @@ namespace TradingLib.Common
 
         [PermissionFieldAttr("冻结帐户", "是否有权冻结或激活交易帐户")]
         public bool r_block { get; set; }
+
+        /// <summary>
+        /// 默认帐号添加规则
+        /// 在有实盘的情况下默认添加实盘帐户，并且帐户类型和路由列表不可选
+        /// 如果没有实盘帐号则隐藏具体的帐户类型
+        /// 如果允许代理添加模拟帐号,则代理可以自行选择帐号类型
+        /// </summary>
+        [PermissionFieldAttr("添加模拟帐号", "是否有权添加模拟帐号")]
+        public bool r_simacc { get; set; }
     }
 }

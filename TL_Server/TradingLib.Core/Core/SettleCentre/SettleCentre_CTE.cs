@@ -75,7 +75,6 @@ namespace TradingLib.Core
         /// <summary>
         /// 转储数据,将当天的交易信息 储存到历史交易信息表中
         /// </summary>
-        [TaskAttr("清算中心转储交易记录", 15, 50, 05, "清算中心转储交易记录")]
         [ContribCommandAttr(QSEnumCommandSource.CLI, "datastore", "datastore - datastore", "datastore")]
         public void Task_DataStore()
         {
@@ -111,7 +110,6 @@ namespace TradingLib.Core
         /// 结算时间15:50 在15:50-16:00之间开机会导致无法找到对应的交易日
         /// 4点结算 否则在结算中心初始化交易日过程中会导致交易日判定不准确，交易日判定是以结算时间为界限，结算前是当前交易日，结算后就是下一交易日
         /// </summary>
-        [TaskAttr("清算中心执行当日结算", 16,0,0, "清算中心执行当日结算")]
         [ContribCommandAttr(QSEnumCommandSource.CLI, "settle", "settle - clean the interday tmp table after reset", "清算中心结算交易帐户")]
         public void Task_SettleAccount()
         {
@@ -128,12 +126,11 @@ namespace TradingLib.Core
         }
 
         
-        //.重置结算中心交易日信息 重置清算中心交易帐户 将昨日扎帐
+        //3.重置结算中心交易日信息 重置清算中心交易帐户 将昨日扎帐
         //清算中心，风控中心，以及数据路由 成交路由都需要进行重置
         //开盘前需要重置
         //通过参数 设定时间注入到任务系统
         [ContribCommandAttr(QSEnumCommandSource.CLI, "resetsc", "resetsc - reset settlecentre trading day", "重置结算中心")]
-        //[TaskAttr("交易系统重置", 16,55,5, "清算中心执行当日结算")]
         public void Task_ResetTradingday()
         {
             //debug("重置交易系统 isnaormal:"+IsNormal.ToString() +" istradingday:"+IsTradingday.ToString(),QSEnumDebugLevel.INFO);

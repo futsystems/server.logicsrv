@@ -29,9 +29,9 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
-        public TrdClientInfo[] ClientsForAccount(string account)
+        public IEnumerable<ClientInfoBase>  ClientsForAccount(string account)
         {
-            return _clients.Clients.Where(client => (client.Account.Equals(account))).ToArray();
+            return _clients.Clients.Where(client => (client.Account.Equals(account)));
         }
 
         /// <summary>

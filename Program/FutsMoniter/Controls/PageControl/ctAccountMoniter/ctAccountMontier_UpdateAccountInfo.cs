@@ -368,6 +368,7 @@ namespace FutsMoniter
                     int r = accountIdx(account.Account);//管理端是以account为唯一键值,应该不会出现重复？？
                     if (r == -1)//datatable不存在该行，我们则增加该行
                     {
+                        //Globals.Debug("account:" + account.Account + " login:" + account.IsLogin.ToString() + " IPAddress:" + account.IPAddress);
                         gt.Rows.Add(account.Account);
                         int i = gt.Rows.Count - 1;
                         gt.Rows[i][ROUTE] = account.OrderRouteType.ToString();
@@ -375,9 +376,18 @@ namespace FutsMoniter
                         gt.Rows[i][EXECUTE] = getExecuteStatus(account.Execute);
                         gt.Rows[i][EXECUTEIMG] = getExecuteStatusImage(account.Execute);
                         gt.Rows[i][PROFITLOSSIMG] = getProfitLossImage(0);
-                        gt.Rows[i][LOGINSTATUS] = getLoginStatus(false);
-                        gt.Rows[i][LOGINSTATUSIMG] = getLoginStatusImage(false);
-                        gt.Rows[i][ADDRESS] = "";
+
+                        gt.Rows[i][LOGINSTATUS] = getLoginStatus(account.IsLogin);
+                        gt.Rows[i][LOGINSTATUSIMG] = getLoginStatusImage(account.IsLogin);
+                        if (account.IsLogin)
+                        {
+                            gt.Rows[i][ADDRESS] = account.IPAddress;
+                        }
+                        else
+                        {
+                            gt.Rows[i][ADDRESS] = "";
+                        }
+
                         gt.Rows[i][LASTEQUITY] = decDisp(account.LastEquity);
 
                         gt.Rows[i][NOWEQUITY] = decDisp(account.NowEquity);
@@ -400,9 +410,10 @@ namespace FutsMoniter
                         RouterGroupSetting rg = Globals.BasicInfoTracker.GetRouterGroup(account.RG_ID);
                         gt.Rows[i][ROUTERGROUPSTR] = rg != null ? rg.Name : "";
 
+
                         accountmap.TryAdd(account.Account, account);
                         accountrowmap.TryAdd(account.Account, i);
-                        Globals.Debug("got account:" + account.Account);
+                        //Globals.Debug("got account:" + account.Account);
                     }
                     else //如果存在表面是进行修改
                     {

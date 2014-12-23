@@ -26,6 +26,13 @@ namespace TradingLib.API
         string[] FilterClient(string filter);
 
         /// <summary>
+        /// 返回某个交易帐号所有登入终端
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        IEnumerable<ClientInfoBase> ClientsForAccount(string account);
+
+        /// <summary>
         /// 获得某个合约当前有效价格
         /// 通过DataRouter进行获取
         /// </summary>

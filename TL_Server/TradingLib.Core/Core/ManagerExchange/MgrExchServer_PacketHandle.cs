@@ -200,31 +200,6 @@ namespace TradingLib.Core
                             SrvOnMGRCloseClearCentre(packet as MGRReqCloseClearCentreRequest, session, manager);
                             break;
                         }
-                    //case MessageTypes.MGRQRYCONNECTOR://查询通道列表
-                    //    {
-                    //        SrvOnMGRQryConnector(packet as MGRQryConnectorRequest, session, manager);
-                    //        break;
-                    //    }
-                    //case MessageTypes.MGRSTARTBROKER://请求启动成交通道
-                    //    {
-                    //        SrvOnMGRStartBroker(packet as MGRReqStartBrokerRequest, session, manager);
-                    //        break;
-                    //    }
-                    //case MessageTypes.MGRSTOPBROKER://请求停止成交通道
-                    //    {
-                    //        SrvOnMGRStopBroker(packet as MGRReqStopBrokerRequest, session, manager);
-                    //        break;
-                    //    }
-                    //case MessageTypes.MGRSTARTDATAFEED://请求启动行情通道
-                    //    {
-                    //        SrvOnMGRStartDataFeed(packet as MGRReqStartDataFeedRequest, session, manager);
-                    //        break;
-                    //    }
-                    //case MessageTypes.MGRSTOPDATAFEED://请求停止行情通道
-                    //    {
-                    //        SrvOnMGRStopDataFeed(packet as MGRReqStopDataFeedRequest, session, manager);
-                    //        break;
-                    //    }
                     case MessageTypes.MGRADDACCOUNT://请求添加交易帐号
                         {
                             SrvOnMGRAddAccount(packet as MGRAddAccountRequest, session, manager);
@@ -280,11 +255,6 @@ namespace TradingLib.Core
                             SrvOnMGRDelRuleItem(packet as MGRDelRuleItemRequest, session, manager);
                             break;
                         }
-                    //case MessageTypes.MGRQRYSYSTEMSTATUS://请求系统状态
-                    //    {
-                    //        SrvOnMGRQrySystemStatus(packet as MGRQrySystemStatusRequest, session, manager);
-                    //        break;
-                    //    }
                     case MessageTypes.MGRQRYORDER://请求查询历史委托
                         {
                             SrvOnMGRQryOrder(packet as MGRQryOrderRequest, session, manager);
@@ -340,31 +310,11 @@ namespace TradingLib.Core
                             //SrvOnMGRQryManager(packet as MGRQryManagerRequest, session, manager);
                             break;
                         }
-                    //case MessageTypes.MGRADDMANAGER://请求添加管理员
-                    //    { 
-                    //        SrvOnMGRAddManger(packet as MGRReqAddManagerRequest,session,manager);
-                    //        break;
-                    //    }
-                    //case MessageTypes.MGRUPDATEMANAGER://请求更新管理员
-                    //    {
-                    //        SrvOnMGRUpdateManger(packet as MGRReqUpdateManagerRequest, session, manager);
-                    //        break;
-                    //    }
-                    //case MessageTypes.MGRQRYACCTSERVICE://查询帐户服务
-                    //    {
-                    //        SrvOnMGRQryAcctService(packet as MGRQryAcctServiceRequest, session, manager);
-                    //        break;
-                    //    }
                     case MessageTypes.MGRCONTRIBREQUEST://扩展请求
                         {
                             SrvOnMGRContribRequest(packet as MGRContribRequest, session, manager);
                             break;
                         }
-                    //case MessageTypes.MGRUPDATEPASS://请求修改密码
-                    //    {
-                    //        SrvOnMGRUpdatePass(packet as MGRUpdatePassRequest, session, manager);
-                    //        break;
-                    //    }
                     case MessageTypes.MGRINSERTTRADE://请求插入成交
                         {
                             SrvOnInsertTrade(packet as MGRReqInsertTradeRequest, session, manager);

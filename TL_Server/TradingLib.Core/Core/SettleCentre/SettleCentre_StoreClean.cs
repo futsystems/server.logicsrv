@@ -51,8 +51,15 @@ namespace TradingLib.Core
             //检查所有系统持仓按照一定的逻辑获得 结算价 目前如果结算价不存在则取持仓最新价来替代(持仓最新价 当没有tick时是以持仓成本作价)
             foreach (Position pos in _clearcentre.TotalPositions)
             {
-                if (pos.SettlementPrice == null)
-                    pos.SettlementPrice = pos.LastPrice;
+                if (_settleWithLatestPrice)//如果以最新价进行结算
+                {
+                    pos.SettlementPrice = pos.LastPrice;//将最新价设定到持仓的结算价
+                }
+                else
+                {
+                    if (pos.SettlementPrice == null)
+                        pos.SettlementPrice = pos.LastPrice;
+                }
             }
 
 

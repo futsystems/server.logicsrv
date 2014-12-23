@@ -90,7 +90,7 @@
             this.btnSell.StateCommon.Content.ShortText.Color1 = System.Drawing.Color.LimeGreen;
             this.btnSell.StateCommon.Content.ShortText.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnSell.TabIndex = 13;
-            this.btnSell.Values.Text = "买 出";
+            this.btnSell.Values.Text = "卖 出";
             // 
             // btnBuy
             // 

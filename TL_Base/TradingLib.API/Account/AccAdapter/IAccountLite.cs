@@ -8,6 +8,7 @@ namespace TradingLib.API
     
     /// <summary>
     /// 交易帐户基础信息
+    /// 用于管理端显示
     /// </summary>
     public interface IAccountLite
     {
@@ -117,11 +118,21 @@ namespace TradingLib.API
         /// </summary>
         bool Deleted { get; set; }
 
-
         /// <summary>
         /// 路由组编号
         /// </summary>
         int RG_ID { get; set; }
+
+        /// <summary>
+        /// 是否处于登入状态
+        /// </summary>
+        bool IsLogin { get; set; }
+
+        /// <summary>
+        /// 登入地址
+        /// </summary>
+        string IPAddress { get; set; }
+
 
     }
 }

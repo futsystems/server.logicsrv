@@ -103,7 +103,6 @@ namespace TradingLib.Core
 
         public void newTick(Tick k)
         {
-            //debug("manger will send tick:" + k.ToString(),QSEnumDebugLevel.INFO);
             tl.newTick(k);
         }
     }

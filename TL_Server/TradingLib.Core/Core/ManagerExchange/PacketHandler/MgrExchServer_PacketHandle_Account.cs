@@ -100,22 +100,6 @@ namespace TradingLib.Core
                     RspMGRQryAccountResponse response = ResponseTemplate<RspMGRQryAccountResponse>.SrvSendRspResponse(request);
                     response.oAccount = list[i].ToAccountLite();
                     CacheRspResponse(response, i == list.Length - 1);
-
-
-                    TrdClientInfo client = exchsrv.FirstClientInfoForAccount(list[i].ID);
-                    if (client != null)
-                    {
-                        NotifyMGRSessionUpdateNotify notify = ResponseTemplate<NotifyMGRSessionUpdateNotify>.SrvSendRspResponse(request);
-                        notify.TradingAccount = client.Account;
-                        notify.IsLogin = client.Authorized;
-                        notify.IPAddress = client.IPAddress;
-                        notify.HardwarCode = client.HardWareCode;
-                        notify.ProductInfo = client.ProductInfo;
-                        notify.FrontID = client.Location.FrontID;
-                        notify.ClientID = client.Location.ClientID;
-
-                        CachePacket(notify);
-                    }
                 }
             }
             else
