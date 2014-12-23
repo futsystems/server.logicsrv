@@ -37,7 +37,7 @@ namespace Ant.Update
             try
             {
                 //667411488000000000
-                MessageBox.Show(new DateTime(667411488000000000).ToString());
+                //MessageBox.Show(new DateTime(667411488000000000).ToString());
                 Beetle.TcpUtils.Setup("beetle");
 
                 tmpFolder = "tmp" + DateTime.Now.ToString("yyyyMMdd"); ;
