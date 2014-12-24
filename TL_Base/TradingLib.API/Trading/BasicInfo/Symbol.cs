@@ -80,6 +80,7 @@ namespace TradingLib.API
         /// </summary>
         CurrencyType Currency { get; }
        
+
         string Exchange { get; }
 
         /// <summary>

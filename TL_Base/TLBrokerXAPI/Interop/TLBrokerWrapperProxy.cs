@@ -100,6 +100,8 @@ namespace TradingLib.BrokerXAPI.Interop
             _Login = NativeLib.GetUnmanagedFunction<LoginProc>("Login");
             _SendOrder = NativeLib.GetUnmanagedFunction<SendOrderProc>("SendOrder");
             _SendOrderAction = NativeLib.GetUnmanagedFunction<SendOrderActionProc>("SendOrderAction");
+            _QryInstrument = NativeLib.GetUnmanagedFunction<QryInstrumentProc>("QryInstrument");
+
 
             _RegOnConnected = NativeLib.GetUnmanagedFunction<RegOnConnectedProc>("RegOnConnected");
             _RegOnDisconnected = NativeLib.GetUnmanagedFunction<RegOnDisconnectedProc>("RegOnDisconnected");
@@ -245,6 +247,22 @@ namespace TradingLib.BrokerXAPI.Interop
             {
                 Util.Debug("SendOrderAction Error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
                 return false;
+            }
+        }
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate bool QryInstrumentProc(IntPtr pWrapper);
+        QryInstrumentProc _QryInstrument;
+        public void QryInstrument()
+        {
+            try
+            {
+                Util.Debug("BrokerProxy QryInstrument", QSEnumDebugLevel.MUST);
+                _QryInstrument(this.Wrapper);
+            }
+            catch (Exception ex)
+            {
+                Util.Debug("QryInstrument Error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
             }
         }
 

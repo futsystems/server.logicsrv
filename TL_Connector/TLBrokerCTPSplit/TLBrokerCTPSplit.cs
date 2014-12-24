@@ -672,6 +672,7 @@ namespace Broker.Live
             _splittracker.SendFatherOrder(o);
         }
 
+
         public override void CancelOrder(long oid)
         {
             _splittracker.CancelFatherOrder(oid);
@@ -686,6 +687,7 @@ namespace Broker.Live
                 tk.GotTick(k);
             }
         }
+
         /// <summary>
         /// 发送子委托
         /// 委托状态要么是Submited,要么是reject

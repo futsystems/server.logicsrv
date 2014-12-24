@@ -369,7 +369,67 @@ namespace TradingLib.BrokerXAPI
         public bool Side;
     }
 
+    /// <summary>
+    /// 合约结构体 用于传递合约信息
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public struct XSymbol
+    {
+        /// <summary>
+        /// 合约
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 24)]
+        public string Symbol;
 
+        /// <summary>
+        /// 交易所
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 12)]
+        public string Exchange;
+
+        /// <summary>
+        /// 品种代码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 24)]
+        public string SecurityCode;
+
+
+        /// <summary>
+        /// 品种类型
+        /// </summary>
+        public SecurityType SecurityType;
+
+        /// <summary>
+        /// 行权方向
+        /// </summary>
+        public QSEnumOptionSide OptionSide;
+
+        /// <summary>
+        /// 执行价
+        /// </summary>
+        public double StrikePrice;
+
+        /// <summary>
+        /// 保证金 额度或比例
+        /// </summary>
+        public double Margin;
+
+        /// <summary>
+        /// 开仓手续费
+        /// </summary>
+        public double EntryCommission;
+
+        /// <summary>
+        /// 平仓手续费
+        /// </summary>
+        public double ExitCommission;
+
+        /// <summary>
+        /// 平今手续费
+        /// </summary>
+        public double ExitTodayCommission;
+
+    }
 
 
     public class XOrderError
@@ -394,4 +454,6 @@ namespace TradingLib.BrokerXAPI
         public XOrderActionField OrderAction;
         public XErrorField Error;
     }
+
+
 }

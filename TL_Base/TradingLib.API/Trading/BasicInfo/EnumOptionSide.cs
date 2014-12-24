@@ -5,12 +5,13 @@ using System.Text;
 
 namespace TradingLib.API
 {
-    public enum QSEnumOptionSide
+    public enum QSEnumOptionSide : byte
     {
         /// <summary>
         /// 看涨期权
         /// </summary>
         CALL,
+
         /// <summary>
         /// 看跌期权
         /// </summary>

@@ -75,7 +75,7 @@ namespace TradingLib.Core
         }
 
         //2:30 到期合约执行强平
-        [TaskAttr("合约交割强平",14,30,0, "合约交割日当天2:30执行强平")]
+        [TaskAttr("合约交割强平",14,50,0, "合约交割日当天2:30执行强平")]
         public void Task_FlatPositionViaExpiredDate()
         {
             foreach (Position pos in _clearcentre.TotalPositions.Where(p => !p.isFlat && p.oSymbol.IsExpiredToday()))

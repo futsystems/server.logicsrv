@@ -244,6 +244,14 @@ namespace TradingLib.BrokerXAPI
         }
 
         /// <summary>
+        /// 查询合约
+        /// </summary>
+        public virtual void QryInstrument()
+        {
+            WrapperQryInstrument();
+        }
+
+        /// <summary>
         /// 响应市场行情
         /// </summary>
         /// <param name="k"></param>
@@ -328,6 +336,11 @@ namespace TradingLib.BrokerXAPI
         {
             //Util.Debug("~~~~~OrderSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XOrderActionField)));
             return _wrapper.SendOrderAction(ref action);
+        }
+
+        protected void WrapperQryInstrument()
+        {
+            _wrapper.QryInstrument();
         }
         #endregion
 

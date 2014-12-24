@@ -6,6 +6,7 @@ using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.LitJson;
 using TradingLib.Core;
+using TradingLib.BrokerXAPI;
 
 namespace TradingLib.ServiceManager
 {
@@ -45,7 +46,15 @@ namespace TradingLib.ServiceManager
             return sb.ToString();
         }
 
-
+        [ContribCommandAttr(QSEnumCommandSource.CLI, "syncsymbol", "syncsymbol - 同步合约", "同步合约数据")]
+        public void CTE_SyncSymbol()
+        {
+            IBroker broker = FindBroker("HX-800175");
+            if (broker != null)
+            {
+                (broker as TLBroker).QryInstrument();
+            }
+        }
         
 
         [ContribCommandAttr(QSEnumCommandSource.CLI, "startbroker", "startbroker - 启动某个成交通道", "启动某个成交通道")]
