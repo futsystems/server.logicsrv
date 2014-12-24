@@ -7,7 +7,7 @@ namespace TradingLib.API
     public enum SecurityType : byte
     {
 
-        NIL = -1,
+        NIL,
         [Description("股票")] 
         STK,//股票
         [Description("期货")]
@@ -26,6 +26,6 @@ namespace TradingLib.API
         CASH,
         BAG,
         [Description("异化证券")]
-        INNOV = 8888,
+        INNOV,
     }
 }
