@@ -819,6 +819,10 @@ namespace TradingLib.Common
             pd.Side = p.Side;
             pd.Volume = p.Volume;
 
+            //记录该持仓对应的接口信息和对应的数据源
+            pd.Broker = p.Broker; //分帐户侧平历史持仓时 需要根据broker来寻找对应的接口 否则会导致系统不知道从哪个接口平掉该持仓
+            pd.Breed = p.Breed;
+
 
             //加载到今日持仓明细列表中的昨日持仓明细列表，需要将对应的昨日结算价格设定为昨日持仓明细的结算价格 并且不能被行情更新
             pd.LastSettlementPrice = p.SettlementPrice;
@@ -829,6 +833,7 @@ namespace TradingLib.Common
             pd.CloseVolume = 0;
             pd.CloseProfitByDate = 0;
             pd.CloseProfitByTrade = 0;
+            
             return pd;
         }
 

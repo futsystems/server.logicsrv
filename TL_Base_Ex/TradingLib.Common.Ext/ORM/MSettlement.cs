@@ -49,11 +49,11 @@ namespace TradingLib.ORM
         }
 
         /// <summary>
-        /// 从数据库加载某个结算日所有历史持仓明细
+        /// 获得分帐户侧所有持仓明细
         /// </summary>
         /// <param name="tradingday"></param>
         /// <returns></returns>
-        public static IEnumerable<PositionDetail> SelectPositionDetails(int tradingday)
+        public static IEnumerable<PositionDetail> SelectAccountPositionDetails(int tradingday)
         {
             using (DBMySql db = new DBMySql())
             {
@@ -62,6 +62,11 @@ namespace TradingLib.ORM
             }
         }
 
+        /// <summary>
+        /// 获得接口侧所有持仓明细数据
+        /// </summary>
+        /// <param name="tradingday"></param>
+        /// <returns></returns>
         public static IEnumerable<PositionDetail> SelectBrokerPositionDetails(int tradingday)
         {
             using (DBMySql db = new DBMySql())
@@ -73,7 +78,7 @@ namespace TradingLib.ORM
 
 
         /// <summary>
-        /// 从数据库加载某个交易帐号某个结算日的所有持仓明细
+        /// 从数据库加载某个交易帐号或通道的持仓明细某个结算日的所有持仓明细
         /// </summary>
         /// <param name="tradingday"></param>
         /// <returns></returns>
