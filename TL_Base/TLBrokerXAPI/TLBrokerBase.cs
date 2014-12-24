@@ -96,6 +96,16 @@ namespace TradingLib.BrokerXAPI
         }
 
         /// <summary>
+        /// 向外通知合约回报
+        /// </summary>
+        public event Action<XSymbol,bool> GotSymbolEvent;
+        protected void NotifySymbol(XSymbol symbol, bool islast)
+        {
+            //debug("Notify SymbolEvent", QSEnumDebugLevel.INFO);
+            if (GotSymbolEvent != null)
+                GotSymbolEvent(symbol, islast);
+        }
+        /// <summary>
         /// 获得当前Tick的市场快照,模拟成交时需要获得当前市场快照用于进行取价操作
         /// </summary>
         public event GetSymbolTickDel GetSymbolTickEvent;

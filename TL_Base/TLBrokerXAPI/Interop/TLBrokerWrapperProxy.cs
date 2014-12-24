@@ -110,7 +110,7 @@ namespace TradingLib.BrokerXAPI.Interop
             _RegRtnOrder = NativeLib.GetUnmanagedFunction<RegRtnOrderProc>("RegRtnOrder");
             _RegRtnOrderError = NativeLib.GetUnmanagedFunction<RegRtnOrderErrorProc>("RegRtnOrderError");
             _RegRtnOrderActionError = NativeLib.GetUnmanagedFunction<RegRtnOrderActionErrorProc>("RegRtnOrderActionError");
-
+            _RegOnSymbol = NativeLib.GetUnmanagedFunction<RegOnSymbolProc>("RegOnSymbol");
         }
 
 
@@ -329,6 +329,15 @@ namespace TradingLib.BrokerXAPI.Interop
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void RegRtnOrderActionErrorProc(IntPtr pWrapper, CBRtnOrderActionError cb);
         RegRtnOrderActionErrorProc _RegRtnOrderActionError;
+
+        /// <summary>
+        /// 注册合约回调
+        /// </summary>
+        /// <param name="pWrapper"></param>
+        /// <param name="cb"></param>
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void RegOnSymbolProc(IntPtr pWrapper, CBOnSymbol cb);
+        RegOnSymbolProc _RegOnSymbol;
         #endregion
 
 
@@ -380,6 +389,13 @@ namespace TradingLib.BrokerXAPI.Interop
         {
             add { cbRtnOrderActionError += value; _RegRtnOrderActionError(this.Wrapper, cbRtnOrderActionError); }
             remove { cbRtnOrderActionError -= value; _RegRtnOrderActionError(this.Wrapper, cbRtnOrderActionError); }
+        }
+
+        CBOnSymbol cbOnSymbol;
+        public event CBOnSymbol OnSymbolEvent
+        {
+            add { cbOnSymbol += value; _RegOnSymbol(this.Wrapper, cbOnSymbol); }
+            remove { cbOnSymbol -= value; _RegOnSymbol(this.Wrapper, cbOnSymbol); }
         }
         #endregion
 

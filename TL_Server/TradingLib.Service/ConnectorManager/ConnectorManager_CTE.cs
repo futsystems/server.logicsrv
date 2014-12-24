@@ -49,7 +49,7 @@ namespace TradingLib.ServiceManager
         [ContribCommandAttr(QSEnumCommandSource.CLI, "syncsymbol", "syncsymbol - 同步合约", "同步合约数据")]
         public void CTE_SyncSymbol()
         {
-            IBroker broker = FindBroker("HX-800175");
+            IBroker broker = FindBroker("tk003");
             if (broker != null)
             {
                 (broker as TLBroker).QryInstrument();
@@ -129,7 +129,6 @@ namespace TradingLib.ServiceManager
             {
                 IBroker broker = vendor.Broker;
                 sb.Append(string.Format("Broker:{0} Margin:{1} RealizedPL:{2} UnRealizedPL:{3}", broker.Token, vendor.CalMargin(), vendor.CalRealizedPL(), vendor.CalUnRealizedPL()));
-            
             }
             return sb.ToString();
         }
