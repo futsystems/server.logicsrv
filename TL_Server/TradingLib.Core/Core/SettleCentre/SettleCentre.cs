@@ -28,9 +28,8 @@ namespace TradingLib.Core
         /// 当前非交易日
         /// </summary>
         NOTRADINGDAY,//非交易日
-
-        
     }
+
     [CoreAttr(SettleCentre.CoreName, "结算中心", "结算中心,用于执行系统结算生成结算报表等")]
     public partial class SettleCentre : BaseSrvObject, ISettleCentre,ICore
     {

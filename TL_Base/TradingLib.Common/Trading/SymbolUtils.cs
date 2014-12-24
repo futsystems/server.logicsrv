@@ -34,5 +34,16 @@ namespace TradingLib.Common
             cfg.CloseTodayRatioByVolume = sym.ExitCommission > 1 ? sym.ExitCommission : 0;
             return cfg;
         }
+
+        /// <summary>
+        /// 当日到期
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsExpiredToday(this Symbol sym)
+        {
+            if (sym.ExpireDate == Util.ToTLDate())
+                return true;
+            return false;
+        }
     }
 }
