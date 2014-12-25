@@ -99,6 +99,7 @@
     <Compile Include="Utils\Domain\DomainUtils_.cs" />
     <Compile Include="Utils\Domain\DomainUtils_RecvBank.cs" />
     <Compile Include="Utils\Domain\DomainUtils_Manager.cs" />
+    <Compile Include="Utils\Domain\DomainUtils_Cfg.cs" />
     <Compile Include="Utils\HanlerMixins.cs" />
     <Compile Include="Utils\ISessionTransUtils.cs" />
     <Compile Include="ORM\Config\ConfigItem.cs" />

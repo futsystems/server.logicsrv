@@ -46,6 +46,11 @@ namespace FutsMoniter
         /// </summary>
         public static Domain Domain { get { return LoginResponse.Domain; } }
 
+        public static void UpdateDomain(DomainImpl domain)
+        {
+            Globals.LoginResponse.Domain = domain;
+        }
+
         /// <summary>
         /// 管理主域ID
         /// </summary>

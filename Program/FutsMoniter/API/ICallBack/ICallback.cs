@@ -48,6 +48,11 @@ namespace TradingLib.API
         /// 基础数据加载完毕
         /// </summary>
         event VoidDelegate GotBasicInfoDoneEvent;
+
+        /// <summary>
+        /// 获得域信息更新事件
+        /// </summary>
+        event Action<DomainImpl> GotDomainEvent;
         #endregion
 
 

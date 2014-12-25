@@ -223,7 +223,9 @@ namespace TradingLib.BrokerXAPI.Interop
             try
             {
                 Util.Debug("BrokerProxy SendOrder", QSEnumDebugLevel.MUST);
-                return _SendOrder(this.Wrapper, ref pOrder);
+                bool x =  _SendOrder(this.Wrapper, ref pOrder);
+                Util.Debug("**************** sendorder return:" + x.ToString(), QSEnumDebugLevel.ERROR);
+                return x;
             }
             catch (Exception ex)
             {
@@ -253,16 +255,19 @@ namespace TradingLib.BrokerXAPI.Interop
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate bool QryInstrumentProc(IntPtr pWrapper);
         QryInstrumentProc _QryInstrument;
-        public void QryInstrument()
+        public bool QryInstrument()
         {
             try
             {
                 Util.Debug("BrokerProxy QryInstrument", QSEnumDebugLevel.MUST);
-                _QryInstrument(this.Wrapper);
+                bool x =  _QryInstrument(this.Wrapper);
+                Util.Debug("**************** qry instrument return:" + x.ToString(), QSEnumDebugLevel.ERROR);
+                return x;
             }
             catch (Exception ex)
             {
                 Util.Debug("QryInstrument Error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                return false;
             }
         }
 

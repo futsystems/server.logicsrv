@@ -162,7 +162,7 @@ namespace TradingLib.ServiceManager
         /// <param name="arg2"></param>
         void broker_GotSymbolEvent(XSymbol arg1, bool arg2)
         {
-            debug("got symbol:" + arg1.Symbol + " margin:" + arg1.Margin.ToString() +" comm:"+arg1.EntryCommission.ToString()+" last:" + arg2.ToString(), QSEnumDebugLevel.INFO);
+            //debug("got symbol:" + arg1.Symbol + " margin:" + arg1.Margin.ToString() +" comm:"+arg1.EntryCommission.ToString()+" last:" + arg2.ToString(), QSEnumDebugLevel.INFO);
         }
 
         /// <summary>

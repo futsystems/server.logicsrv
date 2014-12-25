@@ -429,6 +429,10 @@ namespace TradingLib.BrokerXAPI
         /// </summary>
         public double ExitTodayCommission;
 
+        /// <summary>
+        /// 到期日
+        /// </summary>
+        public int ExpireDate;
     }
 
 

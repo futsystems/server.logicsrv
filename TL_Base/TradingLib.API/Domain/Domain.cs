@@ -140,5 +140,12 @@ namespace TradingLib.API
         bool Misc_InsertTrade { get; set; }
         #endregion
 
+
+        #region 域设置
+        /// <summary>
+        /// 同步实盘帐户ID
+        /// </summary>
+        int CFG_SyncVendor_ID { get; set; }
+        #endregion
     }
 }

@@ -42,7 +42,7 @@ namespace FutsMoniter
 
             //设置
             kryptonRibbonGroupButton_permissiontmp.Click += new EventHandler(kryptonRibbonGroupButton_permissiontmp_Click);
-
+            kryptonRibbonGroupButton_syncsymbol.Click += new EventHandler(kryptonRibbonGroupButton_syncsymbol_Click);
             //基础数据
             kryptonRibbonGroupButton_Mktime.Click += new EventHandler(kryptonRibbonGroupButton_Mktime_Click);
             kryptonRibbonGroupButton_Exchange.Click += new EventHandler(kryptonRibbonGroupButton_Exchange_Click);
@@ -91,6 +91,12 @@ namespace FutsMoniter
             kryptonRibbonGroupButton_Reset.Click += new EventHandler(kryptonRibbonGroupButton_Reset_Click);
             kryptonRibbonGroupButton_SaveConfig.Click += new EventHandler(kryptonRibbonGroupButton_SaveConfig_Click);
         
+        }
+
+        void kryptonRibbonGroupButton_syncsymbol_Click(object sender, EventArgs e)
+        {
+            fmSyncSymbol fm = new fmSyncSymbol();
+            fm.Show();
         }
 
         void kryptonRibbonGroupButton_permissiontmp_Click(object sender, EventArgs e)

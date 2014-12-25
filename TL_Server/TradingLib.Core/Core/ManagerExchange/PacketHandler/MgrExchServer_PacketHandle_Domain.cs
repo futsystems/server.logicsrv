@@ -29,6 +29,41 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="session"></param>
         /// <param name="json"></param>
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateDomainCFGSyncSymbolVendor", "UpdateDomainCFGSyncSymbolVendor - update domain", "更新域默认同步合约实盘帐户")]
+        public void CTE_UpdateDomain(ISession session,int id)
+        {
+            Manager manager = session.GetManager();
+            //只有超级域的管理员
+            if (manager.Domain.Super && manager.IsRoot())
+            {
+                Vendor vendor = BasicTracker.VendorTracker[id];
+                if (vendor == null)
+                {
+                    throw new FutsRspError("实盘帐户不存在");
+                }
+
+                if (!vendor.Domain.IsInDomain(manager))
+                {
+                    throw new FutsRspError("实盘帐户与管理员不同域");
+                }
+
+                vendor.Domain.UpdateSyncVendor(id);
+                //将域信息通知
+                session.NotifyMgr("NotifyDomain", vendor.Domain);
+                session.OperationSuccess("设置同步合约实盘帐户成功");
+            }
+            else
+            {
+                throw new FutsRspError("无权更新同步实盘帐户");
+            }
+
+        }
+
+        /// <summary>
+        /// 更新或添加分区
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="json"></param>
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateDomain", "UpdateDomain - update domain", "查询域", true)]
         public void CTE_UpdateDomain(ISession session, string json)
         {

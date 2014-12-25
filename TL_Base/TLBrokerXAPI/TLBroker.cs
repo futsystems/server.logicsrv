@@ -252,9 +252,9 @@ namespace TradingLib.BrokerXAPI
         /// <summary>
         /// 查询合约
         /// </summary>
-        public virtual void QryInstrument()
+        public virtual bool QryInstrument()
         {
-            WrapperQryInstrument();
+            return WrapperQryInstrument();
         }
 
         /// <summary>
@@ -344,9 +344,9 @@ namespace TradingLib.BrokerXAPI
             return _wrapper.SendOrderAction(ref action);
         }
 
-        protected void WrapperQryInstrument()
+        protected bool WrapperQryInstrument()
         {
-            _wrapper.QryInstrument();
+            return _wrapper.QryInstrument();
         }
         #endregion
 

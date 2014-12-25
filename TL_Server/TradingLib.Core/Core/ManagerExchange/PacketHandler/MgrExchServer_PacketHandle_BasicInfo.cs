@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
+using TradingLib.BrokerXAPI;
 
 namespace TradingLib.Core
 {
@@ -286,6 +287,7 @@ namespace TradingLib.Core
         }
 
 
+
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "SyncSymbol", "SyncSymbol - sync  symbol", "同步合约数据")]
         public void CTE_SyncSymbol(ISession session)
         {
@@ -298,10 +300,73 @@ namespace TradingLib.Core
                 {
                     throw new FutsRspError("无权同步合约数据");
                 }
-                //
-                if (manager.Domain.Super)
+                Vendor vendor = BasicTracker.VendorTracker[manager.Domain.CFG_SyncVendor_ID];
+                if (vendor != null && vendor.Domain.ID == manager.domain_id && vendor.Broker != null && vendor.Broker.IsLive)
                 {
-                    throw new FutsRspError("超级域不支持同步,请手工维护数据");
+                    //如果设置了同步帐号 则从帐号中进行同步数据
+                    if(vendor.Broker is TLBroker)
+                    {
+                        TLBroker broker = vendor.Broker as TLBroker;
+
+                        broker.GotSymbolEvent += (sym, islast) =>
+                        {
+                            SymbolImpl tsym = manager.Domain.GetSymbol(sym.Symbol);
+                            //更新
+                            if (tsym != null)
+                            {
+                                tsym.EntryCommission = (decimal)sym.EntryCommission;
+                                tsym.ExitCommission = (decimal)sym.ExitCommission;
+                                tsym.ExpireDate = sym.ExpireDate;//到期日
+                                BasicTracker.SymbolTracker.UpdateSymbol(manager.domain_id, tsym);
+                            }
+                            else//增加
+                            {
+                                SecurityFamilyImpl sec = BasicTracker.SecurityTracker[manager.domain_id, sym.SecurityCode];
+                                //包含对应品种，则增加合约
+                                if (sec != null)
+                                {
+                                    tsym = new SymbolImpl();
+                                    tsym.Symbol = sym.Symbol;
+                                    tsym.Domain_ID = manager.domain_id;
+                                    tsym.Margin = (decimal)sym.Margin;
+                                    tsym.EntryCommission = (decimal)sym.EntryCommission;
+                                    tsym.ExitCommission = (decimal)sym.ExitCommission;
+                                    tsym.ExpireDate = sym.ExpireDate;//到期日
+
+                                    tsym.Strike = (decimal)sym.StrikePrice;
+                                    tsym.OptionSide = sym.OptionSide;
+
+                                    tsym.security_fk = sec.ID;
+                                    tsym.Tradeable = true;
+                                    BasicTracker.SymbolTracker.UpdateSymbol(manager.domain_id, tsym);
+                                }
+                                else
+                                {
+                                    debug("symbol:" + sym.Symbol + " have no sec setted. code:" + sym.SecurityCode, QSEnumDebugLevel.INFO);
+                                }
+                                
+                            }
+
+                        };
+                        if (!broker.QryInstrument())
+                        {
+                            throw new FutsRspError("通道合约数据查询失败");
+                        }
+                        return;
+                    
+                    }
+                    else
+                    {
+                        throw new FutsRspError("设置的同步实盘帐户无效,请手工维护数据");
+                    }
+
+                }
+                else
+                {
+                    if (manager.Domain.Super)
+                    {
+                        throw new FutsRspError("超级域不支持同步,请手工维护数据");
+                    }
                 }
 
                 Domain domain = BasicTracker.DomainTracker.SuperDomain;
