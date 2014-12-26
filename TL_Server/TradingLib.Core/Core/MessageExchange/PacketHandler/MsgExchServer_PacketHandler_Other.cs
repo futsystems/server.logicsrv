@@ -200,13 +200,10 @@ namespace TradingLib.Core
         void SrvOnQrySettleInfo(QrySettleInfoRequest request)
         {
             debug("QrySettleInfo :" + request.ToString(), QSEnumDebugLevel.INFO);
-
             Settlement settlement = null;
-            
             //如果查询日期为0 则查询上个结算日
             IAccount account = _clearcentre[request.Account];
             //判断account是否为空
-
             int settleday = request.Tradingday;
             if (settleday == 0)
             {

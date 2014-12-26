@@ -33,10 +33,6 @@ namespace Broker.SIM
     {
 
         public const string PROGRAM = "Broker.SIM";
-        
-      
-
-  
 
         AsyncResponse asynctick;
 
@@ -323,7 +319,34 @@ namespace Broker.SIM
 
         #endregion
 
+        /// <summary>
+        /// 获得对应的开平标识
+        /// </summary>
+        /// <param name="f"></param>
+        /// <returns></returns>
+        //QSEnumOffsetFlag GetOffsetFlag(Order o)
+        //{
+        //    switch (o.OffsetFlag)
+        //    { 
+        //        case QSEnumOffsetFlag.OPEN:
+        //            return QSEnumOffsetFlag.OPEN;
 
+        //        case QSEnumOffsetFlag.CLOSETODAY:
+        //            return QSEnumOffsetFlag.CLOSETODAY;
+        //        case QSEnumOffsetFlag.CLOSEYESTERDAY:
+        //            return QSEnumOffsetFlag.CLOSEYESTERDAY;
+
+        //        case QSEnumOffsetFlag.CLOSE:
+        //            {
+        //                //如果是上期所 则需要区分平今 平昨
+        //                if (o.oSymbol.SecurityFamily.Exchange.EXCode == "SHFE")
+        //                { 
+                            
+        //                }
+        //                return QSEnumOffsetFlag.CLOSE;
+        //            }
+        //    }
+        //}
         #region 市场快照扫描成交
         //市场端面扫描模拟成交
         /*
@@ -407,6 +430,7 @@ namespace Broker.SIM
                     {
                         //检查全部成交还是部分成交
                         Trade fill = (Trade)o;
+                        //模拟成交需要按照交易所设定对应的开平标识
                         //生成成交编号
                         fill.BrokerTradeID = NextFillSeq.ToString();//交易所成交编号 Broker端的成交编号
 

@@ -92,11 +92,7 @@ namespace TradingLib.Core
             if (!response.Authorized)
             {
                 debug("账户: " + request.LoginID + " 验证失败", QSEnumDebugLevel.WARNING);
-
-                //CacheMessage(rspinstance.Serialize(), MessageTypes.LOGINRESPONSE, c);//向客户端返回请求交易账户确认
-                //CacheMessage(QSMessageHelper.Message(QSSysMessage.LOGGINFAILED,"账户验证失败,请确认密码或联系管理员"), MessageTypes.SYSMESSAGE, c.ClientID);//发送客户端提示信息
                 c.AuthorizedFail();
-                //SendPacket(response);
             }
             else
             {
@@ -106,21 +102,7 @@ namespace TradingLib.Core
                 //否则会出现缓存找到排序在前面的client，该client可能已经由于某些原因与服务器断开
                 debug("检查相同接入类型同名客户端:" + request.LoginID, QSEnumDebugLevel.INFO);//保证客户端地址唯一
 
-                //检查当个客户端的登入次数超过次数给出提示 不予登入
-                ///_clients.DelClientByLoginID(loginid, c.FrontType, true);//从注册客户端列表中删除该登入名的客户端记录
                 c.AuthorizedSuccess();
-                //c.Account = response.Account;
-
-                //debug("ClientInfo account:" + c.Account + " author:" + c.Authorized.ToString() + " response account:" + response.Account + " loginid:" + response.LoginID.ToString(), QSEnumDebugLevel.INFO);
-                //SendPacket(response);
-                //CacheMessage(rspinstance.Serialize(), MessageTypes.LOGINRESPONSE, c.ClientID);//向客户端返回请求交易账户确认
-                //CacheMessage(QSMessageHelper.Message(QSSysMessage.LOGGINSUCCESS, "账户验证成功,祝你交易愉快！"), MessageTypes.SYSMESSAGE, c.ClientID);
-                //登入成功后我们更新账户的登入信息 如果是自动重连,则第一次登入是没有采集到ip地址,硬件地址.当客户端更新本地数据时，会再次调用updatelogininfo，来更新该信息
-                //UpdateLoginInfo(loginid, true, c);
-                //if (ClientLoginEvent != null)
-                //    ClientLoginEvent(c);
-
-
             }
             TLSend(response);
         }
