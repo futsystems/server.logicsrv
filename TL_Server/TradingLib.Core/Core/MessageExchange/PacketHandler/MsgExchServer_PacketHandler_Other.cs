@@ -155,6 +155,7 @@ namespace TradingLib.Core
 
         /// <summary>
         /// 查询可开手数
+        /// 开平/方向/合约
         /// </summary>
         /// <param name="request"></param>
         void SrvOnQryMaxOrderVol(QryMaxOrderVolRequest request, IAccount account)
@@ -175,12 +176,14 @@ namespace TradingLib.Core
             else
             {
                 int size = account.CanOpenSize(symbol);
+
                 debug("got max opensize:" + size.ToString(), QSEnumDebugLevel.INFO);
                 response.Symbol = request.Symbol;
                 response.MaxVol = size;
                 response.OffsetFlag = request.OffsetFlag;
-                request.Side = request.Side;
-                CachePacket(response);
+                response.Side = request.Side;
+
+                CacheRspResponse(response, true);
             }
         }
 
@@ -371,13 +374,13 @@ namespace TradingLib.Core
             Instrument[] instruments = new Instrument[]{};
             if (request.SecurityType != SecurityType.NIL && string.IsNullOrEmpty(request.ExchID) && string.IsNullOrEmpty(request.Symbol) && string.IsNullOrEmpty(request.Security))
             {
-                debug("it is here a", QSEnumDebugLevel.INFO);
+                //debug("it is here a", QSEnumDebugLevel.INFO);
                 instruments =account.GetInstruments(request.SecurityType).ToArray();  
             }
             //如果所有字段为空 则为查询所有合约列表
             if (request.SecurityType == SecurityType.NIL && string.IsNullOrEmpty(request.ExchID) && string.IsNullOrEmpty(request.Symbol) && string.IsNullOrEmpty(request.Security))
             {
-                debug("it is here b", QSEnumDebugLevel.INFO);
+                //debug("it is here b", QSEnumDebugLevel.INFO);
                 instruments = account.GetInstruments().ToArray();
             }
 

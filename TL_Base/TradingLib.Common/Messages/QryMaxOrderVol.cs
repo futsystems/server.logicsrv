@@ -84,10 +84,9 @@ namespace TradingLib.Common
 
         public RspQryMaxOrderVolResponse()
         {
-            //Account = string.Empty;
             Symbol = string.Empty;
             MaxVol = 0;
-            Side = false;
+            Side = true;
             OffsetFlag = QSEnumOffsetFlag.UNKNOWN;
             _type = MessageTypes.MAXORDERVOLRESPONSE;
         }
@@ -109,10 +108,9 @@ namespace TradingLib.Common
 
         public override string ResponseSerialize()
         {
+            //Util.Debug("response serialized: side:" + Side.ToString(), QSEnumDebugLevel.ERROR);
             StringBuilder sb = new StringBuilder();
             char d = ',';
-            //sb.Append(Account);
-            //sb.Append(d);
             sb.Append(Symbol);
             sb.Append(d);
             sb.Append(Side.ToString());
