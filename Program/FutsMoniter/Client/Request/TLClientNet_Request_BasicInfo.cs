@@ -32,6 +32,13 @@ namespace TradingLib.Common
         {
             this.ReqContribRequest("MgrExchServer", "SyncSymbol", "");
         }
+        /// <summary>
+        /// 请求禁止所有合约
+        /// </summary>
+        public void ReqDisableAllSymbols()
+        {
+            this.ReqContribRequest("MgrExchServer", "DisableAllSymbols", "");
+        }
 
 
         public void ReqQryExchange()

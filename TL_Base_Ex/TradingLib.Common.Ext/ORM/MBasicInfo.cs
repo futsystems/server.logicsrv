@@ -120,7 +120,7 @@ namespace TradingLib.ORM
             using (DBMySql db = new DBMySql())
             {
                 //TLCtxHelper.Ctx.debug("orm update mktimefk:" + sec.MarketTimeFK.ToString() + " exchangefk:" + sec.ExchangeFK.ToString() + " underfk:" + sec.UnderLayingFK.ToString());
-                string query = string.Format("UPDATE info_symbols SET entrycommission='{0}',exitcommission='{1}',margin='{2}',extramargin='{3}',maintancemargin='{4}' ,expiremonth='{5}',expiredate='{6}',tradeable='{7}' WHERE id='{8}'", sym._entrycommission, sym._exitcommission, sym._margin, sym._extramargin, sym._maintancemargin,sym.ExpireMonth,sym.ExpireDate, sym.Tradeable ? 1 : 0, sym.ID);
+                string query = string.Format("UPDATE info_symbols SET entrycommission='{0}',exitcommission='{1}',margin='{2}',extramargin='{3}',maintancemargin='{4}' ,expiremonth='{5}',expiredate='{6}',tradeable='{7}' WHERE id='{8}'", sym._entrycommission, sym._exitcommission, sym._margin, sym._extramargin, sym._maintancemargin,0,sym.ExpireDate, sym.Tradeable ? 1 : 0, sym.ID);
                 return db.Connection.Execute(query) >= 0;
             }
         }
@@ -131,7 +131,7 @@ namespace TradingLib.ORM
             {
                 
                 //string query = string.Format("INSERT INTO info_symbols (`symbol`,`entrycommission`,`exitcommission`,`margin`,`extramargin`,`maintancemargin`,`strike`,`optionside`,`expiremonth`,`expiredate`,`security_fk``underlaying_fk`,`underlayingsymbol_fk`,`tradeable`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}')", sym.Symbol, sym.EntryCommission, sym.ExitCommission, sym.Margin, sym.ExtraMargin, sym.MaintanceMargin, sym.Strike, sym.OptionSide, sym.ExpireMonth, sym.ExpireDate, sym.security_fk, sym.underlaying_fk, sym.underlayingsymbol_fk, sym.Tradeable ? 1 : 0);
-                string query = string.Format("INSERT INTO info_symbols (`symbol`,`entrycommission`,`exitcommission`,`margin`,`extramargin`,`maintancemargin`,`strike`,`optionside`,`expiremonth`,`expiredate`,`security_fk`,`underlaying_fk`,`underlayingsymbol_fk`,`tradeable`,`domain_id`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}')", sym.Symbol, sym._entrycommission, sym._exitcommission, sym._margin, sym._extramargin, sym._maintancemargin, sym.Strike, sym.OptionSide, sym.ExpireMonth, sym.ExpireDate, sym.security_fk, sym.underlaying_fk, sym.underlayingsymbol_fk, sym.Tradeable ? 1 : 0, sym.Domain_ID);
+                string query = string.Format("INSERT INTO info_symbols (`symbol`,`entrycommission`,`exitcommission`,`margin`,`extramargin`,`maintancemargin`,`strike`,`optionside`,`expiremonth`,`expiredate`,`security_fk`,`underlaying_fk`,`underlayingsymbol_fk`,`tradeable`,`domain_id`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}')", sym.Symbol, sym._entrycommission, sym._exitcommission, sym._margin, sym._extramargin, sym._maintancemargin, sym.Strike, sym.OptionSide,0, sym.ExpireDate, sym.security_fk, sym.underlaying_fk, sym.underlayingsymbol_fk, sym.Tradeable ? 1 : 0, sym.Domain_ID);
                 
                 //TLCtxHelper.Ctx.debug("query:" + query);
                 int row = db.Connection.Execute(query);

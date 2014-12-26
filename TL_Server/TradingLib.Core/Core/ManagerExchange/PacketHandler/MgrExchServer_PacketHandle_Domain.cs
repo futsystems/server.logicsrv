@@ -36,20 +36,25 @@ namespace TradingLib.Core
             //只有超级域的管理员
             if (manager.Domain.Super && manager.IsRoot())
             {
-                Vendor vendor = BasicTracker.VendorTracker[id];
-                if (vendor == null)
+                if (id != 0)
                 {
-                    throw new FutsRspError("实盘帐户不存在");
+                    Vendor vendor = BasicTracker.VendorTracker[id];
+                    if (vendor == null)
+                    {
+                        throw new FutsRspError("实盘帐户不存在");
+                    }
+
+                    if (!vendor.Domain.IsInDomain(manager))
+                    {
+                        throw new FutsRspError("实盘帐户与管理员不同域");
+                    }
                 }
 
-                if (!vendor.Domain.IsInDomain(manager))
-                {
-                    throw new FutsRspError("实盘帐户与管理员不同域");
-                }
+                //如果vendorid为0 表明不从实盘帐户同步，从主域同步
+                manager.Domain.UpdateSyncVendor(id);
 
-                vendor.Domain.UpdateSyncVendor(id);
                 //将域信息通知
-                session.NotifyMgr("NotifyDomain", vendor.Domain);
+                session.NotifyMgr("NotifyDomain", manager.Domain);
                 session.OperationSuccess("设置同步合约实盘帐户成功");
             }
             else

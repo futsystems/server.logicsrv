@@ -29,12 +29,12 @@
         private void InitializeComponent()
         {
             this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
-            this.kryptonLabel3 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.btnSubmit = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.cbVendor = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
             this.kryptonLabel2 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.cutVendor = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel1 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.ckSyncMainDomain = new ComponentFactory.Krypton.Toolkit.KryptonCheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cbVendor)).BeginInit();
@@ -42,7 +42,7 @@
             // 
             // kryptonPanel1
             // 
-            this.kryptonPanel1.Controls.Add(this.kryptonLabel3);
+            this.kryptonPanel1.Controls.Add(this.ckSyncMainDomain);
             this.kryptonPanel1.Controls.Add(this.btnSubmit);
             this.kryptonPanel1.Controls.Add(this.cbVendor);
             this.kryptonPanel1.Controls.Add(this.kryptonLabel2);
@@ -53,15 +53,6 @@
             this.kryptonPanel1.Name = "kryptonPanel1";
             this.kryptonPanel1.Size = new System.Drawing.Size(280, 163);
             this.kryptonPanel1.TabIndex = 0;
-            // 
-            // kryptonLabel3
-            // 
-            this.kryptonLabel3.Location = new System.Drawing.Point(12, 92);
-            this.kryptonLabel3.Name = "kryptonLabel3";
-            this.kryptonLabel3.Size = new System.Drawing.Size(255, 18);
-            this.kryptonLabel3.StateCommon.ShortText.Color1 = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.kryptonLabel3.TabIndex = 5;
-            this.kryptonLabel3.Values.Text = "同步合约时将从设定的实盘帐户同步数据";
             // 
             // btnSubmit
             // 
@@ -75,14 +66,14 @@
             // cbVendor
             // 
             this.cbVendor.DropDownWidth = 121;
-            this.cbVendor.Location = new System.Drawing.Point(113, 49);
+            this.cbVendor.Location = new System.Drawing.Point(113, 39);
             this.cbVendor.Name = "cbVendor";
             this.cbVendor.Size = new System.Drawing.Size(121, 21);
             this.cbVendor.TabIndex = 3;
             // 
             // kryptonLabel2
             // 
-            this.kryptonLabel2.Location = new System.Drawing.Point(12, 52);
+            this.kryptonLabel2.Location = new System.Drawing.Point(12, 42);
             this.kryptonLabel2.Name = "kryptonLabel2";
             this.kryptonLabel2.Size = new System.Drawing.Size(95, 18);
             this.kryptonLabel2.TabIndex = 2;
@@ -102,7 +93,15 @@
             this.kryptonLabel1.Name = "kryptonLabel1";
             this.kryptonLabel1.Size = new System.Drawing.Size(95, 18);
             this.kryptonLabel1.TabIndex = 0;
-            this.kryptonLabel1.Values.Text = "当前同步帐户:";
+            this.kryptonLabel1.Values.Text = "当前同步方式:";
+            // 
+            // ckSyncMainDomain
+            // 
+            this.ckSyncMainDomain.Location = new System.Drawing.Point(113, 80);
+            this.ckSyncMainDomain.Name = "ckSyncMainDomain";
+            this.ckSyncMainDomain.Size = new System.Drawing.Size(91, 18);
+            this.ckSyncMainDomain.TabIndex = 5;
+            this.ckSyncMainDomain.Values.Text = "从主域同步";
             // 
             // fmSyncSymbol
             // 
@@ -132,6 +131,6 @@
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel2;
         private ComponentFactory.Krypton.Toolkit.KryptonComboBox cbVendor;
         private ComponentFactory.Krypton.Toolkit.KryptonButton btnSubmit;
-        private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel3;
+        private ComponentFactory.Krypton.Toolkit.KryptonCheckBox ckSyncMainDomain;
     }
 }

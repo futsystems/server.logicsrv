@@ -69,7 +69,7 @@ namespace FutsMoniter
                 symbol.Enabled = false;
 
                 Factory.IDataSourceFactory(cbexpiremonth).BindDataSource(Globals.BasicInfoTracker.GetExpireMonth());
-                cbexpiremonth.SelectedValue = _symbol.ExpireMonth;
+                cbexpiremonth.SelectedValue = (int)_symbol.ExpireDate / 100;//_symbol.ExpireMonth;
                 cbexpiremonth.Enabled = false;
 
                 if (_symbol.SecurityFamily.Type != SecurityType.OPT)
@@ -96,7 +96,7 @@ namespace FutsMoniter
 
                 this.tradeable.Checked = _symbol.Tradeable;
                 //this.tradeable.Text = this.tradeable.Checked ? "可交易" : "不可交易";
-                this.expiredate.Value = (_symbol.ExpireDate == 0 ? Util.ToDateTime(_symbol.ExpireMonth*100+30,0) : Util.ToDateTime(_symbol.ExpireDate, 0));
+                this.expiredate.Value = (_symbol.ExpireDate == 0 ? DateTime.Now:Util.ToDateTime(_symbol.ExpireDate,0));
 
             }
         }
@@ -145,13 +145,13 @@ namespace FutsMoniter
                     case SecurityType.STK:
                         target.Strike = 0;
                         target.OptionSide = QSEnumOptionSide.NULL;
-                        target.ExpireMonth = 0;
+                        //target.ExpireMonth = 0;
                         target.ExpireDate = 0;
                         break;
                     case SecurityType.FUT:
                         target.Strike = 0;
                         target.OptionSide = QSEnumOptionSide.NULL;
-                        target.ExpireMonth = CurrentExpireMonth;
+                        //target.ExpireMonth = CurrentExpireMonth;
                         //target.ExpireDate = 0;
                         break;
                     case SecurityType.OPT:
@@ -172,7 +172,7 @@ namespace FutsMoniter
                     default:
                         target.Strike = 0;
                         target.OptionSide = QSEnumOptionSide.NULL;
-                        target.ExpireMonth = 0;
+                        //target.ExpireMonth = 0;
                         target.ExpireDate = 0;
                         break;
                 }
