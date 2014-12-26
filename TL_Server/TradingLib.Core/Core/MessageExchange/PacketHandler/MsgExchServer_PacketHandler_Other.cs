@@ -194,7 +194,6 @@ namespace TradingLib.Core
             IAccountInfo info = account.ToAccountInfo();
             RspQryAccountInfoResponse response  = ResponseTemplate<RspQryAccountInfoResponse>.SrvSendRspResponse(request);
             response.AccInfo = info;
-            Util.sleep(2000);
             CachePacket(response);
         }
 
