@@ -38,9 +38,13 @@ namespace TradingLib.API
         /// </summary>
         /// <param name="task"></param>
         /// <returns></returns>
-        public static string GetTaskMemo(this ITask task)
+        public static string GetTaskMemo(this ITask task,bool pad=true)
         {
-            return Util.padLeftEx(task.TaskName, 40) + task.GetTimeStr();
+            if (pad)
+            {
+                return Util.padLeftEx(task.TaskName, 40) + task.GetTimeStr();
+            }
+            return task.TaskName + " " + task.GetTimeStr(); 
         }
 
     }

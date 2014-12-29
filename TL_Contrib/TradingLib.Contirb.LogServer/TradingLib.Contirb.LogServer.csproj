@@ -65,7 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LogServer.cs" />
-    <Compile Include="LogTaskEvent.cs" />
+    <Compile Include="ProtocolLogServer.cs" />
     <Compile Include="MLog.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

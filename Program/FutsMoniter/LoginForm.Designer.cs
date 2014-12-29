@@ -123,22 +123,18 @@
             // 
             // ckremberuser
             // 
-            this.ckremberuser.LabelStyle = ComponentFactory.Krypton.Toolkit.LabelStyle.NormalControl;
             this.ckremberuser.Location = new System.Drawing.Point(278, 126);
             this.ckremberuser.Name = "ckremberuser";
             this.ckremberuser.Size = new System.Drawing.Size(91, 18);
             this.ckremberuser.TabIndex = 28;
-            this.ckremberuser.Text = "记住用户名";
             this.ckremberuser.Values.Text = "记住用户名";
             // 
             // ckremberpass
             // 
-            this.ckremberpass.LabelStyle = ComponentFactory.Krypton.Toolkit.LabelStyle.NormalControl;
             this.ckremberpass.Location = new System.Drawing.Point(278, 150);
             this.ckremberpass.Name = "ckremberpass";
             this.ckremberpass.Size = new System.Drawing.Size(78, 18);
             this.ckremberpass.TabIndex = 29;
-            this.ckremberpass.Text = "保存密码";
             this.ckremberpass.Values.Text = "保存密码";
             // 
             // message
@@ -195,6 +191,8 @@
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "LoginForm";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "LoginForm";
             this.TopMost = true;

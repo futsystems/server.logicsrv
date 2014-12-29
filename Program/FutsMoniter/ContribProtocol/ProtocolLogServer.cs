@@ -5,10 +5,13 @@ using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
 
-namespace TradingLib.Contirb.LogServer
+
+
+namespace TradingLib.Contirb.Protocol
 {
     public class LogTaskEvent
     {
+
         /// <summary>
         /// 数据库ID
         /// </summary>

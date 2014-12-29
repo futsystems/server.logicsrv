@@ -42,11 +42,6 @@ namespace TradingLib.API
         /// </summary>
         int TaskSecend { get; }
 
-        //string TaskMemo { get; }
-
-        
-        //string TypeName { get; }
-        //string TimeStr { get; }
 
         void CheckTask(DateTime signaltime);
     }

@@ -6,6 +6,7 @@ using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Mixins.DataBase;
 using TradingLib.Contirb.LogServer;
+using TradingLib.Contirb.Protocol;
 
 namespace TradingLib.ORM
 {
@@ -25,6 +26,19 @@ namespace TradingLib.ORM
             {
                 string query = String.Format("Insert into log_system_task (`settleday`,`uuid`,`taskname`,`tasktype`,`taskmemo`,`date`,`time`,`result`,`exception`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}')", log.Settleday, log.UUID, log.TaskName, log.TaskType, log.TaskMemo, log.Date, log.Time, log.Result ? 1 : 0, log.Exception);
                 return db.Connection.Execute(query) > 0;
+            }
+        }
+
+        /// <summary>
+        /// 查询任务运行日志
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable<LogTaskEvent> SelectLotTaskEvents()
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                const string query = "SELECT * FROM log_system_task";
+                return db.Connection.Query<LogTaskEvent>(query, null);
             }
         }
 

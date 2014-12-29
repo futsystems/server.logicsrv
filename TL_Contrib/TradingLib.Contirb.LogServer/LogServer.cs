@@ -6,6 +6,7 @@ using System.Threading;
 using ZeroMQ;
 using TradingLib.API;
 using TradingLib.Common;
+using TradingLib.Contirb.Protocol;
 
 
 namespace TradingLib.Contirb.LogServer
@@ -229,6 +230,23 @@ namespace TradingLib.Contirb.LogServer
         }
 
 
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryTaskRunLog", "QryTaskRunLog - qry agent sparg  of account", "查询日志运行日志")]
+        public void CTE_QryTaskRunLog(ISession session)
+        {
+            Manager manager = session.GetManager();
+            if (manager.IsRoot())
+            {
+                IEnumerable<LogTaskEvent> logs = ORM.MLog.SelectLotTaskEvents();
+                session.ReplyMgr(logs.ToArray());
+            }
+            else
+            {
+                throw new FutsRspError("无权查询任务运行日志");
+            }
+        }
+
+
+
         LogTaskEvent TaskEvent2Log(TaskEventArgs args)
         {
             LogTaskEvent log = new LogTaskEvent();
@@ -236,7 +254,7 @@ namespace TradingLib.Contirb.LogServer
             log.Exception = !args.IsSuccess ? args.InnerException.ToString() : "";
             log.Result = args.IsSuccess;
             log.Settleday = TLCtxHelper.CmdSettleCentre.NextTradingday;
-            log.TaskMemo = args.Task.GetTaskMemo();
+            log.TaskMemo = args.Task.GetTaskMemo(false);
             log.TaskName = args.Task.TaskName;
             log.TaskType = args.Task.TaskType;
             log.Time = Util.ToTLTime();

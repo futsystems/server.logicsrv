@@ -45,6 +45,7 @@
     <Compile Include="Connecter\RouterItem.cs" />
     <Compile Include="Domain\Domain.cs" />
     <Compile Include="Msic\EnumConnectorStatus.cs" />
+    <Compile Include="Msic\EnumTaskType.cs" />
     <Compile Include="Vendor\IVendor.cs" />
     <Compile Include="Connecter\EnumDataFeedTypes.cs" />
     <Compile Include="Connecter\RouterGroup.cs" />
