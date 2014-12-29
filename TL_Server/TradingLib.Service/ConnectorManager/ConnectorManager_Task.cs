@@ -14,15 +14,17 @@ namespace TradingLib.ServiceManager
         /// <summary>
         /// 重置通道连接
         /// </summary>
-        [TaskAttr("重置行情与交易通道", 8, 30, 5, "日盘前重置行情与交易通道")]
-        [TaskAttr("重置行情与交易通道", 20, 30, 5, "日盘前重置行情与交易通道")]
+        [TaskAttr("重置行情与交易通道", 8, 30,0, "日盘前重置行情与交易通道")]
+        [TaskAttr("重置行情与交易通道", 20, 30,0, "日盘前重置行情与交易通道")]
         public void Task_ResetConnector()
         {
             if (TLCtxHelper.Ctx.SettleCentre.IsTradingday)//如果是交易日则需要启动实盘通道
             {
                 debug("正常交易日,重置所有路由通道", QSEnumDebugLevel.INFO);
+                
                 //1.停止所有通道
                 StopConnector();
+
                 //2.启动所有通道
                 StartConnector();
             }
@@ -61,7 +63,7 @@ namespace TradingLib.ServiceManager
         void StopConnector()
         {
             //1.停止默认通道
-            StopDataFeed(_defaultDataFeedToken);
+            StopDataFeedViaToken(_defaultDataFeedToken);
             Util.sleep(500);
             StopBrokerViaToken(_defaultSimBrokerToken);
             Util.sleep(500);

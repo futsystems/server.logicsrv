@@ -10,7 +10,7 @@ namespace TradingLib.Common
     public static class AccountUtils_BasicInfo
     {
         /// <summary>
-        /// 获得某个帐户下的合约
+        /// 获得帐户下的合约
         /// </summary>
         /// <param name="account"></param>
         /// <param name="symbol"></param>
@@ -21,11 +21,18 @@ namespace TradingLib.Common
             return sym;
         }
 
+        /// <summary>
+        /// 获得帐户下品种
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="code"></param>
+        /// <returns></returns>
         public static SecurityFamily GetSecurity(this IAccount account,string code)
         {
             SecurityFamily sec = account.Domain.GetSecurityFamily(code);
             return sec;
         }
+
         /// <summary>
         /// 获得某个帐户所有可交易合约
         /// </summary>

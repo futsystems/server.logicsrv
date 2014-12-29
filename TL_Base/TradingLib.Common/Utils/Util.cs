@@ -18,7 +18,7 @@ namespace TradingLib.Common
     /// <summary>
     /// Utility class holding commonly used properties
     /// </summary>
-    public class Util
+    public partial class Util
     {
         const string PROGRAME = "GlobalUtil";
 

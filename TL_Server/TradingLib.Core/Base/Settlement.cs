@@ -13,8 +13,6 @@ namespace TradingLib.Core
     /// </summary>
     public class SettlementFactory
     {
-
-
         private static string padLeftEx(string str, int totalByteCount)
         {
             Encoding coding = Encoding.GetEncoding("gb2312");
@@ -27,6 +25,8 @@ namespace TradingLib.Core
             string w = str.PadRight(totalByteCount - dcount);
             return w;
         }
+
+
         private static string padRightEx(string str, int totalByteCount)
         {
             Encoding coding = Encoding.GetEncoding("gb2312");
@@ -36,8 +36,8 @@ namespace TradingLib.Core
                 if (coding.GetByteCount(ch.ToString()) == 2)
                     dcount++;
             }
+
             string w = str.PadLeft(totalByteCount - dcount);
-            
             return w;
         }
 
