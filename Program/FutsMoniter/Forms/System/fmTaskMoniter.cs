@@ -133,7 +133,7 @@ namespace FutsMoniter
                     gt.Rows[i][DATE] = log.Date;
                     gt.Rows[i][TIME] = log.Time;
                     gt.Rows[i][RESULT] = GetTaskRunResult(log.Result);
-                    gt.Rows[i][EXCEPTION] =log.Exception;
+                    //gt.Rows[i][EXCEPTION] =log.Exception;
 
                     logtaskeventmaprowid.TryAdd(log.ID, i);
                     logtaskeventmap.TryAdd(log.ID,log);
@@ -167,8 +167,8 @@ namespace FutsMoniter
         const string TASKMEMO = "任务描述";
         const string DATE = "完成日期";
         const string TIME = "完成时间";
-        const string RESULT = "运行结果";
-        const string EXCEPTION = "异常内容";
+        const string RESULT = "状态";
+        //const string EXCEPTION = "异常内容";
 
         #endregion
 
@@ -216,7 +216,7 @@ namespace FutsMoniter
             gt.Columns.Add(DATE);//1
             gt.Columns.Add(TIME);
             gt.Columns.Add(RESULT,typeof(Image));//1
-            gt.Columns.Add(EXCEPTION);
+            //gt.Columns.Add(EXCEPTION);
         }
 
 
@@ -235,8 +235,8 @@ namespace FutsMoniter
             grid.Columns[TASKNAME].Width = 150;
             grid.Columns[TASKTYPE].Width = 80;
             grid.Columns[TASKMEMO].Width = 200;
-            grid.Columns[DATE].Width = 60;
-            grid.Columns[TIME].Width = 60;
+            grid.Columns[DATE].Width = 80;
+            grid.Columns[TIME].Width = 80;
             grid.Columns[RESULT].Width = 60;
 
         }
