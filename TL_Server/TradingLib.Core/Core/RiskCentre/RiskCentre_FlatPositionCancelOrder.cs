@@ -13,7 +13,7 @@ namespace TradingLib.Core
     /// 1.强平某个持仓，该动作会将该持仓对应合约的所有待成交委托撤掉，然后再进行强平，强平成功后从队列删除
     /// 2.撤单后或强平，撤掉一组委托，待撤单成功后按设置生成对应的强平仓位的事务加入队列
     /// </summary>
-    internal enum QSEnumTaskType
+    internal enum QSEnumRiskTaskType
     { 
         /// <summary>
         /// 强平仓位
@@ -60,7 +60,7 @@ namespace TradingLib.Core
         /// <summary>
         /// 风控操作任务类型
         /// </summary>
-        public QSEnumTaskType TaskType { get; set; }
+        public QSEnumRiskTaskType TaskType { get; set; }
 
         /// <summary>
         /// 委托来源
@@ -233,7 +233,7 @@ namespace TradingLib.Core
         public RiskTaskSet(string account,Position pos,List<long> pendingorders, QSEnumOrderSource source, string closereason)
         {
             //设定平仓任务标识
-            TaskType = QSEnumTaskType.FlatPosition;
+            TaskType = QSEnumRiskTaskType.FlatPosition;
             this.Account = account;
             //持仓数据
             Position = pos;
@@ -265,7 +265,7 @@ namespace TradingLib.Core
         /// <param name="closereason"></param>
         public RiskTaskSet(string account,List<long> orders, List<Position> pendingpositons, QSEnumOrderSource source, string closereason)
         {
-            TaskType = QSEnumTaskType.FlatAllPositions;
+            TaskType = QSEnumRiskTaskType.FlatAllPositions;
             this.Account = account;
             OrderCancels = orders;
             PendingPositionFlat = pendingpositons;
@@ -292,7 +292,7 @@ namespace TradingLib.Core
         /// <param name="closereason"></param>
         public RiskTaskSet(string account, List<long> orders, QSEnumOrderSource source, string closereason)
         {
-            TaskType = QSEnumTaskType.CancelOrder;
+            TaskType = QSEnumRiskTaskType.CancelOrder;
             this.Account = account;
             OrderCancels = orders;
             PendingPositionFlat = new List<Position>();//待强平持仓为空
@@ -316,11 +316,11 @@ namespace TradingLib.Core
             string msg = string.Empty;
             switch(this.TaskType)
             {
-                case QSEnumTaskType.FlatPosition:
+                case QSEnumRiskTaskType.FlatPosition:
                     msg = "Pos:"+this.Position.GetPositionKey() +" FlatSent:"+this.FlatSent.ToString() +" FirCnt:"+this.FireCount.ToString();
                     break;
-                case QSEnumTaskType.CancelOrder:
-                case QSEnumTaskType.FlatAllPositions:
+                case QSEnumRiskTaskType.CancelOrder:
+                case QSEnumRiskTaskType.FlatAllPositions:
                     msg = "CancelSent:"+this.CancelSent.ToString() +" CancelDone:"+this.CancelDone.ToString()+" SubTaskGen:"+this.SubTaskGenerated.ToString();
                     break;
                 default:
@@ -373,14 +373,14 @@ namespace TradingLib.Core
 
             foreach (RiskTaskSet ps in posflatlist)
             {
-                if (ps.TaskType == QSEnumTaskType.FlatPosition)
+                if (ps.TaskType == QSEnumRiskTaskType.FlatPosition)
                 {
                     if (ps.Position.GetPositionKey().Equals(key))
                     {
                         return true;
                     }
                 }
-                if(ps.TaskType == QSEnumTaskType.FlatAllPositions)
+                if (ps.TaskType == QSEnumRiskTaskType.FlatAllPositions)
                 {
                     //如果是先撤单然后再平仓类型的任务 需要检查先撤单再平仓的待平仓列表中是否包含了对应的持仓
                     if (ps.PendingPositionFlat.Where(p => p.GetPositionKey().Equals(key)).Count() > 0)
@@ -404,7 +404,7 @@ namespace TradingLib.Core
 
         bool HaveFlatAllTask(string accid)
         {
-            return posflatlist.Any(task => task.Account.Equals(accid) && task.TaskType == QSEnumTaskType.FlatAllPositions);
+            return posflatlist.Any(task => task.Account.Equals(accid) && task.TaskType == QSEnumRiskTaskType.FlatAllPositions);
         }
 
         /// <summary>
@@ -632,7 +632,7 @@ namespace TradingLib.Core
                 
                 switch (ps.TaskType)
                 {
-                    case QSEnumTaskType.FlatPosition:
+                    case QSEnumRiskTaskType.FlatPosition:
                         {
                             //debug("it is flatpostion section...................", QSEnumDebugLevel.INFO);
                             #region 强平持仓
@@ -754,8 +754,8 @@ namespace TradingLib.Core
                             #endregion
                         }
                         break;
-                    case QSEnumTaskType.CancelOrder:
-                    case QSEnumTaskType.FlatAllPositions:
+                    case QSEnumRiskTaskType.CancelOrder:
+                    case QSEnumRiskTaskType.FlatAllPositions:
                         {
                             #region 撤单 撤单后按持仓情况 进行强平
                             if (ps.HaveOrderCancels)

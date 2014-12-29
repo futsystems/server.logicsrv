@@ -73,7 +73,6 @@ namespace TradingLib.Core
                     //遍历该未平仓持仓对象下的所有持仓明细
                     foreach (PositionDetail pd in pos.PositionDetailTotal.Where(pd => !pd.IsClosed()))
                     {
-
                         //保存结算持仓明细时要将结算日更新为当前
                         pd.Settleday = TLCtxHelper.Ctx.SettleCentre.NextTradingday;
                         //保存持仓明细到数据库

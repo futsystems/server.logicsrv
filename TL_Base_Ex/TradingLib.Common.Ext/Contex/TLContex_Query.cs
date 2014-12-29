@@ -49,31 +49,31 @@ namespace TradingLib.Common
             return list;
         }
 
-        internal List<JsonWrapperTask> QryTask()
-        {
-            List<JsonWrapperTask> list = new List<JsonWrapperTask>();
-            foreach (ITask t in taskList)
-            {
-                list.Add(new JsonWrapperTask(t));
-            }
-            return list;
-        }
+        //internal List<JsonWrapperTask> QryTask()
+        //{
+        //    List<JsonWrapperTask> list = new List<JsonWrapperTask>();
+        //    foreach (ITask t in taskList)
+        //    {
+        //        list.Add(new JsonWrapperTask(t));
+        //    }
+        //    return list;
+        //}
     }
 
-    internal class JsonWrapperTask
-    {
-        ITask _task;
-        public JsonWrapperTask(ITask task)
-        {
-            _task = task;
-        }
+    //internal class JsonWrapperTask
+    //{
+    //    ITask _task;
+    //    public JsonWrapperTask(ITask task)
+    //    {
+    //        _task = task;
+    //    }
 
-        public string TaskName {get{return _task.TaskName;}}
+    //    public string TaskName {get{return _task.TaskName;}}
 
-        public string TaskType {get{return _task.TypeName;}}
+    //    public string TaskType {get{return _task.TypeName;}}
 
-        public string TaskTime {get{return _task.TimeStr;}}
-    }
+    //    public string TaskTime {get{return _task.TimeStr;}}
+    //}
 
 
 

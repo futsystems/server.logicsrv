@@ -1239,20 +1239,6 @@ namespace TradingLib.Common
             }
             return sb.ToString();
         }
-
-        #region 输出Task
-        public string PrintTask()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append(ExUtil.SectionHeader(" TaskList "));
-            foreach (ITask t in taskList)
-            {
-                sb.Append(t.TaskMemo + ExComConst.Line);    
-            }
-            return sb.ToString();
-
-        }
-        #endregion
         #endregion
 
 

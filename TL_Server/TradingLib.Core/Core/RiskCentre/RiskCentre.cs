@@ -192,7 +192,7 @@ namespace TradingLib.Core
                     switch (ps.TaskType)
                     {
 
-                        case QSEnumTaskType.FlatPosition:
+                        case QSEnumRiskTaskType.FlatPosition:
                             {
                                 //如果不需要先撤单的 则跳过
                                 if (!ps.NeedCancelFirst)
@@ -215,8 +215,8 @@ namespace TradingLib.Core
                                 }
                             }
                             break;
-                        case QSEnumTaskType.CancelOrder:
-                        case QSEnumTaskType.FlatAllPositions:
+                        case QSEnumRiskTaskType.CancelOrder:
+                        case QSEnumRiskTaskType.FlatAllPositions:
                             {
                                 if (ps.OrderCancels.Contains(oid))
                                 {
@@ -272,7 +272,7 @@ namespace TradingLib.Core
         { 
             string key = pos.GetPositionKey();
 
-            RiskTaskSet[] list = posflatlist.Where(task => task.TaskType == QSEnumTaskType.FlatPosition && task.Position.GetPositionKey().Equals(key)).ToArray();
+            RiskTaskSet[] list = posflatlist.Where(task => task.TaskType == QSEnumRiskTaskType.FlatPosition && task.Position.GetPositionKey().Equals(key)).ToArray();
 
             foreach (RiskTaskSet tmp in list)
             {

@@ -75,7 +75,7 @@ namespace TradingLib.Core
         }
 
         //2:30 到期合约执行强平
-        [TaskAttr("合约交割强平",14,50,0, "合约交割日当天2:30执行强平")]
+        [TaskAttr("强平-合约交割",14,50,0, "合约交割日执行强平")]
         public void Task_FlatPositionViaExpiredDate()
         {
             foreach (Position pos in _clearcentre.TotalPositions.Where(p => !p.isFlat && p.oSymbol.IsExpiredToday()))
@@ -96,7 +96,7 @@ namespace TradingLib.Core
             //注入强平任务
             debug("注入强平任务,强平时间点:" + flattime,QSEnumDebugLevel.INFO);
             DateTime t = Util.ToDateTime(Util.ToTLDate(), flattime);
-            TaskProc task = new TaskProc(this.UUID, "日内强平-" + flattime.ToString(), t.Hour, t.Minute, t.Second, delegate() { FlatPositionViaMarketTime(flattime,mts); });
+            TaskProc task = new TaskProc(this.UUID, "强平-日内" + flattime.ToString(), t.Hour, t.Minute, t.Second, delegate() { FlatPositionViaMarketTime(flattime,mts); });
             TLCtxHelper.Ctx.InjectTask(task);
         }
 

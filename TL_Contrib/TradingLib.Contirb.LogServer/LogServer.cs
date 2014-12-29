@@ -21,7 +21,9 @@ namespace TradingLib.Contirb.LogServer
         Log _logwarning = new Log("G-Warning", true, true, Util.ProgramData(ContribName), true);//日志组件
         Log _logdebug = new Log("G-Debug", true, true, Util.ProgramData(ContribName), true);//日志组件
 
-        RingBuffer<ILogItem> logcache = new RingBuffer<ILogItem>(50000);
+        const int BUFFERSIZE=10000;
+        RingBuffer<ILogItem> logcache = new RingBuffer<ILogItem>(BUFFERSIZE);
+        RingBuffer<LogTaskEvent> taskeventlogcache = new RingBuffer<LogTaskEvent>(BUFFERSIZE);
         ZmqSocket _logpub = null;
         bool _loggo = false;
 
@@ -57,8 +59,22 @@ namespace TradingLib.Contirb.LogServer
             _savedebug = _cfgdb["logtofile"].AsBool();
 
             Util.SendLogEvent += new ILogItemDel(NewLog);
-            
+
+            TLCtxHelper.EventSystem.TaskErrorEvent += new EventHandler<TaskEventArgs>(EventSystem_TaskErrorEvent);
+            TLCtxHelper.EventSystem.SpecialTimeTaskEvent += new EventHandler<TaskEventArgs>(EventSystem_SpecialTimeTaskEvent);
         }
+
+        void EventSystem_SpecialTimeTaskEvent(object sender, TaskEventArgs e)
+        {
+            NewLogTaskEvent(e);
+        }
+
+        void EventSystem_TaskErrorEvent(object sender, TaskEventArgs e)
+        {
+            NewLogTaskEvent(e);
+        }
+
+
         /// <summary>
         /// 销毁
         /// </summary>
@@ -104,6 +120,15 @@ namespace TradingLib.Contirb.LogServer
             logcache.Write(item);
         }
 
+        /// <summary>
+        /// 用于响应系统触发的任务事件
+        /// </summary>
+        /// <param name="args"></param>
+        void NewLogTaskEvent(TaskEventArgs args)
+        {
+            taskeventlogcache.Write(TaskEvent2Log(args));
+        }
+
 
         
         /// <summary>
@@ -133,6 +158,22 @@ namespace TradingLib.Contirb.LogServer
                     break;
                 default:
                     break;
+            }
+        }
+
+        /// <summary>
+        /// 保存任务日志
+        /// </summary>
+        /// <param name="l"></param>
+        void SaveLogTaskEvent(LogTaskEvent l)
+        {
+            try
+            {
+                ORM.MLog.InsertLogTaskEvent(l);
+            }
+            catch (Exception ex)
+            {
+                debug("SaveLogTaskEvent Error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
             }
         }
 
@@ -174,6 +215,12 @@ namespace TradingLib.Contirb.LogServer
                             SaveLog(l);//保存日志到文本文件
                             SendLog(l);//发送日志到网络
                         }
+
+                        while (taskeventlogcache.hasItems)
+                        {
+                            LogTaskEvent l = taskeventlogcache.Read();
+                            SaveLogTaskEvent(l);
+                        }
                         Thread.Sleep(50);
                     }
                 }
@@ -181,7 +228,21 @@ namespace TradingLib.Contirb.LogServer
             }
         }
 
-        
+
+        LogTaskEvent TaskEvent2Log(TaskEventArgs args)
+        {
+            LogTaskEvent log = new LogTaskEvent();
+            log.Date = Util.ToTLDate();
+            log.Exception = !args.IsSuccess ? args.InnerException.ToString() : "";
+            log.Result = args.IsSuccess;
+            log.Settleday = TLCtxHelper.CmdSettleCentre.NextTradingday;
+            log.TaskMemo = args.Task.GetTaskMemo();
+            log.TaskName = args.Task.TaskName;
+            log.TaskType = args.Task.TaskType;
+            log.Time = Util.ToTLTime();
+            log.UUID = args.Task.UUID;
+            return log;
+        }
     }
 
 }
