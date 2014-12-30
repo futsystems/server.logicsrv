@@ -6,33 +6,8 @@ using TradingLib.API;
 
 namespace TradingLib.Common
 {
-    public static class ManagerUtils_Right
+    public static partial class ManagerUtils
     {
-        /// <summary>
-        /// 获得某个管理员下的帐户
-        /// </summary>
-        /// <param name="mgr"></param>
-        /// <returns></returns>
-        public static IEnumerable<IAccount> GetAccounts(this Manager mgr)
-        {
-            //返回某个管理员下的帐户
-            return mgr.Domain.GetAccounts().Where(ac => ac.Mgr_fk == mgr.BaseMgrID);
-        }
-
-        /// <summary>
-        /// 判断Manager是否属于Root主域
-        /// </summary>
-        /// <param name="mgr"></param>
-        /// <returns></returns>
-        public static bool RightRootDomain(this Manager mgr)
-        {
-            if (mgr.Type == QSEnumManagerType.ROOT || mgr.BaseManager.Type == QSEnumManagerType.ROOT)
-            {
-                return true;
-            }
-            return false;
-        }
-
         /// <summary>
         /// 是否是管理员
         /// </summary>
@@ -54,6 +29,44 @@ namespace TradingLib.Common
         }
 
 
+
+
+
+
+        /// <summary>
+        /// 判断Manager是否属于Root主域
+        /// </summary>
+        /// <param name="mgr"></param>
+        /// <returns></returns>
+        public static bool RightRootDomain(this Manager mgr)
+        {
+            if (mgr.Type == QSEnumManagerType.ROOT || mgr.BaseManager.Type == QSEnumManagerType.ROOT)
+            {
+                return true;
+            }
+            return false;
+        }
+
+
+
+        public static bool RightAccessManager(this Manager mgr, Manager mgr2)
+        {
+            if (mgr2 == null) return false;
+            if (!mgr.Domain.IsInDomain(mgr2)) return false;
+
+            if (mgr.RightRootDomain()) return true;
+
+            if (mgr.BaseMgrID.Equals(mgr2.ParentManager.mgr_fk))
+            {
+                return true;
+            }
+
+            if (mgr.RightAgentParent(mgr2.mgr_fk))
+            {
+                return true;
+            }
+            return false;
+        }
         /// <summary>
         /// 是否可以访问某个交易帐户
         /// </summary>
@@ -63,7 +76,8 @@ namespace TradingLib.Common
         public static bool RightAccessAccount(this Manager mgr, IAccount account)
         {
             if (account == null) return false;
-            if (!mgr.Domain.IsAccountInDomain(account)) return false;//不在同一个域
+            if (!mgr.Domain.IsInDomain(account)) return false;//不在同一个域
+
             if (mgr.RightRootDomain()) return true;
             //如果交易帐户直接属于该Manager的域 则有权限
             if (mgr.BaseMgrID.Equals(account.Mgr_fk))

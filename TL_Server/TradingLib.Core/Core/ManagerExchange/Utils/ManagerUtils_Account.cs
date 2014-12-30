@@ -12,26 +12,7 @@ namespace TradingLib.Core
     public  static partial class MangerUtils
     {
 
-        /// <summary>
-        /// 查看某个代理的可见帐户
-        /// ROOT权限的用户可以查看所有帐户
-        /// 如果是代理则只能看到代理商的直接客户
-        /// </summary>
-        /// <param name="mgr"></param>
-        /// <returns></returns>
-        public static IEnumerable<IAccount> GetVisibleAccount(this Manager mgr)
-        {
-            if (mgr.RightRootDomain())
-            {
-                //获得系统所有交易帐号
-                return mgr.Domain.GetAccounts();
-            }
-            else
-            {
-                return mgr.Domain.GetAccounts().Where(acc => mgr.RightAccessAccount(acc));
-            }
-            
-        }
+
 
         ///// <summary>
         ///// 获得某个域开得所有帐户

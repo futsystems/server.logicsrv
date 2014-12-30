@@ -19,7 +19,7 @@ namespace TradingLib.Core
         {
             Manager manager = session.GetManager();
             //获得当前管理员可以查看的柜员列表
-            Manager[] mgrs = BasicTracker.ManagerTracker.GetManagers(manager).ToArray();
+            Manager[] mgrs = manager.GetVisibleManager().ToArray();// BasicTracker.ManagerTracker.GetManagers(manager).ToArray();
             session.ReplyMgr(mgrs);
         }
 
