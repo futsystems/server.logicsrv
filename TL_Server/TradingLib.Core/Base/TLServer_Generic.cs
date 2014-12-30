@@ -682,7 +682,7 @@ namespace TradingLib.Core
         /// <param name="msg"></param>
         /// <param name="address"></param>
         /// <returns></returns>
-        public virtual long handle(IPacket packet,T clientinfo){ return 0;}
+        public virtual long handle(ISession session,IPacket packet,T clientinfo){ return 0;}
 
         #endregion
 
@@ -807,8 +807,10 @@ namespace TradingLib.Core
                 //debug("raw message type:" + type.ToString() + " message:" + msg, QSEnumDebugLevel.INFO);
                 IPacket packet = PacketHelper.SrvRecvRequest(type, msg, front, address);
                 //debug("<<<<<< Rev Packet:" + packet.ToString(), QSEnumDebugLevel.INFO);
-
-                if (!onPermissionCheck(type, address)) return -1;//关于权限检查 这里需要传递一定参数进行逻辑处理
+                //通过Packet中的客户端ID标识获得对应的clientinfo
+                T clientinfo = _clients[packet.ClientID];
+                //if (!onPermissionCheck(type, address)) return -1;//关于权限检查 这里需要传递一定参数进行逻辑处理
+                Client2Session session = null;
                 switch (type)
                 {
                     #region 通用操作部分
@@ -820,9 +822,19 @@ namespace TradingLib.Core
                         break;
                     case MessageTypes.LOGINREQUEST://登入
                         SrvLoginReq(packet as LoginRequest);
+                        if (clientinfo != null)
+                        {
+                            session = new Client2Session(clientinfo);
+                            TLCtxHelper.EventSystem.FirePacketEvent(this, new PacketEventArgs(session, packet));
+                        }
                         break;
                     case MessageTypes.CLEARCLIENT://注销
                         SrvClearClient(packet as UnregisterClientRequest);
+                        if (clientinfo != null)
+                        {
+                            session = new Client2Session(clientinfo);
+                            TLCtxHelper.EventSystem.FirePacketEvent(this, new PacketEventArgs(session, packet));
+                        }
                         break;
                     case MessageTypes.HEARTBEATREQUEST://客户端请求服务端发送给客户端一个心跳 以让客户端知道 与服务端的连接有效
                         SrvBeatHeartRequest(packet as HeartBeatRequest);
@@ -837,9 +849,10 @@ namespace TradingLib.Core
 
                     default:
                         //如果客户端没有注册到服务器则 不接受任何其他类型的功能请求 要求客户端有效注册到服务器
-                        T clientinfo = _clients[packet.ClientID];
                         if (clientinfo == null) return -1;
-                        result = handle(packet, clientinfo);//外传到子类中去扩展消息类型 通过子类扩展允许tlserver实现更多功能请求
+                        session = new Client2Session(clientinfo);
+                        result = handle(session,packet, clientinfo);//外传到子类中去扩展消息类型 通过子类扩展允许tlserver实现更多功能请求
+                        TLCtxHelper.EventSystem.FirePacketEvent(this, new PacketEventArgs(session, packet));
                         break;
 
                 }

@@ -9,6 +9,9 @@ using TradingLib.Common;
 
 namespace TradingLib.Contirb.Protocol
 {
+    /// <summary>
+    /// 任务调度事件日志
+    /// </summary>
     public class LogTaskEvent
     {
         
@@ -61,5 +64,54 @@ namespace TradingLib.Contirb.Protocol
         /// 任务异常内容
         /// </summary>
         public string Exception { get; set; }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public class LogPacketEvent
+    {
+        public int ID { get; set; }
+
+        /// <summary>
+        /// 结算日
+        /// </summary>
+        public int Settleday { get; set; }
+
+        /// <summary>
+        /// 日期
+        /// </summary>
+        public int Date { get; set; }
+
+        /// <summary>
+        /// 时间
+        /// </summary>
+        public int Time { get; set; }
+
+        /// <summary>
+        /// 回话类别
+        /// </summary>
+        public QSEnumSessionType SessionType { get; set; }
+
+        /// <summary>
+        /// 消息类型
+        /// </summary>
+        public MessageTypes Type { get; set; }
+
+
+        /// <summary>
+        /// 消息内容
+        /// </summary>
+        public string Content { get; set; }
+
+        /// <summary>
+        /// 模块ID
+        /// </summary>
+        public string ModuleID { get; set; }
+
+        /// <summary>
+        /// 命令操作码
+        /// </summary>
+        public string CMDStr { get; set; }
     }
 }

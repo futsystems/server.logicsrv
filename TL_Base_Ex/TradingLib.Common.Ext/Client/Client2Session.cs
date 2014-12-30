@@ -59,6 +59,7 @@ namespace TradingLib.Common
         /// </summary>
         public int MGRFK { get; private set; }
 
+
         /// <summary>
         /// 回话类型
         /// </summary>

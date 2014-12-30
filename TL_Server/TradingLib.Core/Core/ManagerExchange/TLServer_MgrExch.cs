@@ -301,7 +301,7 @@ namespace TradingLib.Core
         /// <param name="msg"></param>
         /// <param name="address"></param>
         /// <returns></returns>
-        public override long handle(IPacket packet,MgrClientInfo clientinfo)
+        public override long handle(ISession session,IPacket packet,MgrClientInfo clientinfo)
         {
             long result = NORETURNRESULT;
             switch (packet.Type)
@@ -328,12 +328,12 @@ namespace TradingLib.Core
                     }
 
                     //2.生成对应的Session 将Manager绑定到session 
-                    Client2Session sesssion = new Client2Session(clientinfo);
-                    sesssion.BindManager(manager);
+                    //Client2Session sesssion = new Client2Session(clientinfo);
+                    (session as Client2Session).BindManager(manager);
 
                     //3.执行packetrequest 处理
                     if (newPacketRequest != null)
-                        newPacketRequest(packet,sesssion,manager);
+                        newPacketRequest(packet,session,manager);
                     else
                         result = (long)MessageTypes.FEATURE_NOT_IMPLEMENTED;
                     break;

@@ -83,6 +83,7 @@
     <Compile Include="Client\TrdClientInfo.cs" />
     <Compile Include="Contex\CoreUtil.cs" />
     <Compile Include="Contex\Event\CashOperationEvent.cs" />
+    <Compile Include="Contex\Event\EventArgs\PacketEventArgs.cs" />
     <Compile Include="Contex\Event\SystemEvent.cs" />
     <Compile Include="Contex\Event\EventArgs\TaskEventArgs.cs" />
     <Compile Include="Contrib\TaskProcUtils.cs" />

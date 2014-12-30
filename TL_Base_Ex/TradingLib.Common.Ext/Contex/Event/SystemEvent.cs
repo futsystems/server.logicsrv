@@ -74,7 +74,7 @@ namespace TradingLib.Common
                 AfterSettleResetEvent(sender, args);
         }
 
-        #region 
+        #region 任务调度事件
 
         /// <summary>
         /// 定时任务事件
@@ -104,6 +104,18 @@ namespace TradingLib.Common
             }
         }
 
+        #endregion
+
+
+        #region Packet消息包事件
+
+        public event EventHandler<PacketEventArgs> PacketEvent;
+
+        internal void FirePacketEvent(object sender, PacketEventArgs args)
+        {
+            if (PacketEvent != null)
+                PacketEvent(sender, args);
+        }
         #endregion
 
     }
