@@ -48,22 +48,32 @@ namespace TradingLib.Common
         }
 
 
-
+        /// <summary>
+        /// 判断mgr是否有权操作mgr2
+        /// 
+        /// </summary>
+        /// <param name="mgr"></param>
+        /// <param name="mgr2"></param>
+        /// <returns></returns>
         public static bool RightAccessManager(this Manager mgr, Manager mgr2)
         {
-            if (mgr2 == null) return false;
-            if (!mgr.Domain.IsInDomain(mgr2)) return false;
+            if (mgr2 == null) return false;//mgr2为空则 mgr无权操作 
+            if (!mgr.Domain.IsInDomain(mgr2)) return false;//mgr2与mgr不在同一个域 则无权操作
 
-            if (mgr.RightRootDomain()) return true;
+            if (mgr.IsRoot()) return true; //如果mgr是管理员则有权操作 域内所有管理员
 
-            if (mgr.BaseMgrID.Equals(mgr2.ParentManager.mgr_fk))
+            //如果当前柜员是代理
+            if (mgr.IsAgent())
             {
-                return true;
-            }
+                //当前管理域ID与目标管理员管理域ID一致
+                if(mgr.BaseMgrID.Equals(mgr2.BaseMgrID))
+                    return true;
 
-            if (mgr.RightAgentParent(mgr2.mgr_fk))
-            {
-                return true;
+                //如果mgr是mgr2的父代理 则有权操作
+                if (mgr.RightAgentParent(mgr2))
+                {
+                    return true;
+                }
             }
             return false;
         }
@@ -111,11 +121,11 @@ namespace TradingLib.Common
             Manager agent = submgr.BaseManager;//获得主域代理
 
             if (agent == null) return false;
-            while (!agent.RightRootDomain())//只要不是Root域 则进行递归
+            while (!agent.RightRootDomain())//只要不是Root域 则进行递归 递归到Root则不用再进行判断，父子关系只到Root结束
             {
                 if (agent.parent_fk == mgr.BaseMgrID)//如果该代理的父域和当前Manager的主域一致，则具有管理权限
                     return true;
-                agent = agent.ParentManager;//递归到父域
+                agent = agent.ParentManager;//递归到上级父域代理
             }
             return false;
         }

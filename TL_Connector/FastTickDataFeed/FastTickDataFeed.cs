@@ -149,6 +149,7 @@ namespace DataFeed.FastTick
                                 string symbol = p[0];
                                 string tickcontent = p[1];
                                 Tick k = TickImpl.Deserialize(tickcontent);
+                                //Util.Debug("tick date:" + k.Date + " time time:" + k.Time);
                                 if (k.isValid)
                                     NotifyTick(k);
                             }

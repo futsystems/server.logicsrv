@@ -58,7 +58,13 @@ namespace TradingLib.Contrib.FinService
         /// <returns></returns>
         decimal GetSafeMargin()
         {
-            return this.FinAmount.AccountArgument.AsDecimal() / this.FinLever.AccountArgument.AsInt();
+            int lever = this.FinLever.AccountArgument.AsInt();
+            if (lever > 0)
+            {
+                return this.FinAmount.AccountArgument.AsDecimal() / this.FinLever.AccountArgument.AsInt();
+            }
+            else
+                return 0;
         }
 
         /// <summary>
