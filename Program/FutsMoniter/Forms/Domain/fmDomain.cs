@@ -89,7 +89,7 @@ namespace FutsMoniter
             DomainImpl[] objs = MoniterUtils.ParseJsonResponse<DomainImpl[]>(jsonstr);
             if (objs != null)
             {
-                foreach (DomainImpl op in objs)
+                foreach (DomainImpl op in objs.OrderBy(d=>d.ID))
                 {
                     InvokeGotDomain(op);
                 }
@@ -238,6 +238,8 @@ namespace FutsMoniter
             ComponentFactory.Krypton.Toolkit.KryptonDataGridView grid = domaingrid;
 
             datasource.DataSource = gt;
+            //datasource.Sort = DOMAINID;
+
             grid.DataSource = datasource;
 
             grid.Columns[DOMAINID].Width = 50;
@@ -258,6 +260,11 @@ namespace FutsMoniter
             accountgrid.Columns[PROFITLOSSIMG].Width = 20;
             accountgrid.Columns[LOGINSTATUSIMG].Width = 20;
             accountgrid.Columns[ADDRESS].Width = 120;**/
+
+            for (int i = 0; i < gt.Columns.Count; i++)
+            {
+                grid.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
+            }
         }
 
 
