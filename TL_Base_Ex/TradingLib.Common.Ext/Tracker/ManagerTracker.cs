@@ -112,37 +112,37 @@ namespace TradingLib.Common
                 return managermap.Values;
             }
         }
-        /// <summary>
-        /// 查询某个管理员可以查询的管理员列表
-        /// </summary>
-        /// <param name="mgr"></param>
-        /// <returns></returns>
-        public IEnumerable<Manager> GetManagers(Manager mgr)
-        {
-            if (mgr.Type == QSEnumManagerType.SUPERROOT)
-            {
-                return managermap.Values;
-            }
-            else if (mgr.Type == QSEnumManagerType.ROOT)
-            {
-                return managermap.Values.Where(m=>m.domain_id == mgr.domain_id);
-            }
-            else
-            { 
-                //如果是代理 返回所有属于该代理的所有柜员
-                if(mgr.Type == QSEnumManagerType.AGENT)
-                {
-                    //如果Manager的mgr_fk等于该代理的ID则返回 或则该Manger的下属一级子代理 如果是员工登入则只显示员工帐户
-                    return managermap.Values.Where(m => m.mgr_fk.Equals(mgr.ID)||m.parent_fk.Equals(mgr.ID));
-                }
-                else
-                {
-                    return new Manager[]{mgr};
-                }
+        ///// <summary>
+        ///// 查询某个管理员可以查询的管理员列表
+        ///// </summary>
+        ///// <param name="mgr"></param>
+        ///// <returns></returns>
+        //public IEnumerable<Manager> GetManagers(Manager mgr)
+        //{
+        //    if (mgr.Type == QSEnumManagerType.SUPERROOT)
+        //    {
+        //        return managermap.Values;
+        //    }
+        //    else if (mgr.Type == QSEnumManagerType.ROOT)
+        //    {
+        //        return managermap.Values.Where(m=>m.domain_id == mgr.domain_id);
+        //    }
+        //    else
+        //    { 
+        //        //如果是代理 返回所有属于该代理的所有柜员
+        //        if(mgr.Type == QSEnumManagerType.AGENT)
+        //        {
+        //            //如果Manager的mgr_fk等于该代理的ID则返回 或则该Manger的下属一级子代理 如果是员工登入则只显示员工帐户
+        //            return managermap.Values.Where(m => m.mgr_fk.Equals(mgr.ID)||m.parent_fk.Equals(mgr.ID));
+        //        }
+        //        else
+        //        {
+        //            return new Manager[]{mgr};
+        //        }
                 
-            }
-            //return new List<Manager>();
-        }
+        //    }
+        //    //return new List<Manager>();
+        //}
 
         /// <summary>
         /// 更新管理员密码

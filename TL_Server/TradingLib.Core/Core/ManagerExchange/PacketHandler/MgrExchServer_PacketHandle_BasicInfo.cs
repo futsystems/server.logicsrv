@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
+using TradingLib.BrokerXAPI;
 
 namespace TradingLib.Core
 {
@@ -285,25 +286,137 @@ namespace TradingLib.Core
             }
         }
 
+        /// <summary>
+        /// 禁止所有合约
+        /// </summary>
+        /// <param name="session"></param>
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "DisableAllSymbols", "DisableAllSymbols - sync  symbol", "禁止所有合约")]
+        public void CTE_DisableAllSymbolsSymbol(ISession session)
+        {
+            Manager manager = session.GetManager();
+            debug(string.Format("管理员{0} 禁止所有合约交易", manager.Login), QSEnumDebugLevel.INFO);
 
+            if (!manager.RightRootDomain())
+            {
+                throw new FutsRspError("无权禁止合约");
+            }
+
+            foreach (SymbolImpl sym in manager.Domain.GetSymbols())
+            {
+                sym.Tradeable = false;
+                //更新合约
+                BasicTracker.SymbolTracker.UpdateSymbol(manager.domain_id, sym);
+            }
+            Symbol[] symlis = manager.Domain.GetSymbols().ToArray();
+            int totalnum = symlis.Length;
+            if (totalnum > 0)
+            {
+                for (int i = 0; i < totalnum; i++)
+                {
+                    RspMGRQrySymbolResponse response = ResponseTemplate<RspMGRQrySymbolResponse>.SrvSendRspResponse(session);
+                    response.Symbol = symlis[i] as SymbolImpl;
+
+                    CacheRspResponse(response, i == totalnum - 1);
+                }
+            }
+            else
+            {
+                RspMGRQrySymbolResponse response = ResponseTemplate<RspMGRQrySymbolResponse>.SrvSendRspResponse(session);
+                CacheRspResponse(response);
+            }
+        }
+
+
+        /// <summary>
+        /// 同步合约数据
+        /// 1.从设置的实盘帐户同步合约，通过TLBroker 查询合约 将接口内预先查询好的合约数据同步出来
+        /// 2.从主域同步合约，分区柜台从主域进行同步
+        /// </summary>
+        /// <param name="session"></param>
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "SyncSymbol", "SyncSymbol - sync  symbol", "同步合约数据")]
         public void CTE_SyncSymbol(ISession session)
         {
-            try
-            {
-                Manager manager = session.GetManager();
-                debug(string.Format("管理员{0} 同步合约数据", manager.Login), QSEnumDebugLevel.INFO);
+            Manager manager = session.GetManager();
+            debug(string.Format("管理员{0} 同步合约数据", manager.Login), QSEnumDebugLevel.INFO);
 
-                if (!manager.RightRootDomain())
-                {
-                    throw new FutsRspError("无权同步合约数据");
+            if (!manager.RightRootDomain())
+            {
+                throw new FutsRspError("无权同步合约数据");
+            }
+
+            //通过实盘帐户同步合约数据
+            if (manager.Domain.CFG_SyncVendor_ID !=0)
+            {
+                Vendor vendor = BasicTracker.VendorTracker[manager.Domain.CFG_SyncVendor_ID];
+                if (vendor == null || vendor.Domain.ID != manager.domain_id || vendor.Broker == null || !vendor.Broker.IsLive || !(vendor.Broker is TLBroker))
+                { 
+                    throw new FutsRspError("设置的同步实盘帐户无效,请修改同步实盘帐户");
                 }
-                //
+
+                TLBroker broker = vendor.Broker as TLBroker;
+                Action<XSymbol,bool> Handler = (sym, islast) =>
+                {
+                    if (islast)
+                    {
+                        Util.Debug("got symbol synced....", QSEnumDebugLevel.WARNING);
+                    }
+                    SymbolImpl tsym = manager.Domain.GetSymbol(sym.Symbol);
+                    //更新
+                    if (tsym != null)
+                    {
+                        tsym.EntryCommission = (decimal)sym.EntryCommission;
+                        tsym.ExitCommission = (decimal)sym.ExitCommission;
+                        tsym.Margin = (decimal)sym.Margin;
+                        tsym.ExpireDate = sym.ExpireDate;//到期日
+                        BasicTracker.SymbolTracker.UpdateSymbol(manager.domain_id, tsym);
+                    }
+                    else//增加
+                    {
+                        SecurityFamilyImpl sec = BasicTracker.SecurityTracker[manager.domain_id, sym.SecurityCode];
+                        //包含对应品种，则增加合约
+                        if (sec != null)
+                        {
+                            tsym = new SymbolImpl();
+                            tsym.Symbol = sym.Symbol;
+                            tsym.Domain_ID = manager.domain_id;
+                            tsym.Margin = (decimal)sym.Margin;
+                            tsym.EntryCommission = (decimal)sym.EntryCommission;
+                            tsym.ExitCommission = (decimal)sym.ExitCommission;
+                            tsym.ExpireDate = sym.ExpireDate;//到期日
+
+                            tsym.Strike = (decimal)sym.StrikePrice;
+                            tsym.OptionSide = sym.OptionSide;
+
+                            tsym.security_fk = sec.ID;
+                            tsym.Tradeable = false;
+                            BasicTracker.SymbolTracker.UpdateSymbol(manager.domain_id, tsym);
+                        }
+                        else
+                        {
+                            debug("symbol:" + sym.Symbol + " have no sec setted. code:" + sym.SecurityCode, QSEnumDebugLevel.INFO);
+                        }
+                    }
+                };
+
+                broker.GotSymbolEvent += new Action<XSymbol, bool>(Handler);
+
+                if (!broker.QryInstrument())
+                {
+                    broker.GotSymbolEvent -= new Action<XSymbol, bool>(Handler);
+                    throw new FutsRspError("通道合约数据查询失败");
+                }
+                broker.GotSymbolEvent -= new Action<XSymbol, bool>(Handler);
+                session.OperationSuccess("同步合约数据完成");
+
+            }//通过主域同步合约数据
+            else
+            {
                 if (manager.Domain.Super)
                 {
-                    throw new FutsRspError("超级域不支持同步,请手工维护数据");
+                    throw new FutsRspError("超级域不支持主域同步,请手工维护数据");
                 }
 
+                //通过主域进行同步合约
                 Domain domain = BasicTracker.DomainTracker.SuperDomain;
                 if (domain != null)
                 {
@@ -316,32 +429,26 @@ namespace TradingLib.Core
                 {
                     throw new FutsRspError("没有可以同步的主域");
                 }
+                session.OperationSuccess("主域同步合约数据完成");
+            }
 
-                session.OperationSuccess("同步合约数据完成");
-                Symbol[] symlis = manager.Domain.GetSymbols().ToArray();
-                int totalnum = symlis.Length;
-                if (totalnum > 0)
-                {
-                    for (int i = 0; i < totalnum; i++)
-                    {
-                        RspMGRQrySymbolResponse response = ResponseTemplate<RspMGRQrySymbolResponse>.SrvSendRspResponse(session);
-                        response.Symbol = symlis[i] as SymbolImpl;
-
-                        CacheRspResponse(response, i == totalnum - 1);
-                    }
-                }
-                else
+            //将所有合约回报给客户端
+            Symbol[] symlis = manager.Domain.GetSymbols().ToArray();
+            int totalnum = symlis.Length;
+            if (totalnum > 0)
+            {
+                for (int i = 0; i < totalnum; i++)
                 {
                     RspMGRQrySymbolResponse response = ResponseTemplate<RspMGRQrySymbolResponse>.SrvSendRspResponse(session);
-                    CacheRspResponse(response);
+                    response.Symbol = symlis[i] as SymbolImpl;
+                    CacheRspResponse(response, i == totalnum - 1);
                 }
-
             }
-            catch (FutsRspError ex)
+            else
             {
-                session.OperationError(ex);
+                RspMGRQrySymbolResponse response = ResponseTemplate<RspMGRQrySymbolResponse>.SrvSendRspResponse(session);
+                CacheRspResponse(response);
             }
         }
-
     }
 }

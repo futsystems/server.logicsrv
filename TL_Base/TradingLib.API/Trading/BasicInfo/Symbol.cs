@@ -80,6 +80,7 @@ namespace TradingLib.API
         /// </summary>
         CurrencyType Currency { get; }
        
+
         string Exchange { get; }
 
         /// <summary>
@@ -106,7 +107,7 @@ namespace TradingLib.API
         /// <summary>
         /// 合约到期月
         /// </summary>
-        int ExpireMonth { get; set; }
+        //int ExpireMonth { get; set; }
 
         /// <summary>
         /// 合约到期日

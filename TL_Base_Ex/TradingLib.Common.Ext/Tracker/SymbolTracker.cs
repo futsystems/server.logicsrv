@@ -290,7 +290,7 @@ namespace TradingLib.Common
                 //target.MaintanceMargin = sym._maintancemargin;
                 target.Strike = sym.Strike;
                 target.OptionSide = sym.OptionSide;
-                target.ExpireMonth = sym.ExpireMonth;
+                //target.ExpireMonth = sym.ExpireMonth;
                 target.ExpireDate = sym.ExpireDate;
 
                 SecurityFamilyImpl sec = BasicTracker.SecurityTracker[target.Domain_ID, sym.SecurityFamily.Code];
@@ -322,7 +322,7 @@ namespace TradingLib.Common
                 target.MaintanceMargin = sym._maintancemargin;
                 target.Strike = sym.Strike;
                 target.OptionSide = sym.OptionSide;
-                target.ExpireMonth = sym.ExpireMonth;
+                //target.ExpireMonth = sym.ExpireMonth;
                 target.ExpireDate = sym.ExpireDate;
 
 
@@ -357,11 +357,13 @@ namespace TradingLib.Common
 
                 target.EntryCommission = sym._entrycommission;
                 target.ExitCommission = sym._exitcommission;
+
                 target.Margin = sym._margin;
                 target.ExtraMargin = sym._extramargin;
                 target.MaintanceMargin = sym._maintancemargin;
+
                 target.Tradeable = sym.Tradeable;//更新交易标识
-                target.ExpireMonth = sym.ExpireMonth;
+                //target.ExpireMonth = sym.ExpireMonth;
                 target.ExpireDate = sym.ExpireDate;
 
                 ORM.MBasicInfo.UpdateSymbol(target);
@@ -379,8 +381,9 @@ namespace TradingLib.Common
                 target.MaintanceMargin = sym._maintancemargin;
                 target.Strike = sym.Strike;
                 target.OptionSide = sym.OptionSide;
-                target.ExpireMonth = sym.ExpireMonth;
+                //target.ExpireMonth = sym.ExpireMonth;
                 target.ExpireDate = sym.ExpireDate;
+
                 target.security_fk = sym.security_fk;
                 target.SecurityFamily = BasicTracker.SecurityTracker[target.Domain_ID,target.security_fk];
                 target.underlaying_fk = sym.underlaying_fk;

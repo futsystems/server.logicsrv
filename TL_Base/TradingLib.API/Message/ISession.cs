@@ -21,6 +21,8 @@ namespace TradingLib.API
         MANAGER,
 
     }
+
+
     /// <summary>
     /// 在扩展模块相应网络端消息时,函数调用需要提供一个支持ISession接口的对象,用于标注客户端位置并向该客户端端发送消息
     /// </summary>

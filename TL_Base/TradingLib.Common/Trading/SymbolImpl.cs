@@ -430,7 +430,7 @@ namespace TradingLib.Common
         //int _expiremonth = 0;
         //public int ExpireMonth { get { return _expiremonth; } set { _expiremonth = value; } }
 
-        public int ExpireMonth { get; set; }
+        //public int ExpireMonth { get; set; }
 
 
         public string Serialize()
@@ -463,7 +463,7 @@ namespace TradingLib.Common
             sb.Append(d);
             sb.Append(this.underlayingsymbol_fk.ToString());//底层合约外键
             sb.Append(d);
-            sb.Append(this.ExpireMonth.ToString());//过期月份
+            sb.Append("0");//过期月份
             sb.Append(d);
             sb.Append(this.Tradeable.ToString());//该合约是否允许交易
             
@@ -487,7 +487,7 @@ namespace TradingLib.Common
             this.security_fk = int.Parse(rec[10]);
             this.underlaying_fk = int.Parse(rec[11]);
             this.underlayingsymbol_fk = int.Parse(rec[12]);
-            this.ExpireMonth = int.Parse(rec[13]);
+            //this.ExpireMonth = int.Parse(rec[13]);
             this.Tradeable = bool.Parse(rec[14]);
         }
     }

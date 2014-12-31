@@ -83,7 +83,10 @@
     <Compile Include="Client\TrdClientInfo.cs" />
     <Compile Include="Contex\CoreUtil.cs" />
     <Compile Include="Contex\Event\CashOperationEvent.cs" />
+    <Compile Include="Contex\Event\EventArgs\PacketEventArgs.cs" />
     <Compile Include="Contex\Event\SystemEvent.cs" />
+    <Compile Include="Contex\Event\EventArgs\TaskEventArgs.cs" />
+    <Compile Include="Contrib\TaskProcUtils.cs" />
     <Compile Include="ORM\MAgentFinance.cs" />
     <Compile Include="ORM\MUIAccess.cs" />
     <Compile Include="ORM\MCashOpAccount.cs" />
@@ -99,6 +102,8 @@
     <Compile Include="Utils\Domain\DomainUtils_.cs" />
     <Compile Include="Utils\Domain\DomainUtils_RecvBank.cs" />
     <Compile Include="Utils\Domain\DomainUtils_Manager.cs" />
+    <Compile Include="Utils\Domain\DomainUtils_Cfg.cs" />
+    <Compile Include="Utils\Domain\DomainUtils_InDomain.cs" />
     <Compile Include="Utils\HanlerMixins.cs" />
     <Compile Include="Utils\ISessionTransUtils.cs" />
     <Compile Include="ORM\Config\ConfigItem.cs" />
@@ -179,7 +184,9 @@
     <Compile Include="Tracker\TotalTracker.cs" />
     <Compile Include="Tracker\VendorTracker.cs" />
     <Compile Include="Utils\Domain\DomainUtils.cs" />
+    <Compile Include="Utils\Manager\ManagerUtils_.cs" />
     <Compile Include="Utils\Manager\ManagerUtils_Right.cs" />
+    <Compile Include="Utils\Manager\ManagerUtils_Objects.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

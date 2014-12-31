@@ -110,7 +110,15 @@ namespace TradingLib.Core
         }
 
 
-
+        /// <summary>
+        /// loginType 
+        /// 0:外部鉴权认证
+        /// 1:清算中心验证
+        /// 2:游客验证
+        /// </summary>
+        /// <param name="clientinfo"></param>
+        /// <param name="request"></param>
+        /// <param name="response"></param>
         void tl_newLoginRequest(TrdClientInfo clientinfo, LoginRequest request, ref LoginResponse response)
         {
             try
@@ -119,7 +127,6 @@ namespace TradingLib.Core
                 debug("Got login request:" + request.LoginID + "|" + request.Passwd +" Type:"+request.LoginType.ToString(), QSEnumDebugLevel.INFO);
                 
                 IAccount account=null;
-                //如果没有用户认证事件的绑定 则调用清算中心的帐号验证进行验证，否则通过认证事件的绑定进行认证
                 if (request.LoginType == 0)
                 {
                     if (!TLCtxHelper.EventSession.IsAuthEventBinded)
@@ -211,25 +218,29 @@ namespace TradingLib.Core
                         response.RspInfo.Fill("INVALID_LOGIN");
                     }
                 
-                }
+                }//未支持登入方式
                 else
                 {
                     response.Authorized = false;
                     response.RspInfo.Fill("LOGINTYPE_NOT_SUPPORT");
                 }
-                
-                if (account.Domain.IsExpired())//域过期
+
+                //若有帐户对象 检查域和管理员对象 进行域过期和管理是否激活进行限制
+                if (account != null)
                 {
-                    clientinfo.AuthorizedFail();
-                    response.Authorized = false;
-                    response.RspInfo.Fill("PLATFORM_EXPIRED");
-                }
-                Manager mgr = BasicTracker.ManagerTracker[account.Mgr_fk];
-                if (mgr == null || (!mgr.Active))
-                {
-                    clientinfo.AuthorizedFail();
-                    response.Authorized = false;
-                    response.RspInfo.Fill("PLATFORM_EXPIRED");
+                    if (account.Domain.IsExpired())//域过期
+                    {
+                        clientinfo.AuthorizedFail();
+                        response.Authorized = false;
+                        response.RspInfo.Fill("PLATFORM_EXPIRED");
+                    }
+                    Manager mgr = BasicTracker.ManagerTracker[account.Mgr_fk];
+                    if (mgr == null || (!mgr.Active))
+                    {
+                        clientinfo.AuthorizedFail();
+                        response.Authorized = false;
+                        response.RspInfo.Fill("PLATFORM_EXPIRED");
+                    }
                 }
                 
                 //对外触发登入事件

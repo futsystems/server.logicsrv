@@ -58,6 +58,8 @@ namespace TradingLib.Core
 
         void tl_newSendOrderRequest(Order o)
         {
+            //对外发送委托 注 这里需要按照对应持仓的情况进行有效分拆，看是否括约的今仓或昨仓
+            //如果跨越的昨仓与今仓则需要分拆 并且将开平标识进行规范化
             if (SendOrderEvent != null)
                 SendOrderEvent(o);
         }

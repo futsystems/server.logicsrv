@@ -50,10 +50,15 @@
     <Compile Include="Domain\DomainUtils.cs" />
     <Compile Include="Manager\UIAccess.cs" />
     <Compile Include="Messages\LogicFront.cs" />
+    <Compile Include="ORM\Config\ConfigDB.cs" />
+    <Compile Include="ORM\Config\ConfigItem.cs" />
+    <Compile Include="ORM\Config\GlobalConfig.cs" />
     <Compile Include="ORM\DBHelper.cs" />
+    <Compile Include="ORM\MConfig.cs" />
     <Compile Include="ORM\MySqlBase.cs" />
     <Compile Include="Domain\DomainImpl.cs" />
     <Compile Include="Trading\SecurityUtils.cs" />
+    <Compile Include="Utils\Util_string.cs" />
     <Compile Include="Vendor\ConnectorStatus.cs" />
     <Compile Include="Vendor\ConnectorConfig.cs" />
     <Compile Include="Vendor\ConnectorInfo.cs" />

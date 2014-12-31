@@ -21,5 +21,10 @@ namespace TradingLib.Common
         /// </summary>
         public event VoidDelegate GotBasicInfoDoneEvent;
 
+        /// <summary>
+        /// 获得域更新事件
+        /// </summary>
+        public event Action<DomainImpl> GotDomainEvent;
+
     }
 }

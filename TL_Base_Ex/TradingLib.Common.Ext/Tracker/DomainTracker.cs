@@ -60,6 +60,18 @@ namespace TradingLib.Common
             }
         }
 
+
+        /// <summary>
+        /// 更新合约同步源
+        /// </summary>
+        /// <param name="domain"></param>
+        /// <param name="vendorid"></param>
+        public void UpdateSyncVendor(DomainImpl domain, int vendorid)
+        {
+            domain.CFG_SyncVendor_ID = vendorid;
+            ORM.MDomain.UpdateSyncVendor(domain);
+        }
+
         public void UpdateDomain(DomainImpl domain)
         {
             DomainImpl target = null;

@@ -120,6 +120,7 @@ namespace TradingLib.Core
 
             //结算后 重置结算中心 如果交易日没有发生变化，则出入金还会停留在上个结算日，而上个结算日已经结算，因此该出入金记录会被丢失 
             //出入金拒绝窗口就是结算时间段
+            Util.sleep(1000);//防止交易日计算时与结算时间过度接近 造成当前交易日计算错误
             this.Reset();
             settled = true;//当日结算过 当日结算过则需要重置交易系统
             this.IsInSettle = false;//标识系统结算完毕
@@ -203,29 +204,28 @@ namespace TradingLib.Core
 
 
         #region 定时开启 关闭清算中心 并在夜盘收盘后更新交易日信息 
-        [TaskAttr("重置结算中心-夜盘收盘后", 3, 00, 5, "夜盘收盘后重置结算中心")]
+        [TaskAttr("重置结算中心-夜盘收盘后", 3,0,0, "夜盘收盘后重置结算中心")]
         public void Task_ResetTradingdayNieght()
         {
             debug("结算中心重置交易日信息", QSEnumDebugLevel.INFO);
             this.Reset();
         }
 
-        [TaskAttr("晚上开盘前开启交易中心", 20, 50, 5, "每天晚上20:50:5开启清算中心")]
-        [TaskAttr("白天开盘前开启交易中心", 8, 50, 5, "每天白天8:50:5开启清算中心")]
+        [TaskAttr("夜盘开启交易中心", 20, 50,0, "每天晚上20:50:5开启清算中心")]
+        [TaskAttr("白盘开启交易中心", 8, 50,0, "每天白天8:50:5开启清算中心")]
         public void Task_OpenClearCentre()
         {
             if (IsNormal && !IsTradingday) return;
             _clearcentre.OpenClearCentre();
             Notify("开启清算中心[" + DateTime.Now.ToString() + "]", " ");
             debug("开启清算中心,准备接受客户委托", QSEnumDebugLevel.INFO);
-
         }
 
         /// <summary>
         /// 关闭清算中心
         /// </summary>
-        [TaskAttr("夜盘关闭清算中心", 2, 35, 5, "夜盘关闭清算中心")]
-        [TaskAttr("日盘关闭清算中心", 15, 20, 5, "日盘关闭清算中心")]
+        [TaskAttr("夜盘关闭清算中心", 2, 35,0, "夜盘关闭清算中心")]
+        [TaskAttr("日盘关闭清算中心", 15, 20,0, "日盘关闭清算中心")]
         public void Task_CloseClearCentre()
         {
             _clearcentre.CloseClearCentre();

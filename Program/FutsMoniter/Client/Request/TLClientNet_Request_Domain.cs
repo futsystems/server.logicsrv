@@ -23,5 +23,14 @@ namespace TradingLib.Common
         {
             this.ReqContribRequest("MgrExchServer", "UpdateDomain", TradingLib.Mixins.LitJson.JsonMapper.ToJson(domain));
         }
+
+        /// <summary>
+        /// 更新同步实盘帐户
+        /// </summary>
+        /// <param name="vid"></param>
+        public void ReqUpdateSyncVendor(int vid)
+        {
+            this.ReqContribRequest("MgrExchServer", "UpdateDomainCFGSyncSymbolVendor",vid.ToString());
+        }
     }
 }

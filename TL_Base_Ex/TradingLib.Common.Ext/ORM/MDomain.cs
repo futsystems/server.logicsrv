@@ -27,7 +27,16 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("UPDATE domain SET name='{0}' ,linkman='{1}',mobile='{2}',qq='{3}',email='{4}',dateexpired='{5}',acclimit='{6}',routergrouplimit='{7}',routeritemlimit='{8}',interfacelist='{9}',module_agent='{10}',module_finservice='{11}',module_payonline='{12}',router_live='{13}',router_sim='{14}',finsplist='{15}',module_subagent='{16}',vendorlimit='{17}'  WHERE id='{18}'", domain.Name, domain.LinkMan, domain.Mobile, domain.QQ, domain.Email, domain.DateExpired, domain.AccLimit, domain.RouterGroupLimit, domain.RouterItemLimit, domain.InterfaceList, domain.Module_Agent ? 1 : 0, domain.Module_FinService ? 1 : 0, domain.Module_PayOnline ? 1 : 0, domain.Router_Live ? 1 : 0, domain.Router_Sim ? 1 : 0, domain.FinSPList, domain.Module_SubAgent ? 1 : 0,domain.VendorLimit, domain.ID);
+                 string query = string.Format("UPDATE domain SET name='{0}' ,linkman='{1}',mobile='{2}',qq='{3}',email='{4}',dateexpired='{5}',acclimit='{6}',routergrouplimit='{7}',routeritemlimit='{8}',interfacelist='{9}',module_agent='{10}',module_finservice='{11}',module_payonline='{12}',router_live='{13}',router_sim='{14}',finsplist='{15}',module_subagent='{16}',vendorlimit='{17}'  WHERE id='{18}'", domain.Name, domain.LinkMan, domain.Mobile, domain.QQ, domain.Email, domain.DateExpired, domain.AccLimit, domain.RouterGroupLimit, domain.RouterItemLimit, domain.InterfaceList, domain.Module_Agent ? 1 : 0, domain.Module_FinService ? 1 : 0, domain.Module_PayOnline ? 1 : 0, domain.Router_Live ? 1 : 0, domain.Router_Sim ? 1 : 0, domain.FinSPList, domain.Module_SubAgent ? 1 : 0, domain.VendorLimit, domain.ID);
+                 db.Connection.Execute(query);
+            }
+        }
+
+        public static void UpdateSyncVendor(DomainImpl domain)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("UPDATE domain SET cfg_syncvendor_id='{0}'  WHERE id='{1}'", domain.CFG_SyncVendor_ID, domain.ID);
                 db.Connection.Execute(query);
             }
         }

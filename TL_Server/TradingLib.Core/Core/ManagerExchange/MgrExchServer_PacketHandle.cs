@@ -310,11 +310,7 @@ namespace TradingLib.Core
                             //SrvOnMGRQryManager(packet as MGRQryManagerRequest, session, manager);
                             break;
                         }
-                    case MessageTypes.MGRCONTRIBREQUEST://扩展请求
-                        {
-                            SrvOnMGRContribRequest(packet as MGRContribRequest, session, manager);
-                            break;
-                        }
+                    
                     case MessageTypes.MGRINSERTTRADE://请求插入成交
                         {
                             SrvOnInsertTrade(packet as MGRReqInsertTradeRequest, session, manager);
@@ -325,6 +321,13 @@ namespace TradingLib.Core
                             SrvOnDelAccount(packet as MGRReqDelAccountRequest, session, manager);
                             break;
                         }
+
+                    case MessageTypes.MGRCONTRIBREQUEST://扩展请求
+                        {
+                            SrvOnMGRContribRequest(packet as MGRContribRequest, session, manager);
+                            break;
+                        }
+
                     default:
                         debug("packet type:" + packet.Type.ToString() + " not set handler", QSEnumDebugLevel.WARNING);
                         break;

@@ -291,7 +291,7 @@ namespace TradingLib.Core
         /// <param name="msg"></param>
         /// <param name="address"></param>
         /// <returns></returns>
-        public override long handle(IPacket packet,TrdClientInfo clientinfo)
+        public override long handle(ISession session,IPacket packet,TrdClientInfo clientinfo)
         {
             long result = NORETURNRESULT;
             switch (packet.Type)
@@ -310,12 +310,12 @@ namespace TradingLib.Core
                     break;
                 default:
                     //1.生成对应的Session 用于减少ClientInfo的暴露防止错误修改相关参数
-                    Client2Session sesssion = new Client2Session(clientinfo);
-                    sesssion.AccountID = clientinfo.Account;
+                    //Client2Session sesssion = new Client2Session(clientinfo);
+                    (session as Client2Session).AccountID = clientinfo.Account;
 
 
                     if (newPacketRequest != null)
-                        newPacketRequest(packet,sesssion);
+                        newPacketRequest(packet,session);
                     else
                         result = (long)MessageTypes.FEATURE_NOT_IMPLEMENTED;
                     break;

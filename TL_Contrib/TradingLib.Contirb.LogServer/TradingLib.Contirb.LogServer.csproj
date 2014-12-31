@@ -59,9 +59,14 @@
       <HintPath>..\..\lib\TradingLib\TradingLib.Common.Ex.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="TradingLib.Mixins">
+      <HintPath>..\..\lib\TradingLib\TradingLib.Mixins.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LogServer.cs" />
+    <Compile Include="ProtocolLogServer.cs" />
+    <Compile Include="MLog.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
@@ -75,6 +80,6 @@
       <OutFiles Include="$(OutputPath)\$(AssemblyName).dll" />
     </ItemGroup>
     <Copy SourceFiles="@(OutFiles)" DestinationFolder="..\..\lib\TradingLib\Contrib" SkipUnchangedFiles="true" />
-	<Copy SourceFiles="@(OutFiles)" DestinationFolder="..\..\Platform\TradingSrv\Contrib" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(OutFiles)" DestinationFolder="..\..\Platform\TradingSrv\Contrib" SkipUnchangedFiles="true" />
   </Target>
 </Project>

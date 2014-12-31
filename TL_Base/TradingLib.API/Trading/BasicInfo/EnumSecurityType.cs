@@ -4,10 +4,10 @@ namespace TradingLib.API
     /// <summary>
     /// Stock, Option, Future, Currency Forward, Forward, FOP, Warrant, ForEx, Index, Bond
     /// </summary>
-    public enum SecurityType
+    public enum SecurityType : byte
     {
 
-        NIL = -1,
+        NIL,
         [Description("股票")] 
         STK,//股票
         [Description("期货")]
@@ -26,6 +26,6 @@ namespace TradingLib.API
         CASH,
         BAG,
         [Description("异化证券")]
-        INNOV = 8888,
+        INNOV,
     }
 }

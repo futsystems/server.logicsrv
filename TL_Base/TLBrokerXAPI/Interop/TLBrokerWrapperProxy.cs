@@ -100,6 +100,8 @@ namespace TradingLib.BrokerXAPI.Interop
             _Login = NativeLib.GetUnmanagedFunction<LoginProc>("Login");
             _SendOrder = NativeLib.GetUnmanagedFunction<SendOrderProc>("SendOrder");
             _SendOrderAction = NativeLib.GetUnmanagedFunction<SendOrderActionProc>("SendOrderAction");
+            _QryInstrument = NativeLib.GetUnmanagedFunction<QryInstrumentProc>("QryInstrument");
+
 
             _RegOnConnected = NativeLib.GetUnmanagedFunction<RegOnConnectedProc>("RegOnConnected");
             _RegOnDisconnected = NativeLib.GetUnmanagedFunction<RegOnDisconnectedProc>("RegOnDisconnected");
@@ -108,7 +110,7 @@ namespace TradingLib.BrokerXAPI.Interop
             _RegRtnOrder = NativeLib.GetUnmanagedFunction<RegRtnOrderProc>("RegRtnOrder");
             _RegRtnOrderError = NativeLib.GetUnmanagedFunction<RegRtnOrderErrorProc>("RegRtnOrderError");
             _RegRtnOrderActionError = NativeLib.GetUnmanagedFunction<RegRtnOrderActionErrorProc>("RegRtnOrderActionError");
-
+            _RegOnSymbol = NativeLib.GetUnmanagedFunction<RegOnSymbolProc>("RegOnSymbol");
         }
 
 
@@ -221,7 +223,9 @@ namespace TradingLib.BrokerXAPI.Interop
             try
             {
                 Util.Debug("BrokerProxy SendOrder", QSEnumDebugLevel.MUST);
-                return _SendOrder(this.Wrapper, ref pOrder);
+                bool x =  _SendOrder(this.Wrapper, ref pOrder);
+                Util.Debug("**************** sendorder return:" + x.ToString(), QSEnumDebugLevel.ERROR);
+                return x;
             }
             catch (Exception ex)
             {
@@ -244,6 +248,25 @@ namespace TradingLib.BrokerXAPI.Interop
             catch (Exception ex)
             {
                 Util.Debug("SendOrderAction Error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                return false;
+            }
+        }
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate bool QryInstrumentProc(IntPtr pWrapper);
+        QryInstrumentProc _QryInstrument;
+        public bool QryInstrument()
+        {
+            try
+            {
+                Util.Debug("BrokerProxy QryInstrument", QSEnumDebugLevel.MUST);
+                bool x =  _QryInstrument(this.Wrapper);
+                Util.Debug("**************** qry instrument return:" + x.ToString(), QSEnumDebugLevel.ERROR);
+                return x;
+            }
+            catch (Exception ex)
+            {
+                Util.Debug("QryInstrument Error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
                 return false;
             }
         }
@@ -311,6 +334,15 @@ namespace TradingLib.BrokerXAPI.Interop
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void RegRtnOrderActionErrorProc(IntPtr pWrapper, CBRtnOrderActionError cb);
         RegRtnOrderActionErrorProc _RegRtnOrderActionError;
+
+        /// <summary>
+        /// 注册合约回调
+        /// </summary>
+        /// <param name="pWrapper"></param>
+        /// <param name="cb"></param>
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void RegOnSymbolProc(IntPtr pWrapper, CBOnSymbol cb);
+        RegOnSymbolProc _RegOnSymbol;
         #endregion
 
 
@@ -362,6 +394,13 @@ namespace TradingLib.BrokerXAPI.Interop
         {
             add { cbRtnOrderActionError += value; _RegRtnOrderActionError(this.Wrapper, cbRtnOrderActionError); }
             remove { cbRtnOrderActionError -= value; _RegRtnOrderActionError(this.Wrapper, cbRtnOrderActionError); }
+        }
+
+        CBOnSymbol cbOnSymbol;
+        public event CBOnSymbol OnSymbolEvent
+        {
+            add { cbOnSymbol += value; _RegOnSymbol(this.Wrapper, cbOnSymbol); }
+            remove { cbOnSymbol -= value; _RegOnSymbol(this.Wrapper, cbOnSymbol); }
         }
         #endregion
 

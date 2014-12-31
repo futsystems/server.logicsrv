@@ -131,5 +131,10 @@ namespace TradingLib.Common
         /// 调试插入成交
         /// </summary>
         public bool Misc_InsertTrade { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int CFG_SyncVendor_ID { get; set; }
     }
 }

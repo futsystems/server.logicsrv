@@ -68,59 +68,25 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static IEnumerable<TradingLib.Mixins.JsonObject.JsonWrapperCashOperation> GetAgentCashOperation(this Domain domain)
         {
-            return ORM.MAgentFinance.GetAgentLatestCashOperationTotal().Where(op => domain.IsInDomain(op.mgr_fk));
-        }
-
-
-
-
-
-        public static bool IsInDomain(this Domain doman, string manger)
-        {
-            Manager mgr = BasicTracker.ManagerTracker[manger];
-            return doman.IsInDomain(mgr);
-        }
-
-        public static bool IsInDomain(this Domain domain, int mgr_fk)
-        {
-            Manager mgr = BasicTracker.ManagerTracker[mgr_fk];
-            return domain.IsInDomain(mgr);
+            return ORM.MAgentFinance.GetAgentLatestCashOperationTotal().Where(op => domain.IsManagerInDomain(op.mgr_fk));
         }
 
         /// <summary>
-        /// 某个Manger是否在某个域内
+        /// 返回该域的所有权限模板
         /// </summary>
         /// <param name="domain"></param>
-        /// <param name="mgr"></param>
         /// <returns></returns>
-        public static bool IsInDomain(this Domain domain, Manager mgr)
+        public static IEnumerable<UIAccess> GetUIAccesses(this Domain domain)
         {
-            if (mgr == null) return false;
-            return mgr.domain_id.Equals(domain.ID);
-        }
-        /// <summary>
-        /// 交易帐户是否在某个域内
-        /// </summary>
-        /// <param name="domain"></param>
-        /// <param name="account"></param>
-        /// <returns></returns>
-        public static bool IsAccountInDomain(this Domain domain,string account)
-        {
-            IAccount acc = TLCtxHelper.CmdAccount[account];
-            return domain.IsAccountInDomain(acc);
+            return BasicTracker.UIAccessTracker.UIAccesses.Where(ui => ui.domain_id == domain.ID);
         }
 
-        /// <summary>
-        /// 交易帐户是否在某个域内
-        /// </summary>
-        /// <param name="domain"></param>
-        /// <param name="account"></param>
-        /// <returns></returns>
-        public static bool IsAccountInDomain(this Domain domain, IAccount account)
-        {
-            if (account == null) return false;
-            return account.Domain.ID.Equals(domain.ID);
-        }
+
+
+        
+
+
+
 
         
 

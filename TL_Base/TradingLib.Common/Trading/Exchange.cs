@@ -90,14 +90,6 @@ namespace TradingLib.Common
                 return true;
             return false;
         }
-        /// <summary>
-        /// 开始时间
-        /// </summary>
-        //public int StartTime { get; set; }
-        /// <summary>
-        /// 结束时间
-        /// </summary>
-        //public int EndTime { get; set; }
 
         /// <summary>
         /// 开始强平时间
@@ -117,8 +109,6 @@ namespace TradingLib.Common
         /// </summary>
         public bool IsFlatTime()
         {
-            
-            
             int now = Util.ToTLTime();
             //LibUtil.Debug("NeedFlatCheck, now:" + now.ToString() +" NeedFlat:"+NeedFlat.ToString() +" FlatStart:" + FlatStartTime.ToString() + " End:" + EndTime.ToString());
             if (!this.NeedFlat)
@@ -136,7 +126,7 @@ namespace TradingLib.Common
             if (NeedFlat)
             {
                 //计算开始强平时间
-                DateTime t = Util.ToDateTime(Util.ToTLDate(), end).Subtract(new TimeSpan(0, 5, 0));
+                DateTime t = Util.ToDateTime(Util.ToTLDate(), end).Subtract(new TimeSpan(0,GlobalConfig.FlatTimeAheadOfMarketClose, 0));
                 FlatStartTime = Util.ToTLTime(t);
             }
             else

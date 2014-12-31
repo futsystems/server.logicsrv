@@ -73,5 +73,50 @@ namespace TradingLib.Common
             if (AfterSettleResetEvent != null)
                 AfterSettleResetEvent(sender, args);
         }
+
+        #region 任务调度事件
+
+        /// <summary>
+        /// 定时任务事件
+        /// </summary>
+        public event EventHandler<TaskEventArgs> SpecialTimeTaskEvent;
+
+
+        /// <summary>
+        /// 执行任务异常事件
+        /// </summary>
+        public event EventHandler<TaskEventArgs> TaskErrorEvent;
+
+
+        internal void FireTaskErrorEvent(object sender, TaskEventArgs args)
+        {
+            if (TaskErrorEvent != null)
+            {
+                TaskErrorEvent(sender, args);
+            }
+        }
+
+        internal void FireSpecialTimeEvent(object sender, TaskEventArgs args)
+        {
+            if (SpecialTimeTaskEvent != null)
+            {
+                SpecialTimeTaskEvent(sender, args);
+            }
+        }
+
+        #endregion
+
+
+        #region Packet消息包事件
+
+        public event EventHandler<PacketEventArgs> PacketEvent;
+
+        internal void FirePacketEvent(object sender, PacketEventArgs args)
+        {
+            if (PacketEvent != null)
+                PacketEvent(sender, args);
+        }
+        #endregion
+
     }
 }

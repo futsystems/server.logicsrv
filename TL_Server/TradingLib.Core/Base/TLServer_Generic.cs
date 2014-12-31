@@ -485,13 +485,13 @@ namespace TradingLib.Core
         int GetMaxFrontIDi()
         {
             int max = 0;
-            
             foreach (int i in frontmap.Values)
             {
                 max = i > max ? i : max;
             }
             return max;
         }
+
         /// <summary>
         /// 获得前置编号
         /// </summary>
@@ -503,9 +503,10 @@ namespace TradingLib.Core
             {
                 frontid = "0";
             }
+            //已经包含了frontid
             if (frontmap.Keys.Contains(frontid))
                 return frontmap[frontid];
-
+            //没有该对应的frontID 则递增
             int fid = GetMaxFrontIDi() + 1;
             frontmap[frontid] = fid;
             frontsessionmaxmap[frontid] = 0;
@@ -546,8 +547,6 @@ namespace TradingLib.Core
         /// <param name="address"></param>
         public virtual void SrvRegClient(RegisterClientRequest request)
         {
-            //if (NumClients < CoreGlobal.ConcurrentUser)//当前连接数小于并发数则有效
-            //{
             //客户端发送的第一个消息就是注册到服务系统,我们需要为client记录address,front信息
             T _newcli = new T();
 
@@ -570,18 +569,9 @@ namespace TradingLib.Core
                 _clients.UnRegistClient(request.ClientID);
                 _clients.RegistClient(_newcli);
             }
+
             SrvBeatHeart(request.ClientID);
             debug("Client:" + request.ClientID + " Bind With Int32 Token, FrontIDi:"+_newcli.FrontIDi.ToString() +" SessionIDi:"+_newcli.SessionIDi.ToString(), QSEnumDebugLevel.INFO);
-                //客户端数目检查
-
-                //CacheMessage(QSMessageHelper.Message(QSSysMessage.OPERATIONREJECT,"系统超过最大并发,请联系管理员!"), MessageTypes.SYSMESSAGE,_newcli.ClientID);
-
-            //}
-            //else
-            //{
-            //    debug("Client:" + request.ClientID + " Registed To Server Failed [超过最大并发数目]", QSEnumDebugLevel.ERROR);
-            //}
-
         }
 
         /// <summary>
@@ -616,6 +606,7 @@ namespace TradingLib.Core
         /// <param name="msg"></param>
         void SrvLoginReq(LoginRequest request)
         {
+            //Util.Debug("it is here srvloginreq",QSEnumDebugLevel.ERROR);
             //如果没有client信息 则直接返回,表明发出该请求的客户端没有通过register主操的服务器
             T cinfo = _clients[request.ClientID];
             if (cinfo == null) return;
@@ -691,7 +682,7 @@ namespace TradingLib.Core
         /// <param name="msg"></param>
         /// <param name="address"></param>
         /// <returns></returns>
-        public virtual long handle(IPacket packet,T clientinfo){ return 0;}
+        public virtual long handle(ISession session,IPacket packet,T clientinfo){ return 0;}
 
         #endregion
 
@@ -816,8 +807,10 @@ namespace TradingLib.Core
                 //debug("raw message type:" + type.ToString() + " message:" + msg, QSEnumDebugLevel.INFO);
                 IPacket packet = PacketHelper.SrvRecvRequest(type, msg, front, address);
                 //debug("<<<<<< Rev Packet:" + packet.ToString(), QSEnumDebugLevel.INFO);
-
-                if (!onPermissionCheck(type, address)) return -1;//关于权限检查 这里需要传递一定参数进行逻辑处理
+                //通过Packet中的客户端ID标识获得对应的clientinfo
+                T clientinfo = _clients[packet.ClientID];
+                //if (!onPermissionCheck(type, address)) return -1;//关于权限检查 这里需要传递一定参数进行逻辑处理
+                Client2Session session = null;
                 switch (type)
                 {
                     #region 通用操作部分
@@ -829,9 +822,19 @@ namespace TradingLib.Core
                         break;
                     case MessageTypes.LOGINREQUEST://登入
                         SrvLoginReq(packet as LoginRequest);
+                        if (clientinfo != null)
+                        {
+                            session = new Client2Session(clientinfo);
+                            TLCtxHelper.EventSystem.FirePacketEvent(this, new PacketEventArgs(session, packet));
+                        }
                         break;
                     case MessageTypes.CLEARCLIENT://注销
                         SrvClearClient(packet as UnregisterClientRequest);
+                        if (clientinfo != null)
+                        {
+                            session = new Client2Session(clientinfo);
+                            TLCtxHelper.EventSystem.FirePacketEvent(this, new PacketEventArgs(session, packet));
+                        }
                         break;
                     case MessageTypes.HEARTBEATREQUEST://客户端请求服务端发送给客户端一个心跳 以让客户端知道 与服务端的连接有效
                         SrvBeatHeartRequest(packet as HeartBeatRequest);
@@ -846,9 +849,10 @@ namespace TradingLib.Core
 
                     default:
                         //如果客户端没有注册到服务器则 不接受任何其他类型的功能请求 要求客户端有效注册到服务器
-                        T clientinfo = _clients[packet.ClientID];
                         if (clientinfo == null) return -1;
-                        result = handle(packet, clientinfo);//外传到子类中去扩展消息类型 通过子类扩展允许tlserver实现更多功能请求
+                        session = new Client2Session(clientinfo);
+                        result = handle(session,packet, clientinfo);//外传到子类中去扩展消息类型 通过子类扩展允许tlserver实现更多功能请求
+                        TLCtxHelper.EventSystem.FirePacketEvent(this, new PacketEventArgs(session, packet));
                         break;
 
                 }

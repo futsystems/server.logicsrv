@@ -104,7 +104,7 @@ namespace FutsMoniter
 
                     gt.Rows[i][UNDERLAYINGSYMBOLID] = sym.underlayingsymbol_fk;
                     gt.Rows[i][UNDERLAYINGSYMBOL] = sym.UnderlayingSymbol != null ? sym.UnderlayingSymbol.Symbol : "无";
-                    gt.Rows[i][EXPIREMONTH] = sym.ExpireMonth;
+                    //gt.Rows[i][EXPIREMONTH] = sym.ExpireMonth;
                     gt.Rows[i][EXPIREDATE] = sym.ExpireDate;
                     gt.Rows[i][TRADEABLE] = sym.Tradeable;
                     gt.Rows[i][TRADEABLETITLE] = GetTradeableTitle(sym.Tradeable);
@@ -129,7 +129,7 @@ namespace FutsMoniter
 
                     gt.Rows[i][UNDERLAYINGSYMBOLID] = sym.underlayingsymbol_fk;
                     gt.Rows[i][UNDERLAYINGSYMBOL] = sym.UnderlayingSymbol != null ? sym.UnderlayingSymbol.Symbol : "无";
-                    gt.Rows[i][EXPIREMONTH] = sym.ExpireMonth;
+                    //gt.Rows[i][EXPIREMONTH] = sym.ExpireMonth;
                     gt.Rows[i][EXPIREDATE] = sym.ExpireDate;
                     gt.Rows[i][TRADEABLE] = sym.Tradeable;
                     gt.Rows[i][TRADEABLETITLE] = GetTradeableTitle(sym.Tradeable);
@@ -209,7 +209,7 @@ namespace FutsMoniter
             gt.Columns.Add(UNDERLAYING);//
             gt.Columns.Add(UNDERLAYINGSYMBOLID);//
             gt.Columns.Add(UNDERLAYINGSYMBOL);//
-            gt.Columns.Add(EXPIREMONTH);
+            //gt.Columns.Add(EXPIREMONTH);
             gt.Columns.Add(EXPIREDATE);
             gt.Columns.Add(TRADEABLE);
             gt.Columns.Add(TRADEABLETITLE);
@@ -235,7 +235,10 @@ namespace FutsMoniter
 
             grid.Columns[EXTRAMARGIN].Visible = false;
             grid.Columns[MAINTANCEMARGIN].Visible = false;
+
             grid.Columns[UNDERLAYINGSYMBOL].Visible = false;
+            grid.Columns[UNDERLAYING].Visible = false;
+            
         }
 
 
@@ -354,7 +357,9 @@ namespace FutsMoniter
 
             btnAddSymbol.Click +=new EventHandler(btnAddSymbol_Click);
             btnSyncSymbols.Click +=new EventHandler(btnSyncSymbols_Click);
+            btnDisableAll.Click += new EventHandler(btnDisableAll_Click);
         }
+       
 
         void symgrid_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
         {
@@ -399,12 +404,42 @@ namespace FutsMoniter
             fm.ShowDialog();
         }
 
+        bool _first = true;
+        DateTime _lastack = DateTime.Now;
+
+        void btnDisableAll_Click(object sender, EventArgs e)
+        {
+            if (!_first)
+            {
+                if ((DateTime.Now - _lastack).TotalSeconds < 10)
+                {
+                    MoniterUtils.WindowMessage("请不要频繁同步或禁止合约");
+                    return;
+                }
+            }
+
+            if (MoniterUtils.WindowConfirm("确认禁止所有合约?") == System.Windows.Forms.DialogResult.Yes)
+            {
+                Globals.TLClient.ReqDisableAllSymbols();
+                _first = false;
+            }
+        }
+
 
         private void btnSyncSymbols_Click(object sender, EventArgs e)
         {
+            if (!_first)
+            {
+                if ((DateTime.Now - _lastack).TotalSeconds < 10)
+                {
+                    MoniterUtils.WindowMessage("请不要频繁同步或禁止合约");
+                    return;
+                }
+            }
             if (fmConfirm.Show("确认同步合约数据?") == System.Windows.Forms.DialogResult.Yes)
             {
                 Globals.TLClient.ReqSyncSymbol();
+                _first = false;
             }
         }
 

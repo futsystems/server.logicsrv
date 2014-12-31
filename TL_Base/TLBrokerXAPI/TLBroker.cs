@@ -208,6 +208,12 @@ namespace TradingLib.BrokerXAPI
             _wrapper.OnRtnOrderErrorEvent += new CBRtnOrderError(_wrapper_OnRtnOrderErrorEvent);
             _wrapper.OnRtnOrderActionErrorEvent += new CBRtnOrderActionError(_wrapper_OnRtnOrderActionErrorEvent);
             _wrapper.OnRtnTradeEvent += new CBRtnTrade(_wrapper_OnRtnTradeEvent);
+            _wrapper.OnSymbolEvent += new CBOnSymbol(_wrapper_OnSymbolEvent);
+        }
+
+        void _wrapper_OnSymbolEvent(ref XSymbol pSymbolField, bool islast)
+        {
+            NotifySymbol(pSymbolField, islast);
         }
 
         
@@ -241,6 +247,14 @@ namespace TradingLib.BrokerXAPI
         {
             
             
+        }
+
+        /// <summary>
+        /// 查询合约
+        /// </summary>
+        public virtual bool QryInstrument()
+        {
+            return WrapperQryInstrument();
         }
 
         /// <summary>
@@ -329,6 +343,11 @@ namespace TradingLib.BrokerXAPI
             //Util.Debug("~~~~~OrderSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XOrderActionField)));
             return _wrapper.SendOrderAction(ref action);
         }
+
+        protected bool WrapperQryInstrument()
+        {
+            return _wrapper.QryInstrument();
+        }
         #endregion
 
         #region 回报缓存
@@ -339,7 +358,7 @@ namespace TradingLib.BrokerXAPI
         RingBuffer<XTradeField> _tradecache = new RingBuffer<XTradeField>(buffersize);
         RingBuffer<XOrderError> _ordererrorcache = new RingBuffer<XOrderError>(buffersize);
         RingBuffer<XOrderActionError> _orderactionerrorcache = new RingBuffer<XOrderActionError>(buffersize);
-
+        
         Thread _notifythread = null;
         bool _working = false;
 

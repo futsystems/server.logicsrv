@@ -95,7 +95,6 @@
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_Connector.cs" />
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_RuleSet.cs" />
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_Account.cs" />
-    <Compile Include="Core\ManagerExchange\UIAccessTracker.cs" />
     <Compile Include="Core\ManagerExchange\Utils\ManagerUtils_.cs" />
     <Compile Include="Core\ManagerExchange\Utils\ManagerUtils_Account.cs" />
     <Compile Include="Core\ManagerExchange\Utils\ManagerUtils.cs" />

@@ -155,6 +155,7 @@
     <Compile Include="Client\Request\TLClientNet_Request_Account.cs" />
     <Compile Include="Client\Request\TLClientNet_Request_Msic.cs" />
     <Compile Include="Client\Request\TLClientNet_Request_Manager.cs" />
+    <Compile Include="Client\Request\TLClientNet_Request_log.cs" />
     <Compile Include="Common\BasicInfoTracker\BasicInfoTracker_.cs" />
     <Compile Include="Common\BasicInfoTracker\BasicInfoTracker_BasicInfo.cs" />
     <Compile Include="Common\BasicInfoTracker\BasicInfoTracker_Rule.cs" />
@@ -175,6 +176,7 @@
     <Compile Include="Common\Ctx\CtxHandler_Contrib.cs" />
     <Compile Include="Common\Ctx\CtxHandler_HistQuery.cs" />
     <Compile Include="Common\ManagerUtils.cs" />
+    <Compile Include="ContribProtocol\ProtocolLogServer.cs" />
     <Compile Include="Controls\Base\ctAccountType.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -407,6 +409,24 @@
     </Compile>
     <Compile Include="Forms\Finance\fmAccountCashReq.Designer.cs">
       <DependentUpon>fmAccountCashReq.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\System\fmLogTaskEvent.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\System\fmLogTaskEvent.Designer.cs">
+      <DependentUpon>fmLogTaskEvent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\System\fmTaskMoniter.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\System\fmTaskMoniter.Designer.cs">
+      <DependentUpon>fmTaskMoniter.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\System\fmSyncSymbol.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\System\fmSyncSymbol.Designer.cs">
+      <DependentUpon>fmSyncSymbol.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\System\fmDefaultConnector.cs">
       <SubType>Form</SubType>
@@ -850,6 +870,15 @@
     <EmbeddedResource Include="Forms\Finance\fmAccountCashReq.resx">
       <DependentUpon>fmAccountCashReq.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\System\fmLogTaskEvent.resx">
+      <DependentUpon>fmLogTaskEvent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\System\fmTaskMoniter.resx">
+      <DependentUpon>fmTaskMoniter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\System\fmSyncSymbol.resx">
+      <DependentUpon>fmSyncSymbol.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Manager\fmAgentPermission.resx">
       <DependentUpon>fmAgentPermission.cs</DependentUpon>
     </EmbeddedResource>
@@ -1054,6 +1083,7 @@
       <Name>FutSystems.GUI</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

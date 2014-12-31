@@ -69,8 +69,23 @@ namespace TradingLib.Core
             {
                 InjectTask(flattime, flatlist[flattime].ToArray());
             }
+
+            
+
         }
 
+        //2:30 到期合约执行强平
+        [TaskAttr("强平-合约交割",14,50,0, "合约交割日执行强平")]
+        public void Task_FlatPositionViaExpiredDate()
+        {
+            foreach (Position pos in _clearcentre.TotalPositions.Where(p => !p.isFlat && p.oSymbol.IsExpiredToday()))
+            {
+                this.FlatPosition(pos, QSEnumOrderSource.RISKCENTRE, "合约交割强平");
+                Thread.Sleep(50);
+            }
+        }
+
+        
         /// <summary>
         /// 注入强平任务
         /// </summary>
@@ -81,7 +96,7 @@ namespace TradingLib.Core
             //注入强平任务
             debug("注入强平任务,强平时间点:" + flattime,QSEnumDebugLevel.INFO);
             DateTime t = Util.ToDateTime(Util.ToTLDate(), flattime);
-            TaskProc task = new TaskProc(this.UUID, "日内强平-" + flattime.ToString(), t.Hour, t.Minute, t.Second, delegate() { FlatPositionViaMarketTime(flattime,mts); });
+            TaskProc task = new TaskProc(this.UUID, "强平-日内" + flattime.ToString(), t.Hour, t.Minute, t.Second, delegate() { FlatPositionViaMarketTime(flattime,mts); });
             TLCtxHelper.Ctx.InjectTask(task);
         }
 
@@ -94,6 +109,8 @@ namespace TradingLib.Core
             }
             return str;
         }
+
+
         /// <summary>
         /// 强平绑定某个市场交易时间的所有持仓
         /// </summary>
@@ -117,7 +134,6 @@ namespace TradingLib.Core
                         CancelOrder(od, QSEnumOrderSource.RISKCENTRE, "尾盘强平");
                     }
                 }
-                //}
             }
 
             //等待1秒后再进行强平持仓

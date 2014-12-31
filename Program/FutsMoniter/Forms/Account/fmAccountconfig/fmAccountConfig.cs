@@ -28,6 +28,7 @@ namespace FutsMoniter
         public void SetAccount(IAccountLite account)
         {
             _account = account;
+
             
         }
 
@@ -188,22 +189,8 @@ namespace FutsMoniter
                 Globals.TLClient.ReqQryAccountFinInfo(_account.Account);
             }
 
-            
-
-        }
 
 
-
-        public void ValidView()
-        {
-            //if (!Globals.RightRouter)
-            //{
-            //    routerpanel.Visible = false;
-            //}
-            //if (!Globals.RightCashOperation)
-            //{
-            //    cashoppanel.Visible = false;
-            //}
         }
 
     }

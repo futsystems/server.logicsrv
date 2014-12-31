@@ -48,4 +48,11 @@ namespace TradingLib.BrokerXAPI
     /// <param name="pOrderAction"></param>
     /// <param name="pError"></param>
     public delegate void CBRtnOrderActionError(ref XOrderActionField pOrderAction,ref XErrorField pError);
+
+    /// <summary>
+    /// 合约查询回调委托
+    /// </summary>
+    /// <param name="pSymbolField"></param>
+    /// <param name="islast"></param>
+    public delegate void CBOnSymbol(ref XSymbol pSymbolField,bool islast);
 }

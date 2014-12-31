@@ -58,6 +58,7 @@ namespace FutsMoniter
             if (_account != null && _account.Account.Equals(account.Account))
             {
                 SetAccount(account);
+                UpdateAccountSetting();
             }
         }
 

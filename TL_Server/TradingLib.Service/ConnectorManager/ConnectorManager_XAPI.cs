@@ -69,7 +69,6 @@ namespace TradingLib.ServiceManager
                     continue;
                 debug(string.Format("DataFeed Config[{0}] Name:{1} SrvIP:{2} LoginID{3}", cfg.Token, cfg.Name, cfg.srvinfo_ipaddress, cfg.usrinfo_userid), QSEnumDebugLevel.INFO);
             }
-
         }
 
         /// <summary>
@@ -124,7 +123,10 @@ namespace TradingLib.ServiceManager
             broker.SendLogItemEvent += new ILogItemDel(Util.Log);
             //设定brokerconfg
             broker.SetBrokerConfig(cfg);
-
+            
+            //
+            broker.GotSymbolEvent += new Action<XSymbol, bool>(broker_GotSymbolEvent);
+            
             //3.转换成Broker 注接口验证时已经保证了 broker对应的interface类型是实现IBroker接口的 这里需要检查是否重复加载
             IBroker brokerinterface = broker as IBroker;
             brokerInstList.Add(cfg.Token, brokerinterface);
@@ -149,6 +151,18 @@ namespace TradingLib.ServiceManager
             };
             //6.将broker的交易类事件绑定到路由内 然后通过路由转发到交易消息服务
             _brokerrouter.LoadBroker(brokerinterface);
+        }
+
+        /// <summary>
+        /// 接口返回合约信息
+        /// 如果分区设置了某个同步通道，则会定时从该通道同步合约信息
+        /// 品种信息需要手工维护
+        /// </summary>
+        /// <param name="arg1"></param>
+        /// <param name="arg2"></param>
+        void broker_GotSymbolEvent(XSymbol arg1, bool arg2)
+        {
+            //debug("got symbol:" + arg1.Symbol + " margin:" + arg1.Margin.ToString() +" comm:"+arg1.EntryCommission.ToString()+" last:" + arg2.ToString(), QSEnumDebugLevel.INFO);
         }
 
         /// <summary>

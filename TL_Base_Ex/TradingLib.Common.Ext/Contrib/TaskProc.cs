@@ -9,12 +9,18 @@ namespace TradingLib.Common
     public class TaskProc : ITask
     {
         string _uuid =string.Empty;
+        /// <summary>
+        /// 对象UUID
+        /// </summary>
         public string UUID { get { return _uuid; } }
+
+
         string _taskName = "Task";
         /// <summary>
         /// 任务名称
         /// </summary>
         public string TaskName { get { return _taskName; } set { _taskName = value; } }
+
 
         QSEnumTaskType _taskType = QSEnumTaskType.SPECIALTIME;
         /// <summary>
@@ -35,6 +41,10 @@ namespace TradingLib.Common
         /// </summary>
         public DateTime LastTime { get { return _lastTime; } set { _lastTime = value; } }
 
+        public int TaskHour { get { return this.Hour; } }
+        public int TaskMinute { get { return this.Minute; } }
+        public int TaskSecend { get { return this.Secend; } }
+
         public int Hour=0;
         public int Minute=0;
         public int Secend=0;
@@ -49,10 +59,18 @@ namespace TradingLib.Common
         {
             if (taskfunc != null)
             {
-                //LibUtil.Debug("Task[" + _taskName + "]" + " Start running");
-                //TaskCentre.Logger.GotDebug("Task["+_taskName+"]"+" Start running");
                 taskfunc();
             } 
+        }
+
+        TaskProcWrapper _taskproc=null;
+        TaskProcWrapper GetTaskProcWrapper()
+        {
+            if (_taskproc == null)
+            {
+                _taskproc = new TaskProcWrapper(this);
+            }
+            return _taskproc;
         }
 
         /// <summary>
@@ -62,16 +80,15 @@ namespace TradingLib.Common
         /// <param name="signalTime">触发检查的时间</param>
         public void CheckTask(DateTime signalTime)
         {
-            //LibUtil.Debug("check task");
             if (_taskType == QSEnumTaskType.CIRCULATE)
             {
                 if (signalTime.Subtract(_lastTime) >= _taskInterval)
                 {
-                    new TaskProcWrapper(this).DoTask();
+                    GetTaskProcWrapper().DoTask();
                     _lastTime = DateTime.Now;
                 }
                 return;
-            }     
+            }
             if (_taskType == QSEnumTaskType.SPECIALTIME)
             {
                 int intHour = signalTime.Hour;
@@ -81,7 +98,7 @@ namespace TradingLib.Common
                 {
                     if (intSecond == this.Secend)
                     {
-                        new TaskProcWrapper(this).DoTask();
+                        GetTaskProcWrapper().DoTask();
                     }
                 }
 
@@ -89,7 +106,7 @@ namespace TradingLib.Common
                 {
                     if (intMinute == this.Minute && intSecond == this.Secend)
                     {
-                        new TaskProcWrapper(this).DoTask();
+                        GetTaskProcWrapper().DoTask();
                     }
                 }
 
@@ -97,7 +114,7 @@ namespace TradingLib.Common
                 {
                     if (intHour == this.Hour && intMinute == this.Minute && intSecond == this.Secend)
                     {
-                        new TaskProcWrapper(this).DoTask();
+                        GetTaskProcWrapper().DoTask();
                     }
                 }
                 return;
@@ -105,29 +122,6 @@ namespace TradingLib.Common
                    
         }
 
-        public string TaskMemo
-        {
-            get
-            {
-                return _taskName.PadRight(25,' ')+(_taskType == QSEnumTaskType.CIRCULATE ?"循环-":"定时-") + GetTaskTimeStr();
-            }
-        }
-
-        public string TypeName { get { return (_taskType == QSEnumTaskType.CIRCULATE ? "循环" : "定时"); } }
-
-        public string TimeStr { get { return GetTaskTimeStr(); } }
-
-        string GetTaskTimeStr()
-        {
-            if (_taskType == QSEnumTaskType.CIRCULATE)
-            {
-                return (_taskInterval.TotalSeconds.ToString() + "秒");
-            }
-            else
-            {
-                return this.Hour.ToString() + ":" + this.Minute.ToString() + ":" + this.Secend.ToString();
-            }
-        }
         /// <summary>
         /// 特定时间执行的任务
         /// 几点,几分,几秒定时运行某个任务
@@ -174,11 +168,18 @@ namespace TradingLib.Common
             try
             {
                 _proc.DoTask();
+
+                //触发定时任务
+                if (_proc.TaskType == QSEnumTaskType.SPECIALTIME)
+                {
+                    TLCtxHelper.EventSystem.FireSpecialTimeEvent(this, TaskEventArgs.TaskSuccess(_proc));
+                }
             }
             catch (Exception ex)
             {
-                //在执行定时任务的时候发生错误,记录该错误到taskcentre_error日志
-                //TaskCentre.Logger.GotDebug("["+_proc.TaskName +"]"+" error:"+ex.ToString());
+                Util.Debug("Task Error:" + ex.ToString());
+                //触发任务执行异常
+                TLCtxHelper.EventSystem.FireTaskErrorEvent(this, TaskEventArgs.TaskFail(_proc, ex));
             }
         }
     }

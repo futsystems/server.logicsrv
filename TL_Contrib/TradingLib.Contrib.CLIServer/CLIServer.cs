@@ -138,11 +138,11 @@ namespace TradingLib.Contrib.CLI
             return TLCtxHelper.Ctx.PrintContrib(contrib);
         }
 
-        [ContribCommandAttr(QSEnumCommandSource.CLI, "ptask", "ptask - print task list", "")]
-        public string PrintTask()
-        {
-            return TLCtxHelper.Ctx.PrintTask();
-        }
+        //[ContribCommandAttr(QSEnumCommandSource.CLI, "ptask", "ptask - print task list", "")]
+        //public string PrintTask()
+        //{
+        //    return TLCtxHelper.Ctx.PrintTask();
+        //}
 
         [ContribCommandAttr(QSEnumCommandSource.CLI, "profile", "profile - print profile information", "")]
         public static string Profile()

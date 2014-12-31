@@ -39,6 +39,7 @@
             this.cbsecurity = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
             this.kryptonLabel1 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.symgrid = new ComponentFactory.Krypton.Toolkit.KryptonDataGridView();
+            this.btnDisableAll = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cbtradeable)).BeginInit();
@@ -49,6 +50,7 @@
             // 
             // kryptonPanel1
             // 
+            this.kryptonPanel1.Controls.Add(this.btnDisableAll);
             this.kryptonPanel1.Controls.Add(this.btnAddSymbol);
             this.kryptonPanel1.Controls.Add(this.btnSyncSymbols);
             this.kryptonPanel1.Controls.Add(this.kryptonLabel3);
@@ -140,6 +142,14 @@
             this.symgrid.Size = new System.Drawing.Size(1033, 563);
             this.symgrid.TabIndex = 0;
             // 
+            // btnDisableAll
+            // 
+            this.btnDisableAll.Location = new System.Drawing.Point(712, 5);
+            this.btnDisableAll.Name = "btnDisableAll";
+            this.btnDisableAll.Size = new System.Drawing.Size(108, 25);
+            this.btnDisableAll.TabIndex = 15;
+            this.btnDisableAll.Values.Text = "禁止所有合约";
+            // 
             // fmSymbol
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -173,5 +183,6 @@
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel2;
         private ComponentFactory.Krypton.Toolkit.KryptonButton btnAddSymbol;
         private ComponentFactory.Krypton.Toolkit.KryptonButton btnSyncSymbols;
+        private ComponentFactory.Krypton.Toolkit.KryptonButton btnDisableAll;
     }
 }
