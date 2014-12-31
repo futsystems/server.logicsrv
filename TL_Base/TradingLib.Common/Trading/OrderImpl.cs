@@ -361,6 +361,7 @@ namespace TradingLib.Common
                 this.xPrice = p;
                 this.xSize = (s >= UnsignedSize ? UnsignedSize : s) * (Side ? 1 : -1);
                 //debug("askbid size:"+s.ToString()+"|");
+                //Util.Debug("tick date:" + k.Date + " ticktime:" + k.Time,QSEnumDebugLevel.ERROR);
                 this.xTime = k.Time;
                 this.xDate = k.Date;
                 return true;
