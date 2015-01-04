@@ -51,7 +51,22 @@ namespace TradingLib.ORM
             }
         }
 
-      
+
+        /// <summary>
+        /// 删除多少天以前的日志记录
+        /// 日志记录使用滚动记录的方式，只保存一定的天数 避免数据库记录过度膨胀
+        /// </summary>
+        /// <param name="days"></param>
+        public static void DeleteLogs(int days)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query1 = string.Format("delete from log_system_packet where UNIX_TIMESTAMP(date(date))< (UNIX_TIMESTAMP(curdate()) -3600*24*{0});", days);
+                string query2 = string.Format("delete from log_system_task where UNIX_TIMESTAMP(date(date))< (UNIX_TIMESTAMP(curdate()) -3600*24*{0});", days);
+                db.Connection.Execute(query1);
+                db.Connection.Execute(query2);
+            }
+        }
     }
 
     

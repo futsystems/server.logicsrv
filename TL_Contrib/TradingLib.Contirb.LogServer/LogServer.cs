@@ -43,6 +43,7 @@ namespace TradingLib.Contirb.LogServer
 
         }
 
+        int _maxlogdays = 15;
         /// <summary>
         /// 加载
         /// </summary>
@@ -57,6 +58,11 @@ namespace TradingLib.Contirb.LogServer
             {
                 _cfgdb.UpdateConfig("logtofile", QSEnumCfgType.Bool, false, "是否保存日志文件到本地文件");
             }
+            if (!_cfgdb.HaveConfig("maxlogdays"))
+            {
+                _cfgdb.UpdateConfig("maxlogdays", QSEnumCfgType.Int, 15, "保留日志天数");
+            }
+            _maxlogdays = _cfgdb["maxlogdays"].AsInt();
 
             _port = _cfgdb["port"].AsInt();
             _savedebug = _cfgdb["logtofile"].AsBool();
@@ -274,7 +280,18 @@ namespace TradingLib.Contirb.LogServer
             }
         }
 
-
+        [TaskAttr("删除过期日志",5,0,0, "每日凌成5点删除过期日志")]
+        public void CTE_DropLogs()
+        {
+            try
+            {
+                ORM.MLog.DeleteLogs(_maxlogdays);
+            }
+            catch (Exception ex)
+            {
+                debug("drop logs error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+            }
+        }
 
         LogTaskEvent TaskEvent2Log(TaskEventArgs args)
         {
