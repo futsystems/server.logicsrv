@@ -24,6 +24,8 @@ namespace TradingLib.Common
 
     public delegate void ClientInfoDelegate<T>(T client) where T : ClientInfoBase;
     public delegate void ClientLoginInfoDelegate<T>(T client,bool login) where T:ClientInfoBase;
+
+
     /// <summary>
     /// 记录交易客户端通讯的信息
     /// </summary>
