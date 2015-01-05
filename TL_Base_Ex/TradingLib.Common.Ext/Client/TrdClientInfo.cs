@@ -13,28 +13,33 @@ namespace TradingLib.Common
     /// </summary>
     public class TrdClientInfo : ClientInfoBase
     {
-        public int UserID { get; set; }//记录交易帐号所对应的UserID用于查询用户信息
-        public string Account { get; set; }//记录客户端登入所对应的交易帐号
-
+        //public int UserID { get; set; }//记录交易帐号所对应的UserID用于查询用户信息
+        public IAccount Account { get; private set; }//记录客户端登入所对应的交易帐号
+        
         public TrdClientInfo(TrdClientInfo copythis)
             : base(copythis)
         {
             Account = copythis.Account;
-            UserID = copythis.UserID;
+            //UserID = copythis.UserID;
 
 
         }
         public TrdClientInfo(string frontid, string clientid)
             : base(frontid, clientid)
         {
-            UserID = 0;
-            Account = string.Empty;
+            //UserID = 0;
+            //Account = string.Empty;
         }
 
         public TrdClientInfo()
         {
-            UserID = 0;
-            Account = string.Empty;
+            //UserID = 0;
+            //Account = string.Empty;
+        }
+
+        public void BindAccount(IAccount account)
+        {
+            this.Account = account;
         }
 
         public override string SubSerialize()
@@ -42,16 +47,16 @@ namespace TradingLib.Common
             StringBuilder sb = new StringBuilder();
             char d = ',';
             sb.Append(Account);
-            sb.Append(d);
-            sb.Append(UserID.ToString());
+            //sb.Append(d);
+            //sb.Append(UserID.ToString());
             return sb.ToString();
         }
 
         public override void SubDeserialize(string str)
         {
             string[] rec = str.Split(',');
-            Account = rec[0];
-            UserID = int.Parse(rec[1]);
+            //Account = rec[0];
+            //UserID = int.Parse(rec[1]);
         }
 
         public override string ToString()

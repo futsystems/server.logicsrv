@@ -80,6 +80,7 @@
     <Compile Include="ClearCentre\Base_ClearCentre_GotXXXX.cs" />
     <Compile Include="ClearCentre\Base_ClearCentre_.cs" />
     <Compile Include="ClearCentre\Base_ClearCentre_TotalInfo.cs" />
+    <Compile Include="Client\MgrClientInfo.cs" />
     <Compile Include="Client\TrdClientInfo.cs" />
     <Compile Include="Contex\CoreUtil.cs" />
     <Compile Include="Contex\Event\CashOperationEvent.cs" />

@@ -63,7 +63,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Base\ClientMgr.cs" />
+    <Compile Include="Base\ClientTracker.cs" />
     <Compile Include="Base\CoreGlobal.cs" />
     <Compile Include="Base\HighLowTracker.cs" />
     <Compile Include="Base\Utils\PositionDetailsUtil.cs" />
@@ -91,7 +91,6 @@
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_Connector.cs" />
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_RuleSet.cs" />
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_Account.cs" />
-    <Compile Include="Core\ManagerExchange\MgrClientInfo.cs" />
     <Compile Include="Core\ManagerExchange\MgrExchServer.cs" />
     <Compile Include="Base\Settlement.cs" />
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_Other.cs" />

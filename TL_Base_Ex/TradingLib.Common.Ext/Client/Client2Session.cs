@@ -27,11 +27,6 @@ namespace TradingLib.Common
         public Client2Session(ClientInfoBase client)
         {
             _client = client;
-            //this.AccountID = string.Empty;//交易员帐号
-            //this.MGRLoginName = string.Empty;//管理员帐号
-            //this.MGRID = 0;
-            //this.MGRFK = 0;
-
             this.SessionType = QSEnumSessionType.CLIENT;
             this.ContirbID = string.Empty;
             this.CMDStr = string.Empty;
@@ -72,9 +67,6 @@ namespace TradingLib.Common
         {
             this.SessionType = QSEnumSessionType.MANAGER;
             this.Manager = manger;
-            //this.MGRFK = manger.mgr_fk;
-            //this.MGRID = manger.ID;
-            //this.MGRLoginName = manger.Login;
         }
 
         public void BindAccount(IAccount account)
@@ -82,32 +74,6 @@ namespace TradingLib.Common
             this.SessionType = QSEnumSessionType.CLIENT;
             this.Account = account;
         }
-
-        //#region Manager 对象
-
-
-
-        /////// <summary>
-        /////// 管理员登入名
-        /////// </summary>
-        ////public string MGRLoginName { get; private set; }
-
-        /////// <summary>
-        /////// 管理员ID
-        /////// </summary>
-        ////public int MGRID { get; private set; }
-
-        /////// <summary>
-        /////// 管理员主域ID
-        /////// </summary>
-        ////public int MGRFK { get; private set; }
-
-
-       
-
-
-
-        //#endregion
 
         /// <summary>
         /// 回话是否已经登入
@@ -118,10 +84,6 @@ namespace TradingLib.Common
         /// 回话对端地址
         /// </summary>
         public ILocation Location { get { return _client.Location; } }
-
-        //public string LoginID { get { return _client.LoginID; } }
-
-
 
         
         /// <summary>

@@ -21,14 +21,14 @@ namespace TradingLib.Core
         public void newSessionUpdate(TrdClientInfo c, bool login)
         {
             debug("sessionupdate,will send to magr moniter", QSEnumDebugLevel.INFO);
-            if (string.IsNullOrEmpty(c.Account))
+            if (string.IsNullOrEmpty(c.Account.ID))
             {
                 debug("Client:" + c.Location.ClientID + " do not have account,can not have session update event", QSEnumDebugLevel.WARNING);
             }
             else
             {
-                NotifyMGRSessionUpdateNotify notify = ResponseTemplate<NotifyMGRSessionUpdateNotify>.SrvSendNotifyResponse(c.Account);
-                notify.TradingAccount = c.Account;
+                NotifyMGRSessionUpdateNotify notify = ResponseTemplate<NotifyMGRSessionUpdateNotify>.SrvSendNotifyResponse(c.Account.ID);
+                notify.TradingAccount = c.Account.ID;
                 notify.IsLogin = login;
                 notify.IPAddress = c.IPAddress;
                 notify.HardwarCode = c.HardWareCode;

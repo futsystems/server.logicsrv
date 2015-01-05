@@ -76,7 +76,7 @@ namespace TradingLib.Core
         /// <param name="c"></param>
         /// <param name="loginid"></param>
         /// <param name="pass"></param>
-        public override void AuthLogin(MgrClientInfo c,LoginRequest request)
+        public override void AuthLogin(LoginRequest request, MgrClientInfo client)
         {
             //数据库密码验证
             bool re = ORM.MManager.ValidManager(request.LoginID, request.Passwd);
@@ -108,7 +108,7 @@ namespace TradingLib.Core
                         response.LoginResponse.BaseMGRFK = m.mgr_fk;//主域id
 
                         //将Manger信息绑定到对应的clientinfo
-                        c.BindManger(m);
+                        client.BindManger(m);
                         //获得界面访问权限列表
                         response.LoginResponse.UIAccess = BasicTracker.UIAccessTracker.GetUIAccess(m);
                         response.LoginResponse.Domain = m.Domain as DomainImpl;
@@ -126,12 +126,12 @@ namespace TradingLib.Core
             }
             if (response.RspInfo.ErrorID != 0)
             {
-                c.AuthorizedFail();
+                client.AuthorizedFail();
                 response.LoginResponse.Authorized = false;
             }
             else
             {
-                c.AuthorizedSuccess();
+                client.AuthorizedSuccess();
                 response.LoginResponse.Authorized = true;
             }
             if (!response.LoginResponse.Authorized)
@@ -148,7 +148,7 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="msg"></param>
         /// <param name="address"></param>
-        public override void SrvReqFuture(FeatureRequest req)
+        public override void SrvReqFuture(FeatureRequest req,MgrClientInfo client)
         {
             FeatureResponse response = ResponseTemplate<FeatureResponse>.SrvSendRspResponse(req);
 
@@ -264,7 +264,7 @@ namespace TradingLib.Core
             Manager manager = clientinfo.Manager;
             if (manager == null)
             {
-                debug("manager:" + clientinfo.MGRLoginName + " do not exist!", QSEnumDebugLevel.ERROR);
+                debug("manager do not exist!", QSEnumDebugLevel.ERROR);
                 return -1;
             }
             //将Manager对象绑定到Session

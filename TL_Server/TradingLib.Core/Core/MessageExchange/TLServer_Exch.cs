@@ -74,7 +74,7 @@ namespace TradingLib.Core
         /// <param name="c"></param>
         /// <param name="loginid"></param>
         /// <param name="pass"></param>
-        public override void AuthLogin(TrdClientInfo c, LoginRequest request)
+        public override void AuthLogin(LoginRequest request,TrdClientInfo client)
         {
             //1.检查外部调用绑定
             if (newLoginRequest == null)
@@ -84,35 +84,36 @@ namespace TradingLib.Core
             }
 
             LoginResponse response = ResponseTemplate<LoginResponse>.SrvSendRspResponse(request);
-            response.FrontUUID = c.Location.FrontID;
-            response.ClientUUID = c.Location.ClientID;
-            response.FrontIDi = c.FrontIDi;
-            response.SessionIDi = c.SessionIDi;
+            response.FrontUUID = client.Location.FrontID;
+            response.ClientUUID = client.Location.ClientID;
+            response.FrontIDi = client.FrontIDi;
+            response.SessionIDi = client.SessionIDi;
             response.Date = TLCtxHelper.Ctx.SettleCentre.CurrentTradingday;
-            newLoginRequest(c,request, ref response);
+            newLoginRequest(client, request, ref response);
 
             //2.检查验证结果 并将对应的数据储存到对应的client informaiton中去
             if (!response.Authorized)
             {
-                c.AuthorizedFail();
+                client.AuthorizedFail();
             }
             else
             {
                 //################客户端验证成功后的一系列操作#############################################
                 //检查当个客户端的登入次数超过次数给出提示 不予登入
-                c.AuthorizedSuccess();
+                client.AuthorizedSuccess();
                 //将登入回报中的相关信息填充到ClientInfo对象中
-                c.Account = response.Account;
-                c.IPAddress = request.IPAddress;
-                c.HardWareCode = request.MAC;
-                c.ProductInfo = request.ProductInfo;
+                //client.Account = response.Account;
+                client.IPAddress = request.IPAddress;
+                client.HardWareCode = request.MAC;
+                client.ProductInfo = request.ProductInfo;
+                client.BindAccount(TLCtxHelper.CmdAccount[response.Account]);
 
                 //登入成功后我们更新账户的登入信息 如果是自动重连,则第一次登入是没有采集到ip地址,硬件地址.当客户端更新本地数据时，会再次调用updatelogininfo，来更新该信息
-                UpdateClientLoginInfo(c, true);
+                UpdateClientLoginInfo(client, true);
                 
 
             }
-            debug(c.ToString(), QSEnumDebugLevel.INFO);
+            debug(client.ToString(), QSEnumDebugLevel.INFO);
             SendOutPacket(response);
         }
 
@@ -122,7 +123,7 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="msg"></param>
         /// <param name="address"></param>
-        public override void SrvReqFuture(FeatureRequest req)
+        public override void SrvReqFuture(FeatureRequest req,TrdClientInfo client)
         {
             FeatureResponse response = ResponseTemplate<FeatureResponse>.SrvSendRspResponse(req);
 
@@ -201,9 +202,9 @@ namespace TradingLib.Core
             //如果请求没有指定交易帐号 则根据对应的Client信息自动绑定交易帐号
             if (string.IsNullOrEmpty(request.Order.Account))
             {
-                request.Order.Account = cinfo.Account;
+                request.Order.Account = cinfo.Account.ID;
             }
-            if (cinfo.Account != request.Order.Account)//客户端没有登入或者登入ID与委托ID不符
+            if (cinfo.Account.ID != request.Order.Account)//客户端没有登入或者登入ID与委托ID不符
             {
                 debug("客户端对应的帐户:" + cinfo.Account + " 与委托帐户:" + request.Order.Account + " 不符合", QSEnumDebugLevel.ERROR);
                 return;
@@ -241,11 +242,9 @@ namespace TradingLib.Core
         /// 取消委托,参数为全局委托编号
         /// </summary>
         /// <param name="msg"></param>
-        public  void SrvOnOrderAction(OrderActionRequest request)
+        public  void SrvOnOrderAction(OrderActionRequest request,TrdClientInfo client)
         {
-            //通过address(ClientID)查询本地客户端列表是否存在该ID
-            TrdClientInfo cinfo = _clients[request.ClientID];
-            if (cinfo == null) return;
+            if (client == null) return;
 
             if (newOrderActionRequest != null)
                 newOrderActionRequest(request);
@@ -256,14 +255,13 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="cname"></param>
         /// <param name="stklist"></param>
-        void SrvRegStocks(RegisterSymbolsRequest request)
+        void SrvRegStocks(RegisterSymbolsRequest request,TrdClientInfo client)
         {
             TrdClientInfo cinfo = _clients[request.ClientID] as TrdClientInfo;
             if (cinfo == null) return;
 
             debug("Client:" + request.ClientID + " Request Mktdata: " + request.Content, QSEnumDebugLevel.INFO);
-            //cinfo.Stocks = request.Content;
-            SrvBeatHeart(request.ClientID);
+            SrvBeatHeart(client);
             if (newRegisterSymbols != null)
             {
                 newRegisterSymbols(request.ClientID, request.Symbols);
@@ -274,12 +272,9 @@ namespace TradingLib.Core
         /// 客户端请求清除已注册的symbol
         /// </summary>
         /// <param name="cname"></param>
-        void SrvClearStocks(UnregisterSymbolsRequest request)
+        void SrvClearStocks(UnregisterSymbolsRequest request,TrdClientInfo client)
         {
-            TrdClientInfo cinfo = _clients[request.ClientID] as TrdClientInfo;
-            if (cinfo == null) return;
-            //cinfo.Stocks = "";
-            SrvBeatHeart(request.ClientID);
+            SrvBeatHeart(client);
         }
 
 
@@ -291,12 +286,12 @@ namespace TradingLib.Core
         /// <param name="msg"></param>
         /// <param name="address"></param>
         /// <returns></returns>
-        public override long handle(ISession session,IPacket packet,TrdClientInfo clientinfo)
+        public override long handle(ISession session,IPacket packet,TrdClientInfo client)
         {
-            //string account = clientinfo.Account;
-            IAccount acc = TLCtxHelper.Ctx.ClearCentre[clientinfo.Account];
+            IAccount acc = client.Account;
             if (acc == null)
             {
+                debug("account do not exist", QSEnumDebugLevel.ERROR);
                 return -1;
             }
             (session as Client2Session).BindAccount(acc);
@@ -305,16 +300,16 @@ namespace TradingLib.Core
             switch (packet.Type)
             {
                 case MessageTypes.SENDORDER:
-                    SrvOnOrderInsert(packet as OrderInsertRequest, clientinfo);
+                    SrvOnOrderInsert(packet as OrderInsertRequest, client);
                     break;
                 case MessageTypes.SENDORDERACTION:
-                    SrvOnOrderAction(packet as OrderActionRequest);
+                    SrvOnOrderAction(packet as OrderActionRequest,client);
                     break;
                 case MessageTypes.REGISTERSTOCK:
-                    SrvRegStocks(packet as RegisterSymbolsRequest);
+                    SrvRegStocks(packet as RegisterSymbolsRequest,client);
                     break;
                 case MessageTypes.CLEARSTOCKS:
-                    SrvClearStocks(packet as UnregisterSymbolsRequest);
+                    SrvClearStocks(packet as UnregisterSymbolsRequest,client);
                     break;
                 default:
                     if (newPacketRequest != null)
