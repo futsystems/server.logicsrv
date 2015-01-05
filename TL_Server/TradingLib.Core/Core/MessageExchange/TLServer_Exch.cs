@@ -278,6 +278,11 @@ namespace TradingLib.Core
         }
 
 
+        public override void SrvOnSession(ref ISession session)
+        {
+            Client2Session s = session as Client2Session;
+            s.SessionType = QSEnumSessionType.CLIENT;
+        }
 
         /// <summary>
         /// 处理母类所不处理的消息类型

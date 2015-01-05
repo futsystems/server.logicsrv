@@ -21,7 +21,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 回话类型
         /// </summary>
-        public QSEnumSessionType SessionType { get; private set; }
+        public QSEnumSessionType SessionType { get; internal set; }
 
 
         public Client2Session(ClientInfoBase client)

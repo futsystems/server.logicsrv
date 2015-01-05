@@ -659,6 +659,12 @@ namespace TradingLib.Core
         /// <param name="address"></param>
         public virtual void SrvReqFuture(FeatureRequest req,T client){}
 
+
+        /// <summary>
+        /// 当创建Session时的回调，用于修改Session相关字段
+        /// </summary>
+        /// <param name="session"></param>
+        public virtual void SrvOnSession(ref ISession session) { }
         /// <summary>
         /// 拓展的消息处理函数,当主体消息逻辑运行后最后运行用于服务扩展消息类型
         /// </summary>
@@ -769,6 +775,12 @@ namespace TradingLib.Core
         #region Message消息处理逻辑
         protected const long NORETURNRESULT = long.MaxValue;
 
+        ISession CreateSession(T client)
+        {
+            ISession session = new Client2Session(client);
+            SrvOnSession(ref session);
+            return session;
+        }
         /// <summary>
         /// 将底层传输层上传上来的数据解析成逻辑数据包并处理
         /// Generic只处理服务端通用部分比如 注册,注销,心跳等连接维护类基础工作
@@ -801,14 +813,14 @@ namespace TradingLib.Core
                         SrvLoginReq(packet as LoginRequest, client);
                         if (client != null)
                         {
-                            TLCtxHelper.EventSystem.FirePacketEvent(this, new PacketEventArgs(new Client2Session(client), packet));
+                            TLCtxHelper.EventSystem.FirePacketEvent(this, new PacketEventArgs(CreateSession(client), packet));
                         }
                         break;
                     case MessageTypes.CLEARCLIENT://注销
                         SrvClearClient(packet as UnregisterClientRequest,client);
                         if (client != null)
                         {
-                            TLCtxHelper.EventSystem.FirePacketEvent(this, new PacketEventArgs(new Client2Session(client), packet));
+                            TLCtxHelper.EventSystem.FirePacketEvent(this, new PacketEventArgs(CreateSession(client), packet));
                         }
                         break;
                     case MessageTypes.HEARTBEATREQUEST://客户端请求服务端发送给客户端一个心跳 以让客户端知道 与服务端的连接有效
@@ -825,7 +837,7 @@ namespace TradingLib.Core
                     default:
                         //如果客户端没有注册到服务器则 不接受任何其他类型的功能请求 要求客户端有效注册到服务器
                         if (client == null) return -1;
-                        ISession session = new Client2Session(client);
+                        ISession session = CreateSession(client);
                         result = handle(session,packet,client);//外传到子类中去扩展消息类型 通过子类扩展允许tlserver实现更多功能请求
                         TLCtxHelper.EventSystem.FirePacketEvent(this, new PacketEventArgs(session, packet));
                         break;
