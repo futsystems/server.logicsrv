@@ -303,8 +303,8 @@ namespace TradingLib.Common
         /// <param name="session"></param>
         public void BindSession(ISession session)
         {
-            this.FrontID = session.FrontID;
-            this.ClientID = session.ClientID;
+            this.FrontID = session.Location.FrontID;
+            this.ClientID = session.Location.ClientID;
             this.RequestID = session.RequestID;
             this.PacketType = QSEnumPacketType.RSPRESPONSE;
         }

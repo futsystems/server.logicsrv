@@ -35,6 +35,7 @@ using TradingLib.Common;
  * */
 namespace TradingLib.Core
 {
+    public delegate void PacketRequestDel(ISession session, IPacket packet);
 
     public abstract class TLServer_Generic<T> : BaseSrvObject
         where T : ClientInfoBase, new()
@@ -119,8 +120,6 @@ namespace TradingLib.Core
         public TLServer_Generic(string programe,string ipaddr, int port, bool verb)
             : base(programe)
         {
-
-
             try
             {
                 //VerboseDebugging = verb;
@@ -797,8 +796,17 @@ namespace TradingLib.Core
         }
 
         protected const long NORETURNRESULT = long.MaxValue;
-        //在消息处理部分通过委托我们将业务部分剥离,传输部分在这里得到分发,sock标识了该信息发送给哪个client
-        //具体由委托剥离出去的逻辑部分 我们需要在逻辑部分进行实现并管理
+
+        /// <summary>
+        /// 将底层传输层上传上来的数据解析成逻辑数据包并处理
+        /// Generic只处理服务端通用部分比如 注册,注销,心跳等连接维护类基础工作
+        /// 这里需要统一登入请求
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="msg"></param>
+        /// <param name="front"></param>
+        /// <param name="address"></param>
+        /// <returns></returns>
         public long basehandle(MessageTypes type, string msg, string front, string address)
         {
             long result = NORETURNRESULT;
@@ -808,7 +816,7 @@ namespace TradingLib.Core
                 IPacket packet = PacketHelper.SrvRecvRequest(type, msg, front, address);
                 //debug("<<<<<< Rev Packet:" + packet.ToString(), QSEnumDebugLevel.INFO);
                 //通过Packet中的客户端ID标识获得对应的clientinfo
-                T clientinfo = _clients[packet.ClientID];
+                T clientinfo = _clients[address];
                 //if (!onPermissionCheck(type, address)) return -1;//关于权限检查 这里需要传递一定参数进行逻辑处理
                 Client2Session session = null;
                 switch (type)
@@ -851,7 +859,7 @@ namespace TradingLib.Core
                         //如果客户端没有注册到服务器则 不接受任何其他类型的功能请求 要求客户端有效注册到服务器
                         if (clientinfo == null) return -1;
                         session = new Client2Session(clientinfo);
-                        result = handle(session,packet, clientinfo);//外传到子类中去扩展消息类型 通过子类扩展允许tlserver实现更多功能请求
+                        result = handle(session,packet,clientinfo);//外传到子类中去扩展消息类型 通过子类扩展允许tlserver实现更多功能请求
                         TLCtxHelper.EventSystem.FirePacketEvent(this, new PacketEventArgs(session, packet));
                         break;
 

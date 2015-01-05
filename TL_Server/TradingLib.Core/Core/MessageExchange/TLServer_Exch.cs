@@ -82,7 +82,7 @@ namespace TradingLib.Core
                 debug("外部认证事件没有绑定", QSEnumDebugLevel.ERROR);
                 return;//回调外部loginRquest的实现函数
             }
-            
+
             LoginResponse response = ResponseTemplate<LoginResponse>.SrvSendRspResponse(request);
             response.FrontUUID = c.Location.FrontID;
             response.ClientUUID = c.Location.ClientID;
@@ -293,6 +293,14 @@ namespace TradingLib.Core
         /// <returns></returns>
         public override long handle(ISession session,IPacket packet,TrdClientInfo clientinfo)
         {
+            //string account = clientinfo.Account;
+            IAccount acc = TLCtxHelper.Ctx.ClearCentre[clientinfo.Account];
+            if (acc == null)
+            {
+                return -1;
+            }
+            (session as Client2Session).BindAccount(acc);
+
             long result = NORETURNRESULT;
             switch (packet.Type)
             {
@@ -309,13 +317,8 @@ namespace TradingLib.Core
                     SrvClearStocks(packet as UnregisterSymbolsRequest);
                     break;
                 default:
-                    //1.生成对应的Session 用于减少ClientInfo的暴露防止错误修改相关参数
-                    //Client2Session sesssion = new Client2Session(clientinfo);
-                    (session as Client2Session).AccountID = clientinfo.Account;
-
-
                     if (newPacketRequest != null)
-                        newPacketRequest(packet,session);
+                        newPacketRequest(session,packet);
                     else
                         result = (long)MessageTypes.FEATURE_NOT_IMPLEMENTED;
                     break;
@@ -432,12 +435,12 @@ namespace TradingLib.Core
         public event OrderActionRequestDel newOrderActionRequest;//发送委托操作
         public event SymbolRegisterDel newRegisterSymbols;//订阅市场数据
         public event MessageArrayDelegate newFeatureRequest;//请求功能列表
-        public event TrdPacketRequestDel newPacketRequest;//其他逻辑宝请求
+        public event PacketRequestDel newPacketRequest;//其他逻辑宝请求
         #endregion
 
 
         
     }
     public delegate void OrderActionRequestDel(OrderActionRequest request);
-    public delegate void TrdPacketRequestDel(IPacket packet, ISession session);
+    
 }

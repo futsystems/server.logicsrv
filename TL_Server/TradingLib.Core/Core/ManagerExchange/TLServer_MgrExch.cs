@@ -76,35 +76,70 @@ namespace TradingLib.Core
         /// <param name="c"></param>
         /// <param name="loginid"></param>
         /// <param name="pass"></param>
-        public override void AuthLogin(MgrClientInfo c, LoginRequest request)
+        public override void AuthLogin(MgrClientInfo c,LoginRequest request)
         {
-            //1.检查外部调用绑定
-            if (newLoginRequest == null)
-            {
-                debug("外部认证事件没有绑定", QSEnumDebugLevel.ERROR);
-                return;//回调外部loginRquest的实现函数
-            }
+            //数据库密码验证
+            bool re = ORM.MManager.ValidManager(request.LoginID, request.Passwd);
 
-            LoginResponse response = ResponseTemplate<LoginResponse>.SrvSendRspResponse(request);
-            newLoginRequest(c, request, ref response);
-
-            //2.检查验证结果 并将对应的数据储存到对应的client informaiton中去
-            if (!response.Authorized)
+            RspMGRLoginResponse response = ResponseTemplate<RspMGRLoginResponse>.SrvSendRspResponse(request);
+            //如果验证通过返回具体的管理信息
+            if (re)
             {
-                debug("账户: " + request.LoginID + " 验证失败", QSEnumDebugLevel.WARNING);
-                c.AuthorizedFail();
+                //通过登入名在内存中获得对应的Manager对象 然后将该Manager对象的数据复制到ClientInfo上
+                Manager m = BasicTracker.ManagerTracker[request.LoginID];
+                if (m != null)
+                {
+                    if (!m.Active)
+                    {
+                        response.RspInfo.Fill("MGR_INACTIVE");
+                    }
+                    if (m.Domain.IsExpired())//域过期
+                    {
+                        response.RspInfo.Fill("PLATFORM_EXPIRED");
+                    }
+                    else
+                    {
+                        response.LoginResponse.LoginID = m.Login;
+                        response.LoginResponse.Mobile = m.Mobile;
+                        response.LoginResponse.Name = m.Name;
+                        response.LoginResponse.QQ = m.QQ;
+                        response.LoginResponse.ManagerType = m.Type;
+                        response.LoginResponse.MGRID = m.ID;//mgrid
+                        response.LoginResponse.BaseMGRFK = m.mgr_fk;//主域id
+
+                        //将Manger信息绑定到对应的clientinfo
+                        c.BindManger(m);
+                        //获得界面访问权限列表
+                        response.LoginResponse.UIAccess = BasicTracker.UIAccessTracker.GetUIAccess(m);
+                        response.LoginResponse.Domain = m.Domain as DomainImpl;
+                    }
+
+                }
+                else//如果管理端对象在内存中不存在 则返回登入失败
+                {
+                    response.RspInfo.Fill("MGR_NOT_EXIST");
+                }
             }
             else
             {
-                //################客户端验证成功后的一系列操作#############################################
-                debug("账户: " + request.LoginID + " 验证成功", QSEnumDebugLevel.INFO);
-                //当某个客户端提供的Account验证成功后,我们需要将缓存中的绑定了该Account的客户端进行清除，一个Account只可以由一个client使用,这样才可以保证通过Account所找到的Client唯一
-                //否则会出现缓存找到排序在前面的client，该client可能已经由于某些原因与服务器断开
-                debug("检查相同接入类型同名客户端:" + request.LoginID, QSEnumDebugLevel.INFO);//保证客户端地址唯一
-
-                c.AuthorizedSuccess();
+                response.RspInfo.Fill("MGR_PASS_ERROR");
             }
-            TLSend(response);
+            if (response.RspInfo.ErrorID != 0)
+            {
+                c.AuthorizedFail();
+                response.LoginResponse.Authorized = false;
+            }
+            else
+            {
+                c.AuthorizedSuccess();
+                response.LoginResponse.Authorized = true;
+            }
+            if (!response.LoginResponse.Authorized)
+            {
+                debug("Manager:" + request.LoginID + " Login failed", QSEnumDebugLevel.WARNING);
+            }
+
+            SendOutPacket(response);
         }
 
 
@@ -215,85 +250,7 @@ namespace TradingLib.Core
         }
 
 
-        void SrvOnMGRLoginRequest(MGRLoginRequest request)
-        {
-            debug("got login request:" + request.ToString(), QSEnumDebugLevel.INFO);
-
-            MgrClientInfo clientinfo = _clients[request.ClientID];
-            
-            //数据库密码验证
-            bool re = ORM.MManager.ValidManager(request.LoginID, request.Passwd);
-
-            RspMGRLoginResponse response = ResponseTemplate<RspMGRLoginResponse>.SrvSendRspResponse(request);
-            response.IsLast = true;
-            response.LoginResponse.Authorized = re;
-            
-            //如果验证通过返回具体的管理信息
-            if (response.LoginResponse.Authorized)
-            {
-                //通过登入名在内存中获得对应的Manager对象 然后将该Manager对象的数据复制到ClientInfo上
-                Manager m = BasicTracker.ManagerTracker[request.LoginID];
-                if (m != null)
-                {
-                    if (!m.Active)
-                    {
-                        clientinfo.AuthorizedFail();
-                        response.LoginResponse.Authorized = false;
-                        response.RspInfo.ErrorID = 1;
-                        response.RspInfo.ErrorMessage = "管理员未激活";
-                    }
-                    if (m.Domain.IsExpired())//域过期
-                    {
-                        clientinfo.AuthorizedFail();
-                        response.LoginResponse.Authorized = false;
-                        response.RspInfo.ErrorID = 1;
-                        response.RspInfo.ErrorMessage = "柜台授权过期";
-                    }
-                    else
-                    {
-                        response.LoginResponse.LoginID = m.Login;
-                        response.LoginResponse.Mobile = m.Mobile;
-                        response.LoginResponse.Name = m.Name;
-                        response.LoginResponse.QQ = m.QQ;
-                        response.LoginResponse.ManagerType = m.Type;
-                        response.LoginResponse.MGRID = m.ID;//mgrid
-                        response.LoginResponse.BaseMGRFK = m.mgr_fk;//主域id
-
-                        //将Manger信息绑定到对应的clientinfo
-                        clientinfo.BindManger(m);
-                        //标注登入成功
-                        clientinfo.AuthorizedSuccess();
-
-                        //获得界面访问权限列表
-                        response.LoginResponse.UIAccess = BasicTracker.UIAccessTracker.GetUIAccess(m);
-                        response.LoginResponse.Domain = m.Domain as DomainImpl;
-                    }
-
-                }
-                else//如果管理端对象在内存中不存在 则返回登入失败
-                {
-                    response.LoginResponse.Authorized = false;
-                    clientinfo.AuthorizedFail();
-                    response.RspInfo.ErrorID = 1;
-                    response.RspInfo.ErrorMessage = "管理员不存在";
-                }
-            }
-            else
-            {
-                response.RspInfo.ErrorID = 1;
-                response.RspInfo.ErrorMessage = "用户名或密码错误";
-                clientinfo.AuthorizedFail();
-            }
-
-            if (!response.LoginResponse.Authorized)
-            {
-                debug("Manager:" + request.LoginID + " Login failed", QSEnumDebugLevel.WARNING);
-            }
-
-            SendOutPacket(response);
-            
-            
-        }
+        
         /// <summary>
         /// 处理母类所不处理的消息类型
         /// </summary>
@@ -303,37 +260,29 @@ namespace TradingLib.Core
         /// <returns></returns>
         public override long handle(ISession session,IPacket packet,MgrClientInfo clientinfo)
         {
+            //1.如果已经登入成功 则ClientInfo会绑定对应的Manager信息
+            Manager manager = clientinfo.Manager;
+            if (manager == null)
+            {
+                debug("manager:" + clientinfo.MGRLoginName + " do not exist!", QSEnumDebugLevel.ERROR);
+                return -1;
+            }
+            //将Manager对象绑定到Session
+            (session as Client2Session).BindManager(manager);
+
             long result = NORETURNRESULT;
             switch (packet.Type)
             {
                 case MessageTypes.SENDORDER:
                     SrvOnOrderInsert(packet as OrderInsertRequest);
                     break;
-
-                case MessageTypes.MGRLOGINREQUEST:
-                    SrvOnMGRLoginRequest(packet as MGRLoginRequest);
-                    break;
-
                 case MessageTypes.SENDORDERACTION:
                     SrvOnOrderAction(packet as OrderActionRequest);
                     break;
 
                 default:
-                    //1.如果已经登入成功 则ClientInfo会绑定对应的Manager信息
-                    Manager manager = clientinfo.Manager;
-                    if (manager == null)
-                    {
-                        debug("manager:" + clientinfo.MGRLoginName + " do not exist!", QSEnumDebugLevel.ERROR);
-                        return -1;
-                    }
-
-                    //2.生成对应的Session 将Manager绑定到session 
-                    //Client2Session sesssion = new Client2Session(clientinfo);
-                    (session as Client2Session).BindManager(manager);
-
-                    //3.执行packetrequest 处理
                     if (newPacketRequest != null)
-                        newPacketRequest(packet,session,manager);
+                        newPacketRequest(session,packet);
                     else
                         result = (long)MessageTypes.FEATURE_NOT_IMPLEMENTED;
                     break;
@@ -396,7 +345,7 @@ namespace TradingLib.Core
         public event OrderDelegate newSendOrderRequest;//发送委托
         public event OrderActionDelegate newOrderActionRequest;//发送委托操作
         public event MessageArrayDelegate newFeatureRequest;//请求功能列表
-        public event MgrPacketRequestDel newPacketRequest;
+        public event PacketRequestDel newPacketRequest;
         public event LocationsViaAccountDel GetLocationsViaAccountEvent;//
         #endregion
 
@@ -408,7 +357,7 @@ namespace TradingLib.Core
     /// <param name="packet"></param>
     /// <param name="session"></param>
     /// <param name="manager"></param>
-    public delegate void MgrPacketRequestDel(IPacket packet,ISession session,Manager manager);
+    //public delegate void MgrPacketRequestDel(ISession session,IPacket packet,Manager manager);
     /// <summary>
     /// 通过某个交易帐号获得对应的管理端通知列表
     /// </summary>

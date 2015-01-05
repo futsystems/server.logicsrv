@@ -420,7 +420,7 @@ namespace TradingLib.Core
                 tl.newOrderActionRequest += new OrderActionRequestDel(tl_newOrderActionRequest);
 
                 //处理其他请求消息
-                tl.newPacketRequest += new TrdPacketRequestDel(tl_newPacketRequest);
+                tl.newPacketRequest += new PacketRequestDel(tl_newPacketRequest);
 
                 tl.ClientRegistedEvent += (TrdClientInfo c) =>
                     {

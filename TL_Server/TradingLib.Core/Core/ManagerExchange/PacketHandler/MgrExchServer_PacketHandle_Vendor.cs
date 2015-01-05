@@ -57,9 +57,9 @@ namespace TradingLib.Core
 
         CustInfoEx GetCustInfoEx(ISession session)
         {
-            if (customerExInfoMap.Keys.Contains(session.ClientID))
+            if (customerExInfoMap.Keys.Contains(session.Location.ClientID))
             {
-                return customerExInfoMap[session.ClientID];
+                return customerExInfoMap[session.Location.ClientID];
             }
             return null;
         }

@@ -317,6 +317,7 @@ namespace TradingLib.Contirb.LogServer
             log.Settleday = TLCtxHelper.CmdSettleCentre.NextTradingday;
             log.Date = Util.ToTLDate();
             log.Time = Util.ToTLTime();
+            log.AuthorizedID = args.Session.AuthorizedID;
             log.SessionType = args.Session.SessionType;
             log.Type = args.Packet.Type;
             log.Content = args.Packet.Content;

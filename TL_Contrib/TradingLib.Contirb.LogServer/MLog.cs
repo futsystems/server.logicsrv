@@ -33,7 +33,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("Insert into log_system_packet (`settleday`,`loginid`,`date`,`time`,`type`,`content`,`iscontrib`,`moduleid`,`cmdstr`,`sessiontype`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}')", log.Settleday, "", log.Date, log.Time, log.Type, log.Content, 0, log.ModuleID, log.CMDStr, log.SessionType);
+                string query = String.Format("Insert into log_system_packet (`settleday`,`authorizedid`,`date`,`time`,`type`,`content`,`iscontrib`,`moduleid`,`cmdstr`,`sessiontype`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}')", log.Settleday,log.AuthorizedID, log.Date, log.Time, log.Type, log.Content, 0, log.ModuleID, log.CMDStr, log.SessionType);
                 db.Connection.Execute(query);
             }
         }

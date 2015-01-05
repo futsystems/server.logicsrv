@@ -435,7 +435,7 @@ namespace TradingLib.Common
                 return;
             }
             //如果没有登入 则直接返回
-            if (bypasscmds.Contains(cmdkey) || session.IsLoggedIn)
+            if (bypasscmds.Contains(cmdkey) || session.Authorized)
             {
                 cmdmap[cmdkey].ExecuteCmd(session, parameters);
             }

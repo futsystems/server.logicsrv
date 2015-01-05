@@ -8,6 +8,10 @@ using TradingLib.Common;
 
 namespace TradingLib.Common
 {
+    /// <summary>
+    /// ISession 扩展方法
+    /// 发送消息,获得相关对象等
+    /// </summary>
     public static class ISessionUtils
     {
         /// <summary>
@@ -42,6 +46,15 @@ namespace TradingLib.Common
             if (session.IsManager() && session is Client2Session)
             {
                 return (session as Client2Session).Manager;
+            }
+            return null;
+        }
+
+        public static IAccount GetAccount(this ISession session)
+        {
+            if (session.IsClient() && session is Client2Session)
+            {
+                return (session as Client2Session).Account;
             }
             return null;
         }
@@ -125,7 +138,7 @@ namespace TradingLib.Common
         public static void NotifyMgr(this ISession session, string cmdstr, object obj, IEnumerable<ILocation> targets = null)
         {
             //通知方式 request获得对应的判断谓词 用于判断哪个客户端需要通知，然后再投影获得对应的地址集合
-            NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(targets == null ? new ILocation[] { session.GetLocation() } : targets);
+            NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(targets == null ? new ILocation[] { session.Location } : targets);
             response.ModuleID = session.ContirbID;
             response.CMDStr = cmdstr;
             response.Result = Mixins.Json.JsonReply.SuccessReply(obj).ToJson();
@@ -151,13 +164,13 @@ namespace TradingLib.Common
             }
         }
 
-        public static ILocation GetLocation(this ISession session)
-        {
-            ILocation location = new Location();
-            location.ClientID = session.ClientID;
-            location.FrontID = session.FrontID;
-            return location;
-        }
+        //public static ILocation GetLocation(this ISession session)
+        //{
+        //    ILocation location = new Location();
+        //    location.ClientID = session.ClientID;
+        //    location.FrontID = session.FrontID;
+        //    return location;
+        //}
 
 
     }

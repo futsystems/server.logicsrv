@@ -23,9 +23,9 @@ namespace TradingLib.Core
             }
         }
 
-        void tl_newPacketRequest(IPacket packet, ISession session)
+        void tl_newPacketRequest(ISession session,IPacket packet)
         {
-            IAccount account = _clearcentre[session.AccountID]; //获得对应的IAccount对象
+            IAccount account = session.GetAccount();
             switch (packet.Type)
             {
 

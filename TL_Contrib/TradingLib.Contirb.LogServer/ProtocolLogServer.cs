@@ -89,6 +89,10 @@ namespace TradingLib.Contirb.Protocol
         public int Time { get; set; }
 
         /// <summary>
+        /// 授权ID
+        /// </summary>
+        public string AuthorizedID { get; set; }
+        /// <summary>
         /// 回话类别
         /// </summary>
         public QSEnumSessionType SessionType { get; set; }

@@ -18,7 +18,8 @@ namespace TradingLib.Common
         /// <param name="pass"></param>
         public void ReqLogin(string loginid, string pass)
         {
-            MGRLoginRequest request = RequestTemplate<MGRLoginRequest>.CliSendRequest(requestid++);
+            //MGRLoginRequest request = RequestTemplate<MGRLoginRequest>.CliSendRequest(requestid++);
+            LoginRequest request = RequestTemplate<LoginRequest>.CliSendRequest(requestid++);
             request.LoginID = loginid;
             request.Passwd = pass;
 
