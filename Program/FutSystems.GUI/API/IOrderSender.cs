@@ -13,8 +13,8 @@ namespace FutSystems.GUI
         event LongDelegate SendCancelEvent;//发送取消
         event DebugDelegate SendDebugEvent;
         event PositionOffsetArgsDel UpdatePostionOffsetEvent;//对外触发止盈止损更新事件
-        event QryCanOpenPosition QryCanOpenPositionEvent;
-        event QryCanOpenPositionLocalDel QryCanOpenPositionLocalEvent;
+        //event QryCanOpenPosition QryCanOpenPositionEvent;
+        //event QryCanOpenPositionLocalDel QryCanOpenPositionLocalEvent;
 
 
 

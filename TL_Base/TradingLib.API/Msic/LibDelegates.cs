@@ -26,6 +26,11 @@ namespace TradingLib.API
     //public delegate Security FindSecurity(string symbol);//通过symbol找到对应的security
     public delegate Symbol Str2SymbolDel(string symbol);//通过symbol找到对应的symbol对象
 
+    //与服务端连接建立与断开委托
+    public delegate void ConnectDel();//连接建立委托
+    public delegate void DisconnectDel();//连接断开委托
+    public delegate void DataPubConnectDel();//Tick数据连接成功
+    public delegate void DataPubDisconnectDel();//Tick数据连接成功
     
     //邮件委托
     public delegate void EmailDel(IEmail email);

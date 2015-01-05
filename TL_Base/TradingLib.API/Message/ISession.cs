@@ -39,6 +39,11 @@ namespace TradingLib.API
         string FrontID { get; }
 
         /// <summary>
+        /// 获得该会话对端地址
+        /// </summary>
+        //ILocation Location { get; }
+
+        /// <summary>
         /// 回话类型
         /// </summary>
         QSEnumSessionType SessionType { get; }
