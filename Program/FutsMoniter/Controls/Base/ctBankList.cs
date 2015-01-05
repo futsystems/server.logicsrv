@@ -9,7 +9,6 @@ using System.Text;
 using System.Windows.Forms;
 using FutSystems.GUI;
 using TradingLib.API;
-using TradingLib.Mixins.LitJson;
 using TradingLib.Mixins.JsonObject;
 
 namespace FutsMoniter
@@ -48,11 +47,12 @@ namespace FutsMoniter
         void OnQryBank(string jsonstr)
         {
 
-            JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
-            int code = int.Parse(jd["Code"].ToString());
-            if (code == 0)
+            //JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
+            //int code = int.Parse(jd["Code"].ToString());
+            JsonWrapperBank[] obj = MoniterUtils.ParseJsonResponse<JsonWrapperBank[]>(jsonstr);
+            if (obj != null)
             {
-                JsonWrapperBank[] obj = TradingLib.Mixins.LitJson.JsonMapper.ToObject<JsonWrapperBank[]>(jd["Playload"].ToJson());
+                //JsonWrapperBank[] obj = TradingLib.Mixins.LitJson.JsonMapper.ToObject<JsonWrapperBank[]>(jd["Playload"].ToJson());
                 GotBankList(obj);
                 _gotdata = true;
             }

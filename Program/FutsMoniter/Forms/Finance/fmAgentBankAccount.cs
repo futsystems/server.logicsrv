@@ -48,7 +48,7 @@ namespace FutsMoniter
                 _bankacc.bank_id = ctBankList1.BankSelected;
                 if (fmConfirm.Show("确认修改银行卡信息,信息错误会导致无法收到汇款") == System.Windows.Forms.DialogResult.Yes)
                 {
-                    Globals.TLClient.ReqUpdateAgentBankInfo(TradingLib.Mixins.LitJson.JsonMapper.ToJson(_bankacc));
+                    Globals.TLClient.ReqUpdateAgentBankInfo(TradingLib.Mixins.Json.JsonMapper.ToJson(_bankacc));
                     this.Close();
                 }
             }
@@ -61,7 +61,7 @@ namespace FutsMoniter
                 _bankacc.bank_id = ctBankList1.BankSelected;
                 if (fmConfirm.Show("确认添加银行卡信息,信息错误会导致无法收到汇款") == System.Windows.Forms.DialogResult.Yes)
                 {
-                    Globals.TLClient.ReqUpdateAgentBankInfo(TradingLib.Mixins.LitJson.JsonMapper.ToJson(_bankacc));
+                    Globals.TLClient.ReqUpdateAgentBankInfo(TradingLib.Mixins.Json.JsonMapper.ToJson(_bankacc));
                     this.Close();
                 }
             }

@@ -58,7 +58,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static IEnumerable<TradingLib.Mixins.JsonObject.JsonWrapperCashOperation> GetAccountCashOperation(this Domain domain)
         {
-            return ORM.MCashOpAccount.GetAccountLatestCashOperationTotal().Where(op => domain.IsAccountInDomain(op.Account));
+            return ORM.MCashOpAccount.GetAccountLatestCashOperationTotal().Where(op => domain.IsInDomain(TLCtxHelper.CmdAccount[op.Account]));
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static IEnumerable<TradingLib.Mixins.JsonObject.JsonWrapperCashOperation> GetAgentCashOperation(this Domain domain)
         {
-            return ORM.MAgentFinance.GetAgentLatestCashOperationTotal().Where(op => domain.IsManagerInDomain(op.mgr_fk));
+            return ORM.MAgentFinance.GetAgentLatestCashOperationTotal().Where(op => domain.IsInDomain(BasicTracker.ManagerTracker[op.mgr_fk]));
         }
 
         /// <summary>

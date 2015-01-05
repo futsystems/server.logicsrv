@@ -9,7 +9,6 @@ using System.Text;
 using System.Windows.Forms;
 using FutSystems.GUI;
 using TradingLib.API;
-using TradingLib.Mixins.LitJson;
 using TradingLib.Mixins.JsonObject;
 
 namespace FutsMoniter
@@ -52,11 +51,12 @@ namespace FutsMoniter
         void OnQryServicePlan(string jsonstr)
         {
             if (_gotdata) return;
-            JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
-            int code = int.Parse(jd["Code"].ToString());
-            if (code == 0)
+            //JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
+            //int code = int.Parse(jd["Code"].ToString());
+            JsonWrapperServicePlane[] plans = MoniterUtils.ParseJsonResponse<JsonWrapperServicePlane[]>(jsonstr);
+            if (plans != null)
             {
-                JsonWrapperServicePlane[] plans = TradingLib.Mixins.LitJson.JsonMapper.ToObject<JsonWrapperServicePlane[]>(jd["Playload"].ToJson());
+                //JsonWrapperServicePlane[] plans = TradingLib.Mixins.LitJson.JsonMapper.ToObject<JsonWrapperServicePlane[]>(jd["Playload"].ToJson());
                 SetServicePlans(plans);
                 _gotdata = true;
             }

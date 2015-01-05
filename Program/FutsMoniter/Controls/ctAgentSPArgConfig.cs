@@ -9,7 +9,6 @@ using System.Windows.Forms;
 using TradingLib.API;
 using TradingLib.Common;
 using FutSystems.GUI;
-using TradingLib.Mixins.LitJson;
 using TradingLib.Mixins.JsonObject;
 
 
@@ -63,7 +62,7 @@ namespace FutsMoniter
                 if (fmConfirm.Show("确认更新帐户:" + ctAgentList1.CurrentAgentFK + "的配资服务参数为当前设置?") == DialogResult.Yes)
                 {
                     //Globals.TLClient.ReqUpdateFinServiceArgument(TradingLib.Mixins.LitJson.JsonMapper.ToJson(finservice));
-                    Globals.TLClient.ReqUpdateSPAgentArg(TradingLib.Mixins.LitJson.JsonMapper.ToJson(spagentarg));
+                    Globals.TLClient.ReqUpdateSPAgentArg(TradingLib.Mixins.Json.JsonMapper.ToJson(spagentarg));
 
                 }
             }
@@ -75,11 +74,13 @@ namespace FutsMoniter
         {
             Globals.Debug("FeeConfigForm got json ret:" + jsonstr);
 
-            JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
-            int code = int.Parse(jd["Code"].ToString());
-            if (code == 0)
+            //JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
+            //int code = int.Parse(jd["Code"].ToString());
+
+            JsonWrapperServicePlanAgentArgument obj = MoniterUtils.ParseJsonResponse<JsonWrapperServicePlanAgentArgument>(jsonstr);
+            if (obj!=null)
             {
-                JsonWrapperServicePlanAgentArgument obj = TradingLib.Mixins.LitJson.JsonMapper.ToObject<JsonWrapperServicePlanAgentArgument>(jd["Playload"].ToJson());
+                //JsonWrapperServicePlanAgentArgument obj = TradingLib.Mixins.LitJson.JsonMapper.ToObject<JsonWrapperServicePlanAgentArgument>(jd["Playload"].ToJson());
                 GotSPAgentArg(obj);
                 lbsptitle.Text = obj.Title;
                 lbchargetype.Text = obj.ChargeType;

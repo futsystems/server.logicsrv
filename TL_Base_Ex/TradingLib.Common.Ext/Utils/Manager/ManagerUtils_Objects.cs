@@ -29,7 +29,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static IEnumerable<IAccount> GetVisibleAccount(this Manager mgr)
         {
-            if (mgr.RightRootDomain())
+            if (mgr.IsInRoot())
             {
                 //获得系统所有交易帐号
                 return mgr.Domain.GetAccounts();
@@ -42,9 +42,14 @@ namespace TradingLib.Common
 
         }
 
+        /// <summary>
+        /// 查看所有可见柜员帐户
+        /// </summary>
+        /// <param name="mgr"></param>
+        /// <returns></returns>
         public static IEnumerable<Manager> GetVisibleManager(this Manager mgr)
         {
-            if (mgr.RightRootDomain())
+            if (mgr.IsInRoot())
             {
                 return mgr.Domain.GetManagers();
             }

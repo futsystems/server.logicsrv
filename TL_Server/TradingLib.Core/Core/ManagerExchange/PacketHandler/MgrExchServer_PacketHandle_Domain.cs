@@ -76,7 +76,7 @@ namespace TradingLib.Core
             //只有超级域的管理员
             if (manager.Domain.Super && manager.IsRoot())
             {
-                DomainImpl domain = TradingLib.Mixins.LitJson.JsonMapper.ToObject<DomainImpl>(json);
+                DomainImpl domain = TradingLib.Mixins.Json.JsonMapper.ToObject<DomainImpl>(json);
                 bool isadd = domain.ID == 0;
                 BasicTracker.DomainTracker.UpdateDomain(domain);
 

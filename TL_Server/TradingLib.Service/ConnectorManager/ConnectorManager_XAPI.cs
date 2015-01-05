@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
-using TradingLib.LitJson;
 using TradingLib.BrokerXAPI;
 
 namespace TradingLib.ServiceManager

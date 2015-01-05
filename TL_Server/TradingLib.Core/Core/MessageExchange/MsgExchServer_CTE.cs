@@ -5,7 +5,7 @@ using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Mixins;
-using TradingLib.Mixins.LitJson;
+using TradingLib.Mixins.Json;
 
 namespace TradingLib.Core
 {

@@ -108,7 +108,7 @@ namespace TradingLib.Common
 
             //3.如果主域没有对应的权限则查找其父代理 继承父代理的权限
             Manager agent = basemanager.ParentManager;//获得主域代理
-            while (!agent.RightRootDomain())//如果父代理不是Root域 则进行递归
+            while (!agent.IsInRoot())//如果父代理不是Root域 则进行递归
             {
                 if (manageruiidxmap.Keys.Contains(agent.ID))
                 {
@@ -120,7 +120,7 @@ namespace TradingLib.Common
             }
             Util.Debug(manager.ToString() + " have no permission set,use default", QSEnumDebugLevel.WARNING);
 
-            if (manager.RightRootDomain())//如果是Root权限 则返回默认管理员权限 所有权限打开
+            if (manager.IsInRoot())//如果是Root权限 则返回默认管理员权限 所有权限打开
             {
                 return GetDefaultRootAccess();
             }

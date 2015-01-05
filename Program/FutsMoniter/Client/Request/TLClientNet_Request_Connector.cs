@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using TradingLib.Mixins.LitJson;
+using TradingLib.Mixins.Json;
 
 namespace TradingLib.Common
 {
@@ -120,8 +120,8 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="item"></param>
         public void ReqUpdateRouterItem(RouterItemSetting item)
-        { 
-            this.ReqContribRequest("ConnectorManager", "UpdateRouterItem",TradingLib.Mixins.LitJson.JsonMapper.ToJson(item));
+        {
+            this.ReqContribRequest("ConnectorManager", "UpdateRouterItem", TradingLib.Mixins.Json.JsonMapper.ToJson(item));
         }
 
         /// <summary>
@@ -130,7 +130,7 @@ namespace TradingLib.Common
         /// <param name="group"></param>
         public void ReqUpdateRouterGroup(RouterGroupSetting group)
         {
-            this.ReqContribRequest("ConnectorManager", "UpdateRouterGroup", TradingLib.Mixins.LitJson.JsonMapper.ToJson(group));
+            this.ReqContribRequest("ConnectorManager", "UpdateRouterGroup", TradingLib.Mixins.Json.JsonMapper.ToJson(group));
         }
         #endregion
 

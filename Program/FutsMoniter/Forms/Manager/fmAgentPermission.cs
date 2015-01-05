@@ -9,7 +9,6 @@ using System.Text;
 using System.Windows.Forms;
 using TradingLib.API;
 using TradingLib.Common;
-using TradingLib.Mixins.LitJson;
 using TradingLib.Mixins.JsonObject;
 using FutSystems.GUI;
 
@@ -78,8 +77,8 @@ namespace FutsMoniter
 
         void OnAgentPermission(string jsonstr)
         {
-            JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
-            int code = int.Parse(jd["Code"].ToString());
+            //JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
+            //int code = int.Parse(jd["Code"].ToString());
             UIAccess obj = MoniterUtils.ParseJsonResponse<UIAccess>(jsonstr);
             if (obj != null)
             {   

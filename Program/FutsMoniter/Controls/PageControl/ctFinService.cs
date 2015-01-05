@@ -8,7 +8,6 @@ using System.Text;
 using System.Windows.Forms;
 using TradingLib.API;
 using TradingLib.Common;
-using TradingLib.Mixins.LitJson;
 using TradingLib.Mixins.JsonObject;
 using FutSystems.GUI;
 
@@ -195,7 +194,7 @@ namespace FutsMoniter
                 }
                 if (fmConfirm.Show("确认更新帐户:" + _account.Account + "的配资服务参数为当前设置?") == DialogResult.Yes)
                 {
-                    Globals.TLClient.ReqUpdateFinServiceArgument(TradingLib.Mixins.LitJson.JsonMapper.ToJson(finservice));
+                    Globals.TLClient.ReqUpdateFinServiceArgument(TradingLib.Mixins.Json.JsonMapper.ToJson(finservice));
                 }
             }
         }

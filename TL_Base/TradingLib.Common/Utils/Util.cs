@@ -274,7 +274,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static string PrintObj(object obj)
         {
-            return TradingLib.Mixins.LitJson.JsonMapper.ToJson(obj);
+            return TradingLib.Mixins.Json.JsonMapper.ToJson(obj);
         }
         ///// <summary>
         ///// 格式化输出数字

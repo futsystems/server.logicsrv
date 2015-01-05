@@ -92,7 +92,7 @@ namespace TradingLib.Core
             {
                 debug(string.Format("管理员:{0} 请求更新品种:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
 
-                if (!manager.RightRootDomain())
+                if (!manager.IsInRoot())
                 {
                     throw new FutsRspError("无权更新品种数据");
                 }
@@ -125,8 +125,8 @@ namespace TradingLib.Core
             try
             {
                 debug(string.Format("管理员:{0} 请求更新合约:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
-           
-                if (!manager.RightRootDomain())
+
+                if (!manager.IsInRoot())
                 {
                     throw new FutsRspError("无权更新合约数据");
                 }
@@ -158,7 +158,7 @@ namespace TradingLib.Core
             {
                 debug(string.Format("管理员:{0} 请求添加品种:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
 
-                if (!manager.RightRootDomain())
+                if (!manager.IsInRoot())
                 {
                     throw new FutsRspError("无权添加品种数据");
                 }
@@ -196,7 +196,7 @@ namespace TradingLib.Core
             {
                 debug(string.Format("管理员:{0} 请求添加合约:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
 
-                if (!manager.RightRootDomain())
+                if (!manager.IsInRoot())
                 {
                     throw new FutsRspError("无权添加合约数据");
                 }
@@ -237,7 +237,7 @@ namespace TradingLib.Core
                 Manager manager = session.GetManager();
                 debug(string.Format("管理员{0} 同步品种数据",manager.Login), QSEnumDebugLevel.INFO);
 
-                if (!manager.RightRootDomain())
+                if (!manager.IsInRoot())
                 {
                     throw new FutsRspError("无权同步品种数据");
                 }
@@ -296,7 +296,7 @@ namespace TradingLib.Core
             Manager manager = session.GetManager();
             debug(string.Format("管理员{0} 禁止所有合约交易", manager.Login), QSEnumDebugLevel.INFO);
 
-            if (!manager.RightRootDomain())
+            if (!manager.IsInRoot())
             {
                 throw new FutsRspError("无权禁止合约");
             }
@@ -339,7 +339,7 @@ namespace TradingLib.Core
             Manager manager = session.GetManager();
             debug(string.Format("管理员{0} 同步合约数据", manager.Login), QSEnumDebugLevel.INFO);
 
-            if (!manager.RightRootDomain())
+            if (!manager.IsInRoot())
             {
                 throw new FutsRspError("无权同步合约数据");
             }

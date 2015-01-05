@@ -10,8 +10,7 @@ using System.Windows.Forms;
 using TradingLib.API;
 using TradingLib.Common;
 using FutSystems.GUI;
-using TradingLib.Mixins;
-using TradingLib.Mixins.LitJson;
+
 using TradingLib.Mixins.JsonObject;
 
 namespace FutsMoniter
@@ -74,11 +73,12 @@ namespace FutsMoniter
         void OnQryRecvBank(string jsonstr)
         {
 
-            JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
-            int code = int.Parse(jd["Code"].ToString());
-            if (code == 0)
+            //JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
+            //int code = int.Parse(jd["Code"].ToString());
+            JsonWrapperReceivableAccount[] objs = MoniterUtils.ParseJsonResponse<JsonWrapperReceivableAccount[]>(jsonstr);
+            if (objs  != null)
             {
-                JsonWrapperReceivableAccount[] objs = TradingLib.Mixins.LitJson.JsonMapper.ToObject<JsonWrapperReceivableAccount[]>(jd["Playload"].ToJson());
+                //JsonWrapperReceivableAccount[] objs = TradingLib.Mixins.LitJson.JsonMapper.ToObject<JsonWrapperReceivableAccount[]>(jd["Playload"].ToJson());
                 foreach (JsonWrapperReceivableAccount obj in objs)
                 {
                     InvokeGotRecvBank(obj);

@@ -5,7 +5,7 @@ using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Core;
-using TradingLib.LitJson;
+
 
 namespace TradingLib.ServiceManager
 {
@@ -21,7 +21,7 @@ namespace TradingLib.ServiceManager
         {
             debug("查询所有接口设置", QSEnumDebugLevel.INFO);
             Manager manger = session.GetManager();
-            if (manger.RightRootDomain())
+            if (manger.IsInRoot())
             {
                 ConnectorInterface[] ops = manger.Domain.GetInterface().ToArray();
                 session.ReplyMgr(ops);
@@ -35,9 +35,9 @@ namespace TradingLib.ServiceManager
             {
                 debug("更新接口设置:" + json, QSEnumDebugLevel.INFO);
                 Manager manger = session.GetManager();
-                if (manger.RightRootDomain())
+                if (manger.IsInRoot())
                 {
-                    ConnectorInterface itface = TradingLib.Mixins.LitJson.JsonMapper.ToObject<ConnectorInterface>(json);
+                    ConnectorInterface itface = TradingLib.Mixins.Json.JsonMapper.ToObject<ConnectorInterface>(json);
                     ORM.MConnector.UpdateConnectorInterface(itface);
                 }
             }

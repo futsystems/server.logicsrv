@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading;
 using ZeroMQ;
 using TradingLib.Mixins.TNetStrings;
-using TradingLib.Mixins.LitJson;
+using TradingLib.Mixins.Json;
 
 namespace TradingLib.Mixins.m2net
 {

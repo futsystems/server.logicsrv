@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TradingLib.Mixins.TNetStrings;
-using TradingLib.Mixins.LitJson;
+using TradingLib.Mixins.Json;
 
 namespace TradingLib.Mixins.m2net
 {

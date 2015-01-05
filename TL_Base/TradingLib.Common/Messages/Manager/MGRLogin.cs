@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TradingLib.API;
-using TradingLib.Mixins.LitJson;
+using TradingLib.Mixins.Json;
 using TradingLib.Mixins.JsonObject;
 
 namespace TradingLib.Common
@@ -118,12 +118,12 @@ namespace TradingLib.Common
         public MgrLoginResponse LoginResponse { get; set; }
         public override string ResponseSerialize()
         {
-            return TradingLib.LitJson.JsonMapper.ToJson(this.LoginResponse);
+            return TradingLib.Mixins.Json.JsonMapper.ToJson(this.LoginResponse);
         }
 
         public override void ResponseDeserialize(string content)
         {
-            this.LoginResponse = TradingLib.LitJson.JsonMapper.ToObject<MgrLoginResponse>(content);
+            this.LoginResponse = TradingLib.Mixins.Json.JsonMapper.ToObject<MgrLoginResponse>(content);
         }
     }
 }

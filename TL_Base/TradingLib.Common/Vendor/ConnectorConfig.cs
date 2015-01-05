@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
-using TradingLib.Mixins.LitJson;
+using TradingLib.Mixins.Json;
 
 
 namespace TradingLib.Common

@@ -9,7 +9,6 @@ using System.Windows.Forms;
 using TradingLib.API;
 using TradingLib.Common;
 using FutSystems.GUI;
-using TradingLib.Mixins.LitJson;
 using TradingLib.Mixins.JsonObject;
 
 namespace FutsMoniter
@@ -65,12 +64,13 @@ namespace FutsMoniter
 
         void OnQryAgentPaymentInfo(string jsonstr)
         {
-            JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
-            int code = int.Parse(jd["Code"].ToString());
-            if (code == 0)
+            //JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
+            //int code = int.Parse(jd["Code"].ToString());
+            JsonWrapperAgentPaymentInfo info = MoniterUtils.ParseJsonResponse<JsonWrapperAgentPaymentInfo>(jsonstr);
+            if (info != null)
             {
-                JsonWrapperAgentPaymentInfo info = TradingLib.Mixins.LitJson.JsonMapper.ToObject<JsonWrapperAgentPaymentInfo>(jd["Playload"].ToJson());
-                if (info != null)
+                //JsonWrapperAgentPaymentInfo info = TradingLib.Mixins.LitJson.JsonMapper.ToObject<JsonWrapperAgentPaymentInfo>(jd["Playload"].ToJson());
+                //if (info != null)
                 {
                     GotJsonWrapperAgentPaymentInfo(info);
                 }

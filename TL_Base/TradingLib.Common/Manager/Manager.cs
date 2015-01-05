@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TradingLib.API;
-using TradingLib.Mixins.LitJson;
+using TradingLib.Mixins.Json;
 
 namespace TradingLib.Common
 {
@@ -110,6 +110,9 @@ namespace TradingLib.Common
         public Manager ParentManager { get; set; }
 
 
+        /// <summary>
+        /// 分区域对象
+        /// </summary>
         [NoJsonExportAttr()]
         public Domain Domain { get; internal set; }
 

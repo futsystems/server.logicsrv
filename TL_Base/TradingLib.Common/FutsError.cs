@@ -57,7 +57,7 @@ namespace TradingLib.Common
         /// 将JsonReply生成对应的FutsRspError
         /// </summary>
         /// <param name="reply"></param>
-        public FutsRspError(TradingLib.Mixins.JsonReply reply)
+        public FutsRspError(TradingLib.Mixins.Json.JsonReply reply)
         {
             ErrorID = reply.Code;
             ErrorMessage = reply.Message;

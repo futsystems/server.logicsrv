@@ -7,7 +7,9 @@ using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
 using System.Diagnostics;
-using TradingLib.LitJson;
+//using TradingLib.LitJson;
+using TradingLib.Mixins.Json;
+
 
 namespace TradingLib.Core
 {
@@ -74,7 +76,7 @@ namespace TradingLib.Core
             //_repserver.GotWebMessageEvent += new WebMessageDel(handleWebTaskMessage);
 
             _repservertnetstring = new WebMsgRepServer(_cfgdb["WebRepServerIP"].AsString(), _cfgdb["WebRepPortTnetString"].AsInt(), true);
-            _repservertnetstring.GotWebMessageEvent += new WebMessageDel(handleWebTaskMessageJson);
+            _repservertnetstring.GotWebMessageEvent += new Func<string, bool, JsonReply>(handleWebTaskMessageJson);
 
             //_pubserver = new WebMsgPubServer(_cfgdb["WebRepServerIP"].AsString(), _cfgdb["WebPubPort"].AsInt());
 
@@ -125,22 +127,28 @@ namespace TradingLib.Core
 
 
 
-        public string handleWebTaskMessageJson(string jsonstr, bool istnetstring = true)
+        public JsonReply handleWebTaskMessageJson(string jsonstr, bool istnetstring = true)
         {
             try
             {
-                JsonData request = JsonMapper.ToObject(jsonstr);
-                string module = request["Module"].ToString();
-                string method = request["Method"].ToString();
-                string args = request["Args"].ToString();
+                //JsonData request = JsonMapper.ToObject(jsonstr);
+                //string module = request["Module"].ToString();
+                //string method = request["Method"].ToString();
+                //string args = request["Args"].ToString();
 
-                return TLCtxHelper.Ctx.MessageWebHandler(module, method, args, istnetstring);
+                JsonRequest request = JsonRequest.ParseRequest(jsonstr);
+                //Request解析错误 返回request为null 请求格式出错
+                if (request == null)
+                {
+                    return WebAPIHelper.ReplyError("REQUEST_FORMAT_ERROR");
+                }
+                return TLCtxHelper.Ctx.MessageWebHandler(request);
 
             }
             catch (Exception ex)
             {
                 debug("handlewebtask error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
-                return JsonReply.GenericError(ReplyType.ServerSideError, "服务端处理消息异常").ToJson();
+                return WebAPIHelper.ReplyError("SERVER_SIDE_ERROR");//JsonReply.GenericError(ReplyType.ServerSideError, "服务端处理消息异常").ToJson();
             }
         }
 

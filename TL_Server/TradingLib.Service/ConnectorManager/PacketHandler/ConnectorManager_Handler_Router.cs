@@ -5,7 +5,6 @@ using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Core;
-using TradingLib.LitJson;
 
 namespace TradingLib.ServiceManager
 {
@@ -19,7 +18,7 @@ namespace TradingLib.ServiceManager
         {
             debug("查询所有通道设置", QSEnumDebugLevel.INFO);
             Manager manger = session.GetManager();
-            if (manger.RightRootDomain())
+            if (manger.IsInRoot())
             {
                 //获得域内所有通道设置
                 ConnectorConfig[] ops = manger.Domain.GetConnectorConfigs().ToArray();// BasicTracker.ConnectorConfigTracker.ConnecotrConfigs.ToArray();
@@ -31,7 +30,7 @@ namespace TradingLib.ServiceManager
         public void CTE_QueryConnectorConfig(ISession session,string token)
         {
             Manager manger = session.GetManager();
-            if (manger.RightRootDomain())
+            if (manger.IsInRoot())
             {
                 bool valid = !BasicTracker.ConnectorConfigTracker.ConnecotrConfigs.Any(c => c.Token.Equals(token));
                 session.ReplyMgr(valid);
@@ -100,7 +99,7 @@ namespace TradingLib.ServiceManager
         {
             debug("查询所有通道状态", QSEnumDebugLevel.INFO);
             Manager manger = session.GetManager();
-            if (manger.RightRootDomain())
+            if (manger.IsInRoot())
             {
                 //获得域内所有通道设置
                 ConnectorStatus[] ops = manger.Domain.GetConnectorConfigs().Select(cfg => GetConnectorStatus(cfg)).ToArray();// BasicTracker.ConnectorConfigTracker.ConnecotrConfigs.ToArray();
@@ -113,7 +112,7 @@ namespace TradingLib.ServiceManager
         {
             debug("查询所有通道状态", QSEnumDebugLevel.INFO);
             Manager manger = session.GetManager();
-            if (manger.RightRootDomain())
+            if (manger.IsInRoot())
             {
                 //获得域内所有通道设置
                 ConnectorStatus[] ops = manger.Domain.GetDefaultConnectorConfigs().Select(cfg => GetConnectorStatus(cfg)).ToArray();// BasicTracker.ConnectorConfigTracker.ConnecotrConfigs.ToArray();
@@ -130,9 +129,9 @@ namespace TradingLib.ServiceManager
             try
             {
                 Manager manger = session.GetManager();
-                if (manger.RightRootDomain())
+                if (manger.IsInRoot())
                 {
-                    ConnectorConfig cfg = TradingLib.Mixins.LitJson.JsonMapper.ToObject<ConnectorConfig>(json);
+                    ConnectorConfig cfg = TradingLib.Mixins.Json.JsonMapper.ToObject<ConnectorConfig>(json);
                     bool isadd = cfg.ID == 0;
 
                     if (string.IsNullOrEmpty(cfg.Name))
@@ -227,10 +226,10 @@ namespace TradingLib.ServiceManager
             try
             {
                 Manager manger = session.GetManager();
-                if (manger.RightRootDomain())
+                if (manger.IsInRoot())
                 {
-                    
-                    RouterGroupSetting group = TradingLib.Mixins.LitJson.JsonMapper.ToObject<RouterGroupSetting>(jsonstr);
+
+                    RouterGroupSetting group = TradingLib.Mixins.Json.JsonMapper.ToObject<RouterGroupSetting>(jsonstr);
                     bool isadd = group.ID == 0;
                     if (isadd && manger.Domain.GetRouterGroups().Count() >= manger.Domain.RouterGroupLimit)
                     {
@@ -263,7 +262,7 @@ namespace TradingLib.ServiceManager
             {
                 Manager manger = session.GetManager();
 
-                if (manger.RightRootDomain())
+                if (manger.IsInRoot())
                 {
                     RouterGroup rg = BasicTracker.RouterGroupTracker[rgid];
                     if (rg == null)
@@ -287,9 +286,9 @@ namespace TradingLib.ServiceManager
             try
             {
                 Manager manger = session.GetManager();
-                if (manger.RightRootDomain())
+                if (manger.IsInRoot())
                 {
-                    RouterItemSetting item = TradingLib.Mixins.LitJson.JsonMapper.ToObject<RouterItemSetting>(json);
+                    RouterItemSetting item = TradingLib.Mixins.Json.JsonMapper.ToObject<RouterItemSetting>(json);
                     bool isadd = item.ID == 0;
 
                     Vendor vendor = BasicTracker.VendorTracker[item.vendor_id];

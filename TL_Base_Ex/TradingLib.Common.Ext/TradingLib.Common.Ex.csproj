@@ -96,6 +96,7 @@
     <Compile Include="Tracker\ConntorConfigTracker.cs" />
     <Compile Include="Tracker\DomainTracker.cs" />
     <Compile Include="Tracker\RouterGrouperTracker.cs" />
+    <Compile Include="Tracker\RspInfoTracker.cs" />
     <Compile Include="Tracker\UIAccessTracker.cs" />
     <Compile Include="Utils\Domain\DomainUtils_Permission.cs" />
     <Compile Include="Utils\Domain\DomainUtils_Basic.cs" />
@@ -118,7 +119,6 @@
     <Compile Include="Profile\Profiler.cs" />
     <Compile Include="Profile\SectionStackEntry.cs" />
     <Compile Include="Profile\SectionStats.cs" />
-    <Compile Include="SettlementInfo.cs" />
     <Compile Include="Template\TemplateHelper.cs" />
     <Compile Include="Tracker\AccountTracker.cs" />
     <Compile Include="Accounts\JsonWrapperAccount.cs" />
@@ -148,8 +148,7 @@
     <Compile Include="ExCommConst.cs" />
     <Compile Include="ExUtil.cs" />
     <Compile Include="Filter.cs" />
-    <Compile Include="JsonReply\ReplyHelper.cs" />
-    <Compile Include="JsonReply\ReplyType.cs" />
+    <Compile Include="WebAPI\ReplyHelper.cs" />
     <Compile Include="ORM\MBasicInfo.cs" />
     <Compile Include="Plugin\ContribCommandInfo.cs" />
     <Compile Include="Plugin\ContribEventInfo.cs" />
@@ -167,7 +166,6 @@
     <Compile Include="ClearCentre\CommissionHelper.cs" />
     <Compile Include="Client\ClientTracker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SessionInfo.cs" />
     <Compile Include="Statistic\AccountSet.cs" />
     <Compile Include="Statistic\GeneralStatistic.cs" />
     <Compile Include="ThroughtPutTracker.cs" />
@@ -187,6 +185,9 @@
     <Compile Include="Utils\Manager\ManagerUtils_.cs" />
     <Compile Include="Utils\Manager\ManagerUtils_Right.cs" />
     <Compile Include="Utils\Manager\ManagerUtils_Objects.cs" />
+    <Compile Include="Utils\Manager\ManagerUtils_AgentFinance.cs" />
+    <Compile Include="Utils\Manager\ManagerUtils_Valid.cs" />
+    <Compile Include="Utils\NotifyPredicateUtils.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

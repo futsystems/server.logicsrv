@@ -59,6 +59,8 @@
     <Compile Include="Domain\DomainImpl.cs" />
     <Compile Include="Trading\SecurityUtils.cs" />
     <Compile Include="Utils\Util_string.cs" />
+    <Compile Include="Utils\XMLRspInfo\XMLRspInfoTracker.cs" />
+    <Compile Include="Utils\XMLRspInfo\XMLRspInfo.cs" />
     <Compile Include="Vendor\ConnectorStatus.cs" />
     <Compile Include="Vendor\ConnectorConfig.cs" />
     <Compile Include="Vendor\ConnectorInfo.cs" />
@@ -88,15 +90,6 @@
     <Compile Include="Trading\SymbolUtils.cs" />
     <Compile Include="Utils\ConfigFile.cs" />
     <Compile Include="FutsError.cs" />
-    <Compile Include="Json\IJsonWrapper.cs" />
-    <Compile Include="Json\JsonData.cs" />
-    <Compile Include="Json\JsonException.cs" />
-    <Compile Include="Json\JsonMapper.cs" />
-    <Compile Include="Json\JsonMockWrapper.cs" />
-    <Compile Include="Json\JsonReader.cs" />
-    <Compile Include="Json\JsonWriter.cs" />
-    <Compile Include="Json\Lexer.cs" />
-    <Compile Include="Json\ParserToken.cs" />
     <Compile Include="Messages\BrokerName.cs" />
     <Compile Include="Messages\ConfirmSettlement.cs" />
     <Compile Include="Messages\ContribCMD.cs" />
@@ -160,7 +153,7 @@
     <Compile Include="Manager\Manager.cs" />
     <Compile Include="Other\SystemStatus.cs" />
     <Compile Include="Utils\TimeOutSocket.cs" />
-    <Compile Include="Utils\XMLRspInfo.cs" />
+    <Compile Include="Utils\XMLRspInfo\XMLRspInfo2.cs" />
     <Compile Include="Account\AccountInfo.cs" />
     <Compile Include="Account\AccountInfoLite.cs" />
     <Compile Include="Account\AccountLite.cs" />
@@ -202,7 +195,6 @@
     <Compile Include="Trading\Settlement.cs" />
     <Compile Include="Trading\SymbolImpl.cs" />
     <Compile Include="Trading\ThreadTracker.cs" />
-    <Compile Include="Reply\GenericReply.cs" />
     <Compile Include="Tracker\MessageTracker.cs" />
     <Compile Include="Messages\TrdMessage.cs" />
     <Compile Include="Trading\OrderTransactionHelper.cs" />
@@ -244,6 +236,9 @@
     <Compile Include="Trading\TradeUtils.cs" />
     <Compile Include="Vendor\VendorImpl.cs" />
     <Compile Include="Vendor\VendorUtils.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Reply\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

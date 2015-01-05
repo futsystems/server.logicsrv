@@ -13,7 +13,7 @@ namespace TradingLib.Core
         public void CTE_QryVendor(ISession session)
         {
             Manager manger = session.GetManager();
-            if (manger.RightRootDomain())
+            if (manger.IsInRoot())
             {
                 VendorSetting[] vendorlist = session.GetManager().Domain.GetVendors().ToArray();// BasicTracker.VendorTracker.Vendors.ToArray();
                 session.ReplyMgr(vendorlist);
@@ -24,9 +24,9 @@ namespace TradingLib.Core
         public void CTE_UpdateVendor(ISession session, string json)
         {
             Manager manger = session.GetManager();
-            if (manger.RightRootDomain())
+            if (manger.IsInRoot())
             {
-                VendorSetting vendor = TradingLib.Mixins.LitJson.JsonMapper.ToObject<VendorSetting>(json);
+                VendorSetting vendor = TradingLib.Mixins.Json.JsonMapper.ToObject<VendorSetting>(json);
                 bool isadd = vendor.ID == 0;
                 if (string.IsNullOrEmpty(vendor.Name))
                 {

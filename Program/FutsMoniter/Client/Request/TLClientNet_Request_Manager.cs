@@ -50,7 +50,7 @@ namespace TradingLib.Common
         /// <param name="mgr"></param>
         public void ReqUpdateManager(ManagerSetting mgr)
         {
-            this.ReqContribRequest("MgrExchServer", "UpdateManager", TradingLib.Mixins.LitJson.JsonMapper.ToJson(mgr));
+            this.ReqContribRequest("MgrExchServer", "UpdateManager", TradingLib.Mixins.Json.JsonMapper.ToJson(mgr));
         }
     }
 }

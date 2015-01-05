@@ -33,7 +33,7 @@ namespace TradingLib.Core
         {
             Manager manager = session.GetManager();
 
-            ManagerSetting m = Mixins.LitJson.JsonMapper.ToObject<ManagerSetting>(json);
+            ManagerSetting m = Mixins.Json.JsonMapper.ToObject<ManagerSetting>(json);
             bool isadd = m.ID == 0;
             if (isadd)
             {
@@ -48,11 +48,10 @@ namespace TradingLib.Core
                 m.mgr_fk = manager.BaseMgrID;
                 //分区ID
                 m.domain_id = manager.domain_id;
+                
+                //验证添加柜员帐户权限
+                manager.ValidRightAddManager(m);
 
-                if (!manager.RightAddManager(m))
-                {
-                    throw new FutsRspError("无权添加管理员类型:" + Util.GetEnumDescription(m.Type));
-                }
                 if (BasicTracker.ManagerTracker[m.Login] != null)
                 {
                     throw new FutsRspError("柜员登入ID不能重复:" + m.Login);
@@ -112,7 +111,7 @@ namespace TradingLib.Core
                 }
 
                 //
-                if (!mgr.RightAgentParent(tomanger))
+                if (!mgr.IsParentOf(tomanger))
                 {
                     throw new FutsRspError("无权操作管理员");
                 }
@@ -143,7 +142,7 @@ namespace TradingLib.Core
                 }
 
                 //
-                if (!mgr.RightAgentParent(tomanger))
+                if (!mgr.IsParentOf(tomanger))
                 {
                     throw new FutsRspError("无权操作管理员");
                 }

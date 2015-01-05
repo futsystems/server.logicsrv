@@ -8,6 +8,7 @@ using TradingLib.Common;
 using FutSystems.GUI;
 using Microsoft.Win32;
 using TradingLib.Mixins;
+using TradingLib.Mixins.Json;
 
 namespace FutsMoniter
 {

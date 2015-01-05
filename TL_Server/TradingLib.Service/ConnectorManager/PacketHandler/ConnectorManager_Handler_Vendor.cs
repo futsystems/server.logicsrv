@@ -5,7 +5,7 @@ using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Core;
-using TradingLib.LitJson;
+
 
 namespace TradingLib.ServiceManager
 {
@@ -21,7 +21,7 @@ namespace TradingLib.ServiceManager
             {
                 Manager manger = session.GetManager();
 
-                if (manger.RightRootDomain())
+                if (manger.IsInRoot())
                 {
                     ConnectorConfig cfg = BasicTracker.ConnectorConfigTracker.GetBrokerConfig(cid);
                     if (cfg == null)
@@ -63,7 +63,7 @@ namespace TradingLib.ServiceManager
             {
                 Manager manger = session.GetManager();
 
-                if (manger.RightRootDomain())
+                if (manger.IsInRoot())
                 {
                     ConnectorConfig cfg = BasicTracker.ConnectorConfigTracker.GetBrokerConfig(cid);
                     if (cfg == null)

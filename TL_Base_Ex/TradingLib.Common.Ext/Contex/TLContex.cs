@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Reflection;
 using TradingLib.API;
 using TradingLib.Common;
+using TradingLib.Mixins.Json;
 
 
 namespace TradingLib.Common
@@ -304,50 +305,54 @@ namespace TradingLib.Common
         }
         /// <summary>
         /// 处理web message exchange消息调用
+        /// 
         /// </summary>
         /// <param name="module"></param>
         /// <param name="cmdstr"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public string MessageWebHandler(string module, string cmdstr, string parameters, bool istnetstring = false)
+        public JsonReply MessageWebHandler(JsonRequest request,bool istnetstring = false)
         {
-            string key = ContribCommandKey(module, cmdstr);
+            //string module, string cmdstr, string parameters
+            string key = ContribCommandKey(request.Module, request.Method);
             Util.Debug("Handler webmessage, cmdkey:" + key);
             ContribCommand cmd=null;
             if(messageWebCmdMap.TryGetValue(key,out cmd))
             {
                 try
                 {
-                    object obj = cmd.ExecuteCmd(null, parameters,istnetstring);
+                    object obj = cmd.ExecuteCmd(null,request.Args,istnetstring);
+                    //根据ContribCommand执行结果进行返回
+                    //1.执行没有任何返回 比如进行一个无返回信息的操作请求
                     if (obj == null)
                     {
-                        return ReplyHelper.Success_Generic;
+                        return WebAPIHelper.ReplySuccess(string.Format("CMD:{0} Execute Successful", key));
                     }
-                    else if (obj is string)
+                    //2.返回JsonReply对象
+                    else if (obj is JsonReply)
                     {
-                        return obj as string;
+                        return obj as JsonReply;
                     }
                     else
                     {
-                        return ReplyHelper.ReplyObject(obj);
+                        return WebAPIHelper.ReplyObject(obj);
                     }
                 }
                 catch (QSCommandError ex)
                 {
                     TLCtxHelper.Ctx.debug(ex.Label + "\r\n reason@" + ex.Reason + "\r\n RawException:" + ex.RawException.Message.ToString(), QSEnumDebugLevel.ERROR);
-                    TLCtxHelper.Ctx.debug("error:" + ReplyHelper.Error_CommandExecute,QSEnumDebugLevel.ERROR);
-                    return  ReplyHelper.Error_CommandExecute;
+                    return WebAPIHelper.ReplyError("COMMAND_EXECUTE_ERROR");
                 }
                 catch (Exception ex)
                 {
                     TLCtxHelper.Ctx.debug("ExectueCmd Error:\r\n" + ex.ToString(), QSEnumDebugLevel.ERROR);
-                    return ReplyHelper.Error_ServerSide;
+                    return WebAPIHelper.ReplyError("SERVER_SIDE_ERROR");
                 }
 
             }
             else
             {
-                return ReplyHelper.Error_MethodNotFund;
+                return WebAPIHelper.ReplyError("METHOD_NOT_FOUND");
             }
         }
 

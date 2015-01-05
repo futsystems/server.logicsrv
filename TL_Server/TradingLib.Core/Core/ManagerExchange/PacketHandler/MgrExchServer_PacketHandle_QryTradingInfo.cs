@@ -16,7 +16,7 @@ namespace TradingLib.Core
                 debug(string.Format("管理员:{0} 请求查询历史委托:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
 
                 //权限验证
-                manager.ValidRightRead(request.TradingAccount);
+                manager.ValidRightReadAccount(request.TradingAccount);
 
                 IList<Order> orders = ORM.MTradingInfo.SelectHistOrders(request.TradingAccount, request.Settleday, request.Settleday);
                 int totalnum = orders.Count;
@@ -51,7 +51,7 @@ namespace TradingLib.Core
             try
             {
                 //权限验证
-                manager.ValidRightRead(request.TradingAccount);
+                manager.ValidRightReadAccount(request.TradingAccount);
 
                 IList<Trade> trades = ORM.MTradingInfo.SelectHistTrades(request.TradingAccount, request.Settleday, request.Settleday);
                 int totalnum = trades.Count;
@@ -111,7 +111,7 @@ namespace TradingLib.Core
             try
             {
                 //权限验证
-                manager.ValidRightRead(request.TradingAccount);
+                manager.ValidRightReadAccount(request.TradingAccount);
 
                 IList<CashTransaction> cts = ORM.MAccount.SelectHistCashTransaction(request.TradingAccount, request.Settleday, request.Settleday);
                 int totalnum = cts.Count;
@@ -145,7 +145,7 @@ namespace TradingLib.Core
             try
             {
                 //权限验证
-                manager.ValidRightRead(request.TradingAccount);
+                manager.ValidRightReadAccount(request.TradingAccount);
 
                 IAccount account = clearcentre[request.TradingAccount];
                 Settlement settlement = ORM.MSettlement.SelectSettlement(request.TradingAccount, request.Settleday);

@@ -57,10 +57,12 @@ namespace TradingLib.Common
             response.ModuleID = session.ContirbID;
             response.CMDStr = session.CMDStr;
             response.IsLast = islast;
-            response.Result = Mixins.JsonReply.SuccessReply(obj).ToJson();
+            response.Result = Mixins.Json.JsonReply.SuccessReply(obj).ToJson();
 
             session.SendPacketMgr(response);
         }
+
+
 
         /// <summary>
         /// 操作错误回报
@@ -105,8 +107,27 @@ namespace TradingLib.Common
             NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(targets == null ? new ILocation[] { session.GetLocation() } : targets);
             response.ModuleID = session.ContirbID;
             response.CMDStr = cmdstr;
-            response.Result = Mixins.JsonReply.SuccessReply(obj).ToJson();
+            response.Result = Mixins.Json.JsonReply.SuccessReply(obj).ToJson();
             session.SendPacketMgr(response);
+        }
+
+
+
+        /// <summary>
+        /// 想符合某个通知判定谓词的管理端列表发送通知
+        /// 比如Manager发生更新,出入金请求记录等需要向特定的管理员发送通知，从而实现各个管理端界面同步更新
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="cmdstr"></param>
+        /// <param name="obj"></param>
+        /// <param name="predicate"></param>
+        public static void NotifyMgr(this ISession session, string cmdstr, object obj, Predicate<Manager> predicate)
+        {
+            IEnumerable<ILocation> locations = TLCtxHelper.Ctx.MessageMgr.GetNotifyTargets(predicate);
+            if (locations.Count() > 0)
+            {
+                session.NotifyMgr(cmdstr,obj,locations);
+            }
         }
 
         public static ILocation GetLocation(this ISession session)

@@ -66,11 +66,9 @@
     <Compile Include="Base\ClientMgr.cs" />
     <Compile Include="Base\CoreGlobal.cs" />
     <Compile Include="Base\HighLowTracker.cs" />
-    <Compile Include="Base\Utils\PositionCloseDetailUtil.cs" />
     <Compile Include="Base\Utils\PositionDetailsUtil.cs" />
     <Compile Include="Base\TIFTracker.cs" />
     <Compile Include="Base\TLServer_Generic.cs" />
-    <Compile Include="Base\Utils\PositionUtil.cs" />
     <Compile Include="Base\Utils\SymbolUtils.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_AccountOperation.cs" />
@@ -82,8 +80,6 @@
     <Compile Include="Core\ClearCentre\JsonWrapperClearCentre.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_AccountCashOperation.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_LogRestore.cs" />
-    <Compile Include="Core\ManagerExchange\ContractBankUtils.cs" />
-    <Compile Include="Core\ManagerExchange\ManagerRights.cs" />
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_FinAgent.cs" />
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_Msic.cs" />
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_RecvBank.cs" />
@@ -95,10 +91,6 @@
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_Connector.cs" />
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_RuleSet.cs" />
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_Account.cs" />
-    <Compile Include="Core\ManagerExchange\Utils\ManagerUtils_.cs" />
-    <Compile Include="Core\ManagerExchange\Utils\ManagerUtils_Account.cs" />
-    <Compile Include="Core\ManagerExchange\Utils\ManagerUtils.cs" />
-    <Compile Include="Core\ManagerExchange\Utils\ManagerUtils_Right.cs" />
     <Compile Include="Core\ManagerExchange\MgrClientInfo.cs" />
     <Compile Include="Core\ManagerExchange\MgrExchServer.cs" />
     <Compile Include="Base\Settlement.cs" />
@@ -112,9 +104,7 @@
     <Compile Include="Core\ManagerExchange\MgrExchServer_Operation.cs" />
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_CashOPAccount.cs" />
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_CashOPAgent.cs" />
-    <Compile Include="Core\ManagerExchange\Utils\ObjectsUtils.cs" />
     <Compile Include="Core\ManagerExchange\MgrExchServer_Notify.cs" />
-    <Compile Include="Core\ManagerExchange\Utils\ManagerUtils_Predicate.cs" />
     <Compile Include="Core\ManagerExchange\MgrExchServer_PacketHandle_.cs" />
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_Vendor.cs" />
     <Compile Include="Core\MessageExchange\BrokerRouter\BrokerRouter_.cs" />

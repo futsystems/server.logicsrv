@@ -37,7 +37,7 @@ namespace TradingLib.Core
             Manager manger = session.GetManager();
             if (manger != null)
             {
-                JsonWrapperBankAccount bankaccount = Mixins.LitJson.JsonMapper.ToObject<JsonWrapperBankAccount>(playload);
+                JsonWrapperBankAccount bankaccount = Mixins.Json.JsonMapper.ToObject<JsonWrapperBankAccount>(playload);
                 //强制设定银行帐号的主域id为当前manger主域id
                 bankaccount.mgr_fk = manger.mgr_fk;
                 if (bankaccount != null && bankaccount.mgr_fk == manger.mgr_fk)

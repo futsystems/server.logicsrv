@@ -6,6 +6,7 @@ using TradingLib.API;
 using TradingLib.Common;
 using ZeroMQ;
 using System.Threading;
+using TradingLib.Mixins.Json;
 
 
 namespace TradingLib.Core
@@ -17,7 +18,7 @@ namespace TradingLib.Core
     public class WebMsgRepServer :BaseSrvObject,IService
     {
 
-        public event WebMessageDel GotWebMessageEvent;
+        public event Func<string,bool,JsonReply> GotWebMessageEvent;
         TimeSpan PollerTimeOut = new TimeSpan(0, 0, 5);
         string _address = "*";
         int _port = 5000;
@@ -31,11 +32,11 @@ namespace TradingLib.Core
         }
 
         bool _istnetstring = false;
-        string handleWebTask(string task)
+        JsonReply handleWebTask(string task)
         {
             if (GotWebMessageEvent != null)
                 return GotWebMessageEvent(task,_istnetstring);
-            return ReplyHelper.Error_WebMsgHandlerNotBind;
+            return null;
         }
 
 
@@ -125,8 +126,15 @@ namespace TradingLib.Core
                         {
                             string str = rep.Receive(Encoding.UTF8);
                             debug("web taks message is:" + str, QSEnumDebugLevel.INFO);
-                            string re = handleWebTask(str);
-                            rep.Send(re, Encoding.UTF8);
+                            JsonReply re = handleWebTask(str);
+                            if (re != null)
+                            {
+                                rep.Send(re.ToJson(), Encoding.UTF8);
+                            }
+                            else
+                            {
+                                rep.Send(WebAPIHelper.ReplyError("COMMAND_RESULT_ERROR").ToJson(), Encoding.UTF8);
+                            }
 
                         }
                         catch (Exception ex)

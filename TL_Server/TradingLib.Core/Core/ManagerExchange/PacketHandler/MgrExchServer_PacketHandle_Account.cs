@@ -31,12 +31,12 @@ namespace TradingLib.Core
             }
 
             //如果不是Root权限的Manager需要进行执行权限检查
-            if (!manager.RightRootDomain())
+            if (!manager.IsInRoot())
             {
                 //如果不是为该主域添加帐户,则我们需要判断当前Manager的主域是否拥有请求主域的权限
                 if (manager.BaseMgrID != request.MgrID)
                 {
-                    if (!manager.RightAgentParent(request.MgrID))
+                    if (!manager.IsParentOf(request.MgrID))
                     {
                         throw new FutsRspError("无权在该管理域开设帐户");
                     }
@@ -295,7 +295,7 @@ namespace TradingLib.Core
         public void CTE_QryDomain(ISession session, string account, int gid)
         {
             Manager manager = session.GetManager();
-            if (!manager.RightRootDomain())
+            if (!manager.IsInRoot())
             {
                 throw new FutsRspError("无权修改帐户路由组设置");
             }

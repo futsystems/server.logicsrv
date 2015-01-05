@@ -4,35 +4,9 @@ using System.Linq;
 using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
-using TradingLib.LitJson;
 
 namespace TradingLib.Common
 {
-
-    public static class ISessionJsonUtils
-    {
-        /// <summary>
-        /// 生成session所对应的jsonreply
-        /// 需要标注code,message,以及模块ID,命令Str
-        /// </summary>
-        /// <param name="session"></param>
-        /// <returns></returns>
-        //public static TradingLib.Mixins.ReplyWriter JsonReply(this ISession session)
-        //{
-        //    TradingLib.Mixins.ReplyWriter writer = new Mixins.ReplyWriter();
-        //    writer.Start();
-        //    writer.WritePropertyName("Code");
-        //    writer.Write(0);
-        //    writer.WritePropertyName("Message");
-        //    writer.Write("");
-        //    writer.WritePropertyName("ModuleID");
-        //    writer.Write(session.ContirbID);
-        //    writer.WritePropertyName("CMDStr");
-        //    writer.Write(session.CMDStr);
-        //    return writer;
-        //}
-    }
-
 
     public class ContribSrvObject:BaseSrvObject
     {
@@ -45,7 +19,7 @@ namespace TradingLib.Common
 
         
         /// <summary>
-        /// 发送一个逻辑数据包
+        /// 通过交易交换发送一个逻辑数据包
         /// </summary>
         /// <param name="packet"></param>
         void SendPacket(IPacket packet)
@@ -53,12 +27,21 @@ namespace TradingLib.Common
             TLCtxHelper.Ctx.MessageExchange.Send(packet);
         }
 
-
-
-        void Send(string message, MessageTypes type, string address)
+        /// <summary>
+        /// 通过管理交换发送一个逻辑数据包
+        /// </summary>
+        /// <param name="packet"></param>
+        void SendPacketMgr(IPacket packet)
         {
-            //TLCtxHelper.Ctx.MessageExchange.Send(message, type, address);
+            TLCtxHelper.Ctx.MessageMgr.Send(packet);
         }
+
+
+
+        //void Send(string message, MessageTypes type, string address)
+        //{
+        //    //TLCtxHelper.Ctx.MessageExchange.Send(message, type, address);
+        //}
 
         /// <summary>
         /// 向某个过滤条件的客户端发送一条消息
@@ -66,13 +49,13 @@ namespace TradingLib.Common
         /// <param name="message"></param>
         /// <param name="type"></param>
         /// <param name="address"></param>
-        public void Broadcast(string message, MessageTypes type, string filter)
-        {
-            foreach (string address in TLCtxHelper.Ctx.MessageExchange.FilterClient(filter))
-            {
-                //TLCtxHelper.Ctx.MessageExchange.Send(message, type, address);
-            }
-        }
+        //public void Broadcast(string message, MessageTypes type, string filter)
+        //{
+        //    foreach (string address in TLCtxHelper.Ctx.MessageExchange.FilterClient(filter))
+        //    {
+        //        //TLCtxHelper.Ctx.MessageExchange.Send(message, type, address);
+        //    }
+        //}
 
         /// <summary>
         /// 向某个指定地址的客户端发送一条消息
@@ -80,10 +63,10 @@ namespace TradingLib.Common
         /// <param name="message"></param>
         /// <param name="type"></param>
         /// <param name="address"></param>
-        public void Push(string message, MessageTypes type, string address)
-        {
-            //TLCtxHelper.Ctx.MessageExchange.Send(message, type, address);
-        }
+        //public void Push(string message, MessageTypes type, string address)
+        //{
+        //    //TLCtxHelper.Ctx.MessageExchange.Send(message, type, address);
+        //}
 
 
         /// <summary>
@@ -94,16 +77,13 @@ namespace TradingLib.Common
         /// <param name="session"></param>
         /// <param name="type"></param>
         /// <param name="message"></param>
-        protected void Send(ISession session, string message, MessageTypes type)
-        {
-            Send(message, type, session.ClientID);
-        }
+        //protected void Send(ISession session, string message, MessageTypes type)
+        //{
+        //    Send(message, type, session.ClientID);
+        //}
 
 
-        void SendPacketMgr(IPacket packet)
-        {
-            TLCtxHelper.Ctx.MessageMgr.Send(packet);
-        }
+
 
 
         /// <summary>
@@ -145,32 +125,32 @@ namespace TradingLib.Common
         //    SendPacketMgr(response);
         //}
 
-        protected void SendJsonReplyMgr(ISession session, object obj, bool islast = true)
-        {
-            RspMGRContribResponse response = ResponseTemplate<RspMGRContribResponse>.SrvSendRspResponse(session);
-            response.ModuleID = session.ContirbID;
-            response.CMDStr = session.CMDStr;
-            response.IsLast = islast;
-            response.Result = Mixins.JsonReply.SuccessReply(obj).ToJson();//new Mixins.ReplyWriter().Start().FillReply(Mixins.JsonReply.GenericSuccess()).FillPlayload(obj).End().ToString();
+        //protected void SendJsonReplyMgr(ISession session, object obj, bool islast = true)
+        //{
+        //    RspMGRContribResponse response = ResponseTemplate<RspMGRContribResponse>.SrvSendRspResponse(session);
+        //    response.ModuleID = session.ContirbID;
+        //    response.CMDStr = session.CMDStr;
+        //    response.IsLast = islast;
+        //    response.Result = Mixins.JsonReply.SuccessReply(obj).ToJson();//new Mixins.ReplyWriter().Start().FillReply(Mixins.JsonReply.GenericSuccess()).FillPlayload(obj).End().ToString();
 
-            SendPacketMgr(response);
-        }
-
-
+        //    SendPacketMgr(response);
+        //}
 
 
-        protected void SendJsonReply(ISession session, JsonReply reply,bool islast=true)
-        {
-            RspContribResponse response = ResponseTemplate<RspContribResponse>.SrvSendRspResponse(session);
-            response.ModuleID = session.ContirbID;
-            response.CMDStr = session.CMDStr;
-            response.IsLast = islast;
 
-            response.RspInfo.ErrorID = (int)reply.Code;
-            response.RspInfo.ErrorMessage = reply.Message;
 
-            SendPacket(response);
-        }
+        //protected void SendJsonReply(ISession session, JsonReply reply,bool islast=true)
+        //{
+        //    RspContribResponse response = ResponseTemplate<RspContribResponse>.SrvSendRspResponse(session);
+        //    response.ModuleID = session.ContirbID;
+        //    response.CMDStr = session.CMDStr;
+        //    response.IsLast = islast;
+
+        //    response.RspInfo.ErrorID = (int)reply.Code;
+        //    response.RspInfo.ErrorMessage = reply.Message;
+
+        //    SendPacket(response);
+        //}
 
         
 
@@ -184,37 +164,37 @@ namespace TradingLib.Common
         /// <param name="session"></param>
         /// <param name="obj">Struct结构体</param>
 
-        protected void SendJsonObjs(ISession session, object[] objlist,bool islast =true)
-        {
-            JsonWriter w = ReplyHelper.NewJWriterWithSession(session);
-            ReplyHelper.FillJWriter(objlist, w);
-            ReplyHelper.EndWriter(w);
-            SendContribResponse(session, w.ToString(),islast);
-        }
+        //protected void SendJsonObjs(ISession session, object[] objlist,bool islast =true)
+        //{
+        //    JsonWriter w = ReplyHelper.NewJWriterWithSession(session);
+        //    ReplyHelper.FillJWriter(objlist, w);
+        //    ReplyHelper.EndWriter(w);
+        //    SendContribResponse(session, w.ToString(),islast);
+        //}
 
         
 
-        protected void SendJsonObj(ISession session, object obj,bool islast = true)
-        {
-            JsonWriter w = ReplyHelper.NewJWriterWithSession(session);
-            ReplyHelper.FillJWriter(obj, w);
-            ReplyHelper.EndWriter(w);
-            SendContribResponse(session, w.ToString(),islast);
-        }
+        //protected void SendJsonObj(ISession session, object obj,bool islast = true)
+        //{
+        //    JsonWriter w = ReplyHelper.NewJWriterWithSession(session);
+        //    ReplyHelper.FillJWriter(obj, w);
+        //    ReplyHelper.EndWriter(w);
+        //    SendContribResponse(session, w.ToString(),islast);
+        //}
 
-        /// <summary>
-        /// 循环发送一个组对象
-        /// </summary>
-        /// <param name="session"></param>
-        /// <param name="objlist"></param>
-        protected void MultiSendJsonObjs(ISession session, object[] objlist,bool setlast=true)
-        {
-            int num = objlist.Length;
-            for (int i = 0; i < num;i++ )
-            {
-                SendJsonObj(session, objlist[i], setlast?(i == num - 1):false);
-            }
-        }
+        ///// <summary>
+        ///// 循环发送一个组对象
+        ///// </summary>
+        ///// <param name="session"></param>
+        ///// <param name="objlist"></param>
+        //protected void MultiSendJsonObjs(ISession session, object[] objlist,bool setlast=true)
+        //{
+        //    int num = objlist.Length;
+        //    for (int i = 0; i < num;i++ )
+        //    {
+        //        SendJsonObj(session, objlist[i], setlast?(i == num - 1):false);
+        //    }
+        //}
 
 
 
@@ -225,35 +205,35 @@ namespace TradingLib.Common
         /// <param name="message"></param>
         /// <param name="type"></param>
         /// <param name="addresslist"></param>
-        protected void Send(ISession session,string message, MessageTypes type, string[] addresslist)
-        {
-            foreach (string address in addresslist)
-            {
-                Send(message, type, address);
-            }
-        }
+        //protected void Send(ISession session,string message, MessageTypes type, string[] addresslist)
+        //{
+        //    foreach (string address in addresslist)
+        //    {
+        //        Send(message, type, address);
+        //    }
+        //}
 
-        protected void Send(ISession session, string message, string[] addresslist)
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append(session.ContirbID);
-            sb.Append('|');
-            sb.Append(session.CMDStr);
-            sb.Append('|');
-            sb.Append(message);
-            Send(session, sb.ToString(), MessageTypes.CONTRIBRESPONSE, addresslist);
-        }
+        //protected void Send(ISession session, string message, string[] addresslist)
+        //{
+        //    StringBuilder sb = new StringBuilder();
+        //    sb.Append(session.ContirbID);
+        //    sb.Append('|');
+        //    sb.Append(session.CMDStr);
+        //    sb.Append('|');
+        //    sb.Append(message);
+        //    Send(session, sb.ToString(), MessageTypes.CONTRIBRESPONSE, addresslist);
+        //}
 
-        protected void Send(ISession session, object obj, string[] addresslist)
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append(session.ContirbID);
-            sb.Append('|');
-            sb.Append(session.CMDStr);
-            sb.Append('|');
-            sb.Append(JsonMapper.ToJson(obj));
-            Send(session, sb.ToString(), MessageTypes.CONTRIBRESPONSE, addresslist);
-        }
+        //protected void Send(ISession session, object obj, string[] addresslist)
+        //{
+        //    StringBuilder sb = new StringBuilder();
+        //    sb.Append(session.ContirbID);
+        //    sb.Append('|');
+        //    sb.Append(session.CMDStr);
+        //    sb.Append('|');
+        //    sb.Append(JsonMapper.ToJson(obj));
+        //    Send(session, sb.ToString(), MessageTypes.CONTRIBRESPONSE, addresslist);
+        //}
 
         
     }

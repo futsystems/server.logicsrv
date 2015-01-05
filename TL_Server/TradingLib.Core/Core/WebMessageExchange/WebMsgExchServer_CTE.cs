@@ -46,26 +46,26 @@ namespace TradingLib.Core
         }
 
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageWeb, "watchaccount", "watchaccount - web管理端设定观察帐户列表", "web管理端设定观察帐户列表")]
-        public string WatchAccounts(string uuid, string accounts)
-        {
-            debug("websock:" + uuid + " 设定帐户集合:" + accounts, QSEnumDebugLevel.INFO);
-            WebAdminInfoEx info = null;
-            if (!webExInfoMap.TryGetValue(uuid, out info))
-            {
-                return ReplyHelper.Error_WebSockUUIDNotFound;
-            }
-            List<IAccount> acclist = new List<IAccount>();
-            string[] args = accounts.Split('.');
-            foreach (string a in args)
-            {
-                IAccount acc = _clearcentre[a];
-                if (acc != null)
-                    acclist.Add(acc);
-            }
-            info.GotWathAccount(acclist);
-            return ReplyHelper.Success_Generic;
-        }
+        //[ContribCommandAttr(QSEnumCommandSource.MessageWeb, "watchaccount", "watchaccount - web管理端设定观察帐户列表", "web管理端设定观察帐户列表")]
+        //public jsonre WatchAccounts(string uuid, string accounts)
+        //{
+        //    debug("websock:" + uuid + " 设定帐户集合:" + accounts, QSEnumDebugLevel.INFO);
+        //    WebAdminInfoEx info = null;
+        //    if (!webExInfoMap.TryGetValue(uuid, out info))
+        //    {
+        //        return ReplyHelper.Error_WebSockUUIDNotFound;
+        //    }
+        //    List<IAccount> acclist = new List<IAccount>();
+        //    string[] args = accounts.Split('.');
+        //    foreach (string a in args)
+        //    {
+        //        IAccount acc = _clearcentre[a];
+        //        if (acc != null)
+        //            acclist.Add(acc);
+        //    }
+        //    info.GotWathAccount(acclist);
+        //    return ReplyHelper.Success_Generic;
+        //}
 
         //[TaskAttr("采集帐户信息", 3, "定时采集帐户信息用于向Web端进行推送")]
         //public void Task_CollectAccountInfo()

@@ -83,7 +83,7 @@ namespace TradingLib.Core
             NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(GetNotifyTargets(op.GetNotifyPredicate()));
             response.ModuleID = CoreName;
             response.CMDStr = "NotifyCashOperation";
-            response.Result = Mixins.JsonReply.SuccessReply(op).ToJson();
+            response.Result = Mixins.Json.JsonReply.SuccessReply(op).ToJson();
             CachePacket(response);
         }
 
@@ -98,7 +98,7 @@ namespace TradingLib.Core
             NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(GetNotifyTargets(mgr.GetNotifyPredicate()));
             response.ModuleID = CoreName;
             response.CMDStr = "NotifyManagerUpdate";
-            response.Result = Mixins.JsonReply.SuccessReply(mgr).ToJson();
+            response.Result = Mixins.Json.JsonReply.SuccessReply(mgr).ToJson();
             CachePacket(response);
         }
 

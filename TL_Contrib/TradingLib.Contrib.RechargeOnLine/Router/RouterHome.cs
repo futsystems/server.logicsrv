@@ -12,6 +12,7 @@ using HttpServer.Routing;
 using TradingLib.Mixins.JsonObject;
 using TradingLib.API;
 using TradingLib.Common;
+using TradingLib.Mixins.Json;
 
 namespace TradingLib.Contrib.RechargeOnLine
 {
@@ -102,7 +103,9 @@ namespace TradingLib.Contrib.RechargeOnLine
         void UpdateNotifyEmail(string account,string email)
         {
             //通过MessageWebHandler通过字符串调用指定的函数进行相关操作,避免了强依赖
-            TLCtxHelper.Ctx.MessageWebHandler("NotifyGatway", "UpdateNotifyEmail", account + "," + email);
+
+            JsonRequest request = JsonRequest.MakeRequest("NotifyGatway", "UpdateNotifyEmail", account + "," + email);
+            TLCtxHelper.Ctx.MessageWebHandler(request);
         }
     }
 }

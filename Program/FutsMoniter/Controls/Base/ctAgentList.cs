@@ -9,8 +9,6 @@ using System.Windows.Forms;
 using FutSystems.GUI;
 using TradingLib.API;
 using TradingLib.Common;
-using TradingLib.Mixins.LitJson;
-
 
 namespace FutsMoniter
 {
@@ -103,11 +101,12 @@ namespace FutsMoniter
 
         void OnManagerNotify(string jsonstr)
         {
-            JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
-            int code = int.Parse(jd["Code"].ToString());
-            if (code == 0)
+            //JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
+            //int code = int.Parse(jd["Code"].ToString());
+            Manager obj = MoniterUtils.ParseJsonResponse<Manager>(jsonstr);
+            if (obj !=null)
             {
-                Manager obj = TradingLib.Mixins.LitJson.JsonMapper.ToObject<Manager>(jd["Playload"].ToJson());
+                //Manager obj = TradingLib.Mixins.LitJson.JsonMapper.ToObject<Manager>(jd["Playload"].ToJson());
                 ReloadList();
             }
         }

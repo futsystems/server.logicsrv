@@ -9,8 +9,7 @@ using System.Diagnostics;//记得加入此引用
 
 using TradingLib.API;
 using TradingLib.Common;
-using TradingLib;
-using TradingLib.LitJson;
+
 
 /*委托核心处理流程
  * 1.客户端发送直接委托
