@@ -54,21 +54,21 @@ namespace TradingLib.Core
                         else if (o.Status == QSEnumOrderStatus.Submited || o.Status == QSEnumOrderStatus.Placed)//已经通过broker提交 该状态无法立即撤单 需要等待委托状态更新为Opened或者 被定时程序发现是一个错误委托
                         {
                             debug(string.Format("委托:{0} 处于:{1},等待broker返回", o.id, o.Status), QSEnumDebugLevel.INFO);
-                            NotifyOrderActionError(action, RspInfoImpl.Fill("ORDER_IN_PRESTAGE"));
+                            NotifyOrderActionError(action, RspInfoEx.Fill("ORDER_IN_PRESTAGE"));
                         }
                     }
                     else
                     {
                         //委托不可撤销
                         debug("对应委托不可撤销:"+o.GetOrderInfo(), QSEnumDebugLevel.WARNING);
-                        NotifyOrderActionError(action, RspInfoImpl.Fill("ORDER_CAN_NOT_BE_DELETE"));
+                        NotifyOrderActionError(action, RspInfoEx.Fill("ORDER_CAN_NOT_BE_DELETE"));
                     }
                 }
             }
             else//委托操作所指定的委托不存在 委托操作字段错误
             {
                 debug("对应委托没有找到", QSEnumDebugLevel.WARNING);
-                NotifyOrderActionError(action, RspInfoImpl.Fill("ORDERACTION_BAD_FIELD"));
+                NotifyOrderActionError(action, RspInfoEx.Fill("ORDERACTION_BAD_FIELD"));
             }
 
         }

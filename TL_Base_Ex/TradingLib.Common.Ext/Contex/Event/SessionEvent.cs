@@ -28,12 +28,12 @@ namespace TradingLib.Common
         /// <summary>
         /// 交易帐号登入成功
         /// </summary>
-        public event AccountIdDel AccountLoginSuccessEvent;
+        public event AccoundIDDel AccountLoginSuccessEvent;
 
         /// <summary>
         /// 交易帐号登入失败
         /// </summary>
-        public event AccountIdDel AccountLoginFailedEvent;
+        public event AccoundIDDel AccountLoginFailedEvent;
 
         /// <summary>
         /// 交易帐号登入成功后向对应客户端推送附加消息

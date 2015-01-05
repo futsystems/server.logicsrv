@@ -234,9 +234,9 @@ namespace TradingLib.ServiceManager
             
 
             //客户端登入成功
-            _messageExchagne.AccountLoginSuccessEvent += new AccountIdDel(TLCtxHelper.EventSession.FireAccountLoginSuccessEvent);
+            _messageExchagne.AccountLoginSuccessEvent += new AccoundIDDel(TLCtxHelper.EventSession.FireAccountLoginSuccessEvent);
             //客户端登入失败
-            _messageExchagne.AccountLoginFailedEvent += new AccountIdDel(TLCtxHelper.EventSession.FireAccountLoginFailedEvent);
+            _messageExchagne.AccountLoginFailedEvent += new AccoundIDDel(TLCtxHelper.EventSession.FireAccountLoginFailedEvent);
             //向登入成功客户端推送消息
             //_messageExchagne.NotifyLoginSuccessEvent += new AccountIdDel(TLCtxHelper.EventSession.FireNotifyLoginSuccessEvent);
             //客户端会话状态变化
@@ -247,13 +247,13 @@ namespace TradingLib.ServiceManager
 
             //EventAccount
             //激活交易帐户
-            _clearCentre.AccountActiveEvent += new AccountIdDel(TLCtxHelper.EventAccount.FireAccountActiveEvent);
+            _clearCentre.AccountActiveEvent += new AccoundIDDel(TLCtxHelper.EventAccount.FireAccountActiveEvent);
             //冻结交易帐户
-            _clearCentre.AccountInActiveEvent += new AccountIdDel(TLCtxHelper.EventAccount.FireAccountInactiveEvent);
+            _clearCentre.AccountInActiveEvent += new AccoundIDDel(TLCtxHelper.EventAccount.FireAccountInactiveEvent);
             //添加交易帐号
-            _clearCentre.AccountAddEvent += new AccountIdDel(TLCtxHelper.EventAccount.FireAccountAddEvent);
+            _clearCentre.AccountAddEvent += new AccoundIDDel(TLCtxHelper.EventAccount.FireAccountAddEvent);
             //删除交易帐号
-            _clearCentre.AccountDelEvent += new AccountIdDel(TLCtxHelper.EventAccount.FireAccountAddEvent);
+            _clearCentre.AccountDelEvent += new AccoundIDDel(TLCtxHelper.EventAccount.FireAccountAddEvent);
 
 
             //扩展模块强关系事件绑定

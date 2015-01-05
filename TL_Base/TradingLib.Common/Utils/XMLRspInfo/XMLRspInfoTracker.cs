@@ -19,13 +19,12 @@ namespace TradingLib.Common
         string _token = string.Empty;
         XMLRspInfo defaulterror = null;
 
-        public XMLRspInfoTracker(string token,string filename,string nodes)
+        public XMLRspInfoTracker(string token,string filename,string nodes="errors")
         {
             _token = token;
             _filename = filename;
             _nodes = nodes;
-            List<XMLRspInfo> list = LoadXMLRspInfo();
-            foreach (XMLRspInfo rsp in list)
+            foreach (XMLRspInfo rsp in LoadXMLRspInfo())
             {
                 xmlkeymap[rsp.Key] = rsp;
                 xmlcodemap[rsp.Code] = rsp;
@@ -72,11 +71,11 @@ namespace TradingLib.Common
             }
         }
 
-        public XMLRspInfo[] RspInfos
+        public IEnumerable<XMLRspInfo> RspInfos
         {
             get
             {
-                return xmlkeymap.Values.ToArray();
+                return xmlkeymap.Values;
             }
         }
 
@@ -85,11 +84,10 @@ namespace TradingLib.Common
         /// 加载xml rspinfo
         /// </summary>
         /// <returns></returns>
-        private  List<XMLRspInfo> LoadXMLRspInfo()
+        private IEnumerable<XMLRspInfo> LoadXMLRspInfo()
         {
             string xmlfile = Util.GetConfigFile(_filename);
             XmlDocument xmlDoc = null;
-            //LibUtil.Debug(">>>> xml error filename:" + xmlfile);
             if (File.Exists(xmlfile))
             {
                 xmlDoc = new XmlDocument();

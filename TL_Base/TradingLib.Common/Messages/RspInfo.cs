@@ -22,40 +22,7 @@ namespace TradingLib.Common
     public delegate void ErrorOrderRspInoDel(Order o,string error);
 
 
-    public static class RspInfoUtils
-    { 
-        public static void Fill(this RspInfo info,XMLRspInfo xml)
-        {
-            info.ErrorID = xml.Code;
-            info.ErrorMessage = xml.Message;
-        }
-
-        public static void Fill(this RspInfo info, FutsRspError error)
-        {
-            info.ErrorID = error.ErrorID;
-            info.ErrorMessage = error.ErrorMessage;
-        }
-
-
-        /// <summary>
-        /// 通过key设定具体的错误信息
-        /// </summary>
-        /// <param name="error_key"></param>
-        public static void Fill(this RspInfo info, string error_key)
-        {
-            info.Fill(XMLRspInfoHelper.Tracker[error_key]);
-        }
-
-        /// <summary>
-        /// 通过code设定具体的错误信息
-        /// </summary>
-        /// <param name="error_code"></param>
-        public static void Fill(this RspInfo info, int error_code)
-        {
-            info.Fill(XMLRspInfoHelper.Tracker[error_code]);
-        }
-
-    }
+    
     /// <summary>
     /// 回报消息
     /// 用于向客户端回报错误提示
@@ -63,48 +30,6 @@ namespace TradingLib.Common
     /// </summary>
     public class RspInfoImpl:RspInfo
     {
-        ///// <summary>
-        ///// 设定具体的错误信息
-        ///// </summary>
-        ///// <param name="error"></param>
-        //public void FillError(XMLRspInfo error)
-        //{
-        //    ErrorID = error.Code;
-        //    ErrorMessage = error.Message;
-        //}
-
-        ///// <summary>
-        ///// 通过异常来填充RspInfo
-        ///// </summary>
-        ///// <param name="error"></param>
-        //public void Fill(FutsRspError error)
-        //{
-        //    ErrorID = error.ErrorID;
-        //    ErrorMessage = error.ErrorMessage;
-        //}
-
-        
-
-        ///// <summary>
-        ///// 通过key设定具体的错误信息
-        ///// </summary>
-        ///// <param name="error_key"></param>
-        //public void FillError(string error_key)
-        //{
-        //    this.FillError(XMLRspInfoHelper.Tracker[error_key]);
-        //}
-
-        ///// <summary>
-        ///// 通过code设定具体的错误信息
-        ///// </summary>
-        ///// <param name="error_code"></param>
-        //public void FillError(int error_code)
-        //{
-        //    this.FillError(XMLRspInfoHelper.Tracker[error_code]);
-        //}
-
-
-
         public RspInfoImpl()
         {
             ErrorID = 0;
@@ -114,20 +39,6 @@ namespace TradingLib.Common
         public int ErrorID { get; set; }
 
         public string ErrorMessage { get; set; }
-
-        public static RspInfo Fill(string errorkey)
-        {
-            RspInfo info = new RspInfoImpl();
-            info.Fill(errorkey);
-            return info;
-        }
-
-        public static RspInfo Fill(int code)
-        {
-            RspInfo info = new RspInfoImpl();
-            info.Fill(code);
-            return info;
-        }
 
         public static string Serialize(RspInfo info)
         {

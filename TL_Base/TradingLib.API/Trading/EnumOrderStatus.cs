@@ -16,8 +16,7 @@ namespace TradingLib.API
     /// </summary>
     public enum QSEnumOrderStatus : byte
     {
-        [Description("提交至清算中心")]
-        Placed=0,
+        [Description("提交至清算中心")]Placed=0,
 
         /// <summary>
         /// 委托已经通过接口正常提交,但是没有获得成交端的任何返回,成交侧可能拒绝也可能接受

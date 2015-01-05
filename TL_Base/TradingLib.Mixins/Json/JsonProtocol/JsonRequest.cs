@@ -28,6 +28,7 @@ namespace TradingLib.Mixins.Json
         /// </summary>
         public string Token;
 
+
         public JsonRequest(string method, string module = "main", string args="",string token = "")
         {
             Module = module;

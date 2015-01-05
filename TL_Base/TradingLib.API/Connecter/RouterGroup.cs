@@ -60,7 +60,5 @@ namespace TradingLib.API
         /// 主域ID
         /// </summary>
         Domain Domain { get;}
-
-        void Start();
     }
 }

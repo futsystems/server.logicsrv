@@ -47,11 +47,11 @@ namespace TradingLib.API
 
 
     //Race中用到的委托
-    public delegate void PromotAccountDel(IAccount account, QSEnumAccountRaceStatus nextstatus);
-    public delegate void EliminateAccountDel(IAccount account, QSEnumAccountRaceStatus nextstatus);
-    public delegate void EntryAccountDel(IAccount account, QSEnumAccountRaceStatus nextstatus);
-    public delegate void AccountEntryRaceDel(IAccount account, QSEnumRaceType type);//某个账户进入某个类别的比赛
-    public delegate bool IAccountSignForPreraceDel(IAccount a, out string msg);//某个账户请求报名预赛
+    //public delegate void PromotAccountDel(IAccount account, QSEnumAccountRaceStatus nextstatus);
+    //public delegate void EliminateAccountDel(IAccount account, QSEnumAccountRaceStatus nextstatus);
+    //public delegate void EntryAccountDel(IAccount account, QSEnumAccountRaceStatus nextstatus);
+    //public delegate void AccountEntryRaceDel(IAccount account, QSEnumRaceType type);//某个账户进入某个类别的比赛
+    //public delegate bool IAccountSignForPreraceDel(IAccount a, out string msg);//某个账户请求报名预赛
 
     //public delegate IRaceInfo GetRaceInfoDel(string acc);//获取某个账户的比赛信息
     
@@ -87,8 +87,8 @@ namespace TradingLib.API
     //webchannel 相关事件委托
     public delegate string WebTaskDel(string param);
     public delegate string WebMessageDel(string param,bool istnetstring);
-    public delegate bool UpdateFinServiceDel(string account, decimal ammount, QSEnumFinServiceType type, decimal discount, int agentcode, out string msg);
-    public delegate bool AddFinServiceDel(string account, decimal ammount, QSEnumFinServiceType type, string agent, decimal discount, out string msg);
+    //public delegate bool UpdateFinServiceDel(string account, decimal ammount, QSEnumFinServiceType type, decimal discount, int agentcode, out string msg);
+    //public delegate bool AddFinServiceDel(string account, decimal ammount, QSEnumFinServiceType type, string agent, decimal discount, out string msg);
     public delegate string AddAccountDel(string user_id, string pass);
     public delegate bool ValidWithdrawDel(string account, decimal ammount, out string msg);
     public delegate bool AccountParamDel(string account, out string msg);

@@ -15,22 +15,22 @@ namespace TradingLib.API
         /// <summary>
         /// 添加交易帐号
         /// </summary>
-        event AccountIdDel AccountAddEvent;
+        event AccoundIDDel AccountAddEvent;
 
         /// <summary>
         /// 删除交易帐号
         /// </summary>
-        event AccountIdDel AccountDelEvent;
+        event AccoundIDDel AccountDelEvent;
 
         /// <summary>
         /// 激活交易帐号
         /// </summary>
-        event AccountIdDel AccountActiveEvent;
+        event AccoundIDDel AccountActiveEvent;
 
         /// <summary>
         /// 冻结交易帐号
         /// </summary>
-        event AccountIdDel AccountInActiveEvent;
+        event AccoundIDDel AccountInActiveEvent;
 
         /// <summary>
         /// 交易帐户加载到内存

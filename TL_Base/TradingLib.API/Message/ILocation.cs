@@ -6,7 +6,7 @@ using System.Text;
 namespace TradingLib.API
 {
     /// <summary>
-    /// 客户端定位
+    /// 客户端位置
     /// </summary>
     public interface ILocation
     {

@@ -82,12 +82,12 @@ namespace TradingLib.Core
         /// <summary>
         /// 客户端登入成功事件
         /// </summary>
-        public event AccountIdDel AccountLoginSuccessEvent;
+        public event AccoundIDDel AccountLoginSuccessEvent;
 
         /// <summary>
         /// 客户端登入失败事件
         /// </summary>
-        public event AccountIdDel AccountLoginFailedEvent;
+        public event AccoundIDDel AccountLoginFailedEvent;
 
         /// <summary>
         /// 客户端登入 退出事件

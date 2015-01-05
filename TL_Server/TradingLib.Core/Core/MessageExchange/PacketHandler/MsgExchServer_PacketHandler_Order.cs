@@ -95,7 +95,7 @@ namespace TradingLib.Core
                 if (!_riskcentre.TrckerOrderAccount(o, out acc))
                 {
                     o.Status = QSEnumOrderStatus.Reject;
-                    ReplyErrorOrder(o, RspInfoImpl.Fill("TRADING_ACCOUNT_NOT_FOUND"), false);
+                    ReplyErrorOrder(o, RspInfoEx.Fill("TRADING_ACCOUNT_NOT_FOUND"), false);
                     return;
                 }
 
@@ -108,7 +108,7 @@ namespace TradingLib.Core
                     if (!_riskcentre.CheckOrderStep1(ref o, acc, out needlog,out errortitle, inter))
                     {
                         o.Status = QSEnumOrderStatus.Reject;
-                        RspInfo info = RspInfoImpl.Fill(errortitle);
+                        RspInfo info = RspInfoEx.Fill(errortitle);
 
                         o.Comment = "风控拒绝:" + info.ErrorMessage;
                         ReplyErrorOrder(o, info, needlog);
@@ -130,7 +130,7 @@ namespace TradingLib.Core
                         if (!_riskcentre.CheckOrderStep2(ref o, acc,out msg, inter))
                         {
                             o.Status = QSEnumOrderStatus.Reject;
-                            RspInfo info = RspInfoImpl.Fill("RISKCENTRE_CHECK_ERROR");
+                            RspInfo info = RspInfoEx.Fill("RISKCENTRE_CHECK_ERROR");
                             info.ErrorMessage = string.IsNullOrEmpty(msg) ? info.ErrorMessage : msg;//错误代码替换
                             o.Comment = "风控拒绝:" + info.ErrorMessage;
                             ReplyErrorOrder(o,info);

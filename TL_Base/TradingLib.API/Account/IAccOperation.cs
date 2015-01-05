@@ -51,7 +51,7 @@ namespace TradingLib.API
         void CancelOrder(string symbol,QSEnumOrderSource source,string cancelreason);
 
         /// <summary>
-        /// 撤掉帐户下的某个为头
+        /// 撤掉帐户下的某个委托
         /// </summary>
         /// <param name="order"></param>
         /// <param name="source"></param>

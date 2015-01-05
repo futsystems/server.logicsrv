@@ -45,6 +45,7 @@
     <Compile Include="Connecter\RouterItem.cs" />
     <Compile Include="Domain\Domain.cs" />
     <Compile Include="Msic\EnumConnectorStatus.cs" />
+    <Compile Include="Msic\EnumOrderTransferType.cs" />
     <Compile Include="Msic\EnumTaskType.cs" />
     <Compile Include="Vendor\IVendor.cs" />
     <Compile Include="Connecter\EnumDataFeedTypes.cs" />
@@ -52,7 +53,6 @@
     <Compile Include="Message\ILocation.cs" />
     <Compile Include="Message\IPacket.cs" />
     <Compile Include="Message\ISession.cs" />
-    <Compile Include="Message\ISessionUtils.cs" />
     <Compile Include="Message\RspInfo.cs" />
     <Compile Include="Msic\EnumCashOPSource.cs" />
     <Compile Include="Msic\EnumDebugLevel.cs" />
@@ -63,8 +63,6 @@
     <Compile Include="Msic\QSEnumRouterStrategy.cs" />
     <Compile Include="Rule\IRuleItem.cs" />
     <Compile Include="Trading\BasicInfo\IMarketTime.cs" />
-    <Compile Include="Reply\IReply.cs" />
-    <Compile Include="Reply\ReplyType.cs" />
     <Compile Include="Trading\CommissionConfig.cs" />
     <Compile Include="Trading\EnumAccountCategoy.cs" />
     <Compile Include="Trading\EnumHedgeFlag.cs" />
@@ -82,7 +80,7 @@
     <Compile Include="Connecter\IDataFeed.cs" />
     <Compile Include="Trading\BasicInfo\EnumCountry.cs" />
     <Compile Include="Msic\Delegates.cs" />
-    <Compile Include="Msic\enum.cs" />
+    <Compile Include="Msic\Enums.cs" />
     <Compile Include="Account\AccAdapter\IAccountInfoLite.cs" />
     <Compile Include="Msic\IEmail.cs" />
     <Compile Include="Trading\BasicInfo\IExchange.cs" />

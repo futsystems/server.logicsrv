@@ -7,8 +7,6 @@ namespace TradingLib.API
 {
     public interface IAccTradingInfo
     {
-        #region 该账户的交易信息
-
         /// <summary>
         /// 是否有任何持仓
         /// </summary>
@@ -18,11 +16,6 @@ namespace TradingLib.API
         /// 获得所有持仓对象
         /// </summary>
         IEnumerable<Position> Positions { get; }
-
-        /// <summary>
-        /// 净持仓,将多空对冲后得到的持仓数据,也就是不支持锁仓的情况下的数据
-        /// </summary>
-        //IEnumerable<Position> PositionsNet { get; }
 
         /// <summary>
         /// 多头持仓维护器
@@ -55,13 +48,5 @@ namespace TradingLib.API
         /// <param name="symbol"></param>
         /// <returns></returns>
         Position GetPosition(string symbol,bool side);
-
-        /// <summary>
-        /// 获得某个合约的净持仓对象
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <returns></returns>
-        //Position GetPositionNet(string symbol);
-        #endregion
     }
 }

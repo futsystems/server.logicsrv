@@ -34,22 +34,22 @@ namespace TradingLib.Core
         /// <summary>
         /// 添加交易帐号
         /// </summary>
-        public event AccountIdDel AccountAddEvent;
+        public event AccoundIDDel AccountAddEvent;
 
         /// <summary>
         /// 删除交易帐号
         /// </summary>
-        public event AccountIdDel AccountDelEvent;
+        public event AccoundIDDel AccountDelEvent;
 
         /// <summary>
         /// 激活交易帐号
         /// </summary>
-        public event AccountIdDel AccountActiveEvent;
+        public event AccoundIDDel AccountActiveEvent;
 
         /// <summary>
         /// 冻结交易帐号
         /// </summary>
-        public event AccountIdDel AccountInActiveEvent;
+        public event AccoundIDDel AccountInActiveEvent;
 
         /// <summary>
         /// 加载交易帐号

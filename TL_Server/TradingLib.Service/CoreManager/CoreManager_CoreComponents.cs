@@ -73,7 +73,7 @@ namespace TradingLib.ServiceManager
             _settleCentre.BindRiskCentre(_riskCentre);
 
             //2.清算中心激活某个账户 调用风控中心重置该账户规则 解决账户检查规则触发后,状态没复位,账户激活后规则失效的问题
-            _clearCentre.AccountActiveEvent += new AccountIdDel(_riskCentre.ResetRuleSet);
+            _clearCentre.AccountActiveEvent += new AccoundIDDel(_riskCentre.ResetRuleSet);
 
             //交易服务回报风控中心
             _messageExchagne.GotTickEvent += new TickDelegate(_riskCentre.GotTick);
@@ -95,7 +95,7 @@ namespace TradingLib.ServiceManager
             //4.风控中心记录客户端的登入 登出情况
             //_messageExchagne.SendLoginInfoEvent -= new LoginInfoDel(_riskCentre.GotLoginInfo);
 
-            _clearCentre.AccountActiveEvent -= new AccountIdDel(_riskCentre.ResetRuleSet);
+            _clearCentre.AccountActiveEvent -= new AccoundIDDel(_riskCentre.ResetRuleSet);
 
             //交易服务行情驱动风控中心
             _messageExchagne.GotTickEvent -= new TickDelegate(_riskCentre.GotTick);
@@ -174,7 +174,7 @@ namespace TradingLib.ServiceManager
             ////帐户变动事件，当帐户设置或者相关属性发生变动时 触发该事件
             _clearCentre.AccountChangedEvent += new AccountSettingChangedDel(_managerExchange.newAccountChanged);
             ////添加帐户
-            _clearCentre.AccountAddEvent += new AccountIdDel(_managerExchange.newAccountAdded);
+            _clearCentre.AccountAddEvent += new AccoundIDDel(_managerExchange.newAccountAdded);
         }
         private void DestoryMgrExchSrv()
         {
@@ -194,7 +194,7 @@ namespace TradingLib.ServiceManager
             ////帐户变动事件，当帐户设置或者相关属性发生变动时 触发该事件
             _clearCentre.AccountChangedEvent -= new AccountSettingChangedDel(_managerExchange.newAccountChanged);
             ////添加帐户
-            _clearCentre.AccountAddEvent -= new AccountIdDel(_managerExchange.newAccountAdded);
+            _clearCentre.AccountAddEvent -= new AccoundIDDel(_managerExchange.newAccountAdded);
            
             _managerExchange.Dispose();
         }

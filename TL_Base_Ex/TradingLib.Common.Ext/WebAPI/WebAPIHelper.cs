@@ -48,6 +48,7 @@ namespace TradingLib.Common
         {
             return new JsonReply(0, "", obj);
         }
+
         /// <summary>
         /// 通过XMLRspInfo生成对应的JsonReply
         /// </summary>

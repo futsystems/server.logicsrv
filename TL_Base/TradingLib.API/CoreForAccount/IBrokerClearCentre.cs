@@ -23,12 +23,7 @@ namespace TradingLib.API
         /// <param name="broker"></param>
         /// <returns></returns>
         IEnumerable<Trade> GetTradesViaBroker(string broker);
-        /// <summary>
-        /// 检查某个委托是否是Pending状态，simbroker 如果委托处于pending状态则需要被加载到成交引擎中去
-        /// </summary>
-        /// <param name="o"></param>
-        /// <returns></returns>
-        //bool IsPending(Order o);
+
         /// <summary>
         /// 返回某个账户 某个symbol的持仓情况
         /// </summary>

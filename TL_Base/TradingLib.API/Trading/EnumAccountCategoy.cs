@@ -13,12 +13,9 @@ namespace TradingLib.API
     /// </summary>
     public enum QSEnumAccountCategory
     {
-        //[Description("交易员")]//交易员购买乘数只能为1,其资金代表公司提供的实际资金
-        //DEALER,
         [Description("模拟交易帐号")]
         SIMULATION,
         [Description("实盘交易帐号")]
         REAL,
-
     }
 }

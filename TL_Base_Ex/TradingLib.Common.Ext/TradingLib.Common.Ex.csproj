@@ -105,8 +105,9 @@
     <Compile Include="Utils\Domain\DomainUtils_Manager.cs" />
     <Compile Include="Utils\Domain\DomainUtils_Cfg.cs" />
     <Compile Include="Utils\Domain\DomainUtils_InDomain.cs" />
+    <Compile Include="Utils\FutsRspErrorUtils.cs" />
     <Compile Include="Utils\HanlerMixins.cs" />
-    <Compile Include="Utils\ISessionTransUtils.cs" />
+    <Compile Include="Utils\ISessionUtils.cs" />
     <Compile Include="ORM\Config\ConfigItem.cs" />
     <Compile Include="ORM\Config\ConfigDB.cs" />
     <Compile Include="ORM\Config\GlobalConfig.cs" />
@@ -148,7 +149,8 @@
     <Compile Include="ExCommConst.cs" />
     <Compile Include="ExUtil.cs" />
     <Compile Include="Filter.cs" />
-    <Compile Include="WebAPI\ReplyHelper.cs" />
+    <Compile Include="Utils\RspInfoUtils.cs" />
+    <Compile Include="WebAPI\WebAPIHelper.cs" />
     <Compile Include="ORM\MBasicInfo.cs" />
     <Compile Include="Plugin\ContribCommandInfo.cs" />
     <Compile Include="Plugin\ContribEventInfo.cs" />

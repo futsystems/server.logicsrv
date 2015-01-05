@@ -12,24 +12,24 @@ namespace TradingLib.Common
         /// <summary>
         /// 交易帐号冻结事件
         /// </summary>
-        public event AccountIdDel AccountInactiveEvent;
+        public event AccoundIDDel AccountInactiveEvent;
 
         /// <summary>
         /// 交易帐号激活事件
         /// </summary>
-        public event AccountIdDel AccountActiveEvent;
+        public event AccoundIDDel AccountActiveEvent;
 
 
         /// <summary>
         /// 添加交易帐号事件
         /// </summary>
-        public event AccountIdDel AccountAddEvent;
+        public event AccoundIDDel AccountAddEvent;
 
 
         /// <summary>
         /// 交易帐号删除事件
         /// </summary>
-        public event AccountIdDel AccountDelEvent;
+        public event AccoundIDDel AccountDelEvent;
 
 
 

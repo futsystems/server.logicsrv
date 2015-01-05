@@ -72,7 +72,7 @@ namespace TradingLib.Core
         /// <param name="errortitle"></param>
         void GotOrderErrorNotify(Order o, string errortitle)
         {
-            RspInfo info = RspInfoImpl.Fill(errortitle);
+            RspInfo info = RspInfoEx.Fill(errortitle);
             o.Comment = info.ErrorMessage;
             Broker_GotOrderError(o, info);
         }
