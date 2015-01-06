@@ -16,7 +16,7 @@ namespace TradingLib.Common
     /// <summary>
     /// 清算中心，为服务器维护了一批交易账户,以及每个交易账户的实时Order,trades,position的相关信息。
     /// </summary>
-    public abstract partial class ClearCentreBase : BaseSrvObject, IClearCentreBase
+    public abstract partial class ClearCentreBase : BaseSrvObject
     {
         
 

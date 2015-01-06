@@ -652,6 +652,7 @@ namespace TradingLib.Common
                         _routermanager = obj as IRouterManager;
                     }
                 }
+
                 //1.检查是否是核心模块
                 if (obj is ICore)
                 {
