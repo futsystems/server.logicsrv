@@ -19,7 +19,7 @@ namespace TradingLib.Common
         private SessionEvent<TrdClientInfo> m_SessionEvent;
         private AccountEvent m_AccountEvent;
         private ExContribEvent m_ExContribEvent;
-        private CashOperationEvent m_CashOperationEvent;
+        //private CashOperationEvent m_CashOperationEvent;
         private SystemEvent m_SystemEvent;
 
         private IUtil m_util;
@@ -39,7 +39,7 @@ namespace TradingLib.Common
             this.m_SessionEvent = new SessionEvent<TrdClientInfo>();
             this.m_AccountEvent = new AccountEvent();
             this.m_ExContribEvent = new ExContribEvent();
-            this.m_CashOperationEvent = new CashOperationEvent();
+            //this.m_CashOperationEvent = new CashOperationEvent();
         }
 
         public void Dispose()
@@ -56,7 +56,7 @@ namespace TradingLib.Common
                 defaultInstance.m_ExContribEvent = null;
                 defaultInstance.m_IndicatorEvent = null;
                 defaultInstance.m_SessionEvent = null;
-                defaultInstance.m_CashOperationEvent = null;
+                //defaultInstance.m_CashOperationEvent = null;
                 //defaultInstance.Dispose();
                 //defaultInstance = null;
             }
@@ -134,18 +134,18 @@ namespace TradingLib.Common
             }
         }
 
-        /// <summary>
-        /// 出入金请求操作事件
-        /// </summary>
-        public static CashOperationEvent CashOperationEvent
-        {
-            get
-            {
-                if (defaultInstance.m_CashOperationEvent == null)
-                    defaultInstance.m_CashOperationEvent = new CashOperationEvent();
-                return defaultInstance.m_CashOperationEvent;
-            }
-        }
+        ///// <summary>
+        ///// 出入金请求操作事件
+        ///// </summary>
+        //public static CashOperationEvent CashOperationEvent
+        //{
+        //    get
+        //    {
+        //        if (defaultInstance.m_CashOperationEvent == null)
+        //            defaultInstance.m_CashOperationEvent = new CashOperationEvent();
+        //        return defaultInstance.m_CashOperationEvent;
+        //    }
+        //}
 
 
 
@@ -157,18 +157,6 @@ namespace TradingLib.Common
             get
             {
                 return defaultInstance.ctx.ClearCentre as IAccountOperation;
-            }
-        }
-
-
-        /// <summary>
-        /// 交易帐号 操作
-        /// </summary>
-        public static IAccountOperationCritical CmdAccountCritical
-        {
-            get
-            {
-                return defaultInstance.ctx.ClearCentre as IAccountOperationCritical;
             }
         }
 

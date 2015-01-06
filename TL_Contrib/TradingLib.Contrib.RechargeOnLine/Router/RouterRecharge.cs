@@ -106,7 +106,7 @@ namespace TradingLib.Contrib.RechargeOnLine
                         response.PageTemplate("payment", viewdata);
                     }
                     //通过事件中继触发出入金请求操作
-                    TLCtxHelper.CashOperationEvent.FireCashOperation(this, QSEnumCashOpEventType.Reject, operation);
+                    TLCtxHelper.EventSystem.FireCashOperation(this, QSEnumCashOpEventType.Reject, operation);
                 }
                 catch (Exception ex)//如果异常 以Internal Server Error显示
                 {

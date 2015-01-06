@@ -12,19 +12,11 @@ namespace TradingLib.API
     public interface IBrokerTradingInfo
     {
         /// <summary>
-        /// 获得某个交易通道当天的委托数据 用于从数据库恢复委托数据
-        /// </summary>
-        /// <param name="?"></param>
-        /// <returns></returns>
-        //IList<Order> getOrders(IBroker broker);
-
-        /// <summary>
         /// 获得日内成交接口的所有委托
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
         IEnumerable<Order> SelectBrokerOrders(string token);
-
 
         /// <summary>
         /// 获得日内成交接口的所有成交
@@ -40,5 +32,11 @@ namespace TradingLib.API
         /// <returns></returns>
         IEnumerable<PositionDetail> SelectBrokerPositionDetails(string token);
 
+
+        /// <summary>
+        /// 获得路右侧委托
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<Order> SelectRouterOrders();
     }
 }

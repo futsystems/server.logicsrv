@@ -61,10 +61,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Accounts\Account.cs" />
-    <Compile Include="Accounts\AccountAdapterToExp.cs" />
+    <Compile Include="Wrapper\AccountAdapterToExp.cs" />
     <Compile Include="Accounts\AccountCreation.cs" />
     <Compile Include="Accounts\AccountFilter.cs" />
     <Compile Include="Accounts\Account_IAccCal.cs" />
+    <Compile Include="Contex\Event\EventArgs\CashOperationEventArgs.cs" />
     <Compile Include="Utils\Account\AccountUtils_ObjectWrapper.cs" />
     <Compile Include="Utils\Account\AccountUtils_xx.cs" />
     <Compile Include="Accounts\Account_Factory.cs" />
@@ -84,7 +85,6 @@
     <Compile Include="Client\MgrClientInfo.cs" />
     <Compile Include="Client\TrdClientInfo.cs" />
     <Compile Include="Contex\CoreUtil.cs" />
-    <Compile Include="Contex\Event\CashOperationEvent.cs" />
     <Compile Include="Contex\Event\EventArgs\PacketEventArgs.cs" />
     <Compile Include="Contex\Event\EventArgs\PositionFlatEventArgs.cs" />
     <Compile Include="Contex\Event\SystemEvent.cs" />
@@ -156,7 +156,7 @@
     <Compile Include="SrvObject\ContribSrvObject.cs" />
     <Compile Include="SrvObject\BaseObject.cs" />
     <Compile Include="ClearCentre\Base_ClearCentre.cs" />
-    <Compile Include="ClearCentre\ClearCentreAdapterToBroker.cs" />
+    <Compile Include="Wrapper\ClearCentreAdapterToBroker.cs" />
     <Compile Include="ClearCentre\CommissionHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ThroughtPutTracker.cs" />

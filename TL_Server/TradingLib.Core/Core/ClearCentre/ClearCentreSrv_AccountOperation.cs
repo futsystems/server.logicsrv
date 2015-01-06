@@ -202,7 +202,7 @@ namespace TradingLib.Core
         {
             try
             {
-                if (CoreUtil.IsSettle2Reset())
+                if (TLCtxHelper.Ctx.SettleCentre.IsInSettle)
                 {
                     msg = "下午15:30-16:15 无法出入金";
                     return false;

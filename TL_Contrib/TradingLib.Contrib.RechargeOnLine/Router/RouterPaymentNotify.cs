@@ -107,7 +107,7 @@ namespace TradingLib.Contrib.RechargeOnLine
                         //重新读取数据库并触发当前确认事件
                         op = ORM.MCashOpAccount.GetAccountCashOperation(transID);
                         //通过事件中继触发出入金请求操作
-                        TLCtxHelper.CashOperationEvent.FireCashOperation(this, QSEnumCashOpEventType.Confirm,op);
+                        TLCtxHelper.EventSystem.FireCashOperation(this, QSEnumCashOpEventType.Confirm, op);
                     }
                     //支付异常
                     else

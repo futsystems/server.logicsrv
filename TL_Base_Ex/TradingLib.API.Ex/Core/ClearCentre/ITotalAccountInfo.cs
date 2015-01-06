@@ -31,10 +31,5 @@ namespace TradingLib.API
         /// 所有成交
         /// </summary>
         IEnumerable<Trade> TotalTrades { get;}
-
-        /// <summary>
-        /// 所有隔夜持仓
-        /// </summary>
-        //IEnumerable<Position> TotalYdPositions { get;}
     }
 }

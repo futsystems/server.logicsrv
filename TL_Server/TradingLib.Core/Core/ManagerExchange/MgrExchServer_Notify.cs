@@ -52,7 +52,7 @@ namespace TradingLib.Core
         /// </summary>
         void InitNotifySection()
         {
-            TLCtxHelper.CashOperationEvent.CashOperationRequest += new EventHandler<CashOperationEventArgs>(CashOperationEvent_CashOperationRequest);
+            TLCtxHelper.EventSystem.CashOperationRequest += new EventHandler<CashOperationEventArgs>(CashOperationEvent_CashOperationRequest);
         }
 
         void CashOperationEvent_CashOperationRequest(object sender, CashOperationEventArgs e)

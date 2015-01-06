@@ -56,7 +56,8 @@
     <Compile Include="ORM\MConfig.cs" />
     <Compile Include="ORM\MySqlBase.cs" />
     <Compile Include="Domain\DomainImpl.cs" />
-    <Compile Include="Trading\SecurityUtils.cs" />
+    <Compile Include="Tracker\HighLowTracker.cs" />
+    <Compile Include="Trading\Utils\SecurityUtils.cs" />
     <Compile Include="Utils\Util_string.cs" />
     <Compile Include="Utils\XMLRspInfo\XMLRspInfoTracker.cs" />
     <Compile Include="Utils\XMLRspInfo\XMLRspInfo.cs" />

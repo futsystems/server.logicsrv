@@ -83,7 +83,7 @@ namespace TradingLib.Core
                     request = ORM.MCashOpAccount.GetAccountCashOperation(request.Ref);
                     session.ReplyMgr(request);
                     //通过事件中继触发事件
-                    TLCtxHelper.CashOperationEvent.FireCashOperation(this, QSEnumCashOpEventType.Confirm, request);
+                    TLCtxHelper.EventSystem.FireCashOperation(this, QSEnumCashOpEventType.Confirm, request);
                 }
             }
             catch (FutsRspError ex)
@@ -110,7 +110,7 @@ namespace TradingLib.Core
                     ORM.MCashOpAccount.CancelAccountCashOperation(request);
                     session.ReplyMgr(request);
                     //通过事件中继触发事件
-                    TLCtxHelper.CashOperationEvent.FireCashOperation(this, QSEnumCashOpEventType.Cancel, request);
+                    TLCtxHelper.EventSystem.FireCashOperation(this, QSEnumCashOpEventType.Cancel, request);
                 }
             }
         }
@@ -134,7 +134,7 @@ namespace TradingLib.Core
                     ORM.MCashOpAccount.RejectAccountCashOperation(request);
                     session.ReplyMgr(request);
                     //通过事件中继触发事件
-                    TLCtxHelper.CashOperationEvent.FireCashOperation(this, QSEnumCashOpEventType.Reject, request);
+                    TLCtxHelper.EventSystem.FireCashOperation(this, QSEnumCashOpEventType.Reject, request);
                 }
             }
         }
@@ -195,7 +195,7 @@ namespace TradingLib.Core
                         ORM.MCashOpAccount.InsertAccountCashOperation(request);
 
                         //通过事件中继触发事件
-                        TLCtxHelper.CashOperationEvent.FireCashOperation(this, QSEnumCashOpEventType.Request, request);
+                        TLCtxHelper.EventSystem.FireCashOperation(this, QSEnumCashOpEventType.Request, request);
 
                         session.OperationSuccess("提交交易帐户出入金成功");
                     }

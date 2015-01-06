@@ -57,7 +57,6 @@
     <Compile Include="Core\ClearCentre\IBrokerTradingInfo.cs" />
     <Compile Include="Core\ClearCentre\ITotalAccountInfo.cs" />
     <Compile Include="Core\Core\IClearCentreSrv.cs" />
-    <Compile Include="Core\ClearCentre\IGotTradingInfo.cs" />
     <Compile Include="Contrib\IContrib.cs" />
     <Compile Include="Delegate.cs" />
     <Compile Include="Core\Core\ICore.cs" />

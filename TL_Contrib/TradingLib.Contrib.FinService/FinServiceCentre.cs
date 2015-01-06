@@ -126,7 +126,7 @@ namespace TradingLib.Contrib.FinService
             TLCtxHelper.EventAccount.AccountActiveEvent += new AccoundIDDel(EventAccount_AccountActiveEvent);
 
             //出入金事件
-            TLCtxHelper.CashOperationEvent.CashOperationRequest += new EventHandler<CashOperationEventArgs>(CashOperationEvent_CashOperationRequest);
+            TLCtxHelper.EventSystem.CashOperationRequest += new EventHandler<CashOperationEventArgs>(CashOperationEvent_CashOperationRequest);
 
             //结算前 结算前事件
             TLCtxHelper.EventSystem.BeforeSettleEvent += new EventHandler<SystemEventArgs>(EventSystem_BeforeSettleEvent);
@@ -206,7 +206,7 @@ namespace TradingLib.Contrib.FinService
                 Util.Debug("结算后采集计费:" + item.Comment);
                 if (item.CollectType == EnumFeeCollectType.CollectAfterSettle)
                 {
-                    TLCtxHelper.CmdAccountCritical.CashOperation(item.Account, item.TotalFee * -1, "", item.Comment);
+                    TLCtxHelper.CmdAuthCashOperation.CashOperation(item.Account, item.TotalFee * -1, "", item.Comment);
                 }
             }
         }

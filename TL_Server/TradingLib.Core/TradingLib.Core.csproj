@@ -64,12 +64,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Base\ClientTracker.cs" />
-    <Compile Include="Base\CoreGlobal.cs" />
-    <Compile Include="Base\HighLowTracker.cs" />
-    <Compile Include="Base\Utils\PositionDetailsUtil.cs" />
     <Compile Include="Base\TIFTracker.cs" />
     <Compile Include="Base\TLServer_Generic.cs" />
-    <Compile Include="Base\Utils\SymbolUtils.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_AccountOperation.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_Interface.cs" />
@@ -156,7 +152,6 @@
     <Compile Include="Transport\FastTickSrvMgrClient.cs" />
     <Compile Include="Transport\ThroughtPutTracker.cs" />
     <Compile Include="Transport\ZeromqThroughPut.cs" />
-    <Compile Include="Base\CoreUtil.cs" />
     <Compile Include="Base\AsyncTransactionLoger.cs" />
     <Compile Include="Base\TIFEngine.cs" />
     <Compile Include="Transport\zmessages.cs" />

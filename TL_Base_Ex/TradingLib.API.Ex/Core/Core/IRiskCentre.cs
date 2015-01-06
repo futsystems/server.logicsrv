@@ -16,7 +16,6 @@ namespace TradingLib.API
 
         /// <summary>
         /// 时间检查标志
-        /// 
         /// </summary>
         bool MarketOpenTimeCheck { get; }
 

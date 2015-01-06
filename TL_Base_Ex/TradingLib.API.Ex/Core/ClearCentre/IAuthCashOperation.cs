@@ -7,6 +7,9 @@ namespace TradingLib.API
 {
     /// <summary>
     /// 认证和出入金请求接口
+    /// 认证交易帐户
+    /// 提交出入金请求，确认出入金请求
+    /// 直接从帐户扣费
     /// </summary>
     public interface IAuthCashOperation
     {
@@ -19,6 +22,14 @@ namespace TradingLib.API
         /// <param name="op"></param>
         /// <returns></returns>
         bool RequestCashOperation(string account, decimal amount, QSEnumCashOperation op,out string opref,QSEnumCashOPSource source= QSEnumCashOPSource.Unknown ,string recvinfo ="");
+
+        /// <summary>
+        /// 直接进行出入金操作
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="ammount"></param>
+        /// <param name="comment"></param>
+        void CashOperation(string id, decimal ammount, string transref, string comment);
 
         /// <summary>
         /// 确认某个入金记录
