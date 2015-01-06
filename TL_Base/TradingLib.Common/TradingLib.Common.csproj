@@ -47,7 +47,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Domain\DomainUtils.cs" />
     <Compile Include="Manager\UIAccess.cs" />
     <Compile Include="Messages\LogicFront.cs" />
     <Compile Include="ORM\Config\ConfigDB.cs" />
@@ -105,7 +104,6 @@
     <Compile Include="Messages\Manager\MGRChangePass.cs" />
     <Compile Include="Messages\Manager\MGRChangeInvestor.cs" />
     <Compile Include="Messages\Manager\MGRClearCentre.cs" />
-    <Compile Include="Messages\Manager\delete\MGRConnector.cs" />
     <Compile Include="Messages\Manager\MGRContrib.cs" />
     <Compile Include="Messages\Manager\MGRHistQry.cs" />
     <Compile Include="Messages\Manager\MGRManager.cs" />

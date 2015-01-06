@@ -27,7 +27,7 @@ namespace TradingLib.Common
     }
 
     /// <summary>
-    /// RspInfo扩展方法类
+    /// RspInfo扩展方法
     /// 用于从不同的消息源填充消息体
     /// </summary>
     public static class RspInfoUtils

@@ -7,8 +7,6 @@ namespace TradingLib.API
 {
     public interface IRuleItem
     {
-
-
         /// <summary>
         /// 数据库全局ID
         /// </summary>

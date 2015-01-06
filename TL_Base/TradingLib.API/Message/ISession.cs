@@ -59,25 +59,6 @@ namespace TradingLib.API
         /// 客户连接编号 整数
         /// </summary>
         int SessionIDi { get; }
-        /// <summary>
-        /// 交易帐号ID
-        /// </summary>
-        //string AccountID { get; }
-
-        /// <summary>
-        /// 管理员登入
-        /// </summary>
-        //string MGRLoginName { get; }
-
-        /// <summary>
-        /// 管理员ID
-        /// </summary>
-        //int MGRID { get; }
-
-        /// <summary>
-        /// 管理员主域ID
-        /// </summary>
-        //int MGRFK { get;  }
 
         /// <summary>
         /// 对应的扩展模块编号

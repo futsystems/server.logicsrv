@@ -60,10 +60,6 @@ namespace TradingLib.Common
             this.AvailableTypes.Clear();
             this.Plugins[typeof(ICore)] = new Dictionary<string, FinderPluginInfo>();//核心模块
             this.Plugins[typeof(IContrib)] = new Dictionary<string, FinderPluginInfo>();//扩展模块插件
-            //this.Plugins[typeof(ISeries)] = new Dictionary<string, FinderPluginInfo>();
-            //this.Plugins[typeof(ITrigger)] = new Dictionary<string, FinderPluginInfo>();
-            //this.Plugins[typeof(IAction)] = new Dictionary<string, FinderPluginInfo>();
-            //this.Plugins[typeof(IBackTestReportPlugin)] = new Dictionary<string, FinderPluginInfo>();
         }
 
 
@@ -260,8 +256,6 @@ namespace TradingLib.Common
         /// <param name="intface"></param>
         public void LoadImplementors(Type intface)
         {
-			//Util.Debug("loadimplementors:" + intface.ToString());
-
             //可用type集合中不存在该interface
             if (!this.AvailableTypes.ContainsKey(intface))
             {
@@ -662,6 +656,8 @@ namespace TradingLib.Common
             }
             return objArray;
         }
+
+
         /// <summary>
         /// 找到某个对象中用某个Attribute标注的所有方法
         /// </summary>
@@ -678,7 +674,6 @@ namespace TradingLib.Common
                 T attr = (T)Attribute.GetCustomAttribute(mi, typeof(T));
                 if (attr != null)
                 {
-                    //Util.Debug(mi.Name);
                     list.Add(mi);
                 }
             }
@@ -722,8 +717,9 @@ namespace TradingLib.Common
             return list;
         }
 
+        #region 获得对象的扩展方法,扩展事件,任务等
         /// <summary>
-        /// 获得某个对象的扩展模块方法
+        /// 获得某个对象方法列表
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
@@ -741,19 +737,16 @@ namespace TradingLib.Common
                     {
                         list.Add(new ContribCommandInfo(mi, attr, obj));
                     }
-                    /*
-                    list.Add(new ContribCommandInfo(mi, attr,obj));
-                    
-                    List<MethodArgument> args = GetArgumentList(mi);
-                    foreach (MethodArgument arg in args)
-                    {
-                        Util.Debug(arg.ToString());
-                    }**/
                 }
             }
             return list;
         }
 
+        /// <summary>
+        /// 获得某个对象的事件列表
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public List<ContribEventInfo> FindContribEvent(object obj)
         {
             List<ContribEventInfo> list = new List<ContribEventInfo>();
@@ -774,7 +767,7 @@ namespace TradingLib.Common
         }
 
         /// <summary>
-        /// 获得某个对象的扩展模块任务
+        /// 获得某个对象的任务列表
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
@@ -796,6 +789,7 @@ namespace TradingLib.Common
             }
             return list;
         }
+        #endregion
 
 
 

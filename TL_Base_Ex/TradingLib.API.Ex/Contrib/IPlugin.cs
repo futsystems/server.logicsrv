@@ -41,11 +41,5 @@ namespace TradingLib.API
         /// 类全名
         /// </summary>
         string Id { get; }
-
-        /*
-        /// <summary>
-        /// 
-        /// </summary>
-        string PluginId { get; }**/
     }
 }

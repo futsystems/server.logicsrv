@@ -88,7 +88,7 @@
     <Compile Include="Msic\TradingLibError.cs" />
     <Compile Include="Trading\Basket.cs" />
     <Compile Include="Msic\Constants.cs" />
-    <Compile Include="Trading\BasicInfo\EneumCurrency.cs" />
+    <Compile Include="Trading\BasicInfo\EnumCurrency.cs" />
     <Compile Include="Msic\GenericTrackerI.cs" />
     <Compile Include="Msic\Imbalance.cs" />
     <Compile Include="Trading\Indicators.cs" />

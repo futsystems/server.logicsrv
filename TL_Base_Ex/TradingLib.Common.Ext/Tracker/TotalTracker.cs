@@ -12,8 +12,6 @@ namespace TradingLib.Common
     /// </summary>
     public class TotalTracker
     {
-
-
         ConcurrentDictionary<long, Order> ordermap = new ConcurrentDictionary<long, Order>();
         ConcurrentDictionary<long, Trade> trademap = new ConcurrentDictionary<long, Trade>();
         ConcurrentDictionary<string, Position> positionmap = new ConcurrentDictionary<string, Position>();

@@ -128,13 +128,22 @@ namespace TradingLib.Common
             return this.finder.FindProperty<T>(type);
         }
 
-
+        /// <summary>
+        /// 获得某个方法的参数列表
+        /// </summary>
+        /// <param name="mi"></param>
+        /// <returns></returns>
         public List<MethodArgument> GetArgumentList(MethodInfo mi)
         {
             this.CreateFinder();
             return this.finder.GetArgumentList(mi);
         }
 
+        /// <summary>
+        /// 将参数转换成 object[] 预备调用方法
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
         public object[] ParseMethodArgs(List<MethodArgument> args)
         {
             this.CreateFinder();

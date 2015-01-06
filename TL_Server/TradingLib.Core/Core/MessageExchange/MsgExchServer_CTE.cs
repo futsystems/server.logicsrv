@@ -35,7 +35,7 @@ namespace TradingLib.Core
         public string PrintConnectionList()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("TotalConnection:" + tl.NumClients + " Logedin:" + tl.NumClientsLoggedIn + ExComConst.Line);
+            sb.Append("TotalConnection:" + tl.NumClients + " Logedin:" + tl.NumClientsLoggedIn + System.Environment.NewLine);
             //foreach (IClientInfo info in tl.Clients)
             //{
             //    sb.Append(ExUtil.ClientInfo2Str(info));

@@ -144,11 +144,11 @@ namespace TradingLib.Common
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("Method:".PadRight(ExComConst.HeaderNum, ' ') +_cmdinfo.MethodInfo.ToString()  + ExComConst.Line);
-            sb.Append("Argument List:" + ExComConst.Line);
+            sb.Append("Method:".PadRight(CliUtils.SECNUM, ' ') + _cmdinfo.MethodInfo.ToString() + System.Environment.NewLine);
+            sb.Append("Argument List:" + System.Environment.NewLine);
             foreach (MethodArgument arg in _argslist)
             {
-                sb.Append("    "+arg.ToString()+ExComConst.Line);
+                sb.Append("    " + arg.ToString() + System.Environment.NewLine);
             }
             return sb.ToString();
         }
@@ -191,16 +191,16 @@ namespace TradingLib.Common
             get{
 
                 StringBuilder sb = new StringBuilder();
-                sb.Append((ExComConst.SectionPrefix + " CommandAPI:" + m_info.Attr.CmdStr+" ").PadRight(ExComConst.SectionNum, ExComConst.SectionChar) + ExComConst.Line);
-                sb.Append("Source:".PadRight(ExComConst.HeaderNum,' ') + m_info.Attr.Source + ExComConst.Line);
-                sb.Append("CmdStr:".PadRight(ExComConst.HeaderNum, ' ') + m_info.Attr.CmdStr + ExComConst.Line);
-                sb.Append("NeedAuth:".PadRight(ExComConst.HeaderNum, ' ') + m_info.Attr.NeedAuth.ToString() + ExComConst.Line);
-                sb.Append("Help:" + ExComConst.Line);
-                sb.Append(m_info.Attr.Help + ExComConst.Line);
-                sb.Append("Function Name:".PadRight(ExComConst.HeaderNum, ' ') + m_info.MethodInfo.Name + ExComConst.Line);
+                sb.Append((CliUtils.SECPRIFX + " CommandAPI:" + m_info.Attr.CmdStr + " ").PadRight(CliUtils.SECNUM, CliUtils.SECCHAR) + System.Environment.NewLine);
+                sb.Append("Source:".PadRight(CliUtils.SECNUM, ' ') + m_info.Attr.Source + System.Environment.NewLine);
+                sb.Append("CmdStr:".PadRight(CliUtils.SECNUM, ' ') + m_info.Attr.CmdStr + System.Environment.NewLine);
+                sb.Append("NeedAuth:".PadRight(CliUtils.SECNUM, ' ') + m_info.Attr.NeedAuth.ToString() + System.Environment.NewLine);
+                sb.Append("Help:" + System.Environment.NewLine);
+                sb.Append(m_info.Attr.Help + System.Environment.NewLine);
+                sb.Append("Function Name:".PadRight(CliUtils.SECNUM, ' ') + m_info.MethodInfo.Name + System.Environment.NewLine);
                 sb.Append(m_action.ToString());
-                sb.Append("Description:" + ExComConst.Line);
-                sb.Append(m_info.Attr.Description + ExComConst.Line);
+                sb.Append("Description:" + System.Environment.NewLine);
+                sb.Append(m_info.Attr.Description + System.Environment.NewLine);
 
                 return sb.ToString();
 

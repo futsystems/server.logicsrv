@@ -468,7 +468,7 @@ namespace TradingLib.Common
             }
             catch (Exception ex)
             {
-                debug("ContribCommand can not math EventHander:"+ex.ToString()+ExComConst.Line);
+                debug("ContribCommand can not math EventHander:"+ex.ToString()+System.Environment.NewLine);
                 debug("Event:" + ev.EventInfo.Name);
                 debug("EventHandlerType:" + ev.EventInfo.EventHandlerType.FullName);
                 debug("Handler:" + h.MethodInfo.Name);
@@ -999,11 +999,11 @@ namespace TradingLib.Common
         string PluginInfo(IPlugin plugin)
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("Author:".PadRight(20, ' ') + plugin.Author + ExComConst.Line);
-            sb.Append("Company:".PadRight(20, ' ') + plugin.Compnay + ExComConst.Line);
-            sb.Append("Version:".PadRight(20, ' ') + plugin.Version + ExComConst.Line);
-            sb.Append("Description:" + ExComConst.Line);
-            sb.Append(plugin.Description + ExComConst.Line);
+            sb.Append("Author:".PadRight(20, ' ') + plugin.Author + System.Environment.NewLine);
+            sb.Append("Company:".PadRight(20, ' ') + plugin.Compnay + System.Environment.NewLine);
+            sb.Append("Version:".PadRight(20, ' ') + plugin.Version + System.Environment.NewLine);
+            sb.Append("Description:" + System.Environment.NewLine);
+            sb.Append(plugin.Description + System.Environment.NewLine);
             return sb.ToString();
         }
 
@@ -1015,10 +1015,10 @@ namespace TradingLib.Common
         public string PrintBaseObjectList()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append(ExUtil.SectionHeader("BaseSrbObjectList"));
+            sb.Append(CliUtils.SectionHeader("BaseSrbObjectList"));
             foreach (BaseSrvObject obj in baseSrvObjectMap.Values)
             {
-                sb.Append(obj.UUID.PadRight(40, ' ') + obj.Name + ExComConst.Line);
+                sb.Append(obj.UUID.PadRight(40, ' ') + obj.Name + System.Environment.NewLine);
             }
             return sb.ToString();
         }
@@ -1030,12 +1030,12 @@ namespace TradingLib.Common
         {
 
             StringBuilder sb = new StringBuilder();
-            sb.Append(ExUtil.SectionHeader("ContribList"));
+            sb.Append(CliUtils.SectionHeader("ContribList"));
             foreach (string uuid in contribIDUUIDMap.Values)
             {
                 IContrib c = baseSrvObjectMap[uuid] as IContrib;
                 IContribPlugin plugin = PluginHelper.LoadContribPlugin(c.GetType().FullName);
-                sb.Append(plugin.ContribID.PadRight(12, ' ') + c.GetType().FullName.PadRight(40, ' ') + plugin.Name + ExComConst.Line);
+                sb.Append(plugin.ContribID.PadRight(12, ' ') + c.GetType().FullName.PadRight(40, ' ') + plugin.Name + System.Environment.NewLine);
             }
             return sb.ToString();
         }
@@ -1046,12 +1046,12 @@ namespace TradingLib.Common
         public string PrintCoreList()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append(ExUtil.SectionHeader("CoreList"));
+            sb.Append(CliUtils.SectionHeader("CoreList"));
             foreach (string uuid in coreIdUUIDMap.Values)
             {
                 ICore core = baseSrvObjectMap[uuid] as ICore;
 
-                sb.Append(core.CoreId.PadRight(20,' ')+core.GetType().FullName.PadRight(40,' ')+ExComConst.Line);
+                sb.Append(core.CoreId.PadRight(20, ' ') + core.GetType().FullName.PadRight(40, ' ') + System.Environment.NewLine);
             }
             return sb.ToString();
         }
@@ -1068,27 +1068,27 @@ namespace TradingLib.Common
             IContrib c = ContribFinderName(contrib.ToUpper());
             if (c == null)
             {
-                return "Contrib:" + contrib + " Not Exist" + ExComConst.Line;
+                return "Contrib:" + contrib + " Not Exist" + System.Environment.NewLine;
             }
             IContribPlugin plugin = PluginHelper.LoadContribPlugin(c.GetType().FullName);
             if (plugin == null)
             {
-                return "Contrib:" + contrib + " Not Exist" + ExComConst.Line;
+                return "Contrib:" + contrib + " Not Exist" + System.Environment.NewLine;
             }
 
-            sb.Append(ExUtil.SectionHeader("Contrib:" + contrib));
-            sb.Append("UUID:".PadRight(20, ' ') + (c as BaseSrvObject).UUID + ExComConst.Line);
-            sb.Append("ContribID:".PadRight(20, ' ') + plugin.ContribID + ExComConst.Line);
-            sb.Append("Name:".PadRight(20, ' ') + plugin.Name + ExComConst.Line);
+            sb.Append(CliUtils.SectionHeader("Contrib:" + contrib));
+            sb.Append("UUID:".PadRight(20, ' ') + (c as BaseSrvObject).UUID + System.Environment.NewLine);
+            sb.Append("ContribID:".PadRight(20, ' ') + plugin.ContribID + System.Environment.NewLine);
+            sb.Append("Name:".PadRight(20, ' ') + plugin.Name + System.Environment.NewLine);
             sb.Append(PluginInfo(plugin));
-            sb.Append("ContribCommand:" + ExComConst.Line);
+            sb.Append("ContribCommand:" + System.Environment.NewLine);
 
             List<ContribCommandInfo> contribcommandlist = PluginHelper.FindContribCommand(c);
             foreach (ContribCommandInfo info in contribcommandlist)
             {
                 sb.Append(PrintCommandAPI(contrib, info.Attr.CmdStr));
             }
-            sb.Append("TaskCommand:" + ExComConst.Line);
+            sb.Append("TaskCommand:" + System.Environment.NewLine);
             Util.Debug("it is run to here for print contrib");
             return sb.ToString();
         }
@@ -1104,7 +1104,7 @@ namespace TradingLib.Common
             string bigcmd = cmd.ToUpper();
             string cmdkey = ContribCommandKey(contrib, cmd);
             if (!IsContribRegisted(contrib))
-                return (ExComConst.SectionPrefix + " Can Not Find Command:" + contrib + "-" + cmd).PadRight(ExComConst.SectionNum, ExComConst.SectionChar);
+                return (CliUtils.SECPRIFX+ " Can Not Find Command:" + contrib + "-" + cmd).PadRight(CliUtils.SECNUM, CliUtils.SECCHAR);
 
             string re = "";
             if (messageRouterCmdMap.Keys.Contains(cmdkey))
@@ -1176,10 +1176,10 @@ namespace TradingLib.Common
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.Append(ExUtil.SectionHeader("ContribEvent List"));
+            sb.Append(CliUtils.SectionHeader("ContribEvent List"));
             foreach (string key in contribEventMap.Keys)
             {
-                sb.Append("Event:" + key + " " + contribEventMap[key].EventInfo.Name+ExComConst.Line);
+                sb.Append("Event:" + key + " " + contribEventMap[key].EventInfo.Name+System.Environment.NewLine);
             }
 
             return sb.ToString();
@@ -1194,14 +1194,14 @@ namespace TradingLib.Common
         public string PrintEventHandler()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append(ExUtil.SectionHeader("Event Handler"));
+            sb.Append(CliUtils.SectionHeader("Event Handler"));
 
             foreach (string eventstr in contribEventHandlerMap.Keys)
             {
-                sb.Append("Event:" + eventstr + ExComConst.Line);
+                sb.Append("Event:" + eventstr + System.Environment.NewLine);
                 foreach (string cmdky in contribEventHandlerMap[eventstr].Keys)
                 {
-                    sb.Append(("Command[" + cmdky + "]").PadRight(25, ' ') + contribEventHandlerMap[eventstr][cmdky].Attr.CmdStr + ExComConst.Line);
+                    sb.Append(("Command[" + cmdky + "]").PadRight(25, ' ') + contribEventHandlerMap[eventstr][cmdky].Attr.CmdStr + System.Environment.NewLine);
                 }
             }
             return sb.ToString();
@@ -1227,7 +1227,7 @@ namespace TradingLib.Common
         string PrintCommandMap(string title, ConcurrentDictionary<string, ContribCommand> map)
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append((ExComConst.SectionPrefix + " " + title + "").PadRight(ExComConst.SectionNum, ExComConst.SectionChar) + ExComConst.Line);
+            sb.Append((CliUtils.SECPRIFX + " " + title + "").PadRight(CliUtils.SECNUM, CliUtils.SECCHAR) + System.Environment.NewLine);
             foreach (string key in map.Keys)
             {
                 sb.Append(("  Command[" + key + "] ").PadRight(50, ' ') + map[key].Source.ToString().PadRight(20, ' ') + map[key].CommandHelp);

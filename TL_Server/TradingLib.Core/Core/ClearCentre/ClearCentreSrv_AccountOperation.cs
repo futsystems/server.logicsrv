@@ -363,7 +363,7 @@ namespace TradingLib.Core
                     //1.检查该帐户当前是否可以交易
                     //CheckAccountExecute(acc);
                     //2.如果缓存中没有该账户,则加入该账户
-                    if (!HaveAccount(acc.ID) && needLoad(acc))
+                    if (!HaveAccount(acc.ID))
                         CacheAccount(acc);
                 }
             }
@@ -375,23 +375,23 @@ namespace TradingLib.Core
         }
 
 
-        bool needLoad(IAccount account)
-        {
-            switch (_loadmode)
-            {
-                case QSEnumAccountLoadMode.ALL:
-                    return true;
-                //实盘加载 只加载实盘帐户
-                case QSEnumAccountLoadMode.REAL:
-                    return ExUtil.IsRealAccount(account);
+        //bool needLoad(IAccount account)
+        //{
+        //    switch (_loadmode)
+        //    {
+        //        case QSEnumAccountLoadMode.ALL:
+        //            return true;
+        //        //实盘加载 只加载实盘帐户
+        //        case QSEnumAccountLoadMode.REAL:
+        //            return ExUtil.IsRealAccount(account);
 
-                //模拟盘加载 只加载模拟盘帐户
-                case QSEnumAccountLoadMode.SIM:
-                    return !ExUtil.IsRealAccount(account);
-                default:
-                    return false;
-            }
-        }
+        //        //模拟盘加载 只加载模拟盘帐户
+        //        case QSEnumAccountLoadMode.SIM:
+        //            return !ExUtil.IsRealAccount(account);
+        //        default:
+        //            return false;
+        //    }
+        //}
 
         ///// <summary>
         ///// 检查账户是否应该被冻结

@@ -7,29 +7,33 @@ using TradingLib.API;
 
 namespace TradingLib.Common
 {
+    /// <summary>
+    /// 基础信息维护器
+    /// 
+    /// </summary>
     public class BasicTracker:IDisposable
     {
 
         static BasicTracker defaultinstance;
+
+        //交易所 品种 合约
         DBExchangeTracker extracker;
         DBMarketTimeTracker mktimetracker;
-
         SecurityTracker setracker;
         SymbolTracker symtracker;
-        
 
+        //
+        DomainTracker domaintracker;
         DBManagerTracker mgrtracker;
-
+        UIAccessTracker uiaccesstracker;
         DBContractBankTracker banktracker;
 
+        //
+        ConnectorConfigTracker connectorcfgtracker;
         RouterGrouperTracker rgtracker;
         VendorTracker vendortracker;
 
-        DomainTracker domaintracker;
 
-        ConnectorConfigTracker connectorcfgtracker;
-
-        UIAccessTracker uiaccesstracker;
         static BasicTracker()
         {
             defaultinstance = new BasicTracker();

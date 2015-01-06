@@ -27,15 +27,15 @@ namespace TradingLib.Core
         public string CTE_PrintTask()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append(ExUtil.SectionHeader(" TaskList "));
+            sb.Append(CliUtils.SectionHeader(" TaskList "));
             foreach (ITask t in TLCtxHelper.Ctx.TaskList.Where(task=>task.TaskType == QSEnumTaskType.SPECIALTIME))
             {
-                sb.Append(t.GetTaskMemo() + ExComConst.Line);
+                sb.Append(t.GetTaskMemo() + System.Environment.NewLine);
             }
-            sb.Append(ExComConst.Line);
+            sb.Append(System.Environment.NewLine);
             foreach (ITask t in TLCtxHelper.Ctx.TaskList.Where(task => task.TaskType == QSEnumTaskType.CIRCULATE))
             {
-                sb.Append(t.GetTaskMemo() + ExComConst.Line);
+                sb.Append(t.GetTaskMemo() + System.Environment.NewLine);
             }
             return sb.ToString();
         }

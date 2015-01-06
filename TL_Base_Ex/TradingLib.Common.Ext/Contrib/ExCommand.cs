@@ -66,7 +66,7 @@ namespace TradingLib.Common
             get
             {
                 char c = ' ';
-                return m_command.PadRight(20, c) + m_helptext + ExComConst.Line;
+                return m_command.PadRight(20, c) + m_helptext + System.Environment.NewLine;
             }
         }
 
