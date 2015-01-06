@@ -36,7 +36,7 @@ namespace TradingLib.Common
     public class RspQryAccountInfoResponse : RspResponsePacket
     {
 
-        public IAccountInfo AccInfo { get; set; }
+        public AccountInfo AccInfo { get; set; }
         public RspQryAccountInfoResponse()
         {
             _type = MessageTypes.ACCOUNTINFORESPONSE;

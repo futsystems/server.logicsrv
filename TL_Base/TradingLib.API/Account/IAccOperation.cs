@@ -8,7 +8,6 @@ namespace TradingLib.API
     /// <summary>
     /// 帐户操作接口
     /// 包含激活 冻结 强迫等操作
-    /// 
     /// </summary>
     public interface IAccOperation
     {

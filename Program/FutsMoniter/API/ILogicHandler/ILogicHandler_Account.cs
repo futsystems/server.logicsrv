@@ -10,25 +10,25 @@ namespace TradingLib.API
 {
     public partial interface ILogicHandler
     {
-        IEnumerable<IAccountLite> Accounts { get; }
+        IEnumerable<AccountLite> Accounts { get; }
 
         /// <summary>
         /// 响应客户选择事件
         /// </summary>
         /// <param name="account"></param>
-        void OnAccountSelected(IAccountLite account);
+        void OnAccountSelected(AccountLite account);
 
         /// <summary>
         /// 响应客户端交易帐户回报
         /// </summary>
         /// <param name="account"></param>
-        void OnAccountLite(IAccountLite account, bool islast);
+        void OnAccountLite(AccountLite account, bool islast);
 
         /// <summary>
         /// 响应服务端交易帐户实时资金变动信息
         /// </summary>
         /// <param name="account"></param>
-        void OnAccountInfoLite(IAccountInfoLite account);
+        void OnAccountInfoLite(AccountInfoLite account);
 
         /// <summary>
         /// 
@@ -46,13 +46,13 @@ namespace TradingLib.API
         /// 管理端查询交易帐户信息回报
         /// </summary>
         /// <param name="accountinfo"></param>
-        void OnAccountInfo(IAccountInfo accountinfo);
+        void OnAccountInfo(AccountInfo accountinfo);
 
         /// <summary>
         /// 交易帐户变动
         /// </summary>
         /// <param name="account"></param>
-        void OnAccountChagne(IAccountLite account);
+        void OnAccountChagne(AccountLite account);
 
     }
 }

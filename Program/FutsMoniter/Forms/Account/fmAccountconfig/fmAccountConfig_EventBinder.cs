@@ -20,7 +20,7 @@ namespace FutsMoniter
             Globals.LogicEvent.GotRuleItemUpdateEvemt += new Action<RuleItem>(OnRuleItemUpdate);//风控规则更新
             Globals.LogicEvent.GotRuleItemDeleteEvent += new Action<RuleItem>(OnRuleItemDel);//风控规则删除
 
-            Globals.LogicEvent.GotAccountChangedEvent += new Action<IAccountLite>(OnAccountChanged);//帐户更新
+            Globals.LogicEvent.GotAccountChangedEvent += new Action<AccountLite>(OnAccountChanged);//帐户更新
 
             if (!Globals.Domain.Super)
             {
@@ -64,7 +64,7 @@ namespace FutsMoniter
             Globals.LogicEvent.GotRuleItemUpdateEvemt -= new Action<RuleItem>(OnRuleItemUpdate);//风控规则更新
             Globals.LogicEvent.GotRuleItemDeleteEvent -= new Action<RuleItem>(OnRuleItemDel);//风控规则删除
 
-            Globals.LogicEvent.GotAccountChangedEvent -= new Action<IAccountLite>(OnAccountChanged);//帐户更新
+            Globals.LogicEvent.GotAccountChangedEvent -= new Action<AccountLite>(OnAccountChanged);//帐户更新
 
         }
         

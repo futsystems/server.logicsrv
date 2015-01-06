@@ -42,7 +42,7 @@ namespace FutsMoniter
             Globals.LogicEvent.RegisterCallback("FinServiceCentre", "UpdateArguments", this.OnQryFinService);//更新参数
             Globals.LogicEvent.RegisterCallback("FinServiceCentre", "ChangeServicePlane", this.OnQryFinService);//修改服务计划
             Globals.LogicEvent.RegisterCallback("FinServiceCentre", "DeleteServicePlane", this.OnDeleteFinService);//删除服务
-            Globals.LogicEvent.GotAccountSelectedEvent += new Action<IAccountLite>(OnAccountSelected);
+            Globals.LogicEvent.GotAccountSelectedEvent += new Action<AccountLite>(OnAccountSelected);
         }
 
         public void OnDisposed()
@@ -52,7 +52,7 @@ namespace FutsMoniter
             Globals.LogicEvent.UnRegisterCallback("FinServiceCentre", "UpdateArguments", this.OnQryFinService);//更新参数
             Globals.LogicEvent.UnRegisterCallback("FinServiceCentre", "ChangeServicePlane", this.OnQryFinService);//修改服务计划
             Globals.LogicEvent.UnRegisterCallback("FinServiceCentre", "DeleteServicePlane", this.OnDeleteFinService);//删除服务
-            Globals.LogicEvent.GotAccountSelectedEvent -= new Action<IAccountLite>(OnAccountSelected);
+            Globals.LogicEvent.GotAccountSelectedEvent -= new Action<AccountLite>(OnAccountSelected);
       
         }
         #endregion
@@ -62,13 +62,13 @@ namespace FutsMoniter
         JsonWrapperFinServiceStub finservice = null;
         JsonWrapperServicePlane[] serviceplans = null;
 
-        IAccountLite _account = null;
+        AccountLite _account = null;
 
         /// <summary>
         /// 响应交易帐户选中事件
         /// </summary>
         /// <param name="account"></param>
-        void OnAccountSelected(IAccountLite account)
+        void OnAccountSelected(AccountLite account)
         {
             if (account == null) return;
             _account = account;

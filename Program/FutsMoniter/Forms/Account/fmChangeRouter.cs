@@ -44,8 +44,8 @@ namespace FutsMoniter
             }
         }
 
-        IAccountLite _account = null;
-        public void SetAccount(IAccountLite account)
+        AccountLite _account = null;
+        public void SetAccount(AccountLite account)
         {
             _account = account;
             this.Text = string.Format("修改帐户[{0}]路由组设置", _account.Account);

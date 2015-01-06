@@ -9,7 +9,7 @@ namespace TradingLib.Common
     public class NotifyMGRAccountChangeUpdateResponse:NotifyResponsePacket
     {
 
-        public IAccountLite oAccount { get; set; }
+        public AccountLite oAccount { get; set; }
 
         public NotifyMGRAccountChangeUpdateResponse()
         {

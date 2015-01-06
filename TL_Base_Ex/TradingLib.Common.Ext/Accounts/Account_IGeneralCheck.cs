@@ -13,7 +13,6 @@ namespace TradingLib.Common
     /// </summary>
     public partial class AccountBase
     {
-        #region 【IGeneral】
         /// <summary>
         /// 检查帐户是否可以交易某个合约,在帐户是否可以交易合约逻辑部分
         /// 我们可以按照合约的种类去查询对应的服务是否支持该合约。
@@ -44,10 +43,8 @@ namespace TradingLib.Common
         public virtual bool CanFundTakeOrder(Order o, out string msg)
         {
             msg = string.Empty;
-
             //如果是平仓委托 则直接返回
             if (!o.IsEntryPosition) return true;
-
             //获得对应方向的持仓
             Position pos = GetPosition(o.Symbol, o.PositionSide);
 
@@ -83,44 +80,5 @@ namespace TradingLib.Common
             Util.Debug("QryCanOpenSize Fundavablie:" + avabilefund.ToString() + " Symbol:" + symbol.Symbol + " Price:" + price.ToString() + " Fundperlot:" + fundperlot.ToString());
             return (int)(avabilefund/fundperlot);
         }
-
-        #endregion
-
-        #region 【IAccCal】
-
-        /// <summary>
-        /// 计算某个委托所要占用的资金
-        /// 正常情况下按照合约对应的合约乘数和当前市值和保证金比例去计算对应的资金需求
-        /// 
-        /// </summary>
-        /// <param name="o"></param>
-        /// <returns></returns>
-        public virtual decimal CalOrderFundRequired(Order o,decimal defaultvalue=0)
-        {
-            decimal price = TLCtxHelper.Ctx.MessageExchange.GetAvabilePrice(o.Symbol);
-            return o.CalFundRequired(price, defaultvalue);
-        }
-
-        /// <summary>
-        /// 获得某个合约的可交易资金
-        /// 合约可用涉及到自身帐户的资金数量和对应服务的所提供的相关扩展
-        /// 比如配资服务 客户自身资金 + 配资服务的可用资金 这里可以统一IService接口来对此类资金的调整进行抽象
-        /// 这里注意多种服务的资金约束冲突
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <returns></returns>
-        public virtual decimal GetFundAvabile(Symbol symbol)
-        {
-            //常规状态下合约的可用资金即为帐户的可用资金
-            if (symbol.SecurityType == SecurityType.FUT)
-                return this.AvabileFunds;
-            if (symbol.SecurityType == SecurityType.OPT)
-                return this.AvabileFunds;
-            if (symbol.SecurityType == SecurityType.INNOV)
-                return this.AvabileFunds;
-            else
-                return 0;
-        }
-        #endregion
     }
 }

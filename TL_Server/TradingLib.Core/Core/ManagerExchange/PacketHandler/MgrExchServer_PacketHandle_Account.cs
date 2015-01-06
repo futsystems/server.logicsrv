@@ -141,19 +141,19 @@ namespace TradingLib.Core
         /// <param name="request"></param>
         /// <param name="session"></param>
         /// <param name="manager"></param>
-        void SrvOnMGRQryAccountInfo(MGRQryAccountInfoRequest request, ISession session, Manager manager)
-        {
-            debug(string.Format("管理员:{0} 请求查询交易帐户信息,帐号:{1}", session.AuthorizedID, request.Account), QSEnumDebugLevel.INFO);
+        //void SrvOnMGRQryAccountInfo(MGRQryAccountInfoRequest request, ISession session, Manager manager)
+        //{
+        //    debug(string.Format("管理员:{0} 请求查询交易帐户信息,帐号:{1}", session.AuthorizedID, request.Account), QSEnumDebugLevel.INFO);
 
-            IAccount account = clearcentre[request.Account];
+        //    IAccount account = clearcentre[request.Account];
 
-            if (account != null)
-            {
-                RspMGRQryAccountInfoResponse response = ResponseTemplate<RspMGRQryAccountInfoResponse>.SrvSendRspResponse(request);
-                response.AccountInfoToSend = account.ToAccountInfo();
-                CachePacket(response);
-            }
-        }
+        //    if (account != null)
+        //    {
+        //        RspMGRQryAccountInfoResponse response = ResponseTemplate<RspMGRQryAccountInfoResponse>.SrvSendRspResponse(request);
+        //        response.AccountInfoToSend = account.GenAccountInfo();
+        //        CachePacket(response);
+        //    }
+        //}
 
         void SrvOnMGRCashOperation(MGRCashOperationRequest request, ISession session, Manager manager)
         {
@@ -172,7 +172,7 @@ namespace TradingLib.Core
             clearcentre.CashOperation(request.Account, request.Amount, request.TransRef, request.Comment);
 
             //出入金操作后返回帐户信息更新
-            session.NotifyMgr("NotifyAccountFinInfo", account.ToAccountInfo());
+            session.NotifyMgr("NotifyAccountFinInfo", account.GenAccountInfo());
             session.OperationSuccess("出入金操作成功");
         }
 
@@ -282,7 +282,7 @@ namespace TradingLib.Core
             IAccount acc = clearcentre[account];
             if (manager.RightAccessAccount(acc))
             {
-                session.ReplyMgr(acc.ToAccountInfo());
+                session.ReplyMgr(acc.GenAccountInfo());
             }
             else
             {

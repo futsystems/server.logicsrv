@@ -10,7 +10,7 @@ namespace TradingLib.Common
     /// 基础交易帐户信息
     /// 用于传递交易帐户
     /// </summary>
-    public class AccountLite:IAccountLite
+    public class AccountLite
     {
         /// <summary>
         /// 交易帐号
@@ -132,7 +132,7 @@ namespace TradingLib.Common
         /// </summary>
         public string IPAddress { get; set; }
 
-        public static string Serialize(IAccountLite account)
+        public static string Serialize(AccountLite account)
         {
             StringBuilder sb = new StringBuilder();
             char d = ',';
@@ -186,10 +186,10 @@ namespace TradingLib.Common
             return sb.ToString();
         }
 
-        public static IAccountLite Deserialize(string msg)
+        public static AccountLite Deserialize(string msg)
         {
             string[] rec = msg.Split(',');
-            IAccountLite account = new AccountLite();
+            AccountLite account = new AccountLite();
             account.Account = rec[0];
             account.Category = (QSEnumAccountCategory)Enum.Parse(typeof(QSEnumAccountCategory), rec[1]);
             account.OrderRouteType = (QSEnumOrderTransferType)Enum.Parse(typeof(QSEnumOrderTransferType), rec[2]);

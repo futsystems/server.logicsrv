@@ -29,7 +29,7 @@ namespace TradingLib.Common
 
     public class RspMGRQryAccountResponse : RspResponsePacket
     {
-        public IAccountLite oAccount { get; set; }
+        public AccountLite oAccount { get; set; }
         public RspMGRQryAccountResponse()
         {
             _type = MessageTypes.MGRQRYACCOUNTSRESPONSE;

@@ -31,7 +31,7 @@ namespace FutsMoniter
 
         void UpdateRouterGroup_Click(object sender, EventArgs e)
         {
-            IAccountLite account = GetVisibleAccount(CurrentAccount);
+            AccountLite account = GetVisibleAccount(CurrentAccount);
             if (account != null)
             {
                 fmChangeRouter fm = new fmChangeRouter();
@@ -50,7 +50,7 @@ namespace FutsMoniter
         /// <param name="e"></param>
         void DelAccount_Click(object sender, EventArgs e)
         {
-            IAccountLite account = GetVisibleAccount(CurrentAccount);
+            AccountLite account = GetVisibleAccount(CurrentAccount);
             if (account != null)
             {
                 if (fmConfirm.Show("确认删除交易帐户?") == DialogResult.Yes)
@@ -80,7 +80,7 @@ namespace FutsMoniter
         /// <param name="e"></param>
         void EditAccount_Click(object sender, EventArgs e)
         {
-            IAccountLite account = GetVisibleAccount(CurrentAccount);
+            AccountLite account = GetVisibleAccount(CurrentAccount);
             if (account != null)
             {
                 fmAccountConfig fm = new fmAccountConfig();
@@ -100,7 +100,7 @@ namespace FutsMoniter
         /// <param name="e"></param>
         void ChangePass_Click(object sender, EventArgs e)
         {
-            IAccountLite account = GetVisibleAccount(CurrentAccount);
+            AccountLite account = GetVisibleAccount(CurrentAccount);
             if (account != null)
             {
                 fmChangePassword fm = new fmChangePassword();
@@ -121,7 +121,7 @@ namespace FutsMoniter
         /// <param name="e"></param>
         void ChangeInvestor_Click(object sender, EventArgs e)
         {
-            IAccountLite account = GetVisibleAccount(CurrentAccount);
+            AccountLite account = GetVisibleAccount(CurrentAccount);
             if (account != null)
             {
                 fmChangeInvestor fm = new fmChangeInvestor();
@@ -142,7 +142,7 @@ namespace FutsMoniter
         /// <param name="e"></param>
         void QryHist_Click(object sender, EventArgs e)
         {
-            IAccountLite account = GetVisibleAccount(CurrentAccount);
+            AccountLite account = GetVisibleAccount(CurrentAccount);
             if (account != null)
             {
                 //if (QryAccountHistEvent != null)
@@ -173,7 +173,7 @@ namespace FutsMoniter
 
         void QrySettlement_Click(object sender, EventArgs e)
         {
-            IAccountLite account = GetVisibleAccount(CurrentAccount);
+            AccountLite account = GetVisibleAccount(CurrentAccount);
             if (account != null)
             {
                 fmSettlement fm = new fmSettlement();
@@ -203,7 +203,7 @@ namespace FutsMoniter
             }
             _lastresumetime = DateTime.Now;
             string account = CurrentAccount;
-            IAccountLite accountlite = null;
+            AccountLite accountlite = null;
 
             if (accountmap.TryGetValue(account, out accountlite))
             {

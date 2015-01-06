@@ -21,13 +21,13 @@ namespace TradingLib.Common
         /// <param name="module"></param>
         /// <param name="cmd"></param>
         /// <param name="del"></param>
-        public void RegisterCallback(string module, string cmd, JsonReplyDel del)
+        public void RegisterCallback(string module, string cmd, Action<string> del)
         {
             string key = module.ToUpper() + "-" + cmd.ToUpper();
 
             if (!callbackmap.Keys.Contains(key))
             {
-                callbackmap.TryAdd(key, new List<JsonReplyDel>());
+                callbackmap.TryAdd(key, new List<Action<string>>());
             }
 
             callbackmap[key].Add(del);
@@ -41,13 +41,13 @@ namespace TradingLib.Common
         /// <param name="module"></param>
         /// <param name="cmd"></param>
         /// <param name="del"></param>
-        public void UnRegisterCallback(string module, string cmd, JsonReplyDel del)
+        public void UnRegisterCallback(string module, string cmd, Action<string> del)
         {
             string key = module.ToUpper() + "-" + cmd.ToUpper();
 
             if (!callbackmap.Keys.Contains(key))
             {
-                callbackmap.TryAdd(key, new List<JsonReplyDel>());
+                callbackmap.TryAdd(key, new List<Action<string>>());
             }
             if (callbackmap[key].Contains(del))
             {
@@ -56,7 +56,7 @@ namespace TradingLib.Common
         }
 
 
-        ConcurrentDictionary<string, List<JsonReplyDel>> callbackmap = new ConcurrentDictionary<string, List<JsonReplyDel>>();
+        ConcurrentDictionary<string, List<Action<string>>> callbackmap = new ConcurrentDictionary<string, List<Action<string>>>();
         /// <summary>
         /// 响应服务端的扩展回报 通过扩展模块ID 操作码 以及具体的json回报内容
         /// </summary>
@@ -68,7 +68,7 @@ namespace TradingLib.Common
             string key = module.ToUpper() + "-" + cmd.ToUpper();
             if (callbackmap.Keys.Contains(key))
             {
-                foreach (JsonReplyDel del in callbackmap[key])
+                foreach (Action<string> del in callbackmap[key])
                 {
                     try
                     {
@@ -97,7 +97,7 @@ namespace TradingLib.Common
             string key = module.ToUpper() + "-" + cmd.ToUpper();
             if (callbackmap.Keys.Contains(key))
             {
-                foreach (JsonReplyDel del in callbackmap[key])
+                foreach (Action<string> del in callbackmap[key])
                 {
                     try
                     {

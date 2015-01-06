@@ -191,7 +191,7 @@ namespace TradingLib.Core
         void SrvOnQryAccountInfo(QryAccountInfoRequest request, IAccount account)
         {
             debug("QryAccountInfo :" + request.ToString(), QSEnumDebugLevel.INFO);
-            IAccountInfo info = account.ToAccountInfo();
+            AccountInfo info = account.GenAccountInfo();
             RspQryAccountInfoResponse response  = ResponseTemplate<RspQryAccountInfoResponse>.SrvSendRspResponse(request);
             response.AccInfo = info;
             CachePacket(response);

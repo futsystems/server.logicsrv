@@ -40,10 +40,10 @@ namespace FutsMoniter
         {
             Globals.LogicEvent.RegisterCallback("MgrExchServer", "QryAccountFinInfo", this.OnQryAccountInfo);
             Globals.LogicEvent.RegisterCallback("MgrExchServer", "NotifyAccountFinInfo", this.OnQryAccountInfo);
-            Globals.LogicEvent.GotAccountSelectedEvent += new Action<IAccountLite>(OnAccountSelected);
+            Globals.LogicEvent.GotAccountSelectedEvent += new Action<AccountLite>(OnAccountSelected);
         }
 
-        void OnAccountSelected(IAccountLite obj)
+        void OnAccountSelected(AccountLite obj)
         {
             _account = obj;
             account.Text = _account.Account;
@@ -53,13 +53,13 @@ namespace FutsMoniter
         {
             Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "QryAccountFinInfo", this.OnQryAccountInfo);
             Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "NotifyAccountFinInfo", this.OnQryAccountInfo);
-            Globals.LogicEvent.GotAccountSelectedEvent -= new Action<IAccountLite>(OnAccountSelected);
+            Globals.LogicEvent.GotAccountSelectedEvent -= new Action<AccountLite>(OnAccountSelected);
             Globals.Debug("ctFinanceInfo disposed...");
          }
 
         void OnQryAccountInfo(string json)
         {
-            IAccountInfo obj = MoniterUtils.ParseJsonResponse<AccountInfo>(json);
+            AccountInfo obj = MoniterUtils.ParseJsonResponse<AccountInfo>(json);
             if (obj != null)
             {
                 this.GotAccountInfo(obj);
@@ -71,13 +71,13 @@ namespace FutsMoniter
         }
 
 
-        IAccountLite _account = null;
+        AccountLite _account = null;
 
-        public void GotAccountInfo(IAccountInfo info)
+        public void GotAccountInfo(AccountInfo info)
         {
             if (InvokeRequired)
             {
-                Invoke(new Action<IAccountInfo>(GotAccountInfo), new object[] { info });
+                Invoke(new Action<AccountInfo>(GotAccountInfo), new object[] { info });
             }
             else
             {

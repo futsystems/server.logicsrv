@@ -16,12 +16,12 @@ namespace TradingLib.Common
         /// <summary>
         /// 响应帐户选择事件
         /// </summary>
-        public event Action<IAccountLite> GotAccountSelectedEvent;
+        public event Action<AccountLite> GotAccountSelectedEvent;
 
         /// <summary>
         /// 交易帐号
         /// </summary>
-        public event Action<IAccountLite> GotAccountEvent;
+        public event Action<AccountLite> GotAccountEvent;
 
         /// <summary>
         /// 财务信息
@@ -31,12 +31,12 @@ namespace TradingLib.Common
         /// <summary>
         /// 动态财务信息
         /// </summary>
-        public event Action<IAccountInfoLite> GotFinanceInfoLiteEvent;
+        public event Action<AccountInfoLite> GotFinanceInfoLiteEvent;
 
         /// <summary>
         /// 交易帐户变化
         /// </summary>
-        public event Action<IAccountLite> GotAccountChangedEvent;
+        public event Action<AccountLite> GotAccountChangedEvent;
 
         /// <summary>
         /// 交易帐户登入信息事件

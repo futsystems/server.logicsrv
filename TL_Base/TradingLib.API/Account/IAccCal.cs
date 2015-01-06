@@ -10,7 +10,6 @@ namespace TradingLib.API
     /// </summary>
     public interface IAccCal
     {
-        #region 帐户公共类计算
         /// <summary>
         /// 计算某个委托所占用资金
         /// </summary>
@@ -18,15 +17,11 @@ namespace TradingLib.API
         /// <returns></returns>
         decimal CalOrderFundRequired(Order o,decimal defaultvalue);
 
-        
         /// <summary>
         /// 获得某个合约的可用资金
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
         decimal GetFundAvabile(Symbol symbol);
-
-
-        #endregion
     }
 }

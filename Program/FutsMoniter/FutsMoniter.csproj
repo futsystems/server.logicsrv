@@ -360,7 +360,6 @@
     <Compile Include="Controls\Base\ctBankList.Designer.cs">
       <DependentUpon>ctBankList.cs</DependentUpon>
     </Compile>
-    <Compile Include="API\Delegate.cs" />
     <Compile Include="API\IBasicInfo.cs" />
     <Compile Include="API\ICallBack\ICallback.cs" />
     <Compile Include="Controls\ctOrderSenderM.cs">

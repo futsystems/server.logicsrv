@@ -40,8 +40,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Account\Service\IAccountService.cs" />
-    <Compile Include="Account\IAccRiskCheck.cs" />
+    <Compile Include="Account\IAccountService.cs" />
+    <Compile Include="Account\IRiskRule.cs" />
     <Compile Include="Contrib\EnumContribCommandHandleType.cs" />
     <Compile Include="Contrib\IPlugin.cs" />
     <Compile Include="Core\ClearCentre\function\IAuthCashOperation.cs" />

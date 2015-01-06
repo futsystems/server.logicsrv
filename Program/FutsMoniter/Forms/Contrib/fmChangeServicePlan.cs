@@ -44,8 +44,8 @@ namespace FutsMoniter
             }
         }
 
-        IAccountLite _account = null;
-        public IAccountLite Account
+        AccountLite _account = null;
+        public AccountLite Account
         {
             get
             {

@@ -53,7 +53,7 @@ namespace FutsMoniter
         /// 当帐户有变化时 更新修改窗体
         /// </summary>
         /// <param name="account"></param>
-        public void OnAccountChanged(IAccountLite account)
+        public void OnAccountChanged(AccountLite account)
         {
             if (_account != null && _account.Account.Equals(account.Account))
             {

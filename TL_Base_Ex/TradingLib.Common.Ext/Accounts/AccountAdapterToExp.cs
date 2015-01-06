@@ -114,7 +114,6 @@ namespace TradingLib.Common
         }
         #endregion
 
-
         #region 【IAccTradingInfo】
 
         public bool AnyPosition { get { return _acc.AnyPosition; } }//是否有持仓

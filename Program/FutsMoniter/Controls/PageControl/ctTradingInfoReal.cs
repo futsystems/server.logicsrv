@@ -44,7 +44,7 @@ namespace FutsMoniter
 
         public void OnInit()
         {
-            Globals.LogicEvent.GotAccountSelectedEvent += new Action<IAccountLite>(OnAccountSelected);
+            Globals.LogicEvent.GotAccountSelectedEvent += new Action<AccountLite>(OnAccountSelected);
             Globals.LogicEvent.GotTickEvent += new TickDelegate(GotTick);
             Globals.LogicEvent.GotOrderEvent += new OrderDelegate(GotOrder);
             Globals.LogicEvent.GotFillEvent += new FillDelegate(GotTrade);
@@ -62,7 +62,7 @@ namespace FutsMoniter
 
         public void OnDisposed()
         {
-            Globals.LogicEvent.GotAccountSelectedEvent -= new Action<IAccountLite>(OnAccountSelected);
+            Globals.LogicEvent.GotAccountSelectedEvent -= new Action<AccountLite>(OnAccountSelected);
             Globals.LogicEvent.GotTickEvent -= new TickDelegate(GotTick);
             Globals.LogicEvent.GotOrderEvent -= new OrderDelegate(GotOrder);
             Globals.LogicEvent.GotFillEvent -= new FillDelegate(GotTrade);
@@ -70,8 +70,8 @@ namespace FutsMoniter
             Globals.LogicEvent.GotResumeResponseEvent -= new Action<RspMGRResumeAccountResponse>(OnResume);
             Globals.Debug("ctTradingInfoReal disposed");
         }
-        IAccountLite _account = null;
-        IAccountLite CurrentAccount { get { return _account; } }
+        AccountLite _account = null;
+        AccountLite CurrentAccount { get { return _account; } }
         /// <summary>
         /// 判断是否是当前选中帐户
         /// </summary>
@@ -84,7 +84,7 @@ namespace FutsMoniter
             return false;
         }
 
-        void OnAccountSelected(IAccountLite account)
+        void OnAccountSelected(AccountLite account)
         {
             _account = account;
             //清空控件交易记录
@@ -106,7 +106,7 @@ namespace FutsMoniter
                 debug("resume account:" + response.ResumeAccount + " start...");
 
                 string account = response.ResumeAccount;
-                IAccountLite acclit = null;
+                AccountLite acclit = null;
                 //if (accountmap.TryGetValue(account, out acclit))
                 {
 

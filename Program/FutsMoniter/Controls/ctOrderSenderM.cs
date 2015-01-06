@@ -16,7 +16,7 @@ namespace FutsMoniter
     public partial class ctOrderSenderM : UserControl,IEventBinder
     {
 
-        IAccountLite _account = null;
+        AccountLite _account = null;
         Symbol _symbol = null;
         public event OrderDelegate SendOrderEvent;
         public ctOrderSenderM()
@@ -37,7 +37,7 @@ namespace FutsMoniter
         public void OnInit()
         {
             //btnInsertTrade.Visible = Globals.UIAccess.fun_tab_placeorder_insert;
-            Globals.LogicEvent.GotAccountSelectedEvent += new Action<IAccountLite>(OnAccountSelected);
+            Globals.LogicEvent.GotAccountSelectedEvent += new Action<AccountLite>(OnAccountSelected);
             Factory.IDataSourceFactory(cboffsetflag).BindDataSource(MoniterUtils.GetOffsetCBList());
             Factory.IDataSourceFactory(cbordertype).BindDataSource(MoniterUtils.GetOrderTypeCBList());
 
@@ -48,11 +48,11 @@ namespace FutsMoniter
 
         public void OnDisposed()
         {
-            Globals.LogicEvent.GotAccountSelectedEvent -= new Action<IAccountLite>(OnAccountSelected);
+            Globals.LogicEvent.GotAccountSelectedEvent -= new Action<AccountLite>(OnAccountSelected);
         }
 
         
-        void OnAccountSelected(IAccountLite obj)
+        void OnAccountSelected(AccountLite obj)
         {
             this.SetAccount(obj);
         }
@@ -67,7 +67,7 @@ namespace FutsMoniter
         /// 绑定帐户
         /// </summary>
         /// <param name="acc"></param>
-        void SetAccount(IAccountLite acc)
+        void SetAccount(AccountLite acc)
         {
             _account = acc;
             account.Text = _account.Account;

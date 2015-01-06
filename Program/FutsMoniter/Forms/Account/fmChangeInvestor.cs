@@ -18,8 +18,8 @@ namespace FutsMoniter
         {
             InitializeComponent();
         }
-        IAccountLite _account = null;
-        public void SetAccount(IAccountLite acc)
+        AccountLite _account = null;
+        public void SetAccount(AccountLite acc)
         {
             _account = acc;
             account.Text = _account.Account;

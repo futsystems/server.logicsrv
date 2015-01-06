@@ -17,15 +17,15 @@ namespace TradingLib.Common
         bool _basicinfodone = false;
         public bool BasicInfoDone { get { return _basicinfodone; } set { _basicinfodone = value; } }
 
-        Dictionary<string, IAccountLite> accountmap = new Dictionary<string, IAccountLite>();
+        Dictionary<string, AccountLite> accountmap = new Dictionary<string, AccountLite>();
 
-        public IEnumerable<IAccountLite> Accounts { get { return accountmap.Values; } }
+        public IEnumerable<AccountLite> Accounts { get { return accountmap.Values; } }
 
         /// <summary>
         /// 事件中继响应帐户选择事件
         /// </summary>
         /// <param name="account"></param>
-        public void OnAccountSelected(IAccountLite account)
+        public void OnAccountSelected(AccountLite account)
         {
             if (GotAccountSelectedEvent != null)
                 GotAccountSelectedEvent(account);
@@ -34,7 +34,7 @@ namespace TradingLib.Common
         /// 响应客户端交易帐户回报
         /// </summary>
         /// <param name="account"></param>
-        public void OnAccountLite(IAccountLite account, bool islast)
+        public void OnAccountLite(AccountLite account, bool islast)
         {
             if (account != null)
             {
@@ -54,7 +54,7 @@ namespace TradingLib.Common
         /// 响应服务端交易帐户实时资金变动信息
         /// </summary>
         /// <param name="account"></param>
-        public void OnAccountInfoLite(IAccountInfoLite account)
+        public void OnAccountInfoLite(AccountInfoLite account)
         {
             if (GotFinanceInfoLiteEvent != null)
                 GotFinanceInfoLiteEvent(account);
@@ -64,7 +64,7 @@ namespace TradingLib.Common
         /// 管理端查询交易帐户信息回报
         /// </summary>
         /// <param name="accountinfo"></param>
-        public void OnAccountInfo(IAccountInfo accountinfo)
+        public void OnAccountInfo(AccountInfo accountinfo)
         {
             //if (GotFinanceInfoEvent != null)
             //    GotFinanceInfoEvent(accountinfo);
@@ -74,7 +74,7 @@ namespace TradingLib.Common
         /// 交易帐户变动
         /// </summary>
         /// <param name="account"></param>
-        public void OnAccountChagne(IAccountLite account)
+        public void OnAccountChagne(AccountLite account)
         {
             if (GotAccountChangedEvent != null)
                 GotAccountChangedEvent(account);

@@ -8,7 +8,7 @@ namespace TradingLib.Common
 {
     public class NotifyMGRAccountInfoLiteResponse:NotifyResponsePacket
     {
-        public IAccountInfoLite InfoLite { get; set; }
+        public AccountInfoLite InfoLite { get; set; }
         public NotifyMGRAccountInfoLiteResponse()
         {
             _type = MessageTypes.MGRACCOUNTINFOLITENOTIFY;

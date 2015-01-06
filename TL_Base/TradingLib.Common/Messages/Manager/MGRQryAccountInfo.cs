@@ -35,7 +35,7 @@ namespace TradingLib.Common
             AccountInfoToSend = new AccountInfo();
         }
 
-        public IAccountInfo AccountInfoToSend {get;set;}
+        public AccountInfo AccountInfoToSend {get;set;}
 
 
         public override string  ResponseSerialize()

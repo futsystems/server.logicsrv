@@ -15,7 +15,7 @@ namespace FutsMoniter
 {
     public partial class fmAccountConfig : ComponentFactory.Krypton.Toolkit.KryptonForm,IEventBinder
     {
-       IAccountLite _account;
+       AccountLite _account;
         public event DebugDelegate SendDebugEvent;
         void debug(string msg)
         {
@@ -25,7 +25,7 @@ namespace FutsMoniter
             
         }
 
-        public void SetAccount(IAccountLite account)
+        public void SetAccount(AccountLite account)
         {
             _account = account;
 

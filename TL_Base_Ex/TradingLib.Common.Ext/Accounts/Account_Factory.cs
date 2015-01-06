@@ -60,8 +60,6 @@ namespace TradingLib.Common
             
         }
 
-
-
         /// <summary>
         /// 
         /// </summary>
@@ -74,7 +72,6 @@ namespace TradingLib.Common
                 if (accounttypemap.Keys.Contains(AccountTypeName))
                 {
                     //检查是否有以单个string为参数的构造函数
-
                     AccountType = accounttypemap[AccountTypeName];
                     Util.Debug(Util.GlobalPrefix + "use user-defined AccountType:" + AccountTypeName);
                 }
@@ -83,7 +80,7 @@ namespace TradingLib.Common
                     AccountType = typeof(AccountBase);
                 }
             }
-            return (IAccount)Activator.CreateInstance(AccountType, new object[] { id});
+            return (IAccount)Activator.CreateInstance(AccountType, new object[] {id});
             
         }
 

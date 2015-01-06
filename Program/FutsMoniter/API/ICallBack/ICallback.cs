@@ -14,12 +14,12 @@ namespace TradingLib.API
         /// <summary>
         /// 获得帐户选中事件
         /// </summary>
-        event Action<IAccountLite> GotAccountSelectedEvent;
+        event Action<AccountLite> GotAccountSelectedEvent;
 
         /// <summary>
         /// 交易帐号
         /// </summary>
-        event Action<IAccountLite> GotAccountEvent;
+        event Action<AccountLite> GotAccountEvent;
         /// <summary>
         /// 财务信息
         /// </summary>
@@ -27,12 +27,12 @@ namespace TradingLib.API
         /// <summary>
         /// 动态财务信息
         /// </summary>
-        event Action<IAccountInfoLite> GotFinanceInfoLiteEvent;
+        event Action<AccountInfoLite> GotFinanceInfoLiteEvent;
 
         /// <summary>
         /// 交易帐户变化
         /// </summary>
-        event Action<IAccountLite> GotAccountChangedEvent;
+        event Action<AccountLite> GotAccountChangedEvent;
 
         /// <summary>
         /// 登入状态变化
@@ -108,7 +108,7 @@ namespace TradingLib.API
         /// <param name="module"></param>
         /// <param name="cmd"></param>
         /// <param name="del"></param>
-        void RegisterCallback(string module, string cmd, JsonReplyDel del);
+        void RegisterCallback(string module, string cmd, Action<string> del);
 
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace TradingLib.API
         /// <param name="module"></param>
         /// <param name="cmd"></param>
         /// <param name="del"></param>
-        void UnRegisterCallback(string module, string cmd, JsonReplyDel del);
+        void UnRegisterCallback(string module, string cmd, Action<string> del);
         #endregion
 
 

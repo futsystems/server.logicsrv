@@ -162,11 +162,11 @@ namespace TradingLib.Core
                             SrvOnMGRResumeAccount(packet as MGRResumeAccountRequest, session, manager);
                             break;
                         }
-                    case MessageTypes.MGRQRYACCOUNTINFO://查询帐户信息
-                        {
-                            SrvOnMGRQryAccountInfo(packet as MGRQryAccountInfoRequest, session, manager);
-                            break;
-                        }
+                    //case MessageTypes.MGRQRYACCOUNTINFO://查询帐户信息
+                    //    {
+                    //        SrvOnMGRQryAccountInfo(packet as MGRQryAccountInfoRequest, session, manager);
+                    //        break;
+                    //    }
                     case MessageTypes.MGRCASHOPERATION://出入金操作
                         {
                             SrvOnMGRCashOperation(packet as MGRCashOperationRequest, session, manager);

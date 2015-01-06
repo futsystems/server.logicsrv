@@ -15,7 +15,7 @@ namespace FutsMoniter
         public void OnInit()
         {
             //加载帐户
-            foreach (IAccountLite account in Globals.LogicHandler.Accounts)
+            foreach (AccountLite account in Globals.LogicHandler.Accounts)
             {
                 InvokeGotAccount(account);
             }
@@ -23,9 +23,9 @@ namespace FutsMoniter
             UpdateAccountNum();
 
             //帐户事件
-            Globals.LogicEvent.GotAccountEvent += new Action<IAccountLite>(GotAccount);
-            Globals.LogicEvent.GotFinanceInfoLiteEvent += new Action<IAccountInfoLite>(GotAccountInfoLite);
-            Globals.LogicEvent.GotAccountChangedEvent += new Action<IAccountLite>(GotAccountChanged);
+            Globals.LogicEvent.GotAccountEvent += new Action<AccountLite>(GotAccount);
+            Globals.LogicEvent.GotFinanceInfoLiteEvent += new Action<AccountInfoLite>(GotAccountInfoLite);
+            Globals.LogicEvent.GotAccountChangedEvent += new Action<AccountLite>(GotAccountChanged);
             Globals.LogicEvent.GotSessionUpdateEvent += new Action<NotifyMGRSessionUpdateNotify>(GotSessionUpdate);
             
 
@@ -56,9 +56,9 @@ namespace FutsMoniter
         public void OnDisposed()
         {
             //帐户事件
-            Globals.LogicEvent.GotAccountEvent -= new Action<IAccountLite>(GotAccount);
-            Globals.LogicEvent.GotFinanceInfoLiteEvent -= new Action<IAccountInfoLite>(GotAccountInfoLite);
-            Globals.LogicEvent.GotAccountChangedEvent -= new Action<IAccountLite>(GotAccountChanged);
+            Globals.LogicEvent.GotAccountEvent -= new Action<AccountLite>(GotAccount);
+            Globals.LogicEvent.GotFinanceInfoLiteEvent -= new Action<AccountInfoLite>(GotAccountInfoLite);
+            Globals.LogicEvent.GotAccountChangedEvent -= new Action<AccountLite>(GotAccountChanged);
             Globals.LogicEvent.GotSessionUpdateEvent -= new Action<NotifyMGRSessionUpdateNotify>(GotSessionUpdate);
         }
     }

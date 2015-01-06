@@ -161,7 +161,7 @@ namespace FutsMoniter
         #endregion
 
         #region 帐户内存数据结构
-        private ConcurrentDictionary<string, IAccountLite> accountmap = new ConcurrentDictionary<string, IAccountLite>();
+        private ConcurrentDictionary<string, AccountLite> accountmap = new ConcurrentDictionary<string, AccountLite>();
         private ConcurrentDictionary<string, int> accountrowmap = new ConcurrentDictionary<string, int>();
 
         /// <summary>
@@ -189,8 +189,8 @@ namespace FutsMoniter
             return (accountmap.ContainsKey(account));
         }
 
-        IAccountLite accountselected = null;
-        public IAccountLite AccountSetlected { get { return accountselected; } }
+        AccountLite accountselected = null;
+        public AccountLite AccountSetlected { get { return accountselected; } }
 
         //得到当前选择的行号
         private string CurrentAccount
@@ -205,7 +205,7 @@ namespace FutsMoniter
 
 
         //通过行号得该行的Security
-        IAccountLite GetVisibleAccount(string account)
+        AccountLite GetVisibleAccount(string account)
         {
             //MessageBox.Show("account:" + account + " haveaccount:" + HaveAccount(account).ToString());
             if (HaveAccount(account))
@@ -290,7 +290,7 @@ namespace FutsMoniter
                     while (accountcache.hasItems)
                     {
                        // Globals.Debug("got account in cache*************************");
-                        IAccountLite account = accountcache.Read();
+                        AccountLite account = accountcache.Read();
                         InvokeGotAccount(account);
                         UpdateAccountNum();
                         //如果在初始化之后获得AccountLite信息 则表明该帐户是新增造成的 需要重新watchaccount
@@ -346,8 +346,8 @@ namespace FutsMoniter
 
 
         const int bufferisze = 1000;
-        RingBuffer<IAccountLite> accountcache = new RingBuffer<IAccountLite>(bufferisze);//交易帐户缓存
-        RingBuffer<IAccountInfoLite> accountinfocache = new RingBuffer<IAccountInfoLite>(bufferisze);//交易帐户财务数据更新缓存
+        RingBuffer<AccountLite> accountcache = new RingBuffer<AccountLite>(bufferisze);//交易帐户缓存
+        RingBuffer<AccountInfoLite> accountinfocache = new RingBuffer<AccountInfoLite>(bufferisze);//交易帐户财务数据更新缓存
         RingBuffer<NotifyMGRSessionUpdateNotify> sessionupdatecache = new RingBuffer<NotifyMGRSessionUpdateNotify>(bufferisze);//交易帐户session更新缓存
 
 
@@ -355,11 +355,11 @@ namespace FutsMoniter
         /// 当有帐户新增或者初始化时调用
         /// </summary>
         /// <param name="account"></param>
-        void InvokeGotAccount(IAccountLite account)
+        void InvokeGotAccount(AccountLite account)
         {
             if (InvokeRequired)
             {
-                Invoke(new IAccountLiteDel(InvokeGotAccount), new object[] { account });
+                Invoke(new Action<AccountLite>(InvokeGotAccount), new object[] { account });
             }
             else
             {
@@ -453,8 +453,8 @@ namespace FutsMoniter
         /// 服务端推送的帐户实时财务数据
         /// </summary>
         /// <param name="account"></param>
-        delegate void IAccountInfoLiteDel(IAccountInfoLite account);
-        void InvokeGotAccountInfoLite(IAccountInfoLite account)
+        delegate void IAccountInfoLiteDel(AccountInfoLite account);
+        void InvokeGotAccountInfoLite(AccountInfoLite account)
         {
             if (InvokeRequired)
             {
