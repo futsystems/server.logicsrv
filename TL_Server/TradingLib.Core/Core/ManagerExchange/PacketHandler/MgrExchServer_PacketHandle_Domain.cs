@@ -69,7 +69,7 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="session"></param>
         /// <param name="json"></param>
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateDomain", "UpdateDomain - update domain", "查询域", true)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateDomain", "UpdateDomain - update domain", "查询域", QSEnumArgParseType.Json)]
         public void CTE_UpdateDomain(ISession session, string json)
         {
             Manager manager = session.GetManager();

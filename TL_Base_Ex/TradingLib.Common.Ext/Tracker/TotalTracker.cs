@@ -9,6 +9,11 @@ namespace TradingLib.Common
 {
     /// <summary>
     /// 总帐交易记录维护器
+    /// 该维护器只是在总帐维度上维护了分帐户的交易信息
+    /// 本身并不产生新的交易数据，
+    /// 例子：
+    /// 我们需要找到某个编号的委托，如果没有总帐维度，则我们需要遍历每个分帐户去找到该委托
+    /// 而有了总帐维度则我们可以快速的找到该委托
     /// </summary>
     public class TotalTracker
     {
@@ -21,6 +26,7 @@ namespace TradingLib.Common
         public IEnumerable<Trade> TotalTrades { get { return trademap.Values; } }
 
         public IEnumerable<Position> TotalPositions { get { return positionmap.Values; } }
+
         /// <summary>
         /// 通过OrderId获得该Order
         /// </summary>

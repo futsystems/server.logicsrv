@@ -339,19 +339,9 @@ namespace TradingLib.Core
     {
 
         /// <summary>
-        /// 强迫成功事件
+        /// 持仓强平事件
         /// </summary>
-        public event PositionDelegate GotFlatSuccessEvent;
-
-        /// <summary>
-        /// 强迫异常事件
-        /// </summary>
-        public event PositionFlatFailDel GotFlatFailedEvent;
-
-
-
-
-
+        public event EventHandler<PositionFlatEventArgs> PositionFlatEvent;
 
         //待平仓列表,主要包含系统尾盘集中强平,系统内部风控强平等形成的平仓指令
         ThreadSafeList<RiskTaskSet> posflatlist = new ThreadSafeList<RiskTaskSet>();
@@ -588,6 +578,12 @@ namespace TradingLib.Core
             }
             return false;
         }
+
+        void PositionFlatFail(Position pos, string error)
+        {
+            if (PositionFlatEvent != null)
+                PositionFlatEvent(this, new PositionFlatEventArgs(pos, error));
+        }
         /// <summary>
         /// 监控强平持仓列表,用于观察委托是否正常平仓
         /// 强平是一个触发过程
@@ -671,11 +667,12 @@ namespace TradingLib.Core
                                                 string reason = ps.Position.GetPositionKey() + " 强平前撤单失败,强平异常";
                                                 debug(reason, QSEnumDebugLevel.INFO);
                                                 ps.FlatFailNoticed = true;
+                                                PositionFlatFail(ps.Position, "POSFLAT_CANCEL_ERROR");
                                                 //对外进行异常平仓报警
-                                                if (GotFlatFailedEvent != null)
-                                                {
-                                                    GotFlatFailedEvent(ps.Position, reason);
-                                                }
+                                                //if (GotFlatFailedEvent != null)
+                                                //{
+                                                //    GotFlatFailedEvent(ps.Position, reason);
+                                                //}
                                             }
                                         }
                                     }
@@ -715,11 +712,12 @@ namespace TradingLib.Core
                                                 debug(msg, QSEnumDebugLevel.WARNING);
                                                 ps.FlatFailNoticed = true;
 
-                                                //对外进行未正常平仓报警
-                                                if (GotFlatFailedEvent != null)
-                                                {
-                                                    GotFlatFailedEvent(ps.Position, msg);
-                                                }
+                                                PositionFlatFail(ps.Position, "POSFLAT_FLATORDER_CANCEL_ERROR");
+                                                ////对外进行未正常平仓报警
+                                                //if (GotFlatFailedEvent != null)
+                                                //{
+                                                //    GotFlatFailedEvent(ps.Position, msg);
+                                                //}
                                             }
                                         }
                                         else
@@ -742,11 +740,12 @@ namespace TradingLib.Core
                                             CancelOrder(ps.OrderID);
                                         }
                                         ps.FlatFailNoticed = true;
+                                        PositionFlatFail(ps.Position, "POSFLAT_OVER_MAXTRYNUMS");
                                         //对外进行未正常平仓报警
-                                        if (GotFlatFailedEvent != null)
-                                        {
-                                            GotFlatFailedEvent(ps.Position,"尝试强平持仓多次,未成功");
-                                        }
+                                        //if (GotFlatFailedEvent != null)
+                                        //{
+                                        //    GotFlatFailedEvent(ps.Position,"尝试强平持仓多次,未成功");
+                                        //}
 
                                     }
                                 }
@@ -807,11 +806,12 @@ namespace TradingLib.Core
                                         debug(reason, QSEnumDebugLevel.ERROR);
 
                                         ps.FlatFailNoticed = true;
-                                        //对外进行异常平仓报警
-                                        if (GotFlatFailedEvent != null)
-                                        {
-                                            GotFlatFailedEvent(null, reason);
-                                        }
+                                        //PositionFlatFail()
+                                        ////对外进行异常平仓报警
+                                        //if (GotFlatFailedEvent != null)
+                                        //{
+                                        //    GotFlatFailedEvent(null, reason);
+                                        //}
                                     }
                                 }
                             }
@@ -883,4 +883,7 @@ namespace TradingLib.Core
         }
         #endregion
     }
+
+
+   
 }

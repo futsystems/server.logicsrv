@@ -25,7 +25,7 @@ namespace TradingLib.Core
             }
         }
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateReceiveableBank", "UpdateReceiveableBank - update  ReceiveableBank", "更新收款银行银行列表",true)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateReceiveableBank", "UpdateReceiveableBank - update  ReceiveableBank", "更新收款银行银行列表", QSEnumArgParseType.Json)]
         public void CTE_UpdateReceiveableBank(ISession session,string json)
         {
             try

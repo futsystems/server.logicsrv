@@ -31,7 +31,7 @@ namespace TradingLib.Core
 
 
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAgentBankAccount", "UpdateAgentBankAccount -update bankaccount of agent", "更新代理银行卡信息", true)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAgentBankAccount", "UpdateAgentBankAccount -update bankaccount of agent", "更新代理银行卡信息", QSEnumArgParseType.Json)]
         public void CTE_UpdateAgentBankAccount(ISession session, string playload)
         {
             Manager manger = session.GetManager();

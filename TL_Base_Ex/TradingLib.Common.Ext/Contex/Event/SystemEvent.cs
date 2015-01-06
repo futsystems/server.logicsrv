@@ -107,7 +107,7 @@ namespace TradingLib.Common
         #endregion
 
 
-        #region Packet消息包事件
+        #region Packet 逻辑消息包事件
 
         public event EventHandler<PacketEventArgs> PacketEvent;
 
@@ -118,5 +118,21 @@ namespace TradingLib.Common
         }
         #endregion
 
+
+        #region Position 强平事件
+
+        /// <summary>
+        /// 强平成功事件
+        /// </summary>
+        public event EventHandler<PositionFlatEventArgs> PositionFlatEvent;
+
+        internal void FirePositionFlatEvent(object sender,PositionFlatEventArgs args)
+        {
+            if (PositionFlatEvent != null)
+            {
+                PositionFlatEvent(sender,args);
+            }
+        }
+        #endregion
     }
 }

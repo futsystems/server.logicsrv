@@ -31,7 +31,7 @@ namespace TradingLib.Core
         }
 
         IdTracker cashopref = new IdTracker();
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "RequestCashOperation", "RequestCashOperation -rquest deposit or withdraw", "请求出入金操作", true)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "RequestCashOperation", "RequestCashOperation -rquest deposit or withdraw", "请求出入金操作", QSEnumArgParseType.Json)]
         public void CTE_RequestCashOperation(ISession session, string playload)
         {
             Manager manger = session.GetManager();
@@ -71,7 +71,7 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="session"></param>
         /// <param name="playload"></param>
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "ConfirmCashOperation", "ConfirmCashOperation -confirm deposit or withdraw", "确认出入金操作请求", true)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "ConfirmCashOperation", "ConfirmCashOperation -confirm deposit or withdraw", "确认出入金操作请求", QSEnumArgParseType.Json)]
         public void CTE_ConfirmCashOperation(ISession session, string playload)
         {
             try
@@ -114,7 +114,7 @@ namespace TradingLib.Core
             }
         }
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "CancelCashOperation", "CancelCashOperation -cancel deposit or withdraw", "取消出入金操作请求", true)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "CancelCashOperation", "CancelCashOperation -cancel deposit or withdraw", "取消出入金操作请求", QSEnumArgParseType.Json)]
         public void CTE_CancelCashOperation(ISession session, string playload)
         {
             debug("取消出入金操作请求", QSEnumDebugLevel.INFO);
@@ -132,7 +132,7 @@ namespace TradingLib.Core
             }
         }
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "RejectCashOperation", "RejectCashOperation -reject deposit or withdraw", "拒绝出入金操作请求", true)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "RejectCashOperation", "RejectCashOperation -reject deposit or withdraw", "拒绝出入金操作请求", QSEnumArgParseType.Json)]
         public void CTE_RejectCashOperation(ISession session, string playload)
         {
             debug("拒绝出入金操作请求", QSEnumDebugLevel.INFO);

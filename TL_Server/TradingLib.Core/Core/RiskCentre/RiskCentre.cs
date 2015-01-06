@@ -21,7 +21,7 @@ namespace TradingLib.Core
 
         const string CoreName = "RiskCentre";
 
-        public event ClientTrackerInfoSessionDel ClientSessionEvent;
+        //public event ClientTrackerInfoSessionDel ClientSessionEvent;
         //public event GetFinServiceDel GetFinServiceDelEvent;
 
         
@@ -278,116 +278,117 @@ namespace TradingLib.Core
             {
                 debug("Position:" + tmp.Position.GetPositionKey() + " 已经平掉,从队列中移除", QSEnumDebugLevel.INFO);
                 posflatlist.Remove(tmp);
-                if (GotFlatSuccessEvent != null)
+                //通过事件中继触发事件
+                if (PositionFlatEvent != null)
                 {
-                    GotFlatSuccessEvent(tmp.Position);
+                    PositionFlatEvent(this, new PositionFlatEventArgs(tmp.Position));
                 }
             }
         }
 
         #endregion
 
-        #region 【客户端信息跟踪】跟踪客户端注册 注销记录
-        /// <summary>
-        /// 获得某个客户端的信息记录
-        /// </summary>
-        /// <param name="acc"></param>
-        /// <returns></returns>
-        public ClientTrackerInfo GetClientTracker(string acc)
-        {
-            if (!trackermap.Keys.Contains(acc))
-            {
-                return null;
-            }
-            return trackermap[acc];//获得该account所对应的追踪信息
+        //#region 【客户端信息跟踪】跟踪客户端注册 注销记录
+        ///// <summary>
+        ///// 获得某个客户端的信息记录
+        ///// </summary>
+        ///// <param name="acc"></param>
+        ///// <returns></returns>
+        //public ClientTrackerInfo GetClientTracker(string acc)
+        //{
+        //    if (!trackermap.Keys.Contains(acc))
+        //    {
+        //        return null;
+        //    }
+        //    return trackermap[acc];//获得该account所对应的追踪信息
 
-        }
-        ConcurrentDictionary<string, ClientTrackerInfo> trackermap = new ConcurrentDictionary<string, ClientTrackerInfo>();
+        //}
+        //ConcurrentDictionary<string, ClientTrackerInfo> trackermap = new ConcurrentDictionary<string, ClientTrackerInfo>();
 
-        /// <summary>
-        /// 检查某个账户是否登入
-        /// </summary>
-        /// <param name="account"></param>
-        /// <param name="info"></param>
-        /// <returns></returns>
-        public bool Islogin(string account, out ClientTrackerInfo info)
-        {
-            info = null;
-            if (trackermap.TryGetValue(account, out info))
-                return info.IsLogined;
+        ///// <summary>
+        ///// 检查某个账户是否登入
+        ///// </summary>
+        ///// <param name="account"></param>
+        ///// <param name="info"></param>
+        ///// <returns></returns>
+        //public bool Islogin(string account, out ClientTrackerInfo info)
+        //{
+        //    info = null;
+        //    if (trackermap.TryGetValue(account, out info))
+        //        return info.IsLogined;
 
-            return false;
-        }
+        //    return false;
+        //}
 
 
-        /// <summary>
-        /// 获得账户登入或者登出信息
-        /// tradingserver只负责触发登入 登出信息 风控中心记录客户端的登入 登出状态 以及客户端的本地信息
-        /// 
-        /// </summary>
-        /// <param name="acc"></param>
-        /// <param name="login"></param>
-        /// <param name="info"></param>
-        public void GotLoginInfo(string acc, bool login, ClientInfoBase info)
-        {
-            try
-            {
-                if (!_clearcentre.HaveAccount(acc)) return;//
+        ///// <summary>
+        ///// 获得账户登入或者登出信息
+        ///// tradingserver只负责触发登入 登出信息 风控中心记录客户端的登入 登出状态 以及客户端的本地信息
+        ///// 
+        ///// </summary>
+        ///// <param name="acc"></param>
+        ///// <param name="login"></param>
+        ///// <param name="info"></param>
+        //public void GotLoginInfo(string acc, bool login, ClientInfoBase info)
+        //{
+        //    try
+        //    {
+        //        if (!_clearcentre.HaveAccount(acc)) return;//
 
-                if (!trackermap.Keys.Contains(acc))
-                {
-                    trackermap.TryAdd(acc, new ClientTrackerInfo(acc,info));
-                }
-                ClientTrackerInfo ti = trackermap[acc];//获得该account所对应的追踪信息
+        //        if (!trackermap.Keys.Contains(acc))
+        //        {
+        //            trackermap.TryAdd(acc, new ClientTrackerInfo(acc,info));
+        //        }
+        //        ClientTrackerInfo ti = trackermap[acc];//获得该account所对应的追踪信息
 
-                //如果是登入
-                if (login)
-                {
-                    if (!ti.IsLogined)//原先没有登入 则登入次数++
-                        ti.LoginNum++;
-                    //如果没有登入，则记录当前时间为登入时间
-                    if (ti.IsLogined == false)//没有登入则记录登入时间
-                        ti.LoginTime = DateTime.Now;
-                    ti.IsLogined = true;
-                }
-                else
-                {
-                    ti.IsLogined = false;
-                    //注销时记录我们的时长
-                    if (ti.LoginTime != DateTime.MinValue)
-                        ti.OnlineSecend += (int)(DateTime.Now - ti.LoginTime).TotalSeconds;
+        //        //如果是登入
+        //        if (login)
+        //        {
+        //            if (!ti.IsLogined)//原先没有登入 则登入次数++
+        //                ti.LoginNum++;
+        //            //如果没有登入，则记录当前时间为登入时间
+        //            if (ti.IsLogined == false)//没有登入则记录登入时间
+        //                ti.LoginTime = DateTime.Now;
+        //            ti.IsLogined = true;
+        //        }
+        //        else
+        //        {
+        //            ti.IsLogined = false;
+        //            //注销时记录我们的时长
+        //            if (ti.LoginTime != DateTime.MinValue)
+        //                ti.OnlineSecend += (int)(DateTime.Now - ti.LoginTime).TotalSeconds;
 
-                }
-                //更新采集到的信息
-                ti.IPAddress = info.IPAddress;//IP地址
-                ti.HardWareCode = info.HardWareCode;//硬件码
-                ti.FrontID = string.IsNullOrEmpty(info.Location.FrontID) ? "Direct" : info.Location.FrontID;//前置机地址
-                //记录客户端的类型和版本
-                //ti.API_Type = "";
-                //ti.API_Version = "";
-                //对外触发客户端信息
-                if (ClientSessionEvent != null)
-                    ClientSessionEvent(ti, login);
-            }
-            catch (Exception ex)
-            {
-                debug(PROGRAME + ":riskcenter got clientinfo error:" + ex.ToString());
-            }
-        }
+        //        }
+        //        //更新采集到的信息
+        //        ti.IPAddress = info.IPAddress;//IP地址
+        //        ti.HardWareCode = info.HardWareCode;//硬件码
+        //        ti.FrontID = string.IsNullOrEmpty(info.Location.FrontID) ? "Direct" : info.Location.FrontID;//前置机地址
+        //        //记录客户端的类型和版本
+        //        //ti.API_Type = "";
+        //        //ti.API_Version = "";
+        //        //对外触发客户端信息
+        //        if (ClientSessionEvent != null)
+        //            ClientSessionEvent(ti, login);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        debug(PROGRAME + ":riskcenter got clientinfo error:" + ex.ToString());
+        //    }
+        //}
 
-        void CheckClientTrackerInfo()
-        {
+        //void CheckClientTrackerInfo()
+        //{
 
-            IEnumerable<ClientTrackerInfo> infos = trackermap.Values;
+        //    IEnumerable<ClientTrackerInfo> infos = trackermap.Values;
 
-            //条件搜索语句
-            IEnumerable<ClientTrackerInfo> set =
-                from info in infos
-                where info.TotalTime.TotalHours > 2 //找出在线时长大于2小时的客户端
-                select info;
+        //    //条件搜索语句
+        //    IEnumerable<ClientTrackerInfo> set =
+        //        from info in infos
+        //        where info.TotalTime.TotalHours > 2 //找出在线时长大于2小时的客户端
+        //        select info;
 
-        }
-        #endregion
+        //}
+        //#endregion
 
         #region 重置
         /// <summary>
@@ -400,7 +401,7 @@ namespace TradingLib.Core
             _posoffsetracker.Clear();
 
             //清空帐户当日登入信息
-            trackermap.Clear();
+            //trackermap.Clear();
 
             //清空强平任务队列
             posflatlist.Clear();

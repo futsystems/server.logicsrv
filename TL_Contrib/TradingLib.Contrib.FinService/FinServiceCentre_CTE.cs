@@ -91,7 +91,7 @@ namespace TradingLib.Contrib.FinService
             //SendJsonReplyMgr(session, ret);
         }
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAgentSPArg", "UpdateAgentSPArg - update agent service plan arg  of account", "更新代理配资服务计划参数",true)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAgentSPArg", "UpdateAgentSPArg - update agent service plan arg  of account", "更新代理配资服务计划参数", QSEnumArgParseType.Json)]
         public void CTE_UpdateAgentSPArg(ISession session, string playload)
         {
             debug("arg:" + playload, QSEnumDebugLevel.INFO);
@@ -153,7 +153,7 @@ namespace TradingLib.Contrib.FinService
         /// </summary>
         /// <param name="session"></param>
         /// <param name="playload"></param>
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateArguments", "UpdateArguments - update argument of finservice", "更新某个帐户的配资参数", true)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateArguments", "UpdateArguments - update argument of finservice", "更新某个帐户的配资参数", QSEnumArgParseType.Json)]
         public void CTE_UpdateArguments(ISession session,string playload)
         {
             debug("arg:" + playload, QSEnumDebugLevel.INFO);
@@ -200,7 +200,7 @@ namespace TradingLib.Contrib.FinService
             //SendJsonReplyMgr(session, stub2.ToJsonWrapperFinServiceStub());
         }
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "ChangeServicePlane", "ChangeServicePlane - add or change finservice of account", "添加或者修改某个帐户的配资服务", true)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "ChangeServicePlane", "ChangeServicePlane - add or change finservice of account", "添加或者修改某个帐户的配资服务", QSEnumArgParseType.Json)]
         public void CTE_ChangeServicePlane(ISession session, string playload)
         {
             debug("request:" + playload, QSEnumDebugLevel.INFO);
@@ -232,7 +232,7 @@ namespace TradingLib.Contrib.FinService
 
         }
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "DeleteServicePlane", "DeleteServicePlane - delete of account", "添加或者修改某个帐户的配资服务", true)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "DeleteServicePlane", "DeleteServicePlane - delete of account", "添加或者修改某个帐户的配资服务", QSEnumArgParseType.Json)]
         public void CTE_DeleteServicePlane(ISession session, string account)
         {
             debug("删除帐户:"+account+"的配资服务", QSEnumDebugLevel.INFO);

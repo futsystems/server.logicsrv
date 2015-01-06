@@ -45,11 +45,13 @@ namespace TradingLib.Common
 			//需要加载的插件接口
             this.DesiredInterfaces.Add(typeof(ICore));
             this.DesiredInterfaces.Add(typeof(IContrib));
-
+            //行情与成交通道
             this.DesiredInterfaces.Add(typeof(IBroker));
             this.DesiredInterfaces.Add(typeof(IDataFeed));
+            //风控规则
             this.DesiredInterfaces.Add(typeof(IAccountCheck));
             this.DesiredInterfaces.Add(typeof(IOrderCheck));
+            //帐户
             this.DesiredInterfaces.Add(typeof(IAccount));
 
         }
@@ -146,7 +148,7 @@ namespace TradingLib.Common
             {
                 try
                 {
-                    list.Add(new AttrPluginContrib((ContribAttr)pair.Value.Attribute));
+                    list.Add(new ContribPlugin((ContribAttr)pair.Value.Attribute));
                 }
                 catch
                 {
@@ -360,7 +362,7 @@ namespace TradingLib.Common
                             }
                         }
 
-                        //如果插件列表中还包含了我们所需要的类型
+                        //如果插件列表中还包含了我们所需要的类型 加载插件
                         if (this.Plugins.ContainsKey(type))
                         {
                             foreach (Type avabileType in this.AvailableTypes[type])//遍历该接口所提供的可用类型

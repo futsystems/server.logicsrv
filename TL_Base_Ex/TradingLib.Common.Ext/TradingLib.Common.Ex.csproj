@@ -85,9 +85,10 @@
     <Compile Include="Contex\CoreUtil.cs" />
     <Compile Include="Contex\Event\CashOperationEvent.cs" />
     <Compile Include="Contex\Event\EventArgs\PacketEventArgs.cs" />
+    <Compile Include="Contex\Event\EventArgs\PositionFlatEventArgs.cs" />
     <Compile Include="Contex\Event\SystemEvent.cs" />
     <Compile Include="Contex\Event\EventArgs\TaskEventArgs.cs" />
-    <Compile Include="Contrib\TaskProcUtils.cs" />
+    <Compile Include="Utils\TaskProcUtils.cs" />
     <Compile Include="ORM\MAgentFinance.cs" />
     <Compile Include="ORM\MUIAccess.cs" />
     <Compile Include="ORM\MCashOpAccount.cs" />
@@ -120,8 +121,6 @@
     <Compile Include="Profile\SectionStackEntry.cs" />
     <Compile Include="Profile\SectionStats.cs" />
     <Compile Include="Tracker\AccountTracker.cs" />
-    <Compile Include="Accounts\JsonWrapperAccount.cs" />
-    <Compile Include="Accounts\JsonWrapperSessionUpdate.cs" />
     <Compile Include="Plugin\Attr\ContribEventAttr.cs" />
     <Compile Include="Plugin\Attr\CoreAttr.cs" />
     <Compile Include="Client\Client2Session.cs" />
@@ -131,8 +130,7 @@
     <Compile Include="Contex\Event\SessionEvent.cs" />
     <Compile Include="Contex\TLContexHelper.cs" />
     <Compile Include="Contex\TLContex_Query.cs" />
-    <Compile Include="Plugin\ContribEventHandler.cs" />
-    <Compile Include="Contrib\AttrPluginContrib.cs" />
+    <Compile Include="Contrib\ContribPlugin.cs" />
     <Compile Include="Plugin\Attr\ContribAttr.cs" />
     <Compile Include="Plugin\Attr\MethodArgument.cs" />
     <Compile Include="Plugin\Attr\TaskAttr.cs" />
@@ -141,7 +139,6 @@
     <Compile Include="Contrib\ContribCommand.cs" />
     <Compile Include="Plugin\Attr\ContribCommandAttr.cs" />
     <Compile Include="Plugin\Attr\CoreCommandAttr.cs" />
-    <Compile Include="Contrib\ExCommand.cs" />
     <Compile Include="Contrib\TaskProc.cs" />
     <Compile Include="Plugin\Attr\MethodArgumentType.cs" />
     <Compile Include="Filter.cs" />
@@ -160,7 +157,6 @@
     <Compile Include="ClearCentre\Base_ClearCentre.cs" />
     <Compile Include="ClearCentre\ClearCentreAdapterToBroker.cs" />
     <Compile Include="ClearCentre\CommissionHelper.cs" />
-    <Compile Include="Client\ClientTracker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ThroughtPutTracker.cs" />
     <Compile Include="Contex\TLContex.cs" />

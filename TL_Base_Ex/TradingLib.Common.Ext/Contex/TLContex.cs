@@ -61,7 +61,7 @@ namespace TradingLib.Common
         ConcurrentDictionary<string, ConcurrentDictionary<string, ContribCommandInfo>> contribEventHandlerMap = new ConcurrentDictionary<string, ConcurrentDictionary<string, ContribCommandInfo>>();
 
         //无需登入便可以执行的命令
-        ThreadSafeList<string> bypasscmds = new ThreadSafeList<string>();
+        //ThreadSafeList<string> bypasscmds = new ThreadSafeList<string>();
         #endregion
 
         #region 定时任务列表
@@ -298,6 +298,11 @@ namespace TradingLib.Common
             {
                 session.OperationError(ex);
             }
+            catch (QSCommandError ex)
+            {
+                TLCtxHelper.Ctx.debug(ex.Label + "\r\n reason@" + ex.Reason + "\r\n RawException:" + ex.RawException.Message.ToString(), QSEnumDebugLevel.ERROR);
+                session.OperationError(new FutsRspError(ex));
+            }
             catch (Exception ex)
             {
                 session.OperationError(new FutsRspError(ex));
@@ -379,12 +384,12 @@ namespace TradingLib.Common
                 catch (QSCommandError ex)
                 {
                     TLCtxHelper.Ctx.debug(ex.Label + "\r\n reason@" + ex.Reason + "\r\n RawException:" + ex.RawException.Message.ToString(), QSEnumDebugLevel.ERROR);
-                    return ExCommand.DEFAULT_REP_WRONG;
+                    return "";// ExCommand.DEFAULT_REP_WRONG;
                 }
                 catch (Exception ex)
                 {
                     TLCtxHelper.Ctx.debug("ExectueCmd Error:\r\n" + ex.ToString(), QSEnumDebugLevel.ERROR);
-                    return ExCommand.DEFAULT_REP_WRONG;
+                    return "";// ExCommand.DEFAULT_REP_WRONG;
                 }
             }
             return "CLICommand:" + cmd + " Not Found\r\n";
@@ -421,7 +426,7 @@ namespace TradingLib.Common
         /// <param name="parameters">调用该扩展模块所附带的参数(除session参数以为),所有扩展模块的函数调用均要包含session入口</param>
         void CmdHandler(ISession session, string contribid, string cmd, string parameters, ConcurrentDictionary<string, ContribCommand> cmdmap)
         {
-            Util.Debug("Contirb:" + contribid + " cmd:" + cmd + " args:" + parameters);
+            //Util.Debug("Contirb:" + contribid + " cmd:" + cmd + " args:" + parameters);
             string cmdkey = ContribCommandKey(contribid, cmd);
 
             if (!IsContribRegisted(contribid) && !IsCoreRegisted(contribid) &&!IsServiceManagerRegisted(contribid))
@@ -434,11 +439,7 @@ namespace TradingLib.Common
                 debug("Error:Contrib[" + contribid + "] do not support Command[" + cmd + "]");
                 return;
             }
-            //如果没有登入 则直接返回
-            if (bypasscmds.Contains(cmdkey) || session.Authorized)
-            {
-                cmdmap[cmdkey].ExecuteCmd(session, parameters);
-            }
+            cmdmap[cmdkey].ExecuteCmd(session, parameters);
             
         }
 
@@ -789,18 +790,11 @@ namespace TradingLib.Common
         void ParseCommandInfo(object obj, string componentId)
         {
             List<ContribCommandInfo> list = PluginHelper.FindContribCommand(obj);
-            /*
-            if (plugin == null)
-            {
-                debug("Error:this obj is not a valid IContribPlugin,will not register ContribCommand");
-                return;
-            }**/
             //获得模块ID
             string contribid = componentId.ToUpper();
             
             foreach (ContribCommandInfo info in list)
             {
-
                 //处理消息的扩展命令
                 if (info.Attr.HandlerType == QSContribCommandHandleType.MessageHandler)
                 {
@@ -834,10 +828,10 @@ namespace TradingLib.Common
                     }
 
                     //如果该命令不用客户端登入授权后执行，则加入白名单列表
-                    if (!info.Attr.NeedAuth)
-                    {
-                        bypasscmds.Add(cmdkey);
-                    }
+                    //if (!info.Attr.NeedAuth)
+                    //{
+                    //    bypasscmds.Add(cmdkey);
+                    //}
 
                 }
                 else if(info.Attr.HandlerType == QSContribCommandHandleType.EventHandler) //事件
@@ -911,10 +905,10 @@ namespace TradingLib.Common
                     }
 
                     //如果该命令不用客户端登入授权后执行，则加入白名单列表
-                    if (!info.Attr.NeedAuth)
-                    {
-                        bypasscmds.Remove(cmdkey);
-                    }
+                    //if (!info.Attr.NeedAuth)
+                    //{
+                    //    bypasscmds.Remove(cmdkey);
+                    //}
 
                 }
                 else if (info.Attr.HandlerType == QSContribCommandHandleType.EventHandler) //事件

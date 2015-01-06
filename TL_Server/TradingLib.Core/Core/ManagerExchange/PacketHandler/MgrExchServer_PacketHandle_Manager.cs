@@ -28,7 +28,7 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="session"></param>
         /// <param name="json"></param>
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateManager", "UpdateManager - update manger", "更新或添加柜员",true)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateManager", "UpdateManager - update manger", "更新或添加柜员", QSEnumArgParseType.Json)]
         public void CTE_UpdateManger(ISession session, string json)
         {
             Manager manager = session.GetManager();

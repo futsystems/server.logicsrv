@@ -59,7 +59,7 @@ namespace TradingLib.API
         /// <summary>
         /// 获得清算中心下所有交易账户
         /// </summary>
-        IAccount[] Accounts { get; }
+        IEnumerable<IAccount> Accounts { get; }
 
         /// <summary>
         /// 返回某个交易账户,通过交易帐号

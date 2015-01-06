@@ -38,7 +38,7 @@ namespace TradingLib.Core
         /// 更新权限模板
         /// </summary>
         /// <param name="session"></param>
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdatePermission", "UpdatePermission - update permission config", "更新权限模板", true)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdatePermission", "UpdatePermission - update permission config", "更新权限模板",QSEnumArgParseType.Json)]
         public void CTE_UpdatePermissionTemplateList(ISession session, string playload)
         {
             Manager manger = session.GetManager();

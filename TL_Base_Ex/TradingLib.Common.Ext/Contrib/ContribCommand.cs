@@ -39,7 +39,7 @@ namespace TradingLib.Common
         }
     }
 
-    public class CommandActionWrapper : ICommandAction
+    internal class CommandActionWrapper
     {
         ContribCommandInfo _cmdinfo;
         List<MethodArgument> _argslist;
@@ -56,34 +56,39 @@ namespace TradingLib.Common
         {
             Util.Debug("Execute got parameters:" + parameters + " argsnum:" + _argslist.Count.ToString());
             string[] p = new string[] { };
-            if (istnetstring)//tnetstring 传递参数列表
+            switch (_cmdinfo.Attr.ArgParseType)
             {
-                byte[] bytemsg = Encoding.UTF8.GetBytes(parameters);
-                ArraySegment<byte> codemsg = new ArraySegment<byte>(bytemsg);
 
-                List<string> arglist = new List<string>();
-                var res = codemsg.TParse();
-                //Utils.Debug("Type:" + res.Data.Type.ToString() + " Value:" + res.Data.ToString());
-                arglist.Add(res.Data.ToString());
-                while (res.Remain.Count > 0)
-                {
-                    res = res.Remain.TParse();
-                    //Utils.Debug("Type:" + res.Data.Type.ToString() + " Value:" + res.Data.ToString());
-                    arglist.Add(res.Data.ToString());
-                }
-                //传递解析后的参数列表
-                p = arglist.ToArray();
-            }
-            else //,号分割参数列表
-            {
-                if (_cmdinfo.Attr.IsJsonArg)//json参数 将整个parameters作为参数传入
-                {
-                    p = new string[] { parameters };
-                }
-                else//用逗号分隔参数列表
-                {
-                    p = parameters.Split(',');
-                }
+                case QSEnumArgParseType.Json:
+                    {
+                        p = new string[] { parameters };
+                        break;
+                    }
+                case QSEnumArgParseType.CommaSeparated:
+                    {
+                        p = parameters.Split(',');
+                        break;
+                    }
+                case QSEnumArgParseType.TNetString:
+                    {
+                        byte[] bytemsg = Encoding.UTF8.GetBytes(parameters);
+                        ArraySegment<byte> codemsg = new ArraySegment<byte>(bytemsg);
+
+                        List<string> arglist = new List<string>();
+                        var res = codemsg.TParse();
+                        //Utils.Debug("Type:" + res.Data.Type.ToString() + " Value:" + res.Data.ToString());
+                        arglist.Add(res.Data.ToString());
+                        while (res.Remain.Count > 0)
+                        {
+                            res = res.Remain.TParse();
+                            //Utils.Debug("Type:" + res.Data.Type.ToString() + " Value:" + res.Data.ToString());
+                            arglist.Add(res.Data.ToString());
+                        }
+                        //传递解析后的参数列表
+                        p = arglist.ToArray();
+                        break;
+                    }
+
             }
 
             //如果分隔后只有1个参数,并且该参数为空或者null,则为无附加参数的函数调用,我们将p至空
@@ -91,10 +96,12 @@ namespace TradingLib.Common
             {
                 p = new string[] { };
             }
+
             //如果第一个参数是ISession则我们将session绑定到第一个参数
             if (_argslist.Count>=1 && _argslist[0].Type == QSEnumMethodArgumentType.ISession)
             {
                 int numargs = p.Length + 1;
+                //验证参数个数
                 if (numargs != _argslist.Count)
                 {
                     throw new QSCommandError(new Exception(), "Parse arguments error: got " + numargs.ToString() + " but we need:" + _argslist.Count.ToString());
@@ -138,7 +145,6 @@ namespace TradingLib.Common
                 //扩展命令运行时 抛出原始异常 FutRspError等
                 throw ex.InnerException;
             }
-            
         }
 
         public override string ToString()
@@ -154,20 +160,18 @@ namespace TradingLib.Common
         }
     }
 
-    public class ContribCommand:ExCommand
+    /// <summary>
+    /// 扩展命令对象
+    /// 
+    /// </summary>
+    public class ContribCommand
     {
-        private ICommandAction m_action;
+        private CommandActionWrapper m_action;
         private ContribCommandInfo m_info;
         public ContribCommand(object obj, ContribCommandInfo info)
-            :base(info.Attr.Source,info.Attr.CmdStr,"Response",info.Attr.Help,info.Attr.Description)
         {
             m_action = new CommandActionWrapper(obj, info);
             m_info = info;
-        }
-        public ContribCommand(QSEnumCommandSource source, string scmd,ICommandAction action,string helptext,string description)
-            :base(source,scmd,"",helptext,description)
-        {
-            m_action = action;
         }
 
         /// <summary>
@@ -175,10 +179,32 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public override object ExecuteCmd(ISession session, string parameters, bool istnetstring = false)
+        public  object ExecuteCmd(ISession session, string parameters, bool istnetstring = false)
         {
             return m_action.Execute(session, parameters,istnetstring);
         }
+
+        public QSEnumCommandSource Source
+        {
+            get { return m_info.Attr.Source; }
+        }
+
+        public string Command
+        {
+            get { return m_info.Attr.CmdStr; }
+        }
+
+        public string CommandHelp
+        {
+            get
+            {
+                char c = ' ';
+                return m_info.Attr.CmdStr.PadRight(20, c) + m_info.Attr.Help + System.Environment.NewLine;
+            }
+        }
+
+
+
         public string ContribCommandDesp
         {
             get
@@ -186,6 +212,7 @@ namespace TradingLib.Common
                 return m_info.Attr.Description;
             }
         }
+
         public string ContribCommandAPI
         { 
             get{
@@ -194,7 +221,7 @@ namespace TradingLib.Common
                 sb.Append((CliUtils.SECPRIFX + " CommandAPI:" + m_info.Attr.CmdStr + " ").PadRight(CliUtils.SECNUM, CliUtils.SECCHAR) + System.Environment.NewLine);
                 sb.Append("Source:".PadRight(CliUtils.SECNUM, ' ') + m_info.Attr.Source + System.Environment.NewLine);
                 sb.Append("CmdStr:".PadRight(CliUtils.SECNUM, ' ') + m_info.Attr.CmdStr + System.Environment.NewLine);
-                sb.Append("NeedAuth:".PadRight(CliUtils.SECNUM, ' ') + m_info.Attr.NeedAuth.ToString() + System.Environment.NewLine);
+                sb.Append("ParseType:".PadRight(CliUtils.SECNUM, ' ') + m_info.Attr.ArgParseType.ToString() + System.Environment.NewLine);
                 sb.Append("Help:" + System.Environment.NewLine);
                 sb.Append(m_info.Attr.Help + System.Environment.NewLine);
                 sb.Append("Function Name:".PadRight(CliUtils.SECNUM, ' ') + m_info.MethodInfo.Name + System.Environment.NewLine);

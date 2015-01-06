@@ -107,6 +107,11 @@ namespace TradingLib.Core
             _brokerRouter.GotOrderActionErrorEvent += new OrderActionErrorDelegate(_br_GotOrderActionErrorEvent);
         }
 
+        /// <summary>
+        /// 通过委托编号 查找路由侧分解发送的委托
+        /// </summary>
+        /// <param name="val"></param>
+        /// <returns></returns>
         public Order SentRouterOrder(long val)
         {
             return _brokerRouter.SentRouterOrder(val);

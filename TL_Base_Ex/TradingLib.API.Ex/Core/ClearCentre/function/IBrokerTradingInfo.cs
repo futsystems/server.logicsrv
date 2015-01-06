@@ -16,7 +16,7 @@ namespace TradingLib.API
         /// </summary>
         /// <param name="?"></param>
         /// <returns></returns>
-        IList<Order> getOrders(IBroker broker);
+        //IList<Order> getOrders(IBroker broker);
 
         /// <summary>
         /// 获得日内成交接口的所有委托

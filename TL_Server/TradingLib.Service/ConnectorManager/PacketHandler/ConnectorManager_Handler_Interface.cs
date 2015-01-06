@@ -28,7 +28,7 @@ namespace TradingLib.ServiceManager
             }
         }
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateInterface", "UpdateInterface - Update interface setted in system", "更新接口设置", true)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateInterface", "UpdateInterface - Update interface setted in system", "更新接口设置", QSEnumArgParseType.Json)]
         public void CTE_UpdateInterface(ISession session, string json)
         {
             try

@@ -42,12 +42,12 @@
   <ItemGroup>
     <Compile Include="Account\Service\IAccountService.cs" />
     <Compile Include="Account\IAccRiskCheck.cs" />
+    <Compile Include="Contrib\EnumContribCommandHandleType.cs" />
     <Compile Include="Contrib\IPlugin.cs" />
     <Compile Include="Core\ClearCentre\function\IAuthCashOperation.cs" />
     <Compile Include="Core\IRouterManager.cs" />
     <Compile Include="Account\IGeneralCheck.cs" />
     <Compile Include="Contrib\EnumCommandSource.cs" />
-    <Compile Include="Contrib\ICommandAction.cs" />
     <Compile Include="Contrib\IContribPlugin.cs" />
     <Compile Include="Core\ISettleCentre.cs" />
     <Compile Include="Core\IUtil.cs" />

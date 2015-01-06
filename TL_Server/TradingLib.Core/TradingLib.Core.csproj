@@ -79,7 +79,8 @@
     <Compile Include="Core\ClearCentre\ClearCentreSrv_CTE.cs" />
     <Compile Include="Core\ClearCentre\JsonWrapperClearCentre.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_AccountCashOperation.cs" />
-    <Compile Include="Core\ClearCentre\ClearCentreSrv_LogRestore.cs" />
+    <Compile Include="Core\ClearCentre\ClearCentreSrv_LogData.cs" />
+    <Compile Include="Core\ClearCentre\ClearCentreSrv_TradingInfo.cs" />
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_FinAgent.cs" />
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_Msic.cs" />
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_RecvBank.cs" />

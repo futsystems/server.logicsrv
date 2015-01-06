@@ -44,6 +44,7 @@
     <Compile Include="Connecter\PositionMetric.cs" />
     <Compile Include="Connecter\RouterItem.cs" />
     <Compile Include="Domain\Domain.cs" />
+    <Compile Include="Msic\EnumArgParseType.cs" />
     <Compile Include="Msic\EnumConnectorStatus.cs" />
     <Compile Include="Msic\EnumOrderTransferType.cs" />
     <Compile Include="Msic\EnumTaskType.cs" />
@@ -71,7 +72,7 @@
     <Compile Include="Account\AccAdapter\IAccountExp.cs" />
     <Compile Include="Account\AccAdapter\IAccountInfo.cs" />
     <Compile Include="IBase.cs" />
-    <Compile Include="CoreForAccount\IBrokerClearCentre.cs" />
+    <Compile Include="Wrapper\IBrokerClearCentre.cs" />
     <Compile Include="Data\Bar.cs" />
     <Compile Include="Data\BarList.cs" />
     <Compile Include="Connecter\IBroker.cs" />

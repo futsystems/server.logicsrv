@@ -104,7 +104,7 @@ namespace TradingLib.Core
         /// 2.客户端注销
         /// 3.客户端硬件地址变更
         /// </summary>
-        public event ISessionDel AccountSessionChangedEvent;
+        //public event ISessionDel AccountSessionChangedEvent;
 
 
         /// <summary>

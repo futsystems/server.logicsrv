@@ -9,7 +9,7 @@ using System.Diagnostics;
 
 namespace TradingLib.Core
 {
-    public delegate void ClientTrackerInfoSessionDel(ClientTrackerInfo info,bool login_flag);
+    //public delegate void ClientTrackerInfoSessionDel(ClientTrackerInfo info,bool login_flag);
     public class CoreUtil
     {
 

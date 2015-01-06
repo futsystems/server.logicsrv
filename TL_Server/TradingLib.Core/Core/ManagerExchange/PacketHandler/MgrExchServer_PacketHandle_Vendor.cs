@@ -20,7 +20,7 @@ namespace TradingLib.Core
             }
         }
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateVendor", "UpdateVendor - update vendor", "更新Vendor设置", true)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateVendor", "UpdateVendor - update vendor", "更新Vendor设置",QSEnumArgParseType.Json)]
         public void CTE_UpdateVendor(ISession session, string json)
         {
             Manager manger = session.GetManager();

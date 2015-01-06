@@ -20,11 +20,6 @@ namespace TradingLib.Common
         /// </summary>
         public event ClientInfoDelegate<T> ClientUnregistedEvent;
 
-
-        /// <summary>
-        /// 客户端登入 退出事件
-        /// </summary>
-        public event ClientLoginInfoDelegate<T> ClientLoginInfoEvent;
         /// <summary>
         /// 交易帐号登入成功
         /// </summary>
@@ -36,22 +31,9 @@ namespace TradingLib.Common
         public event AccoundIDDel AccountLoginFailedEvent;
 
         /// <summary>
-        /// 交易帐号登入成功后向对应客户端推送附加消息
-        /// 1.当前账户财务信息
-        /// 2.风控信息
-        /// 3.比赛信息
-        /// 4.配资信息
+        /// 客户端登入 退出事件
         /// </summary>
-        //public event AccountIdDel NotifyLoginSuccessEvent;
-
-
-        /// <summary>
-        /// 会话状态改变事件
-        /// 1.客户端交易帐号登入
-        /// 2.客户端交易帐号注销
-        /// 3.客户端回报本地硬件编码
-        /// </summary>
-        public event ISessionDel SessionChangedEvent;
+        public event ClientLoginInfoDelegate<T> ClientLoginInfoEvent;
 
 
         /// <summary>
@@ -79,12 +61,6 @@ namespace TradingLib.Common
             if (ClientLoginInfoEvent != null)
                 ClientLoginInfoEvent(c, islogin);
         }
-        internal void FireSessionChangedEvent(ISession session)
-        {
-            if (SessionChangedEvent != null)
-                SessionChangedEvent(session);
-        }
-
 
         internal void FireAccountLoginSuccessEvent(string account)
         {
@@ -98,11 +74,7 @@ namespace TradingLib.Common
             if (AccountLoginFailedEvent != null)
                 AccountLoginFailedEvent(account);
         }
-        //internal void FireNotifyLoginSuccessEvent(string account)
-        //{
-        //    if (NotifyLoginSuccessEvent != null)
-        //        NotifyLoginSuccessEvent(account);
-        //}
+
 
         public bool IsAuthEventBinded { get { return AuthUserEvent != null; } }
 

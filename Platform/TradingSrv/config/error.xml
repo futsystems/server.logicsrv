@@ -43,7 +43,10 @@
 <error id="CASHOUT_OVER_AVABILE" value="200" prompt="超出可提金额"/>
 <error id="CASHOUT_STILL_HAVE_POSITION" value="200" prompt="有持仓,不允许出金"/>
 
-
+<!--风控中心 1000 -->
+<error id="POSFLAT_CANCEL_ERROR" value="1000" prompt="强平前撤单失败"/>
+<error id="POSFLAT_FLATORDER_CANCEL_ERROR" value="1001" prompt="强平委托未成交,且撤单失败"/>
+<error id="POSFLAT_OVER_MAXTRYNUMS" value="1002" prompt="尝试强平持仓多次,未成功"/>
 
 
 <error id="SECURITY_EXIST" value="500" prompt="品种已存在"/>
@@ -54,5 +57,7 @@
 <error id="MGR_PASS_ERROR" value="401" prompt="柜员用户名或密码不正确"/>
 <error id="MGR_NOT_EXIST" value="402" prompt="柜员不存在"/>
 <error id="PLATFORM_EXPIRED" value="410" prompt="柜台授权过期"/>
+
+
 
 </errors>

@@ -123,7 +123,7 @@ namespace TradingLib.ServiceManager
 
 
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateConnectorConfig", "UpdateConnectorConfig - update connector config", "更新通道设置", true)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateConnectorConfig", "UpdateConnectorConfig - update connector config", "更新通道设置", QSEnumArgParseType.Json)]
         public void CTE_UpdateConnectorConfig(ISession session, string json)
         {
             try
@@ -220,7 +220,7 @@ namespace TradingLib.ServiceManager
             }
         }
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateRouterGroup", "UpdateRouterGroup - update routegroup", "更新路由组", true)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateRouterGroup", "UpdateRouterGroup - update routegroup", "更新路由组", QSEnumArgParseType.Json)]
         public void CTE_QryRouterGroup(ISession session, string jsonstr)
         {
             try
@@ -280,7 +280,7 @@ namespace TradingLib.ServiceManager
         }
 
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateRouterItem", "UpdateRouterItem - update routeitem", "更新路由项目", true)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateRouterItem", "UpdateRouterItem - update routeitem", "更新路由项目", QSEnumArgParseType.Json)]
         public void CTE_UpdateRouterItem(ISession session, string json)
         {
             try

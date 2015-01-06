@@ -240,7 +240,7 @@ namespace TradingLib.ServiceManager
             //向登入成功客户端推送消息
             //_messageExchagne.NotifyLoginSuccessEvent += new AccountIdDel(TLCtxHelper.EventSession.FireNotifyLoginSuccessEvent);
             //客户端会话状态变化
-            _messageExchagne.AccountSessionChangedEvent +=new ISessionDel(TLCtxHelper.EventSession.FireSessionChangedEvent);
+            //_messageExchagne.AccountSessionChangedEvent +=new ISessionDel(TLCtxHelper.EventSession.FireSessionChangedEvent);
             //客户端统一认证
             _messageExchagne.AuthUserEvent += new LoginRequestDel<TradingLib.Common.TrdClientInfo>(TLCtxHelper.EventSession.FireAuthUserEvent);
 
@@ -262,9 +262,9 @@ namespace TradingLib.ServiceManager
             //_clearCentre.GetAccountFinAmmountAvabileEvent += new AccountFinAmmountDel(TLCtxHelper.ExContribEvent.GetFinAmmountAvabile);
             _clearCentre.AdjustCommissionEvent += new AdjustCommissionDel(TLCtxHelper.ExContribEvent.AdjustCommission);
 
-
-            _riskCentre.GotFlatFailedEvent += new PositionFlatFailDel(TLCtxHelper.ExContribEvent.FireFlatFailedEvent);
-            _riskCentre.GotFlatSuccessEvent +=new PositionDelegate(TLCtxHelper.ExContribEvent.FireFlatSuccessEvent);
+            _riskCentre.PositionFlatEvent += new EventHandler<PositionFlatEventArgs>(TLCtxHelper.EventSystem.FirePositionFlatEvent);
+            //_riskCentre.GotFlatFailedEvent += new PositionFlatFailDel(TLCtxHelper.ExContribEvent.FireFlatFailedEvent);
+            //_riskCentre.GotFlatSuccessEvent +=new PositionDelegate(TLCtxHelper.ExContribEvent.FireFlatSuccessEvent);
         }
 
 

@@ -10,13 +10,6 @@ namespace TradingLib.Common
     {
 
         #region 【ITotalAccountInfo】 获得整体的交易信息
-
-        //public int SentSize(Order o)
-        //{
-        //    IAccount account = this[o.Account];
-            
-        //}
-
         ///// <summary>
         ///// 通过OrderId获得该Order
         ///// </summary>

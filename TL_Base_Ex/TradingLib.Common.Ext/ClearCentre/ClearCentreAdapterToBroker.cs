@@ -9,8 +9,8 @@ using TradingLib.API;
 namespace TradingLib.Common
 {
     /// <summary>
-    /// 用于将内部clearcentreSrv转换成IBroker需要使用的接口模式,用于部分暴露功能函数,这样IBroker便无法访问IClearCentreSrv的
-    /// 所有功能
+    /// ClearCentreSrv适配器 用于整理ClearCentreSrv接口并规范成IBrokerClearCentre接口
+    /// 暴露需要暴露的功能操作
     /// </summary>
     public class ClearCentreAdapterToBroker : IBrokerClearCentre
     {
@@ -23,15 +23,6 @@ namespace TradingLib.Common
 
         public IEnumerable<Order> GetOrdersViaBroker(string broker)
         {
-            Util.Debug("Broker:" + broker, QSEnumDebugLevel.INFO);
-            foreach (Order o in _clearcentre.TotalOrders)
-            {
-                if (o.Broker.Equals(broker))
-                {
-
-                    string b = o.Broker;
-                }
-            }
             return _clearcentre.TotalOrders.Where(o => o.Broker.Equals(broker));
         }
 
@@ -39,26 +30,15 @@ namespace TradingLib.Common
         {
             return _clearcentre.TotalTrades.Where(f => f.Broker.Equals(broker));
         }
-        /// <summary>
-        /// 获得清算中心下所有交易账户
-        /// </summary>
-        //IAccount[] Accounts { get; }
-        //返回某个交易账户
-        //IAccount this[string accid] { get; }
 
         /// <summary>
-        /// 返回某个账户 某个symbol的持仓情况
+        /// 成交接口 加载成交侧委托,需要恢复日内委托关系链
+        /// 需要找到成交侧委托的父委托,父委托有可能是路由委托也有可能是直接帐户委托
+        /// 这里需要判断然后从清算中心或路由中心获得对应的委托对象
         /// </summary>
-        /// <param name="account"></param>
-        /// <param name="symbol"></param>
+        /// <param name="id"></param>
+        /// <param name="type"></param>
         /// <returns></returns>
-        public Position getPosition(string account, string symbol,bool side)
-        {
-            IAccount acc = _clearcentre[account];
-            return acc.GetPosition(symbol, side);
-        }
-
-
         public Order SentOrder(long id,QSEnumOrderBreedType type = QSEnumOrderBreedType.ACCT)
         {
             if (type == QSEnumOrderBreedType.ACCT)
