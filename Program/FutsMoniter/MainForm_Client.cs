@@ -143,7 +143,7 @@ namespace FutsMoniter
         {
             debug("获得登入回报:" + response.ToString());
             _gotloginrep = true;
-            if (response.LoginResponse.Authorized)
+            if (response.RspInfo.ErrorID==0)
             {
                 //登入的时候会的mgr_fk用于获得对应的编号
                 //如果是代理 则 通过mgr_fk获得对应的Manager对象

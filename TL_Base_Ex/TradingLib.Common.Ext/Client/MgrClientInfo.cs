@@ -9,38 +9,27 @@ namespace TradingLib.Core
 {
     public class MgrClientInfo:ClientInfoBase
     {
-
         public MgrClientInfo()
             :base()
         {
-            //this.MGRLoginName = string.Empty;
-            //this.MGRID = 0;
-            //this.MGRFK = 0;
+            this.Manager = null;
         }
 
-        public void BindManger(Manager manager)
+        public override void BindState(object obj)
         {
-            //this.MGRLoginName = manager.Login;
-            //this.MGRID = manager.ID;
-            //this.MGRFK = manager.mgr_fk;
-            this.Manager = manager;
+            if (obj != null && obj is Manager)
+            {
+                this.Manager = obj as Manager;
+                this.Authorized = true;
+            }
+            else
+            {
+                this.Authorized = false;
+            }
         }
+        
 
         public Manager Manager { get; private set; }
 
-
-        //public string MGRLoginName { get; private set; }
-
-
-        ///// <summary>
-        ///// 如果管理端登入成功 则会将对应的Manager绑定到该管理端对象上
-        ///// 对应的Manager对象ID
-        ///// </summary>
-        //public int MGRID { get; private set; }
-
-        ///// <summary>
-        ///// 管理主域ID
-        ///// </summary>
-        //public int MGRFK { get; private set; }
     }
 }

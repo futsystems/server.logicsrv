@@ -107,11 +107,13 @@ namespace TradingLib.Core
                         response.LoginResponse.MGRID = m.ID;//mgrid
                         response.LoginResponse.BaseMGRFK = m.mgr_fk;//主域id
 
-                        //将Manger信息绑定到对应的clientinfo
-                        client.BindManger(m);
+                        
                         //获得界面访问权限列表
                         response.LoginResponse.UIAccess = BasicTracker.UIAccessTracker.GetUIAccess(m);
                         response.LoginResponse.Domain = m.Domain as DomainImpl;
+
+                        //绑定客户端状态对象 该过程同时进行授权标识
+                        client.BindState(m);
                     }
 
                 }
@@ -124,17 +126,8 @@ namespace TradingLib.Core
             {
                 response.RspInfo.Fill("MGR_PASS_ERROR");
             }
-            if (response.RspInfo.ErrorID != 0)
-            {
-                client.AuthorizedFail();
-                response.LoginResponse.Authorized = false;
-            }
-            else
-            {
-                client.AuthorizedSuccess();
-                response.LoginResponse.Authorized = true;
-            }
-            if (!response.LoginResponse.Authorized)
+
+            if (response.RspInfo.ErrorID!=0)
             {
                 debug("Manager:" + request.LoginID + " Login failed", QSEnumDebugLevel.WARNING);
             }
@@ -250,10 +243,14 @@ namespace TradingLib.Core
         }
 
 
-        public override void SrvOnSession(ref ISession session)
+        public override void OnSessionCreated(Client2Session session)
         {
-            Client2Session s = session as Client2Session;
-            s.SessionType = QSEnumSessionType.MANAGER;
+            session.SessionType = QSEnumSessionType.MANAGER;
+        }
+
+        public override void OnSessionStated(Client2Session session, MgrClientInfo client)
+        {
+            session.BindManager(client.Manager);
         }
         /// <summary>
         /// 处理母类所不处理的消息类型
@@ -262,18 +259,8 @@ namespace TradingLib.Core
         /// <param name="msg"></param>
         /// <param name="address"></param>
         /// <returns></returns>
-        public override long handle(ISession session,IPacket packet,MgrClientInfo clientinfo)
+        public override long handle(ISession session,IPacket packet)
         {
-            //1.如果已经登入成功 则ClientInfo会绑定对应的Manager信息
-            Manager manager = clientinfo.Manager;
-            if (manager == null)
-            {
-                debug("manager do not exist!", QSEnumDebugLevel.ERROR);
-                return -1;
-            }
-            //将Manager对象绑定到Session
-            (session as Client2Session).BindManager(manager);
-
             long result = NORETURNRESULT;
             switch (packet.Type)
             {

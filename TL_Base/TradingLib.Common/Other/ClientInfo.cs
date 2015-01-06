@@ -128,18 +128,26 @@ namespace TradingLib.Common
             FrontType = ClientInfoBase.GetFrontType(frontid);
         }
 
-        public ClientInfoBase(string frontid, string clientid)
-        {
-            Location = new Location(frontid, clientid);
-
-            HardWareCode = string.Empty;
-            IPAddress = string.Empty;
-            ProductInfo = string.Empty;
-
-            HeartBeat = DateTime.Now;
-            LoginID = string.Empty;
-            Authorized = false;
+        /// <summary>
+        /// 绑定客户端状态对象
+        /// </summary>
+        /// <param name="obj"></param>
+        public virtual void BindState(object obj)
+        { 
+            
         }
+        //public ClientInfoBase(string frontid, string clientid)
+        //{
+        //    Location = new Location(frontid, clientid);
+
+        //    HardWareCode = string.Empty;
+        //    IPAddress = string.Empty;
+        //    ProductInfo = string.Empty;
+
+        //    HeartBeat = DateTime.Now;
+        //    LoginID = string.Empty;
+        //    Authorized = false;
+        //}
 
         /// <summary>
         /// 通过前置编号获得前置类型
@@ -167,20 +175,20 @@ namespace TradingLib.Common
             }
         }
 
-        /// <summary>
-        /// 授权某个用户
-        /// </summary>
-        public virtual void AuthorizedSuccess()
-        {
-            this.Authorized = true;
-        }
-        /// <summary>
-        /// 不授权某个用户
-        /// </summary>
-        public virtual void AuthorizedFail()
-        {
-            this.Authorized = false;
-        }
+        ///// <summary>
+        ///// 授权某个用户
+        ///// </summary>
+        //public virtual void AuthorizedSuccess()
+        //{
+        //    this.Authorized = true;
+        //}
+        ///// <summary>
+        ///// 不授权某个用户
+        ///// </summary>
+        //public virtual void AuthorizedFail()
+        //{
+        //    this.Authorized = false;
+        //}
 
 
         public string Serialize()

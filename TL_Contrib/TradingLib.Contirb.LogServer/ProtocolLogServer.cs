@@ -117,5 +117,15 @@ namespace TradingLib.Contirb.Protocol
         /// 命令操作码
         /// </summary>
         public string CMDStr { get; set; }
+
+        /// <summary>
+        /// 前置地址
+        /// </summary>
+        public string FrontID { get; set; }
+
+        /// <summary>
+        /// 客户端标识
+        /// </summary>
+        public string ClientID { get; set; }
     }
 }

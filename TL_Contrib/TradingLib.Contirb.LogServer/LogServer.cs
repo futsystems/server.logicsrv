@@ -317,13 +317,15 @@ namespace TradingLib.Contirb.LogServer
             log.Settleday = TLCtxHelper.CmdSettleCentre.NextTradingday;
             log.Date = Util.ToTLDate();
             log.Time = Util.ToTLTime();
-            log.AuthorizedID = args.Session.AuthorizedID;
-            log.SessionType = args.Session.SessionType;
+            log.AuthorizedID = args.Session!=null?args.Session.AuthorizedID:"";
+            log.SessionType = args.Session != null?args.Session.SessionType:QSEnumSessionType.CLIENT;
             log.Type = args.Packet.Type;
             log.Content = args.Packet.Content;
-            log.ModuleID = args.Session.ContirbID;
-            log.CMDStr = args.Session.CMDStr;
-
+            log.ModuleID = args.Session != null?args.Session.ContirbID:"";
+            log.CMDStr = args.Session != null?args.Session.CMDStr:"";
+            //log.FrontID = args.Session != null ? args.Session.Location.FrontID : "";
+            log.FrontID = args.FrontID;
+            log.ClientID = args.ClientID;
             return log;
         }
     }

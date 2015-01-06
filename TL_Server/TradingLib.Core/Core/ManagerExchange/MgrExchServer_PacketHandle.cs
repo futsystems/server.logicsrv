@@ -143,6 +143,7 @@ namespace TradingLib.Core
             {
                 Manager manager = session.GetManager();
                 session.ContirbID = CoreName;//在使用session.notify 或 session.sendreply会用到module cmd
+
                 switch (packet.Type)
                 {
 

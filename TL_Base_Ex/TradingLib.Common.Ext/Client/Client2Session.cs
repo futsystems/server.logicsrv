@@ -85,6 +85,17 @@ namespace TradingLib.Common
         /// </summary>
         public ILocation Location { get { return _client.Location; } }
 
+        /// <summary>
+        /// 前置编号 整数
+        /// </summary>
+        public int FrontIDi { get { return _client.FrontIDi; } }
+
+        /// <summary>
+        /// 客户连接编号 整数
+        /// </summary>
+        public int SessionIDi { get { return _client.SessionIDi; } }
+
+
         
         /// <summary>
         /// 对应的扩展模块编号

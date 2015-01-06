@@ -50,7 +50,15 @@ namespace TradingLib.API
         /// </summary>
         string AuthorizedID { get; }
 
-        
+        /// <summary>
+        /// 前置编号 整数
+        /// </summary>
+        int FrontIDi { get; }
+
+        /// <summary>
+        /// 客户连接编号 整数
+        /// </summary>
+        int SessionIDi { get; }
         /// <summary>
         /// 交易帐号ID
         /// </summary>

@@ -80,11 +80,6 @@ namespace TradingLib.Common
         public string QQ { get; set; }
 
         /// <summary>
-        /// 是否认证通过
-        /// </summary>
-        public bool Authorized { get; set; }
-
-        /// <summary>
         /// 所属主域ID
         /// </summary>
         public int BaseMGRFK { get; set; }
@@ -104,6 +99,7 @@ namespace TradingLib.Common
         /// </summary>
         public DomainImpl Domain { get; set; }
     }
+
     public class RspMGRLoginResponse : RspResponsePacket
     {
         

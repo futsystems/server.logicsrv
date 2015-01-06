@@ -13,34 +13,33 @@ namespace TradingLib.Common
     /// </summary>
     public class TrdClientInfo : ClientInfoBase
     {
-        //public int UserID { get; set; }//记录交易帐号所对应的UserID用于查询用户信息
         public IAccount Account { get; private set; }//记录客户端登入所对应的交易帐号
         
         public TrdClientInfo(TrdClientInfo copythis)
             : base(copythis)
         {
             Account = copythis.Account;
-            //UserID = copythis.UserID;
-
-
         }
-        public TrdClientInfo(string frontid, string clientid)
-            : base(frontid, clientid)
-        {
-            //UserID = 0;
-            //Account = string.Empty;
-        }
+
 
         public TrdClientInfo()
         {
-            //UserID = 0;
-            //Account = string.Empty;
+            this.Account = null;
         }
 
-        public void BindAccount(IAccount account)
+        public override void BindState(object obj)
         {
-            this.Account = account;
+            if (obj != null && obj is IAccount)
+            {
+                this.Account = Account;
+                this.Authorized = true;
+            }
+            else
+            {
+                this.Authorized = false;
+            }
         }
+
 
         public override string SubSerialize()
         {

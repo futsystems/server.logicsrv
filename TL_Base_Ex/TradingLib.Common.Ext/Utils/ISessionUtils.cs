@@ -163,15 +163,5 @@ namespace TradingLib.Common
                 session.NotifyMgr(cmdstr,obj,locations);
             }
         }
-
-        //public static ILocation GetLocation(this ISession session)
-        //{
-        //    ILocation location = new Location();
-        //    location.ClientID = session.ClientID;
-        //    location.FrontID = session.FrontID;
-        //    return location;
-        //}
-
-
     }
 }
