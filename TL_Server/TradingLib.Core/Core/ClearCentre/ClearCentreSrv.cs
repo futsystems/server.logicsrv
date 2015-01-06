@@ -52,11 +52,6 @@ namespace TradingLib.Core
         public event AccoundIDDel AccountInActiveEvent;
 
         /// <summary>
-        /// 加载交易帐号
-        /// </summary>
-        //public event IAccountDel AccountCachedEvent;
-
-        /// <summary>
         /// 调整手续费事件,对外触发手续费调整事件,用于相关逻辑进行手续费调整
         /// </summary>
         public event AdjustCommissionDel AdjustCommissionEvent;
@@ -70,11 +65,6 @@ namespace TradingLib.Core
         /// 帐户修改事件
         /// </summary>
         public event AccountSettingChangedDel AccountChangedEvent;
-
-        /// <summary>
-        /// 对外触发带手续费的成交回报
-        /// </summary>
-        //public event FillDelegate GotCommissionFill;
 
         #endregion
 

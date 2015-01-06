@@ -11,7 +11,6 @@ namespace TradingLib.ServiceManager
 {
     /// <summary>
     /// 扩展模块管理器
-    /// 用于
     /// </summary>
     public class ContribManager : BaseSrvObject, IServiceManager,IDisposable
     {
