@@ -34,7 +34,7 @@ namespace TradingLib.Core
         RingBuffer<Order> _oupdatecache;
         RingBuffer<Trade> _tcache;
         RingBuffer<long> _ccache;
-        RingBuffer<IPositionRound> _postranscache;
+        RingBuffer<PositionRound> _postranscache;
         RingBuffer<OrderAction> _oactioncache;
         RingBuffer<PositionCloseDetail> _posclosecache;
         //RingBuffer<PositionRound> _postransopencache;
@@ -248,7 +248,7 @@ namespace TradingLib.Core
                             while (_postranscache.hasItems)
                             {
                                 bool re = false;
-                                IPositionRound pr = _postranscache.Read();
+                                PositionRound pr = _postranscache.Read();
                                 try
                                 {
                                     re = ORM.MTradingInfo.InsertPositionRound(pr);
@@ -387,7 +387,7 @@ namespace TradingLib.Core
             newlog();
         }
 
-        public void newPositonRound(IPositionRound pr)
+        public void newPositonRound(PositionRound pr)
         {
             _postranscache.Write(pr);
             newlog();
@@ -454,7 +454,7 @@ namespace TradingLib.Core
             _oupdatecache = new RingBuffer<Order>(maxbr);
             _tcache = new RingBuffer<Trade>(maxbr);
             _ccache = new RingBuffer<long>(maxbr);
-            _postranscache = new RingBuffer<IPositionRound>(maxbr);
+            _postranscache = new RingBuffer<PositionRound>(maxbr);
             _oactioncache = new RingBuffer<OrderAction>(maxbr);
             _posclosecache = new RingBuffer<PositionCloseDetail>(maxbr);
         }

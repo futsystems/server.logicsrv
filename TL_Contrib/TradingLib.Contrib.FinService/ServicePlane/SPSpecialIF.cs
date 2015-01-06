@@ -64,7 +64,7 @@ namespace TradingLib.Contrib.FinService
         /// <param name="t"></param>
         /// <param name="pr"></param>
         /// <returns></returns>
-        public override decimal OnAdjustCommission(Trade t, IPositionRound pr)
+        public override decimal OnAdjustCommission(Trade t, PositionRound pr)
         {
             decimal commission = t.Commission;
             //平仓操作才计算手续费
@@ -109,7 +109,7 @@ namespace TradingLib.Contrib.FinService
         /// 当一次开仓 平仓结束后触发该调用
         /// </summary>
         /// <param name="round"></param>
-        public override void OnRound(IPositionRound round)
+        public override void OnRound(PositionRound round)
         {
             if (!round.oSymbol.SecurityFamily.Code.Equals("IF"))
             {

@@ -362,7 +362,7 @@ namespace TradingLib.ORM
         static PositionRound PRInfo2PositionRound(positionroundinfo info)
         {
             IAccount account=TLCtxHelper.Ctx.ClearCentre[info.Account];
-            PositionRound pr = new PositionRound(info.Account,account.GetSymbol(info.Symbol), info.Side);
+            PositionRoundImpl pr = new PositionRoundImpl(info.Account, account.GetSymbol(info.Symbol), info.Side);
 
             pr.EntryTime = info.EntryTime;
             pr.EntrySize = info.EntrySize;
@@ -413,7 +413,7 @@ namespace TradingLib.ORM
         /// </summary>
         /// <param name="pr"></param>
         /// <returns></returns>
-        public static bool InsertPositionRound(IPositionRound pr)
+        public static bool InsertPositionRound(PositionRound pr)
         {
             using (DBMySql db = new DBMySql())
             {

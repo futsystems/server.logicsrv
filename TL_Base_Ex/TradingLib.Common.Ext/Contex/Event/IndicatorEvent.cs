@@ -56,7 +56,7 @@ namespace TradingLib.Common
                     GotFillEvent(f);
             }
 
-            internal void FirePositionRoundClosed(IPositionRound pr,Position pos)
+            internal void FirePositionRoundClosed(PositionRound pr,Position pos)
             {
                 if (GotPositionClosedEvent != null)
                     GotPositionClosedEvent(pr,pos);

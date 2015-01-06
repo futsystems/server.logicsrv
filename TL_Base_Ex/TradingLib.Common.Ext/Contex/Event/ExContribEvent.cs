@@ -42,7 +42,7 @@ namespace TradingLib.Common
             return 0;
         }
 
-        internal decimal AdjustCommission(Trade f, IPositionRound pr)
+        internal decimal AdjustCommission(Trade f, PositionRound pr)
         {
             if (AdjustCommissionEvent != null)
                 return AdjustCommissionEvent(f, pr);

@@ -60,7 +60,7 @@
     <Compile Include="Manager\EnumManagerType.cs" />
     <Compile Include="Msic\EnumCashOperation.cs" />
     <Compile Include="Msic\ILogItem.cs" />
-    <Compile Include="Msic\QSEnumRouterStrategy.cs" />
+    <Compile Include="Vendor\EnumRouterStrategy.cs" />
     <Compile Include="Rule\IRuleItem.cs" />
     <Compile Include="Trading\BasicInfo\IMarketTime.cs" />
     <Compile Include="Trading\CommissionConfig.cs" />
@@ -99,7 +99,7 @@
     <Compile Include="Trading\EnumOrderSource.cs" />
     <Compile Include="Trading\EnumOrderStatus.cs" />
     <Compile Include="Trading\EnumPositionDirectionType.cs" />
-    <Compile Include="Trading\IPositionRound.cs" />
+    <Compile Include="Trading\PositionRound.cs" />
     <Compile Include="Trading\BasicInfo\EnumOptionSide.cs" />
     <Compile Include="Trading\Order.cs" />
     <Compile Include="Trading\EnumOrderInstructionTypes.cs" />

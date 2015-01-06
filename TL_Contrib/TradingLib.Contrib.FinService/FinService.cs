@@ -275,7 +275,7 @@ namespace TradingLib.Contrib.FinService
         /// </summary>
         /// <param name="t"></param>
         /// <param name="pr"></param>
-        public decimal OnAdjustCommission(Trade t, IPositionRound pr)
+        public decimal OnAdjustCommission(Trade t, PositionRound pr)
         {
             return this.FinService.OnAdjustCommission(t, pr);
         }
@@ -295,7 +295,7 @@ namespace TradingLib.Contrib.FinService
         /// 亏损不收钱 盈利收钱
         /// </summary>
         /// <param name="round"></param>
-        public  void OnRound(IPositionRound round)
+        public void OnRound(PositionRound round)
         {
             this.FinService.OnRound(round);
         }

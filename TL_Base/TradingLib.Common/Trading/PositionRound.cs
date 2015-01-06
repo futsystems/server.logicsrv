@@ -12,7 +12,7 @@ namespace TradingLib.Common
     /// 仓位开平来回,从建仓开始 经过 加仓/减仓 最后 平掉 为一个仓位操作回合.系统对选手的考核通过仓位操作回合来进行
     /// 计算选手操作次数,胜率,平均持仓周期等数据
     /// </summary>
-    public class PositionRound :IPositionRound
+    public class PositionRoundImpl :PositionRound
     {
         public event DebugDelegate SendDebugEvent;
         void debug(string msg)
@@ -31,7 +31,7 @@ namespace TradingLib.Common
         /// <param name="account"></param>
         /// <param name="symbol"></param>
         /// <param name="side"></param>
-        public PositionRound(string account,Symbol symbol,bool side)
+        public PositionRoundImpl(string account, Symbol symbol, bool side)
         {
             Account = account;//记录账户
             oSymbol = symbol;

@@ -144,7 +144,7 @@ namespace TradingLib.ORM
         /// </summary>
         /// <param name="pr"></param>
         /// <returns></returns>
-        public static bool InsertHoldPositionRound(IPositionRound pr, int settleday)
+        public static bool InsertHoldPositionRound(PositionRound pr, int settleday)
         {
             using (DBMySql db = new DBMySql())
             {

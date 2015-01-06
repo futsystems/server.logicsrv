@@ -46,7 +46,7 @@ namespace TradingLib.Core
 
                 debug("从数据库加载上次结算日:" + TLCtxHelper.Ctx.SettleCentre.LastSettleday.ToString() + " 持仓明细数据", QSEnumDebugLevel.INFO);
                 IEnumerable<PositionDetail> plist = LoadPositionFromMysql();//从数据得到昨持仓数据
-                IEnumerable<PositionRound> prlist = LoadPositionRoundFromMysql();//恢复开启的positionround数据
+                IEnumerable<PositionRoundImpl> prlist = LoadPositionRoundFromMysql();//恢复开启的positionround数据
 
                 //从数据库加载上日结算持仓信息 用于恢复当前持仓状态
                 foreach (PositionDetail p in plist)
@@ -54,7 +54,7 @@ namespace TradingLib.Core
                     this.GotPosition(p);
                 }
 
-                foreach (PositionRound pr in prlist)
+                foreach (PositionRoundImpl pr in prlist)
                 {
                     Util.Debug(pr.ToString(), QSEnumDebugLevel.VERB);
                 }
@@ -184,11 +184,11 @@ namespace TradingLib.Core
         /// 加载持仓回合数据
         /// </summary>
         /// <returns></returns>
-        public IList<PositionRound> LoadPositionRoundFromMysql()
+        public IList<PositionRoundImpl> LoadPositionRoundFromMysql()
         {
             debug("从数据库恢复开启的PositionRound数据....", QSEnumDebugLevel.DEBUG);
-            List<PositionRound> prlist = new List<PositionRound>();
-            foreach (PositionRound pr in ORM.MTradingInfo.SelectHoldPositionRounds(TLCtxHelper.Ctx.SettleCentre.LastSettleday))
+            List<PositionRoundImpl> prlist = new List<PositionRoundImpl>();
+            foreach (PositionRoundImpl pr in ORM.MTradingInfo.SelectHoldPositionRounds(TLCtxHelper.Ctx.SettleCentre.LastSettleday))
             {
                 prlist.Add(pr);
             }

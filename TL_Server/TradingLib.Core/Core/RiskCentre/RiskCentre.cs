@@ -268,7 +268,7 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="pr"></param>
         /// <param name="pos"></param>
-        public void GotPostionRoundClosed(IPositionRound pr, Position pos)
+        public void GotPostionRoundClosed(PositionRound pr, Position pos)
         { 
             string key = pos.GetPositionKey();
 

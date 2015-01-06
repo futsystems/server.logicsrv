@@ -68,7 +68,7 @@ namespace TradingLib.Core
         {
             try
             {
-                IPositionRound pr = null;
+                PositionRound pr = null;
                 //PR数据在从数据库恢复数据的时候任然需要被加载到PositionRoundTracker用于恢复PR数据
                 if (postrans != null)
                 {
@@ -112,7 +112,7 @@ namespace TradingLib.Core
         /// <param name="fill"></param>
         /// <param name="c"></param>
         /// <returns></returns>
-        internal decimal onAdjuestCommission(Trade fill, IPositionRound positionround)
+        internal decimal onAdjuestCommission(Trade fill, PositionRound positionround)
         {
             if (AdjustCommissionEvent != null)
                 return AdjustCommissionEvent(fill, positionround);

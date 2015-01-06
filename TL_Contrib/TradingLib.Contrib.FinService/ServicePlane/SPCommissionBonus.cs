@@ -179,7 +179,7 @@ namespace TradingLib.Contrib.FinService
         /// <param name="t"></param>
         /// <param name="pr"></param>
         /// <returns></returns>
-        public override decimal OnAdjustCommission(Trade t, IPositionRound pr)
+        public override decimal OnAdjustCommission(Trade t, PositionRound pr)
         {
             //按标准计算公式得到的手续费
             decimal commission = t.Commission;
