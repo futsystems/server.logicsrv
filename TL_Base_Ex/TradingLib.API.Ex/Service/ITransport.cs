@@ -2,8 +2,23 @@
 
 namespace TradingLib.API
 {
-    public interface ITransport:IService,IDisposable
+    public interface ITransport:IDisposable
     {
+        /// <summary>
+        /// 当前服务状态是否有效
+        /// </summary>
+        bool IsLive { get; }
+
+        /// <summary>
+        /// 启动服务
+        /// </summary>
+        void Start();
+
+        /// <summary>
+        /// 停止服务
+        /// </summary>
+        void Stop();
+
         /// <summary>
         /// 服务标识
         /// </summary>

@@ -15,9 +15,8 @@ namespace TradingLib.Core
     /// repserver主服务,用于响应其他调用端的命令调用
     /// 
     /// </summary>
-    public class WebMsgRepServer :BaseSrvObject,IService
+    public class WebMsgRepServer :BaseSrvObject
     {
-
         public event Func<string,bool,JsonReply> GotWebMessageEvent;
         TimeSpan PollerTimeOut = new TimeSpan(0, 0, 5);
         string _address = "*";

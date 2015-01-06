@@ -6,7 +6,7 @@ using System.Text;
 namespace TradingLib.API
 {
     /// <summary>
-    /// 路由组接口
+    /// 
     /// </summary>
     public interface RouterGroup
     {

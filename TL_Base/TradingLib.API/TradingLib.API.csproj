@@ -35,7 +35,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Account\AccAdapter\IAccountLite.cs" />
     <Compile Include="Account\IAccCal.cs" />
     <Compile Include="Account\IAccOperation.cs" />
     <Compile Include="Account\IAccTradingInfo.cs" />
@@ -69,20 +68,17 @@
     <Compile Include="Trading\EnumHedgeFlag.cs" />
     <Compile Include="Trading\EnumOrderBreed.cs" />
     <Compile Include="Trading\EnumOrderType.cs" />
-    <Compile Include="Account\AccAdapter\IAccountExp.cs" />
-    <Compile Include="Account\AccAdapter\IAccountInfo.cs" />
+    <Compile Include="Wrapper\IAccountExp.cs" />
     <Compile Include="IBase.cs" />
     <Compile Include="Wrapper\IBrokerClearCentre.cs" />
     <Compile Include="Data\Bar.cs" />
     <Compile Include="Data\BarList.cs" />
     <Compile Include="Connecter\IBroker.cs" />
     <Compile Include="Connecter\IConnecter.cs" />
-    <Compile Include="Connecter\IConnecter_base.cs" />
     <Compile Include="Connecter\IDataFeed.cs" />
     <Compile Include="Trading\BasicInfo\EnumCountry.cs" />
     <Compile Include="Msic\Delegates.cs" />
     <Compile Include="Msic\Enums.cs" />
-    <Compile Include="Account\AccAdapter\IAccountInfoLite.cs" />
     <Compile Include="Msic\IEmail.cs" />
     <Compile Include="Trading\BasicInfo\IExchange.cs" />
     <Compile Include="Msic\LibDelegates.cs" />

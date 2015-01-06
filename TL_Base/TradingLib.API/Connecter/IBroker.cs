@@ -6,13 +6,19 @@ using System.Text;
 
 namespace TradingLib.API
 {
-    public interface IBroker :IConnecter,ICTrdReq,ICTrdRep
+    public interface IBroker :IConnecter
     {
 
         /// <summary>
-		/// 请求获得某个symbol的Tick快照数据
+        /// 向Broker发送Order
         /// </summary>
-        event GetSymbolTickDel GetSymbolTickEvent;
+        /// <param name="o"></param>
+        void SendOrder(Order o);
+        /// <summary>
+        /// 向broker取消一个order
+        /// </summary>
+        /// <param name="oid"></param>
+        void CancelOrder(long oid);
 
         /// <summary>
         /// 用于交易通道中需要有Tick进行驱动的逻辑,比如委托触发等
@@ -20,9 +26,45 @@ namespace TradingLib.API
         /// <param name="k"></param>
         void GotTick(Tick k);
 
+
+        #region 事件
+        /// <summary>
+        /// 当有成交时候回报客户端
+        /// </summary>
+        event FillDelegate GotFillEvent;
+        /// <summary>
+        /// 委托正确回报时回报客户端
+        /// </summary>
+        event OrderDelegate GotOrderEvent;
+
+        /// <summary>
+        /// 委托错误回报
+        /// </summary>
+        event OrderErrorDelegate GotOrderErrorEvent;
+
+        /// <summary>
+        /// 委托操作错误回报
+        /// </summary>
+        event OrderActionErrorDelegate GotOrderActionErrorEvent;
+
+        /// <summary>
+        /// 撤单正确回报时回报客户端
+        /// </summary>
+        event LongDelegate GotCancelEvent;
+
+        /// <summary>
+        /// 请求获得某个symbol的Tick快照数据
+        /// </summary>
+        event GetSymbolTickDel GetSymbolTickEvent;
+
+
+        #endregion
+        
+
+        
+
         //清算中心 用于交易通道查询当前的委托 仓位 以及其他相关数据
         IBrokerClearCentre ClearCentre { get; set; }
-
 
         /// <summary>
         /// 获得成交接口所有委托
