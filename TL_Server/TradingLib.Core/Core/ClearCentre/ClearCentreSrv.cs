@@ -52,16 +52,6 @@ namespace TradingLib.Core
         public event AccoundIDDel AccountInActiveEvent;
 
         /// <summary>
-        /// 调整手续费事件,对外触发手续费调整事件,用于相关逻辑进行手续费调整
-        /// </summary>
-        public event AdjustCommissionDel AdjustCommissionEvent;
-
-        /// <summary>
-        /// 交易回合结束
-        /// </summary>
-        public event PositionRoundClosedDel PositionRoundClosedEvent;
-
-        /// <summary>
         /// 帐户修改事件
         /// </summary>
         public event AccountSettingChangedDel AccountChangedEvent;
@@ -118,10 +108,13 @@ namespace TradingLib.Core
             {
                 //初始化异步储存组件
                 _asynLoger = new AsyncTransactionLoger();//获得交易信息数据库记录对象，用于记录委托，成交，取消等信息
+
                 //帐户交易数据维护器产生 平仓明细事件
                 acctk.NewPositionCloseDetailEvent += new Action<PositionCloseDetail>(acctk_NewPositionCloseDetailEvent);
+                
                 //初始化PositionRound生成器
                 prt = new PositionRoundTracker();
+
                 //加载账户信息
                 LoadAccount();
 
@@ -134,6 +127,10 @@ namespace TradingLib.Core
             }
         }
 
+        /// <summary>
+        /// 保存平仓明细记录
+        /// </summary>
+        /// <param name="obj"></param>
         void acctk_NewPositionCloseDetailEvent(PositionCloseDetail obj)
         {
             if (_status == QSEnumClearCentreStatus.CCOPEN)

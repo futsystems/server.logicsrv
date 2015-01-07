@@ -62,7 +62,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConnectorManager\BrokerXAPIHelper.cs" />
     <Compile Include="ConnectorManager\ConnectorManager.cs" />
     <Compile Include="ConnectorManager\ConnectorManager_.cs" />
     <Compile Include="ConnectorManager\ConnectorManager_CTE.cs" />

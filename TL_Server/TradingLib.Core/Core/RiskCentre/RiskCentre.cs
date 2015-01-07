@@ -118,12 +118,16 @@ namespace TradingLib.Core
             _posoffsetracker.CancelOrderEvent += new LongDelegate(CancelOrder);
             _posoffsetracker.AssignOrderIDEvent += new AssignOrderIDDel(AssignOrderID);
 
+            //订阅持仓回合关闭事件
+            TLCtxHelper.EventIndicator.GotPositionClosedEvent += new PositionRoundClosedDel(GotPostionRoundClosed);
             //加载风空规则
             LoadRuleSet();
 
             //初始化日内平仓任务
             InitFlatTask();
         }
+
+
 
      
         /// <summary>
@@ -268,7 +272,7 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="pr"></param>
         /// <param name="pos"></param>
-        public void GotPostionRoundClosed(PositionRound pr, Position pos)
+        void GotPostionRoundClosed(PositionRound pr, Position pos)
         { 
             string key = pos.GetPositionKey();
 

@@ -123,11 +123,10 @@ namespace TradingLib.Core
 
 
         ClearCentre _clearcentre;
-        /// <summary>
-        /// 绑定清算中心用于清算中心得到相关数据
-        /// </summary>
-        public ClearCentre ClearCentre{get { return _clearcentre; } set{ _clearcentre  =  value;}}
-
+        public void BindClearCentre(ClearCentre c)
+        {
+            _clearcentre = c;
+        }
 
         SettleCentre _settlecentre;
         /// <summary>
@@ -137,12 +136,11 @@ namespace TradingLib.Core
 
 
         RiskCentre _riskcentre;
-        /// <summary>
-        /// 绑定风控中心
-        /// </summary>
-        public RiskCentre RiskCentre { get { return _riskcentre; } set { _riskcentre = value; } }
+        public void BindRiskCentre(RiskCentre r)
+        {
+            _riskcentre = r;
+        }
 
-        
 
         //QSEnumServerMode _srvmode = QSEnumServerMode.StandAlone;
         /// <summary>
@@ -490,44 +488,16 @@ namespace TradingLib.Core
 
         #region 其他函数部分
         /// <summary>
-        /// 通过Account查找对应的clientID如果登入了则返回地址 如果没有登入则返回null
-        /// </summary>
-        /// <param name="account"></param>
-        /// <returns></returns>
-        public string[] LoginID2ClientID(string account)
-        {
-            //return tl.AddListForAccount(account);
-            return null;
-        }
-
-        /// <summary>
-        ///通过地址反向查找其登入帐号,如果存在则返回account,若不存在则返回null
-        /// </summary>
-        /// <param name="address"></param>
-        /// <returns></returns>
-        public string AccountFromAddress(string address)
-        {
-            //return tl.AccountForAddress(address);
-            return null;
-        }
-
-        /// <summary>
         /// 返回某个交易帐户所有终端
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
-        public IEnumerable<ClientInfoBase> ClientsForAccount(string account)
+        public IEnumerable<ClientInfoBase> GetNotifyTargets(string account)
         {
             return tl.ClientsForAccount(account);
         }
-        //public TrdClientInfo FirstClientInfoForAccount(string account)
-        //{
-        //    TrdClientInfo[] list = tl.ClientsForAccount(account);
-        //    if (list.Length > 0)
-        //        return list[0];
-        //    else
-        //        return null;
-        //}
+
+
 
         /// <summary>
         /// 恢复交易连接数据
@@ -543,41 +513,7 @@ namespace TradingLib.Core
         }
 
 
-        /// <summary>
-        /// 获得某个合约的市场快照
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <returns></returns>
-        public Tick GetTickSnapshot(string symbol)
-        {
-            return _datafeedRouter.GetTickSnapshot(symbol);
-        }
 
-        /// <summary>
-        /// 判断某个合约当前行情是否处于live状态
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <returns></returns>
-        public bool IsSymbolTickLive(string symbol)
-        {
-            return _datafeedRouter.IsTickLive(symbol);
-        }
-
-
-        /// <summary>
-        /// 获得某个合约的有效价格
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <returns></returns>
-        public decimal GetAvabilePrice(string symbol)
-        {
-            if (_datafeedRouter == null)
-            {
-                return -1;
-            }
-            return _datafeedRouter.GetAvabilePrice(symbol);
-            return 0;
-        }
         #endregion
 
         #region 开始 停止部分

@@ -359,7 +359,7 @@ namespace TradingLib.ORM
         //    return pos;
         //}
 
-        static PositionRound PRInfo2PositionRound(positionroundinfo info)
+        static PositionRoundImpl PRInfo2PositionRound(positionroundinfo info)
         {
             IAccount account=TLCtxHelper.Ctx.ClearCentre[info.Account];
             PositionRoundImpl pr = new PositionRoundImpl(info.Account, account.GetSymbol(info.Symbol), info.Side);
@@ -379,14 +379,14 @@ namespace TradingLib.ORM
 
         }
 
-        public static IList<PositionRound> SelectHoldPositionRounds(int lastsettleday)
+        public static IEnumerable<PositionRoundImpl> SelectHoldPositionRounds(int lastsettleday)
         {
             using (DBMySql db = new DBMySql())
             {
                 string query = string.Format("SELECT account,symbol,side,entrytime,entryprice,entrysize,exittime,exitprice,exitsize,highest,lowest FROM  hold_postransactions WHERE settleday = {0}", lastsettleday);
-                IList<PositionRound> prs = (from prinfo in db.Connection.Query<positionroundinfo>(query).ToArray()
-                                                   select PRInfo2PositionRound(prinfo)).ToArray<PositionRound>();
-                return prs;
+                return db.Connection.Query<positionroundinfo>(query).Select(prinfo => { return PRInfo2PositionRound(prinfo); });//(from prinfo in db.Connection.Query<positionroundinfo>(query).ToArray()
+                                                      //select PRInfo2PositionRound(prinfo)).ToArray<PositionRoundImpl>();
+                //return prs;
             }
         }
 

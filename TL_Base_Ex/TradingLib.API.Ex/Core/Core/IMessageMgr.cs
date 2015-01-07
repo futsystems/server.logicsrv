@@ -21,5 +21,7 @@ namespace TradingLib.API
         /// <param name="predictate"></param>
         /// <returns></returns>
         IEnumerable<ILocation> GetNotifyTargets(Predicate<Manager> predictate);
+
+
     }
 }

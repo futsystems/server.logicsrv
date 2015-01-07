@@ -71,7 +71,7 @@ namespace TradingLib.Common
         public virtual int CanOpenSize(Symbol symbol)
         {
 
-            decimal price = TLCtxHelper.Ctx.MessageExchange.GetAvabilePrice(symbol.Symbol);
+            decimal price = TLCtxHelper.CmdUtils.GetAvabilePrice(symbol.Symbol);
 
             decimal fundperlot = Calc.CalFundRequired(symbol, price, 1);
 

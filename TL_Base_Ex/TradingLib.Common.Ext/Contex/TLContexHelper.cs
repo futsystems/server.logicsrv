@@ -134,21 +134,6 @@ namespace TradingLib.Common
             }
         }
 
-        ///// <summary>
-        ///// 出入金请求操作事件
-        ///// </summary>
-        //public static CashOperationEvent CashOperationEvent
-        //{
-        //    get
-        //    {
-        //        if (defaultInstance.m_CashOperationEvent == null)
-        //            defaultInstance.m_CashOperationEvent = new CashOperationEvent();
-        //        return defaultInstance.m_CashOperationEvent;
-        //    }
-        //}
-
-
-
         /// <summary>
         /// 交易帐号类操作
         /// </summary>
@@ -197,7 +182,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 辅助类操作函数
         /// </summary>
-        public static IUtil CmdUtil
+        public static IUtil CmdUtils
         {
             get
             {

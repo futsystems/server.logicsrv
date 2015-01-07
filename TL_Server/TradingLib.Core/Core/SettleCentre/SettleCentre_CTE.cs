@@ -205,6 +205,7 @@ namespace TradingLib.Core
 
         #region 定时开启 关闭清算中心 并在夜盘收盘后更新交易日信息 
         [TaskAttr("重置结算中心-夜盘收盘后", 3,0,0, "夜盘收盘后重置结算中心")]
+        [TaskAttr("重置结算中心-夜盘收盘后", 8,0,0, "每天8点重置结算中心")]//判定当前交易日状态，系统很多其他事务是按结算状态来进行的
         public void Task_ResetTradingdayNieght()
         {
             debug("结算中心重置交易日信息", QSEnumDebugLevel.INFO);

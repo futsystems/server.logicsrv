@@ -19,42 +19,18 @@ namespace TradingLib.API
         void Send(IPacket packet);
 
         /// <summary>
+        /// 获得某个交易帐户的Client对象
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        IEnumerable<ClientInfoBase> GetNotifyTargets(string account);
+
+        /// <summary>
         /// 查询满足某个条件的客户端地址
         /// </summary>
         /// <param name="filter"></param>
         /// <returns></returns>
-        string[] FilterClient(string filter);
-
-        /// <summary>
-        /// 返回某个交易帐号所有登入终端
-        /// </summary>
-        /// <param name="account"></param>
-        /// <returns></returns>
-        IEnumerable<ClientInfoBase> ClientsForAccount(string account);
-
-        /// <summary>
-        /// 获得某个合约当前有效价格
-        /// 通过DataRouter进行获取
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <returns></returns>
-        decimal GetAvabilePrice(string symbol);
-
-        /// <summary>
-        /// 获得市场快照
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <returns></returns>
-        Tick GetTickSnapshot(string symbol);
-
-
-        /// <summary>
-        /// 判定合约行情是否处于live状态
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <returns></returns>
-        bool IsSymbolTickLive(string symbol);
-
+        //string[] FilterClient(string filter);
 
         /// <summary>
         /// 获得某个Router分解委托

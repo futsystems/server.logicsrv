@@ -68,12 +68,10 @@
     <Compile Include="Base\TLServer_Generic.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_AccountOperation.cs" />
-    <Compile Include="Core\ClearCentre\ClearCentreSrv_Interface.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_onGotXXX.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_Data_Restore.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_CTE.cs" />
-    <Compile Include="Core\ClearCentre\JsonWrapperClearCentre.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_AccountCashOperation.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_LogData.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_TradingInfo.cs" />

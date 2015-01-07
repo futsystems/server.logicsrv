@@ -15,6 +15,6 @@ namespace TradingLib.API
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        decimal GetAvabilePrice(Symbol symbol);
+        decimal GetAvabilePrice(string symbol);
     }
 }

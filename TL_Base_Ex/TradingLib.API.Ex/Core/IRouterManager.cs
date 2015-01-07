@@ -32,36 +32,44 @@ namespace TradingLib.API
         /// </summary>
         IDataFeed DefaultDataFeed { get; }
 
-
-        ///// <summary>
-        ///// 默认实盘成交通道
-        ///// </summary>
-        //IBroker DefaultLiveBroker { get; }
-
-        /// <summary>
-        /// 获得某个合约的行情快照
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <returns></returns>
-        Tick GetTickSnapshot(string symbol);
-
-        /// <summary>
-        /// 获得所有市场数据行情快照
-        /// </summary>
-        /// <returns></returns>
-        IEnumerable<Tick> GetTickSnapshot(); 
-
         ///// <summary>
         ///// 获得所有成交路由
         ///// </summary>
-        IBroker[] Brokers { get;}
+        IEnumerable<IBroker> Brokers { get; }
 
 
         ///// <summary>
         ///// 获得所有行情路由
         ///// </summary>
-        IDataFeed[] DataFeeds { get; }
+        IEnumerable<IDataFeed> DataFeeds { get; }
 
+
+        #region 行情类数据
+
+        /// <summary>
+        /// 获得某个合约当前有效价格
+        /// 通过DataRouter进行获取
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        decimal GetAvabilePrice(string symbol);
+
+        /// <summary>
+        /// 获得市场快照
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        Tick GetTickSnapshot(string symbol);
+
+
+        /// <summary>
+        /// 判定合约行情是否处于live状态
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        bool IsSymbolTickLive(string symbol);
+
+        #endregion
 
     }
 }

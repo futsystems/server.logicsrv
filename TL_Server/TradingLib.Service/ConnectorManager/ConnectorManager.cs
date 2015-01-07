@@ -29,10 +29,10 @@ namespace TradingLib.ServiceManager
     {
         const string SMGName = "ConnectorManager";
         //Broker或Datafeed连接与断开的事件
-        public event IConnecterParamDel BrokerConnectedEvent;
-        public event IConnecterParamDel BrokerDisconnectedEvent;
-        public event IConnecterParamDel DataFeedConnectedEvent;
-        public event IConnecterParamDel DataFeedDisconnectedEvent;
+        //public event IConnecterParamDel BrokerConnectedEvent;
+        //public event IConnecterParamDel BrokerDisconnectedEvent;
+        //public event IConnecterParamDel DataFeedConnectedEvent;
+        //public event IConnecterParamDel DataFeedDisconnectedEvent;
 
 
         BrokerRouter _brokerrouter;
@@ -78,7 +78,7 @@ namespace TradingLib.ServiceManager
         }
 
         /// <summary>
-        /// 加载路由
+        /// 加载行情和成交路由
         /// </summary>
         public void Init()
         {
@@ -89,7 +89,7 @@ namespace TradingLib.ServiceManager
                 return;
             }
 
-            //加载路由
+            //加载接口类型
             LoadConnectorType();
 
             //验证通道接口有效性
@@ -103,7 +103,9 @@ namespace TradingLib.ServiceManager
             _defaultdatafeed = FindDataFeed(_defaultDataFeedToken);//_defaultDataFeedToken通过数据库设置
         }
 
-
+        /// <summary>
+        /// 启动通道
+        /// </summary>
         public void Start()
         {
             Util.StatusSection(this.PROGRAME, "STARTCONNECTOR", QSEnumInfoColor.INFODARKRED,true);

@@ -21,8 +21,6 @@ namespace TradingLib.Common
         protected ConcurrentDictionary<string, OrderTracker> OrdBook = new ConcurrentDictionary<string, OrderTracker>();
         //为每个账户映射一个PositionTracker用户维护该Account的Position
         protected ConcurrentDictionary<string, LSPositionTracker> PosBook = new ConcurrentDictionary<string, LSPositionTracker>();
-        //为每个账户映射一个昨日持仓数据
-        //protected ConcurrentDictionary<string, LSPositionTracker> PosHold = new ConcurrentDictionary<string, LSPositionTracker>();
         //为每个账户映射一个TradeList用于记录实时的成交记录
         protected ConcurrentDictionary<string, ThreadSafeList<Trade>> TradeBook = new ConcurrentDictionary<string, ThreadSafeList<Trade>>();
 
@@ -132,6 +130,7 @@ namespace TradingLib.Common
             {
                 //pt.DefaultAccount = account.ID;
                 PosBook.TryAdd(account.ID, pt);
+                //绑定仓位管理器中的相关事件
                 pt.NewPositionCloseDetailEvent += new Action<PositionCloseDetail>(NewPositionCloseDetail);
                 pt.NewPositionEvent += new Action<Position>(NewPosition);
             }

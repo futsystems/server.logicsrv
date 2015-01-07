@@ -136,6 +136,7 @@ namespace TradingLib.Common
         }
         #endregion
 
+        #region internal 暴露对象
         IClearCentreSrv _clearCentreSrv = null;
         /// <summary>
         /// 清算中心
@@ -224,13 +225,12 @@ namespace TradingLib.Common
                 return _routermanager;
             }
         }
-        
+        #endregion
+
 
         public TLContext()
         {
 
-            //bypasscomd.Add("UCenterAccess-registeruser".ToUpper());
-            //bypasscomd.Add("UCenterAccess-requestraceuser".ToUpper());
         }
 
         public void debug(string msg)
@@ -476,12 +476,6 @@ namespace TradingLib.Common
             }
         }
         #endregion
-
-
-
-
-
-
 
         #region 注册BaseSrvObject
 

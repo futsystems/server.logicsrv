@@ -13,12 +13,6 @@ namespace TradingLib.API
     public delegate long UnknownMessageDelegateSession(MessageTypes t, string msg, ISession session);
 
    
-
-    //更新登入信息
-    //public delegate void LoginInfoDel(string loginID, bool isloggedin, IClientInfo clientInfo);//更新客户端登入信息
-    //以IClient为参数的委托 包含登入客户端 注销客户端
-    //public delegate void ClientParamDel(IClientInfo c);
-
     //当有持仓回合记录关闭时触发该事件
     public delegate void PositionRoundClosedDel(PositionRound pr,Position pos);
 
@@ -64,8 +58,6 @@ namespace TradingLib.API
     //webchannel 相关事件委托
     public delegate string WebTaskDel(string param);
     public delegate string WebMessageDel(string param,bool istnetstring);
-    //public delegate bool UpdateFinServiceDel(string account, decimal ammount, QSEnumFinServiceType type, decimal discount, int agentcode, out string msg);
-    //public delegate bool AddFinServiceDel(string account, decimal ammount, QSEnumFinServiceType type, string agent, decimal discount, out string msg);
     public delegate string AddAccountDel(string user_id, string pass);
     public delegate bool ValidWithdrawDel(string account, decimal ammount, out string msg);
     public delegate bool AccountParamDel(string account, out string msg);

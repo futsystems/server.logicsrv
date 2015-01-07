@@ -17,7 +17,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public virtual decimal CalOrderFundRequired(Order o, decimal defaultvalue = 0)
         {
-            decimal price = TLCtxHelper.Ctx.MessageExchange.GetAvabilePrice(o.Symbol);
+            decimal price = TLCtxHelper.CmdUtils.GetAvabilePrice(o.Symbol);
             return o.CalFundRequired(price, defaultvalue);
         }
 

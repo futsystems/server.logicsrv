@@ -14,12 +14,12 @@ namespace TradingLib.ServiceManager
     /// </summary>
     public class ContribManager : BaseSrvObject, IServiceManager,IDisposable
     {
-        //List<string> contribList = new List<string>();
+        const string SMGName = "ContribManager";
         ConcurrentDictionary<string, IContrib> contribmap = new ConcurrentDictionary<string, IContrib>();
 
-        public string ServiceMgrName { get { return PROGRAME; } }
+        public string ServiceMgrName { get { return SMGName; } }
         public ContribManager()
-            : base("ContribManager")
+            : base(SMGName)
         { 
             
         }
@@ -30,7 +30,7 @@ namespace TradingLib.ServiceManager
         {
             Util.InitStatus(this.PROGRAME, true);
             //1.从配置文件中加载扩展模块列表
-            List<string> contribList = ContribListHelper.GetContribList();
+            List<string> contribList = GetContribList();
 
             //2.从扩展模块列表中加载扩展模块
             foreach (string contribName in contribList)
@@ -141,19 +141,13 @@ namespace TradingLib.ServiceManager
                 }
             }
         }
-    }
 
-    internal class ContribListHelper
-    {
-
-        public  static List<string> GetContribList()
+        private static List<string> GetContribList()
         {
             List<string> list = new List<string>();
             try
-            {
-                
-                string programPath = System.Environment.CurrentDirectory;
-				string fn = Util.GetConfigFile("contriblist.cfg");
+            {                     
+                string fn = Util.GetConfigFile("contriblist.cfg");
                 //实例化一个文件流--->与写入文件相关联  
                 using (FileStream fs = new FileStream(fn, FileMode.Open))
                 {
@@ -167,10 +161,7 @@ namespace TradingLib.ServiceManager
                             {
                                 continue;
                             }
-                            {
-                                list.Add(str);
-                            }
-
+                            list.Add(str);
                         }
                         sw.Close();
                     }

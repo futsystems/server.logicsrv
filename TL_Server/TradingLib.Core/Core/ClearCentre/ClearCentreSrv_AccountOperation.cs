@@ -242,12 +242,10 @@ namespace TradingLib.Core
                     msg = "数据库操作异常";
                     if (amount > 0)
                     {
-                        //acc.CashIn = acc.CashIn - ammount;
                         acc.Deposit(amount);
                     }
                     else
                     {
-                        //acc.CashOut = acc.CashOut - Math.Abs(ammount);
                         acc.Withdraw(amount);
                     }
                     return false;
@@ -325,6 +323,7 @@ namespace TradingLib.Core
         #endregion
 
         #region 【加载账户,添加账户,删除账户】
+
         /// <summary>
         ///获得某个账户的user_id(网站pk)
         /// </summary>
@@ -374,41 +373,6 @@ namespace TradingLib.Core
             }
         }
 
-
-        //bool needLoad(IAccount account)
-        //{
-        //    switch (_loadmode)
-        //    {
-        //        case QSEnumAccountLoadMode.ALL:
-        //            return true;
-        //        //实盘加载 只加载实盘帐户
-        //        case QSEnumAccountLoadMode.REAL:
-        //            return ExUtil.IsRealAccount(account);
-
-        //        //模拟盘加载 只加载模拟盘帐户
-        //        case QSEnumAccountLoadMode.SIM:
-        //            return !ExUtil.IsRealAccount(account);
-        //        default:
-        //            return false;
-        //    }
-        //}
-
-        ///// <summary>
-        ///// 检查账户是否应该被冻结
-        ///// </summary>
-        ///// <param name="account"></param>
-        //void CheckAccountExecute(IAccount account)
-        //{
-        //    //account.Execute = true;
-        //    ////初赛账户，报名后
-        //    //if (account.RaceStatus == QSEnumAccountRaceStatus.INPRERACE)
-        //    //{
-        //    //    //报名后账户就被冻结,当重行启动或者加载时，需要检测，需要一直冻结到结算。这样才可以保证结算时为25万。
-        //    //    if (account.SettleDateTime <= account.RaceEntryTime)
-        //    //        account.Execute = false;
-        //    //}
-        //}
-
         /// <summary>
         /// 交易帐号只能是数字或字母
         /// </summary>
@@ -449,37 +413,15 @@ namespace TradingLib.Core
                 }
             }
 
-            if (create.BaseManager == null)
-            {
-                throw new FutsRspError("帐户对应的管理员不能为空");
-            }
 
             ORM.MAccount.AddAccount(ref create);
 
             //如果添加成功则将该账户加载到内存
-            //加载该账户数据
             LoadAccount(create.Account);
 
-            //switch (create.Category)
-            //{
-            //    //如果是模拟交易帐号则重置资金到模拟初始资金
-            //    case QSEnumAccountCategory.SIMULATION:
-            //    case QSEnumAccountCategory.DEALER:
-            //        {
-            //            //初始化账户权益资金
-            //            ResetEquity(create.Account, simAmount);
-            //            break;
-            //        }
-            //    default:
-            //        break;
-
-            //}
             //对外触发交易帐号添加事件
             if (this.AccountAddEvent != null)
                 this.AccountAddEvent(create.Account);
-
-            
-            //return re;
         }
 
 
@@ -516,11 +458,5 @@ namespace TradingLib.Core
 
         
         #endregion
-
-
-        //public IEnumerable<Position> GetPositions(string account)
-        //{
-        //    return acctk.GetPositionBook(account);
-        //}
     }
 }

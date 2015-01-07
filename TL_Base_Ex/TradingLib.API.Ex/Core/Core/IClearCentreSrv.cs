@@ -57,12 +57,12 @@ namespace TradingLib.API
         /// <summary>
         /// 调整手续费事件,对外触发手续费调整事件,用于相关逻辑进行手续费调整
         /// </summary>
-        event AdjustCommissionDel AdjustCommissionEvent;
+        //event AdjustCommissionDel AdjustCommissionEvent;
 
         /// <summary>
         /// 持仓回合关闭事件
         /// </summary>
-        event PositionRoundClosedDel PositionRoundClosedEvent;//交易回合生成事件
+        //event PositionRoundClosedDel PositionRoundClosedEvent;//交易回合生成事件
 
         
 

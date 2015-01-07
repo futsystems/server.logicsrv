@@ -74,16 +74,13 @@ namespace TradingLib.Core
                 {
                     pr =  prt.GotPositionTransaction(postrans);
                     //调整手续费 注意 这里手续费已经进行了标准手续费计算
-                    f.Commission = onAdjuestCommission(f,pr);   
+                    f.Commission = AdjuestCommission(f,pr);   
                 }
                 IAccount account = this[f.Account];
                 Position pos = account.GetPosition(f.Symbol, f.PositionSide);
                 //如果交易中心处于开启状态 则对外触发包含交易手续费的fill回报 通过tradingserver向管理端与交易客户端发送
                 if (_status == QSEnumClearCentreStatus.CCOPEN)
                 {
-                    //if (GotCommissionFill != null)
-                    //    GotCommissionFill(f);
-
                     debug("Got Fill:" + f.GetTradeInfo(), QSEnumDebugLevel.INFO);
                     //数据库记录成交
                     _asynLoger.newTrade(f);
@@ -92,10 +89,8 @@ namespace TradingLib.Core
                     if (pr.IsClosed)
                     {
                         _asynLoger.newPositonRound(pr);
-                        if (PositionRoundClosedEvent != null)
-                        {
-                            PositionRoundClosedEvent(pr,pos);
-                        }
+                        //向事件中继触发持仓回合关闭事件
+                        TLCtxHelper.EventIndicator.FirePositionRoundClosed(pr, pos);
                     }
                 }
             }
@@ -112,12 +107,9 @@ namespace TradingLib.Core
         /// <param name="fill"></param>
         /// <param name="c"></param>
         /// <returns></returns>
-        internal decimal onAdjuestCommission(Trade fill, PositionRound positionround)
+        internal decimal AdjuestCommission(Trade fill, PositionRound positionround)
         {
-            if (AdjustCommissionEvent != null)
-                return AdjustCommissionEvent(fill, positionround);
-            else
-                return fill.Commission;
+            return TLCtxHelper.ExContribEvent.AdjustCommission(fill, positionround);
         }
 
         #endregion

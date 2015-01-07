@@ -89,33 +89,15 @@ namespace TradingLib.Core
                 throw (new QSClearCentreResotreError(ex, "清算中心从数据库恢复数据异常"));
             }
 
-            //加载委托后进行矫正
-            checkOrder();
-            //获得最大报单引用 
-            
-            
             Status = QSEnumClearCentreStatus.CCRESTOREFINISH;
         }
 
         /// <summary>
-        /// 委托矫正
-        /// 1.pending委托:没有明确取消,成交数量小于委托数量,委托状态不为reject,unknown(这些委托会加载到对应的交易接口)
-        /// 主要是排除已经取消一些有问题的委托数据
+        /// 获得某个交易帐户的合约对象
         /// </summary>
-        void checkOrder()
-        {
-            //foreach (Order o in totaltk)
-            {
-                ////委托的broker为空 且状态为placed 表明该委托为有问题的委托
-                //if (o.Broker == string.Empty && o.Status == QSEnumOrderStatus.Placed)
-                //{
-                //    o.Status = QSEnumOrderStatus.Unknown;
-                //    this.GotOrder(o);
-                //}
-            }
-        }
-
-
+        /// <param name="account"></param>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
         Symbol GetAccountSymbol(string account, string symbol)
         {
             IAccount acc = this[account];
@@ -158,8 +140,6 @@ namespace TradingLib.Core
 
         /// <summary>
         /// 从数据库导出委托数据
-        /// 关于加载Order逻辑 加载的数据为上次结算后的数据.因此这里有个时间段设定。
-        /// 给Account加载数据的时候,只需要加载Account上次结算时间之后产生的交易数据
         /// </summary>
         /// <returns></returns>
         public IEnumerable<Order> LoadOrderFromMysql()
@@ -184,15 +164,11 @@ namespace TradingLib.Core
         /// 加载持仓回合数据
         /// </summary>
         /// <returns></returns>
-        public IList<PositionRoundImpl> LoadPositionRoundFromMysql()
+        public IEnumerable<PositionRoundImpl> LoadPositionRoundFromMysql()
         {
             debug("从数据库恢复开启的PositionRound数据....", QSEnumDebugLevel.DEBUG);
-            List<PositionRoundImpl> prlist = new List<PositionRoundImpl>();
-            foreach (PositionRoundImpl pr in ORM.MTradingInfo.SelectHoldPositionRounds(TLCtxHelper.Ctx.SettleCentre.LastSettleday))
-            {
-                prlist.Add(pr);
-            }
-            debug("数据库恢复开启的PositionRound数据:" + prlist.Count.ToString() + "条", QSEnumDebugLevel.INFO);
+            IEnumerable<PositionRoundImpl> prlist = ORM.MTradingInfo.SelectHoldPositionRounds(TLCtxHelper.Ctx.SettleCentre.LastSettleday);
+            debug("数据库恢复开启的PositionRound数据:" + prlist.Count().ToString() + "条", QSEnumDebugLevel.INFO);
             return prlist;
         }
         #endregion
