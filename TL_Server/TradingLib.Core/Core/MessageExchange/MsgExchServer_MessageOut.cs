@@ -155,6 +155,7 @@ namespace TradingLib.Core
             }
 
         }
+
         #region 消息发送总线 向管理端发送对应的消息
 
         /// <summary>

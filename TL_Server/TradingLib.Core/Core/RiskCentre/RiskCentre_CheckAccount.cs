@@ -32,7 +32,6 @@ namespace TradingLib.Core
             {
                 string s = PROGRAME + ":checkAccount error:" + ex.ToString();
                 debug(s, QSEnumDebugLevel.ERROR);
-                _othercheklog.GotDebug(s);
             }
         }
 
@@ -42,7 +41,7 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="o"></param>
         /// <returns></returns>
-        public bool TrckerOrderAccount(Order o,out IAccount account)
+        public bool TrckerOrderAccount(Order o, out IAccount account)
         {
             account = _clearcentre[o.Account];
             if (account == null) return false;

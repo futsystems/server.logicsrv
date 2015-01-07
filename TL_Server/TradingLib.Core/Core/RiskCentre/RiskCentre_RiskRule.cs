@@ -33,13 +33,11 @@ namespace TradingLib.Core
         }
 
         #region 加载 交易帐户委托规则与帐户规则
-
-        //风控规则集类别 名称与 Type的对应,用于从XML配置文件中生成分控检测插件
         Dictionary<string, RuleClassItem> dicRule = new Dictionary<string, RuleClassItem>();
         /// <summary>
         /// 加载风控规则从风控规则dll中加载对应的类然后用于每个交易账户设定规则进行实例化
         /// </summary>
-        private void LoadRuleSet()
+        private void LoadRuleClass()
         {
             dicRule.Clear();//清空当前映射列表
             foreach (Type t in PluginHelper.LoadOrderRule())
@@ -86,7 +84,9 @@ namespace TradingLib.Core
             {
                 AddRule(account, item);
             }
+            //加载完毕后 设定帐户的风控规则加载标识
             account.RuleItemLoaded = true;
+            //将帐户插入激活的检查列表
             InsertActiveAccount(account);
         }
 
@@ -226,18 +226,18 @@ namespace TradingLib.Core
         /// 用于管理获取当前可用风控规则列表
         /// </summary>
         /// <returns></returns>
-        public RuleClassItem[] GetRuleClassItems(QSEnumRuleType type)
+        public IEnumerable<RuleClassItem> GetRuleClassItems(QSEnumRuleType type)
         {
-            return dicRule.Values.Where(r => (r.Type == type)).ToArray();
+            return dicRule.Values.Where(r => (r.Type == type));
         }
 
         /// <summary>
         /// 获得所有风控规则
         /// </summary>
         /// <returns></returns>
-        public RuleClassItem[] GetRuleClassItems()
+        public IEnumerable<RuleClassItem> GetRuleClassItems()
         {
-            return dicRule.Values.ToArray();
+            return dicRule.Values;
         }
     }
 }

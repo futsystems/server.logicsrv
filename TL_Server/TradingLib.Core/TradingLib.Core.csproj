@@ -118,8 +118,6 @@
     <Compile Include="Core\MessageExchange\MsgExchServer_Router.cs" />
     <Compile Include="Core\MessageExchange\MsgExchServer_MessageOut.cs" />
     <Compile Include="Core\MessageExchange\PacketHandler\MsgExchServer_PacketHandler_Order.cs" />
-    <Compile Include="Core\RiskCentre\PositionOffset.cs" />
-    <Compile Include="Core\RiskCentre\PositionOffsetTracker.cs" />
     <Compile Include="Core\MessageExchange\BrokerRouter\BrokerRouter.cs" />
     <Compile Include="Core\MessageExchange\DataFeedRouter.cs" />
     <Compile Include="Core\RiskCentre\RiskCentre_CheckAccount.cs" />
@@ -131,7 +129,6 @@
     <Compile Include="Core\RiskCentre\RiskCentre_Trading.cs" />
     <Compile Include="Core\SettleCentre\SettleCentre.cs" />
     <Compile Include="Core\SettleCentre\SettleCentre_..cs" />
-    <Compile Include="Core\SettleCentre\SettleCentre_Check.cs" />
     <Compile Include="Core\SettleCentre\SettleCentre_CTE.cs" />
     <Compile Include="Core\SettleCentre\SettleCentre_StoreClean.cs" />
     <Compile Include="Core\SettleCentre\TradingCalendar.cs" />
@@ -139,11 +136,8 @@
     <Compile Include="Core\MessageExchange\MsgExchServer.cs" />
     <Compile Include="Core\RiskCentre\RiskCentre.cs" />
     <Compile Include="Core\TaskCentre\TaskCentre_CTE.cs" />
-    <Compile Include="Core\WebMessageExchange\HealthReport.cs" />
-    <Compile Include="Core\WebMessageExchange\WebAdminInfoEx.cs" />
     <Compile Include="Core\WebMessageExchange\WebMsgExchServer.cs" />
     <Compile Include="Core\WebMessageExchange\WebMsgExchServer_CTE.cs" />
-    <Compile Include="Core\WebMessageExchange\WebMsgPubServer.cs" />
     <Compile Include="Core\WebMessageExchange\WebMsgRepServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Transport\AsyncServer.cs" />

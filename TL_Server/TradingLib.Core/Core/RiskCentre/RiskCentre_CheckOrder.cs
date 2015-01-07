@@ -354,7 +354,6 @@ namespace TradingLib.Core
                 msg = "风控检查异常";
                 string s = PROGRAME + ":委托风控检查异常" + ex.ToString();
                 debug(s, QSEnumDebugLevel.ERROR);
-                _othercheklog.GotDebug(s);
                 return false;
             }
         }

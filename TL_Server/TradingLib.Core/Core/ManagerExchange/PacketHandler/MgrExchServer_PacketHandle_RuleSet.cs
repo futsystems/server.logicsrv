@@ -18,7 +18,7 @@ namespace TradingLib.Core
             {
                 debug(string.Format("管理员:{0} 请求查询风控规则:{1}", session.AuthorizedID, request.ToString()), QSEnumDebugLevel.INFO);
 
-                RuleClassItem[] items = riskcentre.GetRuleClassItems();
+                RuleClassItem[] items = riskcentre.GetRuleClassItems().ToArray();
                 int totalnum = items.Length;
 
                 if (totalnum > 0)

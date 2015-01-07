@@ -18,6 +18,7 @@ namespace TradingLib.Core
     public class WebMsgRepServer :BaseSrvObject
     {
         public event Func<string,bool,JsonReply> GotWebMessageEvent;
+
         TimeSpan PollerTimeOut = new TimeSpan(0, 0, 5);
         string _address = "*";
         int _port = 5000;

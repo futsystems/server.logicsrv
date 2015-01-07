@@ -70,6 +70,7 @@ namespace TradingLib.Core
         //#endregion
 
         bool settled = false;
+
         #region 大结算过程
         //1.采集结算价格 保存结算持仓与日内交易记录
         /// <summary>

@@ -18,41 +18,11 @@ namespace TradingLib.Core
     //服务端风险控制模块,根据每个账户的设定，实时的检查Order是否符合审查要求予以确认或者决绝
     public partial class RiskCentre : BaseSrvObject, IRiskCentre,ICore
     {
-
         const string CoreName = "RiskCentre";
-
-        //public event ClientTrackerInfoSessionDel ClientSessionEvent;
-        //public event GetFinServiceDel GetFinServiceDelEvent;
-
-        
-
-        
-
-        //账户检查日志
-        Log _accountcheklog = new Log("Risk_Account", true, true,Util.ProgramData(CoreName), true);//日志组件
-        //委托检查日志
-        Log _ordercheklog = new Log("Risk_Order", true, true, Util.ProgramData(CoreName), true);//日志组件
-        //其他日志
-        Log _othercheklog = new Log("Risk_Other", true, true, Util.ProgramData(CoreName), true);//日志组件
-
-        
-
-       
         /// <summary>
         /// 清算中心
         /// </summary>
         ClearCentre _clearcentre = null;
-
-        /// <summary>
-        /// 服务端止盈止损
-        /// </summary>
-        PositionOffsetTracker _posoffsetracker = null;
-
-        /// <summary>
-        /// 主力合约列表
-        /// </summary>
-        //Basket hotbasket = new BasketImpl();
-
         public string CoreId { get { return CoreName; } }
 
         ConfigDB _cfgdb;
@@ -66,6 +36,8 @@ namespace TradingLib.Core
 
         public RiskCentre(ClearCentre clearcentre):base(CoreName)
         {
+            _clearcentre = clearcentre;
+
             //1.加载配置文件
             _cfgdb = new ConfigDB(RiskCentre.CoreName);
             if (!_cfgdb.HaveConfig("MarketOpenTimeCheck"))
@@ -110,64 +82,14 @@ namespace TradingLib.Core
             
 
 
-            _clearcentre = clearcentre;
-
-            _posoffsetracker = new PositionOffsetTracker(_clearcentre as ClearCentre);
-            //_posoffsetracker.SendDebugEvent +=new DebugDelegate(msgdebug);
-            _posoffsetracker.SendOrderEvent +=new OrderDelegate(SendOrder);
-            _posoffsetracker.CancelOrderEvent += new LongDelegate(CancelOrder);
-            _posoffsetracker.AssignOrderIDEvent += new AssignOrderIDDel(AssignOrderID);
-
             //订阅持仓回合关闭事件
             TLCtxHelper.EventIndicator.GotPositionClosedEvent += new PositionRoundClosedDel(GotPostionRoundClosed);
+
             //加载风空规则
-            LoadRuleSet();
+            LoadRuleClass();
 
             //初始化日内平仓任务
             InitFlatTask();
-        }
-
-
-
-     
-        /// <summary>
-        /// 查询当前是否是交易日
-        /// </summary>
-        public bool IsTradingday
-        {
-            get
-            {
-                return TLCtxHelper.Ctx.SettleCentre.IsTradingday;
-            }
-        }
-
-
-
-
-
-
-
-
-
-        #region 【服务端止盈止损】客户端提交上来的持仓止盈止损 服务端检查
-        /// <summary>
-        /// 获得某个账户的所有持仓止盈止损参数
-        /// </summary>
-        /// <param name="account"></param>
-        /// <returns></returns>
-        public PositionOffsetArgs[] GetPositionOffset(string account)
-        {
-            return _posoffsetracker.GetPositionOffset(account);
-        }
-
-        /// <summary>
-        /// 客户端提交止盈止损参数更新到监控器
-        /// </summary>
-        /// <param name="args"></param>
-        public void GotPositionOffsetArgs(PositionOffsetArgs args)
-        {
-            _posoffsetracker.GotPositionOffsetArgs(args);
-
         }
 
         /// <summary>
@@ -176,9 +98,12 @@ namespace TradingLib.Core
         /// <param name="k"></param>
         public void GotTick(Tick k)
         {
-            _posoffsetracker.GotTick(k);
+            //_posoffsetracker.GotTick(k);
         }
 
+
+
+        #region 【服务端止盈止损】客户端提交上来的持仓止盈止损 服务端检查
         /// <summary>
         /// 获得取消
         /// 取消事务是在处理队列中进行异步处理
@@ -236,7 +161,6 @@ namespace TradingLib.Core
                             break;
                     }
                 }
-                _posoffsetracker.GotCancel(oid);
             }
         }
 
@@ -255,9 +179,6 @@ namespace TradingLib.Core
                 if (ps.OrderID == order.id && order.Status == QSEnumOrderStatus.Reject)
                     ps.OrderID = 0;
             }
-
-            //止损 止盈
-            //_posoffsetracker.GotCancel(oid);
         }
 
         /// <summary>
@@ -301,17 +222,11 @@ namespace TradingLib.Core
         public void Reset()
         {
             debug("风控中心重置", QSEnumDebugLevel.INFO);
-            //清空帐户的止盈止损参数设置
-            _posoffsetracker.Clear();
-
-            //清空帐户当日登入信息
-            //trackermap.Clear();
-
             //清空强平任务队列
             posflatlist.Clear();
 
             //清空帐户风控检查帐户列表
-            activeaccount.Clear();
+            ClearActiveAccount();
 
             Notify("风控中心重置(结算后)[" + DateTime.Now.ToShortDateString() + "]", " ");
         }
@@ -332,7 +247,7 @@ namespace TradingLib.Core
         {
             Util.DestoryStatus(this.PROGRAME);
             base.Dispose();
-            _posoffsetracker.Dispose();
+            //_posoffsetracker.Dispose();
             
         }
     }
