@@ -53,8 +53,9 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="License">
-      <HintPath>..\..\lib\License.dll</HintPath>
+    <Reference Include="clrzmq, Version=3.0.0.0, Culture=neutral, PublicKeyToken=ef95cdc29d237b0d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\clrzmq.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -82,12 +83,6 @@
     </Reference>
     <Reference Include="TradingLib.ServiceManager">
       <HintPath>..\..\lib\TradingLib\TradingLib.ServiceManager.dll</HintPath>
-    </Reference>
-    <Reference Include="clrzmq">
-      <HintPath>..\..\lib\clrzmq.dll</HintPath>
-    </Reference>
-    <Reference Include="MySql.Data">
-      <HintPath>..\..\lib\MySql.Data.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml" />
   </ItemGroup>
