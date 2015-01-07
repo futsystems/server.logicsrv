@@ -281,56 +281,6 @@ namespace TradingLib.Core
             return result;
         }
 
-        #region TLServer->TLClient发送消息
-
-
-        /// <summary>
-        /// 当有新的委托时,通知所有的管理端
-        /// </summary>
-        /// <param name="o"></param>
-        public void newOrder(Order o)
-        {
-
-        }
-
-        /// <summary>
-        /// 当系统有新的成交时,通知所有的管理端
-        /// </summary>
-        /// <param name="f"></param>
-        public void newFill(Trade f)
-        { 
-            
-        }
-
-        /// <summary>
-        /// 当有持仓更新时,通知所有管理端
-        /// </summary>
-        /// <param name="pos"></param>
-        public void newPositionUpdate(Position pos)
-        {
-
-        }
-
-        /// <summary>
-        /// 当有新的委托操作时,通知所有管理端
-        /// </summary>
-        /// <param name="action"></param>
-        public void newOrderAction(Order action)
-        { 
-        
-        }
-
-
-        /// <summary>
-        /// 调用tlserver_generic发送逻辑包 packet
-        /// </summary>
-        /// <param name="packet"></param>
-        //public void SendPacket(IPacket packet)
-        //{
-        //    TLSend(packet);
-        //}
-        #endregion
-
         #region 底层基础事件
         public event LoginRequestDel<MgrClientInfo> newLoginRequest;//登入服务器
         public event OrderDelegate newSendOrderRequest;//发送委托

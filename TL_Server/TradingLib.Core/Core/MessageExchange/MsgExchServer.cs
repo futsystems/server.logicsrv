@@ -497,8 +497,6 @@ namespace TradingLib.Core
             return tl.ClientsForAccount(account);
         }
 
-
-
         /// <summary>
         /// 恢复交易连接数据
         /// </summary>

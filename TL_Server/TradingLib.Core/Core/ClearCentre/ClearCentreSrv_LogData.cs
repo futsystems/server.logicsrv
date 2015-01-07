@@ -10,6 +10,43 @@ namespace TradingLib.Core
 {
     public partial class ClearCentre
     {
+        #region 记录交易帐户交易日志
+        internal void LogAcctOrder(Order o)
+        {
+            _asynLoger.newOrder(o);
+        }
+
+        internal void LogAcctOrderUpdate(Order o)
+        {
+            _asynLoger.updateOrder(o);
+        }
+
+        internal void LogAcctOrderAction(OrderAction o)
+        {
+            _asynLoger.newOrderAction(o);
+        }
+
+        internal void LogAcctTrade(Trade f)
+        {
+            _asynLoger.newTrade(f);
+        }
+
+        internal void LogAcctPositionRound(PositionRound pr)
+        {
+            _asynLoger.newPositonRound(pr);
+        }
+        
+        internal void LogAcctPositionCloseDetail(PositionCloseDetail detail)
+        {
+            //设定该平仓明细所在结算日
+            detail.Settleday = TLCtxHelper.Ctx.SettleCentre.NextTradingday;
+            //异步保存平仓明细
+            _asynLoger.newPositionCloseDetail(detail);
+        
+        }
+        #endregion
+
+
         /// <summary>
         /// 记录委托数据
         /// </summary>
@@ -62,10 +99,8 @@ namespace TradingLib.Core
         /// <param name="detail"></param>
         internal void LogBrokerPositionCloseDetail(PositionCloseDetail detail)
         {
-            //debug("平仓明细生成:" + obj.GetPositionCloseStr(), QSEnumDebugLevel.INFO);
             //设定该平仓明细所在结算日
             detail.Settleday = TLCtxHelper.Ctx.SettleCentre.NextTradingday;
-
             //异步保存平仓明细
             _asynLoger.newPositionCloseDetail(detail);
         

@@ -32,25 +32,6 @@ namespace TradingLib.Core
         FlatAllPositions,
     }
 
-    //internal enum QSEnumTaskStatus
-    //{ 
-    //    /// <summary>
-    //    /// 等待处理中
-    //    /// </summary>
-    //    Added,
-
-    //    /// <summary>
-    //    /// 等待子任务处理中
-    //    /// </summary>
-    //    SubTaskPending,
-
-    //    /// <summary>
-    //    /// 处理 完毕
-    //    /// </summary>
-    //    Finished
-
-    //}
-
     internal class RiskTaskSet
     {
         /// <summary>

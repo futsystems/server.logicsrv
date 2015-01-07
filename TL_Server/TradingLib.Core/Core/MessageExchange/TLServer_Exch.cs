@@ -168,48 +168,26 @@ namespace TradingLib.Core
         {
             TLCtxHelper.Profiler.EnterSection("OrderInsert");
             debug("Got Order:" + request.Order.ToString(), QSEnumDebugLevel.DEBUG);
-            //通过address(ClientID)查询本地客户端列表是否存在该ID
-            //TrdClientInfo cinfo = _clients[request.ClientID];
-            ////1.如果不存在,表明该ID没有通过注册连接到我们的服务端
-            //if (cinfo == null)
-            //{
-            //    debug("系统拒绝委托:" + request.Order.ToString() + "系统没有该注册端:" + request.ClientID + "|" + request.Order.Account, QSEnumDebugLevel.WARNING);
-            //    return;
-            //}
-            
 
-            //2.检查插入委托请求是否有效
+            //检查插入委托请求是否有效
             if (!request.IsValid)
             {
                 debug("请求无效", QSEnumDebugLevel.ERROR);
-                //debug("系统拒绝委托:" + (o == null ? "Null" : o.ToString()) + "委托无效:" + address + "|" + o.Account,QSEnumDebugLevel.WARNING);
-                //TLSend("系统拒绝，委托无效", MessageTypes.POPMESSAGE, address);//发送客户端提示信息
-                //CacheMessage(QSMessageHelper.Message(QSOrderMessage.REJECT,"系统拒绝，委托无效"), MessageTypes.ORDERMESSAGE, address);//发送客户端提示信息
                 return;
             }
-
-            //3.如果本地客户端列表中存在该ID,则我们需要比较该ID所请求的交易账号与其所发送的委托账号是否一致,这里防止客户端发送他人的account的委托
-            //只有当客户端通过请求账户 提供正确的账户 与密码 系统才会将address(ClientID与Account进行绑定)
-            //if (!cinfo.Authorized)
-            //{
-            //    debug("客户端:" + cinfo.Location.ClientID + "未登入,无法请求委托", QSEnumDebugLevel.ERROR);
-            //    return;
-            //}
             IAccount account = session.GetAccount();
             //如果请求没有指定交易帐号 则根据对应的Client信息自动绑定交易帐号
             if (string.IsNullOrEmpty(request.Order.Account))
             {
                 request.Order.Account = account.ID;
             }
+            //如果指定交易帐号与登入交易帐号不符 则回报异常
             if (account.ID!= request.Order.Account)//客户端没有登入或者登入ID与委托ID不符
-            {
+            {   
                 debug("客户端对应的帐户:" + account.ID + " 与委托帐户:" + request.Order.Account + " 不符合", QSEnumDebugLevel.ERROR);
                 return;
             }
-            //IAccount account = TLCtxHelper.CmdAccount[cinfo.Account];
 
-
-            
             //标注来自客户端的原始委托
             Order order = new OrderImpl(request.Order);//复制委托传入到逻辑层
             order.id = 0;
@@ -257,7 +235,6 @@ namespace TradingLib.Core
             {
                 newRegisterSymbols(request.ClientID, request.Symbols);
             }
-            //SrvBeatHeart(client);
         }
 
         /// <summary>

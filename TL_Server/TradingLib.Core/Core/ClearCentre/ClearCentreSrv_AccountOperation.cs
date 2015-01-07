@@ -436,8 +436,6 @@ namespace TradingLib.Core
 
             try
             {
-                
-                //InactiveAccount(account);//冻结交易帐号
                 //删除数据库
                 ORM.MAccount.DelAccount(account);//删除数据库记录
                 DropAccount(acc);//删除内存记录

@@ -251,8 +251,8 @@ namespace TradingLib.ServiceManager
             _clearCentre.DebugEnable = true;
             _clearCentre.DebugLevel = QSEnumDebugLevel.DEBUG;
 
-            _clearCentre.SqlLog.DebugEnable = true;
-            _clearCentre.SqlLog.DebugLevel = QSEnumDebugLevel.DEBUG;
+            //_clearCentre.SqlLog.DebugEnable = true;
+            //_clearCentre.SqlLog.DebugLevel = QSEnumDebugLevel.DEBUG;
 
             _riskCentre.DebugEnable = true;
             _riskCentre.DebugLevel = QSEnumDebugLevel.DEBUG;
@@ -292,8 +292,8 @@ namespace TradingLib.ServiceManager
 
                 //交易信息记录
 
-                _clearCentre.SqlLog.DebugEnable = dconfig.D_TrdLoger;
-                _clearCentre.SqlLog.DebugLevel = dconfig.DL_TrdLoger;
+                //_clearCentre.SqlLog.DebugEnable = dconfig.D_TrdLoger;
+                //_clearCentre.SqlLog.DebugLevel = dconfig.DL_TrdLoger;
             }
 
             //风控中心

@@ -71,25 +71,5 @@ namespace TradingLib.Core
                 sym = null;// BasicTracker.DomainTracker.SuperDomain.GetSymbol(symbol); 如果没有对应的合约这里需要进行容错处理
             return sym;
         }
-
-
-        //public Order BrokerSentOrder(long id, QSEnumOrderBreedType? type = QSEnumOrderBreedType.ACCT)
-        //{
-        //    if (type == QSEnumOrderBreedType.ROUTER)
-        //    {
-        //        return TLCtxHelper.Ctx.MessageExchange.SentRouterOrder(id);
-        //    }
-        //    else if (type == QSEnumOrderBreedType.ACCT)
-        //    {
-        //        return this.SentOrder(id);
-        //    }
-        //    else if (type == null)
-        //    {
-        //        return this.SentOrder(id);
-        //    }
-        //    return null;
-        //}
-
-
     }
 }

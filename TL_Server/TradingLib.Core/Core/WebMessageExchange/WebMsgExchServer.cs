@@ -31,7 +31,7 @@ namespace TradingLib.Core
         RiskCentre _riskcentre;
         MsgExchServer _srv;
 
-        HealthReport _healthreport;
+        //HealthReport _healthreport;
         public string CoreId { get { return this.PROGRAME; } }
 
 
@@ -80,7 +80,7 @@ namespace TradingLib.Core
 
             //_pubserver = new WebMsgPubServer(_cfgdb["WebRepServerIP"].AsString(), _cfgdb["WebPubPort"].AsInt());
 
-            _healthreport = new HealthReport(s, c, r);
+            //_healthreport = new HealthReport(s, c, r);
         }
 
 

@@ -56,14 +56,16 @@ namespace TradingLib.Core
         /// </summary>
         public event AccountSettingChangedDel AccountChangedEvent;
 
+        protected void AccountChanged(IAccount account)
+        {
+            if (AccountChangedEvent != null)
+                AccountChangedEvent(account);
+        }
+
         #endregion
 
-        QSEnumAccountLoadMode _loadmode = QSEnumAccountLoadMode.ALL;//账户加载模式
 
         AsyncTransactionLoger _asynLoger;//异步记录交易数据到数据库
-        public AsyncTransactionLoger SqlLog { get { return _asynLoger; } }
-
-
         PositionRoundTracker prt;//记录交易回合信息
         /// <summary>
         /// 持仓回合管理器
@@ -100,10 +102,6 @@ namespace TradingLib.Core
                 _cfgdb.UpdateConfig("AccountLoadMode", QSEnumCfgType.String,QSEnumAccountLoadMode.ALL, "清算中心加载帐户类别");
             }
 
-
-
-            //加载模式
-            _loadmode = (QSEnumAccountLoadMode)Enum.Parse(typeof(QSEnumAccountLoadMode), _cfgdb["AccountLoadMode"].AsString());
             try
             {
                 //初始化异步储存组件
@@ -136,25 +134,7 @@ namespace TradingLib.Core
             if (_status == QSEnumClearCentreStatus.CCOPEN)
             {
                 debug("平仓明细生成:" + obj.GetPositionCloseStr(), QSEnumDebugLevel.INFO);
-                //设定该平仓明细所在结算日
-                obj.Settleday = TLCtxHelper.Ctx.SettleCentre.NextTradingday;
-                
-
-                //异步保存平仓明细
-                _asynLoger.newPositionCloseDetail(obj);
-            }
-        }
-
-
-
-        /// <summary>
-        /// 查询当前是否是交易日
-        /// </summary>
-        public bool IsTradingday
-        {
-            get
-            {
-                return TLCtxHelper.Ctx.SettleCentre.IsTradingday;
+                LogAcctPositionCloseDetail(obj);
             }
         }
 
@@ -283,16 +263,6 @@ namespace TradingLib.Core
             Status = QSEnumClearCentreStatus.CCCLOSE;
         }
         #endregion
-
-
-        #region 辅助函数 
-        protected void AccountChanged(IAccount account)
-        {
-            if (AccountChangedEvent != null)
-                AccountChangedEvent(account);
-        }
-        #endregion
-
 
     }
 }
