@@ -191,6 +191,8 @@ namespace TradingLib.Core
                         response.Account = request.LoginID;
                         account = _clearcentre[request.LoginID];
                         response.AccountType = account.Category;
+
+
                     }
                     else
                     {

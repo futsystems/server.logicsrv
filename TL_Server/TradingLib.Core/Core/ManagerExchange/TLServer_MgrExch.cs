@@ -185,43 +185,47 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="msg"></param>
         /// <param name="address"></param>
-        public void SrvOnOrderInsert(OrderInsertRequest request)
+        public void SrvOnOrderInsert(ISession session,OrderInsertRequest request)
         {
             debug("Got Order:" + request.Order.GetOrderInfo(), QSEnumDebugLevel.INFO);
-            MgrClientInfo cinfo = _clients[request.ClientID];
+            //MgrClientInfo cinfo = _clients[request.ClientID];
             //1.如果不存在,表明该ID没有通过注册连接到我们的服务端
-            if (cinfo == null)
-            {
-                debug("系统拒绝委托:" + request.Order.ToString() + "系统没有该注册端:" + request.ClientID + "|" + request.Order.Account, QSEnumDebugLevel.WARNING);
-                return;
-            }
+            //if (cinfo == null)
+            //{
+            //    debug("系统拒绝委托:" + request.Order.ToString() + "系统没有该注册端:" + request.ClientID + "|" + request.Order.Account, QSEnumDebugLevel.WARNING);
+            //    return;
+            //}
 
 
-            //2.检查插入委托请求是否有效
-            if (!request.IsValid)
-            {
-                debug("请求无效", QSEnumDebugLevel.ERROR);
-                return;
-            }
+            ////2.检查插入委托请求是否有效
+            //if (!request.IsValid)
+            //{
+            //    debug("请求无效", QSEnumDebugLevel.ERROR);
+            //    return;
+            //}
 
             //3.如果本地客户端列表中存在该ID,则我们需要比较该ID所请求的交易账号与其所发送的委托账号是否一致,这里防止客户端发送他人的account的委托
             //只有当客户端通过请求账户 提供正确的账户 与密码 系统才会将address(ClientID与Account进行绑定)
-            if (!cinfo.Authorized)
-            {
-                debug("客户端:" + cinfo.Location.ClientID + "未登入,无法请求委托", QSEnumDebugLevel.ERROR);
-                return;
-            }
+            //if (!cinfo.Authorized)
+            //{
+            //    debug("客户端:" + cinfo.Location.ClientID + "未登入,无法请求委托", QSEnumDebugLevel.ERROR);
+            //    return;
+            //}
 
             //IAccount account = TLCtxHelper.CmdAccount[request.Order.Account];
 
+            /* 管理端持仓不区分昨仓和今仓，在管理端进行平仓时，需要检测是否同时在一个委托中平昨仓和今仓，如果混合需要拆分委托
+             * 
+             * 
+             * 
+             * */
 
-            //标注来自客户端的原始委托
+            //标注来自客户端的原始委托 管理端平仓由管理端维护平今 平昨的问题
             Order order = new OrderImpl(request.Order);//复制委托传入到逻辑层
             order.OrderSource = QSEnumOrderSource.QSMONITER;
             order.TotalSize = order.Size;
             order.Date = Util.ToTLDate();
             order.Time = Util.ToTLTime();
-            //order.Domain_ID = account.Domain.ID;
 
             //对外层触发委托事件
             if (newSendOrderRequest != null)
@@ -265,7 +269,7 @@ namespace TradingLib.Core
             switch (packet.Type)
             {
                 case MessageTypes.SENDORDER:
-                    SrvOnOrderInsert(packet as OrderInsertRequest);
+                    SrvOnOrderInsert(session,packet as OrderInsertRequest);
                     break;
                 case MessageTypes.SENDORDERACTION:
                     SrvOnOrderAction(packet as OrderActionRequest);

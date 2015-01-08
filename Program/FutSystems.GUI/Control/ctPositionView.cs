@@ -133,10 +133,34 @@ namespace FutSystems.GUI
         void FlatPosition(Position pos)
         {
             if (pos == null || pos.isFlat) return;
-            Order o = new MarketOrderFlat(pos);
-            o.OffsetFlag = QSEnumOffsetFlag.CLOSE;
-            SendOrder(o);
-            debug("全平仓位:" + pos.Symbol);
+            bool side = pos.isLong ? true : false;
+
+            //上期所需要区分平今和平昨 需要按照昨仓和今仓分开提交委托
+            if (pos.oSymbol.SecurityFamily.Exchange.EXCode.Equals("SHFE"))
+            {
+                int voltd = pos.PositionDetailTodayNew.Sum(p => p.Volume);//今日持仓
+                int volyd = pos.PositionDetailYdNew.Sum(p => p.Volume);//昨日持仓
+                //MessageBox.Show("posyd:" + volyd.ToString() + " voltd:" + voltd.ToString());
+                if (volyd != 0)
+                {
+                    Order oyd = new OrderImpl(pos.Symbol, volyd *(side?1:-1)* -1);
+                    oyd.OffsetFlag = QSEnumOffsetFlag.CLOSE;
+                    SendOrder(oyd);
+                }
+                if (voltd != 0)
+                {
+                    Order otd = new OrderImpl(pos.Symbol, voltd * (side ? 1 : -1) * -1);
+                    otd.OffsetFlag = QSEnumOffsetFlag.CLOSETODAY;
+                    SendOrder(otd);
+                }
+            }
+            else
+            {
+                Order o = new MarketOrderFlat(pos);
+                o.OffsetFlag = QSEnumOffsetFlag.CLOSE;
+                SendOrder(o);
+                debug("全平仓位:" + pos.Symbol);
+            }
         }
         void debug(string msg)
         {

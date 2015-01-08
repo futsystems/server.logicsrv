@@ -31,7 +31,7 @@ namespace TradingLib.Common
         {
             if (obj != null && obj is IAccount)
             {
-                this.Account = Account;
+                this.Account = obj as IAccount;
                 this.Authorized = true;
             }
             else

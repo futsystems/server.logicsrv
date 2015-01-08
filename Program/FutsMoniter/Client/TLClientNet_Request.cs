@@ -41,10 +41,6 @@ namespace TradingLib.Common
             SendPacket(request);
         }
 
-
-
-
-
         #region 交易类操作
         /// <summary>
         /// 发送委托

@@ -126,8 +126,8 @@ namespace TradingLib.Core
                                 //如果不需要先撤单的 则跳过
                                 if (!ps.NeedCancelFirst)
                                 {
-                                    if (ps.OrderID == oid)
-                                        ps.OrderID = 0;
+                                    if (ps.OrderIDList.Contains(oid))
+                                        ps.OrderIDList.Remove(oid);
                                 }
                                 else//需要先撤单的 则检查撤单列表
                                 {
@@ -176,8 +176,8 @@ namespace TradingLib.Core
             foreach (RiskTaskSet ps in posflatlist)
             {
                 //如果委托被拒绝 并且委托ID是本地发送过去的ID 则将positionflatset的委托ID置0
-                if (ps.OrderID == order.id && order.Status == QSEnumOrderStatus.Reject)
-                    ps.OrderID = 0;
+                if (ps.OrderIDList.Contains(order.id) && order.Status == QSEnumOrderStatus.Reject)
+                    ps.OrderIDList.Remove(order.id);
             }
         }
 

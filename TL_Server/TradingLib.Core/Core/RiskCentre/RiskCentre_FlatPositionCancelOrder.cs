@@ -62,7 +62,7 @@ namespace TradingLib.Core
         /// <summary>
         /// 发送的平仓委托OrderID
         /// </summary>
-        public long OrderID { get; set; }
+        public List<long> OrderIDList{ get; set; }
 
         /// <summary>
         /// 是否已经发送强平委托
@@ -234,6 +234,8 @@ namespace TradingLib.Core
             FlatFailNoticed = false;//强平异常通知
             SubTask = new List<RiskTaskSet>();
             SubTaskGenerated = false;
+
+            OrderIDList = new List<long>();
         }
 
         /// <summary>
@@ -263,6 +265,8 @@ namespace TradingLib.Core
             FlatFailNoticed = false;//强平异常通知
             SubTask = new List<RiskTaskSet>();
             SubTaskGenerated = false;
+
+            OrderIDList = new List<long>();
         }
 
         /// <summary>
@@ -290,6 +294,8 @@ namespace TradingLib.Core
             FlatFailNoticed = false;//强平异常通知
             SubTask = new List<RiskTaskSet>();
             SubTaskGenerated = false;
+
+            OrderIDList = new List<long>();
         }
 
         public override string ToString()
@@ -368,11 +374,6 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
-        //bool IsAccountInFlatAllTask(string account)
-        //{
-        //    return accountinfaltall.Contains(account);
-        //}
-
         bool HaveFlatAllTask(string accid)
         {
             return posflatlist.Any(task => task.Account.Equals(accid) && task.TaskType == QSEnumRiskTaskType.FlatAllPositions);
@@ -516,30 +517,86 @@ namespace TradingLib.Core
         void SendFlatPositionOrder(RiskTaskSet set)
         {
             Position pos = set.Position;
-            //生成市价委托
-            Order o = new MarketOrderFlat(pos);
-            o.Account = pos.Account;
-            o.OffsetFlag = QSEnumOffsetFlag.CLOSE;
-            o.OrderSource = set.Source;
-            o.ForceClose = true;
-            o.ForceCloseReason = set.ForceCloseReason;
-            //o.price = 2500;//模拟不成交延迟撤单的情况
-
-            //绑定委托编号 用于提前获得系统唯一OrderID 方便撤单
-            if (AssignOrderIDEvent != null)
-                AssignOrderIDEvent(ref o);
-
+            bool side = pos.isLong ? true : false;
             //绑定合约对象
             IAccount account = _clearcentre[pos.Account];
-            account.TrckerOrderSymbol(ref o);
 
-            set.FlatSent = true;
-            set.FireCount++;//发送强平次数递增
-            set.SentTime = DateTime.Now;
-            set.OrderID = o.id;
+            if (pos.oSymbol.SecurityFamily.Exchange.EXCode.Equals("SHFE"))
+            {
+                debug("Position:" + pos.GetPositionKey() + " is in Exchange:SHFE, we need to check Close/CloseToday Split", QSEnumDebugLevel.INFO);
+                int voltd = pos.PositionDetailTodayNew.Sum(p => p.Volume);//今日持仓
+                int volyd = pos.PositionDetailYdNew.Sum(p => p.Volume);//昨日持仓
+                //MessageBox.Show("posyd:" + volyd.ToString() + " voltd:" + voltd.ToString());
+                
+                if (volyd != 0)
+                {
+                    Order oyd = new OrderImpl(pos.Symbol, volyd * (side ? 1 : -1) * -1);
 
-            //对外发送委托
-            SendOrder(o);
+                    oyd.Account = pos.Account;
+                    oyd.OffsetFlag = QSEnumOffsetFlag.CLOSE;
+                    oyd.OrderSource = set.Source;
+                    oyd.ForceClose = true;
+                    oyd.ForceCloseReason = set.ForceCloseReason;
+
+                    //绑定委托编号 用于提前获得系统唯一OrderID 方便撤单
+                    if (AssignOrderIDEvent != null)
+                        AssignOrderIDEvent(ref oyd);
+                    account.TrckerOrderSymbol(ref oyd);
+
+                    set.OrderIDList.Add(oyd.id);
+
+                    SendOrder(oyd);
+                }
+                if (voltd != 0)
+                {
+                    Order otd = new OrderImpl(pos.Symbol, voltd * (side ? 1 : -1) * -1);
+
+                    otd.Account = pos.Account;
+                    otd.OffsetFlag = QSEnumOffsetFlag.CLOSETODAY;
+                    otd.OrderSource = set.Source;
+                    otd.ForceClose = true;
+                    otd.ForceCloseReason = set.ForceCloseReason;
+
+                    //绑定委托编号 用于提前获得系统唯一OrderID 方便撤单
+                    if (AssignOrderIDEvent != null)
+                        AssignOrderIDEvent(ref otd);
+                    account.TrckerOrderSymbol(ref otd);
+
+                    set.OrderIDList.Add(otd.id);
+
+                    SendOrder(otd);
+                }
+                if (volyd != 0 || voltd != 0)
+                {
+                    set.FlatSent = true;
+                    set.FireCount++;//发送强平次数递增
+                    set.SentTime = DateTime.Now;
+                }
+            }
+            else
+            {
+                //生成市价委托
+                Order o = new MarketOrderFlat(pos);
+                o.Account = pos.Account;
+                o.OffsetFlag = QSEnumOffsetFlag.CLOSE;
+                o.OrderSource = set.Source;
+                o.ForceClose = true;
+                o.ForceCloseReason = set.ForceCloseReason;
+                //o.price = 2500;//模拟不成交延迟撤单的情况
+
+                //绑定委托编号 用于提前获得系统唯一OrderID 方便撤单
+                if (AssignOrderIDEvent != null)
+                    AssignOrderIDEvent(ref o);
+                account.TrckerOrderSymbol(ref o);
+
+                set.FlatSent = true;
+                set.FireCount++;//发送强平次数递增
+                set.SentTime = DateTime.Now;
+                set.OrderIDList.Add(o.id);
+
+                //对外发送委托
+                SendOrder(o);
+            }
         }
 
 
@@ -664,7 +721,7 @@ namespace TradingLib.Core
                                     //如果不是需要先撤单的 则直接发送强平委托
                                     debug(ps.Position.GetPositionKey() + ":没有发送过强平委托，发送强平委托", QSEnumDebugLevel.INFO);
                                     SendFlatPositionOrder(ps);
-                                    debug("flat orderid:" + ps.OrderID.ToString(), QSEnumDebugLevel.WARNING);
+                                    debug("flat orderid:" + string.Join(",",ps.OrderIDList.ToArray()), QSEnumDebugLevel.WARNING);
                                 }
                             }
                             //已经发送过强平委托
@@ -676,13 +733,16 @@ namespace TradingLib.Core
                                     if (DateTime.Now.Subtract(ps.SentTime).TotalSeconds >= SENDORDERDELAY && ps.FireCount < SENDORDERRETRY)
                                     {
                                         //debug("flat orderid:" + ps.OrderID.ToString(), QSEnumDebugLevel.WARNING);
-                                        if (ps.OrderID > 0)//有委托编号表明有平仓委托在事务上，需要撤单
+                                        if (ps.OrderIDList.Count > 0)//有委托编号表明有平仓委托在事务上，需要撤单
                                         {
                                             if (ps.CancelCount <= CANCELORDERRETRY)
                                             {
-                                                debug(ps.Position.GetPositionKey() + " 平仓超时,取消该委托:"+ps.OrderID.ToString(), QSEnumDebugLevel.INFO);
+                                                debug(ps.Position.GetPositionKey() + " 平仓超时,取消该委托:"+ string.Join(",",ps.OrderIDList.ToArray()), QSEnumDebugLevel.INFO);
                                                 //这里会发生委托无法撤掉的分支逻辑 如果撤单多次没有撤掉 则跳出循环
-                                                CancelOrder(ps.OrderID);
+                                                foreach (long oid in ps.OrderIDList)
+                                                {
+                                                    CancelOrder(oid);
+                                                }
                                                 ps.CancelCount++;//递增强平次数
                                                 if (waitforcancel)
                                                     continue;
@@ -715,10 +775,13 @@ namespace TradingLib.Core
                                     {
                                         string msg = ps.Position.GetPositionKey() + " 平仓次数超过" + SENDORDERRETRY + " 出发警告通知";
                                         debug(msg, QSEnumDebugLevel.WARNING);
-                                        if (ps.OrderID != 0)
+                                        if (ps.OrderIDList.Count != 0)
                                         {
-                                            //最后一次撤单
-                                            CancelOrder(ps.OrderID);
+                                            foreach (long oid in ps.OrderIDList)
+                                            {
+                                                //最后一次撤单
+                                                CancelOrder(oid);
+                                            }
                                         }
                                         ps.FlatFailNoticed = true;
                                         PositionFlatFail(ps.Position, "POSFLAT_OVER_MAXTRYNUMS");
