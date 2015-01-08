@@ -112,12 +112,11 @@ namespace TradingLib.Core
         /// <param name="oid"></param>
         public void GotOrder(Order o)
         {
-            if (o.Status == QSEnumOrderStatus.Canceled)
+            if (o.Status == QSEnumOrderStatus.Canceled||o.Status== QSEnumOrderStatus.Filled)//取消或者全部成交
             {
                 long oid = o.id;
                 foreach (RiskTaskSet ps in posflatlist)
                 {
-
                     switch (ps.TaskType)
                     {
 
@@ -126,20 +125,24 @@ namespace TradingLib.Core
                                 //如果不需要先撤单的 则跳过
                                 if (!ps.NeedCancelFirst)
                                 {
+                                    //发送委托列表需要响应撤单,成绩,拒绝 三种状态，应为发送强平委托时 有可能未成交被撤单，也有可能成交，也有可能被拒绝 拒绝部分在 GotOrderError进行响应处理
                                     if (ps.OrderIDList.Contains(oid))
                                         ps.OrderIDList.Remove(oid);
                                 }
                                 else//需要先撤单的 则检查撤单列表
                                 {
-                                    //如果待成交委托列表中包含对应的ID则先删除该委托
-                                    if (ps.PendingOrders.Contains(oid))
+                                    if (o.Status == QSEnumOrderStatus.Canceled)//如果在平某个持仓前需要撤单的，则检查待成交委托
                                     {
-                                        ps.PendingOrders.Remove(oid);
-                                    }
-                                    //如果所有待成交委托均撤单完成 则标志canceldone
-                                    if (ps.PendingOrders.Count == 0)
-                                    {
-                                        ps.CancelDone = true;
+                                        //如果待成交委托列表中包含对应的ID则先删除该委托
+                                        if (ps.PendingOrders.Contains(oid))
+                                        {
+                                            ps.PendingOrders.Remove(oid);
+                                        }
+                                        //如果所有待成交委托均撤单完成 则标志canceldone
+                                        if (ps.PendingOrders.Count == 0)
+                                        {
+                                            ps.CancelDone = true;
+                                        }
                                     }
                                 }
                             }
@@ -147,13 +150,17 @@ namespace TradingLib.Core
                         case QSEnumRiskTaskType.CancelOrder:
                         case QSEnumRiskTaskType.FlatAllPositions:
                             {
-                                if (ps.OrderCancels.Contains(oid))
+                                if (o.Status == QSEnumOrderStatus.Canceled)
                                 {
-                                    ps.OrderCancels.Remove(oid);
-                                }
-                                if (ps.OrderCancels.Count == 0)
-                                {
-                                    ps.CancelDone = true;
+                                    if (ps.OrderCancels.Contains(oid))//如果待取消委托列表包含该委托 则从该列表中删除
+                                    {
+                                        ps.OrderCancels.Remove(oid);
+                                    }
+                                    //如果待取消列表长度为0 则所有委托已经被成功取消
+                                    if (ps.OrderCancels.Count == 0)
+                                    {
+                                        ps.CancelDone = true;
+                                    }
                                 }
                             }
                             break;

@@ -552,7 +552,7 @@ namespace TradingLib.Core
                     Order otd = new OrderImpl(pos.Symbol, voltd * (side ? 1 : -1) * -1);
 
                     otd.Account = pos.Account;
-                    otd.OffsetFlag = QSEnumOffsetFlag.CLOSETODAY;
+                    otd.OffsetFlag = QSEnumOffsetFlag.CLOSE;
                     otd.OrderSource = set.Source;
                     otd.ForceClose = true;
                     otd.ForceCloseReason = set.ForceCloseReason;
@@ -721,7 +721,7 @@ namespace TradingLib.Core
                                     //如果不是需要先撤单的 则直接发送强平委托
                                     debug(ps.Position.GetPositionKey() + ":没有发送过强平委托，发送强平委托", QSEnumDebugLevel.INFO);
                                     SendFlatPositionOrder(ps);
-                                    debug("flat orderid:" + string.Join(",",ps.OrderIDList.ToArray()), QSEnumDebugLevel.WARNING);
+                                    
                                 }
                             }
                             //已经发送过强平委托
