@@ -105,6 +105,11 @@ namespace TradingLib.API
         bool PosLock { get; set; }
 
         /// <summary>
+        /// 单向大边
+        /// </summary>
+        bool SideMargin { get; set; }
+
+        /// <summary>
         /// 帐号隶属于哪个管理员
         /// 可以属于超级管理员Root
         /// 或者属于代理Agent

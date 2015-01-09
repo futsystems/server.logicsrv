@@ -29,6 +29,7 @@ namespace TradingLib.Common
             this.SettleDateTime = DateTime.Now;
             this.SettlementConfirmTimeStamp = Util.ToTLDateTime();
             this.PosLock = false;
+            this.SideMargin = true;
             this.Mgr_fk = 0;
             this.UserID = 0;
             this.Deleted = false;
@@ -106,6 +107,11 @@ namespace TradingLib.Common
         /// 锁仓权限
         /// </summary>
         public bool PosLock { get; set; }
+
+        /// <summary>
+        /// 单向大边
+        /// </summary>
+        public bool SideMargin { get; set; }
 
         /// <summary>
         /// 代理商ID
