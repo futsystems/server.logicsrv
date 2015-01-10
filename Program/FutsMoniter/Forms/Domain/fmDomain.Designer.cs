@@ -41,7 +41,7 @@
             this.kryptonPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.kryptonPanel1.Location = new System.Drawing.Point(0, 0);
             this.kryptonPanel1.Name = "kryptonPanel1";
-            this.kryptonPanel1.Size = new System.Drawing.Size(774, 515);
+            this.kryptonPanel1.Size = new System.Drawing.Size(840, 515);
             this.kryptonPanel1.TabIndex = 0;
             // 
             // domaingrid
@@ -51,14 +51,14 @@
             this.domaingrid.Location = new System.Drawing.Point(0, 0);
             this.domaingrid.Name = "domaingrid";
             this.domaingrid.RowTemplate.Height = 23;
-            this.domaingrid.Size = new System.Drawing.Size(774, 515);
+            this.domaingrid.Size = new System.Drawing.Size(840, 515);
             this.domaingrid.TabIndex = 0;
             // 
             // fmDomain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(774, 515);
+            this.ClientSize = new System.Drawing.Size(840, 515);
             this.Controls.Add(this.kryptonPanel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
@@ -66,7 +66,6 @@
             this.Name = "fmDomain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "域管理";
-            this.TopMost = true;
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).EndInit();
             this.kryptonPanel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.domaingrid)).EndInit();

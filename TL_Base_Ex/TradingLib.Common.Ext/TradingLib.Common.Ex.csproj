@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Accounts\Account.cs" />
+    <Compile Include="ORM\MSystem.cs" />
     <Compile Include="Wrapper\AccountAdapterToExp.cs" />
     <Compile Include="Accounts\AccountCreation.cs" />
     <Compile Include="Accounts\AccountFilter.cs" />
@@ -112,7 +113,6 @@
     <Compile Include="Utils\FutsRspErrorUtils.cs" />
     <Compile Include="Utils\HanlerMixins.cs" />
     <Compile Include="Utils\ISessionUtils.cs" />
-    <Compile Include="ORM\MConfig.cs" />
     <Compile Include="ORM\MAccount.cs" />
     <Compile Include="ORM\MManager.cs" />
     <Compile Include="ORM\MRuleItem.cs" />

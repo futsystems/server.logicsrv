@@ -397,6 +397,12 @@
     <Compile Include="Forms\Domain\fmDomainInfo.Designer.cs">
       <DependentUpon>fmDomainInfo.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Domain\fmDomainRootLoginInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Domain\fmDomainRootLoginInfo.Designer.cs">
+      <DependentUpon>fmDomainRootLoginInfo.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Finance\fmRecvBankEdit.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -862,6 +868,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Domain\fmDomainInfo.resx">
       <DependentUpon>fmDomainInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Domain\fmDomainRootLoginInfo.resx">
+      <DependentUpon>fmDomainRootLoginInfo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Finance\fmRecvBankEdit.resx">
       <DependentUpon>fmRecvBankEdit.cs</DependentUpon>

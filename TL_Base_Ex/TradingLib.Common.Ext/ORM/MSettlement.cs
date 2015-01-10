@@ -248,10 +248,12 @@ namespace TradingLib.ORM
             using (DBMySql db = new DBMySql())
             {
                 string query = "SELECT * FROM system";
-                systeminformation info = db.Connection.Query<systeminformation>(query).SingleOrDefault<systeminformation>();
+                SystemInformation info = db.Connection.Query<SystemInformation>(query).SingleOrDefault<SystemInformation>();
                 return info.LastSettleday;
             }
         }
+
+
 
         /// <summary>
         /// 更新最近结算日期

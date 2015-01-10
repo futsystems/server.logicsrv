@@ -146,8 +146,9 @@ namespace FutsMoniter
 
                     gt.Rows[i][NAME] = domain.Name;
                     gt.Rows[i][LINKMAN] = domain.LinkMan;
-
+                    gt.Rows[i][DATECREATED] = domain.DateCreated;
                     gt.Rows[i][DATEEXPIRED] = domain.DateExpired;
+                    gt.Rows[i][VENDORLIMIT] = domain.VendorLimit;
                     gt.Rows[i][ACCLIMIT] = domain.AccLimit;
                     gt.Rows[i][ROUTERGROUPLIMIT] = domain.RouterGroupLimit;
                     gt.Rows[i][ROUTERITEMLIMIT] = domain.RouterItemLimit;
@@ -162,6 +163,7 @@ namespace FutsMoniter
                     gt.Rows[r][LINKMAN] = domain.LinkMan;
 
                     gt.Rows[r][DATEEXPIRED] = domain.DateExpired;
+                    gt.Rows[r][VENDORLIMIT] = domain.VendorLimit;
                     gt.Rows[r][ACCLIMIT] = domain.AccLimit;
                     gt.Rows[r][ROUTERGROUPLIMIT] = domain.RouterGroupLimit;
                     gt.Rows[r][ROUTERITEMLIMIT] = domain.RouterItemLimit;
@@ -180,10 +182,12 @@ namespace FutsMoniter
         const string DOMAINID = "域ID";
         const string NAME = "名称";
         const string LINKMAN = "联系人";
+        const string DATECREATED = "创建日";
         const string DATEEXPIRED = "到期日";
-        const string ACCLIMIT = "帐户限制";
-        const string ROUTERGROUPLIMIT = "路由组限制";
-        const string ROUTERITEMLIMIT = "路由项目限制";
+        const string VENDORLIMIT = "实盘帐户";
+        const string ACCLIMIT = "分帐户";
+        const string ROUTERGROUPLIMIT = "路由组";
+        const string ROUTERITEMLIMIT = "路由项目";
 
         #endregion
 
@@ -214,6 +218,8 @@ namespace FutsMoniter
             grid.ContextMenuStrip = new ContextMenuStrip();
             grid.ContextMenuStrip.Items.Add("添加Domain", null, new EventHandler(AddDomain_Click));
             grid.ContextMenuStrip.Items.Add("修改Domain", null, new EventHandler(EditDomain_Click));
+            grid.ContextMenuStrip.Items.Add(new System.Windows.Forms.ToolStripSeparator());
+            grid.ContextMenuStrip.Items.Add("查看管理员密码", null, new EventHandler(QryDomainRootPass_Click));
         }
 
         //初始化Account显示空格
@@ -222,8 +228,9 @@ namespace FutsMoniter
             gt.Columns.Add(DOMAINID);//0
             gt.Columns.Add(NAME);//1
             gt.Columns.Add(LINKMAN);//1
-
+            gt.Columns.Add(DATECREATED);
             gt.Columns.Add(DATEEXPIRED);
+            gt.Columns.Add(VENDORLIMIT);
             gt.Columns.Add(ACCLIMIT);//1
             gt.Columns.Add(ROUTERGROUPLIMIT);//1
             gt.Columns.Add(ROUTERITEMLIMIT);//1
@@ -241,10 +248,17 @@ namespace FutsMoniter
 
             grid.DataSource = datasource;
 
-            grid.Columns[DOMAINID].Width = 50;
-            grid.Columns[NAME].Width = 160;
+            grid.Columns[DOMAINID].Width = 30;
+            grid.Columns[NAME].Width = 100;
             //grid.Columns[ISXAPI].Width = 50;
             //grid.Columns[TYPE].Width = 50;
+            grid.Columns[DATECREATED].Width = 60;
+            grid.Columns[DATEEXPIRED].Width = 60;
+
+            grid.Columns[VENDORLIMIT].Width = 60;
+            grid.Columns[ACCLIMIT].Width = 60;
+            grid.Columns[ROUTERGROUPLIMIT].Width = 60;
+            grid.Columns[ROUTERITEMLIMIT].Width = 60;
             /*
             datasource.Sort = ACCOUNT + " ASC";
             
@@ -278,6 +292,22 @@ namespace FutsMoniter
             fmDomainEdit fm = new fmDomainEdit();
             fm.Show();
         }
+
+        /// <summary>
+        /// 查询域RootPass
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void QryDomainRootPass_Click(object sender, EventArgs e)
+        {
+            if(CurrentDomain != null)
+            {
+                fmDomainRootLoginInfo fm = new fmDomainRootLoginInfo();
+                fm.SetDomain(CurrentDomain);
+                fm.ShowDialog();
+            }
+        }
+
 
         void EditDomain_Click(object sender, EventArgs e)
         {

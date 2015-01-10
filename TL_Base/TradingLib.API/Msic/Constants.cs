@@ -5,6 +5,10 @@ using System.Text;
 
 namespace TradingLib.API
 {
+    /// <summary>
+    /// 系统常数类
+    /// 用于设置系统运行时相关参数
+    /// </summary>
     public static class Const
     {
         /// <summary>
@@ -34,13 +38,6 @@ namespace TradingLib.API
         /// 当TP值低于多少时,
         /// </summary>
         public const double TPStopValue = 1;//Tp数值降低到多少后停止检测
-
-
-
-
-
-
-
 
         public const int TLDEFAULTBASEPORT = 5570;//交易通讯端口 5571(DNS) 5572(Tick)
         public const int TLDEFAULTMGRPORT = 6670;//管理端口

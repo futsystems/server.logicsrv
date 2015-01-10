@@ -9,13 +9,54 @@ using TradingLib.Mixins.DataBase;
 
 namespace TradingLib.ORM
 {
-    internal class systeminformation
+    internal class SystemInformation
     {
-        public systeminformation()
+
+        public SystemInformation()
         {
-            LastSettleday = 19700101;
+            this.LastSettleday = 19700101;
+            this.Maj = 0;
+            this.Min = 0;
+            this.Fix = 0;
+            this.Date = 0;
+            this.UpdateDate = 0;
         }
+
+        /// <summary>
+        /// 上次结算日
+        /// </summary>
         public int LastSettleday{ get; set; }
+
+        /// <summary>
+        /// 主版本号
+        /// 功能模块有大的变动，比如增加多个模块或者整体架构发生变化
+        /// </summary>
+        public int Maj { get; set; }
+
+        /// <summary>
+        /// 次版本号
+        /// 和主版本相对而言，次版本号的升级对应的只是局部的变动。
+        /// 但该局部的变动造成了程序和以前版本不能兼容，或者对该程序以前的协作关系产生了破坏，
+        /// 或者是功能上有大的改进或增强。
+        /// </summary>
+        public int Min { get; set; }
+
+        /// <summary>
+        /// 修订版本号
+        /// 局部的变动，主要是局部函数的功能改进，或者bug的修正，或者功能的扩充。
+        /// </summary>
+        public int Fix { get; set; }
+
+        /// <summary>
+        /// 日期
+        /// 版本生成日期
+        /// </summary>
+        public int Date { get; set; }
+
+        /// <summary>
+        /// 系统更新日期
+        /// </summary>
+        public int UpdateDate { get; set; }
     }
 
     internal class positionroundinfo
@@ -65,17 +106,6 @@ namespace TradingLib.ORM
     }
     public class MTradingInfo:MBase
     {
-
-        public static int GetLastSettleday()
-        {
-            using (DBMySql db = new DBMySql())
-            {
-                string query = "SELECT * FROM system";
-                systeminformation info = db.Connection.Query<systeminformation>(query).SingleOrDefault<systeminformation>();
-                return info.LastSettleday;
-            }
-        }
-
 
         /// <summary>
         /// 插入委托

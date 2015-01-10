@@ -5,6 +5,7 @@ using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
 
+
 namespace TradingLib.Core
 {
     public partial class MgrExchServer
@@ -21,6 +22,28 @@ namespace TradingLib.Core
             {
                 DomainImpl [] domains= BasicTracker.DomainTracker.Domains.ToArray();
                 session.ReplyMgr(domains);
+            }
+        }
+
+        /// <summary>
+        /// 查询分区管理员信息
+        /// </summary>
+        /// <param name="session"></param>
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryDomainRootLoginInfo", "QryDomainRootLoginInfo - query domain", "查询分区管理员信息")]
+        public void CTE_QryDomainRootLoginInfo(ISession session,int domainid)
+        {
+            Manager manager = session.GetManager();
+            if (manager.Domain.Super && manager.IsRoot())
+            {
+                Domain domain = BasicTracker.DomainTracker[domainid];
+
+                Manager mgr = domain.GetRootManager();
+                
+                Protocol.DomainRootLoginInfo logininfo = new Protocol.DomainRootLoginInfo();
+                logininfo.DomainID = domain.ID;
+                logininfo.LoginID = mgr.Login;
+                logininfo.Pass = ORM.MManager.GetManagerPass(mgr.Login);
+                session.ReplyMgr(logininfo);
             }
         }
 

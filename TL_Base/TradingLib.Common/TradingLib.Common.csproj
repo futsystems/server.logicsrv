@@ -56,6 +56,9 @@
     <Compile Include="ORM\MConfig.cs" />
     <Compile Include="ORM\MySqlBase.cs" />
     <Compile Include="Domain\DomainImpl.cs" />
+    <Compile Include="Other\TLVersion.cs" />
+    <Compile Include="Protocol\DomainRootLoginInfo.cs" />
+    <Compile Include="Utils\Version.cs" />
     <Compile Include="Tracker\HighLowTracker.cs" />
     <Compile Include="Trading\Utils\SecurityUtils.cs" />
     <Compile Include="Utils\Util_string.cs" />
@@ -74,8 +77,8 @@
     <Compile Include="Tracker\OrderSplitTracker.cs" />
     <Compile Include="Trading\CommissionConfigImpl.cs" />
     <Compile Include="Trading\ErrorPack.cs" />
-    <Compile Include="JsonObject\JsonObjectBase.cs" />
-    <Compile Include="JsonObject\JsonProtocolManager.cs" />
+    <Compile Include="Protocol\JsonObjectBase.cs" />
+    <Compile Include="Protocol\JsonProtocolManager.cs" />
     <Compile Include="Message\Manager\MGRInsertTrade.cs" />
     <Compile Include="Message\QryCommissionMargin.cs" />
     <Compile Include="Message\QryMarketData.cs" />
