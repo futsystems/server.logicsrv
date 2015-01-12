@@ -66,17 +66,17 @@ namespace AccountRuleSet
         #region 覆写静态对象
         public static new string Title
         {
-            get { return "强平[亏损金额]"; }
+            get { return "强平[亏损额度]"; }
         }
         public static new string Description
         {
-            get { return "当最大亏损(包含手续费)大于设定数额时,系统将强平仓位并禁止账户交易"; }
+            get { return "亏损额度(包含手续费)大于设定值时,强平持仓并禁止交易"; }
         }
 
         /// <summary>
         /// 参数名称
         /// </summary>
-        public static new string ValueName { get { return "检查变量"; } }
+        public static new string ValueName { get { return "亏损额度"; } }
 
         /// <summary>
         /// 不用设置比较关系
@@ -86,7 +86,7 @@ namespace AccountRuleSet
         /// <summary>
         /// 默认比较关系大于等于
         /// </summary>
-        public static new QSEnumCompareType DefaultCompare { get { return QSEnumCompareType.GreaterEqual; } }
+        public static new QSEnumCompareType DefaultCompare { get { return QSEnumCompareType.Greater; } }
         
         /// <summary>
         /// 不用设置品种集合
