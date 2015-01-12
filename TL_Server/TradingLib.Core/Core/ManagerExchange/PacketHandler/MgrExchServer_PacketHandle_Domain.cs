@@ -30,7 +30,7 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="session"></param>
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryDomainRootLoginInfo", "QryDomainRootLoginInfo - query domain", "查询分区管理员信息")]
-        public void CTE_QryDomainRootLoginInfo(ISession session,int domainid)
+        public void CTE_QryManagerLoginInfo(ISession session,int domainid)
         {
             Manager manager = session.GetManager();
             if (manager.Domain.Super && manager.IsRoot())
@@ -38,9 +38,8 @@ namespace TradingLib.Core
                 Domain domain = BasicTracker.DomainTracker[domainid];
 
                 Manager mgr = domain.GetRootManager();
-                
-                Protocol.DomainRootLoginInfo logininfo = new Protocol.DomainRootLoginInfo();
-                logininfo.DomainID = domain.ID;
+
+                Protocol.LoginInfo logininfo = new Protocol.LoginInfo();
                 logininfo.LoginID = mgr.Login;
                 logininfo.Pass = ORM.MManager.GetManagerPass(mgr.Login);
                 session.ReplyMgr(logininfo);

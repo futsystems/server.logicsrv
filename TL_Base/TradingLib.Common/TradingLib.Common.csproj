@@ -57,7 +57,7 @@
     <Compile Include="ORM\MySqlBase.cs" />
     <Compile Include="Domain\DomainImpl.cs" />
     <Compile Include="Other\TLVersion.cs" />
-    <Compile Include="Protocol\DomainRootLoginInfo.cs" />
+    <Compile Include="Protocol\LoginInfo.cs" />
     <Compile Include="Utils\Version.cs" />
     <Compile Include="Tracker\HighLowTracker.cs" />
     <Compile Include="Trading\Utils\SecurityUtils.cs" />

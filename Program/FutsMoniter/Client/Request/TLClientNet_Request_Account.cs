@@ -164,6 +164,16 @@ namespace TradingLib.Common
         }
 
         /// <summary>
+        /// 查询分区管理员登入信息
+        /// </summary>
+        /// <param name="domainid"></param>
+        public void ReqQryAccountLoginInfo(string account)
+        {
+            this.ReqContribRequest("MgrExchServer", "QryAccountLoginInfo", account);
+        }
+
+
+        /// <summary>
         /// 查询交易帐户信息
         /// </summary>
         /// <param name="account"></param>

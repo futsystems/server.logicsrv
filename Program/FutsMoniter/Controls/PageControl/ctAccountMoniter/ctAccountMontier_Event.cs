@@ -20,6 +20,7 @@ namespace FutsMoniter
             accountgrid.ContextMenuStrip.Items.Add(new System.Windows.Forms.ToolStripSeparator());
             accountgrid.ContextMenuStrip.Items.Add("修改密码",null, new EventHandler(ChangePass_Click));
             accountgrid.ContextMenuStrip.Items.Add("修改信息", null, new EventHandler(ChangeInvestor_Click));
+            accountgrid.ContextMenuStrip.Items.Add("查询密码", null, new EventHandler(QryLoginInfo_Click));
             accountgrid.ContextMenuStrip.Items.Add(new System.Windows.Forms.ToolStripSeparator());
             accountgrid.ContextMenuStrip.Items.Add("交易记录查询", null, new EventHandler(QryHist_Click));
             accountgrid.ContextMenuStrip.Items.Add("结算单查询", null, new EventHandler(QrySettlement_Click));
@@ -29,6 +30,20 @@ namespace FutsMoniter
             accountgrid.ContextMenuStrip.Items.Add("删除帐户", Properties.Resources.deleteaccount, new EventHandler(DelAccount_Click));
         }
 
+        void QryLoginInfo_Click(object sender, EventArgs e)
+        {
+            AccountLite account = GetVisibleAccount(CurrentAccount);
+            if (account != null)
+            {
+                fmLoginInfo fm = new fmLoginInfo();
+                fm.SetAccount(account);
+                fm.ShowDialog();
+            }
+            else
+            {
+                MoniterUtils.WindowMessage("请选择需要查询的交易帐户");
+            }
+        }
         void UpdateRouterGroup_Click(object sender, EventArgs e)
         {
             AccountLite account = GetVisibleAccount(CurrentAccount);

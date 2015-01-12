@@ -28,13 +28,8 @@ using TradingLib.API;
 
 namespace TradingLib.Protocol
 {
-    public class DomainRootLoginInfo
+    public class LoginInfo
     {
-
-        /// <summary>
-        /// 分区ID
-        /// </summary>
-        public int DomainID { get; set; }
         /// <summary>
         /// 登入ID
         /// </summary>

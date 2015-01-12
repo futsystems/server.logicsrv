@@ -253,6 +253,27 @@ namespace TradingLib.Core
             }
         }
 
+        /// <summary>
+        /// 查询分区管理员信息
+        /// </summary>
+        /// <param name="session"></param>
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryAccountLoginInfo", "QryAccountLoginInfo - query account logininfo", "查看交易帐户密码")]
+        public void CTE_QryDomainRootLoginInfo(ISession session, string account)
+        {
+            Manager manager = session.GetManager();
+            if (manager.Domain.Super && manager.IsRoot())
+            {
+                IAccount acc = clearcentre[account];
+                if (acc == null)
+                {
+                    throw new FutsRspError("交易帐户不存在");
+                }
+                    Protocol.LoginInfo logininfo = new Protocol.LoginInfo();
+                    logininfo.LoginID = account;
+                    logininfo.Pass = ORM.MAccount.GetAccountPass(account);
+                    session.ReplyMgr(logininfo);
+            }
+        }
 
 
         void SrvOnMGRReqChangeInvestor(MGRReqChangeInvestorRequest request, ISession session, Manager manager)

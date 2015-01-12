@@ -302,7 +302,7 @@ namespace FutsMoniter
         {
             if(CurrentDomain != null)
             {
-                fmDomainRootLoginInfo fm = new fmDomainRootLoginInfo();
+                fmLoginInfo fm = new fmLoginInfo();
                 fm.SetDomain(CurrentDomain);
                 fm.ShowDialog();
             }

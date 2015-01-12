@@ -98,18 +98,27 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                try
-                {
-                    string query = String.Format("SELECT a.account,a.pass FROM accounts a WHERE account = '{0}'", account);
-                    AccountAuth auth = db.Connection.Query<AccountAuth>(query, null).Single<AccountAuth>();
-                    return auth.Pass.Equals(pass);
-                }
-                catch (Exception ex)
-                {
-                    return false;
-                }
+                string query = String.Format("SELECT a.account,a.pass FROM accounts a WHERE account = '{0}'", account);
+                AccountAuth auth = db.Connection.Query<AccountAuth>(query, null).Single<AccountAuth>();
+                return auth.Pass.Equals(pass);
             }
         }
+
+        /// <summary>
+        /// 查询某个Manger的密码
+        /// </summary>
+        /// <param name="login"></param>
+        /// <returns></returns>
+        public static string GetAccountPass(string login)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = String.Format("SELECT a.account,a.pass FROM accounts a WHERE account = '{0}'", login);
+                AccountAuth auth = db.Connection.Query<AccountAuth>(query, null).Single<AccountAuth>();
+                return auth.Pass;
+            }
+        }
+
 
         /// <summary>
         /// 更新交易帐户密码

@@ -24,6 +24,32 @@ namespace TradingLib.Core
         }
 
         /// <summary>
+        /// 查询分区管理员信息
+        /// </summary>
+        /// <param name="session"></param>
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryManagerLoginInfo", "QryManagerLoginInfo - query manager logininfo", "查看管理员密码")]
+        public void CTE_QryDomainRootLoginInfo(ISession session, int mgrid)
+        {
+            Manager manager = session.GetManager();
+            if (manager.Domain.Super && manager.IsRoot())
+            {
+
+                Manager mgr = BasicTracker.ManagerTracker[mgrid];
+                if (manager.RightAccessManager(mgr))
+                {
+                    Protocol.LoginInfo logininfo = new Protocol.LoginInfo();
+                    logininfo.LoginID = mgr.Login;
+                    logininfo.Pass = ORM.MManager.GetManagerPass(mgr.Login);
+                    session.ReplyMgr(logininfo);
+                }
+                else
+                {
+                    throw new FutsRspError("无权查看柜员信息");
+                }
+            }
+        }
+
+        /// <summary>
         /// 更新柜员
         /// </summary>
         /// <param name="session"></param>

@@ -815,7 +815,7 @@ namespace TradingLib.Core
             try
             {
                 IPacket packet = PacketHelper.SrvRecvRequest(type, msg, front, address);
-                debug("<<<<<< Rev Packet:" + packet.ToString(), QSEnumDebugLevel.INFO);
+                //debug("<<<<<< Rev Packet:" + packet.ToString(), QSEnumDebugLevel.INFO);
                 T1 client = _clients[address];
                 Client2Session session = client!=null?CreateSession(client):null;
                 switch (type)
