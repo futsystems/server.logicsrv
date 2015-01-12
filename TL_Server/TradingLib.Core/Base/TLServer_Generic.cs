@@ -577,9 +577,10 @@ namespace TradingLib.Core
         /// <param name="request"></param>
         public void SrvVersonReq(VersionRequest request,T1 client)
         {
+            debug("client:" + client.Location.ClientID + " try to qry version", QSEnumDebugLevel.INFO);
             VersionResponse verresp = ResponseTemplate<VersionResponse>.SrvSendRspResponse(request);
-            verresp.ServerVesion = "2.0";
-            verresp.ClientUUID = request.ClientID;
+            verresp.Version = TLCtxHelper.Version;
+            debug("response:" + verresp.ToString(),QSEnumDebugLevel.INFO);
             SendOutPacket(verresp);
         }
 
@@ -814,7 +815,7 @@ namespace TradingLib.Core
             try
             {
                 IPacket packet = PacketHelper.SrvRecvRequest(type, msg, front, address);
-                //debug("<<<<<< Rev Packet:" + packet.ToString(), QSEnumDebugLevel.INFO);
+                debug("<<<<<< Rev Packet:" + packet.ToString(), QSEnumDebugLevel.INFO);
                 T1 client = _clients[address];
                 Client2Session session = client!=null?CreateSession(client):null;
                 switch (type)

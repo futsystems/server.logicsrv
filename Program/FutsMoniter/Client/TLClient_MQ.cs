@@ -95,10 +95,11 @@ namespace TradingLib.Common
         Providers _bn = Providers.Unknown;
         public Providers BrokerName { get { return _bn; } }
         //服务端版本
-        private int _serverversion;
-        public int ServerVersion { get { return _serverversion; } }
+        private TLVersion _serverversion;
+        public TLVersion ServerVersion { get { return _serverversion; } }
+
         //服务端版本与客户端API版本是否匹配
-        public bool IsAPIOK { get { return Util.Version >= _serverversion; } }
+        //public bool IsAPIOK { get { return Util.Version >= _serverversion; } }
 
         public bool IsConnected { get { return _connect; } }//是否连接
         //心跳相应是否正常 连接正常 并且 请求心跳与接收心跳一致(确定发送心跳回复请求后是否收到心跳回报)
@@ -661,6 +662,7 @@ namespace TradingLib.Common
             debug(PROGRAME + ":InitConnection......");
             // register ourselves with provider 注册
             Register();
+            Util.sleep(100);
             // request list of features from provider 请求功能支持列表
             RequestFeatures();
             //request server version;查询服务器版本
@@ -931,8 +933,8 @@ namespace TradingLib.Common
         #endregion
 
 
-        string _srvversion = string.Empty;
-        string _uuid = string.Empty;
+        //string _srvversion = string.Empty;
+        //string _uuid = string.Empty;
         #region 客户端消息回报处理函数
 
         /// <summary>
@@ -941,9 +943,10 @@ namespace TradingLib.Common
         /// <param name="response"></param>
         void CliOnVersionResponse(VersionResponse response)
         {
-            _srvversion = response.ServerVesion;
-            _uuid = response.ClientUUID;
-            debug("Client got version response, version:" + _srvversion + " uuid:" + _uuid, QSEnumDebugLevel.INFO);
+            _serverversion = response.Version;
+
+            //_uuid = response.ClientUUID;
+            debug("Client got version response, version:"+_serverversion.ToString(), QSEnumDebugLevel.INFO);
         }
 
         /// <summary>

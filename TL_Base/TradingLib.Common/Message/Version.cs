@@ -50,33 +50,22 @@ namespace TradingLib.Common
         {
             _type = API.MessageTypes.VERSIONRESPONSE;
         }
-        /// <summary>
-        /// 服务端版本
-        /// </summary>
-        public string ServerVesion { get; set; }
 
-        /// <summary>
-        /// 返回的客户端UUID
-        /// </summary>
-        public string ClientUUID { get; set; }
+        public TLVersion Version { get; set; }
 
         public override string ResponseSerialize()
         {
-            StringBuilder sb = new StringBuilder();
-            char d = ',';
-            sb.Append(this.ServerVesion);
-            sb.Append(d);
-            sb.Append(this.ClientUUID);
-
-            return sb.ToString();
+            if (this.Version == null)
+                return string.Empty;
+            return TLVersion.Serialize(this.Version);
         }
 
 
         public override void ResponseDeserialize(string repstr)
         {
-            string[] rec = repstr.Split(',');
-            this.ServerVesion = rec[0];
-            this.ClientUUID = rec[1];
+            if (string.IsNullOrEmpty(repstr))
+                this.Version = null;
+            this.Version = TLVersion.Deserialize(repstr);
         }
         
     }

@@ -55,7 +55,7 @@ namespace TradingLib.Common
 
         public static string Serialize(TLVersion version)
         {
-            return string.Format("{0},{1},{2},{4}",version.Major,version.Minor,version.Fix,version.Date);
+            return string.Format("{0},{1},{2},{3}",version.Major,version.Minor,version.Fix,version.Date);
         }
 
         public static TLVersion Deserialize(string content)

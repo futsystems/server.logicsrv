@@ -136,7 +136,7 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="acc"></param>
         /// <returns></returns>
-        public static AccountLite ToAccountLite(this IAccount acc)
+        public static AccountLite GenAccountLite(this IAccount acc)
         {
             AccountLite info = new AccountLite();
             info.Account = acc.ID;
@@ -164,6 +164,7 @@ namespace TradingLib.Common
             IEnumerable<ClientInfoBase> clients = TLCtxHelper.Ctx.MessageExchange.GetNotifyTargets(info.Account);
             info.IsLogin = clients.Count() > 0;
             info.IPAddress = info.IsLogin ? clients.FirstOrDefault().IPAddress : "";
+            info.SideMargin = acc.SideMargin;
             return info;
         }
 

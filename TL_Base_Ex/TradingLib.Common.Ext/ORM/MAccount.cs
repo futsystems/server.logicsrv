@@ -60,6 +60,8 @@ namespace TradingLib.ORM
         public string BankAC { get; set; }
 
         public bool PosLock { get; set; }
+        public bool SideMargin { get; set; }
+
         public int Mgr_fk { get; set; }
         public int rg_fk { get; set; }
         public int domain_id { get; set; }
@@ -241,6 +243,23 @@ namespace TradingLib.ORM
                 return db.Connection.Execute(query) >= 0;
             }
         }
+
+        /// <summary>
+        /// 更新帐户单向大边支持
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="poslock"></param>
+        /// <returns></returns>
+        public static bool UpdateAccountSideMargin(string account, bool sidemargin)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = String.Format("UPDATE accounts SET sidemargin = '{0}' WHERE account = '{1}'", sidemargin ? 1 : 0, account);
+                return db.Connection.Execute(query) >= 0;
+            }
+        }
+
+
         /// <summary>
         /// 更新帐户的MAC地址
         /// </summary>
@@ -597,6 +616,7 @@ namespace TradingLib.ORM
             account.BankID = fields.BankID==null?0:(int)fields.BankID;
             account.BankAC = fields.BankAC;
             account.PosLock = fields.PosLock;
+            account.SideMargin = fields.SideMargin;
             account.Mgr_fk = fields.Mgr_fk;
             account.RG_FK = fields.rg_fk;
             

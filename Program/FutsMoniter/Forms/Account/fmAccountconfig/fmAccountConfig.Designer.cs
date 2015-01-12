@@ -43,6 +43,7 @@
             this.pageFinance = new ComponentFactory.Krypton.Navigator.KryptonPage();
             this.kryptonPanel3 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
             this.kryptonGroupBox3 = new ComponentFactory.Krypton.Toolkit.KryptonGroupBox();
+            this.ctFinanceInfo1 = new FutsMoniter.ctFinanceInfo();
             this.kryptonGroupBox2 = new ComponentFactory.Krypton.Toolkit.KryptonGroupBox();
             this.btnCashOperation = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.cashop_comment = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
@@ -70,7 +71,8 @@
             this.accountRuleClassList = new ComponentFactory.Krypton.Toolkit.KryptonListBox();
             this.accountRuleItemList = new ComponentFactory.Krypton.Toolkit.KryptonListBox();
             this.pageMarginCommission = new ComponentFactory.Krypton.Navigator.KryptonPage();
-            this.ctFinanceInfo1 = new FutsMoniter.ctFinanceInfo();
+            this.sidemargin = new ComponentFactory.Krypton.Toolkit.KryptonCheckBox();
+            this.kryptonLabel3 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pagenav)).BeginInit();
@@ -175,6 +177,8 @@
             // 
             // kryptonGroupBox1.Panel
             // 
+            this.kryptonGroupBox1.Panel.Controls.Add(this.sidemargin);
+            this.kryptonGroupBox1.Panel.Controls.Add(this.kryptonLabel3);
             this.kryptonGroupBox1.Panel.Controls.Add(this.ctRouterType1);
             this.kryptonGroupBox1.Panel.Controls.Add(this.btnUpdate);
             this.kryptonGroupBox1.Panel.Controls.Add(this.poslock);
@@ -188,7 +192,7 @@
             // ctRouterType1
             // 
             this.ctRouterType1.EnableAny = false;
-            this.ctRouterType1.Location = new System.Drawing.Point(7, 60);
+            this.ctRouterType1.Location = new System.Drawing.Point(6, 87);
             this.ctRouterType1.Name = "ctRouterType1";
             this.ctRouterType1.RouterType = TradingLib.API.QSEnumOrderTransferType.LIVE;
             this.ctRouterType1.Size = new System.Drawing.Size(156, 21);
@@ -205,7 +209,7 @@
             // 
             // poslock
             // 
-            this.poslock.Location = new System.Drawing.Point(84, 39);
+            this.poslock.Location = new System.Drawing.Point(84, 44);
             this.poslock.Name = "poslock";
             this.poslock.Size = new System.Drawing.Size(19, 13);
             this.poslock.TabIndex = 3;
@@ -229,7 +233,7 @@
             // 
             // intraday
             // 
-            this.intraday.Location = new System.Drawing.Point(84, 15);
+            this.intraday.Location = new System.Drawing.Point(84, 20);
             this.intraday.Name = "intraday";
             this.intraday.Size = new System.Drawing.Size(19, 13);
             this.intraday.TabIndex = 0;
@@ -269,6 +273,14 @@
             this.kryptonGroupBox3.Size = new System.Drawing.Size(373, 248);
             this.kryptonGroupBox3.TabIndex = 3;
             this.kryptonGroupBox3.Values.Heading = "财务信息";
+            // 
+            // ctFinanceInfo1
+            // 
+            this.ctFinanceInfo1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ctFinanceInfo1.Location = new System.Drawing.Point(0, 0);
+            this.ctFinanceInfo1.Name = "ctFinanceInfo1";
+            this.ctFinanceInfo1.Size = new System.Drawing.Size(369, 226);
+            this.ctFinanceInfo1.TabIndex = 0;
             // 
             // kryptonGroupBox2
             // 
@@ -526,13 +538,21 @@
             this.pageMarginCommission.ToolTipTitle = "Page ToolTip";
             this.pageMarginCommission.UniqueName = "CB1FD1C4F2D74E6E96BD0F2D1DC08E66";
             // 
-            // ctFinanceInfo1
+            // sidemargin
             // 
-            this.ctFinanceInfo1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ctFinanceInfo1.Location = new System.Drawing.Point(0, 0);
-            this.ctFinanceInfo1.Name = "ctFinanceInfo1";
-            this.ctFinanceInfo1.Size = new System.Drawing.Size(369, 226);
-            this.ctFinanceInfo1.TabIndex = 0;
+            this.sidemargin.Location = new System.Drawing.Point(84, 68);
+            this.sidemargin.Name = "sidemargin";
+            this.sidemargin.Size = new System.Drawing.Size(19, 13);
+            this.sidemargin.TabIndex = 11;
+            this.sidemargin.Values.Text = "";
+            // 
+            // kryptonLabel3
+            // 
+            this.kryptonLabel3.Location = new System.Drawing.Point(6, 63);
+            this.kryptonLabel3.Name = "kryptonLabel3";
+            this.kryptonLabel3.Size = new System.Drawing.Size(68, 18);
+            this.kryptonLabel3.TabIndex = 10;
+            this.kryptonLabel3.Values.Text = "单向大边:";
             // 
             // fmAccountConfig
             // 
@@ -631,5 +651,7 @@
         private ComponentFactory.Krypton.Toolkit.KryptonGroupBox kryptonGroupBox3;
         private Controls.Base.ctRouterType ctRouterType1;
         private ctFinanceInfo ctFinanceInfo1;
+        private ComponentFactory.Krypton.Toolkit.KryptonCheckBox sidemargin;
+        private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel3;
     }
 }

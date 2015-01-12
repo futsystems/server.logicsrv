@@ -152,6 +152,10 @@ namespace FutsMoniter
                 Globals.LoginResponse = response.LoginResponse;
                 Globals.MGRID = response.LoginResponse.MGRID;//保存管理端登入获得的全局ID用于获取Manager列表时 绑定对应的Manager
                 Globals.BaseMGRFK = response.LoginResponse.BaseMGRFK;
+
+                //登入成功后设置 服务端版本
+                lbSrvVersion.Text = Globals.TLClient.ServerVersion.ToString();
+                
             }
             else
             {

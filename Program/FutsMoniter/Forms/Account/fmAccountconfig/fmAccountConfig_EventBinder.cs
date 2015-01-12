@@ -25,15 +25,10 @@ namespace FutsMoniter
             if (!Globals.Domain.Super)
             {
                 ctRouterType1.Visible = Globals.Manager.IsRoot();//管理员可以设置帐户路由类别
-
-                //pageConfig.Visible = Globals.UIAccess.moniter_tab_config;
                 btnExecute.Visible = Globals.Manager.IsRoot() || Globals.UIAccess.r_block;
 
                 //管理员可以进行财务操作
                 pageFinance.Visible = Globals.Manager.IsRoot();
-                //pageOrderCheck.Visible = Globals.UIAccess.moniter_tab_orderrule;
-                //pageAccountCheck.Visible = Globals.UIAccess.moniter_tab_accountrule;
-
                 pageMarginCommission.Visible = false;
                 
             }
@@ -49,6 +44,7 @@ namespace FutsMoniter
                 this.Text = "交易帐户编辑[" + _account.Account + "]";
                 intraday.Checked = _account.IntraDay;
                 poslock.Checked = _account.PosLock;
+                sidemargin.Checked = _account.SideMargin;
 
                 ctRouterType1.RouterType = _account.OrderRouteType;
 

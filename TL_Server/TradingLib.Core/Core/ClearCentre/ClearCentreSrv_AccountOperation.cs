@@ -84,6 +84,15 @@ namespace TradingLib.Core
             ORM.MAccount.UpdateAccountPosLock(account, poslock);
             AccountChanged(this[account]);
         }
+
+        public void UpdateAccountSideMargin(string account, bool sidemargin)
+        {
+            if (!HaveAccount(account)) return;
+            this[account].SideMargin = sidemargin;
+            ORM.MAccount.UpdateAccountSideMargin(account, sidemargin);
+            AccountChanged(this[account]);
+        }
+
         /// <summary>
         /// 更新账户日内交易设置
         /// </summary>

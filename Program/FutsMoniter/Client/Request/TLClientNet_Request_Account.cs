@@ -157,6 +157,12 @@ namespace TradingLib.Common
             SendPacket(request);
         }
 
+        public void ReqUpdateAccountSideMargin(string account, bool sidemargin)
+        {
+            debug("请求更新帐户单向大边", QSEnumDebugLevel.INFO);
+            this.ReqContribRequest("MgrExchServer", "UpdateAccountSideMargin", account + "," + sidemargin.ToString());
+        }
+
         /// <summary>
         /// 查询交易帐户信息
         /// </summary>

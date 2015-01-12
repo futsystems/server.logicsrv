@@ -143,6 +143,10 @@ namespace FutsMoniter
                 {
                     Globals.TLClient.ReqUpdaetAccountPosLock(_account.Account, poslock.Checked);
                 }
+                if (sidemargin.Checked != _account.SideMargin)
+                {
+                    Globals.TLClient.ReqUpdateAccountSideMargin(_account.Account, sidemargin.Checked);
+                }
             }
         }
 

@@ -98,7 +98,7 @@ namespace TradingLib.Core
                 for (int i = 0; i < list.Length; i++)
                 {
                     RspMGRQryAccountResponse response = ResponseTemplate<RspMGRQryAccountResponse>.SrvSendRspResponse(request);
-                    response.oAccount = list[i].ToAccountLite();
+                    response.oAccount = list[i].GenAccountLite();
                     CacheRspResponse(response, i == list.Length - 1);
                 }
             }
@@ -292,7 +292,7 @@ namespace TradingLib.Core
 
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountRouterGroup", "UpdateAccountRouterGroup - update account router group", "更新帐户路由组信息")]
-        public void CTE_QryDomain(ISession session, string account, int gid)
+        public void CTE_UpdateAccountRouterGroup(ISession session, string account, int gid)
         {
             Manager manager = session.GetManager();
             if (!manager.IsInRoot())
@@ -320,6 +320,32 @@ namespace TradingLib.Core
             //更新路由组
             clearcentre.UpdateRouterGroup(account, rg);
             session.OperationSuccess("更新帐户路由组成功");
+        }
+
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountSideMargin", "UpdateAccountSideMargin - update account sidemargin set", "更新帐户单向大边")]
+        public void CTE_UpdateAccountSideMargin(ISession session, string account,bool sidemargin)
+        {
+            Manager manager = session.GetManager();
+            if (!manager.IsInRoot())
+            {
+                throw new FutsRspError("无权修改帐户单向大边设置");
+            }
+
+            IAccount acc = clearcentre[account];
+            if (acc == null)
+            {
+                throw new FutsRspError("交易帐户不存在");
+            }
+
+            if (!manager.RightAccessAccount(acc))
+            {
+                throw new FutsRspError("无权修改该交易帐户");
+            }
+
+            //更新路由组
+            clearcentre.UpdateAccountSideMargin(account,sidemargin);
+            session.OperationSuccess((sidemargin?"启用":"禁止")+"帐户单向大边策略成功！");
         }
 
     }

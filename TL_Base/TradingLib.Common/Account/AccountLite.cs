@@ -108,6 +108,11 @@ namespace TradingLib.Common
         public bool PosLock { get; set; }
 
         /// <summary>
+        /// 单向大边
+        /// </summary>
+        public bool SideMargin { get; set; }
+
+        /// <summary>
         /// 帐户所属管理员全局ID
         /// </summary>
         public int MGRID { get; set; }
@@ -183,6 +188,8 @@ namespace TradingLib.Common
             sb.Append(account.IsLogin);
             sb.Append(d);
             sb.Append(account.IPAddress);
+            sb.Append(d);
+            sb.Append(account.SideMargin);
             return sb.ToString();
         }
 
@@ -214,6 +221,7 @@ namespace TradingLib.Common
             account.RG_ID = int.Parse(rec[21]);
             account.IsLogin = bool.Parse(rec[22]);
             account.IPAddress = rec[23];
+            account.SideMargin = bool.Parse(rec[24]);
             return account;
         }
     }

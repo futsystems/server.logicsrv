@@ -154,7 +154,6 @@
             this.tabFinance,
             this.tabHistQuery,
             this.kryptonRibbonTab1});
-            this.TabRibbon.SelectedContext = null;
             this.TabRibbon.SelectedTab = this.tabSystem;
             this.TabRibbon.Size = new System.Drawing.Size(1107, 111);
             this.TabRibbon.TabIndex = 0;
@@ -606,8 +605,8 @@
             // lbSrvVersion
             // 
             this.lbSrvVersion.Name = "lbSrvVersion";
-            this.lbSrvVersion.Size = new System.Drawing.Size(72, 17);
-            this.lbSrvVersion.Text = "MR0.7-RC4";
+            this.lbSrvVersion.Size = new System.Drawing.Size(15, 17);
+            this.lbSrvVersion.Text = "--";
             // 
             // toolStripStatusLabel4
             // 
@@ -619,7 +618,7 @@
             // StatusMsg
             // 
             this.StatusMsg.Name = "StatusMsg";
-            this.StatusMsg.Size = new System.Drawing.Size(827, 17);
+            this.StatusMsg.Size = new System.Drawing.Size(785, 17);
             this.StatusMsg.Spring = true;
             // 
             // expireStatus
