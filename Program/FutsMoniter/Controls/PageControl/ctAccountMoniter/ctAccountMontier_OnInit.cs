@@ -29,7 +29,7 @@ namespace FutsMoniter
             Globals.LogicEvent.GotSessionUpdateEvent += new Action<NotifyMGRSessionUpdateNotify>(GotSessionUpdate);
             
 
-            if (!Globals.Domain.Super)
+            //if (!Globals.Domain.Super)
             {
                 //只有管理员可以查看路由类别
                 accountgrid.Columns[ROUTEIMG].Visible = Globals.Manager.IsRoot();
@@ -37,7 +37,7 @@ namespace FutsMoniter
                 accountgrid.Columns[CATEGORYSTR].Visible = Globals.Manager.IsRoot();
 
                 //如果有实盘交易权限则可以查看路由组
-                accountgrid.Columns[ROUTERGROUPSTR].Visible = Globals.Domain.Router_Live;
+                accountgrid.Columns[ROUTERGROUPSTR].Visible = Globals.Domain.Router_Live && Globals.Manager.IsRoot();
 
                 //只有管理员可以修改路由组和删除交易帐户
                 if (!Globals.Manager.IsRoot())
@@ -51,6 +51,7 @@ namespace FutsMoniter
                 }
 
             }
+
             //启动更新线程
             StartUpdate();
         }

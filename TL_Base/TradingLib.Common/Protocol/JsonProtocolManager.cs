@@ -409,7 +409,7 @@ namespace TradingLib.Mixins.JsonObject
         /// <summary>
         /// 发生时间
         /// </summary>
-        public DateTime DateTime { get; set; }
+        public long DateTime { get; set; }
 
         /// <summary>
         /// 金额 带有方向

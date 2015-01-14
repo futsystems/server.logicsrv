@@ -118,7 +118,6 @@ namespace FutsMoniter
                 {
                     Globals.TLClient.ReqUpdateManager(m);
                 }
-
             }
             else
             {
@@ -133,7 +132,7 @@ namespace FutsMoniter
                     _manger.AccLimit = (int)this.acclimit.Value;
                 }
 
-                MessageBox.Show("manager id:" + _manger.ID.ToString());
+                //MessageBox.Show("manager id:" + _manger.ID.ToString());
                 if (fmConfirm.Show("确认更新管理员信息?") == System.Windows.Forms.DialogResult.Yes)
                 {
                     Globals.TLClient.ReqUpdateManager(_manger);
