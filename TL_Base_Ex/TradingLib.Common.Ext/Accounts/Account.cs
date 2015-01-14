@@ -124,6 +124,11 @@ namespace TradingLib.Common
         public int RG_FK { get; set; }
 
         /// <summary>
+        /// 手续费模板ID
+        /// </summary>
+        public int Commission_ID { get; set; }
+
+        /// <summary>
         /// 域ID
         /// </summary>
         public Domain Domain { get; internal set; }
@@ -197,37 +202,6 @@ namespace TradingLib.Common
 
             }
         }
-
-        //#region AccountBase静态函数 用于生成Account对应的相关数据或者统计
-
-        ///// <summary>
-        ///// 为交易帐号生成结算数据
-        ///// </summary>
-        ///// <param name="account"></param>
-        ///// <returns></returns>
-        //public static Settlement GenSettle(IAccount account)
-        //{
-        //    if (account.ID.Equals("9580001"))
-        //    {
-        //        int x = 0;
-        //    }
-        //    Settlement settle = new SettlementImpl();
-        //    settle.Account = account.ID;
-        //    settle.CashIn = account.CashIn;
-        //    settle.CashOut = account.CashOut;
-        //    settle.Commission = account.Commission;
-        //    settle.Confirmed = false;
-        //    settle.LastEqutiy = account.LastEquity;
-        //    settle.RealizedPL = account.RealizedPL;
-        //    settle.UnRealizedPL = account.SettleUnRealizedPL;
-        //    settle.NowEquity = settle.LastEqutiy + settle.RealizedPL + settle.UnRealizedPL - settle.Commission + settle.CashIn - settle.CashOut;
-            
-        //    //指定交易日期
-        //    settle.SettleDay = Util.ToTLDate();
-        //    settle.SettleTime = Util.ToTLTime();
-        //    return settle;
-        //}
-        //#endregion
     }
 
     

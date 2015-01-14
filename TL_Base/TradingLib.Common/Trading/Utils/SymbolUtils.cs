@@ -19,7 +19,23 @@ namespace TradingLib.Common
             return price.ToString();
         }
 
-
+        /// <summary>
+        /// 获得合约月份
+        /// </summary>
+        /// <param name="sym"></param>
+        /// <returns></returns>
+        public static int GetMonth(this Symbol sym)
+        {
+            //郑州 FG503
+            if (sym.SecurityFamily.Exchange.EXCode.Equals("CZCE"))
+            {
+                return 1;
+            }
+            else
+            { 
+                return 1;
+            }
+        }
         
 
         public static CommissionConfig GetCommissionConfig(this Symbol sym)

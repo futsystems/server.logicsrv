@@ -124,6 +124,11 @@ namespace TradingLib.API
         int RG_FK { get; set; }
 
         /// <summary>
+        /// 手续费模板ID
+        /// </summary>
+        int Commission_ID { get; set; }
+
+        /// <summary>
         /// 域ID
         /// </summary>
         Domain Domain { get;}

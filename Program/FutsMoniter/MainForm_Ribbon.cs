@@ -50,8 +50,8 @@ namespace FutsMoniter
             kryptonRibbonGroupButton_Security.Click += new EventHandler(kryptonRibbonGroupButton_Security_Click);
             kryptonRibbonGroupButton_Symbol.Click += new EventHandler(kryptonRibbonGroupButton_Symbol_Click);
             //kryptonRibbonGroupButton_PermissionTemplate.Click += new EventHandler(kryptonRibbonGroupButton_PermissionTemplate_Click);
-
-
+            kryptonRibbonGroupButton_Commission.Click += new EventHandler(kryptonRibbonGroupButton_Commission_Click);
+            kryptonRibbonGroupButton_Margin.Click += new EventHandler(kryptonRibbonGroupButton_Margin_Click);
             //历史记录
             kryptonRibbonGroupButton_QueryExHist.Click += new EventHandler(kryptonRibbonGroupButton_QueryExHist_Click);
             kryptonRibbonGroupButton_QueryCashTransAccount.Click += new EventHandler(kryptonRibbonGroupButton_QueryCashTransAccount_Click);
@@ -90,7 +90,17 @@ namespace FutsMoniter
             kryptonRibbonGroupButton_ShowAll.Click += new EventHandler(kryptonRibbonGroupButton_ShowAll_Click);
             kryptonRibbonGroupButton_Reset.Click += new EventHandler(kryptonRibbonGroupButton_Reset_Click);
             kryptonRibbonGroupButton_SaveConfig.Click += new EventHandler(kryptonRibbonGroupButton_SaveConfig_Click);
-        
+        }
+
+        void kryptonRibbonGroupButton_Margin_Click(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        void kryptonRibbonGroupButton_Commission_Click(object sender, EventArgs e)
+        {
+            fmCommission fm = new fmCommission();
+            fm.Show();
         }
 
         void kryptonRibbonGroupButton_tasklog_Click(object sender, EventArgs e)

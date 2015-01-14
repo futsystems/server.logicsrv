@@ -27,6 +27,11 @@ namespace TradingLib.Common
         /// </summary>
         public string Description { get; set; }
 
+        /// <summary>
+        /// 模板ID
+        /// </summary>
+        public int Template_ID { get; set; }
+
         public IEnumerable<CommissionTemplateItem> CommissionItems { get { return _itemamp.Values; } }
 
         Dictionary<string, CommissionTemplateItem> _itemamp = new Dictionary<string, CommissionTemplateItem>();
@@ -47,6 +52,24 @@ namespace TradingLib.Common
             }
         }
 
+        /// <summary>
+        /// 获得手续费模板中的某个模板项，模板项按品种-月份 进行索引
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        public CommissionTemplateItem this[string code,int month]
+        {
+            get
+            {
+                CommissionTemplateItem item = null;
+                string key = string.Format("{0}-{1}", code, month);
+                if (_itemamp.TryGetValue(key, out item))
+                {
+                    return item;
+                }
+                return null;
+            }
+        }
 
     }
 }

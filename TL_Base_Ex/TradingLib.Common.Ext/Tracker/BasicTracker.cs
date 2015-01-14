@@ -33,6 +33,8 @@ namespace TradingLib.Common
         RouterGrouperTracker rgtracker;
         VendorTracker vendortracker;
 
+        //保证金与手续费
+        CommissionTemplateTracker commissiontracker;
 
         static BasicTracker()
         {
@@ -205,6 +207,21 @@ namespace TradingLib.Common
                 return defaultinstance.uiaccesstracker;
             }
         }
+
+        /// <summary>
+        /// 手续费模板维护器
+        /// </summary>
+        public static CommissionTemplateTracker CommissionTemplateTracker
+        {
+            get
+            {
+                if (defaultinstance.commissiontracker == null)
+                    defaultinstance.commissiontracker = new CommissionTemplateTracker();
+                return defaultinstance.commissiontracker;
+            }
+        }
+
+
         //public static void Release()
         //{
         //    defaultinstance.extracker = null;
