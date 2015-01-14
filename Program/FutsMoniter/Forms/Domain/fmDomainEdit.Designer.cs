@@ -135,7 +135,7 @@
             this.kryptonPage5,
             this.intfaceTab,
             this.splisttab});
-            this.kryptonNavigator1.SelectedIndex = 3;
+            this.kryptonNavigator1.SelectedIndex = 5;
             this.kryptonNavigator1.Size = new System.Drawing.Size(431, 234);
             this.kryptonNavigator1.TabIndex = 15;
             this.kryptonNavigator1.Text = "kryptonNavigator1";
@@ -511,42 +511,34 @@
             // 
             // module_subagent
             // 
-            this.module_subagent.LabelStyle = ComponentFactory.Krypton.Toolkit.LabelStyle.NormalControl;
             this.module_subagent.Location = new System.Drawing.Point(107, 11);
             this.module_subagent.Name = "module_subagent";
             this.module_subagent.Size = new System.Drawing.Size(78, 18);
             this.module_subagent.TabIndex = 3;
-            this.module_subagent.Text = "多级代理";
             this.module_subagent.Values.Text = "多级代理";
             // 
             // module_payonline
             // 
-            this.module_payonline.LabelStyle = ComponentFactory.Krypton.Toolkit.LabelStyle.NormalControl;
             this.module_payonline.Location = new System.Drawing.Point(17, 58);
             this.module_payonline.Name = "module_payonline";
             this.module_payonline.Size = new System.Drawing.Size(119, 18);
             this.module_payonline.TabIndex = 2;
-            this.module_payonline.Text = "在线出入金模块";
             this.module_payonline.Values.Text = "在线出入金模块";
             // 
             // module_finservice
             // 
-            this.module_finservice.LabelStyle = ComponentFactory.Krypton.Toolkit.LabelStyle.NormalControl;
             this.module_finservice.Location = new System.Drawing.Point(17, 34);
             this.module_finservice.Name = "module_finservice";
             this.module_finservice.Size = new System.Drawing.Size(78, 18);
             this.module_finservice.TabIndex = 1;
-            this.module_finservice.Text = "配资模块";
             this.module_finservice.Values.Text = "配资模块";
             // 
             // module_agent
             // 
-            this.module_agent.LabelStyle = ComponentFactory.Krypton.Toolkit.LabelStyle.NormalControl;
             this.module_agent.Location = new System.Drawing.Point(17, 11);
             this.module_agent.Name = "module_agent";
             this.module_agent.Size = new System.Drawing.Size(78, 18);
             this.module_agent.TabIndex = 0;
-            this.module_agent.Text = "代理模块";
             this.module_agent.Values.Text = "代理模块";
             // 
             // kryptonPage5
@@ -574,22 +566,18 @@
             // 
             // router_live
             // 
-            this.router_live.LabelStyle = ComponentFactory.Krypton.Toolkit.LabelStyle.NormalControl;
             this.router_live.Location = new System.Drawing.Point(11, 33);
             this.router_live.Name = "router_live";
             this.router_live.Size = new System.Drawing.Size(78, 18);
             this.router_live.TabIndex = 3;
-            this.router_live.Text = "实盘交易";
             this.router_live.Values.Text = "实盘交易";
             // 
             // router_sim
             // 
-            this.router_sim.LabelStyle = ComponentFactory.Krypton.Toolkit.LabelStyle.NormalControl;
             this.router_sim.Location = new System.Drawing.Point(11, 10);
             this.router_sim.Name = "router_sim";
             this.router_sim.Size = new System.Drawing.Size(78, 18);
             this.router_sim.TabIndex = 2;
-            this.router_sim.Text = "模拟交易";
             this.router_sim.Values.Text = "模拟交易";
             // 
             // intfaceTab

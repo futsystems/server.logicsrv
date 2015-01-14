@@ -516,12 +516,17 @@ namespace TradingLib.ORM
                     //生成当前交易帐号
                     create.Account = (acref + 1).ToString();
                 }
-                else
+                else //指定添加的交易帐号
                 {
                     //查看是否已经存在该帐号
                     if (ExistAccount(create.Account))
                     {
                         throw new FutsRspError("已经存在帐户:" + create.Account);  
+                    }
+                    //
+                    if (create.Account.StartsWith(GlobalConfig.PrefixReal) || create.Account.StartsWith(GlobalConfig.PrefixSim))
+                    {
+                        throw new FutsRspError("指定交易帐号不能使用默认前缀:" + GlobalConfig.PrefixReal + "," + GlobalConfig.PrefixSim);
                     }
                 }
                 if (string.IsNullOrEmpty(create.Password))

@@ -30,7 +30,10 @@
         {
             this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
             this.kryptonGroupBox3 = new ComponentFactory.Krypton.Toolkit.KryptonGroupBox();
+            this.notice = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.btnSubmit = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.ctFinServicePlanList1 = new FutsMoniter.ctFinServicePlanList();
+            this.ctAgentList1 = new FutsMoniter.ctAgentList();
             this.kryptonGroupBox2 = new ComponentFactory.Krypton.Toolkit.KryptonGroupBox();
             this.tableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.kryptonGroupBox1 = new ComponentFactory.Krypton.Toolkit.KryptonGroupBox();
@@ -40,9 +43,6 @@
             this.kryptonLabel3 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.lbsptitle = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel1 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.notice = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.ctFinServicePlanList1 = new FutsMoniter.ctFinServicePlanList();
-            this.ctAgentList1 = new FutsMoniter.ctAgentList();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonGroupBox3)).BeginInit();
@@ -82,8 +82,16 @@
             this.kryptonGroupBox3.Panel.Controls.Add(this.ctAgentList1);
             this.kryptonGroupBox3.Size = new System.Drawing.Size(226, 328);
             this.kryptonGroupBox3.TabIndex = 2;
-            this.kryptonGroupBox3.Text = "操作";
             this.kryptonGroupBox3.Values.Heading = "操作";
+            // 
+            // notice
+            // 
+            this.notice.Location = new System.Drawing.Point(7, 79);
+            this.notice.Name = "notice";
+            this.notice.Size = new System.Drawing.Size(160, 18);
+            this.notice.StateCommon.ShortText.Color1 = System.Drawing.Color.Maroon;
+            this.notice.TabIndex = 3;
+            this.notice.Values.Text = "当前数据为你的成本价格";
             // 
             // btnSubmit
             // 
@@ -93,6 +101,25 @@
             this.btnSubmit.Size = new System.Drawing.Size(70, 25);
             this.btnSubmit.TabIndex = 2;
             this.btnSubmit.Values.Text = "提 交";
+            // 
+            // ctFinServicePlanList1
+            // 
+            this.ctFinServicePlanList1.Location = new System.Drawing.Point(7, 41);
+            this.ctFinServicePlanList1.Name = "ctFinServicePlanList1";
+            this.ctFinServicePlanList1.Size = new System.Drawing.Size(187, 21);
+            this.ctFinServicePlanList1.TabIndex = 1;
+            // 
+            // ctAgentList1
+            // 
+            this.ctAgentList1.CurrentAgentFK = 0;
+            this.ctAgentList1.EnableAny = false;
+            this.ctAgentList1.EnableDefaultBaseMGR = false;
+            this.ctAgentList1.EnableSelected = true;
+            this.ctAgentList1.EnableSelf = true;
+            this.ctAgentList1.Location = new System.Drawing.Point(3, 10);
+            this.ctAgentList1.Name = "ctAgentList1";
+            this.ctAgentList1.Size = new System.Drawing.Size(191, 25);
+            this.ctAgentList1.TabIndex = 0;
             // 
             // kryptonGroupBox2
             // 
@@ -107,7 +134,6 @@
             this.kryptonGroupBox2.Panel.Controls.Add(this.tableLayoutPanel);
             this.kryptonGroupBox2.Size = new System.Drawing.Size(241, 325);
             this.kryptonGroupBox2.TabIndex = 1;
-            this.kryptonGroupBox2.Text = "参数列表";
             this.kryptonGroupBox2.Values.Heading = "参数列表";
             // 
             // tableLayoutPanel
@@ -150,7 +176,6 @@
             this.kryptonGroupBox1.Panel.Controls.Add(this.kryptonLabel1);
             this.kryptonGroupBox1.Size = new System.Drawing.Size(193, 328);
             this.kryptonGroupBox1.TabIndex = 0;
-            this.kryptonGroupBox1.Text = "基本参数";
             this.kryptonGroupBox1.Values.Heading = "基本参数";
             // 
             // lbcollecttype
@@ -200,33 +225,6 @@
             this.kryptonLabel1.Size = new System.Drawing.Size(68, 18);
             this.kryptonLabel1.TabIndex = 0;
             this.kryptonLabel1.Values.Text = "服务计划:";
-            // 
-            // notice
-            // 
-            this.notice.Location = new System.Drawing.Point(7, 79);
-            this.notice.Name = "notice";
-            this.notice.Size = new System.Drawing.Size(160, 18);
-            this.notice.StateCommon.ShortText.Color1 = System.Drawing.Color.Maroon;
-            this.notice.TabIndex = 3;
-            this.notice.Values.Text = "当前数据为你的成本价格";
-            // 
-            // ctFinServicePlanList1
-            // 
-            this.ctFinServicePlanList1.Location = new System.Drawing.Point(7, 41);
-            this.ctFinServicePlanList1.Name = "ctFinServicePlanList1";
-            this.ctFinServicePlanList1.Size = new System.Drawing.Size(187, 21);
-            this.ctFinServicePlanList1.TabIndex = 1;
-            // 
-            // ctAgentList1
-            // 
-            this.ctAgentList1.EnableAny = false;
-            this.ctAgentList1.EnableDefaultBaseMGR = false;
-            this.ctAgentList1.EnableSelected = true;
-            this.ctAgentList1.EnableSelf = false;
-            this.ctAgentList1.Location = new System.Drawing.Point(3, 10);
-            this.ctAgentList1.Name = "ctAgentList1";
-            this.ctAgentList1.Size = new System.Drawing.Size(191, 25);
-            this.ctAgentList1.TabIndex = 0;
             // 
             // ctAgentSPArgConfig
             // 
