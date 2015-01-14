@@ -77,6 +77,7 @@ namespace FutsMoniter
         {
             Globals.LogicEvent.GotHistOrderEvent += new Action<Order, bool>(GotHistOrder);
             Globals.LogicEvent.GotHistTradeEvent += new Action<Trade, bool>(GotHistTrade);
+            Globals.LogicEvent.GotHistPositionEvent += new Action<PositionDetail, bool>(GotHistPosition);
             
         }
 
@@ -86,6 +87,20 @@ namespace FutsMoniter
             Globals.LogicEvent.GotHistTradeEvent -= new Action<Trade, bool>(GotHistTrade);
         }
 
+        void GotHistPosition(PositionDetail d, bool islast)
+        {
+            if (islast)
+            {
+                if (d != null)
+                {
+                    ctHistPosition1.GotHistPosition(d);
+                }
+            }
+            else
+            {
+                ctHistPosition1.GotHistPosition(d);
+            }
+        }
         void GotHistOrder(Order o, bool islast)
         {
 
@@ -117,25 +132,6 @@ namespace FutsMoniter
                 ctHistTrade1.GotHistFill(f);
             }
         }
-
-        public void GotHistPosition(PositionDetail pos, bool islast)
-        {
-            if (islast)
-            {
-                if (!string.IsNullOrEmpty(pos.Account))
-                {
-                    ctHistPosition1.GotHistPosition(pos);
-                }
-            }
-            else
-            {
-                ctHistPosition1.GotHistPosition(pos);
-            }
-        }
-
-
-
-       
 
         public void SetAccount(string acc)
         {

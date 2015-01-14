@@ -63,6 +63,19 @@ namespace TradingLib.ORM
         }
 
         /// <summary>
+        /// 获得某个分帐户的持仓明细
+        /// </summary>
+        /// <param name="tradingday"></param>
+        /// <returns></returns>
+        public static IEnumerable<PositionDetail> SelectAccountPositionDetails(string account,int tradingday)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("SELECT * FROM  log_position_detail_hist WHERE settleday = {0} AND  breed='{1}' AND account='{2}'", tradingday, QSEnumOrderBreedType.ACCT, account);
+                return db.Connection.Query<PositionDetailImpl>(query);
+            }
+        }
+        /// <summary>
         /// 获得接口侧所有持仓明细数据
         /// </summary>
         /// <param name="tradingday"></param>

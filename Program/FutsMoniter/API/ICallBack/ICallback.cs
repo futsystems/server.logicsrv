@@ -98,7 +98,7 @@ namespace TradingLib.API
         event Action<Order, bool> GotHistOrderEvent;
         event Action<Trade, bool> GotHistTradeEvent;
         event Action<RspMGRQrySettleResponse> GotSettlementEvent;
-
+        event Action<PositionDetail, bool> GotHistPositionEvent;
         #endregion
 
         #region Contrib 扩展指令

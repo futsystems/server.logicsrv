@@ -154,52 +154,12 @@ namespace FutsMoniter
 
             grid.DataSource = tb;
             grid.Columns[ACCOUNT].Visible = false;
+
+            for (int i = 0; i < tb.Columns.Count; i++)
+            {
+                tradeGrid.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
+            }
         }
 
-        //private void tradeGrid_CellFormatting(object sender, CellFormattingEventArgs e)
-        //{
-        //    try
-        //    {
-        //        if (e.CellElement.RowInfo is GridViewDataRowInfo)
-        //        {
-
-        //            if (e.CellElement.ColumnInfo.Name == SIDE)
-        //            {
-        //                object side = e.CellElement.RowInfo.Cells[SIDE].Value;
-        //                if (side.ToString().Equals("买入"))
-        //                {
-        //                    e.CellElement.ForeColor = UIGlobals.LongSideColor;
-        //                    e.CellElement.Font = UIGlobals.BoldFont;
-        //                }
-        //                else
-        //                {
-        //                    e.CellElement.ForeColor = UIGlobals.ShortSideColor;
-        //                    e.CellElement.Font = UIGlobals.BoldFont;
-        //                }
-        //            }
-        //            else if (e.CellElement.ColumnInfo.Name == PROFIT)
-        //            {
-        //                decimal p = 0;
-
-        //                decimal.TryParse(e.CellElement.Value.ToString(), out p);
-        //                if (p < 0)
-        //                {
-        //                    e.CellElement.ForeColor = UIGlobals.ShortSideColor;
-        //                }
-        //                else if (p > 0)
-        //                {
-        //                    e.CellElement.ForeColor = UIGlobals.LongSideColor;
-        //                }
-        //                else
-        //                {
-        //                    e.CellElement.ForeColor = Color.Black;
-        //                }
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //    }
-        //}
     }
 }

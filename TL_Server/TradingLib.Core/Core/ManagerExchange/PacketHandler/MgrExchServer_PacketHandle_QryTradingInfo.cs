@@ -48,34 +48,27 @@ namespace TradingLib.Core
         {
             debug(string.Format("管理员:{0} 请求查询历史成交:{1}", session.AuthorizedID, request.ToString()), QSEnumDebugLevel.INFO);
 
-            try
-            {
-                //权限验证
-                manager.ValidRightReadAccount(request.TradingAccount);
+            //权限验证
+            manager.ValidRightReadAccount(request.TradingAccount);
 
-                IList<Trade> trades = ORM.MTradingInfo.SelectHistTrades(request.TradingAccount, request.Settleday, request.Settleday);
-                int totalnum = trades.Count;
-                if (totalnum > 0)
+            IList<Trade> trades = ORM.MTradingInfo.SelectHistTrades(request.TradingAccount, request.Settleday, request.Settleday);
+            int totalnum = trades.Count;
+            if (totalnum > 0)
+            {
+                for (int i = 0; i < totalnum; i++)
                 {
-                    for (int i = 0; i < totalnum; i++)
-                    {
-                        RspMGRQryTradeResponse response = ResponseTemplate<RspMGRQryTradeResponse>.SrvSendRspResponse(request);
-                        response.TradeToSend = trades[i];
-                        response.TradeToSend.Side = response.TradeToSend.xSize > 0 ? true : false;
-                        CacheRspResponse(response, i == totalnum - 1);
-                    }
-                }
-                else
-                {
-                    //返回空项目
                     RspMGRQryTradeResponse response = ResponseTemplate<RspMGRQryTradeResponse>.SrvSendRspResponse(request);
-                    //response.TradeToSend = new TradeImpl();
-                    CacheRspResponse(response);
+                    response.TradeToSend = trades[i];
+                    response.TradeToSend.Side = response.TradeToSend.xSize > 0 ? true : false;
+                    CacheRspResponse(response, i == totalnum - 1);
                 }
             }
-            catch (FutsRspError ex)
+            else
             {
-                session.OperationError(ex);
+                //返回空项目
+                RspMGRQryTradeResponse response = ResponseTemplate<RspMGRQryTradeResponse>.SrvSendRspResponse(request);
+                //response.TradeToSend = new TradeImpl();
+                CacheRspResponse(response);
             }
         }
 
@@ -83,25 +76,26 @@ namespace TradingLib.Core
         {
             debug(string.Format("管理员:{0} 请求查询历史持仓:{1}", session.AuthorizedID, request.ToString()), QSEnumDebugLevel.INFO);
 
-            //IList<SettlePosition> positions = ORM.MTradingInfo.SelectHistPositions(request.TradingAccount, request.Settleday, request.Settleday);
+            //权限验证
+            manager.ValidRightReadAccount(request.TradingAccount);
 
-            //int totalnum = positions.Count;
-            //if (totalnum > 0)
-            //{
-            //    for (int i = 0; i < totalnum; i++)
-            //    {
-            //        RspMGRQryPositionResponse response = ResponseTemplate<RspMGRQryPositionResponse>.SrvSendRspResponse(request);
-            //        response.PostionToSend = positions[i];
-            //        CacheRspResponse(response, i == totalnum - 1);
-            //    }
-            //}
-            //else
-            //{
-            //    //返回空项目
-            //    RspMGRQryPositionResponse response = ResponseTemplate<RspMGRQryPositionResponse>.SrvSendRspResponse(request);
-            //    response.PostionToSend = new SettlePosition();
-            //    CacheRspResponse(response);
-            //}
+            IList<PositionDetail> positions = ORM.MSettlement.SelectAccountPositionDetails(request.TradingAccount,request.Settleday).ToList();//ORM.MTradingInfo.selecth(request.TradingAccount, request.Settleday, request.Settleday);
+            int totalnum = positions.Count();
+            if (totalnum > 0)
+            {
+                for (int i = 0; i < totalnum; i++)
+                {
+                    RspMGRQryPositionResponse response = ResponseTemplate<RspMGRQryPositionResponse>.SrvSendRspResponse(request);
+                    response.PostionToSend = positions[i];
+                    CacheRspResponse(response, i == totalnum - 1);
+                }
+            }
+            else
+            {
+                //返回空项目
+                RspMGRQryPositionResponse response = ResponseTemplate<RspMGRQryPositionResponse>.SrvSendRspResponse(request);
+                CacheRspResponse(response);
+            }
         }
 
         void SrvOnMGRQryCash(MGRQryCashRequest request, ISession session, Manager manager)

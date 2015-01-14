@@ -21,7 +21,7 @@ namespace FutsMoniter
             SetPreferences();
             InitTable();
             BindToTable();
-            this.Load += new EventHandler(ctHistOrder_Load);
+                this.Load += new EventHandler(ctHistOrder_Load);
 
         }
 
@@ -179,9 +179,10 @@ namespace FutsMoniter
             grid.Columns[DIRECTION].Visible = false;
             grid.Columns[STATUS].Visible = false;
 
-            //set width
-            //grid.Columns[SYMBOL].Width = 80;
-
+            for (int i = 0; i < tb.Columns.Count; i++)
+            {
+                orderGrid.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
+            }
 
         }
 

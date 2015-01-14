@@ -158,7 +158,7 @@ namespace FutsMoniter
             accountgrid.Columns[POSLOK].Width = 50;
             accountgrid.Columns[SIDEMARGIN].Width = 50;
 
-             for (int i = 0; i < gt.Columns.Count; i++)
+            for (int i = 0; i < gt.Columns.Count; i++)
             {
                 accountgrid.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
             }

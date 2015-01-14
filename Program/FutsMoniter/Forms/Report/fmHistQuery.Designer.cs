@@ -127,7 +127,7 @@
             this.pageOrder,
             this.pageTrade,
             this.pagePosition});
-            this.kryptonNavigator1.SelectedIndex = 2;
+            this.kryptonNavigator1.SelectedIndex = 0;
             this.kryptonNavigator1.Size = new System.Drawing.Size(856, 432);
             this.kryptonNavigator1.TabIndex = 0;
             this.kryptonNavigator1.Text = "kryptonNavigator1";
