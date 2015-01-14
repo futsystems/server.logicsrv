@@ -5,7 +5,8 @@ namespace TradingLib.Common
 {
 
         /// <summary>
-        /// 交易过程中触发的事件,用于在系统底层逻辑处理完毕后向扩展模块进行事件传递
+        /// 交易事件 行情 委托 成交 取消等
+        /// 用于在系统底层逻辑处理完毕后向扩展模块进行事件传递
         /// </summary>
         public class IndicatorEvent
         {
@@ -25,10 +26,7 @@ namespace TradingLib.Common
             /// 系统底层获得一个成交
             /// </summary>
             public event FillDelegate GotFillEvent;
-            /// <summary>
-            /// 系统底层获得一个持仓变更
-            /// </summary>
-            //public event PositionDelegate GotPositionNotifyEvent;
+
             /// <summary>
             /// 交易系统某个交易回合结束
             /// </summary>
@@ -58,7 +56,7 @@ namespace TradingLib.Common
                     GotFillEvent(f);
             }
 
-            internal void FirePositionRoundClosed(IPositionRound pr,Position pos)
+            internal void FirePositionRoundClosed(PositionRound pr,Position pos)
             {
                 if (GotPositionClosedEvent != null)
                     GotPositionClosedEvent(pr,pos);

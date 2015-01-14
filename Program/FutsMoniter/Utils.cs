@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
 using System.Text;
+using System.IO;
 using TradingLib.API;
 using TradingLib.Common;
 using FutSystems.GUI;
 using Microsoft.Win32;
 using TradingLib.Mixins;
+using TradingLib.Mixins.Json;
 
 namespace FutsMoniter
 {
@@ -150,145 +152,77 @@ namespace FutsMoniter
             return _Result;
         }
 
+        /// <summary>
+        /// 将数据导出到CSV文件
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="view"></param>
+        public static void ExportToCSV(string name,ComponentFactory.Krypton.Toolkit.KryptonDataGridView view)
+        {
+            System.Windows.Forms.SaveFileDialog saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+            saveFileDialog.Filter = "Excel (*.csv)|*.csv";
+            saveFileDialog.FileName = name;
+            if (saveFileDialog.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+            {
+                return;
+            }
+            
+            if (saveFileDialog.FileName.Equals(String.Empty))
+            {
+                fmConfirm.Show("请填写输出文件名");
+                return;
+            }
 
-        //public static void RunExportToExcelML(string title, Telerik.WinControls.UI.RadGridView grid)
-        //{
-        //    System.Windows.Forms.SaveFileDialog saveFileDialog = new System.Windows.Forms.SaveFileDialog();
-        //    saveFileDialog.Filter = "Excel (*.xls)|*.xls";
-        //    if (saveFileDialog.ShowDialog() != System.Windows.Forms.DialogResult.OK)
-        //    {
-        //        return;
-        //    }
+            string filename = CreateFile(saveFileDialog.FileName);
+            StringBuilder strColumn = new StringBuilder();
+            StringBuilder strValue = new StringBuilder();
+            
 
-        //    if (saveFileDialog.FileName.Equals(String.Empty))
-        //    {
-        //        fmConfirm.Show("请填写输出文件名");
-        //        return;
-        //    }
+            using (StreamWriter sw = new StreamWriter(filename))
+            {
+                for (int k = 0; k < view.Columns.Count; k++)
+                {
+                    //add separator
+                    strColumn.Append(view.Columns[k].HeaderText + ',');
+                }
+                strColumn.Remove(strColumn.Length - 1, 1);
+                sw.WriteLine(strColumn);
 
-        //    ExportToExcelML excelExporter = new ExportToExcelML(grid);
+                for (int i = 0; i < view.Rows.Count; i++)
+                {
+                    strValue.Remove(0, strValue.Length); //clear the temp row value
+                    for (int k = 0; k < view.Columns.Count; k++)
+                    {
+                        //add separator
+                        strValue.Append(view.Rows[i].Cells[k].Value.ToString() + ',');
+                    }
+                    strValue.Remove(strValue.Length - 1, 1);
+                    sw.WriteLine(strValue);
+                }
+            }
+        }
 
-        //    //if (this.radTextBoxSheet.Text != String.Empty)
-        //    //{
-        //    //    excelExporter.SheetName = this.radTextBoxSheet.Text;
+        public static string CreateFile(string filename)
+        {
+            FileStream fs = null;
+            try
+            {
+                fs = File.Create(filename);
+            }
+            catch (Exception ex)
+            {
+            
+            }
+            finally
+            {
+                if (fs != null)
+                {
+                    fs.Dispose();
+                }
+            }
+            return filename;
+        }
 
-        //    //}
-        //    excelExporter.SummariesExportOption = SummariesOption.ExportAll;
-        //    //switch (this.radComboBoxSummaries.SelectedIndex)
-        //    //{
-        //    //    case 0:
-        //    //        excelExporter.SummariesExportOption = SummariesOption.ExportAll;
-        //    //        break;
-        //    //    case 1:
-        //    //        excelExporter.SummariesExportOption = SummariesOption.ExportOnlyTop;
-        //    //        break;
-        //    //    case 2:
-        //    //        excelExporter.SummariesExportOption = SummariesOption.ExportOnlyBottom;
-        //    //        break;
-        //    //    case 3:
-        //    //        excelExporter.SummariesExportOption = SummariesOption.DoNotExport;
-        //    //        break;
-        //    //}
-
-        //    //set max sheet rows
-        //    //if (this.radRadioButton1.ToggleState == Telerik.WinControls.Enumerations.ToggleState.On)
-        //    //{
-        //    //    excelExporter.SheetMaxRows = ExcelMaxRows._1048576;
-        //    //}
-        //    //else if (this.radRadioButton2.ToggleState == Telerik.WinControls.Enumerations.ToggleState.On)
-        //    //{
-        //    //    excelExporter.SheetMaxRows = ExcelMaxRows._65536;
-        //    //}
-
-        //    //set exporting visual settings
-        //    excelExporter.ExportVisualSettings = false;// this.exportVisualSettings;
-
-        //    try
-        //    {
-        //        excelExporter.RunExport(saveFileDialog.FileName);
-
-        //        //RadMessageBox.SetThemeName(this.radGridView1.ThemeName);
-        //        //DialogResult dr = RadMessageBox.Show("The data in the grid was exported successfully. Do you want to open the file?",
-        //        //    "Export to Excel", MessageBoxButtons.YesNo, RadMessageIcon.Question);
-        //        //if (dr == DialogResult.Yes)
-        //        //{
-        //        //    openExportFile = true;
-        //        //}
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        fmConfirm.Show("保存文件出错:" + ex.ToString());
-        //    }
-        //}
-
-
-        //public static void ExportToPDF(string title,Telerik.WinControls.UI.RadGridView grid)
-        //{
-        //    System.Windows.Forms.SaveFileDialog saveFileDialog = new System.Windows.Forms.SaveFileDialog();
-        //    saveFileDialog.Filter = "PDF File (*.pdf)|*.pdf";
-        //    if (saveFileDialog.ShowDialog() != System.Windows.Forms.DialogResult.OK)
-        //    {
-        //        return;
-        //    }
-
-        //    if (saveFileDialog.FileName.Equals(String.Empty))
-        //    {
-        //        fmConfirm.Show("请填写输出文件名");
-        //        return;
-        //    }
-
-
-        //    ExportToPDF pdfExporter = new ExportToPDF(grid);
-        //    pdfExporter.PdfExportSettings.Title = "My PDF Title";
-        //    pdfExporter.PdfExportSettings.PageWidth = 297;
-        //    pdfExporter.PdfExportSettings.PageHeight = 210;
-        //    pdfExporter.PageTitle = title;
-        //    pdfExporter.FitToPageWidth = true;
-        //    pdfExporter.SummariesExportOption = SummariesOption.ExportAll;
-        //    /*
-        //    switch (this.radComboBoxSummaries.SelectedIndex)
-        //    {
-        //        case 0:
-        //            pdfExporter.SummariesExportOption = SummariesOption.ExportAll;
-        //            break;
-        //        case 1:
-        //            pdfExporter.SummariesExportOption = SummariesOption.ExportOnlyTop;
-        //            break;
-        //        case 2:
-        //            pdfExporter.SummariesExportOption = SummariesOption.ExportOnlyBottom;
-        //            break;
-        //        case 3:
-        //            pdfExporter.SummariesExportOption = SummariesOption.DoNotExport;
-        //            break;
-        //    }
-        //     * **/
-
-        //    //set exporting visual settings
-        //    pdfExporter.ExportVisualSettings = true;// this.exportVisualSettings;
-
-        //    try
-        //    {
-        //        pdfExporter.RunExport(saveFileDialog.FileName);
-
-        //        //RadMessageBox.SetThemeName(this.radGridView1.ThemeName);
-        //        //DialogResult dr = RadMessageBox.Show("The data in the grid was exported successfully. Do you want to open the file?",
-        //        //    "Export to PDF", MessageBoxButtons.YesNo, RadMessageIcon.Question);
-        //        //if (dr == DialogResult.Yes)
-        //        //{
-        //        //    openExportFile = true;
-        //        //}
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        fmConfirm.Show("保存文件出错:" + ex.ToString());
-        //    }
-        //    //catch (IOException ex)
-        //    //{
-        //    //    RadMessageBox.SetThemeName(this.radGridView1.ThemeName);
-        //    //    RadMessageBox.Show(this, ex.Message, "I/O Error", MessageBoxButtons.OK, RadMessageIcon.Error);
-        //    //}
-        //}
 
         public static ArrayList GetOffsetCBList()
         {

@@ -34,56 +34,38 @@ namespace TradingLib.Core
         /// <summary>
         /// 添加交易帐号
         /// </summary>
-        public event AccountIdDel AccountAddEvent;
+        public event AccoundIDDel AccountAddEvent;
 
         /// <summary>
         /// 删除交易帐号
         /// </summary>
-        public event AccountIdDel AccountDelEvent;
+        public event AccoundIDDel AccountDelEvent;
 
         /// <summary>
         /// 激活交易帐号
         /// </summary>
-        public event AccountIdDel AccountActiveEvent;
+        public event AccoundIDDel AccountActiveEvent;
 
         /// <summary>
         /// 冻结交易帐号
         /// </summary>
-        public event AccountIdDel AccountInActiveEvent;
-
-        /// <summary>
-        /// 加载交易帐号
-        /// </summary>
-        //public event IAccountDel AccountCachedEvent;
-
-        /// <summary>
-        /// 调整手续费事件,对外触发手续费调整事件,用于相关逻辑进行手续费调整
-        /// </summary>
-        public event AdjustCommissionDel AdjustCommissionEvent;
-
-        /// <summary>
-        /// 交易回合结束
-        /// </summary>
-        public event PositionRoundClosedDel PositionRoundClosedEvent;
+        public event AccoundIDDel AccountInActiveEvent;
 
         /// <summary>
         /// 帐户修改事件
         /// </summary>
         public event AccountSettingChangedDel AccountChangedEvent;
 
-        /// <summary>
-        /// 对外触发带手续费的成交回报
-        /// </summary>
-        //public event FillDelegate GotCommissionFill;
+        protected void AccountChanged(IAccount account)
+        {
+            if (AccountChangedEvent != null)
+                AccountChangedEvent(account);
+        }
 
         #endregion
 
-        QSEnumAccountLoadMode _loadmode = QSEnumAccountLoadMode.ALL;//账户加载模式
 
         AsyncTransactionLoger _asynLoger;//异步记录交易数据到数据库
-        public AsyncTransactionLoger SqlLog { get { return _asynLoger; } }
-
-
         PositionRoundTracker prt;//记录交易回合信息
         /// <summary>
         /// 持仓回合管理器
@@ -120,18 +102,17 @@ namespace TradingLib.Core
                 _cfgdb.UpdateConfig("AccountLoadMode", QSEnumCfgType.String,QSEnumAccountLoadMode.ALL, "清算中心加载帐户类别");
             }
 
-
-
-            //加载模式
-            _loadmode = (QSEnumAccountLoadMode)Enum.Parse(typeof(QSEnumAccountLoadMode), _cfgdb["AccountLoadMode"].AsString());
             try
             {
                 //初始化异步储存组件
                 _asynLoger = new AsyncTransactionLoger();//获得交易信息数据库记录对象，用于记录委托，成交，取消等信息
+
                 //帐户交易数据维护器产生 平仓明细事件
                 acctk.NewPositionCloseDetailEvent += new Action<PositionCloseDetail>(acctk_NewPositionCloseDetailEvent);
+                
                 //初始化PositionRound生成器
                 prt = new PositionRoundTracker();
+
                 //加载账户信息
                 LoadAccount();
 
@@ -144,30 +125,16 @@ namespace TradingLib.Core
             }
         }
 
+        /// <summary>
+        /// 保存平仓明细记录
+        /// </summary>
+        /// <param name="obj"></param>
         void acctk_NewPositionCloseDetailEvent(PositionCloseDetail obj)
         {
             if (_status == QSEnumClearCentreStatus.CCOPEN)
             {
                 debug("平仓明细生成:" + obj.GetPositionCloseStr(), QSEnumDebugLevel.INFO);
-                //设定该平仓明细所在结算日
-                obj.Settleday = TLCtxHelper.Ctx.SettleCentre.NextTradingday;
-                
-
-                //异步保存平仓明细
-                _asynLoger.newPositionCloseDetail(obj);
-            }
-        }
-
-
-
-        /// <summary>
-        /// 查询当前是否是交易日
-        /// </summary>
-        public bool IsTradingday
-        {
-            get
-            {
-                return TLCtxHelper.Ctx.SettleCentre.IsTradingday;
+                LogAcctPositionCloseDetail(obj);
             }
         }
 
@@ -296,16 +263,6 @@ namespace TradingLib.Core
             Status = QSEnumClearCentreStatus.CCCLOSE;
         }
         #endregion
-
-
-        #region 辅助函数 
-        protected void AccountChanged(IAccount account)
-        {
-            if (AccountChangedEvent != null)
-                AccountChangedEvent(account);
-        }
-        #endregion
-
 
     }
 }

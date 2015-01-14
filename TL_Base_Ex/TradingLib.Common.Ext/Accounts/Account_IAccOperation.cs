@@ -13,9 +13,6 @@ namespace TradingLib.Common
     /// </summary>
     public partial class AccountBase
     {
-        
-        #region【IAccOperation】
-
         /// <summary>
         /// 冻结帐户
         /// </summary>
@@ -85,8 +82,5 @@ namespace TradingLib.Common
         {
             TLCtxHelper.CmdRiskCentre.CancelOrder(order, source, cancelreason);
         }
-
-
-        #endregion
     }
 }

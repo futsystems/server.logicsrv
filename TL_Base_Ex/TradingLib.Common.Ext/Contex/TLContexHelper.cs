@@ -15,21 +15,77 @@ namespace TradingLib.Common
         private static TLCtxHelper defaultInstance;
         private TLContext ctx;
 
-        private IndicatorEvent m_IndicatorEvent;//交易信息类
+        /// <summary>
+        /// 交易类事件与消息
+        /// </summary>
+        private IndicatorEvent m_IndicatorEvent;
+
+        /// <summary>
+        /// 回话类 注册 注销 登入
+        /// </summary>
         private SessionEvent<TrdClientInfo> m_SessionEvent;
+
+        /// <summary>
+        /// 帐户类事件
+        /// </summary>
         private AccountEvent m_AccountEvent;
+
+        /// <summary>
+        /// 扩展事件
+        /// </summary>
         private ExContribEvent m_ExContribEvent;
-        private CashOperationEvent m_CashOperationEvent;
+
+        /// <summary>
+        /// 系统类事件
+        /// </summary>
         private SystemEvent m_SystemEvent;
 
+
         private IUtil m_util;
+
         public static bool IsReady { get; set; }
+
+        static TLVersion _version=null;
+        /// <summary>
+        /// 版本信息
+        /// </summary>
+        public static TLVersion Version 
+        {
+            get
+            {
+                if (_version == null)
+                {
+                    _version = ORM.MSystem.GetVersion();
+                }
+                return _version;
+            }
+            
+        }
+
+        public static void PrintVersion()
+        {
+            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("".PadLeft(Util.GetAvabileConsoleWidth() / 2 - 1, '.'));
+            //Version:0.65
+            Util.ConsoleColorStatus(string.Format(". Version:{0}",Version.Version), ".", QSEnumInfoColor.INFOGREEN, QSEnumInfoColor.INFOGREEN);
+            Util.ConsoleColorStatus(string.Format(". Build:{0}", Version.BuildNum), ".", QSEnumInfoColor.INFOGREEN, QSEnumInfoColor.INFOGREEN);
+            
+            Util.ConsoleColorStatus(string.Format(". LastUpdate:{0}", "20141123"), ".", QSEnumInfoColor.INFOGREEN, QSEnumInfoColor.INFOGREEN);
+            Util.ConsoleColorStatus(string.Format(". Author:{0}", "QianBo"), ".", QSEnumInfoColor.INFOGREEN, QSEnumInfoColor.INFOGREEN);
+            
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("".PadLeft(Util.GetAvabileConsoleWidth() / 2 - 1, '.'));
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.Gray;
+        }
+
 
         static TLCtxHelper()
         {
             defaultInstance = new TLCtxHelper();
             IsReady = false;
-            
         }
 
         public TLCtxHelper()
@@ -39,7 +95,6 @@ namespace TradingLib.Common
             this.m_SessionEvent = new SessionEvent<TrdClientInfo>();
             this.m_AccountEvent = new AccountEvent();
             this.m_ExContribEvent = new ExContribEvent();
-            this.m_CashOperationEvent = new CashOperationEvent();
         }
 
         public void Dispose()
@@ -56,9 +111,6 @@ namespace TradingLib.Common
                 defaultInstance.m_ExContribEvent = null;
                 defaultInstance.m_IndicatorEvent = null;
                 defaultInstance.m_SessionEvent = null;
-                defaultInstance.m_CashOperationEvent = null;
-                //defaultInstance.Dispose();
-                //defaultInstance = null;
             }
         }
 
@@ -111,6 +163,9 @@ namespace TradingLib.Common
             }
         }
 
+        /// <summary>
+        /// 系统类事件
+        /// </summary>
         public static SystemEvent EventSystem
         {
             get
@@ -135,21 +190,6 @@ namespace TradingLib.Common
         }
 
         /// <summary>
-        /// 出入金请求操作事件
-        /// </summary>
-        public static CashOperationEvent CashOperationEvent
-        {
-            get
-            {
-                if (defaultInstance.m_CashOperationEvent == null)
-                    defaultInstance.m_CashOperationEvent = new CashOperationEvent();
-                return defaultInstance.m_CashOperationEvent;
-            }
-        }
-
-
-
-        /// <summary>
         /// 交易帐号类操作
         /// </summary>
         public static IAccountOperation CmdAccount
@@ -157,18 +197,6 @@ namespace TradingLib.Common
             get
             {
                 return defaultInstance.ctx.ClearCentre as IAccountOperation;
-            }
-        }
-
-
-        /// <summary>
-        /// 交易帐号 操作
-        /// </summary>
-        public static IAccountOperationCritical CmdAccountCritical
-        {
-            get
-            {
-                return defaultInstance.ctx.ClearCentre as IAccountOperationCritical;
             }
         }
 
@@ -209,7 +237,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 辅助类操作函数
         /// </summary>
-        public static IUtil CmdUtil
+        public static IUtil CmdUtils
         {
             get
             {
@@ -230,41 +258,15 @@ namespace TradingLib.Common
 
 
         #region 【全局日志 通知】
-        /// <summary>
-        /// 初始化全局标准输出入口
-        /// </summary>
-        /// <param name="debug"></param>
-        //public static event DebugDelegate SendDebugEvent = null;
-
-
-        /// <summary>
-        /// 全局标准输出入口,用于在屏幕或者信息面板输出系统内的日志信息
-        /// </summary>
-        /// <param name="msg"></param>
-        //public static void Debug(string msg)
-        //{
-        //    Util.Debug(msg);
-        //}
-
         public static Profiler Profiler = new Profiler();
 
-        /// <summary>
-        /// 全局日志事件
-        /// 绑定该事件可以获得系统所有对象的log输出
-        /// </summary>
-        //public static event ILogItemDel SendLogEvent = null;
-        //static bool _consoleEnable = true;
-        //public static bool ConsoleEnable { get { return _consoleEnable; } set { _consoleEnable = value; } }
-        //public static void Log(ILogItem item)
-        //{
-        //    Util.Log(item);
-        //}
 
         /// <summary>
         /// 全局发送邮件事件
         /// 绑定该事件可以获得系统所有对象的Email发送事件
         /// </summary>
         public static event EmailDel SendEmailEvent = null;
+
         /// <summary>
         /// 全局发送邮件入口
         /// </summary>

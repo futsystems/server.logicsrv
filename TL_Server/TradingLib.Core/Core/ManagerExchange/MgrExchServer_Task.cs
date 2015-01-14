@@ -21,7 +21,7 @@ namespace TradingLib.Core
                     {
                         //debug("采集帐户信息:" + account, QSEnumDebugLevel.INFO);
                         NotifyMGRAccountInfoLiteResponse notify = ResponseTemplate<NotifyMGRAccountInfoLiteResponse>.SrvSendNotifyResponse(cst.Location);
-                        notify.InfoLite = acc.ToAccountInfoLite();
+                        notify.InfoLite = acc.GenAccountInfoLite();
                         CachePacket(notify);
                     }
 
@@ -30,7 +30,7 @@ namespace TradingLib.Core
                         NotifyMGRContribNotify notify = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(cst.Location);
                         notify.ModuleID = this.CoreId;
                         notify.CMDStr = "NotifyBrokerPM";
-                        notify.Result = Mixins.JsonReply.SuccessReply(broker.PositionMetrics.ToArray()).ToJson();// new Mixins.ReplyWriter().Start().FillReply(Mixins.JsonReply.GenericSuccess()).FillPlayload(broker.PositionMetrics.ToArray()).End().ToString();
+                        notify.Result = Mixins.Json.JsonReply.SuccessReply(broker.PositionMetrics.ToArray()).ToJson();// new Mixins.ReplyWriter().Start().FillReply(Mixins.JsonReply.GenericSuccess()).FillPlayload(broker.PositionMetrics.ToArray()).End().ToString();
                         CachePacket(notify);
                     }
                 }

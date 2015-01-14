@@ -9,7 +9,6 @@ using System.Windows.Forms;
 using TradingLib.API;
 using TradingLib.Common;
 using FutSystems.GUI;
-using TradingLib.Mixins.LitJson;
 using TradingLib.Mixins.JsonObject;
 
 namespace FutsMoniter
@@ -83,7 +82,7 @@ namespace FutsMoniter
                 request.Operation = op;
                 request.DateTime = Util.ToTLDateTime();
                 request.RecvInfo = op == QSEnumCashOperation.Deposit ? ctReceivableBankList1.RecvInfo : "";
-                Globals.TLClient.ReqRequestAccountCashOperation(TradingLib.Mixins.LitJson.JsonMapper.ToJson(request));
+                Globals.TLClient.ReqRequestAccountCashOperation(TradingLib.Mixins.Json.JsonMapper.ToJson(request));
             }
             this.Close();
         }

@@ -8,9 +8,6 @@ namespace TradingLib.Common
 {
     public partial class TLClientNet
     {
-
-
-
         /// <summary>
         /// 请求登入
         /// </summary>
@@ -18,7 +15,8 @@ namespace TradingLib.Common
         /// <param name="pass"></param>
         public void ReqLogin(string loginid, string pass)
         {
-            MGRLoginRequest request = RequestTemplate<MGRLoginRequest>.CliSendRequest(requestid++);
+            //MGRLoginRequest request = RequestTemplate<MGRLoginRequest>.CliSendRequest(requestid++);
+            LoginRequest request = RequestTemplate<LoginRequest>.CliSendRequest(requestid++);
             request.LoginID = loginid;
             request.Passwd = pass;
 
@@ -42,10 +40,6 @@ namespace TradingLib.Common
             MGRReqCloseClearCentreRequest request = RequestTemplate<MGRReqCloseClearCentreRequest>.CliSendRequest(requestid++);
             SendPacket(request);
         }
-
-
-
-
 
         #region 交易类操作
         /// <summary>

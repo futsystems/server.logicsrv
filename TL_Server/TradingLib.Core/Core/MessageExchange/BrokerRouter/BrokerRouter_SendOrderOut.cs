@@ -117,7 +117,7 @@ namespace TradingLib.Core
         void ResumeRouterOrder()
         {
             debug("resume router roder....",QSEnumDebugLevel.INFO);
-            //从数据库恢复子委托数据
+            //从数据库恢复子委托数据(路由侧分解的子委托)
             IEnumerable<Order> orderlist = TLCtxHelper.Ctx.ClearCentre.SelectRouterOrders();
             //生成父子委托对
             List<FatherSonOrderPair> pairs = GetOrderPairs(orderlist);
@@ -136,7 +136,7 @@ namespace TradingLib.Core
             Dictionary<long, FatherSonOrderPair> pairmap = new Dictionary<long, FatherSonOrderPair>();
             foreach (Order o in sonOrders)
             {
-                //路由侧委托都是从帐户侧分解的 这里不用判断
+                //路由侧委托都是从帐户侧分解的 这里不用判断 直接通过清算中心查询父委托ID
                 Order father = TLCtxHelper.Ctx.ClearCentre.SentOrder(o.FatherID);
                    
                 //如果存在父委托

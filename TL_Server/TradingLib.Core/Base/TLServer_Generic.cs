@@ -35,9 +35,10 @@ using TradingLib.Common;
  * */
 namespace TradingLib.Core
 {
+    public delegate void PacketRequestDel(ISession session, IPacket packet);
 
-    public abstract class TLServer_Generic<T> : BaseSrvObject
-        where T : ClientInfoBase, new()
+    public abstract class TLServer_Generic<T1> : BaseSrvObject
+        where T1: ClientInfoBase, new()
     {
         /// <summary>
         /// 底层数据传输服务
@@ -47,7 +48,7 @@ namespace TradingLib.Core
         /// <summary>
         //TLServer 客户端数据维护器
         /// </summary>
-        protected ClientManger<T> _clients = new ClientManger<T>();
+        protected ClientTracker<T1> _clients = new ClientTracker<T1>();
 
         /// <summary>
         /// 监听地址
@@ -69,12 +70,12 @@ namespace TradingLib.Core
         /// <summary>
         /// 返回注册客户端数
         /// </summary>
-        public int NumClients { get { return _clients.NumClient; } }
+        public int NumClients { get { return _clients.Clients.Count(); } }
 
         /// <summary>
         /// 返回登入客户端数
         /// </summary>
-        public int NumClientsLoggedIn { get { return _clients.NumClientLoggedIn; } }
+        public int NumClientsLoggedIn { get { return _clients.Clients.Where(c=>c.Authorized).Count(); } }
 
 
         //设定服务端的provider name
@@ -119,8 +120,6 @@ namespace TradingLib.Core
         public TLServer_Generic(string programe,string ipaddr, int port, bool verb)
             : base(programe)
         {
-
-
             try
             {
                 //VerboseDebugging = verb;
@@ -133,8 +132,8 @@ namespace TradingLib.Core
                 }
                 
                 //绑定client manager 事件
-                _clients.ClientUnregistedEvent +=new ClientInfoDelegate<T>(_clients_ClientUnRegistedEvent);
-                _clients.ClientRegistedEvent += new ClientInfoDelegate<T>(_clients_ClientRegistedEvent);
+                _clients.ClientUnregistedEvent +=new ClientInfoDelegate<T1>(_clients_ClientUnRegistedEvent);
+                _clients.ClientRegistedEvent += new ClientInfoDelegate<T1>(_clients_ClientRegistedEvent);
                 //初始化缓存文件名
                 clientlistfn = Path.Combine(new string[] { "cache", programe });
 
@@ -151,7 +150,7 @@ namespace TradingLib.Core
         /// 当clientlist 注册某个终端
         /// </summary>
         /// <param name="c"></param>
-        void _clients_ClientRegistedEvent(T c)
+        void _clients_ClientRegistedEvent(T1 c)
         {
             debug("客户端:" + c.Location.ClientID + " FrontID:" + c.Location.FrontID + "  FrontType:" + c.FrontType.ToString() + " Register to system..", QSEnumDebugLevel.INFO);
             if (ClientRegistedEvent != null)
@@ -163,7 +162,7 @@ namespace TradingLib.Core
         /// 如果原先是登入状态,则对业务层更新该状态由登入状态->登出状态
         /// </summary>
         /// <param name="c"></param>
-        void _clients_ClientUnRegistedEvent(T c)
+        void _clients_ClientUnRegistedEvent(T1 c)
         {
             debug("客户端:" + c.Location.ClientID + " FrontID:" + c.Location.FrontID +"  FrontType:" +c.FrontType.ToString()+" Unregisted from system..", QSEnumDebugLevel.INFO);
             if (ClientUnregistedEvent != null)
@@ -214,7 +213,7 @@ namespace TradingLib.Core
                         using (StreamWriter sw = new StreamWriter(fs))
                         {
 
-                            foreach (T info in _clients.Clients)
+                            foreach (T1 info in _clients.Clients)
                             {
                                 string str = info.Serialize();
                                 sw.WriteLine(str);
@@ -233,16 +232,16 @@ namespace TradingLib.Core
             }
         }
 
-        private  List<T> LoadSessions()
+        private  List<T1> LoadSessions()
         {
             lock (sessionfileobj)
             {
                 debug("try to load sessions form file:"+clientlistfn, QSEnumDebugLevel.INFO);
                 if (!File.Exists(clientlistfn))
                 {
-                    return new List<T>();
+                    return new List<T1>();
                 }
-                List<T> cinfolist = new List<T>();
+                List<T1> cinfolist = new List<T1>();
                 try
                 {
                     //实例化一个文件流--->与写入文件相关联  
@@ -253,7 +252,7 @@ namespace TradingLib.Core
                         {
                             while (sw.Peek() > 0)
                             {
-                                T c = new T();
+                                T1 c = new T1();
                                 string str = sw.ReadLine();
                                 c.Deserialize(str);
                                 cinfolist.Add(c);
@@ -281,12 +280,12 @@ namespace TradingLib.Core
         public void RestoreSession()
         {
             //从数据库加载客户端注册信息
-            List<T> cinfolist = LoadSessions();
+            List<T1> cinfolist = LoadSessions();
             //恢复客户端注册信息1.将请求的stocks,account重新恢复到内存
             _clients.Restore(cinfolist);
 
             //向前端显示窗口更新连接信息 恢复数据时 将在线用户向系统触发登入事件 用于采集在线用户的相关信息
-            foreach (T c in cinfolist)
+            foreach (T1 c in cinfolist)
             {
                 if (c.Authorized)
                 {
@@ -535,7 +534,6 @@ namespace TradingLib.Core
                 frontsessionmaxmap[frontid] = nextsession;
 
                 return nextsession;
-
             }
 
         }
@@ -545,19 +543,17 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="cname"></param>
         /// <param name="address"></param>
-        public virtual void SrvRegClient(RegisterClientRequest request)
+        public virtual void SrvRegClient(RegisterClientRequest request,T1 client)
         {
             //客户端发送的第一个消息就是注册到服务系统,我们需要为client记录address,front信息
-            T _newcli = new T();
+            T1 _newcli = new T1();
 
             //初始化ClientInfo对象 绑定FrontiID ClientID以及对应的FrontIDi SessionIDi
             _newcli.Init(request.FrontID, request.ClientID);
             _newcli.FrontIDi = GetFrontIDi(request.FrontID);
             _newcli.SessionIDi = NexSessionID(request.FrontID);
 
-            //查找UUID对应的ClientID如果不存在则直接注册,如果存在则先注销然后再注册
-            T cinfo = _clients[request.ClientID];
-            if (cinfo == null)
+            if (client == null)
             {
                 //如果不存在address对应的客户端 则直接将该客户端缓存到本地
                 _clients.RegistClient(_newcli);
@@ -570,7 +566,7 @@ namespace TradingLib.Core
                 _clients.RegistClient(_newcli);
             }
 
-            SrvBeatHeart(request.ClientID);
+            SrvBeatHeart(client);
             debug("Client:" + request.ClientID + " Bind With Int32 Token, FrontIDi:"+_newcli.FrontIDi.ToString() +" SessionIDi:"+_newcli.SessionIDi.ToString(), QSEnumDebugLevel.INFO);
         }
 
@@ -579,12 +575,12 @@ namespace TradingLib.Core
         /// todo 增加详细内容
         /// </summary>
         /// <param name="request"></param>
-        public void SrvVersonReq(VersionRequest request)
+        public void SrvVersonReq(VersionRequest request,T1 client)
         {
+            debug("client:" + client.Location.ClientID + " try to qry version", QSEnumDebugLevel.INFO);
             VersionResponse verresp = ResponseTemplate<VersionResponse>.SrvSendRspResponse(request);
-            
-            verresp.ServerVesion = "2.0";
-            verresp.ClientUUID = request.ClientID;
+            verresp.Version = TLCtxHelper.Version;
+            debug("response:" + verresp.ToString(),QSEnumDebugLevel.INFO);
             SendOutPacket(verresp);
         }
 
@@ -592,11 +588,10 @@ namespace TradingLib.Core
         /// 请求注销某个客户端
         /// </summary>
         /// <param name="him"></param>
-        protected void SrvClearClient(UnregisterClientRequest req)
+        protected void SrvClearClient(UnregisterClientRequest req,T1 client)
         {
-            T cinfo = _clients[req.ClientID];
-            if (cinfo == null) return;
-            _clients.UnRegistClient(req.ClientID);//clientlist负责触发 updatelogininfo事件
+            if (client == null) return;
+            _clients.UnRegistClient(client.Location.ClientID);//clientlist负责触发 updatelogininfo事件
             debug("Client :" + req.ClientID + " Unregisted from server ", QSEnumDebugLevel.INFO);
         }
 
@@ -604,57 +599,46 @@ namespace TradingLib.Core
         /// client登入请求ClientID+LoginID:Pass
         /// </summary>
         /// <param name="msg"></param>
-        void SrvLoginReq(LoginRequest request)
+        void SrvLoginReq(LoginRequest request,T1 client)
         {
-            //Util.Debug("it is here srvloginreq",QSEnumDebugLevel.ERROR);
-            //如果没有client信息 则直接返回,表明发出该请求的客户端没有通过register主操的服务器
-            T cinfo = _clients[request.ClientID];
-            if (cinfo == null) return;
+            if (client == null) return;
             debug("Client:" + request.ClientID + " Try to login:" + request.Content, QSEnumDebugLevel.INFO);
-            
             //主体认证部分,不同的TLServer有不同的验证需求，这里将逻辑放置到子类当中去实现
-            this.AuthLogin(cinfo,request);
-            SrvBeatHeart(request.ClientID);
+            this.AuthLogin(request,client);
+            SrvBeatHeart(client);
         }
 
-        protected void SrvBeatHeart(string clientid)
+        /// <summary>
+        /// 记录客户端最近心跳时间
+        /// </summary>
+        /// <param name="client"></param>
+        protected void SrvBeatHeart(T1 client)
         {
-            T cinfo = _clients[clientid];
-            if (cinfo == null) return;
-            cinfo.HeartBeat = DateTime.Now;
+            if (client == null) return;
+            client.HeartBeat = DateTime.Now;
         }
+
+
         /// <summary>
         /// 记录客户端发送心跳时间
         /// </summary>
         /// <param name="ClientID"></param>
-        protected void SrvBeatHeart(HeartBeat hb)
+        protected void SrvBeatHeart(HeartBeat hb,T1 client)
         {
-            SrvBeatHeart(hb.ClientID);
+            SrvBeatHeart(client);
         }
 
         /// <summary>
         /// 接收客户端的心跳回报请求，并向对应客户端发送一个心跳回报,以让客户端知道 与服务端的连接仍然有效
         /// </summary>
         /// <param name="ClientID"></param>
-        protected void SrvBeatHeartRequest(HeartBeatRequest req)
+        protected void SrvBeatHeartRequest(HeartBeatRequest req,T1 client)
         {
-            T cinfo = _clients[req.ClientID];
-            if (cinfo == null) return;
-            cinfo.HeartBeat = DateTime.Now;
             //向客户端发送心跳回报，告知客户端,服务端收到客户端消息,连接有效
             HeartBeatResponse response = ResponseTemplate<HeartBeatResponse>.SrvSendRspResponse(req);
             SendOutPacket(response);
+            SrvBeatHeart(client);
         }
-
-        /// <summary>
-        /// 查询从某个前置接入连接上来的客户端数
-        /// </summary>
-        /// <param name="frontid"></param>
-        /// <returns></returns>
-        //protected long SrvQryConnected(string frontid)
-        //{
-        //    return (long)_clients.QryFrontConnected(frontid);
-        //}
         #endregion
 
         #region 子类实现部分
@@ -665,7 +649,7 @@ namespace TradingLib.Core
         /// <param name="c"></param>
         /// <param name="loginid"></param>
         /// <param name="pass"></param>
-        public virtual void AuthLogin(T c, LoginRequest lr){}
+        public virtual void AuthLogin(LoginRequest lr,T1 client){}
 
         /// <summary>
         /// 请求功能特征列表
@@ -673,8 +657,21 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="msg"></param>
         /// <param name="address"></param>
-        public virtual void SrvReqFuture(FeatureRequest req){}
+        public virtual void SrvReqFuture(FeatureRequest req,T1 client){}
 
+
+        /// <summary>
+        /// 创建Session回调，用于初始化Session相关字段
+        /// </summary>
+        /// <param name="session"></param>
+        public virtual void OnSessionCreated(Client2Session session) { }
+
+        /// <summary>
+        /// 设定Session状态回调,用于绑定逻辑对象到Session对象
+        /// 交易服务绑定IAccount,管理服务绑定Manager
+        /// </summary>
+        /// <param name="session"></param>
+        public virtual void OnSessionStated(Client2Session session, T1 client) { }
         /// <summary>
         /// 拓展的消息处理函数,当主体消息逻辑运行后最后运行用于服务扩展消息类型
         /// </summary>
@@ -682,7 +679,7 @@ namespace TradingLib.Core
         /// <param name="msg"></param>
         /// <param name="address"></param>
         /// <returns></returns>
-        public virtual long handle(ISession session,IPacket packet,T clientinfo){ return 0;}
+        public virtual long handle(ISession session,IPacket packet){ return 0;}
 
         #endregion
 
@@ -733,12 +730,10 @@ namespace TradingLib.Core
                 case QSEnumPacketType.NOTIFYRESPONSE:
                 case QSEnumPacketType.LOCATIONNOTIFYRESPONSE:
                     {
-                        if (packet.Type == MessageTypes.MGRCONTRIBRESPONSE)
-                        {
-                            string x = "";
-                        }
+                        //获得packet对应的通知地址列表
                         ILocation[] targets = GetNotifyTargets(packet);
                         byte[] data = packet.Data;
+                        //遍历地址列表对外发送
                         foreach (ILocation location in targets)
                         {
                             TLSend(data, location.ClientID, location.FrontID);
@@ -785,76 +780,84 @@ namespace TradingLib.Core
 
 
         #region Message消息处理逻辑
-        /// <summary>
-        /// 检查客户端权限 主要用于管理端的权限检查
-        /// </summary>
-        /// <param name="mt"></param>
-        /// <param name="address"></param>
-        /// <returns></returns>
-        public virtual bool onPermissionCheck(MessageTypes mt, string address)
+        protected const long NORETURNRESULT = long.MaxValue;
+
+        Client2Session CreateSession(T1 client)
         {
-            return true;
+            Client2Session session = new Client2Session(client);
+            OnSessionCreated(session);
+            return session;
         }
 
-        protected const long NORETURNRESULT = long.MaxValue;
-        //在消息处理部分通过委托我们将业务部分剥离,传输部分在这里得到分发,sock标识了该信息发送给哪个client
-        //具体由委托剥离出去的逻辑部分 我们需要在逻辑部分进行实现并管理
+        /// <summary>
+        /// 触发逻辑包事件
+        /// 通过ctx事件中继触发逻辑包事件
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="packet"></param>
+        void PacketEvent(ISession session, IPacket packet,string frontid,string clientid)
+        {
+            TLCtxHelper.EventSystem.FirePacketEvent(this, new PacketEventArgs(session, packet, frontid, clientid));
+        }
+        /// <summary>
+        /// 将底层传输层上传上来的数据解析成逻辑数据包并处理
+        /// Generic只处理服务端通用部分比如 注册,注销,心跳等连接维护类基础工作
+        /// 这里需要统一登入请求
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="msg"></param>
+        /// <param name="front"></param>
+        /// <param name="address"></param>
+        /// <returns></returns>
         public long basehandle(MessageTypes type, string msg, string front, string address)
         {
             long result = NORETURNRESULT;
             try
             {
-                //debug("raw message type:" + type.ToString() + " message:" + msg, QSEnumDebugLevel.INFO);
                 IPacket packet = PacketHelper.SrvRecvRequest(type, msg, front, address);
                 //debug("<<<<<< Rev Packet:" + packet.ToString(), QSEnumDebugLevel.INFO);
-                //通过Packet中的客户端ID标识获得对应的clientinfo
-                T clientinfo = _clients[packet.ClientID];
-                //if (!onPermissionCheck(type, address)) return -1;//关于权限检查 这里需要传递一定参数进行逻辑处理
-                Client2Session session = null;
+                T1 client = _clients[address];
+                Client2Session session = client!=null?CreateSession(client):null;
                 switch (type)
                 {
-                    #region 通用操作部分
                     case MessageTypes.REGISTERCLIENT://注册
-                        SrvRegClient(packet as RegisterClientRequest);
+                        SrvRegClient(packet as RegisterClientRequest,client);
+                        PacketEvent(session, packet,front,address);
                         break;
                     case MessageTypes.VERSIONREQUEST://版本查询
-                        SrvVersonReq(packet as VersionRequest);
+                        SrvVersonReq(packet as VersionRequest, client);
+                        PacketEvent(session, packet, front, address);
                         break;
                     case MessageTypes.LOGINREQUEST://登入
-                        SrvLoginReq(packet as LoginRequest);
-                        if (clientinfo != null)
-                        {
-                            session = new Client2Session(clientinfo);
-                            TLCtxHelper.EventSystem.FirePacketEvent(this, new PacketEventArgs(session, packet));
-                        }
+                        SrvLoginReq(packet as LoginRequest, client);
+                        PacketEvent(session, packet, front, address);
                         break;
                     case MessageTypes.CLEARCLIENT://注销
-                        SrvClearClient(packet as UnregisterClientRequest);
-                        if (clientinfo != null)
-                        {
-                            session = new Client2Session(clientinfo);
-                            TLCtxHelper.EventSystem.FirePacketEvent(this, new PacketEventArgs(session, packet));
-                        }
+                        SrvClearClient(packet as UnregisterClientRequest,client);
+                        PacketEvent(session, packet, front, address);
                         break;
                     case MessageTypes.HEARTBEATREQUEST://客户端请求服务端发送给客户端一个心跳 以让客户端知道 与服务端的连接有效
-                        SrvBeatHeartRequest(packet as HeartBeatRequest);
+                        SrvBeatHeartRequest(packet as HeartBeatRequest, client);
+                        PacketEvent(session, packet, front, address);
                         break;
                     case MessageTypes.HEARTBEAT://客户端主动向服务端发送心跳,让服务端知道 客户端还存活
-                        SrvBeatHeart(packet as HeartBeat);
+                        SrvBeatHeart(packet as HeartBeat, client);
+                        PacketEvent(session, packet, front, address);
                         break;
                     case MessageTypes.FEATUREREQUEST://功能特征码请求
-                        SrvReqFuture(packet as FeatureRequest);
+                        SrvReqFuture(packet as FeatureRequest, client);
+                        PacketEvent(session, packet, front, address);
                         break;
-                    #endregion
-
                     default:
                         //如果客户端没有注册到服务器则 不接受任何其他类型的功能请求 要求客户端有效注册到服务器
-                        if (clientinfo == null) return -1;
-                        session = new Client2Session(clientinfo);
-                        result = handle(session,packet, clientinfo);//外传到子类中去扩展消息类型 通过子类扩展允许tlserver实现更多功能请求
-                        TLCtxHelper.EventSystem.FirePacketEvent(this, new PacketEventArgs(session, packet));
-                        break;
+                        if (client == null) return -1;
+                        //如果该客户端没有认证通过则 不接受任何其他类型的操作请求
+                        if (!client.Authorized) return -1;//如果授权通过表面已经绑定了对应的状态对象
 
+                        OnSessionStated(session,client);
+                        result = handle(session,packet);//外传到子类中去扩展消息类型 通过子类扩展允许tlserver实现更多功能请求
+                        PacketEvent(session, packet, front, address);
+                        break;
                 }
 
             }
@@ -887,34 +890,34 @@ namespace TradingLib.Core
         /// <summary>
         /// 客户端注册到系统事件
         /// </summary>
-        public event ClientInfoDelegate<T> ClientRegistedEvent;
+        public event ClientInfoDelegate<T1> ClientRegistedEvent;
 
 
         /// <summary>
         /// 客户端从服务端注销事件
         /// </summary>
-        public event ClientInfoDelegate<T> ClientUnregistedEvent;
+        public event ClientInfoDelegate<T1> ClientUnregistedEvent;
 
         /// <summary>
         /// 某个终端登入到系统
         /// </summary>
-        public event ClientInfoDelegate<T> ClientLoginEvent;
+        public event ClientInfoDelegate<T1> ClientLoginEvent;
 
         /// <summary>
         /// 某个终端退出系统
         /// </summary>
-        public event ClientInfoDelegate<T> ClientLogoutEvent;
+        public event ClientInfoDelegate<T1> ClientLogoutEvent;
 
         /// <summary>
         /// 客户端登入,退出事件
         /// </summary>
-        public event ClientLoginInfoDelegate<T> ClientLoginInfoEvent;
+        public event ClientLoginInfoDelegate<T1> ClientLoginInfoEvent;
         /// <summary>
         /// 更新客户端登入信息
         /// </summary>
         /// <param name="c"></param>
         /// <param name="islogin"></param>
-        protected void UpdateClientLoginInfo(T c,bool islogin=true)
+        protected void UpdateClientLoginInfo(T1 c,bool islogin=true)
         {
             if (islogin)//登入
             {

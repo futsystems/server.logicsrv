@@ -16,7 +16,7 @@ namespace FutsMoniter
 {
     public partial class fmRuleSetConfig : ComponentFactory.Krypton.Toolkit.KryptonForm
     {
-      public IAccountLite Account { get; set; }
+      public AccountLite Account { get; set; }
 
         RuleClassItem _ruleclass = null;
         public RuleClassItem RuleClass 

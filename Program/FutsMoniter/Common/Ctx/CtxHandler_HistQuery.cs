@@ -15,6 +15,7 @@ namespace TradingLib.Common
     {
         public event Action<Order, bool> GotHistOrderEvent;
         public event Action<Trade, bool> GotHistTradeEvent;
+        public event Action<PositionDetail, bool> GotHistPositionEvent;
         public event Action<RspMGRQrySettleResponse> GotSettlementEvent;
 
         #region 历史记录查询
@@ -31,6 +32,11 @@ namespace TradingLib.Common
                 GotHistTradeEvent(f, islast);
         }
 
+        public void OnMGRPositionResponse(PositionDetail d, bool islast)
+        {
+            if (GotHistPositionEvent != null)
+                GotHistPositionEvent(d, islast);
+        }
         public void OnMGRSettlementResponse(RspMGRQrySettleResponse response)
         {
             if (GotSettlementEvent != null)

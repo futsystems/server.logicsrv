@@ -45,6 +45,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RSMaxLoss.cs" />
     <Compile Include="RSMaxLossPercent.cs" />
+    <Compile Include="RSEquity.cs" />
+    <Compile Include="RSTime.cs" />
+    <Compile Include="RSMaxProfit.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -57,7 +60,6 @@
       <OutFiles Include="$(OutputPath)\$(AssemblyName).dll" />
     </ItemGroup>
     <Copy SourceFiles="@(OutFiles)" DestinationFolder="..\..\..\lib\TradingLib\RuleSet" SkipUnchangedFiles="true" />
-		<Copy SourceFiles="@(OutFiles)" DestinationFolder="..\..\..\Platform\TradingSrv\RuleSet" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(OutFiles)" DestinationFolder="..\..\..\Platform\TradingSrv\RuleSet" SkipUnchangedFiles="true" />
   </Target>
-  
 </Project>

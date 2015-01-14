@@ -9,55 +9,20 @@ namespace TradingLib.Core
 {
     public partial class RiskCentre
     {
+        /// <summary>
+        /// 分配委托ID
+        /// </summary>
         public event AssignOrderIDDel AssignOrderIDEvent;
+
+        /// <summary>
+        /// 对外发送委托
+        /// </summary>
         public event OrderDelegate newSendOrderRequest;
+
+        /// <summary>
+        /// 对外取消委托
+        /// </summary>
         public event LongDelegate newOrderCancelRequest;
-
-        #region 获得某个合约的当前价格信息
-        public event GetSymbolTickDel newSymbolTickRequest;
-        protected Tick getSymbolTick(string symbol)
-        {
-            if (newSymbolTickRequest != null)
-                return newSymbolTickRequest(symbol);
-            else
-                return null;
-        }
-        /// <summary>
-        /// 获得某个合约的有效价格
-        /// 如果返回-1则价格无效
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <returns></returns>
-        protected decimal GetAvabilePrice(string symbol)
-        {
-            Tick k = getSymbolTick(symbol);//获得当前合约的最新数据
-            if (k == null) return -1;
-
-            decimal price = somePrice(k);
-
-            //如果价格有效则返回价格 否则返回-1无效价格
-            return price > 0 ? price : -1;
-        }
-
-        /// <summary>
-        /// 从Tick数据采获当前可用的价格
-        /// 优先序列 最新价/ ask / bid 如果均不可用则返回价格0
-        /// </summary>
-        /// <param name="k"></param>
-        /// <returns></returns>
-        private decimal somePrice(Tick k)
-        {
-            if (k.isTrade)
-                return k.Trade;
-            if (k.hasAsk)
-                return k.AskPrice;
-            if (k.hasBid)
-                return k.BidPrice;
-            else
-                return -1;
-        }
-        #endregion
-
 
         /// <summary>
         /// 用于提前分配委托ID 便于跟踪委托
@@ -69,7 +34,11 @@ namespace TradingLib.Core
                 AssignOrderIDEvent(ref o);
         }
 
-        public void SendOrder(Order o)
+        /// <summary>
+        /// 发送委托
+        /// </summary>
+        /// <param name="o"></param>
+        void SendOrder(Order o)
         {
             try
             {
@@ -85,8 +54,11 @@ namespace TradingLib.Core
             }
         }
 
-
-        public void CancelOrder(long number)
+        /// <summary>
+        /// 取消委托
+        /// </summary>
+        /// <param name="number"></param>
+        void CancelOrder(long number)
         {
             try
             {

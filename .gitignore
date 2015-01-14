@@ -5,6 +5,7 @@
 *.pdb
 *.cache
 *.tlog
+*.su
 
 #ееЁЩ.sdf
 *.sdf

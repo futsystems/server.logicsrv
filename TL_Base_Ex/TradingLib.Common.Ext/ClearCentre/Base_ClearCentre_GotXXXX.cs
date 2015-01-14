@@ -22,7 +22,6 @@ namespace TradingLib.Common
                     debug("symbol:" + p.Symbol + " not exist in basictracker, drop positiondetail", QSEnumDebugLevel.ERROR);
                     return;
                 }
-
                 acctk.GotPosition(p);
                 onGotPosition(p);
             }

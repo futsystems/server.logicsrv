@@ -87,7 +87,7 @@ namespace TradingLib.Contrib.NotifyCentre
             client.DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.Network;
             client.Credentials = new System.Net.NetworkCredential(_user, _pass);
 
-            TLCtxHelper.CashOperationEvent.CashOperationRequest += new EventHandler<CashOperationEventArgs>(CashOperationEvent_CashOperationRequest);
+            TLCtxHelper.EventSystem.CashOperationRequest += new EventHandler<CashOperationEventArgs>(CashOperationEvent_CashOperationRequest);
 
 
         }

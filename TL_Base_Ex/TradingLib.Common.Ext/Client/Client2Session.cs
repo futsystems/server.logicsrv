@@ -18,14 +18,15 @@ namespace TradingLib.Common
     {
         ClientInfoBase _client;//消息发送来源中的client对象
 
+        /// <summary>
+        /// 回话类型
+        /// </summary>
+        public QSEnumSessionType SessionType { get; internal set; }
+
+
         public Client2Session(ClientInfoBase client)
         {
             _client = client;
-            this.AccountID = string.Empty;//交易员帐号
-            this.MGRLoginName = string.Empty;//管理员帐号
-            this.MGRID = 0;
-            this.MGRFK = 0;
-
             this.SessionType = QSEnumSessionType.CLIENT;
             this.ContirbID = string.Empty;
             this.CMDStr = string.Empty;
@@ -35,56 +36,65 @@ namespace TradingLib.Common
         /// <summary>
         /// 交易帐号 用于交易服务
         /// </summary>
-        public string AccountID { get; set; }
-
-
-        #region Manager 对象
+        public string AuthorizedID 
+        {
+            get
+            {
+                if (this.SessionType == QSEnumSessionType.CLIENT)
+                {
+                    return this.Account != null ? this.Account.ID : "";
+                }
+                else if (this.SessionType == QSEnumSessionType.MANAGER)
+                {
+                    return this.Manager != null ? this.Manager.Login : "";
+                }
+                return string.Empty;
+            }
+        }
 
         /// <summary>
         /// Manager对象
         /// </summary>
         public Manager Manager { get; private set; }
-        /// <summary>
-        /// 管理员登入名
-        /// </summary>
-        public string MGRLoginName { get; private set; }
 
         /// <summary>
-        /// 管理员ID
+        /// 交易帐户对象
         /// </summary>
-        public int MGRID { get; private set; }
+        public IAccount Account { get; private set; }
 
-        /// <summary>
-        /// 管理员主域ID
-        /// </summary>
-        public int MGRFK { get; private set; }
-
-
-        /// <summary>
-        /// 回话类型
-        /// </summary>
-        public QSEnumSessionType SessionType { get; private set; }
 
         public void BindManager(Manager manger)
         {
             this.SessionType = QSEnumSessionType.MANAGER;
             this.Manager = manger;
-            this.MGRFK = manger.mgr_fk;
-            this.MGRID = manger.ID;
-            this.MGRLoginName = manger.Login;
         }
 
-        #endregion
+        public void BindAccount(IAccount account)
+        {
+            this.SessionType = QSEnumSessionType.CLIENT;
+            this.Account = account;
+        }
 
+        /// <summary>
+        /// 回话是否已经登入
+        /// </summary>
+        public bool Authorized { get { return _client.Authorized; } }
 
+        /// <summary>
+        /// 回话对端地址
+        /// </summary>
+        public ILocation Location { get { return _client.Location; } }
 
-        public string FrontID { get { return _client.Location.FrontID; } }
+        /// <summary>
+        /// 前置编号 整数
+        /// </summary>
+        public int FrontIDi { get { return _client.FrontIDi; } }
 
-        public string ClientID { get { return _client.Location.ClientID; } }
+        /// <summary>
+        /// 客户连接编号 整数
+        /// </summary>
+        public int SessionIDi { get { return _client.SessionIDi; } }
 
-        public string LoginID { get { return _client.LoginID; } }
-
-        public bool IsLoggedIn { get { return _client.Authorized; } }
 
         
         /// <summary>

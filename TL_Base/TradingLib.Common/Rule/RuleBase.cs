@@ -28,7 +28,7 @@ namespace TradingLib.Common
         /// </summary>
         public QSEnumCompareType Compare { get; set; }
 
-        string[] _symbolset;
+        List<string> _symbolset=new List<string>();
         /// <summary>
         /// 检查品种列表
         /// </summary>
@@ -45,7 +45,10 @@ namespace TradingLib.Common
             {
                 if (!string.IsNullOrEmpty(value))
                 {
-                    _symbolset = value.Split('_');//分解字符串生成对应的代码
+                    foreach (string s in value.Split('_'))
+                    {
+                        _symbolset.Add(s);
+                    }
                 }
             }
         }

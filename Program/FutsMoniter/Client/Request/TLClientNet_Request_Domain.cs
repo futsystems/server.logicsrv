@@ -16,12 +16,20 @@ namespace TradingLib.Common
         }
 
         /// <summary>
+        /// 查询分区管理员登入信息
+        /// </summary>
+        /// <param name="domainid"></param>
+        public void ReqQryDomainRootLoginInfo(int domainid)
+        {
+            this.ReqContribRequest("MgrExchServer", "QryDomainRootLoginInfo", domainid.ToString());
+        }
+        /// <summary>
         /// 更新域
         /// </summary>
         /// <param name="domain"></param>
         public void ReqUpdateDomain(DomainImpl domain)
         {
-            this.ReqContribRequest("MgrExchServer", "UpdateDomain", TradingLib.Mixins.LitJson.JsonMapper.ToJson(domain));
+            this.ReqContribRequest("MgrExchServer", "UpdateDomain", TradingLib.Mixins.Json.JsonMapper.ToJson(domain));
         }
 
         /// <summary>

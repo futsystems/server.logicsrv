@@ -161,7 +161,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("SELECT * FROM manager_cashopreq  WHERE status='{0}' || datetime>= '{1}'",QSEnumCashInOutStatus.PENDING, Util.ToTLDateTime(DateTime.Now.AddMonths(-1)));
+                string query = String.Format("SELECT * FROM manager_cashopreq  WHERE status='{0}' || datetime>= {1}",QSEnumCashInOutStatus.PENDING, Util.ToTLDateTime(DateTime.Now.AddMonths(-1)));
                 Util.Debug(query);
                 return db.Connection.Query<JsonWrapperCashOperation>(query);
             }
@@ -204,7 +204,7 @@ namespace TradingLib.ORM
                     trans.mgr_fk = op.mgr_fk;
                     trans.Settleday = TLCtxHelper.Ctx.SettleCentre.NextTradingday;
                     trans.TransRef = op.Ref;
-                    trans.DateTime = DateTime.Now;
+                    trans.DateTime = Util.ToTLDateTime();
                     trans.Comment = "";
                     trans.Amount = (op.Operation == QSEnumCashOperation.Deposit ? 1 : -1) * op.Amount;
                     string query2 = string.Format("INSERT INTO manager_cashtrans (`mgr_fk`,`settleday`,`datetime`,`amount`,`transref`,`comment`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}')",trans.mgr_fk,trans.Settleday,trans.DateTime,trans.Amount,trans.TransRef,trans.Comment);
@@ -333,11 +333,11 @@ namespace TradingLib.ORM
                 string query = string.Empty;
                 if (agentfk ==0)
                 {
-                    query = String.Format("SELECT * FROM manager_cashtrans  WHERE  datetime>= '{0}' AND datetime<= '{1}' ", Util.ToDateTime(start), Util.ToDateTime(end));
+                    query = String.Format("SELECT * FROM manager_cashtrans  WHERE  datetime>= {0} AND datetime<= {1} ",start,end);
                 }
                 else
                 {
-                    query = String.Format("SELECT * FROM manager_cashtrans  WHERE mgr_fk='{0}' AND datetime>= '{1}' AND datetime<= '{2}' ", agentfk, Util.ToDateTime(start), Util.ToDateTime(end));
+                    query = String.Format("SELECT * FROM manager_cashtrans  WHERE mgr_fk='{0}' AND datetime>= {1} AND datetime<= {2} ", agentfk,start, end);
                 }
                 return db.Connection.Query<JsonWrapperCasnTrans>(query);
             }

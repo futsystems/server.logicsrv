@@ -1,0 +1,11 @@
+<errors>
+<error id="NONE" value="0" prompt="正常"/>
+<error id="METHOD_NOT_FOUND" value="100" prompt="请求方法不存在"/>
+<error id="SERVER_SIDE_ERROR" value="101" prompt="服务端运行异常"/>
+<error id="COMMAND_EXECUTE_ERROR" value="102" prompt="命令执行异常"/>
+<error id="COMMAND_RESULT_ERROR" value="103" prompt="命令返回无效"/>
+<error id="REQUEST_FORMAT_ERROR" value="103" prompt="命令返回无效"/>
+
+<error id="SERVICE_STOPPED_ALREADY" value="201" prompt="服务处于停止状态"/>
+<error id="SERVICE_STARTED_ALREADY" value="202" prompt="服务处于运行状态"/>
+</errors>

@@ -15,7 +15,7 @@ namespace FutsMoniter
 {
     public partial class fmAccountConfig : ComponentFactory.Krypton.Toolkit.KryptonForm,IEventBinder
     {
-       IAccountLite _account;
+       AccountLite _account;
         public event DebugDelegate SendDebugEvent;
         void debug(string msg)
         {
@@ -25,20 +25,16 @@ namespace FutsMoniter
             
         }
 
-        public void SetAccount(IAccountLite account)
+        public void SetAccount(AccountLite account)
         {
             _account = account;
-
-            
+            ctFinanceInfo1.SetAccount(account);
         }
 
 
         public fmAccountConfig()
         {
             InitializeComponent();
-
-            
-
             this.Load += new EventHandler(fmAccountConfig_Load);
             
         }
@@ -69,6 +65,7 @@ namespace FutsMoniter
             this.btnAddOrderRule.Click +=new EventHandler(btnAddOrderRule_Click);
             this.btnDelAccountRule.Click +=new EventHandler(btnDelAccountRule_Click);
             this.btnDelOrderRule.Click +=new EventHandler(btnDelOrderRule_Click);
+
             this.pagenav.SelectedPageChanged += new EventHandler(pagenav_SelectedPageChanged);
 
 
@@ -142,6 +139,10 @@ namespace FutsMoniter
                 if (poslock.Checked != _account.PosLock)
                 {
                     Globals.TLClient.ReqUpdaetAccountPosLock(_account.Account, poslock.Checked);
+                }
+                if (sidemargin.Checked != _account.SideMargin)
+                {
+                    Globals.TLClient.ReqUpdateAccountSideMargin(_account.Account, sidemargin.Checked);
                 }
             }
         }

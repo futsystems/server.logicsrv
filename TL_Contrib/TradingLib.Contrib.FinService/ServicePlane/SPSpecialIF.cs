@@ -64,7 +64,7 @@ namespace TradingLib.Contrib.FinService
         /// <param name="t"></param>
         /// <param name="pr"></param>
         /// <returns></returns>
-        public override decimal OnAdjustCommission(Trade t, IPositionRound pr)
+        public override decimal OnAdjustCommission(Trade t, PositionRound pr)
         {
             decimal commission = t.Commission;
             //平仓操作才计算手续费
@@ -109,7 +109,7 @@ namespace TradingLib.Contrib.FinService
         /// 当一次开仓 平仓结束后触发该调用
         /// </summary>
         /// <param name="round"></param>
-        public override void OnRound(IPositionRound round)
+        public override void OnRound(PositionRound round)
         {
             if (!round.oSymbol.SecurityFamily.Code.Equals("IF"))
             {
@@ -220,16 +220,23 @@ namespace TradingLib.Contrib.FinService
         public override bool CanTakeOrder(Order o, out string msg)
         {
             msg = string.Empty;
+            if (!o.oSymbol.SecurityFamily.Code.Equals("IF"))
+            {
+                msg = "不允许交易股指意外的品种";
+                return false;
+            }
+
             bool isentry = o.IsEntryPosition;
             if (isentry)
             {
                 bool positoinside = o.PositionSide;
-                //获得对应的持仓数据
-                //Position  = TLCtxHelper.CmdAccount[o.Account].GetPosition(o.symbol, positoinside);
-                int poszie = Account.GetPositionSize(o.Symbol);
+                //持仓数量
+                int poszie = this.Account.GetPositionsHold().Where(pos => pos.oSymbol.SecurityFamily.Code.Equals("IF")).Sum(pos => pos.UnsignedSize);
+                
                 decimal nowequity = this.Account.NowEquity;
 
-                int frozensize = this.Account.Orders.Where(od => od.IsEntryPosition &&od.IsPending()).Sum(od=>od.UnsignedSize);
+                //待开手数
+                int frozensize = this.Account.Orders.Where(pos=>pos.oSymbol.SecurityFamily.Code.Equals("IF")).Where(od => od.IsEntryPosition &&od.IsPending()).Sum(od=>od.UnsignedSize);
 
                 decimal marginperlot = this.MarginPerLot.AccountArgument.AsDecimal();
                 decimal marginperlotstart = this.MarginPerLotStart.AccountArgument.AsDecimal();
@@ -284,15 +291,15 @@ namespace TradingLib.Contrib.FinService
         /// <returns></returns>
         public override int CanOpenSize(Symbol symbol)
         {
-            //LibUtil.Debug("specialif can open size ???????????????");
             decimal marginperlot = this.MarginPerLot.AccountArgument.AsDecimal();
             decimal nowequity = this.Account.NowEquity;
-            int totalsize = (int)(nowequity / marginperlot) + 1;
-            Position longpos = this.Account.GetPosition(symbol.Symbol, true);
-            Position shortpos = this.Account.GetPosition(symbol.Symbol, false);
-            int totalposzie = longpos.UnsignedSize + shortpos.UnsignedSize;
 
-            return totalsize - totalposzie;
+            int totalsize = (int)(nowequity / marginperlot) + 1;
+            //计算股指的所有持仓数量
+            int possize = this.Account.GetPositionsHold().Where(pos => pos.oSymbol.SecurityFamily.Code.Equals("IF")).Sum(pos => pos.UnsignedSize);
+
+            int canopen= totalsize - possize;
+            return canopen >= 0 ? canopen : 0;//为和会计算出来小于0，应为当开仓时计算出来2手，并开了2手，亏钱后，可开就变成了1手，则此时的可开会变成负数
         }
         #endregion
     }

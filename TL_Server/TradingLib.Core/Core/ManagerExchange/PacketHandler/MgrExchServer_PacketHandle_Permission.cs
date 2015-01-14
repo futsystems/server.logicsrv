@@ -19,7 +19,7 @@ namespace TradingLib.Core
             try
             {
                 Manager manger = session.GetManager();
-                if (manger.RightRootDomain())
+                if (manger.IsInRoot())
                 {
                     session.ReplyMgr(manger.Domain.GetUIAccesses().ToArray());
                 }
@@ -38,13 +38,13 @@ namespace TradingLib.Core
         /// 更新权限模板
         /// </summary>
         /// <param name="session"></param>
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdatePermission", "UpdatePermission - update permission config", "更新权限模板", true)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdatePermission", "UpdatePermission - update permission config", "更新权限模板",QSEnumArgParseType.Json)]
         public void CTE_UpdatePermissionTemplateList(ISession session, string playload)
         {
             Manager manger = session.GetManager();
-            if (manger.RightRootDomain())
+            if (manger.IsInRoot())
             {
-                UIAccess access = Mixins.LitJson.JsonMapper.ToObject<UIAccess>(playload);
+                UIAccess access = Mixins.Json.JsonMapper.ToObject<UIAccess>(playload);
                 //更新域信息
                 access.domain_id = manger.domain_id;
 
@@ -64,7 +64,7 @@ namespace TradingLib.Core
             try
             {
                 Manager manger = session.GetManager();
-                if (manger.RightRootDomain())
+                if (manger.IsInRoot())
                 {
                     UIAccess access = BasicTracker.UIAccessTracker.GetAgentUIAccess(managerid);
                     session.ReplyMgr(access);
@@ -84,7 +84,7 @@ namespace TradingLib.Core
         public void CTE_UpdateAgentPermission(ISession session, int managerid, int accessid)
         {
             Manager manger = session.GetManager();
-            if (manger.RightRootDomain())
+            if (manger.IsInRoot())
             {
                 Manager m = BasicTracker.ManagerTracker[managerid];
                 if (m == null)

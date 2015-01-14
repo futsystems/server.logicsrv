@@ -24,16 +24,42 @@ namespace TradingLib.Core
         }
 
         /// <summary>
+        /// 查询分区管理员信息
+        /// </summary>
+        /// <param name="session"></param>
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryManagerLoginInfo", "QryManagerLoginInfo - query manager logininfo", "查看管理员密码")]
+        public void CTE_QryDomainRootLoginInfo(ISession session, int mgrid)
+        {
+            Manager manager = session.GetManager();
+            if (manager.Domain.Super && manager.IsRoot())
+            {
+
+                Manager mgr = BasicTracker.ManagerTracker[mgrid];
+                if (manager.RightAccessManager(mgr))
+                {
+                    Protocol.LoginInfo logininfo = new Protocol.LoginInfo();
+                    logininfo.LoginID = mgr.Login;
+                    logininfo.Pass = ORM.MManager.GetManagerPass(mgr.Login);
+                    session.ReplyMgr(logininfo);
+                }
+                else
+                {
+                    throw new FutsRspError("无权查看柜员信息");
+                }
+            }
+        }
+
+        /// <summary>
         /// 更新柜员
         /// </summary>
         /// <param name="session"></param>
         /// <param name="json"></param>
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateManager", "UpdateManager - update manger", "更新或添加柜员",true)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateManager", "UpdateManager - update manger", "更新或添加柜员", QSEnumArgParseType.Json)]
         public void CTE_UpdateManger(ISession session, string json)
         {
             Manager manager = session.GetManager();
 
-            ManagerSetting m = Mixins.LitJson.JsonMapper.ToObject<ManagerSetting>(json);
+            ManagerSetting m = Mixins.Json.JsonMapper.ToObject<ManagerSetting>(json);
             bool isadd = m.ID == 0;
             if (isadd)
             {
@@ -48,11 +74,10 @@ namespace TradingLib.Core
                 m.mgr_fk = manager.BaseMgrID;
                 //分区ID
                 m.domain_id = manager.domain_id;
+                
+                //验证添加柜员帐户权限
+                manager.ValidRightAddManager(m);
 
-                if (!manager.RightAddManager(m))
-                {
-                    throw new FutsRspError("无权添加管理员类型:" + Util.GetEnumDescription(m.Type));
-                }
                 if (BasicTracker.ManagerTracker[m.Login] != null)
                 {
                     throw new FutsRspError("柜员登入ID不能重复:" + m.Login);
@@ -112,7 +137,7 @@ namespace TradingLib.Core
                 }
 
                 //
-                if (!mgr.RightAgentParent(tomanger))
+                if (!mgr.IsParentOf(tomanger))
                 {
                     throw new FutsRspError("无权操作管理员");
                 }
@@ -143,7 +168,7 @@ namespace TradingLib.Core
                 }
 
                 //
-                if (!mgr.RightAgentParent(tomanger))
+                if (!mgr.IsParentOf(tomanger))
                 {
                     throw new FutsRspError("无权操作管理员");
                 }

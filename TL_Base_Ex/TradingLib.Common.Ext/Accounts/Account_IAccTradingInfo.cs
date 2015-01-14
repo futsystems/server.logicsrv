@@ -8,9 +8,6 @@ namespace TradingLib.Common
 {
     public partial class AccountBase 
     {
-
-        #region 该账户交易信息
-
         /// <summary>
         /// 是否有持仓
         /// </summary>
@@ -129,16 +126,5 @@ namespace TradingLib.Common
         {
             return this.TKPosition[symbol, side];
         }
-
-        /// <summary>
-        /// 获得某个合约的净持仓对象
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <returns></returns>
-        //public Position GetPositionNet(string symbol)
-        //{
-        //    return this.TKPosition.NetPositionTracker[symbol];
-        //}
-        #endregion
     }
 }

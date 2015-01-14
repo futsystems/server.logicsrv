@@ -24,7 +24,7 @@ namespace TradingLib.API
     /// IAccRiskCheck:交易帐户风控规则检查,添加删除委托风控规则或帐户风控规则
     /// IAccOperation:交易帐户操作接口
     /// </summary>
-    public interface IAccount : IFinanceTotal,IAccCal, IAccTradingInfo, IAccOperation,IGeneralCheck,IAccRiskCheck,IAccConfig
+    public interface IAccount : IFinanceTotal,IAccCal, IAccTradingInfo, IAccOperation,IGeneralCheck,IRiskRule,IAccConfig
     {
 
         #region 交易帐号服务类相关操作
@@ -103,6 +103,11 @@ namespace TradingLib.API
         /// 是否允许锁仓
         /// </summary>
         bool PosLock { get; set; }
+
+        /// <summary>
+        /// 单向大边
+        /// </summary>
+        bool SideMargin { get; set; }
 
         /// <summary>
         /// 帐号隶属于哪个管理员

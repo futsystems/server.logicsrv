@@ -191,6 +191,8 @@ namespace TradingLib.Core
                         response.Account = request.LoginID;
                         account = _clearcentre[request.LoginID];
                         response.AccountType = account.Category;
+
+
                     }
                     else
                     {
@@ -230,14 +232,12 @@ namespace TradingLib.Core
                 {
                     if (account.Domain.IsExpired())//域过期
                     {
-                        clientinfo.AuthorizedFail();
                         response.Authorized = false;
                         response.RspInfo.Fill("PLATFORM_EXPIRED");
                     }
                     Manager mgr = BasicTracker.ManagerTracker[account.Mgr_fk];
                     if (mgr == null || (!mgr.Active))
                     {
-                        clientinfo.AuthorizedFail();
                         response.Authorized = false;
                         response.RspInfo.Fill("PLATFORM_EXPIRED");
                     }

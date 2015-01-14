@@ -10,8 +10,6 @@ using System.Windows.Forms;
 using TradingLib.API;
 using TradingLib.Common;
 using FutSystems.GUI;
-using TradingLib.Mixins;
-using TradingLib.Mixins.LitJson;
 
 namespace FutsMoniter
 {
@@ -56,7 +54,7 @@ namespace FutsMoniter
             itface.Type = (QSEnumConnectorType)interfaceType.SelectedValue;
             itface.type_name = typename.Text;
 
-            Globals.TLClient.ReqUpdateInterface(TradingLib.Mixins.LitJson.JsonMapper.ToJson(itface));
+            Globals.TLClient.ReqUpdateInterface(TradingLib.Mixins.Json.JsonMapper.ToJson(itface));
         }
 
         

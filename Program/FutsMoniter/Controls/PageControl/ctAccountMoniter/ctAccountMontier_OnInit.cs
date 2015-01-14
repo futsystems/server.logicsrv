@@ -5,7 +5,7 @@ using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
 using FutSystems.GUI;
-using TradingLib.Mixins.LitJson;
+using TradingLib.Mixins.Json;
 
 namespace FutsMoniter
 {
@@ -15,7 +15,7 @@ namespace FutsMoniter
         public void OnInit()
         {
             //加载帐户
-            foreach (IAccountLite account in Globals.LogicHandler.Accounts)
+            foreach (AccountLite account in Globals.LogicHandler.Accounts)
             {
                 InvokeGotAccount(account);
             }
@@ -23,13 +23,13 @@ namespace FutsMoniter
             UpdateAccountNum();
 
             //帐户事件
-            Globals.LogicEvent.GotAccountEvent += new Action<IAccountLite>(GotAccount);
-            Globals.LogicEvent.GotFinanceInfoLiteEvent += new Action<IAccountInfoLite>(GotAccountInfoLite);
-            Globals.LogicEvent.GotAccountChangedEvent += new Action<IAccountLite>(GotAccountChanged);
+            Globals.LogicEvent.GotAccountEvent += new Action<AccountLite>(GotAccount);
+            Globals.LogicEvent.GotFinanceInfoLiteEvent += new Action<AccountInfoLite>(GotAccountInfoLite);
+            Globals.LogicEvent.GotAccountChangedEvent += new Action<AccountLite>(GotAccountChanged);
             Globals.LogicEvent.GotSessionUpdateEvent += new Action<NotifyMGRSessionUpdateNotify>(GotSessionUpdate);
             
 
-            if (!Globals.Domain.Super)
+            //if (!Globals.Domain.Super)
             {
                 //只有管理员可以查看路由类别
                 accountgrid.Columns[ROUTEIMG].Visible = Globals.Manager.IsRoot();
@@ -37,18 +37,21 @@ namespace FutsMoniter
                 accountgrid.Columns[CATEGORYSTR].Visible = Globals.Manager.IsRoot();
 
                 //如果有实盘交易权限则可以查看路由组
-                accountgrid.Columns[ROUTERGROUPSTR].Visible = Globals.Domain.Router_Live;
+                accountgrid.Columns[ROUTERGROUPSTR].Visible = Globals.Domain.Router_Live && Globals.Manager.IsRoot();
 
                 //只有管理员可以修改路由组和删除交易帐户
                 if (!Globals.Manager.IsRoot())
                 {
-                    accountgrid.ContextMenuStrip.Items[7].Visible = false;
+                    accountgrid.ContextMenuStrip.Items[4].Visible = false;
+
                     accountgrid.ContextMenuStrip.Items[8].Visible = false;
                     accountgrid.ContextMenuStrip.Items[9].Visible = false;
                     accountgrid.ContextMenuStrip.Items[10].Visible = false;
+                    accountgrid.ContextMenuStrip.Items[11].Visible = false;
                 }
 
             }
+
             //启动更新线程
             StartUpdate();
         }
@@ -56,9 +59,9 @@ namespace FutsMoniter
         public void OnDisposed()
         {
             //帐户事件
-            Globals.LogicEvent.GotAccountEvent -= new Action<IAccountLite>(GotAccount);
-            Globals.LogicEvent.GotFinanceInfoLiteEvent -= new Action<IAccountInfoLite>(GotAccountInfoLite);
-            Globals.LogicEvent.GotAccountChangedEvent -= new Action<IAccountLite>(GotAccountChanged);
+            Globals.LogicEvent.GotAccountEvent -= new Action<AccountLite>(GotAccount);
+            Globals.LogicEvent.GotFinanceInfoLiteEvent -= new Action<AccountInfoLite>(GotAccountInfoLite);
+            Globals.LogicEvent.GotAccountChangedEvent -= new Action<AccountLite>(GotAccountChanged);
             Globals.LogicEvent.GotSessionUpdateEvent -= new Action<NotifyMGRSessionUpdateNotify>(GotSessionUpdate);
         }
     }

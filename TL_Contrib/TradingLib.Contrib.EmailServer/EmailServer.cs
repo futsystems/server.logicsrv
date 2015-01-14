@@ -91,27 +91,16 @@ namespace TradingLib.Contrib.EmailSrv
         public void OnLoad()
         {
             TLCtxHelper.SendEmailEvent +=new EmailDel(SendEmail);
-            TLCtxHelper.ExContribEvent.FlatFailedEvent += new PositionFlatFailDel(ExContribEvent_FlatFailedEvent);
-            TLCtxHelper.ExContribEvent.FlatSuccessEvent += new PositionDelegate(ExContribEvent_FlatSuccessEvent);
+            TLCtxHelper.EventSystem.PositionFlatEvent += new EventHandler<PositionFlatEventArgs>(EventSystem_PositionFlatEvent);
+            //TLCtxHelper.ExContribEvent.FlatSuccessEvent += new PositionDelegate(ExContribEvent_FlatSuccessEvent);
         }
 
-        /// <summary>
-        /// 强平成功
-        /// </summary>
-        /// <param name="pos"></param>
-        void ExContribEvent_FlatSuccessEvent(Position pos)
+        void EventSystem_PositionFlatEvent(object sender, PositionFlatEventArgs e)
         {
-            debug("强平成功:" + pos.ToString(), QSEnumDebugLevel.INFO);
+            debug("强平:"+(e.FlatSuccess?"成功":"失败") + e.Position.ToString(), QSEnumDebugLevel.INFO);
         }
 
-        /// <summary>
-        /// 强平异常
-        /// </summary>
-        /// <param name="pos"></param>
-        void ExContribEvent_FlatFailedEvent(Position pos,string reason)
-        {
-            debug("强平异常:" + pos.ToString(), QSEnumDebugLevel.INFO);
-        }
+      
         /// <summary>
         /// 销毁
         /// </summary>

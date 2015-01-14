@@ -5,8 +5,8 @@ using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
 using ZeroMQ;
-using TradingLib.LitJson;
 using System.Threading;
+using TradingLib.Mixins.Json;
 
 namespace TraddingSrvCLI
 {
@@ -185,7 +185,7 @@ namespace TraddingSrvCLI
             CoreThreadStatus status = null;
             try
             {
-                string request = TradingLib.Mixins.JsonRequest.Request("Status").ToJson();
+                string request = TradingLib.Mixins.Json.JsonRequest.Request("Status").ToJson();
                 reqsockt.Send(request, Encoding.UTF8);
                 string rep = reqsockt.Receive(Encoding.UTF8, _reqtimeout);
                 //如果返回为空则表明超时
@@ -203,7 +203,7 @@ namespace TraddingSrvCLI
                 {
                     //如果有数据返回则 重置计数器
                     _timoutcnt = 0;
-                    TradingLib.Mixins.JsonReply<CoreThreadStatus> reply = TradingLib.Mixins.JsonReply.ParseReply<CoreThreadStatus>(rep);
+                    TradingLib.Mixins.Json.JsonReply<CoreThreadStatus> reply = TradingLib.Mixins.Json.JsonReply.ParseReply<CoreThreadStatus>(rep);
                     //解析Reply对象
                     //TradingLib.Mixins.JsonReply reply = TradingLib.Mixins.LitJson.JsonMapper.ToObject<TradingLib.Mixins.JsonReply>(rep);
                     //判断Reply是否为正常返回
@@ -417,8 +417,15 @@ namespace TraddingSrvCLI
                         {
                             string str = rep.Receive(Encoding.UTF8);
                             debug("web taks message is:" + str);
-                            string re = HandleWebTask(str);
-                            rep.Send(re, Encoding.UTF8);
+                            JsonReply re = HandleWebTask(str);
+                            if (re != null)
+                            {
+                                rep.Send(re.ToJson(), Encoding.UTF8);
+                            }
+                            else
+                            {
+                                debug("deal wektask error:");
+                            }
                         }
                         catch (Exception ex)
                         {
@@ -443,38 +450,42 @@ namespace TraddingSrvCLI
             }
         }
 
-        public string HandleWebTask(string msg)
+        public JsonReply HandleWebTask(string msg)
         {
 
             debug("handle...........");
-            TradingLib.Mixins.LitJson.JsonData request = TradingLib.Mixins.JsonRequest.ToObject(msg);
-            string method = request["Method"].ToString().ToUpper();
-            switch (method)
+            //TradingLib.Mixins.LitJson.JsonData request = TradingLib.Mixins.JsonRequest.ToObject(msg);
+            //string method = request["Method"].ToString().ToUpper();
+            JsonRequest request = JsonRequest.ParseRequest(msg);
+            switch (request.Method.ToUpper())
             { 
                 case "START":
                     if (corethread.Status == QSEnumCoreThreadStatus.Stopped)
                     {
                         corethread.Start();
-                        return JsonReply.GenericSuccess(ReplyType.Success, "启动核心服务成功").ToJson();
+                        return WebAPIHelper.ReplySuccess("启动核心服务成功");// JsonReply.GenericSuccess(ReplyType.Success, "启动核心服务成功").ToJson();
                     }
                     else
                     {
-                        return JsonReply.GenericSuccess(ReplyType.Success, "服务非处于停止状态").ToJson();
+                        return WebAPIHelper.ReplyError("SERVICE_STARTED_ALREADY");
+                        //return JsonReply.GenericSuccess(ReplyType.Success, "服务非处于停止状态").ToJson();
                     }
                 case "STOP":
                     if (corethread.Status == QSEnumCoreThreadStatus.Started)
                     {
                         new Thread(corethread.Stop).Start();//放入后台线程进行执行
-                        return JsonReply.GenericSuccess(ReplyType.Success, "停止核心服务成功").ToJson();
+                        return WebAPIHelper.ReplySuccess("停止核心服务成功");
+                        //return JsonReply.GenericSuccess(ReplyType.Success, "停止核心服务成功").ToJson();
                     }
                     else
                     {
-                        return JsonReply.GenericSuccess(ReplyType.Success, "服务非处于运行状态状态").ToJson();
+                        return WebAPIHelper.ReplyError("SERVICE_STOPPED_ALREADY");
+                        //return JsonReply.GenericSuccess(ReplyType.Success, "服务非处于运行状态状态").ToJson();
                     }
                 case "STATUS":
-                    return TradingLib.Mixins.JsonReply.SuccessReply(corethread.CoreStatus).ToJson(); //TradingLib.Mixins.ReplyWriter().Start().FillReply(TradingLib.Mixins.JsonReply.GenericSuccess()).Fill(corethread.CoreStatus,"Playload").End().ToString();
+                    return WebAPIHelper.ReplyObject(corethread.CoreStatus);// TradingLib.Mixins.JsonReply.SuccessReply(corethread.CoreStatus).ToJson(); //TradingLib.Mixins.ReplyWriter().Start().FillReply(TradingLib.Mixins.JsonReply.GenericSuccess()).Fill(corethread.CoreStatus,"Playload").End().ToString();
                 default:
-                    return JsonReply.GenericError(ReplyType.Error, "未支持命令").ToJson();
+                    return WebAPIHelper.ReplyError("METHOD_NOT_FOUND");
             }
         }
 

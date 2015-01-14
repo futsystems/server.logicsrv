@@ -56,6 +56,7 @@ namespace FutsMoniter
         const string AGENTMGRFK = "AGENTMGRFK";
         const string NAME = "姓名";
         const string POSLOK = "锁仓";
+        const string SIDEMARGIN = "单向";
         const string DELETE = "DELETE";
         const string ROUTERGROUP = "Group";
         const string ROUTERGROUPSTR = "路由组";
@@ -117,12 +118,15 @@ namespace FutsMoniter
             gt.Columns.Add(CATEGORY);//18
             gt.Columns.Add(CATEGORYSTR);
             gt.Columns.Add(INTRADAY);//19
+            
+            gt.Columns.Add(POSLOK);//22
+            gt.Columns.Add(SIDEMARGIN);
+            
             gt.Columns.Add(AGENTCODE);//20
             gt.Columns.Add(AGENTMGRFK);//21
-            gt.Columns.Add(POSLOK);//22
-            gt.Columns.Add(DELETE);
             gt.Columns.Add(ROUTERGROUP);
             gt.Columns.Add(ROUTERGROUPSTR);
+            gt.Columns.Add(DELETE);
             
         }
         
@@ -151,8 +155,10 @@ namespace FutsMoniter
             accountgrid.Columns[ADDRESS].Width = 120;
             accountgrid.Columns[HOLDSIZE].Width = 30;
             accountgrid.Columns[INTRADAY].Width = 90;
+            accountgrid.Columns[POSLOK].Width = 50;
+            accountgrid.Columns[SIDEMARGIN].Width = 50;
 
-             for (int i = 0; i < gt.Columns.Count; i++)
+            for (int i = 0; i < gt.Columns.Count; i++)
             {
                 accountgrid.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
             }
@@ -161,7 +167,7 @@ namespace FutsMoniter
         #endregion
 
         #region 帐户内存数据结构
-        private ConcurrentDictionary<string, IAccountLite> accountmap = new ConcurrentDictionary<string, IAccountLite>();
+        private ConcurrentDictionary<string, AccountLite> accountmap = new ConcurrentDictionary<string, AccountLite>();
         private ConcurrentDictionary<string, int> accountrowmap = new ConcurrentDictionary<string, int>();
 
         /// <summary>
@@ -189,8 +195,8 @@ namespace FutsMoniter
             return (accountmap.ContainsKey(account));
         }
 
-        IAccountLite accountselected = null;
-        public IAccountLite AccountSetlected { get { return accountselected; } }
+        AccountLite accountselected = null;
+        public AccountLite AccountSetlected { get { return accountselected; } }
 
         //得到当前选择的行号
         private string CurrentAccount
@@ -205,7 +211,7 @@ namespace FutsMoniter
 
 
         //通过行号得该行的Security
-        IAccountLite GetVisibleAccount(string account)
+        AccountLite GetVisibleAccount(string account)
         {
             //MessageBox.Show("account:" + account + " haveaccount:" + HaveAccount(account).ToString());
             if (HaveAccount(account))
@@ -290,7 +296,7 @@ namespace FutsMoniter
                     while (accountcache.hasItems)
                     {
                        // Globals.Debug("got account in cache*************************");
-                        IAccountLite account = accountcache.Read();
+                        AccountLite account = accountcache.Read();
                         InvokeGotAccount(account);
                         UpdateAccountNum();
                         //如果在初始化之后获得AccountLite信息 则表明该帐户是新增造成的 需要重新watchaccount
@@ -346,8 +352,8 @@ namespace FutsMoniter
 
 
         const int bufferisze = 1000;
-        RingBuffer<IAccountLite> accountcache = new RingBuffer<IAccountLite>(bufferisze);//交易帐户缓存
-        RingBuffer<IAccountInfoLite> accountinfocache = new RingBuffer<IAccountInfoLite>(bufferisze);//交易帐户财务数据更新缓存
+        RingBuffer<AccountLite> accountcache = new RingBuffer<AccountLite>(bufferisze);//交易帐户缓存
+        RingBuffer<AccountInfoLite> accountinfocache = new RingBuffer<AccountInfoLite>(bufferisze);//交易帐户财务数据更新缓存
         RingBuffer<NotifyMGRSessionUpdateNotify> sessionupdatecache = new RingBuffer<NotifyMGRSessionUpdateNotify>(bufferisze);//交易帐户session更新缓存
 
 
@@ -355,11 +361,11 @@ namespace FutsMoniter
         /// 当有帐户新增或者初始化时调用
         /// </summary>
         /// <param name="account"></param>
-        void InvokeGotAccount(IAccountLite account)
+        void InvokeGotAccount(AccountLite account)
         {
             if (InvokeRequired)
             {
-                Invoke(new IAccountLiteDel(InvokeGotAccount), new object[] { account });
+                Invoke(new Action<AccountLite>(InvokeGotAccount), new object[] { account });
             }
             else
             {
@@ -404,7 +410,8 @@ namespace FutsMoniter
                         gt.Rows[i][AGENTCODE] = mgr.Login + " - " + mgr.Name;
                         gt.Rows[i][AGENTMGRFK] = account.MGRID;
                         gt.Rows[i][NAME] = account.Name;
-                        gt.Rows[i][POSLOK] = account.PosLock ? "有权" : "无权";
+                        gt.Rows[i][POSLOK] = account.PosLock ? "支持" : "不支持";
+                        gt.Rows[i][SIDEMARGIN] = account.SideMargin ? "支持" : "不支持";
                         gt.Rows[i][DELETE] = account.Deleted;
                         gt.Rows[i][ROUTERGROUP] = account.RG_ID;
                         RouterGroupSetting rg = Globals.BasicInfoTracker.GetRouterGroup(account.RG_ID);
@@ -426,7 +433,8 @@ namespace FutsMoniter
                         gt.Rows[r][CATEGORYSTR] = Util.GetEnumDescription(account.Category);
                         gt.Rows[r][CATEGORY] = account.Category.ToString();
                         gt.Rows[r][INTRADAY] = account.IntraDay ? "日内" : "隔夜";
-                        gt.Rows[r][POSLOK] = account.PosLock ? "有权" : "无权";
+                        gt.Rows[r][POSLOK] = account.PosLock ? "支持" : "不支持";
+                        gt.Rows[r][SIDEMARGIN] = account.SideMargin ? "支持" : "不支持";
 
                         ManagerSetting mgr = Globals.BasicInfoTracker.GetManager(account.MGRID);
                         gt.Rows[r][AGENTCODE] = mgr.Login + " - " + mgr.Name;
@@ -453,8 +461,8 @@ namespace FutsMoniter
         /// 服务端推送的帐户实时财务数据
         /// </summary>
         /// <param name="account"></param>
-        delegate void IAccountInfoLiteDel(IAccountInfoLite account);
-        void InvokeGotAccountInfoLite(IAccountInfoLite account)
+        delegate void IAccountInfoLiteDel(AccountInfoLite account);
+        void InvokeGotAccountInfoLite(AccountInfoLite account)
         {
             if (InvokeRequired)
             {

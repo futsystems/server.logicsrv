@@ -25,6 +25,8 @@ namespace TradingLib.Common
         public int ErrorID { get; set; }
         public string ErrorMessage { get; set; }
         public Exception RawException { get; set; }
+
+
         public FutsRspError()
         {
             ErrorID = 1;
@@ -57,7 +59,7 @@ namespace TradingLib.Common
         /// 将JsonReply生成对应的FutsRspError
         /// </summary>
         /// <param name="reply"></param>
-        public FutsRspError(TradingLib.Mixins.JsonReply reply)
+        public FutsRspError(TradingLib.Mixins.Json.JsonReply reply)
         {
             ErrorID = reply.Code;
             ErrorMessage = reply.Message;
@@ -74,23 +76,7 @@ namespace TradingLib.Common
             ErrorMessage = error.Message;
         }
 
-        /// <summary>
-        /// 通过key设定具体的错误信息
-        /// </summary>
-        /// <param name="error_key"></param>
-        public void FillError(string error_key)
-        {
-            this.FillError(XMLRspInfoHelper.Tracker[error_key]);
-        }
-
-        /// <summary>
-        /// 通过code设定具体的错误信息
-        /// </summary>
-        /// <param name="error_code"></param>
-        public void FillError(int error_code)
-        {
-            this.FillError(XMLRspInfoHelper.Tracker[error_code]);
-        }
+        
 
     }
 }

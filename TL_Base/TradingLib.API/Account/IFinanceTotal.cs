@@ -34,6 +34,7 @@ namespace TradingLib.API
         /// 帐户当日结算盯市盈亏 以结算价来计算收盘后的浮动盈亏
         /// </summary>
         decimal SettleUnRealizedPL { get; }
+
         /// <summary>
         /// 手续费
         /// </summary>
@@ -65,7 +66,7 @@ namespace TradingLib.API
         decimal MarginFrozen { get;}
 
         /// <summary>
-        /// 总占用资金 = 个品种占用资金之和
+        /// 总占用资金 = 所有品种占用资金之和
         /// 总资金使用量 = 占用保证金 + 冻结保证金
         /// </summary>
         decimal MoneyUsed { get; }
@@ -73,12 +74,12 @@ namespace TradingLib.API
         /// <summary>
         /// 总净值 帐户当前权益=总净值
         /// </summary>
-        decimal TotalLiquidation { get; }//帐户总净值
+        decimal TotalLiquidation { get; }
 
         /// <summary>
         /// 帐户总可用资金=总净值 - 总资金使用量
         /// </summary>
-        decimal AvabileFunds { get; }//帐户总可用资金
+        decimal AvabileFunds { get; }
 
         /// <summary>
         /// 信用金额

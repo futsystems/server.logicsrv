@@ -15,7 +15,7 @@ namespace TradingLib.Common
 
         public void ReqUpdateRecvBank(JsonWrapperReceivableAccount bank)
         {
-            this.ReqContribRequest("MgrExchServer", "UpdateReceiveableBank",TradingLib.Mixins.LitJson.JsonMapper.ToJson(bank)); 
+            this.ReqContribRequest("MgrExchServer", "UpdateReceiveableBank",TradingLib.Mixins.Json.JsonMapper.ToJson(bank)); 
         }
         /// <summary>
         /// 请求同步品种

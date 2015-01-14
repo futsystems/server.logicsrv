@@ -41,6 +41,21 @@ namespace TradingLib.ORM
         }
 
         /// <summary>
+        /// 查询某个Manger的密码
+        /// </summary>
+        /// <param name="login"></param>
+        /// <returns></returns>
+        public static string GetManagerPass(string login)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                    string query = String.Format("SELECT a.login,a.pass FROM manager a WHERE login = '{0}'", login);
+                    ManagerAuth auth = db.Connection.Query<ManagerAuth>(query, null).Single<ManagerAuth>();
+                    return auth.Pass;
+            }
+        }
+
+        /// <summary>
         /// 更新管理员密码
         /// </summary>
         /// <param name="login"></param>

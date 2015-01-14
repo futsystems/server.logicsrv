@@ -7,7 +7,7 @@ using TradingLib.API;
 
 namespace TradingLib.Common
 {
-    public class AccountInfoLite : IAccountInfoLite
+    public class AccountInfoLite
     {
         public string Account { get; set; }
         public decimal NowEquity { get; set; }//当前动态权益
@@ -21,7 +21,7 @@ namespace TradingLib.Common
         public int TotalPositionSize { get; set; }//所有持仓手数量
 
 
-        public static string Serialize(IAccountInfoLite info)
+        public static string Serialize(AccountInfoLite info)
         {
             const char d = ',';
             StringBuilder sb = new StringBuilder();
@@ -48,7 +48,7 @@ namespace TradingLib.Common
 
         }
 
-        public static IAccountInfoLite Deserialize(string msg)
+        public static AccountInfoLite Deserialize(string msg)
         {
             string[] r = msg.Split(',');
             AccountInfoLite a = new AccountInfoLite();

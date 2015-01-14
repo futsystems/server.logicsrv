@@ -44,7 +44,7 @@ namespace TradingLib.Common
             //}
         }
 
-        public static PluginFinderWrapper GetWrapper()
+        static PluginFinderWrapper GetWrapper()
         {
             if (DefaultInstance.wrapper == null)
                 DefaultInstance.wrapper = new PluginFinderWrapper();
@@ -57,9 +57,9 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static IContribPlugin LoadContribPlugin(string id)
+        public static IContribPlugin LoadContribPlugin(string classname)
         {
-            return GetWrapper().LoadContribPlugin(id);
+            return GetWrapper().LoadContribPlugin(classname);
         }
 
         /// <summary>
@@ -162,23 +162,40 @@ namespace TradingLib.Common
             return GetWrapper().LoadBrokerType();
         }
 
-
+        /// <summary>
+        /// 获得帐户类型
+        /// </summary>
+        /// <returns></returns>
         public static List<Type> LoadAccountType()
         {
             return GetWrapper().LoadAccountType();
         }
 
-
+        /// <summary>
+        /// 获得帐户风控规则类型
+        /// </summary>
+        /// <returns></returns>
         public static List<Type> LoadAccountRule()
         {
             return GetWrapper().LoadAccountRule();
         }
 
+        /// <summary>
+        /// 获得委托风控规则类型
+        /// </summary>
+        /// <returns></returns>
         public static List<Type> LoadOrderRule()
         {
             return GetWrapper().LoadOrderRule();
         }
 
+        /// <summary>
+        /// 从某个文件夹加载实现某个接口的类型
+        /// 比如在配资扩展模块中 有多个配资服务计划,且实现了统一的接口，则需要自定义加载该类型
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="needtype"></param>
+        /// <returns></returns>
         public static IList<Type> GetImplementors(string path, Type needtype)
         {
             return GetWrapper().GetImplementors(path, needtype);

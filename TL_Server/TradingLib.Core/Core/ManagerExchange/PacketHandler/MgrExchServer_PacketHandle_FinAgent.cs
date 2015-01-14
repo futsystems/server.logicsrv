@@ -31,13 +31,13 @@ namespace TradingLib.Core
 
 
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAgentBankAccount", "UpdateAgentBankAccount -update bankaccount of agent", "更新代理银行卡信息", true)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAgentBankAccount", "UpdateAgentBankAccount -update bankaccount of agent", "更新代理银行卡信息", QSEnumArgParseType.Json)]
         public void CTE_UpdateAgentBankAccount(ISession session, string playload)
         {
             Manager manger = session.GetManager();
             if (manger != null)
             {
-                JsonWrapperBankAccount bankaccount = Mixins.LitJson.JsonMapper.ToObject<JsonWrapperBankAccount>(playload);
+                JsonWrapperBankAccount bankaccount = Mixins.Json.JsonMapper.ToObject<JsonWrapperBankAccount>(playload);
                 //强制设定银行帐号的主域id为当前manger主域id
                 bankaccount.mgr_fk = manger.mgr_fk;
                 if (bankaccount != null && bankaccount.mgr_fk == manger.mgr_fk)

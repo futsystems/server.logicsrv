@@ -23,7 +23,7 @@ namespace TradingLib.Core
                 status.IsTradingday = TLCtxHelper.Ctx.SettleCentre.IsTradingday;
                 status.LastSettleday = TLCtxHelper.Ctx.SettleCentre.LastSettleday;
                 status.NextTradingday = TLCtxHelper.Ctx.SettleCentre.NextTradingday;
-                status.TotalAccountNum = manger.Domain.Super?clearcentre.Accounts.Length:manger.GetAccounts().Count();
+                status.TotalAccountNum = manger.Domain.Super?clearcentre.Accounts.Count():manger.GetAccounts().Count();
                 status.MarketOpenCheck = TLCtxHelper.Ctx.RiskCentre.MarketOpenTimeCheck;
                 status.IsDevMode = GlobalConfig.IsDevelop;
 

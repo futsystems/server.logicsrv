@@ -75,7 +75,7 @@ namespace TradingLib.Core
         //恢复交易帐号交易信息数据
         RingBuffer<MGRResumeAccountRequest> _resumecache = new RingBuffer<MGRResumeAccountRequest>(buffize);//请求恢复交易帐户数据队列
         RingBuffer<IPacket> _packetcache = new RingBuffer<IPacket>(buffize);//其余消息的缓存队列
-        RingBuffer<SessionInfo> _sessioncache = new RingBuffer<SessionInfo>(buffize);//客户端登入 登出缓存
+        //RingBuffer<SessionInfo> _sessioncache = new RingBuffer<SessionInfo>(buffize);//客户端登入 登出缓存
         RingBuffer<IAccount> _accountchangecache = new RingBuffer<IAccount>(buffize);//帐户变动缓存
         RingBuffer<RspMGRQryAccountResponse> _accqrycache = new RingBuffer<RspMGRQryAccountResponse>(buffize);//交易帐户列表查询缓存需要比其他数据提高发送优先级，其他数据依赖与该数据
 

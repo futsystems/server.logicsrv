@@ -9,8 +9,7 @@ using System.Diagnostics;//记得加入此引用
 
 using TradingLib.API;
 using TradingLib.Common;
-using TradingLib;
-using TradingLib.LitJson;
+
 
 /*委托核心处理流程
  * 1.客户端发送直接委托
@@ -33,7 +32,7 @@ namespace TradingLib.Core
     /// TradingServer是整体的中转站,他负责底层的tlserver处理将客户端请求进行逻辑处理后分发到对应其他的组件
     /// 并且接受其他组件回报过来的信息并转给客户端
     /// </summary>
-    public partial class MsgExchServer : BaseSrvObject, IMessageExchange, ICTrdReq, ICore
+    public partial class MsgExchServer : BaseSrvObject, IMessageExchange, ICore
     {
         const string CoreName = "MsgExch";
 
@@ -83,12 +82,12 @@ namespace TradingLib.Core
         /// <summary>
         /// 客户端登入成功事件
         /// </summary>
-        public event AccountIdDel AccountLoginSuccessEvent;
+        public event AccoundIDDel AccountLoginSuccessEvent;
 
         /// <summary>
         /// 客户端登入失败事件
         /// </summary>
-        public event AccountIdDel AccountLoginFailedEvent;
+        public event AccoundIDDel AccountLoginFailedEvent;
 
         /// <summary>
         /// 客户端登入 退出事件
@@ -105,7 +104,7 @@ namespace TradingLib.Core
         /// 2.客户端注销
         /// 3.客户端硬件地址变更
         /// </summary>
-        public event ISessionDel AccountSessionChangedEvent;
+        //public event ISessionDel AccountSessionChangedEvent;
 
 
         /// <summary>
@@ -124,11 +123,10 @@ namespace TradingLib.Core
 
 
         ClearCentre _clearcentre;
-        /// <summary>
-        /// 绑定清算中心用于清算中心得到相关数据
-        /// </summary>
-        public ClearCentre ClearCentre{get { return _clearcentre; } set{ _clearcentre  =  value;}}
-
+        public void BindClearCentre(ClearCentre c)
+        {
+            _clearcentre = c;
+        }
 
         SettleCentre _settlecentre;
         /// <summary>
@@ -138,12 +136,11 @@ namespace TradingLib.Core
 
 
         RiskCentre _riskcentre;
-        /// <summary>
-        /// 绑定风控中心
-        /// </summary>
-        public RiskCentre RiskCentre { get { return _riskcentre; } set { _riskcentre = value; } }
+        public void BindRiskCentre(RiskCentre r)
+        {
+            _riskcentre = r;
+        }
 
-        
 
         //QSEnumServerMode _srvmode = QSEnumServerMode.StandAlone;
         /// <summary>
@@ -421,7 +418,7 @@ namespace TradingLib.Core
                 tl.newOrderActionRequest += new OrderActionRequestDel(tl_newOrderActionRequest);
 
                 //处理其他请求消息
-                tl.newPacketRequest += new TrdPacketRequestDel(tl_newPacketRequest);
+                tl.newPacketRequest += new PacketRequestDel(tl_newPacketRequest);
 
                 tl.ClientRegistedEvent += (TrdClientInfo c) =>
                     {
@@ -491,44 +488,14 @@ namespace TradingLib.Core
 
         #region 其他函数部分
         /// <summary>
-        /// 通过Account查找对应的clientID如果登入了则返回地址 如果没有登入则返回null
-        /// </summary>
-        /// <param name="account"></param>
-        /// <returns></returns>
-        public string[] LoginID2ClientID(string account)
-        {
-            //return tl.AddListForAccount(account);
-            return null;
-        }
-
-        /// <summary>
-        ///通过地址反向查找其登入帐号,如果存在则返回account,若不存在则返回null
-        /// </summary>
-        /// <param name="address"></param>
-        /// <returns></returns>
-        public string AccountFromAddress(string address)
-        {
-            //return tl.AccountForAddress(address);
-            return null;
-        }
-
-        /// <summary>
         /// 返回某个交易帐户所有终端
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
-        public IEnumerable<ClientInfoBase> ClientsForAccount(string account)
+        public IEnumerable<ClientInfoBase> GetNotifyTargets(string account)
         {
             return tl.ClientsForAccount(account);
         }
-        //public TrdClientInfo FirstClientInfoForAccount(string account)
-        //{
-        //    TrdClientInfo[] list = tl.ClientsForAccount(account);
-        //    if (list.Length > 0)
-        //        return list[0];
-        //    else
-        //        return null;
-        //}
 
         /// <summary>
         /// 恢复交易连接数据
@@ -544,41 +511,7 @@ namespace TradingLib.Core
         }
 
 
-        /// <summary>
-        /// 获得某个合约的市场快照
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <returns></returns>
-        public Tick GetTickSnapshot(string symbol)
-        {
-            return _datafeedRouter.GetTickSnapshot(symbol);
-        }
 
-        /// <summary>
-        /// 判断某个合约当前行情是否处于live状态
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <returns></returns>
-        public bool IsSymbolTickLive(string symbol)
-        {
-            return _datafeedRouter.IsTickLive(symbol);
-        }
-
-
-        /// <summary>
-        /// 获得某个合约的有效价格
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <returns></returns>
-        public decimal GetAvabilePrice(string symbol)
-        {
-            if (_datafeedRouter == null)
-            {
-                return -1;
-            }
-            return _datafeedRouter.GetAvabilePrice(symbol);
-            return 0;
-        }
         #endregion
 
         #region 开始 停止部分

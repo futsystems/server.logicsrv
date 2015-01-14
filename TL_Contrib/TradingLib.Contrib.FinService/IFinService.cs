@@ -60,7 +60,7 @@ namespace TradingLib.Contrib.FinService
         /// <param name="t"></param>
         /// <param name="pr"></param>
         /// <returns></returns>
-        decimal OnAdjustCommission(Trade t, IPositionRound pr);
+        decimal OnAdjustCommission(Trade t, PositionRound pr);
 
         /// <summary>
         /// 响应成交
@@ -72,7 +72,7 @@ namespace TradingLib.Contrib.FinService
         /// 响应成交回合
         /// </summary>
         /// <param name="round"></param>
-        void OnRound(IPositionRound round);
+        void OnRound(PositionRound round);
 
         /// <summary>
         /// 响应结算事件

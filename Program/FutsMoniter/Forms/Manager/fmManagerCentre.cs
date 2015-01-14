@@ -43,6 +43,11 @@ namespace FutsMoniter
         public void OnInit()
         {
             Globals.BasicInfoTracker.GotManagerEvent += new Action<ManagerSetting>(GotManager);
+
+            if (!Globals.Manager.IsRoot())
+            {
+                mgrgrid.ContextMenuStrip.Items[6].Visible = false;
+            }
         }
 
         public void OnDisposed()
@@ -145,6 +150,26 @@ namespace FutsMoniter
         }
 
 
+        /// <summary>
+        /// 查询域RootPass
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void QryManagerPass_Click(object sender, EventArgs e)
+        {
+            ManagerSetting manger = Globals.BasicInfoTracker.GetManager(CurrentManagerID);
+            if (manger == null)
+            {
+                ComponentFactory.Krypton.Toolkit.KryptonMessageBox.Show("请选择管理员");
+                return;
+            }
+
+            fmLoginInfo fm = new fmLoginInfo();
+            fm.SetManager(manger);
+            fm.ShowDialog();
+            
+        }
+
 
         #region 显示字段
 
@@ -191,8 +216,11 @@ namespace FutsMoniter
 
             grid.ContextMenuStrip.Items.Add("添加", null, new EventHandler(AddManager_Click));
             grid.ContextMenuStrip.Items.Add("编辑", null, new EventHandler(EditManager_Click));
+            grid.ContextMenuStrip.Items.Add(new System.Windows.Forms.ToolStripSeparator());
             grid.ContextMenuStrip.Items.Add("激活管理员", null, new EventHandler(ActiveManager_Click));
             grid.ContextMenuStrip.Items.Add("冻结管理员", null, new EventHandler(InactiveManager_Click));
+            grid.ContextMenuStrip.Items.Add(new System.Windows.Forms.ToolStripSeparator());
+            grid.ContextMenuStrip.Items.Add("查看柜员密码", null, new EventHandler(QryManagerPass_Click));
 
         }
 

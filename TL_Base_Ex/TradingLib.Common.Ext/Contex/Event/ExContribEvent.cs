@@ -26,16 +26,7 @@ namespace TradingLib.Common
         /// </summary>
         public event AdjustCommissionDel AdjustCommissionEvent;
 
-        /// <summary>
-        /// 强平成功事件
-        /// </summary>
-        public event PositionDelegate FlatSuccessEvent;
 
-
-        /// <summary>
-        /// 强平异常事件
-        /// </summary>
-        public event PositionFlatFailDel FlatFailedEvent;
 
         internal decimal GetFinAmmountAvabile(string account)
         {
@@ -51,29 +42,11 @@ namespace TradingLib.Common
             return 0;
         }
 
-        internal decimal AdjustCommission(Trade f, IPositionRound pr)
+        internal decimal AdjustCommission(Trade f, PositionRound pr)
         {
             if (AdjustCommissionEvent != null)
                 return AdjustCommissionEvent(f, pr);
             return f.Commission;
-        }
-
-
-        internal void FireFlatSuccessEvent(Position pos)
-        {
-            if (FlatSuccessEvent != null)
-            {
-                FlatSuccessEvent(pos);
-            }
-        }
-
-
-        internal void FireFlatFailedEvent(Position pos,string reason)
-        {
-            if (FlatFailedEvent != null)
-            {
-                FlatFailedEvent(pos,reason);
-            }
         }
     }
 }

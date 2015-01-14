@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TradingLib.API;
+using TradingLib.Mixins.JsonObject;
+
 
 namespace TradingLib.Common
 {
@@ -27,6 +29,7 @@ namespace TradingLib.Common
     public class SystemEvent
     {
 
+        #region 结算与重置事件
         /// <summary>
         /// 结算前事件 在结算前触发
         /// </summary>
@@ -74,6 +77,9 @@ namespace TradingLib.Common
                 AfterSettleResetEvent(sender, args);
         }
 
+        #endregion
+
+
         #region 任务调度事件
 
         /// <summary>
@@ -107,7 +113,7 @@ namespace TradingLib.Common
         #endregion
 
 
-        #region Packet消息包事件
+        #region Packet 逻辑消息包事件
 
         public event EventHandler<PacketEventArgs> PacketEvent;
 
@@ -115,6 +121,44 @@ namespace TradingLib.Common
         {
             if (PacketEvent != null)
                 PacketEvent(sender, args);
+        }
+        #endregion
+
+
+        #region Position 强平事件
+
+        /// <summary>
+        /// 强平成功事件
+        /// </summary>
+        public event EventHandler<PositionFlatEventArgs> PositionFlatEvent;
+
+        internal void FirePositionFlatEvent(object sender,PositionFlatEventArgs args)
+        {
+            if (PositionFlatEvent != null)
+            {
+                PositionFlatEvent(sender,args);
+            }
+        }
+        #endregion
+
+
+        #region 出入金操作状态
+        /// <summary>
+        /// 出入金请求 状态改变22:59
+        /// </summary>
+        public event EventHandler<CashOperationEventArgs> CashOperationRequest = delegate { };
+
+        /// <summary>
+        /// 通过事件中继 向系统推送资金处理事件
+        /// 在每个调用到出入金操作状态改变的地方进行触发
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="eventType"></param>
+        /// <param name="cashOperation"></param>
+        public void FireCashOperation(object sender, QSEnumCashOpEventType eventType, JsonWrapperCashOperation cashOperation)
+        {
+            CashOperationEventArgs arg = new CashOperationEventArgs(eventType, cashOperation);
+            CashOperationRequest(sender, arg);
         }
         #endregion
 

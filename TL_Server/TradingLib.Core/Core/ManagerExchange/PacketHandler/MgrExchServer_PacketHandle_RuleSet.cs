@@ -16,9 +16,9 @@ namespace TradingLib.Core
         {
             try
             {
-                debug(string.Format("管理员:{0} 请求查询风控规则:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
+                debug(string.Format("管理员:{0} 请求查询风控规则:{1}", session.AuthorizedID, request.ToString()), QSEnumDebugLevel.INFO);
 
-                RuleClassItem[] items = riskcentre.GetRuleClassItems();
+                RuleClassItem[] items = riskcentre.GetRuleClassItems().ToArray();
                 int totalnum = items.Length;
 
                 if (totalnum > 0)
@@ -46,7 +46,7 @@ namespace TradingLib.Core
         {
             try
             {
-                debug(string.Format("管理员:{0} 请求更新风控规则:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
+                debug(string.Format("管理员:{0} 请求更新风控规则:{1}", session.AuthorizedID, request.ToString()), QSEnumDebugLevel.INFO);
                 RuleItem item = request.RuleItem;
                 riskcentre.UpdateRule(item);
 
@@ -64,7 +64,7 @@ namespace TradingLib.Core
         {
             try
             {
-                debug(string.Format("管理员:{0} 请求查询帐户分控规则列表:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
+                debug(string.Format("管理员:{0} 请求查询帐户分控规则列表:{1}", session.AuthorizedID, request.ToString()), QSEnumDebugLevel.INFO);
 
                 List<RuleItem> items = new List<RuleItem>();
                 IAccount account = clearcentre[request.Account];
@@ -123,7 +123,7 @@ namespace TradingLib.Core
         {
             try
             {
-                debug(string.Format("管理员:{0} 请求删除风控项:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
+                debug(string.Format("管理员:{0} 请求删除风控项:{1}", session.AuthorizedID, request.ToString()), QSEnumDebugLevel.INFO);
                 riskcentre.DeleteRiskRule(request.RuleItem);
                 RspMGRDelRuleItemResponse response = ResponseTemplate<RspMGRDelRuleItemResponse>.SrvSendRspResponse(request);
                 response.RuleItem = request.RuleItem;

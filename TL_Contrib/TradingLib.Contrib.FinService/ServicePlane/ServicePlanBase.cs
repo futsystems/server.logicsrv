@@ -144,7 +144,7 @@ namespace TradingLib.Contrib.FinService
         /// 亏损不收钱 盈利收钱
         /// </summary>
         /// <param name="round"></param>
-        public virtual void OnRound(IPositionRound round)
+        public virtual void OnRound(PositionRound round)
         {
 
 
@@ -168,7 +168,7 @@ namespace TradingLib.Contrib.FinService
         /// <param name="t"></param>
         /// <param name="pr"></param>
         /// <returns></returns>
-        public virtual decimal OnAdjustCommission(Trade t, IPositionRound pr)
+        public virtual decimal OnAdjustCommission(Trade t, PositionRound pr)
         {
             return t.Commission;
         }

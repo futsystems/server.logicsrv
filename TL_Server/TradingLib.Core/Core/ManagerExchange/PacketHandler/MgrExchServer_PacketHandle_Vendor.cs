@@ -13,20 +13,20 @@ namespace TradingLib.Core
         public void CTE_QryVendor(ISession session)
         {
             Manager manger = session.GetManager();
-            if (manger.RightRootDomain())
+            if (manger.IsInRoot())
             {
                 VendorSetting[] vendorlist = session.GetManager().Domain.GetVendors().ToArray();// BasicTracker.VendorTracker.Vendors.ToArray();
                 session.ReplyMgr(vendorlist);
             }
         }
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateVendor", "UpdateVendor - update vendor", "更新Vendor设置", true)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateVendor", "UpdateVendor - update vendor", "更新Vendor设置",QSEnumArgParseType.Json)]
         public void CTE_UpdateVendor(ISession session, string json)
         {
             Manager manger = session.GetManager();
-            if (manger.RightRootDomain())
+            if (manger.IsInRoot())
             {
-                VendorSetting vendor = TradingLib.Mixins.LitJson.JsonMapper.ToObject<VendorSetting>(json);
+                VendorSetting vendor = TradingLib.Mixins.Json.JsonMapper.ToObject<VendorSetting>(json);
                 bool isadd = vendor.ID == 0;
                 if (string.IsNullOrEmpty(vendor.Name))
                 {
@@ -57,9 +57,9 @@ namespace TradingLib.Core
 
         CustInfoEx GetCustInfoEx(ISession session)
         {
-            if (customerExInfoMap.Keys.Contains(session.ClientID))
+            if (customerExInfoMap.Keys.Contains(session.Location.ClientID))
             {
-                return customerExInfoMap[session.ClientID];
+                return customerExInfoMap[session.Location.ClientID];
             }
             return null;
         }

@@ -31,22 +31,22 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(fmChangePasswordAgent));
             this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
             this.btnSubmit = new ComponentFactory.Krypton.Toolkit.KryptonButton();
-            this.newpass2 = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
-            this.newpass = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
-            this.oldpass = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
             this.kryptonLabel3 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel2 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel1 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.oldpass = new ComponentFactory.Krypton.Toolkit.KryptonMaskedTextBox();
+            this.newpass = new ComponentFactory.Krypton.Toolkit.KryptonMaskedTextBox();
+            this.newpass2 = new ComponentFactory.Krypton.Toolkit.KryptonMaskedTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // kryptonPanel1
             // 
-            this.kryptonPanel1.Controls.Add(this.btnSubmit);
             this.kryptonPanel1.Controls.Add(this.newpass2);
             this.kryptonPanel1.Controls.Add(this.newpass);
             this.kryptonPanel1.Controls.Add(this.oldpass);
+            this.kryptonPanel1.Controls.Add(this.btnSubmit);
             this.kryptonPanel1.Controls.Add(this.kryptonLabel3);
             this.kryptonPanel1.Controls.Add(this.kryptonLabel2);
             this.kryptonPanel1.Controls.Add(this.kryptonLabel1);
@@ -65,27 +65,6 @@
             this.btnSubmit.TabIndex = 6;
             this.btnSubmit.Values.Text = "提 交";
             this.btnSubmit.Click += new System.EventHandler(this.btnSubmit_Click);
-            // 
-            // newpass2
-            // 
-            this.newpass2.Location = new System.Drawing.Point(89, 69);
-            this.newpass2.Name = "newpass2";
-            this.newpass2.Size = new System.Drawing.Size(100, 21);
-            this.newpass2.TabIndex = 5;
-            // 
-            // newpass
-            // 
-            this.newpass.Location = new System.Drawing.Point(89, 41);
-            this.newpass.Name = "newpass";
-            this.newpass.Size = new System.Drawing.Size(100, 21);
-            this.newpass.TabIndex = 4;
-            // 
-            // oldpass
-            // 
-            this.oldpass.Location = new System.Drawing.Point(89, 13);
-            this.oldpass.Name = "oldpass";
-            this.oldpass.Size = new System.Drawing.Size(100, 21);
-            this.oldpass.TabIndex = 3;
             // 
             // kryptonLabel3
             // 
@@ -110,6 +89,30 @@
             this.kryptonLabel1.Size = new System.Drawing.Size(55, 18);
             this.kryptonLabel1.TabIndex = 0;
             this.kryptonLabel1.Values.Text = "旧密码:";
+            // 
+            // oldpass
+            // 
+            this.oldpass.Location = new System.Drawing.Point(89, 13);
+            this.oldpass.Name = "oldpass";
+            this.oldpass.PasswordChar = '#';
+            this.oldpass.Size = new System.Drawing.Size(100, 22);
+            this.oldpass.TabIndex = 7;
+            // 
+            // newpass
+            // 
+            this.newpass.Location = new System.Drawing.Point(89, 41);
+            this.newpass.Name = "newpass";
+            this.newpass.PasswordChar = '#';
+            this.newpass.Size = new System.Drawing.Size(100, 22);
+            this.newpass.TabIndex = 8;
+            // 
+            // newpass2
+            // 
+            this.newpass2.Location = new System.Drawing.Point(89, 69);
+            this.newpass2.Name = "newpass2";
+            this.newpass2.PasswordChar = '#';
+            this.newpass2.Size = new System.Drawing.Size(100, 22);
+            this.newpass2.TabIndex = 9;
             // 
             // fmChangePasswordAgent
             // 
@@ -136,10 +139,10 @@
         private ComponentFactory.Krypton.Toolkit.KryptonPanel kryptonPanel1;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel2;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel1;
-        private ComponentFactory.Krypton.Toolkit.KryptonTextBox newpass2;
-        private ComponentFactory.Krypton.Toolkit.KryptonTextBox newpass;
-        private ComponentFactory.Krypton.Toolkit.KryptonTextBox oldpass;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel3;
         private ComponentFactory.Krypton.Toolkit.KryptonButton btnSubmit;
+        private ComponentFactory.Krypton.Toolkit.KryptonMaskedTextBox oldpass;
+        private ComponentFactory.Krypton.Toolkit.KryptonMaskedTextBox newpass;
+        private ComponentFactory.Krypton.Toolkit.KryptonMaskedTextBox newpass2;
     }
 }

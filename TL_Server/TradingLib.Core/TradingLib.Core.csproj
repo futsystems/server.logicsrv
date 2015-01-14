@@ -63,27 +63,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Base\ClientMgr.cs" />
-    <Compile Include="Base\CoreGlobal.cs" />
-    <Compile Include="Base\HighLowTracker.cs" />
-    <Compile Include="Base\Utils\PositionCloseDetailUtil.cs" />
-    <Compile Include="Base\Utils\PositionDetailsUtil.cs" />
+    <Compile Include="Base\ClientTracker.cs" />
     <Compile Include="Base\TIFTracker.cs" />
     <Compile Include="Base\TLServer_Generic.cs" />
-    <Compile Include="Base\Utils\PositionUtil.cs" />
-    <Compile Include="Base\Utils\SymbolUtils.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_AccountOperation.cs" />
-    <Compile Include="Core\ClearCentre\ClearCentreSrv_Interface.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_onGotXXX.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_Data_Restore.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_CTE.cs" />
-    <Compile Include="Core\ClearCentre\JsonWrapperClearCentre.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_AccountCashOperation.cs" />
-    <Compile Include="Core\ClearCentre\ClearCentreSrv_LogRestore.cs" />
-    <Compile Include="Core\ManagerExchange\ContractBankUtils.cs" />
-    <Compile Include="Core\ManagerExchange\ManagerRights.cs" />
+    <Compile Include="Core\ClearCentre\ClearCentreSrv_LogData.cs" />
+    <Compile Include="Core\ClearCentre\ClearCentreSrv_TradingInfo.cs" />
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_FinAgent.cs" />
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_Msic.cs" />
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_RecvBank.cs" />
@@ -95,11 +86,6 @@
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_Connector.cs" />
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_RuleSet.cs" />
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_Account.cs" />
-    <Compile Include="Core\ManagerExchange\Utils\ManagerUtils_.cs" />
-    <Compile Include="Core\ManagerExchange\Utils\ManagerUtils_Account.cs" />
-    <Compile Include="Core\ManagerExchange\Utils\ManagerUtils.cs" />
-    <Compile Include="Core\ManagerExchange\Utils\ManagerUtils_Right.cs" />
-    <Compile Include="Core\ManagerExchange\MgrClientInfo.cs" />
     <Compile Include="Core\ManagerExchange\MgrExchServer.cs" />
     <Compile Include="Base\Settlement.cs" />
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_Other.cs" />
@@ -112,9 +98,7 @@
     <Compile Include="Core\ManagerExchange\MgrExchServer_Operation.cs" />
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_CashOPAccount.cs" />
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_CashOPAgent.cs" />
-    <Compile Include="Core\ManagerExchange\Utils\ObjectsUtils.cs" />
     <Compile Include="Core\ManagerExchange\MgrExchServer_Notify.cs" />
-    <Compile Include="Core\ManagerExchange\Utils\ManagerUtils_Predicate.cs" />
     <Compile Include="Core\ManagerExchange\MgrExchServer_PacketHandle_.cs" />
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_Vendor.cs" />
     <Compile Include="Core\MessageExchange\BrokerRouter\BrokerRouter_.cs" />
@@ -134,8 +118,6 @@
     <Compile Include="Core\MessageExchange\MsgExchServer_Router.cs" />
     <Compile Include="Core\MessageExchange\MsgExchServer_MessageOut.cs" />
     <Compile Include="Core\MessageExchange\PacketHandler\MsgExchServer_PacketHandler_Order.cs" />
-    <Compile Include="Core\RiskCentre\PositionOffset.cs" />
-    <Compile Include="Core\RiskCentre\PositionOffsetTracker.cs" />
     <Compile Include="Core\MessageExchange\BrokerRouter\BrokerRouter.cs" />
     <Compile Include="Core\MessageExchange\DataFeedRouter.cs" />
     <Compile Include="Core\RiskCentre\RiskCentre_CheckAccount.cs" />
@@ -147,7 +129,6 @@
     <Compile Include="Core\RiskCentre\RiskCentre_Trading.cs" />
     <Compile Include="Core\SettleCentre\SettleCentre.cs" />
     <Compile Include="Core\SettleCentre\SettleCentre_..cs" />
-    <Compile Include="Core\SettleCentre\SettleCentre_Check.cs" />
     <Compile Include="Core\SettleCentre\SettleCentre_CTE.cs" />
     <Compile Include="Core\SettleCentre\SettleCentre_StoreClean.cs" />
     <Compile Include="Core\SettleCentre\TradingCalendar.cs" />
@@ -155,18 +136,14 @@
     <Compile Include="Core\MessageExchange\MsgExchServer.cs" />
     <Compile Include="Core\RiskCentre\RiskCentre.cs" />
     <Compile Include="Core\TaskCentre\TaskCentre_CTE.cs" />
-    <Compile Include="Core\WebMessageExchange\HealthReport.cs" />
-    <Compile Include="Core\WebMessageExchange\WebAdminInfoEx.cs" />
     <Compile Include="Core\WebMessageExchange\WebMsgExchServer.cs" />
     <Compile Include="Core\WebMessageExchange\WebMsgExchServer_CTE.cs" />
-    <Compile Include="Core\WebMessageExchange\WebMsgPubServer.cs" />
     <Compile Include="Core\WebMessageExchange\WebMsgRepServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Transport\AsyncServer.cs" />
     <Compile Include="Transport\FastTickSrvMgrClient.cs" />
     <Compile Include="Transport\ThroughtPutTracker.cs" />
     <Compile Include="Transport\ZeromqThroughPut.cs" />
-    <Compile Include="Base\CoreUtil.cs" />
     <Compile Include="Base\AsyncTransactionLoger.cs" />
     <Compile Include="Base\TIFEngine.cs" />
     <Compile Include="Transport\zmessages.cs" />

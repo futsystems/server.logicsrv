@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
-using TradingLib.LitJson;
 using TradingLib.BrokerXAPI;
 
 namespace TradingLib.ServiceManager
@@ -32,7 +31,7 @@ namespace TradingLib.ServiceManager
             {
                 bool cs_success = false;
                 cs_success = xapibrokermodule.Keys.Contains(itface.type_name);
-                bool cpp_success = itface.IsXAPI?BrokerXAPIHelper.ValidBrokerInterface(itface):true;
+                bool cpp_success = itface.IsXAPI ? XAPIHelper.ValidBrokerInterface(itface.libpath_broker, itface.libname_broker, itface.libpath_wrapper, itface.libname_wrapper) : true;
                 bool ret = cs_success && cpp_success;
                 //通过加载测试
                 if (ret)
@@ -53,7 +52,7 @@ namespace TradingLib.ServiceManager
             {
                 bool cs_success = false;
                 cs_success = xapidatafeedmodule.Keys.Contains(itface.type_name);
-                bool cpp_success = itface.IsXAPI ? BrokerXAPIHelper.ValidBrokerInterface(itface) : true;
+                bool cpp_success = itface.IsXAPI ? XAPIHelper.ValidBrokerInterface(itface.libpath_broker, itface.libname_broker, itface.libpath_wrapper, itface.libname_wrapper) : true;
                 bool ret = cs_success && cpp_success;
                 //通过加载测试
                 if (ret)
@@ -124,8 +123,7 @@ namespace TradingLib.ServiceManager
             //设定brokerconfg
             broker.SetBrokerConfig(cfg);
             
-            //
-            broker.GotSymbolEvent += new Action<XSymbol, bool>(broker_GotSymbolEvent);
+            //broker.GotSymbolEvent += new Action<XSymbol, bool>(broker_GotSymbolEvent);
             
             //3.转换成Broker 注接口验证时已经保证了 broker对应的interface类型是实现IBroker接口的 这里需要检查是否重复加载
             IBroker brokerinterface = broker as IBroker;
@@ -136,33 +134,17 @@ namespace TradingLib.ServiceManager
             if (vendor != null)
                 vendor.BindBroker(brokerinterface);
 
-            //5.绑定状态事件
+            ////5.绑定状态事件
             broker.Connected += (string b) =>
             {
                 debug("Broker[" + b + "] Connected", QSEnumDebugLevel.INFO);
-                if (BrokerConnectedEvent != null)
-                    BrokerConnectedEvent(b);
             };
             broker.Disconnected += (string b) =>
             {
                 debug("Broker[" + b + "] Disconnected", QSEnumDebugLevel.WARNING);
-                if (BrokerDisconnectedEvent != null)
-                    BrokerDisconnectedEvent(b);
             };
             //6.将broker的交易类事件绑定到路由内 然后通过路由转发到交易消息服务
             _brokerrouter.LoadBroker(brokerinterface);
-        }
-
-        /// <summary>
-        /// 接口返回合约信息
-        /// 如果分区设置了某个同步通道，则会定时从该通道同步合约信息
-        /// 品种信息需要手工维护
-        /// </summary>
-        /// <param name="arg1"></param>
-        /// <param name="arg2"></param>
-        void broker_GotSymbolEvent(XSymbol arg1, bool arg2)
-        {
-            //debug("got symbol:" + arg1.Symbol + " margin:" + arg1.Margin.ToString() +" comm:"+arg1.EntryCommission.ToString()+" last:" + arg2.ToString(), QSEnumDebugLevel.INFO);
         }
 
         /// <summary>
@@ -189,16 +171,13 @@ namespace TradingLib.ServiceManager
 
                 datafeed.Connected += (string d) =>
                 {
-                    debug("DataFeed[" + d + "] Connected",QSEnumDebugLevel.INFO);
-                    if (DataFeedConnectedEvent != null)
-                        DataFeedConnectedEvent(d);
+                    debug("DataFeed[" + d + "] Connected", QSEnumDebugLevel.INFO);
                 };
                 datafeed.Disconnected += (string d) =>
                 {
-                    debug("DataFeed[" + d + "] Disonnected",QSEnumDebugLevel.WARNING);
-                    if (DataFeedDisconnectedEvent != null)
-                        DataFeedDisconnectedEvent(d);
+                    debug("DataFeed[" + d + "] Disonnected", QSEnumDebugLevel.WARNING);
                 };
+                //将DataFeed加载到行情路由中去
                 _datafeedrouter.LoadDataFeed(datafeedinterface);
             }
         

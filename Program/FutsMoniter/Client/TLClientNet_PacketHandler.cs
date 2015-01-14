@@ -295,37 +295,20 @@ namespace TradingLib.Common
 
         #region 风控规则类回报
 
-
-        //void CliOnMGRystemStatus(RspMGRQrySystemStatusResponse response)
-        //{
-        //    debug("got systemstatus response:" + response.ToString(), QSEnumDebugLevel.INFO);
-        //    this.handler.OnMGRSytstemStatus(response.Status, response.IsLast);
-        //}
-
-
         void CliOnMGROrderResponse(RspMGRQryOrderResponse response)
         {
-            debug("got historder response:" + response.ToString(), QSEnumDebugLevel.INFO);
-            //if (response.OrderToSend.isValid)
-            {
-                this.handler.OnMGROrderResponse(response.OrderToSend, response.IsLast);
-            }
+            this.handler.OnMGROrderResponse(response.OrderToSend, response.IsLast);
         }
 
         void CliOnMGRTradeResponse(RspMGRQryTradeResponse response)
         {
-            debug("got histtrade response:" + response.ToString(), QSEnumDebugLevel.INFO);
-            //if (response.TradeToSend.isValid)
-            {
-                this.handler.OnMGRTradeResponse(response.TradeToSend, response.IsLast);
-            }
+            this.handler.OnMGRTradeResponse(response.TradeToSend, response.IsLast);
         }
 
 
         void CliOnMGRPositionResponse(RspMGRQryPositionResponse response)
         {
-            debug("got histpostion response:" + response.ToString(), QSEnumDebugLevel.INFO);
-            //this.handler.OnMGRPositionResponse(response.PostionToSend, response.IsLast);
+            this.handler.OnMGRPositionResponse(response.PostionToSend, response.IsLast);
         }
 
         void CliOnMGRCashTransactionResponse(RspMGRQryCashResponse response)

@@ -132,11 +132,11 @@ namespace TradingLib.ORM
                 string query = string.Empty;
                 if (string.IsNullOrEmpty(account))
                 {
-                    query = String.Format("SELECT * FROM log_cashtrans  WHERE  datetime>= '{0}' AND datetime<= '{1}' ",Util.ToDateTime(start), Util.ToDateTime(end));
+                    query = String.Format("SELECT * FROM log_cashtrans  WHERE  datetime>= {0} AND datetime<= {1} ", start, start);
                 }
                 else
                 {
-                    query = String.Format("SELECT * FROM log_cashtrans  WHERE account='{0}' AND datetime>= '{1}' AND datetime<= '{2}' ", account, Util.ToDateTime(start), Util.ToDateTime(end));
+                    query = String.Format("SELECT * FROM log_cashtrans  WHERE account='{0}' AND datetime>= {1} AND datetime<= {2} ", account, start,end);
                 }
                 return db.Connection.Query<JsonWrapperCasnTrans>(query);
             }

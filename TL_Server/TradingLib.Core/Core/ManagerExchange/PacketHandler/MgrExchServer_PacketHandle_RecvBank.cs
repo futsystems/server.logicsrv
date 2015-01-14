@@ -25,18 +25,18 @@ namespace TradingLib.Core
             }
         }
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateReceiveableBank", "UpdateReceiveableBank - update  ReceiveableBank", "更新收款银行银行列表",true)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateReceiveableBank", "UpdateReceiveableBank - update  ReceiveableBank", "更新收款银行银行列表", QSEnumArgParseType.Json)]
         public void CTE_UpdateReceiveableBank(ISession session,string json)
         {
             try
             {
                 Manager manager = session.GetManager();
-                if (!manager.RightRootDomain())
+                if (!manager.IsInRoot())
                 {
                     throw new FutsRspError("无权添加收款银行信息");
                 }
 
-                JsonWrapperReceivableAccount bank = TradingLib.Mixins.LitJson.JsonMapper.ToObject<JsonWrapperReceivableAccount>(json);
+                JsonWrapperReceivableAccount bank = TradingLib.Mixins.Json.JsonMapper.ToObject<JsonWrapperReceivableAccount>(json);
                 manager.Domain.UpdateRecvBanks(bank);
 
                 session.OperationSuccess("更新收款银行信息成功");

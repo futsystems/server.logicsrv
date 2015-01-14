@@ -136,7 +136,7 @@ namespace TraddingSrvCLI
 
                         //启动完毕
                         _status = QSEnumCoreThreadStatus.Started;
-                        Util.PrintVersion();
+                        TLCtxHelper.PrintVersion();
                         while (go)
                         {
                             Thread.Sleep(1000);

@@ -14,7 +14,7 @@ namespace TradingLib.Core
         #region Security Symbol Exchange MarketTime
         void SrvOnMGRQryExchange(MGRQryExchangeRequuest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求查询交易所列表:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求查询交易所列表:{1}", session.AuthorizedID, request.ToString()), QSEnumDebugLevel.INFO);
             IExchange[] exchs = BasicTracker.ExchagneTracker.Exchanges;
 
             int totalnum = exchs.Length;
@@ -30,7 +30,7 @@ namespace TradingLib.Core
 
         void SrvOnMGRQryMarketTime(MGRQryMarketTimeRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求查询交易时间段:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求查询交易时间段:{1}", session.AuthorizedID, request.ToString()), QSEnumDebugLevel.INFO);
             MarketTime[] mts = BasicTracker.MarketTimeTracker.MarketTimes;
             int totalnum = mts.Length;
             for (int i = 0; i < totalnum; i++)
@@ -44,7 +44,7 @@ namespace TradingLib.Core
 
         void SrvOnMGRQrySecurity(MGRQrySecurityRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求查询品种:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求查询品种:{1}", session.AuthorizedID, request.ToString()), QSEnumDebugLevel.INFO);
             SecurityFamilyImpl[] seclist = manager.Domain.GetSecurityFamilies().ToArray();
             int totalnum = seclist.Length;
             if (totalnum > 0)
@@ -66,7 +66,7 @@ namespace TradingLib.Core
         
         void SrvOnMGRQrySymbol(MGRQrySymbolRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求查询合约:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求查询合约:{1}", session.AuthorizedID, request.ToString()), QSEnumDebugLevel.INFO);
             Symbol[] symlis = manager.Domain.GetSymbols().ToArray();
             int totalnum = symlis.Length;
             if (totalnum > 0)
@@ -90,9 +90,9 @@ namespace TradingLib.Core
         {
             try
             {
-                debug(string.Format("管理员:{0} 请求更新品种:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
+                debug(string.Format("管理员:{0} 请求更新品种:{1}", session.AuthorizedID, request.ToString()), QSEnumDebugLevel.INFO);
 
-                if (!manager.RightRootDomain())
+                if (!manager.IsInRoot())
                 {
                     throw new FutsRspError("无权更新品种数据");
                 }
@@ -124,9 +124,9 @@ namespace TradingLib.Core
         {
             try
             {
-                debug(string.Format("管理员:{0} 请求更新合约:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
-           
-                if (!manager.RightRootDomain())
+                debug(string.Format("管理员:{0} 请求更新合约:{1}", session.AuthorizedID, request.ToString()), QSEnumDebugLevel.INFO);
+
+                if (!manager.IsInRoot())
                 {
                     throw new FutsRspError("无权更新合约数据");
                 }
@@ -156,9 +156,9 @@ namespace TradingLib.Core
         {
             try
             {
-                debug(string.Format("管理员:{0} 请求添加品种:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
+                debug(string.Format("管理员:{0} 请求添加品种:{1}", session.AuthorizedID, request.ToString()), QSEnumDebugLevel.INFO);
 
-                if (!manager.RightRootDomain())
+                if (!manager.IsInRoot())
                 {
                     throw new FutsRspError("无权添加品种数据");
                 }
@@ -194,9 +194,9 @@ namespace TradingLib.Core
         {
             try
             {
-                debug(string.Format("管理员:{0} 请求添加合约:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
+                debug(string.Format("管理员:{0} 请求添加合约:{1}", session.AuthorizedID, request.ToString()), QSEnumDebugLevel.INFO);
 
-                if (!manager.RightRootDomain())
+                if (!manager.IsInRoot())
                 {
                     throw new FutsRspError("无权添加合约数据");
                 }
@@ -237,7 +237,7 @@ namespace TradingLib.Core
                 Manager manager = session.GetManager();
                 debug(string.Format("管理员{0} 同步品种数据",manager.Login), QSEnumDebugLevel.INFO);
 
-                if (!manager.RightRootDomain())
+                if (!manager.IsInRoot())
                 {
                     throw new FutsRspError("无权同步品种数据");
                 }
@@ -296,7 +296,7 @@ namespace TradingLib.Core
             Manager manager = session.GetManager();
             debug(string.Format("管理员{0} 禁止所有合约交易", manager.Login), QSEnumDebugLevel.INFO);
 
-            if (!manager.RightRootDomain())
+            if (!manager.IsInRoot())
             {
                 throw new FutsRspError("无权禁止合约");
             }
@@ -339,7 +339,7 @@ namespace TradingLib.Core
             Manager manager = session.GetManager();
             debug(string.Format("管理员{0} 同步合约数据", manager.Login), QSEnumDebugLevel.INFO);
 
-            if (!manager.RightRootDomain())
+            if (!manager.IsInRoot())
             {
                 throw new FutsRspError("无权同步合约数据");
             }

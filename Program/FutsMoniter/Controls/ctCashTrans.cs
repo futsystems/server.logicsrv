@@ -8,7 +8,6 @@ using System.Text;
 using System.Windows.Forms;
 using TradingLib.API;
 using TradingLib.Common;
-using TradingLib.Mixins.LitJson;
 using TradingLib.Mixins.JsonObject;
 using FutSystems.GUI;
 
@@ -42,7 +41,13 @@ namespace FutsMoniter
 
             //绑定查询事件
             this.btnQryReport.Click += new EventHandler(btnQryReport_Click);
+            cashgrid.RowPrePaint += new DataGridViewRowPrePaintEventHandler(cashgrid_RowPrePaint);
             cashgrid.CellFormatting += new DataGridViewCellFormattingEventHandler(cashgrid_CellFormatting);
+        }
+
+        void cashgrid_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        {
+            e.PaintParts = e.PaintParts ^ DataGridViewPaintParts.Focus;
         }
 
         
@@ -116,11 +121,12 @@ namespace FutsMoniter
 
         void OnQryCashTrans(string jsonstr)
         {
-            JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
-            int code = int.Parse(jd["Code"].ToString());
-            if (code == 0)
+            //JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
+            //int code = int.Parse(jd["Code"].ToString());
+            JsonWrapperCasnTrans[] obj = MoniterUtils.ParseJsonResponse<JsonWrapperCasnTrans[]>(jsonstr);
+            if (obj != null)
             {
-                JsonWrapperCasnTrans[] obj = TradingLib.Mixins.LitJson.JsonMapper.ToObject<JsonWrapperCasnTrans[]>(jd["Playload"].ToJson());
+                //JsonWrapperCasnTrans[] obj = TradingLib.Mixins.LitJson.JsonMapper.ToObject<JsonWrapperCasnTrans[]>(jd["Playload"].ToJson());
                 foreach (JsonWrapperCasnTrans c in obj)
                 {
                     GotCashTrans(c);
@@ -143,11 +149,11 @@ namespace FutsMoniter
                 int i = gt.Rows.Count - 1;//得到新建的Row号
                 gt.Rows[i][ID] = trans.ID;
                 gt.Rows[i][SETTLEDAY] = trans.Settleday;
-                gt.Rows[i][DATETIME] = trans.DateTime;
+                gt.Rows[i][DATETIME] = Util.ToDateTime(trans.DateTime);
                 gt.Rows[i][ACCOUNT] = trans.Account;
                 gt.Rows[i][MGRFK] = trans.mgr_fk;
                 gt.Rows[i][OPERATION] = trans.Amount > 0 ? "入金" : "出金";
-                gt.Rows[i][AMOUNT] = trans.Amount;
+                gt.Rows[i][AMOUNT] = Math.Abs(trans.Amount);
                 gt.Rows[i][REF] = trans.TransRef;
 
             }
@@ -273,7 +279,7 @@ namespace FutsMoniter
         {
             if (e.ColumnIndex == 5)
             {
-                string op = cashgrid[6, e.RowIndex].Value.ToString();
+                string op = cashgrid[5, e.RowIndex].Value.ToString();
                 if (op.Equals("入金"))
                 {
                     e.CellStyle.ForeColor = UIGlobals.LongSideColor;

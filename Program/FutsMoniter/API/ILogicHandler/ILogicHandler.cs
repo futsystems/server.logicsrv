@@ -44,8 +44,9 @@ namespace TradingLib.API
         #region 历史记录查询
         void OnMGROrderResponse(Order o, bool islast);
         void OnMGRTradeResponse(Trade f, bool islast);
-        //void OnMGRPositionResponse(PositionDetail pos, bool islast);
-        //void OnMGRCashTransactionResponse(CashTransaction c, bool islast);
+        void OnMGRPositionResponse(PositionDetail pos, bool islast);
+
+
         void OnMGRSettlementResponse(RspMGRQrySettleResponse response);
         #endregion
 

@@ -25,7 +25,7 @@ namespace FutsMoniter
         /// 获得服务端的帐户信息
         /// </summary>
         /// <param name="account"></param>
-        void GotAccount(IAccountLite account)
+        void GotAccount(AccountLite account)
         {
             if (string.IsNullOrEmpty(account.Account))
                 return;
@@ -37,7 +37,7 @@ namespace FutsMoniter
         /// 获得交易帐户的财务状态信息
         /// </summary>
         /// <param name="info"></param>
-        void GotAccountInfoLite(IAccountInfoLite info)
+        void GotAccountInfoLite(AccountInfoLite info)
         {
             accountinfocache.Write(info);
         }
@@ -46,7 +46,7 @@ namespace FutsMoniter
         /// 响应帐户变动事件
         /// </summary>
         /// <param name="account"></param>
-        public void GotAccountChanged(IAccountLite account)
+        public void GotAccountChanged(AccountLite account)
         {
             accountcache.Write(account);
         }

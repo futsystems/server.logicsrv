@@ -11,7 +11,7 @@ namespace TradingLib.Common
     /// 
     /// test
     /// </summary>
-    public class AccountInfo : IAccountInfo
+    public class AccountInfo
     {
         public string Account { get; set; }
         public decimal LastEquity { get; set; }//昨日权益
@@ -90,7 +90,7 @@ namespace TradingLib.Common
         /// 将IAccountInfo 序列化成字符串
         /// </summary>
         /// <returns></returns>
-        public static string Serialize(IAccountInfo info)
+        public static string Serialize(AccountInfo info)
         {
             StringBuilder sb = new StringBuilder();
             char d=',';
@@ -205,7 +205,7 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="msg"></param>
         /// <returns></returns>
-        public static IAccountInfo Deserialize(string msg)
+        public static AccountInfo Deserialize(string msg)
         {
             string[] r = msg.Split(',');
             AccountInfo a = new AccountInfo();

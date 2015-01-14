@@ -21,7 +21,7 @@ namespace FutsMoniter
             SetPreferences();
             InitTable();
             BindToTable();
-            this.Load += new EventHandler(ctHistOrder_Load);
+                this.Load += new EventHandler(ctHistOrder_Load);
 
         }
 
@@ -43,6 +43,9 @@ namespace FutsMoniter
             tb.Rows.Clear();
             BindToTable();
         }
+
+        public ComponentFactory.Krypton.Toolkit.KryptonDataGridView GridView { get { return orderGrid; } }
+
 
         const string ID = "报单编号";
         const string DATETIME = "报单时间";
@@ -176,9 +179,10 @@ namespace FutsMoniter
             grid.Columns[DIRECTION].Visible = false;
             grid.Columns[STATUS].Visible = false;
 
-            //set width
-            //grid.Columns[SYMBOL].Width = 80;
-
+            for (int i = 0; i < tb.Columns.Count; i++)
+            {
+                orderGrid.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
+            }
 
         }
 

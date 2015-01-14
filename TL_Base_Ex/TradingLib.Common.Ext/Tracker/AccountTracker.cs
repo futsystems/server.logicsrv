@@ -21,8 +21,6 @@ namespace TradingLib.Common
         protected ConcurrentDictionary<string, OrderTracker> OrdBook = new ConcurrentDictionary<string, OrderTracker>();
         //为每个账户映射一个PositionTracker用户维护该Account的Position
         protected ConcurrentDictionary<string, LSPositionTracker> PosBook = new ConcurrentDictionary<string, LSPositionTracker>();
-        //为每个账户映射一个昨日持仓数据
-        //protected ConcurrentDictionary<string, LSPositionTracker> PosHold = new ConcurrentDictionary<string, LSPositionTracker>();
         //为每个账户映射一个TradeList用于记录实时的成交记录
         protected ConcurrentDictionary<string, ThreadSafeList<Trade>> TradeBook = new ConcurrentDictionary<string, ThreadSafeList<Trade>>();
 
@@ -47,11 +45,11 @@ namespace TradingLib.Common
         /// <summary>
         /// 获得所有帐户对象
         /// </summary>
-        public IAccount[] Accounts
+        public IEnumerable<IAccount> Accounts
         {
             get
             {
-                return AcctList.Values.ToArray();
+                return AcctList.Values;
             }
         }
 
@@ -132,20 +130,11 @@ namespace TradingLib.Common
             {
                 //pt.DefaultAccount = account.ID;
                 PosBook.TryAdd(account.ID, pt);
+                //绑定仓位管理器中的相关事件
                 pt.NewPositionCloseDetailEvent += new Action<PositionCloseDetail>(NewPositionCloseDetail);
                 pt.NewPositionEvent += new Action<Position>(NewPosition);
             }
             baseacc.TKPosition = pt;
-
-            //这里单独给出两个一个昨日持仓维护器 用于获得交易帐户的昨日持仓数据，这里可以考虑从Position自带的昨日持仓明细获得昨日持仓汇总信息
-            //LSPositionTracker ydpt = new LSPositionTracker();
-            //if (!PosHold.ContainsKey(account.ID))
-            //{
-            //    ydpt.DefaultAccount = account.ID;
-            //    PosHold.TryAdd(account.ID, ydpt);
-            //}
-            //baseacc.TKYdPosition = ydpt;
-
 
             //4.添加账户对应的成交管理器
             ThreadSafeList<Trade> tt = new ThreadSafeList<Trade>();
@@ -186,8 +175,6 @@ namespace TradingLib.Common
             OrdBook.Clear();
             PosBook.Clear();
             TradeBook.Clear();
-            //PosHold.Clear();
-
         }
 
 
@@ -202,7 +189,6 @@ namespace TradingLib.Common
             //清空交易帐户的当日交易记录
             OrdBook[account.ID].Clear();
             PosBook[account.ID].Clear();
-            //PosHold[account.ID].Clear();
             TradeBook[account.ID].Clear();
 
         }

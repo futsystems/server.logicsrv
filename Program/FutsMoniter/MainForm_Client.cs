@@ -143,7 +143,7 @@ namespace FutsMoniter
         {
             debug("获得登入回报:" + response.ToString());
             _gotloginrep = true;
-            if (response.LoginResponse.Authorized)
+            if (response.RspInfo.ErrorID==0)
             {
                 //登入的时候会的mgr_fk用于获得对应的编号
                 //如果是代理 则 通过mgr_fk获得对应的Manager对象
@@ -152,6 +152,10 @@ namespace FutsMoniter
                 Globals.LoginResponse = response.LoginResponse;
                 Globals.MGRID = response.LoginResponse.MGRID;//保存管理端登入获得的全局ID用于获取Manager列表时 绑定对应的Manager
                 Globals.BaseMGRFK = response.LoginResponse.BaseMGRFK;
+
+                //登入成功后设置 服务端版本
+                lbSrvVersion.Text = Globals.TLClient.ServerVersion.Version;
+                
             }
             else
             {

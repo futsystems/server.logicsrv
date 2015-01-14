@@ -14,10 +14,12 @@ namespace TradingLib.Common
     /// </summary>
     public class PacketEventArgs : EventArgs
     {
-        public PacketEventArgs(ISession session, IPacket packet)
+        public PacketEventArgs(ISession session, IPacket packet,string frontid,string clientid)
         {
             this.Session = session;
             this.Packet = packet;
+            this.FrontID = frontid;
+            this.ClientID = clientid;
         }
         /// <summary>
         /// 回话Session
@@ -30,5 +32,14 @@ namespace TradingLib.Common
         /// </summary>
         public IPacket Packet { get; set; }
 
+        /// <summary>
+        /// 前置
+        /// </summary>
+        public string FrontID { get; set; }
+
+        /// <summary>
+        /// 客户端地址
+        /// </summary>
+        public string ClientID { get; set; }
     }
 }

@@ -5,7 +5,7 @@ using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Core;
-using TradingLib.LitJson;
+
 
 namespace TradingLib.ServiceManager
 {
@@ -148,7 +148,7 @@ namespace TradingLib.ServiceManager
             {
                 debug("启动通道", QSEnumDebugLevel.INFO);
                 Manager manger = session.GetManager();
-                if (manger.RightRootDomain())
+                if (manger.IsInRoot())
                 {
                     ConnectorConfig cfg = BasicTracker.ConnectorConfigTracker.GetBrokerConfig(id);
                     if (cfg.domain_id == manger.domain_id)//有权利
@@ -178,7 +178,7 @@ namespace TradingLib.ServiceManager
             {
                 debug("停止通道", QSEnumDebugLevel.INFO);
                 Manager manger = session.GetManager();
-                if (manger.RightRootDomain())
+                if (manger.IsInRoot())
                 {
                     ConnectorConfig cfg = BasicTracker.ConnectorConfigTracker.GetBrokerConfig(id);
                     if (cfg.domain_id == manger.domain_id)//有权利

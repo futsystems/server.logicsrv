@@ -583,13 +583,15 @@ namespace Broker.Live
                     tk.GotFill(t);
                 }
                 debug(string.Format("Resumed {0} Trades", tradelist.Count()),QSEnumDebugLevel.INFO);
+
+                //恢复委托父子关系对 然后恢复到委托分拆器
                 List<FatherSonOrderPair> pairs = GetOrderPairs(orderlist);
                 foreach(FatherSonOrderPair pair in pairs)
                 {
                     _splittracker.ResumeOrder(pair);
                 }
 
-                //数据恢复完毕后再绑定平仓明细事件
+                //数据恢复完毕后再绑定平仓明细事件 否则数据恢复过程中会产生平仓明细数据
                 tk.NewPositionCloseDetailEvent += new Action<PositionCloseDetail>(tk_NewPositionCloseDetailEvent);
 
             }
@@ -608,14 +610,15 @@ namespace Broker.Live
                 if (o.FatherBreed != null)
                 { 
                     QSEnumOrderBreedType bt = (QSEnumOrderBreedType)o.FatherBreed;
-                    if (bt == QSEnumOrderBreedType.ACCT)//如果直接分帐户侧分解 从清算中查找该委托
-                    {
-                        father = ClearCentre.SentOrder(o.FatherID,QSEnumOrderBreedType.ACCT);
-                    }
-                    if (bt == QSEnumOrderBreedType.ROUTER)
-                    {
-                        father = ClearCentre.SentOrder(o.FatherID, QSEnumOrderBreedType.ROUTER);
-                    }
+                    father = ClearCentre.SentOrder(o.FatherID, QSEnumOrderBreedType.ACCT);
+                    //if (bt == QSEnumOrderBreedType.ACCT)//如果直接分帐户侧分解 从清算中查找该委托
+                    //{
+                    //    father = ClearCentre.SentOrder(o.FatherID,QSEnumOrderBreedType.ACCT);
+                    //}
+                    //if (bt == QSEnumOrderBreedType.ROUTER)
+                    //{
+                    //    father = ClearCentre.SentOrder(o.FatherID, QSEnumOrderBreedType.ROUTER);
+                    //}
                 }
                 //如果存在父委托
                 if (father != null)

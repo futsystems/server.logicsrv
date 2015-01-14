@@ -10,8 +10,6 @@ using System.Windows.Forms;
 using TradingLib.API;
 using TradingLib.Common;
 using FutSystems.GUI;
-using TradingLib.Mixins;
-using TradingLib.Mixins.LitJson;
 
 
 namespace FutsMoniter
@@ -144,7 +142,7 @@ namespace FutsMoniter
                 cfg.Token = token.Text;
                 if (fmConfirm.Show("确认添加通道设置?") == System.Windows.Forms.DialogResult.Yes)
                 {
-                    Globals.TLClient.ReqUpdateConnectorConfig(TradingLib.Mixins.LitJson.JsonMapper.ToJson(cfg));
+                    Globals.TLClient.ReqUpdateConnectorConfig(TradingLib.Mixins.Json.JsonMapper.ToJson(cfg));
                     this.Close();
                 }
             }
@@ -164,7 +162,7 @@ namespace FutsMoniter
                 _cfg.NeedVendor = true;
                 if (fmConfirm.Show("确认修改通道设置?") == System.Windows.Forms.DialogResult.Yes)
                 {
-                    Globals.TLClient.ReqUpdateConnectorConfig(TradingLib.Mixins.LitJson.JsonMapper.ToJson(_cfg));
+                    Globals.TLClient.ReqUpdateConnectorConfig(TradingLib.Mixins.Json.JsonMapper.ToJson(_cfg));
                     this.Close();
                 }
 

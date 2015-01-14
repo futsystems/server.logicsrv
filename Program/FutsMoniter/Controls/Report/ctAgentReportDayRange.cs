@@ -8,7 +8,6 @@ using System.Text;
 using System.Windows.Forms;
 using TradingLib.API;
 using TradingLib.Common;
-using TradingLib.Mixins.LitJson;
 using TradingLib.Mixins.JsonObject;
 
 
@@ -57,11 +56,12 @@ namespace FutsMoniter
 
         public void OnTotalReport(string jsonstr)
         {
-            JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
-            int code = int.Parse(jd["Code"].ToString());
-            if (code == 0)
+            //JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
+            JsonWrapperToalReport[] objlist = MoniterUtils.ParseJsonResponse<JsonWrapperToalReport[]>(jsonstr);
+            //int code = int.Parse(jd["Code"].ToString());
+            if (objlist != null)
             {
-                JsonWrapperToalReport[] objlist = TradingLib.Mixins.LitJson.JsonMapper.ToObject<JsonWrapperToalReport[]>(jd["Playload"].ToJson());
+                //JsonWrapperToalReport[] objlist = TradingLib.Mixins.LitJson.JsonMapper.ToObject<JsonWrapperToalReport[]>(jd["Playload"].ToJson());
                 foreach (JsonWrapperToalReport obj in objlist)
                 {
                     InvokeGotJsonWrapperTotalReport(obj);

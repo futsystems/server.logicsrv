@@ -74,7 +74,8 @@ namespace FutSystems.GUI.Control
             {
                 DataRow r = tb.Rows.Add(t.id);
                 int i = tb.Rows.Count - 1;//得到新建的Row号
-
+                //MessageBox.Show(t.xDate.ToString() + " " + t.xTime.ToString());
+                //MessageBox.Show("t:" + t.GetTradStr() + " " + Util.ToDateTime(t.xDate, t.xTime).ToString());
                 //tradeGrid.Rows.Add(t.id, Util.ToDateTime(t.xdate, t.xtime).ToString("HH:mm:ss"), t.symbol, (t.side ? "买" : "卖"), t.xsize, string.Format(getDisplayFormat(t.symbol), t.xprice), string.Format(_defaultformat, t.Commission), Util.GetEnumDescription(t.PositionOperation), t.Account); // if we accept trade, add it to list
                 //tradeGrid.Refresh();
                 tb.Rows[i][ID] = t.id;

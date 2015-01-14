@@ -11,8 +11,6 @@ using System.Windows.Forms;
 using TradingLib.API;
 using TradingLib.Common;
 using FutSystems.GUI;
-using TradingLib.Mixins;
-using TradingLib.Mixins.LitJson;
 using TradingLib.Mixins.JsonObject;
 
 namespace FutsMoniter
@@ -160,7 +158,8 @@ namespace FutsMoniter
         void SetSPList(string list)
         {
             IEnumerable<int> clist = list.Split(',').Select(v => int.Parse(v));
-            for (int i = 0; i < interfacelist.Items.Count; i++)
+
+            for (int i = 0; i < finsplist.Items.Count; i++)
             {
                 ValueObject<int> item = (ValueObject<int>)finsplist.Items[i];
                 if (clist.Contains(item.Value))

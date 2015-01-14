@@ -58,7 +58,13 @@ namespace TradingLib.Contrib.FinService
         /// <returns></returns>
         decimal GetSafeMargin()
         {
-            return this.FinAmount.AccountArgument.AsDecimal() / this.FinLever.AccountArgument.AsInt();
+            int lever = this.FinLever.AccountArgument.AsInt();
+            if (lever > 0)
+            {
+                return this.FinAmount.AccountArgument.AsDecimal() / this.FinLever.AccountArgument.AsInt();
+            }
+            else
+                return 0;
         }
 
         /// <summary>
@@ -173,7 +179,7 @@ namespace TradingLib.Contrib.FinService
         /// <param name="t"></param>
         /// <param name="pr"></param>
         /// <returns></returns>
-        public override decimal OnAdjustCommission(Trade t, IPositionRound pr)
+        public override decimal OnAdjustCommission(Trade t, PositionRound pr)
         {
             //按标准计算公式得到的手续费
             decimal commission = t.Commission;
@@ -313,7 +319,7 @@ namespace TradingLib.Contrib.FinService
         public override int CanOpenSize(Symbol symbol)
         {
 
-            decimal price = TLCtxHelper.CmdUtil.GetAvabilePrice(symbol);
+            decimal price = TLCtxHelper.CmdUtils.GetAvabilePrice(symbol.Symbol);
 
             decimal fundperlot = Calc.CalFundRequired(symbol, price, 1);
 

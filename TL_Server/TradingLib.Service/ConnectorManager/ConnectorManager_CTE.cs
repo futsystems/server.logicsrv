@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
-using TradingLib.LitJson;
 using TradingLib.Core;
 using TradingLib.BrokerXAPI;
 
@@ -12,7 +11,7 @@ namespace TradingLib.ServiceManager
 {
     public partial class ConnectorManager
     {
-        [ContribCommandAttr(QSEnumCommandSource.CLI, "PrintCI", "Print Connector Interface - 输出当前成交接口类型", "输出当前成交接口类型")]
+        [ContribCommandAttr(QSEnumCommandSource.CLI, "pinterface", "Print Connector Interface - 输出当前成交接口类型", "输出当前成交接口类型")]
         public string PrintBrokerInterface()
         {
             StringBuilder sb = new StringBuilder();
@@ -29,7 +28,7 @@ namespace TradingLib.ServiceManager
             return sb.ToString();
         }
 
-        [ContribCommandAttr(QSEnumCommandSource.CLI, "PrintConnector", "PrintConnector - 输出当前加载的数据与成交通道接口", "输出加载的成交与行情通道接口")]
+        [ContribCommandAttr(QSEnumCommandSource.CLI, "pconnector", "PrintConnector - 输出当前加载的数据与成交通道接口", "输出加载的成交与行情通道接口")]
         public string PrintConnector()
         {
             StringBuilder sb = new StringBuilder();

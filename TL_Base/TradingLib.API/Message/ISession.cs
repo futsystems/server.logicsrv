@@ -29,40 +29,36 @@ namespace TradingLib.API
     public interface ISession
     {
         /// <summary>
-        /// 客户端ID
+        /// 获得该会话对端地址
         /// </summary>
-        string ClientID { get; }
-
-        /// <summary>
-        /// 前置编号,标注了该客户端是从哪个前置连接到交易系统
-        /// </summary>
-        string FrontID { get; }
+        ILocation Location { get; }
 
         /// <summary>
         /// 回话类型
         /// </summary>
         QSEnumSessionType SessionType { get; }
 
+        /// <summary>
+        /// 是否已经认证授权
+        /// </summary>
+        bool Authorized { get; }
 
         /// <summary>
-        /// 交易帐号ID
+        /// 授权ID
+        /// 交易帐户授权ID为交易帐号
+        /// 管理员帐户授权ID为管理员登入ID
         /// </summary>
-        string AccountID { get; }
+        string AuthorizedID { get; }
 
         /// <summary>
-        /// 管理员登入
+        /// 前置编号 整数
         /// </summary>
-        string MGRLoginName { get; }
+        int FrontIDi { get; }
 
         /// <summary>
-        /// 管理员ID
+        /// 客户连接编号 整数
         /// </summary>
-        int MGRID { get; }
-
-        /// <summary>
-        /// 管理员主域ID
-        /// </summary>
-        int MGRFK { get;  }
+        int SessionIDi { get; }
 
         /// <summary>
         /// 对应的扩展模块编号
@@ -79,9 +75,6 @@ namespace TradingLib.API
         /// </summary>
         int RequestID { get; set; }
 
-        /// <summary>
-        /// 是否登入
-        /// </summary>
-        bool IsLoggedIn { get; }
+
     }
 }

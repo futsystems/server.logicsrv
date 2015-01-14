@@ -35,36 +35,5 @@ namespace TradingLib.Common
         }
 
 
-        /// <summary>
-        /// 交易帐户是否在某个域内
-        /// </summary>
-        /// <param name="domain"></param>
-        /// <param name="account"></param>
-        /// <returns></returns>
-        public static bool IsAccountInDomain(this Domain domain, string account)
-        {
-            IAccount acc = TLCtxHelper.CmdAccount[account];
-            return domain.IsInDomain(acc);
-        }
-
-        /// <summary>
-        /// 判断某个管理员是否属于某域
-        /// </summary>
-        /// <param name="doman"></param>
-        /// <param name="manger"></param>
-        /// <returns></returns>
-        public static bool IsManagerInDomain(this Domain doman, string manger)
-        {
-            Manager mgr = BasicTracker.ManagerTracker[manger];
-            return doman.IsInDomain(mgr);
-        }
-
-        public static bool IsManagerInDomain(this Domain domain, int mgr_fk)
-        {
-            Manager mgr = BasicTracker.ManagerTracker[mgr_fk];
-            return domain.IsInDomain(mgr);
-        }
-
-
     }
 }

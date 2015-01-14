@@ -94,25 +94,8 @@ namespace TradingLib.Common
             Console.WriteLine();
         }
 
-        public static void PrintVersion()
-        {
-            Console.WriteLine();
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("".PadLeft(GetAvabileConsoleWidth() / 2 - 1, '.'));
-            //Version:0.65
-            ConsoleColorStatus(string.Format(". Version:{0}", "0.65"), ".", QSEnumInfoColor.INFOGREEN, QSEnumInfoColor.INFOGREEN);
-            ConsoleColorStatus(string.Format(". LastUpdate:{0}", "20141123"), ".", QSEnumInfoColor.INFOGREEN, QSEnumInfoColor.INFOGREEN);
-            ConsoleColorStatus(string.Format(". Author:{0}", "QianBo"), ".", QSEnumInfoColor.INFOGREEN, QSEnumInfoColor.INFOGREEN);
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("".PadLeft(GetAvabileConsoleWidth() / 2 - 1, '.'));
-            Console.WriteLine();
-            Console.WriteLine();
-            Console.ForegroundColor = ConsoleColor.Gray;
-            
-            
 
 
-        }
         public static void ConsoleColorStatus(string msg,string rightmsg,QSEnumInfoColor colorl= QSEnumInfoColor.INFOWHITE,QSEnumInfoColor colorr=QSEnumInfoColor.INFOWHITE, int lefpad=0)
         {
             if (colorl == colorr)
@@ -274,7 +257,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static string PrintObj(object obj)
         {
-            return TradingLib.Mixins.LitJson.JsonMapper.ToJson(obj);
+            return TradingLib.Mixins.Json.JsonMapper.ToJson(obj);
         }
         ///// <summary>
         ///// 格式化输出数字
@@ -820,24 +803,24 @@ namespace TradingLib.Common
         /// Gets string representing the version of this suite.
         /// </summary>
         /// <returns></returns>
-        public static string TLVersion()
-        {
-            int build = 2;// TLBuild();
-            int maj = (int)((double)build / 1000);
-            int min = (int)(((double)build - maj * 1000) / 100);
-            int fix = build - (maj * 1000 + min * 100);
-            string nicebuild = maj + "." + min + "." + fix;
-            return nicebuild;
-        }
+        //public static string TLVersion()
+        //{
+        //    int build = 2;// TLBuild();
+        //    int maj = (int)((double)build / 1000);
+        //    int min = (int)(((double)build - maj * 1000) / 100);
+        //    int fix = build - (maj * 1000 + min * 100);
+        //    string nicebuild = maj + "." + min + "." + fix;
+        //    return nicebuild;
+        //}
 
         /// <summary>
         /// Gets a string representing the identity of this suite.
         /// </summary>
         /// <returns></returns>
-        public static string TLSIdentity()
-        {
-            return "TradeLinkSuite-" + TLVersion();
-        }
+        //public static string TLSIdentity()
+        //{
+        //    return "TradeLinkSuite-" + TLVersion();
+        //}
 
 
 

@@ -7,8 +7,6 @@ using System.Threading;
 using TradingLib.API;
 using TradingLib.Common;
 
-using TradingLib.LitJson;
-
 namespace TradingLib.Core
 {
     /// <summary>
@@ -192,81 +190,81 @@ namespace TradingLib.Core
         public decimal InnovMoneyUsed { get { return _acc.InnovMoneyUsed; } }//异化合约资金占用
         public decimal InnovAvabileFunds { get { return _acc.InnovAvabileFunds; } }//异化合约可用资金
         #endregion")]
-        public string QryAccount(string account)
-        {
-            IAccount acc = this[account];
-            if (acc == null)
-            {
-                return ReplyHelper.Error_AccountNotFound;
-            }
-            else
-            {
-                JsonWriter w = ReplyHelper.NewJWriterSuccess();
-                ReplyHelper.FillJWriter(new JsonWrapperAccount(acc), w);
-                ReplyHelper.EndWriter(w);
+        //public string QryAccount(string account)
+        //{
+        //    IAccount acc = this[account];
+        //    if (acc == null)
+        //    {
+        //        return ReplyHelper.Error_AccountNotFound;
+        //    }
+        //    else
+        //    {
+        //        JsonWriter w = ReplyHelper.NewJWriterSuccess();
+        //        ReplyHelper.FillJWriter(new JsonWrapperAccount(acc), w);
+        //        ReplyHelper.EndWriter(w);
 
-                return w.ToString();
-            }
-        }
+        //        return w.ToString();
+        //    }
+        //}
 
-        [ContribCommandAttr(QSEnumCommandSource.CLI, "accfut", "accfut - accfut", "查找某个交易帐号期货信息")]
-        public string CTE_QryAccountFut(string account)
-        {
-            IAccount acc = this[account];
-            if (acc == null)
-            {
-                return ReplyHelper.Error_AccountNotFound;
-            }
-            else
-            {
-                return string.Format("Account:{0} UnrealizedPL:{1} SettleUnrealizedPL:{2}", acc.ID, acc.CalFutRealizedPL(), acc.CalFutSettleUnRealizedPL());
-            }
-        }
+        //[ContribCommandAttr(QSEnumCommandSource.CLI, "accfut", "accfut - accfut", "查找某个交易帐号期货信息")]
+        //public string CTE_QryAccountFut(string account)
+        //{
+        //    IAccount acc = this[account];
+        //    if (acc == null)
+        //    {
+        //        return ReplyHelper.Error_AccountNotFound;
+        //    }
+        //    else
+        //    {
+        //        return string.Format("Account:{0} UnrealizedPL:{1} SettleUnrealizedPL:{2}", acc.ID, acc.CalFutRealizedPL(), acc.CalFutSettleUnRealizedPL());
+        //    }
+        //}
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageWeb, "qryaccountlite", "qryaccountlite - qryaccountlite", "查找某个交易帐号返回总计信息")]
-        public string QryAccountLite(string account)
-        {
-            IAccount acc = this[account];
-            if (acc == null)
-            {
-                return ReplyHelper.Error_AccountNotFound;
-            }
-            else
-            {
-                JsonWriter w = ReplyHelper.NewJWriterSuccess();
-                ReplyHelper.FillJWriter(new JsonWrapperAccountLite(acc), w);
-                ReplyHelper.EndWriter(w);
+        //[ContribCommandAttr(QSEnumCommandSource.MessageWeb, "qryaccountlite", "qryaccountlite - qryaccountlite", "查找某个交易帐号返回总计信息")]
+        //public string QryAccountLite(string account)
+        //{
+        //    IAccount acc = this[account];
+        //    if (acc == null)
+        //    {
+        //        return ReplyHelper.Error_AccountNotFound;
+        //    }
+        //    else
+        //    {
+        //        JsonWriter w = ReplyHelper.NewJWriterSuccess();
+        //        ReplyHelper.FillJWriter(new JsonWrapperAccountLite(acc), w);
+        //        ReplyHelper.EndWriter(w);
 
-                return w.ToString();
-            }
-        }
+        //        return w.ToString();
+        //    }
+        //}
 
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageWeb, "filteraccount", "filteraccount - filteraccount","按条件过滤交易帐号")]
-        [ContribCommandAttr(QSEnumCommandSource.CLI, "filteraccount", "filteraccount - filteraccount", "按条件过滤交易帐号")]
-        public string filterAccount(string filter)
-        {
-            if (string.IsNullOrWhiteSpace(filter))
-            {
-                return ReplyHelper.Error_ServerSide;
-            }
+        //[ContribCommandAttr(QSEnumCommandSource.MessageWeb, "filteraccount", "filteraccount - filteraccount","按条件过滤交易帐号")]
+        //[ContribCommandAttr(QSEnumCommandSource.CLI, "filteraccount", "filteraccount - filteraccount", "按条件过滤交易帐号")]
+        //public string filterAccount(string filter)
+        //{
+        //    if (string.IsNullOrWhiteSpace(filter))
+        //    {
+        //        return ReplyHelper.Error_ServerSide;
+        //    }
 
-            //1.生成对象过滤器
-            AccountFilter f = ObjectFilter.Create<AccountFilter>(filter);
+        //    //1.生成对象过滤器
+        //    AccountFilter f = ObjectFilter.Create<AccountFilter>(filter);
 
-            //2.通过linq表达式获得我们需要筛选的对象
-            IEnumerable<JsonWrapperAccount> list =
-            from acc in acctk.Accounts
-            where f.Match(acc)
-            select new JsonWrapperAccount(acc);
+        //    //2.通过linq表达式获得我们需要筛选的对象
+        //    IEnumerable<JsonWrapperAccount> list =
+        //    from acc in acctk.Accounts
+        //    where f.Match(acc)
+        //    select new JsonWrapperAccount(acc);
 
-            //2.生成json对象返回
-            JsonWriter w = ReplyHelper.NewJWriterSuccess();
-            ReplyHelper.FillJWriter(list.ToArray(),w);
-            ReplyHelper.EndWriter(w);
+        //    //2.生成json对象返回
+        //    JsonWriter w = ReplyHelper.NewJWriterSuccess();
+        //    ReplyHelper.FillJWriter(list.ToArray(),w);
+        //    ReplyHelper.EndWriter(w);
 
-            return w.ToString();
-        }
+        //    return w.ToString();
+        //}
 
 
 
@@ -289,42 +287,42 @@ namespace TradingLib.Core
             CloseClearCentre();
         }
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageWeb, "qryccstatus", "qryccstatus - Query Status of clearcentre", "查看清算中心状态")]
-        public string CTE_QryClearCentre()
-        {
+        //[ContribCommandAttr(QSEnumCommandSource.MessageWeb, "qryccstatus", "qryccstatus - Query Status of clearcentre", "查看清算中心状态")]
+        //public string CTE_QryClearCentre()
+        //{
 
-            JsonWriter w = ReplyHelper.NewJWriterSuccess();
-            ReplyHelper.FillJWriter(new JsonWrapperClearCentreStatus(this), w);
-            ReplyHelper.EndWriter(w);
+        //    JsonWriter w = ReplyHelper.NewJWriterSuccess();
+        //    ReplyHelper.FillJWriter(new JsonWrapperClearCentreStatus(this), w);
+        //    ReplyHelper.EndWriter(w);
 
-            return w.ToString();
-        }
+        //    return w.ToString();
+        //}
 
-        [ContribCommandAttr(QSEnumCommandSource.CLI, "qryaccount", "qryaccount - 查询帐户信息", "查询帐户信息")]
-        public string CLI_QryOrder(string account)
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("-------------------- Account:" + account + "------------------" + ExComConst.Line);
-            IAccount acc = this[account];
-            if (acc == null)
-            {
-                return ReplyHelper.Error_AccountNotFound;
-            }
-            else
-            {
-                JsonWriter w = ReplyHelper.NewJWriterSuccess();
-                ReplyHelper.FillJWriter(new JsonWrapperAccount(acc), w);
-                ReplyHelper.EndWriter(w);
+        //[ContribCommandAttr(QSEnumCommandSource.CLI, "qryaccount", "qryaccount - 查询帐户信息", "查询帐户信息")]
+        //public string CLI_QryOrder(string account)
+        //{
+        //    StringBuilder sb = new StringBuilder();
+        //    sb.Append("-------------------- Account:" + account + "------------------" + ExComConst.Line);
+        //    IAccount acc = this[account];
+        //    if (acc == null)
+        //    {
+        //        return ReplyHelper.Error_AccountNotFound;
+        //    }
+        //    else
+        //    {
+        //        JsonWriter w = ReplyHelper.NewJWriterSuccess();
+        //        ReplyHelper.FillJWriter(new JsonWrapperAccount(acc), w);
+        //        ReplyHelper.EndWriter(w);
 
-                sb.Append(w.ToString() + ExComConst.Line);
-                foreach (Order o in acc.Orders)
-                {
-                    sb.Append(o.ToString() + ExComConst.Line);
-                }
-            }
+        //        sb.Append(w.ToString() + ExComConst.Line);
+        //        foreach (Order o in acc.Orders)
+        //        {
+        //            sb.Append(o.ToString() + ExComConst.Line);
+        //        }
+        //    }
 
-            return sb.ToString();
-        }
+        //    return sb.ToString();
+        //}
 
         #endregion
 
@@ -473,7 +471,7 @@ namespace TradingLib.Core
                     foreach (PositionDetail p in pos.PositionDetailTotal)
                     {
                         sb.Append(p.GetPositionDetailStr() + Environment.NewLine);
-                        sb.Append(TradingLib.Mixins.LitJson.JsonMapper.ToJson(p) + Environment.NewLine);
+                        sb.Append(TradingLib.Mixins.Json.JsonMapper.ToJson(p) + Environment.NewLine);
                     }
                     sb.Append("Sum Size:" + pos.PositionDetailTotal.Where(p => !p.IsClosed()).Sum(pd => pd.Volume));
                     sb.Append(Environment.NewLine);
@@ -483,7 +481,7 @@ namespace TradingLib.Core
                         sb.Append(p.GetPositionCloseStr() + Environment.NewLine);
                     }
                     sb.Append("------持仓汇总------------" + Environment.NewLine);
-                    sb.Append(TradingLib.Mixins.LitJson.JsonMapper.ToJson(pos.GenPositionEx()) + Environment.NewLine);
+                    sb.Append(TradingLib.Mixins.Json.JsonMapper.ToJson(pos.GenPositionEx()) + Environment.NewLine);
                     sb.Append(Environment.NewLine);
                     sb.Append(Environment.NewLine);
                 }

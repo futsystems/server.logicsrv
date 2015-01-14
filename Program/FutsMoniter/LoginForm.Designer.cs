@@ -192,9 +192,8 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "LoginForm";
             this.ShowIcon = false;
-            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "LoginForm";
+            this.Text = "登入";
             this.TopMost = true;
             ((System.ComponentModel.ISupportInitialize)(this.imageheader)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.servers)).EndInit();

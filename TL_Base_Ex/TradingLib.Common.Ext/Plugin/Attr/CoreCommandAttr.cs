@@ -6,7 +6,7 @@ using TradingLib.API;
 
 namespace TradingLib.Common
 {
-    public class CoreCommandAttr:ContribCommandAttr
+    public class CoreCommandAttr : ContribCommandAttr
     {
         /// <summary>
         /// 消息处理命令,用于标注核心模块的命令特性
@@ -17,7 +17,7 @@ namespace TradingLib.Common
         /// <param name="help">帮助</param>
         /// <param name="description">描述</param>
         public CoreCommandAttr(QSEnumCommandSource source, string cmd, string help, string description)
-            :base(source,cmd,help,description)
+            : base(source, cmd, help, description)
         {
 
         }

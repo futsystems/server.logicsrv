@@ -8,6 +8,13 @@ namespace TradingLib.Common
 {
     public static partial class DomainUtils
     {
+
+        #region 更新品种 合约
+        /// <summary>
+        /// 更新品种
+        /// </summary>
+        /// <param name="domain"></param>
+        /// <param name="sec"></param>
         public static void UpdateSecurity(this Domain domain, SecurityFamilyImpl sec)
         {
             sec.Domain_ID = domain.ID;
@@ -23,6 +30,9 @@ namespace TradingLib.Common
         {
             BasicTracker.SecurityTracker.SyncSecurity(domain,sec);
         }
+        #endregion
+
+
         /// <summary>
         /// 更新某个域的合约合约
         /// </summary>
@@ -34,11 +44,42 @@ namespace TradingLib.Common
             BasicTracker.SymbolTracker.UpdateSymbol(domain.ID, sym);
         }
 
+        /// <summary>
+        /// 同步合约
+        /// </summary>
+        /// <param name="domain"></param>
+        /// <param name="sym"></param>
         public static void SyncSymbol(this Domain domain, SymbolImpl sym)
         {
             BasicTracker.SymbolTracker.SyncSymbol(domain, sym);
         }
 
+
+
+        #region 获得域下某个品种或合约
+
+        /// <summary>
+        /// 获得域下所有品种
+        /// </summary>
+        /// <param name="domain"></param>
+        /// <returns></returns>
+        public static IEnumerable<SecurityFamilyImpl> GetSecurityFamilies(this Domain domain)
+        {
+            return BasicTracker.SecurityTracker[domain.ID].Securities;
+        }
+
+
+        /// <summary>
+        /// 获得某个域下所有合约
+        /// </summary>
+        /// <param name="domain"></param>
+        /// <returns></returns>
+        public static IEnumerable<SymbolImpl> GetSymbols(this Domain domain)
+        {
+            return BasicTracker.SymbolTracker[domain.ID].Symbols;
+        }
+
+        
         public static SecurityFamilyImpl GetSecurityFamily(this Domain domain, string code)
         {
             return BasicTracker.SecurityTracker[domain.ID, code];
@@ -60,24 +101,11 @@ namespace TradingLib.Common
             return BasicTracker.SymbolTracker[domain.ID, symbol];
         }
 
-        public static SymbolImpl GetSymbol(this Domain domain,int id)
+        public static SymbolImpl GetSymbol(this Domain domain, int id)
         {
             return BasicTracker.SymbolTracker[domain.ID, id];
         }
 
-
-        public static IEnumerable<SecurityFamilyImpl> GetSecurityFamilies(this Domain domain)
-        {
-            return BasicTracker.SecurityTracker[domain.ID].Securities;
-        }
-        /// <summary>
-        /// 获得某个域下所有合约
-        /// </summary>
-        /// <param name="domain"></param>
-        /// <returns></returns>
-        public static IEnumerable<SymbolImpl> GetSymbols(this Domain domain)
-        {
-            return BasicTracker.SymbolTracker[domain.ID].Symbols;
-        }
+        #endregion
     }
 }

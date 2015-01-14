@@ -87,15 +87,15 @@ namespace TradingLib.Contrib.FinService
                 CollectType = Util.GetEnumDescription(fs.CollectType),
                 Arguments = list.ToArray(),
             };
-
-            SendJsonReplyMgr(session, ret);
+            session.ReplyMgr(ret);
+            //SendJsonReplyMgr(session, ret);
         }
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAgentSPArg", "UpdateAgentSPArg - update agent service plan arg  of account", "更新代理配资服务计划参数",true)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAgentSPArg", "UpdateAgentSPArg - update agent service plan arg  of account", "更新代理配资服务计划参数", QSEnumArgParseType.Json)]
         public void CTE_UpdateAgentSPArg(ISession session, string playload)
         {
             debug("arg:" + playload, QSEnumDebugLevel.INFO);
-            JsonWrapperServicePlanAgentArgument target = Mixins.LitJson.JsonMapper.ToObject<JsonWrapperServicePlanAgentArgument>(playload);
+            JsonWrapperServicePlanAgentArgument target = Mixins.Json.JsonMapper.ToObject<JsonWrapperServicePlanAgentArgument>(playload);
             
             //更新参数
             FinTracker.ArgumentTracker.UpdateArgumentAgent(target.agent_fk, target.serviceplan_fk, target.Arguments);
@@ -135,7 +135,8 @@ namespace TradingLib.Contrib.FinService
                 //SendJsonReplyMgr(session, Mixins.JsonReply.GenericError(1, "无有效配资服务"));
                 //return;
             }
-            SendJsonReplyMgr(session, stub.ToJsonWrapperFinServiceStub());
+            session.ReplyMgr(stub.ToJsonWrapperFinServiceStub());
+            //SendJsonReplyMgr(session, stub.ToJsonWrapperFinServiceStub());
         }
 
 
@@ -152,11 +153,11 @@ namespace TradingLib.Contrib.FinService
         /// </summary>
         /// <param name="session"></param>
         /// <param name="playload"></param>
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateArguments", "UpdateArguments - update argument of finservice", "更新某个帐户的配资参数", true)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateArguments", "UpdateArguments - update argument of finservice", "更新某个帐户的配资参数", QSEnumArgParseType.Json)]
         public void CTE_UpdateArguments(ISession session,string playload)
         {
             debug("arg:" + playload, QSEnumDebugLevel.INFO);
-            JsonWrapperFinServiceStub target = Mixins.LitJson.JsonMapper.ToObject<JsonWrapperFinServiceStub>(playload);
+            JsonWrapperFinServiceStub target = Mixins.Json.JsonMapper.ToObject<JsonWrapperFinServiceStub>(playload);
 
             debug("更新帐户:" + target.Account+ "的配资服务参数", QSEnumDebugLevel.INFO);
             IAccount acc = TLCtxHelper.CmdAccount[target.Account];
@@ -195,14 +196,15 @@ namespace TradingLib.Contrib.FinService
                 //SendJsonReplyMgr(session, Mixins.JsonReply.GenericError(1, "无有效配资服务"));
                 //return;
             }
-            SendJsonReplyMgr(session, stub2.ToJsonWrapperFinServiceStub());
+            session.ReplyMgr(stub2.ToJsonWrapperFinServiceStub());
+            //SendJsonReplyMgr(session, stub2.ToJsonWrapperFinServiceStub());
         }
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "ChangeServicePlane", "ChangeServicePlane - add or change finservice of account", "添加或者修改某个帐户的配资服务", true)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "ChangeServicePlane", "ChangeServicePlane - add or change finservice of account", "添加或者修改某个帐户的配资服务", QSEnumArgParseType.Json)]
         public void CTE_ChangeServicePlane(ISession session, string playload)
         {
             debug("request:" + playload, QSEnumDebugLevel.INFO);
-            JsonWrapperChgServicePlaneRequest request = TradingLib.Mixins.LitJson.JsonMapper.ToObject<JsonWrapperChgServicePlaneRequest>(playload);
+            JsonWrapperChgServicePlaneRequest request = TradingLib.Mixins.Json.JsonMapper.ToObject<JsonWrapperChgServicePlaneRequest>(playload);
             string account = request.Account;
             int serviceplan_fk = request.ServicePlaneFK;
 
@@ -230,7 +232,7 @@ namespace TradingLib.Contrib.FinService
 
         }
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "DeleteServicePlane", "DeleteServicePlane - delete of account", "添加或者修改某个帐户的配资服务", true)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "DeleteServicePlane", "DeleteServicePlane - delete of account", "添加或者修改某个帐户的配资服务", QSEnumArgParseType.Json)]
         public void CTE_DeleteServicePlane(ISession session, string account)
         {
             debug("删除帐户:"+account+"的配资服务", QSEnumDebugLevel.INFO);
@@ -266,12 +268,14 @@ namespace TradingLib.Contrib.FinService
 
                 if (manager.Domain.Super)
                 {
-                    SendJsonReplyMgr(session, splist.ToArray());
+                    session.ReplyMgr(splist.ToArray());
+                    //SendJsonReplyMgr(session, splist.ToArray());
                 }
                 else
                 {
                     int[] idlist = (string.IsNullOrEmpty(manager.Domain.FinSPList)?new int[]{0}:manager.Domain.FinSPList.Split(',').Select(s => int.Parse(s)).ToArray());
-                    SendJsonReplyMgr(session, splist.Where(sp=>idlist.Contains(sp.ID)).ToArray());
+                    session.ReplyMgr(splist.Where(sp => idlist.Contains(sp.ID)).ToArray());
+                    //SendJsonReplyMgr(session, splist.Where(sp=>idlist.Contains(sp.ID)).ToArray());
                 }
             }
             catch (FutsRspError ex)
@@ -289,7 +293,8 @@ namespace TradingLib.Contrib.FinService
         public void CTE_QryTotalReport(ISession session,int agent,int settleday)
         {
             JsonWrapperToalReport report = ORM.MServiceChargeReport.GenTotalReport(agent, settleday);
-            SendJsonReplyMgr(session, report);
+            session.ReplyMgr(report);
+            //SendJsonReplyMgr(session, report);
         }
 
         /// <summary>
@@ -303,7 +308,8 @@ namespace TradingLib.Contrib.FinService
         public void CTE_QrySummaryReport(ISession session, int agentfk,int start,int end)
         {
             JsonWrapperToalReport report = ORM.MServiceChargeReport.GenSummaryReportByDayRange(agentfk, start, end);
-            SendJsonReplyMgr(session, report);
+            session.ReplyMgr(report);
+            //SendJsonReplyMgr(session, report);
         }
 
         /// <summary>
@@ -317,7 +323,8 @@ namespace TradingLib.Contrib.FinService
         public void CTE_QryTotalReport(ISession session, int agentfk,int start,int end)
         {
             JsonWrapperToalReport[] reports = ORM.MServiceChargeReport.GenTotalReportByDayRange(agentfk,start,end).Select((ret) => { return FillTotalReport(ret); }).ToArray();
-            SendJsonReplyMgr(session, reports);
+            session.ReplyMgr(reports);
+            //SendJsonReplyMgr(session, reports);
         }
 
         /// <summary>
@@ -330,7 +337,8 @@ namespace TradingLib.Contrib.FinService
         public void CTE_QryDetailReportByAccount(ISession session, int agentfk,int settleday)
         {
             JsonWrapperToalReport[] reports = ORM.MServiceChargeReport.GenDetailReportByAccount(agentfk, settleday).Select((ret) => { return FillTotalReport(ret); }).ToArray();
-            SendJsonReplyMgr(session, reports);
+            session.ReplyMgr(reports);
+            //SendJsonReplyMgr(session, reports);
         }
 
         JsonWrapperToalReport FillTotalReport(JsonWrapperToalReport report)

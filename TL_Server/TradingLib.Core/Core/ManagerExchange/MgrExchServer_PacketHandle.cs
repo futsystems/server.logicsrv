@@ -27,7 +27,7 @@ namespace TradingLib.Core
         {
             try
             {
-                debug(string.Format("管理员:{0} 请求开启清算中心:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
+                debug(string.Format("管理员:{0} 请求开启清算中心:{1}", session.AuthorizedID, request.ToString()), QSEnumDebugLevel.INFO);
                 clearcentre.OpenClearCentre();
                 session.OperationSuccess("清算中心开启成功");
             }
@@ -42,7 +42,7 @@ namespace TradingLib.Core
         {
             try
             {
-                debug(string.Format("管理员:{0} 请求关闭清算中心:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
+                debug(string.Format("管理员:{0} 请求关闭清算中心:{1}", session.AuthorizedID, request.ToString()), QSEnumDebugLevel.INFO);
                 clearcentre.CloseClearCentre();
                 session.OperationSuccess("清算中心关闭成功");
             }
@@ -66,7 +66,7 @@ namespace TradingLib.Core
         /// <param name="manager"></param>
         void SrvOnMGRContribRequest(MGRContribRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求扩展命令:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求扩展命令:{1}", session.AuthorizedID, request.ToString()), QSEnumDebugLevel.INFO);
             debug("MGRContrib Request,ModuleID:" + request.ModuleID + " CMDStr:" + request.CMDStr + " Parameters:" + request.Parameters, QSEnumDebugLevel.INFO);
             
             session.ContirbID = request.ModuleID;
@@ -80,7 +80,7 @@ namespace TradingLib.Core
 
         void SrvOnInsertTrade(MGRReqInsertTradeRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求插入委托:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求插入委托:{1}", session.AuthorizedID, request.ToString()), QSEnumDebugLevel.INFO);
             RspMGROperationResponse response = ResponseTemplate<RspMGROperationResponse>.SrvSendRspResponse(request);
 
             Trade fill = request.TradeToSend;
@@ -137,11 +137,13 @@ namespace TradingLib.Core
         }
 
 
-        void tl_newPacketRequest(IPacket packet,ISession session,Manager manager)
+        void tl_newPacketRequest(ISession session,IPacket packet)
         {
             try
             {
+                Manager manager = session.GetManager();
                 session.ContirbID = CoreName;//在使用session.notify 或 session.sendreply会用到module cmd
+
                 switch (packet.Type)
                 {
 
@@ -160,11 +162,11 @@ namespace TradingLib.Core
                             SrvOnMGRResumeAccount(packet as MGRResumeAccountRequest, session, manager);
                             break;
                         }
-                    case MessageTypes.MGRQRYACCOUNTINFO://查询帐户信息
-                        {
-                            SrvOnMGRQryAccountInfo(packet as MGRQryAccountInfoRequest, session, manager);
-                            break;
-                        }
+                    //case MessageTypes.MGRQRYACCOUNTINFO://查询帐户信息
+                    //    {
+                    //        SrvOnMGRQryAccountInfo(packet as MGRQryAccountInfoRequest, session, manager);
+                    //        break;
+                    //    }
                     case MessageTypes.MGRCASHOPERATION://出入金操作
                         {
                             SrvOnMGRCashOperation(packet as MGRCashOperationRequest, session, manager);

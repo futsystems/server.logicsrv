@@ -11,8 +11,7 @@ using System.Windows.Forms;
 using TradingLib.API;
 using TradingLib.Common;
 using FutSystems.GUI;
-using TradingLib.Mixins;
-using TradingLib.Mixins.LitJson;
+
 
 namespace FutsMoniter
 {
@@ -21,10 +20,11 @@ namespace FutsMoniter
         
         void OnNotifyConnectorConfig(string jsonstr)
         {
-            JsonReply<ConnectorConfig> reply = JsonReply.ParseReply<ConnectorConfig>(jsonstr);
-            if (reply.Code == 0)
+            //JsonReply<ConnectorConfig> reply = JsonReply.ParseReply<ConnectorConfig>(jsonstr);
+            ConnectorConfig cfg = MoniterUtils.ParseJsonResponse<ConnectorConfig>(jsonstr);
+            if (cfg !=null)
             {
-                InvokeGotConnector(reply.Playload);
+                InvokeGotConnector(cfg);
             }
             else//如果没有配资服
             {

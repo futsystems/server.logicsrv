@@ -360,7 +360,6 @@
     <Compile Include="Controls\Base\ctBankList.Designer.cs">
       <DependentUpon>ctBankList.cs</DependentUpon>
     </Compile>
-    <Compile Include="API\Delegate.cs" />
     <Compile Include="API\IBasicInfo.cs" />
     <Compile Include="API\ICallBack\ICallback.cs" />
     <Compile Include="Controls\ctOrderSenderM.cs">
@@ -397,6 +396,12 @@
     </Compile>
     <Compile Include="Forms\Domain\fmDomainInfo.Designer.cs">
       <DependentUpon>fmDomainInfo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\fmLoginInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\fmLoginInfo.Designer.cs">
+      <DependentUpon>fmLoginInfo.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Finance\fmRecvBankEdit.cs">
       <SubType>Form</SubType>
@@ -863,6 +868,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Domain\fmDomainInfo.resx">
       <DependentUpon>fmDomainInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\fmLoginInfo.resx">
+      <DependentUpon>fmLoginInfo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Finance\fmRecvBankEdit.resx">
       <DependentUpon>fmRecvBankEdit.cs</DependentUpon>

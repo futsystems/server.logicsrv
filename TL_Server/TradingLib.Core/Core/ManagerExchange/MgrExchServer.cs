@@ -51,7 +51,7 @@ namespace TradingLib.Core
             tl.newLoginRequest += new LoginRequestDel<MgrClientInfo>(tl_newLoginRequest);
             tl.newSendOrderRequest += new OrderDelegate(tl_newSendOrderRequest);
             tl.newOrderActionRequest += new OrderActionDelegate(tl_newOrderActionRequest);
-            tl.newPacketRequest += new MgrPacketRequestDel(tl_newPacketRequest);
+            tl.newPacketRequest += new PacketRequestDel(tl_newPacketRequest);
             tl.GetLocationsViaAccountEvent += new LocationsViaAccountDel(tl_GetLocationsViaAccountEvent);
 
             tl.ClientRegistedEvent += new ClientInfoDelegate<MgrClientInfo>(tl_ClientRegistedEvent);

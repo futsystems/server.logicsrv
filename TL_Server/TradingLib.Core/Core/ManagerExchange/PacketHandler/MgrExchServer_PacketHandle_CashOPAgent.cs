@@ -31,12 +31,12 @@ namespace TradingLib.Core
         }
 
         IdTracker cashopref = new IdTracker();
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "RequestCashOperation", "RequestCashOperation -rquest deposit or withdraw", "请求出入金操作", true)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "RequestCashOperation", "RequestCashOperation -rquest deposit or withdraw", "请求出入金操作", QSEnumArgParseType.Json)]
         public void CTE_RequestCashOperation(ISession session, string playload)
         {
             Manager manger = session.GetManager();
 
-            JsonWrapperCashOperation request = Mixins.LitJson.JsonMapper.ToObject<JsonWrapperCashOperation>(playload);
+            JsonWrapperCashOperation request = Mixins.Json.JsonMapper.ToObject<JsonWrapperCashOperation>(playload);
             if (request != null)
             {
                 request.mgr_fk = manger.mgr_fk;
@@ -55,7 +55,7 @@ namespace TradingLib.Core
                 //通知出入金操作
                 //NotifyCashOperation(request);
                 //通过事件中继触发事件
-                TLCtxHelper.CashOperationEvent.FireCashOperation(this, QSEnumCashOpEventType.Request, request);
+                TLCtxHelper.EventSystem.FireCashOperation(this, QSEnumCashOpEventType.Request, request);
             }
 
         }
@@ -71,14 +71,14 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="session"></param>
         /// <param name="playload"></param>
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "ConfirmCashOperation", "ConfirmCashOperation -confirm deposit or withdraw", "确认出入金操作请求", true)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "ConfirmCashOperation", "ConfirmCashOperation -confirm deposit or withdraw", "确认出入金操作请求", QSEnumArgParseType.Json)]
         public void CTE_ConfirmCashOperation(ISession session, string playload)
         {
             try
             {
                 debug("确认出入金操作请求", QSEnumDebugLevel.INFO);
                 Manager manger = session.GetManager();
-                JsonWrapperCashOperation request = Mixins.LitJson.JsonMapper.ToObject<JsonWrapperCashOperation>(playload);
+                JsonWrapperCashOperation request = Mixins.Json.JsonMapper.ToObject<JsonWrapperCashOperation>(playload);
                 
                 HandlerMixins.Valid_ObjectNotNull(request);
 
@@ -105,7 +105,7 @@ namespace TradingLib.Core
                 ORM.MAgentFinance.ConfirmAgentCashOperation(request);
                 session.ReplyMgr(request);
                 //通过事件中继触发事件
-                TLCtxHelper.CashOperationEvent.FireCashOperation(this, QSEnumCashOpEventType.Confirm, request);
+                TLCtxHelper.EventSystem.FireCashOperation(this, QSEnumCashOpEventType.Confirm, request);
                 
             }
             catch (FutsRspError ex)
@@ -114,38 +114,38 @@ namespace TradingLib.Core
             }
         }
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "CancelCashOperation", "CancelCashOperation -cancel deposit or withdraw", "取消出入金操作请求", true)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "CancelCashOperation", "CancelCashOperation -cancel deposit or withdraw", "取消出入金操作请求", QSEnumArgParseType.Json)]
         public void CTE_CancelCashOperation(ISession session, string playload)
         {
             debug("取消出入金操作请求", QSEnumDebugLevel.INFO);
             Manager manger = session.GetManager();
             if (manger != null)
             {
-                JsonWrapperCashOperation request = Mixins.LitJson.JsonMapper.ToObject<JsonWrapperCashOperation>(playload);
+                JsonWrapperCashOperation request = Mixins.Json.JsonMapper.ToObject<JsonWrapperCashOperation>(playload);
                 if (request != null)
                 {
                     ORM.MAgentFinance.CancelAgentCashOperation(request);
                     session.ReplyMgr(request);
                     //通过事件中继触发事件
-                    TLCtxHelper.CashOperationEvent.FireCashOperation(this, QSEnumCashOpEventType.Cancel, request);
+                    TLCtxHelper.EventSystem.FireCashOperation(this, QSEnumCashOpEventType.Cancel, request);
                 }
             }
         }
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "RejectCashOperation", "RejectCashOperation -reject deposit or withdraw", "拒绝出入金操作请求", true)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "RejectCashOperation", "RejectCashOperation -reject deposit or withdraw", "拒绝出入金操作请求", QSEnumArgParseType.Json)]
         public void CTE_RejectCashOperation(ISession session, string playload)
         {
             debug("拒绝出入金操作请求", QSEnumDebugLevel.INFO);
             Manager manger = session.GetManager();
             if (manger != null)
             {
-                JsonWrapperCashOperation request = Mixins.LitJson.JsonMapper.ToObject<JsonWrapperCashOperation>(playload);
+                JsonWrapperCashOperation request = Mixins.Json.JsonMapper.ToObject<JsonWrapperCashOperation>(playload);
                 if (request != null)
                 {
                     ORM.MAgentFinance.RejectAgentCashOperation(request);
                     session.ReplyMgr(request);
                     //通过事件中继触发事件
-                    TLCtxHelper.CashOperationEvent.FireCashOperation(this, QSEnumCashOpEventType.Reject, request);
+                    TLCtxHelper.EventSystem.FireCashOperation(this, QSEnumCashOpEventType.Reject, request);
                 }
             }
         }

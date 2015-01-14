@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
-using TradingLib.LitJson;
+
 
 namespace TradingLib.ServiceManager
 {
@@ -42,25 +42,47 @@ namespace TradingLib.ServiceManager
 
         }
 
+        /// <summary>
+        /// 获得所有成交路由
+        /// </summary>
+        public IEnumerable<IBroker> Brokers { get { return brokerInstList.Values; } }
+
+        /// <summary>
+        /// 获得所有行情路由
+        /// </summary>
+        public IEnumerable<IDataFeed> DataFeeds { get { return datafeedInstList.Values; } }
+
+
+        /// <summary>
+        /// 获得某个合约的市场快照
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
         public Tick GetTickSnapshot(string symbol)
         {
             return _datafeedrouter.GetTickSnapshot(symbol);
         }
 
-        public IEnumerable<Tick> GetTickSnapshot()
+        /// <summary>
+        /// 判断某个合约当前行情是否处于live状态
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        public bool IsSymbolTickLive(string symbol)
         {
-            return _datafeedrouter.GetTickSnapshot();
+            return _datafeedrouter.IsTickLive(symbol);
         }
 
 
         /// <summary>
-        /// 获得所有成交路由
+        /// 获得某个合约的有效价格
         /// </summary>
-        public IBroker[] Brokers { get { return brokerInstList.Values.ToArray(); } }
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        public decimal GetAvabilePrice(string symbol)
+        {
+            return _datafeedrouter.GetAvabilePrice(symbol);
+        }
 
-        /// <summary>
-        /// 获得所有行情路由
-        /// </summary>
-        public IDataFeed[] DataFeeds { get { return datafeedInstList.Values.ToArray(); } }
     }
 }

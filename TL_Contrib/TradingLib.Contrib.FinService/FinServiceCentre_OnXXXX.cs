@@ -10,7 +10,7 @@ namespace TradingLib.Contrib.FinService
 {
     public partial class FinServiceCentre
     {
-        decimal ExContribEvent_AdjustCommissionEvent(Trade fill, IPositionRound positionround)
+        decimal ExContribEvent_AdjustCommissionEvent(Trade fill, PositionRound positionround)
         {
             FinServiceStub stub = FinTracker.FinServiceTracker[fill.Account];
             if (stub == null)
@@ -38,7 +38,7 @@ namespace TradingLib.Contrib.FinService
         /// 响应持仓回合数据
         /// </summary>
         /// <param name="pr"></param>
-        void EventIndicator_GotPositionClosedEvent(IPositionRound pr,Position pos)
+        void EventIndicator_GotPositionClosedEvent(PositionRound pr, Position pos)
         {
             FinServiceStub stub = FinTracker.FinServiceTracker[pr.Account];
             if (stub == null)

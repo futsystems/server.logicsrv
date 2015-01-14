@@ -19,7 +19,6 @@ namespace TradingLib.API
         /// 启动
         /// </summary>
         void Start();
-
         /// <summary>
         /// 停止
         /// </summary>

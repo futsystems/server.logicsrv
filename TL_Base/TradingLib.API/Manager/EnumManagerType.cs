@@ -8,8 +8,6 @@ namespace TradingLib.API
 {
     public enum QSEnumManagerType
     {
-        [Description("超级管理员")]
-        SUPERROOT = -1,//可以添加域
         /// <summary>
         /// 超级管理员
         /// </summary>

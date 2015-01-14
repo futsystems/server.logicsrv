@@ -90,6 +90,7 @@ namespace TradingLib.Contrib.TradeFlow
                 string message = TradeImpl.Serialize(t);
                 if (messageGo && _publisher != null)
                 {
+                    //debug("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`", QSEnumDebugLevel.INFO);
                     _publisher.Send(message, Encoding.UTF8);
                 }
             }

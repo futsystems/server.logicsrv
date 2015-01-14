@@ -155,29 +155,29 @@ namespace TradingLib.Contrib.CLI
             StringBuilder sb = new StringBuilder();
             if (section.Equals("all"))
             {
-                sb.Append((ExComConst.SectionPrefix + " Welcome To TL TradingSystem ").PadRight(ExComConst.SectionNum, ExComConst.SectionChar) + ExComConst.Line);
-                sb.Append("Version 1.0.0" + ExComConst.Line);
+                sb.Append((CliUtils.SECPRIFX + " Welcome To TL TradingSystem ").PadRight(CliUtils.SECNUM, CliUtils.SECCHAR) + System.Environment.NewLine);
+                sb.Append("Version 1.0.0" + System.Environment.NewLine);
             }
             else if (section.Equals("core"))
             {
-                sb.Append("There are some core components in  system:" + ExComConst.Line);
-                sb.Append("##CoreMsgRouter:"+ExComConst.Line);
-                sb.Append("  this message router is used for message exchagne,it will exhange message betwoeen Client and System Components" + ExComConst.Line);
-                sb.Append("such as BrokerRouter/DataFeedRouter/ClearCentre/RiskCentre and many other contrib components." + ExComConst.Line);
-                sb.Append("##MgrMsgRouter:" + ExComConst.Line);
-                sb.Append("  this message router is used for manager message exchange,manager endpoint will communicate with it.via that router" + ExComConst.Line);
-                sb.Append("we can add account/view account information/and do many sutff as we support in our system." + ExComConst.Line);
-                sb.Append("##ClearCentre:" + ExComConst.Line);
-                sb.Append(" ClearCentre hold all the trading information for account,it support account operation/deal with database/close open market/" + ExComConst.Line);
-                sb.Append("settlement/ and many trading staff" + ExComConst.Line);
-                sb.Append("##RiskCentre" + ExComConst.Line);
-                sb.Append(" riskcentre do the risk control of trading,such as order check/account check/riskrule setting/server side loss proft strategy" + ExComConst.Line);
-                sb.Append("##DataFeedRouter" + ExComConst.Line);
-                sb.Append("##BrokerRouter" + ExComConst.Line);
-                sb.Append("##TaskCentre" + ExComConst.Line);
-                sb.Append("##ReportCentre" + ExComConst.Line);
-                sb.Append(ExComConst.Line);
-                sb.Append("now we try to make core much more 'small' and stable,we use contrib to expand the function of system" + ExComConst.Line);
+                sb.Append("There are some core components in  system:" + System.Environment.NewLine);
+                sb.Append("##CoreMsgRouter:" + System.Environment.NewLine);
+                sb.Append("  this message router is used for message exchagne,it will exhange message betwoeen Client and System Components" + System.Environment.NewLine);
+                sb.Append("such as BrokerRouter/DataFeedRouter/ClearCentre/RiskCentre and many other contrib components." + System.Environment.NewLine);
+                sb.Append("##MgrMsgRouter:" + System.Environment.NewLine);
+                sb.Append("  this message router is used for manager message exchange,manager endpoint will communicate with it.via that router" + System.Environment.NewLine);
+                sb.Append("we can add account/view account information/and do many sutff as we support in our system." + System.Environment.NewLine);
+                sb.Append("##ClearCentre:" + System.Environment.NewLine);
+                sb.Append(" ClearCentre hold all the trading information for account,it support account operation/deal with database/close open market/" + System.Environment.NewLine);
+                sb.Append("settlement/ and many trading staff" + System.Environment.NewLine);
+                sb.Append("##RiskCentre" + System.Environment.NewLine);
+                sb.Append(" riskcentre do the risk control of trading,such as order check/account check/riskrule setting/server side loss proft strategy" + System.Environment.NewLine);
+                sb.Append("##DataFeedRouter" + System.Environment.NewLine);
+                sb.Append("##BrokerRouter" + System.Environment.NewLine);
+                sb.Append("##TaskCentre" + System.Environment.NewLine);
+                sb.Append("##ReportCentre" + System.Environment.NewLine);
+                sb.Append(System.Environment.NewLine);
+                sb.Append("now we try to make core much more 'small' and stable,we use contrib to expand the function of system" + System.Environment.NewLine);
             }
             return sb.ToString();
         }

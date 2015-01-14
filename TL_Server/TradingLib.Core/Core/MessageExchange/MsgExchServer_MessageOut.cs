@@ -155,6 +155,7 @@ namespace TradingLib.Core
             }
 
         }
+
         #region 消息发送总线 向管理端发送对应的消息
 
         /// <summary>
@@ -210,34 +211,6 @@ namespace TradingLib.Core
         RingBuffer<OrderActionErrorPack> _erractioncache = new RingBuffer<OrderActionErrorPack>(buffize);//委托操作错误缓存
         RingBuffer<PositionEx> _posupdatecache = new RingBuffer<PositionEx>(buffize);
         RingBuffer<IPacket> _packetcache = new RingBuffer<IPacket>(buffize);//数据包缓存队列
-
-        //关于交易信息转发,交易信息转发时,我们需要区分是实时发生的交易信息转发还是请求回补的信息转发。
-        //实时交易信息通过客户端权限检查自动将交易信息发送到所有有权
-        bool _readgo = false;
-        Thread messageoutthread;
-
-        //当有其他消息的时候我们就转发其他消息
-        bool notokforresume()
-        {
-            return _ocache.hasItems  || _fcache.hasItems || _posupdatecache.hasItems;
-        }
-
-        
-
-        public string[] FilterClient(string filter)
-        {
-            //获得所有客户端地址
-            //if (filter.ToUpper().Equals("ALL"))
-            //{ 
-            //    IEnumerable<string> list =
-            //        from acc in tl.Clients
-            //        //where f.Match(acc)
-            //        select acc.Address;
-            //    return list.ToArray();
-            //}
-            return new string[] { };
-        }
-
         PriorityBufferSet prioritybuffer = new PriorityBufferSet();
         void InitPriorityBuffer()
         {
@@ -251,14 +224,9 @@ namespace TradingLib.Core
             //prioritybuffer.AddRspResponseType(7, typeof(RspQryAccountInfoResponse));
 
         }
-        RingBuffer<RspQryInvestorResponse> investorbuf = new RingBuffer<RspQryInvestorResponse>(buffize);//投资者查询缓存
-        RingBuffer<RspQrySymbolResponse> symbolbuf = new RingBuffer<RspQrySymbolResponse>(buffize);//合约查询缓存
 
-        RingBuffer<RspQryTradeResponse> rsptradebuf = new RingBuffer<RspQryTradeResponse>(buffize);//成交回报缓存
-        RingBuffer<RspQryOrderResponse> rsporderbuf = new RingBuffer<RspQryOrderResponse>(buffize);//委托回报缓存
-        RingBuffer<RspQryPositionResponse> rspposbuf = new RingBuffer<RspQryPositionResponse>(buffize);//持仓缓存
-        RingBuffer<RspQryPositionDetailResponse> rspposdetailbuf = new RingBuffer<RspQryPositionDetailResponse>(buffize);//持仓明细缓存
-        RingBuffer<RspQryAccountInfoResponse> rspaccountinfobuf = new RingBuffer<RspQryAccountInfoResponse>(buffize);//账户明细缓存
+        bool _readgo = false;
+        Thread messageoutthread;
 
         /// <summary>
         /// 所有需要转发到客户端的消息均通过缓存进行，这样避免了多个线程同时操作一个ZeroMQ socket

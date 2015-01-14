@@ -89,6 +89,10 @@ namespace TradingLib.Contirb.Protocol
         public int Time { get; set; }
 
         /// <summary>
+        /// 授权ID
+        /// </summary>
+        public string AuthorizedID { get; set; }
+        /// <summary>
         /// 回话类别
         /// </summary>
         public QSEnumSessionType SessionType { get; set; }
@@ -113,5 +117,15 @@ namespace TradingLib.Contirb.Protocol
         /// 命令操作码
         /// </summary>
         public string CMDStr { get; set; }
+
+        /// <summary>
+        /// 前置地址
+        /// </summary>
+        public string FrontID { get; set; }
+
+        /// <summary>
+        /// 客户端标识
+        /// </summary>
+        public string ClientID { get; set; }
     }
 }

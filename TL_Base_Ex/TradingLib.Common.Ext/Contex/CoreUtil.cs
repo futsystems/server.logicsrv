@@ -14,9 +14,9 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        public decimal GetAvabilePrice(Symbol symbol)
+        public decimal GetAvabilePrice(string symbol)
         {
-            return TLCtxHelper.Ctx.MessageExchange.GetAvabilePrice(symbol.Symbol);
+            return TLCtxHelper.Ctx.RouterManager.GetAvabilePrice(symbol);
         }
     }
 }

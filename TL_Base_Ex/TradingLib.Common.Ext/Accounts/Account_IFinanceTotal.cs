@@ -8,8 +8,6 @@ namespace TradingLib.Common
 {
     public partial class AccountBase
     {
-
-        #region 【IFinanceTotal】
         /// <summary>
         /// 昨日权益
         /// </summary>
@@ -90,7 +88,7 @@ namespace TradingLib.Common
         /// 帐户信用额度
         /// </summary>
         public decimal Credit { get { return TLCtxHelper.ExContribEvent.GetFinAmmountAvabile(this.ID); } }
-        #endregion
+
 
 
         /// <summary>

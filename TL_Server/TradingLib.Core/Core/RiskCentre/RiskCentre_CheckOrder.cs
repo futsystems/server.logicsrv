@@ -117,7 +117,7 @@ namespace TradingLib.Core
             //4.1自动开平标识识别
             bool havelong = account.GetHaveLongPosition(o.Symbol);
             bool haveshort = account.GetHaveShortPosition(o.Symbol);
-            //自动判定开平标识
+            //自动判定开平标识 这里不区分平今还是平昨
             if (o.OffsetFlag == QSEnumOffsetFlag.UNKNOWN)
             {
                 if (havelong && haveshort)
@@ -158,12 +158,12 @@ namespace TradingLib.Core
             //获得委托持仓操作方向
             bool orderside = o.PositionSide;
 
-            //反待成交开仓委托
-            bool othersideentry = account.GetPendingEntrySize(o.Symbol, !orderside) > 0;
-
             //开仓操作
             if (o.IsEntryPosition)
             {
+                //反待成交开仓委托
+                bool othersideentry = account.GetPendingEntrySize(o.Symbol, !orderside) > 0;
+
                 //委托多头开仓操作,同时又空头头寸 或者 委托空头开仓操作，同时又有多头头寸 则表明在持有头寸的时候进行了反向头寸的操作
                 if (othersideentry || (orderside && haveshort) || ((!orderside) && havelong))//多头持仓操作
                 {
@@ -312,22 +312,95 @@ namespace TradingLib.Core
                         return false;
                     }
                 }
-                else//平仓执行数量检查
+                else//平仓执行数量检查 
                 {
-                    //获得该帐户 该合约 该持仓方向的待成交平仓委托
-                    int pendingExitSize = account.GetPendingExitSize(o.Symbol, o.PositionSide);
-                    //当前持仓数量
-                    int pos_size = pos.UnsignedSize;
+
                     //当前委托数量
                     int osize = o.UnsignedSize;
-                    //debug("Order try to exit postion,pos size:" + pos.Size.ToString() + " pending exit size:" + pendingExitSize.ToString() + " osize:" + osize.ToString() + " offsetflag:" + o.OffsetFlag.ToString(), QSEnumDebugLevel.INFO);
 
-                    if (pos_size < pendingExitSize+osize)
+                    //如果是上期所的期货品种 需要检查今仓和昨仓
+                    if (o.oSymbol.SecurityFamily.Exchange.EXCode.Equals("SHFE"))
                     {
-                        //debug("限价委托,未成交数量超过当前持仓", QSEnumDebugLevel.INFO);
-                        debug("Order rejected by[Order FlatSize Check]" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
-                        msg = (pos_size == 0 ? commentNoPositionForFlat : commentOverFlatPositionSize);
-                        return false;
+                        /* 上期所
+                         * 平今 必须用CloseToday
+                         * 平昨 必须用Close/CloseYestoday
+                         * 检查开平标识 如果不是Close则报错
+                         * */
+                        switch (o.OffsetFlag)
+                        {
+                            case QSEnumOffsetFlag.CLOSETODAY:
+                            case QSEnumOffsetFlag.CLOSEYESTERDAY:
+                            case QSEnumOffsetFlag.CLOSE:
+                                break;
+                            default:
+                                msg = "委托字段有误";
+                                return false;
+                        }
+
+                        int voltd = pos.PositionDetailTodayNew.Sum(p => p.Volume);//今日持仓
+                        int volyd = pos.PositionDetailYdNew.Sum(p => p.Volume);//昨日持仓
+
+                        switch (o.OffsetFlag)
+                        {
+                            //平今
+                            case QSEnumOffsetFlag.CLOSETODAY:
+                                {
+                                    int pendingExitSizeCloseToday = account.GetPendingExitOrders(o.Symbol, o.PositionSide).Where(o1 => o1.OffsetFlag == QSEnumOffsetFlag.CLOSETODAY).Sum(o1 => o1.UnsignedSize);
+                                    debug(string.Format("position today:{0}  pendingexist closetoday order size:{1} ordersize:", voltd, pendingExitSizeCloseToday), QSEnumDebugLevel.INFO);
+                                    if (voltd < pendingExitSizeCloseToday + osize)
+                                    {
+                                        debug("Order rejected by[Order FlatSize Check]" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
+                                        msg = (voltd == 0 ? "无可平今仓" : "可平今仓数量不足");
+                                        return false;
+                                    } 
+                                }
+                                break;
+                            //平昨
+                            case QSEnumOffsetFlag.CLOSE:
+                            case QSEnumOffsetFlag.CLOSEYESTERDAY:
+                                {
+                                    int pendingExitSizeCloseYestoday = account.GetPendingExitOrders(o.Symbol, o.PositionSide).Where(o1 => o1.OffsetFlag == QSEnumOffsetFlag.CLOSEYESTERDAY || o1.OffsetFlag == QSEnumOffsetFlag.CLOSE).Sum(o1 => o1.UnsignedSize);
+                                    debug(string.Format("position yestoday:{0}  pendingexist closeyestoday order size:{1} ordersize:", volyd, pendingExitSizeCloseYestoday), QSEnumDebugLevel.INFO);
+                                    if (volyd < pendingExitSizeCloseYestoday + osize)
+                                    {
+                                        debug("Order rejected by[Order FlatSize Check]" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
+                                        msg = (volyd == 0 ? "无可平昨仓" : "可平昨仓数量不足");
+                                        return false;
+                                    }
+                                    break;
+                                }
+                            default:
+                                msg="委托字段有误";
+                                return false;
+
+                        }
+                    }
+                    else
+                    {
+                        //其余交易所 平仓标识均统一成Close
+                        switch (o.OffsetFlag)
+                        { 
+                            case QSEnumOffsetFlag.CLOSETODAY:
+                            case QSEnumOffsetFlag.CLOSEYESTERDAY:
+                            case QSEnumOffsetFlag.CLOSE:
+                                o.OffsetFlag = QSEnumOffsetFlag.CLOSE;
+                                break;
+                            default:
+                                msg="委托字段有误";
+                                return false;
+                        }
+                        //当前持仓数量
+                        int pos_size = pos.UnsignedSize;
+                        //获得该帐户 该合约 该持仓方向的待成交平仓委托
+                        int pendingExitSize = account.GetPendingExitSize(o.Symbol, o.PositionSide);
+                        //debug("Order try to exit postion,pos size:" + pos.Size.ToString() + " pending exit size:" + pendingExitSize.ToString() + " osize:" + osize.ToString() + " offsetflag:" + o.OffsetFlag.ToString(), QSEnumDebugLevel.INFO);
+                        if (pos_size < pendingExitSize + osize)
+                        {
+                            //debug("限价委托,未成交数量超过当前持仓", QSEnumDebugLevel.INFO);
+                            debug("Order rejected by[Order FlatSize Check]" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
+                            msg = (pos_size == 0 ? commentNoPositionForFlat : commentOverFlatPositionSize);
+                            return false;
+                        }
                     }
                 }
 
@@ -354,7 +427,6 @@ namespace TradingLib.Core
                 msg = "风控检查异常";
                 string s = PROGRAME + ":委托风控检查异常" + ex.ToString();
                 debug(s, QSEnumDebugLevel.ERROR);
-                _othercheklog.GotDebug(s);
                 return false;
             }
         }

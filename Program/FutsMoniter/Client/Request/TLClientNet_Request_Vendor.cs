@@ -66,7 +66,7 @@ namespace TradingLib.Common
 
         public void ReqUpdateVendor(VendorSetting vendor)
         {
-            this.ReqContribRequest("MgrExchServer", "UpdateVendor", TradingLib.Mixins.LitJson.JsonMapper.ToJson(vendor));
+            this.ReqContribRequest("MgrExchServer", "UpdateVendor", TradingLib.Mixins.Json.JsonMapper.ToJson(vendor));
         }
     }
 }

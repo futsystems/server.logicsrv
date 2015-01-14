@@ -433,7 +433,7 @@ namespace Broker.SIM
                         //模拟成交需要按照交易所设定对应的开平标识
                         //生成成交编号
                         fill.BrokerTradeID = NextFillSeq.ToString();//交易所成交编号 Broker端的成交编号
-
+                        //Util.Debug("@@@@@@@@@@@@@@@@@@trade date:" + fill.xDate.ToString() + " tradetime:" + fill.xTime.ToString(),QSEnumDebugLevel.ERROR);
                         debug("PTT Server Filled: " + fill.GetTradeDetail(), QSEnumDebugLevel.INFO);
 
                         bool partial = fill.UnsignedSize != o.UnsignedSize;//如果是部分成交 则需要将剩余未成交的委托 返还到委托队列

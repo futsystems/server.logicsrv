@@ -9,7 +9,6 @@ using System.Windows.Forms;
 using TradingLib.API;
 using TradingLib.Common;
 using FutSystems.GUI;
-using TradingLib.Mixins.LitJson;
 using TradingLib.Mixins.JsonObject;
 
 namespace FutsMoniter
@@ -60,7 +59,7 @@ namespace FutsMoniter
                 request.Amount = a;
                 request.Operation = op;
                 request.DateTime = Util.ToTLDateTime();
-                Globals.TLClient.ReqRequestCashOperation(TradingLib.Mixins.LitJson.JsonMapper.ToJson(request));
+                Globals.TLClient.ReqRequestCashOperation(TradingLib.Mixins.Json.JsonMapper.ToJson(request));
             }
             this.Close();
         }

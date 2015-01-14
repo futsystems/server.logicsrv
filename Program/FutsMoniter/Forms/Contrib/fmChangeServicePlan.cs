@@ -8,7 +8,6 @@ using System.Text;
 using System.Windows.Forms;
 using TradingLib.API;
 using TradingLib.Common;
-using TradingLib.Mixins.LitJson;
 using TradingLib.Mixins.JsonObject;
 using FutSystems.GUI;
 
@@ -45,8 +44,8 @@ namespace FutsMoniter
             }
         }
 
-        IAccountLite _account = null;
-        public IAccountLite Account
+        AccountLite _account = null;
+        public AccountLite Account
         {
             get
             {
@@ -86,7 +85,7 @@ namespace FutsMoniter
                 }
             }
 
-            Globals.TLClient.ReqChangeFinService(TradingLib.Mixins.LitJson.JsonMapper.ToJson(request));
+            Globals.TLClient.ReqChangeFinService(TradingLib.Mixins.Json.JsonMapper.ToJson(request));
             this.Close();
         }
     }

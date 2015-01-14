@@ -8,7 +8,6 @@ using System.Text;
 using System.Windows.Forms;
 using TradingLib.API;
 using TradingLib.Common;
-using TradingLib.Mixins.LitJson;
 using TradingLib.Mixins.JsonObject;
 using FutSystems.GUI;
 
@@ -62,11 +61,12 @@ namespace FutsMoniter
 
         void OnQryAccountCashOperationTotal(string jsonstr)
         {
-            JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
-            int code = int.Parse(jd["Code"].ToString());
-            if (code == 0)
+            //JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
+            //int code = int.Parse(jd["Code"].ToString());
+            JsonWrapperCashOperation[] objs = MoniterUtils.ParseJsonResponse<JsonWrapperCashOperation[]>(jsonstr);
+            if (objs != null)
             {
-                JsonWrapperCashOperation[] objs = TradingLib.Mixins.LitJson.JsonMapper.ToObject<JsonWrapperCashOperation[]>(jd["Playload"].ToJson());
+                //JsonWrapperCashOperation[] objs = TradingLib.Mixins.LitJson.JsonMapper.ToObject<JsonWrapperCashOperation[]>(jd["Playload"].ToJson());
                 foreach (JsonWrapperCashOperation op in objs)
                 {
                     ctCashOperationAccount.GotJsonWrapperCashOperation(op);
@@ -80,11 +80,12 @@ namespace FutsMoniter
 
         void OnNotifyCashOperation(string jsonstr)
         {
-            JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
-            int code = int.Parse(jd["Code"].ToString());
-            if (code == 0)
+            //JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
+            //int code = int.Parse(jd["Code"].ToString());
+            JsonWrapperCashOperation obj = MoniterUtils.ParseJsonResponse<JsonWrapperCashOperation>(jsonstr);
+            if (obj != null)
             {
-                JsonWrapperCashOperation obj = TradingLib.Mixins.LitJson.JsonMapper.ToObject<JsonWrapperCashOperation>(jd["Playload"].ToJson());
+                //JsonWrapperCashOperation obj = TradingLib.Mixins.LitJson.JsonMapper.ToObject<JsonWrapperCashOperation>(jd["Playload"].ToJson());
 
                 if (obj.mgr_fk > 0)
                 {

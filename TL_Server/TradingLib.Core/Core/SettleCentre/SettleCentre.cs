@@ -42,8 +42,6 @@ namespace TradingLib.Core
         /// </summary>
         public QSEnumSettleCentreStatus SettleCentreStatus { get; set; }
 
-
-
         int _lastsettleday = 0;
         /// <summary>
         /// 上一个结算日
@@ -125,6 +123,7 @@ namespace TradingLib.Core
         int _resetTime = 170000;
         bool _cleanTmp = false;
         bool _settleWithLatestPrice = false;
+
         public SettleCentre()
             :base(SettleCentre.CoreName)
         {
@@ -132,6 +131,7 @@ namespace TradingLib.Core
 
             //初始化置结算中心状态为未知
             SettleCentreStatus = QSEnumSettleCentreStatus.UNKNOWN;
+            IsInSettle = false;
 
             //初始化交易日信息
             InitTradingDay();
@@ -187,11 +187,9 @@ namespace TradingLib.Core
         /// </summary>
         void InitTradingDay()
         {
-
             //开发模式每天都有结算,运行模式按照交易日里进行结算
             debug("System running under " + (GlobalConfig.IsDevelop?"develop":"production"), QSEnumDebugLevel.INFO);
 
-            IsInSettle = false;
             //从数据库获得上次结算日
             _lastsettleday = ORM.MSettlement.GetLastSettleday();
 
@@ -222,7 +220,6 @@ namespace TradingLib.Core
             //如果当前日期<=netxtradingday则正常,比如下午结算后 当前交易日就是夜盘隶属的下一个交易日,当前时间则小于该交易日,遇到周五则会小2天
             else
             {
-                
                 if (!GlobalConfig.IsDevelop)
                 {
                     //运行模式的交易日是通过交易日历来获得当前交易日 当前交易日有可能为0,为0标识当前不是交易日
@@ -275,7 +272,6 @@ namespace TradingLib.Core
             base.Dispose();
         }
 
-        string settleheader = "#####SettleAccount:";
         /// <summary>
         /// 结算所有交易账户
         /// 结算分析
@@ -286,7 +282,7 @@ namespace TradingLib.Core
         /// </summary>
         public void SettleAccount()
         {
-            debug(string.Format(settleheader+"Start Settele Account,Current Tradingday:{0}",CurrentTradingday), QSEnumDebugLevel.INFO);
+            debug(string.Format("#####SettleAccount: Start Settele Account,Current Tradingday:{0}", CurrentTradingday), QSEnumDebugLevel.INFO);
             foreach (IAccount acc in _clearcentre.Accounts)
             {
                 try

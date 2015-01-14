@@ -56,6 +56,6 @@ namespace TradingLib.API
         event MessageDelegate SendMessageEvent;
     }
 
-    
+
 
 }

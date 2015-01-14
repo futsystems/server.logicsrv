@@ -42,22 +42,14 @@ namespace TradingLib.ServiceManager
         {
             debug("2.初始化ClearCentre");
             _clearCentre = new ClearCentre();
-
-            //tradingserver得到成交后发送给clearcentre处理，计算完手续费后再通过tradingserver回报给客户端
-            //_clearCentre.GotCommissionFill += new FillDelegate(_messageExchagne.newCommissionFill);
-
             //将清算中心传递给tradingserver
-            _messageExchagne.ClearCentre = _clearCentre;
-
+            _messageExchagne.BindClearCentre(_clearCentre);
             //将清算中心传递给结算中心
             _settleCentre.BindClearCentre(_clearCentre);
         }
 
         private void DestoryClearCentre()
         {
-            //tradingserver得到成交后发送给clearcentre处理，计算完手续费后再通过tradingserver回报给客户端
-            //_clearCentre.GotCommissionFill -= new FillDelegate(_messageExchagne.newCommissionFill);
-            //_messageExchagne.ClearCentre = null;
             _clearCentre.Dispose();
         }
 
@@ -69,11 +61,11 @@ namespace TradingLib.ServiceManager
             _riskCentre = new RiskCentre(_clearCentre);
 
             //绑定风控中心
-            _messageExchagne.RiskCentre = _riskCentre;
+            _messageExchagne.BindRiskCentre(_riskCentre);
             _settleCentre.BindRiskCentre(_riskCentre);
 
             //2.清算中心激活某个账户 调用风控中心重置该账户规则 解决账户检查规则触发后,状态没复位,账户激活后规则失效的问题
-            _clearCentre.AccountActiveEvent += new AccountIdDel(_riskCentre.ResetRuleSet);
+            _clearCentre.AccountActiveEvent += new AccoundIDDel(_riskCentre.ResetRuleSet);
 
             //交易服务回报风控中心
             _messageExchagne.GotTickEvent += new TickDelegate(_riskCentre.GotTick);
@@ -85,17 +77,11 @@ namespace TradingLib.ServiceManager
             _riskCentre.newSendOrderRequest += new OrderDelegate(_messageExchagne.SendOrderInternal);
             _riskCentre.newOrderCancelRequest += new LongDelegate(_messageExchagne.CancelOrder);
 
-            //帐户加载事件 用于清算中心Addapter附加到帐户对象
-            _clearCentre.PositionRoundClosedEvent += new PositionRoundClosedDel(_riskCentre.GotPostionRoundClosed);
-            
         }
 
         private void DestoryRiskCentre()
         {
-            //4.风控中心记录客户端的登入 登出情况
-            //_messageExchagne.SendLoginInfoEvent -= new LoginInfoDel(_riskCentre.GotLoginInfo);
-
-            _clearCentre.AccountActiveEvent -= new AccountIdDel(_riskCentre.ResetRuleSet);
+            _clearCentre.AccountActiveEvent -= new AccoundIDDel(_riskCentre.ResetRuleSet);
 
             //交易服务行情驱动风控中心
             _messageExchagne.GotTickEvent -= new TickDelegate(_riskCentre.GotTick);
@@ -107,10 +93,6 @@ namespace TradingLib.ServiceManager
             _riskCentre.newSendOrderRequest -= new OrderDelegate(_messageExchagne.SendOrder);
             _riskCentre.newOrderCancelRequest -= new LongDelegate(_messageExchagne.CancelOrder);
 
-            _clearCentre.PositionRoundClosedEvent -= new PositionRoundClosedDel(_riskCentre.GotPostionRoundClosed);
-
-            //绑定风控中心
-            _messageExchagne.RiskCentre = null;
             _riskCentre.Dispose();
         }
 
@@ -163,7 +145,6 @@ namespace TradingLib.ServiceManager
             ////管理组件转发 交易服务器过来的委托 成交 取消 tick
             _messageExchagne.GotOrderEvent += new OrderDelegate(_managerExchange.newOrder);
             _messageExchagne.GotOrderErrorEvent += new OrderErrorDelegate(_managerExchange.newOrderError);
-            //_messageExchagne.GotCancelEvent += new LongDelegate(_managerExchange.newCancel);
             _messageExchagne.GotFillEvent += new FillDelegate(_managerExchange.newTrade);
             _messageExchagne.GotTickEvent += new TickDelegate(_managerExchange.newTick);
 
@@ -174,7 +155,7 @@ namespace TradingLib.ServiceManager
             ////帐户变动事件，当帐户设置或者相关属性发生变动时 触发该事件
             _clearCentre.AccountChangedEvent += new AccountSettingChangedDel(_managerExchange.newAccountChanged);
             ////添加帐户
-            _clearCentre.AccountAddEvent += new AccountIdDel(_managerExchange.newAccountAdded);
+            _clearCentre.AccountAddEvent += new AccoundIDDel(_managerExchange.newAccountAdded);
         }
         private void DestoryMgrExchSrv()
         {
@@ -184,7 +165,6 @@ namespace TradingLib.ServiceManager
             ////管理组件转发 交易服务器过来的委托 成交 取消 tick
             _messageExchagne.GotOrderEvent -= new OrderDelegate(_managerExchange.newOrder);
             _messageExchagne.GotOrderErrorEvent -= new OrderErrorDelegate(_managerExchange.newOrderError);
-            //_messageExchagne.GotCancelEvent += new LongDelegate(_managerExchange.newCancel);
             _messageExchagne.GotFillEvent -= new FillDelegate(_managerExchange.newTrade);
             _messageExchagne.GotTickEvent -= new TickDelegate(_managerExchange.newTick);
 
@@ -194,7 +174,7 @@ namespace TradingLib.ServiceManager
             ////帐户变动事件，当帐户设置或者相关属性发生变动时 触发该事件
             _clearCentre.AccountChangedEvent -= new AccountSettingChangedDel(_managerExchange.newAccountChanged);
             ////添加帐户
-            _clearCentre.AccountAddEvent -= new AccountIdDel(_managerExchange.newAccountAdded);
+            _clearCentre.AccountAddEvent -= new AccoundIDDel(_managerExchange.newAccountAdded);
            
             _managerExchange.Dispose();
         }
@@ -203,26 +183,9 @@ namespace TradingLib.ServiceManager
         {
             debug("7.初始化WebMsgExchSrv");
             _webmsgExchange = new WebMsgExchServer(_messageExchagne, _clearCentre, _riskCentre);
-
-            //_messageExchagne.GotTickEvent += new TickDelegate(_webmsgExchange.NewTick);
-            //帐户设置变动向web端推送消息
-            //_clearCentre.AccountChangedEvent +=new AccountSettingChangedDel(_webmsgExchange.NewAccountSettingUpdate);
-            
-            //转发账户登入状态信息
-            //_messageExchagne.SendLoginInfoEvent += new LoginInfoDel(_webmsgExchange.NewSessionUpdate);
-
         }
         private void DestoryWebMsgExchSrv()
         {
-            //_messageExchagne.GotTickEvent -= new TickDelegate(_webmsgExchange.NewTick);
-
-
-            //帐户设置变动向web端推送消息
-            //_clearCentre.AccountChangedEvent -= new AccountSettingChangedDel(_webmsgExchange.NewAccountSettingUpdate);
-
-            //转发账户登入状态信息
-            //_messageExchagne.SendLoginInfoEvent -= new LoginInfoDel(_webmsgExchange.NewSessionUpdate);
-
             _webmsgExchange.Dispose();
         }
 

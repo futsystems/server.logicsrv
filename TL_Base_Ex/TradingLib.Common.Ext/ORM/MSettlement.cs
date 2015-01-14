@@ -63,6 +63,19 @@ namespace TradingLib.ORM
         }
 
         /// <summary>
+        /// 获得某个分帐户的持仓明细
+        /// </summary>
+        /// <param name="tradingday"></param>
+        /// <returns></returns>
+        public static IEnumerable<PositionDetail> SelectAccountPositionDetails(string account,int tradingday)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("SELECT * FROM  log_position_detail_hist WHERE settleday = {0} AND  breed='{1}' AND account='{2}'", tradingday, QSEnumOrderBreedType.ACCT, account);
+                return db.Connection.Query<PositionDetailImpl>(query);
+            }
+        }
+        /// <summary>
         /// 获得接口侧所有持仓明细数据
         /// </summary>
         /// <param name="tradingday"></param>
@@ -144,7 +157,7 @@ namespace TradingLib.ORM
         /// </summary>
         /// <param name="pr"></param>
         /// <returns></returns>
-        public static bool InsertHoldPositionRound(IPositionRound pr, int settleday)
+        public static bool InsertHoldPositionRound(PositionRound pr, int settleday)
         {
             using (DBMySql db = new DBMySql())
             {
@@ -248,10 +261,12 @@ namespace TradingLib.ORM
             using (DBMySql db = new DBMySql())
             {
                 string query = "SELECT * FROM system";
-                systeminformation info = db.Connection.Query<systeminformation>(query).SingleOrDefault<systeminformation>();
+                SystemInformation info = db.Connection.Query<SystemInformation>(query).SingleOrDefault<SystemInformation>();
                 return info.LastSettleday;
             }
         }
+
+
 
         /// <summary>
         /// 更新最近结算日期

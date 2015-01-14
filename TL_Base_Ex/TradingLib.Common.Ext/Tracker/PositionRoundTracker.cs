@@ -17,17 +17,17 @@ namespace TradingLib.Common
         /// <summary>
         /// 处于开启过程中的持仓回合
         /// </summary>
-        ConcurrentDictionary<string, PositionRound> _roundmap = new ConcurrentDictionary<string, PositionRound>();
+        ConcurrentDictionary<string, PositionRoundImpl> _roundmap = new ConcurrentDictionary<string, PositionRoundImpl>();
         
         /// <summary>
         /// 已经关闭的持仓回合
         /// </summary>
-        ThreadSafeList<PositionRound> _roundlog = new ThreadSafeList<PositionRound>();
+        ThreadSafeList<PositionRoundImpl> _roundlog = new ThreadSafeList<PositionRoundImpl>();
 
         /// <summary>
         /// 返回已经关闭的持仓操作回合
         /// </summary>
-        public IEnumerable<PositionRound> RoundClosed
+        public IEnumerable<PositionRoundImpl> RoundClosed
         {
             get
             {
@@ -93,11 +93,11 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public PositionRound this[string key]
+        public PositionRoundImpl this[string key]
         {
             get
             {
-                PositionRound pr;
+                PositionRoundImpl pr;
                 if (_roundmap.TryGetValue(key, out pr))
                 {
                     if (pr.IsOpened) return pr;
@@ -119,7 +119,7 @@ namespace TradingLib.Common
             foreach (Position p in hold)
             {
                 SyncPosition(p);
-                keylist.Add(PositionRound.GetPRKey(p));//将同步过的key进行记录
+                keylist.Add(PositionRoundImpl.GetPRKey(p));//将同步过的key进行记录
                 //debug("同步positon:"+p.ToString());
             }
 
@@ -141,8 +141,8 @@ namespace TradingLib.Common
         bool SyncPosition(Position p)
         {
             //debug("同步position:" + p.ToString());
-            string key = PositionRound.GetPRKey(p);
-            PositionRound pr;
+            string key = PositionRoundImpl.GetPRKey(p);
+            PositionRoundImpl pr;
             //positionround open 记录中包含对应的pr数据则进行数据比对并调整
             if (_roundmap.TryGetValue(key, out pr))
             {
@@ -194,7 +194,7 @@ namespace TradingLib.Common
             foreach (string key in removelist)
             {
                 //debug("删除key:"+key);
-                PositionRound removedpr;
+                PositionRoundImpl removedpr;
                 _roundmap.TryRemove(key, out removedpr);
             }
             return removelist;
@@ -205,9 +205,9 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="p"></param>
         /// <returns></returns>
-        PositionRound Posiotn2PR(Position p)
+        PositionRoundImpl Posiotn2PR(Position p)
         {
-            PositionRound pr = new PositionRound(p.Account, p.oSymbol, p.isLong);
+            PositionRoundImpl pr = new PositionRoundImpl(p.Account, p.oSymbol, p.isLong);
             //pr.EntryTime  = p.
             pr.EntrySize = p.Size;
             pr.EntryPrice = p.AvgPrice;
@@ -222,9 +222,9 @@ namespace TradingLib.Common
         /// 将positionround list恢复到 roundmap中去
         /// </summary>
         /// <param name="prlist"></param>
-        public void RestorePositionRounds(IEnumerable<PositionRound> prlist)
+        public void RestorePositionRounds(IEnumerable<PositionRoundImpl> prlist)
         {
-            foreach (PositionRound pr in prlist)
+            foreach (PositionRoundImpl pr in prlist)
             {
                 string key = pr.PRKey;
                 if (!_roundmap.ContainsKey(key))
@@ -241,18 +241,18 @@ namespace TradingLib.Common
         /// 记录一条持仓操作记录数据
         /// </summary>
         /// <param name="p"></param>
-        public IPositionRound GotPositionTransaction(PositionTransaction p)
+        public PositionRound GotPositionTransaction(PositionTransaction p)
         {
-            string key = PositionRound.GetPRKey(p);
+            string key = PositionRoundImpl.GetPRKey(p);
 
-            PositionRound pr = null;
+            PositionRoundImpl pr = null;
             if (_roundmap.TryGetValue(key, out pr))//存在对应的key
             {
                 if (!pr.GotPositionTransaction(p)) wrongpt++;
             }
             else//不存在key则新建一个
             {
-                pr = new PositionRound(p.Account, p.oSymbol, p.Trade.PositionSide);
+                pr = new PositionRoundImpl(p.Account, p.oSymbol, p.Trade.PositionSide);
                 _roundmap.TryAdd(key, pr);
                 if (!pr.GotPositionTransaction(p)) wrongpt++;
             }
@@ -263,7 +263,7 @@ namespace TradingLib.Common
                 //如果已经平仓,则将该positionround数据添加到log中并且从map中移除该pr记录
                 _roundlog.Add(pr);
 
-                PositionRound prremoved;
+                PositionRoundImpl prremoved;
                 _roundmap.TryRemove(key, out prremoved);
             }
             return pr;

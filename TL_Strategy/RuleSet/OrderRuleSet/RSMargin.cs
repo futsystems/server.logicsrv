@@ -89,7 +89,7 @@ namespace OrderRuleSet
         /// </summary>
         public static new string Title
         {
-            get { return "RSMargin:风险比例检查"; }
+            get { return "风险度检查:保证金占用比例"; }
         }
 
         /// <summary>

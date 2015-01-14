@@ -11,8 +11,7 @@ using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
 using FutSystems.GUI;
-using TradingLib.Mixins;
-using TradingLib.Mixins.LitJson;
+
 
 namespace FutsMoniter
 {
@@ -21,10 +20,11 @@ namespace FutsMoniter
 
         void OnNotifyVendorBind(string jsonstr)
         {
-            JsonReply<VendorSetting> reply = JsonReply.ParseReply<VendorSetting>(jsonstr);
-            if (reply.Code == 0)
+            //JsonReply<VendorSetting> reply = JsonReply.ParseReply<VendorSetting>(jsonstr);
+            VendorSetting setting = MoniterUtils.ParseJsonResponse<VendorSetting>(jsonstr);
+            if (setting != null)
             {
-                InvokeGotVendor(reply.Playload);
+                InvokeGotVendor(setting);
             }
             else//如果没有配资服
             {

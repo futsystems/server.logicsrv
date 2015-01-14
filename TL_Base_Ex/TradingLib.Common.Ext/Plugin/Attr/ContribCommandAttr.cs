@@ -8,7 +8,6 @@ namespace TradingLib.Common
 {
     /// <summary>
     /// 用于标注扩展模块的命令,指明该函数响应什么消息形成Message->Command调用的模式
-    /// 
     /// </summary>
     [AttributeUsage(AttributeTargets.Method,AllowMultiple = true)]
     public class ContribCommandAttr:TLAttribute
@@ -54,14 +53,17 @@ namespace TradingLib.Common
         public QSContribCommandHandleType HandlerType {get{return _htype;}}
         QSContribCommandHandleType _htype = QSContribCommandHandleType.MessageHandler;
 
-        bool _needauth = true;
+        //bool _needauth = true;
         /// <summary>
         /// 调用该函数是否需要授权
         /// </summary>
-        public bool NeedAuth { get { return _needauth; } set { _needauth = true; } }
+        //public bool NeedAuth { get { return _needauth; } set { _needauth = true; } }
 
-        bool _jsonreq = false;
-        public bool IsJsonArg { get { return _jsonreq; } set { _jsonreq = value; } }
+        //bool _jsonreq = false;
+        //public bool IsJsonArg { get { return _jsonreq; } set { _jsonreq = value; } }
+
+        QSEnumArgParseType _parsetype = QSEnumArgParseType.CommaSeparated;
+        public QSEnumArgParseType ArgParseType { get { return _parsetype; } }
         /// <summary>
         /// 消息处理命令
         /// 用于绑定到对应消息处理路由表相应对应消息源的消息
@@ -70,15 +72,15 @@ namespace TradingLib.Common
         /// <param name="cmd">命令操作码 标识了该命令</param>
         /// <param name="help">帮助</param>
         /// <param name="description">描述</param>
-        public ContribCommandAttr(QSEnumCommandSource source,string cmd,string help,string description,bool isjson = false,bool needauth=true)
+        public ContribCommandAttr(QSEnumCommandSource source, string cmd, string help, string description, QSEnumArgParseType parsetype = QSEnumArgParseType.CommaSeparated)
         {
             _htype = QSContribCommandHandleType.MessageHandler;
             _source = source;
             _cmdstr = cmd;
             _help = help;
             _description = description;
-            _jsonreq = isjson;
-            _needauth = needauth;
+            _parsetype = parsetype;
+            //_needauth = needauth;
 
         }
 
@@ -91,7 +93,7 @@ namespace TradingLib.Common
         /// <param name="cmd"></param>
         /// <param name="help"></param>
         /// <param name="desctiption"></param>
-        public ContribCommandAttr(string contrib, string eventstr, string cmd, string help, string desctiption, bool isjson = false,bool needauth = true)
+        public ContribCommandAttr(string contrib, string eventstr, string cmd, string help, string desctiption)
         {
             _htype = QSContribCommandHandleType.EventHandler;
             _sourceContrib = contrib;
@@ -101,18 +103,9 @@ namespace TradingLib.Common
             _help = help;
             _description = desctiption;
 
-            _jsonreq = isjson;
-            _needauth = needauth;
+            //_jsonreq = isjson;
+            //_needauth = needauth;
         }
     }
-    /// <summary>
-    /// 扩展命令处理类别
-    /// 1.响应消息源消息
-    /// 2.绑定到其他扩展模块事件
-    /// </summary>
-    public enum QSContribCommandHandleType
-    { 
-        MessageHandler,
-        EventHandler,
-    }
+   
 }

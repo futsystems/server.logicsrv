@@ -16,7 +16,7 @@ namespace TradingLib.Common
     /// <summary>
     /// 清算中心，为服务器维护了一批交易账户,以及每个交易账户的实时Order,trades,position的相关信息。
     /// </summary>
-    public abstract partial class ClearCentreBase : BaseSrvObject, IClearCentreBase
+    public abstract partial class ClearCentreBase : BaseSrvObject
     {
         
 
@@ -66,12 +66,15 @@ namespace TradingLib.Common
         #endregion
 
 
-        #region 数据结构
-
+        /// <summary>
+        /// 分帐户交易信息维护其
+        /// </summary>
         protected AccountTracker acctk = new AccountTracker();
-
+        /// <summary>
+        /// 
+        /// </summary>
         protected TotalTracker totaltk = new TotalTracker();
-        #endregion
+
 
 
         public ClearCentreBase(string name = "ClearCentreBase")
@@ -80,7 +83,7 @@ namespace TradingLib.Common
             acctk.NewPositionEvent += new Action<Position>(acctk_NewPositionEvent);
         }
 
-        //当帐户交易对象维护器产生持仓时，我们将持仓加入total维护其列表用于快速反问
+        //当帐户交易对象维护器产生持仓时，我们将持仓加入total维护其列表用于快速访问
         void acctk_NewPositionEvent(Position obj)
         {
             Util.Debug("new postion created " + obj.GetPositionKey(), QSEnumDebugLevel.MUST);
@@ -173,7 +176,7 @@ namespace TradingLib.Common
         /// 获得Account数组
         /// </summary>
         /// <returns></returns>
-        public IAccount[] Accounts
+        public IEnumerable<IAccount> Accounts
         {
             get { return acctk.Accounts; }//AcctList.Values.ToArray(); }
         }

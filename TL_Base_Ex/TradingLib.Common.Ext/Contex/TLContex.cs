@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Reflection;
 using TradingLib.API;
 using TradingLib.Common;
+using TradingLib.Mixins.Json;
 
 
 namespace TradingLib.Common
@@ -60,7 +61,7 @@ namespace TradingLib.Common
         ConcurrentDictionary<string, ConcurrentDictionary<string, ContribCommandInfo>> contribEventHandlerMap = new ConcurrentDictionary<string, ConcurrentDictionary<string, ContribCommandInfo>>();
 
         //无需登入便可以执行的命令
-        ThreadSafeList<string> bypasscmds = new ThreadSafeList<string>();
+        //ThreadSafeList<string> bypasscmds = new ThreadSafeList<string>();
         #endregion
 
         #region 定时任务列表
@@ -135,6 +136,7 @@ namespace TradingLib.Common
         }
         #endregion
 
+        #region internal 暴露对象
         IClearCentreSrv _clearCentreSrv = null;
         /// <summary>
         /// 清算中心
@@ -223,13 +225,12 @@ namespace TradingLib.Common
                 return _routermanager;
             }
         }
-        
+        #endregion
+
 
         public TLContext()
         {
 
-            //bypasscomd.Add("UCenterAccess-registeruser".ToUpper());
-            //bypasscomd.Add("UCenterAccess-requestraceuser".ToUpper());
         }
 
         public void debug(string msg)
@@ -297,6 +298,11 @@ namespace TradingLib.Common
             {
                 session.OperationError(ex);
             }
+            catch (QSCommandError ex)
+            {
+                TLCtxHelper.Ctx.debug(ex.Label + "\r\n reason@" + ex.Reason + "\r\n RawException:" + ex.RawException.Message.ToString(), QSEnumDebugLevel.ERROR);
+                session.OperationError(new FutsRspError(ex));
+            }
             catch (Exception ex)
             {
                 session.OperationError(new FutsRspError(ex));
@@ -304,50 +310,54 @@ namespace TradingLib.Common
         }
         /// <summary>
         /// 处理web message exchange消息调用
+        /// 
         /// </summary>
         /// <param name="module"></param>
         /// <param name="cmdstr"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public string MessageWebHandler(string module, string cmdstr, string parameters, bool istnetstring = false)
+        public JsonReply MessageWebHandler(JsonRequest request,bool istnetstring = false)
         {
-            string key = ContribCommandKey(module, cmdstr);
+            //string module, string cmdstr, string parameters
+            string key = ContribCommandKey(request.Module, request.Method);
             Util.Debug("Handler webmessage, cmdkey:" + key);
             ContribCommand cmd=null;
             if(messageWebCmdMap.TryGetValue(key,out cmd))
             {
                 try
                 {
-                    object obj = cmd.ExecuteCmd(null, parameters,istnetstring);
+                    object obj = cmd.ExecuteCmd(null,request.Args,istnetstring);
+                    //根据ContribCommand执行结果进行返回
+                    //1.执行没有任何返回 比如进行一个无返回信息的操作请求
                     if (obj == null)
                     {
-                        return ReplyHelper.Success_Generic;
+                        return WebAPIHelper.ReplySuccess(string.Format("CMD:{0} Execute Successful", key));
                     }
-                    else if (obj is string)
+                    //2.返回JsonReply对象
+                    else if (obj is JsonReply)
                     {
-                        return obj as string;
+                        return obj as JsonReply;
                     }
                     else
                     {
-                        return ReplyHelper.ReplyObject(obj);
+                        return WebAPIHelper.ReplyObject(obj);
                     }
                 }
                 catch (QSCommandError ex)
                 {
                     TLCtxHelper.Ctx.debug(ex.Label + "\r\n reason@" + ex.Reason + "\r\n RawException:" + ex.RawException.Message.ToString(), QSEnumDebugLevel.ERROR);
-                    TLCtxHelper.Ctx.debug("error:" + ReplyHelper.Error_CommandExecute,QSEnumDebugLevel.ERROR);
-                    return  ReplyHelper.Error_CommandExecute;
+                    return WebAPIHelper.ReplyError("COMMAND_EXECUTE_ERROR");
                 }
                 catch (Exception ex)
                 {
                     TLCtxHelper.Ctx.debug("ExectueCmd Error:\r\n" + ex.ToString(), QSEnumDebugLevel.ERROR);
-                    return ReplyHelper.Error_ServerSide;
+                    return WebAPIHelper.ReplyError("SERVER_SIDE_ERROR");
                 }
 
             }
             else
             {
-                return ReplyHelper.Error_MethodNotFund;
+                return WebAPIHelper.ReplyError("METHOD_NOT_FOUND");
             }
         }
 
@@ -374,12 +384,12 @@ namespace TradingLib.Common
                 catch (QSCommandError ex)
                 {
                     TLCtxHelper.Ctx.debug(ex.Label + "\r\n reason@" + ex.Reason + "\r\n RawException:" + ex.RawException.Message.ToString(), QSEnumDebugLevel.ERROR);
-                    return ExCommand.DEFAULT_REP_WRONG;
+                    return "";// ExCommand.DEFAULT_REP_WRONG;
                 }
                 catch (Exception ex)
                 {
                     TLCtxHelper.Ctx.debug("ExectueCmd Error:\r\n" + ex.ToString(), QSEnumDebugLevel.ERROR);
-                    return ExCommand.DEFAULT_REP_WRONG;
+                    return "";// ExCommand.DEFAULT_REP_WRONG;
                 }
             }
             return "CLICommand:" + cmd + " Not Found\r\n";
@@ -416,7 +426,7 @@ namespace TradingLib.Common
         /// <param name="parameters">调用该扩展模块所附带的参数(除session参数以为),所有扩展模块的函数调用均要包含session入口</param>
         void CmdHandler(ISession session, string contribid, string cmd, string parameters, ConcurrentDictionary<string, ContribCommand> cmdmap)
         {
-            Util.Debug("Contirb:" + contribid + " cmd:" + cmd + " args:" + parameters);
+            //Util.Debug("Contirb:" + contribid + " cmd:" + cmd + " args:" + parameters);
             string cmdkey = ContribCommandKey(contribid, cmd);
 
             if (!IsContribRegisted(contribid) && !IsCoreRegisted(contribid) &&!IsServiceManagerRegisted(contribid))
@@ -429,11 +439,7 @@ namespace TradingLib.Common
                 debug("Error:Contrib[" + contribid + "] do not support Command[" + cmd + "]");
                 return;
             }
-            //如果没有登入 则直接返回
-            if (bypasscmds.Contains(cmdkey) || session.IsLoggedIn)
-            {
-                cmdmap[cmdkey].ExecuteCmd(session, parameters);
-            }
+            cmdmap[cmdkey].ExecuteCmd(session, parameters);
             
         }
 
@@ -463,19 +469,13 @@ namespace TradingLib.Common
             }
             catch (Exception ex)
             {
-                debug("ContribCommand can not math EventHander:"+ex.ToString()+ExComConst.Line);
+                debug("ContribCommand can not math EventHander:"+ex.ToString()+System.Environment.NewLine);
                 debug("Event:" + ev.EventInfo.Name);
                 debug("EventHandlerType:" + ev.EventInfo.EventHandlerType.FullName);
                 debug("Handler:" + h.MethodInfo.Name);
             }
         }
         #endregion
-
-
-
-
-
-
 
         #region 注册BaseSrvObject
 
@@ -646,6 +646,7 @@ namespace TradingLib.Common
                         _routermanager = obj as IRouterManager;
                     }
                 }
+
                 //1.检查是否是核心模块
                 if (obj is ICore)
                 {
@@ -784,18 +785,11 @@ namespace TradingLib.Common
         void ParseCommandInfo(object obj, string componentId)
         {
             List<ContribCommandInfo> list = PluginHelper.FindContribCommand(obj);
-            /*
-            if (plugin == null)
-            {
-                debug("Error:this obj is not a valid IContribPlugin,will not register ContribCommand");
-                return;
-            }**/
             //获得模块ID
             string contribid = componentId.ToUpper();
             
             foreach (ContribCommandInfo info in list)
             {
-
                 //处理消息的扩展命令
                 if (info.Attr.HandlerType == QSContribCommandHandleType.MessageHandler)
                 {
@@ -829,10 +823,10 @@ namespace TradingLib.Common
                     }
 
                     //如果该命令不用客户端登入授权后执行，则加入白名单列表
-                    if (!info.Attr.NeedAuth)
-                    {
-                        bypasscmds.Add(cmdkey);
-                    }
+                    //if (!info.Attr.NeedAuth)
+                    //{
+                    //    bypasscmds.Add(cmdkey);
+                    //}
 
                 }
                 else if(info.Attr.HandlerType == QSContribCommandHandleType.EventHandler) //事件
@@ -906,10 +900,10 @@ namespace TradingLib.Common
                     }
 
                     //如果该命令不用客户端登入授权后执行，则加入白名单列表
-                    if (!info.Attr.NeedAuth)
-                    {
-                        bypasscmds.Remove(cmdkey);
-                    }
+                    //if (!info.Attr.NeedAuth)
+                    //{
+                    //    bypasscmds.Remove(cmdkey);
+                    //}
 
                 }
                 else if (info.Attr.HandlerType == QSContribCommandHandleType.EventHandler) //事件
@@ -994,11 +988,11 @@ namespace TradingLib.Common
         string PluginInfo(IPlugin plugin)
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("Author:".PadRight(20, ' ') + plugin.Author + ExComConst.Line);
-            sb.Append("Company:".PadRight(20, ' ') + plugin.Compnay + ExComConst.Line);
-            sb.Append("Version:".PadRight(20, ' ') + plugin.Version + ExComConst.Line);
-            sb.Append("Description:" + ExComConst.Line);
-            sb.Append(plugin.Description + ExComConst.Line);
+            sb.Append("Author:".PadRight(20, ' ') + plugin.Author + System.Environment.NewLine);
+            sb.Append("Company:".PadRight(20, ' ') + plugin.Compnay + System.Environment.NewLine);
+            sb.Append("Version:".PadRight(20, ' ') + plugin.Version + System.Environment.NewLine);
+            sb.Append("Description:" + System.Environment.NewLine);
+            sb.Append(plugin.Description + System.Environment.NewLine);
             return sb.ToString();
         }
 
@@ -1010,10 +1004,10 @@ namespace TradingLib.Common
         public string PrintBaseObjectList()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append(ExUtil.SectionHeader("BaseSrbObjectList"));
+            sb.Append(CliUtils.SectionHeader("BaseSrbObjectList"));
             foreach (BaseSrvObject obj in baseSrvObjectMap.Values)
             {
-                sb.Append(obj.UUID.PadRight(40, ' ') + obj.Name + ExComConst.Line);
+                sb.Append(obj.UUID.PadRight(40, ' ') + obj.Name + System.Environment.NewLine);
             }
             return sb.ToString();
         }
@@ -1025,12 +1019,12 @@ namespace TradingLib.Common
         {
 
             StringBuilder sb = new StringBuilder();
-            sb.Append(ExUtil.SectionHeader("ContribList"));
+            sb.Append(CliUtils.SectionHeader("ContribList"));
             foreach (string uuid in contribIDUUIDMap.Values)
             {
                 IContrib c = baseSrvObjectMap[uuid] as IContrib;
                 IContribPlugin plugin = PluginHelper.LoadContribPlugin(c.GetType().FullName);
-                sb.Append(plugin.ContribID.PadRight(12, ' ') + c.GetType().FullName.PadRight(40, ' ') + plugin.Name + ExComConst.Line);
+                sb.Append(plugin.ContribID.PadRight(12, ' ') + c.GetType().FullName.PadRight(40, ' ') + plugin.Name + System.Environment.NewLine);
             }
             return sb.ToString();
         }
@@ -1041,12 +1035,12 @@ namespace TradingLib.Common
         public string PrintCoreList()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append(ExUtil.SectionHeader("CoreList"));
+            sb.Append(CliUtils.SectionHeader("CoreList"));
             foreach (string uuid in coreIdUUIDMap.Values)
             {
                 ICore core = baseSrvObjectMap[uuid] as ICore;
 
-                sb.Append(core.CoreId.PadRight(20,' ')+core.GetType().FullName.PadRight(40,' ')+ExComConst.Line);
+                sb.Append(core.CoreId.PadRight(20, ' ') + core.GetType().FullName.PadRight(40, ' ') + System.Environment.NewLine);
             }
             return sb.ToString();
         }
@@ -1063,27 +1057,27 @@ namespace TradingLib.Common
             IContrib c = ContribFinderName(contrib.ToUpper());
             if (c == null)
             {
-                return "Contrib:" + contrib + " Not Exist" + ExComConst.Line;
+                return "Contrib:" + contrib + " Not Exist" + System.Environment.NewLine;
             }
             IContribPlugin plugin = PluginHelper.LoadContribPlugin(c.GetType().FullName);
             if (plugin == null)
             {
-                return "Contrib:" + contrib + " Not Exist" + ExComConst.Line;
+                return "Contrib:" + contrib + " Not Exist" + System.Environment.NewLine;
             }
 
-            sb.Append(ExUtil.SectionHeader("Contrib:" + contrib));
-            sb.Append("UUID:".PadRight(20, ' ') + (c as BaseSrvObject).UUID + ExComConst.Line);
-            sb.Append("ContribID:".PadRight(20, ' ') + plugin.ContribID + ExComConst.Line);
-            sb.Append("Name:".PadRight(20, ' ') + plugin.Name + ExComConst.Line);
+            sb.Append(CliUtils.SectionHeader("Contrib:" + contrib));
+            sb.Append("UUID:".PadRight(20, ' ') + (c as BaseSrvObject).UUID + System.Environment.NewLine);
+            sb.Append("ContribID:".PadRight(20, ' ') + plugin.ContribID + System.Environment.NewLine);
+            sb.Append("Name:".PadRight(20, ' ') + plugin.Name + System.Environment.NewLine);
             sb.Append(PluginInfo(plugin));
-            sb.Append("ContribCommand:" + ExComConst.Line);
+            sb.Append("ContribCommand:" + System.Environment.NewLine);
 
             List<ContribCommandInfo> contribcommandlist = PluginHelper.FindContribCommand(c);
             foreach (ContribCommandInfo info in contribcommandlist)
             {
                 sb.Append(PrintCommandAPI(contrib, info.Attr.CmdStr));
             }
-            sb.Append("TaskCommand:" + ExComConst.Line);
+            sb.Append("TaskCommand:" + System.Environment.NewLine);
             Util.Debug("it is run to here for print contrib");
             return sb.ToString();
         }
@@ -1099,7 +1093,7 @@ namespace TradingLib.Common
             string bigcmd = cmd.ToUpper();
             string cmdkey = ContribCommandKey(contrib, cmd);
             if (!IsContribRegisted(contrib))
-                return (ExComConst.SectionPrefix + " Can Not Find Command:" + contrib + "-" + cmd).PadRight(ExComConst.SectionNum, ExComConst.SectionChar);
+                return (CliUtils.SECPRIFX+ " Can Not Find Command:" + contrib + "-" + cmd).PadRight(CliUtils.SECNUM, CliUtils.SECCHAR);
 
             string re = "";
             if (messageRouterCmdMap.Keys.Contains(cmdkey))
@@ -1171,10 +1165,10 @@ namespace TradingLib.Common
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.Append(ExUtil.SectionHeader("ContribEvent List"));
+            sb.Append(CliUtils.SectionHeader("ContribEvent List"));
             foreach (string key in contribEventMap.Keys)
             {
-                sb.Append("Event:" + key + " " + contribEventMap[key].EventInfo.Name+ExComConst.Line);
+                sb.Append("Event:" + key + " " + contribEventMap[key].EventInfo.Name+System.Environment.NewLine);
             }
 
             return sb.ToString();
@@ -1189,14 +1183,14 @@ namespace TradingLib.Common
         public string PrintEventHandler()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append(ExUtil.SectionHeader("Event Handler"));
+            sb.Append(CliUtils.SectionHeader("Event Handler"));
 
             foreach (string eventstr in contribEventHandlerMap.Keys)
             {
-                sb.Append("Event:" + eventstr + ExComConst.Line);
+                sb.Append("Event:" + eventstr + System.Environment.NewLine);
                 foreach (string cmdky in contribEventHandlerMap[eventstr].Keys)
                 {
-                    sb.Append(("Command[" + cmdky + "]").PadRight(25, ' ') + contribEventHandlerMap[eventstr][cmdky].Attr.CmdStr + ExComConst.Line);
+                    sb.Append(("Command[" + cmdky + "]").PadRight(25, ' ') + contribEventHandlerMap[eventstr][cmdky].Attr.CmdStr + System.Environment.NewLine);
                 }
             }
             return sb.ToString();
@@ -1222,7 +1216,7 @@ namespace TradingLib.Common
         string PrintCommandMap(string title, ConcurrentDictionary<string, ContribCommand> map)
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append((ExComConst.SectionPrefix + " " + title + "").PadRight(ExComConst.SectionNum, ExComConst.SectionChar) + ExComConst.Line);
+            sb.Append((CliUtils.SECPRIFX + " " + title + "").PadRight(CliUtils.SECNUM, CliUtils.SECCHAR) + System.Environment.NewLine);
             foreach (string key in map.Keys)
             {
                 sb.Append(("  Command[" + key + "] ").PadRight(50, ' ') + map[key].Source.ToString().PadRight(20, ' ') + map[key].CommandHelp);

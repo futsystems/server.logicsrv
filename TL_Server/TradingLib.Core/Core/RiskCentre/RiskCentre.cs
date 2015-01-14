@@ -18,41 +18,11 @@ namespace TradingLib.Core
     //服务端风险控制模块,根据每个账户的设定，实时的检查Order是否符合审查要求予以确认或者决绝
     public partial class RiskCentre : BaseSrvObject, IRiskCentre,ICore
     {
-
         const string CoreName = "RiskCentre";
-
-        public event ClientTrackerInfoSessionDel ClientSessionEvent;
-        //public event GetFinServiceDel GetFinServiceDelEvent;
-
-        
-
-        
-
-        //账户检查日志
-        Log _accountcheklog = new Log("Risk_Account", true, true,Util.ProgramData(CoreName), true);//日志组件
-        //委托检查日志
-        Log _ordercheklog = new Log("Risk_Order", true, true, Util.ProgramData(CoreName), true);//日志组件
-        //其他日志
-        Log _othercheklog = new Log("Risk_Other", true, true, Util.ProgramData(CoreName), true);//日志组件
-
-        
-
-       
         /// <summary>
         /// 清算中心
         /// </summary>
         ClearCentre _clearcentre = null;
-
-        /// <summary>
-        /// 服务端止盈止损
-        /// </summary>
-        PositionOffsetTracker _posoffsetracker = null;
-
-        /// <summary>
-        /// 主力合约列表
-        /// </summary>
-        //Basket hotbasket = new BasketImpl();
-
         public string CoreId { get { return CoreName; } }
 
         ConfigDB _cfgdb;
@@ -66,6 +36,8 @@ namespace TradingLib.Core
 
         public RiskCentre(ClearCentre clearcentre):base(CoreName)
         {
+            _clearcentre = clearcentre;
+
             //1.加载配置文件
             _cfgdb = new ConfigDB(RiskCentre.CoreName);
             if (!_cfgdb.HaveConfig("MarketOpenTimeCheck"))
@@ -110,60 +82,14 @@ namespace TradingLib.Core
             
 
 
-            _clearcentre = clearcentre;
-
-            _posoffsetracker = new PositionOffsetTracker(_clearcentre as ClearCentre);
-            //_posoffsetracker.SendDebugEvent +=new DebugDelegate(msgdebug);
-            _posoffsetracker.SendOrderEvent +=new OrderDelegate(SendOrder);
-            _posoffsetracker.CancelOrderEvent += new LongDelegate(CancelOrder);
-            _posoffsetracker.AssignOrderIDEvent += new AssignOrderIDDel(AssignOrderID);
+            //订阅持仓回合关闭事件
+            TLCtxHelper.EventIndicator.GotPositionClosedEvent += new PositionRoundClosedDel(GotPostionRoundClosed);
 
             //加载风空规则
-            LoadRuleSet();
+            LoadRuleClass();
 
             //初始化日内平仓任务
             InitFlatTask();
-        }
-
-     
-        /// <summary>
-        /// 查询当前是否是交易日
-        /// </summary>
-        public bool IsTradingday
-        {
-            get
-            {
-                return TLCtxHelper.Ctx.SettleCentre.IsTradingday;
-            }
-        }
-
-
-
-
-
-
-
-
-
-        #region 【服务端止盈止损】客户端提交上来的持仓止盈止损 服务端检查
-        /// <summary>
-        /// 获得某个账户的所有持仓止盈止损参数
-        /// </summary>
-        /// <param name="account"></param>
-        /// <returns></returns>
-        public PositionOffsetArgs[] GetPositionOffset(string account)
-        {
-            return _posoffsetracker.GetPositionOffset(account);
-        }
-
-        /// <summary>
-        /// 客户端提交止盈止损参数更新到监控器
-        /// </summary>
-        /// <param name="args"></param>
-        public void GotPositionOffsetArgs(PositionOffsetArgs args)
-        {
-            _posoffsetracker.GotPositionOffsetArgs(args);
-
         }
 
         /// <summary>
@@ -172,9 +98,12 @@ namespace TradingLib.Core
         /// <param name="k"></param>
         public void GotTick(Tick k)
         {
-            _posoffsetracker.GotTick(k);
+            //_posoffsetracker.GotTick(k);
         }
 
+
+
+        #region 【服务端止盈止损】客户端提交上来的持仓止盈止损 服务端检查
         /// <summary>
         /// 获得取消
         /// 取消事务是在处理队列中进行异步处理
@@ -183,12 +112,11 @@ namespace TradingLib.Core
         /// <param name="oid"></param>
         public void GotOrder(Order o)
         {
-            if (o.Status == QSEnumOrderStatus.Canceled)
+            if (o.Status == QSEnumOrderStatus.Canceled||o.Status== QSEnumOrderStatus.Filled)//取消或者全部成交
             {
                 long oid = o.id;
                 foreach (RiskTaskSet ps in posflatlist)
                 {
-
                     switch (ps.TaskType)
                     {
 
@@ -197,20 +125,24 @@ namespace TradingLib.Core
                                 //如果不需要先撤单的 则跳过
                                 if (!ps.NeedCancelFirst)
                                 {
-                                    if (ps.OrderID == oid)
-                                        ps.OrderID = 0;
+                                    //发送委托列表需要响应撤单,成绩,拒绝 三种状态，应为发送强平委托时 有可能未成交被撤单，也有可能成交，也有可能被拒绝 拒绝部分在 GotOrderError进行响应处理
+                                    if (ps.OrderIDList.Contains(oid))
+                                        ps.OrderIDList.Remove(oid);
                                 }
                                 else//需要先撤单的 则检查撤单列表
                                 {
-                                    //如果待成交委托列表中包含对应的ID则先删除该委托
-                                    if (ps.PendingOrders.Contains(oid))
+                                    if (o.Status == QSEnumOrderStatus.Canceled)//如果在平某个持仓前需要撤单的，则检查待成交委托
                                     {
-                                        ps.PendingOrders.Remove(oid);
-                                    }
-                                    //如果所有待成交委托均撤单完成 则标志canceldone
-                                    if (ps.PendingOrders.Count == 0)
-                                    {
-                                        ps.CancelDone = true;
+                                        //如果待成交委托列表中包含对应的ID则先删除该委托
+                                        if (ps.PendingOrders.Contains(oid))
+                                        {
+                                            ps.PendingOrders.Remove(oid);
+                                        }
+                                        //如果所有待成交委托均撤单完成 则标志canceldone
+                                        if (ps.PendingOrders.Count == 0)
+                                        {
+                                            ps.CancelDone = true;
+                                        }
                                     }
                                 }
                             }
@@ -218,13 +150,17 @@ namespace TradingLib.Core
                         case QSEnumRiskTaskType.CancelOrder:
                         case QSEnumRiskTaskType.FlatAllPositions:
                             {
-                                if (ps.OrderCancels.Contains(oid))
+                                if (o.Status == QSEnumOrderStatus.Canceled)
                                 {
-                                    ps.OrderCancels.Remove(oid);
-                                }
-                                if (ps.OrderCancels.Count == 0)
-                                {
-                                    ps.CancelDone = true;
+                                    if (ps.OrderCancels.Contains(oid))//如果待取消委托列表包含该委托 则从该列表中删除
+                                    {
+                                        ps.OrderCancels.Remove(oid);
+                                    }
+                                    //如果待取消列表长度为0 则所有委托已经被成功取消
+                                    if (ps.OrderCancels.Count == 0)
+                                    {
+                                        ps.CancelDone = true;
+                                    }
                                 }
                             }
                             break;
@@ -232,7 +168,6 @@ namespace TradingLib.Core
                             break;
                     }
                 }
-                _posoffsetracker.GotCancel(oid);
             }
         }
 
@@ -248,12 +183,9 @@ namespace TradingLib.Core
             foreach (RiskTaskSet ps in posflatlist)
             {
                 //如果委托被拒绝 并且委托ID是本地发送过去的ID 则将positionflatset的委托ID置0
-                if (ps.OrderID == order.id && order.Status == QSEnumOrderStatus.Reject)
-                    ps.OrderID = 0;
+                if (ps.OrderIDList.Contains(order.id) && order.Status == QSEnumOrderStatus.Reject)
+                    ps.OrderIDList.Remove(order.id);
             }
-
-            //止损 止盈
-            //_posoffsetracker.GotCancel(oid);
         }
 
         /// <summary>
@@ -268,7 +200,7 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="pr"></param>
         /// <param name="pos"></param>
-        public void GotPostionRoundClosed(IPositionRound pr, Position pos)
+        void GotPostionRoundClosed(PositionRound pr, Position pos)
         { 
             string key = pos.GetPositionKey();
 
@@ -278,116 +210,17 @@ namespace TradingLib.Core
             {
                 debug("Position:" + tmp.Position.GetPositionKey() + " 已经平掉,从队列中移除", QSEnumDebugLevel.INFO);
                 posflatlist.Remove(tmp);
-                if (GotFlatSuccessEvent != null)
+                //通过事件中继触发事件
+                if (PositionFlatEvent != null)
                 {
-                    GotFlatSuccessEvent(tmp.Position);
+                    PositionFlatEvent(this, new PositionFlatEventArgs(tmp.Position));
                 }
             }
         }
 
         #endregion
 
-        #region 【客户端信息跟踪】跟踪客户端注册 注销记录
-        /// <summary>
-        /// 获得某个客户端的信息记录
-        /// </summary>
-        /// <param name="acc"></param>
-        /// <returns></returns>
-        public ClientTrackerInfo GetClientTracker(string acc)
-        {
-            if (!trackermap.Keys.Contains(acc))
-            {
-                return null;
-            }
-            return trackermap[acc];//获得该account所对应的追踪信息
-
-        }
-        ConcurrentDictionary<string, ClientTrackerInfo> trackermap = new ConcurrentDictionary<string, ClientTrackerInfo>();
-
-        /// <summary>
-        /// 检查某个账户是否登入
-        /// </summary>
-        /// <param name="account"></param>
-        /// <param name="info"></param>
-        /// <returns></returns>
-        public bool Islogin(string account, out ClientTrackerInfo info)
-        {
-            info = null;
-            if (trackermap.TryGetValue(account, out info))
-                return info.IsLogined;
-
-            return false;
-        }
-
-
-        /// <summary>
-        /// 获得账户登入或者登出信息
-        /// tradingserver只负责触发登入 登出信息 风控中心记录客户端的登入 登出状态 以及客户端的本地信息
-        /// 
-        /// </summary>
-        /// <param name="acc"></param>
-        /// <param name="login"></param>
-        /// <param name="info"></param>
-        public void GotLoginInfo(string acc, bool login, ClientInfoBase info)
-        {
-            try
-            {
-                if (!_clearcentre.HaveAccount(acc)) return;//
-
-                if (!trackermap.Keys.Contains(acc))
-                {
-                    trackermap.TryAdd(acc, new ClientTrackerInfo(acc,info));
-                }
-                ClientTrackerInfo ti = trackermap[acc];//获得该account所对应的追踪信息
-
-                //如果是登入
-                if (login)
-                {
-                    if (!ti.IsLogined)//原先没有登入 则登入次数++
-                        ti.LoginNum++;
-                    //如果没有登入，则记录当前时间为登入时间
-                    if (ti.IsLogined == false)//没有登入则记录登入时间
-                        ti.LoginTime = DateTime.Now;
-                    ti.IsLogined = true;
-                }
-                else
-                {
-                    ti.IsLogined = false;
-                    //注销时记录我们的时长
-                    if (ti.LoginTime != DateTime.MinValue)
-                        ti.OnlineSecend += (int)(DateTime.Now - ti.LoginTime).TotalSeconds;
-
-                }
-                //更新采集到的信息
-                ti.IPAddress = info.IPAddress;//IP地址
-                ti.HardWareCode = info.HardWareCode;//硬件码
-                ti.FrontID = string.IsNullOrEmpty(info.Location.FrontID) ? "Direct" : info.Location.FrontID;//前置机地址
-                //记录客户端的类型和版本
-                //ti.API_Type = "";
-                //ti.API_Version = "";
-                //对外触发客户端信息
-                if (ClientSessionEvent != null)
-                    ClientSessionEvent(ti, login);
-            }
-            catch (Exception ex)
-            {
-                debug(PROGRAME + ":riskcenter got clientinfo error:" + ex.ToString());
-            }
-        }
-
-        void CheckClientTrackerInfo()
-        {
-
-            IEnumerable<ClientTrackerInfo> infos = trackermap.Values;
-
-            //条件搜索语句
-            IEnumerable<ClientTrackerInfo> set =
-                from info in infos
-                where info.TotalTime.TotalHours > 2 //找出在线时长大于2小时的客户端
-                select info;
-
-        }
-        #endregion
+       
 
         #region 重置
         /// <summary>
@@ -396,17 +229,11 @@ namespace TradingLib.Core
         public void Reset()
         {
             debug("风控中心重置", QSEnumDebugLevel.INFO);
-            //清空帐户的止盈止损参数设置
-            _posoffsetracker.Clear();
-
-            //清空帐户当日登入信息
-            trackermap.Clear();
-
             //清空强平任务队列
             posflatlist.Clear();
 
             //清空帐户风控检查帐户列表
-            activeaccount.Clear();
+            ClearActiveAccount();
 
             Notify("风控中心重置(结算后)[" + DateTime.Now.ToShortDateString() + "]", " ");
         }
@@ -427,7 +254,7 @@ namespace TradingLib.Core
         {
             Util.DestoryStatus(this.PROGRAME);
             base.Dispose();
-            _posoffsetracker.Dispose();
+            //_posoffsetracker.Dispose();
             
         }
     }

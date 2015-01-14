@@ -8,7 +8,6 @@ namespace TradingLib.API
     /// <summary>
     /// 帐户操作接口
     /// 包含激活 冻结 强迫等操作
-    /// 
     /// </summary>
     public interface IAccOperation
     {
@@ -51,7 +50,7 @@ namespace TradingLib.API
         void CancelOrder(string symbol,QSEnumOrderSource source,string cancelreason);
 
         /// <summary>
-        /// 撤掉帐户下的某个为头
+        /// 撤掉帐户下的某个委托
         /// </summary>
         /// <param name="order"></param>
         /// <param name="source"></param>

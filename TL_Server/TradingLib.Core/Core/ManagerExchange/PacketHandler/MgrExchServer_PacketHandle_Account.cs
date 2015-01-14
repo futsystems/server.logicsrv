@@ -22,7 +22,7 @@ namespace TradingLib.Core
         /// <param name="manager"></param>
         void SrvOnMGRAddAccount(MGRAddAccountRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求添加交易帐号:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求添加交易帐号:{1}", session.AuthorizedID, request.ToString()), QSEnumDebugLevel.INFO);
 
             //域帐户数目检查
             if (manager.Domain.GetAccounts().Count() >= manager.Domain.AccLimit)
@@ -31,12 +31,12 @@ namespace TradingLib.Core
             }
 
             //如果不是Root权限的Manager需要进行执行权限检查
-            if (!manager.RightRootDomain())
+            if (!manager.IsInRoot())
             {
                 //如果不是为该主域添加帐户,则我们需要判断当前Manager的主域是否拥有请求主域的权限
                 if (manager.BaseMgrID != request.MgrID)
                 {
-                    if (!manager.RightAgentParent(request.MgrID))
+                    if (!manager.IsParentOf(request.MgrID))
                     {
                         throw new FutsRspError("无权在该管理域开设帐户");
                     }
@@ -77,7 +77,7 @@ namespace TradingLib.Core
         /// <param name="manager"></param>
         void SrvOnDelAccount(MGRReqDelAccountRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求删除帐户:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求删除帐户:{1}", session.AuthorizedID, request.ToString()), QSEnumDebugLevel.INFO);
             clearcentre.DelAccount(request.AccountToDelete);
 
             session.OperationSuccess("交易帐户:" + request.AccountToDelete + " 删除成功");
@@ -91,14 +91,14 @@ namespace TradingLib.Core
         /// <param name="manager"></param>
         void SrvOnMGRQryAccount(MGRQryAccountRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求下载交易帐户列表:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求下载交易帐户列表:{1}", session.AuthorizedID, request.ToString()), QSEnumDebugLevel.INFO);
             IAccount[] list = manager.GetVisibleAccount().ToArray();
             if (list.Length > 0)
             {
                 for (int i = 0; i < list.Length; i++)
                 {
                     RspMGRQryAccountResponse response = ResponseTemplate<RspMGRQryAccountResponse>.SrvSendRspResponse(request);
-                    response.oAccount = list[i].ToAccountLite();
+                    response.oAccount = list[i].GenAccountLite();
                     CacheRspResponse(response, i == list.Length - 1);
                 }
             }
@@ -119,14 +119,14 @@ namespace TradingLib.Core
         /// <param name="manager"></param>
         void SrvOnMGRWatchAccount(MGRWatchAccountRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求设定观察列表:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求设定观察列表:{1}", session.AuthorizedID, request.ToString()), QSEnumDebugLevel.INFO);
             CustInfoEx c = customerExInfoMap[request.ClientID];
             c.Watch(request.AccountList);
         }
 
         void SrvOnMGRResumeAccount(MGRResumeAccountRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求恢复交易数据,帐号:{1}", session.MGRLoginName, request.ResumeAccount), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求恢复交易数据,帐号:{1}", session.AuthorizedID, request.ResumeAccount), QSEnumDebugLevel.INFO);
             //判断权限
 
             //将请求放入队列等待处理
@@ -141,23 +141,23 @@ namespace TradingLib.Core
         /// <param name="request"></param>
         /// <param name="session"></param>
         /// <param name="manager"></param>
-        void SrvOnMGRQryAccountInfo(MGRQryAccountInfoRequest request, ISession session, Manager manager)
-        {
-            debug(string.Format("管理员:{0} 请求查询交易帐户信息,帐号:{1}", session.MGRLoginName, request.Account), QSEnumDebugLevel.INFO);
+        //void SrvOnMGRQryAccountInfo(MGRQryAccountInfoRequest request, ISession session, Manager manager)
+        //{
+        //    debug(string.Format("管理员:{0} 请求查询交易帐户信息,帐号:{1}", session.AuthorizedID, request.Account), QSEnumDebugLevel.INFO);
 
-            IAccount account = clearcentre[request.Account];
+        //    IAccount account = clearcentre[request.Account];
 
-            if (account != null)
-            {
-                RspMGRQryAccountInfoResponse response = ResponseTemplate<RspMGRQryAccountInfoResponse>.SrvSendRspResponse(request);
-                response.AccountInfoToSend = account.ToAccountInfo();
-                CachePacket(response);
-            }
-        }
+        //    if (account != null)
+        //    {
+        //        RspMGRQryAccountInfoResponse response = ResponseTemplate<RspMGRQryAccountInfoResponse>.SrvSendRspResponse(request);
+        //        response.AccountInfoToSend = account.GenAccountInfo();
+        //        CachePacket(response);
+        //    }
+        //}
 
         void SrvOnMGRCashOperation(MGRCashOperationRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求出入金操作:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求出入金操作:{1}", session.AuthorizedID, request.ToString()), QSEnumDebugLevel.INFO);
             IAccount account = clearcentre[request.Account];
             HandlerMixins.Valid_ObjectNotNull(account);
 
@@ -172,7 +172,7 @@ namespace TradingLib.Core
             clearcentre.CashOperation(request.Account, request.Amount, request.TransRef, request.Comment);
 
             //出入金操作后返回帐户信息更新
-            session.NotifyMgr("NotifyAccountFinInfo", account.ToAccountInfo());
+            session.NotifyMgr("NotifyAccountFinInfo", account.GenAccountInfo());
             session.OperationSuccess("出入金操作成功");
         }
 
@@ -184,7 +184,7 @@ namespace TradingLib.Core
         /// <param name="manager"></param>
         void SrvOnMGRUpdateAccountCategory(MGRUpdateCategoryRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求更新帐户类别:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求更新帐户类别:{1}", session.AuthorizedID, request.ToString()), QSEnumDebugLevel.INFO);
             IAccount account = clearcentre[request.Account];
             if (account != null)
             {
@@ -194,7 +194,7 @@ namespace TradingLib.Core
 
         void SrvOnMGRUpdateAccountExecute(MGRUpdateExecuteRequest request, ISession session, Manager manger)
         {
-            debug(string.Format("管理员:{0} 请求交易权限类别:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求交易权限类别:{1}", session.AuthorizedID, request.ToString()), QSEnumDebugLevel.INFO);
             IAccount account = clearcentre[request.Account];
             if (account != null)
             {
@@ -212,7 +212,7 @@ namespace TradingLib.Core
 
         void SrvOnMGRUpdateAccountIntraday(MGRUpdateIntradayRequest request, ISession session, Manager manger)
         {
-            debug(string.Format("管理员:{0} 请求更新日内交易:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求更新日内交易:{1}", session.AuthorizedID, request.ToString()), QSEnumDebugLevel.INFO);
             IAccount account = clearcentre[request.Account];
             if (account != null)
             {
@@ -222,7 +222,7 @@ namespace TradingLib.Core
 
         void SrvOnMGRUpdateRouteType(MGRUpdateRouteTypeRequest request, ISession session, Manager manger)
         {
-            debug(string.Format("管理员:{0} 请求更新路由类被:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求更新路由类被:{1}", session.AuthorizedID, request.ToString()), QSEnumDebugLevel.INFO);
             IAccount account = clearcentre[request.Account];
             if (account != null)
             {
@@ -239,7 +239,7 @@ namespace TradingLib.Core
         /// <param name="manger"></param>
         void SrvOnMGRChangeAccountPassword(MGRChangeAccountPassRequest request, ISession session, Manager manger)
         {
-            debug(string.Format("管理员:{0} 请求修改交易密码:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求修改交易密码:{1}", session.AuthorizedID, request.ToString()), QSEnumDebugLevel.INFO);
 
             IAccount account = clearcentre[request.TradingAccount];
             if (account != null)
@@ -253,11 +253,32 @@ namespace TradingLib.Core
             }
         }
 
+        /// <summary>
+        /// 查询分区管理员信息
+        /// </summary>
+        /// <param name="session"></param>
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryAccountLoginInfo", "QryAccountLoginInfo - query account logininfo", "查看交易帐户密码")]
+        public void CTE_QryDomainRootLoginInfo(ISession session, string account)
+        {
+            Manager manager = session.GetManager();
+            if (manager.Domain.Super && manager.IsRoot())
+            {
+                IAccount acc = clearcentre[account];
+                if (acc == null)
+                {
+                    throw new FutsRspError("交易帐户不存在");
+                }
+                    Protocol.LoginInfo logininfo = new Protocol.LoginInfo();
+                    logininfo.LoginID = account;
+                    logininfo.Pass = ORM.MAccount.GetAccountPass(account);
+                    session.ReplyMgr(logininfo);
+            }
+        }
 
 
         void SrvOnMGRReqChangeInvestor(MGRReqChangeInvestorRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求修改投资者信息:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求修改投资者信息:{1}", session.AuthorizedID, request.ToString()), QSEnumDebugLevel.INFO);
             IAccount account = clearcentre[request.TradingAccount];
             if (account != null)
             {
@@ -267,7 +288,7 @@ namespace TradingLib.Core
 
         void SrvOnMGRReqUpdateAccountPosLock(MGRReqUpdatePosLockRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求修改帐户锁仓权限:{1}", session.MGRLoginName, request.ToString()), QSEnumDebugLevel.INFO);
+            debug(string.Format("管理员:{0} 请求修改帐户锁仓权限:{1}", session.AuthorizedID, request.ToString()), QSEnumDebugLevel.INFO);
             IAccount account = clearcentre[request.TradingAccount];
             if (account != null)
             {
@@ -282,7 +303,7 @@ namespace TradingLib.Core
             IAccount acc = clearcentre[account];
             if (manager.RightAccessAccount(acc))
             {
-                session.ReplyMgr(acc.ToAccountInfo());
+                session.ReplyMgr(acc.GenAccountInfo());
             }
             else
             {
@@ -292,10 +313,10 @@ namespace TradingLib.Core
 
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountRouterGroup", "UpdateAccountRouterGroup - update account router group", "更新帐户路由组信息")]
-        public void CTE_QryDomain(ISession session, string account, int gid)
+        public void CTE_UpdateAccountRouterGroup(ISession session, string account, int gid)
         {
             Manager manager = session.GetManager();
-            if (!manager.RightRootDomain())
+            if (!manager.IsInRoot())
             {
                 throw new FutsRspError("无权修改帐户路由组设置");
             }
@@ -320,6 +341,32 @@ namespace TradingLib.Core
             //更新路由组
             clearcentre.UpdateRouterGroup(account, rg);
             session.OperationSuccess("更新帐户路由组成功");
+        }
+
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountSideMargin", "UpdateAccountSideMargin - update account sidemargin set", "更新帐户单向大边")]
+        public void CTE_UpdateAccountSideMargin(ISession session, string account,bool sidemargin)
+        {
+            Manager manager = session.GetManager();
+            if (!manager.IsInRoot())
+            {
+                throw new FutsRspError("无权修改帐户单向大边设置");
+            }
+
+            IAccount acc = clearcentre[account];
+            if (acc == null)
+            {
+                throw new FutsRspError("交易帐户不存在");
+            }
+
+            if (!manager.RightAccessAccount(acc))
+            {
+                throw new FutsRspError("无权修改该交易帐户");
+            }
+
+            //更新路由组
+            clearcentre.UpdateAccountSideMargin(account,sidemargin);
+            session.OperationSuccess((sidemargin?"启用":"禁止")+"帐户单向大边策略成功！");
         }
 
     }

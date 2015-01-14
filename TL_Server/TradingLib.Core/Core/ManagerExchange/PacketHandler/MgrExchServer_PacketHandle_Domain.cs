@@ -5,6 +5,7 @@ using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
 
+
 namespace TradingLib.Core
 {
     public partial class MgrExchServer
@@ -21,6 +22,27 @@ namespace TradingLib.Core
             {
                 DomainImpl [] domains= BasicTracker.DomainTracker.Domains.ToArray();
                 session.ReplyMgr(domains);
+            }
+        }
+
+        /// <summary>
+        /// 查询分区管理员信息
+        /// </summary>
+        /// <param name="session"></param>
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryDomainRootLoginInfo", "QryDomainRootLoginInfo - query domain", "查询分区管理员信息")]
+        public void CTE_QryManagerLoginInfo(ISession session,int domainid)
+        {
+            Manager manager = session.GetManager();
+            if (manager.Domain.Super && manager.IsRoot())
+            {
+                Domain domain = BasicTracker.DomainTracker[domainid];
+
+                Manager mgr = domain.GetRootManager();
+
+                Protocol.LoginInfo logininfo = new Protocol.LoginInfo();
+                logininfo.LoginID = mgr.Login;
+                logininfo.Pass = ORM.MManager.GetManagerPass(mgr.Login);
+                session.ReplyMgr(logininfo);
             }
         }
 
@@ -69,14 +91,14 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="session"></param>
         /// <param name="json"></param>
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateDomain", "UpdateDomain - update domain", "查询域", true)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateDomain", "UpdateDomain - update domain", "查询域", QSEnumArgParseType.Json)]
         public void CTE_UpdateDomain(ISession session, string json)
         {
             Manager manager = session.GetManager();
             //只有超级域的管理员
             if (manager.Domain.Super && manager.IsRoot())
             {
-                DomainImpl domain = TradingLib.Mixins.LitJson.JsonMapper.ToObject<DomainImpl>(json);
+                DomainImpl domain = TradingLib.Mixins.Json.JsonMapper.ToObject<DomainImpl>(json);
                 bool isadd = domain.ID == 0;
                 BasicTracker.DomainTracker.UpdateDomain(domain);
 
