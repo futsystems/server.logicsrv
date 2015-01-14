@@ -36,6 +36,16 @@ namespace FutsMoniter
             Globals.TLClient.ReqQryAccountFinInfo(_account.Account);
         }
 
+        /// <summary>
+        /// 作为模块使用 不用设置account,只需要监听全局的OnAccountSelected 就可以获得Account对象
+        /// 在作为帐户编辑的控件时,需要设置初始化的account
+        /// </summary>
+        /// <param name="acc"></param>
+        public void SetAccount(AccountLite acc)
+        {
+            OnAccountSelected(acc);
+        }
+
         public void OnInit()
         {
             Globals.LogicEvent.RegisterCallback("MgrExchServer", "QryAccountFinInfo", this.OnQryAccountInfo);
@@ -54,7 +64,7 @@ namespace FutsMoniter
             Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "QryAccountFinInfo", this.OnQryAccountInfo);
             Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "NotifyAccountFinInfo", this.OnQryAccountInfo);
             Globals.LogicEvent.GotAccountSelectedEvent -= new Action<AccountLite>(OnAccountSelected);
-            Globals.Debug("ctFinanceInfo disposed...");
+            //Globals.Debug("ctFinanceInfo disposed...");
          }
 
         void OnQryAccountInfo(string json)

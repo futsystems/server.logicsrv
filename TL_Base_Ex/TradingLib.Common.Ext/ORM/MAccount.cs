@@ -297,7 +297,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("Insert into log_cashtrans (`datetime`,`amount`,`comment`,`account`,`transref`,`settleday`) values('{0}','{1}','{2}','{3}','{4}','{5}')", DateTime.Now.ToString(), amount.ToString(), comment, account.ToString(),transref,TLCtxHelper.Ctx.SettleCentre.NextTradingday);
+                string query = String.Format("Insert into log_cashtrans (`datetime`,`amount`,`comment`,`account`,`transref`,`settleday`) values('{0}','{1}','{2}','{3}','{4}','{5}')",Util.ToTLDateTime(), amount.ToString(), comment, account.ToString(),transref,TLCtxHelper.Ctx.SettleCentre.NextTradingday);
                 return db.Connection.Execute(query) > 0;
             }
         }
@@ -436,6 +436,7 @@ namespace TradingLib.ORM
                     return GlobalConfig.PrefixSim;
             }
         }
+
         /// <summary>
         /// 获得某个类型的帐户的最大值
         /// 正则搜索 select * from accounts where account REGEXP '^98'

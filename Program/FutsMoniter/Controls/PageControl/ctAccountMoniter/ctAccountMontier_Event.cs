@@ -100,7 +100,7 @@ namespace FutsMoniter
             {
                 fmAccountConfig fm = new fmAccountConfig();
                 fm.SetAccount(account);
-                fm.Show();//.ShowDialog();
+                fm.ShowDialog();
             }
             else
             {

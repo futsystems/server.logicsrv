@@ -28,17 +28,13 @@ namespace FutsMoniter
         public void SetAccount(AccountLite account)
         {
             _account = account;
-
-            
+            ctFinanceInfo1.SetAccount(account);
         }
 
 
         public fmAccountConfig()
         {
             InitializeComponent();
-
-            
-
             this.Load += new EventHandler(fmAccountConfig_Load);
             
         }
@@ -69,6 +65,7 @@ namespace FutsMoniter
             this.btnAddOrderRule.Click +=new EventHandler(btnAddOrderRule_Click);
             this.btnDelAccountRule.Click +=new EventHandler(btnDelAccountRule_Click);
             this.btnDelOrderRule.Click +=new EventHandler(btnDelOrderRule_Click);
+
             this.pagenav.SelectedPageChanged += new EventHandler(pagenav_SelectedPageChanged);
 
 
