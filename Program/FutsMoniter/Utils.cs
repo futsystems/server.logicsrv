@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
 using System.Text;
+using System.IO;
 using TradingLib.API;
 using TradingLib.Common;
 using FutSystems.GUI;
@@ -149,6 +150,73 @@ namespace FutsMoniter
                 _Result = _Result.Substring(0, _Result.IndexOf('"'));
             }
             return _Result;
+        }
+
+
+        public static void ExportToCSV(string name,ComponentFactory.Krypton.Toolkit.KryptonDataGridView view)
+        {
+            System.Windows.Forms.SaveFileDialog saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+            saveFileDialog.Filter = "Excel (*.csv)|*.csv";
+            saveFileDialog.FileName = name;
+            if (saveFileDialog.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+            {
+                return;
+            }
+            
+            if (saveFileDialog.FileName.Equals(String.Empty))
+            {
+                fmConfirm.Show("请填写输出文件名");
+                return;
+            }
+
+            string filename = CreateFile(saveFileDialog.FileName);
+            StringBuilder strColumn = new StringBuilder();
+            StringBuilder strValue = new StringBuilder();
+            
+
+            using (StreamWriter sw = new StreamWriter(filename))
+            {
+                for (int k = 0; k < view.Columns.Count; k++)
+                {
+                    //add separator
+                    strColumn.Append(view.Columns[k].HeaderText + ',');
+                }
+                strColumn.Remove(strColumn.Length - 1, 1);
+                sw.WriteLine(strColumn);
+
+                for (int i = 0; i < view.Rows.Count; i++)
+                {
+                    strValue.Remove(0, strValue.Length); //clear the temp row value
+                    for (int k = 0; k < view.Columns.Count; k++)
+                    {
+                        //add separator
+                        strValue.Append(view.Rows[i].Cells[k].Value.ToString() + ',');
+                    }
+                    strColumn.Remove(strColumn.Length - 1, 1);
+                    sw.WriteLine(strValue);
+                }
+            }
+        }
+
+        public static string CreateFile(string filename)
+        {
+            FileStream fs = null;
+            try
+            {
+                fs = File.Create(filename);
+            }
+            catch (Exception ex)
+            {
+            
+            }
+            finally
+            {
+                if (fs != null)
+                {
+                    fs.Dispose();
+                }
+            }
+            return filename;
         }
 
 

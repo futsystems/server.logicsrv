@@ -36,26 +36,28 @@
             this.account = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
             this.kryptonLabel1 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonNavigator1 = new ComponentFactory.Krypton.Navigator.KryptonNavigator();
-            this.kryptonPage1 = new ComponentFactory.Krypton.Navigator.KryptonPage();
+            this.pageOrder = new ComponentFactory.Krypton.Navigator.KryptonPage();
+            this.pageTrade = new ComponentFactory.Krypton.Navigator.KryptonPage();
+            this.pagePosition = new ComponentFactory.Krypton.Navigator.KryptonPage();
+            this.btnExport = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.ctHistOrder1 = new FutsMoniter.ctHistOrder();
-            this.kryptonPage2 = new ComponentFactory.Krypton.Navigator.KryptonPage();
             this.ctHistTrade1 = new FutsMoniter.ctHistTrade();
-            this.kryptonPage3 = new ComponentFactory.Krypton.Navigator.KryptonPage();
             this.ctHistPosition1 = new FutsMoniter.ctHistPosition();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonNavigator1)).BeginInit();
             this.kryptonNavigator1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonPage1)).BeginInit();
-            this.kryptonPage1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonPage2)).BeginInit();
-            this.kryptonPage2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonPage3)).BeginInit();
-            this.kryptonPage3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pageOrder)).BeginInit();
+            this.pageOrder.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pageTrade)).BeginInit();
+            this.pageTrade.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pagePosition)).BeginInit();
+            this.pagePosition.SuspendLayout();
             this.SuspendLayout();
             // 
             // kryptonPanel1
             // 
+            this.kryptonPanel1.Controls.Add(this.btnExport);
             this.kryptonPanel1.Controls.Add(this.btnQryHist);
             this.kryptonPanel1.Controls.Add(this.settleday);
             this.kryptonPanel1.Controls.Add(this.kryptonLabel2);
@@ -70,12 +72,11 @@
             // 
             // btnQryHist
             // 
-            this.btnQryHist.Location = new System.Drawing.Point(784, 8);
+            this.btnQryHist.Location = new System.Drawing.Point(718, 8);
             this.btnQryHist.Name = "btnQryHist";
             this.btnQryHist.Size = new System.Drawing.Size(60, 25);
             this.btnQryHist.TabIndex = 5;
             this.btnQryHist.Values.Text = "查 询";
-            this.btnQryHist.Click += new System.EventHandler(this.btnQryHist_Click);
             // 
             // settleday
             // 
@@ -123,26 +124,60 @@
             this.kryptonNavigator1.Location = new System.Drawing.Point(0, 39);
             this.kryptonNavigator1.Name = "kryptonNavigator1";
             this.kryptonNavigator1.Pages.AddRange(new ComponentFactory.Krypton.Navigator.KryptonPage[] {
-            this.kryptonPage1,
-            this.kryptonPage2,
-            this.kryptonPage3});
-            this.kryptonNavigator1.SelectedIndex = 0;
+            this.pageOrder,
+            this.pageTrade,
+            this.pagePosition});
+            this.kryptonNavigator1.SelectedIndex = 2;
             this.kryptonNavigator1.Size = new System.Drawing.Size(856, 432);
             this.kryptonNavigator1.TabIndex = 0;
             this.kryptonNavigator1.Text = "kryptonNavigator1";
             // 
-            // kryptonPage1
+            // pageOrder
             // 
-            this.kryptonPage1.AutoHiddenSlideSize = new System.Drawing.Size(200, 200);
-            this.kryptonPage1.Controls.Add(this.ctHistOrder1);
-            this.kryptonPage1.Flags = 65534;
-            this.kryptonPage1.LastVisibleSet = true;
-            this.kryptonPage1.MinimumSize = new System.Drawing.Size(50, 50);
-            this.kryptonPage1.Name = "kryptonPage1";
-            this.kryptonPage1.Size = new System.Drawing.Size(854, 407);
-            this.kryptonPage1.Text = "委 托";
-            this.kryptonPage1.ToolTipTitle = "Page ToolTip";
-            this.kryptonPage1.UniqueName = "590193F15ED84477088CD0F38750A7C3";
+            this.pageOrder.AutoHiddenSlideSize = new System.Drawing.Size(200, 200);
+            this.pageOrder.Controls.Add(this.ctHistOrder1);
+            this.pageOrder.Flags = 65534;
+            this.pageOrder.LastVisibleSet = true;
+            this.pageOrder.MinimumSize = new System.Drawing.Size(50, 50);
+            this.pageOrder.Name = "pageOrder";
+            this.pageOrder.Size = new System.Drawing.Size(854, 407);
+            this.pageOrder.Text = "委 托";
+            this.pageOrder.ToolTipTitle = "Page ToolTip";
+            this.pageOrder.UniqueName = "590193F15ED84477088CD0F38750A7C3";
+            // 
+            // pageTrade
+            // 
+            this.pageTrade.AutoHiddenSlideSize = new System.Drawing.Size(200, 200);
+            this.pageTrade.Controls.Add(this.ctHistTrade1);
+            this.pageTrade.Flags = 65534;
+            this.pageTrade.LastVisibleSet = true;
+            this.pageTrade.MinimumSize = new System.Drawing.Size(50, 50);
+            this.pageTrade.Name = "pageTrade";
+            this.pageTrade.Size = new System.Drawing.Size(854, 407);
+            this.pageTrade.Text = "成 交";
+            this.pageTrade.ToolTipTitle = "Page ToolTip";
+            this.pageTrade.UniqueName = "484B4FDD7D58432A7BA5AEDB09324076";
+            // 
+            // pagePosition
+            // 
+            this.pagePosition.AutoHiddenSlideSize = new System.Drawing.Size(200, 200);
+            this.pagePosition.Controls.Add(this.ctHistPosition1);
+            this.pagePosition.Flags = 65534;
+            this.pagePosition.LastVisibleSet = true;
+            this.pagePosition.MinimumSize = new System.Drawing.Size(50, 50);
+            this.pagePosition.Name = "pagePosition";
+            this.pagePosition.Size = new System.Drawing.Size(854, 407);
+            this.pagePosition.Text = "持 仓";
+            this.pagePosition.ToolTipTitle = "Page ToolTip";
+            this.pagePosition.UniqueName = "93EA66440495432B228CD438AC6F3C4F";
+            // 
+            // btnExport
+            // 
+            this.btnExport.Location = new System.Drawing.Point(784, 8);
+            this.btnExport.Name = "btnExport";
+            this.btnExport.Size = new System.Drawing.Size(60, 25);
+            this.btnExport.TabIndex = 6;
+            this.btnExport.Values.Text = "导 出";
             // 
             // ctHistOrder1
             // 
@@ -152,19 +187,6 @@
             this.ctHistOrder1.Size = new System.Drawing.Size(854, 407);
             this.ctHistOrder1.TabIndex = 0;
             // 
-            // kryptonPage2
-            // 
-            this.kryptonPage2.AutoHiddenSlideSize = new System.Drawing.Size(200, 200);
-            this.kryptonPage2.Controls.Add(this.ctHistTrade1);
-            this.kryptonPage2.Flags = 65534;
-            this.kryptonPage2.LastVisibleSet = true;
-            this.kryptonPage2.MinimumSize = new System.Drawing.Size(50, 50);
-            this.kryptonPage2.Name = "kryptonPage2";
-            this.kryptonPage2.Size = new System.Drawing.Size(854, 407);
-            this.kryptonPage2.Text = "成 交";
-            this.kryptonPage2.ToolTipTitle = "Page ToolTip";
-            this.kryptonPage2.UniqueName = "484B4FDD7D58432A7BA5AEDB09324076";
-            // 
             // ctHistTrade1
             // 
             this.ctHistTrade1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -172,19 +194,6 @@
             this.ctHistTrade1.Name = "ctHistTrade1";
             this.ctHistTrade1.Size = new System.Drawing.Size(854, 407);
             this.ctHistTrade1.TabIndex = 0;
-            // 
-            // kryptonPage3
-            // 
-            this.kryptonPage3.AutoHiddenSlideSize = new System.Drawing.Size(200, 200);
-            this.kryptonPage3.Controls.Add(this.ctHistPosition1);
-            this.kryptonPage3.Flags = 65534;
-            this.kryptonPage3.LastVisibleSet = true;
-            this.kryptonPage3.MinimumSize = new System.Drawing.Size(50, 50);
-            this.kryptonPage3.Name = "kryptonPage3";
-            this.kryptonPage3.Size = new System.Drawing.Size(854, 407);
-            this.kryptonPage3.Text = "持 仓";
-            this.kryptonPage3.ToolTipTitle = "Page ToolTip";
-            this.kryptonPage3.UniqueName = "93EA66440495432B228CD438AC6F3C4F";
             // 
             // ctHistPosition1
             // 
@@ -209,12 +218,12 @@
             this.kryptonPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonNavigator1)).EndInit();
             this.kryptonNavigator1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonPage1)).EndInit();
-            this.kryptonPage1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonPage2)).EndInit();
-            this.kryptonPage2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonPage3)).EndInit();
-            this.kryptonPage3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pageOrder)).EndInit();
+            this.pageOrder.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pageTrade)).EndInit();
+            this.pageTrade.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pagePosition)).EndInit();
+            this.pagePosition.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -227,12 +236,13 @@
         private ComponentFactory.Krypton.Toolkit.KryptonTextBox account;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel1;
         private ComponentFactory.Krypton.Navigator.KryptonNavigator kryptonNavigator1;
-        private ComponentFactory.Krypton.Navigator.KryptonPage kryptonPage1;
-        private ComponentFactory.Krypton.Navigator.KryptonPage kryptonPage2;
+        private ComponentFactory.Krypton.Navigator.KryptonPage pageOrder;
+        private ComponentFactory.Krypton.Navigator.KryptonPage pageTrade;
         private ComponentFactory.Krypton.Toolkit.KryptonButton btnQryHist;
-        private ComponentFactory.Krypton.Navigator.KryptonPage kryptonPage3;
+        private ComponentFactory.Krypton.Navigator.KryptonPage pagePosition;
         private ctHistOrder ctHistOrder1;
         private ctHistTrade ctHistTrade1;
         private ctHistPosition ctHistPosition1;
+        private ComponentFactory.Krypton.Toolkit.KryptonButton btnExport;
     }
 }

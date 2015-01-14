@@ -44,6 +44,9 @@ namespace FutsMoniter
             BindToTable();
         }
 
+        public ComponentFactory.Krypton.Toolkit.KryptonDataGridView GridView { get { return orderGrid; } }
+
+
         const string ID = "报单编号";
         const string DATETIME = "报单时间";
         const string SYMBOL = "合约";

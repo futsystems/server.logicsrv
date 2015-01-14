@@ -22,20 +22,62 @@ namespace FutsMoniter
 
             this.Load += new EventHandler(fmHistQuery_Load);
             settleday.Value = DateTime.Now;
-
-            //this.FormClosing +=new FormClosingEventHandler(fmHistQuery_FormClosing);
         }
 
         void fmHistQuery_Load(object sender, EventArgs e)
         {
+            this.btnQryHist.Click +=new EventHandler(btnQryHist_Click);
+            this.btnExport.Click += new EventHandler(btnExport_Click);
             Globals.RegIEventHandler(this);
         }
 
+        void btnExport_Click(object sender, EventArgs e)
+        {
+            ComponentFactory.Krypton.Toolkit.KryptonDataGridView gv = GetCurrentGridView();
+            if (gv != null)
+            {
+                MoniterUtils.ExportToCSV(GetCsvFilePrefix(), gv);
+            }
+        }
+
+        ComponentFactory.Krypton.Toolkit.KryptonDataGridView GetCurrentGridView()
+        {
+            if (kryptonNavigator1.SelectedPage.Name == "pageOrder")
+            {
+                return ctHistOrder1.GridView;
+            }
+            else if (kryptonNavigator1.SelectedPage.Name == "pageTrade")
+            {
+                return ctHistTrade1.GridView;
+            }
+            else if (kryptonNavigator1.SelectedPage.Name == "pagePosition")
+            {
+                return ctHistPosition1.GridView;
+            }
+            return null;
+        }
+        string GetCsvFilePrefix()
+        {
+            string b= string.Format("{0}_{1}", account.Text, Settleday);
+            if (kryptonNavigator1.SelectedPage.Name == "pageOrder")
+            {
+                return b + "_Order";
+            }
+            else if (kryptonNavigator1.SelectedPage.Name == "pageTrade")
+            {
+                return b + "_Trade";
+            }
+            else if (kryptonNavigator1.SelectedPage.Name == "pagePosition")
+            {
+                return b + "_Position";
+            }
+            return b;
+        }
         public void OnInit()
         {
             Globals.LogicEvent.GotHistOrderEvent += new Action<Order, bool>(GotHistOrder);
             Globals.LogicEvent.GotHistTradeEvent += new Action<Trade, bool>(GotHistTrade);
-            //Globals.LogicEvent.GotSettlementEvent +=new Action<RspMGRQrySettleResponse>(LogicEvent_GotSettlementEvent);
+            
         }
 
         public void OnDisposed()
@@ -84,7 +126,6 @@ namespace FutsMoniter
                 {
                     ctHistPosition1.GotHistPosition(pos);
                 }
-                //Globals.TLClient.ReqQryHistCashTransaction(account.Text, Settleday);
             }
             else
             {
@@ -129,10 +170,7 @@ namespace FutsMoniter
             ctHistOrder1.Clear();
             ctHistTrade1.Clear();
             ctHistPosition1.Clear();
-            //ctHistCashTransaction1.Clear();
-            //sb.Clear();
             Globals.TLClient.ReqQryHistOrders(account.Text, Settleday);
-            
         }
 
         int Settleday

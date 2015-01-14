@@ -28,6 +28,7 @@ namespace FutsMoniter
             gt.Rows.Clear();
             BindToTable();
         }
+        public ComponentFactory.Krypton.Toolkit.KryptonDataGridView GridView { get { return positiongrid; } }
 
         //public Telerik.WinControls.UI.RadGridView Grid { get { return positiongrid; } }
         delegate void SettlePositionDel(PositionDetail pos);

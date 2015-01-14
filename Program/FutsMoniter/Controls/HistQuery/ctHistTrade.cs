@@ -52,7 +52,8 @@ namespace FutsMoniter
             e.PaintParts = e.PaintParts ^ DataGridViewPaintParts.Focus;
         }
 
-        //public Telerik.WinControls.UI.RadGridView Grid { get { return tradeGrid; } }
+        public ComponentFactory.Krypton.Toolkit.KryptonDataGridView GridView { get { return tradeGrid; } }
+
         string _defaultformat = "{0:F2}";
         public void GotHistFill(Trade t)
         {
