@@ -36,7 +36,32 @@ namespace TradingLib.Common
                 return 1;
             }
         }
-        
+
+        /// <summary>
+        /// 获得某个合约的手续费率
+        /// </summary>
+        /// <param name="sym"></param>
+        /// <param name="item"></param>
+        /// <param name="offset"></param>
+        /// <returns></returns>
+        public static decimal GetCommissionRate(this Symbol sym, CommissionTemplateItem item, QSEnumOffsetFlag offset)
+        {
+            if (item == null)
+            {
+                return (offset == QSEnumOffsetFlag.OPEN ? sym.EntryCommission : sym.ExitCommission);
+            }
+            switch (offset)
+            { 
+                case QSEnumOffsetFlag.OPEN:
+                    return item.GetCommission(sym.EntryCommission, offset);
+                case QSEnumOffsetFlag.CLOSE:
+                case QSEnumOffsetFlag.CLOSEYESTERDAY:
+                case QSEnumOffsetFlag.CLOSETODAY:
+                    return item.GetCommission(sym.ExitCommission, offset);
+                default:
+                    return item.GetCommission(sym.EntryCommission, offset);
+            }
+        }
 
         public static CommissionConfig GetCommissionConfig(this Symbol sym)
         {

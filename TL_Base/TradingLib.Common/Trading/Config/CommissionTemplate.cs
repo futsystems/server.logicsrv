@@ -6,12 +6,8 @@ using TradingLib.API;
 
 namespace TradingLib.Common
 {
-    /// <summary>
-    /// 手续费模板
-    /// </summary>
-    public class CommissionTemplate
+    public class CommissionTemplateSetting
     {
-
         /// <summary>
         /// 模板ID
         /// </summary>
@@ -28,10 +24,22 @@ namespace TradingLib.Common
         public string Description { get; set; }
 
         /// <summary>
-        /// 模板ID
+        /// 域ID
         /// </summary>
-        public int Template_ID { get; set; }
+        public int Domain_ID { get; set; }
 
+        public override string ToString()
+        {
+            return this.Name;
+        }
+    }
+
+
+    /// <summary>
+    /// 手续费模板
+    /// </summary>
+    public class CommissionTemplate : CommissionTemplateSetting
+    {
         public IEnumerable<CommissionTemplateItem> CommissionItems { get { return _itemamp.Values; } }
 
         Dictionary<string, CommissionTemplateItem> _itemamp = new Dictionary<string, CommissionTemplateItem>();

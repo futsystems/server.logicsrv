@@ -140,6 +140,7 @@
     <Compile Include="API\ILogicHandler\ILogicHandler_Account.cs" />
     <Compile Include="Client\AsyncClient_MQ.cs" />
     <Compile Include="Client\PacketHandler\TLClientNet_Request_.cs" />
+    <Compile Include="Client\Request\TLClientNet_Request_CommissionMargin.cs" />
     <Compile Include="Client\Request\TLClientNet_Request_HistQry.cs" />
     <Compile Include="Client\Request\TLClientNet_Request_FinService.cs" />
     <Compile Include="Client\Request\TLClientNet_Request_Permission.cs" />
@@ -335,6 +336,12 @@
     </Compile>
     <Compile Include="Forms\Basic\fmCommission.Designer.cs">
       <DependentUpon>fmCommission.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Basic\fmCommissionTemplateEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Basic\fmCommissionTemplateEdit.Designer.cs">
+      <DependentUpon>fmCommissionTemplateEdit.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\DebugForm.cs">
       <SubType>Form</SubType>
@@ -850,6 +857,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Basic\fmCommission.resx">
       <DependentUpon>fmCommission.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Basic\fmCommissionTemplateEdit.resx">
+      <DependentUpon>fmCommissionTemplateEdit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DebugForm.resx">
       <DependentUpon>DebugForm.cs</DependentUpon>

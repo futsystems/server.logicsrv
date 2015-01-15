@@ -25,6 +25,7 @@ namespace TradingLib.Common
             return tmp[symbol.SecurityFamily.Code, symbol.GetMonth()];
         }
 
+
         /// <summary>
         /// 计算某个成交的手续费
         /// </summary>
@@ -33,44 +34,11 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static decimal CalCommission(this IAccount account, Trade f)
         {
+            //获得该帐户某个合约的手续费模板项
             CommissionTemplateItem item = account.GetCommissionTemplateItem(f.oSymbol);
-            //计算对应的手续费率 可以是按金额，也可以是按手数
-            decimal commissionrate = 0;
-            if (item == null)
-            {
-                //包含手续费模板设置
-                if (f.IsEntryPosition)
-                {
-                    commissionrate = f.oSymbol.EntryCommission + f.oSymbol.EntryCommission > 1 ? item.OpenByVolume : item.OpenByMoney;
-                }
-                //平仓
-                else
-                {
-                    //检查手续费优惠项目
-                    //if (!CommissionHelper.AnyCommissionSetting(SymbolHelper.genSecurityCode(f.Symbol), out commissionrate))
-                    //{
-                    //    commissionrate = f.oSymbol.ExitCommission;
-                    //}
-                    commissionrate = f.oSymbol.ExitCommission+f.oSymbol.ExitCommission>1?item.CloseByVolume:item.CloseByMoney;
-                }
-            }
-            else//没有手续费模板设置 则使用默认
-            {
-                
-                if (f.IsEntryPosition)
-                {
-                    commissionrate = f.oSymbol.EntryCommission;
-                }
-                //平仓
-                else
-                {
-                    //检查手续费优惠项目
-                    if (!CommissionHelper.AnyCommissionSetting(SymbolHelper.genSecurityCode(f.Symbol), out commissionrate))
-                    {
-                        commissionrate = f.oSymbol.ExitCommission;
-                    }
-                }
-            }
+
+            //调用合约的扩展函数 计算获得对应的手续费率
+            decimal commissionrate = f.oSymbol.GetCommissionRate(item, f.OffsetFlag);
 
             //计算标准手续费
             decimal c = 0;
@@ -78,7 +46,6 @@ namespace TradingLib.Common
                 c = commissionrate * f.xPrice * f.UnsignedSize * f.oSymbol.Multiple;
             else
                 c = commissionrate * f.UnsignedSize;
-
             return c;
         }
 

@@ -153,29 +153,29 @@ namespace TradingLib.Common
                 //当成交数据中f.commission<0表明清算中心没有计算手续费,若>=0表明已经计算过手续费 则不需要计算了
                 if (f.Commission < 0)
                 {
-                    decimal commissionrate = 0;
-                    //开仓
-                    if (f.IsEntryPosition)
-                    {
-                        commissionrate = symbol.EntryCommission;
-                    }
-                    //平仓
-                    else
-                    {
-                        //进行特殊手续费判定并设定对应的手续费费率
-                        //如果对应的合约是单边计费的或者有特殊计费方式的合约，则我们单独计算该部分费用,注这里还需要加入一个日内交易的判断,暂时不做(当前交易均为日内)
-                        //获得平仓手续费特例
-                        if (CommissionHelper.AnyCommissionSetting(SymbolHelper.genSecurityCode(f.Symbol), out commissionrate))
-                        {
-                            //debug("合约:" + SymbolHelper.genSecurityCode(f.symbol) + "日内手续费费差异", QSEnumDebugLevel.MUST);
-                        }
-                        else//没有特殊费率参数,则为标准的出场费率
-                        {
-                            commissionrate = symbol.ExitCommission;
-                        }
-                    }
+                    //decimal commissionrate = 0;
+                    ////开仓
+                    //if (f.IsEntryPosition)
+                    //{
+                    //    commissionrate = symbol.EntryCommission;
+                    //}
+                    ////平仓
+                    //else
+                    //{
+                    //    //进行特殊手续费判定并设定对应的手续费费率
+                    //    //如果对应的合约是单边计费的或者有特殊计费方式的合约，则我们单独计算该部分费用,注这里还需要加入一个日内交易的判断,暂时不做(当前交易均为日内)
+                    //    //获得平仓手续费特例
+                    //    if (CommissionHelper.AnyCommissionSetting(SymbolHelper.genSecurityCode(f.Symbol), out commissionrate))
+                    //    {
+                    //        //debug("合约:" + SymbolHelper.genSecurityCode(f.symbol) + "日内手续费费差异", QSEnumDebugLevel.MUST);
+                    //    }
+                    //    else//没有特殊费率参数,则为标准的出场费率
+                    //    {
+                    //        commissionrate = symbol.ExitCommission;
+                    //    }
+                    //}
                     //计算标准手续费
-                    f.Commission = Calc.CalCommission(commissionrate, f);
+                    f.Commission = account.CalCommission(f);
                 }
                 
                 //生成持仓操作记录 同时结合beforeszie aftersize 设置fill PositionOperation,需要知道帐户的持仓信息才可以知道是开 加 减 平等信息

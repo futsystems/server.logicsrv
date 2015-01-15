@@ -27,7 +27,7 @@ namespace TradingLib.Common
         {
             get
             {
-                return domainmap.Values.Where(mgr => mgr.Super).FirstOrDefault();
+                return domainmap.Values.Where(d => (d.Super||d.Dedicated)).FirstOrDefault();
             }
             
         }
