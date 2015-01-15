@@ -26,15 +26,8 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static int GetMonth(this Symbol sym)
         {
-            //郑州 FG503
-            if (sym.SecurityFamily.Exchange.EXCode.Equals("CZCE"))
-            {
-                return 1;
-            }
-            else
-            { 
-                return 1;
-            }
+            string month = sym.Symbol.Substring(sym.Symbol.Length-2, 2);
+            return int.Parse(month);
         }
 
         /// <summary>

@@ -115,5 +115,48 @@ namespace TradingLib.Common
                 
             }
         }
+
+        public void UpdateCommissionTemplateItem(CommissionTemplateItemSetting item)
+        {
+            CommissionTemplateItem target = null;
+            if (commissionTemplateItemMap.TryGetValue(item.ID, out target))
+            {
+                target.ChargeType = item.ChargeType;
+                target.OpenByMoney = item.OpenByMoney;
+                target.OpenByVolume = item.OpenByVolume;
+                target.CloseByMoney = item.CloseByMoney;
+                target.CloseByVolume = item.CloseByVolume;
+                target.CloseTodayByMoney = item.CloseTodayByMoney;
+                target.CloseTodayByVolume = item.CloseTodayByVolume;
+
+                //更新数据库
+                ORM.MCommission.UpdateCommissionTemplateItem(target);
+            }
+            else
+            {
+                target = new CommissionTemplateItem();
+                target.Code = item.Code;
+                target.Month = item.Month;
+                target.OpenByMoney = item.OpenByMoney;
+                target.OpenByVolume = item.OpenByVolume;
+                target.CloseTodayByMoney = item.CloseTodayByMoney;
+                target.CloseTodayByVolume = item.CloseTodayByVolume;
+                target.CloseByMoney = item.CloseByMoney;
+                target.CloseByVolume = item.CloseByVolume;
+                target.Template_ID = item.Template_ID;
+                target.ChargeType = item.ChargeType;
+
+                ORM.MCommission.InsertCommissionTemplateItem(target);
+                item.ID = target.ID;
+                //加入到内存数据结构
+                commissionTemplateItemMap.TryAdd(target.ID, target);
+
+                CommissionTemplate template = BasicTracker.CommissionTemplateTracker[target.Template_ID];
+                if (template != null)
+                {
+                    template.AddItem(target);
+                }
+            }
+        }
     }
 }

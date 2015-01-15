@@ -343,6 +343,12 @@
     <Compile Include="Forms\Basic\fmCommissionTemplateEdit.Designer.cs">
       <DependentUpon>fmCommissionTemplateEdit.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Basic\fmCommissionTemplateItemEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Basic\fmCommissionTemplateItemEdit.Designer.cs">
+      <DependentUpon>fmCommissionTemplateItemEdit.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\DebugForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -860,6 +866,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Basic\fmCommissionTemplateEdit.resx">
       <DependentUpon>fmCommissionTemplateEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Basic\fmCommissionTemplateItemEdit.resx">
+      <DependentUpon>fmCommissionTemplateItemEdit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DebugForm.resx">
       <DependentUpon>DebugForm.cs</DependentUpon>

@@ -64,6 +64,7 @@ namespace TradingLib.ORM
 
         public int Mgr_fk { get; set; }
         public int rg_fk { get; set; }
+        public int Commission_ID { get; set; }
         public int domain_id { get; set; }
 
     }
@@ -634,6 +635,7 @@ namespace TradingLib.ORM
             account.SideMargin = fields.SideMargin;
             account.Mgr_fk = fields.Mgr_fk;
             account.RG_FK = fields.rg_fk;
+            account.Commission_ID = fields.Commission_ID;
             
             //绑定对应的域
             (account as AccountBase).Domain = BasicTracker.DomainTracker[fields.domain_id];

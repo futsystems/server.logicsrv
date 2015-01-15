@@ -30,17 +30,81 @@ namespace FutsMoniter
             this.templatelist.ContextMenuStrip.Items.Add("添加模板", null, new EventHandler(Add_Click));
             this.templatelist.ContextMenuStrip.Items.Add("修改模板", null, new EventHandler(Edit_Click));
             this.templatelist.ContextMenuStrip.Items.Add(new System.Windows.Forms.ToolStripSeparator());
-            this.templatelist.ContextMenuStrip.Items.Add("加载模板", null, new EventHandler(Qry_Click));
+            this.templatelist.ContextMenuStrip.Items.Add("加载数据", null, new EventHandler(Qry_Click));
 
-            //this.templatelist.MouseDoubleClick += new MouseEventHandler(templatelist_MouseDoubleClick);
+            commissionGrid.ContextMenuStrip = new ContextMenuStrip();
+            commissionGrid.ContextMenuStrip.Items.Add("添加模板项目", null, new EventHandler(AddItem_Click));
+
             Globals.RegIEventHandler(this);
             //this.templatelist.ContextMenuStrip.Items.Add("添加模板", null, new EventHandler(Add_Click));
+            commissionGrid.DoubleClick += new EventHandler(commissionGrid_DoubleClick);
         }
 
-        void templatelist_MouseDoubleClick(object sender, MouseEventArgs e)
+
+        void commissionGrid_DoubleClick(object sender, EventArgs e)
         {
-            CommissionTemplateSetting t = templatelist.SelectedItem as CommissionTemplateSetting;
-            templatename.Text = t.Name;
+            CommissionTemplateItemSetting item = GetVisibleCommissionItem(CurrentItemID);
+            if (item == null)
+            {
+                MoniterUtils.WindowMessage("请选择需要编辑的手续费模板项目");
+                return;
+            }
+
+            fmCommissionTemplateItemEdit fm = new fmCommissionTemplateItemEdit();
+            fm.SetCommissioinTemplateItem(item);
+            fm.ShowDialog();
+        }
+
+
+        //得到当前选择的行号
+        private int CurrentItemID
+        {
+            get
+            {
+                int row = commissionGrid.SelectedRows.Count > 0 ? commissionGrid.SelectedRows[0].Index : -1;
+                if (row >= 0)
+                {
+                    return int.Parse(commissionGrid[0, row].Value.ToString());
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+        }
+
+
+
+        //通过行号得该行的Security
+        CommissionTemplateItemSetting GetVisibleCommissionItem(int id)
+        {
+            CommissionTemplateItemSetting item = null;
+            if (itemmap.TryGetValue(id, out item))
+            {
+                return item;
+            }
+            else
+            {
+                return null;
+            }
+
+        }
+
+
+        void AddItem_Click(object sender, EventArgs e)
+        {
+
+            fmCommissionTemplateItemEdit fm = new fmCommissionTemplateItemEdit();
+            try
+            {
+                int id = int.Parse(templateid.Text);
+                fm.SetCommissionTemplateID(id);
+                fm.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MoniterUtils.WindowMessage("请选择模板");
+            }
         }
 
         void Qry_Click(object sender, EventArgs e)
@@ -51,7 +115,9 @@ namespace FutsMoniter
                 MoniterUtils.WindowMessage("请选择手续费模板");
                 return;
             }
+            ClearItem();
             templatename.Text = t.Name;
+            templateid.Text = t.ID.ToString();
             Globals.TLClient.ReqQryCommissionTemplateItem(t.ID);
         }
         void Add_Click(object sender, EventArgs e)
@@ -74,6 +140,7 @@ namespace FutsMoniter
             Globals.LogicEvent.RegisterCallback("MgrExchServer", "NotifyCommissionTemplate", this.OnNotifyCommissionTemplate);
 
             Globals.LogicEvent.RegisterCallback("MgrExchServer", "QryCommissionTemplateItem", this.OnQryCommissionTemplateItem);
+            Globals.LogicEvent.RegisterCallback("MgrExchServer", "NotifyCommissionTemplateItem", this.OnNotifyCommissionTemplateItem);
             Globals.TLClient.ReqQryCommissionTemplate();
         }
 
@@ -83,9 +150,17 @@ namespace FutsMoniter
             Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "NotifyCommissionTemplate", this.OnNotifyCommissionTemplate);
 
             Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "QryCommissionTemplateItem", this.OnQryCommissionTemplateItem);
+            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "NotifyCommissionTemplateItem", this.OnNotifyCommissionTemplateItem);
         }
 
-
+        void ClearItem()
+        {
+            commissionGrid.DataSource = null;
+            itemrowmap.Clear();
+            itemmap.Clear();
+            gt.Rows.Clear();
+            BindToTable();
+        }
         Dictionary<int, int> itemrowmap  = new Dictionary<int, int>();
         Dictionary<int, CommissionTemplateItemSetting> itemmap = new Dictionary<int, CommissionTemplateItemSetting>();
 
@@ -114,9 +189,18 @@ namespace FutsMoniter
             }
         }
 
+        void OnNotifyCommissionTemplateItem(string json)
+        {
+            CommissionTemplateItemSetting obj = MoniterUtils.ParseJsonResponse<CommissionTemplateItemSetting>(json);
+            if (obj != null)
+            {
+                GotCommissionTemplateItem(obj);
+            }
+        }
+
         void GotCommissionTemplateItem(CommissionTemplateItemSetting item)
         {
-            if (this.InvokeRequired)
+            if (InvokeRequired)
             {
                 Invoke(new Action<CommissionTemplateItemSetting>(GotCommissionTemplateItem), new object[] { item });
             }
@@ -135,14 +219,22 @@ namespace FutsMoniter
                     gt.Rows[i][CLOSETODAYBYVOLUME] = item.CloseTodayByVolume;
                     gt.Rows[i][CLOSEBYMONEY] = item.CloseByMoney;
                     gt.Rows[i][CLOSEBYVOLUME] = item.CloseByVolume;
-
+                    gt.Rows[i][CHARGETYPE] = item.ChargeType == QSEnumChargeType.Absolute ? "绝对" : "相对";
                     itemmap.Add(item.ID, item);
                     itemrowmap.Add(item.ID, i);
 
                 }
                 else
-                { 
-                    
+                {
+                    int i = r;
+                    gt.Rows[i][OPENBYMONEY] = item.OpenByMoney;
+                    gt.Rows[i][OPENBYVOLUME] = item.OpenByVolume;
+                    gt.Rows[i][CLOSETODAYBYMONEY] = item.CloseTodayByMoney;
+                    gt.Rows[i][CLOSETODAYBYVOLUME] = item.CloseTodayByVolume;
+                    gt.Rows[i][CLOSEBYMONEY] = item.CloseByMoney;
+                    gt.Rows[i][CLOSEBYVOLUME] = item.CloseByVolume;
+                    gt.Rows[i][CHARGETYPE] = item.ChargeType == QSEnumChargeType.Absolute ? "绝对" : "相对";
+                    itemmap[item.ID]=item;
                 }
                 
             }
@@ -191,12 +283,14 @@ namespace FutsMoniter
         const string ID = "全局ID";
         const string CODE = "品种";
         const string MONTH = "月份";
-        const string OPENBYMONEY = "开仓手续费(金额)";
-        const string OPENBYVOLUME = "开仓手续费(手数)";
-        const string CLOSETODAYBYMONEY = "平今手续费(金额)";
-        const string CLOSETODAYBYVOLUME = "平今手续费(手数)";
-        const string CLOSEBYMONEY = "平仓手续费(金额)";
-        const string CLOSEBYVOLUME = "平仓手续费(手数)";
+        const string OPENBYMONEY = "开仓(金额)";
+        const string OPENBYVOLUME = "开仓(手数)";
+        const string CLOSETODAYBYMONEY = "平今(金额)";
+        const string CLOSETODAYBYVOLUME = "平今(手数)";
+        const string CLOSEBYMONEY = "平仓(金额)";
+        const string CLOSEBYVOLUME = "平仓(手数)";
+        const string CHARGETYPE = "收费方式";
+
         #endregion
 
         DataTable gt = new DataTable();
@@ -237,6 +331,7 @@ namespace FutsMoniter
             gt.Columns.Add(CLOSETODAYBYVOLUME);//
             gt.Columns.Add(CLOSEBYMONEY);//
             gt.Columns.Add(CLOSEBYVOLUME);//
+            gt.Columns.Add(CHARGETYPE);
         }
 
         /// <summary>
@@ -248,8 +343,9 @@ namespace FutsMoniter
             datasource.DataSource = gt;
             grid.DataSource = datasource;
 
-            //grid.Columns[MTID].Width = 80;
-            //grid.Columns[MTNAME].Width = 200;
+            grid.Columns[ID].Width = 60;
+            grid.Columns[CODE].Width =100;
+            grid.Columns[MONTH].Width = 60;
 
         }
 

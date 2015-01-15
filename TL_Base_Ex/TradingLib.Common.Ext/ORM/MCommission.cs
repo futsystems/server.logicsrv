@@ -63,7 +63,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("UPDATE cfg_commission_template SET openbymoney='{0}',openbyvolume='{1}',closetodaybymoney='{2}',closetodaybyvolume='{3}',closebymoney='{4}',closebyvolume='{5}',chargetype='{6}' WHERE id='{7}'", item.OpenByMoney,item.OpenByVolume,item.CloseTodayByMoney,item.CloseTodayByVolume,item.CloseByMoney,item.CloseByVolume,item.ChargeType,item.ID);
+                string query = string.Format("UPDATE cfg_commission SET openbymoney='{0}',openbyvolume='{1}',closetodaybymoney='{2}',closetodaybyvolume='{3}',closebymoney='{4}',closebyvolume='{5}',chargetype='{6}' WHERE id='{7}'", item.OpenByMoney, item.OpenByVolume, item.CloseTodayByMoney, item.CloseTodayByVolume, item.CloseByMoney, item.CloseByVolume, item.ChargeType, item.ID);
                 db.Connection.Execute(query);
             }
         }

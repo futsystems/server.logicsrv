@@ -19,6 +19,7 @@ namespace TradingLib.Common
 
         public static CommissionTemplateItem GetCommissionTemplateItem(this IAccount account,Symbol symbol)
         {
+            Util.Debug("get month xxxxxxxxxxxxxxxxxx:" + symbol.GetMonth(), QSEnumDebugLevel.INFO);
             CommissionTemplate tmp = account.GetCommissionTemplate();
             if (tmp == null)
                 return null;
@@ -34,6 +35,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static decimal CalCommission(this IAccount account, Trade f)
         {
+
             //获得该帐户某个合约的手续费模板项
             CommissionTemplateItem item = account.GetCommissionTemplateItem(f.oSymbol);
 

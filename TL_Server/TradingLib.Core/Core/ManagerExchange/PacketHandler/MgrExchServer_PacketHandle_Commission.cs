@@ -55,7 +55,7 @@ namespace TradingLib.Core
         }
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryCommissionTemplateItem", "QryCommissionTemplateItem - qry commission template item", "查询手续费模板项目")]
-        public void CTE_QryCommissionTemplate(ISession session,int templateid)
+        public void CTE_QryCommissionTemplateItem(ISession session, int templateid)
         {
             Manager manager = session.GetManager();
             if (manager.IsRoot())
@@ -68,6 +68,44 @@ namespace TradingLib.Core
             else
             {
                 throw new FutsRspError("无权查询手续费模板项目");
+            }
+        }
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateCommissionTemplateItem", "UpdateCommissionTemplateItem - update commission template item", "更新手续费模板项目", QSEnumArgParseType.Json)]
+        public void CTE_UpdateCommissionTemplateItem(ISession session, string json)
+        {
+            Manager manager = session.GetManager();
+            if (manager.IsRoot())
+            {
+                CommissionTemplateItemSetting item = Mixins.Json.JsonMapper.ToObject<CommissionTemplateItemSetting>(json);
+                CommissionTemplate template = BasicTracker.CommissionTemplateTracker[item.Template_ID];
+                if (template == null)
+                {
+                    throw new FutsRspError("指定手续费模板不存在");
+                }
+                
+                if (!manager.Domain.GetSecurityFamilies().Any(sec => sec.Code.Equals(item.Code)))
+                {
+                    throw new FutsRspError("不存在对应的品种");
+                }
+
+                bool isadd = item.ID == 0;
+                if (isadd)
+                {
+                    if (template[item.Code, item.Month] != null)
+                    {
+                        throw new FutsRspError("手续费模板项目已存在");
+                    }
+                }
+                //调用update更新或添加
+                BasicTracker.CommissionTemplateTracker.UpdateCommissionTemplateItem(item);
+
+                session.NotifyMgr("NotifyCommissionTemplateItem",template[item.Code,item.Month]);
+                session.OperationSuccess("更新手续费项目功");
+            }
+            else
+            {
+                throw new FutsRspError("无权修改手续费模板");
             }
         }
     }

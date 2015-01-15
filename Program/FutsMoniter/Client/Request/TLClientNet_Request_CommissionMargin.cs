@@ -8,7 +8,6 @@ namespace TradingLib.Common
 {
     public partial class TLClientNet
     {
-
         /// <summary>
         /// 查询手续费模板
         /// </summary>
@@ -27,12 +26,22 @@ namespace TradingLib.Common
             this.ReqContribRequest("MgrExchServer", "UpdateCommissionTemplate", TradingLib.Mixins.Json.JsonMapper.ToJson(t));
         }
 
+
         /// <summary>
         /// 查询手续费模板项目
         /// </summary>
         public void ReqQryCommissionTemplateItem(int templateid)
         {
             this.ReqContribRequest("MgrExchServer", "QryCommissionTemplateItem", templateid.ToString());
+        }
+
+        /// <summary>
+        /// 更新手续费项目
+        /// </summary>
+        /// <param name="t"></param>
+        public void ReqUpdateCommissionTemplateItem(CommissionTemplateItemSetting item)
+        {
+            this.ReqContribRequest("MgrExchServer", "UpdateCommissionTemplateItem", TradingLib.Mixins.Json.JsonMapper.ToJson(item));
         }
     }
 }
