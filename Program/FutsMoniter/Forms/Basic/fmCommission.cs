@@ -344,7 +344,7 @@ namespace FutsMoniter
             grid.DataSource = datasource;
 
             grid.Columns[ID].Width = 60;
-            grid.Columns[CODE].Width =100;
+            grid.Columns[CODE].Width =60;
             grid.Columns[MONTH].Width = 60;
 
         }
