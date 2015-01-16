@@ -84,45 +84,77 @@ namespace TradingLib.Common
             return string.Format("{0}-{1}", this.Code, this.Month);
         }
 
+
         /// <summary>
-        /// 从基准手续费和开平标识 计算手续费率
+        /// 计算手续费
         /// </summary>
-        /// <param name="c"></param>
+        /// <param name="f"></param>
         /// <param name="offset"></param>
         /// <returns></returns>
-        public decimal GetCommission(decimal c,QSEnumOffsetFlag offset)
+        public decimal CalCommission(Trade f, QSEnumOffsetFlag offset)
         {
-            if (ChargeType == QSEnumChargeType.Absolute)
+            switch (offset)
             {
-                switch (offset)
-                { 
-                    case QSEnumOffsetFlag.OPEN://开仓手续费
-                        return this.OpenByMoney != 0 ? this.OpenByMoney : this.OpenByVolume;
-                    case QSEnumOffsetFlag.CLOSE://平仓手续费
-                    case QSEnumOffsetFlag.CLOSEYESTERDAY:
-                        return this.CloseByMoney != 0 ? this.CloseByMoney : this.CloseByVolume;
-                    case QSEnumOffsetFlag.CLOSETODAY://平今手续费
-                        return this.CloseTodayByMoney != 0 ? this.CloseTodayByMoney : this.CloseTodayByVolume;
-                    default:
-                        return this.OpenByMoney != 0 ? this.OpenByMoney : this.OpenByVolume;
-                }
-            }
-            else
-            {
-                switch (offset)
-                {
-                    case QSEnumOffsetFlag.OPEN://开仓手续费
-                        return c + (c < 1 ? this.OpenByMoney : this.OpenByVolume);
-                    case QSEnumOffsetFlag.CLOSE://平仓手续费
-                    case QSEnumOffsetFlag.CLOSEYESTERDAY:
-                        return c + (c < 1 ? this.CloseByMoney : this.CloseByVolume);
-                    case QSEnumOffsetFlag.CLOSETODAY://平今手续费
-                        return c + (c < 1 ? this.CloseTodayByMoney : this.CloseTodayByVolume);
-                    default:
-                        return c + (c < 1 ? this.OpenByMoney : this.OpenByVolume);
-                }
-            
+                case QSEnumOffsetFlag.OPEN://开仓手续费
+                    return (this.OpenByMoney != 0 ? CalCommissionByMoney(f, this.OpenByMoney) : CalCommissionByVolume(f,this.OpenByVolume));
+                case QSEnumOffsetFlag.CLOSE://平仓手续费
+                case QSEnumOffsetFlag.CLOSEYESTERDAY:
+                    return (this.CloseByMoney != 0 ? CalCommissionByMoney(f, this.CloseByMoney) : CalCommissionByVolume(f,this.CloseByVolume));
+                case QSEnumOffsetFlag.CLOSETODAY://平今手续费
+                    return (this.CloseTodayByMoney != 0 ? CalCommissionByMoney(f, this.CloseTodayByMoney) : CalCommissionByVolume(f,this.CloseTodayByVolume));
+                default:
+                    return (this.OpenByMoney != 0 ? CalCommissionByMoney(f, this.OpenByMoney) : CalCommissionByVolume(f,this.OpenByVolume));
             }
         }
+
+        decimal CalCommissionByMoney(Trade f,decimal commissionrate)
+        {
+            return commissionrate * f.xPrice * f.UnsignedSize * f.oSymbol.Multiple;
+        }
+
+        decimal CalCommissionByVolume(Trade f, decimal commissionrate)
+        {
+            return commissionrate * f.UnsignedSize;
+        }
+        ///// <summary>
+        ///// 从基准手续费和开平标识 计算手续费率
+        ///// </summary>
+        ///// <param name="c"></param>
+        ///// <param name="offset"></param>
+        ///// <returns></returns>
+        //public decimal GetCommission(decimal c,QSEnumOffsetFlag offset)
+        //{
+        //    if (ChargeType == QSEnumChargeType.Absolute)
+        //    {
+        //        switch (offset)
+        //        { 
+        //            case QSEnumOffsetFlag.OPEN://开仓手续费
+        //                return this.OpenByMoney != 0 ? this.OpenByMoney : this.OpenByVolume;
+        //            case QSEnumOffsetFlag.CLOSE://平仓手续费
+        //            case QSEnumOffsetFlag.CLOSEYESTERDAY:
+        //                return this.CloseByMoney != 0 ? this.CloseByMoney : this.CloseByVolume;
+        //            case QSEnumOffsetFlag.CLOSETODAY://平今手续费
+        //                return this.CloseTodayByMoney != 0 ? this.CloseTodayByMoney : this.CloseTodayByVolume;
+        //            default:
+        //                return this.OpenByMoney != 0 ? this.OpenByMoney : this.OpenByVolume;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        switch (offset)
+        //        {
+        //            case QSEnumOffsetFlag.OPEN://开仓手续费
+        //                return c + (c < 1 ? this.OpenByMoney : this.OpenByVolume);
+        //            case QSEnumOffsetFlag.CLOSE://平仓手续费
+        //            case QSEnumOffsetFlag.CLOSEYESTERDAY:
+        //                return c + (c < 1 ? this.CloseByMoney : this.CloseByVolume);
+        //            case QSEnumOffsetFlag.CLOSETODAY://平今手续费
+        //                return c + (c < 1 ? this.CloseTodayByMoney : this.CloseTodayByVolume);
+        //            default:
+        //                return c + (c < 1 ? this.OpenByMoney : this.OpenByVolume);
+        //        }
+            
+        //    }
+        //}
     }
 }
