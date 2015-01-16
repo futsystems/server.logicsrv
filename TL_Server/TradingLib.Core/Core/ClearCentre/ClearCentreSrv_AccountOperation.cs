@@ -85,6 +85,19 @@ namespace TradingLib.Core
             AccountChanged(this[account]);
         }
 
+        /// <summary>
+        /// 更新手续费模板
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="templateid"></param>
+        public void UpdateAccountCommissionTemplates(string account, int templateid)
+        {
+            if (!HaveAccount(account)) return;
+            this[account].Commission_ID = templateid;
+            ORM.MAccount.UpdateAccountCommissionTemplate(account, templateid);
+            AccountChanged(this[account]);
+        }
+
         public void UpdateAccountSideMargin(string account, bool sidemargin)
         {
             if (!HaveAccount(account)) return;

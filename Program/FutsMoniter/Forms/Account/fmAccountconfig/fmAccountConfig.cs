@@ -66,9 +66,23 @@ namespace FutsMoniter
             this.btnDelAccountRule.Click +=new EventHandler(btnDelAccountRule_Click);
             this.btnDelOrderRule.Click +=new EventHandler(btnDelOrderRule_Click);
 
+            this.btnUpdateTemplate.Click += new EventHandler(btnUpdateTemplate_Click);
+
             this.pagenav.SelectedPageChanged += new EventHandler(pagenav_SelectedPageChanged);
 
 
+        }
+
+        void btnUpdateTemplate_Click(object sender, EventArgs e)
+        {
+            if (MoniterUtils.WindowConfirm("确认更新帐户手续费与保证金模板?") == System.Windows.Forms.DialogResult.Yes)
+            { 
+                int commissionid = (int)cbCommissionTemplate.SelectedValue;
+                if(_account.Commissin_ID != commissionid)
+                {
+                    Globals.TLClient.ReqUpdateAccountCommissionTemplate(_account.Account,commissionid);
+                }
+            }
         }
 
 
@@ -188,6 +202,10 @@ namespace FutsMoniter
             else if (pagenav.SelectedPage.Name.Equals("pageFinance"))
             {
                 Globals.TLClient.ReqQryAccountFinInfo(_account.Account);
+            }
+            else if (pagenav.SelectedPage.Name.Equals("pageMarginCommission"))
+            {
+                Globals.TLClient.ReqQryCommissionTemplate();
             }
 
 

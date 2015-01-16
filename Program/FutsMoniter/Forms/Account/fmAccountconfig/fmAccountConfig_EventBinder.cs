@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using TradingLib.API;
@@ -22,6 +23,8 @@ namespace FutsMoniter
 
             Globals.LogicEvent.GotAccountChangedEvent += new Action<AccountLite>(OnAccountChanged);//帐户更新
 
+            Globals.LogicEvent.RegisterCallback("MgrExchServer", "QryCommissionTemplate", this.OnQryCommissionTemplate);
+
             if (!Globals.Domain.Super)
             {
                 ctRouterType1.Visible = Globals.Manager.IsRoot();//管理员可以设置帐户路由类别
@@ -36,6 +39,35 @@ namespace FutsMoniter
             //执行延迟加载 只有当延迟加载的空间加载完毕后才可以将数据显示到界面否则相关字段显示错误
             UpdateAccountSetting();
         }
+
+        void OnQryCommissionTemplate(string json)
+        {
+            CommissionTemplateSetting[] list = MoniterUtils.ParseJsonResponse<CommissionTemplateSetting[]>(json);
+            if (list != null)
+            {
+                Factory.IDataSourceFactory(cbCommissionTemplate).BindDataSource(GetCommissionTemplateCBList(list));
+                cbCommissionTemplate.SelectedValue = _account.Commissin_ID;
+            }
+        }
+
+        public static ArrayList GetCommissionTemplateCBList(CommissionTemplateSetting[] items)
+        {
+            ArrayList list = new ArrayList();
+            ValueObject<int> vo1 = new ValueObject<int>();
+            vo1.Name = "系统默认";
+            vo1.Value =0;
+            list.Add(vo1);
+
+            foreach (CommissionTemplateSetting item in items)
+            {
+                ValueObject<int> vo = new ValueObject<int>();
+                vo.Name = item.Name;
+                vo.Value = item.ID;
+                list.Add(vo);
+            }
+            return list;
+        }
+
 
         void UpdateAccountSetting()
         {

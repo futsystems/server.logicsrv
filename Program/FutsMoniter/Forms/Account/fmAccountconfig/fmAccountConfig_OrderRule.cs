@@ -12,7 +12,6 @@ namespace FutsMoniter
     public partial class fmAccountConfig
     {
 
-
         /// <summary>
         /// 委托风控项
         /// </summary>
@@ -39,6 +38,7 @@ namespace FutsMoniter
                 }
             }
         }
+
         void InvokeGotOrderRuleItem(RuleItem item, bool islast)
         {
             if (InvokeRequired)

@@ -165,6 +165,7 @@ namespace TradingLib.Common
             info.IsLogin = clients.Count() > 0;
             info.IPAddress = info.IsLogin ? clients.FirstOrDefault().IPAddress : "";
             info.SideMargin = acc.SideMargin;
+            info.Commissin_ID = acc.Commission_ID;
             return info;
         }
 

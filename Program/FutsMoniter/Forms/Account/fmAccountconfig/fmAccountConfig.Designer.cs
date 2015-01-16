@@ -74,11 +74,11 @@
             this.accountRuleItemList = new ComponentFactory.Krypton.Toolkit.KryptonListBox();
             this.pageMarginCommission = new ComponentFactory.Krypton.Navigator.KryptonPage();
             this.kryptonPanel6 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
-            this.kryptonLabel4 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.kryptonLabel13 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.btnUpdateTemplate = new ComponentFactory.Krypton.Toolkit.KryptonButton();
-            this.cbCommissionTemplate = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
             this.cbMarginTemplate = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
+            this.cbCommissionTemplate = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
+            this.btnUpdateTemplate = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.kryptonLabel13 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.kryptonLabel4 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pagenav)).BeginInit();
@@ -113,8 +113,8 @@
             this.pageMarginCommission.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel6)).BeginInit();
             this.kryptonPanel6.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.cbCommissionTemplate)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cbMarginTemplate)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cbCommissionTemplate)).BeginInit();
             this.SuspendLayout();
             // 
             // kryptonPanel1
@@ -141,7 +141,7 @@
             this.pageOrderCheck,
             this.pageAccountCheck,
             this.pageMarginCommission});
-            this.pagenav.SelectedIndex = 0;
+            this.pagenav.SelectedIndex = 4;
             this.pagenav.Size = new System.Drawing.Size(687, 276);
             this.pagenav.TabIndex = 0;
             this.pagenav.Text = "kryptonNavigator1";
@@ -579,21 +579,21 @@
             this.kryptonPanel6.Size = new System.Drawing.Size(685, 251);
             this.kryptonPanel6.TabIndex = 0;
             // 
-            // kryptonLabel4
+            // cbMarginTemplate
             // 
-            this.kryptonLabel4.Location = new System.Drawing.Point(12, 9);
-            this.kryptonLabel4.Name = "kryptonLabel4";
-            this.kryptonLabel4.Size = new System.Drawing.Size(82, 18);
-            this.kryptonLabel4.TabIndex = 0;
-            this.kryptonLabel4.Values.Text = "手续费模板:";
+            this.cbMarginTemplate.DropDownWidth = 145;
+            this.cbMarginTemplate.Location = new System.Drawing.Point(99, 37);
+            this.cbMarginTemplate.Name = "cbMarginTemplate";
+            this.cbMarginTemplate.Size = new System.Drawing.Size(145, 21);
+            this.cbMarginTemplate.TabIndex = 4;
             // 
-            // kryptonLabel13
+            // cbCommissionTemplate
             // 
-            this.kryptonLabel13.Location = new System.Drawing.Point(11, 37);
-            this.kryptonLabel13.Name = "kryptonLabel13";
-            this.kryptonLabel13.Size = new System.Drawing.Size(82, 18);
-            this.kryptonLabel13.TabIndex = 1;
-            this.kryptonLabel13.Values.Text = "保证金模板:";
+            this.cbCommissionTemplate.DropDownWidth = 145;
+            this.cbCommissionTemplate.Location = new System.Drawing.Point(100, 7);
+            this.cbCommissionTemplate.Name = "cbCommissionTemplate";
+            this.cbCommissionTemplate.Size = new System.Drawing.Size(145, 21);
+            this.cbCommissionTemplate.TabIndex = 3;
             // 
             // btnUpdateTemplate
             // 
@@ -604,21 +604,21 @@
             this.btnUpdateTemplate.TabIndex = 2;
             this.btnUpdateTemplate.Values.Text = "提 交";
             // 
-            // cbCommissionTemplate
+            // kryptonLabel13
             // 
-            this.cbCommissionTemplate.DropDownWidth = 145;
-            this.cbCommissionTemplate.Location = new System.Drawing.Point(100, 7);
-            this.cbCommissionTemplate.Name = "cbCommissionTemplate";
-            this.cbCommissionTemplate.Size = new System.Drawing.Size(145, 21);
-            this.cbCommissionTemplate.TabIndex = 3;
+            this.kryptonLabel13.Location = new System.Drawing.Point(11, 37);
+            this.kryptonLabel13.Name = "kryptonLabel13";
+            this.kryptonLabel13.Size = new System.Drawing.Size(82, 18);
+            this.kryptonLabel13.TabIndex = 1;
+            this.kryptonLabel13.Values.Text = "保证金模板:";
             // 
-            // cbMarginTemplate
+            // kryptonLabel4
             // 
-            this.cbMarginTemplate.DropDownWidth = 145;
-            this.cbMarginTemplate.Location = new System.Drawing.Point(99, 37);
-            this.cbMarginTemplate.Name = "cbMarginTemplate";
-            this.cbMarginTemplate.Size = new System.Drawing.Size(145, 21);
-            this.cbMarginTemplate.TabIndex = 4;
+            this.kryptonLabel4.Location = new System.Drawing.Point(12, 9);
+            this.kryptonLabel4.Name = "kryptonLabel4";
+            this.kryptonLabel4.Size = new System.Drawing.Size(82, 18);
+            this.kryptonLabel4.TabIndex = 0;
+            this.kryptonLabel4.Values.Text = "手续费模板:";
             // 
             // fmAccountConfig
             // 
@@ -672,8 +672,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel6)).EndInit();
             this.kryptonPanel6.ResumeLayout(false);
             this.kryptonPanel6.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.cbCommissionTemplate)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cbMarginTemplate)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cbCommissionTemplate)).EndInit();
             this.ResumeLayout(false);
 
         }

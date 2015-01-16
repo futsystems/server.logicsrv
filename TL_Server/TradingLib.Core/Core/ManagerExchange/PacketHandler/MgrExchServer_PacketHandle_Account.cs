@@ -369,5 +369,30 @@ namespace TradingLib.Core
             session.OperationSuccess((sidemargin?"启用":"禁止")+"帐户单向大边策略成功！");
         }
 
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountCommissionTemplate", "UpdateAccountCommissionTemplate - update account commission template set", "更新帐户手续费模板")]
+        public void CTE_UpdateAccountSideMargin(ISession session, string account,int templateid)
+        {
+            Manager manager = session.GetManager();
+            //if (!manager.IsInRoot())
+            //{
+            //    throw new FutsRspError("无权修改帐户单向大边设置");
+            //}
+
+            IAccount acc = clearcentre[account];
+            if (acc == null)
+            {
+                throw new FutsRspError("交易帐户不存在");
+            }
+
+            if (!manager.RightAccessAccount(acc))
+            {
+                throw new FutsRspError("无权修改该交易帐户");
+            }
+
+            //更新路由组
+            clearcentre.UpdateAccountCommissionTemplates(account, templateid);
+            session.OperationSuccess("更新帐户手续费模板成功");
+        }
+
     }
 }

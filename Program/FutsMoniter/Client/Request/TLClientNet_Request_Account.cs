@@ -163,6 +163,14 @@ namespace TradingLib.Common
             this.ReqContribRequest("MgrExchServer", "UpdateAccountSideMargin", account + "," + sidemargin.ToString());
         }
 
+        public void ReqUpdateAccountCommissionTemplate(string account,int templateid)
+        {
+            debug("请求更新帐户手续费模板", QSEnumDebugLevel.INFO);
+            this.ReqContribRequest("MgrExchServer", "UpdateAccountCommissionTemplate", account+","+templateid.ToString());
+        }
+
+
+
         /// <summary>
         /// 查询分区管理员登入信息
         /// </summary>

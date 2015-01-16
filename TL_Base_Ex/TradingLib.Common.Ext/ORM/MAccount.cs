@@ -269,6 +269,19 @@ namespace TradingLib.ORM
             }
         }
 
+        /// <summary>
+        /// 更新帐户手续费模板
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="templateid"></param>
+        public static void UpdateAccountCommissionTemplate(string account, int templateid)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = String.Format("UPDATE accounts SET commission_id = {0} WHERE account = '{1}'", templateid, account);
+                db.Connection.Execute(query);
+            }
+        }
 
         /// <summary>
         /// 更新帐户的MAC地址

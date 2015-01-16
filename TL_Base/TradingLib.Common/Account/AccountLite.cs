@@ -128,6 +128,11 @@ namespace TradingLib.Common
         public int RG_ID { get; set; }
 
         /// <summary>
+        /// 手续费模板ID
+        /// </summary>
+        public int Commissin_ID { get; set; }
+
+        /// <summary>
         /// 是否处于登入状态
         /// </summary>
         public bool IsLogin { get; set; }
@@ -136,6 +141,8 @@ namespace TradingLib.Common
         /// 登入地址
         /// </summary>
         public string IPAddress { get; set; }
+
+
 
         public static string Serialize(AccountLite account)
         {
@@ -190,6 +197,8 @@ namespace TradingLib.Common
             sb.Append(account.IPAddress);
             sb.Append(d);
             sb.Append(account.SideMargin);
+            sb.Append(d);
+            sb.Append(account.Commissin_ID);
             return sb.ToString();
         }
 
@@ -222,6 +231,7 @@ namespace TradingLib.Common
             account.IsLogin = bool.Parse(rec[22]);
             account.IPAddress = rec[23];
             account.SideMargin = bool.Parse(rec[24]);
+            account.Commissin_ID = int.Parse(rec[25]);
             return account;
         }
     }
