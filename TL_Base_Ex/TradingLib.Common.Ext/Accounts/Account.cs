@@ -114,6 +114,11 @@ namespace TradingLib.Common
         public bool SideMargin { get; set; }
 
         /// <summary>
+        /// 客户端信用额度分开显示
+        /// </summary>
+        public bool CreditSeparate { get; set; }
+
+        /// <summary>
         /// 代理商ID
         /// </summary>
         public int Mgr_fk { get; set; }

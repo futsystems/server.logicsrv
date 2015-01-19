@@ -98,6 +98,19 @@ namespace TradingLib.Core
             AccountChanged(this[account]);
         }
 
+        /// <summary>
+        /// 更新帐户是否分开显示信用额度
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="creditseparate"></param>
+        public void UpdateAccountCreditSeparate(string account, bool creditseparate)
+        {
+            if (!HaveAccount(account)) return;
+            this[account].CreditSeparate = creditseparate;
+            ORM.MAccount.UpdateAccountCreditSeparate(account, creditseparate);
+            AccountChanged(this[account]);
+        }
+
         public void UpdateAccountSideMargin(string account, bool sidemargin)
         {
             if (!HaveAccount(account)) return;

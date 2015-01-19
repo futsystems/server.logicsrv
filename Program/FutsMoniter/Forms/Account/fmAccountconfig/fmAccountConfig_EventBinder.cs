@@ -77,8 +77,8 @@ namespace FutsMoniter
                 intraday.Checked = _account.IntraDay;
                 poslock.Checked = _account.PosLock;
                 sidemargin.Checked = _account.SideMargin;
-
                 ctRouterType1.RouterType = _account.OrderRouteType;
+                cbCreditSeparate.Checked = _account.CreditSeparate;
 
                 btnExecute.Text = _account.Execute ? "冻 结" : "激 活";
                 btnExecute.StateCommon.Content.ShortText.Color1 = !_account.Execute ? UIGlobals.ShortSideColor : UIGlobals.LongSideColor;

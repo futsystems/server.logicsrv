@@ -36,6 +36,7 @@ namespace FutsMoniter
 
         const string LASTEQUITY = "昨日权益";
         const string NOWEQUITY = "当前权益";
+        const string CREDIT = "信用额度";
         const string MARGIN = "保证金";
         const string FROZENMARGIN = "冻结保证金";
         const string CASH = "可用资金";
@@ -107,6 +108,7 @@ namespace FutsMoniter
 
             gt.Columns.Add(LASTEQUITY);//9
             gt.Columns.Add(NOWEQUITY);//10
+            gt.Columns.Add(CREDIT);//
             gt.Columns.Add(MARGIN);//11
             gt.Columns.Add(FROZENMARGIN);//12
             gt.Columns.Add(REALIZEDPL);//13
@@ -395,8 +397,9 @@ namespace FutsMoniter
                         }
 
                         gt.Rows[i][LASTEQUITY] = decDisp(account.LastEquity);
-
                         gt.Rows[i][NOWEQUITY] = decDisp(account.NowEquity);
+                        gt.Rows[i][CREDIT] = decDisp(account.Credit);
+
                         gt.Rows[i][MARGIN] = decDisp(0);
                         gt.Rows[i][FROZENMARGIN] = decDisp(0);
                         gt.Rows[i][REALIZEDPL] = decDisp(0);
@@ -479,6 +482,7 @@ namespace FutsMoniter
                 {
                     //Globals.Debug("account:"+account.Account + "now:" + decDisp(account.NowEquity) + " margin:" + decDisp(account.Margin));
                     gt.Rows[r][NOWEQUITY] = decDisp(account.NowEquity);
+                    gt.Rows[r][CREDIT] = decDisp(account.Credit);
                     gt.Rows[r][MARGIN] = decDisp(account.Margin);
                     gt.Rows[r][FROZENMARGIN] = decDisp(account.ForzenMargin);
                     gt.Rows[r][REALIZEDPL] = decDisp(account.RealizedPL);

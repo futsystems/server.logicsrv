@@ -169,7 +169,10 @@ namespace TradingLib.Common
             this.ReqContribRequest("MgrExchServer", "UpdateAccountCommissionTemplate", account+","+templateid.ToString());
         }
 
-
+        public void ReqUpdateAccountCreditSeparate(string account, bool separate)
+        {
+            this.ReqContribRequest("MgrExchServer", "UpdateAccountCreditSeparate", account + "," + separate.ToString());
+        }
 
         /// <summary>
         /// 查询分区管理员登入信息

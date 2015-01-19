@@ -37,6 +37,8 @@
             this.kryptonGroupBox2 = new ComponentFactory.Krypton.Toolkit.KryptonGroupBox();
             this.tableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.kryptonGroupBox1 = new ComponentFactory.Krypton.Toolkit.KryptonGroupBox();
+            this.lbforceclose = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.kryptonLabel7 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.lbcollecttype = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.lbchargetype = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.lbstatus = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
@@ -47,8 +49,6 @@
             this.kryptonLabel3 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel2 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel1 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.lbforceclose = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.kryptonLabel7 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonGroupBox3)).BeginInit();
@@ -88,7 +88,6 @@
             this.kryptonGroupBox3.Panel.Controls.Add(this.btnChangeStatus);
             this.kryptonGroupBox3.Size = new System.Drawing.Size(134, 260);
             this.kryptonGroupBox3.TabIndex = 2;
-            this.kryptonGroupBox3.Text = "操作";
             this.kryptonGroupBox3.Values.Heading = "操作";
             // 
             // btnDeleteFinService
@@ -105,7 +104,7 @@
             this.btnUpdateArgs.Name = "btnUpdateArgs";
             this.btnUpdateArgs.Size = new System.Drawing.Size(90, 25);
             this.btnUpdateArgs.TabIndex = 2;
-            this.btnUpdateArgs.Values.Text = "修改参数";
+            this.btnUpdateArgs.Values.Text = "更新参数";
             // 
             // btnChangeServicePlan
             // 
@@ -137,7 +136,6 @@
             this.kryptonGroupBox2.Panel.Controls.Add(this.tableLayoutPanel);
             this.kryptonGroupBox2.Size = new System.Drawing.Size(261, 260);
             this.kryptonGroupBox2.TabIndex = 1;
-            this.kryptonGroupBox2.Text = "参数列表";
             this.kryptonGroupBox2.Values.Heading = "参数列表";
             // 
             // tableLayoutPanel
@@ -185,8 +183,23 @@
             this.kryptonGroupBox1.Panel.Controls.Add(this.kryptonLabel1);
             this.kryptonGroupBox1.Size = new System.Drawing.Size(176, 260);
             this.kryptonGroupBox1.TabIndex = 0;
-            this.kryptonGroupBox1.Text = "基本属性";
             this.kryptonGroupBox1.Values.Heading = "基本属性";
+            // 
+            // lbforceclose
+            // 
+            this.lbforceclose.Location = new System.Drawing.Point(77, 134);
+            this.lbforceclose.Name = "lbforceclose";
+            this.lbforceclose.Size = new System.Drawing.Size(19, 18);
+            this.lbforceclose.TabIndex = 11;
+            this.lbforceclose.Values.Text = "--";
+            // 
+            // kryptonLabel7
+            // 
+            this.kryptonLabel7.Location = new System.Drawing.Point(3, 134);
+            this.kryptonLabel7.Name = "kryptonLabel7";
+            this.kryptonLabel7.Size = new System.Drawing.Size(68, 18);
+            this.kryptonLabel7.TabIndex = 10;
+            this.kryptonLabel7.Values.Text = "强平状态:";
             // 
             // lbcollecttype
             // 
@@ -267,22 +280,6 @@
             this.kryptonLabel1.Size = new System.Drawing.Size(68, 18);
             this.kryptonLabel1.TabIndex = 0;
             this.kryptonLabel1.Values.Text = "交易帐户:";
-            // 
-            // lbforceclose
-            // 
-            this.lbforceclose.Location = new System.Drawing.Point(77, 134);
-            this.lbforceclose.Name = "lbforceclose";
-            this.lbforceclose.Size = new System.Drawing.Size(19, 18);
-            this.lbforceclose.TabIndex = 11;
-            this.lbforceclose.Values.Text = "--";
-            // 
-            // kryptonLabel7
-            // 
-            this.kryptonLabel7.Location = new System.Drawing.Point(3, 134);
-            this.kryptonLabel7.Name = "kryptonLabel7";
-            this.kryptonLabel7.Size = new System.Drawing.Size(68, 18);
-            this.kryptonLabel7.TabIndex = 10;
-            this.kryptonLabel7.Values.Text = "强平状态:";
             // 
             // ctFinService
             // 

@@ -107,6 +107,7 @@ namespace TradingLib.Common
             a.Margin = acc.Margin;
             a.MarginFrozen = acc.MarginFrozen;
             a.Credit = acc.Credit;
+            
             return a;
         }
 
@@ -128,6 +129,7 @@ namespace TradingLib.Common
             info.Commission = acc.Commission;
             info.Profit = acc.Profit;
             info.TotalPositionSize = acc.GetTotalPositionSize();
+            info.Credit = acc.Credit;
             return info;
         }
 
@@ -166,6 +168,8 @@ namespace TradingLib.Common
             info.IPAddress = info.IsLogin ? clients.FirstOrDefault().IPAddress : "";
             info.SideMargin = acc.SideMargin;
             info.Commissin_ID = acc.Commission_ID;
+            info.Credit = acc.Credit;
+            info.CreditSeparate = acc.CreditSeparate;
             return info;
         }
 

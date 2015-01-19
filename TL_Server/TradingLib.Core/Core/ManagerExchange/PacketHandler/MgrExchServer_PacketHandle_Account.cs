@@ -373,11 +373,6 @@ namespace TradingLib.Core
         public void CTE_UpdateAccountSideMargin(ISession session, string account,int templateid)
         {
             Manager manager = session.GetManager();
-            //if (!manager.IsInRoot())
-            //{
-            //    throw new FutsRspError("无权修改帐户单向大边设置");
-            //}
-
             IAccount acc = clearcentre[account];
             if (acc == null)
             {
@@ -392,6 +387,26 @@ namespace TradingLib.Core
             //更新路由组
             clearcentre.UpdateAccountCommissionTemplates(account, templateid);
             session.OperationSuccess("更新帐户手续费模板成功");
+        }
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountCreditSeparate", "UpdateAccountCreditSeparate - update account credit separate", "更新帐户信用额度显示方式")]
+        public void CTE_UpdateAccountCreditSeperate(ISession session, string account,bool creditseperate)
+        {
+            Manager manager = session.GetManager();
+            IAccount acc = clearcentre[account];
+            if (acc == null)
+            {
+                throw new FutsRspError("交易帐户不存在");
+            }
+
+            if (!manager.RightAccessAccount(acc))
+            {
+                throw new FutsRspError("无权修改该交易帐户");
+            }
+
+            //更新路由组
+            clearcentre.UpdateAccountCreditSeparate(account, creditseperate);
+            session.OperationSuccess("更新帐户信用额度显示方式");
         }
 
     }

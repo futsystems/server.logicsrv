@@ -110,6 +110,11 @@ namespace TradingLib.API
         bool SideMargin { get; set; }
 
         /// <summary>
+        /// 客户端信用额度分开显示
+        /// </summary>
+        bool CreditSeparate { get; set; }
+
+        /// <summary>
         /// 帐号隶属于哪个管理员
         /// 可以属于超级管理员Root
         /// 或者属于代理Agent

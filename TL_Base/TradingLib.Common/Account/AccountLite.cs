@@ -48,6 +48,12 @@ namespace TradingLib.Common
         public decimal NowEquity { get; set; }
 
         /// <summary>
+        /// 信用额度
+        /// 通过配资服务放出的信用额度
+        /// </summary>
+        public decimal Credit { get; set; }
+
+        /// <summary>
         /// 平仓利润
         /// </summary>
         public decimal RealizedPL { get; set; }
@@ -111,6 +117,11 @@ namespace TradingLib.Common
         /// 单向大边
         /// </summary>
         public bool SideMargin { get; set; }
+
+        /// <summary>
+        /// 信用额度分开显示
+        /// </summary>
+        public bool CreditSeparate { get; set; }
 
         /// <summary>
         /// 帐户所属管理员全局ID
@@ -199,6 +210,10 @@ namespace TradingLib.Common
             sb.Append(account.SideMargin);
             sb.Append(d);
             sb.Append(account.Commissin_ID);
+            sb.Append(d);
+            sb.Append(account.Credit);
+            sb.Append(d);
+            sb.Append(account.CreditSeparate);
             return sb.ToString();
         }
 
@@ -232,6 +247,8 @@ namespace TradingLib.Common
             account.IPAddress = rec[23];
             account.SideMargin = bool.Parse(rec[24]);
             account.Commissin_ID = int.Parse(rec[25]);
+            account.Credit = decimal.Parse(rec[26]);
+            account.CreditSeparate = bool.Parse(rec[27]);
             return account;
         }
     }

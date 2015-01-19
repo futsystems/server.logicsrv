@@ -158,6 +158,11 @@ namespace FutsMoniter
                 {
                     Globals.TLClient.ReqUpdateAccountSideMargin(_account.Account, sidemargin.Checked);
                 }
+
+                if (cbCreditSeparate.Checked != _account.CreditSeparate)
+                {
+                    Globals.TLClient.ReqUpdateAccountCreditSeparate(_account.Account, cbCreditSeparate.Checked);
+                }
             }
         }
 

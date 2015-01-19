@@ -11,6 +11,7 @@ namespace TradingLib.Common
     {
         public string Account { get; set; }
         public decimal NowEquity { get; set; }//当前动态权益
+        public decimal Credit { get; set; }//信用额度
         public decimal Margin { get; set; }//占用保证金
         public decimal ForzenMargin { get; set; }//冻结保证金
         public decimal BuyPower { get; set; }//购买能力
@@ -19,6 +20,8 @@ namespace TradingLib.Common
         public decimal Commission { get; set; }//手续费
         public decimal Profit { get; set; }//净利
         public int TotalPositionSize { get; set; }//所有持仓手数量
+
+
 
 
         public static string Serialize(AccountInfoLite info)
@@ -44,6 +47,8 @@ namespace TradingLib.Common
             sb.Append(info.Account);
             sb.Append(d);
             sb.Append(info.TotalPositionSize);
+            sb.Append(d);
+            sb.Append(info.Credit);
             return sb.ToString();
 
         }
@@ -64,6 +69,7 @@ namespace TradingLib.Common
                 a.Profit = Decimal.Parse(r[7]);
                 a.Account = r[8];
                 a.TotalPositionSize = int.Parse(r[9]);
+                a.Credit = decimal.Parse(r[10]);
             }
             return a;
         }

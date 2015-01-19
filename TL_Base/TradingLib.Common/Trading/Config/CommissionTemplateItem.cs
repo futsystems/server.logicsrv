@@ -7,30 +7,8 @@ using TradingLib.API;
 
 namespace TradingLib.Common
 {
-
     public class CommissionTemplateItemSetting
     {
-        //public CommissionTemplateItemSetting()
-        //{
-        
-        //}
-
-        //public CommissionTemplateItemSetting(CommissionTemplateItemSetting copy)
-        //{
-            
-        //    this.ChargeType = copy.ChargeType;
-        //    this.CloseByMoney = copy.CloseByMoney;
-        //    this.CloseByVolume = copy.CloseByVolume;
-        //    this.CloseTodayByMoney = copy.CloseTodayByMoney;
-        //    this.CloseTodayByVolume = copy.CloseTodayByVolume;
-        //    this.OpenByMoney = copy.OpenByMoney;
-        //    this.OpenByVolume = copy.OpenByVolume;
-        //    this.Percent = copy.Percent;
-        //    this.Code = copy.Code;
-        //    this.ID = copy.ID;
-        //    this.Month = copy.Month;
-        //    this.Template_ID = copy.Template_ID;
-        //}
         /// <summary>
         /// 设置项ID
         /// </summary>

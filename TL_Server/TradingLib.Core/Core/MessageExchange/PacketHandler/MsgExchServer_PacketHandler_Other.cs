@@ -192,6 +192,12 @@ namespace TradingLib.Core
         {
             debug("QryAccountInfo :" + request.ToString(), QSEnumDebugLevel.INFO);
             AccountInfo info = account.GenAccountInfo();
+            //需要合并信用额度
+            if (!account.CreditSeparate)
+            {
+                info.NowEquity += info.Credit;
+                info.Credit = 0;
+            }
             RspQryAccountInfoResponse response  = ResponseTemplate<RspQryAccountInfoResponse>.SrvSendRspResponse(request);
             response.AccInfo = info;
             CachePacket(response);

@@ -61,7 +61,7 @@ namespace TradingLib.ORM
 
         public bool PosLock { get; set; }
         public bool SideMargin { get; set; }
-
+        public bool CreditSeparate { get; set; }
         public int Mgr_fk { get; set; }
         public int rg_fk { get; set; }
         public int Commission_ID { get; set; }
@@ -225,6 +225,8 @@ namespace TradingLib.ORM
             }
         }
 
+        
+
         /// <summary>
         /// 更新路由组信息
         /// </summary>
@@ -279,6 +281,20 @@ namespace TradingLib.ORM
             using (DBMySql db = new DBMySql())
             {
                 string query = String.Format("UPDATE accounts SET commission_id = {0} WHERE account = '{1}'", templateid, account);
+                db.Connection.Execute(query);
+            }
+        }
+
+        /// <summary>
+        /// 更新帐户 分开显示信用额度
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="creditseparate"></param>
+        public static void UpdateAccountCreditSeparate(string account, bool creditseparate)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = String.Format("UPDATE accounts SET creditseparate = {0} WHERE account = '{1}'", creditseparate ? 1 : 0, account);
                 db.Connection.Execute(query);
             }
         }
@@ -649,7 +665,7 @@ namespace TradingLib.ORM
             account.Mgr_fk = fields.Mgr_fk;
             account.RG_FK = fields.rg_fk;
             account.Commission_ID = fields.Commission_ID;
-            
+            account.CreditSeparate = fields.CreditSeparate;
             //绑定对应的域
             (account as AccountBase).Domain = BasicTracker.DomainTracker[fields.domain_id];
             //Util.Debug("fileds route:" + fields.Order_Router_Type.ToString() +" category:"+fields.Account_Category.ToString()) ;
