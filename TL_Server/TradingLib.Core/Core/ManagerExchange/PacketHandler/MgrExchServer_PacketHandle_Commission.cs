@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
+using TradingLib.Protocol;
+
 
 namespace TradingLib.Core
 {
@@ -44,7 +46,6 @@ namespace TradingLib.Core
                 { 
                     
                 }
-
                 session.NotifyMgr("NotifyCommissionTemplate",BasicTracker.CommissionTemplateTracker[t.ID]);
                 session.OperationSuccess("更新手续费模板成功");
             }
@@ -77,7 +78,7 @@ namespace TradingLib.Core
             Manager manager = session.GetManager();
             if (manager.IsRoot())
             {
-                CommissionTemplateItemSetting item = Mixins.Json.JsonMapper.ToObject<CommissionTemplateItemSetting>(json);
+                MGRCommissionTemplateItemSetting item = Mixins.Json.JsonMapper.ToObject<MGRCommissionTemplateItemSetting>(json);
                 CommissionTemplate template = BasicTracker.CommissionTemplateTracker[item.Template_ID];
                 if (template == null)
                 {
@@ -90,17 +91,72 @@ namespace TradingLib.Core
                 }
 
                 bool isadd = item.ID == 0;
-                if (isadd)
+
+                //更新某个单独的月份
+                if (!item.SetAllMonth)
                 {
-                    if (template[item.Code, item.Month] != null)
+                    if (isadd)
                     {
-                        throw new FutsRspError("手续费模板项目已存在");
+                        if (template[item.Code, item.Month] != null)
+                        {
+                            throw new FutsRspError("手续费模板项目已存在");
+                        }
+                    }
+                    //调用update更新或添加
+                    BasicTracker.CommissionTemplateTracker.UpdateCommissionTemplateItem(item);
+                    session.NotifyMgr("NotifyCommissionTemplateItem", template[item.Code, item.Month]);
+                }
+                else
+                {
+                    if (isadd)
+                    {
+                        for (int i = 1; i <= 12; i++)
+                        {
+                            CommissionTemplateItemSetting t = new CommissionTemplateItemSetting();
+                            t.OpenByMoney = item.OpenByMoney;
+                            t.OpenByVolume = item.OpenByVolume;
+                            t.CloseByMoney = item.CloseByMoney;
+                            t.CloseByVolume = item.CloseByVolume;
+                            t.CloseTodayByMoney = item.CloseTodayByMoney;
+                            t.CloseTodayByVolume = item.CloseTodayByVolume;
+                            t.ChargeType = item.ChargeType;
+                            t.Percent = item.Percent;
+
+                            t.Code = item.Code;
+                            t.Month = i;
+                            t.Template_ID = item.Template_ID;
+
+                            CommissionTemplateItem t2 = BasicTracker.CommissionTemplateTracker.CommissionTemplateItems.FirstOrDefault(x => x.Code.Equals(item.Code) && x.Month == i);
+                            if (t2 != null)
+                            {
+                                t.ID = t2.ID;
+                            }
+
+                            //调用update更新或添加
+                            BasicTracker.CommissionTemplateTracker.UpdateCommissionTemplateItem(t);
+                            session.NotifyMgr("NotifyCommissionTemplateItem", template[t.Code, t.Month]);
+                        }
+
+                    }
+                    else //更新 则便利所有手续费模板项目进行更新
+                    {
+                        foreach (CommissionTemplateItemSetting t in BasicTracker.CommissionTemplateTracker.CommissionTemplateItems.Where(x => x.Code.Equals(item.Code)))
+                        {
+                            t.OpenByMoney = item.OpenByMoney;
+                            t.OpenByVolume = item.OpenByVolume;
+                            t.CloseByMoney = item.CloseByMoney;
+                            t.CloseByVolume = item.CloseByVolume;
+                            t.CloseTodayByMoney = item.CloseTodayByMoney;
+                            t.CloseTodayByVolume = item.CloseTodayByVolume;
+                            t.ChargeType = item.ChargeType;
+                            t.Percent = item.Percent;
+
+                            //调用update更新或添加
+                            BasicTracker.CommissionTemplateTracker.UpdateCommissionTemplateItem(t);
+                            session.NotifyMgr("NotifyCommissionTemplateItem", template[t.Code, t.Month]);
+                        }
                     }
                 }
-                //调用update更新或添加
-                BasicTracker.CommissionTemplateTracker.UpdateCommissionTemplateItem(item);
-
-                session.NotifyMgr("NotifyCommissionTemplateItem",template[item.Code,item.Month]);
                 session.OperationSuccess("更新手续费项目功");
             }
             else

@@ -10,6 +10,27 @@ namespace TradingLib.Common
 
     public class CommissionTemplateItemSetting
     {
+        //public CommissionTemplateItemSetting()
+        //{
+        
+        //}
+
+        //public CommissionTemplateItemSetting(CommissionTemplateItemSetting copy)
+        //{
+            
+        //    this.ChargeType = copy.ChargeType;
+        //    this.CloseByMoney = copy.CloseByMoney;
+        //    this.CloseByVolume = copy.CloseByVolume;
+        //    this.CloseTodayByMoney = copy.CloseTodayByMoney;
+        //    this.CloseTodayByVolume = copy.CloseTodayByVolume;
+        //    this.OpenByMoney = copy.OpenByMoney;
+        //    this.OpenByVolume = copy.OpenByVolume;
+        //    this.Percent = copy.Percent;
+        //    this.Code = copy.Code;
+        //    this.ID = copy.ID;
+        //    this.Month = copy.Month;
+        //    this.Template_ID = copy.Template_ID;
+        //}
         /// <summary>
         /// 设置项ID
         /// </summary>
@@ -55,6 +76,11 @@ namespace TradingLib.Common
         /// 平仓手续费 按手数
         /// </summary>
         public decimal CloseByVolume { get; set; }
+
+        /// <summary>
+        /// 上浮一定百分比
+        /// </summary>
+        public decimal Percent { get; set; }
 
         /// <summary>
         /// 加收方式

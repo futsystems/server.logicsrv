@@ -65,6 +65,17 @@ namespace TradingLib.Common
             }
         }
 
+        /// <summary>
+        /// 返回所有手续费模板项目
+        /// </summary>
+        public IEnumerable<CommissionTemplateItem> CommissionTemplateItems
+        {
+            get
+            {
+                return commissionTemplateItemMap.Values;
+            }
+        }
+
         public void UpdateCommissionTemplate(CommissionTemplateSetting t)
         {
             CommissionTemplate target = null;
@@ -107,7 +118,11 @@ namespace TradingLib.Common
                             item.CloseTodayByVolume = 0;
                             item.ChargeType = QSEnumChargeType.Relative;
                             item.Template_ID = target.ID;
+                            item.Percent = 0;
                             ORM.MCommission.InsertCommissionTemplateItem(item);
+
+                            //加入到内存数据结构
+                            commissionTemplateItemMap.TryAdd(item.ID, item);
                             target.AddItem(item);
                         }
                     }
@@ -128,7 +143,7 @@ namespace TradingLib.Common
                 target.CloseByVolume = item.CloseByVolume;
                 target.CloseTodayByMoney = item.CloseTodayByMoney;
                 target.CloseTodayByVolume = item.CloseTodayByVolume;
-
+                target.Percent = item.Percent;
                 //更新数据库
                 ORM.MCommission.UpdateCommissionTemplateItem(target);
             }
@@ -143,11 +158,13 @@ namespace TradingLib.Common
                 target.CloseTodayByVolume = item.CloseTodayByVolume;
                 target.CloseByMoney = item.CloseByMoney;
                 target.CloseByVolume = item.CloseByVolume;
+                target.Percent = item.Percent;
                 target.Template_ID = item.Template_ID;
                 target.ChargeType = item.ChargeType;
 
                 ORM.MCommission.InsertCommissionTemplateItem(target);
                 item.ID = target.ID;
+
                 //加入到内存数据结构
                 commissionTemplateItemMap.TryAdd(target.ID, target);
 

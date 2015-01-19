@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TradingLib.API;
+using TradingLib.Protocol;
+
 
 namespace TradingLib.Common
 {
@@ -39,7 +41,7 @@ namespace TradingLib.Common
         /// 更新手续费项目
         /// </summary>
         /// <param name="t"></param>
-        public void ReqUpdateCommissionTemplateItem(CommissionTemplateItemSetting item)
+        public void ReqUpdateCommissionTemplateItem(MGRCommissionTemplateItemSetting item)
         {
             this.ReqContribRequest("MgrExchServer", "UpdateCommissionTemplateItem", TradingLib.Mixins.Json.JsonMapper.ToJson(item));
         }

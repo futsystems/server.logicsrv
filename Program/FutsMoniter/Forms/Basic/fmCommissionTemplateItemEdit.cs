@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using TradingLib.API;
 using TradingLib.Common;
+using TradingLib.Protocol;
 using FutSystems.GUI;
 
 
@@ -35,18 +36,47 @@ namespace FutsMoniter
             btnSubmit.Click += new EventHandler(btnSubmit_Click);
             bymoney.CheckedChanged += new EventHandler(bymoney_CheckedChanged);
             byvolume.CheckedChanged += new EventHandler(byvolume_CheckedChanged);
+            chargetype.SelectedIndexChanged += new EventHandler(chargetype_SelectedIndexChanged);
 
+        }
+
+        void chargetype_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            PrepareInput();
         }
 
         void PrepareInput()
         {
+            QSEnumChargeType type = (QSEnumChargeType)chargetype.SelectedValue;
+            if (type == QSEnumChargeType.Percent)
+            {
+                gbConfig.Enabled = false;
+                gbPercent.Enabled = true;
+
+                openbyvolume.Value = 0;
+                closetodaybyvolume.Value = 0;
+                closebyvolume.Value = 0;
+
+                openbymoney.Value = 0;
+                closetodaybymoney.Value = 0;
+                closebymoney.Value = 0;
+            }
+            else
+            {
+                gbConfig.Enabled = true;
+                gbPercent.Enabled = false;
+
+                percent.Value = 0;
+            }
+
             if (byvolume.Checked)
             {
                 openbymoney.Value = 0;
-                openbymoney.Enabled = false;
                 closetodaybymoney.Value = 0;
-                closetodaybymoney.Enabled = false;
                 closebymoney.Value = 0;
+                
+                openbymoney.Enabled = false;
+                closetodaybymoney.Enabled = false;
                 closebymoney.Enabled = false;
 
                 openbyvolume.Enabled = true;
@@ -86,16 +116,8 @@ namespace FutsMoniter
                 MoniterUtils.WindowMessage("按金额手续费率必须小于1");
                 return;
             }
-            //if (openbymoney.Value == 0)
-            //{
-            //    if ((closebymoney.Value != 0) || (closetodaybymoney.Value != 0))
-            //    { 
-            //        MoniterUtils.WindowMessage("按金额")
-            //    }
-            //}
             if (_item != null)//更新
             {
-                //_item.Template_ID = _templateid;
                 _item.OpenByMoney = openbymoney.Value;
                 _item.OpenByVolume = openbyvolume.Value;
                 _item.CloseTodayByMoney = closetodaybymoney.Value;
@@ -103,9 +125,12 @@ namespace FutsMoniter
                 _item.CloseByMoney = closebymoney.Value;
                 _item.CloseByVolume = closebyvolume.Value;
                 _item.ChargeType = (QSEnumChargeType)chargetype.SelectedValue;
-                _item.Month = month.SelectedIndex + 1;
-                Globals.TLClient.ReqUpdateCommissionTemplateItem(_item);
+                _item.Percent = percent.Value;
 
+                MGRCommissionTemplateItemSetting cfg = new MGRCommissionTemplateItemSetting(_item);
+                cfg.SetAllMonth = setAllMonth.Checked;
+
+                Globals.TLClient.ReqUpdateCommissionTemplateItem(cfg);
             }
             else//添加
             {
@@ -122,7 +147,11 @@ namespace FutsMoniter
                 item.ChargeType = (QSEnumChargeType)chargetype.SelectedValue;
                 item.Month = month.SelectedIndex+1;
                 item.Template_ID = _templateid;
-                Globals.TLClient.ReqUpdateCommissionTemplateItem(item);
+                item.Percent = percent.Value;
+
+                MGRCommissionTemplateItemSetting cfg = new MGRCommissionTemplateItemSetting(item);
+                cfg.SetAllMonth = setAllMonth.Checked;
+                Globals.TLClient.ReqUpdateCommissionTemplateItem(cfg);
                 
             }
 
@@ -136,7 +165,16 @@ namespace FutsMoniter
         }
 
         CommissionTemplateItemSetting _item = null;
-        public void SetCommissioinTemplateItem(CommissionTemplateItemSetting item)
+
+        IEnumerable<CommissionTemplateItemSetting> _items = null;
+
+
+        public void SetCommissionTemplateItems(IEnumerable<CommissionTemplateItemSetting> items)
+        {
+            _items = items;
+        }
+
+        public void SetCommissionTemplateItem(CommissionTemplateItemSetting item)
         {
             _item = item;
             id.Text = _item.ID.ToString();
@@ -147,8 +185,9 @@ namespace FutsMoniter
             closetodaybyvolume.Value = _item.CloseTodayByVolume;
             closebymoney.Value = _item.CloseByMoney;
             closebyvolume.Value = _item.CloseByVolume;
+            percent.Value = _item.Percent;
             month.SelectedIndex = _item.Month-1;
-
+            chargetype.SelectedValue = _item.ChargeType;
             code.Enabled = false;
             month.Enabled = false;
 

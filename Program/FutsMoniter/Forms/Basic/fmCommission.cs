@@ -38,6 +38,12 @@ namespace FutsMoniter
             Globals.RegIEventHandler(this);
             //this.templatelist.ContextMenuStrip.Items.Add("添加模板", null, new EventHandler(Add_Click));
             commissionGrid.DoubleClick += new EventHandler(commissionGrid_DoubleClick);
+            commissionGrid.RowPrePaint += new DataGridViewRowPrePaintEventHandler(commissionGrid_RowPrePaint);
+        }
+
+        void commissionGrid_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        {
+            e.PaintParts = e.PaintParts ^ DataGridViewPaintParts.Focus;
         }
 
 
@@ -51,10 +57,10 @@ namespace FutsMoniter
             }
 
             fmCommissionTemplateItemEdit fm = new fmCommissionTemplateItemEdit();
-            fm.SetCommissioinTemplateItem(item);
+            fm.SetCommissionTemplateItem(item);
+            fm.SetCommissionTemplateItems(itemmap.Values);
             fm.ShowDialog();
         }
-
 
         //得到当前选择的行号
         private int CurrentItemID
@@ -87,7 +93,6 @@ namespace FutsMoniter
             {
                 return null;
             }
-
         }
 
 
@@ -153,6 +158,20 @@ namespace FutsMoniter
             Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "NotifyCommissionTemplateItem", this.OnNotifyCommissionTemplateItem);
         }
 
+        string GetChargeTypeStr(QSEnumChargeType type)
+        {
+            switch (type)
+            { 
+                case QSEnumChargeType.Absolute:
+                    return "绝对";
+                case QSEnumChargeType.Percent:
+                    return "百分比";
+                case QSEnumChargeType.Relative:
+                    return "相对";
+                default:
+                    return "";
+            }
+        }
         void ClearItem()
         {
             commissionGrid.DataSource = null;
@@ -219,7 +238,9 @@ namespace FutsMoniter
                     gt.Rows[i][CLOSETODAYBYVOLUME] = item.CloseTodayByVolume;
                     gt.Rows[i][CLOSEBYMONEY] = item.CloseByMoney;
                     gt.Rows[i][CLOSEBYVOLUME] = item.CloseByVolume;
-                    gt.Rows[i][CHARGETYPE] = item.ChargeType == QSEnumChargeType.Absolute ? "绝对" : "相对";
+                    gt.Rows[i][PERCENT] = item.Percent;
+                    gt.Rows[i][CHARGETYPE] = GetChargeTypeStr(item.ChargeType);// == QSEnumChargeType.Absolute ? "绝对" : "相对";
+
                     itemmap.Add(item.ID, item);
                     itemrowmap.Add(item.ID, i);
 
@@ -233,10 +254,10 @@ namespace FutsMoniter
                     gt.Rows[i][CLOSETODAYBYVOLUME] = item.CloseTodayByVolume;
                     gt.Rows[i][CLOSEBYMONEY] = item.CloseByMoney;
                     gt.Rows[i][CLOSEBYVOLUME] = item.CloseByVolume;
-                    gt.Rows[i][CHARGETYPE] = item.ChargeType == QSEnumChargeType.Absolute ? "绝对" : "相对";
+                    gt.Rows[i][PERCENT] = item.Percent;
+                    gt.Rows[i][CHARGETYPE] = GetChargeTypeStr(item.ChargeType);// == QSEnumChargeType.Absolute ? "绝对" : "相对";
                     itemmap[item.ID]=item;
                 }
-                
             }
         }
 
@@ -289,6 +310,7 @@ namespace FutsMoniter
         const string CLOSETODAYBYVOLUME = "平今(手数)";
         const string CLOSEBYMONEY = "平仓(金额)";
         const string CLOSEBYVOLUME = "平仓(手数)";
+        const string PERCENT = "上浮率";
         const string CHARGETYPE = "收费方式";
 
         #endregion
@@ -331,6 +353,7 @@ namespace FutsMoniter
             gt.Columns.Add(CLOSETODAYBYVOLUME);//
             gt.Columns.Add(CLOSEBYMONEY);//
             gt.Columns.Add(CLOSEBYVOLUME);//
+            gt.Columns.Add(PERCENT);
             gt.Columns.Add(CHARGETYPE);
         }
 

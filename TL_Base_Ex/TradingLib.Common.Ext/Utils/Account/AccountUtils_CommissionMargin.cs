@@ -73,16 +73,17 @@ namespace TradingLib.Common
             }
             else
             {
-                decimal templatecommission = item.CalCommission(f, f.OffsetFlag);
-                if (item.ChargeType == QSEnumChargeType.Absolute)
+                switch (item.ChargeType)
                 {
-                    return templatecommission;
+                    case QSEnumChargeType.Absolute:
+                        return item.CalCommission(f, f.OffsetFlag);
+                    case QSEnumChargeType.Relative:
+                        return basecommission + item.CalCommission(f, f.OffsetFlag);
+                    case QSEnumChargeType.Percent:
+                        return basecommission * (1 + item.Percent);
+                    default:
+                        return basecommission;
                 }
-                else
-                {
-                    return basecommission + templatecommission;
-                }
-                Util.Debug("basecommission:" + basecommission.ToString() + " templatecommission:" + templatecommission.ToString() + " commissionrate:" + commissionrate.ToString(),QSEnumDebugLevel.INFO);
             }
         }
 

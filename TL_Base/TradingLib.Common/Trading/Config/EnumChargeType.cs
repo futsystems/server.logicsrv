@@ -19,6 +19,12 @@ namespace TradingLib.Common
         /// 绝对收取,按某值进行绝对收取
         /// </summary>
         [Description("按该费率直接收取")]
-        Absolute
+        Absolute,
+
+        /// <summary>
+        /// 上浮一定比例收取,0.1 上浮10%
+        /// </summary>
+        [Description("整理上浮比例收取")]
+        Percent,
     }
 }
