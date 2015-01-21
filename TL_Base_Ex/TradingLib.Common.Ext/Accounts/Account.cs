@@ -134,6 +134,11 @@ namespace TradingLib.Common
         public int Commission_ID { get; set; }
 
         /// <summary>
+        /// 保证金模板ID
+        /// </summary>
+        public int Margin_ID { get; set; }
+
+        /// <summary>
         /// 域ID
         /// </summary>
         public Domain Domain { get; internal set; }

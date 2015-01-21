@@ -62,5 +62,34 @@ namespace TradingLib.Common
         {
             return string.Format("{0}-{1}", this.Code, this.Month);
         }
+
+        /// <summary>
+        /// 计算某个持仓的保证金
+        /// price 按该价格计算保证金
+        /// 开仓价，最新价 等多种计算方式
+        /// </summary>
+        /// <param name="p"></param>
+        /// <returns></returns>
+        public decimal CalMargin(Position p,decimal price)
+        {
+            //异化合约按照固定金额来计算
+            if (p.oSymbol.SecurityType == SecurityType.INNOV)
+            {
+                return p.UnsignedSize * (p.oSymbol.Margin + (p.oSymbol.ExtraMargin > 0 ? p.oSymbol.ExtraMargin : 0));//通过固定保证金来计算持仓保证金占用
+            }
+
+            //其余品种保证金按照最新价格计算
+            if (this.MarginByMoney > 0)
+            {
+                return p.UnsignedSize * price * p.oSymbol.Multiple * this.MarginByMoney;
+            }
+            if(this.MarginByVolume>0)
+            {
+                return p.UnsignedSize * this.MarginByVolume;
+            }
+            return 0;
+        }
     }
+
+    
 }

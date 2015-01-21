@@ -170,6 +170,7 @@ namespace TradingLib.Common
             info.Commissin_ID = acc.Commission_ID;
             info.Credit = acc.Credit;
             info.CreditSeparate = acc.CreditSeparate;
+            info.Margin_ID = acc.Margin_ID;
             return info;
         }
 

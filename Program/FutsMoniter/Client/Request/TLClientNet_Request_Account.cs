@@ -169,6 +169,13 @@ namespace TradingLib.Common
             this.ReqContribRequest("MgrExchServer", "UpdateAccountCommissionTemplate", account+","+templateid.ToString());
         }
 
+        public void ReqUpdateAccountMarginTemplate(string account, int templateid)
+        {
+            debug("请求更新帐户保证金模板", QSEnumDebugLevel.INFO);
+            this.ReqContribRequest("MgrExchServer", "UpdateAccountMarginTemplate", account + "," + templateid.ToString());
+        }
+
+
         public void ReqUpdateAccountCreditSeparate(string account, bool separate)
         {
             this.ReqContribRequest("MgrExchServer", "UpdateAccountCreditSeparate", account + "," + separate.ToString());

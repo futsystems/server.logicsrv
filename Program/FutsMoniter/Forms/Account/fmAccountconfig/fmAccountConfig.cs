@@ -82,6 +82,11 @@ namespace FutsMoniter
                 {
                     Globals.TLClient.ReqUpdateAccountCommissionTemplate(_account.Account,commissionid);
                 }
+                int marginid = (int)cbMarginTemplate.SelectedValue;
+                if (_account.Margin_ID != marginid)
+                {
+                    Globals.TLClient.ReqUpdateAccountMarginTemplate(_account.Account, marginid);
+                }
             }
         }
 
@@ -211,6 +216,7 @@ namespace FutsMoniter
             else if (pagenav.SelectedPage.Name.Equals("pageMarginCommission"))
             {
                 Globals.TLClient.ReqQryCommissionTemplate();
+                Globals.TLClient.ReqQryMarginTemplate();
             }
 
 

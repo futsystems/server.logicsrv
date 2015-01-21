@@ -144,6 +144,11 @@ namespace TradingLib.Common
         public int Commissin_ID { get; set; }
 
         /// <summary>
+        /// 保证金模板ID
+        /// </summary>
+        public int Margin_ID { get; set; }
+
+        /// <summary>
         /// 是否处于登入状态
         /// </summary>
         public bool IsLogin { get; set; }
@@ -214,6 +219,8 @@ namespace TradingLib.Common
             sb.Append(account.Credit);
             sb.Append(d);
             sb.Append(account.CreditSeparate);
+            sb.Append(d);
+            sb.Append(account.Margin_ID);
             return sb.ToString();
         }
 
@@ -249,6 +256,7 @@ namespace TradingLib.Common
             account.Commissin_ID = int.Parse(rec[25]);
             account.Credit = decimal.Parse(rec[26]);
             account.CreditSeparate = bool.Parse(rec[27]);
+            account.Margin_ID = int.Parse(rec[28]);
             return account;
         }
     }

@@ -17,15 +17,27 @@ namespace TradingLib.Common
             return BasicTracker.CommissionTemplateTracker[account.Commission_ID];
         }
 
+        public static MarginTemplate GetMarginTemplate(this IAccount account)
+        {
+            return BasicTracker.MarginTemplateTracker[account.Margin_ID];
+        }
+
         public static CommissionTemplateItem GetCommissionTemplateItem(this IAccount account,Symbol symbol)
         {
-            Util.Debug("get month xxxxxxxxxxxxxxxxxx:" + symbol.GetMonth(), QSEnumDebugLevel.INFO);
             CommissionTemplate tmp = account.GetCommissionTemplate();
             if (tmp == null)
                 return null;
             return tmp[symbol.SecurityFamily.Code, symbol.GetMonth()];
         }
 
+        public static MarginTemplateItem GetMarginTemplateItem(this IAccount account, Symbol symbol)
+        {
+            MarginTemplate tmp = account.GetMarginTemplate();
+            if (tmp == null)
+                return null;
+            return tmp[symbol.SecurityFamily.Code, symbol.GetMonth()];
+            
+        }
 
         /// <summary>
         /// 计算某个成交的手续费
@@ -87,7 +99,47 @@ namespace TradingLib.Common
             }
         }
 
-        
+        /// <summary>
+        /// 计算持仓保证金
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="f"></param>
+        /// <returns></returns>
+        public static decimal CalPositionMargin(this IAccount account, Position p)
+        {
+            //计算基准保证金
+            decimal basemargin = 0;
+            //异化合约按照固定金额来计算
+            if (p.oSymbol.SecurityType == SecurityType.INNOV)
+            {
+                basemargin =  p.UnsignedSize * (p.oSymbol.Margin + (p.oSymbol.ExtraMargin > 0 ? p.oSymbol.ExtraMargin : 0));//通过固定保证金来计算持仓保证金占用
+            }
+
+            //其余品种保证金按照最新价格计算
+            if (p.oSymbol.Margin <= 1)
+            {
+                //需要判断价格的有效性
+                basemargin = p.UnsignedSize * p.LastPrice * p.oSymbol.Multiple * p.oSymbol.Margin;
+            }
+            else
+                basemargin = p.oSymbol.Margin * p.UnsignedSize;
+
+            //获得保证金模板
+            MarginTemplateItem item = account.GetMarginTemplateItem(p.oSymbol);
+            if (item == null) return basemargin;
+
+            switch (item.ChargeType)
+            {
+                case QSEnumChargeType.Absolute:
+                    return item.CalMargin(p,p.LastPrice);
+                case QSEnumChargeType.Relative:
+                    return basemargin + item.CalMargin(p, p.LastPrice);
+                case QSEnumChargeType.Percent:
+                    return basemargin * (1 + item.Percent);
+                default:
+                    return basemargin;
+            }
+        }
     
     }
 }

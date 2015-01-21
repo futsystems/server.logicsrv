@@ -90,11 +90,24 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="account"></param>
         /// <param name="templateid"></param>
-        public void UpdateAccountCommissionTemplates(string account, int templateid)
+        public void UpdateAccountCommissionTemplate(string account, int templateid)
         {
             if (!HaveAccount(account)) return;
             this[account].Commission_ID = templateid;
             ORM.MAccount.UpdateAccountCommissionTemplate(account, templateid);
+            AccountChanged(this[account]);
+        }
+
+        /// <summary>
+        /// 更新保证金模板
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="templateid"></param>
+        public void UpdateAccountMarginTemplate(string account, int templateid)
+        {
+            if (!HaveAccount(account)) return;
+            this[account].Margin_ID = templateid;
+            ORM.MAccount.UpdateAccountMarginTemplate(account, templateid);
             AccountChanged(this[account]);
         }
 

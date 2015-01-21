@@ -219,7 +219,7 @@ namespace TradingLib.Common
             }
             else
             {
-                return FilterPositions(account, SecurityType.FUT).Sum(pos => pos.CalcPositionMargin());
+                return FilterPositions(account, SecurityType.FUT).Sum(pos => account.CalPositionMargin(pos));
             }
         }
 

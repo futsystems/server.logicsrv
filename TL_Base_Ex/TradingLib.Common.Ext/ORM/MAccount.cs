@@ -65,6 +65,7 @@ namespace TradingLib.ORM
         public int Mgr_fk { get; set; }
         public int rg_fk { get; set; }
         public int Commission_ID { get; set; }
+        public int Margin_ID { get; set; }
         public int domain_id { get; set; }
 
     }
@@ -281,6 +282,20 @@ namespace TradingLib.ORM
             using (DBMySql db = new DBMySql())
             {
                 string query = String.Format("UPDATE accounts SET commission_id = {0} WHERE account = '{1}'", templateid, account);
+                db.Connection.Execute(query);
+            }
+        }
+
+        /// <summary>
+        /// 更新帐户保证金模板
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="templateid"></param>
+        public static void UpdateAccountMarginTemplate(string account, int templateid)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = String.Format("UPDATE accounts SET margin_id = {0} WHERE account = '{1}'", templateid, account);
                 db.Connection.Execute(query);
             }
         }
@@ -665,6 +680,7 @@ namespace TradingLib.ORM
             account.Mgr_fk = fields.Mgr_fk;
             account.RG_FK = fields.rg_fk;
             account.Commission_ID = fields.Commission_ID;
+            account.Margin_ID = fields.Margin_ID;
             account.CreditSeparate = fields.CreditSeparate;
             //绑定对应的域
             (account as AccountBase).Domain = BasicTracker.DomainTracker[fields.domain_id];

@@ -134,6 +134,11 @@ namespace TradingLib.API
         int Commission_ID { get; set; }
 
         /// <summary>
+        /// 保证金模板ID
+        /// </summary>
+        int Margin_ID { get; set; }
+
+        /// <summary>
         /// 域ID
         /// </summary>
         Domain Domain { get;}

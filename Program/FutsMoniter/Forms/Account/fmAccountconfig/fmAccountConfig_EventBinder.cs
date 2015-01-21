@@ -14,8 +14,6 @@ namespace FutsMoniter
     {
         public void OnInit()
         {
-           // Globals.Debug("fmAccountConfig init called @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-            
             //绑定事件
             Globals.LogicEvent.GotRuleItemEvent += new Action<RuleItem, bool>(OnRuleItem);//查询风控规则回报
             Globals.LogicEvent.GotRuleItemUpdateEvemt += new Action<RuleItem>(OnRuleItemUpdate);//风控规则更新
@@ -24,6 +22,7 @@ namespace FutsMoniter
             Globals.LogicEvent.GotAccountChangedEvent += new Action<AccountLite>(OnAccountChanged);//帐户更新
 
             Globals.LogicEvent.RegisterCallback("MgrExchServer", "QryCommissionTemplate", this.OnQryCommissionTemplate);
+            Globals.LogicEvent.RegisterCallback("MgrExchServer", "QryMarginTemplate", this.OnQryMarginTemplate);
 
             if (!Globals.Domain.Super)
             {
@@ -49,6 +48,33 @@ namespace FutsMoniter
             }
         }
 
+        void OnQryMarginTemplate(string json)
+        {
+            MarginTemplateSetting[] list = MoniterUtils.ParseJsonResponse<MarginTemplateSetting[]>(json);
+            if (list != null)
+            {
+                Factory.IDataSourceFactory(cbMarginTemplate).BindDataSource(GetMarginTemplateCBList(list));
+                cbMarginTemplate.SelectedValue = _account.Margin_ID;
+            }
+        }
+
+        public static ArrayList GetMarginTemplateCBList(MarginTemplateSetting[] items)
+        {
+            ArrayList list = new ArrayList();
+            ValueObject<int> vo1 = new ValueObject<int>();
+            vo1.Name = "系统默认";
+            vo1.Value = 0;
+            list.Add(vo1);
+
+            foreach (MarginTemplateSetting item in items)
+            {
+                ValueObject<int> vo = new ValueObject<int>();
+                vo.Name = item.Name;
+                vo.Value = item.ID;
+                list.Add(vo);
+            }
+            return list;
+        }
         public static ArrayList GetCommissionTemplateCBList(CommissionTemplateSetting[] items)
         {
             ArrayList list = new ArrayList();

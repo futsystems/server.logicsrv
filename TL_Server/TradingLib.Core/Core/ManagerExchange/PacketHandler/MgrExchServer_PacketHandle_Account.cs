@@ -370,7 +370,7 @@ namespace TradingLib.Core
         }
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountCommissionTemplate", "UpdateAccountCommissionTemplate - update account commission template set", "更新帐户手续费模板")]
-        public void CTE_UpdateAccountSideMargin(ISession session, string account,int templateid)
+        public void CTE_UpdateAccountCommissionTemplate(ISession session, string account,int templateid)
         {
             Manager manager = session.GetManager();
             IAccount acc = clearcentre[account];
@@ -385,9 +385,30 @@ namespace TradingLib.Core
             }
 
             //更新路由组
-            clearcentre.UpdateAccountCommissionTemplates(account, templateid);
+            clearcentre.UpdateAccountCommissionTemplate(account, templateid);
             session.OperationSuccess("更新帐户手续费模板成功");
         }
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountMarginTemplate", "UpdateAccountMarginTemplate - update account margin template set", "更新帐户保证金模板")]
+        public void CTE_UpdateAccountMarginTemplate(ISession session, string account, int templateid)
+        {
+            Manager manager = session.GetManager();
+            IAccount acc = clearcentre[account];
+            if (acc == null)
+            {
+                throw new FutsRspError("交易帐户不存在");
+            }
+
+            if (!manager.RightAccessAccount(acc))
+            {
+                throw new FutsRspError("无权修改该交易帐户");
+            }
+
+            //更新路由组
+            clearcentre.UpdateAccountMarginTemplate(account, templateid);
+            session.OperationSuccess("更新帐户保证金模板成功");
+        }
+
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountCreditSeparate", "UpdateAccountCreditSeparate - update account credit separate", "更新帐户信用额度显示方式")]
         public void CTE_UpdateAccountCreditSeperate(ISession session, string account,bool creditseperate)
