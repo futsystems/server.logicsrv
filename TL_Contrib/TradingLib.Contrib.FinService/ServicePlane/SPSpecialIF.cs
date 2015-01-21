@@ -13,7 +13,6 @@ namespace TradingLib.Contrib.FinService
     /// </summary>
     public class SPSpecialIF : ServicePlanBase
     {
-        
         /// <summary>
         /// 盈利回合收费
         /// </summary>

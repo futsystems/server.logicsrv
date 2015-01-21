@@ -94,7 +94,8 @@ namespace FutsMoniter
 
         void kryptonRibbonGroupButton_Margin_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            fmMargin fm = new fmMargin();
+            fm.Show();
         }
 
         void kryptonRibbonGroupButton_Commission_Click(object sender, EventArgs e)

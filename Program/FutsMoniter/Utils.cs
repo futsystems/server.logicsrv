@@ -243,8 +243,8 @@ namespace FutsMoniter
             list.Add(vo2);
 
             ValueObject<QSEnumOffsetFlag> vo3 = new ValueObject<QSEnumOffsetFlag>();
-            vo3.Name = Util.GetEnumDescription(QSEnumOffsetFlag.CLOSEYESTERDAY);
-            vo3.Value = QSEnumOffsetFlag.CLOSEYESTERDAY;
+            vo3.Name = Util.GetEnumDescription(QSEnumOffsetFlag.CLOSETODAY);
+            vo3.Value = QSEnumOffsetFlag.CLOSETODAY;
             list.Add(vo3);
             return list;
 

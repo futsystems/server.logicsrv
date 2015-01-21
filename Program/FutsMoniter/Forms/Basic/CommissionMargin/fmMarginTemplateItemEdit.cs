@@ -14,9 +14,9 @@ using FutSystems.GUI;
 
 namespace FutsMoniter
 {
-    public partial class fmCommissionTemplateItemEdit : ComponentFactory.Krypton.Toolkit.KryptonForm
+    public partial class fmMarginTemplateItemEdit : ComponentFactory.Krypton.Toolkit.KryptonForm
     {
-        public fmCommissionTemplateItemEdit()
+        public fmMarginTemplateItemEdit()
         {
             InitializeComponent();
             bymoney.Checked = true;
@@ -37,7 +37,24 @@ namespace FutsMoniter
             bymoney.CheckedChanged += new EventHandler(bymoney_CheckedChanged);
             byvolume.CheckedChanged += new EventHandler(byvolume_CheckedChanged);
             chargetype.SelectedIndexChanged += new EventHandler(chargetype_SelectedIndexChanged);
+            setAllCodeMonth.CheckedChanged += new EventHandler(setAllCodeMonth_CheckedChanged);
+            setAllMonth.CheckedChanged += new EventHandler(setAllMonth_CheckedChanged);
+        }
 
+        void setAllMonth_CheckedChanged(object sender, EventArgs e)
+        {
+            if (setAllCodeMonth.Checked)
+            {
+                setAllCodeMonth.Checked = false;
+            }
+        }
+
+        void setAllCodeMonth_CheckedChanged(object sender, EventArgs e)
+        {
+            if (setAllMonth.Checked)
+            {
+                setAllMonth.Checked = false;
+            }
         }
 
         void chargetype_SelectedIndexChanged(object sender, EventArgs e)
@@ -53,13 +70,9 @@ namespace FutsMoniter
                 gbConfig.Enabled = false;
                 gbPercent.Enabled = true;
 
-                openbyvolume.Value = 0;
-                closetodaybyvolume.Value = 0;
-                closebyvolume.Value = 0;
+                marginbyvolume.Value = 0;
+                marginbymoney.Value = 0;
 
-                openbymoney.Value = 0;
-                closetodaybymoney.Value = 0;
-                closebymoney.Value = 0;
             }
             else
             {
@@ -71,32 +84,16 @@ namespace FutsMoniter
 
             if (byvolume.Checked)
             {
-                openbymoney.Value = 0;
-                closetodaybymoney.Value = 0;
-                closebymoney.Value = 0;
-                
-                openbymoney.Enabled = false;
-                closetodaybymoney.Enabled = false;
-                closebymoney.Enabled = false;
-
-                openbyvolume.Enabled = true;
-                closetodaybyvolume.Enabled = true;
-                closebyvolume.Enabled = true;
+                marginbymoney.Value = 0;
+                marginbymoney.Enabled = false;
+                marginbyvolume.Enabled = true;
             }
 
             if (bymoney.Checked)
             {
-                openbyvolume.Value = 0;
-                closetodaybyvolume.Value = 0;
-                closebyvolume.Value = 0;
-
-                openbyvolume.Enabled = false;
-                closetodaybyvolume.Enabled = false;
-                closebyvolume.Enabled = false;
-
-                openbymoney.Enabled = true;
-                closetodaybymoney.Enabled = true;
-                closebymoney.Enabled = true;
+                marginbyvolume.Value = 0;
+                marginbyvolume.Enabled = false;
+                marginbymoney.Enabled = true;
             }
         }
         void byvolume_CheckedChanged(object sender, EventArgs e)
@@ -111,46 +108,39 @@ namespace FutsMoniter
 
         void btnSubmit_Click(object sender, EventArgs e)
         {
-            if (openbymoney.Value >= 1 || closetodaybymoney.Value >= 1 || closebymoney.Value >= 1)
+            if (marginbymoney.Value >= 1)
             {
                 MoniterUtils.WindowMessage("按金额手续费率必须小于1");
                 return;
             }
             if (_item != null)//更新
             {
-                _item.OpenByMoney = openbymoney.Value;
-                _item.OpenByVolume = openbyvolume.Value;
-                _item.CloseTodayByMoney = closetodaybymoney.Value;
-                _item.CloseTodayByVolume = closetodaybyvolume.Value;
-                _item.CloseByMoney = closebymoney.Value;
-                _item.CloseByVolume = closebyvolume.Value;
+                _item.MarginByMoney = marginbymoney.Value;
+                _item.MarginByVolume = marginbyvolume.Value;
                 _item.ChargeType = (QSEnumChargeType)chargetype.SelectedValue;
                 _item.Percent = percent.Value;
 
-                MGRCommissionTemplateItemSetting cfg = new MGRCommissionTemplateItemSetting(_item);
+                MGRMarginTemplateItemSetting cfg = new MGRMarginTemplateItemSetting(_item);
                 cfg.SetAllMonth = setAllMonth.Checked;
-
+                cfg.SetAllCodeMonth = setAllCodeMonth.Checked;
                 Globals.TLClient.ReqUpdateCommissionTemplateItem(cfg);
             }
             else//添加
             {
-                CommissionTemplateItemSetting item = new CommissionTemplateItemSetting();
+                MarginTemplateItemSetting item = new MarginTemplateItemSetting();
                 item.ChargeType = (QSEnumChargeType)chargetype.SelectedValue;
                 item.Code = code.Text;
                 item.Month = 1;
-                item.OpenByMoney = openbymoney.Value;
-                item.OpenByVolume = openbyvolume.Value;
-                item.CloseTodayByMoney = closetodaybymoney.Value;
-                item.CloseTodayByVolume = closetodaybyvolume.Value;
-                item.CloseByMoney = closebymoney.Value;
-                item.CloseByVolume = closebyvolume.Value;
+                item.MarginByMoney = marginbymoney.Value;
+                item.MarginByVolume = marginbyvolume.Value;
                 item.ChargeType = (QSEnumChargeType)chargetype.SelectedValue;
                 item.Month = month.SelectedIndex+1;
                 item.Template_ID = _templateid;
                 item.Percent = percent.Value;
 
-                MGRCommissionTemplateItemSetting cfg = new MGRCommissionTemplateItemSetting(item);
+                MGRMarginTemplateItemSetting cfg = new MGRMarginTemplateItemSetting(item);
                 cfg.SetAllMonth = setAllMonth.Checked;
+                cfg.SetAllCodeMonth = setAllCodeMonth.Checked;
                 Globals.TLClient.ReqUpdateCommissionTemplateItem(cfg);
                 
             }
@@ -164,34 +154,22 @@ namespace FutsMoniter
             _templateid = id;
         }
 
-        CommissionTemplateItemSetting _item = null;
-
-        IEnumerable<CommissionTemplateItemSetting> _items = null;
-
-
-        public void SetCommissionTemplateItems(IEnumerable<CommissionTemplateItemSetting> items)
-        {
-            _items = items;
-        }
-
-        public void SetCommissionTemplateItem(CommissionTemplateItemSetting item)
+        MarginTemplateItemSetting _item = null;
+        public void SetMarginTemplateItem(MarginTemplateItemSetting item)
         {
             _item = item;
             id.Text = _item.ID.ToString();
             code.Text = _item.Code;
-            openbymoney.Value = _item.OpenByMoney;
-            openbyvolume.Value = _item.OpenByVolume;
-            closetodaybymoney.Value = _item.CloseTodayByMoney;
-            closetodaybyvolume.Value = _item.CloseTodayByVolume;
-            closebymoney.Value = _item.CloseByMoney;
-            closebyvolume.Value = _item.CloseByVolume;
+            marginbymoney.Value = _item.MarginByMoney;
+            marginbyvolume.Value = _item.MarginByVolume;
+            
             percent.Value = _item.Percent;
             month.SelectedIndex = _item.Month-1;
             chargetype.SelectedValue = _item.ChargeType;
             code.Enabled = false;
             month.Enabled = false;
-
-            if (_item.OpenByVolume == 0)
+            //MessageBox.Show(TradingLib.Mixins.Json.JsonMapper.ToJson(_item));
+            if (_item.MarginByVolume == 0)
             {
                 bymoney.Checked = true;
             }

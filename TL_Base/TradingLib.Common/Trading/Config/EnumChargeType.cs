@@ -24,7 +24,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 上浮一定比例收取,0.1 上浮10%
         /// </summary>
-        [Description("整理上浮比例收取")]
+        [Description("整体上浮比例收取")]
         Percent,
     }
 }

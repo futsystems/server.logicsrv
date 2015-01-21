@@ -35,6 +35,7 @@ namespace TradingLib.Common
 
         //保证金与手续费
         CommissionTemplateTracker commissiontracker;
+        MarginTemplateTracker margintracker;
 
         static BasicTracker()
         {
@@ -218,6 +219,19 @@ namespace TradingLib.Common
                 if (defaultinstance.commissiontracker == null)
                     defaultinstance.commissiontracker = new CommissionTemplateTracker();
                 return defaultinstance.commissiontracker;
+            }
+        }
+
+        /// <summary>
+        /// 保证金模板维护器
+        /// </summary>
+        public static MarginTemplateTracker MarginTemplateTracker
+        {
+            get
+            {
+                if (defaultinstance.margintracker == null)
+                    defaultinstance.margintracker = new MarginTemplateTracker();
+                return defaultinstance.margintracker;
             }
         }
 

@@ -1,0 +1,66 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using TradingLib.API;
+
+namespace TradingLib.Common
+{
+    public class MarginTemplateItemSetting
+    {
+        /// <summary>
+        /// 全局编号
+        /// </summary>
+        public int ID { get; set; }
+
+        /// <summary>
+        /// 品种代码
+        /// </summary>
+        public string Code { get; set; }
+
+        /// <summary>
+        /// 合约月份
+        /// </summary>
+        public int Month { get; set; }
+
+        /// <summary>
+        /// 保证金额度
+        /// 按比例 百分之多少
+        /// </summary>
+        public decimal MarginByMoney { get; set; }
+
+        /// <summary>
+        /// 保证金额度
+        /// 按手数 1手多少保证金
+        /// </summary>
+        public decimal MarginByVolume { get; set; }
+
+        /// <summary>
+        /// 上浮百分比
+        /// </summary>
+        public decimal Percent { get; set; }
+
+        /// <summary>
+        /// 加收方式
+        /// </summary>
+        public QSEnumChargeType ChargeType { get; set; }
+
+        /// <summary>
+        /// 模板ID
+        /// </summary>
+        public int Template_ID { get; set; }
+
+    }
+
+    public class MarginTemplateItem : MarginTemplateItemSetting
+    {
+        /// <summary>
+        /// 获得该手续费项目的键值
+        /// </summary>
+        /// <returns></returns>
+        public string GetItemKey()
+        {
+            return string.Format("{0}-{1}", this.Code, this.Month);
+        }
+    }
+}

@@ -130,6 +130,11 @@ namespace FutSystems.GUI
             if (SendCancelEvent != null)
                 SendCancelEvent(oid);
         }
+
+        /// <summary>
+        /// 平仓
+        /// </summary>
+        /// <param name="pos"></param>
         void FlatPosition(Position pos)
         {
             if (pos == null || pos.isFlat) return;
@@ -175,6 +180,7 @@ namespace FutSystems.GUI
         const string SIDE = "方向";
         const string DIRECTION = "多空";
         const string SIZE = "总持仓";
+        const string YDSIZE = "昨仓";
         const string CANFLATSIZE = "可平量";//用于计算当前限价委托可以挂单数量
         const string LASTPRICE = "最新";//最新成交价
         const string AVGPRICE = "持仓均价";
@@ -408,6 +414,7 @@ namespace FutSystems.GUI
                 {
                     int size = pos.Size;
                     gt.Rows[posidx][SIZE] = Math.Abs(size);
+                    gt.Rows[posidx][YDSIZE] = pos.PositionDetailYdNew.Sum(p => p.Volume); 
                     gt.Rows[posidx][CANFLATSIZE] = getCanFlatSize(pos);
                     gt.Rows[posidx][AVGPRICE] = string.Format(getDisplayFormat(pos.oSymbol), pos.AvgPrice);
                     gt.Rows[posidx][REALIZEDPL] = string.Format(getDisplayFormat(pos.oSymbol), pos.ClosedPL * getMultiple(pos.oSymbol));
@@ -420,6 +427,7 @@ namespace FutSystems.GUI
                     int i = InsertNewRow(pos, pos.isLong);
                     int size = pos.Size;
                     gt.Rows[i][SIZE] = Math.Abs(size);
+                    gt.Rows[i][YDSIZE] = pos.PositionDetailYdNew.Sum(p => p.Volume); 
                     gt.Rows[i][CANFLATSIZE] = getCanFlatSize(pos);
                     gt.Rows[i][AVGPRICE] = string.Format(getDisplayFormat(pos.oSymbol), pos.AvgPrice);
                     gt.Rows[i][REALIZEDPL] = string.Format(getDisplayFormat(pos.oSymbol), pos.ClosedPL * getMultiple(pos.oSymbol));
@@ -582,6 +590,7 @@ namespace FutSystems.GUI
                 {
                     int size = pos.Size;
                     gt.Rows[posidx][SIZE] = Math.Abs(size);
+                    gt.Rows[posidx][YDSIZE] = pos.PositionDetailYdNew.Sum(p => p.Volume); 
                     gt.Rows[posidx][CANFLATSIZE] = getCanFlatSize(pos);
                     gt.Rows[posidx][AVGPRICE] = string.Format(getDisplayFormat(pos.oSymbol), pos.AvgPrice);
                     gt.Rows[posidx][REALIZEDPL] = string.Format(getDisplayFormat(pos.oSymbol), pos.ClosedPL * getMultiple(pos.oSymbol));
@@ -601,6 +610,7 @@ namespace FutSystems.GUI
                     int i = InsertNewRow(pos,posside);
                     int size = pos.Size;
                     gt.Rows[i][SIZE] = Math.Abs(size);
+                    gt.Rows[i][YDSIZE] = pos.PositionDetailYdNew.Sum(p => p.Volume); 
                     gt.Rows[i][CANFLATSIZE] = getCanFlatSize(pos);
                     gt.Rows[i][AVGPRICE] = string.Format(getDisplayFormat(pos.Symbol), pos.AvgPrice);
                     gt.Rows[i][REALIZEDPL] = string.Format(getDisplayFormat(pos.Symbol), pos.ClosedPL * getMultiple(pos.oSymbol));
@@ -641,8 +651,10 @@ namespace FutSystems.GUI
         {
             gt.Columns.Add(SYMBOL);//0
             gt.Columns.Add(SIDE);//1
+            
             gt.Columns.Add(DIRECTION);//2
             gt.Columns.Add(SIZE, typeof(int));//3
+            gt.Columns.Add(YDSIZE,typeof(int));//1
             gt.Columns.Add(CANFLATSIZE, typeof(int));//4
             gt.Columns.Add(LASTPRICE);//5
             gt.Columns.Add(AVGPRICE);//6
@@ -756,7 +768,7 @@ namespace FutSystems.GUI
                     }
                 }
 
-                if (e.ColumnIndex == 7 || e.ColumnIndex == 8 || e.ColumnIndex == 9 || e.ColumnIndex == 10)
+                if (e.ColumnIndex == 8 || e.ColumnIndex == 9 || e.ColumnIndex == 10 || e.ColumnIndex == 11)
                 {
 
                     decimal v = 0;

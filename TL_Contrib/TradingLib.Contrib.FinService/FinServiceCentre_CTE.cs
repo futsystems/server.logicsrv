@@ -105,7 +105,7 @@ namespace TradingLib.Contrib.FinService
             {
                 stub.LoadArgument();
             }
-
+            session.OperationSuccess("更新代理参数成功");
 
         }
         #endregion

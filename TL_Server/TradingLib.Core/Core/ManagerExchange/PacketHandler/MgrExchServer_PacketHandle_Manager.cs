@@ -91,6 +91,7 @@ namespace TradingLib.Core
                 session.OperationSuccess("添加管理员成功");
                 //通知管理员信息变更
                 NotifyManagerUpdate(BasicTracker.ManagerTracker[m.ID]);
+
             }
             else
             {
@@ -101,6 +102,8 @@ namespace TradingLib.Core
                 }
 
                 BasicTracker.ManagerTracker.UpdateManager(m);
+
+                session.OperationSuccess("更新管理员成功");
                 //通知管理员信息变更
                 NotifyManagerUpdate(target);
             }

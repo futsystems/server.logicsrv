@@ -45,5 +45,39 @@ namespace TradingLib.Common
         {
             this.ReqContribRequest("MgrExchServer", "UpdateCommissionTemplateItem", TradingLib.Mixins.Json.JsonMapper.ToJson(item));
         }
+
+        /// <summary>
+        /// 查询保证金模板列表
+        /// </summary>
+        public void ReqQryMarginTemplate()
+        {
+            this.ReqContribRequest("MgrExchServer", "QryMarginTemplate", "");
+        }
+
+        /// <summary>
+        /// 更新保证金模板
+        /// </summary>
+        /// <param name="t"></param>
+        public void ReqUpdateMarginTemplate(MarginTemplateSetting t)
+        {
+            this.ReqContribRequest("MgrExchServer", "UpdateMarginTemplate", TradingLib.Mixins.Json.JsonMapper.ToJson(t));
+        }
+
+        /// <summary>
+        /// 查询保证金模板项目
+        /// </summary>
+        public void ReqQryMarginTemplateItem(int templateid)
+        {
+            this.ReqContribRequest("MgrExchServer", "QryMarginTemplateItem", templateid.ToString());
+        }
+
+        /// <summary>
+        /// 更新保证金模板项目
+        /// </summary>
+        /// <param name="item"></param>
+        public void ReqUpdateCommissionTemplateItem(MGRMarginTemplateItemSetting item)
+        {
+            this.ReqContribRequest("MgrExchServer", "UpdateMarginTemplateItem", TradingLib.Mixins.Json.JsonMapper.ToJson(item));
+        }
     }
 }

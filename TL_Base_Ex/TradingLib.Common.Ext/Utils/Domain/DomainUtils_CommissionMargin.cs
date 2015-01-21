@@ -19,6 +19,15 @@ namespace TradingLib.Common
             return BasicTracker.CommissionTemplateTracker.CommissionTemplates.Where(t => t.Domain_ID == domain.ID);
         }
 
+        /// <summary>
+        /// 获得域下所有保证金模板
+        /// </summary>
+        /// <param name="domain"></param>
+        /// <returns></returns>
+        public static IEnumerable<MarginTemplate> GetMarginTemplate(this Domain domain)
+        {
+            return BasicTracker.MarginTemplateTracker.MarginTemplates.Where(t => t.Domain_ID == domain.ID);
+        }
 
     }
 }

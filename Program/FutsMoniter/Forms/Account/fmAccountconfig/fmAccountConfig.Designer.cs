@@ -34,6 +34,8 @@
             this.kryptonPanel2 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
             this.btnExecute = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.kryptonGroupBox1 = new ComponentFactory.Krypton.Toolkit.KryptonGroupBox();
+            this.cbCreditSeparate = new ComponentFactory.Krypton.Toolkit.KryptonCheckBox();
+            this.kryptonLabel14 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.sidemargin = new ComponentFactory.Krypton.Toolkit.KryptonCheckBox();
             this.kryptonLabel3 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.ctRouterType1 = new FutsMoniter.Controls.Base.ctRouterType();
@@ -79,8 +81,6 @@
             this.btnUpdateTemplate = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.kryptonLabel13 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel4 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.kryptonLabel14 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.cbCreditSeparate = new ComponentFactory.Krypton.Toolkit.KryptonCheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pagenav)).BeginInit();
@@ -203,6 +203,22 @@
             this.kryptonGroupBox1.Size = new System.Drawing.Size(247, 246);
             this.kryptonGroupBox1.TabIndex = 0;
             this.kryptonGroupBox1.Values.Heading = "基本属性";
+            // 
+            // cbCreditSeparate
+            // 
+            this.cbCreditSeparate.Location = new System.Drawing.Point(84, 88);
+            this.cbCreditSeparate.Name = "cbCreditSeparate";
+            this.cbCreditSeparate.Size = new System.Drawing.Size(78, 18);
+            this.cbCreditSeparate.TabIndex = 13;
+            this.cbCreditSeparate.Values.Text = "分开显示";
+            // 
+            // kryptonLabel14
+            // 
+            this.kryptonLabel14.Location = new System.Drawing.Point(6, 88);
+            this.kryptonLabel14.Name = "kryptonLabel14";
+            this.kryptonLabel14.Size = new System.Drawing.Size(68, 18);
+            this.kryptonLabel14.TabIndex = 12;
+            this.kryptonLabel14.Values.Text = "信用额度:";
             // 
             // sidemargin
             // 
@@ -623,22 +639,6 @@
             this.kryptonLabel4.Size = new System.Drawing.Size(82, 18);
             this.kryptonLabel4.TabIndex = 0;
             this.kryptonLabel4.Values.Text = "手续费模板:";
-            // 
-            // kryptonLabel14
-            // 
-            this.kryptonLabel14.Location = new System.Drawing.Point(6, 88);
-            this.kryptonLabel14.Name = "kryptonLabel14";
-            this.kryptonLabel14.Size = new System.Drawing.Size(68, 18);
-            this.kryptonLabel14.TabIndex = 12;
-            this.kryptonLabel14.Values.Text = "信用额度:";
-            // 
-            // cbCreditSeparate
-            // 
-            this.cbCreditSeparate.Location = new System.Drawing.Point(84, 88);
-            this.cbCreditSeparate.Name = "cbCreditSeparate";
-            this.cbCreditSeparate.Size = new System.Drawing.Size(78, 18);
-            this.cbCreditSeparate.TabIndex = 13;
-            this.cbCreditSeparate.Values.Text = "分开显示";
             // 
             // fmAccountConfig
             // 

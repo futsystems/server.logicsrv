@@ -44,7 +44,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>resources\moniter_terminal.ico</ApplicationIcon>
+    <ApplicationIcon>moniter_terminal.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug-OEM|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -331,23 +331,35 @@
     <Compile Include="Forms\Account\fmChangeRouter.Designer.cs">
       <DependentUpon>fmChangeRouter.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Basic\fmCommission.cs">
+    <Compile Include="Forms\Basic\CommissionMargin\fmCommission.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Basic\fmCommission.Designer.cs">
+    <Compile Include="Forms\Basic\CommissionMargin\fmCommission.Designer.cs">
       <DependentUpon>fmCommission.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Basic\fmCommissionTemplateEdit.cs">
+    <Compile Include="Forms\Basic\CommissionMargin\fmTemplateEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Basic\fmCommissionTemplateEdit.Designer.cs">
-      <DependentUpon>fmCommissionTemplateEdit.cs</DependentUpon>
+    <Compile Include="Forms\Basic\CommissionMargin\fmTemplateEdit.Designer.cs">
+      <DependentUpon>fmTemplateEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Basic\fmCommissionTemplateItemEdit.cs">
+    <Compile Include="Forms\Basic\CommissionMargin\fmCommissionTemplateItemEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Basic\fmCommissionTemplateItemEdit.Designer.cs">
+    <Compile Include="Forms\Basic\CommissionMargin\fmCommissionTemplateItemEdit.Designer.cs">
       <DependentUpon>fmCommissionTemplateItemEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Basic\CommissionMargin\fmMargin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Basic\CommissionMargin\fmMargin.Designer.cs">
+      <DependentUpon>fmMargin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Basic\CommissionMargin\fmMarginTemplateItemEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Basic\CommissionMargin\fmMarginTemplateItemEdit.Designer.cs">
+      <DependentUpon>fmMarginTemplateItemEdit.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\DebugForm.cs">
       <SubType>Form</SubType>
@@ -861,14 +873,20 @@
     <EmbeddedResource Include="Forms\Account\fmChangeRouter.resx">
       <DependentUpon>fmChangeRouter.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Basic\fmCommission.resx">
+    <EmbeddedResource Include="Forms\Basic\CommissionMargin\fmCommission.resx">
       <DependentUpon>fmCommission.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Basic\fmCommissionTemplateEdit.resx">
-      <DependentUpon>fmCommissionTemplateEdit.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Basic\CommissionMargin\fmTemplateEdit.resx">
+      <DependentUpon>fmTemplateEdit.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Basic\fmCommissionTemplateItemEdit.resx">
+    <EmbeddedResource Include="Forms\Basic\CommissionMargin\fmCommissionTemplateItemEdit.resx">
       <DependentUpon>fmCommissionTemplateItemEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Basic\CommissionMargin\fmMargin.resx">
+      <DependentUpon>fmMargin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Basic\CommissionMargin\fmMarginTemplateItemEdit.resx">
+      <DependentUpon>fmMarginTemplateItemEdit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DebugForm.resx">
       <DependentUpon>DebugForm.cs</DependentUpon>

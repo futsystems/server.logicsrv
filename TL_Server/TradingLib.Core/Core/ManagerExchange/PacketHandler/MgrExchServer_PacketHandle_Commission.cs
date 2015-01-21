@@ -55,6 +55,8 @@ namespace TradingLib.Core
             }
         }
 
+
+
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryCommissionTemplateItem", "QryCommissionTemplateItem - qry commission template item", "查询手续费模板项目")]
         public void CTE_QryCommissionTemplateItem(ISession session, int templateid)
         {
@@ -93,22 +95,22 @@ namespace TradingLib.Core
                 bool isadd = item.ID == 0;
 
                 //更新某个单独的月份
-                if (!item.SetAllMonth)
-                {
-                    if (isadd)
-                    {
-                        if (template[item.Code, item.Month] != null)
-                        {
-                            throw new FutsRspError("手续费模板项目已存在");
-                        }
-                    }
-                    //调用update更新或添加
-                    BasicTracker.CommissionTemplateTracker.UpdateCommissionTemplateItem(item);
-                    session.NotifyMgr("NotifyCommissionTemplateItem", template[item.Code, item.Month]);
-                }
-                else
-                {
-                    if (isadd)
+                //if (!item.SetAllMonth && !item.SetAllCodeMonth)
+                //{
+                //    if (isadd)
+                //    {
+                //        if (template[item.Code, item.Month] != null)
+                //        {
+                //            throw new FutsRspError("手续费模板项目已存在");
+                //        }
+                //    }
+                //    //调用update更新或添加
+                //    BasicTracker.CommissionTemplateTracker.UpdateCommissionTemplateItem(item);
+                //    session.NotifyMgr("NotifyCommissionTemplateItem", template[item.Code, item.Month]);
+                //}
+                //else
+                //{
+                    if (isadd)//如果是添加 则没有更新所有品种所有月份的选项
                     {
                         for (int i = 1; i <= 12; i++)
                         {
@@ -140,23 +142,57 @@ namespace TradingLib.Core
                     }
                     else //更新 则便利所有手续费模板项目进行更新
                     {
-                        foreach (CommissionTemplateItemSetting t in BasicTracker.CommissionTemplateTracker.CommissionTemplateItems.Where(x => x.Code.Equals(item.Code)))
+                        //更新该品种所有月份
+                        if (item.SetAllMonth)
                         {
-                            t.OpenByMoney = item.OpenByMoney;
-                            t.OpenByVolume = item.OpenByVolume;
-                            t.CloseByMoney = item.CloseByMoney;
-                            t.CloseByVolume = item.CloseByVolume;
-                            t.CloseTodayByMoney = item.CloseTodayByMoney;
-                            t.CloseTodayByVolume = item.CloseTodayByVolume;
-                            t.ChargeType = item.ChargeType;
-                            t.Percent = item.Percent;
+                            foreach (CommissionTemplateItemSetting t in BasicTracker.CommissionTemplateTracker.CommissionTemplateItems.Where(x => x.Code.Equals(item.Code)))
+                            {
+                                t.OpenByMoney = item.OpenByMoney;
+                                t.OpenByVolume = item.OpenByVolume;
+                                t.CloseByMoney = item.CloseByMoney;
+                                t.CloseByVolume = item.CloseByVolume;
+                                t.CloseTodayByMoney = item.CloseTodayByMoney;
+                                t.CloseTodayByVolume = item.CloseTodayByVolume;
+                                t.ChargeType = item.ChargeType;
+                                t.Percent = item.Percent;
 
+                                //调用update更新或添加
+                                BasicTracker.CommissionTemplateTracker.UpdateCommissionTemplateItem(t);
+                                session.NotifyMgr("NotifyCommissionTemplateItem", template[t.Code, t.Month]);
+                            }
+                        }
+                        //更新所有品种所有月份
+                        else if (item.SetAllCodeMonth)
+                        {
+                            foreach (CommissionTemplateItemSetting t in BasicTracker.CommissionTemplateTracker.CommissionTemplateItems)
+                            {
+                                t.OpenByMoney = item.OpenByMoney;
+                                t.OpenByVolume = item.OpenByVolume;
+                                t.CloseByMoney = item.CloseByMoney;
+                                t.CloseByVolume = item.CloseByVolume;
+                                t.CloseTodayByMoney = item.CloseTodayByMoney;
+                                t.CloseTodayByVolume = item.CloseTodayByVolume;
+                                t.ChargeType = item.ChargeType;
+                                t.Percent = item.Percent;
+
+                                //调用update更新或添加
+                                BasicTracker.CommissionTemplateTracker.UpdateCommissionTemplateItem(t);
+                                session.NotifyMgr("NotifyCommissionTemplateItem", template[t.Code, t.Month]);
+                            }
+                        }
+                        else //更新某个特定月份
+                        {
+                            if (template[item.Code, item.Month] == null)
+                            {
+                                throw new FutsRspError("手续费模板项目不存在");
+                            }
                             //调用update更新或添加
-                            BasicTracker.CommissionTemplateTracker.UpdateCommissionTemplateItem(t);
-                            session.NotifyMgr("NotifyCommissionTemplateItem", template[t.Code, t.Month]);
+                            BasicTracker.CommissionTemplateTracker.UpdateCommissionTemplateItem(item);
+                            session.NotifyMgr("NotifyCommissionTemplateItem", template[item.Code, item.Month]);
+
                         }
                     }
-                }
+                //}
                 session.OperationSuccess("更新手续费项目功");
             }
             else

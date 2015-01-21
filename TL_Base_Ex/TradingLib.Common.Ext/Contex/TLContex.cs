@@ -305,6 +305,7 @@ namespace TradingLib.Common
             }
             catch (Exception ex)
             {
+                debug("MGR Message Handler error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
                 session.OperationError(new FutsRspError(ex));
             }
         }

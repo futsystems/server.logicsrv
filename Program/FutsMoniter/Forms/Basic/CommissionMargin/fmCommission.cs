@@ -127,15 +127,15 @@ namespace FutsMoniter
         }
         void Add_Click(object sender, EventArgs e)
         {
-            fmCommissionTemplateEdit fm = new fmCommissionTemplateEdit();
+            fmTemplateEdit fm = new fmTemplateEdit(TemplateEditType.Commission);
             fm.ShowDialog();
         }
         void Edit_Click(object sender, EventArgs e)
         {
             CommissionTemplateSetting t = templatelist.SelectedItem as CommissionTemplateSetting;
-            fmCommissionTemplateEdit fm = new fmCommissionTemplateEdit();
+            fmTemplateEdit fm = new fmTemplateEdit(TemplateEditType.Commission);
 
-            fm.SetCommissionTemplate(t);
+            fm.SetTemplate(t);
             fm.ShowDialog();
         }
 

@@ -47,12 +47,50 @@ namespace TradingLib.Protocol
             this.OpenByVolume = item.OpenByVolume;
             this.Percent = item.Percent;
             this.SetAllMonth = false;
+            this.SetAllCodeMonth = false;
             this.Template_ID = item.Template_ID;
             
         }
         /// <summary>
-        /// 是否设置到所有月份
+        /// 是否设置到该品种所有月份
         /// </summary>
         public bool SetAllMonth { get; set; }
+
+        /// <summary>
+        /// 是否设置到所有品种所有月份
+        /// </summary>
+        public bool SetAllCodeMonth { get; set; }
+    }
+
+    public class MGRMarginTemplateItemSetting : MarginTemplateItemSetting
+    {
+        public MGRMarginTemplateItemSetting()
+            :base()
+        { 
+        
+        }
+
+        public MGRMarginTemplateItemSetting(MarginTemplateItemSetting item)
+        {
+            this.ChargeType = item.ChargeType;
+            this.Code = item.Code;
+            this.ID = item.ID;
+            this.MarginByMoney = item.MarginByMoney;
+            this.MarginByVolume = item.MarginByVolume;
+            this.Month = item.Month;
+            this.Percent = item.Percent;
+            this.SetAllCodeMonth = false;
+            this.SetAllMonth = false;
+            this.Template_ID = item.Template_ID;
+        }
+        /// <summary>
+        /// 是否设置到该品种所有月份
+        /// </summary>
+        public bool SetAllMonth { get; set; }
+
+        /// <summary>
+        /// 是否设置到所有品种所有月份
+        /// </summary>
+        public bool SetAllCodeMonth { get; set; }
     }
 }

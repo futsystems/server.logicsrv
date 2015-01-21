@@ -18,9 +18,9 @@ namespace TradingLib.API
     {
         [Description("自动识别")]
         UNKNOWN=0,
-        [Description("开仓(开,增)")]
+        [Description("开仓")]
         OPEN=1,
-        [Description("平仓(减,平)")]
+        [Description("平仓")]
         CLOSE=2,
         [Description("平今")]
         CLOSETODAY=3,

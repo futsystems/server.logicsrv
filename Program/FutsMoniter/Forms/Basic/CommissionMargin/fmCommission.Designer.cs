@@ -29,11 +29,11 @@
         private void InitializeComponent()
         {
             this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
+            this.templateid = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel2 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.templatename = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.commissionGrid = new ComponentFactory.Krypton.Toolkit.KryptonDataGridView();
             this.templatelist = new ComponentFactory.Krypton.Toolkit.KryptonListBox();
-            this.templateid = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.commissionGrid)).BeginInit();
@@ -51,6 +51,15 @@
             this.kryptonPanel1.Name = "kryptonPanel1";
             this.kryptonPanel1.Size = new System.Drawing.Size(966, 442);
             this.kryptonPanel1.TabIndex = 0;
+            // 
+            // templateid
+            // 
+            this.templateid.Location = new System.Drawing.Point(286, 7);
+            this.templateid.Name = "templateid";
+            this.templateid.Size = new System.Drawing.Size(19, 18);
+            this.templateid.TabIndex = 4;
+            this.templateid.Values.Text = "--";
+            this.templateid.Visible = false;
             // 
             // kryptonLabel2
             // 
@@ -88,21 +97,15 @@
             this.templatelist.Size = new System.Drawing.Size(140, 442);
             this.templatelist.TabIndex = 0;
             // 
-            // templateid
-            // 
-            this.templateid.Location = new System.Drawing.Point(286, 7);
-            this.templateid.Name = "templateid";
-            this.templateid.Size = new System.Drawing.Size(19, 18);
-            this.templateid.TabIndex = 4;
-            this.templateid.Values.Text = "--";
-            this.templateid.Visible = false;
-            // 
             // fmCommission
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(966, 442);
             this.Controls.Add(this.kryptonPanel1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "fmCommission";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "手续费模板设置";

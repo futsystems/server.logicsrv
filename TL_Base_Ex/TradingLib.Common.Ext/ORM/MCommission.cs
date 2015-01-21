@@ -13,8 +13,6 @@ namespace TradingLib.ORM
     /// </summary>
     public class MCommission:MBase
     {
-        
-
         /// <summary>
         /// 更新手续费模板
         /// </summary>
