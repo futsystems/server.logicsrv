@@ -71,14 +71,14 @@ namespace TradingLib.Core
                 //PR数据在从数据库恢复数据的时候任然需要被加载到PositionRoundTracker用于恢复PR数据
                 if (postrans != null)
                 {
-                    pr =  prt.GotPositionTransaction(postrans);
-                    //调整手续费 注意 这里手续费已经进行了标准手续费计算
-                    f.Commission = AdjuestCommission(f,pr);   
+                    pr = prt.GotPositionTransaction(postrans);
                 }
-
                 //如果交易中心处于开启状态
                 if (_status == QSEnumClearCentreStatus.CCOPEN)
                 {
+                    //调整手续费 注意 这里手续费已经进行了标准手续费计算
+                    f.Commission = AdjuestCommission(f, pr);
+
                     debug("Got Fill:" + f.GetTradeInfo(), QSEnumDebugLevel.INFO);
                     //记录帐户成交记录
                     LogAcctTrade(f);
