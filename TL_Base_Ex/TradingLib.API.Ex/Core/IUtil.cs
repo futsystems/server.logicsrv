@@ -16,5 +16,17 @@ namespace TradingLib.API
         /// <param name="symbol"></param>
         /// <returns></returns>
         decimal GetAvabilePrice(string symbol);
+
+        /// <summary>
+        /// 发送委托
+        /// </summary>
+        /// <param name="o"></param>
+        void SendOrder(Order o);
+
+        /// <summary>
+        /// 取消委托
+        /// </summary>
+        /// <param name="oid"></param>
+        void CancelOrder(long oid);
     }
 }

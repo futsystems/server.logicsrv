@@ -41,7 +41,7 @@ namespace TradingLib.Contrib.RechargeOnLine
         {
             IRequest request = context.Request;
             //Util.Debug("url:" + request.Uri.ToString());
-            IResponse response = context.Response;
+            HttpServer.IResponse response = context.Response;
             //http://58.37.90.221:8050/custnotify?MemberID=100000178&TerminalID=10000001&TransID=635488210619687501&Result=1&ResultDesc=01&FactMoney=1&AdditionalInfo=&SuccTime=20141013181950&Md5Sign=f8d6b9b13937caaf9f6bdfb835b87504&BankID=3002
             
             //客户端页面通知

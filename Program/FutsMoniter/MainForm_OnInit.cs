@@ -10,8 +10,6 @@ namespace FutsMoniter
 {
     partial class MainForm
     {
-
-
         /// <summary>
         /// 登入成功基础数据加载完毕后再执行OnInit
         /// </summary>

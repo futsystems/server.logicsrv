@@ -136,6 +136,16 @@ namespace TradingLib.Core
             if (GotFillEvent != null)
                 GotFillEvent(f);
         }
+
+        /// <summary>
+        /// 对外通知持仓更新
+        /// </summary>
+        /// <param name="pos"></param>
+        void NotifyPositionUpdate(Position pos)
+        {
+            _posupdatecache.Write(pos.GenPositionEx());
+
+        }
         void NotifyOrderError(Order o,RspInfo e)
         { 
             //放入缓存通知客户端

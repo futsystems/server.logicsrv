@@ -358,14 +358,14 @@ namespace TradingLib.Common
             sb.Append(t.xPrice.ToString()); sb.Append(d);
             sb.Append(""); sb.Append(d);
 
-            sb.Append(t.Account); sb.Append(d);
+            sb.Append(t.Account); sb.Append(d);//8
             sb.Append(t.SecurityType); sb.Append(d);
             sb.Append(t.Currency); sb.Append(d);
             sb.Append(t.LocalSymbol); sb.Append(d);
-            sb.Append(t.id); sb.Append(d);
+            sb.Append(t.id); sb.Append(d); //12
             sb.Append(t.Exchange); sb.Append(d);
 
-            sb.Append(t.Broker); sb.Append(d);
+            sb.Append(t.Broker); sb.Append(d);//14
             sb.Append(t.TradeID); sb.Append(d);
             sb.Append(t.Commission); sb.Append(d);
             sb.Append(t.PositionOperation.ToString()); sb.Append(d);

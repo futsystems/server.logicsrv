@@ -21,7 +21,7 @@ namespace TradingLib.Contrib.RechargeOnLine
         public virtual ProcessingResult Process(RequestContext context)
         {
             IRequest request = context.Request;
-            IResponse response = context.Response;
+            HttpServer.IResponse response = context.Response;
             string localpath = request.Uri.AbsolutePath;
             if (localpath == "/deposit")
             {

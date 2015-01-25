@@ -165,6 +165,10 @@ namespace TradingLib.Common
             {
                 return QSEnumFrontType.EVAccess;
             }
+            else if (frontid.ToUpper().StartsWith("WEB-"))
+            {
+                return QSEnumFrontType.WebAccess;
+            }
             else if(frontid.ToUpper().StartsWith("FRONT-"))
             {
                 return QSEnumFrontType.FastAccess;

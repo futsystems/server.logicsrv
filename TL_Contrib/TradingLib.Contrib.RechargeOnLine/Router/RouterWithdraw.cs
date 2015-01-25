@@ -29,7 +29,7 @@ namespace TradingLib.Contrib.RechargeOnLine
         public virtual ProcessingResult Process(RequestContext context)
         {
             IRequest request = context.Request;
-            IResponse response = context.Response;
+            HttpServer.IResponse response = context.Response;
             //过滤访问地址
             if (request.Uri.AbsolutePath.StartsWith(WithdrawPath))
             {

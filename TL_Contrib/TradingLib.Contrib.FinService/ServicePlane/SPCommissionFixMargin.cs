@@ -54,8 +54,6 @@ namespace TradingLib.Contrib.FinService
             _collecttype = EnumFeeCollectType.CollectInTrading;//在交易过程中直接收取
         }
 
-        //int oldfinlever = 0;
-
         public override void OnInit()
         { 
         

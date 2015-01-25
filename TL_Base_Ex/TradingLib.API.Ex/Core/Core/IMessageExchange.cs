@@ -38,5 +38,20 @@ namespace TradingLib.API
         /// <param name="val"></param>
         /// <returns></returns>
         Order SentRouterOrder(long val);
+
+
+        /// <summary>
+        /// 发送委托
+        /// </summary>
+        /// <param name="o"></param>
+        void SendOrder(Order o);
+
+        /// <summary>
+        /// 取消委托
+        /// </summary>
+        /// <param name="oid"></param>
+        void CancelOrder(long oid);
+
+
     }
 }

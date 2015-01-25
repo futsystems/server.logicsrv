@@ -17,7 +17,6 @@ namespace TradingLib.Contrib.FinService
         ArgumentAgentTracker _agtargttracker = new ArgumentAgentTracker();
         ArgumentBaseTracker _baseargtracker = new ArgumentBaseTracker();
 
-
         public Argument GetAgentArgument(int agent_fk, int serviceplan_fk, string argname)
         {
             Dictionary<string, Argument> argmap = GetAgentArgument(agent_fk, serviceplan_fk);

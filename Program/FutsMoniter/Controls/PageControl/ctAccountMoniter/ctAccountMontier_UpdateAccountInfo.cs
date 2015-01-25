@@ -206,7 +206,7 @@ namespace FutsMoniter
             get
             {
                 int row = (accountgrid.SelectedRows.Count > 0 ? accountgrid.SelectedRows[0].Index : -1);
-                return accountgrid[0, row].Value.ToString();
+                return row==-1?string.Empty:(accountgrid[0, row].Value.ToString());
             }
         }
 

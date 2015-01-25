@@ -18,5 +18,24 @@ namespace TradingLib.Common
         {
             return TLCtxHelper.Ctx.RouterManager.GetAvabilePrice(symbol);
         }
+
+        /// <summary>
+        /// 发送委托
+        /// </summary>
+        /// <param name="o"></param>
+        public void SendOrder(Order o)
+        {
+
+            TLCtxHelper.Ctx.MessageExchange.SendOrder(o);
+        }
+
+        /// <summary>
+        /// 取消委托
+        /// </summary>
+        /// <param name="oid"></param>
+        public void CancelOrder(long oid)
+        {
+            TLCtxHelper.Ctx.MessageExchange.CancelOrder(oid);
+        }
     }
 }

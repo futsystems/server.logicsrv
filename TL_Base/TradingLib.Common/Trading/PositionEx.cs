@@ -7,102 +7,6 @@ using TradingLib.API;
 namespace TradingLib.Common
 {
 
-    //public class SettlePosition
-    //{
-    //    public SettlePosition()
-    //    {
-    //        this.Account = string.Empty;
-    //        this.Symbol = string.Empty;
-    //        this.Size = 0;
-    //        this.AVGPrice = 0;
-    //        this.SettlePrice = 0;
-    //        this.Settleday = 0;
-    //        this.SecurityCode = string.Empty;
-    //        this.Margin = 0;
-    //    }
-    //    /// <summary>
-    //    /// 交易帐号
-    //    /// </summary>
-    //    public string Account { get; set; }
-
-    //    /// <summary>
-    //    /// 合约
-    //    /// </summary>
-    //    public string Symbol { get; set; }
-
-    //    /// <summary>
-    //    /// 持仓数量
-    //    /// </summary>
-    //    public int Size { get; set; }
-
-    //    /// <summary>
-    //    /// 持仓均价
-    //    /// </summary>
-    //    public decimal AVGPrice { get; set; }
-
-    //    /// <summary>
-    //    /// 结算价
-    //    /// </summary>
-    //    public decimal SettlePrice { get; set; }
-
-    //    /// <summary>
-    //    /// 结算日
-    //    /// </summary>
-    //    public int Settleday { get; set; }
-
-    //    /// <summary>
-    //    /// 乘数
-    //    /// </summary>
-    //    public int Multiple { get; set; }
-
-    //    /// <summary>
-    //    /// 占用保证金
-    //    /// </summary>
-    //    public decimal Margin { get; set; }
-
-    //    /// <summary>
-    //    /// 品种字头
-    //    /// </summary>
-    //    public string SecurityCode { get; set; }
-
-    //    public static string Serialize(SettlePosition p)
-    //    {
-    //        StringBuilder sb = new StringBuilder();
-    //        char d = ',';
-    //        sb.Append(p.Account);
-    //        sb.Append(d);
-    //        sb.Append(p.Symbol);
-    //        sb.Append(d);
-    //        sb.Append(p.Size.ToString());
-    //        sb.Append(d);
-    //        sb.Append(p.AVGPrice.ToString());
-    //        sb.Append(d);
-    //        sb.Append(p.SettlePrice.ToString());
-    //        sb.Append(d);
-    //        sb.Append(p.Settleday.ToString());
-    //        sb.Append(d);
-    //        sb.Append(p.Multiple.ToString());
-    //        sb.Append(d);
-    //        sb.Append(p.SecurityCode);
-    //        return sb.ToString();
-    //    }
-
-    //    public static SettlePosition Deserialize(string msg)
-    //    {
-    //        string[] rec = msg.Split(',');
-    //        SettlePosition pos = new SettlePosition();
-    //        pos.Account = rec[0];
-    //        pos.Symbol = rec[1];
-    //        pos.Size = int.Parse(rec[2]);
-    //        pos.AVGPrice = decimal.Parse(rec[3]);
-    //        pos.SettlePrice = decimal.Parse(rec[4]);
-    //        pos.Settleday = int.Parse(rec[5]);
-    //        pos.Multiple = int.Parse(rec[6]);
-    //        pos.SecurityCode = rec[7];
-    //        return pos;
-    //    }
-    //}
-
     /// <summary>
     /// PostionEx用于封装持仓汇总信息
     /// 将Position工作对象的持仓状态 封装成PositionEx用于接收客户端的查询
@@ -129,12 +33,6 @@ namespace TradingLib.Common
         /// </summary>
         public int Multiple { get; set; }
 
-        
-        /// <summary>
-        /// 持仓数量
-        /// </summary>
-        //public int UnsignedSize { get; set; }
-
         /// <summary>
         /// 持仓均价 点数
         /// </summary>
@@ -145,10 +43,6 @@ namespace TradingLib.Common
         /// </summary>
         public bool Side { get; set; }
 
-        /// <summary>
-        /// 带方向的数量
-        /// </summary>
-        //public int Size { get; set; }
 
         /// <summary>
         /// 持仓描述类型

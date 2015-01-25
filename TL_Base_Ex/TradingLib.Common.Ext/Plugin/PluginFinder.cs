@@ -816,7 +816,8 @@ namespace TradingLib.Common
                 {
                     var assembly = Assembly.ReflectionOnlyLoadFrom(dllfile);
                     AssemblyName assemblyName = AssemblyName.GetAssemblyName(dllfile);
-                    foreach (var an in assembly.GetReferencedAssemblies())
+                    AssemblyName[] referenced = assembly.GetReferencedAssemblies();
+                    foreach (var an in referenced)
                     {
                         try
                         {
@@ -827,12 +828,15 @@ namespace TradingLib.Common
                             Assembly.ReflectionOnlyLoadFrom(Path.Combine(Path.GetDirectoryName(dllfile), an.Name + ".dll"));
                         }
                     }
-                    foreach (Type type in assembly.GetExportedTypes())
+                    Type[] exportedTypes = assembly.GetExportedTypes();
+                    foreach (Type type in exportedTypes)
                     {
                         //程序集中的type不是抽象函数并且其实现了needType接口,则标记为有效
                         if (!type.IsAbstract && type.GetInterface(needtype.FullName) != null)
                         {
-                            Assembly a = Assembly.Load(assemblyName);
+                            //Assembly a = Assembly.Load(assemblyName);
+                            Assembly a = Assembly.LoadFrom(dllfile);
+                            Type[] ts = a.GetTypes();
                             types.Add(a.GetType(type.FullName));
                         }
 
