@@ -68,7 +68,6 @@
     <Compile Include="ResponseTemplateTracker.cs" />
     <Compile Include="ResponseTracker.cs" />
     <Compile Include="ResponseWrapper.cs" />
-    <Compile Include="Response\Arbitrage.cs" />
     <Compile Include="Tracker.cs" />
   </ItemGroup>
   <ItemGroup>

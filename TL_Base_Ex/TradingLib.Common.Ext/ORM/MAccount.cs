@@ -101,7 +101,9 @@ namespace TradingLib.ORM
             using (DBMySql db = new DBMySql())
             {
                 string query = String.Format("SELECT a.account,a.pass FROM accounts a WHERE account = '{0}'", account);
-                AccountAuth auth = db.Connection.Query<AccountAuth>(query, null).Single<AccountAuth>();
+                AccountAuth auth = db.Connection.Query<AccountAuth>(query, null).FirstOrDefault<AccountAuth>();
+                if (auth == null)
+                    return false;
                 return auth.Pass.Equals(pass);
             }
         }

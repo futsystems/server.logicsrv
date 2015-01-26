@@ -67,7 +67,7 @@ namespace TradingLib.Contrib.ResponseHost
                 ResponseTemplate template = new ResponseTemplate();
                 template.ClassName = type.FullName;
                 template.Name = type.Name;
-                template.Title = "";
+                template.Title = instance.Title;
 
                 ORM.MResponse.InsertResponseTemplate(template);
 

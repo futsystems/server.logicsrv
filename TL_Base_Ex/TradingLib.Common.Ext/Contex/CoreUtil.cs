@@ -20,6 +20,16 @@ namespace TradingLib.Common
         }
 
         /// <summary>
+        /// 获得合约市场快照
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        public Tick GetTickSnapshot(string symbol)
+        {
+            return TLCtxHelper.Ctx.RouterManager.GetTickSnapshot(symbol);
+        }
+
+        /// <summary>
         /// 发送委托
         /// </summary>
         /// <param name="o"></param>

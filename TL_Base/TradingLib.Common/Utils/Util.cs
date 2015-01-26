@@ -177,10 +177,10 @@ namespace TradingLib.Common
         /// string日志的输入委托 将系统的日志以文本形式输出到console
         /// </summary>
         //public static DebugDelegate SendDebugEvent;
-        public static void Debug(string msg, QSEnumDebugLevel level = QSEnumDebugLevel.INFO)
+        public static void Debug(string msg, QSEnumDebugLevel level = QSEnumDebugLevel.INFO,string programe=null)
         {
             //如果给util绑定了sendlogevent事件处理器 则通过sendlogevent处理日志
-            ILogItem item = new LogItem(msg, level, PROGRAME);
+            ILogItem item = new LogItem(msg, level, programe==null?PROGRAME:programe);
             Log(item);
         }
 

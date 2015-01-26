@@ -36,6 +36,10 @@ namespace TradingLib.Contrib.ResponseHost
         /// </summary>
         public IResponse Response { get { return _response; } }
 
+        /// <summary>
+        /// ResponseBase对象
+        /// </summary>
+        public ResponseBase Wrapper { get { return _response as ResponseBase; } }
 
         /// <summary>
         /// 加载策略参数

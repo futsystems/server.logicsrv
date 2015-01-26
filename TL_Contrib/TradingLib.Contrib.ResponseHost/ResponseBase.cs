@@ -35,6 +35,18 @@ namespace TradingLib.Contrib.ResponseHost
         /// </summary>
         public int InstanceID { get; set; }
 
+        /// <summary>
+        /// 策略标题
+        /// </summary>
+        public virtual string Title
+        { 
+            get
+            {
+                return "ResponseBase";
+            }
+        }
+
+        protected string Programe { get { return string.Format("{0}-{1}", this.GetType().Name, this.InstanceID); } }
 
         Dictionary<string, Argument> _args = new Dictionary<string, Argument>();
 
@@ -90,6 +102,13 @@ namespace TradingLib.Contrib.ResponseHost
 
         }
 
+        /// <summary>
+        /// 定时调度，用于定时撤单或计时类操作 时间周期为50ms
+        /// </summary>
+        public virtual void OnTimer()
+        { 
+            
+        }
         #endregion
 
         /// <summary>
@@ -124,6 +143,35 @@ namespace TradingLib.Contrib.ResponseHost
             return this.Positions.FirstOrDefault(pos => pos.Symbol.Equals(symbol) && pos.DirectionType == type);
         }
 
+
+        SymbolBasket _basket = new SymbolBasketImpl();
+
+        /// <summary>
+        /// 判断合约是否被注册
+        /// </summary>
+        /// <param name="symbol"></param>
+        public bool IsSymbolRegisted(string symbol)
+        {
+            return _basket.HaveSymbol(symbol);
+        }
+
+        /// <summary>
+        /// 清除行情订阅
+        /// </summary>
+        protected void ClearSymbols()
+        {
+            _basket.Clear();
+        }
+
+        /// <summary>
+        /// 订阅行情
+        /// </summary>
+        /// <param name="symbol"></param>
+        protected void RegisterSymbol(string symbol)
+        {
+            _basket.Add(GetSymbol(symbol));
+        }
+        
         /// <summary>
         /// 获得某个合约对应的合约对象
         /// </summary>
@@ -134,6 +182,21 @@ namespace TradingLib.Contrib.ResponseHost
             return this.Account.GetSymbol(symbol);
         }
 
+        /// <summary>
+        /// 获得某个合约的市场快照
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        protected Tick GetTickSnapshot(string symbol)
+        {
+            return TLCtxHelper.CmdUtils.GetTickSnapshot(symbol);
+        }
+
+
+        protected void Log(string msg, QSEnumDebugLevel level)
+        {
+            Util.Debug(msg, level, Programe);
+        }
 
         /// <summary>
         /// 发送委托

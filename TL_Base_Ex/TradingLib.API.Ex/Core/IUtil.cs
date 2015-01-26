@@ -18,6 +18,13 @@ namespace TradingLib.API
         decimal GetAvabilePrice(string symbol);
 
         /// <summary>
+        /// 获得某个合约的市场快照
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        Tick  GetTickSnapshot(string symbol);
+
+        /// <summary>
         /// 发送委托
         /// </summary>
         /// <param name="o"></param>

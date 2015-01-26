@@ -183,6 +183,8 @@ namespace TradingLib.Core
                 else if (request.LoginType == 1)
                 {
                     debug("系统通过清算中心认证,LoginID:" + request.LoginID + " Password:" + request.Passwd, QSEnumDebugLevel.INFO);
+                    //1.检查帐户是否存在
+                    
                     login = _clearcentre.VaildAccount(request.LoginID, request.Passwd);
                     response.Authorized = login;
                     if (login)
