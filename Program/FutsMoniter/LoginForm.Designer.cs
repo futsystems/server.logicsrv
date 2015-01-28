@@ -93,7 +93,6 @@
             this.username.Name = "username";
             this.username.Size = new System.Drawing.Size(121, 22);
             this.username.TabIndex = 23;
-            this.username.Text = "888888";
             // 
             // password
             // 
@@ -102,7 +101,6 @@
             this.password.PasswordChar = '#';
             this.password.Size = new System.Drawing.Size(121, 22);
             this.password.TabIndex = 24;
-            this.password.Text = "123456";
             // 
             // servers
             // 

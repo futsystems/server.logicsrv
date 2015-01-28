@@ -75,16 +75,15 @@ namespace TradingLib.Contrib.FinService
         /// <param name="markup"></param>
         /// <param name="basecommission"></param>
         /// <returns></returns>
-        decimal GetCommission(bool ispect, decimal markup, decimal basecommission,bool absolute)
+        decimal GetCommission(bool ispect, decimal markup, decimal basecommission,bool absolute,int size)
         {
-
             if (ispect)
             {
                 return absolute ? (basecommission * markup):(basecommission + basecommission * markup);
             }
             else
             {
-                return absolute?markup:(basecommission +markup);
+                return absolute ? markup * size : (basecommission + markup * size);
             }
         }
 
@@ -103,12 +102,12 @@ namespace TradingLib.Contrib.FinService
             bool ispect = this.CommissionMarginPect.AccountArgument.AsBool();
             bool isabsolute = this.CommissionMarginAbsolute.AccountArgument.AsBool();
             decimal markupvalue = t.IsEntryPosition?this.CommissionOpenMarkup.AccountArgument.AsDecimal():this.CommissionCloseMarkup.AccountArgument.AsDecimal();
-            decimal accountcommission = GetCommission(ispect, markupvalue, commission,isabsolute);
+            decimal accountcommission = GetCommission(ispect, markupvalue, commission,isabsolute,t.UnsignedSize);
 
             bool agentispect = this.CommissionMarginPect.AgentArgument.AsBool();
             bool agentisabsolute = this.CommissionMarginAbsolute.AgentArgument.AsBool();
             decimal agentmarkupvalue = t.IsEntryPosition ? this.CommissionOpenMarkup.AgentArgument.AsDecimal() : this.CommissionCloseMarkup.AgentArgument.AsDecimal();
-            decimal agentcommission = GetCommission(agentispect, agentmarkupvalue, commission, agentisabsolute);
+            decimal agentcommission = GetCommission(agentispect, agentmarkupvalue, commission, agentisabsolute,t.UnsignedSize);
             
             decimal totalfee = accountcommission - commission;
             decimal agentfee = agentcommission - commission;
@@ -126,7 +125,7 @@ namespace TradingLib.Contrib.FinService
                 bool pagentpect = FinTracker.ArgumentTracker.GetAgentArgument(parent.mgr_fk, this.ServicePlanFK, this.CommissionMarginPect.AgentArgument.Name).AsBool();
                 decimal pagentmarkup = FinTracker.ArgumentTracker.GetAgentArgument(parent.mgr_fk, this.ServicePlanFK, t.IsEntryPosition ? this.CommissionOpenMarkup.AgentArgument.Name : this.CommissionCloseMarkup.AgentArgument.Name).AsDecimal();
                 bool pagentabsolute = FinTracker.ArgumentTracker.GetAgentArgument(parent.mgr_fk, this.ServicePlanFK, this.CommissionMarginAbsolute.AgentArgument.Name).AsBool();
-                return GetCommission(agentpect, agentmarkup, commission, agentabsolute) - GetCommission(pagentpect, pagentmarkup, commission, agentabsolute);
+                return GetCommission(agentpect, agentmarkup, commission, agentabsolute,t.UnsignedSize) - GetCommission(pagentpect, pagentmarkup, commission, agentabsolute,t.UnsignedSize);
             };
             //执行收费
             FeeCharge(totalfee, agentfee, func, comment);
