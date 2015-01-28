@@ -15,45 +15,48 @@ namespace AccountRuleSet
             get { return _profit.ToString(); }
             set
             {
-
                 try
                 {
                     _profit = Convert.ToDecimal(value);
                 }
                 catch (Exception ex)
-                { }
+                { 
+                
+                }
             } 
         }
-
-
 
         bool flatStart = false;//强平开始
         public bool CheckAccount(out string msg)
         {
             msg = string.Empty;
-            decimal profit = this.Account.Profit;//获得该账户的当日利润
-            if (profit >= 0 || flatStart ) return true;//如果该账户有利润或者已经强平则直接返回
+            decimal profit = this.Account.Profit;//获得该账户的当日盈亏
+            if (profit < 0 || flatStart ) return true;//如果该账户亏损 则直接返回
 
             profit = Math.Abs(profit);
-            bool ret = profit > _profit;//判断损失是否已经超过了设定的数额
+            bool ret = profit > _profit;//判断盈利值是否已经超过了设定的数额
 
-            //LibUtil.Debug("帐户风控检查,最大亏损额:"+_profit.ToString() +" 当前亏损额:"+profit.ToString());
+            //LibUtil.Debug("帐户风控检查,最大亏损额:"+ _profit.ToString() +" 当前亏损额:"+ profit.ToString());
             //如果强平条件满足并且没有启动强平就强平仓位并禁止交易
+
             if (ret && !flatStart)
             {
                 if (this.Account.Execute)
                     this.Account.InactiveAccount();//冻结账户
+
                 if (this.Account.AnyPosition)
                 {
                     msg = RuleDescription + ":全平所有仓位并冻结账户";
-                    this.Account.FlatPosition(QSEnumOrderSource.RISKCENTREACCOUNTRULE, msg);
+                    this.Account.FlatPosition(QSEnumOrderSource.RISKCENTREACCOUNTRULE,msg);
                 }
+
                 flatStart = true;//开始平仓
                 return false;
             }
             else
                 return true;
         }
+
 
         public override string RuleDescription
         {
@@ -63,11 +66,13 @@ namespace AccountRuleSet
             }
         }
 
+
         #region 覆写静态对象
         public static new string Title
         {
             get { return "强平[盈利额度]"; }
         }
+
         public static new string Description
         {
             get { return "盈利额度(扣除手续费)大于设定值时,强平持仓并禁止交易"; }
@@ -93,6 +98,7 @@ namespace AccountRuleSet
         /// </summary>
         public static new bool CanSetSymbols { get { return false; } }
 
+
         //用于验证客户端的输入值是否正确
         public static new bool ValidSetting(RuleItem item, out string msg)
         {
@@ -103,6 +109,7 @@ namespace AccountRuleSet
                 {
                     msg = "请去掉负号";
                     return false;
+
                 }
                 msg = "";
                 return true;
@@ -112,9 +119,7 @@ namespace AccountRuleSet
                 msg = "请设定有效数值";
                 return false;
             }
-            
         }
-
         #endregion
     }
 }

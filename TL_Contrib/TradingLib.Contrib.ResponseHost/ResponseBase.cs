@@ -209,15 +209,37 @@ namespace TradingLib.Contrib.ResponseHost
         }
 
         /// <summary>
+        /// 取消委托
+        /// </summary>
+        /// <param name="oid"></param>
+        protected void CancelOrder(long oid)
+        {
+            TLCtxHelper.CmdUtils.CancelOrder(oid);
+        }
+        /// <summary>
         /// 买入某个合约
         /// </summary>
         /// <param name="symbol"></param>
         /// <param name="size"></param>
         /// <param name="price"></param>
-        protected void Buy(string symbol, int size, decimal price=0)
+        protected Order Buy(string symbol, int size, decimal price=0)
         {
             Order o = new OrderImpl(symbol, true, size, price, 0, "", Util.ToTLTime(), Util.ToTLDate());
             this.SendOrder(o);
+            return o;
+        }
+
+        /// <summary>
+        /// 卖出某个合约
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <param name="size"></param>
+        /// <param name="price"></param>
+        protected Order Sell(string symbol, int size, decimal price = 0)
+        {
+            Order o = new OrderImpl(symbol, true, size, price, 0, "", Util.ToTLTime(), Util.ToTLDate());
+            this.SendOrder(o);
+            return o;
         }
 
         /// <summary>
@@ -231,17 +253,7 @@ namespace TradingLib.Contrib.ResponseHost
             
         }
 
-        /// <summary>
-        /// 卖出某个合约
-        /// </summary>
-        /// <param name="symbol"></param>
-        /// <param name="size"></param>
-        /// <param name="price"></param>
-        protected void Sell(string symbol, int size, decimal price=0)
-        {
-            Order o = new OrderImpl(symbol, true, size, price, 0, "", Util.ToTLTime(), Util.ToTLDate());
-            this.SendOrder(o);
-        }
+
 
         protected void Sell(string symbol, int size, int ticks)
         { 
