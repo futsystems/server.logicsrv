@@ -55,8 +55,8 @@ namespace TradingLib.Core
         public void CTE_UpdateDomain(ISession session,int id)
         {
             Manager manager = session.GetManager();
-            //只有超级域的管理员
-            if (manager.Domain.Super && manager.IsRoot())
+            //管理员才有权对系统的合约同步进行设置
+            if(manager.IsRoot())
             {
                 if (id != 0)
                 {
