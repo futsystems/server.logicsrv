@@ -36,7 +36,7 @@ namespace TradingLib.Core
             {
                 _timer = new System.Timers.Timer();
                 _timer.Elapsed += new System.Timers.ElapsedEventHandler(TimeEvent);
-                _timer.Interval = 1000;
+                _timer.Interval = Const.TASKFREQ;
                 _timer.Enabled = true;
                 _timer.Start();
                 
@@ -67,6 +67,7 @@ namespace TradingLib.Core
         {
             foreach (ITask t in  TLCtxHelper.Ctx.TaskList)
             {
+                //Util.Debug("sec:" + DateTime.Now.Second.ToString() + " millisec:" + DateTime.Now.Millisecond.ToString(), QSEnumDebugLevel.INFO);
                 t.CheckTask(e.SignalTime);
             }
         }

@@ -18,15 +18,34 @@ namespace TradingLib.Common
         int _miniute;
         int _secend;
         int _intervalsecends;
+        int _intervalMilliSecends;
         string _name;
         string _description;
         QSEnumTaskType _type;
+
+        /// <summary>
+        /// 执行间隔-秒
+        /// </summary>
         public int IntervalSecends { get {
             if (_type == QSEnumTaskType.CIRCULATE)
                 return _intervalsecends;
             else
                 return 0;
         } }
+
+        /// <summary>
+        /// 执行间隔-毫秒
+        /// </summary>
+        public int IntervalMilliSecends
+        {
+            get
+            {
+                if (_type == QSEnumTaskType.CIRCULATE)
+                    return _intervalMilliSecends;
+                else
+                    return 0;
+            }
+        }
 
         public int Hour { get {
 
@@ -79,10 +98,11 @@ namespace TradingLib.Common
         /// <param name="name">任务名称</param>
         /// <param name="secends">任务间隔秒数</param>
         /// <param name="description">任务描述</param>
-        public TaskAttr(string name,int secends,string description="任务描述")
+        public TaskAttr(string name,int intervalSecends,int intervalMilliSecends,string description="任务描述")
         {
             _name = name;
-            _intervalsecends = secends;
+            _intervalsecends = intervalSecends;
+            _intervalMilliSecends = intervalMilliSecends;
             _type = QSEnumTaskType.CIRCULATE;
             _description = description;
         }

@@ -732,7 +732,7 @@ namespace TradingLib.Common
             switch (info.Attr.TaskType)
             {
                 case QSEnumTaskType.CIRCULATE:
-                    return new TaskProc(obj.UUID,info.Attr.Name, new TimeSpan(0, 0, info.Attr.IntervalSecends), delegate() { info.MethodInfo.Invoke(obj, null); });
+                    return new TaskProc(obj.UUID,info.Attr.Name, new TimeSpan(0, 0,0, info.Attr.IntervalSecends,info.Attr.IntervalMilliSecends), delegate() { info.MethodInfo.Invoke(obj, null); });
                 case QSEnumTaskType.SPECIALTIME:
                     return new TaskProc(obj.UUID,info.Attr.Name, info.Attr.Hour, info.Attr.Minute, info.Attr.Secend, delegate() { info.MethodInfo.Invoke(obj, null); });
                 default:

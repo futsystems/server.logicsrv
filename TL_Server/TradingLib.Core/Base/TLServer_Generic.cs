@@ -198,7 +198,7 @@ namespace TradingLib.Core
         bool sessionloaded = false;
         string clientlistfn = @"cache\TrdClientList";
 
-        [TaskAttr("消息交换储存Session",10,"消息交换储存,用于启动时恢复交易客户端连接")]
+        [TaskAttr("消息交换储存Session", 10, 0, "消息交换储存,用于启动时恢复交易客户端连接")]
         public void SaveSessionCache()
         {
             if (!sessionloaded) return;//如果客户端回话没有加载 则不进行实时保存
@@ -942,7 +942,7 @@ namespace TradingLib.Core
         int deadcheckingperiod = Const.CLEARDEADSESSIONPERIOD;//1.5分钟检查一次死链接信息
         int deaddiff = Const.CLIENTDEADTIME;//死链接时间为1分钟,1分钟内没有hearbeat更新的则视为死链接
         //每分钟检查一次客户端回话session
-        [TaskAttr("定时清除无效客户端回话",60, "定时清除无效客户端回话")]
+        [TaskAttr("定时清除无效客户端回话", 60, 0, "定时清除无效客户端回话")]
         public void Task_CleanDeadSession()
         {
             //debug("删除无效客户端回话......", QSEnumDebugLevel.INFO);

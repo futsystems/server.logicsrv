@@ -116,7 +116,7 @@ namespace TradingLib.Core
         /// <summary>
         /// 更新当前行情时间段
         /// </summary>
-        [TaskAttr("更新TickWatcher",1, "自动更新TickWatch时间段设置")]
+        [TaskAttr("更新TickWatcher", 1, 0, "自动更新TickWatch时间段设置")]
         public void Task_UpdateTickWatcher()
         {
             bool isinspan = false;
@@ -478,7 +478,7 @@ namespace TradingLib.Core
 
         DateTime _lastsnapshottime = DateTime.Now;
 
-        [TaskAttr("保存行情快照",30,"保存行情路由系统的行情快照,用于系统崩溃胡快速重启恢复到最近的行情数据,没有行情数据风控系统可能会出现错误平仓")]
+        [TaskAttr("保存行情快照", 30, 0, "保存行情路由系统的行情快照,用于系统崩溃胡快速重启恢复到最近的行情数据,没有行情数据风控系统可能会出现错误平仓")]
         public void Task_SaveTickSnapshot()
         {
             try

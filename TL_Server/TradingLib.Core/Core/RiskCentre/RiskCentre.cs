@@ -79,9 +79,6 @@ namespace TradingLib.Core
             }
             SENDORDERRETRY = _cfgdb["FlatSendOrderRetryNum"].AsInt();
 
-            
-
-
             //订阅持仓回合关闭事件
             TLCtxHelper.EventIndicator.GotPositionClosedEvent += new PositionRoundClosedDel(GotPostionRoundClosed);
 
@@ -100,8 +97,6 @@ namespace TradingLib.Core
         {
             //_posoffsetracker.GotTick(k);
         }
-
-
 
         #region 【服务端止盈止损】客户端提交上来的持仓止盈止损 服务端检查
         /// <summary>

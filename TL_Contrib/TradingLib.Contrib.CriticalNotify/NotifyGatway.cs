@@ -113,7 +113,7 @@ namespace TradingLib.Contrib.NotifyCentre
         }
         RingBuffer<IEmail> emailcache = new RingBuffer<IEmail>(1000);
 
-        [TaskAttr("每5秒检查一次邮件发送",5,"定时发送邮件")]
+        [TaskAttr("每5秒检查一次邮件发送",5,0,"定时发送邮件")]
         public void Task_SendEmail()
         {
             try

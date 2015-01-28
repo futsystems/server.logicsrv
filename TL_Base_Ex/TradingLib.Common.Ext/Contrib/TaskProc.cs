@@ -29,7 +29,7 @@ namespace TradingLib.Common
         public QSEnumTaskType TaskType { get { return _taskType; } set { _taskType = value; } }
 
 
-        TimeSpan _taskInterval = new TimeSpan(0, 0, 0);
+        TimeSpan _taskInterval = new TimeSpan(0, 0, 0, 0);
         /// <summary>
         /// 任务执行间隔
         /// </summary>
@@ -82,6 +82,7 @@ namespace TradingLib.Common
         {
             if (_taskType == QSEnumTaskType.CIRCULATE)
             {
+                //Util.Debug(this.TaskName + string.Format("sig sec:{0} millisec:{1} interval sec:{2} millisec:{3}" , signalTime.Second,signalTime.Millisecond,_taskInterval.Seconds,_taskInterval.Milliseconds),QSEnumDebugLevel.INFO);
                 if (signalTime.Subtract(_lastTime) >= _taskInterval)
                 {
                     GetTaskProcWrapper().DoTask();
@@ -94,9 +95,10 @@ namespace TradingLib.Common
                 int intHour = signalTime.Hour;
                 int intMinute = signalTime.Minute;
                 int intSecond = signalTime.Second;
+
                 if (this.Hour < 0 && this.Minute < 0 && this.Secend >= 0)
                 {
-                    if (intSecond == this.Secend)
+                    if (intSecond == this.Secend && signalTime.Millisecond <= Const.TASKFREQ)
                     {
                         GetTaskProcWrapper().DoTask();
                     }
@@ -104,7 +106,7 @@ namespace TradingLib.Common
 
                 if (this.Hour < 0 && this.Minute >= 0 && this.Secend >= 0)
                 {
-                    if (intMinute == this.Minute && intSecond == this.Secend)
+                    if (intMinute == this.Minute && intSecond == this.Secend && signalTime.Millisecond <= Const.TASKFREQ)
                     {
                         GetTaskProcWrapper().DoTask();
                     }
@@ -112,7 +114,7 @@ namespace TradingLib.Common
 
                 if (this.Hour >= 0 && this.Minute >= 0 && this.Secend >= 0)
                 {
-                    if (intHour == this.Hour && intMinute == this.Minute && intSecond == this.Secend)
+                    if (intHour == this.Hour && intMinute == this.Minute && intSecond == this.Secend && signalTime.Millisecond <= Const.TASKFREQ)
                     {
                         GetTaskProcWrapper().DoTask();
                     }

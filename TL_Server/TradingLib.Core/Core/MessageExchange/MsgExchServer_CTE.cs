@@ -140,7 +140,7 @@ namespace TradingLib.Core
         /// 然后委托进入等待成交阶段
         /// 
         /// </summary>
-        [TaskAttr("交易中心委托状态检查",15, "交易中心委托状态检查")]
+        [TaskAttr("交易中心委托状态检查", 15, 0, "交易中心委托状态检查")]
         public void CTE_OrderStatusCheck()
         {
             if (!TLCtxHelper.IsReady) return;

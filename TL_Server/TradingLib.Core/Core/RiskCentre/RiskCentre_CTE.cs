@@ -14,7 +14,7 @@ namespace TradingLib.Core
         /// <summary>
         /// 帐户风控规则扫描
         /// </summary>
-        [TaskAttr("帐户风控实时检查",1, "帐户风控实时检查")]
+        [TaskAttr("帐户风控实时检查",0,500, "帐户风控实时检查")]
         public void Task_DataCheck()
         {
             foreach (IAccount account in activeaccount.Values)
@@ -26,7 +26,7 @@ namespace TradingLib.Core
         /// <summary>
         /// 强平队列任务扫描
         /// </summary>
-        [TaskAttr("检查强平任务队列", 1, "调度系统每秒检查强平任务队列")]
+        [TaskAttr("检查强平任务队列",0,250,"调度系统每秒检查强平任务队列")]
         public void Task_ProcessPositionFlatSet()
         {
             this.ProcessPositionFlat();

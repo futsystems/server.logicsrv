@@ -12,6 +12,11 @@ namespace TradingLib.API
     public static class Const
     {
         /// <summary>
+        /// 任务调度扫描频率
+        /// 每隔多少毫秒扫描一次任务列表
+        /// </summary>
+        public const int TASKFREQ = 100;
+        /// <summary>
         /// integer precision
         /// </summary>
         public const int IPREC = 1000000;
