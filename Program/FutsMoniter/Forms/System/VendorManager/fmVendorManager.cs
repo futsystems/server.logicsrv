@@ -59,6 +59,7 @@ namespace FutsMoniter
         void WireEvent()
         {
             Globals.RegIEventHandler(this);
+
             configgrid.DoubleClick +=new EventHandler(configgrid_DoubleClick);
             configgrid.RowPrePaint +=new DataGridViewRowPrePaintEventHandler(RowPrePaint);
             configgrid.MouseClick += new MouseEventHandler(configgrid_MouseClick);

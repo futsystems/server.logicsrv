@@ -20,7 +20,6 @@ namespace FutsMoniter
         
         void OnNotifyConnectorConfig(string jsonstr)
         {
-            //JsonReply<ConnectorConfig> reply = JsonReply.ParseReply<ConnectorConfig>(jsonstr);
             ConnectorConfig cfg = MoniterUtils.ParseJsonResponse<ConnectorConfig>(jsonstr);
             if (cfg !=null)
             {
@@ -114,8 +113,9 @@ namespace FutsMoniter
             if (cfg != null)
             {
                 fmConnectorEdit fm = new fmConnectorEdit();
+                fm.SetInterfaceCBList(this.GetInterfaceCBList());
                 fm.SetConnectorConfig(cfg);
-                fm.Show();
+                fm.ShowDialog();
             }
         }
 
@@ -360,12 +360,12 @@ namespace FutsMoniter
 
         void configgrid_MouseClick(object sender, MouseEventArgs e)
         {
-            //throw new NotImplementedException();
             if (e.Button == System.Windows.Forms.MouseButtons.Right)
             {
                 GetConnectorGridRightMenu().Show(Control.MousePosition);
             }
         }
+
         ContextMenuStrip GetConnectorGridRightMenu()
         {
             ConnectorConfig cfg = CurrentConnectorConfig;
@@ -515,7 +515,7 @@ namespace FutsMoniter
         {
             fmConnectorEdit fm = new fmConnectorEdit();
             fm.SetInterfaceCBList(this.GetInterfaceCBList());
-            fm.Show();
+            fm.ShowDialog();
         }
 
         /// <summary>
@@ -531,7 +531,7 @@ namespace FutsMoniter
                 fmConnectorEdit fm = new fmConnectorEdit();
                 fm.SetInterfaceCBList(this.GetInterfaceCBList());
                 fm.SetConnectorConfig(cfg);
-                fm.Show();
+                fm.ShowDialog();
             }
             else
             {

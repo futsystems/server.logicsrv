@@ -40,6 +40,7 @@
             this.pageroutergroup = new ComponentFactory.Krypton.Navigator.KryptonPage();
             this.kryptonPanel3 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
             this.kryptonGroupBox2 = new ComponentFactory.Krypton.Toolkit.KryptonGroupBox();
+            this.ctRouterGroupList1 = new FutsMoniter.Controls.Base.ctRouterGroupList();
             this.rgdescrption = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
             this.cbrgstrategytype = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
             this.rgname = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
@@ -51,7 +52,6 @@
             this.btnUpdateRouterGroup = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.kryptonGroupBox1 = new ComponentFactory.Krypton.Toolkit.KryptonGroupBox();
             this.routeritemgrid = new ComponentFactory.Krypton.Toolkit.KryptonDataGridView();
-            this.ctRouterGroupList1 = new FutsMoniter.Controls.Base.ctRouterGroupList();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tabholder)).BeginInit();
@@ -214,8 +214,16 @@
             this.kryptonGroupBox2.Panel.Controls.Add(this.btnUpdateRouterGroup);
             this.kryptonGroupBox2.Size = new System.Drawing.Size(278, 253);
             this.kryptonGroupBox2.TabIndex = 1;
-            this.kryptonGroupBox2.Text = "路由组设置";
             this.kryptonGroupBox2.Values.Heading = "路由组设置";
+            // 
+            // ctRouterGroupList1
+            // 
+            this.ctRouterGroupList1.EnableAny = false;
+            this.ctRouterGroupList1.Location = new System.Drawing.Point(44, 14);
+            this.ctRouterGroupList1.Name = "ctRouterGroupList1";
+            this.ctRouterGroupList1.RouterGroupID = 0;
+            this.ctRouterGroupList1.Size = new System.Drawing.Size(201, 21);
+            this.ctRouterGroupList1.TabIndex = 17;
             // 
             // rgdescrption
             // 
@@ -303,7 +311,6 @@
             this.kryptonGroupBox1.Panel.Controls.Add(this.routeritemgrid);
             this.kryptonGroupBox1.Size = new System.Drawing.Size(472, 253);
             this.kryptonGroupBox1.TabIndex = 0;
-            this.kryptonGroupBox1.Text = "成交路由列表";
             this.kryptonGroupBox1.Values.Heading = "成交路由列表";
             // 
             // routeritemgrid
@@ -315,14 +322,6 @@
             this.routeritemgrid.RowTemplate.Height = 23;
             this.routeritemgrid.Size = new System.Drawing.Size(468, 231);
             this.routeritemgrid.TabIndex = 0;
-            // 
-            // ctRouterGroupList1
-            // 
-            this.ctRouterGroupList1.EnableAny = false;
-            this.ctRouterGroupList1.Location = new System.Drawing.Point(44, 14);
-            this.ctRouterGroupList1.Name = "ctRouterGroupList1";
-            this.ctRouterGroupList1.Size = new System.Drawing.Size(201, 21);
-            this.ctRouterGroupList1.TabIndex = 17;
             // 
             // fmVendorManager
             // 
