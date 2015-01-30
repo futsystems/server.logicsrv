@@ -552,7 +552,7 @@ namespace TradingLib.Core
                     Order otd = new OrderImpl(pos.Symbol, voltd * (side ? 1 : -1) * -1);
 
                     otd.Account = pos.Account;
-                    otd.OffsetFlag = QSEnumOffsetFlag.CLOSE;
+                    otd.OffsetFlag = QSEnumOffsetFlag.CLOSETODAY;
                     otd.OrderSource = set.Source;
                     otd.ForceClose = true;
                     otd.ForceCloseReason = set.ForceCloseReason;

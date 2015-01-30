@@ -196,7 +196,7 @@ namespace TradingLib.Core
             }
 
             //6.委托价格检查
-            //6.1查看数据通道是否有对应的合约价格
+            //6.1查看数据通道是否有对应的合约价格 行情是否正常
 
             //bool symlive = TLCtxHelper.Ctx.MessageExchange.IsSymbolTickLive(o.Symbol);
             //if (!symlive)
