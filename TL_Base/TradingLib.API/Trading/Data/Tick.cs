@@ -137,7 +137,15 @@ namespace TradingLib.API
         int OpenInterest { get; set; }
         decimal PreSettlement { get; set; }
         decimal Settlement { get; set; }
+        /// <summary>
+        /// ÕÇÍ£¼Û
+        /// </summary>
+        decimal UpperLimit { get; set; }
 
+        /// <summary>
+        /// µøÍ£¼Û
+        /// </summary>
+        decimal LowerLimit { get; set; }
         //QSEnumTickType Type { get; set; }
 
     }

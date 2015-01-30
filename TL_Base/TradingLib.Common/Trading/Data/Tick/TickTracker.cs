@@ -60,12 +60,14 @@ namespace TradingLib.Common
             date.Clear();
             time.Clear();
             last.Clear();
+
+
         }
-        int _estlabels = 10;
+        int _estlabels = 100;
         /// <summary>
         /// create ticktracker
         /// </summary>
-        public TickTracker() : this(10) { }
+        public TickTracker() : this(100) { }
         /// <summary>
         /// create ticktracker with some approximate # of symbols to track
         /// </summary>
@@ -93,6 +95,9 @@ namespace TradingLib.Common
             volume = new GenericTracker<int>(_estlabels);
             oi = new GenericTracker<int>(_estlabels);
             preoi = new GenericTracker<int>(_estlabels);
+
+            upperlimit = new GenericTracker<decimal>(_estlabels);
+            lowerlimit = new GenericTracker<decimal>(_estlabels);
 
             // setup generic trackers to track tick information
             last.NewTxt += new TextIdxDelegate(last_NewTxt);
@@ -128,6 +133,9 @@ namespace TradingLib.Common
             oi.addindex(txt, 0);
             preoi.addindex(txt, 0);
 
+            upperlimit.addindex(txt, 0);
+            lowerlimit.addindex(txt, 0);
+
             if (NewTxt!=null)
                 NewTxt(txt,idx);
         }
@@ -152,6 +160,9 @@ namespace TradingLib.Common
         GenericTracker<int> volume;
         GenericTracker<int> oi;
         GenericTracker<int> preoi;
+
+        GenericTracker<decimal> upperlimit;
+        GenericTracker<decimal> lowerlimit;
 
 
         public string Display(int idx) { return this[idx].ToString(); }
@@ -332,6 +343,8 @@ namespace TradingLib.Common
                 k.Vol = volume[idx];
                 k.OpenInterest = oi[idx];
                 k.PreOpenInterest = preoi[idx];
+                k.UpperLimit = upperlimit[idx];
+                k.LowerLimit = lowerlimit[idx];
                 return k;
             }
         }
@@ -440,6 +453,8 @@ namespace TradingLib.Common
             {
                 preoi[idx] = k.PreOpenInterest;
             }
+            upperlimit[idx] = k.UpperLimit;
+            lowerlimit[idx] = k.LowerLimit;
             return true;
         }
     }

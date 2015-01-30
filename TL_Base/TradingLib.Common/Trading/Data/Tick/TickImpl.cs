@@ -113,6 +113,8 @@ namespace TradingLib.Common
             _oi = 0;
             _presettlement = 0;
             _settlement = 0;
+            _upperlimit = 0;
+            _lowerlimit = 0;
         }
         public static TickImpl Copy(Tick c)
         {
@@ -146,6 +148,8 @@ namespace TradingLib.Common
             k.PreSettlement = c.PreSettlement;
             k.Settlement = c.Settlement;
 
+            k.UpperLimit = c.UpperLimit;
+            k.LowerLimit = c.LowerLimit;
             return k;
         }
         /// <summary>
@@ -248,6 +252,17 @@ namespace TradingLib.Common
         decimal _settlement;
         public decimal Settlement { get { return _settlement; } set { _settlement = value; } }
 
+        decimal _upperlimit;
+        decimal _lowerlimit;
+        /// <summary>
+        /// 涨停价
+        /// </summary>
+        public decimal UpperLimit { get { return _upperlimit; } set { _upperlimit = value; } }
+
+        /// <summary>
+        /// 跌停价
+        /// </summary>
+        public decimal LowerLimit { get { return _lowerlimit; } set { _lowerlimit = value; } }
         public static string Serialize(Tick t)
         {
             const char d = ',';
@@ -296,6 +311,10 @@ namespace TradingLib.Common
             sb.Append(t.PreSettlement.ToString("G0"));
             sb.Append(d);
             sb.Append(t.Settlement);
+            sb.Append(d);
+            sb.Append(t.UpperLimit);
+            sb.Append(d);
+            sb.Append(t.LowerLimit);
 
 
             return sb.ToString();
@@ -351,6 +370,11 @@ namespace TradingLib.Common
             t.BidExchange = r[(int)TickField.bidex];
             t.AskExchange = r[(int)TickField.askex];
             t.Datetime = t.Date * 1000000 + t.Time;
+
+            if (decimal.TryParse(r[(int)TickField.upper], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out d))
+                t.UpperLimit = d;
+            if (decimal.TryParse(r[(int)TickField.lower], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out d))
+                t.LowerLimit = d;
             return t;
         }
 
@@ -478,5 +502,7 @@ namespace TradingLib.Common
         oi,
         presettlement,
         settlement,
+        upper,
+        lower,
     }
 }

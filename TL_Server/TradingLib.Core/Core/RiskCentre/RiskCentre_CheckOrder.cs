@@ -206,17 +206,17 @@ namespace TradingLib.Core
             //}
 
             //6.2检查价格是否在涨跌幅度内
-            //if (o.isLimit || o.isStop)
-            //{
-            //    decimal targetprice = o.isLimit ? o.LimitPrice : o.StopPrice;
-            //    decimal diff = Math.Abs(targetprice - avabileprice);
-            //    //如果价格超过涨跌幅 则回报操作
-            //    if ((diff / avabileprice) > 0.1M)
-            //    {
-            //        errortitle = "ORDERPRICE_OVERT_LIMIT";//保单价格超过涨跌幅
-            //        return false;
-            //    }
-            //}
+            if (o.isLimit || o.isStop)
+            {
+                decimal targetprice = o.isLimit ? o.LimitPrice : o.StopPrice;
+                Tick k = TLCtxHelper.CmdUtils.GetTickSnapshot(o.Symbol);
+                if (targetprice > k.UpperLimit || targetprice < k.LowerLimit)
+                {
+                    errortitle = "ORDERPRICE_OVERT_LIMIT";//保单价格超过涨跌幅
+                    return false;
+                }
+            }
+
             return true;
 
         }
