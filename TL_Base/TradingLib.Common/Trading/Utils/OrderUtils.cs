@@ -94,8 +94,6 @@ namespace TradingLib.Common
                     else
                         //如果便利的委托类型未知 则发挥保证金为最大
                         return decimal.MaxValue;
-
-
                 }
                 else
                     return symbol.Margin * o.UnsignedSize;//固定金额保证金计算 手数×保证金额度 = 总保证金额度

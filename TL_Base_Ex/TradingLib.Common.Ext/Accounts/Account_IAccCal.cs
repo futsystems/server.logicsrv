@@ -17,9 +17,21 @@ namespace TradingLib.Common
         /// <returns></returns>
         public virtual decimal CalOrderFundRequired(Order o, decimal defaultvalue = 0)
         {
-            decimal price = TLCtxHelper.CmdUtils.GetAvabilePrice(o.Symbol);
-            return o.CalFundRequired(price, defaultvalue);
+            //需要判断是否启用单向大边
+            if (!this.SideMargin)
+            {
+                //decimal price = TLCtxHelper.CmdUtils.GetAvabilePrice(o.Symbol);
+                return this.CalOrderMarginFrozen(o);
+            }
+            else
+            {
+                decimal marginfrozennow = this.CalFutMarginSet().Sum(ms => ms.MarginFrozen);
+                //将当前委托纳入待成交委托集，然后按单向大边规则计算冻结保证金
+                decimal marginfrozenwill = this.CalFutMarginSet(o).Sum(ms => ms.MarginFrozen);
+                return marginfrozenwill - marginfrozennow;//纳入开仓委托的单向大边冻结保证金 - 当前冻结保证金 为该委托所需冻结保证金
+            }
         }
+
 
         /// <summary>
         /// 获得某个合约的可交易资金

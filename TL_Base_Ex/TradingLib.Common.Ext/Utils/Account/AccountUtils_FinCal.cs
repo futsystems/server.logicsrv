@@ -33,12 +33,24 @@ namespace TradingLib.Common
         /// </summary>
         public bool Side { get; set; }
 
+        /// <summary>
+        /// 占用保证金
+        /// </summary>
         public decimal Margin { get; set; }
 
+        /// <summary>
+        /// 持仓数量
+        /// </summary>
         public int HoldSize { get; set; }
 
+        /// <summary>
+        /// 冻结保证金
+        /// </summary>
         public decimal MarginFrozen { get; set; }
 
+        /// <summary>
+        /// 待开仓数量
+        /// </summary>
         public int PendingOpenSize { get; set; }
 
         /// <summary>
@@ -136,35 +148,43 @@ namespace TradingLib.Common
         #region 计算期货财务数据
         /// <summary>
         /// 按照单向大边规则计算品种的保证金数据集
+        /// EntryOrder开仓委托,用于按照单向大边
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
-        public static IEnumerable<MarginSet> CalFutMarginSet(this IAccount account)
+        public static IEnumerable<MarginSet> CalFutMarginSet(this IAccount account,Order entryorder=null)
         {
             Dictionary<string, SecSide> map = new Dictionary<string, SecSide>();
+
+            //持仓分组
             var gposresult = FilterPositions(account, SecurityType.FUT).GroupBy(p => new SecSide(p));
             foreach (var g in gposresult)
             {
-                g.Key.Margin = g.Sum(p => p.CalcPositionMargin());
+                g.Key.Margin = g.Sum(p => account.CalPositionMargin(p));
                 g.Key.HoldSize = g.Sum(p => p.UnsignedSize);
                 map.Add(g.Key.Key, g.Key);
             }
 
-            var gorderresult = FilterPendingOrders(account, SecurityType.FUT).Where(o => o.IsEntryPosition).GroupBy(o => new SecSide(o));
+            //委托分组
+            IEnumerable<Order> pendingorders = FilterPendingOrders(account, SecurityType.FUT);
+            pendingorders = entryorder != null ? pendingorders.Concat(new Order[] { entryorder }) : pendingorders;
+            var gorderresult = pendingorders.Where(o => o.IsEntryPosition).GroupBy(o => new SecSide(o));
             foreach (var g in gorderresult)
             {
+                //如果持仓分组中存在了对应的分组 则将委托分组数据记录对应的分组
                 if (map.Keys.Contains(g.Key.Key))
                 {
                     SecSide s = map[g.Key.Key];
-                    s.MarginFrozen = g.Sum(o => o.CalFundRequired(TLCtxHelper.CmdUtils.GetAvabilePrice(o.Symbol)));
+                    s.MarginFrozen = g.Sum(o => account.CalOrderMarginFrozen(o));
                     s.PendingOpenSize = g.Sum(o => o.UnsignedSize);
                 }
                 else
                 {
-                    g.Key.MarginFrozen = g.Sum(o => o.CalFundRequired(TLCtxHelper.CmdUtils.GetAvabilePrice(o.Symbol)));
+                    g.Key.MarginFrozen = g.Sum(o => account.CalOrderMarginFrozen(o));
                     g.Key.PendingOpenSize = g.Sum(o => o.UnsignedSize);
                     map.Add(g.Key.Key, g.Key);
                 }
+
             }
 
             var maginlist = map.Values.GroupBy(s => s.SecCode).Select(g =>
@@ -234,6 +254,8 @@ namespace TradingLib.Common
                 return FilterPendingOrders(account, SecurityType.FUT).Where(o => o.IsEntryPosition).Sum(e => account.CalOrderFundRequired(e, 0));
             }
         }
+
+
 
         public static decimal CalFutUnRealizedPL(this IAccount account)
         {

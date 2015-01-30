@@ -140,6 +140,74 @@ namespace TradingLib.Common
                     return basemargin;
             }
         }
+
+        /// <summary>
+        /// 计算委托的保证金冻结
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="o"></param>
+        /// <returns></returns>
+        public static decimal CalOrderMarginFrozen(this IAccount account, Order o)
+        {
+
+            if (!o.IsEntryPosition) return 0;//平仓委托不冻结保证金
+
+            decimal basemarginfrozen = 0;
+            Symbol symbol = o.oSymbol;
+            int size = o.UnsignedSize;
+            decimal currentPrice = TLCtxHelper.Ctx.RouterManager.GetAvabilePrice(symbol.Symbol);//获得某合约当前价格
+            //取价算法 市委托 取得合约当前价格，限价或追价 取设定价格
+            decimal price = o.isMarket ? currentPrice : (o.isLimit ? o.LimitPrice : o.StopPrice);
+
+            if (symbol.SecurityType == SecurityType.FUT)//期货资金需求计算
+            {
+                if (symbol.Margin <= 1)
+                {
+                    //如果是按市值比例来确认保证金,而给出的当前市场价格<=0 则返回可开手数量为0
+                    if (price <= 0)
+                        basemarginfrozen= decimal.MaxValue;
+                    basemarginfrozen = symbol.Margin * symbol.Multiple * price * size;
+                }
+                else
+                {
+                    basemarginfrozen = symbol.Margin * size;
+                }
+            }
+            else if (symbol.SecurityType == SecurityType.OPT)//期权资金需求计算
+            {
+                basemarginfrozen =  price * symbol.Multiple * size;
+            }
+            else if (symbol.SecurityType == SecurityType.INNOV)//异化资金需求计算
+            {
+                if (symbol.Margin > 0)
+                {
+                    basemarginfrozen =  symbol.Margin + (symbol.ExtraMargin > 0 ? symbol.ExtraMargin : 0);
+                }
+                else
+                {
+                    basemarginfrozen =  decimal.MaxValue;
+                }
+            }
+            else
+                basemarginfrozen = decimal.MaxValue;
+
+
+            //获得保证金模板
+            MarginTemplateItem item = account.GetMarginTemplateItem(o.oSymbol);
+            if (item == null) return basemarginfrozen;
+
+            switch (item.ChargeType)
+            {
+                case QSEnumChargeType.Absolute:
+                    return item.CalMarginFrozen(o, currentPrice);
+                case QSEnumChargeType.Relative:
+                    return basemarginfrozen + item.CalMarginFrozen(o, currentPrice);
+                case QSEnumChargeType.Percent:
+                    return basemarginfrozen * (1 + item.Percent);
+                default:
+                    return basemarginfrozen;
+            }
+        }
     
     }
 }

@@ -89,6 +89,27 @@ namespace TradingLib.Common
             }
             return 0;
         }
+
+        /// <summary>
+        /// 计算某个委托冻结保证金
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="price"></param>
+        /// <returns></returns>
+        public decimal CalMarginFrozen(Order o, decimal currentPrice)
+        {
+            if (!o.IsEntryPosition) return 0;//平仓委托不冻结保证金
+            decimal targetPrice = o.isMarket ? currentPrice : (o.isLimit ? o.LimitPrice : o.StopPrice);
+            if (this.MarginByMoney>0)
+            {
+                return o.UnsignedSize *targetPrice* o.oSymbol.Multiple * this.MarginByMoney;
+            }
+            if (this.MarginByVolume > 0)
+            {
+                return o.UnsignedSize * this.MarginByVolume;
+            }
+            return 0;
+        }
     }
 
     

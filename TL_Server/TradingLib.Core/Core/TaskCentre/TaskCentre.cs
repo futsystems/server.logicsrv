@@ -20,7 +20,7 @@ namespace TradingLib.Core
         public static Log Logger = new Log("TaskCentre_Error", true, true, Util.ProgramData(CoreName), true);//日志组件
 
         System.Timers.Timer _timer = null;
-
+        System.Timers.Timer _timerSpecial = null;
         public string CoreId { get { return this.PROGRAME; } }
         public TaskCentre():base(TaskCentre.CoreName)
         { 
@@ -39,7 +39,14 @@ namespace TradingLib.Core
                 _timer.Interval = Const.TASKFREQ;
                 _timer.Enabled = true;
                 _timer.Start();
-                
+            }
+            if (_timerSpecial == null)
+            {
+                _timerSpecial = new System.Timers.Timer();
+                _timerSpecial.Elapsed += new System.Timers.ElapsedEventHandler(TimeEventSpecial);
+                _timerSpecial.Interval = 1000;
+                _timerSpecial.Enabled = true;
+                _timerSpecial.Start();
             }
         }
 
@@ -53,6 +60,10 @@ namespace TradingLib.Core
             {
                 _timer.Stop();
             }
+            if (_timerSpecial != null)
+            {
+                _timerSpecial.Stop();
+            }
         }
 
         public override void Dispose()
@@ -61,11 +72,36 @@ namespace TradingLib.Core
             base.Dispose();
             _timer.Elapsed -= new System.Timers.ElapsedEventHandler(TimeEvent);
             _timer = null;
+            _timerSpecial.Elapsed -= new System.Timers.ElapsedEventHandler(TimeEventSpecial);
+            _timerSpecial = null;
+
+        }
+        /// <summary>
+        /// 以秒为频率定时检查特定时间执行的任务
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="e"></param>
+        void TimeEventSpecial(object source, System.Timers.ElapsedEventArgs e)
+        {
+            //Util.Debug("-----------------------------------------");
+            if (!TLCtxHelper.IsReady) return;
+            foreach (ITask t in TLCtxHelper.Ctx.TaskList.Where(task => task.TaskType == QSEnumTaskType.SPECIALTIME))
+            {
+                //Util.Debug("sec:" + DateTime.Now.Second.ToString() + " millisec:" + DateTime.Now.Millisecond.ToString(), QSEnumDebugLevel.INFO);
+                //Util.Debug("Task:" + t.TaskName + " Memo" + t.GetTaskMemo());
+                t.CheckTask(e.SignalTime);
+            }
         }
 
+        /// <summary>
+        /// 以特定扫描频率100ms定时运行时间间隔执行的任务
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="e"></param>
         void TimeEvent(object source, System.Timers.ElapsedEventArgs e)
         {
-            foreach (ITask t in  TLCtxHelper.Ctx.TaskList)
+            if (!TLCtxHelper.IsReady) return;
+            foreach (ITask t in  TLCtxHelper.Ctx.TaskList.Where(task=>task.TaskType == QSEnumTaskType.CIRCULATE))
             {
                 //Util.Debug("sec:" + DateTime.Now.Second.ToString() + " millisec:" + DateTime.Now.Millisecond.ToString(), QSEnumDebugLevel.INFO);
                 t.CheckTask(e.SignalTime);

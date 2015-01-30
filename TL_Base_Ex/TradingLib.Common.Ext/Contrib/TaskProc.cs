@@ -98,7 +98,7 @@ namespace TradingLib.Common
 
                 if (this.Hour < 0 && this.Minute < 0 && this.Secend >= 0)
                 {
-                    if (intSecond == this.Secend && signalTime.Millisecond <= Const.TASKFREQ)
+                    if (intSecond == this.Secend)
                     {
                         GetTaskProcWrapper().DoTask();
                     }
@@ -106,7 +106,7 @@ namespace TradingLib.Common
 
                 if (this.Hour < 0 && this.Minute >= 0 && this.Secend >= 0)
                 {
-                    if (intMinute == this.Minute && intSecond == this.Secend && signalTime.Millisecond <= Const.TASKFREQ)
+                    if (intMinute == this.Minute && intSecond == this.Secend)
                     {
                         GetTaskProcWrapper().DoTask();
                     }
@@ -114,7 +114,7 @@ namespace TradingLib.Common
 
                 if (this.Hour >= 0 && this.Minute >= 0 && this.Secend >= 0)
                 {
-                    if (intHour == this.Hour && intMinute == this.Minute && intSecond == this.Secend && signalTime.Millisecond <= Const.TASKFREQ)
+                    if (intHour == this.Hour && intMinute == this.Minute && intSecond == this.Secend)
                     {
                         GetTaskProcWrapper().DoTask();
                     }
