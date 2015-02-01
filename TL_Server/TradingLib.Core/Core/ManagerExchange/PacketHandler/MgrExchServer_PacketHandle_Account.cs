@@ -261,7 +261,7 @@ namespace TradingLib.Core
         public void CTE_QryDomainRootLoginInfo(ISession session, string account)
         {
             Manager manager = session.GetManager();
-            if (manager.Domain.Super && manager.IsRoot())
+            if (manager.IsRoot())
             {
                 IAccount acc = clearcentre[account];
                 if (acc == null)

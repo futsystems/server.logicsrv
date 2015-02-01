@@ -31,7 +31,7 @@ namespace TradingLib.Core
         public void CTE_QryDomainRootLoginInfo(ISession session, int mgrid)
         {
             Manager manager = session.GetManager();
-            if (manager.Domain.Super && manager.IsRoot())
+            if (manager.IsRoot())
             {
 
                 Manager mgr = BasicTracker.ManagerTracker[mgrid];
