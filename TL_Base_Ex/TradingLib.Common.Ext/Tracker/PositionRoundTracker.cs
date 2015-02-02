@@ -226,6 +226,7 @@ namespace TradingLib.Common
         {
             foreach (PositionRoundImpl pr in prlist)
             {
+                if (pr == null) continue;
                 string key = pr.PRKey;
                 if (!_roundmap.ContainsKey(key))
                 {

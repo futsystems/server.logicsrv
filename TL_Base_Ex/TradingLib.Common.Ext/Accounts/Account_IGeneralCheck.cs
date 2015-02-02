@@ -31,8 +31,6 @@ namespace TradingLib.Common
                 re = false;
             }
             return re;
-
-            
         }
 
         /// <summary>
