@@ -61,6 +61,16 @@ namespace TradingLib.Common
             time.Clear();
             last.Clear();
 
+            open.Clear();
+            high.Clear();
+            low.Clear();
+            presettle.Clear();
+            volume.Clear();
+            oi.Clear();
+            preoi.Clear();
+            upperlimit.Clear();
+            lowerlimit.Clear();
+
 
         }
         int _estlabels = 100;

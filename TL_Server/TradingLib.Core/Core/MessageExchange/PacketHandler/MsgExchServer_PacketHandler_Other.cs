@@ -175,7 +175,8 @@ namespace TradingLib.Core
             }
             else
             {
-                int size = account.CanOpenSize(symbol);
+                
+                int size = account.CanOpenSize(symbol,request.Side,request.OffsetFlag);
 
                 debug("got max opensize:" + size.ToString(), QSEnumDebugLevel.INFO);
                 response.Symbol = request.Symbol;

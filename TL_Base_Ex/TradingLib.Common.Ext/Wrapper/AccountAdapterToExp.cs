@@ -161,9 +161,9 @@ namespace TradingLib.Common
         //}
 
 
-        public int CanOpenSize(Symbol symbol)
+        public int CanOpenSize(Symbol symbol,bool side,QSEnumOffsetFlag offset)
         {
-            return _acc.CanOpenSize(symbol);
+            return _acc.CanOpenSize(symbol,side,offset);
         }
         #endregion
 

@@ -7,6 +7,9 @@ using TradingLib.API;
 
 namespace TradingLib.Common
 {
+    /// <summary>
+    /// 品种大边数据
+    /// </summary>
     internal class SecSide
     {
         string _key = string.Empty;
@@ -82,15 +85,20 @@ namespace TradingLib.Common
         }
     }
 
-
+    /// <summary>
+    /// 按单向大边统计出来的保证金数据
+    /// 记录某品种 保证金占用，冻结保证金等数据
+    /// </summary>
     public class MarginSet
     {
 
-        public MarginSet(string code, decimal margin, decimal frozen)
+        public MarginSet(bool bigside,string code, decimal margin,int netfrozensize,decimal frozen)
         {
+            this.MarginSide = bigside;
             this.Code = code;
             this.Margin = margin;
             this.MarginFrozen = frozen;
+            this.NetFronzenSize = netfrozensize;
         }
         /// <summary>
         /// 键值 品种-方向
@@ -98,14 +106,45 @@ namespace TradingLib.Common
         public string Code { get; set; }
 
         /// <summary>
+        /// 保证金方向 记录了该保证金是按多方计算 还是空方计算
+        /// </summary>
+        public bool MarginSide { get; set; }
+
+        /// <summary>
         /// 占用保证金
         /// </summary>
         public decimal Margin { get; set; }
 
         /// <summary>
+        /// 大边持仓数量
+        /// </summary>
+        public int  BigHoldSize { get; set; }
+
+        /// <summary>
+        /// 小边持仓数量
+        /// </summary>
+        public int SmallHoldSize { get; set; }
+       
+        /// <summary>
         /// 冻结保证金
         /// </summary>
         public decimal MarginFrozen { get; set; }
+
+        /// <summary>
+        /// 大边待开仓数量
+        /// </summary>
+        public int BigPendingOpenSize { get; set; }
+
+        /// <summary>
+        /// 小边待开仓数量
+        /// </summary>
+        public int SmallPendingOpenSize { get; set; }
+
+        /// <summary>
+        /// 冻结保证金对应手数
+        /// 这里不是原始挂单数量 是按单边规则计算出来的净冻结挂单数量
+        /// </summary>
+        public int NetFronzenSize { get; set; }
 
         public override string ToString()
         {
@@ -146,6 +185,7 @@ namespace TradingLib.Common
         #endregion
 
         #region 计算期货财务数据
+        
         /// <summary>
         /// 按照单向大边规则计算品种的保证金数据集
         /// EntryOrder开仓委托,用于按照单向大边
@@ -156,7 +196,7 @@ namespace TradingLib.Common
         {
             Dictionary<string, SecSide> map = new Dictionary<string, SecSide>();
 
-            //持仓分组
+            //持仓分组 按品种和方向
             var gposresult = FilterPositions(account, SecurityType.FUT).GroupBy(p => new SecSide(p));
             foreach (var g in gposresult)
             {
@@ -165,10 +205,11 @@ namespace TradingLib.Common
                 map.Add(g.Key.Key, g.Key);
             }
 
-            //委托分组
+            //委托分组 按品种和方向
             IEnumerable<Order> pendingorders = FilterPendingOrders(account, SecurityType.FUT);
             pendingorders = entryorder != null ? pendingorders.Concat(new Order[] { entryorder }) : pendingorders;
             var gorderresult = pendingorders.Where(o => o.IsEntryPosition).GroupBy(o => new SecSide(o));
+
             foreach (var g in gorderresult)
             {
                 //如果持仓分组中存在了对应的分组 则将委托分组数据记录对应的分组
@@ -186,17 +227,27 @@ namespace TradingLib.Common
                 }
 
             }
+            //通过以上分组统计整理成 品种 大边的统计数据 每个品种最多包含 多和空2个方向
 
             var maginlist = map.Values.GroupBy(s => s.SecCode).Select(g =>
             {
+                
                 //如果只有1边持仓
                 if (g.Count() == 1)
                 {
-                    return new MarginSet(g.Key, g.ElementAt(0).Margin, g.ElementAt(0).MarginFrozen);
+
+                    MarginSet tmp = new MarginSet(g.ElementAt(0).Side ,g.Key, g.ElementAt(0).Margin, g.ElementAt(0).PendingOpenSize,g.ElementAt(0).MarginFrozen);
+                    tmp.BigHoldSize = g.ElementAt(0).HoldSize;
+                    tmp.BigPendingOpenSize = g.ElementAt(0).PendingOpenSize;
+                    tmp.SmallHoldSize = 0;
+                    tmp.SmallPendingOpenSize = 0;
+                    return tmp;
                 }
                 //双边持仓
                 else
                 {
+                    int netfrozensize = 0;
+
                     int maxidx = g.ElementAt(0).Margin > g.ElementAt(1).Margin ? 0 : 1;
                     SecSide big = g.ElementAt(maxidx);//大边
                     SecSide small = g.ElementAt(maxidx == 0 ? 1 : 0);//小边
@@ -206,6 +257,7 @@ namespace TradingLib.Common
                     if (big.PendingOpenSize >= small.PendingOpenSize)
                     {
                         marginfrozen = big.MarginFrozen;
+                        netfrozensize = big.PendingOpenSize;
                     }
                     else//大边挂单小于小边挂单 
                     {
@@ -213,19 +265,34 @@ namespace TradingLib.Common
                         int holddiff = big.HoldSize - small.HoldSize;//大边与小边的持仓差，这个差需要从小边挂单中扣除。小边挂单要超过大边持仓才占用保证金
                         //小边挂单数量如果小于持仓仓差，则小边不计算冻结保证金
                         if (small.PendingOpenSize <= holddiff)
+                        {
+                            netfrozensize = big.PendingOpenSize;
                             marginfrozen = big.MarginFrozen;
+                        }
                         else //小边挂单数量大于持仓仓差，则小边需要计算冻结保证金
                         {
                             //小边净挂单量
                             int netsize = small.PendingOpenSize - holddiff;
                             if (netsize <= big.PendingOpenSize)//小边净挂单量小于等于 大边挂单量，则按大边挂单量计算
+                            {
                                 marginfrozen = big.MarginFrozen;
+                                netfrozensize = big.PendingOpenSize;
+                            }
                             else
+                            {
+                                netfrozensize = netsize;
                                 marginfrozen = (small.MarginFrozen / small.PendingOpenSize) * netsize;
+                            }
                         }
 
                     }
-                    return new MarginSet(g.Key, big.Margin, marginfrozen);
+                    //有多空2边的统计 按大边占用保证金和 规则统计出来的保证金占用来体现当前保证金数据
+                    MarginSet tmp = new MarginSet(big.Side ,g.Key, big.Margin, netfrozensize,marginfrozen);
+                    tmp.BigHoldSize = big.HoldSize;
+                    tmp.BigPendingOpenSize = big.PendingOpenSize;
+                    tmp.SmallHoldSize = small.HoldSize;
+                    tmp.SmallPendingOpenSize = small.PendingOpenSize;
+                    return tmp;
                 }
             });
             return maginlist;

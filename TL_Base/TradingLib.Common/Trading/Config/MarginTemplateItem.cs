@@ -110,6 +110,20 @@ namespace TradingLib.Common
             }
             return 0;
         }
+
+        public decimal CalMarginFrozen(Symbol symbol, int size,decimal price, QSEnumOffsetFlag flag = QSEnumOffsetFlag.OPEN)
+        {
+            if (flag != QSEnumOffsetFlag.OPEN) return 0;
+            if (this.MarginByMoney > 0)
+            {
+                return size * price * symbol.Multiple * this.MarginByMoney;
+            }
+            if (this.MarginByVolume > 0)
+            {
+                return size * this.MarginByVolume;
+            }
+            return 0;
+        }
     }
 
     

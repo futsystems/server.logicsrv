@@ -96,7 +96,7 @@ namespace Lottoqq.Account
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        public override int CanOpenSize(Symbol symbol)
+        public override int  CanOpenSize(Symbol symbol, bool side, QSEnumOffsetFlag flag)
         {
             IAccountService service = null;
             //如果是异化合约,则我们按照异化合约的保证金直接进行计算可开手数
@@ -117,10 +117,10 @@ namespace Lottoqq.Account
             //配资服务通过配资服务查询可开手数
             if (GetService("FinService", out service))
             {
-                return service.CanOpenSize(symbol);
+                return service.CanOpenSize(symbol,side,flag);
             }
 
-            return base.CanOpenSize(symbol);
+            return base.CanOpenSize(symbol,side,flag);
         }
 
         /// <summary>

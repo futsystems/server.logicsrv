@@ -129,13 +129,17 @@ namespace DataFeed.FastTick
                 using ( ZmqSocket subscriber = context.CreateSocket(SocketType.SUB) ,symbolreq= context.CreateSocket(SocketType.REQ))
                 {
                     string reqadd = "tcp://" + server + ":" + reqport;
-                    debug("Connect to FastTickServer:" + reqadd, QSEnumDebugLevel.INFO);
+                    debug("Connect to FastTick ReqServer:" + reqadd, QSEnumDebugLevel.INFO);
                     symbolreq.Connect(reqadd);
-                    _symbolreq = symbolreq;
 
-                    debug("Subscribe to FastTick Publisher server:" + server + " Port:" + port,QSEnumDebugLevel.INFO);
-                    subscriber.Connect("tcp://" + server + ":" + port);
+                    string subadd = "tcp://" + server + ":" + port;
+                    debug("Subscribe to FastTick PubServer:" + subadd, QSEnumDebugLevel.INFO);
+                    subscriber.Connect(subadd);
+                    //订阅行情心跳数据
+                    subscriber.Subscribe(Encoding.UTF8.GetBytes("TICKHEARTBEAT"));
+
                     //subscriber.SubscribeAll();
+                    _symbolreq = symbolreq;
                     _subscriber = subscriber;
                     
                     subscriber.ReceiveReady += (s, e) =>
@@ -152,6 +156,10 @@ namespace DataFeed.FastTick
                                 //Util.Debug("tick date:" + k.Date + " time time:" + k.Time);
                                 if (k.isValid)
                                     NotifyTick(k);
+                            }
+                            else
+                            {
+                                //debug("tick str:" + tickstr, QSEnumDebugLevel.INFO);
                             }
                         }
                         catch (Exception ex)

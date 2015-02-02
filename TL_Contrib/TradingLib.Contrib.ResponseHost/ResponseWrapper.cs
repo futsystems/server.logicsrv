@@ -119,7 +119,7 @@ namespace TradingLib.Contrib.ResponseHost
         /// <summary>
         /// 返回AccountService的唯一标识
         /// </summary>
-        public string SN { get { return "FinService"; } }
+        public string SN { get { return "ResponseService"; } }
 
         /// <summary>
         /// 该服务所绑定的Account
@@ -161,7 +161,7 @@ namespace TradingLib.Contrib.ResponseHost
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        public int CanOpenSize(Symbol symbol)
+        public int CanOpenSize(Symbol symbol,bool side,QSEnumOffsetFlag flag)
         {
             return 0;
         }

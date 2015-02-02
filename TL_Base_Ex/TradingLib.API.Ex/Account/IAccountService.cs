@@ -89,7 +89,7 @@ namespace TradingLib.API
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        int CanOpenSize(Symbol symbol);
+        int CanOpenSize(Symbol symbol,bool side,QSEnumOffsetFlag flag);
 
 
         /// <summary>

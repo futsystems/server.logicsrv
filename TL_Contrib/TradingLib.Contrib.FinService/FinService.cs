@@ -423,7 +423,7 @@ namespace TradingLib.Contrib.FinService
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        public int CanOpenSize(Symbol symbol)
+        public int CanOpenSize(Symbol symbol,bool side,QSEnumOffsetFlag flag)
         {
             return _finservice.CanOpenSize(symbol);
         }
