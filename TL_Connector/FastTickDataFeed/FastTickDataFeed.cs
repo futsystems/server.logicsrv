@@ -10,14 +10,13 @@ using TradingLib.BrokerXAPI;
 
 namespace DataFeed.FastTick
 {
-       
 
     public class FastTick :TLDataFeedBase,IDataFeed
     {
         TimeSpan timeout = new TimeSpan(0, 0, 1);
         
-        string server="127.0.0.1";
-        string server2 = string.Empty;
+        string master="127.0.0.1";
+        string slave = "127.0.0.1";
 		int port=6000;
 		int reqport=6001;
 
@@ -25,6 +24,8 @@ namespace DataFeed.FastTick
         {
 			
         }
+
+
         public bool IsLive
         {
             get
@@ -35,6 +36,147 @@ namespace DataFeed.FastTick
 
 
         public void Stop()
+        {
+
+            StopHB();
+
+            StopTickHandler();
+        }
+
+        //int _timeout = 3;
+        //bool _switch = true;
+
+        bool _usemaster = true;
+
+        string CurrentServer
+        {
+            get
+            {
+                return _usemaster ? master : slave;
+            }
+        }
+        public void Start()
+        {
+            master = _cfg.srvinfo_ipaddress;
+            slave = _cfg.srvinfo_field2;
+            port = _cfg.srvinfo_port;
+            int.TryParse(_cfg.srvinfo_field1, out reqport);
+
+            debug(string.Format("MasterServer:{0} SlaveServer:{1} Port:{2} ReqPort:{3}", master, slave, port, reqport), QSEnumDebugLevel.INFO);
+            
+            //if (_switch)//优先使用主行情服务
+            //{
+            //    master = _cfg.srvinfo_ipaddress;
+            //    slave = _cfg.srvinfo_field2;
+            //}
+            //else//反转，当主行情异常时连接备用行情
+            //{
+            //    master = _cfg.srvinfo_field2;
+            //    slave = _cfg.srvinfo_ipaddress;
+            //}
+
+            //port = _cfg.srvinfo_port;
+            //int outreq = 6661;
+            //int.TryParse(_cfg.srvinfo_field1,out outreq);
+            //reqport = outreq;
+
+            //if (Util.IsServerPortOpened(server, port, _timeout))
+            //{
+            //    debug("Server:" + server +" is avabile", QSEnumDebugLevel.INFO);
+            //}
+            //else
+            //{
+            //    //如果第一个服务地址异常 则反转服务器连接顺序
+            //    _switch = !_switch;
+            //    debug("Server:" + server + " is not avabile,try another server.", QSEnumDebugLevel.WARNING);
+            //    Util.sleep(1000);
+            //    if (Util.IsServerPortOpened(server2, port, _timeout))
+            //    {
+            //        debug("Server:" + server2 + " is avabile,use it", QSEnumDebugLevel.INFO);
+            //        server = server2;
+            //    }
+            //    else
+            //    {
+            //        debug("Servers are not avabile both,stop...", QSEnumDebugLevel.ERROR);
+            //        return;
+            //    }
+            //}
+
+            StartTickHandler();
+            
+            StartHB();
+        }
+
+        #region 行情服务监控线程 用于当行情服务停止时 切换到备用服务器
+        void StartHB()
+        {
+            if (_hb) return;
+            _hb = true;
+            _hbthread = new Thread(HeartBeatWatch);
+            _hbthread.IsBackground = true;
+            _hbthread.Name = "FasktTickDF HBWatch";
+            _hbthread.Start();
+            ThreadTracker.Register(_hbthread);
+
+        }
+
+        void StopHB()
+        {
+            if (!_hb) return;
+            _hb = false;
+            int _wait = 0;
+            while (_hbthread.IsAlive && (_wait++ < 5))
+            {
+                debug("#:" + _wait.ToString() + "  FastTickHB is stoping...." + "MessageThread Status:" + _hbthread.IsAlive.ToString(), QSEnumDebugLevel.INFO);
+                Thread.Sleep(500);
+            }
+            if (!_hbthread.IsAlive)
+            {
+                ThreadTracker.Unregister(_hbthread);
+                _hbthread = null;
+                debug("FastTickHB Stopped successfull...", QSEnumDebugLevel.INFO);
+            }
+            else
+            {
+                debug("Some Error Happend In Stoping FastTickHB", QSEnumDebugLevel.ERROR);
+            }
+        }
+
+
+        DateTime _lastheartbeat = DateTime.Now;
+        bool _hb = false;
+        Thread _hbthread = null;
+
+        //bool _reconntick = true;
+        //bool _stoptick = false;
+        private void HeartBeatWatch()
+        {
+            while (_hb)
+            {
+                if (DateTime.Now.Subtract(_lastheartbeat).TotalSeconds > 4)
+                {
+                    debug("TickHeartBeat lost, try to ReConnect to tick server", QSEnumDebugLevel.ERROR);
+                    if (_tickgo)
+                    {
+                        _usemaster = !_usemaster;
+                        //停止行情服务线程
+                        StopTickHandler();
+                        //启动行情服务
+                        StartTickHandler();
+                        //更新行情心跳时间
+                        _lastheartbeat = DateTime.Now;
+                        debug("Connect to TickServer success", QSEnumDebugLevel.INFO);
+                    }
+                }
+                Util.sleep(100);
+            }
+        }
+
+        #endregion
+
+
+        #region 行情服务主线程
+        void StopTickHandler()
         {
             if (!_tickgo) return;
             _tickgo = false;
@@ -54,52 +196,10 @@ namespace DataFeed.FastTick
             {
                 debug("Some Error Happend In Stoping FastTick", QSEnumDebugLevel.ERROR);
             }
-            
         }
 
-        int _timeout = 3;
-        bool _switch = true;
-        
-        public void Start()
+        void StartTickHandler()
         {
-            if (_switch)//优先使用主行情服务
-            {
-                server = _cfg.srvinfo_ipaddress;
-                server2 = _cfg.srvinfo_field2;
-            }
-            else//反转，当主行情异常时连接备用行情
-            {
-                server = _cfg.srvinfo_field2;
-                server2 = _cfg.srvinfo_ipaddress;
-            }
-
-            port = _cfg.srvinfo_port;
-            int outreq = 6661;
-            int.TryParse(_cfg.srvinfo_field1,out outreq);
-            reqport = outreq;
-
-            if (Util.IsServerPortOpened(server, port, _timeout))
-            {
-                debug("Server:" + server +" is avabile", QSEnumDebugLevel.INFO);
-            }
-            else
-            {
-                //如果第一个服务地址异常 则反转服务器连接顺序
-                _switch = !_switch;
-                debug("Server:" + server + " is not avabile,try another server.", QSEnumDebugLevel.WARNING);
-                Util.sleep(1000);
-                if (Util.IsServerPortOpened(server2, port, _timeout))
-                {
-                    debug("Server:" + server2 + " is avabile,use it", QSEnumDebugLevel.INFO);
-                    server = server2;
-                }
-                else
-                {
-                    debug("Servers are not avabile both,stop...", QSEnumDebugLevel.ERROR);
-                    return;
-                }
-            }
-
             if (_tickgo) return;
             _tickgo = true;
             _tickthread = new Thread(TickHandler);
@@ -108,7 +208,7 @@ namespace DataFeed.FastTick
             _tickthread.Start();
             ThreadTracker.Register(_tickthread);
 
-            int i=0;
+            int i = 0;
             while (!_tickreceiveruning & i < 5)
             {
                 Thread.Sleep(500);
@@ -128,11 +228,11 @@ namespace DataFeed.FastTick
             {
                 using ( ZmqSocket subscriber = context.CreateSocket(SocketType.SUB) ,symbolreq= context.CreateSocket(SocketType.REQ))
                 {
-                    string reqadd = "tcp://" + server + ":" + reqport;
+                    string reqadd = "tcp://" + CurrentServer + ":" + reqport;
                     debug("Connect to FastTick ReqServer:" + reqadd, QSEnumDebugLevel.INFO);
                     symbolreq.Connect(reqadd);
 
-                    string subadd = "tcp://" + server + ":" + port;
+                    string subadd = "tcp://" + CurrentServer + ":" + port;
                     debug("Subscribe to FastTick PubServer:" + subadd, QSEnumDebugLevel.INFO);
                     subscriber.Connect(subadd);
                     //订阅行情心跳数据
@@ -166,6 +266,8 @@ namespace DataFeed.FastTick
                         {
                             debug("Tick process error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
                         }
+                        //记录数据到达时间
+                        _lastheartbeat = DateTime.Now;
                     };
                     var poller = new Poller(new List<ZmqSocket> { subscriber });
 
@@ -181,6 +283,7 @@ namespace DataFeed.FastTick
                                 debug("Tick Thread Stopped,try to close socket", QSEnumDebugLevel.INFO);
                                 subscriber.Close();
                                 symbolreq.Close();
+                                debug("-----------------------", QSEnumDebugLevel.ERROR);
                             }
                         }
                         catch (ZmqException ex)
@@ -192,13 +295,23 @@ namespace DataFeed.FastTick
                         {
                             debug("Tick数据处理错误"+ex.ToString(),QSEnumDebugLevel.ERROR);
                         }
+                        
                     }
                     _tickreceiveruning = false;
                     NotifyDisconnected();
                 }
+                debug("----------step1", QSEnumDebugLevel.ERROR);
+                context.Terminate();
+                context.Dispose();
+                debug("content terminate", QSEnumDebugLevel.ERROR);
             }
+            debug("----------step2", QSEnumDebugLevel.ERROR);
         }
+        #endregion
 
+
+
+        #region 通过请求端口执行API请求
         /// <summary>
         /// 通过本地push向对应的FastTickServer发送消息
         /// </summary>
@@ -308,6 +421,8 @@ namespace DataFeed.FastTick
             }
             return QSEnumDataFeedTypes.CTP;
         }
+        #endregion
+
 
 
     }
