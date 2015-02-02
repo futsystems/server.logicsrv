@@ -41,6 +41,8 @@ namespace DataFeed.FastTick
             StopHB();
 
             StopTickHandler();
+            //重新将行情服务器标识设置为主，这样停止后会再次重连主服务器
+            _usemaster = true;
         }
 
         //int _timeout = 3;
@@ -117,7 +119,7 @@ namespace DataFeed.FastTick
             _hbthread.Name = "FasktTickDF HBWatch";
             _hbthread.Start();
             ThreadTracker.Register(_hbthread);
-
+            _lastheartbeat = DateTime.Now;
         }
 
         void StopHB()
@@ -300,10 +302,10 @@ namespace DataFeed.FastTick
                     _tickreceiveruning = false;
                     NotifyDisconnected();
                 }
-                debug("----------step1", QSEnumDebugLevel.ERROR);
-                context.Terminate();
-                context.Dispose();
-                debug("content terminate", QSEnumDebugLevel.ERROR);
+                //debug("----------step1", QSEnumDebugLevel.ERROR);
+                //context.Terminate();
+                //context.Dispose();
+                //debug("content terminate", QSEnumDebugLevel.ERROR);
             }
             debug("----------step2", QSEnumDebugLevel.ERROR);
         }
