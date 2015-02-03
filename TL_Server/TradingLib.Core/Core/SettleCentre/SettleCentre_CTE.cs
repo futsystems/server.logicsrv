@@ -81,7 +81,7 @@ namespace TradingLib.Core
         {
             if (IsNormal && !IsTradingday) return;//结算中心正常 但不是交易日 不做记录转储
 
-            this.IsInSettle = true;//标识结算中心处于结算状态
+            //this.IsInSettle = true;//标识结算中心处于结算状态 此处不可标识结算状态 否则在执行结算前操作时 会针对配资费用 进行收取利息或者盈利分红收取，此时会进行CashOperation进行出入金操作，而出入金操作是对结算状态做检查的。因此将结算状态移植 实际结算步骤中
 
             //通过系统事件中继触发结算前事件
             try
@@ -115,6 +115,8 @@ namespace TradingLib.Core
         public void Task_SettleAccount()
         {
             if (IsNormal && !IsTradingday) return;
+            this.IsInSettle = true;//标识结算中心处于结算状态
+
             this.SettleAccount();
             //触发结算后记录
             TLCtxHelper.EventSystem.FireAfterSettleEvent(this, new SystemEventArgs());

@@ -206,7 +206,18 @@ namespace TradingLib.Contrib.FinService
                 Util.Debug("结算后采集计费:" + item.Comment);
                 if (item.CollectType == EnumFeeCollectType.CollectAfterSettle)
                 {
-                    TLCtxHelper.CmdAuthCashOperation.CashOperation(item.Account, item.TotalFee * -1, "", item.Comment);
+                    try
+                    {
+                        TLCtxHelper.CmdAuthCashOperation.CashOperation(item.Account, item.TotalFee * -1, "", item.Comment);
+                    }
+                    catch (FutsRspError ex)
+                    {
+                        debug("FinService CashOperation error:" + ex.ErrorMessage, QSEnumDebugLevel.ERROR);
+                    }
+                    catch (Exception ex)
+                    {
+                        debug("FinService CashOperation general error:"+ex.ToString(), QSEnumDebugLevel.ERROR);
+                    }
                 }
             }
         }
