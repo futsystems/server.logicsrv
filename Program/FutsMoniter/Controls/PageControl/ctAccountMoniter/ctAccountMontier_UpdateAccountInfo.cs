@@ -534,7 +534,7 @@ namespace FutsMoniter
 
         private void accountgrid_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            if (e.ColumnIndex == 14 || e.ColumnIndex == 15 || e.ColumnIndex == 17)
+            if (e.ColumnIndex == 15 || e.ColumnIndex == 16 || e.ColumnIndex == 18)
             {
                 e.CellStyle.Font = UIGlobals.BoldFont;
                 decimal v = 0;
