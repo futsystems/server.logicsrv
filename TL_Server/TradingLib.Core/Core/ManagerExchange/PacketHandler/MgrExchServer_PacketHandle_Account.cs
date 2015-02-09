@@ -286,15 +286,15 @@ namespace TradingLib.Core
             }
         }
 
-        void SrvOnMGRReqUpdateAccountPosLock(MGRReqUpdatePosLockRequest request, ISession session, Manager manager)
-        {
-            debug(string.Format("管理员:{0} 请求修改帐户锁仓权限:{1}", session.AuthorizedID, request.ToString()), QSEnumDebugLevel.INFO);
-            IAccount account = clearcentre[request.TradingAccount];
-            if (account != null)
-            {
-                clearcentre.UpdateAccountPosLock(request.TradingAccount, request.PosLock);
-            }
-        }
+        //void SrvOnMGRReqUpdateAccountPosLock(MGRReqUpdatePosLockRequest request, ISession session, Manager manager)
+        //{
+        //    debug(string.Format("管理员:{0} 请求修改帐户锁仓权限:{1}", session.AuthorizedID, request.ToString()), QSEnumDebugLevel.INFO);
+        //    IAccount account = clearcentre[request.TradingAccount];
+        //    if (account != null)
+        //    {
+        //        clearcentre.UpdateAccountPosLock(request.TradingAccount, request.PosLock);
+        //    }
+        //}
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryAccountFinInfo", "QryAccountFinInfo - query account", "查询帐户信息")]
         public void CTE_QryAccountFinInfo(ISession session, string account)
@@ -344,30 +344,30 @@ namespace TradingLib.Core
         }
 
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountSideMargin", "UpdateAccountSideMargin - update account sidemargin set", "更新帐户单向大边")]
-        public void CTE_UpdateAccountSideMargin(ISession session, string account,bool sidemargin)
-        {
-            Manager manager = session.GetManager();
-            if (!manager.IsInRoot())
-            {
-                throw new FutsRspError("无权修改帐户单向大边设置");
-            }
+        //[ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountSideMargin", "UpdateAccountSideMargin - update account sidemargin set", "更新帐户单向大边")]
+        //public void CTE_UpdateAccountSideMargin(ISession session, string account,bool sidemargin)
+        //{
+        //    Manager manager = session.GetManager();
+        //    if (!manager.IsInRoot())
+        //    {
+        //        throw new FutsRspError("无权修改帐户单向大边设置");
+        //    }
 
-            IAccount acc = clearcentre[account];
-            if (acc == null)
-            {
-                throw new FutsRspError("交易帐户不存在");
-            }
+        //    IAccount acc = clearcentre[account];
+        //    if (acc == null)
+        //    {
+        //        throw new FutsRspError("交易帐户不存在");
+        //    }
 
-            if (!manager.RightAccessAccount(acc))
-            {
-                throw new FutsRspError("无权修改该交易帐户");
-            }
+        //    if (!manager.RightAccessAccount(acc))
+        //    {
+        //        throw new FutsRspError("无权修改该交易帐户");
+        //    }
 
-            //更新路由组
-            clearcentre.UpdateAccountSideMargin(account,sidemargin);
-            session.OperationSuccess((sidemargin?"启用":"禁止")+"帐户单向大边策略成功！");
-        }
+        //    //更新路由组
+        //    clearcentre.UpdateAccountSideMargin(account,sidemargin);
+        //    session.OperationSuccess((sidemargin?"启用":"禁止")+"帐户单向大边策略成功！");
+        //}
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountCommissionTemplate", "UpdateAccountCommissionTemplate - update account commission template set", "更新帐户手续费模板")]
         public void CTE_UpdateAccountCommissionTemplate(ISession session, string account,int templateid)
@@ -410,25 +410,25 @@ namespace TradingLib.Core
         }
 
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountCreditSeparate", "UpdateAccountCreditSeparate - update account credit separate", "更新帐户信用额度显示方式")]
-        public void CTE_UpdateAccountCreditSeperate(ISession session, string account,bool creditseperate)
-        {
-            Manager manager = session.GetManager();
-            IAccount acc = clearcentre[account];
-            if (acc == null)
-            {
-                throw new FutsRspError("交易帐户不存在");
-            }
+        //[ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountCreditSeparate", "UpdateAccountCreditSeparate - update account credit separate", "更新帐户信用额度显示方式")]
+        //public void CTE_UpdateAccountCreditSeperate(ISession session, string account,bool creditseperate)
+        //{
+        //    Manager manager = session.GetManager();
+        //    IAccount acc = clearcentre[account];
+        //    if (acc == null)
+        //    {
+        //        throw new FutsRspError("交易帐户不存在");
+        //    }
 
-            if (!manager.RightAccessAccount(acc))
-            {
-                throw new FutsRspError("无权修改该交易帐户");
-            }
+        //    if (!manager.RightAccessAccount(acc))
+        //    {
+        //        throw new FutsRspError("无权修改该交易帐户");
+        //    }
 
-            //更新路由组
-            clearcentre.UpdateAccountCreditSeparate(account, creditseperate);
-            session.OperationSuccess("更新帐户信用额度显示方式");
-        }
+        //    //更新路由组
+        //    clearcentre.UpdateAccountCreditSeparate(account, creditseperate);
+        //    session.OperationSuccess("更新帐户信用额度显示方式");
+        //}
 
     }
 }

@@ -928,21 +928,6 @@
             最近结算确认日期
             </summary>
         </member>
-        <member name="P:TradingLib.Common.AccountBase.PosLock">
-            <summary>
-            锁仓权限
-            </summary>
-        </member>
-        <member name="P:TradingLib.Common.AccountBase.SideMargin">
-            <summary>
-            单向大边
-            </summary>
-        </member>
-        <member name="P:TradingLib.Common.AccountBase.CreditSeparate">
-            <summary>
-            客户端信用额度分开显示
-            </summary>
-        </member>
         <member name="P:TradingLib.Common.AccountBase.Mgr_fk">
             <summary>
             代理商ID
@@ -961,6 +946,11 @@
         <member name="P:TradingLib.Common.AccountBase.Margin_ID">
             <summary>
             保证金模板ID
+            </summary>
+        </member>
+        <member name="P:TradingLib.Common.AccountBase.ExStrategy_ID">
+            <summary>
+            交易参数模板ID
             </summary>
         </member>
         <member name="P:TradingLib.Common.AccountBase.Domain">
@@ -2146,22 +2136,6 @@
             <param name="id"></param>
             <returns></returns>
         </member>
-        <member name="M:TradingLib.ORM.MAccount.UpdateAccountPosLock(System.String,System.Boolean)">
-            <summary>
-            更新帐户的锁仓权限
-            </summary>
-            <param name="account"></param>
-            <param name="poslock"></param>
-            <returns></returns>
-        </member>
-        <member name="M:TradingLib.ORM.MAccount.UpdateAccountSideMargin(System.String,System.Boolean)">
-            <summary>
-            更新帐户单向大边支持
-            </summary>
-            <param name="account"></param>
-            <param name="poslock"></param>
-            <returns></returns>
-        </member>
         <member name="M:TradingLib.ORM.MAccount.UpdateAccountCommissionTemplate(System.String,System.Int32)">
             <summary>
             更新帐户手续费模板
@@ -2175,13 +2149,6 @@
             </summary>
             <param name="account"></param>
             <param name="templateid"></param>
-        </member>
-        <member name="M:TradingLib.ORM.MAccount.UpdateAccountCreditSeparate(System.String,System.Boolean)">
-            <summary>
-            更新帐户 分开显示信用额度
-            </summary>
-            <param name="account"></param>
-            <param name="creditseparate"></param>
         </member>
         <member name="M:TradingLib.ORM.MAccount.UpdateAccountMAC(System.String,System.String)">
             <summary>
@@ -5284,6 +5251,47 @@
             <summary>
             帐号所属域
             </summary>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_ExStrategy.GetExStrategyTemplate(TradingLib.API.IAccount)">
+            <summary>
+            获得交易账户的交易参数模板
+            </summary>
+            <param name="account"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_ExStrategy.GetExStrategy(TradingLib.API.IAccount)">
+            <summary>
+            获得账户交易参数
+            </summary>
+            <param name="account"></param>
+            <returns></returns>
+        </member>
+        <member name="T:TradingLib.Common.AccountUtils_Args">
+            <summary>
+            将交易账户交易参数全部放入模板中进行设置
+            这里以扩展函数的形式提供参数暴露
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_Args.GetArgsSideMargin(TradingLib.API.IAccount)">
+            <summary>
+            获得交易账户单向大边保证金设置
+            </summary>
+            <param name="account"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_Args.GetArgsCreditSeparate(TradingLib.API.IAccount)">
+            <summary>
+            交易账户财务信息中是否将信用额度分开显示
+            </summary>
+            <param name="account"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_Args.GetArgsPositionLock(TradingLib.API.IAccount)">
+            <summary>
+            是否支持锁仓操作
+            </summary>
+            <param name="account"></param>
+            <returns></returns>
         </member>
     </members>
 </doc>

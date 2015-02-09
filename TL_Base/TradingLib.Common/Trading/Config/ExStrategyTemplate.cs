@@ -78,5 +78,11 @@ namespace TradingLib.Common
         /// </summary>
         public bool CreditSeparate { get; set; }
 
+
+        /// <summary>
+        /// 是否支持锁仓
+        /// </summary>
+        public bool PositionLock { get; set; }
+
     }
 }

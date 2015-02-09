@@ -70,6 +70,8 @@
     <Compile Include="Tracker\BasicTracker\ExStrategyTemplateTracker.cs" />
     <Compile Include="Tracker\BasicTracker\MarginTemplateTracker.cs" />
     <Compile Include="Utils\Account\AccountUtils_xx.cs" />
+    <Compile Include="Utils\Account\AccountUtils_ExStrategy.cs" />
+    <Compile Include="Utils\Account\AccountUtils_Args.cs" />
     <Compile Include="Utils\Domain\DomainUtils_CommissionMargin.cs" />
     <Compile Include="Utils\Domain\DomainUtils_ExStrategy.cs" />
     <Compile Include="Wrapper\AccountAdapterToExp.cs" />

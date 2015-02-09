@@ -28,8 +28,8 @@ namespace TradingLib.Common
             this.CreatedTime = DateTime.Now;
             this.SettleDateTime = DateTime.Now;
             this.SettlementConfirmTimeStamp = Util.ToTLDateTime();
-            this.PosLock = false;
-            this.SideMargin = true;
+            //this.PosLock = false;
+            //this.SideMargin = true;
             this.Mgr_fk = 0;
             this.UserID = 0;
             this.Deleted = false;
@@ -106,17 +106,17 @@ namespace TradingLib.Common
         /// <summary>
         /// 锁仓权限
         /// </summary>
-        public bool PosLock { get; set; }
+        //public bool PosLock { get; set; }
 
         /// <summary>
         /// 单向大边
         /// </summary>
-        public bool SideMargin { get; set; }
+        //public bool SideMargin { get; set; }
 
         /// <summary>
         /// 客户端信用额度分开显示
         /// </summary>
-        public bool CreditSeparate { get; set; }
+        //public bool CreditSeparate { get; set; }
 
         /// <summary>
         /// 代理商ID
@@ -137,6 +137,12 @@ namespace TradingLib.Common
         /// 保证金模板ID
         /// </summary>
         public int Margin_ID { get; set; }
+
+
+        /// <summary>
+        /// 交易参数模板ID
+        /// </summary>
+        public int ExStrategy_ID { get; set; }
 
         /// <summary>
         /// 域ID

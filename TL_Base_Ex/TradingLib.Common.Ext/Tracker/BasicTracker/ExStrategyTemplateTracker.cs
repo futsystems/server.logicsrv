@@ -99,6 +99,9 @@ namespace TradingLib.Common
                 //数据库插入后获得的全局ID赋值回传
                 t.ID = target.ID;
 
+                ExStrategy item = new ExStrategy();
+                item.Template_ID = t.ID;
+                this.UpdateExStrategy(item);
 
             }
         }
@@ -117,6 +120,7 @@ namespace TradingLib.Common
                 target.AvabileFund = item.AvabileFund;
                 target.SideMargin = item.SideMargin;
                 target.CreditSeparate = item.CreditSeparate;
+                target.PositionLock = item.PositionLock;
 
                 ORM.MExStrategy.UpdateExStrategyTemplateItem(target);
             }
@@ -127,6 +131,7 @@ namespace TradingLib.Common
                 target.AvabileFund = item.AvabileFund;
                 target.SideMargin = item.SideMargin;
                 target.CreditSeparate = item.CreditSeparate;
+                target.PositionLock = item.PositionLock;
 
                 target.Template_ID = item.Template_ID;
                 ORM.MExStrategy.InsertExStrategyTemplateItem(target);

@@ -69,7 +69,7 @@ namespace TradingLib.Common
         public virtual int CanOpenSize(Symbol symbol,bool side,QSEnumOffsetFlag flag)
         {
             //未启用单向大边
-            if (!this.SideMargin)
+            if (!this.GetArgsSideMargin())
             {
                 decimal price = TLCtxHelper.CmdUtils.GetAvabilePrice(symbol.Symbol);
 

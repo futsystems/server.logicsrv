@@ -649,21 +649,6 @@
             确认结算日期
             </summary>
         </member>
-        <member name="P:TradingLib.API.IAccount.PosLock">
-            <summary>
-            是否允许锁仓
-            </summary>
-        </member>
-        <member name="P:TradingLib.API.IAccount.SideMargin">
-            <summary>
-            单向大边
-            </summary>
-        </member>
-        <member name="P:TradingLib.API.IAccount.CreditSeparate">
-            <summary>
-            客户端信用额度分开显示
-            </summary>
-        </member>
         <member name="P:TradingLib.API.IAccount.Mgr_fk">
             <summary>
             帐号隶属于哪个管理员
@@ -685,6 +670,11 @@
         <member name="P:TradingLib.API.IAccount.Margin_ID">
             <summary>
             保证金模板ID
+            </summary>
+        </member>
+        <member name="P:TradingLib.API.IAccount.ExStrategy_ID">
+            <summary>
+            交易参数模板ID
             </summary>
         </member>
         <member name="P:TradingLib.API.IAccount.Domain">

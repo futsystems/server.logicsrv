@@ -159,17 +159,17 @@ namespace TradingLib.Common
             info.Broker = acc.Broker;
             info.BankID = acc.BankID;
             info.BankAC = acc.BankAC;
-            info.PosLock = acc.PosLock;
+            //info.PosLock = acc.PosLock;
             info.MGRID = acc.Mgr_fk;
             info.Deleted = acc.Deleted;
             info.RG_ID = acc.RG_FK;
             IEnumerable<ClientInfoBase> clients = TLCtxHelper.Ctx.MessageExchange.GetNotifyTargets(info.Account);
             info.IsLogin = clients.Count() > 0;
             info.IPAddress = info.IsLogin ? clients.FirstOrDefault().IPAddress : "";
-            info.SideMargin = acc.SideMargin;
+            //info.SideMargin = acc.SideMargin;
             info.Commissin_ID = acc.Commission_ID;
             info.Credit = acc.Credit;
-            info.CreditSeparate = acc.CreditSeparate;
+            //info.CreditSeparate = acc.CreditSeparate;
             info.Margin_ID = acc.Margin_ID;
             return info;
         }

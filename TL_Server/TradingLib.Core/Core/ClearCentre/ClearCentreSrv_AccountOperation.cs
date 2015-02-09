@@ -77,13 +77,13 @@ namespace TradingLib.Core
             AccountChanged(this[account]);
         }
 
-        public void UpdateAccountPosLock(string account, bool poslock)
-        {
-            if (!HaveAccount(account)) return;
-            this[account].PosLock = poslock;
-            ORM.MAccount.UpdateAccountPosLock(account, poslock);
-            AccountChanged(this[account]);
-        }
+        //public void UpdateAccountPosLock(string account, bool poslock)
+        //{
+        //    if (!HaveAccount(account)) return;
+        //    this[account].PosLock = poslock;
+        //    ORM.MAccount.UpdateAccountPosLock(account, poslock);
+        //    AccountChanged(this[account]);
+        //}
 
         /// <summary>
         /// 更新手续费模板
@@ -116,21 +116,21 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="account"></param>
         /// <param name="creditseparate"></param>
-        public void UpdateAccountCreditSeparate(string account, bool creditseparate)
-        {
-            if (!HaveAccount(account)) return;
-            this[account].CreditSeparate = creditseparate;
-            ORM.MAccount.UpdateAccountCreditSeparate(account, creditseparate);
-            AccountChanged(this[account]);
-        }
+        //public void UpdateAccountCreditSeparate(string account, bool creditseparate)
+        //{
+        //    if (!HaveAccount(account)) return;
+        //    this[account].CreditSeparate = creditseparate;
+        //    ORM.MAccount.UpdateAccountCreditSeparate(account, creditseparate);
+        //    AccountChanged(this[account]);
+        //}
 
-        public void UpdateAccountSideMargin(string account, bool sidemargin)
-        {
-            if (!HaveAccount(account)) return;
-            this[account].SideMargin = sidemargin;
-            ORM.MAccount.UpdateAccountSideMargin(account, sidemargin);
-            AccountChanged(this[account]);
-        }
+        //public void UpdateAccountSideMargin(string account, bool sidemargin)
+        //{
+        //    if (!HaveAccount(account)) return;
+        //    this[account].SideMargin = sidemargin;
+        //    ORM.MAccount.UpdateAccountSideMargin(account, sidemargin);
+        //    AccountChanged(this[account]);
+        //}
 
         /// <summary>
         /// 更新账户日内交易设置

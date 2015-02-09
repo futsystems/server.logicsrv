@@ -12,11 +12,13 @@ namespace TradingLib.API
         /// <summary>
         /// 
         /// </summary>
+        [Description("浮盈可开仓")]
         UnPLInclude,
 
         /// <summary>
         /// 
         /// </summary>
+        [Description("浮盈不可开仓")]
         UnPLExclude,
     }
 

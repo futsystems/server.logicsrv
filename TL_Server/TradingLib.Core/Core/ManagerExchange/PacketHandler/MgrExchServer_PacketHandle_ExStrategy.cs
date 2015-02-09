@@ -28,7 +28,7 @@ namespace TradingLib.Core
             }
         }
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdatExStrategyTemplate", "UpdateExStrategyTemplate - update exstrategy template", "更新计算策略模板", QSEnumArgParseType.Json)]
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateExStrategyTemplate", "UpdateExStrategyTemplate - update exstrategy template", "更新计算策略模板", QSEnumArgParseType.Json)]
         public void CTE_UpdateExStrategyTemplate(ISession session, string json)
         {
             Manager manager = session.GetManager();
@@ -68,5 +68,24 @@ namespace TradingLib.Core
             }
         }
 
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateExStrategyTemplateItem", "UpdateExStrategyTemplateItem - update exstrategy template item", "更新交易参数模板项目", QSEnumArgParseType.Json)]
+        public void CTE_UpdateExStrategyTemplateItem(ISession session, string json)
+        {
+            Manager manager = session.GetManager();
+            if (manager.IsRoot())
+            {
+                ExStrategy item = Mixins.Json.JsonMapper.ToObject<ExStrategy>(json);
+                ExStrategyTemplate template = BasicTracker.ExStrategyTemplateTracker[item.Template_ID];
+                if (template == null)
+                {
+                    throw new FutsRspError("指定交易参数模板不存在");
+                }
+
+                BasicTracker.ExStrategyTemplateTracker.UpdateExStrategy(item);
+                session.NotifyMgr("NotifyExStrategyTemplateItem", BasicTracker.ExStrategyTemplateTracker[item.Template_ID].ExStrategy);
+                session.OperationSuccess("更新交易参数模板成功");
+
+            }
+        }
     }
 }
