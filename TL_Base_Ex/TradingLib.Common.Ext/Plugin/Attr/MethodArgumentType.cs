@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using TradingLib.Mixins.Json;
 
 namespace TradingLib.Common
 {
@@ -18,6 +19,7 @@ namespace TradingLib.Common
         Enum,//枚举
         Boolean,//布尔
         Decimal,//
+        //JsonRequest,//JsonRequest
         UserDefined//用户自定义
     }
 }

@@ -38,7 +38,6 @@ namespace TradingLib.Contrib.RechargeOnLine
                  + "FactMoney=" + FactMoney + mark + "AdditionalInfo=" + AdditionalInfo + mark + "SuccTime=" + SuccTime
                  + mark + "Md5Sign=" + Md5Key;
 
-
             if (Md5Sign.ToLower() == Md5Encrypt(_WaitSign).ToLower())
             {
                 return true;

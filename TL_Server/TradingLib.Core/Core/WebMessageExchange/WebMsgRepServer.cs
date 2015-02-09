@@ -125,7 +125,7 @@ namespace TradingLib.Core
                         try
                         {
                             string str = rep.Receive(Encoding.UTF8);
-                            debug("web taks message is:" + str, QSEnumDebugLevel.INFO);
+                            debug("WebAPI Request:" + str, QSEnumDebugLevel.INFO);
                             JsonReply re = handleWebTask(str);
                             if (re != null)
                             {

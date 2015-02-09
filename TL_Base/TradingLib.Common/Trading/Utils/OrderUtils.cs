@@ -128,7 +128,7 @@ namespace TradingLib.Common
             sb.Append(" ["+o.Account+"]");
             sb.Append(" ID:" + o.id.ToString());
             sb.Append(" T:"+Math.Abs(o.TotalSize).ToString()+" F:"+o.FilledSize.ToString()+" R:"+o.UnsignedSize.ToString());
-            sb.Append(" Broker:" + o.Broker + " Breed:" + o.Breed.ToString());
+            sb.Append(" Broker:" + o.Broker + " Breed:" + o.Breed.ToString() +" Comment:"+o.Comment);
             if (brokerside)
             {
                 sb.Append(" " + o.BrokerLocalOrderID + " RemoteID:" + o.BrokerRemoteOrderID);

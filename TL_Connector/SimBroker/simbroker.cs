@@ -554,7 +554,10 @@ namespace Broker.SIM
             //提交委托时 设定localorderid remoteorderid
             o.BrokerLocalOrderID = "";
             o.Status = QSEnumOrderStatus.Submited;
-            _orderinCache.Write(new OrderImpl(o));//复制委托 委托的模拟成交变化不会改变初始委托数据
+            Order tmp = new OrderImpl(o);
+            tmp.Comment = string.Empty;
+            //将委托comment清空，模拟成交不携带comment信息，在messageexchange中根据委托状态进行设定comment信息
+            _orderinCache.Write(tmp);//复制委托 委托的模拟成交变化不会改变初始委托数据
 
         }
 

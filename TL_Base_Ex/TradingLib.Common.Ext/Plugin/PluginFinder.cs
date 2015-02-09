@@ -6,6 +6,8 @@ using System.IO;
 using System.Reflection;
 using TradingLib.API;
 using TradingLib.Common;
+using TradingLib.Mixins.Json;
+
 
 namespace TradingLib.Common
 {
@@ -423,6 +425,8 @@ namespace TradingLib.Common
                 ParameterInfo info2 = parameters[i];
                 Type parameterType = info2.ParameterType;
 
+                //通过反射获得方法调用的所有参数列表 并按支持的参数类型形成方法参数列表
+
                 if (parameterType == typeof(ISession))
                 {
                     MethodArgument session = new MethodArgument(info2.Name, QSEnumMethodArgumentType.ISession)
@@ -504,9 +508,19 @@ namespace TradingLib.Common
                     };
                     list.Add(argument9);
                 }
+                //else if (parameterType == typeof(JsonRequest))
+                //{
+                //    MethodArgument argument10 = new MethodArgument(info2.Name, QSEnumMethodArgumentType.JsonRequest)
+                //    {
+                //        Order = i + 1,
+                //        Value = null
+                //    };
+                //    list.Add(argument10);
+                //}
 
             }
             //将自定义的参数特性设置到自动搜索出的对象
+            //如果参数用方法参数特性标注 则按标注进行赋值 比如参数描述等
             object[] customAttributes = mi.GetCustomAttributes(typeof(MethodArgument), false);
             for (int j = 0; j < customAttributes.Length; j++)
             {
@@ -591,6 +605,12 @@ namespace TradingLib.Common
                                     objArray[argument.Order - 1] = Convert.ToString(argument.Value);
                                     continue;
                                 }
+                            //case QSEnumMethodArgumentType.JsonRequest:
+                            //    {
+                            //        JsonRequest = TradingLib.Mixins.Json.
+                            //        objArray[argument.Order - 1] = argument.Value as JsonRequest;
+                            //        continue;
+                            //    }
                         }
                     }
                 }
