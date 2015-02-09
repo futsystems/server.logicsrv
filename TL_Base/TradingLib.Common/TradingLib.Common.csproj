@@ -20,6 +20,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DebugSymbols>true</DebugSymbols>
+    <DocumentationFile>bin\Debug\TradingLib.Common.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -62,6 +63,7 @@
     <Compile Include="Trading\Config\CommissionTemplate.cs" />
     <Compile Include="Trading\Config\CommissionTemplateItem.cs" />
     <Compile Include="Trading\Config\EnumChargeType.cs" />
+    <Compile Include="Trading\Config\ExStrategyTemplate.cs" />
     <Compile Include="Trading\Config\MarginTemplate.cs" />
     <Compile Include="Trading\Config\MarginTemplateItem.cs" />
     <Compile Include="Utils\Version.cs" />
@@ -254,6 +256,7 @@
   <Target Name="AfterBuild">
     <ItemGroup>
       <OutFiles Include="$(OutputPath)\$(AssemblyName).dll" />
+	  <OutFiles Include="$(OutputPath)\$(AssemblyName).xml" />
     </ItemGroup>
     <Copy SourceFiles="@(OutFiles)" DestinationFolder="..\..\lib\TradingLib\" SkipUnchangedFiles="true" />
   </Target>

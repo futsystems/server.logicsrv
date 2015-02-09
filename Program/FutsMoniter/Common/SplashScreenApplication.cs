@@ -128,6 +128,13 @@ namespace FutsMoniter.Common
 
             //必须先显示，再激活，否则主窗体不能在启动窗体消失后出现
             //MessageBox.Show("xxxx");
+            Application.Run(this._PrimaryForm);
+
+            //while (true)
+            //{
+            //    Application.DoEvents();
+            //    Thread.Sleep(10);
+            //}
             this._PrimaryForm.Show();
             this._PrimaryForm.Activate();
             this._PrimaryForm.Closed += new EventHandler(_PrimaryForm_Closed);

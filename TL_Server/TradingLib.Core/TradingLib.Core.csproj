@@ -75,6 +75,7 @@
     <Compile Include="Core\ClearCentre\ClearCentreSrv_AccountCashOperation.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_LogData.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_TradingInfo.cs" />
+    <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_ExStrategy.cs" />
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_Margin.cs" />
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_Commission.cs" />
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_FinAgent.cs" />

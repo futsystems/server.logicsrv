@@ -33,9 +33,12 @@ namespace TradingLib.Common
         RouterGrouperTracker rgtracker;
         VendorTracker vendortracker;
 
-        //保证金与手续费
+        //手续费模板
         CommissionTemplateTracker commissiontracker;
+        //保证金模板
         MarginTemplateTracker margintracker;
+        //计算策略模板
+        ExStrategyTemplateTracker exstrategytracker;
 
         static BasicTracker()
         {
@@ -232,6 +235,19 @@ namespace TradingLib.Common
                 if (defaultinstance.margintracker == null)
                     defaultinstance.margintracker = new MarginTemplateTracker();
                 return defaultinstance.margintracker;
+            }
+        }
+
+        /// <summary>
+        /// 计算策略模板维护器
+        /// </summary>
+        public static ExStrategyTemplateTracker ExStrategyTemplateTracker
+        {
+            get
+            {
+                if (defaultinstance.exstrategytracker == null)
+                    defaultinstance.exstrategytracker = new ExStrategyTemplateTracker();
+                return defaultinstance.exstrategytracker;
             }
         }
 

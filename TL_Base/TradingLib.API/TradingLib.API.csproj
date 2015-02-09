@@ -20,6 +20,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DebugSymbols>true</DebugSymbols>
+    <DocumentationFile>bin\Debug\TradingLib.API.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -40,6 +41,7 @@
     <Compile Include="Account\IAccTradingInfo.cs" />
     <Compile Include="Account\IAccConfig.cs" />
     <Compile Include="Account\IFinanceTotal.cs" />
+    <Compile Include="Trading\EnumStrategy.cs" />
     <Compile Include="Vendor\PositionMetric.cs" />
     <Compile Include="Vendor\RouterItem.cs" />
     <Compile Include="Domain\Domain.cs" />
@@ -133,6 +135,7 @@
   <Target Name="AfterBuild">
     <ItemGroup>
       <OutFiles Include="$(OutputPath)\$(AssemblyName).dll" />
+	  <OutFiles Include="$(OutputPath)\$(AssemblyName).xml" />
     </ItemGroup>
     <Copy SourceFiles="@(OutFiles)" DestinationFolder="..\..\lib\TradingLib\" SkipUnchangedFiles="true" />
   </Target>
