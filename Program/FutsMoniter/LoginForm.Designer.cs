@@ -67,7 +67,7 @@
             // 
             this.label0.Location = new System.Drawing.Point(22, 97);
             this.label0.Name = "label0";
-            this.label0.Size = new System.Drawing.Size(63, 20);
+            this.label0.Size = new System.Drawing.Size(68, 18);
             this.label0.TabIndex = 20;
             this.label0.Values.Text = "柜台地址:";
             // 
@@ -75,7 +75,7 @@
             // 
             this.label1.Location = new System.Drawing.Point(35, 126);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(51, 20);
+            this.label1.Size = new System.Drawing.Size(55, 18);
             this.label1.TabIndex = 21;
             this.label1.Values.Text = "用户名:";
             // 
@@ -83,7 +83,7 @@
             // 
             this.label2.Location = new System.Drawing.Point(49, 159);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(38, 20);
+            this.label2.Size = new System.Drawing.Size(41, 18);
             this.label2.TabIndex = 22;
             this.label2.Values.Text = "密码:";
             // 
@@ -91,7 +91,7 @@
             // 
             this.username.Location = new System.Drawing.Point(97, 122);
             this.username.Name = "username";
-            this.username.Size = new System.Drawing.Size(121, 20);
+            this.username.Size = new System.Drawing.Size(121, 21);
             this.username.TabIndex = 23;
             // 
             // password
@@ -99,7 +99,7 @@
             this.password.Location = new System.Drawing.Point(97, 155);
             this.password.Name = "password";
             this.password.PasswordChar = '#';
-            this.password.Size = new System.Drawing.Size(121, 20);
+            this.password.Size = new System.Drawing.Size(121, 21);
             this.password.TabIndex = 24;
             // 
             // servers
@@ -123,7 +123,7 @@
             // 
             this.ckremberuser.Location = new System.Drawing.Point(278, 126);
             this.ckremberuser.Name = "ckremberuser";
-            this.ckremberuser.Size = new System.Drawing.Size(86, 20);
+            this.ckremberuser.Size = new System.Drawing.Size(91, 18);
             this.ckremberuser.TabIndex = 28;
             this.ckremberuser.Values.Text = "记住用户名";
             // 
@@ -131,7 +131,7 @@
             // 
             this.ckremberpass.Location = new System.Drawing.Point(278, 150);
             this.ckremberpass.Name = "ckremberpass";
-            this.ckremberpass.Size = new System.Drawing.Size(73, 20);
+            this.ckremberpass.Size = new System.Drawing.Size(78, 18);
             this.ckremberpass.TabIndex = 29;
             this.ckremberpass.Values.Text = "保存密码";
             // 
@@ -150,7 +150,7 @@
             this.btnExit.LinkBehavior = ComponentFactory.Krypton.Toolkit.KryptonLinkBehavior.NeverUnderline;
             this.btnExit.Location = new System.Drawing.Point(315, 186);
             this.btnExit.Name = "btnExit";
-            this.btnExit.Size = new System.Drawing.Size(39, 20);
+            this.btnExit.Size = new System.Drawing.Size(41, 18);
             this.btnExit.StateCommon.LongText.Color1 = System.Drawing.Color.Red;
             this.btnExit.StateCommon.LongText.Color2 = System.Drawing.Color.Red;
             this.btnExit.StateCommon.ShortText.Color1 = System.Drawing.Color.Red;
