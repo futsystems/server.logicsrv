@@ -59,7 +59,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("INSERT INTO cfg_strategy (`margin`,`avabilefund`,`sidemargin`,`creditseparate`,`positionlock`,`template_id`) VALUES ( '{0}','{1}','{2}','{3}','{4}')", item.Margin, item.AvabileFund, item.SideMargin ? 1 : 0, item.CreditSeparate ? 1 : 0, item.PositionLock ? 1 : 0, item.Template_ID);
+                string query = string.Format("INSERT INTO cfg_strategy (`margin`,`avabilefund`,`sidemargin`,`creditseparate`,`positionlock`,`template_id`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}')", item.Margin, item.AvabileFund, item.SideMargin ? 1 : 0, item.CreditSeparate ? 1 : 0, item.PositionLock ? 1 : 0, item.Template_ID);
                 int row = db.Connection.Execute(query);
                 SetIdentity(db.Connection, id => item.ID = id, "id", "cfg_strategy");
             }
