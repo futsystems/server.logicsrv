@@ -178,6 +178,11 @@ namespace FutsMoniter
 
 
         #region 事件
+        /// <summary>
+        /// 更新服务参数
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnUpdateArgs_Click(object sender, EventArgs e)
         {
 
@@ -198,7 +203,11 @@ namespace FutsMoniter
                 }
             }
         }
-
+        /// <summary>
+        /// 修改服务计划
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnChangeServicePlan_Click(object sender, EventArgs e)
         {
             if (_account == null)
@@ -220,6 +229,11 @@ namespace FutsMoniter
             fm.ShowDialog();
         }
 
+        /// <summary>
+        /// 删除服务计划
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnDeleteFinService_Click(object sender, EventArgs e)
         {
             if (_account == null)

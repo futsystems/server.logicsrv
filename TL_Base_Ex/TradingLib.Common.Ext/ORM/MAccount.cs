@@ -304,6 +304,19 @@ namespace TradingLib.ORM
         }
 
         /// <summary>
+        /// 更新账户交易参数模板
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="templateid"></param>
+        public static void UpdateAccountExStrategyTemplate(string account, int templateid)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = String.Format("UPDATE accounts SET exstrategy_id = {0} WHERE account = '{1}'", templateid, account);
+                db.Connection.Execute(query);
+            }
+        }
+        /// <summary>
         /// 更新帐户 分开显示信用额度
         /// </summary>
         /// <param name="account"></param>

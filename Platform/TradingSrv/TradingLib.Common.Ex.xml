@@ -218,6 +218,13 @@
             <param name="domain"></param>
             <returns></returns>
         </member>
+        <member name="M:TradingLib.Common.DomainUtils.GetExStrategyTemplate(TradingLib.API.Domain)">
+            <summary>
+            获得域下所有计算策略模板
+            </summary>
+            <param name="domain"></param>
+            <returns></returns>
+        </member>
         <member name="M:TradingLib.Common.DomainUtils.UpdateSyncVendor(TradingLib.API.Domain,System.Int32)">
             <summary>
             更新同步实盘帐户
@@ -340,13 +347,6 @@
             </summary>
             <param name="domain"></param>
             <param name="rgid"></param>
-            <returns></returns>
-        </member>
-        <member name="M:TradingLib.Common.DomainUtils.GetExStrategyTemplate(TradingLib.API.Domain)">
-            <summary>
-            获得域下所有计算策略模板
-            </summary>
-            <param name="domain"></param>
             <returns></returns>
         </member>
         <member name="M:TradingLib.ORM.MConnector.UpdateConnectorInterface(TradingLib.Common.ConnectorInterface)">
@@ -797,6 +797,13 @@
             删除某条帐户风控规则
             </summary>
             <param name="id"></param>
+        </member>
+        <member name="M:TradingLib.Common.AccountBase.GetAvabileAdjustment">
+            <summary>
+            获得可用资金期货部分调整
+            取决于交易参数中浮盈是否可以开仓
+            </summary>
+            <returns></returns>
         </member>
         <member name="M:TradingLib.Common.AccountBase.Deposit(System.Decimal)">
             <summary>
@@ -2146,6 +2153,13 @@
         <member name="M:TradingLib.ORM.MAccount.UpdateAccountMarginTemplate(System.String,System.Int32)">
             <summary>
             更新帐户保证金模板
+            </summary>
+            <param name="account"></param>
+            <param name="templateid"></param>
+        </member>
+        <member name="M:TradingLib.ORM.MAccount.UpdateAccountExStrategyTemplate(System.String,System.Int32)">
+            <summary>
+            更新账户交易参数模板
             </summary>
             <param name="account"></param>
             <param name="templateid"></param>
@@ -3691,6 +3705,14 @@
             <param name="account"></param>
             <returns></returns>
         </member>
+        <member name="M:TradingLib.Common.AccountUtils_FinCal.CalFutMargin(TradingLib.API.IAccount)">
+            <summary>
+            计算期货占用保证金
+            在计算单个持仓的保证金是调用交易账户的CalPositionMargin方法
+            </summary>
+            <param name="account"></param>
+            <returns></returns>
+        </member>
         <member name="M:TradingLib.Common.AccountUtils_FinCal.CalOptPositionCost(TradingLib.API.IAccount)">
             <summary>
             期权持仓成本
@@ -3780,6 +3802,47 @@
             异化合约保证金冻结
             </summary>
             <param name="acc"></param>
+            <returns></returns>
+        </member>
+        <member name="T:TradingLib.Common.AccountUtils_Args">
+            <summary>
+            将交易账户交易参数全部放入模板中进行设置
+            这里以扩展函数的形式提供参数暴露
+            </summary>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_Args.GetArgsSideMargin(TradingLib.API.IAccount)">
+            <summary>
+            获得交易账户单向大边保证金设置
+            </summary>
+            <param name="account"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_Args.GetArgsCreditSeparate(TradingLib.API.IAccount)">
+            <summary>
+            交易账户财务信息中是否将信用额度分开显示
+            </summary>
+            <param name="account"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_Args.GetArgsPositionLock(TradingLib.API.IAccount)">
+            <summary>
+            是否支持锁仓操作
+            </summary>
+            <param name="account"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_Args.GetArgsMarginStrategy(TradingLib.API.IAccount)">
+            <summary>
+            获得交易账户的保证金计算方式
+            </summary>
+            <param name="account"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TradingLib.Common.AccountUtils_Args.GetArgsAvabileFundStrategy(TradingLib.API.IAccount)">
+            <summary>
+            返回交易账户浮盈是否可开仓设置
+            </summary>
+            <param name="account"></param>
             <returns></returns>
         </member>
         <member name="T:TradingLib.Common.BasicTracker">
@@ -5189,6 +5252,7 @@
         <member name="M:TradingLib.Common.AccountUtils_CommissionMargin.CalPositionMargin(TradingLib.API.IAccount,TradingLib.API.Position)">
             <summary>
             计算持仓保证金
+            这里需要按照账户设置的保证金计算规则进行计算
             </summary>
             <param name="account"></param>
             <param name="f"></param>
@@ -5262,33 +5326,6 @@
         <member name="M:TradingLib.Common.AccountUtils_ExStrategy.GetExStrategy(TradingLib.API.IAccount)">
             <summary>
             获得账户交易参数
-            </summary>
-            <param name="account"></param>
-            <returns></returns>
-        </member>
-        <member name="T:TradingLib.Common.AccountUtils_Args">
-            <summary>
-            将交易账户交易参数全部放入模板中进行设置
-            这里以扩展函数的形式提供参数暴露
-            </summary>
-        </member>
-        <member name="M:TradingLib.Common.AccountUtils_Args.GetArgsSideMargin(TradingLib.API.IAccount)">
-            <summary>
-            获得交易账户单向大边保证金设置
-            </summary>
-            <param name="account"></param>
-            <returns></returns>
-        </member>
-        <member name="M:TradingLib.Common.AccountUtils_Args.GetArgsCreditSeparate(TradingLib.API.IAccount)">
-            <summary>
-            交易账户财务信息中是否将信用额度分开显示
-            </summary>
-            <param name="account"></param>
-            <returns></returns>
-        </member>
-        <member name="M:TradingLib.Common.AccountUtils_Args.GetArgsPositionLock(TradingLib.API.IAccount)">
-            <summary>
-            是否支持锁仓操作
             </summary>
             <param name="account"></param>
             <returns></returns>

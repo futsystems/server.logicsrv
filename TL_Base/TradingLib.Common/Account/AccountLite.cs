@@ -149,6 +149,11 @@ namespace TradingLib.Common
         public int Margin_ID { get; set; }
 
         /// <summary>
+        /// 交易参数模板
+        /// </summary>
+        public int ExStrategy_ID { get; set; }
+
+        /// <summary>
         /// 是否处于登入状态
         /// </summary>
         public bool IsLogin { get; set; }
@@ -221,6 +226,8 @@ namespace TradingLib.Common
             //sb.Append(account.CreditSeparate);
             sb.Append(d);
             sb.Append(account.Margin_ID);
+            sb.Append(d);
+            sb.Append(account.ExStrategy_ID);
             return sb.ToString();
         }
 
@@ -257,6 +264,7 @@ namespace TradingLib.Common
             account.Credit = decimal.Parse(rec[26]);
             //account.CreditSeparate = bool.Parse(rec[27]);
             account.Margin_ID = int.Parse(rec[28]);
+            account.ExStrategy_ID = int.Parse(rec[29]);
             return account;
         }
     }

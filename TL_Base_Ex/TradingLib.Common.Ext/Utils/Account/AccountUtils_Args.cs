@@ -52,7 +52,32 @@ namespace TradingLib.Common
             return true;
 
         }
-   
+
+        /// <summary>
+        /// 获得交易账户的保证金计算方式
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public static QSEnumMarginStrategy GetArgsMarginStrategy(this IAccount account)
+        {
+            ExStrategy s = account.GetExStrategy();
+            if (s != null)
+                return s.Margin;
+            return QSEnumMarginStrategy.LastPrice;
+        }
+
+        /// <summary>
+        /// 返回交易账户浮盈是否可开仓设置
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public static QSEnumAvabileFundStrategy GetArgsAvabileFundStrategy(this IAccount account)
+        {
+            ExStrategy s = account.GetExStrategy();
+            if (s != null)
+                return s.AvabileFund;
+            return QSEnumAvabileFundStrategy.UnPLInclude;
+        }
  
     }
 }

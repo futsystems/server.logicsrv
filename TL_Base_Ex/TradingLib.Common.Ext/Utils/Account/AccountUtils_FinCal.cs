@@ -298,6 +298,12 @@ namespace TradingLib.Common
             return maginlist;
         }
 
+        /// <summary>
+        /// 计算期货占用保证金
+        /// 在计算单个持仓的保证金是调用交易账户的CalPositionMargin方法
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
         public static decimal CalFutMargin(this IAccount account)
         {
             if (account.GetArgsSideMargin())
@@ -318,7 +324,7 @@ namespace TradingLib.Common
             }
             else
             {
-                return FilterPendingOrders(account, SecurityType.FUT).Where(o => o.IsEntryPosition).Sum(e => account.CalOrderFundRequired(e, 0));
+                return FilterPendingOrders(account, SecurityType.FUT).Where(o => o.IsEntryPosition).Sum(e => account.CalOrderMarginFrozen(e));
             }
         }
 

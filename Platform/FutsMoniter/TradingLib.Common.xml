@@ -10316,6 +10316,11 @@
             保证金模板ID
             </summary>
         </member>
+        <member name="P:TradingLib.Common.AccountLite.ExStrategy_ID">
+            <summary>
+            交易参数模板
+            </summary>
+        </member>
         <member name="P:TradingLib.Common.AccountLite.IsLogin">
             <summary>
             是否处于登入状态

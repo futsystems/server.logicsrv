@@ -77,6 +77,19 @@ namespace TradingLib.Core
             AccountChanged(this[account]);
         }
 
+        /// <summary>
+        /// 更新交易账户交易参数模板
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="id"></param>
+        public void UpdateAccountExStrategyTemplate(string account, int id)
+        {
+            if (!HaveAccount(account)) return;
+            IAccount acc = this[account];
+            acc.ExStrategy_ID = id;
+            ORM.MAccount.UpdateAccountExStrategyTemplate(account, id);
+            AccountChanged(this[account]);
+        }
         //public void UpdateAccountPosLock(string account, bool poslock)
         //{
         //    if (!HaveAccount(account)) return;

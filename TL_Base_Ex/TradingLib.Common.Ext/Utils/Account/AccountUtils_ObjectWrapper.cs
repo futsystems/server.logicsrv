@@ -171,6 +171,7 @@ namespace TradingLib.Common
             info.Credit = acc.Credit;
             //info.CreditSeparate = acc.CreditSeparate;
             info.Margin_ID = acc.Margin_ID;
+            info.ExStrategy_ID = acc.ExStrategy_ID;
             return info;
         }
 

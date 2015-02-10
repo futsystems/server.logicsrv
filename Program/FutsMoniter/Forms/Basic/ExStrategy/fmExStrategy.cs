@@ -37,6 +37,7 @@ namespace FutsMoniter
             _current.CreditSeparate = creditseparate.Checked;
             _current.Margin = (QSEnumMarginStrategy)margin.SelectedValue;
             _current.AvabileFund = (QSEnumAvabileFundStrategy)avabilefund.SelectedValue;
+            _current.PositionLock = poslock.Checked;
 
             Globals.TLClient.ReqUpdateExStrategyTemplateItem(_current);
         }
@@ -58,61 +59,7 @@ namespace FutsMoniter
             //commissionGrid.RowPrePaint += new DataGridViewRowPrePaintEventHandler(commissionGrid_RowPrePaint);
         }
 
-        void commissionGrid_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
-        {
-            e.PaintParts = e.PaintParts ^ DataGridViewPaintParts.Focus;
-        }
-
-
-        //void commissionGrid_DoubleClick(object sender, EventArgs e)
-        //{
-        //    CommissionTemplateItemSetting item = GetVisibleCommissionItem(CurrentItemID);
-        //    if (item == null)
-        //    {
-        //        MoniterUtils.WindowMessage("请选择需要编辑的手续费模板项目");
-        //        return;
-        //    }
-
-        //    fmCommissionTemplateItemEdit fm = new fmCommissionTemplateItemEdit();
-        //    fm.SetCommissionTemplateItem(item);
-        //    fm.SetCommissionTemplateItems(itemmap.Values);
-        //    fm.ShowDialog();
-        //}
-
-        //得到当前选择的行号
-        //private int CurrentItemID
-        //{
-        //    get
-        //    {
-        //        return 0;
-        //        //int row = commissionGrid.SelectedRows.Count > 0 ? commissionGrid.SelectedRows[0].Index : -1;
-        //        //if (row >= 0)
-        //        //{
-        //        //    return int.Parse(commissionGrid[0, row].Value.ToString());
-        //        //}
-        //        //else
-        //        //{
-        //        //    return 0;
-        //        //}
-        //    }
-        //}
-
-
-
-        //通过行号得该行的Security
-        //ExStrategy GetVisibleExStrategy(int id)
-        //{
-        //    ExStrategy item = null;
-        //    if (itemmap.TryGetValue(id, out item))
-        //    {
-        //        return item;
-        //    }
-        //    else
-        //    {
-        //        return null;
-        //    }
-        //}
-
+       
 
         void AddItem_Click(object sender, EventArgs e)
         {
@@ -135,7 +82,7 @@ namespace FutsMoniter
             ExStrategyTemplateSetting t = templatelist.SelectedItem as ExStrategyTemplateSetting;
             if (t == null)
             {
-                MoniterUtils.WindowMessage("请选择手续费模板");
+                MoniterUtils.WindowMessage("请选择交易参数模板");
                 return;
             }
             ClearItem();
@@ -176,20 +123,7 @@ namespace FutsMoniter
             Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "NotifyExStrategyTemplateItem", this.OnNotifyExStrategyTemplateItem);
         }
 
-        string GetChargeTypeStr(QSEnumChargeType type)
-        {
-            switch (type)
-            { 
-                case QSEnumChargeType.Absolute:
-                    return "绝对";
-                case QSEnumChargeType.Percent:
-                    return "百分比";
-                case QSEnumChargeType.Relative:
-                    return "相对";
-                default:
-                    return "";
-            }
-        }
+
         void ClearItem()
         {
             //commissionGrid.DataSource = null;
@@ -199,21 +133,6 @@ namespace FutsMoniter
             //BindToTable();
         }
         ExStrategy _current = null;
-        //Dictionary<int, int> itemrowmap  = new Dictionary<int, int>();
-        //Dictionary<int, ExStrategy> itemmap = new Dictionary<int, ExStrategy>();
-
-        //int ItemIdx(int id)
-        //{
-        //    int rowid = -1;
-        //    if (itemrowmap.TryGetValue(id, out rowid))
-        //    {
-        //        return rowid;
-        //    }
-        //    else
-        //    {
-        //        return -1;
-        //    }
-        //}
 
         void OnQryExStrategyTemplateItem(string json)
         {
@@ -243,49 +162,6 @@ namespace FutsMoniter
             _current = item;
         }
 
-        void GotCommissionTemplateItem(CommissionTemplateItemSetting item)
-        {
-            //if (InvokeRequired)
-            //{
-            //    Invoke(new Action<CommissionTemplateItemSetting>(GotCommissionTemplateItem), new object[] { item });
-            //}
-            //else
-            //{
-            //    int r = ItemIdx(item.ID);
-            //    if (r == -1)
-            //    {
-            //        gt.Rows.Add(item.ID);
-            //        int i = gt.Rows.Count - 1;
-            //        gt.Rows[i][CODE] = item.Code;
-            //        gt.Rows[i][MONTH] = item.Month;
-            //        gt.Rows[i][OPENBYMONEY] = item.OpenByMoney;
-            //        gt.Rows[i][OPENBYVOLUME] = item.OpenByVolume;
-            //        gt.Rows[i][CLOSETODAYBYMONEY] = item.CloseTodayByMoney;
-            //        gt.Rows[i][CLOSETODAYBYVOLUME] = item.CloseTodayByVolume;
-            //        gt.Rows[i][CLOSEBYMONEY] = item.CloseByMoney;
-            //        gt.Rows[i][CLOSEBYVOLUME] = item.CloseByVolume;
-            //        gt.Rows[i][PERCENT] = item.Percent;
-            //        gt.Rows[i][CHARGETYPE] = GetChargeTypeStr(item.ChargeType);// == QSEnumChargeType.Absolute ? "绝对" : "相对";
-
-            //        itemmap.Add(item.ID, item);
-            //        itemrowmap.Add(item.ID, i);
-
-            //    }
-            //    else
-            //    {
-            //        int i = r;
-            //        gt.Rows[i][OPENBYMONEY] = item.OpenByMoney;
-            //        gt.Rows[i][OPENBYVOLUME] = item.OpenByVolume;
-            //        gt.Rows[i][CLOSETODAYBYMONEY] = item.CloseTodayByMoney;
-            //        gt.Rows[i][CLOSETODAYBYVOLUME] = item.CloseTodayByVolume;
-            //        gt.Rows[i][CLOSEBYMONEY] = item.CloseByMoney;
-            //        gt.Rows[i][CLOSEBYVOLUME] = item.CloseByVolume;
-            //        gt.Rows[i][PERCENT] = item.Percent;
-            //        gt.Rows[i][CHARGETYPE] = GetChargeTypeStr(item.ChargeType);// == QSEnumChargeType.Absolute ? "绝对" : "相对";
-            //        itemmap[item.ID]=item;
-            //    }
-            //}
-        }
 
         Dictionary<int, ExStrategyTemplateSetting> templatemap = new Dictionary<int, ExStrategyTemplateSetting>();
         void OnQryExStrategyTemplate(string json)

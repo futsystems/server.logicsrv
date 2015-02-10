@@ -78,7 +78,61 @@ namespace FutsMoniter
                 }
                 
             }
+            if (!ValidArgs(_argument))
+            {
+                return false;
+            }
             return true;
+        }
+
+        bool ValidArgs(JsonWrapperArgument arg)
+        {
+            if (_argument.ArgType.Equals("STRING"))
+            {
+                try
+                {
+                    Convert.ToString(_argument.ArgValue);
+                }
+                catch (Exception ex)
+                {
+                    return false;
+                }
+            }
+            if (_argument.ArgType.Equals("INT"))
+            {
+                try
+                {
+                    Convert.ToInt32(_argument.ArgValue);
+                }
+                catch (Exception ex)
+                {
+                    return false;
+                }
+            }
+            if (_argument.ArgType.Equals("DECIMAL"))
+            {
+                try
+                {
+                    Convert.ToDecimal(_argument.ArgValue);
+                }
+                catch (Exception ex)
+                {
+                    return false;
+                }
+            }
+            if (_argument.ArgType.Equals("BOOLEAN"))
+            {
+                try
+                {
+                    Convert.ToBoolean(_argument.ArgValue);
+                }
+                catch (Exception ex)
+                {
+                    return false;
+                }
+            }
+            return true;
+            
         }
 
         public void DisableEdit()
