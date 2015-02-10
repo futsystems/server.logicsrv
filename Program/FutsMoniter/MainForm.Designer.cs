@@ -142,7 +142,6 @@
             this.TabRibbon.Name = "TabRibbon";
             this.TabRibbon.QATButtons.AddRange(new System.ComponentModel.Component[] {
             this.kryptonRibbonQATButton_debug});
-            this.TabRibbon.QATLocation = ComponentFactory.Krypton.Ribbon.QATLocation.Hidden;
             this.TabRibbon.QATUserChange = false;
             this.TabRibbon.RibbonAppButton.AppButtonMenuItems.AddRange(new ComponentFactory.Krypton.Toolkit.KryptonContextMenuItemBase[] {
             this.kryptonContextMenuItem_exit,
@@ -165,7 +164,6 @@
             this.tabFinance,
             this.tabHistQuery,
             this.kryptonRibbonTab1});
-            this.TabRibbon.SelectedContext = null;
             this.TabRibbon.SelectedTab = this.tabBasicConfig;
             this.TabRibbon.Size = new System.Drawing.Size(1107, 115);
             this.TabRibbon.TabIndex = 0;

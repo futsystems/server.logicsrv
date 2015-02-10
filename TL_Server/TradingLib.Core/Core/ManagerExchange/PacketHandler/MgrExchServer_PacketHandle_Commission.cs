@@ -66,7 +66,11 @@ namespace TradingLib.Core
                 CommissionTemplate template = BasicTracker.CommissionTemplateTracker[templateid];
 
                 CommissionTemplateItemSetting[] items = template.CommissionItems.ToArray();
-                session.ReplyMgr(items);
+                for (int i = 0; i < items.Length;i++ )
+                {
+                    session.ReplyMgr(items[i], i == items.Length - 1);
+                }
+                
             }
             else
             {
@@ -94,22 +98,6 @@ namespace TradingLib.Core
 
                 bool isadd = item.ID == 0;
 
-                //更新某个单独的月份
-                //if (!item.SetAllMonth && !item.SetAllCodeMonth)
-                //{
-                //    if (isadd)
-                //    {
-                //        if (template[item.Code, item.Month] != null)
-                //        {
-                //            throw new FutsRspError("手续费模板项目已存在");
-                //        }
-                //    }
-                //    //调用update更新或添加
-                //    BasicTracker.CommissionTemplateTracker.UpdateCommissionTemplateItem(item);
-                //    session.NotifyMgr("NotifyCommissionTemplateItem", template[item.Code, item.Month]);
-                //}
-                //else
-                //{
                     if (isadd)//如果是添加 则没有更新所有品种所有月份的选项
                     {
                         for (int i = 1; i <= 12; i++)
@@ -145,7 +133,7 @@ namespace TradingLib.Core
                         //更新该品种所有月份
                         if (item.SetAllMonth)
                         {
-                            foreach (CommissionTemplateItemSetting t in BasicTracker.CommissionTemplateTracker.CommissionTemplateItems.Where(x => x.Code.Equals(item.Code)))
+                            foreach (CommissionTemplateItemSetting t in BasicTracker.CommissionTemplateTracker[item.Template_ID].CommissionItems.Where(x => x.Code.Equals(item.Code)))
                             {
                                 t.OpenByMoney = item.OpenByMoney;
                                 t.OpenByVolume = item.OpenByVolume;
@@ -164,7 +152,7 @@ namespace TradingLib.Core
                         //更新所有品种所有月份
                         else if (item.SetAllCodeMonth)
                         {
-                            foreach (CommissionTemplateItemSetting t in BasicTracker.CommissionTemplateTracker.CommissionTemplateItems)
+                            foreach (CommissionTemplateItemSetting t in BasicTracker.CommissionTemplateTracker[item.Template_ID].CommissionItems)
                             {
                                 t.OpenByMoney = item.OpenByMoney;
                                 t.OpenByVolume = item.OpenByVolume;

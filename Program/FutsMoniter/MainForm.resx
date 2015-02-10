@@ -210,8 +210,8 @@
   <data name="kryptonContextMenuItem_changepass.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK+AAA
-        CvgBZiY8/QAAB49JREFUWEe1V2tsm2cV/tJloQPExLZsE+MmkNAmkPgxIYHEOgQUMVBFfyBt6lSmrF1T
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK9wAA
+        CvcBEOiS5wAAB49JREFUWEe1V2tsm2cV/tJloQPExLZsE+MmkNAmkPgxIYHEOgQUMVBFfyBt6lSmrF1T
         J+mS5u7ESexcnYuvcep7YufmOE4cO/Etdhwnzv3WtV1vaylSQaxpx8SAH2umNofnfHwVGlKzQsORHr2f
         9X3ve55zzvOe97XwMPbqkRxxbNFrfxiIhKdmFxYovbRI8dT0RUdv7yv87vXcY+I3u27VTY3CgUOvZWpP
         df1manb23JU/XLu7fvYszSwu0IX33qPl9fVLdrdrPxEJqtZWadYumaqtVVA0Nz1udbsK51eW3z9z/jyF
@@ -495,8 +495,8 @@
   <data name="kryptonRibbonGroupButton_permissiontmp.ImageLarge" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAALBwAA
-        CwcBtnMLwAAAEyhJREFUeF7tXQlYU9e25vWidaBq38M61jpVfXVstVIyQBhEUEAUA0mYBAVRFEesonUW
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAALBgAA
+        CwYBZDTpJAAAEyhJREFUeF7tXQlYU9e25vWidaBq38M61jpVfXVstVIyQBhEUEAUA0mYBAVRFEesonUW
         FZAqUwjgLIrUqc5D2+dVW7VqbWvtVXurXm2rts7WARXXW+vkBJKwAwRDEoH/+/6PkL3P2vv8a++1194n
         BJvqAolktq2jQtlXqFCOEcmzVgjlWSeQ55HXkYAs5F+fQW4XypULRTLl4L6h6f/Dm6iF0Zg9+zWhQuWC
         gmfjz5v9RqwDv3GfQ9D0r2DEguMQvfgUxCT/AOOX/QyxS89yr6MWnoSw2YchYMpeGDi6AMRBOc/QIYfQ
@@ -823,8 +823,8 @@
   <data name="kryptonRibbonGroupButton_PermissionAgent.ImageLarge" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK+AAA
-        CvgBZiY8/QAAB1dJREFUWEetlgtM0/cWx388pjNuzuDNolu41zCBTZCiFCn/9t9WXnOjyKOl7xYoyIYg
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK9wAA
+        CvcBEOiS5wAAB1dJREFUWEetlgtM0/cWx388pjNuzuDNolu41zCBTZCiFCn/9t9WXnOjyKOl7xYoyIYg
         0T1cplEqglgLpZUWSnkInej1LdPpdPfeZHePxGwxuzdz2aLLYjI3M3XqFLxy587O798/7wpz20k++dPf
         //zO9/zOOb9/IMRqncxWKwnfXEtSjG1EomsnYp2XiA0+In2+gcgRiaaDLFN7yKIq5+L0Mn9D9sv7P1ZU
         HrqcU3X4mqLy8FcvVuw/mFbSpUnWdISL1HR/O4lX7ydxhQcm8bsSYDS+sLRif52i6tBAZukekJo6QaJv
@@ -922,8 +922,8 @@
   <data name="kryptonRibbonGroupButton_AccountCashreq.ImageLarge" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK+AAA
-        CvgBZiY8/QAAB3VJREFUWEe1lgtQlNcVxy+PahxT42Cno+nQOigQBdkFeaz7Flhs3EVA2PcDWJCKqDVp
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK9wAA
+        CvcBEOiS5wAAB3VJREFUWEe1lgtQlNcVxy+PahxT42Cno+nQOigQBdkFeaz7Flhs3EVA2PcDWJCKqDVp
         zaOOsCKwwMLCwgK7vFnBB2IFNGrsiJOm1jRW+4h2miomNmPbqYo2iVqNeHrutwsIbGIS6Zn5zbd777nn
         /7/n3m+BEJNpOrtMxH9nMYnTNRG+2kl4agfhaZuJcI2ZiBG+soVEKRrI0s21yxNyXWbpxgO/lRX0XU/e
         fOimrODQh2vzDxyMz25Txihb/DkKut5JwhUHSJi8dxrfygBX2ewXn+UqkW3uuyvJ6QahvhX4GidgHgi0
@@ -1017,8 +1017,8 @@
   <data name="kryptonRibbonGroupButton_QueryExHist.ImageLarge" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK+AAA
-        CvgBZiY8/QAACEtJREFUWEetVgtQlNcVvjyqcUyNg52MpmPrEAEFBILsAvtEYBFleS77Xh67vEVS7TQ6
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK9wAA
+        CvcBEOiS5wAACEtJREFUWEetVgtQlNcVvjyqcUyNg52MpmPrEAEFBILsAvtEYBFleS77Xh67vEVS7TQ6
         0YqrsLxZWN2FZRdWQB6RRwQzYzMmpkmqINHGSdNO21HHttN22qnGNFFjbO3puXcXWHxUdHpnvvn3/v85
         3/fdc87/AyFG46M4ZCT+Bw6TWF0nEai7CF9tJ3ytg4i21pMEhEDpJNEKG1m/sz00qbi/Pq38xJS0cuwv
         6TvHb0grx3+/veLEaKK+R8lROv3jFDS/i4QrTpAw+cgjeC4DPKXDL7Gwv1a6c+yOpGgARHndINB0AcaB
@@ -1059,8 +1059,8 @@
   <data name="kryptonRibbonGroupButton_QueryCashTransAccount.ImageLarge" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK+AAA
-        CvgBZiY8/QAAB3VJREFUWEe1lgtQlNcVxy+PahxT42Cno+nQOigQBdkFeaz7Flhs3EVA2PcDWJCKqDVp
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK9wAA
+        CvcBEOiS5wAAB3VJREFUWEe1lgtQlNcVxy+PahxT42Cno+nQOigQBdkFeaz7Flhs3EVA2PcDWJCKqDVp
         zaOOsCKwwMLCwgK7vFnBB2IFNGrsiJOm1jRW+4h2miomNmPbqYo2iVqNeHrutwsIbGIS6Zn5zbd777nn
         /7/n3m+BEJNpOrtMxH9nMYnTNRG+2kl4agfhaZuJcI2ZiBG+soVEKRrI0s21yxNyXWbpxgO/lRX0XU/e
         fOimrODQh2vzDxyMz25Txihb/DkKut5JwhUHSJi8dxrfygBX2ewXn+UqkW3uuyvJ6QahvhX4GidgHgi0
@@ -1098,8 +1098,8 @@
   <data name="kryptonRibbonGroupButton_QuerySettleAccount.ImageLarge" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK+AAA
-        CvgBZiY8/QAACGtJREFUWEetlgtQVOcVxz8e1TimxsFORtOxdYhAAgpEgV33xSoPo4AK+37wfkSEiKaa
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK9wAA
+        CvcBEOiS5wAACGtJREFUWEetlgtQVOcVxz8e1TimxsFORtOxdYhAAgpEgV33xSoPo4AK+37wfkSEiKaa
         GI26POTNsk9YlvcKAkKiBCGgURM0hhQ1jc+qaGqTTDONVadpYhLTOT3f3U0E97YZ03wzv7l37/2+8/9/
         55x77xKi07lTqCPeO4sIR1tPBKoGwlfZCF9jJ6KVZUSMCBSNZIncShbmGwKjshxlcet7TsXn9X2WkP/6
         rfi816+szu3pXZHerAhXNHpz5XR9A1kk7yFBsv1u/CwDPIXda0WaoyQ+v++rmMwOECU3gUDdADgPhJpG
@@ -1141,8 +1141,8 @@
   <data name="kryptonRibbonGroupButton_QueryCashTransAgent.ImageLarge" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK+AAA
-        CvgBZiY8/QAAB3VJREFUWEe1lgtQlNcVxy+PahxT42Cno+nQOigQBdkFeaz7Flhs3EVA2PcDWJCKqDVp
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK9wAA
+        CvcBEOiS5wAAB3VJREFUWEe1lgtQlNcVxy+PahxT42Cno+nQOigQBdkFeaz7Flhs3EVA2PcDWJCKqDVp
         zaOOsCKwwMLCwgK7vFnBB2IFNGrsiJOm1jRW+4h2miomNmPbqYo2iVqNeHrutwsIbGIS6Zn5zbd777nn
         /7/n3m+BEJNpOrtMxH9nMYnTNRG+2kl4agfhaZuJcI2ZiBG+soVEKRrI0s21yxNyXWbpxgO/lRX0XU/e
         fOimrODQh2vzDxyMz25Txihb/DkKut5JwhUHSJi8dxrfygBX2ewXn+UqkW3uuyvJ6QahvhX4GidgHgi0
@@ -1180,8 +1180,8 @@
   <data name="kryptonRibbonGroupButton_QuerySettleAgent.ImageLarge" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK+AAA
-        CvgBZiY8/QAACGtJREFUWEetlgtQVOcVxz8e1TimxsFORtOxdYhAAgpEgV33xSoPo4AK+37wfkSEiKaa
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK9wAA
+        CvcBEOiS5wAACGtJREFUWEetlgtQVOcVxz8e1TimxsFORtOxdYhAAgpEgV33xSoPo4AK+37wfkSEiKaa
         GI26POTNsk9YlvcKAkKiBCGgURM0hhQ1jc+qaGqTTDONVadpYhLTOT3f3U0E97YZ03wzv7l37/2+8/9/
         55x77xKi07lTqCPeO4sIR1tPBKoGwlfZCF9jJ6KVZUSMCBSNZIncShbmGwKjshxlcet7TsXn9X2WkP/6
         rfi816+szu3pXZHerAhXNHpz5XR9A1kk7yFBsv1u/CwDPIXda0WaoyQ+v++rmMwOECU3gUDdADgPhJpG
@@ -1223,8 +1223,8 @@
   <data name="kryptonRibbonGroupButton_QueryAgentProfit.ImageLarge" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK+AAA
-        CvgBZiY8/QAABxxJREFUWEe1lgtsU2UUx789BAmIZBgzNFMy2KZsrIM92t72tmMvxa0T6Puxjj2Y4sBA
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK9wAA
+        CvcBEOiS5wAABxxJREFUWEe1lgtsU2UUx789BAmIZBgzNFMy2KZsrIM92t72tmMvxa0T6Puxjj2Y4sBA
         ovFBgLKNFdat3Wg7ugdjq2NkD7bBzHhEVIwgBBwqauIrioqoIIjgFDQ5nu+2w+FuGSie5Jfbe++5///5
         zvnuTQmxWMaywUJC15YRoWkrkeobiETvIRJjI5E9ZiWpiFTbROZr3GT2ito56cVea/bTnUdySnvOKFbs
         Op9TuuuTJ5Z3dqcVbNMma5tCRRr6fAOJ03SSWHXXGP5VAYy2MSRtqbciZ0XPr5lF7SDLawapoQEwD1hj
