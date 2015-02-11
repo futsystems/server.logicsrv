@@ -28,7 +28,7 @@ namespace FutsMoniter
         public void SetAccount(AccountLite account)
         {
             _account = account;
-            //ctFinanceInfo1.SetAccount(account);
+            ctFinanceInfo1.SetAccount(_account);
         }
 
 
