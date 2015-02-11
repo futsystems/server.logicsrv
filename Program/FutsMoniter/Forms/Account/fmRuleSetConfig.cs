@@ -59,7 +59,7 @@ namespace FutsMoniter
 
                 argvalue.Text = _rule.Value;
                 comparetype.SelectedValue = _rule.Compare;
-                symbolset.Text = _rule.SymbolSet;
+                symbolset.Text = _rule.SymbolSet.Replace('_',',');
             }
         }
 
@@ -84,7 +84,7 @@ namespace FutsMoniter
                 item.Enable = true;
                 item.RuleName = _ruleclass.ClassName;
                 item.RuleType = _ruleclass.Type;
-                item.SymbolSet = symbolset.Text;
+                item.SymbolSet = symbolset.Text.Replace(',','_');
                 item.Value = argvalue.Text;
 
                 if (fmConfirm.Show("确添加帐户风控规则?") == System.Windows.Forms.DialogResult.Yes)
