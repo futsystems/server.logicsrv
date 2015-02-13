@@ -33,7 +33,7 @@ namespace FutsMoniter
             JsonReply<T> reply = JsonReply.ParseReply<T>(json);
             if (reply.Code == 0)
             {
-                return reply.Playload;
+                return reply.Payload;
             }
             else
             {

@@ -12,11 +12,23 @@ namespace TradingLib.Contrib.APIService
     {
 
 
-        [ContribCommandAttr(QSEnumCommandSource.MessageWeb, "CreateCounter", "CreateCounter - 新建柜台实例", "在该部署环境中新建柜台实例")]
+        /// <summary>
+        /// 创建柜台实例
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [ContribCommandAttr(QSEnumCommandSource.MessageWeb, "CreateCounter", "CreateCounter - 新建柜台实例", "在该部署环境中新建柜台实例",QSEnumArgParseType.Json)]
         public object CreateCounter(string request)
         {
-            debug("got create counter request....:" + request,QSEnumDebugLevel.INFO);
+            debug("got create counter request:" + request,QSEnumDebugLevel.INFO);
+            JsonData args = JsonMapper.ToObject(request);
+
             DomainImpl domain = new DomainImpl();
+            domain.Name = args["Company"].ToString();
+            domain.LinkMan = args["LinkMan"].ToString();
+            domain.QQ = "";
+            domain.Mobile = "";
+
             BasicTracker.DomainTracker.UpdateDomain(domain);
 
             Manager toadd = new Manager();
@@ -35,7 +47,79 @@ namespace TradingLib.Contrib.APIService
             debug("domain created id:" + domain.ID);
 
             return new { DomainID = domain.ID };
-            
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [ContribCommandAttr(QSEnumCommandSource.MessageWeb, "RenewCounter", "RenewCounter - 续费柜台", "续费柜台", QSEnumArgParseType.Json)]
+        public object RenewCounter(string request)
+        {
+            debug("got renew counter request:" + request, QSEnumDebugLevel.INFO);
+            JsonData args = JsonMapper.ToObject(request);
+            int domain_id = int.Parse(args["DomainID"].ToString());
+            int expiredate = int.Parse(args["ExpireDate"].ToString());
+
+            DomainImpl tmp = BasicTracker.DomainTracker[domain_id];
+            if (tmp != null)
+            {
+                tmp.DateExpired = expiredate;
+                BasicTracker.DomainTracker.UpdateDomain(tmp);
+            }
+
+            return new
+            {
+                DomainID = domain_id,
+                ExpireDate = tmp.DateExpired,
+            };
+        }
+
+        /// <summary>
+        /// 更新柜台参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [ContribCommandAttr(QSEnumCommandSource.MessageWeb, "UpdateCounter", "UpdateCounter - 更新柜台参数", "更新柜台参数", QSEnumArgParseType.Json)]
+        public object UpdateCounter(string request)
+        {
+            debug("got update counter request:" + request, QSEnumDebugLevel.INFO);
+            JsonData args = JsonMapper.ToObject(request);
+            int domain_id = int.Parse(args["DomainID"].ToString());
+
+            int mainacct_num = int.Parse(args["MainAccountNum"].ToString());
+            int subacct_num = int.Parse(args["SubAccountNum"].ToString());
+            int rg_num = int.Parse(args["RouterGroupNum"].ToString());
+            int expiredate = int.Parse(args["ExpireDate"].ToString());
+            bool exlive = bool.Parse(args["ExLive"].ToString());
+            bool exsim = bool.Parse(args["ExSIM"].ToString());
+
+            DomainImpl tmp = BasicTracker.DomainTracker[domain_id];
+            if (tmp != null)
+            {
+                tmp.AccLimit = subacct_num;
+                tmp.VendorLimit = mainacct_num;
+                tmp.DateExpired = expiredate;
+                tmp.Router_Live = exlive;
+                tmp.Router_Sim = exsim;
+                tmp.RouterGroupLimit = rg_num;
+                tmp.RouterItemLimit = 1;
+                tmp.ID = domain_id;
+
+                BasicTracker.DomainTracker.UpdateDomain(tmp);
+            }
+
+            return new 
+            { 
+                DomainID = domain_id,
+                SubAccountNum =tmp.AccLimit,
+                MainAccountNum = tmp.VendorLimit,
+                RouterGroupNum = tmp.RouterGroupLimit,
+                ExpireDate =tmp.DateExpired,
+                ExLive = tmp.Router_Live,
+                ExSIM = tmp.Router_Sim,
+            };
         }
     }
 }
