@@ -209,7 +209,7 @@ namespace TraddingSrvCLI
                     //判断Reply是否为正常返回
                     if (reply.Code == 0)
                     {
-                        status = reply.Playload;
+                        status = reply.Payload;
                         //TradingLib.Mixins.LitJson.JsonData data = TradingLib.Mixins.JsonReply.ParseJsonReplyData(rep);
                         //status = TradingLib.Mixins.JsonReply.ParsePlayload<CoreThreadStatus>(data);
                         debug("reply status:" + status.Status.ToString());

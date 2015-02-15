@@ -8,6 +8,34 @@ namespace TradingLib.Common
 {
     public class DomainImpl : Domain
     {
+        public DomainImpl()
+        {
+            this.ID=0;
+            this.Name="分区";
+            this.LinkMan = string.Empty;
+            this.Mobile=string.Empty;
+            this.QQ = string.Empty;
+            this.Email = string.Empty;
+            this.AccLimit = 1;
+            this.DateExpired = Util.ToTLDate();
+            this.DateCreated = Util.ToTLDate();
+            this.Super = false;
+            this.Dedicated = false;
+            this.RouterGroupLimit = 1;
+            this.RouterItemLimit = 1;
+            this.VendorLimit = 1;
+            this.InterfaceList=string.Empty;
+            this.FinSPList = string.Empty;
+            this.Module_Agent = false;
+            this.Module_FinService = false;
+            this.Module_PayOnline = false;
+            this.Module_SubAgent = false;
+            this.Router_Live = true;
+            this.Router_Sim = true;
+            this.Misc_InsertTrade = false;
+
+
+        }
         /// <summary>
         /// 域ID
         /// </summary>

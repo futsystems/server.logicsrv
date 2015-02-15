@@ -196,15 +196,16 @@ namespace FutsMoniter
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="json"></param>
         void OnQryCommissionTemplateItem(string json)
         {
-            CommissionTemplateItemSetting[] list = MoniterUtils.ParseJsonResponse<CommissionTemplateItemSetting[]>(json);
-            if (list != null)
+            CommissionTemplateItemSetting obj = MoniterUtils.ParseJsonResponse<CommissionTemplateItemSetting>(json);
+            if (obj != null)
             {
-                foreach (CommissionTemplateItemSetting item in list)
-                {
-                    GotCommissionTemplateItem(item);
-                }
+                GotCommissionTemplateItem(obj);
             }
         }
 

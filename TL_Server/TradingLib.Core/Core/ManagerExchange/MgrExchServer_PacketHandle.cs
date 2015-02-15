@@ -302,11 +302,11 @@ namespace TradingLib.Core
                             SrvOnMGRReqChangeInvestor(packet as MGRReqChangeInvestorRequest, session, manager);
                             break;
                         }
-                    case MessageTypes.MGRUPDATEPOSLOCK://请求修改帐户锁仓权限
-                        {
-                            SrvOnMGRReqUpdateAccountPosLock(packet as MGRReqUpdatePosLockRequest, session, manager);
-                            break;
-                        }
+                    //case MessageTypes.MGRUPDATEPOSLOCK://请求修改帐户锁仓权限
+                    //    {
+                    //        SrvOnMGRReqUpdateAccountPosLock(packet as MGRReqUpdatePosLockRequest, session, manager);
+                    //        break;
+                    //    }
                     case MessageTypes.MGRQRYMANAGER://请求查询管理员列表
                         {
                             //SrvOnMGRQryManager(packet as MGRQryManagerRequest, session, manager);

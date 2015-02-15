@@ -40,8 +40,11 @@ namespace OrderRuleSet
             if (!o.IsEntryPosition) return true;//平仓不检查
             Symbol symbol = o.oSymbol;
 
-            if (IsInSymbolSet(symbol))
+            if (!IsInSymbolSet(symbol))
+            {
                 return true;
+
+            }
             else
             {
                 msg = RuleDescription + " 不满足,委托被拒绝";
@@ -57,7 +60,7 @@ namespace OrderRuleSet
         {
             get
             {
-                return "开仓条件:禁止交易集合["+this.SymbolSet+"]";
+                return "开仓条件:禁止交易集合[" + this.SymbolSet.Replace('_', ' ') + "]";
             }
         }
 

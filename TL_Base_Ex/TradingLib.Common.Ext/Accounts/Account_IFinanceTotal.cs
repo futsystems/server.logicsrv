@@ -81,8 +81,24 @@ namespace TradingLib.Common
         /// 总可用资金
         /// 常规计算的可用资金 + 扩展模块提供的配资资金
         /// </summary>
-        public decimal AvabileFunds { get { return TotalLiquidation - MoneyUsed + this.Credit; } }//帐户总可用资金
+        public decimal AvabileFunds { get { return TotalLiquidation - MoneyUsed + this.Credit + GetAvabileAdjustment(); } }//帐户总可用资金
 
+        /// <summary>
+        /// 获得可用资金期货部分调整
+        /// 取决于交易参数中浮盈是否可以开仓
+        /// </summary>
+        /// <returns></returns>
+        decimal GetAvabileAdjustment()
+        {
+            decimal futunpl = this.CalFutUnRealizedPL();
+            if (futunpl <= 0) return 0;//如果当前处于浮亏状态，则可用资金调整为0，按正常算法计算可用资金
+            //如果浮动盈亏大于0 则按照设置来判断浮盈是否可以开仓
+            if (this.GetArgsAvabileFundStrategy() == QSEnumAvabileFundStrategy.UnPLExclude)
+            {
+                return -1 * futunpl;
+            }
+            return 0;
+        }
 
         /// <summary>
         /// 帐户信用额度

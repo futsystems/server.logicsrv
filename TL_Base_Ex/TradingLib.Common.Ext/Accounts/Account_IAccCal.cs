@@ -19,7 +19,7 @@ namespace TradingLib.Common
         public virtual decimal CalOrderFundRequired(Order o, decimal defaultvalue = 0)
         {
             //需要判断是否启用单向大边
-            if (!this.SideMargin)
+            if (!this.GetArgsSideMargin())
             {
                 //decimal price = TLCtxHelper.CmdUtils.GetAvabilePrice(o.Symbol);
                 return this.CalOrderMarginFrozen(o);

@@ -10,7 +10,7 @@ namespace TradingLib.Mixins.Json
     {
         public int Code;
         public string Message;
-        public object Playload;
+        public object Payload;
 
         public static JsonReply ErrorReply(int code = 1, string message = "")
         {
@@ -21,13 +21,13 @@ namespace TradingLib.Mixins.Json
             return new JsonReply(code, message, null);
         }
 
-        public static JsonReply SuccessReply(object playload = null,int code = 0, string message = "")
+        public static JsonReply SuccessReply(object payload = null,int code = 0, string message = "")
         {
             if (string.IsNullOrEmpty(message))
             {
                 message = "Success:" + code.ToString();
             }
-            return new JsonReply(code, message, playload);
+            return new JsonReply(code, message, payload);
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace TradingLib.Mixins.Json
         {
             this.Code = code;
             this.Message = message;
-            this.Playload = obj;
+            this.Payload = obj;
         }
 
         public string ToJson()
@@ -64,19 +64,19 @@ namespace TradingLib.Mixins.Json
     {
         public int Code;
         public string Message;
-        public T Playload;
+        public T Payload;
 
         public JsonReply()
         {
             Code = 0;
             Message = string.Empty;
-            Playload = default(T);
+            Payload = default(T);
         }
         public JsonReply(int code, string message, T playload)
         {
             Code = code;
             Message = message;
-            Playload = playload;
+            Payload = playload;
         }
 
         /// <summary>

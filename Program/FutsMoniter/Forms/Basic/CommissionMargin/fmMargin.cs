@@ -195,13 +195,10 @@ namespace FutsMoniter
 
         void OnQryMarginTemplateItem(string json)
         {
-            MarginTemplateItemSetting[] list = MoniterUtils.ParseJsonResponse<MarginTemplateItemSetting[]>(json);
-            if (list != null)
+            MarginTemplateItemSetting obj = MoniterUtils.ParseJsonResponse<MarginTemplateItemSetting>(json);
+            if (obj != null)
             {
-                foreach (MarginTemplateItemSetting item in list)
-                {
-                    GotCommissionTemplateItem(item);
-                }
+                    GotCommissionTemplateItem(obj);
             }
         }
 

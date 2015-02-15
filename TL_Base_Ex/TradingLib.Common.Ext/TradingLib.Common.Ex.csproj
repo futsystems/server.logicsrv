@@ -20,6 +20,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DebugSymbols>true</DebugSymbols>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -63,11 +65,16 @@
     <Compile Include="Accounts\Account.cs" />
     <Compile Include="ORM\MCommission.cs" />
     <Compile Include="ORM\MMargin.cs" />
+    <Compile Include="ORM\MStrategy.cs" />
     <Compile Include="ORM\MSystem.cs" />
     <Compile Include="Tracker\BasicTracker\CommissionTemplateTracker.cs" />
+    <Compile Include="Tracker\BasicTracker\ExStrategyTemplateTracker.cs" />
     <Compile Include="Tracker\BasicTracker\MarginTemplateTracker.cs" />
     <Compile Include="Utils\Account\AccountUtils_xx.cs" />
+    <Compile Include="Utils\Account\AccountUtils_ExStrategy.cs" />
+    <Compile Include="Utils\Account\AccountUtils_Args.cs" />
     <Compile Include="Utils\Domain\DomainUtils_CommissionMargin.cs" />
+    <Compile Include="Utils\Domain\DomainUtils_ExStrategy.cs" />
     <Compile Include="Wrapper\AccountAdapterToExp.cs" />
     <Compile Include="Accounts\AccountCreation.cs" />
     <Compile Include="Accounts\AccountFilter.cs" />

@@ -23,6 +23,10 @@ namespace FutsMoniter
 
             Globals.LogicEvent.RegisterCallback("MgrExchServer", "QryCommissionTemplate", this.OnQryCommissionTemplate);
             Globals.LogicEvent.RegisterCallback("MgrExchServer", "QryMarginTemplate", this.OnQryMarginTemplate);
+            Globals.LogicEvent.RegisterCallback("MgrExchServer", "QryExStrategyTemplate", this.OnQryExStrategyTemplate);
+
+
+
 
             if (!Globals.Domain.Super)
             {
@@ -58,6 +62,33 @@ namespace FutsMoniter
             }
         }
 
+        void OnQryExStrategyTemplate(string json)
+        {
+            ExStrategyTemplateSetting[] list = MoniterUtils.ParseJsonResponse<ExStrategyTemplateSetting[]>(json);
+            if (list != null)
+            {
+                Factory.IDataSourceFactory(cbExStrategyTemplate).BindDataSource(GetExStrategyTemplateCBList(list));
+                cbExStrategyTemplate.SelectedValue = _account.ExStrategy_ID;
+            }
+        }
+
+        public static ArrayList GetExStrategyTemplateCBList(ExStrategyTemplateSetting[] items)
+        {
+            ArrayList list = new ArrayList();
+            ValueObject<int> vo1 = new ValueObject<int>();
+            vo1.Name = "系统默认";
+            vo1.Value = 0;
+            list.Add(vo1);
+
+            foreach (ExStrategyTemplateSetting item in items)
+            {
+                ValueObject<int> vo = new ValueObject<int>();
+                vo.Name = item.Name;
+                vo.Value = item.ID;
+                list.Add(vo);
+            }
+            return list;
+        }
         public static ArrayList GetMarginTemplateCBList(MarginTemplateSetting[] items)
         {
             ArrayList list = new ArrayList();
@@ -100,10 +131,10 @@ namespace FutsMoniter
             {
                 this.Text = "交易帐户编辑[" + _account.Account + "]";
                 intraday.Checked = _account.IntraDay;
-                poslock.Checked = _account.PosLock;
-                sidemargin.Checked = _account.SideMargin;
+                //poslock.Checked = _account.PosLock;
+                //sidemargin.Checked = _account.SideMargin;
                 ctRouterType1.RouterType = _account.OrderRouteType;
-                cbCreditSeparate.Checked = _account.CreditSeparate;
+                //cbCreditSeparate.Checked = _account.CreditSeparate;
 
                 btnExecute.Text = _account.Execute ? "冻 结" : "激 活";
                 btnExecute.StateCommon.Content.ShortText.Color1 = !_account.Execute ? UIGlobals.ShortSideColor : UIGlobals.LongSideColor;

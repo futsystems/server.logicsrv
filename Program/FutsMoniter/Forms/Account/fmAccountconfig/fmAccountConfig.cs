@@ -28,7 +28,7 @@ namespace FutsMoniter
         public void SetAccount(AccountLite account)
         {
             _account = account;
-            ctFinanceInfo1.SetAccount(account);
+            ctFinanceInfo1.SetAccount(_account);
         }
 
 
@@ -86,6 +86,11 @@ namespace FutsMoniter
                 if (_account.Margin_ID != marginid)
                 {
                     Globals.TLClient.ReqUpdateAccountMarginTemplate(_account.Account, marginid);
+                }
+                int strategyid = (int)cbExStrategyTemplate.SelectedValue;
+                if (_account.ExStrategy_ID != strategyid)
+                {
+                    Globals.TLClient.ReqUpdateAccountExStrategyTemplate(_account.Account, strategyid);
                 }
             }
         }
@@ -155,19 +160,19 @@ namespace FutsMoniter
                 {
                     Globals.TLClient.ReqUpdateRouteType(_account.Account, ctRouterType1.RouterType);
                 }
-                if (poslock.Checked != _account.PosLock)
-                {
-                    Globals.TLClient.ReqUpdaetAccountPosLock(_account.Account, poslock.Checked);
-                }
-                if (sidemargin.Checked != _account.SideMargin)
-                {
-                    Globals.TLClient.ReqUpdateAccountSideMargin(_account.Account, sidemargin.Checked);
-                }
+                //if (poslock.Checked != _account.PosLock)
+                //{
+                //    Globals.TLClient.ReqUpdaetAccountPosLock(_account.Account, poslock.Checked);
+                //}
+                //if (sidemargin.Checked != _account.SideMargin)
+                //{
+                //    Globals.TLClient.ReqUpdateAccountSideMargin(_account.Account, sidemargin.Checked);
+                //}
 
-                if (cbCreditSeparate.Checked != _account.CreditSeparate)
-                {
-                    Globals.TLClient.ReqUpdateAccountCreditSeparate(_account.Account, cbCreditSeparate.Checked);
-                }
+                //if (cbCreditSeparate.Checked != _account.CreditSeparate)
+                //{
+                //    Globals.TLClient.ReqUpdateAccountCreditSeparate(_account.Account, cbCreditSeparate.Checked);
+                //}
             }
         }
 
@@ -217,6 +222,7 @@ namespace FutsMoniter
             {
                 Globals.TLClient.ReqQryCommissionTemplate();
                 Globals.TLClient.ReqQryMarginTemplate();
+                Globals.TLClient.ReqQryExStrategyTemplate();
             }
 
 

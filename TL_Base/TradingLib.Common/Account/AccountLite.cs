@@ -116,12 +116,12 @@ namespace TradingLib.Common
         /// <summary>
         /// 单向大边
         /// </summary>
-        public bool SideMargin { get; set; }
+        //public bool SideMargin { get; set; }
 
         /// <summary>
         /// 信用额度分开显示
         /// </summary>
-        public bool CreditSeparate { get; set; }
+        //public bool CreditSeparate { get; set; }
 
         /// <summary>
         /// 帐户所属管理员全局ID
@@ -147,6 +147,11 @@ namespace TradingLib.Common
         /// 保证金模板ID
         /// </summary>
         public int Margin_ID { get; set; }
+
+        /// <summary>
+        /// 交易参数模板
+        /// </summary>
+        public int ExStrategy_ID { get; set; }
 
         /// <summary>
         /// 是否处于登入状态
@@ -212,15 +217,17 @@ namespace TradingLib.Common
             sb.Append(d);
             sb.Append(account.IPAddress);
             sb.Append(d);
-            sb.Append(account.SideMargin);
+            //sb.Append("");
             sb.Append(d);
             sb.Append(account.Commissin_ID);
             sb.Append(d);
             sb.Append(account.Credit);
             sb.Append(d);
-            sb.Append(account.CreditSeparate);
+            //sb.Append(account.CreditSeparate);
             sb.Append(d);
             sb.Append(account.Margin_ID);
+            sb.Append(d);
+            sb.Append(account.ExStrategy_ID);
             return sb.ToString();
         }
 
@@ -252,11 +259,12 @@ namespace TradingLib.Common
             account.RG_ID = int.Parse(rec[21]);
             account.IsLogin = bool.Parse(rec[22]);
             account.IPAddress = rec[23];
-            account.SideMargin = bool.Parse(rec[24]);
+            //account.SideMargin = bool.Parse(rec[24]);
             account.Commissin_ID = int.Parse(rec[25]);
             account.Credit = decimal.Parse(rec[26]);
-            account.CreditSeparate = bool.Parse(rec[27]);
+            //account.CreditSeparate = bool.Parse(rec[27]);
             account.Margin_ID = int.Parse(rec[28]);
+            account.ExStrategy_ID = int.Parse(rec[29]);
             return account;
         }
     }

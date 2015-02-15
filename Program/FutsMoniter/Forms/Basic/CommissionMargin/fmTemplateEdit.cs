@@ -16,6 +16,7 @@ namespace FutsMoniter
     { 
         Margin,
         Commission,
+        Strategy
     }
     public partial class fmTemplateEdit : ComponentFactory.Krypton.Toolkit.KryptonForm
     {
@@ -34,6 +35,8 @@ namespace FutsMoniter
 
         CommissionTemplateSetting _commissionTemplate = null;
         MarginTemplateSetting _marginTemplate = null;
+        ExStrategyTemplateSetting _exstrategyTemplate = null;
+
         bool isedit = false;
         public void SetTemplate(object t)
         {
@@ -66,6 +69,17 @@ namespace FutsMoniter
                 else
                 {
                     MoniterUtils.WindowMessage("请设定要编辑的保证金模板");
+                }
+            }
+            else if (_type == TemplateEditType.Strategy)
+            {
+                if (t is ExStrategyTemplateSetting)
+                {
+                    _exstrategyTemplate = t as ExStrategyTemplateSetting;
+                    name.Text = _exstrategyTemplate.Name;
+                    desp.Text = _exstrategyTemplate.Description;
+                    id.Text = _exstrategyTemplate.ID.ToString();
+                    this.Text = "标记交易参数模板";
                 }
             }
 
@@ -106,6 +120,24 @@ namespace FutsMoniter
                     _marginTemplate.Name = name.Text;
                     _marginTemplate.Description = desp.Text;
                     Globals.TLClient.ReqUpdateMarginTemplate(_marginTemplate);
+                }
+            }
+            else if (_type == TemplateEditType.Strategy)
+            {
+                if (_exstrategyTemplate == null)
+                {
+                    ExStrategyTemplateSetting target = new ExStrategyTemplateSetting();
+                    target.Name = name.Text;
+                    target.Description = desp.Text;
+
+                    Globals.TLClient.ReqUpdateExStrategyTemplate(target);
+                }
+                else
+                {
+                    _exstrategyTemplate.Name = name.Text;
+                    _exstrategyTemplate.Description = desp.Text;
+
+                    Globals.TLClient.ReqUpdateExStrategyTemplate(_exstrategyTemplate);
                 }
             }
 

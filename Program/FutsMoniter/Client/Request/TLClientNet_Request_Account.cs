@@ -146,22 +146,22 @@ namespace TradingLib.Common
             SendPacket(request);
         }
 
-        public void ReqUpdaetAccountPosLock(string account, bool poslock)
-        {
-            debug("请求更新帐户锁仓权限", QSEnumDebugLevel.INFO);
-            MGRReqUpdatePosLockRequest request = RequestTemplate<MGRReqUpdatePosLockRequest>.CliSendRequest(requestid++);
+        //public void ReqUpdaetAccountPosLock(string account, bool poslock)
+        //{
+        //    debug("请求更新帐户锁仓权限", QSEnumDebugLevel.INFO);
+        //    MGRReqUpdatePosLockRequest request = RequestTemplate<MGRReqUpdatePosLockRequest>.CliSendRequest(requestid++);
 
-            request.TradingAccount = account;
-            request.PosLock = poslock;
+        //    request.TradingAccount = account;
+        //    request.PosLock = poslock;
 
-            SendPacket(request);
-        }
+        //    SendPacket(request);
+        //}
 
-        public void ReqUpdateAccountSideMargin(string account, bool sidemargin)
-        {
-            debug("请求更新帐户单向大边", QSEnumDebugLevel.INFO);
-            this.ReqContribRequest("MgrExchServer", "UpdateAccountSideMargin", account + "," + sidemargin.ToString());
-        }
+        //public void ReqUpdateAccountSideMargin(string account, bool sidemargin)
+        //{
+        //    debug("请求更新帐户单向大边", QSEnumDebugLevel.INFO);
+        //    this.ReqContribRequest("MgrExchServer", "UpdateAccountSideMargin", account + "," + sidemargin.ToString());
+        //}
 
         public void ReqUpdateAccountCommissionTemplate(string account,int templateid)
         {
@@ -173,6 +173,12 @@ namespace TradingLib.Common
         {
             debug("请求更新帐户保证金模板", QSEnumDebugLevel.INFO);
             this.ReqContribRequest("MgrExchServer", "UpdateAccountMarginTemplate", account + "," + templateid.ToString());
+        }
+
+        public void ReqUpdateAccountExStrategyTemplate(string account, int templateid)
+        {
+            debug("请求更交易参数模板", QSEnumDebugLevel.INFO);
+            this.ReqContribRequest("MgrExchServer", "UpdateAccountExStrategyTemplate", account + "," + templateid.ToString());
         }
 
 

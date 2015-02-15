@@ -91,7 +91,7 @@
             // 
             this.username.Location = new System.Drawing.Point(97, 122);
             this.username.Name = "username";
-            this.username.Size = new System.Drawing.Size(121, 22);
+            this.username.Size = new System.Drawing.Size(121, 21);
             this.username.TabIndex = 23;
             // 
             // password
@@ -99,7 +99,7 @@
             this.password.Location = new System.Drawing.Point(97, 155);
             this.password.Name = "password";
             this.password.PasswordChar = '#';
-            this.password.Size = new System.Drawing.Size(121, 22);
+            this.password.Size = new System.Drawing.Size(121, 21);
             this.password.TabIndex = 24;
             // 
             // servers

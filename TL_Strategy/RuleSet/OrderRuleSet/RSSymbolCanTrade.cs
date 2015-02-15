@@ -50,7 +50,10 @@ namespace OrderRuleSet
             Symbol symbol = o.oSymbol;
 
             if (IsInSymbolSet(symbol))
+            {
                 return true;
+
+            }
             else
             {
                 msg = RuleDescription + " 不满足,委托被拒绝";
@@ -66,7 +69,7 @@ namespace OrderRuleSet
         {
             get
             {
-                return "开仓条件:只允许交易集合["+this.SymbolSet+"]";
+                return "开仓条件:只允许交易集合["+this.SymbolSet.Replace('_',' ')+"]";
             }
         }
 

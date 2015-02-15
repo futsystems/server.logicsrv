@@ -101,6 +101,7 @@ namespace TradingLib.Common
 
         /// <summary>
         /// 计算持仓保证金
+        /// 这里需要按照账户设置的保证金计算规则进行计算
         /// </summary>
         /// <param name="account"></param>
         /// <param name="f"></param>
@@ -115,11 +116,26 @@ namespace TradingLib.Common
                 basemargin =  p.UnsignedSize * (p.oSymbol.Margin + (p.oSymbol.ExtraMargin > 0 ? p.oSymbol.ExtraMargin : 0));//通过固定保证金来计算持仓保证金占用
             }
 
+            decimal tprice = p.LastPrice;
+            QSEnumMarginStrategy s = account.GetArgsMarginStrategy();
+            switch (s)
+            {
+                case QSEnumMarginStrategy.LastPrice:
+                    tprice = p.LastPrice;
+                    break;
+                case QSEnumMarginStrategy.PositionCost:
+                    tprice = p.AvgPrice;
+                    break;
+                default:
+                    tprice = p.LastPrice;
+                    break;
+            }
+
             //其余品种保证金按照最新价格计算
             if (p.oSymbol.Margin <= 1)
             {
                 //需要判断价格的有效性
-                basemargin = p.UnsignedSize * p.LastPrice * p.oSymbol.Multiple * p.oSymbol.Margin;
+                basemargin = p.UnsignedSize * tprice * p.oSymbol.Multiple * p.oSymbol.Margin;
             }
             else
                 basemargin = p.oSymbol.Margin * p.UnsignedSize;
@@ -131,9 +147,9 @@ namespace TradingLib.Common
             switch (item.ChargeType)
             {
                 case QSEnumChargeType.Absolute:
-                    return item.CalMargin(p,p.LastPrice);
+                    return item.CalMargin(p, tprice);
                 case QSEnumChargeType.Relative:
-                    return basemargin + item.CalMargin(p, p.LastPrice);
+                    return basemargin + item.CalMargin(p, tprice);
                 case QSEnumChargeType.Percent:
                     return basemargin * (1 + item.Percent);
                 default:

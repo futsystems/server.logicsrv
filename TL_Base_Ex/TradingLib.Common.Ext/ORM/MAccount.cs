@@ -59,14 +59,15 @@ namespace TradingLib.ORM
         public int? BankID { get; set; }
         public string BankAC { get; set; }
 
-        public bool PosLock { get; set; }
-        public bool SideMargin { get; set; }
-        public bool CreditSeparate { get; set; }
+        //public bool PosLock { get; set; }
+        //public bool SideMargin { get; set; }
+       // public bool CreditSeparate { get; set; }
         public int Mgr_fk { get; set; }
         public int rg_fk { get; set; }
         public int Commission_ID { get; set; }
         public int Margin_ID { get; set; }
         public int domain_id { get; set; }
+        public int exstrategy_id { get; set; }
 
     }
 
@@ -250,29 +251,29 @@ namespace TradingLib.ORM
         /// <param name="account"></param>
         /// <param name="poslock"></param>
         /// <returns></returns>
-        public static bool UpdateAccountPosLock(string account, bool poslock)
-        {
-            using (DBMySql db = new DBMySql())
-            {
-                string query = String.Format("UPDATE accounts SET poslock = '{0}' WHERE account = '{1}'", poslock?1:0, account);
-                return db.Connection.Execute(query) >= 0;
-            }
-        }
+        //public static bool UpdateAccountPosLock(string account, bool poslock)
+        //{
+        //    using (DBMySql db = new DBMySql())
+        //    {
+        //        string query = String.Format("UPDATE accounts SET poslock = '{0}' WHERE account = '{1}'", poslock?1:0, account);
+        //        return db.Connection.Execute(query) >= 0;
+        //    }
+        //}
 
-        /// <summary>
-        /// 更新帐户单向大边支持
-        /// </summary>
-        /// <param name="account"></param>
-        /// <param name="poslock"></param>
-        /// <returns></returns>
-        public static bool UpdateAccountSideMargin(string account, bool sidemargin)
-        {
-            using (DBMySql db = new DBMySql())
-            {
-                string query = String.Format("UPDATE accounts SET sidemargin = '{0}' WHERE account = '{1}'", sidemargin ? 1 : 0, account);
-                return db.Connection.Execute(query) >= 0;
-            }
-        }
+        ///// <summary>
+        ///// 更新帐户单向大边支持
+        ///// </summary>
+        ///// <param name="account"></param>
+        ///// <param name="poslock"></param>
+        ///// <returns></returns>
+        //public static bool UpdateAccountSideMargin(string account, bool sidemargin)
+        //{
+        //    using (DBMySql db = new DBMySql())
+        //    {
+        //        string query = String.Format("UPDATE accounts SET sidemargin = '{0}' WHERE account = '{1}'", sidemargin ? 1 : 0, account);
+        //        return db.Connection.Execute(query) >= 0;
+        //    }
+        //}
 
         /// <summary>
         /// 更新帐户手续费模板
@@ -303,18 +304,31 @@ namespace TradingLib.ORM
         }
 
         /// <summary>
+        /// 更新账户交易参数模板
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="templateid"></param>
+        public static void UpdateAccountExStrategyTemplate(string account, int templateid)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = String.Format("UPDATE accounts SET exstrategy_id = {0} WHERE account = '{1}'", templateid, account);
+                db.Connection.Execute(query);
+            }
+        }
+        /// <summary>
         /// 更新帐户 分开显示信用额度
         /// </summary>
         /// <param name="account"></param>
         /// <param name="creditseparate"></param>
-        public static void UpdateAccountCreditSeparate(string account, bool creditseparate)
-        {
-            using (DBMySql db = new DBMySql())
-            {
-                string query = String.Format("UPDATE accounts SET creditseparate = {0} WHERE account = '{1}'", creditseparate ? 1 : 0, account);
-                db.Connection.Execute(query);
-            }
-        }
+        //public static void UpdateAccountCreditSeparate(string account, bool creditseparate)
+        //{
+        //    using (DBMySql db = new DBMySql())
+        //    {
+        //        string query = String.Format("UPDATE accounts SET creditseparate = {0} WHERE account = '{1}'", creditseparate ? 1 : 0, account);
+        //        db.Connection.Execute(query);
+        //    }
+        //}
 
         /// <summary>
         /// 更新帐户的MAC地址
@@ -677,13 +691,14 @@ namespace TradingLib.ORM
             account.Broker = fields.Broker;
             account.BankID = fields.BankID==null?0:(int)fields.BankID;
             account.BankAC = fields.BankAC;
-            account.PosLock = fields.PosLock;
-            account.SideMargin = fields.SideMargin;
+            //account.PosLock = fields.PosLock;
+            //account.SideMargin = fields.SideMargin;
             account.Mgr_fk = fields.Mgr_fk;
             account.RG_FK = fields.rg_fk;
             account.Commission_ID = fields.Commission_ID;
             account.Margin_ID = fields.Margin_ID;
-            account.CreditSeparate = fields.CreditSeparate;
+            //account.CreditSeparate = fields.CreditSeparate;
+            account.ExStrategy_ID = fields.exstrategy_id;
             //绑定对应的域
             (account as AccountBase).Domain = BasicTracker.DomainTracker[fields.domain_id];
             //Util.Debug("fileds route:" + fields.Order_Router_Type.ToString() +" category:"+fields.Account_Category.ToString()) ;

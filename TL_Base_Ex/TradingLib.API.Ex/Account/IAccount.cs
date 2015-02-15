@@ -102,17 +102,17 @@ namespace TradingLib.API
         /// <summary>
         /// 是否允许锁仓
         /// </summary>
-        bool PosLock { get; set; }
+        //bool PosLock { get; set; }
 
         /// <summary>
         /// 单向大边
         /// </summary>
-        bool SideMargin { get; set; }
+        //bool SideMargin { get; set; }
 
         /// <summary>
         /// 客户端信用额度分开显示
         /// </summary>
-        bool CreditSeparate { get; set; }
+        //bool CreditSeparate { get; set; }
 
         /// <summary>
         /// 帐号隶属于哪个管理员
@@ -137,6 +137,11 @@ namespace TradingLib.API
         /// 保证金模板ID
         /// </summary>
         int Margin_ID { get; set; }
+
+        /// <summary>
+        /// 交易参数模板ID
+        /// </summary>
+        int ExStrategy_ID { get; set; }
 
         /// <summary>
         /// 域ID

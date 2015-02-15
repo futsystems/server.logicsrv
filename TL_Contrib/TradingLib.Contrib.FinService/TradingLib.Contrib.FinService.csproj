@@ -54,9 +54,6 @@
       <HintPath>..\..\lib\TradingLib\TradingLib.Common.Ex.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="TradingLib.Core">
-      <HintPath>..\..\lib\TradingLib\TradingLib.Core.dll</HintPath>
-    </Reference>
     <Reference Include="TradingLib.Mixins">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\TradingLib\TradingLib.Mixins.dll</HintPath>

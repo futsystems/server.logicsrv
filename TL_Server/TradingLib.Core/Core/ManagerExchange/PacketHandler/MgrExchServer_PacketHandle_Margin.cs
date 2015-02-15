@@ -74,7 +74,10 @@ namespace TradingLib.Core
                 MarginTemplate template = BasicTracker.MarginTemplateTracker[templateid];
 
                 MarginTemplateItemSetting[] items = template.MarginTemplateItems.ToArray();
-                session.ReplyMgr(items);
+                for (int i = 0; i < items.Length; i++)
+                {
+                    session.ReplyMgr(items[i],i!= items.Length-1);
+                }
             }
             else
             {
@@ -132,7 +135,7 @@ namespace TradingLib.Core
                     //更新该品种所有月份
                     if (item.SetAllMonth)
                     {
-                        foreach (MarginTemplateItemSetting t in BasicTracker.MarginTemplateTracker.MarginTemplateItems.Where(x => x.Code.Equals(item.Code)))
+                        foreach (MarginTemplateItemSetting t in BasicTracker.MarginTemplateTracker[item.Template_ID].MarginTemplateItems.Where(x => x.Code.Equals(item.Code)))
                         {
                             t.MarginByMoney = item.MarginByMoney;
                             t.MarginByVolume = item.MarginByVolume;
@@ -147,7 +150,7 @@ namespace TradingLib.Core
                     //更新所有品种所有月份
                     else if (item.SetAllCodeMonth)
                     {
-                        foreach (MarginTemplateItemSetting t in BasicTracker.MarginTemplateTracker.MarginTemplateItems)
+                        foreach (MarginTemplateItemSetting t in BasicTracker.MarginTemplateTracker[item.Template_ID].MarginTemplateItems)
                         {
                             t.MarginByMoney = item.MarginByMoney;
                             t.MarginByVolume = item.MarginByVolume;
