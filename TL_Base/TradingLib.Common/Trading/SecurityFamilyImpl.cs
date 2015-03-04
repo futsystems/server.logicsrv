@@ -127,6 +127,8 @@ namespace TradingLib.Common
             }
         }
 
+
+
         public bool IsFlatTime
         {
             get

@@ -77,7 +77,12 @@ namespace TradingLib.Core
         }
 
 
-
+        /// <summary>
+        /// 请求插入测试成交数据
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="session"></param>
+        /// <param name="manager"></param>
         void SrvOnInsertTrade(MGRReqInsertTradeRequest request, ISession session, Manager manager)
         {
             debug(string.Format("管理员:{0} 请求插入委托:{1}", session.AuthorizedID, request.ToString()), QSEnumDebugLevel.INFO);
@@ -101,7 +106,27 @@ namespace TradingLib.Core
                 return;
             }
 
-            fill.Broker = "Broker.SIM.SIMTrader";
+            //检查价格
+            decimal targetprice = fill.xPrice;
+            Tick k = TLCtxHelper.CmdUtils.GetTickSnapshot(fill.Symbol);
+            if (targetprice > k.UpperLimit || targetprice < k.LowerLimit)
+            {
+                response.RspInfo.Fill("ORDERPRICE_OVERT_LIMIT");
+                CacheRspResponse(response);
+                return;
+            }
+
+            //时间检查
+            IMarketTime mt = fill.oSymbol.SecurityFamily.MarketTime;
+            if (!mt.IsInMarketTime(fill.xTime))
+            {
+                response.RspInfo.Fill("SYMBOL_NOT_MARKETTIME");
+                CacheRspResponse(response);
+                return;
+            }
+
+
+            fill.Broker = "SIMBROKER";
 
             Order o = new MarketOrder(fill.Symbol, fill.Side, fill.UnsignedSize);
 
@@ -118,17 +143,13 @@ namespace TradingLib.Core
             o.Size = 0;
             o.FilledSize = o.UnsignedSize;
             
-            
-            
-
-
             //注意这里需要获得可用的委托流水和成交流水号
             long ordid = exchsrv.futs_InsertOrderManual(o);
-            o.OrderSysID = o.OrderSeq.ToString();
-            //o.BrokerKey = 
-            
+
+
             fill.id = ordid;
             fill.OrderSeq = o.OrderSeq;
+            fill.BrokerRemoteOrderID = o.BrokerRemoteOrderID;
             fill.TradeID = "xxxxx";//随机产生的成交编号
 
             Util.sleep(100);

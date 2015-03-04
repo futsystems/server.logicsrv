@@ -147,6 +147,11 @@ namespace TradingLib.Common
             return now >= StartTime && now <= EndTime;
         }
 
+        public bool IsInTimeEntry(int time)
+        {
+            return time >= StartTime && time <= EndTime;
+        }
+
         public  string Serialize()
         {
             return "#" + StartTime.ToString() + "-" + EndTime.ToString() + (NeedFlat ? "*" : "");
@@ -213,6 +218,22 @@ namespace TradingLib.Common
                 return false;
             }
         }
+
+        /// <summary>
+        /// 判断某个时间是否在交易时间段内
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        public bool IsInMarketTime(int time)
+        {
+            //判断每个时间段 如果某个时间段满足则返回true,全部不满足 则返回false
+            foreach (MktTimeEntry s in sessionlist)
+            {
+                if (s.IsInTimeEntry(time)) return true;
+            }
+            return false;
+        }
+
 
         /// <summary>
         /// 是否是强平时间段

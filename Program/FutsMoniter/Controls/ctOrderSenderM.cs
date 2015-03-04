@@ -40,8 +40,12 @@ namespace FutsMoniter
             Globals.LogicEvent.GotAccountSelectedEvent += new Action<AccountLite>(OnAccountSelected);
             Factory.IDataSourceFactory(cboffsetflag).BindDataSource(MoniterUtils.GetOffsetCBList());
             Factory.IDataSourceFactory(cbordertype).BindDataSource(MoniterUtils.GetOrderTypeCBList());
-
-            btnInsertTrade.Visible = Globals.Domain.Misc_InsertTrade&&Globals.Manager.IsRoot();
+            //Globals.Debug("~~~~~~~~~~~~~~~~~~~~~~~~~~ order sender insert:" + Globals.Domain.Misc_InsertTrade.ToString() + " is root:" + Globals.Manager.IsRoot());
+            //如果不是超级域 则需要按设置来判断是否显示调试插入按钮
+            if (!Globals.Domain.Super)
+            {
+                btnInsertTrade.Visible = Globals.Domain.Misc_InsertTrade && Globals.Manager.IsRoot();
+            }
         }
 
         

@@ -39,6 +39,9 @@ namespace TradingLib.Core
         {
             AssignOrderID(ref o);
             long ordid = o.id;
+            //设定委托相关编号
+            o.OrderSysID = o.OrderSeq.ToString();
+            o.BrokerRemoteOrderID = o.OrderSysID;
             _br_GotOrderEvent(o);
             debug("insert ordre manual .....", QSEnumDebugLevel.INFO);
             return ordid;
