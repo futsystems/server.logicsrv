@@ -45,6 +45,7 @@
             this.kryptonLabel3 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel2 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel1 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.kryptonLabel9 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cboffsetflag)).BeginInit();
@@ -53,6 +54,7 @@
             // 
             // kryptonPanel1
             // 
+            this.kryptonPanel1.Controls.Add(this.kryptonLabel9);
             this.kryptonPanel1.Controls.Add(this.kryptonLabel8);
             this.kryptonPanel1.Controls.Add(this.btnSubmit);
             this.kryptonPanel1.Controls.Add(this.cboffsetflag);
@@ -72,7 +74,7 @@
             this.kryptonPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.kryptonPanel1.Location = new System.Drawing.Point(0, 0);
             this.kryptonPanel1.Name = "kryptonPanel1";
-            this.kryptonPanel1.Size = new System.Drawing.Size(299, 262);
+            this.kryptonPanel1.Size = new System.Drawing.Size(298, 223);
             this.kryptonPanel1.TabIndex = 0;
             // 
             // kryptonLabel8
@@ -86,7 +88,7 @@
             // btnSubmit
             // 
             this.btnSubmit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSubmit.Location = new System.Drawing.Point(227, 225);
+            this.btnSubmit.Location = new System.Drawing.Point(226, 186);
             this.btnSubmit.Name = "btnSubmit";
             this.btnSubmit.Size = new System.Drawing.Size(60, 25);
             this.btnSubmit.TabIndex = 14;
@@ -100,6 +102,7 @@
             this.cboffsetflag.Name = "cboffsetflag";
             this.cboffsetflag.Size = new System.Drawing.Size(100, 21);
             this.cboffsetflag.TabIndex = 13;
+            this.cboffsetflag.Visible = false;
             // 
             // price
             // 
@@ -157,6 +160,7 @@
             this.kryptonLabel7.Size = new System.Drawing.Size(41, 18);
             this.kryptonLabel7.TabIndex = 6;
             this.kryptonLabel7.Values.Text = "开平:";
+            this.kryptonLabel7.Visible = false;
             // 
             // kryptonLabel6
             // 
@@ -206,11 +210,19 @@
             this.kryptonLabel1.TabIndex = 0;
             this.kryptonLabel1.Values.Text = "交易帐户:";
             // 
+            // kryptonLabel9
+            // 
+            this.kryptonLabel9.Location = new System.Drawing.Point(189, 117);
+            this.kryptonLabel9.Name = "kryptonLabel9";
+            this.kryptonLabel9.Size = new System.Drawing.Size(106, 18);
+            this.kryptonLabel9.TabIndex = 16;
+            this.kryptonLabel9.Values.Text = "合约注意大小写";
+            // 
             // fmInsertTrade
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(299, 262);
+            this.ClientSize = new System.Drawing.Size(298, 223);
             this.Controls.Add(this.kryptonPanel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MaximizeBox = false;
@@ -246,5 +258,6 @@
         private ComponentFactory.Krypton.Toolkit.KryptonComboBox cboffsetflag;
         private ComponentFactory.Krypton.Toolkit.KryptonButton btnSubmit;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel8;
+        private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel9;
     }
 }
