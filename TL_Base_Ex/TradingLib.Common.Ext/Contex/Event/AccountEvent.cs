@@ -33,7 +33,7 @@ namespace TradingLib.Common
 
 
         /// <summary>
-        /// 交易账户设置发送变动事件
+        /// 交易帐号设置发送变动事件
         /// </summary>
         public event AccoundIDDel AccountChangeEvent;
 
@@ -67,7 +67,6 @@ namespace TradingLib.Common
             if (AccountChangeEvent != null)
                 AccountChangeEvent(account);
         }
-
 
     }
 }

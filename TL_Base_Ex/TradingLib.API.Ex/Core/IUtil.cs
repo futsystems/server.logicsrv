@@ -24,6 +24,14 @@ namespace TradingLib.API
         /// <returns></returns>
         Tick  GetTickSnapshot(string symbol);
 
+
+        /// <summary>
+        /// 获得系统内分配的唯一编号，客户端提交委托在委托处理流程中获得该编号
+        /// 风控中心为了提前记录委托序号，需要通过调用该函数进行预先获得，以用于扯单等操作
+        /// </summary>
+        /// <param name="o"></param>
+        void AssignOrderID(ref Order o);
+
         /// <summary>
         /// 发送委托
         /// </summary>

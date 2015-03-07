@@ -18,7 +18,7 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="c"></param>
         /// <param name="login"></param>
-        public void newSessionUpdate(TrdClientInfo c, bool login)
+        void newSessionUpdate(TrdClientInfo c, bool login)
         {
             debug("sessionupdate,will send to magr moniter", QSEnumDebugLevel.INFO);
             if (string.IsNullOrEmpty(c.Account.ID))

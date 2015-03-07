@@ -64,26 +64,10 @@ namespace TradingLib.ServiceManager
             _messageExchagne.BindRiskCentre(_riskCentre);
             _settleCentre.BindRiskCentre(_riskCentre);
 
-            //2.清算中心激活某个账户 调用风控中心重置该账户规则 解决账户检查规则触发后,状态没复位,账户激活后规则失效的问题
-            _clearCentre.AccountActiveEvent += new AccoundIDDel(_riskCentre.ResetRuleSet);
-
-            
-            //风控中心从tradingsrv获得委托编号 提交委托 取消委托的操作
-            _riskCentre.AssignOrderIDEvent += new AssignOrderIDDel(_messageExchagne.AssignOrderID);
-            //_riskCentre.newSendOrderRequest += new OrderDelegate(_messageExchagne.SendOrderInternal);
-            //_riskCentre.newOrderCancelRequest += new LongDelegate(_messageExchagne.CancelOrder);
-
         }
 
         private void DestoryRiskCentre()
         {
-            _clearCentre.AccountActiveEvent -= new AccoundIDDel(_riskCentre.ResetRuleSet);
-
-
-            //风控中心从tradingsrv获得委托编号 提交委托 取消委托的操作
-            //_riskCentre.AssignOrderIDEvent -= new AssignOrderIDDel(_messageExchagne.AssignOrderID);
-            //_riskCentre.newSendOrderRequest -= new OrderDelegate(_messageExchagne.SendOrder);
-            //_riskCentre.newOrderCancelRequest -= new LongDelegate(_messageExchagne.CancelOrder);
 
             _riskCentre.Dispose();
         }
@@ -98,11 +82,12 @@ namespace TradingLib.ServiceManager
             //绑定清算中心的Tick查询函数,用于清算中心查询合约可开仓数量
             _clearCentre.newSymbolTickRequest += new GetSymbolTickDel(_datafeedRouter.GetTickSnapshot);
         }
+
         void DestoryDataFeedRouter()
         {
             _messageExchagne.UnBindDataRouter(_datafeedRouter);
 
-            _clearCentre.newSymbolTickRequest -= new GetSymbolTickDel(_datafeedRouter.GetTickSnapshot);
+            //_clearCentre.newSymbolTickRequest -= new GetSymbolTickDel(_datafeedRouter.GetTickSnapshot);
             _datafeedRouter.Dispose();
         }
 
@@ -130,27 +115,9 @@ namespace TradingLib.ServiceManager
         {
             debug("6.初始化MgrExchServer");
             _managerExchange = new MgrExchServer(_messageExchagne, _clearCentre, _riskCentre);
-
-            ////转发账户登入状态信息
-            _messageExchagne.ClientLoginInfoEvent += new ClientLoginInfoDelegate<TrdClientInfo>(_managerExchange.newSessionUpdate);
-
-            ////帐户变动事件，当帐户设置或者相关属性发生变动时 触发该事件
-            //_clearCentre.AccountChangedEvent += new AccountSettingChangedDel(_managerExchange.newAccountChanged);
-            
-            ////添加帐户
-            //_clearCentre.AccountAddEvent += new AccoundIDDel(_managerExchange.newAccountAdded);
         }
         private void DestoryMgrExchSrv()
         {
-
-            ////转发账户登入状态信息
-            _messageExchagne.ClientLoginInfoEvent -= new ClientLoginInfoDelegate<TrdClientInfo>(_managerExchange.newSessionUpdate);
-
-            ////帐户变动事件，当帐户设置或者相关属性发生变动时 触发该事件
-            //_clearCentre.AccountChangedEvent -= new AccountSettingChangedDel(_managerExchange.newAccountChanged);
-            ////添加帐户
-           // _clearCentre.AccountAddEvent -= new AccoundIDDel(_managerExchange.newAccountAdded);
-           
             _managerExchange.Dispose();
         }
 

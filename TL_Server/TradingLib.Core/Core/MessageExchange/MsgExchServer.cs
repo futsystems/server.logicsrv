@@ -244,7 +244,8 @@ namespace TradingLib.Core
             if (o.id <= 0)
                 o.id = _orderIDTracker.AssignId;
             //获得本地递增流水号
-            o.OrderSeq = this.NextOrderSeq;
+            if (o.OrderSeq <=0)
+                o.OrderSeq = this.NextOrderSeq;
         }
 
         public void AssignTradeID(ref Trade f)

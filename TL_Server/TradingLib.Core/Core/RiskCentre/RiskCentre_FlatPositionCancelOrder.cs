@@ -539,8 +539,9 @@ namespace TradingLib.Core
                     oyd.ForceCloseReason = set.ForceCloseReason;
 
                     //绑定委托编号 用于提前获得系统唯一OrderID 方便撤单
-                    if (AssignOrderIDEvent != null)
-                        AssignOrderIDEvent(ref oyd);
+                    //if (AssignOrderIDEvent != null)
+                    //    AssignOrderIDEvent(ref oyd);
+                    TLCtxHelper.CmdUtils.AssignOrderID(ref oyd);
                     account.TrckerOrderSymbol(ref oyd);
 
                     set.OrderIDList.Add(oyd.id);
@@ -558,8 +559,9 @@ namespace TradingLib.Core
                     otd.ForceCloseReason = set.ForceCloseReason;
 
                     //绑定委托编号 用于提前获得系统唯一OrderID 方便撤单
-                    if (AssignOrderIDEvent != null)
-                        AssignOrderIDEvent(ref otd);
+                    //if (AssignOrderIDEvent != null)
+                    //    AssignOrderIDEvent(ref otd);
+                    TLCtxHelper.CmdUtils.AssignOrderID(ref otd);
                     account.TrckerOrderSymbol(ref otd);
 
                     set.OrderIDList.Add(otd.id);
@@ -585,8 +587,9 @@ namespace TradingLib.Core
                 //o.price = 2500;//模拟不成交延迟撤单的情况
 
                 //绑定委托编号 用于提前获得系统唯一OrderID 方便撤单
-                if (AssignOrderIDEvent != null)
-                    AssignOrderIDEvent(ref o);
+                //if (AssignOrderIDEvent != null)
+                //    AssignOrderIDEvent(ref o);
+                TLCtxHelper.CmdUtils.AssignOrderID(ref o);
                 account.TrckerOrderSymbol(ref o);
 
                 set.FlatSent = true;

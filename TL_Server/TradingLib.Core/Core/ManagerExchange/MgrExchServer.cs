@@ -78,6 +78,7 @@ namespace TradingLib.Core
             TLCtxHelper.EventIndicator.GotOrderErrorEvent += new OrderErrorDelegate(this.newOrderError);
             TLCtxHelper.EventAccount.AccountChangeEvent += new AccoundIDDel(this.newAccountChanged);
             TLCtxHelper.EventAccount.AccountAddEvent += new AccoundIDDel(this.newAccountAdded);
+            TLCtxHelper.EventSession.ClientLoginInfoEvent += new ClientLoginInfoDelegate<TrdClientInfo>(this.newSessionUpdate);
         }
 
 

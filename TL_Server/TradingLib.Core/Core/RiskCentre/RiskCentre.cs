@@ -92,6 +92,10 @@ namespace TradingLib.Core
             TLCtxHelper.EventIndicator.GotTickEvent +=new TickDelegate(this.GotTick);
             TLCtxHelper.EventIndicator.GotOrderEvent += new OrderDelegate(this.GotOrder);
             TLCtxHelper.EventIndicator.GotOrderErrorEvent += new OrderErrorDelegate(this.GotOrderError);
+
+            //交易帐户激活
+            TLCtxHelper.EventAccount.AccountActiveEvent += new AccoundIDDel(this.ResetRuleSet);
+
             
         }
 

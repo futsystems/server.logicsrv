@@ -29,6 +29,11 @@ namespace TradingLib.Common
             return TLCtxHelper.Ctx.RouterManager.GetTickSnapshot(symbol);
         }
 
+
+        public void AssignOrderID(ref Order o)
+        {
+            TLCtxHelper.Ctx.MessageExchange.AssignOrderID(ref o);
+        }
         /// <summary>
         /// 发送委托
         /// </summary>

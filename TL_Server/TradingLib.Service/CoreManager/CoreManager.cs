@@ -210,8 +210,7 @@ namespace TradingLib.ServiceManager
 
             //客户端登入成功
             _messageExchagne.AccountLoginSuccessEvent += new AccoundIDDel(TLCtxHelper.EventSession.FireAccountLoginSuccessEvent);
-            //客户端登入失败
-            _messageExchagne.AccountLoginFailedEvent += new AccoundIDDel(TLCtxHelper.EventSession.FireAccountLoginFailedEvent);
+            
             //向登入成功客户端推送消息
             //_messageExchagne.NotifyLoginSuccessEvent += new AccountIdDel(TLCtxHelper.EventSession.FireNotifyLoginSuccessEvent);
             //客户端会话状态变化

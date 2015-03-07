@@ -41,6 +41,12 @@ namespace TradingLib.API
 
 
         /// <summary>
+        /// 预先分配委托编号
+        /// </summary>
+        /// <param name="o"></param>
+        void AssignOrderID(ref Order o);
+
+        /// <summary>
         /// 发送委托
         /// </summary>
         /// <param name="o"></param>

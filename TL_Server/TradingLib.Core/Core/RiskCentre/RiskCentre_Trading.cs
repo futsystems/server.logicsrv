@@ -10,31 +10,6 @@ namespace TradingLib.Core
     public partial class RiskCentre
     {
         /// <summary>
-        /// 分配委托ID
-        /// </summary>
-        public event AssignOrderIDDel AssignOrderIDEvent;
-
-        /// <summary>
-        /// 对外发送委托
-        /// </summary>
-        //public event OrderDelegate newSendOrderRequest;
-
-        /// <summary>
-        /// 对外取消委托
-        /// </summary>
-        //public event LongDelegate newOrderCancelRequest;
-
-        /// <summary>
-        /// 用于提前分配委托ID 便于跟踪委托
-        /// </summary>
-        /// <param name="o"></param>
-        void AssignOrderID(ref Order o)
-        {
-            if (AssignOrderIDEvent != null)
-                AssignOrderIDEvent(ref o);
-        }
-
-        /// <summary>
         /// 发送委托
         /// </summary>
         /// <param name="o"></param>
