@@ -18,14 +18,14 @@ namespace TradingLib.API
         /// <summary>
         /// 请求获得某个symbol的Tick数据
         /// </summary>
-        event GetSymbolTickDel newSymbolTickRequest;
+        //event GetSymbolTickDel newSymbolTickRequest;
 
         /// <summary>
         /// 获得某个合约的当前市场价格
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        decimal GetAvabilePrice(string symbol);
+        //decimal GetAvabilePrice(string symbol);
 
 
         /// <summary>

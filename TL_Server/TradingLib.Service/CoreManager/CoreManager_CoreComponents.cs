@@ -78,16 +78,12 @@ namespace TradingLib.ServiceManager
             debug("4.初始化DataFeedRouter");
             _datafeedRouter = new DataFeedRouter();
             _messageExchagne.BindDataRouter(_datafeedRouter);
-
-            //绑定清算中心的Tick查询函数,用于清算中心查询合约可开仓数量
-            _clearCentre.newSymbolTickRequest += new GetSymbolTickDel(_datafeedRouter.GetTickSnapshot);
         }
 
         void DestoryDataFeedRouter()
         {
             _messageExchagne.UnBindDataRouter(_datafeedRouter);
 
-            //_clearCentre.newSymbolTickRequest -= new GetSymbolTickDel(_datafeedRouter.GetTickSnapshot);
             _datafeedRouter.Dispose();
         }
 
