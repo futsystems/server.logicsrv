@@ -44,11 +44,12 @@ namespace TradingLib.Core
         /// 向管理客户端转发帐户变动
         /// </summary>
         /// <param name="account"></param>
-        public void newAccountChanged(IAccount account)
+        void newAccountChanged(string account)
         {
             debug("account changed,will send to manager montier", QSEnumDebugLevel.INFO);
-            NotifyMGRAccountChangeUpdateResponse notify = ResponseTemplate<NotifyMGRAccountChangeUpdateResponse>.SrvSendNotifyResponse(account.ID);
-            notify.oAccount = account.GenAccountLite();
+            IAccount acc = TLCtxHelper.CmdAccount[account];
+            NotifyMGRAccountChangeUpdateResponse notify = ResponseTemplate<NotifyMGRAccountChangeUpdateResponse>.SrvSendNotifyResponse(account);
+            notify.oAccount = acc.GenAccountLite();
             CachePacket(notify);
         }
 
@@ -56,7 +57,7 @@ namespace TradingLib.Core
         /// 有新帐号增加时 向服务端通知
         /// </summary>
         /// <param name="account"></param>
-        public void newAccountAdded(string account)
+        void newAccountAdded(string account)
         {
             debug("account added,will send to manager montier", QSEnumDebugLevel.INFO);
             IAccount acc = clearcentre[account];
@@ -68,22 +69,22 @@ namespace TradingLib.Core
             }
         }
 
-        public void newOrder(Order o)
+        void newOrder(Order o)
         {
             _ocache.Write(o);
         }
 
-        public void newOrderError(Order  order,RspInfo error)
+        void newOrderError(Order  order,RspInfo error)
         {
             _errorordercache.Write(new OrderErrorPack(order,error));
         }
 
-        public void newTrade(Trade f)
+        void newTrade(Trade f)
         {
             _fcache.Write(f);
         }
 
-        public void newCancel(long id)
+        void newCancel(long id)
         {
             Order o = clearcentre.SentOrder(id);
             if (o != null && o.isValid)
@@ -96,12 +97,12 @@ namespace TradingLib.Core
             }
         }
 
-        public void newOrderAction(OrderAction action)
+        void newOrderAction(OrderAction action)
         {
             _occache.Write(action);
         }
 
-        public void newTick(Tick k)
+        void newTick(Tick k)
         {
             tl.newTick(k);
         }

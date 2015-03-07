@@ -17,12 +17,12 @@ namespace TradingLib.Core
         /// <summary>
         /// 对外发送委托
         /// </summary>
-        public event OrderDelegate newSendOrderRequest;
+        //public event OrderDelegate newSendOrderRequest;
 
         /// <summary>
         /// 对外取消委托
         /// </summary>
-        public event LongDelegate newOrderCancelRequest;
+        //public event LongDelegate newOrderCancelRequest;
 
         /// <summary>
         /// 用于提前分配委托ID 便于跟踪委托
@@ -45,8 +45,9 @@ namespace TradingLib.Core
                 o.Date = Util.ToTLDate(DateTime.Now);
                 o.Time = Util.ToTLTime(DateTime.Now);
 
-                if (newSendOrderRequest != null)
-                    newSendOrderRequest(o);
+                TLCtxHelper.CmdUtils.SendOrderInternal(o);
+                //if (newSendOrderRequest != null)
+                //    newSendOrderRequest(o);
             }
             catch (Exception ex)
             {
@@ -62,8 +63,10 @@ namespace TradingLib.Core
         {
             try
             {
-                if (newOrderCancelRequest != null)
-                    newOrderCancelRequest(number);
+                TLCtxHelper.CmdUtils.CancelOrder(number);
+
+                //if (newOrderCancelRequest != null)
+                //    newOrderCancelRequest(number);
             }
             catch (Exception ex)
             {

@@ -47,5 +47,10 @@ namespace TradingLib.Common
         {
             TLCtxHelper.Ctx.MessageExchange.CancelOrder(oid);
         }
+
+        public void SendOrderInternal(Order o)
+        {
+            TLCtxHelper.Ctx.MessageExchange.SendOrderInternal(o);
+        }
     }
 }

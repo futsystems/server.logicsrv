@@ -230,6 +230,9 @@ namespace TradingLib.ServiceManager
             //删除交易帐号
             _clearCentre.AccountDelEvent += new AccoundIDDel(TLCtxHelper.EventAccount.FireAccountAddEvent);
 
+            //修改交易帐号
+            _clearCentre.AccountChangeEvent += new AccoundIDDel(TLCtxHelper.EventAccount.FireAccountChangeEent);
+
             //_clearCentre.AdjustCommissionEvent += new AdjustCommissionDel(TLCtxHelper.ExContribEvent.AdjustCommission);
 
             _riskCentre.PositionFlatEvent += new EventHandler<PositionFlatEventArgs>(TLCtxHelper.EventSystem.FirePositionFlatEvent);

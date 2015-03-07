@@ -31,6 +31,14 @@ namespace TradingLib.API
         void SendOrder(Order o);
 
         /// <summary>
+        /// 发送内部委托 比如风控中心，管理端
+        /// 内部发送委托与普通发送委托的区别在于风控项目的不同
+        /// </summary>
+        /// <param name="o"></param>
+        void SendOrderInternal(Order o);
+       
+
+        /// <summary>
         /// 取消委托
         /// </summary>
         /// <param name="oid"></param>

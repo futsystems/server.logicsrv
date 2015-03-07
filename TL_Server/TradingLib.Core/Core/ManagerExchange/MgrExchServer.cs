@@ -70,6 +70,14 @@ namespace TradingLib.Core
             InitNotifySection();
             //启动消息服务
             StartMessageRouter();
+
+            //订阅交易信息
+            TLCtxHelper.EventIndicator.GotTickEvent += new TickDelegate(this.newTick);
+            TLCtxHelper.EventIndicator.GotFillEvent += new FillDelegate(this.newTrade);
+            TLCtxHelper.EventIndicator.GotOrderEvent += new OrderDelegate(this.newOrder);
+            TLCtxHelper.EventIndicator.GotOrderErrorEvent += new OrderErrorDelegate(this.newOrderError);
+            TLCtxHelper.EventAccount.AccountChangeEvent += new AccoundIDDel(this.newAccountChanged);
+            TLCtxHelper.EventAccount.AccountAddEvent += new AccoundIDDel(this.newAccountAdded);
         }
 
 

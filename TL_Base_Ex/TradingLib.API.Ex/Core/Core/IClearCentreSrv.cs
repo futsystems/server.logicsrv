@@ -52,7 +52,7 @@ namespace TradingLib.API
         /// <summary>
         /// 帐户修改事件
         /// </summary>
-        event AccountSettingChangedDel AccountChangedEvent;
+        event AccoundIDDel AccountChangeEvent;
 
         /// <summary>
         /// 调整手续费事件,对外触发手续费调整事件,用于相关逻辑进行手续费调整

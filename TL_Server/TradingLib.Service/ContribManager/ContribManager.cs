@@ -39,6 +39,10 @@ namespace TradingLib.ServiceManager
             }
         }
 
+        /// <summary>
+        /// 初始化某个扩展模块
+        /// </summary>
+        /// <param name="className"></param>
         void InitContrib(string className)
         {
             IContribPlugin plugin = PluginHelper.LoadContribPlugin(className);
@@ -142,6 +146,10 @@ namespace TradingLib.ServiceManager
             }
         }
 
+        /// <summary>
+        /// 获得扩展模块列表
+        /// </summary>
+        /// <returns></returns>
         private static List<string> GetContribList()
         {
             List<string> list = new List<string>();

@@ -53,5 +53,12 @@ namespace TradingLib.API
         void CancelOrder(long oid);
 
 
+        /// <summary>
+        /// 发送内部委托
+        /// </summary>
+        /// <param name="o"></param>
+        void SendOrderInternal(Order o);
+
+
     }
 }

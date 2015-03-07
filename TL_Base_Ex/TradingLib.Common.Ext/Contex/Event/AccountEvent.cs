@@ -32,6 +32,10 @@ namespace TradingLib.Common
         public event AccoundIDDel AccountDelEvent;
 
 
+        /// <summary>
+        /// 交易账户设置发送变动事件
+        /// </summary>
+        public event AccoundIDDel AccountChangeEvent;
 
 
         internal void FireAccountInactiveEvent(string account)
@@ -58,6 +62,11 @@ namespace TradingLib.Common
                 AccountDelEvent(account);
         }
 
+        internal void FireAccountChangeEent(string account)
+        {
+            if (AccountChangeEvent != null)
+                AccountChangeEvent(account);
+        }
 
 
     }

@@ -13,11 +13,11 @@ namespace TradingLib.Core
         ///<summary>
         /// 管理端触发的提交委托事件
         /// </summary>
-        public event OrderDelegate SendOrderEvent;
+        //public event OrderDelegate SendOrderEvent;
         /// <summary>
         /// 管理端提交的取消委托事件
         /// </summary>
-        public event LongDelegate SendOrderCancelEvent;
+        //public event LongDelegate SendOrderCancelEvent;
 
 
         void tl_ClientUnregistedEvent(MgrClientInfo client)
@@ -60,8 +60,9 @@ namespace TradingLib.Core
         {
             //对外发送委托 注 这里需要按照对应持仓的情况进行有效分拆，看是否括约的今仓或昨仓
             //如果跨越的昨仓与今仓则需要分拆 并且将开平标识进行规范化
-            if (SendOrderEvent != null)
-                SendOrderEvent(o);
+            //if (SendOrderEvent != null)
+            //    SendOrderEvent(o);
+            TLCtxHelper.CmdUtils.SendOrderInternal(o);
         }
 
         void tl_newOrderActionRequest(OrderAction o)
@@ -70,8 +71,10 @@ namespace TradingLib.Core
             {
                 if (o.OrderID != 0)
                 {
-                    if (SendOrderCancelEvent != null)
-                        SendOrderCancelEvent(o.OrderID);
+                    TLCtxHelper.CmdUtils.CancelOrder(o.OrderID);
+
+                    //if (SendOrderCancelEvent != null)
+                    //    SendOrderCancelEvent(o.OrderID);
                 }
             }
         }

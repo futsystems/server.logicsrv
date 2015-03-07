@@ -67,15 +67,11 @@ namespace TradingLib.ServiceManager
             //2.清算中心激活某个账户 调用风控中心重置该账户规则 解决账户检查规则触发后,状态没复位,账户激活后规则失效的问题
             _clearCentre.AccountActiveEvent += new AccoundIDDel(_riskCentre.ResetRuleSet);
 
-            //交易服务回报风控中心
-            _messageExchagne.GotTickEvent += new TickDelegate(_riskCentre.GotTick);
-            _messageExchagne.GotOrderEvent +=new OrderDelegate(_riskCentre.GotOrder);
-            _messageExchagne.GotOrderErrorEvent += new OrderErrorDelegate(_riskCentre.GotOrderError);
             
             //风控中心从tradingsrv获得委托编号 提交委托 取消委托的操作
             _riskCentre.AssignOrderIDEvent += new AssignOrderIDDel(_messageExchagne.AssignOrderID);
-            _riskCentre.newSendOrderRequest += new OrderDelegate(_messageExchagne.SendOrderInternal);
-            _riskCentre.newOrderCancelRequest += new LongDelegate(_messageExchagne.CancelOrder);
+            //_riskCentre.newSendOrderRequest += new OrderDelegate(_messageExchagne.SendOrderInternal);
+            //_riskCentre.newOrderCancelRequest += new LongDelegate(_messageExchagne.CancelOrder);
 
         }
 
@@ -83,15 +79,11 @@ namespace TradingLib.ServiceManager
         {
             _clearCentre.AccountActiveEvent -= new AccoundIDDel(_riskCentre.ResetRuleSet);
 
-            //交易服务行情驱动风控中心
-            _messageExchagne.GotTickEvent -= new TickDelegate(_riskCentre.GotTick);
-            _messageExchagne.GotOrderEvent -= new OrderDelegate(_riskCentre.GotOrder);
-            _messageExchagne.GotOrderErrorEvent -= new OrderErrorDelegate(_riskCentre.GotOrderError);
 
             //风控中心从tradingsrv获得委托编号 提交委托 取消委托的操作
-            _riskCentre.AssignOrderIDEvent -= new AssignOrderIDDel(_messageExchagne.AssignOrderID);
-            _riskCentre.newSendOrderRequest -= new OrderDelegate(_messageExchagne.SendOrder);
-            _riskCentre.newOrderCancelRequest -= new LongDelegate(_messageExchagne.CancelOrder);
+            //_riskCentre.AssignOrderIDEvent -= new AssignOrderIDDel(_messageExchagne.AssignOrderID);
+            //_riskCentre.newSendOrderRequest -= new OrderDelegate(_messageExchagne.SendOrder);
+            //_riskCentre.newOrderCancelRequest -= new LongDelegate(_messageExchagne.CancelOrder);
 
             _riskCentre.Dispose();
         }
@@ -139,42 +131,25 @@ namespace TradingLib.ServiceManager
             debug("6.初始化MgrExchServer");
             _managerExchange = new MgrExchServer(_messageExchagne, _clearCentre, _riskCentre);
 
-            _managerExchange.SendOrderEvent += new OrderDelegate(_messageExchagne.SendOrderInternal);
-            _managerExchange.SendOrderCancelEvent += new LongDelegate(_messageExchagne.CancelOrder);
-           
-            ////管理组件转发 交易服务器过来的委托 成交 取消 tick
-            _messageExchagne.GotOrderEvent += new OrderDelegate(_managerExchange.newOrder);
-            _messageExchagne.GotOrderErrorEvent += new OrderErrorDelegate(_managerExchange.newOrderError);
-            _messageExchagne.GotFillEvent += new FillDelegate(_managerExchange.newTrade);
-            _messageExchagne.GotTickEvent += new TickDelegate(_managerExchange.newTick);
-
-            
             ////转发账户登入状态信息
             _messageExchagne.ClientLoginInfoEvent += new ClientLoginInfoDelegate<TrdClientInfo>(_managerExchange.newSessionUpdate);
 
             ////帐户变动事件，当帐户设置或者相关属性发生变动时 触发该事件
-            _clearCentre.AccountChangedEvent += new AccountSettingChangedDel(_managerExchange.newAccountChanged);
+            //_clearCentre.AccountChangedEvent += new AccountSettingChangedDel(_managerExchange.newAccountChanged);
+            
             ////添加帐户
-            _clearCentre.AccountAddEvent += new AccoundIDDel(_managerExchange.newAccountAdded);
+            //_clearCentre.AccountAddEvent += new AccoundIDDel(_managerExchange.newAccountAdded);
         }
         private void DestoryMgrExchSrv()
         {
-            _managerExchange.SendOrderEvent -= new OrderDelegate(_messageExchagne.SendOrderInternal);
-            _managerExchange.SendOrderCancelEvent -= new LongDelegate(_messageExchagne.CancelOrder);
-
-            ////管理组件转发 交易服务器过来的委托 成交 取消 tick
-            _messageExchagne.GotOrderEvent -= new OrderDelegate(_managerExchange.newOrder);
-            _messageExchagne.GotOrderErrorEvent -= new OrderErrorDelegate(_managerExchange.newOrderError);
-            _messageExchagne.GotFillEvent -= new FillDelegate(_managerExchange.newTrade);
-            _messageExchagne.GotTickEvent -= new TickDelegate(_managerExchange.newTick);
 
             ////转发账户登入状态信息
             _messageExchagne.ClientLoginInfoEvent -= new ClientLoginInfoDelegate<TrdClientInfo>(_managerExchange.newSessionUpdate);
 
             ////帐户变动事件，当帐户设置或者相关属性发生变动时 触发该事件
-            _clearCentre.AccountChangedEvent -= new AccountSettingChangedDel(_managerExchange.newAccountChanged);
+            //_clearCentre.AccountChangedEvent -= new AccountSettingChangedDel(_managerExchange.newAccountChanged);
             ////添加帐户
-            _clearCentre.AccountAddEvent -= new AccoundIDDel(_managerExchange.newAccountAdded);
+           // _clearCentre.AccountAddEvent -= new AccoundIDDel(_managerExchange.newAccountAdded);
            
             _managerExchange.Dispose();
         }

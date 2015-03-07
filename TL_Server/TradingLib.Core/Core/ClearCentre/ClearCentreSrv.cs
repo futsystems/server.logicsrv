@@ -54,12 +54,12 @@ namespace TradingLib.Core
         /// <summary>
         /// 帐户修改事件
         /// </summary>
-        public event AccountSettingChangedDel AccountChangedEvent;
+        public event AccoundIDDel AccountChangeEvent;
 
         protected void AccountChanged(IAccount account)
         {
-            if (AccountChangedEvent != null)
-                AccountChangedEvent(account);
+            if (AccountChangeEvent != null)
+                AccountChangeEvent(account.ID);
         }
 
         #endregion
