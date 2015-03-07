@@ -100,24 +100,6 @@ namespace TradingLib.Core
             }
         }
 
-        ClearCentre _clearcentre = null;
-        public void BindClearCentre(ClearCentre cc)
-        {
-            _clearcentre = cc;
-        }
-
-        RiskCentre _riskcentre = null;
-        public void BindRiskCentre(RiskCentre rc)
-        {
-            _riskcentre = rc;
-        }
-
-        MsgExchServer _exchsrv = null;
-        public void BindExchSrv(MsgExchServer srv)
-        {
-            _exchsrv = srv;
-        }
-
 
         ConfigDB _cfgdb;
         int _resetTime = 170000;
@@ -150,19 +132,19 @@ namespace TradingLib.Core
             }
             _resetTime = _cfgdb["ResetTime"].AsInt();
 
-            //结算价 取价方式
-            if (!_cfgdb.HaveConfig("SettleWithLatestPrice"))
-            {
-                _cfgdb.UpdateConfig("SettleWithLatestPrice", QSEnumCfgType.Bool,false, "是否已最新价来结算持仓盯市盈亏");
-            }
-            _settleWithLatestPrice = _cfgdb["SettleWithLatestPrice"].AsBool();
+            ////结算价 取价方式
+            //if (!_cfgdb.HaveConfig("SettleWithLatestPrice"))
+            //{
+            //    _cfgdb.UpdateConfig("SettleWithLatestPrice", QSEnumCfgType.Bool,false, "是否已最新价来结算持仓盯市盈亏");
+            //}
+            //_settleWithLatestPrice = _cfgdb["SettleWithLatestPrice"].AsBool();
 
-            //是否清空日内临时表
-            if (!_cfgdb.HaveConfig("CleanTmpTable"))
-            {
-                _cfgdb.UpdateConfig("CleanTmpTable", QSEnumCfgType.Bool,false, "结算后重置系统是否情况日内临时表");
-            }
-            _cleanTmp = _cfgdb["CleanTmpTable"].AsBool();
+            ////是否清空日内临时表
+            //if (!_cfgdb.HaveConfig("CleanTmpTable"))
+            //{
+            //    _cfgdb.UpdateConfig("CleanTmpTable", QSEnumCfgType.Bool,false, "结算后重置系统是否情况日内临时表");
+            //}
+            //_cleanTmp = _cfgdb["CleanTmpTable"].AsBool();
 
             //注入交易记录转储任务 结算前5分钟 保存交易记录
             DateTime storetime = Util.ToDateTime(Util.ToTLDate(DateTime.Now), TradingCalendar.SettleTime)-new TimeSpan(0,5,0);
@@ -272,34 +254,34 @@ namespace TradingLib.Core
             base.Dispose();
         }
 
-        /// <summary>
-        /// 结算所有交易账户
-        /// 结算分析
-        /// 1.单日lastequity + realizedpl + unrealizedpl - commission + cashin - cashout = now equity 数据库检验通过
-        /// 2.当日结算完毕后的nowequity即为账户表中的lastequity 数据库检验通过
-        /// 3.产生错误就是在某些结算记录中上日权益不等于该账户的nowequity
-        /// 4.账户结算时需要检查 账户的上日权益是否是数据库记录的上日权益
-        /// </summary>
-        public void SettleAccount()
-        {
-            debug(string.Format("#####SettleAccount: Start Settele Account,Current Tradingday:{0}", CurrentTradingday), QSEnumDebugLevel.INFO);
-            foreach (IAccount acc in _clearcentre.Accounts)
-            {
-                try
-                {
-                    ORM.MSettlement.SettleAccount(acc);
-                }
-                catch (Exception ex)
-                {
-                    debug(string.Format("SettleError,Account:{0} errors:{1}",acc.ID,ex.ToString()), QSEnumDebugLevel.ERROR);
-                }
-            }
+        ///// <summary>
+        ///// 结算所有交易账户
+        ///// 结算分析
+        ///// 1.单日lastequity + realizedpl + unrealizedpl - commission + cashin - cashout = now equity 数据库检验通过
+        ///// 2.当日结算完毕后的nowequity即为账户表中的lastequity 数据库检验通过
+        ///// 3.产生错误就是在某些结算记录中上日权益不等于该账户的nowequity
+        ///// 4.账户结算时需要检查 账户的上日权益是否是数据库记录的上日权益
+        ///// </summary>
+        //public void SettleAccount()
+        //{
+        //    debug(string.Format("#####SettleAccount: Start Settele Account,Current Tradingday:{0}", CurrentTradingday), QSEnumDebugLevel.INFO);
+        //    foreach (IAccount acc in _clearcentre.Accounts)
+        //    {
+        //        try
+        //        {
+        //            ORM.MSettlement.SettleAccount(acc);
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            debug(string.Format("SettleError,Account:{0} errors:{1}",acc.ID,ex.ToString()), QSEnumDebugLevel.ERROR);
+        //        }
+        //    }
 
-            //更新最近结算日
-            debug(string.Format("Update lastsettleday as:{0}", CurrentTradingday), QSEnumDebugLevel.INFO);
-            ORM.MSettlement.UpdateSettleday(CurrentTradingday);
-            debug("Settlement Done", QSEnumDebugLevel.INFO);
-        }
+        //    //更新最近结算日
+        //    debug(string.Format("Update lastsettleday as:{0}", CurrentTradingday), QSEnumDebugLevel.INFO);
+        //    ORM.MSettlement.UpdateSettleday(CurrentTradingday);
+        //    debug("Settlement Done", QSEnumDebugLevel.INFO);
+        //}
 
 
     }

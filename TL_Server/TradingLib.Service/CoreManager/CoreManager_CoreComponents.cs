@@ -28,7 +28,7 @@ namespace TradingLib.ServiceManager
         {
             debug("1.初始化MsgExchServer");
             _messageExchagne = new MsgExchServer();
-            _settleCentre.BindExchSrv(_messageExchagne);
+            //_settleCentre.BindExchSrv(_messageExchagne);
         }
 
 
@@ -45,7 +45,7 @@ namespace TradingLib.ServiceManager
             //将清算中心传递给tradingserver
             _messageExchagne.BindClearCentre(_clearCentre);
             //将清算中心传递给结算中心
-            _settleCentre.BindClearCentre(_clearCentre);
+            //_settleCentre.BindClearCentre(_clearCentre);
         }
 
         private void DestoryClearCentre()
@@ -62,7 +62,7 @@ namespace TradingLib.ServiceManager
 
             //绑定风控中心
             _messageExchagne.BindRiskCentre(_riskCentre);
-            _settleCentre.BindRiskCentre(_riskCentre);
+            //_settleCentre.BindRiskCentre(_riskCentre);
 
         }
 

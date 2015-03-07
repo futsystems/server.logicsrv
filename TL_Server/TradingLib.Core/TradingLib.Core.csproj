@@ -70,11 +70,12 @@
     <Compile Include="Core\ClearCentre\ClearCentreSrv_AccountOperation.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_onGotXXX.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_.cs" />
-    <Compile Include="Core\ClearCentre\ClearCentreSrv_Data_Restore.cs" />
+    <Compile Include="Core\ClearCentre\ClearCentreSrv_DataRestore.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_CTE.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_AccountCashOperation.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_LogData.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_TradingInfo.cs" />
+    <Compile Include="Core\ClearCentre\ClearCentreSrv_DataStore.cs" />
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_ExStrategy.cs" />
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_Margin.cs" />
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_Commission.cs" />
@@ -131,7 +132,7 @@
     <Compile Include="Core\RiskCentre\RiskCentre_RiskRule.cs" />
     <Compile Include="Core\RiskCentre\RiskCentre_Trading.cs" />
     <Compile Include="Core\SettleCentre\SettleCentre.cs" />
-    <Compile Include="Core\SettleCentre\SettleCentre_..cs" />
+    <Compile Include="Core\SettleCentre\SettleCentre_.cs" />
     <Compile Include="Core\SettleCentre\SettleCentre_CTE.cs" />
     <Compile Include="Core\SettleCentre\SettleCentre_StoreClean.cs" />
     <Compile Include="Core\SettleCentre\TradingCalendar.cs" />

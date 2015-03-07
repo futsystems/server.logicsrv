@@ -94,13 +94,14 @@ namespace TradingLib.Core
             }
 
             
-            //保存结算持仓对应的PR数据
-            this.SaveHoldInfo();
-            //保存当前持仓明细
-            this.SavePositionDetails();//保存持仓明细
-            //保存交易日志 委托 成交 委托操作
-            this.Dump2Log();//将委托 成交 撤单 PR数据保存到对应的log_表 所有的转储操作均是replace into不会存在重复操作
-            
+            ////保存结算持仓对应的PR数据
+            //this.SaveHoldInfo();
+            ////保存当前持仓明细
+            //this.SavePositionDetails();//保存持仓明细
+            ////保存交易日志 委托 成交 委托操作
+            //this.Dump2Log();//将委托 成交 撤单 PR数据保存到对应的log_表 所有的转储操作均是replace into不会存在重复操作
+
+            TLCtxHelper.EventSystem.FireSettleDataStoreEvent(this, new SystemEventArgs());
         }
 
 
@@ -117,7 +118,10 @@ namespace TradingLib.Core
             if (IsNormal && !IsTradingday) return;
             this.IsInSettle = true;//标识结算中心处于结算状态
 
-            this.SettleAccount();
+           // this.SettleAccount();
+
+            TLCtxHelper.EventSystem.FireSettleEvent(this, new SystemEventArgs());
+
             //触发结算后记录
             TLCtxHelper.EventSystem.FireAfterSettleEvent(this, new SystemEventArgs());
 
@@ -143,18 +147,19 @@ namespace TradingLib.Core
             TLCtxHelper.EventSystem.FireBeforeSettleResetEvent(this, new SystemEventArgs());
             
             //清空日内交易记录
-            if (_cleanTmp)
-            {
-                this.CleanTempTable();
-            }
+            //if (_cleanTmp)
+            //{
+            //    this.CleanTempTable();
+            //}
 
             //15:50分结算帐户完毕后 4点从数据库重新加载帐户权益数据,此时数据库加载的数据是按结算重置后加载的日期信息 即结算日向前滚动一日
-            _clearcentre.Reset();
+            //_clearcentre.Reset();
             //重置风控中心，清空内存缓存数据
-            _riskcentre.Reset();
+            //_riskcentre.Reset();
             //重置消息交换中心
-            _exchsrv.Reset();
+            //_exchsrv.Reset();
             //重置管理交换中心
+            TLCtxHelper.EventSystem.FireSettleResetEvet(this, new SystemEventArgs());
 
             //重置任务中心
             TLCtxHelper.EventSystem.FireAfterSettleResetEvent(this, new SystemEventArgs());
@@ -172,30 +177,36 @@ namespace TradingLib.Core
             TLCtxHelper.EventSystem.FireBeforeSettleEvent(this, new SystemEventArgs());
 
             //A:储存当前数据
-            this.SaveHoldInfo();//保存结算持仓数据和对应的PR数据
-            this.SavePositionDetails();//保存持仓明细
-            this.Dump2Log();//转储到历史记录表
+            //this.SaveHoldInfo();//保存结算持仓数据和对应的PR数据
+            //this.SavePositionDetails();//保存持仓明细
+            //this.Dump2Log();//转储到历史记录表
+
+            TLCtxHelper.EventSystem.FireSettleDataStoreEvent(this, new SystemEventArgs());
 
             //B:结算交易帐户形成结算记录
-            this.SettleAccount();
+            //this.SettleAccount();
+            TLCtxHelper.EventSystem.FireSettleResetEvet(this, new SystemEventArgs());
+            
             TLCtxHelper.EventSystem.FireAfterSettleEvent(this, new SystemEventArgs());
 
             TLCtxHelper.EventSystem.FireBeforeSettleResetEvent(this, new SystemEventArgs());
-            //C:清空当日交易记录
-            if (_cleanTmp)
-            {
-                this.CleanTempTable();
-            }
+            ////C:清空当日交易记录
+            //if (_cleanTmp)
+            //{
+            //    this.CleanTempTable();
+            //}
 
             //D:重置系统状态
             //重置结算中心 形成新的最后结算日 下一交易日和当前交易日数据
             this.Reset();
+
+            TLCtxHelper.EventSystem.FireSettleResetEvet(this, new SystemEventArgs());
             //重置清算中心，加载下一交易日的交易记录
-            _clearcentre.Reset();
+            //_clearcentre.Reset();
             //重置风控中心，清空内存缓存数据
-            _riskcentre.Reset();
+            //_riskcentre.Reset();
             //重置消息交换中心
-            _exchsrv.Reset();
+            //_exchsrv.Reset();
             //重置管理交换中心
 
             //重置任务中心
@@ -215,28 +226,7 @@ namespace TradingLib.Core
             this.Reset();
         }
 
-        [TaskAttr("夜盘开启交易中心", 20, 50,0, "每天晚上20:50:5开启清算中心")]
-        [TaskAttr("白盘开启交易中心", 8, 50,0, "每天白天8:50:5开启清算中心")]
-        public void Task_OpenClearCentre()
-        {
-            if (IsNormal && !IsTradingday) return;
-            _clearcentre.OpenClearCentre();
-            Notify("开启清算中心[" + DateTime.Now.ToString() + "]", " ");
-            debug("开启清算中心,准备接受客户委托", QSEnumDebugLevel.INFO);
-        }
 
-        /// <summary>
-        /// 关闭清算中心
-        /// </summary>
-        [TaskAttr("夜盘关闭清算中心", 2, 35,0, "夜盘关闭清算中心")]
-        [TaskAttr("日盘关闭清算中心", 15, 20,0, "日盘关闭清算中心")]
-        public void Task_CloseClearCentre()
-        {
-            _clearcentre.CloseClearCentre();
-            if (!IsTradingday) return;
-            Notify("关闭清算中心[" + DateTime.Now.ToString() + "]", " ");
-            debug("关闭清算中心,将拒绝所有客户委托", QSEnumDebugLevel.INFO);
-        }
 
 
         #endregion

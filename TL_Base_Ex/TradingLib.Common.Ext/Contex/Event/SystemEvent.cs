@@ -35,6 +35,15 @@ namespace TradingLib.Common
         /// </summary>
         public event EventHandler<SystemEventArgs> BeforeSettleEvent;
 
+        /// <summary>
+        /// 结算 数据转储事件
+        /// </summary>
+        public event EventHandler<SystemEventArgs> SettleDataStoreEvent;
+
+        /// <summary>
+        /// 结算事件
+        /// </summary>
+        public event EventHandler<SystemEventArgs> SettleEvent;
 
         /// <summary>
         /// 结算后事件 在系统结算完毕后触发
@@ -52,12 +61,29 @@ namespace TradingLib.Common
         /// </summary>
         public event EventHandler<SystemEventArgs> AfterSettleResetEvent;
 
+
+        /// <summary>
+        /// 结算重置事件 在结算重置时触发
+        /// </summary>
+        public event EventHandler<SystemEventArgs> SettleResetEvent;
+
         internal void FireBeforeSettleEvent(object sender,SystemEventArgs args)
         {
             if (BeforeSettleEvent != null)
                 BeforeSettleEvent(sender, args);
         }
 
+        internal void FireSettleDataStoreEvent(object sender, SystemEventArgs args)
+        {
+            if (SettleDataStoreEvent != null)
+                SettleDataStoreEvent(sender, args);
+        }
+
+        internal void FireSettleEvent(object sender, SystemEventArgs args)
+        {
+            if (SettleEvent != null)
+                SettleEvent(sender, args);
+        }
 
         internal void FireAfterSettleEvent(object sender, SystemEventArgs args)
         {
@@ -77,6 +103,11 @@ namespace TradingLib.Common
                 AfterSettleResetEvent(sender, args);
         }
 
+        internal void FireSettleResetEvet(object sender, SystemEventArgs args)
+        {
+            if (SettleResetEvent != null)
+                SettleResetEvent(sender, args);
+        }
         #endregion
 
 

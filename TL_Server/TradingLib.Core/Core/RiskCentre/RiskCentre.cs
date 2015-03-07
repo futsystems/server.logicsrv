@@ -96,7 +96,14 @@ namespace TradingLib.Core
             //交易帐户激活
             TLCtxHelper.EventAccount.AccountActiveEvent += new AccoundIDDel(this.ResetRuleSet);
 
+            //结算重置
+            TLCtxHelper.EventSystem.SettleResetEvent += new EventHandler<SystemEventArgs>(EventSystem_SettleResetEvent);
             
+        }
+
+        void EventSystem_SettleResetEvent(object sender, SystemEventArgs e)
+        {
+            this.Reset();
         }
 
 

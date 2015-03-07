@@ -459,6 +459,9 @@ namespace TradingLib.Core
                 InitPriorityBuffer();
                 //启动消息服务
                 StartMessageRouter();
+
+                //订阅系统事件
+                TLCtxHelper.EventSystem.SettleResetEvent += new EventHandler<SystemEventArgs>(EventSystem_SettleResetEvent);
                 
             }
             catch (Exception ex)
@@ -466,6 +469,11 @@ namespace TradingLib.Core
                 debug("初始化服务异常:" + ex.ToString(),QSEnumDebugLevel.ERROR);
                 throw (new QSTradingServerInitError(ex));
             }
+        }
+
+        void EventSystem_SettleResetEvent(object sender, SystemEventArgs e)
+        {
+            this.Reset();
         }
 
         
