@@ -26,5 +26,12 @@ namespace TradingLib.API
         /// 是否是在强平时间段
         /// </summary>
         bool IsFlatTime { get; }
+
+        /// <summary>
+        /// 判断某个时间是否在交易时间段内
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        bool IsInMarketTime(int time);
     }
 }
