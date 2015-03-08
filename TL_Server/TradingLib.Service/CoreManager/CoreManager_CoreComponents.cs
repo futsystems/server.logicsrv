@@ -110,7 +110,7 @@ namespace TradingLib.ServiceManager
         void InitMgrExchSrv()
         {
             debug("6.初始化MgrExchServer");
-            _managerExchange = new MgrExchServer(_messageExchagne, _clearCentre, _riskCentre);
+            _managerExchange = new MgrExchServer(_messageExchagne, _clearCentre);
         }
         private void DestoryMgrExchSrv()
         {
