@@ -236,14 +236,16 @@ namespace TradingLib.ServiceManager
 
             _riskCentre.PositionFlatEvent += new EventHandler<PositionFlatEventArgs>(TLCtxHelper.EventSystem.FirePositionFlatEvent);
 
-            IOnBrokerEvent onbr = _messageExchagne as IOnBrokerEvent;
-
+            IOnRouterEvent onbr = _messageExchagne as IOnRouterEvent;
+            
             TLCtxHelper.BrokerRouter.GotFillEvent += new FillDelegate(onbr.OnFillEvent);
             TLCtxHelper.BrokerRouter.GotCancelEvent += new LongDelegate(onbr.OnCancelEvent);
             TLCtxHelper.BrokerRouter.GotOrderEvent += new OrderDelegate(onbr.OnOrderEvent);
 
             TLCtxHelper.BrokerRouter.GotOrderErrorEvent += new OrderErrorDelegate(onbr.OnOrderErrorEvent);
             TLCtxHelper.BrokerRouter.GotOrderActionErrorEvent += new OrderActionErrorDelegate(onbr.OnOrderActionErrorEvent);
+
+            TLCtxHelper.DataRouter.GotTickEvent += new TickDelegate(onbr.OnTickEvent);
         }
 
 

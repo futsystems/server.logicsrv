@@ -238,6 +238,19 @@ namespace TradingLib.Common
                 return _brokerrouter;
             }
         }
+
+        IDataRouter _datarouter = null;
+        internal IDataRouter DataRouter
+        {
+            get
+            {
+                if (_datarouter == null)
+                {
+                    debug("Error-DataRouter not valid");
+                }
+                return _datarouter;
+            }
+        }
         #endregion
 
 
@@ -652,6 +665,11 @@ namespace TradingLib.Common
                 if (obj is IBrokerRouter)
                 {
                     _brokerrouter = obj as IBrokerRouter;
+                }
+
+                if (obj is IDataRouter)
+                {
+                    _datarouter = obj as IDataRouter;
                 }
 
                 //0.检查是否是服务模块管理

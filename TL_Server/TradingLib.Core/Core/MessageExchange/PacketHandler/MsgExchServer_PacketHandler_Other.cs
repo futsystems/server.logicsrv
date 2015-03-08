@@ -568,7 +568,7 @@ namespace TradingLib.Core
 
             if (string.IsNullOrEmpty(request.Symbol))
             {
-                Tick[] ticks = _datafeedRouter.GetTickSnapshot();
+                Tick[] ticks = TLCtxHelper.DataRouter.GetTickSnapshot();
                 for (int i = 0; i < ticks.Length; i++)
                 {
                     RspQryMarketDataResponse response = ResponseTemplate<RspQryMarketDataResponse>.SrvSendRspResponse(request);

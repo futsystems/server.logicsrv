@@ -50,7 +50,7 @@ namespace TradingLib.Core
                             "向系统输出模拟tick数据 用于系统调试")]
         public string DemoTick(decimal lastsettle , decimal settleprice)
         {
-            _datafeedRouter.DemoTick(lastsettle,settleprice);
+            ///_datafeedRouter.DemoTick(lastsettle,settleprice);
             return "DemoTick Send";
         }
 
@@ -61,7 +61,8 @@ namespace TradingLib.Core
         public string PrintTickSnapshot()
         {
             StringBuilder sb = new StringBuilder();
-            foreach (Tick k in _datafeedRouter.GetTickSnapshot())
+
+            foreach (Tick k in TLCtxHelper.DataRouter.GetTickSnapshot())
             {
                 if(k!= null && k.isValid)
                     sb.Append(TickImpl.Serialize(k)+Environment.NewLine);
@@ -89,7 +90,8 @@ namespace TradingLib.Core
                             "从行情系统排除某个合约")]
         public void ExcludeSymbol(string symbol)
         {
-            _datafeedRouter.ExcludeSymbol(symbol);
+
+            TLCtxHelper.DataRouter.ExcludeSymbol(symbol);
         }
 
          [CoreCommandAttr(QSEnumCommandSource.CLI,
@@ -98,7 +100,7 @@ namespace TradingLib.Core
                     "从行情系统包含某个合约")]
          public void IncludeSymbol(string symbol)
          {
-             _datafeedRouter.IncludeSymbol(symbol);
+             TLCtxHelper.DataRouter.IncludeSymbol(symbol);
          }
 
 
@@ -119,7 +121,7 @@ namespace TradingLib.Core
         {
             debug("重置行情与成交路由", QSEnumDebugLevel.INFO);
             TLCtxHelper.BrokerRouter.Reset();
-            _datafeedRouter.Reset();
+            TLCtxHelper.DataRouter.Reset();
         }
 
 

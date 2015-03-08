@@ -61,23 +61,23 @@ namespace TradingLib.Core
         /// 将数据路由绑定到交易服务器
         /// </summary>
         /// <param name="datafeedrouter"></param>
-        public void BindDataRouter(DataFeedRouter datafeedrouter)
-        {
-            _datafeedRouter = datafeedrouter;
-            _datafeedRouter.GotTickEvent += new TickDelegate(_datafeedRouter_GotTickEvent);
+        //public void BindDataRouter(DataFeedRouter datafeedrouter)
+        //{
+        //    _datafeedRouter = datafeedrouter;
+        //    _datafeedRouter.GotTickEvent += new TickDelegate(_datafeedRouter_GotTickEvent);
 
-        }
+        //}
 
-        public void UnBindDataRouter(DataFeedRouter datafeedrouter)
-        {
-            if (datafeedrouter == _datafeedRouter)
-            {
-                _datafeedRouter.GotTickEvent -= new TickDelegate(_datafeedRouter_GotTickEvent);
-            }
-            _datafeedRouter = null;
-        }
+        //public void UnBindDataRouter(DataFeedRouter datafeedrouter)
+        //{
+        //    if (datafeedrouter == _datafeedRouter)
+        //    {
+        //        _datafeedRouter.GotTickEvent -= new TickDelegate(_datafeedRouter_GotTickEvent);
+        //    }
+        //    _datafeedRouter = null;
+        //}
 
-        void _datafeedRouter_GotTickEvent(Tick k)
+        public void OnTickEvent(Tick k)
         {
             //在DataFeedRouter中有Ringbuffer进行行情缓存
             //1.先向客户端广播Tick行情 

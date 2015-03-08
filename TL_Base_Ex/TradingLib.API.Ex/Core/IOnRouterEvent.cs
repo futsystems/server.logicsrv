@@ -9,7 +9,7 @@ namespace TradingLib.API
     /// 响应BrokerRouter汇聚上来的成交接口事件接口
     /// BrokerRouter的数据回报通过IOnBrokerEvent接口进行处理
     /// </summary>
-    public interface IOnBrokerEvent
+    public interface IOnRouterEvent
     {
         void OnOrderEvent(Order o);
         void OnFillEvent(Trade f);
@@ -17,5 +17,7 @@ namespace TradingLib.API
 
         void OnOrderErrorEvent(Order o, RspInfo e);
         void OnOrderActionErrorEvent(OrderAction action, RspInfo e);
+
+        void OnTickEvent(Tick k);
     }
 }

@@ -274,6 +274,13 @@ namespace TradingLib.Common
             }
         }
 
+        public static IDataRouter DataRouter
+        {
+            get
+            {
+                return defaultInstance.ctx.DataRouter as IDataRouter;
+            }
+        }
         /// <summary>
         /// 系统加载完毕后绑定扩展模块的事件
         /// </summary>

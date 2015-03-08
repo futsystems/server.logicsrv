@@ -19,7 +19,7 @@ namespace TradingLib.Core
     /// FastTickSrv对接所有的行情源然后形成统一的订阅与传输格式对外传出，这样避免了在多点去维护不同的行情与订阅信息
     /// 这里只要针对FastTick进行订阅就可以了
     /// </summary>
-    public class DataFeedRouter:BaseSrvObject
+    public class DataFeedRouter:BaseSrvObject,IDataRouter
     {
         const string ComponentName = "DataFeedRouter";
         TickWatcher _tickwatcher;

@@ -67,13 +67,10 @@ namespace TradingLib.ServiceManager
         {
             debug("4.初始化DataFeedRouter");
             _datafeedRouter = new DataFeedRouter();
-            _messageExchagne.BindDataRouter(_datafeedRouter);
         }
 
         void DestoryDataFeedRouter()
         {
-            _messageExchagne.UnBindDataRouter(_datafeedRouter);
-
             _datafeedRouter.Dispose();
         }
 
@@ -84,13 +81,11 @@ namespace TradingLib.ServiceManager
             _brokerRouter = new BrokerRouter(_clearCentre);
 
             _brokerRouter.DataFeedRouter = _datafeedRouter;
-            //_messageExchagne.BindBrokerRouter(_brokerRouter);
         }
 
         private void DestoryBrokerRouter()
         {
             _brokerRouter.DataFeedRouter = null;
-            //_messageExchagne.UnBindBrokerRouter(_brokerRouter);
             _brokerRouter.Dispose();
         }
 

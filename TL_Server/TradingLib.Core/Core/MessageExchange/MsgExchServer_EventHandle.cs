@@ -40,7 +40,8 @@ namespace TradingLib.Core
         {
             debug("Register Symbol Market Data:" + sym.Symbol, QSEnumDebugLevel.INFO);
             SymbolBasket b = new SymbolBasketImpl(sym);
-            _datafeedRouter.RegisterSymbols(b);
+
+            TLCtxHelper.DataRouter.RegisterSymbols(b);
             
         }
 
