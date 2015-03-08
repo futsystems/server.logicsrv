@@ -263,6 +263,16 @@ namespace TradingLib.Common
             }
         }
 
+        /// <summary>
+        /// 系统交易路由管理器
+        /// </summary>
+        public static IBrokerRouter BrokerRouter
+        {
+            get
+            {
+                return defaultInstance.ctx.BrokerRouter as IBrokerRouter;
+            }
+        }
 
         /// <summary>
         /// 系统加载完毕后绑定扩展模块的事件

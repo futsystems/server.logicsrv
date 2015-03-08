@@ -84,7 +84,7 @@ namespace TradingLib.Core
                     //如果委托状态表面需要通过broker来取消委托 则通过broker来进行撤单
                     if (o.CanCancel())//opened partfilled
                     {
-                        _brokerRouter.CancelOrder(o.id);
+                        TLCtxHelper.BrokerRouter.CancelOrder(o.id);
                     }
                     else if (o.Status == QSEnumOrderStatus.Submited)//已经通过broker提交 该状态无法立即撤单 需要等待委托状态更新为Opened或者 被定时程序发现是一个错误委托
                     {

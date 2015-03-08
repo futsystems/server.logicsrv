@@ -118,7 +118,7 @@ namespace TradingLib.Core
         public void Reset()
         {
             debug("重置行情与成交路由", QSEnumDebugLevel.INFO);
-            _brokerRouter.Reset();
+            TLCtxHelper.BrokerRouter.Reset();
             _datafeedRouter.Reset();
         }
 
@@ -176,7 +176,7 @@ namespace TradingLib.Core
                         tmp.Comment = "部分成交(维)";
                         ReplyOrder(tmp);
                         //撤单
-                        _brokerRouter.CancelOrder(o.id);
+                        TLCtxHelper.BrokerRouter.CancelOrder(o.id);
                         continue;
                     }
                     //未成交
@@ -186,7 +186,7 @@ namespace TradingLib.Core
                         tmp.Comment = "拒绝(维)";
                         ReplyOrder(tmp);
                         //撤单
-                        _brokerRouter.CancelOrder(o.id);
+                        TLCtxHelper.BrokerRouter.CancelOrder(o.id);
                         continue;
                     }
                     //异常合约
@@ -197,7 +197,7 @@ namespace TradingLib.Core
                         tmp.Comment = "拒绝(维)";
                         ReplyOrder(tmp);
                         //撤单
-                        _brokerRouter.CancelOrder(o.id);
+                        TLCtxHelper.BrokerRouter.CancelOrder(o.id);
                         continue;
                     }
                 }

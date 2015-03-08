@@ -48,6 +48,8 @@
     <Compile Include="Contrib\IPlugin.cs" />
     <Compile Include="Core\ClearCentre\IAuthCashOperation.cs" />
     <Compile Include="Core\ClearCentre\IGotTradingRecord.cs" />
+    <Compile Include="Core\IBrokerRouter.cs" />
+    <Compile Include="Core\IOnBrokerEvent.cs" />
     <Compile Include="Core\IRouterManager.cs" />
     <Compile Include="Account\IGeneralCheck.cs" />
     <Compile Include="Contrib\EnumCommandSource.cs" />

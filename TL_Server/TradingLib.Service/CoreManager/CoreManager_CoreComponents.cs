@@ -84,13 +84,13 @@ namespace TradingLib.ServiceManager
             _brokerRouter = new BrokerRouter(_clearCentre);
 
             _brokerRouter.DataFeedRouter = _datafeedRouter;
-            _messageExchagne.BindBrokerRouter(_brokerRouter);
+            //_messageExchagne.BindBrokerRouter(_brokerRouter);
         }
 
         private void DestoryBrokerRouter()
         {
             _brokerRouter.DataFeedRouter = null;
-            _messageExchagne.UnBindBrokerRouter(_brokerRouter);
+            //_messageExchagne.UnBindBrokerRouter(_brokerRouter);
             _brokerRouter.Dispose();
         }
 

@@ -42,7 +42,7 @@ namespace TradingLib.Core
             //设定委托相关编号
             o.OrderSysID = o.OrderSeq.ToString();
             o.BrokerRemoteOrderID = o.OrderSysID;
-            _br_GotOrderEvent(o);
+            OnOrderEvent(o);
             debug("insert ordre manual .....", QSEnumDebugLevel.INFO);
             //return ordid;
 
@@ -50,7 +50,7 @@ namespace TradingLib.Core
 
         public void ManualInsertTrade(Trade t)
         {
-            _br_GotFillEvent(t);
+            OnFillEvent(t);
             debug("insert trade manual ....", QSEnumDebugLevel.INFO);
         }
 
@@ -99,16 +99,16 @@ namespace TradingLib.Core
         /// 路由服务器将操作回报通过tl的操作向客户端进行发送
         /// </summary>
         /// <param name="brokerrouter"></param>
-        public void BindBrokerRouter(BrokerRouter brokerrouter)
-        {
-            _brokerRouter = brokerrouter;
-            _brokerRouter.GotCancelEvent += new LongDelegate(_br_GotCancelEvent);
-            _brokerRouter.GotFillEvent += new FillDelegate(_br_GotFillEvent);
-            _brokerRouter.GotOrderEvent += new OrderDelegate(_br_GotOrderEvent);
+        //public void BindBrokerRouter(BrokerRouter brokerrouter)
+        //{
+        //    //_brokerRouter = brokerrouter;
+        //    _brokerRouter.GotCancelEvent += new LongDelegate(_br_GotCancelEvent);
+        //    _brokerRouter.GotFillEvent += new FillDelegate(_br_GotFillEvent);
+        //    _brokerRouter.GotOrderEvent += new OrderDelegate(_br_GotOrderEvent);
 
-            _brokerRouter.GotOrderErrorEvent += new OrderErrorDelegate(_br_GotOrderErrorEvent);//路由中心返回的委托错误均要通知到清算中心进行委托更新
-            _brokerRouter.GotOrderActionErrorEvent += new OrderActionErrorDelegate(_br_GotOrderActionErrorEvent);
-        }
+        //    _brokerRouter.GotOrderErrorEvent += new OrderErrorDelegate(_br_GotOrderErrorEvent);//路由中心返回的委托错误均要通知到清算中心进行委托更新
+        //    _brokerRouter.GotOrderActionErrorEvent += new OrderActionErrorDelegate(_br_GotOrderActionErrorEvent);
+        //}
 
         /// <summary>
         /// 通过委托编号 查找路由侧分解发送的委托
@@ -117,28 +117,29 @@ namespace TradingLib.Core
         /// <returns></returns>
         public Order SentRouterOrder(long val)
         {
-            return _brokerRouter.SentRouterOrder(val);
+
+            return TLCtxHelper.BrokerRouter.SentRouterOrder(val);
         }
 
 
 
-        public void UnBindBrokerRouter(BrokerRouter brokerrouter)
-        {
-            if (brokerrouter == _brokerRouter)
-            {
-                _brokerRouter.GotCancelEvent -= new LongDelegate(_br_GotCancelEvent);
-                _brokerRouter.GotFillEvent -= new FillDelegate(_br_GotFillEvent);
-                _brokerRouter.GotOrderEvent -= new OrderDelegate(_br_GotOrderEvent);
-                _brokerRouter.GotOrderErrorEvent -= new OrderErrorDelegate(_br_GotOrderErrorEvent);
-            }
-            _brokerRouter = null;
-        }
+        //public void UnBindBrokerRouter(BrokerRouter brokerrouter)
+        //{
+        //    if (brokerrouter == _brokerRouter)
+        //    {
+        //        _brokerRouter.GotCancelEvent -= new LongDelegate(_br_GotCancelEvent);
+        //        _brokerRouter.GotFillEvent -= new FillDelegate(_br_GotFillEvent);
+        //        _brokerRouter.GotOrderEvent -= new OrderDelegate(_br_GotOrderEvent);
+        //        _brokerRouter.GotOrderErrorEvent -= new OrderErrorDelegate(_br_GotOrderErrorEvent);
+        //    }
+        //    _brokerRouter = null;
+        //}
 
 
 
         #region 委托操作错误回报处理
 
-        void _br_GotOrderActionErrorEvent(OrderAction action,RspInfo info)
+        public void OnOrderActionErrorEvent(OrderAction action, RspInfo info)
         {
             //对外通知
             NotifyOrderActionError(action, info);
@@ -151,7 +152,7 @@ namespace TradingLib.Core
         /// 响应路由中心委托错误回报
         /// </summary>
         /// <param name="notify"></param>
-        void _br_GotOrderErrorEvent(Order order, RspInfo info)
+        public void OnOrderErrorEvent(Order order, RspInfo info)
         {
             handler_GotOrderErrorEvent(order,info);
         }
@@ -181,7 +182,7 @@ namespace TradingLib.Core
 
 
         #region 委托回报处理
-        void _br_GotOrderEvent(Order o)
+        public void OnOrderEvent(Order o)
         {
             handler_GotOrderEvent(o);
         }
@@ -232,7 +233,7 @@ namespace TradingLib.Core
         /// 响应成交路由返回的成交回报
         /// </summary>
         /// <param name="t"></param>
-        void _br_GotFillEvent(Trade t)
+        public void OnFillEvent(Trade t)
         {
             //设定系统内成交编号
             AssignTradeID(ref t);
@@ -261,7 +262,7 @@ namespace TradingLib.Core
 
 
         #region 委托取消回报处理
-        void _br_GotCancelEvent(long oid)
+        public void OnCancelEvent(long oid)
         {
             //清算中心响应取消回报
             TLCtxHelper.CmdGotTradingRecord.GotCancel(oid);

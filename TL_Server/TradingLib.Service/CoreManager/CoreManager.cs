@@ -235,6 +235,15 @@ namespace TradingLib.ServiceManager
             //_clearCentre.AdjustCommissionEvent += new AdjustCommissionDel(TLCtxHelper.ExContribEvent.AdjustCommission);
 
             _riskCentre.PositionFlatEvent += new EventHandler<PositionFlatEventArgs>(TLCtxHelper.EventSystem.FirePositionFlatEvent);
+
+            IOnBrokerEvent onbr = _messageExchagne as IOnBrokerEvent;
+
+            TLCtxHelper.BrokerRouter.GotFillEvent += new FillDelegate(onbr.OnFillEvent);
+            TLCtxHelper.BrokerRouter.GotCancelEvent += new LongDelegate(onbr.OnCancelEvent);
+            TLCtxHelper.BrokerRouter.GotOrderEvent += new OrderDelegate(onbr.OnOrderEvent);
+
+            TLCtxHelper.BrokerRouter.GotOrderErrorEvent += new OrderErrorDelegate(onbr.OnOrderErrorEvent);
+            TLCtxHelper.BrokerRouter.GotOrderActionErrorEvent += new OrderActionErrorDelegate(onbr.OnOrderActionErrorEvent);
         }
 
 

@@ -225,6 +225,19 @@ namespace TradingLib.Common
                 return _routermanager;
             }
         }
+
+        IBrokerRouter _brokerrouter = null;
+        internal IBrokerRouter BrokerRouter
+        {
+            get
+            {
+                if (_brokerrouter == null)
+                {
+                    debug("Error-BrokerRouter not valid");
+                }
+                return _brokerrouter;
+            }
+        }
         #endregion
 
 
@@ -634,6 +647,11 @@ namespace TradingLib.Common
                 {
                     //debug("MessageMgr(ManagerSrv) regsited to ctx");
                     _messagemgr = obj as IMessageMgr;
+                }
+
+                if (obj is IBrokerRouter)
+                {
+                    _brokerrouter = obj as IBrokerRouter;
                 }
 
                 //0.检查是否是服务模块管理

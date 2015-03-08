@@ -50,7 +50,8 @@ namespace TradingLib.Core
                             notify.BindRequest(request);
 
                             //通过brokerrouter取消委托
-                            _brokerRouter.CancelOrder(o.id);
+
+                            TLCtxHelper.BrokerRouter.CancelOrder(o.id);
                         }
                         //处于中间状态Placed或Submited由系统单独逻辑进行定时检查 用于清除处于未知状态的委托
                         else if (o.Status == QSEnumOrderStatus.Submited || o.Status == QSEnumOrderStatus.Placed)//已经通过broker提交 该状态无法立即撤单 需要等待委托状态更新为Opened或者 被定时程序发现是一个错误委托
