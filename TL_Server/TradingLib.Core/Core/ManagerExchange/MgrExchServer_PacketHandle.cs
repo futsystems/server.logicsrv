@@ -114,8 +114,8 @@ namespace TradingLib.Core
             o.FilledSize = o.UnsignedSize;
             
             //注意这里需要获得可用的委托流水和成交流水号
-            long ordid = exchsrv.futs_InsertOrderManual(o);
-
+            TLCtxHelper.CmdUtils.ManualInsertOrder(o); //exchsrv.futs_InsertOrderManual(o);
+            long ordid = o.id;
 
             fill.id = ordid;
             fill.OrderSeq = o.OrderSeq;
@@ -123,7 +123,8 @@ namespace TradingLib.Core
             fill.TradeID = "xxxxx";//随机产生的成交编号
 
             Util.sleep(100);
-            exchsrv.futs_InsertTradeManual(fill);
+            TLCtxHelper.CmdUtils.ManualInsertTrade(fill);
+            //exchsrv.futs_InsertTradeManual(fill);
 
         }
 

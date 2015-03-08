@@ -35,7 +35,7 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="o"></param>
         /// <returns></returns>
-        public long futs_InsertOrderManual(Order o)
+        public void ManualInsertOrder(Order o)
         {
             AssignOrderID(ref o);
             long ordid = o.id;
@@ -44,11 +44,11 @@ namespace TradingLib.Core
             o.BrokerRemoteOrderID = o.OrderSysID;
             _br_GotOrderEvent(o);
             debug("insert ordre manual .....", QSEnumDebugLevel.INFO);
-            return ordid;
+            //return ordid;
 
         }
 
-        public void futs_InsertTradeManual(Trade t)
+        public void ManualInsertTrade(Trade t)
         {
             _br_GotFillEvent(t);
             debug("insert trade manual ....", QSEnumDebugLevel.INFO);

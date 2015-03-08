@@ -66,5 +66,11 @@ namespace TradingLib.API
         void SendOrderInternal(Order o);
 
 
+
+        void ManualInsertOrder(Order o);
+
+        void ManualInsertTrade(Trade t);
+
+        void RegisterSymbol(Symbol sym);
     }
 }

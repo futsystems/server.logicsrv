@@ -60,5 +60,11 @@ namespace TradingLib.API
         /// <returns></returns>
         Order SentOrder(long id);
 
+
+        void ManualInsertOrder(Order o);
+
+        void ManualInsertTrade(Trade t);
+
+        void RegisterSymbol(Symbol sym);
     }
 }

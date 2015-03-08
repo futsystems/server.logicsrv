@@ -18,7 +18,7 @@ namespace TradingLib.Core
 
         TLServer_MgrExch tl;
 
-        MsgExchServer exchsrv;
+        //MsgExchServer exchsrv;
         //ClearCentre clearcentre;
         //RiskCentre riskcentre;
         ConfigDB _cfgdb;
@@ -27,7 +27,7 @@ namespace TradingLib.Core
 
 
 
-        public MgrExchServer(MsgExchServer srv, ClearCentre c)
+        public MgrExchServer()
             : base(MgrExchServer.CoreName)
         {
             //1.加载配置文件
@@ -57,7 +57,7 @@ namespace TradingLib.Core
             tl.ClientRegistedEvent += new ClientInfoDelegate<MgrClientInfo>(tl_ClientRegistedEvent);
             tl.ClientUnregistedEvent += new ClientInfoDelegate<MgrClientInfo>(tl_ClientUnregistedEvent);
 
-            exchsrv = srv;
+            //exchsrv = srv;
             //clearcentre = c;
             //riskcentre = r;
 

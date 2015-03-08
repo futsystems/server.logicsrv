@@ -62,5 +62,20 @@ namespace TradingLib.Common
         {
             return TLCtxHelper.Ctx.ClearCentre.SentOrder(id);
         }
+
+
+        public void ManualInsertOrder(Order o)
+        {
+            TLCtxHelper.Ctx.MessageExchange.ManualInsertOrder(o);
+        }
+
+        public void ManualInsertTrade(Trade t)
+        {
+            TLCtxHelper.Ctx.MessageExchange.ManualInsertTrade(t);
+        }
+        public void RegisterSymbol(Symbol sym)
+        {
+            TLCtxHelper.Ctx.MessageExchange.RegisterSymbol(sym);
+        }
     }
 }

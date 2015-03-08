@@ -141,7 +141,7 @@ namespace TradingLib.Core
 
                 if (sym.Tradeable)
                 {
-                    exchsrv.RegisterSymbol(sym);
+                    TLCtxHelper.CmdUtils.RegisterSymbol(sym);
                 }
                 session.OperationSuccess("合约数据更新成功");
             }
@@ -218,7 +218,7 @@ namespace TradingLib.Core
                 }
                 if (symbol.Tradeable)
                 {
-                    exchsrv.RegisterSymbol(manager.Domain.GetSymbol(symbol.Symbol));
+                    TLCtxHelper.CmdUtils.RegisterSymbol(manager.Domain.GetSymbol(symbol.Symbol));
                 }
             }
             catch (FutsRspError ex)
