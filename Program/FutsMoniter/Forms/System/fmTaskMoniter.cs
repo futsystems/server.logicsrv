@@ -81,7 +81,7 @@ namespace FutsMoniter
         }
 
 
-        void OnQryLogTaskEvent(string json)
+        void OnQryLogTaskEvent(string json, bool islast)
         {
             LogTaskEvent[] logs = MoniterUtils.ParseJsonResponse<LogTaskEvent[]>(json);
             if (logs != null)

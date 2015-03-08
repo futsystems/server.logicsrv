@@ -70,7 +70,7 @@ namespace FutsMoniter
 
         JsonWrapperServicePlanAgentArgument spagentarg = null;
 
-        void OnQrySPAgentArg(string jsonstr)
+        void OnQrySPAgentArg(string jsonstr, bool islast)
         {
             Globals.Debug("FeeConfigForm got json ret:" + jsonstr);
 

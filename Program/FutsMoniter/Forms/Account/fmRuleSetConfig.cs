@@ -89,7 +89,7 @@ namespace FutsMoniter
 
                 if (fmConfirm.Show("确添加帐户风控规则?") == System.Windows.Forms.DialogResult.Yes)
                 {
-                    Globals.TLClient.ReqUpdateRuleSet(item);
+                    Globals.TLClient.ReqUpdateRuleItem(item);
                 }
             }
             else if (RuleClass == null)
@@ -100,7 +100,7 @@ namespace FutsMoniter
 
                 if (fmConfirm.Show("确认更新帐户风控规则?") == System.Windows.Forms.DialogResult.Yes)
                 {
-                    Globals.TLClient.ReqUpdateRuleSet(this.Rule);
+                    Globals.TLClient.ReqUpdateRuleItem(this.Rule);
                 }
             }
             //MessageBox.Show("it is here");

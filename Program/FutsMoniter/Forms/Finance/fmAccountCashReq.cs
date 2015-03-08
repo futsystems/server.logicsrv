@@ -47,19 +47,19 @@ namespace FutsMoniter
         public void OnInit()
         {
             Globals.LogicEvent.RegisterCallback("MgrExchServer", "QryAccountCashOperationTotal", this.OnQryAccountCashOperationTotal);//查询交易帐户出入金请求
-            Globals.LogicEvent.RegisterCallback("MgrExchServer", "NotifyCashOperation", this.OnNotifyCashOperation);
+            Globals.LogicEvent.RegisterNotifyCallback("MgrExchServer", "NotifyCashOperation", this.OnNotifyCashOperation);
 
         }
 
         public void OnDisposed()
         {
             Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "QryAccountCashOperationTotal", this.OnQryAccountCashOperationTotal);//查询交易帐户出入金请求
-            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "NotifyCashOperation", this.OnNotifyCashOperation);
+            Globals.LogicEvent.UnRegisterNotifyCallback("MgrExchServer", "NotifyCashOperation", this.OnNotifyCashOperation);
 
         }
 
 
-        void OnQryAccountCashOperationTotal(string jsonstr)
+        void OnQryAccountCashOperationTotal(string jsonstr, bool islast)
         {
             //JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
             //int code = int.Parse(jd["Code"].ToString());

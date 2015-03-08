@@ -36,7 +36,7 @@ namespace FutsMoniter
             Globals.LogicEvent.UnRegisterCallback("ConnectorManager", "QryTokenValid", this.OnQryTokenValid);
         }
 
-        void OnQryTokenValid(string json)
+        void OnQryTokenValid(string json, bool islast)
         {
             bool valid = MoniterUtils.ParseJsonResponse<bool>(json);
             if (valid)

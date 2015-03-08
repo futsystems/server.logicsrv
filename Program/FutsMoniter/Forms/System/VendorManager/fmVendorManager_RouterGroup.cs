@@ -65,7 +65,7 @@ namespace FutsMoniter
         }
 
         bool _gotitem = false;
-        void OnQryRouterItem(string jsonstr)
+        void OnQryRouterItem(string jsonstr, bool islast)
         {
             RouterItemSetting[] objs = MoniterUtils.ParseJsonResponse<RouterItemSetting[]>(jsonstr);
             if (objs != null)

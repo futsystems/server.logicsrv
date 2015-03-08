@@ -84,7 +84,7 @@ namespace FutsMoniter
         }
 
 
-        void OnPositionMertics(string json)
+        void OnPositionMertics(string json, bool islast)
         {
             lock (ctmap)
             {

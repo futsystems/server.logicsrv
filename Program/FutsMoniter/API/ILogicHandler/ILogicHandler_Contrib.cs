@@ -19,7 +19,7 @@ namespace TradingLib.API
     public partial interface ILogicHandler
     {
 
-        void OnMGRContribResponse(string module, string cmd, string result);
+        void OnMGRContribResponse(string module, string cmd, string result,bool islast);
 
 
         void OnMGRContribNotify(string module, string cmd, string result);

@@ -21,18 +21,32 @@ namespace TradingLib.Common
         /// <param name="module"></param>
         /// <param name="cmd"></param>
         /// <param name="del"></param>
-        public void RegisterCallback(string module, string cmd, Action<string> del)
+        public void RegisterCallback(string module, string cmd, Action<string,bool> del)
         {
             string key = module.ToUpper() + "-" + cmd.ToUpper();
 
             if (!callbackmap.Keys.Contains(key))
             {
-                callbackmap.TryAdd(key, new List<Action<string>>());
+                callbackmap.TryAdd(key, new List<Action<string,bool>>());
             }
 
             callbackmap[key].Add(del);
 
         }
+
+        public void RegisterNotifyCallback(string module, string cmd, Action<string> del)
+        {
+            string key = module.ToUpper() + "-" + cmd.ToUpper();
+
+            if (!notifycallbackmap.Keys.Contains(key))
+            {
+                notifycallbackmap.TryAdd(key, new List<Action<string>>());
+            }
+
+            notifycallbackmap[key].Add(del);
+
+        }
+
 
 
         /// <summary>
@@ -41,13 +55,13 @@ namespace TradingLib.Common
         /// <param name="module"></param>
         /// <param name="cmd"></param>
         /// <param name="del"></param>
-        public void UnRegisterCallback(string module, string cmd, Action<string> del)
+        public void UnRegisterCallback(string module, string cmd, Action<string,bool> del)
         {
             string key = module.ToUpper() + "-" + cmd.ToUpper();
 
             if (!callbackmap.Keys.Contains(key))
             {
-                callbackmap.TryAdd(key, new List<Action<string>>());
+                callbackmap.TryAdd(key, new List<Action<string,bool>>());
             }
             if (callbackmap[key].Contains(del))
             {
@@ -55,24 +69,39 @@ namespace TradingLib.Common
             }
         }
 
+        public void UnRegisterNotifyCallback(string module, string cmd, Action<string> del)
+        {
+            string key = module.ToUpper() + "-" + cmd.ToUpper();
 
-        ConcurrentDictionary<string, List<Action<string>>> callbackmap = new ConcurrentDictionary<string, List<Action<string>>>();
+            if (!notifycallbackmap.Keys.Contains(key))
+            {
+                notifycallbackmap.TryAdd(key, new List<Action<string>>());
+            }
+            if (notifycallbackmap[key].Contains(del))
+            {
+                notifycallbackmap[key].Remove(del);
+            }
+        }
+
+
+        ConcurrentDictionary<string, List<Action<string>>> notifycallbackmap = new ConcurrentDictionary<string, List<Action<string>>>();
+        ConcurrentDictionary<string, List<Action<string,bool>>> callbackmap = new ConcurrentDictionary<string, List<Action<string,bool>>>();
         /// <summary>
         /// 响应服务端的扩展回报 通过扩展模块ID 操作码 以及具体的json回报内容
         /// </summary>
         /// <param name="module"></param>
         /// <param name="cmd"></param>
         /// <param name="result"></param>
-        public void OnMGRContribResponse(string module, string cmd, string result)
+        public void OnMGRContribResponse(string module, string cmd, string result,bool islast)
         {
             string key = module.ToUpper() + "-" + cmd.ToUpper();
             if (callbackmap.Keys.Contains(key))
             {
-                foreach (Action<string> del in callbackmap[key])
+                foreach (Action<string,bool> del in callbackmap[key])
                 {
                     try
                     {
-                        del(result);
+                        del(result,islast);
                     }
                     catch (Exception ex)
                     {
@@ -97,7 +126,7 @@ namespace TradingLib.Common
             string key = module.ToUpper() + "-" + cmd.ToUpper();
             if (callbackmap.Keys.Contains(key))
             {
-                foreach (Action<string> del in callbackmap[key])
+                foreach (Action<string> del in notifycallbackmap[key])
                 {
                     try
                     {

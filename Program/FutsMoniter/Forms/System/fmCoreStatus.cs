@@ -59,7 +59,7 @@ namespace FutsMoniter
         {
             Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "QrySystemStatus", this.OnQrySystemStatus);
         }
-        void OnQrySystemStatus(string json)
+        void OnQrySystemStatus(string json, bool islast)
         {
             SystemStatus status = MoniterUtils.ParseJsonResponse<SystemStatus>(json);
             if (status != null)

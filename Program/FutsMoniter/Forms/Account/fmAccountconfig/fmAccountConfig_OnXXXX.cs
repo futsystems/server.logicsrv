@@ -27,8 +27,37 @@ namespace FutsMoniter
             }
         }
 
+        void OnRuleItemDel(string json, bool islast)
+        {
+            RuleItem item = MoniterUtils.ParseJsonResponse<RuleItem>(json);
+            if (item == null) return;
+
+            if (item.RuleType == QSEnumRuleType.OrderRule)
+            {
+                InvokeGotOrderRuleItemDel(item, true);
+            }
+            else if (item.RuleType == QSEnumRuleType.AccountRule)
+            {
+                InvokeGotAccountRuleItemDel(item, true);
+            }
+        }
+
+        void OnRuleItemUpdate(string json, bool islast)
+        {
+            RuleItem item = MoniterUtils.ParseJsonResponse<RuleItem>(json);
+            if (item == null) return;
+            OnRuleItem(item, true);
+
+        }
         void OnRuleItemUpdate(RuleItem item)
         {
+            OnRuleItem(item, true);
+        }
+
+        void OnRuleItem(string json, bool islast)
+        {
+            RuleItem item = MoniterUtils.ParseJsonResponse<RuleItem>(json);
+            if (item == null) return;
             OnRuleItem(item, true);
         }
         /// <summary>

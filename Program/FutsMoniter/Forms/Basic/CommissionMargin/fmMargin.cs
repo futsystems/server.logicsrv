@@ -137,20 +137,20 @@ namespace FutsMoniter
         public void OnInit()
         {
             Globals.LogicEvent.RegisterCallback("MgrExchServer", "QryMarginTemplate", this.OnQryMarginTemplate);
-            Globals.LogicEvent.RegisterCallback("MgrExchServer", "NotifyMarginTemplate", this.OnNotifyMarginTemplate);
+            Globals.LogicEvent.RegisterNotifyCallback("MgrExchServer", "NotifyMarginTemplate", this.OnNotifyMarginTemplate);
 
             Globals.LogicEvent.RegisterCallback("MgrExchServer", "QryMarginTemplateItem", this.OnQryMarginTemplateItem);
-            Globals.LogicEvent.RegisterCallback("MgrExchServer", "NotifyMarginTemplateItem", this.OnNotifyMarginTemplateItem);
+            Globals.LogicEvent.RegisterNotifyCallback("MgrExchServer", "NotifyMarginTemplateItem", this.OnNotifyMarginTemplateItem);
             Globals.TLClient.ReqQryMarginTemplate();
         }
 
         public void OnDisposed()
         {
             Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "QryMarginTemplate", this.OnQryMarginTemplate);
-            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "NotifyMarginTemplate", this.OnNotifyMarginTemplate);
+            Globals.LogicEvent.UnRegisterNotifyCallback("MgrExchServer", "NotifyMarginTemplate", this.OnNotifyMarginTemplate);
 
             Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "QryMarginTemplateItem", this.OnQryMarginTemplateItem);
-            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "NotifyMarginTemplateItem", this.OnNotifyMarginTemplateItem);
+            Globals.LogicEvent.UnRegisterNotifyCallback("MgrExchServer", "NotifyMarginTemplateItem", this.OnNotifyMarginTemplateItem);
         }
 
         string GetChargeTypeStr(QSEnumChargeType type)
@@ -193,7 +193,7 @@ namespace FutsMoniter
             }
         }
 
-        void OnQryMarginTemplateItem(string json)
+        void OnQryMarginTemplateItem(string json, bool islast)
         {
             MarginTemplateItemSetting obj = MoniterUtils.ParseJsonResponse<MarginTemplateItemSetting>(json);
             if (obj != null)
@@ -248,7 +248,7 @@ namespace FutsMoniter
         }
 
         Dictionary<int, MarginTemplateSetting> templatemap = new Dictionary<int, MarginTemplateSetting>();
-        void OnQryMarginTemplate(string json)
+        void OnQryMarginTemplate(string json, bool islast)
         {
             MarginTemplateSetting[] list = MoniterUtils.ParseJsonResponse<MarginTemplateSetting[]>(json);
             if (list != null)

@@ -104,6 +104,7 @@ namespace TradingLib.Core
         void EventSystem_SettleResetEvent(object sender, SystemEventArgs e)
         {
             this.Reset();
+            
         }
 
 

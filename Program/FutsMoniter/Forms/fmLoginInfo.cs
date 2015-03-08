@@ -64,7 +64,7 @@ namespace FutsMoniter
             }
         }
 
-        void OnLoginInfo(string json)
+        void OnLoginInfo(string json, bool islast)
         {
             LoginInfo info = MoniterUtils.ParseJsonResponse<LoginInfo>(json);
             if (json != null)

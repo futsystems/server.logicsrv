@@ -87,7 +87,7 @@ namespace FutsMoniter
             Globals.TLClient.ReqQryFinService(_account.Account);
         }
 
-        void OnDeleteFinService(string json)
+        void OnDeleteFinService(string json, bool islast)
         {
             JsonWrapperFinServiceStub stub = MoniterUtils.ParseJsonResponse<JsonWrapperFinServiceStub>(json);
             if (stub == null)
@@ -98,7 +98,7 @@ namespace FutsMoniter
         }
 
 
-        void OnQryFinService(string jsonstr)
+        void OnQryFinService(string jsonstr, bool islast)
         {
             JsonWrapperFinServiceStub obj = MoniterUtils.ParseJsonResponse<JsonWrapperFinServiceStub>(jsonstr);
             if (obj != null)
@@ -113,7 +113,7 @@ namespace FutsMoniter
         /// 获得服务计划
         /// </summary>
         /// <param name="jsonstr"></param>
-        void OnQryServicePlan(string jsonstr)
+        void OnQryServicePlan(string jsonstr, bool islast)
         {
             JsonWrapperServicePlane[] splist = MoniterUtils.ParseJsonResponse<JsonWrapperServicePlane[]>(jsonstr);
             serviceplans =splist;

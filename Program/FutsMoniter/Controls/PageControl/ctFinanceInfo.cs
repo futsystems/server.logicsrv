@@ -49,7 +49,7 @@ namespace FutsMoniter
         public void OnInit()
         {
             Globals.LogicEvent.RegisterCallback("MgrExchServer", "QryAccountFinInfo", this.OnQryAccountInfo);
-            Globals.LogicEvent.RegisterCallback("MgrExchServer", "NotifyAccountFinInfo", this.OnQryAccountInfo);
+            Globals.LogicEvent.RegisterNotifyCallback("MgrExchServer", "NotifyAccountFinInfo", this.OnNotifyAccountInfo);
             Globals.LogicEvent.GotAccountSelectedEvent += new Action<AccountLite>(OnAccountSelected);
         }
 
@@ -62,12 +62,16 @@ namespace FutsMoniter
         public void OnDisposed()
         {
             Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "QryAccountFinInfo", this.OnQryAccountInfo);
-            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "NotifyAccountFinInfo", this.OnQryAccountInfo);
+            Globals.LogicEvent.UnRegisterNotifyCallback("MgrExchServer", "NotifyAccountFinInfo", this.OnNotifyAccountInfo);
             Globals.LogicEvent.GotAccountSelectedEvent -= new Action<AccountLite>(OnAccountSelected);
             //Globals.Debug("ctFinanceInfo disposed...");
          }
 
-        void OnQryAccountInfo(string json)
+        void OnNotifyAccountInfo(string json)
+        {
+            OnQryAccountInfo(json, true);
+        }
+        void OnQryAccountInfo(string json, bool islast)
         {
             AccountInfo obj = MoniterUtils.ParseJsonResponse<AccountInfo>(json);
             if (obj != null)

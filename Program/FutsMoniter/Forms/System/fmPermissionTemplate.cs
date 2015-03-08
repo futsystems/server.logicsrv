@@ -116,7 +116,7 @@ namespace FutsMoniter
 
         public void OnInit()
         {
-            Globals.LogicEvent.RegisterCallback("MgrExchServer", "NotifyUIAccess", OnNotifyPermissionTemplate);
+            Globals.LogicEvent.RegisterNotifyCallback("MgrExchServer", "NotifyUIAccess", OnNotifyPermissionTemplate);
             Globals.LogicEvent.RegisterCallback("MgrExchServer", "QueryPermmissionTemplateList", OnQryPermissionTemplate);
             
             Globals.TLClient.ReqQryPermmissionTemplateList();
@@ -124,7 +124,7 @@ namespace FutsMoniter
 
         public void OnDisposed()
         {
-            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "NotifyUIAccess", OnNotifyPermissionTemplate);
+            Globals.LogicEvent.UnRegisterNotifyCallback("MgrExchServer", "NotifyUIAccess", OnNotifyPermissionTemplate);
             Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "QueryPermmissionTemplateList", OnQryPermissionTemplate);
             
         }
@@ -141,7 +141,7 @@ namespace FutsMoniter
 
 
         bool _loaded = false;
-        void OnQryPermissionTemplate(string jsonstr)
+        void OnQryPermissionTemplate(string jsonstr, bool islast)
         {
             UIAccess[] objs = MoniterUtils.ParseJsonResponse<UIAccess[]>(jsonstr);
             if (objs != null)

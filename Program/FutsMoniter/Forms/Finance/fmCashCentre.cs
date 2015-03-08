@@ -46,7 +46,7 @@ namespace FutsMoniter
             Globals.LogicEvent.RegisterCallback("MgrExchServer", "CancelAccountCashOperation", this.OnAccountCashOperation);
             Globals.LogicEvent.RegisterCallback("MgrExchServer", "RejectAccountCashOperation", this.OnAccountCashOperation);
 
-            Globals.LogicEvent.RegisterCallback("MgrExchServer", "NotifyCashOperation", this.OnNotifyCashOperation);
+            Globals.LogicEvent.RegisterNotifyCallback("MgrExchServer", "NotifyCashOperation", this.OnNotifyCashOperation);
 
             Globals.TLClient.ReqQryAgentCashopOperationTotal();
             Globals.TLClient.ReqQryAccountCashopOperationTotal();
@@ -67,12 +67,12 @@ namespace FutsMoniter
             Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "CancelAccountCashOperation", this.OnAccountCashOperation);
             Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "RejectAccountCashOperation", this.OnAccountCashOperation);
 
-            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "NotifyCashOperation", this.OnNotifyCashOperation);
+            Globals.LogicEvent.UnRegisterNotifyCallback("MgrExchServer", "NotifyCashOperation", this.OnNotifyCashOperation);
 
             
         }
 
-        void OnQryAgentCashOperationTotal(string jsonstr)
+        void OnQryAgentCashOperationTotal(string jsonstr, bool islast)
         {
             //JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
             //int code = int.Parse(jd["Code"].ToString());
@@ -91,7 +91,7 @@ namespace FutsMoniter
             }
         }
 
-        void OnQryAccountCashOperationTotal(string jsonstr)
+        void OnQryAccountCashOperationTotal(string jsonstr, bool islast)
         {
             //JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
             //int code = int.Parse(jd["Code"].ToString());
@@ -132,7 +132,7 @@ namespace FutsMoniter
             }
         }
 
-        void OnAccountCashOperation(string jsonstr)
+        void OnAccountCashOperation(string jsonstr, bool islast)
         {
             //JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
             //int code = int.Parse(jd["Code"].ToString());

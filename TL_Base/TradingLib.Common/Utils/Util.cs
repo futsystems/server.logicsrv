@@ -388,6 +388,17 @@ namespace TradingLib.Common
         }
 
 
+        /// <summary>
+        /// 通过枚举字符串返回枚举
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="enumstr"></param>
+        /// <returns></returns>
+        public static T ParseEnum<T>(string enumstr)
+        {
+            return (T)Enum.Parse(typeof(T), enumstr);
+        }
+
 
         /// <summary>
         /// 用于记录当前服务器版本，客户端版本不能小于服务端版本，如果客户端版本小于服务端版本，则表明服务端有更新，需要更新客户端API

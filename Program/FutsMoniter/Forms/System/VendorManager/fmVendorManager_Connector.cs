@@ -32,7 +32,7 @@ namespace FutsMoniter
         }
 
         bool _gotconnector = false;
-        void OnQryConnectorConfig(string jsonstr)
+        void OnQryConnectorConfig(string jsonstr, bool islast)
         {
             ConnectorConfig[] objs =  MoniterUtils.ParseJsonResponse<ConnectorConfig[]>(jsonstr);
             if (objs != null)
@@ -54,7 +54,7 @@ namespace FutsMoniter
         }
 
         bool _gotstatus = false;
-        void OnQryConnectorStatus(string jsonstr)
+        void OnQryConnectorStatus(string jsonstr, bool islast)
         {
             ConnectorStatus[] objs = MoniterUtils.ParseJsonResponse<ConnectorStatus[]>(jsonstr);
             if (objs !=null)

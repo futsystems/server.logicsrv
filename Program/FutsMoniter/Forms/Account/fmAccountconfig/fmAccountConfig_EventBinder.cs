@@ -26,7 +26,10 @@ namespace FutsMoniter
             Globals.LogicEvent.RegisterCallback("MgrExchServer", "QryExStrategyTemplate", this.OnQryExStrategyTemplate);
 
 
-
+            Globals.LogicEvent.RegisterCallback("RiskCentre", "QryRuleItem", this.OnRuleItem);
+            Globals.LogicEvent.RegisterCallback("RiskCentre", "UpdateRuleItem", this.OnRuleItemUpdate);
+            Globals.LogicEvent.RegisterCallback("RiskCentre", "DelRuleItem", this.OnRuleItemDel);
+           
 
             if (!Globals.Domain.Super)
             {
@@ -42,7 +45,7 @@ namespace FutsMoniter
             UpdateAccountSetting();
         }
 
-        void OnQryCommissionTemplate(string json)
+        void OnQryCommissionTemplate(string json,bool islast)
         {
             CommissionTemplateSetting[] list = MoniterUtils.ParseJsonResponse<CommissionTemplateSetting[]>(json);
             if (list != null)
@@ -52,7 +55,7 @@ namespace FutsMoniter
             }
         }
 
-        void OnQryMarginTemplate(string json)
+        void OnQryMarginTemplate(string json,bool islast)
         {
             MarginTemplateSetting[] list = MoniterUtils.ParseJsonResponse<MarginTemplateSetting[]>(json);
             if (list != null)
@@ -62,7 +65,7 @@ namespace FutsMoniter
             }
         }
 
-        void OnQryExStrategyTemplate(string json)
+        void OnQryExStrategyTemplate(string json, bool islast)
         {
             ExStrategyTemplateSetting[] list = MoniterUtils.ParseJsonResponse<ExStrategyTemplateSetting[]>(json);
             if (list != null)
@@ -150,6 +153,10 @@ namespace FutsMoniter
 
             Globals.LogicEvent.GotAccountChangedEvent -= new Action<AccountLite>(OnAccountChanged);//帐户更新
 
+
+            Globals.LogicEvent.UnRegisterCallback("RiskCentre", "QryRuleItem", this.OnRuleItem);
+            Globals.LogicEvent.UnRegisterCallback("RiskCentre", "UpdateRuleItem", this.OnRuleItemUpdate);
+            Globals.LogicEvent.UnRegisterCallback("RiskCentre", "DelRuleItem", this.OnRuleItemDel);
         }
         
     }

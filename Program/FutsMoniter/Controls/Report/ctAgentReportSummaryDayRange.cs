@@ -45,7 +45,7 @@ namespace FutsMoniter
             BindToTable();
         }
 
-        public void OnTotalReport(string jsonstr)
+        public void OnTotalReport(string jsonstr, bool islast)
         {
             //JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
             //int code = int.Parse(jd["Code"].ToString());

@@ -258,26 +258,26 @@ namespace TradingLib.Core
                             SrvOnMGRUpdateSymbol(packet as MGRUpdateSymbolRequest, session, manager);
                             break;
                         }
-                    case MessageTypes.MGRQRYRULECLASS://请求查询风控规则列表
-                        {
-                            SrvOnMGRQryRuleSet(packet as MGRQryRuleSetRequest, session, manager);
-                            break;
-                        }
-                    case MessageTypes.MGRUPDATERULEITEM://请求更新风控规则
-                        {
-                            SrvOnMGRUpdateRule(packet as MGRUpdateRuleRequest, session, manager);
-                            break;
-                        }
-                    case MessageTypes.MGRQRYRULEITEM://请求查询帐户风控项目列表
-                        {
-                            SrvOnMGRQryRuleItem(packet as MGRQryRuleItemRequest, session, manager);
-                            break;
-                        }
-                    case MessageTypes.MGRDELRULEITEM://请求删除风控规则
-                        {
-                            SrvOnMGRDelRuleItem(packet as MGRDelRuleItemRequest, session, manager);
-                            break;
-                        }
+                    //case MessageTypes.MGRQRYRULECLASS://请求查询风控规则列表
+                    //    {
+                    //        SrvOnMGRQryRuleSet(packet as MGRQryRuleSetRequest, session, manager);
+                    //        break;
+                    //    }
+                    //case MessageTypes.MGRUPDATERULEITEM://请求更新风控规则
+                    //    {
+                    //        SrvOnMGRUpdateRule(packet as MGRUpdateRuleRequest, session, manager);
+                    //        break;
+                    //    }
+                    //case MessageTypes.MGRQRYRULEITEM://请求查询帐户风控项目列表
+                    //    {
+                    //        SrvOnMGRQryRuleItem(packet as MGRQryRuleItemRequest, session, manager);
+                    //        break;
+                    //    }
+                    //case MessageTypes.MGRDELRULEITEM://请求删除风控规则
+                    //    {
+                    //        SrvOnMGRDelRuleItem(packet as MGRDelRuleItemRequest, session, manager);
+                    //        break;
+                    //    }
                     case MessageTypes.MGRQRYORDER://请求查询历史委托
                         {
                             SrvOnMGRQryOrder(packet as MGRQryOrderRequest, session, manager);

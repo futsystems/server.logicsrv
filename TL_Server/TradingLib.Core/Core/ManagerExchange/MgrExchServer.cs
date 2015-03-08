@@ -20,14 +20,14 @@ namespace TradingLib.Core
 
         MsgExchServer exchsrv;
         ClearCentre clearcentre;
-        RiskCentre riskcentre;
+        //RiskCentre riskcentre;
         ConfigDB _cfgdb;
 
         ConcurrentDictionary<string, CustInfoEx> customerExInfoMap = null;
 
 
 
-        public MgrExchServer(MsgExchServer srv, ClearCentre c, RiskCentre r)
+        public MgrExchServer(MsgExchServer srv, ClearCentre c)
             : base(MgrExchServer.CoreName)
         {
             //1.加载配置文件
@@ -59,7 +59,7 @@ namespace TradingLib.Core
 
             exchsrv = srv;
             clearcentre = c;
-            riskcentre = r;
+            //riskcentre = r;
 
             customerExInfoMap = new ConcurrentDictionary<string, CustInfoEx>();
 

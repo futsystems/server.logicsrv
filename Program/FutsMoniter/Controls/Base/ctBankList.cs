@@ -44,7 +44,7 @@ namespace FutsMoniter
         }
 
 
-        void OnQryBank(string jsonstr)
+        void OnQryBank(string jsonstr, bool islast)
         {
 
             //JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);

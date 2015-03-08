@@ -92,8 +92,8 @@ namespace TradingLib.Common
         /// </summary>
         public void OnFinishLoad()
         {
-            Globals.LogicEvent.RegisterCallback("MgrExchServer", "NotifyManagerUpdate", OnManagerNotify);
-            Globals.LogicEvent.RegisterCallback("ConnectorManager", "NotifyRouterGroup", OnRouterGroupNotify);
+            Globals.LogicEvent.RegisterNotifyCallback("MgrExchServer", "NotifyManagerUpdate", OnManagerNotify);
+            Globals.LogicEvent.RegisterNotifyCallback("ConnectorManager", "NotifyRouterGroup", OnRouterGroupNotify);
 
             foreach (SecurityFamilyImpl target in securitymap.Values)
             {

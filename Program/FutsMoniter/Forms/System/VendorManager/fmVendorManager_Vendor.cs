@@ -34,7 +34,7 @@ namespace FutsMoniter
 
 
         bool _gotvendor = false;
-        void OnQryVendor(string jsonstr)
+        void OnQryVendor(string jsonstr, bool islast)
         {
             VendorSetting[] objs = MoniterUtils.ParseJsonResponse<VendorSetting[]>(jsonstr);
             if (objs != null)

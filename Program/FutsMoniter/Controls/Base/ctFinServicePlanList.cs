@@ -48,7 +48,7 @@ namespace FutsMoniter
 
 
         //响应服务端回报
-        void OnQryServicePlan(string jsonstr)
+        void OnQryServicePlan(string jsonstr, bool islast)
         {
             if (_gotdata) return;
             //JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
