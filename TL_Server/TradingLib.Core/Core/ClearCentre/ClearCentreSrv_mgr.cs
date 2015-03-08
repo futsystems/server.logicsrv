@@ -246,7 +246,7 @@ namespace TradingLib.Core
             IAccount acct = TLCtxHelper.CmdAccount[account];
             if (acct != null)
             {
-                this.ChangeAccountPass(account, newpass);
+                this.UpdateAccountPass(account, newpass);
                 session.OperationSuccess("ÐÞ¸ÄÃÜÂë³É¹¦");
             }
             else

@@ -147,9 +147,9 @@ namespace TradingLib.Core
             //debug("检查异常状态的委托....", QSEnumDebugLevel.INFO);
             DateTime now = DateTime.Now;
             //遍历所有需要检查的委托 停留在placed 或者 submited unknown
-            foreach (Order o in _clearcentre.TotalOrders.Where(o => statuscheck(o, now)))
+            foreach (Order o in TLCtxHelper.CmdTotalInfo.TotalOrders.Where(o => statuscheck(o, now)))
             {
-                IAccount acc = _clearcentre[o.Account];
+                IAccount acc = TLCtxHelper.CmdAccount[o.Account];
                 if (acc != null)
                 {
                     AccountBase account = acc as AccountBase;

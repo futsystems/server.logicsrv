@@ -21,7 +21,7 @@ namespace TradingLib.Core
         /// <param name="acc"></param>
         /// <param name="pass"></param>
         /// <returns></returns>
-        public void ChangeAccountPass(string account, string pass)
+        public void UpdateAccountPass(string account, string pass)
         {
             if (!HaveAccount(account)) return;
             ORM.MAccount.UpdateAccountPass(account, pass);

@@ -11,7 +11,7 @@ namespace TradingLib.Common
 
         #region 【IGotTradingInfo】昨日持仓 委托 成交 取消 Tick数据处理
 
-        internal void GotPosition(PositionDetail p)
+        public void GotPosition(PositionDetail p)
         {
             try
             {
@@ -41,7 +41,7 @@ namespace TradingLib.Common
         /// 这里需要判断如果委托已经被记录过则继续响应委托事件 用于更新委托的状态
         /// </summary>
         /// <param name="error"></param>
-        internal void GotErrorOrder(Order o,RspInfo e)
+        public void GotOrderError(Order o, RspInfo e)
         {
             try
             {
@@ -65,7 +65,7 @@ namespace TradingLib.Common
         /// 清算中心获得委托数据
         /// </summary>
         /// <param name="o"></param>
-        internal void GotOrder(Order o)
+        public void GotOrder(Order o)
         {
             try
             {
@@ -99,7 +99,7 @@ namespace TradingLib.Common
         /// 清算中心获得取消
         /// </summary>
         /// <param name="oid"></param>
-        internal void GotCancel(long oid)
+        public void GotCancel(long oid)
         {
             try
             {
@@ -123,7 +123,7 @@ namespace TradingLib.Common
         /// 清算中心获得成交
         /// </summary>
         /// <param name="f"></param>
-        internal void GotFill(Trade f)
+        public void GotFill(Trade f)
         {
             try
             {
@@ -197,7 +197,7 @@ namespace TradingLib.Common
         }
 
         //得到新的Tick数据
-        internal void GotTick(Tick k)
+        public void GotTick(Tick k)
         {
             try
             {

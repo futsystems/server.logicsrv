@@ -209,7 +209,7 @@ namespace TradingLib.Core
             debug("QrySettleInfo :" + request.ToString(), QSEnumDebugLevel.INFO);
             Settlement settlement = null;
             //如果查询日期为0 则查询上个结算日
-            IAccount account = _clearcentre[request.Account];
+            IAccount account = TLCtxHelper.CmdAccount[request.Account];
             //判断account是否为空
             int settleday = request.Tradingday;
             if (settleday == 0)
@@ -244,7 +244,7 @@ namespace TradingLib.Core
         {
             debug("QrySettleInfoConfirm :" + request.ToString(), QSEnumDebugLevel.INFO);
             RspQrySettleInfoConfirmResponse response = ResponseTemplate<RspQrySettleInfoConfirmResponse>.SrvSendRspResponse(request);
-            IAccount account = _clearcentre[request.Account];
+            IAccount account = TLCtxHelper.CmdAccount[request.Account];
             debug("confirm stamp:" + account.SettlementConfirmTimeStamp.ToString(), QSEnumDebugLevel.INFO);
 
            
@@ -274,7 +274,7 @@ namespace TradingLib.Core
             //获得结算时间
             long timestamp = Util.ToTLDateTime(TLCtxHelper.Ctx.SettleCentre.CurrentTradingday, Util.ToTLTime());
             ORM.MSettlement.ConfirmeSettle(request.Account,TLCtxHelper.Ctx.SettleCentre.CurrentTradingday, timestamp);
-            IAccount account = _clearcentre[request.Account];
+            IAccount account = TLCtxHelper.CmdAccount[request.Account];
             account.SettlementConfirmTimeStamp = timestamp;
 
             //发送结算确认
@@ -323,7 +323,7 @@ namespace TradingLib.Core
             debug("ReqChangePassword:" + request.ToString(), QSEnumDebugLevel.INFO);
 
             RspReqChangePasswordResponse response = ResponseTemplate<RspReqChangePasswordResponse>.SrvSendRspResponse(request);
-            bool valid = _clearcentre.VaildAccount(request.Account,request.OldPassword);
+            bool valid = TLCtxHelper.CmdAccount.VaildAccount(request.Account, request.OldPassword);
             if(!valid)
             {
                 response.RspInfo.Fill("OLD_PASS_ERROR");
@@ -332,7 +332,7 @@ namespace TradingLib.Core
             }
 
             //修改密码返回
-            _clearcentre.ChangeAccountPass(request.Account, request.NewPassword);
+            TLCtxHelper.CmdAccount.UpdateAccountPass(request.Account, request.NewPassword);
             CachePacket(response);
         }
 
@@ -345,7 +345,7 @@ namespace TradingLib.Core
             debug("QryNoticeRequest:" + request.ToString(), QSEnumDebugLevel.INFO);
             RspQryNoticeResponse response = ResponseTemplate<RspQryNoticeResponse>.SrvSendRspResponse(request);
 
-            IAccount account = _clearcentre[request.Account];
+            IAccount account = TLCtxHelper.CmdAccount[request.Account];
             if (account != null)
             {
                 if (account.Category == QSEnumAccountCategory.SIMULATION)
@@ -444,7 +444,7 @@ namespace TradingLib.Core
         void SrvOnRegisterBankAccount(QryRegisterBankAccountRequest request)
         {
             debug("QryRegisterBankAccount:" + request.ToString(), QSEnumDebugLevel.INFO);
-            IAccount account = _clearcentre[request.TradingAccount];
+            IAccount account = TLCtxHelper.CmdAccount[request.TradingAccount];
             if (account != null)
             {
                 RspQryRegisterBankAccountResponse response = ResponseTemplate<RspQryRegisterBankAccountResponse>.SrvSendRspResponse(request);
@@ -475,7 +475,7 @@ namespace TradingLib.Core
         {
             debug("QryTransferSerialRequest:" + request.ToString(), QSEnumDebugLevel.INFO);
             IList<CashTransaction> cts = ORM.MAccount.SelectHistCashTransaction(request.TradingAccount, 0, 0);
-            IAccount account = _clearcentre[request.TradingAccount];
+            IAccount account = TLCtxHelper.CmdAccount[request.TradingAccount];
             int totalnum = cts.Count;
             debug("total transfer num:" + totalnum.ToString(), QSEnumDebugLevel.INFO);
             if (totalnum > 0)

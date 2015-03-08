@@ -36,17 +36,17 @@ namespace TradingLib.Core
         }
 
 
-        /// <summary>
-        /// 检查委托对应的交易帐号是否存在并有效
-        /// </summary>
-        /// <param name="o"></param>
-        /// <returns></returns>
-        public bool TrckerOrderAccount(Order o, out IAccount account)
-        {
-            account = TLCtxHelper.CmdAccount[o.Account];
-            if (account == null) return false;
-            return true;
-        }
+        ///// <summary>
+        ///// 检查委托对应的交易帐号是否存在并有效
+        ///// </summary>
+        ///// <param name="o"></param>
+        ///// <returns></returns>
+        //public bool TrckerOrderAccount(Order o, out IAccount account)
+        //{
+        //    account = TLCtxHelper.CmdAccount[o.Account];
+        //    if (account == null) return false;
+        //    return true;
+        //}
         #endregion
         
     }

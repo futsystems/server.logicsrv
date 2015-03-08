@@ -33,6 +33,22 @@ namespace TradingLib.API
         /// </summary>
         /// <param name="id"></param>
         void ActiveAccount(string id);
+
+        /// <summary>
+        /// 更新交易账户密码
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="newpass"></param>
+        void UpdateAccountPass(string account, string newpass);
+
+
+        /// <summary>
+        /// 验证交易帐户
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="pass"></param>
+        /// <returns></returns>
+        bool VaildAccount(string account, string pass);
     }
 
 }

@@ -209,6 +209,13 @@ namespace TradingLib.Common
             }
         }
 
+        internal static IGotTradingRecord CmdGotTradingRecord
+        {
+            get
+            {
+                return defaultInstance.ctx.ClearCentre as IGotTradingRecord;
+            }
+        }
         /// <summary>
         /// 认证与出入金请求
         /// </summary>

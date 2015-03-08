@@ -47,6 +47,7 @@
     <Compile Include="Contrib\EnumContribCommandHandleType.cs" />
     <Compile Include="Contrib\IPlugin.cs" />
     <Compile Include="Core\ClearCentre\IAuthCashOperation.cs" />
+    <Compile Include="Core\ClearCentre\IGotTradingRecord.cs" />
     <Compile Include="Core\IRouterManager.cs" />
     <Compile Include="Account\IGeneralCheck.cs" />
     <Compile Include="Contrib\EnumCommandSource.cs" />

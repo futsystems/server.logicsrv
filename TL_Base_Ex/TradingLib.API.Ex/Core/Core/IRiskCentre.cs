@@ -7,13 +7,6 @@ namespace TradingLib.API
 {
     public interface IRiskCentre
     {
-        
-        /// <summary>
-        /// 执行某个帐户的帐户风控规则检查,比如损失超过多少执行强平等
-        /// </summary>
-        /// <param name="a"></param>
-        void CheckAccount(IAccount a);
-
         /// <summary>
         /// 时间检查标志
         /// </summary>
@@ -49,11 +42,41 @@ namespace TradingLib.API
         void CancelOrder(string account, string symbol, QSEnumOrderSource source, string cancelreason = "系统强平");
 
         /// <summary>
-        /// 撤掉帐户下的某个为头
+        /// 撤掉帐户下的某个委托
         /// </summary>
         /// <param name="order"></param>
         /// <param name="source"></param>
         /// <param name="cancelreason"></param>
         void CancelOrder(Order order, QSEnumOrderSource source, string cancelreason = "系统强平");
+
+
+        /// <summary>
+        /// 执行某个帐户的帐户风控规则检查,比如损失超过多少执行强平等
+        /// </summary>
+        /// <param name="a"></param>
+        void CheckAccount(IAccount a);
+
+
+        /// <summary>
+        /// 风控中心一段委托检查
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="o"></param>
+        /// <param name="needlog"></param>
+        /// <param name="errortitle"></param>
+        /// <param name="inter"></param>
+        /// <returns></returns>
+        bool CheckOrderStep1(ref Order o, IAccount acc, out bool needlog, out string errortitle, bool inter);
+
+        /// <summary>
+        /// 风控中心二段委托检查
+        /// </summary>
+        /// <param name="?"></param>
+        /// <param name="?"></param>
+        /// <param name="?"></param>
+        /// <param name="?"></param>
+        /// <returns></returns>
+        bool CheckOrderStep2(ref Order o, IAccount acc, out string msg, bool inter);
+
     }
 }

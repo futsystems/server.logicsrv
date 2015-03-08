@@ -13,7 +13,7 @@ namespace TradingLib.API
     /// 成交侧交易信息
     /// 帐户认证与出入金操作
     /// </summary>
-    public interface IClearCentreSrv  :IAccountOperation,ITotalAccountInfo, IBrokerTradingInfo, IAuthCashOperation
+    public interface IClearCentreSrv : IAccountOperation, ITotalAccountInfo, IBrokerTradingInfo, IAuthCashOperation, IGotTradingRecord
     {
         /// <summary>
         /// 请求获得某个symbol的Tick数据

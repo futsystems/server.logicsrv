@@ -41,8 +41,7 @@ namespace TradingLib.ServiceManager
         {
             debug("2.初始化ClearCentre");
             _clearCentre = new ClearCentre();
-            //将清算中心传递给tradingserver
-            _messageExchagne.BindClearCentre(_clearCentre);
+
         }
 
         private void DestoryClearCentre()
@@ -56,14 +55,10 @@ namespace TradingLib.ServiceManager
         {
             debug("3.初始化RiskCentre");
             _riskCentre = new RiskCentre();
-
-            //绑定风控中心
-            _messageExchagne.BindRiskCentre(_riskCentre);
         }
 
         private void DestoryRiskCentre()
         {
-
             _riskCentre.Dispose();
         }
 

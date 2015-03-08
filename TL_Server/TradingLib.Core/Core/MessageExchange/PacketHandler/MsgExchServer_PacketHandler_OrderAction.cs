@@ -19,12 +19,14 @@ namespace TradingLib.Core
         {
             OrderAction action = request.OrderAction;
             Order o = null;
-            IAccount account = _clearcentre[request.OrderAction.Account];
+
+            IAccount account = TLCtxHelper.CmdAccount[request.OrderAction.Account];
 
             //1.通过交易系统分配的全局委托ID进行识别委托
             if (action.OrderID != 0)
             {
-                o = _clearcentre.SentOrder(action.OrderID);
+
+                o = TLCtxHelper.CmdTotalInfo.SentOrder(action.OrderID);
             }
             else//通过OrderRef FrontID SessionID 或者 OrderSysID进行查找委托
             {

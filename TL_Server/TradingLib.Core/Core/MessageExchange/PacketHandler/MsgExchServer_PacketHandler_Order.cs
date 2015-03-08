@@ -91,8 +91,8 @@ namespace TradingLib.Core
                 //给委托绑定唯一的委托编号
                 AssignOrderID(ref o);
 
-                IAccount acc = null;
-                if (!_riskcentre.TrckerOrderAccount(o, out acc))
+                IAccount acc = TLCtxHelper.CmdAccount[o.Account];
+                if (acc == null)
                 {
                     o.Status = QSEnumOrderStatus.Reject;
                     ReplyErrorOrder(o, RspInfoEx.Fill("TRADING_ACCOUNT_NOT_FOUND"), false);
@@ -105,8 +105,10 @@ namespace TradingLib.Core
                     debug("Got Order[Check1]:" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
                     string errortitle = string.Empty;
                     bool needlog = true;
-                    if (!_riskcentre.CheckOrderStep1(ref o, acc, out needlog,out errortitle, inter))
+
+                    if (!TLCtxHelper.CmdRiskCentre.CheckOrderStep1(ref o, acc, out needlog, out errortitle, inter))
                     {
+                        
                         o.Status = QSEnumOrderStatus.Reject;
                         RspInfo info = RspInfoEx.Fill(errortitle);
 
@@ -127,7 +129,7 @@ namespace TradingLib.Core
                     if (riskcheck)
                     {
                         debug("Got Order[Check2]:" + o.id.ToString(), QSEnumDebugLevel.INFO);
-                        if (!_riskcentre.CheckOrderStep2(ref o, acc,out msg, inter))
+                        if (!TLCtxHelper.CmdRiskCentre.CheckOrderStep2(ref o, acc, out msg, inter))
                         {
                             o.Status = QSEnumOrderStatus.Reject;
                             RspInfo info = RspInfoEx.Fill("RISKCENTRE_CHECK_ERROR");

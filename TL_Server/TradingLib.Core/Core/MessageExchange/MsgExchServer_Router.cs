@@ -83,7 +83,7 @@ namespace TradingLib.Core
             //1.先向客户端广播Tick行情 
             tl.newTick(k);
             //2.清算中心响应Tick事件
-            _clearcentre.GotTick(k);
+            TLCtxHelper.CmdGotTradingRecord.GotTick(k);
             //2.对外触发Tick事件 用于被其他组件简体
             if (GotTickEvent != null)
                 GotTickEvent(k);
@@ -169,7 +169,7 @@ namespace TradingLib.Core
             //如果需要记录该委托错误 则需要调用清算中心的goterrororder进行处理
             if (needlog)
             {
-                _clearcentre.GotErrorOrder(order,info);
+                TLCtxHelper.CmdGotTradingRecord.GotOrderError(order, info);
             }
             //对外通知
             NotifyOrderError(order, info);
@@ -212,7 +212,7 @@ namespace TradingLib.Core
                     break;
             }
             //清算中心响应委托回报
-            _clearcentre.GotOrder(o);
+            TLCtxHelper.CmdGotTradingRecord.GotOrder(o);
 
             //if (o.Status == QSEnumOrderStatus.Canceled)
             //{
@@ -238,12 +238,13 @@ namespace TradingLib.Core
             AssignTradeID(ref t);
             //在BrokerRouter->GotFillEvent->ClearCentre.GotFill->adjustcommission->this.GotCommissionFill调用链 形成每笔成交手续费的计算 当计算完毕后 再向客户端进行发送
             //清算中心响应成交回报
-            _clearcentre.GotFill(t);//注这里的成交没有结算手续费,成交部分我们需要在结算中心结算结算完手续费后再向客户端发送
+
+            TLCtxHelper.CmdGotTradingRecord.GotFill(t);//注这里的成交没有结算手续费,成交部分我们需要在结算中心结算结算完手续费后再向客户端发送
             
             //对外通知
             NotifyFill(t);
-            
-            IAccount account = _clearcentre[t.Account];
+
+            IAccount account = TLCtxHelper.CmdAccount[t.Account];
             if (account != null)
             {
                 //有新的成交数据后,系统自动发送对应的持仓信息
@@ -263,7 +264,7 @@ namespace TradingLib.Core
         void _br_GotCancelEvent(long oid)
         {
             //清算中心响应取消回报
-            _clearcentre.GotCancel(oid);
+            TLCtxHelper.CmdGotTradingRecord.GotCancel(oid);
             //对外触发取消事件
             //if (GotCancelEvent != null)
             //    GotCancelEvent(oid);

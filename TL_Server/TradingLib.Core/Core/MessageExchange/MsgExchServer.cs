@@ -122,24 +122,24 @@ namespace TradingLib.Core
         
 
 
-        ClearCentre _clearcentre;
-        public void BindClearCentre(ClearCentre c)
-        {
-            _clearcentre = c;
-        }
+        //ClearCentre _clearcentre;
+        //public void BindClearCentre(ClearCentre c)
+        //{
+        //    //_clearcentre = c;
+        //}
 
-        SettleCentre _settlecentre;
+        //SettleCentre _settlecentre;
         /// <summary>
         /// 结算中心
         /// </summary>
-        public SettleCentre SettleCentre { get { return _settlecentre; } set { _settlecentre = value; } }
+        //public SettleCentre SettleCentre { get { return _settlecentre; } set { _settlecentre = value; } }
 
 
-        RiskCentre _riskcentre;
-        public void BindRiskCentre(RiskCentre r)
-        {
-            _riskcentre = r;
-        }
+        //RiskCentre _riskcentre;
+        //public void BindRiskCentre(RiskCentre r)
+        //{
+        //    //_riskcentre = r;
+        //}
 
 
         //QSEnumServerMode _srvmode = QSEnumServerMode.StandAlone;

@@ -77,7 +77,7 @@ namespace TradingLib.Core
             try
             {
                 debug("Got CancelOrder :" + val, QSEnumDebugLevel.INFO);
-                Order o = _clearcentre.SentOrder(val);
+                Order o = TLCtxHelper.CmdTotalInfo.SentOrder(val);
                 //如果委托处于pending状态
                 if (o.IsPending())
                 {
@@ -150,11 +150,11 @@ namespace TradingLib.Core
                             bool servicevalid = true;
                             if (request.ServiceType == 0)
                             {
-                                account = _clearcentre.QryAccount(response.UserID, QSEnumAccountCategory.SIMULATION);
+                                //account = _clearcentre.QryAccount(response.UserID, QSEnumAccountCategory.SIMULATION);
                             }
                             else if (request.ServiceType == 1)
                             {
-                                account = _clearcentre.QryAccount(response.UserID, QSEnumAccountCategory.REAL);
+                                //account = _clearcentre.QryAccount(response.UserID, QSEnumAccountCategory.REAL);
                             }
                             else
                             {
@@ -184,14 +184,14 @@ namespace TradingLib.Core
                 {
                     debug("系统通过清算中心认证,LoginID:" + request.LoginID + " Password:" + request.Passwd, QSEnumDebugLevel.INFO);
                     //1.检查帐户是否存在
-                    
-                    login = _clearcentre.VaildAccount(request.LoginID, request.Passwd);
+
+                    login = TLCtxHelper.CmdAccount.VaildAccount(request.LoginID, request.Passwd);
                     response.Authorized = login;
                     if (login)
                     {
                         response.LoginID = request.LoginID;
                         response.Account = request.LoginID;
-                        account = _clearcentre[request.LoginID];
+                        account = TLCtxHelper.CmdAccount[request.LoginID];
                         response.AccountType = account.Category;
 
 
@@ -204,23 +204,23 @@ namespace TradingLib.Core
                 //游客登入
                 else if (request.LoginType == 2)
                 {
-                    string MAC = request.MAC;
-                    string accid = _clearcentre.ValidAccountViaMAC(MAC);
-                    if (!string.IsNullOrEmpty(accid))
-                    {
-                        debug("MAC认证通过,MAC:" + MAC + " account:" + account);
-                        response.Authorized = true;
-                        response.LoginID = MAC;
-                        response.Account = accid;
-                        account = _clearcentre[accid];
-                        response.AccountType = account.Category;
+                    //string MAC = request.MAC;
+                    //string accid = _clearcentre.ValidAccountViaMAC(MAC);
+                    //if (!string.IsNullOrEmpty(accid))
+                    //{
+                    //    debug("MAC认证通过,MAC:" + MAC + " account:" + account);
+                    //    response.Authorized = true;
+                    //    response.LoginID = MAC;
+                    //    response.Account = accid;
+                    //    account = TLCtxHelper.CmdAccount[accid];
+                    //    response.AccountType = account.Category;
 
-                    }
-                    else
-                    {
-                        response.Authorized = false;
-                        response.RspInfo.Fill("INVALID_LOGIN");
-                    }
+                    //}
+                    //else
+                    //{
+                    //    response.Authorized = false;
+                    //    response.RspInfo.Fill("INVALID_LOGIN");
+                    //}
                 
                 }//未支持登入方式
                 else
