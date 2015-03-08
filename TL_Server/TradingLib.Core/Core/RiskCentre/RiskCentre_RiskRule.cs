@@ -148,7 +148,7 @@ namespace TradingLib.Core
         /// <param name="item"></param>
         public void UpdateRule(RuleItem item)
         {
-            IAccount account = _clearcentre[item.Account];
+            IAccount account = TLCtxHelper.CmdAccount[item.Account];
             //判断帐户是否存在
             if (account != null)
             {
@@ -186,7 +186,7 @@ namespace TradingLib.Core
         /// <param name="item"></param>
         public void DeleteRiskRule(RuleItem item)
         {
-            IAccount account = _clearcentre[item.Account];
+            IAccount account = TLCtxHelper.CmdAccount[item.Account];
             if (account != null)
             {
                 if (item.RuleType == QSEnumRuleType.OrderRule)
@@ -210,7 +210,7 @@ namespace TradingLib.Core
         /// <param name="account"></param>
         public void ResetRuleSet(string account)
         {
-            IAccount acc = _clearcentre[account];
+            IAccount acc = TLCtxHelper.CmdAccount[account];
             if (acc != null)
             {
                 acc.ClearAccountCheck();

@@ -200,6 +200,15 @@ namespace TradingLib.Common
             }
         }
 
+
+        public static ITotalAccountInfo CmdTotalInfo
+        {
+            get
+            {
+                return defaultInstance.ctx.ClearCentre as ITotalAccountInfo;
+            }
+        }
+
         /// <summary>
         /// 认证与出入金请求
         /// </summary>

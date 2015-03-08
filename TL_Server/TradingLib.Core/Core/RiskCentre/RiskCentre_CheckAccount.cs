@@ -43,7 +43,7 @@ namespace TradingLib.Core
         /// <returns></returns>
         public bool TrckerOrderAccount(Order o, out IAccount account)
         {
-            account = _clearcentre[o.Account];
+            account = TLCtxHelper.CmdAccount[o.Account];
             if (account == null) return false;
             return true;
         }

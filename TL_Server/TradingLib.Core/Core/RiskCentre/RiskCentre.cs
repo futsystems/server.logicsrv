@@ -22,7 +22,7 @@ namespace TradingLib.Core
         /// <summary>
         /// 清算中心
         /// </summary>
-        ClearCentre _clearcentre = null;
+        //ClearCentre _clearcentre = null;
         public string CoreId { get { return CoreName; } }
 
         ConfigDB _cfgdb;
@@ -34,9 +34,9 @@ namespace TradingLib.Core
         string commentNoPositionForFlat = "无可平持仓";
         string commentOverFlatPositionSize = "可平持仓数量不足";
 
-        public RiskCentre(ClearCentre clearcentre):base(CoreName)
+        public RiskCentre():base(CoreName)
         {
-            _clearcentre = clearcentre;
+            //_clearcentre = clearcentre;
 
             //1.加载配置文件
             _cfgdb = new ConfigDB(RiskCentre.CoreName);

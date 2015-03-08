@@ -399,7 +399,7 @@ namespace TradingLib.Core
             }
             
             //为该帐户生成
-            IAccount account = _clearcentre[accid];
+            IAccount account = TLCtxHelper.CmdAccount[accid];
             if (account != null)
             {
                 List<long> olist = account.GetPendingOrders().Select(o => o.id).ToList();
@@ -461,7 +461,7 @@ namespace TradingLib.Core
         /// <param name="cancelreason"></param>
         public void CancelOrder(string accid,QSEnumOrderSource ordersouce, string cancelreason = "系统强平")
         {
-            IAccount account = _clearcentre[accid];
+            IAccount account = TLCtxHelper.CmdAccount[accid];
             if (account != null)
             {
                 List<long> olist = account.GetPendingOrders().Select(o => o.id).ToList();
@@ -480,7 +480,7 @@ namespace TradingLib.Core
         /// <param name="cancelreason"></param>
         public void CancelOrder(string accid, string symbol, QSEnumOrderSource ordersource, string cancelreason = "系统强平")
         {
-            IAccount account = _clearcentre[accid];
+            IAccount account = TLCtxHelper.CmdAccount[accid];
             if (account != null)
             {
                 List<long> olist = account.GetPendingOrders(symbol).Select(o => o.id).ToList();
@@ -500,7 +500,7 @@ namespace TradingLib.Core
         /// <returns></returns>
         RiskTaskSet GenFlatPostionSet(Position pos, QSEnumOrderSource ordersource, string closereason)
         {
-            IAccount account = _clearcentre[pos.Account];
+            IAccount account = TLCtxHelper.CmdAccount[pos.Account];
             if (account == null)
                 return null;
             //获得对应持仓上的待成交委托
@@ -519,7 +519,7 @@ namespace TradingLib.Core
             Position pos = set.Position;
             bool side = pos.isLong ? true : false;
             //绑定合约对象
-            IAccount account = _clearcentre[pos.Account];
+            IAccount account = TLCtxHelper.CmdAccount[pos.Account];
 
             if (pos.oSymbol.SecurityFamily.Exchange.EXCode.Equals("SHFE"))
             {
