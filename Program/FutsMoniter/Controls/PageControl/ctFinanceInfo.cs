@@ -48,8 +48,8 @@ namespace FutsMoniter
 
         public void OnInit()
         {
-            Globals.LogicEvent.RegisterCallback("MgrExchServer", "QryAccountFinInfo", this.OnQryAccountInfo);
-            Globals.LogicEvent.RegisterNotifyCallback("MgrExchServer", "NotifyAccountFinInfo", this.OnNotifyAccountInfo);
+            Globals.LogicEvent.RegisterCallback("ClearCentre", "QryAccountFinInfo", this.OnQryAccountInfo);
+            Globals.LogicEvent.RegisterNotifyCallback("ClearCentre", "NotifyAccountFinInfo", this.OnNotifyAccountInfo);
             Globals.LogicEvent.GotAccountSelectedEvent += new Action<AccountLite>(OnAccountSelected);
         }
 
@@ -61,8 +61,8 @@ namespace FutsMoniter
 
         public void OnDisposed()
         {
-            Globals.LogicEvent.UnRegisterCallback("MgrExchServer", "QryAccountFinInfo", this.OnQryAccountInfo);
-            Globals.LogicEvent.UnRegisterNotifyCallback("MgrExchServer", "NotifyAccountFinInfo", this.OnNotifyAccountInfo);
+            Globals.LogicEvent.UnRegisterCallback("ClearCentre", "QryAccountFinInfo", this.OnQryAccountInfo);
+            Globals.LogicEvent.UnRegisterNotifyCallback("ClearCentre", "NotifyAccountFinInfo", this.OnNotifyAccountInfo);
             Globals.LogicEvent.GotAccountSelectedEvent -= new Action<AccountLite>(OnAccountSelected);
             //Globals.Debug("ctFinanceInfo disposed...");
          }

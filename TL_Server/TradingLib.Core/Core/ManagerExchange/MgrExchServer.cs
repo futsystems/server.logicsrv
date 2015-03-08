@@ -19,7 +19,7 @@ namespace TradingLib.Core
         TLServer_MgrExch tl;
 
         MsgExchServer exchsrv;
-        ClearCentre clearcentre;
+        //ClearCentre clearcentre;
         //RiskCentre riskcentre;
         ConfigDB _cfgdb;
 
@@ -58,7 +58,7 @@ namespace TradingLib.Core
             tl.ClientUnregistedEvent += new ClientInfoDelegate<MgrClientInfo>(tl_ClientUnregistedEvent);
 
             exchsrv = srv;
-            clearcentre = c;
+            //clearcentre = c;
             //riskcentre = r;
 
             customerExInfoMap = new ConcurrentDictionary<string, CustInfoEx>();

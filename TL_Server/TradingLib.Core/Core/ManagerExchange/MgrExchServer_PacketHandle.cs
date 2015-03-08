@@ -22,37 +22,7 @@ namespace TradingLib.Core
         }
 
 
-        #region ClearCentre
-        void SrvOnMGROpenClearCentre(MGRReqOpenClearCentreRequest request, ISession session, Manager manger)
-        {
-            try
-            {
-                debug(string.Format("管理员:{0} 请求开启清算中心:{1}", session.AuthorizedID, request.ToString()), QSEnumDebugLevel.INFO);
-                clearcentre.OpenClearCentre();
-                session.OperationSuccess("清算中心开启成功");
-            }
-            catch (FutsRspError ex)
-            {
-                session.OperationError(ex);
-            }
-            
-        }
-
-        void SrvOnMGRCloseClearCentre(MGRReqCloseClearCentreRequest request, ISession session, Manager manger)
-        {
-            try
-            {
-                debug(string.Format("管理员:{0} 请求关闭清算中心:{1}", session.AuthorizedID, request.ToString()), QSEnumDebugLevel.INFO);
-                clearcentre.CloseClearCentre();
-                session.OperationSuccess("清算中心关闭成功");
-            }
-            catch (FutsRspError ex)
-            {
-                session.OperationError(ex);
-            }
-
-        }
-        #endregion
+        
 
 
 
@@ -89,7 +59,7 @@ namespace TradingLib.Core
             RspMGROperationResponse response = ResponseTemplate<RspMGROperationResponse>.SrvSendRspResponse(request);
 
             Trade fill = request.TradeToSend;
-            IAccount account = clearcentre[fill.Account];
+            IAccount account = TLCtxHelper.CmdAccount[fill.Account];
             fill.oSymbol = account.GetSymbol(fill.Symbol);
 
             if (fill.oSymbol == null)
@@ -188,46 +158,46 @@ namespace TradingLib.Core
                     //        SrvOnMGRQryAccountInfo(packet as MGRQryAccountInfoRequest, session, manager);
                     //        break;
                     //    }
-                    case MessageTypes.MGRCASHOPERATION://出入金操作
-                        {
-                            SrvOnMGRCashOperation(packet as MGRCashOperationRequest, session, manager);
-                            break;
-                        }
-                    case MessageTypes.MGRUPDATEACCOUNTCATEGORY://更新帐户类别
-                        {
-                            SrvOnMGRUpdateAccountCategory(packet as MGRUpdateCategoryRequest, session, manager);
-                            break;
-                        }
-                    case MessageTypes.MGRUPDATEACCOUNTEXECUTE://更新帐户执行权限
-                        {
-                            SrvOnMGRUpdateAccountExecute(packet as MGRUpdateExecuteRequest, session, manager);
-                            break;
-                        }
-                    case MessageTypes.MGRUPDATEACCOUNTINTRADAY://更新日内交易权限
-                        {
-                            SrvOnMGRUpdateAccountIntraday(packet as MGRUpdateIntradayRequest, session, manager);
-                            break;
-                        }
-                    case MessageTypes.MGRUPDATEACCOUNTROUTETRANSFERTYPE://更新路由类别哦
-                        {
-                            SrvOnMGRUpdateRouteType(packet as MGRUpdateRouteTypeRequest, session, manager);
-                            break;
-                        }
-                    case MessageTypes.MGROPENCLEARCENTRE://请求开启清算中心
-                        {
-                            SrvOnMGROpenClearCentre(packet as MGRReqOpenClearCentreRequest, session, manager);
-                            break;
-                        }
-                    case MessageTypes.MGRCLOSECLEARCENTRE://请求关闭清算中心
-                        {
-                            SrvOnMGRCloseClearCentre(packet as MGRReqCloseClearCentreRequest, session, manager);
-                            break;
-                        }
-                    case MessageTypes.MGRADDACCOUNT://请求添加交易帐号
-                        {
-                            SrvOnMGRAddAccount(packet as MGRAddAccountRequest, session, manager);
-                            break;
-                        }
+                    //case MessageTypes.MGRCASHOPERATION://出入金操作
+                    //    {
+                    //        SrvOnMGRCashOperation(packet as MGRCashOperationRequest, session, manager);
+                    //        break;
+                    //    }
+                    //case MessageTypes.MGRUPDATEACCOUNTCATEGORY://更新帐户类别
+                    //    {
+                    //        SrvOnMGRUpdateAccountCategory(packet as MGRUpdateCategoryRequest, session, manager);
+                    //        break;
+                    //    }
+                    //case MessageTypes.MGRUPDATEACCOUNTEXECUTE://更新帐户执行权限
+                    //    {
+                    //        SrvOnMGRUpdateAccountExecute(packet as MGRUpdateExecuteRequest, session, manager);
+                    //        break;
+                    //    }
+                    //case MessageTypes.MGRUPDATEACCOUNTINTRADAY://更新日内交易权限
+                    //    {
+                    //        SrvOnMGRUpdateAccountIntraday(packet as MGRUpdateIntradayRequest, session, manager);
+                    //        break;
+                    //    }
+                    //case MessageTypes.MGRUPDATEACCOUNTROUTETRANSFERTYPE://更新路由类别哦
+                    //    {
+                    //        SrvOnMGRUpdateRouteType(packet as MGRUpdateRouteTypeRequest, session, manager);
+                    //        break;
+                    //    }
+                    //case MessageTypes.MGROPENCLEARCENTRE://请求开启清算中心
+                    //    {
+                    //        SrvOnMGROpenClearCentre(packet as MGRReqOpenClearCentreRequest, session, manager);
+                    //        break;
+                    //    }
+                    //case MessageTypes.MGRCLOSECLEARCENTRE://请求关闭清算中心
+                    //    {
+                    //        SrvOnMGRCloseClearCentre(packet as MGRReqCloseClearCentreRequest, session, manager);
+                    //        break;
+                    //    }
+                    //case MessageTypes.MGRADDACCOUNT://请求添加交易帐号
+                    //    {
+                    //        SrvOnMGRAddAccount(packet as MGRAddAccountRequest, session, manager);
+                    //        break;
+                    //    }
                     case MessageTypes.MGRQRYEXCHANGE://请求查询交易所
                         {
                             SrvOnMGRQryExchange(packet as MGRQryExchangeRequuest, session, manager);
@@ -303,11 +273,11 @@ namespace TradingLib.Core
                             SrvOnMGRQrySettlement(packet as MGRQrySettleRequest, session, manager);
                             break;
                         }
-                    case MessageTypes.MGRCHANGEACCOUNTPASS://请求修改密码
-                        {
-                            SrvOnMGRChangeAccountPassword(packet as MGRChangeAccountPassRequest, session, manager);
-                            break;
-                        }
+                    //case MessageTypes.MGRCHANGEACCOUNTPASS://请求修改密码
+                    //    {
+                    //        SrvOnMGRChangeAccountPassword(packet as MGRChangeAccountPassRequest, session, manager);
+                    //        break;
+                    //    }
                     case MessageTypes.MGRADDSECURITY://请求添加品种
                         {
                             SrvOnMGRReqAddSecurity(packet as MGRReqAddSecurityRequest, session, manager);
@@ -318,11 +288,11 @@ namespace TradingLib.Core
                             SrvOnMGRReqAddSymbol(packet as MGRReqAddSymbolRequest, session, manager);
                             break;
                         }
-                    case MessageTypes.MGRCHANGEINVESTOR://请求修改投资者信息
-                        {
-                            SrvOnMGRReqChangeInvestor(packet as MGRReqChangeInvestorRequest, session, manager);
-                            break;
-                        }
+                    //case MessageTypes.MGRCHANGEINVESTOR://请求修改投资者信息
+                    //    {
+                    //        SrvOnMGRReqChangeInvestor(packet as MGRReqChangeInvestorRequest, session, manager);
+                    //        break;
+                    //    }
                     //case MessageTypes.MGRUPDATEPOSLOCK://请求修改帐户锁仓权限
                     //    {
                     //        SrvOnMGRReqUpdateAccountPosLock(packet as MGRReqUpdatePosLockRequest, session, manager);
@@ -339,11 +309,11 @@ namespace TradingLib.Core
                             SrvOnInsertTrade(packet as MGRReqInsertTradeRequest, session, manager);
                             break;
                         }
-                    case MessageTypes.MGRDELACCOUNT://请求删除交易帐户
-                        {
-                            SrvOnDelAccount(packet as MGRReqDelAccountRequest, session, manager);
-                            break;
-                        }
+                    //case MessageTypes.MGRDELACCOUNT://请求删除交易帐户
+                    //    {
+                    //        SrvOnDelAccount(packet as MGRReqDelAccountRequest, session, manager);
+                    //        break;
+                    //    }
 
                     case MessageTypes.MGRCONTRIBREQUEST://扩展请求
                         {

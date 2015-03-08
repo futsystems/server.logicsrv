@@ -51,5 +51,14 @@ namespace TradingLib.API
         /// </summary>
         /// <param name="oid"></param>
         void CancelOrder(long oid);
+
+
+        /// <summary>
+        /// 通过系统内委托编号获得委托
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Order SentOrder(long id);
+
     }
 }

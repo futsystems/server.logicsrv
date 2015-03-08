@@ -202,8 +202,8 @@ namespace TradingLib.Core
             debug("resuem account:" + acc, QSEnumDebugLevel.INFO);
             try
             {
-                            
-                IAccount account = clearcentre[acc];
+
+                IAccount account = TLCtxHelper.CmdAccount[acc];
                 if (account == null)
                 {
                     debug("Resume Account:" + acc + " do not exist", QSEnumDebugLevel.ERROR);

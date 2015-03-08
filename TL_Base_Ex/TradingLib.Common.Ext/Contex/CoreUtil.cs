@@ -57,5 +57,10 @@ namespace TradingLib.Common
         {
             TLCtxHelper.Ctx.MessageExchange.SendOrderInternal(o);
         }
+
+        public Order SentOrder(long id)
+        {
+            return TLCtxHelper.Ctx.ClearCentre.SentOrder(id);
+        }
     }
 }

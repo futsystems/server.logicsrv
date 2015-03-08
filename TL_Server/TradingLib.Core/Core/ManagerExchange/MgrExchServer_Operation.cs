@@ -60,7 +60,7 @@ namespace TradingLib.Core
         void newAccountAdded(string account)
         {
             debug("account added,will send to manager montier", QSEnumDebugLevel.INFO);
-            IAccount acc = clearcentre[account];
+            IAccount acc = TLCtxHelper.CmdAccount[account];
             if (acc != null)
             {
                 NotifyMGRAccountChangeUpdateResponse notify = ResponseTemplate<NotifyMGRAccountChangeUpdateResponse>.SrvSendNotifyResponse(account);
@@ -86,7 +86,8 @@ namespace TradingLib.Core
 
         void newCancel(long id)
         {
-            Order o = clearcentre.SentOrder(id);
+            Order o = TLCtxHelper.CmdUtils.SentOrder(id);
+            
             if (o != null && o.isValid)
             {
                 OrderAction action = new OrderActionImpl();
