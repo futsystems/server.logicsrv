@@ -34,32 +34,33 @@ namespace TradingLib.Core
         /// <summary>
         /// 添加交易帐号
         /// </summary>
-        public event AccoundIDDel AccountAddEvent;
+       // public event AccoundIDDel AccountAddEvent;
 
         /// <summary>
         /// 删除交易帐号
         /// </summary>
-        public event AccoundIDDel AccountDelEvent;
+        //public event AccoundIDDel AccountDelEvent;
 
         /// <summary>
         /// 激活交易帐号
         /// </summary>
-        public event AccoundIDDel AccountActiveEvent;
+        //public event AccoundIDDel AccountActiveEvent;
 
         /// <summary>
         /// 冻结交易帐号
         /// </summary>
-        public event AccoundIDDel AccountInActiveEvent;
+        //public event AccoundIDDel AccountInActiveEvent;
 
         /// <summary>
         /// 帐户修改事件
         /// </summary>
-        public event AccoundIDDel AccountChangeEvent;
+        //public event AccoundIDDel AccountChangeEvent;
 
         protected void AccountChanged(IAccount account)
         {
-            if (AccountChangeEvent != null)
-                AccountChangeEvent(account.ID);
+            TLCtxHelper.EventAccount.FireAccountChangeEent(account.ID);
+            //if (AccountChangeEvent != null)
+            //    AccountChangeEvent(account.ID);
         }
 
         #endregion

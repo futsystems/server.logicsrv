@@ -40,59 +40,59 @@ namespace TradingLib.Core
         /// <summary>
         /// 行情事件
         /// </summary>
-        public event TickDelegate GotTickEvent;
+        //public event TickDelegate GotTickEvent;
         
         /// <summary>
         /// 委托事件
         /// </summary>
-        public event OrderDelegate GotOrderEvent;
+        //public event OrderDelegate GotOrderEvent;
 
         /// <summary>
         /// 委托错误事件
         /// </summary>
-        public event OrderErrorDelegate GotOrderErrorEvent;
+        //public event OrderErrorDelegate GotOrderErrorEvent;
 
         /// <summary>
         /// 委托操作事件
         /// </summary>
-        public event OrderActionDelegate GotOrderActionEvent;
+        //public event OrderActionDelegate GotOrderActionEvent;
 
         /// <summary>
         /// 委托操作错误事件
         /// </summary>
-        public event OrderActionErrorDelegate GotOrderActionErrorEvent;
+        //public event OrderActionErrorDelegate GotOrderActionErrorEvent;
 
         /// <summary>
         /// 成交事件
         /// </summary>
-        public event FillDelegate GotFillEvent;
+        //public event FillDelegate GotFillEvent;
 
 
         /// <summary>
         /// 客户端注册事件
         /// </summary>
-        public event ClientInfoDelegate<TrdClientInfo> ClientRegistedEvent;
+        //public event ClientInfoDelegate<TrdClientInfo> ClientRegistedEvent;
         /// <summary>
         /// 客户端注销事件
         /// </summary>
-        public event ClientInfoDelegate<TrdClientInfo> ClientUnregistedEvent;
+        //public event ClientInfoDelegate<TrdClientInfo> ClientUnregistedEvent;
 
 
         
         /// <summary>
         /// 客户端登入成功事件
         /// </summary>
-        public event AccoundIDDel AccountLoginSuccessEvent;
+        //public event AccoundIDDel AccountLoginSuccessEvent;
 
         /// <summary>
         /// 客户端登入失败事件
         /// </summary>
-        public event AccoundIDDel AccountLoginFailedEvent;
+        //public event AccoundIDDel AccountLoginFailedEvent;
 
         /// <summary>
         /// 客户端登入 退出事件
         /// </summary>
-        public event ClientLoginInfoDelegate<TrdClientInfo> ClientLoginInfoEvent;
+        //public event ClientLoginInfoDelegate<TrdClientInfo> ClientLoginInfoEvent;
         /// <summary>
         /// 客户端登入成功后回报消息事件
         /// </summary>
@@ -112,7 +112,7 @@ namespace TradingLib.Core
         /// 用于绑定到交易路由服务然后进行用户认证
         /// 如果没有绑定改事件则进行默认的本地数据库表交易帐号与密码的认证
         /// </summary>
-        public event LoginRequestDel<TrdClientInfo> AuthUserEvent;
+        //public event LoginRequestDel<TrdClientInfo> AuthUserEvent;
         #endregion
 
 
@@ -423,26 +423,29 @@ namespace TradingLib.Core
 
                 tl.ClientRegistedEvent += (TrdClientInfo c) =>
                     {
-                        if (ClientRegistedEvent != null)
-                        {
-                            ClientRegistedEvent(c);
-                        }
+                        TLCtxHelper.EventSession.FireClientConnectedEvent(c);
+                        //if (ClientRegistedEvent != null)
+                        //{
+                        //    ClientRegistedEvent(c);
+                        //}
                         //debug("客户端:" + c.Location.ClientID + " 注册到系统", QSEnumDebugLevel.INFO);
                     };
                 tl.ClientUnregistedEvent += (TrdClientInfo c) =>
                     {
-                        if (ClientUnregistedEvent != null)
-                        {
-                            ClientUnregistedEvent(c);
-                        }
+                        TLCtxHelper.EventSession.FireClientDisconnectedEvent(c);
+                        //if (ClientUnregistedEvent != null)
+                        //{
+                        //    ClientUnregistedEvent(c);
+                        //}
                         //debug("客户端:" + c.Location.ClientID + " 从系统注销", QSEnumDebugLevel.INFO);
                     };
                 tl.ClientLoginInfoEvent += (TrdClientInfo c, bool login) =>
                     {
-                        if (ClientLoginInfoEvent != null)
-                        {
-                            ClientLoginInfoEvent(c, login);
-                        }
+                        TLCtxHelper.EventSession.FireClientLoginInfoEvent(c, login);
+                        //if (ClientLoginInfoEvent != null)
+                        //{
+                        //    ClientLoginInfoEvent(c, login);
+                        //}
                         debug("客户端:" + c.Location.ClientID + " 登入状态:"+login.ToString(), QSEnumDebugLevel.INFO);
                     };
 

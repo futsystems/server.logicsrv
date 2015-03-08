@@ -126,15 +126,17 @@ namespace TradingLib.Core
             //如果需要将委托状态通知发送到客户端 则设置needsend为true
             //路由中心返回委托回报时,发送给客户端的委托需要进行copy 否则后续GotOrderEvent事件如果对委托有修改,则会导致发送给客户端的委托发生变化,委托发送是在线程内延迟执行
             _ocache.Write(new OrderImpl(o));
-            if (GotOrderEvent != null)
-                GotOrderEvent(o);
+            TLCtxHelper.EventIndicator.FireOrderEvent(o);
+            //if (GotOrderEvent != null)
+            //    GotOrderEvent(o);
         }
         void NotifyFill(Trade f)
         {
             _fcache.Write(new TradeImpl(f));
+            TLCtxHelper.EventIndicator.FireFillEvent(f);
             //对外触发成交事件
-            if (GotFillEvent != null)
-                GotFillEvent(f);
+            //if (GotFillEvent != null)
+            //    GotFillEvent(f);
         }
 
         /// <summary>
@@ -150,19 +152,22 @@ namespace TradingLib.Core
         { 
             //放入缓存通知客户端
             _errorordercache.Write(new OrderErrorPack(o,e));
-            if (GotOrderErrorEvent != null)
-            {
-                GotOrderErrorEvent(o,e);
-            }
+
+            TLCtxHelper.EventIndicator.FireOrderErrorEvent(o, e);
+            //if (GotOrderErrorEvent != null)
+            //{
+            //    GotOrderErrorEvent(o,e);
+            //}
         }
 
         void NotifyOrderActionError(OrderAction a, RspInfo e)
         {
             _erractioncache.Write(new OrderActionErrorPack(a, e));
-            if (GotOrderActionErrorEvent != null)
-            {
-                GotOrderActionErrorEvent(a, e);
-            }
+            
+            //if (GotOrderActionErrorEvent != null)
+            //{
+            //    GotOrderActionErrorEvent(a, e);
+            //}
 
         }
 

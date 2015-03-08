@@ -176,8 +176,9 @@ namespace TradingLib.Core
             debug("激活帐户:" + id, QSEnumDebugLevel.INFO);
             if (!HaveAccount(id)) return;
             this[id].Execute = true;
-            if (AccountActiveEvent != null)
-                AccountActiveEvent(id);
+            TLCtxHelper.EventAccount.FireAccountActiveEvent(id);
+            //if (AccountActiveEvent != null)
+            //    AccountActiveEvent(id);
             AccountChanged(this[id]);
         }
         /// <summary>
@@ -189,8 +190,9 @@ namespace TradingLib.Core
             debug("冻结账户:" + id, QSEnumDebugLevel.INFO);
             if (!HaveAccount(id)) return;
             this[id].Execute = false;
-            if (AccountInActiveEvent != null)
-                AccountInActiveEvent(id);
+            TLCtxHelper.EventAccount.FireAccountInactiveEvent(id);
+            //if (AccountInActiveEvent != null)
+            //    AccountInActiveEvent(id);
             AccountChanged(this[id]);
         }
 
@@ -481,8 +483,9 @@ namespace TradingLib.Core
             LoadAccount(create.Account);
 
             //对外触发交易帐号添加事件
-            if (this.AccountAddEvent != null)
-                this.AccountAddEvent(create.Account);
+            TLCtxHelper.EventAccount.FireAccountAddEvent(create.Account);
+            //if (this.AccountAddEvent != null)
+            //    this.AccountAddEvent(create.Account);
         }
 
 
@@ -501,8 +504,9 @@ namespace TradingLib.Core
                 ORM.MAccount.DelAccount(account);//删除数据库记录
                 DropAccount(acc);//删除内存记录
                 //对外触发交易帐户删除事件
-                if (AccountDelEvent != null)
-                    AccountDelEvent(account);
+                TLCtxHelper.EventAccount.FireAccountDelEvent(account);
+                //if (AccountDelEvent != null)
+                //    AccountDelEvent(account);
                 acc.Deleted = true;
                 AccountChanged(acc);
 

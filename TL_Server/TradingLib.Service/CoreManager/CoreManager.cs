@@ -186,66 +186,36 @@ namespace TradingLib.ServiceManager
         public void WireCtxEvent()
         {
             Util.StatusSection(this.PROGRAME, "CTXEVENT", QSEnumInfoColor.INFOGREEN,true);
-            //EventIndicator
-            //获得市场行情
-            _messageExchagne.GotTickEvent += new TickDelegate(TLCtxHelper.EventIndicator.FireTickEvent);
-            //获得底层委托回报
-            _messageExchagne.GotOrderEvent += new OrderDelegate(TLCtxHelper.EventIndicator.FireOrderEvent);
-            //获得底层成交回报 //系统内的成交回报是清算中心处理过手续费的成交
-            //_clearCentre.GotCommissionFill += new FillDelegate(TLCtxHelper.EventIndicator.FireFillEvent);
-            _messageExchagne.GotFillEvent += new FillDelegate(TLCtxHelper.EventIndicator.FireFillEvent);
-            //获得底层取消委托回报
-            //_messageExchagne.GotCancelEvent += new LongDelegate(TLCtxHelper.EventIndicator.FireCancelEvent);
-            //获得底层持仓回合回报
-            //_clearCentre.PositionRoundClosedEvent += new PositionRoundClosedDel(TLCtxHelper.EventIndicator.FirePositionRoundClosed);
-
-            //EventSession
-            //客户端建立连接
-            _messageExchagne.ClientRegistedEvent += new ClientInfoDelegate<TrdClientInfo>(TLCtxHelper.EventSession.FireClientConnectedEvent);
-            //客户端断开连接
-            _messageExchagne.ClientUnregistedEvent += new ClientInfoDelegate<TrdClientInfo>(TLCtxHelper.EventSession.FireClientDisconnectedEvent);
-            //客户端登入 退出事件
-            _messageExchagne.ClientLoginInfoEvent += new ClientLoginInfoDelegate<TrdClientInfo>(TLCtxHelper.EventSession.FireClientLoginInfoEvent);
-            
-
-            //客户端登入成功
-            _messageExchagne.AccountLoginSuccessEvent += new AccoundIDDel(TLCtxHelper.EventSession.FireAccountLoginSuccessEvent);
-            
-            //向登入成功客户端推送消息
-            //_messageExchagne.NotifyLoginSuccessEvent += new AccountIdDel(TLCtxHelper.EventSession.FireNotifyLoginSuccessEvent);
-            //客户端会话状态变化
-            //_messageExchagne.AccountSessionChangedEvent +=new ISessionDel(TLCtxHelper.EventSession.FireSessionChangedEvent);
-            //客户端统一认证
-            _messageExchagne.AuthUserEvent += new LoginRequestDel<TradingLib.Common.TrdClientInfo>(TLCtxHelper.EventSession.FireAuthUserEvent);
-
+ 
 
             //EventAccount
             //激活交易帐户
-            _clearCentre.AccountActiveEvent += new AccoundIDDel(TLCtxHelper.EventAccount.FireAccountActiveEvent);
+            //_clearCentre.AccountActiveEvent += new AccoundIDDel(TLCtxHelper.EventAccount.FireAccountActiveEvent);
             //冻结交易帐户
-            _clearCentre.AccountInActiveEvent += new AccoundIDDel(TLCtxHelper.EventAccount.FireAccountInactiveEvent);
+            //_clearCentre.AccountInActiveEvent += new AccoundIDDel(TLCtxHelper.EventAccount.FireAccountInactiveEvent);
             //添加交易帐号
-            _clearCentre.AccountAddEvent += new AccoundIDDel(TLCtxHelper.EventAccount.FireAccountAddEvent);
+            //_clearCentre.AccountAddEvent += new AccoundIDDel(TLCtxHelper.EventAccount.FireAccountAddEvent);
             //删除交易帐号
-            _clearCentre.AccountDelEvent += new AccoundIDDel(TLCtxHelper.EventAccount.FireAccountAddEvent);
+            //_clearCentre.AccountDelEvent += new AccoundIDDel(TLCtxHelper.EventAccount.FireAccountAddEvent);
 
             //修改交易帐号
-            _clearCentre.AccountChangeEvent += new AccoundIDDel(TLCtxHelper.EventAccount.FireAccountChangeEent);
-
-            //_clearCentre.AdjustCommissionEvent += new AdjustCommissionDel(TLCtxHelper.ExContribEvent.AdjustCommission);
+            //_clearCentre.AccountChangeEvent += new AccoundIDDel(TLCtxHelper.EventAccount.FireAccountChangeEent);
 
             _riskCentre.PositionFlatEvent += new EventHandler<PositionFlatEventArgs>(TLCtxHelper.EventSystem.FirePositionFlatEvent);
 
-            IOnRouterEvent onbr = _messageExchagne as IOnRouterEvent;
-            
-            TLCtxHelper.BrokerRouter.GotFillEvent += new FillDelegate(onbr.OnFillEvent);
-            TLCtxHelper.BrokerRouter.GotCancelEvent += new LongDelegate(onbr.OnCancelEvent);
-            TLCtxHelper.BrokerRouter.GotOrderEvent += new OrderDelegate(onbr.OnOrderEvent);
+            if (_messageExchagne != null)
+            {
+                IOnRouterEvent onbr = _messageExchagne as IOnRouterEvent;
 
-            TLCtxHelper.BrokerRouter.GotOrderErrorEvent += new OrderErrorDelegate(onbr.OnOrderErrorEvent);
-            TLCtxHelper.BrokerRouter.GotOrderActionErrorEvent += new OrderActionErrorDelegate(onbr.OnOrderActionErrorEvent);
+                TLCtxHelper.BrokerRouter.GotFillEvent += new FillDelegate(onbr.OnFillEvent);
+                TLCtxHelper.BrokerRouter.GotCancelEvent += new LongDelegate(onbr.OnCancelEvent);
+                TLCtxHelper.BrokerRouter.GotOrderEvent += new OrderDelegate(onbr.OnOrderEvent);
 
-            TLCtxHelper.DataRouter.GotTickEvent += new TickDelegate(onbr.OnTickEvent);
+                TLCtxHelper.BrokerRouter.GotOrderErrorEvent += new OrderErrorDelegate(onbr.OnOrderErrorEvent);
+                TLCtxHelper.BrokerRouter.GotOrderActionErrorEvent += new OrderActionErrorDelegate(onbr.OnOrderActionErrorEvent);
+
+                TLCtxHelper.DataRouter.GotTickEvent += new TickDelegate(onbr.OnTickEvent);
+            }
         }
 
 

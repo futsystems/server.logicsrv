@@ -85,8 +85,9 @@ namespace TradingLib.Core
             //2.清算中心响应Tick事件
             TLCtxHelper.CmdGotTradingRecord.GotTick(k);
             //2.对外触发Tick事件 用于被其他组件简体
-            if (GotTickEvent != null)
-                GotTickEvent(k);
+            TLCtxHelper.EventIndicator.FireTickEvent(k);
+            //if (GotTickEvent != null)
+            //    GotTickEvent(k);
         }
 
         #endregion

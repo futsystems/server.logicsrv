@@ -28,31 +28,31 @@ namespace TradingLib.API
         //decimal GetAvabilePrice(string symbol);
 
 
-        /// <summary>
-        /// 添加交易帐号
-        /// </summary>
-        event AccoundIDDel AccountAddEvent;
+        ///// <summary>
+        ///// 添加交易帐号
+        ///// </summary>
+        //event AccoundIDDel AccountAddEvent;
 
-        /// <summary>
-        /// 删除交易帐号
-        /// </summary>
-        event AccoundIDDel AccountDelEvent;
+        ///// <summary>
+        ///// 删除交易帐号
+        ///// </summary>
+        //event AccoundIDDel AccountDelEvent;
 
-        /// <summary>
-        /// 激活交易帐号
-        /// </summary>
-        event AccoundIDDel AccountActiveEvent;
+        ///// <summary>
+        ///// 激活交易帐号
+        ///// </summary>
+        //event AccoundIDDel AccountActiveEvent;
 
-        /// <summary>
-        /// 冻结交易帐号
-        /// </summary>
-        event AccoundIDDel AccountInActiveEvent;
+        ///// <summary>
+        ///// 冻结交易帐号
+        ///// </summary>
+        //event AccoundIDDel AccountInActiveEvent;
 
 
-        /// <summary>
-        /// 帐户修改事件
-        /// </summary>
-        event AccoundIDDel AccountChangeEvent;
+        ///// <summary>
+        ///// 帐户修改事件
+        ///// </summary>
+        //event AccoundIDDel AccountChangeEvent;
 
         /// <summary>
         /// 调整手续费事件,对外触发手续费调整事件,用于相关逻辑进行手续费调整

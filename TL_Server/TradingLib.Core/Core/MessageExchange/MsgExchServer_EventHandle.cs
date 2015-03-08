@@ -139,7 +139,8 @@ namespace TradingLib.Core
                     else
                     {
                         debug("系统通过UCenter鉴权认证", QSEnumDebugLevel.INFO);
-                        AuthUserEvent(clientinfo, request, ref response);
+                        TLCtxHelper.EventSession.FireAuthUserEvent(clientinfo, request, ref response);
+                        //AuthUserEvent(clientinfo, request, ref response);
                         //如果底层登入成功 则检查具体的服务信息，如果服务不存在则仍然是登入不成功
                         login = response.Authorized;
                         if (login)
@@ -249,13 +250,15 @@ namespace TradingLib.Core
                 //对外触发登入事件
                 if (response.Authorized)
                 {
-                    if (AccountLoginSuccessEvent != null)
-                        AccountLoginSuccessEvent(response.Account);
+                    TLCtxHelper.EventSession.FireAccountLoginSuccessEvent(response.Account);
+                    //if (AccountLoginSuccessEvent != null)
+                    //    AccountLoginSuccessEvent(response.Account);
                 }
                 else
                 {
-                    if (AccountLoginFailedEvent != null)
-                        AccountLoginFailedEvent(response.Account);
+                    TLCtxHelper.EventSession.FireAccountLoginFailedEvent(response.Account);
+                    //if (AccountLoginFailedEvent != null)
+                    //    AccountLoginFailedEvent(response.Account);
                 }
             }
             catch (Exception ex)
