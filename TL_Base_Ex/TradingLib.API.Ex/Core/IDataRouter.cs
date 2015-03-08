@@ -17,7 +17,7 @@ namespace TradingLib.API
         void ExcludeSymbol(string symbol);
         void IncludeSymbol(string symbol);
         Tick[] GetTickSnapshot();
-
+        void LoadDataFeed(IDataFeed datafeed);
         void Reset();
     }
 }

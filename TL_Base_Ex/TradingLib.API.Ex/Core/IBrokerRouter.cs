@@ -40,5 +40,8 @@ namespace TradingLib.API
         /// 重置
         /// </summary>
         void Reset();
+
+
+        void LoadBroker(IBroker broker);
     }
 }

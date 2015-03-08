@@ -16,7 +16,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public decimal GetAvabilePrice(string symbol)
         {
-            return TLCtxHelper.Ctx.RouterManager.GetAvabilePrice(symbol);
+            return TLCtxHelper.DataRouter.GetAvabilePrice(symbol);
         }
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public Tick GetTickSnapshot(string symbol)
         {
-            return TLCtxHelper.Ctx.RouterManager.GetTickSnapshot(symbol);
+            return TLCtxHelper.DataRouter.GetTickSnapshot(symbol);
         }
 
 

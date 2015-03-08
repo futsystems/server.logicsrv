@@ -8,7 +8,7 @@ using TradingLib;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Core;
-
+using Autofac;
 
 
 namespace TradingLib.ServiceManager
@@ -19,31 +19,38 @@ namespace TradingLib.ServiceManager
     {
         const string SMGName = "CoreManager";
         DebugConfig dconfig;//日志设置信息
+        private static IContainer Container { get; set; }
         public string ServiceMgrName { get { return SMGName; } }
         public CoreManager()
             : base(SMGName)
         {
             dconfig = new DebugConfig();
+
+
+            var builder = new ContainerBuilder();
+            builder.RegisterType<BrokerRouter>().AsSelf().As<IBrokerRouter>();
+            builder.RegisterType<DataFeedRouter>().AsSelf().As<IDataRouter>();
+            Container = builder.Build();
+
         }
 
         //============ 服务组件 ===============================
         //核心服务
-        private BrokerRouter _brokerRouter;//交易通道路由
-        private DataFeedRouter _datafeedRouter;//数据通道路由
-
-        public BrokerRouter BrokerRouter { get { return _brokerRouter; } }
-        public DataFeedRouter DataFeedRouter { get { return _datafeedRouter; } }
+        private IBrokerRouter _brokerRouter;//交易通道路由
+        private IDataRouter _datafeedRouter;//数据通道路由
         
         private MsgExchServer _messageExchagne;//交易消息交换
         private MgrExchServer _managerExchange;//管理消息交换
         private WebMsgExchServer _webmsgExchange;//Web端消息响应
+
         private ClearCentre _clearCentre;//清算服务
         private SettleCentre _settleCentre;//结算中心
         private RiskCentre _riskCentre;//风控服务
         private TaskCentre _taskcentre;//调度服务
 
-       
 
+        public IBrokerRouter BrokerRouter { get { return _brokerRouter; } }
+        public IDataRouter DataFeedRouter { get { return _datafeedRouter; } }
         /// <summary>
         /// 加载Connecter 填充 brokerrouter, datafeedrouter
         /// </summary>
@@ -57,31 +64,32 @@ namespace TradingLib.ServiceManager
             Util.InitStatus(this.PROGRAME, true);
             #region 加载核心模块
             debug("[INIT CORE] SettleCentre", QSEnumDebugLevel.INFO);
-            InitSettleCentre();//初始化结算中心
+            _settleCentre = new SettleCentre();//初始化结算中心
 
             debug("[INIT CORE] MsgExchServer", QSEnumDebugLevel.INFO);
-            InitMsgExchSrv();//初始化交易服务
+            _messageExchagne = new MsgExchServer();//初始化交易服务
 
             debug("[INIT CORE] ClearCentre", QSEnumDebugLevel.INFO);
-            InitClearCentre();//初始化结算中心 初始化账户信息
+            _clearCentre = new ClearCentre();//初始化结算中心 初始化账户信息
 
             debug("[INIT CORE] RiskCentre", QSEnumDebugLevel.INFO);
-            InitRiskCentre();//初始化风控中心 初始化账户风控规则
+            _riskCentre = new RiskCentre();//初始化风控中心 初始化账户风控规则
 
             debug("[INIT CORE] DataFeedRouter", QSEnumDebugLevel.INFO);
-            InitDataFeedRouter();//初始化数据路由
+            var scope = Container.BeginLifetimeScope();
+            _datafeedRouter = scope.Resolve<IDataRouter>();//初始化数据路由
 
             debug("[INIT CORE] BrokerRouter", QSEnumDebugLevel.INFO);
-            InitBrokerRouter();//初始化交易路由选择器
+            _brokerRouter = new BrokerRouter(_clearCentre);//初始化交易路由选择器
 
             debug("[INIT CORE] MgrExchServer", QSEnumDebugLevel.INFO);//服务端管理界面,提供管理客户端接入,查看并设置相关数据
-            InitMgrExchSrv();//初始化管理服务
+            _managerExchange = new MgrExchServer(); ;//初始化管理服务
 
             debug("[INIT CORE] WebMsgExchServer", QSEnumDebugLevel.INFO);
-            InitWebMsgExchSrv();
+            _webmsgExchange = new WebMsgExchServer();
 
             debug("[INIT CORE] TaskCentre", QSEnumDebugLevel.INFO);
-            InitTaskCentre();//初始化任务执行中心 在所有组件加载完毕后 在统一加载定时任务设置
+            _taskcentre = new TaskCentre();//初始化任务执行中心 在所有组件加载完毕后 在统一加载定时任务设置
             #endregion
 
         }
@@ -99,10 +107,10 @@ namespace TradingLib.ServiceManager
             _riskCentre.Start();
             _clearCentre.Start();
 
-            _datafeedRouter.Start();
-            _datafeedRouter.LoadTickSnapshot();
+            //_datafeedRouter.Start();
+            //_datafeedRouter.LoadTickSnapshot();
 
-            _brokerRouter.Start();
+            //_brokerRouter.Start();
 
             _managerExchange.Start();
 
@@ -130,9 +138,9 @@ namespace TradingLib.ServiceManager
 
             _managerExchange.Stop();//与message类似
 
-            _brokerRouter.Stop();//成交路由
+            //_brokerRouter.Stop();//成交路由
 
-            _datafeedRouter.Stop();//行情路由
+            //_datafeedRouter.Stop();//行情路由
 
             _clearCentre.Stop();//清算中心
 
@@ -186,20 +194,6 @@ namespace TradingLib.ServiceManager
         public void WireCtxEvent()
         {
             Util.StatusSection(this.PROGRAME, "CTXEVENT", QSEnumInfoColor.INFOGREEN,true);
- 
-
-            //EventAccount
-            //激活交易帐户
-            //_clearCentre.AccountActiveEvent += new AccoundIDDel(TLCtxHelper.EventAccount.FireAccountActiveEvent);
-            //冻结交易帐户
-            //_clearCentre.AccountInActiveEvent += new AccoundIDDel(TLCtxHelper.EventAccount.FireAccountInactiveEvent);
-            //添加交易帐号
-            //_clearCentre.AccountAddEvent += new AccoundIDDel(TLCtxHelper.EventAccount.FireAccountAddEvent);
-            //删除交易帐号
-            //_clearCentre.AccountDelEvent += new AccoundIDDel(TLCtxHelper.EventAccount.FireAccountAddEvent);
-
-            //修改交易帐号
-            //_clearCentre.AccountChangeEvent += new AccoundIDDel(TLCtxHelper.EventAccount.FireAccountChangeEent);
 
             _riskCentre.PositionFlatEvent += new EventHandler<PositionFlatEventArgs>(TLCtxHelper.EventSystem.FirePositionFlatEvent);
 
@@ -240,11 +234,11 @@ namespace TradingLib.ServiceManager
             _riskCentre.DebugEnable = true;
             _riskCentre.DebugLevel = QSEnumDebugLevel.DEBUG;
 
-            _brokerRouter.DebugEnable = true;
-            _brokerRouter.DebugLevel = QSEnumDebugLevel.DEBUG;
+            //_brokerRouter.DebugEnable = true;
+            //_brokerRouter.DebugLevel = QSEnumDebugLevel.DEBUG;
 
-            _datafeedRouter.DebugEnable = true;
-            _datafeedRouter.DebugLevel = QSEnumDebugLevel.DEBUG;
+            //_datafeedRouter.DebugEnable = true;
+            //_datafeedRouter.DebugLevel = QSEnumDebugLevel.DEBUG;
 
 
         }
@@ -286,19 +280,19 @@ namespace TradingLib.ServiceManager
                 _riskCentre.DebugLevel = dconfig.DL_RiskCentre;
             }
 
-            //交易路由
-            if (_brokerRouter != null)
-            {
-                _brokerRouter.DebugEnable = dconfig.D_BrokerRouter;
-                _brokerRouter.DebugLevel = dconfig.DL_BrokerRouter;
-            }
+            ////交易路由
+            //if (_brokerRouter != null)
+            //{
+            //    _brokerRouter.DebugEnable = dconfig.D_BrokerRouter;
+            //    _brokerRouter.DebugLevel = dconfig.DL_BrokerRouter;
+            //}
 
-            //数据路由
-            if (_datafeedRouter != null)
-            {
-                _datafeedRouter.DebugEnable = dconfig.D_DataFeedRouter;
-                _datafeedRouter.DebugLevel = dconfig.DL_DataFeedRouter;
-            }
+            ////数据路由
+            //if (_datafeedRouter != null)
+            //{
+            //    _datafeedRouter.DebugEnable = dconfig.D_DataFeedRouter;
+            //    _datafeedRouter.DebugLevel = dconfig.DL_DataFeedRouter;
+            //}
 
 
         }

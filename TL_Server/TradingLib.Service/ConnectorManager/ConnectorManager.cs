@@ -35,8 +35,8 @@ namespace TradingLib.ServiceManager
         //public event IConnecterParamDel DataFeedDisconnectedEvent;
 
 
-        BrokerRouter _brokerrouter;
-        DataFeedRouter _datafeedrouter;
+        IBrokerRouter _brokerrouter;
+        IDataRouter _datafeedrouter;
 
         public string ServiceMgrName { get { return SMGName; } }
 
@@ -70,7 +70,7 @@ namespace TradingLib.ServiceManager
         /// </summary>
         /// <param name="_br"></param>
         /// <param name="_dr"></param>
-        public void BindRouter(BrokerRouter _br, DataFeedRouter _dr)
+        public void BindRouter(IBrokerRouter _br, IDataRouter _dr)
         {
             _brokerrouter = _br;
             _datafeedrouter = _dr;

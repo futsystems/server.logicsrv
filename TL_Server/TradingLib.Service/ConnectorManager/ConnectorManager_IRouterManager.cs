@@ -68,10 +68,10 @@ namespace TradingLib.ServiceManager
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        public bool IsSymbolTickLive(string symbol)
-        {
-            return _datafeedrouter.IsTickLive(symbol);
-        }
+        //public bool IsSymbolTickLive(string symbol)
+        //{
+        //    return _datafeedrouter.IsTickLive(symbol);
+        //}
 
 
         /// <summary>

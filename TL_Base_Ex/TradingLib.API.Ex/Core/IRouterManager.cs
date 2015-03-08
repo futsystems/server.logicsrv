@@ -52,14 +52,14 @@ namespace TradingLib.API
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        decimal GetAvabilePrice(string symbol);
+        //decimal GetAvabilePrice(string symbol);
 
         /// <summary>
         /// 获得市场快照
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        Tick GetTickSnapshot(string symbol);
+        //Tick GetTickSnapshot(string symbol);
 
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace TradingLib.API
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        bool IsSymbolTickLive(string symbol);
+        //bool IsSymbolTickLive(string symbol);
 
         #endregion
 

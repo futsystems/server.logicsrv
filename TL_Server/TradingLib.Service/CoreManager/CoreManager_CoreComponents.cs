@@ -12,11 +12,7 @@ namespace TradingLib.ServiceManager
 {
     public partial class CoreManager
     {
-        private void InitSettleCentre()
-        {
-            debug("0.初始化结算中心");
-            _settleCentre = new SettleCentre();
-        }
+
 
         private void DestorySettleCentre()
         {
@@ -71,7 +67,7 @@ namespace TradingLib.ServiceManager
 
         void DestoryDataFeedRouter()
         {
-            _datafeedRouter.Dispose();
+            //_datafeedRouter.Dispose();
         }
 
         //初始化brokerselector
@@ -80,13 +76,13 @@ namespace TradingLib.ServiceManager
             debug("5.初始化BrokerRouter");
             _brokerRouter = new BrokerRouter(_clearCentre);
 
-            _brokerRouter.DataFeedRouter = _datafeedRouter;
+            //_brokerRouter.DataFeedRouter = _datafeedRouter;
         }
 
         private void DestoryBrokerRouter()
         {
-            _brokerRouter.DataFeedRouter = null;
-            _brokerRouter.Dispose();
+            //_brokerRouter.DataFeedRouter = null;
+            //_brokerRouter.Dispose();
         }
 
         /// <summary>
