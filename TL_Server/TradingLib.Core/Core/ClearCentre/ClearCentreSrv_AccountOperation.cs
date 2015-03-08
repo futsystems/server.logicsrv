@@ -21,7 +21,7 @@ namespace TradingLib.Core
         /// <param name="acc"></param>
         /// <param name="pass"></param>
         /// <returns></returns>
-        public override void ChangeAccountPass(string account, string pass)
+        public void ChangeAccountPass(string account, string pass)
         {
             if (!HaveAccount(account)) return;
             ORM.MAccount.UpdateAccountPass(account, pass);
@@ -31,7 +31,7 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="id"></param>
         /// <param name="ca"></param>
-        public override void UpdateAccountCategory(string account, QSEnumAccountCategory ca)
+        public void UpdateAccountCategory(string account, QSEnumAccountCategory ca)
         {
             if (!HaveAccount(account)) return;
             this[account].Category = ca;
@@ -43,7 +43,7 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="acc"></param>
         /// <param name="type"></param>
-        public override void UpdateAccountRouterTransferType(string account, QSEnumOrderTransferType type)
+        public void UpdateAccountRouterTransferType(string account, QSEnumOrderTransferType type)
         {
             if (!HaveAccount(account)) return;
             this[account].OrderRouteType = type;
@@ -150,7 +150,7 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="account"></param>
         /// <param name="intraday"></param>
-        public override void UpdateAccountIntradyType(string account, bool intraday)
+        public void UpdateAccountIntradyType(string account, bool intraday)
         {
             if (!HaveAccount(account)) return;
             this[account].IntraDay = intraday;
@@ -171,7 +171,7 @@ namespace TradingLib.Core
         /// 某个账户激活后需要调用风控中心重新加载该账户的风控规则，使得风控规则复位
         /// </summary>
         /// <param name="id"></param>
-        public override void ActiveAccount(string id)
+        public void ActiveAccount(string id)
         {
             debug("激活帐户:" + id, QSEnumDebugLevel.INFO);
             if (!HaveAccount(id)) return;
@@ -184,7 +184,7 @@ namespace TradingLib.Core
         /// 禁止某个账户进行交易
         /// </summary>
         /// <param name="id"></param>
-        public override void InactiveAccount(string id)
+        public void InactiveAccount(string id)
         {
             debug("冻结账户:" + id, QSEnumDebugLevel.INFO);
             if (!HaveAccount(id)) return;
@@ -216,7 +216,7 @@ namespace TradingLib.Core
         /// <param name="acc"></param>
         /// <param name="amount"></param>
         /// <param name="comment"></param>
-        public override void CashOperation(string account, decimal amount,string transref, string comment)
+        public void CashOperation(string account, decimal amount,string transref, string comment)
         {
 
             debug("CashOperation ID:" + account + " Amount:" + amount.ToString() + " Comment:" + comment, QSEnumDebugLevel.INFO);
@@ -373,7 +373,7 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="account"></param>
         /// <param name="value"></param>
-        public override void ResetEquity(string account, decimal value)
+        public void ResetEquity(string account, decimal value)
         {
             IAccount a;
             if (!HaveAccount(account, out a)) return;

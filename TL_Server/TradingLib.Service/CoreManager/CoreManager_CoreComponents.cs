@@ -120,7 +120,7 @@ namespace TradingLib.ServiceManager
         void InitWebMsgExchSrv()
         {
             debug("7.初始化WebMsgExchSrv");
-            _webmsgExchange = new WebMsgExchServer(_messageExchagne, _clearCentre, _riskCentre);
+            _webmsgExchange = new WebMsgExchServer();
         }
         private void DestoryWebMsgExchSrv()
         {

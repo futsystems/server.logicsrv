@@ -24,17 +24,13 @@ namespace TradingLib.Core
         const string CoreName = "WebMsgExch";
         WebMsgRepServer _repserver;
 
-        ClearCentre _clearcentre;
-        RiskCentre _riskcentre;
-        MsgExchServer _srv;
-
         public string CoreId { get { return this.PROGRAME; } }
 
 
         ConfigDB _cfgdb;
 
 
-        public WebMsgExchServer( MsgExchServer s, ClearCentre c, RiskCentre r):
+        public WebMsgExchServer():
             base(WebMsgExchServer.CoreName)
         {
 
@@ -48,10 +44,6 @@ namespace TradingLib.Core
             {
                 _cfgdb.UpdateConfig("WebRepPort", QSEnumCfgType.Int, 9090, "WebMsgExchServer监听端口,用于处理常规逗号分隔函数调用");
             }
-
-            _srv = s;
-            _clearcentre = c;
-            _riskcentre = r;
 
             _repserver = new WebMsgRepServer(_cfgdb["WebRepServerIP"].AsString(), _cfgdb["WebRepPort"].AsInt(), true);
             _repserver.GotWebMessageEvent += new Func<string, bool, JsonReply>(handleWebTaskMessageJson);
