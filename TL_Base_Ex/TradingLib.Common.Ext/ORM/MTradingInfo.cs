@@ -391,7 +391,7 @@ namespace TradingLib.ORM
 
         static PositionRoundImpl PRInfo2PositionRound(positionroundinfo info)
         {
-            IAccount account=TLCtxHelper.Ctx.ClearCentre[info.Account];
+            IAccount account=TLCtxHelper.CmdAccount[info.Account];
             if (account == null)
                 return null;
             PositionRoundImpl pr = new PositionRoundImpl(info.Account, account.GetSymbol(info.Symbol), info.Side);

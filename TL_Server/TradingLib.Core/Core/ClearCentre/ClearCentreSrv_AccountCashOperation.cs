@@ -23,7 +23,8 @@ namespace TradingLib.Core
         public bool RequestCashOperation(string account, decimal amount, QSEnumCashOperation op,out string opref,QSEnumCashOPSource source= QSEnumCashOPSource.Unknown,string  recvinfo="")
         {
             opref = string.Empty;
-            if (!this.HaveAccount(account)) return false;
+            IAccount acc = TLCtxHelper.CmdAccount[account];
+            if (acc == null ) return false;
             if (amount <= 0) return false;
             JsonWrapperCashOperation request = new JsonWrapperCashOperation();
             request.Account = account;
@@ -56,7 +57,7 @@ namespace TradingLib.Core
         {
 
             JsonWrapperCashOperation op = ORM.MCashOpAccount.GetAccountCashOperation(opref);
-            IAccount account = this[op.Account];
+            IAccount account = TLCtxHelper.CmdAccount[op.Account];
             if (account == null)
             {
                 throw new FutsRspError("交易帐户不存在");

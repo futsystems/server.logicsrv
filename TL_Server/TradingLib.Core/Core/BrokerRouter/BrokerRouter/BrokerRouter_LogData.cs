@@ -16,33 +16,40 @@ namespace TradingLib.Core
         //路由侧只需要记录委托关系,不需要记录成交 用于恢复交易状态，路由侧只需要恢复委托 保存中间分解路径
         void LogRouterOrder(Order o)
         {
-            _clearCentre.LogRouterOrder(o);
+            //_clearCentre.LogRouterOrder(o);
+            TLCtxHelper.DataRepository.NewOrder(o);
         }
+
         void LogRouterOrderUpdate(Order o)
         {
-            _clearCentre.LogRouterOrderUpdate(o);
+            //_clearCentre.LogRouterOrderUpdate(o);
+            TLCtxHelper.DataRepository.UpdateOrder(o);
         }
 
 
 
         void LogBrokerPositionCloseDetailEvent(PositionCloseDetail obj)
         {
-            _clearCentre.LogBrokerPositionCloseDetail(obj);
+            //_clearCentre.LogBrokerPositionCloseDetail(obj);
+            TLCtxHelper.DataRepository.NewPositionCloseDetail(obj);
         }
 
         void LogBrokerFillEvent(Trade t)
         {
-            _clearCentre.LogBrokerTrade(t);
+            //_clearCentre.LogBrokerTrade(t);
+            TLCtxHelper.DataRepository.NewTrade(t);
         }
 
         void LogBrokerOrderUpdateEvent(Order o)
         {
-            _clearCentre.LogBrokerOrderUpdate(o);
+            TLCtxHelper.DataRepository.UpdateOrder(o);
+            //_clearCentre.LogBrokerOrderUpdate(o);
         }
 
         void LogBrokerOrderEvent(Order o)
         {
-            _clearCentre.LogBrokerOrder(o);
+            TLCtxHelper.DataRepository.NewOrder(o);
+            //_clearCentre.LogBrokerOrder(o);
         }
         #endregion
     }

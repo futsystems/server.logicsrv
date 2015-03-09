@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using TradingLib.API;
 using System.Reflection;
+using Autofac;
 
 namespace TradingLib.Common
 {
@@ -15,6 +16,21 @@ namespace TradingLib.Common
         private static TLCtxHelper defaultInstance;
         private TLContext ctx;
 
+        static ILifetimeScope _scope = null;
+        public static ILifetimeScope Scope {
+
+            get 
+            {
+                if (_scope == null)
+                    throw new NullReferenceException("Globle Scope not setted");
+                return _scope;
+            }
+        }
+
+        public static void RegisterScope(ILifetimeScope scope)
+        {
+            _scope = scope;
+        }
         /// <summary>
         /// 交易类事件与消息
         /// </summary>
@@ -192,11 +208,11 @@ namespace TradingLib.Common
         /// <summary>
         /// 交易帐号类操作
         /// </summary>
-        public static IAccountOperation CmdAccount
+        public static IAccountManager CmdAccount
         {
             get
             {
-                return defaultInstance.ctx.ClearCentre as IAccountOperation;
+                return AccountManager;//defaultInstance.ctx.ClearCentre as IAccountOperation;
             }
         }
 
@@ -219,13 +235,13 @@ namespace TradingLib.Common
         /// <summary>
         /// 认证与出入金请求
         /// </summary>
-        public static IAuthCashOperation CmdAuthCashOperation
-        {
-            get
-            {
-                return defaultInstance.ctx.ClearCentre as IAuthCashOperation;
-            }
-        }
+        //public static IAuthCashOperation CmdAuthCashOperation
+        //{
+        //    get
+        //    {
+        //        return defaultInstance.ctx.ClearCentre as IAuthCashOperation;
+        //    }
+        //}
 
         /// <summary>
         /// 结算中心
@@ -281,6 +297,44 @@ namespace TradingLib.Common
                 return defaultInstance.ctx.DataRouter as IDataRouter;
             }
         }
+
+        /// <summary>
+        /// 交易记录储存
+        /// </summary>
+        public static IDataRepository DataRepository
+        {
+            get
+            {
+                return defaultInstance.ctx.DataRepository as IDataRepository;
+            }
+        }
+
+
+        static IAccountManager _accountmanager;
+        public static IAccountManager AccountManager
+        {
+            get
+            {
+                if (_accountmanager == null)
+                    _accountmanager = _scope.Resolve<IAccountManager>();
+                return _accountmanager;
+            }
+        }
+        static IClearCentre _clearcenre;
+        /// <summary>
+        /// 清算中心
+        /// </summary>
+        public static IClearCentre ClearCenre
+        {
+            get
+            {
+                if (_clearcenre == null)
+                    _clearcenre = _scope.Resolve<IClearCentre>();
+                return _clearcenre;
+            }
+        }
+
+
         /// <summary>
         /// 系统加载完毕后绑定扩展模块的事件
         /// </summary>

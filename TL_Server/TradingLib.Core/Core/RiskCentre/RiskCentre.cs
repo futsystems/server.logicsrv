@@ -16,7 +16,7 @@ namespace TradingLib.Core
     
 
     //服务端风险控制模块,根据每个账户的设定，实时的检查Order是否符合审查要求予以确认或者决绝
-    public partial class RiskCentre : BaseSrvObject, IRiskCentre,ICore
+    public partial class RiskCentre : BaseSrvObject, IModuleRiskCentre
     {
         const string CoreName = "RiskCentre";
         /// <summary>

@@ -31,7 +31,7 @@ namespace TradingLib.Core
     }
 
     [CoreAttr(SettleCentre.CoreName, "结算中心", "结算中心,用于执行系统结算生成结算报表等")]
-    public partial class SettleCentre : BaseSrvObject, ISettleCentre,ICore
+    public partial class SettleCentre : BaseSrvObject, IModuleSettleCentre
     {
         const string CoreName = "SettleCentre";
         public string CoreId { get { return PROGRAME; } }

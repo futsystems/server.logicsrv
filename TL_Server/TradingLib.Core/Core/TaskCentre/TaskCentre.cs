@@ -14,7 +14,7 @@ namespace TradingLib.Core
     /// 1.几点几分几秒执行的任务
     /// 2.每隔多少时间执行的任务
     /// </summary>
-    public partial class TaskCentre:BaseSrvObject,ICore
+    public partial class TaskCentre : BaseSrvObject, IModuleTaskCentre
     {
         const string CoreName = "TaskCentre";
         public static Log Logger = new Log("TaskCentre_Error", true, true, Util.ProgramData(CoreName), true);//日志组件
@@ -26,6 +26,8 @@ namespace TradingLib.Core
         { 
             
         }
+
+        bool _rnning = false;
         /// <summary>
         /// 启动
         /// </summary>
@@ -48,6 +50,7 @@ namespace TradingLib.Core
                 _timerSpecial.Enabled = true;
                 _timerSpecial.Start();
             }
+            _rnning = true;
         }
 
         /// <summary>
@@ -64,16 +67,27 @@ namespace TradingLib.Core
             {
                 _timerSpecial.Stop();
             }
+            _rnning = false;
         }
 
         public override void Dispose()
         {
             Util.DestoryStatus(this.PROGRAME);
             base.Dispose();
-            _timer.Elapsed -= new System.Timers.ElapsedEventHandler(TimeEvent);
-            _timer = null;
-            _timerSpecial.Elapsed -= new System.Timers.ElapsedEventHandler(TimeEventSpecial);
-            _timerSpecial = null;
+            if (_rnning)
+            {
+                Stop();
+            }
+            if(_timer != null)
+            {
+                _timer.Elapsed -= new System.Timers.ElapsedEventHandler(TimeEvent);
+                _timer = null;
+            }
+            if(_timerSpecial !=null)
+            {
+                _timerSpecial.Elapsed -= new System.Timers.ElapsedEventHandler(TimeEventSpecial);
+                _timerSpecial = null;
+            }
 
         }
         /// <summary>

@@ -144,7 +144,9 @@ namespace TradingLib.ServiceManager
                 debug("Broker[" + b + "] Disconnected", QSEnumDebugLevel.WARNING);
             };
             //6.将broker的交易类事件绑定到路由内 然后通过路由转发到交易消息服务
-            _brokerrouter.LoadBroker(brokerinterface);
+            //_brokerrouter.LoadBroker(brokerinterface);
+            //TLCtxHelper.Scope.
+            TLCtxHelper.BrokerRouter.LoadBroker(brokerinterface);
         }
 
         /// <summary>
@@ -178,7 +180,8 @@ namespace TradingLib.ServiceManager
                     debug("DataFeed[" + d + "] Disonnected", QSEnumDebugLevel.WARNING);
                 };
                 //将DataFeed加载到行情路由中去
-                _datafeedrouter.LoadDataFeed(datafeedinterface);
+                //_datafeedrouter.LoadDataFeed(datafeedinterface);
+                TLCtxHelper.DataRouter.LoadDataFeed(datafeedinterface);
             }
         
         }

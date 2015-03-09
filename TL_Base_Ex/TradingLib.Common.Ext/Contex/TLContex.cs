@@ -251,6 +251,19 @@ namespace TradingLib.Common
                 return _datarouter;
             }
         }
+
+        IDataRepository _datarepository = null;
+        internal IDataRepository DataRepository
+        {
+            get
+            {
+                if (_datarepository == null)
+                {
+                    debug("Error-DataRepository not valid");
+                }
+                return _datarepository;
+            }
+        }
         #endregion
 
 
@@ -670,6 +683,12 @@ namespace TradingLib.Common
                 if (obj is IDataRouter)
                 {
                     _datarouter = obj as IDataRouter;
+                }
+
+
+                if (obj is IDataRepository)
+                {
+                    _datarepository = obj as IDataRepository;
                 }
 
                 //0.检查是否是服务模块管理

@@ -33,7 +33,7 @@ namespace TradingLib.Core
         /// <returns></returns>
         public IBroker SelectBroker(Order o,bool isorderaction=false)
         {
-            IAccount account = _clearCentre[o.Account];
+            IAccount account = TLCtxHelper.CmdAccount[o.Account];
             if (account == null) return null;
             //如果设定的路由类别为模拟 则返回模拟成交接口 如果是路由类别为实盘 则通过RouterGroup返回对应的路由
             if (account.OrderRouteType == QSEnumOrderTransferType.SIM)

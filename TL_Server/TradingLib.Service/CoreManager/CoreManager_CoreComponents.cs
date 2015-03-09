@@ -74,7 +74,7 @@ namespace TradingLib.ServiceManager
         private void InitBrokerRouter()
         {
             debug("5.初始化BrokerRouter");
-            _brokerRouter = new BrokerRouter(_clearCentre);
+            _brokerRouter = new BrokerRouter();
 
             //_brokerRouter.DataFeedRouter = _datafeedRouter;
         }

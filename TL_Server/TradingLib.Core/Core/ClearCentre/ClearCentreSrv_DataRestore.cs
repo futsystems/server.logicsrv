@@ -30,7 +30,7 @@ namespace TradingLib.Core
             try
             {
                 //从数据库加载账户的当日出入金信息以及昨日结算权益数据
-                foreach (IAccount acc in acctk.Accounts)
+                foreach (IAccount acc in TLCtxHelper.CmdAccount.Accounts)
                 {
                     //这里累计NextTradingday的出入金数据 恢复到当前状态,结算之后的所有交易数据都归入以结算日为基础计算的下一个交易日
                     acc.Deposit(ORM.MAccount.CashInOfTradingDay(acc.ID,TLCtxHelper.Ctx.SettleCentre.NextTradingday));
@@ -41,13 +41,13 @@ namespace TradingLib.Core
                 }
 
                 debug("从数据库加载交易日:" + TLCtxHelper.Ctx.SettleCentre.NextTradingday.ToString() + " 交易数据", QSEnumDebugLevel.INFO);
-                IEnumerable<Order> olist = LoadOrderFromMysql();
-                IEnumerable<Trade> flist = LoadTradesFromMysql();
-                IEnumerable<long> clist = LoadCanclesFromMysql();
+                IEnumerable<Order> olist = TLCtxHelper.DataRepository.SelectAcctOrders();
+                IEnumerable<Trade> flist = TLCtxHelper.DataRepository.SelectAcctTrades();
+                IEnumerable<OrderAction> clist = TLCtxHelper.DataRepository.SelectAcctOrderActions();
 
                 debug("从数据库加载上次结算日:" + TLCtxHelper.Ctx.SettleCentre.LastSettleday.ToString() + " 持仓明细数据", QSEnumDebugLevel.INFO);
-                IEnumerable<PositionDetail> plist = LoadPositionFromMysql();//从数据得到昨持仓数据
-                IEnumerable<PositionRoundImpl> prlist = LoadPositionRoundFromMysql();//恢复开启的positionround数据
+                IEnumerable<PositionDetail> plist = TLCtxHelper.DataRepository.SelectAcctPositionDetails() ;//从数据得到昨持仓数据
+                //IEnumerable<PositionRoundImpl> prlist = LoadPositionRoundFromMysql();//恢复开启的positionround数据
 
                 //从数据库加载上日结算持仓信息 用于恢复当前持仓状态
                 foreach (PositionDetail p in plist)
@@ -55,12 +55,12 @@ namespace TradingLib.Core
                     this.GotPosition(p);
                 }
 
-                foreach (PositionRoundImpl pr in prlist)
-                {
-                    Util.Debug(pr.ToString(), QSEnumDebugLevel.VERB);
-                }
+                //foreach (PositionRoundImpl pr in prlist)
+                //{
+                //    Util.Debug(pr.ToString(), QSEnumDebugLevel.VERB);
+                //}
                 //当将昨日持仓恢复到内存后需要恢复开启的持仓回合数据,当成交数据恢复时会同时更新持仓回合记录
-                prt.RestorePositionRounds(prlist);
+                //prt.RestorePositionRounds(prlist);
 
                 //PR数据与持仓数据进行同步1.从数据库加载同步一次  2.保存到数据库同步一次
                 prt.SyncPositionHold(this.TotalPositions.Where(pos=>!pos.isFlat));
@@ -72,17 +72,11 @@ namespace TradingLib.Core
                 {
                     this.GotFill(f);
                 }
-                foreach (long oid in clist)
+                foreach (OrderAction action in clist)
                 {
-                    this.GotCancel(oid);
+                    if(action.ActionFlag == QSEnumOrderActionFlag.Delete && action.OrderID != 0)
+                        this.GotCancel(action.OrderID) ;
                 }
-
-                //foreach (Position p in this.TotalYdPositions)
-                //{
-                //    string key = PositionRound.GetPRKey(p);
-                //    PositionRound pr = prt[key];
-                //    debug("PH:" + p.Account + " " + p.Symbol + "  Size:" + p.Size + "    PR:" + (pr == null ? "NULL" : pr.HoldSize.ToString()), QSEnumDebugLevel.MUST);
-                //}
             }
             catch (Exception ex)
             {
@@ -93,85 +87,6 @@ namespace TradingLib.Core
             Status = QSEnumClearCentreStatus.CCRESTOREFINISH;
         }
 
-        /// <summary>
-        /// 获得某个交易帐户的合约对象
-        /// </summary>
-        /// <param name="account"></param>
-        /// <param name="symbol"></param>
-        /// <returns></returns>
-        Symbol GetAccountSymbol(string account, string symbol)
-        {
-            IAccount acc = this[account];
-            if (acc == null) return null;
-            return acc.GetSymbol(symbol);
-        }
-
-
-        /// <summary>
-        /// 从数据库导出取消记录
-        /// </summary>
-        /// <returns></returns>
-        //恢复内存数据的时候需要得到上次结算后的成交信息，而恢复交易通道则需要得到当天的所有数据这里统一解决了结算时间与实际交易时间段之间可能产生的冲突
-        private List<long> LoadCanclesFromMysql()
-        {
-            debug("从数据库恢复取消数据....", QSEnumDebugLevel.DEBUG);
-            List<long> clist = new List<long>();
-            foreach (OrderAction oc in ORM.MTradingInfo.SelectOrderActions())
-            { 
-                if(oc.ActionFlag == QSEnumOrderActionFlag.Delete && oc.OrderID != 0)
-                {
-                    clist.Add(oc.OrderID);
-                }
-            }
-            debug("数据库恢复前次结算以来取消数据:" + clist.Count.ToString() + "条", QSEnumDebugLevel.INFO);
-            return clist;
-        }
-
-        /// <summary>
-        /// 从数据库导出成交数据
-        /// </summary>
-        public IEnumerable<Trade> LoadTradesFromMysql()
-        {
-            //填充对象oSymbol
-            IEnumerable<Trade> trades = ORM.MTradingInfo.SelectTrades().Select(f => { f.oSymbol = GetAccountSymbol(f.Account, f.Symbol); return f; });
-            debug("数据库恢复前次结算以来成交数据:" + trades.Count().ToString() + "条", QSEnumDebugLevel.INFO);
-            return trades;
-        }
-       
-
-        /// <summary>
-        /// 从数据库导出委托数据
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<Order> LoadOrderFromMysql()
-        {
-            IEnumerable<Order> orders = ORM.MTradingInfo.SelectOrders().Select(o => { o.oSymbol = GetAccountSymbol(o.Account, o.Symbol); return o; });
-            debug("数据库恢复前次结算以来委托数据:" + orders.Count().ToString() + "条", QSEnumDebugLevel.INFO);
-            return orders;
-        }
-
-        /// <summary>
-        /// 加载上次结算时的持仓数据,这里的持仓均是隔夜仓数据
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<PositionDetail> LoadPositionFromMysql()
-        {
-            IEnumerable<PositionDetail> positions = ORM.MSettlement.SelectAccountPositionDetails(TLCtxHelper.Ctx.SettleCentre.LastSettleday).Select(pos => { pos.oSymbol = GetAccountSymbol(pos.Account, pos.Symbol); return pos; });
-            debug("数据库恢复前次结算持仓明细数据:" + positions.Count().ToString() + "条", QSEnumDebugLevel.INFO);
-            return positions;
-        }
-
-        /// <summary>
-        /// 加载持仓回合数据
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<PositionRoundImpl> LoadPositionRoundFromMysql()
-        {
-            debug("从数据库恢复开启的PositionRound数据....", QSEnumDebugLevel.DEBUG);
-            IEnumerable<PositionRoundImpl> prlist = ORM.MTradingInfo.SelectHoldPositionRounds(TLCtxHelper.Ctx.SettleCentre.LastSettleday);
-            debug("数据库恢复开启的PositionRound数据:" + prlist.Count().ToString() + "条", QSEnumDebugLevel.INFO);
-            return prlist;
-        }
         #endregion
     }
 }

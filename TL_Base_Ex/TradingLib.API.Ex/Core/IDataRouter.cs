@@ -18,6 +18,18 @@ namespace TradingLib.API
         void IncludeSymbol(string symbol);
         Tick[] GetTickSnapshot();
         void LoadDataFeed(IDataFeed datafeed);
+
+        void LoadTickSnapshot();
+        /// <summary>
+        /// 启动
+        /// </summary>
+        void Start();
+
+        /// <summary>
+        /// 停止
+        /// </summary>
+        void Stop();
+
         void Reset();
     }
 }

@@ -24,56 +24,22 @@ namespace TradingLib.Core
     /// 5.关闭清算中心 //不做状态检查
     /// </summary>
     [CoreAttr(ClearCentre.CoreName,"清算中心","清算中心,用于维护交易帐号,交易记录,保证金核算,系统结算等功能")]
-    public partial class ClearCentre : ClearCentreBase, IClearCentreSrv, ICore
+    public partial class ClearCentre : ClearCentreBase, IClearCentreSrv, IModuleClearCentre,ICore
     {
         const string CoreName = "ClearCentre";
 
         public string CoreId { get { return this.PROGRAME; } }
 
-        #region 事件
-        /// <summary>
-        /// 添加交易帐号
-        /// </summary>
-       // public event AccoundIDDel AccountAddEvent;
-
-        /// <summary>
-        /// 删除交易帐号
-        /// </summary>
-        //public event AccoundIDDel AccountDelEvent;
-
-        /// <summary>
-        /// 激活交易帐号
-        /// </summary>
-        //public event AccoundIDDel AccountActiveEvent;
-
-        /// <summary>
-        /// 冻结交易帐号
-        /// </summary>
-        //public event AccoundIDDel AccountInActiveEvent;
-
-        /// <summary>
-        /// 帐户修改事件
-        /// </summary>
-        //public event AccoundIDDel AccountChangeEvent;
 
         protected void AccountChanged(IAccount account)
         {
             TLCtxHelper.EventAccount.FireAccountChangeEent(account.ID);
-            //if (AccountChangeEvent != null)
-            //    AccountChangeEvent(account.ID);
         }
-
-        #endregion
-
-
-        AsyncTransactionLoger _asynLoger;//异步记录交易数据到数据库
         PositionRoundTracker prt;//记录交易回合信息
         /// <summary>
         /// 持仓回合管理器
         /// </summary>
         public PositionRoundTracker PositionRoundTracker { get { return this.prt; } }
-
-        
 
 
         ConfigDB _cfgdb;
@@ -118,12 +84,8 @@ namespace TradingLib.Core
             }
             _cleanTmp = _cfgdb["CleanTmpTable"].AsBool();
 
-
             try
             {
-                //初始化异步储存组件
-                _asynLoger = new AsyncTransactionLoger();//获得交易信息数据库记录对象，用于记录委托，成交，取消等信息
-
                 //帐户交易数据维护器产生 平仓明细事件
                 acctk.NewPositionCloseDetailEvent += new Action<PositionCloseDetail>(acctk_NewPositionCloseDetailEvent);
                 
@@ -131,7 +93,7 @@ namespace TradingLib.Core
                 prt = new PositionRoundTracker();
 
                 //加载账户信息
-                LoadAccount();
+                //LoadAccount();
 
                 Status = QSEnumClearCentreStatus.CCINITFINISH;
             }
@@ -141,17 +103,13 @@ namespace TradingLib.Core
                 throw (new QSClearCentreInitError(ex, "ClearCentre初始化错误"));
             }
 
-            TLCtxHelper.EventSystem.SettleDataStoreEvent += new EventHandler<SystemEventArgs>(EventSystem_SettleDataStoreEvent);
+            
             TLCtxHelper.EventSystem.SettleEvent +=new EventHandler<SystemEventArgs>(EventSystem_SettleEvent);
             TLCtxHelper.EventSystem.SettleResetEvent +=new EventHandler<SystemEventArgs>(EventSystem_SettleResetEvent);
         }
 
         void  EventSystem_SettleResetEvent(object sender, SystemEventArgs e)
         {
-            if (_cleanTmp)
-            {
-                this.CleanTempTable();
-            }
             this.Reset();
         }
 
@@ -160,15 +118,15 @@ namespace TradingLib.Core
  	        this.SettleAccount();
         }
 
-        void EventSystem_SettleDataStoreEvent(object sender, SystemEventArgs e)
-        {
-            ////保存结算持仓对应的PR数据
-            this.SaveHoldInfo();
-            ////保存当前持仓明细
-            this.SavePositionDetails();//保存持仓明细
-            ////保存交易日志 委托 成交 委托操作
-            this.Dump2Log();//将委托 成交 撤单 PR数据保存到对应的log_表 所有的转储操作均是replace into不会存在重复操作
-        }
+        //void EventSystem_SettleDataStoreEvent(object sender, SystemEventArgs e)
+        //{
+        //    ////保存结算持仓对应的PR数据
+        //    this.SaveHoldInfo();
+        //    ////保存当前持仓明细
+        //    this.SavePositionDetails();//保存持仓明细
+        //    ////保存交易日志 委托 成交 委托操作
+        //    this.Dump2Log();//将委托 成交 撤单 PR数据保存到对应的log_表 所有的转储操作均是replace into不会存在重复操作
+        //}
 
         /// <summary>
         /// 保存平仓明细记录
@@ -179,7 +137,8 @@ namespace TradingLib.Core
             if (_status == QSEnumClearCentreStatus.CCOPEN)
             {
                 debug("平仓明细生成:" + obj.GetPositionCloseStr(), QSEnumDebugLevel.INFO);
-                LogAcctPositionCloseDetail(obj);
+                //LogAcctPositionCloseDetail(obj);
+                TLCtxHelper.DataRepository.NewPositionCloseDetail(obj);
             }
         }
 
@@ -194,7 +153,7 @@ namespace TradingLib.Core
             
             //清空分帐户维护器交易记录
             debug("清算中心重置", QSEnumDebugLevel.INFO);
-            foreach (IAccount a in this.Accounts)
+            foreach (IAccount a in TLCtxHelper.CmdAccount.Accounts)
             {
                 acctk.ResetAccount(a);
             }
@@ -217,14 +176,12 @@ namespace TradingLib.Core
         public void Start()
         {
             Util.StartStatus(this.PROGRAME);
-            _asynLoger.Start();
             RestoreFromMysql();
         }
 
         public void Stop()
         {
             Util.StopStatus(this.PROGRAME);
-            _asynLoger.Stop();
         }
 
 
@@ -233,7 +190,6 @@ namespace TradingLib.Core
             Util.DestoryStatus(this.PROGRAME);
             base.Dispose();
             acctk.Dispose();
-            _asynLoger.Dispose();
         }
         #endregion
 

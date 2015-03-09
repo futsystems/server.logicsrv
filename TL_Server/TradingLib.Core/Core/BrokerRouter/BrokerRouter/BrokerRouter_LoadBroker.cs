@@ -33,7 +33,7 @@ namespace TradingLib.Core
             this.GotTickEvent += new TickDelegate(broker.GotTick);
 
             //将清算中心绑定到交易通道
-            broker.ClearCentre = new ClearCentreAdapterToBroker(_clearCentre);
+            broker.ClearCentre = new ClearCentreAdapterToBroker();
 
             if (broker is TLBrokerBase)
             {

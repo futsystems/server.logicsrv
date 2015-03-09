@@ -15,20 +15,19 @@ namespace TradingLib.Common
     public class ClearCentreAdapterToBroker : IBrokerClearCentre
     {
         private IClearCentreSrv _clearcentre;
-        public ClearCentreAdapterToBroker(IClearCentreSrv c)
+        public ClearCentreAdapterToBroker()
         {
-            _clearcentre = c;
         }
 
 
         public IEnumerable<Order> GetOrdersViaBroker(string broker)
         {
-            return _clearcentre.TotalOrders.Where(o => o.Broker.Equals(broker));
+            return TLCtxHelper.CmdTotalInfo.TotalOrders.Where(o => o.Broker.Equals(broker));
         }
 
         public IEnumerable<Trade> GetTradesViaBroker(string broker)
         {
-            return _clearcentre.TotalTrades.Where(f => f.Broker.Equals(broker));
+            return TLCtxHelper.CmdTotalInfo.TotalTrades.Where(f => f.Broker.Equals(broker));
         }
 
         /// <summary>
@@ -43,7 +42,7 @@ namespace TradingLib.Common
         {
             if (type == QSEnumOrderBreedType.ACCT)
             {
-                return _clearcentre.SentOrder(id);
+                return TLCtxHelper.CmdTotalInfo.SentOrder(id);
             }
             if (type == QSEnumOrderBreedType.ROUTER)
             {
@@ -60,7 +59,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public IEnumerable<Order> SelectBrokerOrders(string token)
         {
-            return _clearcentre.SelectBrokerOrders(token);
+            return TLCtxHelper.DataRepository.SelectBrokerOrders(token);
         }
 
 
@@ -71,7 +70,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public IEnumerable<Trade> SelectBrokerTrades(string token)
         {
-            return _clearcentre.SelectBrokerTrades(token);
+            return TLCtxHelper.DataRepository.SelectBrokerTrades(token);
         }
 
         /// <summary>
@@ -81,7 +80,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public IEnumerable<PositionDetail> SelectBrokerPositionDetails(string token)
         {
-            return _clearcentre.SelectBrokerPositionDetails(token);
+            return TLCtxHelper.DataRepository.SelectBrokerPositionDetails(token);
         }
 
     }

@@ -228,6 +228,7 @@ namespace TradingLib.Core
         public void LoadDataFeed(IDataFeed datafeed)
         { 
             //将数据通道的Tick转发到datafeedrouter然后再转发到TradingServer
+            debug("load datafeed:xxxxxxxxxxxxxxxxxxxxxx", QSEnumDebugLevel.INFO);
             datafeed.GotTickEvent +=new TickDelegate(GotTick);
             datafeed.Connected += new IConnecterParamDel(datafeed_Connected);
             
@@ -611,6 +612,7 @@ namespace TradingLib.Core
         {
             //利用异步处理tick组件来接受并处理tick数据,这样当有多个数据源时,就不会存在线程问题。
             //在asynctick中统一缓存然后由唯一的线程对外发送tick数据
+            //debug("datafeed got tick ??????????????", QSEnumDebugLevel.INFO);
             asynctick.newTick(k);
         }
 
@@ -632,11 +634,13 @@ namespace TradingLib.Core
         {
             if (excludesymbol.Contains(k.Symbol))
                 return;
+            //debug("it is tick here..............", QSEnumDebugLevel.INFO);
             newtick(k, false);
 
         }
         void newtick(Tick k,bool ishist=false)
         {
+            //debug("got tick:" + TickImpl.Serialize(k), QSEnumDebugLevel.INFO);
             try
             {
                 if (GlobalConfig.IsDevelop)//如果处于开发环境则需要替换行情的时间
@@ -650,8 +654,12 @@ namespace TradingLib.Core
                 //如果是历史行情加载，tickwatcher不用监控该tick
                 if(!ishist)
                     _tickwatcher.GotTick(k);
+
                 if (GotTickEvent != null)
+                {
+                    //debug("fire raw tick event", QSEnumDebugLevel.INFO);
                     GotTickEvent(k);
+                }
             }
             catch (Exception ex)
             {

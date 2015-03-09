@@ -51,7 +51,7 @@ namespace TradingLib.Core
 
 
         TIFEngine _tifengine;
-        private ClearCentre _clearCentre;
+        //private ClearCentre _clearCentre;
         //private DataFeedRouter _datafeedRouter;
 
         OrderTransactionHelper _ordHelper;
@@ -66,9 +66,9 @@ namespace TradingLib.Core
                 
         //           } }
 
-        public BrokerRouter(ClearCentre c):base("BrokerRouter")
+        public BrokerRouter():base("BrokerRouter")
         {
-            _clearCentre = c;
+            //_clearCentre = c;
             _tifengine = new TIFEngine();
             //_tifengine.SendDebugEvent +=new DebugDelegate(msgdebug);
             //_tifengine.SendOrderEvent += new OrderDelegate(route_SendOrder);

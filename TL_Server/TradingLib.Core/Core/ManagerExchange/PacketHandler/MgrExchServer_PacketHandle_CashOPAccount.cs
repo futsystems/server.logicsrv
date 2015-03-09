@@ -77,7 +77,7 @@ namespace TradingLib.Core
                     
 
                     //调用清算中心出入金确认操作
-                    TLCtxHelper.CmdAuthCashOperation.ConfirmCashOperation(request.Ref);
+                    //TLCtxHelper.CmdAuthCashOperation.ConfirmCashOperation(request.Ref);
 
                     //重新从数据库加载数据 返回当前记录的数据
                     request = ORM.MCashOpAccount.GetAccountCashOperation(request.Ref);

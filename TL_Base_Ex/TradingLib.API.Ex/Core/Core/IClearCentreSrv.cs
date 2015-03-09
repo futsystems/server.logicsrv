@@ -13,7 +13,7 @@ namespace TradingLib.API
     /// 成交侧交易信息
     /// 帐户认证与出入金操作
     /// </summary>
-    public interface IClearCentreSrv : IAccountOperation, ITotalAccountInfo, IBrokerTradingInfo, IAuthCashOperation, IGotTradingRecord
+    public interface IClearCentreSrv : ITotalAccountInfo, IGotTradingRecord
     {
         /// <summary>
         /// 请求获得某个symbol的Tick数据
@@ -77,7 +77,7 @@ namespace TradingLib.API
         /// <param name="ac"></param>
         /// <param name="pass"></param>
         /// <returns></returns>
-        bool VaildAccount(string ac, string pass);
+        //bool VaildAccount(string ac, string pass);
 
         /// <summary>
         /// 安全出入金操作,主要用于web端的交互
@@ -87,7 +87,7 @@ namespace TradingLib.API
         /// <param name="comment"></param>
         /// <param name="msg"></param>
         /// <returns></returns>
-        bool CashOperationSafe(string accid, decimal ammount, string comment, out string msg);
+        //bool CashOperationSafe(string accid, decimal ammount, string comment, out string msg);
 
 
     }

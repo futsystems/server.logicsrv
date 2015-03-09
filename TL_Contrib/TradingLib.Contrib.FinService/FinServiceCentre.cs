@@ -208,7 +208,7 @@ namespace TradingLib.Contrib.FinService
                 {
                     try
                     {
-                        TLCtxHelper.CmdAuthCashOperation.CashOperation(item.Account, item.TotalFee * -1, "", item.Comment);
+                        TLCtxHelper.CmdAccount.CashOperation(item.Account, item.TotalFee * -1, "", item.Comment);
                     }
                     catch (FutsRspError ex)
                     {

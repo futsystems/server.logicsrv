@@ -176,7 +176,7 @@ namespace TradingLib.Core
             try
             {
                 //debug("取消委托到这里...", QSEnumDebugLevel.MUST);
-                Order o = _clearCentre.SentOrder(val);//通过orderID在清算中心找到对应的Order
+                Order o = TLCtxHelper.CmdTotalInfo.SentOrder(val);//通过orderID在清算中心找到对应的Order
                 bool splited = this.IsOrderSplited(o);//判断委托是否被分拆
                 if (!splited)
                 {

@@ -12,7 +12,7 @@ namespace TradingLib.ServiceManager
     /// <summary>
     /// 扩展模块管理器
     /// </summary>
-    public class ContribManager : BaseSrvObject, IServiceManager,IDisposable
+    public class ContribManager : BaseSrvObject,IContribManager
     {
         const string SMGName = "ContribManager";
         ConcurrentDictionary<string, IContrib> contribmap = new ConcurrentDictionary<string, IContrib>();

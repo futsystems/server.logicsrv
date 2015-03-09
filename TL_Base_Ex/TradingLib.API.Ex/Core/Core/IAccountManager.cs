@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,9 +6,9 @@ using System.Text;
 namespace TradingLib.API
 {
     /// <summary>
-    /// 定义了账户操作接口
+    /// 交易帐户管理功能接口
     /// </summary>
-    public interface IAccountOperation
+    public interface IAccountManager
     {
         /// <summary>
         /// 获得清算中心下所有交易账户
@@ -49,6 +49,14 @@ namespace TradingLib.API
         /// <param name="pass"></param>
         /// <returns></returns>
         bool VaildAccount(string account, string pass);
-    }
 
+        /// <summary>
+        /// 直接进行出入金操作
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="ammount"></param>
+        /// <param name="comment"></param>
+        void CashOperation(string id, decimal ammount, string transref, string comment);
+
+    }
 }

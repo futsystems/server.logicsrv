@@ -58,10 +58,10 @@ namespace TradingLib.ServiceManager
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        public Tick GetTickSnapshot(string symbol)
-        {
-            return _datafeedrouter.GetTickSnapshot(symbol);
-        }
+        //public Tick GetTickSnapshot(string symbol)
+        //{
+        //    return _datafeedrouter.GetTickSnapshot(symbol);
+        //}
 
         /// <summary>
         /// 判断某个合约当前行情是否处于live状态
@@ -79,10 +79,10 @@ namespace TradingLib.ServiceManager
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        public decimal GetAvabilePrice(string symbol)
-        {
-            return _datafeedrouter.GetAvabilePrice(symbol);
-        }
+        //public decimal GetAvabilePrice(string symbol)
+        //{
+        //    return _datafeedrouter.GetAvabilePrice(symbol);
+        //}
 
     }
 }

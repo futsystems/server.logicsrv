@@ -57,7 +57,7 @@ namespace TradingLib.Common
             //request.Comment = comment;
 
             //SendPacket(request);
-            this.ReqContribRequest("ClearCentre", "AccountCashOperation", Mixins.Json.JsonMapper.ToJson(new { account = account, amount = amount,txnref=transref,comment=comment }));
+            this.ReqContribRequest("AccountManager", "AccountCashOperation", Mixins.Json.JsonMapper.ToJson(new { account = account, amount = amount, txnref = transref, comment = comment }));
      
         }
 
@@ -69,7 +69,7 @@ namespace TradingLib.Common
             //request.Intraday = intraday;
 
             //SendPacket(request);
-            this.ReqContribRequest("ClearCentre", "UpdateAccountIntraday", Mixins.Json.JsonMapper.ToJson(new { account = account, intraday = intraday }));
+            this.ReqContribRequest("AccountManager", "UpdateAccountIntraday", Mixins.Json.JsonMapper.ToJson(new { account = account, intraday = intraday }));
      
         }
 
@@ -80,7 +80,7 @@ namespace TradingLib.Common
             //request.Account = account;
             //request.Category = category;
 
-            this.ReqContribRequest("ClearCentre", "UpdateAccountCategory", Mixins.Json.JsonMapper.ToJson(new { account = account, category = category}));
+            this.ReqContribRequest("AccountManager", "UpdateAccountCategory", Mixins.Json.JsonMapper.ToJson(new { account = account, category = category }));
         }
 
         public void ReqUpdateRouteType(string account, QSEnumOrderTransferType routertrype)
@@ -92,7 +92,7 @@ namespace TradingLib.Common
 
             //SendPacket(request);
 
-            this.ReqContribRequest("ClearCentre", "UpdateRouteType", Mixins.Json.JsonMapper.ToJson(new { account = account, routertrype = routertrype }));
+            this.ReqContribRequest("AccountManager", "UpdateRouteType", Mixins.Json.JsonMapper.ToJson(new { account = account, routertrype = routertrype }));
        
         }
 
@@ -104,7 +104,7 @@ namespace TradingLib.Common
             //request.Execute = active;
 
             //SendPacket(request);
-            this.ReqContribRequest("ClearCentre", "UpdateAccountExecute", Mixins.Json.JsonMapper.ToJson(new { account = account, execute = active }));
+            this.ReqContribRequest("AccountManager", "UpdateAccountExecute", Mixins.Json.JsonMapper.ToJson(new { account = account, execute = active }));
        
         }
 
@@ -119,7 +119,7 @@ namespace TradingLib.Common
             //request.MgrID = mgrid;
             //request.RouterGroup_ID = routergroupid;
             //SendPacket(request);
-            this.ReqContribRequest("ClearCentre", "AddAccount", Mixins.Json.JsonMapper.ToJson(new { account = account, category = category, password = pass, user_id = userid, manager_id = mgrid, routergroup_id = routergroupid }));
+            this.ReqContribRequest("AccountManager", "AddAccount", Mixins.Json.JsonMapper.ToJson(new { account = account, category = category, password = pass, user_id = userid, manager_id = mgrid, routergroup_id = routergroupid }));
         }
 
         public void ReqDelAccount(string account)
@@ -128,7 +128,7 @@ namespace TradingLib.Common
             //MGRReqDelAccountRequest request = RequestTemplate<MGRReqDelAccountRequest>.CliSendRequest(requestid++);
             //request.AccountToDelete = account;
 
-            this.ReqContribRequest("ClearCentre", "DelAccount", Mixins.Json.JsonMapper.ToJson(new { account = account}));
+            this.ReqContribRequest("AccountManager", "DelAccount", Mixins.Json.JsonMapper.ToJson(new { account = account }));
         
         }
 
@@ -140,7 +140,7 @@ namespace TradingLib.Common
             //request.TradingAccount = account;
             //request.NewPassword = pass;
 
-            this.ReqContribRequest("ClearCentre", "UpdateAccountPass", Mixins.Json.JsonMapper.ToJson(new { account = account,newpass=pass }));
+            this.ReqContribRequest("AccountManager", "UpdateAccountPass", Mixins.Json.JsonMapper.ToJson(new { account = account, newpass = pass }));
         
         }
 
@@ -156,7 +156,7 @@ namespace TradingLib.Common
             //request.BankAC = bankac;
 
             //SendPacket(request);
-            this.ReqContribRequest("ClearCentre", "UpdateAccountInvestor", Mixins.Json.JsonMapper.ToJson(new { account=account,name=name,broker=broker,bank_id=bankfk,bank_ac=bankac}));
+            this.ReqContribRequest("AccountManager", "UpdateAccountInvestor", Mixins.Json.JsonMapper.ToJson(new { account = account, name = name, broker = broker, bank_id = bankfk, bank_ac = bankac }));
        
         }
 
@@ -180,25 +180,25 @@ namespace TradingLib.Common
         public void ReqUpdateAccountCommissionTemplate(string account,int templateid)
         {
             debug("请求更新帐户手续费模板", QSEnumDebugLevel.INFO);
-            this.ReqContribRequest("ClearCentre", "UpdateAccountCommissionTemplate", account + "," + templateid.ToString());
+            this.ReqContribRequest("AccountManager", "UpdateAccountCommissionTemplate", account + "," + templateid.ToString());
         }
 
         public void ReqUpdateAccountMarginTemplate(string account, int templateid)
         {
             debug("请求更新帐户保证金模板", QSEnumDebugLevel.INFO);
-            this.ReqContribRequest("ClearCentre", "UpdateAccountMarginTemplate", account + "," + templateid.ToString());
+            this.ReqContribRequest("AccountManager", "UpdateAccountMarginTemplate", account + "," + templateid.ToString());
         }
 
         public void ReqUpdateAccountExStrategyTemplate(string account, int templateid)
         {
             debug("请求更交易参数模板", QSEnumDebugLevel.INFO);
-            this.ReqContribRequest("ClearCentre", "UpdateAccountExStrategyTemplate", account + "," + templateid.ToString());
+            this.ReqContribRequest("AccountManager", "UpdateAccountExStrategyTemplate", account + "," + templateid.ToString());
         }
 
 
         public void ReqUpdateAccountCreditSeparate(string account, bool separate)
         {
-            this.ReqContribRequest("ClearCentre", "UpdateAccountCreditSeparate", account + "," + separate.ToString());
+            this.ReqContribRequest("AccountManager", "UpdateAccountCreditSeparate", account + "," + separate.ToString());
         }
 
         /// <summary>
@@ -207,7 +207,7 @@ namespace TradingLib.Common
         /// <param name="domainid"></param>
         public void ReqQryAccountLoginInfo(string account)
         {
-            this.ReqContribRequest("ClearCentre", "QryAccountLoginInfo", account);
+            this.ReqContribRequest("AccountManager", "QryAccountLoginInfo", account);
         }
 
 
@@ -217,7 +217,7 @@ namespace TradingLib.Common
         /// <param name="account"></param>
         public void ReqQryAccountFinInfo(string account)
         {
-            this.ReqContribRequest("ClearCentre", "QryAccountFinInfo", account);
+            this.ReqContribRequest("AccountManager", "QryAccountFinInfo", account);
         }
 
         /// <summary>
@@ -227,7 +227,7 @@ namespace TradingLib.Common
         /// <param name="rgid"></param>
         public void ReqUpdateRouterGroup(string account,int rgid)
         {
-            this.ReqContribRequest("ClearCentre", "UpdateAccountRouterGroup", account + "," + rgid.ToString());
+            this.ReqContribRequest("AccountManager", "UpdateAccountRouterGroup", account + "," + rgid.ToString());
         }
     }
 }

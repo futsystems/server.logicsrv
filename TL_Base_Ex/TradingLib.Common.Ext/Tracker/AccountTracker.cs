@@ -45,13 +45,13 @@ namespace TradingLib.Common
         /// <summary>
         /// 获得所有帐户对象
         /// </summary>
-        public IEnumerable<IAccount> Accounts
-        {
-            get
-            {
-                return AcctList.Values;
-            }
-        }
+        //public IEnumerable<IAccount> Accounts
+        //{
+        //    get
+        //    {
+        //        return AcctList.Values;
+        //    }
+        //}
 
 
         /// <summary>
@@ -59,16 +59,16 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
-        public IAccount this[string account]
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(account)) return null;
-                IAccount ac = null;
-                AcctList.TryGetValue(account, out ac);
-                return ac;
-            }
-        }
+        //public IAccount this[string account]
+        //{
+        //    get
+        //    {
+        //        if (string.IsNullOrEmpty(account)) return null;
+        //        IAccount ac = null;
+        //        AcctList.TryGetValue(account, out ac);
+        //        return ac;
+        //    }
+        //}
 
         /// <summary>
         /// 查询某个userid下的某个类型的交易帐户
@@ -147,24 +147,24 @@ namespace TradingLib.Common
 
         
 
-        public bool HaveAccount(string account)
-        {
-            if (AcctList.ContainsKey(account))
-                return true;
-            else
-                return false;
-        }
+        //public bool HaveAccount(string account)
+        //{
+        //    if (AcctList.ContainsKey(account))
+        //        return true;
+        //    else
+        //        return false;
+        //}
 
-        public bool HaveAccount(string account, out IAccount acc)
-        {
-            acc = null;
-            if (AcctList.TryGetValue(account, out acc))
-            {
-                return true;
-            }
-            else
-                return false;
-        }
+        //public bool HaveAccount(string account, out IAccount acc)
+        //{
+        //    acc = null;
+        //    if (AcctList.TryGetValue(account, out acc))
+        //    {
+        //        return true;
+        //    }
+        //    else
+        //        return false;
+        //}
 
 
         /// <summary>

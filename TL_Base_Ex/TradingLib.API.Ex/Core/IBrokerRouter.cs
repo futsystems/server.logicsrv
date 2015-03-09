@@ -41,6 +41,16 @@ namespace TradingLib.API
         /// </summary>
         void Reset();
 
+        /// <summary>
+        /// 启动
+        /// </summary>
+        void Start();
+
+
+        /// <summary>
+        /// 停止
+        /// </summary>
+        void Stop();
 
         void LoadBroker(IBroker broker);
     }
