@@ -18,18 +18,19 @@ namespace TradingLib.Core
         protected ConcurrentDictionary<string, IAccount> AcctList = new ConcurrentDictionary<string, IAccount>();
 
 
-        public AccountManager()
+        public AccountManager():
+            base(AccountManager.CoreName)
         {
             LoadAccount();
             
         }
         public void Start()
-        { 
-        
+        {
+            Util.StartStatus(this.PROGRAME);
         }
         public void Stop()
-        { 
-        
+        {
+            Util.StopStatus(this.PROGRAME);
         }
 
         /// <summary>
