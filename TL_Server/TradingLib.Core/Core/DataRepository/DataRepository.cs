@@ -114,7 +114,7 @@ namespace TradingLib.Core
         public void NewPositionCloseDetail(PositionCloseDetail d)
         {
             //设定该平仓明细所在结算日
-            d.Settleday = TLCtxHelper.CmdSettleCentre.NextTradingday;
+            d.Settleday = TLCtxHelper.ModuleSettleCentre.NextTradingday;
             //异步保存平仓明细
             _asynLoger.newPositionCloseDetail(d);
         }
@@ -159,7 +159,7 @@ namespace TradingLib.Core
         /// <returns></returns>
         Symbol GetAccountSymbol(string account, string symbol)
         {
-            IAccount acc = TLCtxHelper.CmdAccount[account];
+            IAccount acc = TLCtxHelper.ModuleAccountManager[account];
             if (acc == null) return null;
             return acc.GetSymbol(symbol);
         }
@@ -194,7 +194,7 @@ namespace TradingLib.Core
         /// <returns></returns>
         public IEnumerable<PositionDetail> SelectAcctPositionDetails()
         {
-            IEnumerable<PositionDetail> positions = ORM.MSettlement.SelectAccountPositionDetails(TLCtxHelper.Ctx.SettleCentre.LastSettleday).Select(pos => { pos.oSymbol = GetAccountSymbol(pos.Account, pos.Symbol); return pos; });
+            IEnumerable<PositionDetail> positions = ORM.MSettlement.SelectAccountPositionDetails(TLCtxHelper.ModuleSettleCentre.LastSettleday).Select(pos => { pos.oSymbol = GetAccountSymbol(pos.Account, pos.Symbol); return pos; });
             debug("数据库恢复前次结算持仓明细数据:" + positions.Count().ToString() + "条", QSEnumDebugLevel.INFO);
             return positions;
         }
@@ -237,7 +237,7 @@ namespace TradingLib.Core
         /// <returns></returns>
         public IEnumerable<PositionDetail> SelectBrokerPositionDetails(string token)
         {
-            return ORM.MSettlement.SelectBrokerPositionDetails(TLCtxHelper.Ctx.SettleCentre.LastSettleday).Where(p => p.Broker.Equals(token)).Select(pos => { pos.oSymbol = GetSymbolViaToken(pos.Account, pos.Symbol); return pos; });
+            return ORM.MSettlement.SelectBrokerPositionDetails(TLCtxHelper.ModuleSettleCentre.LastSettleday).Where(p => p.Broker.Equals(token)).Select(pos => { pos.oSymbol = GetSymbolViaToken(pos.Account, pos.Symbol); return pos; });
         }
 
 
@@ -249,7 +249,7 @@ namespace TradingLib.Core
         /// <returns></returns>
         public IEnumerable<Order> SelectRouterOrders()
         {
-            return ORM.MTradingInfo.SelectRouterOrders().Select(ro => { Order fo = TLCtxHelper.CmdTotalInfo.SentOrder(ro.FatherID); ro.oSymbol = fo != null ? fo.oSymbol : null; return ro; });
+            return ORM.MTradingInfo.SelectRouterOrders().Select(ro => { Order fo = TLCtxHelper.ModuleClearCentre.SentOrder(ro.FatherID); ro.oSymbol = fo != null ? fo.oSymbol : null; return ro; });
         }
 
         /// <summary>

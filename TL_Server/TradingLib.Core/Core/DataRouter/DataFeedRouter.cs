@@ -86,13 +86,13 @@ namespace TradingLib.Core
         {
             DataFeedRouterStatus status = new DataFeedRouterStatus();
 
-            if (TLCtxHelper.Ctx.RouterManager.DefaultDataFeed == null)//如果行情通道不存在 则为false
+            if (TLCtxHelper.ServiceRouterManager.DefaultDataFeed == null)//如果行情通道不存在 则为false
             {
                 status.IsDefaultDataFeedLive = false;
             }
             else
             {
-                status.IsDefaultDataFeedLive = TLCtxHelper.Ctx.RouterManager.DefaultDataFeed.IsLive;//如果行情通道存在 则设定DefaultDataFeed的当前工作状态
+                status.IsDefaultDataFeedLive = TLCtxHelper.ServiceRouterManager.DefaultDataFeed.IsLive;//如果行情通道存在 则设定DefaultDataFeed的当前工作状态
             }
 
             status.MassAlert = _tickwatcher.isMassAlerting;//是否处于报警状态
@@ -244,8 +244,8 @@ namespace TradingLib.Core
         IDataFeed GetDataFeed(Symbol symbol)
         {
             //如果默认的行情路由存在并且处于活动状态 则通过该行情通道订阅行情数据
-            if (TLCtxHelper.Ctx.RouterManager.DefaultDataFeed != null && TLCtxHelper.Ctx.RouterManager.DefaultDataFeed.IsLive)
-                return TLCtxHelper.Ctx.RouterManager.DefaultDataFeed;
+            if (TLCtxHelper.ServiceRouterManager.DefaultDataFeed != null && TLCtxHelper.ServiceRouterManager.DefaultDataFeed.IsLive)
+                return TLCtxHelper.ServiceRouterManager.DefaultDataFeed;
 
             //通过预设Selector逻辑 找到对应的行情通道
             string dfname = "demo";
@@ -254,7 +254,7 @@ namespace TradingLib.Core
 
         IDataFeed GetDataFeedViaToken(string token)
         {
-            return TLCtxHelper.Ctx.RouterManager.FindDataFeed(token);
+            return TLCtxHelper.ServiceRouterManager.FindDataFeed(token);
         }
         #endregion
 

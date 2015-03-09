@@ -56,7 +56,7 @@ namespace TradingLib.Core
         {
             try
             {
-                return TLCtxHelper.DataRouter.GetTickSnapshot(symbol);
+                return TLCtxHelper.ModuleDataRouter.GetTickSnapshot(symbol);
             }
             catch (Exception ex)
             {

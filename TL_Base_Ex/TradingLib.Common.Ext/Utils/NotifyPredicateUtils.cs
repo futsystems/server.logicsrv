@@ -76,7 +76,7 @@ namespace TradingLib.Common
                 func = (mgr) =>
                 {
                     if (mgr == null) return false;
-                    IAccount account = TLCtxHelper.CmdAccount[op.Account];
+                    IAccount account = TLCtxHelper.ModuleAccountManager[op.Account];
 
                     //如果有Root域的管理端登入 则需要通知
                     if (mgr.IsInRoot())

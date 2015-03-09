@@ -79,7 +79,7 @@ namespace TradingLib.Core
         public void Task_FlatPositionViaExpiredDate()
         {
 
-            foreach (Position pos in TLCtxHelper.CmdTotalInfo.TotalPositions.Where(p => !p.isFlat && p.oSymbol.IsExpiredToday()))
+            foreach (Position pos in TLCtxHelper.ModuleClearCentre.TotalPositions.Where(p => !p.isFlat && p.oSymbol.IsExpiredToday()))
             {
                 this.FlatPosition(pos, QSEnumOrderSource.RISKCENTRE, "合约交割强平");
                 Thread.Sleep(50);
@@ -121,12 +121,12 @@ namespace TradingLib.Core
             debug("执行强平任务 对日内帐户执行撤单并强平持仓,强平时间点:" + flattime.ToString(), QSEnumDebugLevel.INFO);
             //1.遍历所有pending orders 如果委托对应的帐户是日内交易并且该委托需要在该强平时间点撤单 则执行撤单
             //查询所有待成交委托 且该委托合约在对应的强平时间点 撤掉将当前强平时间点的所有委托
-            foreach (Order od in TLCtxHelper.CmdTotalInfo.TotalOrders.Where(o => o.IsPending() && IsSymbolWithMarketTime(o.oSymbol, mts)))
+            foreach (Order od in TLCtxHelper.ModuleClearCentre.TotalOrders.Where(o => o.IsPending() && IsSymbolWithMarketTime(o.oSymbol, mts)))
             {
                 debug("symbol:"+od.Symbol+"order status:" + od.IsPending().ToString() + " withmarkettime:" + IsSymbolWithMarketTime(od.oSymbol, mts),QSEnumDebugLevel.INFO);
                 //if (od.IsPending() && IsSymbolWithMarketTime(od.oSymbol, mts))
                 //{
-                IAccount acc = TLCtxHelper.CmdAccount[od.Account];
+                IAccount acc = TLCtxHelper.ModuleAccountManager[od.Account];
                 if (acc != null)
                 {
                     if (!acc.IntraDay) continue;
@@ -140,9 +140,9 @@ namespace TradingLib.Core
             //等待1秒后再进行强平持仓
             Util.sleep(3000);
             //2.遍历所有持仓 进行强平
-            foreach (Position pos in TLCtxHelper.CmdTotalInfo.TotalPositions.Where(p => !p.isFlat && IsSymbolWithMarketTime(p.oSymbol, mts)))
+            foreach (Position pos in TLCtxHelper.ModuleClearCentre.TotalPositions.Where(p => !p.isFlat && IsSymbolWithMarketTime(p.oSymbol, mts)))
             {
-                IAccount acc = TLCtxHelper.CmdAccount[pos.Account];
+                IAccount acc = TLCtxHelper.ModuleAccountManager[pos.Account];
                 if (acc != null)
                 {
                     if (!acc.IntraDay) continue;//如果隔夜账户,则不用平仓

@@ -30,13 +30,13 @@ namespace TradingLib.Core
                         {
                             debug("Got Order:" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
                             //LogAcctOrder(o);
-                            TLCtxHelper.DataRepository.NewOrder(o);
+                            TLCtxHelper.ModuleDataRepository.NewOrder(o);
                         }
                         else
                         {
                             debug("Update Order:" + o.GetOrderStatus(), QSEnumDebugLevel.INFO);
                             //LogAcctOrderUpdate(o);
-                            TLCtxHelper.DataRepository.UpdateOrder(o);
+                            TLCtxHelper.ModuleDataRepository.UpdateOrder(o);
                         }
                     }
                 }
@@ -60,7 +60,7 @@ namespace TradingLib.Core
                     oc.OrderID = o.id;
                     debug("Got Cancel:" + oid, QSEnumDebugLevel.INFO);
                     //LogAcctOrderAction(oc);
-                    TLCtxHelper.DataRepository.NewOrderAction(oc);
+                    TLCtxHelper.ModuleDataRepository.NewOrderAction(oc);
                 }
             }
         }
@@ -85,13 +85,13 @@ namespace TradingLib.Core
                     debug("Got Fill:" + f.GetTradeInfo(), QSEnumDebugLevel.INFO);
                     //记录帐户成交记录
                     //LogAcctTrade(f);
-                    TLCtxHelper.DataRepository.NewTrade(f);
+                    TLCtxHelper.ModuleDataRepository.NewTrade(f);
                     //当PositionRound关闭后 对外触发PositionRound关闭事件
                     if (pr.IsClosed)
                     {
                         //LogAcctPositionRound(pr);
                         //持仓回合才需要获得对应的持仓信息
-                        IAccount account = TLCtxHelper.CmdAccount[f.Account];
+                        IAccount account = TLCtxHelper.ModuleAccountManager[f.Account];
                         Position pos = account.GetPosition(f.Symbol, f.PositionSide);
                         //向事件中继触发持仓回合关闭事件
                         TLCtxHelper.EventIndicator.FirePositionRoundClosed(pr, pos);

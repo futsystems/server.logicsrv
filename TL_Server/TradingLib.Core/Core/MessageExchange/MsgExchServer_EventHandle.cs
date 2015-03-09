@@ -41,7 +41,7 @@ namespace TradingLib.Core
             debug("Register Symbol Market Data:" + sym.Symbol, QSEnumDebugLevel.INFO);
             SymbolBasket b = new SymbolBasketImpl(sym);
 
-            TLCtxHelper.DataRouter.RegisterSymbols(b);
+            TLCtxHelper.ModuleDataRouter.RegisterSymbols(b);
             
         }
 
@@ -78,14 +78,14 @@ namespace TradingLib.Core
             try
             {
                 debug("Got CancelOrder :" + val, QSEnumDebugLevel.INFO);
-                Order o = TLCtxHelper.CmdTotalInfo.SentOrder(val);
+                Order o = TLCtxHelper.ModuleClearCentre.SentOrder(val);
                 //如果委托处于pending状态
                 if (o.IsPending())
                 {
                     //如果委托状态表面需要通过broker来取消委托 则通过broker来进行撤单
                     if (o.CanCancel())//opened partfilled
                     {
-                        TLCtxHelper.BrokerRouter.CancelOrder(o.id);
+                        TLCtxHelper.ModuleBrokerRouter.CancelOrder(o.id);
                     }
                     else if (o.Status == QSEnumOrderStatus.Submited)//已经通过broker提交 该状态无法立即撤单 需要等待委托状态更新为Opened或者 被定时程序发现是一个错误委托
                     {
@@ -187,13 +187,13 @@ namespace TradingLib.Core
                     debug("系统通过清算中心认证,LoginID:" + request.LoginID + " Password:" + request.Passwd, QSEnumDebugLevel.INFO);
                     //1.检查帐户是否存在
 
-                    login = TLCtxHelper.CmdAccount.VaildAccount(request.LoginID, request.Passwd);
+                    login = TLCtxHelper.ModuleAccountManager.VaildAccount(request.LoginID, request.Passwd);
                     response.Authorized = login;
                     if (login)
                     {
                         response.LoginID = request.LoginID;
                         response.Account = request.LoginID;
-                        account = TLCtxHelper.CmdAccount[request.LoginID];
+                        account = TLCtxHelper.ModuleAccountManager[request.LoginID];
                         response.AccountType = account.Category;
 
 

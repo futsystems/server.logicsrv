@@ -109,7 +109,7 @@ namespace TradingLib.Contrib.CLICommand
         [CoreCommandAttr(QSEnumCommandSource.CLI, "demo1", "demo1 - ", "")]
         public string CTE_FlatPosition()
         {
-            IAccount account = TLCtxHelper.CmdAccount["4444"];
+            IAccount account = TLCtxHelper.ModuleAccountManager["4444"];
 
             StringBuilder ret = new StringBuilder();
             foreach (MarginSet ms in account.CalFutMarginSet())

@@ -15,7 +15,7 @@ namespace TradingLib.Common
         {
             try
             {
-                IAccount account = TLCtxHelper.CmdAccount[p.Account];
+                IAccount account = TLCtxHelper.ModuleAccountManager[p.Account];
                 if (account == null) return;
                 Symbol symbol = p.oSymbol;
                 if (symbol == null)
@@ -46,7 +46,7 @@ namespace TradingLib.Common
         {
             try
             {
-                IAccount account = TLCtxHelper.CmdAccount[o.Account];
+                IAccount account = TLCtxHelper.ModuleAccountManager[o.Account];
                 if (account == null) return;
                 Symbol symbol = o.oSymbol;
                 if (symbol == null)
@@ -71,7 +71,7 @@ namespace TradingLib.Common
         {
             try
             {
-                IAccount account = TLCtxHelper.CmdAccount[o.Account];
+                IAccount account = TLCtxHelper.ModuleAccountManager[o.Account];
                 if (account == null) return;
                 Symbol symbol = o.oSymbol;
                 if (symbol == null)
@@ -107,7 +107,7 @@ namespace TradingLib.Common
             try
             {
                 string account = SentOrder(oid).Account;
-                IAccount acc = TLCtxHelper.CmdAccount[account];
+                IAccount acc = TLCtxHelper.ModuleAccountManager[account];
                 if (acc == null) return;
 
                 acctk.GotCancel(account, oid);
@@ -131,7 +131,7 @@ namespace TradingLib.Common
         {
             try
             {
-                IAccount account = TLCtxHelper.CmdAccount[f.Account];
+                IAccount account = TLCtxHelper.ModuleAccountManager[f.Account];
                 if (account == null) return;
                 Symbol symbol = f.oSymbol;
                 if (symbol == null)

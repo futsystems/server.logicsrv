@@ -148,7 +148,7 @@ namespace TradingLib.Core
                 //删除数据库
                 ORM.MAccount.DelAccount(account);//删除数据库记录
                 //删除内存记录
-                TLCtxHelper.ClearCenre.DropAccount(acc);
+                TLCtxHelper.ModuleClearCentre.DropAccount(acc);
                 //对外触发交易帐户删除事件
                 TLCtxHelper.EventAccount.FireAccountDelEvent(account);
                 acc.Deleted = true;
@@ -187,7 +187,7 @@ namespace TradingLib.Core
                 foreach (IAccount acc in accountlist)
                 {
                     AcctList.TryAdd(acc.ID, acc);
-                    TLCtxHelper.ClearCenre.CacheAccount(acc);
+                    TLCtxHelper.ModuleClearCentre.CacheAccount(acc);
                 }
                 //foreach (IAccount acc in accountlist)
                 //{

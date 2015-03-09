@@ -358,7 +358,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("Insert into log_cashtrans (`datetime`,`amount`,`comment`,`account`,`transref`,`settleday`) values('{0}','{1}','{2}','{3}','{4}','{5}')",Util.ToTLDateTime(), amount.ToString(), comment, account.ToString(),transref,TLCtxHelper.Ctx.SettleCentre.NextTradingday);
+                string query = String.Format("Insert into log_cashtrans (`datetime`,`amount`,`comment`,`account`,`transref`,`settleday`) values('{0}','{1}','{2}','{3}','{4}','{5}')", Util.ToTLDateTime(), amount.ToString(), comment, account.ToString(), transref, TLCtxHelper.ModuleSettleCentre.NextTradingday);
                 return db.Connection.Execute(query) > 0;
             }
         }

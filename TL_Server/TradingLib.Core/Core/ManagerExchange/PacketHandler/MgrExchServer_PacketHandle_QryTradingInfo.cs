@@ -141,7 +141,7 @@ namespace TradingLib.Core
                 //权限验证
                 manager.ValidRightReadAccount(request.TradingAccount);
 
-                IAccount account = TLCtxHelper.CmdAccount[request.TradingAccount];
+                IAccount account = TLCtxHelper.ModuleAccountManager[request.TradingAccount];
                 Settlement settlement = ORM.MSettlement.SelectSettlement(request.TradingAccount, request.Settleday);
                 if (settlement != null)
                 {

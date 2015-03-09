@@ -25,7 +25,7 @@ namespace TradingLib.ServiceManager
     /// 路由通道管理器
     /// 加载对应的路由通道类型 然后按照设定生成对应的路由并进行管理
     /// </summary>
-    public partial class ConnectorManager : BaseSrvObject,IConnectorManager, IRouterManager
+    public partial class ConnectorManager : BaseSrvObject,IConnectorManager
     {
         const string SMGName = "ConnectorManager";
         //Broker或Datafeed连接与断开的事件
@@ -111,7 +111,7 @@ namespace TradingLib.ServiceManager
         public void Start()
         {
             Util.StatusSection(this.PROGRAME, "STARTCONNECTOR", QSEnumInfoColor.INFODARKRED,true);
-            if (TLCtxHelper.Ctx.SettleCentre.IsTradingday)//如果是交易日则需要启动实盘通道
+            if (TLCtxHelper.ModuleSettleCentre.IsTradingday)//如果是交易日则需要启动实盘通道
             {
                 debug("正常交易日,启动所有通道", QSEnumDebugLevel.INFO);
                 StartConnector();

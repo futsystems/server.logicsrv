@@ -328,7 +328,7 @@ namespace TradingLib.Core
         /// <summary>
         /// 持仓强平事件
         /// </summary>
-        public event EventHandler<PositionFlatEventArgs> PositionFlatEvent;
+        //public event EventHandler<PositionFlatEventArgs> PositionFlatEvent;
 
         //待平仓列表,主要包含系统尾盘集中强平,系统内部风控强平等形成的平仓指令
         ThreadSafeList<RiskTaskSet> posflatlist = new ThreadSafeList<RiskTaskSet>();
@@ -399,7 +399,7 @@ namespace TradingLib.Core
             }
             
             //为该帐户生成
-            IAccount account = TLCtxHelper.CmdAccount[accid];
+            IAccount account = TLCtxHelper.ModuleAccountManager[accid];
             if (account != null)
             {
                 List<long> olist = account.GetPendingOrders().Select(o => o.id).ToList();
@@ -461,7 +461,7 @@ namespace TradingLib.Core
         /// <param name="cancelreason"></param>
         public void CancelOrder(string accid,QSEnumOrderSource ordersouce, string cancelreason = "系统强平")
         {
-            IAccount account = TLCtxHelper.CmdAccount[accid];
+            IAccount account = TLCtxHelper.ModuleAccountManager[accid];
             if (account != null)
             {
                 List<long> olist = account.GetPendingOrders().Select(o => o.id).ToList();
@@ -480,7 +480,7 @@ namespace TradingLib.Core
         /// <param name="cancelreason"></param>
         public void CancelOrder(string accid, string symbol, QSEnumOrderSource ordersource, string cancelreason = "系统强平")
         {
-            IAccount account = TLCtxHelper.CmdAccount[accid];
+            IAccount account = TLCtxHelper.ModuleAccountManager[accid];
             if (account != null)
             {
                 List<long> olist = account.GetPendingOrders(symbol).Select(o => o.id).ToList();
@@ -500,7 +500,7 @@ namespace TradingLib.Core
         /// <returns></returns>
         RiskTaskSet GenFlatPostionSet(Position pos, QSEnumOrderSource ordersource, string closereason)
         {
-            IAccount account = TLCtxHelper.CmdAccount[pos.Account];
+            IAccount account = TLCtxHelper.ModuleAccountManager[pos.Account];
             if (account == null)
                 return null;
             //获得对应持仓上的待成交委托
@@ -519,7 +519,7 @@ namespace TradingLib.Core
             Position pos = set.Position;
             bool side = pos.isLong ? true : false;
             //绑定合约对象
-            IAccount account = TLCtxHelper.CmdAccount[pos.Account];
+            IAccount account = TLCtxHelper.ModuleAccountManager[pos.Account];
 
             if (pos.oSymbol.SecurityFamily.Exchange.EXCode.Equals("SHFE"))
             {
@@ -622,8 +622,9 @@ namespace TradingLib.Core
 
         void PositionFlatFail(Position pos, string error)
         {
-            if (PositionFlatEvent != null)
-                PositionFlatEvent(this, new PositionFlatEventArgs(pos, error));
+            TLCtxHelper.EventSystem.FirePositionFlatEvent(this, new PositionFlatEventArgs(pos,error));
+            //if (PositionFlatEvent != null)
+            //    PositionFlatEvent(this, new PositionFlatEventArgs(pos, error));
         }
         /// <summary>
         /// 监控强平持仓列表,用于观察委托是否正常平仓

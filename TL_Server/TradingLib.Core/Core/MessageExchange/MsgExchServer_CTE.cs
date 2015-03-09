@@ -62,7 +62,7 @@ namespace TradingLib.Core
         {
             StringBuilder sb = new StringBuilder();
 
-            foreach (Tick k in TLCtxHelper.DataRouter.GetTickSnapshot())
+            foreach (Tick k in TLCtxHelper.ModuleDataRouter.GetTickSnapshot())
             {
                 if(k!= null && k.isValid)
                     sb.Append(TickImpl.Serialize(k)+Environment.NewLine);
@@ -91,7 +91,7 @@ namespace TradingLib.Core
         public void ExcludeSymbol(string symbol)
         {
 
-            TLCtxHelper.DataRouter.ExcludeSymbol(symbol);
+            TLCtxHelper.ModuleDataRouter.ExcludeSymbol(symbol);
         }
 
          [CoreCommandAttr(QSEnumCommandSource.CLI,
@@ -100,7 +100,7 @@ namespace TradingLib.Core
                     "从行情系统包含某个合约")]
          public void IncludeSymbol(string symbol)
          {
-             TLCtxHelper.DataRouter.IncludeSymbol(symbol);
+             TLCtxHelper.ModuleDataRouter.IncludeSymbol(symbol);
          }
 
 
@@ -120,8 +120,8 @@ namespace TradingLib.Core
         public void Reset()
         {
             debug("重置行情与成交路由", QSEnumDebugLevel.INFO);
-            TLCtxHelper.BrokerRouter.Reset();
-            TLCtxHelper.DataRouter.Reset();
+            TLCtxHelper.ModuleBrokerRouter.Reset();
+            TLCtxHelper.ModuleDataRouter.Reset();
         }
 
 
@@ -149,9 +149,9 @@ namespace TradingLib.Core
             //debug("检查异常状态的委托....", QSEnumDebugLevel.INFO);
             DateTime now = DateTime.Now;
             //遍历所有需要检查的委托 停留在placed 或者 submited unknown
-            foreach (Order o in TLCtxHelper.CmdTotalInfo.TotalOrders.Where(o => statuscheck(o, now)))
+            foreach (Order o in TLCtxHelper.ModuleClearCentre.TotalOrders.Where(o => statuscheck(o, now)))
             {
-                IAccount acc = TLCtxHelper.CmdAccount[o.Account];
+                IAccount acc = TLCtxHelper.ModuleAccountManager[o.Account];
                 if (acc != null)
                 {
                     AccountBase account = acc as AccountBase;
@@ -178,7 +178,7 @@ namespace TradingLib.Core
                         tmp.Comment = "部分成交(维)";
                         ReplyOrder(tmp);
                         //撤单
-                        TLCtxHelper.BrokerRouter.CancelOrder(o.id);
+                        TLCtxHelper.ModuleBrokerRouter.CancelOrder(o.id);
                         continue;
                     }
                     //未成交
@@ -188,7 +188,7 @@ namespace TradingLib.Core
                         tmp.Comment = "拒绝(维)";
                         ReplyOrder(tmp);
                         //撤单
-                        TLCtxHelper.BrokerRouter.CancelOrder(o.id);
+                        TLCtxHelper.ModuleBrokerRouter.CancelOrder(o.id);
                         continue;
                     }
                     //异常合约
@@ -199,7 +199,7 @@ namespace TradingLib.Core
                         tmp.Comment = "拒绝(维)";
                         ReplyOrder(tmp);
                         //撤单
-                        TLCtxHelper.BrokerRouter.CancelOrder(o.id);
+                        TLCtxHelper.ModuleBrokerRouter.CancelOrder(o.id);
                         continue;
                     }
                 }

@@ -12,7 +12,7 @@ namespace TradingLib.API
     /// 2.数据成交路由通道管理
     /// 3.扩展模块管理
     /// </summary>
-    public interface IServiceManager
+    public interface IServiceManager : IDisposable
     {
         string ServiceMgrName { get; }
 

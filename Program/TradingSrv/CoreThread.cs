@@ -51,7 +51,7 @@ namespace TraddingSrvCLI
             //生成容器，并注册组件 这里后期修改成配置文件形式，则可以按照配置文件加载不同的组件实现不同的服务端服务
             var builder = new ContainerBuilder();
             builder.RegisterType<CoreManager>().As<ICoreManager>().InstancePerLifetimeScope();
-            builder.RegisterType<ConnectorManager>().As<IConnectorManager>().InstancePerLifetimeScope();
+            builder.RegisterType<ConnectorManager>().As<IConnectorManager>().As<IRouterManager>().InstancePerLifetimeScope();
             builder.RegisterType<ContribManager>().As<IContribManager>().InstancePerLifetimeScope();
 
             builder.RegisterType<BrokerRouter>().As<IBrokerRouter>().InstancePerLifetimeScope();
@@ -63,7 +63,7 @@ namespace TraddingSrvCLI
             builder.RegisterType<ClearCentre>().As<IModuleClearCentre>().As<IClearCentre>().InstancePerLifetimeScope();
             
             builder.RegisterType<TaskCentre>().As<IModuleTaskCentre>().InstancePerLifetimeScope();
-            builder.RegisterType<RiskCentre>().As<IModuleRiskCentre>().InstancePerLifetimeScope();
+            builder.RegisterType<RiskCentre>().As<IModuleRiskCentre>().As<IRiskCentre>().InstancePerLifetimeScope();
             builder.RegisterType<WebMsgExchServer>().As<IModuleAPIExchange>().InstancePerLifetimeScope();
 
             builder.RegisterType<DataRepository>().As<IModuleDataRepository>().As<IDataRepository>().InstancePerLifetimeScope();

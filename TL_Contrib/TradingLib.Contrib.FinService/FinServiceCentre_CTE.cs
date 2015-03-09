@@ -121,7 +121,7 @@ namespace TradingLib.Contrib.FinService
         public void CTE_QryFinService(ISession session, string account)
         {
             debug("查询帐户:" + account + "的配资服务", QSEnumDebugLevel.INFO);
-            IAccount acc = TLCtxHelper.CmdAccount[account];
+            IAccount acc = TLCtxHelper.ModuleAccountManager[account];
             if (acc == null)
             {
                 throw new FutsRspError("交易帐号不存在");
@@ -161,7 +161,7 @@ namespace TradingLib.Contrib.FinService
             JsonWrapperFinServiceStub target = Mixins.Json.JsonMapper.ToObject<JsonWrapperFinServiceStub>(playload);
 
             debug("更新帐户:" + target.Account+ "的配资服务参数", QSEnumDebugLevel.INFO);
-            IAccount acc = TLCtxHelper.CmdAccount[target.Account];
+            IAccount acc = TLCtxHelper.ModuleAccountManager[target.Account];
             if (acc == null)
             {
                 throw new FutsRspError("交易帐号不存在");
@@ -209,7 +209,7 @@ namespace TradingLib.Contrib.FinService
             string account = request.Account;
             int serviceplan_fk = request.ServicePlaneFK;
 
-            IAccount acc = TLCtxHelper.CmdAccount[account];
+            IAccount acc = TLCtxHelper.ModuleAccountManager[account];
             if (acc == null)
             {
                 throw new FutsRspError("交易帐号不存在");
@@ -237,7 +237,7 @@ namespace TradingLib.Contrib.FinService
         public void CTE_DeleteServicePlane(ISession session, string account)
         {
             debug("删除帐户:"+account+"的配资服务", QSEnumDebugLevel.INFO);
-            IAccount acc = TLCtxHelper.CmdAccount[account];
+            IAccount acc = TLCtxHelper.ModuleAccountManager[account];
             if (acc == null)
             {
                 throw new FutsRspError("交易帐号不存在");

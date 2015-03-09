@@ -54,7 +54,7 @@ namespace TradingLib.Core
             needlog = true;
             //1 结算中心检查
             //1.1检查结算中心是否正常状态 如果历史结算状态则需要将结算记录补充完毕后才可以接受新的委托
-            if (!TLCtxHelper.Ctx.SettleCentre.IsNormal)
+            if (!TLCtxHelper.ModuleSettleCentre.IsNormal)
             {
                 errortitle = "SETTLECENTRE_NOT_RESET";//结算中心异常
                 needlog = false;
@@ -62,7 +62,7 @@ namespace TradingLib.Core
             }
 
             //1.2检查当前是否是交易日
-            if (!TLCtxHelper.Ctx.SettleCentre.IsTradingday)//非周六0->2:30 周六0:00->2:30有交易(金银夜盘交易)
+            if (!TLCtxHelper.ModuleSettleCentre.IsTradingday)//非周六0->2:30 周六0:00->2:30有交易(金银夜盘交易)
             {
                 errortitle = "NOT_TRADINGDAY";//非交易日
                 needlog = false;
@@ -70,7 +70,7 @@ namespace TradingLib.Core
             }
 
             //1.3检查结算中心是否处于结算状态 结算状态不接受任何委托
-            if (TLCtxHelper.Ctx.SettleCentre.IsInSettle)
+            if (TLCtxHelper.ModuleSettleCentre.IsInSettle)
             {
                 errortitle = "SETTLECENTRE_IN_SETTLE";//结算中心出入结算状态
                 needlog = false;

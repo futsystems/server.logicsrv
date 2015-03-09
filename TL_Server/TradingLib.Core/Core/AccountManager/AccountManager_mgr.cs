@@ -112,7 +112,7 @@ namespace TradingLib.Core
             var req = Mixins.Json.JsonMapper.ToObject(json);
             var account = req["account"].ToString();
             var category = Util.ParseEnum<QSEnumAccountCategory>(req["category"].ToString());
-            IAccount acct = TLCtxHelper.CmdAccount[account];
+            IAccount acct = TLCtxHelper.ModuleAccountManager[account];
             if (acct != null)
             {
                 this.UpdateAccountCategory(account, category);
@@ -126,7 +126,7 @@ namespace TradingLib.Core
             var req = Mixins.Json.JsonMapper.ToObject(json);
             var account = req["account"].ToString();
             var execute = bool.Parse(req["execute"].ToString());
-            IAccount acct = TLCtxHelper.CmdAccount[account];
+            IAccount acct = TLCtxHelper.ModuleAccountManager[account];
             if (acct != null)
             {
                 if (execute && !acct.Execute)
@@ -149,7 +149,7 @@ namespace TradingLib.Core
             var account = req["account"].ToString();
             var intraday = bool.Parse(req["intraday"].ToString());
 
-            IAccount acct = TLCtxHelper.CmdAccount[account];
+            IAccount acct = TLCtxHelper.ModuleAccountManager[account];
             if (acct != null)
             {
                 this.UpdateAccountIntradyType(account, intraday);
@@ -165,7 +165,7 @@ namespace TradingLib.Core
             var account = req["account"].ToString();
             var routetype = Util.ParseEnum<QSEnumOrderTransferType>(req["routertrype"].ToString());
 
-            IAccount acct = TLCtxHelper.CmdAccount[account];
+            IAccount acct = TLCtxHelper.ModuleAccountManager[account];
             if (acct != null)
             {
                 this.UpdateAccountRouterTransferType(account, routetype);
@@ -183,7 +183,7 @@ namespace TradingLib.Core
             var bank_id = int.Parse(req["bank_id"].ToString());
             var bank_ac = req["bank_ac"].ToString();
 
-            IAccount acct = TLCtxHelper.CmdAccount[account];
+            IAccount acct = TLCtxHelper.ModuleAccountManager[account];
             if (acct != null)
             {
                 this.UpdateInvestorInfo(account, name, broker, bank_id, bank_ac);
@@ -206,7 +206,7 @@ namespace TradingLib.Core
 
             //var routetype = Util.ParseEnum<QSEnumOrderTransferType>(req["routertrype"].ToString());
 
-            IAccount acct = TLCtxHelper.CmdAccount[account];
+            IAccount acct = TLCtxHelper.ModuleAccountManager[account];
             HandlerMixins.Valid_ObjectNotNull(acct);
 
             Manager manger = session.GetManager();
@@ -243,7 +243,7 @@ namespace TradingLib.Core
             var account = req["account"].ToString();
             var newpass = req["newpass"].ToString();
 
-            IAccount acct = TLCtxHelper.CmdAccount[account];
+            IAccount acct = TLCtxHelper.ModuleAccountManager[account];
             if (acct != null)
             {
                 this.UpdateAccountPass(account, newpass);
@@ -270,7 +270,7 @@ namespace TradingLib.Core
         public void CTE_UpdateAccountCommissionTemplate(ISession session, string account, int templateid)
         {
             Manager manager = session.GetManager();
-            IAccount acc = TLCtxHelper.CmdAccount[account];
+            IAccount acc = TLCtxHelper.ModuleAccountManager[account];
             if (acc == null)
             {
                 throw new FutsRspError("交易帐户不存在");
@@ -296,7 +296,7 @@ namespace TradingLib.Core
                 throw new FutsRspError("无权修改帐户路由组设置");
             }
 
-            IAccount acc = TLCtxHelper.CmdAccount[account];
+            IAccount acc = TLCtxHelper.ModuleAccountManager[account];
             if (acc == null)
             {
                 throw new FutsRspError("交易帐户不存在");
@@ -324,7 +324,7 @@ namespace TradingLib.Core
         public void CTE_QryAccountFinInfo(ISession session, string account)
         {
             Manager manager = session.GetManager();
-            IAccount acc = TLCtxHelper.CmdAccount[account];
+            IAccount acc = TLCtxHelper.ModuleAccountManager[account];
             if (manager.RightAccessAccount(acc))
             {
                 session.ReplyMgr(acc.GenAccountInfo());
@@ -342,7 +342,7 @@ namespace TradingLib.Core
         public void CTE_UpdateAccountMarginTemplate(ISession session, string account, int templateid)
         {
             Manager manager = session.GetManager();
-            IAccount acc = TLCtxHelper.CmdAccount[account];
+            IAccount acc = TLCtxHelper.ModuleAccountManager[account];
             if (acc == null)
             {
                 throw new FutsRspError("交易帐户不存在");
@@ -362,7 +362,7 @@ namespace TradingLib.Core
         public void CTE_UpdateAccountExStrategyTemplate(ISession session, string account, int templateid)
         {
             Manager manager = session.GetManager();
-            IAccount acc = TLCtxHelper.CmdAccount[account];
+            IAccount acc = TLCtxHelper.ModuleAccountManager[account];
             if (acc == null)
             {
                 throw new FutsRspError("交易帐户不存在");
@@ -389,7 +389,7 @@ namespace TradingLib.Core
             Manager manager = session.GetManager();
             if (manager.IsRoot())
             {
-                IAccount acc = TLCtxHelper.CmdAccount[account];
+                IAccount acc = TLCtxHelper.ModuleAccountManager[account];
                 if (acc == null)
                 {
                     throw new FutsRspError("交易帐户不存在");

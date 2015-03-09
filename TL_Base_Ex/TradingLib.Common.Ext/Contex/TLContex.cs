@@ -137,55 +137,6 @@ namespace TradingLib.Common
         #endregion
 
         #region internal 暴露对象
-        IClearCentreSrv _clearCentreSrv = null;
-        /// <summary>
-        /// 清算中心
-        /// </summary>
-        internal IClearCentreSrv ClearCentre
-        {
-            get
-            {
-                if (_clearCentreSrv == null)
-                {
-                    debug("Error-ClearCentre not valid");
-                }
-                return _clearCentreSrv;
-            }
-        }
-
-        IRiskCentre _riskcentre = null;
-        /// <summary>
-        /// 风控中心
-        /// </summary>
-        internal IRiskCentre RiskCentre
-        {
-            get
-            {
-                if (_riskcentre == null)
-                {
-                    debug("Error-RiskCentre not valid");
-                }
-                return _riskcentre;
-            }
-        }
-
-        ISettleCentre _settlecentre = null;
-        /// <summary>
-        /// 清算中心
-        /// </summary>
-        internal ISettleCentre SettleCentre
-        {
-            get
-            {
-                if (_settlecentre == null)
-                {
-                    debug("Error-SettleCentre not valid");
-                }
-                return _settlecentre;
-                
-            }
-        }
-
         IMessageExchange _messageExchange = null;
         internal IMessageExchange MessageExchange
         {
@@ -211,59 +162,6 @@ namespace TradingLib.Common
                 return _messagemgr;
             }
         }
-
-
-        IRouterManager _routermanager = null;
-        internal IRouterManager RouterManager
-        {
-            get
-            {
-                if (_routermanager == null)
-                {
-                    debug("Error-RotuerManager not valid");
-                }
-                return _routermanager;
-            }
-        }
-
-        IBrokerRouter _brokerrouter = null;
-        internal IBrokerRouter BrokerRouter
-        {
-            get
-            {
-                if (_brokerrouter == null)
-                {
-                    debug("Error-BrokerRouter not valid");
-                }
-                return _brokerrouter;
-            }
-        }
-
-        IDataRouter _datarouter = null;
-        internal IDataRouter DataRouter
-        {
-            get
-            {
-                if (_datarouter == null)
-                {
-                    debug("Error-DataRouter not valid");
-                }
-                return _datarouter;
-            }
-        }
-
-        IDataRepository _datarepository = null;
-        internal IDataRepository DataRepository
-        {
-            get
-            {
-                if (_datarepository == null)
-                {
-                    debug("Error-DataRepository not valid");
-                }
-                return _datarepository;
-            }
-        }
         #endregion
 
 
@@ -281,17 +179,6 @@ namespace TradingLib.Common
         {
             Util.Debug(">>>>Context:" + msg);
         }
-
-        void objlog(ILogItem item)
-        {
-            Util.Log(item);
-        }
-        void objemail(IEmail email)
-        {
-            TLCtxHelper.Email(email);
-        }
-
-
 
         #region 命令解析与调用
 
@@ -518,8 +405,6 @@ namespace TradingLib.Common
         #endregion
 
         #region 注册BaseSrvObject
-
-
         public void Unregister(object obj)
         {
             if (obj is BaseSrvObject)
@@ -528,9 +413,9 @@ namespace TradingLib.Common
 
                 //2.将BaseSrvObject的日志输出时间绑定到全局日志输出组件
                 //srvobj -= new DebugDelegate(objdebug);
-                srvobj.SendLogItemEvent -= new ILogItemDel(objlog);
+                srvobj.SendLogItemEvent -= new ILogItemDel(Util.Log);
                 //3.将BaseSrvObject的邮件发送事件banding到全局邮件发送函数
-                srvobj.SendEmailEvent -= new EmailDel(objemail);
+                srvobj.SendEmailEvent -= new EmailDel(TLCtxHelper.Email);
 
                 //4.将BaseSrvObject的log事件绑定到全局日志发送函数
                 //srvobj.SendLogEvent -= new LogDelegate(objlog);
@@ -547,30 +432,6 @@ namespace TradingLib.Common
                     baseSrvObjectMap.TryRemove(srvobj.UUID, out objremoved);
                 }
 
-
-
-
-
-
-
-
-
-                if (obj is IClearCentreSrv)
-                {
-                    debug("ClearCentre unregisted from ctx");
-                    _clearCentreSrv = null;
-                }
-                if (obj is IRiskCentre)
-                {
-                    debug("RiskCentre unregisted from ctx");
-                    _riskcentre = null;
-                    //return;
-                }
-                if (obj is ISettleCentre)
-                {
-                    debug("SettleCentre unregsited from ctx");
-                    _settlecentre = null;
-                }
                 if (obj is IMessageExchange)
                 {
                     debug("MessageRouter(TradingServer) unregisted from ctx");
@@ -588,10 +449,10 @@ namespace TradingLib.Common
                     serviceMgrIdUUIDMap.TryRemove(mgr.ServiceMgrName.ToUpper(), out uuidremoved);
                     UnParseCommandInfo(obj, mgr.ServiceMgrName);
 
-                    if (obj is IRouterManager)
-                    {
-                        _routermanager = null;
-                    }
+                    //if (obj is IRouterManager)
+                    //{
+                    //    _routermanager = null;
+                    //}
                 }
 
                 //1.检查是否是核心模块
@@ -633,37 +494,14 @@ namespace TradingLib.Common
                 //1.记录系统生成的BaseSrvObject
                 BaseSrvObject srvobj = obj as BaseSrvObject;
                 baseSrvObjectMap.TryAdd(srvobj.UUID, srvobj);
-
                 //2.将BaseSrvObject的日志输出时间绑定到全局日志输出组件
-                //srvobj.SendDebugEvent += new DebugDelegate(objdebug);
-                srvobj.SendLogItemEvent += new ILogItemDel(objlog) ;
+                srvobj.SendLogItemEvent += new ILogItemDel(Util.Log);
                 //3.将BaseSrvObject的邮件发送事件banding到全局邮件发送函数
-                srvobj.SendEmailEvent += new EmailDel(objemail);
-
-                //4.将BaseSrvObject的log事件绑定到全局日志发送函数
-                //srvobj.SendLogEvent += new LogDelegate(objlog);
-
+                srvobj.SendEmailEvent += new EmailDel(TLCtxHelper.Email);
                 //4.查找该对象所支持模块任务列表
                 ParseTaskInfo(srvobj);
 
 
-                if (obj is IClearCentreSrv)
-                {
-                    //debug("ClearCentre registed to ctx");
-                    _clearCentreSrv = obj as IClearCentreSrv;
-                    //return;
-                }
-                if (obj is ISettleCentre)
-                {
-                    _settlecentre = obj as ISettleCentre ;
-                }
-
-                if (obj is IRiskCentre)
-                {
-                    //debug("RiskCentre registed to ctx");
-                    _riskcentre = obj as IRiskCentre;
-                    //return;
-                }
                 if (obj is IMessageExchange)
                 {
                     //debug("MessageRouter(TradingServer) registed to ctx");
@@ -675,21 +513,6 @@ namespace TradingLib.Common
                     _messagemgr = obj as IMessageMgr;
                 }
 
-                if (obj is IBrokerRouter)
-                {
-                    _brokerrouter = obj as IBrokerRouter;
-                }
-
-                if (obj is IDataRouter)
-                {
-                    _datarouter = obj as IDataRouter;
-                }
-
-
-                if (obj is IDataRepository)
-                {
-                    _datarepository = obj as IDataRepository;
-                }
 
                 //0.检查是否是服务模块管理
                 if (obj is IServiceManager)
@@ -697,10 +520,6 @@ namespace TradingLib.Common
                     IServiceManager mgr = obj as IServiceManager;
                     serviceMgrIdUUIDMap.TryAdd(mgr.ServiceMgrName.ToUpper(), srvobj.UUID);
                     ParseCommandInfo(obj, mgr.ServiceMgrName);
-                    if (obj is IRouterManager)
-                    {
-                        _routermanager = obj as IRouterManager;
-                    }
                 }
 
                 //1.检查是否是核心模块
@@ -708,7 +527,6 @@ namespace TradingLib.Common
                 {
                     ICore core = obj as ICore;
                     coreIdUUIDMap.TryAdd(core.CoreId.ToUpper(), srvobj.UUID);
-                    
                     ParseCommandInfo(obj, core.CoreId);
                 }
 
@@ -720,10 +538,8 @@ namespace TradingLib.Common
                     contribIDUUIDMap.TryAdd(plugin.ContribID.ToUpper(), srvobj.UUID);
                     //查找该对象所支持模块命令列表
                     ParseCommandInfo(obj, plugin.ContribID);
-
                     //查找对象暴露的事件
                     ParseContribEventInfo(obj, plugin.ContribID);
-
                 }
             }
 

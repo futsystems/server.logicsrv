@@ -30,23 +30,23 @@ namespace TradingLib.Core
             try
             {
                 //从数据库加载账户的当日出入金信息以及昨日结算权益数据
-                foreach (IAccount acc in TLCtxHelper.CmdAccount.Accounts)
+                foreach (IAccount acc in TLCtxHelper.ModuleAccountManager.Accounts)
                 {
                     //这里累计NextTradingday的出入金数据 恢复到当前状态,结算之后的所有交易数据都归入以结算日为基础计算的下一个交易日
-                    acc.Deposit(ORM.MAccount.CashInOfTradingDay(acc.ID,TLCtxHelper.Ctx.SettleCentre.NextTradingday));
-                    acc.Withdraw(ORM.MAccount.CashOutOfTradingDay(acc.ID, TLCtxHelper.Ctx.SettleCentre.NextTradingday));
+                    acc.Deposit(ORM.MAccount.CashInOfTradingDay(acc.ID,TLCtxHelper.ModuleSettleCentre.NextTradingday));
+                    acc.Withdraw(ORM.MAccount.CashOutOfTradingDay(acc.ID, TLCtxHelper.ModuleSettleCentre.NextTradingday));
 
                     //获得帐户昨日权益 通过查找昨日结算记录中的结算权益来恢复
-                    acc.LastEquity = ORM.MAccount.GetSettleEquity(acc.ID,TLCtxHelper.Ctx.SettleCentre.LastSettleday);
+                    acc.LastEquity = ORM.MAccount.GetSettleEquity(acc.ID, TLCtxHelper.ModuleSettleCentre.LastSettleday);
                 }
 
-                debug("从数据库加载交易日:" + TLCtxHelper.Ctx.SettleCentre.NextTradingday.ToString() + " 交易数据", QSEnumDebugLevel.INFO);
-                IEnumerable<Order> olist = TLCtxHelper.DataRepository.SelectAcctOrders();
-                IEnumerable<Trade> flist = TLCtxHelper.DataRepository.SelectAcctTrades();
-                IEnumerable<OrderAction> clist = TLCtxHelper.DataRepository.SelectAcctOrderActions();
+                debug("从数据库加载交易日:" + TLCtxHelper.ModuleSettleCentre.NextTradingday.ToString() + " 交易数据", QSEnumDebugLevel.INFO);
+                IEnumerable<Order> olist = TLCtxHelper.ModuleDataRepository.SelectAcctOrders();
+                IEnumerable<Trade> flist = TLCtxHelper.ModuleDataRepository.SelectAcctTrades();
+                IEnumerable<OrderAction> clist = TLCtxHelper.ModuleDataRepository.SelectAcctOrderActions();
 
-                debug("从数据库加载上次结算日:" + TLCtxHelper.Ctx.SettleCentre.LastSettleday.ToString() + " 持仓明细数据", QSEnumDebugLevel.INFO);
-                IEnumerable<PositionDetail> plist = TLCtxHelper.DataRepository.SelectAcctPositionDetails() ;//从数据得到昨持仓数据
+                debug("从数据库加载上次结算日:" + TLCtxHelper.ModuleSettleCentre.LastSettleday.ToString() + " 持仓明细数据", QSEnumDebugLevel.INFO);
+                IEnumerable<PositionDetail> plist = TLCtxHelper.ModuleDataRepository.SelectAcctPositionDetails();//从数据得到昨持仓数据
                 //IEnumerable<PositionRoundImpl> prlist = LoadPositionRoundFromMysql();//恢复开启的positionround数据
 
                 //从数据库加载上日结算持仓信息 用于恢复当前持仓状态

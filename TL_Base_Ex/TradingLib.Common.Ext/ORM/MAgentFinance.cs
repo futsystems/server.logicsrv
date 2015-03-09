@@ -48,7 +48,7 @@ namespace TradingLib.ORM
                     {
                         mgr_fk = agentfk,
                         Balance=0,
-                        Settleday = TLCtxHelper.Ctx.SettleCentre.LastSettleday,
+                        Settleday = TLCtxHelper.ModuleSettleCentre.LastSettleday,
                     };
                     InsertAgentBalance(b);
                     return b;
@@ -202,7 +202,7 @@ namespace TradingLib.ORM
 
                     JsonWrapperCasnTrans trans = new JsonWrapperCasnTrans();
                     trans.mgr_fk = op.mgr_fk;
-                    trans.Settleday = TLCtxHelper.Ctx.SettleCentre.NextTradingday;
+                    trans.Settleday = TLCtxHelper.ModuleSettleCentre.NextTradingday;
                     trans.TransRef = op.Ref;
                     trans.DateTime = Util.ToTLDateTime();
                     trans.Comment = "";

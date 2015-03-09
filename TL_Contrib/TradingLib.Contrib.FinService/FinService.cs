@@ -228,7 +228,7 @@ namespace TradingLib.Contrib.FinService
         {
             //LibUtil.Debug("初始化配资服务项,account:" + this.Acct);
             //1.预检查
-            this.Account = TLCtxHelper.CmdAccount[this.Acct];//如果没有对应的交易帐号 则直接返回
+            this.Account = TLCtxHelper.ModuleAccountManager[this.Acct];//如果没有对应的交易帐号 则直接返回
             if (this.Account == null) return;
             Type type = FinTracker.ServicePlaneTracker.GetFinServiceType(this.serviceplan_fk);
             if (type == null) return;//如果没有获得对应的类型 则直接返回
@@ -333,7 +333,7 @@ namespace TradingLib.Contrib.FinService
             item.serviceplan_fk = this.serviceplan_fk;
             item.Agent_fk = this.AgentID;
             item.Comment = comment;
-            item.Settleday = TLCtxHelper.CmdSettleCentre.NextTradingday;
+            item.Settleday = TLCtxHelper.ModuleSettleCentre.NextTradingday;
             
 
             //定义了代理之间的分润计算

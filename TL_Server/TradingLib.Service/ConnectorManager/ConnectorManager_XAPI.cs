@@ -146,7 +146,7 @@ namespace TradingLib.ServiceManager
             //6.将broker的交易类事件绑定到路由内 然后通过路由转发到交易消息服务
             //_brokerrouter.LoadBroker(brokerinterface);
             //TLCtxHelper.Scope.
-            TLCtxHelper.BrokerRouter.LoadBroker(brokerinterface);
+            TLCtxHelper.ModuleBrokerRouter.LoadBroker(brokerinterface);
         }
 
         /// <summary>
@@ -181,7 +181,7 @@ namespace TradingLib.ServiceManager
                 };
                 //将DataFeed加载到行情路由中去
                 //_datafeedrouter.LoadDataFeed(datafeedinterface);
-                TLCtxHelper.DataRouter.LoadDataFeed(datafeedinterface);
+                TLCtxHelper.ModuleDataRouter.LoadDataFeed(datafeedinterface);
             }
         
         }

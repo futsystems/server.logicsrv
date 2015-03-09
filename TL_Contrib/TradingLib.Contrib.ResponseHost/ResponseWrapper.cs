@@ -58,7 +58,7 @@ namespace TradingLib.Contrib.ResponseHost
         /// </summary>
         public void InitResponse()
         {
-            this.Account = TLCtxHelper.CmdAccount[this.Acct];//如果没有对应的交易帐号 则直接返回
+            this.Account = TLCtxHelper.ModuleAccountManager[this.Acct];//如果没有对应的交易帐号 则直接返回
             if (this.Account == null) return;
 
             Type type = Tracker.ResponseTemplateTracker.GetResponseType(this.Response_Template_ID);

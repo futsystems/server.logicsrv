@@ -140,6 +140,8 @@ namespace TradingLib.Common
             }
         }
 
+
+        #region 全局事件
         /// <summary>
         /// 交易信息类事件集合
         /// </summary>
@@ -204,65 +206,39 @@ namespace TradingLib.Common
                 return defaultInstance.m_ExContribEvent;
             }
         }
-
-        /// <summary>
-        /// 交易帐号类操作
-        /// </summary>
-        public static IAccountManager CmdAccount
-        {
-            get
-            {
-                return AccountManager;//defaultInstance.ctx.ClearCentre as IAccountOperation;
-            }
-        }
+        #endregion
 
 
-        public static ITotalAccountInfo CmdTotalInfo
-        {
-            get
-            {
-                return defaultInstance.ctx.ClearCentre as ITotalAccountInfo;
-            }
-        }
 
-        internal static IGotTradingRecord CmdGotTradingRecord
-        {
-            get
-            {
-                return defaultInstance.ctx.ClearCentre as IGotTradingRecord;
-            }
-        }
-        /// <summary>
-        /// 认证与出入金请求
-        /// </summary>
-        //public static IAuthCashOperation CmdAuthCashOperation
-        //{
-        //    get
-        //    {
-        //        return defaultInstance.ctx.ClearCentre as IAuthCashOperation;
-        //    }
-        //}
-
+        #region 全局模块对象 通过scope自动获得
+        static ISettleCentre _settlecentre = null;
         /// <summary>
         /// 结算中心
         /// </summary>
-        public static ISettleCentre CmdSettleCentre
+        public static ISettleCentre ModuleSettleCentre
         {
             get
             {
-                return defaultInstance.ctx.SettleCentre as ISettleCentre;
+                if (_settlecentre == null)
+                    _settlecentre = _scope.Resolve<ISettleCentre>();
+                return _settlecentre;
+                //return defaultInstance.ctx.SettleCentre as ISettleCentre;
             }
         }
 
 
+        static IRiskCentre _riskcentre = null;
         /// <summary>
         /// 风控中心
         /// </summary>
-        public static IRiskCentre CmdRiskCentre
+        public static IRiskCentre ModuleRiskCentre
         {
             get
             {
-                return defaultInstance.ctx.RiskCentre as IRiskCentre;
+                if (_riskcentre == null)
+                    _riskcentre = _scope.Resolve<IRiskCentre>();
+                return _riskcentre;
+                //return defaultInstance.ctx.RiskCentre as IRiskCentre;
             }
         }
 
@@ -279,39 +255,54 @@ namespace TradingLib.Common
             }
         }
 
+        static IBrokerRouter _brokerrouter = null;
         /// <summary>
-        /// 系统交易路由管理器
+        /// 交易路由服务
         /// </summary>
-        public static IBrokerRouter BrokerRouter
+        public static IBrokerRouter ModuleBrokerRouter
         {
             get
             {
-                return defaultInstance.ctx.BrokerRouter as IBrokerRouter;
+                if (_brokerrouter == null)
+                    _brokerrouter = _scope.Resolve<IBrokerRouter>();
+                return _brokerrouter;// defaultInstance.ctx.BrokerRouter as IBrokerRouter;
             }
         }
 
-        public static IDataRouter DataRouter
-        {
-            get
-            {
-                return defaultInstance.ctx.DataRouter as IDataRouter;
-            }
-        }
-
+        static IDataRouter _datarouter = null;
         /// <summary>
-        /// 交易记录储存
+        /// 行情路由服务
         /// </summary>
-        public static IDataRepository DataRepository
+        public static IDataRouter ModuleDataRouter
         {
             get
             {
-                return defaultInstance.ctx.DataRepository as IDataRepository;
+                if (_datarouter == null)
+                    _datarouter = _scope.Resolve<IDataRouter>();
+                return _datarouter;
+            }
+        }
+
+        static IDataRepository _datarepository = null;
+        /// <summary>
+        /// 交易记录读写服务
+        /// </summary>
+        public static IDataRepository ModuleDataRepository
+        {
+            get
+            {
+                if (_datarepository == null)
+                    _datarepository = _scope.Resolve<IDataRepository>();
+                return _datarepository;
             }
         }
 
 
-        static IAccountManager _accountmanager;
-        public static IAccountManager AccountManager
+        static IAccountManager _accountmanager = null;
+        /// <summary>
+        /// 交易账户管理服务
+        /// </summary>
+        public static IAccountManager ModuleAccountManager
         {
             get
             {
@@ -320,19 +311,47 @@ namespace TradingLib.Common
                 return _accountmanager;
             }
         }
-        static IClearCentre _clearcenre;
+
+        static IClearCentre _clearcenre = null;
         /// <summary>
-        /// 清算中心
+        /// 清算服务
+        /// 如果按原来的方式 通过BaseSrvObj进行注册，则需要按照先后顺序进行调用
+        /// 比如初始化到AccountManager时 需要加载交易帐户，加载交易帐户的过程中又需要将该帐户Cache到清算中心
+        /// 此时如果清算中心没有生成，则会造成nullreference异常，
+        /// 如果统一使用autofac容器来自动加载，则使用到该对象时，会自行加载
+        /// 
+        /// 注意：需要减少对象初始化时相互依赖，如果形成依赖循环则程序就会无法初始化造成崩溃。
+        /// 始终整理清楚初始化顺序是有必要的
         /// </summary>
-        public static IClearCentre ClearCenre
+        public static IClearCentre ModuleClearCentre
         {
             get
             {
+                //方式1
+                //return defaultInstance.ctx.ClearCentre2;
+
+                //方式2
                 if (_clearcenre == null)
                     _clearcenre = _scope.Resolve<IClearCentre>();
                 return _clearcenre;
             }
         }
+
+        static IRouterManager _routermanager = null;
+        /// <summary>
+        /// 路由服务管理
+        /// </summary>
+        public static IRouterManager ServiceRouterManager
+        {
+            get
+            {
+                if (_routermanager == null)
+                    _routermanager = _scope.Resolve<IRouterManager>();
+                return _routermanager;
+            }
+        }
+        #endregion
+
 
 
         /// <summary>

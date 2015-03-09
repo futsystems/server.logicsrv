@@ -17,14 +17,14 @@ namespace TradingLib.Core
             {
                 Manager manger = session.GetManager();
                 SystemStatus status = new SystemStatus();
-                status.CurrentTradingday = TLCtxHelper.Ctx.SettleCentre.CurrentTradingday;
+                status.CurrentTradingday = TLCtxHelper.ModuleSettleCentre.CurrentTradingday;
                 status.IsClearCentreOpen = true; //clearcentre.Status == QSEnumClearCentreStatus.CCOPEN;
-                status.IsSettleNormal = TLCtxHelper.Ctx.SettleCentre.IsNormal;
-                status.IsTradingday = TLCtxHelper.Ctx.SettleCentre.IsTradingday;
-                status.LastSettleday = TLCtxHelper.Ctx.SettleCentre.LastSettleday;
-                status.NextTradingday = TLCtxHelper.Ctx.SettleCentre.NextTradingday;
-                status.TotalAccountNum = manger.Domain.Super ? TLCtxHelper.CmdAccount.Accounts.Count() : manger.GetAccounts().Count();
-                status.MarketOpenCheck = TLCtxHelper.Ctx.RiskCentre.MarketOpenTimeCheck;
+                status.IsSettleNormal = TLCtxHelper.ModuleSettleCentre.IsNormal;
+                status.IsTradingday = TLCtxHelper.ModuleSettleCentre.IsTradingday;
+                status.LastSettleday = TLCtxHelper.ModuleSettleCentre.LastSettleday;
+                status.NextTradingday = TLCtxHelper.ModuleSettleCentre.NextTradingday;
+                status.TotalAccountNum = manger.Domain.Super ? TLCtxHelper.ModuleAccountManager.Accounts.Count() : manger.GetAccounts().Count();
+                status.MarketOpenCheck = TLCtxHelper.ModuleRiskCentre.MarketOpenTimeCheck;
                 status.IsDevMode = GlobalConfig.IsDevelop;
 
                 session.ReplyMgr(status);

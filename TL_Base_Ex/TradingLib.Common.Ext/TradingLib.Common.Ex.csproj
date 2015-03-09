@@ -146,7 +146,6 @@
     <Compile Include="Contex\Event\IndicatorEvent.cs" />
     <Compile Include="Contex\Event\SessionEvent.cs" />
     <Compile Include="Contex\TLContexHelper.cs" />
-    <Compile Include="Contex\TLContex_Query.cs" />
     <Compile Include="Contrib\ContribPlugin.cs" />
     <Compile Include="Plugin\Attr\ContribAttr.cs" />
     <Compile Include="Plugin\Attr\MethodArgument.cs" />

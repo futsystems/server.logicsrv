@@ -208,7 +208,7 @@ namespace TradingLib.Contrib.FinService
                 {
                     try
                     {
-                        TLCtxHelper.CmdAccount.CashOperation(item.Account, item.TotalFee * -1, "", item.Comment);
+                        TLCtxHelper.ModuleAccountManager.CashOperation(item.Account, item.TotalFee * -1, "", item.Comment);
                     }
                     catch (FutsRspError ex)
                     {
@@ -270,7 +270,7 @@ namespace TradingLib.Contrib.FinService
             if (_addservice)
             {
                 DBServicePlan sp = FinTracker.ServicePlaneTracker[_defaultspclassname];
-                IAccount acc = TLCtxHelper.CmdAccount[account];
+                IAccount acc = TLCtxHelper.ModuleAccountManager[account];
                 //如果是实盘帐号则默认给他开通配资服务
                 if (acc != null && sp != null && (acc.Category == QSEnumAccountCategory.REAL))
                 {

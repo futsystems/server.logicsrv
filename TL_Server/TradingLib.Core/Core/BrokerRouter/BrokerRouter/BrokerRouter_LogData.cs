@@ -17,13 +17,13 @@ namespace TradingLib.Core
         void LogRouterOrder(Order o)
         {
             //_clearCentre.LogRouterOrder(o);
-            TLCtxHelper.DataRepository.NewOrder(o);
+            TLCtxHelper.ModuleDataRepository.NewOrder(o);
         }
 
         void LogRouterOrderUpdate(Order o)
         {
             //_clearCentre.LogRouterOrderUpdate(o);
-            TLCtxHelper.DataRepository.UpdateOrder(o);
+            TLCtxHelper.ModuleDataRepository.UpdateOrder(o);
         }
 
 
@@ -31,24 +31,24 @@ namespace TradingLib.Core
         void LogBrokerPositionCloseDetailEvent(PositionCloseDetail obj)
         {
             //_clearCentre.LogBrokerPositionCloseDetail(obj);
-            TLCtxHelper.DataRepository.NewPositionCloseDetail(obj);
+            TLCtxHelper.ModuleDataRepository.NewPositionCloseDetail(obj);
         }
 
         void LogBrokerFillEvent(Trade t)
         {
             //_clearCentre.LogBrokerTrade(t);
-            TLCtxHelper.DataRepository.NewTrade(t);
+            TLCtxHelper.ModuleDataRepository.NewTrade(t);
         }
 
         void LogBrokerOrderUpdateEvent(Order o)
         {
-            TLCtxHelper.DataRepository.UpdateOrder(o);
+            TLCtxHelper.ModuleDataRepository.UpdateOrder(o);
             //_clearCentre.LogBrokerOrderUpdate(o);
         }
 
         void LogBrokerOrderEvent(Order o)
         {
-            TLCtxHelper.DataRepository.NewOrder(o);
+            TLCtxHelper.ModuleDataRepository.NewOrder(o);
             //_clearCentre.LogBrokerOrder(o);
         }
         #endregion

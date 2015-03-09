@@ -19,7 +19,7 @@ namespace TradingLib.Core
         [TaskAttr("白盘开启交易中心", 8, 50, 0, "每天白天8:50:5开启清算中心")]
         public void Task_OpenClearCentre()
         {
-            if (!TLCtxHelper.CmdSettleCentre.IsTradingday) return;
+            if (!TLCtxHelper.ModuleSettleCentre.IsTradingday) return;
             this.OpenClearCentre();
             Notify("开启清算中心[" + DateTime.Now.ToString() + "]", " ");
             debug("开启清算中心,准备接受客户委托", QSEnumDebugLevel.INFO);
@@ -33,7 +33,7 @@ namespace TradingLib.Core
         public void Task_CloseClearCentre()
         {
             this.CloseClearCentre();
-            if (!TLCtxHelper.CmdSettleCentre.IsTradingday) return;
+            if (!TLCtxHelper.ModuleSettleCentre.IsTradingday) return;
             Notify("关闭清算中心[" + DateTime.Now.ToString() + "]", " ");
             debug("关闭清算中心,将拒绝所有客户委托", QSEnumDebugLevel.INFO);
         }
@@ -295,23 +295,23 @@ namespace TradingLib.Core
 
 
 
-//        /// <summary>
-//        /// 开启清算中心
-//        /// </summary>
-//        [ContribCommandAttr(QSEnumCommandSource.CLI, "opencc", "opencc - Open ClearCentre", "开启交易中心,接收客户端提交的委托")]
-//        [ContribCommandAttr(QSEnumCommandSource.MessageWeb, "opencc", "opencc - Open ClearCentre", "开启交易中心,接受客户端提交的委托")]
-//        public void EXCH_OpenClearCentre()
-//        {
-//            OpenClearCentre();
-//        }
+        /// <summary>
+        /// 开启清算中心
+        /// </summary>
+        [ContribCommandAttr(QSEnumCommandSource.CLI, "opencc", "opencc - Open ClearCentre", "开启交易中心,接收客户端提交的委托")]
+        [ContribCommandAttr(QSEnumCommandSource.MessageWeb, "opencc", "opencc - Open ClearCentre", "开启交易中心,接受客户端提交的委托")]
+        public void EXCH_OpenClearCentre()
+        {
+            OpenClearCentre();
+        }
 
 
-//        [ContribCommandAttr(QSEnumCommandSource.CLI, "closecc", "closecc - Close ClearCentre", "关闭交易中心,拒绝收客户端提交的委托")]
-//        [ContribCommandAttr(QSEnumCommandSource.MessageWeb, "closecc", "closecc - Close ClearCentre", "关闭交易中心,拒绝客户端提交的委托")]
-//        public void EXCH_CloseClearCentre()
-//        {
-//            CloseClearCentre();
-//        }
+        [ContribCommandAttr(QSEnumCommandSource.CLI, "closecc", "closecc - Close ClearCentre", "关闭交易中心,拒绝收客户端提交的委托")]
+        [ContribCommandAttr(QSEnumCommandSource.MessageWeb, "closecc", "closecc - Close ClearCentre", "关闭交易中心,拒绝客户端提交的委托")]
+        public void EXCH_CloseClearCentre()
+        {
+            CloseClearCentre();
+        }
 
 //        //[ContribCommandAttr(QSEnumCommandSource.MessageWeb, "qryccstatus", "qryccstatus - Query Status of clearcentre", "查看清算中心状态")]
 //        //public string CTE_QryClearCentre()

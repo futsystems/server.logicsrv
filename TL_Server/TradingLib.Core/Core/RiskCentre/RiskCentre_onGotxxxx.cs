@@ -138,10 +138,11 @@ namespace TradingLib.Core
                 debug("Position:" + tmp.Position.GetPositionKey() + " 已经平掉,从队列中移除", QSEnumDebugLevel.INFO);
                 posflatlist.Remove(tmp);
                 //通过事件中继触发事件
-                if (PositionFlatEvent != null)
-                {
-                    PositionFlatEvent(this, new PositionFlatEventArgs(tmp.Position));
-                }
+                TLCtxHelper.EventSystem.FirePositionFlatEvent(this, new PositionFlatEventArgs(tmp.Position));
+                //if (PositionFlatEvent != null)
+                //{
+                //    PositionFlatEvent(this, new PositionFlatEventArgs(tmp.Position));
+                //}
             }
         }
 

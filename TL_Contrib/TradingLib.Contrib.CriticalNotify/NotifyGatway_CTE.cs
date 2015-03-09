@@ -19,7 +19,7 @@ namespace TradingLib.Contrib.NotifyCentre
         public void CTE_QryFinService(string account,string email)
         {
             debug("更新交易帐户:" + account + "的通知邮件地址为:" + email, QSEnumDebugLevel.INFO);
-            IAccount acc = TLCtxHelper.CmdAccount[account];
+            IAccount acc = TLCtxHelper.ModuleAccountManager[account];
             if (acc != null)
             {
                 ContactTracker.UpdateEmail(account, email);

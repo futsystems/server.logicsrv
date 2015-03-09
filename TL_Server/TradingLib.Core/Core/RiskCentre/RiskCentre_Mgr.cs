@@ -73,7 +73,7 @@ namespace TradingLib.Core
                 string acct  = req["account"].ToString();
                 QSEnumRuleType ruletype = Util.ParseEnum<QSEnumRuleType>(req["ruletype"].ToString());
                 //QSEnumRuleType ruletype = (QSEnumRuleType)Enum.Parse(typeof(QSEnumRuleType), req["ruletype"].ToString());
-                IAccount account = TLCtxHelper.CmdAccount[acct];
+                IAccount account = TLCtxHelper.ModuleAccountManager[acct];
 
                 
                 if (account != null)

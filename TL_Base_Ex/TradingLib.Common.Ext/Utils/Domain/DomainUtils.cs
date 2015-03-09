@@ -48,7 +48,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static IEnumerable<IAccount> GetAccounts(this Domain domain)
         {
-            return TLCtxHelper.CmdAccount.Accounts.Where(acc => acc.Domain.Equals(domain));
+            return TLCtxHelper.ModuleAccountManager.Accounts.Where(acc => acc.Domain.Equals(domain));
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static IEnumerable<TradingLib.Mixins.JsonObject.JsonWrapperCashOperation> GetAccountCashOperation(this Domain domain)
         {
-            return ORM.MCashOpAccount.GetAccountLatestCashOperationTotal().Where(op => domain.IsInDomain(TLCtxHelper.CmdAccount[op.Account]));
+            return ORM.MCashOpAccount.GetAccountLatestCashOperationTotal().Where(op => domain.IsInDomain(TLCtxHelper.ModuleAccountManager[op.Account]));
         }
 
         /// <summary>

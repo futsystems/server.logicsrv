@@ -13,7 +13,7 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryAccountPaymentInfo", "QryAccountPaymentInfo - query payment Info", "查询交易帐户支付信息")]
         public void CTE_QryAccountPaymentInfo(ISession session, string account)
         {
-            IAccount acc = TLCtxHelper.CmdAccount[account];
+            IAccount acc = TLCtxHelper.ModuleAccountManager[account];
             if (acc == null)
             { 
             }
@@ -37,7 +37,7 @@ namespace TradingLib.Core
                 }
                 else //如果不是root则过滤 代理商只能看到有权限的交易帐号的出入金请求
                 {
-                    ops = list.Where(op => manger.RightAccessAccount(TLCtxHelper.CmdAccount[op.Account])).ToArray();
+                    ops = list.Where(op => manger.RightAccessAccount(TLCtxHelper.ModuleAccountManager[op.Account])).ToArray();
                 }
 
                 session.ReplyMgr(ops);
@@ -68,7 +68,7 @@ namespace TradingLib.Core
                 
                 if (request != null)
                 {
-                    IAccount account = TLCtxHelper.CmdAccount[request.Account];
+                    IAccount account = TLCtxHelper.ModuleAccountManager[request.Account];
                     if (!manger.RightAccessAccount(account))
                     {
                         throw new FutsRspError("无权访问帐户:" + account.ID);
@@ -177,7 +177,7 @@ namespace TradingLib.Core
                         {
                             throw new FutsRspError("请设定交易帐号");
                         }
-                        IAccount account = TLCtxHelper.CmdAccount[request.Account];
+                        IAccount account = TLCtxHelper.ModuleAccountManager[request.Account];
                         if (account == null)
                         {
                             throw new FutsRspError(string.Format("交易帐号[{0}]不存在", request.Account));

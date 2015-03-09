@@ -25,8 +25,8 @@ namespace TradingLib.Core
         /// <param name="errorTitle"></param>
         /// <returns></returns>
         bool SendOrderOut(Order o,out string errorTitle)
-        { 
-            IAccount account = TLCtxHelper.CmdAccount[o.Account];
+        {
+            IAccount account = TLCtxHelper.ModuleAccountManager[o.Account];
             errorTitle = string.Empty;
 
             //1.如果是模拟交易则直接通过broker发送委托,broker_sendorder会按从路由选择器获得对应的路由
@@ -54,7 +54,7 @@ namespace TradingLib.Core
         bool XBrokerSendOrder(Order o,out string errorTitle)
         {
             debug("XBrokerSendOrder check if need split the order", QSEnumDebugLevel.INFO);
-            IAccount account = TLCtxHelper.CmdAccount[o.Account];
+            IAccount account = TLCtxHelper.ModuleAccountManager[o.Account];
             Position pos = account.GetPosition(o.Symbol, o.PositionSide);//获得该委托对应预操作的持仓对象
 
             //筛选出没有平掉的持仓明细
@@ -118,7 +118,7 @@ namespace TradingLib.Core
         {
             debug("resume router roder....",QSEnumDebugLevel.INFO);
             //从数据库恢复子委托数据(路由侧分解的子委托)
-            IEnumerable<Order> orderlist = TLCtxHelper.DataRepository.SelectRouterOrders();
+            IEnumerable<Order> orderlist = TLCtxHelper.ModuleDataRepository.SelectRouterOrders();
             //生成父子委托对
             List<FatherSonOrderPair> pairs = GetOrderPairs(orderlist);
             //恢复到分解器
@@ -137,7 +137,7 @@ namespace TradingLib.Core
             foreach (Order o in sonOrders)
             {
                 //路由侧委托都是从帐户侧分解的 这里不用判断 直接通过清算中心查询父委托ID
-                Order father = TLCtxHelper.Ctx.ClearCentre.SentOrder(o.FatherID);
+                Order father = TLCtxHelper.ModuleClearCentre.SentOrder(o.FatherID);
                    
                 //如果存在父委托
                 if (father != null)

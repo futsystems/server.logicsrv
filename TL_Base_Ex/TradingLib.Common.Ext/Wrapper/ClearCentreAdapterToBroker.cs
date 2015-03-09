@@ -14,20 +14,20 @@ namespace TradingLib.Common
     /// </summary>
     public class ClearCentreAdapterToBroker : IBrokerClearCentre
     {
-        private IClearCentreSrv _clearcentre;
         public ClearCentreAdapterToBroker()
         {
+
         }
 
 
         public IEnumerable<Order> GetOrdersViaBroker(string broker)
         {
-            return TLCtxHelper.CmdTotalInfo.TotalOrders.Where(o => o.Broker.Equals(broker));
+            return TLCtxHelper.ModuleClearCentre.TotalOrders.Where(o => o.Broker.Equals(broker));
         }
 
         public IEnumerable<Trade> GetTradesViaBroker(string broker)
         {
-            return TLCtxHelper.CmdTotalInfo.TotalTrades.Where(f => f.Broker.Equals(broker));
+            return TLCtxHelper.ModuleClearCentre.TotalTrades.Where(f => f.Broker.Equals(broker));
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace TradingLib.Common
         {
             if (type == QSEnumOrderBreedType.ACCT)
             {
-                return TLCtxHelper.CmdTotalInfo.SentOrder(id);
+                return TLCtxHelper.ModuleClearCentre.SentOrder(id);
             }
             if (type == QSEnumOrderBreedType.ROUTER)
             {
@@ -59,7 +59,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public IEnumerable<Order> SelectBrokerOrders(string token)
         {
-            return TLCtxHelper.DataRepository.SelectBrokerOrders(token);
+            return TLCtxHelper.ModuleDataRepository.SelectBrokerOrders(token);
         }
 
 
@@ -70,7 +70,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public IEnumerable<Trade> SelectBrokerTrades(string token)
         {
-            return TLCtxHelper.DataRepository.SelectBrokerTrades(token);
+            return TLCtxHelper.ModuleDataRepository.SelectBrokerTrades(token);
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public IEnumerable<PositionDetail> SelectBrokerPositionDetails(string token)
         {
-            return TLCtxHelper.DataRepository.SelectBrokerPositionDetails(token);
+            return TLCtxHelper.ModuleDataRepository.SelectBrokerPositionDetails(token);
         }
 
     }

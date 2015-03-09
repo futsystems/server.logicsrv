@@ -23,7 +23,7 @@ namespace TradingLib.Core
         public bool RequestCashOperation(string account, decimal amount, QSEnumCashOperation op,out string opref,QSEnumCashOPSource source= QSEnumCashOPSource.Unknown,string  recvinfo="")
         {
             opref = string.Empty;
-            IAccount acc = TLCtxHelper.CmdAccount[account];
+            IAccount acc = TLCtxHelper.ModuleAccountManager[account];
             if (acc == null ) return false;
             if (amount <= 0) return false;
             JsonWrapperCashOperation request = new JsonWrapperCashOperation();
@@ -57,7 +57,7 @@ namespace TradingLib.Core
         {
 
             JsonWrapperCashOperation op = ORM.MCashOpAccount.GetAccountCashOperation(opref);
-            IAccount account = TLCtxHelper.CmdAccount[op.Account];
+            IAccount account = TLCtxHelper.ModuleAccountManager[op.Account];
             if (account == null)
             {
                 throw new FutsRspError("交易帐户不存在");
@@ -83,7 +83,7 @@ namespace TradingLib.Core
             }
 
             //执行时间检查 
-            if (TLCtxHelper.Ctx.SettleCentre.IsInSettle)
+            if (TLCtxHelper.ModuleSettleCentre.IsInSettle)
             {
                 throw new FutsRspError("系统正在结算,禁止出入金操作");
             }

@@ -18,7 +18,7 @@ namespace TradingLib.ServiceManager
         [TaskAttr("重置行情与交易通道", 20, 30,0, "日盘前重置行情与交易通道")]
         public void Task_ResetConnector()
         {
-            if (TLCtxHelper.Ctx.SettleCentre.IsTradingday)//如果是交易日则需要启动实盘通道
+            if (TLCtxHelper.ModuleSettleCentre.IsTradingday)//如果是交易日则需要启动实盘通道
             {
                 debug("正常交易日,重置所有路由通道", QSEnumDebugLevel.INFO);
                 

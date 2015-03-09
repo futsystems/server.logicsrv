@@ -20,13 +20,13 @@ namespace TradingLib.Core
             OrderAction action = request.OrderAction;
             Order o = null;
 
-            IAccount account = TLCtxHelper.CmdAccount[request.OrderAction.Account];
+            IAccount account = TLCtxHelper.ModuleAccountManager[request.OrderAction.Account];
 
             //1.通过交易系统分配的全局委托ID进行识别委托
             if (action.OrderID != 0)
             {
 
-                o = TLCtxHelper.CmdTotalInfo.SentOrder(action.OrderID);
+                o = TLCtxHelper.ModuleClearCentre.SentOrder(action.OrderID);
             }
             else//通过OrderRef FrontID SessionID 或者 OrderSysID进行查找委托
             {
@@ -51,7 +51,7 @@ namespace TradingLib.Core
 
                             //通过brokerrouter取消委托
 
-                            TLCtxHelper.BrokerRouter.CancelOrder(o.id);
+                            TLCtxHelper.ModuleBrokerRouter.CancelOrder(o.id);
                         }
                         //处于中间状态Placed或Submited由系统单独逻辑进行定时检查 用于清除处于未知状态的委托
                         else if (o.Status == QSEnumOrderStatus.Submited || o.Status == QSEnumOrderStatus.Placed)//已经通过broker提交 该状态无法立即撤单 需要等待委托状态更新为Opened或者 被定时程序发现是一个错误委托

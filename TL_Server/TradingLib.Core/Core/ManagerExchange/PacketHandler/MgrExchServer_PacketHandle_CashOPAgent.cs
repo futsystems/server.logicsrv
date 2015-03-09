@@ -97,7 +97,7 @@ namespace TradingLib.Core
                 //}
 
                 //执行时间检查 
-                if (TLCtxHelper.Ctx.SettleCentre.IsInSettle)
+                if (TLCtxHelper.ModuleSettleCentre.IsInSettle)
                 {
                     throw new FutsRspError("系统正在结算,禁止出入金操作");
                 }

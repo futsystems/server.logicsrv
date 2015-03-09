@@ -39,7 +39,7 @@ namespace TradingLib.Core
         [CoreCommandAttr(QSEnumCommandSource.CLI, "flat", "flat - 强平某帐户所有持仓", "强平某个帐户的持仓，先撤单，然后再强平")]
         public string CTE_DemoFalt1(string account)
         {
-            IAccount acc = TLCtxHelper.CmdAccount[account];
+            IAccount acc = TLCtxHelper.ModuleAccountManager[account];
             if (acc != null)
             {
                 acc.FlatPosition(QSEnumOrderSource.RISKCENTRE, "DemoFlat");
@@ -56,10 +56,10 @@ namespace TradingLib.Core
         [CoreCommandAttr(QSEnumCommandSource.CLI, "flatpos", "flatpos - 强平某帐户某合约所有持仓", "风控中心平掉某个帐户的某个合约的所有持仓")]
         public void CTE_FlatPosition(string account, string symbol)
         {
-            Position pos = TLCtxHelper.CmdAccount[account].GetPosition(symbol, true);
+            Position pos = TLCtxHelper.ModuleAccountManager[account].GetPosition(symbol, true);
             if (pos != null && !pos.isFlat)
                 FlatPosition(pos, QSEnumOrderSource.RISKCENTRE, "风控强平");
-            Position pos2 = TLCtxHelper.CmdAccount[account].GetPosition(symbol, false);
+            Position pos2 = TLCtxHelper.ModuleAccountManager[account].GetPosition(symbol, false);
             if (pos2 != null && !pos2.isFlat)
                 FlatPosition(pos2, QSEnumOrderSource.RISKCENTRE, "风控强平");
         }

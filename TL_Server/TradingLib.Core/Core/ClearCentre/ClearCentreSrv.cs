@@ -24,7 +24,7 @@ namespace TradingLib.Core
     /// 5.关闭清算中心 //不做状态检查
     /// </summary>
     [CoreAttr(ClearCentre.CoreName,"清算中心","清算中心,用于维护交易帐号,交易记录,保证金核算,系统结算等功能")]
-    public partial class ClearCentre : ClearCentreBase, IClearCentreSrv, IModuleClearCentre,ICore
+    public partial class ClearCentre : ClearCentreBase,IModuleClearCentre,ICore
     {
         const string CoreName = "ClearCentre";
 
@@ -138,7 +138,7 @@ namespace TradingLib.Core
             {
                 debug("平仓明细生成:" + obj.GetPositionCloseStr(), QSEnumDebugLevel.INFO);
                 //LogAcctPositionCloseDetail(obj);
-                TLCtxHelper.DataRepository.NewPositionCloseDetail(obj);
+                TLCtxHelper.ModuleDataRepository.NewPositionCloseDetail(obj);
             }
         }
 
@@ -153,7 +153,7 @@ namespace TradingLib.Core
             
             //清空分帐户维护器交易记录
             debug("清算中心重置", QSEnumDebugLevel.INFO);
-            foreach (IAccount a in TLCtxHelper.CmdAccount.Accounts)
+            foreach (IAccount a in TLCtxHelper.ModuleAccountManager.Accounts)
             {
                 acctk.ResetAccount(a);
             }
@@ -208,10 +208,10 @@ namespace TradingLib.Core
         /// <summary>
         /// 清算中心状态
         /// </summary>
-        internal QSEnumClearCentreStatus Status
+        public QSEnumClearCentreStatus Status
         {
             get { return _status; }
-            set
+            private set
             {
                 oldstatus = Status;//先保存原先状态
                 _status = value;//再设定新的状态

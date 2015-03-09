@@ -178,7 +178,7 @@ namespace TradingLib.ORM
         /// <returns></returns>
         public static bool IsAccountSettled(string account)
         {
-            return IsAccountSettled(account,TLCtxHelper.Ctx.SettleCentre.CurrentTradingday);
+            return IsAccountSettled(account, TLCtxHelper.ModuleSettleCentre.CurrentTradingday);
         }
         /// <summary>
         /// 检查账户是否结算过,搜索结算信息表,如果该日有结算信息,则结算过,没有则没有结算过
@@ -210,8 +210,8 @@ namespace TradingLib.ORM
                     bool istransok = true;
 
                     Settlement settle = acc.ToSettlement();
-                    settle.SettleDay = TLCtxHelper.Ctx.SettleCentre.NextTradingday;//结算日为当前交易日
-                    settle.SettleTime = TLCtxHelper.Ctx.SettleCentre.SettleTime;//获得结算时间
+                    settle.SettleDay = TLCtxHelper.ModuleSettleCentre.NextTradingday;//结算日为当前交易日
+                    settle.SettleTime = TLCtxHelper.ModuleSettleCentre.SettleTime;//获得结算时间
 
                     //1.插入某账户的结算信息(当前财务信息)平仓盈亏,持仓盈亏,手续费,入金,出金,昨日权益,当前权益
                     if (acc.LastEquity != acc.NowEquity)

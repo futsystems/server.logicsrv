@@ -18,7 +18,7 @@ namespace TradingLib.Common
         /// </summary>
         public void InactiveAccount()
         {
-            TLCtxHelper.CmdAccount.InactiveAccount(this.ID);
+            TLCtxHelper.ModuleAccountManager.InactiveAccount(this.ID);
         }
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace TradingLib.Common
         /// </summary>
         public void ActiveAccount()
         {
-            TLCtxHelper.CmdAccount.ActiveAccount(this.ID);
+            TLCtxHelper.ModuleAccountManager.ActiveAccount(this.ID);
         }
 
 
@@ -37,7 +37,7 @@ namespace TradingLib.Common
         /// <param name="comment"></param>
         public void FlatPosition(QSEnumOrderSource source, string comment)
         {
-            TLCtxHelper.CmdRiskCentre.FlatPosition(this.ID, source, comment);
+            TLCtxHelper.ModuleRiskCentre.FlatPosition(this.ID, source, comment);
         }
 
 
@@ -49,7 +49,7 @@ namespace TradingLib.Common
         /// <param name="comment"></param>
         public void FlatPosition(Position pos,QSEnumOrderSource source, string comment)
         {
-            TLCtxHelper.CmdRiskCentre.FlatPosition(pos, source, comment);
+            TLCtxHelper.ModuleRiskCentre.FlatPosition(pos, source, comment);
             
         }
 
@@ -58,7 +58,7 @@ namespace TradingLib.Common
         /// </summary>
         public void CancelOrder(QSEnumOrderSource source, string cancelreason)
         {
-            TLCtxHelper.CmdRiskCentre.CancelOrder(this.ID, source, cancelreason);
+            TLCtxHelper.ModuleRiskCentre.CancelOrder(this.ID, source, cancelreason);
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace TradingLib.Common
         /// <param name="cancelreason"></param>
         public void CancelOrder(string symbol, QSEnumOrderSource source, string cancelreason)
         {
-            TLCtxHelper.CmdRiskCentre.CancelOrder(this.ID, symbol, source, cancelreason);
+            TLCtxHelper.ModuleRiskCentre.CancelOrder(this.ID, symbol, source, cancelreason);
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace TradingLib.Common
         /// <param name="cancelreason"></param>
         public void CancelOrder(Order order, QSEnumOrderSource source, string cancelreason)
         {
-            TLCtxHelper.CmdRiskCentre.CancelOrder(order, source, cancelreason);
+            TLCtxHelper.ModuleRiskCentre.CancelOrder(order, source, cancelreason);
         }
     }
 }

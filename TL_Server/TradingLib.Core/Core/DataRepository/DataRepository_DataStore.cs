@@ -21,10 +21,10 @@ namespace TradingLib.Core
         public void CleanTempTable()
         {
             debug(datacleanheader + "Clean Tmp_XXX Tables", QSEnumDebugLevel.INFO);
-            ORM.MTradingInfo.ClearIntradayOrders(TLCtxHelper.CmdSettleCentre.NextTradingday);
-            ORM.MTradingInfo.ClearIntradayTrades(TLCtxHelper.CmdSettleCentre.NextTradingday);
-            ORM.MTradingInfo.ClearIntradayOrderActions(TLCtxHelper.CmdSettleCentre.NextTradingday);
-            ORM.MTradingInfo.ClearIntradayPosTransactions(TLCtxHelper.CmdSettleCentre.NextTradingday);
+            ORM.MTradingInfo.ClearIntradayOrders(TLCtxHelper.ModuleSettleCentre.NextTradingday);
+            ORM.MTradingInfo.ClearIntradayTrades(TLCtxHelper.ModuleSettleCentre.NextTradingday);
+            ORM.MTradingInfo.ClearIntradayOrderActions(TLCtxHelper.ModuleSettleCentre.NextTradingday);
+            ORM.MTradingInfo.ClearIntradayPosTransactions(TLCtxHelper.ModuleSettleCentre.NextTradingday);
             debug("Cleaned Success", QSEnumDebugLevel.INFO);
         }
 
@@ -49,7 +49,7 @@ namespace TradingLib.Core
             debug(datastoreheader + "Save PositionDetails....", QSEnumDebugLevel.MUST);
             
             //检查所有系统持仓按照一定的逻辑获得 结算价 目前如果结算价不存在则取持仓最新价来替代(持仓最新价 当没有tick时是以持仓成本作价)
-            foreach (Position pos in TLCtxHelper.CmdTotalInfo.TotalPositions)
+            foreach (Position pos in TLCtxHelper.ModuleClearCentre.TotalPositions)
             {
                 if (_settleWithLatestPrice)//如果以最新价进行结算
                 {
@@ -66,7 +66,7 @@ namespace TradingLib.Core
             int i = 0;
             
             //遍历所有交易帐户
-            foreach (IAccount account in TLCtxHelper.CmdAccount.Accounts)
+            foreach (IAccount account in TLCtxHelper.ModuleAccountManager.Accounts)
             {
                 //遍历交易帐户下所有未平仓持仓对象
                 foreach (Position pos in account.GetPositionsHold())
@@ -75,7 +75,7 @@ namespace TradingLib.Core
                     foreach (PositionDetail pd in pos.PositionDetailTotal.Where(pd => !pd.IsClosed()))
                     {
                         //保存结算持仓明细时要将结算日更新为当前
-                        pd.Settleday = TLCtxHelper.Ctx.SettleCentre.NextTradingday;
+                        pd.Settleday = TLCtxHelper.ModuleSettleCentre.NextTradingday;
                         //保存持仓明细到数据库
                         ORM.MSettlement.InsertPositionDetail(pd);
                         i++;
@@ -86,7 +86,7 @@ namespace TradingLib.Core
 
             i = 0;
             //遍历所有成交接口
-            foreach (IBroker broker in TLCtxHelper.Ctx.RouterManager.Brokers)
+            foreach (IBroker broker in TLCtxHelper.ServiceRouterManager.Brokers)
             {
                 //接口没有启动 则没有交易数据
                 if (!broker.IsLive)
@@ -98,7 +98,7 @@ namespace TradingLib.Core
                     foreach (PositionDetail pd in pos.PositionDetailTotal.Where(pd => !pd.IsClosed()))
                     {
                         //保存结算持仓明细时要将结算日更新为当前
-                        pd.Settleday = TLCtxHelper.Ctx.SettleCentre.NextTradingday;
+                        pd.Settleday = TLCtxHelper.ModuleSettleCentre.NextTradingday;
                         //设定标识
                         pd.Broker = broker.Token;
                         pd.Breed = QSEnumOrderBreedType.BROKER;

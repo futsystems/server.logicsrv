@@ -195,7 +195,7 @@ namespace TradingLib.Core
         public bool RightAccessAccount(string account)
         {
             if (this.Manager == null) return false;//没有管理端绑定 则返回false
-            IAccount acc = TLCtxHelper.CmdAccount[account];
+            IAccount acc = TLCtxHelper.ModuleAccountManager[account];
             if (acc == null) return false;
             return this.Manager.RightAccessAccount(acc);
         }
@@ -234,7 +234,7 @@ namespace TradingLib.Core
             WatchAccounts.Clear();
             foreach (string account in accountlist)
             {
-                IAccount acc = TLCtxHelper.CmdAccount[account];
+                IAccount acc = TLCtxHelper.ModuleAccountManager[account];
                 if (acc == null) continue;//交易帐户不存在 
                 if (!this.Manager.RightAccessAccount(acc)) continue;//无权查看交易帐户 不添加
                 WatchAccounts.Add(acc);
@@ -271,7 +271,7 @@ namespace TradingLib.Core
         /// <param name="account"></param>
         public void Selected(string account)
         {
-            IAccount acc = TLCtxHelper.CmdAccount[account];
+            IAccount acc = TLCtxHelper.ModuleAccountManager[account];
             if (acc == null) return;//交易帐户不存在 
             if (!this.Manager.RightAccessAccount(acc)) return;//无权查看交易帐户
             _selectacc = account;

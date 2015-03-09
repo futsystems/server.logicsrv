@@ -22,8 +22,8 @@ namespace TradingLib.Core
         /// </summary>
         void SettleAccount()
         {
-            debug(string.Format("#####SettleAccount: Start Settele Account,Current Tradingday:{0}", TLCtxHelper.CmdSettleCentre.CurrentTradingday), QSEnumDebugLevel.INFO);
-            foreach (IAccount acc in TLCtxHelper.CmdAccount.Accounts)
+            debug(string.Format("#####SettleAccount: Start Settele Account,Current Tradingday:{0}", TLCtxHelper.ModuleSettleCentre.CurrentTradingday), QSEnumDebugLevel.INFO);
+            foreach (IAccount acc in TLCtxHelper.ModuleAccountManager.Accounts)
             {
                 try
                 {
@@ -36,8 +36,8 @@ namespace TradingLib.Core
             }
 
             //更新最近结算日
-            debug(string.Format("Update lastsettleday as:{0}",TLCtxHelper.CmdSettleCentre.CurrentTradingday), QSEnumDebugLevel.INFO);
-            ORM.MSettlement.UpdateSettleday(TLCtxHelper.CmdSettleCentre.CurrentTradingday);
+            debug(string.Format("Update lastsettleday as:{0}", TLCtxHelper.ModuleSettleCentre.CurrentTradingday), QSEnumDebugLevel.INFO);
+            ORM.MSettlement.UpdateSettleday(TLCtxHelper.ModuleSettleCentre.CurrentTradingday);
             debug("Settlement Done", QSEnumDebugLevel.INFO);
         }
 

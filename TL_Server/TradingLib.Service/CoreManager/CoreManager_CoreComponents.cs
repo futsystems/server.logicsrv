@@ -1,126 +1,126 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using TradingLib.API;
-using TradingLib.Common;
-using TradingLib.Core;
+﻿//using System;
+//using System.Collections.Generic;
+//using System.Linq;
+//using System.Text;
+//using TradingLib.API;
+//using TradingLib.Common;
+//using TradingLib.Core;
 
 
 
-namespace TradingLib.ServiceManager
-{
-    public partial class CoreManager
-    {
+//namespace TradingLib.ServiceManager
+//{
+//    public partial class CoreManager
+//    {
 
 
-        private void DestorySettleCentre()
-        {
+//        private void DestorySettleCentre()
+//        {
 
-        }
-
-
-        private void InitMsgExchSrv()
-        {
-            debug("1.初始化MsgExchServer");
-            _messageExchagne = new MsgExchServer();
-        }
+//        }
 
 
-        private void DestoryMsgExchSrv()
-        {
-            _messageExchagne.Dispose();
-        }
+//        private void InitMsgExchSrv()
+//        {
+//            debug("1.初始化MsgExchServer");
+//            _messageExchagne = new MsgExchServer();
+//        }
+
+
+//        private void DestoryMsgExchSrv()
+//        {
+//            _messageExchagne.Dispose();
+//        }
         
-        //初始化清算中心
-        private void InitClearCentre()
-        {
-            debug("2.初始化ClearCentre");
-            _clearCentre = new ClearCentre();
+//        //初始化清算中心
+//        private void InitClearCentre()
+//        {
+//            debug("2.初始化ClearCentre");
+//            _clearCentre = new ClearCentre();
 
-        }
+//        }
 
-        private void DestoryClearCentre()
-        {
-            _clearCentre.Dispose();
-        }
+//        private void DestoryClearCentre()
+//        {
+//            _clearCentre.Dispose();
+//        }
 
 
-        //初始化风控中心
-        private void InitRiskCentre()
-        {
-            debug("3.初始化RiskCentre");
-            _riskCentre = new RiskCentre();
-        }
+//        //初始化风控中心
+//        private void InitRiskCentre()
+//        {
+//            debug("3.初始化RiskCentre");
+//            _riskCentre = new RiskCentre();
+//        }
 
-        private void DestoryRiskCentre()
-        {
-            _riskCentre.Dispose();
-        }
+//        private void DestoryRiskCentre()
+//        {
+//            _riskCentre.Dispose();
+//        }
 
-        //初始化datafeedrouter
-        private void InitDataFeedRouter()
-        {
-            debug("4.初始化DataFeedRouter");
-            _datafeedRouter = new DataFeedRouter();
-        }
+//        //初始化datafeedrouter
+//        private void InitDataFeedRouter()
+//        {
+//            debug("4.初始化DataFeedRouter");
+//            _datafeedRouter = new DataFeedRouter();
+//        }
 
-        void DestoryDataFeedRouter()
-        {
-            //_datafeedRouter.Dispose();
-        }
+//        void DestoryDataFeedRouter()
+//        {
+//            //_datafeedRouter.Dispose();
+//        }
 
-        //初始化brokerselector
-        private void InitBrokerRouter()
-        {
-            debug("5.初始化BrokerRouter");
-            _brokerRouter = new BrokerRouter();
+//        //初始化brokerselector
+//        private void InitBrokerRouter()
+//        {
+//            debug("5.初始化BrokerRouter");
+//            _brokerRouter = new BrokerRouter();
 
-            //_brokerRouter.DataFeedRouter = _datafeedRouter;
-        }
+//            //_brokerRouter.DataFeedRouter = _datafeedRouter;
+//        }
 
-        private void DestoryBrokerRouter()
-        {
-            //_brokerRouter.DataFeedRouter = null;
-            //_brokerRouter.Dispose();
-        }
+//        private void DestoryBrokerRouter()
+//        {
+//            //_brokerRouter.DataFeedRouter = null;
+//            //_brokerRouter.Dispose();
+//        }
 
-        /// <summary>
-        /// 初始化管理与交易信号转发中心
-        /// </summary>
-        void InitMgrExchSrv()
-        {
-            debug("6.初始化MgrExchServer");
-            _managerExchange = new MgrExchServer();
-        }
-        private void DestoryMgrExchSrv()
-        {
-            _managerExchange.Dispose();
-        }
+//        /// <summary>
+//        /// 初始化管理与交易信号转发中心
+//        /// </summary>
+//        void InitMgrExchSrv()
+//        {
+//            debug("6.初始化MgrExchServer");
+//            _managerExchange = new MgrExchServer();
+//        }
+//        private void DestoryMgrExchSrv()
+//        {
+//            _managerExchange.Dispose();
+//        }
 
-        void InitWebMsgExchSrv()
-        {
-            debug("7.初始化WebMsgExchSrv");
-            _webmsgExchange = new WebMsgExchServer();
-        }
-        private void DestoryWebMsgExchSrv()
-        {
-            _webmsgExchange.Dispose();
-        }
+//        void InitWebMsgExchSrv()
+//        {
+//            debug("7.初始化WebMsgExchSrv");
+//            _webmsgExchange = new WebMsgExchServer();
+//        }
+//        private void DestoryWebMsgExchSrv()
+//        {
+//            _webmsgExchange.Dispose();
+//        }
 
-        private void InitTaskCentre()
-        {
+//        private void InitTaskCentre()
+//        {
 
-            _taskcentre = new TaskCentre();
-        }
+//            _taskcentre = new TaskCentre();
+//        }
 
-        private void DestoryTaskCentre()
-        {
+//        private void DestoryTaskCentre()
+//        {
 
-            _taskcentre.Dispose();
-        }
+//            _taskcentre.Dispose();
+//        }
 
 
         
-    }
-}
+//    }
+//}

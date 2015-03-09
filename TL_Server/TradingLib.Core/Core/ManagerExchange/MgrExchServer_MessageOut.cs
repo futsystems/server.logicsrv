@@ -203,7 +203,7 @@ namespace TradingLib.Core
             try
             {
 
-                IAccount account = TLCtxHelper.CmdAccount[acc];
+                IAccount account = TLCtxHelper.ModuleAccountManager[acc];
                 if (account == null)
                 {
                     debug("Resume Account:" + acc + " do not exist", QSEnumDebugLevel.ERROR);

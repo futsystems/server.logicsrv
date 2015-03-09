@@ -83,7 +83,7 @@ namespace TradingLib.Core
             //1.先向客户端广播Tick行情 
             tl.newTick(k);
             //2.清算中心响应Tick事件
-            TLCtxHelper.CmdGotTradingRecord.GotTick(k);
+            TLCtxHelper.ModuleClearCentre.GotTick(k);
             //2.对外触发Tick事件 用于被其他组件简体
             //debug("got tick:" + TickImpl.Serialize(k), QSEnumDebugLevel.INFO);
             TLCtxHelper.EventIndicator.FireTickEvent(k);
@@ -120,7 +120,7 @@ namespace TradingLib.Core
         public Order SentRouterOrder(long val)
         {
 
-            return TLCtxHelper.BrokerRouter.SentRouterOrder(val);
+            return TLCtxHelper.ModuleBrokerRouter.SentRouterOrder(val);
         }
 
 
@@ -172,7 +172,7 @@ namespace TradingLib.Core
             //如果需要记录该委托错误 则需要调用清算中心的goterrororder进行处理
             if (needlog)
             {
-                TLCtxHelper.CmdGotTradingRecord.GotOrderError(order, info);
+                TLCtxHelper.ModuleClearCentre.GotOrderError(order, info);
             }
             //对外通知
             NotifyOrderError(order, info);
@@ -215,7 +215,7 @@ namespace TradingLib.Core
                     break;
             }
             //清算中心响应委托回报
-            TLCtxHelper.CmdGotTradingRecord.GotOrder(o);
+            TLCtxHelper.ModuleClearCentre.GotOrder(o);
 
             //if (o.Status == QSEnumOrderStatus.Canceled)
             //{
@@ -242,12 +242,12 @@ namespace TradingLib.Core
             //在BrokerRouter->GotFillEvent->ClearCentre.GotFill->adjustcommission->this.GotCommissionFill调用链 形成每笔成交手续费的计算 当计算完毕后 再向客户端进行发送
             //清算中心响应成交回报
 
-            TLCtxHelper.CmdGotTradingRecord.GotFill(t);//注这里的成交没有结算手续费,成交部分我们需要在结算中心结算结算完手续费后再向客户端发送
+            TLCtxHelper.ModuleClearCentre.GotFill(t);//注这里的成交没有结算手续费,成交部分我们需要在结算中心结算结算完手续费后再向客户端发送
             
             //对外通知
             NotifyFill(t);
 
-            IAccount account = TLCtxHelper.CmdAccount[t.Account];
+            IAccount account = TLCtxHelper.ModuleAccountManager[t.Account];
             if (account != null)
             {
                 //有新的成交数据后,系统自动发送对应的持仓信息
@@ -267,10 +267,11 @@ namespace TradingLib.Core
         public void OnCancelEvent(long oid)
         {
             //清算中心响应取消回报
-            TLCtxHelper.CmdGotTradingRecord.GotCancel(oid);
+            TLCtxHelper.ModuleClearCentre.GotCancel(oid);
             //对外触发取消事件
             //if (GotCancelEvent != null)
             //    GotCancelEvent(oid);
+            
         }
         #endregion
 

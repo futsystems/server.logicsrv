@@ -70,14 +70,12 @@
     <Compile Include="Core\AccountManager\AccountManager_edit.cs" />
     <Compile Include="Core\AccountManager\AccountManager_mgr.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv.cs" />
-    <Compile Include="Core\ClearCentre\ClearCentreSrv_AccountOperation.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_onGotXXX.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_DataRestore.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_CTE.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_AccountCashOperation.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_DataStore.cs" />
-    <Compile Include="Core\ClearCentre\ClearCentreSrv_mgr.cs" />
     <Compile Include="Core\DataRepository\DataRepository.cs" />
     <Compile Include="Core\DataRepository\DataRepository_DataStore.cs" />
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_ExStrategy.cs" />

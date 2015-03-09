@@ -47,7 +47,7 @@ namespace TradingLib.Core
         void newAccountChanged(string account)
         {
             debug("account changed,will send to manager montier", QSEnumDebugLevel.INFO);
-            IAccount acc = TLCtxHelper.CmdAccount[account];
+            IAccount acc = TLCtxHelper.ModuleAccountManager[account];
             NotifyMGRAccountChangeUpdateResponse notify = ResponseTemplate<NotifyMGRAccountChangeUpdateResponse>.SrvSendNotifyResponse(account);
             notify.oAccount = acc.GenAccountLite();
             CachePacket(notify);
@@ -60,7 +60,7 @@ namespace TradingLib.Core
         void newAccountAdded(string account)
         {
             debug("account added,will send to manager montier", QSEnumDebugLevel.INFO);
-            IAccount acc = TLCtxHelper.CmdAccount[account];
+            IAccount acc = TLCtxHelper.ModuleAccountManager[account];
             if (acc != null)
             {
                 NotifyMGRAccountChangeUpdateResponse notify = ResponseTemplate<NotifyMGRAccountChangeUpdateResponse>.SrvSendNotifyResponse(account);

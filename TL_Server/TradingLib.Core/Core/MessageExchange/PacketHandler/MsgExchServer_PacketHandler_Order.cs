@@ -91,7 +91,7 @@ namespace TradingLib.Core
                 //给委托绑定唯一的委托编号
                 AssignOrderID(ref o);
 
-                IAccount acc = TLCtxHelper.CmdAccount[o.Account];
+                IAccount acc = TLCtxHelper.ModuleAccountManager[o.Account];
                 if (acc == null)
                 {
                     o.Status = QSEnumOrderStatus.Reject;
@@ -106,7 +106,7 @@ namespace TradingLib.Core
                     string errortitle = string.Empty;
                     bool needlog = true;
 
-                    if (!TLCtxHelper.CmdRiskCentre.CheckOrderStep1(ref o, acc, out needlog, out errortitle, inter))
+                    if (!TLCtxHelper.ModuleRiskCentre.CheckOrderStep1(ref o, acc, out needlog, out errortitle, inter))
                     {
                         
                         o.Status = QSEnumOrderStatus.Reject;
@@ -129,7 +129,7 @@ namespace TradingLib.Core
                     if (riskcheck)
                     {
                         debug("Got Order[Check2]:" + o.id.ToString(), QSEnumDebugLevel.INFO);
-                        if (!TLCtxHelper.CmdRiskCentre.CheckOrderStep2(ref o, acc, out msg, inter))
+                        if (!TLCtxHelper.ModuleRiskCentre.CheckOrderStep2(ref o, acc, out msg, inter))
                         {
                             o.Status = QSEnumOrderStatus.Reject;
                             RspInfo info = RspInfoEx.Fill("RISKCENTRE_CHECK_ERROR");
@@ -153,7 +153,7 @@ namespace TradingLib.Core
                     //debug("####################### brokerrouter send order", QSEnumDebugLevel.INFO);
                     //委托通过风控检查,则通过brokerrouter路由到对应的下单接口
                     if (o.Status == QSEnumOrderStatus.Placed)
-                        TLCtxHelper.BrokerRouter.SendOrder(o);
+                        TLCtxHelper.ModuleBrokerRouter.SendOrder(o);
                 }
             }
             catch (Exception ex)

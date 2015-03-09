@@ -59,7 +59,7 @@ namespace TradingLib.Core
             RspMGROperationResponse response = ResponseTemplate<RspMGROperationResponse>.SrvSendRspResponse(request);
 
             Trade fill = request.TradeToSend;
-            IAccount account = TLCtxHelper.CmdAccount[fill.Account];
+            IAccount account = TLCtxHelper.ModuleAccountManager[fill.Account];
             fill.oSymbol = account.GetSymbol(fill.Symbol);
 
             if (fill.oSymbol == null)
