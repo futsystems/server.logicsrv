@@ -43,61 +43,7 @@ namespace TradingLib.Common
             totaltk.NewPosition(obj);
         }
 
-        #region 【IClearCentreBase】交易账户 操作
-        /// <summary>
-        /// 获得Account数组
-        /// </summary>
-        /// <returns></returns>
-        //public IEnumerable<IAccount> Accounts
-        //{
-        //    get { return acctk.Accounts; }
-        //}
-        /// <summary>
-        /// 通过AccountID获得某个账户
-        /// </summary>
-        /// <param name="accid"></param>
-        /// <returns></returns>
-        //public IAccount this[string accid]
-        //{
-        //    get
-        //    {
-        //        return acctk[accid];
-        //    }
-        //}
-
-        /// <summary>
-        /// 查找某个userid的交易帐户
-        /// </summary>
-        /// <param name="uid"></param>
-        /// <param name="category"></param>
-        /// <returns></returns>
-        public IAccount QryAccount(int uid,QSEnumAccountCategory category)
-        {
-            return acctk.QryAccount(uid, category);
-        }
-
-
-        ///// <summary>
-        ///// 查询是否有某个ID的账户
-        ///// </summary>
-        ///// <param name="a"></param>
-        ///// <returns></returns>
-        //public bool HaveAccount(string a)
-        //{
-        //    return acctk.HaveAccount(a);
-        //}
-        ///// <summary>
-        ///// 查询是否有某个ID的账户并返回该账户
-        ///// </summary>
-        ///// <param name="a"></param>
-        ///// <param name="acc"></param>
-        ///// <returns></returns>
-        //public bool HaveAccount(string a, out IAccount acc)
-        //{
-        //    acc = null;
-        //    return acctk.HaveAccount(a, out acc);
-        //}
-
+        #region 添加或删除交易帐户到清算服务的内存数据哭
         /// <summary>
         /// 将某个账户缓存到服务器内存，注意检查是否已经存在该账户
         /// 生成该账户所对应的数据对象用于实时储存交易信息与合约信息

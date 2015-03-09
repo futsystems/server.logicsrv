@@ -82,6 +82,8 @@ namespace TradingLib.Common
 
                 bool neworder = !totaltk.IsTracked(o.id);
                 acctk.GotOrder(o);
+
+                //整体交易数据维护器和每个帐户交易数据维护器 维护的数据是统一对象，避免内存占用 当有新委托时 才调用整体交易数据维护器维护该委托
                 if (neworder)
                 {
                     totaltk.NewOrder(o);
@@ -154,30 +156,10 @@ namespace TradingLib.Common
                 totaltk.NewFill(f);//所有的成交都只有一次回报 都需要进行记录
                 pos = account.GetPosition(f.Symbol, positionside);//acctk.GetPosition(f.Account, f.symbol, positionside);
                 int aftersize = pos.UnsignedSize;//查询该成交后数量
+
                 //当成交数据中f.commission<0表明清算中心没有计算手续费,若>=0表明已经计算过手续费 则不需要计算了
                 if (f.Commission < 0)
                 {
-                    //decimal commissionrate = 0;
-                    ////开仓
-                    //if (f.IsEntryPosition)
-                    //{
-                    //    commissionrate = symbol.EntryCommission;
-                    //}
-                    ////平仓
-                    //else
-                    //{
-                    //    //进行特殊手续费判定并设定对应的手续费费率
-                    //    //如果对应的合约是单边计费的或者有特殊计费方式的合约，则我们单独计算该部分费用,注这里还需要加入一个日内交易的判断,暂时不做(当前交易均为日内)
-                    //    //获得平仓手续费特例
-                    //    if (CommissionHelper.AnyCommissionSetting(SymbolHelper.genSecurityCode(f.Symbol), out commissionrate))
-                    //    {
-                    //        //debug("合约:" + SymbolHelper.genSecurityCode(f.symbol) + "日内手续费费差异", QSEnumDebugLevel.MUST);
-                    //    }
-                    //    else//没有特殊费率参数,则为标准的出场费率
-                    //    {
-                    //        commissionrate = symbol.ExitCommission;
-                    //    }
-                    //}
                     //计算标准手续费
                     f.Commission = account.CalCommission(f);
                 }
@@ -185,8 +167,6 @@ namespace TradingLib.Common
                 //生成持仓操作记录 同时结合beforeszie aftersize 设置fill PositionOperation,需要知道帐户的持仓信息才可以知道是开 加 减 平等信息
                 postrans = new PositionTransaction(f, symbol, beforesize, aftersize, pos.Highest,pos.Lowest);
                 f.PositionOperation = postrans.PosOperation;
-                
-
                 //子类函数的onGotFill用于执行数据记录以及其他相关业务逻辑
                 onGotFill(f, postrans);
 

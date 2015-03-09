@@ -18,7 +18,7 @@ namespace TradingLib.Core
                 Manager manger = session.GetManager();
                 SystemStatus status = new SystemStatus();
                 status.CurrentTradingday = TLCtxHelper.ModuleSettleCentre.CurrentTradingday;
-                status.IsClearCentreOpen = true; //clearcentre.Status == QSEnumClearCentreStatus.CCOPEN;
+                status.ClearCentreStatus = TLCtxHelper.ModuleClearCentre.Status; //clearcentre.Status == QSEnumClearCentreStatus.CCOPEN;
                 status.IsSettleNormal = TLCtxHelper.ModuleSettleCentre.IsNormal;
                 status.IsTradingday = TLCtxHelper.ModuleSettleCentre.IsTradingday;
                 status.LastSettleday = TLCtxHelper.ModuleSettleCentre.LastSettleday;

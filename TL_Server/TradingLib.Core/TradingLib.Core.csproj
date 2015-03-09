@@ -71,11 +71,9 @@
     <Compile Include="Core\AccountManager\AccountManager_mgr.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_onGotXXX.cs" />
-    <Compile Include="Core\ClearCentre\ClearCentreSrv_.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_DataRestore.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_CTE.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_AccountCashOperation.cs" />
-    <Compile Include="Core\ClearCentre\ClearCentreSrv_DataStore.cs" />
     <Compile Include="Core\DataRepository\DataRepository.cs" />
     <Compile Include="Core\DataRepository\DataRepository_DataStore.cs" />
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_ExStrategy.cs" />
@@ -137,7 +135,6 @@
     <Compile Include="Core\SettleCentre\SettleCentre.cs" />
     <Compile Include="Core\SettleCentre\SettleCentre_.cs" />
     <Compile Include="Core\SettleCentre\SettleCentre_CTE.cs" />
-    <Compile Include="Core\SettleCentre\SettleCentre_StoreClean.cs" />
     <Compile Include="Core\SettleCentre\TradingCalendar.cs" />
     <Compile Include="Core\TaskCentre\TaskCentre.cs" />
     <Compile Include="Core\MessageExchange\MsgExchServer.cs" />

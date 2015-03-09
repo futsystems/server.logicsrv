@@ -118,7 +118,7 @@ namespace TradingLib.Core
             if (IsNormal && !IsTradingday) return;
             this.IsInSettle = true;//标识结算中心处于结算状态
 
-           // this.SettleAccount();
+            this.SettleAccount();
 
             TLCtxHelper.EventSystem.FireSettleEvent(this, new SystemEventArgs());
 

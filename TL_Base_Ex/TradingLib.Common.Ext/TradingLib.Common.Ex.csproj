@@ -97,7 +97,6 @@
     <Compile Include="Accounts\Account_IAccConfig.cs" />
     <Compile Include="Utils\Account\AccountUtils_BasicInfo.cs" />
     <Compile Include="ClearCentre\Base_ClearCentre_GotXXXX.cs" />
-    <Compile Include="ClearCentre\Base_ClearCentre_.cs" />
     <Compile Include="ClearCentre\Base_ClearCentre_TotalInfo.cs" />
     <Compile Include="Client\MgrClientInfo.cs" />
     <Compile Include="Client\TrdClientInfo.cs" />

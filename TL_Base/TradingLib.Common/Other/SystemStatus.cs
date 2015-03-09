@@ -14,7 +14,7 @@ namespace TradingLib.Common
             this.CurrentTradingday = 0;
             this.NextTradingday = 0;
             this.IsSettleNormal = true;
-            this.IsClearCentreOpen = true;
+            this.ClearCentreStatus = QSEnumClearCentreStatus.UNKNOWN;
             this.TotalAccountNum = 0;
 
         }
@@ -42,7 +42,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 清算中心是否开启
         /// </summary>
-        public bool IsClearCentreOpen { get; set; }
+        public QSEnumClearCentreStatus ClearCentreStatus { get; set; }
 
         /// <summary>
         /// 账户总数
@@ -72,7 +72,7 @@ namespace TradingLib.Common
             sb.Append(d);
             sb.Append(this.IsSettleNormal.ToString());
             sb.Append(d);
-            sb.Append(this.IsClearCentreOpen.ToString());
+            sb.Append(this.ClearCentreStatus.ToString());
             sb.Append(d);
             sb.Append(this.TotalAccountNum.ToString());
             sb.Append(d);
@@ -90,7 +90,7 @@ namespace TradingLib.Common
             this.NextTradingday = int.Parse(rec[2]);
             this.IsTradingday = bool.Parse(rec[3]);
             this.IsSettleNormal = bool.Parse(rec[4]);
-            this.IsClearCentreOpen = bool.Parse(rec[5]);
+            this.ClearCentreStatus = (QSEnumClearCentreStatus)Enum.Parse(typeof(QSEnumClearCentreStatus), rec[5]);
             this.TotalAccountNum = int.Parse(rec[6]);
             this.MarketOpenCheck = bool.Parse(rec[7]);
             this.IsDevMode = bool.Parse(rec[8]);

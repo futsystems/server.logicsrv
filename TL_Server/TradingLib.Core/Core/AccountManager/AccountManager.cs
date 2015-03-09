@@ -28,6 +28,7 @@ namespace TradingLib.Core
         {
             Util.StartStatus(this.PROGRAME);
         }
+
         public void Stop()
         {
             Util.StopStatus(this.PROGRAME);
