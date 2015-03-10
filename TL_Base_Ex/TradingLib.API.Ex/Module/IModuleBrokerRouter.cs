@@ -5,13 +5,8 @@ using System.Text;
 
 namespace TradingLib.API
 {
-    public interface ICore:IDisposable
+    public interface IModuleBrokerRouter:ICore,IBrokerRouter
     {
-        string CoreId { get; }
-
-        void Start();
-
-        void Stop();
 
     }
 }

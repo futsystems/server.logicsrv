@@ -27,8 +27,8 @@ namespace TradingLib.ServiceManager
 
         //============ 服务组件 ===============================
         //核心服务
-        private IBrokerRouter _brokerRouter;//交易通道路由
-        private IDataRouter _datafeedRouter;//数据通道路由
+        private IModuleBrokerRouter _brokerRouter;//交易通道路由
+        private IModuleDataRouter _datafeedRouter;//数据通道路由
 
         private IModuleExCore _messageExchagne;//交易消息交换
         private MgrExchServer _managerExchange;//管理消息交换
@@ -69,10 +69,10 @@ namespace TradingLib.ServiceManager
 
             debug("[INIT CORE] DataFeedRouter", QSEnumDebugLevel.INFO);
             //var scope = Container.BeginLifetimeScope();
-            _datafeedRouter = TLCtxHelper.Scope.Resolve<IDataRouter>();//Container.Resolve<IDataRouter>();//初始化数据路由
+            _datafeedRouter = TLCtxHelper.Scope.Resolve<IModuleDataRouter>();//Container.Resolve<IDataRouter>();//初始化数据路由
 
             debug("[INIT CORE] BrokerRouter", QSEnumDebugLevel.INFO);
-            _brokerRouter = TLCtxHelper.Scope.Resolve<IBrokerRouter>();//初始化交易路由选择器
+            _brokerRouter = TLCtxHelper.Scope.Resolve<IModuleBrokerRouter>();//初始化交易路由选择器
 
             debug("[INIT CORE] MgrExchServer", QSEnumDebugLevel.INFO);//服务端管理界面,提供管理客户端接入,查看并设置相关数据
             _managerExchange = new MgrExchServer(); ;//初始化管理服务

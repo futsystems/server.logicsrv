@@ -86,7 +86,7 @@ namespace TradingLib.Core
                 }
                 catch (Exception ex)
                 {
-                    debug(PROGRAM + ":process message out error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                    debug(PROGRAME + ":process message out error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
                 }
             }
         }

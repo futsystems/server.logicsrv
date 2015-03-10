@@ -19,9 +19,11 @@ namespace TradingLib.Core
     /// FastTickSrv对接所有的行情源然后形成统一的订阅与传输格式对外传出，这样避免了在多点去维护不同的行情与订阅信息
     /// 这里只要针对FastTick进行订阅就可以了
     /// </summary>
-    public class DataFeedRouter:BaseSrvObject,IDataRouter
+    public class DataFeedRouter:BaseSrvObject,IModuleDataRouter
     {
-        const string ComponentName = "DataFeedRouter";
+        const string CoreName = "DataFeedRouter";
+        public string CoreId { get { return this.PROGRAME; } }
+
         TickWatcher _tickwatcher;
         List<MktTime> _mkttimespanlist = new List<MktTime>();
 
@@ -30,10 +32,10 @@ namespace TradingLib.Core
         int _massalertspan = 5;
         int _alertspan = 10;
         public DataFeedRouter()
-            : base(ComponentName)
+            : base(DataFeedRouter.CoreName)
         {
             //1.加载配置文件
-            _cfgdb = new ConfigDB(ComponentName);
+            _cfgdb = new ConfigDB(DataFeedRouter.CoreName);
             if (!_cfgdb.HaveConfig("SymbolIdleSpan"))
             {
                 _cfgdb.UpdateConfig("SymbolIdleSpan", QSEnumCfgType.Int,10, "合约行情处于非激活状态的判定时间,多少秒后该合约判定为行情异常");
@@ -76,6 +78,14 @@ namespace TradingLib.Core
             _mkttimespanlist.Add(new MktTime(210000, 235959));//夜盘23:59:59秒
             _mkttimespanlist.Add(new MktTime(0, 23000));//凌晨00:00:00-2:30:00
 
+            //订阅重置事件
+            TLCtxHelper.EventSystem.SettleResetEvent += new EventHandler<SystemEventArgs>(EventSystem_SettleResetEvent);
+
+        }
+
+        void EventSystem_SettleResetEvent(object sender, SystemEventArgs e)
+        {
+            this.Reset();
         }
 
         /// <summary>

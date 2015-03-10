@@ -60,7 +60,7 @@ namespace TradingLib.Core
             }
             catch (Exception ex)
             {
-                debug(PROGRAM + ":get symbol tick snapshot error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                debug(PROGRAME + ":get symbol tick snapshot error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
                 return null;
             }
         }

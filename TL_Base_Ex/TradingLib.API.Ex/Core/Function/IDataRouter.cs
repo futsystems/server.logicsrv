@@ -46,16 +46,17 @@ namespace TradingLib.API
         void LoadDataFeed(IDataFeed datafeed);
 
         void LoadTickSnapshot();
-        /// <summary>
-        /// 启动
-        /// </summary>
-        void Start();
 
-        /// <summary>
-        /// 停止
-        /// </summary>
-        void Stop();
+        ///// <summary>
+        ///// 启动
+        ///// </summary>
+        //void Start();
 
-        void Reset();
+        ///// <summary>
+        ///// 停止
+        ///// </summary>
+        //void Stop();
+
+        //void Reset();
     }
 }

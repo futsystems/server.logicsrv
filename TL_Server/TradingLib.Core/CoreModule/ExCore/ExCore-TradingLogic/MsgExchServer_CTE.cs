@@ -120,8 +120,8 @@ namespace TradingLib.Core
         public void Reset()
         {
             debug("重置行情与成交路由", QSEnumDebugLevel.INFO);
-            TLCtxHelper.ModuleBrokerRouter.Reset();
-            TLCtxHelper.ModuleDataRouter.Reset();
+            //TLCtxHelper.ModuleBrokerRouter.Reset();
+            //TLCtxHelper.ModuleDataRouter.Reset();
         }
 
 

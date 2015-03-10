@@ -43,9 +43,10 @@ namespace TradingLib.Core
     /// 5.交易路由中心操作接口是线程安全的,内置2个队列一个队列用于处理交易系统提交上来的委托以及其他操作,排队处理
     ///   另一个队列处理成交接口返回过来的回报,将这些回报逐一返回给交易系统
     /// </summary>
-    public partial class BrokerRouter:BaseSrvObject,IBrokerRouter
+    public partial class BrokerRouter:BaseSrvObject,IModuleBrokerRouter
     {
-        public const string PROGRAM = "BrokerRouter";
+        const string CoreName = "BrokerRouter";
+        public string CoreId { get { return this.PROGRAME; } }
 
 
 

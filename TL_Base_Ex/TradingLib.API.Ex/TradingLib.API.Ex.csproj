@@ -56,11 +56,11 @@
     <Compile Include="Module\IModuleAPIExchange.cs" />
     <Compile Include="Module\IModuleClearCentre.cs" />
     <Compile Include="Module\IModuleDataRepository.cs" />
+    <Compile Include="Module\IModuleDataRouter.cs" />
     <Compile Include="Module\IModuleExCore.cs" />
     <Compile Include="Module\IModuleRiskCentre.cs" />
     <Compile Include="Module\IModuleSettleCentre.cs" />
     <Compile Include="Module\IModuleTaskCentre.cs" />
-    <Compile Include="Core\IOnRouterEvent.cs" />
     <Compile Include="Core\Function\IRouterManager.cs" />
     <Compile Include="Account\IGeneralCheck.cs" />
     <Compile Include="Contrib\EnumCommandSource.cs" />
@@ -72,6 +72,7 @@
     <Compile Include="Contrib\IContrib.cs" />
     <Compile Include="Delegate.cs" />
     <Compile Include="Module\ICore.cs" />
+    <Compile Include="Module\IModuleBrokerRouter.cs" />
     <Compile Include="ServiceManager\IServiceManager.cs" />
     <Compile Include="ITransport.cs" />
     <Compile Include="Core\Function\IMessageMgr.cs" />

@@ -88,8 +88,6 @@ namespace TradingLib.Core
         /// 交易帐号只能是数字或字母
         /// </summary>
         System.Text.RegularExpressions.Regex regaccount = new System.Text.RegularExpressions.Regex(@"^[A-Za-z0-9-]+$");
-
-
         /// <summary>
         /// 为某个user_id添加某个类型的帐号 密码为pass
         /// 默认mgr_fk为0 如果为0则通过ManagerTracker获得Root的mgr_fk 将默认帐户统一挂在Root用户下

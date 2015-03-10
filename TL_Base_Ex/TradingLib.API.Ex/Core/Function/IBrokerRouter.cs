@@ -36,20 +36,20 @@ namespace TradingLib.API
         /// <returns></returns>
         Order SentRouterOrder(long val);
 
-        /// <summary>
-        /// 重置
-        /// </summary>
-        void Reset();
+        ///// <summary>
+        ///// 重置
+        ///// </summary>
+        //void Reset();
 
-        /// <summary>
-        /// 启动
-        /// </summary>
-        void Start();
+        ///// <summary>
+        ///// 启动
+        ///// </summary>
+        //void Start();
 
-        /// <summary>
-        /// 停止
-        /// </summary>
-        void Stop();
+        ///// <summary>
+        ///// 停止
+        ///// </summary>
+        //void Stop();
 
         void LoadBroker(IBroker broker);
     }

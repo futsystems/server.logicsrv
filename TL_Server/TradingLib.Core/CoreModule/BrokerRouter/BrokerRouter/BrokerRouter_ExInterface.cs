@@ -127,7 +127,7 @@ namespace TradingLib.Core
             }
             catch (Exception ex)
             {
-                debug(PROGRAM + ":向broker发送委托错误:" + ex.ToString() + ex.StackTrace.ToString(), QSEnumDebugLevel.ERROR);
+                debug(PROGRAME + ":向broker发送委托错误:" + ex.ToString() + ex.StackTrace.ToString(), QSEnumDebugLevel.ERROR);
                 o.Status = QSEnumOrderStatus.Reject;
                 errorTitle = "EXECUTION_BROKER_PLACEORDER_ERROR";
                 return false;
@@ -149,7 +149,7 @@ namespace TradingLib.Core
                 //如果没有交易通道则拒绝该委托
                 o.Status = QSEnumOrderStatus.Reject;
                 GotOrderErrorNotify(o, "EXECUTION_BROKER_NOT_FOUND");
-                debug(PROGRAM + ":没有可以交易的通道 |" + o.ToString(), QSEnumDebugLevel.WARNING);
+                debug(PROGRAME + ":没有可以交易的通道 |" + o.ToString(), QSEnumDebugLevel.WARNING);
             }
         }
         /// <summary>
@@ -160,7 +160,7 @@ namespace TradingLib.Core
         {
             try
             {
-                debug(PROGRAM + ":Route Cancel to Broker Side:" + val.ToString(), QSEnumDebugLevel.INFO);
+                debug(PROGRAME + ":Route Cancel to Broker Side:" + val.ToString(), QSEnumDebugLevel.INFO);
                 RouterCancelOrder(val);
             }
             catch (Exception ex)
@@ -190,7 +190,7 @@ namespace TradingLib.Core
             }
             catch (Exception ex)
             {
-                debug(PROGRAM + ":向broker发送取消委托出错:" + ex.ToString() + ex.StackTrace.ToString(), QSEnumDebugLevel.ERROR);
+                debug(PROGRAME + ":向broker发送取消委托出错:" + ex.ToString() + ex.StackTrace.ToString(), QSEnumDebugLevel.ERROR);
             }
         }
 
