@@ -44,6 +44,8 @@ namespace TradingLib.Core
                     //转发委托
                     while (_ordercache.hasItems)
                     {
+                        TLCtxHelper.EventRouter.FireOrderEvent(_ordercache.Read());
+
                         if (GotOrderEvent != null)
                             GotOrderEvent(_ordercache.Read());
                     }
@@ -52,6 +54,9 @@ namespace TradingLib.Core
                     {
                         Trade fill = _fillcache.Read();
                         _tifengine.GotFill(fill);
+
+                        TLCtxHelper.EventRouter.FireFillEvent(fill);
+
                         if (GotFillEvent != null)
                             GotFillEvent(fill);
                     }
@@ -61,6 +66,8 @@ namespace TradingLib.Core
                         long oid = _cancelcache.Read();
                         _tifengine.GotCancel(oid);
                         _ordHelper.GotCancel(oid);//发单辅助引擎得到委托
+
+                        TLCtxHelper.EventRouter.FireCancelEvent(oid);
                         if (GotCancelEvent != null)
                             GotCancelEvent(oid);
                     }
@@ -68,6 +75,8 @@ namespace TradingLib.Core
                     while (_errorordernotifycache.hasItems & !_cancelcache.hasItems & !_ordercache.hasItems & !_fillcache.hasItems)
                     {
                         OrderErrorPack error = _errorordernotifycache.Read();
+
+                        TLCtxHelper.EventRouter.FireOrderError(error.Order, error.RspInfo);
                         if (GotOrderErrorEvent != null)
                             GotOrderErrorEvent(error.Order, error.RspInfo);
                     }

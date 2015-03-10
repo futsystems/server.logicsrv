@@ -655,6 +655,8 @@ namespace TradingLib.Core
                 if(!ishist)
                     _tickwatcher.GotTick(k);
 
+                TLCtxHelper.EventRouter.FireTickEvent(k);
+
                 if (GotTickEvent != null)
                 {
                     //debug("fire raw tick event", QSEnumDebugLevel.INFO);

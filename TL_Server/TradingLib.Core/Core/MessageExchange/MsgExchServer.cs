@@ -465,7 +465,18 @@ namespace TradingLib.Core
 
                 //订阅系统事件
                 TLCtxHelper.EventSystem.SettleResetEvent += new EventHandler<SystemEventArgs>(EventSystem_SettleResetEvent);
-                
+
+                //订阅路由侧事件
+                TLCtxHelper.EventRouter.GotTickEvent += new TickDelegate(this.OnTickEvent);
+
+                TLCtxHelper.EventRouter.GotOrderEvent += new OrderDelegate(this.OnOrderEvent);
+                TLCtxHelper.EventRouter.GotFillEvent += new FillDelegate(this.OnFillEvent);
+                TLCtxHelper.EventRouter.GotCancelEvent += new LongDelegate(this.OnCancelEvent);
+
+                TLCtxHelper.EventRouter.GotOrderErrorEvent += new OrderErrorDelegate(this.OnOrderErrorEvent);
+                TLCtxHelper.EventRouter.GotOrderActionErrorEvent += new OrderActionErrorDelegate(this.OnOrderActionErrorEvent);
+
+
             }
             catch (Exception ex)
             {

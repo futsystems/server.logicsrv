@@ -31,31 +31,6 @@ namespace TradingLib.Common
         {
             _scope = scope;
         }
-        /// <summary>
-        /// 交易类事件与消息
-        /// </summary>
-        private IndicatorEvent m_IndicatorEvent;
-
-        /// <summary>
-        /// 回话类 注册 注销 登入
-        /// </summary>
-        private SessionEvent<TrdClientInfo> m_SessionEvent;
-
-        /// <summary>
-        /// 帐户类事件
-        /// </summary>
-        private AccountEvent m_AccountEvent;
-
-        /// <summary>
-        /// 扩展事件
-        /// </summary>
-        private ExContribEvent m_ExContribEvent;
-
-        /// <summary>
-        /// 系统类事件
-        /// </summary>
-        private SystemEvent m_SystemEvent;
-
 
         private IUtil m_util;
 
@@ -104,7 +79,7 @@ namespace TradingLib.Common
             IsReady = false;
         }
 
-        public TLCtxHelper()
+        private TLCtxHelper()
         {
             this.ctx = new TLContext();
             this.m_IndicatorEvent = new IndicatorEvent();
@@ -142,6 +117,36 @@ namespace TradingLib.Common
 
 
         #region 全局事件
+        /// <summary>
+        /// 交易类事件与消息
+        /// </summary>
+        private IndicatorEvent m_IndicatorEvent;
+
+        /// <summary>
+        /// 回话类 注册 注销 登入
+        /// </summary>
+        private SessionEvent<TrdClientInfo> m_SessionEvent;
+
+        /// <summary>
+        /// 帐户类事件
+        /// </summary>
+        private AccountEvent m_AccountEvent;
+
+        /// <summary>
+        /// 扩展事件
+        /// </summary>
+        private ExContribEvent m_ExContribEvent;
+
+        /// <summary>
+        /// 系统类事件
+        /// </summary>
+        private SystemEvent m_SystemEvent;
+
+        /// <summary>
+        /// 路右侧事件
+        /// </summary>
+        private RouterEvent m_RouterEvent;
+
         /// <summary>
         /// 交易信息类事件集合
         /// </summary>
@@ -204,6 +209,19 @@ namespace TradingLib.Common
                 if (defaultInstance.m_ExContribEvent == null)
                     defaultInstance.m_ExContribEvent = new ExContribEvent();
                 return defaultInstance.m_ExContribEvent;
+            }
+        }
+
+        /// <summary>
+        /// 路右侧事件
+        /// </summary>
+        public static RouterEvent EventRouter
+        {
+            get
+            {
+                if (defaultInstance.m_RouterEvent == null)
+                    defaultInstance.m_RouterEvent = new RouterEvent();
+                return defaultInstance.m_RouterEvent;
             }
         }
         #endregion
@@ -351,7 +369,6 @@ namespace TradingLib.Common
             }
         }
         #endregion
-
 
 
         /// <summary>

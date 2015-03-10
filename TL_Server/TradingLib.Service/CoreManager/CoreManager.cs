@@ -172,16 +172,16 @@ namespace TradingLib.ServiceManager
             Util.StatusSection(this.PROGRAME, "CTXEVENT", QSEnumInfoColor.INFOGREEN,true);
             //if (_messageExchagne != null)
             {
-                IOnRouterEvent onbr = _messageExchagne as IOnRouterEvent;
+                //IOnRouterEvent onbr = _messageExchagne as IOnRouterEvent;
 
-                TLCtxHelper.ModuleBrokerRouter.GotFillEvent += new FillDelegate(onbr.OnFillEvent);
-                TLCtxHelper.ModuleBrokerRouter.GotCancelEvent += new LongDelegate(onbr.OnCancelEvent);
-                TLCtxHelper.ModuleBrokerRouter.GotOrderEvent += new OrderDelegate(onbr.OnOrderEvent);
+                //TLCtxHelper.ModuleBrokerRouter.GotFillEvent += new FillDelegate(onbr.OnFillEvent);
+                //TLCtxHelper.ModuleBrokerRouter.GotCancelEvent += new LongDelegate(onbr.OnCancelEvent);
+                //TLCtxHelper.ModuleBrokerRouter.GotOrderEvent += new OrderDelegate(onbr.OnOrderEvent);
 
-                TLCtxHelper.ModuleBrokerRouter.GotOrderErrorEvent += new OrderErrorDelegate(onbr.OnOrderErrorEvent);
-                TLCtxHelper.ModuleBrokerRouter.GotOrderActionErrorEvent += new OrderActionErrorDelegate(onbr.OnOrderActionErrorEvent);
+                //TLCtxHelper.ModuleBrokerRouter.GotOrderErrorEvent += new OrderErrorDelegate(onbr.OnOrderErrorEvent);
+                //TLCtxHelper.ModuleBrokerRouter.GotOrderActionErrorEvent += new OrderActionErrorDelegate(onbr.OnOrderActionErrorEvent);
 
-                TLCtxHelper.ModuleDataRouter.GotTickEvent += new TickDelegate(onbr.OnTickEvent);
+                //TLCtxHelper.ModuleDataRouter.GotTickEvent += new TickDelegate(onbr.OnTickEvent);
             }
         }
     }
