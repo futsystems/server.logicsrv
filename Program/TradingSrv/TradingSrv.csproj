@@ -69,28 +69,32 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\TradingLib\TLBrokerXAPI.dll</HintPath>
     </Reference>
-    <Reference Include="TradingLib.API">
+    <Reference Include="TradingLib.API, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\TradingLib\TradingLib.API.dll</HintPath>
     </Reference>
     <Reference Include="TradingLib.API.Ex">
       <HintPath>..\..\lib\TradingLib\TradingLib.API.Ex.dll</HintPath>
     </Reference>
-    <Reference Include="TradingLib.Common">
+    <Reference Include="TradingLib.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\TradingLib\TradingLib.Common.dll</HintPath>
     </Reference>
     <Reference Include="TradingLib.Common.Ex">
       <HintPath>..\..\lib\TradingLib\TradingLib.Common.Ex.dll</HintPath>
     </Reference>
-    <Reference Include="TradingLib.Core">
+    <Reference Include="TradingLib.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\TradingLib\TradingLib.Core.dll</HintPath>
     </Reference>
-    <Reference Include="TradingLib.Mixins">
+    <Reference Include="TradingLib.Mixins, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\TradingLib\TradingLib.Mixins.dll</HintPath>
     </Reference>
-    <Reference Include="TradingLib.ServiceManager">
+    <Reference Include="TradingLib.ServiceManager, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\TradingLib\TradingLib.ServiceManager.dll</HintPath>
     </Reference>
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CoreDaemon.cs" />

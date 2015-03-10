@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using TradingLib.ServiceManager;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Core;
@@ -154,7 +153,7 @@ namespace TraddingSrvCLI
                     using (var connectorMgr = scope.Resolve<IConnectorManager>())//2.路由管理器,绑定核心部分的数据与成交路由,并加载Connector
                     {
                         connectorMgr.Init();
-                        using (var contribMgr = new ContribManager())//3.扩展模块管理器 加载扩展模块,启动扩展模块
+                        using (var contribMgr = scope.Resolve<IContribManager>())//3.扩展模块管理器 加载扩展模块,启动扩展模块
                         {
                             contribMgr.Init();
                             contribMgr.Load();

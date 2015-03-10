@@ -11,6 +11,6 @@ namespace TradingLib.API
     /// </summary>
     public interface IContribManager : IServiceManager, IDisposable
     {
-
+        void Load();
     }
 }
