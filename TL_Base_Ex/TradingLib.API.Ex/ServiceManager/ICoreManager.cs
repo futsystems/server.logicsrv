@@ -12,6 +12,5 @@ namespace TradingLib.API
     public interface ICoreManager : IServiceManager, IDisposable
     {
 
-        void WireCtxEvent();
     }
 }

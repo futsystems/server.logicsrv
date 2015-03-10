@@ -59,7 +59,7 @@ namespace TradingLib.Core
             _stepOrderSeqHigh = _cfgdb["OrderSeqStepHigh"].AsInt();
             #endregion
 
-            #region 成交编号
+            #region 成交流水号
             if (!_cfgdb.HaveConfig("StartTradeID"))
             {
                 _cfgdb.UpdateConfig("StartTradeID", QSEnumCfgType.Int, 2000, "默认起始成交编号");
@@ -85,6 +85,7 @@ namespace TradingLib.Core
             _stepTradeIDHigh = _cfgdb["TradeIDStepHigh"].AsInt();
             #endregion
 
+            #region 委托状态注释
             if (!_cfgdb.HaveConfig("CommentFilled"))
             {
                 _cfgdb.UpdateConfig("CommentFilled", QSEnumCfgType.String, "全部成交", "全部成交备注");
@@ -120,8 +121,9 @@ namespace TradingLib.Core
                 _cfgdb.UpdateConfig("CommentOpened", QSEnumCfgType.String, "已经报入", "取消委托备注");
             }
             commentOpened = _cfgdb["CommentOpened"].AsString();
+            #endregion
 
-
+            //获得当前日内起始委托流水号和成交流水号
             int maxorderseq = ORM.MTradingInfo.MaxOrderSeq();
             _maxOrderSeq = maxorderseq > _startOrderSeq ? maxorderseq : _startOrderSeq;
             debug("Max OrderSeq:" + _maxOrderSeq, QSEnumDebugLevel.INFO);

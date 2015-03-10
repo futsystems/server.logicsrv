@@ -13,8 +13,6 @@ using Autofac;
 
 namespace TradingLib.ServiceManager
 {
-    public delegate void LoadConnecter(BrokerRouter br,DataFeedRouter dr);
-
     public partial class CoreManager : BaseSrvObject, ICoreManager
     {
         const string SMGName = "CoreManager";
@@ -161,28 +159,6 @@ namespace TradingLib.ServiceManager
             BasicTracker.DisposeInstance();//是否底层对象维护器
             PluginHelper.DisposeInstance();//释放插件维护器
             TLCtxHelper.DisposeInstance();
-        }
-
-        /// <summary>
-        /// 绑定事件,在全局事件层面上将事件与底层核心对象进行绑定
-        /// 这里需要按对象区分开来,进行绑定，当有核心对象被销毁重建时，需要重新绑定事件
-        /// </summary>
-        public void WireCtxEvent()
-        {
-            Util.StatusSection(this.PROGRAME, "CTXEVENT", QSEnumInfoColor.INFOGREEN,true);
-            //if (_messageExchagne != null)
-            {
-                //IOnRouterEvent onbr = _messageExchagne as IOnRouterEvent;
-
-                //TLCtxHelper.ModuleBrokerRouter.GotFillEvent += new FillDelegate(onbr.OnFillEvent);
-                //TLCtxHelper.ModuleBrokerRouter.GotCancelEvent += new LongDelegate(onbr.OnCancelEvent);
-                //TLCtxHelper.ModuleBrokerRouter.GotOrderEvent += new OrderDelegate(onbr.OnOrderEvent);
-
-                //TLCtxHelper.ModuleBrokerRouter.GotOrderErrorEvent += new OrderErrorDelegate(onbr.OnOrderErrorEvent);
-                //TLCtxHelper.ModuleBrokerRouter.GotOrderActionErrorEvent += new OrderActionErrorDelegate(onbr.OnOrderActionErrorEvent);
-
-                //TLCtxHelper.ModuleDataRouter.GotTickEvent += new TickDelegate(onbr.OnTickEvent);
-            }
         }
     }
 }

@@ -11,6 +11,9 @@ using TradingLib.ORM;
 using ZeroMQ;
 using TradingLib.Logging;
 using Autofac;
+using Autofac.Configuration;
+
+
 
 
 namespace TraddingSrvCLI
@@ -46,10 +49,14 @@ namespace TraddingSrvCLI
         /// 全局容器 静态，生命周期为整个程序的生命周期
         /// </summary>
         private static IContainer Container { get; set; }
-        public CoreThread()
+        public CoreThread(string autofac_setion)
         {
             //生成容器，并注册组件 这里后期修改成配置文件形式，则可以按照配置文件加载不同的组件实现不同的服务端服务
             var builder = new ContainerBuilder();
+            //从配置文件加载对应的配置项运行
+            builder.RegisterModule(new ConfigurationSettingsReader(autofac_setion, Util.GetConfigFile("autofac.xml")));
+
+            /*
             builder.RegisterType<CoreManager>().As<ICoreManager>().InstancePerLifetimeScope();
             builder.RegisterType<ConnectorManager>().As<IConnectorManager>().As<IRouterManager>().InstancePerLifetimeScope();
             builder.RegisterType<ContribManager>().As<IContribManager>().InstancePerLifetimeScope();
@@ -58,19 +65,19 @@ namespace TraddingSrvCLI
             builder.RegisterType<DataFeedRouter>().As<IDataRouter>().InstancePerLifetimeScope();
 
             //builder.RegisterType<MsgExchServer>().As<IModuleExCore>().As<IExCore>().InstancePerLifetimeScope();
-            
+
             builder.RegisterType<ExCoreNoTrading>().As<IModuleExCore>().As<IExCore>().InstancePerLifetimeScope();
-            
+
             builder.RegisterType<SettleCentre>().As<IModuleSettleCentre>().As<ISettleCentre>().InstancePerLifetimeScope();
             builder.RegisterType<AccountManager>().As<IModuleAccountManager>().As<IAccountManager>().InstancePerLifetimeScope();
             builder.RegisterType<ClearCentre>().As<IModuleClearCentre>().As<IClearCentre>().InstancePerLifetimeScope();
-            
+
             builder.RegisterType<TaskCentre>().As<IModuleTaskCentre>().InstancePerLifetimeScope();
             builder.RegisterType<RiskCentre>().As<IModuleRiskCentre>().As<IRiskCentre>().InstancePerLifetimeScope();
             builder.RegisterType<WebMsgExchServer>().As<IModuleAPIExchange>().InstancePerLifetimeScope();
 
             builder.RegisterType<DataRepository>().As<IModuleDataRepository>().As<IDataRepository>().InstancePerLifetimeScope();
-
+            **/
 
             Container = builder.Build();
 
@@ -128,7 +135,7 @@ namespace TraddingSrvCLI
         public void Run()
         {
             //核心服务生命周期
-            /* 所有核心模块均从
+            /* 
              * 
              * 
              * */
@@ -146,11 +153,7 @@ namespace TraddingSrvCLI
                     coreMgr.Init();
                     using (var connectorMgr = scope.Resolve<IConnectorManager>())//2.路由管理器,绑定核心部分的数据与成交路由,并加载Connector
                     {
-                        //将路行情路由 成交路由注入通道管理器，在加载通道的过程中 将通道加载到对应的路由器中
-                        //connectorMgr.BindRouter(coreMgr.BrokerRouter, coreMgr.DataFeedRouter);
-
                         connectorMgr.Init();
-
                         using (var contribMgr = new ContribManager())//3.扩展模块管理器 加载扩展模块,启动扩展模块
                         {
                             contribMgr.Init();
@@ -163,12 +166,6 @@ namespace TraddingSrvCLI
                             //1.待所有服务器启动完毕后 启动核心服务
                             coreMgr.Start();
 
-                            //2.绑定核心服务事件到CTX访问界面
-                            coreMgr.WireCtxEvent();
-
-                            //debug(">>> Set DebugConfig....");
-                            //coreMgr.ApplyDebugConfig();
-                            //coreMgr.DebugAll();
                             //3.绑定扩展模块调用事件
                             TLCtxHelper.BindContribEvent();
 
@@ -181,18 +178,15 @@ namespace TraddingSrvCLI
                             //启动完毕
                             _status = QSEnumCoreThreadStatus.Started;
                             TLCtxHelper.PrintVersion();
+
                             while (go)
                             {
                                 Thread.Sleep(1000);
                             }
                             TLCtxHelper.IsReady = false;
+                            connectorMgr.Stop();//通道管理器停止
                             coreMgr.Stop();//内核停止
                             contribMgr.Stop();//扩展停止
-
-                            //连接件停止
-                            //contribMgr.Destory();//扩展销毁
-                            //connectorMgr.Dispose();//连接器销毁
-                            //coreMgr.Dispose();//内核销毁
                             //GC.Collect();
                         }
                     }

@@ -23,24 +23,14 @@ namespace TradingLib.Core
             TLCtxHelper.ModuleClearCentre.GotTick(k);
             //2.对外触发Tick事件 用于被其他组件监听
             TLCtxHelper.EventIndicator.FireTickEvent(k);
-
+            //对外通知
             this.NotifyTick(k);
-        }
-
-        /// <summary>
-        /// 通过委托编号 查找路由侧分解发送的委托
-        /// </summary>
-        /// <param name="val"></param>
-        /// <returns></returns>
-        public Order SentRouterOrder(long val)
-        {
-            return TLCtxHelper.ModuleBrokerRouter.SentRouterOrder(val);
         }
 
         public void OnOrderActionErrorEvent(OrderAction action, RspInfo info)
         {
             //对外通知
-            NotifyOrderActionError(action, info);
+            this.NotifyOrderActionError(action, info);
         }
 
         /// <summary>
@@ -60,12 +50,9 @@ namespace TradingLib.Core
             {
                 TLCtxHelper.ModuleClearCentre.GotOrderError(order, info);
             }
-
-            
             //对外触发委托错误事件
             TLCtxHelper.EventIndicator.FireOrderErrorEvent(order,info);
-
-            //
+            //对外通知
             this.NotifyOrderError(order, info);
         }
 
@@ -106,10 +93,9 @@ namespace TradingLib.Core
                 //清算中心响应取消回报
                 OnCancelEvent(o.id);
             }
-
-            //对外通知
+            //对外触发委托事件
             TLCtxHelper.EventIndicator.FireOrderEvent(o);
-
+            //对外通知
             this.NotifyOrder(o);
         }
 
@@ -122,13 +108,11 @@ namespace TradingLib.Core
         {
             //设定系统内成交编号
             AssignTradeID(ref t);
-            
             //清算中心响应成交回报
             TLCtxHelper.ModuleClearCentre.GotFill(t);//注这里的成交没有结算手续费,成交部分我们需要在结算中心结算结算完手续费后再向客户端发送
-
             //对外通知成交
             TLCtxHelper.EventIndicator.FireFillEvent(t);
-
+            //对外通知
             this.NotifyFill(t);
 
             //对外通知持仓更新
@@ -139,20 +123,19 @@ namespace TradingLib.Core
                 Position pos = account.GetPosition(t.Symbol, t.PositionSide);
                 if (pos != null)
                 {
+                    //对外通知
                     NotifyPositionUpdate(pos);
                 }
             }
-
         }
 
         public void OnCancelEvent(long oid)
         {
             //清算中心响应取消回报
             TLCtxHelper.ModuleClearCentre.GotCancel(oid);
-
             //对外触发取消事件
             TLCtxHelper.EventIndicator.FireCancelEvent(oid);
-
+            //对外通知
             this.NotifyCancel(oid);
         }
     }

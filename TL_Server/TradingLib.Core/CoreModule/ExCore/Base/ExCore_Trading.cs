@@ -21,7 +21,6 @@ namespace TradingLib.Core
         public void RegisterSymbol(Symbol sym)
         {
             SymbolBasket b = new SymbolBasketImpl(sym);
-
             TLCtxHelper.ModuleDataRouter.RegisterSymbols(b);
         }
 
@@ -132,6 +131,7 @@ namespace TradingLib.Core
                 //给委托绑定唯一的委托编号
                 AssignOrderID(ref o);
 
+                //检查交易帐户
                 IAccount acc = TLCtxHelper.ModuleAccountManager[o.Account];
                 if (acc == null)
                 {
@@ -149,7 +149,6 @@ namespace TradingLib.Core
 
                     if (!TLCtxHelper.ModuleRiskCentre.CheckOrderStep1(ref o, acc, out needlog, out errortitle, inter))
                     {
-
                         o.Status = QSEnumOrderStatus.Reject;
                         RspInfo info = RspInfoEx.Fill(errortitle);
 
@@ -183,10 +182,8 @@ namespace TradingLib.Core
                         }
                     }
 
-                    //通过了风控检查的委托 状态为Placed,若我们不进行风控检查 则直接设置委托为Placed
-                    if (!riskcheck)
-                        o.Status = QSEnumOrderStatus.Placed;
-
+                    //通过了风控检查的委托
+                    o.Status = QSEnumOrderStatus.Placed;
                     //debug("####################### gotorderevent Placed", QSEnumDebugLevel.INFO);
                     //向客户端发送委托提交回报 这里已经将委托提交到清算中心做记录,没有通过委托检查的委托 通过ReplyErrorOrder进行回报
                     ReplyOrder(o);

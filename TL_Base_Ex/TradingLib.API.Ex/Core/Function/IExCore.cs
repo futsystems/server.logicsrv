@@ -13,7 +13,6 @@ namespace TradingLib.API
         /// <param name="sym"></param>
         void RegisterSymbol(Symbol sym);
 
-
         /// <summary>
         /// 分配委托编号
         /// 在某些情况下 系统内部需要提前知道委托编号，用于扯单或记录 比如风控中心的委托 需要记录该委托编号用于维护该事务状态

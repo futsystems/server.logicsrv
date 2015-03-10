@@ -1,0 +1,187 @@
+<?xml version="1.0"?>
+<configuration>
+  <configSections>
+    <section name="autofac" type="Autofac.Configuration.SectionHandler, Autofac.Configuration"/>
+	<section name="logicsrv" type="Autofac.Configuration.SectionHandler, Autofac.Configuration"/>
+  </configSections>
+  <autofac>
+    <components>
+      <component type="TradingLib.ServiceManager.CoreManager,TradingLib.ServiceManager"  instance-scope="per-lifetime-scope">
+        <services>
+          <service type="TradingLib.API.ICoreManager,TradingLib.API.Ex"/>
+        </services>
+      </component>
+
+      <component type="TradingLib.ServiceManager.ConnectorManager,TradingLib.ServiceManager" instance-scope="per-lifetime-scope">
+        <services>
+          <service type="TradingLib.API.IConnectorManager,TradingLib.API.Ex"/>
+          <service type="TradingLib.API.IRouterManager,TradingLib.API.Ex"/>
+        </services>
+      </component>
+      
+      <component type="TradingLib.ServiceManager.ContribManager,TradingLib.ServiceManager" instance-scope="per-lifetime-scope">
+      <services>
+        <service type="TradingLib.API.IContribManager,TradingLib.API.Ex"/>
+      </services>
+      </component>
+      
+      
+      <component type="TradingLib.Core.BrokerRouter,TradingLib.Core" instance-scope="per-lifetime-scope">
+      <services>
+        <service type="TradingLib.API.IBrokerRouter,TradingLib.API.Ex"/>
+      </services>
+      </component>
+      
+      
+      <component type="TradingLib.Core.DataFeedRouter,TradingLib.Core" instance-scope="per-lifetime-scope">
+      <services>
+        <service type="TradingLib.API.IDataRouter,TradingLib.API.Ex"/>
+      </services>
+      </component>
+      
+      
+      <component type="TradingLib.Core.ExCoreNoTrading,TradingLib.Core" instance-scope="per-lifetime-scope">
+      <services>
+        <service type="TradingLib.API.IModuleExCore,TradingLib.API.Ex"/>
+        <service type="TradingLib.API.IExCore,TradingLib.API.Ex"/>
+      </services>
+      </component>
+      
+      
+      <component type="TradingLib.Core.SettleCentre,TradingLib.Core"  instance-scope="per-lifetime-scope">
+      <services>
+        <service type="TradingLib.API.IModuleSettleCentre,TradingLib.API.Ex"/>
+        <service type="TradingLib.API.ISettleCentre,TradingLib.API.Ex"/>
+      </services>
+      </component>
+      
+
+      <component type="TradingLib.Core.AccountManager,TradingLib.Core" instance-scope="per-lifetime-scope">
+      <services>
+        <service type="TradingLib.API.IModuleAccountManager,TradingLib.API.Ex"/>
+        <service type="TradingLib.API.IAccountManager,TradingLib.API.Ex"/>
+      </services>
+      </component>
+      
+
+      <component type="TradingLib.Core.ClearCentre,TradingLib.Core"  instance-scope="per-lifetime-scope">
+      <services>
+        <service type="TradingLib.API.IModuleClearCentre,TradingLib.API.Ex"/>
+        <service type="TradingLib.API.IClearCentre,TradingLib.API.Ex"/>
+      </services>
+      </component>
+      
+      <component type="TradingLib.Core.DataRepository,TradingLib.Core"  instance-scope="per-lifetime-scope">
+      <services>
+        <service type="TradingLib.API.IModuleDataRepository,TradingLib.API.Ex"/>
+        <service type="TradingLib.API.IDataRepository,TradingLib.API.Ex"/>
+      </services>
+      </component>
+
+      <component type="TradingLib.Core.RiskCentre,TradingLib.Core" instance-scope="per-lifetime-scope">
+      <services>
+        <service type="TradingLib.API.IModuleRiskCentre,TradingLib.API.Ex"/>
+        <service type="TradingLib.API.IRiskCentre,TradingLib.API.Ex"/>
+      </services>
+      </component>
+      
+      
+      <component type="TradingLib.Core.TaskCentre,TradingLib.Core" service="TradingLib.API.IModuleTaskCentre,TradingLib.API.Ex" instance-scope="per-lifetime-scope"/>
+      
+      
+      <component type="TradingLib.Core.WebMsgExchServer,TradingLib.Core" service="TradingLib.API.IModuleAPIExchange,TradingLib.API.Ex" instance-scope="per-lifetime-scope"/>
+
+    </components>
+  </autofac>
+  
+  <logicsrv>
+    <components>
+      <component type="TradingLib.ServiceManager.CoreManager,TradingLib.ServiceManager"  instance-scope="per-lifetime-scope">
+        <services>
+          <service type="TradingLib.API.ICoreManager,TradingLib.API.Ex"/>
+        </services>
+      </component>
+
+      <component type="TradingLib.ServiceManager.ConnectorManager,TradingLib.ServiceManager" instance-scope="per-lifetime-scope">
+        <services>
+          <service type="TradingLib.API.IConnectorManager,TradingLib.API.Ex"/>
+          <service type="TradingLib.API.IRouterManager,TradingLib.API.Ex"/>
+        </services>
+      </component>
+      
+      <component type="TradingLib.ServiceManager.ContribManager,TradingLib.ServiceManager" instance-scope="per-lifetime-scope">
+      <services>
+        <service type="TradingLib.API.IContribManager,TradingLib.API.Ex"/>
+      </services>
+      </component>
+      
+      
+      <component type="TradingLib.Core.BrokerRouter,TradingLib.Core" instance-scope="per-lifetime-scope">
+      <services>
+        <service type="TradingLib.API.IBrokerRouter,TradingLib.API.Ex"/>
+      </services>
+      </component>
+      
+      
+      <component type="TradingLib.Core.DataFeedRouter,TradingLib.Core" instance-scope="per-lifetime-scope">
+      <services>
+        <service type="TradingLib.API.IDataRouter,TradingLib.API.Ex"/>
+      </services>
+      </component>
+      
+      
+      <component type="TradingLib.Core.MsgExchServer,TradingLib.Core" instance-scope="per-lifetime-scope">
+      <services>
+        <service type="TradingLib.API.IModuleExCore,TradingLib.API.Ex"/>
+        <service type="TradingLib.API.IExCore,TradingLib.API.Ex"/>
+      </services>
+      </component>
+      
+      
+      <component type="TradingLib.Core.SettleCentre,TradingLib.Core"  instance-scope="per-lifetime-scope">
+      <services>
+        <service type="TradingLib.API.IModuleSettleCentre,TradingLib.API.Ex"/>
+        <service type="TradingLib.API.ISettleCentre,TradingLib.API.Ex"/>
+      </services>
+      </component>
+      
+
+      <component type="TradingLib.Core.AccountManager,TradingLib.Core" instance-scope="per-lifetime-scope">
+      <services>
+        <service type="TradingLib.API.IModuleAccountManager,TradingLib.API.Ex"/>
+        <service type="TradingLib.API.IAccountManager,TradingLib.API.Ex"/>
+      </services>
+      </component>
+      
+
+      <component type="TradingLib.Core.ClearCentre,TradingLib.Core"  instance-scope="per-lifetime-scope">
+      <services>
+        <service type="TradingLib.API.IModuleClearCentre,TradingLib.API.Ex"/>
+        <service type="TradingLib.API.IClearCentre,TradingLib.API.Ex"/>
+      </services>
+      </component>
+      
+      <component type="TradingLib.Core.DataRepository,TradingLib.Core"  instance-scope="per-lifetime-scope">
+      <services>
+        <service type="TradingLib.API.IModuleDataRepository,TradingLib.API.Ex"/>
+        <service type="TradingLib.API.IDataRepository,TradingLib.API.Ex"/>
+      </services>
+      </component>
+
+      <component type="TradingLib.Core.RiskCentre,TradingLib.Core" instance-scope="per-lifetime-scope">
+      <services>
+        <service type="TradingLib.API.IModuleRiskCentre,TradingLib.API.Ex"/>
+        <service type="TradingLib.API.IRiskCentre,TradingLib.API.Ex"/>
+      </services>
+      </component>
+      
+      
+      <component type="TradingLib.Core.TaskCentre,TradingLib.Core" service="TradingLib.API.IModuleTaskCentre,TradingLib.API.Ex" instance-scope="per-lifetime-scope"/>
+      
+      
+      <component type="TradingLib.Core.WebMsgExchServer,TradingLib.Core" service="TradingLib.API.IModuleAPIExchange,TradingLib.API.Ex" instance-scope="per-lifetime-scope"/>
+
+    </components>
+  </logicsrv>
+  
+</configuration>

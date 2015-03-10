@@ -81,7 +81,6 @@ namespace TradingLib.Core
                 tl.ProviderName = Providers.QSPlatform;
                 tl.NumWorkers = 5;
 
-
                 //设定日志输出
                 //tl.VerboseDebugging = false;
                 //tlserver内部直接发送的消息通过回调将消息缓存到外部缓存中进行队列发送
