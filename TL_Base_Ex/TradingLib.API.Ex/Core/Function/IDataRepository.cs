@@ -44,6 +44,7 @@ namespace TradingLib.API
         void NewPositionCloseDetail(PositionCloseDetail d);
 
 
+        #region 加载交易记录
         /// <summary>
         /// 获得所有交易帐户日内 成交数据
         /// </summary>
@@ -100,5 +101,9 @@ namespace TradingLib.API
         /// </summary>
         /// <returns></returns>
         IEnumerable<Order> SelectRouterOrders();
+
+        #endregion
+
+
     }
 }

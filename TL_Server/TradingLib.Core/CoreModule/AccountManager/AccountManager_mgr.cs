@@ -287,6 +287,48 @@ namespace TradingLib.Core
         }
 
 
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountMarginTemplate", "UpdateAccountMarginTemplate - update account margin template set", "更新帐户保证金模板")]
+        public void CTE_UpdateAccountMarginTemplate(ISession session, string account, int templateid)
+        {
+            Manager manager = session.GetManager();
+            IAccount acc = TLCtxHelper.ModuleAccountManager[account];
+            if (acc == null)
+            {
+                throw new FutsRspError("交易帐户不存在");
+            }
+
+            if (!manager.RightAccessAccount(acc))
+            {
+                throw new FutsRspError("无权修改该交易帐户");
+            }
+
+            //更新路由组
+            this.UpdateAccountMarginTemplate(account, templateid);
+            session.OperationSuccess("更新帐户保证金模板成功");
+        }
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountExStrategyTemplate", "UpdateAccountExStrategyTemplate - update account exstrategy template set", "更新帐户交易参数模板")]
+        public void CTE_UpdateAccountExStrategyTemplate(ISession session, string account, int templateid)
+        {
+            Manager manager = session.GetManager();
+            IAccount acc = TLCtxHelper.ModuleAccountManager[account];
+            if (acc == null)
+            {
+                throw new FutsRspError("交易帐户不存在");
+            }
+
+            if (!manager.RightAccessAccount(acc))
+            {
+                throw new FutsRspError("无权修改该交易帐户");
+            }
+
+            //更新路由组
+            this.UpdateAccountExStrategyTemplate(account, templateid);
+            session.OperationSuccess("更新帐户交易参数模板成功");
+        }
+
+
+
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountRouterGroup", "UpdateAccountRouterGroup - update account router group", "更新帐户路由组信息")]
         public void CTE_UpdateAccountRouterGroup(ISession session, string account, int gid)
         {
@@ -334,50 +376,6 @@ namespace TradingLib.Core
                 throw new FutsRspError("无权查看该帐户信息");
             }
         }
-
-
-
-
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountMarginTemplate", "UpdateAccountMarginTemplate - update account margin template set", "更新帐户保证金模板")]
-        public void CTE_UpdateAccountMarginTemplate(ISession session, string account, int templateid)
-        {
-            Manager manager = session.GetManager();
-            IAccount acc = TLCtxHelper.ModuleAccountManager[account];
-            if (acc == null)
-            {
-                throw new FutsRspError("交易帐户不存在");
-            }
-
-            if (!manager.RightAccessAccount(acc))
-            {
-                throw new FutsRspError("无权修改该交易帐户");
-            }
-
-            //更新路由组
-            this.UpdateAccountMarginTemplate(account, templateid);
-            session.OperationSuccess("更新帐户保证金模板成功");
-        }
-
-        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountExStrategyTemplate", "UpdateAccountExStrategyTemplate - update account exstrategy template set", "更新帐户交易参数模板")]
-        public void CTE_UpdateAccountExStrategyTemplate(ISession session, string account, int templateid)
-        {
-            Manager manager = session.GetManager();
-            IAccount acc = TLCtxHelper.ModuleAccountManager[account];
-            if (acc == null)
-            {
-                throw new FutsRspError("交易帐户不存在");
-            }
-
-            if (!manager.RightAccessAccount(acc))
-            {
-                throw new FutsRspError("无权修改该交易帐户");
-            }
-
-            //更新路由组
-            this.UpdateAccountExStrategyTemplate(account, templateid);
-            session.OperationSuccess("更新帐户交易参数模板成功");
-        }
-
 
         /// <summary>
         /// 查询分区管理员信息

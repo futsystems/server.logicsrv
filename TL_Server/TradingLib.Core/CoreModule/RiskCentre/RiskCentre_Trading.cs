@@ -21,8 +21,6 @@ namespace TradingLib.Core
                 o.Time = Util.ToTLTime(DateTime.Now);
 
                 TLCtxHelper.ModuleExCore.SendOrderInternal(o);
-                //if (newSendOrderRequest != null)
-                //    newSendOrderRequest(o);
             }
             catch (Exception ex)
             {
@@ -39,9 +37,6 @@ namespace TradingLib.Core
             try
             {
                 TLCtxHelper.ModuleExCore.CancelOrder(number);
-
-                //if (newOrderCancelRequest != null)
-                //    newOrderCancelRequest(number);
             }
             catch (Exception ex)
             {

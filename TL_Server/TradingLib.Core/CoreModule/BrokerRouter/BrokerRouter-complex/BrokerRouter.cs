@@ -83,6 +83,14 @@ namespace TradingLib.Core
             InitSplitTracker();
 
             StartProcessMsgOut();
+
+            TLCtxHelper.EventSystem.SettleResetEvent += new EventHandler<SystemEventArgs>(EventSystem_SettleResetEvent);
+        }
+
+        void EventSystem_SettleResetEvent(object sender, SystemEventArgs e)
+        {
+            debug("重置交易路由服务", QSEnumDebugLevel.INFO);
+            this.Reset();
         }
 
         event TickDelegate GotTickEvent;

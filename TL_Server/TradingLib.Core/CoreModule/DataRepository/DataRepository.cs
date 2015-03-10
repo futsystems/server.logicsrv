@@ -51,6 +51,7 @@ namespace TradingLib.Core
 
             //响应结算交易记录转储
             TLCtxHelper.EventSystem.SettleDataStoreEvent += new EventHandler<SystemEventArgs>(EventSystem_SettleDataStoreEvent);
+            
             //响应结算重置 清空日内交易记录表
             TLCtxHelper.EventSystem.SettleResetEvent += new EventHandler<SystemEventArgs>(EventSystem_SettleResetEvent);
         }
@@ -70,6 +71,7 @@ namespace TradingLib.Core
 
             ////保存当前持仓明细
             this.SavePositionDetails();//保存持仓明细
+
             ////保存交易日志 委托 成交 委托操作
             this.Dump2Log();//将委托 成交 撤单 PR数据保存到对应的log_表 所有的转储操作均是replace into不会存在重复操作
         }

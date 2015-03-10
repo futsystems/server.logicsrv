@@ -188,14 +188,6 @@ namespace TradingLib.Core
                     AcctList.TryAdd(acc.ID, acc);
                     TLCtxHelper.ModuleClearCentre.CacheAccount(acc);
                 }
-                //foreach (IAccount acc in accountlist)
-                //{
-                //    //1.检查该帐户当前是否可以交易
-                //    //CheckAccountExecute(acc);
-                //    //2.如果缓存中没有该账户,则加入该账户
-                //    //if (!HaveAccount(acc.ID))
-                //        //CacheAccount(acc);
-                //}
             }
             catch (Exception ex)
             {

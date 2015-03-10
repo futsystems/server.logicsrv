@@ -119,7 +119,7 @@ namespace TradingLib.Core
 
         public void Reset()
         {
-            debug("重置行情与成交路由", QSEnumDebugLevel.INFO);
+            debug("重置交易消息交换服务", QSEnumDebugLevel.INFO);
             //TLCtxHelper.ModuleBrokerRouter.Reset();
             //TLCtxHelper.ModuleDataRouter.Reset();
         }

@@ -8,9 +8,6 @@ namespace TradingLib.Common
 {
     public partial class ClearCentreBase
     {
-
-        #region 【IGotTradingInfo】昨日持仓 委托 成交 取消 Tick数据处理
-
         public void GotPosition(PositionDetail p)
         {
             try
@@ -192,7 +189,5 @@ namespace TradingLib.Common
                 debug("Got Tick error:" + ex.ToString());
             }
         }
-        #endregion
-
     }
 }

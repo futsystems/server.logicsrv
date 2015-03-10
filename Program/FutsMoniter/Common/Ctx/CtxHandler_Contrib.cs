@@ -124,7 +124,7 @@ namespace TradingLib.Common
         public void OnMGRContribNotify(string module, string cmd, string result)
         {
             string key = module.ToUpper() + "-" + cmd.ToUpper();
-            if (callbackmap.Keys.Contains(key))
+            if (notifycallbackmap.Keys.Contains(key))
             {
                 foreach (Action<string> del in notifycallbackmap[key])
                 {

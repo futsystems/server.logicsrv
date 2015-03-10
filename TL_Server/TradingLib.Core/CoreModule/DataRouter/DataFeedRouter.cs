@@ -85,6 +85,7 @@ namespace TradingLib.Core
 
         void EventSystem_SettleResetEvent(object sender, SystemEventArgs e)
         {
+            debug("重置行情路由服务", QSEnumDebugLevel.INFO);
             this.Reset();
         }
 

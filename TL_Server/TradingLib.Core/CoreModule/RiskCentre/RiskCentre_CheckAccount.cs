@@ -9,9 +9,6 @@ namespace TradingLib.Core
 {
     public partial class RiskCentre
     {
-
-
-        #region 【帐户检查】
         /// <summary>
         /// 执行账户的 账户规则检查
         /// </summary>
@@ -34,20 +31,6 @@ namespace TradingLib.Core
                 debug(s, QSEnumDebugLevel.ERROR);
             }
         }
-
-
-        ///// <summary>
-        ///// 检查委托对应的交易帐号是否存在并有效
-        ///// </summary>
-        ///// <param name="o"></param>
-        ///// <returns></returns>
-        //public bool TrckerOrderAccount(Order o, out IAccount account)
-        //{
-        //    account = TLCtxHelper.CmdAccount[o.Account];
-        //    if (account == null) return false;
-        //    return true;
-        //}
-        #endregion
         
     }
 }

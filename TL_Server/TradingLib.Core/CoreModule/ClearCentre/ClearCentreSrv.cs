@@ -27,19 +27,11 @@ namespace TradingLib.Core
     public partial class ClearCentre : ClearCentreBase,IModuleClearCentre,ICore
     {
         const string CoreName = "ClearCentre";
-
         public string CoreId { get { return this.PROGRAME; } }
 
         PositionRoundTracker prt;//记录交易回合信息
-        /// <summary>
-        /// 持仓回合管理器
-        /// </summary>
-        //public PositionRoundTracker PositionRoundTracker { get { return this.prt; } }
-
 
         ConfigDB _cfgdb;
-        decimal simAmount { get { return _cfgdb["DefaultSimAmount"].AsDecimal(); } }//获得默认资金
-        string defaultpass { get { return _cfgdb["DefaultPass"].AsString(); } }
 
         public ClearCentre():
             base("ClearCentre")
@@ -48,18 +40,6 @@ namespace TradingLib.Core
 
             //1.加载配置文件
             _cfgdb = new ConfigDB(ClearCentre.CoreName);
-            if (!_cfgdb.HaveConfig("DefaultSimAmount"))
-            {
-                _cfgdb.UpdateConfig("DefaultSimAmount", QSEnumCfgType.Decimal, 1000000, "模拟帐户初始资金");
-            }
-            if (!_cfgdb.HaveConfig("DefaultPass"))
-            {
-                _cfgdb.UpdateConfig("DefaultPass", QSEnumCfgType.String,"123456", "模拟帐户在没有提供UserID进行直接创建时的默认交易密码");
-            }
-            if (!_cfgdb.HaveConfig("AccountLoadMode"))
-            {
-                _cfgdb.UpdateConfig("AccountLoadMode", QSEnumCfgType.String,QSEnumAccountLoadMode.ALL, "清算中心加载帐户类别");
-            }
 
             try
             {
@@ -69,9 +49,6 @@ namespace TradingLib.Core
                 //初始化PositionRound生成器
                 prt = new PositionRoundTracker();
 
-                //加载账户信息
-                //LoadAccount();
-
                 Status = QSEnumClearCentreStatus.CCINITFINISH;
             }
             catch (Exception ex)
@@ -80,8 +57,6 @@ namespace TradingLib.Core
                 throw (new QSClearCentreInitError(ex, "ClearCentre初始化错误"));
             }
 
-            
-           
             TLCtxHelper.EventSystem.SettleResetEvent +=new EventHandler<SystemEventArgs>(EventSystem_SettleResetEvent);
         }
 

@@ -36,8 +36,6 @@ namespace TradingLib.Core
 
         public RiskCentre():base(CoreName)
         {
-            //_clearcentre = clearcentre;
-
             //1.加载配置文件
             _cfgdb = new ConfigDB(RiskCentre.CoreName);
             if (!_cfgdb.HaveConfig("MarketOpenTimeCheck"))

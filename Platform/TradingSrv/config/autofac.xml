@@ -26,7 +26,7 @@
       </component>
       
       
-      <component type="TradingLib.Core.BrokerRouter,TradingLib.Core" instance-scope="per-lifetime-scope">
+      <component type="TradingLib.Core.BrokerRouterPassThrough,TradingLib.Core" instance-scope="per-lifetime-scope">
       <services>
 		<service type="TradingLib.API.IModuleBrokerRouter,TradingLib.API.Ex"/>
         <service type="TradingLib.API.IBrokerRouter,TradingLib.API.Ex"/>

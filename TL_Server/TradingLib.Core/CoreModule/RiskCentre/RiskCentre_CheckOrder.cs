@@ -79,12 +79,12 @@ namespace TradingLib.Core
 
             //2 清算中心检查
             //2.1检查清算中心是否出入接受委托状态(正常工作状态下系统会定时开启和关闭清算中心,如果是开发模式则可以通过手工来提前开启)
-            //if (_clearcentre.Status != QSEnumClearCentreStatus.CCOPEN)
-            //{
-            //    errortitle = "CLEARCENTRE_CLOSED";//清算中心已关闭
-            //    needlog = false;
-            //    return false;
-            //}
+            if (TLCtxHelper.ModuleClearCentre.Status != QSEnumClearCentreStatus.CCOPEN)
+            {
+                errortitle = "CLEARCENTRE_CLOSED";//清算中心已关闭
+                needlog = false;
+                return false;
+            }
 
             //3 合约检查
             //3.1合约是否存在
