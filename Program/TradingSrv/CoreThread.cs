@@ -57,7 +57,10 @@ namespace TraddingSrvCLI
             builder.RegisterType<BrokerRouter>().As<IBrokerRouter>().InstancePerLifetimeScope();
             builder.RegisterType<DataFeedRouter>().As<IDataRouter>().InstancePerLifetimeScope();
 
-
+            //builder.RegisterType<MsgExchServer>().As<IModuleExCore>().As<IExCore>().InstancePerLifetimeScope();
+            
+            builder.RegisterType<ExCoreNoTrading>().As<IModuleExCore>().As<IExCore>().InstancePerLifetimeScope();
+            
             builder.RegisterType<SettleCentre>().As<IModuleSettleCentre>().As<ISettleCentre>().InstancePerLifetimeScope();
             builder.RegisterType<AccountManager>().As<IModuleAccountManager>().As<IAccountManager>().InstancePerLifetimeScope();
             builder.RegisterType<ClearCentre>().As<IModuleClearCentre>().As<IClearCentre>().InstancePerLifetimeScope();

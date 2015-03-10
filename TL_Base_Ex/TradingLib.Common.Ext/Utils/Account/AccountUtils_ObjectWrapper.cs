@@ -163,9 +163,9 @@ namespace TradingLib.Common
             info.MGRID = acc.Mgr_fk;
             info.Deleted = acc.Deleted;
             info.RG_ID = acc.RG_FK;
-            IEnumerable<ClientInfoBase> clients = TLCtxHelper.Ctx.MessageExchange.GetNotifyTargets(info.Account);
-            info.IsLogin = clients.Count() > 0;
-            info.IPAddress = info.IsLogin ? clients.FirstOrDefault().IPAddress : "";
+            //IEnumerable<ClientInfoBase> clients = TLCtxHelper.Ctx.MessageExchange.GetNotifyTargets(info.Account);
+            //info.IsLogin = clients.Count() > 0;
+            //info.IPAddress = info.IsLogin ? clients.FirstOrDefault().IPAddress : "";
             //info.SideMargin = acc.SideMargin;
             info.Commissin_ID = acc.Commission_ID;
             info.Credit = acc.Credit;

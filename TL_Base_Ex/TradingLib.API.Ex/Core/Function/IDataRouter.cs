@@ -7,7 +7,7 @@ namespace TradingLib.API
 {
     public interface IDataRouter
     {
-        event TickDelegate GotTickEvent;
+        //event TickDelegate GotTickEvent;
 
 
         void RegisterSymbols(SymbolBasket b);

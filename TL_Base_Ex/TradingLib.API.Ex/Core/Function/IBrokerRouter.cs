@@ -11,11 +11,11 @@ namespace TradingLib.API
     /// </summary>
     public interface IBrokerRouter
     {
-        event OrderErrorDelegate GotOrderErrorEvent;
-        event OrderActionErrorDelegate GotOrderActionErrorEvent;
-        event FillDelegate GotFillEvent;
-        event OrderDelegate GotOrderEvent;
-        event LongDelegate GotCancelEvent;
+        //event OrderErrorDelegate GotOrderErrorEvent;
+        //event OrderActionErrorDelegate GotOrderActionErrorEvent;
+        //event FillDelegate GotFillEvent;
+        //event OrderDelegate GotOrderEvent;
+        //event LongDelegate GotCancelEvent;
 
         /// <summary>
         /// 提交委托
@@ -45,7 +45,6 @@ namespace TradingLib.API
         /// 启动
         /// </summary>
         void Start();
-
 
         /// <summary>
         /// 停止

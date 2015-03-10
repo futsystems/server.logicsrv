@@ -66,7 +66,7 @@ namespace TradingLib.Common
         /// <param name="packet"></param>
         private static void SendPacket(this ISession session,IPacket packet)
         {
-            TLCtxHelper.Ctx.MessageExchange.Send(packet);
+            //TLCtxHelper.Ctx.MessageExchange.Send(packet);
         }
 
         /// <summary>

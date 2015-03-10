@@ -46,7 +46,7 @@ namespace TradingLib.Common
             }
             if (type == QSEnumOrderBreedType.ROUTER)
             {
-                return TLCtxHelper.Ctx.MessageExchange.SentRouterOrder(id);
+                return TLCtxHelper.ModuleBrokerRouter.SentRouterOrder(id);
             }
             return null;
         }

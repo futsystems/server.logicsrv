@@ -16,14 +16,14 @@ namespace TradingLib.API
         /// <summary>
         /// 向某个地址的客户端发送一条消息
         /// </summary>
-        void Send(IPacket packet);
+        //void Send(IPacket packet);
 
         /// <summary>
         /// 获得某个交易帐户的Client对象
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
-        IEnumerable<ClientInfoBase> GetNotifyTargets(string account);
+        //IEnumerable<ClientInfoBase> GetNotifyTargets(string account);
 
         /// <summary>
         /// 查询满足某个条件的客户端地址
@@ -32,38 +32,37 @@ namespace TradingLib.API
         /// <returns></returns>
         //string[] FilterClient(string filter);
 
-        /// <summary>
-        /// 获得某个Router分解委托
-        /// </summary>
-        /// <param name="val"></param>
-        /// <returns></returns>
-        Order SentRouterOrder(long val);
+        ///// <summary>
+        ///// 获得某个Router分解委托
+        ///// </summary>
+        ///// <param name="val"></param>
+        ///// <returns></returns>
+        //Order SentRouterOrder(long val);
 
 
-        /// <summary>
-        /// 预先分配委托编号
-        /// </summary>
-        /// <param name="o"></param>
-        void AssignOrderID(ref Order o);
+        ///// <summary>
+        ///// 预先分配委托编号
+        ///// </summary>
+        ///// <param name="o"></param>
+        //void AssignOrderID(ref Order o);
 
-        /// <summary>
-        /// 发送委托
-        /// </summary>
-        /// <param name="o"></param>
-        void SendOrder(Order o);
+        ///// <summary>
+        ///// 发送委托
+        ///// </summary>
+        ///// <param name="o"></param>
+        //void SendOrder(Order o);
 
-        /// <summary>
-        /// 取消委托
-        /// </summary>
-        /// <param name="oid"></param>
-        void CancelOrder(long oid);
-
+        ///// <summary>
+        ///// 取消委托
+        ///// </summary>
+        ///// <param name="oid"></param>
+        //void CancelOrder(long oid);
 
         /// <summary>
         /// 发送内部委托
         /// </summary>
         /// <param name="o"></param>
-        void SendOrderInternal(Order o);
+        //void SendOrderInternal(Order o);
 
 
 
@@ -71,6 +70,6 @@ namespace TradingLib.API
 
         void ManualInsertTrade(Trade t);
 
-        void RegisterSymbol(Symbol sym);
+        //void RegisterSymbol(Symbol sym);
     }
 }

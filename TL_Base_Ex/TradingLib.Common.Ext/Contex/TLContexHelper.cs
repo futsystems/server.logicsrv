@@ -368,6 +368,20 @@ namespace TradingLib.Common
                 return _routermanager;
             }
         }
+
+        static IExCore _excore = null;
+        /// <summary>
+        /// 系统 交易核心
+        /// </summary>
+        public static IExCore ModuleExCore
+        {
+            get
+            {
+                if (_excore == null)
+                    _excore = _scope.Resolve<IExCore>();
+                return _excore;
+            }
+        }
         #endregion
 
 

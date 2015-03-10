@@ -71,7 +71,7 @@ namespace TradingLib.Common
             //未启用单向大边
             if (!this.GetArgsSideMargin())
             {
-                decimal price = TLCtxHelper.CmdUtils.GetAvabilePrice(symbol.Symbol);
+                decimal price = TLCtxHelper.ModuleDataRouter.GetAvabilePrice(symbol.Symbol);
 
                 decimal fundperlot = this.CalOrderMarginFrozen(symbol, 1);
 

@@ -31,8 +31,8 @@ namespace TradingLib.ServiceManager
         //核心服务
         private IBrokerRouter _brokerRouter;//交易通道路由
         private IDataRouter _datafeedRouter;//数据通道路由
-        
-        private MsgExchServer _messageExchagne;//交易消息交换
+
+        private IModuleExCore _messageExchagne;//交易消息交换
         private MgrExchServer _managerExchange;//管理消息交换
         private IModuleAPIExchange _webmsgExchange;//Web端消息响应
 
@@ -58,7 +58,7 @@ namespace TradingLib.ServiceManager
             _settleCentre = TLCtxHelper.Scope.Resolve<IModuleSettleCentre>();//初始化结算中心
 
             debug("[INIT CORE] MsgExchServer", QSEnumDebugLevel.INFO);
-            _messageExchagne = new MsgExchServer();//初始化交易服务
+            _messageExchagne = TLCtxHelper.Scope.Resolve<IModuleExCore>();//初始化交易服务
 
             debug("[INIT CORE] AccountManager", QSEnumDebugLevel.INFO);
             _acctmanger = TLCtxHelper.Scope.Resolve<IModuleAccountManager>();//初始化交易帐户管理服务
@@ -115,7 +115,7 @@ namespace TradingLib.ServiceManager
 
             _webmsgExchange.Start();
 
-            _messageExchagne.RestoreSession();//恢复客户端连接
+            //_messageExchagne.RestoreSession();//恢复客户端连接
          
             _messageExchagne.Start();//交易服务启动
 

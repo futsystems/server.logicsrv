@@ -32,7 +32,7 @@ namespace TradingLib.Common
 
         public void AssignOrderID(ref Order o)
         {
-            TLCtxHelper.Ctx.MessageExchange.AssignOrderID(ref o);
+            TLCtxHelper.ModuleExCore.AssignOrderID(ref o);
         }
         /// <summary>
         /// 发送委托
@@ -41,7 +41,7 @@ namespace TradingLib.Common
         public void SendOrder(Order o)
         {
 
-            TLCtxHelper.Ctx.MessageExchange.SendOrder(o);
+            TLCtxHelper.ModuleExCore.SendOrder(o);
         }
 
         /// <summary>
@@ -50,12 +50,12 @@ namespace TradingLib.Common
         /// <param name="oid"></param>
         public void CancelOrder(long oid)
         {
-            TLCtxHelper.Ctx.MessageExchange.CancelOrder(oid);
+            TLCtxHelper.ModuleExCore.CancelOrder(oid);
         }
 
         public void SendOrderInternal(Order o)
         {
-            TLCtxHelper.Ctx.MessageExchange.SendOrderInternal(o);
+            TLCtxHelper.ModuleExCore.SendOrderInternal(o);
         }
 
         public Order SentOrder(long id)
@@ -75,7 +75,7 @@ namespace TradingLib.Common
         }
         public void RegisterSymbol(Symbol sym)
         {
-            TLCtxHelper.Ctx.MessageExchange.RegisterSymbol(sym);
+            TLCtxHelper.ModuleExCore.RegisterSymbol(sym);
         }
     }
 }
