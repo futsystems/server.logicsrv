@@ -9,14 +9,40 @@ namespace TradingLib.API
     {
         //event TickDelegate GotTickEvent;
 
-
+        /// <summary>
+        /// 订阅行情
+        /// </summary>
+        /// <param name="b"></param>
         void RegisterSymbols(SymbolBasket b);
 
+        /// <summary>
+        /// 获得某个合约的市场行情快照
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
         Tick GetTickSnapshot(string symbol);
+
+        /// <summary>
+        /// 获得某个合约的当前有效价格
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
         decimal GetAvabilePrice(string symbol);
+
         void ExcludeSymbol(string symbol);
+
         void IncludeSymbol(string symbol);
+
+        /// <summary>
+        /// 获得所有行情快照
+        /// </summary>
+        /// <returns></returns>
         Tick[] GetTickSnapshot();
+
+        /// <summary>
+        /// 加载行情通道
+        /// </summary>
+        /// <param name="datafeed"></param>
         void LoadDataFeed(IDataFeed datafeed);
 
         void LoadTickSnapshot();

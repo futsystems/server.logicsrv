@@ -30,6 +30,8 @@ namespace TraddingSrvCLI
             string s =msg +msg1.PadLeft(len2-1);
             Console.WriteLine(s);
         }
+
+
         static void Main(string[] args)
         {
             debug("intsize:" + sizeof(int).ToString() + " doublesize:" + sizeof(double).ToString() + " boolsize:" + sizeof(bool).ToString());

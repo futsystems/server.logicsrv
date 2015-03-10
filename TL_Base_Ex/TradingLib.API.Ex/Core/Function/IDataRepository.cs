@@ -23,6 +23,7 @@ namespace TradingLib.API
         /// </summary>
         /// <param name="?"></param>
         void NewOrderAction(OrderAction actoin);
+
         /// <summary>
         /// 更新委托
         /// </summary>
