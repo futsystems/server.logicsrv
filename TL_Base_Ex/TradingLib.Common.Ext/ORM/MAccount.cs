@@ -354,11 +354,11 @@ namespace TradingLib.ORM
         /// <param name="amount"></param>
         /// <param name="comment"></param>
         /// <returns></returns>
-        public static bool CashOperation(string account, decimal amount, string transref,string comment)
+        public static bool CashOperation(string account, decimal amount,QSEnumEquityType equity_type, string transref,string comment)
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("Insert into log_cashtrans (`datetime`,`amount`,`comment`,`account`,`transref`,`settleday`) values('{0}','{1}','{2}','{3}','{4}','{5}')", Util.ToTLDateTime(), amount.ToString(), comment, account.ToString(), transref, TLCtxHelper.ModuleSettleCentre.NextTradingday);
+                string query = String.Format("Insert into log_cashtrans (`datetime`,`amount`,`comment`,`account`,`transref`,`settleday`,`equity_type`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}')", Util.ToTLDateTime(), amount.ToString(), comment, account.ToString(), transref, TLCtxHelper.ModuleSettleCentre.NextTradingday, equity_type);
                 return db.Connection.Execute(query) > 0;
             }
         }
@@ -384,11 +384,11 @@ namespace TradingLib.ORM
         /// <param name="accId"></param>
         /// <param name="start"></param>
         /// <returns></returns>
-        public static decimal CashInOfTradingDay(string accId,int tradingday)
+        public static decimal CashInOfTradingDay(string accId, QSEnumEquityType eq_type,  int tradingday)
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("SELECT Sum(amount) as total FROM log_cashtrans where settleday ='{0}' and account='{1}' and amount>0", tradingday, accId);
+                string query = String.Format("SELECT Sum(amount) as total FROM log_cashtrans where settleday ='{0}' and account='{1}' and equity_type='{2}' and amount>0", tradingday, accId,eq_type);
                 TotalCashAmount total = db.Connection.Query<TotalCashAmount>(query, null).Single<TotalCashAmount>();
                 return total.Total;
             }
@@ -417,11 +417,11 @@ namespace TradingLib.ORM
         /// <param name="accID"></param>
         /// <param name="start"></param>
         /// <returns></returns>
-        public static decimal CashOutOfTradingDay(string accId,int tradingday)
+        public static decimal CashOutOfTradingDay(string accId,QSEnumEquityType eq_type,int tradingday)
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("SELECT Sum(amount) as total FROM log_cashtrans where settleday ='{0}' and account='{1}' and amount<0", tradingday, accId);
+                string query = String.Format("SELECT Sum(amount) as total FROM log_cashtrans where settleday ='{0}' and account='{1}' and equity_type='{2}' and amount<0", tradingday, accId, eq_type);
                 TotalCashAmount total = db.Connection.Query<TotalCashAmount>(query, null).Single<TotalCashAmount>();
                 return total.Total;
             }

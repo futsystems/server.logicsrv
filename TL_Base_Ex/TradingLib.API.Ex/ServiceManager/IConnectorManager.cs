@@ -12,5 +12,6 @@ namespace TradingLib.API
     public interface IConnectorManager : IServiceManager, IRouterManager
     {
 
+
     }
 }

@@ -166,6 +166,10 @@ namespace TradingLib.API
         /// <param name="amount"></param>
         void Withdraw(decimal amount);
 
+
+        void CreditDeposit(decimal amount);
+
+        void CreditWithdraw(decimal amount);
         /// <summary>
         /// 重置账户状态,用于每日造成开盘时,重置数据 
         /// </summary>

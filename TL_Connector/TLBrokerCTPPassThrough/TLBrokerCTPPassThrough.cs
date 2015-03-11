@@ -100,6 +100,52 @@ namespace Broker.Live
         /// <param name="o"></param>
         public override void SendOrder(Order o)
         {
+            debug("send order to broker:" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
+
+            XOrderField order = new XOrderField();
+
+            order.ID = o.id.ToString();
+            order.Date = o.Date;
+            order.Time = o.Time;
+            order.Symbol = o.Symbol;
+            order.Exchange = o.Exchange;
+            order.Side = o.Side;
+            order.TotalSize = Math.Abs(o.TotalSize);
+            order.FilledSize = 0;
+            order.UnfilledSize = 0;
+
+            order.LimitPrice = (double)o.LimitPrice;
+            order.StopPrice = 0;
+
+            order.OffsetFlag = o.OffsetFlag;
+
+            o.Broker = this.Token;
+
+
+            //通过接口发送委托,如果成功会返回接口对应逻辑的近端委托编号 否则就是发送失败
+            bool success = WrapperSendOrder(ref order);
+            if (success)
+            {
+                //0.更新子委托状态为Submited状态 表明已经通过接口提交
+                o.Status = QSEnumOrderStatus.Submited;
+                //1.发送委托时设定本地委托编号
+                o.BrokerLocalOrderID = order.BrokerLocalOrderID;
+
+                Order lo = new OrderImpl(o);
+                //近端ID委托map
+                //localOrderID_map.TryAdd(o.BrokerLocalOrderID, lo);
+
+                //交易信息维护器获得委托 //？将委托复制后加入到接口维护的map中 在发送子委托过程中 本地记录的Order就是分拆过程中产生的委托，改变这个委托将同步改变委托分拆器中的委托
+                //tk.GotOrder(lo);//原来引用的是分拆器发送过来的子委托 现在修改成本地复制后的委托
+                //对外触发成交侧委托数据用于记录该成交接口的交易数据
+                debug("Send Order Success,LocalID:" + order.BrokerLocalOrderID, QSEnumDebugLevel.INFO);
+
+            }
+            else
+            {
+                o.Status = QSEnumOrderStatus.Reject;
+                debug("Send Order Fail,will notify to client", QSEnumDebugLevel.WARNING);
+            }
 
             
         }

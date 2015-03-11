@@ -7,6 +7,12 @@ namespace TradingLib.API
 {
     public interface IRouterManager
     {
+        /// <summary>
+        /// 查找成交路由
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        //IBroker FindBroker(int id);
 
         /// <summary>
         /// 查找成交路由

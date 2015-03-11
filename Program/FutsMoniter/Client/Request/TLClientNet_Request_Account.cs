@@ -47,7 +47,7 @@ namespace TradingLib.Common
             SendPacket(request);
         }
 
-        public void ReqCashOperation(string account, decimal amount, string transref, string comment)
+        public void ReqCashOperation(string account, decimal amount,QSEnumEquityType eq_type, string transref, string comment)
         {
             debug("请求出入金操作:" + account + " amount:" + amount.ToString() + " transref:" + transref + " comment:" + comment, QSEnumDebugLevel.INFO);
             //MGRCashOperationRequest request = RequestTemplate<MGRCashOperationRequest>.CliSendRequest(requestid++);
@@ -57,7 +57,7 @@ namespace TradingLib.Common
             //request.Comment = comment;
 
             //SendPacket(request);
-            this.ReqContribRequest("AccountManager", "AccountCashOperation", Mixins.Json.JsonMapper.ToJson(new { account = account, amount = amount, txnref = transref, comment = comment }));
+            this.ReqContribRequest("AccountManager", "AccountCashOperation", Mixins.Json.JsonMapper.ToJson(new { account = account, amount = amount, txnref = transref, comment = comment,equity_type=eq_type }));
      
         }
 

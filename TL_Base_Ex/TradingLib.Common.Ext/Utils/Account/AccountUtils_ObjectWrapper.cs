@@ -167,11 +167,19 @@ namespace TradingLib.Common
             //info.IsLogin = clients.Count() > 0;
             //info.IPAddress = info.IsLogin ? clients.FirstOrDefault().IPAddress : "";
             //info.SideMargin = acc.SideMargin;
+            //如果将其他模块的数据返回
             info.Commissin_ID = acc.Commission_ID;
             info.Credit = acc.Credit;
             //info.CreditSeparate = acc.CreditSeparate;
             info.Margin_ID = acc.Margin_ID;
             info.ExStrategy_ID = acc.ExStrategy_ID;
+            if(TLCtxHelper.Version.ProductType == QSEnumProductType.VendorMoniter)
+            {
+                int id = BasicTracker.ConnectorMapTracker.GetConnectorIDForAccount(acc.ID);
+                ConnectorConfig cfg = BasicTracker.ConnectorConfigTracker.GetBrokerConfig(id);
+                info.ConnectorToken = cfg!= null?(string.Format("{0}-{1}",cfg.Token,cfg.usrinfo_userid)):"";
+            }
+            //info.ConnectorToken = TLCtxHelper.Version.ProductType== QSEnumProductType.VendorMoniter ?BasicTracke
             return info;
         }
 

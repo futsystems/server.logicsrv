@@ -124,7 +124,7 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="o"></param>
         /// <param name="riskcheck"></param>
-        protected void OrderRequestHandler(Order o, bool inter = false, bool riskcheck = true)
+        protected virtual void OrderRequestHandler(Order o, bool inter = false, bool riskcheck = true)
         {
             try
             {
@@ -184,6 +184,7 @@ namespace TradingLib.Core
 
                     //通过了风控检查的委托
                     o.Status = QSEnumOrderStatus.Placed;
+
                     //debug("####################### gotorderevent Placed", QSEnumDebugLevel.INFO);
                     //向客户端发送委托提交回报 这里已经将委托提交到清算中心做记录,没有通过委托检查的委托 通过ReplyErrorOrder进行回报
                     ReplyOrder(o);

@@ -69,11 +69,12 @@
     <Compile Include="CoreModule\AccountManager\AccountManager.cs" />
     <Compile Include="CoreModule\AccountManager\AccountManager_edit.cs" />
     <Compile Include="CoreModule\AccountManager\AccountManager_mgr.cs" />
-    <Compile Include="CoreModule\BrokerRouter\BrokerRouter-passthrough\BrokerRouter.cs" />
-    <Compile Include="CoreModule\BrokerRouter\BrokerRouter-passthrough\BrokerRouter_.cs" />
-    <Compile Include="CoreModule\BrokerRouter\BrokerRouter-passthrough\BrokerRouter_ExInterface.cs" />
-    <Compile Include="CoreModule\BrokerRouter\BrokerRouter-passthrough\BrokerRouter_MessageOut.cs" />
-    <Compile Include="CoreModule\BrokerRouter\BrokerRouter-passthrough\BrokerRouter_LoadBroker.cs" />
+    <Compile Include="CoreModule\BrokerRouter\BrokerRouter-passthrough\BrokerRouter\BrokerRouter.cs" />
+    <Compile Include="CoreModule\BrokerRouter\BrokerRouter-passthrough\BrokerRouter\BrokerRouter_.cs" />
+    <Compile Include="CoreModule\BrokerRouter\BrokerRouter-passthrough\BrokerRouter\BrokerRouter_ExInterface.cs" />
+    <Compile Include="CoreModule\BrokerRouter\BrokerRouter-passthrough\BrokerRouter\BrokerRouter_MessageOut.cs" />
+    <Compile Include="CoreModule\BrokerRouter\BrokerRouter-passthrough\BrokerRouter\BrokerRouter_LoadBroker.cs" />
+    <Compile Include="CoreModule\BrokerRouter\BrokerRouter-passthrough\BrokerRouter\BrokerRouter_CTE.cs" />
     <Compile Include="CoreModule\ExCore\Base\ExCore_.cs" />
     <Compile Include="CoreModule\ExCore\Base\ExCore_OnRouterEvent.cs" />
     <Compile Include="CoreModule\ExCore\Base\ExCore_Trading.cs" />

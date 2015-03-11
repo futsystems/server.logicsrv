@@ -164,9 +164,8 @@
             this.tabFinance,
             this.tabHistQuery,
             this.kryptonRibbonTab1});
-            this.TabRibbon.SelectedContext = null;
-            this.TabRibbon.SelectedTab = this.tabBasicConfig;
-            this.TabRibbon.Size = new System.Drawing.Size(1107, 111);
+            this.TabRibbon.SelectedTab = this.tabSystem;
+            this.TabRibbon.Size = new System.Drawing.Size(1107, 115);
             this.TabRibbon.TabIndex = 0;
             // 
             // kryptonRibbonQATButton_debug
@@ -389,6 +388,14 @@
             // kryptonRibbonGroupButton_ExStrategy
             // 
             this.kryptonRibbonGroupButton_ExStrategy.TextLine1 = "交易参数模板";
+            // 
+            // kryptonRibbonGroupButton6
+            // 
+            this.kryptonRibbonGroupButton6.Visible = false;
+            // 
+            // kryptonRibbonGroupButton7
+            // 
+            this.kryptonRibbonGroupButton7.Visible = false;
             // 
             // tabAgent
             // 
@@ -713,7 +720,7 @@
             this.kryptonDockableWorkspace.Root.UniqueName = "63131E53D7AF42D465A56982E95AFFBD";
             this.kryptonDockableWorkspace.Root.WorkspaceControl = this.kryptonDockableWorkspace;
             this.kryptonDockableWorkspace.ShowMaximizeButton = false;
-            this.kryptonDockableWorkspace.Size = new System.Drawing.Size(1107, 582);
+            this.kryptonDockableWorkspace.Size = new System.Drawing.Size(1107, 578);
             this.kryptonDockableWorkspace.TabIndex = 3;
             this.kryptonDockableWorkspace.TabStop = true;
             // 
@@ -721,9 +728,9 @@
             // 
             this.mainpanel.Controls.Add(this.kryptonDockableWorkspace);
             this.mainpanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mainpanel.Location = new System.Drawing.Point(0, 111);
+            this.mainpanel.Location = new System.Drawing.Point(0, 115);
             this.mainpanel.Name = "mainpanel";
-            this.mainpanel.Size = new System.Drawing.Size(1107, 582);
+            this.mainpanel.Size = new System.Drawing.Size(1107, 578);
             this.mainpanel.TabIndex = 4;
             // 
             // kryptonRibbonGroupButton3

@@ -20,6 +20,8 @@ namespace TradingLib.ORM
             this.Fix = 0;
             this.Date = 0;
             this.UpdateDate = 0;
+            this.ProductType = QSEnumProductType.CounterSystem;
+            
         }
 
         /// <summary>
@@ -57,6 +59,11 @@ namespace TradingLib.ORM
         /// 系统更新日期
         /// </summary>
         public int UpdateDate { get; set; }
+
+        /// <summary>
+        /// 产品类别
+        /// </summary>
+        public QSEnumProductType ProductType { get; set; }
     }
 
     internal class positionroundinfo

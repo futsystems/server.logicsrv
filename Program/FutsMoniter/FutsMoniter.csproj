@@ -158,6 +158,7 @@
     <Compile Include="Client\Request\TLClientNet_Request_Msic.cs" />
     <Compile Include="Client\Request\TLClientNet_Request_Manager.cs" />
     <Compile Include="Client\Request\TLClientNet_Request_log.cs" />
+    <Compile Include="Client\Request\TLClientNet_Request_AccountConnector.cs" />
     <Compile Include="Common\BasicInfoTracker\BasicInfoTracker_.cs" />
     <Compile Include="Common\BasicInfoTracker\BasicInfoTracker_BasicInfo.cs" />
     <Compile Include="Common\BasicInfoTracker\BasicInfoTracker_Rule.cs" />
@@ -331,6 +332,12 @@
     </Compile>
     <Compile Include="Forms\Account\fmChangeRouter.Designer.cs">
       <DependentUpon>fmChangeRouter.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Account\fmBindConnector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Account\fmBindConnector.Designer.cs">
+      <DependentUpon>fmBindConnector.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Basic\CommissionMargin\fmCommission.cs">
       <SubType>Form</SubType>
@@ -879,6 +886,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Account\fmChangeRouter.resx">
       <DependentUpon>fmChangeRouter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Account\fmBindConnector.resx">
+      <DependentUpon>fmBindConnector.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Basic\CommissionMargin\fmCommission.resx">
       <DependentUpon>fmCommission.cs</DependentUpon>

@@ -80,8 +80,12 @@ namespace FutsMoniter
             accountgrid.CellDoubleClick +=new DataGridViewCellEventHandler(accountgrid_CellDoubleClick);//双击单元格
             accountgrid.CellFormatting +=new DataGridViewCellFormattingEventHandler(accountgrid_CellFormatting);//格式化单元格
             accountgrid.SizeChanged +=new EventHandler(accountgrid_SizeChanged);//大小改变
+
+            accountgrid.SizeChanged += new EventHandler(accountgrid_SizeChanged_FixWidth);//大小改变
+
             accountgrid.Scroll +=new ScrollEventHandler(accountgrid_Scroll);//滚轮滚动
             accountgrid.RowPrePaint += new DataGridViewRowPrePaintEventHandler(accountgrid_RowPrePaint);
+            
 
             //绑定事件
             btnAddAccount.Click += new EventHandler(btnAddAccount_Click);

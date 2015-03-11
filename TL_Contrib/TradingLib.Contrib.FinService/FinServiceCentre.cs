@@ -208,7 +208,7 @@ namespace TradingLib.Contrib.FinService
                 {
                     try
                     {
-                        TLCtxHelper.ModuleAccountManager.CashOperation(item.Account, item.TotalFee * -1, "", item.Comment);
+                        TLCtxHelper.ModuleAccountManager.CashOperation(item.Account,item.TotalFee * -1,QSEnumEquityType.OwnEquity, "", item.Comment);
                     }
                     catch (FutsRspError ex)
                     {

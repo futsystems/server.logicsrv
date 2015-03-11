@@ -36,7 +36,9 @@ namespace FutsMoniter
 
         const string LASTEQUITY = "昨日权益";
         const string NOWEQUITY = "当前权益";
-        const string CREDIT = "信用额度";
+        const string CREDIT = "优先资金";
+        const string TOTALEQUITY = "帐户总权益";
+
         const string MARGIN = "保证金";
         const string FROZENMARGIN = "冻结保证金";
         const string CASH = "可用资金";
@@ -61,6 +63,7 @@ namespace FutsMoniter
         const string DELETE = "DELETE";
         const string ROUTERGROUP = "Group";
         const string ROUTERGROUPSTR = "路由组";
+        const string MAINACCOUNT = "主帐户通道";
 
 
         DataTable gt = new DataTable();
@@ -80,6 +83,7 @@ namespace FutsMoniter
             grid.AllowUserToDeleteRows = false;
             grid.AllowUserToResizeRows = false;
             grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            //grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
             grid.ColumnHeadersHeight = 25;
             grid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             grid.ReadOnly = true;
@@ -109,14 +113,15 @@ namespace FutsMoniter
             gt.Columns.Add(LASTEQUITY);//9
             gt.Columns.Add(NOWEQUITY);//10
             gt.Columns.Add(CREDIT);//
-            gt.Columns.Add(MARGIN);//11
-            gt.Columns.Add(FROZENMARGIN);//12
-            gt.Columns.Add(REALIZEDPL);//13
-            gt.Columns.Add(UNREALIZEDPL);//14
+            gt.Columns.Add(TOTALEQUITY);//12
+            gt.Columns.Add(MARGIN);//13
+            gt.Columns.Add(FROZENMARGIN);//14
+            gt.Columns.Add(REALIZEDPL);//15
+            gt.Columns.Add(UNREALIZEDPL);//16
 
-            gt.Columns.Add(COMMISSION, typeof(Decimal));//15
-            gt.Columns.Add(PROFIT);//16
-            gt.Columns.Add(HOLDSIZE);//17
+            gt.Columns.Add(COMMISSION, typeof(Decimal));//17
+            gt.Columns.Add(PROFIT);//18
+            gt.Columns.Add(HOLDSIZE);//19
             gt.Columns.Add(CATEGORY);//18
             gt.Columns.Add(CATEGORYSTR);
             gt.Columns.Add(INTRADAY);//19
@@ -129,6 +134,7 @@ namespace FutsMoniter
             gt.Columns.Add(ROUTERGROUP);
             gt.Columns.Add(ROUTERGROUPSTR);
             gt.Columns.Add(DELETE);
+            gt.Columns.Add(MAINACCOUNT);//
             
         }
         
@@ -149,14 +155,16 @@ namespace FutsMoniter
             accountgrid.Columns[DELETE].Visible = false;
             accountgrid.Columns[ROUTERGROUP].Visible = false;
 
-            accountgrid.Columns[ACCOUNT].Width = 100;
-            accountgrid.Columns[ROUTEIMG].Width = 30;
-            accountgrid.Columns[EXECUTEIMG].Width = 30;
-            accountgrid.Columns[PROFITLOSSIMG].Width = 30;
-            accountgrid.Columns[LOGINSTATUSIMG].Width = 30;
-            accountgrid.Columns[ADDRESS].Width = 120;
-            accountgrid.Columns[HOLDSIZE].Width = 30;
-            accountgrid.Columns[INTRADAY].Width = 90;
+            //accountgrid.Columns[ACCOUNT].Width = 100;
+            //accountgrid.Columns[ROUTEIMG].Width = 30;
+            //accountgrid.Columns[EXECUTEIMG].Width = 30;
+            //accountgrid.Columns[PROFITLOSSIMG].Width = 30;
+            //accountgrid.Columns[LOGINSTATUSIMG].Width = 30;
+            //accountgrid.Columns[ADDRESS].Width = 120;
+            //accountgrid.Columns[HOLDSIZE].Width = 30;
+            //accountgrid.Columns[INTRADAY].Width = 90;
+
+
             //accountgrid.Columns[POSLOK].Width = 50;
             //accountgrid.Columns[SIDEMARGIN].Width = 50;
 
@@ -166,6 +174,21 @@ namespace FutsMoniter
             }
         }
 
+        private void VendorMoniterWidth()
+        {
+            accountgrid.Columns[ACCOUNT].Width = 100;
+            accountgrid.Columns[NAME].Width = 80;
+            accountgrid.Columns[EXECUTEIMG].Width = 30;
+            accountgrid.Columns[PROFITLOSSIMG].Width = 30;
+
+            accountgrid.Columns[INTRADAY].Width = 50;
+            accountgrid.Columns[MAINACCOUNT].Width = 180;
+        }
+
+        private void accountgrid_SizeChanged_FixWidth(object sender, EventArgs e)
+        {
+            VendorMoniterWidth();
+        }
         #endregion
 
         #region 帐户内存数据结构
@@ -399,6 +422,7 @@ namespace FutsMoniter
                         gt.Rows[i][LASTEQUITY] = decDisp(account.LastEquity);
                         gt.Rows[i][NOWEQUITY] = decDisp(account.NowEquity);
                         gt.Rows[i][CREDIT] = decDisp(account.Credit);
+                        gt.Rows[i][TOTALEQUITY] = decDisp(account.NowEquity + account.Credit);
 
                         gt.Rows[i][MARGIN] = decDisp(0);
                         gt.Rows[i][FROZENMARGIN] = decDisp(0);
@@ -420,6 +444,10 @@ namespace FutsMoniter
                         RouterGroupSetting rg = Globals.BasicInfoTracker.GetRouterGroup(account.RG_ID);
                         gt.Rows[i][ROUTERGROUPSTR] = rg != null ? rg.Name : "";
 
+                        if (Globals.TLClient.ServerVersion.ProductType == QSEnumProductType.VendorMoniter)
+                        {
+                            gt.Rows[i][MAINACCOUNT] = account.ConnectorToken;
+                        }
 
                         accountmap.TryAdd(account.Account, account);
                         accountrowmap.TryAdd(account.Account, i);
@@ -448,6 +476,10 @@ namespace FutsMoniter
                         RouterGroupSetting rg = Globals.BasicInfoTracker.GetRouterGroup(account.RG_ID);
                         gt.Rows[r][ROUTERGROUPSTR] = rg != null ? rg.Name : "";
 
+                        if (Globals.TLClient.ServerVersion.ProductType == QSEnumProductType.VendorMoniter)
+                        {
+                            gt.Rows[r][MAINACCOUNT] = account.ConnectorToken;
+                        }
                     }
 
                 }
@@ -483,6 +515,7 @@ namespace FutsMoniter
                     //Globals.Debug("account:"+account.Account + "now:" + decDisp(account.NowEquity) + " margin:" + decDisp(account.Margin));
                     gt.Rows[r][NOWEQUITY] = decDisp(account.NowEquity);
                     gt.Rows[r][CREDIT] = decDisp(account.Credit);
+                    gt.Rows[r][TOTALEQUITY] = decDisp(account.NowEquity + account.Credit);
                     gt.Rows[r][MARGIN] = decDisp(account.Margin);
                     gt.Rows[r][FROZENMARGIN] = decDisp(account.ForzenMargin);
                     gt.Rows[r][REALIZEDPL] = decDisp(account.RealizedPL);
@@ -534,7 +567,7 @@ namespace FutsMoniter
 
         private void accountgrid_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            if (e.ColumnIndex == 15 || e.ColumnIndex == 16 || e.ColumnIndex == 18)
+            if (e.ColumnIndex == 16 || e.ColumnIndex == 17 || e.ColumnIndex == 19)
             {
                 e.CellStyle.Font = UIGlobals.BoldFont;
                 decimal v = 0;

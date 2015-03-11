@@ -20,9 +20,15 @@ namespace TradingLib.Core
         const string CoreName = "BrokerRouterPassThrough";
         public string CoreId { get { return this.PROGRAME; } }
 
+        /// <summary>
+        /// 交易帐户与通道的映射关系维护器
+        /// </summary>
+        //AccountConnectorTracker _acctokentracker = null;
         public BrokerRouterPassThrough()
-            : base("BrokerRouter")
+            : base(BrokerRouterPassThrough.CoreName)
         {
+
+            //_acctokentracker = new AccountConnectorTracker();
 
             StartProcessMsgOut();
         }

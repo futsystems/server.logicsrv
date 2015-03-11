@@ -67,10 +67,13 @@
   <ItemGroup>
     <Compile Include="Accounts\Account.cs" />
     <Compile Include="Contex\Event\RouterEvent.cs" />
+    <Compile Include="ORM\MAccountConnectorMap.cs" />
     <Compile Include="ORM\MCommission.cs" />
     <Compile Include="ORM\MMargin.cs" />
     <Compile Include="ORM\MStrategy.cs" />
     <Compile Include="ORM\MSystem.cs" />
+    <Compile Include="Tracker\BasicTracker\ConnectorMap\AccountConnectorPair.cs" />
+    <Compile Include="Tracker\BasicTracker\ConnectorMap\AccountConnectorTracker.cs" />
     <Compile Include="Tracker\BasicTracker\Template\CommissionTemplateTracker.cs" />
     <Compile Include="Tracker\BasicTracker\Template\ExStrategyTemplateTracker.cs" />
     <Compile Include="Tracker\BasicTracker\Template\MarginTemplateTracker.cs" />

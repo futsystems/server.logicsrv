@@ -164,6 +164,11 @@ namespace TradingLib.Common
         public string IPAddress { get; set; }
 
 
+        /// <summary>
+        /// 绑定的主帐户信息
+        /// </summary>
+        public string ConnectorToken { get; set; }
+
 
         public static string Serialize(AccountLite account)
         {
@@ -228,6 +233,8 @@ namespace TradingLib.Common
             sb.Append(account.Margin_ID);
             sb.Append(d);
             sb.Append(account.ExStrategy_ID);
+            sb.Append(d);
+            sb.Append(account.ConnectorToken);
             return sb.ToString();
         }
 
@@ -265,6 +272,7 @@ namespace TradingLib.Common
             //account.CreditSeparate = bool.Parse(rec[27]);
             account.Margin_ID = int.Parse(rec[28]);
             account.ExStrategy_ID = int.Parse(rec[29]);
+            account.ConnectorToken = rec[30];
             return account;
         }
     }

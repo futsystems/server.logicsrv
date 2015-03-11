@@ -186,8 +186,27 @@ namespace TradingLib.Core
                 foreach (IAccount acc in accountlist)
                 {
                     AcctList.TryAdd(acc.ID, acc);
+                    
+                    //恢复昨日权益以及今日出入金数据
+                    //这里累计NextTradingday的出入金数据 恢复到当前状态,结算之后的所有交易数据都归入以结算日为基础计算的下一个交易日
+                    acc.Deposit(ORM.MAccount.CashInOfTradingDay(acc.ID, QSEnumEquityType.OwnEquity, TLCtxHelper.ModuleSettleCentre.NextTradingday));
+                    acc.Withdraw(ORM.MAccount.CashOutOfTradingDay(acc.ID, QSEnumEquityType.OwnEquity, TLCtxHelper.ModuleSettleCentre.NextTradingday));
+
+                    acc.CreditDeposit(ORM.MAccount.CashInOfTradingDay(acc.ID, QSEnumEquityType.CreditEquity, TLCtxHelper.ModuleSettleCentre.NextTradingday));
+                    acc.CreditWithdraw(ORM.MAccount.CashOutOfTradingDay(acc.ID, QSEnumEquityType.CreditEquity, TLCtxHelper.ModuleSettleCentre.NextTradingday));
+
+
+
+                    //获得帐户昨日权益 通过查找昨日结算记录中的结算权益来恢复
+                    acc.LastEquity = ORM.MAccount.GetSettleEquity(acc.ID, TLCtxHelper.ModuleSettleCentre.LastSettleday);
+
+                    //载入清算中心
                     TLCtxHelper.ModuleClearCentre.CacheAccount(acc);
+
                 }
+
+
+
             }
             catch (Exception ex)
             {

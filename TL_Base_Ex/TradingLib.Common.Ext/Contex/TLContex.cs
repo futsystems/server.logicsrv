@@ -525,6 +525,10 @@ namespace TradingLib.Common
                 //1.检查是否是核心模块
                 if (obj is ICore)
                 {
+                    if (obj is IModuleBrokerRouter)
+                    {
+                        int x = 0;
+                    }
                     ICore core = obj as ICore;
                     coreIdUUIDMap.TryAdd(core.CoreId.ToUpper(), srvobj.UUID);
                     ParseCommandInfo(obj, core.CoreId);

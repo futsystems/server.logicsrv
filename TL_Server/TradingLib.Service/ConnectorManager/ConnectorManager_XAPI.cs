@@ -13,7 +13,10 @@ namespace TradingLib.ServiceManager
 
         //接口对象映射表
         Dictionary<string, IBroker> brokerInstList = new Dictionary<string, IBroker>();
+        //Dictionary<int, IBroker> brokerInstIdMap = new Dictionary<int, IBroker>();
+
         Dictionary<string, IDataFeed> datafeedInstList = new Dictionary<string, IDataFeed>();
+
 
         /// <summary>
         /// 验证成交接口设置
@@ -127,7 +130,10 @@ namespace TradingLib.ServiceManager
             
             //3.转换成Broker 注接口验证时已经保证了 broker对应的interface类型是实现IBroker接口的 这里需要检查是否重复加载
             IBroker brokerinterface = broker as IBroker;
+            //保存token到broker的map关系
             brokerInstList.Add(cfg.Token, brokerinterface);
+            //保存id到broker的map关系
+            //brokerInstIdMap.Add(cfg.ID, brokerinterface);
 
             //4.绑定Broker
             VendorImpl vendor = BasicTracker.VendorTracker[broker.VendorID];//获得该通道设定的VendorID

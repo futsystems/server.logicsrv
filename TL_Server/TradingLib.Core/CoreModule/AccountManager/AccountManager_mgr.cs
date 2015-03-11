@@ -203,8 +203,7 @@ namespace TradingLib.Core
             var amount = decimal.Parse(req["amount"].ToString());
             var txnref = req["txnref"].ToString();
             var comment = req["comment"].ToString();
-
-            //var routetype = Util.ParseEnum<QSEnumOrderTransferType>(req["routertrype"].ToString());
+            var equity_type = Util.ParseEnum<QSEnumEquityType>(req["equity_type"].ToString());
 
             IAccount acct = TLCtxHelper.ModuleAccountManager[account];
             HandlerMixins.Valid_ObjectNotNull(acct);
@@ -217,7 +216,7 @@ namespace TradingLib.Core
             }
 
             //执行出入金操作
-            this.CashOperation(account, amount, txnref, comment);
+            this.CashOperation(account, amount,equity_type, txnref, comment);
 
             //出入金操作后返回帐户信息更新
             session.NotifyMgr("NotifyAccountFinInfo", acct.GenAccountInfo());

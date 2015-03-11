@@ -29,16 +29,7 @@ namespace TradingLib.Core
             //从数据库恢复交易记录和出入金记录
             try
             {
-                //从数据库加载账户的当日出入金信息以及昨日结算权益数据
-                foreach (IAccount acc in TLCtxHelper.ModuleAccountManager.Accounts)
-                {
-                    //这里累计NextTradingday的出入金数据 恢复到当前状态,结算之后的所有交易数据都归入以结算日为基础计算的下一个交易日
-                    acc.Deposit(ORM.MAccount.CashInOfTradingDay(acc.ID,TLCtxHelper.ModuleSettleCentre.NextTradingday));
-                    acc.Withdraw(ORM.MAccount.CashOutOfTradingDay(acc.ID, TLCtxHelper.ModuleSettleCentre.NextTradingday));
 
-                    //获得帐户昨日权益 通过查找昨日结算记录中的结算权益来恢复
-                    acc.LastEquity = ORM.MAccount.GetSettleEquity(acc.ID, TLCtxHelper.ModuleSettleCentre.LastSettleday);
-                }
 
                 debug("从数据库加载交易日:" + TLCtxHelper.ModuleSettleCentre.NextTradingday.ToString() + " 交易数据", QSEnumDebugLevel.INFO);
                 IEnumerable<Order> olist = TLCtxHelper.ModuleDataRepository.SelectAcctOrders();

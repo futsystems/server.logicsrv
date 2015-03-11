@@ -124,7 +124,7 @@ namespace TradingLib.Core
         {
             if (trade != null && trade.isValid)
             {
-                //CTP接口的成交通过远端编号与委托进行关联
+                //CTP接口的成交通过远端编号与委托进行关联 如果对应的本地委托不存在则该成交数据也会丢弃
                 Order o = RemoteID2Order(trade.BrokerRemoteOrderID);
                 if (o != null)
                 {
@@ -196,17 +196,38 @@ namespace TradingLib.Core
             if (o != null && o.isValid)
             {
                 Order localorder = LocalID2Order(o.BrokerLocalOrderID);
+
+                //获得该委托的通道对象
+                IBroker broker = TLCtxHelper.ServiceRouterManager.FindBroker(o.Broker);
+
+                //如果通道对象不存在则直接返回
+                if (broker == null)
+                {
+                    debug(string.Format("Broker:{0} is not registed", o.Broker), QSEnumDebugLevel.WARNING);
+                    return;
+                }
+
+                //查看与该通道绑定的交易帐户
+
+
+
                 //如果本地委托不存在 则该委托为新委托
                 //补充委托信息
                 if (localorder == null)
                 {
                     localorder = new OrderImpl(o);
-                    IAccount account = TLCtxHelper.ModuleAccountManager["6600001"];
+                    //通过交易通道Broker Token获得绑定的交易帐户
+                    IAccount account = BasicTracker.ConnectorMapTracker.GetAccountForBroker(o.Broker);
+                    if (account == null)
+                    {
+                        debug(string.Format("Broker:{0} is not binded with any account", o.Broker), QSEnumDebugLevel.WARNING);
+                        return;
+                    }
+
                     localorder.Account = account.ID;
                     localorder.oSymbol = account.GetSymbol(localorder.Symbol);
                     //设定委托编号
                     TLCtxHelper.ModuleExCore.AssignOrderID(ref localorder);
-
                     //将委托保存到map
                     localOrderID_map.TryAdd(localorder.BrokerLocalOrderID, localorder);
                 }

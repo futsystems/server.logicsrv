@@ -33,6 +33,9 @@ namespace TradingLib.Common
         RouterGrouperTracker rgtracker;
         VendorTracker vendortracker;
 
+        //帐户绑定主帐户
+        AccountConnectorTracker accconnectortracker;
+
         //手续费模板
         CommissionTemplateTracker commissiontracker;
         //保证金模板
@@ -251,6 +254,19 @@ namespace TradingLib.Common
             }
         }
 
+        /// <summary>
+        /// 交易帐户通道绑定维护器
+        /// </summary>
+        public static AccountConnectorTracker ConnectorMapTracker
+        {
+            get
+            {
+                if (defaultinstance.accconnectortracker == null)
+                    defaultinstance.accconnectortracker = new AccountConnectorTracker();
+                return defaultinstance.accconnectortracker;
+            }
+        
+        }
 
         //public static void Release()
         //{
