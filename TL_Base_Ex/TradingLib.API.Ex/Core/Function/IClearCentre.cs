@@ -96,5 +96,14 @@ namespace TradingLib.API
         /// </summary>
         /// <param name="account"></param>
         void DropAccount(IAccount account);
+
+
+        /// <summary>
+        /// 清空某个交易帐户的交易记录
+        /// 1.交易帐户日内交易记录清空
+        /// 2.交易记录从统计维护器中删除 确保统计上一致
+        /// </summary>
+        /// <param name="a"></param>
+        void ResetAccount(IAccount a);
     }
 }

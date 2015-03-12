@@ -34,16 +34,10 @@ namespace FutsMoniter
 
             Factory.IDataSourceFactory(cbrgstrategytype).BindDataSource(UIUtil.genEnumList<QSEnumRouterStrategy>());
             this.Load += new EventHandler(fmConnectorCfg_Load);
-            this.FormClosing += new FormClosingEventHandler(fmVendorManager_FormClosing);
+
         }
 
-        void fmVendorManager_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            //if (positionmetricmontier != null)
-            //{
-            //    positionmetricmontier.Close();
-            //}
-        }
+
 
         void fmConnectorCfg_Load(object sender, EventArgs e)
         {

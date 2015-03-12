@@ -134,7 +134,7 @@ namespace TradingLib.Common
         /// </summary>
         public void ResetAccount(IAccount account)
         {
-            account.Reset();//结算后要对account进行reset 包括出入金数据 同时将相关标识复位
+            //account.Reset();//结算后要对account进行reset 包括出入金数据 同时将相关标识复位
             //昨日权益以及出入金数据从数据库重新加载
 
             //清空交易帐户的当日交易记录

@@ -36,5 +36,10 @@ namespace TradingLib.Common
         {
             this.ReqContribRequest("BrokerRouterPassThrough", "DelAccountConnectorPair", account);
         }
+
+        public void ReqSyncData(string account)
+        {
+            this.ReqContribRequest("BrokerRouterPassThrough", "SyncExData", account);
+        }
     }
 }

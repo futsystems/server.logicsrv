@@ -62,6 +62,32 @@ namespace TradingLib.Common
         {
             acctk.DropAccount(a);
         }
+
+        /// <summary>
+        /// 清空某个交易帐户的交易记录
+        /// </summary>
+        public void ResetAccount(IAccount a)
+        {
+            //将该交易帐户的委托 成交 持仓 从统计维护器中删除
+            foreach (Order o in a.Orders)
+            {
+                totaltk.DropOrder(o);
+            }
+
+            foreach (Trade f in a.Trades)
+            {
+                totaltk.DropFill(f);
+            }
+
+            foreach (Position p in a.Positions)
+            {
+                totaltk.DropPosition(p);
+            }
+
+            //将交易帐户 交易记录维护器中该帐户的交易记录清空
+            acctk.ResetAccount(a);
+
+        }
         #endregion
 
 

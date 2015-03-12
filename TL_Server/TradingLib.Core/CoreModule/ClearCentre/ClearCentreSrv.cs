@@ -92,6 +92,7 @@ namespace TradingLib.Core
             debug("清算中心重置", QSEnumDebugLevel.INFO);
             foreach (IAccount a in TLCtxHelper.ModuleAccountManager.Accounts)
             {
+                a.Reset();
                 acctk.ResetAccount(a);
             }
 

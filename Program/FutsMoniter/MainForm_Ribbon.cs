@@ -37,6 +37,8 @@ namespace FutsMoniter
             kryptonRibbonGroupButton_interfacelist.Click += new EventHandler(kryptonRibbonGroupButton_interfacelist_Click);
             kryptonRibbonGroupButton_connectorlist.Click += new EventHandler(kryptonRibbonGroupButton_connectorlist_Click);
             kryptonRibbonGroupButton_tickpaper.Click += new EventHandler(kryptonRibbonGroupButton_tickpaper_Click);
+            kryptonRibbonGroupButton_MainAccount.Click += new EventHandler(kryptonRibbonGroupButton_MainAccount_Click);
+
             //系统状态
             kryptonRibbonGroupButton_SystemStatus.Click += new EventHandler(kryptonRibbonGroupButton_SystemStatus_Click);
             kryptonRibbonGroupButton_tasklog.Click += new EventHandler(kryptonRibbonGroupButton_tasklog_Click);
@@ -91,6 +93,12 @@ namespace FutsMoniter
             kryptonRibbonGroupButton_ShowAll.Click += new EventHandler(kryptonRibbonGroupButton_ShowAll_Click);
             kryptonRibbonGroupButton_Reset.Click += new EventHandler(kryptonRibbonGroupButton_Reset_Click);
             kryptonRibbonGroupButton_SaveConfig.Click += new EventHandler(kryptonRibbonGroupButton_SaveConfig_Click);
+        }
+
+        void kryptonRibbonGroupButton_MainAccount_Click(object sender, EventArgs e)
+        {
+            fmConnectorManager fm = new fmConnectorManager();
+            fm.Show();
         }
 
         void kryptonRibbonGroupButton_ExStrategy_Click(object sender, EventArgs e)

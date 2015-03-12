@@ -56,6 +56,15 @@ namespace TradingLib.Common
             positionmap.TryAdd(pos.GetPositionKey(), pos);
         }
 
+        /// <summary>
+        /// 去除某个持仓数据
+        /// </summary>
+        /// <param name="pos"></param>
+        public void DropPosition(Position pos)
+        {
+            Position tmp = null;
+            positionmap.TryRemove(pos.GetPositionKey(), out tmp);
+        }
 
         /// <summary>
         /// 当有新的委托进入系统时记录该委托
@@ -67,6 +76,15 @@ namespace TradingLib.Common
         }
 
         /// <summary>
+        /// 去除某个委托数据
+        /// </summary>
+        /// <param name="o"></param>
+        public void DropOrder(Order o)
+        { 
+            Order tmp=null;
+            ordermap.TryRemove(o.id, out tmp);
+        }
+        /// <summary>
         /// 新成交
         /// </summary>
         /// <param name="fill"></param>
@@ -75,6 +93,15 @@ namespace TradingLib.Common
             trademap.TryAdd(fill.id, fill);
         }
 
+        /// <summary>
+        /// 去除某个成交数据
+        /// </summary>
+        /// <param name="fill"></param>
+        public void DropFill(Trade fill)
+        {
+            Trade tmp = null;
+            trademap.TryRemove(fill.id, out tmp);
+        }
 
 
         public void Clear()

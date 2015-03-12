@@ -460,6 +460,12 @@
     <Compile Include="Forms\Finance\fmAccountCashReq.Designer.cs">
       <DependentUpon>fmAccountCashReq.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\System\ConnectorManager\fmConnectorManager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\System\ConnectorManager\fmConnectorManager.Designer.cs">
+      <DependentUpon>fmConnectorManager.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\System\fmLogTaskEvent.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -943,6 +949,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Finance\fmAccountCashReq.resx">
       <DependentUpon>fmAccountCashReq.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\System\ConnectorManager\fmConnectorManager.resx">
+      <DependentUpon>fmConnectorManager.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\System\fmLogTaskEvent.resx">
       <DependentUpon>fmLogTaskEvent.cs</DependentUpon>

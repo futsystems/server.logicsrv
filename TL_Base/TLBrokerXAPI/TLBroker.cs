@@ -258,6 +258,16 @@ namespace TradingLib.BrokerXAPI
         }
 
         /// <summary>
+        /// 恢复日内交易数据
+        /// 调用底层交易接口恢复隔夜持仓，当日委托，当日成交等数据
+        /// </summary>
+        public virtual bool Restore()
+        {
+            return false;
+            //return WrapperRestore();
+        }
+
+        /// <summary>
         /// 响应市场行情
         /// </summary>
         /// <param name="k"></param>
@@ -348,6 +358,16 @@ namespace TradingLib.BrokerXAPI
         {
             return _wrapper.QryInstrument();
         }
+
+        /// <summary>
+        /// 请求恢复交易数据
+        /// </summary>
+        /// <returns></returns>
+        protected bool WrapperRestore()
+        {
+            return _wrapper.Restore();
+        }
+        protected
         #endregion
 
         #region 回报缓存

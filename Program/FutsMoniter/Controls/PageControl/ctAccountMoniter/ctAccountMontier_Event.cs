@@ -29,8 +29,24 @@ namespace FutsMoniter
             accountgrid.ContextMenuStrip.Items.Add("绑定主帐户", Properties.Resources.changerouter, new EventHandler(UpdateAccountConnecotr_Click));//10
             accountgrid.ContextMenuStrip.Items.Add(new System.Windows.Forms.ToolStripSeparator());//11
             accountgrid.ContextMenuStrip.Items.Add("删除帐户", Properties.Resources.deleteaccount, new EventHandler(DelAccount_Click));//12
+            accountgrid.ContextMenuStrip.Items.Add("同步交易数据", Properties.Resources.deleteaccount, new EventHandler(SyncData_Click));//12
+        
+        
         }
 
+        void SyncData_Click(object sender, EventArgs e)
+        {
+
+            AccountLite account = GetVisibleAccount(CurrentAccount);
+            if (account != null)
+            {
+                Globals.TLClient.ReqSyncData(account.Account);
+            }
+            else
+            {
+                MoniterUtils.WindowMessage("请选择需要查询的交易帐户");
+            }
+        }
         void QryLoginInfo_Click(object sender, EventArgs e)
         {
             AccountLite account = GetVisibleAccount(CurrentAccount);

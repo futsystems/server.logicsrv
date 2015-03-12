@@ -102,8 +102,57 @@ namespace TradingLib.Core
                 session.OperationSuccess(string.Format("主帐户[{0}]从帐户:{1}解绑成功", config.Token, account));
             
             }
-
         }
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "SyncExData", "SyncExData - sync trading data from broker", "同步交易通道交易数据")]
+        public void CTE_SyncExData(ISession session, string account)
+        {
+            var manager = session.GetManager();
+            if (manager.IsInRoot())
+            {
+                IAccount acct = TLCtxHelper.ModuleAccountManager[account];
+                if(acct == null)
+                {
+                    throw new FutsRspError(string.Format("交易帐户:{0}不存在",account));
+                }
+                int id = BasicTracker.ConnectorMapTracker.GetConnectorIDForAccount(account);
+                if (id == 0)
+                {
+                    throw new FutsRspError("未绑定主帐户,无法同步");
+                }
+                ConnectorConfig config = manager.Domain.GetConnectorConfigs().FirstOrDefault(cfg => cfg.ID == id);
+                if (config == null)
+                {
+                    throw new FutsRspError("无权操作该主帐户");
+                }
+
+                //获得该交易帐户绑定的Broker
+                IBroker broker = TLCtxHelper.ServiceRouterManager.FindBroker(config.Token);
+
+                //将成交路由内的委托map清除
+                Order tmp = null;
+                foreach (Order o in acct.Orders)
+                {
+                    localOrderID_map.TryRemove(o.BrokerLocalOrderID, out tmp);
+                    remoteOrderID_map.TryRemove(o.BrokerRemoteOrderID, out tmp);
+                }
+
+                //清空交易帐户数据，然后从接口侧恢复日内交易数据
+                TLCtxHelper.ModuleClearCentre.ResetAccount(acct);
+
+                if (broker is TLBroker)
+                {
+                    TLBroker b = broker as TLBroker;
+                    //请求恢复日内交易数据
+                    debug("请求恢复接口的日内交易记录",QSEnumDebugLevel.INFO);
+                    b.Restore();
+                }
+                //然后重启Broker
+                //session.OperationSuccess(string.Format("主帐户[{0}]从帐户:{1}解绑成功", config.Token, account));
+
+            }
+        }
+
 
     }
 }

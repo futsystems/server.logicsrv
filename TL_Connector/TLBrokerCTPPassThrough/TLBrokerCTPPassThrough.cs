@@ -39,6 +39,14 @@ namespace Broker.Live
             
         }
 
+        public override bool Restore()
+        {
+            localOrderID_map.Clear();
+            remoteOrderID_map.Clear();
+
+            //调用底层恢复数据
+            return this.WrapperRestore();
+        }
         /// <summary>
         /// 响应行情 驱动本地相关数据计算
         /// </summary>
