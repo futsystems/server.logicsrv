@@ -28,7 +28,10 @@ namespace Broker.Live
         /// </summary>
         public override void DestoryBroker()
         {
-            
+
+            //清空委托map
+            localOrderID_map.Clear();
+            remoteOrderID_map.Clear();
         }
 
         /// <summary>
@@ -39,14 +42,15 @@ namespace Broker.Live
             
         }
 
-        public override bool Restore()
-        {
-            localOrderID_map.Clear();
-            remoteOrderID_map.Clear();
+        //public override bool Restore()
+        //{
+        //    //恢复日内数据前 清空本地委托map
+        //    localOrderID_map.Clear();
+        //    remoteOrderID_map.Clear();
 
-            //调用底层恢复数据
-            return this.WrapperRestore();
-        }
+        //    //调用底层恢复数据
+        //    return this.WrapperRestore();
+        //}
         /// <summary>
         /// 响应行情 驱动本地相关数据计算
         /// </summary>

@@ -29,12 +29,12 @@
         private void InitializeComponent()
         {
             this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
+            this.btnDelAccountConnector = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.kryptonLabel2 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.cbConnectorList = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
             this.btnSubmit = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.cutrgname = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel1 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.cbConnectorList = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
-            this.kryptonLabel2 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.btnDelAccountConnector = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cbConnectorList)).BeginInit();
@@ -51,13 +51,41 @@
             this.kryptonPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.kryptonPanel1.Location = new System.Drawing.Point(0, 0);
             this.kryptonPanel1.Name = "kryptonPanel1";
-            this.kryptonPanel1.Size = new System.Drawing.Size(380, 163);
+            this.kryptonPanel1.Size = new System.Drawing.Size(360, 145);
             this.kryptonPanel1.TabIndex = 0;
+            // 
+            // btnDelAccountConnector
+            // 
+            this.btnDelAccountConnector.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnDelAccountConnector.Location = new System.Drawing.Point(192, 108);
+            this.btnDelAccountConnector.Name = "btnDelAccountConnector";
+            this.btnDelAccountConnector.Size = new System.Drawing.Size(70, 25);
+            this.btnDelAccountConnector.TabIndex = 6;
+            this.btnDelAccountConnector.Values.Text = "解 绑";
+            this.btnDelAccountConnector.Visible = false;
+            // 
+            // kryptonLabel2
+            // 
+            this.kryptonLabel2.Location = new System.Drawing.Point(21, 55);
+            this.kryptonLabel2.Name = "kryptonLabel2";
+            this.kryptonLabel2.Size = new System.Drawing.Size(75, 20);
+            this.kryptonLabel2.TabIndex = 5;
+            this.kryptonLabel2.Values.Text = "可用主帐户:";
+            // 
+            // cbConnectorList
+            // 
+            this.cbConnectorList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbConnectorList.DropDownWidth = 231;
+            this.cbConnectorList.Location = new System.Drawing.Point(109, 54);
+            this.cbConnectorList.Name = "cbConnectorList";
+            this.cbConnectorList.Size = new System.Drawing.Size(211, 21);
+            this.cbConnectorList.TabIndex = 4;
             // 
             // btnSubmit
             // 
             this.btnSubmit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSubmit.Location = new System.Drawing.Point(298, 126);
+            this.btnSubmit.Location = new System.Drawing.Point(278, 108);
             this.btnSubmit.Name = "btnSubmit";
             this.btnSubmit.Size = new System.Drawing.Size(70, 25);
             this.btnSubmit.TabIndex = 3;
@@ -79,38 +107,11 @@
             this.kryptonLabel1.TabIndex = 1;
             this.kryptonLabel1.Values.Text = "当前主帐户:";
             // 
-            // cbConnectorList
-            // 
-            this.cbConnectorList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.cbConnectorList.DropDownWidth = 231;
-            this.cbConnectorList.Location = new System.Drawing.Point(109, 54);
-            this.cbConnectorList.Name = "cbConnectorList";
-            this.cbConnectorList.Size = new System.Drawing.Size(231, 21);
-            this.cbConnectorList.TabIndex = 4;
-            // 
-            // kryptonLabel2
-            // 
-            this.kryptonLabel2.Location = new System.Drawing.Point(21, 55);
-            this.kryptonLabel2.Name = "kryptonLabel2";
-            this.kryptonLabel2.Size = new System.Drawing.Size(75, 20);
-            this.kryptonLabel2.TabIndex = 5;
-            this.kryptonLabel2.Values.Text = "可用主帐户:";
-            // 
-            // btnDelAccountConnector
-            // 
-            this.btnDelAccountConnector.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnDelAccountConnector.Location = new System.Drawing.Point(212, 126);
-            this.btnDelAccountConnector.Name = "btnDelAccountConnector";
-            this.btnDelAccountConnector.Size = new System.Drawing.Size(70, 25);
-            this.btnDelAccountConnector.TabIndex = 6;
-            this.btnDelAccountConnector.Values.Text = "解 绑";
-            // 
             // fmBindConnector
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(380, 163);
+            this.ClientSize = new System.Drawing.Size(360, 145);
             this.Controls.Add(this.kryptonPanel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;

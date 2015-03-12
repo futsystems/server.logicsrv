@@ -17,29 +17,36 @@ namespace FutsMoniter
         {
             accountgrid.ContextMenuStrip = new ContextMenuStrip();
             accountgrid.ContextMenuStrip.Items.Add("编辑账户", Properties.Resources.editAccount, new EventHandler(EditAccount_Click));//0
-            accountgrid.ContextMenuStrip.Items.Add(new System.Windows.Forms.ToolStripSeparator());//1
-            accountgrid.ContextMenuStrip.Items.Add("修改密码",null, new EventHandler(ChangePass_Click));//2
-            accountgrid.ContextMenuStrip.Items.Add("修改信息", null, new EventHandler(ChangeInvestor_Click));//3
-            accountgrid.ContextMenuStrip.Items.Add("查询密码", null, new EventHandler(QryLoginInfo_Click));//4
-            accountgrid.ContextMenuStrip.Items.Add(new System.Windows.Forms.ToolStripSeparator());//5
-            accountgrid.ContextMenuStrip.Items.Add("交易记录查询", null, new EventHandler(QryHist_Click));//6
-            accountgrid.ContextMenuStrip.Items.Add("结算单查询", null, new EventHandler(QrySettlement_Click));//7
-            accountgrid.ContextMenuStrip.Items.Add(new System.Windows.Forms.ToolStripSeparator());//8
-            accountgrid.ContextMenuStrip.Items.Add("修改路由组", Properties.Resources.changerouter, new EventHandler(UpdateRouterGroup_Click));//9
-            accountgrid.ContextMenuStrip.Items.Add("绑定主帐户", Properties.Resources.changerouter, new EventHandler(UpdateAccountConnecotr_Click));//10
+            accountgrid.ContextMenuStrip.Items.Add("修改密码",null, new EventHandler(ChangePass_Click));//1
+            accountgrid.ContextMenuStrip.Items.Add("修改信息", null, new EventHandler(ChangeInvestor_Click));//2
+            accountgrid.ContextMenuStrip.Items.Add(new System.Windows.Forms.ToolStripSeparator());//3
+            accountgrid.ContextMenuStrip.Items.Add("交易记录查询", null, new EventHandler(QryHist_Click));//4
+            accountgrid.ContextMenuStrip.Items.Add("结算单查询", null, new EventHandler(QrySettlement_Click));//5
+            accountgrid.ContextMenuStrip.Items.Add("查询密码", null, new EventHandler(QryLoginInfo_Click));//6
+            accountgrid.ContextMenuStrip.Items.Add(new System.Windows.Forms.ToolStripSeparator());//7
+            accountgrid.ContextMenuStrip.Items.Add("修改路由组", Properties.Resources.changerouter, new EventHandler(UpdateRouterGroup_Click));//8
+            accountgrid.ContextMenuStrip.Items.Add("解绑主帐户", Properties.Resources.delAccount_16, new EventHandler(DelAccountConnecotr_Click));//9
+            accountgrid.ContextMenuStrip.Items.Add("绑定主帐户", Properties.Resources.addAccount_16, new EventHandler(UpdateAccountConnecotr_Click));//10
             accountgrid.ContextMenuStrip.Items.Add(new System.Windows.Forms.ToolStripSeparator());//11
             accountgrid.ContextMenuStrip.Items.Add("删除帐户", Properties.Resources.deleteaccount, new EventHandler(DelAccount_Click));//12
-            accountgrid.ContextMenuStrip.Items.Add("同步交易数据", Properties.Resources.deleteaccount, new EventHandler(SyncData_Click));//12
+            accountgrid.ContextMenuStrip.Items.Add("同步交易数据", Properties.Resources.deleteaccount, new EventHandler(SyncData_Click));//13
         
         
         }
 
+        /// <summary>
+        /// 重新同步交易数据
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void SyncData_Click(object sender, EventArgs e)
         {
 
             AccountLite account = GetVisibleAccount(CurrentAccount);
             if (account != null)
             {
+                Globals.LogicHandler.FireAccountSyncEvent(account);//触发同步事件，
+
                 Globals.TLClient.ReqSyncData(account.Account);
             }
             else
@@ -61,6 +68,33 @@ namespace FutsMoniter
                 MoniterUtils.WindowMessage("请选择需要查询的交易帐户");
             }
         }
+
+        /// <summary>
+        /// 删除主帐户
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void DelAccountConnecotr_Click(object sender, EventArgs e)
+        {
+            AccountLite account = GetVisibleAccount(CurrentAccount);
+            if (account != null)
+            {
+                if (MoniterUtils.WindowConfirm("确认从帐户:" + account.Account + "解绑主帐户?") == DialogResult.Yes)
+                {
+                    Globals.TLClient.ReqDelAccountConnector(account.Account);
+                }
+            }
+            else
+            {
+                fmConfirm.Show("请选择需要编辑的交易帐户！");
+            }
+        }
+
+        /// <summary>
+        /// 绑定主帐户
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void UpdateAccountConnecotr_Click(object sender, EventArgs e)
         {
             AccountLite account = GetVisibleAccount(CurrentAccount);
@@ -264,6 +298,8 @@ namespace FutsMoniter
                 Globals.LogicHandler.OnAccountSelected(accountlite);
             }
         }
+
+        
 
     }
 }

@@ -76,13 +76,15 @@ namespace FutsMoniter
                 accountgrid.Columns[AGENTCODE].Visible = false;
 
                 //隐藏右键菜单
-                accountgrid.ContextMenuStrip.Items[2].Visible = false;
-                accountgrid.ContextMenuStrip.Items[4].Visible = false;
+                accountgrid.ContextMenuStrip.Items[1].Visible = false;
 
+                accountgrid.ContextMenuStrip.Items[3].Visible = false;
+                accountgrid.ContextMenuStrip.Items[4].Visible = false;
+                accountgrid.ContextMenuStrip.Items[5].Visible = false;
                 accountgrid.ContextMenuStrip.Items[6].Visible = false;
-                accountgrid.ContextMenuStrip.Items[7].Visible = false;
+
                 accountgrid.ContextMenuStrip.Items[8].Visible = false;
-                accountgrid.ContextMenuStrip.Items[9].Visible = false;
+
 
                 //accountgrid.ContextMenuStrip.Items[11].Visible = false;
                 //调整宽度

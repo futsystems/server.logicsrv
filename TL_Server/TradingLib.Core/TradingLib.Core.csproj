@@ -75,6 +75,7 @@
     <Compile Include="CoreModule\BrokerRouter\BrokerRouter-passthrough\BrokerRouter\BrokerRouter_MessageOut.cs" />
     <Compile Include="CoreModule\BrokerRouter\BrokerRouter-passthrough\BrokerRouter\BrokerRouter_LoadBroker.cs" />
     <Compile Include="CoreModule\BrokerRouter\BrokerRouter-passthrough\BrokerRouter\BrokerRouter_CTE.cs" />
+    <Compile Include="CoreModule\BrokerRouter\BrokerRouter-passthrough\BrokerRouter\BrokerRouter_Helper.cs" />
     <Compile Include="CoreModule\ExCore\Base\ExCore_.cs" />
     <Compile Include="CoreModule\ExCore\Base\ExCore_OnRouterEvent.cs" />
     <Compile Include="CoreModule\ExCore\Base\ExCore_Trading.cs" />

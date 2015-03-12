@@ -45,6 +45,7 @@ namespace FutsMoniter
         public void OnInit()
         {
             Globals.LogicEvent.GotAccountSelectedEvent += new Action<AccountLite>(OnAccountSelected);
+            Globals.LogicEvent.GotAccountSyncEvent += new Action<AccountLite>(OnAccountSyncEvent);
             Globals.LogicEvent.GotTickEvent += new TickDelegate(GotTick);
             Globals.LogicEvent.GotOrderEvent += new OrderDelegate(GotOrder);
             Globals.LogicEvent.GotFillEvent += new FillDelegate(GotTrade);
@@ -59,6 +60,8 @@ namespace FutsMoniter
             }
 
         }
+
+
 
         public void OnDisposed()
         {
@@ -92,10 +95,26 @@ namespace FutsMoniter
 
             //开始恢复该帐户交易记录
             Globals.TradingInfoTracker.RequetResume(account.Account);
-
-
         }
 
+        void OnAccountSyncEvent(AccountLite obj)
+        {
+            //如果同步交易数据的时候 当前显示的帐户与我们同步的帐户一致，则需要清空当前交易记录，否则同步后会造成重复
+            if (_account.Account == obj.Account)
+            {
+                ClearTradingInfo();
+            }
+        }
+
+        /// <summary>
+        /// 清空界面数据和交易记录缓存
+        /// </summary>
+        public void Clear()
+        {
+            ClearTradingInfo();
+        }
+
+        
         /// <summary>
         /// 响应交易数据恢复
         /// </summary>

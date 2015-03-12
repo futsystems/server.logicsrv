@@ -19,6 +19,11 @@ namespace TradingLib.Common
         public event Action<AccountLite> GotAccountSelectedEvent;
 
         /// <summary>
+        /// 交易帐户同步事件
+        /// </summary>
+        public event Action<AccountLite> GotAccountSyncEvent;
+
+        /// <summary>
         /// 交易帐号
         /// </summary>
         public event Action<AccountLite> GotAccountEvent;

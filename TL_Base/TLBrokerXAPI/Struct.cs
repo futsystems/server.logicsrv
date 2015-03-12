@@ -370,6 +370,44 @@ namespace TradingLib.BrokerXAPI
     }
 
     /// <summary>
+    /// 交易帐户信息
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public struct XAccountInfo
+    {
+        /// <summary>
+        /// 昨日权益
+        /// </summary>
+        public double LastEquity;
+
+        /// <summary>
+        /// 入金
+        /// </summary>
+        public double Deposit;
+
+        /// <summary>
+        /// 出金
+        /// </summary>
+        public double WithDraw;
+
+        /// <summary>
+        /// 平仓盈亏
+        /// </summary>
+        public double ClosePorifit;
+
+        /// <summary>
+        /// 持仓盈亏
+        /// </summary>
+        public double PositoinProfit;
+
+        /// <summary>
+        /// 手续费
+        /// </summary>
+        public double Commission;
+    }
+
+
+    /// <summary>
     /// 合约结构体 用于传递合约信息
     /// </summary>
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]

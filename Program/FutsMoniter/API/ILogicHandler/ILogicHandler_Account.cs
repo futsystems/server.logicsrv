@@ -19,6 +19,11 @@ namespace TradingLib.API
         void OnAccountSelected(AccountLite account);
 
         /// <summary>
+        /// 触发交易帐户 同步交易数据事件
+        /// </summary>
+        /// <param name="account"></param>
+        void FireAccountSyncEvent(AccountLite account);
+        /// <summary>
         /// 响应客户端交易帐户回报
         /// </summary>
         /// <param name="account"></param>

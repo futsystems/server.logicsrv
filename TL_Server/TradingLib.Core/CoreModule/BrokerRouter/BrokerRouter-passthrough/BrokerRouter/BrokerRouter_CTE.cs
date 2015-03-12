@@ -50,12 +50,10 @@ namespace TradingLib.Core
             var manager = session.GetManager();
             if (manager.IsInRoot())
             {
-
                 //查询该域内所有通道                         通道未绑定                                                       映射我们需要的字段
                 var list = manager.Domain.GetConnectorConfigs().Where(cfg => !BasicTracker.ConnectorMapTracker.IsConnectorBinded(cfg.Token)).Select(cfg => new { ConnectorID = cfg.ID, Token = cfg.Token, LoginID = cfg.usrinfo_userid }).ToArray();
                 session.ReplyMgr(list);
             }
-
         }
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountConnectorPair", "UpdateAccountConnectorPair - update account connector binding", "更新交易帐户绑定的主帐户")]
@@ -64,6 +62,16 @@ namespace TradingLib.Core
             var manager = session.GetManager();
             if (manager.IsInRoot())
             {
+                IAccount acct = TLCtxHelper.ModuleAccountManager[account];
+                if (acct == null)
+                {
+                    throw new FutsRspError(string.Format("交易帐户:{0}不存在", account));
+                }
+
+                int id = BasicTracker.ConnectorMapTracker.GetConnectorIDForAccount(account);
+                ConnectorConfig oldconfig = manager.Domain.GetConnectorConfigs().FirstOrDefault(cfg => cfg.ID == id);
+                
+
                 ConnectorConfig config = manager.Domain.GetConnectorConfigs().FirstOrDefault(cfg => cfg.ID == connecor_id);
                 if (config == null)
                 {
@@ -72,8 +80,21 @@ namespace TradingLib.Core
 
                 BasicTracker.ConnectorMapTracker.UpdateAccountConnectorPair(account, connecor_id);
 
+
                 //触发交易帐户变动事件
                 TLCtxHelper.EventAccount.FireAccountChangeEent(account);
+
+                //清空该交易帐户交易数据
+                ClearAccountTradingInfo(acct);
+
+                //停止原有通道
+                if (oldconfig != null)
+                {
+                    this.AsyncStopBroker(oldconfig.Token);
+                }
+
+                //启动交易通道
+                this.AsyncStartBroker(config.Token);
 
                 session.OperationSuccess(string.Format("绑定主帐户[{0}]到帐户:{1}成功", config.Token, account));
             }
@@ -81,11 +102,17 @@ namespace TradingLib.Core
 
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "DelAccountConnectorPair", "DelAccountConnectorPair - del account connector binding", "删除交易帐户的主帐户绑定")]
-        public void CTE_UpdateAccountConnectorPair(ISession session, string account)
+        public void CTE_DelAccountConnectorPair(ISession session, string account)
         {
             var manager = session.GetManager();
             if (manager.IsInRoot())
             {
+                IAccount acct = TLCtxHelper.ModuleAccountManager[account];
+                if(acct == null)
+                {
+                    throw new FutsRspError(string.Format("交易帐户:{0}不存在",account));
+                }
+
                 int id = BasicTracker.ConnectorMapTracker.GetConnectorIDForAccount(account);
                 ConnectorConfig config = manager.Domain.GetConnectorConfigs().FirstOrDefault(cfg => cfg.ID == id);
                 if (config == null)
@@ -98,6 +125,13 @@ namespace TradingLib.Core
 
                 //触发交易帐户变动事件
                 TLCtxHelper.EventAccount.FireAccountChangeEent(account);
+
+                //清空该交易帐户交易数据
+                ClearAccountTradingInfo(acct);
+
+                //停止交易通道
+                this.AsyncStopBroker(config.Token);
+
 
                 session.OperationSuccess(string.Format("主帐户[{0}]从帐户:{1}解绑成功", config.Token, account));
             
@@ -126,30 +160,14 @@ namespace TradingLib.Core
                     throw new FutsRspError("无权操作该主帐户");
                 }
 
-                //获得该交易帐户绑定的Broker
-                IBroker broker = TLCtxHelper.ServiceRouterManager.FindBroker(config.Token);
+                //清空帐户交易数据
+                ClearAccountTradingInfo(acct);
 
-                //将成交路由内的委托map清除
-                Order tmp = null;
-                foreach (Order o in acct.Orders)
-                {
-                    localOrderID_map.TryRemove(o.BrokerLocalOrderID, out tmp);
-                    remoteOrderID_map.TryRemove(o.BrokerRemoteOrderID, out tmp);
-                }
+                //3.重启交易通道
+                AsyncBrokerOperationDel cb = new AsyncBrokerOperationDel(this.RestartBroker);
+                cb.BeginInvoke(config.Token, null, null);
 
-                //清空交易帐户数据，然后从接口侧恢复日内交易数据
-                TLCtxHelper.ModuleClearCentre.ResetAccount(acct);
-
-                if (broker is TLBroker)
-                {
-                    TLBroker b = broker as TLBroker;
-                    //请求恢复日内交易数据
-                    debug("请求恢复接口的日内交易记录",QSEnumDebugLevel.INFO);
-                    b.Restore();
-                }
-                //然后重启Broker
-                //session.OperationSuccess(string.Format("主帐户[{0}]从帐户:{1}解绑成功", config.Token, account));
-
+                session.OperationSuccess("开始同步交易数据");
             }
         }
 

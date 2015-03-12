@@ -40,6 +40,17 @@ namespace TradingLib.Core
 
 
 
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "OpenClearCentre", "OpenClearCentre - open clearcentre", "开启清算中心")]
+        public void CTE_OpenClearCentre(ISession session)
+        {
+            OpenClearCentre();
+        }
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "CloseClearCentre", "CloseClearCentre - close clearcentre", "关闭清算中心")]
+        public void CTE_CloseClearCentre(ISession session)
+        {
+            CloseClearCentre();
+        }
 
 
         /// <summary>

@@ -111,7 +111,7 @@ namespace TradingLib.BrokerXAPI.Interop
             _RegRtnOrderError = NativeLib.GetUnmanagedFunction<RegRtnOrderErrorProc>("RegRtnOrderError");
             _RegRtnOrderActionError = NativeLib.GetUnmanagedFunction<RegRtnOrderActionErrorProc>("RegRtnOrderActionError");
             _RegOnSymbol = NativeLib.GetUnmanagedFunction<RegOnSymbolProc>("RegOnSymbol");
-            _Restore = NativeLib.GetUnmanagedFunction<RestoreProc>("Restore");
+            //_Restore = NativeLib.GetUnmanagedFunction<RestoreProc>("Restore");
         }
 
 
@@ -272,28 +272,28 @@ namespace TradingLib.BrokerXAPI.Interop
             }
         }
 
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate bool RestoreProc(IntPtr pWrapper);
-        RestoreProc _Restore;
-        /// <summary>
-        /// 请求接口恢复日内交易数据
-        /// </summary>
-        /// <returns></returns>
-        public bool Restore()
-        {
-            try
-            {
-                Util.Debug("BrokerProxy Restore", QSEnumDebugLevel.MUST);
-                bool x = _Restore(this.Wrapper);
-                Util.Debug("**************** qry Restore return:" + x.ToString(), QSEnumDebugLevel.ERROR);
-                return x;
-            }
-            catch (Exception ex)
-            {
-                Util.Debug("Restore Error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
-                return false;
-            }
-        }
+        //[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        //public delegate bool RestoreProc(IntPtr pWrapper);
+        //RestoreProc _Restore;
+        ///// <summary>
+        ///// 请求接口恢复日内交易数据
+        ///// </summary>
+        ///// <returns></returns>
+        //public bool Restore()
+        //{
+        //    try
+        //    {
+        //        Util.Debug("BrokerProxy Restore", QSEnumDebugLevel.MUST);
+        //        bool x = _Restore(this.Wrapper);
+        //        Util.Debug("**************** qry Restore return:" + x.ToString(), QSEnumDebugLevel.ERROR);
+        //        return x;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Util.Debug("Restore Error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+        //        return false;
+        //    }
+        //}
 
         #region 注册回调函数接口
         /// <summary>

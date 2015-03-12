@@ -17,6 +17,10 @@ namespace TradingLib.API
         event Action<AccountLite> GotAccountSelectedEvent;
 
         /// <summary>
+        /// 交易帐户同步事件
+        /// </summary>
+        event Action<AccountLite> GotAccountSyncEvent;
+        /// <summary>
         /// 交易帐号
         /// </summary>
         event Action<AccountLite> GotAccountEvent;
