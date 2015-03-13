@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
+using Common.Logging;
 using System.Diagnostics;
 
 namespace TradingLib.Common
@@ -15,6 +16,7 @@ namespace TradingLib.Common
     /// </summary>
     public class BaseSrvObject:IDisposable
     {
+        protected ILog log = null;
         /// <summary>
         /// 服务端对象名称
         /// </summary>
@@ -27,6 +29,8 @@ namespace TradingLib.Common
         {
             try
             {
+                log = LogManager.GetLogger(programe);
+
                 PROGRAME = programe;
                 _uuid = System.Guid.NewGuid().ToString();
                 TLCtxHelper.Ctx.Register(this);
@@ -123,11 +127,28 @@ namespace TradingLib.Common
 		//[Conditional("DEBUG")]
         protected void debug(string msg, QSEnumDebugLevel level = QSEnumDebugLevel.DEBUG)
         {
-            if (_debugEnable && (int)level <= (int)_debuglevel && SendLogItemEvent != null)
+            //if (_debugEnable && (int)level <= (int)_debuglevel && SendLogItemEvent != null)
+            //{
+            //    ILogItem item = new LogItem(msg, level, this.PROGRAME);
+            //    SendLogItemEvent(item);
+            //}
+            switch (level)
             {
-                ILogItem item = new LogItem(msg, level, this.PROGRAME);
-                SendLogItemEvent(item);
+                case QSEnumDebugLevel.DEBUG:
+                    log.Debug(msg);
+                    break;
+                case QSEnumDebugLevel.ERROR:
+                    log.Error(msg);
+                    break;
+                case QSEnumDebugLevel.INFO:
+                    log.Info(msg);
+                    break;
+                default:
+                    log.Debug(msg);
+                    break;
+
             }
+            
         }
 
         /// <summary>
