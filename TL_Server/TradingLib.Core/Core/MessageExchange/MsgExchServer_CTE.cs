@@ -12,6 +12,30 @@ namespace TradingLib.Core
     public partial class MsgExchServer
     {
 
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "ClearAccountTerminals", "ClearAccountTerminals - clear account logined terminal", "注销某个帐号的所登入的所有终端")]
+        public void CTE_UpdateAccountMarginTemplate(ISession session, string account)
+        {
+            Manager manager = session.GetManager();
+            if (!manager.IsRoot())
+            {
+                throw new FutsRspError("无权进行此操作");
+            }
+
+            IAccount acc = _clearcentre[account];
+            if (acc == null)
+            {
+                throw new FutsRspError("交易帐户不存在");
+            }
+
+            if (!manager.RightAccessAccount(acc))
+            {
+                throw new FutsRspError("无权修改该交易帐户");
+            }
+
+            tl.ClearTerminalsForAccount(account);
+            session.OperationSuccess("注销交易终端成功");
+        }
+
         #region 状态类查询
         //[CoreCommandAttr(QSEnumCommandSource.MessageWeb,
         //                    "qrydatafeedrouterstatus",

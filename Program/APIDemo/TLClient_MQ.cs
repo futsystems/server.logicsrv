@@ -950,8 +950,8 @@ namespace TradingLib.Common
         /// <param name="response"></param>
         void CliOnVersionResponse(VersionResponse response)
         {
-            _srvversion = response.ServerVesion;
-            _uuid = response.ClientUUID;
+            _srvversion = response.Version.Version;
+            _uuid = response.ClientID;
             debug("Client got version response, version:" + _srvversion + " uuid:" + _uuid, QSEnumDebugLevel.INFO);
         }
 

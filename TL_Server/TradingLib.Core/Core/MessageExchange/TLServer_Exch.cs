@@ -25,6 +25,17 @@ namespace TradingLib.Core
         }
 
         /// <summary>
+        /// 注销某个交易帐户的所有登入终端
+        /// </summary>
+        /// <param name="account"></param>
+        public void ClearTerminalsForAccount(string account)
+        {
+            foreach (TrdClientInfo info in this.ClientsForAccount(account))
+            {
+                _clients.UnRegistClient(info.Location.ClientID);
+            }
+        }
+        /// <summary>
         /// 查找所有以交易帐号account登入的客户端连接
         /// </summary>
         /// <param name="account"></param>

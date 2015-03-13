@@ -180,25 +180,39 @@ namespace TradingLib.Core
                         }
                     }
                 }
+                //通过本地交易数据库认证
                 else if (request.LoginType == 1)
                 {
                     debug("系统通过清算中心认证,LoginID:" + request.LoginID + " Password:" + request.Passwd, QSEnumDebugLevel.INFO);
                     //1.检查帐户是否存在
+                    //获得当前登入终端数量
+                    int loginnums = tl.ClientsForAccount(request.LoginID).Count();
+                    //如果当前登入个数大于等于系统允许的登入数量则拒绝登入
+                    debug("account:" + request.LoginID + " current login num:" + loginnums.ToString(), QSEnumDebugLevel.INFO);
                     
-                    login = _clearcentre.VaildAccount(request.LoginID, request.Passwd);
-                    response.Authorized = login;
-                    if (login)
+                    if (loginnums >= loginTerminalNum)
                     {
-                        response.LoginID = request.LoginID;
-                        response.Account = request.LoginID;
-                        account = _clearcentre[request.LoginID];
-                        response.AccountType = account.Category;
-
-
+                        response.Authorized = false;
+                        response.RspInfo.Fill("TERMINAL_NUM_LIMIT");
                     }
                     else
                     {
-                        response.RspInfo.Fill("INVALID_LOGIN");
+                        login = _clearcentre.VaildAccount(request.LoginID, request.Passwd);
+                        response.Authorized = login;
+                        if (login)
+                        {
+                            response.LoginID = request.LoginID;
+                            response.Account = request.LoginID;
+                            account = _clearcentre[request.LoginID];
+                            response.AccountType = account.Category;
+
+
+                        }
+                        else
+                        {
+                            response.Authorized = false;
+                            response.RspInfo.Fill("INVALID_LOGIN");
+                        }
                     }
                 }
                 //游客登入

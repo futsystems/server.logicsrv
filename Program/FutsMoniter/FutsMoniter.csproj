@@ -140,6 +140,7 @@
     <Compile Include="API\ILogicHandler\ILogicHandler_Account.cs" />
     <Compile Include="Client\AsyncClient_MQ.cs" />
     <Compile Include="Client\PacketHandler\TLClientNet_Request_.cs" />
+    <Compile Include="Client\Request\TLClientNet_Request_ExCore_Exchange.cs" />
     <Compile Include="Client\Request\TLClientNet_Request_ExStrategy.cs" />
     <Compile Include="Client\Request\TLClientNet_Request_CommissionMargin.cs" />
     <Compile Include="Client\Request\TLClientNet_Request_HistQry.cs" />
@@ -1111,6 +1112,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="images\clearterminal.png" />
     <Content Include="moniter_terminal.ico" />
     <None Include="resources\moniter_terminal.ico" />
     <None Include="resources\deleteaccount.png" />

@@ -276,6 +276,8 @@ namespace TradingLib.Core
         //Server将融合多个Broker和DataFeed通道
         //int _orderlimitsize = 0;
         bool needConfirmSettlement = true;
+        //单一客户端登入
+        int loginTerminalNum = 6;
         public MsgExchServer()
             : base(MsgExchServer.CoreName)
         {
@@ -393,6 +395,13 @@ namespace TradingLib.Core
                     _cfgdb.UpdateConfig("NeedConfirmSettlement", QSEnumCfgType.Bool,true, "是否需要确认结算单");
                 }
                 needConfirmSettlement = _cfgdb["NeedConfirmSettlement"].AsBool();
+
+                if (!_cfgdb.HaveConfig("LoginTerminalNum"))
+                {
+                    _cfgdb.UpdateConfig("LoginTerminalNum", QSEnumCfgType.Int, 6, "客户端允许登入终端个数");
+                }
+
+                loginTerminalNum = _cfgdb["LoginTerminalNum"].AsInt();
 
                 tl = new TLServer_Exch(CoreName,_cfgdb["TLServerIP"].AsString(), _cfgdb["TLPort"].AsInt(), true);
 
