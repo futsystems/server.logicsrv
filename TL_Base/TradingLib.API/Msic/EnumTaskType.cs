@@ -20,7 +20,7 @@ namespace TradingLib.API
         [Description("循环任务")]
         CIRCULATE,
 
-        [Description("QuartzCron任务")]
-        CRON,
+        //[Description("QuartzCron任务")]
+        //CRON,
     }
 }

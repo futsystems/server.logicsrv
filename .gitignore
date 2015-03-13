@@ -24,6 +24,7 @@
 
 /publish
 /package
+/packages
 /cache
 
 #排除子目录中的bin obj debug release

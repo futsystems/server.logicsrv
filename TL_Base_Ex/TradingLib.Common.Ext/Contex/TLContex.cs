@@ -64,18 +64,6 @@ namespace TradingLib.Common
         //ThreadSafeList<string> bypasscmds = new ThreadSafeList<string>();
         #endregion
 
-        #region 定时任务列表
-
-        ThreadSafeList<ITask> taskList = new ThreadSafeList<ITask>();
-        /// <summary>
-        /// 全局任务列表
-        /// </summary>
-        public ThreadSafeList<ITask> TaskList { get { return taskList; } }
-
-        ConcurrentDictionary<string, ITask> taskUUIDMap = new ConcurrentDictionary<string, ITask>();
-        public ConcurrentDictionary<string, ITask> CornTaskMap = new ConcurrentDictionary<string, ITask>();
-
-        #endregion
 
         #region 对象引用列表
         //记录了系统内的所有BaseObject
@@ -705,14 +693,14 @@ namespace TradingLib.Common
         /// 
         /// </summary>
         /// <param name="proc"></param>
-        public void InjectTask(TaskProc proc)
-        {
+        //public void InjectTask(TaskProc proc)
+        //{
 
-            taskList.Add(proc);
+        //    taskList.Add(proc);
 
-            TLCtxHelper.ModuleTaskCentre.RegisterTask(proc);
+        //    TLCtxHelper.ModuleTaskCentre.RegisterTask(proc);
 
-        }
+        //}
         /// <summary>
         /// 解析任务
         /// </summary>
@@ -725,19 +713,11 @@ namespace TradingLib.Common
             //遍历所有任务列表生成对应的Task对象放入全局列表
             foreach (TaskInfo info in list)
             {
-                ITask task = TaskInfo2ITask(obj, info);
+                ITask task = TaskProc.CreateTask(obj, info);
                 if (task != null)
                 {
-                    //Util.Debug("注册任务:" + info.Attr.Name);
-                    //将任务标识为某个BaseSrvObject对象,对象销毁时要自动注销任务
-                    taskList.Add(task);
-                    //定时任务
-                    if (task.TaskType != QSEnumTaskType.CIRCULATE)
-                    {
-                        //taskUUIDMap.TryAdd(task.TaskUUID, task);
-                        //注册到任务中心的Quartz
-                        TLCtxHelper.ModuleTaskCentre.RegisterTask(task);
-                    }
+                    //将任务注册到任务调度中心
+                    TLCtxHelper.ModuleTaskCentre.RegisterTask(task);
                 }
             }
         }
@@ -746,44 +726,44 @@ namespace TradingLib.Common
 
         void UnParseTaskInfo(BaseSrvObject obj)
         {
-            List<ITask> deletelist = new List<ITask>();
-            foreach(ITask t in taskList)
-            {
-                if (t.UUID == obj.UUID)
-                {
-                    deletelist.Add(t);
-                }
-            }
-            foreach (ITask t in deletelist)
-            {
-                taskList.Remove(t);
-            }
+            //List<ITask> deletelist = new List<ITask>();
+            //foreach(ITask t in taskList)
+            //{
+            //    if (t.UUID == obj.UUID)
+            //    {
+            //        deletelist.Add(t);
+            //    }
+            //}
+            //foreach (ITask t in deletelist)
+            //{
+            //    taskList.Remove(t);
+            //}
 
         }
 
-        ITask TaskInfo2ITask(BaseSrvObject obj, TaskInfo info)
-        {
-            switch (info.Attr.TaskType)
-            {
-                case QSEnumTaskType.CIRCULATE:
-                    return new TaskProc(obj.UUID,info.Attr.Name, new TimeSpan(0, 0,0, info.Attr.IntervalSecends,info.Attr.IntervalMilliSecends), delegate() { info.MethodInfo.Invoke(obj, null); });
+        //ITask TaskInfo2ITask(BaseSrvObject obj, TaskInfo info)
+        //{
+        //    switch (info.Attr.TaskType)
+        //    {
+        //        case QSEnumTaskType.CIRCULATE:
+        //            return new TaskProc(obj.UUID,info.Attr.Name, new TimeSpan(0, 0,0, info.Attr.IntervalSecends,info.Attr.IntervalMilliSecends), delegate() { info.MethodInfo.Invoke(obj, null); });
 
-                case QSEnumTaskType.SPECIALTIME:
-                    {
+        //        //case QSEnumTaskType.SPECIALTIME:
+        //        //    {
 
-                        TaskProc p =  new TaskProc(obj.UUID, info.Attr.Name, info.Attr.Hour, info.Attr.Minute, info.Attr.Secend, delegate() { info.MethodInfo.Invoke(obj, null); });
-                        //注册到Quartz中去 进行任务调度
-                        return p;
-                    }
-                case QSEnumTaskType.CRON:
-                    {
-                        TaskProc p = new TaskProc(obj.UUID, info.Attr.Name, info.Attr.CronExpression, delegate() { info.MethodInfo.Invoke(obj, null); });
-                        return p;
-                    }
-                default:
-                    return null;
-            }
-        }
+        //        //        TaskProc p =  new TaskProc(obj.UUID, info.Attr.Name, info.Attr.Hour, info.Attr.Minute, info.Attr.Secend, delegate() { info.MethodInfo.Invoke(obj, null); });
+        //        //        //注册到Quartz中去 进行任务调度
+        //        //        return p;
+        //        //    }
+        //        case QSEnumTaskType.SPECIALTIME:
+        //            {
+        //                TaskProc p = new TaskProc(obj.UUID, info.Attr.Name, info.Attr.CronExpression, delegate() { info.MethodInfo.Invoke(obj, null); });
+        //                return p;
+        //            }
+        //        default:
+        //            return null;
+        //    }
+        //}
         #endregion
 
         #region 解析注册ContribEvent

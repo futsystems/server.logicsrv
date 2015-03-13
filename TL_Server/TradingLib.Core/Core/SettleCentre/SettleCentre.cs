@@ -167,17 +167,17 @@ namespace TradingLib.Core
             //注入交易记录转储任务 结算前5分钟 保存交易记录
             DateTime storetime = Util.ToDateTime(Util.ToTLDate(DateTime.Now), TradingCalendar.SettleTime)-new TimeSpan(0,5,0);
             TaskProc taskstore = new TaskProc(this.UUID, "系统转储-" + Util.ToTLTime(storetime).ToString(), storetime.Hour, storetime.Minute, storetime.Second, delegate() { Task_DataStore(); });
-            TLCtxHelper.Ctx.InjectTask(taskstore);
+            TLCtxHelper.ModuleTaskCentre.RegisterTask(taskstore);
 
             //注入结算任务 可以在数据指定重置时间
             DateTime settletime = Util.ToDateTime(Util.ToTLDate(DateTime.Now), TradingCalendar.SettleTime);
             TaskProc tasksettle = new TaskProc(this.UUID, "系统结算-" + Util.ToTLTime(settletime).ToString(), settletime.Hour, settletime.Minute, settletime.Second, delegate() { Task_SettleAccount(); });
-            TLCtxHelper.Ctx.InjectTask(tasksettle);
+            TLCtxHelper.ModuleTaskCentre.RegisterTask(tasksettle);
 
             //注入重置任务 可以在数据指定重置时间
             DateTime resettime = Util.ToDateTime(Util.ToTLDate(DateTime.Now), _resetTime);
             TaskProc taskreset = new TaskProc(this.UUID, "系统重置-" + Util.ToTLTime(resettime).ToString(), resettime.Hour, resettime.Minute, resettime.Second, delegate() { Task_ResetTradingday(); });
-            TLCtxHelper.Ctx.InjectTask(taskreset);
+            TLCtxHelper.ModuleTaskCentre.RegisterTask(taskreset);
 
         }
 

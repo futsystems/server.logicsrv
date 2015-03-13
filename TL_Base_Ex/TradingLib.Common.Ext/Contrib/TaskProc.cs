@@ -8,6 +8,26 @@ namespace TradingLib.Common
 {
     public class TaskProc : ITask
     {
+
+        /// <summary>
+        /// 通过BaseSrvObject和TaskAttr封装出来的info创建ITask
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="info"></param>
+        /// <returns></returns>
+        public static ITask CreateTask(BaseSrvObject obj, TaskInfo info)
+        {
+            
+            switch (info.Attr.TaskType)
+            {
+                case QSEnumTaskType.CIRCULATE:
+                    return new TaskProc(obj.UUID, info.Attr.Name, new TimeSpan(0, 0, 0, info.Attr.IntervalSecends, info.Attr.IntervalMilliSecends), delegate() { info.MethodInfo.Invoke(obj, null); });
+                case QSEnumTaskType.SPECIALTIME:
+                    return new TaskProc(obj.UUID, info.Attr.Name, info.Attr.CronExpression, delegate() { info.MethodInfo.Invoke(obj, null); });
+                default:
+                    return null;
+            }
+        }
         string _uuid =string.Empty;
         /// <summary>
         /// 对象UUID
@@ -41,21 +61,17 @@ namespace TradingLib.Common
         /// </summary>
         public TimeSpan TaskInterval { get { return _taskInterval; } set { _taskInterval = value; } }
         
+
         DateTime _lastTime = new DateTime(1970, 01, 01);
         /// <summary>
         /// 上次执行任务时间
         /// </summary>
         public DateTime LastTime { get { return _lastTime; } set { _lastTime = value; } }
 
-        public int TaskHour { get { return this.Hour; } }
-        public int TaskMinute { get { return this.Minute; } }
-        public int TaskSecend { get { return this.Secend; } }
-
-        public int Hour=0;
-        public int Minute=0;
-        public int Secend=0;
-
-        VoidDelegate taskfunc;//任务回调函数
+        /// <summary>
+        /// 回调任务
+        /// </summary>
+        VoidDelegate taskfunc;
 
 
         string _cronstr = string.Empty;
@@ -65,74 +81,38 @@ namespace TradingLib.Common
         /// <summary>
         /// 执行特定时间的任务
         /// </summary>
-        public void DoTask()
-        {
-            if (taskfunc != null)
-            {
-                taskfunc();
-            } 
-        }
-
-        TaskProcWrapper _taskproc=null;
-        TaskProcWrapper GetTaskProcWrapper()
-        {
-            if (_taskproc == null)
-            {
-                _taskproc = new TaskProcWrapper(this);
-            }
-            return _taskproc;
-        }
-
-        /// <summary>
-        /// 执行定时任务
-        /// 检查上次执行时间与当前时间的间隔,如果大于设定的时间间隔,则执行任务
-        /// </summary>
-        /// <param name="signalTime">触发检查的时间</param>
-        public void CheckTask(DateTime signalTime)
+        public void DoTask(DateTime triggertime)
         {
             if (_taskType == QSEnumTaskType.CIRCULATE)
             {
                 //Util.Debug(this.TaskName + string.Format("sig sec:{0} millisec:{1} interval sec:{2} millisec:{3}" , signalTime.Second,signalTime.Millisecond,_taskInterval.Seconds,_taskInterval.Milliseconds),QSEnumDebugLevel.INFO);
-                if (signalTime.Subtract(_lastTime) >= _taskInterval)
+                if (triggertime.Subtract(_lastTime) >= _taskInterval)
                 {
-                    GetTaskProcWrapper().DoTask();
-                    _lastTime = DateTime.Now;
+                    try
+                    {
+                        if (taskfunc != null)
+                        {
+                            taskfunc();
+                        }
+                        _lastTime = DateTime.Now;
+                    }
+                    catch (Exception ex)
+                    {
+                        Util.Debug("Task Error:" + ex.ToString());
+                       
+                    }
                 }
                 return;
             }
             if (_taskType == QSEnumTaskType.SPECIALTIME)
             {
-                int intHour = signalTime.Hour;
-                int intMinute = signalTime.Minute;
-                int intSecond = signalTime.Second;
-
-                if (this.Hour < 0 && this.Minute < 0 && this.Secend >= 0)
+                if (taskfunc != null)
                 {
-                    if (intSecond == this.Secend)
-                    {
-                        GetTaskProcWrapper().DoTask();
-                    }
+                    taskfunc();
                 }
-
-                if (this.Hour < 0 && this.Minute >= 0 && this.Secend >= 0)
-                {
-                    if (intMinute == this.Minute && intSecond == this.Secend)
-                    {
-                        GetTaskProcWrapper().DoTask();
-                    }
-                }
-
-                if (this.Hour >= 0 && this.Minute >= 0 && this.Secend >= 0)
-                {
-                    if (intHour == this.Hour && intMinute == this.Minute && intSecond == this.Secend)
-                    {
-                        GetTaskProcWrapper().DoTask();
-                    }
-                }
-                return;
             }
-                   
         }
+
 
         /// <summary>
         /// 特定时间执行的任务
@@ -148,10 +128,18 @@ namespace TradingLib.Common
             _uuid = uuid;
             _taskName = taskName;
             _taskType = QSEnumTaskType.SPECIALTIME;//特定时间执行的任务
-            Hour = hour;
-            Minute = minute;
-            Secend = secend;
+            _cronstr = string.Format("{0} {1} {2} * * ?", secend, minute, hour);
             taskfunc = func;
+        }
+
+        public TaskProc(string uuid, string taskName, string cronstr, VoidDelegate func)
+        {
+            _taskUUID = System.Guid.NewGuid().ToString();
+            _uuid = uuid;
+            _taskName = taskName;
+            _taskType = QSEnumTaskType.SPECIALTIME;
+            taskfunc = func;
+            _cronstr = cronstr;
         }
 
         /// <summary>
@@ -172,50 +160,38 @@ namespace TradingLib.Common
 
             
         }
-
-
-        public TaskProc(string uuid, string taskName, string cronstr, VoidDelegate func)
-        {
-            _taskUUID = System.Guid.NewGuid().ToString();
-            _uuid = uuid;
-            _taskName = taskName;
-            _taskType = QSEnumTaskType.CRON;
-            taskfunc = func;
-            _cronstr = cronstr;
-        }
-
     }
 
-    /// <summary>
-    /// 将TaskProc置于try catch结构中运行,并记录错误运行输出
-    /// </summary>
-    internal class TaskProcWrapper
-    {
-        TaskProc _proc;
-        public TaskProcWrapper(TaskProc proc)
-        {
-            _proc = proc;
-        }
+    ///// <summary>
+    ///// 将TaskProc置于try catch结构中运行,并记录错误运行输出
+    ///// </summary>
+    //internal class TaskProcWrapper
+    //{
+    //    TaskProc _proc;
+    //    public TaskProcWrapper(TaskProc proc)
+    //    {
+    //        _proc = proc;
+    //    }
 
-        public void DoTask()
-        {
-            try
-            {
-                _proc.DoTask();
+    //    public void DoTask()
+    //    {
+    //        try
+    //        {
+    //            _proc.DoTask();
 
-                //触发定时任务
-                if (_proc.TaskType == QSEnumTaskType.SPECIALTIME)
-                {
-                    TLCtxHelper.EventSystem.FireSpecialTimeEvent(this, TaskEventArgs.TaskSuccess(_proc));
-                }
-            }
-            catch (Exception ex)
-            {
-                Util.Debug("Task Error:" + ex.ToString());
-                //触发任务执行异常
-                TLCtxHelper.EventSystem.FireTaskErrorEvent(this, TaskEventArgs.TaskFail(_proc, ex));
-            }
-        }
-    }
+    //            //触发定时任务
+    //            if (_proc.TaskType == QSEnumTaskType.SPECIALTIME)
+    //            {
+    //                TLCtxHelper.EventSystem.FireSpecialTimeEvent(this, TaskEventArgs.TaskSuccess(_proc));
+    //            }
+    //        }
+    //        catch (Exception ex)
+    //        {
+    //            Util.Debug("Task Error:" + ex.ToString());
+    //            //触发任务执行异常
+    //            TLCtxHelper.EventSystem.FireTaskErrorEvent(this, TaskEventArgs.TaskFail(_proc, ex));
+    //        }
+    //    }
+    //}
     
 }

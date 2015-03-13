@@ -19,19 +19,14 @@ namespace TradingLib.API
         string UUID { get; }
 
         /// <summary>
+        /// 任务UUID
+        /// </summary>
+        string TaskUUID { get; }
+
+        /// <summary>
         /// 任务名称
         /// </summary>
         string TaskName { get; }
-
-        /// <summary>
-        /// 任务UUID
-        /// </summary>
-        string TaskUUID { get;}
-
-        /// <summary>
-        /// Cron表达式
-        /// </summary>
-        string CronExpression { get; }
 
         /// <summary>
         /// 任务类别 定时/循环
@@ -39,28 +34,19 @@ namespace TradingLib.API
         QSEnumTaskType TaskType { get; }
 
         /// <summary>
+        /// Cron表达式
+        /// </summary>
+        string CronExpression { get; }
+
+        /// <summary>
         /// 任务间隔
         /// </summary>
         TimeSpan TaskInterval { get; set; }
 
         /// <summary>
-        /// 定时任务小时
+        /// 运行任务
         /// </summary>
-        int TaskHour { get; }
-
-        /// <summary>
-        /// 定时任务分钟
-        /// </summary>
-        int TaskMinute { get; }
-
-        /// <summary>
-        /// 定时任务秒
-        /// </summary>
-        int TaskSecend { get; }
-
-
-        void DoTask();
-
-        void CheckTask(DateTime signaltime);
+        /// <param name="triggertime"></param>
+        void DoTask(DateTime triggertime);
     }
 }

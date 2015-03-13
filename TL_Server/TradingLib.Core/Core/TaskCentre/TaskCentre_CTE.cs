@@ -15,12 +15,12 @@ namespace TradingLib.Core
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(CliUtils.SectionHeader(" TaskList "));
-            foreach (ITask t in TLCtxHelper.Ctx.TaskList.Where(task=>task.TaskType == QSEnumTaskType.SPECIALTIME))
+            foreach (ITask t in taskUUIDMap.Values.Where(task => task.TaskType == QSEnumTaskType.SPECIALTIME))
             {
                 sb.Append(t.GetTaskMemo() + System.Environment.NewLine);
             }
             sb.Append(System.Environment.NewLine);
-            foreach (ITask t in TLCtxHelper.Ctx.TaskList.Where(task => task.TaskType == QSEnumTaskType.CIRCULATE))
+            foreach (ITask t in taskUUIDMap.Values.Where(task => task.TaskType == QSEnumTaskType.CIRCULATE))
             {
                 sb.Append(t.GetTaskMemo() + System.Environment.NewLine);
             }
