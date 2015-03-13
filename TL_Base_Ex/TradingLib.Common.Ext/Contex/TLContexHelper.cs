@@ -235,6 +235,16 @@ namespace TradingLib.Common
         }
 
         /// <summary>
+        /// 任务模块
+        /// </summary>
+        public static ITaskCentre ModuleTaskCentre
+        {
+            get
+            {
+                return defaultInstance.ctx.TaskCentre;
+            }
+        }
+        /// <summary>
         /// 辅助类操作函数
         /// </summary>
         public static IUtil CmdUtils

@@ -26,5 +26,14 @@ namespace TradingLib.Core
             }
             return sb.ToString();
         }
+
+            
+        [ContribCommandAttr(QSEnumCommandSource.CLI, "ptask2", "ptask - print task list", "")]
+        public string CTE_Quazrt()
+        {
+            return "Sech:" + _scheduler.IsStarted.ToString();
+        }
+
+
     }
 }

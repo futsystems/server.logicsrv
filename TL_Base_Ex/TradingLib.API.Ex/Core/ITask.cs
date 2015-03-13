@@ -24,6 +24,16 @@ namespace TradingLib.API
         string TaskName { get; }
 
         /// <summary>
+        /// 任务UUID
+        /// </summary>
+        string TaskUUID { get;}
+
+        /// <summary>
+        /// Cron表达式
+        /// </summary>
+        string CronExpression { get; }
+
+        /// <summary>
         /// 任务类别 定时/循环
         /// </summary>
         QSEnumTaskType TaskType { get; }
@@ -48,6 +58,8 @@ namespace TradingLib.API
         /// </summary>
         int TaskSecend { get; }
 
+
+        void DoTask();
 
         void CheckTask(DateTime signaltime);
     }

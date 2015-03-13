@@ -106,6 +106,9 @@ namespace TradingLib.Contrib.CLICommand
 
     public partial class CommandCabinet : ContribSrvObject, IContrib
     {
+
+
+
         [CoreCommandAttr(QSEnumCommandSource.CLI, "demo1", "demo1 - ", "")]
         public string CTE_FlatPosition()
         {

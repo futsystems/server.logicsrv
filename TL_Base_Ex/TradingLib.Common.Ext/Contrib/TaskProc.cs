@@ -15,6 +15,12 @@ namespace TradingLib.Common
         public string UUID { get { return _uuid; } }
 
 
+        string _taskUUID = string.Empty;
+        /// <summary>
+        /// 每个任务有一个全局唯一的TaskUUID 用于通过TaskUUID来进行任务的查找
+        /// </summary>
+        public string TaskUUID { get { return _taskUUID; } }
+
         string _taskName = "Task";
         /// <summary>
         /// 任务名称
@@ -50,6 +56,10 @@ namespace TradingLib.Common
         public int Secend=0;
 
         VoidDelegate taskfunc;//任务回调函数
+
+
+        string _cronstr = string.Empty;
+        public string CronExpression { get { return _cronstr; } }
 
 
         /// <summary>
@@ -134,6 +144,7 @@ namespace TradingLib.Common
         /// <param name="func"></param>
         public TaskProc(string uuid,string taskName,int hour, int minute, int secend, VoidDelegate func)
         {
+            _taskUUID = System.Guid.NewGuid().ToString();
             _uuid = uuid;
             _taskName = taskName;
             _taskType = QSEnumTaskType.SPECIALTIME;//特定时间执行的任务
@@ -143,13 +154,34 @@ namespace TradingLib.Common
             taskfunc = func;
         }
 
+        /// <summary>
+        /// 循环执行任务
+        /// </summary>
+        /// <param name="uuid"></param>
+        /// <param name="taskName"></param>
+        /// <param name="interval"></param>
+        /// <param name="func"></param>
         public TaskProc(string uuid,string taskName,TimeSpan interval, VoidDelegate func)
         {
+            _taskUUID = System.Guid.NewGuid().ToString();
             _uuid = uuid;
             _taskName = taskName;
             _taskType = QSEnumTaskType.CIRCULATE;//循环执行任务
             _taskInterval = interval;
             taskfunc = func;
+
+            
+        }
+
+
+        public TaskProc(string uuid, string taskName, string cronstr, VoidDelegate func)
+        {
+            _taskUUID = System.Guid.NewGuid().ToString();
+            _uuid = uuid;
+            _taskName = taskName;
+            _taskType = QSEnumTaskType.CRON;
+            taskfunc = func;
+            _cronstr = cronstr;
         }
 
     }

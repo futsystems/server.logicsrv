@@ -71,6 +71,10 @@ namespace TradingLib.Common
         /// 全局任务列表
         /// </summary>
         public ThreadSafeList<ITask> TaskList { get { return taskList; } }
+
+        ConcurrentDictionary<string, ITask> taskUUIDMap = new ConcurrentDictionary<string, ITask>();
+        public ConcurrentDictionary<string, ITask> CornTaskMap = new ConcurrentDictionary<string, ITask>();
+
         #endregion
 
         #region 对象引用列表
@@ -223,6 +227,20 @@ namespace TradingLib.Common
                     debug("Error-RotuerManager not valid");
                 }
                 return _routermanager;
+            }
+        }
+
+        ITaskCentre _taskcentre = null;
+        internal ITaskCentre TaskCentre
+        {
+            get
+            {
+                if (_taskcentre == null)
+                {
+                    debug("Error-TaskCentre not valid");
+                }
+
+                return _taskcentre;
             }
         }
         #endregion
@@ -636,6 +654,10 @@ namespace TradingLib.Common
                     _messagemgr = obj as IMessageMgr;
                 }
 
+                if (obj is ITaskCentre)
+                {
+                    _taskcentre = obj as ITaskCentre;
+                }
                 //0.检查是否是服务模块管理
                 if (obj is IServiceManager)
                 {
@@ -687,6 +709,9 @@ namespace TradingLib.Common
         {
 
             taskList.Add(proc);
+
+            TLCtxHelper.ModuleTaskCentre.RegisterTask(proc);
+
         }
         /// <summary>
         /// 解析任务
@@ -694,8 +719,10 @@ namespace TradingLib.Common
         /// <param name="obj"></param>
         void ParseTaskInfo(BaseSrvObject obj)
         {
+            //查找对象中用TaskAttr标注的方法属性集合
             List<TaskInfo> list = PluginHelper.FindContribTask(obj);
 
+            //遍历所有任务列表生成对应的Task对象放入全局列表
             foreach (TaskInfo info in list)
             {
                 ITask task = TaskInfo2ITask(obj, info);
@@ -704,6 +731,13 @@ namespace TradingLib.Common
                     //Util.Debug("注册任务:" + info.Attr.Name);
                     //将任务标识为某个BaseSrvObject对象,对象销毁时要自动注销任务
                     taskList.Add(task);
+                    //定时任务
+                    if (task.TaskType != QSEnumTaskType.CIRCULATE)
+                    {
+                        //taskUUIDMap.TryAdd(task.TaskUUID, task);
+                        //注册到任务中心的Quartz
+                        TLCtxHelper.ModuleTaskCentre.RegisterTask(task);
+                    }
                 }
             }
         }
@@ -733,8 +767,19 @@ namespace TradingLib.Common
             {
                 case QSEnumTaskType.CIRCULATE:
                     return new TaskProc(obj.UUID,info.Attr.Name, new TimeSpan(0, 0,0, info.Attr.IntervalSecends,info.Attr.IntervalMilliSecends), delegate() { info.MethodInfo.Invoke(obj, null); });
+
                 case QSEnumTaskType.SPECIALTIME:
-                    return new TaskProc(obj.UUID,info.Attr.Name, info.Attr.Hour, info.Attr.Minute, info.Attr.Secend, delegate() { info.MethodInfo.Invoke(obj, null); });
+                    {
+
+                        TaskProc p =  new TaskProc(obj.UUID, info.Attr.Name, info.Attr.Hour, info.Attr.Minute, info.Attr.Secend, delegate() { info.MethodInfo.Invoke(obj, null); });
+                        //注册到Quartz中去 进行任务调度
+                        return p;
+                    }
+                case QSEnumTaskType.CRON:
+                    {
+                        TaskProc p = new TaskProc(obj.UUID, info.Attr.Name, info.Attr.CronExpression, delegate() { info.MethodInfo.Invoke(obj, null); });
+                        return p;
+                    }
                 default:
                     return null;
             }

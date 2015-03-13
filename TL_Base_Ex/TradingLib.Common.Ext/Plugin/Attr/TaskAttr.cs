@@ -74,6 +74,8 @@ namespace TradingLib.Common
                 return 0;
         } }
 
+        string _cronstr = string.Empty;
+        public string CronExpression { get { return _cronstr; } }
         /// <summary>
         /// 定时执行几点几分几秒执行该任务
         /// </summary>
@@ -104,6 +106,16 @@ namespace TradingLib.Common
             _intervalsecends = intervalSecends;
             _intervalMilliSecends = intervalMilliSecends;
             _type = QSEnumTaskType.CIRCULATE;
+            _description = description;
+        }
+
+
+
+        public TaskAttr(string name, string cronstr, string description = "任务描述")
+        {
+            _type = QSEnumTaskType.CRON;
+            _name = name;
+            _cronstr = cronstr;
             _description = description;
         }
     }

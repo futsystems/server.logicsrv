@@ -57,6 +57,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\clrzmq.dll</HintPath>
     </Reference>
+    <Reference Include="Quartz">
+      <HintPath>..\..\lib\Quartz.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="TLBrokerXAPI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -89,6 +92,7 @@
   <ItemGroup>
     <Compile Include="CoreDaemon.cs" />
     <Compile Include="CoreThread.cs" />
+    <Compile Include="demo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
