@@ -132,6 +132,7 @@ namespace TradingLib.Common
             //    ILogItem item = new LogItem(msg, level, this.PROGRAME);
             //    SendLogItemEvent(item);
             //}
+            
             switch (level)
             {
                 case QSEnumDebugLevel.DEBUG:
@@ -150,43 +151,6 @@ namespace TradingLib.Common
             }
             
         }
-
-        /// <summary>
-        /// 日志输出
-        /// </summary>
-        /// <param name="msg"></param>
-        //protected void msgdebug(string msg)
-        //{
-        //    if (SendDebugEvent != null)
-        //        SendDebugEvent(msg);
-        //}
-
-        //private bool _noverb = true;
-        ///// <summary>
-        ///// 是否显示内部调试信息
-        ///// </summary>
-        //public bool VerboseDebugging
-        //{
-        //    get { return !_noverb; }
-        //    set
-        //    {
-        //        _noverb = !value;
-        //    }
-        //}
-        /// <summary>
-        /// 内部输出调试日志
-        /// </summary>
-        /// <param name="msg"></param>
-        //protected void v(string msg)
-        //{
-        //    if (!_noverb)
-        //    {
-        //        msgdebug(string.Format("[Verb] {0}:{1}",PROGRAME,msg));
-        //        //2.调用日志事件对外触发日志事件
-        //        if (SendLogEvent != null)
-        //            SendLogEvent(PROGRAME, msg, QSEnumDebugLevel.VERB);
-        //    }
-        //}
         #endregion
 
     }

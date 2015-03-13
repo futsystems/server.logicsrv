@@ -16,13 +16,12 @@ namespace TradingLib.ServiceManager
     public partial class CoreManager : BaseSrvObject, ICoreManager
     {
         const string SMGName = "CoreManager";
-        DebugConfig dconfig;//日志设置信息
-        
+
         public string ServiceMgrName { get { return SMGName; } }
         public CoreManager()
             : base(SMGName)
         {
-            dconfig = new DebugConfig();
+
         }
 
         //============ 服务组件 ===============================

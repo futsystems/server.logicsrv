@@ -46,6 +46,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Common.Logging.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Quartz">
+      <HintPath>..\..\lib\Quartz.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
@@ -75,6 +78,7 @@
   <ItemGroup>
     <Compile Include="Accounts\Account.cs" />
     <Compile Include="Contex\Event\RouterEvent.cs" />
+    <Compile Include="Contrib\Task.cs" />
     <Compile Include="ORM\MAccountConnectorMap.cs" />
     <Compile Include="ORM\MCommission.cs" />
     <Compile Include="ORM\MMargin.cs" />

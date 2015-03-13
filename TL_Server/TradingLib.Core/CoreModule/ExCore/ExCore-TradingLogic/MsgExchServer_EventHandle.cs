@@ -130,20 +130,34 @@ namespace TradingLib.Core
                     debug("系统通过清算中心认证,LoginID:" + request.LoginID + " Password:" + request.Passwd, QSEnumDebugLevel.INFO);
                     //1.检查帐户是否存在
 
-                    login = TLCtxHelper.ModuleAccountManager.VaildAccount(request.LoginID, request.Passwd);
-                    response.Authorized = login;
-                    if (login)
+                    //1.检查帐户是否存在
+                    //获得当前登入终端数量
+                    int loginnums = tl.ClientsForAccount(request.LoginID).Count();
+                    //如果当前登入个数大于等于系统允许的登入数量则拒绝登入
+                    debug("account:" + request.LoginID + " current login num:" + loginnums.ToString(), QSEnumDebugLevel.INFO);
+
+                    if (loginnums >= loginTerminalNum)
                     {
-                        response.LoginID = request.LoginID;
-                        response.Account = request.LoginID;
-                        account = TLCtxHelper.ModuleAccountManager[request.LoginID];
-                        response.AccountType = account.Category;
-
-
+                        response.Authorized = false;
+                        response.RspInfo.Fill("TERMINAL_NUM_LIMIT");
                     }
                     else
                     {
-                        response.RspInfo.Fill("INVALID_LOGIN");
+                        login = TLCtxHelper.ModuleAccountManager.VaildAccount(request.LoginID, request.Passwd);
+                        response.Authorized = login;
+                        if (login)
+                        {
+                            response.LoginID = request.LoginID;
+                            response.Account = request.LoginID;
+                            account = TLCtxHelper.ModuleAccountManager[request.LoginID];
+                            response.AccountType = account.Category;
+
+
+                        }
+                        else
+                        {
+                            response.RspInfo.Fill("INVALID_LOGIN");
+                        }
                     }
                 }
                 //游客登入

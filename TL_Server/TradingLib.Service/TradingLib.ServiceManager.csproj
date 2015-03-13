@@ -76,7 +76,6 @@
     <Compile Include="ConnectorManager\PacketHandler\ConnectorManager_Handler_Vendor.cs" />
     <Compile Include="ConnectorManager\ConnectorManager_Task.cs" />
     <Compile Include="ContribManager\ContribManager.cs" />
-    <Compile Include="DebugConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CoreManager\CoreManager.cs" />
   </ItemGroup>

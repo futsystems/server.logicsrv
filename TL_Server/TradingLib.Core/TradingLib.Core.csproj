@@ -30,6 +30,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Common.Logging">
+      <HintPath>..\..\lib\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging.Core">
+      <HintPath>..\..\lib\Common.Logging.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Quartz">
+      <HintPath>..\..\lib\Quartz.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows.Forms" />
@@ -148,6 +157,7 @@
     <Compile Include="CoreModule\SettleCentre\SettleCentre_.cs" />
     <Compile Include="CoreModule\SettleCentre\SettleCentre_CTE.cs" />
     <Compile Include="CoreModule\SettleCentre\TradingCalendar.cs" />
+    <Compile Include="CoreModule\TaskCentre\Listener.cs" />
     <Compile Include="CoreModule\TaskCentre\TaskCentre.cs" />
     <Compile Include="CoreModule\ExCore\ExCore-TradingLogic\MsgExchServer.cs" />
     <Compile Include="CoreModule\RiskCentre\RiskCentre.cs" />

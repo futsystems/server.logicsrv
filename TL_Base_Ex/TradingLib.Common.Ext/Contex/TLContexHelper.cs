@@ -382,6 +382,17 @@ namespace TradingLib.Common
                 return _excore;
             }
         }
+
+        static ITaskCentre _taskcentre = null;
+        public static ITaskCentre ModuleTaskCentre
+        {
+            get
+            {
+                if (_taskcentre == null)
+                    _taskcentre = _scope.Resolve<ITaskCentre>();
+                return _taskcentre;
+            }
+        }
         #endregion
 
 

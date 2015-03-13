@@ -8,7 +8,7 @@ namespace TradingLib.API
     /// <summary>
     /// 任务调度模块接口
     /// </summary>
-    public interface IModuleTaskCentre:ICore
+    public interface IModuleTaskCentre:ICore,ITaskCentre
     {
 
     }

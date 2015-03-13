@@ -46,6 +46,7 @@ namespace TradingLib.Core
         TLServer_Exch tl;
 
         bool needConfirmSettlement = true;
+        int loginTerminalNum = 6;
         public MsgExchServer()
             : base(MsgExchServer.CoreName)
         {
@@ -73,6 +74,14 @@ namespace TradingLib.Core
                     _cfgdb.UpdateConfig("NeedConfirmSettlement", QSEnumCfgType.Bool,true, "是否需要确认结算单");
                 }
                 needConfirmSettlement = _cfgdb["NeedConfirmSettlement"].AsBool();
+
+                if (!_cfgdb.HaveConfig("LoginTerminalNum"))
+                {
+                    _cfgdb.UpdateConfig("LoginTerminalNum", QSEnumCfgType.Int, 6, "客户端允许登入终端个数");
+                }
+
+                loginTerminalNum = _cfgdb["LoginTerminalNum"].AsInt();
+
 
                 tl = new TLServer_Exch(CoreName,_cfgdb["TLServerIP"].AsString(), _cfgdb["TLPort"].AsInt(), true);
 

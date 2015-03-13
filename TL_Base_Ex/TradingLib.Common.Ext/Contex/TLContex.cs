@@ -64,14 +64,6 @@ namespace TradingLib.Common
         //ThreadSafeList<string> bypasscmds = new ThreadSafeList<string>();
         #endregion
 
-        #region 定时任务列表
-
-        ThreadSafeList<ITask> taskList = new ThreadSafeList<ITask>();
-        /// <summary>
-        /// 全局任务列表
-        /// </summary>
-        public ThreadSafeList<ITask> TaskList { get { return taskList; } }
-        #endregion
 
         #region 对象引用列表
         //记录了系统内的所有BaseObject
@@ -552,17 +544,7 @@ namespace TradingLib.Common
         #region 注册扩展组件的Task函数
 
 
-        /// <summary>
-        /// 手工注入TaskProc 
-        /// 注意在生成TaskProc时需要制定对象的UUID 从而实现当对象注销时自动通过uuid进行任务释放
-        /// 
-        /// </summary>
-        /// <param name="proc"></param>
-        public void InjectTask(TaskProc proc)
-        {
 
-            taskList.Add(proc);
-        }
         /// <summary>
         /// 解析任务
         /// </summary>
@@ -573,12 +555,10 @@ namespace TradingLib.Common
 
             foreach (TaskInfo info in list)
             {
-                ITask task = TaskInfo2ITask(obj, info);
+                ITask task = TaskProc.CreateTask(obj, info);
                 if (task != null)
                 {
-                    //Util.Debug("注册任务:" + info.Attr.Name);
-                    //将任务标识为某个BaseSrvObject对象,对象销毁时要自动注销任务
-                    taskList.Add(task);
+                    TLCtxHelper.ModuleTaskCentre.RegisterTask(task);
                 }
             }
         }
@@ -587,33 +567,21 @@ namespace TradingLib.Common
 
         void UnParseTaskInfo(BaseSrvObject obj)
         {
-            List<ITask> deletelist = new List<ITask>();
-            foreach(ITask t in taskList)
-            {
-                if (t.UUID == obj.UUID)
-                {
-                    deletelist.Add(t);
-                }
-            }
-            foreach (ITask t in deletelist)
-            {
-                taskList.Remove(t);
-            }
+            //List<ITask> deletelist = new List<ITask>();
+            //foreach(ITask t in taskList)
+            //{
+            //    if (t.UUID == obj.UUID)
+            //    {
+            //        deletelist.Add(t);
+            //    }
+            //}
+            //foreach (ITask t in deletelist)
+            //{
+            //    taskList.Remove(t);
+            //}
 
         }
 
-        ITask TaskInfo2ITask(BaseSrvObject obj, TaskInfo info)
-        {
-            switch (info.Attr.TaskType)
-            {
-                case QSEnumTaskType.CIRCULATE:
-                    return new TaskProc(obj.UUID,info.Attr.Name, new TimeSpan(0, 0,0, info.Attr.IntervalSecends,info.Attr.IntervalMilliSecends), delegate() { info.MethodInfo.Invoke(obj, null); });
-                case QSEnumTaskType.SPECIALTIME:
-                    return new TaskProc(obj.UUID,info.Attr.Name, info.Attr.Hour, info.Attr.Minute, info.Attr.Secend, delegate() { info.MethodInfo.Invoke(obj, null); });
-                default:
-                    return null;
-            }
-        }
         #endregion
 
         #region 解析注册ContribEvent

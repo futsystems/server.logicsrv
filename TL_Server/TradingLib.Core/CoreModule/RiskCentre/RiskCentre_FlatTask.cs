@@ -98,7 +98,7 @@ namespace TradingLib.Core
             debug("注入强平任务,强平时间点:" + flattime,QSEnumDebugLevel.INFO);
             DateTime t = Util.ToDateTime(Util.ToTLDate(), flattime);
             TaskProc task = new TaskProc(this.UUID, "强平-日内" + flattime.ToString(), t.Hour, t.Minute, t.Second, delegate() { FlatPositionViaMarketTime(flattime,mts); });
-            TLCtxHelper.Ctx.InjectTask(task);
+            TLCtxHelper.ModuleTaskCentre.RegisterTask(task);
         }
 
         string MarketTimeIDstr(MarketTime[] mts)
