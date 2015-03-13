@@ -339,6 +339,12 @@
     <Compile Include="Forms\Account\fmBindConnector.Designer.cs">
       <DependentUpon>fmBindConnector.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Account\fmConnectorAccountInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Account\fmConnectorAccountInfo.Designer.cs">
+      <DependentUpon>fmConnectorAccountInfo.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Basic\CommissionMargin\fmCommission.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -895,6 +901,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Account\fmBindConnector.resx">
       <DependentUpon>fmBindConnector.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Account\fmConnectorAccountInfo.resx">
+      <DependentUpon>fmConnectorAccountInfo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Basic\CommissionMargin\fmCommission.resx">
       <DependentUpon>fmCommission.cs</DependentUpon>

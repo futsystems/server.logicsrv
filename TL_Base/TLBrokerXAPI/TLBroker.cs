@@ -209,6 +209,12 @@ namespace TradingLib.BrokerXAPI
             _wrapper.OnRtnOrderActionErrorEvent += new CBRtnOrderActionError(_wrapper_OnRtnOrderActionErrorEvent);
             _wrapper.OnRtnTradeEvent += new CBRtnTrade(_wrapper_OnRtnTradeEvent);
             _wrapper.OnSymbolEvent += new CBOnSymbol(_wrapper_OnSymbolEvent);
+            _wrapper.OnAccountInfoEvent += new CBOnAccountInfo(_wrapper_OnAccountInfoEvent);
+        }
+
+        void _wrapper_OnAccountInfoEvent(ref XAccountInfo pAccountInfo, bool islast)
+        {
+            NotifyAccountInfo(pAccountInfo, islast);
         }
 
         void _wrapper_OnSymbolEvent(ref XSymbol pSymbolField, bool islast)
@@ -359,6 +365,10 @@ namespace TradingLib.BrokerXAPI
             return _wrapper.QryInstrument();
         }
 
+        protected bool WrapperQryAccountInfo()
+        {
+            return _wrapper.QryAccountInfo();
+        }
         ///// <summary>
         ///// 请求恢复交易数据
         ///// </summary>
@@ -367,6 +377,11 @@ namespace TradingLib.BrokerXAPI
         //{
         //    return _wrapper.Restore();
         //}
+
+        public bool QryAccountInfo()
+        {
+            return WrapperQryAccountInfo();
+        }
         protected
         #endregion
 

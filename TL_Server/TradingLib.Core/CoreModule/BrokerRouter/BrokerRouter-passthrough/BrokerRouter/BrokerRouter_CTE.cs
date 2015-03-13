@@ -6,7 +6,8 @@ using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.BrokerXAPI;
-
+using System.Runtime.InteropServices;
+using System.Reflection;
 
 namespace TradingLib.Core
 {
@@ -137,6 +138,58 @@ namespace TradingLib.Core
             
             }
         }
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryBrokerAccountInfo", "QryBrokerAccountInfo - qry account info", "查询底层交易帐户信息")]
+        public void CTE_QryBrokerAccountInfo(ISession session, string account)
+        {
+            var manager = session.GetManager();
+            if (manager.IsInRoot())
+            {
+                IAccount acct = TLCtxHelper.ModuleAccountManager[account];
+                if (acct == null)
+                {
+                    throw new FutsRspError(string.Format("交易帐户:{0}不存在", account));
+                }
+                int id = BasicTracker.ConnectorMapTracker.GetConnectorIDForAccount(account);
+                if (id == 0)
+                {
+                    throw new FutsRspError("未绑定主帐户,无法同步");
+                }
+                ConnectorConfig config = manager.Domain.GetConnectorConfigs().FirstOrDefault(cfg => cfg.ID == id);
+                if (config == null)
+                {
+                    throw new FutsRspError("无权操作该主帐户");
+                }
+
+                IBroker broker = TLCtxHelper.ServiceRouterManager.FindBroker(config.Token);
+
+                if (broker is TLBroker)
+                {
+                    TLBroker b = broker as TLBroker;
+                    
+                    Action<XAccountInfo, bool> Handler = (info, islast) =>
+                        {
+                            //回报数据
+                            session.ReplyMgr(new { LastEquity = info.LastEquity, Deposit = info.Deposit, Withdraw = info.WithDraw, CloseProfit = info.ClosePorifit, PositionProfit = info.PositoinProfit, Commission = info.Commission });
+                            
+                            debug("account info:" + info.LastEquity.ToString() + " deposit:" + info.Deposit.ToString(), QSEnumDebugLevel.WARNING);
+                            if (islast)
+                            {
+                                //如果是最后一条回报 则删除事件绑定
+                                Util.ClearAllEvents(b, "GotAccountInfoEvent");
+                            }
+                        };
+                    
+                    //绑定事件
+                    b.GotAccountInfoEvent += new Action<XAccountInfo, bool>(Handler);
+                    //调用查询
+                    b.QryAccountInfo();
+                }
+
+            }
+        }
+       
+
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "SyncExData", "SyncExData - sync trading data from broker", "同步交易通道交易数据")]
         public void CTE_SyncExData(ISession session, string account)

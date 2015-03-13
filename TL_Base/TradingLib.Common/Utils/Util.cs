@@ -809,6 +809,46 @@ namespace TradingLib.Common
         }
 
 
+        /// <summary>
+        /// 清空某个事件的所有绑定的委托
+        /// </summary>
+        /// <param name="objectHasEvents"></param>
+        /// <param name="eventName"></param>
+        public static void ClearAllEvents(object objectHasEvents, string eventName)
+        {
+            if (objectHasEvents == null)
+            {
+                return;
+            }
+            try
+            {
+                EventInfo[] events = objectHasEvents.GetType().GetEvents(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+                if (events == null || events.Length < 1)
+                {
+                    return;
+                }
+
+                for (int i = 0; i < events.Length; i++)
+                {
+                    EventInfo ei = events[i];
+                    if (ei.Name == eventName)
+                    {
+                        FieldInfo fi = ei.DeclaringType.GetField(eventName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+                        if (fi != null)
+                        {
+                            fi.SetValue(objectHasEvents, null);
+                        }
+                        break;
+                    }
+                }
+            }
+            catch
+            {
+            }
+        }
+
+
+
 
         /// <summary>
         /// Gets string representing the version of this suite.

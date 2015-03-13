@@ -30,10 +30,28 @@ namespace FutsMoniter
             accountgrid.ContextMenuStrip.Items.Add(new System.Windows.Forms.ToolStripSeparator());//11
             accountgrid.ContextMenuStrip.Items.Add("删除帐户", Properties.Resources.deleteaccount, new EventHandler(DelAccount_Click));//12
             accountgrid.ContextMenuStrip.Items.Add("同步交易数据", Properties.Resources.deleteaccount, new EventHandler(SyncData_Click));//13
+            accountgrid.ContextMenuStrip.Items.Add("查询主帐户", Properties.Resources.deleteaccount, new EventHandler(QryAccountInfo_Click));//13
         
         
         }
 
+        void QryAccountInfo_Click(object sender, EventArgs e)
+        {
+
+            AccountLite account = GetVisibleAccount(CurrentAccount);
+            if (account != null)
+            {
+                //Globals.LogicHandler.FireAccountSyncEvent(account);//触发同步事件，
+                fmConnectorAccountInfo fm = new fmConnectorAccountInfo();
+                fm.SetAccount(account);
+                fm.ShowDialog();
+                //Globals.TLClient.ReqQryConnectorAccountInfo(account.Account);
+            }
+            else
+            {
+                MoniterUtils.WindowMessage("请选择需要查询的交易帐户");
+            }
+        }
         /// <summary>
         /// 重新同步交易数据
         /// </summary>

@@ -101,7 +101,8 @@ namespace TradingLib.BrokerXAPI.Interop
             _SendOrder = NativeLib.GetUnmanagedFunction<SendOrderProc>("SendOrder");
             _SendOrderAction = NativeLib.GetUnmanagedFunction<SendOrderActionProc>("SendOrderAction");
             _QryInstrument = NativeLib.GetUnmanagedFunction<QryInstrumentProc>("QryInstrument");
-
+            //_Restore = NativeLib.GetUnmanagedFunction<RestoreProc>("Restore");
+            _QryAccountInfo = NativeLib.GetUnmanagedFunction<QryAccountInfoProc>("QryAccountInfo");
 
             _RegOnConnected = NativeLib.GetUnmanagedFunction<RegOnConnectedProc>("RegOnConnected");
             _RegOnDisconnected = NativeLib.GetUnmanagedFunction<RegOnDisconnectedProc>("RegOnDisconnected");
@@ -111,7 +112,9 @@ namespace TradingLib.BrokerXAPI.Interop
             _RegRtnOrderError = NativeLib.GetUnmanagedFunction<RegRtnOrderErrorProc>("RegRtnOrderError");
             _RegRtnOrderActionError = NativeLib.GetUnmanagedFunction<RegRtnOrderActionErrorProc>("RegRtnOrderActionError");
             _RegOnSymbol = NativeLib.GetUnmanagedFunction<RegOnSymbolProc>("RegOnSymbol");
-            //_Restore = NativeLib.GetUnmanagedFunction<RestoreProc>("Restore");
+            _RegOnAccountInfo = NativeLib.GetUnmanagedFunction<RegOnAccountInfoProc>("RegOnAccountInfo");
+
+            
         }
 
 
@@ -272,6 +275,27 @@ namespace TradingLib.BrokerXAPI.Interop
             }
         }
 
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate bool QryAccountInfoProc(IntPtr pWrapper);
+        QryAccountInfoProc _QryAccountInfo;
+        public bool QryAccountInfo()
+        {
+            try
+            {
+                Util.Debug("BrokerProxy QryAccountInfo", QSEnumDebugLevel.MUST);
+                bool x = _QryAccountInfo(this.Wrapper);
+                Util.Debug("**************** qry accountinfo return:" + x.ToString(), QSEnumDebugLevel.ERROR);
+                return x;
+            }
+            catch (Exception ex)
+            {
+                Util.Debug("QryAccountInfo Error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                return false;
+            }
+        }
+
+
+
         //[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         //public delegate bool RestoreProc(IntPtr pWrapper);
         //RestoreProc _Restore;
@@ -367,6 +391,12 @@ namespace TradingLib.BrokerXAPI.Interop
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void RegOnSymbolProc(IntPtr pWrapper, CBOnSymbol cb);
         RegOnSymbolProc _RegOnSymbol;
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void RegOnAccountInfoProc(IntPtr pWrapper, CBOnAccountInfo cb);
+        RegOnAccountInfoProc _RegOnAccountInfo;
+
+
         #endregion
 
 
@@ -425,6 +455,16 @@ namespace TradingLib.BrokerXAPI.Interop
         {
             add { cbOnSymbol += value; _RegOnSymbol(this.Wrapper, cbOnSymbol); }
             remove { cbOnSymbol -= value; _RegOnSymbol(this.Wrapper, cbOnSymbol); }
+        }
+
+        /// <summary>
+        /// 帐户信息回报事件
+        /// </summary>
+        CBOnAccountInfo cbOnAccountInfo;
+        public event CBOnAccountInfo OnAccountInfoEvent
+        {
+            add { cbOnAccountInfo += value; _RegOnAccountInfo(this.Wrapper, cbOnAccountInfo); }
+            remove { cbOnAccountInfo -= value; _RegOnAccountInfo(this.Wrapper, cbOnAccountInfo); }
         }
         #endregion
 

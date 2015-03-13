@@ -105,6 +105,13 @@ namespace TradingLib.BrokerXAPI
             if (GotSymbolEvent != null)
                 GotSymbolEvent(symbol, islast);
         }
+
+        public event Action<XAccountInfo, bool> GotAccountInfoEvent;
+        protected void NotifyAccountInfo(XAccountInfo accountInfo,bool islast)
+        {
+            if (GotAccountInfoEvent != null)
+                GotAccountInfoEvent(accountInfo, islast);
+        }
         /// <summary>
         /// 获得当前Tick的市场快照,模拟成交时需要获得当前市场快照用于进行取价操作
         /// </summary>

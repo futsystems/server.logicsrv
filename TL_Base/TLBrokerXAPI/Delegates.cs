@@ -55,4 +55,11 @@ namespace TradingLib.BrokerXAPI
     /// <param name="pSymbolField"></param>
     /// <param name="islast"></param>
     public delegate void CBOnSymbol(ref XSymbol pSymbolField,bool islast);
+
+    /// <summary>
+    /// 交易帐户财务信息查询回调委托
+    /// </summary>
+    /// <param name="?"></param>
+    /// <param name="islast"></param>
+    public delegate void CBOnAccountInfo(ref XAccountInfo pAccountInfo,bool islast);
 }
