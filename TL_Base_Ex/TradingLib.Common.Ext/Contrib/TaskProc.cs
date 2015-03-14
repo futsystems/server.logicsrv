@@ -161,37 +161,5 @@ namespace TradingLib.Common
             
         }
     }
-
-    ///// <summary>
-    ///// 将TaskProc置于try catch结构中运行,并记录错误运行输出
-    ///// </summary>
-    //internal class TaskProcWrapper
-    //{
-    //    TaskProc _proc;
-    //    public TaskProcWrapper(TaskProc proc)
-    //    {
-    //        _proc = proc;
-    //    }
-
-    //    public void DoTask()
-    //    {
-    //        try
-    //        {
-    //            _proc.DoTask();
-
-    //            //触发定时任务
-    //            if (_proc.TaskType == QSEnumTaskType.SPECIALTIME)
-    //            {
-    //                TLCtxHelper.EventSystem.FireSpecialTimeEvent(this, TaskEventArgs.TaskSuccess(_proc));
-    //            }
-    //        }
-    //        catch (Exception ex)
-    //        {
-    //            Util.Debug("Task Error:" + ex.ToString());
-    //            //触发任务执行异常
-    //            TLCtxHelper.EventSystem.FireTaskErrorEvent(this, TaskEventArgs.TaskFail(_proc, ex));
-    //        }
-    //    }
-    //}
     
 }

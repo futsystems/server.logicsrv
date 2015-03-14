@@ -8,6 +8,7 @@ using TradingLib.API;
 using TradingLib.Common;
 using Quartz;
 using Quartz.Impl;
+using Quartz.Impl.Matchers;
 
 
 namespace TradingLib.Core
@@ -23,12 +24,7 @@ namespace TradingLib.Core
     {
         const string CoreName = "TaskCentre";
         public string CoreId { get { return this.PROGRAME; } }
-
-        public static Log Logger = new Log("TaskCentre_Error", true, true, Util.ProgramData(CoreName), true);//日志组件
-
         System.Timers.Timer _timer = null;
-        //System.Timers.Timer _timerSpecial = null;
-        
 
         IScheduler _scheduler = null;
         public TaskCentre():base(TaskCentre.CoreName)
@@ -37,6 +33,8 @@ namespace TradingLib.Core
             ISchedulerFactory schedFact = new StdSchedulerFactory();
             _scheduler = schedFact.GetScheduler();
             
+            _scheduler.ListenerManager.AddTriggerListener(new TrgierListener(), GroupMatcher<TriggerKey>.AnyGroup());
+            _scheduler.ListenerManager.AddJobListener(new JobListener(), GroupMatcher<JobKey>.AnyGroup());
         }
 
         ConcurrentDictionary<string, ITask> taskUUIDMap = new ConcurrentDictionary<string, ITask>();
@@ -58,8 +56,7 @@ namespace TradingLib.Core
                     .UsingJobData("TaskUUID", task.TaskUUID)
                     .Build();
 
-
-                debug(" task xxxxxxxxxxx cron:" + task.CronExpression, QSEnumDebugLevel.ERROR);
+                //debug(" task xxxxxxxxxxx cron:" + task.CronExpression, QSEnumDebugLevel.ERROR);
 
                 ITrigger trigger = TriggerBuilder.Create()
                     .WithIdentity("Trigger-" + task.TaskUUID, "TriggerGroup")
@@ -104,14 +101,6 @@ namespace TradingLib.Core
                 _timer.Enabled = true;
                 _timer.Start();
             }
-            //if (_timerSpecial == null)
-            //{
-            //    _timerSpecial = new System.Timers.Timer();
-            //    _timerSpecial.Elapsed += new System.Timers.ElapsedEventHandler(TimeEventSpecial);
-            //    _timerSpecial.Interval = 1000;
-            //    _timerSpecial.Enabled = true;
-            //    _timerSpecial.Start();
-            //}
             _scheduler.Start();
         }
 
@@ -134,22 +123,7 @@ namespace TradingLib.Core
             _timer.Elapsed -= new System.Timers.ElapsedEventHandler(TimeEvent);
             _timer = null;
         }
-        ///// <summary>
-        ///// 以秒为频率定时检查特定时间执行的任务
-        ///// </summary>
-        ///// <param name="source"></param>
-        ///// <param name="e"></param>
-        //void TimeEventSpecial(object source, System.Timers.ElapsedEventArgs e)
-        //{
-        //    //Util.Debug("-----------------------------------------");
-        //    if (!TLCtxHelper.IsReady) return;
-        //    foreach (ITask t in TLCtxHelper.Ctx.TaskList.Where(task => task.TaskType == QSEnumTaskType.SPECIALTIME))
-        //    {
-        //        //Util.Debug("sec:" + DateTime.Now.Second.ToString() + " millisec:" + DateTime.Now.Millisecond.ToString(), QSEnumDebugLevel.INFO);
-        //        //Util.Debug("Task:" + t.TaskName + " Memo" + t.GetTaskMemo());
-        //        //t.CheckTask(e.SignalTime);
-        //    }
-        //}
+
 
         /// <summary>
         /// 以特定扫描频率100ms定时运行时间间隔执行的任务

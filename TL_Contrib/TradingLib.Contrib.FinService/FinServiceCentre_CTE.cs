@@ -23,10 +23,11 @@ namespace TradingLib.Contrib.FinService
             }
         }
 
-        [TaskAttr("配资帐户风控检查", "0/5 * * * * ?", "执行配资帐户风控检查")]
+        [TaskAttr("测试任务", "0/5 * * * * ?", "执行配资帐户风控检查")]
         public void Task_Demo()
         {
-            debug("demo Cron runing ...................................", QSEnumDebugLevel.ERROR);
+            debug("demo Cron runing ...................................22", QSEnumDebugLevel.ERROR);
+            throw new Exception("exception");
         }
 
 

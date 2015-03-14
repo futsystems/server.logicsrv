@@ -141,6 +141,7 @@
     <Compile Include="Core\MessageExchange\MsgExchServer.cs" />
     <Compile Include="Core\RiskCentre\RiskCentre.cs" />
     <Compile Include="Core\TaskCentre\TaskCentre_CTE.cs" />
+    <Compile Include="Core\TaskCentre\TaskListener.cs" />
     <Compile Include="Core\WebMessageExchange\WebMsgExchServer.cs" />
     <Compile Include="Core\WebMessageExchange\WebMsgExchServer_CTE.cs" />
     <Compile Include="Core\WebMessageExchange\WebMsgRepServer.cs" />
