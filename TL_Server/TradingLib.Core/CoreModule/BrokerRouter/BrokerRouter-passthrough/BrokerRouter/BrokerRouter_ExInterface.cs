@@ -28,12 +28,12 @@ namespace TradingLib.Core
         /// <param name="o"></param>
         public void SendOrder(Order o)
         {
-            debug("BrokerRouter try to send order out side:"+o.GetOrderInfo(), QSEnumDebugLevel.INFO);
+            logger.Info("BrokerRouter try to send order out side:" + o.GetOrderInfo());
             //通过交易帐户获得对应的通道
             IBroker broker = BasicTracker.ConnectorMapTracker.GetBrokerForAccount(o.Account);
             if (broker == null)
             {
-                debug("交易通道不存在", QSEnumDebugLevel.ERROR);
+                logger.Warn("交易通道不存在");
             }
 
             //通过交易通道直接发送委托

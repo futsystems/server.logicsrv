@@ -116,10 +116,10 @@ namespace TradingLib.Core
             _valid = true;
             if (_valid)
             {
-                debug("Trading Server Starting success");
+                logger.Info("Trading Server Starting success");
             }
             else
-                debug("Trading Server Starting failed.");
+                logger.Info("Trading Server Starting failed.");
         }
         public void Stop()
         {
@@ -128,7 +128,7 @@ namespace TradingLib.Core
             {
                 tl.Stop();
             }
-            debug("Manger server stopped....");
+            logger.Info("Manger server stopped....");
         }
 
 

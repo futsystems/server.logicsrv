@@ -66,7 +66,7 @@ namespace TradingLib.ServiceManager
             }
             catch (Exception ex)
             {
-                debug("start broker error:" + ex.ToString(),QSEnumDebugLevel.ERROR);
+                logger.Error("start broker error:" + ex.ToString());
             }
         }
 
@@ -79,7 +79,7 @@ namespace TradingLib.ServiceManager
             }
             catch (Exception ex)
             {
-                debug("start broker error:" + ex.ToString(),QSEnumDebugLevel.ERROR);
+                logger.Error("start broker error:" + ex.ToString());
             }
         }
         
@@ -87,14 +87,14 @@ namespace TradingLib.ServiceManager
         [ContribCommandAttr(QSEnumCommandSource.MessageWeb, "startdatafeed", "startdatafeed - 启动某个数据通道", "用于Web端启动某个数据通道")]
         public void StartDataFeedViaToken(string name)
         {
-            debug("启动数据通道:"+name, QSEnumDebugLevel.INFO);
+            logger.Info("启动数据通道:" + name);
             try
             {
                 StartDataFeed(name);
             }
             catch (Exception ex)
             {
-                debug("start datafeed error:" + ex.ToString());
+                logger.Error("start datafeed error:" + ex.ToString());
             }
         }
 
@@ -102,14 +102,14 @@ namespace TradingLib.ServiceManager
         [ContribCommandAttr(QSEnumCommandSource.MessageWeb, "stopdatafeed", "stopdatafeed - 停止某个数据通道", "用于Web端停止某个数据通道")]
         public void StopDataFeedViaToken(string name)
         {
-            debug("停止数据通道:" + name, QSEnumDebugLevel.INFO);
+            logger.Info("停止数据通道:" + name);
             try
             {
                 StopDataFeed(name);
             }
             catch (Exception ex)
             {
-                debug("stop datafeed error:" + ex.ToString());
+                logger.Error("stop datafeed error:" + ex.ToString());
             }
         }
         

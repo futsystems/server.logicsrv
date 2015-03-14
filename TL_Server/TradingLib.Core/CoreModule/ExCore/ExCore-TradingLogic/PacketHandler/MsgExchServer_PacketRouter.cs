@@ -19,7 +19,7 @@ namespace TradingLib.Core
             }
             else
             {
-                debug("packet:" + packet.ToString() + "写入优先缓存", QSEnumDebugLevel.INFO);
+                //logger.Info("packet:" + packet.ToString() + "写入优先缓存");
             }
         }
 
@@ -156,7 +156,7 @@ namespace TradingLib.Core
                     break;
 
                 default:
-                    debug("packet:" + packet.ToString() + " can not be handled", QSEnumDebugLevel.WARNING);
+                    logger.Warn("packet:" + packet.ToString() + " can not be handled");
                     break;
             }
         }

@@ -22,7 +22,7 @@ namespace TradingLib.Core
             if (!TLCtxHelper.ModuleSettleCentre.IsTradingday) return;
             this.OpenClearCentre();
             Notify("开启清算中心[" + DateTime.Now.ToString() + "]", " ");
-            debug("开启清算中心,准备接受客户委托", QSEnumDebugLevel.INFO);
+            logger.Info("开启清算中心,准备接受客户委托");
         }
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace TradingLib.Core
             this.CloseClearCentre();
             if (!TLCtxHelper.ModuleSettleCentre.IsTradingday) return;
             Notify("关闭清算中心[" + DateTime.Now.ToString() + "]", " ");
-            debug("关闭清算中心,将拒绝所有客户委托", QSEnumDebugLevel.INFO);
+            logger.Info("关闭清算中心,将拒绝所有客户委托");
         }
 
 

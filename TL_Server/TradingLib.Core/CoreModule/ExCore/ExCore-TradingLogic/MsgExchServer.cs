@@ -53,7 +53,7 @@ namespace TradingLib.Core
             try
             {
 
-                debug("初始化TradingServer");
+                logger.Info("初始化TradingServer");
 
                 
                 if (!_cfgdb.HaveConfig("TLServerIP"))
@@ -133,7 +133,7 @@ namespace TradingLib.Core
                         //{
                         //    ClientLoginInfoEvent(c, login);
                         //}
-                        debug("客户端:" + c.Location.ClientID + " 登入状态:"+login.ToString(), QSEnumDebugLevel.INFO);
+                        logger.Info("客户端:" + c.Location.ClientID + " 登入状态:" + login.ToString());
                     };
 
                 //初始化优先发送缓存对象
@@ -147,7 +147,7 @@ namespace TradingLib.Core
             }
             catch (Exception ex)
             {
-                debug("初始化服务异常:" + ex.ToString(),QSEnumDebugLevel.ERROR);
+                logger.Error("初始化服务异常:" + ex.ToString());
                 throw (new QSTradingServerInitError(ex));
             }
         }
@@ -227,11 +227,11 @@ namespace TradingLib.Core
             _valid = true;
             if (_valid)
             {
-                debug("Trading Server Starting success");
+                logger.Info("Trading Server Starting success");
                 Notify("启动", "启动时间:" + DateTime.Now.ToString());
             }
             else
-                debug("Trading Server Starting failed.");
+                logger.Info("Trading Server Starting failed.");
         }
 
         /// <summary>

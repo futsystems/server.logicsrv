@@ -16,7 +16,7 @@ namespace TradingLib.ServiceManager
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryConnectorConfig", "QryConnectorConfig - query broker config", "查询所有通道设置")]
         public void CTE_QueryConnectorConfig(ISession session)
         {
-            debug("查询所有通道设置", QSEnumDebugLevel.INFO);
+            logger.Info("查询所有通道设置");
             Manager manger = session.GetManager();
             if (manger.IsInRoot())
             {
@@ -42,7 +42,7 @@ namespace TradingLib.ServiceManager
         {
             try
             {
-                debug("查询默认通道设置", QSEnumDebugLevel.INFO);
+                logger.Info("查询默认通道设置");
                 Manager manger = session.GetManager();
                 if (manger.Domain.Super || manger.Domain.Dedicated)
                 {
@@ -97,7 +97,7 @@ namespace TradingLib.ServiceManager
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryConnectorStatus", "QryConnectorStatus - query connector status", "查询所有通道状态")]
         public void CTE_QueryConnectorStatus(ISession session)
         {
-            debug("查询所有通道状态", QSEnumDebugLevel.INFO);
+            logger.Info("查询所有通道状态");
             Manager manger = session.GetManager();
             if (manger.IsInRoot())
             {
@@ -110,7 +110,7 @@ namespace TradingLib.ServiceManager
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryDefaultConnectorStatus", "QryDefaultConnectorStatus - query connector status", "查询所有通道状态")]
         public void CTE_QryDefaultConnectorStatus(ISession session)
         {
-            debug("查询所有通道状态", QSEnumDebugLevel.INFO);
+            logger.Info("查询所有通道状态");
             Manager manger = session.GetManager();
             if (manger.IsInRoot())
             {

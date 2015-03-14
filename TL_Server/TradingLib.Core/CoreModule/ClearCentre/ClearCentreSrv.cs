@@ -74,7 +74,7 @@ namespace TradingLib.Core
         {
             if (_status == QSEnumClearCentreStatus.CCOPEN)
             {
-                debug("平仓明细生成:" + obj.GetPositionCloseStr(), QSEnumDebugLevel.INFO);
+                logger.Info("平仓明细生成:" + obj.GetPositionCloseStr());
                 TLCtxHelper.ModuleDataRepository.NewPositionCloseDetail(obj);
             }
         }
@@ -89,7 +89,7 @@ namespace TradingLib.Core
             Status = QSEnumClearCentreStatus.CCRESET;
             
             //清空分帐户维护器交易记录
-            debug("清算中心重置", QSEnumDebugLevel.INFO);
+            logger.Info("清算中心重置");
             foreach (IAccount a in TLCtxHelper.ModuleAccountManager.Accounts)
             {
                 a.Reset();

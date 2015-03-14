@@ -58,7 +58,7 @@ namespace TradingLib.Core
                 //执行常规检查,step1检查不涉及帐户类的检查不用加锁 常规检查部分拒绝的委托不记录到数据库 避免记录很多无效委托
                 if (riskcheck)
                 {
-                    debug("Got Order[Check1]:" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
+                    logger.Info("Got Order[Check1]:" + o.GetOrderInfo());
                     string errortitle = string.Empty;
                     bool needlog = true;
 
@@ -70,7 +70,7 @@ namespace TradingLib.Core
                         o.Comment = "风控拒绝:" + info.ErrorMessage;
                         ReplyErrorOrder(o, info, needlog);
 
-                        debug("委托(" + o.id.ToString() + ")被拒绝,ErrorID:" + errortitle + " ErrorMesssage:" + info.ErrorMessage + " needlog:" + needlog.ToString(), QSEnumDebugLevel.WARNING);
+                        logger.Warn("委托(" + o.id.ToString() + ")被拒绝,ErrorID:" + errortitle + " ErrorMesssage:" + info.ErrorMessage + " needlog:" + needlog.ToString());
                         return;
                     }
                 }
@@ -83,7 +83,7 @@ namespace TradingLib.Core
                     string msg = "";
                     if (riskcheck)
                     {
-                        debug("Got Order[Check2]:" + o.id.ToString(), QSEnumDebugLevel.INFO);
+                        logger.Info("Got Order[Check2]:" + o.id.ToString());
                         if (!TLCtxHelper.ModuleRiskCentre.CheckOrderStep2(ref o, acc, out msg, inter))
                         {
                             o.Status = QSEnumOrderStatus.Reject;
@@ -92,7 +92,7 @@ namespace TradingLib.Core
                             o.Comment = "风控拒绝:" + info.ErrorMessage;
                             ReplyErrorOrder(o, info,false);
 
-                            debug("委托(" + o.id.ToString() + ")被拒绝,ErrorID:" + info.ErrorID.ToString() + " ErrorMesssage:" + info.ErrorMessage, QSEnumDebugLevel.WARNING);
+                            logger.Warn("委托(" + o.id.ToString() + ")被拒绝,ErrorID:" + info.ErrorID.ToString() + " ErrorMesssage:" + info.ErrorMessage);
                             return;
                         }
                     }
@@ -113,7 +113,7 @@ namespace TradingLib.Core
             catch (Exception ex)
             {
                 //向外层抛出异常
-                debug("OrderRequestHandler error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                logger.Error("OrderRequestHandler error:" + ex.ToString());
                 throw (new QSTradingServerSendOrderError(ex));
             }
 

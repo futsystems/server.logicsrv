@@ -46,11 +46,11 @@ namespace TradingLib.Core
                 {
                     RuleClassItem item = RuleClassItem.Type2RuleClassItem(t);
                     dicRule.Add(item.ClassName, item);
-                    debug("[RuleSet Loaded] " + item.ClassName, QSEnumDebugLevel.INFO);
+                    logger.Info("[RuleSet Loaded] " + item.ClassName);
                 }
                 catch (Exception ex)
                 {
-                    debug("OrderRuleSet:" + t.FullName + " load error:"+ex.ToString(), QSEnumDebugLevel.ERROR);
+                    logger.Error("OrderRuleSet:" + t.FullName + " load error:" + ex.ToString());
                 }
             }
 
@@ -60,11 +60,11 @@ namespace TradingLib.Core
                 {
                     RuleClassItem item = RuleClassItem.Type2RuleClassItem(t);
                     dicRule.Add(item.ClassName, item);
-                    debug("[RuleSet Loaded] " + item.ClassName, QSEnumDebugLevel.INFO);
+                    logger.Info("[RuleSet Loaded] " + item.ClassName);
                 }
                 catch (Exception ex)
                 {
-                    debug("AccountRuleSet:" + t.FullName + " load error", QSEnumDebugLevel.ERROR);
+                    logger.Error("AccountRuleSet:" + t.FullName + " load error");
                 }
             }
         }
@@ -75,7 +75,7 @@ namespace TradingLib.Core
         /// <param name="a"></param>
         public void LoadRuleItem(IAccount account)
         {
-            debug("加载账户:" + account.ID + " 账户规则", QSEnumDebugLevel.DEBUG);
+            logger.Info("加载账户:" + account.ID + " 账户规则");
             foreach (RuleItem item in ORM.MRuleItem.SelectRuleItem(account.ID, QSEnumRuleType.OrderRule))
             {
                 AddRule(account, item);
@@ -98,7 +98,7 @@ namespace TradingLib.Core
         /// <param name="item"></param>
         void AddRule(IAccount account,RuleItem item)
         {
-            debug("添加风控项，帐户:" + account.ID + " rultename:" + item.RuleName, QSEnumDebugLevel.INFO);
+            logger.Info("添加风控项，帐户:" + account.ID + " rultename:" + item.RuleName);
             RuleClassItem klassitem = null;
             //从风控类型字典中找到对应的类型并进行实例化
             if (dicRule.TryGetValue(item.RuleName, out klassitem))

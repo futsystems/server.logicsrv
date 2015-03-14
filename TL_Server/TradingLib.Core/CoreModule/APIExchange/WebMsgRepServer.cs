@@ -55,7 +55,7 @@ namespace TradingLib.Core
         {
             if (_started)
                 return;
-            debug("Start " + PROGRAME, QSEnumDebugLevel.INFO);
+            logger.Info("Start " + PROGRAME);
             //启动主服务线程
 
             _srvgo = true;
@@ -71,7 +71,7 @@ namespace TradingLib.Core
             //这里是否可以用thread.join来解决？
             while ((_mainthreadready != true) && (_wait++ < 5))
             {
-                debug("#:" + _wait.ToString() + "webchannelServer is starting.....");
+                logger.Info("#:" + _wait.ToString() + "webchannelServer is starting.....");
                 Thread.Sleep(500);
             }
 
@@ -93,7 +93,7 @@ namespace TradingLib.Core
             int _wait = 0;
             while ((_srvThread.IsAlive == true) && (_wait++ < 5))
             {
-                debug("#:" + _wait.ToString() + "  #mainthread:" + _srvThread.IsAlive.ToString() + "  webchannelServer is stoping.....");
+                logger.Info("#:" + _wait.ToString() + "  #mainthread:" + _srvThread.IsAlive.ToString() + "  webchannelServer is stoping.....");
                 Thread.Sleep(1000);
             }
             _srvThread.Abort();
@@ -101,7 +101,7 @@ namespace TradingLib.Core
             if (!_srvThread.IsAlive)
             {
                 _started = false;
-                debug("WebMsgRepServer Stopped successfull", QSEnumDebugLevel.INFO);
+                logger.Info("WebMsgRepServer Stopped successfull");
             }
             else
                 throw new QSAsyncServerError();
@@ -125,7 +125,7 @@ namespace TradingLib.Core
                         try
                         {
                             string str = rep.Receive(Encoding.UTF8);
-                            debug("WebAPI Request:" + str, QSEnumDebugLevel.INFO);
+                            logger.Info("WebAPI Request:" + str);
                             JsonReply re = handleWebTask(str);
                             if (re != null)
                             {
@@ -139,7 +139,7 @@ namespace TradingLib.Core
                         }
                         catch (Exception ex)
                         {
-                            debug("deal wektask error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                            logger.Error("deal wektask error:" + ex.ToString());
                         }
 
                     };
@@ -154,14 +154,14 @@ namespace TradingLib.Core
                             poller.Poll(PollerTimeOut);
                             if(!_srvgo)
                             {
-                                debug("main thread stopped,stop socket", QSEnumDebugLevel.INFO);
+                                logger.Info("main thread stopped,stop socket");
                                 rep.Close();
                             
                             }
                         }
                         catch (ZmqException e)
                         {
-                            debug("%%%%main server message error" + e.ToString());
+                            logger.Error("%%%%main server message error" + e.ToString());
                         }
 
                     }

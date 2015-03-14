@@ -110,7 +110,7 @@ namespace TradingLib.Core
         {
             if (_started)
                 return;
-            debug("Start Message Transport Service @" + PROGRAME);
+            logger.Info("Start Message Transport Service @" + PROGRAME);
             //启动主服务线程
             _workergo = true;
             _srvgo = true;
@@ -121,7 +121,7 @@ namespace TradingLib.Core
             ThreadTracker.Register(_srvThread);
 
 
-            debug("Start  Names REQ Service @" + PROGRAME);
+            logger.Info("Start  Names REQ Service @" + PROGRAME);
             //启动服务响应查询线程
             _namesgo = true;
             _namesThread = new Thread(new ThreadStart(NameLookup));
@@ -135,18 +135,18 @@ namespace TradingLib.Core
             //防止过早返回 服务没有启动造成的程序混乱
             while ((_mainthreadready != true || _serverDNSthreadready != true) && (_wait++ < 5))
             {
-                debug("#:" + _wait.ToString() + "mainthread:" + _mainthreadready.ToString() + " dnsthread:" + _serverDNSthreadready.ToString() + "AsyncServer is starting.....");
+                logger.Info("#:" + _wait.ToString() + "mainthread:" + _mainthreadready.ToString() + " dnsthread:" + _serverDNSthreadready.ToString() + "AsyncServer is starting.....");
                 Thread.Sleep(500);
             }
             //当主线程与名成查询线程全部启动时候我们认为服务启动完毕否则我们抛出异常
             if (IsLive)
             {
-                debug("Starting " + PROGRAME + " successfull");
+                logger.Info("Starting " + PROGRAME + " successfull");
                 _started = true;
             }
             else
             {
-                debug("Starting " + PROGRAME + " Failed");
+                logger.Info("Starting " + PROGRAME + " Failed");
                 throw new QSAsyncServerError();
             }
         }
@@ -170,60 +170,60 @@ namespace TradingLib.Core
             if (!_started)
                 return;
             //停止服务查询端口
-            debug(string.Format("Stop Names REQ  Service[{0}]",PROGRAME),QSEnumDebugLevel.INFO);
+            logger.Info(string.Format("Stop Names REQ  Service[{0}]", PROGRAME));
             _namesgo = false;
             int namewait=0;
 
             while (IsNameServerAlive && namewait <10)
             {
-                debug(string.Format("#{0} wait name req server stopping....",namewait),QSEnumDebugLevel.INFO);
+                logger.Info(string.Format("#{0} wait name req server stopping....", namewait));
                 Thread.Sleep(2000);
                 namewait++;
             }
             if (!IsNameServerAlive)
             {
-                debug("Names REQ  Service Stopped successfull",QSEnumDebugLevel.INFO);
+                logger.Info("Names REQ  Service Stopped successfull");
             }
 
             //停止工作线程
-            debug(string.Format("Stop MessageRouter Service[{0}]",PROGRAME),QSEnumDebugLevel.INFO);
-            debug("1.Stop WorkerThreads",QSEnumDebugLevel.INFO);
+            logger.Info(string.Format("Stop MessageRouter Service[{0}]", PROGRAME));
+            logger.Info("1.Stop WorkerThreads");
             _workergo = false;
             for(int i = 0; i < workers.Count; i++)
             {
                 int workwait = 0;
                 while (workers[i].IsAlive && workwait < 10)
                 {
-                    debug(string.Format("#{0} wait worker[{1}]  stopping....",workwait,i), QSEnumDebugLevel.INFO);
+                    logger.Info(string.Format("#{0} wait worker[{1}]  stopping....", workwait, i));
                     Thread.Sleep(1000);
                     workwait++;
                 }
                 if (!workers[i].IsAlive)
-                    debug("worker[" + i.ToString() + "] stopped successfull",QSEnumDebugLevel.INFO);
+                    logger.Info("worker[" + i.ToString() + "] stopped successfull");
             }
 
             //停止主消息路由线程
-            debug("2.Stop RouteThread",QSEnumDebugLevel.INFO);
+            logger.Info("2.Stop RouteThread");
             _srvgo = false;
             int mainwait=0;
             while (IsMainServerAlive && mainwait < 10)
             {
-                debug(string.Format("#{0} wait mainthread stopping....",mainwait), QSEnumDebugLevel.INFO);
+                logger.Info(string.Format("#{0} wait mainthread stopping....", mainwait));
                 Thread.Sleep(1000);
                 mainwait++;
             }
             if (!IsMainServerAlive)
             {
-                debug("MainThread stopped successfull", QSEnumDebugLevel.INFO);
+                logger.Info("MainThread stopped successfull");
             }
 
             if((!IsMainServerAlive)&&(!IsNameServerAlive))
             {
-                debug(string.Format("Stop transport of {0} successfull",PROGRAME),QSEnumDebugLevel.INFO);
+                logger.Info(string.Format("Stop transport of {0} successfull", PROGRAME));
             }
             else
             {
-                debug(string.Format("Stop transport of {0} error",PROGRAME),QSEnumDebugLevel.ERROR);
+                logger.Error(string.Format("Stop transport of {0} error", PROGRAME));
             }
         }
 
@@ -279,7 +279,7 @@ namespace TradingLib.Core
                                         }
                                         catch (Exception ex)
                                         {
-                                            debug("error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                                            logger.Error("error:" + ex.ToString());
                                         }
                                         //int id = (int)_pn;
                                         //rep.Send(id.ToString(), Encoding.UTF8);
@@ -309,7 +309,7 @@ namespace TradingLib.Core
                         }
                         catch (Exception ex)
                         {
-                            debug("deal wektask error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                            logger.Error("deal wektask error:" + ex.ToString());
                         }
 
                     };
@@ -324,13 +324,13 @@ namespace TradingLib.Core
                             poller.Poll(PollerTimeOut);
                             if (!_namesgo)
                             {
-                                debug("Names thread stopped,try to close socket", QSEnumDebugLevel.INFO);
+                                logger.Info("Names thread stopped,try to close socket");
                                 rep.Close();
                             }
                         }
                         catch (ZmqException e)
                         {
-                            debug("names look up error" + e.ToString());
+                            logger.Error("names look up error" + e.ToString());
                         }
 
                     }
@@ -476,7 +476,7 @@ namespace TradingLib.Core
                             poller.Poll(PollerTimeOut);
                             if (!_srvgo)
                             {
-                                debug("messageroute thread stop,try to clear socket",QSEnumDebugLevel.INFO);
+                                logger.Info("messageroute thread stop,try to clear socket");
                                 frontend.Close();
                                 backend.Close();
                                 publisher.Close();
@@ -486,11 +486,11 @@ namespace TradingLib.Core
                         }
                         catch (ZmqException e)
                         {
-                            debug(PROGRAME + ":MainThread[ZmqExcetion]" + e.ToString(), QSEnumDebugLevel.ERROR);
+                            logger.Error(PROGRAME + ":MainThread[ZmqExcetion]" + e.ToString());
                         }
                         catch (System.Exception ex)
                         {
-                            debug(PROGRAME + ":MainThread[Excetion]" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                            logger.Error(PROGRAME + ":MainThread[Excetion]" + ex.ToString());
                         }
 
                     }
@@ -526,14 +526,14 @@ namespace TradingLib.Core
                         poller.Poll(PollerTimeOut);
                         if (!_workergo)
                         {
-                            debug(string.Format("worker thread[{0}] stopped,close worker socket",id), QSEnumDebugLevel.INFO);
+                            logger.Info(string.Format("worker thread[{0}] stopped,close worker socket", id));
                             worker.Close();
                         }
 
                     }
                     catch (ZmqException e)
                     {
-                        debug(string.Format("worker {0} proc error:",id) + e.ToString());
+                        logger.Error(string.Format("worker {0} proc error:", id) + e.ToString());
                     }
                 }
             }
@@ -637,18 +637,18 @@ namespace TradingLib.Core
             }
             catch (ZmqException e)
             {
-                debug(PROGRAME + ":Worker[" + id.ToString() + "][ZmqExcetion]" + e.ToString(), QSEnumDebugLevel.ERROR);
+                logger.Error(PROGRAME + ":Worker[" + id.ToString() + "][ZmqExcetion]" + e.ToString());
                 return;
             }
             //捕捉QSTradingServerError(客户端向服务端请求操作所引发的异常)
             catch (QSTradingServerError ex)
             {
-                debug(PROGRAME + ":Worker[" + id.ToString() + "][QSExcetion]" + ex.Label + " " + ex.RawException.Message, QSEnumDebugLevel.ERROR);
+                logger.Error(PROGRAME + ":Worker[" + id.ToString() + "][QSExcetion]" + ex.Label + " " + ex.RawException.Message);
                 return;
             }
             catch (System.Exception ex)
             {
-                debug(PROGRAME + ":Worker[" + id.ToString() + "][Excetion]" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                logger.Error(PROGRAME + ":Worker[" + id.ToString() + "][Excetion]" + ex.ToString());
                 return;
             }
 

@@ -74,14 +74,14 @@ namespace TradingLib.ServiceManager
             Util.LoadStatus(this.PROGRAME, true);
             foreach (string key in contribmap.Keys)
             {
-                debug("[LOAD CONTRIB] " + key,QSEnumDebugLevel.INFO);
+                logger.Info("[LOAD CONTRIB] " + key);
                 try
                 {
                     contribmap[key].OnLoad();
                 }
                 catch (Exception ex)
                 {
-                    debug("load:" + key + "error:" + ex.ToString(),QSEnumDebugLevel.ERROR);
+                    logger.Error("load:" + key + "error:" + ex.ToString());
                 }
             }
         }
@@ -93,14 +93,14 @@ namespace TradingLib.ServiceManager
             Util.DestoryStatus(this.PROGRAME, true);
             foreach (string key in contribmap.Keys)
             {
-                debug("[RELEASE CONTRIB] " + key, QSEnumDebugLevel.INFO);
+                logger.Info("[RELEASE CONTRIB] " + key);
                 try
                 {
                     contribmap[key].OnDestory();
                 }
                 catch (Exception ex)
                 {
-                    debug("release:" + key + "error:" + ex.ToString(),QSEnumDebugLevel.ERROR);
+                    logger.Error("release:" + key + "error:" + ex.ToString());
                 }
             }
         }
@@ -113,7 +113,7 @@ namespace TradingLib.ServiceManager
             Util.StartStatus(this.PROGRAME, true);
             foreach (string key in contribmap.Keys)
             {
-                debug(string.Format("[START CONTRIB] {0}", key), QSEnumDebugLevel.INFO);
+                logger.Info(string.Format("[START CONTRIB] {0}", key));
                 try
                 {
                     contribmap[key].Start();
@@ -134,7 +134,7 @@ namespace TradingLib.ServiceManager
             Util.StopStatus(this.PROGRAME, true);
             foreach (string key in contribmap.Keys)
             {
-                debug(string.Format("[STOP CONTRIB] {0}", key), QSEnumDebugLevel.INFO);
+                logger.Info(string.Format("[STOP CONTRIB] {0}", key));
                 try
                 {
                     contribmap[key].Stop();

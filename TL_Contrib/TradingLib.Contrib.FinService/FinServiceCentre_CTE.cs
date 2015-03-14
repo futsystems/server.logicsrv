@@ -28,7 +28,7 @@ namespace TradingLib.Contrib.FinService
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryAgentSPArg", "QryAgentSPArg - qry agent sparg  of account", "查询代理某个服务计划的参数")]
         public void CTE_QryAgentSPArg(ISession session, int agentfk, int spfk)
         {
-            debug("查询代理:" + agentfk.ToString() + " 的配资服务计划:" + spfk.ToString()+" 参数", QSEnumDebugLevel.INFO);
+            logger.Info("查询代理:" + agentfk.ToString() + " 的配资服务计划:" + spfk.ToString() + " 参数");
             Manager m = BasicTracker.ManagerTracker[agentfk];
             //session.ManagerID 对应的登入ID 这里需要用AgentFK标识
             if (m == null)
@@ -95,7 +95,7 @@ namespace TradingLib.Contrib.FinService
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAgentSPArg", "UpdateAgentSPArg - update agent service plan arg  of account", "更新代理配资服务计划参数", QSEnumArgParseType.Json)]
         public void CTE_UpdateAgentSPArg(ISession session, string playload)
         {
-            debug("arg:" + playload, QSEnumDebugLevel.INFO);
+            logger.Info("arg:" + playload);
             JsonWrapperServicePlanAgentArgument target = Mixins.Json.JsonMapper.ToObject<JsonWrapperServicePlanAgentArgument>(playload);
             
             //更新参数
@@ -120,7 +120,7 @@ namespace TradingLib.Contrib.FinService
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryFinService", "QryFinService - query finservice of account", "查询某个帐户的配资服务")]
         public void CTE_QryFinService(ISession session, string account)
         {
-            debug("查询帐户:" + account + "的配资服务", QSEnumDebugLevel.INFO);
+            logger.Info("查询帐户:" + account + "的配资服务");
             IAccount acc = TLCtxHelper.ModuleAccountManager[account];
             if (acc == null)
             {
@@ -157,10 +157,10 @@ namespace TradingLib.Contrib.FinService
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateArguments", "UpdateArguments - update argument of finservice", "更新某个帐户的配资参数", QSEnumArgParseType.Json)]
         public void CTE_UpdateArguments(ISession session,string playload)
         {
-            debug("arg:" + playload, QSEnumDebugLevel.INFO);
+            logger.Info("arg:" + playload);
             JsonWrapperFinServiceStub target = Mixins.Json.JsonMapper.ToObject<JsonWrapperFinServiceStub>(playload);
 
-            debug("更新帐户:" + target.Account+ "的配资服务参数", QSEnumDebugLevel.INFO);
+            logger.Info("更新帐户:" + target.Account + "的配资服务参数");
             IAccount acc = TLCtxHelper.ModuleAccountManager[target.Account];
             if (acc == null)
             {
@@ -204,7 +204,7 @@ namespace TradingLib.Contrib.FinService
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "ChangeServicePlane", "ChangeServicePlane - add or change finservice of account", "添加或者修改某个帐户的配资服务", QSEnumArgParseType.Json)]
         public void CTE_ChangeServicePlane(ISession session, string playload)
         {
-            debug("request:" + playload, QSEnumDebugLevel.INFO);
+            logger.Info("request:" + playload);
             JsonWrapperChgServicePlaneRequest request = TradingLib.Mixins.Json.JsonMapper.ToObject<JsonWrapperChgServicePlaneRequest>(playload);
             string account = request.Account;
             int serviceplan_fk = request.ServicePlaneFK;
@@ -236,7 +236,7 @@ namespace TradingLib.Contrib.FinService
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "DeleteServicePlane", "DeleteServicePlane - delete of account", "添加或者修改某个帐户的配资服务", QSEnumArgParseType.Json)]
         public void CTE_DeleteServicePlane(ISession session, string account)
         {
-            debug("删除帐户:"+account+"的配资服务", QSEnumDebugLevel.INFO);
+            logger.Info("删除帐户:" + account + "的配资服务");
             IAccount acc = TLCtxHelper.ModuleAccountManager[account];
             if (acc == null)
             {

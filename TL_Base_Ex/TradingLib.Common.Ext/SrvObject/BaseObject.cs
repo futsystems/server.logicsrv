@@ -16,7 +16,7 @@ namespace TradingLib.Common
     /// </summary>
     public class BaseSrvObject:IDisposable
     {
-        protected ILog log = null;
+        protected ILog logger = null;
         /// <summary>
         /// 服务端对象名称
         /// </summary>
@@ -29,7 +29,7 @@ namespace TradingLib.Common
         {
             try
             {
-                log = LogManager.GetLogger(programe);
+                logger = LogManager.GetLogger(programe);
 
                 PROGRAME = programe;
                 _uuid = System.Guid.NewGuid().ToString();
@@ -125,32 +125,32 @@ namespace TradingLib.Common
         /// <param name="msg"></param>
         /// <param name="level"></param>
 		//[Conditional("DEBUG")]
-        protected void debug(string msg, QSEnumDebugLevel level = QSEnumDebugLevel.DEBUG)
-        {
-            //if (_debugEnable && (int)level <= (int)_debuglevel && SendLogItemEvent != null)
-            //{
-            //    ILogItem item = new LogItem(msg, level, this.PROGRAME);
-            //    SendLogItemEvent(item);
-            //}
+        //protected void debug(string msg, QSEnumDebugLevel level = QSEnumDebugLevel.DEBUG)
+        //{
+        //    //if (_debugEnable && (int)level <= (int)_debuglevel && SendLogItemEvent != null)
+        //    //{
+        //    //    ILogItem item = new LogItem(msg, level, this.PROGRAME);
+        //    //    SendLogItemEvent(item);
+        //    //}
             
-            switch (level)
-            {
-                case QSEnumDebugLevel.DEBUG:
-                    log.Debug(msg);
-                    break;
-                case QSEnumDebugLevel.ERROR:
-                    log.Error(msg);
-                    break;
-                case QSEnumDebugLevel.INFO:
-                    log.Info(msg);
-                    break;
-                default:
-                    log.Debug(msg);
-                    break;
+        //    switch (level)
+        //    {
+        //        case QSEnumDebugLevel.DEBUG:
+        //            log.Debug(msg);
+        //            break;
+        //        case QSEnumDebugLevel.ERROR:
+        //            log.Error(msg);
+        //            break;
+        //        case QSEnumDebugLevel.INFO:
+        //            log.Info(msg);
+        //            break;
+        //        default:
+        //            log.Debug(msg);
+        //            break;
 
-            }
+        //    }
             
-        }
+        //}
         #endregion
 
     }

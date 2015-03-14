@@ -106,7 +106,7 @@ namespace TradingLib.Core
         /// <param name="error"></param>
         void GotOrderError(Order order, RspInfo info)
         {
-            debug("Got Orrder Error ID:" + order.id.ToString(), QSEnumDebugLevel.INFO);
+            logger.Info("Got Orrder Error ID:" + order.id.ToString());
             foreach (RiskTaskSet ps in posflatlist)
             {
                 //如果委托被拒绝 并且委托ID是本地发送过去的ID 则将positionflatset的委托ID置0
@@ -135,7 +135,7 @@ namespace TradingLib.Core
 
             foreach (RiskTaskSet tmp in list)
             {
-                debug("Position:" + tmp.Position.GetPositionKey() + " 已经平掉,从队列中移除", QSEnumDebugLevel.INFO);
+                logger.Info("Position:" + tmp.Position.GetPositionKey() + " 已经平掉,从队列中移除");
                 posflatlist.Remove(tmp);
                 //通过事件中继触发事件
                 TLCtxHelper.EventSystem.FirePositionFlatEvent(this, new PositionFlatEventArgs(tmp.Position));

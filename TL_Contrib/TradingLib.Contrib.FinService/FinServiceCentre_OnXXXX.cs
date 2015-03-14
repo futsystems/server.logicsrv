@@ -15,8 +15,8 @@ namespace TradingLib.Contrib.FinService
             FinServiceStub stub = FinTracker.FinServiceTracker[fill.Account];
             if (stub == null)
                 return fill.Commission;
-            
-            debug("got commssion adjust event", QSEnumDebugLevel.INFO);
+
+            logger.Info("got commssion adjust event");
             return stub.OnAdjustCommission(fill, positionround);
         }
 
@@ -31,7 +31,7 @@ namespace TradingLib.Contrib.FinService
             if (stub == null)
                 return;
             stub.OnTrade(t);
-            debug("got fill event",QSEnumDebugLevel.INFO);
+            logger.Info("got fill event");
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace TradingLib.Contrib.FinService
             if (stub == null)
                 return;
             stub.OnRound(pr);
-            debug("got pr close event",QSEnumDebugLevel.INFO);
+            logger.Info("got pr close event");
         }
     }
 }

@@ -13,7 +13,7 @@ namespace TradingLib.Core
         {
             try
             {
-                debug(string.Format("管理员:{0} 请求查询历史委托:{1}", session.AuthorizedID, request.ToString()), QSEnumDebugLevel.INFO);
+                logger.Info(string.Format("管理员:{0} 请求查询历史委托:{1}", session.AuthorizedID, request.ToString()));
 
                 //权限验证
                 manager.ValidRightReadAccount(request.TradingAccount);
@@ -46,7 +46,7 @@ namespace TradingLib.Core
 
         void SrvnMGRQryTrade(MGRQryTradeRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求查询历史成交:{1}", session.AuthorizedID, request.ToString()), QSEnumDebugLevel.INFO);
+            logger.Info(string.Format("管理员:{0} 请求查询历史成交:{1}", session.AuthorizedID, request.ToString()));
 
             //权限验证
             manager.ValidRightReadAccount(request.TradingAccount);
@@ -74,7 +74,7 @@ namespace TradingLib.Core
 
         void SrvOnMGRQryPosition(MGRQryPositionRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求查询历史持仓:{1}", session.AuthorizedID, request.ToString()), QSEnumDebugLevel.INFO);
+            logger.Info(string.Format("管理员:{0} 请求查询历史持仓:{1}", session.AuthorizedID, request.ToString()));
 
             //权限验证
             manager.ValidRightReadAccount(request.TradingAccount);
@@ -100,7 +100,7 @@ namespace TradingLib.Core
 
         void SrvOnMGRQryCash(MGRQryCashRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求查询出入金记录:{1}", session.AuthorizedID, request.ToString()), QSEnumDebugLevel.INFO);
+            logger.Info(string.Format("管理员:{0} 请求查询出入金记录:{1}", session.AuthorizedID, request.ToString()));
 
             try
             {
@@ -134,7 +134,7 @@ namespace TradingLib.Core
 
         void SrvOnMGRQrySettlement(MGRQrySettleRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求查询结算记录:{1}", session.AuthorizedID, request.ToString()), QSEnumDebugLevel.INFO);
+            logger.Info(string.Format("管理员:{0} 请求查询结算记录:{1}", session.AuthorizedID, request.ToString()));
 
             try
             {

@@ -13,8 +13,8 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryRuleSet", "QryRuleSet - query rule set", "查询风控规则集")]
         public void CTE_QryRuleSet(ISession session)
         {
-            
-            debug(string.Format("管理员:{0} 请求查询风控规则", session.AuthorizedID), QSEnumDebugLevel.INFO);
+
+            logger.Info(string.Format("管理员:{0} 请求查询风控规则", session.AuthorizedID));
 
             RuleClassItem[] items = this.GetRuleClassItems().ToArray();
             int totalnum = items.Length;
@@ -24,19 +24,11 @@ namespace TradingLib.Core
             {
                 for (int i = 0; i < totalnum; i++)
                 {
-                    //RspMGRQryRuleSetResponse response = ResponseTemplate<RspMGRQryRuleSetResponse>.SrvSendRspResponse(request);
-                    //response.RuleClassItem = items[i];
-                    //CacheRspResponse(response, i == totalnum - 1);
-                    debug("classitem:" + items[i].Serialize(),QSEnumDebugLevel.ERROR);
-                    debug("classjson:" + TradingLib.Mixins.Json.JsonMapper.ToJson(items[i]));
                     session.ReplyMgr(items[i], i == totalnum - 1);
                 }
             }
             else
             {
-                //RspMGRQryRuleSetResponse response = ResponseTemplate<RspMGRQryRuleSetResponse>.SrvSendRspResponse(request);
-                //CacheRspResponse(response);
-
                 session.ReplyMgr(null);
             }
         }
@@ -46,7 +38,7 @@ namespace TradingLib.Core
         {
             try
             {
-                debug(string.Format("管理员:{0} 请求更新风控规则:{1}", session.AuthorizedID, json), QSEnumDebugLevel.INFO);
+                logger.Info(string.Format("管理员:{0} 请求更新风控规则:{1}", session.AuthorizedID, json));
                 RuleItem item = Mixins.Json.JsonMapper.ToObject<RuleItem>(json);
                 this.UpdateRule(item);
                 session.ReplyMgr(item);
@@ -66,7 +58,7 @@ namespace TradingLib.Core
         {
             try
             {
-                debug(string.Format("管理员:{0} 请求查询帐户分控规则列表:{1}", session.AuthorizedID, json.ToString()), QSEnumDebugLevel.INFO);
+                logger.Info(string.Format("管理员:{0} 请求查询帐户分控规则列表:{1}", session.AuthorizedID, json.ToString()));
 
                 List<RuleItem> items = new List<RuleItem>();
                 var req = Mixins.Json.JsonMapper.ToObject(json);
@@ -134,7 +126,7 @@ namespace TradingLib.Core
         {
             try
             {
-                debug(string.Format("管理员:{0} 请求删除风控项:{1}", session.AuthorizedID,json), QSEnumDebugLevel.INFO);
+                logger.Info(string.Format("管理员:{0} 请求删除风控项:{1}", session.AuthorizedID, json));
                 RuleItem item = Mixins.Json.JsonMapper.ToObject<RuleItem>(json);
                 this.DeleteRiskRule(item);
                 //RspMGRDelRuleItemResponse response = ResponseTemplate<RspMGRDelRuleItemResponse>.SrvSendRspResponse(request);

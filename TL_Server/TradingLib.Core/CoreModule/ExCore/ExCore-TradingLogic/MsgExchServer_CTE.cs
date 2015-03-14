@@ -144,7 +144,7 @@ namespace TradingLib.Core
 
         public void Reset()
         {
-            debug("重置交易消息交换服务", QSEnumDebugLevel.INFO);
+            logger.Info("重置交易消息交换服务");
             //TLCtxHelper.ModuleBrokerRouter.Reset();
             //TLCtxHelper.ModuleDataRouter.Reset();
         }
@@ -184,7 +184,7 @@ namespace TradingLib.Core
                     int fillsize = account.FilledSize(o.id);
                     bool iscancel = account.IsCanceled(o.id);
                     bool iscomplete = account.IsComplate(o.id);
-                    debug("OrderStatus:" + o.Status.ToString() + " SentSize:" + sentsize.ToString() + " FillSize:" + fillsize.ToString() + " IsCanceled:" + iscancel.ToString() + " IsComplete:" + iscomplete.ToString(), QSEnumDebugLevel.INFO);
+                    logger.Info("OrderStatus:" + o.Status.ToString() + " SentSize:" + sentsize.ToString() + " FillSize:" + fillsize.ToString() + " IsCanceled:" + iscancel.ToString() + " IsComplete:" + iscomplete.ToString());
                     Order tmp = new OrderImpl(o);
                     //将全部成交或部分成交的委托进行补充处理
                     //全部成交

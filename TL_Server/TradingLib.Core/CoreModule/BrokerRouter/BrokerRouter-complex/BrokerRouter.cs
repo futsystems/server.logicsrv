@@ -89,7 +89,7 @@ namespace TradingLib.Core
 
         void EventSystem_SettleResetEvent(object sender, SystemEventArgs e)
         {
-            debug("重置交易路由服务", QSEnumDebugLevel.INFO);
+            logger.Info("重置交易路由服务");
             this.Reset();
         }
 

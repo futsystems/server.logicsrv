@@ -294,7 +294,7 @@ namespace TradingLib.Core
                 }
                 catch (Exception ex)
                 {
-                    debug("消息发送线程出错 " + ex.ToString(), QSEnumDebugLevel.ERROR);
+                    logger.Error("消息发送线程出错 " + ex.ToString());
                 }
             }
 

@@ -57,7 +57,7 @@ namespace TradingLib.Core
         {
             try
             {
-                debug("Got CancelOrder :" + val, QSEnumDebugLevel.INFO);
+                logger.Info("Got CancelOrder :" + val);
                 Order o = TLCtxHelper.ModuleClearCentre.SentOrder(val);
                 //如果委托处于pending状态
                 if (o.IsPending())
@@ -69,22 +69,22 @@ namespace TradingLib.Core
                     }
                     else if (o.Status == QSEnumOrderStatus.Submited)//已经通过broker提交 该状态无法立即撤单 需要等待委托状态更新为Opened或者 被定时程序发现是一个错误委托
                     {
-                        debug("委托:" + val.ToString() + "处于Submited,等待broker返回", QSEnumDebugLevel.INFO);
+                        logger.Info("委托:" + val.ToString() + "处于Submited,等待broker返回");
                     }
                     else if (o.Status == QSEnumOrderStatus.Placed)//
                     {
-                        debug("委托:" + val.ToString() + "处于Placed,等待系统返回", QSEnumDebugLevel.INFO);
+                        logger.Info("委托:" + val.ToString() + "处于Placed,等待系统返回");
                     }
                 }
                 else
                 {
-                    debug("委托:" + val.ToString() + "不可撤销", QSEnumDebugLevel.WARNING);
+                    logger.Info("委托:" + val.ToString() + "不可撤销");
                 }
 
             }
             catch (Exception ex)
             {
-                debug("取消委托出错:" + ex.ToString());
+                logger.Error("取消委托出错:" + ex.ToString());
                 throw (new QSTradingServerCancleError(ex));
             }
         }
@@ -143,7 +143,7 @@ namespace TradingLib.Core
                 //执行常规检查,step1检查不涉及帐户类的检查不用加锁 常规检查部分拒绝的委托不记录到数据库 避免记录很多无效委托
                 if (riskcheck)
                 {
-                    debug("Got Order[Check1]:" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
+                    logger.Info("Got Order[Check1]:" + o.GetOrderInfo());
                     string errortitle = string.Empty;
                     bool needlog = true;
 
@@ -155,7 +155,7 @@ namespace TradingLib.Core
                         o.Comment = "风控拒绝:" + info.ErrorMessage;
                         ReplyErrorOrder(o, info, needlog);
 
-                        debug("委托(" + o.id.ToString() + ")被拒绝,ErrorID:" + errortitle + " ErrorMesssage:" + info.ErrorMessage + " needlog:" + needlog.ToString(), QSEnumDebugLevel.WARNING);
+                        logger.Warn("委托(" + o.id.ToString() + ")被拒绝,ErrorID:" + errortitle + " ErrorMesssage:" + info.ErrorMessage + " needlog:" + needlog.ToString());
                         return;
                     }
                 }
@@ -168,7 +168,7 @@ namespace TradingLib.Core
                     string msg = "";
                     if (riskcheck)
                     {
-                        debug("Got Order[Check2]:" + o.id.ToString(), QSEnumDebugLevel.INFO);
+                        logger.Info("Got Order[Check2]:" + o.id.ToString());
                         if (!TLCtxHelper.ModuleRiskCentre.CheckOrderStep2(ref o, acc, out msg, inter))
                         {
                             o.Status = QSEnumOrderStatus.Reject;
@@ -177,7 +177,7 @@ namespace TradingLib.Core
                             o.Comment = "风控拒绝:" + info.ErrorMessage;
                             ReplyErrorOrder(o, info);
 
-                            debug("委托(" + o.id.ToString() + ")被拒绝,ErrorID:" + info.ErrorID.ToString() + " ErrorMesssage:" + info.ErrorMessage, QSEnumDebugLevel.WARNING);
+                            logger.Warn("委托(" + o.id.ToString() + ")被拒绝,ErrorID:" + info.ErrorID.ToString() + " ErrorMesssage:" + info.ErrorMessage);
                             return;
                         }
                     }
@@ -198,7 +198,7 @@ namespace TradingLib.Core
             catch (Exception ex)
             {
                 //向外层抛出异常
-                debug("OrderRequestHandler error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                logger.Error("OrderRequestHandler error:" + ex.ToString());
                 throw (new QSTradingServerSendOrderError(ex));
             }
 

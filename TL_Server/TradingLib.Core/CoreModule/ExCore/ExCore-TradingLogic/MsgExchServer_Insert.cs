@@ -43,7 +43,7 @@ namespace TradingLib.Core
             o.OrderSysID = o.OrderSeq.ToString();
             o.BrokerRemoteOrderID = o.OrderSysID;
             OnOrderEvent(o);
-            debug("insert ordre manual .....", QSEnumDebugLevel.INFO);
+            logger.Info("insert ordre manual .....");
             //return ordid;
 
         }
@@ -51,7 +51,7 @@ namespace TradingLib.Core
         public void ManualInsertTrade(Trade t)
         {
             OnFillEvent(t);
-            debug("insert trade manual ....", QSEnumDebugLevel.INFO);
+            logger.Info("insert trade manual ....");
         }
     }
 }

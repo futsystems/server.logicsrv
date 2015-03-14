@@ -428,7 +428,7 @@ namespace TradingLib.Core
             //如果该持仓已经在平仓队列中则不进行处理直接返回
             if (IsPosFlatPending(pos))
                 return;
-            debug("RiskCentre Flatpostion:" + pos.ToString(), QSEnumDebugLevel.INFO);
+            logger.Info("RiskCentre Flatpostion:" + pos.ToString());
 
             //生成平仓任务
             RiskTaskSet ps = GenFlatPostionSet(pos, ordersource, closereason);
@@ -523,7 +523,7 @@ namespace TradingLib.Core
 
             if (pos.oSymbol.SecurityFamily.Exchange.EXCode.Equals("SHFE"))
             {
-                debug("Position:" + pos.GetPositionKey() + " is in Exchange:SHFE, we need to check Close/CloseToday Split", QSEnumDebugLevel.INFO);
+                logger.Info("Position:" + pos.GetPositionKey() + " is in Exchange:SHFE, we need to check Close/CloseToday Split");
                 int voltd = pos.PositionDetailTodayNew.Sum(p => p.Volume);//今日持仓
                 int volyd = pos.PositionDetailYdNew.Sum(p => p.Volume);//昨日持仓
                 //MessageBox.Show("posyd:" + volyd.ToString() + " voltd:" + voltd.ToString());
@@ -663,7 +663,7 @@ namespace TradingLib.Core
                 {
                     if (!AnySubTaskInList(ps))//如果没有任何子任务在队列中则删除父任务
                     {
-                        debug("子任务全部完成,删除父任务", QSEnumDebugLevel.INFO);
+                        logger.Info("子任务全部完成,删除父任务");
                         removelist.Add(ps);
                     }
                 }
@@ -683,7 +683,7 @@ namespace TradingLib.Core
                                     //如果没有发送过取消委托 则遍历所有委托 发送取消
                                     if (!ps.CancelSent)
                                     {
-                                        debug(ps.Position.GetPositionKey() + ":没有发送强平委托,且需要先撤单，发送撤单", QSEnumDebugLevel.INFO);
+                                        logger.Info(ps.Position.GetPositionKey() + ":没有发送强平委托,且需要先撤单，发送撤单");
                                         foreach (long oid in ps.PendingOrders)
                                         {
                                             this.CancelOrder(oid);
@@ -698,7 +698,7 @@ namespace TradingLib.Core
                                         //如果取消委托已经发送并且已经完成 同时是第一次发送强迫指令 则执行强平
                                         if (ps.CancelDone)
                                         {
-                                            debug(ps.Position.GetPositionKey() + ":已经发送撤单,并且所有委托已经撤掉,继续执行强平逻辑", QSEnumDebugLevel.INFO);
+                                            logger.Info(ps.Position.GetPositionKey() + ":已经发送撤单,并且所有委托已经撤掉,继续执行强平逻辑");
                                             SendFlatPositionOrder(ps);
                                         }
                                         else
@@ -707,7 +707,7 @@ namespace TradingLib.Core
                                             if (DateTime.Now.Subtract(ps.SentTime).TotalSeconds >= SENDORDERDELAY && (!ps.FlatFailNoticed))
                                             {
                                                 string reason = ps.Position.GetPositionKey() + " 强平前撤单失败,强平异常";
-                                                debug(reason, QSEnumDebugLevel.INFO);
+                                                logger.Info(reason);
                                                 ps.FlatFailNoticed = true;
                                                 PositionFlatFail(ps.Position, "POSFLAT_CANCEL_ERROR");
                                                 //对外进行异常平仓报警
@@ -723,7 +723,7 @@ namespace TradingLib.Core
                                 {
 
                                     //如果不是需要先撤单的 则直接发送强平委托
-                                    debug(ps.Position.GetPositionKey() + ":没有发送过强平委托，发送强平委托", QSEnumDebugLevel.INFO);
+                                    logger.Info(ps.Position.GetPositionKey() + ":没有发送过强平委托，发送强平委托");
                                     SendFlatPositionOrder(ps);
                                     
                                 }
@@ -741,7 +741,7 @@ namespace TradingLib.Core
                                         {
                                             if (ps.CancelCount <= CANCELORDERRETRY)
                                             {
-                                                debug(ps.Position.GetPositionKey() + " 平仓超时,取消该委托:"+ string.Join(",",ps.OrderIDList.ToArray()), QSEnumDebugLevel.INFO);
+                                                logger.Info(ps.Position.GetPositionKey() + " 平仓超时,取消该委托:" + string.Join(",", ps.OrderIDList.ToArray()));
                                                 //这里会发生委托无法撤掉的分支逻辑 如果撤单多次没有撤掉 则跳出循环
                                                 foreach (long oid in ps.OrderIDList)
                                                 {
@@ -754,7 +754,7 @@ namespace TradingLib.Core
                                             else//发送的委托无法撤单，但是也不成交 执行异常
                                             {
                                                 string msg = "强平持仓:" + ps.Position.GetPositionKey() + " 委托未成交且撤单失败,强平异常";
-                                                debug(msg, QSEnumDebugLevel.WARNING);
+                                                logger.Warn(msg);
                                                 ps.FlatFailNoticed = true;
 
                                                 PositionFlatFail(ps.Position, "POSFLAT_FLATORDER_CANCEL_ERROR");
@@ -768,7 +768,7 @@ namespace TradingLib.Core
                                         else
                                         {
                                             //如果没有委托编号 则表明委托已经撤掉 需要重新发送平仓委托 (如果通道拒绝则 OrderError会触发风控中心将委托置0，则显示原有委托已撤掉)
-                                            debug(ps.Position.GetPositionKey() + " 原有委托已撤掉,重新平仓", QSEnumDebugLevel.INFO);
+                                            logger.Info(ps.Position.GetPositionKey() + " 原有委托已撤掉,重新平仓");
                                             SendFlatPositionOrder(ps);
                                             continue;
                                         }
@@ -778,7 +778,7 @@ namespace TradingLib.Core
                                     if (ps.FireCount == SENDORDERRETRY && (!ps.FlatFailNoticed))//报警的时间设定
                                     {
                                         string msg = ps.Position.GetPositionKey() + " 平仓次数超过" + SENDORDERRETRY + " 出发警告通知";
-                                        debug(msg, QSEnumDebugLevel.WARNING);
+                                        logger.Warn(msg);
                                         if (ps.OrderIDList.Count != 0)
                                         {
                                             foreach (long oid in ps.OrderIDList)
@@ -809,7 +809,7 @@ namespace TradingLib.Core
                             {
                                 if (!ps.CancelSent)//如果没有发送过撤单 则发送撤单
                                 {
-                                    debug("发送撤单指令", QSEnumDebugLevel.INFO);
+                                    logger.Info("发送撤单指令");
                                     foreach (long oid in ps.OrderCancels)
                                     {
                                         this.CancelOrder(oid);
@@ -828,7 +828,7 @@ namespace TradingLib.Core
                                         {
                                             if (!ps.SubTaskGenerated)//如果没有生成过子任务 则添加子任务
                                             {
-                                                debug("队列批量撤单完成，生成平仓事务加入到队列", QSEnumDebugLevel.INFO);
+                                                logger.Info("队列批量撤单完成，生成平仓事务加入到队列");
                                                 foreach (Position pos in ps.PendingPositionFlat)
                                                 {
                                                     RiskTaskSet ps2 = GenFlatPostionSet(pos, ps.Source, ps.ForceCloseReason);
@@ -840,7 +840,7 @@ namespace TradingLib.Core
                                         }
                                         else//如果没有待平仓委托 直接删除该任务
                                         {
-                                            debug("删除撤单事务");
+                                            logger.Info("删除撤单事务");
                                             removelist.Add(ps);
                                         }
                                     }
@@ -851,7 +851,7 @@ namespace TradingLib.Core
                                         //int i = 0;
                                         //执行强平异常 如果强平过程中撤单失败 则会导致强平失败
                                         string reason = "撤单过程异常,未成功 强平失败";
-                                        debug(reason, QSEnumDebugLevel.ERROR);
+                                        logger.Warn(reason);
 
                                         ps.FlatFailNoticed = true;
                                         //PositionFlatFail()
@@ -869,7 +869,7 @@ namespace TradingLib.Core
                                 {
                                     if (!ps.SubTaskGenerated)//如果没有生成过子任务 则添加子任务
                                     {
-                                        debug("没有撤单列表，直接生成平仓事务加入到队列", QSEnumDebugLevel.INFO);
+                                        logger.Info("没有撤单列表，直接生成平仓事务加入到队列");
                                         foreach (Position pos in ps.PendingPositionFlat)
                                         {
                                             RiskTaskSet ps2 = GenFlatPostionSet(pos, ps.Source, ps.ForceCloseReason);
@@ -881,7 +881,7 @@ namespace TradingLib.Core
                                 }
                                 else
                                 {
-                                    debug("没有待撤单列表，也没有待平仓列表 该事务为无效事务,删除事务");
+                                    logger.Info("没有待撤单列表，也没有待平仓列表 该事务为无效事务,删除事务");
                                     removelist.Add(ps);
                                 }
                             }
@@ -900,23 +900,23 @@ namespace TradingLib.Core
             foreach (RiskTaskSet ps in addlist)
             {
                 chg = true;
-                debug("插入任务:" + ps.ToString(), QSEnumDebugLevel.INFO);
+                logger.Info("插入任务:" + ps.ToString());
                 posflatlist.Add(ps);
             }
 
             foreach (RiskTaskSet ps in removelist)
             {
                 chg = true;
-                debug("删除任务:" + ps.ToString(), QSEnumDebugLevel.INFO);
+                logger.Info("删除任务:" + ps.ToString());
                 posflatlist.Remove(ps);
             }
 
             if (chg)
             {
-                debug("XXXXXXXXXXXXXXXXX task changed XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",QSEnumDebugLevel.INFO);
+                logger.Info("XXXXXXXXXXXXXXXXX task changed XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
                 foreach (RiskTaskSet ps in posflatlist)
                 {
-                    debug(ps.ToString(), QSEnumDebugLevel.INFO);
+                    logger.Info(ps.ToString());
                 }
             }
         }

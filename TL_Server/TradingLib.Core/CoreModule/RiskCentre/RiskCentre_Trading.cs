@@ -24,7 +24,7 @@ namespace TradingLib.Core
             }
             catch (Exception ex)
             {
-                debug("发送委托异常:" + o.ToString() + ex.ToString(), QSEnumDebugLevel.ERROR);
+                logger.Error("发送委托异常:" + o.ToString() + ex.ToString());
             }
         }
 
@@ -40,7 +40,7 @@ namespace TradingLib.Core
             }
             catch (Exception ex)
             {
-                debug("取消委托异常:" + number.ToString() + ex.ToString(), QSEnumDebugLevel.ERROR);
+                logger.Error("取消委托异常:" + number.ToString() + ex.ToString());
             }
         }
 

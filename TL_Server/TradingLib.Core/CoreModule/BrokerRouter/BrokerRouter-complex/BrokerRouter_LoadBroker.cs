@@ -60,7 +60,7 @@ namespace TradingLib.Core
             }
             catch (Exception ex)
             {
-                debug(PROGRAME + ":get symbol tick snapshot error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                logger.Info(PROGRAME + ":get symbol tick snapshot error:" + ex.ToString());
                 return null;
             }
         }
@@ -90,17 +90,17 @@ namespace TradingLib.Core
             {
                 if (order.Breed == QSEnumOrderBreedType.ROUTER)
                 {
-                    debug("Reply ErrorOrder To Spliter:" + order.GetOrderInfo() + " ErrorTitle:" + error.ErrorMessage, QSEnumDebugLevel.INFO);
+                    logger.Info("Reply ErrorOrder To Spliter:" + order.GetOrderInfo() + " ErrorTitle:" + error.ErrorMessage);
                     LogRouterOrderUpdate(order);//更新路由侧委托
                     _splittracker.GotSonOrderError(order, error);
                     return;
                 }
-                debug("Reply ErrorOrder To MessageExch:" + order.GetOrderInfo() + " ErrorTitle:" + error.ErrorMessage, QSEnumDebugLevel.INFO);
+                logger.Info("Reply ErrorOrder To MessageExch:" + order.GetOrderInfo() + " ErrorTitle:" + error.ErrorMessage);
                 _errorordernotifycache.Write(new OrderErrorPack(order, error));
             }
             else
             {
-                debug("Got Invalid OrderError", QSEnumDebugLevel.ERROR);
+                logger.Error("Got Invalid OrderError");
             }
         }
 
@@ -117,7 +117,7 @@ namespace TradingLib.Core
             }
             else
             {
-                debug("Got Invalid OrderActionError", QSEnumDebugLevel.ERROR);
+                logger.Error("Got Invalid OrderActionError");
             }
         }
 
@@ -132,16 +132,16 @@ namespace TradingLib.Core
             {
                 if (fill.Breed == QSEnumOrderBreedType.ROUTER)
                 {
-                    debug("Reply Fill To Spliter:" + fill.GetTradeInfo(), QSEnumDebugLevel.INFO);
+                    logger.Info("Reply Fill To Spliter:" + fill.GetTradeInfo());
                     _splittracker.GotSonFill(fill);
                     return;
                 }
-                debug("Reply Fill To MessageExch:" + fill.GetTradeInfo(), QSEnumDebugLevel.INFO);
+                logger.Info("Reply Fill To MessageExch:" + fill.GetTradeInfo());
                 _fillcache.Write(new TradeImpl(fill));
             }
             else
             {
-                debug("Got Invalid Fill", QSEnumDebugLevel.ERROR);
+                logger.Error("Got Invalid Fill");
             }
         }
 
@@ -157,18 +157,18 @@ namespace TradingLib.Core
                 //这里需要判断,该委托回报是拆分过的子委托还是分帐户侧的委托 如果是拆分过的委托则需要回报给拆分器
                 if (o.Breed == QSEnumOrderBreedType.ROUTER)
                 {
-                    debug("Reply Order To Spliter:" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
+                    logger.Info("Reply Order To Spliter:" + o.GetOrderInfo());
                     LogRouterOrderUpdate(o);//更新路由侧委托
                     _splittracker.GotSonOrder(o);
                     return;
                 }
                 Order no = new OrderImpl(o);
-                debug("Reply Order To MessageExch:" + no.GetOrderInfo(), QSEnumDebugLevel.INFO);
+                logger.Info("Reply Order To MessageExch:" + no.GetOrderInfo());
                 _ordercache.Write(no);
             }
             else
             {
-                debug("Got Invalid Order", QSEnumDebugLevel.ERROR);
+                logger.Error("Got Invalid Order");
             }
         }
 
@@ -178,7 +178,7 @@ namespace TradingLib.Core
 
         void Broker_GotCancel(long oid)
         {
-            debug("Reply Cancel To MessageExch:" + oid.ToString());
+            logger.Info("Reply Cancel To MessageExch:" + oid.ToString());
             _cancelcache.Write(oid);
         }
 

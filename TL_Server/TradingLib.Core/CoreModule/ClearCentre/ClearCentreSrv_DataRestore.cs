@@ -31,12 +31,12 @@ namespace TradingLib.Core
             {
 
 
-                debug("从数据库加载交易日:" + TLCtxHelper.ModuleSettleCentre.NextTradingday.ToString() + " 交易数据", QSEnumDebugLevel.INFO);
+                logger.Info("从数据库加载交易日:" + TLCtxHelper.ModuleSettleCentre.NextTradingday.ToString() + " 交易数据");
                 IEnumerable<Order> olist = TLCtxHelper.ModuleDataRepository.SelectAcctOrders();
                 IEnumerable<Trade> flist = TLCtxHelper.ModuleDataRepository.SelectAcctTrades();
                 IEnumerable<OrderAction> clist = TLCtxHelper.ModuleDataRepository.SelectAcctOrderActions();
 
-                debug("从数据库加载上次结算日:" + TLCtxHelper.ModuleSettleCentre.LastSettleday.ToString() + " 持仓明细数据", QSEnumDebugLevel.INFO);
+                logger.Info("从数据库加载上次结算日:" + TLCtxHelper.ModuleSettleCentre.LastSettleday.ToString() + " 持仓明细数据");
                 IEnumerable<PositionDetail> plist = TLCtxHelper.ModuleDataRepository.SelectAcctPositionDetails();//从数据得到昨持仓数据
                 //IEnumerable<PositionRoundImpl> prlist = LoadPositionRoundFromMysql();//恢复开启的positionround数据
 
@@ -71,7 +71,7 @@ namespace TradingLib.Core
             }
             catch (Exception ex)
             {
-                debug("restore mysql error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                logger.Error("restore mysql error:" + ex.ToString());
                 throw (new QSClearCentreResotreError(ex, "清算中心从数据库恢复数据异常"));
             }
 

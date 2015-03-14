@@ -18,7 +18,7 @@ namespace TradingLib.Core
         /// <param name="request"></param>
         void SrvOnQryOrder(QryOrderRequest request,IAccount account)
         {
-            debug("QryOrder :" + request.ToString(), QSEnumDebugLevel.INFO);
+            logger.Info("QryOrder :" + request.ToString());
             Order[] orders = new Order[]{};
             //合约为空 查询所有
             if (string.IsNullOrEmpty(request.Symbol))
@@ -52,7 +52,7 @@ namespace TradingLib.Core
         /// <param name="request"></param>
         void SrvOnQryTrade(QryTradeRequest request, IAccount account)
         {
-            debug("QryTrade :" + request.ToString(), QSEnumDebugLevel.INFO);
+            logger.Info("QryTrade :" + request.ToString());
             Trade[] trades = new Trade[] { };
             if (string.IsNullOrEmpty(request.Symbol))
             {
@@ -67,7 +67,7 @@ namespace TradingLib.Core
                     RspQryTradeResponse response = ResponseTemplate<RspQryTradeResponse>.SrvSendRspResponse(request);
                     response.TradeToSend = trades[i];
 
-                    debug("转发当日成交:" + trades[i].ToString() + " side:" + trades[i].Side.ToString(), QSEnumDebugLevel.INFO);
+                    logger.Info("转发当日成交:" + trades[i].ToString() + " side:" + trades[i].Side.ToString());
                     CacheRspResponse(response, i == totalnum - 1);
                 }
             }
@@ -85,7 +85,7 @@ namespace TradingLib.Core
         /// <param name="request"></param>
         void SrvOnQryPosition(QryPositionRequest request, IAccount account)
         {
-            debug("QryPosition :" + request.ToString(), QSEnumDebugLevel.INFO);
+            logger.Info("QryPosition :" + request.ToString());
             Position[] positions = new Position[] { };
             //Position[] netpos = new Position[] { };
 
@@ -99,7 +99,7 @@ namespace TradingLib.Core
                 positions = account.Positions.Where(pos => pos.Symbol.Equals(request.Symbol)).ToArray();
             }
 
-            debug("total num:" + positions.Length.ToString(), QSEnumDebugLevel.INFO);
+            logger.Info("total num:" + positions.Length.ToString());
             int totalnum = positions.Length;
 
             if (totalnum > 0)
@@ -128,7 +128,7 @@ namespace TradingLib.Core
         /// <param name="account"></param>
         void SrvOnQryPositionDetail(QryPositionDetailRequest request, IAccount account)
         {
-            debug("QryPositionDetail" + request.ToString(), QSEnumDebugLevel.INFO);
+            logger.Info("QryPositionDetail" + request.ToString());
             List<PositionDetail> list = new List<PositionDetail>();
             foreach (Position p in account.Positions)
             {
@@ -160,7 +160,7 @@ namespace TradingLib.Core
         /// <param name="request"></param>
         void SrvOnQryMaxOrderVol(QryMaxOrderVolRequest request, IAccount account)
         {
-            debug("QryMaxOrderVol :" + request.ToString(), QSEnumDebugLevel.INFO);
+            logger.Info("QryMaxOrderVol :" + request.ToString());
             Symbol symbol = account.GetSymbol(request.Symbol);
             RspQryMaxOrderVolResponse response = ResponseTemplate<RspQryMaxOrderVolResponse>.SrvSendRspResponse(request);
             if(symbol == null)
@@ -178,7 +178,7 @@ namespace TradingLib.Core
                 
                 int size = account.CanOpenSize(symbol,request.Side,request.OffsetFlag);
 
-                debug("got max opensize:" + size.ToString(), QSEnumDebugLevel.INFO);
+                logger.Info("got max opensize:" + size.ToString());
                 response.Symbol = request.Symbol;
                 response.MaxVol = size;
                 response.OffsetFlag = request.OffsetFlag;
@@ -191,7 +191,7 @@ namespace TradingLib.Core
 
         void SrvOnQryAccountInfo(QryAccountInfoRequest request, IAccount account)
         {
-            debug("QryAccountInfo :" + request.ToString(), QSEnumDebugLevel.INFO);
+            logger.Info("QryAccountInfo :" + request.ToString());
             AccountInfo info = account.GenAccountInfo();
             //需要合并信用额度
             if (!account.GetArgsCreditSeparate())
@@ -206,7 +206,7 @@ namespace TradingLib.Core
 
         void SrvOnQrySettleInfo(QrySettleInfoRequest request)
         {
-            debug("QrySettleInfo :" + request.ToString(), QSEnumDebugLevel.INFO);
+            logger.Info("QrySettleInfo :" + request.ToString());
             Settlement settlement = null;
             //如果查询日期为0 则查询上个结算日
             IAccount account = TLCtxHelper.ModuleAccountManager[request.Account];
@@ -214,13 +214,13 @@ namespace TradingLib.Core
             int settleday = request.Tradingday;
             if (settleday == 0)
             {
-                debug("Request Tradingday:0 ,try to get the settlement of lastsettleday:" + TLCtxHelper.ModuleSettleCentre.LastSettleday, QSEnumDebugLevel.INFO);
+                logger.Info("Request Tradingday:0 ,try to get the settlement of lastsettleday:" + TLCtxHelper.ModuleSettleCentre.LastSettleday);
                 settleday = TLCtxHelper.ModuleSettleCentre.LastSettleday;
             }
             settlement = ORM.MSettlement.SelectSettlement(request.Account, settleday);
             if (settlement != null)
             {
-                debug("got settlement....", QSEnumDebugLevel.INFO);
+                logger.Info("got settlement....");
                 List<string> settlelist = SettlementFactory.GenSettlementFile(settlement,account);
                 for (int i = 0; i < settlelist.Count; i++)
                 {
@@ -234,7 +234,7 @@ namespace TradingLib.Core
             else
             {
                 RspQrySettleInfoResponse response = ResponseTemplate<RspQrySettleInfoResponse>.SrvSendRspResponse(request);
-                debug("can not find settlement for account:" + request.Account + " for settleday:" + request.Tradingday.ToString(), QSEnumDebugLevel.WARNING);
+                logger.Warn("can not find settlement for account:" + request.Account + " for settleday:" + request.Tradingday.ToString());
                 response.RspInfo.Fill("SELLTEINFO_NOT_FOUND");
                 CachePacket(response);
             }
@@ -242,10 +242,10 @@ namespace TradingLib.Core
 
         void SrvOnQrySettleInfoConfirm(QrySettleInfoConfirmRequest request)
         {
-            debug("QrySettleInfoConfirm :" + request.ToString(), QSEnumDebugLevel.INFO);
+            logger.Info("QrySettleInfoConfirm :" + request.ToString());
             RspQrySettleInfoConfirmResponse response = ResponseTemplate<RspQrySettleInfoConfirmResponse>.SrvSendRspResponse(request);
             IAccount account = TLCtxHelper.ModuleAccountManager[request.Account];
-            debug("confirm stamp:" + account.SettlementConfirmTimeStamp.ToString(), QSEnumDebugLevel.INFO);
+            logger.Info("confirm stamp:" + account.SettlementConfirmTimeStamp.ToString());
 
            
             response.TradingAccount = request.Account;
@@ -269,7 +269,7 @@ namespace TradingLib.Core
 
         void SrvOnConfirmSettlement(ConfirmSettlementRequest request)
         {
-            debug("ConfirmSettlement :" + request.ToString(), QSEnumDebugLevel.INFO);
+            logger.Info("ConfirmSettlement :" + request.ToString());
             
             //获得结算时间
             long timestamp = Util.ToTLDateTime(TLCtxHelper.ModuleSettleCentre.CurrentTradingday, Util.ToTLTime());
@@ -279,7 +279,7 @@ namespace TradingLib.Core
 
             //发送结算确认
             RspConfirmSettlementResponse response = ResponseTemplate<RspConfirmSettlementResponse>.SrvSendRspResponse(request);
-            debug("confirm stamp:" + account.SettlementConfirmTimeStamp.ToString(), QSEnumDebugLevel.INFO);
+            logger.Info("confirm stamp:" + account.SettlementConfirmTimeStamp.ToString());
             DateTime confirmtime = Util.ToDateTime(account.SettlementConfirmTimeStamp);
             response.TradingAccount = request.Account;
             response.ConfirmDay = Util.ToTLDate(confirmtime);
@@ -295,7 +295,7 @@ namespace TradingLib.Core
         /// <param name="request"></param>
         void SrvOnQryInvestor(QryInvestorRequest request, IAccount account)
         {
-            debug("QryInvestor :" + request.ToString(), QSEnumDebugLevel.INFO);
+            logger.Info("QryInvestor :" + request.ToString());
             RspQryInvestorResponse response = ResponseTemplate<RspQryInvestorResponse>.SrvSendRspResponse(request);
 
             TrdClientInfo info = tl.GetClient(request.ClientID);
@@ -310,7 +310,7 @@ namespace TradingLib.Core
 
         void SrvOnContribRequest(ContribRequest request,ISession session)
         {
-            debug("Contrib Request:" + request.ToString(), QSEnumDebugLevel.INFO);
+            logger.Info("Contrib Request:" + request.ToString());
             TLCtxHelper.Ctx.MessageExchangeHandler(session, request);
         }
 
@@ -320,7 +320,7 @@ namespace TradingLib.Core
         /// <param name="request"></param>
         void SrvOnReqChangePassword(ReqChangePasswordRequest request)
         {
-            debug("ReqChangePassword:" + request.ToString(), QSEnumDebugLevel.INFO);
+            logger.Info("ReqChangePassword:" + request.ToString());
 
             RspReqChangePasswordResponse response = ResponseTemplate<RspReqChangePasswordResponse>.SrvSendRspResponse(request);
             bool valid = TLCtxHelper.ModuleAccountManager.VaildAccount(request.Account, request.OldPassword);
@@ -342,7 +342,7 @@ namespace TradingLib.Core
         /// <param name="request"></param>
         void SrvOnQryNotice(QryNoticeRequest request)
         {
-            debug("QryNoticeRequest:" + request.ToString(), QSEnumDebugLevel.INFO);
+            logger.Info("QryNoticeRequest:" + request.ToString());
             RspQryNoticeResponse response = ResponseTemplate<RspQryNoticeResponse>.SrvSendRspResponse(request);
 
             IAccount account = TLCtxHelper.ModuleAccountManager[request.Account];
@@ -372,12 +372,12 @@ namespace TradingLib.Core
         /// <param name="request"></param>
         void SrvOnQrySymbol(QrySymbolRequest request,IAccount account)
         {
-            debug("QrySymbol:" + request.ToString(), QSEnumDebugLevel.INFO);
+            logger.Info("QrySymbol:" + request.ToString());
             Util.sleep(1000);
             Instrument[] instruments = new Instrument[]{};
             if (request.SecurityType != SecurityType.NIL && string.IsNullOrEmpty(request.ExchID) && string.IsNullOrEmpty(request.Symbol) && string.IsNullOrEmpty(request.Security))
             {
-                debug("qry instruments via security type", QSEnumDebugLevel.INFO);
+                logger.Info("qry instruments via security type");
                 instruments =account.GetInstruments(request.SecurityType).ToArray();  
             }
             //如果所有字段为空 则为查询所有合约列表
@@ -411,7 +411,7 @@ namespace TradingLib.Core
         /// <param name="request"></param>
         void SrvOnQryContractBank(QryContractBankRequest request)
         {
-            debug("QryContractBank:" + request.ToString(), QSEnumDebugLevel.INFO);
+            logger.Info("QryContractBank:" + request.ToString());
             ContractBank[] banks = BasicTracker.ContractBankTracker.Banks;
             if (banks.Length > 0)
             {
@@ -443,7 +443,7 @@ namespace TradingLib.Core
         /// <param name="request"></param>
         void SrvOnRegisterBankAccount(QryRegisterBankAccountRequest request)
         {
-            debug("QryRegisterBankAccount:" + request.ToString(), QSEnumDebugLevel.INFO);
+            logger.Info("QryRegisterBankAccount:" + request.ToString());
             IAccount account = TLCtxHelper.ModuleAccountManager[request.TradingAccount];
             if (account != null)
             {
@@ -473,11 +473,11 @@ namespace TradingLib.Core
         /// <param name="request"></param>
         void SrvOnQryTransferSerial(QryTransferSerialRequest request)
         {
-            debug("QryTransferSerialRequest:" + request.ToString(), QSEnumDebugLevel.INFO);
+            logger.Info("QryTransferSerialRequest:" + request.ToString());
             IList<CashTransaction> cts = ORM.MAccount.SelectHistCashTransaction(request.TradingAccount, 0, 0);
             IAccount account = TLCtxHelper.ModuleAccountManager[request.TradingAccount];
             int totalnum = cts.Count;
-            debug("total transfer num:" + totalnum.ToString(), QSEnumDebugLevel.INFO);
+            logger.Info("total transfer num:" + totalnum.ToString());
             if (totalnum > 0)
             {
                 for (int i = 0; i < totalnum; i++)
@@ -510,7 +510,7 @@ namespace TradingLib.Core
         /// <param name="account"></param>
         void SrvOnQryInstrumentCommissionRate(QryInstrumentCommissionRateRequest request, IAccount account)
         {
-            debug("QryInstrumentCommissionRate:" + request.ToString(), QSEnumDebugLevel.DEBUG);
+            logger.Info("QryInstrumentCommissionRate:" + request.ToString());
             
             //返回所有
             if (string.IsNullOrEmpty(request.Symbol))
@@ -533,7 +533,7 @@ namespace TradingLib.Core
 
         void SrvOnQryInstrumentMarginRate(QryInstrumentMarginRateRequest request, IAccount account)
         {
-            debug("QryInstrumentMarginRate:" + request.ToString(), QSEnumDebugLevel.DEBUG);
+            logger.Info("QryInstrumentMarginRate:" + request.ToString());
             
             if (string.IsNullOrEmpty(request.Symbol))
             {
@@ -564,7 +564,7 @@ namespace TradingLib.Core
         /// <param name="account"></param>
         void SrvOnQryMarketData(QryMarketDataRequest request, IAccount account)
         {
-            debug("QryMarketData:" + request.ToString(), QSEnumDebugLevel.DEBUG);
+            logger.Info("QryMarketData:" + request.ToString());
 
             if (string.IsNullOrEmpty(request.Symbol))
             {

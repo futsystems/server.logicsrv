@@ -37,7 +37,7 @@ namespace TradingLib.Core
             }
             catch (Exception ex)
             {
-                debug("帐户信息采集出错:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                logger.Error("帐户信息采集出错:" + ex.ToString());
             }
         }
     }

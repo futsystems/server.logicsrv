@@ -32,7 +32,7 @@ namespace TradingLib.ServiceManager
                     VendorImpl vendor = BasicTracker.VendorTracker[cfg.vendor_id];
                     if (vendor == null)
                     {
-                        debug("原来通道绑定异常", QSEnumDebugLevel.WARNING);
+                        logger.Warn("原来通道绑定异常");
                     }
                     //加入检查，如果有持仓则不能解绑，需要素有持仓平掉 所有委托撤掉后才可以解绑
                     //解绑通道
@@ -98,7 +98,7 @@ namespace TradingLib.ServiceManager
                     if (broker == null)
                     {
                         //throw new FutsRspError("通道对象没有初始化");
-                        debug(string.Format("通道[{0}],没有初始化", cfg.Token), QSEnumDebugLevel.ERROR);
+                        logger.Error(string.Format("通道[{0}],没有初始化", cfg.Token));
                         LoadBrokerConnector(cfg);
                     }
                     broker = FindBroker(cfg.Token);

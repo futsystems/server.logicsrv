@@ -170,7 +170,7 @@ namespace TradingLib.Core
         void InitTradingDay()
         {
             //开发模式每天都有结算,运行模式按照交易日里进行结算
-            debug("System running under " + (GlobalConfig.IsDevelop?"develop":"production"), QSEnumDebugLevel.INFO);
+            logger.Info("System running under " + (GlobalConfig.IsDevelop ? "develop" : "production"));
 
             //从数据库获得上次结算日
             _lastsettleday = ORM.MSettlement.GetLastSettleday();
@@ -193,10 +193,10 @@ namespace TradingLib.Core
             //如果当前日期越过了下一个交易日,则表明按结算推算出来的下一个交易日已经被跳过,需要手工进行结算
             if (nowdate > _nexttradingday)
             {
-                debug(string.Format("上次结算日:{0} 下一交易日:{1} 当前日期:{2}", _lastsettleday, _nexttradingday, nowdate), QSEnumDebugLevel.INFO);
-                debug("当前日期越过了交易日,系统缺少对应交易的结算,请手工进行结算", QSEnumDebugLevel.INFO);
+                logger.Info(string.Format("上次结算日:{0} 下一交易日:{1} 当前日期:{2}", _lastsettleday, _nexttradingday, nowdate));
+                logger.Info("当前日期越过了交易日,系统缺少对应交易的结算,请手工进行结算");
                 SettleCentreStatus = QSEnumSettleCentreStatus.HISTSETTLE;
-                debug(string.Format("设定当前交易日为下一个交易日:{0}", _nexttradingday), QSEnumDebugLevel.INFO);
+                logger.Info(string.Format("设定当前交易日为下一个交易日:{0}", _nexttradingday));
                 _tradingday = _nexttradingday;
             }
             //如果当前日期<=netxtradingday则正常,比如下午结算后 当前交易日就是夜盘隶属的下一个交易日,当前时间则小于该交易日,遇到周五则会小2天
@@ -212,8 +212,8 @@ namespace TradingLib.Core
                     //开发版 当前交易日就是结算日推算出来的下一个交易日
                     _tradingday = _nexttradingday;
                 }
-                debug(string.Format("结算中心初始化交易日信息,当前日期:{0} 当前时间:{1}", nowdate, nowtime), QSEnumDebugLevel.INFO);
-                debug(string.Format("上次结算日:{0} 下一交易日:{1} 当前交易日:{2}", _lastsettleday, _nexttradingday,_tradingday), QSEnumDebugLevel.INFO);
+                logger.Info(string.Format("结算中心初始化交易日信息,当前日期:{0} 当前时间:{1}", nowdate, nowtime));
+                logger.Info(string.Format("上次结算日:{0} 下一交易日:{1} 当前交易日:{2}", _lastsettleday, _nexttradingday, _tradingday));
 
                 if (CurrentTradingday == 0)
                 {
@@ -234,7 +234,7 @@ namespace TradingLib.Core
         public void Reset()
         {
             InitTradingDay();
-            debug(string.Format("结算中心初始化,上次结算日:{0} 下一交易日:{1} 当前交易日:{2} 结算状态:{3}", _lastsettleday, _nexttradingday, _tradingday, SettleCentreStatus));
+            logger.Info(string.Format("结算中心初始化,上次结算日:{0} 下一交易日:{1} 当前交易日:{2} 结算状态:{3}", _lastsettleday, _nexttradingday, _tradingday, SettleCentreStatus));
         }
 
         public void Start()
@@ -264,7 +264,7 @@ namespace TradingLib.Core
         /// </summary>
         public void SettleAccount()
         {
-            debug(string.Format("#####SettleAccount: Start Settele Account,Current Tradingday:{0}", CurrentTradingday), QSEnumDebugLevel.INFO);
+            logger.Info(string.Format("#####SettleAccount: Start Settele Account,Current Tradingday:{0}", CurrentTradingday));
             foreach (IAccount acc in TLCtxHelper.ModuleAccountManager.Accounts)
             {
                 try
@@ -273,14 +273,14 @@ namespace TradingLib.Core
                 }
                 catch (Exception ex)
                 {
-                    debug(string.Format("SettleError,Account:{0} errors:{1}", acc.ID, ex.ToString()), QSEnumDebugLevel.ERROR);
+                    logger.Error(string.Format("SettleError,Account:{0} errors:{1}", acc.ID, ex.ToString()));
                 }
             }
 
             //更新最近结算日
-            debug(string.Format("Update lastsettleday as:{0}", CurrentTradingday), QSEnumDebugLevel.INFO);
+            logger.Info(string.Format("Update lastsettleday as:{0}", CurrentTradingday));
             ORM.MSettlement.UpdateSettleday(CurrentTradingday);
-            debug("Settlement Done", QSEnumDebugLevel.INFO);
+            logger.Info("Settlement Done");
         }
 
 

@@ -22,13 +22,13 @@ namespace TradingLib.Core
                 string msg = string.Empty;
                 if (!a.CheckAccount(out msg) && msg != string.Empty)//账户检查不通过并且有返回消息则我们打印消息
                 {
-                    debug(msg, QSEnumDebugLevel.INFO);
+                    logger.Warn(msg);
                 }
             }
             catch (Exception ex)
             {
                 string s = PROGRAME + ":checkAccount error:" + ex.ToString();
-                debug(s, QSEnumDebugLevel.ERROR);
+                logger.Error(s);
             }
         }
         

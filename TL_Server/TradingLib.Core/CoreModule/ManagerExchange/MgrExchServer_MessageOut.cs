@@ -190,7 +190,7 @@ namespace TradingLib.Core
                 }
                 catch (Exception ex)
                 {
-                    debug(ex.ToString());
+                    logger.Error(ex);
                 }
             }
         }
@@ -199,14 +199,14 @@ namespace TradingLib.Core
         { 
        
             string acc = request.ResumeAccount;
-            debug("resuem account:" + acc, QSEnumDebugLevel.INFO);
+            logger.Info("resuem account:" + acc);
             try
             {
 
                 IAccount account = TLCtxHelper.ModuleAccountManager[acc];
                 if (account == null)
                 {
-                    debug("Resume Account:" + acc + " do not exist", QSEnumDebugLevel.ERROR);
+                    logger.Error("Resume Account:" + acc + " do not exist");
                     return;
                 }
 
@@ -252,7 +252,7 @@ namespace TradingLib.Core
             }
             catch (Exception ex)
             {
-                debug("恢复交易帐户:" + acc + "出错" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                logger.Error("恢复交易帐户:" + acc + "出错" + ex.ToString());
             }
         }
 

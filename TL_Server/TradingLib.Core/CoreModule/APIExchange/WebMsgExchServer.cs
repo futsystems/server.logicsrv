@@ -64,7 +64,7 @@ namespace TradingLib.Core
             }
             catch (Exception ex)
             {
-                debug("handlewebtask error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                logger.Error("handlewebtask error:" + ex.ToString());
                 return WebAPIHelper.ReplyError("SERVER_SIDE_ERROR");//JsonReply.GenericError(ReplyType.ServerSideError, "服务端处理消息异常").ToJson();
             }
         }
@@ -72,7 +72,7 @@ namespace TradingLib.Core
         public void Start()
         {
             Util.StartStatus(this.PROGRAME);
-            debug("webmsgexch start....", QSEnumDebugLevel.INFO);
+            logger.Info("webmsgexch start....");
             _repserver.Start();
         }
 
@@ -80,7 +80,7 @@ namespace TradingLib.Core
         {
             Util.StopStatus(this.PROGRAME);
             _repserver.Stop();
-            debug("webmsgexch stopped", QSEnumDebugLevel.INFO);
+            logger.Info("webmsgexch stopped");
         
         }
 

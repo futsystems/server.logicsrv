@@ -150,7 +150,7 @@ namespace TradingLib.Core
         /// <param name="rg"></param>
         public void UpdateRouterGroup(string account, RouterGroup rg)
         {
-            debug("修改帐户路由组为:" + rg.Name, QSEnumDebugLevel.INFO);
+            logger.Info("修改帐户路由组为:" + rg.Name);
             if (!HaveAccount(account)) return;
             this[account].RG_FK = rg.ID;
             ORM.MAccount.UpdateRouterGroup(account, rg.ID);
@@ -165,7 +165,7 @@ namespace TradingLib.Core
         /// <param name="id"></param>
         public void ActiveAccount(string id)
         {
-            debug("激活帐户:" + id, QSEnumDebugLevel.INFO);
+            logger.Info("激活帐户:" + id);
             if (!HaveAccount(id)) return;
             this[id].Execute = true;
             TLCtxHelper.EventAccount.FireAccountActiveEvent(id);
@@ -179,7 +179,7 @@ namespace TradingLib.Core
         /// <param name="id"></param>
         public void InactiveAccount(string id)
         {
-            debug("冻结账户:" + id, QSEnumDebugLevel.INFO);
+            logger.Info("冻结账户:" + id);
             if (!HaveAccount(id)) return;
             this[id].Execute = false;
             TLCtxHelper.EventAccount.FireAccountInactiveEvent(id);
@@ -195,7 +195,7 @@ namespace TradingLib.Core
         public void CashOperation(string account, decimal amount,QSEnumEquityType equitytype, string transref, string comment)
         {
 
-            debug("CashOperation ID:" + account + " Amount:" + amount.ToString() + " Comment:" + comment, QSEnumDebugLevel.INFO);
+            logger.Info("CashOperation ID:" + account + " Amount:" + amount.ToString() + " Comment:" + comment);
             IAccount acc = this[account];
             if (acc == null)
             {

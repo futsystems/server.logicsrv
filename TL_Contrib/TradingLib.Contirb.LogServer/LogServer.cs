@@ -105,7 +105,7 @@ namespace TradingLib.Contirb.LogServer
         /// </summary>
         public void Start()
         {
-            debug("启动日志服务,监听端口:" + _port.ToString(), QSEnumDebugLevel.INFO);
+            logger.Info("启动日志服务,监听端口:" + _port.ToString());
             if (_loggo) return;
             _loggo = true;
             _reportThread = new Thread(LogProcess);
@@ -118,7 +118,7 @@ namespace TradingLib.Contirb.LogServer
         /// </summary>
         public void Stop()
         {
-            debug("停止日志服务.....");
+            logger.Info("停止日志服务.....");
             if (!_loggo) return;
             _loggo = false;
             Util.WaitThreadStop(_reportThread);
@@ -192,7 +192,7 @@ namespace TradingLib.Contirb.LogServer
             }
             catch (Exception ex)
             {
-                debug("SaveLogTaskEvent Error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                logger.Error("SaveLogTaskEvent Error:" + ex.ToString());
             }
         }
 
@@ -204,7 +204,7 @@ namespace TradingLib.Contirb.LogServer
             }
             catch (Exception ex)
             {
-                debug("SaveLogPacketEvent Error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                logger.Error("SaveLogPacketEvent Error:" + ex.ToString());
             }
         }
 
@@ -289,7 +289,7 @@ namespace TradingLib.Contirb.LogServer
             }
             catch (Exception ex)
             {
-                debug("drop logs error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                logger.Error("drop logs error:" + ex.ToString());
             }
         }
 

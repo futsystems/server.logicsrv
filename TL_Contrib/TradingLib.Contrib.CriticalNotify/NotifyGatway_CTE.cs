@@ -18,7 +18,7 @@ namespace TradingLib.Contrib.NotifyCentre
         [ContribCommandAttr(QSEnumCommandSource.MessageWeb, "UpdateNotifyEmail", "UpdateNotifyEmail - 更新交易帐户的通知邮件地址", "更新交易帐户的通知邮件地址")]
         public void CTE_QryFinService(string account,string email)
         {
-            debug("更新交易帐户:" + account + "的通知邮件地址为:" + email, QSEnumDebugLevel.INFO);
+            logger.Info("更新交易帐户:" + account + "的通知邮件地址为:" + email);
             IAccount acc = TLCtxHelper.ModuleAccountManager[account];
             if (acc != null)
             {

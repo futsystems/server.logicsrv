@@ -20,10 +20,10 @@ namespace TradingLib.Core
         /// <param name="login"></param>
         void newSessionUpdate(TrdClientInfo c, bool login)
         {
-            debug("sessionupdate,will send to magr moniter", QSEnumDebugLevel.INFO);
+            logger.Debug("sessionupdate,will send to magr moniter");
             if (string.IsNullOrEmpty(c.Account.ID))
             {
-                debug("Client:" + c.Location.ClientID + " do not have account,can not have session update event", QSEnumDebugLevel.WARNING);
+                logger.Warn("Client:" + c.Location.ClientID + " do not have account,can not have session update event");
             }
             else
             {
@@ -46,7 +46,7 @@ namespace TradingLib.Core
         /// <param name="account"></param>
         void newAccountChanged(string account)
         {
-            debug("account changed,will send to manager montier", QSEnumDebugLevel.INFO);
+            logger.Info("account changed,will send to manager montier");
             IAccount acc = TLCtxHelper.ModuleAccountManager[account];
             NotifyMGRAccountChangeUpdateResponse notify = ResponseTemplate<NotifyMGRAccountChangeUpdateResponse>.SrvSendNotifyResponse(account);
             notify.oAccount = acc.GenAccountLite();
@@ -59,7 +59,7 @@ namespace TradingLib.Core
         /// <param name="account"></param>
         void newAccountAdded(string account)
         {
-            debug("account added,will send to manager montier", QSEnumDebugLevel.INFO);
+            logger.Info("account added,will send to manager montier");
             IAccount acc = TLCtxHelper.ModuleAccountManager[account];
             if (acc != null)
             {

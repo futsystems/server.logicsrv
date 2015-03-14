@@ -13,7 +13,7 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryAgentPaymentInfo", "QryAgentPaymentInfo - query payment Info", "查询代理支付信息")]
         public void CTE_QryPaymentInfo(ISession session, int agentfk)
         {
-            debug("查询代理支付信息", QSEnumDebugLevel.INFO);
+            logger.Info("查询代理支付信息");
             Manager manger = BasicTracker.ManagerTracker[agentfk];
             JsonWrapperAgentPaymentInfo info = manger.GetPaymentInfo();
             session.ReplyMgr(info);
@@ -23,7 +23,7 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryAgentCashOperationTotal", "QryAgentCashOperationTotal - query agent pending cash operation", "查询所有代理待处理委托")]
         public void CTE_QryAgentCashOperationTotal(ISession session)
         {
-            debug("查询代理所有出入金请求记录", QSEnumDebugLevel.INFO);
+            logger.Info("查询代理所有出入金请求记录");
             //查询所有代理出入金记录
             Manager manger = session.GetManager();
             JsonWrapperCashOperation[] ops = manger.Domain.GetAgentCashOperation().ToArray();
@@ -76,7 +76,7 @@ namespace TradingLib.Core
         {
             try
             {
-                debug("确认出入金操作请求", QSEnumDebugLevel.INFO);
+                logger.Info("确认出入金操作请求");
                 Manager manger = session.GetManager();
                 JsonWrapperCashOperation request = Mixins.Json.JsonMapper.ToObject<JsonWrapperCashOperation>(playload);
                 
@@ -117,7 +117,7 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "CancelCashOperation", "CancelCashOperation -cancel deposit or withdraw", "取消出入金操作请求", QSEnumArgParseType.Json)]
         public void CTE_CancelCashOperation(ISession session, string playload)
         {
-            debug("取消出入金操作请求", QSEnumDebugLevel.INFO);
+            logger.Info("取消出入金操作请求");
             Manager manger = session.GetManager();
             if (manger != null)
             {
@@ -135,7 +135,7 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "RejectCashOperation", "RejectCashOperation -reject deposit or withdraw", "拒绝出入金操作请求", QSEnumArgParseType.Json)]
         public void CTE_RejectCashOperation(ISession session, string playload)
         {
-            debug("拒绝出入金操作请求", QSEnumDebugLevel.INFO);
+            logger.Info("拒绝出入金操作请求");
             Manager manger = session.GetManager();
             if (manger != null)
             {
@@ -160,7 +160,7 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QueryAgentCashTrans", "QueryAgentCashTrans -query agents cashtrans", "查询代理出入金记录")]
         public void CTE_QueryAgentCashTrans(ISession session,int agentfk, long start, long end)
         {
-            debug("查询出入金记录", QSEnumDebugLevel.INFO);
+            logger.Info("查询出入金记录");
             Manager manger = session.GetManager();
             if (manger != null)
             {

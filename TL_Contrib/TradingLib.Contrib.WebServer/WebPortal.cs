@@ -62,7 +62,7 @@ namespace TradingLib.Contrib.WebPortal
         /// </summary>
         public void Start()
         {
-            debug("Start webportal at port:" + _port.ToString(), QSEnumDebugLevel.INFO);
+            logger.Info("Start webportal at port:" + _port.ToString());
             _webserver.Start();
         
         }

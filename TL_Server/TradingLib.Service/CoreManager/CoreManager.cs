@@ -48,38 +48,38 @@ namespace TradingLib.ServiceManager
             Util.InitStatus(this.PROGRAME, true);
             #region 加载核心模块
 
-            debug("[INIT CORE] DataRepository", QSEnumDebugLevel.INFO);
+            logger.Info("[INIT CORE] DataRepository");
             _datarepository = TLCtxHelper.Scope.Resolve<IModuleDataRepository>();//初始化交易数据储存服务
-            
-            debug("[INIT CORE] SettleCentre", QSEnumDebugLevel.INFO);
+
+            logger.Info("[INIT CORE] SettleCentre");
             _settleCentre = TLCtxHelper.Scope.Resolve<IModuleSettleCentre>();//初始化结算中心
 
-            debug("[INIT CORE] MsgExchServer", QSEnumDebugLevel.INFO);
+            logger.Info("[INIT CORE] MsgExchServer");
             _messageExchagne = TLCtxHelper.Scope.Resolve<IModuleExCore>();//初始化交易服务
 
-            debug("[INIT CORE] AccountManager", QSEnumDebugLevel.INFO);
+            logger.Info("[INIT CORE] AccountManager");
             _acctmanger = TLCtxHelper.Scope.Resolve<IModuleAccountManager>();//初始化交易帐户管理服务
 
-            debug("[INIT CORE] ClearCentre", QSEnumDebugLevel.INFO);
+            logger.Info("[INIT CORE] ClearCentre");
             _clearCentre = TLCtxHelper.Scope.Resolve<IModuleClearCentre>();//初始化结算中心 初始化账户信息
-            
-            debug("[INIT CORE] RiskCentre", QSEnumDebugLevel.INFO);
+
+            logger.Info("[INIT CORE] RiskCentre");
             _riskCentre = TLCtxHelper.Scope.Resolve<IModuleRiskCentre>();//初始化风控中心 初始化账户风控规则
 
-            debug("[INIT CORE] DataFeedRouter", QSEnumDebugLevel.INFO);
+            logger.Info("[INIT CORE] DataFeedRouter");
             //var scope = Container.BeginLifetimeScope();
             _datafeedRouter = TLCtxHelper.Scope.Resolve<IModuleDataRouter>();//Container.Resolve<IDataRouter>();//初始化数据路由
 
-            debug("[INIT CORE] BrokerRouter", QSEnumDebugLevel.INFO);
+            logger.Info("[INIT CORE] BrokerRouter");
             _brokerRouter = TLCtxHelper.Scope.Resolve<IModuleBrokerRouter>();//初始化交易路由选择器
 
-            debug("[INIT CORE] MgrExchServer", QSEnumDebugLevel.INFO);//服务端管理界面,提供管理客户端接入,查看并设置相关数据
+            logger.Info("[INIT CORE] MgrExchServer");//服务端管理界面,提供管理客户端接入,查看并设置相关数据
             _managerExchange = new MgrExchServer(); ;//初始化管理服务
 
-            debug("[INIT CORE] WebMsgExchServer", QSEnumDebugLevel.INFO);
+            logger.Info("[INIT CORE] WebMsgExchServer");
             _webmsgExchange = TLCtxHelper.Scope.Resolve<IModuleAPIExchange>();
 
-            debug("[INIT CORE] TaskCentre", QSEnumDebugLevel.INFO);
+            logger.Info("[INIT CORE] TaskCentre");
             _taskcentre = TLCtxHelper.Scope.Resolve<IModuleTaskCentre>();//初始化任务执行中心 在所有组件加载完毕后 在统一加载定时任务设置
             #endregion
 
@@ -118,7 +118,7 @@ namespace TradingLib.ServiceManager
 
             _taskcentre.Start();
 
-            debug("----------- Core Started -----------------",QSEnumDebugLevel.INFO);
+            logger.Info("----------- Core Started -----------------");
         }
 
         public void Stop()

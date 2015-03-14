@@ -112,7 +112,7 @@ namespace TradingLib.Core
         /// </summary>
         public void Reset()
         {
-            debug("风控中心重置", QSEnumDebugLevel.INFO);
+            logger.Info("风控中心重置");
             //清空强平任务队列
             posflatlist.Clear();
 

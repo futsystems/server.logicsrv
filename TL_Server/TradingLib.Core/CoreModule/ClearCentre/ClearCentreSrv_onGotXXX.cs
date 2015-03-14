@@ -28,12 +28,12 @@ namespace TradingLib.Core
                     {
                         if (neworder)
                         {
-                            debug("Got Order:" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
+                            logger.Info("Got Order:" + o.GetOrderInfo());
                             TLCtxHelper.ModuleDataRepository.NewOrder(o);
                         }
                         else
                         {
-                            debug("Update Order:" + o.GetOrderStatus(), QSEnumDebugLevel.INFO);
+                            logger.Info("Update Order:" + o.GetOrderStatus());
                             TLCtxHelper.ModuleDataRepository.UpdateOrder(o);
                         }
                     }
@@ -41,7 +41,7 @@ namespace TradingLib.Core
             }
             catch (Exception ex)
             {
-                debug("onGotOrder error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                logger.Error("onGotOrder error:" + ex.ToString());
             }
         }
 
@@ -56,7 +56,7 @@ namespace TradingLib.Core
                     oc.Account = o.Account;
                     oc.ActionFlag = QSEnumOrderActionFlag.Delete;
                     oc.OrderID = o.id;
-                    debug("Got Cancel:" + oid, QSEnumDebugLevel.INFO);
+                    logger.Info("Got Cancel:" + oid);
                     TLCtxHelper.ModuleDataRepository.NewOrderAction(oc);
                 }
             }
@@ -79,7 +79,7 @@ namespace TradingLib.Core
                     //调整手续费 注意 这里手续费已经进行了标准手续费计算
                     f.Commission = AdjuestCommission(f, pr);
 
-                    debug("Got Fill:" + f.GetTradeInfo(), QSEnumDebugLevel.INFO);
+                    logger.Info("Got Fill:" + f.GetTradeInfo());
                     //记录帐户成交记录
                     TLCtxHelper.ModuleDataRepository.NewTrade(f);
                     //当PositionRound关闭后 对外触发PositionRound关闭事件
@@ -96,7 +96,7 @@ namespace TradingLib.Core
             }
             catch (Exception ex)
             {
-                debug("onGotFill error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                logger.Error("onGotFill error:" + ex.ToString());
             }
         }
 

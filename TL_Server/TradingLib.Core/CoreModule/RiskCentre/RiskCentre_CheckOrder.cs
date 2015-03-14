@@ -150,7 +150,7 @@ namespace TradingLib.Core
                 {
                     o.OffsetFlag = QSEnumOffsetFlag.OPEN;
                 }
-                debug("Order offsetFlag unknown,auto detected to:" + o.OffsetFlag.ToString());
+                logger.Info("Order offsetFlag unknown,auto detected to:" + o.OffsetFlag.ToString());
             }
 
 
@@ -262,7 +262,7 @@ namespace TradingLib.Core
                     if (!account.Execute)
                     {
                         msg = "账户被冻结";
-                        debug("Order rejected by [Execute Check]" + o.GetOrderInfo(), QSEnumDebugLevel.WARNING);
+                        logger.Warn("Order rejected by [Execute Check]" + o.GetOrderInfo());
                         return false;
                     }
                 }
@@ -277,7 +277,7 @@ namespace TradingLib.Core
                         if (o.oSymbol.IsFlatTime)
                         {
                             msg = "日内交易帐户，系统正在强平，无法处理委托！";
-                            debug("Order rejected by [FlatTime Check] not in [intraday] trading time" + o.GetOrderInfo(), QSEnumDebugLevel.WARNING);
+                            logger.Info("Order rejected by [FlatTime Check] not in [intraday] trading time" + o.GetOrderInfo());
                             return false;
                         }
                     }
@@ -290,7 +290,7 @@ namespace TradingLib.Core
                 {
                     if (!account.CanTakeSymbol(o.oSymbol, out msg))
                     {
-                        debug("Order rejected by[Account CanTakeSymbol Check]" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
+                        logger.Info("Order rejected by[Account CanTakeSymbol Check]" + o.GetOrderInfo());
                         return false;
                     }
                 }
@@ -308,7 +308,7 @@ namespace TradingLib.Core
                     //保证金检查(如果帐户存在特殊的服务,可由特殊的服务进行保证金检查)
                     if (!account.CanFundTakeOrder(o, out msg))
                     {
-                        debug("Order rejected by[Order Margin Check]" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
+                        logger.Info("Order rejected by[Order Margin Check]" + o.GetOrderInfo());
                         return false;
                     }
                 }
@@ -346,10 +346,10 @@ namespace TradingLib.Core
                             case QSEnumOffsetFlag.CLOSETODAY:
                                 {
                                     int pendingExitSizeCloseToday = account.GetPendingExitOrders(o.Symbol, o.PositionSide).Where(o1 => o1.OffsetFlag == QSEnumOffsetFlag.CLOSETODAY).Sum(o1 => o1.UnsignedSize);
-                                    debug(string.Format("position today:{0}  pendingexist closetoday order size:{1} ordersize:", voltd, pendingExitSizeCloseToday), QSEnumDebugLevel.INFO);
+                                    logger.Info(string.Format("position today:{0}  pendingexist closetoday order size:{1} ordersize:", voltd, pendingExitSizeCloseToday));
                                     if (voltd < pendingExitSizeCloseToday + osize)
                                     {
-                                        debug("Order rejected by[Order FlatSize Check]" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
+                                        logger.Info("Order rejected by[Order FlatSize Check]" + o.GetOrderInfo());
                                         msg = (voltd == 0 ? "无可平今仓" : "可平今仓数量不足");
                                         return false;
                                     } 
@@ -360,10 +360,10 @@ namespace TradingLib.Core
                             case QSEnumOffsetFlag.CLOSEYESTERDAY:
                                 {
                                     int pendingExitSizeCloseYestoday = account.GetPendingExitOrders(o.Symbol, o.PositionSide).Where(o1 => o1.OffsetFlag == QSEnumOffsetFlag.CLOSEYESTERDAY || o1.OffsetFlag == QSEnumOffsetFlag.CLOSE).Sum(o1 => o1.UnsignedSize);
-                                    debug(string.Format("position yestoday:{0}  pendingexist closeyestoday order size:{1} ordersize:", volyd, pendingExitSizeCloseYestoday), QSEnumDebugLevel.INFO);
+                                    logger.Info(string.Format("position yestoday:{0}  pendingexist closeyestoday order size:{1} ordersize:", volyd, pendingExitSizeCloseYestoday));
                                     if (volyd < pendingExitSizeCloseYestoday + osize)
                                     {
-                                        debug("Order rejected by[Order FlatSize Check]" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
+                                        logger.Info("Order rejected by[Order FlatSize Check]" + o.GetOrderInfo());
                                         msg = (volyd == 0 ? "无可平昨仓" : "可平昨仓数量不足");
                                         return false;
                                     }
@@ -397,7 +397,7 @@ namespace TradingLib.Core
                         if (pos_size < pendingExitSize + osize)
                         {
                             //debug("限价委托,未成交数量超过当前持仓", QSEnumDebugLevel.INFO);
-                            debug("Order rejected by[Order FlatSize Check]" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
+                            logger.Info("Order rejected by[Order FlatSize Check]" + o.GetOrderInfo());
                             msg = (pos_size == 0 ? commentNoPositionForFlat : commentOverFlatPositionSize);
                             return false;
                         }
@@ -413,7 +413,7 @@ namespace TradingLib.Core
                 {
                     if (!account.CheckOrder(o, out msg))//如果通过风控检查 则置委托状态为Placed
                     {
-                        debug("Order rejected by[Order Rule Check]" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
+                        logger.Info("Order rejected by[Order Rule Check]" + o.GetOrderInfo());
                         return false;
                     }
                 }
@@ -426,7 +426,7 @@ namespace TradingLib.Core
             {
                 msg = "风控检查异常";
                 string s = PROGRAME + ":委托风控检查异常" + ex.ToString();
-                debug(s, QSEnumDebugLevel.ERROR);
+                logger.Error(s);
                 return false;
             }
         }

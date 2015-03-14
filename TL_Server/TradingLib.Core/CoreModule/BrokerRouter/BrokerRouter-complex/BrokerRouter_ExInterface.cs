@@ -31,7 +31,7 @@ namespace TradingLib.Core
                 if (o.Status != QSEnumOrderStatus.Reject)
                 {
                     //按照委托方式发送委托直接发送或通过本地委托模拟器进行发送
-                    debug("Send  Order To Broker Side:" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
+                    logger.Info("Send  Order To Broker Side:" + o.GetOrderInfo());
                     //这里需要针对委托进行判断 如果需要拆分 则将委托拆分成多个委托然后统一对外提交
                     //模拟成交不用拆分 实盘委托拆分，如何在多个成交帐户间进行路由，是否也需要像单帐户一样，做单边趋势
                     //比如帐户A有多头，则卖出操作优先路由到A帐户进行平仓，帐户B有空头,则买入操作优先路由到B帐户进行平仓
@@ -60,8 +60,8 @@ namespace TradingLib.Core
             }
             catch (Exception ex)
             {
-                debug("BrokerRouter Send Order Error:" + (o == null ? "Null" : o.ToString()), QSEnumDebugLevel.ERROR);
-                debug(ex.ToString());
+                logger.Error("BrokerRouter Send Order Error:" + (o == null ? "Null" : o.ToString()));
+                logger.Error(ex.ToString());
             }
         }
 
@@ -98,7 +98,7 @@ namespace TradingLib.Core
         /// <returns></returns>
         bool BrokerSendOrder(Order o, out string errorTitle)
         {
-            debug("BrokerSendOrder select broker and send through broker", QSEnumDebugLevel.INFO);
+            logger.Info("BrokerSendOrder select broker and send through broker");
             errorTitle = string.Empty;
             try
             {
@@ -121,13 +121,13 @@ namespace TradingLib.Core
                     //如果没有交易通道则拒绝该委托
                     o.Status = QSEnumOrderStatus.Reject;
                     errorTitle = "EXECUTION_BROKER_NOT_FOUND";
-                    debug("没有可以交易的通道 |" + o.GetOrderInfo(), QSEnumDebugLevel.WARNING);
+                    logger.Warn("没有可以交易的通道 |" + o.GetOrderInfo());
                     return false;
                 }
             }
             catch (Exception ex)
             {
-                debug(PROGRAME + ":向broker发送委托错误:" + ex.ToString() + ex.StackTrace.ToString(), QSEnumDebugLevel.ERROR);
+                logger.Error(PROGRAME + ":向broker发送委托错误:" + ex.ToString() + ex.StackTrace.ToString());
                 o.Status = QSEnumOrderStatus.Reject;
                 errorTitle = "EXECUTION_BROKER_PLACEORDER_ERROR";
                 return false;
@@ -149,7 +149,7 @@ namespace TradingLib.Core
                 //如果没有交易通道则拒绝该委托
                 o.Status = QSEnumOrderStatus.Reject;
                 GotOrderErrorNotify(o, "EXECUTION_BROKER_NOT_FOUND");
-                debug(PROGRAME + ":没有可以交易的通道 |" + o.ToString(), QSEnumDebugLevel.WARNING);
+                logger.Warn(PROGRAME + ":没有可以交易的通道 |" + o.ToString());
             }
         }
         /// <summary>
@@ -160,13 +160,13 @@ namespace TradingLib.Core
         {
             try
             {
-                debug(PROGRAME + ":Route Cancel to Broker Side:" + val.ToString(), QSEnumDebugLevel.INFO);
+                logger.Info(PROGRAME + ":Route Cancel to Broker Side:" + val.ToString());
                 RouterCancelOrder(val);
             }
             catch (Exception ex)
             {
-                debug("BrokerRouter CancelOrder Error:" + val.ToString(), QSEnumDebugLevel.ERROR);
-                debug(ex.ToString());
+                logger.Error("BrokerRouter CancelOrder Error:" + val.ToString());
+                logger.Error(ex);
             }
 
         }
@@ -190,7 +190,7 @@ namespace TradingLib.Core
             }
             catch (Exception ex)
             {
-                debug(PROGRAME + ":向broker发送取消委托出错:" + ex.ToString() + ex.StackTrace.ToString(), QSEnumDebugLevel.ERROR);
+                logger.Error(PROGRAME + ":向broker发送取消委托出错:" + ex.ToString() + ex.StackTrace.ToString());
             }
         }
 

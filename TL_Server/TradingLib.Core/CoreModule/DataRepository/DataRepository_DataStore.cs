@@ -20,12 +20,12 @@ namespace TradingLib.Core
         /// </summary>
         public void CleanTempTable()
         {
-            debug(datacleanheader + "Clean Tmp_XXX Tables", QSEnumDebugLevel.INFO);
+            logger.Info(datacleanheader + "Clean Tmp_XXX Tables");
             ORM.MTradingInfo.ClearIntradayOrders(TLCtxHelper.ModuleSettleCentre.NextTradingday);
             ORM.MTradingInfo.ClearIntradayTrades(TLCtxHelper.ModuleSettleCentre.NextTradingday);
             ORM.MTradingInfo.ClearIntradayOrderActions(TLCtxHelper.ModuleSettleCentre.NextTradingday);
             ORM.MTradingInfo.ClearIntradayPosTransactions(TLCtxHelper.ModuleSettleCentre.NextTradingday);
-            debug("Cleaned Success", QSEnumDebugLevel.INFO);
+            logger.Info("Cleaned Success");
         }
 
         //public void SaveHoldInfo()
@@ -46,7 +46,7 @@ namespace TradingLib.Core
         /// </summary>
         public void SavePositionDetails()
         {
-            debug(datastoreheader + "Save PositionDetails....", QSEnumDebugLevel.MUST);
+            logger.Info(datastoreheader + "Save PositionDetails....");
             
             //检查所有系统持仓按照一定的逻辑获得 结算价 目前如果结算价不存在则取持仓最新价来替代(持仓最新价 当没有tick时是以持仓成本作价)
             foreach (Position pos in TLCtxHelper.ModuleClearCentre.TotalPositions)
@@ -82,7 +82,7 @@ namespace TradingLib.Core
                     }
                 }
             }
-            debug(string.Format("Saved {0} Account PositionDetails Successfull", i), QSEnumDebugLevel.INFO);
+            logger.Info(string.Format("Saved {0} Account PositionDetails Successfull", i));
 
             i = 0;
             //遍历所有成交接口
@@ -109,7 +109,7 @@ namespace TradingLib.Core
                     }
                 }
             }
-            debug(string.Format("Saved {0} Broker PositionDetails Successfull", i), QSEnumDebugLevel.INFO);
+            logger.Info(string.Format("Saved {0} Broker PositionDetails Successfull", i));
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace TradingLib.Core
         /// </summary>
         public void Dump2Log()
         {
-            debug(datastoreheader + "Dump TradingInfo(Order,Trade,OrderAction)", QSEnumDebugLevel.INFO);
+            logger.Info(datastoreheader + "Dump TradingInfo(Order,Trade,OrderAction)");
             int onum, tnum, cnum, prnum;
 
             ORM.MTradingInfo.DumpIntradayOrders(out onum);
@@ -125,10 +125,10 @@ namespace TradingLib.Core
             ORM.MTradingInfo.DumpIntradayOrderActions(out cnum);
             ORM.MTradingInfo.DumpIntradayPosTransactions(out prnum);
 
-            debug("Order       Saved:" + onum.ToString(), QSEnumDebugLevel.INFO);
-            debug("Trade       Saved:" + tnum.ToString(), QSEnumDebugLevel.INFO);
-            debug("OrderAction Saved:" + cnum.ToString(), QSEnumDebugLevel.INFO);
-            debug("PosTrans    Saved:" + prnum.ToString(), QSEnumDebugLevel.INFO);
+            logger.Info("Order       Saved:" + onum.ToString());
+            logger.Info("Trade       Saved:" + tnum.ToString());
+            logger.Info("OrderAction Saved:" + cnum.ToString());
+            logger.Info("PosTrans    Saved:" + prnum.ToString());
         }
 
 

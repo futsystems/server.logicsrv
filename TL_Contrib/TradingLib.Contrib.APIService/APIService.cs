@@ -31,7 +31,7 @@ namespace TradingLib.Contrib.APIService
         /// </summary>
         public void OnLoad() 
         {
-            debug("APIServiceBundle is loading ......", QSEnumDebugLevel.INFO);
+            logger.Info("APIServiceBundle is loading ......");
         }
         /// <summary>
         /// 销毁

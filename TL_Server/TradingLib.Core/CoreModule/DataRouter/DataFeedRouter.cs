@@ -85,7 +85,7 @@ namespace TradingLib.Core
 
         void EventSystem_SettleResetEvent(object sender, SystemEventArgs e)
         {
-            debug("重置行情路由服务", QSEnumDebugLevel.INFO);
+            logger.Info("重置行情路由服务");
             this.Reset();
         }
 
@@ -183,7 +183,7 @@ namespace TradingLib.Core
         /// <param name="val"></param>
         void _tickwatcher_GotMassAlertCleard(int val)
         {
-            debug("MassAlart cleard, the latest tick time:" + val.ToString(), QSEnumDebugLevel.WARNING);
+            logger.Warn("MassAlart cleard, the latest tick time:" + val.ToString());
         }
 
         /// <summary>
@@ -193,7 +193,7 @@ namespace TradingLib.Core
         /// <param name="val"></param>
         void _tickwatcher_GotMassAlert(int val)
         {
-            debug("MassAlert," +"the latest tick time:"+_tickwatcher.RecentTime.ToString()+" there is no tick in "+_tickwatcher.MassAlertThreshold.ToString()+" secends"  , QSEnumDebugLevel.WARNING);
+            logger.Warn("MassAlert," + "the latest tick time:" + _tickwatcher.RecentTime.ToString() + " there is no tick in " + _tickwatcher.MassAlertThreshold.ToString() + " secends");
             
             /* 如果我们在夜盘没有订阅任何数据 则接口会一直重启
             IDataFeed df = TLCtxHelper.Ctx.RouterManager.DefaultDataFeed;
@@ -216,7 +216,7 @@ namespace TradingLib.Core
         /// <param name="sym"></param>
         void _tickwatcher_GotFirstTick(string sym)
         {
-            debug("symbol:" + sym + "'s tick first arive..", QSEnumDebugLevel.WARNING);
+            logger.Info("symbol:" + sym + "'s tick first arive..");
         }
 
         /// <summary>
@@ -239,7 +239,7 @@ namespace TradingLib.Core
         public void LoadDataFeed(IDataFeed datafeed)
         { 
             //将数据通道的Tick转发到datafeedrouter然后再转发到TradingServer
-            debug("load datafeed:xxxxxxxxxxxxxxxxxxxxxx", QSEnumDebugLevel.INFO);
+            logger.Info("load datafeed:xxxxxxxxxxxxxxxxxxxxxx");
             datafeed.GotTickEvent +=new TickDelegate(GotTick);
             datafeed.Connected += new IConnecterParamDel(datafeed_Connected);
             
@@ -286,7 +286,7 @@ namespace TradingLib.Core
             //如果通过该通道已注册的行情为0 则加载所有默认合约进行注册
             if (basket.Count == 0)
             {
-                debug(string.Format("DataFeed[{0}] have not registed any symbol,register all symbol we trade",df.Token), QSEnumDebugLevel.INFO);
+                logger.Info(string.Format("DataFeed[{0}] have not registed any symbol,register all symbol we trade", df.Token));
                 SymbolBasket nb = new SymbolBasketImpl();
 
                 foreach (Symbol sym in BasicTracker.SymbolTracker.BasketAvabile)
@@ -301,7 +301,7 @@ namespace TradingLib.Core
             }
             else//如果有对应的合约 则重新注册
             {
-                debug("DataFeed:" + df.Token + "connected,register symbols: " + string.Join(",", basket.ToSymArray()), QSEnumDebugLevel.INFO);
+                logger.Info("DataFeed:" + df.Token + "connected,register symbols: " + string.Join(",", basket.ToSymArray()));
                 df.RegisterSymbols(basket);
             }
         }
@@ -332,7 +332,7 @@ namespace TradingLib.Core
             try
             {
                 //遍历所有的security,然后选择对应的数据通道请求行情数据
-                debug("request market data to datafeed:" + string.Join(",", b.ToSymArray()), QSEnumDebugLevel.INFO);
+                logger.Info("request market data to datafeed:" + string.Join(",", b.ToSymArray()));
                 //将请求的合约按行情通道进行分组,然后统一调用行情通道的订阅合约函数
                 Dictionary<IDataFeed, SymbolBasket> registermap = new Dictionary<IDataFeed, SymbolBasket>();
                 //遍历合约列表然后按照对应的接口进行分类,最后统一进行注册防止过度调用接口的注册函数[假设是多个接口 多个行情字头可能每个合约对应的数据接口都不一致]
@@ -357,7 +357,7 @@ namespace TradingLib.Core
                 {
                     if (!df.IsLive)
                     {
-                        debug(PROGRAME + ":DataFeed[" + df.Token + "]  is not connected well, please make the connection first", QSEnumDebugLevel.WARNING);
+                        logger.Warn(PROGRAME + ":DataFeed[" + df.Token + "]  is not connected well, please make the connection first");
                         continue;
                     }
                     //调用行情通道订阅合约组
@@ -374,7 +374,7 @@ namespace TradingLib.Core
             }
             catch (Exception ex)
             {
-                debug(PROGRAME + ":regist symbols error:" + ex.ToString());
+                logger.Error(PROGRAME + ":regist symbols error:" + ex.ToString());
             }
 
         }
@@ -520,7 +520,7 @@ namespace TradingLib.Core
             }
             catch (Exception ex)
             {
-                debug("Error In savetick:" + ex.ToString(), QSEnumDebugLevel.ERROR);  
+                logger.Error("Error In savetick:" + ex.ToString());  
             }
 
         }
@@ -554,7 +554,7 @@ namespace TradingLib.Core
             }
             catch (Exception ex)
             {
-                debug("Error In loadtick:" + ex.ToString(), QSEnumDebugLevel.ERROR);  
+                logger.Error("Error In loadtick:" + ex.ToString());  
             }
         }
         #endregion
@@ -676,7 +676,7 @@ namespace TradingLib.Core
             }
             catch (Exception ex)
             {
-                debug(PROGRAME + ":async got tick error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                logger.Error(PROGRAME + ":async got tick error:" + ex.ToString());
             }
         }
 

@@ -41,7 +41,7 @@ namespace TradingLib.Core
             try
             {
                 //市场数据时IF1302 CN_XXXX FUT这样的字符串,我们需要将他们反序列化成secuirty获得准确的symbol取字头然后才可以得到正确的security
-                debug("Got Market data request : " + client + " " + mbstring, QSEnumDebugLevel.DEBUG);
+                logger.Debug("Got Market data request : " + client + " " + mbstring);
                 //SymbolBasket b = SymbolBasketImpl.FromString(mbstring);
                 //FastTickMgrRegisterSymbol(b);
                 //用于tradingServer注册获得数据 用于模拟成交以及 财务计算/客户端是直接连接到tick pub获得数据
@@ -49,8 +49,7 @@ namespace TradingLib.Core
             }
             catch (Exception ex)
             {
-                debug("客户端注册市场数据出错:" + ex.ToString());
-                throw (new QSTradingServerRegistSymbolError(ex));
+                logger.Error("客户端注册市场数据出错:" + ex.ToString());
             }
         }
 
@@ -68,7 +67,7 @@ namespace TradingLib.Core
             try
             {
                 bool login = false;
-                debug("Got login request:" + request.LoginID + "|" + request.Passwd +" Type:"+request.LoginType.ToString(), QSEnumDebugLevel.INFO);
+                logger.Info("Got login request:" + request.LoginID + "|" + request.Passwd + " Type:" + request.LoginType.ToString());
                 
                 IAccount account=null;
                 if (request.LoginType == 0)
@@ -81,7 +80,7 @@ namespace TradingLib.Core
                     }
                     else
                     {
-                        debug("系统通过UCenter鉴权认证", QSEnumDebugLevel.INFO);
+                        logger.Info("系统通过UCenter鉴权认证");
                         TLCtxHelper.EventSession.FireAuthUserEvent(clientinfo, request, ref response);
                         //AuthUserEvent(clientinfo, request, ref response);
                         //如果底层登入成功 则检查具体的服务信息，如果服务不存在则仍然是登入不成功
@@ -90,7 +89,7 @@ namespace TradingLib.Core
                         {
                             response.LoginID = request.LoginID;
 
-                            debug("logined:" + response.LoginID + " userid:" + response.UserID.ToString(), QSEnumDebugLevel.INFO);
+                            logger.Info("logined:" + response.LoginID + " userid:" + response.UserID.ToString());
                             
                             bool servicevalid = true;
                             if (request.ServiceType == 0)
@@ -127,14 +126,14 @@ namespace TradingLib.Core
                 }
                 else if (request.LoginType == 1)
                 {
-                    debug("系统通过清算中心认证,LoginID:" + request.LoginID + " Password:" + request.Passwd, QSEnumDebugLevel.INFO);
+                    logger.Info("系统通过清算中心认证,LoginID:" + request.LoginID + " Password:" + request.Passwd);
                     //1.检查帐户是否存在
 
                     //1.检查帐户是否存在
                     //获得当前登入终端数量
                     int loginnums = tl.ClientsForAccount(request.LoginID).Count();
                     //如果当前登入个数大于等于系统允许的登入数量则拒绝登入
-                    debug("account:" + request.LoginID + " current login num:" + loginnums.ToString(), QSEnumDebugLevel.INFO);
+                    logger.Info("account:" + request.LoginID + " current login num:" + loginnums.ToString());
 
                     if (loginnums >= loginTerminalNum)
                     {

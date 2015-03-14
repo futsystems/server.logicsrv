@@ -129,7 +129,7 @@ namespace TradingLib.Core
 
             if (response.RspInfo.ErrorID!=0)
             {
-                debug("Manager:" + request.LoginID + " Login failed", QSEnumDebugLevel.WARNING);
+                logger.Warn("Manager:" + request.LoginID + " Login failed");
             }
 
             SendOutPacket(response);
@@ -187,7 +187,7 @@ namespace TradingLib.Core
         /// <param name="address"></param>
         public void SrvOnOrderInsert(ISession session,OrderInsertRequest request)
         {
-            debug("Got Order:" + request.Order.GetOrderInfo(), QSEnumDebugLevel.INFO);
+            logger.Info("Got Order:" + request.Order.GetOrderInfo());
             //MgrClientInfo cinfo = _clients[request.ClientID];
             //1.如果不存在,表明该ID没有通过注册连接到我们的服务端
             //if (cinfo == null)
@@ -238,7 +238,7 @@ namespace TradingLib.Core
         public void SrvOnOrderAction(OrderActionRequest request)
         {
             //通过address(ClientID)查询本地客户端列表是否存在该ID
-            debug("got order action:" + request.ToString(), QSEnumDebugLevel.INFO);
+            logger.Info("got order action:" + request.ToString());
             MgrClientInfo cinfo = _clients[request.ClientID];
             if (cinfo == null) return;
 

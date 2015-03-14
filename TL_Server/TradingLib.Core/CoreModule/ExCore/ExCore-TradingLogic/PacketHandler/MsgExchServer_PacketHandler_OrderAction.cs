@@ -30,7 +30,7 @@ namespace TradingLib.Core
             }
             else//通过OrderRef FrontID SessionID 或者 OrderSysID进行查找委托
             {
-                debug("OrderAction OrderRef:" + action.OrderRef + " Front:" + action.FrontID.ToString() + " Session:" + action.SessionID.ToString() + " OrderSysID:" + action.OrderExchID + " OrderRef:" + action.OrderRef + " Request:" + action.RequestID, QSEnumDebugLevel.INFO);
+                logger.Info("OrderAction OrderRef:" + action.OrderRef + " Front:" + action.FrontID.ToString() + " Session:" + action.SessionID.ToString() + " OrderSysID:" + action.OrderExchID + " OrderRef:" + action.OrderRef + " Request:" + action.RequestID);
                 o = account.Orders.FirstOrDefault(tmp=>(tmp.OrderRef == action.OrderRef && tmp.FrontIDi == action.FrontID && tmp.SessionIDi == action.SessionID) || (tmp.OrderSysID == action.OrderExchID));
             }
 
@@ -56,21 +56,21 @@ namespace TradingLib.Core
                         //处于中间状态Placed或Submited由系统单独逻辑进行定时检查 用于清除处于未知状态的委托
                         else if (o.Status == QSEnumOrderStatus.Submited || o.Status == QSEnumOrderStatus.Placed)//已经通过broker提交 该状态无法立即撤单 需要等待委托状态更新为Opened或者 被定时程序发现是一个错误委托
                         {
-                            debug(string.Format("委托:{0} 处于:{1},等待broker返回", o.id, o.Status), QSEnumDebugLevel.INFO);
+                            logger.Info(string.Format("委托:{0} 处于:{1},等待broker返回", o.id, o.Status));
                             NotifyOrderActionError(action, RspInfoEx.Fill("ORDER_IN_PRESTAGE"));
                         }
                     }
                     else
                     {
                         //委托不可撤销
-                        debug("对应委托不可撤销:"+o.GetOrderInfo(), QSEnumDebugLevel.WARNING);
+                        logger.Info("对应委托不可撤销:" + o.GetOrderInfo());
                         NotifyOrderActionError(action, RspInfoEx.Fill("ORDER_CAN_NOT_BE_DELETE"));
                     }
                 }
             }
             else//委托操作所指定的委托不存在 委托操作字段错误
             {
-                debug("对应委托没有找到", QSEnumDebugLevel.WARNING);
+                logger.Warn("对应委托没有找到");
                 NotifyOrderActionError(action, RspInfoEx.Fill("ORDERACTION_BAD_FIELD"));
             }
 

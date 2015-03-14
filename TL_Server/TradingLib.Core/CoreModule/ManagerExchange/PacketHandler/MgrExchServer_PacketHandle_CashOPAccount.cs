@@ -24,7 +24,7 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryAccountCashOperationTotal", "QryAccountCashOperationTotal - query account pending cash operation", "查询所有交易帐户待处理委托")]
         public void CTE_QryAccountCashOperationTotal(ISession session)
         {
-            debug("查询交易帐户所有出入金请求记录", QSEnumDebugLevel.INFO);
+            logger.Info("查询交易帐户所有出入金请求记录");
             Manager manger = session.GetManager();
             if (manger != null)
             {
@@ -57,7 +57,7 @@ namespace TradingLib.Core
         {
             try
             {
-                debug("确认出入金操作请求", QSEnumDebugLevel.INFO);
+                logger.Info("确认出入金操作请求");
                 Manager manger = session.GetManager();
                 if (!manger.IsRoot())
                 {
@@ -100,7 +100,7 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "CancelAccountCashOperation", "CancelCashOperation -cancel deposit or withdraw", "取消出入金操作请求", QSEnumArgParseType.Json)]
         public void CTE_CancelAccountCashOperation(ISession session, string playload)
         {
-            debug("取消出入金操作请求", QSEnumDebugLevel.INFO);
+            logger.Info("取消出入金操作请求");
             Manager manger = session.GetManager();
             if (manger != null)
             {
@@ -124,7 +124,7 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "RejectAccountCashOperation", "RejectCashOperation -reject deposit or withdraw", "拒绝出入金操作请求", QSEnumArgParseType.Json)]
         public void CTE_RejectAccountCashOperation(ISession session, string playload)
         {
-            debug("拒绝出入金操作请求", QSEnumDebugLevel.INFO);
+            logger.Info("拒绝出入金操作请求");
             Manager manger = session.GetManager();
             if (manger != null)
             {
@@ -149,7 +149,7 @@ namespace TradingLib.Core
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QueryAccountCashTrans", "QueryAccountCashTrans -query account cashtrans", "查询交易帐户出入金记录")]
         public void CTE_QueryAccountCashTrans(ISession session, string account, long start, long end)
         {
-            debug("查询出入金记录: start:"+start.ToString() +" end:"+end.ToString(), QSEnumDebugLevel.INFO);
+            logger.Info("查询出入金记录: start:" + start.ToString() + " end:" + end.ToString());
             Manager manger = session.GetManager();
             if (manger != null)
             {
@@ -164,7 +164,7 @@ namespace TradingLib.Core
         {
             try
             {
-                debug("管理员请求交易帐户出入金:" + playload, QSEnumDebugLevel.INFO);
+                logger.Info("管理员请求交易帐户出入金:" + playload);
                 Manager manger = session.GetManager();
                 if (manger != null)
                 {

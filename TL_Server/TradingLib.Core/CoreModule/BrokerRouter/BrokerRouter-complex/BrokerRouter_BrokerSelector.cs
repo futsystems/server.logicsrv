@@ -51,7 +51,7 @@ namespace TradingLib.Core
                 //没有设定路由组则返回null
                 if (rg == null)
                 {
-                    debug(string.Format("account:{0} have not set router gorup fk:{1}", account.ID, account.RG_FK), QSEnumDebugLevel.WARNING);
+                    logger.Warn(string.Format("account:{0} have not set router gorup fk:{1}", account.ID, account.RG_FK));
                     return null;
                 }
                 if (isorderaction)//如果是委托操作则直接从Broker字段查找对应的通道

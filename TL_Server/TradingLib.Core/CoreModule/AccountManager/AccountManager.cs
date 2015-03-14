@@ -98,7 +98,7 @@ namespace TradingLib.Core
         /// <returns></returns>
         public void AddAccount(ref AccountCreation create)
         {
-            debug("清算中心为user:" + create.UserID.ToString() + " 添加交易帐号到主柜员ID:" + create.BaseManager.ID.ToString(), QSEnumDebugLevel.INFO);
+            logger.Info("清算中心为user:" + create.UserID.ToString() + " 添加交易帐号到主柜员ID:" + create.BaseManager.ID.ToString());
 
             if (create.Domain == null)
             {
@@ -135,7 +135,7 @@ namespace TradingLib.Core
 
         public void DelAccount(string account)
         {
-            debug("清算中心删除交易帐户:" + account, QSEnumDebugLevel.INFO);
+            logger.Info("清算中心删除交易帐户:" + account);
             IAccount acc = this[account];
             if (acc == null)
             {
@@ -155,7 +155,7 @@ namespace TradingLib.Core
             }
             catch (Exception ex)
             {
-                debug("删除交易帐户错误:" + ex.ToString());
+                logger.Error("删除交易帐户错误:" + ex.ToString());
                 throw new FutsRspError("删除交易帐户异常，请手工删除相关信息");
             }
         }
@@ -167,7 +167,7 @@ namespace TradingLib.Core
         /// <param name="accID"></param>
         private void LoadAccount(string account = null)
         {
-            debug("Loading accounts form database.....", QSEnumDebugLevel.INFO);
+            logger.Info("Loading accounts form database.....");
             try
             {
                 IList<IAccount> accountlist = new List<IAccount>();

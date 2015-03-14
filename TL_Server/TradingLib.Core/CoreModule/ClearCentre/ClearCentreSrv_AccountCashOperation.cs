@@ -103,7 +103,7 @@ namespace TradingLib.Core
                     account.Withdraw(op.Amount);
                 }
             }
-            debug("Account:" + op.Account + " 确认入金:" + op.Amount.ToString() + " 成功!");
+            logger.Info("Account:" + op.Account + " 确认入金:" + op.Amount.ToString() + " 成功!");
             return true;
         }
     }

@@ -17,7 +17,7 @@ namespace TradingLib.Common
                 Symbol symbol = p.oSymbol;
                 if (symbol == null)
                 {
-                    debug("symbol:" + p.Symbol + " not exist in basictracker, drop positiondetail", QSEnumDebugLevel.ERROR);
+                    logger.Warn("symbol:" + p.Symbol + " not exist in basictracker, drop positiondetail");
                     return;
                 }
                 acctk.GotPosition(p);
@@ -25,7 +25,7 @@ namespace TradingLib.Common
             }
             catch (Exception ex)
             {
-                debug("处理隔夜持仓明细数据异常:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                logger.Error("处理隔夜持仓明细数据异常:" + ex.ToString());
             }
         }
 
@@ -48,7 +48,7 @@ namespace TradingLib.Common
                 Symbol symbol = o.oSymbol;
                 if (symbol == null)
                 {
-                    debug("symbol:" + o.Symbol + " not exist in basictracker, drop errororder", QSEnumDebugLevel.ERROR);
+                    logger.Warn("symbol:" + o.Symbol + " not exist in basictracker, drop errororder");
                     return;
                 }
                 bool neworder = !totaltk.IsTracked(o.id);
@@ -57,7 +57,7 @@ namespace TradingLib.Common
             }
             catch (Exception ex)
             {
-                debug("处理委托错误异常:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                logger.Error("处理委托错误异常:" + ex.ToString());
             }
         }
         /// <summary>
@@ -73,7 +73,7 @@ namespace TradingLib.Common
                 Symbol symbol = o.oSymbol;
                 if (symbol == null)
                 {
-                    debug("symbol:" + o.Symbol + " not exist in basictracker, drop order", QSEnumDebugLevel.ERROR);
+                    logger.Warn("symbol:" + o.Symbol + " not exist in basictracker, drop order");
                     return;
                 }
 
@@ -90,7 +90,7 @@ namespace TradingLib.Common
             }
             catch (Exception ex)
             {
-                debug("处理委托异常:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                logger.Error("处理委托异常:" + ex.ToString());
             }
         }
         internal virtual void onGotOrder(Order o, bool neworder)
@@ -114,7 +114,7 @@ namespace TradingLib.Common
             }
             catch (Exception ex)
             {
-                debug("处理取消异常:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                logger.Error("处理取消异常:" + ex.ToString());
             }
         }
         internal virtual void onGotCancel(long oid)
@@ -135,7 +135,7 @@ namespace TradingLib.Common
                 Symbol symbol = f.oSymbol;
                 if (symbol == null)
                 {
-                    debug("symbol:" + f.Symbol + " not exist in basictracker, drop trade", QSEnumDebugLevel.ERROR);
+                    logger.Warn("symbol:" + f.Symbol + " not exist in basictracker, drop trade");
                     return;
                 }
 
@@ -170,7 +170,7 @@ namespace TradingLib.Common
             }
             catch (Exception ex)
             {
-                debug("Got Fill error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                logger.Error("Got Fill error:" + ex.ToString());
             }
         }
         internal virtual void onGotFill(Trade fill, PositionTransaction postrans)
@@ -186,7 +186,7 @@ namespace TradingLib.Common
             }
             catch (Exception ex)
             {
-                debug("Got Tick error:" + ex.ToString());
+                logger.Error("Got Tick error:" + ex.ToString());
             }
         }
     }

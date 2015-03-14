@@ -19,7 +19,7 @@ namespace TradingLib.ServiceManager
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryInterface", "QryInterface - query interface setted in system", "查询所有接口设置")]
         public void CTE_QueryInterface(ISession session)
         {
-            debug("查询所有接口设置", QSEnumDebugLevel.INFO);
+            logger.Info("查询所有接口设置");
             Manager manger = session.GetManager();
             if (manger.IsInRoot())
             {
@@ -33,7 +33,7 @@ namespace TradingLib.ServiceManager
         {
             try
             {
-                debug("更新接口设置:" + json, QSEnumDebugLevel.INFO);
+                logger.Info("更新接口设置:" + json);
                 Manager manger = session.GetManager();
                 if (manger.IsInRoot())
                 {

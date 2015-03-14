@@ -97,7 +97,7 @@ namespace TradingLib.Contrib.EmailSrv
 
         void EventSystem_PositionFlatEvent(object sender, PositionFlatEventArgs e)
         {
-            debug("强平:"+(e.FlatSuccess?"成功":"失败") + e.Position.ToString(), QSEnumDebugLevel.INFO);
+            logger.Info("强平:" + (e.FlatSuccess ? "成功" : "失败") + e.Position.ToString());
         }
 
       
@@ -160,7 +160,7 @@ namespace TradingLib.Contrib.EmailSrv
             }
             catch (Exception ex)
             {
-                debug("Send email error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                logger.Error("Send email error:" + ex.ToString());
             }
         }
 
@@ -172,7 +172,7 @@ namespace TradingLib.Contrib.EmailSrv
         {
             if (email.Receivers.Length == 0)
                 email.Receivers = _noticelsit.Split(',');
-            debug(PROGRAME + ":发送邮件到:" + string.Join(",", email.Receivers), QSEnumDebugLevel.INFO);
+            logger.Info(PROGRAME + ":发送邮件到:" + string.Join(",", email.Receivers));
             System.Net.Mail.MailMessage Message = new System.Net.Mail.MailMessage();
             Message.From = new System.Net.Mail.MailAddress(_from);//这里需要注
             foreach(string add in email.Receivers)

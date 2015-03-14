@@ -78,10 +78,10 @@ namespace TradingLib.Core
 
         public void DisplayTimer()
         {
-            debug("插入委托时间消耗:"+ordert.Elapsed.ToString(),QSEnumDebugLevel.MUST);
-            debug("更新委托时间消耗:" + updateordert.Elapsed.ToString(), QSEnumDebugLevel.MUST);
-            debug("插入成交时间消耗:" + tradet.Elapsed.ToString(), QSEnumDebugLevel.MUST);
-            debug("插入取消时间消耗:" + tradet.Elapsed.ToString(), QSEnumDebugLevel.MUST);
+            logger.Info("插入委托时间消耗:" + ordert.Elapsed.ToString());
+            logger.Info("更新委托时间消耗:" + updateordert.Elapsed.ToString());
+            logger.Info("插入成交时间消耗:" + tradet.Elapsed.ToString());
+            logger.Info("插入取消时间消耗:" + tradet.Elapsed.ToString());
             
         }
 
@@ -115,18 +115,18 @@ namespace TradingLib.Core
                                 }
                                 catch (Exception ex)
                                 {
-                                    debug(ex.ToString(),QSEnumDebugLevel.ERROR);
+                                    logger.Error(ex.ToString());
                                     throw (new QSTranLogOrderError(o));
                                 }
                                 string s = "交易日志:Order Inserted:" + o.GetOrderInfo();
                                 if (!re)
                                 {
                                     _nrt++;
-                                    debug(s + "失败", QSEnumDebugLevel.ERROR);
+                                    logger.Error(s + "失败");
                                 }
                                 else
                                 {
-                                    debug(s + " 成功", QSEnumDebugLevel.INFO);
+                                    logger.Info(s + " 成功");
                                 }
                                 Thread.Sleep(_delay);
 
@@ -144,18 +144,18 @@ namespace TradingLib.Core
                                 }
                                 catch (Exception ex)
                                 {
-                                    debug(ex.ToString(), QSEnumDebugLevel.ERROR);
+                                    logger.Error(ex.ToString());
                                     throw (new QSTranLogOrderUpdateError(o));
                                 }
                                 string s = "交易日志:Order Update:" + o.GetOrderStatus();
                                 if (!re)
                                 {
                                     _nrt++;
-                                    debug(s + "失败", QSEnumDebugLevel.ERROR);
+                                    logger.Error(s + "失败");
                                 }
                                 else
                                 {
-                                    debug(s + " 成功", QSEnumDebugLevel.INFO);
+                                    logger.Info(s + " 成功");
                                 }
                                 Thread.Sleep(_delay);
                             }
@@ -172,18 +172,18 @@ namespace TradingLib.Core
                                 }
                                 catch (Exception ex)
                                 {
-                                    debug(ex.ToString(), QSEnumDebugLevel.ERROR);
+                                    logger.Error(ex.ToString());
                                     throw (new QSTranLogFillError(f));
                                 }
                                 string s = "交易日志:Trade Inserted:" + f.GetTradeInfo();
                                 if (!re)
                                 {
                                     _nrt++;
-                                    debug(s + " 失败", QSEnumDebugLevel.ERROR);
+                                    logger.Error(s + " 失败");
                                 }
                                 else
                                 {
-                                    debug(s + " 成功", QSEnumDebugLevel.INFO);
+                                    logger.Info(s + " 成功");
                                 }
                                 Thread.Sleep(_delay);
 
@@ -201,18 +201,18 @@ namespace TradingLib.Core
                                 }
                                 catch (Exception ex)
                                 {
-                                    debug(ex.ToString(), QSEnumDebugLevel.ERROR);
+                                    logger.Error(ex.ToString());
                                     throw (new QSTranLogCancelError(oid));
                                 }
                                 string s = "交易日志:Cancle inserted:" + oid.ToString();
                                 if (!re)
                                 {
                                     _nrt++;
-                                    debug(s + " 失败", QSEnumDebugLevel.ERROR);
+                                    logger.Error(s + " 失败");
                                 }
                                 else
                                 {
-                                    debug(s + " 成功", QSEnumDebugLevel.INFO);
+                                    logger.Info(s + " 成功");
                                 }
                                 Thread.Sleep(_delay);
                             }
@@ -227,18 +227,18 @@ namespace TradingLib.Core
                                 }
                                 catch (Exception ex)
                                 {
-                                    debug(ex.ToString(), QSEnumDebugLevel.ERROR);
+                                    logger.Error(ex.ToString());
                                 }
 
                                 string s = "交易日志:OrderAction Inserted" + OrderActionImpl.Serialize(action);
                                 if (!re)
                                 {
                                     _nrt++;
-                                    debug(s + " 失败", QSEnumDebugLevel.ERROR);
+                                    logger.Error(s + " 失败");
                                 }
                                 else
                                 {
-                                    debug(s + " 成功", QSEnumDebugLevel.INFO);
+                                    logger.Info(s + " 成功");
                                 }
                                 Thread.Sleep(_delay);
 
@@ -255,18 +255,18 @@ namespace TradingLib.Core
                                 }
                                 catch (Exception ex)
                                 {
-                                    debug(ex.ToString(), QSEnumDebugLevel.ERROR);
+                                    logger.Error(ex.ToString());
                                     //throw (new QSTranLogCancelError(oid));
                                 }
                                 string s = "交易日志:PosTransaction Inserted:";// +oid.ToString();
                                 if (!re)
                                 {
                                     _nrt++;
-                                    debug(s + " 失败", QSEnumDebugLevel.ERROR);
+                                    logger.Error(s + " 失败");
                                 }
                                 else
                                 {
-                                    debug(s + " 成功", QSEnumDebugLevel.INFO);
+                                    logger.Info(s + " 成功");
                                 }
                                 Thread.Sleep(_delay);
                             }
@@ -281,17 +281,17 @@ namespace TradingLib.Core
                                 }
                                 catch (Exception ex)
                                 {
-                                    debug(ex.ToString(), QSEnumDebugLevel.ERROR);
+                                    logger.Error(ex.ToString());
                                 }
                                 string s = "平仓明细日志:PositionCloseDetail Inserted:";// +oid.ToString();
                                 if (!re)
                                 {
                                     _nrt++;
-                                    debug(s + " 失败", QSEnumDebugLevel.ERROR);
+                                    logger.Error(s + " 失败");
                                 }
                                 else
                                 {
-                                    debug(s + " 成功", QSEnumDebugLevel.INFO);
+                                    logger.Info(s + " 成功");
                                 }
                                 Thread.Sleep(_delay);
                             }
@@ -309,36 +309,36 @@ namespace TradingLib.Core
                         //mysql则通过不断尝试进行数据库连接,当连接成功后重新将日志插入数据库
                         catch (QSTranLogOrderError ex)
                         {
-                            debug(ex.OFail.ToString(), QSEnumDebugLevel.ERROR);
-                            debug(PROGRAME +":交易日志持久化发生错误:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                            logger.Error(ex.OFail.ToString());
+                            logger.Error(PROGRAME + ":交易日志持久化发生错误:" + ex.ToString());
                              //this.newOrder(ex.OFail);
                         }
                         catch (QSTranLogOrderUpdateError ex)
                         {
-                            debug(ex.OFail.ToString(), QSEnumDebugLevel.ERROR);
-                            debug(PROGRAME + ":交易日志持久化发生错误:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                            logger.Error(ex.OFail.ToString());
+                            logger.Error(PROGRAME + ":交易日志持久化发生错误:" + ex.ToString());
                             //this.updateOrder(ex.OFail);
                         }
                         catch (QSTranLogFillError ex)
                         {
-                            debug(ex.FFail.ToString(), QSEnumDebugLevel.ERROR);
-                            debug(PROGRAME + ":交易日志持久化发生错误:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                            logger.Error(ex.FFail.ToString());
+                            logger.Error(PROGRAME + ":交易日志持久化发生错误:" + ex.ToString());
                             //this.newTrade(ex.FFail);
                         }
                         catch (QSTranLogCancelError ex)
                         {
-                            debug(PROGRAME + ":交易日志持久化发生错误:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                            logger.Error(PROGRAME + ":交易日志持久化发生错误:" + ex.ToString());
                             //this.newCancle(ex.CFail);
                         }
                         catch (Exception ex)
                         {
-                            debug(PROGRAME + ":交易日志持久化发生错误:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                            logger.Error(PROGRAME + ":交易日志持久化发生错误:" + ex.ToString());
                         }
                     }
                     catch (Exception ex)
                     {
                         //在异常捕捉时，我们会将没有记录的交易信息返回缓存进行处理,如果在返回遗漏交易信息的时候发生错误,则我们这里还会产生异常,导致系统崩溃
-                        debug(PROGRAME + ":异常捕捉产生错误,会发生遗漏委托记录" + ex.ToString());
+                        logger.Error(PROGRAME + ":异常捕捉产生错误,会发生遗漏委托记录" + ex.ToString());
                     }
                 }
         }

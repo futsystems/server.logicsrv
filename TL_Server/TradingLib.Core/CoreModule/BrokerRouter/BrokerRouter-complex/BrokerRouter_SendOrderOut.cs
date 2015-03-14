@@ -53,7 +53,7 @@ namespace TradingLib.Core
         /// <param name="o"></param>
         bool XBrokerSendOrder(Order o,out string errorTitle)
         {
-            debug("XBrokerSendOrder check if need split the order", QSEnumDebugLevel.INFO);
+            logger.Info("XBrokerSendOrder check if need split the order");
             IAccount account = TLCtxHelper.ModuleAccountManager[o.Account];
             Position pos = account.GetPosition(o.Symbol, o.PositionSide);//获得该委托对应预操作的持仓对象
 
@@ -87,13 +87,13 @@ namespace TradingLib.Core
             errorTitle = string.Empty;
             if (brokerclosemap.Count == 1)
             {
-                debug("PositionDetails to be closed are  in same broker,send order directly.", QSEnumDebugLevel.INFO);
+                logger.Info("PositionDetails to be closed are  in same broker,send order directly.");
                 o.Broker = brokerclosemap.Keys.First();//设定预发送委托的BrokerToken
                 return BrokerSendOrder(o, out errorTitle);
             }
             else
             {
-                debug("PositionDetails to be closed are in diferent broker,send order via spliter.", QSEnumDebugLevel.INFO);
+                logger.Info("PositionDetails to be closed are in diferent broker,send order via spliter.");
                 splitedordermap.TryAdd(o.id, o);
                 _splittracker.SendFatherOrder(o, SplitOrder(o, brokerclosemap));
                 return true;
@@ -116,7 +116,7 @@ namespace TradingLib.Core
         /// </summary>
         void ResumeRouterOrder()
         {
-            debug("resume router roder....",QSEnumDebugLevel.INFO);
+            logger.Info("resume router roder....");
             //从数据库恢复子委托数据(路由侧分解的子委托)
             IEnumerable<Order> orderlist = TLCtxHelper.ModuleDataRepository.SelectRouterOrders();
             //生成父子委托对
@@ -128,7 +128,7 @@ namespace TradingLib.Core
                 //将父委托记录到本地缓存
                 splitedordermap.TryAdd(pair.FatherOrder.id, pair.FatherOrder);
             }
-            debug("resumed router order num:" + splitedordermap.Count.ToString(), QSEnumDebugLevel.INFO);
+            logger.Info("resumed router order num:" + splitedordermap.Count.ToString());
         }
 
         List<FatherSonOrderPair> GetOrderPairs(IEnumerable<Order> sonOrders)
@@ -198,7 +198,7 @@ namespace TradingLib.Core
 
         void CancelSonOrderEvent(Order order)
         {
-            debug("委托分拆器调用BrokerSendOrder取消委托:" + order.GetOrderInfo(), QSEnumDebugLevel.INFO);
+            logger.Info("委托分拆器调用BrokerSendOrder取消委托:" + order.GetOrderInfo());
             BrokerCancelOrder(order);
         }
 
@@ -208,7 +208,7 @@ namespace TradingLib.Core
         /// <param name="order"></param>
         void SendSonOrderEvent(Order order)
         {
-            debug("委托分拆器调用BrokerSendOrder发送委托:" + order.GetOrderInfo(), QSEnumDebugLevel.INFO);
+            logger.Info("委托分拆器调用BrokerSendOrder发送委托:" + order.GetOrderInfo());
             string error=string.Empty;
             BrokerSendOrder(order, out error);
         }

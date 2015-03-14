@@ -60,7 +60,7 @@ namespace TradingLib.Core
             }
             catch (Exception ex)
             {
-                debug(PROGRAME + ":get symbol tick snapshot error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                logger.Error(PROGRAME + ":get symbol tick snapshot error:" + ex.ToString());
                 return null;
             }
         }
@@ -88,13 +88,13 @@ namespace TradingLib.Core
         {
             if (order != null && order.isValid)
             {
-               
-                debug("Reply ErrorOrder To MessageExch:" + order.GetOrderInfo() + " ErrorTitle:" + error.ErrorMessage, QSEnumDebugLevel.INFO);
+
+                logger.Info("Reply ErrorOrder To MessageExch:" + order.GetOrderInfo() + " ErrorTitle:" + error.ErrorMessage);
                 _errorordernotifycache.Write(new OrderErrorPack(order, error));
             }
             else
             {
-                debug("Got Invalid OrderError", QSEnumDebugLevel.ERROR);
+                logger.Error("Got Invalid OrderError");
             }
         }
 
@@ -111,7 +111,7 @@ namespace TradingLib.Core
             }
             else
             {
-                debug("Got Invalid OrderActionError", QSEnumDebugLevel.ERROR);
+                logger.Error("Got Invalid OrderActionError");
             }
         }
 
@@ -141,7 +141,7 @@ namespace TradingLib.Core
 
                     Util.Debug("获得成交:" + fill.GetTradeDetail(), QSEnumDebugLevel.INFO);
 
-                    debug("Reply Fill To MessageExch:" + fill.GetTradeInfo(), QSEnumDebugLevel.INFO);
+                    logger.Info("Reply Fill To MessageExch:" + fill.GetTradeInfo());
                     _fillcache.Write(new TradeImpl(fill));
                 }
 
@@ -149,7 +149,7 @@ namespace TradingLib.Core
             }
             else
             {
-                debug("Got Invalid Fill", QSEnumDebugLevel.ERROR);
+                logger.Error("Got Invalid Fill");
             }
         }
 
@@ -203,7 +203,7 @@ namespace TradingLib.Core
                 //如果通道对象不存在则直接返回
                 if (broker == null)
                 {
-                    debug(string.Format("Broker:{0} is not registed", o.Broker), QSEnumDebugLevel.WARNING);
+                    logger.Warn(string.Format("Broker:{0} is not registed", o.Broker));
                     return;
                 }
 
@@ -220,7 +220,7 @@ namespace TradingLib.Core
                     IAccount account = BasicTracker.ConnectorMapTracker.GetAccountForBroker(o.Broker);
                     if (account == null)
                     {
-                        debug(string.Format("Broker:{0} is not binded with any account", o.Broker), QSEnumDebugLevel.WARNING);
+                        logger.Warn(string.Format("Broker:{0} is not binded with any account", o.Broker));
                         return;
                     }
 
@@ -258,12 +258,12 @@ namespace TradingLib.Core
                     }
                 }
 
-                debug("Reply Order To MessageExch:" + localorder.GetOrderInfo(), QSEnumDebugLevel.INFO);
+                logger.Info("Reply Order To MessageExch:" + localorder.GetOrderInfo());
                 _ordercache.Write(localorder);
             }
             else
             {
-                debug("Got Invalid Order", QSEnumDebugLevel.ERROR);
+                logger.Error("Got Invalid Order");
             }
         }
 
@@ -273,7 +273,7 @@ namespace TradingLib.Core
 
         void Broker_GotCancel(long oid)
         {
-            debug("Reply Cancel To MessageExch:" + oid.ToString());
+            logger.Info("Reply Cancel To MessageExch:" + oid.ToString());
             _cancelcache.Write(oid);
         }
     }

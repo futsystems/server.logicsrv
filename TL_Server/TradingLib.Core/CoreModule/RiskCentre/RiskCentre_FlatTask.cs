@@ -53,7 +53,7 @@ namespace TradingLib.Core
         /// </summary>
         void InitFlatTask()
         {
-            debug("初始化日内强平任务", QSEnumDebugLevel.INFO);
+            logger.Info("初始化日内强平任务");
             Dictionary<int, List<MarketTime>> flatlist = new Dictionary<int, List<MarketTime>>();
             foreach (FlatTimeMarketTimePair p in BasicTracker.MarketTimeTracker.GetFlatTimeMarketTimePairs())
             {
@@ -95,7 +95,7 @@ namespace TradingLib.Core
         void InjectTask(int flattime, MarketTime[] mts)
         {
             //注入强平任务
-            debug("注入强平任务,强平时间点:" + flattime,QSEnumDebugLevel.INFO);
+            logger.Info("注入强平任务,强平时间点:" + flattime);
             DateTime t = Util.ToDateTime(Util.ToTLDate(), flattime);
             TaskProc task = new TaskProc(this.UUID, "强平-日内" + flattime.ToString(), t.Hour, t.Minute, t.Second, delegate() { FlatPositionViaMarketTime(flattime,mts); });
             TLCtxHelper.ModuleTaskCentre.RegisterTask(task);
@@ -118,12 +118,12 @@ namespace TradingLib.Core
         /// <param name="mt"></param>
         void FlatPositionViaMarketTime(int flattime,MarketTime[] mts)
         {
-            debug("执行强平任务 对日内帐户执行撤单并强平持仓,强平时间点:" + flattime.ToString(), QSEnumDebugLevel.INFO);
+            logger.Info("执行强平任务 对日内帐户执行撤单并强平持仓,强平时间点:" + flattime.ToString());
             //1.遍历所有pending orders 如果委托对应的帐户是日内交易并且该委托需要在该强平时间点撤单 则执行撤单
             //查询所有待成交委托 且该委托合约在对应的强平时间点 撤掉将当前强平时间点的所有委托
             foreach (Order od in TLCtxHelper.ModuleClearCentre.TotalOrders.Where(o => o.IsPending() && IsSymbolWithMarketTime(o.oSymbol, mts)))
             {
-                debug("symbol:"+od.Symbol+"order status:" + od.IsPending().ToString() + " withmarkettime:" + IsSymbolWithMarketTime(od.oSymbol, mts),QSEnumDebugLevel.INFO);
+                logger.Info("symbol:" + od.Symbol + "order status:" + od.IsPending().ToString() + " withmarkettime:" + IsSymbolWithMarketTime(od.oSymbol, mts));
                 //if (od.IsPending() && IsSymbolWithMarketTime(od.oSymbol, mts))
                 //{
                 IAccount acc = TLCtxHelper.ModuleAccountManager[od.Account];

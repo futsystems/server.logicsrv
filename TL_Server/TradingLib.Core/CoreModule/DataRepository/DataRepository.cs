@@ -175,7 +175,7 @@ namespace TradingLib.Core
         {
             //填充对象oSymbol
             IEnumerable<Trade> trades = ORM.MTradingInfo.SelectTrades().Select(f => { f.oSymbol = GetAccountSymbol(f.Account, f.Symbol); return f; });
-            debug("数据库恢复前次结算以来成交数据:" + trades.Count().ToString() + "条", QSEnumDebugLevel.INFO);
+            logger.Info("数据库恢复前次结算以来成交数据:" + trades.Count().ToString() + "条");
             return trades;
         }
 
@@ -186,7 +186,7 @@ namespace TradingLib.Core
         public IEnumerable<Order> SelectAcctOrders()
         {
             IEnumerable<Order> orders = ORM.MTradingInfo.SelectOrders().Select(o => { o.oSymbol = GetAccountSymbol(o.Account, o.Symbol); return o; });
-            debug("数据库恢复前次结算以来委托数据:" + orders.Count().ToString() + "条", QSEnumDebugLevel.INFO);
+            logger.Info("数据库恢复前次结算以来委托数据:" + orders.Count().ToString() + "条");
             return orders;
         }
 
@@ -197,7 +197,7 @@ namespace TradingLib.Core
         public IEnumerable<PositionDetail> SelectAcctPositionDetails()
         {
             IEnumerable<PositionDetail> positions = ORM.MSettlement.SelectAccountPositionDetails(TLCtxHelper.ModuleSettleCentre.LastSettleday).Select(pos => { pos.oSymbol = GetAccountSymbol(pos.Account, pos.Symbol); return pos; });
-            debug("数据库恢复前次结算持仓明细数据:" + positions.Count().ToString() + "条", QSEnumDebugLevel.INFO);
+            logger.Info("数据库恢复前次结算持仓明细数据:" + positions.Count().ToString() + "条");
             return positions;
         }
 
@@ -208,7 +208,7 @@ namespace TradingLib.Core
         public IEnumerable<OrderAction> SelectAcctOrderActions()
         {
             IEnumerable<OrderAction> actions = ORM.MTradingInfo.SelectOrderActions().Where(o=>o.OrderID != 0);
-            debug("数据库恢复前次结算以来取消数据:" + actions.Count().ToString() + "条", QSEnumDebugLevel.INFO);
+            logger.Info("数据库恢复前次结算以来取消数据:" + actions.Count().ToString() + "条");
             return actions;
 
         }

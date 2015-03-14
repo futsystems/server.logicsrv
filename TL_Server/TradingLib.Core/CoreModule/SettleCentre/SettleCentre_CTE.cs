@@ -90,7 +90,7 @@ namespace TradingLib.Core
             }
             catch (Exception ex)
             {
-                debug("BeforeSettleEvent Fired error:" + ex.ToString(), QSEnumDebugLevel.FATAL);
+                logger.Error("BeforeSettleEvent Fired error:" + ex.ToString());
             }
 
             
@@ -143,7 +143,7 @@ namespace TradingLib.Core
         {
             //debug("重置交易系统 isnaormal:"+IsNormal.ToString() +" istradingday:"+IsTradingday.ToString(),QSEnumDebugLevel.INFO);
             if (!settled) return;//没有结算就不重置交易系统
-            debug("系统重置，清算中心重置帐户，风控中心重置规则 清空日内记录表", QSEnumDebugLevel.INFO);
+            logger.Info("系统重置，清算中心重置帐户，风控中心重置规则 清空日内记录表");
             TLCtxHelper.EventSystem.FireBeforeSettleResetEvent(this, new SystemEventArgs());
             
             //清空日内交易记录
@@ -222,7 +222,7 @@ namespace TradingLib.Core
         [TaskAttr("重置结算中心-夜盘收盘后", 8,0,0, "每天8点重置结算中心")]//判定当前交易日状态，系统很多其他事务是按结算状态来进行的
         public void Task_ResetTradingdayNieght()
         {
-            debug("结算中心重置交易日信息", QSEnumDebugLevel.INFO);
+            logger.Info("结算中心重置交易日信息");
             this.Reset();
         }
 

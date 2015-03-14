@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Common.Logging.Core">
+      <HintPath>..\..\lib\Common.Logging.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data" />
@@ -63,7 +66,7 @@
   <Target Name="BeforeBuild">
   </Target>
   -->
-	<Target Name="AfterBuild">
+  <Target Name="AfterBuild">
     <ItemGroup>
       <OutFiles Include="$(OutputPath)\$(AssemblyName).dll" />
     </ItemGroup>

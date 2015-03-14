@@ -36,8 +36,8 @@ namespace TradingLib.Core
         /// <param name="manager"></param>
         void SrvOnMGRContribRequest(MGRContribRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求扩展命令:{1}", session.AuthorizedID, request.ToString()), QSEnumDebugLevel.INFO);
-            debug("MGRContrib Request,ModuleID:" + request.ModuleID + " CMDStr:" + request.CMDStr + " Parameters:" + request.Parameters, QSEnumDebugLevel.INFO);
+            logger.Info(string.Format("管理员:{0} 请求扩展命令:{1}", session.AuthorizedID, request.ToString()));
+            logger.Debug("MGRContrib Request,ModuleID:" + request.ModuleID + " CMDStr:" + request.CMDStr + " Parameters:" + request.Parameters);
             
             session.ContirbID = request.ModuleID;
             session.CMDStr = request.CMDStr;
@@ -55,7 +55,7 @@ namespace TradingLib.Core
         /// <param name="manager"></param>
         void SrvOnInsertTrade(MGRReqInsertTradeRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求插入委托:{1}", session.AuthorizedID, request.ToString()), QSEnumDebugLevel.INFO);
+            logger.Info(string.Format("管理员:{0} 请求插入委托:{1}", session.AuthorizedID, request.ToString()));
             RspMGROperationResponse response = ResponseTemplate<RspMGROperationResponse>.SrvSendRspResponse(request);
 
             Trade fill = request.TradeToSend;
@@ -323,7 +323,7 @@ namespace TradingLib.Core
                         }
 
                     default:
-                        debug("packet type:" + packet.Type.ToString() + " not set handler", QSEnumDebugLevel.WARNING);
+                        logger.Warn("packet type:" + packet.Type.ToString() + " not set handler");
                         break;
                 }
             }
@@ -333,7 +333,7 @@ namespace TradingLib.Core
             }
             catch (Exception ex)
             {
-                debug("tl_packet handler eror:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                logger.Error("tl_packet handler eror:" + ex.ToString());
             }
         }
     }

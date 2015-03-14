@@ -53,7 +53,7 @@ namespace TradingLib.Contrib.CLI
         /// </summary>
         public void Start()
         {
-            debug("启动命令行服务");
+            logger.Info("启动命令行服务");
             _telentserver = new TelnetServer(_port, null);
             _telentserver.Start();
 

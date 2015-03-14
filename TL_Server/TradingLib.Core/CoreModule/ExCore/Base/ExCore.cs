@@ -126,11 +126,11 @@ namespace TradingLib.Core
             //获得当前日内起始委托流水号和成交流水号
             int maxorderseq = ORM.MTradingInfo.MaxOrderSeq();
             _maxOrderSeq = maxorderseq > _startOrderSeq ? maxorderseq : _startOrderSeq;
-            debug("Max OrderSeq:" + _maxOrderSeq, QSEnumDebugLevel.INFO);
+            logger.Info("Max OrderSeq:" + _maxOrderSeq);
 
             int maxtradeid = ORM.MTradingInfo.MaxTradeID();
             _maxTradeID = maxtradeid > _startTradeID ? maxtradeid : _startTradeID;
-            debug("Max TradeID:" + _maxTradeID, QSEnumDebugLevel.INFO);
+            logger.Info("Max TradeID:" + _maxTradeID);
 
 
 

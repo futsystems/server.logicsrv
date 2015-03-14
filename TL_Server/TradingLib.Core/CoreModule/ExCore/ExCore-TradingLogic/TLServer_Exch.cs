@@ -77,7 +77,7 @@ namespace TradingLib.Core
             NotifyResponsePacket notify= packet as NotifyResponsePacket;
             //查找以交易帐户登入的地址列表
             ILocation[] locationlist = ClientsForAccount(notify.Account).Select(client =>client.Location).ToArray();
-            debug("交易帐户:" + notify.Account + " 链接端数量:" + locationlist.Length.ToString(),QSEnumDebugLevel.DEBUG);
+            logger.Info("交易帐户:" + notify.Account + " 链接端数量:" + locationlist.Length.ToString());
             return locationlist;
         }
         /// <summary>
@@ -91,7 +91,7 @@ namespace TradingLib.Core
             //1.检查外部调用绑定
             if (newLoginRequest == null)
             {
-                debug("外部认证事件没有绑定", QSEnumDebugLevel.ERROR);
+                logger.Error("外部认证事件没有绑定");
                 return;//回调外部loginRquest的实现函数
             }
 
@@ -121,7 +121,7 @@ namespace TradingLib.Core
                 
 
             }
-            debug(client.ToString(), QSEnumDebugLevel.INFO);
+            logger.Info(client.ToString());
             SendOutPacket(response);
         }
 
@@ -179,12 +179,12 @@ namespace TradingLib.Core
         public  void SrvOnOrderInsert(ISession session,OrderInsertRequest request)
         {
             TLCtxHelper.Profiler.EnterSection("OrderInsert");
-            debug("Got Order:" + request.Order.ToString(), QSEnumDebugLevel.DEBUG);
+            logger.Info("Got Order:" + request.Order.ToString());
 
             //检查插入委托请求是否有效
             if (!request.IsValid)
             {
-                debug("请求无效", QSEnumDebugLevel.ERROR);
+                logger.Warn("请求无效");
                 return;
             }
             IAccount account = session.GetAccount();
@@ -195,8 +195,8 @@ namespace TradingLib.Core
             }
             //如果指定交易帐号与登入交易帐号不符 则回报异常
             if (account.ID!= request.Order.Account)//客户端没有登入或者登入ID与委托ID不符
-            {   
-                debug("客户端对应的帐户:" + account.ID + " 与委托帐户:" + request.Order.Account + " 不符合", QSEnumDebugLevel.ERROR);
+            {
+                logger.Warn("客户端对应的帐户:" + account.ID + " 与委托帐户:" + request.Order.Account + " 不符合");
                 return;
             }
 
@@ -242,7 +242,7 @@ namespace TradingLib.Core
         /// <param name="stklist"></param>
         void SrvRegStocks(ISession session, RegisterSymbolsRequest request)
         {
-            debug("Client:" + request.ClientID + " Request Mktdata: " + request.Content, QSEnumDebugLevel.INFO);
+            logger.Info("Client:" + request.ClientID + " Request Mktdata: " + request.Content);
             if (newRegisterSymbols != null)
             {
                 newRegisterSymbols(request.ClientID, request.Symbols);
@@ -323,7 +323,7 @@ namespace TradingLib.Core
         {
             if (o==null ||!o.isValid)
             {
-                debug("invalid order: " + (o==null ? "Null Order":o.ToString()),QSEnumDebugLevel.WARNING);
+                logger.Warn("invalid order: " + (o == null ? "Null Order" : o.ToString()));
                 return;
             }
 
@@ -333,26 +333,26 @@ namespace TradingLib.Core
             notify.Order = o;
 
             TLSend(notify);
-            debug("send ordernotify to client | "+o.ToString());
+            logger.Info("send ordernotify to client | " + o.ToString());
         }
 
         internal void newOrderError(ErrorOrderNotify notify)
         {
             if (notify.Order == null || !notify.Order.isValid)
             {
-                debug("invalid ordererror:" + notify.ToString(), QSEnumDebugLevel.INFO);
+                logger.Info("invalid ordererror:" + notify.ToString());
                 return;
             }
             if (string.IsNullOrEmpty(notify.Order.Account)) return;
 
             TLSend(notify);
-            debug("send order error notify to client | " + notify.ToString());
+            logger.Info("send order error notify to client | " + notify.ToString());
         }
 
         internal void newOrderActionError(ErrorOrderActionNotify notify)
         {
             TLSend(notify);
-            debug("send orderaction error notify to client | " + notify.ToString());
+            logger.Info("send orderaction error notify to client | " + notify.ToString());
         }
         /// <summary>
         /// 向客户端发送成交回报
@@ -362,7 +362,7 @@ namespace TradingLib.Core
         {
             if (trade==null || !trade.isValid)
             {
-                debug("invalid trade: " + (trade==null?"Null Trade":trade.ToString()));
+                logger.Info("invalid trade: " + (trade == null ? "Null Trade" : trade.ToString()));
                 return;
             }
 
@@ -372,7 +372,7 @@ namespace TradingLib.Core
             notify.Trade = trade;
 
             TLSend(notify);
-            debug("send Filld to client | "+trade.ToString());
+            logger.Info("send Filld to client | " + trade.ToString());
         }
 
 
@@ -387,7 +387,7 @@ namespace TradingLib.Core
             response.OrderAction = action;
 
             TLSend(response);
-            debug("send Cancel to client | " + action.ToString());
+            logger.Info("send Cancel to client | " + action.ToString());
         }
 
         /// <summary>
@@ -401,7 +401,7 @@ namespace TradingLib.Core
             notify.Position = pos;
 
             TLSend(notify);
-            debug("send positionupdate to client|" + pos.ToString());
+            logger.Info("send positionupdate to client|" + pos.ToString());
 
         }
         #endregion

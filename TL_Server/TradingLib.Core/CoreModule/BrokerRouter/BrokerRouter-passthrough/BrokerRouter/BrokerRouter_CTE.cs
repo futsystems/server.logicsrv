@@ -171,8 +171,8 @@ namespace TradingLib.Core
                         {
                             //回报数据
                             session.ReplyMgr(new { LastEquity = info.LastEquity, Deposit = info.Deposit, Withdraw = info.WithDraw, CloseProfit = info.ClosePorifit, PositionProfit = info.PositoinProfit, Commission = info.Commission });
-                            
-                            debug("account info:" + info.LastEquity.ToString() + " deposit:" + info.Deposit.ToString(), QSEnumDebugLevel.WARNING);
+
+                            logger.Info("account info:" + info.LastEquity.ToString() + " deposit:" + info.Deposit.ToString());
                             if (islast)
                             {
                                 //如果是最后一条回报 则删除事件绑定

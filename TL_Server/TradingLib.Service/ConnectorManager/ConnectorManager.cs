@@ -113,7 +113,7 @@ namespace TradingLib.ServiceManager
             Util.StatusSection(this.PROGRAME, "STARTCONNECTOR", QSEnumInfoColor.INFODARKRED,true);
             if (TLCtxHelper.ModuleSettleCentre.IsTradingday)//如果是交易日则需要启动实盘通道
             {
-                debug("正常交易日,启动所有通道", QSEnumDebugLevel.INFO);
+                logger.Info("正常交易日,启动所有通道");
                 StartConnector();
             }
         }
@@ -136,7 +136,7 @@ namespace TradingLib.ServiceManager
         /// </summary>
         void LoadConnectorType()
         {
-            debug("Load datafeed and broker connectors", QSEnumDebugLevel.INFO);
+            logger.Info("Load datafeed and broker connectors");
             //获得当前插件connecter中所有可用的交易通道插件以及数据通道插件 
             List<Type> brokerlist = PluginHelper.LoadBrokerType();
             List<Type> datafeedlist = PluginHelper.LoadDataFeedType();
