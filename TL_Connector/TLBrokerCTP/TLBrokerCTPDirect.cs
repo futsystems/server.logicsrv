@@ -559,7 +559,7 @@ namespace Broker.Live
                         }
                         else
                         {
-                            debug("Duplicate BrokerLocalOrderID,Order:" + o.GetOrderInfo(), QSEnumDebugLevel.WARNING);
+                            debug("Duplicate BrokerLocalOrderID,Order:" + o.GetOrderInfo(), QSEnumDebugLevel.WARN);
                         }
                     }
                     if (!string.IsNullOrEmpty(o.BrokerRemoteOrderID))//BrokerRemoteOrderID不为空
@@ -570,7 +570,7 @@ namespace Broker.Live
                         }
                         else
                         {
-                            debug("Duplicate BrokerRemoteOrderID,Order:" + o.GetOrderInfo(), QSEnumDebugLevel.WARNING);
+                            debug("Duplicate BrokerRemoteOrderID,Order:" + o.GetOrderInfo(), QSEnumDebugLevel.WARN);
                         }
                     }
                     tk.GotOrder(o);
@@ -737,7 +737,7 @@ namespace Broker.Live
             else
             {
                 o.Status = QSEnumOrderStatus.Reject;
-                debug("Send Order Fail,will notify to client", QSEnumDebugLevel.WARNING);
+                debug("Send Order Fail,will notify to client", QSEnumDebugLevel.WARN);
             }
 
             //发送子委托时 记录到数据库
@@ -891,7 +891,7 @@ namespace Broker.Live
                         norder.OffsetFlag = QSEnumOffsetFlag.OPEN;//开仓
 
                         bool success = WrapperSendOrder(ref norder);
-                        debug(string.Format("平仓量超过持仓量,主帐户侧持仓缺失,下单进行补仓 市价{0} {1} 手 {2} {3}", norder.Side ? "买入" : "卖出", norder.TotalSize, norder.Symbol, success ? "成功" : "失败"), QSEnumDebugLevel.WARNING);
+                        debug(string.Format("平仓量超过持仓量,主帐户侧持仓缺失,下单进行补仓 市价{0} {1} 手 {2} {3}", norder.Side ? "买入" : "卖出", norder.TotalSize, norder.Symbol, success ? "成功" : "失败"), QSEnumDebugLevel.WARN);
                     }
                     //资金不足
                     if (error.Error.ErrorID == 31)

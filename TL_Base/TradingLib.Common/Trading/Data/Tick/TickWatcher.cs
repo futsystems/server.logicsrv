@@ -176,7 +176,7 @@ namespace TradingLib.Common
                 bool tmatch = Util.FTDIFF(_lasttime, Util.ToTLTime()) < CheckLiveMaxDelaySec;//行情时间在我们设定的延迟范围内
                 //日期和时间均吻合,则表明当前行情系统在线
                 _islive = dmatch && tmatch;
-                Util.Debug("TickStream live check status:"+_islive.ToString() +" tickdata:"+k.Date.ToString() +" tick time:"+k.Time.ToString(), QSEnumDebugLevel.MUST);
+                Util.Debug("TickStream live check status:"+_islive.ToString() +" tickdata:"+k.Date.ToString() +" tick time:"+k.Time.ToString(), QSEnumDebugLevel.INFO);
                 _livecheck = false;
             }
 
@@ -270,7 +270,7 @@ namespace TradingLib.Common
                     int ticktime = _last[sym];
                     if (Util.FTDIFF(ticktime, time) > AlertSecondsWithoutTick)
                     {
-                        Util.Debug("time:" + time.ToString() + " sym lasttime:" + _last[sym].ToString(), QSEnumDebugLevel.WARNING);
+                        Util.Debug("time:" + time.ToString() + " sym lasttime:" + _last[sym].ToString(), QSEnumDebugLevel.WARN);
                         c++;
                         GotAlert(sym);
                     }

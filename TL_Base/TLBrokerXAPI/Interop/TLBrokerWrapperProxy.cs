@@ -74,9 +74,9 @@ namespace TradingLib.BrokerXAPI.Interop
         public TLBrokerWrapperProxy(string path, string dllname)
         {
             //1.加载dll
-			Util.Debug ("strat to load wrapper Nativelib ......", QSEnumDebugLevel.WARNING);
+            Util.Debug("strat to load wrapper Nativelib ......", QSEnumDebugLevel.WARN);
             NativeLib = new UnmanagedLibrary(path, dllname);
-			Util.Debug ("Nativelib is loaded ......", QSEnumDebugLevel.WARNING);
+            Util.Debug("Nativelib is loaded ......", QSEnumDebugLevel.WARN);
             //2.绑定导出函数到委托
             AssignCommonDelegates();
 
@@ -226,7 +226,7 @@ namespace TradingLib.BrokerXAPI.Interop
         {
             try
             {
-                Util.Debug("BrokerProxy SendOrder", QSEnumDebugLevel.MUST);
+                Util.Debug("BrokerProxy SendOrder", QSEnumDebugLevel.INFO);
                 bool x =  _SendOrder(this.Wrapper, ref pOrder);
                 Util.Debug("**************** sendorder return:" + x.ToString(), QSEnumDebugLevel.ERROR);
                 return x;
@@ -246,7 +246,7 @@ namespace TradingLib.BrokerXAPI.Interop
         {
             try
             {
-                Util.Debug("BrokerProxy SendOrderAction", QSEnumDebugLevel.MUST);
+                Util.Debug("BrokerProxy SendOrderAction", QSEnumDebugLevel.INFO);
                 return _SendOrderAction(this.Wrapper, ref pAction);
             }
             catch (Exception ex)
@@ -263,7 +263,7 @@ namespace TradingLib.BrokerXAPI.Interop
         {
             try
             {
-                Util.Debug("BrokerProxy QryInstrument", QSEnumDebugLevel.MUST);
+                Util.Debug("BrokerProxy QryInstrument", QSEnumDebugLevel.INFO);
                 bool x =  _QryInstrument(this.Wrapper);
                 Util.Debug("**************** qry instrument return:" + x.ToString(), QSEnumDebugLevel.ERROR);
                 return x;
@@ -282,7 +282,7 @@ namespace TradingLib.BrokerXAPI.Interop
         {
             try
             {
-                Util.Debug("BrokerProxy QryAccountInfo", QSEnumDebugLevel.MUST);
+                Util.Debug("BrokerProxy QryAccountInfo", QSEnumDebugLevel.INFO);
                 bool x = _QryAccountInfo(this.Wrapper);
                 Util.Debug("**************** qry accountinfo return:" + x.ToString(), QSEnumDebugLevel.ERROR);
                 return x;

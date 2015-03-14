@@ -156,7 +156,7 @@ namespace Broker.Live
             else
             {
                 o.Status = QSEnumOrderStatus.Reject;
-                debug("Send Order Fail,will notify to client", QSEnumDebugLevel.WARNING);
+                debug("Send Order Fail,will notify to client", QSEnumDebugLevel.WARN);
             }
 
             

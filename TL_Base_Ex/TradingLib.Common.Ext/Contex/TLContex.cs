@@ -405,9 +405,9 @@ namespace TradingLib.Common
 
                 //2.将BaseSrvObject的日志输出时间绑定到全局日志输出组件
                 //srvobj -= new DebugDelegate(objdebug);
-                srvobj.SendLogItemEvent -= new ILogItemDel(Util.Log);
+                //srvobj.SendLogItemEvent -= new ILogItemDel(Util.Log);
                 //3.将BaseSrvObject的邮件发送事件banding到全局邮件发送函数
-                srvobj.SendEmailEvent -= new EmailDel(TLCtxHelper.Email);
+                //srvobj.SendEmailEvent -= new EmailDel(TLCtxHelper.Email);
 
                 //4.将BaseSrvObject的log事件绑定到全局日志发送函数
                 //srvobj.SendLogEvent -= new LogDelegate(objlog);
@@ -487,9 +487,9 @@ namespace TradingLib.Common
                 BaseSrvObject srvobj = obj as BaseSrvObject;
                 baseSrvObjectMap.TryAdd(srvobj.UUID, srvobj);
                 //2.将BaseSrvObject的日志输出时间绑定到全局日志输出组件
-                srvobj.SendLogItemEvent += new ILogItemDel(Util.Log);
+                //srvobj.SendLogItemEvent += new ILogItemDel(Util.Log);
                 //3.将BaseSrvObject的邮件发送事件banding到全局邮件发送函数
-                srvobj.SendEmailEvent += new EmailDel(TLCtxHelper.Email);
+                //srvobj.SendEmailEvent += new EmailDel(TLCtxHelper.Email);
                 //4.查找该对象所支持模块任务列表
                 ParseTaskInfo(srvobj);
 

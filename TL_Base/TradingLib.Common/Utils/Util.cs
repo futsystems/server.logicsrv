@@ -12,6 +12,8 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Net;
 using System.Net.Sockets;
+using Common.Logging;
+
 
 namespace TradingLib.Common
 {
@@ -32,20 +34,20 @@ namespace TradingLib.Common
         /// 通过控制台打印日志输出
         /// </summary>
         /// <param name="msg"></param>
-        public static void ConsolePrint(ILogItem item)
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("[");
-            sb.Append(item.Level.ToString());
-            sb.Append("] ");
-            sb.Append(item.Programe);
-            sb.Append(":");
-            sb.Append(item.Message);
+        //public static void ConsolePrint(ILogItem item)
+        //{
+        //    StringBuilder sb = new StringBuilder();
+        //    sb.Append("[");
+        //    sb.Append(item.Level.ToString());
+        //    sb.Append("] ");
+        //    sb.Append(item.Programe);
+        //    sb.Append(":");
+        //    sb.Append(item.Message);
 
-            Console.ForegroundColor = GetColor(item.Level);
-            Console.WriteLine(sb.ToString());
-            Console.ForegroundColor = ConsoleColor.Gray;
-        }
+        //    Console.ForegroundColor = GetColor(item.Level);
+        //    Console.WriteLine(sb.ToString());
+        //    Console.ForegroundColor = ConsoleColor.Gray;
+        //}
 
         public static void LoadStatus(string body, bool samecolor = false)
         {
@@ -143,36 +145,36 @@ namespace TradingLib.Common
                     return ConsoleColor.White;
             }
         }
-        /// <summary>
-        /// Get color for the specified log level
-        /// </summary>
-        /// <param name="level">Level for the log entry</param>
-        /// <returns>A <see cref="ConsoleColor"/> for the level</returns>
-        public static ConsoleColor GetColor(QSEnumDebugLevel level)
-        {
-            switch (level)
-            {
-                case QSEnumDebugLevel.VERB:
-                    return ConsoleColor.DarkGray;
-                case QSEnumDebugLevel.DEBUG:
-                    return ConsoleColor.Gray;
-                case QSEnumDebugLevel.INFO:
-                    return ConsoleColor.White;
-                case QSEnumDebugLevel.WARNING:
-                    return ConsoleColor.DarkMagenta;
-                case QSEnumDebugLevel.ERROR:
-                    return ConsoleColor.Magenta;
-                case QSEnumDebugLevel.MUST:
-                    return ConsoleColor.Blue;
+        ///// <summary>
+        ///// Get color for the specified log level
+        ///// </summary>
+        ///// <param name="level">Level for the log entry</param>
+        ///// <returns>A <see cref="ConsoleColor"/> for the level</returns>
+        //public static ConsoleColor GetColor(QSEnumDebugLevel level)
+        //{
+        //    switch (level)
+        //    {
+        //        case QSEnumDebugLevel.VERB:
+        //            return ConsoleColor.DarkGray;
+        //        case QSEnumDebugLevel.DEBUG:
+        //            return ConsoleColor.Gray;
+        //        case QSEnumDebugLevel.INFO:
+        //            return ConsoleColor.White;
+        //        case QSEnumDebugLevel.WARNING:
+        //            return ConsoleColor.DarkMagenta;
+        //        case QSEnumDebugLevel.ERROR:
+        //            return ConsoleColor.Magenta;
+        //        case QSEnumDebugLevel.MUST:
+        //            return ConsoleColor.Blue;
 
                
-                //case LogLevel.Fatal:
-                //    return ConsoleColor.Red;
-            }
-            return ConsoleColor.Yellow;
-        }
+        //        //case LogLevel.Fatal:
+        //        //    return ConsoleColor.Red;
+        //    }
+        //    return ConsoleColor.Yellow;
+        //}
 
-
+        static ILog _logger = LogManager.GetLogger("Utils");
         /// <summary>
         /// string日志的输入委托 将系统的日志以文本形式输出到console
         /// </summary>
@@ -180,8 +182,29 @@ namespace TradingLib.Common
         public static void Debug(string msg, QSEnumDebugLevel level = QSEnumDebugLevel.INFO,string programe=null)
         {
             //如果给util绑定了sendlogevent事件处理器 则通过sendlogevent处理日志
-            ILogItem item = new LogItem(msg, level, programe==null?PROGRAME:programe);
-            Log(item);
+            //ILogItem item = new LogItem(msg, level, programe==null?PROGRAME:programe);
+            //Log(item);
+            switch (level)
+            { 
+                case QSEnumDebugLevel.DEBUG:
+                    _logger.Debug(msg);
+                    break;
+                case QSEnumDebugLevel.ERROR:
+                    _logger.Error(msg);
+                    break;
+                case QSEnumDebugLevel.INFO:
+                    _logger.Info(msg);
+                    break;
+                case QSEnumDebugLevel.FATAL:
+                    _logger.Fatal(msg);
+                    break;
+                case QSEnumDebugLevel.WARN:
+                    _logger.Warn(msg);
+                    break;
+                default:
+                    _logger.Debug(msg);
+                    break;
+            }
         }
 
         /// <summary>
@@ -190,27 +213,14 @@ namespace TradingLib.Common
         /// <param name="item"></param>
         public static void Log(ILogItem item)
         {
-            //如果发送日志事件有绑定则发送日志 同时进行控制台打印
-            if (SendLogEvent != null)
-            {
-                //发送日志
-                SendLogEvent(item);
-
-                //显示台打印日志
-                ConsolePrint(item);
-
-            }//如果没有绑定处理器 则通过控制台输出
-            else
-            {
-                ConsolePrint(item);
-            }
+            Debug(item.Message, item.Level, item.Programe);
         }
         
 
-        static void debug(string msg)
-        {
-            Debug(msg);
-        }
+        //static void debug(string msg)
+        //{
+        //    Debug(msg);
+        //}
 
 
 

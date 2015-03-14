@@ -28,7 +28,7 @@ namespace TradingLib.Contrib.CLI
         /// </summary>
         public void OnLoad()
         {
-            Util.Debug("CLIserver loading....");
+            logger.Info("CLIServer Loading....");
             _cfgdb = new ConfigDB(CLIServer.ContribName);
             if (!_cfgdb.HaveConfig("cmdport"))
             {

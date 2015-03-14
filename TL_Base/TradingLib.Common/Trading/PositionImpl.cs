@@ -461,7 +461,7 @@ namespace TradingLib.Common
                     {
                         c.LastSettlementPrice = k.PreSettlement;
                     }
-                    Util.Debug("update presettlementprice for position[" + this.Account + "-" + this.Symbol + "] price:" + _lastsettlementprice.ToString() +" tick presettlement:"+k.PreSettlement.ToString(), QSEnumDebugLevel.MUST);
+                    Util.Debug("update presettlementprice for position[" + this.Account + "-" + this.Symbol + "] price:" + _lastsettlementprice.ToString() + " tick presettlement:" + k.PreSettlement.ToString(), QSEnumDebugLevel.INFO);
                 }
                 //检查昨结算价格是否异常 如果获得了昨日结算价格 但是又和行情中的昨结算价格不一致则有异常
                 if (_lastsettlementprice != null && k.PreSettlement > 0 && k.PreSettlement != _lastsettlementprice)
@@ -480,7 +480,7 @@ namespace TradingLib.Common
                     {
                         p.SettlementPrice = k.Settlement;
                     }
-                    Util.Debug("update settlementprice for position[" + this.Account + "-" + this.Symbol + "] price:" + _settlementprice.ToString(), QSEnumDebugLevel.MUST);
+                    Util.Debug("update settlementprice for position[" + this.Account + "-" + this.Symbol + "] price:" + _settlementprice.ToString(), QSEnumDebugLevel.INFO);
                 }
             }
         }

@@ -358,7 +358,7 @@ namespace TradingLib.Core
                 {
                     if (islast)
                     {
-                        Util.Debug("got symbol synced....", QSEnumDebugLevel.WARNING);
+                        Util.Debug("got symbol synced....", QSEnumDebugLevel.WARN);
                     }
                     SymbolImpl tsym = manager.Domain.GetSymbol(sym.Symbol);
                     //更新

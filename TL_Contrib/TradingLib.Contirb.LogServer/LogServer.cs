@@ -166,7 +166,7 @@ namespace TradingLib.Contirb.LogServer
                 case QSEnumDebugLevel.INFO:
                     _loginfo.GotDebug(l.Message);
                     break;
-                case QSEnumDebugLevel.WARNING:
+                case QSEnumDebugLevel.WARN:
                     _logwarning.GotDebug(l.Message);
                     break;
                 case QSEnumDebugLevel.DEBUG:

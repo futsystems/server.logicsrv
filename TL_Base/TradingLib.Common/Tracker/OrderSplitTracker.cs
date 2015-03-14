@@ -262,7 +262,7 @@ namespace TradingLib.Common
                 //如果委托处于提交状态但是没有获得CTP回报,此时委托处于Submited,但是如果这个时候撤单就会发生处于submit 不进行撤单，但是后来委托回报又回来了，则状态会发生混乱
                 if (sonOrders.All(o => !o.IsPending())) //处于Submit的委托 可能CTP回报回报慢导致状态没有进入Opened
                 {
-                    Util.Debug(string.Format("All SonOrder Can not be canceled,father status:{0} notify father cancel internal", fatherOrder.Status), QSEnumDebugLevel.WARNING);
+                    Util.Debug(string.Format("All SonOrder Can not be canceled,father status:{0} notify father cancel internal", fatherOrder.Status), QSEnumDebugLevel.WARN);
                     //如果子委托全部为拒绝 则父委托为拒绝
                     if (sonOrders.All(o => o.Status == QSEnumOrderStatus.Reject))
                     {
@@ -297,7 +297,7 @@ namespace TradingLib.Common
             }
             else
             {
-                Util.Debug("Order:" + oid.ToString() + " is not in platform_order_map in broker", QSEnumDebugLevel.WARNING);
+                Util.Debug("Order:" + oid.ToString() + " is not in platform_order_map in broker", QSEnumDebugLevel.WARN);
             }
         }
         #endregion

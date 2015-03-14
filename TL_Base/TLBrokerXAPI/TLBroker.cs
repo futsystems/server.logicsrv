@@ -138,7 +138,7 @@ namespace TradingLib.BrokerXAPI
             if (!_loginsuccess)
             {
                 msg = "登入失败,请检查配置信息";
-                debug(msg, QSEnumDebugLevel.WARNING);
+                debug(msg, QSEnumDebugLevel.WARN);
                 ResetResource();
                 return false;
             }
@@ -462,7 +462,7 @@ namespace TradingLib.BrokerXAPI
         bool _connected = false;
         void _wrapper_OnConnectedEvent()
         {
-            Util.Debug("-----------TLBroker OnConnectedEvent-----------------------", QSEnumDebugLevel.WARNING);
+            Util.Debug("-----------TLBroker OnConnectedEvent-----------------------", QSEnumDebugLevel.WARN);
             _connected = true;
             //请求登入
             _wrapper.Login(ref _usrinfo);
@@ -473,7 +473,7 @@ namespace TradingLib.BrokerXAPI
 
         void _wrapper_OnLoginEvent(ref XRspUserLoginField pRspUserLogin)
         {
-            Util.Debug("-----------TLBroker OnLoginEvent-----------------------", QSEnumDebugLevel.WARNING);
+            Util.Debug("-----------TLBroker OnLoginEvent-----------------------", QSEnumDebugLevel.WARN);
             _loginreply = true;
             if (pRspUserLogin.ErrorID == 0)
             {
@@ -489,14 +489,14 @@ namespace TradingLib.BrokerXAPI
 
         void _wrapper_OnDisconnectedEvent()
         {
-            Util.Debug("-----------TLBroker OnDisconnectedEvent-----------------------", QSEnumDebugLevel.WARNING);
+            Util.Debug("-----------TLBroker OnDisconnectedEvent-----------------------", QSEnumDebugLevel.WARN);
         }
 
 
 
         void _wrapper_OnRtnOrderEvent(ref XOrderField pOrder)
         {
-            Util.Debug("-----------TLBroker OnRtnOrderEvent-----------------------", QSEnumDebugLevel.WARNING);
+            Util.Debug("-----------TLBroker OnRtnOrderEvent-----------------------", QSEnumDebugLevel.WARN);
             //Util.Debug(" date:" + pOrder.Date + "time:"+pOrder.Time + " exchange:" + pOrder.Exchange + " filledsize:" + pOrder.FilledSize.ToString() + " limitprice:" + pOrder.LimitPrice + " offsetflag:" + pOrder.OffsetFlag.ToString() + " orderid:" + pOrder.ID + " status:" + pOrder.OrderStatus.ToString() + " side:" + pOrder.Side + " stopprice:" + pOrder.StopPrice.ToString() + " symbol:" + pOrder.Symbol + " totalsize:" + pOrder.TotalSize.ToString() + " unfilledsize:" + pOrder.UnfilledSize.ToString() + " statusmsg:" + pOrder.StatusMsg);
             
             _ordercache.Write(pOrder);
@@ -505,7 +505,7 @@ namespace TradingLib.BrokerXAPI
 
         void _wrapper_OnRtnOrderErrorEvent(ref XOrderField pOrder, ref XErrorField pError)
         {
-            Util.Debug("-----------TLBroker OnRtnOrderErrorEvent-----------------------", QSEnumDebugLevel.WARNING);
+            Util.Debug("-----------TLBroker OnRtnOrderErrorEvent-----------------------", QSEnumDebugLevel.WARN);
             //Util.Debug("~~~~~ErrorSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XErrorField)), QSEnumDebugLevel.WARNING);
             //Util.Debug("order localid:" + pOrder.BrokerLocalOrderID + " errorid:" + pError.ErrorID.ToString() + " errmsg:" + pError.ErrorMsg, QSEnumDebugLevel.MUST);
             //Util.Debug(" data:" + pOrder.Date + " exchange:" + pOrder.Exchange + " filledsize:" + pOrder.FilledSize.ToString() + " limitprice:" + pOrder.LimitPrice + " offsetflag:" + pOrder.OffsetFlag.ToString() + " orderid:" + pOrder.ID + " status:" + pOrder.OrderStatus.ToString() + " side:" + pOrder.Side + " stopprice:" + pOrder.StopPrice.ToString() + " symbol:" + pOrder.Symbol + " totalsize:" + pOrder.TotalSize.ToString() + " unfilledsize:" + pOrder.UnfilledSize.ToString() + " statusmsg:" + pOrder.StatusMsg);
@@ -515,7 +515,7 @@ namespace TradingLib.BrokerXAPI
         }
         void _wrapper_OnRtnOrderActionErrorEvent(ref XOrderActionField pOrderAction, ref XErrorField pError)
         {
-            Util.Debug("-----------TLBroker OrderActionErrorEvent-----------------------", QSEnumDebugLevel.WARNING);
+            Util.Debug("-----------TLBroker OrderActionErrorEvent-----------------------", QSEnumDebugLevel.WARN);
             //Util.Debug("~~~~~OrderActionSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XOrderActionField)), QSEnumDebugLevel.WARNING);
            
             _orderactionerrorcache.Write(new XOrderActionError(pOrderAction, pError));
@@ -524,7 +524,7 @@ namespace TradingLib.BrokerXAPI
 
         void _wrapper_OnRtnTradeEvent(ref XTradeField pTrade)
         {
-            Util.Debug("-----------TLBroker OnRtnTradeEvent-----------------------", QSEnumDebugLevel.WARNING);
+            Util.Debug("-----------TLBroker OnRtnTradeEvent-----------------------", QSEnumDebugLevel.WARN);
             //Util.Debug("~~~~~TradeSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XTradeField)), QSEnumDebugLevel.WARNING);
             //Util.Debug("Trade:" + TradingLib.Mixins.LitJson.JsonMapper.ToJson(pTrade), QSEnumDebugLevel.WARNING);
             //Console.WriteLine("got new trade..???????????????????????");
