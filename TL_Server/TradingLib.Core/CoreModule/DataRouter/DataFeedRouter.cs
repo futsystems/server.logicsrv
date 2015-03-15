@@ -140,7 +140,7 @@ namespace TradingLib.Core
                     //如果TickWatcher没有设定开始于结束时间 则设定
                     if (!_tickwatcher.TimeSpanSetted)
                     {
-                        Util.Debug("Now we are in Tick TimeSpan,but have not set TickWatcher,set TimeSpan as:" + t.ToString(), QSEnumDebugLevel.WARN);
+                        Util.Warn("Now we are in Tick TimeSpan,but have not set TickWatcher,set TimeSpan as:" + t.ToString());
                         _tickwatcher.UpdateTimeSpan(t.StartTime, t.EndTime);
                     }
                 }
@@ -159,7 +159,7 @@ namespace TradingLib.Core
                         preset = true;
                         if (!_tickwatcher.TimeSpanSetted || (_tickwatcher.TimeSpanSetted && (_tickwatcher.StartAlertTime != t.StartTime || _tickwatcher.StopAlertTime != t.EndTime)))
                         {
-                            Util.Debug("Tick will come in less than 5 secends,set TimeSpan first:" + t.ToString(), QSEnumDebugLevel.WARN);
+                            Util.Warn("Tick will come in less than 5 secends,set TimeSpan first:" + t.ToString());
                             _tickwatcher.UpdateTimeSpan(t.StartTime, t.EndTime);
                         }
                         
@@ -170,7 +170,7 @@ namespace TradingLib.Core
                 //如果不再行情覆盖时间段内
                 if (!preset && _tickwatcher.TimeSpanSetted)
                 {
-                    Util.Debug("we are levae Tick TimeSpan ,reset TickWatcher", QSEnumDebugLevel.WARN);
+                    logger.Warn("we are levae Tick TimeSpan ,reset TickWatcher");
                     _tickwatcher.Reset();
                 }
             }
@@ -225,7 +225,7 @@ namespace TradingLib.Core
         /// <param name="sym"></param>
         void _tickwatcher_GotAlert(string sym)
         {
-            Util.Debug("symbol:" + sym + " have no tick in " + _tickwatcher.AlertThreshold.ToString() + " secends.", QSEnumDebugLevel.WARN);
+            logger.Warn("symbol:" + sym + " have no tick in " + _tickwatcher.AlertThreshold.ToString() + " secends.");
         }
 
         #endregion

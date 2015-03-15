@@ -216,7 +216,7 @@ namespace TradingLib.ORM
                     //1.插入某账户的结算信息(当前财务信息)平仓盈亏,持仓盈亏,手续费,入金,出金,昨日权益,当前权益
                     if (acc.LastEquity != acc.NowEquity)
                     {
-                        Util.Debug(string.Format("account:{0} lastequity:{1} nowequity:{2}", settle.Account, settle.LastEquity, settle.NowEquity),QSEnumDebugLevel.DEBUG);
+                        Util.Debug(string.Format("account:{0} lastequity:{1} nowequity:{2}", settle.Account, settle.LastEquity, settle.NowEquity));
                     }
                     string query = String.Format("Insert into log_settlement (`account`,`settleday`,`realizedpl`,`unrealizedpl`,`commission`,`cashin`,`cashout`,`lastequity`,`nowequity`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}')", settle.Account, settle.SettleDay, settle.RealizedPL, settle.UnRealizedPL, settle.Commission, settle.CashIn, settle.CashOut, settle.LastEquity, settle.NowEquity);
                     istransok =  istransok &&  (db.Connection.Execute(query) > 0);

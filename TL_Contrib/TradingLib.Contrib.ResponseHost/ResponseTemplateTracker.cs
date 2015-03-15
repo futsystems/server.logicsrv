@@ -43,7 +43,7 @@ namespace TradingLib.Contrib.ResponseHost
             IList<Type> types = PluginHelper.GetImplementors("Response", typeof(IResponse));
             foreach (Type t in types)
             {
-                Util.Debug("Load Response Type:" + t.FullName, QSEnumDebugLevel.INFO);
+                Util.Info("Load Response Type:" + t.FullName);
                 //同步服务计划 ServicePlane
                 InitResponseTemplate(t);
             }

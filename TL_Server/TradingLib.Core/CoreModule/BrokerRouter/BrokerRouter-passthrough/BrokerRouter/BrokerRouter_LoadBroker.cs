@@ -139,7 +139,7 @@ namespace TradingLib.Core
                     fill.BrokerTradeID = trade.BrokerTradeID;
                     fill.TradeID = trade.BrokerTradeID;
 
-                    Util.Debug("获得成交:" + fill.GetTradeDetail(), QSEnumDebugLevel.INFO);
+                    Util.Info("获得成交:" + fill.GetTradeDetail());
 
                     logger.Info("Reply Fill To MessageExch:" + fill.GetTradeInfo());
                     _fillcache.Write(new TradeImpl(fill));

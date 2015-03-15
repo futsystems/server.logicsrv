@@ -17,7 +17,7 @@ namespace TradingLib.Contrib.ResponseHost
         {
             foreach (ResponseWrapper resp in ORM.MResponse.SelectResponse())
             {
-                Util.Debug("load response instance:" + resp.Acct + " templateid:" + resp.Response_Template_ID.ToString(), QSEnumDebugLevel.INFO);
+                Util.Info("load response instance:" + resp.Acct + " templateid:" + resp.Response_Template_ID.ToString());
                 LoadResponse(resp);
             } 
         }

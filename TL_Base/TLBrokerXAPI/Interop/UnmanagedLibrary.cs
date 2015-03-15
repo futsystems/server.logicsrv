@@ -156,7 +156,7 @@ namespace TradingLib.BrokerXAPI.Interop
         {
             string fn = filename.EndsWith(Platform.LibSuffix) ? filename : filename + Platform.LibSuffix;
             string libPath = Path.GetFullPath(Path.Combine(dir, fn));
-            Util.Debug("libPath:" + libPath, QSEnumDebugLevel.INFO);
+            Util.Info("libPath:" + libPath);
             return NullifyInvalidHandle(Platform.OpenHandle(libPath));
         }
 

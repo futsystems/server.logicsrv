@@ -19,7 +19,7 @@ namespace TradingLib.Common
 
             foreach (AccountConnectorPair pair in ORM.MAccountConnectorMap.SelectAccountConnectorPairs())
             {
-                Util.Debug("account:" + pair.Account + " connectorID:" + pair.Connector_ID.ToString(), QSEnumDebugLevel.ERROR);
+                Util.Error("account:" + pair.Account + " connectorID:" + pair.Connector_ID.ToString());
                 ConnectorConfig cfg = BasicTracker.ConnectorConfigTracker.GetBrokerConfig(pair.Connector_ID);
                 if(cfg != null)
                 {

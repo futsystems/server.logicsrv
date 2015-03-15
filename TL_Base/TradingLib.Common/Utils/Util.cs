@@ -145,45 +145,30 @@ namespace TradingLib.Common
                     return ConsoleColor.White;
             }
         }
-        ///// <summary>
-        ///// Get color for the specified log level
-        ///// </summary>
-        ///// <param name="level">Level for the log entry</param>
-        ///// <returns>A <see cref="ConsoleColor"/> for the level</returns>
-        //public static ConsoleColor GetColor(QSEnumDebugLevel level)
-        //{
-        //    switch (level)
-        //    {
-        //        case QSEnumDebugLevel.VERB:
-        //            return ConsoleColor.DarkGray;
-        //        case QSEnumDebugLevel.DEBUG:
-        //            return ConsoleColor.Gray;
-        //        case QSEnumDebugLevel.INFO:
-        //            return ConsoleColor.White;
-        //        case QSEnumDebugLevel.WARNING:
-        //            return ConsoleColor.DarkMagenta;
-        //        case QSEnumDebugLevel.ERROR:
-        //            return ConsoleColor.Magenta;
-        //        case QSEnumDebugLevel.MUST:
-        //            return ConsoleColor.Blue;
-
-               
-        //        //case LogLevel.Fatal:
-        //        //    return ConsoleColor.Red;
-        //    }
-        //    return ConsoleColor.Yellow;
-        //}
 
         static ILog _logger = LogManager.GetLogger("Utils");
+
         /// <summary>
-        /// string日志的输入委托 将系统的日志以文本形式输出到console
+        /// 处理日志
         /// </summary>
-        //public static DebugDelegate SendDebugEvent;
-        public static void Debug(string msg, QSEnumDebugLevel level = QSEnumDebugLevel.INFO,string programe=null)
+        /// <param name="item"></param>
+        public static void Log(ILogItem item)
+        {
+            Log(item.Message, item.Level, item.Programe);
+        }
+
+
+        /// <summary>
+        /// 全局日志系统
+        /// 该日志函数用于在相关模块中快速输出日志，而不用进行进行LogManager.GetLogger操作，简化了日志输出和调试
+        /// 
+        /// </summary>
+        public static void Log(string msg, QSEnumDebugLevel level = QSEnumDebugLevel.INFO,string programe=null)
         {
             //如果给util绑定了sendlogevent事件处理器 则通过sendlogevent处理日志
             //ILogItem item = new LogItem(msg, level, programe==null?PROGRAME:programe);
             //Log(item);
+            msg = string.Format("{0}:{1}", !string.IsNullOrEmpty(programe)? "Utils-"+programe : "Utils", msg);
             switch (level)
             { 
                 case QSEnumDebugLevel.DEBUG:
@@ -207,14 +192,33 @@ namespace TradingLib.Common
             }
         }
 
-        /// <summary>
-        /// 处理日志
-        /// </summary>
-        /// <param name="item"></param>
-        public static void Log(ILogItem item)
+
+        public static void Debug(string msg, string programe=null)
         {
-            Debug(item.Message, item.Level, item.Programe);
+            Log(msg, QSEnumDebugLevel.DEBUG, programe);
         }
+
+        public static void Info(string msg, string progame = null)
+        {
+            Log(msg, QSEnumDebugLevel.INFO, progame);
+        }
+
+        public static void Error(string msg, string programe = null)
+        {
+            Log(msg, QSEnumDebugLevel.ERROR, programe);
+        }
+
+        public static void Fatal(string msg, string programe = null)
+        {
+            Log(msg, QSEnumDebugLevel.FATAL, programe);
+        }
+
+        public static void Warn(string msg, string programe = null)
+        {
+            Log(msg, QSEnumDebugLevel.WARN, programe);
+        }
+
+
         
 
         //static void debug(string msg)

@@ -118,7 +118,7 @@ namespace TradingLib.Common
                 }
                 agent = agent.ParentManager;//递归到父域
             }
-            Util.Debug(manager.ToString() + " have no permission set,use default", QSEnumDebugLevel.WARN);
+            Util.Warn(manager.ToString() + " have no permission set,use default");
 
             if (manager.IsInRoot())//如果是Root权限 则返回默认管理员权限 所有权限打开
             {

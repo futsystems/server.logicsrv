@@ -74,9 +74,10 @@ namespace TradingLib.BrokerXAPI.Interop
         public TLBrokerWrapperProxy(string path, string dllname)
         {
             //1.加载dll
-            Util.Debug("strat to load wrapper Nativelib ......", QSEnumDebugLevel.WARN);
+            
+            Util.Info("strat to load wrapper Nativelib ......");
             NativeLib = new UnmanagedLibrary(path, dllname);
-            Util.Debug("Nativelib is loaded ......", QSEnumDebugLevel.WARN);
+            Util.Info("Nativelib is loaded ......");
             //2.绑定导出函数到委托
             AssignCommonDelegates();
 
@@ -149,7 +150,7 @@ namespace TradingLib.BrokerXAPI.Interop
             }
             catch (Exception ex)
             {
-                Util.Debug("Register BrokerProxy Error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                Util.Error("Register BrokerProxy Error:" + ex.ToString());
             }
         }
 
@@ -164,12 +165,12 @@ namespace TradingLib.BrokerXAPI.Interop
         {
             try
             {
-                Util.Debug("~~~~~XServerInfoFieldSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XServerInfoField)));
+                Util.Info("~~~~~XServerInfoFieldSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XServerInfoField)));
                 _Connect(this.Wrapper, ref pServerInfo);
             }
             catch (Exception ex)
             {
-                Util.Debug("Connect Broker Error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                Util.Error("Connect Broker Error:" + ex.ToString());
             }
         }
 
@@ -188,7 +189,7 @@ namespace TradingLib.BrokerXAPI.Interop
             }
             catch (Exception ex)
             {
-                Util.Debug("Disconnect Broker Error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                Util.Error("Disconnect Broker Error:" + ex.ToString());
             }
         }
 
@@ -210,7 +211,7 @@ namespace TradingLib.BrokerXAPI.Interop
             }
             catch (Exception ex)
             {
-                Util.Debug("Login Error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                Util.Error("Login Error:" + ex.ToString());
             }
         }
 
@@ -226,14 +227,14 @@ namespace TradingLib.BrokerXAPI.Interop
         {
             try
             {
-                Util.Debug("BrokerProxy SendOrder", QSEnumDebugLevel.INFO);
+                Util.Info("BrokerProxy SendOrder");
                 bool x =  _SendOrder(this.Wrapper, ref pOrder);
-                Util.Debug("**************** sendorder return:" + x.ToString(), QSEnumDebugLevel.ERROR);
+                Util.Info("**************** sendorder return:" + x.ToString());
                 return x;
             }
             catch (Exception ex)
             {
-                Util.Debug("SendOrder Error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                Util.Error("SendOrder Error:" + ex.ToString());
                 return false;
             }
         }
@@ -246,12 +247,12 @@ namespace TradingLib.BrokerXAPI.Interop
         {
             try
             {
-                Util.Debug("BrokerProxy SendOrderAction", QSEnumDebugLevel.INFO);
+                Util.Info("BrokerProxy SendOrderAction");
                 return _SendOrderAction(this.Wrapper, ref pAction);
             }
             catch (Exception ex)
             {
-                Util.Debug("SendOrderAction Error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                Util.Error("SendOrderAction Error:" + ex.ToString());
                 return false;
             }
         }
@@ -263,14 +264,14 @@ namespace TradingLib.BrokerXAPI.Interop
         {
             try
             {
-                Util.Debug("BrokerProxy QryInstrument", QSEnumDebugLevel.INFO);
+                Util.Info("BrokerProxy QryInstrument");
                 bool x =  _QryInstrument(this.Wrapper);
-                Util.Debug("**************** qry instrument return:" + x.ToString(), QSEnumDebugLevel.ERROR);
+                Util.Error("**************** qry instrument return:" + x.ToString());
                 return x;
             }
             catch (Exception ex)
             {
-                Util.Debug("QryInstrument Error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                Util.Error("QryInstrument Error:" + ex.ToString());
                 return false;
             }
         }
@@ -282,14 +283,14 @@ namespace TradingLib.BrokerXAPI.Interop
         {
             try
             {
-                Util.Debug("BrokerProxy QryAccountInfo", QSEnumDebugLevel.INFO);
+                Util.Info("BrokerProxy QryAccountInfo");
                 bool x = _QryAccountInfo(this.Wrapper);
-                Util.Debug("**************** qry accountinfo return:" + x.ToString(), QSEnumDebugLevel.ERROR);
+                Util.Info("**************** qry accountinfo return:" + x.ToString());
                 return x;
             }
             catch (Exception ex)
             {
-                Util.Debug("QryAccountInfo Error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                Util.Error("QryAccountInfo Error:" + ex.ToString());
                 return false;
             }
         }

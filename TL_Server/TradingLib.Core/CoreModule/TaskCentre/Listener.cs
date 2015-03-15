@@ -62,7 +62,7 @@ namespace TradingLib.Core
             }
             catch (Exception ex)
             {
-                Util.Debug("JobExecuted Handle  Error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                Util.Error("JobExecuted Handle  Error:" + ex.ToString(),"JobListener");
             }
         }
     }
@@ -112,7 +112,7 @@ namespace TradingLib.Core
             }
             catch (Exception ex)
             {
-                Util.Debug("TriggerMisfired Handle Error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                Util.Error("TriggerMisfired Handle Error:" + ex.ToString());
             }
         }
 

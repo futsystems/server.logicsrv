@@ -228,7 +228,6 @@ namespace TradingLib.Core
             if (_valid)
             {
                 logger.Info("Trading Server Starting success");
-                Notify("启动", "启动时间:" + DateTime.Now.ToString());
             }
             else
                 logger.Info("Trading Server Starting failed.");

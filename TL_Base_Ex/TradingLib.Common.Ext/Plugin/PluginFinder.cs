@@ -395,7 +395,7 @@ namespace TradingLib.Common
                                 }
                                 catch (Exception ex)
                                 { 
-									Util.Debug("plugin parse error:"+ex.ToString(),QSEnumDebugLevel.ERROR);
+									Util.Error("plugin parse error:"+ex.ToString());
                                 }
                             
                             }
@@ -404,7 +404,7 @@ namespace TradingLib.Common
                 }
                 catch (Exception ex)
                 { 
-					Util.Debug ("pluginhelper LoadImplementors error:" + ex.ToString (), QSEnumDebugLevel.ERROR);
+					Util.Error("pluginhelper LoadImplementors error:" + ex.ToString ());
                 }
                 
             }

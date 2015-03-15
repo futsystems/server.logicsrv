@@ -220,7 +220,7 @@ namespace Broker.Live
             int shortPendingEntrySize = shortEntryOrders.Sum(po => po.UnsignedSize);
             int shortPendingExitSize = shortExitOrders.Sum(po => po.UnsignedSize);
 
-            Util.Debug("当前持仓数量 多头:" + longsize.ToString() + " 空头:" + shortsize.ToString() +"待买开:"+longPendingEntrySize.ToString() +" 待卖平:"+longPendingExitSize.ToString()+" 待卖开:"+shortPendingEntrySize.ToString() +" 待买平"+shortPendingExitSize.ToString()+ " 委托操作持仓方向:" + (posside ? "多头" : "空头") + " 开平:" + (isEntry ? "开" : "平") + " 方向:" + (side ? "买入" : "卖出") + " 数量:" + o.UnsignedSize.ToString(), QSEnumDebugLevel.INFO);
+            Util.Info("当前持仓数量 多头:" + longsize.ToString() + " 空头:" + shortsize.ToString() + "待买开:" + longPendingEntrySize.ToString() + " 待卖平:" + longPendingExitSize.ToString() + " 待卖开:" + shortPendingEntrySize.ToString() + " 待买平" + shortPendingExitSize.ToString() + " 委托操作持仓方向:" + (posside ? "多头" : "空头") + " 开平:" + (isEntry ? "开" : "平") + " 方向:" + (side ? "买入" : "卖出") + " 数量:" + o.UnsignedSize.ToString());
 
             //如果当前没有持仓 则直接开仓
             if (longsize == 0 && shortsize == 0)
@@ -751,7 +751,7 @@ namespace Broker.Live
 
         void CancelSonOrder(Order o)
         {
-            Util.Debug("XAP[" + this.Token + "] 取消子委托:" + o.GetOrderInfo(true), QSEnumDebugLevel.INFO);
+            Util.Info("XAP[" + this.Token + "] 取消子委托:" + o.GetOrderInfo(true));
             XOrderActionField action = new XOrderActionField();
             action.ActionFlag = QSEnumOrderActionFlag.Delete;
 
@@ -803,7 +803,7 @@ namespace Broker.Live
                         }
                     }
                 }
-                Util.Debug("更新子委托:" + o.GetOrderInfo(true), QSEnumDebugLevel.INFO);
+                Util.Info("更新子委托:" + o.GetOrderInfo(true));
                 //这个过程更新了OrderTracker中的状态，原来程序中o使用的是委托分拆器过来的委托,因此委托分拆器没有更新委托状态也能获得正常的回报 
                 /* 委托分拆器获得子委托回报 原来并没有去更新子委托，但是同样获得正常数据
                  * 委托分拆器的委托在接口里被ordertracker维护了，在ordertracker获得委托更新时候同步更新了委托分拆器中的子委托
@@ -845,7 +845,7 @@ namespace Broker.Live
                 sonfill.BrokerTradeID = trade.BrokerTradeID;
                 sonfill.TradeID = trade.BrokerTradeID;
 
-                Util.Debug("获得子成交:" + sonfill.GetTradeDetail(), QSEnumDebugLevel.INFO);
+                Util.Info("获得子成交:" + sonfill.GetTradeDetail());
                 tk.GotFill(sonfill);
                 //记录接口侧成交数据
                 this.LogBrokerTrade(sonfill);
@@ -864,7 +864,7 @@ namespace Broker.Live
                 {
                     o.Status = QSEnumOrderStatus.Reject;
                     o.Comment = error.Error.ErrorMsg;
-                    Util.Debug("更新子委托:" + o.GetOrderInfo(true), QSEnumDebugLevel.INFO);
+                    Util.Info("更新子委托:" + o.GetOrderInfo(true));
                     tk.GotOrder(o);
                     //更新接口侧委托
                     this.LogBrokerOrderUpdate(o);//更新日志
@@ -930,7 +930,7 @@ namespace Broker.Live
                 {
                     o.Status = QSEnumOrderStatus.Canceled;
                     o.Comment = error.Error.ErrorMsg;
-                    Util.Debug("更新子委托:" + o.GetOrderInfo(true), QSEnumDebugLevel.INFO);
+                    Util.Info("更新子委托:" + o.GetOrderInfo(true));
 
                     tk.GotOrder(o); //Broker交易信息管理器
 

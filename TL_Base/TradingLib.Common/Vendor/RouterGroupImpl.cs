@@ -173,7 +173,7 @@ namespace TradingLib.Common
             }
             int idx = rd.Next(0, brokers.Length);
             IBroker broker = brokers[idx];
-            Util.Debug(string.Format("Stochastic Strategy Select Broker[{0}]", broker.Token), QSEnumDebugLevel.WARN);
+            Util.Info(string.Format("Stochastic Strategy Select Broker[{0}]", broker.Token));
             return broker;
         }
 
@@ -185,7 +185,7 @@ namespace TradingLib.Common
                 return null;
             }
             IBroker broker = brokers[0];
-            Util.Debug(string.Format("Priority Strategy Select Broker[{0}]", broker.Token), QSEnumDebugLevel.WARN);
+            Util.Info(string.Format("Priority Strategy Select Broker[{0}]", broker.Token));
             return broker;
         }
         /// <summary>

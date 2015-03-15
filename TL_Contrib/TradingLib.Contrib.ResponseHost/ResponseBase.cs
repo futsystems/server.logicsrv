@@ -195,7 +195,7 @@ namespace TradingLib.Contrib.ResponseHost
 
         protected void Log(string msg, QSEnumDebugLevel level)
         {
-            Util.Debug(msg, level, Programe);
+            Util.Log(msg, level, Programe);
         }
 
         /// <summary>

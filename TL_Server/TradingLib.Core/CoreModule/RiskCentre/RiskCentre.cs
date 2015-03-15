@@ -118,8 +118,6 @@ namespace TradingLib.Core
 
             //清空帐户风控检查帐户列表
             ClearActiveAccount();
-
-            Notify("风控中心重置(结算后)[" + DateTime.Now.ToShortDateString() + "]", " ");
         }
 
         #endregion
