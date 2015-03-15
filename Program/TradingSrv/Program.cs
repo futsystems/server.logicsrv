@@ -12,6 +12,10 @@ using Common.Logging;
 using System.Runtime.InteropServices;
 using System.Reflection;
 //using NLog;
+//using NLog.Targets;
+//using NLog.Config;
+//using NLog;
+
 
 namespace TraddingSrvCLI
 {
@@ -39,24 +43,29 @@ namespace TraddingSrvCLI
 
         static void Main(string[] args)
         {
+
+            //// Step 1. Create configuration object 
+            //var config = new LoggingConfiguration();
+
+            //// Step 2. Create targets and add them to the configuration 
+            //var target = new NLog.Targets.ZMQTarget();
+            //config.AddTarget("zmq", target);
+            //target.Layout = @"${date:format=HH\\:MM\\:ss} ${logger} ${message}";
+
+            //var rule1 = new LoggingRule("*", NLog.LogLevel.Debug, target);
+            //config.LoggingRules.Add(rule1);
+            //NLog.LogManager.Configuration = config;
+
+
+            //Logger logger = NLog.LogManager.GetLogger("MyClassName");
+
             log.Debug("it is debug here???????????????");
             log.Error("some error happend");
 
             //logger.Debug("it is log to here");
 
             //Util.sleep(100000);
-            debug("intsize:" + sizeof(int).ToString() + " doublesize:" + sizeof(double).ToString() + " boolsize:" + sizeof(bool).ToString());
-            debug("OrderSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XOrderField)).ToString());
-            debug("TradeSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XTradeField)).ToString());
-            debug("ErrorSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XErrorField)).ToString());
-            //XServerInfoField
-            //debug("XServerInfoFieldSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XServerInfoField)).ToString());
-            ////XUserInfoField
-            debug("XUserInfoFieldSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XUserInfoField)).ToString());
-            debug("XRspUserLoginFieldSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XRspUserLoginField)).ToString());
-            debug("XOrderActionFieldSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XOrderActionField)).ToString());
-            //return;
-            //Util.Debug("Orders:" +TradingLib.Mixins.LitJson.JsonMapper.ToJson(new XOrderField()),QSEnumDebugLevel.WARNING);
+
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
             try
             {

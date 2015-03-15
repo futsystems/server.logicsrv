@@ -67,7 +67,7 @@ namespace TradingLib.Contirb.LogServer
             _port = _cfgdb["port"].AsInt();
             _savedebug = _cfgdb["logtofile"].AsBool();
 
-            Util.SendLogEvent += new ILogItemDel(NewLog);
+            //Util.SendLogEvent += new ILogItemDel(NewLog);
 
             TLCtxHelper.EventSystem.TaskErrorEvent += new EventHandler<TaskEventArgs>(EventSystem_TaskErrorEvent);
             TLCtxHelper.EventSystem.SpecialTimeTaskEvent += new EventHandler<TaskEventArgs>(EventSystem_SpecialTimeTaskEvent);
@@ -95,7 +95,7 @@ namespace TradingLib.Contirb.LogServer
         /// </summary>
         public void OnDestory()
         {
-            Util.SendLogEvent -= new ILogItemDel(NewLog);
+            //Util.SendLogEvent -= new ILogItemDel(NewLog);
             base.Dispose();
             
 

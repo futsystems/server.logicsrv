@@ -27,28 +27,6 @@ namespace TradingLib.Common
         public static string GlobalPrefix = ">>> ";
 
 
-        public static event ILogItemDel SendLogEvent;
-
-        /// <summary>
-        /// 控制台输出
-        /// 通过控制台打印日志输出
-        /// </summary>
-        /// <param name="msg"></param>
-        //public static void ConsolePrint(ILogItem item)
-        //{
-        //    StringBuilder sb = new StringBuilder();
-        //    sb.Append("[");
-        //    sb.Append(item.Level.ToString());
-        //    sb.Append("] ");
-        //    sb.Append(item.Programe);
-        //    sb.Append(":");
-        //    sb.Append(item.Message);
-
-        //    Console.ForegroundColor = GetColor(item.Level);
-        //    Console.WriteLine(sb.ToString());
-        //    Console.ForegroundColor = ConsoleColor.Gray;
-        //}
-
         public static void LoadStatus(string body, bool samecolor = false)
         {
             StatusSection(body, "LOAD",QSEnumInfoColor.INFOGREEN, samecolor);
@@ -146,6 +124,14 @@ namespace TradingLib.Common
             }
         }
 
+
+        #region 全局日志输出函数 避免多个类中去获得单独的日志对象
+        /* 大量创建的对象，或者临时性日志输出，则可以通过调用全局日志输出函数进行
+         * 信息输出，避免创建过多logger对象 
+         * 
+         * 
+         * 
+         * **/
         static ILog _logger = LogManager.GetLogger("Utils");
 
         /// <summary>
@@ -161,7 +147,6 @@ namespace TradingLib.Common
         /// <summary>
         /// 全局日志系统
         /// 该日志函数用于在相关模块中快速输出日志，而不用进行进行LogManager.GetLogger操作，简化了日志输出和调试
-        /// 
         /// </summary>
         public static void Log(string msg, QSEnumDebugLevel level = QSEnumDebugLevel.INFO,string programe=null)
         {
@@ -217,14 +202,8 @@ namespace TradingLib.Common
         {
             Log(msg, QSEnumDebugLevel.WARN, programe);
         }
+        #endregion
 
-
-        
-
-        //static void debug(string msg)
-        //{
-        //    Debug(msg);
-        //}
 
 
 
