@@ -102,8 +102,10 @@ namespace TradingLib.BrokerXAPI.Interop
             _SendOrder = NativeLib.GetUnmanagedFunction<SendOrderProc>("SendOrder");
             _SendOrderAction = NativeLib.GetUnmanagedFunction<SendOrderActionProc>("SendOrderAction");
             _QryInstrument = NativeLib.GetUnmanagedFunction<QryInstrumentProc>("QryInstrument");
-            //_Restore = NativeLib.GetUnmanagedFunction<RestoreProc>("Restore");
+            _Restore = NativeLib.GetUnmanagedFunction<RestoreProc>("Restore");
             _QryAccountInfo = NativeLib.GetUnmanagedFunction<QryAccountInfoProc>("QryAccountInfo");
+            _QryOrder = NativeLib.GetUnmanagedFunction<QryOrderProc>("QryOrder");
+            _QryTrade = NativeLib.GetUnmanagedFunction<QryTradeProc>("QryTrade");
 
             _RegOnConnected = NativeLib.GetUnmanagedFunction<RegOnConnectedProc>("RegOnConnected");
             _RegOnDisconnected = NativeLib.GetUnmanagedFunction<RegOnDisconnectedProc>("RegOnDisconnected");
@@ -114,7 +116,8 @@ namespace TradingLib.BrokerXAPI.Interop
             _RegRtnOrderActionError = NativeLib.GetUnmanagedFunction<RegRtnOrderActionErrorProc>("RegRtnOrderActionError");
             _RegOnSymbol = NativeLib.GetUnmanagedFunction<RegOnSymbolProc>("RegOnSymbol");
             _RegOnAccountInfo = NativeLib.GetUnmanagedFunction<RegOnAccountInfoProc>("RegOnAccountInfo");
-
+            _RegOnQryOrder = NativeLib.GetUnmanagedFunction<RegOnQryOrderProc>("RegOnQryOrder");
+            _RegOnQryTrade = NativeLib.GetUnmanagedFunction<RegOnQryTradeProc>("RegOnQryTrade");
             
         }
 
@@ -295,30 +298,68 @@ namespace TradingLib.BrokerXAPI.Interop
             }
         }
 
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate bool QryOrderProc(IntPtr pWrapper);
+        QryOrderProc _QryOrder;
+        public bool QryOrder()
+        {
+            try
+            {
+                Util.Info("BrokerProxy QryOrderProc");
+                bool x = _QryOrder(this.Wrapper);
+                Util.Info("**************** qry order return:" + x.ToString());
+                return x;
+            }
+            catch (Exception ex)
+            {
+                Util.Error("QryOrder Error:" + ex.ToString());
+                return false;
+            }
+        }
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate bool QryTradeProc(IntPtr pWrapper);
+        QryTradeProc _QryTrade;
+        public bool QryTrade()
+        {
+            try
+            {
+                Util.Info("BrokerProxy QryTrade");
+                bool x = _QryTrade(this.Wrapper);
+                Util.Info("**************** qry trade return:" + x.ToString());
+                return x;
+            }
+            catch (Exception ex)
+            {
+                Util.Error("QryTrade Error:" + ex.ToString());
+                return false;
+            }
+        }
 
 
-        //[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        //public delegate bool RestoreProc(IntPtr pWrapper);
-        //RestoreProc _Restore;
-        ///// <summary>
-        ///// 请求接口恢复日内交易数据
-        ///// </summary>
-        ///// <returns></returns>
-        //public bool Restore()
-        //{
-        //    try
-        //    {
-        //        Util.Debug("BrokerProxy Restore", QSEnumDebugLevel.MUST);
-        //        bool x = _Restore(this.Wrapper);
-        //        Util.Debug("**************** qry Restore return:" + x.ToString(), QSEnumDebugLevel.ERROR);
-        //        return x;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Util.Debug("Restore Error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
-        //        return false;
-        //    }
-        //}
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate bool RestoreProc(IntPtr pWrapper);
+        RestoreProc _Restore;
+        /// <summary>
+        /// 请求接口恢复日内交易数据
+        /// </summary>
+        /// <returns></returns>
+        public bool Restore()
+        {
+            try
+            {
+                Util.Info("BrokerProxy Restore");
+                bool x = _Restore(this.Wrapper);
+                Util.Info("**************** qry Restore return:" + x.ToString());
+                return x;
+            }
+            catch (Exception ex)
+            {
+                Util.Error("Restore Error:" + ex.ToString());
+                return false;
+            }
+        }
 
         #region 注册回调函数接口
         /// <summary>
@@ -397,6 +438,14 @@ namespace TradingLib.BrokerXAPI.Interop
         public delegate void RegOnAccountInfoProc(IntPtr pWrapper, CBOnAccountInfo cb);
         RegOnAccountInfoProc _RegOnAccountInfo;
 
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void RegOnQryOrderProc(IntPtr pWrapper, CBOnQryOrder cb);
+        RegOnQryOrderProc _RegOnQryOrder;
+
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void RegOnQryTradeProc(IntPtr pWrapper, CBOnQryTrade cb);
+        RegOnQryTradeProc _RegOnQryTrade;
 
         #endregion
 
@@ -466,6 +515,20 @@ namespace TradingLib.BrokerXAPI.Interop
         {
             add { cbOnAccountInfo += value; _RegOnAccountInfo(this.Wrapper, cbOnAccountInfo); }
             remove { cbOnAccountInfo -= value; _RegOnAccountInfo(this.Wrapper, cbOnAccountInfo); }
+        }
+
+        CBOnQryOrder cbOnQryOrder;
+        public event CBOnQryOrder OnQryOrderEvent
+        {
+            add { cbOnQryOrder += value; _RegOnQryOrder(this.Wrapper, cbOnQryOrder); }
+            remove { cbOnQryOrder -= value; _RegOnQryOrder(this.Wrapper, cbOnQryOrder); }
+        }
+
+        CBOnQryTrade cbOnQryTrade;
+        public event CBOnQryTrade OnQryTradeEvent
+        {
+            add { cbOnQryTrade += value; _RegOnQryTrade(this.Wrapper, cbOnQryTrade); }
+            remove { cbOnQryTrade -= value; _RegOnQryTrade(this.Wrapper, cbOnQryTrade); }
         }
         #endregion
 

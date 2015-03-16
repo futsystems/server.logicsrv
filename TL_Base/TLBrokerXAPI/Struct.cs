@@ -244,6 +244,11 @@ namespace TradingLib.BrokerXAPI
         /// </summary>
         public bool Side;//1
 
+        /// <summary>
+        /// 序号
+        /// </summary>
+        public int SequenceNo;
+
     }
     
     /// <summary>
@@ -367,6 +372,11 @@ namespace TradingLib.BrokerXAPI
         /// 方向
         /// </summary>
         public bool Side;
+
+        /// <summary>
+        /// 序号
+        /// </summary>
+        public int SequenceNo;
     }
 
     /// <summary>

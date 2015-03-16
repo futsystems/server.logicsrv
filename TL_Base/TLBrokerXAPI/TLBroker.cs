@@ -210,6 +210,20 @@ namespace TradingLib.BrokerXAPI
             _wrapper.OnRtnTradeEvent += new CBRtnTrade(_wrapper_OnRtnTradeEvent);
             _wrapper.OnSymbolEvent += new CBOnSymbol(_wrapper_OnSymbolEvent);
             _wrapper.OnAccountInfoEvent += new CBOnAccountInfo(_wrapper_OnAccountInfoEvent);
+
+            _wrapper.OnQryOrderEvent += new CBOnQryOrder(_wrapper_OnQryOrderEvent);
+            _wrapper.OnQryTradeEvent += new CBOnQryTrade(_wrapper_OnQryTradeEvent);
+        }
+
+        void _wrapper_OnQryTradeEvent(ref XTradeField pTrade, bool islast)
+        {
+            NotifyQryTrade(pTrade, islast);
+        }
+
+        //Dictionary<long, XOrderField> orderlist = new Dictionary<long, XOrderField>();
+        void _wrapper_OnQryOrderEvent(ref XOrderField pOrder, bool islast)
+        {
+            NotifyQryOrder(pOrder, islast);
         }
 
         void _wrapper_OnAccountInfoEvent(ref XAccountInfo pAccountInfo, bool islast)
@@ -267,11 +281,11 @@ namespace TradingLib.BrokerXAPI
         /// 恢复日内交易数据
         /// 调用底层交易接口恢复隔夜持仓，当日委托，当日成交等数据
         /// </summary>
-        //public virtual bool Restore()
-        //{
-        //    return false;
-        //    //return WrapperRestore();
-        //}
+        public virtual bool Restore()
+        {
+            throw new NotImplementedException();
+            //return WrapperRestore();
+        }
 
         /// <summary>
         /// 响应市场行情
@@ -317,6 +331,26 @@ namespace TradingLib.BrokerXAPI
         public virtual void ProcessOrderActionError(ref XOrderActionError error)
         {
         
+        }
+
+        /// <summary>
+        /// 处理委托查询
+        /// </summary>
+        /// <param name="order"></param>
+        /// <param name="islast"></param>
+        public virtual void ProcessQryOrder(ref XOrderField order, bool islast)
+        { 
+        
+        }
+
+        /// <summary>
+        /// 处理成交查询
+        /// </summary>
+        /// <param name="trade"></param>
+        /// <param name="islast"></param>
+        public virtual void ProcessQryTrade(ref XTradeField trade, bool islast)
+        { 
+            
         }
 
 
@@ -369,18 +403,39 @@ namespace TradingLib.BrokerXAPI
         {
             return _wrapper.QryAccountInfo();
         }
+
+        protected bool WrapperQryOrder()
+        {
+            return _wrapper.QryOrder();
+        }
+
+        protected bool WrapperQryTrade()
+        {
+            return _wrapper.QryTrade();
+        }
+
         ///// <summary>
         ///// 请求恢复交易数据
         ///// </summary>
         ///// <returns></returns>
-        //protected bool WrapperRestore()
-        //{
-        //    return _wrapper.Restore();
-        //}
+        protected bool WrapperRestore()
+        {
+            return _wrapper.Restore();
+        }
 
         public bool QryAccountInfo()
         {
             return WrapperQryAccountInfo();
+        }
+
+        public bool QryOrder()
+        {
+            return WrapperQryOrder();
+        }
+
+        public bool QryTrade()
+        {
+            return WrapperQryTrade();
         }
         protected
         #endregion

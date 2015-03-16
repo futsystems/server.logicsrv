@@ -112,6 +112,36 @@ namespace TradingLib.BrokerXAPI
             if (GotAccountInfoEvent != null)
                 GotAccountInfoEvent(accountInfo, islast);
         }
+
+        public event Action<XOrderField, bool> GotQryOrderEvent;
+        protected void NotifyQryOrder(XOrderField order,bool islast)
+        {
+
+            try
+            {
+                if (GotQryOrderEvent != null)
+                    GotQryOrderEvent(order, islast);
+            }
+            catch (Exception ex)
+            {
+                Util.Error("NotifyQryOrder Error:" + ex.ToString());
+            }
+        }
+
+        public event Action<XTradeField, bool> GotQryTradeEvent;
+        protected void NotifyQryTrade(XTradeField trade, bool islast)
+        {
+            try
+            {
+                if (GotQryTradeEvent != null)
+                    GotQryTradeEvent(trade, islast);
+            }
+            catch (Exception ex)
+            { 
+                
+            }
+        }
+    
         /// <summary>
         /// 获得当前Tick的市场快照,模拟成交时需要获得当前市场快照用于进行取价操作
         /// </summary>
@@ -235,11 +265,12 @@ namespace TradingLib.BrokerXAPI
         //[Conditional("DEBUG")]
         protected void debug(string msg, QSEnumDebugLevel level = QSEnumDebugLevel.DEBUG)
         {
-            if (_debugEnable && (int)level <= (int)_debuglevel && SendLogItemEvent != null)
-            {
-                ILogItem item = new LogItem(msg, level, this.Token);
-                SendLogItemEvent(item);
-            }
+            //if (_debugEnable && (int)level <= (int)_debuglevel && SendLogItemEvent != null)
+            //{
+            //    ILogItem item = new LogItem(msg, level, this.Token);
+            //    SendLogItemEvent(item);
+            //}
+            Util.Log(msg, level);
         }
         #endregion
 

@@ -29,10 +29,22 @@ namespace TradingLib.BrokerXAPI
     public delegate void CBRtnTrade(ref XTradeField pTrade);
 
     /// <summary>
+    /// 查询成交回调委托
+    /// </summary>
+    /// <param name="pTrade"></param>
+    public delegate void CBOnQryTrade(ref XTradeField pTrade,bool islast);
+
+    /// <summary>
     /// 委托回调委托
     /// </summary>
     /// <param name="pOrder"></param>
     public delegate void CBRtnOrder(ref XOrderField pOrder);
+
+    /// <summary>
+    /// 查询委托回调委托
+    /// </summary>
+    /// <param name="pOrder"></param>
+    public delegate void CBOnQryOrder(ref XOrderField pOrder,bool islast);
 
     /// <summary>
     /// 委托错误回调委托

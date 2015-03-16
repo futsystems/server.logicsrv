@@ -28,10 +28,10 @@ namespace FutsMoniter
             btnLogin.Enabled = false;
 
 
-            if (Globals.Config["HeaderImg"].AsString() == "OEM")
-            {
-                imageheader.Image = Properties.Resources.header_oem;
-            }
+            //if (Globals.Config["HeaderImg"].AsString() == "OEM")
+            //{
+            //    imageheader.Image = Properties.Resources.header_oem;
+            //}
             
 
            
