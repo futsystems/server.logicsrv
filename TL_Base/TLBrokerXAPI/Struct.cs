@@ -507,5 +507,29 @@ namespace TradingLib.BrokerXAPI
         public XErrorField Error;
     }
 
+    public class XHistOrder
+    {
+        public XHistOrder(XOrderField order, bool islast)
+        {
+            this.Order = order;
+            this.IsLast = islast;
+        }
+
+        public XOrderField Order;
+        public bool IsLast;
+    }
+
+    public class XHistTrade
+    {
+        public XHistTrade(XTradeField trade, bool islast)
+        {
+            this.Trade = trade;
+            this.IsLast = islast;
+        }
+
+        public XTradeField Trade;
+        public bool IsLast;
+    }
+
 
 }

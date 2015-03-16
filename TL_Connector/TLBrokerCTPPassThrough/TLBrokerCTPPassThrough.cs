@@ -15,32 +15,35 @@ namespace Broker.Live
 
         public TLBrokerCTPPassThrough()
         {
-            this.GotQryOrderEvent += new Action<XOrderField, bool>(TLBrokerCTPPassThrough_GotQryOrderEvent);
-            this.GotQryTradeEvent += new Action<XTradeField, bool>(TLBrokerCTPPassThrough_GotQryTradeEvent);
+            //this.GotQryOrderEvent += new Action<XOrderField, bool>(TLBrokerCTPPassThrough_GotQryOrderEvent);
+            //this.GotQryTradeEvent += new Action<XTradeField, bool>(TLBrokerCTPPassThrough_GotQryTradeEvent);
         }
 
-        public override bool Restore()
-        {
-            //清空历史记录
-            histordermap.Clear();
-            histtrademap.Clear();
 
-            //查询委托
-            return this.QryOrder();
-        }
+        //public override bool Restore()
+        //{
+        //    //清空历史记录
+        //    histordermap.Clear();
+        //    histtrademap.Clear();
+
+        //    //查询委托
+        //    return this.QryOrder();
+        //}
 
         SortedDictionary<int, Trade> histtrademap = new SortedDictionary<int, Trade>();
-        void TLBrokerCTPPassThrough_GotQryTradeEvent(XTradeField arg1, bool arg2)
+        public override void ProcessQryTrade(ref XTradeField trade, bool islast)
         {
-            debug("c# trade seq:" + arg1.SequenceNo.ToString(),QSEnumDebugLevel.ERROR);
-            Trade localtrade = getLocalTrade(ref arg1);
-            if (localtrade != null)
+            if (trade.SequenceNo != -1)
             {
-                histtrademap.Add(arg1.SequenceNo, localtrade);
+                debug("c# trade seq:" + trade.SequenceNo.ToString(), QSEnumDebugLevel.ERROR);
+                Trade localtrade = getLocalTrade(ref trade);
+                if (localtrade != null)
+                {
+                    histtrademap.Add(trade.SequenceNo, localtrade);
+                }
             }
-            if (arg2)
+            if (islast)
             {
-                debug("got hist trade list...");
                 foreach (Trade f in histtrademap.Values)
                 {
                     debug(f.GetTradStr());
@@ -50,14 +53,17 @@ namespace Broker.Live
         }
 
         SortedDictionary<int, Order> histordermap = new SortedDictionary<int, Order>();
-        void TLBrokerCTPPassThrough_GotQryOrderEvent(XOrderField arg1, bool arg2)
+        public override void ProcessQryOrder(ref XOrderField order, bool islast)
         {
-            debug("c# order seq:" + arg1.SequenceNo.ToString(), QSEnumDebugLevel.ERROR);
-            Order localorder = getLocalOrder(ref arg1);
-            histordermap.Add(arg1.SequenceNo, localorder);
-            if (arg2)
+            //如果不为空委托 则进行委托处理(空委托的含义为 当前日内委托数据记录数为0)
+            if (order.SequenceNo != -1)
             {
-                debug("got hist order list....");
+                debug("c# order seq:" + order.SequenceNo.ToString(), QSEnumDebugLevel.ERROR);
+                Order localorder = getLocalOrder(ref order);
+                histordermap.Add(order.SequenceNo, localorder);
+            }
+            if (islast)
+            {
                 foreach (Order o in histordermap.Values)
                 {
                     debug(o.GetOrderStatus());
@@ -67,6 +73,7 @@ namespace Broker.Live
                 this.QryTrade();
             }
         }
+
         /// <summary>
         /// 初始化交易接口
         /// </summary>
@@ -86,14 +93,26 @@ namespace Broker.Live
             //清空委托map
             localOrderID_map.Clear();
             remoteOrderID_map.Clear();
+
+            //清空历史记录
+            histordermap.Clear();
+            histtrademap.Clear();
+
         }
 
         /// <summary>
         /// 恢复交易接口数据
+        /// 通过查询CTP接口的日内数据来恢复当前历史记录
         /// </summary>
         public override void OnResume()
         {
-            
+            ////清空历史记录
+            histordermap.Clear();
+            histtrademap.Clear();
+
+            Util.sleep(1000);
+            ////查询委托
+            this.QryOrder();
         }
 
         //public override bool Restore()

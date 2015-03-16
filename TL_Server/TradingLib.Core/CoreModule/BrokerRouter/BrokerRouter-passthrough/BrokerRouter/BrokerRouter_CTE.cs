@@ -217,35 +217,8 @@ namespace TradingLib.Core
                 ClearAccountTradingInfo(acct);
 
                 ////3.重启交易通道
-                //AsyncBrokerOperationDel cb = new AsyncBrokerOperationDel(this.RestartBroker);
-                //cb.BeginInvoke(config.Token, null, null);
-
-                IBroker broker = TLCtxHelper.ServiceRouterManager.FindBroker(config.Token);
-                if (broker != null)
-                {
-                    TLBroker b = broker as TLBroker;
-                    //b.Restore();
-                    //SortedDictionary<long, string> ordermap = new SortedDictionary<long, string>();
-                    //Action<XOrderField, bool> Handler = (info, islast) =>
-                    //    {
-                    //        logger.Debug("timestamp "+Util.ToTLDateTime(info.Date, info.Time) + " order loalid:" + info.BrokerLocalOrderID + " remoteid:" + info.BrokerRemoteOrderID + " date:" + info.Date.ToString() + " time:" + info.Time.ToString());
-                    //        ordermap.Add(Util.ToTLDateTime(info.Date, info.Time), info.BrokerRemoteOrderID);
-                    //        if (islast)
-                    //        {
-                    //            logger.Error("last data got..");
-
-                    //            foreach (string orderid in ordermap.Values)
-                    //            {
-                    //                logger.Error("order id:" + orderid);
-                    //                //logger.Error("order loalid:" + info.BrokerLocalOrderID + " remoteid:" + info.BrokerRemoteOrderID + " date:" + info.Date.ToString() + " time:" + info.Time.ToString());
-                                    
-                    //            }
-                    //            Util.ClearAllEvents(b, "GotQryOrderEvent");
-                    //        }
-                    //    };
-                    //b.GotQryOrderEvent +=new Action<XOrderField,bool>(Handler);
-                    b.Restore();
-                }
+                AsyncBrokerOperationDel cb = new AsyncBrokerOperationDel(this.RestartBroker);
+                cb.BeginInvoke(config.Token, null, null);
 
                 session.OperationSuccess("开始同步交易数据");
             }

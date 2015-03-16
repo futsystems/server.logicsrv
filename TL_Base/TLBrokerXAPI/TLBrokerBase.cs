@@ -114,11 +114,12 @@ namespace TradingLib.BrokerXAPI
         }
 
         public event Action<XOrderField, bool> GotQryOrderEvent;
-        protected void NotifyQryOrder(XOrderField order,bool islast)
+        protected void NotifyQryOrder(XOrderField order, bool islast)
         {
 
             try
             {
+                Console.WriteLine("xxxxxxxxxxx");
                 if (GotQryOrderEvent != null)
                     GotQryOrderEvent(order, islast);
             }
@@ -137,8 +138,8 @@ namespace TradingLib.BrokerXAPI
                     GotQryTradeEvent(trade, islast);
             }
             catch (Exception ex)
-            { 
-                
+            {
+
             }
         }
     

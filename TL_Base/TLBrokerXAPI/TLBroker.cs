@@ -144,8 +144,7 @@ namespace TradingLib.BrokerXAPI
             }
             
 
-            //恢复该接口日内交易数据
-            OnResume();
+            
 
             //启动回报消息通知线程 在另外一个线程中将接口返回的回报进行处理
             _working = true;
@@ -155,6 +154,10 @@ namespace TradingLib.BrokerXAPI
 
             msg = "接口:" + this.Token + "登入成功,可以接受交易请求";
             debug(msg, QSEnumDebugLevel.INFO);
+
+            //恢复该接口日内交易数据
+            OnResume();
+
             return true;
             //对外触发连接成功事件
         }
@@ -217,13 +220,18 @@ namespace TradingLib.BrokerXAPI
 
         void _wrapper_OnQryTradeEvent(ref XTradeField pTrade, bool islast)
         {
-            NotifyQryTrade(pTrade, islast);
+            Util.Debug("-----------TLBroker OnQryTradeEvent-----------------------");
+            _histtrade.Write(new XHistTrade(pTrade, islast));
+            NewNotify();
+
         }
 
         //Dictionary<long, XOrderField> orderlist = new Dictionary<long, XOrderField>();
         void _wrapper_OnQryOrderEvent(ref XOrderField pOrder, bool islast)
         {
-            NotifyQryOrder(pOrder, islast);
+            Util.Debug("-----------TLBroker OnQryOrderEvent-----------------------");
+            _historder.Write(new XHistOrder(pOrder,islast));
+            NewNotify();
         }
 
         void _wrapper_OnAccountInfoEvent(ref XAccountInfo pAccountInfo, bool islast)
@@ -281,11 +289,11 @@ namespace TradingLib.BrokerXAPI
         /// 恢复日内交易数据
         /// 调用底层交易接口恢复隔夜持仓，当日委托，当日成交等数据
         /// </summary>
-        public virtual bool Restore()
-        {
-            throw new NotImplementedException();
-            //return WrapperRestore();
-        }
+        //public virtual bool Restore()
+        //{
+        //    throw new NotImplementedException();
+        //    //return WrapperRestore();
+        //}
 
         /// <summary>
         /// 响应市场行情
@@ -332,6 +340,23 @@ namespace TradingLib.BrokerXAPI
         {
         
         }
+
+        public bool QryAccountInfo()
+        {
+            return WrapperQryAccountInfo();
+        }
+
+        public bool QryOrder()
+        {
+            return WrapperQryOrder();
+        }
+
+        public bool QryTrade()
+        {
+            return WrapperQryTrade();
+        }
+
+
 
         /// <summary>
         /// 处理委托查询
@@ -384,13 +409,11 @@ namespace TradingLib.BrokerXAPI
         #region 底层wrapper发送委托或取消委托
         protected bool WrapperSendOrder(ref XOrderField order)
         {
-            //Util.Debug("~~~~~OrderSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XOrderField)));
             return _wrapper.SendOrder(ref order);
         }
 
         protected bool WrapperSendOrderAction(ref XOrderActionField action)
         {
-            //Util.Debug("~~~~~OrderSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XOrderActionField)));
             return _wrapper.SendOrderAction(ref action);
         }
 
@@ -423,20 +446,7 @@ namespace TradingLib.BrokerXAPI
             return _wrapper.Restore();
         }
 
-        public bool QryAccountInfo()
-        {
-            return WrapperQryAccountInfo();
-        }
 
-        public bool QryOrder()
-        {
-            return WrapperQryOrder();
-        }
-
-        public bool QryTrade()
-        {
-            return WrapperQryTrade();
-        }
         protected
         #endregion
 
@@ -448,7 +458,9 @@ namespace TradingLib.BrokerXAPI
         RingBuffer<XTradeField> _tradecache = new RingBuffer<XTradeField>(buffersize);
         RingBuffer<XOrderError> _ordererrorcache = new RingBuffer<XOrderError>(buffersize);
         RingBuffer<XOrderActionError> _orderactionerrorcache = new RingBuffer<XOrderActionError>(buffersize);
-        
+
+        RingBuffer<XHistOrder> _historder = new RingBuffer<XHistOrder>(buffersize);
+        RingBuffer<XHistTrade> _histtrade = new RingBuffer<XHistTrade>(buffersize);
         Thread _notifythread = null;
         bool _working = false;
 
@@ -497,6 +509,18 @@ namespace TradingLib.BrokerXAPI
                         XTradeField trade = _tradecache.Read();
                         ProcessTrade(ref trade);
 
+                    }
+
+                    while (!_ordererrorcache.hasItems && !_ordererrorcache.hasItems && !_tradecache.hasItems && _historder.hasItems)
+                    {
+                        XHistOrder order = _historder.Read();
+                        ProcessQryOrder(ref order.Order, order.IsLast);
+                    }
+
+                    while (!_ordererrorcache.hasItems && !_ordererrorcache.hasItems && !_tradecache.hasItems && _histtrade.hasItems)
+                    {
+                        XHistTrade trade = _histtrade.Read();
+                        ProcessQryTrade(ref trade.Trade, trade.IsLast);
                     }
 
                     // clear current flag signal
@@ -552,8 +576,6 @@ namespace TradingLib.BrokerXAPI
         void _wrapper_OnRtnOrderEvent(ref XOrderField pOrder)
         {
             Util.Info("-----------TLBroker OnRtnOrderEvent-----------------------");
-            //Util.Debug(" date:" + pOrder.Date + "time:"+pOrder.Time + " exchange:" + pOrder.Exchange + " filledsize:" + pOrder.FilledSize.ToString() + " limitprice:" + pOrder.LimitPrice + " offsetflag:" + pOrder.OffsetFlag.ToString() + " orderid:" + pOrder.ID + " status:" + pOrder.OrderStatus.ToString() + " side:" + pOrder.Side + " stopprice:" + pOrder.StopPrice.ToString() + " symbol:" + pOrder.Symbol + " totalsize:" + pOrder.TotalSize.ToString() + " unfilledsize:" + pOrder.UnfilledSize.ToString() + " statusmsg:" + pOrder.StatusMsg);
-            
             _ordercache.Write(pOrder);
             NewNotify();
         }
@@ -561,18 +583,12 @@ namespace TradingLib.BrokerXAPI
         void _wrapper_OnRtnOrderErrorEvent(ref XOrderField pOrder, ref XErrorField pError)
         {
             Util.Info("-----------TLBroker OnRtnOrderErrorEvent-----------------------");
-            //Util.Debug("~~~~~ErrorSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XErrorField)), QSEnumDebugLevel.WARNING);
-            //Util.Debug("order localid:" + pOrder.BrokerLocalOrderID + " errorid:" + pError.ErrorID.ToString() + " errmsg:" + pError.ErrorMsg, QSEnumDebugLevel.MUST);
-            //Util.Debug(" data:" + pOrder.Date + " exchange:" + pOrder.Exchange + " filledsize:" + pOrder.FilledSize.ToString() + " limitprice:" + pOrder.LimitPrice + " offsetflag:" + pOrder.OffsetFlag.ToString() + " orderid:" + pOrder.ID + " status:" + pOrder.OrderStatus.ToString() + " side:" + pOrder.Side + " stopprice:" + pOrder.StopPrice.ToString() + " symbol:" + pOrder.Symbol + " totalsize:" + pOrder.TotalSize.ToString() + " unfilledsize:" + pOrder.UnfilledSize.ToString() + " statusmsg:" + pOrder.StatusMsg);
-            
             _ordererrorcache.Write(new XOrderError(pOrder, pError));
             NewNotify();
         }
         void _wrapper_OnRtnOrderActionErrorEvent(ref XOrderActionField pOrderAction, ref XErrorField pError)
         {
             Util.Info("-----------TLBroker OrderActionErrorEvent-----------------------");
-            //Util.Debug("~~~~~OrderActionSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XOrderActionField)), QSEnumDebugLevel.WARNING);
-           
             _orderactionerrorcache.Write(new XOrderActionError(pOrderAction, pError));
             NewNotify();
         }
@@ -580,10 +596,6 @@ namespace TradingLib.BrokerXAPI
         void _wrapper_OnRtnTradeEvent(ref XTradeField pTrade)
         {
             Util.Debug("-----------TLBroker OnRtnTradeEvent-----------------------");
-            //Util.Debug("~~~~~TradeSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XTradeField)), QSEnumDebugLevel.WARNING);
-            //Util.Debug("Trade:" + TradingLib.Mixins.LitJson.JsonMapper.ToJson(pTrade), QSEnumDebugLevel.WARNING);
-            //Console.WriteLine("got new trade..???????????????????????");
-            //Util.Debug("tradefield commission:" + pTrade.Commission + " date:" + pTrade.Date.ToString() + " exchange:" + pTrade.Exchange + " offsetflag:" + pTrade.OffsetFlag.ToString() + " price:" + pTrade.Price.ToString() + " side:" + pTrade.Side.ToString() + " size:" + pTrade.Size.ToString() + " symbol:" + pTrade.Symbol + " time:" + pTrade.Time + " tradeid:" + pTrade.BrokerTradeID +" ordresysid:"+pTrade.BrokerRemoteOrderID +" date:"+pTrade.Date.ToString() +" time:"+pTrade.Time.ToString());
             _tradecache.Write(pTrade);
             NewNotify();
         }
