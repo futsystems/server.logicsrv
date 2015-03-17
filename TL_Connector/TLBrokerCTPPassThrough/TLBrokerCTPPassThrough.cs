@@ -79,7 +79,7 @@ namespace Broker.Live
         public override void InitBroker()
         {
             base.InitBroker();
-            debug("xxxxxxxxxxxxxxxxx", QSEnumDebugLevel.ERROR);
+            //debug("xxxxxxxxxxxxxxxxx", QSEnumDebugLevel.ERROR);
             
         }
 
@@ -114,7 +114,8 @@ namespace Broker.Live
             ////获得所有历史数据 用于恢复当前最新交易状态
             this.QryOrder();
 
-            //this.Withdraw(5);
+            //查询帐户信息用于同步当前权益
+
         }
 
         /// <summary>

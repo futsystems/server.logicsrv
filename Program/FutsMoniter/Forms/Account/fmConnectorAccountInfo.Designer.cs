@@ -253,6 +253,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "fmConnectorAccountInfo";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "主帐户财务信息与出入金";
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).EndInit();
             this.kryptonPanel1.ResumeLayout(false);

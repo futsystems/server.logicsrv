@@ -74,4 +74,7 @@ namespace TradingLib.BrokerXAPI
     /// <param name="?"></param>
     /// <param name="islast"></param>
     public delegate void CBOnAccountInfo(ref XAccountInfo pAccountInfo,bool islast);
+
+
+    public delegate void CBOnLog(IntPtr handler,int len);
 }

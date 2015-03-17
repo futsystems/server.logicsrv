@@ -28,10 +28,11 @@ namespace FutsMoniter
             accountgrid.ContextMenuStrip.Items.Add("解绑主帐户", Properties.Resources.delAccount_16, new EventHandler(DelAccountConnecotr_Click));//9
             accountgrid.ContextMenuStrip.Items.Add("绑定主帐户", Properties.Resources.addAccount_16, new EventHandler(UpdateAccountConnecotr_Click));//10
             accountgrid.ContextMenuStrip.Items.Add(new System.Windows.Forms.ToolStripSeparator());//11
+            accountgrid.ContextMenuStrip.Items.Add("同步交易数据", Properties.Resources.update_24, new EventHandler(SyncData_Click));//13
+            accountgrid.ContextMenuStrip.Items.Add("主帐户出入金与查询", Properties.Resources.cashop2, new EventHandler(QryAccountInfo_Click));//13
+            accountgrid.ContextMenuStrip.Items.Add(new System.Windows.Forms.ToolStripSeparator());//11
             accountgrid.ContextMenuStrip.Items.Add("删除帐户", Properties.Resources.deleteaccount, new EventHandler(DelAccount_Click));//12
-            accountgrid.ContextMenuStrip.Items.Add("同步交易数据", Properties.Resources.deleteaccount, new EventHandler(SyncData_Click));//13
-            accountgrid.ContextMenuStrip.Items.Add("主帐户出入金与查询", Properties.Resources.deleteaccount, new EventHandler(QryAccountInfo_Click));//13
-        
+           
         
         }
 

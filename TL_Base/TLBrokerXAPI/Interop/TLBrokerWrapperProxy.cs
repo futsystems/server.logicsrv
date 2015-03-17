@@ -74,10 +74,9 @@ namespace TradingLib.BrokerXAPI.Interop
         public TLBrokerWrapperProxy(string path, string dllname)
         {
             //1.加载dll
-            
-            Util.Info("strat to load wrapper Nativelib ......");
+
+            Util.Info("Load Nativelib wrapper dll/so", this.GetType().Name);
             NativeLib = new UnmanagedLibrary(path, dllname);
-            Util.Info("Nativelib is loaded ......");
             //2.绑定导出函数到委托
             AssignCommonDelegates();
 
@@ -120,6 +119,8 @@ namespace TradingLib.BrokerXAPI.Interop
             _RegOnAccountInfo = NativeLib.GetUnmanagedFunction<RegOnAccountInfoProc>("RegOnAccountInfo");
             _RegOnQryOrder = NativeLib.GetUnmanagedFunction<RegOnQryOrderProc>("RegOnQryOrder");
             _RegOnQryTrade = NativeLib.GetUnmanagedFunction<RegOnQryTradeProc>("RegOnQryTrade");
+
+            _RegOnLog = NativeLib.GetUnmanagedFunction<RegOnLogProc>("RegOnLog");
             
         }
 
@@ -148,6 +149,7 @@ namespace TradingLib.BrokerXAPI.Interop
         {
             try
             {
+                Util.Info("BrokerProxy Register TLBroker");
                 _Register(this.Wrapper, brokerproxy.Handle);
 
                 //注册完毕具体的broker对象后 绑定事件注意 直接用函数名来进行绑定会造成回调函数被回收导致c++调用回调时报错 要用原始的事件声明方式
@@ -170,7 +172,8 @@ namespace TradingLib.BrokerXAPI.Interop
         {
             try
             {
-                Util.Info("~~~~~XServerInfoFieldSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XServerInfoField)));
+                Util.Info("BrokerProxy Connect");
+                //Util.Info("~~~~~XServerInfoFieldSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XServerInfoField)));
                 _Connect(this.Wrapper, ref pServerInfo);
             }
             catch (Exception ex)
@@ -190,6 +193,7 @@ namespace TradingLib.BrokerXAPI.Interop
         {
             try
             {
+                Util.Info("BrokerProxy Disconnect");
                 _Disconnect(this.Wrapper);
             }
             catch (Exception ex)
@@ -211,7 +215,8 @@ namespace TradingLib.BrokerXAPI.Interop
         {
             try
             {
-                Util.Debug("~~~~~XUserInfoFieldSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XUserInfoField)));
+                Util.Info("BrokerProxy Login");
+                //Util.Debug("~~~~~XUserInfoFieldSize:" + System.Runtime.InteropServices.Marshal.SizeOf(typeof(XUserInfoField)));
                 _Login(this.Wrapper, ref pUserInfo);
             }
             catch (Exception ex)
@@ -234,7 +239,7 @@ namespace TradingLib.BrokerXAPI.Interop
             {
                 Util.Info("BrokerProxy SendOrder");
                 bool x =  _SendOrder(this.Wrapper, ref pOrder);
-                Util.Info("**************** sendorder return:" + x.ToString());
+                //Util.Info("**************** sendorder return:" + x.ToString());
                 return x;
             }
             catch (Exception ex)
@@ -271,7 +276,7 @@ namespace TradingLib.BrokerXAPI.Interop
             {
                 Util.Info("BrokerProxy QryInstrument");
                 bool x =  _QryInstrument(this.Wrapper);
-                Util.Error("**************** qry instrument return:" + x.ToString());
+                //Util.Error("**************** qry instrument return:" + x.ToString());
                 return x;
             }
             catch (Exception ex)
@@ -290,7 +295,7 @@ namespace TradingLib.BrokerXAPI.Interop
             {
                 Util.Info("BrokerProxy QryAccountInfo");
                 bool x = _QryAccountInfo(this.Wrapper);
-                Util.Info("**************** qry accountinfo return:" + x.ToString());
+                //Util.Info("**************** qry accountinfo return:" + x.ToString());
                 return x;
             }
             catch (Exception ex)
@@ -307,9 +312,9 @@ namespace TradingLib.BrokerXAPI.Interop
         {
             try
             {
-                Util.Info("BrokerProxy QryOrderProc");
+                Util.Info("BrokerProxy QryOrder");
                 bool x = _QryOrder(this.Wrapper);
-                Util.Info("**************** qry order return:" + x.ToString());
+                //Util.Info("**************** qry order return:" + x.ToString());
                 return x;
             }
             catch (Exception ex)
@@ -328,7 +333,7 @@ namespace TradingLib.BrokerXAPI.Interop
             {
                 Util.Info("BrokerProxy QryTrade");
                 bool x = _QryTrade(this.Wrapper);
-                Util.Info("**************** qry trade return:" + x.ToString());
+                //Util.Info("**************** qry trade return:" + x.ToString());
                 return x;
             }
             catch (Exception ex)
@@ -347,7 +352,7 @@ namespace TradingLib.BrokerXAPI.Interop
             {
                 Util.Info("BrokerProxy _Deposit");
                 bool x = _Deposit(this.Wrapper, amount);
-                Util.Info("**************** deposit return:" + x.ToString());
+                //Util.Info("**************** deposit return:" + x.ToString());
                 return x;
             }
             catch (Exception ex)
@@ -366,7 +371,7 @@ namespace TradingLib.BrokerXAPI.Interop
             {
                 Util.Info("BrokerProxy Withdraw");
                 bool x = _Withdraw(this.Wrapper, amount);
-                Util.Info("**************** withdraw return:" + x.ToString());
+                //Util.Info("**************** withdraw return:" + x.ToString());
                 return x;
             }
             catch (Exception ex)
@@ -392,7 +397,7 @@ namespace TradingLib.BrokerXAPI.Interop
             {
                 Util.Info("BrokerProxy Restore");
                 bool x = _Restore(this.Wrapper);
-                Util.Info("**************** qry Restore return:" + x.ToString());
+                //Util.Info("**************** qry Restore return:" + x.ToString());
                 return x;
             }
             catch (Exception ex)
@@ -487,10 +492,21 @@ namespace TradingLib.BrokerXAPI.Interop
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void RegOnQryTradeProc(IntPtr pWrapper, CBOnQryTrade cb);
         RegOnQryTradeProc _RegOnQryTrade;
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void RegOnLogProc(IntPtr pWrapper, CBOnLog cb);
+        RegOnLogProc _RegOnLog;
         #endregion
 
 
         #region 回调事件
+        CBOnLog cbOnLog;
+        public event CBOnLog OnLogEvent
+        {
+            add { cbOnLog += value; _RegOnLog(this.Wrapper, cbOnLog); }
+            remove { cbOnLog -= value; _RegOnLog(this.Wrapper, cbOnLog); }
+        }
+
         CBOnConnected cbBOnConnected;
         public event CBOnConnected OnConnectedEvent
         {

@@ -75,9 +75,8 @@ namespace TradingLib.BrokerXAPI.Interop
         public TLBrokerProxy(string path, string dllname)
         {
             //1.加载dll
-			Util.Info("strat to load Nativelib ......");
+            Util.Info("Load Nativelib Broker dll/so",this.GetType().Name);
             NativeLib = new UnmanagedLibrary(path, dllname);
-            Util.Info("loaded Nativelib ......");
             //2.绑定导出函数到委托
             AssignCommonDelegates();
 

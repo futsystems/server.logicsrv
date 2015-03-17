@@ -1140,6 +1140,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="images\update-24.png" />
+    <None Include="images\cashop.png" />
+    <None Include="images\cashop2.png" />
     <Content Include="moniter_terminal.ico" />
     <None Include="resources\moniter_terminal.ico" />
     <None Include="resources\deleteaccount.png" />

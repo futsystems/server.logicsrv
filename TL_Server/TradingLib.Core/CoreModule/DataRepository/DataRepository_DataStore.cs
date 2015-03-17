@@ -130,10 +130,6 @@ namespace TradingLib.Core
             logger.Info("OrderAction Saved:" + cnum.ToString());
             logger.Info("PosTrans    Saved:" + prnum.ToString());
         }
-
-
-
-
         #endregion
     }
 }

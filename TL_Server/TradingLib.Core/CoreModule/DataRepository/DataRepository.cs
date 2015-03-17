@@ -11,11 +11,8 @@ namespace TradingLib.Core
     /// 数据储存于加载
     /// </summary>
     [CoreAttr(DataRepository.CoreName, "交易数据储存模块", "交易数据储存模块用于向储存介质储存交易记录，同时从介质加载历史交易记录")]
-    public partial class DataRepository : BaseSrvObject,IModuleDataRepository
+    public partial class DataRepository : DataRepositoryBase
     {
-        const string CoreName = "DataRepository";
-        public string CoreId { get { return this.PROGRAME; } }
-
         ConfigDB _cfgdb;
         AsyncTransactionLoger _asynLoger;//异步记录交易数据到数据库
 
@@ -26,7 +23,6 @@ namespace TradingLib.Core
         public DataRepository() :
             base(DataRepository.CoreName)
         {
-
             //1.加载配置文件
             _cfgdb = new ConfigDB(DataRepository.CoreName);
 
@@ -80,7 +76,7 @@ namespace TradingLib.Core
         /// 插入委托
         /// </summary>
         /// <param name="o"></param>
-        public void NewOrder(Order o)
+        public override void NewOrder(Order o)
         {
             _asynLoger.newOrder(o);
         }
@@ -89,12 +85,12 @@ namespace TradingLib.Core
         /// 更新委托
         /// </summary>
         /// <param name="o"></param>
-        public void UpdateOrder(Order o)
+        public override void UpdateOrder(Order o)
         {
             _asynLoger.updateOrder(o);
         }
 
-        public void NewOrderAction(OrderAction actoin)
+        public override void NewOrderAction(OrderAction actoin)
         {
             _asynLoger.newOrderAction(actoin);
             
@@ -104,7 +100,7 @@ namespace TradingLib.Core
         /// 插入成交
         /// </summary>
         /// <param name="f"></param>
-        public void NewTrade(Trade f)
+        public override void NewTrade(Trade f)
         {
             _asynLoger.newTrade(f);
         }
@@ -113,7 +109,7 @@ namespace TradingLib.Core
         /// 插入平仓明细
         /// </summary>
         /// <param name="d"></param>
-        public void NewPositionCloseDetail(PositionCloseDetail d)
+        public override void NewPositionCloseDetail(PositionCloseDetail d)
         {
             //设定该平仓明细所在结算日
             d.Settleday = TLCtxHelper.ModuleSettleCentre.NextTradingday;
@@ -124,7 +120,7 @@ namespace TradingLib.Core
         /// <summary>
         /// 启动服务
         /// </summary>
-        public void Start()
+        public override void Start()
         {
             Util.StartStatus(this.PROGRAME);
             _asynLoger.Start();
@@ -133,7 +129,7 @@ namespace TradingLib.Core
         /// <summary>
         /// 停止服务
         /// </summary>
-        public void Stop()
+        public override void Stop()
         {
             Util.StopStatus(this.PROGRAME);
             _asynLoger.Stop();
@@ -171,7 +167,7 @@ namespace TradingLib.Core
         /// 获得所有交易帐户日内 成交数据
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Trade> SelectAcctTrades()
+        public override IEnumerable<Trade> SelectAcctTrades()
         {
             //填充对象oSymbol
             IEnumerable<Trade> trades = ORM.MTradingInfo.SelectTrades().Select(f => { f.oSymbol = GetAccountSymbol(f.Account, f.Symbol); return f; });
@@ -183,7 +179,7 @@ namespace TradingLib.Core
         /// 获得所有交易帐户日内 委托数据
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Order> SelectAcctOrders()
+        public override IEnumerable<Order> SelectAcctOrders()
         {
             IEnumerable<Order> orders = ORM.MTradingInfo.SelectOrders().Select(o => { o.oSymbol = GetAccountSymbol(o.Account, o.Symbol); return o; });
             logger.Info("数据库恢复前次结算以来委托数据:" + orders.Count().ToString() + "条");
@@ -194,7 +190,7 @@ namespace TradingLib.Core
         /// 获得所有交易帐户日内 持仓明细数据
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<PositionDetail> SelectAcctPositionDetails()
+        public override IEnumerable<PositionDetail> SelectAcctPositionDetails()
         {
             IEnumerable<PositionDetail> positions = ORM.MSettlement.SelectAccountPositionDetails(TLCtxHelper.ModuleSettleCentre.LastSettleday).Select(pos => { pos.oSymbol = GetAccountSymbol(pos.Account, pos.Symbol); return pos; });
             logger.Info("数据库恢复前次结算持仓明细数据:" + positions.Count().ToString() + "条");
@@ -205,7 +201,7 @@ namespace TradingLib.Core
         /// 获得所有交易账户日内 委托操作数据
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<OrderAction> SelectAcctOrderActions()
+        public override IEnumerable<OrderAction> SelectAcctOrderActions()
         {
             IEnumerable<OrderAction> actions = ORM.MTradingInfo.SelectOrderActions().Where(o=>o.OrderID != 0);
             logger.Info("数据库恢复前次结算以来取消数据:" + actions.Count().ToString() + "条");
@@ -217,7 +213,7 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        public IEnumerable<Trade> SelectBrokerTrades(string token)
+        public override IEnumerable<Trade> SelectBrokerTrades(string token)
         {
             return ORM.MTradingInfo.SelectBrokerTrades().Where(t => t.Broker.Equals(token)).Select(t => { t.oSymbol = GetSymbolViaToken(t.Account, t.Symbol); return t; });
         }
@@ -227,7 +223,7 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        public IEnumerable<Order> SelectBrokerOrders(string token)
+        public override IEnumerable<Order> SelectBrokerOrders(string token)
         {
             return ORM.MTradingInfo.SelectBrokerOrders().Where(o => o.Broker.Equals(token)).Select(o => { o.oSymbol = GetSymbolViaToken(o.Account, o.Symbol); return o; });
         }
@@ -237,7 +233,7 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        public IEnumerable<PositionDetail> SelectBrokerPositionDetails(string token)
+        public override IEnumerable<PositionDetail> SelectBrokerPositionDetails(string token)
         {
             return ORM.MSettlement.SelectBrokerPositionDetails(TLCtxHelper.ModuleSettleCentre.LastSettleday).Where(p => p.Broker.Equals(token)).Select(pos => { pos.oSymbol = GetSymbolViaToken(pos.Account, pos.Symbol); return pos; });
         }
@@ -249,7 +245,7 @@ namespace TradingLib.Core
         /// 路由侧委托中的合约对象与对应的父委托合约对象一致
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Order> SelectRouterOrders()
+        public override IEnumerable<Order> SelectRouterOrders()
         {
             return ORM.MTradingInfo.SelectRouterOrders().Select(ro => { Order fo = TLCtxHelper.ModuleClearCentre.SentOrder(ro.FatherID); ro.oSymbol = fo != null ? fo.oSymbol : null; return ro; });
         }

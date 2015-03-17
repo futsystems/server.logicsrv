@@ -52,7 +52,7 @@ namespace TradingLib.API
         /// <summary>
         /// 恢复日内交易记录
         /// </summary>
-        void RestoreFromMysql();
+        //void Restore();
 
 
         #region 整体交易信息

@@ -111,7 +111,7 @@ namespace TradingLib.BrokerXAPI
         public virtual bool Start(out string msg)
         {
             msg = string.Empty;
-            debug("Try to start broker:" + this.Token, QSEnumDebugLevel.INFO);
+            Util.Info("Try to start broker:" + this.Token,this.GetType().Name);
             //初始化参数
             ParseConfigInfo();
             //初始化接口
@@ -227,6 +227,16 @@ namespace TradingLib.BrokerXAPI
 
             _wrapper.OnQryOrderEvent += new CBOnQryOrder(_wrapper_OnQryOrderEvent);
             _wrapper.OnQryTradeEvent += new CBOnQryTrade(_wrapper_OnQryTradeEvent);
+
+            _wrapper.OnLogEvent += new CBOnLog(_wrapper_OnLogEvent);
+        }
+
+        void _wrapper_OnLogEvent(IntPtr pData, int len)
+        {
+            byte[] data = new byte[len];
+            Marshal.Copy(pData, data, 0, len);
+            string message = System.Text.Encoding.UTF8.GetString(data,0,len);
+            Util.Debug(message, "XAPI");
         }
 
 

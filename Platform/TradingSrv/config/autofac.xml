@@ -66,14 +66,14 @@
       </component>
       
 
-      <component type="TradingLib.Core.ClearCentre,TradingLib.Core"  instance-scope="per-lifetime-scope">
+      <component type="TradingLib.Core.ClearCentrePass,TradingLib.Core"  instance-scope="per-lifetime-scope">
       <services>
         <service type="TradingLib.API.IModuleClearCentre,TradingLib.API.Ex"/>
         <service type="TradingLib.API.IClearCentre,TradingLib.API.Ex"/>
       </services>
       </component>
       
-      <component type="TradingLib.Core.DataRepository,TradingLib.Core"  instance-scope="per-lifetime-scope">
+      <component type="TradingLib.Core.DataRepositoryBase,TradingLib.Core"  instance-scope="per-lifetime-scope">
       <services>
         <service type="TradingLib.API.IModuleDataRepository,TradingLib.API.Ex"/>
         <service type="TradingLib.API.IDataRepository,TradingLib.API.Ex"/>

@@ -119,7 +119,7 @@ namespace TradingLib.BrokerXAPI
 
             try
             {
-                Console.WriteLine("xxxxxxxxxxx");
+                //Console.WriteLine("xxxxxxxxxxx");
                 if (GotQryOrderEvent != null)
                     GotQryOrderEvent(order, islast);
             }
@@ -266,11 +266,6 @@ namespace TradingLib.BrokerXAPI
         //[Conditional("DEBUG")]
         protected void debug(string msg, QSEnumDebugLevel level = QSEnumDebugLevel.DEBUG)
         {
-            //if (_debugEnable && (int)level <= (int)_debuglevel && SendLogItemEvent != null)
-            //{
-            //    ILogItem item = new LogItem(msg, level, this.Token);
-            //    SendLogItemEvent(item);
-            //}
             Util.Log(msg, level);
         }
         #endregion

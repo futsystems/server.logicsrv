@@ -23,7 +23,7 @@ namespace TradingLib.Core
         /// 1.恢复结算持仓数据
         /// 2.在结算持仓数据的基础上 叠加下个交易数据得到账户最新的交易信息
         /// </summary>
-        public void RestoreFromMysql()
+        protected virtual void Restore()
         {
             Status = QSEnumClearCentreStatus.CCRESTORE;
             //从数据库恢复交易记录和出入金记录

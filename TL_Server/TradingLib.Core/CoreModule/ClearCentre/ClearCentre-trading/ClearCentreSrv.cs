@@ -103,7 +103,7 @@ namespace TradingLib.Core
             prt.Clear();
 
             //从数据中恢复数据用于得到当前最新状态包含持仓,PR,出入金等数据
-            RestoreFromMysql();
+            Restore();
 
             Status = QSEnumClearCentreStatus.CCRESETFINISH;
         }
@@ -114,7 +114,7 @@ namespace TradingLib.Core
         public void Start()
         {
             Util.StartStatus(this.PROGRAME);
-            RestoreFromMysql();
+            Restore();
         }
 
         public void Stop()
