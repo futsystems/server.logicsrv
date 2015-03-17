@@ -308,7 +308,15 @@ namespace TradingLib.BrokerXAPI
             return WrapperQryTrade();
         }
 
+        public bool Deposit(double amount)
+        {
+            return WrapperDeposit(amount);
+        }
 
+        public bool Withdraw(double amount)
+        {
+            return WrapperWithdraw(amount);
+        }
 
 
 
@@ -427,6 +435,15 @@ namespace TradingLib.BrokerXAPI
             return _wrapper.QryTrade();
         }
 
+        protected bool WrapperWithdraw(double amount)
+        {
+            return _wrapper.Withdraw(amount);
+        }
+
+        protected bool WrapperDeposit(double amount)
+        {
+            return _wrapper.Deposit(amount);
+        }
         ///// <summary>
         ///// 请求恢复交易数据
         ///// </summary>

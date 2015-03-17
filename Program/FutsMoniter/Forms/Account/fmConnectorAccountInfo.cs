@@ -25,12 +25,41 @@ namespace FutsMoniter
         public void SetAccount(AccountLite acc)
         {
             account = acc;
+            this.Text = string.Format("主帐户查询与出入金【{0}】-{1}",account.ConnectorToken,acc.Account);
+            
 
         }
         void fmConnectorAccountInfo_Load(object sender, EventArgs e)
         {
+            btnDeposit.Click += new EventHandler(btnDeposit_Click);
+            btnWithdraw.Click += new EventHandler(btnWithdraw_Click);
             Globals.RegIEventHandler(this);
             Globals.TLClient.ReqQryConnectorAccountInfo(account.Account);
+        }
+
+        void btnWithdraw_Click(object sender, EventArgs e)
+        {
+            string _acc = account.Account;
+            double _amount = (double)amount.Value;
+            string _pass = pass.Text;
+
+            if (MoniterUtils.WindowConfirm(string.Format("确认从主帐户:{0}所绑定的底层帐户出金:{1}", account.ConnectorToken, _amount)) == System.Windows.Forms.DialogResult.Yes)
+            {
+                Globals.TLClient.ReqWithdrawMainAccount(_acc, _amount, _pass);
+            }
+
+        }
+
+        void btnDeposit_Click(object sender, EventArgs e)
+        {
+            string _acc = account.Account;
+            double _amount = (double)amount.Value;
+            string _pass = pass.Text;
+
+            if (MoniterUtils.WindowConfirm(string.Format("确认向主帐户:{0}所绑定的底层帐户入金:{1}", account.ConnectorToken, _amount)) == System.Windows.Forms.DialogResult.Yes)
+            {
+                Globals.TLClient.ReqDepositMainAccount(_acc, _amount, _pass);
+            }
         }
 
         public void OnInit()

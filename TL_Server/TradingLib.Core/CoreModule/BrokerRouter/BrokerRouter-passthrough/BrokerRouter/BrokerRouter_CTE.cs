@@ -8,6 +8,7 @@ using TradingLib.Common;
 using TradingLib.BrokerXAPI;
 using System.Runtime.InteropServices;
 using System.Reflection;
+using TradingLib.Mixins.Json;
 
 namespace TradingLib.Core
 {
@@ -224,6 +225,72 @@ namespace TradingLib.Core
             }
         }
 
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "MainAccountDeposit", "MainAccountDeposit - deposit to main account", "底层主帐户入金",QSEnumArgParseType.Json)]
+        public void CTE_MainAccountDeposit(ISession session, string request)
+        {
+            var manager = session.GetManager();
+            if (!manager.IsInRoot()) throw new FutsRspError("无权进行入金操作");
+            
+            JsonData args = JsonMapper.ToObject(request);
+            var account = args["account"].ToString();
+            var amount = double.Parse(args["amount"].ToString());
+            var pass = args["pass"].ToString();
+
+            IAccount acc = TLCtxHelper.ModuleAccountManager[account];
+            if (!manager.RightAccessAccount(acc))
+            {
+                throw new FutsRspError("无权操作该帐户");
+            }
+            IBroker broker = BasicTracker.ConnectorMapTracker.GetBrokerForAccount(account);
+
+            if (broker == null)
+            {
+                throw new FutsRspError("未绑定主帐户");
+            }
+
+            if (broker is TLBroker)
+            {
+                TLBroker b = broker as TLBroker;
+                b.Deposit(amount);
+                session.OperationSuccess("入金操作已提交,请查询主帐户信息");
+            }
+
+
+            
+
+        }
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "MainAccountWithdraw", "MainAccountWithdraw - withdraw from account", "底层主帐户出金", QSEnumArgParseType.Json)]
+        public void CTE_MainAccountWithdraw(ISession session, string request)
+        {
+            var manager = session.GetManager();
+            if (!manager.IsInRoot()) throw new FutsRspError("无权进行出金操作");
+            
+            JsonData args = JsonMapper.ToObject(request);
+            var account = args["account"].ToString();
+            var amount = double.Parse(args["amount"].ToString());
+            var pass = args["pass"].ToString();
+
+            IAccount acc = TLCtxHelper.ModuleAccountManager[account];
+            if (!manager.RightAccessAccount(acc))
+            {
+                throw new FutsRspError("无权操作该帐户");
+            }
+            IBroker broker = BasicTracker.ConnectorMapTracker.GetBrokerForAccount(account);
+
+            if (broker == null)
+            {
+                throw new FutsRspError("未绑定主帐户");
+            }
+
+            if (broker is TLBroker)
+            {
+                TLBroker b = broker as TLBroker;
+                b.Withdraw(amount);
+                session.OperationSuccess("出金操作已提交,请查询主帐户信息");
+            }
+
+        }
 
     }
 }

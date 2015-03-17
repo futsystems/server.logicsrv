@@ -47,5 +47,26 @@ namespace TradingLib.Common
             this.ReqContribRequest("BrokerRouterPassThrough", "QryBrokerAccountInfo", account);
         }
 
+        /// <summary>
+        /// 主帐户入金
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="amount"></param>
+        /// <param name="pass"></param>
+        public void ReqDepositMainAccount(string account, double amount, string pass)
+        {
+            this.ReqContribRequest("BrokerRouterPassThrough", "MainAccountDeposit", TradingLib.Mixins.Json.JsonMapper.ToJson(new { account = account, amount = amount, pass = pass }));
+        }
+
+        /// <summary>
+        /// 主帐户出金
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="amount"></param>
+        /// <param name="pass"></param>
+        public void ReqWithdrawMainAccount(string account, double amount, string pass)
+        {
+            this.ReqContribRequest("BrokerRouterPassThrough", "MainAccountWithdraw", TradingLib.Mixins.Json.JsonMapper.ToJson(new { account = account, amount = amount, pass = pass }));
+        }
     }
 }

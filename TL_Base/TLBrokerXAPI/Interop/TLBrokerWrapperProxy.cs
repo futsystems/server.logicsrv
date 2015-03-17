@@ -106,6 +106,8 @@ namespace TradingLib.BrokerXAPI.Interop
             _QryAccountInfo = NativeLib.GetUnmanagedFunction<QryAccountInfoProc>("QryAccountInfo");
             _QryOrder = NativeLib.GetUnmanagedFunction<QryOrderProc>("QryOrder");
             _QryTrade = NativeLib.GetUnmanagedFunction<QryTradeProc>("QryTrade");
+            _Withdraw = NativeLib.GetUnmanagedFunction<WithdrawProc>("Withdraw");
+            _Deposit = NativeLib.GetUnmanagedFunction<DepositProc>("Deposit");
 
             _RegOnConnected = NativeLib.GetUnmanagedFunction<RegOnConnectedProc>("RegOnConnected");
             _RegOnDisconnected = NativeLib.GetUnmanagedFunction<RegOnDisconnectedProc>("RegOnDisconnected");
@@ -336,6 +338,45 @@ namespace TradingLib.BrokerXAPI.Interop
             }
         }
 
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate bool DepositProc(IntPtr pWrapper,double amount);
+        DepositProc _Deposit;
+        public bool Deposit(double amount)
+        {
+            try
+            {
+                Util.Info("BrokerProxy _Deposit");
+                bool x = _Deposit(this.Wrapper, amount);
+                Util.Info("**************** deposit return:" + x.ToString());
+                return x;
+            }
+            catch (Exception ex)
+            {
+                Util.Error("_Deposit Error:" + ex.ToString());
+                return false;
+            }
+        }
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate bool WithdrawProc(IntPtr pWrapper, double amount);
+        WithdrawProc _Withdraw;
+        public bool Withdraw(double amount)
+        {
+            try
+            {
+                Util.Info("BrokerProxy Withdraw");
+                bool x = _Withdraw(this.Wrapper, amount);
+                Util.Info("**************** withdraw return:" + x.ToString());
+                return x;
+            }
+            catch (Exception ex)
+            {
+                Util.Error("Withdraw Error:" + ex.ToString());
+                return false;
+            }
+        }
+
+
 
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -446,7 +487,6 @@ namespace TradingLib.BrokerXAPI.Interop
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void RegOnQryTradeProc(IntPtr pWrapper, CBOnQryTrade cb);
         RegOnQryTradeProc _RegOnQryTrade;
-
         #endregion
 
 

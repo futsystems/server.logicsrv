@@ -113,6 +113,8 @@ namespace Broker.Live
             ////查询委托 在委托处理完毕后会链式查询成交 整体恢复数据过程Position->Order->Trade 真个过程
             ////获得所有历史数据 用于恢复当前最新交易状态
             this.QryOrder();
+
+            //this.Withdraw(5);
         }
 
         /// <summary>

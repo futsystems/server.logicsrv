@@ -30,7 +30,7 @@ namespace FutsMoniter
             accountgrid.ContextMenuStrip.Items.Add(new System.Windows.Forms.ToolStripSeparator());//11
             accountgrid.ContextMenuStrip.Items.Add("删除帐户", Properties.Resources.deleteaccount, new EventHandler(DelAccount_Click));//12
             accountgrid.ContextMenuStrip.Items.Add("同步交易数据", Properties.Resources.deleteaccount, new EventHandler(SyncData_Click));//13
-            accountgrid.ContextMenuStrip.Items.Add("查询主帐户", Properties.Resources.deleteaccount, new EventHandler(QryAccountInfo_Click));//13
+            accountgrid.ContextMenuStrip.Items.Add("主帐户出入金与查询", Properties.Resources.deleteaccount, new EventHandler(QryAccountInfo_Click));//13
         
         
         }
