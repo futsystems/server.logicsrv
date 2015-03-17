@@ -15,22 +15,16 @@ namespace Broker.Live
 
         public TLBrokerCTPPassThrough()
         {
-            //this.GotQryOrderEvent += new Action<XOrderField, bool>(TLBrokerCTPPassThrough_GotQryOrderEvent);
-            //this.GotQryTradeEvent += new Action<XTradeField, bool>(TLBrokerCTPPassThrough_GotQryTradeEvent);
+
         }
 
 
-        //public override bool Restore()
-        //{
-        //    //清空历史记录
-        //    histordermap.Clear();
-        //    histtrademap.Clear();
-
-        //    //查询委托
-        //    return this.QryOrder();
-        //}
-
         SortedDictionary<int, Trade> histtrademap = new SortedDictionary<int, Trade>();
+        /// <summary>
+        /// 响应接口查询成交回报
+        /// </summary>
+        /// <param name="trade"></param>
+        /// <param name="islast"></param>
         public override void ProcessQryTrade(ref XTradeField trade, bool islast)
         {
             if (trade.SequenceNo != -1)
@@ -53,6 +47,11 @@ namespace Broker.Live
         }
 
         SortedDictionary<int, Order> histordermap = new SortedDictionary<int, Order>();
+        /// <summary>
+        /// 响应接口查询委托回报
+        /// </summary>
+        /// <param name="order"></param>
+        /// <param name="islast"></param>
         public override void ProcessQryOrder(ref XOrderField order, bool islast)
         {
             //如果不为空委托 则进行委托处理(空委托的含义为 当前日内委托数据记录数为0)
@@ -102,6 +101,7 @@ namespace Broker.Live
 
         /// <summary>
         /// 恢复交易接口数据
+        /// PassThrough类型的CTP接口在本地不保存历史记录，全部通过接口的查询功能进行处理
         /// 通过查询CTP接口的日内数据来恢复当前历史记录
         /// </summary>
         public override void OnResume()
@@ -110,20 +110,11 @@ namespace Broker.Live
             histordermap.Clear();
             histtrademap.Clear();
 
-            Util.sleep(1000);
-            ////查询委托
+            ////查询委托 在委托处理完毕后会链式查询成交 整体恢复数据过程Position->Order->Trade 真个过程
+            ////获得所有历史数据 用于恢复当前最新交易状态
             this.QryOrder();
         }
 
-        //public override bool Restore()
-        //{
-        //    //恢复日内数据前 清空本地委托map
-        //    localOrderID_map.Clear();
-        //    remoteOrderID_map.Clear();
-
-        //    //调用底层恢复数据
-        //    return this.WrapperRestore();
-        //}
         /// <summary>
         /// 响应行情 驱动本地相关数据计算
         /// </summary>
