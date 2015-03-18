@@ -44,6 +44,44 @@ namespace TradingLib.Core
             //    brokerbase.NewBrokerFillEvent += new FillDelegate(LogBrokerFillEvent);
             //    brokerbase.NewBrokerPositionCloseDetailEvent += new Action<PositionCloseDetail>(LogBrokerPositionCloseDetailEvent);
             //}
+            if (broker is TLBrokerBase)
+            {
+                TLBrokerBase brokerbase = broker as TLBrokerBase;
+                brokerbase.GotHistPositionDetail += new Action<PositionDetail>(Broker_GotHistPositionDetail);
+            }
+        }
+
+
+
+        void Broker_GotHistPositionDetail(PositionDetail pos)
+        {
+            //获得该委托的通道对象
+            IBroker broker = TLCtxHelper.ServiceRouterManager.FindBroker(pos.Broker);
+
+            //如果通道对象不存在则直接返回
+            if (broker == null)
+            {
+                logger.Warn(string.Format("Broker:{0} is not registed", pos.Broker));
+                return;
+            }
+
+            //通过交易通道Broker Token获得绑定的交易帐户
+            IAccount account = BasicTracker.ConnectorMapTracker.GetAccountForBroker(pos.Broker);
+            if (account == null)
+            {
+                logger.Warn(string.Format("Broker:{0} is not binded with any account", pos.Broker));
+                return;
+            }
+            pos.Account = account.ID;
+            //设定合约
+            pos.oSymbol = account.GetSymbol(pos.Symbol);
+
+
+
+            TLCtxHelper.ModuleClearCentre.GotPosition(pos);
+
+
+
         }
 
 

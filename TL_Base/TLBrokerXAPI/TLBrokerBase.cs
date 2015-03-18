@@ -95,6 +95,15 @@ namespace TradingLib.BrokerXAPI
                 GotOrderActionErrorEvent(acton, info);
         }
 
+
+        public event Action<PositionDetail> GotHistPositionDetail;
+        protected void NotifyHistPositoinDetail(PositionDetail pos)
+        {
+            debug("Notify HistPositionDetail", QSEnumDebugLevel.INFO);
+            if (GotHistPositionDetail != null)
+                GotHistPositionDetail(pos);
+        }
+
         /// <summary>
         /// 向外通知合约回报
         /// </summary>
@@ -140,6 +149,20 @@ namespace TradingLib.BrokerXAPI
             catch (Exception ex)
             {
 
+            }
+        }
+
+        public event Action<XPositionDetail, bool> GotQryPositionDetailEvent;
+        protected void NotifyQryPositionDetail(XPositionDetail position, bool islast)
+        {
+            try
+            {
+                if (GotQryPositionDetailEvent != null)
+                    GotQryPositionDetailEvent(position, islast);
+            }
+            catch (Exception ex)
+            { 
+                
             }
         }
     
@@ -234,6 +257,7 @@ namespace TradingLib.BrokerXAPI
                 NewBrokerPositionCloseDetailEvent(detail);
         }
         
+
 
         #endregion
 

@@ -73,6 +73,45 @@ namespace Broker.Live
             }
         }
 
+        public override void ProcessQryPositionDetail(ref XPositionDetail position, bool islast)
+        {
+            string msg = string.Format("OpenData:{0} Settleday:{1} Side:{2} OpenPrice:{3} Volume:{4} Symbol:{5} Exchange:{6}", position.OpenDate, position.SettleDay, position.Side, position.OpenPrice, position.Volume, position.Symbol, position.Exchange);
+
+            debug("got positon detail:"+msg, QSEnumDebugLevel.INFO);
+            PositionDetail p = new PositionDetailImpl();
+            
+            p.OpenDate = position.OpenDate;
+            p.Settleday = position.SettleDay;
+            //CTP传递过来的LastSettlementPrice就是昨日的结算价格
+            p.LastSettlementPrice = (decimal)position.LastSettlementPrice;
+
+            //本地持仓明细在恢复持仓数据加载中 
+            //在结算时候 系统会将当日结算价格计入SettlementPrice,明日加载该隔夜持仓时 会将SettlementPrice赋值给LastSettlementPrice(跨过交易日)
+            p.SettlementPrice = (decimal)position.LastSettlementPrice;
+            //p.TradeID = position.BrokerTradeID;
+            
+            p.OpenPrice = (decimal)position.OpenPrice;
+            p.Symbol = position.Symbol;
+            p.Volume = position.Volume;
+            p.Side = position.Side;
+            p.Exchange = position.Exchange;
+
+            //标记该持仓明细是该接口发出
+            p.Broker = this.Token;
+
+            NotifyHistPositoinDetail(p);
+            if (islast)
+            {
+                //foreach (Order o in histordermap.Values)
+                //{
+                //    debug(o.GetOrderStatus());
+                //    NotifyOrder(o);
+                //}
+
+                //持仓数据查询完毕后查询委托
+                this.QryOrder();
+            }
+        }
         /// <summary>
         /// 初始化交易接口
         /// </summary>
@@ -112,8 +151,8 @@ namespace Broker.Live
 
             ////查询委托 在委托处理完毕后会链式查询成交 整体恢复数据过程Position->Order->Trade 真个过程
             ////获得所有历史数据 用于恢复当前最新交易状态
-            this.QryOrder();
-
+            //this.QryOrder();
+            this.QryPositionDetail();
             //查询帐户信息用于同步当前权益
 
         }

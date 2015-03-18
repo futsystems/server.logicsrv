@@ -20,6 +20,12 @@ namespace TradingLib.API
 
         #region 响应交易回报 用于记录交易记录
         /// <summary>
+        /// 记录持仓明细 
+        /// 用于恢复隔夜持仓
+        /// </summary>
+        /// <param name="pos"></param>
+        void GotPosition(PositionDetail pos);
+        /// <summary>
         /// 记录委托
         /// </summary>
         /// <param name="o"></param>

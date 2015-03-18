@@ -231,17 +231,12 @@ namespace TradingLib.BrokerXAPI
 
             _wrapper.OnQryOrderEvent += new CBOnQryOrder(_wrapper_OnQryOrderEvent);
             _wrapper.OnQryTradeEvent += new CBOnQryTrade(_wrapper_OnQryTradeEvent);
+            _wrapper.OnQryPositionDetailEvent += new CBOnQryPositionDetail(_wrapper_OnQryPositionDetailEvent);
 
             _wrapper.OnLogEvent += new CBOnLog(_wrapper_OnLogEvent);
         }
 
-        void _wrapper_OnLogEvent(IntPtr pData, int len)
-        {
-            byte[] data = new byte[len];
-            Marshal.Copy(pData, data, 0, len);
-            string message = System.Text.Encoding.UTF8.GetString(data,0,len);
-            Util.Debug(message, "XAPI");
-        }
+
 
 
 
@@ -320,6 +315,11 @@ namespace TradingLib.BrokerXAPI
         public bool QryTrade()
         {
             return WrapperQryTrade();
+        }
+
+        public bool QryPositionDetail()
+        {
+            return WrapperQryPositionDetail();
         }
 
         public bool Deposit(double amount)
@@ -411,6 +411,11 @@ namespace TradingLib.BrokerXAPI
 
         }
 
+        public virtual void ProcessQryPositionDetail(ref XPositionDetail position, bool islast)
+        { 
+            
+        }
+
         #endregion
 
 
@@ -447,6 +452,11 @@ namespace TradingLib.BrokerXAPI
         protected bool WrapperQryTrade()
         {
             return _wrapper.QryTrade();
+        }
+
+        protected bool WrapperQryPositionDetail()
+        {
+            return _wrapper.QryPositionDetail();
         }
 
         protected bool WrapperWithdraw(double amount)
@@ -632,6 +642,21 @@ namespace TradingLib.BrokerXAPI
             //Util.Debug("-----------TLBroker OnQryOrderEvent-----------------------");
             ProcessQryOrder(ref pOrder, islast);
         }
+
+        void _wrapper_OnQryPositionDetailEvent(ref XPositionDetail pPosition, bool islast)
+        {
+            ProcessQryPositionDetail(ref pPosition, islast);
+        }
+
+        void _wrapper_OnLogEvent(IntPtr pData, int len)
+        {
+            byte[] data = new byte[len];
+            Marshal.Copy(pData, data, 0, len);
+            string message = System.Text.Encoding.UTF8.GetString(data, 0, len);
+            Util.Debug(message, "XAPI");
+        }
+
+
 
         void _wrapper_OnAccountInfoEvent(ref XAccountInfo pAccountInfo, bool islast)
         {

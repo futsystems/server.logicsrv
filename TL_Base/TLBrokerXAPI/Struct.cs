@@ -380,6 +380,66 @@ namespace TradingLib.BrokerXAPI
     }
 
     /// <summary>
+    /// 持仓明细结构体
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public struct XPositionDetail
+    {
+        /// <summary>
+        /// 开仓日期
+        /// </summary>
+        public int OpenDate;
+
+        /// <summary>
+        /// 结算日 该持仓明细属于哪个结算日
+        /// </summary>
+        public int SettleDay;
+
+        /// <summary>
+        /// 持仓数量
+        /// </summary>
+        public int Volume;
+
+        /// <summary>
+        /// 开仓价格
+        /// </summary>
+        public double OpenPrice;
+
+        /// <summary>
+        /// 昨日结算价格
+        /// 隔夜持仓结算时 记录结算价格，并按结算价格来计算盯市盈亏并纳入到权益数据，次日开盘后持仓价就为该结算价格
+        /// </summary>
+        public double LastSettlementPrice;
+
+        /// <summary>
+        /// 方向
+        /// </summary>
+        public bool Side;
+
+        /// <summary>
+        /// 合约
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 24)]
+        public string Symbol;
+
+        /// <summary>
+        /// 交易所
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 12)]
+        public string Exchange;
+
+        /// <summary>
+        /// 成交编号
+        /// 在CTP接口中 每个开仓成交对应一个持仓明细 这里有具体的成交ID对应
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
+        public string BrokerTradeID;
+
+
+
+
+    }
+    /// <summary>
     /// 交易帐户信息
     /// </summary>
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]

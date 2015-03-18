@@ -47,6 +47,13 @@ namespace TradingLib.BrokerXAPI
     public delegate void CBOnQryOrder(ref XOrderField pOrder,bool islast);
 
     /// <summary>
+    /// 查询持仓明细回调函数
+    /// </summary>
+    /// <param name="pPosition"></param>
+    /// <param name="islast"></param>
+    public delegate void CBOnQryPositionDetail(ref XPositionDetail pPosition,bool islast);
+
+    /// <summary>
     /// 委托错误回调委托
     /// </summary>
     /// <param name="pOrder"></param>

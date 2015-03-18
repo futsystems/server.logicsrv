@@ -683,6 +683,9 @@ namespace TradingLib.Common
             }
             else
             {
+                decimal v = d.PositionPrice();
+                int s = d.Volume;
+
                 //通过加权计算获得当前的持仓均价
                 this._price = _postotallist.Where(pos1 => !pos1.IsClosed()).Sum(pos2 => pos2.Volume * pos2.PositionPrice()) / Math.Abs(this._size);
             }   

@@ -106,6 +106,7 @@ namespace TradingLib.BrokerXAPI.Interop
             _QryAccountInfo = NativeLib.GetUnmanagedFunction<QryAccountInfoProc>("QryAccountInfo");
             _QryOrder = NativeLib.GetUnmanagedFunction<QryOrderProc>("QryOrder");
             _QryTrade = NativeLib.GetUnmanagedFunction<QryTradeProc>("QryTrade");
+            _QryPositionDetail = NativeLib.GetUnmanagedFunction<QryPositionDetailProc>("QryPositionDetail");
             _Withdraw = NativeLib.GetUnmanagedFunction<WithdrawProc>("Withdraw");
             _Deposit = NativeLib.GetUnmanagedFunction<DepositProc>("Deposit");
 
@@ -120,7 +121,7 @@ namespace TradingLib.BrokerXAPI.Interop
             _RegOnAccountInfo = NativeLib.GetUnmanagedFunction<RegOnAccountInfoProc>("RegOnAccountInfo");
             _RegOnQryOrder = NativeLib.GetUnmanagedFunction<RegOnQryOrderProc>("RegOnQryOrder");
             _RegOnQryTrade = NativeLib.GetUnmanagedFunction<RegOnQryTradeProc>("RegOnQryTrade");
-
+            _RegOnQryPositionDetail = NativeLib.GetUnmanagedFunction<RegOnQryPositionDetailProc>("RegOnPositionDetail");
             _RegOnLog = NativeLib.GetUnmanagedFunction<RegOnLogProc>("RegOnLog");
             
         }
@@ -345,6 +346,27 @@ namespace TradingLib.BrokerXAPI.Interop
         }
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate bool QryPositionDetailProc(IntPtr pWrapper);
+        QryPositionDetailProc _QryPositionDetail;
+        public bool QryPositionDetail()
+        {
+            try
+            {
+                Util.Info("BrokerProxy QryPositionDetail");
+                bool x = _QryPositionDetail(this.Wrapper);
+                //Util.Info("**************** qry trade return:" + x.ToString());
+                return x;
+            }
+            catch (Exception ex)
+            {
+                Util.Error("QryPositionDetail Error:" + ex.ToString());
+                return false;
+            }
+        }
+
+
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate bool DepositProc(IntPtr pWrapper,double amount);
         DepositProc _Deposit;
         public bool Deposit(double amount)
@@ -495,12 +517,19 @@ namespace TradingLib.BrokerXAPI.Interop
         RegOnQryTradeProc _RegOnQryTrade;
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void RegOnQryPositionDetailProc(IntPtr pWrapper, CBOnQryPositionDetail cb);
+        RegOnQryPositionDetailProc _RegOnQryPositionDetail;
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void RegOnLogProc(IntPtr pWrapper, CBOnLog cb);
         RegOnLogProc _RegOnLog;
         #endregion
 
 
         #region 回调事件
+        
+
+
         CBOnLog cbOnLog;
         public event CBOnLog OnLogEvent
         {
@@ -587,35 +616,13 @@ namespace TradingLib.BrokerXAPI.Interop
             add { cbOnQryTrade += value; _RegOnQryTrade(this.Wrapper, cbOnQryTrade); }
             remove { cbOnQryTrade -= value; _RegOnQryTrade(this.Wrapper, cbOnQryTrade); }
         }
+
+        CBOnQryPositionDetail cbOnQryPositionDetail;
+        public event CBOnQryPositionDetail OnQryPositionDetailEvent
+        {
+            add { cbOnQryPositionDetail += value; _RegOnQryPositionDetail(this.Wrapper, cbOnQryPositionDetail); }
+            remove { cbOnQryPositionDetail -= value; _RegOnQryPositionDetail(this.Wrapper, cbOnQryPositionDetail); }
+        }
         #endregion
-
-
-
-
-        ///// <summary>
-        ///// 字符串参数调用
-        ///// </summary>
-        ///// <param name="input"></param>
-        ///// <returns></returns>
-        //[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        //public delegate string DemoStringCallProc(string input);
-        //public DemoStringCallProc demostringcall;
-
-        ///// <summary>
-        ///// 整形参数调用
-        ///// </summary>
-        ///// <param name="x"></param>
-        ///// <returns></returns>
-        //[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        //public delegate int DemoIntCallProc(int x);
-        //public DemoIntCallProc demointcall;
-
-        ///// <summary>
-        ///// 结构体参数调用
-        ///// </summary>
-        ///// <param name="error"></param>
-        //[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        //public delegate void DemoStructCallProc(ref  ErrorField error);
-        //public DemoStructCallProc demostructcall;
     }
 }
