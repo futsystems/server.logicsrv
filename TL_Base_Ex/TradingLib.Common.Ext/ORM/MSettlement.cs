@@ -40,15 +40,33 @@ namespace TradingLib.ORM
         /// <param name="?"></param>
         /// <param name="settleday"></param>
         /// <returns></returns>
-        public static bool InsertPositionDetail(PositionDetail p)
+        public static void InsertPositionDetail(PositionDetail p)
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("Insert into log_position_detail_hist (`account`,`opendate`,`opentime`,`closeamount`,`settleday`,`side`,`volume`,`openprice`,`tradeid`,`lastsettlementprice`,`settlementprice`,`closevolume`,`hedgeflag`,`margin`,`exchange`,`symbol`,`seccode`,`closeprofitbydate`,`closeprofitbytrade`,`positionprofitbydate`,`positionprofitbytrade`,`ishisposition`,`broker`,`breed`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}','{17}','{18}','{19}','{20}','{21}','{22}','{23}')", p.Account, p.OpenDate, p.OpenTime, p.CloseAmount, p.Settleday, p.Side ? 1 : 0, p.Volume, p.OpenPrice, p.TradeID, p.LastSettlementPrice, p.SettlementPrice, p.CloseVolume, p.HedgeFlag, p.Margin, p.Exchange, p.Symbol, p.SecCode, p.CloseProfitByDate, p.CloseProfitByTrade, p.PositionProfitByDate, p.PositionProfitByTrade, p.IsHisPosition ? 1 : 0,p.Broker,p.Breed);
-                return db.Connection.Execute(query) > 0;
+                //如果对应的持仓明细不存在 则插入该持仓明细数据
+                if (!IsPositionDetailExist(p))
+                {
+                    string query = String.Format("Insert into log_position_detail_hist (`account`,`opendate`,`opentime`,`closeamount`,`settleday`,`side`,`volume`,`openprice`,`tradeid`,`lastsettlementprice`,`settlementprice`,`closevolume`,`hedgeflag`,`margin`,`exchange`,`symbol`,`seccode`,`closeprofitbydate`,`closeprofitbytrade`,`positionprofitbydate`,`positionprofitbytrade`,`ishisposition`,`broker`,`breed`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}','{17}','{18}','{19}','{20}','{21}','{22}','{23}')", p.Account, p.OpenDate, p.OpenTime, p.CloseAmount, p.Settleday, p.Side ? 1 : 0, p.Volume, p.OpenPrice, p.TradeID, p.LastSettlementPrice, p.SettlementPrice, p.CloseVolume, p.HedgeFlag, p.Margin, p.Exchange, p.Symbol, p.SecCode, p.CloseProfitByDate, p.CloseProfitByTrade, p.PositionProfitByDate, p.PositionProfitByTrade, p.IsHisPosition ? 1 : 0, p.Broker, p.Breed);
+                    db.Connection.Execute(query);
+                }
             }
         }
 
+
+        /// <summary>
+        /// 检查某个持仓明细是否已经存在
+        /// </summary>
+        /// <param name="p"></param>
+        /// <returns></returns>
+        public static bool IsPositionDetailExist(PositionDetail p)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = String.Format("select account from log_position_detail_hist  where `account` = '{0}' AND `settleday` = '{1}' AND  `symbol`='{2}' AND `tradeid`='{3}'", p.Account, p.Settleday, p.Symbol,p.TradeID);
+                return db.Connection.Query(query).Count() > 0;
+            }
+        }
         /// <summary>
         /// 获得分帐户侧所有持仓明细
         /// </summary>
@@ -173,17 +191,33 @@ namespace TradingLib.ORM
         /// </summary>
         /// <param name="pr"></param>
         /// <returns></returns>
-        public static bool InsertHoldPositionRound(PositionRound pr, int settleday)
+        public static void InsertHoldPositionRound(PositionRound pr, int settleday)
         {
             using (DBMySql db = new DBMySql())
             {
-                //string query = String.Format("Insert into hold_postransactions (`account`,`symbol`,`security`,`multiple`,`entrytime`,`entrysize`,`entryprice`,`entrycommission`,`exittime`,`exitsize`,`exitprice`,`exitcommission`,`highest`,`lowest`,`size`,`holdsize`,`side`,`wl`,`totalpoints`,`profit`,`commission`,`netprofit`,`type`,`settleday`) values('{0}','{1}','{2}','{3}',{4},'{5}','{6}','{7}',{8},'{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}','{17}','{18}','{19}','{20}','{21}','{22}',{23})", pr.Account, pr.Symbol, pr.Security, pr.Multiple.ToString(), pr.EntryTime!=null?Util.ToTLDateTime((DateTime)pr.EntryTime).ToString():null, pr.EntrySize.ToString(), pr.EntryPrice.ToString(), pr.EntryCommission.ToString(), pr.ExitTime!=null?Util.ToTLDateTime((DateTime)pr.ExitTime).ToString():null, pr.ExitSize.ToString(), pr.ExitPrice.ToString(), pr.ExitCommission.ToString(), pr.Highest.ToString(), pr.Lowest.ToString(), pr.Size.ToString(), pr.HoldSize.ToString(), pr.Side ? 1 : 0, pr.WL.ToString(), pr.TotalPoints.ToString(), pr.Profit.ToString(), pr.Commissoin.ToString(), pr.NetProfit.ToString(), pr.Type.ToString(), settleday);
-                string query = String.Format("Insert into hold_postransactions (`account`,`symbol`,`security`,`multiple`,`entrytime`,`entrysize`,`entryprice`,`entrycommission`,`exitsize`,`exitprice`,`exitcommission`,`highest`,`lowest`,`size`,`holdsize`,`side`,`wl`,`totalpoints`,`profit`,`commission`,`netprofit`,`type`,`settleday`) values('{0}','{1}','{2}','{3}',{4},'{5}','{6}','{7}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}','{17}','{18}','{19}','{20}','{21}','{22}',{23})", pr.Account, pr.Symbol, pr.Security, pr.Multiple.ToString(), pr.EntryTime != null ? Util.ToTLDateTime((DateTime)pr.EntryTime).ToString() : null, pr.EntrySize.ToString(), pr.EntryPrice.ToString(), pr.EntryCommission.ToString(), pr.ExitTime != null ? Util.ToTLDateTime((DateTime)pr.ExitTime).ToString() : null, pr.ExitSize.ToString(), pr.ExitPrice.ToString(), pr.ExitCommission.ToString(), pr.Highest.ToString(), pr.Lowest.ToString(), pr.Size.ToString(), pr.HoldSize.ToString(), pr.Side ? 1 : 0, pr.WL.ToString(), pr.TotalPoints.ToString(), pr.Profit.ToString(), pr.Commissoin.ToString(), pr.NetProfit.ToString(), pr.Type.ToString(), settleday);
-                
-                return db.Connection.Execute(query) > 0;
+                if (!IsPositoinRoundExist(pr, settleday))
+                {
+                    string query = String.Format("Insert into hold_postransactions (`account`,`symbol`,`security`,`multiple`,`entrytime`,`entrysize`,`entryprice`,`entrycommission`,`exitsize`,`exitprice`,`exitcommission`,`highest`,`lowest`,`size`,`holdsize`,`side`,`wl`,`totalpoints`,`profit`,`commission`,`netprofit`,`type`,`settleday`) values('{0}','{1}','{2}','{3}',{4},'{5}','{6}','{7}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}','{17}','{18}','{19}','{20}','{21}','{22}',{23})", pr.Account, pr.Symbol, pr.Security, pr.Multiple.ToString(), pr.EntryTime != null ? Util.ToTLDateTime((DateTime)pr.EntryTime).ToString() : null, pr.EntrySize.ToString(), pr.EntryPrice.ToString(), pr.EntryCommission.ToString(), pr.ExitTime != null ? Util.ToTLDateTime((DateTime)pr.ExitTime).ToString() : null, pr.ExitSize.ToString(), pr.ExitPrice.ToString(), pr.ExitCommission.ToString(), pr.Highest.ToString(), pr.Lowest.ToString(), pr.Size.ToString(), pr.HoldSize.ToString(), pr.Side ? 1 : 0, pr.WL.ToString(), pr.TotalPoints.ToString(), pr.Profit.ToString(), pr.Commissoin.ToString(), pr.NetProfit.ToString(), pr.Type.ToString(), settleday);
+                    db.Connection.Execute(query);
+                }
             }
         }
 
+        /// <summary>
+        /// 判断某个持仓回合数据是否存在
+        /// 持仓回合是只开仓到平仓的一个整体过程，所以每个交易帐户不可能同一个合约有2条持仓回合记录
+        /// </summary>
+        /// <param name="pr"></param>
+        /// <param name="settleday"></param>
+        /// <returns></returns>
+        public static bool IsPositoinRoundExist(PositionRound pr, int settleday)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = String.Format("SELECT *  FROM hold_postransactions  where `account` = '{0}' AND `settleday` = '{1}' AND  `symbol`='{2}' ", pr.Account, settleday, pr.Symbol);
+                return db.Connection.Query(query).Count() > 0;
+            }
+        }
         /// <summary>
         /// 删除某个交易日的开启的持仓回合信息
         /// </summary>

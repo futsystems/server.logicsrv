@@ -93,6 +93,11 @@ namespace TradingLib.Core
                 debug("BeforeSettleEvent Fired error:" + ex.ToString(), QSEnumDebugLevel.FATAL);
             }
 
+            //保存结算价信息
+            this.SaveSettlementPrice();
+
+            //绑定结算价信息
+            this.BindSettlementPrice();
             
             //保存结算持仓对应的PR数据
             this.SaveHoldInfo();
@@ -397,9 +402,11 @@ namespace TradingLib.Core
 
             //通过系统事件中继触发结算前事件
             //TLCtxHelper.EventSystem.FireBeforeSettleEvent(this, new SystemEventArgs());
+            //this.IsInSettle = true;//标识结算中心处于结算状态
 
             //绑定结算价格
             this.BindSettlementPrice();
+
             //A:储存当前数据
             //保存结算持仓数据和对应的PR数据
             this.SaveHoldInfo();
@@ -413,6 +420,7 @@ namespace TradingLib.Core
             //B:结算交易帐户形成结算记录
             this.SettleAccount();
 
+            
             //TLCtxHelper.EventSystem.FireAfterSettleEvent(this, new SystemEventArgs());
 
             //TLCtxHelper.EventSystem.FireBeforeSettleResetEvent(this, new SystemEventArgs());
@@ -436,7 +444,7 @@ namespace TradingLib.Core
             //重置任务中心
             //TLCtxHelper.EventSystem.FireAfterSettleResetEvent(this, new SystemEventArgs());
 
-            session.OperationSuccess(string.Format("删除交易日:{0}结算信息成功", settleday));
+            session.OperationSuccess(string.Format("交易日:{0}结算完成", settleday));
         }
 
 

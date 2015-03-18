@@ -58,6 +58,7 @@ namespace FutsMoniter
             int settleday = Util.ToTLDate(dpSettleday.Value);
             if (MoniterUtils.WindowConfirm(string.Format("确认回滚到交易日:{0}", settleday)) == System.Windows.Forms.DialogResult.Yes)
             {
+                
                 Globals.TLClient.ReqRollBackToDay(settleday);
             }
         }

@@ -29,15 +29,15 @@
         private void InitializeComponent()
         {
             this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
-            this.kryptonLabel1 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.kryptonLabel2 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.kryptonLabel3 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.kryptonLabel4 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.lbSettleday = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.lbSymbol = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.lbPrice = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.ndPrice = new ComponentFactory.Krypton.Toolkit.KryptonNumericUpDown();
             this.btnSubmit = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.ndPrice = new ComponentFactory.Krypton.Toolkit.KryptonNumericUpDown();
+            this.lbPrice = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.lbSymbol = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.lbSettleday = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.kryptonLabel4 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.kryptonLabel3 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.kryptonLabel2 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.kryptonLabel1 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             this.SuspendLayout();
@@ -59,61 +59,15 @@
             this.kryptonPanel1.Size = new System.Drawing.Size(224, 165);
             this.kryptonPanel1.TabIndex = 0;
             // 
-            // kryptonLabel1
+            // btnSubmit
             // 
-            this.kryptonLabel1.Location = new System.Drawing.Point(32, 12);
-            this.kryptonLabel1.Name = "kryptonLabel1";
-            this.kryptonLabel1.Size = new System.Drawing.Size(51, 20);
-            this.kryptonLabel1.TabIndex = 0;
-            this.kryptonLabel1.Values.Text = "结算日:";
-            // 
-            // kryptonLabel2
-            // 
-            this.kryptonLabel2.Location = new System.Drawing.Point(45, 38);
-            this.kryptonLabel2.Name = "kryptonLabel2";
-            this.kryptonLabel2.Size = new System.Drawing.Size(38, 20);
-            this.kryptonLabel2.TabIndex = 1;
-            this.kryptonLabel2.Values.Text = "合约:";
-            // 
-            // kryptonLabel3
-            // 
-            this.kryptonLabel3.Location = new System.Drawing.Point(8, 64);
-            this.kryptonLabel3.Name = "kryptonLabel3";
-            this.kryptonLabel3.Size = new System.Drawing.Size(75, 20);
-            this.kryptonLabel3.TabIndex = 2;
-            this.kryptonLabel3.Values.Text = "当前结算价:";
-            // 
-            // kryptonLabel4
-            // 
-            this.kryptonLabel4.Location = new System.Drawing.Point(32, 90);
-            this.kryptonLabel4.Name = "kryptonLabel4";
-            this.kryptonLabel4.Size = new System.Drawing.Size(51, 20);
-            this.kryptonLabel4.TabIndex = 3;
-            this.kryptonLabel4.Values.Text = "更新为:";
-            // 
-            // lbSettleday
-            // 
-            this.lbSettleday.Location = new System.Drawing.Point(89, 12);
-            this.lbSettleday.Name = "lbSettleday";
-            this.lbSettleday.Size = new System.Drawing.Size(20, 20);
-            this.lbSettleday.TabIndex = 4;
-            this.lbSettleday.Values.Text = "--";
-            // 
-            // lbSymbol
-            // 
-            this.lbSymbol.Location = new System.Drawing.Point(89, 38);
-            this.lbSymbol.Name = "lbSymbol";
-            this.lbSymbol.Size = new System.Drawing.Size(20, 20);
-            this.lbSymbol.TabIndex = 5;
-            this.lbSymbol.Values.Text = "--";
-            // 
-            // lbPrice
-            // 
-            this.lbPrice.Location = new System.Drawing.Point(89, 64);
-            this.lbPrice.Name = "lbPrice";
-            this.lbPrice.Size = new System.Drawing.Size(20, 20);
-            this.lbPrice.TabIndex = 6;
-            this.lbPrice.Values.Text = "--";
+            this.btnSubmit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSubmit.Location = new System.Drawing.Point(145, 128);
+            this.btnSubmit.Name = "btnSubmit";
+            this.btnSubmit.Size = new System.Drawing.Size(67, 25);
+            this.btnSubmit.TabIndex = 1;
+            this.btnSubmit.Values.Text = "提 交";
+            this.btnSubmit.Click += new System.EventHandler(this.btnSubmit_Click);
             // 
             // ndPrice
             // 
@@ -128,15 +82,61 @@
             this.ndPrice.Size = new System.Drawing.Size(99, 22);
             this.ndPrice.TabIndex = 7;
             // 
-            // btnSubmit
+            // lbPrice
             // 
-            this.btnSubmit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSubmit.Location = new System.Drawing.Point(145, 128);
-            this.btnSubmit.Name = "btnSubmit";
-            this.btnSubmit.Size = new System.Drawing.Size(67, 25);
-            this.btnSubmit.TabIndex = 1;
-            this.btnSubmit.Values.Text = "提 交";
-            this.btnSubmit.Click += new System.EventHandler(this.btnSubmit_Click);
+            this.lbPrice.Location = new System.Drawing.Point(89, 64);
+            this.lbPrice.Name = "lbPrice";
+            this.lbPrice.Size = new System.Drawing.Size(20, 20);
+            this.lbPrice.TabIndex = 6;
+            this.lbPrice.Values.Text = "--";
+            // 
+            // lbSymbol
+            // 
+            this.lbSymbol.Location = new System.Drawing.Point(89, 38);
+            this.lbSymbol.Name = "lbSymbol";
+            this.lbSymbol.Size = new System.Drawing.Size(20, 20);
+            this.lbSymbol.TabIndex = 5;
+            this.lbSymbol.Values.Text = "--";
+            // 
+            // lbSettleday
+            // 
+            this.lbSettleday.Location = new System.Drawing.Point(89, 12);
+            this.lbSettleday.Name = "lbSettleday";
+            this.lbSettleday.Size = new System.Drawing.Size(20, 20);
+            this.lbSettleday.TabIndex = 4;
+            this.lbSettleday.Values.Text = "--";
+            // 
+            // kryptonLabel4
+            // 
+            this.kryptonLabel4.Location = new System.Drawing.Point(32, 90);
+            this.kryptonLabel4.Name = "kryptonLabel4";
+            this.kryptonLabel4.Size = new System.Drawing.Size(51, 20);
+            this.kryptonLabel4.TabIndex = 3;
+            this.kryptonLabel4.Values.Text = "更新为:";
+            // 
+            // kryptonLabel3
+            // 
+            this.kryptonLabel3.Location = new System.Drawing.Point(8, 64);
+            this.kryptonLabel3.Name = "kryptonLabel3";
+            this.kryptonLabel3.Size = new System.Drawing.Size(75, 20);
+            this.kryptonLabel3.TabIndex = 2;
+            this.kryptonLabel3.Values.Text = "当前结算价:";
+            // 
+            // kryptonLabel2
+            // 
+            this.kryptonLabel2.Location = new System.Drawing.Point(45, 38);
+            this.kryptonLabel2.Name = "kryptonLabel2";
+            this.kryptonLabel2.Size = new System.Drawing.Size(38, 20);
+            this.kryptonLabel2.TabIndex = 1;
+            this.kryptonLabel2.Values.Text = "合约:";
+            // 
+            // kryptonLabel1
+            // 
+            this.kryptonLabel1.Location = new System.Drawing.Point(32, 12);
+            this.kryptonLabel1.Name = "kryptonLabel1";
+            this.kryptonLabel1.Size = new System.Drawing.Size(51, 20);
+            this.kryptonLabel1.TabIndex = 0;
+            this.kryptonLabel1.Values.Text = "结算日:";
             // 
             // fmUpdateSettlementPrice
             // 
@@ -148,6 +148,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "fmUpdateSettlementPrice";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "更新结算价信息";
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).EndInit();
             this.kryptonPanel1.ResumeLayout(false);

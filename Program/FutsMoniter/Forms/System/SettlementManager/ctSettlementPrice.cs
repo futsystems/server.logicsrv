@@ -43,6 +43,13 @@ namespace FutsMoniter
             fm.ShowDialog();
         }
 
+        void Clear()
+        {
+            gridSettlementPrice.DataSource = null;
+            gt.Rows.Clear();
+            BindToTable();
+        }
+
         public void OnInit()
         {
             Globals.LogicEvent.RegisterCallback("SettleCentre", "QrySettlementPrice", OnQrySettlementPrice);
