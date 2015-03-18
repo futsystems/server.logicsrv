@@ -89,6 +89,7 @@ namespace FutsMoniter
             lbCommission.Text = Util.FormatDecimal(commission);
             lbCloseProfit.Text = Util.FormatDecimal(closeprofit);
             lbPositionProfit.Text = Util.FormatDecimal(positionprofit);
+            lbNowEquity.Text = Util.FormatDecimal(lastequity + deposit - withdraw + closeprofit + positionprofit - commission);
 
         }
 

@@ -43,6 +43,8 @@
             this.kryptonGroupBox3 = new ComponentFactory.Krypton.Toolkit.KryptonGroupBox();
             this.ctFinanceInfo1 = new FutsMoniter.ctFinanceInfo();
             this.kryptonGroupBox2 = new ComponentFactory.Krypton.Toolkit.KryptonGroupBox();
+            this.cbEquityTypeList = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
+            this.kryptonLabel2 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.btnCashOperation = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.cashop_comment = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
             this.kryptonLabel8 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
@@ -77,8 +79,6 @@
             this.btnUpdateTemplate = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.kryptonLabel13 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel4 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.kryptonLabel2 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.cbEquityTypeList = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pagenav)).BeginInit();
@@ -100,6 +100,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.kryptonGroupBox2)).BeginInit();
             this.kryptonGroupBox2.Panel.SuspendLayout();
             this.kryptonGroupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.cbEquityTypeList)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cashop_type)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pageOrderCheck)).BeginInit();
             this.pageOrderCheck.SuspendLayout();
@@ -116,7 +117,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.cbExStrategyTemplate)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cbMarginTemplate)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cbCommissionTemplate)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cbEquityTypeList)).BeginInit();
             this.SuspendLayout();
             // 
             // kryptonPanel1
@@ -300,6 +300,22 @@
             this.kryptonGroupBox2.TabIndex = 2;
             this.kryptonGroupBox2.Values.Heading = "出入金";
             // 
+            // cbEquityTypeList
+            // 
+            this.cbEquityTypeList.DropDownWidth = 121;
+            this.cbEquityTypeList.Location = new System.Drawing.Point(102, 67);
+            this.cbEquityTypeList.Name = "cbEquityTypeList";
+            this.cbEquityTypeList.Size = new System.Drawing.Size(121, 21);
+            this.cbEquityTypeList.TabIndex = 10;
+            // 
+            // kryptonLabel2
+            // 
+            this.kryptonLabel2.Location = new System.Drawing.Point(25, 67);
+            this.kryptonLabel2.Name = "kryptonLabel2";
+            this.kryptonLabel2.Size = new System.Drawing.Size(63, 20);
+            this.kryptonLabel2.TabIndex = 9;
+            this.kryptonLabel2.Values.Text = "资金类型:";
+            // 
             // btnCashOperation
             // 
             this.btnCashOperation.Location = new System.Drawing.Point(199, 183);
@@ -383,7 +399,7 @@
             this.pageOrderCheck.LastVisibleSet = true;
             this.pageOrderCheck.MinimumSize = new System.Drawing.Size(50, 50);
             this.pageOrderCheck.Name = "pageOrderCheck";
-            this.pageOrderCheck.Size = new System.Drawing.Size(685, 249);
+            this.pageOrderCheck.Size = new System.Drawing.Size(685, 251);
             this.pageOrderCheck.Text = "委托规则";
             this.pageOrderCheck.ToolTipTitle = "Page ToolTip";
             this.pageOrderCheck.UniqueName = "4EFE1B2BEB22429A75BE5624BE5AAD1C";
@@ -399,7 +415,7 @@
             this.kryptonPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.kryptonPanel4.Location = new System.Drawing.Point(0, 0);
             this.kryptonPanel4.Name = "kryptonPanel4";
-            this.kryptonPanel4.Size = new System.Drawing.Size(685, 249);
+            this.kryptonPanel4.Size = new System.Drawing.Size(685, 251);
             this.kryptonPanel4.TabIndex = 0;
             // 
             // btnDelOrderRule
@@ -606,22 +622,6 @@
             this.kryptonLabel4.TabIndex = 0;
             this.kryptonLabel4.Values.Text = "手续费模板:";
             // 
-            // kryptonLabel2
-            // 
-            this.kryptonLabel2.Location = new System.Drawing.Point(25, 67);
-            this.kryptonLabel2.Name = "kryptonLabel2";
-            this.kryptonLabel2.Size = new System.Drawing.Size(63, 20);
-            this.kryptonLabel2.TabIndex = 9;
-            this.kryptonLabel2.Values.Text = "资金类型:";
-            // 
-            // cbEquityTypeList
-            // 
-            this.cbEquityTypeList.DropDownWidth = 121;
-            this.cbEquityTypeList.Location = new System.Drawing.Point(102, 67);
-            this.cbEquityTypeList.Name = "cbEquityTypeList";
-            this.cbEquityTypeList.Size = new System.Drawing.Size(121, 21);
-            this.cbEquityTypeList.TabIndex = 10;
-            // 
             // fmAccountConfig
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -658,6 +658,7 @@
             this.kryptonGroupBox2.Panel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonGroupBox2)).EndInit();
             this.kryptonGroupBox2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.cbEquityTypeList)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cashop_type)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pageOrderCheck)).EndInit();
             this.pageOrderCheck.ResumeLayout(false);
@@ -677,7 +678,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.cbExStrategyTemplate)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cbMarginTemplate)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cbCommissionTemplate)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cbEquityTypeList)).EndInit();
             this.ResumeLayout(false);
 
         }

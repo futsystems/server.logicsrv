@@ -41,6 +41,12 @@ namespace FutsMoniter
                 pageMarginCommission.Visible = Globals.Manager.IsRoot();
             }
 
+            if (Globals.TLClient.ServerVersion.ProductType == QSEnumProductType.VendorMoniter)
+            {
+                pageOrderCheck.Visible = false;
+                ctRouterType1.Visible = false;
+            }
+
             //执行延迟加载 只有当延迟加载的空间加载完毕后才可以将数据显示到界面否则相关字段显示错误
             UpdateAccountSetting();
         }

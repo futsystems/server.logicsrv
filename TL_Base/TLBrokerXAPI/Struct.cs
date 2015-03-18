@@ -401,6 +401,11 @@ namespace TradingLib.BrokerXAPI
         public int Volume;
 
         /// <summary>
+        /// 平仓数量
+        /// </summary>
+        public int CloseVolume;
+
+        /// <summary>
         /// 开仓价格
         /// </summary>
         public double OpenPrice;

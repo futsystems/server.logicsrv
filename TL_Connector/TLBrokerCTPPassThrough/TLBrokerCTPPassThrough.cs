@@ -68,38 +68,53 @@ namespace Broker.Live
                     debug(o.GetOrderStatus());
                     NotifyOrder(o);
                 }
+                histtrademap.Clear();
                 //委托查询完成后查询成交
                 this.QryTrade();
             }
         }
 
+        /// <summary>
+        /// CTP查询持仓明细反应的是当前最新持仓状态,我们需要将他还原成历史持仓
+        /// 清算中心初始化 首先是从数据库加载历史持仓 然后在历史持仓的基础上累加成交获得当前最新的持仓状态
+        /// 
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="islast"></param>
         public override void ProcessQryPositionDetail(ref XPositionDetail position, bool islast)
         {
-            string msg = string.Format("OpenData:{0} Settleday:{1} Side:{2} OpenPrice:{3} Volume:{4} Symbol:{5} Exchange:{6}", position.OpenDate, position.SettleDay, position.Side, position.OpenPrice, position.Volume, position.Symbol, position.Exchange);
+            string msg = string.Format("OpenData:{0} Settleday:{1} Side:{2} OpenPrice:{3} Volume:{4} Symbol:{5} Exchange:{6} CloseVol:{7}", position.OpenDate, position.SettleDay, position.Side, position.OpenPrice, position.Volume, position.Symbol, position.Exchange,position.CloseVolume);
 
             debug("got positon detail:"+msg, QSEnumDebugLevel.INFO);
-            PositionDetail p = new PositionDetailImpl();
-            
-            p.OpenDate = position.OpenDate;
-            p.Settleday = position.SettleDay;
-            //CTP传递过来的LastSettlementPrice就是昨日的结算价格
-            p.LastSettlementPrice = (decimal)position.LastSettlementPrice;
+            //开仓日期与结算日不同 则为隔夜持仓
+            if (position.OpenDate != position.SettleDay)
+            {
+                PositionDetail p = new PositionDetailImpl();
 
-            //本地持仓明细在恢复持仓数据加载中 
-            //在结算时候 系统会将当日结算价格计入SettlementPrice,明日加载该隔夜持仓时 会将SettlementPrice赋值给LastSettlementPrice(跨过交易日)
-            p.SettlementPrice = (decimal)position.LastSettlementPrice;
-            //p.TradeID = position.BrokerTradeID;
-            
-            p.OpenPrice = (decimal)position.OpenPrice;
-            p.Symbol = position.Symbol;
-            p.Volume = position.Volume;
-            p.Side = position.Side;
-            p.Exchange = position.Exchange;
+                p.OpenDate = position.OpenDate;
+                p.Settleday = position.SettleDay;
+                //CTP传递过来的LastSettlementPrice就是昨日的结算价格
+                p.LastSettlementPrice = (decimal)position.LastSettlementPrice;
 
-            //标记该持仓明细是该接口发出
-            p.Broker = this.Token;
+                //本地持仓明细在恢复持仓数据加载中 
+                //在结算时候 系统会将当日结算价格计入SettlementPrice,明日加载该隔夜持仓时 会将SettlementPrice赋值给LastSettlementPrice(跨过交易日)
+                p.SettlementPrice = (decimal)position.LastSettlementPrice;
+                //p.TradeID = position.BrokerTradeID;
 
-            NotifyHistPositoinDetail(p);
+                p.OpenPrice = (decimal)position.OpenPrice;
+                p.Symbol = position.Symbol;
+
+                //如果该持仓明细是历史持仓 则该持仓昨日结算时持仓数量 = 当前持仓数量 + 今日平仓量
+                p.Volume = position.Volume + position.CloseVolume;
+                p.CloseVolume = 0;//平仓量为0 平仓量由清算中心累加成交数据获得
+                p.Side = position.Side;
+                p.Exchange = position.Exchange;
+
+                //标记该持仓明细是该接口发出
+                p.Broker = this.Token;
+
+                NotifyHistPositoinDetail(p);
+            }
             if (islast)
             {
                 //foreach (Order o in histordermap.Values)
@@ -108,6 +123,7 @@ namespace Broker.Live
                 //    NotifyOrder(o);
                 //}
 
+                histordermap.Clear();
                 //持仓数据查询完毕后查询委托
                 this.QryOrder();
             }

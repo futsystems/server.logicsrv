@@ -139,7 +139,8 @@ namespace FutsMoniter
                 tabAgent.Visible = false;//柜员tab不可见
                 tabFinance.Visible = false;//财务管理tab不可见
                 tabHistQuery.Visible = false;//历史查询tab不可见
-
+                kryptonRibbonGroupButton_interfacelist.Visible = false;
+                kryptonRibbonGroupButton_connectorlist.Visible = false;
             }
 
 

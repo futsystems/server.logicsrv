@@ -24,7 +24,7 @@ namespace TradingLib.Core
     /// 5.关闭清算中心 //不做状态检查
     /// </summary>
     [CoreAttr(ClearCentre.CoreName,"清算中心","清算中心,用于维护交易帐号,交易记录,保证金核算,系统结算等功能")]
-    public partial class ClearCentre : ClearCentreBase,IModuleClearCentre,ICore
+    public partial class ClearCentre : ClearCentreBase,IModuleClearCentre
     {
         const string CoreName = "ClearCentre";
         public string CoreId { get { return this.PROGRAME; } }
