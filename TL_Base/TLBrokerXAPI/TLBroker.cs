@@ -176,14 +176,18 @@ namespace TradingLib.BrokerXAPI
             Util.Info("Release Broker c++ resoure and reset start status");
             //断开底层接口连接
             _wrapper.Disconnect();
-            _wrapper.Dispose();
+            //先释放_broker _broker日志输出依赖于 _wrapper的日志输出/
             _broker.Dispose();
+            //最后释放wrapper
+            _wrapper.Dispose();
+            
 
             _wrapper = null;
             _broker = null;
             _connected = false;
             _loginreply = false;
             _loginsuccess = false;
+            Util.Info("Resource Disposed", this.GetType().Name);
         }
         public virtual void Stop()
         {

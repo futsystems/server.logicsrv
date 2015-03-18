@@ -106,31 +106,5 @@ namespace TradingLib.BrokerXAPI.Interop
         public delegate IntPtr DestoryBrokerProc(IntPtr pBroker);
         public DestoryBrokerProc DestoryBroker;
 
-
-        ///// <summary>
-        ///// 字符串参数调用
-        ///// </summary>
-        ///// <param name="input"></param>
-        ///// <returns></returns>
-        //[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        //public delegate string DemoStringCallProc(string input);
-        //public DemoStringCallProc demostringcall;
-
-        ///// <summary>
-        ///// 整形参数调用
-        ///// </summary>
-        ///// <param name="x"></param>
-        ///// <returns></returns>
-        //[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        //public delegate int DemoIntCallProc(int x);
-        //public DemoIntCallProc demointcall;
-
-        ///// <summary>
-        ///// 结构体参数调用
-        ///// </summary>
-        ///// <param name="error"></param>
-        //[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        //public delegate void DemoStructCallProc(ref  ErrorField error);
-        //public DemoStructCallProc demostructcall;
     }
 }

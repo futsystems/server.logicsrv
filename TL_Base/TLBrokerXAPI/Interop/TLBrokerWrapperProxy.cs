@@ -94,6 +94,7 @@ namespace TradingLib.BrokerXAPI.Interop
         {
             _CreateBrokerWrapper = NativeLib.GetUnmanagedFunction<CreateBrokerWrapperProc>("CreateBrokerWrapper");
             _DestoryBrokerWrapper = NativeLib.GetUnmanagedFunction<DestoryBrokerWrapperProc>("DestoryBrokerWrapper");
+
             _Register = NativeLib.GetUnmanagedFunction<RegisterProc>("Register");
             _Connect = NativeLib.GetUnmanagedFunction<ConnectProc>("Connect");
             _Disconnect = NativeLib.GetUnmanagedFunction<DisconnectProc>("Disconnect");
