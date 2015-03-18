@@ -21,9 +21,9 @@ namespace TradingLib.BrokerXAPI.Interop
         public static SafeLibraryHandle OpenHandle(string filename)
         {
 			bool fileexit = File.Exists (filename);
-			Util.Debug ("File:" + filename + " exit:"+fileexit.ToString(), QSEnumDebugLevel.ERROR);
+			Util.Debug("File:" + filename + " exit:"+fileexit.ToString());
 			SafeLibraryHandle hd =  dlopen(filename, RTLD_NOW | RTLD_GLOBAL);
-			Util.Debug ("handle is load successfull....", QSEnumDebugLevel.WARNING);
+			//Util.Debug("handle is load successfull....", QSEnumDebugLevel.WARNING);
 			return hd;
         }
 
