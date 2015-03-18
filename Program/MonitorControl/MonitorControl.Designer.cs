@@ -1,4 +1,4 @@
-﻿namespace TradingLib.GUI
+﻿namespace TradingLib.MoniterControl
 {
     partial class MonitorControl
     {

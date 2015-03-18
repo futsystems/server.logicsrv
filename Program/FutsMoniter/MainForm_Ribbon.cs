@@ -43,6 +43,8 @@ namespace FutsMoniter
             //设置
             kryptonRibbonGroupButton_permissiontmp.Click += new EventHandler(kryptonRibbonGroupButton_permissiontmp_Click);
             kryptonRibbonGroupButton_syncsymbol.Click += new EventHandler(kryptonRibbonGroupButton_syncsymbol_Click);
+            kryptonRibbonGroupButton_settlemgr.Click += new EventHandler(kryptonRibbonGroupButton_settlemgr_Click);
+            
             //基础数据
             kryptonRibbonGroupButton_Mktime.Click += new EventHandler(kryptonRibbonGroupButton_Mktime_Click);
             kryptonRibbonGroupButton_Exchange.Click += new EventHandler(kryptonRibbonGroupButton_Exchange_Click);
@@ -96,9 +98,15 @@ namespace FutsMoniter
             kryptonRibbonGroupButton_demo.Click += new EventHandler(kryptonRibbonGroupButton_demo_Click);
         }
 
+        void kryptonRibbonGroupButton_settlemgr_Click(object sender, EventArgs e)
+        {
+            fmSettleManager fm = new fmSettleManager();
+            fm.ShowDialog();
+        }
+
         void kryptonRibbonGroupButton_demo_Click(object sender, EventArgs e)
         {
-            TradingLib.GUI.MonitorControl ctl = new TradingLib.GUI.MonitorControl();
+            TradingLib.MoniterControl.MonitorControl ctl = new  TradingLib.MoniterControl.MonitorControl();
 
         }
 

@@ -137,6 +137,7 @@
     <Compile Include="Core\SettleCentre\SettleCentre_..cs" />
     <Compile Include="Core\SettleCentre\SettleCentre_CTE.cs" />
     <Compile Include="Core\SettleCentre\SettleCentre_StoreClean.cs" />
+    <Compile Include="Core\SettleCentre\SettlementPriceTracker.cs" />
     <Compile Include="Core\SettleCentre\TradingCalendar.cs" />
     <Compile Include="Core\TaskCentre\TaskCentre.cs" />
     <Compile Include="Core\MessageExchange\MsgExchServer.cs" />

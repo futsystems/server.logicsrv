@@ -10,7 +10,7 @@ using TradingLib.API;
 using TradingLib.Common;
 
 
-namespace TradingLib.GUI
+namespace TradingLib.MoniterControl
 {
     public partial class DemoControl : MonitorControl
     {

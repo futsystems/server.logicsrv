@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace TradingLib.GUI
+namespace TradingLib.MoniterControl
 {
     /// <summary>
     /// 响应类回调特性

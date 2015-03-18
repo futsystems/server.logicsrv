@@ -118,7 +118,7 @@ namespace TradingLib.Core
             _exchsrv = srv;
         }
 
-
+        SettlementPriceTracker _settlementPriceTracker = new SettlementPriceTracker();
         ConfigDB _cfgdb;
         int _resetTime = 170000;
         bool _cleanTmp = false;
@@ -181,7 +181,34 @@ namespace TradingLib.Core
 
         }
 
-        
+        /// <summary>
+        /// 设定当前结算中心日期
+        /// </summary>
+        /// <param name="tradingday"></param>
+        void SetCurrentDay(int day)
+        {
+            //计算出某日的上一个交易日
+            _lastsettleday = TradingCalendar.LastTradingDay(day);
+           
+            //根据上个交易日计算出下一个交易日
+            _nexttradingday = TradingCalendar.NextTradingDay(_lastsettleday);
+
+            //如果下一个交易日就是设定的当日，则当前交易日就是该日期，否则当前交易日为0 标识非交易日
+            _tradingday = _nexttradingday == day?_nexttradingday:0;
+
+            //设定结算中心状态
+            if (CurrentTradingday == 0)
+            {
+                SettleCentreStatus = QSEnumSettleCentreStatus.NOTRADINGDAY;//如果没有当前交易日信息则为非交易日状态
+            }
+            else
+            {
+                SettleCentreStatus = QSEnumSettleCentreStatus.TRADINGDAY;//如果获得了当前交易日则当前为可交易日状态
+            }
+
+            debug(string.Format("设定结算日期信息,上一交易日:{0} 当前交易日:{1} 下一交易日：{2}",_lastsettleday,_tradingday,_nexttradingday), QSEnumDebugLevel.INFO);
+
+        }
         /// <summary>
         /// 初始化交易日信息
         /// </summary>

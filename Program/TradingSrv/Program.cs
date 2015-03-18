@@ -85,7 +85,7 @@ namespace TraddingSrvCLI
         static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             Exception ex = (Exception)e.ExceptionObject;
-            Util.Debug(ex.ToString());
+            Util.Debug("Exception Occured,cateched by CurrentDomain_UnhandledException:" + ex.ToString(), QSEnumDebugLevel.ERROR);
         }
     }
 

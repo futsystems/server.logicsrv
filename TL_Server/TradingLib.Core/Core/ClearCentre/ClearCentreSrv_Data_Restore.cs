@@ -27,8 +27,8 @@ namespace TradingLib.Core
         {
             Status = QSEnumClearCentreStatus.CCRESTORE;
             //从数据库恢复交易记录和出入金记录
-            try
-            {
+            //try
+            //{
                 //从数据库加载账户的当日出入金信息以及昨日结算权益数据
                 foreach (IAccount acc in acctk.Accounts)
                 {
@@ -38,7 +38,12 @@ namespace TradingLib.Core
 
                     //获得帐户昨日权益 通过查找昨日结算记录中的结算权益来恢复
                     acc.LastEquity = ORM.MAccount.GetSettleEquity(acc.ID,TLCtxHelper.Ctx.SettleCentre.LastSettleday);
+                    if (acc.ID == "18800401")
+                    {
+                        int i = 0;
+                    }
                 }
+                
 
                 debug("从数据库加载交易日:" + TLCtxHelper.Ctx.SettleCentre.NextTradingday.ToString() + " 交易数据", QSEnumDebugLevel.INFO);
                 IEnumerable<Order> olist = LoadOrderFromMysql();
@@ -55,15 +60,16 @@ namespace TradingLib.Core
                     this.GotPosition(p);
                 }
 
-                foreach (PositionRoundImpl pr in prlist)
-                {
-                    Util.Debug(pr.ToString(), QSEnumDebugLevel.VERB);
-                }
+                //foreach (PositionRoundImpl pr in prlist)
+                //{
+                //    //Util.Debug(pr.ToString(), QSEnumDebugLevel.VERB);
+                //}
                 //当将昨日持仓恢复到内存后需要恢复开启的持仓回合数据,当成交数据恢复时会同时更新持仓回合记录
                 prt.RestorePositionRounds(prlist);
 
                 //PR数据与持仓数据进行同步1.从数据库加载同步一次  2.保存到数据库同步一次
                 prt.SyncPositionHold(this.TotalPositions.Where(pos=>!pos.isFlat));
+
                 foreach (Order o in olist)
                 {
                     this.GotOrder(o);
@@ -83,12 +89,12 @@ namespace TradingLib.Core
                 //    PositionRound pr = prt[key];
                 //    debug("PH:" + p.Account + " " + p.Symbol + "  Size:" + p.Size + "    PR:" + (pr == null ? "NULL" : pr.HoldSize.ToString()), QSEnumDebugLevel.MUST);
                 //}
-            }
-            catch (Exception ex)
-            {
-                debug("restore mysql error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
-                throw (new QSClearCentreResotreError(ex, "清算中心从数据库恢复数据异常"));
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    debug("restore mysql error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+            //    //throw (new QSClearCentreResotreError(ex, "清算中心从数据库恢复数据异常"));
+            //}
 
             Status = QSEnumClearCentreStatus.CCRESTOREFINISH;
         }

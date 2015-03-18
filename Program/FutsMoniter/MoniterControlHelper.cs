@@ -6,7 +6,7 @@ using System.Reflection;
 
 using TradingLib.API;
 using TradingLib.Common;
-using TradingLib.GUI;
+using TradingLib.MoniterControl;
 
 namespace FutsMoniter
 {

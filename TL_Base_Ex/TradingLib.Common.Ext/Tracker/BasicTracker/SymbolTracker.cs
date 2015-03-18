@@ -133,8 +133,8 @@ namespace TradingLib.Common
             //加载所有合约 这里需要判断合约是否过期
             foreach (SymbolImpl sym in ORM.MBasicInfo.SelectSymbol(domain.ID))
             {
-                if (sym.IsExpired)
-                    continue;
+                //if (sym.IsExpired(TLCtxHelper.CmdSettleCentre.NextTradingday))//下个交易日是否过期
+                //    continue;
                 symcodemap[sym.Symbol] = sym;
                 idxcodemap[sym.ID] = sym;
             }

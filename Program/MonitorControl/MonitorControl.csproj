@@ -8,8 +8,8 @@
     <ProjectGuid>{00EFBCFD-6BAB-403E-9B84-652FBC109286}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MonitorControl</RootNamespace>
-    <AssemblyName>MonitorControl</AssemblyName>
+    <RootNamespace>TradingLib.MoniterControl</RootNamespace>
+    <AssemblyName>TradingLib.MoniterControl</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -44,32 +44,52 @@
     <Reference Include="TradingLib.Common">
       <HintPath>..\..\lib\TradingLib\TradingLib.Common.dll</HintPath>
     </Reference>
+    <Reference Include="TradingLib.Mixins">
+      <HintPath>..\..\lib\TradingLib\TradingLib.Mixins.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\IBasicInfoTracker.cs" />
     <Compile Include="CallbackAttr.cs" />
+    <Compile Include="Base\ctAgentList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Base\ctAgentList.Designer.cs">
+      <DependentUpon>ctAgentList.cs</DependentUpon>
+    </Compile>
     <Compile Include="ctDebug.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="ctDebug.designer.cs">
       <DependentUpon>ctDebug.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataSourceAdapter.cs" />
     <Compile Include="DemoControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="DemoControl.Designer.cs">
       <DependentUpon>DemoControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUIHelper.cs" />
     <Compile Include="HandlerInfo.cs" />
+    <Compile Include="API\ICTX.cs" />
+    <Compile Include="API\IEventBinder.cs" />
+    <Compile Include="API\IMoniterControl.cs" />
+    <Compile Include="MoniterHelper.cs" />
     <Compile Include="MonitorControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="MonitorControl.Designer.cs">
       <DependentUpon>MonitorControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="MonitorPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\BasicInfoTrackerUtil.cs" />
+    <Compile Include="ValueObject.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Base\ctAgentList.resx">
+      <DependentUpon>ctAgentList.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ctDebug.resx">
       <DependentUpon>ctDebug.cs</DependentUpon>
     </EmbeddedResource>
@@ -80,6 +100,7 @@
       <DependentUpon>MonitorControl.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

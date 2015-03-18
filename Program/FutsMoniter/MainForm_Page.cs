@@ -13,7 +13,7 @@ using ComponentFactory.Krypton.Workspace;
 using ComponentFactory.Krypton.Docking;
 using TradingLib.API;
 using TradingLib.Common;
-using TradingLib.GUI;
+using TradingLib.MoniterControl;
 using FutsMoniter.Common;
 
 namespace FutsMoniter
@@ -48,7 +48,7 @@ namespace FutsMoniter
             pagelist.Add(NewAccMoniter());
             foreach (MonitorControl ct in workspacelist)
             {
-                pagelist.Add(NewPage(ct.GetType().FullName+"[W]", ct.GetType().FullName, 2, ct));
+                pagelist.Add(NewPage(ct.GetType().FullName + "[W]", ct.Title, 2, ct));
             }
             return pagelist.ToArray();
         }
@@ -75,7 +75,7 @@ namespace FutsMoniter
             foreach(MonitorControl ct in controlist)
             {
                 Util.Debug("$$$$$$$$$$$$$$$$$$$$$4 try to add montor control #####################:"+ct.GetType().FullName);
-                pagelist.Add(NewPage(ct.GetType().FullName+"[M]", ct.GetType().FullName, 2, ct));
+                pagelist.Add(NewPage(ct.GetType().FullName+"[M]",ct.Title, 2, ct));
             }
             
             return pagelist.ToArray();

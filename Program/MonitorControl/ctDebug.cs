@@ -8,7 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using TradingLib.API;
 
-namespace TradingLib.GUI
+namespace TradingLib.MoniterControl
 {
     public partial class ctDebug: UserControl
     {

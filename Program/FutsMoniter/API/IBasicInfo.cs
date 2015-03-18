@@ -30,6 +30,7 @@ namespace TradingLib.API
         /// <param name="id"></param>
         /// <returns></returns>
         Exchange GetExchange(int id);
+
         /// <summary>
         /// 通过全局ID获得品种对象
         /// </summary>
@@ -43,12 +44,14 @@ namespace TradingLib.API
         /// <param name="code"></param>
         /// <returns></returns>
         SecurityFamilyImpl GetSecurity(string code);
+
         /// <summary>
         /// 通过全局ID获得合约对象
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         SymbolImpl GetSymbol(int id);
+
         /// <summary>
         /// 通过合约字头获得合约对象
         /// </summary>
@@ -66,25 +69,34 @@ namespace TradingLib.API
         /// </summary>
         IEnumerable<SymbolImpl> Symbols { get; }
 
+        /// <summary>
+        /// 获得所有市场时间
+        /// </summary>
         IEnumerable<MarketTime> MarketTimes { get; }
 
+        /// <summary>
+        /// 获得所有交易所对象
+        /// </summary>
         IEnumerable<Exchange> Exchanges { get; }
 
+        /// <summary>
+        /// 获得所有管理员对象
+        /// </summary>
         IEnumerable<ManagerSetting> Managers { get; }
 
-        IEnumerable<RouterGroupSetting> RouterGroups { get; }
         /// <summary>
-        /// 获得所有可交易合约
+        /// 
         /// </summary>
-        //SymbolImpl[] SymbolsTradable { get; }
+        IEnumerable<RouterGroupSetting> RouterGroups { get; }
+
         /// <summary>
-        ///  获得委托风控规则数组
+        ///  获得委托风控规则
         /// </summary>
         /// <returns></returns>
         IEnumerable<RuleClassItem> OrderRuleClass{get;}
 
         /// <summary>
-        /// 获得帐户风控规则数组
+        /// 获得帐户风控规则
         /// </summary>
         /// <returns></returns>
         IEnumerable<RuleClassItem> AccountRuleClass{get;}

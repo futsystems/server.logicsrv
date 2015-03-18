@@ -48,6 +48,7 @@ namespace TradingLib.Contrib.TradeFlow
         {
             this.GotTrade(t);
         }
+
         /// <summary>
         /// 销毁
         /// </summary>

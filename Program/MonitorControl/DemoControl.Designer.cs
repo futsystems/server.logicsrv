@@ -1,4 +1,4 @@
-﻿namespace TradingLib.GUI
+﻿namespace TradingLib.MoniterControl
 {
     partial class DemoControl
     {
@@ -31,7 +31,7 @@
             this.kryptonButton1 = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.kryptonLabel1 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.args = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
-            this.ctDebug1 = new TradingLib.GUI.ctDebug();
+            this.ctDebug1 = new TradingLib.MoniterControl.ctDebug();
             this.SuspendLayout();
             // 
             // kryptonButton1

@@ -14,12 +14,6 @@ namespace TradingLib.Common
     /// </summary>
     public class PositionRoundImpl :PositionRound
     {
-        public event DebugDelegate SendDebugEvent;
-        void debug(string msg)
-        {
-            if (SendDebugEvent != null)
-                SendDebugEvent(msg);
-        }
         /// <summary>
         /// 储存了成交序列,按照该序列的成交 完成了一个positionround
         /// </summary>
@@ -150,7 +144,7 @@ namespace TradingLib.Common
             }
             catch (Exception ex)
             {
-                debug("some error:" + ex.ToString());
+                Util.Debug("some error:" + ex.ToString());
                 return false;
             }           
         }
@@ -338,6 +332,20 @@ namespace TradingLib.Common
             
         }
 
+        /// <summary>
+        /// 判断当前持仓回合是否有效
+        /// 用于从数据库恢复持仓回合数据 填充到持仓回合管理器中时的检查，避免相关字段为空造成的异常
+        /// </summary>
+        public bool IsValid
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(this.Account)) return false;
+                if (this.oSymbol == null) return false;
+
+                return true;
+            }
+        }
         public override string ToString()
         {
                 //return Account + "," + Symbol + "," +Security+","+ EntryTime.ToString() + "," + EntrySize.ToString() + "," + EntryPrice.ToString() + "," + ExitTime.ToString() + "," + ExitSize.ToString() + "," + ExitPrice.ToString() + "," + Highest.ToString() + "," + Lowest.ToString() + "," + HoldSize.ToString()+","+EntryCommission.ToString()+","+ExitCommission.ToString()+","+Side.ToString()+","+WL.ToString()+","+Points.ToString()+","+TotalPoints.ToString()+","+Profit.ToString()+","+Commissoin.ToString()+","+NetProfit.ToString();

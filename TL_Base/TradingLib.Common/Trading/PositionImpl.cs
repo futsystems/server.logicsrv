@@ -639,7 +639,7 @@ namespace TradingLib.Common
             {
                 this._price = _postotallist.Where(pos1 => !pos1.IsClosed()).Sum(pos2 => pos2.Volume* pos2.PositionPrice()) / Math.Abs(this._size);
             }
-            Util.Debug("runing size:" + this._size.ToString() + " positiondetail size:" + _postotallist.Where(pos1 => !pos1.IsClosed()).Sum(pos2 => pos2.Volume));
+            //Util.Debug("runing size:" + this._size.ToString() + " positiondetail size:" + _postotallist.Where(pos1 => !pos1.IsClosed()).Sum(pos2 => pos2.Volume));
             _closedpl += cpl; // update running closed pl 更新平仓盈亏
             return cpl;//返回平仓盈亏
         }

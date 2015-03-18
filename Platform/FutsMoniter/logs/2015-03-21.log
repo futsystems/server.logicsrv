@@ -1,0 +1,1015 @@
+12:05:45.7776 [DEBUG] Moniter:init globals 
+12:05:45.8566 [INFO] Moniter:GlobalUtil:~~~~~~~~~~~~~~~~~~``moniter start here~~~~~~~~~~~~~~~~~~`` 
+12:06:04.9537 [DEBUG] Moniter:[INFO] TLClientNet Starting...... 
+12:06:04.9657 [DEBUG] Moniter:[INFO] demo_TLClient_MQ:Start to connect to server.... 
+12:06:04.9657 [DEBUG] Moniter:[INFO] demo_TLClient_MQ:Stop TLCLient_MQ.... 
+12:06:04.9657 [DEBUG] Moniter:[DEBUG] demo_TLClient_MQ:Realse asyncClient and thread resource 
+12:06:04.9657 [DEBUG] Moniter:[INFO] demo_TLClient_MQ:Client: Disconnected 
+12:06:04.9657 [DEBUG] Moniter:[DEBUG] demo_TLClient_MQ:attempting connect to server... retry times:1 
+12:06:04.9797 [DEBUG] Moniter:[DEBUG] demo_TLClient_MQ:[Mode] Mode to Provider 
+12:06:04.9797 [DEBUG] Moniter:[DEBUG] demo_TLClient_MQ:[TLFound] Searching provider list... 
+12:06:04.9797 [DEBUG] Moniter:[DEBUG]         Attempting to found server at : 127.0.0.1:6670 
+12:06:04.9997 [DEBUG] Moniter:[AsyncClient]Start say hello to server... 
+12:06:05.2297 [DEBUG] Moniter:response:Packet Type:BROKERNAMERESPONSE Content:Dev-2-Platform,2^True^0,|10001 FrontID: Client: Size:38 
+12:06:05.2737 [DEBUG] Moniter:[INFO] got brokernameresponse:2 
+12:06:05.2747 [DEBUG] Moniter:[DEBUG]         Found provider: QSPlatform at: 127.0.0.1:6670 
+12:06:05.2747 [DEBUG] Moniter:[DEBUG]         Total Found 1 providers. 
+12:06:05.2747 [DEBUG] Moniter:[DEBUG] provider index cannot be less than zero, using first provider. 
+12:06:05.2747 [DEBUG] Moniter:[DEBUG] demo_TLClient_MQ:[connect] Connect to prvider.... 
+12:06:05.2747 [DEBUG] Moniter:[DEBUG]         Attempting connection to server: 127.0.0.1 
+12:06:05.2957 [DEBUG] Moniter:[MUST] AsyncClient:Connect to Message Server:tcp://127.0.0.1:6670 
+12:06:05.7877 [DEBUG] Moniter:[DEBUG] AsyncClient#:1Starting.... 
+12:06:05.7937 [DEBUG] Moniter:[DEBUG]         connected to server: 127.0.0.1:6670 via:c0919d64-afa9-4038-9d65-5418b779d5f2 
+12:06:05.7937 [DEBUG] Moniter:[DEBUG] demo_TLClient_MQ:InitConnection...... 
+12:06:05.7937 [DEBUG] Moniter:[DEBUG] demo_TLClient_MQ:注册到服务端... 
+12:06:05.9117 [DEBUG] Moniter:[DEBUG] demo_TLClient_MQ:请求服务端功能列表... 
+12:06:05.9167 [DEBUG] Moniter:[DEBUG] demo_TLClient_MQ:请求服务端版本... 
+12:06:05.9167 [DEBUG] Moniter:[DEBUG] connected ok, try to start thread 
+12:06:05.9297 [DEBUG] Moniter:[DEBUG] demo_TLClient_MQ :BW Backend threade started 
+12:06:05.9297 [DEBUG] Moniter:[DEBUG] demo_TLClient_MQ :HeartBeatSend Backend threade started 
+12:06:05.9507 [DEBUG] Moniter:[INFO] raw message type:FEATURERESPONSE message:5006,5200,5007,5005,5004,6004,5001,5003,6003,5008,5009,6100,6104,6106,5100,5208,5212^True^0,|1 
+12:06:05.9667 [DEBUG] Moniter:[DEBUG] demo_TLClient_MQ:Checing TickDataSupport... 
+12:06:05.9667 [DEBUG] Moniter:[DEBUG]         providertype:Both 
+12:06:05.9667 [DEBUG] Moniter:[INFO]         Spuuort Tick we subscribde tick data server 
+12:06:05.9877 [DEBUG] Moniter:[MUST] AsyncClient:Connect to TickServer :tcp://127.0.0.1:6672 
+12:06:06.0097 [DEBUG] Moniter:[INFO] raw message type:VERSIONRESPONSE message:1,8,2,20150215^True^0,|2 
+12:06:06.0097 [DEBUG] Moniter:[INFO] Client got version response, version:TradingLib.Common.TLVersion 
+12:06:06.4378 [DEBUG] Moniter:请求服务端登入 
+12:06:06.4788 [DEBUG] Moniter:[DEBUG] AsyncClient#:1  AsynClient[Tick Reciver] is connecting.... 
+12:06:06.4788 [DEBUG] Moniter:[DEBUG] AsyncClient:[TickReciver] started successfull 
+12:06:06.4788 [DEBUG] Moniter:[DEBUG] demo_TLClient_MQ :TickWatcher threade started 
+12:06:06.6728 [DEBUG] Moniter:[INFO] raw message type:MGRLOGINRESPONSE message:{"LoginID":"root-11","Name":"\u6797wz","ManagerType":0,"Mobile":"","QQ":"","BaseMGRFK":11,"MGRID":11,"UIAccess":{"id":0,"domain_id":0,"name":null,"desp":null,"r_execution":true,"r_block":true,"r_simacc":true},"Domain":{"ID":11,"Name":"\u8FD0\u8425\u5206\u533A11-10\u4E2A\u6B63\u5F0F\uFF0C20\u4E2A\u8BD5\u7528","LinkMan":"\u6797wz","Mobile":"","QQ":"","Email":"","AccLimit":30,"DateExpired":20150416,"DateCreated":20150308,"Super":false,"Dedicated":false,"RouterGroupLimit":1,"RouterItemLimit":1,"VendorLimit":1,"InterfaceList":"1,2","FinSPList":"","Module_Agent":false,"Module_SubAgent":false,"Module_FinService":false,"Module_PayOnline":false,"Router_Live":true,"Router_Sim":true,"Misc_InsertTrade":false,"CFG_SyncVendor_ID":0}}^True^0,|0 
+12:06:06.7678 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:06.8018 [DEBUG] Moniter:[INFO] got login response:Packet Type:MGRLOGINRESPONSE Content:{"LoginID":"root-11","Name":"\u6797wz","ManagerType":0,"Mobile":"","QQ":"","BaseMGRFK":11,"MGRID":11,"UIAccess":{"id":0,"domain_id":0,"name":null,"desp":null,"r_execution":true,"r_block":true,"r_simacc":true},"Domain":{"ID":11,"Name":"\u8FD0\u8425\u5206\u533A11-10\u4E2A\u6B63\u5F0F\uFF0C20\u4E2A\u8BD5\u7528","LinkMan":"\u6797wz","Mobile":"","QQ":"","Email":"","AccLimit":30,"DateExpired":20150416,"DateCreated":20150308,"Super":false,"Dedicated":false,"RouterGroupLimit":1,"RouterItemLimit":1,"VendorLimit":1,"InterfaceList":"1,2","FinSPList":"","Module_Agent":false,"Module_SubAgent":false,"Module_FinService":false,"Module_PayOnline":false,"Router_Live":true,"Router_Sim":true,"Misc_InsertTrade":false,"CFG_SyncVendor_ID":0}}^True^0,|0 FrontID: Client: Size:747 
+12:06:06.8038 [DEBUG] Moniter:获得登入回报:Packet Type:MGRLOGINRESPONSE Content:{"LoginID":"root-11","Name":"\u6797wz","ManagerType":0,"Mobile":"","QQ":"","BaseMGRFK":11,"MGRID":11,"UIAccess":{"id":0,"domain_id":0,"name":null,"desp":null,"r_execution":true,"r_block":true,"r_simacc":true},"Domain":{"ID":11,"Name":"\u8FD0\u8425\u5206\u533A11-10\u4E2A\u6B63\u5F0F\uFF0C20\u4E2A\u8BD5\u7528","LinkMan":"\u6797wz","Mobile":"","QQ":"","Email":"","AccLimit":30,"DateExpired":20150416,"DateCreated":20150308,"Super":false,"Dedicated":false,"RouterGroupLimit":1,"RouterItemLimit":1,"VendorLimit":1,"InterfaceList":"1,2","FinSPList":"","Module_Agent":false,"Module_SubAgent":false,"Module_FinService":false,"Module_PayOnline":false,"Router_Live":true,"Router_Sim":true,"Misc_InsertTrade":false,"CFG_SyncVendor_ID":0}}^True^0,|0 FrontID: Client: Size:747 
+12:06:06.9508 [DEBUG] Moniter:[INFO] 请求查询市场时间列表 
+12:06:07.0198 [DEBUG] Moniter:[INFO] raw message type:MGRMARKETTIMERESPONSE message:1,普通商品,普通商品,#90000-101500#103000-113000#133000-150000*^False^0,|1 
+12:06:07.0608 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.0608 [DEBUG] Moniter:[INFO] got markettime response:Packet Type:MGRMARKETTIMERESPONSE Content:1,普通商品,普通商品,#90000-101500#103000-113000^False^0,|1 FrontID: Client: Size:74 
+12:06:07.0608 [DEBUG] Moniter:[INFO] raw message type:MGRMARKETTIMERESPONSE message:2,商品夜盘2:30,商品夜盘2:30,#90000-101500#103000-113000#133000-150000*#210000-235959#0-23000*^False^0,|1 
+12:06:07.0688 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.0688 [DEBUG] Moniter:[INFO] got markettime response:Packet Type:MGRMARKETTIMERESPONSE Content:2,商品夜盘2:30,商品夜盘2:30,#90000-101500#103000-113000#210000-235959^False^0,|1 FrontID: Client: Size:96 
+12:06:07.0688 [DEBUG] Moniter:[INFO] raw message type:MGRMARKETTIMERESPONSE message:3,金融期货,金融期货交易所交易时间段,#91500-113000#130000-151500*^False^0,|1 
+12:06:07.0688 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.0688 [DEBUG] Moniter:[INFO] got markettime response:Packet Type:MGRMARKETTIMERESPONSE Content:3,金融期货,金融期货交易所交易时间段,#91500-113000^False^0,|1 FrontID: Client: Size:84 
+12:06:07.0688 [DEBUG] Moniter:[INFO] raw message type:MGRMARKETTIMERESPONSE message:4,全时间段测试,全时段交易,#0-235959^False^0,|1 
+12:06:07.0688 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.0688 [DEBUG] Moniter:[INFO] got markettime response:Packet Type:MGRMARKETTIMERESPONSE Content:4,全时间段测试,全时段交易,#0-235959^False^0,|1 FrontID: Client: Size:65 
+12:06:07.0688 [DEBUG] Moniter:[INFO] raw message type:MGRMARKETTIMERESPONSE message:5,商品夜盘1:00,商品夜盘1:00,#90000-101500#103000-113000#133000-150000*#210000-235959#0-10000*^False^0,|1 
+12:06:07.0688 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.0688 [DEBUG] Moniter:[INFO] got markettime response:Packet Type:MGRMARKETTIMERESPONSE Content:5,商品夜盘1:00,商品夜盘1:00,#90000-101500#103000-113000#210000-235959^False^0,|1 FrontID: Client: Size:96 
+12:06:07.0688 [DEBUG] Moniter:[INFO] raw message type:MGRMARKETTIMERESPONSE message:6,商品夜盘23:30,商品夜盘23:30,#90000-101500#103000-113000#133000-150000*#210000-235959#0-23300*^False^0,|1 
+12:06:07.0688 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.0688 [DEBUG] Moniter:[INFO] got markettime response:Packet Type:MGRMARKETTIMERESPONSE Content:6,商品夜盘23:30,商品夜盘23:30,#90000-101500#103000-113000#210000-235959^False^0,|1 FrontID: Client: Size:98 
+12:06:07.0688 [DEBUG] Moniter:[INFO] raw message type:MGRMARKETTIMERESPONSE message:7,商品夜盘23:00,商品夜盘23:00,#90000-101500#103000-113000#133000-150000*#210000-230000*^True^0,|1 
+12:06:07.0688 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.0688 [DEBUG] Moniter:[INFO] got markettime response:Packet Type:MGRMARKETTIMERESPONSE Content:7,商品夜盘23:00,商品夜盘23:00,#90000-101500#103000-113000^True^0,|1 FrontID: Client: Size:83 
+12:06:07.0688 [DEBUG] Moniter:[INFO] 请求查询交易所列表 
+12:06:07.1208 [DEBUG] Moniter:[INFO] raw message type:MGREXCHANGERESPONSE message:1,SHFE,上海期货交易所,CN^False^0,|2 
+12:06:07.1208 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.1208 [DEBUG] Moniter:[INFO] got exchange response:Packet Type:MGREXCHANGERESPONSE Content:1,SHFE,上海期货交易所,CN^False^0,|2 FrontID: Client: Size:50 
+12:06:07.1208 [DEBUG] Moniter:[INFO] raw message type:MGREXCHANGERESPONSE message:2,DCE,大连期货交易所,CN^False^0,|2 
+12:06:07.1208 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.1208 [DEBUG] Moniter:[INFO] got exchange response:Packet Type:MGREXCHANGERESPONSE Content:2,DCE,大连期货交易所,CN^False^0,|2 FrontID: Client: Size:49 
+12:06:07.1308 [DEBUG] Moniter:[INFO] raw message type:MGREXCHANGERESPONSE message:3,CZCE,郑州期货交易所,CN^False^0,|2 
+12:06:07.1308 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.1308 [DEBUG] Moniter:[INFO] got exchange response:Packet Type:MGREXCHANGERESPONSE Content:3,CZCE,郑州期货交易所,CN^False^0,|2 FrontID: Client: Size:50 
+12:06:07.1308 [DEBUG] Moniter:[INFO] raw message type:MGREXCHANGERESPONSE message:4,CFFEX,中国金融期货交易所,CN^False^0,|2 
+12:06:07.1308 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.1308 [DEBUG] Moniter:[INFO] got exchange response:Packet Type:MGREXCHANGERESPONSE Content:4,CFFEX,中国金融期货交易所,CN^False^0,|2 FrontID: Client: Size:57 
+12:06:07.1308 [DEBUG] Moniter:[INFO] raw message type:MGREXCHANGERESPONSE message:5,SSE,上海证券交易所,CN^False^0,|2 
+12:06:07.1308 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.1308 [DEBUG] Moniter:[INFO] got exchange response:Packet Type:MGREXCHANGERESPONSE Content:5,SSE,上海证券交易所,CN^False^0,|2 FrontID: Client: Size:49 
+12:06:07.1308 [DEBUG] Moniter:[INFO] raw message type:MGREXCHANGERESPONSE message:6,SZSE,深圳证券交易所,CN^False^0,|2 
+12:06:07.1308 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.1308 [DEBUG] Moniter:[INFO] got exchange response:Packet Type:MGREXCHANGERESPONSE Content:6,SZSE,深圳证券交易所,CN^False^0,|2 FrontID: Client: Size:50 
+12:06:07.1308 [DEBUG] Moniter:[INFO] raw message type:MGREXCHANGERESPONSE message:7,INNOVEX,乐透期权交易所,CN^True^0,|2 
+12:06:07.1308 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.1308 [DEBUG] Moniter:[INFO] got exchange response:Packet Type:MGREXCHANGERESPONSE Content:7,INNOVEX,乐透期权交易所,CN^True^0,|2 FrontID: Client: Size:52 
+12:06:07.1308 [DEBUG] Moniter:[INFO] 请求查询品种列表 
+12:06:07.2268 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:461,sh000300,沪深300指数,RMB,IDX,1,0.01,True,0.00000000,0.00000000,1.0000,1.0000,0.0000,5,0,1^False^0,|3 
+12:06:07.2438 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.2438 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:461,sh000300,沪深300指数,RMB,IDX,1,0.01,True,0.00000000,0.00000000,1.0000,1.0000,0.0000,5,0,1^False^0,|3 FrontID: Client: Size:116 
+12:06:07.2578 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:463,IF,沪深300股指,RMB,FUT,300,0.2,True,0.00003000,0.00003000,0.1100,0.1100,0.0000,4,0,3^False^0,|3 
+12:06:07.2578 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.2578 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:463,IF,沪深300股指,RMB,FUT,300,0.2,True,0.00003000,0.00003000,0.1100,0.1100,0.0000,4,0,3^False^0,|3 FrontID: Client: Size:111 
+12:06:07.2578 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:465,IO,沪深300股指期权,RMB,OPT,100,0.1,True,1.10000000,5.00000000,1.0000,1.0000,0.0000,4,0,3^False^0,|3 
+12:06:07.2578 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.2578 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:465,IO,沪深300股指期权,RMB,OPT,100,0.1,True,1.10000000,5.00000000,1.0000,1.0000,0.0000,4,0,3^False^0,|3 FrontID: Client: Size:117 
+12:06:07.2578 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:467,TF,国债期货,RMB,FUT,10000,0.002,True,9.00000000,9.00000000,0.0300,0.0000,0.0000,4,0,1^False^0,|3 
+12:06:07.2578 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.2578 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:467,TF,国债期货,RMB,FUT,10000,0.002,True,9.00000000,9.00000000,0.0300,0.0000,0.0000,4,0,1^False^0,|3 FrontID: Client: Size:112 
+12:06:07.2578 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:469,jm,焦煤,RMB,FUT,60,1,True,0.00012000,0.00012000,0.1100,0.1100,0.0000,2,0,1^False^0,|3 
+12:06:07.2578 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.2578 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:469,jm,焦煤,RMB,FUT,60,1,True,0.00012000,0.00012000,0.1100,0.1100,0.0000,2,0,1^False^0,|3 FrontID: Client: Size:99 
+12:06:07.2578 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:471,CF,郑棉,RMB,FUT,5,5,True,5.30000000,5.30000000,0.1000,0.1000,0.0000,3,0,6^False^0,|3 
+12:06:07.2578 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.2578 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:471,CF,郑棉,RMB,FUT,5,5,True,5.30000000,5.30000000,0.1000,0.1000,0.0000,3,0,6^False^0,|3 FrontID: Client: Size:98 
+12:06:07.2578 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:473,cu,沪铜,RMB,FUT,5,10,True,0.00007000,0.00007000,0.1000,0.1400,0.0000,1,0,5^False^0,|3 
+12:06:07.2578 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.2578 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:473,cu,沪铜,RMB,FUT,5,10,True,0.00007000,0.00007000,0.1000,0.1400,0.0000,1,0,5^False^0,|3 FrontID: Client: Size:99 
+12:06:07.2578 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:475,ru,橡胶,RMB,FUT,10,5,True,0.00006000,0.00006000,0.1000,0.1000,0.0000,1,0,1^False^0,|3 
+12:06:07.2578 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.2578 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:475,ru,橡胶,RMB,FUT,10,5,True,0.00006000,0.00006000,0.1000,0.1000,0.0000,1,0,1^False^0,|3 FrontID: Client: Size:99 
+12:06:07.2578 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:477,fu,燃油,RMB,FUT,50,1,True,0.00004000,0.00004000,0.1100,0.1100,0.0000,1,0,1^False^0,|3 
+12:06:07.2578 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.2578 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:477,fu,燃油,RMB,FUT,50,1,True,0.00004000,0.00004000,0.1100,0.1100,0.0000,1,0,1^False^0,|3 FrontID: Client: Size:99 
+12:06:07.2718 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:479,wr,线材,RMB,FUT,10,1,True,0.00006000,0.00006000,0.1000,0.1000,0.0000,1,0,1^False^0,|3 
+12:06:07.2718 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.2718 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:479,wr,线材,RMB,FUT,10,1,True,0.00006000,0.00006000,0.1000,0.1000,0.0000,1,0,1^False^0,|3 FrontID: Client: Size:99 
+12:06:07.2718 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:481,al,沪铝,RMB,FUT,5,5,True,4.25000000,4.25000000,0.0800,0.0800,0.0000,1,0,5^False^0,|3 
+12:06:07.2718 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.2718 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:481,al,沪铝,RMB,FUT,5,5,True,4.25000000,4.25000000,0.0800,0.0800,0.0000,1,0,5^False^0,|3 FrontID: Client: Size:98 
+12:06:07.2718 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:483,zn,沪锌,RMB,FUT,5,5,True,4.25000000,4.25000000,0.0800,0.0800,0.0000,1,0,5^False^0,|3 
+12:06:07.2718 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.2718 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:483,zn,沪锌,RMB,FUT,5,5,True,4.25000000,4.25000000,0.0800,0.0800,0.0000,1,0,5^False^0,|3 FrontID: Client: Size:98 
+12:06:07.2718 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:485,rb,螺纹,RMB,FUT,10,1,True,0.00006000,0.00006000,0.0800,0.0800,0.0000,1,0,5^False^0,|3 
+12:06:07.2718 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.2718 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:485,rb,螺纹,RMB,FUT,10,1,True,0.00006000,0.00006000,0.0800,0.0800,0.0000,1,0,5^False^0,|3 FrontID: Client: Size:99 
+12:06:07.2718 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:487,pb,沪铅,RMB,FUT,25,5,True,0.00006000,0.00006000,0.0800,0.1100,0.0000,1,0,5^False^0,|3 
+12:06:07.2718 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.2718 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:487,pb,沪铅,RMB,FUT,25,5,True,0.00006000,0.00006000,0.0800,0.1100,0.0000,1,0,5^False^0,|3 FrontID: Client: Size:99 
+12:06:07.2718 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:489,ag,沪银,RMB,FUT,15,1,True,0.00060000,0.00060000,0.1100,0.1100,0.0000,1,0,2^False^0,|3 
+12:06:07.2718 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.2718 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:489,ag,沪银,RMB,FUT,15,1,True,0.00060000,0.00060000,0.1100,0.1100,0.0000,1,0,2^False^0,|3 FrontID: Client: Size:99 
+12:06:07.2718 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:491,au,沪金,RMB,FUT,1000,0.05,True,14.50000000,14.50000000,0.1000,0.1000,0.0000,1,0,2^False^0,|3 
+12:06:07.2718 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.2718 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:491,au,沪金,RMB,FUT,1000,0.05,True,14.50000000,14.50000000,0.1000,0.1000,0.0000,1,0,2^False^0,|3 FrontID: Client: Size:106 
+12:06:07.2718 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:493,y,豆油,RMB,FUT,10,2,True,3.62500000,3.62500000,0.0800,0.0800,0.0000,2,0,1^False^0,|3 
+12:06:07.2718 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.2868 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:493,y,豆油,RMB,FUT,10,2,True,3.62500000,3.62500000,0.0800,0.0800,0.0000,2,0,1^False^0,|3 FrontID: Client: Size:98 
+12:06:07.2868 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:495,a,豆一,RMB,FUT,10,1,True,3.00000000,3.00000000,0.0800,0.0800,0.0000,2,0,1^False^0,|3 
+12:06:07.2868 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.2868 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:495,a,豆一,RMB,FUT,10,1,True,3.00000000,3.00000000,0.0800,0.0800,0.0000,2,0,1^False^0,|3 FrontID: Client: Size:98 
+12:06:07.2868 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:497,l,塑料,RMB,FUT,5,5,True,0.00011000,0.00011000,0.1000,0.1000,0.0000,2,0,1^False^0,|3 
+12:06:07.2868 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.2868 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:497,l,塑料,RMB,FUT,5,5,True,0.00011000,0.00011000,0.1000,0.1000,0.0000,2,0,1^False^0,|3 FrontID: Client: Size:97 
+12:06:07.2868 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:499,v,PVC,RMB,FUT,5,5,True,3.62500000,3.62500000,0.0800,0.0800,0.0000,2,0,1^False^0,|3 
+12:06:07.2868 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.2868 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:499,v,PVC,RMB,FUT,5,5,True,3.62500000,3.62500000,0.0800,0.0800,0.0000,2,0,1^False^0,|3 FrontID: Client: Size:94 
+12:06:07.2868 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:501,m,豆粕,RMB,FUT,10,1,True,3.00000000,3.00000000,0.0800,0.0800,0.0000,2,0,1^False^0,|3 
+12:06:07.2868 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.2868 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:501,m,豆粕,RMB,FUT,10,1,True,3.00000000,3.00000000,0.0800,0.0800,0.0000,2,0,1^False^0,|3 FrontID: Client: Size:98 
+12:06:07.2868 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:503,c,玉米,RMB,FUT,10,1,True,2.37500000,2.37500000,0.0900,0.0900,0.0000,2,0,1^False^0,|3 
+12:06:07.2868 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.2868 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:503,c,玉米,RMB,FUT,10,1,True,2.37500000,2.37500000,0.0900,0.0900,0.0000,2,0,1^False^0,|3 FrontID: Client: Size:98 
+12:06:07.2868 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:505,p,棕榈油,RMB,FUT,10,2,True,3.62500000,3.62500000,0.1000,0.1000,0.0000,2,0,6^False^0,|3 
+12:06:07.2868 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.2868 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:505,p,棕榈油,RMB,FUT,10,2,True,3.62500000,3.62500000,0.1000,0.1000,0.0000,2,0,6^False^0,|3 FrontID: Client: Size:101 
+12:06:07.2868 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:507,OL,菜油,RMB,FUT,5,2,True,1.75000000,1.75000000,0.1000,0.1000,0.0000,3,0,1^False^0,|3 
+12:06:07.2868 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.2868 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:507,OL,菜油,RMB,FUT,5,2,True,1.75000000,1.75000000,0.1000,0.1000,0.0000,3,0,1^False^0,|3 FrontID: Client: Size:98 
+12:06:07.2868 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:509,RL,籼稻,RMB,FUT,10,1,True,1.75000000,1.75000000,0.0900,0.0900,0.0000,3,0,1^False^0,|3 
+12:06:07.2868 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.2868 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:509,RL,籼稻,RMB,FUT,10,1,True,1.75000000,1.75000000,0.0900,0.0900,0.0000,3,0,1^False^0,|3 FrontID: Client: Size:99 
+12:06:07.2868 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:511,ME,甲醇,RMB,FUT,50,1,True,10.00000000,10.00000000,0.1500,0.1500,0.0000,3,0,1^False^0,|3 
+12:06:07.2868 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.3028 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:511,ME,甲醇,RMB,FUT,50,1,True,10.00000000,10.00000000,0.1500,0.1500,0.0000,3,0,1^False^0,|3 FrontID: Client: Size:101 
+12:06:07.3028 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:513,TA,PTA,RMB,FUT,5,2,True,4.25000000,4.25000000,0.1300,0.1300,0.0000,3,0,6^False^0,|3 
+12:06:07.3028 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.3028 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:513,TA,PTA,RMB,FUT,5,2,True,4.25000000,4.25000000,0.1300,0.1300,0.0000,3,0,6^False^0,|3 FrontID: Client: Size:95 
+12:06:07.3028 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:515,WH,强麦,RMB,FUT,10,1,True,1.75000000,1.75000000,0.1000,0.1000,0.0000,3,0,1^False^0,|3 
+12:06:07.3028 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.3028 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:515,WH,强麦,RMB,FUT,10,1,True,1.75000000,1.75000000,0.1000,0.1000,0.0000,3,0,1^False^0,|3 FrontID: Client: Size:99 
+12:06:07.3028 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:517,SR,白糖,RMB,FUT,10,1,True,4.25000000,4.25000000,0.1100,0.1100,0.0000,3,0,6^False^0,|3 
+12:06:07.3028 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.3028 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:517,SR,白糖,RMB,FUT,10,1,True,4.25000000,4.25000000,0.1100,0.1100,0.0000,3,0,6^False^0,|3 FrontID: Client: Size:99 
+12:06:07.3028 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:519,FG,玻璃,RMB,FUT,20,1,True,3.50000000,3.50000000,0.1500,0.1500,0.0000,3,0,1^False^0,|3 
+12:06:07.3028 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.3028 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:519,FG,玻璃,RMB,FUT,20,1,True,3.50000000,3.50000000,0.1500,0.1500,0.0000,3,0,1^False^0,|3 FrontID: Client: Size:99 
+12:06:07.3028 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:521,测试,测试,RMB,FUT,0,0,True,0.00000000,0.00000000,0.0000,0.0000,0.0000,3,0,2^False^0,|3 
+12:06:07.3028 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.3028 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:521,测试,测试,RMB,FUT,0,0,True,0.00000000,0.00000000,0.0000,0.0000,0.0000,3,0,2^False^0,|3 FrontID: Client: Size:102 
+12:06:07.3028 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:523,bu,石油沥青,RMB,FUT,10,2,True,0.00004000,0.00004000,0.0800,0.0800,0.0000,1,0,1^False^0,|3 
+12:06:07.3028 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.3028 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:523,bu,石油沥青,RMB,FUT,10,2,True,0.00004000,0.00004000,0.0800,0.0800,0.0000,1,0,1^False^0,|3 FrontID: Client: Size:105 
+12:06:07.3028 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:525,hc,热轧卷板,RMB,FUT,10,2,True,0.00011000,0.00011000,0.0800,0.0800,0.0000,1,0,1^False^0,|3 
+12:06:07.3028 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.3028 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:525,hc,热轧卷板,RMB,FUT,10,2,True,0.00011000,0.00011000,0.0800,0.0800,0.0000,1,0,1^False^0,|3 FrontID: Client: Size:105 
+12:06:07.3028 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:527,b,豆二,RMB,FUT,10,1,True,0.00022000,0.00022000,0.0800,0.0800,0.0000,2,0,1^False^0,|3 
+12:06:07.3028 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.3028 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:527,b,豆二,RMB,FUT,10,1,True,0.00022000,0.00022000,0.0800,0.0800,0.0000,2,0,1^False^0,|3 FrontID: Client: Size:98 
+12:06:07.3028 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:529,jd,鲜鸡蛋,RMB,FUT,5,1,True,0.00016000,0.00016000,0.1200,0.1200,0.0000,2,0,1^False^0,|3 
+12:06:07.3188 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.3188 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:529,jd,鲜鸡蛋,RMB,FUT,5,1,True,0.00016000,0.00016000,0.1200,0.1200,0.0000,2,0,1^False^0,|3 FrontID: Client: Size:101 
+12:06:07.3188 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:531,fb,纤维板,RMB,FUT,500,0.05,True,0.00011000,0.00011000,0.1100,0.1100,0.0000,2,0,1^False^0,|3 
+12:06:07.3188 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.3188 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:531,fb,纤维板,RMB,FUT,500,0.05,True,0.00011000,0.00011000,0.1100,0.1100,0.0000,2,0,1^False^0,|3 FrontID: Client: Size:106 
+12:06:07.3188 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:533,bb,胶合板,RMB,FUT,500,0.05,True,0.00011000,0.00011000,0.1300,0.1300,0.0000,2,0,1^False^0,|3 
+12:06:07.3188 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.3188 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:533,bb,胶合板,RMB,FUT,500,0.05,True,0.00011000,0.00011000,0.1300,0.1300,0.0000,2,0,1^False^0,|3 FrontID: Client: Size:106 
+12:06:07.3188 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:535,pp,聚丙烯,RMB,FUT,5,1,True,0.00006000,0.00006000,0.0900,0.0900,0.0000,2,0,1^False^0,|3 
+12:06:07.3188 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.3188 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:535,pp,聚丙烯,RMB,FUT,5,1,True,0.00006000,0.00006000,0.0900,0.0900,0.0000,2,0,1^False^0,|3 FrontID: Client: Size:101 
+12:06:07.3188 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:537,j,焦炭,RMB,FUT,100,1,True,0.00009000,0.00009000,0.0900,0.0900,0.0000,2,0,6^False^0,|3 
+12:06:07.3188 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.3188 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:537,j,焦炭,RMB,FUT,100,1,True,0.00009000,0.00009000,0.0900,0.0900,0.0000,2,0,6^False^0,|3 FrontID: Client: Size:99 
+12:06:07.3188 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:539,i,铁矿石,RMB,FUT,100,1,True,0.00009000,0.00009000,0.0900,0.0900,0.0000,2,0,1^False^0,|3 
+12:06:07.3188 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.3188 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:539,i,铁矿石,RMB,FUT,100,1,True,0.00009000,0.00009000,0.0900,0.0900,0.0000,2,0,1^False^0,|3 FrontID: Client: Size:102 
+12:06:07.3188 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:541,PM,普麦,RMB,FUT,50,1,True,5.20000000,5.20000000,0.0800,0.0800,0.0000,3,0,1^False^0,|3 
+12:06:07.3188 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.3188 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:541,PM,普麦,RMB,FUT,50,1,True,5.20000000,5.20000000,0.0800,0.0800,0.0000,3,0,1^False^0,|3 FrontID: Client: Size:99 
+12:06:07.3188 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:543,RI,早籼稻,RMB,FUT,20,1,True,2.70000000,2.70000000,0.0900,0.0900,0.0000,3,0,1^False^0,|3 
+12:06:07.3188 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.3188 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:543,RI,早籼稻,RMB,FUT,20,1,True,2.70000000,2.70000000,0.0900,0.0900,0.0000,3,0,1^False^0,|3 FrontID: Client: Size:102 
+12:06:07.3338 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:545,RS,菜籽,RMB,FUT,10,1,True,2.20000000,2.20000000,0.0800,0.0800,0.0000,3,0,1^False^0,|3 
+12:06:07.3338 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.3338 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:545,RS,菜籽,RMB,FUT,10,1,True,2.20000000,2.20000000,0.0800,0.0800,0.0000,3,0,1^False^0,|3 FrontID: Client: Size:99 
+12:06:07.3338 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:547,RM,菜粕,RMB,FUT,10,1,True,1.70000000,1.70000000,0.0900,0.0900,0.0000,3,0,1^False^0,|3 
+12:06:07.3338 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.3338 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:547,RM,菜粕,RMB,FUT,10,1,True,1.70000000,1.70000000,0.0900,0.0900,0.0000,3,0,1^False^0,|3 FrontID: Client: Size:99 
+12:06:07.3338 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:549,TC,动力煤,RMB,FUT,200,0.2,True,8.50000000,8.50000000,0.0900,0.0900,0.0000,3,0,1^False^0,|3 
+12:06:07.3338 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.3338 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:549,TC,动力煤,RMB,FUT,200,0.2,True,8.50000000,8.50000000,0.0900,0.0900,0.0000,3,0,1^False^0,|3 FrontID: Client: Size:105 
+12:06:07.3338 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:551,JR,粳稻,RMB,FUT,20,1,True,3.20000000,3.20000000,0.0900,0.0900,0.0000,3,0,1^False^0,|3 
+12:06:07.3338 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.3338 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:551,JR,粳稻,RMB,FUT,20,1,True,3.20000000,3.20000000,0.0900,0.0900,0.0000,3,0,1^False^0,|3 FrontID: Client: Size:99 
+12:06:07.3338 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:553,LR,晚籼,RMB,FUT,20,1,True,3.20000000,3.20000000,0.0900,0.0900,0.0000,3,0,1^False^0,|3 
+12:06:07.3338 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.3338 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:553,LR,晚籼,RMB,FUT,20,1,True,3.20000000,3.20000000,0.0900,0.0900,0.0000,3,0,1^False^0,|3 FrontID: Client: Size:99 
+12:06:07.3338 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:555,SF,硅铁,RMB,FUT,5,2,True,3.20000000,3.20000000,0.0900,0.0900,0.0000,3,0,1^False^0,|3 
+12:06:07.3338 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.3338 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:555,SF,硅铁,RMB,FUT,5,2,True,3.20000000,3.20000000,0.0900,0.0900,0.0000,3,0,1^False^0,|3 FrontID: Client: Size:98 
+12:06:07.3338 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:557,SM,锰硅,RMB,FUT,5,2,True,3.20000000,3.20000000,0.0900,0.0900,0.0000,3,0,1^False^0,|3 
+12:06:07.3338 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.3338 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:557,SM,锰硅,RMB,FUT,5,2,True,3.20000000,3.20000000,0.0900,0.0900,0.0000,3,0,1^False^0,|3 FrontID: Client: Size:98 
+12:06:07.3338 [DEBUG] Moniter:[INFO] raw message type:MGRSECURITYRESPONSE message:559,MA,郑醇,RMB,FUT,10,1,True,3.00000000,3.00000000,0.1000,0.0000,0.0000,3,0,6^True^0,|3 
+12:06:07.3338 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.3338 [DEBUG] Moniter:[INFO] got security response:Packet Type:MGRSECURITYRESPONSE Content:559,MA,郑醇,RMB,FUT,10,1,True,3.00000000,3.00000000,0.1000,0.0000,0.0000,3,0,6^True^0,|3 FrontID: Client: Size:98 
+12:06:07.3338 [DEBUG] Moniter:[INFO] 请求查询合约列表 
+12:06:07.4488 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2499,bu1506,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150615,523,0,0,0,False^False^0,|4 
+12:06:07.4488 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.4588 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2499,bu1506,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150615,523,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.4588 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2501,bu1509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150915,523,0,0,0,False^False^0,|4 
+12:06:07.4588 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.4588 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2501,bu1509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150915,523,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.4588 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2503,a1505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150514,495,0,0,0,True^False^0,|4 
+12:06:07.4588 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.4588 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2503,a1505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150514,495,0,0,0,True^False^0,|4 FrontID: Client: Size:126 
+12:06:07.4588 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2517,a1509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150914,495,0,0,0,True^False^0,|4 
+12:06:07.4588 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.4588 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2517,a1509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150914,495,0,0,0,True^False^0,|4 FrontID: Client: Size:126 
+12:06:07.4588 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2527,bu1603,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20160315,523,0,0,0,False^False^0,|4 
+12:06:07.4588 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.4588 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2527,bu1603,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20160315,523,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.4588 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2543,v1504,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150414,499,0,0,0,False^False^0,|4 
+12:06:07.4588 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.4588 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2543,v1504,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150414,499,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.4818 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2545,rb1504,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150415,485,0,0,0,False^False^0,|4 
+12:06:07.4818 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.4818 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2545,rb1504,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150415,485,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.4818 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2547,wr1504,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150415,479,0,0,0,False^False^0,|4 
+12:06:07.4818 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.4818 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2547,wr1504,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150415,479,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.4818 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2549,l1504,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150414,497,0,0,0,False^False^0,|4 
+12:06:07.4818 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.4898 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2549,l1504,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150414,497,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.4898 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2551,i1504,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150414,539,0,0,0,False^False^0,|4 
+12:06:07.4898 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.4898 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2551,i1504,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150414,539,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.4898 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2553,TC504,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150406,549,0,0,0,False^False^0,|4 
+12:06:07.4898 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.4898 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2553,TC504,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150406,549,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.4898 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2555,p1504,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150414,505,0,0,0,False^False^0,|4 
+12:06:07.4898 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.4898 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2555,p1504,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150414,505,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.4898 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2557,TA504,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150414,513,0,0,0,False^False^0,|4 
+12:06:07.4898 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.4898 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2557,TA504,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150414,513,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.4898 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2559,ME504,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150414,511,0,0,0,False^False^0,|4 
+12:06:07.4898 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.4898 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2559,ME504,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150414,511,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.4898 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2561,ag1504,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150415,489,0,0,0,False^False^0,|4 
+12:06:07.4898 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.4898 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2561,ag1504,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150415,489,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.4898 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2563,FG504,3.50000000,3.50000000,0.10000000,-1.00000000,-1.00000000,0.00000,NULL,20150415,519,0,0,0,False^False^0,|4 
+12:06:07.4898 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.4898 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2563,FG504,3.50000000,3.50000000,0.10000000,-1.00000000,-1.00000000,0.00000,NULL,20150415,519,0,0,0,False^False^0,|4 FrontID: Client: Size:124 
+12:06:07.4898 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2565,j1504,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150414,537,0,0,0,False^False^0,|4 
+12:06:07.4898 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.4898 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2565,j1504,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150414,537,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.4898 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2567,pb1504,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150415,487,0,0,0,True^False^0,|4 
+12:06:07.5058 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5058 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2567,pb1504,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150415,487,0,0,0,True^False^0,|4 FrontID: Client: Size:127 
+12:06:07.5058 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2569,au1504,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150415,491,0,0,0,False^False^0,|4 
+12:06:07.5058 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5058 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2569,au1504,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150415,491,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.5058 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2571,al1504,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150415,481,0,0,0,False^False^0,|4 
+12:06:07.5058 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5058 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2571,al1504,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150415,481,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.5058 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2573,fu1504,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150331,477,0,0,0,False^False^0,|4 
+12:06:07.5058 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5058 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2573,fu1504,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150331,477,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.5058 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2575,ru1504,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150415,475,0,0,0,False^False^0,|4 
+12:06:07.5058 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5058 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2575,ru1504,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150415,475,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.5058 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2577,zn1505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150515,483,0,0,0,True^False^0,|4 
+12:06:07.5058 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5058 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2577,zn1505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150515,483,0,0,0,True^False^0,|4 FrontID: Client: Size:127 
+12:06:07.5058 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2579,cu1505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150515,473,0,0,0,True^False^0,|4 
+12:06:07.5058 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5058 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2579,cu1505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150515,473,0,0,0,True^False^0,|4 FrontID: Client: Size:127 
+12:06:07.5058 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2581,v1505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150514,499,0,0,0,True^False^0,|4 
+12:06:07.5058 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5058 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2581,v1505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150514,499,0,0,0,True^False^0,|4 FrontID: Client: Size:126 
+12:06:07.5058 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2583,rb1505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150515,485,0,0,0,True^False^0,|4 
+12:06:07.5058 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5058 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2583,rb1505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150515,485,0,0,0,True^False^0,|4 FrontID: Client: Size:127 
+12:06:07.5058 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2585,wr1505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150515,479,0,0,0,False^False^0,|4 
+12:06:07.5208 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5208 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2585,wr1505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150515,479,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.5208 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2587,c1505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150514,503,0,0,0,True^False^0,|4 
+12:06:07.5208 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5208 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2587,c1505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150514,503,0,0,0,True^False^0,|4 FrontID: Client: Size:126 
+12:06:07.5208 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2589,a1511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151113,495,0,0,0,False^False^0,|4 
+12:06:07.5208 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5208 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2589,a1511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151113,495,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.5208 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2591,b1505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150514,527,0,0,0,False^False^0,|4 
+12:06:07.5208 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5208 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2591,b1505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150514,527,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.5208 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2593,y1505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150514,493,0,0,0,True^False^0,|4 
+12:06:07.5208 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5208 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2593,y1505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150514,493,0,0,0,True^False^0,|4 FrontID: Client: Size:126 
+12:06:07.5208 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2595,l1505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150514,497,0,0,0,True^False^0,|4 
+12:06:07.5208 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5208 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2595,l1505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150514,497,0,0,0,True^False^0,|4 FrontID: Client: Size:126 
+12:06:07.5208 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2597,i1505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150514,539,0,0,0,True^False^0,|4 
+12:06:07.5208 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5208 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2597,i1505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150514,539,0,0,0,True^False^0,|4 FrontID: Client: Size:126 
+12:06:07.5208 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2599,TC505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150506,549,0,0,0,True^False^0,|4 
+12:06:07.5208 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5208 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2599,TC505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150506,549,0,0,0,True^False^0,|4 FrontID: Client: Size:126 
+12:06:07.5208 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2601,m1505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150514,501,0,0,0,True^False^0,|4 
+12:06:07.5208 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5208 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2601,m1505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150514,501,0,0,0,True^False^0,|4 FrontID: Client: Size:126 
+12:06:07.5208 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2603,p1505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150514,505,0,0,0,True^False^0,|4 
+12:06:07.5368 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5368 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2603,p1505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150514,505,0,0,0,True^False^0,|4 FrontID: Client: Size:126 
+12:06:07.5368 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2605,CF505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150514,471,0,0,0,True^False^0,|4 
+12:06:07.5368 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5368 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2605,CF505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150514,471,0,0,0,True^False^0,|4 FrontID: Client: Size:126 
+12:06:07.5368 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2607,SR505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150514,517,0,0,0,True^False^0,|4 
+12:06:07.5368 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5368 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2607,SR505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150514,517,0,0,0,True^False^0,|4 FrontID: Client: Size:126 
+12:06:07.5368 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2609,SR507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150714,517,0,0,0,False^False^0,|4 
+12:06:07.5368 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5368 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2609,SR507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150714,517,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.5368 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2611,SR509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150914,517,0,0,0,True^False^0,|4 
+12:06:07.5368 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5368 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2611,SR509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150914,517,0,0,0,True^False^0,|4 FrontID: Client: Size:126 
+12:06:07.5368 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2613,SR511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151113,517,0,0,0,False^False^0,|4 
+12:06:07.5528 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5528 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2613,SR511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151113,517,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.5528 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2615,TA505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150514,513,0,0,0,True^False^0,|4 
+12:06:07.5528 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5528 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2615,TA505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150514,513,0,0,0,True^False^0,|4 FrontID: Client: Size:126 
+12:06:07.5528 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2617,ME505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150514,511,0,0,0,True^False^0,|4 
+12:06:07.5528 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5528 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2617,ME505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150514,511,0,0,0,True^False^0,|4 FrontID: Client: Size:126 
+12:06:07.5528 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2619,bu1512,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151215,523,0,0,0,False^False^0,|4 
+12:06:07.5528 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5528 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2619,bu1512,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151215,523,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.5528 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2637,zn1504,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150415,483,0,0,0,True^False^0,|4 
+12:06:07.5528 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5528 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2637,zn1504,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150415,483,0,0,0,True^False^0,|4 FrontID: Client: Size:127 
+12:06:07.5688 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2639,cu1504,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150415,473,0,0,0,True^False^0,|4 
+12:06:07.5688 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5688 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2639,cu1504,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150415,473,0,0,0,True^False^0,|4 FrontID: Client: Size:127 
+12:06:07.5688 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2641,a1507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150714,495,0,0,0,False^False^0,|4 
+12:06:07.5688 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5688 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2641,a1507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150714,495,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.5688 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2643,cu1508,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150817,473,0,0,0,False^False^0,|4 
+12:06:07.5688 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5688 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2643,cu1508,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150817,473,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.5688 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2645,v1508,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150814,499,0,0,0,False^False^0,|4 
+12:06:07.5688 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5688 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2645,v1508,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150814,499,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.5688 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2647,rb1508,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150817,485,0,0,0,False^False^0,|4 
+12:06:07.5688 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5688 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2647,rb1508,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150817,485,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.5688 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2649,wr1508,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150817,479,0,0,0,False^False^0,|4 
+12:06:07.5688 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5688 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2649,wr1508,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150817,479,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.5688 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2651,y1508,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150814,493,0,0,0,False^False^0,|4 
+12:06:07.5688 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5688 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2651,y1508,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150814,493,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.5688 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2653,l1508,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150814,497,0,0,0,False^False^0,|4 
+12:06:07.5688 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5838 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2653,l1508,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150814,497,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.5838 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2655,i1508,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150814,539,0,0,0,False^False^0,|4 
+12:06:07.5838 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5838 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2655,i1508,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150814,539,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.5838 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2657,TC508,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150806,549,0,0,0,False^False^0,|4 
+12:06:07.5838 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5838 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2657,TC508,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150806,549,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.5838 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2659,m1508,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150814,501,0,0,0,False^False^0,|4 
+12:06:07.5838 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5838 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2659,m1508,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150814,501,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.5838 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2661,p1508,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150814,505,0,0,0,False^False^0,|4 
+12:06:07.5838 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5838 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2661,p1508,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150814,505,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.5838 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2663,TA508,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150814,513,0,0,0,False^False^0,|4 
+12:06:07.5838 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5838 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2663,TA508,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150814,513,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.5838 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2665,ME508,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150814,511,0,0,0,False^False^0,|4 
+12:06:07.5838 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5838 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2665,ME508,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150814,511,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.5838 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2667,ag1508,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150817,489,0,0,0,False^False^0,|4 
+12:06:07.5838 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5838 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2667,ag1508,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150817,489,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.5838 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2669,FG508,3.50000000,3.50000000,0.10000000,-1.00000000,-1.00000000,0.00000,NULL,20150814,519,0,0,0,False^False^0,|4 
+12:06:07.5838 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5838 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2669,FG508,3.50000000,3.50000000,0.10000000,-1.00000000,-1.00000000,0.00000,NULL,20150814,519,0,0,0,False^False^0,|4 FrontID: Client: Size:124 
+12:06:07.5838 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2671,j1508,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150814,537,0,0,0,False^False^0,|4 
+12:06:07.5988 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5988 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2671,j1508,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150814,537,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.5988 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2673,pb1508,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150817,487,0,0,0,False^False^0,|4 
+12:06:07.5988 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5988 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2673,pb1508,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150817,487,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.5988 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2675,au1508,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150817,491,0,0,0,False^False^0,|4 
+12:06:07.5988 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5988 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2675,au1508,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150817,491,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.5988 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2677,al1508,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150817,481,0,0,0,False^False^0,|4 
+12:06:07.5988 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5988 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2677,al1508,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150817,481,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.5988 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2679,fu1508,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150731,477,0,0,0,False^False^0,|4 
+12:06:07.5988 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5988 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2679,fu1508,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150731,477,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.5988 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2681,ru1508,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150817,475,0,0,0,False^False^0,|4 
+12:06:07.5988 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5988 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2681,ru1508,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150817,475,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.5988 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2683,fu1509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150831,477,0,0,0,False^False^0,|4 
+12:06:07.5988 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5988 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2683,fu1509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150831,477,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.5988 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2685,PM505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150514,541,0,0,0,True^False^0,|4 
+12:06:07.5988 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.5988 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2685,PM505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150514,541,0,0,0,True^False^0,|4 FrontID: Client: Size:126 
+12:06:07.5988 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2687,ag1505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150515,489,0,0,0,False^False^0,|4 
+12:06:07.5988 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6148 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2687,ag1505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150515,489,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.6148 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2689,FG505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150514,519,0,0,0,True^False^0,|4 
+12:06:07.6148 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6148 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2689,FG505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150514,519,0,0,0,True^False^0,|4 FrontID: Client: Size:126 
+12:06:07.6148 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2691,WH505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150514,515,0,0,0,True^False^0,|4 
+12:06:07.6148 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6148 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2691,WH505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150514,515,0,0,0,True^False^0,|4 FrontID: Client: Size:126 
+12:06:07.6148 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2693,RI505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150514,543,0,0,0,True^False^0,|4 
+12:06:07.6148 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6148 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2693,RI505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150514,543,0,0,0,True^False^0,|4 FrontID: Client: Size:126 
+12:06:07.6148 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2695,j1505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150514,537,0,0,0,True^False^0,|4 
+12:06:07.6148 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6148 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2695,j1505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150514,537,0,0,0,True^False^0,|4 FrontID: Client: Size:126 
+12:06:07.6148 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2697,pb1505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150515,487,0,0,0,True^False^0,|4 
+12:06:07.6148 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6148 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2697,pb1505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150515,487,0,0,0,True^False^0,|4 FrontID: Client: Size:127 
+12:06:07.6148 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2699,al1505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150515,481,0,0,0,True^False^0,|4 
+12:06:07.6148 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6148 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2699,al1505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150515,481,0,0,0,True^False^0,|4 FrontID: Client: Size:127 
+12:06:07.6148 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2701,fu1505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150430,477,0,0,0,False^False^0,|4 
+12:06:07.6148 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6148 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2701,fu1505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150430,477,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.6148 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2703,ru1505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150515,475,0,0,0,True^False^0,|4 
+12:06:07.6148 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6148 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2703,ru1505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150515,475,0,0,0,True^False^0,|4 FrontID: Client: Size:127 
+12:06:07.6148 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2705,v1506,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150612,499,0,0,0,False^False^0,|4 
+12:06:07.6148 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6148 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2705,v1506,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150612,499,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.6318 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2707,rb1506,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150615,485,0,0,0,False^False^0,|4 
+12:06:07.6318 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6318 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2707,rb1506,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150615,485,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.6318 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2709,wr1506,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150615,479,0,0,0,False^False^0,|4 
+12:06:07.6318 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6318 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2709,wr1506,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150615,479,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.6318 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2711,l1506,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150612,497,0,0,0,False^False^0,|4 
+12:06:07.6318 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6318 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2711,l1506,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150612,497,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.6318 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2713,i1506,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150612,539,0,0,0,False^False^0,|4 
+12:06:07.6318 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6318 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2713,i1506,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150612,539,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.6318 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2715,TC506,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150604,549,0,0,0,False^False^0,|4 
+12:06:07.6318 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6318 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2715,TC506,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150604,549,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.6318 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2717,p1506,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150612,505,0,0,0,False^False^0,|4 
+12:06:07.6318 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6318 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2717,p1506,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150612,505,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.6318 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2719,TA506,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150612,513,0,0,0,False^False^0,|4 
+12:06:07.6318 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6318 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2719,TA506,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150612,513,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.6318 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2721,FG506,3.50000000,3.50000000,0.10000000,-1.00000000,-1.00000000,0.00000,NULL,20150612,519,0,0,0,True^False^0,|4 
+12:06:07.6318 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6458 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2721,FG506,3.50000000,3.50000000,0.10000000,-1.00000000,-1.00000000,0.00000,NULL,20150612,519,0,0,0,True^False^0,|4 FrontID: Client: Size:123 
+12:06:07.6458 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2723,j1506,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150612,537,0,0,0,False^False^0,|4 
+12:06:07.6458 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6458 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2723,j1506,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150612,537,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.6458 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2725,zn1506,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150615,483,0,0,0,False^False^0,|4 
+12:06:07.6458 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6458 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2725,zn1506,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150615,483,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.6458 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2727,cu1506,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150615,473,0,0,0,True^False^0,|4 
+12:06:07.6458 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6458 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2727,cu1506,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150615,473,0,0,0,True^False^0,|4 FrontID: Client: Size:127 
+12:06:07.6458 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2729,bu1606,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20160615,523,0,0,0,False^False^0,|4 
+12:06:07.6458 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6458 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2729,bu1606,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20160615,523,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.6458 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2731,ag1506,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150615,489,0,0,0,True^False^0,|4 
+12:06:07.6458 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6458 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2731,ag1506,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150615,489,0,0,0,True^False^0,|4 FrontID: Client: Size:127 
+12:06:07.6458 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2733,pb1506,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150615,487,0,0,0,True^False^0,|4 
+12:06:07.6458 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6458 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2733,pb1506,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150615,487,0,0,0,True^False^0,|4 FrontID: Client: Size:127 
+12:06:07.6458 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2735,al1506,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150615,481,0,0,0,False^False^0,|4 
+12:06:07.6458 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6618 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2735,al1506,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150615,481,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.6618 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2737,fu1506,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150529,477,0,0,0,False^False^0,|4 
+12:06:07.6618 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6618 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2737,fu1506,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150529,477,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.6618 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2739,ru1506,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150615,475,0,0,0,False^False^0,|4 
+12:06:07.6618 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6618 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2739,ru1506,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150615,475,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.6618 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2741,zn1507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150715,483,0,0,0,False^False^0,|4 
+12:06:07.6618 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6618 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2741,zn1507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150715,483,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.6618 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2743,cu1507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150715,473,0,0,0,False^False^0,|4 
+12:06:07.6618 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6618 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2743,cu1507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150715,473,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.6618 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2745,IF1503,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150320,463,0,0,0,True^False^0,|4 
+12:06:07.6618 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6618 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2745,IF1503,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150320,463,0,0,0,True^False^0,|4 FrontID: Client: Size:127 
+12:06:07.6618 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2747,v1507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150714,499,0,0,0,False^False^0,|4 
+12:06:07.6618 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6618 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2747,v1507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150714,499,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.6618 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2749,rb1507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150715,485,0,0,0,False^False^0,|4 
+12:06:07.6618 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6618 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2749,rb1507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150715,485,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.6618 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2751,wr1507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150715,479,0,0,0,False^False^0,|4 
+12:06:07.6618 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6618 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2751,wr1507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150715,479,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.6618 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2753,c1507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150714,503,0,0,0,False^False^0,|4 
+12:06:07.6768 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6768 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2753,c1507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150714,503,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.6768 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2755,a1601,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20160114,495,0,0,0,False^False^0,|4 
+12:06:07.6768 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6768 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2755,a1601,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20160114,495,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.6768 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2757,b1507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150714,527,0,0,0,False^False^0,|4 
+12:06:07.6768 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6768 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2757,b1507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150714,527,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.6768 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2759,y1507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150714,493,0,0,0,False^False^0,|4 
+12:06:07.6768 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6768 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2759,y1507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150714,493,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.6768 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2761,l1507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150714,497,0,0,0,False^False^0,|4 
+12:06:07.6768 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6768 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2761,l1507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150714,497,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.6768 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2763,i1507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150714,539,0,0,0,False^False^0,|4 
+12:06:07.6768 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6768 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2763,i1507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150714,539,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.6768 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2765,TC507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150706,549,0,0,0,False^False^0,|4 
+12:06:07.6768 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6768 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2765,TC507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150706,549,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.6768 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2767,m1507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150714,501,0,0,0,False^False^0,|4 
+12:06:07.6768 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6768 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2767,m1507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150714,501,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.6768 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2769,p1507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150714,505,0,0,0,False^False^0,|4 
+12:06:07.6768 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6768 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2769,p1507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150714,505,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.6768 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2771,CF507,0.00000000,0.00000000,0.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150714,471,0,0,0,False^False^0,|4 
+12:06:07.6928 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6928 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2771,CF507,0.00000000,0.00000000,0.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150714,471,0,0,0,False^False^0,|4 FrontID: Client: Size:124 
+12:06:07.6928 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2773,TA507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150714,513,0,0,0,False^False^0,|4 
+12:06:07.6928 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6928 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2773,TA507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150714,513,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.6928 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2775,PM507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150714,541,0,0,0,False^False^0,|4 
+12:06:07.6928 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6928 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2775,PM507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150714,541,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.6928 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2777,ag1507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150715,489,0,0,0,False^False^0,|4 
+12:06:07.6928 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6928 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2777,ag1507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150715,489,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.6928 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2779,FG507,3.50000000,3.50000000,0.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150714,519,0,0,0,False^False^0,|4 
+12:06:07.6928 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6928 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2779,FG507,3.50000000,3.50000000,0.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150714,519,0,0,0,False^False^0,|4 FrontID: Client: Size:124 
+12:06:07.6928 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2781,WH507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150714,515,0,0,0,False^False^0,|4 
+12:06:07.6928 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6928 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2781,WH507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150714,515,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.6928 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2783,RI507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150714,543,0,0,0,False^False^0,|4 
+12:06:07.6928 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6928 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2783,RI507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150714,543,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.6928 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2785,j1507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150714,537,0,0,0,False^False^0,|4 
+12:06:07.6928 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.6928 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2785,j1507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150714,537,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.6928 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2787,pb1507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150715,487,0,0,0,False^False^0,|4 
+12:06:07.6928 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7088 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2787,pb1507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150715,487,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.7088 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2789,al1507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150715,481,0,0,0,False^False^0,|4 
+12:06:07.7088 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7088 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2789,al1507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150715,481,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.7088 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2791,fu1507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150630,477,0,0,0,False^False^0,|4 
+12:06:07.7088 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7088 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2791,fu1507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150630,477,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.7088 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2793,ru1507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150715,475,0,0,0,False^False^0,|4 
+12:06:07.7088 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7088 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2793,ru1507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150715,475,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.7088 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2795,zn1508,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150817,483,0,0,0,False^False^0,|4 
+12:06:07.7088 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7088 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2795,zn1508,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150817,483,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.7088 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2797,v1509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150914,499,0,0,0,True^False^0,|4 
+12:06:07.7088 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7088 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2797,v1509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150914,499,0,0,0,True^False^0,|4 FrontID: Client: Size:126 
+12:06:07.7088 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2799,rb1509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150915,485,0,0,0,True^False^0,|4 
+12:06:07.7088 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7088 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2799,rb1509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150915,485,0,0,0,True^False^0,|4 FrontID: Client: Size:127 
+12:06:07.7088 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2801,wr1509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150915,479,0,0,0,False^False^0,|4 
+12:06:07.7088 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7088 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2801,wr1509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150915,479,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.7088 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2803,c1509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150914,503,0,0,0,True^False^0,|4 
+12:06:07.7088 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7088 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2803,c1509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150914,503,0,0,0,True^False^0,|4 FrontID: Client: Size:126 
+12:06:07.7088 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2805,a1603,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20160314,495,0,0,0,False^False^0,|4 
+12:06:07.7088 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7238 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2805,a1603,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20160314,495,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.7238 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2807,b1509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150914,527,0,0,0,False^False^0,|4 
+12:06:07.7238 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7238 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2807,b1509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150914,527,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.7238 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2809,y1509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150914,493,0,0,0,True^False^0,|4 
+12:06:07.7238 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7238 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2809,y1509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150914,493,0,0,0,True^False^0,|4 FrontID: Client: Size:126 
+12:06:07.7238 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2811,l1509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150914,497,0,0,0,True^False^0,|4 
+12:06:07.7238 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7238 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2811,l1509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150914,497,0,0,0,True^False^0,|4 FrontID: Client: Size:126 
+12:06:07.7238 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2813,i1509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150914,539,0,0,0,True^False^0,|4 
+12:06:07.7238 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7238 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2813,i1509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150914,539,0,0,0,True^False^0,|4 FrontID: Client: Size:126 
+12:06:07.7238 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2815,TC509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150904,549,0,0,0,True^False^0,|4 
+12:06:07.7238 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7238 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2815,TC509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150904,549,0,0,0,True^False^0,|4 FrontID: Client: Size:126 
+12:06:07.7238 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2817,m1509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150914,501,0,0,0,True^False^0,|4 
+12:06:07.7238 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7238 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2817,m1509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150914,501,0,0,0,True^False^0,|4 FrontID: Client: Size:126 
+12:06:07.7238 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2819,p1509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150914,505,0,0,0,True^False^0,|4 
+12:06:07.7238 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7238 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2819,p1509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150914,505,0,0,0,True^False^0,|4 FrontID: Client: Size:126 
+12:06:07.7238 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2821,CF509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150914,471,0,0,0,True^False^0,|4 
+12:06:07.7238 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7238 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2821,CF509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150914,471,0,0,0,True^False^0,|4 FrontID: Client: Size:126 
+12:06:07.7238 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2823,TA509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150914,513,0,0,0,True^False^0,|4 
+12:06:07.7238 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7238 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2823,TA509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150914,513,0,0,0,True^False^0,|4 FrontID: Client: Size:126 
+12:06:07.7238 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2825,PM509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150914,541,0,0,0,True^False^0,|4 
+12:06:07.7408 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7408 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2825,PM509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150914,541,0,0,0,True^False^0,|4 FrontID: Client: Size:126 
+12:06:07.7408 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2827,FG509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150914,519,0,0,0,True^False^0,|4 
+12:06:07.7408 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7408 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2827,FG509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150914,519,0,0,0,True^False^0,|4 FrontID: Client: Size:126 
+12:06:07.7408 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2829,WH509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150914,515,0,0,0,True^False^0,|4 
+12:06:07.7408 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7408 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2829,WH509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150914,515,0,0,0,True^False^0,|4 FrontID: Client: Size:126 
+12:06:07.7408 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2831,RI509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150914,543,0,0,0,True^False^0,|4 
+12:06:07.7408 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7408 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2831,RI509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150914,543,0,0,0,True^False^0,|4 FrontID: Client: Size:126 
+12:06:07.7408 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2833,j1509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150914,537,0,0,0,True^False^0,|4 
+12:06:07.7408 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7408 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2833,j1509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150914,537,0,0,0,True^False^0,|4 FrontID: Client: Size:126 
+12:06:07.7408 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2835,zn1509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150915,483,0,0,0,False^False^0,|4 
+12:06:07.7408 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7408 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2835,zn1509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150915,483,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.7408 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2837,cu1509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150915,473,0,0,0,False^False^0,|4 
+12:06:07.7408 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7408 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2837,cu1509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150915,473,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.7408 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2839,bu1609,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20160915,523,0,0,0,False^False^0,|4 
+12:06:07.7408 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7408 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2839,bu1609,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20160915,523,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.7408 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2841,ag1509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150915,489,0,0,0,False^False^0,|4 
+12:06:07.7408 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7408 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2841,ag1509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150915,489,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.7548 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2843,pb1509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150915,487,0,0,0,False^False^0,|4 
+12:06:07.7548 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7548 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2843,pb1509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150915,487,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.7548 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2845,al1509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150915,481,0,0,0,False^False^0,|4 
+12:06:07.7548 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7548 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2845,al1509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150915,481,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.7548 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2847,ru1509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150915,475,0,0,0,True^False^0,|4 
+12:06:07.7548 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7548 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2847,ru1509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150915,475,0,0,0,True^False^0,|4 FrontID: Client: Size:127 
+12:06:07.7548 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2849,zn1511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151116,483,0,0,0,False^False^0,|4 
+12:06:07.7548 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7548 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2849,zn1511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151116,483,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.7548 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2851,cu1511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151116,473,0,0,0,False^False^0,|4 
+12:06:07.7548 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7548 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2851,cu1511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151116,473,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.7548 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2853,v1511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151113,499,0,0,0,False^False^0,|4 
+12:06:07.7548 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7548 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2853,v1511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151113,499,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.7548 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2855,rb1511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151116,485,0,0,0,False^False^0,|4 
+12:06:07.7548 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7548 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2855,rb1511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151116,485,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.7548 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2857,wr1511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151116,479,0,0,0,False^False^0,|4 
+12:06:07.7548 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7548 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2857,wr1511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151116,479,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.7548 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2859,c1511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151113,503,0,0,0,False^False^0,|4 
+12:06:07.7548 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7548 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2859,c1511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151113,503,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.7548 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2861,a1605,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20160513,495,0,0,0,False^False^0,|4 
+12:06:07.7708 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7708 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2861,a1605,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20160513,495,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.7708 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2863,b1511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151113,527,0,0,0,False^False^0,|4 
+12:06:07.7708 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7708 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2863,b1511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151113,527,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.7708 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2865,y1511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151113,493,0,0,0,False^False^0,|4 
+12:06:07.7708 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7708 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2865,y1511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151113,493,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.7708 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2867,l1511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151113,497,0,0,0,False^False^0,|4 
+12:06:07.7708 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7708 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2867,l1511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151113,497,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.7708 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2869,i1511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151113,539,0,0,0,False^False^0,|4 
+12:06:07.7708 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7708 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2869,i1511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151113,539,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.7708 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2871,zn1510,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151015,483,0,0,0,False^False^0,|4 
+12:06:07.7708 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7708 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2871,zn1510,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151015,483,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.7708 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2873,cu1510,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151015,473,0,0,0,False^False^0,|4 
+12:06:07.7708 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7708 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2873,cu1510,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151015,473,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.7708 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2875,IF1506,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150619,463,0,0,0,True^False^0,|4 
+12:06:07.7708 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7708 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2875,IF1506,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150619,463,0,0,0,True^False^0,|4 FrontID: Client: Size:127 
+12:06:07.7708 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2877,v1510,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151014,499,0,0,0,False^False^0,|4 
+12:06:07.7708 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7708 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2877,v1510,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151014,499,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.7708 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2879,rb1510,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151015,485,0,0,0,False^False^0,|4 
+12:06:07.7708 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7868 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2879,rb1510,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151015,485,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.7868 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2881,wr1510,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151015,479,0,0,0,False^False^0,|4 
+12:06:07.7868 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7868 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2881,wr1510,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151015,479,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.7868 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2883,l1510,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151014,497,0,0,0,False^False^0,|4 
+12:06:07.7868 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7868 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2883,l1510,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151014,497,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.7868 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2885,i1510,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151014,539,0,0,0,False^False^0,|4 
+12:06:07.7868 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7868 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2885,i1510,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151014,539,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.7868 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2887,TC510,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151006,549,0,0,0,False^False^0,|4 
+12:06:07.7868 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7868 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2887,TC510,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151006,549,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.7868 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2889,bu1504,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150415,523,0,0,0,False^False^0,|4 
+12:06:07.7868 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7868 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2889,bu1504,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150415,523,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.7868 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2891,p1510,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151014,505,0,0,0,False^False^0,|4 
+12:06:07.7868 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7868 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2891,p1510,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151014,505,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.7868 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2893,TA510,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151014,513,0,0,0,False^False^0,|4 
+12:06:07.7868 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7868 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2893,TA510,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151014,513,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.7868 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2895,ag1510,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151015,489,0,0,0,False^False^0,|4 
+12:06:07.7868 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.7868 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2895,ag1510,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151015,489,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.7868 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2897,FG510,3.50000000,3.50000000,0.10000000,-1.00000000,-1.00000000,0.00000,NULL,20151021,519,0,0,0,False^False^0,|4 
+12:06:07.7868 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.8018 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2897,FG510,3.50000000,3.50000000,0.10000000,-1.00000000,-1.00000000,0.00000,NULL,20151021,519,0,0,0,False^False^0,|4 FrontID: Client: Size:124 
+12:06:07.8018 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2899,j1510,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151014,537,0,0,0,False^False^0,|4 
+12:06:07.8018 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.8018 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2899,j1510,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151014,537,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.8018 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2901,pb1510,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151015,487,0,0,0,False^False^0,|4 
+12:06:07.8018 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.8018 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2901,pb1510,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151015,487,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.8018 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2903,al1510,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151015,481,0,0,0,False^False^0,|4 
+12:06:07.8018 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.8018 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2903,al1510,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151015,481,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.8018 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2905,fu1510,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150930,477,0,0,0,False^False^0,|4 
+12:06:07.8018 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.8018 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2905,fu1510,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150930,477,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.8018 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2907,ru1510,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151015,475,0,0,0,False^False^0,|4 
+12:06:07.8018 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.8018 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2907,ru1510,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151015,475,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.8018 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2909,TC511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151105,549,0,0,0,False^False^0,|4 
+12:06:07.8018 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.8018 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2909,TC511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151105,549,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.8018 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2911,bu1505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150515,523,0,0,0,False^False^0,|4 
+12:06:07.8018 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.8018 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2911,bu1505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150515,523,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.8018 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2913,m1511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151113,501,0,0,0,False^False^0,|4 
+12:06:07.8018 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.8018 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2913,m1511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151113,501,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.8178 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2915,p1511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151113,505,0,0,0,False^False^0,|4 
+12:06:07.8178 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.8178 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2915,p1511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151113,505,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.8178 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2917,CF511,0.00000000,0.00000000,0.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151113,471,0,0,0,False^False^0,|4 
+12:06:07.8178 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.8178 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2917,CF511,0.00000000,0.00000000,0.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151113,471,0,0,0,False^False^0,|4 FrontID: Client: Size:124 
+12:06:07.8178 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2919,TA511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151113,513,0,0,0,False^False^0,|4 
+12:06:07.8178 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.8178 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2919,TA511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151113,513,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.8178 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2921,ME511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151113,511,0,0,0,False^False^0,|4 
+12:06:07.8178 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.8178 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2921,ME511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151113,511,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.8178 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2923,ag1511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151116,489,0,0,0,False^False^0,|4 
+12:06:07.8178 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.8178 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2923,ag1511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151116,489,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.8178 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2925,FG511,3.50000000,3.50000000,0.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151113,519,0,0,0,False^False^0,|4 
+12:06:07.8178 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.8178 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2925,FG511,3.50000000,3.50000000,0.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151113,519,0,0,0,False^False^0,|4 FrontID: Client: Size:124 
+12:06:07.8178 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2927,j1511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151113,537,0,0,0,False^False^0,|4 
+12:06:07.8178 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.8178 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2927,j1511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151113,537,0,0,0,False^False^0,|4 FrontID: Client: Size:127 
+12:06:07.8178 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2929,pb1511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151116,487,0,0,0,False^False^0,|4 
+12:06:07.8178 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.8178 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2929,pb1511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151116,487,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.8178 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2931,au1511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151116,491,0,0,0,False^False^0,|4 
+12:06:07.8329 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.8329 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2931,au1511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151116,491,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.8329 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2933,al1511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151116,481,0,0,0,False^False^0,|4 
+12:06:07.8329 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.8329 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2933,al1511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151116,481,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.8329 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2935,fu1511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151030,477,0,0,0,False^False^0,|4 
+12:06:07.8329 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.8329 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2935,fu1511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151030,477,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.8329 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2937,ru1511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151116,475,0,0,0,False^False^0,|4 
+12:06:07.8329 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.8329 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2937,ru1511,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151116,475,0,0,0,False^False^0,|4 FrontID: Client: Size:128 
+12:06:07.8329 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2939,IF1509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150930,463,0,0,0,True^False^0,|4 
+12:06:07.8329 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.8329 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2939,IF1509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150930,463,0,0,0,True^False^0,|4 FrontID: Client: Size:127 
+12:06:07.8329 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2941,CF601,0.00000000,0.00000000,0.09000000,0.00000000,0.00000000,0.00000,NULL,20160115,471,0,0,0,False^False^0,|4 
+12:06:07.8329 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.8329 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2941,CF601,0.00000000,0.00000000,0.09000000,0.00000000,0.00000000,0.00000,NULL,20160115,471,0,0,0,False^False^0,|4 FrontID: Client: Size:122 
+12:06:07.8329 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2943,FG512,3.50000000,3.50000000,0.10000000,0.00000000,0.00000000,0.00000,NULL,20151214,519,0,0,0,False^False^0,|4 
+12:06:07.8329 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.8329 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2943,FG512,3.50000000,3.50000000,0.10000000,0.00000000,0.00000000,0.00000,NULL,20151214,519,0,0,0,False^False^0,|4 FrontID: Client: Size:122 
+12:06:07.8329 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2945,FG601,3.50000000,3.50000000,0.00000000,0.00000000,0.00000000,0.00000,NULL,20160115,519,0,0,0,False^False^0,|4 
+12:06:07.8329 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.8329 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2945,FG601,3.50000000,3.50000000,0.00000000,0.00000000,0.00000000,0.00000,NULL,20160115,519,0,0,0,False^False^0,|4 FrontID: Client: Size:122 
+12:06:07.8329 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2947,au1506,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150630,491,0,0,0,True^False^0,|4 
+12:06:07.8329 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.8329 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2947,au1506,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150630,491,0,0,0,True^False^0,|4 FrontID: Client: Size:127 
+12:06:07.8489 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2949,IF1504,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150430,463,0,0,0,True^False^0,|4 
+12:06:07.8489 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.8489 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2949,IF1504,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150430,463,0,0,0,True^False^0,|4 FrontID: Client: Size:127 
+12:06:07.8489 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2955,MA506,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150630,559,0,0,0,True^False^0,|4 
+12:06:07.8489 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.8489 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2955,MA506,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150630,559,0,0,0,True^False^0,|4 FrontID: Client: Size:126 
+12:06:07.8489 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2957,MA503,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150330,559,0,0,0,True^False^0,|4 
+12:06:07.8489 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.8489 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2957,MA503,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150330,559,0,0,0,True^False^0,|4 FrontID: Client: Size:126 
+12:06:07.8489 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:2959,ag1512,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151231,489,0,0,0,True^False^0,|4 
+12:06:07.8489 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.8489 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:2959,ag1512,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151231,489,0,0,0,True^False^0,|4 FrontID: Client: Size:127 
+12:06:07.8489 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:3941,TF1503,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150331,467,0,0,0,True^False^0,|4 
+12:06:07.8489 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.8489 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:3941,TF1503,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150331,467,0,0,0,True^False^0,|4 FrontID: Client: Size:127 
+12:06:07.8489 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:3943,TF1506,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150630,467,0,0,0,True^False^0,|4 
+12:06:07.8489 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.8489 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:3943,TF1506,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150630,467,0,0,0,True^False^0,|4 FrontID: Client: Size:127 
+12:06:07.8489 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:3945,TF1509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150930,467,0,0,0,True^False^0,|4 
+12:06:07.8489 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.8489 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:3945,TF1509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150930,467,0,0,0,True^False^0,|4 FrontID: Client: Size:127 
+12:06:07.8489 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:3947,au1505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150531,491,0,0,0,True^False^0,|4 
+12:06:07.8489 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.8489 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:3947,au1505,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150531,491,0,0,0,True^False^0,|4 FrontID: Client: Size:127 
+12:06:07.8489 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:3949,au1507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150731,491,0,0,0,True^False^0,|4 
+12:06:07.8489 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.8649 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:3949,au1507,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150731,491,0,0,0,True^False^0,|4 FrontID: Client: Size:127 
+12:06:07.8649 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:3951,au1509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150930,491,0,0,0,True^False^0,|4 
+12:06:07.8649 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.8649 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:3951,au1509,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20150930,491,0,0,0,True^False^0,|4 FrontID: Client: Size:127 
+12:06:07.8649 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:3953,au1510,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151031,491,0,0,0,True^False^0,|4 
+12:06:07.8649 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.8649 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:3953,au1510,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151031,491,0,0,0,True^False^0,|4 FrontID: Client: Size:127 
+12:06:07.8649 [DEBUG] Moniter:[INFO] raw message type:MGRSYMBOLRESPONSE message:3955,au1512,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151231,491,0,0,0,True^True^0,|4 
+12:06:07.8649 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.8649 [DEBUG] Moniter:[INFO] got symbol response:Packet Type:MGRSYMBOLRESPONSE Content:3955,au1512,-1.00000000,-1.00000000,-1.00000000,-1.00000000,-1.00000000,0.00000,NULL,20151231,491,0,0,0,True^True^0,|4 FrontID: Client: Size:126 
+12:06:07.8649 [DEBUG] Moniter:[INFO] 请求查询风控规则列表 
+12:06:07.8939 [DEBUG] Moniter:[INFO] raw message type:MGRRULECLASSRESPONSE message:OrderRuleSet.RSSymbolBlock,合约检查:禁止交易,禁止交易设置的品种 品种用逗号分割,True,False,True,检查变量,OrderRule,GreaterEqual,^False^0,|5 
+12:06:07.8989 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.8989 [DEBUG] Moniter:[INFO] got ruleset response:Packet Type:MGRRULECLASSRESPONSE Content:OrderRuleSet.RSSymbolBlock,合约检查:禁止交易,禁止交易设置的品种 品种用逗号分割,True,False,True,检查变量,OrderRule,GreaterEqual,^False^0,|5 FrontID: Client: Size:174 
+12:06:07.9109 [DEBUG] Moniter:[INFO] raw message type:MGRRULECLASSRESPONSE message:OrderRuleSet.RSSymbolCanTrade,合约检查:允许交易,允许交易设置的品种 品种用逗号分割,True,False,True,检查变量,OrderRule,GreaterEqual,^False^0,|5 
+12:06:07.9109 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.9109 [DEBUG] Moniter:[INFO] got ruleset response:Packet Type:MGRRULECLASSRESPONSE Content:OrderRuleSet.RSSymbolCanTrade,合约检查:允许交易,允许交易设置的品种 品种用逗号分割,True,False,True,检查变量,OrderRule,GreaterEqual,^False^0,|5 FrontID: Client: Size:177 
+12:06:07.9109 [DEBUG] Moniter:[INFO] raw message type:MGRRULECLASSRESPONSE message:OrderRuleSet.RSMargin,风险度检查:保证金占用比例,当可用资金大于设定百分比时 该委托可接收(可用资金是当前可用资金扣除该委托成交所占用保证金) 可用资金比例大于20% 则参考值填写20,True,False,True,检查变量,OrderRule,GreaterEqual,^False^0,|5 
+12:06:07.9109 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.9109 [DEBUG] Moniter:[INFO] got ruleset response:Packet Type:MGRRULECLASSRESPONSE Content:OrderRuleSet.RSMargin,风险度检查:保证金占用比例,当可用资金大于设定百分比时 该委托可接收(可用资金是当前可用资金扣除该委托成交所占用保证金) 可用资金比例大于20% 则参考值填写20,True,False,True,检查变量,OrderRule,GreaterEqual,^False^0,|5 FrontID: Client: Size:313 
+12:06:07.9109 [DEBUG] Moniter:[INFO] raw message type:MGRRULECLASSRESPONSE message:AccountRuleSet.RSTime,强平[执行时间],到执行时间时 强平持仓并禁止交易 145500代表14点55分00秒,True,False,True,执行时间,AccountRule,Equals,^False^0,|5 
+12:06:07.9109 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.9109 [DEBUG] Moniter:[INFO] got ruleset response:Packet Type:MGRRULECLASSRESPONSE Content:AccountRuleSet.RSTime,强平[执行时间],到执行时间时 强平持仓并禁止交易 145500代表14点55分00秒,True,False,True,执行时间,AccountRule,Equals,^False^0,|5 FrontID: Client: Size:185 
+12:06:07.9109 [DEBUG] Moniter:[INFO] raw message type:MGRRULECLASSRESPONSE message:AccountRuleSet.RSMaxProfit,强平[盈利额度],盈利额度(扣除手续费)大于设定值时 强平持仓并禁止交易,True,False,False,盈利额度,AccountRule,Greater,^False^0,|5 
+12:06:07.9109 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.9109 [DEBUG] Moniter:[INFO] got ruleset response:Packet Type:MGRRULECLASSRESPONSE Content:AccountRuleSet.RSMaxProfit,强平[盈利额度],盈利额度(扣除手续费)大于设定值时 强平持仓并禁止交易,True,False,False,盈利额度,AccountRule,Greater,^False^0,|5 FrontID: Client: Size:193 
+12:06:07.9109 [DEBUG] Moniter:[INFO] raw message type:MGRRULECLASSRESPONSE message:AccountRuleSet.RSEquity,强平[帐户权益],帐户权益小于设定值时 强平持仓并禁止交易,True,False,False,当前权益,AccountRule,Less,^False^0,|5 
+12:06:07.9109 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.9109 [DEBUG] Moniter:[INFO] got ruleset response:Packet Type:MGRRULECLASSRESPONSE Content:AccountRuleSet.RSEquity,强平[帐户权益],帐户权益小于设定值时 强平持仓并禁止交易,True,False,False,当前权益,AccountRule,Less,^False^0,|5 FrontID: Client: Size:170 
+12:06:07.9109 [DEBUG] Moniter:[INFO] raw message type:MGRRULECLASSRESPONSE message:AccountRuleSet.RSMaxLoss,强平[亏损额度],亏损额度(包含手续费)大于设定值时 强平持仓并禁止交易,True,False,False,亏损额度,AccountRule,Greater,^True^0,|5 
+12:06:07.9109 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.9109 [DEBUG] Moniter:[INFO] got ruleset response:Packet Type:MGRRULECLASSRESPONSE Content:AccountRuleSet.RSMaxLoss,强平[亏损额度],亏损额度(包含手续费)大于设定值时 强平持仓并禁止交易,True,False,False,亏损额度,AccountRule,Greater,^True^0,|5 FrontID: Client: Size:190 
+12:06:07.9109 [DEBUG] Moniter:[INFO] 请求扩展命令,module:MgrExchServer cmd:QryManager args: 
+12:06:07.9939 [DEBUG] Moniter:[INFO] raw message type:MGRCONTRIBRESPONSE message:MgrExchServer,QryManager,{"Code":0,"Message":"Success:0","Payload":[{"ID":11,"Login":"root-11","User_Id":0,"Type":0,"Name":"\u6797wz","Mobile":"","QQ":"","AccLimit":30,"parent_fk":11,"mgr_fk":11,"domain_id":11,"Active":true}]}^True^0,|6 
+12:06:07.9939 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:07.9939 [DEBUG] Moniter:[DEBUG] ContribResponse ->Module:MgrExchServer CMD:QryManager Ret:{"Code":0,"Message":"Success:0","Payload":[{"ID":11,"Login":"root-11","User_Id":0,"Type":0,"Name":"\u6797wz","Mobile":"","QQ":"","AccLimit":30,"parent_fk":11,"mgr_fk":11,"domain_id":11,"Active":true}]} 
+12:06:08.0209 [DEBUG] Moniter:[INFO] 请求扩展命令,module:ConnectorManager cmd:QryRouterGroup args: 
+12:06:08.0939 [DEBUG] Moniter:[INFO] raw message type:MGRCONTRIBRESPONSE message:ConnectorManager,QryRouterGroup,{"Code":0,"Message":"Success:0","Payload":[]}^True^0,|7 
+12:06:08.0939 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:08.0939 [DEBUG] Moniter:[DEBUG] ContribResponse ->Module:ConnectorManager CMD:QryRouterGroup Ret:{"Code":0,"Message":"Success:0","Payload":[]} 
+12:06:08.1019 [DEBUG] Moniter:********************************* routergroup done, try to qry account list 
+12:06:08.1019 [DEBUG] Moniter:[INFO] 查询交易帐户列表 
+12:06:08.2969 [DEBUG] Moniter:[INFO] raw message type:MGRQRYACCOUNTSRESPONSE message:81280308,SIMULATION,SIM,True,True,0,6769900.1400000000000000000001,618000.00,-26519.999999999999999999999940,21579.86,569900.14000000000000000000006,6200000.00,0,775962.0000000000,戴茗,海通期货,0,,False,11,False,0,False,,,0,0,,0,17^False^0,|8 
+12:06:08.3059 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:08.3059 [DEBUG] Moniter:[INFO] got mgrqryaccount response:Packet Type:MGRQRYACCOUNTSRESPONSE Content:81280308,SIMULATION,SIM,True,True,0,6769900.1400000000000000000001,618000.00,-26519.999999999999999999999940,21579.86,569900.14000000000000000000006,6200000.00,0,775962.0000000000,戴茗,海通期货,0,,False,11,False,0,False,,,0,0,,0,17^False^0,|8 FrontID: Client: Size:256 
+12:06:08.3169 [DEBUG] Moniter:[INFO] raw message type:MGRQRYACCOUNTSRESPONSE message:81280210,SIMULATION,SIM,True,True,6421220.7128,1577969.052800,82440.00,0.000000,4471.66,77968.340000,3000000.00,7921220.00,0.0000000000,王禹,海通期货,0,,False,11,False,0,False,,,0,0,,0,0^False^0,|8 
+12:06:08.3169 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:08.3169 [DEBUG] Moniter:[INFO] got mgrqryaccount response:Packet Type:MGRQRYACCOUNTSRESPONSE Content:81280210,SIMULATION,SIM,True,True,6421220.7128,1577969.052800,82440.00,0.000000,4471.66,77968.340000,3000000.00,7921220.00,0.0000000000,王禹,海通期货,0,,False,11,False,0,False,,,0,0,,0,0^False^0,|8 FrontID: Client: Size:211 
+12:06:08.3169 [DEBUG] Moniter:[INFO] raw message type:MGRQRYACCOUNTSRESPONSE message:81280313,SIMULATION,SIM,True,True,0,1240000.00,0,0,0,0,1240000.00,0,0,邓大伟,海通期货,0,,False,11,False,0,False,,,0,0,,0,17^False^0,|8 
+12:06:08.3169 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:08.3169 [DEBUG] Moniter:[INFO] got mgrqryaccount response:Packet Type:MGRQRYACCOUNTSRESPONSE Content:81280313,SIMULATION,SIM,True,True,0,1240000.00,0,0,0,0,1240000.00,0,0,邓大伟,海通期货,0,,False,11,False,0,False,,,0,0,,0,17^False^0,|8 FrontID: Client: Size:149 
+12:06:08.3169 [DEBUG] Moniter:[INFO] raw message type:MGRQRYACCOUNTSRESPONSE message:81280203,SIMULATION,SIM,True,True,0.5206,863228.540600,38400.00,0.000000,5171.98,33228.020000,830000.00,0,0.0000000000,范老三,海通期货,0,,False,11,False,0,False,,,0,0,,0,17^False^0,|8 
+12:06:08.3169 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:08.3169 [DEBUG] Moniter:[INFO] got mgrqryaccount response:Packet Type:MGRQRYACCOUNTSRESPONSE Content:81280203,SIMULATION,SIM,True,True,0.5206,863228.540600,38400.00,0.000000,5171.98,33228.020000,830000.00,0,0.0000000000,范老三,海通期货,0,,False,11,False,0,False,,,0,0,,0,17^False^0,|8 FrontID: Client: Size:198 
+12:06:08.3169 [DEBUG] Moniter:[INFO] raw message type:MGRQRYACCOUNTSRESPONSE message:81280302,SIMULATION,SIM,True,True,0,758730.240000,-49680.00,-18720.000000,2869.76,-71269.760000,830000.00,0,258654.0000000000,张小冲,海通期货,0,,False,11,False,0,False,,,0,0,,0,17^False^0,|8 
+12:06:08.3169 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:08.3169 [DEBUG] Moniter:[INFO] got mgrqryaccount response:Packet Type:MGRQRYACCOUNTSRESPONSE Content:81280302,SIMULATION,SIM,True,True,0,758730.240000,-49680.00,-18720.000000,2869.76,-71269.760000,830000.00,0,258654.0000000000,张小冲,海通期货,0,,False,11,False,0,False,,,0,0,,0,17^False^0,|8 FrontID: Client: Size:205 
+12:06:08.3169 [DEBUG] Moniter:[INFO] raw message type:MGRQRYACCOUNTSRESPONSE message:81280201,SIMULATION,SIM,True,True,281092.4466,260279.866600,-19440.00,0.000000,280.58,-19720.580000,280000.00,281092.00,0.0000000000,巴小飞,海通期货,1,6229988956965844447,False,11,False,0,False,,,0,0,,0,17^False^0,|8 
+12:06:08.3169 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:08.3169 [DEBUG] Moniter:[INFO] got mgrqryaccount response:Packet Type:MGRQRYACCOUNTSRESPONSE Content:81280201,SIMULATION,SIM,True,True,281092.4466,260279.866600,-19440.00,0.000000,280.58,-19720.580000,280000.00,281092.00,0.0000000000,巴小飞,海通期货,1,6229988956965844447,False,11,False,0,False,,,0,0,,0,17^False^0,|8 FrontID: Client: Size:231 
+12:06:08.3169 [DEBUG] Moniter:[INFO] raw message type:MGRQRYACCOUNTSRESPONSE message:8128299,SIMULATION,SIM,True,True,3993906.6794,3993906.6794,0,0,0,0,0,0,0,李翔,海通期货,0,,False,11,False,0,False,,,45,0,,0,17^False^0,|8 
+12:06:08.3169 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:08.3169 [DEBUG] Moniter:[INFO] got mgrqryaccount response:Packet Type:MGRQRYACCOUNTSRESPONSE Content:8128299,SIMULATION,SIM,True,True,3993906.6794,3993906.6794,0,0,0,0,0,0,0,李翔,海通期货,0,,False,11,False,0,False,,,45,0,,0,17^False^0,|8 FrontID: Client: Size:150 
+12:06:08.3169 [DEBUG] Moniter:[INFO] raw message type:MGRQRYACCOUNTSRESPONSE message:81280307,SIMULATION,SIM,True,True,0,363662.560000,15480.00,0.000000,1817.44,13662.560000,350000.00,0,0.0000000000,秦大蛮,海通期货,0,,False,11,False,0,False,,,0,0,,0,17^False^0,|8 
+12:06:08.3169 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:08.3169 [DEBUG] Moniter:[INFO] got mgrqryaccount response:Packet Type:MGRQRYACCOUNTSRESPONSE Content:81280307,SIMULATION,SIM,True,True,0,363662.560000,15480.00,0.000000,1817.44,13662.560000,350000.00,0,0.0000000000,秦大蛮,海通期货,0,,False,11,False,0,False,,,0,0,,0,17^False^0,|8 FrontID: Client: Size:193 
+12:06:08.3169 [DEBUG] Moniter:[INFO] raw message type:MGRQRYACCOUNTSRESPONSE message:81280312,SIMULATION,SIM,True,True,0,2300160.520000,-48540.00,-19620.000000,1679.48,-69839.480000,2370000.00,0,517308.0000000000,张明珠,海通期货,0,,False,11,False,0,False,,,0,0,,0,17^False^0,|8 
+12:06:08.3169 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:08.3169 [DEBUG] Moniter:[INFO] got mgrqryaccount response:Packet Type:MGRQRYACCOUNTSRESPONSE Content:81280312,SIMULATION,SIM,True,True,0,2300160.520000,-48540.00,-19620.000000,1679.48,-69839.480000,2370000.00,0,517308.0000000000,张明珠,海通期货,0,,False,11,False,0,False,,,0,0,,0,17^False^0,|8 FrontID: Client: Size:207 
+12:06:08.3169 [DEBUG] Moniter:[INFO] raw message type:MGRQRYACCOUNTSRESPONSE message:81280305,SIMULATION,SIM,True,True,0,9291404.740000000000000000000,406320.00,-35159.999999999999999999999940,29755.26,341404.74000000000000000000006,10450000.00,1500000.00,775962.0000000000,张艳波,海通期货,0,,False,11,False,0,False,,,0,0,,0,17^False^0,|8 
+12:06:08.3169 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:08.3169 [DEBUG] Moniter:[INFO] got mgrqryaccount response:Packet Type:MGRQRYACCOUNTSRESPONSE Content:81280305,SIMULATION,SIM,True,True,0,9291404.740000000000000000000,406320.00,-35159.999999999999999999999940,29755.26,341404.74000000000000000000006,10450000.00,1500000.00,775962.0000000000,张艳波,海通期货,0,,False,11,False,0,False,,,0,0,,0,17^False^0,|8 FrontID: Client: Size:268 
+12:06:08.3329 [DEBUG] Moniter:[INFO] raw message type:MGRQRYACCOUNTSRESPONSE message:81280211,SIMULATION,SIM,True,True,644815.9480,284662.688000,0,-55200.000000,138.26,-55338.260000,340000.00,644815.00,513031.2000000000,何良福,海通期货,0,,False,11,False,0,False,,,0,0,,0,17^False^0,|8 
+12:06:08.3329 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:08.3329 [DEBUG] Moniter:[INFO] got mgrqryaccount response:Packet Type:MGRQRYACCOUNTSRESPONSE Content:81280211,SIMULATION,SIM,True,True,644815.9480,284662.688000,0,-55200.000000,138.26,-55338.260000,340000.00,644815.00,513031.2000000000,何良福,海通期货,0,,False,11,False,0,False,,,0,0,,0,17^False^0,|8 FrontID: Client: Size:214 
+12:06:08.3329 [DEBUG] Moniter:[INFO] raw message type:MGRQRYACCOUNTSRESPONSE message:81280306,SIMULATION,SIM,True,True,0,1602777.820000,-16800.00,0.000000,422.18,-17222.180000,1620000.00,0,0.0000000000,宁德雄,海通期货,0,,False,11,False,0,False,,,0,0,,0,17^False^0,|8 
+12:06:08.3329 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:08.3329 [DEBUG] Moniter:[INFO] got mgrqryaccount response:Packet Type:MGRQRYACCOUNTSRESPONSE Content:81280306,SIMULATION,SIM,True,True,0,1602777.820000,-16800.00,0.000000,422.18,-17222.180000,1620000.00,0,0.0000000000,宁德雄,海通期货,0,,False,11,False,0,False,,,0,0,,0,17^False^0,|8 FrontID: Client: Size:196 
+12:06:08.3329 [DEBUG] Moniter:[INFO] raw message type:MGRQRYACCOUNTSRESPONSE message:81280214,SIMULATION,SIM,True,True,0,0,0,0,0,0,0,0,0,李跃红,海通期货,0,,False,11,False,0,False,,,0,0,,0,0^False^0,|8 
+12:06:08.3329 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:08.3329 [DEBUG] Moniter:[INFO] got mgrqryaccount response:Packet Type:MGRQRYACCOUNTSRESPONSE Content:81280214,SIMULATION,SIM,True,True,0,0,0,0,0,0,0,0,0,李跃红,海通期货,0,,False,11,False,0,False,,,0,0,,0,0^False^0,|8 FrontID: Client: Size:130 
+12:06:08.3329 [DEBUG] Moniter:[INFO] raw message type:MGRQRYACCOUNTSRESPONSE message:81280304,SIMULATION,SIM,True,True,0,8699543.120000,-588720.00,0.000000,11736.88,-600456.880000,9300000.00,0,0.0000000000,张鹏,海通期货,0,,False,11,False,0,False,,,0,0,,0,17^False^0,|8 
+12:06:08.3329 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:08.3329 [DEBUG] Moniter:[INFO] got mgrqryaccount response:Packet Type:MGRQRYACCOUNTSRESPONSE Content:81280304,SIMULATION,SIM,True,True,0,8699543.120000,-588720.00,0.000000,11736.88,-600456.880000,9300000.00,0,0.0000000000,张鹏,海通期货,0,,False,11,False,0,False,,,0,0,,0,17^False^0,|8 FrontID: Client: Size:197 
+12:06:08.3329 [DEBUG] Moniter:[INFO] raw message type:MGRQRYACCOUNTSRESPONSE message:81280209,SIMULATION,SIM,True,True,0.9024,586621.282400,-31560.00,0.000000,1819.62,-33379.620000,620000.00,0,0.0000000000,赵凯,海通期货,0,,False,11,False,0,False,,,0,0,,0,17^True^0,|8 
+12:06:08.3329 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:08.3329 [DEBUG] Moniter:[INFO] got mgrqryaccount response:Packet Type:MGRQRYACCOUNTSRESPONSE Content:81280209,SIMULATION,SIM,True,True,0.9024,586621.282400,-31560.00,0.000000,1819.62,-33379.620000,620000.00,0,0.0000000000,赵凯,海通期货,0,,False,11,False,0,False,,,0,0,,0,17^True^0,|8 FrontID: Client: Size:196 
+12:06:08.6619 [DEBUG] Moniter:Set control visable via UIAccess 
+12:06:08.6819 [INFO] Moniter:GlobalUtil:register callback for control:TradingLib.MoniterControl.DemoControl 
+12:06:08.6949 [INFO] Moniter:GlobalUtil:dll file:D:\worktable\FutSystems\Platform\FutsMoniter\plugin\TradingLib.HistReport.dll 
+12:06:08.7799 [INFO] Moniter:GlobalUtil:type:TradingLib.HistReport.HistReport 
+12:06:08.7859 [INFO] Moniter:GlobalUtil:type:TradingLib.Protocol.SummaryViaSec 
+12:06:08.7859 [INFO] Moniter:GlobalUtil:MoniterControl list: 
+12:06:08.7859 [INFO] Moniter:GlobalUtil:      TradingLib.HistReport.HistReport 
+12:06:09.3689 [INFO] Moniter:GlobalUtil:register callback for control:TradingLib.HistReport.HistReport 
+12:06:09.3689 [INFO] Moniter:GlobalUtil:register callback for control:TradingLib.MoniterControl.DemoControl 
+12:06:09.7020 [DEBUG] Moniter:DockableWorkspace cell added...... 
+12:06:10.1090 [INFO] Moniter:GlobalUtil:$$$$$$$$$$$$$$$$$$$$$4 try to add montor control #####################:TradingLib.MoniterControl.DemoControl 
+12:06:10.1580 [DEBUG] Moniter:dockspace cell added 
+12:06:10.3090 [DEBUG] Moniter:dockspace cell added 
+12:06:11.4481 [DEBUG] Moniter:[INFO] 请求设置观察帐户列表:81280201,81280203,81280209,81280210,81280211,81280214,81280302,81280304,81280305,81280306,81280307,81280308,81280312,81280313,8128299 
+12:06:13.9002 [DEBUG] Moniter:[INFO] 请求设置观察帐户列表:81280201,81280203,81280209,81280210,81280211,81280214,81280302,81280304,81280305,81280306,81280307,81280308,81280312,81280313,8128299 
+12:06:17.4274 [DEBUG] Moniter:dockspace cell removed 
+12:06:17.4864 [DEBUG] Moniter:dockspace cell removed 
+12:06:17.5004 [DEBUG] Moniter:DockableWorkspace cell removed...... 
+12:06:17.5554 [DEBUG] Moniter:DockableWorkspace cell added...... 
+12:06:17.5894 [DEBUG] Moniter:dockspace cell added 
+12:06:17.6044 [DEBUG] Moniter:dockspace cell added 
+12:06:18.5785 [DEBUG] Moniter:[INFO] 请求设置观察帐户列表:81280201,81280203,81280209,81280210,81280211,81280214,81280302,81280304,81280305,81280306,81280307,81280308,81280312 
+12:06:21.9507 [DEBUG] Moniter:[INFO] 请求设置观察帐户列表:81280201,81280203,81280209,81280210,81280211,81280214,81280302,81280304,81280305,81280306,81280307,81280308,81280312,81280313,8128299 
+12:06:28.3540 [DEBUG] Moniter:[INFO] 请求恢复日内交易数据 Account:81280211 
+12:06:28.4590 [DEBUG] Moniter:[INFO] raw message type:MGRRESUMEACCOUNTRESPONE message:81280211,BEGIN^True^0,|13 
+12:06:28.4590 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:28.4590 [DEBUG] Moniter:[INFO] got resume account response:Packet Type:MGRRESUMEACCOUNTRESPONE Content:81280211,BEGIN^True^0,|13 FrontID: Client: Size:33 
+12:06:28.4740 [DEBUG] Moniter:resume account:81280211 start... 
+12:06:28.4740 [DEBUG] Moniter:[INFO] raw message type:ORDERNOTIFY message:IF1503,false,-1,0,3834.00,0.00,全部成交,CFFEX,81280211,FUT,RMB,unused,635623822641901266,DAY,20150320,101405,1,0,SIMBROKER,38016,,Filled,OPEN,          16,False,Speculation,38016,38016,,1,305,0|0 
+12:06:28.5020 [DEBUG] Moniter:[INFO] got order notify:TradingLib.Common.OrderImpl 
+12:06:28.5030 [DEBUG] Moniter:[INFO] raw message type:ORDERNOTIFY message:IF1503,false,-1,0,3846.40,0.00,全部成交,CFFEX,81280211,FUT,RMB,unused,635623822641901414,DAY,20150320,103906,1,0,SIMBROKER,49143,,Filled,OPEN,          19,False,Speculation,49143,49143,,1,305,0|0 
+12:06:28.5030 [DEBUG] Moniter:[INFO] got order notify:TradingLib.Common.OrderImpl 
+12:06:28.5030 [DEBUG] Moniter:[INFO] raw message type:EXECUTENOTIFY message:20150320,101407,,IF1503,False,-1,3834.40,,81280211,FUT,RMB,,635623822641901266,CFFEX,SIMBROKER,46791,34.51,EntryPosition,0.00,          16,Speculation,38016,38016,OPEN|0 
+12:06:28.5190 [DEBUG] Moniter:[INFO] got trade notify:TradingLib.Common.TradeImpl 
+12:06:28.5770 [INFO] Moniter:GlobalUtil:runing size:-1 positiondetail size:1 
+12:06:28.5770 [DEBUG] Moniter:[INFO] raw message type:EXECUTENOTIFY message:20150320,103906,,IF1503,False,-1,3846.80,,81280211,FUT,RMB,,635623822641901414,CFFEX,SIMBROKER,59934,34.62,AddPosition,0.00,          19,Speculation,49143,49143,OPEN|0 
+12:06:28.5770 [DEBUG] Moniter:[INFO] got trade notify:TradingLib.Common.TradeImpl 
+12:06:28.5810 [INFO] Moniter:GlobalUtil:runing size:-2 positiondetail size:2 
+12:06:28.5810 [DEBUG] Moniter:[INFO] raw message type:EXECUTENOTIFY message:20150320,101407,,IF1503,False,-1,3834.40,,81280211,FUT,RMB,,635623822641901266,CFFEX,SIMBROKER,46791,34.51,AddPosition,0.00,          16,Speculation,38016,38016,OPEN|0 
+12:06:28.5810 [DEBUG] Moniter:[INFO] got trade notify:TradingLib.Common.TradeImpl 
+12:06:28.5810 [INFO] Moniter:GlobalUtil:runing size:-3 positiondetail size:3 
+12:06:28.5810 [DEBUG] Moniter:[INFO] raw message type:EXECUTENOTIFY message:20150320,103906,,IF1503,False,-1,3846.80,,81280211,FUT,RMB,,635623822641901414,CFFEX,SIMBROKER,59934,34.62,AddPosition,0.00,          19,Speculation,49143,49143,OPEN|0 
+12:06:28.5810 [DEBUG] Moniter:[INFO] got trade notify:TradingLib.Common.TradeImpl 
+12:06:28.5810 [INFO] Moniter:GlobalUtil:runing size:-4 positiondetail size:4 
+12:06:28.5810 [DEBUG] Moniter:[INFO] raw message type:MGRRESUMEACCOUNTRESPONE message:81280211,END^True^0,|13 
+12:06:28.5810 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:06:28.5810 [DEBUG] Moniter:[INFO] got resume account response:Packet Type:MGRRESUMEACCOUNTRESPONE Content:81280211,END^True^0,|13 FrontID: Client: Size:31 
+12:06:28.5810 [DEBUG] Moniter:resume account:81280211 end... 
+12:06:28.5810 [DEBUG] Moniter:try to load trading info tracker account:81280211 request account:81280211 
+12:06:28.5990 [DEBUG] Moniter:order view got order:TradingLib.Common.OrderImpl 
+12:06:28.5990 [DEBUG] Moniter:order view got order:TradingLib.Common.OrderImpl 
+12:06:28.6140 [DEBUG] Moniter:xxxxxxxxxxxxx got order 
+12:06:28.6140 [DEBUG] Moniter:xxxxxxxxxxxxx got order 
+12:06:28.6140 [DEBUG] Moniter:order view got order:TradingLib.Common.OrderImpl 
+12:06:28.6140 [DEBUG] Moniter:order view got order:TradingLib.Common.OrderImpl 
+12:06:28.6140 [DEBUG] Moniter:xxxxxxxxxxxxx got order 
+12:06:28.6140 [DEBUG] Moniter:xxxxxxxxxxxxx got order 
+12:06:28.6440 [DEBUG] Moniter:new row inserted,account-symbol-side:81280211-IF1503-Short 
+12:07:05.3831 [DEBUG] Moniter:[INFO] 请求扩展命令,module:MgrExchServer cmd:QrySystemStatus args: 
+12:07:05.4561 [DEBUG] Moniter:[INFO] raw message type:MGRCONTRIBRESPONSE message:MgrExchServer,QrySystemStatus,{"Code":0,"Message":"Success:0","Payload":{"LastSettleday":20150319,"CurrentTradingday":20150320,"NextTradingday":20150320,"IsTradingday":false,"IsSettleNormal":false,"IsClearCentreOpen":true,"TotalAccountNum":15,"MarketOpenCheck":true,"IsDevMode":false}}^True^0,|14 
+12:07:05.4561 [DEBUG] Moniter:[INFO] 操作成功 没有携带成功消息 静默 
+12:07:05.4561 [DEBUG] Moniter:[DEBUG] ContribResponse ->Module:MgrExchServer CMD:QrySystemStatus Ret:{"Code":0,"Message":"Success:0","Payload":{"LastSettleday":20150319,"CurrentTradingday":20150320,"NextTradingday":20150320,"IsTradingday":false,"IsSettleNormal":false,"IsClearCentreOpen":true,"TotalAccountNum":15,"MarketOpenCheck":true,"IsDevMode":false}} 

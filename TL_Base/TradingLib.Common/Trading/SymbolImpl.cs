@@ -352,20 +352,17 @@ namespace TradingLib.Common
         /// <summary>
         /// 判断该合约是否过期
         /// </summary>
-        public bool IsExpired
+        public bool IsExpired(int date)
         {
-            get 
+
+            if (this.ExpireDate == 0)
             {
-                if (this.ExpireDate == 0)
-                {
-                    //如果没有结算日信息则不过气
-                    return false;
-                }
-                else
-                {
-                    return Util.ToTLDate() > this.ExpireDate ? true : false;
-                }
-            
+                //如果没有结算日信息则不过气
+                return false;
+            }
+            else
+            {
+                return date > this.ExpireDate ? true : false;
             }
         }
 

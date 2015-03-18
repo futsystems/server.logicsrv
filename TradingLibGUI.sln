@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reactor", "Program\Reactor\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonitorControl", "Program\MonitorControl\MonitorControl.csproj", "{00EFBCFD-6BAB-403E-9B84-652FBC109286}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HistReport", "Program\MoniterPlugin\HistReport\HistReport.csproj", "{CC62ED9C-4D42-40E9-A05F-FADA379E3F3F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,6 +79,18 @@ Global
 		{00EFBCFD-6BAB-403E-9B84-652FBC109286}.Release|Any CPU.Build.0 = Release|Any CPU
 		{00EFBCFD-6BAB-403E-9B84-652FBC109286}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{00EFBCFD-6BAB-403E-9B84-652FBC109286}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{CC62ED9C-4D42-40E9-A05F-FADA379E3F3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC62ED9C-4D42-40E9-A05F-FADA379E3F3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC62ED9C-4D42-40E9-A05F-FADA379E3F3F}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{CC62ED9C-4D42-40E9-A05F-FADA379E3F3F}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{CC62ED9C-4D42-40E9-A05F-FADA379E3F3F}.Debug-OEM|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC62ED9C-4D42-40E9-A05F-FADA379E3F3F}.Debug-OEM|Any CPU.Build.0 = Debug|Any CPU
+		{CC62ED9C-4D42-40E9-A05F-FADA379E3F3F}.Debug-OEM|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{CC62ED9C-4D42-40E9-A05F-FADA379E3F3F}.Debug-OEM|Mixed Platforms.Build.0 = Debug|Any CPU
+		{CC62ED9C-4D42-40E9-A05F-FADA379E3F3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC62ED9C-4D42-40E9-A05F-FADA379E3F3F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC62ED9C-4D42-40E9-A05F-FADA379E3F3F}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{CC62ED9C-4D42-40E9-A05F-FADA379E3F3F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -87,5 +101,6 @@ Global
 		{1C903716-33F2-4FF7-9419-E46ADCA87E50} = {3B0CAAC3-E11D-4411-AE9F-808FE3EDAF5C}
 		{1F19DAA4-2247-41DD-8934-8771DF364A6C} = {3B0CAAC3-E11D-4411-AE9F-808FE3EDAF5C}
 		{00EFBCFD-6BAB-403E-9B84-652FBC109286} = {3B0CAAC3-E11D-4411-AE9F-808FE3EDAF5C}
+		{CC62ED9C-4D42-40E9-A05F-FADA379E3F3F} = {3B0CAAC3-E11D-4411-AE9F-808FE3EDAF5C}
 	EndGlobalSection
 EndGlobal

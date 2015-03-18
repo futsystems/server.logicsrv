@@ -38,6 +38,35 @@ namespace TradingLib.Core
             debug(datastoreheader + "Save Positionround Open Successfull", QSEnumDebugLevel.INFO);
         }
 
+
+        /// <summary>
+        /// 保存结算价格
+        /// 通过行情路由获得当前市场快照然后保存快照中所有合约的结算价格
+        /// </summary>
+        void SaveSettlementPrice()
+        { 
+        
+        }
+
+        /// <summary>
+        /// 将结算价格绑定到持仓对象
+        /// </summary>
+        void BindSettlementPrice()
+        {
+            SettlementPrice target = null;
+            foreach (Position pos in _clearcentre.TotalPositions.Where(pos=>!pos.isFlat))
+            {
+                //如果持仓合约有对应的结算价信息 设定结算价
+                target = _settlementPriceTracker[pos.Symbol];
+                if (target != null)
+                {
+                    pos.SettlementPrice = target.Price;
+                }
+            }
+            
+        }
+
+
         string datastoreheader = "#####DataStore:";
         /// <summary>
         /// 1.保存持仓明细
@@ -51,12 +80,14 @@ namespace TradingLib.Core
             //检查所有系统持仓按照一定的逻辑获得 结算价 目前如果结算价不存在则取持仓最新价来替代(持仓最新价 当没有tick时是以持仓成本作价)
             foreach (Position pos in _clearcentre.TotalPositions)
             {
+                //如果系统设定按最新价来执行结算 则将结算价格设为持仓的最新价
                 if (_settleWithLatestPrice)//如果以最新价进行结算
                 {
                     pos.SettlementPrice = pos.LastPrice;//将最新价设定到持仓的结算价
                 }
                 else
                 {
+                    //默认情况下 系统按结算价进行结算，如果结算价缺失则按最新价进行结算
                     if (pos.SettlementPrice == null)
                         pos.SettlementPrice = pos.LastPrice;
                 }

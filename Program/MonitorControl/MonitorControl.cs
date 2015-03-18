@@ -8,9 +8,11 @@ using System.Text;
 using System.Windows.Forms;
 using TradingLib.API;
 using TradingLib.Common;
+using TradingLib.Mixins.Json;
 
 
-namespace TradingLib.GUI
+
+namespace TradingLib.MoniterControl
 {
  
     /// <summary>
@@ -21,7 +23,7 @@ namespace TradingLib.GUI
     /// 1.响应用户输入的请求 形成服务端扩展请求调用通过 ReqContribRequest对外发送
     /// 2.编写响应函数 用特性标记，系统在加载时自动获得对应的回调函数并注册到回调中心 当服务端有消息回报时自动回调该函数
     /// </summary>
-    public partial class MonitorControl : UserControl
+    public partial class MonitorControl : UserControl,IMoniterControl
     {
         public MonitorControl()
         {
@@ -40,6 +42,13 @@ namespace TradingLib.GUI
             _client = client;
         }
 
+        public virtual string Title
+        {
+            get
+            {
+                return "BaseMonitorControl";
+            }
+        }
         /// <summary>
         /// 提交请求
         /// </summary>
@@ -56,6 +65,17 @@ namespace TradingLib.GUI
             {
                 throw new NullReferenceException("MGRClient can not be null");
             }
+        }
+
+        /// <summary>
+        /// 以Json格式发送请求
+        /// </summary>
+        /// <param name="module"></param>
+        /// <param name="cmd"></param>
+        /// <param name="obj"></param>
+        protected void JsonRequest(string module, string cmd, object obj)
+        {
+            this.Request(module, cmd, JsonMapper.ToJson(obj));
         }
 
         /// <summary>

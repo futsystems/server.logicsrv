@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TradingLib.Common;
-using TradingLib.GUI;
+using TradingLib.MoniterControl;
 using FutsMoniter.Common;
 
 namespace FutsMoniter
@@ -136,7 +136,13 @@ namespace FutsMoniter
             MonitorControlHelper.RegisterControl(ctl);
             ctl.SetClient(Globals.TLClient);
 
+
+            MonitorControl ct_report = MoniterPlugin.CreateMoniterControl("TradingLib.HistReport.HistReport");
+            MonitorControlHelper.RegisterControl(ct_report);
+            ct_report.SetClient(Globals.TLClient);
+
             AddWorkspacePage(ctl);
+            AddWorkspacePage(ct_report);
 
             MonitorControl ct2 = new DemoControl();
             MonitorControlHelper.RegisterControl(ct2);
