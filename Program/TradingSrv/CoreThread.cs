@@ -146,7 +146,7 @@ namespace TraddingSrvCLI
                 //读取配置文件 初始化数据库参数 系统其余设置均从数据库中加载
                 ConfigFile _configFile = ConfigFile.GetConfigFile();
                 DBHelper.InitDBConfig(_configFile["DBAddress"].AsString(), _configFile["DBPort"].AsInt(), _configFile["DBName"].AsString(), _configFile["DBUser"].AsString(), _configFile["DBPass"].AsString());
-
+                
                 using (var coreMgr =scope.Resolve<ICoreManager>())//1.核心模块管理器,加载核心服务组件
                 {
                     coreMgr.Init();

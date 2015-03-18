@@ -316,7 +316,7 @@ namespace TradingLib.BrokerXAPI.Interop
             {
                 Util.Info("BrokerProxy QryOrder");
                 bool x = _QryOrder(this.Wrapper);
-                //Util.Info("**************** qry order return:" + x.ToString());
+                Util.Info("**************** QryOrder return:" + x.ToString());
                 return x;
             }
             catch (Exception ex)
@@ -335,7 +335,7 @@ namespace TradingLib.BrokerXAPI.Interop
             {
                 Util.Info("BrokerProxy QryTrade");
                 bool x = _QryTrade(this.Wrapper);
-                //Util.Info("**************** qry trade return:" + x.ToString());
+                Util.Info("**************** QryTrade return:" + x.ToString());
                 return x;
             }
             catch (Exception ex)
@@ -354,7 +354,7 @@ namespace TradingLib.BrokerXAPI.Interop
             {
                 Util.Info("BrokerProxy QryPositionDetail");
                 bool x = _QryPositionDetail(this.Wrapper);
-                //Util.Info("**************** qry trade return:" + x.ToString());
+                Util.Info("**************** QryPositionDetail return:" + x.ToString());
                 return x;
             }
             catch (Exception ex)
