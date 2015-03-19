@@ -8,7 +8,7 @@ using TradingLib.Common;
 
 namespace TradingLib.Common
 {
-    public partial class TLClientNet
+    public partial class TLClientNet:IMGRClient
     {
 
         #region Event

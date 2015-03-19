@@ -30,7 +30,7 @@ namespace FutsMoniter
             Globals.Debug("init globals");
             Util.Debug("~~~~~~~~~~~~~~~~~~``moniter start here~~~~~~~~~~~~~~~~~~``");
 
-            //DemoControl ctl = new DemoControl();
+            
 
             //Util.sleep(100000);
             

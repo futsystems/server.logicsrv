@@ -17,16 +17,7 @@ namespace TradingLib.GUI
         public DemoControl()
         {
             InitializeComponent();
-
-
-            this.Log("sub control construct finished", QSEnumDebugLevel.DEBUG);
         }
-
-        protected override void OnLoad(EventArgs e)
-        {
-            this.Log("base control load", QSEnumDebugLevel.INFO);
-        }
-
 
         /// <summary>
         /// 界面按钮事件 触发后向服务端提交一个请求
@@ -35,11 +26,16 @@ namespace TradingLib.GUI
         /// <param name="e"></param>
         private void kryptonButton1_Click(object sender, EventArgs e)
         {
-            this.Request("demo", "helloworld", args.Text);
+            this.Request("MgrExchServer", "HelloWorld", args.Text);
         }
 
-        [CallbackAttr("demo","helloworld")]
-        void OnHelloworld(string result)
+
+        /// <summary>
+        /// CallbackAttr标注 注册一个回调函数
+        /// </summary>
+        /// <param name="result"></param>
+        [CallbackAttr("MgrExchServer", "HelloWorld")]
+        public void OnHelloworld(string result)
         {
             ctDebug1.GotDebug(result);
         }

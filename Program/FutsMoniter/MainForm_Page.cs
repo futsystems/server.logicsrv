@@ -13,6 +13,7 @@ using ComponentFactory.Krypton.Workspace;
 using ComponentFactory.Krypton.Docking;
 using TradingLib.API;
 using TradingLib.Common;
+using TradingLib.GUI;
 using FutsMoniter.Common;
 
 namespace FutsMoniter
@@ -25,15 +26,39 @@ namespace FutsMoniter
         /// </summary>
         void InitPage()
         {
-            kryptonDockingManager.AddToWorkspace("Workspace", new KryptonPage[] { NewAccMoniter() });
+            kryptonDockingManager.AddToWorkspace("Workspace", GetWorkspacePages());
             kryptonDockingManager.AddDockspace("Control", DockingEdge.Bottom, new KryptonPage[] { NewTradingInfoReal() });
             kryptonDockingManager.AddDockspace("Control", DockingEdge.Right, GetModulePage());
 
 
-            if (System.IO.File.Exists("config.xml"))
+            //if (System.IO.File.Exists("config.xml"))
+            //{
+            //    kryptonDockingManager.LoadConfigFromFile("config.xml");
+            //}
+        }
+
+        public void AddWorkspacePage(MonitorControl control)
+        {
+            workspacelist.Add(control);
+        }
+        List<MonitorControl> workspacelist = new List<MonitorControl>();
+        KryptonPage[] GetWorkspacePages()
+        {
+            List<KryptonPage> pagelist = new List<KryptonPage>();
+            pagelist.Add(NewAccMoniter());
+            foreach (MonitorControl ct in workspacelist)
             {
-                kryptonDockingManager.LoadConfigFromFile("config.xml");
+                pagelist.Add(NewPage(ct.GetType().FullName+"[W]", ct.GetType().FullName, 2, ct));
             }
+            return pagelist.ToArray();
+        }
+
+
+        List<MonitorControl> controlist = new List<MonitorControl>();
+
+        public void AddModulePage(MonitorControl control)
+        {
+            controlist.Add(control);
         }
 
         KryptonPage[] GetModulePage()
@@ -46,6 +71,13 @@ namespace FutsMoniter
             {
                 pagelist.Add(NewFinService());
             }
+
+            foreach(MonitorControl ct in controlist)
+            {
+                Util.Debug("$$$$$$$$$$$$$$$$$$$$$4 try to add montor control #####################:"+ct.GetType().FullName);
+                pagelist.Add(NewPage(ct.GetType().FullName+"[M]", ct.GetType().FullName, 2, ct));
+            }
+            
             return pagelist.ToArray();
         }
         void DestoryPage()

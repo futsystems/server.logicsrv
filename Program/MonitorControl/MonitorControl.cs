@@ -16,32 +16,17 @@ namespace TradingLib.GUI
     /// <summary>
     /// 管理端动态控件的基类
     /// 其余控件需从该控件进行集成并获得对系统的相关调用
+    /// 设计架构如下
+    /// MonitorControl 做成高内聚的组件
+    /// 1.响应用户输入的请求 形成服务端扩展请求调用通过 ReqContribRequest对外发送
+    /// 2.编写响应函数 用特性标记，系统在加载时自动获得对应的回调函数并注册到回调中心 当服务端有消息回报时自动回调该函数
     /// </summary>
     public partial class MonitorControl : UserControl
     {
         public MonitorControl()
         {
-            InitializeComponent();
-
-            this.Log("moniter control init from here",QSEnumDebugLevel.DEBUG);
-
-            List<HandlerInfo> infolist = GUIHelper.FindHandler(this);
-            foreach (HandlerInfo info in infolist)
-            {
-                Log(string.Format("Handler module:{0} command:{1}", info.Attr.Module, info.Attr.Cmd),QSEnumDebugLevel.INFO);
-            }
-
-            this.Log("base control construct finished",QSEnumDebugLevel.DEBUG);
-
-            
+            InitializeComponent();            
         }
-
-        protected override void OnLoad(EventArgs e)
-        {
-            this.Log("base control load",QSEnumDebugLevel.INFO);
-        }
-
-
 
         IMGRClient _client = null;
 

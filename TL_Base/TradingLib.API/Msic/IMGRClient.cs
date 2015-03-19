@@ -23,50 +23,5 @@ namespace TradingLib.API
         /// <param name="args">参数</param>
         void ReqContribRequest(string module, string cmd, string args);
 
-        /// <summary>
-        /// 注册请求回调函数
-        /// 用于向系统回调中心 注册一个回调函数
-        /// 
-        /// </summary>
-        /// <param name="module">回调函数用于处理的模块</param>
-        /// <param name="cmd">回调函数用于响应的命理</param>
-        /// <param name="result">执行命令所返回的结果</param>
-        /// <param name="islast">返回结束标识</param>
-        void RegisterCallback(string module,string cmd,Action<string,bool> handler);
-
-        /// <summary>
-        /// 注册通知回调函数
-        /// 
-        /// 服务端向管理端发送通知，通过向系统回调中心 注册一个回调函数
-        /// </summary>
-        /// <param name="module"></param>
-        /// <param name="cmd"></param>
-        /// <param name="del"></param>
-        void RegisterNotifyCallback(string module, string cmd, Action<string> handler);
-
-        /// <summary>
-        /// 注销回调函数
-        /// </summary>
-        /// <param name="module"></param>
-        /// <param name="cmd"></param>
-        /// <param name="handler"></param>
-        void UnRegisterCallback(string module,string cmd,Action<string,bool> handler);
-
-        /// <summary>
-        /// 注销 通知回调函数
-        /// </summary>
-        /// <param name="module"></param>
-        /// <param name="cmd"></param>
-        /// <param name="handler"></param>
-        void UnRegisterNotifyCallback(string module, string cmd, Action<string> handler);
-
-
-        /// <summary>
-        /// 日志输出
-        /// </summary>
-        /// <param name="message"></param>
-        /// <param name="leve"></param>
-        void Log(string message, QSEnumDebugLevel leve);
-
     }
 }
