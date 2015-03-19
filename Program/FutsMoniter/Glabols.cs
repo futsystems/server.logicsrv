@@ -6,13 +6,14 @@ using System.Drawing;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Mixins.JsonObject;
+using Common.Logging;
 
 namespace FutsMoniter
 {
     
     public partial class Globals
     {
-        
+        static ILog logger = LogManager.GetLogger("Moniter");
 
         public static ConfigFile Config = null;
 
@@ -23,12 +24,18 @@ namespace FutsMoniter
             try
             {
                 Config = ConfigFile.GetConfigFile("moniter.cfg");
+                Util.SendLogEvent += new ILogItemDel(Util_SendLogEvent);
             }
             catch(Exception ex)
             {
             
             }
                 
+        }
+
+        static void Util_SendLogEvent(ILogItem log)
+        {
+            Log(log.Message, log.Level, log.Programe);
         }
 
         /// <summary>
@@ -232,12 +239,42 @@ namespace FutsMoniter
 
         public static LoginStatus LoginStatus = new LoginStatus(false,"",false);
 
-        public static event DebugDelegate SendDebugEvent;
+
         public static void Debug(string msg)
         {
-            //logger.GotDebug(msg);
-            if (SendDebugEvent != null)
-                SendDebugEvent(msg);
+            Log(msg, QSEnumDebugLevel.DEBUG);
+        }
+
+        /// <summary>
+        /// 输出日志
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="level"></param>
+        /// <param name="program"></param>
+        public static void Log(string message, QSEnumDebugLevel level, string program = null)
+        {
+            if(program != null)
+            {
+                message = string.Format("{0}:{1}",program,message);
+            }
+            switch (level)
+            { 
+                case QSEnumDebugLevel.DEBUG:
+                    logger.Debug(message);
+                    break;
+                case QSEnumDebugLevel.ERROR:
+                    logger.Error(message);
+                    break;
+                case QSEnumDebugLevel.FATAL:
+                    logger.Fatal(message);
+                    break;
+                case QSEnumDebugLevel.INFO:
+                    logger.Info(message);
+                    break;
+                case QSEnumDebugLevel.WARNING:
+                    logger.Warn(message);
+                    break;
+            }
         }
 
         //public static string CompanyName = "分帐户柜台系统";

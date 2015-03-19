@@ -46,11 +46,11 @@ namespace FutsMoniter
 
         /// <summary>
         /// 注册初始化完成事件回调
-        /// 如果初始化过程没有完成 则注册成回调函数,当初始化完成后再次执行
+        /// 如果核心初始化过程没有完成 则注册成回调函数,当初始化完成后再次执行
         /// 如果初始化过程已经完成，则直接执行该函数
         /// </summary>
         /// <param name="callback"></param>
-        static void RegInitCallback(VoidDelegate callback)
+        public static void RegInitCallback(VoidDelegate callback)
         {
             if (!Globals.EnvReady)
             {

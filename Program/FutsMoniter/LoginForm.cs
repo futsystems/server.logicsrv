@@ -8,9 +8,14 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using TradingLib.API;
+using TradingLib.Common;
+using TradingLib.GUI;
+
 
 using FutsMoniter.Common;
 using FutSystems.GUI;
+
+
 
 namespace FutsMoniter
 {
@@ -22,6 +27,13 @@ namespace FutsMoniter
         Starter mStart;
         public LoginForm(Starter starter)
         {
+            Globals.Debug("init globals");
+            Util.Debug("~~~~~~~~~~~~~~~~~~``moniter start here~~~~~~~~~~~~~~~~~~``");
+
+            //DemoControl ctl = new DemoControl();
+
+            //Util.sleep(100000);
+            
             InitializeComponent();
 
             mStart = starter;

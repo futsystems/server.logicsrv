@@ -91,6 +91,15 @@ namespace FutsMoniter
             kryptonRibbonGroupButton_ShowAll.Click += new EventHandler(kryptonRibbonGroupButton_ShowAll_Click);
             kryptonRibbonGroupButton_Reset.Click += new EventHandler(kryptonRibbonGroupButton_Reset_Click);
             kryptonRibbonGroupButton_SaveConfig.Click += new EventHandler(kryptonRibbonGroupButton_SaveConfig_Click);
+
+
+            kryptonRibbonGroupButton_demo.Click += new EventHandler(kryptonRibbonGroupButton_demo_Click);
+        }
+
+        void kryptonRibbonGroupButton_demo_Click(object sender, EventArgs e)
+        {
+            TradingLib.GUI.MonitorControl ctl = new TradingLib.GUI.MonitorControl();
+
         }
 
         void kryptonRibbonGroupButton_ExStrategy_Click(object sender, EventArgs e)

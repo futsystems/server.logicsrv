@@ -42,6 +42,7 @@
     <Compile Include="Account\IAccTradingInfo.cs" />
     <Compile Include="Account\IAccConfig.cs" />
     <Compile Include="Account\IFinanceTotal.cs" />
+    <Compile Include="Msic\IMGRClient.cs" />
     <Compile Include="Trading\EnumStrategy.cs" />
     <Compile Include="Vendor\PositionMetric.cs" />
     <Compile Include="Vendor\RouterItem.cs" />

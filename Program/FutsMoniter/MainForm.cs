@@ -47,8 +47,7 @@ namespace FutsMoniter
         void debug(string msg)
         {
             debugform.GotDebug(msg);
-            logfile.GotDebug(msg);
-            //logsrv.NeLog(msg);
+            Globals.Debug(msg);
         }
 
         Ctx _ctx;
@@ -65,7 +64,7 @@ namespace FutsMoniter
             kryptonDockingManager.ManageControl(mainpanel, w);
             kryptonDockingManager.ManageFloating(this);
 
-            Globals.SendDebugEvent += new DebugDelegate(debug);
+            //Globals.SendDebugEvent += new DebugDelegate(debug);
 
             _ctx = new Ctx();
             _ctx.InitStatusEvent += new Action<string>(ShowInfo);
