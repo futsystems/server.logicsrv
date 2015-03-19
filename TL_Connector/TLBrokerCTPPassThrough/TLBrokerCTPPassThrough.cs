@@ -70,6 +70,7 @@ namespace Broker.Live
                 }
                 histtrademap.Clear();
                 //委托查询完成后查询成交
+                Util.sleep(1000);
                 this.QryTrade();
             }
         }
@@ -117,14 +118,9 @@ namespace Broker.Live
             }
             if (islast)
             {
-                //foreach (Order o in histordermap.Values)
-                //{
-                //    debug(o.GetOrderStatus());
-                //    NotifyOrder(o);
-                //}
-
                 histordermap.Clear();
                 //持仓数据查询完毕后查询委托
+                Util.sleep(1000);
                 this.QryOrder();
             }
         }
@@ -167,6 +163,7 @@ namespace Broker.Live
 
             ////查询委托 在委托处理完毕后会链式查询成交 整体恢复数据过程Position->Order->Trade 真个过程
             ////获得所有历史数据 用于恢复当前最新交易状态
+            Util.sleep(1000);
             this.QryPositionDetail();
             //查询帐户信息用于同步当前权益
 
