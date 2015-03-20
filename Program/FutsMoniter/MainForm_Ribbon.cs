@@ -101,7 +101,8 @@ namespace FutsMoniter
         void kryptonRibbonGroupButton_settlemgr_Click(object sender, EventArgs e)
         {
             fmSettleManager fm = new fmSettleManager();
-            fm.ShowDialog();
+            //fm.ShowDialog();
+            fm.Show();
         }
 
         void kryptonRibbonGroupButton_demo_Click(object sender, EventArgs e)

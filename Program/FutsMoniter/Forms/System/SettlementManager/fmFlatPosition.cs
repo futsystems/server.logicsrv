@@ -41,11 +41,16 @@ namespace FutsMoniter
         {
             if (MoniterUtils.WindowConfirm("确认执行手工平仓(再次确认时间和价格)?") == System.Windows.Forms.DialogResult.Yes)
             {
+                if (size.Value <= 0)
+                {
+                    MoniterUtils.WindowMessage("平仓手数量需大于0");
+                    return;
+                }
                 var data = new {
                                 
                                 account = _pos.Account,
                                 symbol = _pos.Symbol,
-                                side = _pos.Side,
+                                side = !_pos.Side,
 
                                 time = Util.ToTLTime(time.Value),
                                 size = (int)size.Value,
@@ -54,7 +59,7 @@ namespace FutsMoniter
                                 
                             };
                 string s = TradingLib.Mixins.Json.JsonMapper.ToJson(data);
-                MessageBox.Show(s);
+                
                 Globals.TLClient.ReqFlatPositionHold(data);
             }
         }

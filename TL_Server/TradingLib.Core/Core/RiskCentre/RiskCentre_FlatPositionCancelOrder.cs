@@ -426,7 +426,7 @@ namespace TradingLib.Core
         public void FlatPosition(Position pos, QSEnumOrderSource ordersource, string closereason)
         {
             //如果持仓为null  则直接返回
-            //if (pos == null) return;
+            if (pos == null) return;
             //如果该持仓已经在平仓队列中则不进行处理直接返回
             if (IsPosFlatPending(pos))
                 return;

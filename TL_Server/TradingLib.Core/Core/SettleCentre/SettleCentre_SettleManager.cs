@@ -85,7 +85,7 @@ namespace TradingLib.Core
             var data = JsonMapper.ToObject(json);
 
             //交易帐户
-            var account = data["account"].ToString();
+            var acct = data["account"].ToString();
             //持仓合约
             var symbol = data["symbol"].ToString();
             //持仓方向
@@ -100,9 +100,74 @@ namespace TradingLib.Core
             //平仓价格
             decimal price = decimal.Parse(data["price"].ToString());
             //平今，平昨标志
-            var flat = (QSEnumOffsetFlag)Enum.Parse(typeof(QSEnumOffsetFlag), data["offset_flag"].ToString());
-            
+            var flag = (QSEnumOffsetFlag)Enum.Parse(typeof(QSEnumOffsetFlag), data["offset_flag"].ToString());
 
+
+            Trade f = new TradeImpl(symbol,price,size * (side ? 1 : -1));
+            f.xDate = _tradingday;//设定成交时间为 交易日
+            f.xTime = time;
+            f.OffsetFlag = flag;
+
+            f.Account = acct;
+            IAccount account = _clearcentre[acct];
+
+            f.oSymbol = account.GetSymbol(f.Symbol);
+
+            if (f.oSymbol == null)
+            {
+                throw new FutsRspError(string.Format("合约:{0}不存在", f.Symbol));
+            }
+
+            if (account == null)
+            {
+                throw new FutsRspError(string.Format("交易帐户:{0}不存在",acct));
+            }
+
+            //时间检查
+            IMarketTime mt = f.oSymbol.SecurityFamily.MarketTime;
+            if (!mt.IsInMarketTime(f.xTime))
+            {
+                throw new FutsRspError("平仓时间不在交易时间段内");
+            }
+
+            f.Broker = "SIMBROKER";
+
+            Order o = new MarketOrder(f.Symbol, f.Side, f.UnsignedSize);
+
+            o.oSymbol = f.oSymbol;
+            o.Account = f.Account;
+            o.Date = f.xDate;
+            o.Time = Util.ToTLTime(Util.ToDateTime(f.xDate, f.xTime) - new TimeSpan(0, 0, 1));
+            o.Status = QSEnumOrderStatus.Filled;
+            o.OffsetFlag = f.OffsetFlag;
+            o.Broker = f.Broker;
+
+            //委托成交之后
+            o.TotalSize = o.Size;
+            o.Size = 0;
+            o.FilledSize = o.UnsignedSize;
+
+            //注意这里需要获得可用的委托流水和成交流水号
+
+            long ordid = _exchsrv.futs_InsertOrderManual(o);
+
+
+            f.id = ordid;
+            f.OrderSeq = o.OrderSeq;
+            f.BrokerRemoteOrderID = o.BrokerRemoteOrderID;
+            f.TradeID = "xxxxx";//随机产生的成交编号
+
+            Util.sleep(100);
+            _exchsrv.futs_InsertTradeManual(f);
+
+            /* 在进行手工插入时 由于清算中心根据清算中心的状态来决定是否保存交易记录到数据库，在历史手工结算时
+             * 清算中心需要记录这条交易记录
+             * 
+             * 
+             * 
+             * 
+             * **/
+            session.OperationSuccess("手工平仓成功");
         }
 
 
@@ -173,6 +238,9 @@ namespace TradingLib.Core
 
             //重置结算价格维护器
             _settlementPriceTracker.Clear();
+
+            //重新加载合约数据
+            BasicTracker.SymbolTracker.Reload();
 
             //重置清算中心 用于加载对应的交易数据
             _clearcentre.Reset();

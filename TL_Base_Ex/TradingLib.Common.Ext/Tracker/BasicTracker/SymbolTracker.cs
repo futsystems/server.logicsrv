@@ -23,6 +23,17 @@ namespace TradingLib.Common
         }
 
         /// <summary>
+        /// 重新加载合约数据
+        /// 合约数据与交易日相关，在结算中心回滚的过程中需要重新加载已过期的历史合约
+        /// </summary>
+        internal void Reload()
+        {
+            foreach (var t in domainsymboltracker.Values)
+            {
+                t.Reload();
+            }
+        }
+        /// <summary>
         /// 获得某个域的DBSymbolTracker
         /// </summary>
         /// <param name="domain_id"></param>
@@ -133,8 +144,8 @@ namespace TradingLib.Common
             //加载所有合约 这里需要判断合约是否过期
             foreach (SymbolImpl sym in ORM.MBasicInfo.SelectSymbol(domain.ID))
             {
-                //if (sym.IsExpired(TLCtxHelper.CmdSettleCentre.NextTradingday))//下个交易日是否过期
-                //    continue;
+                if (sym.IsExpired(TLCtxHelper.CmdSettleCentre.NextTradingday))//下个交易日是否过期
+                    continue;
                 symcodemap[sym.Symbol] = sym;
                 idxcodemap[sym.ID] = sym;
             }
@@ -148,6 +159,30 @@ namespace TradingLib.Common
             }
         }
 
+        /// <summary>
+        /// 结算中心修改结算日后 需要重新加载合约数据
+        /// </summary>
+        public void Reload()
+        {
+            symcodemap.Clear();
+            idxcodemap.Clear();
+            //加载所有合约 这里需要判断合约是否过期
+            foreach (SymbolImpl sym in ORM.MBasicInfo.SelectSymbol(_domain.ID))
+            {
+                if (sym.IsExpired(TLCtxHelper.CmdSettleCentre.NextTradingday))//下个交易日是否过期
+                    continue;
+                symcodemap[sym.Symbol] = sym;
+                idxcodemap[sym.ID] = sym;
+            }
+
+            //易话合约底层绑定
+            foreach (SymbolImpl sym in symcodemap.Values)
+            {
+                sym.ULSymbol = this[sym.underlaying_fk];
+                sym.UnderlayingSymbol = this[sym.underlayingsymbol_fk];
+                sym.SecurityFamily = BasicTracker.SecurityTracker[sym.Domain_ID, sym.security_fk];
+            }
+        }
 
         /// <summary>
         /// 通过合约代码获得合约对象
