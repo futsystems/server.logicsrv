@@ -22,7 +22,7 @@
 /Platform/**/log/
 /Platform/**/cache/
 /Platform/TLDataBase
-
+/Platform/FutsMoniter/logs
 /publish
 /package
 /packages

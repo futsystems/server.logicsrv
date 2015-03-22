@@ -524,11 +524,29 @@
     <Compile Include="Forms\System\PositionsMetric\fmPositionMetricMoniter.Designer.cs">
       <DependentUpon>fmPositionMetricMoniter.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\System\SettlementManager\ctPositionDetails.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\System\SettlementManager\ctPositionDetails.Designer.cs">
+      <DependentUpon>ctPositionDetails.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\System\SettlementManager\ctPositionHold.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\System\SettlementManager\ctPositionHold.Designer.cs">
+      <DependentUpon>ctPositionHold.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\System\SettlementManager\ctSettlementPrice.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Forms\System\SettlementManager\ctSettlementPrice.Designer.cs">
       <DependentUpon>ctSettlementPrice.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\System\SettlementManager\fmFlatPosition.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\System\SettlementManager\fmFlatPosition.Designer.cs">
+      <DependentUpon>fmFlatPosition.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\System\SettlementManager\fmSettleManager.cs">
       <SubType>Form</SubType>
@@ -974,8 +992,17 @@
     <EmbeddedResource Include="Forms\System\fmLogTaskEvent.resx">
       <DependentUpon>fmLogTaskEvent.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\System\SettlementManager\ctPositionDetails.resx">
+      <DependentUpon>ctPositionDetails.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\System\SettlementManager\ctPositionHold.resx">
+      <DependentUpon>ctPositionHold.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\System\SettlementManager\ctSettlementPrice.resx">
       <DependentUpon>ctSettlementPrice.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\System\SettlementManager\fmFlatPosition.resx">
+      <DependentUpon>fmFlatPosition.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\System\SettlementManager\fmSettleManager.resx">
       <DependentUpon>fmSettleManager.cs</DependentUpon>

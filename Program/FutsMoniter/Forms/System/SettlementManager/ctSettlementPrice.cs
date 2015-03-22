@@ -16,17 +16,29 @@ namespace FutsMoniter
         public ctSettlementPrice()
         {
             InitializeComponent();
-
-            SetPreferences();
-            InitTable();
-            BindToTable();
-            this.Load += new EventHandler(ctSettlementPrice_Load);
+            try
+            {
+                SetPreferences();
+                InitTable();
+                BindToTable();
+                this.Load += new EventHandler(ctSettlementPrice_Load);
+            }
+            catch (Exception ex)
+            { 
+                
+            }
         }
 
         void ctSettlementPrice_Load(object sender, EventArgs e)
         {
             Globals.RegIEventHandler(this);
             gridSettlementPrice.DoubleClick += new EventHandler(gridSettlementPrice_DoubleClick);
+            gridSettlementPrice.RowPrePaint += new DataGridViewRowPrePaintEventHandler(gridSettlementPrice_RowPrePaint);
+        }
+
+        void gridSettlementPrice_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        {
+            e.PaintParts = e.PaintParts ^ DataGridViewPaintParts.Focus;
         }
 
         void gridSettlementPrice_DoubleClick(object sender, EventArgs e)
@@ -43,8 +55,11 @@ namespace FutsMoniter
             fm.ShowDialog();
         }
 
-        void Clear()
+        public void Clear()
         {
+            settlementPriceMap.Clear();
+            settlementPriceRowMap.Clear();
+
             gridSettlementPrice.DataSource = null;
             gt.Rows.Clear();
             BindToTable();
@@ -156,6 +171,9 @@ namespace FutsMoniter
         { 
         
         }
+
+
+
         #region 表格
         #region 显示字段
 

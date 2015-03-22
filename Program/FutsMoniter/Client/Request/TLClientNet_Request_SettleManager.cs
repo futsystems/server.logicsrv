@@ -44,6 +44,23 @@ namespace TradingLib.Common
             this.ReqContribRequest("SettleCentre", "QrySettlementPrice", TradingLib.Mixins.Json.JsonMapper.ToJson(new { settleday = settleday }));
         }
 
+
+        /// <summary>
+        /// 查询结算状态
+        /// </summary>
+        public void ReqQrySettleStatus()
+        {
+            this.ReqContribRequest("SettleCentre", "QrySettleStatus", "");
+        }
+
+        /// <summary>
+        /// 查询当前所有持仓数据
+        /// </summary>
+        public void ReqQryPositionHold()
+        {
+            this.ReqContribRequest("SettleCentre", "QryPositionHold", "");
+        }
+
         /// <summary>
         /// 更新结算价格
         /// </summary>
@@ -53,6 +70,15 @@ namespace TradingLib.Common
             this.ReqContribRequest("SettleCentre", "UpdateSettlementPrice", TradingLib.Mixins.Json.JsonMapper.ToJson(price));
         }
 
+
+        /// <summary>
+        /// 手工平掉某个持仓
+        /// </summary>
+        /// <param name="data"></param>
+        public void ReqFlatPositionHold(object data)
+        {
+            this.ReqContribRequest("SettleCentre", "FlatPositionHold", TradingLib.Mixins.Json.JsonMapper.ToJson(data));
+        }
 
     }
 }
