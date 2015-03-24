@@ -32,7 +32,8 @@ namespace FutsMoniter
             accountgrid.ContextMenuStrip.Items.Add("主帐户出入金与查询", Properties.Resources.cashop2, new EventHandler(QryAccountInfo_Click));//13
             accountgrid.ContextMenuStrip.Items.Add(new System.Windows.Forms.ToolStripSeparator());//11
             accountgrid.ContextMenuStrip.Items.Add("删除帐户", Properties.Resources.deleteaccount, new EventHandler(DelAccount_Click));//12
-           
+            accountgrid.ContextMenuStrip.Items.Add("注销帐户", Properties.Resources.clearterminal, new EventHandler(ClearTerminal_Click));
+      
         
         }
 
@@ -73,6 +74,23 @@ namespace FutsMoniter
                 MoniterUtils.WindowMessage("请选择需要查询的交易帐户");
             }
         }
+
+        void ClearTerminal_Click(object sender, EventArgs e)
+        {
+            AccountLite account = GetVisibleAccount(CurrentAccount);
+            if (account != null)
+            {
+                if (MoniterUtils.WindowConfirm(string.Format("确认注销交易帐户[{0}]的所有登入交易终端?", account.Account)) == DialogResult.Yes)
+                {
+                    Globals.TLClient.ReqClearTerminals(account.Account);
+                }
+            }
+            else
+            {
+                MoniterUtils.WindowMessage("请选择需要查询的交易帐户");
+            }
+        }
+
         void QryLoginInfo_Click(object sender, EventArgs e)
         {
             AccountLite account = GetVisibleAccount(CurrentAccount);

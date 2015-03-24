@@ -11,10 +11,10 @@ using TradingLib.BrokerXAPI;
 using Common.Logging;
 using System.Runtime.InteropServices;
 using System.Reflection;
-//using NLog;
-//using NLog.Targets;
-//using NLog.Config;
-//using NLog;
+using NLog;
+using NLog.Targets;
+using NLog.Config;
+using NLog;
 
 
 namespace TraddingSrvCLI
@@ -43,29 +43,6 @@ namespace TraddingSrvCLI
 
         static void Main(string[] args)
         {
-
-            //// Step 1. Create configuration object 
-            //var config = new LoggingConfiguration();
-
-            //// Step 2. Create targets and add them to the configuration 
-            //var target = new NLog.Targets.ZMQTarget();
-            //config.AddTarget("zmq", target);
-            //target.Layout = @"${date:format=HH\\:MM\\:ss} ${logger} ${message}";
-
-            //var rule1 = new LoggingRule("*", NLog.LogLevel.Debug, target);
-            //config.LoggingRules.Add(rule1);
-            //NLog.LogManager.Configuration = config;
-
-
-            //Logger logger = NLog.LogManager.GetLogger("MyClassName");
-
-            log.Debug("it is debug here???????????????");
-            log.Error("some error happend");
-
-            //logger.Debug("it is log to here");
-
-            //Util.sleep(100000);
-
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
             try
             {

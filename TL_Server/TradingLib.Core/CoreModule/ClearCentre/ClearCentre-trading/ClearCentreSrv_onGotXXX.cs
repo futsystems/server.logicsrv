@@ -24,7 +24,7 @@ namespace TradingLib.Core
             {
                 if (o != null && o.isValid)
                 {
-                    if (_status == QSEnumClearCentreStatus.CCOPEN)
+                    if (_status == QSEnumClearCentreStatus.CCOPEN || TLCtxHelper.ModuleSettleCentre.SettleCentreStatus == QSEnumSettleCentreStatus.HISTSETTLE)
                     {
                         if (neworder)
                         {
@@ -74,7 +74,7 @@ namespace TradingLib.Core
                     pr = prt.GotPositionTransaction(postrans);
                 }
                 //如果交易中心处于开启状态
-                if (_status == QSEnumClearCentreStatus.CCOPEN)
+                if (_status == QSEnumClearCentreStatus.CCOPEN || TLCtxHelper.ModuleSettleCentre.SettleCentreStatus == QSEnumSettleCentreStatus.HISTSETTLE)
                 {
                     //调整手续费 注意 这里手续费已经进行了标准手续费计算
                     f.Commission = AdjuestCommission(f, pr);

@@ -131,6 +131,7 @@ namespace TraddingSrvCLI
             thread.Abort();
             thread = null;
         }
+
         public void Run()
         {
             //核心服务生命周期

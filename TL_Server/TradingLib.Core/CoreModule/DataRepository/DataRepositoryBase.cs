@@ -22,48 +22,6 @@ namespace TradingLib.Core
         { 
             
         }
-        
-
-        /// <summary>
-        /// 插入委托
-        /// </summary>
-        /// <param name="o"></param>
-        public virtual void NewOrder(Order o)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// 更新委托
-        /// </summary>
-        /// <param name="o"></param>
-        public virtual void UpdateOrder(Order o)
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual void NewOrderAction(OrderAction actoin)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// 插入成交
-        /// </summary>
-        /// <param name="f"></param>
-        public virtual void NewTrade(Trade f)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// 插入平仓明细
-        /// </summary>
-        /// <param name="d"></param>
-        public virtual void NewPositionCloseDetail(PositionCloseDetail d)
-        {
-            throw new NotImplementedException();
-        }
 
         /// <summary>
         /// 启动服务
@@ -86,6 +44,53 @@ namespace TradingLib.Core
             base.Dispose();
             Util.DestoryStatus(this.PROGRAME);
         }
+
+        #region 插入实时交易数据
+        /// <summary>
+        /// 插入委托
+        /// </summary>
+        /// <param name="o"></param>
+        public virtual void NewOrder(Order o)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// 更新委托
+        /// </summary>
+        /// <param name="o"></param>
+        public virtual void UpdateOrder(Order o)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// 插入委托操作
+        /// </summary>
+        /// <param name="actoin"></param>
+        public virtual void NewOrderAction(OrderAction actoin)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// 插入成交
+        /// </summary>
+        /// <param name="f"></param>
+        public virtual void NewTrade(Trade f)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// 插入平仓明细
+        /// </summary>
+        /// <param name="d"></param>
+        public virtual void NewPositionCloseDetail(PositionCloseDetail d)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
 
 
         #region 日内数据查询

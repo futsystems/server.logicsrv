@@ -7,28 +7,7 @@ using TradingLib.Common;
 
 namespace TradingLib.Core
 {
-    public enum QSEnumSettleCentreStatus
-    { 
-        /// <summary>
-        /// 未初始化
-        /// </summary>
-        UNKNOWN,//未知
 
-        /// <summary>
-        /// 结算信息不完整 需要在对应日期上加载历史记录并做结算
-        /// </summary>
-        HISTSETTLE,//历史结算
-
-        /// <summary>
-        /// 当前是交易日 可以进行正常的交易与结算
-        /// </summary>
-        TRADINGDAY,//交易日
-
-        /// <summary>
-        /// 当前非交易日
-        /// </summary>
-        NOTRADINGDAY,//非交易日
-    }
 
     [CoreAttr(SettleCentre.CoreName, "结算中心", "结算中心,用于执行系统结算生成结算报表等")]
     public partial class SettleCentre : BaseSrvObject, IModuleSettleCentre
@@ -37,10 +16,11 @@ namespace TradingLib.Core
         public string CoreId { get { return PROGRAME; } }
 
 
+        QSEnumSettleCentreStatus _settleStatus = QSEnumSettleCentreStatus.UNKNOWN;
         /// <summary>
         /// 结算中心状态
         /// </summary>
-        public QSEnumSettleCentreStatus SettleCentreStatus { get; set; }
+        public QSEnumSettleCentreStatus SettleCentreStatus { get { return _settleStatus; } set { _settleStatus = value; } }
 
         int _lastsettleday = 0;
         /// <summary>
@@ -100,6 +80,7 @@ namespace TradingLib.Core
             }
         }
 
+        SettlementPriceTracker _settlementPriceTracker = new SettlementPriceTracker();
 
         ConfigDB _cfgdb;
         int _resetTime = 170000;
@@ -132,19 +113,19 @@ namespace TradingLib.Core
             }
             _resetTime = _cfgdb["ResetTime"].AsInt();
 
-            ////结算价 取价方式
-            //if (!_cfgdb.HaveConfig("SettleWithLatestPrice"))
-            //{
-            //    _cfgdb.UpdateConfig("SettleWithLatestPrice", QSEnumCfgType.Bool,false, "是否已最新价来结算持仓盯市盈亏");
-            //}
-            //_settleWithLatestPrice = _cfgdb["SettleWithLatestPrice"].AsBool();
+            //结算价 取价方式
+            if (!_cfgdb.HaveConfig("SettleWithLatestPrice"))
+            {
+                _cfgdb.UpdateConfig("SettleWithLatestPrice", QSEnumCfgType.Bool, false, "是否已最新价来结算持仓盯市盈亏");
+            }
+            _settleWithLatestPrice = _cfgdb["SettleWithLatestPrice"].AsBool();
 
-            ////是否清空日内临时表
-            //if (!_cfgdb.HaveConfig("CleanTmpTable"))
-            //{
-            //    _cfgdb.UpdateConfig("CleanTmpTable", QSEnumCfgType.Bool,false, "结算后重置系统是否情况日内临时表");
-            //}
-            //_cleanTmp = _cfgdb["CleanTmpTable"].AsBool();
+            //是否清空日内临时表
+            if (!_cfgdb.HaveConfig("CleanTmpTable"))
+            {
+                _cfgdb.UpdateConfig("CleanTmpTable", QSEnumCfgType.Bool, false, "结算后重置系统是否情况日内临时表");
+            }
+            _cleanTmp = _cfgdb["CleanTmpTable"].AsBool();
 
             //注入交易记录转储任务 结算前5分钟 保存交易记录
             DateTime storetime = Util.ToDateTime(Util.ToTLDate(DateTime.Now), TradingCalendar.SettleTime)-new TimeSpan(0,5,0);
@@ -163,7 +144,41 @@ namespace TradingLib.Core
 
         }
 
-        
+        /// <summary>
+        /// 设定当前结算中心日期
+        /// 用于回溯到某个交易日
+        /// 根据给定的日期 推算到上一个结算日 然后根据上一个结算日推算出下一个结算日
+        /// 通过当前日期与下一个交易日是否一致来判定当前日期是否是交易日。
+        /// 这里假定系统回溯到交易日结算前 与 实时运行时需要通过时间来判定 处于哪个交易日 逻辑有所不同
+        /// </summary>
+        /// <param name="tradingday"></param>
+        void SetCurrentDay(int day)
+        {
+            //计算出某日的上一个交易日
+            _lastsettleday = TradingCalendar.LastTradingDay(day);
+
+            //根据上个交易日计算出下一个交易日
+            _nexttradingday = TradingCalendar.NextTradingDay(_lastsettleday);
+
+            //如果下一个交易日就是设定的当日，则当前交易日就是该日期，否则当前交易日为0 标识非交易日
+            _tradingday = _nexttradingday == day ? _nexttradingday : 0;
+
+            //标记当前状态为历史结算
+            _settleStatus = QSEnumSettleCentreStatus.HISTSETTLE;
+            ////设定结算中心状态
+            //if (CurrentTradingday == 0)
+            //{
+            //    SettleCentreStatus = QSEnumSettleCentreStatus.NOTRADINGDAY;//如果没有当前交易日信息则为非交易日状态
+            //}
+            //else
+            //{
+            //    SettleCentreStatus = QSEnumSettleCentreStatus.TRADINGDAY;//如果获得了当前交易日则当前为可交易日状态
+            //}
+
+            logger.Info(string.Format("设定结算日期信息,上一交易日:{0} 当前交易日:{1} 下一交易日：{2}", _lastsettleday, _tradingday, _nexttradingday));
+
+        }
+
         /// <summary>
         /// 初始化交易日信息
         /// </summary>
@@ -195,7 +210,7 @@ namespace TradingLib.Core
             {
                 logger.Info(string.Format("上次结算日:{0} 下一交易日:{1} 当前日期:{2}", _lastsettleday, _nexttradingday, nowdate));
                 logger.Info("当前日期越过了交易日,系统缺少对应交易的结算,请手工进行结算");
-                SettleCentreStatus = QSEnumSettleCentreStatus.HISTSETTLE;
+                SettleCentreStatus = QSEnumSettleCentreStatus.UNKNOWN;
                 logger.Info(string.Format("设定当前交易日为下一个交易日:{0}", _nexttradingday));
                 _tradingday = _nexttradingday;
             }

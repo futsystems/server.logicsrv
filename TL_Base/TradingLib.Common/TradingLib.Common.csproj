@@ -67,12 +67,14 @@
     <Compile Include="Other\TLVersion.cs" />
     <Compile Include="Protocol\CommissionTemplateItem.cs" />
     <Compile Include="Protocol\LoginInfo.cs" />
+    <Compile Include="Trading\Comparers.cs" />
     <Compile Include="Trading\Config\CommissionTemplate.cs" />
     <Compile Include="Trading\Config\CommissionTemplateItem.cs" />
     <Compile Include="Trading\Config\EnumChargeType.cs" />
     <Compile Include="Trading\Config\ExStrategyTemplate.cs" />
     <Compile Include="Trading\Config\MarginTemplate.cs" />
     <Compile Include="Trading\Config\MarginTemplateItem.cs" />
+    <Compile Include="Trading\SettlementPrice.cs" />
     <Compile Include="Utils\Version.cs" />
     <Compile Include="Tracker\HighLowTracker.cs" />
     <Compile Include="Trading\Utils\SecurityUtils.cs" />
@@ -214,7 +216,7 @@
     <Compile Include="Tracker\MessageTracker.cs" />
     <Compile Include="Message\TrdMessage.cs" />
     <Compile Include="Trading\OrderTransactionHelper.cs" />
-    <Compile Include="Trading\PositionRound.cs" />
+    <Compile Include="Trading\PositionRoundImpl.cs" />
     <Compile Include="Trading\PositionTransaction.cs" />
     <Compile Include="Trading\SymbolHelper.cs" />
     <Compile Include="Trading\Data\Tick\TickWatcher.cs" />

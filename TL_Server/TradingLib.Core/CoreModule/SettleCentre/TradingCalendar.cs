@@ -46,6 +46,30 @@ namespace TradingLib.Core
             }
         }
 
+
+        /// <summary>
+        /// 推算出某个日期的上一个交易日
+        /// </summary>
+        /// <param name="day"></param>
+        /// <returns></returns>
+        public static int LastTradingDay(int day)
+        {
+            DateTime workday = Util.ToDateTime(day, 0);
+            //在当前日期上加一日
+            workday = workday.Date.AddDays(-1);
+
+            //循环判断workday是否是节假日 如果不是则加一日
+            while (true)
+            {
+                if (IsTradingday(workday))
+                {
+                    return Util.ToTLDate(workday);
+                }
+                workday = workday.Date.AddDays(-1);
+            }
+        }
+
+
         /// <summary>
         /// 返回下一个交易日【除去 周六、日,国家今年法定假日】
         /// </summary>

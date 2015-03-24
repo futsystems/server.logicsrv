@@ -54,27 +54,11 @@ namespace TradingLib.Core
             return string.Format("last settleday:{0} next tradingday:{1} current tradingday:{2} istradingday:{3}", _lastsettleday, _nexttradingday, _tradingday,IsTradingday);
         }
 
-
-        //#region 交易记录检验
-        ///// <summary>
-        ///// 数据检验
-        ///// </summary>
-        //[TaskAttr("清算中心数据检验", 15, 22, 35, "清算中心数据检验")]
-        //public void Task_DataCheck()
-        //{
-        //    if (IsNormal && !IsTradingday) return;//如果是正常状态 且当前是非交易日则直接返回
-        //    this.CheckAccountLastEquity();
-        //    this.CheckTradingInfo();
-        //    Notify("数据检验[" + DateTime.Now.ToString() + "]", " ");
-        //}
-        //#endregion
-
         bool settled = false;
 
         #region 大结算过程
-        //1.采集结算价格 保存结算持仓与日内交易记录
         /// <summary>
-        /// 转储数据,将当天的交易信息 储存到历史交易信息表中
+        /// 1.转储数据,将当天的交易信息 储存到历史交易信息表中
         /// </summary>
         [ContribCommandAttr(QSEnumCommandSource.CLI, "datastore", "datastore - datastore", "datastore")]
         public void Task_DataStore()
@@ -93,15 +77,22 @@ namespace TradingLib.Core
                 logger.Error("BeforeSettleEvent Fired error:" + ex.ToString());
             }
 
-            
-            ////保存结算持仓对应的PR数据
-            //this.SaveHoldInfo();
-            ////保存当前持仓明细
-            //this.SavePositionDetails();//保存持仓明细
-            ////保存交易日志 委托 成交 委托操作
-            //this.Dump2Log();//将委托 成交 撤单 PR数据保存到对应的log_表 所有的转储操作均是replace into不会存在重复操作
+            //保存结算价信息
+            this.SaveSettlementPrice();
 
-            TLCtxHelper.EventSystem.FireSettleDataStoreEvent(this, new SystemEventArgs());
+            //绑定结算价信息
+            this.BindSettlementPrice();
+
+            //A:储存 结算数据(各业持仓,持仓回合,当日交易记录)
+            //保存结算持仓数据和对应的PR数据
+            this.SaveHoldInfo();
+            //保存持仓明细
+            this.SavePositionDetails();
+            //转储到历史记录表
+            this.Dump2Log();
+
+            //通过事件中继出发数据保存事件
+            //TLCtxHelper.EventSystem.FireSettleDataStoreEvent(this, new SystemEventArgs());
         }
 
 
@@ -120,9 +111,10 @@ namespace TradingLib.Core
 
             this.SettleAccount();
 
+            //触发 结算操作事件 用于调用监听该事件对象进行结算操作 比如 代理模块对代理帐户的结算
             TLCtxHelper.EventSystem.FireSettleEvent(this, new SystemEventArgs());
 
-            //触发结算后记录
+            //触发 结算完成事件
             TLCtxHelper.EventSystem.FireAfterSettleEvent(this, new SystemEventArgs());
 
             //结算后 重置结算中心 如果交易日没有发生变化，则出入金还会停留在上个结算日，而上个结算日已经结算，因此该出入金记录会被丢失 
@@ -147,21 +139,15 @@ namespace TradingLib.Core
             TLCtxHelper.EventSystem.FireBeforeSettleResetEvent(this, new SystemEventArgs());
             
             //清空日内交易记录
-            //if (_cleanTmp)
-            //{
-            //    this.CleanTempTable();
-            //}
+            if (_cleanTmp)
+            {
+                this.CleanTempTable();
+            }
 
-            //15:50分结算帐户完毕后 4点从数据库重新加载帐户权益数据,此时数据库加载的数据是按结算重置后加载的日期信息 即结算日向前滚动一日
-            //_clearcentre.Reset();
-            //重置风控中心，清空内存缓存数据
-            //_riskcentre.Reset();
-            //重置消息交换中心
-            //_exchsrv.Reset();
-            //重置管理交换中心
+            //触发 系统重置操作事件
             TLCtxHelper.EventSystem.FireSettleResetEvet(this, new SystemEventArgs());
 
-            //重置任务中心
+            //触发 系统重置完成事件
             TLCtxHelper.EventSystem.FireAfterSettleResetEvent(this, new SystemEventArgs());
             
         }
@@ -230,6 +216,48 @@ namespace TradingLib.Core
 
 
         #endregion
+
+
+
+
+        /// <summary>
+        /// 保存结算价格
+        /// 通过行情路由获得当前市场快照然后保存快照中所有合约的结算价格
+        /// </summary>
+        void SaveSettlementPrice()
+        {
+            //清空结算价信息
+            _settlementPriceTracker.Clear();
+            foreach (var k in TLCtxHelper.ModuleDataRouter.GetTickSnapshot())
+            {
+                if (k != null)
+                {
+                    _settlementPriceTracker.UpdateSettlementPrice(new SettlementPrice() { Price = k.Settlement, SettleDay = this.NextTradingday, Symbol = k.Symbol });
+                }
+                else
+                {
+                    _settlementPriceTracker.UpdateSettlementPrice(new SettlementPrice() { Price = -1, SettleDay = this.NextTradingday, Symbol = k.Symbol });
+                }
+            }
+        }
+
+        /// <summary>
+        /// 将结算价格绑定到持仓对象
+        /// </summary>
+        void BindSettlementPrice()
+        {
+            SettlementPrice target = null;
+            foreach (Position pos in TLCtxHelper.ModuleClearCentre.TotalPositions.Where(pos => !pos.isFlat))
+            {
+                //如果持仓合约有对应的结算价信息 设定结算价
+                target = _settlementPriceTracker[pos.Symbol];
+                if (target != null)
+                {
+                    pos.SettlementPrice = target.Price;
+                }
+            }
+
+        }
 
     }
 }

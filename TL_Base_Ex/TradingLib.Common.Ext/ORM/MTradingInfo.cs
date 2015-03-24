@@ -241,7 +241,8 @@ namespace TradingLib.ORM
                 List<Order> orders2 = db.Connection.Query<OrderImpl>(query2).ToList<Order>();
                 
                 //合并委托记录
-                orders.AddRange(orders2);
+                //orders.AddRange(orders2);
+                orders.Union(orders2, new OrderCompare());
 
                 return orders;
             }
@@ -319,7 +320,8 @@ namespace TradingLib.ORM
                 string query2 = string.Format("SELECT * FROM  {0}  WHERE settleday >='{1}' AND settleday <='{2}' AND breed='{3}'", "log_trades", begin, end, breed);
                 List<Trade> trades2 = db.Connection.Query<TradeImpl>(query2).ToList<Trade>();
 
-                trades.AddRange(trades2);
+                //trades.AddRange(trades2);
+                trades.Union(trades2, new TradeCompare());
                 return trades;
             }
         }

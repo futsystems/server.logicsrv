@@ -88,6 +88,13 @@ namespace TradingLib.API
 
         
         #endregion
+
+        /// <summary>
+        /// 重置清算中心
+        /// 用于清空交易记录 并按结算中心的日期设置加载对应交易日的交易数据
+        /// </summary>
+        void Reset();
+
         /// <summary>
         /// 载入交易帐户
         /// 为该用户生成基本交易数据结构，并维护该帐户的实时交易信息，以形成交易状态

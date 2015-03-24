@@ -34,6 +34,7 @@
 <error id="SERVICE_NOT_VALID" value="25" prompt="请求服务无效"/>
 <error id="ACCOUNT_NOT_CREATED" value="26" prompt="没有开通交易帐号,登入网站开通"/>
 <error id="LOGINTYPE_NOT_SUPPORT" value="27" prompt="登入方式不支持"/>
+<error id="TERMINAL_NUM_LIMIT" value="271" prompt="登入终端数量超过限制"/>
 <error id="CASHOPERATION_NOT_ALLOW_NOW" value="28" prompt="当前时间不允许出入金操作"/>
 <error id="SETTLECENTRE_IN_SETTLE" value="29" prompt="结算系统正在结算,无法处理委托"/>
 <error id="RISKCENTRE_CHECK_ERROR" value="100" prompt="风控检查异常"/>

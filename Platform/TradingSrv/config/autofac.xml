@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <configuration>
   <configSections>
-    <section name="autofac" type="Autofac.Configuration.SectionHandler, Autofac.Configuration"/>
-	<section name="logicsrv" type="Autofac.Configuration.SectionHandler, Autofac.Configuration"/>
+    <section name="vendor" type="Autofac.Configuration.SectionHandler, Autofac.Configuration"/>
+	<section name="counter" type="Autofac.Configuration.SectionHandler, Autofac.Configuration"/>
   </configSections>
-  <autofac>
+  <vendor>
     <components>
       <component type="TradingLib.ServiceManager.CoreManager,TradingLib.ServiceManager"  instance-scope="per-lifetime-scope">
         <services>
@@ -100,9 +100,9 @@
       <component type="TradingLib.Core.WebMsgExchServer,TradingLib.Core" service="TradingLib.API.IModuleAPIExchange,TradingLib.API.Ex" instance-scope="per-lifetime-scope"/>
 
     </components>
-  </autofac>
+  </vendor>
   
-  <logicsrv>
+  <counter>
     <components>
       <component type="TradingLib.ServiceManager.CoreManager,TradingLib.ServiceManager"  instance-scope="per-lifetime-scope">
         <services>
@@ -195,6 +195,6 @@
       <component type="TradingLib.Core.WebMsgExchServer,TradingLib.Core" service="TradingLib.API.IModuleAPIExchange,TradingLib.API.Ex" instance-scope="per-lifetime-scope"/>
 
     </components>
-  </logicsrv>
+  </counter>
   
 </configuration>

@@ -23,6 +23,7 @@
 /Platform/**/log/
 /Platform/**/cache/
 /Platform/TLDataBase
+/Platform/**/logs
 /Platform/Logs
 
 /publish

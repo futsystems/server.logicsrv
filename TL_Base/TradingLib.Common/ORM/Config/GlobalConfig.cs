@@ -13,6 +13,7 @@ namespace TradingLib.Common
         static GlobalConfig()
         {
             defaultinstance = new GlobalConfig();
+            //_producttype = (QSEnumProductType)Enum.Parse(typeof(QSEnumProductType), defaultinstance.config["ProductType"].AsString());
         }
 
         private GlobalConfig()
@@ -93,8 +94,27 @@ namespace TradingLib.Common
             {
                 config.UpdateConfig("FlatTimeAheadOfMarketClose", QSEnumCfgType.Int, 5, "收盘前提前多少时间强平持仓");
             }
+
+            ////服务类型
+            //if (!config.HaveConfig("ProductType"))
+            //{
+            //    config.UpdateConfig("ProductType", QSEnumCfgType.String, QSEnumProductType.CounterSystem.ToString(), "服务类型,系统容器会按不同的服务类型加载不同的功能实现");
+            
+            //}
         }
 
+        //static QSEnumProductType _producttype = QSEnumProductType.CounterSystem; 
+        ///// <summary>
+        ///// 产品类别
+        ///// 系统根据产品类别来加载不同的服务端实现
+        ///// </summary>
+        //public static QSEnumProductType ProductType
+        //{
+        //    get
+        //    {
+        //        return _producttype;
+        //    }
+        //}
         /// <summary>
         /// 收盘前提前多少时间强平持仓
         /// </summary>

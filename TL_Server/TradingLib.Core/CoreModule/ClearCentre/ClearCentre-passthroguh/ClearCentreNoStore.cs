@@ -106,5 +106,10 @@ namespace TradingLib.Core
         {
             Util.StopStatus(this.PROGRAME);
         }
+
+        public void Reset()
+        { 
+            
+        }
     }
 }

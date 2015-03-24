@@ -91,6 +91,5 @@ namespace TradingLib.Common
         #endregion
 
 
-
     }
 }

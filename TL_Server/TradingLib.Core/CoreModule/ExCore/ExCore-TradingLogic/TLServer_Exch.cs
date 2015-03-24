@@ -35,7 +35,6 @@ namespace TradingLib.Core
                 _clients.UnRegistClient(info.Location.ClientID);
             }
         }
-
         /// <summary>
         /// 查找所有以交易帐号account登入的客户端连接
         /// </summary>

@@ -5,8 +5,34 @@ using System.Text;
 
 namespace TradingLib.API
 {
+    public enum QSEnumSettleCentreStatus
+    {
+        /// <summary>
+        /// 未初始化
+        /// </summary>
+        UNKNOWN,//未知
+
+        /// <summary>
+        /// 结算信息不完整 需要在对应日期上加载历史记录并做结算
+        /// </summary>
+        HISTSETTLE,//历史结算
+
+        /// <summary>
+        /// 当前是交易日 可以进行正常的交易与结算
+        /// </summary>
+        TRADINGDAY,//交易日
+
+        /// <summary>
+        /// 当前非交易日
+        /// </summary>
+        NOTRADINGDAY,//非交易日
+    }
+
+
     public interface ISettleCentre
     {
+        QSEnumSettleCentreStatus SettleCentreStatus { get; }
+
         /// <summary>
         /// 上次结算日
         /// </summary>

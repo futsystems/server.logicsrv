@@ -97,9 +97,9 @@
     <Compile Include="CoreModule\ClearCentre\ClearCentre-trading\ClearCentreSrv_CTE.cs" />
     <Compile Include="CoreModule\ClearCentre\ClearCentre-trading\ClearCentreSrv_AccountCashOperation.cs" />
     <Compile Include="CoreModule\DataRepository\DataRepository.cs" />
-    <Compile Include="CoreModule\DataRepository\DataRepository_DataStore.cs" />
     <Compile Include="CoreModule\ExCore\ExCore-NoTrading\ExCoreNoTrading.cs" />
     <Compile Include="CoreModule\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_ExStrategy.cs" />
+    <Compile Include="CoreModule\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_helloworld.cs" />
     <Compile Include="CoreModule\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_Margin.cs" />
     <Compile Include="CoreModule\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_Commission.cs" />
     <Compile Include="CoreModule\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_FinAgent.cs" />
@@ -158,7 +158,9 @@
     <Compile Include="CoreModule\SettleCentre\SettleCentre.cs" />
     <Compile Include="CoreModule\SettleCentre\SettleCentre_.cs" />
     <Compile Include="CoreModule\SettleCentre\SettleCentre_CTE.cs" />
+    <Compile Include="CoreModule\SettleCentre\SettleCentre_SettleManager.cs" />
     <Compile Include="CoreModule\SettleCentre\TradingCalendar.cs" />
+    <Compile Include="CoreModule\SettleCentre\SettleCentre_DataStoreClean.cs" />
     <Compile Include="CoreModule\TaskCentre\Listener.cs" />
     <Compile Include="CoreModule\TaskCentre\TaskCentre.cs" />
     <Compile Include="CoreModule\ExCore\ExCore-TradingLogic\MsgExchServer.cs" />
@@ -168,6 +170,7 @@
     <Compile Include="CoreModule\APIExchange\WebMsgRepServer.cs" />
     <Compile Include="CoreModule\ExCore\Base\ExCore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SettlementPriceTracker.cs" />
     <Compile Include="Transport\AsyncServer.cs" />
     <Compile Include="Transport\FastTickSrvMgrClient.cs" />
     <Compile Include="Transport\ThroughtPutTracker.cs" />

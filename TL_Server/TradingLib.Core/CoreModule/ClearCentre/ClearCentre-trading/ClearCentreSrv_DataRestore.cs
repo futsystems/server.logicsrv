@@ -30,7 +30,6 @@ namespace TradingLib.Core
             try
             {
 
-
                 logger.Info("从数据库加载交易日:" + TLCtxHelper.ModuleSettleCentre.NextTradingday.ToString() + " 交易数据");
                 IEnumerable<Order> olist = TLCtxHelper.ModuleDataRepository.SelectAcctOrders();
                 IEnumerable<Trade> flist = TLCtxHelper.ModuleDataRepository.SelectAcctTrades();

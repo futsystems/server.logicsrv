@@ -46,31 +46,31 @@ namespace TradingLib.Core
             _asynLoger = new AsyncTransactionLoger();//获得交易信息数据库记录对象，用于记录委托，成交，取消等信息
 
             //响应结算交易记录转储
-            TLCtxHelper.EventSystem.SettleDataStoreEvent += new EventHandler<SystemEventArgs>(EventSystem_SettleDataStoreEvent);
+            //TLCtxHelper.EventSystem.SettleDataStoreEvent += new EventHandler<SystemEventArgs>(EventSystem_SettleDataStoreEvent);
             
             //响应结算重置 清空日内交易记录表
-            TLCtxHelper.EventSystem.SettleResetEvent += new EventHandler<SystemEventArgs>(EventSystem_SettleResetEvent);
+            //TLCtxHelper.EventSystem.SettleResetEvent += new EventHandler<SystemEventArgs>(EventSystem_SettleResetEvent);
         }
 
-        void EventSystem_SettleResetEvent(object sender, SystemEventArgs e)
-        {
-            if (_cleanTmp)
-            {
-                this.CleanTempTable();
-            }
-        }
+        //void EventSystem_SettleResetEvent(object sender, SystemEventArgs e)
+        //{
+        //    if (_cleanTmp)
+        //    {
+        //        this.CleanTempTable();
+        //    }
+        //}
 
-        void EventSystem_SettleDataStoreEvent(object sender, SystemEventArgs e)
-        {
-             ////保存结算持仓对应的PR数据
-            //this.SaveHoldInfo();
+        //void EventSystem_SettleDataStoreEvent(object sender, SystemEventArgs e)
+        //{
+        //     ////保存结算持仓对应的PR数据
+        //    this.SaveHoldInfo();
 
-            ////保存当前持仓明细
-            this.SavePositionDetails();//保存持仓明细
+        //    ////保存当前持仓明细
+        //    this.SavePositionDetails();//保存持仓明细
 
-            ////保存交易日志 委托 成交 委托操作
-            this.Dump2Log();//将委托 成交 撤单 PR数据保存到对应的log_表 所有的转储操作均是replace into不会存在重复操作
-        }
+        //    ////保存交易日志 委托 成交 委托操作
+        //    this.Dump2Log();//将委托 成交 撤单 PR数据保存到对应的log_表 所有的转储操作均是replace into不会存在重复操作
+        //}
 
         /// <summary>
         /// 插入委托
