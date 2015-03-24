@@ -13,6 +13,8 @@ using TradingLib.MoniterControl;
 
 namespace TradingLib.HistReport
 {
+
+    [MoniterControlAttr("HistReport","统计报表",QSEnumControlPlace.WorkSpace)]
     public partial class HistReport : MonitorControl
     {
         public HistReport()

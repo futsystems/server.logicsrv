@@ -27,10 +27,9 @@ namespace FutsMoniter
         void InitPage()
         {
             kryptonDockingManager.AddToWorkspace("Workspace", GetWorkspacePages());
-            kryptonDockingManager.AddDockspace("Control", DockingEdge.Bottom, new KryptonPage[] { NewTradingInfoReal() });
             kryptonDockingManager.AddDockspace("Control", DockingEdge.Right, GetModulePage());
-
-
+            kryptonDockingManager.AddDockspace("Control", DockingEdge.Bottom, new KryptonPage[] { NewTradingInfoReal() });
+            
             //if (System.IO.File.Exists("config.xml"))
             //{
             //    kryptonDockingManager.LoadConfigFromFile("config.xml");
@@ -42,6 +41,7 @@ namespace FutsMoniter
             workspacelist.Add(control);
         }
         List<MonitorControl> workspacelist = new List<MonitorControl>();
+
         KryptonPage[] GetWorkspacePages()
         {
             List<KryptonPage> pagelist = new List<KryptonPage>();
@@ -74,12 +74,13 @@ namespace FutsMoniter
 
             foreach(MonitorControl ct in controlist)
             {
-                Util.Debug("$$$$$$$$$$$$$$$$$$$$$4 try to add montor control #####################:"+ct.GetType().FullName);
                 pagelist.Add(NewPage(ct.GetType().FullName+"[M]",ct.Title, 2, ct));
             }
             
             return pagelist.ToArray();
         }
+
+
         void DestoryPage()
         {
             //隐藏所有Page

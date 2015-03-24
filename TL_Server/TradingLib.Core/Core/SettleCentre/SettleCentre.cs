@@ -227,7 +227,7 @@ namespace TradingLib.Core
             {
                 debug(string.Format("上次结算日:{0} 下一交易日:{1} 当前日期:{2}", _lastsettleday, _nexttradingday, nowdate), QSEnumDebugLevel.INFO);
                 debug("当前日期越过了交易日,系统缺少对应交易的结算,请手工进行结算", QSEnumDebugLevel.INFO);
-                SettleCentreStatus = QSEnumSettleCentreStatus.HISTSETTLE;
+                SettleCentreStatus = QSEnumSettleCentreStatus.NOTRADINGDAY;
                 debug(string.Format("设定当前交易日为下一个交易日:{0}", _nexttradingday), QSEnumDebugLevel.INFO);
                 _tradingday = _nexttradingday;
             }

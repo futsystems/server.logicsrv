@@ -869,6 +869,9 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="WrapperCTX.cs" />
+    <Compile Include="MainForm_Plugin.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <EmbeddedResource Include="Controls\Base\ctAccountType.resx">
       <DependentUpon>ctAccountType.cs</DependentUpon>
     </EmbeddedResource>

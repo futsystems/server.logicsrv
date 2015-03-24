@@ -29,6 +29,19 @@ namespace FutsMoniter
             Globals.Debug("init globals");
             Util.Debug("~~~~~~~~~~~~~~~~~~``moniter start here~~~~~~~~~~~~~~~~~~``");
 
+            //foreach (Type type in MoniterPlugin.GetMoniterControlTypes())
+            //{
+            //    MoniterControlAttr attr = MoniterPlugin.GetMoniterControlAttr(type);
+            //    if (attr != null)
+            //    {
+            //        Globals.Debug("type:" + type.Name + " 已经标注过");
+            //        MonitorControl control = MoniterPlugin.CreateMoniterControl(type.FullName);
+            //        MonitorControlHelper.RegisterControl(control);
+            //        control.SetClient(Globals.TLClient);
+
+            //        //AddWorkspacePage(control);
+            //    }
+            //}
 
             //List<Type> types = MoniterPlugin.LoadMoniterTypes();
 
@@ -39,7 +52,7 @@ namespace FutsMoniter
 
             bool issub = typeof(MonitorControl).IsAssignableFrom(typeof(DemoControl));
             //bool issub2 = typeof(DemoControl).IsAssignableFrom(typeof(MonitorControl));
-            ////Util.sleep(100000);
+            //Util.sleep(100000);
 
             //MoniterPlugin.LoadMoniterTypes();
 

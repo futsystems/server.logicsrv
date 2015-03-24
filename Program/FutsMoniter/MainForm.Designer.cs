@@ -57,6 +57,7 @@
             this.kryptonRibbonGroupButton_permissiontmp = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
             this.kryptonRibbonGroupButton_syncsymbol = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
             this.kryptonRibbonGroupButton2 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
+            this.kryptonRibbonGroup14 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroup();
             this.tabBasicConfig = new ComponentFactory.Krypton.Ribbon.KryptonRibbonTab();
             this.kryptonRibbonGroup4 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroup();
             this.kryptonRibbonGroupTriple5 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupTriple();
@@ -128,9 +129,6 @@
             this.kryptonDockableWorkspace = new ComponentFactory.Krypton.Docking.KryptonDockableWorkspace();
             this.mainpanel = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
             this.kryptonRibbonGroupButton3 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
-            this.kryptonRibbonGroup14 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroup();
-            this.kryptonRibbonGroupTriple17 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupTriple();
-            this.kryptonRibbonGroupButton_settlemgr = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
             this.kryptonRibbonGroupButton8 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
             this.kryptonRibbonGroupButton9 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
             ((System.ComponentModel.ISupportInitialize)(this.TabRibbon)).BeginInit();
@@ -169,9 +167,8 @@
             this.tabFinance,
             this.tabHistQuery,
             this.kryptonRibbonTab1});
-            this.TabRibbon.SelectedContext = null;
-            this.TabRibbon.SelectedTab = this.tabSystem;
-            this.TabRibbon.Size = new System.Drawing.Size(1107, 115);
+            this.TabRibbon.SelectedTab = this.tabBasicConfig;
+            this.TabRibbon.Size = new System.Drawing.Size(1107, 111);
             this.TabRibbon.TabIndex = 0;
             // 
             // kryptonRibbonQATButton_debug
@@ -310,6 +307,10 @@
             // 
             this.kryptonRibbonGroupButton_syncsymbol.ImageLarge = ((System.Drawing.Image)(resources.GetObject("kryptonRibbonGroupButton_syncsymbol.ImageLarge")));
             this.kryptonRibbonGroupButton_syncsymbol.TextLine1 = "合约同步";
+            // 
+            // kryptonRibbonGroup14
+            // 
+            this.kryptonRibbonGroup14.TextLine1 = "管理工具";
             // 
             // tabBasicConfig
             // 
@@ -723,7 +724,7 @@
             this.kryptonDockableWorkspace.Root.UniqueName = "63131E53D7AF42D465A56982E95AFFBD";
             this.kryptonDockableWorkspace.Root.WorkspaceControl = this.kryptonDockableWorkspace;
             this.kryptonDockableWorkspace.ShowMaximizeButton = false;
-            this.kryptonDockableWorkspace.Size = new System.Drawing.Size(1107, 578);
+            this.kryptonDockableWorkspace.Size = new System.Drawing.Size(1107, 582);
             this.kryptonDockableWorkspace.TabIndex = 3;
             this.kryptonDockableWorkspace.TabStop = true;
             // 
@@ -731,32 +732,15 @@
             // 
             this.mainpanel.Controls.Add(this.kryptonDockableWorkspace);
             this.mainpanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mainpanel.Location = new System.Drawing.Point(0, 115);
+            this.mainpanel.Location = new System.Drawing.Point(0, 111);
             this.mainpanel.Name = "mainpanel";
-            this.mainpanel.Size = new System.Drawing.Size(1107, 578);
+            this.mainpanel.Size = new System.Drawing.Size(1107, 582);
             this.mainpanel.TabIndex = 4;
             // 
             // kryptonRibbonGroupButton3
             // 
             this.kryptonRibbonGroupButton3.ImageLarge = ((System.Drawing.Image)(resources.GetObject("kryptonRibbonGroupButton3.ImageLarge")));
             this.kryptonRibbonGroupButton3.TextLine1 = "保证金模板";
-            // 
-            // kryptonRibbonGroup14
-            // 
-            this.kryptonRibbonGroup14.Items.AddRange(new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupContainer[] {
-            this.kryptonRibbonGroupTriple17});
-            this.kryptonRibbonGroup14.TextLine1 = "管理工具";
-            // 
-            // kryptonRibbonGroupTriple17
-            // 
-            this.kryptonRibbonGroupTriple17.Items.AddRange(new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupItem[] {
-            this.kryptonRibbonGroupButton_settlemgr,
-            this.kryptonRibbonGroupButton8,
-            this.kryptonRibbonGroupButton9});
-            // 
-            // kryptonRibbonGroupButton_settlemgr
-            // 
-            this.kryptonRibbonGroupButton_settlemgr.TextLine1 = "结算处理";
             // 
             // MainForm
             // 
@@ -887,8 +871,7 @@
         private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton_demo;
         private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton3;
         private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroup kryptonRibbonGroup14;
-        private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupTriple kryptonRibbonGroupTriple17;
-        private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton_settlemgr;
+        
         private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton8;
         private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton9;
 

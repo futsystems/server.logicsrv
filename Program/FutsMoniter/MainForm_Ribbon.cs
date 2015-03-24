@@ -43,8 +43,19 @@ namespace FutsMoniter
             //设置
             kryptonRibbonGroupButton_permissiontmp.Click += new EventHandler(kryptonRibbonGroupButton_permissiontmp_Click);
             kryptonRibbonGroupButton_syncsymbol.Click += new EventHandler(kryptonRibbonGroupButton_syncsymbol_Click);
+            //
+
+            //动态加载Ribbon菜单
+            ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton_settlemgr;
+            kryptonRibbonGroupButton_settlemgr = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
+            kryptonRibbonGroupButton_settlemgr.TextLine1 = "结算处理";
             kryptonRibbonGroupButton_settlemgr.Click += new EventHandler(kryptonRibbonGroupButton_settlemgr_Click);
-            
+
+            //this.kryptonRibbonGroupTriple7.Items.AddRange(new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupItem[] {
+            //kryptonRibbonGroupButton_settlemgr,
+            //this.kryptonRibbonGroupButton8,
+            //this.kryptonRibbonGroupButton9});
+
             //基础数据
             kryptonRibbonGroupButton_Mktime.Click += new EventHandler(kryptonRibbonGroupButton_Mktime_Click);
             kryptonRibbonGroupButton_Exchange.Click += new EventHandler(kryptonRibbonGroupButton_Exchange_Click);

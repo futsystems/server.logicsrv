@@ -49,8 +49,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\EnumControlPlace.cs" />
     <Compile Include="API\IBasicInfoTracker.cs" />
-    <Compile Include="CallbackAttr.cs" />
+    <Compile Include="API\IMonterCommand.cs" />
+    <Compile Include="Attr\CallbackAttr.cs" />
+    <Compile Include="Attr\MoniterCommandAttr.cs" />
     <Compile Include="Base\ctAgentList.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -74,11 +77,13 @@
     <Compile Include="API\ICTX.cs" />
     <Compile Include="API\IEventBinder.cs" />
     <Compile Include="API\IMoniterControl.cs" />
+    <Compile Include="Attr\MoniterControlAttr.cs" />
+    <Compile Include="Abstract\MoniterCommand.cs" />
     <Compile Include="MoniterHelper.cs" />
-    <Compile Include="MonitorControl.cs">
+    <Compile Include="Abstract\MonitorControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="MonitorControl.Designer.cs">
+    <Compile Include="Abstract\MonitorControl.Designer.cs">
       <DependentUpon>MonitorControl.cs</DependentUpon>
     </Compile>
     <Compile Include="MonitorPlugin.cs" />
@@ -96,7 +101,7 @@
     <EmbeddedResource Include="DemoControl.resx">
       <DependentUpon>DemoControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MonitorControl.resx">
+    <EmbeddedResource Include="Abstract\MonitorControl.resx">
       <DependentUpon>MonitorControl.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>

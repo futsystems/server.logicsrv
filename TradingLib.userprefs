@@ -1,6 +1,11 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench />
+  <MonoDevelop.Ide.Workbench ActiveDocument="TL_Contrib/TradingLib.Contrib.APIService/APIService.cs">
+    <Files>
+      <File FileName="TL_Server/TradingLib.Core/Core/ClearCentre/ClearCentreSrv.cs" Line="242" Column="48" />
+      <File FileName="TL_Contrib/TradingLib.Contrib.APIService/APIService.cs" Line="10" Column="2" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

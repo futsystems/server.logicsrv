@@ -131,24 +131,31 @@ namespace FutsMoniter
             SetExpireStatus();
             //登入基础数据初始化完成后 加载page
 
+
+            //LoadMonitorControl();
+
             //加载系统扩展显示控件
-            MonitorControl ctl = new DemoControl();
-            MonitorControlHelper.RegisterControl(ctl);
-            ctl.SetClient(Globals.TLClient);
+            //MonitorControl ctl = new DemoControl();
+            //MonitorControlHelper.RegisterControl(ctl);
+            //ctl.SetClient(Globals.TLClient);
 
+            //string ctName = "TradingLib.HistReport.HistReport";
+            //Type type = MoniterPlugin.GetMoniterControl(ctName);
+            //MoniterControlAttr attr = MoniterPlugin.GetMoniterControlAttr(type);
 
-            MonitorControl ct_report = MoniterPlugin.CreateMoniterControl("TradingLib.HistReport.HistReport");
-            MonitorControlHelper.RegisterControl(ct_report);
-            ct_report.SetClient(Globals.TLClient);
+            
+            //MonitorControl ct_report = MoniterPlugin.CreateMoniterControl("TradingLib.HistReport.HistReport");
+            //MonitorControlHelper.RegisterControl(ct_report);
+            //ct_report.SetClient(Globals.TLClient);
+            LoadMonitorControl();
+            //AddWorkspacePage(ctl);
+            //AddWorkspacePage(ct_report);
 
-            AddWorkspacePage(ctl);
-            AddWorkspacePage(ct_report);
+            //MonitorControl ct2 = new DemoControl();
+            //MonitorControlHelper.RegisterControl(ct2);
+            //ct2.SetClient(Globals.TLClient);
 
-            MonitorControl ct2 = new DemoControl();
-            MonitorControlHelper.RegisterControl(ct2);
-            ct2.SetClient(Globals.TLClient);
-
-            AddModulePage(ct2);
+            //AddModulePage(ct2);
 
             InitPage();
             //初始化后台woker用于弹窗提示
