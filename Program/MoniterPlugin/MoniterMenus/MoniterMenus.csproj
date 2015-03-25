@@ -8,8 +8,8 @@
     <ProjectGuid>{1F802F7C-AD27-4E9B-8115-78B83D919A25}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MoniterMenus</RootNamespace>
-    <AssemblyName>MoniterMenus</AssemblyName>
+    <RootNamespace>MM.SettleManagement</RootNamespace>
+    <AssemblyName>MM.SettleManagement</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

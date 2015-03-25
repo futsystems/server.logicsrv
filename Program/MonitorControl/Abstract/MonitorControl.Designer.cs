@@ -1,6 +1,6 @@
 ﻿namespace TradingLib.MoniterControl
 {
-    partial class MonitorControl
+    partial class MoniterControl
     {
         /// <summary> 
         /// 必需的设计器变量。

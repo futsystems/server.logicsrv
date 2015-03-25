@@ -85,7 +85,10 @@ namespace TradingLib.API
         /// </summary>
         IEnumerable<Trade> TotalTrades { get; }
 
-
+        /// <summary>
+        /// 所有持仓回合
+        /// </summary>
+        IEnumerable<PositionRound> TotalRoundOpend { get; }
         
         #endregion
 

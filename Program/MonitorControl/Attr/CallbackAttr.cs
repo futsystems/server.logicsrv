@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using TradingLib.API;
+
 
 namespace TradingLib.MoniterControl
 {
@@ -18,29 +20,32 @@ namespace TradingLib.MoniterControl
 
         public string Cmd { get; private set; }
 
-        public CallbackAttr(string module, string cmd)
+        public QSEnumCallbackTypes Type { get; private set; }
+
+        public CallbackAttr(string module, string cmd,QSEnumCallbackTypes type = QSEnumCallbackTypes.Response)
         {
             this.Module = module;
             this.Cmd = cmd;
+            this.Type = type;
         }
     }
 
-    /// <summary>
-    /// 通知类回调特性
-    /// 服务端状态发生变化 主动推送一条消息
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-    public class NotifyAttr : Attribute
-    {
+    ///// <summary>
+    ///// 通知类回调特性
+    ///// 服务端状态发生变化 主动推送一条消息
+    ///// </summary>
+    //[AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
+    //public class NotifyAttr : Attribute
+    //{
 
-        public string Module { get; private set; }
+    //    public string Module { get; private set; }
 
-        public string Cmd { get; private set; }
+    //    public string Cmd { get; private set; }
 
-        public NotifyAttr(string module, string cmd)
-        {
-            this.Module = module;
-            this.Cmd = cmd;
-        }
-    }
+    //    public NotifyAttr(string module, string cmd)
+    //    {
+    //        this.Module = module;
+    //        this.Cmd = cmd;
+    //    }
+    //}
 }

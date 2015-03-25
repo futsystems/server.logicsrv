@@ -15,7 +15,7 @@ namespace TradingLib.HistReport
 {
 
     [MoniterControlAttr("HistReport","统计报表",QSEnumControlPlace.WorkSpace)]
-    public partial class HistReport : MonitorControl
+    public partial class HistReport : TradingLib.MoniterControl.MoniterControl
     {
         public HistReport()
         {
@@ -55,8 +55,8 @@ namespace TradingLib.HistReport
         /// CallbackAttr标注 注册一个回调函数
         /// </summary>
         /// <param name="result"></param>
-        [CallbackAttr("HistReportCentre", "QrySummaryViaSecCode")]
-        public void OnHelloworld(string result)
+        [CallbackAttr("HistReportCentre", "QrySummaryViaSecCode",QSEnumCallbackTypes.Response)]
+        public void OnHelloworld(string result,bool islast)
         {
             Util.Debug("got result:" + result);
             OnSummaryViaSecCode(result);

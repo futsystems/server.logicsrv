@@ -26,6 +26,8 @@ namespace TradingLib.MoniterControl
         public static ICTX CTX { get { return _ctx; } }
 
 
+
+        #region 对象与回调函数注册
         /// <summary>
         /// 
         /// </summary>
@@ -51,7 +53,7 @@ namespace TradingLib.MoniterControl
         /// <param name="module"></param>
         /// <param name="cmd"></param>
         /// <param name="handler"></param>
-        public static void RegisterCallback(string module, string cmd, Action<string> handler)
+        public static void RegisterCallback(string module, string cmd, Action<string,bool> handler)
         {
             if (_ctx != null)
             {
@@ -65,13 +67,58 @@ namespace TradingLib.MoniterControl
         /// <param name="module"></param>
         /// <param name="cmd"></param>
         /// <param name="handler"></param>
-        public static void UnRegisterCallback(string module, string cmd, Action<string> handler)
+        public static void UnRegisterCallback(string module, string cmd, Action<string, bool> handler)
         {
             if (_ctx != null)
             {
                 _ctx.UnRegisterCallback(module, cmd, handler);
             }
         }
+
+        /// <summary>
+        /// 注册通知类回调
+        /// </summary>
+        /// <param name="module"></param>
+        /// <param name="cmd"></param>
+        /// <param name="handler"></param>
+        public static void RegisterNotifyCallback(string module, string cmd, Action<string> handler)
+        {
+            if (_ctx != null)
+            {
+                _ctx.RegisterNotifyCallback(module, cmd, handler);
+            }
+        }
+
+
+        /// <summary>
+        /// 注销通知类回调
+        /// </summary>
+        /// <param name="module"></param>
+        /// <param name="cmd"></param>
+        /// <param name="handler"></param>
+        public static void UnRegisterNotifyCallback(string module, string cmd, Action<string> handler)
+        {
+            if (_ctx != null)
+            {
+                _ctx.UnRegisterNotifyCallback(module, cmd, handler);
+            }
+        }
+        #endregion
+
+        /// <summary>
+        /// 通过底层Client发送一个请求
+        /// </summary>
+        /// <param name="module"></param>
+        /// <param name="cmd"></param>
+        /// <param name="args"></param>
+        public static void Request(string module, string cmd, string args)
+        {
+            if (_ctx != null)
+            {
+                _ctx.Request(module, cmd, args);
+            }
+        }
+
 
 
         /// <summary>

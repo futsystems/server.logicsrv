@@ -147,8 +147,12 @@ namespace FutsMoniter
            
             //更新过期提醒
             SetExpireStatus();
-            //登入基础数据初始化完成后 加载page
+
+            //加载管理控件
+            this.LoadMoniterControl();
+            //初始化管理端Page页面
             InitPage();
+
             //初始化后台woker用于弹窗提示
             InitBW();
             //操作回报消息 弹窗提示

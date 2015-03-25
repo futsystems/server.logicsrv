@@ -20,6 +20,15 @@ namespace TradingLib.Core
             
         }
 
+        public IEnumerable<PositionRound> TotalRoundOpend
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+
         #region 清算中心 开启 关闭 以及状态更新
         const string OpenTime = "8:55";
         const string CloseTime = "15:15";

@@ -26,8 +26,14 @@ namespace TradingLib.API
         /// </summary>
         IBasicInfoTracker BasicInfoTracker { get; }
 
+
+
+
         /// <summary>
-        /// 
+        /// 将某个对象注册到系统
+        /// 界面对象由于加载时间的问题 可能在系统初始化完成前加载也有可能在系统初始化完成后加载
+        /// 完成后加载的则立即调用初始化函数 用于获得底层基本数据 填充界面
+        /// 完成前加载的则响应系统底层初始化完成时间 用于延迟获得底层基本数据 填充界面
         /// </summary>
         /// <param name="obj"></param>
         void RegIEventHandler(IEventBinder obj);
@@ -45,7 +51,7 @@ namespace TradingLib.API
         /// <param name="module"></param>
         /// <param name="cmd"></param>
         /// <param name="handler"></param>
-        void RegisterCallback(string module, string cmd, Action<string> handler);
+        void RegisterCallback(string module, string cmd, Action<string,bool> handler);
 
         /// <summary>
         /// 注销回调函数
@@ -53,6 +59,32 @@ namespace TradingLib.API
         /// <param name="module"></param>
         /// <param name="cmd"></param>
         /// <param name="handler"></param>
-        void UnRegisterCallback(string module, string cmd, Action<string> handler);
+        void UnRegisterCallback(string module, string cmd, Action<string,bool> handler);
+
+        /// <summary>
+        /// 注册通知类回调
+        /// </summary>
+        /// <param name="module"></param>
+        /// <param name="cmd"></param>
+        /// <param name="handler"></param>
+        void RegisterNotifyCallback(string module, string cmd, Action<string> handler);
+
+
+        /// <summary>
+        /// 注销通知类回调
+        /// </summary>
+        /// <param name="module"></param>
+        /// <param name="cmd"></param>
+        /// <param name="handler"></param>
+        void UnRegisterNotifyCallback(string module, string cmd, Action<string> handler);
+
+
+        /// <summary>
+        /// 提交某个请求
+        /// </summary>
+        /// <param name="module"></param>
+        /// <param name="cmd"></param>
+        /// <param name="args"></param>
+        void Request(string module, string cmd, string args);
     }
 }

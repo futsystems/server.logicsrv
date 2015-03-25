@@ -75,13 +75,13 @@ namespace TradingLib.MoniterControl
         /// </summary>
         /// <param name="typename"></param>
         /// <returns></returns>
-        public static MonitorControl CreateMoniterControl(string typename)
+        public static MoniterControl CreateMoniterControl(string typename)
         {
             if (!typemap.Keys.Contains(typename))
             {
                 return null;
             }
-            return (MonitorControl)Activator.CreateInstance(typemap[typename]);
+            return (MoniterControl)Activator.CreateInstance(typemap[typename]);
         }
 
         /// <summary>

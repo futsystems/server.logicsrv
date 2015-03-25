@@ -23,9 +23,9 @@ namespace TradingLib.MoniterControl
     /// 1.响应用户输入的请求 形成服务端扩展请求调用通过 ReqContribRequest对外发送
     /// 2.编写响应函数 用特性标记，系统在加载时自动获得对应的回调函数并注册到回调中心 当服务端有消息回报时自动回调该函数
     /// </summary>
-    public partial class MonitorControl : UserControl,IMoniterControl
+    public partial class MoniterControl : UserControl,IMoniterControl
     {
-        public MonitorControl()
+        public MoniterControl()
         {
             InitializeComponent();            
         }
@@ -57,14 +57,7 @@ namespace TradingLib.MoniterControl
         /// <param name="args">参数</param>
         protected void Request(string module, string cmd, string args)
         {
-            if (_client != null)
-            {
-                _client.ReqContribRequest(module, cmd, args);
-            }
-            else
-            {
-                throw new NullReferenceException("MGRClient can not be null");
-            }
+            MoniterHelper.Request(module, cmd, args);
         }
 
         /// <summary>

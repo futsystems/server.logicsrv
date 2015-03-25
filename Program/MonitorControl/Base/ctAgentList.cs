@@ -137,13 +137,13 @@ namespace TradingLib.MoniterControl
                     agent.SelectedValue = MoniterHelper.CTX.Manager.mgr_fk;
                 }
             }
-            MoniterHelper.RegisterCallback("MgrExchServer", "NotifyManagerUpdate", OnManagerNotify);
+            MoniterHelper.RegisterNotifyCallback("MgrExchServer", "NotifyManagerUpdate", OnManagerNotify);
             _gotdata = true;
         }
 
         public void OnDisposed()
         {
-            MoniterHelper.UnRegisterCallback("MgrExchServer", "NotifyManagerUpdate", OnManagerNotify);
+            MoniterHelper.UnRegisterNotifyCallback("MgrExchServer", "NotifyManagerUpdate", OnManagerNotify);
         }
 
 

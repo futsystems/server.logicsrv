@@ -11,10 +11,6 @@ using TradingLib.BrokerXAPI;
 using Common.Logging;
 using System.Runtime.InteropServices;
 using System.Reflection;
-using NLog;
-using NLog.Targets;
-using NLog.Config;
-using NLog;
 
 
 namespace TraddingSrvCLI

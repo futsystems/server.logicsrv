@@ -12,7 +12,7 @@ using TradingLib.Common;
 
 namespace TradingLib.MoniterControl
 {
-    public partial class DemoControl : MonitorControl
+    public partial class DemoControl : MoniterControl
     {
         public DemoControl()
         {

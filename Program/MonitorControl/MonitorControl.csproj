@@ -49,6 +49,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\EnumCallbackTypes.cs" />
     <Compile Include="API\EnumControlPlace.cs" />
     <Compile Include="API\IBasicInfoTracker.cs" />
     <Compile Include="API\IMonterCommand.cs" />

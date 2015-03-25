@@ -5,12 +5,13 @@ using System.Linq;
 using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
+using TradingLib.MoniterControl;
 using FutsMoniter;
 
 namespace TradingLib.Common
 {
 
-    public partial class BasicInfoTracker:IBasicInfo
+    public partial class BasicInfoTracker:IBasicInfo,IBasicInfoTracker
     {
         public BasicInfoTracker()
         {

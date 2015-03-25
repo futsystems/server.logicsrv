@@ -129,9 +129,12 @@
     <Reference Include="TradingLib.Mixins">
       <HintPath>..\..\lib\TradingLib\TradingLib.Mixins.dll</HintPath>
     </Reference>
+    <Reference Include="TradingLib.MoniterControl, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\TradingLib\TradingLib.MoniterControl.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API\IEventBinder.cs" />
     <Compile Include="API\ILogicHandler\ILogicHandler_.cs" />
     <Compile Include="API\ILogicHandler\ILogicHandler_Contrib.cs" />
     <Compile Include="API\ILogicHandler\ILogicHandler_Basic.cs" />
@@ -804,7 +807,6 @@
     <Compile Include="LoginForm.Designer.cs">
       <DependentUpon>LoginForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="LogServer.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -826,12 +828,17 @@
     <Compile Include="MainForm_Ribbon.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="MoniterControlHelper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Common\SplashScreenApplication.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="Globals_RegEvent.cs" />
     <Compile Include="MainForm_Page.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WrapperCTX.cs" />
+    <Compile Include="MainForm_Plugin.cs">
       <SubType>Form</SubType>
     </Compile>
     <EmbeddedResource Include="Controls\Base\ctAccountType.resx">

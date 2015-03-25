@@ -109,6 +109,13 @@ namespace TradingLib.Core
         }
 
 
+        public IEnumerable<PositionRound> TotalRoundOpend
+        {
+            get
+            {
+                return prt.RoundClosed;
+            }
+        }
 
         #region 启动 停止 销毁
         public void Start()

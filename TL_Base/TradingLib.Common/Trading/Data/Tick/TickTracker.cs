@@ -70,14 +70,19 @@ namespace TradingLib.Common
             preoi.Clear();
             upperlimit.Clear();
             lowerlimit.Clear();
-
-
+            settlement.Clear();
         }
+
+
         int _estlabels = 100;
         /// <summary>
         /// create ticktracker
         /// </summary>
         public TickTracker() : this(100) { }
+
+        public TickTracker(string name) { _name = name; }
+
+
         /// <summary>
         /// create ticktracker with some approximate # of symbols to track
         /// </summary>
@@ -109,10 +114,12 @@ namespace TradingLib.Common
             upperlimit = new GenericTracker<decimal>(_estlabels);
             lowerlimit = new GenericTracker<decimal>(_estlabels);
 
+            settlement = new GenericTracker<decimal>(_estlabels);
+
             // setup generic trackers to track tick information
             last.NewTxt += new TextIdxDelegate(last_NewTxt);
         }
-        public TickTracker(string name) { _name = name; }
+        
         
 
         /// <summary>
@@ -146,6 +153,8 @@ namespace TradingLib.Common
             upperlimit.addindex(txt, 0);
             lowerlimit.addindex(txt, 0);
 
+            settlement.addindex(txt, 0);
+
             if (NewTxt!=null)
                 NewTxt(txt,idx);
         }
@@ -173,7 +182,7 @@ namespace TradingLib.Common
 
         GenericTracker<decimal> upperlimit;
         GenericTracker<decimal> lowerlimit;
-
+        GenericTracker<decimal> settlement;
 
         public string Display(int idx) { return this[idx].ToString(); }
         public string Display(string txt) { return this[txt].ToString(); }
@@ -355,6 +364,8 @@ namespace TradingLib.Common
                 k.PreOpenInterest = preoi[idx];
                 k.UpperLimit = upperlimit[idx];
                 k.LowerLimit = lowerlimit[idx];
+                k.Settlement = settlement[idx];
+
                 return k;
             }
         }
@@ -378,6 +389,7 @@ namespace TradingLib.Common
             }
             return ticks.ToArray();
         }
+
         /// <summary>
         /// get a tick in tick format
         /// </summary>
@@ -465,6 +477,12 @@ namespace TradingLib.Common
             }
             upperlimit[idx] = k.UpperLimit;
             lowerlimit[idx] = k.LowerLimit;
+            
+            if (k.Settlement != 0)
+            {
+                settlement[idx] = k.Settlement;
+            }
+
             return true;
         }
     }

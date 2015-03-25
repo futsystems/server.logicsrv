@@ -8,8 +8,8 @@
     <ProjectGuid>{CC62ED9C-4D42-40E9-A05F-FADA379E3F3F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TradingLib.HistReport</RootNamespace>
-    <AssemblyName>TradingLib.HistReport</AssemblyName>
+    <RootNamespace>MC.HistReport</RootNamespace>
+    <AssemblyName>MC.HistReport</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
