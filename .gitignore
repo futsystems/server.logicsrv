@@ -21,6 +21,7 @@
 /Platform/**/*.exe
 /Platform/**/log/
 /Platform/**/cache/
+/Platform/**/Logs/
 /Platform/TLDataBase
 /Platform/FutsMoniter/logs
 /publish

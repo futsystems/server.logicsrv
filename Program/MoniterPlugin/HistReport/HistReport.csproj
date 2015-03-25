@@ -51,15 +51,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HistReport.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="HistReport.cs" />
     <Compile Include="HistReport.Designer.cs">
       <DependentUpon>HistReport.cs</DependentUpon>
     </Compile>
-    <Compile Include="HistReport_SummaryAgent.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="HistReport_SummaryAgent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Protocol.cs" />
   </ItemGroup>
