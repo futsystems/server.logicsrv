@@ -136,8 +136,15 @@ namespace TradingLib.Core
             //debug("重置交易系统 isnaormal:"+IsNormal.ToString() +" istradingday:"+IsTradingday.ToString(),QSEnumDebugLevel.INFO);
             if (!settled) return;//没有结算就不重置交易系统
             logger.Info("系统重置，清算中心重置帐户，风控中心重置规则 清空日内记录表");
-            TLCtxHelper.EventSystem.FireBeforeSettleResetEvent(this, new SystemEventArgs());
+
+            this.ResetSystem();
             
+        }
+
+        void ResetSystem()
+        {
+            TLCtxHelper.EventSystem.FireBeforeSettleResetEvent(this, new SystemEventArgs());
+
             //清空日内交易记录
             if (_cleanTmp)
             {
@@ -149,7 +156,6 @@ namespace TradingLib.Core
 
             //触发 系统重置完成事件
             TLCtxHelper.EventSystem.FireAfterSettleResetEvent(this, new SystemEventArgs());
-            
         }
 
         /// <summary>
