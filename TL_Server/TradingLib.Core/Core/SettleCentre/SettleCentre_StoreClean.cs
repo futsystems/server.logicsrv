@@ -51,7 +51,7 @@ namespace TradingLib.Core
             foreach (Position pos in _clearcentre.TotalPositions.Where(pos => !pos.isFlat))
             {
                 Tick k = TLCtxHelper.CmdUtils.GetTickSnapshot(pos.Symbol);
-                if (k != null)
+                if (k != null && k.Settlement != 0 && (double)k.Settlement < double.MaxValue)
                 {
                     _settlementPriceTracker.UpdateSettlementPrice(new SettlementPrice() { Price = k.Settlement, SettleDay = this.NextTradingday, Symbol = pos.Symbol });
                 }
@@ -72,7 +72,7 @@ namespace TradingLib.Core
             {
                 //如果持仓合约有对应的结算价信息 设定结算价
                 target = _settlementPriceTracker[pos.Symbol];
-                if (target != null)
+                if (target != null && target.Price>0)
                 {
                     pos.SettlementPrice = target.Price;
                 }
