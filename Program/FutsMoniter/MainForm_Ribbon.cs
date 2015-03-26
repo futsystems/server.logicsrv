@@ -45,7 +45,7 @@ namespace FutsMoniter
             kryptonRibbonGroupButton_syncsymbol.Click += new EventHandler(kryptonRibbonGroupButton_syncsymbol_Click);
             //
 
-            kryptonRibbonGroupButton_settlemangement.Click += new EventHandler(kryptonRibbonGroupButton_settlemangement_Click);
+            kryptonRibbonGroupButton_SettleManagerment.Click += new EventHandler(kryptonRibbonGroupButton_SettleManagerment_Click);
 
             ////动态加载Ribbon菜单
             //ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton_settlemgr;
@@ -112,19 +112,12 @@ namespace FutsMoniter
             kryptonRibbonGroupButton_demo.Click += new EventHandler(kryptonRibbonGroupButton_demo_Click);
         }
 
-        void kryptonRibbonGroupButton_settlemangement_Click(object sender, EventArgs e)
+        void kryptonRibbonGroupButton_SettleManagerment_Click(object sender, EventArgs e)
         {
             fmSettleManager fm = new fmSettleManager();
-            //fm.ShowDialog();
-            fm.Show();
+            fm.ShowDialog();
         }
 
-        //void kryptonRibbonGroupButton_settlemgr_Click(object sender, EventArgs e)
-        //{
-        //    fmSettleManager fm = new fmSettleManager();
-        //    //fm.ShowDialog();
-        //    fm.Show();
-        //}
 
         void kryptonRibbonGroupButton_demo_Click(object sender, EventArgs e)
         {
