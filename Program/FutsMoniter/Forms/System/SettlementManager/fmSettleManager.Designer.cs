@@ -49,6 +49,7 @@
             this.ctPositionHold1 = new FutsMoniter.ctPositionHold();
             this.kryptonPage2 = new ComponentFactory.Krypton.Navigator.KryptonPage();
             this.ctSettlementPrice1 = new FutsMoniter.ctSettlementPrice();
+            this.btnResetSystem = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonGroupBox2)).BeginInit();
@@ -166,12 +167,13 @@
             // 
             // kryptonGroupBox1.Panel
             // 
+            this.kryptonGroupBox1.Panel.Controls.Add(this.btnResetSystem);
             this.kryptonGroupBox1.Panel.Controls.Add(this.btnReSettle);
             this.kryptonGroupBox1.Panel.Controls.Add(this.btnDelSettleInfo);
             this.kryptonGroupBox1.Panel.Controls.Add(this.kryptonLabel1);
             this.kryptonGroupBox1.Panel.Controls.Add(this.dpSettleday);
             this.kryptonGroupBox1.Panel.Controls.Add(this.btnLoadInfo);
-            this.kryptonGroupBox1.Size = new System.Drawing.Size(262, 129);
+            this.kryptonGroupBox1.Size = new System.Drawing.Size(392, 129);
             this.kryptonGroupBox1.TabIndex = 6;
             this.kryptonGroupBox1.Values.Heading = "手工结算";
             // 
@@ -273,6 +275,14 @@
             this.ctSettlementPrice1.Size = new System.Drawing.Size(652, 247);
             this.ctSettlementPrice1.TabIndex = 1;
             // 
+            // btnResetSystem
+            // 
+            this.btnResetSystem.Location = new System.Drawing.Point(252, 69);
+            this.btnResetSystem.Name = "btnResetSystem";
+            this.btnResetSystem.Size = new System.Drawing.Size(116, 25);
+            this.btnResetSystem.TabIndex = 5;
+            this.btnResetSystem.Values.Text = "重置系统";
+            // 
             // fmSettleManager
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -329,6 +339,7 @@
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel2;
         private ctPositionHold ctPositionHold1;
         private ctSettlementPrice ctSettlementPrice1;
+        private ComponentFactory.Krypton.Toolkit.KryptonButton btnResetSystem;
         //private ctSettlementPrice ctSettlementPrice1;
     }
 }

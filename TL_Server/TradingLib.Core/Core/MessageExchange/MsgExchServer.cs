@@ -251,6 +251,7 @@ namespace TradingLib.Core
         {
             //系统本地给成交赋日内唯一流水号 成交端的TradeID由接口负责
             f.TradeID = this.NextTradeID.ToString();
+
         }
 
         #endregion

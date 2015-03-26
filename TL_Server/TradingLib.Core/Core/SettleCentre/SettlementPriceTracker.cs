@@ -19,7 +19,10 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="settleday"></param>
         public void LoadSettlementPrice(int settleday)
-        { 
+        {
+            //加载数据前清空
+            this.Clear();
+
             foreach(var price in ORM.MSettlement.SelectSettlementPrice(settleday))
             {
                 settlementPriceMap.Add(price.Symbol, price);

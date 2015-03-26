@@ -62,10 +62,19 @@ namespace FutsMoniter
             btnDelSettleInfo.Click += new EventHandler(btnDelSettleInfo_Click);
             btnLoadInfo.Click += new EventHandler(btnLoadInfo_Click);
             btnReSettle.Click += new EventHandler(btnReSettle_Click);
+            btnResetSystem.Click += new EventHandler(btnResetSystem_Click);
             Globals.RegIEventHandler(this);
 
             //查询结算状态
             Globals.TLClient.ReqQrySettleStatus();
+        }
+
+        void btnResetSystem_Click(object sender, EventArgs e)
+        {
+            if (MoniterUtils.WindowConfirm("确认重置系统 进入工作状态") == System.Windows.Forms.DialogResult.Yes)
+            {
+                Globals.TLClient.ReqResetSystem();
+            }
         }
 
 

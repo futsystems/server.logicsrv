@@ -510,6 +510,13 @@ namespace TradingLib.Core
             return "";
         }
 
+        [ContribCommandAttr(QSEnumCommandSource.CLI, "ccstatus", "ccstatus - print clearcentre information", "")]
+        public string CTE_ClearCentreInfo()
+        {
+            return string.Format("status:{0}",Status);
+            
+        }
+
         [ContribCommandAttr(QSEnumCommandSource.CLI, "symbol", "symbol - xxxxx print out symbol information", "")]
         public string CTE_PrintSymnbol(string symbol)
         {

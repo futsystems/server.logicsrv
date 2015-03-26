@@ -102,7 +102,7 @@ namespace TradingLib.Core
             //平今，平昨标志
             var flag = (QSEnumOffsetFlag)Enum.Parse(typeof(QSEnumOffsetFlag), data["offset_flag"].ToString());
 
-
+            
             Trade f = new TradeImpl(symbol,price,size * (side ? 1 : -1));
             f.xDate = _tradingday;//设定成交时间为 交易日
             f.xTime = time;
@@ -123,6 +123,11 @@ namespace TradingLib.Core
                 throw new FutsRspError(string.Format("交易帐户:{0}不存在",acct));
             }
 
+            Position pos = account.GetPosition(f.Symbol, !f.Side);
+            if (f.UnsignedSize > pos.UnsignedSize)
+            {
+                throw new FutsRspError(string.Format("平仓数量大于持仓数量"));
+            }
             //时间检查
             IMarketTime mt = f.oSymbol.SecurityFamily.MarketTime;
             if (!mt.IsInMarketTime(f.xTime))
@@ -154,6 +159,7 @@ namespace TradingLib.Core
 
             f.id = ordid;
             f.OrderSeq = o.OrderSeq;
+            f.OrderSysID = o.OrderSeq.ToString();
             f.BrokerRemoteOrderID = o.BrokerRemoteOrderID;
             f.TradeID = "xxxxx";//随机产生的成交编号
 
@@ -345,6 +351,17 @@ namespace TradingLib.Core
             session.OperationSuccess(string.Format("交易日:{0}结算完成", settleday));
         }
 
+                        /// <summary>
+        /// 查询结算价信息
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="json"></param>
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "ResetSystem", "ResetSystem - 重置当前系统 进入工作状态", "重置当前系统 进入工作状态", QSEnumArgParseType.Json)]
+        public void CTE_QrySettlementPrice(ISession session)
+        {
+            this.Reset();
 
+            this.ResetSystem();
+        }
     }
 }

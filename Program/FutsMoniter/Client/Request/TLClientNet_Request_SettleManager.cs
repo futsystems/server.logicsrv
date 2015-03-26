@@ -80,5 +80,14 @@ namespace TradingLib.Common
             this.ReqContribRequest("SettleCentre", "FlatPositionHold", TradingLib.Mixins.Json.JsonMapper.ToJson(data));
         }
 
+        /// <summary>
+        /// 重置系统 进入工作状态
+        /// </summary>
+        public void ReqResetSystem()
+        {
+            this.ReqContribRequest("SettleCentre", "ResetSystem","");
+      
+        }
+
     }
 }
