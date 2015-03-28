@@ -55,6 +55,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Account\AccountProfie.cs" />
     <Compile Include="Manager\UIAccess.cs" />
     <Compile Include="Message\LogicFront.cs" />
     <Compile Include="ORM\Config\ConfigDB.cs" />

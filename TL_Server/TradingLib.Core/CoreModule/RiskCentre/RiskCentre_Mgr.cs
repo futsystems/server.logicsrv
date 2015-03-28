@@ -142,5 +142,76 @@ namespace TradingLib.Core
             }
         }
 
+
+
+        /// <summary>
+        /// 更新主帐户监控风控规则
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="json"></param>
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateVendorFlatRule", "UpdateVendorFlatRule - update flat rule for vendor moniter account", "更新主帐户监控强平规则", QSEnumArgParseType.Json)]
+        public void CTE_UpdateVendorFlatRule(ISession session, string json)
+        {
+            logger.Info(string.Format("管理员:{0} 更新主帐户强平规则:{1}", session.AuthorizedID, json.ToString()));
+
+            Manager manager = session.GetManager();
+
+            var req = TradingLib.Mixins.Json.JsonMapper.ToObject(json);
+
+            var account = req["account"].ToString();
+            var equity = decimal.Parse(req["equity"].ToString());//初始权益
+            var warnLevel = int.Parse(req["warn_level"].ToString());//报警线
+            var flatLevel = int.Parse(req["flat_level"].ToString());//强平线
+            var overNight = decimal.Parse(req["night_hold"].ToString());//过夜倍数
+
+
+            IAccount acct = TLCtxHelper.ModuleAccountManager[account];
+
+            if(acct == null) throw new FutsRspError("交易帐户不存在");
+            //判断帐户是否存在
+            if (acct != null)
+            {
+                if (!acct.RuleItemLoaded)
+                {
+                    this.LoadRuleItem(acct);//风控规则延迟加载,如果帐户没有加载则先加载帐户风控规则
+                }
+            }
+            
+            
+
+
+            //查询帐户风控规则
+            IAccountCheck accountcheck = acct.AccountChecks.Where(check=>check.GetType().FullName.Equals("AccountRuleSet.RSVendorFlat")).FirstOrDefault();
+            
+            string args = TradingLib.Mixins.Json.JsonMapper.ToJson(new {equity =equity,warn_level=warnLevel,flat_level=flatLevel,night_hold=overNight});
+            
+            RuleItem target = null;
+            //如果该帐户风控规则不存在 则添加
+            if(accountcheck == null)
+            {
+                //生成ruleItem
+                target = new RuleItem();
+                target.Account = acct.ID;
+                target.Compare = QSEnumCompareType.Equals;
+                target.Enable = true;
+                target.RuleName = "AccountRuleSet.RSVendorFlat";
+                target.RuleType = QSEnumRuleType.AccountRule;
+                target.SymbolSet = "";
+                target.Value = args;
+
+                this.UpdateRule(target);
+            }
+            else//更新
+            {
+                target = RuleItem.IRule2RuleItem(accountcheck);
+                
+                //将传递过来的参数重新生成json格式
+                target.Value = args;
+                this.UpdateRule(target);
+
+                session.OperationSuccess("更新风控项目成功");
+            }
+        }
+
     }
 }

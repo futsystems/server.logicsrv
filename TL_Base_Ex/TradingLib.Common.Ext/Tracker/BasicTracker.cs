@@ -43,6 +43,8 @@ namespace TradingLib.Common
         //计算策略模板
         ExStrategyTemplateTracker exstrategytracker;
 
+        //交易帐户个人信息维护器
+        AccountProfileTracker accprofiletracker;
         static BasicTracker()
         {
             defaultinstance = new BasicTracker();
@@ -266,6 +268,19 @@ namespace TradingLib.Common
                 return defaultinstance.accconnectortracker;
             }
         
+        }
+
+        /// <summary>
+        /// 交易帐户个人信息维护器
+        /// </summary>
+        public static AccountProfileTracker AccountProfileTracker
+        {
+            get
+            {
+                if (defaultinstance.accprofiletracker == null)
+                    defaultinstance.accprofiletracker = new AccountProfileTracker();
+                return defaultinstance.accprofiletracker;
+            }
         }
 
         //public static void Release()

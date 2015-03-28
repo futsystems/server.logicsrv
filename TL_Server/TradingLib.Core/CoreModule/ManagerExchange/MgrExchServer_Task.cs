@@ -19,7 +19,7 @@ namespace TradingLib.Core
                     //便利所有订阅账户列表
                     foreach (IAccount acc in cst.WathAccountList)
                     {
-                        //debug("采集帐户信息:" + account, QSEnumDebugLevel.INFO);
+                        //logger.Debug("帐户信息采集推送");
                         NotifyMGRAccountInfoLiteResponse notify = ResponseTemplate<NotifyMGRAccountInfoLiteResponse>.SrvSendNotifyResponse(cst.Location);
                         notify.InfoLite = acc.GenAccountInfoLite();
                         CachePacket(notify);

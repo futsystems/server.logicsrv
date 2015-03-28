@@ -141,20 +141,43 @@ namespace TradingLib.ServiceManager
                 vendor.BindBroker(brokerinterface);
 
             ////5.绑定状态事件
-            broker.Connected += (string b) =>
-            {
-                logger.Info("Broker[" + b + "] Connected");
-            };
-            broker.Disconnected += (string b) =>
-            {
-                logger.Info("Broker[" + b + "] Disconnected");
-            };
+            broker.Connected += OnBrokerConnected;
+
+            broker.Disconnected += OnBrokerDisconnected;
+
             //6.将broker的交易类事件绑定到路由内 然后通过路由转发到交易消息服务
             //_brokerrouter.LoadBroker(brokerinterface);
             //TLCtxHelper.Scope.
             TLCtxHelper.ModuleBrokerRouter.LoadBroker(brokerinterface);
         }
 
+        void OnBrokerConnected(string token)
+        {
+            logger.Info("Broker[" + token + "] Connected");
+            if (TLCtxHelper.Version.ProductType == QSEnumProductType.VendorMoniter)
+            {
+                IAccount account = BasicTracker.ConnectorMapTracker.GetAccountForBroker(token);
+                if (account != null)
+                {
+                    //触发帐户变动事件
+                    TLCtxHelper.EventAccount.FireAccountChangeEent(account.ID);
+                }
+            }
+        }
+
+        void OnBrokerDisconnected(string token)
+        {
+            logger.Info("Broker[" + token + "] Disconnected");
+            if (TLCtxHelper.Version.ProductType == QSEnumProductType.VendorMoniter)
+            {
+                IAccount account = BasicTracker.ConnectorMapTracker.GetAccountForBroker(token);
+                if (account != null)
+                {
+                    //触发帐户变动事件
+                    TLCtxHelper.EventAccount.FireAccountChangeEent(account.ID);
+                }
+            }
+        }
         /// <summary>
         /// 加载BrokerXAPI底层成交接口
         /// </summary>

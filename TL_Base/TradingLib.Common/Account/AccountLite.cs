@@ -169,6 +169,11 @@ namespace TradingLib.Common
         /// </summary>
         public string ConnectorToken { get; set; }
 
+        /// <summary>
+        /// 绑定主帐户连接状态
+        /// </summary>
+        public bool MAcctConnected { get; set; }
+
 
         public static string Serialize(AccountLite account)
         {
@@ -235,6 +240,8 @@ namespace TradingLib.Common
             sb.Append(account.ExStrategy_ID);
             sb.Append(d);
             sb.Append(account.ConnectorToken);
+            sb.Append(d);
+            sb.Append(account.MAcctConnected);
             return sb.ToString();
         }
 
@@ -273,6 +280,7 @@ namespace TradingLib.Common
             account.Margin_ID = int.Parse(rec[28]);
             account.ExStrategy_ID = int.Parse(rec[29]);
             account.ConnectorToken = rec[30];
+            account.MAcctConnected = bool.Parse(rec[31]);
             return account;
         }
     }

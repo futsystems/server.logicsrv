@@ -88,7 +88,7 @@ namespace TraddingSrvCLI
             autofac_section = _configFile["Product"].AsString();
             autofac_section = string.IsNullOrEmpty(autofac_section) ? "Product" : autofac_section;
 
-
+            
             if (!string.IsNullOrEmpty(_oppositeAddress))
             { 
                 _opposited=true;

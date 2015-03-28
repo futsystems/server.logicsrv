@@ -155,7 +155,14 @@ namespace TradingLib.Common
             info.Profit = acc.Profit;
             info.RealizedPL = acc.RealizedPL;
             info.UnRealizedPL = acc.UnRealizedPL;
+            
             info.Name = acc.Name;
+            AccountProfile profile = BasicTracker.AccountProfileTracker[acc.ID];
+            if (profile != null)
+            {
+                info.Name = profile.Name;
+            }
+
             info.Broker = acc.Broker;
             info.BankID = acc.BankID;
             info.BankAC = acc.BankAC;
@@ -163,6 +170,7 @@ namespace TradingLib.Common
             info.MGRID = acc.Mgr_fk;
             info.Deleted = acc.Deleted;
             info.RG_ID = acc.RG_FK;
+
             //IEnumerable<ClientInfoBase> clients = TLCtxHelper.Ctx.MessageExchange.GetNotifyTargets(info.Account);
             //info.IsLogin = clients.Count() > 0;
             //info.IPAddress = info.IsLogin ? clients.FirstOrDefault().IPAddress : "";
@@ -175,9 +183,15 @@ namespace TradingLib.Common
             info.ExStrategy_ID = acc.ExStrategy_ID;
             if(TLCtxHelper.Version.ProductType == QSEnumProductType.VendorMoniter)
             {
-                int id = BasicTracker.ConnectorMapTracker.GetConnectorIDForAccount(acc.ID);
-                ConnectorConfig cfg = BasicTracker.ConnectorConfigTracker.GetBrokerConfig(id);
-                info.ConnectorToken = cfg!= null?(string.Format("{0}-{1}",cfg.Token,cfg.usrinfo_userid)):"";
+                IBroker broker = BasicTracker.ConnectorMapTracker.GetBrokerForAccount(acc.ID);
+                if(broker != null)
+                {
+                    int id = BasicTracker.ConnectorMapTracker.GetConnectorIDForAccount(acc.ID);
+                    ConnectorConfig cfg = BasicTracker.ConnectorConfigTracker.GetBrokerConfig(id);
+                    info.ConnectorToken = cfg!= null?(string.Format("{0}-{1}",cfg.Token,cfg.usrinfo_userid)):"";
+                    info.MAcctConnected = broker.IsLive;
+                    Util.Debug(string.Format("Broker:{0} Connected:{1}", broker.Token, broker.IsLive));
+                }
             }
             //info.ConnectorToken = TLCtxHelper.Version.ProductType== QSEnumProductType.VendorMoniter ?BasicTracke
             return info;

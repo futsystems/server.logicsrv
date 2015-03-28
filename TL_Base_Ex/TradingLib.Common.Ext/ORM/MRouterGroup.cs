@@ -60,7 +60,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("UPDATE router_group SET strategy='{0}',description='{1}' WHERE id='{4}'", group.Strategy, group.Description);
+                string query = string.Format("UPDATE router_group SET strategy='{0}',description='{1}' WHERE id='{2}'", group.Strategy, group.Description,group.ID);
                 db.Connection.Execute(query);
             }
         }

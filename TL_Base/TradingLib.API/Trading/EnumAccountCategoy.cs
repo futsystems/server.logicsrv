@@ -12,5 +12,7 @@ namespace TradingLib.API
         SIMULATION,
         [Description("实盘交易帐号")]
         REAL,
+        [Description("配资客户")]
+        LOANNEE
     }
 }

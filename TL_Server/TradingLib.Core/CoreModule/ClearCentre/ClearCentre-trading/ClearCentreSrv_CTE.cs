@@ -22,6 +22,7 @@ namespace TradingLib.Core
             if (!TLCtxHelper.ModuleSettleCentre.IsTradingday) return;
             this.OpenClearCentre();
             logger.Info("开启清算中心,准备接受客户委托");
+
         }
 
         /// <summary>
@@ -42,12 +43,14 @@ namespace TradingLib.Core
         public void CTE_OpenClearCentre(ISession session)
         {
             OpenClearCentre();
+            session.OperationSuccess("清算中心成功开启");
         }
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "CloseClearCentre", "CloseClearCentre - close clearcentre", "关闭清算中心")]
         public void CTE_CloseClearCentre(ISession session)
         {
             CloseClearCentre();
+            session.OperationSuccess("清算中心成功关闭");
         }
 
 

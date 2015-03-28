@@ -415,6 +415,8 @@ namespace TradingLib.Common
             sb.Append(this.Name);
             sb.Append(d);
             sb.Append(this.Country.ToString());
+            sb.Append(d);
+            sb.Append(this.Title);
             return sb.ToString();
         }
 
@@ -425,6 +427,10 @@ namespace TradingLib.Common
             this.EXCode = rec[1];
             this.Name = rec[2];
             this.Country = (Country)Enum.Parse(typeof(Country), rec[3]);
+            if (rec.Length > 4)
+            {
+                this.Title = rec[4];
+            }
 
         }
     }

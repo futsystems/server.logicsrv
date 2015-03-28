@@ -80,10 +80,12 @@
     <Compile Include="Contex\Event\RouterEvent.cs" />
     <Compile Include="Contrib\Task.cs" />
     <Compile Include="ORM\MAccountConnectorMap.cs" />
+    <Compile Include="ORM\MAccountProfile.cs" />
     <Compile Include="ORM\MCommission.cs" />
     <Compile Include="ORM\MMargin.cs" />
     <Compile Include="ORM\MStrategy.cs" />
     <Compile Include="ORM\MSystem.cs" />
+    <Compile Include="Tracker\BasicTracker\AccountProfileTracker.cs" />
     <Compile Include="Tracker\BasicTracker\ConnectorMap\AccountConnectorPair.cs" />
     <Compile Include="Tracker\BasicTracker\ConnectorMap\AccountConnectorTracker.cs" />
     <Compile Include="Tracker\BasicTracker\Template\CommissionTemplateTracker.cs" />

@@ -81,6 +81,112 @@ namespace TradingLib.Core
             session.OperationSuccess("新增帐户:" + create.Account + "成功");
         }
 
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "AddFinServiceAccount", "AddFinServiceAccount - add finservice account", "添加配资客户", QSEnumArgParseType.Json)]
+        public void CTE_AddFinServiceAccount(ISession session, string json)
+        {
+            logger.Info(string.Format("管理员:{0} 请求添加配资客户帐号:{1}", session.AuthorizedID, json));
+
+            Manager manager = session.GetManager();
+            var profile = Mixins.Json.JsonMapper.ToObject<AccountProfile>(json);
+            var account = profile.Account;
+            QSEnumAccountCategory category = QSEnumAccountCategory.LOANNEE;
+            var password = string.Empty;
+            var routergroup_id = 0;
+            var user_id = 0;
+            var manager_id = manager.BaseManager.ID;
+
+            //域帐户数目检查
+            if (manager.Domain.GetAccounts().Count() >= manager.Domain.AccLimit)
+            {
+                throw new FutsRspError("帐户数目达到上限:" + manager.Domain.AccLimit.ToString());
+            }
+
+            //如果不是Root权限的Manager需要进行执行权限检查
+            if (!manager.IsInRoot())
+            {
+                //如果不是为该主域添加帐户,则我们需要判断当前Manager的主域是否拥有请求主域的权限
+                if (manager.BaseMgrID != manager_id)
+                {
+                    if (!manager.IsParentOf(manager_id))
+                    {
+                        throw new FutsRspError("无权在该管理域开设帐户");
+                    }
+                }
+            }
+
+            //Manager帐户数量限制 如果是在自己的主域中添加交易帐户 则需要检查帐户数量
+            int limit = manager.BaseManager.AccLimit;
+
+            int cnt = manager.GetVisibleAccount().Count();//获得该manger下属的所有帐户数目
+            if (cnt >= limit)
+            {
+                throw new FutsRspError("可开帐户数量超过限制:" + limit.ToString());
+            }
+
+
+            AccountCreation create = new AccountCreation();
+            create.Account = account;
+            create.Category = category;
+            create.Password = password;
+            create.RouteGroup = BasicTracker.RouterGroupTracker[routergroup_id];
+            create.RouterType = QSEnumOrderTransferType.SIM;
+            create.UserID = user_id;
+            create.Domain = manager.Domain;
+            create.BaseManager = manager.BaseManager;
+
+
+            //执行操作 并捕获异常 产生异常则给出错误回报
+            this.AddAccount(ref create);//将交易帐户加入到主域
+
+            profile.Account = create.Account;//获得添加的交易帐户
+            //插入新的profile
+            BasicTracker.AccountProfileTracker.UpdateAccountProfile(profile);
+
+            session.OperationSuccess("新增配资客户:" + create.Account + "成功");
+
+        }
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryAccountProfile", "QryAccountProfile - qry profile account", "查询交易帐户个人信息")]
+        public void CTE_QryAccountProfile(ISession session, string account)
+        {
+            Manager mgr = session.GetManager();
+            if (mgr == null) throw new FutsRspError("管理员不存在");
+
+            AccountProfile profile = BasicTracker.AccountProfileTracker[account];
+            
+            //如果个人信息不存在 则添加个人信息
+            if (profile == null)
+            {
+                profile = new AccountProfile();
+                profile.Account = account;
+
+                BasicTracker.AccountProfileTracker.UpdateAccountProfile(profile);
+            }
+            session.ReplyMgr(profile);           
+
+        }
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateAccountProfile", "UpdateAccountProfile - update account profile", "更新交易帐户个人信息",QSEnumArgParseType.Json)]
+        public void CTE_UpdateAccountProfile(ISession session, string json)
+        {
+            Manager mgr = session.GetManager();
+            if (mgr == null) throw new FutsRspError("管理员不存在");
+
+            var profile = Mixins.Json.JsonMapper.ToObject<AccountProfile>(json);
+            IAccount account = TLCtxHelper.ModuleAccountManager[profile.Account];
+
+            if (account != null)
+            {
+                BasicTracker.AccountProfileTracker.UpdateAccountProfile(profile);
+            }
+            //触发交易帐户变动事件
+            TLCtxHelper.EventAccount.FireAccountChangeEent(account.ID);
+
+            session.OperationSuccess("更新个人信息成功");
+
+        }
+
         /// <summary>
         /// 请求删除交易帐户
         /// </summary>

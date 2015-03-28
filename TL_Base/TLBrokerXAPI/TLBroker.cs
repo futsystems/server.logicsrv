@@ -167,6 +167,7 @@ namespace TradingLib.BrokerXAPI
             //恢复该接口日内交易数据
             OnResume();
 
+            NotifyConnected();
             return true;
             //对外触发连接成功事件
         }
@@ -189,6 +190,7 @@ namespace TradingLib.BrokerXAPI
             _loginsuccess = false;
             Util.Info("Resource Disposed", this.GetType().Name);
         }
+
         public virtual void Stop()
         {
             if (!this.IsLive) return;
@@ -199,6 +201,8 @@ namespace TradingLib.BrokerXAPI
             ResetResource();
 
             this.DestoryBroker();
+
+            this.NotifyDisconnected();
         }
 
         public bool IsLive { get { return _working; } }
