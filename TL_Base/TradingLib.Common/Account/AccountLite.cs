@@ -174,6 +174,10 @@ namespace TradingLib.Common
         /// </summary>
         public bool MAcctConnected { get; set; }
 
+        /// <summary>
+        /// 主帐户风控规则
+        /// </summary>
+        public string MAcctRiskRule { get; set; }
 
         public static string Serialize(AccountLite account)
         {
@@ -242,6 +246,8 @@ namespace TradingLib.Common
             sb.Append(account.ConnectorToken);
             sb.Append(d);
             sb.Append(account.MAcctConnected);
+            sb.Append(d);
+            sb.Append(account.MAcctRiskRule);
             return sb.ToString();
         }
 
@@ -281,6 +287,7 @@ namespace TradingLib.Common
             account.ExStrategy_ID = int.Parse(rec[29]);
             account.ConnectorToken = rec[30];
             account.MAcctConnected = bool.Parse(rec[31]);
+            account.MAcctRiskRule = rec[32];
             return account;
         }
     }

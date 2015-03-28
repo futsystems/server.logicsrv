@@ -192,6 +192,10 @@ namespace TradingLib.Common
                     info.MAcctConnected = broker.IsLive;
                     Util.Debug(string.Format("Broker:{0} Connected:{1}", broker.Token, broker.IsLive));
                 }
+
+                IAccountCheck rs = acc.AccountChecks.Where(check => check.GetType().FullName.Equals("AccountRuleSet.RSVendorFlat")).FirstOrDefault();
+                info.MAcctRiskRule = rs != null ? rs.RuleDescription : "未设置";
+            
             }
             //info.ConnectorToken = TLCtxHelper.Version.ProductType== QSEnumProductType.VendorMoniter ?BasicTracke
             return info;

@@ -60,8 +60,8 @@ namespace AccountRuleSet
                     //解析json参数
                     var args = TradingLib.Mixins.Json.JsonMapper.ToObject(_args);
                     lastEquity = decimal.Parse(args["equity"].ToString());//初始权益
-                    flatLevel = int.Parse(args["warn_level"].ToString());//报警线
-                    warnLevel = int.Parse(args["flat_level"].ToString());//强平线
+                    warnLevel = int.Parse(args["warn_level"].ToString());//报警线
+                    flatLevel = int.Parse(args["flat_level"].ToString());//强平线
                     nightHold = decimal.Parse(args["night_hold"].ToString());//过夜倍数
 
 
@@ -115,7 +115,7 @@ namespace AccountRuleSet
         {
             get
             {
-                return string.Format("强平:{0},过夜:{1}",this.FlatEquity,this.nightHold);
+                return string.Format("强平:{0} 过夜:{1}",this.FlatEquity,this.nightHold);
             }
         }
 
