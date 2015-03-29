@@ -69,6 +69,7 @@ namespace FutsMoniter
             kryptonRibbonGroupButton_Commission.Click += new EventHandler(kryptonRibbonGroupButton_Commission_Click);
             kryptonRibbonGroupButton_Margin.Click += new EventHandler(kryptonRibbonGroupButton_Margin_Click);
             kryptonRibbonGroupButton_ExStrategy.Click += new EventHandler(kryptonRibbonGroupButton_ExStrategy_Click);
+            //kryptonribbongroupbutton_
             //历史记录
             kryptonRibbonGroupButton_QueryExHist.Click += new EventHandler(kryptonRibbonGroupButton_QueryExHist_Click);
             kryptonRibbonGroupButton_QueryCashTransAccount.Click += new EventHandler(kryptonRibbonGroupButton_QueryCashTransAccount_Click);
@@ -109,7 +110,7 @@ namespace FutsMoniter
             kryptonRibbonGroupButton_SaveConfig.Click += new EventHandler(kryptonRibbonGroupButton_SaveConfig_Click);
 
 
-            kryptonRibbonGroupButton_demo.Click += new EventHandler(kryptonRibbonGroupButton_demo_Click);
+            //kryptonRibbonGroupButton_demo.Click += new EventHandler(kryptonRibbonGroupButton_demo_Click);
         }
 
         void kryptonRibbonGroupButton_SettleManagerment_Click(object sender, EventArgs e)

@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\..\Platform\FutsMoniter\plugin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -31,8 +31,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ComponentFactory.Krypton.Navigator, Version=4.4.0.0, Culture=neutral, PublicKeyToken=dc91bbef911870e2" />
-    <Reference Include="ComponentFactory.Krypton.Toolkit, Version=4.4.0.0, Culture=neutral, PublicKeyToken=dc91bbef911870e2" />
+    <Reference Include="ComponentFactory.Krypton.Navigator, Version=4.4.0.0, Culture=neutral, PublicKeyToken=a87e673e9ecb6e8e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\lib\kypton\ComponentFactory.Krypton.Navigator.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ComponentFactory.Krypton.Toolkit, Version=4.4.0.0, Culture=neutral, PublicKeyToken=a87e673e9ecb6e8e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\lib\kypton\ComponentFactory.Krypton.Toolkit.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
@@ -41,13 +49,15 @@
     <Reference Include="System.Xml" />
     <Reference Include="TradingLib.API">
       <HintPath>..\..\..\lib\TradingLib\TradingLib.API.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="TradingLib.Common">
       <HintPath>..\..\..\lib\TradingLib\TradingLib.Common.dll</HintPath>
+      <Private>False</Private>
     </Reference>
-    <Reference Include="TradingLib.Mixins, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
-    <Reference Include="TradingLib.MoniterControl">
-      <HintPath>..\..\MonitorControl\obj\Debug\TradingLib.MoniterControl.dll</HintPath>
+    <Reference Include="TradingLib.Mixins">
+      <HintPath>..\..\..\lib\TradingLib\TradingLib.Mixins.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -67,7 +77,13 @@
     <EmbeddedResource Include="HistReport.resx">
       <DependentUpon>HistReport.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\licenses.licx" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\MonitorControl\MonitorControl.csproj">
+      <Project>{00EFBCFD-6BAB-403E-9B84-652FBC109286}</Project>
+      <Name>MonitorControl</Name>
+      <Private>False</Private>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
