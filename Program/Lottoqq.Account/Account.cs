@@ -46,22 +46,37 @@ namespace Lottoqq.Account
             if (symbol.SecurityType == SecurityType.INNOV)
             {
                 //如果是LOTTO类型的证券,则需要检查是否具备秘籍服务,并且调用秘籍服务的CanTradeSymbol来判定是否有资格交易该合约
-                if (symbol.SecurityFamily.Code.Equals("LOTTO"))
+                //if (symbol.SecurityFamily.Code.Equals("LOTTO"))
+                //{
+                //    //检查秘籍服务是否可以交易该合约
+                //    service = null;
+                //    if (GetService("MJService", out service))
+                //    {
+                //        re = re && service.CanTradeSymbol(symbol, out msg);
+                //        return re;
+                //    }
+                //    else
+                //    {
+                //        msg ="帐户无乐透服务,无法交易乐透期权!";
+                //        return false;
+                //    }
+                //}
+                if (symbol.SecurityFamily.Code.Equals("MINI"))
                 {
-                    //检查秘籍服务是否可以交易该合约
                     service = null;
-                    if (GetService("MJService", out service))
+                    if (GetService("MiniService", out service))
                     {
                         re = re && service.CanTradeSymbol(symbol, out msg);
                         return re;
                     }
                     else
                     {
-                        msg ="帐户无乐透服务,无法交易乐透期权!";
+                        msg = "帐户没有迷你合约交易服务,无法交易迷你合约";
                         return false;
                     }
                 }
             }
+
             if (GetService("FinService", out service))
             {
                 return service.CanTradeSymbol(symbol, out msg);
@@ -81,6 +96,18 @@ namespace Lottoqq.Account
         {
             IAccountService service = null;
 
+            //如果是异化合约
+            if (o.oSymbol.SecurityType == SecurityType.INNOV)
+            {
+                //如果是mini品种
+                if (o.oSymbol.SecurityFamily.Code.Equals("MINI"))
+                {
+                    if (GetService("MiniService", out service))
+                    {
+                        return service.CanTakeOrder(o, out msg);
+                    }
+                }
+            }
             //如果有配资服务 则调用配资服务的保证金检查机制进行处理
             if (GetService("FinService", out service))
             {

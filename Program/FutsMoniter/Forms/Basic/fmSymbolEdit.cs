@@ -234,7 +234,7 @@ namespace FutsMoniter
             int exid = (int)cbexchange.SelectedValue;
 
             Factory.IDataSourceFactory(cbsecurity).BindDataSource(Globals.BasicInfoTracker.GetSecurityCombListViaExchange(exid));
-
+            gp_lotto.Visible = exid == 7 ? true : false;
             OnCBExpiremonth();
         }
 

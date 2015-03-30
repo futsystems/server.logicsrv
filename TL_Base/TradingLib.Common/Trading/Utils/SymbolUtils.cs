@@ -26,6 +26,10 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static int GetMonth(this Symbol sym)
         {
+            if (sym.SecurityFamily.Type == SecurityType.INNOV)
+            {
+                return GetMonth(sym.ULSymbol);
+            }
             string month = sym.Symbol.Substring(sym.Symbol.Length-2, 2);
             return int.Parse(month);
         }

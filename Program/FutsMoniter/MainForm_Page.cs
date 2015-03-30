@@ -22,7 +22,7 @@ namespace FutsMoniter
     {
         Dictionary<string, KryptonPage> pagemap = new Dictionary<string, KryptonPage>();
         /// <summary>
-        /// 
+        /// 初始化视区控件
         /// </summary>
         void InitPage()
         {
@@ -30,10 +30,13 @@ namespace FutsMoniter
             kryptonDockingManager.AddDockspace("Control", DockingEdge.Right, GetModulePage());
             kryptonDockingManager.AddDockspace("Control", DockingEdge.Bottom, new KryptonPage[] { NewTradingInfoReal() });
             
-            //if (System.IO.File.Exists("config.xml"))
-            //{
-            //    kryptonDockingManager.LoadConfigFromFile("config.xml");
-            //}
+            //加载默认布局
+            if (System.IO.File.Exists("config.xml"))
+            {
+                kryptonDockingManager.LoadConfigFromFile("config.xml");
+            }
+            //显示所有页面
+            kryptonDockingManager.ShowAllPages();
         }
 
         public void AddWorkspacePage(MonitorControl control)
