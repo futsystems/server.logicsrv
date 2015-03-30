@@ -61,6 +61,19 @@ namespace Lottoqq.Account
                         return false;
                     }
                 }
+                if (symbol.SecurityFamily.Code.Equals("MINI"))
+                {
+                    if (GetService("MiniService", out service))
+                    {
+                        re = re & service.CanTradeSymbol(symbol, out msg);
+                        return re;
+                    }
+                    else
+                    {
+                        msg = "帐户没有迷你合约交易服务,无法交易迷你合约";
+                    }
+                }
+
             }
             if (GetService("FinService", out service))
             {
@@ -81,6 +94,16 @@ namespace Lottoqq.Account
         {
             IAccountService service = null;
 
+            if (o.oSymbol.SecurityType == SecurityType.INNOV)
+            {
+                if (o.oSymbol.SecurityFamily.Code.Equals("MINI"))
+                {
+                    if (GetService("MiniService", out service))
+                    {
+                        return service.CanTakeOrder(o, out msg);
+                    }
+                }
+            }
             //如果有配资服务 则调用配资服务的保证金检查机制进行处理
             if (GetService("FinService", out service))
             {

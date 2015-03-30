@@ -32,10 +32,12 @@ namespace FutsMoniter
             kryptonDockingManager.AddDockspace("Control", DockingEdge.Right, GetModulePage());
 
 
-            //if (System.IO.File.Exists("config.xml"))
-            //{
-            //    kryptonDockingManager.LoadConfigFromFile("config.xml");
-            //}
+            if (System.IO.File.Exists("config.xml"))
+            {
+                kryptonDockingManager.LoadConfigFromFile("config.xml");
+            }
+
+            kryptonDockingManager.ShowAllPages();
         }
 
         List<MoniterControl> workspacelist = new List<MoniterControl>();

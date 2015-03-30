@@ -217,7 +217,11 @@ namespace TradingLib.Common
                 if (SecurityFamily != null)
                 {
                     //如果该合约是异化合约,则其乘数参数为底层合约的参数
-                    if (SecurityFamily.Type == API.SecurityType.INNOV)
+                    /* 异化方法
+                     * 1.lotto 保证金手续费变化 底层乘数不变，相当于将波动率小的合约放大成波动率大的合约
+                     * 2.mini  保证金手续费变化 底层成熟也变化，把成熟大的合约缩小成迷你合约
+                     * */
+                    if (SecurityFamily.Type == API.SecurityType.INNOV && SecurityFamily.Code=="LOTO")
                     {
                         return ULSymbol != null ? ULSymbol.Multiple : 1;
                     }
