@@ -37,9 +37,9 @@
             this.quote_czce = new FutSystems.GUI.ViewQuoteList();
             this.kryptonPage4 = new ComponentFactory.Krypton.Navigator.KryptonPage();
             this.quote_shfe = new FutSystems.GUI.ViewQuoteList();
-            this.ctOrderSenderM1 = new FutsMoniter.ctOrderSenderM();
             this.kryptonPage2 = new ComponentFactory.Krypton.Navigator.KryptonPage();
             this.quote_innov = new FutSystems.GUI.ViewQuoteList();
+            this.ctOrderSenderM1 = new FutsMoniter.ctOrderSenderM();
             ((System.ComponentModel.ISupportInitialize)(this.quotenav)).BeginInit();
             this.quotenav.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPage1)).BeginInit();
@@ -70,7 +70,7 @@
             this.page3,
             this.kryptonPage4,
             this.kryptonPage2});
-            this.quotenav.SelectedIndex = 4;
+            this.quotenav.SelectedIndex = 0;
             this.quotenav.Size = new System.Drawing.Size(634, 298);
             this.quotenav.TabIndex = 0;
             this.quotenav.Text = "kryptonNavigator1";
@@ -223,14 +223,6 @@
             this.quote_shfe.Text = "viewQuoteList1";
             this.quote_shfe.UPColor = System.Drawing.Color.Red;
             // 
-            // ctOrderSenderM1
-            // 
-            this.ctOrderSenderM1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.ctOrderSenderM1.Location = new System.Drawing.Point(0, 298);
-            this.ctOrderSenderM1.Name = "ctOrderSenderM1";
-            this.ctOrderSenderM1.Size = new System.Drawing.Size(634, 57);
-            this.ctOrderSenderM1.TabIndex = 1;
-            // 
             // kryptonPage2
             // 
             this.kryptonPage2.AutoHiddenSlideSize = new System.Drawing.Size(200, 200);
@@ -240,7 +232,7 @@
             this.kryptonPage2.MinimumSize = new System.Drawing.Size(50, 50);
             this.kryptonPage2.Name = "kryptonPage2";
             this.kryptonPage2.Size = new System.Drawing.Size(632, 273);
-            this.kryptonPage2.Text = "kryptonPage2";
+            this.kryptonPage2.Text = "自定义";
             this.kryptonPage2.ToolTipTitle = "Page ToolTip";
             this.kryptonPage2.UniqueName = "6B72CA2ECCB3472E5881088932069857";
             // 
@@ -267,6 +259,14 @@
             this.quote_innov.TableLineColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.quote_innov.Text = "viewQuoteList1";
             this.quote_innov.UPColor = System.Drawing.Color.Red;
+            // 
+            // ctOrderSenderM1
+            // 
+            this.ctOrderSenderM1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.ctOrderSenderM1.Location = new System.Drawing.Point(0, 298);
+            this.ctOrderSenderM1.Name = "ctOrderSenderM1";
+            this.ctOrderSenderM1.Size = new System.Drawing.Size(634, 57);
+            this.ctOrderSenderM1.TabIndex = 1;
             // 
             // ctQuoteMoniter
             // 

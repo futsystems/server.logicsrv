@@ -68,17 +68,59 @@ namespace TradingLib.Core
         void BindSettlementPrice()
         {
             SettlementPrice target = null;
+            //遍历所有分帐户侧持仓
             foreach (Position pos in _clearcentre.TotalPositions.Where(pos=>!pos.isFlat))
             {
-                //如果持仓合约有对应的结算价信息 设定结算价
-                target = _settlementPriceTracker[pos.Symbol];
-                if (target != null && target.Price>0)
+                //如果系统设置成以最新价进行结算 则结算价为最新价格
+                if (_settleWithLatestPrice)//如果以最新价进行结算
                 {
-                    pos.SettlementPrice = target.Price;
+                    pos.SettlementPrice = pos.LastPrice;//将最新价设定到持仓的结算价
+                }
+                else
+                {
+                    //如果持仓合约有对应的结算价信息 设定结算价
+                    target = _settlementPriceTracker[pos.Symbol];
+                    if (target != null && target.Price > 0)
+                    {
+                        pos.SettlementPrice = target.Price;
+                    }
+                }
+
+                //如果没有设定结算价 则将持仓的最新价格设置成为结算价
+                if (pos.SettlementPrice == null)
+                {
+                    pos.SettlementPrice = pos.LastPrice;
+                }
+
+            }
+
+            //遍历所有接口侧持仓
+            foreach (IBroker broker in TLCtxHelper.Ctx.RouterManager.Brokers)
+            {
+                //接口没有启动 则没有交易数据
+                if (!broker.IsLive)
+                    continue;
+
+                //遍历成交接口有持仓的 持仓，将该持仓的持仓明细保存到数据库
+                foreach (Position pos in broker.Positions.Where(p => !p.isFlat))
+                {
+                    //如果持仓合约有对应的结算价信息 设定结算价
+                    target = _settlementPriceTracker[pos.Symbol];
+                    if (target != null && target.Price > 0)
+                    {
+                        pos.SettlementPrice = target.Price;
+                    }
+                    //如果没有设定结算价 则将持仓的最新价格设置成为结算价
+                    if (pos.SettlementPrice == null)
+                    {
+                        pos.SettlementPrice = pos.LastPrice;
+                    }
                 }
             }
-            
+
         }
+
+
 
 
         string datastoreheader = "#####DataStore:";
@@ -92,20 +134,20 @@ namespace TradingLib.Core
             debug(datastoreheader + "Save PositionDetails....", QSEnumDebugLevel.MUST);
 
             //检查所有系统持仓按照一定的逻辑获得 结算价 目前如果结算价不存在则取持仓最新价来替代(持仓最新价 当没有tick时是以持仓成本作价)
-            foreach (Position pos in _clearcentre.TotalPositions)
-            {
-                //如果系统设定按最新价来执行结算 则将结算价格设为持仓的最新价
-                if (_settleWithLatestPrice)//如果以最新价进行结算
-                {
-                    pos.SettlementPrice = pos.LastPrice;//将最新价设定到持仓的结算价
-                }
-                else
-                {
-                    //默认情况下 系统按结算价进行结算，如果结算价缺失则按最新价进行结算
-                    if (pos.SettlementPrice == null)
-                        pos.SettlementPrice = pos.LastPrice;
-                }
-            }
+            //foreach (Position pos in _clearcentre.TotalPositions.Where(pos => !pos.isFlat))
+            //{
+            //    //如果系统设定按最新价来执行结算 则将结算价格设为持仓的最新价
+            //    if (_settleWithLatestPrice)//如果以最新价进行结算
+            //    {
+            //        pos.SettlementPrice = pos.LastPrice;//将最新价设定到持仓的结算价
+            //    }
+            //    else
+            //    {
+            //        //默认情况下 系统按结算价进行结算，如果结算价缺失则按最新价进行结算
+            //        if (pos.SettlementPrice == null)
+            //            pos.SettlementPrice = pos.LastPrice;
+            //    }
+            //}
 
 
             int i=0;

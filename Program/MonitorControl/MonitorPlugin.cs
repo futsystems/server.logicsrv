@@ -6,7 +6,7 @@ using System.IO;
 using System.Reflection;
 using TradingLib.API;
 using TradingLib.Common;
-
+using System.Windows.Forms;
 
 namespace TradingLib.MoniterControl
 {
@@ -127,51 +127,38 @@ namespace TradingLib.MoniterControl
             foreach (string dllfile in dllfilelist)
             {
                 Util.Debug("dll file:" + dllfile, QSEnumDebugLevel.INFO);
-                var assembly = Assembly.ReflectionOnlyLoadFrom(dllfile);
-                AssemblyName assemblyName = AssemblyName.GetAssemblyName(dllfile);
-
-                //加载所有依赖的dll 如果不存在则在插件目录下寻找
-                foreach (var an in assembly.GetReferencedAssemblies())
+                //直接加载该dll并获得程序集 这里不能使用LoadFile LoadFile会强制在目录下加载所引用的程序集 LoadFrom则会按照一定策略去加载程序集 会通过在内存中加载依赖项
+                Assembly a = Assembly.LoadFrom(dllfile); 
+                try
                 {
-                    try
+                    foreach (Type type in a.GetExportedTypes())
                     {
-                        Assembly.ReflectionOnlyLoad(an.FullName);
-                    }
-                    catch
-                    {
-                        Assembly.ReflectionOnlyLoadFrom(Path.Combine(Path.GetDirectoryName(dllfile), an.Name + ".dll"));
-                    }
-                }
-
-                Assembly a = Assembly.Load(assemblyName);
-                foreach (Type type in assembly.GetExportedTypes())
-                {
-                    Util.Debug("type:" + type.FullName);
-                    //bool x = type.GetInterface(typeof(IMoniterControl).FullName) != null;
-                    //程序集中的type不是抽象函数并且其实现了needType接口,则标记为有效
-                    //Type c = typeof(MonitorControl);
-                    //bool issub = typeof(IMoniterControl).IsAssignableFrom(type);
-                    //bool issub2 = typeof(MonitorControl).IsAssignableFrom(type);
-                    //bool issub3 = type.GetInterface(typeof(IMoniterControl).FullName) != null;
-                    if (!type.IsAbstract && type.GetInterface(typeof(IMoniterControl).FullName) != null)
-                    {
-                        
-                        dictionary[a.GetType(type.FullName)] = true;//标记该类型被加载
-                    }
-
-                    //判断是否是管理端命令对象
-                    if(!type.IsAbstract && type.GetInterface(typeof(IMonterCommand).FullName) != null)
-                    {
+                        Util.Debug("type:" + type.FullName);
                        
-                        //dictionary[a.GetType(type.FullName)] = true;//标记该类型被加载
-                        Type target = a.GetType(type.FullName);
-                        MoniterCommandAttr attr = (MoniterCommandAttr)Attribute.GetCustomAttribute(target, typeof(MoniterCommandAttr));
-                        if (attr != null && !IsExistCommand(attr.UUID))
+                        //获得所有导出类型并判断是否继承了对应的接口
+                        if (!type.IsAbstract && type.GetInterface(typeof(IMoniterControl).FullName) != null)
                         {
-                            commandMap.Add(attr.UUID, target);
-                            commandAttrMap.Add(attr.UUID, attr);
+                            dictionary[a.GetType(type.FullName)] = true;//标记该类型被加载
+                        }
+
+                        //判断是否是管理端命令对象
+                        if (!type.IsAbstract && type.GetInterface(typeof(IMonterCommand).FullName) != null)
+                        {
+
+                            //dictionary[a.GetType(type.FullName)] = true;//标记该类型被加载
+                            Type target = a.GetType(type.FullName);
+                            MoniterCommandAttr attr = (MoniterCommandAttr)Attribute.GetCustomAttribute(target, typeof(MoniterCommandAttr));
+                            if (attr != null && !IsExistCommand(attr.UUID))
+                            {
+                                commandMap.Add(attr.UUID, target);
+                                commandAttrMap.Add(attr.UUID, attr);
+                            }
                         }
                     }
+                }
+                catch (Exception ex)
+                {
+                    Util.Debug("load plugin error:" + ex.ToString());
                 }
             }
             foreach (Type t in dictionary.Keys)

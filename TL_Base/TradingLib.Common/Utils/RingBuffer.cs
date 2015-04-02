@@ -73,7 +73,7 @@ namespace TradingLib.Common
                 System.Threading.Interlocked.Increment(ref _rflip);
             }
             T val = _buffer[_rc];
-
+            _buffer[_rc] = default(T);//将buffer放空否则对应的对象会常驻内存知道将buffersize占满
             return val;
         }
         

@@ -31,6 +31,7 @@
             this.kryptonNavigator1 = new ComponentFactory.Krypton.Navigator.KryptonNavigator();
             this.kryptonPage1 = new ComponentFactory.Krypton.Navigator.KryptonPage();
             this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
+            this.gridAgentSummary = new ComponentFactory.Krypton.Toolkit.KryptonDataGridView();
             this.btnQryAgentReport = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.end_agent = new ComponentFactory.Krypton.Toolkit.KryptonDateTimePicker();
             this.kryptonLabel2 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
@@ -38,20 +39,20 @@
             this.kryptonLabel1 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.ctAgentList1 = new TradingLib.MoniterControl.ctAgentList();
             this.kryptonPage2 = new ComponentFactory.Krypton.Navigator.KryptonPage();
-            this.gridAgentSummary = new ComponentFactory.Krypton.Toolkit.KryptonDataGridView();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonNavigator1)).BeginInit();
             this.kryptonNavigator1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPage1)).BeginInit();
             this.kryptonPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonPage2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridAgentSummary)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.kryptonPage2)).BeginInit();
             this.SuspendLayout();
             // 
             // kryptonNavigator1
             // 
             this.kryptonNavigator1.Bar.BarOrientation = ComponentFactory.Krypton.Toolkit.VisualOrientation.Left;
+            this.kryptonNavigator1.Bar.TabStyle = ComponentFactory.Krypton.Toolkit.TabStyle.StandardProfile;
             this.kryptonNavigator1.Button.ButtonDisplayLogic = ComponentFactory.Krypton.Navigator.ButtonDisplayLogic.None;
             this.kryptonNavigator1.Button.CloseButtonAction = ComponentFactory.Krypton.Navigator.CloseButtonAction.None;
             this.kryptonNavigator1.Button.CloseButtonDisplay = ComponentFactory.Krypton.Navigator.ButtonDisplay.Hide;
@@ -75,7 +76,7 @@
             this.kryptonPage1.MinimumSize = new System.Drawing.Size(50, 50);
             this.kryptonPage1.Name = "kryptonPage1";
             this.kryptonPage1.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.kryptonPage1.Size = new System.Drawing.Size(810, 507);
+            this.kryptonPage1.Size = new System.Drawing.Size(812, 507);
             this.kryptonPage1.Text = "代理商统计";
             this.kryptonPage1.ToolTipTitle = "Page ToolTip";
             this.kryptonPage1.UniqueName = "E03F60D8CD58406440BF349FB5CD42F6";
@@ -92,8 +93,20 @@
             this.kryptonPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.kryptonPanel1.Location = new System.Drawing.Point(0, 0);
             this.kryptonPanel1.Name = "kryptonPanel1";
-            this.kryptonPanel1.Size = new System.Drawing.Size(810, 507);
+            this.kryptonPanel1.Size = new System.Drawing.Size(812, 507);
             this.kryptonPanel1.TabIndex = 0;
+            // 
+            // gridAgentSummary
+            // 
+            this.gridAgentSummary.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.gridAgentSummary.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.gridAgentSummary.Location = new System.Drawing.Point(3, 35);
+            this.gridAgentSummary.Name = "gridAgentSummary";
+            this.gridAgentSummary.RowTemplate.Height = 23;
+            this.gridAgentSummary.Size = new System.Drawing.Size(810, 473);
+            this.gridAgentSummary.TabIndex = 6;
             // 
             // btnQryAgentReport
             // 
@@ -107,14 +120,14 @@
             // 
             this.end_agent.Location = new System.Drawing.Point(471, 8);
             this.end_agent.Name = "end_agent";
-            this.end_agent.Size = new System.Drawing.Size(109, 21);
+            this.end_agent.Size = new System.Drawing.Size(109, 20);
             this.end_agent.TabIndex = 4;
             // 
             // kryptonLabel2
             // 
             this.kryptonLabel2.Location = new System.Drawing.Point(404, 9);
             this.kryptonLabel2.Name = "kryptonLabel2";
-            this.kryptonLabel2.Size = new System.Drawing.Size(63, 20);
+            this.kryptonLabel2.Size = new System.Drawing.Size(68, 18);
             this.kryptonLabel2.TabIndex = 3;
             this.kryptonLabel2.Values.Text = "结束时间:";
             // 
@@ -122,14 +135,14 @@
             // 
             this.start_agent.Location = new System.Drawing.Point(289, 8);
             this.start_agent.Name = "start_agent";
-            this.start_agent.Size = new System.Drawing.Size(109, 21);
+            this.start_agent.Size = new System.Drawing.Size(109, 20);
             this.start_agent.TabIndex = 2;
             // 
             // kryptonLabel1
             // 
             this.kryptonLabel1.Location = new System.Drawing.Point(220, 9);
             this.kryptonLabel1.Name = "kryptonLabel1";
-            this.kryptonLabel1.Size = new System.Drawing.Size(63, 20);
+            this.kryptonLabel1.Size = new System.Drawing.Size(68, 18);
             this.kryptonLabel1.TabIndex = 1;
             this.kryptonLabel1.Values.Text = "开始时间:";
             // 
@@ -152,22 +165,10 @@
             this.kryptonPage2.LastVisibleSet = true;
             this.kryptonPage2.MinimumSize = new System.Drawing.Size(50, 50);
             this.kryptonPage2.Name = "kryptonPage2";
-            this.kryptonPage2.Size = new System.Drawing.Size(810, 507);
+            this.kryptonPage2.Size = new System.Drawing.Size(812, 507);
             this.kryptonPage2.Text = "kryptonPage2";
             this.kryptonPage2.ToolTipTitle = "Page ToolTip";
             this.kryptonPage2.UniqueName = "F170619B9A724D1025A64ECC2865145B";
-            // 
-            // gridAgentSummary
-            // 
-            this.gridAgentSummary.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.gridAgentSummary.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.gridAgentSummary.Location = new System.Drawing.Point(3, 35);
-            this.gridAgentSummary.Name = "gridAgentSummary";
-            this.gridAgentSummary.RowTemplate.Height = 23;
-            this.gridAgentSummary.Size = new System.Drawing.Size(808, 473);
-            this.gridAgentSummary.TabIndex = 6;
             // 
             // HistReport
             // 
@@ -183,8 +184,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).EndInit();
             this.kryptonPanel1.ResumeLayout(false);
             this.kryptonPanel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonPage2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridAgentSummary)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.kryptonPage2)).EndInit();
             this.ResumeLayout(false);
 
         }

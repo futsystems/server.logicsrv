@@ -163,8 +163,7 @@
             this.tabFinance,
             this.tabHistQuery,
             this.kryptonRibbonTab1});
-            this.TabRibbon.SelectedContext = null;
-            this.TabRibbon.SelectedTab = this.tabBasicConfig;
+            this.TabRibbon.SelectedTab = this.tabSystem;
             this.TabRibbon.Size = new System.Drawing.Size(1107, 111);
             this.TabRibbon.TabIndex = 0;
             // 
@@ -384,6 +383,7 @@
             // 
             // kryptonRibbonGroupButton_ExStrategy
             // 
+            this.kryptonRibbonGroupButton_ExStrategy.ImageLarge = ((System.Drawing.Image)(resources.GetObject("kryptonRibbonGroupButton_ExStrategy.ImageLarge")));
             this.kryptonRibbonGroupButton_ExStrategy.TextLine1 = "交易参数模板";
             // 
             // tabAgent
