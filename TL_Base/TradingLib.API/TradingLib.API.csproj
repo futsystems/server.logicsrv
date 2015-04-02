@@ -42,6 +42,7 @@
     <Compile Include="Account\IAccTradingInfo.cs" />
     <Compile Include="Account\IAccConfig.cs" />
     <Compile Include="Account\IFinanceTotal.cs" />
+    <Compile Include="Msic\IMGRClient.cs" />
     <Compile Include="Trading\EnumStrategy.cs" />
     <Compile Include="Vendor\PositionMetric.cs" />
     <Compile Include="Vendor\RouterItem.cs" />
@@ -123,6 +124,12 @@
     <Compile Include="Rule\IRuleCheckAccount.cs" />
     <Compile Include="Rule\IRuleCheckOrder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="job_scheduling_data_2_0.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

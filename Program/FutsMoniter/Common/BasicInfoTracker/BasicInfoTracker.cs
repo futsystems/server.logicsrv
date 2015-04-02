@@ -10,7 +10,7 @@ using FutsMoniter;
 namespace TradingLib.Common
 {
 
-    public partial class BasicInfoTracker:IBasicInfo
+    public partial class BasicInfoTracker : IBasicInfo, IBasicInfoTracker
     {
         public BasicInfoTracker()
         {

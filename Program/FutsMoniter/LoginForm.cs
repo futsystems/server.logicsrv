@@ -8,9 +8,13 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using TradingLib.API;
+using TradingLib.Common;
+using TradingLib.MoniterControl;
 
 using FutsMoniter.Common;
 using FutSystems.GUI;
+
+
 
 namespace FutsMoniter
 {
@@ -22,6 +26,38 @@ namespace FutsMoniter
         Starter mStart;
         public LoginForm(Starter starter)
         {
+            Globals.Debug("init globals");
+            Util.Debug("~~~~~~~~~~~~~~~~~~``moniter start here~~~~~~~~~~~~~~~~~~``");
+
+            //foreach (Type type in MoniterPlugin.GetMoniterControlTypes())
+            //{
+            //    MoniterControlAttr attr = MoniterPlugin.GetMoniterControlAttr(type);
+            //    if (attr != null)
+            //    {
+            //        Globals.Debug("type:" + type.Name + " 已经标注过");
+            //        MonitorControl control = MoniterPlugin.CreateMoniterControl(type.FullName);
+            //        MonitorControlHelper.RegisterControl(control);
+            //        control.SetClient(Globals.TLClient);
+
+            //        //AddWorkspacePage(control);
+            //    }
+            //}
+
+            //List<Type> types = MoniterPlugin.LoadMoniterTypes();
+
+            //foreach (Type t in types)
+            //{
+            //    Util.Debug("got type:" + t.FullName);
+            //}
+
+            bool issub = typeof(MonitorControl).IsAssignableFrom(typeof(DemoControl));
+            //bool issub2 = typeof(DemoControl).IsAssignableFrom(typeof(MonitorControl));
+            //Util.sleep(100000);
+
+            //MoniterPlugin.LoadMoniterTypes();
+
+            //MonitorControl ctl = MoniterPlugin.CreateMoniterControl("TradingLib.HistReport.HistReport");
+
             InitializeComponent();
 
             mStart = starter;

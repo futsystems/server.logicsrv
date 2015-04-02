@@ -56,6 +56,9 @@ namespace TradingLib.ServiceManager
         {
             Util.InitStatus(this.PROGRAME, true);
             #region 加载核心模块
+            debug("[INIT CORE] TaskCentre", QSEnumDebugLevel.INFO);
+            InitTaskCentre();//初始化任务执行中心 在所有组件加载完毕后 在统一加载定时任务设置
+
             debug("[INIT CORE] SettleCentre", QSEnumDebugLevel.INFO);
             InitSettleCentre();//初始化结算中心
 
@@ -80,8 +83,7 @@ namespace TradingLib.ServiceManager
             debug("[INIT CORE] WebMsgExchServer", QSEnumDebugLevel.INFO);
             InitWebMsgExchSrv();
 
-            debug("[INIT CORE] TaskCentre", QSEnumDebugLevel.INFO);
-            InitTaskCentre();//初始化任务执行中心 在所有组件加载完毕后 在统一加载定时任务设置
+            
             #endregion
 
         }

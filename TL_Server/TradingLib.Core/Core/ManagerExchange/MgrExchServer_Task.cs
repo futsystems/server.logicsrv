@@ -23,6 +23,7 @@ namespace TradingLib.Core
                         NotifyMGRAccountInfoLiteResponse notify = ResponseTemplate<NotifyMGRAccountInfoLiteResponse>.SrvSendNotifyResponse(cst.Location);
                         notify.InfoLite = acc.GenAccountInfoLite();
                         CachePacket(notify);
+                        //_accinfolitecache.Write(notify);
                     }
 
                     foreach (IBroker broker in cst.WatchBrokers)

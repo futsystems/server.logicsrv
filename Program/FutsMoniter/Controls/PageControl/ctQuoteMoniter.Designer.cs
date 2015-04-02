@@ -37,6 +37,8 @@
             this.quote_czce = new FutSystems.GUI.ViewQuoteList();
             this.kryptonPage4 = new ComponentFactory.Krypton.Navigator.KryptonPage();
             this.quote_shfe = new FutSystems.GUI.ViewQuoteList();
+            this.kryptonPage2 = new ComponentFactory.Krypton.Navigator.KryptonPage();
+            this.quote_innov = new FutSystems.GUI.ViewQuoteList();
             this.ctOrderSenderM1 = new FutsMoniter.ctOrderSenderM();
             ((System.ComponentModel.ISupportInitialize)(this.quotenav)).BeginInit();
             this.quotenav.SuspendLayout();
@@ -48,6 +50,8 @@
             this.page3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPage4)).BeginInit();
             this.kryptonPage4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.kryptonPage2)).BeginInit();
+            this.kryptonPage2.SuspendLayout();
             this.SuspendLayout();
             // 
             // quotenav
@@ -64,7 +68,8 @@
             this.kryptonPage1,
             this.page2,
             this.page3,
-            this.kryptonPage4});
+            this.kryptonPage4,
+            this.kryptonPage2});
             this.quotenav.SelectedIndex = 0;
             this.quotenav.Size = new System.Drawing.Size(634, 298);
             this.quotenav.TabIndex = 0;
@@ -152,7 +157,7 @@
             this.page3.LastVisibleSet = true;
             this.page3.MinimumSize = new System.Drawing.Size(50, 50);
             this.page3.Name = "page3";
-            this.page3.Size = new System.Drawing.Size(632, 330);
+            this.page3.Size = new System.Drawing.Size(632, 273);
             this.page3.Text = "郑商所";
             this.page3.ToolTipTitle = "Page ToolTip";
             this.page3.UniqueName = "768D1AAE0C354F6F78B8CBDFA739720B";
@@ -173,7 +178,7 @@
             this.quote_czce.QuoteFont = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
             this.quote_czce.QuoteViewWidth = 1030;
             this.quote_czce.SelectedQuoteRow = -1;
-            this.quote_czce.Size = new System.Drawing.Size(632, 330);
+            this.quote_czce.Size = new System.Drawing.Size(632, 273);
             this.quote_czce.SymbolFont = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
             this.quote_czce.SymbolFontColor = System.Drawing.Color.Green;
             this.quote_czce.TabIndex = 2;
@@ -218,6 +223,43 @@
             this.quote_shfe.Text = "viewQuoteList1";
             this.quote_shfe.UPColor = System.Drawing.Color.Red;
             // 
+            // kryptonPage2
+            // 
+            this.kryptonPage2.AutoHiddenSlideSize = new System.Drawing.Size(200, 200);
+            this.kryptonPage2.Controls.Add(this.quote_innov);
+            this.kryptonPage2.Flags = 65534;
+            this.kryptonPage2.LastVisibleSet = true;
+            this.kryptonPage2.MinimumSize = new System.Drawing.Size(50, 50);
+            this.kryptonPage2.Name = "kryptonPage2";
+            this.kryptonPage2.Size = new System.Drawing.Size(632, 273);
+            this.kryptonPage2.Text = "自定义";
+            this.kryptonPage2.ToolTipTitle = "Page ToolTip";
+            this.kryptonPage2.UniqueName = "6B72CA2ECCB3472E5881088932069857";
+            // 
+            // quote_innov
+            // 
+            this.quote_innov.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.quote_innov.DNColor = System.Drawing.Color.Green;
+            this.quote_innov.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.quote_innov.HeaderBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.quote_innov.HeaderFont = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.quote_innov.HeaderFontColor = System.Drawing.Color.Turquoise;
+            this.quote_innov.Location = new System.Drawing.Point(0, 0);
+            this.quote_innov.MenuEnable = false;
+            this.quote_innov.Name = "quote_innov";
+            this.quote_innov.QuoteBackColor1 = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.quote_innov.QuoteBackColor2 = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.quote_innov.QuoteFont = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
+            this.quote_innov.QuoteViewWidth = 1030;
+            this.quote_innov.SelectedQuoteRow = -1;
+            this.quote_innov.Size = new System.Drawing.Size(632, 273);
+            this.quote_innov.SymbolFont = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
+            this.quote_innov.SymbolFontColor = System.Drawing.Color.Green;
+            this.quote_innov.TabIndex = 3;
+            this.quote_innov.TableLineColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.quote_innov.Text = "viewQuoteList1";
+            this.quote_innov.UPColor = System.Drawing.Color.Red;
+            // 
             // ctOrderSenderM1
             // 
             this.ctOrderSenderM1.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -244,6 +286,8 @@
             this.page3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPage4)).EndInit();
             this.kryptonPage4.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.kryptonPage2)).EndInit();
+            this.kryptonPage2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -260,5 +304,7 @@
         private FutSystems.GUI.ViewQuoteList quote_dce;
         private FutSystems.GUI.ViewQuoteList quote_cffex;
         private ctOrderSenderM ctOrderSenderM1;
+        private ComponentFactory.Krypton.Navigator.KryptonPage kryptonPage2;
+        private FutSystems.GUI.ViewQuoteList quote_innov;
     }
 }

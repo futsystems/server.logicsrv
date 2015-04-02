@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TradingLib.Common;
-
+using TradingLib.MoniterControl;
 using FutsMoniter.Common;
 
 namespace FutsMoniter
@@ -33,7 +33,8 @@ namespace FutsMoniter
             kryptonRibbonGroupButton_CloseClearCentre.Visible = Globals.Domain.Super || Globals.Domain.Dedicated;
             kryptonRibbonGroup1.Visible = Globals.Domain.Super || Globals.Domain.Dedicated;
             kryptonRibbonGroupButton_tickpaper.Visible = Globals.Domain.Super || Globals.Domain.Dedicated;
-
+            kryptonRibbonGroupButton_SettleManagerment.Visible = Globals.Domain.Super || Globals.Domain.Dedicated;
+            kryptonRibbonGroupButton_SettleManagerment.Visible = Globals.Domain.Super || Globals.Domain.Dedicated;
 
             //超级管理员 可以查看所有界面
             if (!(Globals.Domain.Super&&Globals.Manager.IsRoot()))
@@ -130,11 +131,42 @@ namespace FutsMoniter
             //更新过期提醒
             SetExpireStatus();
             //登入基础数据初始化完成后 加载page
+
+
+            //LoadMonitorControl();
+
+            //加载系统扩展显示控件
+            //MonitorControl ctl = new DemoControl();
+            //MonitorControlHelper.RegisterControl(ctl);
+            //ctl.SetClient(Globals.TLClient);
+
+            //string ctName = "TradingLib.HistReport.HistReport";
+            //Type type = MoniterPlugin.GetMoniterControl(ctName);
+            //MoniterControlAttr attr = MoniterPlugin.GetMoniterControlAttr(type);
+
+            
+            //MonitorControl ct_report = MoniterPlugin.CreateMoniterControl("TradingLib.HistReport.HistReport");
+            //MonitorControlHelper.RegisterControl(ct_report);
+            //ct_report.SetClient(Globals.TLClient);
+            LoadMonitorControl();
+            //AddWorkspacePage(ctl);
+            //AddWorkspacePage(ct_report);
+
+            //MonitorControl ct2 = new DemoControl();
+            //MonitorControlHelper.RegisterControl(ct2);
+            //ct2.SetClient(Globals.TLClient);
+
+            //AddModulePage(ct2);
+
             InitPage();
             //初始化后台woker用于弹窗提示
             InitBW();
             //操作回报消息 弹窗提示
             Globals.LogicEvent.GotRspInfoEvent += new Action<TradingLib.API.RspInfo>(OnRspInfo);
+
+
+            
+
                  
         }
         public void OnDisposed()

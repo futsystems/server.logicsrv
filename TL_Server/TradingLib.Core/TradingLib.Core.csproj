@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Quartz">
+      <HintPath>..\..\lib\Quartz.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows.Forms" />
@@ -75,6 +78,7 @@
     <Compile Include="Core\ClearCentre\ClearCentreSrv_AccountCashOperation.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_LogData.cs" />
     <Compile Include="Core\ClearCentre\ClearCentreSrv_TradingInfo.cs" />
+    <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_helloworld.cs" />
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_ExStrategy.cs" />
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_Margin.cs" />
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_Commission.cs" />
@@ -132,12 +136,15 @@
     <Compile Include="Core\SettleCentre\SettleCentre.cs" />
     <Compile Include="Core\SettleCentre\SettleCentre_..cs" />
     <Compile Include="Core\SettleCentre\SettleCentre_CTE.cs" />
+    <Compile Include="Core\SettleCentre\SettleCentre_SettleManager.cs" />
     <Compile Include="Core\SettleCentre\SettleCentre_StoreClean.cs" />
+    <Compile Include="Core\SettleCentre\SettlementPriceTracker.cs" />
     <Compile Include="Core\SettleCentre\TradingCalendar.cs" />
     <Compile Include="Core\TaskCentre\TaskCentre.cs" />
     <Compile Include="Core\MessageExchange\MsgExchServer.cs" />
     <Compile Include="Core\RiskCentre\RiskCentre.cs" />
     <Compile Include="Core\TaskCentre\TaskCentre_CTE.cs" />
+    <Compile Include="Core\TaskCentre\TaskListener.cs" />
     <Compile Include="Core\WebMessageExchange\WebMsgExchServer.cs" />
     <Compile Include="Core\WebMessageExchange\WebMsgExchServer_CTE.cs" />
     <Compile Include="Core\WebMessageExchange\WebMsgRepServer.cs" />

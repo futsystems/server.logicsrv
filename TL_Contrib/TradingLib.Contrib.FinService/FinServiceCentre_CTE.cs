@@ -23,6 +23,14 @@ namespace TradingLib.Contrib.FinService
             }
         }
 
+        //[TaskAttr("测试任务", "0/5 * * * * ?", "执行配资帐户风控检查")]
+        //public void Task_Demo()
+        //{
+        //    debug("demo Cron runing ...................................22", QSEnumDebugLevel.ERROR);
+        //    throw new Exception("exception");
+        //}
+
+
         #region 代理参数查询与设置
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryAgentSPArg", "QryAgentSPArg - qry agent sparg  of account", "查询代理某个服务计划的参数")]

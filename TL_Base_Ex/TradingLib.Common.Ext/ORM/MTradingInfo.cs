@@ -215,6 +215,7 @@ namespace TradingLib.ORM
             int settleday = TLCtxHelper.Ctx.SettleCentre.NextTradingday;
             return SelectOrders(settleday, settleday, QSEnumOrderBreedType.ROUTER);
         }
+
         /// <summary>
         /// 搜索某个结算时间段的委托记录
         /// </summary>
@@ -234,7 +235,8 @@ namespace TradingLib.ORM
                 List<Order> orders2 = db.Connection.Query<OrderImpl>(query2).ToList<Order>();
                 
                 //合并委托记录
-                orders.AddRange(orders2);
+                //orders.AddRange(orders2);
+                orders.Union(orders2, new OrderCompare());
 
                 return orders;
             }
@@ -312,7 +314,8 @@ namespace TradingLib.ORM
                 string query2 = string.Format("SELECT * FROM  {0}  WHERE settleday >='{1}' AND settleday <='{2}' AND breed='{3}'", "log_trades", begin, end, breed);
                 List<Trade> trades2 = db.Connection.Query<TradeImpl>(query2).ToList<Trade>();
 
-                trades.AddRange(trades2);
+                //trades.AddRange(trades2);
+                trades.Union(trades2, new TradeCompare());
                 return trades;
             }
         }
@@ -382,13 +385,6 @@ namespace TradingLib.ORM
             
         }
 
-
-        //static Position posfields2position(positionfields fields)
-        //{
-        //    Position pos = new PositionImpl(fields.Symbol, fields.SettlePrice, fields.Size, 0, fields.Account,fields.Size>0?QSEnumPositionDirectionType.Long:QSEnumPositionDirectionType.Short);
-        //    return pos;
-        //}
-
         static PositionRoundImpl PRInfo2PositionRound(positionroundinfo info)
         {
             IAccount account=TLCtxHelper.Ctx.ClearCentre[info.Account];
@@ -416,9 +412,7 @@ namespace TradingLib.ORM
             using (DBMySql db = new DBMySql())
             {
                 string query = string.Format("SELECT account,symbol,side,entrytime,entryprice,entrysize,exittime,exitprice,exitsize,highest,lowest FROM  hold_postransactions WHERE settleday = {0}", lastsettleday);
-                return db.Connection.Query<positionroundinfo>(query).Select(prinfo => { return PRInfo2PositionRound(prinfo); });//(from prinfo in db.Connection.Query<positionroundinfo>(query).ToArray()
-                                                      //select PRInfo2PositionRound(prinfo)).ToArray<PositionRoundImpl>();
-                //return prs;
+                return db.Connection.Query<positionroundinfo>(query).Select(prinfo => { return PRInfo2PositionRound(prinfo); });
             }
         }
 

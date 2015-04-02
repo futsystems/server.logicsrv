@@ -63,7 +63,7 @@ namespace TradingLib.Core
             messageoutthread = null;
         }
 
-        const int buffize = 5000;
+        const int buffize = 1000;
 
         //实时交易信息缓存
         
@@ -79,6 +79,7 @@ namespace TradingLib.Core
         RingBuffer<IAccount> _accountchangecache = new RingBuffer<IAccount>(buffize);//帐户变动缓存
         RingBuffer<RspMGRQryAccountResponse> _accqrycache = new RingBuffer<RspMGRQryAccountResponse>(buffize);//交易帐户列表查询缓存需要比其他数据提高发送优先级，其他数据依赖与该数据
 
+        //RingBuffer<NotifyMGRAccountInfoLiteResponse> _accinfolitecache = new RingBuffer<NotifyMGRAccountInfoLiteResponse>(buffize);
 
         //关于交易信息转发,交易信息转发时,我们需要区分是实时发生的交易信息转发还是请求回补的信息转发。
         //实时交易信息通过客户端权限检查自动将交易信息发送到所有有权,而回补信息则是针对不同的管理端进行的回补请求,若统一由tl.neworder转发会造成不同的管理端之间信息重复接收
@@ -179,13 +180,21 @@ namespace TradingLib.Core
                     {
                         
                         IPacket packet = _packetcache.Read();
-                        if (packet.Type == MessageTypes.MGRCONTRIBRESPONSE)
-                        {
-                            string x = "";
-                        }
+                        //if (packet.Type == MessageTypes.MGRCONTRIBRESPONSE)
+                        //{
+                        //    string x = "";
+                        //}
                         //debug("发送消息: 类型:" + packet.Type.ToString() + " 发送消息:" + packet.Content, QSEnumDebugLevel.INFO);
                         tl.TLSend(packet);
                     }
+
+                    //while (_accinfolitecache.hasItems)
+                    //{
+                    //    _accinfolitecache.Read();
+                    //    Util.Debug("account lite cache num:" + _accinfolitecache.Count.ToString());
+                    //    //tl.TLSend(_accinfolitecache.Read());
+                    //}
+
                     Thread.Sleep(100);
                 }
                 catch (Exception ex)

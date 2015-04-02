@@ -75,6 +75,7 @@ namespace TradingLib.Common
             {
                 sb.Append("Type:" + t.FullName + "\r\n");
             }
+            
             sb.Append("-------- Avabile Types--------" + "\r\n");
             foreach (Type t in AvailableTypes.Keys)
             {
@@ -254,6 +255,7 @@ namespace TradingLib.Common
             }
             return this.AvailableTypes[Interface];
         }
+
         /// <summary>
         /// 从程序目录加载某个接口的实现
         /// </summary>

@@ -43,6 +43,22 @@ namespace FutsMoniter
             //设置
             kryptonRibbonGroupButton_permissiontmp.Click += new EventHandler(kryptonRibbonGroupButton_permissiontmp_Click);
             kryptonRibbonGroupButton_syncsymbol.Click += new EventHandler(kryptonRibbonGroupButton_syncsymbol_Click);
+            //
+
+            kryptonRibbonGroupButton_SettleManagerment.Click += new EventHandler(kryptonRibbonGroupButton_SettleManagerment_Click);
+
+            ////动态加载Ribbon菜单
+            //ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton_settlemgr;
+            //kryptonRibbonGroupButton_settlemgr = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
+            //kryptonRibbonGroupButton_settlemgr.TextLine1 = "结算处理";
+            //kryptonRibbonGroupButton_settlemgr.Click += new EventHandler(kryptonRibbonGroupButton_settlemgr_Click);
+
+            //this.kryptonRibbonGroupTriple7.Items.AddRange(new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupItem[] {
+            //kryptonRibbonGroupButton_settlemgr});
+            //,
+            //this.kryptonRibbonGroupButton8,
+            //this.kryptonRibbonGroupButton9});
+
             //基础数据
             kryptonRibbonGroupButton_Mktime.Click += new EventHandler(kryptonRibbonGroupButton_Mktime_Click);
             kryptonRibbonGroupButton_Exchange.Click += new EventHandler(kryptonRibbonGroupButton_Exchange_Click);
@@ -53,6 +69,7 @@ namespace FutsMoniter
             kryptonRibbonGroupButton_Commission.Click += new EventHandler(kryptonRibbonGroupButton_Commission_Click);
             kryptonRibbonGroupButton_Margin.Click += new EventHandler(kryptonRibbonGroupButton_Margin_Click);
             kryptonRibbonGroupButton_ExStrategy.Click += new EventHandler(kryptonRibbonGroupButton_ExStrategy_Click);
+            //kryptonribbongroupbutton_
             //历史记录
             kryptonRibbonGroupButton_QueryExHist.Click += new EventHandler(kryptonRibbonGroupButton_QueryExHist_Click);
             kryptonRibbonGroupButton_QueryCashTransAccount.Click += new EventHandler(kryptonRibbonGroupButton_QueryCashTransAccount_Click);
@@ -91,6 +108,22 @@ namespace FutsMoniter
             kryptonRibbonGroupButton_ShowAll.Click += new EventHandler(kryptonRibbonGroupButton_ShowAll_Click);
             kryptonRibbonGroupButton_Reset.Click += new EventHandler(kryptonRibbonGroupButton_Reset_Click);
             kryptonRibbonGroupButton_SaveConfig.Click += new EventHandler(kryptonRibbonGroupButton_SaveConfig_Click);
+
+
+            //kryptonRibbonGroupButton_demo.Click += new EventHandler(kryptonRibbonGroupButton_demo_Click);
+        }
+
+        void kryptonRibbonGroupButton_SettleManagerment_Click(object sender, EventArgs e)
+        {
+            fmSettleManager fm = new fmSettleManager();
+            fm.ShowDialog();
+        }
+
+
+        void kryptonRibbonGroupButton_demo_Click(object sender, EventArgs e)
+        {
+            TradingLib.MoniterControl.MonitorControl ctl = new  TradingLib.MoniterControl.MonitorControl();
+
         }
 
         void kryptonRibbonGroupButton_ExStrategy_Click(object sender, EventArgs e)

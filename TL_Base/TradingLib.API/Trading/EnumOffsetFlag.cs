@@ -13,6 +13,7 @@ namespace TradingLib.API
     /// 持仓相反的普通委托,客户端多次提交后会造成 平仓的同时开出反向仓位的问题。如果加入开平标识,则在orderrouter处理中就可以进行判断
     /// 
     /// 关于Enum byte 不改变原有Enum的顺序 btye强制转换后 会以对应设定数字或默认数字进行转换
+    /// LitJson 在转换byte类型的枚举时 会出现错误
     /// </summary>
     public enum QSEnumOffsetFlag : byte
     {

@@ -12,14 +12,17 @@ namespace TradingLib.Common
     {
         public QSEnumTaskType TaskType { get { return _type; } }
 
+        string _name;
         public string Name { get { return _name; } }
 
-        int _hour;
-        int _miniute;
-        int _secend;
+        //int _hour;
+        //int _miniute;
+        //int _secend;
+
         int _intervalsecends;
         int _intervalMilliSecends;
-        string _name;
+
+        
         string _description;
         QSEnumTaskType _type;
 
@@ -47,33 +50,35 @@ namespace TradingLib.Common
             }
         }
 
-        public int Hour { get {
+        //public int Hour { get {
 
-            if (_type == QSEnumTaskType.SPECIALTIME)
-                return _hour;
-            else
-                return 0;
-        } }
+        //    if (_type == QSEnumTaskType.SPECIALTIME)
+        //        return _hour;
+        //    else
+        //        return 0;
+        //} }
 
-        public int Minute
-        {
-            get
-            {
-                if (_type == QSEnumTaskType.SPECIALTIME)
-                    return _miniute;
-                else
-                    return 0;
-            }
-        }
+        //public int Minute
+        //{
+        //    get
+        //    {
+        //        if (_type == QSEnumTaskType.SPECIALTIME)
+        //            return _miniute;
+        //        else
+        //            return 0;
+        //    }
+        //}
 
-        public int Secend { get {
+        //public int Secend { get {
 
-            if (_type == QSEnumTaskType.SPECIALTIME)
-                return _secend;
-            else
-                return 0;
-        } }
+        //    if (_type == QSEnumTaskType.SPECIALTIME)
+        //        return _secend;
+        //    else
+        //        return 0;
+        //} }
 
+        string _cronstr = string.Empty;
+        public string CronExpression { get { return _cronstr; } }
         /// <summary>
         /// 定时执行几点几分几秒执行该任务
         /// </summary>
@@ -85,12 +90,25 @@ namespace TradingLib.Common
         public TaskAttr(string name,int hour, int minute, int secend,string description="任务描述")
         {
             _name = name;
-            _hour = hour;
-            _miniute = minute;
-            _secend = secend;
             _type = QSEnumTaskType.SPECIALTIME;
+            _cronstr = string.Format("{0} {1} {2} * * ?", secend, minute, hour);
             _description = description;
         }
+
+        /// <summary>
+        /// 通过Cron Expression创建定时任务
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="cronstr"></param>
+        /// <param name="description"></param>
+        public TaskAttr(string name, string cronstr, string description = "任务描述")
+        {
+            _type = QSEnumTaskType.SPECIALTIME;
+            _name = name;
+            _cronstr = cronstr;
+            _description = description;
+        }
+
 
         /// <summary>
         /// 每隔多少时间执行该任务
@@ -106,5 +124,9 @@ namespace TradingLib.Common
             _type = QSEnumTaskType.CIRCULATE;
             _description = description;
         }
+
+
+
+
     }
 }

@@ -19,5 +19,8 @@ namespace TradingLib.API
         /// </summary>
         [Description("循环任务")]
         CIRCULATE,
+
+        //[Description("QuartzCron任务")]
+        //CRON,
     }
 }

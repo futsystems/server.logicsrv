@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
-
+using TradingLib.Mixins.Json;
 
 /* 进一步完善结算机制
  * 目前结算 1.数据保存 结算持仓明细 当日交易记录 2.执行帐户结算 3.清空日内交易记录
@@ -93,6 +93,11 @@ namespace TradingLib.Core
                 debug("BeforeSettleEvent Fired error:" + ex.ToString(), QSEnumDebugLevel.FATAL);
             }
 
+            //保存结算价信息
+            this.SaveSettlementPrice();
+
+            //绑定结算价信息
+            this.BindSettlementPrice();
             
             //保存结算持仓对应的PR数据
             this.SaveHoldInfo();
@@ -139,9 +144,15 @@ namespace TradingLib.Core
         {
             //debug("重置交易系统 isnaormal:"+IsNormal.ToString() +" istradingday:"+IsTradingday.ToString(),QSEnumDebugLevel.INFO);
             if (!settled) return;//没有结算就不重置交易系统
+
+            this.ResetSystem();
+        }
+
+        void ResetSystem()
+        {
             debug("系统重置，清算中心重置帐户，风控中心重置规则 清空日内记录表", QSEnumDebugLevel.INFO);
             TLCtxHelper.EventSystem.FireBeforeSettleResetEvent(this, new SystemEventArgs());
-            
+
             //清空日内交易记录
             if (_cleanTmp)
             {
@@ -158,7 +169,6 @@ namespace TradingLib.Core
 
             //重置任务中心
             TLCtxHelper.EventSystem.FireAfterSettleResetEvent(this, new SystemEventArgs());
-            
         }
 
         /// <summary>
@@ -171,6 +181,10 @@ namespace TradingLib.Core
             //通过系统事件中继触发结算前事件
             TLCtxHelper.EventSystem.FireBeforeSettleEvent(this, new SystemEventArgs());
 
+            //加载当前交易日的结算价信息
+            _settlementPriceTracker.LoadSettlementPrice(this.NextTradingday);
+
+            this.BindSettlementPrice();
             //A:储存当前数据
             this.SaveHoldInfo();//保存结算持仓数据和对应的PR数据
             this.SavePositionDetails();//保存持仓明细
@@ -240,6 +254,8 @@ namespace TradingLib.Core
 
 
         #endregion
+
+
 
     }
 }

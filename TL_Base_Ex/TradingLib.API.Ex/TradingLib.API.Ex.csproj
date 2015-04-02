@@ -52,6 +52,7 @@
     <Compile Include="Contrib\EnumCommandSource.cs" />
     <Compile Include="Contrib\IContribPlugin.cs" />
     <Compile Include="Core\Core\ISettleCentre.cs" />
+    <Compile Include="Core\ITaskCentre.cs" />
     <Compile Include="Core\IUtil.cs" />
     <Compile Include="Core\ITask.cs" />
     <Compile Include="Account\IAccount.cs" />

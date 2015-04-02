@@ -12,6 +12,7 @@
 
 
 #排除目录
+/patch
 /output
 /lib/Win
 /lib/TradingLib
@@ -20,10 +21,12 @@
 /Platform/**/*.exe
 /Platform/**/log/
 /Platform/**/cache/
+/Platform/**/Logs/
 /Platform/TLDataBase
-
+/Platform/FutsMoniter/logs
 /publish
 /package
+/packages
 /cache
 
 #排除子目录中的bin obj debug release

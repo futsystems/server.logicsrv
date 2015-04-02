@@ -127,11 +127,11 @@ namespace APIDemo
         {
             
             Order o = new OrderImpl();
-            o.symbol = sendorder_symbol.Text;
+            o.Symbol = sendorder_symbol.Text;
             o.TotalSize = int.Parse(sendorder_size.Text);
-            o.size = o.TotalSize;
-            o.side = true;
-            o.price = decimal.Parse(sendorder_price.Text);
+            o.Size = o.TotalSize;
+            o.Side = true;
+            o.LimitPrice = decimal.Parse(sendorder_price.Text);
             o.OffsetFlag = CurrentFlag;
             for (int i = 0; i < int.Parse(submintnum.Text); i++)
             {
@@ -144,11 +144,11 @@ namespace APIDemo
         private void btnSell_Click(object sender, EventArgs e)
         {
             Order o = new OrderImpl();
-            o.symbol = sendorder_symbol.Text;
+            o.Symbol = sendorder_symbol.Text;
             o.TotalSize = int.Parse(sendorder_size.Text);
-            o.size = o.TotalSize;
-            o.side = false;
-            o.price = decimal.Parse(sendorder_price.Text);
+            o.Size = o.TotalSize;
+            o.Side = false;
+            o.LimitPrice = decimal.Parse(sendorder_price.Text);
             o.OffsetFlag = CurrentFlag;
             for (int i = 0; i < int.Parse(submintnum.Text); i++)
             {

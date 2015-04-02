@@ -10,10 +10,10 @@ namespace TradingLib.API
 {
     public static class ITaskUtils
     {
-        static string GetSpecialTime(this ITask task)
-        {
-            return string.Format("{0}:{1}:{2}", task.TaskHour, task.TaskMinute, task.TaskSecend);
-        }
+        //static string GetSpecialTime(this ITask task)
+        //{
+        //    return string.Format("{0}:{1}:{2}", task.TaskHour, task.TaskMinute, task.TaskSecend);
+        //}
 
         static string GetCirulateTime(this ITask task)
         {
@@ -27,7 +27,7 @@ namespace TradingLib.API
                 case QSEnumTaskType.CIRCULATE:
                     return string.Format("{0} {1}",Util.GetEnumDescription(task.TaskType),task.GetCirulateTime());
                 case QSEnumTaskType.SPECIALTIME:
-                    return string.Format("{0} {1}", Util.GetEnumDescription(task.TaskType), task.GetSpecialTime());
+                    return string.Format("{0} {1}", Util.GetEnumDescription(task.TaskType), task.CronExpression);
                 default:
                     return "未知";
             }

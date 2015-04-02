@@ -6,9 +6,9 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using FutSystems.GUI;
 using TradingLib.API;
 using TradingLib.Common;
+using FutSystems.GUI;
 
 namespace FutsMoniter
 {
@@ -137,7 +137,6 @@ namespace FutsMoniter
                     agent.SelectedValue = Globals.BaseMGRFK;
                 }
             }
-
             Globals.LogicEvent.RegisterCallback("MgrExchServer", "NotifyManagerUpdate", OnManagerNotify);
             _gotdata = true;
         }

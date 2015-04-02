@@ -44,7 +44,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>moniter_terminal.ico</ApplicationIcon>
+    <ApplicationIcon>moniter0.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug-OEM|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -74,6 +74,14 @@
     <Reference Include="Beetle, Version=2.5.9.2, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\update\Beetle.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging, Version=3.0.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging.Core, Version=3.0.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Common.Logging.Core.dll</HintPath>
     </Reference>
     <Reference Include="ComponentFactory.Krypton.Design, Version=4.4.0.0, Culture=neutral, PublicKeyToken=dc91bbef911870e2, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -109,6 +117,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\NetMQ.dll</HintPath>
     </Reference>
+    <Reference Include="NLog, Version=3.1.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="Smark.Core, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\update\Smark.Core.dll</HintPath>
@@ -129,6 +141,9 @@
     <Reference Include="TradingLib.Mixins">
       <HintPath>..\..\lib\TradingLib\TradingLib.Mixins.dll</HintPath>
     </Reference>
+    <Reference Include="TradingLib.MoniterControl">
+      <HintPath>..\..\lib\TradingLib\TradingLib.MoniterControl.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\IEventBinder.cs" />
@@ -140,6 +155,8 @@
     <Compile Include="API\ILogicHandler\ILogicHandler_Account.cs" />
     <Compile Include="Client\AsyncClient_MQ.cs" />
     <Compile Include="Client\PacketHandler\TLClientNet_Request_.cs" />
+    <Compile Include="Client\Request\TLClientNet_Request_SettleManager.cs" />
+    <Compile Include="Client\Request\TLClientNet_Request_ExCore_Exchange.cs" />
     <Compile Include="Client\Request\TLClientNet_Request_ExStrategy.cs" />
     <Compile Include="Client\Request\TLClientNet_Request_CommissionMargin.cs" />
     <Compile Include="Client\Request\TLClientNet_Request_HistQry.cs" />
@@ -507,6 +524,42 @@
     <Compile Include="Forms\System\PositionsMetric\fmPositionMetricMoniter.Designer.cs">
       <DependentUpon>fmPositionMetricMoniter.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\System\SettlementManager\ctPositionDetails.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\System\SettlementManager\ctPositionDetails.Designer.cs">
+      <DependentUpon>ctPositionDetails.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\System\SettlementManager\ctPositionHold.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\System\SettlementManager\ctPositionHold.Designer.cs">
+      <DependentUpon>ctPositionHold.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\System\SettlementManager\ctSettlementPrice.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\System\SettlementManager\ctSettlementPrice.Designer.cs">
+      <DependentUpon>ctSettlementPrice.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\System\SettlementManager\fmFlatPosition.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\System\SettlementManager\fmFlatPosition.Designer.cs">
+      <DependentUpon>fmFlatPosition.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\System\SettlementManager\fmSettleManager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\System\SettlementManager\fmSettleManager.Designer.cs">
+      <DependentUpon>fmSettleManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\System\SettlementManager\fmUpdateSettlementPrice.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\System\SettlementManager\fmUpdateSettlementPrice.Designer.cs">
+      <DependentUpon>fmUpdateSettlementPrice.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\System\VendorManager\fmRouterGroupEdit.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -806,12 +859,17 @@
     <Compile Include="MainForm_Ribbon.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="MoniterControlHelper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Common\SplashScreenApplication.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="Globals_RegEvent.cs" />
     <Compile Include="MainForm_Page.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WrapperCTX.cs" />
+    <Compile Include="MainForm_Plugin.cs">
       <SubType>Form</SubType>
     </Compile>
     <EmbeddedResource Include="Controls\Base\ctAccountType.resx">
@@ -937,6 +995,21 @@
     <EmbeddedResource Include="Forms\System\fmLogTaskEvent.resx">
       <DependentUpon>fmLogTaskEvent.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\System\SettlementManager\ctPositionDetails.resx">
+      <DependentUpon>ctPositionDetails.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\System\SettlementManager\ctPositionHold.resx">
+      <DependentUpon>ctPositionHold.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\System\SettlementManager\ctSettlementPrice.resx">
+      <DependentUpon>ctSettlementPrice.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\System\SettlementManager\fmFlatPosition.resx">
+      <DependentUpon>fmFlatPosition.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\System\SettlementManager\fmSettleManager.resx">
+      <DependentUpon>fmSettleManager.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\System\fmTaskMoniter.resx">
       <DependentUpon>fmTaskMoniter.cs</DependentUpon>
     </EmbeddedResource>
@@ -960,6 +1033,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\System\PositionsMetric\fmPositionMetricMoniter.resx">
       <DependentUpon>fmPositionMetricMoniter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\System\SettlementManager\fmUpdateSettlementPrice.resx">
+      <DependentUpon>fmUpdateSettlementPrice.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\System\VendorManager\fmRouterGroupEdit.resx">
       <DependentUpon>fmRouterGroupEdit.cs</DependentUpon>
@@ -1111,6 +1187,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="images\clearterminal.png" />
     <Content Include="moniter_terminal.ico" />
     <None Include="resources\moniter_terminal.ico" />
     <None Include="resources\deleteaccount.png" />

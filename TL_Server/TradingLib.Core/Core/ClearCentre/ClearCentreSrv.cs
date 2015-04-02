@@ -166,8 +166,6 @@ namespace TradingLib.Core
             Status = QSEnumClearCentreStatus.CCRESETFINISH;
         }
 
-
-
         #region 启动 停止 销毁
         public void Start()
         {
@@ -193,7 +191,6 @@ namespace TradingLib.Core
         #endregion
 
 
-
         #region 清算中心 开启 关闭 以及状态更新
         const string OpenTime = "8:55";
         const string CloseTime = "15:15";
@@ -214,6 +211,7 @@ namespace TradingLib.Core
             {
                 oldstatus = Status;//先保存原先状态
                 _status = value;//再设定新的状态
+
                 //更新当前状态 
                 UpdateStatus();
             }
@@ -235,6 +233,7 @@ namespace TradingLib.Core
 
             //状态由 恢复->恢复完成改变 则我们检查当前的时间,如果是清算中心接收委托事件 则设定对应状态
             //交易日内 盘中 启动软件
+            //这里判定原来的状态 如果上一个状态是恢复数据完成 则我们标记清算中心为开启
             if (oldstatus == QSEnumClearCentreStatus.CCRESTORE && Status == QSEnumClearCentreStatus.CCRESTOREFINISH)
             {
                 bool day = Util.IsInPeriod(Convert.ToDateTime(OpenTime), Convert.ToDateTime(CloseTime));
@@ -242,10 +241,21 @@ namespace TradingLib.Core
                 bool night2 = Util.IsInPeriod(Convert.ToDateTime(NightOpenTime2), Convert.ToDateTime(NightClosedTime2));
 
                 if (day || nigth1 || night2)
-                    Status = QSEnumClearCentreStatus.CCOPEN;
+                    _status = QSEnumClearCentreStatus.CCOPEN;
                 else
-                    Status = QSEnumClearCentreStatus.CCCLOSE;
+                    _status = QSEnumClearCentreStatus.CCCLOSE;
             }
+
+            //清算中心重置 在正常交易过程中清算中心重置后 等待定时任务自动打开清算中心 在手工历史结算时 重置完毕我们要打开清算中心，用于记录手工平仓记录
+            if (oldstatus == QSEnumClearCentreStatus.CCOPEN && Status == QSEnumClearCentreStatus.CCRESETFINISH)
+            {
+                if (TLCtxHelper.CmdSettleCentre.SettleCentreStatus == QSEnumSettleCentreStatus.HISTSETTLE)
+                {
+                    _status = QSEnumClearCentreStatus.CCOPEN;
+                }
+            }
+
+            
         }
 
         /// <summary>

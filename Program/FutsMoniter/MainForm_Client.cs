@@ -131,6 +131,7 @@ namespace FutsMoniter
             tlclient.OnLoginEvent += new RspMGRLoginResponseDel(tlclient_OnLoginEvent);
             tlclient.BindLogicHandler(Globals.LogicHandler);
             Globals.RegisterClient(tlclient);
+            
             _gotloginrep = false;
             _logined = false;
             _connected = false;

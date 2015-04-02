@@ -217,8 +217,9 @@ namespace TradingLib.Common
                 if (SecurityFamily != null)
                 {
                     //如果该合约是异化合约,则其乘数参数为底层合约的参数
-                    if (SecurityFamily.Type == API.SecurityType.INNOV)
+                    if (SecurityFamily.Type == API.SecurityType.INNOV && SecurityFamily.Code=="LOTTO")//如果是乐透类【配资性质】 乘数按底层乘数计算，Mini类的按mini合约的乘数计算
                     {
+
                         return ULSymbol != null ? ULSymbol.Multiple : 1;
                     }
                     return SecurityFamily.Multiple;
@@ -352,20 +353,17 @@ namespace TradingLib.Common
         /// <summary>
         /// 判断该合约是否过期
         /// </summary>
-        public bool IsExpired
+        public bool IsExpired(int date)
         {
-            get 
+
+            if (this.ExpireDate == 0)
             {
-                if (this.ExpireDate == 0)
-                {
-                    //如果没有结算日信息则不过气
-                    return false;
-                }
-                else
-                {
-                    return Util.ToTLDate() > this.ExpireDate ? true : false;
-                }
-            
+                //如果没有结算日信息则不过气
+                return false;
+            }
+            else
+            {
+                return date > this.ExpireDate ? true : false;
             }
         }
 

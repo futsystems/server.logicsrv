@@ -13,6 +13,7 @@ using ComponentFactory.Krypton.Workspace;
 using ComponentFactory.Krypton.Docking;
 using TradingLib.API;
 using TradingLib.Common;
+using TradingLib.MoniterControl;
 using FutsMoniter.Common;
 
 namespace FutsMoniter
@@ -21,19 +22,46 @@ namespace FutsMoniter
     {
         Dictionary<string, KryptonPage> pagemap = new Dictionary<string, KryptonPage>();
         /// <summary>
-        /// 
+        /// 初始化视区控件
         /// </summary>
         void InitPage()
         {
-            kryptonDockingManager.AddToWorkspace("Workspace", new KryptonPage[] { NewAccMoniter() });
-            kryptonDockingManager.AddDockspace("Control", DockingEdge.Bottom, new KryptonPage[] { NewTradingInfoReal() });
+            kryptonDockingManager.AddToWorkspace("Workspace", GetWorkspacePages());
             kryptonDockingManager.AddDockspace("Control", DockingEdge.Right, GetModulePage());
-
-
+            kryptonDockingManager.AddDockspace("Control", DockingEdge.Bottom, new KryptonPage[] { NewTradingInfoReal() });
+            
+            //加载默认布局
             if (System.IO.File.Exists("config.xml"))
             {
                 kryptonDockingManager.LoadConfigFromFile("config.xml");
             }
+            //显示所有页面
+            kryptonDockingManager.ShowAllPages();
+        }
+
+        public void AddWorkspacePage(MonitorControl control)
+        {
+            workspacelist.Add(control);
+        }
+        List<MonitorControl> workspacelist = new List<MonitorControl>();
+
+        KryptonPage[] GetWorkspacePages()
+        {
+            List<KryptonPage> pagelist = new List<KryptonPage>();
+            pagelist.Add(NewAccMoniter());
+            foreach (MonitorControl ct in workspacelist)
+            {
+                pagelist.Add(NewPage(ct.GetType().FullName + "[W]", ct.Title, 2, ct));
+            }
+            return pagelist.ToArray();
+        }
+
+
+        List<MonitorControl> controlist = new List<MonitorControl>();
+
+        public void AddModulePage(MonitorControl control)
+        {
+            controlist.Add(control);
         }
 
         KryptonPage[] GetModulePage()
@@ -46,8 +74,16 @@ namespace FutsMoniter
             {
                 pagelist.Add(NewFinService());
             }
+
+            foreach(MonitorControl ct in controlist)
+            {
+                pagelist.Add(NewPage(ct.GetType().FullName+"[M]",ct.Title, 2, ct));
+            }
+            
             return pagelist.ToArray();
         }
+
+
         void DestoryPage()
         {
             //隐藏所有Page
