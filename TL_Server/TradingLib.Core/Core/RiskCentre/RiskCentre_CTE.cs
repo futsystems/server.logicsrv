@@ -33,6 +33,21 @@ namespace TradingLib.Core
         }
 
 
+        /// <summary>
+        /// 冻结帐户检查
+        /// 每5秒检查一次冻结帐户，如果帐户有持仓则进行强平操作
+        /// </summary>
+        [TaskAttr("检查冻结帐户",5,0, "每5秒检查一次冻结帐户")]
+        public void Task_CheckAccountFrozen()
+        {
+            foreach (IAccount account in activeaccount.Values.Where(a=>a.AnyPosition))
+            {
+                account.FlatPosition(QSEnumOrderSource.RISKCENTREACCOUNTRULE,"强平冻结帐户持仓");
+            }
+        }
+
+
+
 
         #region 命令行操作
 
