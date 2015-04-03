@@ -63,7 +63,7 @@ namespace TradingLib.Core
             messageoutthread = null;
         }
 
-        const int buffize = 5000;
+        const int buffize = 5000;//
 
         //实时交易信息缓存
         
@@ -179,11 +179,6 @@ namespace TradingLib.Core
                     {
                         
                         IPacket packet = _packetcache.Read();
-                        if (packet.Type == MessageTypes.MGRCONTRIBRESPONSE)
-                        {
-                            string x = "";
-                        }
-                        //debug("发送消息: 类型:" + packet.Type.ToString() + " 发送消息:" + packet.Content, QSEnumDebugLevel.INFO);
                         tl.TLSend(packet);
                     }
                     Thread.Sleep(100);

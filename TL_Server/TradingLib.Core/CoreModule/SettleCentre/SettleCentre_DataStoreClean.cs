@@ -135,5 +135,81 @@ namespace TradingLib.Core
             logger.Info("Cleaned Success");
         }
 
+
+        /// <summary>
+        /// 保存结算价格
+        /// 通过行情路由获得当前市场快照然后保存快照中所有合约的结算价格
+        /// </summary>
+        void SaveSettlementPrice()
+        {
+            //清空结算价信息
+            _settlementPriceTracker.Clear();
+            foreach (var k in TLCtxHelper.ModuleDataRouter.GetTickSnapshot())
+            {
+                if (k != null && k.Settlement !=0 &&(double)k.Settlement<double.MaxValue)
+                {
+                    _settlementPriceTracker.UpdateSettlementPrice(new SettlementPrice() { Price = k.Settlement, SettleDay = this.NextTradingday, Symbol = k.Symbol });
+                }
+                else
+                {
+                    _settlementPriceTracker.UpdateSettlementPrice(new SettlementPrice() { Price = -1, SettleDay = this.NextTradingday, Symbol = k.Symbol });
+                }
+            }
+        }
+
+        /// <summary>
+        /// 将结算价格绑定到持仓对象
+        /// </summary>
+        void BindSettlementPrice()
+        {
+            SettlementPrice target = null;
+
+            //绑定分帐户侧持仓结算价
+            foreach (Position pos in TLCtxHelper.ModuleClearCentre.TotalPositions.Where(pos => !pos.isFlat))
+            {
+                if (_settleWithLatestPrice)//如果以最新价进行结算
+                {
+                    pos.SettlementPrice = pos.LastPrice;//将最新价设定到持仓的结算价
+                }
+                else
+                {
+                    //如果持仓合约有对应的结算价信息 设定结算价
+                    target = _settlementPriceTracker[pos.Symbol];
+                    if (target != null && target.Price>0)
+                    {
+                        pos.SettlementPrice = target.Price;
+                    }
+                }
+
+                if (pos.SettlementPrice == null)
+                {
+                    pos.SettlementPrice = pos.LastPrice;
+                }
+            }
+
+            foreach (IBroker broker in TLCtxHelper.ServiceRouterManager.Brokers)
+            {
+                if (!broker.IsLive)
+                    continue;
+
+                foreach(Position pos in broker.Positions.Where(p=>!p.isFlat))
+                {
+                    //遍历成交接口持仓 设定结算价
+                    target = _settlementPriceTracker[pos.Symbol];
+                    if (target != null && target.Price>0)
+                    {
+                        pos.SettlementPrice = target.Price;
+                    }
+
+                    if (pos.SettlementPrice == null)
+                    {
+                        pos.SettlementPrice = pos.LastPrice;
+                    }
+                }
+
+                
+            }
+
+        }
     }
 }

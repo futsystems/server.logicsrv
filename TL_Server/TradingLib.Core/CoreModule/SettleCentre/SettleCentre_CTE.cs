@@ -226,44 +226,7 @@ namespace TradingLib.Core
 
 
 
-        /// <summary>
-        /// 保存结算价格
-        /// 通过行情路由获得当前市场快照然后保存快照中所有合约的结算价格
-        /// </summary>
-        void SaveSettlementPrice()
-        {
-            //清空结算价信息
-            _settlementPriceTracker.Clear();
-            foreach (var k in TLCtxHelper.ModuleDataRouter.GetTickSnapshot())
-            {
-                if (k != null)
-                {
-                    _settlementPriceTracker.UpdateSettlementPrice(new SettlementPrice() { Price = k.Settlement, SettleDay = this.NextTradingday, Symbol = k.Symbol });
-                }
-                else
-                {
-                    _settlementPriceTracker.UpdateSettlementPrice(new SettlementPrice() { Price = -1, SettleDay = this.NextTradingday, Symbol = k.Symbol });
-                }
-            }
-        }
-
-        /// <summary>
-        /// 将结算价格绑定到持仓对象
-        /// </summary>
-        void BindSettlementPrice()
-        {
-            SettlementPrice target = null;
-            foreach (Position pos in TLCtxHelper.ModuleClearCentre.TotalPositions.Where(pos => !pos.isFlat))
-            {
-                //如果持仓合约有对应的结算价信息 设定结算价
-                target = _settlementPriceTracker[pos.Symbol];
-                if (target != null)
-                {
-                    pos.SettlementPrice = target.Price;
-                }
-            }
-
-        }
+        
 
     }
 }
