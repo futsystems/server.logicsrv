@@ -42,7 +42,10 @@ namespace TradingLib.Core
         {
             foreach (IAccount account in activeaccount.Values.Where(a=>a.AnyPosition))
             {
-                account.FlatPosition(QSEnumOrderSource.RISKCENTREACCOUNTRULE,"强平冻结帐户持仓");
+                if (!account.Execute)
+                {
+                    account.FlatPosition(QSEnumOrderSource.RISKCENTREACCOUNTRULE, "强平冻结帐户持仓");
+                }
             }
         }
 
