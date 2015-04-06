@@ -20,7 +20,7 @@ namespace NLog.Targets
         {
             Console.WriteLine(msg);
         }
-        RingBuffer<string> _buffer = new RingBuffer<string>(10000);
+        RingBuffer<string> _buffer = new RingBuffer<string>(1000);
 
         Thread _logthread = null;
         bool _running = false;
@@ -82,6 +82,7 @@ namespace NLog.Targets
                 using (ZmqSocket socket = ctx.CreateSocket(SocketType.PUSH))
                 {
                     string address = string.Format("tcp://{0}:{1}", _hostName, _port);
+                    debug(string.Format("LogCollectServer:{0}", address));
                     socket.Connect(address);
 
                     debug(string.Format("NLog-ZMQTarget will push log to remote:{0} with identity:{1}",address,_identity));

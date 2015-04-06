@@ -19,7 +19,7 @@ namespace FutsMoniter
         public fmAcctFilter()
         {
             InitializeComponent();
-            accexecute.Items.Add("<Any>");
+            accexecute.Items.Add(MoniterUtil.AnyCBStr);
             accexecute.Items.Add("允许");
             accexecute.Items.Add("冻结");
             accexecute.SelectedIndex = 0;

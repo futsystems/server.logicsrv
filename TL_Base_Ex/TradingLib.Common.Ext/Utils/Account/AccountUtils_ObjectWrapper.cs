@@ -188,7 +188,7 @@ namespace TradingLib.Common
                 {
                     int id = BasicTracker.ConnectorMapTracker.GetConnectorIDForAccount(acc.ID);
                     ConnectorConfig cfg = BasicTracker.ConnectorConfigTracker.GetBrokerConfig(id);
-                    info.ConnectorToken = cfg!= null?(string.Format("{0}-{1}",cfg.Token,cfg.usrinfo_userid)):"";
+                    info.ConnectorToken = cfg!= null?(string.Format("{0}-{1}",cfg.Name,cfg.usrinfo_userid)):"";
                     info.MAcctConnected = broker.IsLive;
                     Util.Debug(string.Format("Broker:{0} Connected:{1}", broker.Token, broker.IsLive));
                 }

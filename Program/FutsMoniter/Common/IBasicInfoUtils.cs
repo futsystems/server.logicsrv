@@ -69,7 +69,7 @@ namespace TradingLib.Common
             if (isany)
             {
                 ValueObject<int> vo1 = new ValueObject<int>();
-                vo1.Name = "<Any>";
+                vo1.Name = MoniterUtil.AnyCBStr;
                 vo1.Value = 0;
                 list.Add(vo1);
             }
@@ -104,7 +104,7 @@ namespace TradingLib.Common
             if (isany)
             {
                 ValueObject<int> vo1 = new ValueObject<int>();
-                vo1.Name = "<Any>";
+                vo1.Name = MoniterUtil.AnyCBStr;
                 vo1.Value = 0;
                 list.Add(vo1);
             }
@@ -124,7 +124,7 @@ namespace TradingLib.Common
             if (isany)
             {
                 ValueObject<int> vo1 = new ValueObject<int>();
-                vo1.Name = "<Any>";
+                vo1.Name = MoniterUtil.AnyCBStr;
                 vo1.Value = 0;
                 list.Add(vo1);
             }
@@ -191,7 +191,7 @@ namespace TradingLib.Common
 
             if (all)
             {
-                list.Add(new ValueObject<int> { Name = "<Any>", Value = 0 });
+                list.Add(new ValueObject<int> { Name = MoniterUtil.AnyCBStr, Value = 0 });
             }
             //从柜员列表中获得管理员或代理域
             foreach (ManagerSetting m in info.Managers.Where(g => (g.Type == QSEnumManagerType.ROOT || g.Type == QSEnumManagerType.AGENT)))

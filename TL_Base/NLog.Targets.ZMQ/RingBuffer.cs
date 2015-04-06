@@ -74,7 +74,7 @@ namespace NLog.Targets.ZMQ
                 System.Threading.Interlocked.Increment(ref _rflip);
             }
             T val = _buffer[_rc];
-
+            _buffer[_rc] = default(T);
             return val;
         }
         

@@ -53,7 +53,7 @@ namespace TradingLib.Core
             if (manager.IsInRoot())
             {
                 //查询该域内所有通道                         通道未绑定                                                       映射我们需要的字段
-                var list = manager.Domain.GetConnectorConfigs().Where(cfg => !BasicTracker.ConnectorMapTracker.IsConnectorBinded(cfg.Token)).Select(cfg => new { ConnectorID = cfg.ID, Token = cfg.Token, LoginID = cfg.usrinfo_userid }).ToArray();
+                var list = manager.Domain.GetConnectorConfigs().Where(cfg => !BasicTracker.ConnectorMapTracker.IsConnectorBinded(cfg.Token)).Select(cfg => new { ConnectorID = cfg.ID, Token = cfg.Token,UserName=cfg.Name, LoginID = cfg.usrinfo_userid }).ToArray();
                 session.ReplyMgr(list);
             }
         }

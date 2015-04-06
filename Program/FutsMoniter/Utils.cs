@@ -48,7 +48,7 @@ namespace FutsMoniter
             if (any)
             {
                 ValueObject<QSEnumOrderTransferType> vo = new ValueObject<QSEnumOrderTransferType>();
-                vo.Name = "<Any>";
+                vo.Name = MoniterUtil.AnyCBStr;
                 vo.Value = (QSEnumOrderTransferType)(-1);
                 list.Add(vo);
             }
@@ -80,7 +80,7 @@ namespace FutsMoniter
             if (any)
             {
                 ValueObject<QSEnumAccountCategory> vo = new ValueObject<QSEnumAccountCategory>();
-                vo.Name = "<Any>";
+                vo.Name = MoniterUtil.AnyCBStr;
                 vo.Value = (QSEnumAccountCategory)(-1);
                 list.Add(vo);
             }
@@ -270,7 +270,7 @@ namespace FutsMoniter
             if (any)
             {
                 ValueObject<int> vo = new ValueObject<int>();
-                vo.Name = "<Any>";
+                vo.Name = MoniterUtil.AnyCBStr;
                 vo.Value = 0;
                 list.Add(vo);
             }
