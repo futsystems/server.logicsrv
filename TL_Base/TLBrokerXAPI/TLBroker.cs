@@ -326,14 +326,20 @@ namespace TradingLib.BrokerXAPI
             return WrapperQryPositionDetail();
         }
 
-        public bool Deposit(double amount)
+        /// <summary>
+        /// 执行入金操作 如果没有提供密码则使用通道设置中设置的密码
+        /// </summary>
+        /// <param name="amount"></param>
+        /// <param name="pass"></param>
+        /// <returns></returns>
+        public bool Deposit(double amount,string pass)
         {
-            return WrapperDeposit(amount);
+            return WrapperDeposit(amount,pass);
         }
 
-        public bool Withdraw(double amount)
+        public bool Withdraw(double amount,string pass)
         {
-            return WrapperWithdraw(amount);
+            return WrapperWithdraw(amount,pass);
         }
 
 
@@ -463,14 +469,22 @@ namespace TradingLib.BrokerXAPI
             return _wrapper.QryPositionDetail();
         }
 
-        protected bool WrapperWithdraw(double amount)
+        protected bool WrapperWithdraw(double amount,string pass)
         {
-            return _wrapper.Withdraw(amount);
+            XCashOperation op = new XCashOperation();
+            op.Amount = amount;
+            op.Password = pass;
+
+            return _wrapper.Withdraw(ref op);
         }
 
-        protected bool WrapperDeposit(double amount)
+        protected bool WrapperDeposit(double amount,string pass)
         {
-            return _wrapper.Deposit(amount);
+            XCashOperation op = new XCashOperation();
+            op.Amount = amount;
+            op.Password = pass;
+
+            return _wrapper.Deposit(ref op);
         }
         ///// <summary>
         ///// 请求恢复交易数据

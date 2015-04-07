@@ -18,8 +18,6 @@ namespace TradingLib.BrokerXAPI
 
         public IBrokerClearCentre ClearCentre { get; set; }
 
-
-
         #region 交易回报事件事件
         /// <summary>
         /// 当数据服务器登入成功后调用
@@ -177,7 +175,6 @@ namespace TradingLib.BrokerXAPI
             return null;
         }
         #endregion
-
 
         #region 配置信息
 

@@ -33,10 +33,15 @@ namespace TradingLib.Core
         }
 
 
+        /// <summary>
+        /// 检查冻结帐户
+        /// 在风控强平过程中，触发强平条件，则会执行强平任务，当某些情况没有正确或及时触发强平操作
+        /// 在这个任务中进行检查，如果帐户被冻结，并且还有持仓则将持仓平掉 用于补漏(风控强平失效)
+        /// </summary>
         [TaskAttr("检查冻结帐户",5,0, "每5秒检查一次冻结帐户")]
         public void Task_CheckAccountFrozen()
         {
-            foreach (IAccount account in activeaccount.Values.Where(a => a.AnyPosition))
+            foreach (IAccount account in activeaccount.Values.Where(a=>!a.Execute).Where(a => a.AnyPosition))
             {
                 account.FlatPosition(QSEnumOrderSource.RISKCENTRE, "强平冻结帐户持仓");
             }

@@ -548,6 +548,24 @@ namespace TradingLib.BrokerXAPI
         public int ExpireDate;
     }
 
+    /// <summary>
+    /// 出入金操作结构体 用于执行出入金操作
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public struct XCashOperation
+    {
+        /// <summary>
+        /// 出入金金额
+        /// </summary>
+        public double Amount;
+
+        /// <summary>
+        /// 密码
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 40)]
+        public string Password;
+    }
+
 
     public class XOrderError
     {

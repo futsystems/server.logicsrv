@@ -367,14 +367,14 @@ namespace TradingLib.BrokerXAPI.Interop
 
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate bool DepositProc(IntPtr pWrapper,double amount);
+        public delegate bool DepositProc(IntPtr pWrapper,ref XCashOperation pCashOperation);
         DepositProc _Deposit;
-        public bool Deposit(double amount)
+        public bool Deposit(ref XCashOperation pCashOperation)
         {
             try
             {
                 Util.Info("BrokerProxy _Deposit");
-                bool x = _Deposit(this.Wrapper, amount);
+                bool x = _Deposit(this.Wrapper, ref pCashOperation);
                 //Util.Info("**************** deposit return:" + x.ToString());
                 return x;
             }
@@ -386,14 +386,14 @@ namespace TradingLib.BrokerXAPI.Interop
         }
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate bool WithdrawProc(IntPtr pWrapper, double amount);
+        public delegate bool WithdrawProc(IntPtr pWrapper, ref XCashOperation pCashOperation);
         WithdrawProc _Withdraw;
-        public bool Withdraw(double amount)
+        public bool Withdraw(ref XCashOperation pCashOperation)
         {
             try
             {
                 Util.Info("BrokerProxy Withdraw");
-                bool x = _Withdraw(this.Wrapper, amount);
+                bool x = _Withdraw(this.Wrapper, ref pCashOperation);
                 //Util.Info("**************** withdraw return:" + x.ToString());
                 return x;
             }

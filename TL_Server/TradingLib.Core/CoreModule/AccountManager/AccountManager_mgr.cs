@@ -5,6 +5,8 @@ using System.Text;
 using System.Data;
 using TradingLib.API;
 using TradingLib.Common;
+using TradingLib.BrokerXAPI;
+
 
 namespace TradingLib.Core
 {
@@ -310,6 +312,7 @@ namespace TradingLib.Core
             var txnref = req["txnref"].ToString();
             var comment = req["comment"].ToString();
             var equity_type = Util.ParseEnum<QSEnumEquityType>(req["equity_type"].ToString());
+            var sync_mainacct = bool.Parse(req["sync_mainacct"].ToString());
 
             IAccount acct = TLCtxHelper.ModuleAccountManager[account];
             HandlerMixins.Valid_ObjectNotNull(acct);
@@ -324,6 +327,36 @@ namespace TradingLib.Core
             //执行出入金操作
             this.CashOperation(account, amount,equity_type, txnref, comment);
 
+            //主帐户监控
+            if (TLCtxHelper.Version.ProductType == QSEnumProductType.VendorMoniter)
+            {
+                //同步出入金操作到主帐户
+                if (sync_mainacct)
+                {
+                    IBroker broker = BasicTracker.ConnectorMapTracker.GetBrokerForAccount(account);
+
+                    if (broker == null)
+                    {
+                        throw new FutsRspError("未绑定主帐户,无法同步出入金操作到底层帐户");
+                    }
+
+                    if (broker is TLBroker)
+                    {
+                        TLBroker b = broker as TLBroker;
+                        if (amount > 0)
+                        {
+                            //入金
+                            b.Deposit((double)Math.Abs(amount), "");
+                        }
+                        else
+                        {
+                            //出金
+                            b.Withdraw((double)Math.Abs(amount), "");
+                        }
+                        //session.OperationSuccess("出金操作已提交,请查询主帐户信息");
+                    }
+                }
+            }
             //出入金操作后返回帐户信息更新
             session.NotifyMgr("NotifyAccountFinInfo", acct.GenAccountInfo());
             session.OperationSuccess("出入金操作成功");

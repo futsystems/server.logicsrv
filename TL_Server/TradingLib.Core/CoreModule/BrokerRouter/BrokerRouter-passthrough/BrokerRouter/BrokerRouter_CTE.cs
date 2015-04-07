@@ -251,7 +251,7 @@ namespace TradingLib.Core
             if (broker is TLBroker)
             {
                 TLBroker b = broker as TLBroker;
-                b.Deposit(amount);
+                b.Deposit(amount,pass);
                 session.OperationSuccess("入金操作已提交,请查询主帐户信息");
             }
 
@@ -286,11 +286,166 @@ namespace TradingLib.Core
             if (broker is TLBroker)
             {
                 TLBroker b = broker as TLBroker;
-                b.Withdraw(amount);
+                b.Withdraw(amount,pass);
                 session.OperationSuccess("出金操作已提交,请查询主帐户信息");
             }
 
         }
+
+
+        /// <summary>
+        /// 判断当前时间是否在出金时间段内
+        /// </summary>
+        /// <returns></returns>
+        bool IsInWithdrawTime()
+        {
+            int now = Util.ToTLTime();
+            if (now >= _withdrawStart && now <= _withdrawEnd)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 判定当前时间是否在夜盘交易时间
+        /// </summary>
+        /// <returns></returns>
+        bool IsInNightTrading()
+        {
+            int now = Util.ToTLTime();
+            if (now >= _nightStart && now <= 235959)
+            {
+                return true;
+            }
+            if (now >= 0 && now < 23000)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 获得当前活跃的银合约
+        /// </summary>
+        /// <returns></returns>
+        Symbol GetActiveAg()
+        {
+            Symbol tmp = null;
+            Tick tmpk = null;
+            foreach (Tick k in TLCtxHelper.ModuleDataRouter.GetTickSnapshot())
+            {
+                Symbol s = BasicTracker.SymbolTracker[1][k.Symbol];
+                if (s != null && s.SecurityFamily.Code=="ag")//如果是白银合约
+                { 
+                    if(tmpk == null) tmpk = k;
+                    tmp = k.Vol >= tmpk.Vol ? s : tmp;
+                }
+            }
+            return tmp;
+        }
+
+        Symbol _activeSymbol = null;
+        [TaskAttr("获得当前银主力合约",21,00,05, "每天晚上21:00:05检查主力合约")]
+        public void Task_CheckActiveSymbol()
+        {
+            if (!TLCtxHelper.ModuleSettleCentre.IsTradingday) return;
+
+            _activeSymbol = GetActiveAg();
+        }
+
+        /// <summary>
+        /// 检查所有帐户，如果帐户被强平并且有绑定的持仓并且有优先资金，则将优先资金出金
+        /// 运行逻辑。
+        /// 风控规则触发后 冻结交易帐户并且进行强平操作，操作完毕后需要将底层主帐户中的优先资金出金以保证资金安全
+        /// 
+        /// 1.是否是交易日，如果不是交易日则不做逻辑判定
+        /// 2.检查当前时间是否在白盘，如果在交易时间段则帐户冻结，系统自动将优先资金出金以保证资金安全
+        /// 3.检查当前时间是否在夜盘，如果在夜盘则挂单,占用所有保证金,这样就不允许该帐户进行交易
+        /// </summary>
+        [TaskAttr("检查冻结帐户[出金/挂单]", 2, 0, "每2秒检查一次冻结帐户进行出金或挂单")]
+        public void Task_CheckAccountFrozen()
+        {
+            //非交易日 不做逻辑检查
+            if (!TLCtxHelper.ModuleSettleCentre.IsTradingday) return;
+
+            //遍历所有被冻结的交易帐户
+            foreach (IAccount account in TLCtxHelper.ModuleAccountManager.Accounts.Where(acc=>!acc.Execute))
+            {
+                //如果没有任何持仓，则表明强平结束/或手工冻结该帐户，可以进行出金操作，帐户的强平由风控规则和风控中心的补漏任务进行维护
+                if (!account.AnyPosition && account.Credit>0)
+                {
+
+                    IBroker broker = BasicTracker.ConnectorMapTracker.GetBrokerForAccount(account.ID);
+                    if (broker != null && broker.IsLive && account.Credit>0)
+                    {
+                        //如果在出金时间段内 则将优先资金出金
+                        if (IsInWithdrawTime())
+                        {
+                            if (broker is TLBroker)
+                            {
+                                //如果在可出金时间段,则将优先资金出掉 否则进行挂单
+                                logger.Info(string.Format("Account:{0} is blocked with position closed and in withdraw time,will withdraw credit:{1}", account.ID, account.Credit));
+
+                                double creditvalue = (double)account.Credit;
+                                //调用帐户管理模块执行出金操作
+                                TLCtxHelper.ModuleAccountManager.CashOperation(account.ID, account.Credit * -1, QSEnumEquityType.CreditEquity, "", "");
+
+                                //调用broker接口执行出金操作
+                                TLBroker b = broker as TLBroker;
+                                //执行出金操作
+                                b.Withdraw((double)creditvalue, "");
+                            }
+                        }
+                        else //如果不在出金时间段内 比如夜盘交易 则通过挂单来实现资金冻结
+                        {
+                            if (IsInNightTrading())
+                            {
+                                logger.Info(string.Format("Account:{0} is blocked with position closed and out withdraw time ,will frozen credit:{1}", account.ID, account.Credit));
+
+                                //冻结保证金为0
+                                if (account.MarginFrozen == 0)
+                                {
+                                    if (_activeSymbol != null)
+                                    {
+                                        decimal price = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(_activeSymbol.Symbol).UpperLimit;
+                                        decimal margin = _activeSymbol.Margin * _activeSymbol.Multiple * price;
+                                        int size = (int)(account.Credit / margin);//获得优先资金可开手数
+
+                                        Order order = new OrderImpl(_activeSymbol.Symbol, 0);
+                                        order.Account = account.ID;
+                                        order.Side = false;//卖出
+                                        order.Size = size;
+                                        order.OffsetFlag = QSEnumOffsetFlag.OPEN;
+                                        order.LimitPrice = price;
+
+                                        //发送委托
+                                        //this.SendOrder(order);
+                                    }
+                                    else
+                                    {
+                                        logger.Error("热门合约为空,请检查热门合约获取逻辑");
+                                    }
+                                }
+                                else
+                                {
+                                    //如果当前挂单不是对应的热门合约 则撤单【热门合约挂单所有手数为0】
+                                    if (account.GetPendingOrders(_activeSymbol.Symbol).Sum(o=>o.UnsignedSize) ==0)
+                                    {
+                                        logger.Info("挂单非指定合约,撤单");
+                                        //撤掉所有委托
+                                        account.CancelOrder(QSEnumOrderSource.RISKCENTRE,"撤掉非冻结委托");
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+            
+        }
+
 
     }
 }

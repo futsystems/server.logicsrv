@@ -56,7 +56,7 @@ namespace TradingLib.API
         /// <param name="id"></param>
         /// <param name="ammount"></param>
         /// <param name="comment"></param>
-        void CashOperation(string id, decimal ammount,QSEnumEquityType equitytype, string transref, string comment);
+        void CashOperation(string account, decimal ammount,QSEnumEquityType equitytype, string transref, string comment);
 
     }
 }
