@@ -72,11 +72,11 @@ namespace TradingLib.ORM
         public string Symbol { get; set; }
         public bool Side { get; set; }
 
-        public DateTime EntryTime { get; set; }
+        public long EntryTime { get; set; }
         public decimal EntryPrice { get; set; }
         public int EntrySize { get; set; }
 
-        public DateTime ExitTime { get; set; }
+        public long ExitTime { get; set; }
         public decimal ExitPrice { get; set; }
         public int ExitSize { get; set; }
 

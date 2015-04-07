@@ -114,7 +114,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 时间
         /// </summary>
-        public DateTime Time { get { return Util.ToDateTime(Trade.xDate, Trade.xTime); } }
+        public long Time { get { return Util.ToTLDateTime(Trade.xDate, Trade.xTime); } }
 
         /// <summary>
         /// 数量
