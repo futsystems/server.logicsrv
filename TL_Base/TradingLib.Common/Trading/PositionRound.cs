@@ -156,7 +156,9 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static string GetPRKey(PositionTransaction p)
         {
-            return p.Account + "-" + p.Symbol+"-"+(p.Trade.PositionSide?QSEnumPositionDirectionType.Long.ToString():QSEnumPositionDirectionType.Short.ToString());
+            //return p.Account + "-" + p.Symbol+"-"+(p.Trade.PositionSide?QSEnumPositionDirectionType.Long.ToString():QSEnumPositionDirectionType.Short.ToString());
+
+            return GenKey(p.Account, p.Symbol, p.Trade.PositionSide ? QSEnumPositionDirectionType.Long : QSEnumPositionDirectionType.Short);
         }
 
         /// <summary>
@@ -166,16 +168,22 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static string GetPRKey(Position position)
         {
-			return position.Account + "-" + position.Symbol +"-"+ position.DirectionType.ToString();
+			//return position.Account + "-" + position.Symbol +"-"+ position.DirectionType.ToString();
+            return GenKey(position.Account, position.Symbol, position.DirectionType);
         }
 
         public string PRKey
         {
             get {
-                return Account+ "-" + Symbol +"-"+(Side?QSEnumPositionDirectionType.Long.ToString():QSEnumPositionDirectionType.Short.ToString());
+                //return Account+ "-" + Symbol +"-"+(Side?QSEnumPositionDirectionType.Long.ToString():QSEnumPositionDirectionType.Short.ToString());
+                return GenKey(this.Account, this.Symbol,Side?QSEnumPositionDirectionType.Long:QSEnumPositionDirectionType.Short);
             }
         }
-        
+
+        static string GenKey(string account, string symbol,QSEnumPositionDirectionType direction)
+        {
+            return string.Format("{0}-{1}-{2}", account, symbol, direction);
+        }
         /// <summary>
         /// 账户
         /// </summary>
@@ -207,11 +215,11 @@ namespace TradingLib.Common
         /// </summary>
         public int EntrySize { get { return _entrysize; } set { _entrysize = value; } }
 
-        DateTime _entrytime;
+        long _entrytime=0;
         /// <summary>
         /// 开仓时间
         /// </summary>
-        public DateTime EntryTime { get { return _entrytime; } set { _entrytime = value; } }
+        public long EntryTime { get { return _entrytime; } set { _entrytime = value; } }
 
         decimal _entryprice;
         /// <summary>
@@ -242,11 +250,11 @@ namespace TradingLib.Common
         /// 总平仓数量
         /// </summary>
         public int ExitSize { get { return _exitsize; } set { _exitsize = value; } }
-        DateTime? _exittime;
+        long _exittime=0;
         /// <summary>
         /// 平仓时间
         /// </summary>
-        public DateTime? ExitTime { get { return _exittime; } set { _exittime = value; } }
+        public long ExitTime { get { return _exittime; } set { _exittime = value; } }
 
         decimal _exitprice;
         /// <summary>
@@ -327,6 +335,11 @@ namespace TradingLib.Common
         /// <returns></returns>
         public bool EqualPosition(Position p)
         {
+            //持仓方向检查
+            if (p.DirectionType == QSEnumPositionDirectionType.Long && this.Side == false) return false;
+            if (p.DirectionType == QSEnumPositionDirectionType.Short && this.Side == true) return true;
+
+            //持仓帐户 合约 手数检查
             if (p.Account == Account && p.Symbol == Symbol && p.Size == HoldSize) return true;
             return false;
             
@@ -349,7 +362,7 @@ namespace TradingLib.Common
         public override string ToString()
         {
                 //return Account + "," + Symbol + "," +Security+","+ EntryTime.ToString() + "," + EntrySize.ToString() + "," + EntryPrice.ToString() + "," + ExitTime.ToString() + "," + ExitSize.ToString() + "," + ExitPrice.ToString() + "," + Highest.ToString() + "," + Lowest.ToString() + "," + HoldSize.ToString()+","+EntryCommission.ToString()+","+ExitCommission.ToString()+","+Side.ToString()+","+WL.ToString()+","+Points.ToString()+","+TotalPoints.ToString()+","+Profit.ToString()+","+Commissoin.ToString()+","+NetProfit.ToString();
-            string nm = Account + "_" + Symbol + " 方向:" + Side.ToString() + " 开仓:" + EntryTime.ToString() + "," + EntrySize.ToString() + "," + Util.FormatDecimal(EntryPrice) + " 平仓:" + ExitTime.ToString() + "," + ExitSize.ToString() + "," + Util.FormatDecimal(ExitPrice) + " 最高:" + Util.FormatDecimal(Highest) + " 最底:" + Util.FormatDecimal(Lowest) + " 持有数量:" + HoldSize.ToString() + " 开仓手续费:" + Util.FormatDecimal(EntryCommission) + " 平仓手续费:" + Util.FormatDecimal(ExitCommission);
+            string nm=this.PRKey + " 方向:" + Side.ToString() + " 开仓:" + EntryTime.ToString() + "," + EntrySize.ToString() + "," + Util.FormatDecimal(EntryPrice) + " 平仓:" + ExitTime.ToString() + "," + ExitSize.ToString() + "," + Util.FormatDecimal(ExitPrice) + " 最高:" + Util.FormatDecimal(Highest) + " 最底:" + Util.FormatDecimal(Lowest) + " 持有数量:" + HoldSize.ToString() + " 开仓手续费:" + Util.FormatDecimal(EntryCommission) + " 平仓手续费:" + Util.FormatDecimal(ExitCommission);
 
                 if (IsClosed)
                     nm = nm + "盈亏:" + WL.ToString() + " 总点数:" + Util.FormatDecimal(TotalPoints) + " 总盈利:" + Util.FormatDecimal(Profit) + " 总手续费:" + Util.FormatDecimal(Commissoin) + " 净利润:" + Util.FormatDecimal(NetProfit);
