@@ -23,6 +23,10 @@ namespace TradingLib.Common
             this.CashOut = 0M;
             this.LastEquity = 0M;
             this.NowEquity = 0M;
+            this.CreditCashIn = 0M;
+            this.CreditCashOut = 0M;
+            this.LastCredit = 0M;
+            this.NowCredit = 0;
             this.Confirmed = false;
         }
 
@@ -37,6 +41,10 @@ namespace TradingLib.Common
         public decimal CashOut { get; set; }
         public decimal LastEquity { get; set; }
         public decimal NowEquity { get; set; }
+        public decimal CreditCashIn { get; set; }
+        public decimal CreditCashOut { get; set; }
+        public decimal LastCredit { get; set; }
+        public decimal NowCredit { get; set; }
         public bool Confirmed { get; set; }
     }
 

@@ -266,6 +266,10 @@ namespace TradingLib.Core
                     localorder.oSymbol = account.GetSymbol(localorder.Symbol);
                     //设定委托编号
                     TLCtxHelper.ModuleExCore.AssignOrderID(ref localorder);
+                    //将路由中心处理获得的id传递给接口侧id
+                    //o.id = localorder.id;
+
+
                     //将委托保存到map
                     localOrderID_map.TryAdd(localorder.BrokerLocalOrderID, localorder);
                 }
@@ -295,7 +299,7 @@ namespace TradingLib.Core
                         }
                     }
                 }
-
+                
                 logger.Info("Reply Order To MessageExch:" + localorder.GetOrderInfo());
                 _ordercache.Write(localorder);
             }

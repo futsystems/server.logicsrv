@@ -82,5 +82,15 @@ namespace TradingLib.Common
         {
             TLCtxHelper.ModuleRiskCentre.CancelOrder(order, source, cancelreason);
         }
+
+        /// <summary>
+        /// 设置/接触某个交易帐户的警告
+        /// </summary>
+        /// <param name="warnning"></param>
+        /// <param name="message"></param>
+        public void Warn(bool warnning,string message="")
+        {
+            TLCtxHelper.ModuleRiskCentre.Warn(this.ID, warnning, message);
+        }
     }
 }

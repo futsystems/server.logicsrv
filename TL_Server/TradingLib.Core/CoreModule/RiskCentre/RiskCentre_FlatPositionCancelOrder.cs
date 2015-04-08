@@ -326,6 +326,36 @@ namespace TradingLib.Core
     {
 
         /// <summary>
+        /// 警告某个交易帐户
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="iswarnning"></param>
+        /// <param name="message"></param>
+        public void Warn(string account, bool iswarnning, string message = "")
+        { 
+            //为该帐户生成
+            IAccount acct = TLCtxHelper.ModuleAccountManager[account];
+            if (acct != null)
+            {
+                logger.Info(string.Format("{0}警告,内容:{1}",iswarnning?"设置":"解除",message));
+                acct.IsWarn = iswarnning;
+                if (iswarnning)
+                {
+                    TLCtxHelper.EventAccount.FireAccountWarnOnEvent(account, message);//设置警告
+                }
+                else
+                {
+                    TLCtxHelper.EventAccount.FireAccountWarnOffEvent(account, message);//解除警告
+                }
+
+                TLCtxHelper.EventAccount.FireAccountChangeEent(account);//设置帐户状态变化事件
+            }
+            else
+            {
+                logger.Warn(string.Format("Account:{0} is not existed", account));
+            }
+        }
+        /// <summary>
         /// 持仓强平事件
         /// </summary>
         //public event EventHandler<PositionFlatEventArgs> PositionFlatEvent;
@@ -809,7 +839,7 @@ namespace TradingLib.Core
                             {
                                 if (!ps.CancelSent)//如果没有发送过撤单 则发送撤单
                                 {
-                                    logger.Info("发送撤单指令");
+                                    
                                     foreach (long oid in ps.OrderCancels)
                                     {
                                         this.CancelOrder(oid);
@@ -817,6 +847,7 @@ namespace TradingLib.Core
                                     }
                                     ps.CancelSent = true;//标注 取消已经发出
                                     ps.SentTime = DateTime.Now;
+                                    logger.Info(string.Format("发送撤单指令,Time:{0}",ps.SentTime));
                                 }
                                 else//撤销委托发送出去后需要检查撤单是否成功 如果成功则
                                 {
@@ -850,7 +881,7 @@ namespace TradingLib.Core
                                     {
                                         //int i = 0;
                                         //执行强平异常 如果强平过程中撤单失败 则会导致强平失败
-                                        string reason = "撤单过程异常,未成功 强平失败";
+                                        string reason = string.Format("撤单过程异常,未成功 强平失败,Time:{0} SentTime:{1}",DateTime.Now,ps.SentTime);
                                         logger.Warn(reason);
 
                                         ps.FlatFailNoticed = true;

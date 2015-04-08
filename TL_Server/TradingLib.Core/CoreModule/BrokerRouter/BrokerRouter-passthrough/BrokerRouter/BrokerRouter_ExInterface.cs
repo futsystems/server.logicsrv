@@ -49,8 +49,31 @@ namespace TradingLib.Core
         /// <param name="oid"></param>
         public void CancelOrder(long val)
         {
-           
 
+            logger.Info("BrokerRouter try to cancel order to brokersize:");
+            Order o = TLCtxHelper.ModuleClearCentre.SentOrder(val);
+            if (o != null)
+            {
+                IBroker broker = BasicTracker.ConnectorMapTracker.GetBrokerForAccount(o.Account);
+                if (broker == null)
+                {
+                    logger.Warn("交易通道不存在");
+                    return;
+                }
+                if (!broker.IsLive)
+                {
+                    logger.Warn("交易通道未连接");
+                    return;
+                }
+
+                //通过交易通道直接发送委托
+                broker.CancelOrder(val);
+            }
+            else
+            {
+                logger.Warn(string.Format("委托:{0} 不存在", val));
+            }
+            
         }
 
     }

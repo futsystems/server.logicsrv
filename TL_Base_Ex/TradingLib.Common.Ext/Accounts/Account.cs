@@ -49,6 +49,12 @@ namespace TradingLib.Common
         public bool Execute { get; set; }
 
         /// <summary>
+        /// 是否处于警告状态
+        /// </summary>
+        public bool IsWarn { get; set; }
+
+
+        /// <summary>
         /// 是否是日内交易
         /// </summary>
         public bool IntraDay { get; set; }

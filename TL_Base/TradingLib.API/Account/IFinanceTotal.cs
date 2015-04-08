@@ -16,6 +16,11 @@ namespace TradingLib.API
         decimal LastEquity { get; set; }
 
         /// <summary>
+        /// 昨日优先资金
+        /// </summary>
+        decimal LastCredit { get; set; }
+
+        /// <summary>
         /// 当前权益
         /// </summary>
         decimal NowEquity { get; }
@@ -55,6 +60,15 @@ namespace TradingLib.API
         /// </summary>
         decimal CashOut { get; }
 
+        /// <summary>
+        /// 优先资金入金
+        /// </summary>
+        decimal CreditCashIn { get; }
+
+        /// <summary>
+        /// 优先资金出金
+        /// </summary>
+        decimal CreditCashOut { get; }
         /// <summary>
         /// 保证金占用
         /// </summary>

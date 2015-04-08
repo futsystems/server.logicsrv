@@ -176,7 +176,8 @@ namespace TradingLib.Core
             TLCtxHelper.EventSystem.FireSettleDataStoreEvent(this, new SystemEventArgs());
 
             //B:结算交易帐户形成结算记录
-            //this.SettleAccount();
+            
+            this.SettleAccount();
             TLCtxHelper.EventSystem.FireSettleResetEvet(this, new SystemEventArgs());
             
             TLCtxHelper.EventSystem.FireAfterSettleEvent(this, new SystemEventArgs());

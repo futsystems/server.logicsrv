@@ -221,6 +221,17 @@ namespace Broker.Live
             }
             return null;
         }
+
+        ConcurrentDictionary<long, Order> orderID_map = new ConcurrentDictionary<long, Order>();
+        Order ID2Order(long oid)
+        {
+            Order o = null;
+            if (orderID_map.TryGetValue(oid, out o))
+            {
+                return o;
+            }
+            return null;
+        }
         #endregion
 
 
@@ -230,8 +241,7 @@ namespace Broker.Live
         /// <param name="o"></param>
         public override void SendOrder(Order o)
         {
-            debug("send order to broker:" + o.GetOrderInfo(), QSEnumDebugLevel.INFO);
-
+            debug("XAPI[" + this.Token + "] Send Order: " + o.GetOrderInfo(true), QSEnumDebugLevel.INFO);
             XOrderField order = new XOrderField();
 
             order.ID = o.id.ToString();
@@ -287,7 +297,35 @@ namespace Broker.Live
         /// <param name="oid"></param>
         public override void CancelOrder(long oid)
         {
-            
+
+            Order o = ClearCentre.SentOrder(oid);
+            if (o == null)
+            { 
+                debug(string.Format("OrderID:{0} is not valid,can not be canceled",oid),QSEnumDebugLevel.WARN);
+                return;
+            }
+
+            Util.Info("XAP[" + this.Token + "] 取消委托:" + o.GetOrderInfo(true));
+            XOrderActionField action = new XOrderActionField();
+            action.ActionFlag = QSEnumOrderActionFlag.Delete;
+
+            action.ID = o.id.ToString();
+            action.BrokerLocalOrderID = o.BrokerLocalOrderID;
+            action.BrokerRemoteOrderID = o.BrokerRemoteOrderID;
+            action.Exchange = o.BrokerRemoteOrderID.Split(':')[0];//从RemoeOrderID获得交易所信息
+            action.Price = 0;
+            action.Size = 0;
+            action.Symbol = o.Symbol;
+
+
+            if (WrapperSendOrderAction(ref action))
+            {
+
+            }
+            else
+            {
+                debug("Cancel order fail,will notify to client");
+            }
 
         }
 
@@ -362,9 +400,17 @@ namespace Broker.Live
         public override void ProcessOrder(ref XOrderField order)
         {
             Order localorder = getLocalOrder(ref order);
+
+            //bool newOrder = localorder.id == 0;
             //向外回报委托
             this.NotifyOrder(localorder);
 
+            //对外回报Order,BrokerRouter会处理该委托，并给该委托设定OrderID
+            //if (newOrder)
+            //{
+            //    debug("Broker Side Got OrderID Asigned:"+localorder.id, QSEnumDebugLevel.INFO);
+            //    orderID_map.TryAdd(localorder.id, localorder);
+            //}
         }
 
         /// <summary>

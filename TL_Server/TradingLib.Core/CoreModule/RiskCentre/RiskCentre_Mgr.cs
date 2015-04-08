@@ -143,6 +143,38 @@ namespace TradingLib.Core
         }
 
 
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "DelVendorFlatRule", "DelVendorFlatRule - del flat rule for vendor moniter account", "删除主帐户监控风控规则")]
+        public void CTE_DelVendorFlatRule(ISession session, string account)
+        {
+            logger.Info(string.Format("管理员:{0} 查询主帐户{1}强平规则", session.AuthorizedID, account));
+
+            Manager manager = session.GetManager();
+            IAccount acct = TLCtxHelper.ModuleAccountManager[account];
+
+            if (acct == null) throw new FutsRspError("交易帐户不存在");
+
+            //判断帐户是否存在
+            if (acct != null)
+            {
+                if (!acct.RuleItemLoaded)
+                {
+                    this.LoadRuleItem(acct);//风控规则延迟加载,如果帐户没有加载则先加载帐户风控规则
+                }
+            }
+            //查询帐户风控规则
+            IAccountCheck accountcheck = acct.AccountChecks.Where(check => check.GetType().FullName.Equals("AccountRuleSet.RSVendorFlat")).FirstOrDefault();
+            //如果该帐户风控规则不存在 则添加
+            if (accountcheck != null)
+            {
+                RuleItem item = RuleItem.IRule2RuleItem(accountcheck);
+                this.DeleteRiskRule(item);
+
+                TLCtxHelper.EventAccount.FireAccountChangeEent(account);
+            }
+
+
+        }
+
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryVendorFlatRule", "QryVendorFlatRule - query flat rule for vendor moniter account", "查询主帐户监控风控规则")]
         public void CTE_QryVendorFlatRule(ISession session, string account)
         {

@@ -179,6 +179,18 @@ namespace TradingLib.Common
         /// </summary>
         public string MAcctRiskRule { get; set; }
 
+
+        /// <summary>
+        /// 警告状态
+        /// </summary>
+        public bool IsWarn { get; set; }
+
+        /// <summary>
+        /// 警告内容
+        /// </summary>
+        public string WarnMessage { get; set; }
+
+
         public static string Serialize(AccountLite account)
         {
             StringBuilder sb = new StringBuilder();
@@ -248,6 +260,11 @@ namespace TradingLib.Common
             sb.Append(account.MAcctConnected);
             sb.Append(d);
             sb.Append(account.MAcctRiskRule);
+            sb.Append(d);
+            sb.Append(account.IsWarn);
+            sb.Append(d);
+            sb.Append(account.WarnMessage);
+
             return sb.ToString();
         }
 
@@ -288,6 +305,9 @@ namespace TradingLib.Common
             account.ConnectorToken = rec[30];
             account.MAcctConnected = bool.Parse(rec[31]);
             account.MAcctRiskRule = rec[32];
+            account.IsWarn = bool.Parse(rec[33]);
+            account.WarnMessage = rec[34];
+
             return account;
         }
     }

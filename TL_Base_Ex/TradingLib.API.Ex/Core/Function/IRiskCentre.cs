@@ -78,5 +78,13 @@ namespace TradingLib.API
         /// <returns></returns>
         bool CheckOrderStep2(ref Order o, IAccount acc, out string msg, bool inter);
 
+
+        /// <summary>
+        /// 警告某个交易帐户
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="iswarnning"></param>
+        /// <param name="message"></param>
+        void Warn(string account, bool iswarnning, string message = "");
     }
 }

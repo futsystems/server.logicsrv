@@ -38,6 +38,29 @@ namespace TradingLib.Common
         public event AccoundIDDel AccountChangeEvent;
 
 
+        /// <summary>
+        /// 交易帐户警告开启事件
+        /// </summary>
+        public event Action<string,string> AccountWarnOnEvent;
+
+        internal void FireAccountWarnOnEvent(string account,string message)
+        { 
+            if(AccountWarnOnEvent != null)
+                AccountWarnOnEvent(account,message);
+        }
+        /// <summary>
+        /// 交易帐户警告关闭事件
+        /// </summary>
+        public event Action<string,string> AccountWarnOffEvent;
+
+        internal void FireAccountWarnOffEvent(string account,string message)
+        {
+            if (AccountWarnOffEvent != null)
+                AccountWarnOffEvent(account, message);
+        }
+
+
+
         internal void FireAccountInactiveEvent(string account)
         {
             if(AccountInactiveEvent != null)

@@ -54,7 +54,7 @@ namespace TradingLib.ServiceManager
             logger.Info("[INIT CORE] SettleCentre");
             _settleCentre = TLCtxHelper.Scope.Resolve<IModuleSettleCentre>();//初始化结算中心
 
-            logger.Info("[INIT CORE] MsgExchServer");
+            logger.Info("[INIT CORE] ExCore");
             _messageExchagne = TLCtxHelper.Scope.Resolve<IModuleExCore>();//初始化交易服务
 
             logger.Info("[INIT CORE] AccountManager");

@@ -26,7 +26,7 @@ namespace TradingLib.Core
 
         int _nightStart = 210000;
         int _nightEnd = 23000;
-
+        string _frozenCode = "m";
         /// <summary>
         /// 交易帐户与通道的映射关系维护器
         /// </summary>
@@ -66,6 +66,13 @@ namespace TradingLib.Core
                 _cfgdb.UpdateConfig("NightEndTime", QSEnumCfgType.Int, 23000, "夜盘结束时间");
             }
             _nightEnd = _cfgdb["NightEndTime"].AsInt();
+
+            //冻结保证金挂单品种
+            if (!_cfgdb.HaveConfig("FrozenSecCode"))
+            {
+                _cfgdb.UpdateConfig("FrozenSecCode", QSEnumCfgType.String,"m", "夜盘用于冻结保证金的品种");
+            }
+            _frozenCode = _cfgdb["FrozenSecCode"].AsString();
 
 
             StartProcessMsgOut();

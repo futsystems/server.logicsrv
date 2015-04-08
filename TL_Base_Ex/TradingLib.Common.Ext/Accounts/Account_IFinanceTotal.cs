@@ -60,6 +60,7 @@ namespace TradingLib.Common
         /// </summary>
         public decimal CashOut { get { return _cashout; } set { _cashout = value; } }
 
+
         decimal _creditcashin = 0;
         /// <summary>
         /// 优先资金 入金
@@ -73,6 +74,8 @@ namespace TradingLib.Common
         /// 优先资金出金
         /// </summary>
         public decimal CreditCashOut { get { return _creditcashout; } set { _creditcashout = value; } }
+
+
         /// <summary>
         /// 保证金占用
         /// 期货保证金占用 期权持仓成本 异化保证金

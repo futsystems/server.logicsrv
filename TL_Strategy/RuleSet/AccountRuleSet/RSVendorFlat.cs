@@ -78,11 +78,32 @@ namespace AccountRuleSet
 
         bool flatStart = false;//强平开始
         bool warnStart = false;//报警开始
+        bool iswarnning = false;//
         public bool CheckAccount(out string msg)
         {
             msg = string.Empty;
             decimal equity = this.Account.NowEquity;//获得该账户的当前权益
-            
+            //iswarnning = this.Account.i
+            iswarnning = this.Account.IsWarn;
+            if (equity < this.WarnEquity)
+            {
+                if (!iswarnning)
+                {
+                    iswarnning = true;
+                    this.Account.Warn(true, "达到警告线");
+                    Util.Debug("帐户警告开启~~~~~~~~~~~~~~~~~~~");
+                }
+            }
+            else
+            {
+                if (iswarnning)
+                {
+                    iswarnning = false;
+                    this.Account.Warn(false, "");
+                    Util.Debug("帐户警告关闭~~~~~~~~~~~~~~~~~~~");
+                }
+            }
+
             //当前权益小于强平金额 执行强平操作
             if (equity < this.FlatEquity)
             {

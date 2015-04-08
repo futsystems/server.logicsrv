@@ -44,6 +44,13 @@ namespace TradingLib.API
         bool Execute { get; set; }
 
         /// <summary>
+        /// 是否处于警告状态
+        /// </summary>
+        bool IsWarn { get; set; }
+
+
+
+        /// <summary>
         /// 是否日内交易
         /// </summary>
         bool IntraDay { get; set; }
