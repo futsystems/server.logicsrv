@@ -146,6 +146,8 @@ namespace TradingLib.Core
             if (!settled) return;//没有结算就不重置交易系统
 
             this.ResetSystem();
+
+
         }
 
         void ResetSystem()
@@ -169,6 +171,9 @@ namespace TradingLib.Core
 
             //重置任务中心
             TLCtxHelper.EventSystem.FireAfterSettleResetEvent(this, new SystemEventArgs());
+
+            //每日系统重置时回收内存
+            GC.Collect();
         }
 
         /// <summary>

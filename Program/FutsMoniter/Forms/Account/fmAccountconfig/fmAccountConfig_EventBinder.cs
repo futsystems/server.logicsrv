@@ -30,7 +30,9 @@ namespace FutsMoniter
 
             if (!Globals.Domain.Super)
             {
-                ctRouterType1.Visible = Globals.Manager.IsRoot();//管理员可以设置帐户路由类别
+                //ctRouterType1.Visible = Globals.Manager.IsRoot();//管理员可以设置帐户路由类别
+                ctRouterType1.Visible = Globals.Domain.Router_Live && Globals.Domain.Router_Sim;
+
                 btnExecute.Visible = Globals.Manager.IsRoot() || Globals.UIAccess.r_block;
 
                 //管理员可以进行财务操作

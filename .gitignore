@@ -17,6 +17,7 @@
 /lib/Win
 /lib/TradingLib
 
+/Platform/FutsMoniter/Secure0
 /Platform/**/*.dll
 /Platform/**/*.exe
 /Platform/**/log/
@@ -52,3 +53,4 @@
 *.rar
 *.tar
 *.zip
+
