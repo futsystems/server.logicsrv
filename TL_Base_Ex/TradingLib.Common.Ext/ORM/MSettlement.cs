@@ -214,7 +214,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("SELECT *  FROM hold_postransactions  where `account` = '{0}' AND `settleday` = '{1}' AND  `symbol`='{2}' ", pr.Account, settleday, pr.Symbol);
+                string query = String.Format("SELECT *  FROM hold_postransactions  where `account` = '{0}' AND `settleday` = '{1}' AND  `symbol`='{2}' AND `side`='{3}'", pr.Account, settleday, pr.Symbol,pr.Side?1:0);
                 return db.Connection.Query(query).Count() > 0;
             }
         }

@@ -129,42 +129,46 @@ namespace FutsMoniter
         /// <param name="e"></param>
         void Confirm_Click(object sender, EventArgs e)
         {
+            
             JsonWrapperCashOperation op = CurrentCashOperation;
 
             if (!validCashOperation(op)) return;
 
             if (!validManualDeposit(op)) return;
-            //如果出金 就打印支付申请单
-            if (op.Operation == QSEnumCashOperation.WithDraw)
+            if (MoniterUtils.WindowConfirm(string.Format("确认出入金请求:",op.Ref)) == DialogResult.Yes)
             {
-                if (ViewType == CashOpViewType.Agent)//代理支付凭证
+                //如果出金 就打印支付申请单
+                if (op.Operation == QSEnumCashOperation.WithDraw)
                 {
-                    //生成支付单
-                    fmPaySlipAgent fm = new fmPaySlipAgent();
-                    fm.SetCashOperation(op);
-                    if (fm.ShowDialog() != DialogResult.Yes)
+                    if (ViewType == CashOpViewType.Agent)//代理支付凭证
                     {
-                        return;
+                        //生成支付单
+                        fmPaySlipAgent fm = new fmPaySlipAgent();
+                        fm.SetCashOperation(op);
+                        if (fm.ShowDialog() != DialogResult.Yes)
+                        {
+                            return;
+                        }
                     }
+                    else
+                    {
+                        fmPaySlip fm = new fmPaySlip();
+                        fm.SetCashOperation(op);
+                        if (fm.ShowDialog() != DialogResult.Yes)
+                        {
+                            return;
+                        }
+                    }
+                }
+
+                if (ViewType == CashOpViewType.Agent)
+                {
+                    Globals.TLClient.ReqConfirmCashOperation(op.ToJson());
                 }
                 else
                 {
-                    fmPaySlip fm = new fmPaySlip();
-                    fm.SetCashOperation(op);
-                    if (fm.ShowDialog() != DialogResult.Yes)
-                    {
-                        return;
-                    }
+                    Globals.TLClient.ReqConfirmAccountCashOperation(op.ToJson());
                 }
-            }
-
-            if (ViewType == CashOpViewType.Agent)
-            {
-                Globals.TLClient.ReqConfirmCashOperation(op.ToJson());
-            }
-            else
-            {
-                Globals.TLClient.ReqConfirmAccountCashOperation(op.ToJson());
             }
         }
 

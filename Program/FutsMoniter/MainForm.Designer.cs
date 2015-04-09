@@ -163,7 +163,8 @@
             this.tabFinance,
             this.tabHistQuery,
             this.kryptonRibbonTab1});
-            this.TabRibbon.SelectedTab = this.tabSystem;
+            this.TabRibbon.SelectedContext = null;
+            this.TabRibbon.SelectedTab = this.tabHistQuery;
             this.TabRibbon.Size = new System.Drawing.Size(1107, 111);
             this.TabRibbon.TabIndex = 0;
             // 
@@ -536,6 +537,7 @@
             // 
             this.kryptonRibbonGroupButton_QuerySettleAgent.ImageLarge = ((System.Drawing.Image)(resources.GetObject("kryptonRibbonGroupButton_QuerySettleAgent.ImageLarge")));
             this.kryptonRibbonGroupButton_QuerySettleAgent.TextLine1 = "结算单";
+            this.kryptonRibbonGroupButton_QuerySettleAgent.Visible = false;
             // 
             // kryptonRibbonGroup8
             // 

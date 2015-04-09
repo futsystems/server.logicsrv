@@ -129,37 +129,37 @@ namespace FutsMoniter
         void kryptonRibbonGroupButton_ExStrategy_Click(object sender, EventArgs e)
         {
             fmExStrategy fm = new fmExStrategy();
-            fm.Show();
+            fm.ShowDialog();
         }
 
         void kryptonRibbonGroupButton_Margin_Click(object sender, EventArgs e)
         {
             fmMargin fm = new fmMargin();
-            fm.Show();
+            fm.ShowDialog();
         }
 
         void kryptonRibbonGroupButton_Commission_Click(object sender, EventArgs e)
         {
             fmCommission fm = new fmCommission();
-            fm.Show();
+            fm.ShowDialog();
         }
 
         void kryptonRibbonGroupButton_tasklog_Click(object sender, EventArgs e)
         {
             fmTaskMoniter fm = new fmTaskMoniter();
-            fm.Show();
+            fm.ShowDialog();
         }
 
         void kryptonRibbonGroupButton_syncsymbol_Click(object sender, EventArgs e)
         {
             fmSyncSymbol fm = new fmSyncSymbol();
-            fm.Show();
+            fm.ShowDialog();
         }
 
         void kryptonRibbonGroupButton_permissiontmp_Click(object sender, EventArgs e)
         {
             fmPermissionTemplate fm = new fmPermissionTemplate();
-            fm.Show();
+            fm.ShowDialog();
         }
 
         void kryptonRibbonGroupButton_Reset_Click(object sender, EventArgs e)
@@ -195,7 +195,7 @@ namespace FutsMoniter
         void kryptonRibbonGroupButton_tickpaper_Click(object sender, EventArgs e)
         {
             fmDefaultConnector fm = new fmDefaultConnector();
-            fm.Show();
+            fm.ShowDialog();
         }
 
         void kryptonContextMenuItem_changepass_Click(object sender, EventArgs e)
@@ -207,7 +207,7 @@ namespace FutsMoniter
         void kryptonRibbonGroupButton_ReceiveBank_Click(object sender, EventArgs e)
         {
             fmRecvBankManager fm = new fmRecvBankManager();
-            fm.Show();
+            fm.ShowDialog();
         }
 
         void kryptonContextMenuItem_DomainInfo_Click(object sender, EventArgs e)
@@ -220,19 +220,19 @@ namespace FutsMoniter
         void kryptonContextMenuItem_Domain_Click(object sender, EventArgs e)
         {
             fmDomain fm = new fmDomain();
-            fm.Show();
+            fm.ShowDialog();
         }
 
         void kryptonRibbonGroupButton_connectorlist_Click(object sender, EventArgs e)
         {
             fmVendorManager fm = new fmVendorManager();
-            fm.Show();
+            fm.ShowDialog();
         }
 
         void kryptonRibbonGroupButton_interfacelist_Click(object sender, EventArgs e)
         {
             fmInterface fm = new fmInterface();
-            fm.Show();
+            fm.ShowDialog();
         }
 
 
@@ -240,13 +240,13 @@ namespace FutsMoniter
         void kryptonRibbonGroupButton_QuerySettleAccount_Click(object sender, EventArgs e)
         {
             fmSettlement fm = new fmSettlement();
-            fm.Show();
+            fm.ShowDialog();
         }
 
         void kryptonRibbonGroupButton_PermissionAgent_Click(object sender, EventArgs e)
         {
             fmAgentPermission fm = new fmAgentPermission();
-            fm.Show();//.ShowDialog();
+            fm.ShowDialog();
         }
 
 
@@ -284,19 +284,19 @@ namespace FutsMoniter
         void kryptonRibbonGroupButton_CasherManagement_Click(object sender, EventArgs e)
         {
             fmCashCentre fm = new fmCashCentre();
-            fm.Show();
+            fm.ShowDialog();
         }
 
         void kryptonRibbonGroupButton_FinanceManagement_Click(object sender, EventArgs e)
         {
             fmFinanceCentre fm = new fmFinanceCentre();
-            fm.Show();
+            fm.ShowDialog();
         }
 
         void kryptonRibbonGroupButton_AccountCashreq_Click(object sender, EventArgs e)
         {
             fmAccountCashReq fm = new fmAccountCashReq();
-            fm.Show();
+            fm.ShowDialog();
         }
 
 
@@ -304,13 +304,13 @@ namespace FutsMoniter
         void kryptonRibbonGroupButton_AgentCost_Click(object sender, EventArgs e)
         {
             fmAgentCostConfig fm = new fmAgentCostConfig();
-            fm.Show();
+            fm.ShowDialog();
         }
 
         void kryptonRibbonGroupButton_AgentManagement_Click(object sender, EventArgs e)
         {
             fmManagerCentre fm = new fmManagerCentre();
-            fm.Show();
+            fm.ShowDialog();
         }
 
         #endregion
@@ -321,25 +321,25 @@ namespace FutsMoniter
         void kryptonRibbonGroupButton_QueryAgentProfit_Click(object sender, EventArgs e)
         {
             fmAgentProfitReport fm = new fmAgentProfitReport();
-            fm.Show();
+            fm.ShowDialog();
         }
 
         void kryptonRibbonGroupButton_QueryExHist_Click(object sender, EventArgs e)
         {
             fmHistQuery fm = new fmHistQuery();
-            fm.Show();
+            fm.ShowDialog();
         }
 
         void kryptonRibbonGroupButton_QueryCashTransAccount_Click(object sender, EventArgs e)
         {
             fmHistQueryCashTrans fm = new fmHistQueryCashTrans();
-            fm.Show();
+            fm.ShowDialog();
         }
 
         void kryptonRibbonGroupButton_QueryCashTransAgent_Click(object sender, EventArgs e)
         {
             fmHistQueryCashTransAgent fm = new fmHistQueryCashTransAgent();
-            fm.Show();
+            fm.ShowDialog();
         }
 
         #endregion
@@ -367,7 +367,7 @@ namespace FutsMoniter
         void kryptonRibbonGroupButton_SystemStatus_Click(object sender, EventArgs e)
         {
             fmCoreStatus fm = new fmCoreStatus();
-            fm.Show();
+            fm.ShowDialog();
         }
 
         void kryptonRibbonGroupButton_RouterList_Click(object sender, EventArgs e)
@@ -386,26 +386,26 @@ namespace FutsMoniter
         void kryptonRibbonGroupButton_Exchange_Click(object sender, EventArgs e)
         {
             fmExchange fm = new fmExchange();
-            fm.Show();
+            fm.ShowDialog();
         }
 
         void kryptonRibbonGroupButton_Mktime_Click(object sender, EventArgs e)
         {
             fmMarketTime fm = new fmMarketTime();
-            fm.Show();
+            fm.ShowDialog();
          
         }
 
         void kryptonRibbonGroupButton_Symbol_Click(object sender, EventArgs e)
         {
             fmSymbol fm = new fmSymbol();
-            fm.Show();
+            fm.ShowDialog();
         }
 
         void kryptonRibbonGroupButton_Security_Click(object sender, EventArgs e)
         {
             fmSecurity fm = new fmSecurity();
-            fm.Show();
+            fm.ShowDialog();
         }
 
 
