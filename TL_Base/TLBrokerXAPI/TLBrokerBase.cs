@@ -38,6 +38,15 @@ namespace TradingLib.BrokerXAPI
                 Disconnected(this.Token);
         }
 
+        public event Action<RspInfo> GotRspInfoEvent;
+        protected void NotifyMessage(XErrorField message)
+        {
+            RspInfo info = new RspInfoImpl();
+            info.ErrorID = message.ErrorID;
+            info.ErrorMessage = message.ErrorMsg;
+            if (GotRspInfoEvent != null)
+                GotRspInfoEvent(info);
+        }
         /// <summary>
         /// 当接口有成交数据时 对外触发
         /// </summary>

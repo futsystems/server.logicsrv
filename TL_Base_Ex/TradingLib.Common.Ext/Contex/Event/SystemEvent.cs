@@ -193,5 +193,16 @@ namespace TradingLib.Common
         }
         #endregion
 
+
+        #region 其他事件
+
+        public event EventHandler<ManagerNotifyEventArgs> ManagerNotifyEvent = delegate { };
+
+        public void FireManagerNotifyEvent(object sender, ManagerNotifyEventArgs arg)
+        {
+            ManagerNotifyEvent(sender, arg);
+        }
+        #endregion
+
     }
 }

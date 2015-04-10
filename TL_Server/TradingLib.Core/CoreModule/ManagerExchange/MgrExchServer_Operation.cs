@@ -13,6 +13,15 @@ namespace TradingLib.Core
     public partial class MgrExchServer
     {
 
+
+        /// <summary>
+        /// 向管理端发送一个通知
+        /// </summary>
+        /// <param name="info"></param>
+        void NewMessage(RspInfo info)
+        { 
+            
+        }
         /// <summary>
         /// 向管理客户端转发客户端的登入退出事件
         /// </summary>

@@ -48,7 +48,29 @@ namespace TradingLib.Core
             {
                 TLBrokerBase brokerbase = broker as TLBrokerBase;
                 brokerbase.GotHistPositionDetail += new Action<PositionDetail>(Broker_GotHistPositionDetail);
+                brokerbase.GotRspInfoEvent += (rspinfo) => { Broker_GotRspInfoEvent(broker, rspinfo); };
             }
+        }
+
+        void Broker_GotRspInfoEvent(IBroker broker, RspInfo obj)
+        {
+            logger.Info(string.Format("Message from broker:{0} ErrorID:{1} ErrorMessage:{2}", "2", obj.ErrorID, obj.ErrorMessage));
+            //找到该broker对应的Account然后将对应的消息推送到管理端
+            IAccount account = BasicTracker.ConnectorMapTracker.GetAccountForBroker(broker.Token);
+            if (account == null)
+            {
+                logger.Info(string.Format("Broker:{0} is not binded with any account",broker.Token));
+            }
+            ConnectorConfig cfg = BasicTracker.ConnectorConfigTracker.GetBrokerConfig(broker.Token);
+
+            var predicate = account.GetNotifyPredicate();
+            ManagerNotify notify = new ManagerNotify();
+            notify.NotifyType = "主帐户交易通道";
+            notify.ErrorID = obj.ErrorID;
+            notify.ErrorMessage = string.Format("主帐户{0}:{1}",cfg != null ? (string.Format("{0}-{1}", cfg.Name, cfg.usrinfo_userid)) : "",obj.ErrorMessage);
+
+            ManagerNotifyEventArgs arg = new ManagerNotifyEventArgs(predicate, notify);
+            TLCtxHelper.EventSystem.FireManagerNotifyEvent(this, arg);
         }
 
 

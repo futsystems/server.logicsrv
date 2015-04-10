@@ -53,6 +53,18 @@ namespace TradingLib.Core
         void InitNotifySection()
         {
             TLCtxHelper.EventSystem.CashOperationRequest += new EventHandler<CashOperationEventArgs>(CashOperationEvent_CashOperationRequest);
+            TLCtxHelper.EventSystem.ManagerNotifyEvent +=new EventHandler<ManagerNotifyEventArgs>(EventSystem_ManagerNotifyEvent);
+
+        }
+
+        void EventSystem_ManagerNotifyEvent(object sender, ManagerNotifyEventArgs e)
+        {
+            NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(GetNotifyTargets(e.NotifyPredicate));
+            response.ModuleID = CoreName;
+            response.CMDStr = "ManagerNotify";
+            response.Result = Mixins.Json.JsonMapper.ToJson(e.Notify);
+
+            CachePacket(response);
         }
 
         void CashOperationEvent_CashOperationRequest(object sender, CashOperationEventArgs e)
@@ -71,6 +83,8 @@ namespace TradingLib.Core
             //1.过滤没有绑定Manager的custinfoex                2.通过谓词过滤Manager              3.投影成地址
             return this.NotifyTarges.Where(c=>c.Manager!=null).Where(e => predictate(e.Manager)).Select(info => info.Location).ToArray();
         }
+
+
 
 
         /// <summary>
@@ -101,6 +115,7 @@ namespace TradingLib.Core
             response.Result = Mixins.Json.JsonReply.SuccessReply(mgr).ToJson();
             CachePacket(response);
         }
+
 
         
     }

@@ -241,51 +241,6 @@ namespace TradingLib.ORM
             }
         }
 
-        
-
-        /// <summary>
-        /// 更新路由组信息
-        /// </summary>
-        /// <param name="account"></param>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        //public static bool UpdateRouterGroup(string account, int rgid)
-        //{
-        //    using (DBMySql db = new DBMySql())
-        //    {
-        //        string query = String.Format("UPDATE accounts SET rg_fk = '{0}' WHERE account = '{1}'", rgid, account);
-        //        return db.Connection.Execute(query) >= 0;
-        //    }
-        //}
-        /// <summary>
-        /// 更新帐户的锁仓权限
-        /// </summary>
-        /// <param name="account"></param>
-        /// <param name="poslock"></param>
-        /// <returns></returns>
-        //public static bool UpdateAccountPosLock(string account, bool poslock)
-        //{
-        //    using (DBMySql db = new DBMySql())
-        //    {
-        //        string query = String.Format("UPDATE accounts SET poslock = '{0}' WHERE account = '{1}'", poslock?1:0, account);
-        //        return db.Connection.Execute(query) >= 0;
-        //    }
-        //}
-
-        ///// <summary>
-        ///// 更新帐户单向大边支持
-        ///// </summary>
-        ///// <param name="account"></param>
-        ///// <param name="poslock"></param>
-        ///// <returns></returns>
-        //public static bool UpdateAccountSideMargin(string account, bool sidemargin)
-        //{
-        //    using (DBMySql db = new DBMySql())
-        //    {
-        //        string query = String.Format("UPDATE accounts SET sidemargin = '{0}' WHERE account = '{1}'", sidemargin ? 1 : 0, account);
-        //        return db.Connection.Execute(query) >= 0;
-        //    }
-        //}
 
         /// <summary>
         /// 更新帐户手续费模板
@@ -328,19 +283,6 @@ namespace TradingLib.ORM
                 db.Connection.Execute(query);
             }
         }
-        /// <summary>
-        /// 更新帐户 分开显示信用额度
-        /// </summary>
-        /// <param name="account"></param>
-        /// <param name="creditseparate"></param>
-        //public static void UpdateAccountCreditSeparate(string account, bool creditseparate)
-        //{
-        //    using (DBMySql db = new DBMySql())
-        //    {
-        //        string query = String.Format("UPDATE accounts SET creditseparate = {0} WHERE account = '{1}'", creditseparate ? 1 : 0, account);
-        //        db.Connection.Execute(query);
-        //    }
-        //}
 
         /// <summary>
         /// 更新帐户的MAC地址
@@ -505,6 +447,8 @@ namespace TradingLib.ORM
                     return GlobalConfig.PrefixReal;
                 case QSEnumAccountCategory.SIMULATION:
                     return GlobalConfig.PrefixSim;
+                case QSEnumAccountCategory.LOANNEE:
+                    return GlobalConfig.PrefixLoannee;
                 default:
                     return GlobalConfig.PrefixSim;
             }

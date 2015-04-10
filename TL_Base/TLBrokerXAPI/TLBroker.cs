@@ -238,7 +238,10 @@ namespace TradingLib.BrokerXAPI
             _wrapper.OnQryPositionDetailEvent += new CBOnQryPositionDetail(_wrapper_OnQryPositionDetailEvent);
 
             _wrapper.OnLogEvent += new CBOnLog(_wrapper_OnLogEvent);
+            _wrapper.OnMessageEvent += new CBOnMessage(_wrapper_OnMessageEvent);
         }
+
+
 
 
 
@@ -507,6 +510,7 @@ namespace TradingLib.BrokerXAPI
         RingBuffer<XTradeField> _tradecache = new RingBuffer<XTradeField>(buffersize);
         RingBuffer<XOrderError> _ordererrorcache = new RingBuffer<XOrderError>(buffersize);
         RingBuffer<XOrderActionError> _orderactionerrorcache = new RingBuffer<XOrderActionError>(buffersize);
+        RingBuffer<XErrorField> _messagecache = new RingBuffer<XErrorField>(buffersize);
 
         //RingBuffer<XHistOrder> _historder = new RingBuffer<XHistOrder>(buffersize);
         //RingBuffer<XHistTrade> _histtrade = new RingBuffer<XHistTrade>(buffersize);
@@ -571,7 +575,11 @@ namespace TradingLib.BrokerXAPI
                     //    XHistTrade trade = _histtrade.Read();
                     //    ProcessQryTrade(ref trade.Trade, trade.IsLast);
                     //}
-
+                    while (_messagecache.hasItems)
+                    {
+                        XErrorField message = _messagecache.Read();
+                        NotifyMessage(message);
+                    }
                     // clear current flag signal
                     _notifywaiting.Reset();
                     // wait for a new signal to continue reading
@@ -584,6 +592,7 @@ namespace TradingLib.BrokerXAPI
             }
             Util.Debug("Notify thread stopped...");
         }
+
         #endregion
 
         #region Proxy底层事件处理
@@ -674,6 +683,17 @@ namespace TradingLib.BrokerXAPI
             Util.Debug(message, "XAPI");
         }
 
+        /// <summary>
+        /// 接口侧返回消息处理
+        /// </summary>
+        /// <param name="pMessage"></param>
+        /// <param name="islast"></param>
+        void _wrapper_OnMessageEvent(ref XErrorField pMessage, bool islast)
+        {
+            Util.Debug("-----------TLBroker OnMessageEvent-----------------------");
+            _messagecache.Write(pMessage);
+            NewNotify();
+        }
 
 
         void _wrapper_OnAccountInfoEvent(ref XAccountInfo pAccountInfo, bool islast)

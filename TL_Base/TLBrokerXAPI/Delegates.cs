@@ -82,6 +82,21 @@ namespace TradingLib.BrokerXAPI
     /// <param name="islast"></param>
     public delegate void CBOnAccountInfo(ref XAccountInfo pAccountInfo,bool islast);
 
-
+    /// <summary>
+    /// 接口侧日志输出
+    /// </summary>
+    /// <param name="handler"></param>
+    /// <param name="len"></param>
     public delegate void CBOnLog(IntPtr handler,int len);
+
+
+    /// <summary>
+    /// 接口侧相关操作回报
+    /// 1.操作错误通知
+    /// 2.操作成功通知
+    /// </summary>
+    /// <param name="pError"></param>
+    /// <param name="islast"></param>
+    public delegate void CBOnMessage(ref XErrorField pMessage,bool islast);
+
 }

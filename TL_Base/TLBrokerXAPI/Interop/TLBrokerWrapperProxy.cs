@@ -123,7 +123,7 @@ namespace TradingLib.BrokerXAPI.Interop
             _RegOnQryTrade = NativeLib.GetUnmanagedFunction<RegOnQryTradeProc>("RegOnQryTrade");
             _RegOnQryPositionDetail = NativeLib.GetUnmanagedFunction<RegOnQryPositionDetailProc>("RegOnPositionDetail");
             _RegOnLog = NativeLib.GetUnmanagedFunction<RegOnLogProc>("RegOnLog");
-            
+            _RegOnMessage = NativeLib.GetUnmanagedFunction<RegOnMessageProc>("RegOnMessage");
         }
 
 
@@ -459,6 +459,9 @@ namespace TradingLib.BrokerXAPI.Interop
         public delegate void RegOnLoginProc(IntPtr pWrapper, CBOnLogin cb);
         RegOnLoginProc _RegOnLogin;
 
+
+
+
         /// <summary>
         /// 注册成交回报回调
         /// </summary>
@@ -523,12 +526,24 @@ namespace TradingLib.BrokerXAPI.Interop
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void RegOnLogProc(IntPtr pWrapper, CBOnLog cb);
         RegOnLogProc _RegOnLog;
+
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void RegOnMessageProc(IntPtr pWrapper, CBOnMessage cb);
+        RegOnMessageProc _RegOnMessage;
+
+
         #endregion
 
 
         #region 回调事件
-        
 
+        CBOnMessage cbOnMessage;
+        public event CBOnMessage OnMessageEvent
+        {
+            add { cbOnMessage += value; _RegOnMessage(this.Wrapper, cbOnMessage); }
+            remove { cbOnMessage -= value; _RegOnMessage(this.Wrapper, cbOnMessage); }
+        }
 
         CBOnLog cbOnLog;
         public event CBOnLog OnLogEvent

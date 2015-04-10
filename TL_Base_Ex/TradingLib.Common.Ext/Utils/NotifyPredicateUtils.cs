@@ -62,6 +62,29 @@ namespace TradingLib.Common
 
 
         /// <summary>
+        /// 获得某个帐户的通知对象
+        /// 
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public static Predicate<Manager> GetNotifyPredicate(this IAccount account)
+        {
+            Predicate<Manager> func = null;
+            func = (mgr) =>
+            {
+                if (mgr == null) return false;
+                
+                //如果有Root域的管理端登入 则需要通知
+                if (mgr.IsInRoot())
+                    return true;
+                //如果该交易帐户的代理客户端登入 则需要通知
+                if (mgr.RightAccessAccount(account))
+                    return true;
+                return false;
+            };
+            return func;
+        }
+        /// <summary>
         /// 获得出入金操作的通知对象判断诸词
         /// </summary>
         /// <param name="op"></param>

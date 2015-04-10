@@ -34,9 +34,9 @@ namespace TradingLib.Common
                 config.UpdateConfig("VendorName", QSEnumCfgType.String, "乐透", "系统商标,用于显示软件品牌");
             }
 
-            if (!config.HaveConfig("DealerPrompt"))
+            if (!config.HaveConfig("LoanneePrompt"))
             {
-                config.UpdateConfig("DealerPrompt", QSEnumCfgType.String, "", "交易员帐户登入提示");
+                config.UpdateConfig("LoanneePrompt", QSEnumCfgType.String, "", "配资帐户登入提示");
             }
 
             if (!config.HaveConfig("SimPrompt"))
@@ -79,6 +79,12 @@ namespace TradingLib.Common
             {
                 config.UpdateConfig("RealPrefix", QSEnumCfgType.String, "88", "实盘帐户前缀");
             }
+
+            if (!config.HaveConfig("LoanneePrefix"))
+            {
+                config.UpdateConfig("LoanneePrefix", QSEnumCfgType.String, "99", "配资帐户前缀");
+            }
+
 
             if (!config.HaveConfig("StartDefaultConnector"))
             {
@@ -146,6 +152,16 @@ namespace TradingLib.Common
             }
         }
 
+        /// <summary>
+        /// 配资帐户默认前缀
+        /// </summary>
+        public static string PrefixLoannee
+        {
+            get
+            {
+                return defaultinstance.config["LoanneePrefix"].AsString();
+            }
+        }
         /// <summary>
         /// 实盘交易帐户前缀
         /// </summary>
