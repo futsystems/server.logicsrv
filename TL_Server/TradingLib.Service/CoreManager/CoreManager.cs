@@ -48,17 +48,29 @@ namespace TradingLib.ServiceManager
         /// 加载Connecter 填充 brokerrouter, datafeedrouter
         /// </summary>
         //public event LoadConnecter LoadConnecterEvent;
-
+        /* 数据库连接缓存 数据库连接 9
+         * 任务调度中心 3
+         * 交易消息服务 6
+         * 交易记录异步记录 1
+         * 行情路由 异步行情处理 1 
+         * 交易路由 异步交易回报 1
+         * 管理消息服务 6
+         * webmsg消息服务 3
+         * 
+         * FastTickDataFeed ZmqPoll线程 + Zmq内部2个 + 值守线程1个
+         * SimTrader 委托入队列线程 + 撮合结果出回报线程(定时撮合) + Tick异步驱动撮合线程(如果由tick进行驱动撮合)
+         * */
         /// <summary>
         /// 加载模块
         /// </summary>
         public void Init()
         {
             Util.InitStatus(this.PROGRAME, true);
-
+            //9 + 3 + 6 + 1 + 1 + 1 +6 + 3 = 30个线程
+            //数据库 线程 [9]
             #region 加载核心模块
             debug("[INIT CORE] TaskCentre", QSEnumDebugLevel.INFO);
-            InitTaskCentre();//初始化任务执行中心 在所有组件加载完毕后 在统一加载定时任务设置
+            InitTaskCentre();//初始化任务执行中心 在所有组件加载完毕后 在统一加载定时任务设置 [3]
             //9个线程 增加3个 quartz 调度线程1个 任务线程2个
 
             debug("[INIT CORE] SettleCentre", QSEnumDebugLevel.INFO);
@@ -66,31 +78,31 @@ namespace TradingLib.ServiceManager
             //18个线程 线程池timer线程1个，数据库连接增加线程8个
 
             debug("[INIT CORE] MsgExchServer", QSEnumDebugLevel.INFO);
-            InitMsgExchSrv();//初始化交易服务
+            InitMsgExchSrv();//初始化交易服务 [6]
             //19个线程 增加消息发送线程1个
 
             debug("[INIT CORE] ClearCentre", QSEnumDebugLevel.INFO);
             InitClearCentre();//初始化结算中心 初始化账户信息
-            //19个线程
+            //19个线程 [1]
 
             debug("[INIT CORE] RiskCentre", QSEnumDebugLevel.INFO);
             InitRiskCentre();//初始化风控中心 初始化账户风控规则
             //19个线程
 
             debug("[INIT CORE] DataFeedRouter", QSEnumDebugLevel.INFO);
-            InitDataFeedRouter();//初始化数据路由
+            InitDataFeedRouter();//初始化数据路由 [1]
             //19个线程
 
             debug("[INIT CORE] BrokerRouter", QSEnumDebugLevel.INFO);
-            InitBrokerRouter();//初始化交易路由选择器
+            InitBrokerRouter();//初始化交易路由选择器 [1]
             //20个线程 增加路由中心 交易消息回报线程(通道将交易回报统一进入路由中心缓存进行处理和发送)
 
             debug("[INIT CORE] MgrExchServer", QSEnumDebugLevel.INFO);//服务端管理界面,提供管理客户端接入,查看并设置相关数据
-            InitMgrExchSrv();//初始化管理服务
+            InitMgrExchSrv();//初始化管理服务 [6]
             //21个线程 增加消息发送线程1个
 
             debug("[INIT CORE] WebMsgExchServer", QSEnumDebugLevel.INFO);
-            InitWebMsgExchSrv();
+            InitWebMsgExchSrv(); //[3]
             //21个线程
             #endregion
 
@@ -109,30 +121,32 @@ namespace TradingLib.ServiceManager
             _riskCentre.Start();
             //21个线程
             _clearCentre.Start();
-            //22个线程 增加交易数据异步记录线程
+            //22个线程 增加交易数据异步记录线程【1】
 
             _datafeedRouter.Start();
             _datafeedRouter.LoadTickSnapshot();
-            //25个线程 增加1个asynctick异步处理线程 tickwatcher2个线程
+            //23个线程 增加1个asynctick异步处理线程* tickwatcher2个线程[删除TickWatcher]【1】
 
             _brokerRouter.Start();
-            //25个线程 去除orderhelper/ tifengine的2个处理线程
+            //23个线程 去除orderhelper/ tifengine的2个处理线程 消息发送线程【1】
 
             _managerExchange.Start();
-            //30个线程 增加5个线程 1个worker,1个zmq Poll线程，2个zmq内部线程，1个tick异步发送线程【可简化】
+            //28个线程 增加5个线程 1个worker,1个zmq Poll线程，2个zmq内部线程，1个tick异步发送线程【可简化】
             //这里经过了简化 将servicerep整合到 messagerouter zmq poll中
-            //同时将行情发送和消息发送都改造成线程安全的方式【加锁】 同时行情心跳在主poll循环中判定时间进行间隔发送
+            //同时将行情发送和消息发送都改造成线程安全的方式 同时行情心跳在主poll循环中判定时间进行间隔发送
             //简化后为29个线程 增加4个线程 1个worker线程,1个zmq poll线程,2个zmq内部线程
+            //【5】+【1】
 
             _webmsgExchange.Start();
-            //32 增加3个线程 1个zmq Poll线程，2个zmq内部线程
+            //31 增加3个线程 1个zmq Poll线程，2个zmq内部线程【3】
 
             _messageExchagne.RestoreSession();//恢复客户端连接
             _messageExchagne.Start();//交易服务启动
-            //37 增加5个线程 2个worker线程，1个zmq poll线程 2个zmq内部线程
+            //36 增加5个线程 2个worker线程，1个zmq poll线程 2个zmq内部线程 消息发送线程【5】+【1】
 
             _taskcentre.Start();
-            //38 增加1个timer线程 用于执行循环任务
+            //36 增加1个timer线程 用于执行循环任务[已经取消]
+            //【3】 Quartz线程
 
             debug("----------- Core Started -----------------",QSEnumDebugLevel.INFO);
         }
