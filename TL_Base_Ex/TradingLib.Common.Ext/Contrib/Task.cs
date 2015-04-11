@@ -28,7 +28,7 @@ namespace TradingLib.Common
             //2.获得对应的任务
             ITask task = TLCtxHelper.ModuleTaskCentre[taskuuid];
 
-            task.DoTask(DateTime.Now);
+            task.DoTask();
         }
 
     }

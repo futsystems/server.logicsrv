@@ -24,7 +24,7 @@ namespace TradingLib.Core
     {
         const string CoreName = "TaskCentre";
         public string CoreId { get { return this.PROGRAME; } }
-        System.Timers.Timer _timer = null;
+        //System.Timers.Timer _timer = null;
 
         IScheduler _scheduler = null;
         public TaskCentre():base(TaskCentre.CoreName)
@@ -38,9 +38,11 @@ namespace TradingLib.Core
             
             _scheduler.ListenerManager.AddTriggerListener(new TrgierListener(), GroupMatcher<TriggerKey>.AnyGroup());
             _scheduler.ListenerManager.AddJobListener(new JobListener(), GroupMatcher<JobKey>.AnyGroup());
+
         }
 
         ConcurrentDictionary<string, ITask> taskUUIDMap = new ConcurrentDictionary<string, ITask>();
+
 
         /// <summary>
         /// 注册一个Task
@@ -51,8 +53,29 @@ namespace TradingLib.Core
             //将任务添加到本地map
             taskUUIDMap.TryAdd(task.TaskUUID, task);
 
-            //定时任务注册到scheduler
+            //定时任务
             if (task.TaskType == QSEnumTaskType.SPECIALTIME)
+            {
+                IJobDetail job = JobBuilder.Create<CoreTask>()
+                    .WithIdentity("Task-" + task.TaskUUID, "TaskGroup")
+                    .UsingJobData("TaskUUID", task.TaskUUID)
+                    .Build();
+
+                //debug(" task xxxxxxxxxxx cron:" + task.CronExpression, QSEnumDebugLevel.ERROR);
+                
+                ITrigger trigger = TriggerBuilder.Create()
+                    .WithIdentity("Trigger-" + task.TaskUUID, "TriggerGroup")
+                    .StartNow()
+                    .WithCronSchedule(task.CronExpression)
+                    .Build();
+
+
+
+                _scheduler.ScheduleJob(job, trigger);
+            }
+
+            //循环执行的任务
+            if (task.TaskType == QSEnumTaskType.CIRCULATE)
             {
                 IJobDetail job = JobBuilder.Create<CoreTask>()
                     .WithIdentity("Task-" + task.TaskUUID, "TaskGroup")
@@ -64,8 +87,13 @@ namespace TradingLib.Core
                 ITrigger trigger = TriggerBuilder.Create()
                     .WithIdentity("Trigger-" + task.TaskUUID, "TriggerGroup")
                     .StartNow()
-                    .WithCronSchedule(task.CronExpression)
+                    .WithSimpleSchedule(x => x
+                        .WithInterval(task.TaskInterval)
+                        .RepeatForever()
+                        )
                     .Build();
+
+
 
                 _scheduler.ScheduleJob(job, trigger);
             }
@@ -96,14 +124,14 @@ namespace TradingLib.Core
         public void Start()
         {
             Util.StartStatus(this.PROGRAME);
-            if (_timer == null)
-            {
-                _timer = new System.Timers.Timer();
-                _timer.Elapsed += new System.Timers.ElapsedEventHandler(TimeEvent);
-                _timer.Interval = Const.TASKFREQ;
-                _timer.Enabled = true;
-                _timer.Start();
-            }
+            //if (_timer == null)
+            //{
+            //    _timer = new System.Timers.Timer();
+            //    _timer.Elapsed += new System.Timers.ElapsedEventHandler(TimeEvent);
+            //    _timer.Interval = Const.TASKFREQ;
+            //    _timer.Enabled = true;
+            //    _timer.Start();
+            //}
             _scheduler.Start();
         }
 
@@ -112,19 +140,19 @@ namespace TradingLib.Core
         /// </summary>
         public void Stop()
         {
-            Util.StopStatus(this.PROGRAME);
-            if (_timer != null)
-            {
-                _timer.Stop();
-            }
+            //Util.StopStatus(this.PROGRAME);
+            //if (_timer != null)
+            //{
+            //    _timer.Stop();
+            //}
         }
 
         public override void Dispose()
         {
             Util.DestoryStatus(this.PROGRAME);
             base.Dispose();
-            _timer.Elapsed -= new System.Timers.ElapsedEventHandler(TimeEvent);
-            _timer = null;
+            //_timer.Elapsed -= new System.Timers.ElapsedEventHandler(TimeEvent);
+            //_timer = null;
         }
 
 
@@ -133,15 +161,15 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="source"></param>
         /// <param name="e"></param>
-        void TimeEvent(object source, System.Timers.ElapsedEventArgs e)
-        {
-            if (!TLCtxHelper.IsReady) return;
-            foreach (ITask t in taskUUIDMap.Values.Where(task => task.TaskType == QSEnumTaskType.CIRCULATE))
-            {
-                //Util.Debug("sec:" + DateTime.Now.Second.ToString() + " millisec:" + DateTime.Now.Millisecond.ToString(), QSEnumDebugLevel.INFO);
-                t.DoTask(e.SignalTime);
-            }
-        }
+        //void TimeEvent(object source, System.Timers.ElapsedEventArgs e)
+        //{
+        //    if (!TLCtxHelper.IsReady) return;
+        //    foreach (ITask t in taskUUIDMap.Values.Where(task => task.TaskType == QSEnumTaskType.CIRCULATE))
+        //    {
+        //        //Util.Debug("sec:" + DateTime.Now.Second.ToString() + " millisec:" + DateTime.Now.Millisecond.ToString(), QSEnumDebugLevel.INFO);
+        //        t.DoTask(e.SignalTime);
+        //    }
+        //}
 
     }
     
