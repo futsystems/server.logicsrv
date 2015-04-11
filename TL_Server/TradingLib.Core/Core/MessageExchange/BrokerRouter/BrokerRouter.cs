@@ -50,11 +50,11 @@ namespace TradingLib.Core
 
 
 
-        TIFEngine _tifengine;
+        //TIFEngine _tifengine;
         private ClearCentre _clearCentre;
         private DataFeedRouter _datafeedRouter;
 
-        OrderTransactionHelper _ordHelper;
+        //OrderTransactionHelper _ordHelper;
 
         /// <summary>
         /// 数据路由,用于让交易接口得到需要的tick数据等信息
@@ -68,12 +68,12 @@ namespace TradingLib.Core
         public BrokerRouter(ClearCentre c):base("BrokerRouter")
         {
             _clearCentre = c;
-            _tifengine = new TIFEngine();
+            //_tifengine = new TIFEngine();
             //_tifengine.SendDebugEvent +=new DebugDelegate(msgdebug);
             //_tifengine.SendOrderEvent += new OrderDelegate(route_SendOrder);
-            _tifengine.SendCancelEvent += new LongDelegate(RouterCancelOrder);
+            //_tifengine.SendCancelEvent += new LongDelegate(RouterCancelOrder);
 
-            _ordHelper = new OrderTransactionHelper("BrokerRouter");
+            //_ordHelper = new OrderTransactionHelper("BrokerRouter");
             //_ordHelper.SendDebugEvent +=new DebugDelegate(msgdebug);
             //_ordHelper.SendOrderEvent += new OrderDelegate(broker_sendorder);
 
@@ -86,8 +86,8 @@ namespace TradingLib.Core
 
         public void Reset()
         {
-            _ordHelper.Clear();
-            _tifengine.Clear();
+            //_ordHelper.Clear();
+            //_tifengine.Clear();
             //重启模拟交易 
             //IBroker b = GetSimBroker();
             //if (b == null) return;
@@ -101,16 +101,16 @@ namespace TradingLib.Core
         {
             Util.StartStatus(this.PROGRAME);
             StartProcessMsgOut();
-            _ordHelper.Start();
-            _tifengine.Start();
+            //_ordHelper.Start();
+            //_tifengine.Start();
             ResumeRouterOrder();
         }
 
         public void Stop()
         {
             Util.StopStatus(this.PROGRAME);
-            _ordHelper.Stop();
-            _tifengine.Stop();
+            //_ordHelper.Stop();
+            //_tifengine.Stop();
             StopProcessMsgOut();
         }
 

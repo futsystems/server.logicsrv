@@ -409,7 +409,7 @@ namespace TradingLib.Core
                 //tl = new TLServer_Exch("TradingServer", _cfgdb["TLServerIP"].AsString(), _cfgdb["TLPort"].AsInt());
                 //VerboseDebugging = _cfgdb["VerbDebug"].AsBool();
                 tl.ProviderName = Providers.QSPlatform;
-                tl.NumWorkers = 5;
+                tl.NumWorkers = 2;
 
 
                 //设定日志输出

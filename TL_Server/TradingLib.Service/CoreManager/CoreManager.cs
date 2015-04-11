@@ -18,12 +18,12 @@ namespace TradingLib.ServiceManager
     public partial class CoreManager : BaseSrvObject, IServiceManager,IDisposable
     {
         const string SMGName = "CoreManager";
-        DebugConfig dconfig;//日志设置信息
+        //DebugConfig dconfig;//日志设置信息
         public string ServiceMgrName { get { return SMGName; } }
         public CoreManager()
             : base(SMGName)
         {
-            dconfig = new DebugConfig();
+            //dconfig = new DebugConfig();
         }
 
         //============ 服务组件 ===============================
@@ -55,35 +55,43 @@ namespace TradingLib.ServiceManager
         public void Init()
         {
             Util.InitStatus(this.PROGRAME, true);
+
             #region 加载核心模块
             debug("[INIT CORE] TaskCentre", QSEnumDebugLevel.INFO);
             InitTaskCentre();//初始化任务执行中心 在所有组件加载完毕后 在统一加载定时任务设置
+            //9个线程 增加3个 quartz 调度线程1个 任务线程2个
 
             debug("[INIT CORE] SettleCentre", QSEnumDebugLevel.INFO);
             InitSettleCentre();//初始化结算中心
+            //18个线程 线程池timer线程1个，数据库连接增加线程8个
 
             debug("[INIT CORE] MsgExchServer", QSEnumDebugLevel.INFO);
             InitMsgExchSrv();//初始化交易服务
+            //19个线程 增加消息发送线程1个
 
             debug("[INIT CORE] ClearCentre", QSEnumDebugLevel.INFO);
             InitClearCentre();//初始化结算中心 初始化账户信息
+            //19个线程
 
             debug("[INIT CORE] RiskCentre", QSEnumDebugLevel.INFO);
             InitRiskCentre();//初始化风控中心 初始化账户风控规则
+            //19个线程
 
             debug("[INIT CORE] DataFeedRouter", QSEnumDebugLevel.INFO);
             InitDataFeedRouter();//初始化数据路由
+            //19个线程
 
             debug("[INIT CORE] BrokerRouter", QSEnumDebugLevel.INFO);
             InitBrokerRouter();//初始化交易路由选择器
+            //20个线程 增加路由中心 交易消息回报线程(通道将交易回报统一进入路由中心缓存进行处理和发送)
 
             debug("[INIT CORE] MgrExchServer", QSEnumDebugLevel.INFO);//服务端管理界面,提供管理客户端接入,查看并设置相关数据
             InitMgrExchSrv();//初始化管理服务
+            //21个线程 增加消息发送线程1个
 
             debug("[INIT CORE] WebMsgExchServer", QSEnumDebugLevel.INFO);
             InitWebMsgExchSrv();
-
-            
+            //21个线程
             #endregion
 
         }
@@ -97,27 +105,35 @@ namespace TradingLib.ServiceManager
             Util.StartStatus(this.PROGRAME, true);
 
             _settleCentre.Start();
-
+            //21个线程
             _riskCentre.Start();
+            //21个线程
             _clearCentre.Start();
+            //22个线程 增加交易数据异步记录线程
 
             _datafeedRouter.Start();
             _datafeedRouter.LoadTickSnapshot();
+            //25个线程 增加1个asynctick异步处理线程 tickwatcher2个线程
 
             _brokerRouter.Start();
+            //25个线程 去除orderhelper/ tifengine的2个处理线程
 
             _managerExchange.Start();
+            //30个线程 增加5个线程 1个worker,1个zmq Poll线程，2个zmq内部线程，1个tick异步发送线程【可简化】
+            //这里经过了简化 将servicerep整合到 messagerouter zmq poll中
+            //同时将行情发送和消息发送都改造成线程安全的方式【加锁】 同时行情心跳在主poll循环中判定时间进行间隔发送
+            //简化后为29个线程 增加4个线程 1个worker线程,1个zmq poll线程,2个zmq内部线程
 
             _webmsgExchange.Start();
+            //32 增加3个线程 1个zmq Poll线程，2个zmq内部线程
 
             _messageExchagne.RestoreSession();//恢复客户端连接
-         
             _messageExchagne.Start();//交易服务启动
+            //37 增加5个线程 2个worker线程，1个zmq poll线程 2个zmq内部线程
 
             _taskcentre.Start();
+            //38 增加1个timer线程 用于执行循环任务
 
-            //初始化
-            //ApplyDebugConfig();
             debug("----------- Core Started -----------------",QSEnumDebugLevel.INFO);
         }
 
@@ -272,52 +288,52 @@ namespace TradingLib.ServiceManager
         /// </summary>
         public void ApplyDebugConfig()
         {
-            //交易业务与消息
-            if (_messageExchagne != null)
-            {
-                _messageExchagne.DebugEnable = dconfig.D_TrdLogic;
-                _messageExchagne.DebugLevel = dconfig.DL_TrdLogic;
-            }
+            ////交易业务与消息
+            //if (_messageExchagne != null)
+            //{
+            //    _messageExchagne.DebugEnable = dconfig.D_TrdLogic;
+            //    _messageExchagne.DebugLevel = dconfig.DL_TrdLogic;
+            //}
 
-            //管理业务与消息
-            if (_managerExchange != null)
-            {
-                _managerExchange.DebugEnable = dconfig.D_MgrLogic;
-                _managerExchange.DebugLevel = dconfig.DL_MgrLogic;
-            }
+            ////管理业务与消息
+            //if (_managerExchange != null)
+            //{
+            //    _managerExchange.DebugEnable = dconfig.D_MgrLogic;
+            //    _managerExchange.DebugLevel = dconfig.DL_MgrLogic;
+            //}
 
-            //清算中心
-            if (_clearCentre != null)
-            {
-                _clearCentre.DebugEnable = dconfig.D_ClearCentre;
-                _clearCentre.DebugLevel = dconfig.DL_ClearCentre;
+            ////清算中心
+            //if (_clearCentre != null)
+            //{
+            //    _clearCentre.DebugEnable = dconfig.D_ClearCentre;
+            //    _clearCentre.DebugLevel = dconfig.DL_ClearCentre;
 
-                //交易信息记录
+            //    //交易信息记录
 
-                //_clearCentre.SqlLog.DebugEnable = dconfig.D_TrdLoger;
-                //_clearCentre.SqlLog.DebugLevel = dconfig.DL_TrdLoger;
-            }
+            //    //_clearCentre.SqlLog.DebugEnable = dconfig.D_TrdLoger;
+            //    //_clearCentre.SqlLog.DebugLevel = dconfig.DL_TrdLoger;
+            //}
 
-            //风控中心
-            if (_riskCentre != null)
-            {
-                _riskCentre.DebugEnable = dconfig.D_RiskCentre;
-                _riskCentre.DebugLevel = dconfig.DL_RiskCentre;
-            }
+            ////风控中心
+            //if (_riskCentre != null)
+            //{
+            //    _riskCentre.DebugEnable = dconfig.D_RiskCentre;
+            //    _riskCentre.DebugLevel = dconfig.DL_RiskCentre;
+            //}
 
-            //交易路由
-            if (_brokerRouter != null)
-            {
-                _brokerRouter.DebugEnable = dconfig.D_BrokerRouter;
-                _brokerRouter.DebugLevel = dconfig.DL_BrokerRouter;
-            }
+            ////交易路由
+            //if (_brokerRouter != null)
+            //{
+            //    _brokerRouter.DebugEnable = dconfig.D_BrokerRouter;
+            //    _brokerRouter.DebugLevel = dconfig.DL_BrokerRouter;
+            //}
 
-            //数据路由
-            if (_datafeedRouter != null)
-            {
-                _datafeedRouter.DebugEnable = dconfig.D_DataFeedRouter;
-                _datafeedRouter.DebugLevel = dconfig.DL_DataFeedRouter;
-            }
+            ////数据路由
+            //if (_datafeedRouter != null)
+            //{
+            //    _datafeedRouter.DebugEnable = dconfig.D_DataFeedRouter;
+            //    _datafeedRouter.DebugLevel = dconfig.DL_DataFeedRouter;
+            //}
 
 
         }

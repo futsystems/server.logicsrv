@@ -73,6 +73,11 @@ namespace TradingLib.Core
         public int Port { get { return _port; } set { _port = value; } }
         private int _port = 5570;
 
+        //服务端名称查询 用于客户端检测是否存在我们系统内的服务器
+        Providers _pn = Providers.Unknown;
+        public Providers ProviderName { get { return _pn; } set { _pn = value; } }
+
+
         /// <summary>
         /// AsyncServer构造函数
         /// </summary>
@@ -95,8 +100,14 @@ namespace TradingLib.Core
 
         }
 
+        /// <summary>
+        /// 主服务线程
+        /// </summary>
         Thread _srvThread;
-        Thread _namesThread;
+
+        /// <summary>
+        /// worker线程
+        /// </summary>
         List<Thread> workers;
 
         bool _srvgo = false;//路由线程运行标志
@@ -104,8 +115,7 @@ namespace TradingLib.Core
         bool _started = false;
 
         bool _mainthreadready = false;
-        bool _serverDNSthreadready = false;
-        //这里需要注意关闭 启动的细节。防止服务器崩溃
+
         public void Start()
         {
             if (_started)
@@ -120,22 +130,12 @@ namespace TradingLib.Core
             _srvThread.Start();
             ThreadTracker.Register(_srvThread);
 
-
-            debug("Start  Names REQ Service @" + PROGRAME);
-            //启动服务响应查询线程
-            _namesgo = true;
-            _namesThread = new Thread(new ThreadStart(NameLookup));
-            _namesThread.IsBackground = true;
-            _namesThread.Name = "AsyncNamesLookup@" + PROGRAME;
-            _namesThread.Start();
-            ThreadTracker.Register(_namesThread);
-
+            //这里等待线程启动完毕后再返回,线程启动完毕后方可利用该组件进行消息发送
+            //_mainthreadready标志在程序进入poll段后置true
             int _wait = 0;
-            //用于等待线程中的相关服务启动完毕 这样函数返回时候服务已经启动完毕 相当于阻塞了线程
-            //防止过早返回 服务没有启动造成的程序混乱
-            while ((_mainthreadready != true || _serverDNSthreadready != true) && (_wait++ < 5))
+            while ((_mainthreadready != true) && (_wait++ < 5))
             {
-                debug("#:" + _wait.ToString() + "mainthread:" + _mainthreadready.ToString() + " dnsthread:" + _serverDNSthreadready.ToString() + "AsyncServer is starting.....");
+                debug("#:" + _wait.ToString() + "SrvThread:" + _mainthreadready.ToString()  + "AsyncServer is starting.....");
                 Thread.Sleep(500);
             }
             //当主线程与名成查询线程全部启动时候我们认为服务启动完毕否则我们抛出异常
@@ -154,36 +154,13 @@ namespace TradingLib.Core
         /// <summary>
         /// 服务是否正常启动
         /// </summary>
-        public bool IsLive { get { return IsMainServerAlive && IsNameServerAlive; } }
-        /// <summary>
-        /// 主线程是否启动
-        /// </summary>
-        public bool IsMainServerAlive { get { return _srvThread.IsAlive; } }
-        /// <summary>
-        /// 名称查询线程是否启动
-        /// </summary>
-        public bool IsNameServerAlive { get { return _namesThread.IsAlive; } }
+        public bool IsLive { get { return _srvThread.IsAlive; } }
 
 
         public void Stop()
         {
             if (!_started)
                 return;
-            //停止服务查询端口
-            debug(string.Format("Stop Names REQ  Service[{0}]",PROGRAME),QSEnumDebugLevel.INFO);
-            _namesgo = false;
-            int namewait=0;
-
-            while (IsNameServerAlive && namewait <10)
-            {
-                debug(string.Format("#{0} wait name req server stopping....",namewait),QSEnumDebugLevel.INFO);
-                Thread.Sleep(2000);
-                namewait++;
-            }
-            if (!IsNameServerAlive)
-            {
-                debug("Names REQ  Service Stopped successfull",QSEnumDebugLevel.INFO);
-            }
 
             //停止工作线程
             debug(string.Format("Stop MessageRouter Service[{0}]",PROGRAME),QSEnumDebugLevel.INFO);
@@ -206,24 +183,15 @@ namespace TradingLib.Core
             debug("2.Stop RouteThread",QSEnumDebugLevel.INFO);
             _srvgo = false;
             int mainwait=0;
-            while (IsMainServerAlive && mainwait < 10)
+            while (IsLive && mainwait < 10)
             {
                 debug(string.Format("#{0} wait mainthread stopping....",mainwait), QSEnumDebugLevel.INFO);
                 Thread.Sleep(1000);
                 mainwait++;
             }
-            if (!IsMainServerAlive)
+            if (!IsLive)
             {
                 debug("MainThread stopped successfull", QSEnumDebugLevel.INFO);
-            }
-
-            if((!IsMainServerAlive)&&(!IsNameServerAlive))
-            {
-                debug(string.Format("Stop transport of {0} successfull",PROGRAME),QSEnumDebugLevel.INFO);
-            }
-            else
-            {
-                debug(string.Format("Stop transport of {0} error",PROGRAME),QSEnumDebugLevel.ERROR);
             }
         }
 
@@ -237,110 +205,7 @@ namespace TradingLib.Core
             catch { }
         }
 
-        //服务端名称查询 用于客户端检测是否存在我们系统内的服务器
-        private bool _namesgo;
-        Providers _pn = Providers.Unknown;
-        public Providers ProviderName { get { return _pn; } set { _pn = value; } }
-        private void NameLookup()
-        {
-            byte[] buffer = new byte[0];
-            int size = 0;
-            using (var context = ZmqContext.Create())
-            {
-                using (ZmqSocket rep = context.CreateSocket(SocketType.REP))
-                {
-                    rep.Linger = new TimeSpan(0);
-                    rep.ReceiveTimeout = new TimeSpan(0,0,1);
-                    rep.Bind("tcp://" + _serverip + ":" + (Port + 1).ToString());
-                    rep.ReceiveReady += (s, e) =>
-                    {
-                        try
-                        {
-                            buffer = rep.Receive(buffer,SocketFlags.DontWait,out size);
-                            Message msg = Message.gotmessage(buffer);
-                            //v("ServerDNS Got Message:" + msg.Type.ToString() + "|" + msg.Content.ToString() + "|" + msg.Content.Length.ToString() + " message buffer size:" + size + " recevied size:" + buffer.Length.ToString());
-                            //如果消息无效则直接返回
-                            if (!msg.isValid)
-                                return;
-                            switch (msg.Type)
-                            {
 
-                                case MessageTypes.BROKERNAMEREQUEST:
-                                    {
-                                        try
-                                        {
-                                            BrokerNameRequest request = RequestTemplate<BrokerNameRequest>.SrvRecvRequest("", "", msg.Content);
-
-                                            BrokerNameResponse response = ResponseTemplate<BrokerNameResponse>.SrvSendRspResponse(request);
-
-                                            response.Provider = Providers.QSPlatform;
-                                            response.BrokerName = "Dev-2-Platform";
-                                            rep.Send(response.Data);
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            debug("error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
-                                        }
-                                        //int id = (int)_pn;
-                                        //rep.Send(id.ToString(), Encoding.UTF8);
-                                    }
-                                    break;
-                                ////接受前置机查询 当前置机所连接的客户端数
-                                //case MessageTypes.QRYENDPOINTCONNECTED:
-                                //    {
-                                //        //debug(PROGRAME + "Qry connected endpoint number", QSEnumDebugLevel.INFO);
-                                //        string frontid = msg.Content;
-                                //        long num = handleMessage(msg.Type, msg.Content, msg.Content, msg.Content);
-                                //        debug("ServerDNS Got" + msg.Content + " Connected Num:" + num.ToString());
-                                //        try
-                                //        {
-                                //            rep.Send(Convert.ToInt32(num).ToString(), Encoding.UTF8);
-                                //        }
-                                //        catch (Exception ex)
-                                //        {
-                                //            debug("QRYENDPOINTCONNECTED error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
-                                //            rep.Send("10000", Encoding.UTF8);
-                                //        }
-                                //        break;
-                                //    }
-                                default:
-                                    return;//其他类型的消息直接返回
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            debug("deal wektask error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
-                        }
-
-                    };
-                    var poller = new Poller(new List<ZmqSocket> { rep });
-
-                    _serverDNSthreadready = true;
-                    while (_namesgo)
-                    {
-                        _serverDNSthreadready = true;
-                        try
-                        {
-                            poller.Poll(PollerTimeOut);
-                            if (!_namesgo)
-                            {
-                                debug("Names thread stopped,try to close socket", QSEnumDebugLevel.INFO);
-                                rep.Close();
-                            }
-                        }
-                        catch (ZmqException e)
-                        {
-                            debug("names look up error" + e.ToString());
-                        }
-
-                    }
-                    _serverDNSthreadready = false;
-                }
-            }
-        }
-
-        //服务器发送产生了一定的问题 是不是需要从worker下手发送返回消息？
-        //服务端向客户端发送消息需要附带地址
         /// <summary>
         /// 向某个客户端发送消息
         /// </summary>
@@ -349,15 +214,20 @@ namespace TradingLib.Core
         /// <param name="front">对应前置地址,前置地址为空/null则客户端直接连接到本地Router</param>
         public void Send(byte[] body, string address,string front)
         {
-            ZMessage zmsg = new ZMessage(body);
-            //将消息地址与消息绑定，通过outputChanel发送出去,这样frontend就会根据消息地址自动的将消息发送给对应的客户端
-            zmsg.Wrap(Encoding.UTF8.GetBytes(address),null);
-            //如果front不为空或者null,则我们再继续添加路由地址
-            if (!string.IsNullOrEmpty(front))
+            if (_outputChanel == null)
+                return;
+            lock (_outputChanel)
             {
-                zmsg.Wrap(Encoding.UTF8.GetBytes(front),null);
+                ZMessage zmsg = new ZMessage(body);
+                //将消息地址与消息绑定，通过outputChanel发送出去,这样frontend就会根据消息地址自动的将消息发送给对应的客户端
+                zmsg.Wrap(Encoding.UTF8.GetBytes(address), null);
+                //如果front不为空或者null,则我们再继续添加路由地址
+                if (!string.IsNullOrEmpty(front))
+                {
+                    zmsg.Wrap(Encoding.UTF8.GetBytes(front), null);
+                }
+                zmsg.Send(_outputChanel);
             }
-            zmsg.Send(_outputChanel);
         }
 
         /// <summary>
@@ -367,18 +237,34 @@ namespace TradingLib.Core
         public void SendTick(Tick k)
         {
             string tickstr = k.Symbol + "^" + TickImpl.Serialize(k);
-            //debug("tickstr:" + tickstr, QSEnumDebugLevel.INFO);
-            _tickpub.Send(tickstr, Encoding.UTF8);
+            SendTick(tickstr);
         }
+
         /// <summary>
         /// 发送Tick 心跳数据
         /// 非线程安全
         /// </summary>
-        public void SendTickHeartBeat()
+        void SendTickHeartBeat()
         {
             string tickstr = "TICKHEARTBEAT";
-            _tickpub.Send(tickstr, Encoding.UTF8);
+            SendTick(tickstr);
         }
+
+        DateTime _lasthb = DateTime.Now;
+        /// <summary>
+        /// 通过tickpub socket 对外转发数据
+        /// </summary>
+        /// <param name="msg"></param>
+        void SendTick(string msg)
+        {
+            if (_tickpub == null)
+                return;
+            lock (_tickpub)
+            {
+                _tickpub.Send(msg, Encoding.UTF8);
+            }
+        }
+
 
 
         //传输层前端
@@ -390,7 +276,7 @@ namespace TradingLib.Core
             workers = new List<Thread>(_worknum);
             using (ZmqContext context = ZmqContext.Create())
             {   //当server端返回信息时,我们同样需要借助一定的设备完成
-                using (ZmqSocket frontend = context.CreateSocket(SocketType.ROUTER), backend = context.CreateSocket(SocketType.DEALER), outchannel = context.CreateSocket(SocketType.DEALER), outClient = context.CreateSocket(SocketType.DEALER), publisher = context.CreateSocket(SocketType.PUB))//, adminpublisher = context.Socket(SocketType.PUB),adminfrontend = context.Socket(SocketType.ROUTER), adminbackend = context.Socket(SocketType.DEALER))
+                using (ZmqSocket frontend = context.CreateSocket(SocketType.ROUTER), backend = context.CreateSocket(SocketType.DEALER), outchannel = context.CreateSocket(SocketType.DEALER), outClient = context.CreateSocket(SocketType.DEALER), publisher = context.CreateSocket(SocketType.PUB), serviceRep = context.CreateSocket(SocketType.REP))
                 {
                     #region tcp keep alive
                     //frontend.AddTcpAcceptFilter("192.168.1.1");//由防火墙来控制访问列表
@@ -417,11 +303,9 @@ namespace TradingLib.Core
                     _outputChanel = outClient;
                     outClient.Connect("inproc://output");
 
-                    
                    //tick数据转发
                     publisher.Bind("tcp://*:" + (Port + 2).ToString());
                     _tickpub = publisher;
-                    //starttcikthread();
 
                     //管理服务器只开一个线程用于处理消息 通过设置worknum实现
                     for (int workerid = 0; workerid <_worknum; workerid++)
@@ -436,52 +320,94 @@ namespace TradingLib.Core
                     //fronted过来的信息我们路由到backend上去
                     frontend.ReceiveReady += (s, e) =>
                     {
-#if DEBUG
-                        //v("frontend->backent");
-                        
-#endif
                         var zmsg = new ZMessage(e.Socket);
                         zmsg.Send(backend);
-                        
                     };
                     //backend过来的信息我们路由到frontend上去
                     backend.ReceiveReady += (s, e) =>
                     {
-#if DEBUG
-                       // v("backend->frontend");
-#endif
                         var zmsg = new ZMessage(e.Socket);
                         zmsg.Send(frontend);
                     };
                     //output接受到的消息,我们通过front发送出去,所有发送给客户端的消息通过outClient发送到output,然后再通过front路由出去
                     outchannel.ReceiveReady += (s, e) =>
                     {
-#if DEBUG
-                            //v("server side send the message outside");
-                            //v("output->frontend");
-#endif
                         var zmsg = new ZMessage(e.Socket);
-#if DEBUG
-                            //v("address is:" + zmsg.AddressToString());
-#endif
                         zmsg.Send(frontend);
                     };
-                    var poller = new Poller(new List<ZmqSocket> { frontend, backend, outchannel });
+
+                    //服务查询
+                    byte[] buffer = new byte[0];
+                    int size = 0;
+
+                    serviceRep.Linger = new TimeSpan(0);
+                    serviceRep.ReceiveTimeout = new TimeSpan(0, 0, 1);
+                    serviceRep.Bind("tcp://" + _serverip + ":" + (Port + 1).ToString());
+                    serviceRep.ReceiveReady += (s, e) =>
+                    {
+                        try
+                        {
+                            buffer = serviceRep.Receive(buffer, SocketFlags.DontWait, out size);
+                            Message msg = Message.gotmessage(buffer);
+                            //v("ServerDNS Got Message:" + msg.Type.ToString() + "|" + msg.Content.ToString() + "|" + msg.Content.Length.ToString() + " message buffer size:" + size + " recevied size:" + buffer.Length.ToString());
+                            //如果消息无效则直接返回
+                            if (!msg.isValid)
+                                return;
+                            switch (msg.Type)
+                            {
+                                case MessageTypes.BROKERNAMEREQUEST:
+                                    {
+                                        try
+                                        {
+                                            BrokerNameRequest request = RequestTemplate<BrokerNameRequest>.SrvRecvRequest("", "", msg.Content);
+                                            BrokerNameResponse response = ResponseTemplate<BrokerNameResponse>.SrvSendRspResponse(request);
+                                            response.Provider = Providers.QSPlatform;
+                                            response.BrokerName = "Dev-2-Platform";
+                                            serviceRep.Send(response.Data);
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            debug("error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                                        }
+                                    }
+                                    break;
+                                default:
+                                    return;//其他类型的消息直接返回
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            debug("deal wektask error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+                        }
+
+                    };
+
+                    var poller = new Poller(new List<ZmqSocket> { frontend, backend, outchannel,serviceRep });
                     //让线程一直获取由socket发报过来的信息
                     _mainthreadready = true;
                     while (_srvgo)
                     {
                         try
                         {
-                            poller.Poll(PollerTimeOut);
+                            poller.Poll(PollerTimeOut);//设定poll的time out可以防止该线程一直阻塞在poll，导致线程无法停止
                             if (!_srvgo)
                             {
-                                debug("messageroute thread stop,try to clear socket",QSEnumDebugLevel.INFO);
+                                debug("messageroute thread stop,try to clear socket", QSEnumDebugLevel.INFO);
                                 frontend.Close();
                                 backend.Close();
                                 publisher.Close();
                                 outchannel.Close();
                                 outClient.Close();
+                                serviceRep.Close();
+                            }
+                            else//如果服务没有停止
+                            {
+                                DateTime now = DateTime.Now;
+                                if ((now - _lasthb).TotalSeconds >= 5)
+                                {
+                                    this.SendTickHeartBeat();
+                                    _lasthb = now;
+                                }
                             }
                         }
                         catch (ZmqException e)
@@ -539,7 +465,6 @@ namespace TradingLib.Core
             }
         }
         
-        //ConcurrentDictionary<string,>
 
         ZeromqThroughPut zmqTP;//流控管理器,用于跟踪所有客户端连接的消息流
         //Worker消息处理函数

@@ -58,7 +58,7 @@ namespace TradingLib.API
         /// <summary>
         /// 向行情系统分发行情心跳,用于告知客户端行情连接有效[停盘时,可能行情通道没有数据发送]
         /// </summary>
-        void SendTickHeartBeat();
+        //void SendTickHeartBeat();
 
     }
 }

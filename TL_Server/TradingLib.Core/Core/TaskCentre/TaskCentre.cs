@@ -29,8 +29,11 @@ namespace TradingLib.Core
         IScheduler _scheduler = null;
         public TaskCentre():base(TaskCentre.CoreName)
         {
+            //设置Quartz后台任务线程数为2 这里累计增加3个线程(1个是触发线程，2个是任务运行线程)
+            System.Collections.Specialized.NameValueCollection kv = new System.Collections.Specialized.NameValueCollection();
+            kv["quartz.threadPool.threadCount"] = "2";
 
-            ISchedulerFactory schedFact = new StdSchedulerFactory();
+            ISchedulerFactory schedFact = new StdSchedulerFactory(kv);
             _scheduler = schedFact.GetScheduler();
             
             _scheduler.ListenerManager.AddTriggerListener(new TrgierListener(), GroupMatcher<TriggerKey>.AnyGroup());

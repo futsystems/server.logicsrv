@@ -90,6 +90,11 @@ namespace TraddingSrvCLI
             thread.Abort();
             thread = null;
         }
+        /// <summary>
+        /// 核心业务线程之外默认为5个线程
+        /// 3个程序默认线程 + 2个ZMQ线程
+        /// 启动核心线程后会增加一个线程用于运行Run函数
+        /// </summary>
         public void Run()
         {
             ////////////////////////////////// Init & Load Section
@@ -101,7 +106,6 @@ namespace TraddingSrvCLI
             using (var coreMgr = new CoreManager())//1.核心模块管理器,加载核心服务组件
             {
                 coreMgr.Init();
-
                 using (var connectorMgr = new ConnectorManager())//2.路由管理器,绑定核心部分的数据与成交路由,并加载Connector
                 {
                     connectorMgr.BindRouter(coreMgr.BrokerRouter, coreMgr.DataFeedRouter);
@@ -111,6 +115,7 @@ namespace TraddingSrvCLI
                     {
                         contribMgr.Init();
                         contribMgr.Load();
+                        //21个线程 不包含扩展的线程(此处禁用所有扩展模块)
 
                         ////////////////////////////////// Stat Section
                         //0.启动扩展服务
@@ -118,6 +123,7 @@ namespace TraddingSrvCLI
 
                         //1.待所有服务器启动完毕后 启动核心服务
                         coreMgr.Start();
+
 
                         //2.绑定核心服务事件到CTX访问界面
                         coreMgr.WireCtxEvent();

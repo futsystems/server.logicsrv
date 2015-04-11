@@ -342,10 +342,10 @@ namespace TradingLib.Core
                     }
                 }
                 //如果启动成功 则同时启动行情发送线程
-                if (_started)
-                {
-                    starttickthread();
-                }
+                //if (_started)
+                //{
+                //    starttickthread();
+                //}
 
             }
             catch (Exception ex)
@@ -367,7 +367,7 @@ namespace TradingLib.Core
             {
                 debug("Soping " + PROGRAME + " server...", QSEnumDebugLevel.INFO);
                 //停止行情线程
-                stoptickthread();
+                //stoptickthread();
                 //停止底层传输
                 if (_trans != null && _trans.IsLive)
                     _trans.Stop();
@@ -385,9 +385,9 @@ namespace TradingLib.Core
 
         #region 服务端向客户端回报Tick
 
-        RingBuffer<Tick> tickq = new RingBuffer<Tick>(Util.TICK_BUFFER_SIZE);
-        bool _tickgo = false;
-        Thread tickthread;
+        //RingBuffer<Tick> tickq = new RingBuffer<Tick>(Util.TICK_BUFFER_SIZE);
+        //bool _tickgo = false;
+        //Thread tickthread;
 
         /// <summary>
         /// 服务端向客户端发送Tick,发送Tick有2钟方式1.排入队列发送 2.直接发送
@@ -396,80 +396,85 @@ namespace TradingLib.Core
         /// <param name="tick">The tick to include in the notification.</param>
         public void newTick(Tick tick)
         {
-            tickq.Write(tick);
-        }
-
-        void starttickthread()
-        {
-            if (_tickgo)
-                return;
-            _tickgo = true;
-            tickthread = new Thread(tickprocess);
-            tickthread.IsBackground = true;
-            tickthread.Name = "TickPubThread@" + PROGRAME;
-            tickthread.Start();
-            ThreadTracker.Register(tickthread);
-        }
-
-
-
-        void stoptickthread()
-        {
-            if (!_tickgo) return;
-            if (tickthread != null && tickthread.IsAlive)
+            if (tick == null) return;
+            //tickq.Write(tick);
+            if (_started)
             {
-                _tickgo = false;
-                int mainwati = 0;
-                while (tickthread.IsAlive && mainwati < 10)
-                {
-                    debug(string.Format("#{0} wati tickthread stopping....", mainwati), QSEnumDebugLevel.INFO);
-                    Thread.Sleep(1000);
-                    mainwati++;
-                }
-                if (!tickthread.IsAlive)
-                {
-                    debug("Tickthread stopped successfull", QSEnumDebugLevel.INFO);
-                }
-                tickthread.Abort();
-                tickthread = null;
+                _trans.SendTick(tick);
             }
         }
 
-        int _wait = 10;
-        void tickprocess()
-        {
-            DateTime last = DateTime.Now;
-            DateTime now = DateTime.Now;
-            while (_tickgo)
-            {
-                try
-                {
-                    now = DateTime.Now;
-                    while (tickq.hasItems)
-                    {
-                        Tick tick = tickq.Read();
-                        _trans.SendTick(tick);
-                    }
+        //void starttickthread()
+        //{
+        //    if (_tickgo)
+        //        return;
+        //    _tickgo = true;
+        //    tickthread = new Thread(tickprocess);
+        //    tickthread.IsBackground = true;
+        //    tickthread.Name = "TickPubThread@" + PROGRAME;
+        //    tickthread.Start();
+        //    ThreadTracker.Register(tickthread);
+        //}
 
-                    //发送心跳
-                    if ((now - last).TotalSeconds >= 5)
-                    {
-                        _trans.SendTickHeartBeat();
-                        last = now;
-                    }
-                    if (tickq.isEmpty)
-                    {
-                        Thread.Sleep(_wait);
-                    }
-                }
-                catch (Exception ex)
-                { 
+
+
+        //void stoptickthread()
+        //{
+        //    if (!_tickgo) return;
+        //    if (tickthread != null && tickthread.IsAlive)
+        //    {
+        //        _tickgo = false;
+        //        int mainwati = 0;
+        //        while (tickthread.IsAlive && mainwati < 10)
+        //        {
+        //            debug(string.Format("#{0} wati tickthread stopping....", mainwati), QSEnumDebugLevel.INFO);
+        //            Thread.Sleep(1000);
+        //            mainwati++;
+        //        }
+        //        if (!tickthread.IsAlive)
+        //        {
+        //            debug("Tickthread stopped successfull", QSEnumDebugLevel.INFO);
+        //        }
+        //        tickthread.Abort();
+        //        tickthread = null;
+        //    }
+        //}
+
+        //int _wait = 10;
+        //void tickprocess()
+        //{
+        //    DateTime last = DateTime.Now;
+        //    DateTime now = DateTime.Now;
+        //    while (_tickgo)
+        //    {
+        //        try
+        //        {
+        //            now = DateTime.Now;
+        //            while (tickq.hasItems)
+        //            {
+        //                Tick tick = tickq.Read();
+        //                _trans.SendTick(tick);
+        //            }
+
+        //            //发送心跳
+        //            if ((now - last).TotalSeconds >= 5)
+        //            {
+        //                _trans.SendTickHeartBeat();
+        //                last = now;
+        //            }
+        //            if (tickq.isEmpty)
+        //            {
+        //                Thread.Sleep(_wait);
+        //            }
+        //        }
+        //        catch (Exception ex)
+        //        { 
                 
-                }
-            }
+        //        }
+        //    }
             
             
-        }
+        //}
         #endregion
 
 
