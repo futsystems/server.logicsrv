@@ -242,6 +242,9 @@ namespace TradingLib.Contirb.LogServer
                         while (logcache.hasItems)
                         {
                             ILogItem l = logcache.Read();
+                            if (l == null)
+                                continue;
+
                             SaveLog(l);//保存日志到文本文件
                             SendLog(l);//发送日志到网络
                         }
@@ -249,12 +252,16 @@ namespace TradingLib.Contirb.LogServer
                         while (taskeventlogcache.hasItems)
                         {
                             LogTaskEvent l = taskeventlogcache.Read();
+                            if (l == null)
+                                continue;
                             SaveLogTaskEvent(l);
                         }
 
                         while (packetlogcache.hasItems)
                         {
                             LogPacketEvent l = packetlogcache.Read();
+                            if (l == null)
+                                continue;
                             SaveLogPacketEvent(l);
                         }
                         Thread.Sleep(50);
