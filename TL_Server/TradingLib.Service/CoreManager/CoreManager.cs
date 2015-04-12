@@ -40,6 +40,20 @@ namespace TradingLib.ServiceManager
         private IModuleRiskCentre _riskCentre;//风控服务
         private IModuleTaskCentre _taskcentre;//调度服务
 
+        /*
+         *  数据库连接缓存 数据库连接 9
+         *  任务调度中心 3
+         *  交易消息服务 1消息发送 +async3个
+         *  交易记录异步记录 1
+         *  行情路由 异步行情处理 1 
+         *  交易路由 异步交易回报 1
+         *  
+         *  webmsg消息服务 3
+         *  FastTickDataFeed ZmqPoll线程 + Zmq内部2个 + 值守线程1个
+         *  SimTrader 委托入队列线程 + 撮合结果出回报线程(定时撮合) + Tick异步驱动撮合线程(如果由tick进行驱动撮合)
+         * 
+         * 
+         * **/
         /// <summary>
         /// 加载模块
         /// </summary>
@@ -50,12 +64,14 @@ namespace TradingLib.ServiceManager
 
             logger.Info("[INIT CORE] DataRepository");
             _datarepository = TLCtxHelper.Scope.Resolve<IModuleDataRepository>();//初始化交易数据储存服务
+            //增加1个交易记录异步记录线程
 
             logger.Info("[INIT CORE] SettleCentre");
             _settleCentre = TLCtxHelper.Scope.Resolve<IModuleSettleCentre>();//初始化结算中心
 
             logger.Info("[INIT CORE] ExCore");
             _messageExchagne = TLCtxHelper.Scope.Resolve<IModuleExCore>();//初始化交易服务
+            //增加1个消息发送线程
 
             logger.Info("[INIT CORE] AccountManager");
             _acctmanger = TLCtxHelper.Scope.Resolve<IModuleAccountManager>();//初始化交易帐户管理服务
@@ -70,8 +86,10 @@ namespace TradingLib.ServiceManager
             //var scope = Container.BeginLifetimeScope();
             _datafeedRouter = TLCtxHelper.Scope.Resolve<IModuleDataRouter>();//Container.Resolve<IDataRouter>();//初始化数据路由
 
+
             logger.Info("[INIT CORE] BrokerRouter");
             _brokerRouter = TLCtxHelper.Scope.Resolve<IModuleBrokerRouter>();//初始化交易路由选择器
+            //增加异步行情处理线程
 
             logger.Info("[INIT CORE] MgrExchServer");//服务端管理界面,提供管理客户端接入,查看并设置相关数据
             _managerExchange = new MgrExchServer(); ;//初始化管理服务

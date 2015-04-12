@@ -42,8 +42,7 @@ namespace TradingLib.Core
             }
 
             tl = new TLServer_MgrExch(_cfgdb["TLServerIP"].AsString(), _cfgdb["TLPort"].AsInt(), false);
-            tl.NumWorkers = 1;
-            //tl.NumWorkers = 1;
+            tl.NumWorkers = 2;
             //tl.EnableTPTracker = false;
 
             tl.CachePacketEvent += new IPacketDelegate(CachePacket);

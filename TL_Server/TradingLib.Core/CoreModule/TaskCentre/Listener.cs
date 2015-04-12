@@ -50,14 +50,21 @@ namespace TradingLib.Core
                 string taskuuid = context.JobDetail.JobDataMap.GetString("TaskUUID");
                 ITask task = TLCtxHelper.ModuleTaskCentre[taskuuid];
 
-                //通过jobException来判断任务运行是否有异常发生，如果产生异常则触发对应的系统时间，在相关扩展模块中会将异常记录到数据库，同时任务执行状态标注为False
-                if (jobException != null)
+                if (task.TaskType == QSEnumTaskType.SPECIALTIME)
                 {
-                    TLCtxHelper.EventSystem.FireTaskErrorEvent(this, TaskEventArgs.TaskFail(task, jobException));
+                    //通过jobException来判断任务运行是否有异常发生，如果产生异常则触发对应的系统时间，在相关扩展模块中会将异常记录到数据库，同时任务执行状态标注为False
+                    if (jobException != null)
+                    {
+                        TLCtxHelper.EventSystem.FireTaskErrorEvent(this, TaskEventArgs.TaskFail(task, jobException));
+                    }
+                    else
+                    {
+                        TLCtxHelper.EventSystem.FireSpecialTimeEvent(this, TaskEventArgs.TaskSuccess(task));
+                    }
                 }
-                else
+                if (task.TaskType == QSEnumTaskType.CIRCULATE)
                 {
-                    TLCtxHelper.EventSystem.FireSpecialTimeEvent(this, TaskEventArgs.TaskSuccess(task));
+                    //Util.Info("Task:" + task.TaskName + " InterVal:" + task.TaskInterval);
                 }
             }
             catch (Exception ex)

@@ -62,11 +62,11 @@ namespace TradingLib.Common
         public TimeSpan TaskInterval { get { return _taskInterval; } set { _taskInterval = value; } }
 
 
-        DateTime _lastTime = new DateTime(1970, 01, 01);
+        ///DateTime _lastTime = new DateTime(1970, 01, 01);
         /// <summary>
         /// 上次执行任务时间
         /// </summary>
-        public DateTime LastTime { get { return _lastTime; } set { _lastTime = value; } }
+        //public DateTime LastTime { get { return _lastTime; } set { _lastTime = value; } }
 
         /// <summary>
         /// 回调任务
@@ -81,36 +81,36 @@ namespace TradingLib.Common
         /// <summary>
         /// 执行特定时间的任务
         /// </summary>
-        public void DoTask(DateTime triggertime)
+        public void DoTask()
         {
-            if (_taskType == QSEnumTaskType.CIRCULATE)
-            {
-                //Util.Debug(this.TaskName + string.Format("sig sec:{0} millisec:{1} interval sec:{2} millisec:{3}" , signalTime.Second,signalTime.Millisecond,_taskInterval.Seconds,_taskInterval.Milliseconds),QSEnumDebugLevel.INFO);
-                if (triggertime.Subtract(_lastTime) >= _taskInterval)
-                {
-                    try
-                    {
-                        if (taskfunc != null)
-                        {
-                            taskfunc();
-                        }
-                        _lastTime = DateTime.Now;
-                    }
-                    catch (Exception ex)
-                    {
-                        Util.Debug("Task Error:" + ex.ToString());
+            //if (_taskType == QSEnumTaskType.CIRCULATE)
+            //{
+            //    //Util.Debug(this.TaskName + string.Format("sig sec:{0} millisec:{1} interval sec:{2} millisec:{3}" , signalTime.Second,signalTime.Millisecond,_taskInterval.Seconds,_taskInterval.Milliseconds),QSEnumDebugLevel.INFO);
+            //    if (triggertime.Subtract(_lastTime) >= _taskInterval)
+            //    {
+            //        try
+            //        {
+            //            if (taskfunc != null)
+            //            {
+            //                taskfunc();
+            //            }
+            //            _lastTime = DateTime.Now;
+            //        }
+            //        catch (Exception ex)
+            //        {
+            //            Util.Debug("Task Error:" + ex.ToString());
 
-                    }
-                }
-                return;
-            }
-            if (_taskType == QSEnumTaskType.SPECIALTIME)
-            {
+            //        }
+            //    }
+            //    return;
+            //}
+            //if (_taskType == QSEnumTaskType.SPECIALTIME)
+            //{
                 if (taskfunc != null)
                 {
                     taskfunc();
                 }
-            }
+            //}
         }
 
 

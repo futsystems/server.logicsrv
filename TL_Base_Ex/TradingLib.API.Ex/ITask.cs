@@ -47,6 +47,6 @@ namespace TradingLib.API
         /// 运行任务
         /// </summary>
         /// <param name="triggertime"></param>
-        void DoTask(DateTime triggertime);
+        void DoTask();
     }
 }

@@ -132,6 +132,12 @@ namespace TraddingSrvCLI
             thread = null;
         }
 
+        /// <summary>
+        /// 核心业务线程之外默认为5个线程
+        /// 3个命令行程序线程 + 2个ZMQ线程
+        /// 启动核心业务线程后会增加一个线程
+        /// 累计进入核心业务线程时为6个线程
+        /// </summary>
         public void Run()
         {
             //核心服务生命周期

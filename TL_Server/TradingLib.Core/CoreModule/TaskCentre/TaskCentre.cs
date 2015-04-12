@@ -30,8 +30,11 @@ namespace TradingLib.Core
         public TaskCentre()
             : base(TaskCentre.CoreName)
         {
+            //设置Quartz后台任务线程数为2 这里累计增加3个线程(1个是触发线程，2个是任务运行线程)
+            System.Collections.Specialized.NameValueCollection kv = new System.Collections.Specialized.NameValueCollection();
+            kv["quartz.threadPool.threadCount"] = "2";
 
-            ISchedulerFactory schedFact = new StdSchedulerFactory();
+            ISchedulerFactory schedFact = new StdSchedulerFactory(kv);
             _scheduler = schedFact.GetScheduler();
 
             _scheduler.ListenerManager.AddTriggerListener(new TrgierListener(), GroupMatcher<TriggerKey>.AnyGroup());
@@ -67,6 +70,24 @@ namespace TradingLib.Core
 
                 _scheduler.ScheduleJob(job, trigger);
             }
+
+            if (task.TaskType == QSEnumTaskType.CIRCULATE)
+            { 
+                IJobDetail job = JobBuilder.Create<CoreTask>()
+                    .WithIdentity("Task-" + task.TaskUUID, "TaskGroup")
+                    .UsingJobData("TaskUUID", task.TaskUUID)
+                    .Build();
+
+                ITrigger trigger = TriggerBuilder.Create()
+                    .WithIdentity("Trigger-" + task.TaskUUID, "TriggerGroup")
+                    .StartNow()
+                    .WithSimpleSchedule(x => x
+                        .WithInterval(task.TaskInterval)
+                        .RepeatForever()
+                        )
+                    .Build();
+                _scheduler.ScheduleJob(job, trigger);
+            }
         }
 
         /// <summary>
@@ -94,14 +115,14 @@ namespace TradingLib.Core
         public void Start()
         {
             Util.StartStatus(this.PROGRAME);
-            if (_timer == null)
-            {
-                _timer = new System.Timers.Timer();
-                _timer.Elapsed += new System.Timers.ElapsedEventHandler(TimeEvent);
-                _timer.Interval = Const.TASKFREQ;
-                _timer.Enabled = true;
-                _timer.Start();
-            }
+            //if (_timer == null)
+            //{
+            //    _timer = new System.Timers.Timer();
+            //    _timer.Elapsed += new System.Timers.ElapsedEventHandler(TimeEvent);
+            //    _timer.Interval = Const.TASKFREQ;
+            //    _timer.Enabled = true;
+            //    _timer.Start();
+            //}
             _scheduler.Start();
         }
 
@@ -121,8 +142,8 @@ namespace TradingLib.Core
         {
             Util.DestoryStatus(this.PROGRAME);
             base.Dispose();
-            _timer.Elapsed -= new System.Timers.ElapsedEventHandler(TimeEvent);
-            _timer = null;
+            //_timer.Elapsed -= new System.Timers.ElapsedEventHandler(TimeEvent);
+            //_timer = null;
         }
 
 
@@ -131,15 +152,15 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="source"></param>
         /// <param name="e"></param>
-        void TimeEvent(object source, System.Timers.ElapsedEventArgs e)
-        {
-            if (!TLCtxHelper.IsReady) return;
-            foreach (ITask t in taskUUIDMap.Values.Where(task => task.TaskType == QSEnumTaskType.CIRCULATE))
-            {
-                //Util.Debug("sec:" + DateTime.Now.Second.ToString() + " millisec:" + DateTime.Now.Millisecond.ToString(), QSEnumDebugLevel.INFO);
-                t.DoTask(e.SignalTime);
-            }
-        }
+        //void TimeEvent(object source, System.Timers.ElapsedEventArgs e)
+        //{
+        //    if (!TLCtxHelper.IsReady) return;
+        //    foreach (ITask t in taskUUIDMap.Values.Where(task => task.TaskType == QSEnumTaskType.CIRCULATE))
+        //    {
+        //        //Util.Debug("sec:" + DateTime.Now.Second.ToString() + " millisec:" + DateTime.Now.Millisecond.ToString(), QSEnumDebugLevel.INFO);
+        //        t.DoTask(e.SignalTime);
+        //    }
+        //}
 
     }
 
