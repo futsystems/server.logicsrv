@@ -236,6 +236,7 @@ namespace FutsMoniter
             router_live.Checked = _domain.Router_Live;
             router_sim.Checked = _domain.Router_Sim;
             splisttab.Enabled = _domain.Module_FinService;
+            switchrouter.Checked = _domain.Switch_Router;
 
             this.Text = "编辑域分区:" + _domain.Name;
 
@@ -278,6 +279,7 @@ namespace FutsMoniter
 
                 _domain.Router_Live = router_live.Checked;
                 _domain.Router_Sim = router_sim.Checked;
+                _domain.Switch_Router = switchrouter.Checked;
 
                 if (fmConfirm.Show("确认更新分区设置?") == System.Windows.Forms.DialogResult.Yes)
                 {

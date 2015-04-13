@@ -67,8 +67,17 @@
     <Compile Include="HistReport.Designer.cs">
       <DependentUpon>HistReport.cs</DependentUpon>
     </Compile>
+    <Compile Include="HistReport_SummaryAccount.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="HistReport_SummaryAccount.Designer.cs">
+      <DependentUpon>HistReport_SummaryAccount.cs</DependentUpon>
+    </Compile>
     <Compile Include="HistReport_SummaryAgent.cs">
       <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="HistReport_SummaryAgent.Designer.cs">
+      <DependentUpon>HistReport_SummaryAgent.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Protocol.cs" />
@@ -76,6 +85,12 @@
   <ItemGroup>
     <EmbeddedResource Include="HistReport.resx">
       <DependentUpon>HistReport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HistReport_SummaryAccount.resx">
+      <DependentUpon>HistReport_SummaryAccount.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HistReport_SummaryAgent.resx">
+      <DependentUpon>HistReport_SummaryAgent.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\licenses.licx" />
   </ItemGroup>

@@ -21,32 +21,51 @@ namespace TradingLib.HistReport
         {
             InitializeComponent();
 
-            SetPreferences();
-            InitTable();
-            BindToTable();
 
             this.Load += new EventHandler(HistReport_Load);
         }
 
         void HistReport_Load(object sender, EventArgs e)
         {
-            btnQryAgentReport.Click += new EventHandler(btnQryAgentReport_Click);
+            histReport_SummaryAccount1.QryAccountEvent += new Action<string, int, int>(histReport_SummaryAccount1_QryAccountEvent);
+            histReport_SummaryAgent1.QryAgentEvent += new Action<int, int, int>(histReport_SummaryAgent21_QryAgentEvent);
         }
 
-        void btnQryAgentReport_Click(object sender, EventArgs e)
+        void histReport_SummaryAgent21_QryAgentEvent(int arg1, int arg2, int arg3)
         {
-            int mgrid = ctAgentList1.CurrentAgentFK;
-            int start = Util.ToTLDate(start_agent.Value);
-            int end = Util.ToTLDate(end_agent.Value);
-            QryAentReport(start, end, mgrid);
-
+            histReport_SummaryAgent1.Clear();
+            QryAentReport(arg2, arg3, arg1);
         }
 
+        void histReport_SummaryAccount1_QryAccountEvent(string arg1, int arg2, int arg3)
+        {
+            histReport_SummaryAccount1.Clear();
+            QryAccountReport(arg2, arg3, arg1);
+        }
+
+
+        /// <summary>
+        /// 查询代理统计
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <param name="mgrid"></param>
         void QryAentReport(int start, int end, int mgrid)
         {
-            Clear();
             var data = new { start_date = start, end_date = end, manager_id = mgrid };
             this.JsonRequest("HistReportCentre", "QrySummaryViaSecCode", data);
+        }
+
+        /// <summary>
+        /// 查询交易帐户统计
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <param name="account"></param>
+        void QryAccountReport(int start, int end, string account)
+        {
+            var data = new { start_date = start, end_date = end, account = account };
+            this.JsonRequest("HistReportCentre", "QryAccountSummary", data);
         }
 
 
@@ -56,12 +75,18 @@ namespace TradingLib.HistReport
         /// </summary>
         /// <param name="result"></param>
         [CallbackAttr("HistReportCentre", "QrySummaryViaSecCode")]
-        public void OnHelloworld(string result)
+        public void OnQrySummaryViaSecCode(string result)
         {
             Util.Debug("got result:" + result, QSEnumDebugLevel.INFO);
-            OnSummaryViaSecCode(result);
+            histReport_SummaryAgent1.OnSummaryViaSecCode(result);
         }
 
+        [CallbackAttr("HistReportCentre", "QryAccountSummary")]
+        public void OnQrySummaryAccount(string result)
+        {
+            Util.Debug("got result:" + result, QSEnumDebugLevel.INFO);
+            histReport_SummaryAccount1.OnSummaryAccount(result);
+        }
 
         public override string Title
         {

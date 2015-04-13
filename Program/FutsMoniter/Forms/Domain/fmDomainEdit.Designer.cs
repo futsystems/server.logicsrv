@@ -79,6 +79,7 @@
             this.kryptonPanel7 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
             this.finsplist = new System.Windows.Forms.CheckedListBox();
             this.btnSubmit = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.switchrouter = new ComponentFactory.Krypton.Toolkit.KryptonCheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonNavigator1)).BeginInit();
@@ -135,7 +136,7 @@
             this.kryptonPage5,
             this.intfaceTab,
             this.splisttab});
-            this.kryptonNavigator1.SelectedIndex = 5;
+            this.kryptonNavigator1.SelectedIndex = 3;
             this.kryptonNavigator1.Size = new System.Drawing.Size(431, 234);
             this.kryptonNavigator1.TabIndex = 15;
             this.kryptonNavigator1.Text = "kryptonNavigator1";
@@ -556,6 +557,7 @@
             // 
             // kryptonPanel6
             // 
+            this.kryptonPanel6.Controls.Add(this.switchrouter);
             this.kryptonPanel6.Controls.Add(this.router_live);
             this.kryptonPanel6.Controls.Add(this.router_sim);
             this.kryptonPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -651,6 +653,14 @@
             this.btnSubmit.TabIndex = 14;
             this.btnSubmit.Values.Text = "提 交";
             this.btnSubmit.Click += new System.EventHandler(this.btnSubmit_Click);
+            // 
+            // switchrouter
+            // 
+            this.switchrouter.Location = new System.Drawing.Point(11, 82);
+            this.switchrouter.Name = "switchrouter";
+            this.switchrouter.Size = new System.Drawing.Size(105, 18);
+            this.switchrouter.TabIndex = 4;
+            this.switchrouter.Values.Text = "路由模式切换";
             // 
             // fmDomainEdit
             // 
@@ -754,5 +764,6 @@
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel7;
         private ComponentFactory.Krypton.Toolkit.KryptonNumericUpDown vendorlimit;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel9;
+        private ComponentFactory.Krypton.Toolkit.KryptonCheckBox switchrouter;
     }
 }

@@ -181,7 +181,8 @@ namespace TradingLib.Core
                 debug("got max opensize:" + size.ToString(), QSEnumDebugLevel.INFO);
                 response.Symbol = request.Symbol;
                 response.MaxVol = size;
-                response.OffsetFlag = request.OffsetFlag;
+                //如果请求查询下单数量时 没有正常提供offsetflag,则我们以开仓为默认，否则以请求的offset进行回报
+                response.OffsetFlag = request.OffsetFlag == QSEnumOffsetFlag.UNKNOWN ? QSEnumOffsetFlag.OPEN : request.OffsetFlag;
                 response.Side = request.Side;
 
                 CacheRspResponse(response, true);

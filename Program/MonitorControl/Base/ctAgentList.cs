@@ -62,11 +62,18 @@ namespace TradingLib.MoniterControl
             }
             set
             {
-                _enableany = value;
-
-                if (MoniterHelper.CTX.EnvReady)
+                try
                 {
-                    ReloadList();
+                    _enableany = value;
+
+                    if (MoniterHelper.CTX.EnvReady)
+                    {
+                        ReloadList();
+                    }
+                }
+                catch (Exception ex)
+                { 
+                    
                 }
                 //agent.Enabled = _enableselected;
             }
@@ -82,10 +89,18 @@ namespace TradingLib.MoniterControl
             }
             set
             {
-                _defaultbasemgr = value;
-                if (MoniterHelper.CTX.EnvReady)
+                try
                 {
-                    ReloadList();
+
+                    _defaultbasemgr = value;
+                    if (MoniterHelper.CTX.EnvReady)
+                    {
+                        ReloadList();
+                    }
+                }
+                catch (Exception ex)
+                { 
+                    
                 }
             }
         }

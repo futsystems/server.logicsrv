@@ -5,49 +5,55 @@ using System.Drawing;
 using System.Data;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.Protocol;
-using System.Windows.Forms;
 
 namespace TradingLib.HistReport
 {
-    public partial class HistReport_SummaryAgent : UserControl
+    public partial class HistReport_SummaryAccount : UserControl
     {
-        public event Action<int, int, int> QryAgentEvent;
-        public HistReport_SummaryAgent()
+        public event Action<string, int, int> QryAccountEvent;
+
+        public HistReport_SummaryAccount()
         {
             InitializeComponent();
             SetPreferences();
             InitTable();
             BindToTable();
-            this.Load += new EventHandler(HistReport_SummaryAgent2_Load);
+            this.Load += new EventHandler(HistReport_SummaryAccount_Load);
         }
 
-        void HistReport_SummaryAgent2_Load(object sender, EventArgs e)
+        void HistReport_SummaryAccount_Load(object sender, EventArgs e)
         {
             btnQry.Click += new EventHandler(btnQry_Click);
         }
 
         void btnQry_Click(object sender, EventArgs e)
         {
-            int mgrid = ctAgentList1.CurrentAgentFK;
             int start = Util.ToTLDate(start_agent.Value);
             int end = Util.ToTLDate(end_agent.Value);
+            string acct = account.Text;
 
-            if (QryAgentEvent != null)
-                QryAgentEvent(mgrid, start, end);
+            if (QryAccountEvent != null)
+            {
+                QryAccountEvent(acct, start, end);
+            }
         }
+
+
+        
+
 
         #region 表格
         #region 显示字段
 
-        //const string ID = "代理全局ID";
-        const string MANAGER_ID = "管理域编号";
+        const string ACCOUNT = "交易帐户";
         const string SEC_CODE = "品种编码";
-        const string TOTAL_SIZE = "累计交易量";
+        const string TOTAL_REALIZEDPL = "累计平仓盈亏";
         const string TOTAL_COMMISSION = "累计手续费";
-        const string TOTAL_REALIZEDPROFIT = "累计平仓盈亏";
+        const string TOTAL_VOLUME = "累计交易量";
 
         #endregion
 
@@ -59,7 +65,7 @@ namespace TradingLib.HistReport
         /// </summary>
         private void SetPreferences()
         {
-            ComponentFactory.Krypton.Toolkit.KryptonDataGridView grid = gridAgentSummary;
+            ComponentFactory.Krypton.Toolkit.KryptonDataGridView grid = summaryAccountGrid;
 
             grid.AllowUserToAddRows = false;
             grid.AllowUserToDeleteRows = false;
@@ -80,11 +86,11 @@ namespace TradingLib.HistReport
         //初始化Account显示空格
         private void InitTable()
         {
-            gt.Columns.Add(MANAGER_ID);//
+            gt.Columns.Add(ACCOUNT);//
             gt.Columns.Add(SEC_CODE);//
-            gt.Columns.Add(TOTAL_SIZE);//
+            gt.Columns.Add(TOTAL_REALIZEDPL);//
             gt.Columns.Add(TOTAL_COMMISSION);//
-            gt.Columns.Add(TOTAL_REALIZEDPROFIT);
+            gt.Columns.Add(TOTAL_VOLUME);
         }
 
         /// <summary>
@@ -92,7 +98,7 @@ namespace TradingLib.HistReport
         /// </summary>
         private void BindToTable()
         {
-            ComponentFactory.Krypton.Toolkit.KryptonDataGridView grid = gridAgentSummary;
+            ComponentFactory.Krypton.Toolkit.KryptonDataGridView grid = summaryAccountGrid;
 
 
             datasource.DataSource = gt;
@@ -112,42 +118,46 @@ namespace TradingLib.HistReport
         #endregion
 
 
-        public void OnSummaryViaSecCode(string jsonstr)
+        public void OnSummaryAccount(string jsonstr)
         {
-            SummaryViaSec[] objlist = MoniterControl.MoniterHelper.ParseJsonResponse<SummaryViaSec[]>(jsonstr);
-            if (objlist != null)
+            SummaryAccount obj = MoniterControl.MoniterHelper.ParseJsonResponse<SummaryAccount>(jsonstr);
+            if (obj != null)
             {
-                foreach (SummaryViaSec obj in objlist)
+                lbAccount.Text = obj.Account;
+                lbCashIn.Text = obj.CashIn.ToString();
+                lbCashOut.Text = obj.CashOut.ToString();
+
+                foreach (var  item in obj.Items)
                 {
-                    InvokeGotSummaryViaSecCode(obj);
+                    InvokeGotSummaryAccount(item);
                 }
             }
         }
 
 
 
-        void InvokeGotSummaryViaSecCode(SummaryViaSec report)
+        void InvokeGotSummaryAccount(SummaryAccountItem report)
         {
             if (InvokeRequired)
             {
-                Invoke(new Action<SummaryViaSec>(InvokeGotSummaryViaSecCode), new object[] { report });
+                Invoke(new Action<SummaryAccountItem>(InvokeGotSummaryAccount), new object[] { report });
             }
             else
             {
                 DataRow r = gt.Rows.Add(0);
                 int i = gt.Rows.Count - 1;//得到新建的Row号
 
-                gt.Rows[i][MANAGER_ID] = report.Manager_ID;
-                gt.Rows[i][SEC_CODE] = report.Sec_Code;
-                gt.Rows[i][TOTAL_SIZE] = report.Total_Size;
-                gt.Rows[i][TOTAL_COMMISSION] = report.Total_Commission;
-                gt.Rows[i][TOTAL_REALIZEDPROFIT] = report.Total_Profit;
+                gt.Rows[i][ACCOUNT] = report.Account;
+                gt.Rows[i][SEC_CODE] = report.SecCode;
+                gt.Rows[i][TOTAL_REALIZEDPL] = report.RealizedPL;
+                gt.Rows[i][TOTAL_COMMISSION] = report.Commission;
+                gt.Rows[i][TOTAL_VOLUME] = report.Volume;
             }
         }
 
         public void Clear()
         {
-            gridAgentSummary.DataSource = null;
+            summaryAccountGrid.DataSource = null;
             gt.Rows.Clear();
             BindToTable();
         }
