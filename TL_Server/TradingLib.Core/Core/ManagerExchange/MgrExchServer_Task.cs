@@ -9,11 +9,14 @@ namespace TradingLib.Core
 {
     public partial class MgrExchServer
     {
+        DateTime _lastAllPushTime = DateTime.Now;
+        int _allPushDiff = 30;
         [TaskAttr("采集帐户信息", 1,0, "定时采集帐户信息用于向管理端进行推送")]
         public void Task_CollectAccountInfo()
         {
             try
             {
+                int allPushDiff = (int)DateTime.Now.Subtract(_lastAllPushTime).TotalSeconds;
                 foreach (CustInfoEx cst in customerExInfoMap.Values)
                 {
                     //便利所有订阅账户列表
@@ -23,7 +26,18 @@ namespace TradingLib.Core
                         NotifyMGRAccountInfoLiteResponse notify = ResponseTemplate<NotifyMGRAccountInfoLiteResponse>.SrvSendNotifyResponse(cst.Location);
                         notify.InfoLite = acc.GenAccountInfoLite();
                         CachePacket(notify);
-                        //_accinfolitecache.Write(notify);
+                    }
+
+                    //每隔30秒全推一次信息 用于解决管理端只看到部分交易帐户 筛选持仓或者交易时造成的列表帐户缺失
+                    if (allPushDiff > _allPushDiff)
+                    {
+                        foreach (IAccount acc in cst.Manager.GetAccounts())
+                        {
+                            NotifyMGRAccountInfoLiteResponse notify = ResponseTemplate<NotifyMGRAccountInfoLiteResponse>.SrvSendNotifyResponse(cst.Location);
+                            notify.InfoLite = acc.GenAccountInfoLite();
+                            CachePacket(notify);
+                        }
+                        _lastAllPushTime = DateTime.Now;
                     }
 
                     foreach (IBroker broker in cst.WatchBrokers)

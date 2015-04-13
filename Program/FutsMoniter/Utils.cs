@@ -178,7 +178,7 @@ namespace FutsMoniter
             StringBuilder strValue = new StringBuilder();
             
 
-            using (StreamWriter sw = new StreamWriter(filename))
+            using (StreamWriter sw = new StreamWriter(filename, false, System.Text.Encoding.Unicode))
             {
                 for (int k = 0; k < view.Columns.Count; k++)
                 {

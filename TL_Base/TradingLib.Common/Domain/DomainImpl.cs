@@ -32,6 +32,7 @@ namespace TradingLib.Common
             this.Module_SubAgent = false;
             this.Router_Live = true;
             this.Router_Sim = true;
+            this.Switch_Router = false;
             this.Misc_InsertTrade = false;
 
 
@@ -155,6 +156,10 @@ namespace TradingLib.Common
         /// </summary>
         public bool Router_Sim { get; set; }
 
+        /// <summary>
+        /// 切换路由模式
+        /// </summary>
+        public bool Switch_Router { get; set; }
         /// <summary>
         /// 调试插入成交
         /// </summary>
