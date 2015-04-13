@@ -134,6 +134,12 @@ namespace TradingLib.API
         /// </summary>
         bool Router_Sim { get; set; }
 
+
+        /// <summary>
+        /// 切换路由模式
+        /// </summary>
+        bool Switch_Router { get; set; }
+
         /// <summary>
         /// 调试插入成交
         /// </summary>

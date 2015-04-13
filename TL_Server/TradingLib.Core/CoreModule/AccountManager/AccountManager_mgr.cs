@@ -66,6 +66,21 @@ namespace TradingLib.Core
                 throw new FutsRspError("可开帐户数量超过限制:" + limit.ToString());
             }
 
+            Manager targetmgr = BasicTracker.ManagerTracker[manager_id];
+            if (targetmgr == null)
+            {
+                //如果指定的管理域不存在，则默认为当前操作的manager的域
+                targetmgr = manager.BaseManager;
+            }
+
+            //指定的manager域和当前管理域不一致 则判断当前管理域是否有权在指定的域内开户
+            if (targetmgr.BaseMgrID != manager.BaseMgrID)
+            {
+                if (!manager.RightAccessManager(targetmgr))
+                {
+                    throw new FutsRspError("无权为该管理员添加帐户");
+                }
+            }
 
             AccountCreation create = new AccountCreation();
             create.Account = account;
@@ -75,7 +90,7 @@ namespace TradingLib.Core
             create.RouterType = create.Category == QSEnumAccountCategory.SIMULATION ? QSEnumOrderTransferType.SIM : QSEnumOrderTransferType.LIVE;
             create.UserID = user_id;
             create.Domain = manager.Domain;
-            create.BaseManager = manager.BaseManager;
+            create.BaseManager = targetmgr;
 
 
             //执行操作 并捕获异常 产生异常则给出错误回报
