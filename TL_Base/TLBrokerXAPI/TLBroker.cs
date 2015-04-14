@@ -166,12 +166,40 @@ namespace TradingLib.BrokerXAPI
 
             //恢复该接口日内交易数据
             OnResume();
-
+            //对外触发连连接成功事件
             NotifyConnected();
             return true;
             //对外触发连接成功事件
         }
 
+        /// <summary>
+        /// 记录从接口获得的合约数据
+        /// 保证金 手续费等
+        /// 本地处理成交时 需要计算成交数据
+        /// </summary>
+        ConcurrentDictionary<string, XSymbol> symbolmap = new ConcurrentDictionary<string, XSymbol>();
+
+
+        public virtual void Stop()
+        {
+            if (!this.IsLive) return;
+            _working = false;
+
+            //停止消息发送线程
+            Util.WaitThreadStop(_notifythread);
+
+            //重置接口对象
+            ResetResource();
+
+            
+            this.DestoryBroker();
+
+            this.NotifyDisconnected();
+        }
+
+        /// <summary>
+        /// 释放底层接口对象
+        /// </summary>
         void ResetResource()
         {
             Util.Info("Release Broker c++ resoure and reset start status");
@@ -181,7 +209,7 @@ namespace TradingLib.BrokerXAPI
             _broker.Dispose();
             //最后释放wrapper
             _wrapper.Dispose();
-            
+
 
             _wrapper = null;
             _broker = null;
@@ -191,19 +219,6 @@ namespace TradingLib.BrokerXAPI
             Util.Info("Resource Disposed", this.GetType().Name);
         }
 
-        public virtual void Stop()
-        {
-            if (!this.IsLive) return;
-            _working = false;
-            //停止消息发送线程
-            Util.WaitThreadStop(_notifythread);
-
-            ResetResource();
-
-            this.DestoryBroker();
-
-            this.NotifyDisconnected();
-        }
 
         public bool IsLive { get { return _working; } }
 
@@ -241,14 +256,6 @@ namespace TradingLib.BrokerXAPI
             _wrapper.OnMessageEvent += new CBOnMessage(_wrapper_OnMessageEvent);
         }
 
-
-
-
-
-
-
-        
-
         /// <summary>
         /// 执行对象销毁
         /// </summary>
@@ -257,6 +264,17 @@ namespace TradingLib.BrokerXAPI
             
 
         }
+
+        /// <summary>
+        /// 启动时登入成功后 恢复日内交易数据
+        /// </summary>
+        public virtual void OnResume()
+        {
+
+
+        }
+
+
         #endregion
 
         #region 交易接口操作 下单 撤单 与回报处理 子类覆写
@@ -287,16 +305,6 @@ namespace TradingLib.BrokerXAPI
         {
             return WrapperQryInstrument();
         }
-
-        /// <summary>
-        /// 恢复日内交易数据
-        /// 调用底层交易接口恢复隔夜持仓，当日委托，当日成交等数据
-        /// </summary>
-        //public virtual bool Restore()
-        //{
-        //    throw new NotImplementedException();
-        //    //return WrapperRestore();
-        //}
 
         /// <summary>
         /// 响应市场行情
@@ -349,14 +357,7 @@ namespace TradingLib.BrokerXAPI
 
 
 
-        /// <summary>
-        /// 启动时登入成功后 恢复日内交易数据
-        /// </summary>
-        public virtual void OnResume()
-        {
 
-
-        }
 
 
 
@@ -436,42 +437,78 @@ namespace TradingLib.BrokerXAPI
 
 
 
-        #region 底层wrapper发送委托或取消委托
+        #region 底层wrapper向接口提交操作
+        /// <summary>
+        /// 提交委托
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns></returns>
         protected bool WrapperSendOrder(ref XOrderField order)
         {
             return _wrapper.SendOrder(ref order);
         }
 
+        /// <summary>
+        /// 提交委托操作
+        /// </summary>
+        /// <param name="action"></param>
+        /// <returns></returns>
         protected bool WrapperSendOrderAction(ref XOrderActionField action)
         {
             return _wrapper.SendOrderAction(ref action);
         }
 
+        /// <summary>
+        /// 查询合约
+        /// </summary>
+        /// <returns></returns>
         protected bool WrapperQryInstrument()
         {
             return _wrapper.QryInstrument();
         }
 
+        /// <summary>
+        /// 查询交易帐户信息
+        /// </summary>
+        /// <returns></returns>
         protected bool WrapperQryAccountInfo()
         {
             return _wrapper.QryAccountInfo();
         }
 
+        /// <summary>
+        /// 查询委托
+        /// </summary>
+        /// <returns></returns>
         protected bool WrapperQryOrder()
         {
             return _wrapper.QryOrder();
         }
 
+        /// <summary>
+        /// 查询成交
+        /// </summary>
+        /// <returns></returns>
         protected bool WrapperQryTrade()
         {
             return _wrapper.QryTrade();
         }
 
+        /// <summary>
+        /// 查询持仓明细
+        /// </summary>
+        /// <returns></returns>
         protected bool WrapperQryPositionDetail()
         {
             return _wrapper.QryPositionDetail();
         }
 
+        /// <summary>
+        /// 出金操作
+        /// </summary>
+        /// <param name="amount"></param>
+        /// <param name="pass"></param>
+        /// <returns></returns>
         protected bool WrapperWithdraw(double amount,string pass)
         {
             XCashOperation op = new XCashOperation();
@@ -481,6 +518,12 @@ namespace TradingLib.BrokerXAPI
             return _wrapper.Withdraw(ref op);
         }
 
+        /// <summary>
+        /// 入金操作
+        /// </summary>
+        /// <param name="amount"></param>
+        /// <param name="pass"></param>
+        /// <returns></returns>
         protected bool WrapperDeposit(double amount,string pass)
         {
             XCashOperation op = new XCashOperation();
@@ -489,17 +532,7 @@ namespace TradingLib.BrokerXAPI
 
             return _wrapper.Deposit(ref op);
         }
-        ///// <summary>
-        ///// 请求恢复交易数据
-        ///// </summary>
-        ///// <returns></returns>
-        protected bool WrapperRestore()
-        {
-            return _wrapper.Restore();
-        }
 
-
-        protected
         #endregion
 
         #region 回报缓存
@@ -595,7 +628,7 @@ namespace TradingLib.BrokerXAPI
 
         #endregion
 
-        #region Proxy底层事件处理
+        #region Proxy底层回报数据处理
         bool _connected = false;
         void _wrapper_OnConnectedEvent()
         {

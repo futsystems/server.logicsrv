@@ -143,6 +143,9 @@ namespace TradingLib.Core
         }
 
 
+        #region 强平风控 json传递强平参数
+        readonly string vendorFlatRuleName = "AccountRuleSet.RSVendorFlat";
+
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "DelVendorFlatRule", "DelVendorFlatRule - del flat rule for vendor moniter account", "删除主帐户监控风控规则")]
         public void CTE_DelVendorFlatRule(ISession session, string account)
         {
@@ -153,21 +156,22 @@ namespace TradingLib.Core
 
             if (acct == null) throw new FutsRspError("交易帐户不存在");
 
-            //判断帐户是否存在
-            if (acct != null)
+            //如果交易帐户没有加载风控规则 则先加载风控规则
+            if (!acct.RuleItemLoaded)
             {
-                if (!acct.RuleItemLoaded)
-                {
-                    this.LoadRuleItem(acct);//风控规则延迟加载,如果帐户没有加载则先加载帐户风控规则
-                }
+                this.LoadRuleItem(acct);//风控规则延迟加载,如果帐户没有加载则先加载帐户风控规则
             }
+
             //查询帐户风控规则
-            IAccountCheck accountcheck = acct.AccountChecks.Where(check => check.GetType().FullName.Equals("AccountRuleSet.RSVendorFlat")).FirstOrDefault();
-            //如果该帐户风控规则不存在 则添加
+            IAccountCheck accountcheck = acct.AccountChecks.Where(check => check.GetType().FullName.Equals(vendorFlatRuleName)).FirstOrDefault();
+            
+            //存在对应风控规则 删除风控规则 并重置帐户警告
             if (accountcheck != null)
             {
                 RuleItem item = RuleItem.IRule2RuleItem(accountcheck);
                 this.DeleteRiskRule(item);
+
+                acct.Warn(false);//解除帐户警告
 
                 TLCtxHelper.EventAccount.FireAccountChangeEent(account);
             }
@@ -185,22 +189,21 @@ namespace TradingLib.Core
 
             if (acct == null) throw new FutsRspError("交易帐户不存在");
 
-            //判断帐户是否存在
-            if (acct != null)
+            if (!acct.RuleItemLoaded)
             {
-                if (!acct.RuleItemLoaded)
-                {
-                    this.LoadRuleItem(acct);//风控规则延迟加载,如果帐户没有加载则先加载帐户风控规则
-                }
+                this.LoadRuleItem(acct);//风控规则延迟加载,如果帐户没有加载则先加载帐户风控规则
             }
+
             //查询帐户风控规则
-            IAccountCheck accountcheck = acct.AccountChecks.Where(check => check.GetType().FullName.Equals("AccountRuleSet.RSVendorFlat")).FirstOrDefault();
+            IAccountCheck accountcheck = acct.AccountChecks.Where(check => check.GetType().FullName.Equals(vendorFlatRuleName)).FirstOrDefault();
             //如果该帐户风控规则不存在 则添加
             if (accountcheck == null)
             {
                 session.ReplyMgr(null);
+                return;
             }
 
+            //解析风控规则json参数
             var args = TradingLib.Mixins.Json.JsonMapper.ToObject(accountcheck.Value);
             var response = new 
             {
@@ -209,14 +212,10 @@ namespace TradingLib.Core
                 warn_level = int.Parse(args["warn_level"].ToString()),//报警线
                 flat_level = int.Parse(args["flat_level"].ToString()),//强平线
                 night_hold = decimal.Parse(args["night_hold"].ToString()),//过夜倍数
-
-            
             };
             session.ReplyMgr(response);
-
-
-
         }
+
         /// <summary>
         /// 更新主帐户监控风控规则
         /// </summary>
@@ -241,21 +240,16 @@ namespace TradingLib.Core
             IAccount acct = TLCtxHelper.ModuleAccountManager[account];
 
             if(acct == null) throw new FutsRspError("交易帐户不存在");
-            //判断帐户是否存在
-            if (acct != null)
-            {
-                if (!acct.RuleItemLoaded)
-                {
-                    this.LoadRuleItem(acct);//风控规则延迟加载,如果帐户没有加载则先加载帐户风控规则
-                }
-            }
-            
-            
 
+            if (!acct.RuleItemLoaded)
+            {
+                this.LoadRuleItem(acct);//风控规则延迟加载,如果帐户没有加载则先加载帐户风控规则
+            }
 
             //查询帐户风控规则
-            IAccountCheck accountcheck = acct.AccountChecks.Where(check=>check.GetType().FullName.Equals("AccountRuleSet.RSVendorFlat")).FirstOrDefault();
+            IAccountCheck accountcheck = acct.AccountChecks.Where(check => check.GetType().FullName.Equals(vendorFlatRuleName)).FirstOrDefault();
             
+            //生成风控规则参数
             string args = TradingLib.Mixins.Json.JsonMapper.ToJson(new {equity =equity,warn_level=warnLevel,flat_level=flatLevel,night_hold=overNight});
             
             RuleItem target = null;
@@ -267,7 +261,7 @@ namespace TradingLib.Core
                 target.Account = acct.ID;
                 target.Compare = QSEnumCompareType.Equals;
                 target.Enable = true;
-                target.RuleName = "AccountRuleSet.RSVendorFlat";
+                target.RuleName = vendorFlatRuleName;
                 target.RuleType = QSEnumRuleType.AccountRule;
                 target.SymbolSet = "";
                 target.Value = args;
@@ -284,9 +278,11 @@ namespace TradingLib.Core
 
                 session.OperationSuccess("更新风控项目成功");
             }
-
             TLCtxHelper.EventAccount.FireAccountChangeEent(account);
         }
+
+        #endregion
+
 
     }
 }

@@ -19,6 +19,53 @@ namespace Broker.Live
         }
 
 
+        /// <summary>
+        /// 销毁交易接口
+        /// </summary>
+        public override void DestoryBroker()
+        {
+
+            //清空委托map
+            localOrderID_map.Clear();
+            remoteOrderID_map.Clear();
+
+            //清空历史记录
+            histordermap.Clear();
+            histtrademap.Clear();
+
+        }
+
+        /// <summary>
+        /// 恢复交易接口数据
+        /// PassThrough类型的CTP接口在本地不保存历史记录，全部通过接口的查询功能进行处理
+        /// 通过查询CTP接口的日内数据来恢复当前历史记录
+        /// </summary>
+        public override void OnResume()
+        {
+            ////清空历史记录
+            histordermap.Clear();
+            histtrademap.Clear();
+
+            ////查询委托 在委托处理完毕后会链式查询成交 整体恢复数据过程Position->Order->Trade 真个过程
+            ////获得所有历史数据 用于恢复当前最新交易状态
+            Util.sleep(1000);
+            //通知 数据恢复开始
+            NotifyExDataSyncStart();
+
+            this.QryPositionDetail();
+            //查询帐户信息用于同步当前权益
+        }
+
+        /// <summary>
+        /// 响应行情 驱动本地相关数据计算
+        /// </summary>
+        /// <param name="k"></param>
+        public override void GotTick(Tick k)
+        {
+            
+        }
+
+        #region 处理接口查询获得的持仓明细 委托 成交等信息
         SortedDictionary<int, Trade> histtrademap = new SortedDictionary<int, Trade>();
         /// <summary>
         /// 响应接口查询成交回报
@@ -43,6 +90,8 @@ namespace Broker.Live
                     debug(f.GetTradStr());
                     NotifyTrade(f);
                 }
+                //对外通知交易数据同步完毕
+                NotifyExDataSyncEnd();
             }
         }
 
@@ -84,9 +133,9 @@ namespace Broker.Live
         /// <param name="islast"></param>
         public override void ProcessQryPositionDetail(ref XPositionDetail position, bool islast)
         {
-            string msg = string.Format("OpenData:{0} Settleday:{1} Side:{2} OpenPrice:{3} Volume:{4} Symbol:{5} Exchange:{6} CloseVol:{7}", position.OpenDate, position.SettleDay, position.Side, position.OpenPrice, position.Volume, position.Symbol, position.Exchange,position.CloseVolume);
+            string msg = string.Format("OpenData:{0} Settleday:{1} Side:{2} OpenPrice:{3} Volume:{4} Symbol:{5} Exchange:{6} CloseVol:{7}", position.OpenDate, position.SettleDay, position.Side, position.OpenPrice, position.Volume, position.Symbol, position.Exchange, position.CloseVolume);
 
-            debug("got positon detail:"+msg, QSEnumDebugLevel.INFO);
+            debug("got positon detail:" + msg, QSEnumDebugLevel.INFO);
             //开仓日期与结算日不同 则为隔夜持仓
             if (position.OpenDate != position.SettleDay)
             {
@@ -124,60 +173,8 @@ namespace Broker.Live
                 this.QryOrder();
             }
         }
-        /// <summary>
-        /// 初始化交易接口
-        /// </summary>
-        public override void InitBroker()
-        {
-            base.InitBroker();
-            //debug("xxxxxxxxxxxxxxxxx", QSEnumDebugLevel.ERROR);
-            
-        }
 
-        /// <summary>
-        /// 销毁交易接口
-        /// </summary>
-        public override void DestoryBroker()
-        {
-
-            //清空委托map
-            localOrderID_map.Clear();
-            remoteOrderID_map.Clear();
-
-            //清空历史记录
-            histordermap.Clear();
-            histtrademap.Clear();
-
-        }
-
-        /// <summary>
-        /// 恢复交易接口数据
-        /// PassThrough类型的CTP接口在本地不保存历史记录，全部通过接口的查询功能进行处理
-        /// 通过查询CTP接口的日内数据来恢复当前历史记录
-        /// </summary>
-        public override void OnResume()
-        {
-            ////清空历史记录
-            histordermap.Clear();
-            histtrademap.Clear();
-
-            ////查询委托 在委托处理完毕后会链式查询成交 整体恢复数据过程Position->Order->Trade 真个过程
-            ////获得所有历史数据 用于恢复当前最新交易状态
-            Util.sleep(1000);
-            this.QryPositionDetail();
-            //查询帐户信息用于同步当前权益
-
-        }
-
-        /// <summary>
-        /// 响应行情 驱动本地相关数据计算
-        /// </summary>
-        /// <param name="k"></param>
-        public override void GotTick(Tick k)
-        {
-            
-        }
-
+        #endregion
 
         #region 委托索引map用于按不同的方式定位委托
         ConcurrentDictionary<string, Order> localOrderID_map = new ConcurrentDictionary<string, Order>();
@@ -197,16 +194,6 @@ namespace Broker.Live
             }
             return null;
         }
-
-        /// <summary>
-        /// 通过BrokerLocalID判断 该委托是否是新的委托
-        /// </summary>
-        /// <param name="localid"></param>
-        /// <returns></returns>
-        //bool IsNewOrder(string localid)
-        //{ 
-        //    return localOrderID_map.Keys.cont
-        //}
 
         /// <summary>
         /// 交易所编号 委托 map
@@ -235,6 +222,7 @@ namespace Broker.Live
         #endregion
 
 
+        #region 通过接口向外发送委托 取消委托
         /// <summary>
         /// 提交委托
         /// </summary>
@@ -329,7 +317,10 @@ namespace Broker.Live
 
         }
 
+        #endregion
 
+
+        #region 处理接口侧实时交易数据 委托 委托错误 委托操作错误 成交等回报数据
         Order getLocalOrder(ref XOrderField order)
         {
             debug(string.Format("Got Order LocalID:{0} RemoteID:{1} Price:{2} TotalSize:{3} OffsetFlag:{4} OrderStatus:{5}", order.BrokerLocalOrderID, order.BrokerRemoteOrderID, order.LimitPrice, order.TotalSize, order.OffsetFlag, order.OrderStatus), QSEnumDebugLevel.INFO);
@@ -474,6 +465,8 @@ namespace Broker.Live
                 this.NotifyTrade(t);
             }
         }
+
+        #endregion
 
 
     }

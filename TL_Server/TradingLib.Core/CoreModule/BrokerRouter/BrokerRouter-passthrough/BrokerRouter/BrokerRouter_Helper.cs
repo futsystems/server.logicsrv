@@ -39,6 +39,7 @@ namespace TradingLib.Core
             AsyncBrokerOperationDel cb = new AsyncBrokerOperationDel(this.RestartBroker);
             cb.BeginInvoke(token, null, null);
         }
+
         /// <summary>
         /// 重启成交接口
         /// </summary>

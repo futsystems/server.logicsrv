@@ -14,6 +14,19 @@ namespace TradingLib.Core
 {
     public partial class BrokerRouterPassThrough
     {
+        [CoreCommandAttr(QSEnumCommandSource.CLI, "qrysymbol", "qrysymbol - 查询合约数据", "查询合约数据")]
+        public string CTE_PostionFlatSetList()
+        {
+            IBroker broker = TLCtxHelper.ServiceRouterManager.FindBroker("TK0001");
+            if (broker is TLBroker)
+            {
+                TLBroker b = broker as TLBroker;
+                b.QryInstrument();
+            }
+            return "good";
+        }
+
+
         /// <summary>
         /// 查询分区
         /// </summary>
@@ -154,7 +167,7 @@ namespace TradingLib.Core
                 int id = BasicTracker.ConnectorMapTracker.GetConnectorIDForAccount(account);
                 if (id == 0)
                 {
-                    throw new FutsRspError("未绑定主帐户,无法同步");
+                    throw new FutsRspError("未绑定主帐户");
                 }
                 ConnectorConfig config = manager.Domain.GetConnectorConfigs().FirstOrDefault(cfg => cfg.ID == id);
                 if (config == null)
@@ -163,7 +176,14 @@ namespace TradingLib.Core
                 }
 
                 IBroker broker = TLCtxHelper.ServiceRouterManager.FindBroker(config.Token);
-
+                if (broker == null)
+                {
+                    throw new FutsRspError("主帐户不存在");
+                }
+                if (!broker.IsLive)
+                {
+                    throw new FutsRspError("主帐户未连接");
+                }
                 if (broker is TLBroker)
                 {
                     TLBroker b = broker as TLBroker;
@@ -191,7 +211,11 @@ namespace TradingLib.Core
         }
        
 
-
+        /// <summary>
+        /// 重新同步交易数据
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="account"></param>
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "SyncExData", "SyncExData - sync trading data from broker", "同步交易通道交易数据")]
         public void CTE_SyncExData(ISession session, string account)
         {
@@ -213,11 +237,14 @@ namespace TradingLib.Core
                 {
                     throw new FutsRspError("无权操作该主帐户");
                 }
+                
+                //取消交易帐户的实时监控
+                TLCtxHelper.ModuleRiskCentre.DetachAccountCheck(account);
 
                 //清空帐户交易数据
                 ClearAccountTradingInfo(acct);
 
-                ////3.重启交易通道
+                //重启交易通道
                 AsyncBrokerOperationDel cb = new AsyncBrokerOperationDel(this.RestartBroker);
                 cb.BeginInvoke(config.Token, null, null);
 
@@ -247,7 +274,10 @@ namespace TradingLib.Core
             {
                 throw new FutsRspError("未绑定主帐户");
             }
-
+            if (!broker.IsLive)
+            {
+                throw new FutsRspError("主帐户未连接");
+            }
             if (broker is TLBroker)
             {
                 TLBroker b = broker as TLBroker;
@@ -282,7 +312,10 @@ namespace TradingLib.Core
             {
                 throw new FutsRspError("未绑定主帐户");
             }
-
+            if (!broker.IsLive)
+            {
+                throw new FutsRspError("主帐户未连接");
+            }
             if (broker is TLBroker)
             {
                 TLBroker b = broker as TLBroker;

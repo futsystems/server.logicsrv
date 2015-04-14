@@ -47,9 +47,57 @@ namespace TradingLib.Core
             if (broker is TLBrokerBase)
             {
                 TLBrokerBase brokerbase = broker as TLBrokerBase;
+                //隔夜持仓明细回报
                 brokerbase.GotHistPositionDetail += new Action<PositionDetail>(Broker_GotHistPositionDetail);
+                
+                //交易数据恢复开始 恢复结束
+                brokerbase.ExDataSyncEnd += new IConnecterParamDel(Broker_ExDataSyncEnd);
+                brokerbase.ExDataSyncStart += new IConnecterParamDel(Broker_ExDataSyncStart);
+
+                //获得合约数据
+                brokerbase.GotSymbolEvent += new Action<XSymbol, bool>(brokerbase_GotSymbolEvent);
+
                 brokerbase.GotRspInfoEvent += (rspinfo) => { Broker_GotRspInfoEvent(broker, rspinfo); };
             }
+        }
+
+        void brokerbase_GotSymbolEvent(XSymbol arg1, bool arg2)
+        {
+            logger.Info(string.Format("Symbol:{0} Margin:{1} EntryCommission:{2} ExitCommission:{3} ExitTodayCommission:{4}", arg1.Symbol, arg1.Margin, arg1.EntryCommission, arg1.ExitCommission, arg1.ExitTodayCommission));
+        }
+
+        /// <summary>
+        /// 交易接口交易数据同步开始
+        /// </summary>
+        /// <param name="tocken"></param>
+        void Broker_ExDataSyncStart(string token)
+        {
+            logger.Info(string.Format("Broker:{0} SyncExData Start", token));
+            IAccount account = BasicTracker.ConnectorMapTracker.GetAccountForBroker(token);
+            if (account == null)
+            {
+                logger.Info(string.Format("Broker:{0} is not binded with any account", token));
+                return;
+            }
+            //取消交易帐户实时监控
+            TLCtxHelper.ModuleRiskCentre.DetachAccountCheck(account.ID);
+        }
+
+        /// <summary>
+        /// 交易接口交易数据同步完成
+        /// </summary>
+        /// <param name="tocken"></param>
+        void Broker_ExDataSyncEnd(string token)
+        {
+            logger.Info(string.Format("Broker:{0} SyncExData End", token));
+            IAccount account = BasicTracker.ConnectorMapTracker.GetAccountForBroker(token);
+            if (account == null)
+            {
+                logger.Info(string.Format("Broker:{0} is not binded with any account", token));
+                return;
+            }
+            //将交易帐户加入实时监控列表
+            TLCtxHelper.ModuleRiskCentre.AttachAccountCheck(account.ID);
         }
 
         void Broker_GotRspInfoEvent(IBroker broker, RspInfo obj)
@@ -98,11 +146,7 @@ namespace TradingLib.Core
             //设定合约
             pos.oSymbol = account.GetSymbol(pos.Symbol);
 
-
-
             TLCtxHelper.ModuleClearCentre.GotPosition(pos);
-
-
 
         }
 

@@ -28,6 +28,7 @@ namespace TradingLib.BrokerXAPI
             if (Connected != null)
                 Connected(this.Token);
         }
+
         /// <summary>
         /// 当数据服务器断开后触发事件
         /// </summary>
@@ -36,6 +37,30 @@ namespace TradingLib.BrokerXAPI
         {
             if (Disconnected != null)
                 Disconnected(this.Token);
+        }
+
+        /// <summary>
+        /// 交易记录同步开始事件
+        /// </summary>
+        public event IConnecterParamDel ExDataSyncStart;
+
+        protected void NotifyExDataSyncStart()
+        {
+            if (ExDataSyncStart != null)
+                ExDataSyncStart(this.Token);
+        }
+
+        /// <summary>
+        /// 交易记录同步完成事件
+        /// 用于通知接口交易记录已经恢复和同步
+        /// 依赖于该同步的操作可以得到通知
+        /// </summary>
+        public event IConnecterParamDel ExDataSyncEnd;
+
+        protected void NotifyExDataSyncEnd()
+        {
+            if (ExDataSyncEnd != null)
+                ExDataSyncEnd(this.Token);
         }
 
         public event Action<RspInfo> GotRspInfoEvent;
@@ -47,6 +72,7 @@ namespace TradingLib.BrokerXAPI
             if (GotRspInfoEvent != null)
                 GotRspInfoEvent(info);
         }
+
         /// <summary>
         /// 当接口有成交数据时 对外触发
         /// </summary>

@@ -102,7 +102,7 @@ namespace TradingLib.BrokerXAPI.Interop
             _SendOrder = NativeLib.GetUnmanagedFunction<SendOrderProc>("SendOrder");
             _SendOrderAction = NativeLib.GetUnmanagedFunction<SendOrderActionProc>("SendOrderAction");
             _QryInstrument = NativeLib.GetUnmanagedFunction<QryInstrumentProc>("QryInstrument");
-            _Restore = NativeLib.GetUnmanagedFunction<RestoreProc>("Restore");
+            //_Restore = NativeLib.GetUnmanagedFunction<RestoreProc>("Restore");
             _QryAccountInfo = NativeLib.GetUnmanagedFunction<QryAccountInfoProc>("QryAccountInfo");
             _QryOrder = NativeLib.GetUnmanagedFunction<QryOrderProc>("QryOrder");
             _QryTrade = NativeLib.GetUnmanagedFunction<QryTradeProc>("QryTrade");
@@ -278,6 +278,10 @@ namespace TradingLib.BrokerXAPI.Interop
             {
                 Util.Info("BrokerProxy QryInstrument");
                 bool x =  _QryInstrument(this.Wrapper);
+                if(!x)
+                {
+                    Util.Warn("have not synced symbol data");
+                }
                 //Util.Error("**************** qry instrument return:" + x.ToString());
                 return x;
             }
@@ -316,7 +320,7 @@ namespace TradingLib.BrokerXAPI.Interop
             {
                 Util.Info("BrokerProxy QryOrder");
                 bool x = _QryOrder(this.Wrapper);
-                Util.Info("**************** QryOrder return:" + x.ToString());
+                //Util.Info("**************** QryOrder return:" + x.ToString());
                 return x;
             }
             catch (Exception ex)
@@ -335,7 +339,7 @@ namespace TradingLib.BrokerXAPI.Interop
             {
                 Util.Info("BrokerProxy QryTrade");
                 bool x = _QryTrade(this.Wrapper);
-                Util.Info("**************** QryTrade return:" + x.ToString());
+                //Util.Info("**************** QryTrade return:" + x.ToString());
                 return x;
             }
             catch (Exception ex)
@@ -354,7 +358,7 @@ namespace TradingLib.BrokerXAPI.Interop
             {
                 Util.Info("BrokerProxy QryPositionDetail");
                 bool x = _QryPositionDetail(this.Wrapper);
-                Util.Info("**************** QryPositionDetail return:" + x.ToString());
+                //Util.Info("**************** QryPositionDetail return:" + x.ToString());
                 return x;
             }
             catch (Exception ex)
@@ -373,7 +377,7 @@ namespace TradingLib.BrokerXAPI.Interop
         {
             try
             {
-                Util.Info("BrokerProxy _Deposit");
+                Util.Info("BrokerProxy Deposit");
                 bool x = _Deposit(this.Wrapper, ref pCashOperation);
                 //Util.Info("**************** deposit return:" + x.ToString());
                 return x;
@@ -394,7 +398,6 @@ namespace TradingLib.BrokerXAPI.Interop
             {
                 Util.Info("BrokerProxy Withdraw");
                 bool x = _Withdraw(this.Wrapper, ref pCashOperation);
-                //Util.Info("**************** withdraw return:" + x.ToString());
                 return x;
             }
             catch (Exception ex)
@@ -407,28 +410,28 @@ namespace TradingLib.BrokerXAPI.Interop
 
 
 
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate bool RestoreProc(IntPtr pWrapper);
-        RestoreProc _Restore;
-        /// <summary>
-        /// 请求接口恢复日内交易数据
-        /// </summary>
-        /// <returns></returns>
-        public bool Restore()
-        {
-            try
-            {
-                Util.Info("BrokerProxy Restore");
-                bool x = _Restore(this.Wrapper);
-                //Util.Info("**************** qry Restore return:" + x.ToString());
-                return x;
-            }
-            catch (Exception ex)
-            {
-                Util.Error("Restore Error:" + ex.ToString());
-                return false;
-            }
-        }
+        //[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        //public delegate bool RestoreProc(IntPtr pWrapper);
+        //RestoreProc _Restore;
+        ///// <summary>
+        ///// 请求接口恢复日内交易数据
+        ///// </summary>
+        ///// <returns></returns>
+        //public bool Restore()
+        //{
+        //    try
+        //    {
+        //        Util.Info("BrokerProxy Restore");
+        //        bool x = _Restore(this.Wrapper);
+        //        //Util.Info("**************** qry Restore return:" + x.ToString());
+        //        return x;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Util.Error("Restore Error:" + ex.ToString());
+        //        return false;
+        //    }
+        //}
 
         #region 注册回调函数接口
         /// <summary>

@@ -12,6 +12,19 @@ namespace TradingLib.API
         /// </summary>
         bool MarketOpenTimeCheck { get; }
 
+
+        /// <summary>
+        /// 将某个交易帐户放入实时监控列表
+        /// </summary>
+        /// <param name="account"></param>
+        void AttachAccountCheck(string account);
+
+        /// <summary>
+        /// 将某个交易帐户从实时监控列表脱离
+        /// </summary>
+        /// <param name="account"></param>
+        void DetachAccountCheck(string account);
+
         /// <summary>
         /// 强平某个交易帐户的所有持仓
         /// </summary>

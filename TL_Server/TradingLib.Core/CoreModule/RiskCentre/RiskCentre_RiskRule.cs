@@ -14,23 +14,57 @@ namespace TradingLib.Core
         ConcurrentDictionary<string, IAccount> activeaccount = new ConcurrentDictionary<string, IAccount>();
 
         /// <summary>
+        /// 将某个交易帐户放入实时监控列表
+        /// </summary>
+        /// <param name="account"></param>
+        public void AttachAccountCheck(string account)
+        {
+            logger.Info(string.Format("清算中心将帐户:{0} 放入实时监控列表", account));
+            if (!activeaccount.Keys.Contains(account))
+            { 
+                IAccount target = TLCtxHelper.ModuleAccountManager[account];
+                if(target == null)
+                {
+                    logger.Warn(string.Format("交易帐户:{0}不存在",account));
+                    return;
+                }
+                activeaccount.TryAdd(account, target);
+            }
+        }
+
+        /// <summary>
+        /// 将某个交易帐户从实时监控列表脱离
+        /// </summary>
+        /// <param name="account"></param>
+        public void DetachAccountCheck(string account)
+        {
+            logger.Info(string.Format("清算中心取消帐户:{0} 实时监控", account));
+            IAccount target = null;
+            if (activeaccount.Keys.Contains(account))
+            {
+                activeaccount.TryRemove(account, out target);
+            }
+        }
+
+        /// <summary>
         /// 清空监控中的帐户列表
         /// </summary>
         void ClearActiveAccount()
         {
             activeaccount.Clear();
         }
+
         /// <summary>
         /// 插入某帐户 风控中心以实时监控
         /// </summary>
         /// <param name="account"></param>
-        void InsertActiveAccount(IAccount account)
-        {
-            if (!activeaccount.Keys.Contains(account.ID))
-            {
-                activeaccount.TryAdd(account.ID, account);
-            }
-        }
+        //void InsertActiveAccount(IAccount account)
+        //{
+        //    if (!activeaccount.Keys.Contains(account.ID))
+        //    {
+        //        activeaccount.TryAdd(account.ID, account);
+        //    }
+        //}
 
         #region 加载 交易帐户委托规则与帐户规则
         Dictionary<string, RuleClassItem> dicRule = new Dictionary<string, RuleClassItem>();
@@ -76,18 +110,24 @@ namespace TradingLib.Core
         public void LoadRuleItem(IAccount account)
         {
             logger.Info("加载账户:" + account.ID + " 账户规则");
+            bool any = false;
             foreach (RuleItem item in ORM.MRuleItem.SelectRuleItem(account.ID, QSEnumRuleType.OrderRule))
             {
                 AddRule(account, item);
             }
             foreach (RuleItem item in ORM.MRuleItem.SelectRuleItem(account.ID, QSEnumRuleType.AccountRule))
             {
+                any = true;
                 AddRule(account, item);
             }
             //加载完毕后 设定帐户的风控规则加载标识
             account.RuleItemLoaded = true;
-            //将帐户插入激活的检查列表
-            InsertActiveAccount(account);
+            
+            //如果有加载任一帐户检查规则 则将帐户插入激活的检查列表
+            if (any)
+            {
+                AttachAccountCheck(account.ID);
+            }
         }
 
 
