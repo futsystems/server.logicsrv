@@ -240,6 +240,8 @@ namespace FutsMoniter
             grid.Columns[VENDORID].Width = 50;
             grid.Columns[VENDORNAME].Width = 120;
             grid.Columns[FUTCOMPANY].Width = 150;
+            grid.Columns[LASTEQUITY].Visible = false;
+
             //grid.Columns[ID].Width = 50;
             //grid.Columns[NAME].Width = 120;
             //grid.Columns[ISXAPI].Width = 50;

@@ -33,8 +33,8 @@ namespace FutsMoniter
             kryptonRibbonGroupButton_CloseClearCentre.Visible = Globals.Domain.Super || Globals.Domain.Dedicated;
             kryptonRibbonGroup1.Visible = Globals.Domain.Super || Globals.Domain.Dedicated;
             kryptonRibbonGroupButton_tickpaper.Visible = Globals.Domain.Super || Globals.Domain.Dedicated;
-            kryptonRibbonGroupButton_SettleManagerment.Visible = Globals.Domain.Super || Globals.Domain.Dedicated;
-            kryptonRibbonGroupButton_SettleManagerment.Visible = Globals.Domain.Super || Globals.Domain.Dedicated;
+            //kryptonRibbonGroupButton_SettleManagerment.Visible = Globals.Domain.Super || Globals.Domain.Dedicated;
+            //kryptonRibbonGroupButton_SettleManagerment.Visible = Globals.Domain.Super || Globals.Domain.Dedicated;
 
             //超级管理员 可以查看所有界面
             if (!(Globals.Domain.Super&&Globals.Manager.IsRoot()))

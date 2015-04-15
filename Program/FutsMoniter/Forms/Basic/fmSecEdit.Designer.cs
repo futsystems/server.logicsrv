@@ -324,7 +324,7 @@
             262144});
             this.margin.Location = new System.Drawing.Point(122, 229);
             this.margin.Maximum = new decimal(new int[] {
-            10000,
+            1000000,
             0,
             0,
             0});
@@ -372,7 +372,7 @@
             // 
             this.multiple.Location = new System.Drawing.Point(122, 125);
             this.multiple.Maximum = new decimal(new int[] {
-            100000,
+            1000000,
             0,
             0,
             0});

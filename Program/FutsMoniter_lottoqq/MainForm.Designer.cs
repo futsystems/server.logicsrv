@@ -32,10 +32,11 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.TabRibbon = new ComponentFactory.Krypton.Ribbon.KryptonRibbon();
             this.kryptonRibbonQATButton_debug = new ComponentFactory.Krypton.Ribbon.KryptonRibbonQATButton();
-            this.kryptonContextMenuItem_exit = new ComponentFactory.Krypton.Toolkit.KryptonContextMenuItem();
             this.kryptonContextMenuItem_Domain = new ComponentFactory.Krypton.Toolkit.KryptonContextMenuItem();
             this.kryptonContextMenuItem_DomainInfo = new ComponentFactory.Krypton.Toolkit.KryptonContextMenuItem();
             this.kryptonContextMenuItem_changepass = new ComponentFactory.Krypton.Toolkit.KryptonContextMenuItem();
+            this.kryptonContextMenuItem_help = new ComponentFactory.Krypton.Toolkit.KryptonContextMenuItem();
+            this.kryptonContextMenuItem_exit = new ComponentFactory.Krypton.Toolkit.KryptonContextMenuItem();
             this.buttonSpecAppMenu1 = new ComponentFactory.Krypton.Ribbon.ButtonSpecAppMenu();
             this.buttonSpecAppMenu2 = new ComponentFactory.Krypton.Ribbon.ButtonSpecAppMenu();
             this.tabSystem = new ComponentFactory.Krypton.Ribbon.KryptonRibbonTab();
@@ -127,7 +128,6 @@
             this.kryptonRibbonGroupButton3 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
             this.kryptonRibbonGroupButton8 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
             this.kryptonRibbonGroupButton9 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
-            this.kryptonContextMenuItem_help = new ComponentFactory.Krypton.Toolkit.KryptonContextMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.TabRibbon)).BeginInit();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonDockableWorkspace)).BeginInit();
@@ -165,18 +165,14 @@
             this.tabFinance,
             this.tabHistQuery,
             this.kryptonRibbonTab1});
-            this.TabRibbon.SelectedTab = this.tabHistQuery;
+            this.TabRibbon.SelectedContext = null;
+            this.TabRibbon.SelectedTab = this.tabSystem;
             this.TabRibbon.Size = new System.Drawing.Size(1107, 111);
             this.TabRibbon.TabIndex = 0;
             // 
             // kryptonRibbonQATButton_debug
             // 
             this.kryptonRibbonQATButton_debug.Image = ((System.Drawing.Image)(resources.GetObject("kryptonRibbonQATButton_debug.Image")));
-            // 
-            // kryptonContextMenuItem_exit
-            // 
-            this.kryptonContextMenuItem_exit.Image = ((System.Drawing.Image)(resources.GetObject("kryptonContextMenuItem_exit.Image")));
-            this.kryptonContextMenuItem_exit.Text = "退 出";
             // 
             // kryptonContextMenuItem_Domain
             // 
@@ -192,6 +188,16 @@
             // 
             this.kryptonContextMenuItem_changepass.Image = ((System.Drawing.Image)(resources.GetObject("kryptonContextMenuItem_changepass.Image")));
             this.kryptonContextMenuItem_changepass.Text = "修改密码";
+            // 
+            // kryptonContextMenuItem_help
+            // 
+            this.kryptonContextMenuItem_help.Image = ((System.Drawing.Image)(resources.GetObject("kryptonContextMenuItem_help.Image")));
+            this.kryptonContextMenuItem_help.Text = "帮 助";
+            // 
+            // kryptonContextMenuItem_exit
+            // 
+            this.kryptonContextMenuItem_exit.Image = ((System.Drawing.Image)(resources.GetObject("kryptonContextMenuItem_exit.Image")));
+            this.kryptonContextMenuItem_exit.Text = "退 出";
             // 
             // buttonSpecAppMenu1
             // 
@@ -308,6 +314,7 @@
             // kryptonRibbonGroupButton_SettleManagerment
             // 
             this.kryptonRibbonGroupButton_SettleManagerment.TextLine1 = "结算管理";
+            this.kryptonRibbonGroupButton_SettleManagerment.Visible = false;
             // 
             // tabBasicConfig
             // 
@@ -729,11 +736,6 @@
             // 
             this.kryptonRibbonGroupButton3.ImageLarge = ((System.Drawing.Image)(resources.GetObject("kryptonRibbonGroupButton3.ImageLarge")));
             this.kryptonRibbonGroupButton3.TextLine1 = "保证金模板";
-            // 
-            // kryptonContextMenuItem_help
-            // 
-            this.kryptonContextMenuItem_help.Image = ((System.Drawing.Image)(resources.GetObject("kryptonContextMenuItem_help.Image")));
-            this.kryptonContextMenuItem_help.Text = "帮 助";
             // 
             // MainForm
             // 
