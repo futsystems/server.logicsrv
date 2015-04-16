@@ -10,7 +10,7 @@ using TradingLib.Common;
 namespace TradingLib.Core
 {
 
-    public partial class MgrExchServer : BaseSrvObject, ICore, IMessageMgr
+    public partial class MgrExchServer : BaseSrvObject, IModuleMgrExchange
     {
         const string CoreName = "MgrExchServer";
         public string CoreId { get { return this.PROGRAME; } }

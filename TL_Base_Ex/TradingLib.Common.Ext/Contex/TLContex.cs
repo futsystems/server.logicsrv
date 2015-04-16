@@ -142,18 +142,18 @@ namespace TradingLib.Common
             }
         }
 
-        IMessageMgr _messagemgr = null;
-        internal IMessageMgr MessageMgr
-        {
-            get
-            {
-                if (_messagemgr == null)
-                {
-                    debug("Error-MessageMgr not valid");
-                }
-                return _messagemgr;
-            }
-        }
+        //IMessageMgr _messagemgr = null;
+        //internal IMessageMgr MessageMgr
+        //{
+        //    get
+        //    {
+        //        if (_messagemgr == null)
+        //        {
+        //            debug("Error-MessageMgr not valid");
+        //        }
+        //        return _messagemgr;
+        //    }
+        //}
         #endregion
 
 
@@ -429,11 +429,11 @@ namespace TradingLib.Common
                     debug("MessageRouter(TradingServer) unregisted from ctx");
                     _messageExchange = null;
                 }
-                if (obj is IMessageMgr)
-                {
-                    debug("MessageMgr(ManagerSrv) unregisted from ctx");
-                    _messagemgr = null;
-                }
+                //if (obj is IMessageMgr)
+                //{
+                //    debug("MessageMgr(ManagerSrv) unregisted from ctx");
+                //    _messagemgr = null;
+                //}
 
                 if (obj is IServiceManager)
                 { 
@@ -499,11 +499,11 @@ namespace TradingLib.Common
                     //debug("MessageRouter(TradingServer) registed to ctx");
                     _messageExchange = obj as IMessageExchange;
                 }
-                if (obj is IMessageMgr)
-                {
-                    //debug("MessageMgr(ManagerSrv) regsited to ctx");
-                    _messagemgr = obj as IMessageMgr;
-                }
+                //if (obj is IMessageMgr)
+                //{
+                //    //debug("MessageMgr(ManagerSrv) regsited to ctx");
+                //    _messagemgr = obj as IMessageMgr;
+                //}
 
 
                 //0.检查是否是服务模块管理

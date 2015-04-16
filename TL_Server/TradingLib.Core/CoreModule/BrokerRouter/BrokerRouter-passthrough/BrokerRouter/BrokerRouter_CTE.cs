@@ -188,7 +188,7 @@ namespace TradingLib.Core
                 {
                     TLBroker b = broker as TLBroker;
                     
-                    Action<XAccountInfo, bool> Handler = (info, islast) =>
+                    Action<TLBroker,XAccountInfo, bool> Handler = (tb,info, islast) =>
                         {
                             //回报数据
                             session.ReplyMgr(new { LastEquity = info.LastEquity, Deposit = info.Deposit, Withdraw = info.WithDraw, CloseProfit = info.ClosePorifit, PositionProfit = info.PositoinProfit, Commission = info.Commission });
@@ -197,12 +197,13 @@ namespace TradingLib.Core
                             if (islast)
                             {
                                 //如果是最后一条回报 则删除事件绑定
-                                Util.ClearAllEvents(b, "GotAccountInfoEvent");
+                                //Util.ClearAllEvents(b, "GotAccountInfoEvent");
+                                //b.GotAccountInfoEvent -= Handler;
                             }
                         };
                     
                     //绑定事件
-                    b.GotAccountInfoEvent += new Action<XAccountInfo, bool>(Handler);
+                    b.GotAccountInfoEvent += new Action<TLBroker,XAccountInfo, bool>(Handler);
                     //调用查询
                     b.QryAccountInfo();
                 }

@@ -67,6 +67,22 @@ namespace TradingLib.Core
             CachePacket(response);
         }
 
+        /// <summary>
+        /// 向某个Manager过滤谓词对应的Manager发送通知
+        /// </summary>
+        /// <param name="cmdstr"></param>
+        /// <param name="module"></param>
+        /// <param name="obj"></param>
+        /// <param name="predictate"></param>
+        public void Notify(string module,string cmdstr,object obj, Predicate<Manager> predictate)
+        {
+            NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(GetNotifyTargets(predictate));
+            response.ModuleID = module;
+            response.CMDStr = cmdstr;
+            response.Result = Mixins.Json.JsonReply.SuccessReply(obj).ToJson();
+            CachePacket(response);
+        }
+
         void CashOperationEvent_CashOperationRequest(object sender, CashOperationEventArgs e)
         {
             NotifyCashOperation(e.CashOperation);

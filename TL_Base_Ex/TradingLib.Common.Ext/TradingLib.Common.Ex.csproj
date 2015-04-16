@@ -77,6 +77,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Accounts\Account.cs" />
+    <Compile Include="Contex\Event\EventArgs\BrokerAccountInfoEventArgs.cs" />
+    <Compile Include="Contex\Event\EventArgs\BrokerTransferEventArgs.cs" />
     <Compile Include="Contex\Event\EventArgs\ManagerNotifyEventArgs.cs" />
     <Compile Include="Contex\Event\RouterEvent.cs" />
     <Compile Include="Contrib\Task.cs" />

@@ -40,6 +40,13 @@
 		<service type="TradingLib.API.IDataRouter,TradingLib.API.Ex"/>
       </services>
       </component>
+	  
+	  <component type="TradingLib.Core.MgrExchServer,TradingLib.Core" instance-scope="per-lifetime-scope">
+      <services>
+        <service type="TradingLib.API.IModuleMgrExchange,TradingLib.API.Ex"/>
+		<service type="TradingLib.API.IMgrExchange,TradingLib.API.Ex"/>
+      </services>
+      </component>
       
       
       <component type="TradingLib.Core.ExCoreNoTrading,TradingLib.Core" instance-scope="per-lifetime-scope">
@@ -139,7 +146,14 @@
       </services>
       </component>
       
-      
+      <component type="TradingLib.Core.MgrExchServer,TradingLib.Core" instance-scope="per-lifetime-scope">
+      <services>
+        <service type="TradingLib.API.IModuleMgrExchange,TradingLib.API.Ex"/>
+		<service type="TradingLib.API.IMgrExchange,TradingLib.API.Ex"/>
+      </services>
+      </component>
+	  
+	  
       <component type="TradingLib.Core.MsgExchServer,TradingLib.Core" instance-scope="per-lifetime-scope">
       <services>
         <service type="TradingLib.API.IModuleExCore,TradingLib.API.Ex"/>

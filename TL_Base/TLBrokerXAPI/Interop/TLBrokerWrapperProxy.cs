@@ -124,6 +124,7 @@ namespace TradingLib.BrokerXAPI.Interop
             _RegOnQryPositionDetail = NativeLib.GetUnmanagedFunction<RegOnQryPositionDetailProc>("RegOnPositionDetail");
             _RegOnLog = NativeLib.GetUnmanagedFunction<RegOnLogProc>("RegOnLog");
             _RegOnMessage = NativeLib.GetUnmanagedFunction<RegOnMessageProc>("RegOnMessage");
+            _RegOnTransfer = NativeLib.GetUnmanagedFunction<RegOnTransferProc>("RegOnTransfer");
         }
 
 
@@ -535,11 +536,22 @@ namespace TradingLib.BrokerXAPI.Interop
         public delegate void RegOnMessageProc(IntPtr pWrapper, CBOnMessage cb);
         RegOnMessageProc _RegOnMessage;
 
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate void RegOnTransferProc(IntPtr pWrapper, CBOnTransfer cb);
+        RegOnTransferProc _RegOnTransfer;
 
         #endregion
 
 
         #region 回调事件
+
+        CBOnTransfer cbOnTransfer;
+        public event CBOnTransfer OnTransferEvent
+        {
+            add { cbOnTransfer += value; _RegOnTransfer(this.Wrapper, cbOnTransfer); }
+            remove { cbOnTransfer -= value; _RegOnTransfer(this.Wrapper, cbOnTransfer); }
+        }
+
 
         CBOnMessage cbOnMessage;
         public event CBOnMessage OnMessageEvent

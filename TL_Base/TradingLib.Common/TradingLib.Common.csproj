@@ -83,6 +83,7 @@
     <Compile Include="Utils\Util_string.cs" />
     <Compile Include="Utils\XMLRspInfo\XMLRspInfoTracker.cs" />
     <Compile Include="Utils\XMLRspInfo\XMLRspInfo.cs" />
+    <Compile Include="Vendor\BrokerAccountInfo.cs" />
     <Compile Include="Vendor\ConnectorStatus.cs" />
     <Compile Include="Vendor\ConnectorConfig.cs" />
     <Compile Include="Vendor\ConnectorInfo.cs" />

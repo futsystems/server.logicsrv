@@ -31,6 +31,7 @@ using TradingLib.Common;
  * */
 namespace TradingLib.BrokerXAPI
 {
+
     /// <summary>
     /// 错误消息结构体
     /// </summary>
@@ -564,6 +565,36 @@ namespace TradingLib.BrokerXAPI
         /// </summary>
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 40)]
         public string Password;
+    }
+
+
+    /// <summary>
+    /// 出入金回报结构体
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public struct XTransferField
+    {
+
+        /// <summary>
+        /// 出入金标识
+        /// </summary>
+        public QSEnumCashOperation TransType;
+
+        /// <summary>
+        /// 出入金金额
+        /// </summary>
+        public double Amount;
+
+        /// <summary>
+        /// 错误代码
+        /// </summary>
+        public int ErrorID;
+        /// <summary>
+        /// 错误信息
+        /// </summary>
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+        public string ErrorMsg;
+
     }
 
 

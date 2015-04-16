@@ -93,21 +93,21 @@ namespace Ant.Update
                 update.AppName = Utils.AppNameUpdate;
 
                 GetUpdateInfoResponse getinfo = (GetUpdateInfoResponse)mChannel.Send(update);
-                ChangeStatus(Color.Black, "获取文件更新信息...");
+                ChangeStatus(Color.Black, "获取更新列表...");
                 if (string.IsNullOrEmpty(getinfo.Status))//如果有状态信息 就显示状态
                 {
                     mUpdateInfo.LoadXml(getinfo.Info);//加载更新xml
                     mDownloads = mLocalInfo.Comparable(mUpdateInfo);//比较更新 xml 用于获得最新的下载列表
                     if (mDownloads.Count == 0)
                     {
-                        ChangeStatus(Color.Black, "当前是最新版本!"); //没有下载内容则为最新班额不能
+                        ChangeStatus(Color.Black, "没有更新信息!"); //没有下载内容则为最新班额不能
                     }
                     else
                     {
-                        ChangeStatus(Color.Black, "下载文件到临时文件夹...");
+                        ChangeStatus(Color.Black, "下载更新文件...");
                         mUpateCount = mDownloads.Count;
 
-                        Utils.TotalProgress.Draw(string.Format("更新文件总进度 {0}/{1}", 0, mUpateCount), 0, mUpateCount);
+                        Utils.TotalProgress.Draw(string.Format("更新进度 {0}/{1}", 0, mUpateCount), 0, mUpateCount);
 
                         string tmpf = Utils.GetFileFullName(tmpFolder);
                         if (!System.IO.Directory.Exists(tmpf))

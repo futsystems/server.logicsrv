@@ -76,7 +76,7 @@ namespace TradingLib.Common
         /// <param name="packet"></param>
         private static void SendPacketMgr(this ISession session, IPacket packet)
         {
-            TLCtxHelper.Ctx.MessageMgr.Send(packet);
+            TLCtxHelper.ModuleMgrExchange.Send(packet);
         }
 
         /// <summary>
@@ -157,7 +157,7 @@ namespace TradingLib.Common
         /// <param name="predicate"></param>
         public static void NotifyMgr(this ISession session, string cmdstr, object obj, Predicate<Manager> predicate)
         {
-            IEnumerable<ILocation> locations = TLCtxHelper.Ctx.MessageMgr.GetNotifyTargets(predicate);
+            IEnumerable<ILocation> locations = TLCtxHelper.ModuleMgrExchange.GetNotifyTargets(predicate);
             if (locations.Count() > 0)
             {
                 session.NotifyMgr(cmdstr,obj,locations);

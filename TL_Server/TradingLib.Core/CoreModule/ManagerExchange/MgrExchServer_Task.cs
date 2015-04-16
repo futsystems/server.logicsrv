@@ -12,7 +12,7 @@ namespace TradingLib.Core
         DateTime _lastPushAllTime = DateTime.Now;
         int _pushAllDiff = 30;
 
-        [TaskAttr("采集帐户信息", 1,0, "定时采集帐户信息用于向管理端进行推送")]
+        [TaskAttr("采集帐户信息",1,0, "定时采集帐户信息用于向管理端进行推送")]
         public void Task_CollectAccountInfo()
         {
             try

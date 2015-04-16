@@ -204,5 +204,32 @@ namespace TradingLib.Common
         }
         #endregion
 
+
+        #region 底层交易接口出入金回报事件
+
+        public event EventHandler<BrokerTransferEventArgs> BrokerTransferEvent = delegate { };
+        /// <summary>
+        /// 主帐户出入金操作回报事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="arg"></param>
+        public void FireBrokerTransferEvent(object sender, BrokerTransferEventArgs arg)
+        {
+            BrokerTransferEvent(sender, arg);
+        }
+
+        public event EventHandler<BrokerAccountInfoEventArgs> BrokerAccountInfoEvent = delegate { };
+        /// <summary>
+        /// 主帐户交易帐户回报事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="arg"></param>
+        public void FireBrokerAccountInfoEvent(object sender, BrokerAccountInfoEventArgs arg)
+        {
+            BrokerAccountInfoEvent(sender, arg);
+        }
+
+        #endregion
+
     }
 }

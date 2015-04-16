@@ -7,6 +7,8 @@ using System.Text;
 using System.Windows.Forms;
 using Ant.Component;
 using Beetle;
+using System.IO;
+
 namespace Ant.Manager
 {
     public partial class FrmUpload : Form
@@ -26,16 +28,55 @@ namespace Ant.Manager
             set;
         }
 
-      
+        /// <summary>
+        /// 获得应用程序列表
+        /// </summary>
+        /// <returns></returns>
+        List<string> GetAppList()
+        {
+            List<string> applist = new List<string>();
+            if (!File.Exists("applist.cfg")) return applist;
+            //实例化一个文件流--->与写入文件相关联  
+            using (FileStream fs = new FileStream("applist.cfg", FileMode.Open))
+            {
+                //实例化一个StreamWriter-->与fs相关联  
+                using (StreamReader sw = new StreamReader(fs))
+                {
+                    while (sw.Peek() > 0)
+                    {
+                        string str = sw.ReadLine();
+                        if (string.IsNullOrEmpty(str))
+                            continue;
+                        if (str.StartsWith(";"))
+                            continue;
+                        applist.Add(str);
+                    }
+                    sw.Close();
+                }
+                fs.Close();
+            }
+                return applist;
+        }
+
         private void FrmUpload_Load(object sender, EventArgs e)
         {
             mCount = UpdateItems.Count;
             Utils.FileProgress.Draw("", 0, 100);
             Utils.TotalProgress.Draw(string.Format("总进度 {0}/{1}", 0, mCount), 0, mCount);
             imgFile.Image = Utils.FileProgress.Image;
-            imtTotal.Image = Utils.TotalProgress.Image ;
-            cbAppName.Items.Add("Moniter");
+            imtTotal.Image = Utils.TotalProgress.Image;
+
+            List<string> applist =GetAppList();
+            if (applist.Count == 0)
+            {
+                cbAppName.Items.Add("Moniter");
+            }
+            else
+            {
+                cbAppName.Items.AddRange(applist.ToArray());
+            }
             cbAppName.SelectedIndex = 0;
+
             if (!string.IsNullOrEmpty(Utils.IPAddress))
             {
                 txtIPAddress.Text = Utils.IPAddress;

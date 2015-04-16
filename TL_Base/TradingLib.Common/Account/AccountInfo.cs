@@ -23,6 +23,10 @@ namespace TradingLib.Common
         public decimal Profit { get; set; }//净利
         public decimal CashIn { get; set; }//入金
         public decimal CashOut { get; set; }//出金
+
+        public decimal LastCredit { get; set; }//昨日优先资金
+        public decimal CreditCashIn { get; set; }//优先入金
+        public decimal CreditCashOut {get;set;}//优先出金
         public decimal MoneyUsed { get; set; } //总资金占用
         public decimal TotalLiquidation { get; set; }//帐户总净值
         public decimal AvabileFunds { get; set; }//帐户总可用资金  12
@@ -196,6 +200,12 @@ namespace TradingLib.Common
             sb.Append(info.MarginFrozen.ToString());
             sb.Append(d);
             sb.Append(info.Credit);
+            sb.Append(d);
+            sb.Append(info.LastCredit);
+            sb.Append(d);
+            sb.Append(info.CreditCashIn);
+            sb.Append(d);
+            sb.Append(info.CreditCashOut);
             return sb.ToString();
         }
 
@@ -263,6 +273,9 @@ namespace TradingLib.Common
                 a.Margin = decimal.Parse(r[46]);
                 a.MarginFrozen = decimal.Parse(r[47]);
                 a.Credit = decimal.Parse(r[48]);
+                a.LastCredit = decimal.Parse(r[49]);
+                a.CreditCashIn = decimal.Parse(r[50]);
+                a.CreditCashOut = decimal.Parse(r[51]);
             }
             return a;
         }

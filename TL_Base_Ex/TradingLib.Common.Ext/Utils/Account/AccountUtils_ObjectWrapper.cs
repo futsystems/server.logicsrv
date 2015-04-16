@@ -107,7 +107,10 @@ namespace TradingLib.Common
             a.Margin = acc.Margin;
             a.MarginFrozen = acc.MarginFrozen;
             a.Credit = acc.Credit;
-            
+            a.LastCredit = acc.LastCredit;
+            a.CreditCashIn = acc.CreditCashIn;
+            a.CreditCashOut = acc.CreditCashOut;
+
             return a;
         }
 

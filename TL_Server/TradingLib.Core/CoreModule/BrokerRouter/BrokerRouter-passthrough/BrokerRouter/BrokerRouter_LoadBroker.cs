@@ -58,7 +58,41 @@ namespace TradingLib.Core
                 brokerbase.GotSymbolEvent += new Action<XSymbol, bool>(brokerbase_GotSymbolEvent);
 
                 brokerbase.GotRspInfoEvent += (rspinfo) => { Broker_GotRspInfoEvent(broker, rspinfo); };
+
+                brokerbase.GotTransferEvent += new Action<TLBroker, XTransferField, bool>(Broker_GotTransferEvent);
+                brokerbase.GotAccountInfoEvent += new Action<TLBroker,XAccountInfo, bool>(Broker_GotAccountInfoEvent);
             }
+        }
+
+        void Broker_GotAccountInfoEvent(TLBroker broker,XAccountInfo arg1, bool arg2)
+        {
+            BrokerAccountInfo info = new BrokerAccountInfo();
+            info.CashIn = (decimal)arg1.Deposit;
+            info.CashOut = (decimal)arg1.WithDraw;
+            info.CloseProfit = (decimal)arg1.ClosePorifit;
+            info.Commission = (decimal)arg1.Commission;
+            info.LastEquity = (decimal)arg1.LastEquity;
+            info.PositionProfit = (decimal)arg1.PositoinProfit;
+
+            BrokerAccountInfoEventArgs arg = new BrokerAccountInfoEventArgs();
+            arg.AccountInfo = info;
+            arg.BrokerToken = broker.Token;
+
+
+            TLCtxHelper.EventSystem.FireBrokerAccountInfoEvent(null,arg);
+        }
+
+        void Broker_GotTransferEvent(TLBroker arg1, XTransferField arg2, bool arg3)
+        {
+            logger.Info(string.Format("Broker:{0} {1}:{2} {3}",arg1.Token,Util.GetEnumDescription(arg2.TransType),arg2.Amount,(arg2.ErrorID==0?"成功":"失败")));
+            BrokerTransferEventArgs arg = new BrokerTransferEventArgs();
+            arg.BrokerToken = arg1.Token;
+            arg.Amount = (decimal)arg2.Amount;
+            arg.ErrorID = arg2.ErrorID;
+            arg.ErrorMsg = arg2.ErrorMsg;
+            arg.TransType = arg2.TransType;
+            //通过系统中继触发接口出入金事件
+            TLCtxHelper.EventSystem.FireBrokerTransferEvent(null, arg);
         }
 
         void brokerbase_GotSymbolEvent(XSymbol arg1, bool arg2)

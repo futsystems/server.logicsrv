@@ -30,7 +30,7 @@ namespace TradingLib.ServiceManager
         private IModuleDataRouter _datafeedRouter;//数据通道路由
 
         private IModuleExCore _messageExchagne;//交易消息交换
-        private MgrExchServer _managerExchange;//管理消息交换
+        private IModuleMgrExchange _managerExchange;//管理消息交换
         private IModuleAPIExchange _webmsgExchange;//Web端消息响应
 
         private IModuleClearCentre _clearCentre;//清算服务
@@ -92,7 +92,7 @@ namespace TradingLib.ServiceManager
             //增加异步行情处理线程
 
             logger.Info("[INIT CORE] MgrExchServer");//服务端管理界面,提供管理客户端接入,查看并设置相关数据
-            _managerExchange = new MgrExchServer(); ;//初始化管理服务
+            _managerExchange = TLCtxHelper.Scope.Resolve<IModuleMgrExchange>();//初始化管理服务
 
             logger.Info("[INIT CORE] WebMsgExchServer");
             _webmsgExchange = TLCtxHelper.Scope.Resolve<IModuleAPIExchange>();

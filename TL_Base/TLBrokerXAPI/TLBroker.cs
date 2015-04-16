@@ -254,7 +254,10 @@ namespace TradingLib.BrokerXAPI
 
             _wrapper.OnLogEvent += new CBOnLog(_wrapper_OnLogEvent);
             _wrapper.OnMessageEvent += new CBOnMessage(_wrapper_OnMessageEvent);
+            _wrapper.OnTransferEvent += new CBOnTransfer(_wrapper_OnTransferEvent);
         }
+
+      
 
         /// <summary>
         /// 执行对象销毁
@@ -728,10 +731,18 @@ namespace TradingLib.BrokerXAPI
             NewNotify();
         }
 
+        void _wrapper_OnTransferEvent(ref XTransferField pTransfer, bool islast)
+        {
+            Util.Debug("-----------TLBroker OnTransferEvent-----------------------");
+            //对外通知出入金回报
+            NotifyTransfer(this, pTransfer, islast);
+        }
+
+
 
         void _wrapper_OnAccountInfoEvent(ref XAccountInfo pAccountInfo, bool islast)
         {
-            NotifyAccountInfo(pAccountInfo, islast);
+            NotifyAccountInfo(this,pAccountInfo, islast);
         }
 
         void _wrapper_OnSymbolEvent(ref XSymbol pSymbolField, bool islast)

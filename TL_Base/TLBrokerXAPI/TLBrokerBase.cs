@@ -148,11 +148,11 @@ namespace TradingLib.BrokerXAPI
                 GotSymbolEvent(symbol, islast);
         }
 
-        public event Action<XAccountInfo, bool> GotAccountInfoEvent;
-        protected void NotifyAccountInfo(XAccountInfo accountInfo,bool islast)
+        public event Action<TLBroker,XAccountInfo, bool> GotAccountInfoEvent;
+        protected void NotifyAccountInfo(TLBroker broker, XAccountInfo accountInfo,bool islast)
         {
             if (GotAccountInfoEvent != null)
-                GotAccountInfoEvent(accountInfo, islast);
+                GotAccountInfoEvent(broker,accountInfo, islast);
         }
 
         public event Action<XOrderField, bool> GotQryOrderEvent;
@@ -198,7 +198,20 @@ namespace TradingLib.BrokerXAPI
                 
             }
         }
-    
+
+        public event Action<TLBroker, XTransferField, bool> GotTransferEvent;
+        protected void NotifyTransfer(TLBroker broker, XTransferField txn, bool islast)
+        {
+            try
+            {
+                if (GotTransferEvent != null)
+                    GotTransferEvent(broker, txn, islast);
+            }
+            catch (Exception ex)
+            { 
+                
+            }
+        }
         /// <summary>
         /// 获得当前Tick的市场快照,模拟成交时需要获得当前市场快照用于进行取价操作
         /// </summary>

@@ -99,4 +99,12 @@ namespace TradingLib.BrokerXAPI
     /// <param name="islast"></param>
     public delegate void CBOnMessage(ref XErrorField pMessage,bool islast);
 
+
+    /// <summary>
+    /// 接口侧出入金回报
+    /// </summary>
+    /// <param name="pTransfer"></param>
+    /// <param name="islast"></param>
+    public delegate void CBOnTransfer(ref XTransferField pTransfer,bool islast);
+
 }

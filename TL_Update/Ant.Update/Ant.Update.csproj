@@ -34,7 +34,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>update.ico</ApplicationIcon>
+    <ApplicationIcon>update-new.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Beetle">
@@ -89,6 +89,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="update-log.png" />
+    <Content Include="update-new.ico" />
     <Content Include="update.ico" />
   </ItemGroup>
   <ItemGroup>

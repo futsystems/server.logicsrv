@@ -401,6 +401,17 @@ namespace TradingLib.Common
                 return _taskcentre;
             }
         }
+
+        static IMgrExchange _mgrexchange = null;
+        public static IMgrExchange ModuleMgrExchange
+        {
+            get
+            {
+                if (_mgrexchange == null)
+                    _mgrexchange = _scope.Resolve<IMgrExchange>();
+                return _mgrexchange;
+            }
+        }
         #endregion
 
 

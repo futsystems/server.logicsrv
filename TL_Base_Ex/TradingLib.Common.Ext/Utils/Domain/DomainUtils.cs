@@ -37,7 +37,7 @@ namespace TradingLib.Common
                 else
                     return false;
             };
-            return TLCtxHelper.Ctx.MessageMgr.GetNotifyTargets(p);
+            return TLCtxHelper.ModuleMgrExchange.GetNotifyTargets(p);
         }
 
 
