@@ -74,11 +74,25 @@ namespace TradingLib.Contrib.MainAcctFinService
             var feeid = int.Parse(data["id"].ToString());
             var method = Util.ParseEnum<QSEnumChargeMethod>(data["charge_method"].ToString());
 
+            
+
             Fee fee = FinGlobal.FinServiceTracker.GetFee(feeid);
             if(fee == null)
             {
                 throw new FutsRspError(string.Format("收费记录:{0}不存在",feeid));
             }
+
+            IAccount account = TLCtxHelper.ModuleAccountManager[fee.Account];
+            if (account == null)
+            {
+                throw new FutsRspError("交易帐户不存在");
+            }
+
+            if (!manager.RightAccessAccount(account))
+            {
+                throw new FutsRspError("管理员无权执行该操作");
+            }
+
 
             if (fee.Collected)
             {
@@ -87,6 +101,10 @@ namespace TradingLib.Contrib.MainAcctFinService
 
             CollectFee(fee, method);
 
+            //通知
+            FeeSetting notify = FinGlobal.FinServiceTracker.GetFeeSetting(feeid);
+            TLCtxHelper.ModuleMgrExchange.Notify(ContribName, "NotifyFee", notify, account.GetNotifyPredicate());
+            
             session.OperationSuccess("执行收费操作成功");
         }
 
@@ -113,11 +131,48 @@ namespace TradingLib.Contrib.MainAcctFinService
         /// 更新收费项目
         /// </summary>
         /// <param name="session"></param>
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "RollBackFee", "RollBackFee - rollback fee", "回滚收费操作", QSEnumArgParseType.Json)]
+        public void CTE_RollBackFee(ISession session, string request)
+        {
+            logger.Info(string.Format("管理员:{0} 回滚收费项目:{1}", session.GetManager().Login, request));
+            Manager manager = session.GetManager();
+            FeeSetting f = TradingLib.Mixins.Json.JsonMapper.ToObject<FeeSetting>(request);
+            IAccount account = TLCtxHelper.ModuleAccountManager[f.Account];
+            if (account == null)
+            {
+                throw new FutsRspError("交易帐户不存在");
+            }
+
+            if (!manager.RightAccessAccount(account))
+            {
+                throw new FutsRspError("管理员无权执行该操作");
+            }
+            Fee target = FinGlobal.FinServiceTracker.GetFee(f.ID);
+            if (!target.Collected)
+            {
+                throw new FutsRspError("未扣费收费项目无法回滚");
+            }
+
+            //执行回滚
+            RollbackFee(target);
+
+            //通知
+            FeeSetting notify = FinGlobal.FinServiceTracker.GetFeeSetting(f.ID);
+            TLCtxHelper.ModuleMgrExchange.Notify(ContribName, "NotifyFee", notify, account.GetNotifyPredicate());
+            session.OperationSuccess("回滚收费项目成功");
+
+        }
+
+        /// <summary>
+        /// 更新收费项目
+        /// </summary>
+        /// <param name="session"></param>
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateFee", "UpdateFee - update fee", "更新收费项目", QSEnumArgParseType.Json)]
         public void CTE_UpdateFee(ISession session,string request)
         {
             logger.Info(string.Format("管理员:{0} 更新收费项目:{1}", session.GetManager().Login,request));
             Manager manager = session.GetManager();
+
             FeeSetting f = TradingLib.Mixins.Json.JsonMapper.ToObject<FeeSetting>(request);
 
             IAccount account = TLCtxHelper.ModuleAccountManager[f.Account];
@@ -153,6 +208,35 @@ namespace TradingLib.Contrib.MainAcctFinService
             Manager manager = session.GetManager();
 
             session.ReplyMgr(_status);
+        }
+
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "ManualForceChargeServiceFee", "ManualForceChargeServiceFee - manual force charge", "手工强制执行收费", QSEnumArgParseType.Json)]
+        public void CTE_ManualForceChargeServiceFee(ISession session)
+        {
+            logger.Info(string.Format("管理员:{0} 查询状态", session.GetManager().Login));
+            Manager manager = session.GetManager();
+            if (!manager.IsRoot())
+            {
+                throw new FutsRspError("无权进行此操作");
+            }
+
+            if (!TLCtxHelper.ModuleSettleCentre.IsTradingday)    
+            {
+                throw new FutsRspError("非交易日，无法执行收费");
+            }
+
+            //执行收费操作
+            _status.ChargeServiceBeforeTimeSpan = true;
+            ChargeServiceFee(QSEnumChargeTime.BeforeTimeSpan);
+
+            _status.ChargeServiceAfterTimeSpan = true;
+            ChargeServiceFee(QSEnumChargeTime.AfterTimeSpan);
+
+            //执行扣费操作
+            CollectFee();
+            session.ReplyMgr(_status);
+            session.OperationSuccess("手工生成服务费收费记录完成");
         }
 
 

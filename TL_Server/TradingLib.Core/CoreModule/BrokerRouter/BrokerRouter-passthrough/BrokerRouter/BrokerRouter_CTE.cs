@@ -253,6 +253,46 @@ namespace TradingLib.Core
             }
         }
 
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "SyncEquity", "SyncEquity - 同步权益", "同步权益",QSEnumArgParseType.Json)]
+        public void CTE_SyncEquity(ISession session, string request)
+        {
+            var manager = session.GetManager();
+            if (!manager.IsInRoot()) throw new FutsRspError("无权进行入金操作");
+
+            JsonData args = JsonMapper.ToObject(request);
+            var account = args["account"].ToString();
+            var targetStaticEquity = decimal.Parse(args["target_static_equity"].ToString());
+            var targetStaticCredit = decimal.Parse(args["target_static_credit"].ToString());
+
+            IAccount acc = TLCtxHelper.ModuleAccountManager[account];
+            if (acc == null)
+            {
+                throw new FutsRspError("交易帐户不存在");
+            }
+            if (!manager.RightAccessAccount(acc))
+            {
+                throw new FutsRspError("无权操作该帐户");
+            }
+
+            decimal static_equity = acc.LastEquity + acc.CashIn - acc.CashOut;
+            decimal static_credit = acc.LastCredit + acc.CreditCashIn - acc.CreditCashOut;
+
+            decimal diff_equity = targetStaticEquity - static_equity;
+            decimal diff_credit = targetStaticCredit - static_credit;
+
+            if (diff_credit != 0)
+            {
+                TLCtxHelper.ModuleAccountManager.CashOperation(account, diff_equity, QSEnumEquityType.OwnEquity, "", string.Format("Sync-Target:{0}", targetStaticEquity));
+            }
+            if (diff_equity != 0)
+            {
+                TLCtxHelper.ModuleAccountManager.CashOperation(account, diff_credit, QSEnumEquityType.CreditEquity, "", string.Format("Sync-Target:{0}", targetStaticCredit));
+            }
+            
+            session.OperationSuccess("同步资金完成");
+
+        }
+
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "MainAccountDeposit", "MainAccountDeposit - deposit to main account", "底层主帐户入金",QSEnumArgParseType.Json)]
         public void CTE_MainAccountDeposit(ISession session, string request)
         {

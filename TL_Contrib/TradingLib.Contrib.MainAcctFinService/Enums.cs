@@ -70,13 +70,19 @@ namespace TradingLib.Contrib.MainAcctFinService
     /// </summary>
     public enum QSEnumFeeStatus
     { 
-        [Description("收费创建")]
+        [Description("创建")]
         Charged,
-        [Description("收费提交")]
+        [Description("提交扣费")]
         Placed,
-        [Description("收费回报异常")]
+        [Description("回滚扣费")]
+        Rollback,
+        [Description("扣费成功")]
         Success,
-        [Description("收费回报错误")]
+        [Description("扣费失败")]
         Fail,
+        [Description("回滚成功")]
+        RollbackSuccess,
+        [Description("回滚失败")]
+        RollbackFail,
     }
 }

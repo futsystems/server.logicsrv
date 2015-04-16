@@ -251,6 +251,51 @@ namespace TradingLib.Contrib.MainAcctFinService
                 CollectFee(f);
             }
         }
+
+        /// <summary>
+        /// 对某个收费项目进行回滚
+        /// </summary>
+        /// <param name="f"></param>
+        void RollbackFee(Fee f)
+        {
+            //如果该收费项目没有扣费 则无法回滚
+            if (!f.Collected)
+            {
+                return;
+            }
+            string account = f.Account;
+            decimal amount = f.Amount;
+
+            string comment = string.Format("RollbackFee-{0}",f.Description);
+            //会滚操作均按计入优先的方式进行操作
+
+            try
+            {
+
+                FinGlobal.FinServiceTracker.UpdateFeeStatus(f, QSEnumFeeStatus.Rollback);
+                if (f.FeeType == QSEnumFeeType.FinServiceFee)
+                {
+                    //帐户客户权益出金
+                    TLCtxHelper.ModuleAccountManager.CashOperation(account, amount, QSEnumEquityType.OwnEquity, "", comment);
+                    //帐户优先权益入金
+                    TLCtxHelper.ModuleAccountManager.CashOperation(account, amount * -1, QSEnumEquityType.CreditEquity, "", comment);
+                }
+                //系统的手续按照本地费率计算，多收的手续费可以通过从主帐户出金的方式或者优先资金入金的方式收取
+                if (f.FeeType == QSEnumFeeType.CommissionFee)
+                {
+                    //这里客户权益不需要出金，因为手续费盘中已经通过计算多收取了 体现在了客户权益中
+                    //帐户优先权益入金
+                    TLCtxHelper.ModuleAccountManager.CashOperation(account, amount * -1, QSEnumEquityType.CreditEquity, "", comment);
+                }
+                FinGlobal.FinServiceTracker.FeeUnCollected(f);
+                FinGlobal.FinServiceTracker.UpdateFeeStatus(f, QSEnumFeeStatus.RollbackSuccess);
+            }
+            catch (Exception ex)//支付异常
+            {
+                logger.Error("AutoDepositCredit Rollback Fee:" + ex.ToString());
+                FinGlobal.FinServiceTracker.UpdateFeeStatus(f, QSEnumFeeStatus.RollbackFail, "回滚计入优先异常");
+            }
+        }
         void CollectFee(Fee f,QSEnumChargeMethod ?method= null)
         {
             //如果已经完成收费则返回
@@ -261,7 +306,7 @@ namespace TradingLib.Contrib.MainAcctFinService
             string account = f.Account;
             decimal amount = f.Amount;
 
-            string comment = string.Format("{0}-{1}-{2}", f.Settleday, f.Account, f.ID);
+            string comment = string.Format("PlaceFee-{0}", f.Description);
             //如果没有指定收费方法则按计费中的方法进行收费
             QSEnumChargeMethod m = method == null ? f.ChargeMethod : (QSEnumChargeMethod)method;
 
@@ -280,16 +325,16 @@ namespace TradingLib.Contrib.MainAcctFinService
                             if (f.FeeType == QSEnumFeeType.FinServiceFee)
                             {
                                 //帐户客户权益出金
-                                TLCtxHelper.ModuleAccountManager.CashOperation(account, amount * -1, QSEnumEquityType.OwnEquity, "", "");
+                                TLCtxHelper.ModuleAccountManager.CashOperation(account, amount * -1, QSEnumEquityType.OwnEquity, "", comment);
                                 //帐户优先权益入金
-                                TLCtxHelper.ModuleAccountManager.CashOperation(account, amount, QSEnumEquityType.CreditEquity, "", string.Format("{0}-{1}", comment, f.Amount));
+                                TLCtxHelper.ModuleAccountManager.CashOperation(account, amount, QSEnumEquityType.CreditEquity, "",comment);
                             }
                             //系统的手续按照本地费率计算，多收的手续费可以通过从主帐户出金的方式或者优先资金入金的方式收取
                             if (f.FeeType == QSEnumFeeType.CommissionFee)
                             {
                                 //这里客户权益不需要出金，因为手续费盘中已经通过计算多收取了 体现在了客户权益中
                                 //帐户优先权益入金
-                                TLCtxHelper.ModuleAccountManager.CashOperation(account, amount, QSEnumEquityType.CreditEquity, "", string.Format("{0}-{1}", comment, f.Amount));
+                                TLCtxHelper.ModuleAccountManager.CashOperation(account, amount, QSEnumEquityType.CreditEquity, "", comment);
                             }
 
                             FinGlobal.FinServiceTracker.FeeCollected(f);
@@ -297,7 +342,7 @@ namespace TradingLib.Contrib.MainAcctFinService
                         }
                         catch (Exception ex)//支付异常
                         {
-                            logger.Error("AutoDepositCredit for fee error:" + ex.ToString());
+                            logger.Error("AutoDepositCredit Place Fee error:" + ex.ToString());
                             FinGlobal.FinServiceTracker.UpdateFeeStatus(f, QSEnumFeeStatus.Fail, "计入优先异常");
                         }
 
@@ -312,7 +357,7 @@ namespace TradingLib.Contrib.MainAcctFinService
                         if (f.FeeType == QSEnumFeeType.FinServiceFee)
                         {
                             //帐户客户权益出金
-                            TLCtxHelper.ModuleAccountManager.CashOperation(account, amount * -1, QSEnumEquityType.OwnEquity, "", "");
+                            TLCtxHelper.ModuleAccountManager.CashOperation(account, amount * -1, QSEnumEquityType.OwnEquity, "", comment);
 
                             TLBroker broker = GetBroker(account);
                             if (broker == null)
