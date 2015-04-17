@@ -187,29 +187,36 @@ namespace TradingLib.Core
                 if (broker is TLBroker)
                 {
                     TLBroker b = broker as TLBroker;
-                    
-                    Action<TLBroker,XAccountInfo, bool> Handler = (tb,info, islast) =>
-                        {
-                            //回报数据
-                            session.ReplyMgr(new { LastEquity = info.LastEquity, Deposit = info.Deposit, Withdraw = info.WithDraw, CloseProfit = info.ClosePorifit, PositionProfit = info.PositoinProfit, Commission = info.Commission });
 
-                            logger.Info("account info:" + info.LastEquity.ToString() + " deposit:" + info.Deposit.ToString());
-                            if (islast)
-                            {
-                                //如果是最后一条回报 则删除事件绑定
-                                //Util.ClearAllEvents(b, "GotAccountInfoEvent");
-                                //b.GotAccountInfoEvent -= Handler;
-                            }
-                        };
-                    
-                    //绑定事件
-                    b.GotAccountInfoEvent += new Action<TLBroker,XAccountInfo, bool>(Handler);
-                    //调用查询
-                    b.QryAccountInfo();
+                    QryBrokerInfoTrans txn = new QryBrokerInfoTrans();
+
+                    Deferred df = new Deferred(txn.QryBrokerAccountInfo, new object[] { b });
+
+                    //指定回调函数
+                    DeferredCallBack successHandler =(args)=>
+                    {
+                        logger.Debug("successHandler");
+                        BrokerAccountInfo binfo =  args.Result.GetValue(0) as BrokerAccountInfo;
+                        session.ReplyMgr(new { LastEquity = binfo.LastEquity, Deposit = binfo.CashIn, Withdraw = binfo.CashOut, CloseProfit = binfo.CloseProfit, PositionProfit = binfo.PositionProfit, Commission = binfo.Commission });
+                    };
+                    DeferredCallBack errorHandler =(args)=>
+                    {
+                        logger.Debug("errorHandler");
+                        session.OperationError(new FutsRspError("查询主帐户出错"));
+                    };
+
+                    //绑定回调函数
+                    df.OnSuccess(successHandler)
+                        .OnError(errorHandler);
+
+                    df.Run();
                 }
 
             }
         }
+
+        
+
        
 
         /// <summary>
@@ -325,11 +332,9 @@ namespace TradingLib.Core
                 b.Deposit(amount,pass);
                 session.OperationSuccess("入金操作已提交,请查询主帐户信息");
             }
-
-
-            
-
         }
+
+
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "MainAccountWithdraw", "MainAccountWithdraw - withdraw from account", "底层主帐户出金", QSEnumArgParseType.Json)]
         public void CTE_MainAccountWithdraw(ISession session, string request)

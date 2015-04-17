@@ -241,12 +241,46 @@ namespace TradingLib.Contrib.MainAcctFinService
 
 
 
-        [CoreCommandAttr(QSEnumCommandSource.CLI, "chargefee", "demofee - 执行收费", "执行收费")]
-        public void CTE_chargefee(string account)
+        [CoreCommandAttr(QSEnumCommandSource.CLI, "deferred", "deferred - 执行收费", "执行收费")]
+        public void CTE_chargefee(int x)
         {
             //ChargeServiceFee(account);
+
+
+            Deferred df = new Deferred(deferredcall, null);
+            df.OnSuccess(cbsuccess)
+                .OnError(cberror);
+
+            df.Run();
+
         }
 
+        object[] deferredcall(object[] objs)
+        {
+            logger.Info("deferred runing....");
+            int i =0;
+            while (i < 10)
+            {
+                logger.Info("sleep .....:" + i.ToString());
+                Util.sleep(100);
+                i++;
+            }
+            //throw new Exception("deferred call error");
+            return new object[] { "18001", "accountinfo" };
+            
+
+        }
+
+        void cbsuccess(IDeferredResult d)
+        {
+
+            logger.Info("deferred success account:"+d.Result.GetValue(0).ToString());
+        }
+
+        void cberror(IDeferredResult d)
+        {
+            logger.Info("deferred error");
+        }
 
         #region 定时任务
         /// <summary>

@@ -36,5 +36,6 @@ namespace TradingLib.Common
         /// 当日手续费
         /// </summary>
         public decimal Commission { get; set; }
+
     }
 }

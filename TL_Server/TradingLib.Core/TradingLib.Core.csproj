@@ -85,6 +85,7 @@
     <Compile Include="CoreModule\BrokerRouter\BrokerRouter-passthrough\BrokerRouter\BrokerRouter_LoadBroker.cs" />
     <Compile Include="CoreModule\BrokerRouter\BrokerRouter-passthrough\BrokerRouter\BrokerRouter_CTE.cs" />
     <Compile Include="CoreModule\BrokerRouter\BrokerRouter-passthrough\BrokerRouter\BrokerRouter_Helper.cs" />
+    <Compile Include="CoreModule\BrokerRouter\BrokerRouter-passthrough\BrokerRouter\QryBrokerTrans.cs" />
     <Compile Include="CoreModule\ClearCentre\ClearCentre-passthroguh\ClearCentreNoStore.cs" />
     <Compile Include="CoreModule\DataRepository\DataRepositoryBase.cs" />
     <Compile Include="CoreModule\ExCore\Base\ExCore_.cs" />
