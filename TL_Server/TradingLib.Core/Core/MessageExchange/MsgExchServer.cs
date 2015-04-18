@@ -524,6 +524,45 @@ namespace TradingLib.Core
 
         #endregion
 
+
+        Dictionary<string, MarketData> mdmap = new Dictionary<string, MarketData>();
+        Dictionary<string, Tick> mdtickmap = new Dictionary<string, Tick>();
+        /// <summary>
+        /// 从数据库加载上个交易日的市场数据
+        /// 飞迅客户端需要查询市场数据来获得隔日持仓的结算价信息
+        /// </summary>
+        void ReloadMarketData()
+        {
+            mdtickmap.Clear();
+            mdmap.Clear();
+            foreach(var d in ORM.MSettlement.SelectMarketData(TLCtxHelper.CmdSettleCentre.LastSettleday))
+            {
+                mdmap[d.Symbol] = d;
+                Tick k = new TickImpl();
+                k.Symbol = d.Symbol;
+                k.AskPrice = d.AskPrice;
+                k.AskSize = d.AskSize;
+                k.BidPrice = d.BidPrice;
+                k.BidSize = d.BidSize;
+                k.Date = TLCtxHelper.CmdSettleCentre.LastSettleday;
+                k.Time = 0;
+                k.Trade = d.Close;
+                k.UpperLimit = d.UpperLimit;
+                k.Vol = d.Vol;
+                k.High = d.High;
+                k.Low = d.Low;
+                k.LowerLimit = d.LowerLimit;
+                k.Open = d.Open;
+                k.OpenInterest = d.OI;
+                k.PreOpenInterest = d.PreOI;
+                k.PreSettlement = d.PreSettlement;
+                k.Settlement = d.Settlement;
+                k.Size = 0;
+
+                mdtickmap[d.Symbol] = k;
+            }
+        }
+
         #region 开始 停止部分
         /// <summary>
         /// 开启服务
@@ -550,6 +589,9 @@ namespace TradingLib.Core
             }
             else
                 debug("Trading Server Starting failed.");
+
+            //加载昨日市场数据
+            ReloadMarketData();
         }
 
         /// <summary>

@@ -218,6 +218,7 @@ namespace TradingLib.Core
                 debug("Request Tradingday:0 ,try to get the settlement of lastsettleday:" + TLCtxHelper.Ctx.SettleCentre.LastSettleday, QSEnumDebugLevel.INFO);
                 settleday = TLCtxHelper.Ctx.SettleCentre.LastSettleday;
             }
+
             settlement = ORM.MSettlement.SelectSettlement(request.Account, settleday);
             if (settlement != null)
             {
@@ -236,20 +237,28 @@ namespace TradingLib.Core
             {
                 RspQrySettleInfoResponse response = ResponseTemplate<RspQrySettleInfoResponse>.SrvSendRspResponse(request);
                 debug("can not find settlement for account:" + request.Account + " for settleday:" + request.Tradingday.ToString(), QSEnumDebugLevel.WARNING);
-                response.RspInfo.Fill("SELLTEINFO_NOT_FOUND");
+                response.Tradingday = settleday;
+                response.TradingAccount = request.Account;
+                response.SettlementContent ="该帐户没有任何结算记录";
                 CachePacket(response);
             }
         }
 
+        /// <summary>
+        /// 如果tradingday 为0 则在接口侧我们判定非交易日不需要确认结算单
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
         void SrvOnQrySettleInfoConfirm(QrySettleInfoConfirmRequest request)
         {
             debug("QrySettleInfoConfirm :" + request.ToString(), QSEnumDebugLevel.INFO);
+
             RspQrySettleInfoConfirmResponse response = ResponseTemplate<RspQrySettleInfoConfirmResponse>.SrvSendRspResponse(request);
             IAccount account = _clearcentre[request.Account];
             debug("confirm stamp:" + account.SettlementConfirmTimeStamp.ToString(), QSEnumDebugLevel.INFO);
 
-           
             response.TradingAccount = request.Account;
+            //如果需要确认结算单 则将帐户的最新结算单确认时间回报
             if (needConfirmSettlement)
             {
                 //如果结算时间戳为0 则表明为新注册用户,新注册用户不用注册
@@ -257,7 +266,7 @@ namespace TradingLib.Core
                 response.ConfirmDay = Util.ToTLDate(confirmtime);
                 response.ConfirmTime = Util.ToTLTime(confirmtime);
             }
-            else
+            else //如果不需要确认结算单 则返回上个交易日时间
             {
                 DateTime confirmtime = DateTime.Now;
                 response.ConfirmDay = Util.ToTLDate(confirmtime);
@@ -511,7 +520,7 @@ namespace TradingLib.Core
         /// <param name="account"></param>
         void SrvOnQryInstrumentCommissionRate(QryInstrumentCommissionRateRequest request, IAccount account)
         {
-            debug("QryInstrumentCommissionRate:" + request.ToString(), QSEnumDebugLevel.DEBUG);
+            debug("QryInstrumentCommissionRate:" + request.ToString(), QSEnumDebugLevel.INFO);
             
             //返回所有
             if (string.IsNullOrEmpty(request.Symbol))
@@ -534,7 +543,7 @@ namespace TradingLib.Core
 
         void SrvOnQryInstrumentMarginRate(QryInstrumentMarginRateRequest request, IAccount account)
         {
-            debug("QryInstrumentMarginRate:" + request.ToString(), QSEnumDebugLevel.DEBUG);
+            debug("QryInstrumentMarginRate:" + request.ToString(), QSEnumDebugLevel.INFO);
             
             if (string.IsNullOrEmpty(request.Symbol))
             {
@@ -553,7 +562,6 @@ namespace TradingLib.Core
                     sym.FillSymbolMarginResponse(ref response);
                 }
                 CacheRspResponse(response);
-
             }
         }
 
@@ -565,16 +573,35 @@ namespace TradingLib.Core
         /// <param name="account"></param>
         void SrvOnQryMarketData(QryMarketDataRequest request, IAccount account)
         {
-            debug("QryMarketData:" + request.ToString(), QSEnumDebugLevel.DEBUG);
+            debug("QryMarketData:" + request.ToString(), QSEnumDebugLevel.INFO);
 
             if (string.IsNullOrEmpty(request.Symbol))
             {
-                Tick[] ticks = _datafeedRouter.GetTickSnapshot();
-                for (int i = 0; i < ticks.Length; i++)
+                Tick[] ticks = mdtickmap.Values.ToArray();
+                if (ticks.Length >= 1)
                 {
-                    RspQryMarketDataResponse response = ResponseTemplate<RspQryMarketDataResponse>.SrvSendRspResponse(request);
-                    response.TickToSend = ticks[i];
-                    CacheRspResponse(response, i != ticks.Length - 1);
+                    for (int i = 0; i < ticks.Length; i++)
+                    {
+                        RspQryMarketDataResponse response = ResponseTemplate<RspQryMarketDataResponse>.SrvSendRspResponse(request);
+                        response.TickToSend = ticks[i];
+                        CacheRspResponse(response, i != ticks.Length - 1);
+                    }
+                }
+                else
+                {
+                    //如果数据库没有报错上个交易日的市场数据 则生成空数据回报 否则飞迅客户端会无法登入
+                    Symbol sym = account.Domain.GetSymbols().Where(s=>s.IsTradeable).FirstOrDefault();
+                    if (sym != null)
+                    {
+                        Tick k = new TickImpl(sym.Symbol);
+                        RspQryMarketDataResponse response = ResponseTemplate<RspQryMarketDataResponse>.SrvSendRspResponse(request);
+                        response.TickToSend = k;
+                        CacheRspResponse(response);
+                    }
+                    else
+                    {
+                        Util.Debug("帐户:" + account.ID + "所在域没有可交易合约,无法生成默认市场数据");
+                    }
                 }
             }
             

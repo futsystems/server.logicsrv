@@ -224,8 +224,8 @@ namespace TradingLib.Core
         PriorityBufferSet prioritybuffer = new PriorityBufferSet();
         void InitPriorityBuffer()
         {
-            prioritybuffer.AddRspResponseType(1, typeof(RspQryInvestorResponse));
-            prioritybuffer.AddRspResponseType(2, typeof(RspQrySymbolResponse));
+            //prioritybuffer.AddRspResponseType(1, typeof(RspQryInvestorResponse));
+            //prioritybuffer.AddRspResponseType(2, typeof(RspQrySymbolResponse));
 
             //prioritybuffer.AddRspResponseType(3, typeof(RspQryTradeResponse));
             //prioritybuffer.AddRspResponseType(4, typeof(RspQryOrderResponse));

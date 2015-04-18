@@ -53,11 +53,48 @@ namespace TradingLib.Core
                 Tick k = TLCtxHelper.CmdUtils.GetTickSnapshot(pos.Symbol);
                 if (k != null && k.Settlement != 0 && (double)k.Settlement < double.MaxValue)
                 {
-                    _settlementPriceTracker.UpdateSettlementPrice(new SettlementPrice() { Price = k.Settlement, SettleDay = this.NextTradingday, Symbol = pos.Symbol });
+                    MarketData data = new MarketData();
+                    data.AskPrice = k.AskPrice;
+                    data.AskSize = k.AskSize;
+                    data.BidPrice = k.BidPrice;
+                    data.BidSize = k.BidSize;
+                    data.Close = k.Trade;
+                    data.High = k.High;
+                    data.Low = k.Low;
+                    data.LowerLimit = k.LowerLimit;
+                    data.OI = k.OpenInterest;
+                    data.Open = k.Open;
+                    data.PreOI = k.PreOpenInterest;
+                    data.PreSettlement = k.PreSettlement;
+                    data.SettleDay = TLCtxHelper.CmdSettleCentre.NextTradingday;
+                    data.Settlement = k.Settlement;
+                    data.Symbol = k.Symbol;
+                    data.UpperLimit = k.UpperLimit;
+                    data.Vol = k.Vol;
+
+                    _settlementPriceTracker.UpdateSettlementPrice(data);
                 }
                 else
                 {
-                    _settlementPriceTracker.UpdateSettlementPrice(new SettlementPrice() { Price = -1, SettleDay = this.NextTradingday, Symbol = pos.Symbol });
+                    MarketData data = new MarketData();
+                    data.AskPrice = -1;
+                    data.AskSize = -1;
+                    data.BidPrice = -1;
+                    data.BidSize = -1;
+                    data.Close = -1;
+                    data.High = -1;
+                    data.Low = -1;
+                    data.LowerLimit = -1;
+                    data.OI = -1;
+                    data.Open = -1;
+                    data.PreOI = -1;
+                    data.PreSettlement = -1;
+                    data.SettleDay = TLCtxHelper.CmdSettleCentre.NextTradingday;
+                    data.Settlement = -1;
+                    data.Symbol = pos.Symbol;
+                    data.UpperLimit = -1;
+                    data.Vol = -1;
+                    _settlementPriceTracker.UpdateSettlementPrice(data);
                 }
             }
         }
@@ -67,7 +104,7 @@ namespace TradingLib.Core
         /// </summary>
         void BindSettlementPrice()
         {
-            SettlementPrice target = null;
+            MarketData target = null;
             //遍历所有分帐户侧持仓
             foreach (Position pos in _clearcentre.TotalPositions.Where(pos=>!pos.isFlat))
             {
@@ -80,9 +117,9 @@ namespace TradingLib.Core
                 {
                     //如果持仓合约有对应的结算价信息 设定结算价
                     target = _settlementPriceTracker[pos.Symbol];
-                    if (target != null && target.Price > 0)
+                    if (target != null && target.Settlement > 0)
                     {
-                        pos.SettlementPrice = target.Price;
+                        pos.SettlementPrice = target.Settlement;
                     }
                 }
 
@@ -106,9 +143,9 @@ namespace TradingLib.Core
                 {
                     //如果持仓合约有对应的结算价信息 设定结算价
                     target = _settlementPriceTracker[pos.Symbol];
-                    if (target != null && target.Price > 0)
+                    if (target != null && target.Settlement > 0)
                     {
-                        pos.SettlementPrice = target.Price;
+                        pos.SettlementPrice = target.Settlement;
                     }
                     //如果没有设定结算价 则将持仓的最新价格设置成为结算价
                     if (pos.SettlementPrice == null)

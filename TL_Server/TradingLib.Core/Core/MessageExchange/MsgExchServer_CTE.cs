@@ -72,9 +72,9 @@ namespace TradingLib.Core
                             "demotick",
                             "demotick - send demotick to system",
                             "向系统输出模拟tick数据 用于系统调试")]
-        public string DemoTick(decimal lastsettle , decimal settleprice)
+        public string DemoTick(string symbol,decimal lastsettle , decimal settleprice)
         {
-            _datafeedRouter.DemoTick(lastsettle,settleprice);
+            _datafeedRouter.DemoTick(symbol,lastsettle,settleprice);
             return "DemoTick Send";
         }
 
@@ -141,9 +141,11 @@ namespace TradingLib.Core
 
         public void Reset()
         {
-            debug("重置行情与成交路由", QSEnumDebugLevel.INFO);
+            debug("重置行情与成交路由 并加载上日市场数据", QSEnumDebugLevel.INFO);
             _brokerRouter.Reset();
             _datafeedRouter.Reset();
+
+            ReloadMarketData();
         }
 
 

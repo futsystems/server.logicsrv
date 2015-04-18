@@ -210,7 +210,7 @@ namespace TradingLib.Core
                 throw new FutsRspError("无权进行该操作");
             }
 
-            var settlementPrice = JsonMapper.ToObject<SettlementPrice>(json);
+            var settlementPrice = JsonMapper.ToObject<MarketData>(json);
             if (settlementPrice != null)
             {
                 _settlementPriceTracker.UpdateSettlementPrice(settlementPrice);
@@ -261,7 +261,7 @@ namespace TradingLib.Core
                 if (_settlementPriceTracker[pos.Symbol] == null)
                 {
                     //插入该结算价信息记录 价格为-1
-                    _settlementPriceTracker.UpdateSettlementPrice(new SettlementPrice() { Price = -1, SettleDay = this.NextTradingday, Symbol = pos.Symbol });
+                    _settlementPriceTracker.UpdateSettlementPrice(new MarketData { Settlement = -1, SettleDay = this.NextTradingday, Symbol = pos.Symbol });
                 }
             }
 

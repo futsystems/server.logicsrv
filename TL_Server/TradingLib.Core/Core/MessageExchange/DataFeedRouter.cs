@@ -561,13 +561,13 @@ namespace TradingLib.Core
         AsyncResponse asynctick = null;
 
 
-        public void DemoTick(decimal lastsettle,decimal settleprice)
+        public void DemoTick(string symbol,decimal lastsettle,decimal settleprice)
         {
             Tick k = new TickImpl();
             k.Trade = 2404.0M;
             k.Size = 10;
-            k.Symbol = "IF1411";
-            k.AskPrice=2381.0M;
+            k.Symbol = symbol;
+            k.AskPrice=2382.0M;
             k.AskSize=10;
             k.BidPrice = 2381.0M;
             k.BidSize = 2;
@@ -582,27 +582,9 @@ namespace TradingLib.Core
             k.Time = Util.ToTLTime();
             k.PreSettlement = lastsettle;
             k.Settlement = settleprice;
+            k.LowerLimit = 1000;
+            k.UpperLimit = 4000;
             GotTick(k);
-
-            Tick k2 = new TickImpl();
-            k2.Trade = 85.1M;
-            k2.Size = 10;
-            k2.Symbol = "IO1406-C-2150";
-            k2.AskPrice = 85.4M;
-            k2.AskSize = 10;
-            k2.BidPrice = 85.3M;
-            k2.BidSize = 2;
-            k2.Open = 84.0M;
-            k2.Low = 80.0M;
-            k2.High = 90M;
-            k2.Vol = 2000;
-            k2.OpenInterest = 100;
-            k2.PreOpenInterest = 120;
-            k2.Date = Util.ToTLDate();
-            k2.Time = Util.ToTLTime();
-
-            GotTick(k2);
-
         }
 
         /// <summary>
