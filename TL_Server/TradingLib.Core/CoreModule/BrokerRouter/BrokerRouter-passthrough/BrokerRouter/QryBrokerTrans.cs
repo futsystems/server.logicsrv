@@ -31,6 +31,7 @@ namespace TradingLib.Core
             TLCtxHelper.EventSystem.BrokerAccountInfoEvent -= new EventHandler<BrokerAccountInfoEventArgs>(BrokerAccountInfoHandler);
         }
 
+
         string _brokertoken = string.Empty;
         bool _requested = false;
         /// <summary>

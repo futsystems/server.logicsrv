@@ -7,9 +7,94 @@ using Common.Logging;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.BrokerXAPI;
+using System.Threading;
 
 namespace TradingLib.Contrib.MainAcctFinService
 {
+
+    public class TxnBrokerWithdraw
+    {
+        ManualResetEvent TimeoutObject = new ManualResetEvent(false);
+        const int timeoutMSec = 2000;
+
+        TLBroker _broker = null;
+        public TxnBrokerWithdraw(TLBroker broker)
+        {
+            _broker = broker;
+        }
+
+        void BindEvent()
+        {
+            //TLCtxHelper.EventSystem.BrokerTransferEvent +=new EventHandler<BrokerTransferEventArgs>(EventSystem_BrokerTransferEvent);
+        }
+
+        
+
+        void UnBindEvent()
+        {
+            //TLCtxHelper.EventSystem.BrokerAccountInfoEvent -= new EventHandler<BrokerAccountInfoEventArgs>(BrokerAccountInfoHandler);
+        }
+
+        bool _requested = false;
+        decimal _amount = 0;
+        public object[] Withdraw(object[] args)
+        {
+            try
+            {
+                if (!_requested)
+                {
+                    BindEvent();
+                    _requested = true;
+                }
+                TimeoutObject.Reset();
+
+                var amount = double.Parse(args.GetValue(0).ToString());
+                var pass = args.GetValue(1).ToString();
+                _amount = (decimal)amount;
+
+                _broker.Withdraw(amount,pass);
+
+                if (TimeoutObject.WaitOne(timeoutMSec, false))
+                {
+
+
+                    throw new Exception("Have no account info");
+
+                }
+                else //超时时间过去后仍然没有事件终止信号
+                {
+                    throw new Exception("TimeOut");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                _requested = false;
+                //_brokertoken = string.Empty;
+                UnBindEvent();
+            }
+
+        }
+
+
+        void EventSystem_BrokerTransferEvent(object sender, BrokerTransferEventArgs e)
+        {
+            if (!_requested) return;
+            
+            //if (e.BrokerToken.Equals(_broker.Token) && e.)
+            //{ 
+                
+            //}
+        }
+
+
+    }
+
+
 
     public class BrokerTransTracker
     {

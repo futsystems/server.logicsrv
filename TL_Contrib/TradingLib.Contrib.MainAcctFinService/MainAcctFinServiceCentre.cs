@@ -68,25 +68,6 @@ namespace TradingLib.Contrib.MainAcctFinService
             FinGlobal.BrokerTransTracker.Clear();
             //FinGlobal.FinServiceTracker
         }
-        //ConcurrentDictionary<string, XAccountInfo> connectorAccountInfoMap = new ConcurrentDictionary<string, XAccountInfo>();
-
-        //bool HaveXAccountInfo(string account)
-        //{
-        //    return connectorAccountInfoMap.Keys.Contains(account);
-        //}
-
-        //XAccountInfo GetAccountInfo(string account)
-        //{
-        //    if (string.IsNullOrEmpty(account))
-        //        return new XAccountInfo();
-
-        //    XAccountInfo target;
-        //    if (connectorAccountInfoMap.TryGetValue(account, out target))
-        //    {
-        //        return target;
-        //    }
-        //    return new XAccountInfo();
-        //}
 
 
         /// <summary>
@@ -183,9 +164,8 @@ namespace TradingLib.Contrib.MainAcctFinService
             Fee f = Fee.CreateCommissionFee(account.ID, commissionFee);
             f.ChargeTime = QSEnumChargeTime.AfterTimeSpan;
             f.ChargeMethod = fs != null ? fs.ChargeMethod : QSEnumChargeMethod.AutoDepositCredit;
-            f.Amount = 1;
             f.Comment = string.Format("客户手续费:{0} 主帐户手续费:{1}", Util.FormatDecimal(account.Commission), Util.FormatDecimal(info.Commission));
-            //if (f.Amount > 0)
+            if (f.Amount > 0)
             {
                 FinGlobal.FinServiceTracker.InsertFee(f);
             }
