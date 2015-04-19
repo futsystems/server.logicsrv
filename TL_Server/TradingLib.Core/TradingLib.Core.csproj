@@ -107,6 +107,7 @@
     <Compile Include="Core\ManagerExchange\MgrExchServer_Notify.cs" />
     <Compile Include="Core\ManagerExchange\MgrExchServer_PacketHandle_.cs" />
     <Compile Include="Core\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_Vendor.cs" />
+    <Compile Include="Core\ManagerExchange\MgrExchServer_CTE.cs" />
     <Compile Include="Core\MessageExchange\BrokerRouter\BrokerRouter_.cs" />
     <Compile Include="Core\MessageExchange\BrokerRouter\BrokerRouter_SendOrderOut.cs" />
     <Compile Include="Core\MessageExchange\BrokerRouter\BrokerRouter_LoadBroker.cs" />

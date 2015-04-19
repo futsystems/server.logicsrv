@@ -29,7 +29,9 @@ namespace TradingLib.Core
                     }
 
                     //每隔30秒全推一次信息 用于解决管理端只看到部分交易帐户 筛选持仓或者交易时造成的列表帐户缺失
-                    if (allPushDiff > _allPushDiff)
+                    //如果管理端回话没有正常销毁则mgr为null 此时调用这里30秒的全推操作就会抛出异常，导致下面的管理回话不能正常发送实时帐户信息
+                    if (allPushDiff > _allPushDiff && cst.Manager != null)
+                    //if (allPushDiff > _allPushDiff)
                     {
                         foreach (IAccount acc in cst.Manager.GetAccounts())
                         {
