@@ -43,7 +43,7 @@ namespace FutsMoniter
 
         void gridSettlementPrice_DoubleClick(object sender, EventArgs e)
         {
-            SettlementPrice price = CurrentSettlementPrice;
+            MarketData price = CurrentSettlementPrice;
             if (price == null)
             {
                 MoniterUtils.WindowMessage("请选择要编辑的结算价信息");
@@ -79,14 +79,14 @@ namespace FutsMoniter
         }
 
         //得到当前选择的行号
-        private SettlementPrice CurrentSettlementPrice
+        private MarketData CurrentSettlementPrice
         {
             get
             {
                 //gridSettlementPrice.CurrentRow.Index
                 int row = (gridSettlementPrice.SelectedRows.Count > 0 ? gridSettlementPrice.SelectedRows[0].Index : -1);
                 string symbol =  row == -1 ? string.Empty : (gridSettlementPrice[1, row].Value.ToString());
-                SettlementPrice price = null;
+                MarketData price = null;
                 if (settlementPriceMap.TryGetValue(symbol, out price))
                 {
                     return settlementPriceMap[symbol];
@@ -96,7 +96,7 @@ namespace FutsMoniter
         }
 
 
-        private Dictionary<string, SettlementPrice> settlementPriceMap = new Dictionary<string, SettlementPrice>();
+        private Dictionary<string, MarketData> settlementPriceMap = new Dictionary<string, MarketData>();
         private Dictionary<string, int> settlementPriceRowMap = new Dictionary<string, int>();
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace FutsMoniter
 
         void OnUpdateSettlementPrice(string json)
         {
-            SettlementPrice obj = MoniterUtils.ParseJsonResponse<SettlementPrice>(json);
+            MarketData obj = MoniterUtils.ParseJsonResponse<MarketData>(json);
             if (obj != null)
             {
                 InvokeGotSettlementPrice(obj);
@@ -125,7 +125,7 @@ namespace FutsMoniter
 
         void OnQrySettlementPrice(string json)
         {
-            SettlementPrice[] list = MoniterUtils.ParseJsonResponse<SettlementPrice[]>(json);
+            MarketData[] list = MoniterUtils.ParseJsonResponse<MarketData[]>(json);
             if (list != null)
             {
                 foreach (var price in list)
@@ -135,11 +135,11 @@ namespace FutsMoniter
             }
         }
 
-        void InvokeGotSettlementPrice(SettlementPrice price)
+        void InvokeGotSettlementPrice(MarketData price)
         {
             if (InvokeRequired)
             {
-                Invoke(new Action<SettlementPrice>(InvokeGotSettlementPrice), new object[] { price });
+                Invoke(new Action<MarketData>(InvokeGotSettlementPrice), new object[] { price });
             }
             else
             {
@@ -151,7 +151,7 @@ namespace FutsMoniter
 
                     gt.Rows[i][SETTLEDAY] = price.SettleDay;
                     gt.Rows[i][SYMBOL] = price.Symbol;
-                    gt.Rows[i][PRICE] = price.Price;
+                    gt.Rows[i][PRICE] = price.Settlement;
 
                     settlementPriceMap.Add(price.Symbol, price);
                     settlementPriceRowMap.Add(price.Symbol, i);
@@ -159,7 +159,7 @@ namespace FutsMoniter
                 else
                 {
                     //更新价格信息
-                    gt.Rows[r][PRICE] = price.Price;
+                    gt.Rows[r][PRICE] = price.Settlement;
                 }
 
             }

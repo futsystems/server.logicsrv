@@ -197,7 +197,13 @@ namespace TradingLib.Core
 
             //6.委托价格检查
             //6.1查看数据通道是否有对应的合约价格 行情是否正常
-
+            Tick tk = TLCtxHelper.CmdUtils.GetTickSnapshot(o.Symbol);
+            if (tk == null||(!tk.isValid))
+            {
+                errortitle = "SYMBOL_TICK_ERROR";//市场旱情异常
+                return false;
+            }
+            
             //bool symlive = TLCtxHelper.Ctx.MessageExchange.IsSymbolTickLive(o.Symbol);
             //if (!symlive)
             //{

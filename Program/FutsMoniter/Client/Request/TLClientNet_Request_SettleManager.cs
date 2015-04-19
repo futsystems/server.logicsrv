@@ -65,7 +65,7 @@ namespace TradingLib.Common
         /// 更新结算价格
         /// </summary>
         /// <param name="price"></param>
-        public void ReqUpdateSettlementPrice(SettlementPrice price)
+        public void ReqUpdateSettlementPrice(MarketData price)
         {
             this.ReqContribRequest("SettleCentre", "UpdateSettlementPrice", TradingLib.Mixins.Json.JsonMapper.ToJson(price));
         }

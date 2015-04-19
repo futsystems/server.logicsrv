@@ -75,11 +75,11 @@ namespace TradingLib.Common
             }
             foreach (Exchange ex in info.Exchanges)
             {
-                //if (ex.EXCode.Equals("INNOVEX"))
-                //{
-                //    //if (!Globals.UIAccess.sectype_lotto)
-                //        continue;
-                //}
+                if (ex.EXCode.Equals("INNOVEX"))
+                {
+                    //if (!Globals.UIAccess.sectype_lotto)
+                        continue;
+                }
                 if (ex.EXCode.Equals("SSE"))
                 {
                     //if (!Globals.UIAccess.sectype_stock)

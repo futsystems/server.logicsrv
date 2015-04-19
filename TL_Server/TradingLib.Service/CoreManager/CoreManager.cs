@@ -42,8 +42,17 @@ namespace TradingLib.ServiceManager
         private RiskCentre _riskCentre;//风控服务
         private TaskCentre _taskcentre;//调度服务
 
-       
 
+        /// <summary>
+        /// 检查目录 如果目录不存在则创建目录
+        /// </summary>
+        void CheckDirectory()
+        {
+            if (!Directory.Exists("cache"))
+            {
+                Directory.CreateDirectory("cache");
+            }
+        }
         /// <summary>
         /// 加载Connecter 填充 brokerrouter, datafeedrouter
         /// </summary>
@@ -66,6 +75,8 @@ namespace TradingLib.ServiceManager
         public void Init()
         {
             Util.InitStatus(this.PROGRAME, true);
+            
+            CheckDirectory();
             //9 + 3 + 6 + 1 + 1 + 1 +6 + 3 = 30个线程
             //数据库 线程 [9]
             #region 加载核心模块
