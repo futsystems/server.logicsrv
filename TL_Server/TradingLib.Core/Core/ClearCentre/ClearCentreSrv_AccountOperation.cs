@@ -250,77 +250,79 @@ namespace TradingLib.Core
                 acc.Withdraw(Math.Abs(amount));
             }
             ORM.MAccount.CashOperation(account, amount, transref, comment);
+
+            TLCtxHelper.EventAccount.FireAccountCashOperationEvent(acc.ID, amount > 0 ? QSEnumCashOperation.Deposit : QSEnumCashOperation.WithDraw, Math.Abs(amount));
         }
-        /// <summary>
-        /// web管理所用到的出入金操作 并返回对应信息
-        /// </summary>
-        /// <param name="accid"></param>
-        /// <param name="amount"></param>
-        /// <param name="comment"></param>
-        /// <param name="msg"></param>
-        /// <returns></returns>
-        public bool CashOperationSafe(string accid, decimal amount, string comment, out string msg)
-        {
-            try
-            {
-                if (TLCtxHelper.Ctx.SettleCentre.IsInSettle)
-                {
-                    msg = "下午15:30-16:15 无法出入金";
-                    return false;
-                }
+        ///// <summary>
+        ///// web管理所用到的出入金操作 并返回对应信息
+        ///// </summary>
+        ///// <param name="accid"></param>
+        ///// <param name="amount"></param>
+        ///// <param name="comment"></param>
+        ///// <param name="msg"></param>
+        ///// <returns></returns>
+        //public bool CashOperationSafe(string accid, decimal amount, string comment, out string msg)
+        //{
+        //    try
+        //    {
+        //        if (TLCtxHelper.Ctx.SettleCentre.IsInSettle)
+        //        {
+        //            msg = "下午15:30-16:15 无法出入金";
+        //            return false;
+        //        }
 
-                IAccount acc = this[accid];
-                if (acc == null)
-                {
-                    msg = "无该交易帐号";
-                    return false;
+        //        IAccount acc = this[accid];
+        //        if (acc == null)
+        //        {
+        //            msg = "无该交易帐号";
+        //            return false;
 
-                }
+        //        }
 
-                if (ORM.MAccount.IsTransRefExist(accid,comment))
-                {
-                    msg = "该资金操作的ref_ID已经提交,请勿重复提交";
-                    return false;
-                }
+        //        if (ORM.MAccount.IsTransRefExist(accid,comment))
+        //        {
+        //            msg = "该资金操作的ref_ID已经提交,请勿重复提交";
+        //            return false;
+        //        }
 
-                if (amount > 0)
-                {
-                    acc.Deposit(amount);
-                }
-                else
-                {
-                    acc.Withdraw(amount);
-                }
+        //        if (amount > 0)
+        //        {
+        //            acc.Deposit(amount);
+        //        }
+        //        else
+        //        {
+        //            acc.Withdraw(amount);
+        //        }
 
 
-                if (ORM.MAccount.CashOperation(acc.ID, amount,"",comment))
-                {
-                    msg = "";
-                    return true;
-                }
-                else
-                {
-                    msg = "数据库操作异常";
-                    if (amount > 0)
-                    {
-                        acc.Deposit(amount);
-                    }
-                    else
-                    {
-                        acc.Withdraw(amount);
-                    }
-                    return false;
-                }
+        //        if (ORM.MAccount.CashOperation(acc.ID, amount,"",comment))
+        //        {
+        //            msg = "";
+        //            return true;
+        //        }
+        //        else
+        //        {
+        //            msg = "数据库操作异常";
+        //            if (amount > 0)
+        //            {
+        //                acc.Deposit(amount);
+        //            }
+        //            else
+        //            {
+        //                acc.Withdraw(amount);
+        //            }
+        //            return false;
+        //        }
 
-            }
-            catch (Exception ex)
-            {
-                debug("资金操作异常:" + ex.ToString(), QSEnumDebugLevel.ERROR);
-                msg = "资金操作异常";
-                return false;
-            }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        debug("资金操作异常:" + ex.ToString(), QSEnumDebugLevel.ERROR);
+        //        msg = "资金操作异常";
+        //        return false;
+        //    }
 
-        }
+        //}
         /// <summary>
         /// 验证某个交易账户是否有效
         /// </summary>

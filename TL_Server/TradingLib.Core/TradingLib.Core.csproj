@@ -127,6 +127,7 @@
     <Compile Include="Core\MessageExchange\PacketHandler\MsgExchServer_PacketHandler_Order.cs" />
     <Compile Include="Core\MessageExchange\BrokerRouter\BrokerRouter.cs" />
     <Compile Include="Core\MessageExchange\DataFeedRouter.cs" />
+    <Compile Include="Core\MessageExchange\MsgExchServer_Notify.cs" />
     <Compile Include="Core\RiskCentre\RiskCentre_CheckAccount.cs" />
     <Compile Include="Core\RiskCentre\RiskCentre_CTE.cs" />
     <Compile Include="Core\RiskCentre\RiskCentre_FlatPositionCancelOrder.cs" />

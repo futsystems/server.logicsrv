@@ -409,7 +409,7 @@ namespace TradingLib.Core
                 //tl = new TLServer_Exch("TradingServer", _cfgdb["TLServerIP"].AsString(), _cfgdb["TLPort"].AsInt());
                 //VerboseDebugging = _cfgdb["VerbDebug"].AsBool();
                 tl.ProviderName = Providers.QSPlatform;
-                tl.NumWorkers = 2;
+                tl.NumWorkers = 10;
 
 
                 //设定日志输出
@@ -468,13 +468,25 @@ namespace TradingLib.Core
                 InitPriorityBuffer();
                 //启动消息服务
                 StartMessageRouter();
-                
+
+                TLCtxHelper.EventAccount.AccountCashOperationEvent += new Action<string, QSEnumCashOperation, decimal>(EventAccount_AccountCashOperationEvent);
+                TLCtxHelper.EventAccount.AccountTradingNoticeEvent += new Action<string, string>(EventAccount_AccountTradingNoticeEvent);
             }
             catch (Exception ex)
             {
                 debug("初始化服务异常:" + ex.ToString(),QSEnumDebugLevel.ERROR);
                 throw (new QSTradingServerInitError(ex));
             }
+        }
+
+        void EventAccount_AccountTradingNoticeEvent(string arg1, string arg2)
+        {
+            NotifyTradingNotice(arg1, arg2);
+        }
+
+        void EventAccount_AccountCashOperationEvent(string arg1, QSEnumCashOperation arg2, decimal arg3)
+        {
+            NotifyCashOperation(arg1, arg2, arg3);
         }
 
         

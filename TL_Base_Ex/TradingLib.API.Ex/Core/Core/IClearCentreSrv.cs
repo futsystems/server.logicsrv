@@ -87,7 +87,7 @@ namespace TradingLib.API
         /// <param name="comment"></param>
         /// <param name="msg"></param>
         /// <returns></returns>
-        bool CashOperationSafe(string accid, decimal ammount, string comment, out string msg);
+        //bool CashOperationSafe(string accid, decimal ammount, string comment, out string msg);
 
 
     }

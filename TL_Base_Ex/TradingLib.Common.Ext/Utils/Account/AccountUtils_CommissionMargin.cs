@@ -12,16 +12,32 @@ namespace TradingLib.Common
     /// </summary>
     public static class AccountUtils_CommissionMargin
     {
+        /// <summary>
+        /// 获得某个帐户的手续费模板
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
         public static CommissionTemplate GetCommissionTemplate(this IAccount account)
         {
             return BasicTracker.CommissionTemplateTracker[account.Commission_ID];
         }
 
+        /// <summary>
+        /// 获得某个帐户的保证金模板
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
         public static MarginTemplate GetMarginTemplate(this IAccount account)
         {
             return BasicTracker.MarginTemplateTracker[account.Margin_ID];
         }
 
+        /// <summary>
+        /// 获得某个帐户 某个合约的手续费模板项
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
         public static CommissionTemplateItem GetCommissionTemplateItem(this IAccount account,Symbol symbol)
         {
             CommissionTemplate tmp = account.GetCommissionTemplate();
@@ -30,6 +46,12 @@ namespace TradingLib.Common
             return tmp[symbol.SecurityFamily.Code, symbol.GetMonth()];
         }
 
+        /// <summary>
+        /// 获得某个帐户 某个合约的保证金模板项
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
         public static MarginTemplateItem GetMarginTemplateItem(this IAccount account, Symbol symbol)
         {
             MarginTemplate tmp = account.GetMarginTemplate();
