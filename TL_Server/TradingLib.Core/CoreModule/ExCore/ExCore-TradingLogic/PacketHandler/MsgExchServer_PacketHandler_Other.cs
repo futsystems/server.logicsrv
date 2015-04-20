@@ -23,7 +23,7 @@ namespace TradingLib.Core
             //合约为空 查询所有
             if (string.IsNullOrEmpty(request.Symbol))
             {
-                orders = account.Orders.ToArray();
+                orders = account.Orders.Where(o=>!string.IsNullOrEmpty(o.OrderSysID)).ToArray();
             }
             int totalnum = orders.Length;
             if (totalnum > 0)

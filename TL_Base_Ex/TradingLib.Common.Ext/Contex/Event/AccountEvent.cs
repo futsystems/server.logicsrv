@@ -43,6 +43,35 @@ namespace TradingLib.Common
         /// </summary>
         public event Action<string,string> AccountWarnOnEvent;
 
+        /// <summary>
+        /// 交易帐户出入金事件
+        /// </summary>
+        public event Action<string, QSEnumCashOperation, decimal> AccountCashOperationEvent;
+
+        /// <summary>
+        /// 交易帐户交易通知事件
+        /// </summary>
+        public event Action<string, string> AccountTradingNoticeEvent;
+
+        internal void FireAccountTradingNoticeEvent(string account, string content)
+        {
+            if (AccountTradingNoticeEvent != null)
+                AccountTradingNoticeEvent(account, content);
+        }
+        /// <summary>
+        /// 触发某个交易帐户的出入金事件
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="type"></param>
+        /// <param name="amount"></param>
+        internal void FireAccountCashOperationEvent(string account, QSEnumCashOperation type, decimal amount)
+        {
+            if (AccountCashOperationEvent != null)
+                AccountCashOperationEvent(account, type, amount);
+        }
+
+
+
         internal void FireAccountWarnOnEvent(string account,string message)
         { 
             if(AccountWarnOnEvent != null)

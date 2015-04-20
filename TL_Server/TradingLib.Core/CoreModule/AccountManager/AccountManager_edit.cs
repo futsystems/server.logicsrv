@@ -257,6 +257,7 @@ namespace TradingLib.Core
                 }
                 ORM.MAccount.CashOperation(account, amount, QSEnumEquityType.CreditEquity, transref, comment);
             
+                TLCtxHelper.EventAccount.FireAccountCashOperationEvent(acc.ID,amount>0?QSEnumCashOperation.Deposit:QSEnumCashOperation.WithDraw,Math.Abs(amount));
             }
         }
 

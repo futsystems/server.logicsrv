@@ -312,6 +312,10 @@ namespace TradingLib.Common
                     return ResponseTemplate<OrderActionNotify>.CliRecvResponse(content);
                 case MessageTypes.ERRORORDERACTIONNOTIFY://委托操作错误通知
                     return ResponseTemplate<ErrorOrderActionNotify>.CliRecvResponse(content);
+                case MessageTypes.CASHOPERATIONNOTIFY://出入金操作通知
+                    return ResponseTemplate<CashOperationNotify>.CliRecvResponse(content);
+                case MessageTypes.TRADINGNOTICENOTIFY://交易通知
+                    return ResponseTemplate<TradingNoticeNotify>.CliRecvResponse(content);
 
                 case MessageTypes.ORDERRESPONSE://查询委托回报
                     return ResponseTemplate<RspQryOrderResponse>.CliRecvResponse(content);

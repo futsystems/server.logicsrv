@@ -99,6 +99,7 @@
     <Compile Include="CoreModule\ClearCentre\ClearCentre-trading\ClearCentreSrv_AccountCashOperation.cs" />
     <Compile Include="CoreModule\DataRepository\DataRepository.cs" />
     <Compile Include="CoreModule\ExCore\ExCore-NoTrading\ExCoreNoTrading.cs" />
+    <Compile Include="CoreModule\ExCore\ExCore-TradingLogic\MsgExchServer_Notify.cs" />
     <Compile Include="CoreModule\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_ExStrategy.cs" />
     <Compile Include="CoreModule\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_helloworld.cs" />
     <Compile Include="CoreModule\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_Margin.cs" />

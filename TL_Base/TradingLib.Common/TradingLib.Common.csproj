@@ -57,7 +57,9 @@
   <ItemGroup>
     <Compile Include="Account\AccountProfie.cs" />
     <Compile Include="Manager\UIAccess.cs" />
+    <Compile Include="Message\CashOperationNotify.cs" />
     <Compile Include="Message\LogicFront.cs" />
+    <Compile Include="Message\TradingNoticeNotify.cs" />
     <Compile Include="ORM\Config\ConfigDB.cs" />
     <Compile Include="ORM\Config\ConfigItem.cs" />
     <Compile Include="ORM\Config\GlobalConfig.cs" />

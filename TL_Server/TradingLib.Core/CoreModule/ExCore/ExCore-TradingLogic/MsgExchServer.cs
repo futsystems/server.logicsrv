@@ -144,12 +144,25 @@ namespace TradingLib.Core
 
                 //订阅系统事件
                 TLCtxHelper.EventSystem.SettleResetEvent += new EventHandler<SystemEventArgs>(EventSystem_SettleResetEvent);
+
+                TLCtxHelper.EventAccount.AccountCashOperationEvent += new Action<string, QSEnumCashOperation, decimal>(EventAccount_AccountCashOperationEvent);
+                TLCtxHelper.EventAccount.AccountTradingNoticeEvent += new Action<string, string>(EventAccount_AccountTradingNoticeEvent);
             }
             catch (Exception ex)
             {
                 logger.Error("初始化服务异常:" + ex.ToString());
                 throw (new QSTradingServerInitError(ex));
             }
+        }
+
+        void EventAccount_AccountTradingNoticeEvent(string arg1, string arg2)
+        {
+            throw new NotImplementedException();
+        }
+
+        void EventAccount_AccountCashOperationEvent(string arg1, QSEnumCashOperation arg2, decimal arg3)
+        {
+            throw new NotImplementedException();
         }
 
         void EventSystem_SettleResetEvent(object sender, SystemEventArgs e)

@@ -109,7 +109,8 @@ namespace TradingLib.API
         POSITIONUPDATENOTIFY,//服务端向客户端发仓位状态信息,PC交易客户端自己计算持仓数据,网页交易客户端则需要服务端进行响应
         ORDERACTIONNOTIFY,//委托操作回报
         ERRORORDERACTIONNOTIFY,//委托操作回报
-        
+        CASHOPERATIONNOTIFY,//出入金操作回报
+        TRADINGNOTICENOTIFY,//交易通知回报
 
         //request replay
         LOGINRESPONSE=6200,//登入回报
