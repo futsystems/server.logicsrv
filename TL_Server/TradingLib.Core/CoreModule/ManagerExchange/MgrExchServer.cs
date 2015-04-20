@@ -276,6 +276,47 @@ namespace TradingLib.Core
             _selectacc = account;
         }
 
+
+        public string ToString(bool full)
+        {
+            string domain = "null";
+            string client = "null";
+            string id = "null";
+            if (_clientInfo == null)
+            {
+                domain = "null";
+                client = "null";
+            }
+            else
+            {
+                client = _clientInfo.Location.ClientID;
+                if (_clientInfo.Manager == null)
+                {
+                    domain = "mgr null";
+                    id = "mgr null";
+                }
+                else
+                {
+                    domain = _clientInfo.Manager.domain_id.ToString();
+                    id = _clientInfo.LoginID;
+                }
+            }
+
+            string info = string.Format("ClientInfo:{0} Domain:{1} ID:{2}", client, domain, id);
+
+            if (full)
+            {
+                return info + "-" + string.Join(",", WathAccountList.Select(a => a.ID).ToArray());
+            }
+            else
+            {
+                return info;
+            }
+        }
+        public override string ToString()
+        {
+            return ToString(false);
+        }
     }
 
 

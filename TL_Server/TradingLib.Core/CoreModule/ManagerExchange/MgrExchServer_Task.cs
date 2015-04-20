@@ -31,8 +31,9 @@ namespace TradingLib.Core
                     }
 
                     //每隔30秒全推一次信息，用于解决管理端只看到部分交易帐户，筛选帐户时造成列表帐户缺失
-                    if (pushAllDiff > _pushAllDiff)
+                    if (pushAllDiff > _pushAllDiff && cst.Manager != null)
                     {
+                        
                         foreach (var acc in cst.Manager.GetAccounts())
                         {
                             NotifyMGRAccountInfoLiteResponse notify = ResponseTemplate<NotifyMGRAccountInfoLiteResponse>.SrvSendNotifyResponse(cst.Location);
