@@ -146,14 +146,31 @@ namespace TradingLib.Core
             _settlementPriceTracker.Clear();
             foreach (var k in TLCtxHelper.ModuleDataRouter.GetTickSnapshot())
             {
-                if (k != null && k.Settlement !=0 &&(double)k.Settlement<double.MaxValue)
+                if (k != null && k.Settlement != 0 && (double)k.Settlement < double.MaxValue)
                 {
-                    _settlementPriceTracker.UpdateSettlementPrice(new SettlementPrice() { Price = k.Settlement, SettleDay = this.NextTradingday, Symbol = k.Symbol });
+                    MarketData data = new MarketData();
+                    data.AskPrice = k.AskPrice;
+                    data.AskSize = k.AskSize;
+                    data.BidPrice = k.BidPrice;
+                    data.BidSize = k.BidSize;
+                    data.Close = k.Trade;
+                    data.High = k.High;
+                    data.Low = k.Low;
+                    data.LowerLimit = k.LowerLimit;
+                    data.OI = k.OpenInterest;
+                    data.Open = k.Open;
+                    data.PreOI = k.PreOpenInterest;
+                    data.PreSettlement = k.PreSettlement;
+                    data.SettleDay = TLCtxHelper.ModuleSettleCentre.NextTradingday;
+                    data.Settlement = k.Settlement;
+                    data.Symbol = k.Symbol;
+                    data.UpperLimit = k.UpperLimit;
+                    data.Vol = k.Vol;
                 }
-                else
-                {
-                    _settlementPriceTracker.UpdateSettlementPrice(new SettlementPrice() { Price = -1, SettleDay = this.NextTradingday, Symbol = k.Symbol });
-                }
+                //else
+                //{
+                //    _settlementPriceTracker.UpdateSettlementPrice(new MarketData() { Price = -1, SettleDay = this.NextTradingday, Symbol = k.Symbol });
+                //}
             }
         }
 
@@ -162,7 +179,7 @@ namespace TradingLib.Core
         /// </summary>
         void BindSettlementPrice()
         {
-            SettlementPrice target = null;
+            MarketData target = null;
 
             //绑定分帐户侧持仓结算价
             foreach (Position pos in TLCtxHelper.ModuleClearCentre.TotalPositions.Where(pos => !pos.isFlat))
@@ -175,9 +192,9 @@ namespace TradingLib.Core
                 {
                     //如果持仓合约有对应的结算价信息 设定结算价
                     target = _settlementPriceTracker[pos.Symbol];
-                    if (target != null && target.Price>0)
+                    if (target != null && target.Settlement>0)
                     {
-                        pos.SettlementPrice = target.Price;
+                        pos.SettlementPrice = target.Settlement;
                     }
                 }
 
@@ -196,9 +213,9 @@ namespace TradingLib.Core
                 {
                     //遍历成交接口持仓 设定结算价
                     target = _settlementPriceTracker[pos.Symbol];
-                    if (target != null && target.Price>0)
+                    if (target != null && target.Settlement > 0)
                     {
-                        pos.SettlementPrice = target.Price;
+                        pos.SettlementPrice = target.Settlement;
                     }
 
                     if (pos.SettlementPrice == null)

@@ -145,6 +145,8 @@ namespace TradingLib.Core
         public void Reset()
         {
             logger.Info("重置交易消息交换服务");
+            logger.Info("加载昨日收盘时行情数据");
+            ReloadMarketData();
             //TLCtxHelper.ModuleBrokerRouter.Reset();
             //TLCtxHelper.ModuleDataRouter.Reset();
         }

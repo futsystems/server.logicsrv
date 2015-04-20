@@ -415,12 +415,12 @@ namespace TradingLib.ORM
         /// </summary>
         /// <param name="settleday"></param>
         /// <returns></returns>
-        public static IEnumerable<SettlementPrice> SelectSettlementPrice(int settleday)
+        public static IEnumerable<MarketData> SelectMarketData(int settleday)
         {
             using (DBMySql db = new DBMySql())
             {
                 string query = String.Format("SELECT * FROM log_settlement_price WHERE  settleday = '{0}'", settleday);
-                return db.Connection.Query<SettlementPrice>(query);
+                return db.Connection.Query<MarketData>(query);
             }
         }
 
@@ -428,12 +428,12 @@ namespace TradingLib.ORM
         /// 向数据库插入一条结算价格记录
         /// </summary>
         /// <param name="price"></param>
-        public static void InsertSettlementPrice(SettlementPrice price)
+        public static void InsertMarketData(MarketData data)
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("INSERT INTO log_settlement_price (`symbol`,`settleday`,`price`) values('{0}','{1}','{2}')", price.Symbol, price.SettleDay, price.Price);
-                db.Connection.Execute(query);
+                string query = String.Format("INSERT INTO log_settlement_price (`settleday`,`symbol`,`askprice`,`asksize`,`bidprice`,`bidsize`,`upperlimit`,`lowerlimit`,`presettlement`,`settlement`,`preoi`,`oi`,`open`,`high`,`low`,`close`,`vol`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}')",data.SettleDay,data.Symbol,data.AskPrice,data.AskSize,data.BidPrice,data.BidSize,data.UpperLimit,data.LowerLimit,data.PreSettlement,data.Settlement,data.PreOI,data.OI,data.Open,data.High,data.Low,data.Close,data.Vol );
+                 db.Connection.Execute(query);
             }
         }
 
@@ -441,11 +441,11 @@ namespace TradingLib.ORM
         /// 更新结算价信息
         /// </summary>
         /// <param name="price"></param>
-        public static void UpdateSettlementPrice(SettlementPrice price)
+        public static void UpdateMarketData(MarketData price)
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("UPDATE log_settlement_price SET price = '{0}' WHERE symbol = '{1}' AND settleday = '{2}'", price.Price, price.Symbol, price.SettleDay);
+                string query = String.Format("UPDATE log_settlement_price SET price = '{0}' WHERE symbol = '{1}' AND settleday = '{2}'", price.Settlement, price.Symbol, price.SettleDay);
                 db.Connection.Execute(query);
             }
         }

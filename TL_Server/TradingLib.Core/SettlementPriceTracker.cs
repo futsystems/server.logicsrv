@@ -12,7 +12,7 @@ namespace TradingLib.Core
 {
     public class SettlementPriceTracker
     {
-        Dictionary<string, SettlementPrice> settlementPriceMap = new Dictionary<string, SettlementPrice>();
+        Dictionary<string, MarketData> settlementPriceMap = new Dictionary<string, MarketData>();
 
         /// <summary>
         /// 从数据库加载某个结算日的计算机信息
@@ -20,7 +20,7 @@ namespace TradingLib.Core
         /// <param name="settleday"></param>
         public void LoadSettlementPrice(int settleday)
         {
-            foreach (var price in ORM.MSettlement.SelectSettlementPrice(settleday))
+            foreach (var price in ORM.MSettlement.SelectMarketData(settleday))
             {
                 settlementPriceMap.Add(price.Symbol, price);
             }
@@ -34,7 +34,7 @@ namespace TradingLib.Core
             settlementPriceMap.Clear();
         }
 
-        public IEnumerable<SettlementPrice> SettlementPrices
+        public IEnumerable<MarketData> SettlementPrices
         {
             get
             {
@@ -46,11 +46,11 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
-        public SettlementPrice this[string symbol]
+        public MarketData this[string symbol]
         {
             get
             {
-                SettlementPrice target = null;
+                MarketData target = null;
                 if (settlementPriceMap.TryGetValue(symbol, out target))
                 {
                     return target;
@@ -63,24 +63,24 @@ namespace TradingLib.Core
         /// 更新结算价信息
         /// </summary>
         /// <param name="price"></param>
-        public void UpdateSettlementPrice(SettlementPrice price)
+        public void UpdateSettlementPrice(MarketData price)
         {
-            SettlementPrice target = null;
+            MarketData target = null;
             //结算价信息已经存在
             if (settlementPriceMap.TryGetValue(price.Symbol, out target))
             {
-                target.Price = price.Price;
-                ORM.MSettlement.UpdateSettlementPrice(target);//更新到数据库
+                target.Settlement = price.Settlement;
+                ORM.MSettlement.UpdateMarketData(target);//更新到数据库
 
             }
             else
             {
-                target = new SettlementPrice();
-                target.Price = price.Price;
+                target = new MarketData();
+                target.Settlement = price.Settlement;
                 target.SettleDay = price.SettleDay;
                 target.Symbol = price.Symbol;
                 //插入数据库记录
-                ORM.MSettlement.InsertSettlementPrice(target);
+                ORM.MSettlement.InsertMarketData(target);
                 //放到缓存
                 settlementPriceMap.Add(target.Symbol, target);
             }
