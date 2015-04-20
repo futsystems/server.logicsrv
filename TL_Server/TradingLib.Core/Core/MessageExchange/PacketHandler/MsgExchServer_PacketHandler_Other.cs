@@ -14,6 +14,12 @@ namespace TradingLib.Core
 
         /// <summary>
         /// 查询委托
+        /// 返回委托对于第一阶段拒绝的委托 查询不返回
+        /// 因为飞迅
+        /// strcpy(toOrder->OrderSysID,fromOrder->OrderExchID.c_str());//报单编号
+        /// 如果OrderSysID缺失 会造成排序错乱导致数据汇总错误。
+        /// 盘中交易时 第一风控阶段觉得委托可以正常显示 因此用
+        /// .Where(o=>!string.IsNullOrEmpty(o.OrderSysID))进行过滤
         /// </summary>
         /// <param name="request"></param>
         void SrvOnQryOrder(QryOrderRequest request,IAccount account)
@@ -23,7 +29,7 @@ namespace TradingLib.Core
             //合约为空 查询所有
             if (string.IsNullOrEmpty(request.Symbol))
             {
-                orders = account.Orders.ToArray();
+                orders = account.Orders.Where(o=>!string.IsNullOrEmpty(o.OrderSysID)).ToArray();
             }
             int totalnum = orders.Length;
             if (totalnum > 0)
@@ -67,7 +73,7 @@ namespace TradingLib.Core
                     RspQryTradeResponse response = ResponseTemplate<RspQryTradeResponse>.SrvSendRspResponse(request);
                     response.TradeToSend = trades[i];
 
-                    debug("转发当日成交:" + trades[i].ToString() + " side:" + trades[i].Side.ToString(), QSEnumDebugLevel.INFO);
+                    //debug("转发当日成交:" + trades[i].ToString() + " side:" + trades[i].Side.ToString(), QSEnumDebugLevel.INFO);
                     CacheRspResponse(response, i == totalnum - 1);
                 }
             }
@@ -99,15 +105,17 @@ namespace TradingLib.Core
                 positions = account.Positions.Where(pos => pos.Symbol.Equals(request.Symbol)).ToArray();
             }
 
-            debug("total num:" + positions.Length.ToString(), QSEnumDebugLevel.INFO);
+            //debug("total num:" + positions.Length.ToString(), QSEnumDebugLevel.INFO);
             int totalnum = positions.Length;
 
             if (totalnum > 0)
             {
                 for (int i = 0; i < totalnum; i++)
                 {
+                    
                     RspQryPositionResponse response = ResponseTemplate<RspQryPositionResponse>.SrvSendRspResponse(request);
                     response.PositionToSend = positions[i].GenPositionEx();
+                    debug("转发持仓:" + response.ToString(),QSEnumDebugLevel.INFO);
                     CacheRspResponse(response, i == totalnum - 1);
                 }
             }
