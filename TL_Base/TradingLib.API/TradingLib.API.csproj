@@ -55,6 +55,8 @@
     <Compile Include="Account\IAccConfig.cs" />
     <Compile Include="Account\IFinanceTotal.cs" />
     <Compile Include="EnumEquityType.cs" />
+    <Compile Include="Msic\EnumAlgorithm.cs" />
+    <Compile Include="Msic\EnumMarginPrice.cs" />
     <Compile Include="Msic\EnumTransType.cs" />
     <Compile Include="Msic\IMGRClient.cs" />
     <Compile Include="Trading\EnumStrategy.cs" />

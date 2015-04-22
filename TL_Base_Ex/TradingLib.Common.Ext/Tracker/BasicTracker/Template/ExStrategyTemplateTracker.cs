@@ -116,8 +116,10 @@ namespace TradingLib.Common
             //更新
             if (exStrategyMap.TryGetValue(item.ID, out target))
             {
-                target.Margin = item.Margin;
-                target.AvabileFund = item.AvabileFund;
+                target.MarginPrice = item.MarginPrice;
+                target.IncludeCloseProfit = item.IncludeCloseProfit;
+                target.IncludePositionProfit = item.IncludePositionProfit;
+                target.Algorithm = item.Algorithm;
                 target.SideMargin = item.SideMargin;
                 target.CreditSeparate = item.CreditSeparate;
                 target.PositionLock = item.PositionLock;
@@ -127,8 +129,10 @@ namespace TradingLib.Common
             else
             {
                 target = new ExStrategy();
-                target.Margin = item.Margin;
-                target.AvabileFund = item.AvabileFund;
+                target.MarginPrice = item.MarginPrice;
+                target.IncludeCloseProfit = item.IncludeCloseProfit;
+                target.IncludePositionProfit = item.IncludePositionProfit;
+                target.Algorithm = item.Algorithm;
                 target.SideMargin = item.SideMargin;
                 target.CreditSeparate = item.CreditSeparate;
                 target.PositionLock = item.PositionLock;

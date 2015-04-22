@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -60,13 +60,25 @@ namespace TradingLib.Common
         /// 保证金计算方法
         /// 按不同的保证金计算方法来计算交易账户的持仓保证金
         /// </summary>
-        public QSEnumMarginStrategy Margin { get; set; }
+        public QSEnumMarginPrice MarginPrice { get; set; }
+
+        /// <summary>
+        /// 可用资金是否包含平仓盈亏
+        /// </summary>
+        public bool IncludeCloseProfit { get; set; }
 
 
         /// <summary>
-        /// 可用资金计算方法
+        /// 可用资金是否包含浮动盈亏
         /// </summary>
-        public QSEnumAvabileFundStrategy AvabileFund { get; set; }
+        public bool IncludePositionProfit { get; set; }
+
+
+        /// <summary>
+        /// 浮动盈亏算法
+        /// </summary>
+        public QSEnumAlgorithm Algorithm { get; set; }
+
 
         /// <summary>
         /// 是否支持单向大边保证金制度

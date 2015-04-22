@@ -117,13 +117,13 @@ namespace TradingLib.Common
             }
 
             decimal tprice = p.LastPrice;
-            QSEnumMarginStrategy s = account.GetArgsMarginStrategy();
+            QSEnumMarginPrice s = account.GetParamMarginPriceType();
             switch (s)
             {
-                case QSEnumMarginStrategy.LastPrice:
+                case QSEnumMarginPrice.TradePrice:
                     tprice = p.LastPrice;
                     break;
-                case QSEnumMarginStrategy.PositionCost:
+                case QSEnumMarginPrice.OpenPrice:
                     tprice = p.AvgPrice;
                     break;
                 default:
@@ -288,6 +288,47 @@ namespace TradingLib.Common
                     return basemarginfrozen;
             }
         }
+
+        /// <summary>
+        /// 获得某个交易帐户 某个合约的保证金设置
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        public static MarginConfig GetMarginConfig(this IAccount account, Symbol symbol)
+        {
+            //获得合约的基础保证金设置
+            MarginConfig cfg = symbol.GetMarginConfig();
+            //获得帐户该合约的保证金模板项
+            MarginTemplateItem item = account.GetMarginTemplateItem(symbol);
+            if (item != null)
+            {
+                if (item.ChargeType == QSEnumChargeType.Absolute)
+                {
+                    cfg.LongMarginRatioByMoney = item.MarginByMoney;
+                    cfg.LongMarginRatioByVolume = item.MarginByVolume;
+                    cfg.ShortMarginRatioByMoney = item.MarginByMoney;
+                    cfg.ShortMarginRatioByVoume = item.MarginByVolume;
+                }
+                else if (item.ChargeType == QSEnumChargeType.Relative)
+                {
+                    cfg.LongMarginRatioByMoney = cfg.LongMarginRatioByMoney == 0 ? 0 : cfg.LongMarginRatioByMoney + item.MarginByMoney;
+                    cfg.LongMarginRatioByVolume = cfg.LongMarginRatioByVolume == 0 ? 0 : cfg.LongMarginRatioByVolume + item.MarginByVolume;
+                    cfg.ShortMarginRatioByMoney = cfg.ShortMarginRatioByMoney == 0 ? 0 : cfg.ShortMarginRatioByMoney + item.MarginByMoney;
+                    cfg.ShortMarginRatioByVoume = cfg.ShortMarginRatioByVoume == 0 ? 0 : cfg.ShortMarginRatioByVoume + item.MarginByVolume;
+                }
+                else if (item.ChargeType == QSEnumChargeType.Percent)
+                {
+                    cfg.LongMarginRatioByMoney = cfg.LongMarginRatioByMoney * (1 + item.Percent);
+                    cfg.LongMarginRatioByVolume = cfg.LongMarginRatioByVolume * (1 + item.Percent);
+                    cfg.ShortMarginRatioByMoney = cfg.ShortMarginRatioByMoney * (1 + item.Percent);
+                    cfg.ShortMarginRatioByVoume = cfg.ShortMarginRatioByVoume * (1 + item.Percent);
+                }
+            }
+            cfg.Account = account.ID;
+            return cfg;
+        }
+    
     
     }
 }

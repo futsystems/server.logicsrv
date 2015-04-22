@@ -306,7 +306,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static decimal CalFutMargin(this IAccount account)
         {
-            if (account.GetArgsSideMargin())
+            if (account.GetParamSideMargin())
             {
                 return account.CalFutMarginSet().Sum(ms => ms.Margin);
             }
@@ -318,7 +318,7 @@ namespace TradingLib.Common
 
         public static decimal CalFutMarginFrozen(this IAccount account)
         {
-            if (account.GetArgsSideMargin())
+            if (account.GetParamSideMargin())
             {
                 return account.CalFutMarginSet().Sum(ms => ms.MarginFrozen);
             }

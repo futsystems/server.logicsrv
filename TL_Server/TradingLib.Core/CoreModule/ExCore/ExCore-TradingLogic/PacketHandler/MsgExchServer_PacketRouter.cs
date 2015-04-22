@@ -144,6 +144,12 @@ namespace TradingLib.Core
                         SrvOnQryMarketData(request, account);
                     }
                     break;
+                case MessageTypes.QRYTRADINGPARAMS://查询交易参数
+                    {
+                        QryTradingParamsRequest request = packet as QryTradingParamsRequest;
+                        SrvOnQryTradingParams(request, account);
+                    }
+                    break;
                 case MessageTypes.CONTRIBREQUEST://扩展请求
                     {
                         ContribRequest request = packet as ContribRequest;

@@ -54,14 +54,20 @@ namespace TradingLib.Common
             return cfg;
         }
 
-
-        public static void FillSymbolMarginResponse(this Symbol sym, ref RspQryInstrumentMarginRateResponse response)
+        /// <summary>
+        /// 获得某个合约的保证金设置
+        /// </summary>
+        /// <param name="sym"></param>
+        /// <returns></returns>
+        public static MarginConfig GetMarginConfig(this Symbol sym)
         {
-            response.Symbol = sym.Symbol;
-            response.LongMarginRatioByVolume = sym.Margin > 1 ? sym.Margin : 0;
-            response.LongMarginRatioByMoney = sym.Margin < 1 ? sym.Margin : 0;
-            response.ShortMarginRatioByVoume = response.LongMarginRatioByVolume;
-            response.ShortMarginRatioByMoney = response.LongMarginRatioByMoney;
+            MarginConfig cfg = new MarginConfig();
+            cfg.Symbol = sym.Symbol;
+            cfg.LongMarginRatioByMoney = sym.Margin < 1 ? sym.Margin : 0;
+            cfg.ShortMarginRatioByMoney = sym.Margin < 1 ? sym.Margin : 0;
+            cfg.LongMarginRatioByVolume = sym.Margin > 1 ? sym.Margin : 0;
+            cfg.ShortMarginRatioByVoume = sym.Margin > 1 ? sym.Margin : 0;
+            return cfg;
         }
 
 
