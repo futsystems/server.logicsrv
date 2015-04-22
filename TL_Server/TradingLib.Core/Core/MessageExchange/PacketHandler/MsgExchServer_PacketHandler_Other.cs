@@ -203,7 +203,7 @@ namespace TradingLib.Core
             debug("QryAccountInfo :" + request.ToString(), QSEnumDebugLevel.INFO);
             AccountInfo info = account.GenAccountInfo();
             //需要合并信用额度
-            if (!account.GetArgsCreditSeparate())
+            if (!account.GetParamCreditSeparate())
             {
                 info.NowEquity += info.Credit;
                 info.Credit = 0;
@@ -567,7 +567,8 @@ namespace TradingLib.Core
                 }
                 else
                 {
-                    sym.FillSymbolMarginResponse(ref response);
+                    MarginConfig cfg = account.GetMarginConfig(sym);
+                    response.FillMarginCfg(cfg);
                 }
                 CacheRspResponse(response);
             }
@@ -615,5 +616,36 @@ namespace TradingLib.Core
             
         }
 
+
+        /// <summary>
+        /// 查询交易参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="account"></param>
+        void SrvOnQryTradingParams(QryTradingParamsRequest request, IAccount account)
+        {
+            debug("QryTradingParams:" + request.ToString(), QSEnumDebugLevel.INFO);
+            ExStrategy setting = account.GetExStrategy();
+
+            if (setting == null)
+            {
+                RspQryTradingParamsResponse response = ResponseTemplate<RspQryTradingParamsResponse>.SrvSendRspResponse(request);
+                response.Account = account.ID;
+                response.Algorithm = QSEnumAlgorithm.AG_All;
+                response.MarginPriceType = QSEnumMarginPrice.OpenPrice;
+                response.IncludeCloseProfit = true;
+                CacheRspResponse(response);
+            }
+            else
+            {
+                RspQryTradingParamsResponse response = ResponseTemplate<RspQryTradingParamsResponse>.SrvSendRspResponse(request);
+                response.Account = account.ID;
+                response.Algorithm = account.GetParamAlgorithm();
+                response.MarginPriceType = account.GetParamMarginPriceType();
+                response.IncludeCloseProfit = account.GetParamIncludeCloseProfit();
+                
+                CacheRspResponse(response);
+            }
+        }
     }
 }

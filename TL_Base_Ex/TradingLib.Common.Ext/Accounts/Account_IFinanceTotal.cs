@@ -90,12 +90,17 @@ namespace TradingLib.Common
         /// <returns></returns>
         decimal GetAvabileAdjustment()
         {
-            decimal futunpl = this.CalFutUnRealizedPL();
+            decimal futunpl = this.CalFutUnRealizedPL();//平仓盈亏
+            decimal futclosepl = this.CalFutRealizedPL();//平仓盈亏
             if (futunpl <= 0) return 0;//如果当前处于浮亏状态，则可用资金调整为0，按正常算法计算可用资金
             //如果浮动盈亏大于0 则按照设置来判断浮盈是否可以开仓
-            if (this.GetArgsAvabileFundStrategy() == QSEnumAvabileFundStrategy.UnPLExclude)
+            if (this.GetParamIncludePositionProfit())
             {
                 return -1 * futunpl;
+            }
+            if (this.GetParamIncludeCloseProfit())
+            {
+                return -1 * futclosepl;
             }
             return 0;
         }

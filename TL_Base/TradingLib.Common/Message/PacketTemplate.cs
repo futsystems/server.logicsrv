@@ -172,7 +172,9 @@ namespace TradingLib.Common
                     //查询市场行情
                     case MessageTypes.QRYMARKETDATA:
                         return RequestTemplate<QryMarketDataRequest>.SrvRecvRequest(frontid, clientid, content);
-
+                    //查询交易参数
+                    case MessageTypes.QRYTRADINGPARAMS:
+                        return RequestTemplate<QryTradingParamsRequest>.SrvRecvRequest(frontid, clientid, content);
 
                     #region manager
                     case MessageTypes.MGRLOGINREQUEST://请求登入
@@ -316,7 +318,7 @@ namespace TradingLib.Common
                     return ResponseTemplate<CashOperationNotify>.CliRecvResponse(content);
                 case MessageTypes.TRADINGNOTICENOTIFY://交易通知
                     return ResponseTemplate<TradingNoticeNotify>.CliRecvResponse(content);
-
+ 
                 case MessageTypes.ORDERRESPONSE://查询委托回报
                     return ResponseTemplate<RspQryOrderResponse>.CliRecvResponse(content);
                 case MessageTypes.TRADERESPONSE://成交查询回报
@@ -358,7 +360,9 @@ namespace TradingLib.Common
                     return ResponseTemplate<RspQryInstrumentMarginRateResponse>.CliRecvResponse(content);
                 case MessageTypes.MARKETDATARESPONSE://查询市场行情回报
                     return ResponseTemplate<RspQryMarketDataResponse>.CliRecvResponse(content);
-                
+                case MessageTypes.TRADINGPARAMSRESPONSE://查询交易参数回报
+                    return ResponseTemplate<RspQryTradingParamsResponse>.CliRecvResponse(content);
+
                 case MessageTypes.TICKNOTIFY:
                     TickNotify ticknotify = new TickNotify();
                     ticknotify.Tick = TickImpl.Deserialize(content);

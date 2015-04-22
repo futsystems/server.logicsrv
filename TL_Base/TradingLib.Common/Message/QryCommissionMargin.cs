@@ -226,6 +226,15 @@ namespace TradingLib.Common
         /// </summary>
         public decimal ShortMarginRatioByVoume { get; set; }
 
+
+        public void FillMarginCfg(MarginConfig cfg)
+        {
+            this.LongMarginRatioByMoney = cfg.LongMarginRatioByMoney;
+            this.LongMarginRatioByVolume = cfg.LongMarginRatioByVolume;
+            this.ShortMarginRatioByMoney = cfg.ShortMarginRatioByMoney;
+            this.ShortMarginRatioByVoume = cfg.ShortMarginRatioByVoume;
+
+        }
         public override string ResponseSerialize()
         {
             StringBuilder sb = new StringBuilder();
