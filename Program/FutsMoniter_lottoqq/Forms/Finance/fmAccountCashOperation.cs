@@ -10,6 +10,8 @@ using TradingLib.API;
 using TradingLib.Common;
 using FutSystems.GUI;
 using TradingLib.Mixins.JsonObject;
+using TradingLib.API;
+using TradingLib.Common;
 
 namespace FutsMoniter
 {
@@ -29,6 +31,14 @@ namespace FutsMoniter
             
             loaded = true;
             cashoptype.SelectedIndexChanged += new EventHandler(cashoptype_SelectedIndexChanged);
+        }
+
+        AccountLite _account = null;
+        public void SetAccount(AccountLite acc)
+        {
+            _account = acc;
+            account.Text = _account.Account;
+            
         }
 
         void cashoptype_SelectedIndexChanged(object sender, EventArgs e)

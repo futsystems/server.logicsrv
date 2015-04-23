@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
-
+using TradingLib.Mixins.JsonObject;
 
 namespace TradingLib.Contrib.FinService
 {
@@ -57,6 +57,88 @@ namespace TradingLib.Contrib.FinService
 
         }
 
+        public override bool ValidArguments(JsonWrapperArgument[] args, out string error)
+        {
+            error = "参数异常,请检查";
+
+            Dictionary<string, Argument> argmap = new Dictionary<string, Argument>();
+            foreach (var arg in args)
+            {
+                argmap.Add(arg.ArgName, new Argument(arg.ArgName, arg.ArgValue, (EnumArgumentType)Enum.Parse(typeof(EnumArgumentType), arg.ArgType)));
+            }
+
+            Argument wincharge = argmap["WinCharge"];
+            if (wincharge != null)
+            {
+                decimal winchargevalue = wincharge.AsDecimal();
+                if (winchargevalue > 500)
+                {
+                    error = "手续费不能超过500";
+                    return false;
+                }
+                decimal winchargevalue_agent = agentargmap["WinCharge"].AsDecimal();
+                if (winchargevalue < winchargevalue_agent)
+                {
+                    error = "盈利手续费不能低于代理值:"+Util.FormatDecimal(winchargevalue_agent);
+                    return false;
+                }
+            }
+            Argument losscharge = argmap["LossCharge"];
+            if (losscharge != null)
+            {
+                decimal losschargevalue = losscharge.AsDecimal();
+                if (losschargevalue > 500)
+                {
+                    error = "手续费不能超过500";
+                    return false;
+                }
+                decimal losschargevalue_agent = agentargmap["LossCharge"].AsDecimal();
+                if (losschargevalue < losschargevalue_agent)
+                {
+                    error = "亏损手续费不能低于代理值:" + Util.FormatDecimal(losschargevalue_agent);
+                    return false;
+                }
+            }
+
+            Argument marginperlot = argmap["MarginPerLot"];
+            if (marginperlot != null)
+            {
+                decimal marginperlotvalue = marginperlot.AsDecimal();
+                decimal marginperlotvalue_agent = agentargmap["MarginPerLot"].AsDecimal();
+                if (marginperlotvalue < marginperlotvalue_agent)
+                {
+                    error = "每手保证金不能低于代理值:" + Util.FormatDecimal(marginperlotvalue_agent);
+                    return false;
+                }
+            }
+
+            Argument marginperlotstop = argmap["MarginPerLotStop"];
+            if (marginperlotstop != null)
+            {
+                decimal marginperlotstopvalue = marginperlotstop.AsDecimal();
+                decimal marginperlotstopvalue_agent = agentargmap["MarginPerLotStop"].AsDecimal();
+                if (marginperlotstopvalue < marginperlotstopvalue_agent)
+                { 
+                    error = "止损线不能低于代理值:"+Util.FormatDecimal(marginperlotstopvalue_agent);
+                    return false;
+                }
+            }
+
+            Argument marginperlotstart = argmap["MarginPerLotStart"];
+            if (marginperlotstart != null)
+            {
+                decimal marginperlotstartvalue = marginperlotstart.AsDecimal();
+                decimal marginperlotstartvalue_agent = agentargmap["MarginPerLotStart"].AsDecimal();
+                if (marginperlotstartvalue < marginperlotstartvalue_agent)
+                {
+                    error = "保证金起步值不能低于代理值:" + Util.FormatDecimal(marginperlotstartvalue_agent);
+                    return false;
+                }
+            }
+
+
+            return true;
+        }
         /// <summary>
         /// 调整手续费
         /// </summary>

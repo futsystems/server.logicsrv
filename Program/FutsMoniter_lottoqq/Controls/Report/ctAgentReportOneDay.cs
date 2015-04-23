@@ -26,6 +26,12 @@ namespace FutsMoniter
             q_settleday.Value = DateTime.Now;
 
             this.btnQryReport.Click +=new EventHandler(btnQryReport_Click);
+            this.Load += new EventHandler(ctAgentReportOneDay_Load);
+        }
+
+        void ctAgentReportOneDay_Load(object sender, EventArgs e)
+        {
+            Globals.RegIEventHandler(this);
         }
 
         public void OnInit()
@@ -39,11 +45,6 @@ namespace FutsMoniter
         }
 
 
-        void OnInitFinished()
-        {
-            Globals.LogicEvent.RegisterCallback("FinServiceCentre", "QryTotalReport", this.OnTotalReport);
-        }
-
 
 
         public void Clear()
@@ -55,15 +56,13 @@ namespace FutsMoniter
 
         public void OnTotalReport(string jsonstr)
         {
-            //JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
-            //int code = int.Parse(jd["Code"].ToString());
-            JsonWrapperToalReport obj = MoniterUtils.ParseJsonResponse<JsonWrapperToalReport>(jsonstr);
-            if (obj != null)
+            JsonWrapperToalReport[] objlist = MoniterUtils.ParseJsonResponse<JsonWrapperToalReport[]>(jsonstr);
+            if (objlist != null)
             {
-                //JsonWrapperToalReport obj = TradingLib.Mixins.LitJson.JsonMapper.ToObject<JsonWrapperToalReport>(jd["Playload"].ToJson());
-
-                InvokeGotJsonWrapperTotalReport(obj);
-
+                foreach (var obj in objlist)
+                {
+                    InvokeGotJsonWrapperTotalReport(obj);
+                }
             }
         }
 

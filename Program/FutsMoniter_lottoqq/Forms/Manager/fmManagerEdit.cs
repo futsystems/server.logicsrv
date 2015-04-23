@@ -36,6 +36,7 @@ namespace FutsMoniter
             this.mobile.Text = _manger.Mobile;
             this.qq.Text = _manger.QQ;
             this.acclimit.Value = _manger.AccLimit;
+            this.agentlimit.Value = _manger.AgentLimit;
             this.type.Enabled = false;
             this.login.Enabled = false;
             this.acclimit.Enabled = false;
@@ -103,6 +104,7 @@ namespace FutsMoniter
                 m.Mobile = this.mobile.Text;
                 m.QQ = this.qq.Text;
                 m.AccLimit = (int)this.acclimit.Value;
+                m.AgentLimit = (int)this.agentlimit.Value;
                 if (Globals.Manager.Type == QSEnumManagerType.ROOT)
                 {
                     if (m.Type == QSEnumManagerType.AGENT)//如果添加代理则mgr_fk=0
@@ -130,6 +132,7 @@ namespace FutsMoniter
                 if (_manger.Type == QSEnumManagerType.AGENT)
                 {
                     _manger.AccLimit = (int)this.acclimit.Value;
+                    _manger.AgentLimit = (int)this.agentlimit.Value;
                 }
 
                 //MessageBox.Show("manager id:" + _manger.ID.ToString());

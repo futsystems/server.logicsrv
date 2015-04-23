@@ -23,24 +23,26 @@ namespace FutsMoniter
             this.Load += new EventHandler(fmAccountCashReq_Load);
         }
 
+        AccountLite _account = null;
+        public void SetAccount(AccountLite account)
+        {
+            _account = account;
+        }
         void fmAccountCashReq_Load(object sender, EventArgs e)
         {
             //全局事件回调
             Globals.RegIEventHandler(this);
-
-            //
             btnAccountCashReq.Click += new EventHandler(btnAccountCashReq_Click);
 
-            if (Globals.EnvReady)
-            {
-                //Globals.TLClient.ReqQryAgentCashopOperationTotal();
-                Globals.TLClient.ReqQryAccountCashopOperationTotal();
-            }
         }
 
         void btnAccountCashReq_Click(object sender, EventArgs e)
         {
             fmAccountCashOperation fm = new fmAccountCashOperation();
+            if (_account != null)
+            {
+                fm.SetAccount(_account);
+            }
             fm.Show();
         }
 
@@ -48,7 +50,7 @@ namespace FutsMoniter
         {
             Globals.LogicEvent.RegisterCallback("MgrExchServer", "QryAccountCashOperationTotal", this.OnQryAccountCashOperationTotal);//查询交易帐户出入金请求
             Globals.LogicEvent.RegisterCallback("MgrExchServer", "NotifyCashOperation", this.OnNotifyCashOperation);
-
+            Globals.TLClient.ReqQryAccountCashopOperationTotal();
         }
 
         public void OnDisposed()
@@ -61,12 +63,10 @@ namespace FutsMoniter
 
         void OnQryAccountCashOperationTotal(string jsonstr)
         {
-            //JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
-            //int code = int.Parse(jd["Code"].ToString());
+
             JsonWrapperCashOperation[] objs = MoniterUtils.ParseJsonResponse<JsonWrapperCashOperation[]>(jsonstr);
             if (objs != null)
             {
-                //JsonWrapperCashOperation[] objs = TradingLib.Mixins.LitJson.JsonMapper.ToObject<JsonWrapperCashOperation[]>(jd["Playload"].ToJson());
                 foreach (JsonWrapperCashOperation op in objs)
                 {
                     ctCashOperationAccount.GotJsonWrapperCashOperation(op);
@@ -80,8 +80,6 @@ namespace FutsMoniter
 
         void OnNotifyCashOperation(string jsonstr)
         {
-            //JsonData jd = TradingLib.Mixins.LitJson.JsonMapper.ToObject(jsonstr);
-            //int code = int.Parse(jd["Code"].ToString());
             JsonWrapperCashOperation obj = MoniterUtils.ParseJsonResponse<JsonWrapperCashOperation>(jsonstr);
             if (obj != null)
             {
@@ -100,10 +98,6 @@ namespace FutsMoniter
             else//如果没有配资服
             {
 
-            }
-            if (Globals.EnvReady)
-            {
-                //Globals.TLClient.ReqQryAgentFinanceInfoLite();
             }
         }
 

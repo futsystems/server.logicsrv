@@ -68,6 +68,11 @@ namespace TradingLib.Core
                 {
                     throw new FutsRspError("无权开设下级代理");
                 }
+                int mgrnum = manager.GetVisibleManager().Count();
+                if (mgrnum > manager.AgentLimit)//包含了自己manager
+                {
+                    throw new FutsRspError("代理数目超过限制:" + manager.AgentLimit.ToString());
+                }
                 //父MangerID 柜员的父管理域是当前柜员管理域 Root除外,Root的父柜员为自己
                 m.parent_fk = manager.BaseMgrID;
                 //管理域ID 默认添加的管理员的管理域ID与当前管理员管理域ID一致(风控员,财务人员等) 代理与Root除外 他们有独立的管理域 

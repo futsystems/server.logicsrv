@@ -91,7 +91,9 @@ namespace FutsMoniter
                 Factory.IDataSourceFactory(cbbank).BindDataSource(list);
                 cbbank.SelectedValue = _bankselected;
                 _gotdata = true;
+                cbbank.SelectedIndex = 0;
             }
+
         }
 
         int _bankselected = 0;

@@ -17,6 +17,8 @@ namespace FutsMoniter
         {
             accountgrid.ContextMenuStrip = new ContextMenuStrip();
             accountgrid.ContextMenuStrip.Items.Add("编辑账户", Properties.Resources.editAccount, new EventHandler(EditAccount_Click));
+            accountgrid.ContextMenuStrip.Items.Add("出入金", Properties.Resources.editAccount, new EventHandler(CashOpAccount_Click));
+            
             accountgrid.ContextMenuStrip.Items.Add(new System.Windows.Forms.ToolStripSeparator());
             accountgrid.ContextMenuStrip.Items.Add("修改密码",null, new EventHandler(ChangePass_Click));
             accountgrid.ContextMenuStrip.Items.Add("修改信息", null, new EventHandler(ChangeInvestor_Click));
@@ -32,6 +34,21 @@ namespace FutsMoniter
       
         }
 
+        void CashOpAccount_Click(object sender, EventArgs e)
+        {
+            AccountLite account = GetVisibleAccount(CurrentAccount);
+            if (account != null)
+            {
+                fmAccountCashReq fm = new fmAccountCashReq();
+                fm.SetAccount(account);
+                fm.ShowDialog();
+                fm.Close();
+            }
+            else
+            {
+                MoniterUtils.WindowMessage("请选择交易帐户");
+            }
+        }
         void ClearTerminal_Click(object sender, EventArgs e)
         {
             AccountLite account = GetVisibleAccount(CurrentAccount);

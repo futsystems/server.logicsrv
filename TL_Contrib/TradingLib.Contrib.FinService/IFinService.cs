@@ -133,6 +133,12 @@ namespace TradingLib.Contrib.FinService
         decimal GetFinAmountAvabile();
         #endregion
 
+        /// <summary>
+        /// 验证参数是否合法
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        bool ValidArguments(JsonWrapperArgument[] args,out string error);
 
         /// <summary>
         /// 执行定时帐户检查 

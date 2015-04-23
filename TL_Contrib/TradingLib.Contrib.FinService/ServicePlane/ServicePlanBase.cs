@@ -96,15 +96,19 @@ namespace TradingLib.Contrib.FinService
         /// <summary>
         /// 交易帐户参数列表
         /// </summary>
-        Dictionary<string, Argument> accountargmap = new Dictionary<string, Argument>();
+        protected Dictionary<string, Argument> accountargmap = new Dictionary<string, Argument>();
 
         /// <summary>
         /// 代理帐户参数列表
         /// </summary>
-        Dictionary<string, Argument> agentargmap = new Dictionary<string, Argument>();
+        protected Dictionary<string, Argument> agentargmap = new Dictionary<string, Argument>();
 
 
-
+        public virtual bool ValidArguments(JsonWrapperArgument[] args, out string error)
+        {
+            error = string.Empty;
+            return true;
+        }
         /// <summary>
         /// 初始化参数
         /// </summary>

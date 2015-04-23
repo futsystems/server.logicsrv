@@ -28,8 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
+            this.accTraded = new ComponentFactory.Krypton.Toolkit.KryptonCheckBox();
             this.btnAcctFilter = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.lbCurrentAccount = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel7 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
@@ -46,7 +47,6 @@
             this.kryptonContextMenuItems1 = new ComponentFactory.Krypton.Toolkit.KryptonContextMenuItems();
             this.kryptonContextMenuItem1 = new ComponentFactory.Krypton.Toolkit.KryptonContextMenuItem();
             this.kryptonContextMenuItem2 = new ComponentFactory.Krypton.Toolkit.KryptonContextMenuItem();
-            this.accTraded = new ComponentFactory.Krypton.Toolkit.KryptonCheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.accountgrid)).BeginInit();
@@ -72,6 +72,14 @@
             this.kryptonPanel1.Name = "kryptonPanel1";
             this.kryptonPanel1.Size = new System.Drawing.Size(1380, 28);
             this.kryptonPanel1.TabIndex = 31;
+            // 
+            // accTraded
+            // 
+            this.accTraded.Location = new System.Drawing.Point(261, 5);
+            this.accTraded.Name = "accTraded";
+            this.accTraded.Size = new System.Drawing.Size(51, 18);
+            this.accTraded.TabIndex = 19;
+            this.accTraded.Values.Text = "交易";
             // 
             // btnAcctFilter
             // 
@@ -108,6 +116,8 @@
             this.btnAddAccount.Location = new System.Drawing.Point(1118, 2);
             this.btnAddAccount.Name = "btnAddAccount";
             this.btnAddAccount.Size = new System.Drawing.Size(68, 25);
+            this.btnAddAccount.StateCommon.Content.ShortText.Color1 = System.Drawing.Color.Red;
+            this.btnAddAccount.StateCommon.Content.ShortText.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnAddAccount.TabIndex = 13;
             this.btnAddAccount.Values.Text = "添加帐户";
             // 
@@ -163,8 +173,8 @@
             this.accountgrid.AllowUserToAddRows = false;
             this.accountgrid.AllowUserToDeleteRows = false;
             this.accountgrid.AllowUserToResizeRows = false;
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.accountgrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.accountgrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.accountgrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
@@ -207,14 +217,6 @@
             // kryptonContextMenuItem2
             // 
             this.kryptonContextMenuItem2.Text = "Menu Item";
-            // 
-            // accTraded
-            // 
-            this.accTraded.Location = new System.Drawing.Point(261, 5);
-            this.accTraded.Name = "accTraded";
-            this.accTraded.Size = new System.Drawing.Size(51, 18);
-            this.accTraded.TabIndex = 19;
-            this.accTraded.Values.Text = "交易";
             // 
             // ctAccountMontier
             // 

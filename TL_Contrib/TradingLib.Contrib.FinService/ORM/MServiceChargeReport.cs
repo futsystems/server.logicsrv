@@ -17,6 +17,49 @@ namespace TradingLib.Contrib.FinService.ORM
         {
             public decimal Total { get; set; }
         }
+
+        /// <summary>
+        /// 获得某个代理某天的汇总统计
+        /// </summary>
+        /// <param name="agentfk"></param>
+        /// <param name="settleday"></param>
+        /// <returns></returns>
+        public static JsonWrapperToalReport GenTotalReport2(int agentfk, int settleday)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format(@"
+                select IFNULL(agent_fk1,agent_fk2) as agent_fk, IFNULL(settleday1,settleday2) as settleday,IFNULL(totalfee,0) as totalfee,IFNULL(agentfee,0) as agentfee,IFNULL(agentprofit,0) as agentprofit,IFNULL(total_commission,0) as commissionprofit from
+(
+select * from (select agent_fk as agent_fk1,settleday as settleday1,sum(totalfee) as totalfee,sum(agentfee) as agentfee ,sum(agentprofit) as agentprofit FROM log_service_feecharge  WHERE agent_fk='{0}' AND settleday='{1}') tb1  left join  (select settleday as settleday2,agent_fk as agent_fk2,sum(commission) as total_commission from log_service_commission where  agent_fk = '{0}' AND settleday='{1}') tb2 on tb1.settleday1 = tb2.settleday2
+union
+select * from (select agent_fk as agent_fk1,settleday as settleday1,sum(totalfee) as totalfee,sum(agentfee) as agentfee ,sum(agentprofit) as agentprofit FROM log_service_feecharge  WHERE agent_fk='{0}' AND settleday='{1}') tb1  right join (select settleday as settleday2,agent_fk as agent_fk2,sum(commission) as total_commission from log_service_commission where  agent_fk = '{0}' AND settleday='{1}') tb2 on tb1.settleday1 = tb2.settleday2
+) AS Report", agentfk, settleday);
+
+
+                //1.生成直客记录
+                JsonWrapperToalReport rep = db.Connection.Query<JsonWrapperToalReport>(query).FirstOrDefault();
+
+                if (rep == null)
+                {
+                    rep = new JsonWrapperToalReport();
+                    rep.SettleDay = settleday;
+                    rep.Agent_FK = agentfk;
+                }
+                else
+                {
+                    if (rep.Agent_FK == 0)//如果agentfk对应没有收费记录 搜索语句会返回agentfk为0的空记录 这要进行agentfk赋值
+                    {
+                        rep.Agent_FK = agentfk;
+                    }
+                }
+                //3.将Manager基本信息填充进去
+                FillReportMangerInfo(rep);
+
+                return rep;
+            }
+
+        }
         /// <summary>
         /// 查询某天的代理统计
         /// select * from (select sum(commission) as total,agent_fk  from log_service_commission GROUP BY agent_fk)a INNER JOIN (SELECT sum(agentfee) as fee ,agent_fk from log_service_feecharge GROUP BY agent_fk)b on a.agent_fk=b.agent_fk
@@ -183,6 +226,25 @@ namespace TradingLib.Contrib.FinService.ORM
         }
 
 
+        public static IEnumerable<JsonWrapperToalReport> GenTotalReportByDayRange2(int agentfk, int start, int end)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format(@"
+                select IFNULL(agent_fk1,agent_fk2) as agent_fk, IFNULL(settleday1,settleday2) as settleday,IFNULL(totalfee,0) as totalfee,IFNULL(agentfee,0) as agentfee,IFNULL(agentprofit,0) as agentprofit,IFNULL(total_commission,0) as commissionprofit from
+(
+select * from (select agent_fk as agent_fk1,settleday as settleday1,sum(totalfee) as totalfee,sum(agentfee) as agentfee ,sum(agentprofit) as agentprofit FROM log_service_feecharge  WHERE agent_fk='{0}' AND settleday>='{1}' AND settleday<='{2}' GROUP BY settleday ) tb1  left join  (select settleday as settleday2,agent_fk as agent_fk2,sum(commission) as total_commission from log_service_commission where  agent_fk = '{0}' AND settleday>='{1}' AND settleday<='{2}' GROUP BY settleday) tb2 on tb1.settleday1 = tb2.settleday2
+union
+select * from (select agent_fk as agent_fk1,settleday as settleday1,sum(totalfee) as totalfee,sum(agentfee) as agentfee ,sum(agentprofit) as agentprofit FROM log_service_feecharge  WHERE agent_fk='{0}' AND settleday>='{1}' AND settleday<='{2}' GROUP BY settleday ) tb1  right join (select settleday as settleday2,agent_fk as agent_fk2,sum(commission) as total_commission from log_service_commission where  agent_fk = '{0}' AND settleday>='{1}' AND settleday<='{2}' GROUP BY settleday) tb2 on tb1.settleday1 = tb2.settleday2
+) AS Report ORDER BY settleday", agentfk, start, end);
+                JsonWrapperToalReport[] reports=db.Connection.Query<JsonWrapperToalReport>(query, null).ToArray();
+                foreach (JsonWrapperToalReport rep in reports)
+                {
+                    FillReportMangerInfo(rep);
+                }
+                return reports;
+            }
+        }
         /// <summary>
         /// 查询某个代理一段时间内的利润流水
         /// </summary>

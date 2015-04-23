@@ -181,7 +181,7 @@ namespace FutsMoniter
         const string MOBILE = "手机";
         const string QQ = "QQ号码";
         const string ACCNUMLIMIT = "帐户数量限制";
-
+        const string AGENTLIMIT = "代理数量限制";
         const string MGRFK = "管理域ID";
         const string STATUS = "状态";
 
@@ -235,6 +235,7 @@ namespace FutsMoniter
             gt.Columns.Add(MOBILE);//
             gt.Columns.Add(QQ);//
             gt.Columns.Add(ACCNUMLIMIT);//
+            gt.Columns.Add(AGENTLIMIT);
             gt.Columns.Add(MGRFK);//
 
             gt.Columns.Add(STATUS,typeof(Image));//
@@ -302,7 +303,8 @@ namespace FutsMoniter
                     gt.Rows[i][NAME] = manger.Name;
                     gt.Rows[i][MOBILE] = manger.Mobile;
                     gt.Rows[i][QQ] = manger.QQ;
-                    gt.Rows[i][ACCNUMLIMIT] = manger.Type == QSEnumManagerType.AGENT ? manger.AccLimit.ToString() : "";
+                    gt.Rows[i][ACCNUMLIMIT] = manger.AccLimit;
+                    gt.Rows[i][AGENTLIMIT] = manger.AgentLimit;
                     gt.Rows[i][MGRFK] = manger.mgr_fk;
 
                     gt.Rows[i][STATUS] = getStatusImage(manger.Active);
@@ -320,6 +322,7 @@ namespace FutsMoniter
                     gt.Rows[i][MOBILE] = manger.Mobile;
                     gt.Rows[i][QQ] = manger.QQ;
                     gt.Rows[i][ACCNUMLIMIT] = manger.AccLimit;
+                    gt.Rows[i][AGENTLIMIT] = manger.AgentLimit;
                     gt.Rows[i][MGRFK] = manger.mgr_fk;
                     gt.Rows[i][STATUS] = getStatusImage(manger.Active);
 

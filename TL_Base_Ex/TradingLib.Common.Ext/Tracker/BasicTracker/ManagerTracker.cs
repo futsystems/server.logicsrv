@@ -62,6 +62,7 @@ namespace TradingLib.Common
                 target.Type = mgr.Type;
                 target.User_Id = mgr.User_Id;
                 target.Active = mgr.Active;
+                target.AgentLimit = mgr.AgentLimit;
 
                 target.mgr_fk = mgr.mgr_fk;
                 target.domain_id = mgr.domain_id;
@@ -87,6 +88,7 @@ namespace TradingLib.Common
                 target.Mobile = mgr.Mobile;
                 target.QQ = mgr.QQ;
                 target.AccLimit = mgr.AccLimit;
+                target.AgentLimit = mgr.AgentLimit;
 
                 ORM.MManager.UpdateManager(target);
             }

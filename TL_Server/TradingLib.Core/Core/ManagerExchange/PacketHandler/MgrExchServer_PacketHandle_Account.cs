@@ -95,6 +95,15 @@ namespace TradingLib.Core
         void SrvOnDelAccount(MGRReqDelAccountRequest request, ISession session, Manager manager)
         {
             debug(string.Format("管理员:{0} 请求删除帐户:{1}", session.AuthorizedID, request.ToString()), QSEnumDebugLevel.INFO);
+            IAccount account = TLCtxHelper.CmdAccount[request.AccountToDelete];
+            if (account == null)
+            {
+                throw new FutsRspError("交易帐户不存在");
+            }
+            if (account.NowEquity != 0)
+            {
+                throw new FutsRspError("交易帐户有资金，无法删除");
+            }
             clearcentre.DelAccount(request.AccountToDelete);
 
             session.OperationSuccess("交易帐户:" + request.AccountToDelete + " 删除成功");

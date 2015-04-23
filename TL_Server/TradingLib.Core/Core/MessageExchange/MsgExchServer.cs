@@ -450,7 +450,28 @@ namespace TradingLib.Core
                     {
                         if (ClientLoginInfoEvent != null)
                         {
-                            ClientLoginInfoEvent(c, login);
+                            //检查对应的帐户是否还有交易客户端
+                            if(c.Account != null)
+                            {
+                                //注销操作
+                                if (!login)
+                                {
+                                    //查询该交易帐户是否还有登入的回话 如果存在则不更新注销消息
+                                    TrdClientInfo info = tl.ClientsForAccount(c.Account.ID).FirstOrDefault();
+                                    if (info == null)
+                                    {
+                                        ClientLoginInfoEvent(c, login);
+                                    }
+                                    else
+                                    {
+                                        ClientLoginInfoEvent(info,true);//还有其他客户端登入，则显示该客户端回话信息
+                                    }
+                                }
+                                else//登入操作
+                                {
+                                    ClientLoginInfoEvent(c, login);
+                                }
+                            }
                         }
                         debug("客户端:" + c.Location.ClientID + " 登入状态:"+login.ToString(), QSEnumDebugLevel.INFO);
                     };

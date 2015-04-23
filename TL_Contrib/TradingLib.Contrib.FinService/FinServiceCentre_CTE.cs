@@ -173,22 +173,23 @@ namespace TradingLib.Contrib.FinService
             if (acc == null)
             {
                 throw new FutsRspError("交易帐号不存在");
-                //SendJsonReplyMgr(session, Mixins.JsonReply.GenericError(1, "交易帐号不存在"));
-                //return;
             }
             FinServiceStub stub = FinTracker.FinServiceTracker[target.Account];
             if (stub == null)
             {
                 throw new FutsRspError("无有效配资服务");
-                //SendJsonReplyMgr(session, Mixins.JsonReply.GenericError(1, "无有效配资服务"));
-                //return;
             }
 
             if (!stub.ID.Equals(target.ID))
             { 
                 
             }
-
+            string error = "参数设置错误";
+            if (!stub.ValidArguments(target.FinService.Arguments,out error))
+            { 
+                throw new FutsRspError(error);
+            }
+            //target.FinService.Arguments
             //更新参数
             FinTracker.ArgumentTracker.UpdateArgumentAccount(target.ID, target.FinService.Arguments);
             
@@ -295,14 +296,27 @@ namespace TradingLib.Contrib.FinService
 
         /// <summary>
         /// 查询某个交易日 代理商汇总记录
+        /// 这里需要返回该代理自己的统计以及该代理下面所有代理的汇总统计
         /// </summary>
         /// <param name="session"></param>
         /// <param name="settleday"></param>
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryTotalReport", "QryTotalReport - query totalreport", "查询某日所有代理的汇总统计")]
         public void CTE_QryTotalReport(ISession session,int agent,int settleday)
         {
-            JsonWrapperToalReport report = ORM.MServiceChargeReport.GenTotalReport(agent, settleday);
-            session.ReplyMgr(report);
+            Manager mgr = BasicTracker.ManagerTracker[agent];
+            if (mgr == null)
+            {
+                throw new FutsRspError("指定管理员不存在");
+            }
+            IEnumerable<Manager> managers = mgr.GetVisibleManager();
+            List<JsonWrapperToalReport> reports = new List<JsonWrapperToalReport>();
+            foreach (var qmgr in managers)
+            {
+                JsonWrapperToalReport report = ORM.MServiceChargeReport.GenTotalReport2(qmgr.BaseMgrID, settleday);
+                reports.Add(report);
+                
+            }
+            session.ReplyMgr(reports.ToArray());
             //SendJsonReplyMgr(session, report);
         }
 
@@ -331,7 +345,7 @@ namespace TradingLib.Contrib.FinService
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryTotalReportDayRange", "QryTotalReportDayRange - query totalreport", "查询某个代理某个时间段内利润流水")]
         public void CTE_QryTotalReport(ISession session, int agentfk,int start,int end)
         {
-            JsonWrapperToalReport[] reports = ORM.MServiceChargeReport.GenTotalReportByDayRange(agentfk,start,end).Select((ret) => { return FillTotalReport(ret); }).ToArray();
+            JsonWrapperToalReport[] reports = ORM.MServiceChargeReport.GenTotalReportByDayRange2(agentfk,start,end).Select((ret) => { return FillTotalReport(ret); }).ToArray();
             session.ReplyMgr(reports);
             //SendJsonReplyMgr(session, reports);
         }

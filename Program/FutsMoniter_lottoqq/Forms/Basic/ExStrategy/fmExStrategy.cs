@@ -18,8 +18,8 @@ namespace FutsMoniter
         public fmExStrategy()
         {
             InitializeComponent();
-            Factory.IDataSourceFactory(margin).BindDataSource(UIUtil.GetEnumValueObjects<QSEnumMarginStrategy>());
-            Factory.IDataSourceFactory(avabilefund).BindDataSource(UIUtil.GetEnumValueObjects<QSEnumAvabileFundStrategy>());
+            Factory.IDataSourceFactory(margin).BindDataSource(UIUtil.GetEnumValueObjects<QSEnumMarginPrice>());
+            //Factory.IDataSourceFactory(avabilefund).BindDataSource(UIUtil.GetEnumValueObjects<QSEnumAvabileFundStrategy>());
 
             btnSubmit.Click += new EventHandler(btnSubmit_Click);
             this.Load += new EventHandler(fmCommission_Load);
@@ -35,8 +35,10 @@ namespace FutsMoniter
 
             _current.SideMargin = sidemargin.Checked;
             _current.CreditSeparate = creditseparate.Checked;
-            _current.Margin = (QSEnumMarginStrategy)margin.SelectedValue;
-            _current.AvabileFund = (QSEnumAvabileFundStrategy)avabilefund.SelectedValue;
+            _current.MarginPrice = (QSEnumMarginPrice)margin.SelectedValue;
+            _current.IncludeCloseProfit = avaincludecloseprofit.Checked;
+            _current.IncludePositionProfit = avaincludecloseprofit.Checked;
+
             _current.PositionLock = poslock.Checked;
 
             Globals.TLClient.ReqUpdateExStrategyTemplateItem(_current);
@@ -154,8 +156,9 @@ namespace FutsMoniter
 
         void GotExStrategy(ExStrategy item)
         {
-            margin.SelectedValue = item.Margin;
-            avabilefund.SelectedValue = item.AvabileFund;
+            margin.SelectedValue = item.MarginPrice;
+
+            avaincludecloseprofit.Checked = item.IncludeCloseProfit;
             sidemargin.Checked = item.SideMargin;
             creditseparate.Checked = item.CreditSeparate;
             poslock.Checked = item.PositionLock;

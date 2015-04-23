@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
-
+using TradingLib.Mixins.JsonObject;
 
 namespace TradingLib.Contrib.FinService
 {
@@ -220,6 +220,11 @@ namespace TradingLib.Contrib.FinService
 
             ServicePlanBase baseobj = _finservice as ServicePlanBase;
             baseobj.InitArgument(accountarg, agentarg);
+        }
+        public bool ValidArguments(JsonWrapperArgument[] args,out string error)
+        {
+            
+            return this.FinService.ValidArguments(args,out error);
         }
         /// <summary>
         /// 初始化配资服务
