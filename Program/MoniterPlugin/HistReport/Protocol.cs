@@ -5,6 +5,106 @@ using System.Text;
 
 namespace TradingLib.Protocol
 {
+    /// <summary>
+    /// 分区统计
+    /// </summary>
+    public class DomainStatistic
+    {
+
+        /// <summary>
+        /// 分区ID
+        /// </summary>
+        public int Domain_ID { get; set; }
+        /// <summary>
+        /// 交易帐户数目
+        /// </summary>
+        public int AccNumTotal { get; set; }
+
+
+        /// <summary>
+        /// 登入交易帐户
+        /// </summary>
+        public int AccNumRegisted { get; set; }
+
+        /// <summary>
+        /// 最大交易帐户登入数
+        /// </summary>
+        public int MaxAccNumRegisted { get; set; }
+
+        /// <summary>
+        /// 发生交易的交易帐户
+        /// </summary>
+        public int AccNumTraded { get; set; }
+
+
+
+        /// <summary>
+        /// 所有保证金数量
+        /// </summary>
+        public decimal MarginTotal { get; set; }
+
+        /// <summary>
+        /// 最大保证金占用
+        /// </summary>
+        public decimal MaxMarginTotal { get; set; }
+
+        /// <summary>
+        /// 多头持仓数量
+        /// </summary>
+        public int LongPositionHold { get; set; }
+
+        /// <summary>
+        /// 最大多头持仓
+        /// </summary>
+        public decimal MaxLongPositionHold { get; set; }
+
+        /// <summary>
+        /// 空头持仓数量
+        /// </summary>
+        public int ShortPositionHold { get; set; }
+
+
+        /// <summary>
+        /// 最大空头持仓
+        /// </summary>
+        public int MaxShortPositionHold { get; set; }
+
+        /// <summary>
+        /// 手续费
+        /// </summary>
+        public decimal Commission { get; set; }
+
+        /// <summary>
+        /// 平仓盈亏
+        /// </summary>
+        public decimal RealizedPL { get; set; }
+
+        /// <summary>
+        /// 持仓盈亏
+        /// </summary>
+        public decimal UnRealizedPL { get; set; }
+
+        /// <summary>
+        /// 总权益
+        /// </summary>
+        public decimal Equity { get; set; }
+
+        /// <summary>
+        /// 总信用额度
+        /// </summary>
+        public decimal Credit { get; set; }
+        /// <summary>
+        /// 总入金
+        /// </summary>
+        public decimal CashIn { get; set; }
+
+        /// <summary>
+        /// 总入金 
+        /// </summary>
+        public decimal CashOut { get; set; }
+    }
+
+
     public class SummaryAccount
     {
         /// <summary>

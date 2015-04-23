@@ -9,6 +9,7 @@ namespace TradingLib.Common
 {
     public class CoreUtil : IUtil
     {
+
         /// <summary>
         /// 返回某个合约的可用价格
         /// </summary>

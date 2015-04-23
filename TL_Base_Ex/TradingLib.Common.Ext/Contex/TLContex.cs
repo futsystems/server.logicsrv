@@ -133,7 +133,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 清算中心
         /// </summary>
-        internal IClearCentreSrv ClearCentre
+        public IClearCentreSrv ClearCentre
         {
             get
             {
@@ -149,7 +149,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 风控中心
         /// </summary>
-        internal IRiskCentre RiskCentre
+        public IRiskCentre RiskCentre
         {
             get
             {
@@ -165,7 +165,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 清算中心
         /// </summary>
-        internal ISettleCentre SettleCentre
+        public ISettleCentre SettleCentre
         {
             get
             {
@@ -179,7 +179,7 @@ namespace TradingLib.Common
         }
 
         IMessageExchange _messageExchange = null;
-        internal IMessageExchange MessageExchange
+        public IMessageExchange MessageExchange
         {
             get
             {
@@ -192,7 +192,7 @@ namespace TradingLib.Common
         }
 
         IMessageMgr _messagemgr = null;
-        internal IMessageMgr MessageMgr
+        public IMessageMgr MessageMgr
         {
             get
             {
@@ -206,7 +206,7 @@ namespace TradingLib.Common
 
 
         IRouterManager _routermanager = null;
-        internal IRouterManager RouterManager
+        public IRouterManager RouterManager
         {
             get
             {
@@ -219,7 +219,7 @@ namespace TradingLib.Common
         }
 
         ITaskCentre _taskcentre = null;
-        internal ITaskCentre TaskCentre
+        public ITaskCentre TaskCentre
         {
             get
             {

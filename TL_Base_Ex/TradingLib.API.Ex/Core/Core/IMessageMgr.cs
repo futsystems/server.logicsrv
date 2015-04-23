@@ -22,6 +22,13 @@ namespace TradingLib.API
         /// <returns></returns>
         IEnumerable<ILocation> GetNotifyTargets(Predicate<Manager> predictate);
 
-
+        /// <summary>
+        /// 向管理端发送通知
+        /// </summary>
+        /// <param name="module"></param>
+        /// <param name="cmdstr"></param>
+        /// <param name="obj"></param>
+        /// <param name="predictate"></param>
+        void Notify(string module, string cmdstr, object obj, Predicate<Manager> predictate);
     }
 }

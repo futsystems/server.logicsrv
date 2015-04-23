@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.MoniterControl;
-
+using TradingLib.Protocol;
 
 namespace TradingLib.HistReport
 {
@@ -68,7 +68,48 @@ namespace TradingLib.HistReport
             this.JsonRequest("HistReportCentre", "QryAccountSummary", data);
         }
 
+        /// <summary>
+        /// CallbackAttr标注 注册一个回调函数
+        /// </summary>
+        /// <param name="result"></param>
+        [CallbackAttr("HistReportCentre", "Statistic")]
+        public void OnStatisticNotify(string result)
+        {
+            Util.Debug("got result:" + result, QSEnumDebugLevel.INFO);
+            DomainStatistic ds = MoniterHelper.ParseJsonResponse<DomainStatistic>(result);
+            if (ds != null)
+            {
+                InvokeGotDomainStatistic(ds);
+            }
+        }
 
+        void InvokeGotDomainStatistic(DomainStatistic ds)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action<DomainStatistic>(InvokeGotDomainStatistic), new object[] { ds });
+            }
+            else
+            {
+                lbaccnumtotal.Text = ds.AccNumTotal.ToString();
+                lbaccnumtraded.Text = ds.AccNumTraded.ToString();
+                lbaccnumregisted.Text = ds.MaxAccNumRegisted.ToString();
+                lbequity.Text = Util.FormatDecimal(ds.Equity);
+                lbcredit.Text = Util.FormatDecimal(ds.Credit);
+                lbcashin.Text = Util.FormatDecimal(ds.CashIn);
+                lbcashout.Text = Util.FormatDecimal(ds.CashOut);
+                lbcommission.Text = Util.FormatDecimal(ds.Commission);
+                lbrealizedpl.Text = Util.FormatDecimal(ds.RealizedPL);
+                lbunrealizedpl.Text = Util.FormatDecimal(ds.UnRealizedPL);
+
+                lbmargin.Text = Util.FormatDecimal(ds.MarginTotal);
+                lbmaxmargin.Text = Util.FormatDecimal(ds.MaxMarginTotal);
+                lblonghod.Text = ds.LongPositionHold.ToString();
+                lbshorthold.Text = ds.ShortPositionHold.ToString();
+                lbmaxlonghold.Text = ds.MaxLongPositionHold.ToString();
+                lbmaxshorthold.Text = ds.MaxShortPositionHold.ToString();
+            }
+        }
 
         /// <summary>
         /// CallbackAttr标注 注册一个回调函数

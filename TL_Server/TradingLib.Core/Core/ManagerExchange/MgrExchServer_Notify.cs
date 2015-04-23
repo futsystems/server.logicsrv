@@ -60,6 +60,33 @@ namespace TradingLib.Core
             NotifyCashOperation(e.CashOperation);
         }
 
+        void EventSystem_ManagerNotifyEvent(object sender, ManagerNotifyEventArgs e)
+        {
+            NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(GetNotifyTargets(e.NotifyPredicate));
+            response.ModuleID = CoreName;
+            response.CMDStr = "ManagerNotify";
+            response.Result = Mixins.Json.JsonMapper.ToJson(e.Notify);
+
+            CachePacket(response);
+        }
+
+
+        /// <summary>
+        /// 向某个Manager过滤谓词对应的Manager发送通知
+        /// </summary>
+        /// <param name="cmdstr"></param>
+        /// <param name="module"></param>
+        /// <param name="obj"></param>
+        /// <param name="predictate"></param>
+        public void Notify(string module, string cmdstr, object obj, Predicate<Manager> predictate)
+        {
+            NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(GetNotifyTargets(predictate));
+            response.ModuleID = module;
+            response.CMDStr = cmdstr;
+            response.Result = Mixins.Json.JsonReply.SuccessReply(obj).ToJson();
+            CachePacket(response);
+        }
+
         /// <summary>
         /// 通过谓词过滤出当前通知地址
         /// 需要提供的参数就是Manager对应的谓词，用于判断是否需要通知该Manager

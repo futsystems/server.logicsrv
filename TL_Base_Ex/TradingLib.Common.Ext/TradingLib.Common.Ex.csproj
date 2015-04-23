@@ -66,6 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Accounts\Account.cs" />
+    <Compile Include="Contex\Event\EventArgs\ManagerNotifyEventArgs.cs" />
     <Compile Include="Contrib\Task.cs" />
     <Compile Include="ORM\MCommission.cs" />
     <Compile Include="ORM\MMargin.cs" />
