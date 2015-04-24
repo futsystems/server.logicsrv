@@ -100,7 +100,6 @@ namespace TradingLib.Contrib
                 Manager m = d.GetRootManager();
                 if(m != null)
                 {
-                    Util.Debug("send status to manger");
                     TLCtxHelper.Ctx.MessageMgr.Notify(ContribName, "Statistic", UpdateDomainStaticMap(d), GetSameRoot(m));
                 }  
             }

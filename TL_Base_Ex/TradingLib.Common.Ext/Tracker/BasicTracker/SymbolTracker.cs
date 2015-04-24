@@ -108,14 +108,14 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="domain_id"></param>
         /// <param name="sym"></param>
-        internal void UpdateSymbol(int domain_id, SymbolImpl sym)
+        internal void UpdateSymbol(int domain_id, SymbolImpl sym,bool updateall=true)
         {
             DBSymbolTracker tracker = null;
             if (!domainsymboltracker.TryGetValue(domain_id, out tracker))
             {
                 domainsymboltracker.Add(domain_id, new DBSymbolTracker(BasicTracker.DomainTracker[domain_id]));
             }
-            domainsymboltracker[domain_id].UpdateSymbol(sym);
+            domainsymboltracker[domain_id].UpdateSymbol(sym, updateall);
         }
 
         internal void SyncSymbol(Domain domain, SymbolImpl sym)
@@ -384,21 +384,29 @@ namespace TradingLib.Common
             }
         }
 
-        public void UpdateSymbol(SymbolImpl sym)
+        /// <summary>
+        /// updateall标识是否同步所有信息 比如手续费和保证金
+        /// 如果超级域更新合约的相关数据，如果分区存在该合约则只跟新基础数据不用更新分区设置的保证金和手续费
+        /// </summary>
+        /// <param name="sym"></param>
+        /// <param name="updateall"></param>
+        public void UpdateSymbol(SymbolImpl sym,bool updateall=true)
         {
             SymbolImpl target = null;
             if (symcodemap.TryGetValue(sym.Symbol, out target))//已经存在该合约
             {
+                if (updateall)
+                {
+                    target.EntryCommission = sym._entrycommission;
+                    target.ExitCommission = sym._exitcommission;
 
-                target.EntryCommission = sym._entrycommission;
-                target.ExitCommission = sym._exitcommission;
+                    target.Margin = sym._margin;
+                    target.ExtraMargin = sym._extramargin;
+                    target.MaintanceMargin = sym._maintancemargin;
 
-                target.Margin = sym._margin;
-                target.ExtraMargin = sym._extramargin;
-                target.MaintanceMargin = sym._maintancemargin;
-
-                target.Tradeable = sym.Tradeable;//更新交易标识
-                //target.ExpireMonth = sym.ExpireMonth;
+                    target.Tradeable = sym.Tradeable;//更新交易标识
+                    //target.ExpireMonth = sym.ExpireMonth;
+                }
                 target.ExpireDate = sym.ExpireDate;
 
                 ORM.MBasicInfo.UpdateSymbol(target);

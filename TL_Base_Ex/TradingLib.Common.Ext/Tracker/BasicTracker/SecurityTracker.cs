@@ -67,14 +67,14 @@ namespace TradingLib.Common
             }
         }
 
-        internal void UpdateSecurity(SecurityFamilyImpl sec)
+        internal void UpdateSecurity(SecurityFamilyImpl sec,bool updateall = true)
         {
             DBSecurityTracker tracker = null;
             if (!domainsecboltracker.TryGetValue(sec.Domain_ID, out tracker))
             {
                 domainsecboltracker.Add(sec.ID, new DBSecurityTracker(BasicTracker.DomainTracker[sec.Domain_ID]));
             }
-            domainsecboltracker[sec.Domain_ID].UpdateSecurity(sec);
+            domainsecboltracker[sec.Domain_ID].UpdateSecurity(sec,updateall);
 
         }
 
@@ -277,10 +277,10 @@ namespace TradingLib.Common
             }
         
         }
-        public void UpdateSecurity(SecurityFamilyImpl sec)
+        public void UpdateSecurity(SecurityFamilyImpl sec,bool updateall = true)
         {
             SecurityFamilyImpl target = null;
-            if (idxcodemap.TryGetValue(sec.ID, out target))//品种存在 更新品种
+            if (idxcodemap.TryGetValue(sec.ID, out target))//品种存在 更新品种 通过ID更新 品种会存在修改code的情况
             {
                 //内存实例更新
                 target.Code = sec.Code;
@@ -298,14 +298,19 @@ namespace TradingLib.Common
                 target.underlaying_fk = sec.underlaying_fk;
                 target.UnderLaying = BasicTracker.SecurityTracker[target.Domain_ID, target.underlaying_fk];
 
+                
                 target.Multiple = sec.Multiple;
                 target.PriceTick = sec.PriceTick;
-                target.EntryCommission = sec.EntryCommission;
-                target.ExitCommission = sec.ExitCommission;
-                target.Margin = sec.Margin;
-                target.ExtraMargin = sec.ExtraMargin;
-                target.MaintanceMargin = sec.MaintanceMargin;
-                target.Tradeable = sec.Tradeable;
+
+                if (updateall)
+                {
+                    target.EntryCommission = sec.EntryCommission;
+                    target.ExitCommission = sec.ExitCommission;
+                    target.Margin = sec.Margin;
+                    target.ExtraMargin = sec.ExtraMargin;
+                    target.MaintanceMargin = sec.MaintanceMargin;
+                    target.Tradeable = sec.Tradeable;
+                }
  
                 //数据库更新
                 ORM.MBasicInfo.UpdateSecurity(target);

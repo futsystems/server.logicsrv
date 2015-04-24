@@ -99,7 +99,37 @@ namespace TradingLib.Core
 
                 SecurityFamilyImpl sec = request.SecurityFaimly;
 
+                SecurityFamilyImpl rawsec = manager.Domain.GetSecurityFamily(sec.ID);
+                if (rawsec == null)
+                {
+                    Util.Debug("品种数据异常，直接返回");
+                    return;
+                }
+
+
+                //如果是超级域 则同步更新所有分区
+                if (manager.Domain.Super)
+                {
+                    //更新所有域的品种
+                    foreach (var d in BasicTracker.DomainTracker.Domains)
+                    {
+                        if (d.ID == manager.Domain.ID) //超级域 跳过 已经更新过品种数据
+                            continue;
+                        //通过初始品种数据的Code找到对应的对象，然后将ID传入 调用更新，否则更新时 ID不对应导致重复增加
+                        SecurityFamilyImpl t = d.GetSecurityFamily(rawsec.Code);
+                        if (t == null)
+                        {
+                            continue;
+                        }
+                        sec.ID = t.ID;
+                        d.UpdateSecurity(sec,false);
+                    }
+                }
+
+                sec.ID = rawsec.ID;
+                //分区数据更新完毕后 再更新超级分区
                 manager.Domain.UpdateSecurity(sec);
+
 
                 RspMGRQrySecurityResponse response = ResponseTemplate<RspMGRQrySecurityResponse>.SrvSendRspResponse(request);
                 response.SecurityFaimly = manager.Domain.GetSecurityFamily(sec.ID);
@@ -131,17 +161,40 @@ namespace TradingLib.Core
                     throw new FutsRspError("无权更新合约数据");
                 }
 
-                SymbolImpl sym = request.Symbol;
+                SymbolImpl symbol = request.Symbol;
+                //设定合约symbol为当前管理员域ID 避免管理端没有正常传输分区ID
+                symbol.Domain_ID = manager.Domain.ID;
 
-                manager.Domain.UpdateSymbol(sym);
+                SecurityFamilyImpl rawsec = BasicTracker.SecurityTracker[symbol.Domain_ID, symbol.security_fk];
+                if (rawsec == null)
+                {
+                    Util.Debug("品种数据异常，直接返回");
+                    return;
+                }
+
+                manager.Domain.UpdateSymbol(symbol);
+
+                //如果是超级域 则同步更新所有分区
+                if (manager.Domain.Super)
+                {
+                    //更新所有域的合约
+                    foreach (var d in BasicTracker.DomainTracker.Domains)
+                    {
+                        if (d.ID == manager.Domain.ID) //超级域 跳过 已经更新过品种数据
+                            continue;
+                        d.UpdateSymbolViaSuper(symbol);
+                    }
+                }
+
+
 
                 RspMGRQrySymbolResponse response = ResponseTemplate<RspMGRQrySymbolResponse>.SrvSendRspResponse(request);
-                response.Symbol = manager.Domain.GetSymbol(sym.ID);
+                response.Symbol = manager.Domain.GetSymbol(symbol.ID);
                 CacheRspResponse(response);
 
-                if (sym.Tradeable)
+                if (symbol.Tradeable)
                 {
-                    exchsrv.RegisterSymbol(sym);
+                    exchsrv.RegisterSymbol(symbol);
                 }
                 session.OperationSuccess("合约数据更新成功");
             }
@@ -164,9 +217,22 @@ namespace TradingLib.Core
                 }
 
                 SecurityFamilyImpl sec = request.SecurityFaimly;
+
                 if (manager.Domain.GetSecurityFamily(sec.Code) == null)
                 {
                     manager.Domain.UpdateSecurity(sec);
+                    
+                    //如果是超级域 则同步更新所有分区
+                    if (manager.Domain.Super)
+                    {
+                        //更新所有域的品种
+                        foreach (var d in BasicTracker.DomainTracker.Domains)
+                        {
+                            if (d.ID == manager.Domain.ID) //超级域 跳过 已经更新过品种数据
+                                continue;
+                            d.UpdateSecurity(sec);
+                        }
+                    }
 
                     RspMGRQrySecurityResponse response = ResponseTemplate<RspMGRQrySecurityResponse>.SrvSendRspResponse(request);
                     response.SecurityFaimly = manager.Domain.GetSecurityFamily(sec.Code);
@@ -202,9 +268,34 @@ namespace TradingLib.Core
                 }
 
                 SymbolImpl symbol = request.Symbol;
+                //设定合约symbol为当前管理员域ID 避免管理端没有正常传输分区ID
+                symbol.Domain_ID = manager.Domain.ID;
+
                 if (manager.Domain.GetSymbol(symbol.Symbol) == null)
                 {
+                    SecurityFamilyImpl rawsec = BasicTracker.SecurityTracker[symbol.Domain_ID, symbol.security_fk];
+                    if (rawsec == null)
+                    {
+                        Util.Debug("品种数据异常，直接返回");
+                        return;
+                    }
+
                     manager.Domain.UpdateSymbol(symbol);
+
+                    //如果是超级域 则同步更新所有分区
+                    if (manager.Domain.Super)
+                    {
+                        //更新所有域的合约
+                        foreach (var d in BasicTracker.DomainTracker.Domains)
+                        {
+                            if (d.ID == manager.Domain.ID) //超级域 跳过 已经更新过品种数据
+                                continue;
+                            d.UpdateSymbolViaSuper(symbol);
+                        }
+                    }
+
+                    
+
 
                     RspMGRReqAddSymbolResponse response = ResponseTemplate<RspMGRReqAddSymbolResponse>.SrvSendRspResponse(request);
                     response.Symbol = manager.Domain.GetSymbol(symbol.Symbol);
