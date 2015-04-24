@@ -111,14 +111,14 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="domain_id"></param>
         /// <param name="sym"></param>
-        internal void UpdateSymbol(int domain_id, SymbolImpl sym)
+        internal void UpdateSymbol(int domain_id, SymbolImpl sym,bool updateall = true)
         {
             DBSymbolTracker tracker = null;
             if (!domainsymboltracker.TryGetValue(domain_id, out tracker))
             {
                 domainsymboltracker.Add(domain_id, new DBSymbolTracker(BasicTracker.DomainTracker[domain_id]));
             }
-            domainsymboltracker[domain_id].UpdateSymbol(sym);
+            domainsymboltracker[domain_id].UpdateSymbol(sym,updateall);
         }
 
         internal void SyncSymbol(Domain domain, SymbolImpl sym)
@@ -386,21 +386,24 @@ namespace TradingLib.Common
             }
         }
 
-        public void UpdateSymbol(SymbolImpl sym)
+        public void UpdateSymbol(SymbolImpl sym,bool updateall = true)
         {
             SymbolImpl target = null;
             if (symcodemap.TryGetValue(sym.Symbol, out target))//已经存在该合约
             {
 
-                target.EntryCommission = sym._entrycommission;
-                target.ExitCommission = sym._exitcommission;
+                if (updateall)
+                {
+                    target.EntryCommission = sym._entrycommission;
+                    target.ExitCommission = sym._exitcommission;
 
-                target.Margin = sym._margin;
-                target.ExtraMargin = sym._extramargin;
-                target.MaintanceMargin = sym._maintancemargin;
+                    target.Margin = sym._margin;
+                    target.ExtraMargin = sym._extramargin;
+                    target.MaintanceMargin = sym._maintancemargin;
 
-                target.Tradeable = sym.Tradeable;//更新交易标识
-                //target.ExpireMonth = sym.ExpireMonth;
+                    target.Tradeable = sym.Tradeable;//更新交易标识
+                    //target.ExpireMonth = sym.ExpireMonth;
+                }
                 target.ExpireDate = sym.ExpireDate;
 
                 ORM.MBasicInfo.UpdateSymbol(target);

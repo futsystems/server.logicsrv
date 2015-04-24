@@ -175,5 +175,35 @@ namespace TradingLib.Common
                 }
             }
         }
+
+
+        /// <summary>
+        /// 向某个模板中添加某个品种的默认模板项
+        /// </summary>
+        /// <param name="tmp"></param>
+        /// <param name="sec"></param>
+        public void AddDefaultTemplateItem(CommissionTemplate tmp, SecurityFamilyImpl sec)
+        {
+            for (int i = 1; i <= 12; i++)
+            {
+                CommissionTemplateItem item = new CommissionTemplateItem();
+                item.Code = sec.Code;
+                item.Month = i;
+                item.OpenByMoney = 0;
+                item.OpenByVolume = 0;
+                item.CloseByMoney = 0;
+                item.CloseByVolume = 0;
+                item.CloseTodayByMoney = 0;
+                item.CloseTodayByVolume = 0;
+                item.ChargeType = QSEnumChargeType.Relative;
+                item.Template_ID = tmp.ID;
+                item.Percent = 0;
+                ORM.MCommission.InsertCommissionTemplateItem(item);
+
+                //加入到内存数据结构
+                commissionTemplateItemMap.TryAdd(item.ID, item);
+                tmp.AddItem(item);
+            }
+        }
     }
 }

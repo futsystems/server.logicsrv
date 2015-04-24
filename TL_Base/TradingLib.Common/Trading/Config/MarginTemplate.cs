@@ -75,5 +75,23 @@ namespace TradingLib.Common
                 return null;
             }
         }
+
+        /// <summary>
+        /// 判断是否存在某个品种的模板项目
+        /// </summary>
+        /// <param name="code"></param>
+        /// <param name="month"></param>
+        /// <returns></returns>
+        public bool HaveTemplateItem(string code, int month = 0)
+        {
+            if (month == 0)
+            {
+                return _itemmap.Keys.Contains(string.Format("{0}-1", code));
+            }
+            else
+            {
+                return _itemmap.Keys.Contains(string.Format("{0}-{1}", code, month));
+            }
+        }
     }
 }

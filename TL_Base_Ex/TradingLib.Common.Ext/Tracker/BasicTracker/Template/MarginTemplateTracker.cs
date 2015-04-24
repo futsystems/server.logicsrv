@@ -150,5 +150,30 @@ namespace TradingLib.Common
                 }
             }
         }
+
+        /// <summary>
+        /// 为某个保证金模板增加某个品种的保证金模板项目
+        /// </summary>
+        /// <param name="tmp"></param>
+        /// <param name="sec"></param>
+        public void AddDefaultTemplateItem(MarginTemplate tmp, SecurityFamilyImpl sec)
+        {
+            for (int i = 1; i <= 12; i++)
+            {
+                MarginTemplateItem item = new MarginTemplateItem();
+                item.Code = sec.Code;
+                item.Month = i;
+                item.MarginByMoney = 0;
+                item.MarginByVolume = 0;
+                item.Percent = 0;
+                item.ChargeType = QSEnumChargeType.Relative;
+                item.Template_ID = tmp.ID;
+                item.Percent = 0;
+                ORM.MMargin.InsertMarginTemplateItem(item);
+                //加入到内存数据结构
+                marginTemplateItemMap.TryAdd(item.ID, item);
+                tmp.AddItem(item);
+            }
+        }
     }
 }
