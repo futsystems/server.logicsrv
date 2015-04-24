@@ -100,9 +100,9 @@ namespace TradingLib.Core
             {
                 throw new FutsRspError("交易帐户不存在");
             }
-            if (account.NowEquity != 0)
+            if (account.NowEquity > 1)
             {
-                throw new FutsRspError("交易帐户有资金，无法删除");
+                throw new FutsRspError("交易帐户资金大于1元，请处理后删除");
             }
             clearcentre.DelAccount(request.AccountToDelete);
 

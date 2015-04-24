@@ -175,11 +175,12 @@ namespace TradingLib.Common
                 idxcodemap[sym.ID] = sym;
             }
 
-            //易话合约底层绑定
+            //绑定品种对象和底层合约
             foreach (SymbolImpl sym in symcodemap.Values)
             {
                 sym.ULSymbol = this[sym.underlaying_fk];
                 sym.UnderlayingSymbol = this[sym.underlayingsymbol_fk];
+
                 sym.SecurityFamily = BasicTracker.SecurityTracker[sym.Domain_ID, sym.security_fk];
             }
         }
@@ -407,10 +408,16 @@ namespace TradingLib.Common
                     target.Tradeable = sym.Tradeable;//更新交易标识
                     //target.ExpireMonth = sym.ExpireMonth;
                 }
+                //检查底层数据
+                if (target.security_fk == 0)
+                {
+                    target.security_fk = sym.security_fk;
+                    target.SecurityFamily = sym.SecurityFamily;
+                    //合约更新没有对底层品种进行更新，防止错误操作这里进行了锁定
+                }
                 target.ExpireDate = sym.ExpireDate;
 
                 ORM.MBasicInfo.UpdateSymbol(target);
-
             }
             else//不存在该合约
             {
@@ -434,8 +441,13 @@ namespace TradingLib.Common
                 target.underlayingsymbol_fk = sym.underlayingsymbol_fk;
                 target.UnderlayingSymbol = BasicTracker.SymbolTracker[target.Domain_ID, target.underlayingsymbol_fk] as SymbolImpl;
                 target.Tradeable = sym.Tradeable;//更新交易标识
-                
 
+                //如果不存在品种信息 则不插入该合约
+                if (target.SecurityFamily == null || target.security_fk == 0)
+                {
+                    Util.Debug("合约对象没有品种信息,直接返回");
+                    return;
+                }
                 ORM.MBasicInfo.InsertSymbol(target);
                 
                 symcodemap[target.Symbol] = target;

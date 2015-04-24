@@ -69,6 +69,8 @@ namespace FutsMoniter
             kryptonRibbonGroupButton_Commission.Click += new EventHandler(kryptonRibbonGroupButton_Commission_Click);
             kryptonRibbonGroupButton_Margin.Click += new EventHandler(kryptonRibbonGroupButton_Margin_Click);
             kryptonRibbonGroupButton_ExStrategy.Click += new EventHandler(kryptonRibbonGroupButton_ExStrategy_Click);
+
+            kryptonRibbonGroupButton_CheckSecAndSymbol.Click += new EventHandler(kryptonRibbonGroupButton_CheckSecAndSymbol_Click);
             //kryptonribbongroupbutton_
             //历史记录
             kryptonRibbonGroupButton_QueryExHist.Click += new EventHandler(kryptonRibbonGroupButton_QueryExHist_Click);
@@ -111,6 +113,14 @@ namespace FutsMoniter
 
 
             //kryptonRibbonGroupButton_demo.Click += new EventHandler(kryptonRibbonGroupButton_demo_Click);
+        }
+
+        void kryptonRibbonGroupButton_CheckSecAndSymbol_Click(object sender, EventArgs e)
+        {
+            if (MoniterUtils.WindowConfirm("确认检查基础数据?") == System.Windows.Forms.DialogResult.Yes)
+            {
+                Globals.TLClient.ReqCheckSecurityAndSymbol();
+            }
         }
 
         void kryptonRibbonGroupButton_SettleManagerment_Click(object sender, EventArgs e)

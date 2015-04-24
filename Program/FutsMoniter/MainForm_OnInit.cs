@@ -28,6 +28,7 @@ namespace FutsMoniter
             //接口设置
             kryptonRibbonGroupButton_interfacelist.Visible = Globals.Domain.Super;
             
+
             //系统 开启关闭清算中心 默认行情和交易通道 超级管理员或者是独立部署的管理员
             kryptonRibbonGroupButton_OpenClearCentre.Visible = Globals.Domain.Super || Globals.Domain.Dedicated;
             kryptonRibbonGroupButton_CloseClearCentre.Visible = Globals.Domain.Super || Globals.Domain.Dedicated;
@@ -36,6 +37,7 @@ namespace FutsMoniter
             kryptonRibbonGroupButton_SettleManagerment.Visible = Globals.Domain.Super || Globals.Domain.Dedicated;
             kryptonRibbonGroupButton_SettleManagerment.Visible = Globals.Domain.Super || Globals.Domain.Dedicated;
 
+            kryptonRibbonGroupButton_CheckSecAndSymbol.Visible = Globals.Domain.Super && Globals.Manager.IsRoot();
             //超级管理员 可以查看所有界面
             if (!(Globals.Domain.Super&&Globals.Manager.IsRoot()))
             {

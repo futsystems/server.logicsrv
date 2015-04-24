@@ -127,6 +127,7 @@
             this.kryptonRibbonGroupButton3 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
             this.kryptonRibbonGroupButton8 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
             this.kryptonRibbonGroupButton9 = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
+            this.kryptonRibbonGroupButton_CheckSecAndSymbol = new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton();
             ((System.ComponentModel.ISupportInitialize)(this.TabRibbon)).BeginInit();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonDockableWorkspace)).BeginInit();
@@ -163,8 +164,7 @@
             this.tabFinance,
             this.tabHistQuery,
             this.kryptonRibbonTab1});
-            this.TabRibbon.SelectedContext = null;
-            this.TabRibbon.SelectedTab = this.tabHistQuery;
+            this.TabRibbon.SelectedTab = this.tabBasicConfig;
             this.TabRibbon.Size = new System.Drawing.Size(1107, 111);
             this.TabRibbon.TabIndex = 0;
             // 
@@ -380,7 +380,8 @@
             // kryptonRibbonGroupTriple14
             // 
             this.kryptonRibbonGroupTriple14.Items.AddRange(new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupItem[] {
-            this.kryptonRibbonGroupButton_ExStrategy});
+            this.kryptonRibbonGroupButton_ExStrategy,
+            this.kryptonRibbonGroupButton_CheckSecAndSymbol});
             // 
             // kryptonRibbonGroupButton_ExStrategy
             // 
@@ -729,6 +730,10 @@
             this.kryptonRibbonGroupButton3.ImageLarge = ((System.Drawing.Image)(resources.GetObject("kryptonRibbonGroupButton3.ImageLarge")));
             this.kryptonRibbonGroupButton3.TextLine1 = "保证金模板";
             // 
+            // kryptonRibbonGroupButton_CheckSecAndSymbol
+            // 
+            this.kryptonRibbonGroupButton_CheckSecAndSymbol.TextLine1 = "检查基础数据";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -858,6 +863,7 @@
         
         private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton8;
         private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton9;
+        private ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupButton kryptonRibbonGroupButton_CheckSecAndSymbol;
 
     }
 }

@@ -11,6 +11,88 @@ namespace TradingLib.Core
     public partial class MgrExchServer
     {
 
+        #region 检查品种与合约数据
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "CheckSecurityAndSymbol", "CheckSecurityAndSymbol - check security and symbol data", "检查品种和合约数据")]
+        public void CTE_CheckSecurityAndSymbol(ISession session)
+        {
+            debug("检查品种和合约数据", QSEnumDebugLevel.INFO);
+            Manager manager = session.GetManager();
+
+            bool right = manager.Domain.Super && manager.IsRoot();//超级分区的管理员才有权限执行数据检查
+            if (!right)
+            {
+                throw new FutsRspError("无权进行基础数据检查");
+            }
+
+            #region 更新品种
+            //遍历所有品种
+            foreach (var sec in manager.Domain.GetSecurityFamilies())
+            {
+                //更新所有域对应品种
+                foreach (var d in BasicTracker.DomainTracker.Domains)
+                {
+                    if (d.ID == manager.Domain.ID) //不更新超级域
+                        continue;
+                    
+                    //获得该域的品种对象 品种更新时按数据库ID进行查询
+                    SecurityFamilyImpl target = d.GetSecurityFamily(sec.Code);
+                    if (target == null)
+                    {
+                        //创建品种对象
+                        target = new SecurityFamilyImpl();
+                        target.Domain_ID = d.ID;
+                    }
+
+                    //复制品种数据
+                    target.Code = sec.Code;
+                    target.Name = sec.Name;
+                    target.Currency = sec.Currency;
+                    target.Type = sec.Type;
+
+                    target.exchange_fk = sec.exchange_fk;
+                    target.Exchange = BasicTracker.ExchagneTracker[target.exchange_fk];
+
+                    target.mkttime_fk = sec.mkttime_fk;
+                    target.MarketTime = BasicTracker.MarketTimeTracker[target.mkttime_fk];
+
+                    target.underlaying_fk = sec.underlaying_fk;
+                    target.UnderLaying = BasicTracker.SecurityTracker[target.Domain_ID, target.underlaying_fk];
+
+                    target.Multiple = sec.Multiple;
+                    target.PriceTick = sec.PriceTick;
+                    target.EntryCommission = sec.EntryCommission;
+                    target.ExitCommission = sec.ExitCommission;
+                    target.Margin = sec.Margin;
+                    target.ExtraMargin = sec.ExtraMargin;
+                    target.MaintanceMargin = sec.MaintanceMargin;
+                    target.Tradeable = sec.Tradeable;
+                    
+                    //对该分区更新或添加品种信息
+                    d.UpdateSecurity(target, false);
+                }
+            }
+            
+            #endregion
+
+
+            #region 更新合约
+            foreach (var sym in manager.Domain.GetSymbols())
+            { 
+                //更新所有域对应品种
+                foreach (var d in BasicTracker.DomainTracker.Domains)
+                {
+                    if (d.ID == manager.Domain.ID) //不更新超级域
+                        continue;
+                    d.UpdateSymbolViaSuper(sym);
+                }
+            }
+            session.OperationSuccess("基础数据检查完毕");
+            #endregion
+        }
+
+        #endregion
+
         #region Security Symbol Exchange MarketTime
         void SrvOnMGRQryExchange(MGRQryExchangeRequuest request, ISession session, Manager manager)
         {

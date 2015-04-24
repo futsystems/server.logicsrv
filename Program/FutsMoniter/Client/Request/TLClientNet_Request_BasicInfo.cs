@@ -13,6 +13,14 @@ namespace TradingLib.Common
        
         #region 基础数据维护
 
+        /// <summary>
+        /// 检查基础数据
+        /// </summary>
+        public void ReqCheckSecurityAndSymbol()
+        {
+            this.ReqContribRequest("MgrExchServer", "CheckSecurityAndSymbol","");  
+        }
+
         public void ReqUpdateRecvBank(JsonWrapperReceivableAccount bank)
         {
             this.ReqContribRequest("MgrExchServer", "UpdateReceiveableBank",TradingLib.Mixins.Json.JsonMapper.ToJson(bank)); 
