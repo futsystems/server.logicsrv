@@ -431,8 +431,11 @@ namespace TradingLib.Common
                 target.underlayingsymbol_fk = sym.underlayingsymbol_fk;
                 target.UnderlayingSymbol = BasicTracker.SymbolTracker[target.Domain_ID, target.underlayingsymbol_fk] as SymbolImpl;
                 target.Tradeable = sym.Tradeable;//更新交易标识
-                
 
+                if (target.security_fk == 0 || target.SecurityFamily == null)
+                {
+                    Util.Debug("合约对象没有品种数据,不插入该合约信息");
+                }
                 ORM.MBasicInfo.InsertSymbol(target);
                 
                 symcodemap[target.Symbol] = target;

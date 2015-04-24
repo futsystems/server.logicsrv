@@ -217,6 +217,15 @@ namespace TradingLib.Core
 
             var req = Mixins.Json.JsonMapper.ToObject(json);
             var account = req["account"].ToString();
+            IAccount acc = this[account];
+            if (acc == null)
+            {
+                throw new FutsRspError("交易帐户不存在");
+            }
+            if (acc.NowEquity > 1)
+            {
+                throw new FutsRspError("交易帐户资金大于1元，请处理后再删除");
+            }
             this.DelAccount(account);
 
             session.OperationSuccess("交易帐户:" + account + " 删除成功");
