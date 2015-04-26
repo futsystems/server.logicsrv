@@ -1,0 +1,63 @@
+<errors>
+<error id="NONE" value="0" prompt="正确"/>
+<error id="INVALID_LOGIN" value="1" prompt="不合法的登入"/>
+<error id="NOT_TRADINGDAY" value="2" prompt="非交易日"/>
+<error id="CLEARCENTRE_CLOSED" value="3" prompt="清算中心未开启"/>
+<error id="INVALID_ORDER" value="4" prompt="委托无效"/>
+<error id="NOT_AUTHORIZED" value="5" prompt="未授权"/>
+<error id="ORDER_ACCOUNT_NOT_MATCH" value="6" prompt="委托帐号与登入帐号不符"/>
+<error id="OLD_PASS_ERROR" value="7" prompt="旧密码错误"/>
+<error id="SYMBOL_NOT_EXISTED" value="8" prompt="指定合约不存在"/>
+<error id="SYMBOL_NOT_TRADEABLE" value="81" prompt="指定合约不可交易"/>
+<error id="SYMBOL_NOT_MARKETTIME" value="82" prompt="非交易时间"/>
+<error id="SYMBOL_TICK_ERROR" value="9" prompt="该合约无有效市场行情,无法处理委托"/>
+<error id="SETTLECENTRE_NOT_RESET" value="10" prompt="交易柜台未重置,等待结算"/>
+<error id="INSUFFICIENT_MONEY" value="11" prompt="可用资金不足"/>
+<error id="POSITION_NOT_HOLDING" value="12" prompt="无可平仓位"/>
+<error id="POSITION_OVER_CLOSE" value="15" prompt="可平持仓数量不足,请检查挂单"/>
+<error id="POSITION_ORDER_CANNOT_CLOSE" value="13" prompt="委托与当前持仓方向相同,无法平仓"/>
+<error id="POSITION_ORDER_CANNOT_OPEN" value="14" prompt="委托与当前持仓方向相反,无法开仓"/>
+<error id="OFFSETFLAG_CAN_NOT_TETECTED" value="140" prompt="同时持有多空头寸，无法自动判定开平标识，请设定开平标识"/>
+<error id="TWO_SIDE_POSITION_HOLD_FORBIDDEN" value="141" prompt="不允许进行锁仓操作"/>
+
+<error id="POSITION_OVER_CLOSE_AUTO_CANCEL" value="16" prompt="市价平仓溢出,系统自动扯单并平仓"/>
+<error id="ORDER_CAN_NOT_BE_DELETE" value="17" prompt="委托无法撤消"/>
+<error id="ORDER_IN_PRESTAGE" value="171" prompt="处理中,无法撤销"/>
+<error id="ORDERACTION_BAD_FIELD" value="18" prompt="委托操作字段有误"/>
+<error id="EXECUTION_BROKER_NOT_FOUND" value="19" prompt="无可用交易通道"/>
+<error id="EXECUTION_BROKER_PLACEORDER_ERROR" value="108" prompt="交易通道提交委托异常"/>
+<error id="TRADING_ACCOUNT_NOT_FOUND" value="20" prompt="交易帐号不存在"/>
+<error id="SELLTEINFO_NOT_FOUND" value="21" prompt="无结算记录"/>
+<error id="ORDERSIZE_LIMIT" value="22" prompt="最大单笔委托数量不能超过:50"/>
+<error id="ORDERSIZE_ZERO_ERROR" value="23" prompt="委托数量不能为零"/>
+<error id="ORDERPRICE_OVERT_LIMIT" value="24" prompt="价格超过涨跌幅"/>
+<error id="SERVICE_NOT_VALID" value="25" prompt="请求服务无效"/>
+<error id="ACCOUNT_NOT_CREATED" value="26" prompt="没有开通交易帐号,登入网站开通"/>
+<error id="LOGINTYPE_NOT_SUPPORT" value="27" prompt="登入方式不支持"/>
+<error id="TERMINAL_NUM_LIMIT" value="271" prompt="登入终端数量超过限制"/>
+<error id="CASHOPERATION_NOT_ALLOW_NOW" value="28" prompt="当前时间不允许出入金操作"/>
+<error id="SETTLECENTRE_IN_SETTLE" value="29" prompt="结算系统正在结算,无法处理委托"/>
+<error id="RISKCENTRE_CHECK_ERROR" value="100" prompt="风控检查异常"/>
+
+<error id="RISKCENTRE_CHECK_ERROR" value="100" prompt="风控检查异常"/>
+
+<error id="CASHOUT_OVER_AVABILE" value="200" prompt="超出可提金额"/>
+<error id="CASHOUT_STILL_HAVE_POSITION" value="200" prompt="有持仓,不允许出金"/>
+
+<error id="POSFLAT_CANCEL_ERROR" value="1000" prompt="强平前撤单失败"/>
+<error id="POSFLAT_FLATORDER_CANCEL_ERROR" value="1001" prompt="强平委托未成交,且撤单失败"/>
+<error id="POSFLAT_OVER_MAXTRYNUMS" value="1002" prompt="尝试强平持仓多次,未成功"/>
+
+
+<error id="SECURITY_EXIST" value="500" prompt="品种已存在"/>
+<error id="SYMBOL_EXIST" value="501" prompt="合约已存在"/>
+
+
+<error id="MGR_INACTIVE" value="400" prompt="柜员未激活"/>
+<error id="MGR_PASS_ERROR" value="401" prompt="柜员用户名或密码不正确"/>
+<error id="MGR_NOT_EXIST" value="402" prompt="柜员不存在"/>
+<error id="PLATFORM_EXPIRED" value="410" prompt="柜台授权过期"/>
+
+
+
+</errors>

@@ -1,0 +1,186 @@
+110926: [LOAD CONTRIB] TradingLib.Contrib.HistReportCentre
+110926: [LOAD CONTRIB] TradingLib.Contrib.CLI.CLIServer
+110926: CLIserver loading....
+110926: [LOAD CONTRIB] TradingLib.Contrib.FinService.FinServiceCentre
+110926: FinServiceCentre loading......
+110926: GetImplementors errorSystem.IO.FileNotFoundException: 未能加载文件或程序集“file:///D:\worktable\Futs.base\Platform\TradingSrv\Secure\Contrib\HttpServer.dll”或它的某一个依赖项。系统找不到指定的文件。
+文件名:“file:///D:\worktable\Futs.base\Platform\TradingSrv\Secure\Contrib\HttpServer.dll”
+   在 System.Reflection.RuntimeAssembly._nLoad(AssemblyName fileName, String codeBase, Evidence assemblySecurity, RuntimeAssembly locationHint, StackCrawlMark& stackMark, Boolean throwOnFileNotFound, Boolean forIntrospection, Boolean suppressSecurityChecks)
+   在 System.Reflection.RuntimeAssembly.nLoad(AssemblyName fileName, String codeBase, Evidence assemblySecurity, RuntimeAssembly locationHint, StackCrawlMark& stackMark, Boolean throwOnFileNotFound, Boolean forIntrospection, Boolean suppressSecurityChecks)
+   在 System.Reflection.RuntimeAssembly.InternalLoadAssemblyName(AssemblyName assemblyRef, Evidence assemblySecurity, StackCrawlMark& stackMark, Boolean forIntrospection, Boolean suppressSecurityChecks)
+   在 System.Reflection.RuntimeAssembly.InternalLoadFrom(String assemblyFile, Evidence securityEvidence, Byte[] hashValue, AssemblyHashAlgorithm hashAlgorithm, Boolean forIntrospection, Boolean suppressSecurityChecks, StackCrawlMark& stackMark)
+   在 System.Reflection.Assembly.ReflectionOnlyLoadFrom(String assemblyFile)
+   在 TradingLib.Common.PluginFinder.GetImplementors(String path, Type needtype)
+
+警告: 程序集绑定日志记录被关闭。
+要启用程序集绑定失败日志记录，请将注册表值 [HKLM\Software\Microsoft\Fusion!EnableLog] (DWORD)设置为 1。
+注意: 会有一些与程序集绑定失败日志记录关联的性能损失。
+要关闭此功能，请移除注册表值 [HKLM\Software\Microsoft\Fusion!EnableLog]。
+
+110926: Load ServicePlane Type:TradingLib.Contrib.FinService.SPCommonissionFixMargin
+110926: Load ServicePlane Type:TradingLib.Contrib.FinService.SPCommonissionBonus
+110926: Load ServicePlane Type:TradingLib.Contrib.FinService.SPSpecialIF
+110926: Load ServicePlane Type:TradingLib.Contrib.FinService.SPBonus
+110926: Load ServicePlane Type:TradingLib.Contrib.FinService.SPInterest
+110926: Load ServicePlane Type:TradingLib.Contrib.FinService.SPInterestFixMargin
+110926: Load Service Instance......
+110926: [START CONTRIB] TradingLib.Contirb.LogServer.LogServer
+110926: 启动日志服务,监听端口:3369
+110926: [START CONTRIB] TradingLib.Contrib.HistReportCentre
+110926: [START CONTRIB] TradingLib.Contrib.CLI.CLIServer
+110926: [START CONTRIB] TradingLib.Contrib.FinService.FinServiceCentre
+110926: Telnet server start listening at:8888
+110926: 添加风控项，帐户:6600001 rultename:AccountRuleSet.RSVendorFlat
+110926: 从数据库加载交易日:20150427 交易数据
+110926: 数据库恢复前次结算以来委托数据:0条
+110926: 数据库恢复前次结算以来成交数据:0条
+110926: 数据库恢复前次结算以来取消数据:0条
+110926: 从数据库加载上次结算日:20150426 持仓明细数据
+110926: 数据库恢复前次结算持仓明细数据:2条
+110926: 数据库恢复开启的PositionRound数据:1条
+110926: tick:IF1505 10@2404.000000 demo presettlement:2000
+110926: resume router roder....
+110926: resumed router order num:0
+110926: Starting MgrExch server...
+110926: Try to start server at: *:6670
+110927: try to load sessions form file:cache\MgrExch
+110927: webmsgexch start....
+110927: Start WebMsgRepServer
+110951: [LOAD CONTRIB] TradingLib.Contrib.HistReportCentre
+110951: [LOAD CONTRIB] TradingLib.Contrib.CLI.CLIServer
+110951: CLIserver loading....
+110951: [LOAD CONTRIB] TradingLib.Contrib.FinService.FinServiceCentre
+110951: FinServiceCentre loading......
+110951: Load ServicePlane Type:TradingLib.Contrib.FinService.SPCommonissionFixMargin
+110951: Load ServicePlane Type:TradingLib.Contrib.FinService.SPCommonissionBonus
+110951: Load ServicePlane Type:TradingLib.Contrib.FinService.SPSpecialIF
+110951: Load ServicePlane Type:TradingLib.Contrib.FinService.SPBonus
+110951: Load ServicePlane Type:TradingLib.Contrib.FinService.SPInterest
+110951: Load ServicePlane Type:TradingLib.Contrib.FinService.SPInterestFixMargin
+110951: Load Service Instance......
+110951: [START CONTRIB] TradingLib.Contirb.LogServer.LogServer
+110951: 启动日志服务,监听端口:3369
+110951: [START CONTRIB] TradingLib.Contrib.HistReportCentre
+110951: [START CONTRIB] TradingLib.Contrib.CLI.CLIServer
+110951: Telnet server start listening at:8888
+110951: [START CONTRIB] TradingLib.Contrib.FinService.FinServiceCentre
+110951: 添加风控项，帐户:6600001 rultename:AccountRuleSet.RSVendorFlat
+110952: 从数据库加载交易日:20150427 交易数据
+110952: 数据库恢复前次结算以来委托数据:0条
+110952: 数据库恢复前次结算以来成交数据:0条
+110952: 数据库恢复前次结算以来取消数据:0条
+110952: 从数据库加载上次结算日:20150426 持仓明细数据
+110952: 数据库恢复前次结算持仓明细数据:2条
+110952: 数据库恢复开启的PositionRound数据:1条
+110952: tick:IF1505 10@2404.000000 demo presettlement:2000
+110952: resume router roder....
+110952: resumed router order num:0
+110952: Starting MgrExch server...
+110952: Try to start server at: *:6670
+111631: [LOAD CONTRIB] TradingLib.Contrib.HistReportCentre
+111631: [LOAD CONTRIB] TradingLib.Contrib.CLI.CLIServer
+111631: CLIserver loading....
+111631: [LOAD CONTRIB] TradingLib.Contrib.FinService.FinServiceCentre
+111631: FinServiceCentre loading......
+111631: Load ServicePlane Type:TradingLib.Contrib.FinService.SPCommonissionFixMargin
+111631: Load ServicePlane Type:TradingLib.Contrib.FinService.SPCommonissionBonus
+111631: Load ServicePlane Type:TradingLib.Contrib.FinService.SPSpecialIF
+111631: Load ServicePlane Type:TradingLib.Contrib.FinService.SPBonus
+111631: Load ServicePlane Type:TradingLib.Contrib.FinService.SPInterest
+111631: Load ServicePlane Type:TradingLib.Contrib.FinService.SPInterestFixMargin
+111631: Load Service Instance......
+111631: [START CONTRIB] TradingLib.Contirb.LogServer.LogServer
+111631: 启动日志服务,监听端口:3369
+111631: [START CONTRIB] TradingLib.Contrib.HistReportCentre
+111631: [START CONTRIB] TradingLib.Contrib.CLI.CLIServer
+111631: Telnet server start listening at:8888
+111631: [START CONTRIB] TradingLib.Contrib.FinService.FinServiceCentre
+111631: 添加风控项，帐户:6600001 rultename:AccountRuleSet.RSVendorFlat
+111631: 从数据库加载交易日:20150427 交易数据
+111631: 数据库恢复前次结算以来委托数据:0条
+111631: 数据库恢复前次结算以来成交数据:0条
+111631: 数据库恢复前次结算以来取消数据:0条
+111631: 从数据库加载上次结算日:20150426 持仓明细数据
+111631: 数据库恢复前次结算持仓明细数据:2条
+111631: 数据库恢复开启的PositionRound数据:1条
+111631: tick:IF1505 10@2404.000000 demo presettlement:2000
+111631: resume router roder....
+111631: resumed router order num:0
+111631: Starting MgrExch server...
+111631: Try to start server at: *:6670
+112910: [LOAD CONTRIB] TradingLib.Contrib.HistReportCentre
+112910: [LOAD CONTRIB] TradingLib.Contrib.CLI.CLIServer
+112910: CLIserver loading....
+112910: [LOAD CONTRIB] TradingLib.Contrib.FinService.FinServiceCentre
+112910: FinServiceCentre loading......
+112910: Load ServicePlane Type:TradingLib.Contrib.FinService.SPCommonissionFixMargin
+112910: Load ServicePlane Type:TradingLib.Contrib.FinService.SPCommonissionBonus
+112910: Load ServicePlane Type:TradingLib.Contrib.FinService.SPSpecialIF
+112910: Load ServicePlane Type:TradingLib.Contrib.FinService.SPBonus
+112910: Load ServicePlane Type:TradingLib.Contrib.FinService.SPInterest
+112910: Load ServicePlane Type:TradingLib.Contrib.FinService.SPInterestFixMargin
+112910: Load Service Instance......
+112910: [START CONTRIB] TradingLib.Contirb.LogServer.LogServer
+112910: 启动日志服务,监听端口:3369
+112910: [START CONTRIB] TradingLib.Contrib.HistReportCentre
+112910: [START CONTRIB] TradingLib.Contrib.CLI.CLIServer
+112910: Telnet server start listening at:8888
+112910: [START CONTRIB] TradingLib.Contrib.FinService.FinServiceCentre
+112910: 添加风控项，帐户:6600001 rultename:AccountRuleSet.RSVendorFlat
+112910: 从数据库加载交易日:20150427 交易数据
+112910: 数据库恢复前次结算以来委托数据:0条
+112910: 数据库恢复前次结算以来成交数据:0条
+112910: 数据库恢复前次结算以来取消数据:0条
+112910: 从数据库加载上次结算日:20150426 持仓明细数据
+130357: [LOAD CONTRIB] TradingLib.Contrib.HistReportCentre
+130357: [LOAD CONTRIB] TradingLib.Contrib.CLI.CLIServer
+130357: CLIserver loading....
+130357: [LOAD CONTRIB] TradingLib.Contrib.FinService.FinServiceCentre
+130357: FinServiceCentre loading......
+130357: Load ServicePlane Type:TradingLib.Contrib.FinService.SPCommonissionFixMargin
+130357: Load ServicePlane Type:TradingLib.Contrib.FinService.SPCommonissionBonus
+130357: Load ServicePlane Type:TradingLib.Contrib.FinService.SPSpecialIF
+130357: Load ServicePlane Type:TradingLib.Contrib.FinService.SPBonus
+130357: Load ServicePlane Type:TradingLib.Contrib.FinService.SPInterest
+130357: Load ServicePlane Type:TradingLib.Contrib.FinService.SPInterestFixMargin
+130357: Load Service Instance......
+130357: [START CONTRIB] TradingLib.Contirb.LogServer.LogServer
+130357: 启动日志服务,监听端口:3369
+130357: [START CONTRIB] TradingLib.Contrib.HistReportCentre
+130357: [START CONTRIB] TradingLib.Contrib.CLI.CLIServer
+130357: Telnet server start listening at:8888
+130357: [START CONTRIB] TradingLib.Contrib.FinService.FinServiceCentre
+130357: 添加风控项，帐户:6600001 rultename:AccountRuleSet.RSVendorFlat
+130358: 从数据库加载交易日:20150427 交易数据
+130358: 数据库恢复前次结算以来委托数据:0条
+130358: 数据库恢复前次结算以来成交数据:0条
+130358: 数据库恢复前次结算以来取消数据:0条
+130358: 从数据库加载上次结算日:20150426 持仓明细数据
+130358: 数据库恢复前次结算持仓明细数据:2条
+130358: 数据库恢复开启的PositionRound数据:1条
+130358: tick:IF1505 10@2404.000000 demo presettlement:2000
+130358: resume router roder....
+130358: resumed router order num:0
+130358: Starting MgrExch server...
+130358: Try to start server at: *:6670
+130358: try to load sessions form file:cache\MgrExch
+130358: webmsgexch start....
+130358: Start WebMsgRepServer
+130359: try to load sessions form file:cache\MsgExch
+130359: Starting MsgExch server...
+130359: Try to start server at: *:5570
+130359: ----------- Core Started -----------------
+130359: >>>>Context:Binding ContribEvent with ContribCommand(Handler)
+130359: 正常交易日,启动所有通道
+130359: 启动数据通道:FASTTICK
+130359: MasterServer:tick-master.cloud-deploy.com SlaveServer:tick-slave.cloud-deploy.com Port:9000 ReqPort:9001
+130359: Connect to FastTick ReqServer:tcp://tick-master.cloud-deploy.com:9001
+130401: Subscribe to FastTick PubServer:tcp://tick-master.cloud-deploy.com:9000
+130401: DataFeed[FASTTICK] Connected
+130401: DataFeed[FASTTICK] have not registed any symbol,register all symbol we trade
+130401: request market data to datafeed:TA509,TA512,ag1505,ag1506,ag1507,m1505,m1507,m1508,m1509,IF1505,IH1505,IC1505
+130401: FASTTICK RegisterSymbol CTP:TA509,TA512,ag1505,ag1506,ag1507,m1505,m1507,m1508,m1509,IF1505,IH1505,IC1505
+130402: 模拟引擎启动,成交方式:市场断面扫描 取价方式:盘口价 模拟实盘取价:False
+130402: 从清算中心加载模拟交易记录
+130402: Order Cnt:0 Trade Cnt:0 Max Fill Seq:2519
+130402: Broker[SIMBROKER] Connected
