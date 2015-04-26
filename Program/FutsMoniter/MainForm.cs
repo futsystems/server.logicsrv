@@ -292,6 +292,18 @@ namespace FutsMoniter
             }
         }
 
+        void SetVersionInfo()
+        {
+            if (!Globals.Domain.Super)
+            {
+                lbServerAddress.Visible = false;
+                lbSrvVersion.Visible = false;
+
+                toolStripStatusLabel1.Visible = false;
+                toolStripStatusLabel2.Visible = false;
+            }
+
+        }
 
 
 

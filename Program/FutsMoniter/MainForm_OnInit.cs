@@ -132,6 +132,8 @@ namespace FutsMoniter
 
             //更新过期提醒
             SetExpireStatus();
+
+            SetVersionInfo();
             //登入基础数据初始化完成后 加载page
 
 

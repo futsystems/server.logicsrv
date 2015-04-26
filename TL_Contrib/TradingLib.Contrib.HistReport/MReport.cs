@@ -21,6 +21,19 @@ namespace TradingLib.ORM
     {
 
         /// <summary>
+        /// 保存分区统计信息
+        /// </summary>
+        /// <param name="st"></param>
+        public static void InsertDomainStatistic(DomainStatistic st)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = String.Format("Insert into contrib_histreport_statistic (`settleday`,`domain_id`,`accnumtotal`,`maxaccnumregisted`,`accnumtraded`,`maxmargintotal`,`maxlongpositionhold`,`maxshortpositionhold`,`commission`,`realizedpl`,`unrealizedpl`,`cashin`,`cashout`) VALUES ('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}')",TLCtxHelper.CmdSettleCentre.NextTradingday,st.Domain_ID,st.AccNumTotal,st.MaxAccNumRegisted,st.AccNumTraded,st.MaxMarginTotal,st.MaxLongPositionHold,st.MaxShortPositionHold,st.Commission,st.RealizedPL,st.UnRealizedPL,st.CashIn,st.CashOut);
+                db.Connection.Execute(query);
+            }
+        }
+
+        /// <summary>
         /// select securitycode as sec_code,sum(ABS(log_trades.xsize)) as total_size,sum(log_trades.commission) as total_commission,sum(log_trades.profit) as total_profit  from log_trades ,accounts where accounts.mgr_fk =2 and log_trades.account = accounts.account GROUP BY securitycode
         /// 统计某个代理的客户 在一段时间内按品种分组的 总成交量，手续费，总盈亏
         /// </summary>

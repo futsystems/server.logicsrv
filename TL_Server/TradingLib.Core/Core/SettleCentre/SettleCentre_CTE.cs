@@ -186,6 +186,9 @@ namespace TradingLib.Core
             //通过系统事件中继触发结算前事件
             TLCtxHelper.EventSystem.FireBeforeSettleEvent(this, new SystemEventArgs());
 
+            //保存结算价信息
+            this.SaveSettlementPrice();
+
             //加载当前交易日的结算价信息
             _settlementPriceTracker.LoadSettlementPrice(this.NextTradingday);
 
