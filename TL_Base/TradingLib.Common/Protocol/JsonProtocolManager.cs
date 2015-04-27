@@ -425,6 +425,12 @@ namespace TradingLib.Mixins.JsonObject
         /// 说明
         /// </summary>
         public string Comment { get; set; }
+
+
+        /// <summary>
+        /// 资金类型
+        /// </summary>
+        public QSEnumEquityType Equity_Type { get; set; }
     }
 
 

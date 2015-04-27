@@ -277,6 +277,7 @@ namespace TradingLib.Core
                     fill.BrokerTradeID = trade.BrokerTradeID;
                     fill.TradeID = trade.BrokerTradeID;
 
+                    logger.Debug("************** Order SysID:" + o.OrderSysID + " OffSet:" + o.OffsetFlag.ToString() + " TradeID:" + fill.BrokerTradeID + " OffsetFlag:" + fill.OffsetFlag);
                     Util.Info("获得成交:" + fill.GetTradeDetail());
 
                     logger.Info("Reply Fill To MessageExch:" + fill.GetTradeInfo());

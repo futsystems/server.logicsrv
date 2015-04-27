@@ -374,7 +374,11 @@ namespace TradingLib.Common
             sb.Append(t.HedgeFlag); sb.Append(d);
             sb.Append(t.OrderSeq.ToString()); sb.Append(d);
             sb.Append(t.OrderSysID); sb.Append(d);
-            sb.Append(t.OffsetFlag.ToString());
+            sb.Append(t.OffsetFlag.ToString()); sb.Append(d);
+            sb.Append(t.BrokerLocalOrderID); sb.Append(d);
+            sb.Append(t.BrokerRemoteOrderID); sb.Append(d);//
+            sb.Append(t.BrokerTradeID);
+
 
             return sb.ToString();
         }
@@ -413,6 +417,9 @@ namespace TradingLib.Common
             t.OrderSeq = int.Parse(rec[(int)TradeField.OrderSeq]);
             t.OrderSysID = rec[(int)TradeField.OrderExchID];
             t.OffsetFlag = (QSEnumOffsetFlag)Enum.Parse(typeof(QSEnumOffsetFlag),rec[(int)TradeField.OffsetFlag]);
+            t.BrokerLocalOrderID = rec[(int)TradeField.BrokerLocalOrderID];
+            t.BrokerRemoteOrderID = rec[(int)TradeField.BrokerRemoteOrderID];
+            t.BrokerTradeID = rec[(int)TradeField.BrokerTradeID];
             return t;
         }
 

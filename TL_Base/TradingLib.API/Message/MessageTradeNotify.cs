@@ -30,5 +30,8 @@ namespace TradingLib.API
         OrderSeq,//委托流水
         OrderExchID,//交易所委托标识
         OffsetFlag,//开平标识
+        BrokerLocalOrderID,//成交侧本地委托编号
+        BrokerRemoteOrderID,//成交侧远端委托编号
+        BrokerTradeID,//成交侧成交编号
     }
 }

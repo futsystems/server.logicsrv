@@ -66,7 +66,7 @@ namespace Broker.Live
         }
 
         #region 处理接口查询获得的持仓明细 委托 成交等信息
-        SortedDictionary<int, Trade> histtrademap = new SortedDictionary<int, Trade>();
+        SortedDictionary<string, Trade> histtrademap = new SortedDictionary<string, Trade>();
         /// <summary>
         /// 响应接口查询成交回报
         /// </summary>
@@ -76,11 +76,16 @@ namespace Broker.Live
         {
             if (trade.SequenceNo != -1)
             {
-                debug("c# trade seq:" + trade.SequenceNo.ToString(), QSEnumDebugLevel.ERROR);
+                //debug("c# trade seq:" + trade.SequenceNo.ToString(), QSEnumDebugLevel.ERROR);
                 Trade localtrade = getLocalTrade(ref trade);
+                //Util.Warn("key:" + key);
                 if (localtrade != null)
                 {
-                    histtrademap.Add(trade.SequenceNo, localtrade);
+                    string key = string.Format("{0}-{1}{2}", Util.ToTLDateTime(trade.Date, trade.Time).ToString(), trade.Exchange, trade.BrokerTradeID);
+                    if (!histtrademap.Keys.Contains(key))
+                    {
+                        histtrademap.Add(key, localtrade);
+                    }
                 }
             }
             if (islast)
@@ -95,7 +100,7 @@ namespace Broker.Live
             }
         }
 
-        SortedDictionary<int, Order> histordermap = new SortedDictionary<int, Order>();
+        SortedDictionary<string, Order> histordermap = new SortedDictionary<string, Order>();
         /// <summary>
         /// 响应接口查询委托回报
         /// </summary>
@@ -106,9 +111,18 @@ namespace Broker.Live
             //如果不为空委托 则进行委托处理(空委托的含义为 当前日内委托数据记录数为0)
             if (order.SequenceNo != -1)
             {
-                debug("c# order seq:" + order.SequenceNo.ToString(), QSEnumDebugLevel.ERROR);
+                //debug("c# order seq:" + order.SequenceNo.ToString(), QSEnumDebugLevel.ERROR);
+
                 Order localorder = getLocalOrder(ref order);
-                histordermap.Add(order.SequenceNo, localorder);
+                if (localorder != null)
+                {
+                    string key = string.Format("{0}-{1}{2}", Util.ToTLDateTime(order.Date, order.Time).ToString(), order.Exchange, order.BrokerRemoteOrderID);
+                    if (!histordermap.Keys.Contains(key))
+                    {
+                        histordermap.Add(key, localorder);
+                    }
+                    
+                }
             }
             if (islast)
             {
@@ -428,7 +442,7 @@ namespace Broker.Live
 
         Trade getLocalTrade(ref XTradeField trade)
         {
-            debug(string.Format("Got Fill, LocalID:{0} RemoteID:{1} BrokerTradeID:{2} XPrice:{3} Side:{4} XSize:{5}", trade.BrokerLocalOrderID, trade.BrokerRemoteOrderID, trade.BrokerTradeID, trade.Price, trade.Side, trade.Size), QSEnumDebugLevel.INFO);
+            debug(string.Format("Got Fill,Seq:{6} LocalID:{0} RemoteID:{1} BrokerTradeID:{2} XPrice:{3} Side:{4} XSize:{5}", trade.BrokerLocalOrderID, trade.BrokerRemoteOrderID, trade.BrokerTradeID, trade.Price, trade.Side, trade.Size,trade.SequenceNo), QSEnumDebugLevel.INFO);
 
             //CTP接口的成交通过远端编号与委托进行关联
             Order o = RemoteID2Order(trade.BrokerRemoteOrderID);
