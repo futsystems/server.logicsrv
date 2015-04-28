@@ -36,10 +36,13 @@ namespace TradingLib.Common
         }
         void CliOnOrderNotify(OrderNotify response)
         {
-            debug("got order notify:" + response.Order.ToString(), QSEnumDebugLevel.INFO);
+            debug("got order notify:" + response, QSEnumDebugLevel.INFO);
             Order o = response.Order;
-            o.oSymbol = Globals.BasicInfoTracker.GetSymbol(o.Symbol);
-            this.handler.OnOrder(o);
+            if (o != null && o.isValid)
+            {
+                o.oSymbol = Globals.BasicInfoTracker.GetSymbol(o.Symbol);
+                this.handler.OnOrder(o);
+            }
         }
         void CliOnTradeNotify(TradeNotify response)
         {

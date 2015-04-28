@@ -235,8 +235,6 @@ namespace TradingLib.Core
                         notify.PositionDetail = pd;
                         tl.TLSend(notify);
                     }
-                   
-                    
                 }
 
                 //转发当日委托
@@ -246,6 +244,7 @@ namespace TradingLib.Core
                     notify.Order = o;
                     tl.TLSend(notify);
                 }
+
                 //转发当日成交
                 foreach (Trade f in account.Trades)
                 {

@@ -102,6 +102,8 @@ namespace TradingLib.Common
 
         public override string ContentSerialize()
         {
+            if (this.Order == null)
+                return string.Empty;
             return OrderImpl.Serialize(Order);
         }
 

@@ -502,58 +502,66 @@ namespace TradingLib.Common
         /// <returns></returns>
         public new static Order Deserialize(string message)
         {
-            Order o = null;
-            string[] rec = message.Split(','); // get the record
-            if (rec.Length < 17) throw new InvalidOrder();
-
-            bool side = Convert.ToBoolean(rec[(int)OrderField.Side]);
-            int size = Math.Abs(Convert.ToInt32(rec[(int)OrderField.Size])) * (side ? 1 : -1);
-            decimal oprice = Convert.ToDecimal(rec[(int)OrderField.Price], System.Globalization.CultureInfo.InvariantCulture);
-            decimal ostop = Convert.ToDecimal(rec[(int)OrderField.Stop], System.Globalization.CultureInfo.InvariantCulture);
-            string sym = rec[(int)OrderField.Symbol];
-            int totalsize = int.Parse(rec[(int)OrderField.TotalSize]);
-            o = new OrderImpl(sym, side, size);
-
-            o.TotalSize = totalsize;
-
-            o.LimitPrice = oprice;
-            o.StopPrice = ostop;
-            o.Comment = rec[(int)OrderField.Comment];
-            o.Account = rec[(int)OrderField.Account];
-            o.Exchange = rec[(int)OrderField.Exchange];
-            //o.LocalSymbol = rec[(int)OrderField.LocalSymbol];
-            o.Currency = (CurrencyType)Enum.Parse(typeof(CurrencyType), rec[(int)OrderField.Currency]);
-            o.SecurityType = (SecurityType)Enum.Parse(typeof(SecurityType), rec[(int)OrderField.Security]);
-            o.id = Convert.ToInt64(rec[(int)OrderField.OrderID]);
-            o.TimeInForce = (QSEnumTimeInForce)Enum.Parse(typeof(QSEnumTimeInForce), rec[(int)OrderField.OrderTIF]);
-            decimal trail = 0;
-            if (decimal.TryParse(rec[(int)OrderField.Trail], System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.InvariantCulture, out trail))
-                o.trail = trail;
-            o.Date = Convert.ToInt32(rec[(int)OrderField.oDate]);
-            o.Time = Convert.ToInt32(rec[(int)OrderField.oTime]);
-            o.Broker = rec[(int)OrderField.Broker];
-            o.BrokerRemoteOrderID = rec[(int)OrderField.BrokerKey];
-            o.BrokerLocalOrderID = rec[(int)OrderField.LocalID];
-            o.Status = (QSEnumOrderStatus)Enum.Parse(typeof(QSEnumOrderStatus), rec[(int)OrderField.Status]);
-            int f=0;
-            int.TryParse(rec[(int)OrderField.oFilled],out f);
-            o.FilledSize = f;
-
-            o.OffsetFlag = (QSEnumOffsetFlag)Enum.Parse(typeof(QSEnumOffsetFlag), rec[(int)OrderField.PostFlag]);
-
-            o.OrderRef = rec[(int)OrderField.OrderRef];
-            o.ForceClose = bool.Parse(rec[(int)OrderField.ForceClose]);
-            o.HedgeFlag = (QSEnumHedgeFlag)Enum.Parse(typeof(QSEnumHedgeFlag),rec[(int)OrderField.HedgeFlag]);
-            o.OrderSeq = int.Parse(rec[(int)OrderField.OrderSeq]);
-            o.OrderSysID = rec[(int)OrderField.OrderExchID];
-            o.ForceCloseReason = rec[(int)OrderField.ForceReason];
-            if (rec.Length > 29)
+            try
             {
-                o.FrontIDi = int.Parse(rec[(int)OrderField.FrontID]);
-                o.SessionIDi = int.Parse(rec[(int)OrderField.SessionID]);
-                o.RequestID = int.Parse(rec[(int)OrderField.RequestID]);
+                Order o = null;
+                string[] rec = message.Split(','); // get the record
+                if (rec.Length < 17) throw new InvalidOrder();
+
+                bool side = Convert.ToBoolean(rec[(int)OrderField.Side]);
+                int size = Math.Abs(Convert.ToInt32(rec[(int)OrderField.Size])) * (side ? 1 : -1);
+                decimal oprice = Convert.ToDecimal(rec[(int)OrderField.Price], System.Globalization.CultureInfo.InvariantCulture);
+                decimal ostop = Convert.ToDecimal(rec[(int)OrderField.Stop], System.Globalization.CultureInfo.InvariantCulture);
+                string sym = rec[(int)OrderField.Symbol];
+                int totalsize = int.Parse(rec[(int)OrderField.TotalSize]);
+                o = new OrderImpl(sym, side, size);
+
+                o.TotalSize = totalsize;
+
+                o.LimitPrice = oprice;
+                o.StopPrice = ostop;
+                o.Comment = rec[(int)OrderField.Comment];
+                o.Account = rec[(int)OrderField.Account];
+                o.Exchange = rec[(int)OrderField.Exchange];
+                //o.LocalSymbol = rec[(int)OrderField.LocalSymbol];
+                o.Currency = (CurrencyType)Enum.Parse(typeof(CurrencyType), rec[(int)OrderField.Currency]);
+                o.SecurityType = (SecurityType)Enum.Parse(typeof(SecurityType), rec[(int)OrderField.Security]);
+                o.id = Convert.ToInt64(rec[(int)OrderField.OrderID]);
+                o.TimeInForce = (QSEnumTimeInForce)Enum.Parse(typeof(QSEnumTimeInForce), rec[(int)OrderField.OrderTIF]);
+                decimal trail = 0;
+                if (decimal.TryParse(rec[(int)OrderField.Trail], System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.InvariantCulture, out trail))
+                    o.trail = trail;
+                o.Date = Convert.ToInt32(rec[(int)OrderField.oDate]);
+                o.Time = Convert.ToInt32(rec[(int)OrderField.oTime]);
+                o.Broker = rec[(int)OrderField.Broker];
+                o.BrokerRemoteOrderID = rec[(int)OrderField.BrokerKey];
+                o.BrokerLocalOrderID = rec[(int)OrderField.LocalID];
+                o.Status = (QSEnumOrderStatus)Enum.Parse(typeof(QSEnumOrderStatus), rec[(int)OrderField.Status]);
+                int f = 0;
+                int.TryParse(rec[(int)OrderField.oFilled], out f);
+                o.FilledSize = f;
+
+                o.OffsetFlag = (QSEnumOffsetFlag)Enum.Parse(typeof(QSEnumOffsetFlag), rec[(int)OrderField.PostFlag]);
+
+                o.OrderRef = rec[(int)OrderField.OrderRef];
+                o.ForceClose = bool.Parse(rec[(int)OrderField.ForceClose]);
+                o.HedgeFlag = (QSEnumHedgeFlag)Enum.Parse(typeof(QSEnumHedgeFlag), rec[(int)OrderField.HedgeFlag]);
+                o.OrderSeq = int.Parse(rec[(int)OrderField.OrderSeq]);
+                o.OrderSysID = rec[(int)OrderField.OrderExchID];
+                o.ForceCloseReason = rec[(int)OrderField.ForceReason];
+                if (rec.Length > 29)
+                {
+                    o.FrontIDi = int.Parse(rec[(int)OrderField.FrontID]);
+                    o.SessionIDi = int.Parse(rec[(int)OrderField.SessionID]);
+                    o.RequestID = int.Parse(rec[(int)OrderField.RequestID]);
+                }
+                return o;
             }
-            return o;
+            catch (Exception ex)
+            {
+                Util.Debug("Order Deserialize error:" + ex.ToString() + " RawStr:" + message);
+                return null;
+            }
         }
 
         public static long Unique { get { return DateTime.Now.Ticks; } }
