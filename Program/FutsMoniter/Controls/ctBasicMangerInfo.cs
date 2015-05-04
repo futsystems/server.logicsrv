@@ -16,7 +16,13 @@ namespace FutsMoniter
         public ctBasicMangerInfo()
         {
             InitializeComponent();
-            this.btnChangePass.Click +=new EventHandler(btnChangePass_Click);
+            this.Load += new EventHandler(ctBasicMangerInfo_Load);
+            //this.btnChangePass.Click +=new EventHandler(btnChangePass_Click);
+        }
+
+        void ctBasicMangerInfo_Load(object sender, EventArgs e)
+        {
+            Globals.RegIEventHandler(this);
         }
 
         public void OnInit()
@@ -37,20 +43,11 @@ namespace FutsMoniter
             lbmobile.Text = Globals.LoginResponse.Mobile;
             lbqq.Text = Globals.LoginResponse.QQ;
             lbrole.Text = Util.GetEnumDescription(Globals.LoginResponse.ManagerType);
+            acclimit.Text = Globals.Manager.AccLimit.ToString();
+            agentlimit.Text = Globals.Manager.AgentLimit.ToString();
+            creditlimit.Text = Util.FormatDecimal(Globals.Manager.CreditLimit);
+
         }
 
-        /// <summary>
-        /// 响应环境初始化完成事件 用于在环境初始化之前创立的空间获得对应的基础数据
-        /// </summary>
-        public void OnInitFinished()
-        {
-            InitAgentList();
-        }
-
-        private void btnChangePass_Click(object sender, EventArgs e)
-        {
-            fmChangePasswordAgent fm = new fmChangePasswordAgent();
-            fm.ShowDialog();
-        }
     }
 }

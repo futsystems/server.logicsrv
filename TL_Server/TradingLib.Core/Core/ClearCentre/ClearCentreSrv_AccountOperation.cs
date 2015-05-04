@@ -216,7 +216,7 @@ namespace TradingLib.Core
         /// <param name="acc"></param>
         /// <param name="amount"></param>
         /// <param name="comment"></param>
-        public override void CashOperation(string account, decimal amount,string transref, string comment)
+        public override void CashOperation(string account, decimal amount, QSEnumEquityType equitytype, string transref, string comment)
         {
 
             debug("CashOperation ID:" + account + " Amount:" + amount.ToString() + " Comment:" + comment, QSEnumDebugLevel.INFO);
@@ -226,32 +226,64 @@ namespace TradingLib.Core
                 throw new FutsRspError("交易帐户不存在");
             }
 
-            //金额检查
-            if (amount<0)
+            //帐户自有资金的出入金操作
+            if (equitytype == QSEnumEquityType.OwnEquity)
             {
-                if (acc.NowEquity < Math.Abs(amount))
+                //金额检查
+                if (amount < 0)
                 {
-                    throw new FutsRspError("出金额度大于帐户权益");
+                    if (acc.NowEquity < Math.Abs(amount))
+                    {
+                        throw new FutsRspError("出金额度大于帐户权益");
+                    }
                 }
+
+                //执行时间检查 
+                if (TLCtxHelper.Ctx.SettleCentre.IsInSettle)
+                {
+                    throw new FutsRspError("系统正在结算,禁止出入金操作");
+                }
+
+                if (amount > 0)
+                {
+                    acc.Deposit(amount);
+                }
+                else
+                {
+                    acc.Withdraw(Math.Abs(amount));
+                }
+                ORM.MAccount.CashOperation(account, amount, QSEnumEquityType.OwnEquity, transref, comment);
             }
 
-            //执行时间检查 
-            if (TLCtxHelper.Ctx.SettleCentre.IsInSettle)
+            if (equitytype == QSEnumEquityType.CreditEquity)
             {
-                throw new FutsRspError("系统正在结算,禁止出入金操作");
+                if (amount < 0)
+                {
+                    if (acc.Credit < Math.Abs(amount))
+                    {
+                        throw new FutsRspError("出金额度大于优先资金权益");
+                    }
+                }
+
+                //执行时间检查 
+                if (TLCtxHelper.Ctx.SettleCentre.IsInSettle)
+                {
+                    throw new FutsRspError("系统正在结算,禁止出入金操作");
+                }
+
+                if (amount > 0)
+                {
+                    acc.CreditDeposit(Math.Abs(amount));
+                }
+                else
+                {
+                    acc.CreditWithdraw(Math.Abs(amount));
+                }
+                ORM.MAccount.CashOperation(account, amount, QSEnumEquityType.CreditEquity, transref, comment);
+
+                TLCtxHelper.EventAccount.FireAccountCashOperationEvent(acc.ID, amount > 0 ? QSEnumCashOperation.Deposit : QSEnumCashOperation.WithDraw, Math.Abs(amount));
             }
 
-            if (amount > 0)
-            {
-                acc.Deposit(amount);
-            }
-            else
-            {
-                acc.Withdraw(Math.Abs(amount));
-            }
-            ORM.MAccount.CashOperation(account, amount, transref, comment);
-
-            TLCtxHelper.EventAccount.FireAccountCashOperationEvent(acc.ID, amount > 0 ? QSEnumCashOperation.Deposit : QSEnumCashOperation.WithDraw, Math.Abs(amount));
         }
         ///// <summary>
         ///// web管理所用到的出入金操作 并返回对应信息
@@ -381,7 +413,7 @@ namespace TradingLib.Core
             if (!HaveAccount(account, out a)) return;
             decimal nowequity = a.NowEquity;
             decimal netchange = value - nowequity;
-            CashOperation(account, netchange,"", "System Reset");
+            CashOperation(account, netchange,QSEnumEquityType.OwnEquity,"", "System Reset");
         }
         #endregion
 

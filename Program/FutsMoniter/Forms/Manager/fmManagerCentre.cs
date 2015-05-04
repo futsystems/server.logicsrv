@@ -44,9 +44,17 @@ namespace FutsMoniter
         {
             Globals.BasicInfoTracker.GotManagerEvent += new Action<ManagerSetting>(GotManager);
 
-            if (!Globals.Manager.IsRoot())
+            if (!Globals.Domain.Super)
             {
-                mgrgrid.ContextMenuStrip.Items[6].Visible = false;
+                if (!Globals.Manager.IsRoot())
+                {
+                    mgrgrid.ContextMenuStrip.Items[6].Visible = false;
+                }
+                if (!Globals.Domain.Module_Agent)
+                {
+                    mgrgrid.Columns[AGENTLIMIT].Visible = false;
+                    mgrgrid.Columns[CREDITLIMIT].Visible = false;
+                }
             }
         }
 
@@ -181,6 +189,8 @@ namespace FutsMoniter
         const string MOBILE = "手机";
         const string QQ = "QQ号码";
         const string ACCNUMLIMIT = "帐户数量限制";
+        const string AGENTLIMIT = "下级代理限制";
+        const string CREDITLIMIT = "信用额度限制";
 
         const string MGRFK = "管理域ID";
         const string STATUS = "状态";
@@ -235,6 +245,8 @@ namespace FutsMoniter
             gt.Columns.Add(MOBILE);//
             gt.Columns.Add(QQ);//
             gt.Columns.Add(ACCNUMLIMIT);//
+            gt.Columns.Add(AGENTLIMIT);
+            gt.Columns.Add(CREDITLIMIT);
             gt.Columns.Add(MGRFK);//
 
             gt.Columns.Add(STATUS,typeof(Image));//
@@ -302,7 +314,9 @@ namespace FutsMoniter
                     gt.Rows[i][NAME] = manger.Name;
                     gt.Rows[i][MOBILE] = manger.Mobile;
                     gt.Rows[i][QQ] = manger.QQ;
-                    gt.Rows[i][ACCNUMLIMIT] = manger.Type == QSEnumManagerType.AGENT ? manger.AccLimit.ToString() : "";
+                    gt.Rows[i][ACCNUMLIMIT] = manger.Type == QSEnumManagerType.AGENT ? manger.AccLimit.ToString() : "--";
+                    gt.Rows[i][AGENTLIMIT] = manger.Type == QSEnumManagerType.AGENT ? manger.AgentLimit.ToString() : "--";
+                    gt.Rows[i][CREDITLIMIT] = manger.Type == QSEnumManagerType.AGENT ? Util.FormatDecimal(manger.CreditLimit) : "--";
                     gt.Rows[i][MGRFK] = manger.mgr_fk;
 
                     gt.Rows[i][STATUS] = getStatusImage(manger.Active);
@@ -319,7 +333,10 @@ namespace FutsMoniter
                     gt.Rows[i][NAME] = manger.Name;
                     gt.Rows[i][MOBILE] = manger.Mobile;
                     gt.Rows[i][QQ] = manger.QQ;
-                    gt.Rows[i][ACCNUMLIMIT] = manger.AccLimit;
+                    gt.Rows[i][ACCNUMLIMIT] = manger.Type == QSEnumManagerType.AGENT ? manger.AccLimit.ToString() : "--";
+                    gt.Rows[i][AGENTLIMIT] = manger.Type == QSEnumManagerType.AGENT ? manger.AgentLimit.ToString() : "--";
+                    gt.Rows[i][CREDITLIMIT] = manger.Type == QSEnumManagerType.AGENT ? Util.FormatDecimal(manger.CreditLimit) : "--";
+                
                     gt.Rows[i][MGRFK] = manger.mgr_fk;
                     gt.Rows[i][STATUS] = getStatusImage(manger.Active);
 

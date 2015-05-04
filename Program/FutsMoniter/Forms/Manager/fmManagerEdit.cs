@@ -36,42 +36,25 @@ namespace FutsMoniter
             this.mobile.Text = _manger.Mobile;
             this.qq.Text = _manger.QQ;
             this.acclimit.Value = _manger.AccLimit;
+            this.agentlimit.Value = _manger.AgentLimit;
+            this.creditlimit.Value = _manger.CreditLimit;
+
             this.type.Enabled = false;
             this.login.Enabled = false;
             this.acclimit.Enabled = false;
+            this.agentlimit.Enabled = false;
+            this.creditlimit.Enabled = false;
 
             //如果是代理商则可以修改帐户数量限制 同时设定限制为自己的限制 给代理的客户数量不能超过过自己的限制
             if (_manger.Type == QSEnumManagerType.AGENT)
             {
                 this.acclimit.Enabled = true;
-                this.acclimit.Maximum = Globals.Manager.AccLimit;
+                //this.acclimit.Maximum = Globals.Manager.AccLimit;
+                this.creditlimit.Enabled = true;
+                this.agentlimit.Enabled = true;
             }
         }
-        //public Manager Manager
-        //{
-        //    set
-        //    {
-        //        _manger = value;
-        //        this.Text = " 编辑管理员:" + manger.Name;
-        //        this.id.Text = manger.ID.ToString();
-        //        this.mgr_fk.Text = manger.mgr_fk.ToString();
-        //        this.login.Text = manger.Login;
-        //        this.name.Text = manger.Name;
-        //        this.mobile.Text = manger.Mobile;
-        //        this.qq.Text = manger.QQ;
-        //        this.acclimit.Value = manger.AccLimit;
-        //        this.type.Enabled = false;
-        //        this.login.Enabled = false;
-        //        this.acclimit.Enabled = false;
 
-        //        //如果是代理商则可以修改帐户数量限制 同时设定限制为自己的限制 给代理的客户数量不能超过过自己的限制
-        //        if (manger.Type == QSEnumManagerType.AGENT)
-        //        {
-        //            this.acclimit.Enabled = true;
-        //            this.acclimit.Maximum = Globals.Manager.AccLimit;
-        //        }
-        //    }
-        //}
 
         private void btnSubmit_Click(object sender, EventArgs e)
         {
@@ -103,6 +86,9 @@ namespace FutsMoniter
                 m.Mobile = this.mobile.Text;
                 m.QQ = this.qq.Text;
                 m.AccLimit = (int)this.acclimit.Value;
+                m.AgentLimit = (int)this.agentlimit.Value;
+                m.CreditLimit = this.creditlimit.Value;
+
                 if (Globals.Manager.Type == QSEnumManagerType.ROOT)
                 {
                     if (m.Type == QSEnumManagerType.AGENT)//如果添加代理则mgr_fk=0
@@ -127,9 +113,12 @@ namespace FutsMoniter
                 _manger.Mobile = this.mobile.Text;
                 _manger.QQ = this.qq.Text;
 
+                //如果是代理则修改相关参数
                 if (_manger.Type == QSEnumManagerType.AGENT)
                 {
                     _manger.AccLimit = (int)this.acclimit.Value;
+                    _manger.AgentLimit = (int)this.agentlimit.Value;
+                    _manger.CreditLimit = this.creditlimit.Value;
                 }
 
                 //MessageBox.Show("manager id:" + _manger.ID.ToString());

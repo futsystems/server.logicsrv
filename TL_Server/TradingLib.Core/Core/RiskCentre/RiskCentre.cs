@@ -33,7 +33,7 @@ namespace TradingLib.Core
         int _orderlimitsize = 10;
         string commentNoPositionForFlat = "无可平持仓";
         string commentOverFlatPositionSize = "可平持仓数量不足";
-
+        bool auctionEnable = false;
         public RiskCentre(ClearCentre clearcentre):base(CoreName)
         {
             _clearcentre = clearcentre;
@@ -66,6 +66,14 @@ namespace TradingLib.Core
                 _cfgdb.UpdateConfig("CommentOverFlatPositionSize", QSEnumCfgType.String, "可平持仓数量不足", "可平持仓数量不足消息");
             }
             commentOverFlatPositionSize = _cfgdb["CommentOverFlatPositionSize"].AsString();
+
+            if (!_cfgdb.HaveConfig("AuctionEnable"))
+            {
+                _cfgdb.UpdateConfig("AuctionEnable", QSEnumCfgType.Bool,false, "集合竞价");
+            }
+            auctionEnable = _cfgdb["AuctionEnable"].AsBool();
+
+
 
             if (!_cfgdb.HaveConfig("FlatSendOrderFreq"))
             {

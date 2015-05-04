@@ -48,7 +48,7 @@ namespace TradingLib.Common
             SendPacket(request);
         }
 
-        public void ReqCashOperation(string account, decimal amount, string transref, string comment)
+        public void ReqCashOperation(string account, decimal amount,QSEnumEquityType type, string transref, string comment)
         {
             debug("请求出入金操作:" + account + " amount:" + amount.ToString() + " transref:" + transref + " comment:" + comment, QSEnumDebugLevel.INFO);
             MGRCashOperationRequest request = RequestTemplate<MGRCashOperationRequest>.CliSendRequest(requestid++);
@@ -56,6 +56,7 @@ namespace TradingLib.Common
             request.Amount = amount;
             request.TransRef = transref;
             request.Comment = comment;
+            request.EquityType = type;
 
             SendPacket(request);
         }

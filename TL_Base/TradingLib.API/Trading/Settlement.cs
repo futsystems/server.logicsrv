@@ -54,6 +54,24 @@ namespace TradingLib.API
         decimal NowEquity { get; set; }
 
         /// <summary>
+        /// 优先资金入金
+        /// </summary>
+        decimal CreditCashIn { get; set; }
+        /// <summary>
+        /// 优先资金出金
+        /// </summary>
+        decimal CreditCashOut { get; set; }
+        /// <summary>
+        /// 昨日优先资金
+        /// </summary>
+        decimal LastCredit { get; set; }
+        /// <summary>
+        /// 今日结算时优先资金
+        /// </summary>
+        decimal NowCredit { get; set; }
+
+
+        /// <summary>
         /// 结算确认
         /// </summary>
         bool Confirmed { get; set; }

@@ -195,7 +195,7 @@ namespace TradingLib.Core
             }
 
             //执行出入金操作
-            clearcentre.CashOperation(request.Account, request.Amount, request.TransRef, request.Comment);
+            clearcentre.CashOperation(request.Account, request.Amount, request.EquityType, request.TransRef, request.Comment);
 
             //出入金操作后返回帐户信息更新
             session.NotifyMgr("NotifyAccountFinInfo", account.GenAccountInfo());

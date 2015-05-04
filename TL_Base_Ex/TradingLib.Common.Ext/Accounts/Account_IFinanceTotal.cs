@@ -14,6 +14,11 @@ namespace TradingLib.Common
         public decimal LastEquity { get; set; }
 
         /// <summary>
+        /// 昨日信用额度
+        /// </summary>
+        public decimal LastCredit { get; set; }
+
+        /// <summary>
         /// 当前权益 经过排查 commission并非线程安全
         /// </summary>
         public decimal NowEquity { get { return TotalLiquidation; } }
@@ -54,6 +59,19 @@ namespace TradingLib.Common
         /// 本次结算周期(本日出金)
         /// </summary>
         public decimal CashOut { get { return _cashout; } set { _cashout = value; } }
+
+
+        decimal _creditcashin = 0;
+        /// <summary>
+        /// 信用入金额度
+        /// </summary>
+        public decimal CreditCashIn { get { return _creditcashin; } set { _creditcashin = value; } }
+
+        decimal _creditcashout = 0;
+        /// <summary>
+        /// 信用出金额度
+        /// </summary>
+        public decimal CreditCashOut { get { return _creditcashout; } set { _creditcashout = value; } }
 
         /// <summary>
         /// 保证金占用
@@ -108,10 +126,10 @@ namespace TradingLib.Common
         /// <summary>
         /// 帐户信用额度
         /// </summary>
-        public decimal Credit { get { return TLCtxHelper.ExContribEvent.GetFinAmmountAvabile(this.ID); } }
+        //public decimal Credit { get { return TLCtxHelper.ExContribEvent.GetFinAmmountAvabile(this.ID); } }
 
 
-
+        public decimal Credit { get { return LastCredit + CreditCashIn - CreditCashOut; } }
         /// <summary>
         /// 入金
         /// </summary>
@@ -131,6 +149,19 @@ namespace TradingLib.Common
         {
             amount = Math.Abs(amount);
             _cashout += amount;
+        }
+
+
+        public void CreditDeposit(decimal amount)
+        {
+            amount = Math.Abs(amount);
+            _creditcashin += amount;
+        }
+
+        public void CreditWithdraw(decimal amount)
+        {
+            amount = Math.Abs(amount);
+            _creditcashout += amount;
         }
     }
 }

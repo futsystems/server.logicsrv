@@ -48,7 +48,7 @@
             this.lbbasemgrfk.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lbbasemgrfk.Location = new System.Drawing.Point(0, 0);
             this.lbbasemgrfk.Name = "lbbasemgrfk";
-            this.lbbasemgrfk.Size = new System.Drawing.Size(752, 366);
+            this.lbbasemgrfk.Size = new System.Drawing.Size(805, 366);
             this.lbbasemgrfk.TabIndex = 0;
             // 
             // kryptonGroupBox1
@@ -62,9 +62,8 @@
             // kryptonGroupBox1.Panel
             // 
             this.kryptonGroupBox1.Panel.Controls.Add(this.mgrgrid);
-            this.kryptonGroupBox1.Size = new System.Drawing.Size(752, 262);
+            this.kryptonGroupBox1.Size = new System.Drawing.Size(805, 262);
             this.kryptonGroupBox1.TabIndex = 1;
-            this.kryptonGroupBox1.Text = "员工与代理";
             this.kryptonGroupBox1.Values.Heading = "员工与代理";
             // 
             // mgrgrid
@@ -74,7 +73,7 @@
             this.mgrgrid.Location = new System.Drawing.Point(0, 0);
             this.mgrgrid.Name = "mgrgrid";
             this.mgrgrid.RowTemplate.Height = 23;
-            this.mgrgrid.Size = new System.Drawing.Size(748, 240);
+            this.mgrgrid.Size = new System.Drawing.Size(801, 240);
             this.mgrgrid.TabIndex = 0;
             // 
             // ctBasicMangerInfo1
@@ -82,14 +81,14 @@
             this.ctBasicMangerInfo1.Dock = System.Windows.Forms.DockStyle.Top;
             this.ctBasicMangerInfo1.Location = new System.Drawing.Point(0, 0);
             this.ctBasicMangerInfo1.Name = "ctBasicMangerInfo1";
-            this.ctBasicMangerInfo1.Size = new System.Drawing.Size(752, 98);
+            this.ctBasicMangerInfo1.Size = new System.Drawing.Size(805, 98);
             this.ctBasicMangerInfo1.TabIndex = 0;
             // 
             // fmManagerCentre
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(752, 366);
+            this.ClientSize = new System.Drawing.Size(805, 366);
             this.Controls.Add(this.lbbasemgrfk);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;

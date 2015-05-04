@@ -107,6 +107,9 @@ namespace TradingLib.Common
             a.Margin = acc.Margin;
             a.MarginFrozen = acc.MarginFrozen;
             a.Credit = acc.Credit;
+            a.LastCredit = acc.LastCredit;
+            a.CreditCashIn = acc.CreditCashIn;
+            a.CreditCashOut = acc.CreditCashOut;
             
             return a;
         }
@@ -192,6 +195,12 @@ namespace TradingLib.Common
             settle.RealizedPL = account.RealizedPL;
             settle.UnRealizedPL = account.SettleUnRealizedPL;
             settle.NowEquity = settle.LastEquity + settle.RealizedPL + settle.UnRealizedPL - settle.Commission + settle.CashIn - settle.CashOut;
+
+            settle.CreditCashIn = account.CreditCashIn;
+            settle.CreditCashOut = account.CreditCashOut;
+            settle.LastCredit = account.LastCredit;
+            settle.NowCredit = account.Credit;
+
 
             //指定交易日期
             settle.SettleDay = Util.ToTLDate();

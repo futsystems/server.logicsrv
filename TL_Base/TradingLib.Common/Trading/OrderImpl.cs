@@ -304,7 +304,11 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="t"></param>
         /// <returns></returns>
-        public bool Fill(Tick t) { return Fill(t, false); }
+        public bool Fill(Tick t) 
+        { 
+            return Fill(t, false); 
+        }
+
         public bool Fill(Tick t, bool fillOPG)
         {
             if (!t.isTrade) return false;//fill with trade 
@@ -327,6 +331,29 @@ namespace TradingLib.Common
         }
 
         /// <summary>
+        /// 集合竞价方式成交该委托
+        /// </summary>
+        /// <param name="k"></param>
+        /// <returns></returns>
+        public bool FillAuction(Tick t)
+        {
+            //合约不一致直接返回
+            if (t.Symbol != oSymbol.TickSymbol) return false;
+            //买入 委托价格大于等于开盘价 或者 卖出 委托价格小于等于开盘价
+            if ((isLimit && Side && (t.Open <= LimitPrice)) // buy limit
+                || (isLimit && !Side && (t.Open >= LimitPrice))// sell limit
+                )
+            {
+                this.xPrice = t.Open;//开盘价成交
+                this.xSize = UnsignedSize;//所有委托数量
+                this.xSize *= Side ? 1 : -1;
+                this.xTime = t.Time;
+                this.xDate = t.Date;
+                return true;
+            }
+            return false;
+        }
+        /// <summary>
         /// fill against bid and ask rather than trade
         /// 
         /// </summary>
@@ -342,7 +369,7 @@ namespace TradingLib.Common
             // buyer has to match with seller and vice verca利用ask,bid来成交Order
             bool ok = Side ? k.hasAsk : k.hasBid;
             if (!ok) return false;
-            //debug("got here 1");
+            
             decimal p = Side ? k.AskPrice : k.BidPrice;
             //获得对应的ask bid size大小用于fill
             int s=0;
@@ -360,8 +387,6 @@ namespace TradingLib.Common
             {
                 this.xPrice = p;
                 this.xSize = (s >= UnsignedSize ? UnsignedSize : s) * (Side ? 1 : -1);
-                //debug("askbid size:"+s.ToString()+"|");
-                //Util.Debug("tick date:" + k.Date + " ticktime:" + k.Time,QSEnumDebugLevel.ERROR);
                 this.xTime = k.Time;
                 this.xDate = k.Date;
                 return true;

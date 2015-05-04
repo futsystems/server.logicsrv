@@ -102,6 +102,10 @@ namespace FutsMoniter
                 nowequity.Text = Util.FormatDecimal(info.NowEquity);
                 margin.Text = Util.FormatDecimal(info.Margin);
                 marginfrozen.Text = Util.FormatDecimal(info.MarginFrozen);
+                lastcredit.Text = Util.FormatDecimal(info.LastCredit);
+                creditcashin.Text = Util.FormatDecimal(info.CreditCashIn);
+                creditcashout.Text = Util.FormatDecimal(info.CreditCashOut);
+                credit.Text = Util.FormatDecimal(info.Credit);
             }
         }
 

@@ -82,6 +82,20 @@ namespace TradingLib.ORM
         public decimal NowEquity { get; set; }
     }
 
+    internal class AccountLastCredit
+    {
+        public AccountLastCredit()
+        {
+            this.Account = string.Empty;
+            this.NowCredit = 0M;
+        }
+
+        public string Account { get; set; }
+
+        public decimal NowCredit { get; set; }
+    }
+
+
 
     internal class TransRefFields
     {
@@ -354,11 +368,11 @@ namespace TradingLib.ORM
         /// <param name="amount"></param>
         /// <param name="comment"></param>
         /// <returns></returns>
-        public static bool CashOperation(string account, decimal amount, string transref,string comment)
+        public static bool CashOperation(string account, decimal amount, QSEnumEquityType equity_type, string transref, string comment)
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("Insert into log_cashtrans (`datetime`,`amount`,`comment`,`account`,`transref`,`settleday`) values('{0}','{1}','{2}','{3}','{4}','{5}')",Util.ToTLDateTime(), amount.ToString(), comment, account.ToString(),transref,TLCtxHelper.Ctx.SettleCentre.NextTradingday);
+                string query = String.Format("Insert into log_cashtrans (`datetime`,`amount`,`comment`,`account`,`transref`,`settleday`,`equity_type`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}')", Util.ToTLDateTime(), amount.ToString(), comment, account.ToString(), transref, TLCtxHelper.Ctx.SettleCentre.NextTradingday,equity_type);
                 return db.Connection.Execute(query) > 0;
             }
         }
@@ -384,11 +398,11 @@ namespace TradingLib.ORM
         /// <param name="accId"></param>
         /// <param name="start"></param>
         /// <returns></returns>
-        public static decimal CashInOfTradingDay(string accId,int tradingday)
+        public static decimal CashInOfTradingDay(string accId, QSEnumEquityType eq_type,int tradingday)
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("SELECT Sum(amount) as total FROM log_cashtrans where settleday ='{0}' and account='{1}' and amount>0", tradingday, accId);
+                string query = String.Format("SELECT Sum(amount) as total FROM log_cashtrans where settleday ='{0}' and account='{1}' and equity_type='{2}' and amount>0", tradingday, accId,eq_type);
                 TotalCashAmount total = db.Connection.Query<TotalCashAmount>(query, null).Single<TotalCashAmount>();
                 return total.Total;
             }
@@ -417,11 +431,11 @@ namespace TradingLib.ORM
         /// <param name="accID"></param>
         /// <param name="start"></param>
         /// <returns></returns>
-        public static decimal CashOutOfTradingDay(string accId,int tradingday)
+        public static decimal CashOutOfTradingDay(string accId, QSEnumEquityType eq_type, int tradingday)
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("SELECT Sum(amount) as total FROM log_cashtrans where settleday ='{0}' and account='{1}' and amount<0", tradingday, accId);
+                string query = String.Format("SELECT Sum(amount) as total FROM log_cashtrans where settleday ='{0}' and account='{1}' and equity_type='{2}' and amount<0", tradingday, accId,eq_type);
                 TotalCashAmount total = db.Connection.Query<TotalCashAmount>(query, null).Single<TotalCashAmount>();
                 return total.Total;
             }
@@ -735,6 +749,23 @@ namespace TradingLib.ORM
                 AccountLastEquity settleEquity = db.Connection.Query<AccountLastEquity>(query).SingleOrDefault();//包含多个元素则异常
                 //Util.Debug("settleEquity == null :" + (settleEquity == null).ToString());
                 return settleEquity==null?0:settleEquity.NowEquity;
+            }
+        }
+
+
+        /// <summary>
+        /// 查询某个交易帐户某个交易日的结算优先资金(信用额度)
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="settleday"></param>
+        /// <returns></returns>
+        public static decimal GetSettleCredit(string account, int settleday)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("SELECT account,nowcredit FROM log_settlement WHERE account = '{0}' AND settleday = '{1}'", account, settleday);
+                AccountLastCredit settleCredit = db.Connection.Query<AccountLastCredit>(query).SingleOrDefault();//包含多个元素则异常
+                return settleCredit == null ? 0 : settleCredit.NowCredit;
             }
         }
 

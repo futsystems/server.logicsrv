@@ -152,7 +152,7 @@ namespace TradingLib.Common
         /// <param name="acc"></param>
         /// <param name="amount"></param>
         /// <param name="comment"></param>
-        public abstract void CashOperation(string acc, decimal amount,string transref, string comment);
+        public abstract void CashOperation(string acc, decimal amount,QSEnumEquityType equity_type, string transref, string comment);
 
         /// <summary>
         /// 复位某个账户的资金到多少数值

@@ -30,7 +30,6 @@
         {
             this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
             this.kryptonGroupBox1 = new ComponentFactory.Krypton.Toolkit.KryptonGroupBox();
-            this.btnChangePass = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.lbqq = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.lbmobile = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.lbrole = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
@@ -43,6 +42,12 @@
             this.kryptonLabel10 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.lbbasemgrfk = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel12 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.acclimit = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.kryptonLabel2 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.agentlimit = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.kryptonLabel4 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.creditlimit = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.kryptonLabel11 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonGroupBox1)).BeginInit();
@@ -67,7 +72,12 @@
             // 
             // kryptonGroupBox1.Panel
             // 
-            this.kryptonGroupBox1.Panel.Controls.Add(this.btnChangePass);
+            this.kryptonGroupBox1.Panel.Controls.Add(this.creditlimit);
+            this.kryptonGroupBox1.Panel.Controls.Add(this.kryptonLabel11);
+            this.kryptonGroupBox1.Panel.Controls.Add(this.agentlimit);
+            this.kryptonGroupBox1.Panel.Controls.Add(this.kryptonLabel4);
+            this.kryptonGroupBox1.Panel.Controls.Add(this.acclimit);
+            this.kryptonGroupBox1.Panel.Controls.Add(this.kryptonLabel2);
             this.kryptonGroupBox1.Panel.Controls.Add(this.lbqq);
             this.kryptonGroupBox1.Panel.Controls.Add(this.lbmobile);
             this.kryptonGroupBox1.Panel.Controls.Add(this.lbrole);
@@ -82,17 +92,7 @@
             this.kryptonGroupBox1.Panel.Controls.Add(this.kryptonLabel12);
             this.kryptonGroupBox1.Size = new System.Drawing.Size(753, 98);
             this.kryptonGroupBox1.TabIndex = 1;
-            this.kryptonGroupBox1.Text = "管理域信息";
             this.kryptonGroupBox1.Values.Heading = "管理域信息";
-            // 
-            // btnChangePass
-            // 
-            this.btnChangePass.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnChangePass.Location = new System.Drawing.Point(649, 39);
-            this.btnChangePass.Name = "btnChangePass";
-            this.btnChangePass.Size = new System.Drawing.Size(90, 25);
-            this.btnChangePass.TabIndex = 13;
-            this.btnChangePass.Values.Text = "修改密码";
             // 
             // lbqq
             // 
@@ -191,6 +191,54 @@
             this.kryptonLabel12.TabIndex = 0;
             this.kryptonLabel12.Values.Text = "管理域ID:";
             // 
+            // acclimit
+            // 
+            this.acclimit.Location = new System.Drawing.Point(607, 6);
+            this.acclimit.Name = "acclimit";
+            this.acclimit.Size = new System.Drawing.Size(19, 18);
+            this.acclimit.TabIndex = 13;
+            this.acclimit.Values.Text = "--";
+            // 
+            // kryptonLabel2
+            // 
+            this.kryptonLabel2.Location = new System.Drawing.Point(506, 6);
+            this.kryptonLabel2.Name = "kryptonLabel2";
+            this.kryptonLabel2.Size = new System.Drawing.Size(95, 18);
+            this.kryptonLabel2.TabIndex = 12;
+            this.kryptonLabel2.Values.Text = "帐户个数限制:";
+            // 
+            // agentlimit
+            // 
+            this.agentlimit.Location = new System.Drawing.Point(607, 30);
+            this.agentlimit.Name = "agentlimit";
+            this.agentlimit.Size = new System.Drawing.Size(19, 18);
+            this.agentlimit.TabIndex = 15;
+            this.agentlimit.Values.Text = "--";
+            // 
+            // kryptonLabel4
+            // 
+            this.kryptonLabel4.Location = new System.Drawing.Point(506, 30);
+            this.kryptonLabel4.Name = "kryptonLabel4";
+            this.kryptonLabel4.Size = new System.Drawing.Size(95, 18);
+            this.kryptonLabel4.TabIndex = 14;
+            this.kryptonLabel4.Values.Text = "代理个数限制:";
+            // 
+            // creditlimit
+            // 
+            this.creditlimit.Location = new System.Drawing.Point(607, 52);
+            this.creditlimit.Name = "creditlimit";
+            this.creditlimit.Size = new System.Drawing.Size(19, 18);
+            this.creditlimit.TabIndex = 17;
+            this.creditlimit.Values.Text = "--";
+            // 
+            // kryptonLabel11
+            // 
+            this.kryptonLabel11.Location = new System.Drawing.Point(506, 52);
+            this.kryptonLabel11.Name = "kryptonLabel11";
+            this.kryptonLabel11.Size = new System.Drawing.Size(95, 18);
+            this.kryptonLabel11.TabIndex = 16;
+            this.kryptonLabel11.Values.Text = "信用额度限制:";
+            // 
             // ctBasicMangerInfo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -212,7 +260,6 @@
 
         private ComponentFactory.Krypton.Toolkit.KryptonPanel kryptonPanel1;
         private ComponentFactory.Krypton.Toolkit.KryptonGroupBox kryptonGroupBox1;
-        private ComponentFactory.Krypton.Toolkit.KryptonButton btnChangePass;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel lbqq;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel lbmobile;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel lbrole;
@@ -225,6 +272,12 @@
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel10;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel lbbasemgrfk;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel12;
+        private ComponentFactory.Krypton.Toolkit.KryptonLabel creditlimit;
+        private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel11;
+        private ComponentFactory.Krypton.Toolkit.KryptonLabel agentlimit;
+        private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel4;
+        private ComponentFactory.Krypton.Toolkit.KryptonLabel acclimit;
+        private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel2;
 
     }
 }

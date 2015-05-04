@@ -19,6 +19,7 @@ namespace TradingLib.Common
         public decimal Amount { get; set; }
         public string TransRef { get; set; }
         public string Comment { get; set; }
+        public QSEnumEquityType EquityType { get; set; }
 
         public override string ContentSerialize()
         {
@@ -31,6 +32,9 @@ namespace TradingLib.Common
             sb.Append(this.TransRef.ToString());
             sb.Append(d);
             sb.Append(this.Comment);
+            sb.Append(d);
+            sb.Append(this.EquityType);
+
 
             return sb.ToString();
         }
@@ -42,6 +46,7 @@ namespace TradingLib.Common
             this.Amount = decimal.Parse(rec[1]);
             this.TransRef = rec[2];
             this.Comment = rec[3];
+            this.EquityType = (QSEnumEquityType)Enum.Parse(typeof(QSEnumEquityType), rec[4]);
         }
 
 

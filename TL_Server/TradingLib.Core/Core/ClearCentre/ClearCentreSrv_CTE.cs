@@ -111,9 +111,9 @@ namespace TradingLib.Core
 
         #region 出入金操作
         [ContribCommandAttr(QSEnumCommandSource.MessageWeb, "cashoperation", "cashoperation - 出入金操作", "出入金操作")]
-        public void CTE_Cash(string account,decimal amount,string comment)
+        public void CTE_Cash(string account,decimal amount,QSEnumEquityType equity_type,string comment)
         {
-            this.CashOperation(account, amount,"", comment);
+            this.CashOperation(account, amount,equity_type,"", comment);
         }
 
         [ContribCommandAttr(QSEnumCommandSource.MessageWeb, "resetequity", "resetequity - 重置某个交易帐户资金至多少资金", "重置某个交易帐户资金至多少资金")]

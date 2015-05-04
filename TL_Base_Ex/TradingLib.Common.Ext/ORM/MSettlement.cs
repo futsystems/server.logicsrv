@@ -285,7 +285,8 @@ namespace TradingLib.ORM
                     {
                         Util.Debug(string.Format("account:{0} lastequity:{1} nowequity:{2}", settle.Account, settle.LastEquity, settle.NowEquity),QSEnumDebugLevel.DEBUG);
                     }
-                    string query = String.Format("Insert into log_settlement (`account`,`settleday`,`realizedpl`,`unrealizedpl`,`commission`,`cashin`,`cashout`,`lastequity`,`nowequity`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}')", settle.Account, settle.SettleDay, settle.RealizedPL, settle.UnRealizedPL, settle.Commission, settle.CashIn, settle.CashOut, settle.LastEquity, settle.NowEquity);
+                    //string query = String.Format("Insert into log_settlement (`account`,`settleday`,`realizedpl`,`unrealizedpl`,`commission`,`cashin`,`cashout`,`lastequity`,`nowequity`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}')", settle.Account, settle.SettleDay, settle.RealizedPL, settle.UnRealizedPL, settle.Commission, settle.CashIn, settle.CashOut, settle.LastEquity, settle.NowEquity);
+                    string query = String.Format("Insert into log_settlement (`account`,`settleday`,`realizedpl`,`unrealizedpl`,`commission`,`cashin`,`cashout`,`lastequity`,`nowequity`,`lastcredit`,`nowcredit`,`creditcashin`,`creditcashout`) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}')", settle.Account, settle.SettleDay, settle.RealizedPL, settle.UnRealizedPL, settle.Commission, settle.CashIn, settle.CashOut, settle.LastEquity, settle.NowEquity, settle.LastCredit, settle.NowCredit, settle.CreditCashIn, settle.CreditCashOut);
                     istransok =  istransok &&  (db.Connection.Execute(query) > 0);
 
                     //2.更新账户表中的上期权益数据 将结算数据的当前权益更新为帐户的昨日权益

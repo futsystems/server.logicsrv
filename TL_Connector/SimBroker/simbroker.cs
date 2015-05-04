@@ -377,8 +377,51 @@ namespace Broker.SIM
                 // 遍历所有的委托 查询是否存在该委托对应的取消,如果存在该委托的取消,则取消该委托
                 for (int i = 0; i < orders.Length; i++)
                 {
+
                     //获得对应的委托
                     Order o = orders[i];
+
+                    bool isAcution = false;
+                    
+                    //Util.Debug("market time:" + o.oSymbol.SecurityFamily.IsMarketTime.ToString() + " actuion time:" + o.oSymbol.SecurityFamily.IsInActionExutionTime().ToString(),QSEnumDebugLevel.INFO);
+                    
+                    //集合竞价报单时间段内 可以进行取消操作
+                    if (o.oSymbol.SecurityFamily.IsInAuctionTime())
+                    {
+                        int cidx0 = gotcancel(o.id, cancels);
+                        if (cidx0 >= 0)
+                        {
+                            debug("PTT Server Canceled: " + o.id, QSEnumDebugLevel.INFO);
+                            cancels[cidx0] = 0;
+                            o.Status = QSEnumOrderStatus.Canceled;
+
+                            //如果模拟实盘则需要删除限盘口跟踪
+                            if (o.isLimit && this._simLimitReal)
+                                onLimitOrderCancelled(o.id);
+
+                            _ocache.Write(o);
+                            _ccache.Write(o.id);
+                            continue;
+                        }
+                    }
+
+                    //集合竞价撮合时间段内 设置isAcution并全部成交
+                    if (o.oSymbol.SecurityFamily.IsInActionExutionTime())
+                    {
+                        //Util.Debug("order is in action execution time",QSEnumDebugLevel.INFO);
+                        isAcution = true;
+                    }
+                    
+
+
+                    //如果不处于连续竞价时间段 并且也不处于集合竞价撮合时间段 直接返回不执行成交
+                    if (!o.oSymbol.SecurityFamily.IsMarketTime && !isAcution)
+                    {
+                        //Util.Debug("order is not in action execution time and market time", QSEnumDebugLevel.INFO);
+                        unfilled.Add(o);
+                        //如果该委托处于非市场交易时间则继续下一条
+                        continue;
+                    }
 
                     //1.取消检查 查询是否有该委托的取消,若有取消 则直接返回,不对委托进行成交检查
                     //遍历所有的委托 会将所有的有效取消消耗,若还有取消没有消耗,则是因为其他原因造成的死取消
@@ -406,9 +449,15 @@ namespace Broker.SIM
                     //如果是挂单 并且需要模拟实盘进行成交
                     if (tick != null && tick.isValid)
                     {
-                       
                         //1.以对方盘口价格进行成交
-                        filled = o.Fill(tick, _useBikAsk, false);
+                        if (isAcution)
+                        {
+                            filled = o.FillAuction(tick);
+                        }
+                        else
+                        {
+                            filled = o.Fill(tick, _useBikAsk, false);
+                        }
 
                         //2.限价单如果没有成交我们按累计的盘口检查是否可以用最新价进行成交
                         LimitOrderQuoteStatus qs = null;

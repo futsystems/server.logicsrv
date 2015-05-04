@@ -33,15 +33,15 @@ namespace TradingLib.Core
                 foreach (IAccount acc in acctk.Accounts)
                 {
                     //这里累计NextTradingday的出入金数据 恢复到当前状态,结算之后的所有交易数据都归入以结算日为基础计算的下一个交易日
-                    acc.Deposit(ORM.MAccount.CashInOfTradingDay(acc.ID,TLCtxHelper.Ctx.SettleCentre.NextTradingday));
-                    acc.Withdraw(ORM.MAccount.CashOutOfTradingDay(acc.ID, TLCtxHelper.Ctx.SettleCentre.NextTradingday));
+                    acc.Deposit(ORM.MAccount.CashInOfTradingDay(acc.ID, QSEnumEquityType.OwnEquity,TLCtxHelper.Ctx.SettleCentre.NextTradingday));
+                    acc.Withdraw(ORM.MAccount.CashOutOfTradingDay(acc.ID,QSEnumEquityType.OwnEquity, TLCtxHelper.Ctx.SettleCentre.NextTradingday));
+
+                    acc.CreditDeposit(ORM.MAccount.CashInOfTradingDay(acc.ID, QSEnumEquityType.CreditEquity, TLCtxHelper.Ctx.SettleCentre.NextTradingday));
+                    acc.CreditWithdraw(ORM.MAccount.CashOutOfTradingDay(acc.ID, QSEnumEquityType.CreditEquity, TLCtxHelper.Ctx.SettleCentre.NextTradingday));
 
                     //获得帐户昨日权益 通过查找昨日结算记录中的结算权益来恢复
                     acc.LastEquity = ORM.MAccount.GetSettleEquity(acc.ID,TLCtxHelper.Ctx.SettleCentre.LastSettleday);
-                    if (acc.ID == "18800401")
-                    {
-                        int i = 0;
-                    }
+                    acc.LastCredit = ORM.MAccount.GetSettleCredit(acc.ID, TLCtxHelper.Ctx.SettleCentre.LastSettleday);
                 }
                 
 

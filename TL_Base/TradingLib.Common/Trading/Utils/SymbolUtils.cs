@@ -80,5 +80,7 @@ namespace TradingLib.Common
                 return true;
             return false;
         }
+
+        
     }
 }

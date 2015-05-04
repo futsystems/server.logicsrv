@@ -153,7 +153,7 @@
     <Compile Include="API\ILogicHandler\ILogicHandler_Rule.cs" />
     <Compile Include="API\ILogicHandler\ILogicHandler_Trading.cs" />
     <Compile Include="API\ILogicHandler\ILogicHandler_Account.cs" />
-    <Compile Include="Client\AsyncClient_MQ.cs" />
+    <Compile Include="Client\Request\AsyncClient_MQ.cs" />
     <Compile Include="Client\PacketHandler\TLClientNet_Request_.cs" />
     <Compile Include="Client\Request\TLClientNet_Request_SettleManager.cs" />
     <Compile Include="Client\Request\TLClientNet_Request_ExCore_Exchange.cs" />

@@ -100,21 +100,6 @@ namespace TradingLib.API
         long SettlementConfirmTimeStamp { get; set; }
 
         /// <summary>
-        /// 是否允许锁仓
-        /// </summary>
-        //bool PosLock { get; set; }
-
-        /// <summary>
-        /// 单向大边
-        /// </summary>
-        //bool SideMargin { get; set; }
-
-        /// <summary>
-        /// 客户端信用额度分开显示
-        /// </summary>
-        //bool CreditSeparate { get; set; }
-
-        /// <summary>
         /// 帐号隶属于哪个管理员
         /// 可以属于超级管理员Root
         /// 或者属于代理Agent
@@ -165,6 +150,18 @@ namespace TradingLib.API
         /// </summary>
         /// <param name="amount"></param>
         void Withdraw(decimal amount);
+
+        /// <summary>
+        /// 信用入金
+        /// </summary>
+        /// <param name="amount"></param>
+        void CreditDeposit(decimal amount);
+
+        /// <summary>
+        /// 信用出金
+        /// </summary>
+        /// <param name="amount"></param>
+        void CreditWithdraw(decimal amount);
 
         /// <summary>
         /// 重置账户状态,用于每日造成开盘时,重置数据 

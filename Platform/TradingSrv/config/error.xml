@@ -37,6 +37,7 @@
 <error id="TERMINAL_NUM_LIMIT" value="271" prompt="登入终端数量超过限制"/>
 <error id="CASHOPERATION_NOT_ALLOW_NOW" value="28" prompt="当前时间不允许出入金操作"/>
 <error id="SETTLECENTRE_IN_SETTLE" value="29" prompt="结算系统正在结算,无法处理委托"/>
+<error id="ACTION_NEED_LIMIT" value="30" prompt="集合竞价需设定报单价"/>
 <error id="RISKCENTRE_CHECK_ERROR" value="100" prompt="风控检查异常"/>
 
 <error id="RISKCENTRE_CHECK_ERROR" value="100" prompt="风控检查异常"/>

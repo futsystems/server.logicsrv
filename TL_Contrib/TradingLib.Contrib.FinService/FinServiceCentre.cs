@@ -103,7 +103,6 @@ namespace TradingLib.Contrib.FinService
             debug("Load Service Instance......", QSEnumDebugLevel.INFO);
             FinTracker.FinServiceTracker.ToArray();
 
-
             //将服务的计费日志导出
             FinTracker.FinServiceTracker.GotFeeChargeItemEvent += new FeeChargeItemDel(_chargelog.newFeeChargeItem);
 
@@ -208,7 +207,7 @@ namespace TradingLib.Contrib.FinService
                 {
                     try
                     {
-                        TLCtxHelper.CmdAuthCashOperation.CashOperation(item.Account, item.TotalFee * -1, "", item.Comment);
+                        TLCtxHelper.CmdAuthCashOperation.CashOperation(item.Account, item.TotalFee * -1,QSEnumEquityType.OwnEquity,"", item.Comment);
                     }
                     catch (FutsRspError ex)
                     {

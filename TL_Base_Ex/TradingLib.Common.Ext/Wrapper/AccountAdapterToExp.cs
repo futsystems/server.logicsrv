@@ -173,6 +173,7 @@ namespace TradingLib.Common
         /// </summary>
         public decimal NowEquity { get { return _acc.NowEquity; } }
 
+        public decimal LastCredit { get { return _acc.LastCredit; } set { } }
         /// <summary>
         /// 上期权益
         /// </summary>
@@ -209,6 +210,10 @@ namespace TradingLib.Common
         /// </summary>
         public decimal CashOut { get { return _acc.CashOut; } }
 
+        public decimal CreditCashIn { get { return _acc.CreditCashIn; } }
+
+
+        public decimal CreditCashOut { get { return _acc.CreditCashOut; } }
         /// <summary>
         /// 保证金占用
         /// </summary>

@@ -29,7 +29,7 @@ namespace TradingLib.API
         /// <param name="id"></param>
         /// <param name="ammount"></param>
         /// <param name="comment"></param>
-        void CashOperation(string id, decimal ammount, string transref, string comment);
+        void CashOperation(string id, decimal ammount, QSEnumEquityType equity_type, string transref, string comment);
 
         /// <summary>
         /// 确认某个入金记录

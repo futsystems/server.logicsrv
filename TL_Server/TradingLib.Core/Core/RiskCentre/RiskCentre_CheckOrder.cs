@@ -105,13 +105,40 @@ namespace TradingLib.Core
             //3.3检查合约交易时间段
             if (_marketopencheck)
             {
-                //合约市场开市时间检查(对不同的市场进行开市时间常规检查)
-                if (!o.oSymbol.IsMarketTime)
+                if (auctionEnable)
                 {
-                    errortitle = "SYMBOL_NOT_MARKETTIME";//非交易时间段
-                    return false;
+                    //合约市场开市时间检查(对不同的市场进行开市时间常规检查)
+                    if ((!o.oSymbol.IsMarketTime) && (!o.oSymbol.SecurityFamily.IsInAuctionTime()))
+                    {
+                        errortitle = "SYMBOL_NOT_MARKETTIME";//非交易时间段
+                        return false;
+                    }
+
+                    //处于集合竞价 只允许限价单进入
+                    if (o.oSymbol.SecurityFamily.IsInAuctionTime() && (!o.isLimit))
+                    {
+                        errortitle = "ACTION_NEED_LIMIT";
+                        return false;
+                    
+                    }
+                }
+                else //非集合竞价 检查合约正常交易时间区间
+                {
+                    if (!o.oSymbol.IsMarketTime)
+                    {
+                        errortitle = "SYMBOL_NOT_MARKETTIME";//非交易时间段
+                        return false;
+                    }
                 }
             }
+
+            //集合竞价开启并且处于该品种对应的集合竞价时间区间 则检查委托 必须为挂单
+            if (auctionEnable && o.oSymbol.SecurityFamily.IsInAuctionTime())
+            { 
+            
+            }
+
+
 
             //4.开仓标识与锁仓权限检查
             //4.1自动开平标识识别
