@@ -354,7 +354,10 @@ namespace Broker.SIM
          * 移动完毕后再遍历所有的委托 并用最新的市场快照去进行成交。
          * 这样操作的方式 数据循环量减少 可以提高处理量
          * 
-         * 
+         * 交易时间段划分
+         * 1.集合竞价报单 允许下单 撤单 执行撮合
+         * 2.集合竞价撮合 不允许下单 撤单 执行撮合
+         * 3.连续撮合 允许下单 撤单 同时进行撮合
          * **/
         void processPaperTrading()
         { 
@@ -425,22 +428,25 @@ namespace Broker.SIM
 
                     //1.取消检查 查询是否有该委托的取消,若有取消 则直接返回,不对委托进行成交检查
                     //遍历所有的委托 会将所有的有效取消消耗,若还有取消没有消耗,则是因为其他原因造成的死取消
-                    int cidx = gotcancel(o.id, cancels);
-                    if (cidx >= 0)
+                    //如果处于集合竞价撮合时间段内 则无法取消委托
+                    if (!isAcution)
                     {
-                        debug("PTT Server Canceled: " + o.id,QSEnumDebugLevel.INFO);
-                        cancels[cidx] = 0;
-                        o.Status = QSEnumOrderStatus.Canceled;
+                        int cidx = gotcancel(o.id, cancels);
+                        if (cidx >= 0)
+                        {
+                            debug("PTT Server Canceled: " + o.id, QSEnumDebugLevel.INFO);
+                            cancels[cidx] = 0;
+                            o.Status = QSEnumOrderStatus.Canceled;
 
-                        //如果模拟实盘则需要删除限盘口跟踪
-                        if (o.isLimit && this._simLimitReal)
-                            onLimitOrderCancelled(o.id);
+                            //如果模拟实盘则需要删除限盘口跟踪
+                            if (o.isLimit && this._simLimitReal)
+                                onLimitOrderCancelled(o.id);
 
-                        _ocache.Write(o);
-                        _ccache.Write(o.id);
-                        continue;
+                            _ocache.Write(o);
+                            _ccache.Write(o.id);
+                            continue;
+                        }
                     }
-
                     //2.成交检查 用Tick数据成交该委托 注意我们是遍历所有的委托 然后取对应的tick数据 去进行成交
                     bool filled = false;
 
