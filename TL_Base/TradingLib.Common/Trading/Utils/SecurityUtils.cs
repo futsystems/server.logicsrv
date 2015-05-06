@@ -68,5 +68,23 @@ namespace TradingLib.Common
                 return now > _actimestart_com && now < _actimeend_com;
             }
         }
+
+        /// <summary>
+        /// 判断该品种是否处于连续竞价时间段
+        /// </summary>
+        /// <param name="sec"></param>
+        /// <returns></returns>
+        public static bool IsInContinuous(this SecurityFamily sec)
+        {
+
+            if (sec.MarketTime != null)
+            {
+                return sec.MarketTime.IsOpenTime;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }
