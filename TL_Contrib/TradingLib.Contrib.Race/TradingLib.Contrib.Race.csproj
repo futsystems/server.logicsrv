@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{BE993254-EF0E-41BD-80F6-E73A8F6B6C9C}</ProjectGuid>
+    <ProjectGuid>{83C73986-B4ED-4245-A556-7BEEF8EB8EF8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TradingLib.Contrib.Race</RootNamespace>
@@ -17,66 +17,65 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\lib\Contrib\Debug\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>none</DebugType>
+    <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\lib\Contrib\Release\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>none</ErrorReport>
+    <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\lib\Contrib\Release\TradingLib.Contrib.Race.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
     <Reference Include="TradingLib.API">
-      <HintPath>..\..\lib\Win\TradingLib.API.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\lib\TradingLib\TradingLib.API.dll</HintPath>
     </Reference>
     <Reference Include="TradingLib.API.Ex">
-      <HintPath>..\..\lib\Win\TradingLib.API.Ex.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\lib\TradingLib\TradingLib.API.Ex.dll</HintPath>
     </Reference>
     <Reference Include="TradingLib.Common">
-      <HintPath>..\..\lib\Win\TradingLib.Common.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\lib\TradingLib\TradingLib.Common.dll</HintPath>
     </Reference>
     <Reference Include="TradingLib.Common.Ex">
-      <HintPath>..\..\lib\Win\TradingLib.Common.Ex.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\lib\TradingLib\TradingLib.Common.Ex.dll</HintPath>
     </Reference>
-    <Reference Include="MySql.Data">
-      <HintPath>..\..\lib\MySql.Data.dll</HintPath>
+    <Reference Include="TradingLib.Mixins">
+      <HintPath>..\..\lib\TradingLib\TradingLib.Mixins.dll</HintPath>
     </Reference>
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IRace.cs" />
-    <Compile Include="IRaceStatistic.cs" />
-    <Compile Include="mySqlRace.cs" />
+    <Compile Include="Enums.cs" />
+    <Compile Include="ORM\MRace.cs" />
+    <Compile Include="ProfitCal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RaceUtils.cs" />
-    <Compile Include="Race\Race.cs" />
-    <Compile Include="Race\RaceCentre.cs" />
-    <Compile Include="Race\RaceRule.cs" />
-    <Compile Include="Race\RaceStatistic.cs" />
-    <Compile Include="Race\RaceCentre_Contrib.cs" />
+    <Compile Include="Race.cs" />
+    <Compile Include="RaceCentre.cs" />
+    <Compile Include="RaceCentre_CTE.cs" />
+    <Compile Include="RaceRule.cs" />
+    <Compile Include="RaceService.cs" />
+    <Compile Include="RaceServiceTracker.cs" />
+    <Compile Include="RaceTracker.cs" />
+    <Compile Include="Tracker.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>xcopy /r /y $(TargetPath) $(ProjectDir)..\..\bin\Debug\IF888\QSTradingServer\Contrib
-xcopy /r /y $(TargetPath) $(ProjectDir)..\..\bin\Debug\IF888\TradingServerCLI\Contrib</PostBuildEvent>
-  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
-  <Target Name="AfterBuild">
-  </Target>
   -->
+  <Target Name="AfterBuild">
+    <ItemGroup>
+      <OutFiles Include="$(OutputPath)\$(AssemblyName).dll" />
+    </ItemGroup>
+    <Copy SourceFiles="@(OutFiles)" DestinationFolder="..\..\lib\TradingLib\Contrib" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(OutFiles)" DestinationFolder="..\..\Platform\TradingSrv\Contrib" SkipUnchangedFiles="true" />
+  </Target>
 </Project>
