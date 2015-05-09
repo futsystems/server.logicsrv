@@ -34,6 +34,8 @@ namespace TradingLib.Core
         string commentNoPositionForFlat = "无可平持仓";
         string commentOverFlatPositionSize = "可平持仓数量不足";
 
+        bool auctionEnable = false;
+
         public RiskCentre():base(CoreName)
         {
             //1.加载配置文件
@@ -76,6 +78,13 @@ namespace TradingLib.Core
                 _cfgdb.UpdateConfig("FlatSendOrderRetryNum", QSEnumCfgType.Int, 3, "强平重试次数");
             }
             SENDORDERRETRY = _cfgdb["FlatSendOrderRetryNum"].AsInt();
+
+            if (!_cfgdb.HaveConfig("AuctionEnable"))
+            {
+                _cfgdb.UpdateConfig("AuctionEnable", QSEnumCfgType.Bool,false, "集合竞价");
+            }
+            auctionEnable = _cfgdb["AuctionEnable"].AsBool();
+
 
             //订阅持仓回合关闭事件
             TLCtxHelper.EventIndicator.GotPositionClosedEvent += new PositionRoundClosedDel(GotPostionRoundClosed);

@@ -380,22 +380,58 @@ namespace Broker.SIM
                     //获得对应的委托
                     Order o = orders[i];
 
-                    //1.取消检查 查询是否有该委托的取消,若有取消 则直接返回,不对委托进行成交检查
-                    //遍历所有的委托 会将所有的有效取消消耗,若还有取消没有消耗,则是因为其他原因造成的死取消
-                    int cidx = gotcancel(o.id, cancels);
-                    if (cidx >= 0)
+                    bool periodAuctionPlace = o.oSymbol.SecurityFamily.IsInAuctionTime();//是否处于集合竞价报单时段
+                    bool periodAuctionExecution = o.oSymbol.SecurityFamily.IsInActionExutionTime();//是否处于集合竞价撮合时段
+                    bool periodContinuous = o.oSymbol.SecurityFamily.IsInContinuous();//是否处于连续竞价阶段
+
+
+                    //集合竞价报单时间段内 可以进行取消操作
+                    if (periodAuctionPlace)
                     {
-                        debug("PTT Server Canceled: " + o.id,QSEnumDebugLevel.INFO);
-                        cancels[cidx] = 0;
-                        o.Status = QSEnumOrderStatus.Canceled;
+                        int cidx0 = gotcancel(o.id, cancels);
+                        if (cidx0 >= 0)
+                        {
+                            debug("PTT Server Canceled: " + o.id, QSEnumDebugLevel.INFO);
+                            cancels[cidx0] = 0;
+                            o.Status = QSEnumOrderStatus.Canceled;
 
-                        //如果模拟实盘则需要删除限盘口跟踪
-                        if (o.isLimit && this._simLimitReal)
-                            onLimitOrderCancelled(o.id);
+                            //如果模拟实盘则需要删除限盘口跟踪
+                            if (o.isLimit && this._simLimitReal)
+                                onLimitOrderCancelled(o.id);
 
-                        _ocache.Write(o);
-                        _ccache.Write(o.id);
+                            _ocache.Write(o);
+                            _ccache.Write(o.id);
+                            continue;
+                        }
+                    }
+
+                    //如果不处于连续竞价时间段 并且也不处于集合竞价撮合时间段 直接返回不执行成交
+                    if (!periodContinuous && !periodAuctionExecution)
+                    {
+                        unfilled.Add(o);
                         continue;
+                    }
+
+                    //处于集合竞价撮合时间段内 则无法取消委托,只有在连续竞价时间段内才能进行撤单
+                    if (!periodAuctionExecution)
+                    {
+                        //1.取消检查 查询是否有该委托的取消,若有取消 则直接返回,不对委托进行成交检查
+                        //遍历所有的委托 会将所有的有效取消消耗,若还有取消没有消耗,则是因为其他原因造成的死取消
+                        int cidx = gotcancel(o.id, cancels);
+                        if (cidx >= 0)
+                        {
+                            debug("PTT Server Canceled: " + o.id, QSEnumDebugLevel.INFO);
+                            cancels[cidx] = 0;
+                            o.Status = QSEnumOrderStatus.Canceled;
+
+                            //如果模拟实盘则需要删除限盘口跟踪
+                            if (o.isLimit && this._simLimitReal)
+                                onLimitOrderCancelled(o.id);
+
+                            _ocache.Write(o);
+                            _ccache.Write(o.id);
+                            continue;
+                        }
                     }
 
                     //2.成交检查 用Tick数据成交该委托 注意我们是遍历所有的委托 然后取对应的tick数据 去进行成交
@@ -406,9 +442,16 @@ namespace Broker.SIM
                     //如果是挂单 并且需要模拟实盘进行成交
                     if (tick != null && tick.isValid)
                     {
-                       
+
                         //1.以对方盘口价格进行成交
-                        filled = o.Fill(tick, _useBikAsk, false);
+                        if (periodAuctionExecution)
+                        {
+                            filled = o.FillAuction(tick);
+                        }
+                        else
+                        {
+                            filled = o.Fill(tick, _useBikAsk, false);
+                        }
 
                         //2.限价单如果没有成交我们按累计的盘口检查是否可以用最新价进行成交
                         LimitOrderQuoteStatus qs = null;

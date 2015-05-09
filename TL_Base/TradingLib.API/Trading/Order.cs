@@ -188,6 +188,12 @@ namespace TradingLib.API
 
         #region 委托成交函数
         /// <summary>
+        /// 集合竞价成交
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        bool FillAuction(Tick t);
+        /// <summary>
         /// try to fill order against another order
         /// </summary>
         /// <param name="o"></param>

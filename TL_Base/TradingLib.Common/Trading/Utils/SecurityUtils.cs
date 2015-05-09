@@ -25,5 +25,69 @@ namespace TradingLib.Common
             }
             return 1;
         }
+
+        #region 判定品种当前是否处于集合竞价时间段
+        static int _actimestart_com = 85500;
+        static int _actimeend_com = 85900;
+        static int _normaltimestart_com = 90000;
+
+        static int _actimestart_cf = 91000;
+        static int _acttimeend_cf = 91400;
+        static int _normaltimestart_cf = 91500;
+
+        /// <summary>
+        /// 是否处于集合竞价成交时间段
+        /// </summary>
+        /// <param name="sec"></param>
+        /// <returns></returns>
+        public static bool IsInActionExutionTime(this SecurityFamily sec)
+        {
+            int now = Util.ToTLTime();
+            if (sec.Exchange.EXCode.Equals("CFFEX"))
+            {
+                return now > _acttimeend_cf && now < _normaltimestart_cf;
+            }
+            else
+            {
+                return now > _actimeend_com && now < _normaltimestart_com;
+            }
+        }
+        /// <summary>
+        /// 是否处于集合竞价报单时间段
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsInAuctionTime(this SecurityFamily sec)
+        {
+            int now = Util.ToTLTime();
+            if (sec.Exchange.EXCode.Equals("CFFEX"))
+            {
+                return now > _actimestart_cf && now < _acttimeend_cf;
+            }
+            else
+            {
+                return now > _actimestart_com && now < _actimeend_com;
+            }
+        }
+
+        /// <summary>
+        /// 判断该品种是否处于连续竞价时间段
+        /// </summary>
+        /// <param name="sec"></param>
+        /// <returns></returns>
+        public static bool IsInContinuous(this SecurityFamily sec)
+        {
+
+            if (sec.MarketTime != null)
+            {
+                return sec.MarketTime.IsOpenTime;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        #endregion
+
+
     }
 }

@@ -52,6 +52,11 @@ namespace TradingLib.Core
         {
             errortitle = string.Empty;
             needlog = true;
+
+            bool periodAuctionPlace = false;
+            bool periodAuctionExecution = false;
+            bool periodContinuous = false;
+
             //1 结算中心检查
             //1.1检查结算中心是否正常状态 如果历史结算状态则需要将结算记录补充完毕后才可以接受新的委托
             if (!TLCtxHelper.ModuleSettleCentre.IsNormal)
@@ -102,15 +107,45 @@ namespace TradingLib.Core
                 return false;
             }
 
+            periodAuctionPlace = o.oSymbol.SecurityFamily.IsInAuctionTime();//是否处于集合竞价报单时段
+            periodAuctionExecution = o.oSymbol.SecurityFamily.IsInActionExutionTime();//是否处于集合竞价撮合时段
+            periodContinuous = o.oSymbol.SecurityFamily.IsInContinuous();//是否处于连续竞价阶段
+
+
             //3.3检查合约交易时间段
             if (_marketopencheck)
             {
-                //合约市场开市时间检查(对不同的市场进行开市时间常规检查)
-                if (!o.oSymbol.IsMarketTime)
+                if (auctionEnable)
                 {
-                    errortitle = "SYMBOL_NOT_MARKETTIME";//非交易时间段
-                    return false;
+                    //合约市场开市时间检查
+                    if ((!periodContinuous) && (!periodAuctionPlace))
+                    {
+                        errortitle = "SYMBOL_NOT_MARKETTIME";//非交易时间段
+                        return false;
+                    }
+
+                    //处于集合竞价 只允许限价单进入
+                    if (periodAuctionPlace && (!o.isLimit))
+                    {
+                        errortitle = "ACTION_NEED_LIMIT";
+                        return false;
+                    }
                 }
+                else //非集合竞价 检查合约正常连续竞价时间段
+                {
+                    if (!periodContinuous)
+                    {
+                        errortitle = "SYMBOL_NOT_MARKETTIME";//非交易时间段
+                        return false;
+                    }
+                }
+
+                ////合约市场开市时间检查(对不同的市场进行开市时间常规检查)
+                //if (!o.oSymbol.IsMarketTime)
+                //{
+                //    errortitle = "SYMBOL_NOT_MARKETTIME";//非交易时间段
+                //    return false;
+                //}
             }
 
             //4.开仓标识与锁仓权限检查
@@ -198,24 +233,39 @@ namespace TradingLib.Core
             //6.委托价格检查
             //6.1查看数据通道是否有对应的合约价格 行情是否正常
 
-            //bool symlive = TLCtxHelper.Ctx.MessageExchange.IsSymbolTickLive(o.Symbol);
-            //if (!symlive)
-            //{
-            //    errortitle = "SYMBOL_TICK_ERROR";//市场旱情异常
-            //    return false;
-            //}
-
-            //6.2检查价格是否在涨跌幅度内
-            if (o.isLimit || o.isStop)
+            //6.委托价格检查
+            //6.1连续竞价阶段需要检查合约有效性是否有正常的价格 集合竞价阶段 该合约可能还没有行情
+            if (periodContinuous)
             {
-                decimal targetprice = o.isLimit ? o.LimitPrice : o.StopPrice;
-                Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(o.Symbol);
-                if (targetprice > k.UpperLimit || targetprice < k.LowerLimit)
+                Tick tk = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(o.Symbol);
+                if (tk == null || (!tk.isValid))
                 {
-                    errortitle = "ORDERPRICE_OVERT_LIMIT";//保单价格超过涨跌幅
+                    errortitle = "SYMBOL_TICK_ERROR";//市场行情异常
                     return false;
                 }
+
+                //6.2检查价格是否在涨跌幅度内
+                if (o.isLimit || o.isStop)
+                {
+                    decimal targetprice = o.isLimit ? o.LimitPrice : o.StopPrice;
+                    if (targetprice > tk.UpperLimit || targetprice < tk.LowerLimit)
+                    {
+                        errortitle = "ORDERPRICE_OVERT_LIMIT";//保单价格超过涨跌幅
+                        return false;
+                    }
+                }
             }
+            ////6.2检查价格是否在涨跌幅度内
+            //if (o.isLimit || o.isStop)
+            //{
+            //    decimal targetprice = o.isLimit ? o.LimitPrice : o.StopPrice;
+            //    Tick k = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(o.Symbol);
+            //    if (targetprice > k.UpperLimit || targetprice < k.LowerLimit)
+            //    {
+            //        errortitle = "ORDERPRICE_OVERT_LIMIT";//保单价格超过涨跌幅
+            //        return false;
+            //    }
+            //}
 
             return true;
 

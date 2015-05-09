@@ -299,6 +299,30 @@ namespace TradingLib.Common
         #region Fill section
 
         /// <summary>
+        /// 集合竞价方式成交该委托
+        /// </summary>
+        /// <param name="k"></param>
+        /// <returns></returns>
+        public bool FillAuction(Tick t)
+        {
+            //合约不一致直接返回
+            if (t.Symbol != oSymbol.TickSymbol) return false;
+            //买入 委托价格大于等于开盘价 或者 卖出 委托价格小于等于开盘价
+            if ((isLimit && Side && (t.Open <= LimitPrice)) // buy limit
+                || (isLimit && !Side && (t.Open >= LimitPrice))// sell limit
+                )
+            {
+                this.xPrice = t.Open;//开盘价成交
+                this.xSize = UnsignedSize;//所有委托数量
+                this.xSize *= Side ? 1 : -1;
+                this.xTime = t.Time;
+                this.xDate = t.Date;
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Fills this order with a tick(trade price)
         /// 用最新成交价去成交一个委托
         /// </summary>
