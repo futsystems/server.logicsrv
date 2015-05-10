@@ -86,11 +86,11 @@ namespace TradingLib.Core
             create.Account = account;
             create.Category = category;
             create.Password = password;
-            create.RouteGroup = BasicTracker.RouterGroupTracker[routergroup_id];
+            //create.RouteGroup = BasicTracker.RouterGroupTracker[routergroup_id];
             create.RouterType = create.Category == QSEnumAccountCategory.SIMULATION ? QSEnumOrderTransferType.SIM : QSEnumOrderTransferType.LIVE;
             create.UserID = user_id;
-            create.Domain = manager.Domain;
-            create.BaseManager = targetmgr;
+            //create.Domain = manager.Domain;
+            create.BaseManagerID = targetmgr.BaseMgrID;
 
 
             //执行操作 并捕获异常 产生异常则给出错误回报
@@ -146,11 +146,11 @@ namespace TradingLib.Core
             create.Account = account;
             create.Category = category;
             create.Password = password;
-            create.RouteGroup = BasicTracker.RouterGroupTracker[routergroup_id];
+            //create.RouteGroup = BasicTracker.RouterGroupTracker[routergroup_id];
             create.RouterType = QSEnumOrderTransferType.SIM;
             create.UserID = user_id;
-            create.Domain = manager.Domain;
-            create.BaseManager = manager.BaseManager;
+            //create.Domain = manager.Domain;
+            //create.BaseManager = manager.BaseManager;
 
 
             //执行操作 并捕获异常 产生异常则给出错误回报
@@ -163,6 +163,68 @@ namespace TradingLib.Core
             session.OperationSuccess("新增配资客户:" + create.Account + "成功");
 
         }
+
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "AddAccountFacde", "AddAccountFacde - add  account", "添加交易帐号", QSEnumArgParseType.Json)]
+        public void CTE_AddAccountFacde(ISession session, string json)
+        {
+            logger.Info(string.Format("管理员:{0} 请求添加帐号:{1}", session.AuthorizedID, json));
+
+            Manager manager = session.GetManager();
+            var creation = Mixins.Json.JsonMapper.ToObject<AccountCreation>(json);
+            var account = creation.Account;
+
+            //域帐户数目检查
+            if (manager.Domain.GetAccounts().Count() >= manager.Domain.AccLimit)
+            {
+                throw new FutsRspError("帐户数目达到上限:" + manager.Domain.AccLimit.ToString());
+            }
+
+            if (creation.BaseManagerID == 0)
+            {
+                creation.BaseManagerID = manager.BaseMgrID;
+            }
+
+            //如果不是Root权限的Manager需要进行执行权限检查
+            if (!manager.IsInRoot())
+            {
+                //如果不是为该主域添加帐户,则我们需要判断当前Manager的主域是否拥有请求主域的权限
+                if (manager.BaseMgrID != creation.BaseManagerID)
+                {
+                    if (!manager.IsParentOf(creation.BaseManagerID))
+                    {
+                        throw new FutsRspError("无权在该管理域开设帐户");
+                    }
+                }
+            }
+
+            //Manager帐户数量限制 如果是在自己的主域中添加交易帐户 则需要检查帐户数量
+            int limit = manager.BaseManager.AccLimit;
+
+            int cnt = manager.GetVisibleAccount().Count();//获得该manger下属的所有帐户数目
+            if (cnt >= limit)
+            {
+                throw new FutsRspError("可开帐户数量超过限制:" + limit.ToString());
+            }
+
+
+            //执行操作 并捕获异常 产生异常则给出错误回报
+            this.AddAccount(ref creation);//将交易帐户加入到主域
+
+            //帐户添加完毕后同步添加profile信息
+            creation.Profile.Account = creation.Account;
+
+            //插入新的profile
+            BasicTracker.AccountProfileTracker.UpdateAccountProfile(creation.Profile);
+
+            //对外触发交易帐号添加事件
+            TLCtxHelper.EventAccount.FireAccountAddEvent(creation.Account);
+
+            session.OperationSuccess("新增交易帐号:" + creation.Account + "成功");
+
+        }
+
+
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryAccountProfile", "QryAccountProfile - qry profile account", "查询交易帐户个人信息")]
         public void CTE_QryAccountProfile(ISession session, string account)

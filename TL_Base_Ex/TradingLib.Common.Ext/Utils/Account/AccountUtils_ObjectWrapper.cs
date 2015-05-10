@@ -174,10 +174,8 @@ namespace TradingLib.Common
             info.Deleted = acc.Deleted;
             info.RG_ID = acc.RG_FK;
 
-            //IEnumerable<ClientInfoBase> clients = TLCtxHelper.Ctx.MessageExchange.GetNotifyTargets(info.Account);
-            //info.IsLogin = clients.Count() > 0;
-            //info.IPAddress = info.IsLogin ? clients.FirstOrDefault().IPAddress : "";
-            //info.SideMargin = acc.SideMargin;
+            
+
             //如果将其他模块的数据返回
             info.Commissin_ID = acc.Commission_ID;
             info.Credit = acc.Credit;
@@ -199,6 +197,15 @@ namespace TradingLib.Common
                 IAccountCheck rs = acc.AccountChecks.Where(check => check.GetType().FullName.Equals("AccountRuleSet.RSVendorFlat")).FirstOrDefault();
                 info.MAcctRiskRule = rs != null ? rs.RuleDescription : "未设置";
             
+            }
+            if (TLCtxHelper.Version.ProductType == QSEnumProductType.CounterSystem)
+            {
+
+                info.IsLogin = true;
+                //IEnumerable<ClientInfoBase> clients = TLCtxHelper.Ctx.MessageExchange.GetNotifyTargets(info.Account);
+                //info.IsLogin = clients.Count() > 0;
+                //info.IPAddress = info.IsLogin ? clients.FirstOrDefault().IPAddress : "";
+
             }
 
             info.IsWarn = acc.IsWarn;

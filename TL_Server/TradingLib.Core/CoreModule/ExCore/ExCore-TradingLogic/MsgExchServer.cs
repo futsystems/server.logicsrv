@@ -111,28 +111,16 @@ namespace TradingLib.Core
                 tl.ClientRegistedEvent += (TrdClientInfo c) =>
                     {
                         TLCtxHelper.EventSession.FireClientConnectedEvent(c);
-                        //if (ClientRegistedEvent != null)
-                        //{
-                        //    ClientRegistedEvent(c);
-                        //}
-                        //debug("客户端:" + c.Location.ClientID + " 注册到系统", QSEnumDebugLevel.INFO);
+                        logger.Info("客户端:" + c.Location.ClientID + " 注册到系统");
                     };
                 tl.ClientUnregistedEvent += (TrdClientInfo c) =>
                     {
                         TLCtxHelper.EventSession.FireClientDisconnectedEvent(c);
-                        //if (ClientUnregistedEvent != null)
-                        //{
-                        //    ClientUnregistedEvent(c);
-                        //}
-                        //debug("客户端:" + c.Location.ClientID + " 从系统注销", QSEnumDebugLevel.INFO);
+                        logger.Info("客户端:" + c.Location.ClientID + " 从系统注销");
                     };
                 tl.ClientLoginInfoEvent += (TrdClientInfo c, bool login) =>
                     {
                         TLCtxHelper.EventSession.FireClientLoginInfoEvent(c, login);
-                        //if (ClientLoginInfoEvent != null)
-                        //{
-                        //    ClientLoginInfoEvent(c, login);
-                        //}
                         logger.Info("客户端:" + c.Location.ClientID + " 登入状态:" + login.ToString());
                     };
 

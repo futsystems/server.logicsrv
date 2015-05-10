@@ -65,6 +65,8 @@ namespace TradingLib.Common
                 target.Mobile = profile.Mobile;
                 target.Name = profile.Name;
                 target.QQ = profile.QQ;
+                target.Broker = profile.Broker;
+
             }
             else
             {

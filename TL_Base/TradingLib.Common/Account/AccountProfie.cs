@@ -61,6 +61,10 @@ namespace TradingLib.Common
         /// </summary>
         public string BankAC { get; set; }
 
+        /// <summary>
+        /// 期货公司
+        /// </summary>
+        public string Broker { get; set; }
 
     }
 }

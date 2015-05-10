@@ -560,8 +560,9 @@ namespace TradingLib.ORM
                         throw new FutsRspError("用户已经申请过交易帐户");
                     }
                 }
+                Manager mgr = BasicTracker.ManagerTracker[create.BaseManagerID];
 
-                string query = String.Format("Insert into accounts (`account`,`pass`,`account_category`,`order_route_type`,`createdtime`,`settledatetime`,`user_id`,`mgr_fk`,`rg_fk`,`domain_id` ) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}')",create.Account,create.Password,create.Category,create.RouterType, Util.ToTLDateTime(),Util.ToTLDateTime(DateTime.Now - new TimeSpan(1, 0, 0, 0, 0)),create.UserID,create.BaseManager.ID,create.RouteGroup==null?0:create.RouteGroup.ID,create.Domain.ID);
+                string query = String.Format("Insert into accounts (`account`,`pass`,`account_category`,`order_route_type`,`createdtime`,`settledatetime`,`user_id`,`mgr_fk`,`rg_fk`,`domain_id` ) values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}')", create.Account, create.Password, create.Category, create.RouterType, Util.ToTLDateTime(), Util.ToTLDateTime(DateTime.Now - new TimeSpan(1, 0, 0, 0, 0)), create.UserID, create.BaseManagerID, create.RouterID, mgr.Domain.ID);
                 return db.Connection.Execute(query) > 0;
             }
         }

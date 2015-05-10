@@ -101,7 +101,6 @@
     <Compile Include="Utils\Domain\DomainUtils_CommissionMargin.cs" />
     <Compile Include="Utils\Domain\DomainUtils_ExStrategy.cs" />
     <Compile Include="Wrapper\AccountAdapterToExp.cs" />
-    <Compile Include="Accounts\AccountCreation.cs" />
     <Compile Include="Accounts\AccountFilter.cs" />
     <Compile Include="Accounts\Account_IAccCal.cs" />
     <Compile Include="Contex\Event\EventArgs\CashOperationEventArgs.cs" />

@@ -47,6 +47,7 @@ namespace TradingLib.Core
 
         /// <summary>
         /// 查找某个地址的ClientInfo
+        /// 返回登入列表的第一客户端信息
         /// </summary>
         /// <param name="clientid"></param>
         /// <returns></returns>

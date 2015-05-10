@@ -78,6 +78,8 @@ namespace TradingLib.Core
             TLCtxHelper.EventAccount.AccountChangeEvent += new AccoundIDDel(this.newAccountChanged);
             TLCtxHelper.EventAccount.AccountAddEvent += new AccoundIDDel(this.newAccountAdded);
             TLCtxHelper.EventSession.ClientLoginInfoEvent += new ClientLoginInfoDelegate<TrdClientInfo>(this.newSessionUpdate);
+
+
         }
 
 

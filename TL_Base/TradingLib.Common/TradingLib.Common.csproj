@@ -55,7 +55,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Account\AccountCreation.cs" />
     <Compile Include="Account\AccountProfie.cs" />
+    <Compile Include="Account\SessionInfo.cs" />
     <Compile Include="Manager\UIAccess.cs" />
     <Compile Include="Message\CashOperationNotify.cs" />
     <Compile Include="Message\LogicFront.cs" />

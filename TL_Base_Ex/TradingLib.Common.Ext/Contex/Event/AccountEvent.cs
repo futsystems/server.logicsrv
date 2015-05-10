@@ -53,6 +53,8 @@ namespace TradingLib.Common
         /// </summary>
         public event Action<string, string> AccountTradingNoticeEvent;
 
+
+
         internal void FireAccountTradingNoticeEvent(string account, string content)
         {
             if (AccountTradingNoticeEvent != null)

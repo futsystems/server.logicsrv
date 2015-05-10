@@ -98,13 +98,11 @@ namespace TradingLib.Core
         /// <returns></returns>
         public void AddAccount(ref AccountCreation create)
         {
-            logger.Info("清算中心为user:" + create.UserID.ToString() + " 添加交易帐号到主柜员ID:" + create.BaseManager.ID.ToString());
+            logger.Info("清算中心为user:" + create.UserID.ToString() + " 添加交易帐号到主柜员ID:" + create.BaseManagerID.ToString());
 
-            if (create.Domain == null)
-            {
-                throw new FutsRspError("帐户所属域参数不正确");
-            }
-            if (create.BaseManager == null)
+            Manager mgr = BasicTracker.ManagerTracker[create.BaseManagerID];
+
+            if (mgr == null)
             {
                 throw new FutsRspError("帐户所属柜员参数不正确");
             }

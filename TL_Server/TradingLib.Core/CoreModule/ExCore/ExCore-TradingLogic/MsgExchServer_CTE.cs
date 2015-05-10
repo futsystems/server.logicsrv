@@ -35,6 +35,38 @@ namespace TradingLib.Core
             session.OperationSuccess("注销交易终端成功");
         }
 
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QrySessionInfo", "QrySessionInfo - 查询回话信息", "查询某个交易帐户的登入信息")]
+        public void CTE_QrySessionInfo(ISession session, string account)
+        {
+            Manager manager = session.GetManager();
+            if (!manager.IsRoot())
+            {
+                throw new FutsRspError("无权进行此操作");
+            }
+
+            IAccount acc = TLCtxHelper.ModuleAccountManager[account];
+            if (acc == null)
+            {
+                throw new FutsRspError("交易帐户不存在");
+            }
+
+            TrdClientInfo client = tl.ClientsForAccount(account).FirstOrDefault();
+
+            SessionInfo info = new SessionInfo();
+            info.Account = account;
+            if (client != null)
+            {
+                info = new SessionInfo();
+                info.ClientID = client.Location.ClientID;
+                info.FrontID = client.Location.FrontID;
+                info.IPAddress = client.IPAddress;
+                info.ProductInfo = client.ProductInfo;
+            }
+
+            session.ReplyMgr(info);
+
+        }
+
 
 
         #region 状态类查询
