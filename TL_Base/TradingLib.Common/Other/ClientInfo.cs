@@ -149,6 +149,8 @@ namespace TradingLib.Common
         //    Authorized = false;
         //}
 
+
+        
         /// <summary>
         /// 通过前置编号获得前置类型
         /// </summary>

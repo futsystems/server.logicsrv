@@ -179,9 +179,11 @@ namespace TradingLib.Common
             //如果将其他模块的数据返回
             info.Commissin_ID = acc.Commission_ID;
             info.Credit = acc.Credit;
-            //info.CreditSeparate = acc.CreditSeparate;
             info.Margin_ID = acc.Margin_ID;
             info.ExStrategy_ID = acc.ExStrategy_ID;
+
+
+
             if(TLCtxHelper.Version.ProductType == QSEnumProductType.VendorMoniter)
             {
                 IBroker broker = BasicTracker.ConnectorMapTracker.GetBrokerForAccount(acc.ID);
@@ -201,10 +203,8 @@ namespace TradingLib.Common
             if (TLCtxHelper.Version.ProductType == QSEnumProductType.CounterSystem)
             {
 
-                info.IsLogin = true;
-                //IEnumerable<ClientInfoBase> clients = TLCtxHelper.Ctx.MessageExchange.GetNotifyTargets(info.Account);
-                //info.IsLogin = clients.Count() > 0;
-                //info.IPAddress = info.IsLogin ? clients.FirstOrDefault().IPAddress : "";
+                info.IsLogin = acc.IsLogin;
+                //info.SessionInfo = acc.SessionInfo;
 
             }
 

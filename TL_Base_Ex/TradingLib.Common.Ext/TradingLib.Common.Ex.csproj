@@ -77,6 +77,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Accounts\Account.cs" />
+    <Compile Include="Accounts\Account_Session.cs" />
     <Compile Include="Contex\Event\EventArgs\BrokerAccountInfoEventArgs.cs" />
     <Compile Include="Contex\Event\EventArgs\BrokerTransferEventArgs.cs" />
     <Compile Include="Contex\Event\EventArgs\ManagerNotifyEventArgs.cs" />
@@ -97,6 +98,7 @@
     <Compile Include="Utils\Account\AccountUtils_xx.cs" />
     <Compile Include="Utils\Account\AccountUtils_ExStrategy.cs" />
     <Compile Include="Utils\Account\AccountUtils_Args.cs" />
+    <Compile Include="Utils\Account\AccountUtils_SessionInfo.cs" />
     <Compile Include="Utils\Deferred.cs" />
     <Compile Include="Utils\Domain\DomainUtils_CommissionMargin.cs" />
     <Compile Include="Utils\Domain\DomainUtils_ExStrategy.cs" />

@@ -114,7 +114,8 @@ namespace TradingLib.Core
                 client.HardWareCode = request.MAC;
                 client.ProductInfo = request.ProductInfo;
 
-                client.BindState(TLCtxHelper.ModuleAccountManager[response.Account]);
+                IAccount account = TLCtxHelper.ModuleAccountManager[response.Account];
+                client.BindState(account);
 
                 //登入成功后我们更新账户的登入信息 如果是自动重连,则第一次登入是没有采集到ip地址,硬件地址.当客户端更新本地数据时，会再次调用updatelogininfo，来更新该信息
                 UpdateClientLoginInfo(client, true);

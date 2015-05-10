@@ -109,20 +109,7 @@ namespace TradingLib.Common
         /// </summary>
         public long SettlementConfirmTimeStamp { get; set; }
 
-        /// <summary>
-        /// 锁仓权限
-        /// </summary>
-        //public bool PosLock { get; set; }
 
-        /// <summary>
-        /// 单向大边
-        /// </summary>
-        //public bool SideMargin { get; set; }
-
-        /// <summary>
-        /// 客户端信用额度分开显示
-        /// </summary>
-        //public bool CreditSeparate { get; set; }
 
         /// <summary>
         /// 代理商ID

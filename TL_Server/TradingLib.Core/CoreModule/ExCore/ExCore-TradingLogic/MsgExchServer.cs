@@ -120,8 +120,41 @@ namespace TradingLib.Core
                     };
                 tl.ClientLoginInfoEvent += (TrdClientInfo c, bool login) =>
                     {
-                        TLCtxHelper.EventSession.FireClientLoginInfoEvent(c, login);
-                        logger.Info("客户端:" + c.Location.ClientID + " 登入状态:" + login.ToString());
+                        //检查对应的帐户是否还有交易客户端
+                        if (c.Account != null)
+                        {
+                            //注销操作
+                            if (!login)
+                            {
+                                //查询该交易帐户是否还有登入的回话 如果存在则不更新注销消息
+                                TrdClientInfo info = tl.ClientsForAccount(c.Account.ID).FirstOrDefault();
+                                if (info == null)
+                                {
+                                    //如果该交易帐户没有任何终端注册 则清空回话信息
+                                    c.Account.UnBindClient();
+
+                                    TLCtxHelper.EventSession.FireClientLoginInfoEvent(c, login);
+
+                                }
+                                else
+                                {
+                                    //还有其他客户端登入，则显示该客户端回话信息 同时回话信息绑定到该终端
+                                    c.Account.BindClient(info);
+                                    
+                                    TLCtxHelper.EventSession.FireClientLoginInfoEvent(info, true);
+                                    
+                                }
+                            }
+                            else//登入操作
+                            {
+                                c.Account.BindClient(c);
+
+                                TLCtxHelper.EventSession.FireClientLoginInfoEvent(c, login);
+                                logger.Info("客户端:" + c.Location.ClientID + " 登入状态:" + login.ToString());
+                            }
+                        }
+
+                        
                     };
 
                 //初始化优先发送缓存对象

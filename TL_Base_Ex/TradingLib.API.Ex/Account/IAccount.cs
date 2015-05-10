@@ -28,8 +28,25 @@ namespace TradingLib.API
     {
 
         #region 交易帐号服务类相关操作
+        /// <summary>
+        /// 绑定交易帐户服务
+        /// </summary>
+        /// <param name="service"></param>
+        /// <param name="force"></param>
         void BindService(IAccountService service, bool force = true);
+
+        /// <summary>
+        /// 解绑帐户服务
+        /// </summary>
+        /// <param name="service"></param>
         void UnBindService(IAccountService service);
+
+        /// <summary>
+        /// 获得某个交易帐户服务
+        /// </summary>
+        /// <param name="sn"></param>
+        /// <param name="service"></param>
+        /// <returns></returns>
         bool GetService(string sn, out IAccountService service);
         #endregion
 
@@ -65,6 +82,8 @@ namespace TradingLib.API
         /// </summary>
         QSEnumAccountCategory Category { get; set; }
 
+
+        #region 投资者信息
         /// <summary>
         /// MAC地址 用于标注客户端硬件
         /// </summary>
@@ -89,6 +108,7 @@ namespace TradingLib.API
         /// 银行帐号
         /// </summary>
         string BankAC { get; set; }
+        #endregion
 
 
         /// <summary>
@@ -106,20 +126,7 @@ namespace TradingLib.API
         /// </summary>
         long SettlementConfirmTimeStamp { get; set; }
 
-        /// <summary>
-        /// 是否允许锁仓
-        /// </summary>
-        //bool PosLock { get; set; }
-
-        /// <summary>
-        /// 单向大边
-        /// </summary>
-        //bool SideMargin { get; set; }
-
-        /// <summary>
-        /// 客户端信用额度分开显示
-        /// </summary>
-        //bool CreditSeparate { get; set; }
+       
 
         /// <summary>
         /// 帐号隶属于哪个管理员
@@ -135,6 +142,7 @@ namespace TradingLib.API
         /// </summary>
         int RG_FK { get; set; }
 
+        #region 模板编号
         /// <summary>
         /// 手续费模板ID
         /// </summary>
@@ -150,17 +158,11 @@ namespace TradingLib.API
         /// </summary>
         int ExStrategy_ID { get; set; }
 
-        /// <summary>
-        /// 域ID
-        /// </summary>
-        Domain Domain { get;}
-
-        /// <summary>
-        /// 该帐号所绑定的全局UserID
-        /// </summary>
-        int UserID { get; set; }
+        #endregion
 
 
+
+        #region 出入金操作
         /// <summary>
         /// 入金接口
         /// </summary>
@@ -173,10 +175,45 @@ namespace TradingLib.API
         /// <param name="amount"></param>
         void Withdraw(decimal amount);
 
-
+        /// <summary>
+        /// 信用入金
+        /// </summary>
+        /// <param name="amount"></param>
         void CreditDeposit(decimal amount);
 
+        /// <summary>
+        /// 信用出金
+        /// </summary>
+        /// <param name="amount"></param>
         void CreditWithdraw(decimal amount);
+        #endregion
+
+        /// <summary>
+        /// 域ID
+        /// </summary>
+        Domain Domain { get;}
+
+        /// <summary>
+        /// 该帐号所绑定的全局UserID
+        /// </summary>
+        int UserID { get; set; }
+
+
+        #region 交易回话类
+
+        /// <summary>
+        /// 是否登入
+        /// </summary>
+        bool IsLogin { get; set; }
+
+        /// <summary>
+        /// 回话信息 
+        /// </summary>
+        string SessionInfo { get; set; }
+
+        #endregion
+
+
         /// <summary>
         /// 重置账户状态,用于每日造成开盘时,重置数据 
         /// </summary>

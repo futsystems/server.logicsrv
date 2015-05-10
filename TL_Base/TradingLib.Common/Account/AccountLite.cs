@@ -113,15 +113,6 @@ namespace TradingLib.Common
         /// </summary>
         public bool PosLock { get; set; }
 
-        /// <summary>
-        /// 单向大边
-        /// </summary>
-        //public bool SideMargin { get; set; }
-
-        /// <summary>
-        /// 信用额度分开显示
-        /// </summary>
-        //public bool CreditSeparate { get; set; }
 
         /// <summary>
         /// 帐户所属管理员全局ID
@@ -161,7 +152,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 登入地址
         /// </summary>
-        public string IPAddress { get; set; }
+        public string SessionInfo { get; set; }
 
 
         /// <summary>
@@ -241,7 +232,7 @@ namespace TradingLib.Common
             sb.Append(d);
             sb.Append(account.IsLogin);
             sb.Append(d);
-            sb.Append(account.IPAddress);
+            sb.Append(account.SessionInfo);
             sb.Append(d);
             //sb.Append("");
             sb.Append(d);
@@ -295,7 +286,7 @@ namespace TradingLib.Common
             account.Deleted = bool.Parse(rec[20]);
             account.RG_ID = int.Parse(rec[21]);
             account.IsLogin = bool.Parse(rec[22]);
-            account.IPAddress = rec[23];
+            account.SessionInfo = rec[23];
             //account.SideMargin = bool.Parse(rec[24]);
             account.Commissin_ID = int.Parse(rec[25]);
             account.Credit = decimal.Parse(rec[26]);
