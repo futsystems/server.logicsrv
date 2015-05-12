@@ -556,8 +556,7 @@ namespace TradingLib.Core
                 logger.Info("Position:" + pos.GetPositionKey() + " is in Exchange:SHFE, we need to check Close/CloseToday Split");
                 int voltd = pos.PositionDetailTodayNew.Sum(p => p.Volume);//今日持仓
                 int volyd = pos.PositionDetailYdNew.Sum(p => p.Volume);//昨日持仓
-                //MessageBox.Show("posyd:" + volyd.ToString() + " voltd:" + voltd.ToString());
-                
+                Tick snapshot = TLCtxHelper.ModuleDataRouter.GetTickSnapshot(pos.Account);
                 if (volyd != 0)
                 {
                     Order oyd = new OrderImpl(pos.Symbol, volyd * (side ? 1 : -1) * -1);
@@ -575,7 +574,10 @@ namespace TradingLib.Core
                     account.TrckerOrderSymbol(ref oyd);
 
                     set.OrderIDList.Add(oyd.id);
-
+                    if (snapshot != null)
+                    {
+                        oyd.LimitPrice = oyd.Side ? snapshot.UpperLimit : snapshot.LowerLimit;
+                    }
                     SendOrder(oyd);
                 }
                 if (voltd != 0)
@@ -595,7 +597,10 @@ namespace TradingLib.Core
                     account.TrckerOrderSymbol(ref otd);
 
                     set.OrderIDList.Add(otd.id);
-
+                    if (snapshot != null)
+                    {
+                        otd.LimitPrice = otd.Side ? snapshot.UpperLimit : snapshot.LowerLimit;
+                    }
                     SendOrder(otd);
                 }
                 if (volyd != 0 || voltd != 0)

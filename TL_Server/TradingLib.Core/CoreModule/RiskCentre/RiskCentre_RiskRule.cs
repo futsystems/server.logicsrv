@@ -54,18 +54,6 @@ namespace TradingLib.Core
             activeaccount.Clear();
         }
 
-        /// <summary>
-        /// 插入某帐户 风控中心以实时监控
-        /// </summary>
-        /// <param name="account"></param>
-        //void InsertActiveAccount(IAccount account)
-        //{
-        //    if (!activeaccount.Keys.Contains(account.ID))
-        //    {
-        //        activeaccount.TryAdd(account.ID, account);
-        //    }
-        //}
-
         #region 加载 交易帐户委托规则与帐户规则
         Dictionary<string, RuleClassItem> dicRule = new Dictionary<string, RuleClassItem>();
         /// <summary>
@@ -123,11 +111,9 @@ namespace TradingLib.Core
             //加载完毕后 设定帐户的风控规则加载标识
             account.RuleItemLoaded = true;
             
-            //如果有加载任一帐户检查规则 则将帐户插入激活的检查列表
-            if (any)
-            {
-                AttachAccountCheck(account.ID);
-            }
+            //将交易帐户加入风控监控列表 (取消对是否有风控规则的检查，如果帐户没有添加风控规则 冻结账户后，应该将该帐户清仓)
+            AttachAccountCheck(account.ID);
+            
         }
 
 

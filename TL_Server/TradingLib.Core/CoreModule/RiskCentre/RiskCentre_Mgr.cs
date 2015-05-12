@@ -128,11 +128,15 @@ namespace TradingLib.Core
             {
                 logger.Info(string.Format("管理员:{0} 请求删除风控项:{1}", session.AuthorizedID, json));
                 RuleItem item = Mixins.Json.JsonMapper.ToObject<RuleItem>(json);
-                this.DeleteRiskRule(item);
-                //RspMGRDelRuleItemResponse response = ResponseTemplate<RspMGRDelRuleItemResponse>.SrvSendRspResponse(request);
-                //response.RuleItem = request.RuleItem;
+                IAccount account = TLCtxHelper.ModuleAccountManager[item.Account];
 
-                //CacheRspResponse(response);
+                this.DeleteRiskRule(item);
+
+                //这里需要通过风控规则来解除交易帐户的警告，如果该警告不是该规则触发
+                if (account != null)
+                {
+                    account.Warn(false);//解除帐户警告
+                }
                 session.ReplyMgr(item);
                 session.OperationSuccess("风控规则删除成功");
             }

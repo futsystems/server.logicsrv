@@ -247,6 +247,7 @@ namespace TradingLib.Core
 
             //重置结算价格维护器
             _settlementPriceTracker.Clear();
+
             //加载当前交易日的结算价信息
             _settlementPriceTracker.LoadSettlementPrice(this.NextTradingday);
 

@@ -166,11 +166,9 @@ namespace TradingLib.Core
                     data.Symbol = k.Symbol;
                     data.UpperLimit = k.UpperLimit;
                     data.Vol = k.Vol;
+
+                    _settlementPriceTracker.UpdateSettlementPrice(data);
                 }
-                //else
-                //{
-                //    _settlementPriceTracker.UpdateSettlementPrice(new MarketData() { Price = -1, SettleDay = this.NextTradingday, Symbol = k.Symbol });
-                //}
             }
         }
 

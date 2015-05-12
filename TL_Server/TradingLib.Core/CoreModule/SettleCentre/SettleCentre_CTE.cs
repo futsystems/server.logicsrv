@@ -151,6 +151,9 @@ namespace TradingLib.Core
                 this.CleanTempTable();
             }
 
+            //重置结算价格维护器
+            _settlementPriceTracker.Clear();
+
             //触发 系统重置操作事件
             TLCtxHelper.EventSystem.FireSettleResetEvet(this, new SystemEventArgs());
 
@@ -168,15 +171,25 @@ namespace TradingLib.Core
             //通过系统事件中继触发结算前事件
             TLCtxHelper.EventSystem.FireBeforeSettleEvent(this, new SystemEventArgs());
 
-            //A:储存当前数据
-            //this.SaveHoldInfo();//保存结算持仓数据和对应的PR数据
-            //this.SavePositionDetails();//保存持仓明细
-            //this.Dump2Log();//转储到历史记录表
+            //保存结算价信息
+            this.SaveSettlementPrice();
+
+            //加载当前交易日的结算价信息
+            _settlementPriceTracker.LoadSettlementPrice(this.NextTradingday);
 
             TLCtxHelper.EventSystem.FireSettleDataStoreEvent(this, new SystemEventArgs());
 
+            this.BindSettlementPrice();
+
+            this.SaveHoldInfo();
+
+            //A:储存当前数据
+            this.SaveHoldInfo();//保存结算持仓数据和对应的PR数据
+            this.SavePositionDetails();//保存持仓明细
+            this.Dump2Log();//转储到历史记录表
+
+
             //B:结算交易帐户形成结算记录
-            
             this.SettleAccount();
             TLCtxHelper.EventSystem.FireSettleResetEvet(this, new SystemEventArgs());
             
@@ -194,13 +207,6 @@ namespace TradingLib.Core
             this.Reset();
 
             TLCtxHelper.EventSystem.FireSettleResetEvet(this, new SystemEventArgs());
-            //重置清算中心，加载下一交易日的交易记录
-            //_clearcentre.Reset();
-            //重置风控中心，清空内存缓存数据
-            //_riskcentre.Reset();
-            //重置消息交换中心
-            //_exchsrv.Reset();
-            //重置管理交换中心
 
             //重置任务中心
             TLCtxHelper.EventSystem.FireAfterSettleResetEvent(this, new SystemEventArgs());
