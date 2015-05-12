@@ -32,12 +32,12 @@ namespace TradingLib.Contrib.FinService
 
         [ArgumentAttribute("CommissionMarkupAbsolute", "直接收取", EnumArgumentType.BOOLEAN, true, false, false)]
         public ArgumentPair CommissionMarginAbsolute { get; set; }
+
         /// <summary>
         /// 配资比例
         /// </summary>
         [ArgumentAttribute("FinAmount", "配资额度", EnumArgumentType.DECIMAL, true, 0, 0)]
         public ArgumentPair FinAmount { get; set; }
-
 
         /// <summary>
         /// 强平权益 当客户权益低于该值时 执行强平

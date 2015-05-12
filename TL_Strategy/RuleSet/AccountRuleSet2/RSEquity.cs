@@ -4,74 +4,55 @@ using System.Linq;
 using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
-using TradingLib.Mixins;
 
-namespace AccountRuleSet
+namespace AccountRuleSet2
 {
-    public class RSVendorFlat : RuleBase, IAccountCheck
+    public class RSEquity :RuleBase, IAccountCheck
     {
         /// <summary>
-        /// 参数集【json格式】
+        /// 参数【json格式】
         /// </summary>
         private string _args = string.Empty;
 
         /// <summary>
-        /// 期初权益
+        /// 权益 强平线
         /// </summary>
-        decimal lastEquity = 0;
-        /// <summary>
-        /// 强平比例
-        /// </summary>
-        int flatLevel = 10;
-        /// <summary>
-        /// 报警比例
-        /// </summary>
-        int warnLevel = 10;
-        /// <summary>
-        /// 过夜倍数
-        /// </summary>
-        decimal nightHold = 1;
+        decimal equity_flat = 0;
 
         /// <summary>
-        /// 报警金额
+        /// 权益 报警线
         /// </summary>
-        decimal WarnEquity
-        {
-            get { return lastEquity * this.warnLevel / 100; }
-        }
+        decimal equity_warn = 0;
 
         /// <summary>
-        /// 强平金额
+        /// 是否启用强平
         /// </summary>
-        decimal FlatEquity
-        {
-            get { return lastEquity * this.flatLevel / 100; }
-        }
+        //bool enable_flat = false;
 
+        /// <summary>
+        /// 是否启用报警
+        /// </summary>
+        //bool enable_warn = false;
 
         public override string Value
         {
-            get { return _args.ToString(); }
+            get { return _args; }
             set
             {
+
                 try
                 {
                     _args = value;
                     //解析json参数
                     var args = TradingLib.Mixins.Json.JsonMapper.ToObject(_args);
-                    lastEquity = decimal.Parse(args["equity"].ToString());//初始权益
-                    warnLevel = int.Parse(args["warn_level"].ToString());//报警线
-                    flatLevel = int.Parse(args["flat_level"].ToString());//强平线
-                    nightHold = decimal.Parse(args["night_hold"].ToString());//过夜倍数
+                    equity_flat = decimal.Parse(args["equity_flat"].ToString());//强平线
+                    equity_warn = decimal.Parse(args["equity_warn"].ToString());//报警线
 
-
-
+                    
                 }
                 catch (Exception ex)
-                {
-                    Util.Error(string.Format("帐户{0}的风控规则{1}参数出错:{2}", this.Account.ID, Title, _args));
-                }
-            }
+                { }
+            } 
         }
 
 
@@ -79,14 +60,14 @@ namespace AccountRuleSet
         bool flatStart = false;//强平开始
         bool warnStart = false;//报警开始
         bool iswarnning = false;//
+
         public bool CheckAccount(out string msg)
         {
             msg = string.Empty;
             decimal equity = this.Account.NowEquity;//获得该账户的当前权益
-            //iswarnning = this.Account.i
 
             iswarnning = this.Account.IsWarn;
-            if (equity < this.WarnEquity)
+            if (equity < equity_warn)
             {
                 if (!iswarnning)
                 {
@@ -105,8 +86,8 @@ namespace AccountRuleSet
                 }
             }
 
-            //当前权益小于强平金额 执行强平操作
-            if (equity < this.FlatEquity)
+
+            if (equity <= equity_flat)
             {
                 if (!flatStart)
                 {
@@ -114,19 +95,10 @@ namespace AccountRuleSet
                         this.Account.InactiveAccount();//冻结账户
                     if (this.Account.AnyPosition)
                     {
-                        msg = string.Format("{0}风控规则{1}[{2}]",this.Account.ID,Title,this.RuleDescription) + ":全平所有仓位并冻结账户";
+                        msg = RuleDescription + ":全平所有仓位并冻结账户";
                         this.Account.FlatPosition(QSEnumOrderSource.RISKCENTREACCOUNTRULE, msg);
                     }
                     flatStart = true;//开始平仓
-                    return false;
-                }
-            }
-
-            if (equity < this.WarnEquity)
-            {
-                //
-                if (!warnStart)
-                {
                     return false;
                 }
             }
@@ -137,24 +109,25 @@ namespace AccountRuleSet
         {
             get
             {
-                return string.Format("强平:{0} 过夜:{1}",this.FlatEquity,this.nightHold);
+                return "帐户权益 " + Util.GetEnumDescription(this.Compare) + " " + equity_flat.ToString("N2") + "[" + SymbolSet + "]" + "强平持仓并禁止交易";
             }
         }
 
         #region 覆写静态对象
         public static new string Title
         {
-            get { return "强平[主帐户监控]"; }
+            get { return "帐户权益小于X时,强平并冻结帐户"; }
         }
+
         public static new string Description
         {
-            get { return "帐户权益满足相关条件进行强平或报警"; }
+            get { return "帐户权益小于设定值时,强平持仓并禁止交易"; }
         }
 
         /// <summary>
         /// 参数名称
         /// </summary>
-        public static new string ValueName { get { return "参数(Json)"; } }
+        public static new string ValueName { get { return "当前权益"; } }
 
         /// <summary>
         /// 不用设置比较关系
@@ -165,7 +138,7 @@ namespace AccountRuleSet
         /// 默认比较关系大于等于
         /// </summary>
         public static new QSEnumCompareType DefaultCompare { get { return QSEnumCompareType.Less; } }
-
+        
         /// <summary>
         /// 不用设置品种集合
         /// </summary>
@@ -190,7 +163,7 @@ namespace AccountRuleSet
                 msg = "请设定有效数值";
                 return false;
             }
-
+            
         }
 
         #endregion

@@ -140,7 +140,7 @@
             this.pageOrderCheck,
             this.pageAccountCheck,
             this.pageMarginCommission});
-            this.pagenav.SelectedIndex = 1;
+            this.pagenav.SelectedIndex = 3;
             this.pagenav.Size = new System.Drawing.Size(687, 278);
             this.pagenav.TabIndex = 0;
             this.pagenav.Text = "kryptonNavigator1";
@@ -374,7 +374,7 @@
             this.pageOrderCheck.LastVisibleSet = true;
             this.pageOrderCheck.MinimumSize = new System.Drawing.Size(50, 50);
             this.pageOrderCheck.Name = "pageOrderCheck";
-            this.pageOrderCheck.Size = new System.Drawing.Size(685, 251);
+            this.pageOrderCheck.Size = new System.Drawing.Size(685, 253);
             this.pageOrderCheck.Text = "委托规则";
             this.pageOrderCheck.ToolTipTitle = "Page ToolTip";
             this.pageOrderCheck.UniqueName = "4EFE1B2BEB22429A75BE5624BE5AAD1C";
@@ -390,7 +390,7 @@
             this.kryptonPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.kryptonPanel4.Location = new System.Drawing.Point(0, 0);
             this.kryptonPanel4.Name = "kryptonPanel4";
-            this.kryptonPanel4.Size = new System.Drawing.Size(685, 251);
+            this.kryptonPanel4.Size = new System.Drawing.Size(685, 253);
             this.kryptonPanel4.TabIndex = 0;
             // 
             // btnDelOrderRule
@@ -447,7 +447,7 @@
             this.pageAccountCheck.LastVisibleSet = true;
             this.pageAccountCheck.MinimumSize = new System.Drawing.Size(50, 50);
             this.pageAccountCheck.Name = "pageAccountCheck";
-            this.pageAccountCheck.Size = new System.Drawing.Size(660, 251);
+            this.pageAccountCheck.Size = new System.Drawing.Size(685, 253);
             this.pageAccountCheck.Text = "帐户规则";
             this.pageAccountCheck.ToolTipTitle = "Page ToolTip";
             this.pageAccountCheck.UniqueName = "4080C8819A02492855A9978B69F0DAEB";
@@ -463,7 +463,7 @@
             this.kryptonPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.kryptonPanel5.Location = new System.Drawing.Point(0, 0);
             this.kryptonPanel5.Name = "kryptonPanel5";
-            this.kryptonPanel5.Size = new System.Drawing.Size(660, 251);
+            this.kryptonPanel5.Size = new System.Drawing.Size(685, 253);
             this.kryptonPanel5.TabIndex = 1;
             // 
             // btnDelAccountRule

@@ -184,6 +184,7 @@ namespace TradingLib.Core
         /// <summary>
         /// 更新风控规则
         /// 如果没有则新增
+        /// 更新风控规则 都要将帐户添加到风控检查列表 否则新增风控规则后会出现规则不生效的问题
         /// </summary>
         /// <param name="item"></param>
         public void UpdateRule(RuleItem item)
@@ -209,6 +210,10 @@ namespace TradingLib.Core
                     //添加新的委托规则
                     AddRule(account, item);
 
+                    //添加帐户到风控监控列表
+                    this.AttachAccountCheck(account.ID);
+
+
                 }
                 else //添加到数据库然后再加入到帐户规则中
                 {
@@ -216,6 +221,9 @@ namespace TradingLib.Core
                     ORM.MRuleItem.InsertRuleItem(item);//数据先添加 获得全局ID号
                     //3.添加新的rule到帐户
                     AddRule(account, item);
+
+                    //添加帐户到风控监控列表
+                    this.AttachAccountCheck(account.ID);
                 }
             }
         }
