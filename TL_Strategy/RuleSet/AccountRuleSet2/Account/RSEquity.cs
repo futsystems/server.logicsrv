@@ -5,9 +5,9 @@ using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
 
-namespace AccountRuleSet2
+namespace RuleSet2.Account
 {
-    public class RSMaxProfit :RuleBase, IAccountCheck
+    public class RSEquity :RuleBase, IAccountCheck
     {
         /// <summary>
         /// 参数【json格式】
@@ -15,14 +15,14 @@ namespace AccountRuleSet2
         private string _args = string.Empty;
 
         /// <summary>
-        /// 损失强平线 
+        /// 权益 强平线
         /// </summary>
-        decimal profit_flat = 0;
+        decimal equity_flat = 0;
 
         /// <summary>
-        /// 损失报警线
+        /// 权益 报警线
         /// </summary>
-        decimal profit_warn = 0;
+        decimal equity_warn = 0;
 
 
         public override string Value
@@ -36,13 +36,17 @@ namespace AccountRuleSet2
                     _args = value;
                     //解析json参数
                     var args = TradingLib.Mixins.Json.JsonMapper.ToObject(_args);
-                    profit_flat = decimal.Parse(args["profit_flat"].ToString());//强平线
-                    profit_warn = decimal.Parse(args["profit_warn"].ToString());//报警线
+                    equity_flat = decimal.Parse(args["equity_flat"].ToString());//强平线
+                    equity_warn = decimal.Parse(args["equity_warn"].ToString());//报警线
+
+                    
                 }
                 catch (Exception ex)
                 { }
-            }
+            } 
         }
+
+
 
         bool flatStart = false;//强平触发
         bool iswarnning = false;//是否处于报警状态
@@ -50,11 +54,10 @@ namespace AccountRuleSet2
         public bool CheckAccount(out string msg)
         {
             msg = string.Empty;
-            decimal profit = this.Account.Profit;//获得该帐户净亏损
-            if (profit <= 0) return true;//如果帐户亏损则直接返回
+            decimal equity = this.Account.NowEquity;//获得该账户的当前权益
 
             iswarnning = this.Account.IsWarn;
-            if (profit >= profit_warn)
+            if (equity < equity_warn)
             {
                 if (!iswarnning)
                 {
@@ -74,7 +77,7 @@ namespace AccountRuleSet2
             }
 
 
-            if (profit >= profit_flat)
+            if (equity <= equity_flat)
             {
                 if (!flatStart)
                 {
@@ -92,31 +95,29 @@ namespace AccountRuleSet2
             return true;
         }
 
-
         public override string RuleDescription
         {
             get
             {
-                return "账户盈利大于" + profit_flat.ToString("N2") + "强平仓位并禁止交易";
+                return "帐户权益小于"+ equity_flat.ToString("N2")+"强平持仓并禁止交易";
             }
         }
-
 
         #region 覆写静态对象
         public static new string Title
         {
-            get { return "帐户盈利(扣手续费)大于X时,强平并冻结帐户"; }
+            get { return "帐户权益小于X时,强平并冻结帐户"; }
         }
 
         public static new string Description
         {
-            get { return "监控帐户盈亏,当帐户盈利大于设定值时,触发强平并冻结交易帐户"; }
+            get { return "监控帐户权益,当帐户权益小于设定值时,触发强平并冻结交易帐户"; }
         }
 
         /// <summary>
         /// 参数名称
         /// </summary>
-        public static new string ValueName { get { return "盈利额度"; } }
+        public static new string ValueName { get { return "当前权益"; } }
 
         /// <summary>
         /// 不用设置比较关系
@@ -126,13 +127,12 @@ namespace AccountRuleSet2
         /// <summary>
         /// 默认比较关系大于等于
         /// </summary>
-        public static new QSEnumCompareType DefaultCompare { get { return QSEnumCompareType.Greater; } }
+        public static new QSEnumCompareType DefaultCompare { get { return QSEnumCompareType.Less; } }
         
         /// <summary>
         /// 不用设置品种集合
         /// </summary>
         public static new bool CanSetSymbols { get { return false; } }
-
 
         //用于验证客户端的输入值是否正确
         public static new bool ValidSetting(RuleItem item, out string msg)
@@ -144,7 +144,6 @@ namespace AccountRuleSet2
                 {
                     msg = "请去掉负号";
                     return false;
-
                 }
                 msg = "";
                 return true;
@@ -154,7 +153,9 @@ namespace AccountRuleSet2
                 msg = "请设定有效数值";
                 return false;
             }
+            
         }
+
         #endregion
     }
 }

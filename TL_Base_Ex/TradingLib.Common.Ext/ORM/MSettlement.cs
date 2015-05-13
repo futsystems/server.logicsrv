@@ -445,7 +445,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("UPDATE log_settlement_price SET price = '{0}' WHERE symbol = '{1}' AND settleday = '{2}'", price.Settlement, price.Symbol, price.SettleDay);
+                string query = String.Format("UPDATE log_settlement_price SET settlement = '{0}' WHERE symbol = '{1}' AND settleday = '{2}'", price.Settlement, price.Symbol, price.SettleDay);
                 db.Connection.Execute(query);
             }
         }

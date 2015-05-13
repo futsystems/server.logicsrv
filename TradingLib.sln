@@ -119,7 +119,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradingLib.Contrib.HistRepo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradingLib.Contrib.MainAcctFinService", "TL_Contrib\TradingLib.Contrib.MainAcctFinService\TradingLib.Contrib.MainAcctFinService.csproj", "{38087E0E-7DE2-4442-8882-6F05F5982DFD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountRuleSet2", "TL_Strategy\RuleSet\AccountRuleSet2\AccountRuleSet2.csproj", "{A9885951-5F0E-42A6-A425-30DC322B6748}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RuleSet2", "TL_Strategy\RuleSet\AccountRuleSet2\RuleSet2.csproj", "{A9885951-5F0E-42A6-A425-30DC322B6748}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

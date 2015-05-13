@@ -5,9 +5,9 @@ using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
 
-namespace AccountRuleSet2
+namespace RuleSet2.Account
 {
-    public class RSEquity :RuleBase, IAccountCheck
+    public class RSMaxLoss :RuleBase, IAccountCheck
     {
         /// <summary>
         /// 参数【json格式】
@@ -15,14 +15,14 @@ namespace AccountRuleSet2
         private string _args = string.Empty;
 
         /// <summary>
-        /// 权益 强平线
+        /// 损失强平线 
         /// </summary>
-        decimal equity_flat = 0;
+        decimal loss_flat = 0;
 
         /// <summary>
-        /// 权益 报警线
+        /// 损失报警线
         /// </summary>
-        decimal equity_warn = 0;
+        decimal loss_warn = 0;
 
 
         public override string Value
@@ -36,28 +36,28 @@ namespace AccountRuleSet2
                     _args = value;
                     //解析json参数
                     var args = TradingLib.Mixins.Json.JsonMapper.ToObject(_args);
-                    equity_flat = decimal.Parse(args["equity_flat"].ToString());//强平线
-                    equity_warn = decimal.Parse(args["equity_warn"].ToString());//报警线
-
-                    
+                    loss_flat = decimal.Parse(args["loss_flat"].ToString());//强平线
+                    loss_warn = decimal.Parse(args["loss_warn"].ToString());//报警线
                 }
                 catch (Exception ex)
                 { }
-            } 
+            }
         }
 
 
-
+        
         bool flatStart = false;//强平触发
         bool iswarnning = false;//是否处于报警状态
 
         public bool CheckAccount(out string msg)
         {
             msg = string.Empty;
-            decimal equity = this.Account.NowEquity;//获得该账户的当前权益
+            decimal loss = this.Account.Profit;//获得该帐户净亏损
+            if (loss >= 0) return true;//如果帐户盈利则直接返回
+            loss = Math.Abs(loss);
 
             iswarnning = this.Account.IsWarn;
-            if (equity < equity_warn)
+            if (loss >= loss_warn)
             {
                 if (!iswarnning)
                 {
@@ -77,7 +77,7 @@ namespace AccountRuleSet2
             }
 
 
-            if (equity <= equity_flat)
+            if (loss >= loss_flat)
             {
                 if (!flatStart)
                 {
@@ -99,25 +99,24 @@ namespace AccountRuleSet2
         {
             get
             {
-                return "帐户权益小于"+ equity_flat.ToString("N2")+"强平持仓并禁止交易";
+                return "账户亏损大于"+loss_flat.ToString("N2") +"强平仓位并禁止交易";
             }
         }
 
         #region 覆写静态对象
         public static new string Title
         {
-            get { return "帐户权益小于X时,强平并冻结帐户"; }
+            get { return "帐户亏损(含手续费)大于X时,强平并冻结帐户"; }
         }
-
         public static new string Description
         {
-            get { return "监控帐户权益,当帐户权益小于设定值时,触发强平并冻结交易帐户"; }
+            get { return "监控帐户盈亏,当帐户亏损大于设定值时,触发强平并冻结交易帐户"; }
         }
 
         /// <summary>
         /// 参数名称
         /// </summary>
-        public static new string ValueName { get { return "当前权益"; } }
+        public static new string ValueName { get { return "亏损额度"; } }
 
         /// <summary>
         /// 不用设置比较关系
@@ -127,7 +126,7 @@ namespace AccountRuleSet2
         /// <summary>
         /// 默认比较关系大于等于
         /// </summary>
-        public static new QSEnumCompareType DefaultCompare { get { return QSEnumCompareType.Less; } }
+        public static new QSEnumCompareType DefaultCompare { get { return QSEnumCompareType.Greater; } }
         
         /// <summary>
         /// 不用设置品种集合
