@@ -14,7 +14,7 @@ using TradingLib.Protocol;
 namespace TradingLib.HistReport
 {
 
-    [MoniterControlAttr("HistReport","统计报表",QSEnumControlPlace.WorkSpace)]
+    [MoniterControlAttr("HistReport", "统计报表", QSEnumControlPlace.WorkSpace)]
     public partial class HistReport : MonitorControl
     {
         public HistReport()

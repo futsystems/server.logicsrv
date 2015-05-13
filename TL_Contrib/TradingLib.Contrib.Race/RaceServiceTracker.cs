@@ -16,8 +16,8 @@ namespace TradingLib.Contrib.Race
         {
             foreach (var rs in ORM.MRace.SelectRaceServices())
             {
-                if (!rsmap.Keys.Contains(rs.Account))
-                    rsmap[rs.Account] = rs;
+                if (!rsmap.Keys.Contains(rs.Acct))
+                    rsmap[rs.Acct] = rs;
             }
         }
 
@@ -43,7 +43,7 @@ namespace TradingLib.Contrib.Race
                 else//如果没有则给该帐户创建比赛服务并返回
                 {
                     RaceService rs = new RaceService();
-                    rs.Account = account;
+                    rs.Acct = account;
 
                     this.UpdateRaceService(rs);
                     return rsmap[account];
@@ -68,7 +68,7 @@ namespace TradingLib.Contrib.Race
         {
             RaceService target = null;
             //已经存在比赛服务
-            if (rsmap.TryGetValue(rs.Account, out target))
+            if (rsmap.TryGetValue(rs.Acct, out target))
             {
                 target.RaceID = rs.RaceID;
                 target.RaceStatus = rs.RaceStatus;
@@ -79,15 +79,15 @@ namespace TradingLib.Contrib.Race
             else
             {
                 target = new RaceService();
-                target.Account = rs.Account;
+                target.Acct = rs.Acct;
                 target.InitRaceService();
                 target.EntryTime = 0;
                 target.RaceID = "";
                 target.RaceStatus = QSEnumAccountRaceStatus.NORACE;
 
                 ORM.MRace.InsertRaceService(target);
-                if (!rsmap.Keys.Contains(target.Account))
-                    rsmap[target.Account] = target;
+                if (!rsmap.Keys.Contains(target.Acct))
+                    rsmap[target.Acct] = target;
             }
 
         }

@@ -31,10 +31,10 @@ namespace FutsMoniter
             kryptonDockingManager.AddDockspace("Control", DockingEdge.Bottom, new KryptonPage[] { NewTradingInfoReal() });
             
             //加载默认布局
-            if (System.IO.File.Exists("config.xml"))
-            {
-                kryptonDockingManager.LoadConfigFromFile("config.xml");
-            }
+            //if (System.IO.File.Exists("config.xml"))
+            //{
+            //    kryptonDockingManager.LoadConfigFromFile("config.xml");
+            //}
             //显示所有页面
             kryptonDockingManager.ShowAllPages();
         }

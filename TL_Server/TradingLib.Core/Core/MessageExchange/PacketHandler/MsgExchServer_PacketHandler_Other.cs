@@ -380,6 +380,7 @@ namespace TradingLib.Core
             {
                 response.NoticeContent = string.IsNullOrEmpty(GlobalConfig.DealerPrompt)?("欢迎使用" + GlobalConfig.VendorName + "交易系统"):GlobalConfig.DealerPrompt;
             }
+
             CachePacket(response);
 
         }

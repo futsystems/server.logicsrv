@@ -23,6 +23,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{DC106983-A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FutsMoniter_lottoqq", "Program\FutsMoniter_lottoqq\FutsMoniter_lottoqq.csproj", "{BDE67F69-4EDA-4C95-AC84-DE18AEBB4AC9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaceMoniter", "Program\MoniterPlugin\RaceMoniter\RaceMoniter.csproj", "{5F195459-6D04-49DD-BA9B-ED1532F9565B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -155,6 +157,22 @@ Global
 		{BDE67F69-4EDA-4C95-AC84-DE18AEBB4AC9}.Release-OEM|Any CPU.Build.0 = Release-OEM|Any CPU
 		{BDE67F69-4EDA-4C95-AC84-DE18AEBB4AC9}.Release-OEM|Mixed Platforms.ActiveCfg = Release-OEM|Any CPU
 		{BDE67F69-4EDA-4C95-AC84-DE18AEBB4AC9}.Release-OEM|Mixed Platforms.Build.0 = Release-OEM|Any CPU
+		{5F195459-6D04-49DD-BA9B-ED1532F9565B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F195459-6D04-49DD-BA9B-ED1532F9565B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F195459-6D04-49DD-BA9B-ED1532F9565B}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{5F195459-6D04-49DD-BA9B-ED1532F9565B}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{5F195459-6D04-49DD-BA9B-ED1532F9565B}.Debug-OEM|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F195459-6D04-49DD-BA9B-ED1532F9565B}.Debug-OEM|Any CPU.Build.0 = Debug|Any CPU
+		{5F195459-6D04-49DD-BA9B-ED1532F9565B}.Debug-OEM|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{5F195459-6D04-49DD-BA9B-ED1532F9565B}.Debug-OEM|Mixed Platforms.Build.0 = Debug|Any CPU
+		{5F195459-6D04-49DD-BA9B-ED1532F9565B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F195459-6D04-49DD-BA9B-ED1532F9565B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F195459-6D04-49DD-BA9B-ED1532F9565B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{5F195459-6D04-49DD-BA9B-ED1532F9565B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{5F195459-6D04-49DD-BA9B-ED1532F9565B}.Release-OEM|Any CPU.ActiveCfg = Release|Any CPU
+		{5F195459-6D04-49DD-BA9B-ED1532F9565B}.Release-OEM|Any CPU.Build.0 = Release|Any CPU
+		{5F195459-6D04-49DD-BA9B-ED1532F9565B}.Release-OEM|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{5F195459-6D04-49DD-BA9B-ED1532F9565B}.Release-OEM|Mixed Platforms.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -166,5 +184,6 @@ Global
 		{1F802F7C-AD27-4E9B-8115-78B83D919A25} = {DC106983-A405-4349-B476-489B7CE5CB5C}
 		{C87A245F-E926-4027-96BC-A6BFC40AA8E6} = {DC106983-A405-4349-B476-489B7CE5CB5C}
 		{CC62ED9C-4D42-40E9-A05F-FADA379E3F3F} = {0ADD7175-85C9-42C4-8306-7903A75DB0F2}
+		{5F195459-6D04-49DD-BA9B-ED1532F9565B} = {0ADD7175-85C9-42C4-8306-7903A75DB0F2}
 	EndGlobalSection
 EndGlobal

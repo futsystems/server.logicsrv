@@ -166,9 +166,9 @@ namespace TradingLib.Contrib.Race
         public void RestoreAccount(RaceService rs)
         {
             if (rs.RaceID != this.RaceID) return;//如果账户的raceID与本race id不符合 则拒绝加入该账户
-            if (!HaveAccount(rs.Account))
+            if (!HaveAccount(rs.Acct))
             {
-                raceAccountMap.Add(rs.Account,rs);
+                raceAccountMap.Add(rs.Acct, rs);
             }
 
         }
@@ -235,8 +235,8 @@ namespace TradingLib.Contrib.Race
         /// <param name="acc"></param>
         public void ExitAccount(RaceService rs)
         {
-            if (HaveAccount(rs.Account))
-                raceAccountMap.Remove(rs.Account);
+            if (HaveAccount(rs.Acct))
+                raceAccountMap.Remove(rs.Acct);
         }
 
         
@@ -278,25 +278,25 @@ namespace TradingLib.Contrib.Race
             switch (RaceType)
             {
                 case QSEnumRaceType.PRERACE:
-                    r = RaceRule.PRERACECheck(rs.oAccount);
+                    r = RaceRule.PRERACECheck(rs.Account);
                     break;
                 case QSEnumRaceType.SEMIRACE:
-                    r = RaceRule.SEMIRACECheck(rs.oAccount);
+                    r = RaceRule.SEMIRACECheck(rs.Account);
                     break;
                 case QSEnumRaceType.REAL1:
-                    r = RaceRule.REAL1Check(rs.oAccount);
+                    r = RaceRule.REAL1Check(rs.Account);
                     break;
                 case QSEnumRaceType.REAL2:
-                    r = RaceRule.REAL2Check(rs.oAccount);
+                    r = RaceRule.REAL2Check(rs.Account);
                     break;
                 case QSEnumRaceType.REAL3:
-                    r = RaceRule.REAL3Check(rs.oAccount);
+                    r = RaceRule.REAL3Check(rs.Account);
                     break;
                 case QSEnumRaceType.REAL4:
-                    r = RaceRule.REAL4Check(rs.oAccount);
+                    r = RaceRule.REAL4Check(rs.Account);
                     break;
                 case QSEnumRaceType.REAL5:
-                    r = RaceRule.REAL5Check(rs.oAccount);
+                    r = RaceRule.REAL5Check(rs.Account);
                     break;
                 default:
                     r = QSEnumRaceCheckResult.STAY;

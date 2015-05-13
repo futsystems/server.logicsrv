@@ -27,6 +27,15 @@ namespace TradingLib.Contrib.Race.ORM
             }
         }
 
+        public static IEnumerable<RaceSetting> SelectRaceSettings()
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                const string query = "SELECT *  FROM contrib_race_session";
+                return db.Connection.Query<RaceSetting>(query, null).ToArray();
+            }
+        }
+
         public static void UpdateRace(Race race)
         {
             using (DBMySql db = new DBMySql())
@@ -40,7 +49,7 @@ namespace TradingLib.Contrib.Race.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("INSERT INTO contrib_race_session (`entrynum`,`eliminatenum`,`promotnum`,`racetype`,`starttime`,`biginsigntime`,`engsigntime`,`raceid`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}')", race.EntryNum, race.EliminateNum, race.PromotNum, race.RaceType,race.StartTime,race.BeginSignTime,race.EndSignTime,race.RaceID);
+                string query = string.Format("INSERT INTO contrib_race_session (`entrynum`,`eliminatenum`,`promotnum`,`racetype`,`starttime`,`beginsigntime`,`endsigntime`,`raceid`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}')", race.EntryNum, race.EliminateNum, race.PromotNum, race.RaceType,race.StartTime,race.BeginSignTime,race.EndSignTime,race.RaceID);
                 db.Connection.Execute(query);
             }
         }
@@ -58,6 +67,24 @@ namespace TradingLib.Contrib.Race.ORM
             }
         }
 
+        public static IEnumerable<RaceServiceSetting> SelectRaceServiceSettings()
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                const string query = "SELECT *  FROM contrib_race_service";
+                return db.Connection.Query<RaceServiceSetting>(query, null).ToArray();
+            }
+        }
+
+        public static RaceServiceSetting SelectRaceServiceSetting(string account)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("SELECT *  FROM contrib_race_service WHERE acct='{0}'",account);
+                return db.Connection.Query<RaceServiceSetting>(query, null).ToArray().FirstOrDefault();
+            }
+        }
+
         
 
         /// <summary>
@@ -68,7 +95,7 @@ namespace TradingLib.Contrib.Race.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("INSERT INTO contrib_race_service (`account`,`raceid`,`entrytime`,`racestatus`) VALUES ( '{0}','{1}','{2}','{3}')",rs.Account,rs.RaceID,rs.EntryTime,rs.RaceStatus);
+                string query = string.Format("INSERT INTO contrib_race_service (`acct`,`raceid`,`entrytime`,`racestatus`) VALUES ( '{0}','{1}','{2}','{3}')",rs.Acct,rs.RaceID,Util.ToTLDateTime(),rs.RaceStatus);
                 db.Connection.Execute(query);
             }
         }
@@ -81,7 +108,7 @@ namespace TradingLib.Contrib.Race.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("UPDATE  contrib_race_service SET raceid='{0}' ,entrytime='{1}' ,racestatus='{2}' WHERE account='{3}'",rs.RaceID,rs.EntryTime,rs.RaceStatus,rs.Account);
+                string query = string.Format("UPDATE  contrib_race_service SET raceid='{0}' ,entrytime='{1}' ,racestatus='{2}' WHERE acct='{3}'",rs.RaceID,rs.EntryTime,rs.RaceStatus,rs.Acct);
                 db.Connection.Execute(query);
             }
         }

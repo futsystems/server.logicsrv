@@ -359,6 +359,39 @@ namespace FutsMoniter
         RingBuffer<NotifyMGRSessionUpdateNotify> sessionupdatecache = new RingBuffer<NotifyMGRSessionUpdateNotify>(bufferisze);//交易帐户session更新缓存
 
 
+        string name_sim = "模拟交易帐户";
+        string name_real = "实盘交易帐户";
+        bool name_inited = false;
+
+        string GenNameCategory(QSEnumAccountCategory category)
+        {
+            if (!name_inited)
+            {
+                try
+                {
+                    name_inited = true;
+                    name_sim = Globals.Config["NAME_SIMULATION"].AsString();
+                    name_real = Globals.Config["NAME_REAL"].AsString();
+                    
+                }
+                catch (Exception ex)
+                { 
+                    
+                }
+            }
+
+            if (category == QSEnumAccountCategory.SIMULATION)
+            {
+                return name_sim;
+            }
+            if (category == QSEnumAccountCategory.REAL)
+            {
+                return name_real;
+            }
+            return Util.GetEnumDescription(category);
+
+            
+        }
         /// <summary>
         /// 当有帐户新增或者初始化时调用
         /// </summary>
@@ -406,7 +439,8 @@ namespace FutsMoniter
                         gt.Rows[i][UNREALIZEDPL] = decDisp(0);
                         gt.Rows[i][COMMISSION] = decDisp(0);
                         gt.Rows[i][PROFIT] = decDisp(0);
-                        gt.Rows[i][CATEGORYSTR] = Util.GetEnumDescription(account.Category);
+                        gt.Rows[i][CATEGORYSTR] = GenNameCategory(account.Category);
+                        
                         gt.Rows[i][CATEGORY] = account.Category.ToString();
                         gt.Rows[i][INTRADAY] = account.IntraDay ? "日内" : "隔夜";
                         ManagerSetting mgr = Globals.BasicInfoTracker.GetManager(account.MGRID);
@@ -433,7 +467,7 @@ namespace FutsMoniter
                         gt.Rows[r][ROUTEIMG] = getRouteStatusImage(account.OrderRouteType);
                         gt.Rows[r][EXECUTE] = getExecuteStatus(account.Execute);
                         gt.Rows[r][EXECUTEIMG] = getExecuteStatusImage(account.Execute);
-                        gt.Rows[r][CATEGORYSTR] = Util.GetEnumDescription(account.Category);
+                        gt.Rows[r][CATEGORYSTR] = GenNameCategory(account.Category);
                         gt.Rows[r][CATEGORY] = account.Category.ToString();
                         gt.Rows[r][INTRADAY] = account.IntraDay ? "日内" : "隔夜";
                         //gt.Rows[r][POSLOK] = account.PosLock ? "支持" : "不支持";

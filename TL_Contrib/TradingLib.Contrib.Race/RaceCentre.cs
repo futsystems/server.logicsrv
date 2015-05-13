@@ -10,7 +10,7 @@ namespace TradingLib.Contrib.Race
     [ContribAttr(RaceCentre.ContribName, "比赛服务", "用于提供交易帐户的比赛服务")]
     public partial class RaceCentre : ContribSrvObject, IContrib
     {
-        const string ContribName = "Race";
+        const string ContribName = "RaceCentre";
 
         public RaceCentre()
             : base(RaceCentre.ContribName)
@@ -38,9 +38,9 @@ namespace TradingLib.Contrib.Race
             tmp.EliminateNum = 0;
             tmp.EntryNum = 0;
             tmp.PromotNum = 0;
-            tmp.StartTime = Util.ToTLDateTime(DateTime.MinValue);
-            tmp.BeginSignTime = Util.ToTLDateTime(DateTime.MinValue);
-            tmp.EndSignTime = Util.ToTLDateTime(DateTime.MaxValue);
+            tmp.StartTime = 0;
+            tmp.BeginSignTime = 0;
+            tmp.EndSignTime = 0;
 
             if (!Tracker.RaceTracker.HaveAnyRace(QSEnumRaceType.PRERACE))
             { 
@@ -166,7 +166,7 @@ namespace TradingLib.Contrib.Race
             Race r = Tracker.RaceTracker.LatestPrerace;
             string race_id = r == null ? "" : r.RaceID;
 
-            RaceStatusChange change = new RaceStatusChange(Util.ToTLDateTime(), arg1.Account, arg1.RaceID, arg1.RaceStatus, race_id, arg2);
+            RaceStatusChange change = new RaceStatusChange(Util.ToTLDateTime(), arg1.Acct, arg1.RaceID, arg1.RaceStatus, race_id, arg2);
             
             //记录帐户比赛变动
             ORM.MRace.InsertRaceChangeLog(change);
@@ -183,7 +183,7 @@ namespace TradingLib.Contrib.Race
                 //加入比赛
                 r.EntryAccount(arg1);
                 //重置比赛资金
-                ResetAccountEquity(arg1.oAccount, r.StartEquity);
+                ResetAccountEquity(arg1.Account, r.StartEquity);
             }
         }
 
@@ -198,7 +198,7 @@ namespace TradingLib.Contrib.Race
             Race r = Tracker.RaceTracker.GetRaceViaRaceStatus(arg2);
             string race_id = r == null ? "" : r.RaceID;
 
-            RaceStatusChange change = new RaceStatusChange(Util.ToTLDateTime(), arg1.Account, arg1.RaceID, arg1.RaceStatus, race_id, arg2);
+            RaceStatusChange change = new RaceStatusChange(Util.ToTLDateTime(), arg1.Acct, arg1.RaceID, arg1.RaceStatus, race_id, arg2);
             
             //记录帐户比赛变动
             ORM.MRace.InsertRaceChangeLog(change);
@@ -222,7 +222,7 @@ namespace TradingLib.Contrib.Race
                 //加入比赛 比如从REAL2降级到复赛等情况
                 r.EntryAccount(arg1);
                 //重置比赛资金
-                ResetAccountEquity(arg1.oAccount, r.StartEquity);
+                ResetAccountEquity(arg1.Account, r.StartEquity);
             }
 
 
@@ -238,8 +238,8 @@ namespace TradingLib.Contrib.Race
             //通过下个比赛状态获得对应的比赛对象
             Race r = Tracker.RaceTracker.GetRaceViaRaceStatus(arg2);
             string race_id = r == null ? "" : r.RaceID;
-            
-            RaceStatusChange change = new RaceStatusChange(Util.ToTLDateTime(), arg1.Account, arg1.RaceID, arg1.RaceStatus, race_id, arg2);
+
+            RaceStatusChange change = new RaceStatusChange(Util.ToTLDateTime(), arg1.Acct, arg1.RaceID, arg1.RaceStatus, race_id, arg2);
 
             //记录帐户比赛变动
             ORM.MRace.InsertRaceChangeLog(change);
@@ -262,7 +262,7 @@ namespace TradingLib.Contrib.Race
                 //加入比赛
                 r.EntryAccount(arg1);
                 //重置比赛资金
-                ResetAccountEquity(arg1.oAccount, r.StartEquity);
+                ResetAccountEquity(arg1.Account, r.StartEquity);
             }
         }
 

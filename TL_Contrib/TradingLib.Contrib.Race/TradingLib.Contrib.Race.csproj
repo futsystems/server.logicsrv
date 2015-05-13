@@ -59,6 +59,7 @@
     <Compile Include="Race.cs" />
     <Compile Include="RaceCentre.cs" />
     <Compile Include="RaceCentre_CTE.cs" />
+    <Compile Include="RaceCentre_mgr.cs" />
     <Compile Include="RaceRule.cs" />
     <Compile Include="RaceService.cs" />
     <Compile Include="RaceServiceTracker.cs" />
