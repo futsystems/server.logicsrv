@@ -275,33 +275,52 @@ namespace TradingLib.Contrib.Race
         {
             QSEnumRaceCheckResult r;
             //根据Race的类型选择不同的判断规则来判断当前账户是 保留,淘汰,还是晋级
+            decimal exequity = 0;
             switch (RaceType)
             {
                 case QSEnumRaceType.PRERACE:
-                    r = RaceRule.PRERACECheck(rs.Account);
+                    r = RaceRule.PRERACECheck(rs.Account,out exequity);
                     break;
                 case QSEnumRaceType.SEMIRACE:
-                    r = RaceRule.SEMIRACECheck(rs.Account);
+                    r = RaceRule.SEMIRACECheck(rs.Account, out exequity);
                     break;
                 case QSEnumRaceType.REAL1:
-                    r = RaceRule.REAL1Check(rs.Account);
+                    r = RaceRule.REAL1Check(rs.Account, out exequity);
                     break;
                 case QSEnumRaceType.REAL2:
-                    r = RaceRule.REAL2Check(rs.Account);
+                    r = RaceRule.REAL2Check(rs.Account, out exequity);
                     break;
                 case QSEnumRaceType.REAL3:
-                    r = RaceRule.REAL3Check(rs.Account);
+                    r = RaceRule.REAL3Check(rs.Account, out exequity);
                     break;
                 case QSEnumRaceType.REAL4:
-                    r = RaceRule.REAL4Check(rs.Account);
+                    r = RaceRule.REAL4Check(rs.Account, out exequity);
                     break;
                 case QSEnumRaceType.REAL5:
-                    r = RaceRule.REAL5Check(rs.Account);
+                    r = RaceRule.REAL5Check(rs.Account, out exequity);
                     break;
                 default:
                     r = QSEnumRaceCheckResult.STAY;
                     break;
             }
+
+            //更新比赛服务的考核信息
+            rs.ExamineTime = Util.ToTLDateTime();
+            rs.ExamineEquity = exequity;
+
+            //更新考核信息
+            ORM.MRace.UpdateRaceServiceExamine(rs);
+
+            //如果比赛处于冻结状态检查报名时间和当前时间
+            if (!rs.IsAvabile)
+            {
+                if (DateTime.Now.Subtract(Util.ToDateTime(rs.EntryTime)).TotalDays > 1)
+                {
+                    rs.Active();//激活配资服务
+                }
+
+            }
+
             //debug("检查结果:" +r.ToString());
             //得到检查结果后,调用racerule来判断我们需要将该账户推送到哪个状态
             if (r == QSEnumRaceCheckResult.STAY) return;//如果检查该账户得到保留结果,则直接返回不用修改账户Race状态
@@ -319,6 +338,8 @@ namespace TradingLib.Contrib.Race
                 this.EliminateAccount(rs, nextstatus);
                 Util.Debug("比赛[" + Title + "]" + " 淘汰选手:" + rs.Account + " 到:" + nextstatus.ToString(), QSEnumDebugLevel.INFO);
             }
+
+            
         }
     }
 

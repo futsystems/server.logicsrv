@@ -54,6 +54,9 @@ namespace TradingLib.Contrib.Race.ORM
             }
         }
 
+
+
+
         /// <summary>
         /// 获得所有比赛服务
         /// </summary>
@@ -114,6 +117,32 @@ namespace TradingLib.Contrib.Race.ORM
         }
 
 
+        /// <summary>
+        /// 更新比赛服务的考核信息
+        /// 记录考核时间和考核权益
+        /// </summary>
+        /// <param name="rs"></param>
+        public static void UpdateRaceServiceExamine(RaceService rs)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("UPDATE  contrib_race_service SET examinetime='{0}' ,examineequity='{1}' WHERE acct='{2}'",rs.ExamineTime,rs.ExamineEquity, rs.Acct);
+                db.Connection.Execute(query);
+            }
+        }
+
+        /// <summary>
+        /// 更新比赛服务的active字段
+        /// </summary>
+        /// <param name="rs"></param>
+        public static void UpdateRaceServiceActive(RaceService rs)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("UPDATE  contrib_race_service SET isavabile='{0}' WHERE acct='{1}'", rs.IsAvabile ? 1 : 0, rs.Acct);
+                db.Connection.Execute(query);
+            }
+        }
 
         /// <summary>
         /// 插入交易帐户比赛状态变动过程

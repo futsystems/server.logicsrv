@@ -28,6 +28,26 @@ namespace TradingLib.Contrib.Race
         /// 比赛状态
         /// </summary>
         public QSEnumAccountRaceStatus RaceStatus { get; set; }
+
+        /// <summary>
+        /// 考核时间
+        /// </summary>
+        public long ExamineTime { get; set; }
+
+
+        /// <summary>
+        /// 考核权益
+        /// 初赛或者复赛会进行盈利折算
+        /// </summary>
+        public decimal ExamineEquity { get; set; }
+
+
+        /// <summary>
+        /// 是否有效
+        /// </summary>
+        public bool IsAvabile { get; set; }
+
+
     }
 
 
@@ -36,9 +56,6 @@ namespace TradingLib.Contrib.Race
     /// </summary>
     public class RaceService : RaceServiceSetting,IAccountService
     {
-        public bool IsAvabile { get; set; }
-
-
         /// <summary>
         /// 交易帐户对象
         /// </summary>
@@ -50,6 +67,7 @@ namespace TradingLib.Contrib.Race
         public void InitRaceService()
         {
             this.Account = TLCtxHelper.CmdAccount[this.Acct];
+            this.Account.BindService(this);
         }
 
         public string SN { get { return "RaceService"; } }
@@ -82,6 +100,23 @@ namespace TradingLib.Contrib.Race
         }
 
 
+        /// <summary>
+        /// 激活服务
+        /// </summary>
+        public void Active()
+        {
+            this.IsAvabile = true;
+            ORM.MRace.UpdateRaceServiceActive(this);
+        }
+
+        /// <summary>
+        /// 冻结服务
+        /// </summary>
+        public void InActive()
+        {
+            this.IsAvabile = false;
+            ORM.MRace.UpdateRaceServiceActive(this);
+        }
 
     }
 }

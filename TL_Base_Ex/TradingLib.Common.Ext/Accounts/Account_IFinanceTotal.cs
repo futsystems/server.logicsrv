@@ -129,7 +129,7 @@ namespace TradingLib.Common
         //public decimal Credit { get { return TLCtxHelper.ExContribEvent.GetFinAmmountAvabile(this.ID); } }
 
 
-        public decimal Credit { get { return LastCredit + CreditCashIn - CreditCashOut; } }
+        public decimal Credit { get { return LastCredit + CreditCashIn - CreditCashOut +TLCtxHelper.ExContribEvent.GetFinAmmountAvabile(this.ID); } }
         /// <summary>
         /// 入金
         /// </summary>

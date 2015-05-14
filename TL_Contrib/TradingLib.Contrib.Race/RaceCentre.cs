@@ -69,7 +69,6 @@ namespace TradingLib.Contrib.Race
                 tmp.RaceType = QSEnumRaceType.REAL2;
                 Tracker.RaceTracker.UpdateRaceSetting(tmp);
             }
-
             if (!Tracker.RaceTracker.HaveAnyRace(QSEnumRaceType.REAL3))
             {
                 tmp.RaceID = "REAL3";
@@ -89,8 +88,6 @@ namespace TradingLib.Contrib.Race
                 Tracker.RaceTracker.UpdateRaceSetting(tmp);
             }
         }
-
-
 
         /// <summary>
         /// 销毁
@@ -176,6 +173,9 @@ namespace TradingLib.Contrib.Race
             arg1.RaceStatus = arg2;
             arg1.EntryTime = change.DateTime;
             ORM.MRace.UpdateRaceService(arg1);
+
+            //新注册比赛后 要冻结该比赛服务
+            arg1.InActive();
 
             //目的比赛不为空则加入比赛 并调整资金等其他事宜
             if (r != null)

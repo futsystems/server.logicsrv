@@ -113,6 +113,16 @@ namespace Lottoqq.Account
             {
                 return service.CanTakeOrder(o, out msg);
             }
+
+            //如果绑定了比赛服务
+            if (GetService("RaceService",out service))
+            {
+                if (!service.IsAvabile)
+                {
+                    msg = "比赛服务未激活,报名后需等待一个工作日";
+                    return false;
+                }
+            }
             return base.CanFundTakeOrder(o, out msg);
         }
 
@@ -173,5 +183,7 @@ namespace Lottoqq.Account
 
             return base.GetFundAvabile(symbol);
         }
+
+        
     }
 }

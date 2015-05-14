@@ -30,8 +30,9 @@
         {
             this.raceGrid = new ComponentFactory.Krypton.Toolkit.KryptonDataGridView();
             this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
-            this.btnQryRaceList = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.btnOpenNewRace = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.btnQryRaceList = new ComponentFactory.Krypton.Toolkit.KryptonButton();
+            this.btnExamineRace = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             ((System.ComponentModel.ISupportInitialize)(this.raceGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
@@ -51,6 +52,7 @@
             // 
             // kryptonPanel1
             // 
+            this.kryptonPanel1.Controls.Add(this.btnExamineRace);
             this.kryptonPanel1.Controls.Add(this.btnOpenNewRace);
             this.kryptonPanel1.Controls.Add(this.btnQryRaceList);
             this.kryptonPanel1.Controls.Add(this.raceGrid);
@@ -60,6 +62,14 @@
             this.kryptonPanel1.Size = new System.Drawing.Size(540, 317);
             this.kryptonPanel1.TabIndex = 1;
             // 
+            // btnOpenNewRace
+            // 
+            this.btnOpenNewRace.Location = new System.Drawing.Point(120, 15);
+            this.btnOpenNewRace.Name = "btnOpenNewRace";
+            this.btnOpenNewRace.Size = new System.Drawing.Size(90, 25);
+            this.btnOpenNewRace.TabIndex = 2;
+            this.btnOpenNewRace.Values.Text = "新开比赛";
+            // 
             // btnQryRaceList
             // 
             this.btnQryRaceList.Location = new System.Drawing.Point(14, 15);
@@ -68,13 +78,13 @@
             this.btnQryRaceList.TabIndex = 1;
             this.btnQryRaceList.Values.Text = "查询比赛";
             // 
-            // btnOpenNewRace
+            // btnExamineRace
             // 
-            this.btnOpenNewRace.Location = new System.Drawing.Point(120, 15);
-            this.btnOpenNewRace.Name = "btnOpenNewRace";
-            this.btnOpenNewRace.Size = new System.Drawing.Size(90, 25);
-            this.btnOpenNewRace.TabIndex = 2;
-            this.btnOpenNewRace.Values.Text = "新开比赛";
+            this.btnExamineRace.Location = new System.Drawing.Point(447, 15);
+            this.btnExamineRace.Name = "btnExamineRace";
+            this.btnExamineRace.Size = new System.Drawing.Size(90, 25);
+            this.btnExamineRace.TabIndex = 3;
+            this.btnExamineRace.Values.Text = "手工考核";
             // 
             // ctRaceList
             // 
@@ -96,5 +106,6 @@
         private ComponentFactory.Krypton.Toolkit.KryptonPanel kryptonPanel1;
         private ComponentFactory.Krypton.Toolkit.KryptonButton btnQryRaceList;
         private ComponentFactory.Krypton.Toolkit.KryptonButton btnOpenNewRace;
+        private ComponentFactory.Krypton.Toolkit.KryptonButton btnExamineRace;
     }
 }

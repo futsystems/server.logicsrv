@@ -132,6 +132,23 @@ namespace TradingLib.Protocol
         /// 比赛状态
         /// </summary>
         public QSEnumAccountRaceStatus RaceStatus { get; set; }
+
+        /// <summary>
+        /// 考核时间
+        /// </summary>
+        public long ExamineTime { get; set; }
+
+
+        /// <summary>
+        /// 考核权益
+        /// 初赛或者复赛会进行盈利折算
+        /// </summary>
+        public decimal ExamineEquity { get; set; }
+
+        /// <summary>
+        /// 是否有效
+        /// </summary>
+        public bool IsAvabile { get; set; }
     }
 
 }

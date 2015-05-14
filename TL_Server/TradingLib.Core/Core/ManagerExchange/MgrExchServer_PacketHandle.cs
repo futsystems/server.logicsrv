@@ -141,7 +141,7 @@ namespace TradingLib.Core
             //委托成交之后
             o.TotalSize = o.Size;
             o.Size = 0;
-            o.FilledSize = o.UnsignedSize;
+            o.FilledSize = Math.Abs(o.TotalSize);
             
             //注意这里需要获得可用的委托流水和成交流水号
             long ordid = exchsrv.futs_InsertOrderManual(o);
@@ -150,6 +150,7 @@ namespace TradingLib.Core
             fill.id = ordid;
             fill.OrderSeq = o.OrderSeq;
             fill.BrokerRemoteOrderID = o.BrokerRemoteOrderID;
+            fill.OrderSysID = o.OrderSysID;
             fill.TradeID = "xxxxx";//随机产生的成交编号
 
             Util.sleep(100);

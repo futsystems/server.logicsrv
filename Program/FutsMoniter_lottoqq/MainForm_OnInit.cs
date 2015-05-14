@@ -55,8 +55,7 @@ namespace FutsMoniter
                     kryptonRibbonGroupButton_SystemStatus.Visible = Globals.Manager.IsRoot();//系统状态
 
                     //权限模板 管理员查看
-                    kryptonRibbonGroupButton_xxxxx.Visible = Globals.Manager.IsRoot();
-                    kryptonRibbonGroup13.Visible = kryptonRibbonGroupButton_xxxxx.Visible;
+                   
                 }
 
                 //------------------------基础数据 -------------------------------------------------------
@@ -93,8 +92,6 @@ namespace FutsMoniter
                 //代理模块
                 if (!Globals.Domain.Module_Agent)//没有代理模块
                 {
-
-                    kryptonRibbonGroupButton_xxxxx.Visible = false;//权限模板设置
 
                     //-----------------------柜员管理----------------------------------------
                     kryptonRibbonGroupButton_AgentCost.Visible = false;//代理资费设置

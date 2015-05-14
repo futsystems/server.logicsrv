@@ -1,4 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <updates>
-<item file="Moniter.exe" uid="8a619de3b56e4b7ba28b927d4cbfd82d"/>
+<item file="Moniter.exe" uid="f7a806af33544e2abe8b3a5166252be3"/>
+<item file="config\moniter.cfg" uid="e0c06ba28b8c4c9abb93122df6e58c89"/>
 </updates>

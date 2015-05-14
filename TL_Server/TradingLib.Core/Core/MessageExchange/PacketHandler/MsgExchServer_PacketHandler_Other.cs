@@ -381,7 +381,11 @@ namespace TradingLib.Core
                 response.NoticeContent = string.IsNullOrEmpty(GlobalConfig.DealerPrompt)?("欢迎使用" + GlobalConfig.VendorName + "交易系统"):GlobalConfig.DealerPrompt;
             }
 
-            CachePacket(response);
+            RspQryNoticeResponse response0 = ResponseTemplate<RspQryNoticeResponse>.SrvSendRspResponse(request);
+            //这里需要输出帐户特定的告知内容
+            response0.NoticeContent = "测试内容"+System.Environment.NewLine;
+            CacheRspResponse(response0, false);
+            CacheRspResponse(response,true);
 
         }
 

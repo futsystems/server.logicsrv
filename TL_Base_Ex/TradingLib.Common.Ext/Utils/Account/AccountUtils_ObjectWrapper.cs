@@ -199,7 +199,8 @@ namespace TradingLib.Common
             settle.CreditCashIn = account.CreditCashIn;
             settle.CreditCashOut = account.CreditCashOut;
             settle.LastCredit = account.LastCredit;
-            settle.NowCredit = account.Credit;
+
+            settle.NowCredit = account.LastCredit + account.CreditCashIn - account.CreditCashOut;
 
 
             //指定交易日期

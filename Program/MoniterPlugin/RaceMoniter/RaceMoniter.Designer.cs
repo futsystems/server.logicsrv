@@ -31,10 +31,10 @@
             this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
             this.kryptonNavigator1 = new ComponentFactory.Krypton.Navigator.KryptonNavigator();
             this.kryptonPage1 = new ComponentFactory.Krypton.Navigator.KryptonPage();
+            this.ctRaceService1 = new TradingLib.RaceMoniter.ctRaceService();
             this.kryptonPage2 = new ComponentFactory.Krypton.Navigator.KryptonPage();
             this.kryptonPanel2 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
             this.ctRaceList1 = new TradingLib.RaceMoniter.ctRaceList();
-            this.ctRaceService1 = new TradingLib.RaceMoniter.ctRaceService();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonNavigator1)).BeginInit();
@@ -69,7 +69,7 @@
             this.kryptonNavigator1.Pages.AddRange(new ComponentFactory.Krypton.Navigator.KryptonPage[] {
             this.kryptonPage1,
             this.kryptonPage2});
-            this.kryptonNavigator1.SelectedIndex = 0;
+            this.kryptonNavigator1.SelectedIndex = 1;
             this.kryptonNavigator1.Size = new System.Drawing.Size(649, 512);
             this.kryptonNavigator1.TabIndex = 0;
             this.kryptonNavigator1.Text = "kryptonNavigator1";
@@ -86,6 +86,14 @@
             this.kryptonPage1.Text = "比赛服务";
             this.kryptonPage1.ToolTipTitle = "Page ToolTip";
             this.kryptonPage1.UniqueName = "23DBBBCDF05E4348DB92182D219A0838";
+            // 
+            // ctRaceService1
+            // 
+            this.ctRaceService1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ctRaceService1.Location = new System.Drawing.Point(0, 0);
+            this.ctRaceService1.Name = "ctRaceService1";
+            this.ctRaceService1.Size = new System.Drawing.Size(647, 487);
+            this.ctRaceService1.TabIndex = 0;
             // 
             // kryptonPage2
             // 
@@ -116,14 +124,6 @@
             this.ctRaceList1.Name = "ctRaceList1";
             this.ctRaceList1.Size = new System.Drawing.Size(647, 487);
             this.ctRaceList1.TabIndex = 0;
-            // 
-            // ctRaceService1
-            // 
-            this.ctRaceService1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ctRaceService1.Location = new System.Drawing.Point(0, 0);
-            this.ctRaceService1.Name = "ctRaceService1";
-            this.ctRaceService1.Size = new System.Drawing.Size(647, 487);
-            this.ctRaceService1.TabIndex = 0;
             // 
             // RaceMoniter
             // 

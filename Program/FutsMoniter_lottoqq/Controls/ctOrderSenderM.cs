@@ -42,10 +42,11 @@ namespace FutsMoniter
             Factory.IDataSourceFactory(cbordertype).BindDataSource(MoniterUtils.GetOrderTypeCBList());
             //Globals.Debug("~~~~~~~~~~~~~~~~~~~~~~~~~~ order sender insert:" + Globals.Domain.Misc_InsertTrade.ToString() + " is root:" + Globals.Manager.IsRoot());
             //如果不是超级域 则需要按设置来判断是否显示调试插入按钮
-            if (!Globals.Domain.Super)
-            {
-                btnInsertTrade.Visible = Globals.Domain.Misc_InsertTrade && Globals.Manager.IsRoot();
-            }
+            //if (!Globals.Domain.Super)
+            //{
+            //    btnInsertTrade.Visible = Globals.Domain.Misc_InsertTrade && Globals.Manager.IsRoot();
+            //}
+            btnInsertTrade.Visible = false;
         }
 
         

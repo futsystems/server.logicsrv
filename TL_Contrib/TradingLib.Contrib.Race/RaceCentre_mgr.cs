@@ -10,6 +10,22 @@ namespace TradingLib.Contrib.Race
 {
     public partial class RaceCentre
     {
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "ExamineRace", "ExamineRace - examine race", "执行考核比赛", QSEnumArgParseType.Json)]
+        public void CTE_ExamineRace(ISession session)
+        {
+            Manager mgr = session.GetManager();
+            if (!mgr.IsRoot())
+            {
+                throw new FutsRspError("无权进行该操作");
+            }
+
+            ExamineRace();
+
+            session.OperationSuccess("执行考核比赛成功");
+
+        }
+
+
         /// <summary>
         /// 查询比赛列表
         /// </summary>

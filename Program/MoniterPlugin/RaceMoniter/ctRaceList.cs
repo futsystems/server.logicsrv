@@ -17,6 +17,9 @@ namespace TradingLib.RaceMoniter
         public event VoidDelegate QryRaceListEvent;
 
         public event VoidDelegate OpenNewRaceEvent;
+
+        public event VoidDelegate ExamineRaceEvent;
+
         public ctRaceList()
         {
             InitializeComponent();
@@ -33,6 +36,13 @@ namespace TradingLib.RaceMoniter
         {
             btnQryRaceList.Click += new EventHandler(btnQryRaceList_Click);
             btnOpenNewRace.Click += new EventHandler(btnOpenNewRace_Click);
+            btnExamineRace.Click += new EventHandler(btnExamineRace_Click);
+        }
+
+        void btnExamineRace_Click(object sender, EventArgs e)
+        {
+            if (ExamineRaceEvent != null)
+                ExamineRaceEvent();
         }
 
         void btnOpenNewRace_Click(object sender, EventArgs e)

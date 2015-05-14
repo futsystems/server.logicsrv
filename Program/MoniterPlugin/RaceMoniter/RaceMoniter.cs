@@ -28,6 +28,7 @@ namespace TradingLib.RaceMoniter
         {
             ctRaceList1.QryRaceListEvent += new VoidDelegate(QryRaceList);
             ctRaceList1.OpenNewRaceEvent += new VoidDelegate(OpenNewRace);
+            ctRaceList1.ExamineRaceEvent += new VoidDelegate(ExamineRace);
 
             ctRaceService1.QryRaceEvent += new Action<string, string>(QryRaceService);
             ctRaceService1.PrompotAccountEvent += new Action<string>(PromptAccount);
@@ -81,19 +82,40 @@ namespace TradingLib.RaceMoniter
             this.JsonRequest("RaceCentre", "QryRaceService", new  { account = account, race_status = racetype });
         }
 
+        /// <summary>
+        /// 淘汰交易帐户
+        /// </summary>
+        /// <param name="account"></param>
         void EliminateAccount(string account)
         {
             this.Request("RaceCentre", "EliminateAccount",account);
         }
 
+        /// <summary>
+        /// 报名参加比赛
+        /// </summary>
+        /// <param name="account"></param>
         void SignRaceAccount(string account)
         {
             this.Request("RaceCentre", "SignRaceAccount", account);
         }
 
+        /// <summary>
+        /// 晋级交易帐户
+        /// </summary>
+        /// <param name="account"></param>
         void PromptAccount(string account)
         {
             this.Request("RaceCentre", "PromptAccount", account);
         }
+
+        /// <summary>
+        /// 手工考核比赛
+        /// </summary>
+        void ExamineRace()
+        {
+            this.Request("RaceCentre", "ExamineRace","");
+        }
+
     }
 }

@@ -146,6 +146,10 @@ namespace TradingLib.RaceMoniter
         const string RACEID = "比赛编号";
         const string ENTRYTIME = "参赛日期";
         const string RACESTATUS = "比赛状态";
+        const string EXAMINETIME = "考核时间";
+        const string EXAMINEEQUITY = "折算权益";
+        const string STATUS = "状态";
+
 
         #endregion
 
@@ -186,6 +190,9 @@ namespace TradingLib.RaceMoniter
                 gt.Rows[i][RACEID] = rs.RaceID;
                 gt.Rows[i][ENTRYTIME] = Util.ToDateTime(rs.EntryTime).ToString("yy-MM-dd");
                 gt.Rows[i][RACESTATUS] = Util.GetEnumDescription(rs.RaceStatus);
+                gt.Rows[i][EXAMINETIME] = Util.ToDateTime(rs.ExamineTime).ToString();
+                gt.Rows[i][EXAMINEEQUITY] = Util.FormatDecimal(rs.ExamineEquity);
+                gt.Rows[i][STATUS] = rs.IsAvabile ? "激活" : "冻结";
                 
             }
         }
@@ -219,6 +226,9 @@ namespace TradingLib.RaceMoniter
             gt.Columns.Add(RACEID);//
             gt.Columns.Add(ENTRYTIME);//
             gt.Columns.Add(RACESTATUS);//
+            gt.Columns.Add(EXAMINETIME);//
+            gt.Columns.Add(EXAMINEEQUITY);//
+            gt.Columns.Add(STATUS);
 
         }
 
