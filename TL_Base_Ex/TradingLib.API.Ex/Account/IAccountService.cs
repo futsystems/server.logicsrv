@@ -112,6 +112,13 @@ namespace TradingLib.API
         /// 当前服务是否可用
         /// </summary>
         bool IsAvabile { get; }
+
+
+        /// <summary>
+        /// 帐户服务的通知接口 用于博易登入时显示
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<string> GetNotice();
     }
 
 

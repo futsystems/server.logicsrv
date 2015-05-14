@@ -122,5 +122,11 @@ namespace TradingLib.Contrib.MiniService
                 return this.Account != null;
             }
         }
+
+        public IEnumerable<string> GetNotice()
+        {
+            return new List<string>();
+        }
+
     }
 }

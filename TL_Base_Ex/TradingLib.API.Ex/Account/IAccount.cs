@@ -173,6 +173,14 @@ namespace TradingLib.API
         /// </summary>
         bool Deleted { get; set; }
 
+
+        /// <summary>
+        /// 获得交易帐户登入时通知
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<string> GetNotice();
+         
+        
     }
 
 

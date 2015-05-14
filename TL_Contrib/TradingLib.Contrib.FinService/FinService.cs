@@ -462,6 +462,11 @@ namespace TradingLib.Contrib.FinService
         
         }
 
+        public IEnumerable<string> GetNotice()
+        {
+            return new List<string>();
+        }
+
         #endregion
 
 

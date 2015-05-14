@@ -113,5 +113,14 @@ namespace TradingLib.Common
 
             }
         }
+
+        /// <summary>
+        /// 获得交易帐户登入通知
+        /// </summary>
+        /// <returns></returns>
+        public virtual IEnumerable<string> GetNotice()
+        {
+            return new List<string>();
+        }
     }
 }

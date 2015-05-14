@@ -118,5 +118,16 @@ namespace TradingLib.Contrib.Race
             ORM.MRace.UpdateRaceServiceActive(this);
         }
 
+
+        public IEnumerable<string> GetNotice()
+        {
+            List<string> notice = new List<string>();
+            notice.Add(string.Format("比赛编号:{0}", this.RaceID) + System.Environment.NewLine);
+            notice.Add(string.Format("比赛状态:{0}", Util.GetEnumDescription(this.RaceStatus)) + System.Environment.NewLine);
+            notice.Add(string.Format("考核权益:{0}", Util.FormatDecimal(this.ExamineEquity)) + System.Environment.NewLine);
+            notice.Add(string.Format("比赛激活:{0}", this.IsAvabile ? "激活" : "冻结") + System.Environment.NewLine);
+
+            return notice;
+        }
     }
 }

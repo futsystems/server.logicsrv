@@ -184,6 +184,15 @@ namespace Lottoqq.Account
             return base.GetFundAvabile(symbol);
         }
 
-        
+
+        public override IEnumerable<string> GetNotice()
+        {
+            IAccountService service = null;
+            if (GetService("RaceService", out service))
+            {
+                return service.GetNotice();
+            }
+            return base.GetNotice();
+        }
     }
 }

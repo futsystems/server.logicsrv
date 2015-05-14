@@ -381,10 +381,14 @@ namespace TradingLib.Core
                 response.NoticeContent = string.IsNullOrEmpty(GlobalConfig.DealerPrompt)?("欢迎使用" + GlobalConfig.VendorName + "交易系统"):GlobalConfig.DealerPrompt;
             }
 
-            RspQryNoticeResponse response0 = ResponseTemplate<RspQryNoticeResponse>.SrvSendRspResponse(request);
-            //这里需要输出帐户特定的告知内容
-            response0.NoticeContent = "测试内容"+System.Environment.NewLine;
-            CacheRspResponse(response0, false);
+            foreach (var notice in account.GetNotice())
+            {
+                RspQryNoticeResponse tmp = ResponseTemplate<RspQryNoticeResponse>.SrvSendRspResponse(request);
+                //这里需要输出帐户特定的告知内容
+                tmp.NoticeContent = notice;
+                CacheRspResponse(tmp, false);
+            }
+            
             CacheRspResponse(response,true);
 
         }
