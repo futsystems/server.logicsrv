@@ -85,11 +85,13 @@ namespace TradingLib.Core
         /// <param name="manager"></param>
         void SrvOnInsertTrade(MGRReqInsertTradeRequest request, ISession session, Manager manager)
         {
-            debug(string.Format("管理员:{0} 请求插入委托:{1}", session.AuthorizedID, request.ToString()), QSEnumDebugLevel.INFO);
+            //debug(string.Format("管理员:{0} 请求插入委托:{1}", session.AuthorizedID, request.ToString()), QSEnumDebugLevel.INFO);
             RspMGROperationResponse response = ResponseTemplate<RspMGROperationResponse>.SrvSendRspResponse(request);
 
             Trade fill = request.TradeToSend;
             IAccount account = clearcentre[fill.Account];
+            if (account == null) return;
+
             fill.oSymbol = account.GetSymbol(fill.Symbol);
 
             if (fill.oSymbol == null)

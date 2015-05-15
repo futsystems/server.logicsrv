@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
+            this.kryptonLabel9 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel8 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.btnSubmit = new ComponentFactory.Krypton.Toolkit.KryptonButton();
             this.cboffsetflag = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
@@ -37,7 +38,6 @@
             this.size = new ComponentFactory.Krypton.Toolkit.KryptonNumericUpDown();
             this.cbside = new ComponentFactory.Krypton.Toolkit.KryptonComboBox();
             this.timestr = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
-            this.account = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel7 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel6 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel5 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
@@ -45,7 +45,7 @@
             this.kryptonLabel3 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel2 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             this.kryptonLabel1 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
-            this.kryptonLabel9 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.account = new ComponentFactory.Krypton.Toolkit.KryptonTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cboffsetflag)).BeginInit();
@@ -54,6 +54,7 @@
             // 
             // kryptonPanel1
             // 
+            this.kryptonPanel1.Controls.Add(this.account);
             this.kryptonPanel1.Controls.Add(this.kryptonLabel9);
             this.kryptonPanel1.Controls.Add(this.kryptonLabel8);
             this.kryptonPanel1.Controls.Add(this.btnSubmit);
@@ -63,7 +64,6 @@
             this.kryptonPanel1.Controls.Add(this.size);
             this.kryptonPanel1.Controls.Add(this.cbside);
             this.kryptonPanel1.Controls.Add(this.timestr);
-            this.kryptonPanel1.Controls.Add(this.account);
             this.kryptonPanel1.Controls.Add(this.kryptonLabel7);
             this.kryptonPanel1.Controls.Add(this.kryptonLabel6);
             this.kryptonPanel1.Controls.Add(this.kryptonLabel5);
@@ -76,6 +76,14 @@
             this.kryptonPanel1.Name = "kryptonPanel1";
             this.kryptonPanel1.Size = new System.Drawing.Size(298, 223);
             this.kryptonPanel1.TabIndex = 0;
+            // 
+            // kryptonLabel9
+            // 
+            this.kryptonLabel9.Location = new System.Drawing.Point(189, 117);
+            this.kryptonLabel9.Name = "kryptonLabel9";
+            this.kryptonLabel9.Size = new System.Drawing.Size(106, 18);
+            this.kryptonLabel9.TabIndex = 16;
+            this.kryptonLabel9.Values.Text = "合约注意大小写";
             // 
             // kryptonLabel8
             // 
@@ -145,14 +153,6 @@
             this.timestr.Size = new System.Drawing.Size(100, 21);
             this.timestr.TabIndex = 8;
             // 
-            // account
-            // 
-            this.account.Location = new System.Drawing.Point(87, 13);
-            this.account.Name = "account";
-            this.account.Size = new System.Drawing.Size(19, 18);
-            this.account.TabIndex = 7;
-            this.account.Values.Text = "--";
-            // 
             // kryptonLabel7
             // 
             this.kryptonLabel7.Location = new System.Drawing.Point(39, 171);
@@ -210,13 +210,13 @@
             this.kryptonLabel1.TabIndex = 0;
             this.kryptonLabel1.Values.Text = "交易帐户:";
             // 
-            // kryptonLabel9
+            // account
             // 
-            this.kryptonLabel9.Location = new System.Drawing.Point(189, 117);
-            this.kryptonLabel9.Name = "kryptonLabel9";
-            this.kryptonLabel9.Size = new System.Drawing.Size(106, 18);
-            this.kryptonLabel9.TabIndex = 16;
-            this.kryptonLabel9.Values.Text = "合约注意大小写";
+            this.account.Location = new System.Drawing.Point(87, 9);
+            this.account.Name = "account";
+            this.account.Size = new System.Drawing.Size(100, 22);
+            this.account.TabIndex = 17;
+            this.account.Text = "kryptonTextBox1";
             // 
             // fmInsertTrade
             // 
@@ -253,11 +253,11 @@
         private ComponentFactory.Krypton.Toolkit.KryptonNumericUpDown size;
         private ComponentFactory.Krypton.Toolkit.KryptonComboBox cbside;
         private ComponentFactory.Krypton.Toolkit.KryptonTextBox timestr;
-        private ComponentFactory.Krypton.Toolkit.KryptonLabel account;
         private ComponentFactory.Krypton.Toolkit.KryptonNumericUpDown price;
         private ComponentFactory.Krypton.Toolkit.KryptonComboBox cboffsetflag;
         private ComponentFactory.Krypton.Toolkit.KryptonButton btnSubmit;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel8;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel9;
+        private ComponentFactory.Krypton.Toolkit.KryptonTextBox account;
     }
 }
