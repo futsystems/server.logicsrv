@@ -4,12 +4,18 @@ using System.Linq;
 using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
-
+using TradingLib.Mixins.Json;
 
 namespace TradingLib.Contrib.Race
 {
     public partial class RaceCentre
     {
+        #region race api service
+
+        
+
+        #endregion
+
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "ExamineRace", "ExamineRace - examine race", "执行考核比赛", QSEnumArgParseType.Json)]
         public void CTE_ExamineRace(ISession session)
         {

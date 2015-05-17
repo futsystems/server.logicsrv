@@ -19,7 +19,7 @@ namespace TradingLib.Contrib.Race
         public static decimal CalObverseProfit(IAccount account)
         {
 
-            return -400000;
+            return 0;
         }
     }
 }

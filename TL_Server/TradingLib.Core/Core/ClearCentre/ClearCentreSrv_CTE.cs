@@ -6,6 +6,7 @@ using System.Data;
 using System.Threading;
 using TradingLib.API;
 using TradingLib.Common;
+using TradingLib.Mixins.Json;
 
 namespace TradingLib.Core
 {
@@ -110,6 +111,37 @@ namespace TradingLib.Core
         #endregion
 
         #region 出入金操作
+        /// <summary>
+        /// 创建柜台实例
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [ContribCommandAttr(QSEnumCommandSource.MessageWeb, "CreateSIMAccount", "CreateSIMAccount - 新建比赛帐号", "创建比赛帐号", QSEnumArgParseType.Json)]
+        public object CTE_CreateSIMAccount(string request)
+        {
+            debug("got create sim account request:" + request, QSEnumDebugLevel.INFO);
+            JsonData args = JsonMapper.ToObject(request);
+            int user_id = int.Parse(args["UserID"].ToString());
+            int domain_id = int.Parse(args["DomainID"].ToString());
+
+            AccountCreation create = new AccountCreation();
+            create.Account = "";
+            create.Category = QSEnumAccountCategory.SIMULATION;
+            create.Password = "";
+            create.RouteGroup = null;
+            create.RouterType = QSEnumOrderTransferType.SIM;
+            create.UserID = user_id;
+            create.Domain = BasicTracker.DomainTracker[domain_id];
+            create.BaseManager = create.Domain.GetManagers().Where(m => m.Type == QSEnumManagerType.ROOT).FirstOrDefault();
+
+
+            //执行操作 并捕获异常 产生异常则给出错误回报
+            this.AddAccount(ref create);//将交易帐户加入到主域
+
+            return new { Account = create.Account };
+        }
+
+
         [ContribCommandAttr(QSEnumCommandSource.MessageWeb, "cashoperation", "cashoperation - 出入金操作", "出入金操作")]
         public void CTE_Cash(string account,decimal amount,QSEnumEquityType equity_type,string comment)
         {
