@@ -73,6 +73,7 @@ namespace TradingLib.Contrib.Race
                 target.RaceID = rs.RaceID;
                 target.RaceStatus = rs.RaceStatus;
                 target.EntryTime = rs.EntryTime;
+                
 
                 ORM.MRace.UpdateRaceService(target);
             }

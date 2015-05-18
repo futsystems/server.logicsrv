@@ -11,6 +11,8 @@ namespace TradingLib.Contrib.Race
     public partial class RaceCentre
     {
 
+
+
         [CoreCommandAttr(QSEnumCommandSource.CLI, "raceprompt", "prompt - prompt account", "手工晋级某个交易帐号")]
         public void CTE_Prompt(string account)
         {

@@ -98,7 +98,7 @@ namespace TradingLib.Contrib.Race.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("INSERT INTO contrib_race_service (`acct`,`raceid`,`entrytime`,`racestatus`) VALUES ( '{0}','{1}','{2}','{3}')",rs.Acct,rs.RaceID,Util.ToTLDateTime(),rs.RaceStatus);
+                string query = string.Format("INSERT INTO contrib_race_service (`acct`,`raceid`,`entrytime`,`racestatus`,`examinetime`) VALUES ( '{0}','{1}','{2}','{3}','{4}')", rs.Acct, rs.RaceID, Util.ToTLDateTime(), rs.RaceStatus,Util.ToTLDateTime(TLCtxHelper.CmdSettleCentre.LastSettleday,0));
                 db.Connection.Execute(query);
             }
         }

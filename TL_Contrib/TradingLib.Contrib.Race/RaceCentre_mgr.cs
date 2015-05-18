@@ -11,6 +11,69 @@ namespace TradingLib.Contrib.Race
     public partial class RaceCentre
     {
         #region race api service
+        [ContribCommandAttr(QSEnumCommandSource.MessageWeb, "QryRaceStatus", "QryRaceStatus - 查询比赛状态", "查询比赛状态", QSEnumArgParseType.Json)]
+        public object CTE_QryRaceStatus(string request)
+        {
+            JsonData args = JsonMapper.ToObject(request);
+            string acct = args["Account"].ToString();
+
+            IAccount account = TLCtxHelper.CmdAccount[acct];
+            if (account == null)
+            {
+                throw new FutsRspError("交易帐户不存在");
+            }
+
+            RaceService rs = Tracker.RaceServiceTracker[account.ID];
+            return new
+            {
+                Account = rs.Account.ID,
+                RaceID = rs.RaceID,
+                RaceStatus = Util.GetEnumDescription(rs.RaceStatus),
+                EntryTime = Util.ToDateTime(rs.EntryTime).ToString(),
+                ExamineEquity = rs.ExamineEquity,
+                IsAvabile = rs.IsAvabile,
+                InRace = IsInRace(rs.RaceStatus),
+            };
+        }
+
+        bool IsInRace(QSEnumAccountRaceStatus status)
+        {
+            switch (status)
+            {
+                case QSEnumAccountRaceStatus.ELIMINATE: return false;
+                case QSEnumAccountRaceStatus.NORACE: return false;
+                default:
+                    return true;
+            }
+        }
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageWeb, "SignRace", "SignRace - 报名比赛", "报名比赛", QSEnumArgParseType.Json)]
+        public object CTE_SignRace(string request)
+        {
+            JsonData args = JsonMapper.ToObject(request);
+            string acct = args["Account"].ToString();
+
+            IAccount account = TLCtxHelper.CmdAccount[acct];
+            if (account == null)
+            {
+                throw new FutsRspError("交易帐户不存在");
+            }
+            //报名参加比赛
+            SignRaceService(account);
+
+            RaceService rs = Tracker.RaceServiceTracker[account.ID];
+            return new
+            {
+                Account = rs.Account.ID,
+                RaceID = rs.RaceID,
+                RaceStatus = Util.GetEnumDescription(rs.RaceStatus),
+                EntryTime = Util.ToDateTime(rs.EntryTime).ToString(),
+                ExamineEquity = rs.ExamineEquity,
+                IsAvabile = rs.IsAvabile,
+                InRace = IsInRace(rs.RaceStatus),
+            };
+        }
+
 
         
 
