@@ -36,7 +36,7 @@ namespace TradingLib.Common
             sroot.AgentLimit = 0;
             sroot.CreditLimit = 0;
             sroot.domain_id = 1;
-            sroot.ID = 0;
+            sroot.ID =-1;
             sroot.Login = "sroot";
             sroot.mgr_fk = 1;
             sroot.parent_fk = 1;
