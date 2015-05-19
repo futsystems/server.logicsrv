@@ -66,15 +66,19 @@ namespace TradingLib.Contrib.Race
         /// </summary>
         public void InitRaceService()
         {
+            
             this.Account = TLCtxHelper.CmdAccount[this.Acct];
-            this.Account.BindService(this);
+            if (this.Account != null)
+            {
+                this.Account.BindService(this);
+            }
         }
 
         public string SN { get { return "RaceService"; } }
 
         public decimal GetFundAvabile(Symbol symbol)
         {
-            return 0;
+            return this.Account.AvabileFunds;
         }
 
         public int CanOpenSize(Symbol symbol, bool side, QSEnumOffsetFlag flag)
