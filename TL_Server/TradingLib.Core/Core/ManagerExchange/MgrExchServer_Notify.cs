@@ -87,6 +87,30 @@ namespace TradingLib.Core
             CachePacket(response);
         }
 
+
+        public void Notify(string module, string cmdstr, object obj,Manager manager)
+        {
+            if (manager == null) return;
+            List<Manager> m = new List<Manager>();
+            m.Add(manager);
+            Notify(module, cmdstr, obj, m);
+        }
+        /// <summary>
+        /// 向某个管理员列表发送通知
+        /// </summary>
+        /// <param name="module"></param>
+        /// <param name="cmdstr"></param>
+        /// <param name="obj"></param>
+        /// <param name="manager"></param>
+        public void Notify(string module, string cmdstr, object obj,IEnumerable<Manager> managers)
+        {
+            NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(GetNotifyTargets(managers));
+            response.ModuleID = module;
+            response.CMDStr = cmdstr;
+            response.Result = Mixins.Json.JsonReply.SuccessReply(obj).ToJson();
+            CachePacket(response);
+        }
+
         /// <summary>
         /// 通过谓词过滤出当前通知地址
         /// 需要提供的参数就是Manager对应的谓词，用于判断是否需要通知该Manager
@@ -99,6 +123,15 @@ namespace TradingLib.Core
             return this.NotifyTarges.Where(c=>c.Manager!=null).Where(e => predictate(e.Manager)).Select(info => info.Location).ToArray();
         }
 
+        /// <summary>
+        /// 获得某个Manager列表对应的在线管理员地址
+        /// </summary>
+        /// <param name="managers"></param>
+        /// <returns></returns>
+        public IEnumerable<ILocation> GetNotifyTargets(IEnumerable<Manager> managers)
+        {
+            return this.NotifyTarges.Where(c => managers.Any(m => m.ID == c.Manager.ID)).Select(info => info.Location);
+        }
 
         /// <summary>
         /// 出入金状态通知

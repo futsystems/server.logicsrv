@@ -43,6 +43,14 @@ namespace TradingLib.Common
 
         private IUtil m_util;
 
+        /// <summary>
+        /// 启动时间
+        /// </summary>
+        public static long StartUpTime { get; set; }
+
+        /// <summary>
+        /// 是否启动完毕
+        /// </summary>
         public static bool IsReady { get; set; }
 
         static TLVersion _version=null;

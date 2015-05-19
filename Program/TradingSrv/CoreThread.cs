@@ -143,11 +143,14 @@ namespace TraddingSrvCLI
                         //启动完毕
                         _status = QSEnumCoreThreadStatus.Started;
                         TLCtxHelper.PrintVersion();
+                        TLCtxHelper.StartUpTime = Util.ToTLDateTime();
+
                         while (go)
                         {
                             Thread.Sleep(1000);
                         }
                         TLCtxHelper.IsReady = false;
+                        
                         coreMgr.Stop();//内核停止
                         contribMgr.Stop();//扩展停止
                         

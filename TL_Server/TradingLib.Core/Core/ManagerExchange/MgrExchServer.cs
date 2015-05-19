@@ -25,7 +25,7 @@ namespace TradingLib.Core
 
         ConcurrentDictionary<string, CustInfoEx> customerExInfoMap = null;
 
-
+        PushServer _pushserver = new PushServer("121.40.32.76", 8870);
 
         public MgrExchServer(MsgExchServer srv, ClearCentre c, RiskCentre r)
             : base(MgrExchServer.CoreName)
@@ -98,6 +98,8 @@ namespace TradingLib.Core
             {
                 tl.Start();
                 tl.RestoreSession();
+                _pushserver.Start();
+
             }
             catch (Exception ex)
             {
@@ -119,6 +121,9 @@ namespace TradingLib.Core
             {
                 tl.Stop();
             }
+
+            _pushserver.Stop();
+
             debug("Manger server stopped....");
         }
 

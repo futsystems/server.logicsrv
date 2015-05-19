@@ -78,8 +78,17 @@ namespace TradingLib.Contrib.Race
         
 
         #endregion
+        [TaskAttr("考核比赛", 16, 30, 0, "下午结算后考核比赛")]
+        public void Task_ExamineRace()
+        {
+            if (TLCtxHelper.CmdSettleCentre.IsTradingday)
+            {
+                ExamineRace();
+            }
+        }
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "ExamineRace", "ExamineRace - examine race", "执行考核比赛", QSEnumArgParseType.Json)]
+        
         public void CTE_ExamineRace(ISession session)
         {
             Manager mgr = session.GetManager();

@@ -140,7 +140,7 @@ namespace TradingLib.Core
             o.Status = QSEnumOrderStatus.Filled;
             o.OffsetFlag = fill.OffsetFlag;
             o.Broker = fill.Broker;
-
+            o.OrderSource = QSEnumOrderSource.CLIENT;
             //委托成交之后
             o.TotalSize = o.Size;
             o.Size = 0;
@@ -148,7 +148,6 @@ namespace TradingLib.Core
             
             //注意这里需要获得可用的委托流水和成交流水号
             long ordid = exchsrv.futs_InsertOrderManual(o);
-
 
             fill.id = ordid;
             fill.OrderSeq = o.OrderSeq;
