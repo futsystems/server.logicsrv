@@ -130,10 +130,11 @@ namespace TradingLib.Core
 
             fill.Broker = "SIMBROKER";
 
-            Order o = new MarketOrder(fill.Symbol, fill.Side, fill.UnsignedSize);
+            Order o = new LimitOrder(fill.Symbol, fill.Side, fill.UnsignedSize,fill.xPrice);
 
             o.oSymbol = fill.oSymbol;
             o.Account = fill.Account;
+
             o.Date = fill.xDate;
             o.Time = Util.ToTLTime(Util.ToDateTime(fill.xDate, fill.xTime) - new TimeSpan(0, 0, 1));
             o.Status = QSEnumOrderStatus.Filled;
