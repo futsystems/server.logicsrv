@@ -38,6 +38,8 @@ namespace FutsMoniter
             _current.MarginPrice = (QSEnumMarginPrice)margin.SelectedValue;
             _current.IncludeCloseProfit = avaincludecloseprofit.Checked;
             _current.PositionLock = poslock.Checked;
+            _current.EntrySlip = (int)entryslip.Value;
+            _current.ExitSlip = (int)exitslip.Value;
 
             Globals.TLClient.ReqUpdateExStrategyTemplateItem(_current);
         }
@@ -159,6 +161,9 @@ namespace FutsMoniter
             sidemargin.Checked = item.SideMargin;
             creditseparate.Checked = item.CreditSeparate;
             poslock.Checked = item.PositionLock;
+
+            entryslip.Value = item.EntrySlip;
+            exitslip.Value = item.ExitSlip;
             _current = item;
         }
 
@@ -195,6 +200,11 @@ namespace FutsMoniter
                     templatelist.Items.Add(obj);
                 }
             }
+        }
+
+        private void kryptonGroupBox1_Paint(object sender, PaintEventArgs e)
+        {
+
         }
 
 

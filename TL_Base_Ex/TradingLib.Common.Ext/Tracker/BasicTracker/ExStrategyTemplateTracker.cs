@@ -123,6 +123,8 @@ namespace TradingLib.Common
                 target.SideMargin = item.SideMargin;
                 target.CreditSeparate = item.CreditSeparate;
                 target.PositionLock = item.PositionLock;
+                target.EntrySlip = item.EntrySlip;
+                target.ExitSlip = item.ExitSlip;
 
                 ORM.MExStrategy.UpdateExStrategyTemplateItem(target);
             }
@@ -137,6 +139,8 @@ namespace TradingLib.Common
                 target.SideMargin = item.SideMargin;
                 target.CreditSeparate = item.CreditSeparate;
                 target.PositionLock = item.PositionLock;
+                target.EntrySlip = item.EntrySlip;
+                target.ExitSlip = item.ExitSlip;
 
                 target.Template_ID = item.Template_ID;
                 ORM.MExStrategy.InsertExStrategyTemplateItem(target);

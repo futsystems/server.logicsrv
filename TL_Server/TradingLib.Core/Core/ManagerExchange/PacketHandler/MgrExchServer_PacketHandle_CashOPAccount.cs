@@ -209,7 +209,7 @@ namespace TradingLib.Core
                         request.Ref = cashopref.AssignId.ToString();
                         request.Source = QSEnumCashOPSource.Manual;
                         request.Status = QSEnumCashInOutStatus.PENDING;
-                        request.Submiter = string.Format("{0}-{1}",manger.BaseMgrID,manger.BaseManager.Login);
+                        request.Submitter = string.Format("{0}-{1}",manger.BaseMgrID,manger.BaseManager.Login);
 
                         ORM.MCashOpAccount.InsertAccountCashOperation(request);
 
@@ -219,7 +219,7 @@ namespace TradingLib.Core
                         session.OperationSuccess("提交交易帐户出入金成功");
 
                         //如果自动确认该代理的出入金 则执行确认操作
-                        if (access.r_cashop_auto_confirm)
+                        if (access!=null && access.r_cashop_auto_confirm)
                         {
                             //调用清算中心出入金确认操作
                             TLCtxHelper.CmdAuthCashOperation.ConfirmCashOperation(request.Ref);

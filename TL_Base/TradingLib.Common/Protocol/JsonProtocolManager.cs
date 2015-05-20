@@ -389,7 +389,7 @@ namespace TradingLib.Mixins.JsonObject
         /// <summary>
         /// 提交者信息
         /// </summary>
-        public string Submiter { get; set; }
+        public string Submitter { get; set; }
     }
 
     public class JsonWrapperCasnTrans

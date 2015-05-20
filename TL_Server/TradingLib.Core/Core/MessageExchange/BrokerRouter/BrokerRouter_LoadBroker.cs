@@ -134,7 +134,27 @@ namespace TradingLib.Core
                     return;
                 }
                 debug("Reply Fill To MessageExch:" + fill.GetTradeInfo(), QSEnumDebugLevel.INFO);
-                _fillcache.Write(new TradeImpl(fill));
+
+                //设置成交滑点
+                Trade t = new TradeImpl(fill);
+                IAccount account = TLCtxHelper.CmdAccount[t.Account];
+                if (account != null)
+                {
+                    ExStrategy strategy = account.GetExStrategy();
+                    //交易参数模板存在 则调整成交价格
+                    if (strategy != null)
+                    {
+                        if (t.IsEntryPosition)
+                        {
+                            t.xPrice = t.xPrice + (t.Side ? 1 : -1) * strategy.EntrySlip * t.oSymbol.SecurityFamily.PriceTick;
+                        }
+                        else
+                        {
+                            t.xPrice = t.xPrice + (t.Side ? 1 : -1) * strategy.ExitSlip * t.oSymbol.SecurityFamily.PriceTick;
+                        }
+                    }
+                }
+                _fillcache.Write(t);
             }
             else
             {
