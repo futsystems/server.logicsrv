@@ -37,6 +37,7 @@ namespace FutsMoniter
             kryptonRibbonGroup1.Visible = Globals.Domain.Super || Globals.Domain.Dedicated;
             kryptonRibbonGroupButton_tickpaper.Visible = Globals.Domain.Super || Globals.Domain.Dedicated;
 
+            kryptonRibbonGroupButton_permissiontmp.Visible = (Globals.Domain.Super || Globals.Domain.Dedicated) && Globals.Manager.IsRoot();//超级管理员才可以看到权限模板
             //kryptonRibbonGroupButton_SettleManagerment.Visible = Globals.Domain.Super || Globals.Domain.Dedicated;
             //kryptonRibbonGroupButton_SettleManagerment.Visible = Globals.Domain.Super || Globals.Domain.Dedicated;
 

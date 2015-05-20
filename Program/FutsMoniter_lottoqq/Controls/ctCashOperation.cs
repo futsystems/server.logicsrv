@@ -313,6 +313,7 @@ namespace FutsMoniter
                     gt.Rows[i][SOURCE] = op.Source;
                     gt.Rows[i][SOURCESTR] = Util.GetEnumDescription(op.Source);
                     gt.Rows[i][RECVINFO] = op.RecvInfo;
+                    gt.Rows[i][SUBMITTER] = op.Submiter;
                     operationkeymap.TryAdd(key, op);
                     idxmap.TryAdd(key, i);
                 }
@@ -343,6 +344,7 @@ namespace FutsMoniter
         const string SOURCE = "SOURCE";
         const string SOURCESTR = "来源";
         const string RECVINFO = "收款信息";
+        const string SUBMITTER = "提交者信息";
 
         #endregion
 
@@ -388,6 +390,7 @@ namespace FutsMoniter
             gt.Columns.Add(SOURCE);//10
             gt.Columns.Add(SOURCESTR);//RECVINFO
             gt.Columns.Add(RECVINFO);//
+            gt.Columns.Add(SUBMITTER);
         }
 
         /// <summary>

@@ -78,7 +78,7 @@ namespace TradingLib.Contrib.Race
 
         public decimal GetFundAvabile(Symbol symbol)
         {
-            return this.Account.AvabileFunds;
+            return 0;
         }
 
         public int CanOpenSize(Symbol symbol, bool side, QSEnumOffsetFlag flag)

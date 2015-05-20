@@ -173,12 +173,12 @@ namespace Lottoqq.Account
         public override decimal GetFundAvabile(Symbol symbol)
         {
             IAccountService service = null;
-            if (GetService("RaceService", out service))
-            {
-                //如果比赛服务有效 则受到比赛资金的限制
-                if(service.IsAvabile)
-                    return service.GetFundAvabile(symbol);
-            }
+            //if (GetService("RaceService", out service))
+            //{
+            //    //如果比赛服务有效 则受到比赛资金的限制
+            //    if(service.IsAvabile)
+            //        return service.GetFundAvabile(symbol);
+            //}
             
 
             return base.GetFundAvabile(symbol);

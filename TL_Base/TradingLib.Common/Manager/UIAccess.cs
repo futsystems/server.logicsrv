@@ -51,5 +51,14 @@ namespace TradingLib.Common
         /// </summary>
         [PermissionFieldAttr("添加模拟帐号", "是否有权添加模拟帐号")]
         public bool r_simacc { get; set; }
+
+        [PermissionFieldAttr("提交出入金", "是否有权限提交出入金")]
+        public bool r_cashop { get; set; }
+
+        [PermissionFieldAttr("下级代理出入金", "下级代理是否有权提交出入金")]
+        public bool r_cashop_subagent { get; set; }
+
+        [PermissionFieldAttr("自动确认出入金", "自动确认出入金")]
+        public bool r_cashop_auto_confirm { get; set; }
     }
 }
