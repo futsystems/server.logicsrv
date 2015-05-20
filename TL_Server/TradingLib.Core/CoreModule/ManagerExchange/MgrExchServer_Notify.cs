@@ -83,6 +83,32 @@ namespace TradingLib.Core
             CachePacket(response);
         }
 
+
+        public void Notify(string module, string cmdstr, object obj, Manager manager)
+        {
+            if (manager == null) return;
+            List<Manager> m = new List<Manager>();
+            m.Add(manager);
+            Notify(module, cmdstr, obj, m);
+        }
+        /// <summary>
+        /// 向某个管理员列表发送通知
+        /// </summary>
+        /// <param name="module"></param>
+        /// <param name="cmdstr"></param>
+        /// <param name="obj"></param>
+        /// <param name="manager"></param>
+        public void Notify(string module, string cmdstr, object obj, IEnumerable<Manager> managers)
+        {
+            NotifyMGRContribNotify response = ResponseTemplate<NotifyMGRContribNotify>.SrvSendNotifyResponse(GetNotifyTargets(managers));
+            response.ModuleID = module;
+            response.CMDStr = cmdstr;
+            response.Result = Mixins.Json.JsonReply.SuccessReply(obj).ToJson();
+            CachePacket(response);
+        }
+
+
+
         void CashOperationEvent_CashOperationRequest(object sender, CashOperationEventArgs e)
         {
             NotifyCashOperation(e.CashOperation);
@@ -101,7 +127,15 @@ namespace TradingLib.Core
         }
 
 
-
+        /// <summary>
+        /// 获得某个Manager列表对应的在线管理员地址
+        /// </summary>
+        /// <param name="managers"></param>
+        /// <returns></returns>
+        public IEnumerable<ILocation> GetNotifyTargets(IEnumerable<Manager> managers)
+        {
+            return this.NotifyTarges.Where(c => managers.Any(m => m.ID == c.Manager.ID)).Select(info => info.Location);
+        }
 
         /// <summary>
         /// 出入金状态通知

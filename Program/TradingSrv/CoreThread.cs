@@ -186,6 +186,7 @@ namespace TraddingSrvCLI
                             //最后确认主备机服务状态，并启用全局状态标识，所有的消息接收需要该标识打开,否则不接受任何操作类的消息
                             TLCtxHelper.IsReady = true;
 
+                            TLCtxHelper.StartUpTime = Util.ToTLDateTime();
                             //启动完毕
                             _status = QSEnumCoreThreadStatus.Started;
                             TLCtxHelper.PrintVersion();

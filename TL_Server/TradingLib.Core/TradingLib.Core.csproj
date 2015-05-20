@@ -176,6 +176,7 @@
     <Compile Include="SettlementPriceTracker.cs" />
     <Compile Include="Transport\AsyncServer.cs" />
     <Compile Include="Transport\FastTickSrvMgrClient.cs" />
+    <Compile Include="Transport\PushServer.cs" />
     <Compile Include="Transport\ThroughtPutTracker.cs" />
     <Compile Include="Transport\ZeromqThroughPut.cs" />
     <Compile Include="Base\AsyncTransactionLoger.cs" />

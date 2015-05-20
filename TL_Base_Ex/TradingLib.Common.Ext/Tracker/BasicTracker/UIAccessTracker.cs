@@ -30,7 +30,7 @@ namespace TradingLib.Common
             _cfgdb = new ConfigDB("UIAccessTracker");
             if (!_cfgdb.HaveConfig("Comment"))
             {
-                _cfgdb.UpdateConfig("ExcludePermissionForAgent", QSEnumCfgType.String, "fm_debug,nav_system,nav_basic,nav_manager,nav_manager_permissionagent,nav_finance_cashercentre,moniter_router,moniter_acctype,moniter_tab_finance,moniter_menu_delaccount,fun_info_operation,fun_tab_placeorder,moniter_tab_config_inactive,acctype_sim,acctype_dealer", "代理默认排除的权限列表");
+                _cfgdb.UpdateConfig("ExcludePermissionForAgent", QSEnumCfgType.String, "r_execution,r_block,r_simacc,r_cashop,r_cashop_subagent,r_cashop_auto_confirm", "代理默认排除的权限列表");
             }
             foreach (string s in _cfgdb["ExcludePermissionForAgent"].AsString().Split(','))
             {

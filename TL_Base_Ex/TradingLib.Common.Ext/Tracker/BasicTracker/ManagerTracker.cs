@@ -36,7 +36,7 @@ namespace TradingLib.Common
             sroot.AgentLimit = 0;
             sroot.CreditLimit = 0;
             sroot.domain_id = 1;
-            sroot.ID = 0;
+            sroot.ID = -1;
             sroot.Login = "sroot";
             sroot.mgr_fk = 1;
             sroot.parent_fk = 1;
@@ -85,6 +85,9 @@ namespace TradingLib.Common
                 target.Type = mgr.Type;
                 target.User_Id = mgr.User_Id;
                 target.Active = mgr.Active;
+                target.AgentLimit = mgr.AgentLimit;
+                target.CreditLimit = mgr.CreditLimit;
+
 
                 target.mgr_fk = mgr.mgr_fk;
                 target.domain_id = mgr.domain_id;
@@ -110,6 +113,9 @@ namespace TradingLib.Common
                 target.Mobile = mgr.Mobile;
                 target.QQ = mgr.QQ;
                 target.AccLimit = mgr.AccLimit;
+                target.AgentLimit = mgr.AgentLimit;
+                target.CreditLimit = mgr.CreditLimit;
+
 
                 ORM.MManager.UpdateManager(target);
             }

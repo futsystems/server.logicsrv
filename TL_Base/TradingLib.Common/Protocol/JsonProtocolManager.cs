@@ -385,6 +385,11 @@ namespace TradingLib.Mixins.JsonObject
         /// 0表示第三方支付
         /// </summary>
         public string  RecvInfo { get; set; }
+
+        /// <summary>
+        /// 提交者信息
+        /// </summary>
+        public string Submitter { get; set; }
     }
 
     public class JsonWrapperCasnTrans

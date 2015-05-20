@@ -27,6 +27,7 @@ namespace TradingLib.Common
             {
                 //该custinfoex 绑定了管理端
                 if (mgr == null) return false;
+                if (mgr.domain_id != manager.domain_id) return false;//不属于同一分区 则直接返回
                 //如果有Root域的管理端登入 则需要通知
                 if (mgr.IsInRoot())
                     return true;

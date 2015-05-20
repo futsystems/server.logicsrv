@@ -24,6 +24,17 @@ namespace TradingLib.Common
                 config.UpdateConfig("DEVELOP", QSEnumCfgType.Bool,true, "是否运行在开发模式");
             }
 
+            if (!config.HaveConfig("DeployName"))
+            {
+                config.UpdateConfig("DeployName", QSEnumCfgType.String, "Deploy", "部署标识");
+            }
+
+            if (!config.HaveConfig("Organization"))
+            {
+                config.UpdateConfig("Organization", QSEnumCfgType.String, "TCB", "公司名称");
+            }
+
+
             if (!config.HaveConfig("DefaultPassword"))
             {
                 config.UpdateConfig("DefaultPassword",QSEnumCfgType.String,"123456","默认帐户密码");
@@ -121,6 +132,31 @@ namespace TradingLib.Common
         //        return _producttype;
         //    }
         //}
+
+
+        /// <summary>
+        /// 部署名称
+        /// </summary>
+        public static string DeployName
+        {
+            get
+            {
+                return defaultinstance.config["DeployName"].AsString();
+            }
+        }
+
+        /// <summary>
+        /// 组织名称
+        /// </summary>
+        public static string Organization
+        {
+            get
+            {
+                return defaultinstance.config["Organization"].AsString();
+            }
+        }
+
+
         /// <summary>
         /// 收盘前提前多少时间强平持仓
         /// </summary>

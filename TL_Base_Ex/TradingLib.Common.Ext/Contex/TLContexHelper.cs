@@ -34,6 +34,13 @@ namespace TradingLib.Common
 
         private IUtil m_util;
 
+
+        /// <summary>
+        /// 启动时间
+        /// </summary>
+        public static long StartUpTime { get; set; }
+
+
         public static bool IsReady { get; set; }
 
         static TLVersion _version=null;
@@ -61,23 +68,6 @@ namespace TradingLib.Common
             Util.Info(string.Format(". Build:{0}", Version.BuildNum));
             Util.Info(string.Format(". LastUpdate:{0}", "20141123"));
             Util.Info(string.Format(". Author:{0}", "QianBo"));
-
-
-            //Console.WriteLine();
-            //Console.ForegroundColor = ConsoleColor.Green;
-            //Console.WriteLine("".PadLeft(Util.GetAvabileConsoleWidth() / 2 - 1, '.'));
-            //Version:0.65
-            //Util.ConsoleColorStatus(string.Format(". Version:{0}",Version.Version), ".", QSEnumInfoColor.INFOGREEN, QSEnumInfoColor.INFOGREEN);
-            //Util.ConsoleColorStatus(string.Format(". Build:{0}", Version.BuildNum), ".", QSEnumInfoColor.INFOGREEN, QSEnumInfoColor.INFOGREEN);
-            
-            //Util.ConsoleColorStatus(string.Format(". LastUpdate:{0}", "20141123"), ".", QSEnumInfoColor.INFOGREEN, QSEnumInfoColor.INFOGREEN);
-            //Util.ConsoleColorStatus(string.Format(". Author:{0}", "QianBo"), ".", QSEnumInfoColor.INFOGREEN, QSEnumInfoColor.INFOGREEN);
-            
-            //Console.ForegroundColor = ConsoleColor.Green;
-            //Console.WriteLine("".PadLeft(Util.GetAvabileConsoleWidth() / 2 - 1, '.'));
-            //Console.WriteLine();
-            //Console.WriteLine();
-            //Console.ForegroundColor = ConsoleColor.Gray;
         }
 
 

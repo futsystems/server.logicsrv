@@ -100,7 +100,7 @@ namespace TradingLib.Core
 
             fill.Broker = "SIMBROKER";
 
-            Order o = new MarketOrder(fill.Symbol, fill.Side, fill.UnsignedSize);
+            Order o = new LimitOrder(fill.Symbol, fill.Side, fill.UnsignedSize,fill.xPrice);
 
             o.oSymbol = fill.oSymbol;
             o.Account = fill.Account;
@@ -109,6 +109,7 @@ namespace TradingLib.Core
             o.Status = QSEnumOrderStatus.Filled;
             o.OffsetFlag = fill.OffsetFlag;
             o.Broker = fill.Broker;
+            o.OrderSource = QSEnumOrderSource.CLIENT;
 
             //委托成交之后
             o.TotalSize = o.Size;

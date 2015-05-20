@@ -50,6 +50,16 @@ namespace TradingLib.Common
         public int AccLimit { get; set; }
 
         /// <summary>
+        /// 下级代理数量
+        /// </summary>
+        public int AgentLimit { get; set; }
+
+        /// <summary>
+        /// 代理有限额度
+        /// </summary>
+        public decimal CreditLimit { get; set; }
+
+        /// <summary>
         /// 上级代理
         /// </summary>
         public int parent_fk { get; set; }

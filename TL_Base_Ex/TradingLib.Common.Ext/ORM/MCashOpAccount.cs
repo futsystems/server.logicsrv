@@ -22,7 +22,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("INSERT INTO log_cashopreq (`account`,`datetime`,`operation`,`amount`,`ref`,`status`,`source`,`recvinfo`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}')", op.Account, op.DateTime, op.Operation, op.Amount, op.Ref, op.Status, op.Source, op.RecvInfo);
+                string query = string.Format("INSERT INTO log_cashopreq (`account`,`datetime`,`operation`,`amount`,`ref`,`status`,`source`,`recvinfo`,`submitter`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}')", op.Account, op.DateTime, op.Operation, op.Amount, op.Ref, op.Status, op.Source, op.RecvInfo,op.Submitter);
                 return db.Connection.Execute(query) > 0;
             }
         }
