@@ -55,11 +55,13 @@ namespace TradingLib.Core
         /// <param name="manager"></param>
         void SrvOnInsertTrade(MGRReqInsertTradeRequest request, ISession session, Manager manager)
         {
-            logger.Info(string.Format("管理员:{0} 请求插入委托:{1}", session.AuthorizedID, request.ToString()));
+            //logger.Info(string.Format("管理员:{0} 请求插入委托:{1}", session.AuthorizedID, request.ToString()));
             RspMGROperationResponse response = ResponseTemplate<RspMGROperationResponse>.SrvSendRspResponse(request);
 
             Trade fill = request.TradeToSend;
             IAccount account = TLCtxHelper.ModuleAccountManager[fill.Account];
+            if (account == null) return;
+
             fill.oSymbol = account.GetSymbol(fill.Symbol);
 
             if (fill.oSymbol == null)
@@ -111,7 +113,7 @@ namespace TradingLib.Core
             //委托成交之后
             o.TotalSize = o.Size;
             o.Size = 0;
-            o.FilledSize = o.UnsignedSize;
+            o.FilledSize = Math.Abs(o.TotalSize);
             
             //注意这里需要获得可用的委托流水和成交流水号
             TLCtxHelper.CmdUtils.ManualInsertOrder(o); //exchsrv.futs_InsertOrderManual(o);
@@ -120,6 +122,7 @@ namespace TradingLib.Core
             fill.id = ordid;
             fill.OrderSeq = o.OrderSeq;
             fill.BrokerRemoteOrderID = o.BrokerRemoteOrderID;
+            fill.OrderSysID = o.OrderSysID;
             fill.TradeID = "xxxxx";//随机产生的成交编号
 
             Util.sleep(100);

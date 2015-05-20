@@ -134,7 +134,7 @@ namespace TradingLib.Common
         /// <summary>
         /// 当前优先资金 = 昨日优先资金 + 今日优先资入金 - 今日优先资金出金
         /// </summary>
-        public decimal Credit { get { return LastCredit + CreditCashIn - CreditCashOut; } }
+        public decimal Credit { get { return LastCredit + CreditCashIn - CreditCashOut + TLCtxHelper.ExContribEvent.GetFinAmmountAvabile(this.ID); } }
 
         /// <summary>
         /// 入金

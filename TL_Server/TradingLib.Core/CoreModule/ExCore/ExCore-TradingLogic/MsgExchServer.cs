@@ -222,29 +222,36 @@ namespace TradingLib.Core
             mdmap.Clear();
             foreach (var d in ORM.MSettlement.SelectMarketData(TLCtxHelper.ModuleSettleCentre.LastSettleday))
             {
-                mdmap[d.Symbol] = d;
-                Tick k = new TickImpl();
-                k.Symbol = d.Symbol;
-                k.AskPrice = d.AskPrice;
-                k.AskSize = d.AskSize;
-                k.BidPrice = d.BidPrice;
-                k.BidSize = d.BidSize;
-                k.Date = TLCtxHelper.ModuleSettleCentre.LastSettleday;
-                k.Time = 153000;
-                k.Trade = d.Close;
-                k.UpperLimit = d.UpperLimit;
-                k.Vol = d.Vol;
-                k.High = d.High;
-                k.Low = d.Low;
-                k.LowerLimit = d.LowerLimit;
-                k.Open = d.Open;
-                k.OpenInterest = d.OI;
-                k.PreOpenInterest = d.PreOI;
-                k.PreSettlement = d.PreSettlement;
-                k.Settlement = d.Settlement;
-                k.Size = 0;
+                try
+                {
+                    mdmap[d.Symbol] = d;
+                    Tick k = new TickImpl();
+                    k.Symbol = d.Symbol;
+                    k.AskPrice = d.AskPrice;
+                    k.AskSize = d.AskSize;
+                    k.BidPrice = d.BidPrice;
+                    k.BidSize = d.BidSize;
+                    k.Date = TLCtxHelper.ModuleSettleCentre.LastSettleday;
+                    k.Time = 153000;
+                    k.Trade = d.Close;
+                    k.UpperLimit = d.UpperLimit;
+                    k.Vol = d.Vol;
+                    k.High = d.High;
+                    k.Low = d.Low;
+                    k.LowerLimit = d.LowerLimit;
+                    k.Open = d.Open;
+                    k.OpenInterest = d.OI;
+                    k.PreOpenInterest = d.PreOI;
+                    k.PreSettlement = d.PreSettlement;
+                    k.Settlement = d.Settlement;
+                    k.Size = 0;
 
-                mdtickmap[d.Symbol] = k;
+                    mdtickmap[d.Symbol] = k;
+                }
+                catch (Exception ex)
+                {
+                    logger.Error("Load MarketData Error:" + ex.ToString());
+                }
             }
         }
 

@@ -114,5 +114,10 @@ namespace TradingLib.Common
 
             }
         }
+
+        public virtual IEnumerable<string> GetNotice()
+        {
+            return new List<string>();
+        }
     }
 }

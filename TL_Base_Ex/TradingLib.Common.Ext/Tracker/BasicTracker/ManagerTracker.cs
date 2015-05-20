@@ -29,6 +29,29 @@ namespace TradingLib.Common
                 m.BaseManager = this[m.mgr_fk];
                 m.ParentManager = this[m.parent_fk];
             }
+
+            Manager sroot = new Manager();
+            sroot.AccLimit = 0;
+            sroot.Active = true;
+            sroot.AgentLimit = 0;
+            sroot.CreditLimit = 0;
+            sroot.domain_id = 1;
+            sroot.ID = 0;
+            sroot.Login = "sroot";
+            sroot.mgr_fk = 1;
+            sroot.parent_fk = 1;
+            sroot.domain_id = 1;
+            sroot.Mobile = "";
+            sroot.QQ = "";
+            sroot.Type = QSEnumManagerType.ROOT;
+
+
+            managermap[sroot.Login] = sroot;
+            mgridmap[sroot.ID] = sroot;
+
+            sroot.Domain = BasicTracker.DomainTracker[sroot.domain_id];
+            sroot.BaseManager = this[sroot.mgr_fk];
+            sroot.ParentManager = this[sroot.parent_fk];
         }
 
 

@@ -457,29 +457,14 @@ namespace TradingLib.Contrib.FinService
         
         }
 
-        #endregion
-
-
-        #region 服务查询和设置
-        /// <summary>
-        /// 查询服务状态和参数
-        /// </summary>
-        /// <returns></returns>
-        public string QryService()
+        public IEnumerable<string> GetNotice()
         {
-            return _finservice.ToString();   
-        }
-
-        /// <summary>
-        /// 设置服务状态和参数
-        /// </summary>
-        /// <param name="cfg"></param>
-        public void SetService(string cfg)
-        {
-
+            return new List<string>();
         }
 
         #endregion
+
+        
 
     }
 }
