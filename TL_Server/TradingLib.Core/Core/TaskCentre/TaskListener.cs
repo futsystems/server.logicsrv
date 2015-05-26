@@ -113,6 +113,8 @@ namespace TradingLib.Core
             try
             {
                 string taskuuid = trigger.JobDataMap.GetString("TaskUUID");
+                if (string.IsNullOrEmpty(taskuuid))
+                    return;
                 ITask task = TLCtxHelper.ModuleTaskCentre[taskuuid];
                 TLCtxHelper.EventSystem.FireTaskErrorEvent(this, TaskEventArgs.TaskFail(task, new Exception("Task Misfired")));
             }

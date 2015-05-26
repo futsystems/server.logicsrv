@@ -108,6 +108,7 @@ namespace TradingLib.Common
                 target.Name = t.Name;
                 target.Description = t.Description;
                 target.Domain_ID = t.Domain_ID;
+                target.Manager_ID = t.Manager_ID;
 
                 ORM.MMargin.InsertMarginTemplate(target);
                 marginTemplateMap.TryAdd(target.ID, target);

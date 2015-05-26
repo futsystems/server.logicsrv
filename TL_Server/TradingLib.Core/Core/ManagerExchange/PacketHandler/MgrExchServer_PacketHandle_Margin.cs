@@ -19,9 +19,20 @@ namespace TradingLib.Core
         public void CTE_QryMarginTemplate(ISession session)
         {
             Manager manager = session.GetManager();
-            if (manager.IsRoot())
+            UIAccess access = manager.GetAccess();
+            if (!access.r_margion)
+            {
+                throw new FutsRspError("无权查询保证金模板");
+            }
+
+            if (manager.BaseManager.IsRoot())
             {
                 MarginTemplateSetting[] templates = manager.Domain.GetMarginTemplate().ToArray();
+                session.ReplyMgr(templates);
+            }
+            else if(manager.BaseManager.IsAgent())
+            {
+                MarginTemplateSetting[] templates = manager.Domain.GetMarginTemplate().Where(item => item.Manager_ID == manager.BaseMgrID).ToArray();
                 session.ReplyMgr(templates);
             }
             else
@@ -39,25 +50,42 @@ namespace TradingLib.Core
         public void CTE_UpdateMarginTemplate(ISession session, string json)
         {
             Manager manager = session.GetManager();
-            if (manager.IsRoot())
+            UIAccess access = manager.GetAccess();
+            if (!access.r_margion)
+            {
+                throw new FutsRspError("无权更新保证金模板");
+            }
+
+            //if (manager.IsRoot())
             {
                 MarginTemplateSetting t = Mixins.Json.JsonMapper.ToObject<MarginTemplateSetting>(json);
                 t.Domain_ID = manager.domain_id;
                 bool isaddd = t.ID == 0;
-                BasicTracker.MarginTemplateTracker.UpdateMarginTemplate(t);
-
-                //如果是添加手续费模板 则需要预先将数据写入到数据库
                 if (isaddd)
                 {
-
+                    t.Manager_ID = manager.BaseMgrID;//如果是新添加 则设定管理主域ID
                 }
+                else
+                {
+                    MarginTemplate template = BasicTracker.MarginTemplateTracker[t.ID];
+                    if (template != null)
+                    {
+                        if (template.Manager_ID != manager.BaseMgrID)
+                        {
+                            throw new FutsRspError(string.Format("无权修改保证金模板[{0}]", template.Name));
+                        }
+                    }
+                }
+
+                BasicTracker.MarginTemplateTracker.UpdateMarginTemplate(t);
+
                 session.NotifyMgr("NotifyMarginTemplate", BasicTracker.MarginTemplateTracker[t.ID]);
                 session.OperationSuccess("更新保证金模板成功");
             }
-            else
-            {
-                throw new FutsRspError("无权修改保证金模板");
-            }
+            //else
+            //{
+            //    throw new FutsRspError("无权修改保证金模板");
+            //}
         }
 
         /// <summary>
@@ -69,7 +97,13 @@ namespace TradingLib.Core
         public void CTE_QryMarginTemplateItem(ISession session, int templateid)
         {
             Manager manager = session.GetManager();
-            if (manager.IsRoot())
+            UIAccess access = manager.GetAccess();
+            if (!access.r_margion)
+            {
+                throw new FutsRspError("无权查询保证金模板项目");
+            }
+
+            //if (manager.IsRoot())
             {
                 MarginTemplate template = BasicTracker.MarginTemplateTracker[templateid];
 
@@ -79,17 +113,22 @@ namespace TradingLib.Core
                     session.ReplyMgr(items[i],i!= items.Length-1);
                 }
             }
-            else
-            {
-                throw new FutsRspError("无权查询保证金模板项目");
-            }
+            //else
+            //{
+            //    throw new FutsRspError("无权查询保证金模板项目");
+            //}
         }
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateMarginTemplateItem", "UpdateMarginTemplateItem - update margin template item", "更新保证金模板项目", QSEnumArgParseType.Json)]
         public void CTE_UpdateMarginTemplateItem(ISession session, string json)
         {
             Manager manager = session.GetManager();
-            if (manager.IsRoot())
+            UIAccess access = manager.GetAccess();
+            if (!access.r_margion)
+            {
+                throw new FutsRspError("无权更新保证金模板项目");
+            }
+            //if (manager.IsRoot())
             {
                 MGRMarginTemplateItemSetting item = Mixins.Json.JsonMapper.ToObject<MGRMarginTemplateItemSetting>(json);
                 MarginTemplate template = BasicTracker.MarginTemplateTracker[item.Template_ID];
@@ -177,10 +216,10 @@ namespace TradingLib.Core
                 //}
                 session.OperationSuccess("更新手续费项目功");
             }
-            else
-            {
-                throw new FutsRspError("无权修改手续费模板");
-            }
+            //else
+            //{
+            //    throw new FutsRspError("无权修改手续费模板");
+            //}
         }
     }
 }

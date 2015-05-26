@@ -45,10 +45,30 @@ namespace TradingLib.Core
         /// <param name="type"></param>
         public override void UpdateAccountRouterTransferType(string account, QSEnumOrderTransferType type)
         {
-            if (!HaveAccount(account)) return;
-            this[account].OrderRouteType = type;
+            IAccount acct = this[account];
+            if(acct == null) return;
+            
+            //记录原来路由类别
+            QSEnumOrderTransferType oldrouter = acct.OrderRouteType;
+
+            //修改交易帐户路由类别
+            //原来路由是实盘 需要将原来实盘上的挂单撤掉 同时平掉实盘上的持仓 然后将挂单挂到模拟上
+            if (oldrouter == QSEnumOrderTransferType.LIVE)
+            {
+                //遍历所有持仓
+                foreach (Position pos in acct.Positions.Where(p => !p.isFlat))
+                {
+                    
+                }
+            }
+
+
+            acct.OrderRouteType = type;
             ORM.MAccount.UpdateAccountRouterTransferType(account, type);
-            AccountChanged(this[account]);
+            AccountChanged(acct);
+
+            
+
         }
 
         public void UpdateInvestorInfo(string account, string name,string broker,int  bankfk,string bankac)

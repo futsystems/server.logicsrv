@@ -60,5 +60,16 @@ namespace TradingLib.Common
 
         [PermissionFieldAttr("自动确认出入金", "自动确认出入金")]
         public bool r_cashop_auto_confirm { get; set; }
+
+        [PermissionFieldAttr("手续费模板权限", "添加,修改手续费模板并绑定到交易帐户")]
+        public bool r_commission { get; set; }
+
+        [PermissionFieldAttr("保证金模板权限", "添加,修改保证金模板并绑定到交易帐户")]
+        public bool r_margion { get; set; }
+
+        [PermissionFieldAttr("交易参数模板权限", "添加,修改交易参数模板并绑定到交易帐户")]
+        public bool r_exstrategy { get; set; }
+
+
     }
 }

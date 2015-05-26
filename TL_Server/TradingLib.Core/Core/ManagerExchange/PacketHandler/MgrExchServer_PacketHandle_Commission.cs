@@ -19,9 +19,21 @@ namespace TradingLib.Core
         public void CTE_QryCommissionTemplate(ISession session)
         {
             Manager manager = session.GetManager();
-            if (manager.IsRoot())
+            UIAccess access = manager.GetAccess();
+            if (!access.r_commission)
+            {
+                throw new FutsRspError("无权查询手续费模板");
+            }
+
+            if (manager.BaseManager.IsRoot())//
             {
                 CommissionTemplateSetting[] templates = manager.Domain.GetCommissionTemplate().ToArray();
+                session.ReplyMgr(templates);
+            }
+            else if (manager.IsAgent())//如果是代理
+            {
+                
+                CommissionTemplateSetting[] templates = manager.Domain.GetCommissionTemplate().Where(item=>item.Manager_ID== manager.BaseMgrID).ToArray();
                 session.ReplyMgr(templates);
             }
             else
@@ -34,25 +46,42 @@ namespace TradingLib.Core
         public void CTE_UpdateCommissionTemplate(ISession session, string json)
         {
             Manager manager = session.GetManager();
-            if (manager.IsRoot())
+            UIAccess access = manager.GetAccess();
+            if (!access.r_commission)
+            {
+                throw new FutsRspError("无权更新手续费模板");
+            }
+
+            //if (manager.IsRoot())
             {
                 CommissionTemplateSetting t = Mixins.Json.JsonMapper.ToObject<CommissionTemplateSetting>(json);
                 t.Domain_ID = manager.domain_id;
                 bool isaddd = t.ID == 0;
+                if (isaddd)
+                {
+                    t.Manager_ID = manager.BaseMgrID;//如果是新添加 则设定管理主域ID
+                }
+                else
+                {
+                    CommissionTemplate template = BasicTracker.CommissionTemplateTracker[t.ID];
+                    if (template != null)
+                    {
+                        if (template.Manager_ID != manager.BaseMgrID)
+                        {
+                            throw new FutsRspError(string.Format("无权修改手续费模板[{0}]",template.Name));
+                        }
+                    }
+                }
                 BasicTracker.CommissionTemplateTracker.UpdateCommissionTemplate(t);
 
-                //如果是添加手续费模板 则需要预先将数据写入到数据库
-                if (isaddd)
-                { 
-                    
-                }
                 session.NotifyMgr("NotifyCommissionTemplate",BasicTracker.CommissionTemplateTracker[t.ID]);
                 session.OperationSuccess("更新手续费模板成功");
             }
-            else
-            {
-                throw new FutsRspError("无权修改手续费模板");
-            }
+
+            //else
+            //{
+            //    throw new FutsRspError("无权修改手续费模板");
+            //}
         }
 
 
@@ -61,7 +90,13 @@ namespace TradingLib.Core
         public void CTE_QryCommissionTemplateItem(ISession session, int templateid)
         {
             Manager manager = session.GetManager();
-            if (manager.IsRoot())
+            UIAccess access = manager.GetAccess();
+            if (!access.r_commission)
+            {
+                throw new FutsRspError("无权查询手续费模板项目");
+            }
+
+            //if (manager.IsRoot())
             {
                 CommissionTemplate template = BasicTracker.CommissionTemplateTracker[templateid];
 
@@ -72,17 +107,23 @@ namespace TradingLib.Core
                 }
                 
             }
-            else
-            {
-                throw new FutsRspError("无权查询手续费模板项目");
-            }
+            //else
+            //{
+            //    throw new FutsRspError("无权查询手续费模板项目");
+            //}
         }
 
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateCommissionTemplateItem", "UpdateCommissionTemplateItem - update commission template item", "更新手续费模板项目", QSEnumArgParseType.Json)]
         public void CTE_UpdateCommissionTemplateItem(ISession session, string json)
         {
             Manager manager = session.GetManager();
-            if (manager.IsRoot())
+            UIAccess access = manager.GetAccess();
+            if (!access.r_commission)
+            {
+                throw new FutsRspError("无权更新手续费模板项目");
+            }
+
+            //if (manager.IsRoot())
             {
                 MGRCommissionTemplateItemSetting item = Mixins.Json.JsonMapper.ToObject<MGRCommissionTemplateItemSetting>(json);
                 CommissionTemplate template = BasicTracker.CommissionTemplateTracker[item.Template_ID];
@@ -183,10 +224,10 @@ namespace TradingLib.Core
                 //}
                 session.OperationSuccess("更新手续费项目功");
             }
-            else
-            {
-                throw new FutsRspError("无权修改手续费模板");
-            }
+            //else
+            //{
+            //    throw new FutsRspError("无权修改手续费模板");
+            //}
         }
     }
 }

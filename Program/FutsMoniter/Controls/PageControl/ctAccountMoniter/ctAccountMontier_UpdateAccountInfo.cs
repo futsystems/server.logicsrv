@@ -372,7 +372,15 @@ namespace FutsMoniter
                     name_inited = true;
                     name_sim = Globals.Config["NAME_SIMULATION"].AsString();
                     name_real = Globals.Config["NAME_REAL"].AsString();
-                    
+                    if (string.IsNullOrEmpty(name_sim))
+                    {
+                        name_sim = "模拟交易帐户";
+                    }
+                    if (string.IsNullOrEmpty(name_real))
+                    {
+                        name_real = "实盘交易帐户";
+                    }
+
                 }
                 catch (Exception ex)
                 { 

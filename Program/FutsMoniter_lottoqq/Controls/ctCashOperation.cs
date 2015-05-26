@@ -313,7 +313,7 @@ namespace FutsMoniter
                     gt.Rows[i][SOURCE] = op.Source;
                     gt.Rows[i][SOURCESTR] = Util.GetEnumDescription(op.Source);
                     gt.Rows[i][RECVINFO] = op.RecvInfo;
-                    gt.Rows[i][SUBMITTER] = op.Submiter;
+                    gt.Rows[i][SUBMITTER] = op.Submitter;
                     operationkeymap.TryAdd(key, op);
                     idxmap.TryAdd(key, i);
                 }

@@ -93,6 +93,7 @@ namespace TradingLib.Common
                 target.Name = t.Name;
                 target.Description = t.Description;
                 target.Domain_ID = t.Domain_ID;
+                target.Manager_ID = t.Manager_ID;
 
                 ORM.MCommission.InsertCommissionTemplate(target);
                 //放入内存数据结构
@@ -100,6 +101,7 @@ namespace TradingLib.Common
                 //插入原始数据
                 t.ID = target.ID;
 
+                //模板添加后 添加所有品种对应的数据
                 Domain domain = BasicTracker.DomainTracker.SuperDomain;
                 if (domain != null)
                 {

@@ -11,15 +11,6 @@ namespace TradingLib.Common
 
         #region 更新品种 合约
 
-        ///// <summary>
-        ///// 超级郁更新品种时同步更新分区品种
-        ///// </summary>
-        ///// <param name="domain"></param>
-        ///// <param name="sec"></param>
-        //public static void UpdateSecurityViaSuper(this Domain domain, SecurityFamilyImpl sec)
-        //{ 
-            
-        //}
         /// <summary>
         /// 更新品种
         /// </summary>
