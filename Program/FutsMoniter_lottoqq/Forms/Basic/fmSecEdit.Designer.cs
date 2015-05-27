@@ -218,7 +218,7 @@
             // 
             // exitcommission
             // 
-            this.exitcommission.DecimalPlaces = 6;
+            this.exitcommission.DecimalPlaces = 8;
             this.exitcommission.Increment = new decimal(new int[] {
             1,
             0,
@@ -334,7 +334,7 @@
             // 
             // entrycommission
             // 
-            this.entrycommission.DecimalPlaces = 6;
+            this.entrycommission.DecimalPlaces = 8;
             this.entrycommission.Increment = new decimal(new int[] {
             1,
             0,

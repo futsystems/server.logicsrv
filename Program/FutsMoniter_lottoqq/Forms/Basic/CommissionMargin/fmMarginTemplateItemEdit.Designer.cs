@@ -109,7 +109,7 @@
             this.kryptonLabel7.Name = "kryptonLabel7";
             this.kryptonLabel7.Size = new System.Drawing.Size(82, 18);
             this.kryptonLabel7.TabIndex = 29;
-            this.kryptonLabel7.Values.Text = "开仓手续费:";
+            this.kryptonLabel7.Values.Text = "保证金上浮:";
             // 
             // percent
             // 

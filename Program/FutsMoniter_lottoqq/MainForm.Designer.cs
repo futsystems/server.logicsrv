@@ -168,7 +168,8 @@
             this.tabFinance,
             this.tabHistQuery,
             this.kryptonRibbonTab1});
-            this.TabRibbon.SelectedTab = this.tabAgent;
+            this.TabRibbon.SelectedContext = null;
+            this.TabRibbon.SelectedTab = this.tabHistQuery;
             this.TabRibbon.Size = new System.Drawing.Size(1107, 111);
             this.TabRibbon.TabIndex = 0;
             // 
@@ -546,6 +547,7 @@
             this.kryptonRibbonGroup7.Items.AddRange(new ComponentFactory.Krypton.Ribbon.KryptonRibbonGroupContainer[] {
             this.kryptonRibbonGroupTriple7});
             this.kryptonRibbonGroup7.TextLine1 = "代理帐户";
+            this.kryptonRibbonGroup7.Visible = false;
             // 
             // kryptonRibbonGroupTriple7
             // 
@@ -557,6 +559,7 @@
             // 
             this.kryptonRibbonGroupButton_QueryCashTransAgent.ImageLarge = ((System.Drawing.Image)(resources.GetObject("kryptonRibbonGroupButton_QueryCashTransAgent.ImageLarge")));
             this.kryptonRibbonGroupButton_QueryCashTransAgent.TextLine1 = "出入金";
+            this.kryptonRibbonGroupButton_QueryCashTransAgent.Visible = false;
             // 
             // kryptonRibbonGroupButton_QuerySettleAgent
             // 

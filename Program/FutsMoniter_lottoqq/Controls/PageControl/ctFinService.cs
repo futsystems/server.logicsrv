@@ -83,8 +83,11 @@ namespace FutsMoniter
                 Globals.TLClient.ReqQryServicePlan();
             }
 
-            //请求交易帐户的配资服务
-            Globals.TLClient.ReqQryFinService(_account.Account);
+            if (Globals.Domain.Module_FinService)
+            {
+                //请求交易帐户的配资服务
+                Globals.TLClient.ReqQryFinService(_account.Account);
+            }
         }
 
         void OnDeleteFinService(string json)

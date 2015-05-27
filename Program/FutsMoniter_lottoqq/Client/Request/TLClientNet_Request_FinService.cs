@@ -34,6 +34,7 @@ namespace TradingLib.Common
         /// <param name="account"></param>
         public void ReqQryFinService(string account)
         {
+            
             this.ReqContribRequest("FinServiceCentre", "QryFinService", account);
         }
 

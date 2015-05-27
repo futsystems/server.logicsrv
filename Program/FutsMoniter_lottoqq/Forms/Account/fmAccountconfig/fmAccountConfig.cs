@@ -49,7 +49,10 @@ namespace FutsMoniter
             cashop_type.SelectedIndex = 0;
             Factory.IDataSourceFactory(orderRuleClassList).BindDataSource(Globals.BasicInfoTracker.GetOrderRuleClassListItems());
             Factory.IDataSourceFactory(accountRuleClassList).BindDataSource(Globals.BasicInfoTracker.GetAccountRuleClassListItems());
+            Factory.IDataSourceFactory(equity_type).BindDataSource(UIUtil.GetEnumValueObjects<QSEnumEquityType>());
+            equity_type.SelectedIndex = 0;
                 
+            
         
         }
 
@@ -136,9 +139,11 @@ namespace FutsMoniter
                 fmConfirm.Show("请输入出入金金额");
                 return;
             }
+            QSEnumEquityType eq_type = (QSEnumEquityType)equity_type.SelectedValue;
+
             if (fmConfirm.Show("确认向帐户[" + _account.Account + "] " + cashoptitle + " " + amount.ToString() + " 流水号:" + cashopref) == System.Windows.Forms.DialogResult.Yes)
             {
-                Globals.TLClient.ReqCashOperation(_account.Account, amount2, cashopref, comment);
+                Globals.TLClient.ReqCashOperation(_account.Account, amount2, eq_type, cashopref, comment);
             }
 
         }

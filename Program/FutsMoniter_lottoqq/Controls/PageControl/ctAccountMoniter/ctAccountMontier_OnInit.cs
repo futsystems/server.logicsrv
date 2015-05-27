@@ -42,12 +42,12 @@ namespace FutsMoniter
                 //只有管理员可以修改路由组和删除交易帐户
                 if (!Globals.Manager.IsRoot())
                 {
-                    accountgrid.ContextMenuStrip.Items[4].Visible = false;
+                    accountgrid.ContextMenuStrip.Items[5].Visible = false;
 
-                    accountgrid.ContextMenuStrip.Items[8].Visible = false;
-                    accountgrid.ContextMenuStrip.Items[9].Visible = false;
                     accountgrid.ContextMenuStrip.Items[10].Visible = false;
                     accountgrid.ContextMenuStrip.Items[11].Visible = false;
+                    accountgrid.ContextMenuStrip.Items[12].Visible = false;
+                    accountgrid.ContextMenuStrip.Items[13].Visible = false;
                 }
 
             }

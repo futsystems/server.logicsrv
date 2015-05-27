@@ -52,15 +52,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonGroupBox3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonGroupBox3.Panel)).BeginInit();
             this.kryptonGroupBox3.Panel.SuspendLayout();
             this.kryptonGroupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonGroupBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonGroupBox2.Panel)).BeginInit();
             this.kryptonGroupBox2.Panel.SuspendLayout();
             this.kryptonGroupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonGroupBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonGroupBox1.Panel)).BeginInit();
             this.kryptonGroupBox1.Panel.SuspendLayout();
             this.kryptonGroupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -160,7 +157,7 @@
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanel.Size = new System.Drawing.Size(257, 236);
+            this.tableLayoutPanel.Size = new System.Drawing.Size(257, 238);
             this.tableLayoutPanel.TabIndex = 12;
             // 
             // kryptonGroupBox1
@@ -192,7 +189,7 @@
             // 
             this.lbforceclose.Location = new System.Drawing.Point(77, 134);
             this.lbforceclose.Name = "lbforceclose";
-            this.lbforceclose.Size = new System.Drawing.Size(20, 20);
+            this.lbforceclose.Size = new System.Drawing.Size(19, 18);
             this.lbforceclose.TabIndex = 11;
             this.lbforceclose.Values.Text = "--";
             // 
@@ -200,7 +197,7 @@
             // 
             this.kryptonLabel7.Location = new System.Drawing.Point(3, 134);
             this.kryptonLabel7.Name = "kryptonLabel7";
-            this.kryptonLabel7.Size = new System.Drawing.Size(63, 20);
+            this.kryptonLabel7.Size = new System.Drawing.Size(68, 18);
             this.kryptonLabel7.TabIndex = 10;
             this.kryptonLabel7.Values.Text = "强平状态:";
             // 
@@ -208,7 +205,7 @@
             // 
             this.lbcollecttype.Location = new System.Drawing.Point(77, 110);
             this.lbcollecttype.Name = "lbcollecttype";
-            this.lbcollecttype.Size = new System.Drawing.Size(20, 20);
+            this.lbcollecttype.Size = new System.Drawing.Size(19, 18);
             this.lbcollecttype.TabIndex = 9;
             this.lbcollecttype.Values.Text = "--";
             // 
@@ -216,7 +213,7 @@
             // 
             this.lbchargetype.Location = new System.Drawing.Point(77, 86);
             this.lbchargetype.Name = "lbchargetype";
-            this.lbchargetype.Size = new System.Drawing.Size(20, 20);
+            this.lbchargetype.Size = new System.Drawing.Size(19, 18);
             this.lbchargetype.TabIndex = 8;
             this.lbchargetype.Values.Text = "--";
             // 
@@ -224,7 +221,7 @@
             // 
             this.lbstatus.Location = new System.Drawing.Point(77, 62);
             this.lbstatus.Name = "lbstatus";
-            this.lbstatus.Size = new System.Drawing.Size(20, 20);
+            this.lbstatus.Size = new System.Drawing.Size(19, 18);
             this.lbstatus.TabIndex = 7;
             this.lbstatus.Values.Text = "--";
             // 
@@ -232,7 +229,7 @@
             // 
             this.lbsptitle.Location = new System.Drawing.Point(77, 38);
             this.lbsptitle.Name = "lbsptitle";
-            this.lbsptitle.Size = new System.Drawing.Size(20, 20);
+            this.lbsptitle.Size = new System.Drawing.Size(19, 18);
             this.lbsptitle.TabIndex = 6;
             this.lbsptitle.Values.Text = "--";
             // 
@@ -240,7 +237,7 @@
             // 
             this.lbaccount.Location = new System.Drawing.Point(76, 13);
             this.lbaccount.Name = "lbaccount";
-            this.lbaccount.Size = new System.Drawing.Size(20, 20);
+            this.lbaccount.Size = new System.Drawing.Size(19, 18);
             this.lbaccount.TabIndex = 5;
             this.lbaccount.Values.Text = "--";
             // 
@@ -248,7 +245,7 @@
             // 
             this.kryptonLabel5.Location = new System.Drawing.Point(3, 110);
             this.kryptonLabel5.Name = "kryptonLabel5";
-            this.kryptonLabel5.Size = new System.Drawing.Size(63, 20);
+            this.kryptonLabel5.Size = new System.Drawing.Size(68, 18);
             this.kryptonLabel5.TabIndex = 4;
             this.kryptonLabel5.Values.Text = "采集方式:";
             // 
@@ -256,7 +253,7 @@
             // 
             this.kryptonLabel4.Location = new System.Drawing.Point(3, 86);
             this.kryptonLabel4.Name = "kryptonLabel4";
-            this.kryptonLabel4.Size = new System.Drawing.Size(63, 20);
+            this.kryptonLabel4.Size = new System.Drawing.Size(68, 18);
             this.kryptonLabel4.TabIndex = 3;
             this.kryptonLabel4.Values.Text = "计费方式:";
             // 
@@ -264,7 +261,7 @@
             // 
             this.kryptonLabel3.Location = new System.Drawing.Point(3, 62);
             this.kryptonLabel3.Name = "kryptonLabel3";
-            this.kryptonLabel3.Size = new System.Drawing.Size(63, 20);
+            this.kryptonLabel3.Size = new System.Drawing.Size(68, 18);
             this.kryptonLabel3.TabIndex = 2;
             this.kryptonLabel3.Values.Text = "激活状态:";
             // 
@@ -272,7 +269,7 @@
             // 
             this.kryptonLabel2.Location = new System.Drawing.Point(3, 38);
             this.kryptonLabel2.Name = "kryptonLabel2";
-            this.kryptonLabel2.Size = new System.Drawing.Size(63, 20);
+            this.kryptonLabel2.Size = new System.Drawing.Size(68, 18);
             this.kryptonLabel2.TabIndex = 1;
             this.kryptonLabel2.Values.Text = "服务计划:";
             // 
@@ -280,7 +277,7 @@
             // 
             this.kryptonLabel1.Location = new System.Drawing.Point(1, 14);
             this.kryptonLabel1.Name = "kryptonLabel1";
-            this.kryptonLabel1.Size = new System.Drawing.Size(63, 20);
+            this.kryptonLabel1.Size = new System.Drawing.Size(68, 18);
             this.kryptonLabel1.TabIndex = 0;
             this.kryptonLabel1.Values.Text = "交易帐户:";
             // 
@@ -293,15 +290,12 @@
             this.Size = new System.Drawing.Size(586, 263);
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).EndInit();
             this.kryptonPanel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonGroupBox3.Panel)).EndInit();
             this.kryptonGroupBox3.Panel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.kryptonGroupBox3)).EndInit();
             this.kryptonGroupBox3.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonGroupBox2.Panel)).EndInit();
             this.kryptonGroupBox2.Panel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.kryptonGroupBox2)).EndInit();
             this.kryptonGroupBox2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.kryptonGroupBox1.Panel)).EndInit();
             this.kryptonGroupBox1.Panel.ResumeLayout(false);
             this.kryptonGroupBox1.Panel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonGroupBox1)).EndInit();

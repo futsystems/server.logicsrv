@@ -75,8 +75,8 @@ namespace FutsMoniter
                 //}
 
                 //------------------------财务管理-------------------------------------------------------
-                //代理才有权限看到 代理财务帐户
-                kryptonRibbonGroupButton_FinanceManagement.Visible = Globals.Manager.IsAgent();
+                //代理才有权限看到 代理财务帐户 去除代理收益帐户
+                kryptonRibbonGroupButton_FinanceManagement.Visible = false;//Globals.Manager.IsAgent();
 
                 //管理员才可以进行出纳管理或修改收款方式
                 kryptonRibbonGroupButton_CasherManagement.Visible = Globals.Manager.IsRoot();

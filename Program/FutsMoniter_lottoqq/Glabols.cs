@@ -55,7 +55,8 @@ namespace FutsMoniter
 
         public static void UpdateDomain(DomainImpl domain)
         {
-            Globals.LoginResponse.Domain = domain;
+            if(domain.ID == Globals.LoginResponse.Domain.ID)
+                Globals.LoginResponse.Domain = domain;
         }
 
         /// <summary>
