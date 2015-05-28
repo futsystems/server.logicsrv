@@ -25,11 +25,23 @@ namespace AccountRuleSet
             } 
         }
 
+        /// <summary>
+        /// 是否需要检查品种
+        /// 品种在列表内的执行时间检查 其余的不做检查
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        protected bool NeedCheckSymbol(Symbol symbol)
+        {
+            if (_symbolset == null || _symbolset.Count==0) return false;
+            return true;
+        }
 
 
         bool flatStart = false;//强平开始
         public bool CheckAccount(out string msg)
         {
+            
             msg = string.Empty;
             int diff = Util.ToTLTime()-_time;//计算当前时间与设定时间的diff
             bool ret = (Math.Abs(diff)<5);
@@ -37,12 +49,33 @@ namespace AccountRuleSet
 
             if (ret && !flatStart)
             {
-                if (this.Account.Execute)
-                    this.Account.InactiveAccount();//冻结账户
+                //如果没有设定合约则强平所有持仓,那么我们需要冻结交易帐户
+                if (_symbolset == null && _symbolset.Count == 0)
+                {
+                    if (this.Account.Execute)
+                        this.Account.InactiveAccount();//冻结账户
+                }
                 if (this.Account.AnyPosition)
                 {
-                    msg = RuleDescription + ":全平所有仓位并冻结账户";
-                    this.Account.FlatPosition(QSEnumOrderSource.RISKCENTREACCOUNTRULE, msg);
+                    msg = RuleDescription + ":强平对应持仓";
+                    foreach (var pos in this.Account.Positions.Where(p => !p.isFlat))
+                    {
+                        //设置了品种列表需要检查
+                        if (_symbolset != null && _symbolset.Count > 0)
+                        {
+                            if (_symbolset.Contains(pos.oSymbol.SecurityFamily.Code))
+                            {
+                                this.Account.FlatPosition(pos, QSEnumOrderSource.RISKCENTRE, msg);
+                            }
+                        }
+                        else
+                        {
+                            this.Account.FlatPosition(pos, QSEnumOrderSource.RISKCENTRE, msg);
+                        }
+                        Util.sleep(10);
+                    }
+                    
+                    //this.Account.FlatPosition(QSEnumOrderSource.RISKCENTREACCOUNTRULE, msg);
                 }
                 flatStart = true;//开始平仓
                 return false;
@@ -66,7 +99,7 @@ namespace AccountRuleSet
         }
         public static new string Description
         {
-            get { return "到执行时间时,强平持仓并禁止交易,145500代表14点55分00秒"; }
+            get { return "到执行时间时,强平持仓,145500代表14点55分00秒"; }
         }
 
         /// <summary>

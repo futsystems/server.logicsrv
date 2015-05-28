@@ -28,7 +28,7 @@ namespace TradingLib.Common
         /// </summary>
         public QSEnumCompareType Compare { get; set; }
 
-        List<string> _symbolset=new List<string>();
+        protected List<string> _symbolset=new List<string>();
         /// <summary>
         /// 检查品种列表
         /// </summary>

@@ -5,17 +5,7 @@ using System.Runtime.InteropServices;
 // 有关程序集的常规信息通过以下
 // 特性集控制。更改这些特性值可修改
 // 与程序集关联的信息。
-#if OEM
-[assembly: AssemblyTitle("柜台管理端")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("期货柜台开发组")]
-[assembly: AssemblyProduct("柜台管理端")]
-[assembly: AssemblyCopyright("Copyright © 开发组 2014")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
 
-#else
 [assembly: AssemblyTitle("资管系统管理端")]
 [assembly: AssemblyDescription("资管系统管理端")]
 [assembly: AssemblyConfiguration("")]
@@ -25,8 +15,6 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-
-#endif
 
 // 将 ComVisible 设置为 false 使此程序集中的类型
 // 对 COM 组件不可见。如果需要从 COM 访问此程序集中的类型，

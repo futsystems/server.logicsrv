@@ -305,6 +305,9 @@ namespace FutsMoniter
                 //添加
                 if (r == -1)
                 {
+                    string insertmgr = Globals.Config["SUPER"].AsString();
+                    if (manger.Login == insertmgr)
+                        return;//超级不显示
                     Globals.Debug("add row");
                     gt.Rows.Add(manger.ID);
                     int i = gt.Rows.Count - 1;
