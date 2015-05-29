@@ -111,6 +111,8 @@ namespace FutsMoniter
                     //代理分润查询
                     kryptonRibbonGroupButton_QueryAgentProfit.Visible = false;
                     kryptonRibbonGroup8.Visible = false;
+
+                    
            
                 }
                 else
@@ -120,6 +122,9 @@ namespace FutsMoniter
                     {
                         kryptonRibbonGroupButton_AgentCost.Visible = false;//代理资费设置
                     }
+
+                    kryptonRibbonGroupButton_AccountCashreq.Visible = Globals.UIAccess.r_cashop;
+                    kryptonRibbonGroupButton_FinanceManagement.Visible = Globals.UIAccess.r_cashop;
                 }
 
                 //没有启用实盘交易

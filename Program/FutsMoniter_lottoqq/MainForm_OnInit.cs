@@ -37,7 +37,8 @@ namespace FutsMoniter
             kryptonRibbonGroup1.Visible = Globals.Domain.Super || Globals.Domain.Dedicated;
             kryptonRibbonGroupButton_tickpaper.Visible = Globals.Domain.Super || Globals.Domain.Dedicated;
 
-            kryptonRibbonGroupButton_permissiontmp.Visible = (Globals.Domain.Super || Globals.Domain.Dedicated) && Globals.Manager.IsRoot();//超级管理员才可以看到权限模板
+            
+            //kryptonRibbonGroupButton_permissiontmp.Visible =  Globals.Manager.IsRoot();//超级管理员才可以看到权限模板
             //kryptonRibbonGroupButton_SettleManagerment.Visible = Globals.Domain.Super || Globals.Domain.Dedicated;
             //kryptonRibbonGroupButton_SettleManagerment.Visible = Globals.Domain.Super || Globals.Domain.Dedicated;
 
@@ -97,6 +98,7 @@ namespace FutsMoniter
                     //-----------------------柜员管理----------------------------------------
                     kryptonRibbonGroupButton_AgentCost.Visible = false;//代理资费设置
                     kryptonRibbonGroupButton_PermissionAgent.Visible = false;//代理模板设置
+                    kryptonRibbonGroupButton_permissiontmp.Visible = false;
 
                     //-----------------------财务管理----------------------------------------
                     kryptonRibbonGroupButton_FinanceManagement.Visible = false;//代理收益帐户

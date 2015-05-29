@@ -70,6 +70,12 @@ namespace TradingLib.Common
         [PermissionFieldAttr("交易参数模板权限", "添加,修改交易参数模板并绑定到交易帐户")]
         public bool r_exstrategy { get; set; }
 
+        [PermissionFieldAttr("添加交易帐号", "添加交易帐号")]
+        public bool r_account_add { get; set; }
+
+        [PermissionFieldAttr("编辑交易帐号", "编辑交易帐号")]
+        public bool r_account_edit { get; set; }
+
 
     }
 }

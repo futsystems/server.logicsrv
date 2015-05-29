@@ -71,7 +71,7 @@ namespace OrderRuleSet
         /// </summary>
         public static new string Title
         {
-            get { return "合约检查:禁止交易"; }
+            get { return "品种检查:禁止交易"; }
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace OrderRuleSet
         /// </summary>
         public static new string Description
         {
-            get { return "禁止交易设置的品种,品种用逗号分割"; }
+            get { return "禁止交易设置的品种,品种用逗号,分割"; }
         }
 
         public static new bool CanSetCompare { get { return false; } }

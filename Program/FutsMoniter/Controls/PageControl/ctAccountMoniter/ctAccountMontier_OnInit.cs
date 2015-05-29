@@ -27,7 +27,19 @@ namespace FutsMoniter
             Globals.LogicEvent.GotFinanceInfoLiteEvent += new Action<AccountInfoLite>(GotAccountInfoLite);
             Globals.LogicEvent.GotAccountChangedEvent += new Action<AccountLite>(GotAccountChanged);
             Globals.LogicEvent.GotSessionUpdateEvent += new Action<NotifyMGRSessionUpdateNotify>(GotSessionUpdate);
-            
+
+            if (!Globals.Domain.Super)
+            {
+                btnAddAccount.Visible = Globals.UIAccess.r_account_add;
+
+                if (!Globals.UIAccess.r_account_edit)
+                {
+                    accountgrid.ContextMenuStrip.Items[0].Visible = false;
+                    accountgrid.ContextMenuStrip.Items[1].Visible = false;
+                    accountgrid.ContextMenuStrip.Items[2].Visible = false;
+                    accountgrid.ContextMenuStrip.Items[3].Visible = false;
+                }
+            }
 
             //if (!Globals.Domain.Super)
             {
@@ -48,6 +60,7 @@ namespace FutsMoniter
                     accountgrid.ContextMenuStrip.Items[9].Visible = false;
                     accountgrid.ContextMenuStrip.Items[10].Visible = false;
                     accountgrid.ContextMenuStrip.Items[11].Visible = false;
+                    accountgrid.ContextMenuStrip.Items[12].Visible = false;
                 }
 
             }

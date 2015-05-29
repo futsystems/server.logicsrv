@@ -94,7 +94,7 @@
             131072});
             this.marginlimit.Location = new System.Drawing.Point(99, 94);
             this.marginlimit.Maximum = new decimal(new int[] {
-            50000000,
+            500000000,
             0,
             0,
             0});
