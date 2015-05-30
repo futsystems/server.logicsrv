@@ -17,6 +17,7 @@ namespace TradingLib.Common
             this.QQ = string.Empty;
             this.Email = string.Empty;
             this.AccLimit = 1;
+
             this.DateExpired = Util.ToTLDate();
             this.DateCreated = Util.ToTLDate();
             this.Super = false;
@@ -77,6 +78,10 @@ namespace TradingLib.Common
         /// </summary>
         public int AccLimit { get; set; }
 
+        /// <summary>
+        /// 代理数量限制
+        /// </summary>
+        public int AgentLimit { get; set; }
 
         /// <summary>
         /// 过期日
@@ -169,5 +174,15 @@ namespace TradingLib.Common
         /// 
         /// </summary>
         public int CFG_SyncVendor_ID { get; set; }
+
+        /// <summary>
+        /// 是否处于运营状态
+        /// </summary>
+        public bool IsProduction { get; set; }
+
+        /// <summary>
+        /// 分帐户个数
+        /// </summary>
+        public int DiscountNum { get; set; }
     }
 }

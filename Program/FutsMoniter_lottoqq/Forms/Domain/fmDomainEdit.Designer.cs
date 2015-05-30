@@ -70,6 +70,7 @@
             this.module_agent = new ComponentFactory.Krypton.Toolkit.KryptonCheckBox();
             this.kryptonPage5 = new ComponentFactory.Krypton.Navigator.KryptonPage();
             this.kryptonPanel6 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
+            this.switch_router = new ComponentFactory.Krypton.Toolkit.KryptonCheckBox();
             this.router_live = new ComponentFactory.Krypton.Toolkit.KryptonCheckBox();
             this.router_sim = new ComponentFactory.Krypton.Toolkit.KryptonCheckBox();
             this.intfaceTab = new ComponentFactory.Krypton.Navigator.KryptonPage();
@@ -79,7 +80,9 @@
             this.kryptonPanel7 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
             this.finsplist = new System.Windows.Forms.CheckedListBox();
             this.btnSubmit = new ComponentFactory.Krypton.Toolkit.KryptonButton();
-            this.switch_router = new ComponentFactory.Krypton.Toolkit.KryptonCheckBox();
+            this.agentlimit = new ComponentFactory.Krypton.Toolkit.KryptonNumericUpDown();
+            this.kryptonLabel17 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.kryptonLabel18 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonNavigator1)).BeginInit();
@@ -136,7 +139,7 @@
             this.kryptonPage5,
             this.intfaceTab,
             this.splisttab});
-            this.kryptonNavigator1.SelectedIndex = 3;
+            this.kryptonNavigator1.SelectedIndex = 1;
             this.kryptonNavigator1.Size = new System.Drawing.Size(431, 234);
             this.kryptonNavigator1.TabIndex = 15;
             this.kryptonNavigator1.Text = "kryptonNavigator1";
@@ -298,6 +301,9 @@
             // 
             // kryptonPanel3
             // 
+            this.kryptonPanel3.Controls.Add(this.kryptonLabel18);
+            this.kryptonPanel3.Controls.Add(this.agentlimit);
+            this.kryptonPanel3.Controls.Add(this.kryptonLabel17);
             this.kryptonPanel3.Controls.Add(this.kryptonLabel7);
             this.kryptonPanel3.Controls.Add(this.vendorlimit);
             this.kryptonPanel3.Controls.Add(this.kryptonLabel9);
@@ -566,6 +572,14 @@
             this.kryptonPanel6.Size = new System.Drawing.Size(429, 209);
             this.kryptonPanel6.TabIndex = 0;
             // 
+            // switch_router
+            // 
+            this.switch_router.Location = new System.Drawing.Point(11, 82);
+            this.switch_router.Name = "switch_router";
+            this.switch_router.Size = new System.Drawing.Size(132, 18);
+            this.switch_router.TabIndex = 4;
+            this.switch_router.Values.Text = "切换帐户路由类别";
+            // 
             // router_live
             // 
             this.router_live.Location = new System.Drawing.Point(11, 33);
@@ -654,13 +668,43 @@
             this.btnSubmit.Values.Text = "提 交";
             this.btnSubmit.Click += new System.EventHandler(this.btnSubmit_Click);
             // 
-            // switch_router
+            // agentlimit
             // 
-            this.switch_router.Location = new System.Drawing.Point(11, 82);
-            this.switch_router.Name = "switch_router";
-            this.switch_router.Size = new System.Drawing.Size(132, 18);
-            this.switch_router.TabIndex = 4;
-            this.switch_router.Values.Text = "切换帐户路由类别";
+            this.agentlimit.Location = new System.Drawing.Point(106, 139);
+            this.agentlimit.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.agentlimit.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.agentlimit.Name = "agentlimit";
+            this.agentlimit.Size = new System.Drawing.Size(116, 20);
+            this.agentlimit.TabIndex = 39;
+            this.agentlimit.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // kryptonLabel17
+            // 
+            this.kryptonLabel17.Location = new System.Drawing.Point(42, 139);
+            this.kryptonLabel17.Name = "kryptonLabel17";
+            this.kryptonLabel17.Size = new System.Drawing.Size(55, 18);
+            this.kryptonLabel17.TabIndex = 38;
+            this.kryptonLabel17.Values.Text = "代理数:";
+            // 
+            // kryptonLabel18
+            // 
+            this.kryptonLabel18.Location = new System.Drawing.Point(228, 140);
+            this.kryptonLabel18.Name = "kryptonLabel18";
+            this.kryptonLabel18.Size = new System.Drawing.Size(92, 18);
+            this.kryptonLabel18.TabIndex = 40;
+            this.kryptonLabel18.Values.Text = "可开代理数量";
             // 
             // fmDomainEdit
             // 
@@ -765,5 +809,8 @@
         private ComponentFactory.Krypton.Toolkit.KryptonNumericUpDown vendorlimit;
         private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel9;
         private ComponentFactory.Krypton.Toolkit.KryptonCheckBox switch_router;
+        private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel18;
+        private ComponentFactory.Krypton.Toolkit.KryptonNumericUpDown agentlimit;
+        private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel17;
     }
 }

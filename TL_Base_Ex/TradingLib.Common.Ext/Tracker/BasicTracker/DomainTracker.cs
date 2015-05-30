@@ -101,6 +101,11 @@ namespace TradingLib.Common
                 target.Router_Sim = domain.Router_Sim;
                 target.VendorLimit = domain.VendorLimit;
                 target.Switch_Router = domain.Switch_Router;
+                target.AgentLimit = domain.AgentLimit;
+
+                target.IsProduction = domain.IsProduction;
+                target.DiscountNum = domain.DiscountNum;
+
 
                 ORM.MDomain.UpdateDomain(target);
                 
@@ -130,6 +135,10 @@ namespace TradingLib.Common
                 target.Router_Sim = domain.Router_Sim;
                 target.VendorLimit = domain.VendorLimit;
                 target.Switch_Router = domain.Switch_Router;
+                target.AgentLimit = domain.AgentLimit;
+
+                target.IsProduction = domain.IsProduction;
+                target.DiscountNum = domain.DiscountNum;
 
                 ORM.MDomain.InsertDomain(target);
                 domain.ID = target.ID;

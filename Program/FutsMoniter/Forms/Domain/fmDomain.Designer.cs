@@ -30,6 +30,8 @@
         {
             this.kryptonPanel1 = new ComponentFactory.Krypton.Toolkit.KryptonPanel();
             this.domaingrid = new ComponentFactory.Krypton.Toolkit.KryptonDataGridView();
+            this.kryptonLabel1 = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
+            this.totalnum = new ComponentFactory.Krypton.Toolkit.KryptonLabel();
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).BeginInit();
             this.kryptonPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.domaingrid)).BeginInit();
@@ -37,6 +39,8 @@
             // 
             // kryptonPanel1
             // 
+            this.kryptonPanel1.Controls.Add(this.totalnum);
+            this.kryptonPanel1.Controls.Add(this.kryptonLabel1);
             this.kryptonPanel1.Controls.Add(this.domaingrid);
             this.kryptonPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.kryptonPanel1.Location = new System.Drawing.Point(0, 0);
@@ -47,12 +51,28 @@
             // domaingrid
             // 
             this.domaingrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.domaingrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.domaingrid.Dock = System.Windows.Forms.DockStyle.Top;
             this.domaingrid.Location = new System.Drawing.Point(0, 0);
             this.domaingrid.Name = "domaingrid";
             this.domaingrid.RowTemplate.Height = 23;
-            this.domaingrid.Size = new System.Drawing.Size(840, 515);
+            this.domaingrid.Size = new System.Drawing.Size(840, 475);
             this.domaingrid.TabIndex = 0;
+            // 
+            // kryptonLabel1
+            // 
+            this.kryptonLabel1.Location = new System.Drawing.Point(656, 485);
+            this.kryptonLabel1.Name = "kryptonLabel1";
+            this.kryptonLabel1.Size = new System.Drawing.Size(95, 18);
+            this.kryptonLabel1.TabIndex = 1;
+            this.kryptonLabel1.Values.Text = "分帐户总数量:";
+            // 
+            // totalnum
+            // 
+            this.totalnum.Location = new System.Drawing.Point(757, 485);
+            this.totalnum.Name = "totalnum";
+            this.totalnum.Size = new System.Drawing.Size(19, 18);
+            this.totalnum.TabIndex = 2;
+            this.totalnum.Values.Text = "--";
             // 
             // fmDomain
             // 
@@ -68,6 +88,7 @@
             this.Text = "域管理";
             ((System.ComponentModel.ISupportInitialize)(this.kryptonPanel1)).EndInit();
             this.kryptonPanel1.ResumeLayout(false);
+            this.kryptonPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.domaingrid)).EndInit();
             this.ResumeLayout(false);
 
@@ -77,5 +98,7 @@
 
         private ComponentFactory.Krypton.Toolkit.KryptonPanel kryptonPanel1;
         private ComponentFactory.Krypton.Toolkit.KryptonDataGridView domaingrid;
+        private ComponentFactory.Krypton.Toolkit.KryptonLabel kryptonLabel1;
+        private ComponentFactory.Krypton.Toolkit.KryptonLabel totalnum;
     }
 }

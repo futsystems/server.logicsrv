@@ -548,6 +548,7 @@ namespace TradingLib.Core
                     account.TrckerOrderSymbol(ref oyd);
 
                     set.OrderIDList.Add(oyd.id);
+                    //上期所以停板价发送强平委托
                     if (snapshot != null)
                     {
                         oyd.LimitPrice = oyd.Side ? snapshot.UpperLimit : snapshot.LowerLimit;
@@ -570,6 +571,7 @@ namespace TradingLib.Core
                     account.TrckerOrderSymbol(ref otd);
 
                     set.OrderIDList.Add(otd.id);
+                    //上期所以停板价发送强平委托
                     if (snapshot != null)
                     {
                         otd.LimitPrice = otd.Side ? snapshot.UpperLimit : snapshot.LowerLimit;
@@ -585,8 +587,10 @@ namespace TradingLib.Core
             }
             else
             {
+                Tick snapshot = TLCtxHelper.CmdUtils.GetTickSnapshot(pos.Symbol);
+
                 //生成市价委托
-                Order o = new MarketOrderFlat(pos);
+                Order o = new  OrderImpl(pos.Symbol,pos.UnsignedSize * (side ? 1 : -1) * -1);
                 o.Account = pos.Account;
                 o.OffsetFlag = QSEnumOffsetFlag.CLOSE;
                 o.OrderSource = set.Source;
@@ -604,6 +608,15 @@ namespace TradingLib.Core
                 set.SentTime = DateTime.Now;
                 set.OrderIDList.Add(o.id);
 
+                //上期所以停板价发送强平委托
+                if (snapshot != null)
+                {
+                    o.LimitPrice = o.Side ? snapshot.UpperLimit : snapshot.LowerLimit;
+                }
+                else
+                {
+                    o.LimitPrice = 0;
+                }
                 //对外发送委托
                 SendOrder(o);
             }

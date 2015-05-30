@@ -112,6 +112,7 @@ namespace TradingLib.Core
                     toadd.QQ = domain.QQ;
                     toadd.Type = QSEnumManagerType.ROOT;
                     toadd.AccLimit = domain.AccLimit;
+                    toadd.AgentLimit = domain.AgentLimit;
                     toadd.Active = true;//新增domain时添加的Manger为激活状态 否则无法登入
                         
                     //设定域ID
@@ -134,6 +135,7 @@ namespace TradingLib.Core
                         toadd.QQ = domain.QQ;
                         toadd.Type = QSEnumManagerType.ROOT;
                         toadd.AccLimit = domain.AccLimit;
+                        toadd.AgentLimit = domain.AgentLimit;
                         toadd.Active = true;//新增domain时添加的Manger为激活状态 否则无法登入
 
                         //设定域ID
@@ -148,6 +150,7 @@ namespace TradingLib.Core
                         mgr.Name = domain.LinkMan;
                         mgr.QQ = domain.QQ;
                         mgr.AccLimit = domain.AccLimit;
+                        mgr.AgentLimit = domain.AgentLimit;
 
                         BasicTracker.ManagerTracker.UpdateManager(mgr);
                     }

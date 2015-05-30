@@ -129,7 +129,7 @@ namespace FutsMoniter
                 return rowid;
             }
         }
-
+        int _totalchargenum = 0;
         void InvokeGotDomain(DomainImpl domain)
         {
             if (InvokeRequired)
@@ -152,8 +152,10 @@ namespace FutsMoniter
                     gt.Rows[i][ACCLIMIT] = domain.AccLimit;
                     gt.Rows[i][ROUTERGROUPLIMIT] = domain.RouterGroupLimit;
                     gt.Rows[i][ROUTERITEMLIMIT] = domain.RouterItemLimit;
+                    gt.Rows[i][ISPRODUCTION] = domain.IsProduction?"运营":"测试";
+                    gt.Rows[i][CHARGENUM] = domain.IsProduction ? (domain.AccLimit-domain.DiscountNum) : 0;
 
-
+                    
                     domainrowid.TryAdd(domain.ID, i);
                     domainmap.TryAdd(domain.ID, domain);
                 }
@@ -168,9 +170,18 @@ namespace FutsMoniter
                     gt.Rows[r][ROUTERGROUPLIMIT] = domain.RouterGroupLimit;
                     gt.Rows[r][ROUTERITEMLIMIT] = domain.RouterItemLimit;
 
+                    gt.Rows[r][ISPRODUCTION] = domain.IsProduction ? "运营" : "测试";
+                    gt.Rows[r][CHARGENUM] = domain.IsProduction ? (domain.AccLimit - domain.DiscountNum) : 0;
+
                     domainmap[domain.ID] = domain;
                 }
 
+                _totalchargenum = 0;
+                foreach (var d in domainmap.Values)
+                {
+                    _totalchargenum += (d.IsProduction ? (d.AccLimit - d.DiscountNum) : 0);
+                }
+                totalnum.Text = _totalchargenum.ToString();
             }
         }
 
@@ -188,6 +199,9 @@ namespace FutsMoniter
         const string ACCLIMIT = "分帐户";
         const string ROUTERGROUPLIMIT = "路由组";
         const string ROUTERITEMLIMIT = "路由项目";
+
+        const string ISPRODUCTION = "运营";
+        const string CHARGENUM = "收费";
 
         #endregion
 
@@ -220,6 +234,7 @@ namespace FutsMoniter
             grid.ContextMenuStrip.Items.Add("修改Domain", null, new EventHandler(EditDomain_Click));
             grid.ContextMenuStrip.Items.Add(new System.Windows.Forms.ToolStripSeparator());
             grid.ContextMenuStrip.Items.Add("查看管理员密码", null, new EventHandler(QryDomainRootPass_Click));
+
         }
 
         //初始化Account显示空格
@@ -234,6 +249,8 @@ namespace FutsMoniter
             gt.Columns.Add(ACCLIMIT);//1
             gt.Columns.Add(ROUTERGROUPLIMIT);//1
             gt.Columns.Add(ROUTERITEMLIMIT);//1
+            gt.Columns.Add(ISPRODUCTION);//1
+            gt.Columns.Add(CHARGENUM);//1
         }
 
         /// <summary>
@@ -249,7 +266,7 @@ namespace FutsMoniter
             grid.DataSource = datasource;
 
             grid.Columns[DOMAINID].Width = 30;
-            grid.Columns[NAME].Width = 100;
+            grid.Columns[NAME].Width = 50;
             //grid.Columns[ISXAPI].Width = 50;
             //grid.Columns[TYPE].Width = 50;
             grid.Columns[DATECREATED].Width = 60;
@@ -259,6 +276,8 @@ namespace FutsMoniter
             grid.Columns[ACCLIMIT].Width = 60;
             grid.Columns[ROUTERGROUPLIMIT].Width = 60;
             grid.Columns[ROUTERITEMLIMIT].Width = 60;
+            grid.Columns[ISPRODUCTION].Width = 60;
+            grid.Columns[CHARGENUM].Width = 60;
             /*
             datasource.Sort = ACCOUNT + " ASC";
             

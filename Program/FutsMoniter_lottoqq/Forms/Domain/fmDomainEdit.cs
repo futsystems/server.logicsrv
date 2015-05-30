@@ -237,6 +237,7 @@ namespace FutsMoniter
             router_sim.Checked = _domain.Router_Sim;
             splisttab.Enabled = _domain.Module_FinService;
             switch_router.Checked = _domain.Switch_Router;
+            agentlimit.Value = _domain.AgentLimit;
 
             this.Text = "编辑域分区:" + _domain.Name;
 
@@ -280,6 +281,7 @@ namespace FutsMoniter
                 _domain.Router_Live = router_live.Checked;
                 _domain.Router_Sim = router_sim.Checked;
                 _domain.Switch_Router = switch_router.Checked;
+                _domain.AgentLimit = (int)agentlimit.Value;
 
                 if (fmConfirm.Show("确认更新分区设置?") == System.Windows.Forms.DialogResult.Yes)
                 {
@@ -301,7 +303,7 @@ namespace FutsMoniter
                 _domain.RouterGroupLimit = (int)routergrouplimit.Value;
                 _domain.RouterItemLimit = (int)routeritemlimit.Value;
                 _domain.VendorLimit = (int)vendorlimit.Value;
-
+                _domain.AgentLimit = (int)agentlimit.Value;
 
                 _domain.InterfaceList = GetInterfaceListString();
                 _domain.FinSPList = GetSPListString();

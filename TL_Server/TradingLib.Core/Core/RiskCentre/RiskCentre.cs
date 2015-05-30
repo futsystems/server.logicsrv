@@ -34,6 +34,8 @@ namespace TradingLib.Core
         string commentNoPositionForFlat = "无可平持仓";
         string commentOverFlatPositionSize = "可平持仓数量不足";
         bool auctionEnable = false;
+        bool flatOrderByLimit = false;//按停版价来发送强平委托
+
         public RiskCentre(ClearCentre clearcentre):base(CoreName)
         {
             _clearcentre = clearcentre;
@@ -86,6 +88,13 @@ namespace TradingLib.Core
                 _cfgdb.UpdateConfig("FlatSendOrderRetryNum", QSEnumCfgType.Int, 3, "强平重试次数");
             }
             SENDORDERRETRY = _cfgdb["FlatSendOrderRetryNum"].AsInt();
+
+            if (!_cfgdb.HaveConfig("FlatOrderByLimit"))
+            {
+                _cfgdb.UpdateConfig("FlatOrderByLimit", QSEnumCfgType.Bool,false, "是否有停版价格发送强平委托");
+            }
+            flatOrderByLimit = _cfgdb["FlatOrderByLimit"].AsBool();
+
 
             //订阅持仓回合关闭事件
             TLCtxHelper.EventIndicator.GotPositionClosedEvent += new PositionRoundClosedDel(GotPostionRoundClosed);
