@@ -114,6 +114,8 @@ namespace FutsMoniter
             Globals.LogicEvent.RegisterCallback("MgrExchServer", "QryExStrategyTemplateItem", this.OnQryExStrategyTemplateItem);
             Globals.LogicEvent.RegisterCallback("MgrExchServer", "NotifyExStrategyTemplateItem", this.OnNotifyExStrategyTemplateItem);
             Globals.TLClient.ReqQryExStrategyTemplate();
+
+            module_slip.Visible = Globals.Domain.Module_Slip;
         }
 
         public void OnDisposed()

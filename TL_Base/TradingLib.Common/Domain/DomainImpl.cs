@@ -31,6 +31,7 @@ namespace TradingLib.Common
             this.Module_FinService = false;
             this.Module_PayOnline = false;
             this.Module_SubAgent = false;
+            this.Module_Slip = false;
             this.Router_Live = true;
             this.Router_Sim = true;
             this.Switch_Router = false;
@@ -150,6 +151,10 @@ namespace TradingLib.Common
         /// </summary>
         public bool Module_PayOnline { get; set; }
 
+        /// <summary>
+        /// 滑点设置功能
+        /// </summary>
+        public bool Module_Slip {get;set;}
 
         /// <summary>
         /// 实盘路由

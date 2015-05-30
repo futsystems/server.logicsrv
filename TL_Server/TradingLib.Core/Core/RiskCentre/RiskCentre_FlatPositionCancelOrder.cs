@@ -609,13 +609,12 @@ namespace TradingLib.Core
                 set.OrderIDList.Add(o.id);
 
                 //上期所以停板价发送强平委托
-                if (snapshot != null)
+                if (flatOrderByLimit) //如果设置以涨跌停板价格发送强平委托 则需要设定对应的停板价
                 {
-                    o.LimitPrice = o.Side ? snapshot.UpperLimit : snapshot.LowerLimit;
-                }
-                else
-                {
-                    o.LimitPrice = 0;
+                    if (snapshot != null)
+                    {
+                        o.LimitPrice = o.Side ? snapshot.UpperLimit : snapshot.LowerLimit;
+                    }
                 }
                 //对外发送委托
                 SendOrder(o);
