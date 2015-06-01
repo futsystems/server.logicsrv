@@ -105,9 +105,29 @@ namespace TradingLib.Common
                 config.UpdateConfig("FlatTimeAheadOfMarketClose", QSEnumCfgType.Int, 5, "收盘前提前多少时间强平持仓");
             }
 
-            
+            if (!config.HaveConfig("SleepAfterSendOrder"))
+            {
+                config.UpdateConfig("SleepAfterSendOrder", QSEnumCfgType.Int,50, "实盘下单后等待毫秒数,防止多个线程同时下单造成异常");
+            }
         }
 
+        static int sleepAfterSendOrder = -1;
+        public static int SleepAfterSendOrder
+        {
+            get
+            {
+                if (sleepAfterSendOrder == -1)
+                {
+                    sleepAfterSendOrder = defaultinstance.config["SleepAfterSendOrder"].AsInt();
+                    if (sleepAfterSendOrder == -1)
+                    {
+                        sleepAfterSendOrder = 0;
+                    }
+                }
+
+                return sleepAfterSendOrder;
+            }
+        }
         /// <summary>
         /// 部署名称
         /// </summary>

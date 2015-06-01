@@ -670,9 +670,17 @@ namespace Broker.Live
         }
         #endregion
 
+        object _sendorder = new object();
         public override void SendOrder(Order o)
         {
-            _splittracker.SendFatherOrder(o);
+            lock (_sendorder)
+            {
+                _splittracker.SendFatherOrder(o);
+
+                Util.sleep(GlobalConfig.SleepAfterSendOrder);
+                //TODO
+                //后期修改成队列对外发送委托 同时加入自成交检验
+            }
         }
 
 

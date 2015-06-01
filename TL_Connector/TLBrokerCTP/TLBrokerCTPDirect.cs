@@ -667,9 +667,14 @@ namespace Broker.Live
         }
         #endregion
 
+        object _sendorder = new object();
         public override void SendOrder(Order o)
         {
-            _splittracker.SendFatherOrder(o);
+            lock (_sendorder)
+            {
+                _splittracker.SendFatherOrder(o);
+                Util.sleep(GlobalConfig.SleepAfterSendOrder);
+            }
         }
 
         public override void CancelOrder(long oid)

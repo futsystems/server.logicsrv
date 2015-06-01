@@ -279,6 +279,7 @@ namespace TradingLib.Core
         bool needConfirmSettlement = true;
         //单一客户端登入
         int loginTerminalNum = 6;
+        int workernum = 5;
         public MsgExchServer()
             : base(MsgExchServer.CoreName)
         {
@@ -404,12 +405,21 @@ namespace TradingLib.Core
 
                 loginTerminalNum = _cfgdb["LoginTerminalNum"].AsInt();
 
+                if (!_cfgdb.HaveConfig("MessageWorkerNum"))
+                {
+                    _cfgdb.UpdateConfig("MessageWorkerNum", QSEnumCfgType.Int,5, "消息处理Worker数量");
+                }
+
+                workernum = _cfgdb["MessageWorkerNum"].AsInt();
+                workernum = (workernum <= 0 ? 5 : workernum);
+
+
                 tl = new TLServer_Exch(CoreName,_cfgdb["TLServerIP"].AsString(), _cfgdb["TLPort"].AsInt(), true);
 
                 //tl = new TLServer_Exch("TradingServer", _cfgdb["TLServerIP"].AsString(), _cfgdb["TLPort"].AsInt());
                 //VerboseDebugging = _cfgdb["VerbDebug"].AsBool();
                 tl.ProviderName = Providers.QSPlatform;
-                tl.NumWorkers = 10;
+                tl.NumWorkers = workernum;
 
 
                 //设定日志输出
