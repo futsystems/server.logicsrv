@@ -8,6 +8,8 @@ namespace TradingLib.Common
 {
     public partial class Util
     {
+
+
         public static string padLeftEx(string str, int totalByteCount)
         {
             Encoding coding = Encoding.GetEncoding("gb2312");

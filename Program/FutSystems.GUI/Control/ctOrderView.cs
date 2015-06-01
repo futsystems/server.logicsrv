@@ -87,6 +87,8 @@ namespace FutSystems.GUI
         const string SYMBOL = "合约";
         const string DIRECTION = "方向";
         const string OPERATION = "买卖";
+        const string OFFSETFLAG = "开平";
+
         const string SIZE = "报单手数";
         const string PRICE = "报单价格";
         const string FILLED = "成交手数";
@@ -148,6 +150,7 @@ namespace FutSystems.GUI
                         tb.Rows[i][SYMBOL] = o.Symbol;
                         tb.Rows[i][DIRECTION] = o.Side ? "1" : "-1";
                         tb.Rows[i][OPERATION] = o.Side ? "买入" : "   卖出";
+                        tb.Rows[i][OFFSETFLAG] = o.OffsetFlag == QSEnumOffsetFlag.OPEN ? "开仓" : "平仓";
                         tb.Rows[i][SIZE] = Math.Abs(o.TotalSize);
                         tb.Rows[i][PRICE] = GetOrderPrice(o);
                         tb.Rows[i][FILLED] = Math.Abs(o.FilledSize);
@@ -217,6 +220,7 @@ namespace FutSystems.GUI
             tb.Columns.Add(SYMBOL);//2
             tb.Columns.Add(DIRECTION);//3
             tb.Columns.Add(OPERATION);//4
+            tb.Columns.Add(OFFSETFLAG);
             tb.Columns.Add(SIZE);//5
             tb.Columns.Add(PRICE);//6
             tb.Columns.Add(FILLED);//7

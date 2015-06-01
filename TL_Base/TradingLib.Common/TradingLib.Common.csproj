@@ -74,6 +74,7 @@
     <Compile Include="Trading\Config\MarginTemplateItem.cs" />
     <Compile Include="Trading\MarginConfig.cs" />
     <Compile Include="Trading\SettlementPrice.cs" />
+    <Compile Include="Utils\Util_Decimal.cs" />
     <Compile Include="Utils\Version.cs" />
     <Compile Include="Tracker\HighLowTracker.cs" />
     <Compile Include="Trading\Utils\SecurityUtils.cs" />

@@ -37,8 +37,11 @@ namespace FutsMoniter
 
                 //管理员可以进行财务操作
                 pageFinance.Visible = Globals.Manager.IsRoot();
-                pageMarginCommission.Visible = Globals.Manager.IsRoot();
-
+                pageMarginCommission.Visible = false;
+                if (Globals.Manager.IsRoot() || (Globals.Manager.IsAgent() && Globals.UIAccess.r_account_edit))
+                {
+                    pageMarginCommission.Visible = true;
+                }
             }
 
             //执行延迟加载 只有当延迟加载的空间加载完毕后才可以将数据显示到界面否则相关字段显示错误

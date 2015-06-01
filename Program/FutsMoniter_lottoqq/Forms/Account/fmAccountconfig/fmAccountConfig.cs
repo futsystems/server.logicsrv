@@ -141,7 +141,7 @@ namespace FutsMoniter
             }
             QSEnumEquityType eq_type = (QSEnumEquityType)equity_type.SelectedValue;
 
-            if (fmConfirm.Show("确认向帐户[" + _account.Account + "] " + cashoptitle + " " + amount.ToString() + " 流水号:" + cashopref) == System.Windows.Forms.DialogResult.Yes)
+            if (fmConfirm.Show("确认向帐户[" + _account.Account + "] " + cashoptitle + " " + amount.ToChineseStr() + " 流水号:" + cashopref) == System.Windows.Forms.DialogResult.Yes)
             {
                 Globals.TLClient.ReqCashOperation(_account.Account, amount2, eq_type, cashopref, comment);
             }
