@@ -250,17 +250,17 @@ namespace TradingLib.Contrib.Race
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
-        public static QSEnumRaceCheckResult PRERACECheck(IAccount account,out decimal exequity)
+        public static QSEnumRaceCheckResult PRERACECheck(RaceService rs,out decimal exequity)
         {
             //加入晋级时间限制,用于防止中间晋级过程中，权益出错导致 连续晋级 (account.RaceEntryTime - DateTime.Now).TotalDays < 5
 
             decimal start = StartEquity(QSEnumRaceType.PRERACE);
             //计算折算收益 obverseProfit来计算盈利率
-            decimal end = start + ProfitCal.CalObverseProfit(account);
+            decimal end = start + ProfitCal.CalObverseProfit(rs);
             exequity = end;
 
             //晋级需要折算利润,淘汰的时候不折算利润
-            if (CalMargin(start, account.NowEquity) <= PRERACE_ELIMINATE)
+            if (CalMargin(start, rs.Account.NowEquity) <= PRERACE_ELIMINATE)
                 return QSEnumRaceCheckResult.ELIMINATE;
             if (CalMargin(start, end) >= PRERACE_PROMOT)
                 return QSEnumRaceCheckResult.PROMOT;
@@ -275,13 +275,13 @@ namespace TradingLib.Contrib.Race
         /// <param name="account"></param>
         /// <param name="race"></param>
         /// <returns></returns>
-        public static QSEnumRaceCheckResult SEMIRACECheck(IAccount account, out decimal exequity)
+        public static QSEnumRaceCheckResult SEMIRACECheck(RaceService rs, out decimal exequity)
         {
             decimal start = StartEquity(QSEnumRaceType.SEMIRACE);
-            decimal end = start + ProfitCal.CalObverseProfit(account);
+            decimal end = start + ProfitCal.CalObverseProfit(rs);
             exequity = end;
 
-            if (CalMargin(start, account.NowEquity) <= SEMIRACE_ELIMINATE)
+            if (CalMargin(start, rs.Account.NowEquity) <= SEMIRACE_ELIMINATE)
                 return QSEnumRaceCheckResult.ELIMINATE;
             if (CalMargin(start, end) >= SEMIRACE_PROMOT)
                 return QSEnumRaceCheckResult.PROMOT;
@@ -297,11 +297,11 @@ namespace TradingLib.Contrib.Race
         /// <param name="account"></param>
         /// <param name="race"></param>
         /// <returns></returns>
-        public static QSEnumRaceCheckResult REAL1Check(IAccount account, out decimal exequity)
+        public static QSEnumRaceCheckResult REAL1Check(RaceService rs, out decimal exequity)
         {
 
             decimal start = StartEquity(QSEnumRaceType.REAL1);
-            decimal end = account.NowEquity;
+            decimal end = rs.Account.NowEquity;
             exequity = end;
 
             if (CalMargin(start, end) <= REAL1_ELIMINATE)
@@ -318,11 +318,11 @@ namespace TradingLib.Contrib.Race
         /// <param name="account"></param>
         /// <param name="race"></param>
         /// <returns></returns>
-        public static QSEnumRaceCheckResult REAL2Check(IAccount account, out decimal exequity)
+        public static QSEnumRaceCheckResult REAL2Check(RaceService rs, out decimal exequity)
         {
 
             decimal start = StartEquity(QSEnumRaceType.REAL2);
-            decimal end = account.NowEquity;
+            decimal end = rs.Account.NowEquity;
             exequity = end;
 
             if (CalMargin(start, end) <= REAL2_ELIMINATE)
@@ -339,11 +339,11 @@ namespace TradingLib.Contrib.Race
         /// <param name="account"></param>
         /// <param name="race"></param>
         /// <returns></returns>
-        public static QSEnumRaceCheckResult REAL3Check(IAccount account, out decimal exequity)
+        public static QSEnumRaceCheckResult REAL3Check(RaceService rs, out decimal exequity)
         {
 
             decimal start = StartEquity(QSEnumRaceType.REAL3);
-            decimal end = account.NowEquity;
+            decimal end = rs.Account.NowEquity;
             exequity = end;
 
             if (CalMargin(start, end) <= REAL3_ELIMINATE)
@@ -360,11 +360,11 @@ namespace TradingLib.Contrib.Race
         /// <param name="account"></param>
         /// <param name="race"></param>
         /// <returns></returns>
-        public static QSEnumRaceCheckResult REAL4Check(IAccount account, out decimal exequity)
+        public static QSEnumRaceCheckResult REAL4Check(RaceService rs, out decimal exequity)
         {
 
             decimal start = StartEquity(QSEnumRaceType.REAL4);
-            decimal end = account.NowEquity;
+            decimal end = rs.Account.NowEquity;
             exequity = end;
 
             if (CalMargin(start, end) <= REAL4_ELIMINATE)
@@ -381,11 +381,11 @@ namespace TradingLib.Contrib.Race
         /// <param name="account"></param>
         /// <param name="race"></param>
         /// <returns></returns>
-        public static QSEnumRaceCheckResult REAL5Check(IAccount account, out decimal exequity)
+        public static QSEnumRaceCheckResult REAL5Check(RaceService rs, out decimal exequity)
         {
 
             decimal start = StartEquity(QSEnumRaceType.REAL5);
-            decimal end = account.NowEquity;
+            decimal end = rs.Account.NowEquity;
             exequity = end;
 
             if (CalMargin(start, end) <= REAL5_ELIMINATE)

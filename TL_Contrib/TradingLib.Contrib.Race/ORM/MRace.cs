@@ -111,7 +111,7 @@ namespace TradingLib.Contrib.Race.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = string.Format("UPDATE  contrib_race_service SET raceid='{0}' ,entrytime='{1}' ,racestatus='{2}' WHERE acct='{3}'",rs.RaceID,rs.EntryTime,rs.RaceStatus,rs.Acct);
+                string query = string.Format("UPDATE  contrib_race_service SET raceid='{0}' ,entrytime='{1}' ,racestatus='{2}',entrysettleday='{3}'  WHERE acct='{4}'", rs.RaceID, rs.EntryTime, rs.RaceStatus,rs.EntrySettleday, rs.Acct);
                 db.Connection.Execute(query);
             }
         }
@@ -154,6 +154,24 @@ namespace TradingLib.Contrib.Race.ORM
             {
                 string query = string.Format("INSERT INTO contrib_race_log (`account`,`datetime`,`srcstatus`,`deststatus`,`srcraceid`,`destraceid`,`settleday`) VALUES ( '{0}','{1}','{2}','{3}','{4}','{5}','{6}')",change.Account,change.DateTime,change.SrcStatus,change.DestStatus,change.SrcRaceID,change.DestRaceID,TLCtxHelper.CmdSettleCentre.LastSettleday);
                 db.Connection.Execute(query);
+            }
+        }
+
+
+
+        /// <summary>
+        /// 查询某个交易帐户 某个时间区间的结算记录
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <returns></returns>
+        public static IEnumerable<Settlement> SelectSettlements(string account, int start, int end)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("SELECT *  FROM log_settlement WHERE account={0} and settleday>={1} and settleday<={2}",account,start,end);
+                return db.Connection.Query<SettlementImpl>(query, null).ToArray();
             }
         }
     }

@@ -63,6 +63,7 @@
     <Compile Include="RaceRule.cs" />
     <Compile Include="RaceService.cs" />
     <Compile Include="RaceServiceTracker.cs" />
+    <Compile Include="RaceService_util.cs" />
     <Compile Include="RaceTracker.cs" />
     <Compile Include="Tracker.cs" />
   </ItemGroup>

@@ -279,25 +279,25 @@ namespace TradingLib.Contrib.Race
             switch (RaceType)
             {
                 case QSEnumRaceType.PRERACE:
-                    r = RaceRule.PRERACECheck(rs.Account,out exequity);
+                    r = RaceRule.PRERACECheck(rs,out exequity);
                     break;
                 case QSEnumRaceType.SEMIRACE:
-                    r = RaceRule.SEMIRACECheck(rs.Account, out exequity);
+                    r = RaceRule.SEMIRACECheck(rs, out exequity);
                     break;
                 case QSEnumRaceType.REAL1:
-                    r = RaceRule.REAL1Check(rs.Account, out exequity);
+                    r = RaceRule.REAL1Check(rs, out exequity);
                     break;
                 case QSEnumRaceType.REAL2:
-                    r = RaceRule.REAL2Check(rs.Account, out exequity);
+                    r = RaceRule.REAL2Check(rs, out exequity);
                     break;
                 case QSEnumRaceType.REAL3:
-                    r = RaceRule.REAL3Check(rs.Account, out exequity);
+                    r = RaceRule.REAL3Check(rs, out exequity);
                     break;
                 case QSEnumRaceType.REAL4:
-                    r = RaceRule.REAL4Check(rs.Account, out exequity);
+                    r = RaceRule.REAL4Check(rs, out exequity);
                     break;
                 case QSEnumRaceType.REAL5:
-                    r = RaceRule.REAL5Check(rs.Account, out exequity);
+                    r = RaceRule.REAL5Check(rs, out exequity);
                     break;
                 default:
                     r = QSEnumRaceCheckResult.STAY;
@@ -338,8 +338,6 @@ namespace TradingLib.Contrib.Race
                 this.EliminateAccount(rs, nextstatus);
                 Util.Debug("比赛[" + Title + "]" + " 淘汰选手:" + rs.Account + " 到:" + nextstatus.ToString(), QSEnumDebugLevel.INFO);
             }
-
-            
         }
     }
 

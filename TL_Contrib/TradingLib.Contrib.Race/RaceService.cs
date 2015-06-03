@@ -25,6 +25,11 @@ namespace TradingLib.Contrib.Race
         public long EntryTime { get; set; }
 
         /// <summary>
+        /// 参赛结算日 在哪个结算日参赛
+        /// </summary>
+        public int EntrySettleday { get; set; }
+
+        /// <summary>
         /// 比赛状态
         /// </summary>
         public QSEnumAccountRaceStatus RaceStatus { get; set; }

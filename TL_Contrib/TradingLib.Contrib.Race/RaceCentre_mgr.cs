@@ -68,6 +68,7 @@ namespace TradingLib.Contrib.Race
                 RaceID = rs.RaceID,
                 RaceStatus = Util.GetEnumDescription(rs.RaceStatus),
                 EntryTime = Util.ToDateTime(rs.EntryTime).ToString(),
+
                 ExamineEquity = rs.ExamineEquity,
                 IsAvabile = rs.IsAvabile,
                 InRace = IsInRace(rs.RaceStatus),

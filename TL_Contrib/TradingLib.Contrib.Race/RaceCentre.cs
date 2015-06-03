@@ -172,6 +172,8 @@ namespace TradingLib.Contrib.Race
             arg1.RaceID = race_id;
             arg1.RaceStatus = arg2;
             arg1.EntryTime = change.DateTime;
+            arg1.EntrySettleday = TLCtxHelper.CmdSettleCentre.NextTradingday;//当前报名结算日为下一个结算日(这个下一个结算日是按上个结算日推断出来的，然后当前结算日根据假期和时间来推断出当前结算日)
+            
             ORM.MRace.UpdateRaceService(arg1);
 
             //新注册比赛后 要冻结该比赛服务

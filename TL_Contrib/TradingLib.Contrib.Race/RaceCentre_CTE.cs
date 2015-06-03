@@ -19,6 +19,17 @@ namespace TradingLib.Contrib.Race
             PromptAccount(account);
         }
 
+        [CoreCommandAttr(QSEnumCommandSource.CLI, "racecal", "racecal - cal account", "计算帐户参赛以来的折算收益")]
+        public string CTE_RaceCal(string account)
+        {
+            RaceService rs = Tracker.RaceServiceTracker[account];
+
+            string re =  string.Format("参赛时间:{0} 折算收益:{1}", rs.EntryTime, ProfitCal.CalObverseProfit(rs));
+            debug(re, QSEnumDebugLevel.DEBUG);
+
+            return re;
+        }
+
 
         [CoreCommandAttr(QSEnumCommandSource.CLI, "raceeliminate", "eliminate - eliminate account", "手工淘汰某个交易帐号")]
         public void CTE_Eliminate(string account)
@@ -135,15 +146,6 @@ namespace TradingLib.Contrib.Race
         void SignRaceService(IAccount account)
         {
             RaceService rs = Tracker.RaceServiceTracker[account.ID];
-            ////交易帐户没有生成过对应的比赛服务
-            //if (rs == null)
-            //{
-            //    rs = new RaceService();
-            //    rs.Account = account.ID;
-            //    Tracker.RaceServiceTracker.UpdateRaceService(rs);
-
-            //    rs = Tracker.RaceServiceTracker[account.ID];
-            //}
 
             if (rs.RaceStatus != QSEnumAccountRaceStatus.NORACE && rs.RaceStatus!= QSEnumAccountRaceStatus.ELIMINATE)
             {

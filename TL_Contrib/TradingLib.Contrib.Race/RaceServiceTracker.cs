@@ -83,6 +83,7 @@ namespace TradingLib.Contrib.Race
                 target.Acct = rs.Acct;
                 target.InitRaceService();
                 target.EntryTime = 0;
+                target.EntrySettleday = 0;
                 target.RaceID = "";
                 target.RaceStatus = QSEnumAccountRaceStatus.NORACE;
 
