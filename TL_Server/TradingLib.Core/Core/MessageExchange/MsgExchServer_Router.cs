@@ -105,6 +105,7 @@ namespace TradingLib.Core
             _brokerRouter.GotCancelEvent += new LongDelegate(_br_GotCancelEvent);
             _brokerRouter.GotFillEvent += new FillDelegate(_br_GotFillEvent);
             _brokerRouter.GotOrderEvent += new OrderDelegate(_br_GotOrderEvent);
+            _brokerRouter.AssignOrderIDEvent += new AssignOrderIDDel(AssignOrderID);
 
             _brokerRouter.GotOrderErrorEvent += new OrderErrorDelegate(_br_GotOrderErrorEvent);//路由中心返回的委托错误均要通知到清算中心进行委托更新
             _brokerRouter.GotOrderActionErrorEvent += new OrderActionErrorDelegate(_br_GotOrderActionErrorEvent);

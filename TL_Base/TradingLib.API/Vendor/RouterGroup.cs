@@ -11,6 +11,11 @@ namespace TradingLib.API
     public interface RouterGroup
     {
         /// <summary>
+        /// 获得第一个默认Broker
+        /// </summary>
+        /// <returns></returns>
+        IBroker GetBroker();
+        /// <summary>
         /// 按token返回IBroker成交接口
         /// </summary>
         /// <param name="token"></param>

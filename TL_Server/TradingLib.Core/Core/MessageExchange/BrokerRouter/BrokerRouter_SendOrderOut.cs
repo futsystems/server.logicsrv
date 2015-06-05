@@ -49,6 +49,8 @@ namespace TradingLib.Core
         /// <summary>
         /// 平仓委托的处理
         /// 平仓委托经过检查后返回一组经过分拆或没有分拆的原始委托
+        /// 注意通过XBrokerSendOrder发单的操作均为主帐户侧发单
+        /// 如果持仓对应是模拟则需要纠正Broker
         /// </summary>
         /// <param name="o"></param>
         bool XBrokerSendOrder(Order o,out string errorTitle)
@@ -88,7 +90,23 @@ namespace TradingLib.Core
             if (brokerclosemap.Count == 1)
             {
                 debug("PositionDetails to be closed are  in same broker,send order directly.", QSEnumDebugLevel.INFO);
+                
                 o.Broker = brokerclosemap.Keys.First();//设定预发送委托的BrokerToken
+                /// 注意通过XBrokerSendOrder发单的操作均为主帐户侧发单
+                /// 如果持仓对应是模拟则需要纠正Broker
+                if (o.Broker.Equals("SIMBROKER"))
+                { 
+                    RouterGroup rg = BasicTracker.RouterGroupTracker[account.RG_FK]; //这里需要做个鉴权 帐户设置的路由组的domain_id与帐户所属domain_id一致
+                    //没有设定路由组则返回null
+                    if (rg != null)
+                    {
+                        IBroker b = rg.GetBroker();
+                        if (b != null)
+                        {
+                            o.Broker = b.Token;
+                        }
+                    }
+                }
                 return BrokerSendOrder(o, out errorTitle);
             }
             else
@@ -97,6 +115,131 @@ namespace TradingLib.Core
                 splitedordermap.TryAdd(o.id, o);
                 _splittracker.SendFatherOrder(o, SplitOrder(o, brokerclosemap));
                 return true;
+            }
+        }
+
+        /// <summary>
+        /// 将某个交易帐户对应的BrokerSide的持仓强平
+        /// </summary>
+        /// <param name="account"></param>
+        public void ClosePositionBrokerSide(IAccount account)
+        {
+            foreach (var pos in account.GetPositionsHold())
+            {
+                ClosePositionBrokerSide(account,pos);
+            }
+            
+        }
+
+        public void OpenPositionBrokerSide(IAccount account)
+        {
+            foreach (var pos in account.GetPositionsHold())
+            {
+                OpenPositionBrokerSide(account, pos);
+            }
+        }
+        /// <summary>
+        /// 创建将某个持仓对应的接口侧持仓
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="pos"></param>
+        void OpenPositionBrokerSide(IAccount account, Position pos)
+        {
+            Order openOrder = new OrderImpl(pos.Symbol, pos.isLong, pos.UnsignedSize);
+            openOrder.oSymbol = pos.oSymbol;
+            openOrder.Account = "Internal";
+            openOrder.Date = Util.ToTLDate();
+            openOrder.Time = Util.ToTLTime();
+
+            openOrder.Status = QSEnumOrderStatus.Placed;
+            openOrder.OffsetFlag = QSEnumOffsetFlag.OPEN;
+            openOrder.OrderSource = QSEnumOrderSource.CLEARCENTRE;
+            openOrder.TotalSize = openOrder.Size;
+
+            //获得委托编号
+            if (AssignOrderIDEvent != null)
+                AssignOrderIDEvent(ref openOrder);
+
+            RouterGroup rg = BasicTracker.RouterGroupTracker[account.RG_FK];
+            if (rg != null)
+            {
+                decimal price = TLCtxHelper.CmdUtils.GetAvabilePrice(openOrder.Symbol);
+                IBroker b =  rg.GetBroker(openOrder, openOrder.CalFundRequired(price));
+
+                if (b != null && b.IsLive)
+                {
+                    openOrder.Broker = b.Token;//通过Broker发送委托时,将Token设定到委托对应字段
+                    b.SendOrder(openOrder);
+                }
+
+            }
+
+        }
+        /// <summary>
+        /// 将某个持仓对应的接口侧持仓关闭
+        /// </summary>
+        /// <param name="pos"></param>
+        void ClosePositionBrokerSide(IAccount account,Position pos)
+        {
+            Order closeOrder = new MarketOrderFlat(pos);
+
+            closeOrder.oSymbol = pos.oSymbol;
+            closeOrder.Account = "Internal";
+            closeOrder.Date = Util.ToTLDate();
+            closeOrder.Time = Util.ToTLTime();
+
+            closeOrder.Status = QSEnumOrderStatus.Placed;
+            closeOrder.OffsetFlag = QSEnumOffsetFlag.CLOSE;
+            closeOrder.OrderSource = QSEnumOrderSource.CLEARCENTRE;
+            closeOrder.TotalSize = closeOrder.Size;
+
+            
+            //获得委托编号
+            if (AssignOrderIDEvent != null)
+                AssignOrderIDEvent(ref closeOrder);
+
+            //筛选出没有平掉的持仓明细
+            List<PositionDetail> poslisttoclose = new List<PositionDetail>();
+
+            //遍历所有未平仓持仓明细数据,然后将欲平持仓放入列表
+            Dictionary<string, int> brokerclosemap = new Dictionary<string, int>();
+            foreach (PositionDetail positiondetail in pos.PositionDetailTotal.Where(pd => !pd.IsClosed()))
+            {
+                //如果不存在该broker token则添加
+                if (!brokerclosemap.Keys.Contains(positiondetail.Broker))
+                {
+                    brokerclosemap.Add(positiondetail.Broker, 0);
+                }
+
+                poslisttoclose.Add(positiondetail);
+                brokerclosemap[positiondetail.Broker] += positiondetail.Volume;//将对应的成交通道 需要提交的平仓数量进行累加
+            }
+
+            string broker = string.Empty;
+            string errorTitle = string.Empty;
+            if (brokerclosemap.Count == 1)
+            {
+                debug("PositionDetails to be closed are  in same broker,send order directly.", QSEnumDebugLevel.INFO);
+                closeOrder.Broker = brokerclosemap.Keys.First();//设定预发送委托的BrokerToken
+
+                RouterGroup rg = BasicTracker.RouterGroupTracker[account.RG_FK];
+                if (rg != null)
+                {
+                    IBroker b = rg.GetBroker(closeOrder.Broker);
+
+                    if (b != null && b.IsLive)
+                    {
+                        closeOrder.Broker = b.Token;//通过Broker发送委托时,将Token设定到委托对应字段
+                        b.SendOrder(closeOrder);
+                    }
+                }
+                //BrokerSendOrder(closeOrder, out errorTitle);
+            }
+            else
+            {
+                debug("PositionDetails to be closed are in diferent broker,send order via spliter.", QSEnumDebugLevel.INFO);
+                splitedordermap.TryAdd(closeOrder.id, closeOrder);
+                _splittracker.SendFatherOrder(closeOrder, SplitOrder(closeOrder, brokerclosemap));
             }
         }
 

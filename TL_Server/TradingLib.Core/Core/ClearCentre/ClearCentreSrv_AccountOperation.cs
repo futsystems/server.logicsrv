@@ -50,17 +50,14 @@ namespace TradingLib.Core
             
             //记录原来路由类别
             QSEnumOrderTransferType oldrouter = acct.OrderRouteType;
-
-            //修改交易帐户路由类别
-            //原来路由是实盘 需要将原来实盘上的挂单撤掉 同时平掉实盘上的持仓 然后将挂单挂到模拟上
-            if (oldrouter == QSEnumOrderTransferType.LIVE)
+            //当前设定路由与原来路由类别相同
+            if (type == oldrouter)
             {
-                //遍历所有持仓
-                foreach (Position pos in acct.Positions.Where(p => !p.isFlat))
-                {
-                    
-                }
+                return;
             }
+
+            //触发路由切换事件
+            TLCtxHelper.EventAccount.FireAccountRouterSwitchEvent(account, type);
 
 
             acct.OrderRouteType = type;

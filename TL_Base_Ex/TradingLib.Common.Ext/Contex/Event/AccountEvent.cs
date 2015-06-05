@@ -42,6 +42,20 @@ namespace TradingLib.Common
         /// </summary>
         public event Action<string,string> AccountTradingNoticeEvent;
 
+
+
+        /// <summary>
+        /// 交易帐户路由切换11:00
+        /// </summary>
+        public event Action<string,QSEnumOrderTransferType> AccountRouterSwitchEvent;
+
+        internal void FireAccountRouterSwitchEvent(string account, QSEnumOrderTransferType type)
+        {
+            if (AccountRouterSwitchEvent != null)
+                AccountRouterSwitchEvent(account, type);
+        }
+
+
         internal void FireAccountTradingNoticeEvent(string account, string content)
         {
             if (AccountTradingNoticeEvent != null)

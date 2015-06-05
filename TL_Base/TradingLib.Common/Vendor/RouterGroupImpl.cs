@@ -123,6 +123,18 @@ namespace TradingLib.Common
         }
 
         /// <summary>
+        /// 获得第一个可用的Broker
+        /// </summary>
+        /// <returns></returns>
+        public IBroker GetBroker()
+        {
+            Vendor vendor = GetVendors().FirstOrDefault();
+            if (vendor != null)
+                return vendor.Broker;
+            else
+                return null;
+        }
+        /// <summary>
         /// 获得IBroker成交路由
         /// 路由选择主体逻辑
         /// 1.开仓时由策略选择 按路由有限顺序或随机选择成交路由

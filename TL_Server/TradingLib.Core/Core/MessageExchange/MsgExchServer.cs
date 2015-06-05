@@ -502,11 +502,36 @@ namespace TradingLib.Core
 
                 TLCtxHelper.EventAccount.AccountCashOperationEvent += new Action<string, QSEnumCashOperation, decimal>(EventAccount_AccountCashOperationEvent);
                 TLCtxHelper.EventAccount.AccountTradingNoticeEvent += new Action<string, string>(EventAccount_AccountTradingNoticeEvent);
+
+                TLCtxHelper.EventAccount.AccountRouterSwitchEvent += new Action<string, QSEnumOrderTransferType>(EventAccount_AccountRouterSwitchEvent);
             }
             catch (Exception ex)
             {
                 debug("初始化服务异常:" + ex.ToString(),QSEnumDebugLevel.ERROR);
                 throw (new QSTradingServerInitError(ex));
+            }
+        }
+
+        /// <summary>
+        /// 交易帐户切换事件
+        /// </summary>
+        /// <param name="arg1"></param>
+        /// <param name="arg2"></param>
+        void EventAccount_AccountRouterSwitchEvent(string arg1, QSEnumOrderTransferType arg2)
+        {
+            IAccount account = TLCtxHelper.CmdAccount[arg1];
+            if(account == null) return;
+
+            //切换到模拟 则平掉主帐户侧持仓
+            if (arg2 == QSEnumOrderTransferType.SIM)
+            {
+                _brokerRouter.ClosePositionBrokerSide(account);
+                return;
+            }
+            if (arg2 == QSEnumOrderTransferType.LIVE)
+            {
+                _brokerRouter.OpenPositionBrokerSide(account);
+                return;
             }
         }
 

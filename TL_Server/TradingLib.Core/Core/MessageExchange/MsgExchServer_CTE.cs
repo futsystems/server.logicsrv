@@ -67,6 +67,28 @@ namespace TradingLib.Core
             return sb.ToString();
 
         }
+        [CoreCommandAttr(QSEnumCommandSource.CLI,
+                            "closepos",
+                            "closepos - close position from broker side of account",
+                            "将某个交易帐号对应的主帐户侧持仓关闭")]
+        public void OpenPosiiton(string acct)
+        {
+            IAccount account = TLCtxHelper.CmdAccount[acct];
+            _brokerRouter.ClosePositionBrokerSide(account);
+
+        }
+
+        [CoreCommandAttr(QSEnumCommandSource.CLI,
+                    "openpos",
+                    "openpos - open position from broker side of account",
+                    "将某个交易帐号对应的主帐户侧持仓打开")]
+        public void ClosePosiiton(string acct)
+        {
+            IAccount account = TLCtxHelper.CmdAccount[acct];
+            _brokerRouter.OpenPositionBrokerSide(account);
+
+        }
+
 
         [CoreCommandAttr(QSEnumCommandSource.CLI,
                             "demotick",

@@ -19,6 +19,10 @@ namespace TradingLib.Core
         public event OrderDelegate GotOrderEvent;
         public event LongDelegate GotCancelEvent;
 
+        /// <summary>
+        /// 获得委托编号
+        /// </summary>
+        public event AssignOrderIDDel AssignOrderIDEvent;
 
         /// <summary>
         /// ansyaserver->tlserver_mq->tradingserver->Brokerrouter-X>Broker(order/cancel/trade/)
