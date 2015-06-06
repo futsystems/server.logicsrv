@@ -23,7 +23,6 @@ all:clean release base server contrib connector account rule exsrv
 release:
 	$(shell ./version.sh)
 
-
 package1: release
 	$(PACK) $(PACKFILES)
 
@@ -53,6 +52,7 @@ exsrv:
 
 publish:
 	$(XBUILD) /target:Publish $(FLAGS) $(PROJ)
+	$(shell ./build.sh)
 
 publishclean:
 	$(XBUILD) /target:PublishClean $(FLAGS) $(PROJ)
