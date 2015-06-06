@@ -21,8 +21,8 @@ mv $version_file $version_file.bak
 
 echo "using System.Reflection;" > $version_file
 echo "" >> $version_file
-echo "[assembly: AssemblyVersion(\"$major.$minor.$fix.0\")]" >> $version_file
-echo "[assembly: AssemblyFileVersion(\"$major.$minor.$fix.$commit_num ${commit_hash:1}\")]" >> $version_file
+echo "[assembly: AssemblyVersion(\"$major.$minor.$fix.$commit_num\")]" >> $version_file
+echo "[assembly: AssemblyFileVersion(\"$major.$minor.$fix.$commit_num\")]" >> $version_file
 echo "[assembly: AssemblyInformationalVersion(\"$major.$minor.$fix.$commit_num ${commit_hash:1}\")]" >> $version_file
 echo "[assembly: AssemblyConfiguration(\"\")]" >> $version_file
 
