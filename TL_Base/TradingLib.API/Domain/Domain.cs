@@ -130,6 +130,11 @@ namespace TradingLib.API
         bool Module_Slip { get; set; }
 
         /// <summary>
+        /// 智能路由切换
+        /// </summary>
+        bool Module_AutoSwitch { get; set; }
+
+        /// <summary>
         /// 实盘路由
         /// </summary>
         bool Router_Live { get; set; }

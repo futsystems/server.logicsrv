@@ -157,6 +157,11 @@ namespace TradingLib.Common
         public bool Module_Slip {get;set;}
 
         /// <summary>
+        /// 只能切换功能 接口侧的持仓和委托处理
+        /// </summary>
+        public bool Module_AutoSwitch { get; set; }
+
+        /// <summary>
         /// 实盘路由
         /// </summary>
         public bool Router_Live { get; set; }

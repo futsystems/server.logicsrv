@@ -519,19 +519,23 @@ namespace TradingLib.Core
         /// <param name="arg2"></param>
         void EventAccount_AccountRouterSwitchEvent(string arg1, QSEnumOrderTransferType arg2)
         {
+            
             IAccount account = TLCtxHelper.CmdAccount[arg1];
-            if(account == null) return;
+            if (account.Domain != null && account.Domain.Module_AutoSwitch)
+            {
+                if (account == null) return;
 
-            //切换到模拟 则平掉主帐户侧持仓
-            if (arg2 == QSEnumOrderTransferType.SIM)
-            {
-                _brokerRouter.ClosePositionBrokerSide(account);
-                return;
-            }
-            if (arg2 == QSEnumOrderTransferType.LIVE)
-            {
-                _brokerRouter.OpenPositionBrokerSide(account);
-                return;
+                //切换到模拟 则平掉主帐户侧持仓
+                if (arg2 == QSEnumOrderTransferType.SIM)
+                {
+                    _brokerRouter.ClosePositionBrokerSide(account);
+                    return;
+                }
+                if (arg2 == QSEnumOrderTransferType.LIVE)
+                {
+                    _brokerRouter.OpenPositionBrokerSide(account);
+                    return;
+                }
             }
         }
 
