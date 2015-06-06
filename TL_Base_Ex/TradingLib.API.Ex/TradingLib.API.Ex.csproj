@@ -42,6 +42,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Shared\VersionInfo.cs">
+      <Link>VersionInfo.cs</Link>
+    </Compile>
     <Compile Include="Account\IAccountService.cs" />
     <Compile Include="Account\IRiskRule.cs" />
     <Compile Include="Contrib\EnumContribCommandHandleType.cs" />
