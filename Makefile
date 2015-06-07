@@ -53,6 +53,8 @@ exsrv:
 publish:
 	$(XBUILD) /target:Publish $(FLAGS) $(PROJ)
 	$(shell ./build.sh)
+	@echo "\033[32;49;1mLogicSrv Package Build Success Version:$(shell git describe) \033[39;49;0m"
+
 
 publishclean:
 	$(XBUILD) /target:PublishClean $(FLAGS) $(PROJ)
