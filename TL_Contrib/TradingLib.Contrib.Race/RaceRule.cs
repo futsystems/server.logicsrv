@@ -32,7 +32,7 @@ namespace TradingLib.Contrib.Race
         /// </summary>
         public const decimal PRERACE_PROMOT = 0.25M;//0.2 加折算
         public const decimal PRERACE_ELIMINATE = -0.2M;
-        public const decimal SEMIRACE_PROMOT = 0.25M;//0.25加折算
+        public const decimal SEMIRACE_PROMOT = 0.30M;//0.25加折算
         public const decimal SEMIRACE_ELIMINATE = -0.10M;
         public const decimal REAL1_PROMOT = 0.3M;
         public const decimal REAL1_ELIMINATE = -0.10M;

@@ -331,12 +331,12 @@ namespace TradingLib.Contrib.Race
             if (r == QSEnumRaceCheckResult.PROMOT)
             {
                 this.PromotAccount(rs, nextstatus);
-                Util.Debug("比赛[" + Title + "]" + " 晋级选手:" + rs.Account + " 到:" + nextstatus.ToString(), QSEnumDebugLevel.INFO);
+                Util.Debug("比赛[" + Title + "]" + " 晋级选手:" + rs.Account + " 到:" + nextstatus.ToString() + " 折算收益:" + Util.FormatDecimal(exequity), QSEnumDebugLevel.INFO);
             }
             if (r == QSEnumRaceCheckResult.ELIMINATE)
             {
                 this.EliminateAccount(rs, nextstatus);
-                Util.Debug("比赛[" + Title + "]" + " 淘汰选手:" + rs.Account + " 到:" + nextstatus.ToString(), QSEnumDebugLevel.INFO);
+                Util.Debug("比赛[" + Title + "]" + " 淘汰选手:" + rs.Account + " 到:" + nextstatus.ToString() + " 折算收益:" + Util.FormatDecimal(exequity), QSEnumDebugLevel.INFO);
             }
         }
     }
