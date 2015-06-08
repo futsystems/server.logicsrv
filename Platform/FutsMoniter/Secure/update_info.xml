@@ -1,4 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <updates>
-<item file="Moniter.exe" uid="6ca803a5fffd465fb94eb7c49091c64a"/>
+<item file="Moniter.exe" uid="aaafe779e0e0454db4d2ae093a804443"/>
+<item file="plugin\TradingLib.HistReport.dll" uid="50286981e7a14f36b75bd3617f0900f4"/>
+<item file="config.xml" uid="5506796c62bf49db83c57ad3c6701038"/>
 </updates>

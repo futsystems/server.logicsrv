@@ -677,7 +677,7 @@ namespace Broker.Live
             {
                 _splittracker.SendFatherOrder(o);
 
-                Util.sleep(GlobalConfig.SleepAfterSendOrder);
+                //Util.sleep(GlobalConfig.SleepAfterSendOrder);
                 //TODO
                 //后期修改成队列对外发送委托 同时加入自成交检验
             }

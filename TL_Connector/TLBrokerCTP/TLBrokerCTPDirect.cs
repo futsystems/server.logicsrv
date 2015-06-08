@@ -673,7 +673,7 @@ namespace Broker.Live
             lock (_sendorder)
             {
                 _splittracker.SendFatherOrder(o);
-                Util.sleep(GlobalConfig.SleepAfterSendOrder);
+                //Util.sleep(GlobalConfig.SleepAfterSendOrder);
             }
         }
 
