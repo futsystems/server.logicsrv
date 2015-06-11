@@ -265,6 +265,8 @@ namespace TradingLib.Contrib.Race
                 r.EntryAccount(arg1);
                 //重置比赛资金
                 ResetAccountEquity(arg1.Account, r.StartEquity);
+
+                arg1.InActive();
             }
         }
 
@@ -281,6 +283,7 @@ namespace TradingLib.Contrib.Race
             TLCtxHelper.CmdAuthCashOperation.CashOperation(account.ID, diff, QSEnumEquityType.OwnEquity, "", "比赛重置");
 
         }
+
         /// <summary>
         /// 停止
         /// </summary>

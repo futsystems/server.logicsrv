@@ -10,8 +10,29 @@ namespace TradingLib.Contrib.Race
 {
     public partial class RaceCentre
     {
-
-
+        [TaskAttr("比赛帐户风控检查",2,0, "比赛风控风控检查")]
+        public void TaskAccountCheck()
+        {
+            if (TLCtxHelper.CmdSettleCentre.IsTradingday)
+            {
+                foreach (var rs in Tracker.RaceServiceTracker.RaceServices)
+                {
+                    if (rs.IsAvabile && rs.Account != null)
+                    {
+                        if (rs.Account.Profit < 0 && Math.Abs(rs.Account.Profit) >= 20000)
+                        {
+                            //如果该帐户仍然处于可交易状态 则冻结帐户 同时强平持仓 这样就避免多次冻结和强平操作
+                            if (rs.Account.Execute)
+                            {
+                                rs.Account.InactiveAccount();
+                                rs.Account.FlatPosition(QSEnumOrderSource.RISKCENTRE, "比赛强平");
+                            }
+                        }
+                    }
+                }
+            }
+        
+        }
 
         [CoreCommandAttr(QSEnumCommandSource.CLI, "raceprompt", "prompt - prompt account", "手工晋级某个交易帐号")]
         public void CTE_Prompt(string account)

@@ -117,9 +117,10 @@ namespace Lottoqq.Account
             //如果绑定了比赛服务
             if (GetService("RaceService",out service))
             {
-                if (!service.IsAvabile)
+                bool rs_pass = service.CanTakeOrder(o, out msg);
+                //如果比赛服务检查委托不通过 则返回 
+                if (!rs_pass)
                 {
-                    msg = "比赛服务未激活,报名后需等待一个工作日";
                     return false;
                 }
             }

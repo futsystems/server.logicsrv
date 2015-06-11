@@ -99,6 +99,19 @@ namespace TradingLib.Contrib.Race
 
         public bool CanTakeOrder(Order o, out string msg)
         {
+            if (!this.IsAvabile)
+            {
+                msg = "比赛服务未激活,报名后需等待一个工作日";
+                return false;
+            }
+            if (o.IsEntryPosition)
+            {
+                if (Account.Commission >= 4000)
+                {
+                    msg = "手续费超过限制:4000";
+                    return false;
+                }
+            }
             msg = string.Empty;
             return true;
         }
