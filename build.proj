@@ -8,7 +8,6 @@
 <PackageDir>package\logicsrv</PackageDir>
 </PropertyGroup>
 
-
   <ItemGroup>
     <CleanFiles Include="lib\TradingLib\*" />
     <CleanFiles Include="lib\TradingLib\Contrib\*" />
@@ -44,7 +43,6 @@
     <LibFiles Include="lib\MySql.Data.dll" />
 		<LibFiles Condition=" '$(OperatingPlatform)' == 'Windows' " Include="lib\libzmq\clrzmq\clrzmq.dll" />
 		<LibFiles Condition=" '$(OperatingPlatform)' == 'Unix' " Include="lib\libzmq\clrzmq-unix\clrzmq.dll" />
-		<LibFiles Condition=" '$(OperatingPlatform)' == 'Unix' " Include="lib\libzmq\clrzmq-unix\libzmq.a" />
   </ItemGroup>
   <ItemGroup>
     <BuildFilesExecute Include="Platform\TradingSrv\LogicSrv.exe" />
@@ -66,8 +64,7 @@
 	</Target>
   
   <Target Name="Base">
-	<MSBuild Projects="TL_Base\HttpServer\HttpServer.csproj" Properties="Configuration=$(Configuration);" />
-  <MSBuild Projects="TL_Base\TradingLib.API\TradingLib.API.csproj" Properties="Configuration=$(Configuration);" />
+    <MSBuild Projects="TL_Base\TradingLib.API\TradingLib.API.csproj" Properties="Configuration=$(Configuration);" />
 	<MSBuild Projects="TL_Base\TradingLib.Mixins\TradingLib.Mixins.csproj" Properties="Configuration=$(Configuration);" />
 	<MSBuild Projects="TL_Base\TradingLib.Common\TradingLib.Common.csproj" Properties="Configuration=$(Configuration);" />
 	<MSBuild Projects="TL_Base\TLBrokerXAPI\TLBrokerXAPI.csproj" Properties="Configuration=$(Configuration);" />
