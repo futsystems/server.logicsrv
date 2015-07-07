@@ -94,6 +94,7 @@
     <Compile Include="ServicePlane\SPCommissionBonus.cs" />
     <Compile Include="ServicePlane\SPCommissionFixMargin.cs" />
     <Compile Include="ServicePlane\SPInterestFixMargin.cs" />
+    <Compile Include="ServicePlane\SPSpecialIFExt.cs" />
     <Compile Include="Tracker.cs" />
     <Compile Include="FinServiceCentre_OnXXXX.cs" />
     <Compile Include="FinServiceCentre_CTE.cs" />

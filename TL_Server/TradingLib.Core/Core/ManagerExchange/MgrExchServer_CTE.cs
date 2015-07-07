@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
 using TradingLib.API;
 using TradingLib.Common;
 
@@ -25,5 +26,42 @@ namespace TradingLib.Core
 
             return sb.ToString();
         }
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageWeb, "qrystatus", "qrystatus - 查询系统状态", "查询系统状态")]
+        public object CTE_QryStatus()
+        {
+            if (perf == null)
+            {
+                perf = new Performance();
+                perf.OnStartup();
+            }
+
+            Process proc = Process.GetCurrentProcess();
+            object status = new
+            {
+                DomainNum = BasicTracker.DomainTracker.Domains.Count(),//分区数量
+                ManagerNum = BasicTracker.ManagerTracker.Managers.Count(),//管理员数量
+                ManagerRegistedNum = customerExInfoMap.Values.Count,//登入管理员数量
+
+                AccountNum = TLCtxHelper.CmdAccount.Accounts.Count(),//帐户数量
+                AccountTraded = TLCtxHelper.CmdAccount.Accounts.Where(ac => ac.Commission != 0 || ac.Positions.Count() != 0).Count(),//帐户发生交易数量
+                OrderNum = TLCtxHelper.Ctx.ClearCentre.TotalOrders.Count(),
+                TradeNum = TLCtxHelper.Ctx.ClearCentre.TotalTrades.Count(),
+
+
+                IsTradingday = TLCtxHelper.CmdSettleCentre.IsTradingday,//当前是否是交易日
+                SettleNormal = TLCtxHelper.CmdSettleCentre.IsNormal,//结算中心是否正常
+                StartUpTime = TLCtxHelper.StartUpTime,//启动时间
+
+                //当前进程内存用量
+                MemSize = perf.MemorySize,
+                CPUTime = perf.CPUUsageLastMinute,
+
+
+            };
+            return status;
+        }
+
+
     }
 }

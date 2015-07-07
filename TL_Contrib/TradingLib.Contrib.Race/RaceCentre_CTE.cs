@@ -17,17 +17,36 @@ namespace TradingLib.Contrib.Race
             {
                 foreach (var rs in Tracker.RaceServiceTracker.RaceServices)
                 {
+                    
                     if (rs.IsAvabile && rs.Account != null)
                     {
-                        if (rs.Account.Profit < 0 && Math.Abs(rs.Account.Profit) >= 20000)
+                        if (rs.RaceStatus == QSEnumAccountRaceStatus.INPRERACE)
                         {
-                            //如果该帐户仍然处于可交易状态 则冻结帐户 同时强平持仓 这样就避免多次冻结和强平操作
-                            if (rs.Account.Execute)
+
+                            if (rs.Account.Profit < 0 && Math.Abs(rs.Account.Profit) >= 30000)
                             {
-                                rs.Account.InactiveAccount();
-                                rs.Account.FlatPosition(QSEnumOrderSource.RISKCENTRE, "比赛强平");
+                                //如果该帐户仍然处于可交易状态 则冻结帐户 同时强平持仓 这样就避免多次冻结和强平操作
+                                if (rs.Account.Execute)
+                                {
+                                    rs.Account.InactiveAccount();
+                                    rs.Account.FlatPosition(QSEnumOrderSource.RISKCENTRE, "比赛强平");
+                                }
                             }
                         }
+
+                        else
+                        {
+                            if (rs.Account.Profit < 0 && Math.Abs(rs.Account.Profit) >= 20000)
+                            {
+                                //如果该帐户仍然处于可交易状态 则冻结帐户 同时强平持仓 这样就避免多次冻结和强平操作
+                                if (rs.Account.Execute)
+                                {
+                                    rs.Account.InactiveAccount();
+                                    rs.Account.FlatPosition(QSEnumOrderSource.RISKCENTRE, "比赛强平");
+                                }
+                            }
+                        }
+                        
                     }
                 }
             }

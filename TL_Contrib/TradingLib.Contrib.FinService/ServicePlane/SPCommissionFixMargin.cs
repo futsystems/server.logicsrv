@@ -32,6 +32,7 @@ namespace TradingLib.Contrib.FinService
 
         [ArgumentAttribute("CommissionMarkupAbsolute", "直接收取", EnumArgumentType.BOOLEAN, true, false, false)]
         public ArgumentPair CommissionMarginAbsolute { get; set; }
+
         /// <summary>
         /// 配资比例
         /// </summary>
@@ -59,6 +60,50 @@ namespace TradingLib.Contrib.FinService
         
         }
 
+        public override bool ValidArguments(JsonWrapperArgument[] args, out string error)
+        {
+            error = "参数异常,请检查";
+
+            Dictionary<string, Argument> argmap = new Dictionary<string, Argument>();
+            foreach (var arg in args)
+            {
+                argmap.Add(arg.ArgName, new Argument(arg.ArgName, arg.ArgValue, (EnumArgumentType)Enum.Parse(typeof(EnumArgumentType), arg.ArgType)));
+            }
+
+            //检查逻辑:设定的配资额度不能高于代理的允许单个客户最高额度，同时强平比例不能低于设定给代理的对应比例
+            decimal stopequityvalue_agent = agentargmap["StopEquity"].AsDecimal();
+            decimal finamountvalue_agent = agentargmap["FinAmount"].AsDecimal();
+            //强平权益检查
+            Argument stopequity = argmap["StopEquity"];
+            Argument finamount = argmap["FinAmount"];
+            if (stopequity != null && finamount != null)
+            {
+                decimal stopequityvalue = stopequity.AsDecimal();
+                decimal finamountvalue = finamount.AsDecimal();
+
+                if (finamountvalue > finamountvalue_agent)
+                {
+                    error = "配资额度不能高于代理值:" + Util.FormatDecimal(finamountvalue_agent);
+                    return false;
+                }
+
+                decimal ratio = stopequityvalue / finamountvalue;
+                decimal ratio_agent = stopequityvalue_agent / finamountvalue_agent;
+
+                //当前设定的强平权益比例不能低于代理值
+                if (ratio < ratio_agent)
+                {
+                    error = "强平权益不能低于代理值:" + Util.FormatDecimal(ratio_agent * finamountvalue);
+                    return false;
+                }
+
+                
+                
+                
+            }
+
+            return true;
+        }
 
         /// <summary>
         /// 结算前执行费用计算 并形成扣费记录

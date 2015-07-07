@@ -50,11 +50,11 @@ namespace AccountRuleSet
             if (ret && !flatStart)
             {
                 //如果没有设定合约则强平所有持仓,那么我们需要冻结交易帐户
-                if (_symbolset == null && _symbolset.Count == 0)
-                {
+                //if (_symbolset == null && _symbolset.Count == 0)
+                //{
                     if (this.Account.Execute)
                         this.Account.InactiveAccount();//冻结账户
-                }
+                //}
                 if (this.Account.AnyPosition)
                 {
                     msg = RuleDescription + ":强平对应持仓";

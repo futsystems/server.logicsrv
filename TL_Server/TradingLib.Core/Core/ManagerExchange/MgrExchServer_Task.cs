@@ -70,8 +70,22 @@ namespace TradingLib.Core
 
             return _organization;
         }
-        [TaskAttr("采集系统状态信息",10, 0, "定时采集系统状态信息向日志服务器推送")]
+
+        Performance perf = null;
+        [TaskAttr("内存和CPU数据采集", 30, 0, "每30秒采集内存和CPU数据")]
         public void Task_StatusCollect()
+        {
+            if (perf == null)
+            {
+                perf = new Performance();
+                perf.OnStartup();
+            }
+            perf.DoPerformance();
+        }
+
+
+        [TaskAttr("采集系统状态信息",10, 0, "定时采集系统状态信息向日志服务器推送")]
+        public void Task_Performance()
         {
             object status = new 
             {
@@ -90,6 +104,8 @@ namespace TradingLib.Core
 
             _pushserver.Push(status);
         }
+
+
         DateTime _lastAllPushTime = DateTime.Now;
         int _allPushDiff = 30;
         [TaskAttr("采集帐户信息", 1,0, "定时采集帐户信息用于向管理端进行推送")]

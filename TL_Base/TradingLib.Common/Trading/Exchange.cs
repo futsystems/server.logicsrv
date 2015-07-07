@@ -116,9 +116,9 @@ namespace TradingLib.Common
             //2.在结束前5分钟
             return now >= FlatStartTime && now <= EndTime;
 
-            
+
         }
-        public MktTimeEntry(int start, int end,bool needflat)
+        public MktTimeEntry(int start, int end, bool needflat)
         {
             StartTime = start;
             EndTime = end;
@@ -126,7 +126,7 @@ namespace TradingLib.Common
             if (NeedFlat)
             {
                 //计算开始强平时间
-                DateTime t = Util.ToDateTime(Util.ToTLDate(), end).Subtract(new TimeSpan(0,GlobalConfig.FlatTimeAheadOfMarketClose, 0));
+                DateTime t = Util.ToDateTime(Util.ToTLDate(), end).Subtract(new TimeSpan(0, GlobalConfig.FlatTimeAheadOfMarketClose, 0));
                 FlatStartTime = Util.ToTLTime(t);
             }
             else
@@ -141,7 +141,7 @@ namespace TradingLib.Common
         /// <returns></returns>
         public bool IsOpenTime()
         {
-            
+
             int now = Util.ToTLTime();
             //LibUtil.Debug("OpenTimeCheck, now:" + now.ToString() + " Start:" + StartTime.ToString() + " End:" + EndTime.ToString());
             return now >= StartTime && now <= EndTime;
@@ -152,15 +152,18 @@ namespace TradingLib.Common
             return time >= StartTime && time <= EndTime;
         }
 
-        public  string Serialize()
+        public string Serialize()
         {
-            return "#" + StartTime.ToString() + "-" + EndTime.ToString() + (NeedFlat ? "*" : "");
+            return "#" + StartTime.ToString() + "-" + EndTime.ToString();// +(NeedFlat ? "*" : "");
         }
+
+
 
         public static MktTimeEntry Deserialize(string msg)
         {
             try
             {
+                //Util.Debug("msg:" + msg, QSEnumDebugLevel.INFO);
                 string[] p = msg.Split('-');
                 if (p.Length < 2) return null;
                 bool needflat = false;
@@ -169,14 +172,15 @@ namespace TradingLib.Common
                     needflat = true;
                     p[1] = p[1].TrimEnd(new char[] { '*' });
                 }
-                MktTimeEntry se = new MktTimeEntry(int.Parse(p[0]), int.Parse(p[1]),needflat);
+                MktTimeEntry se = new MktTimeEntry(int.Parse(p[0]), int.Parse(p[1]), needflat);
                 return se;
             }
             catch (Exception ex)
             {
+                //Util.Debug("mkttimeentry error:" + ex.ToString(), QSEnumDebugLevel.ERROR);
                 return null;
             }
-            
+
         }
     }
 
@@ -266,11 +270,12 @@ namespace TradingLib.Common
             {
                 r += s.ToString();
             }
-            return "ID:" + ID.ToString() +" Name:" + Name + " Desp:" + Description + " MktTime:" + this.SerializeMktTimeString() +" "+r;
+            return "ID:" + ID.ToString() + " Name:" + Name + " Desp:" + Description + " MktTime:" + this.SerializeMktTimeString() + " " + r;
         }
 
         internal void AddMktTimeEntry(MktTimeEntry s)
         {
+            //Util.Debug("add mkttimeentry:" + s.Serialize());
             this.sessionlist.Add(s);
         }
 
@@ -299,12 +304,12 @@ namespace TradingLib.Common
             foreach (string s in p)
             {
                 MktTimeEntry se = MktTimeEntry.Deserialize(s);
-                if(se == null) continue;
+                if (se == null) continue;
                 this.AddMktTimeEntry(se);
             }
-            
+
         }
-       
+
 
 
         public string Serialize()
@@ -335,7 +340,7 @@ namespace TradingLib.Common
         public override bool Equals(object obj)
         {
             if (obj is MarketTime)
-            { 
+            {
                 MarketTime mtobj = obj as MarketTime;
                 if (this.ID.Equals(mtobj.ID))
                     return true;
@@ -347,7 +352,7 @@ namespace TradingLib.Common
     public class Exchange : IExchange
     {
 
-        private int _id=0;//数据库编号
+        private int _id = 0;//数据库编号
         private string _ex;//交易所代码
         private string _name;//交易所名称
         private Country _country;//交易所所处国家
@@ -363,7 +368,7 @@ namespace TradingLib.Common
         private MarketTime _session;//交易所交易时间
 
 
-        
+
         public string SessionString
         {
             get
@@ -378,8 +383,8 @@ namespace TradingLib.Common
         public string Index { get { return _country.ToString() + "_" + _ex.ToString(); } }
 
         public Exchange()
-        { 
-            
+        {
+
         }
 
         /// <summary>
@@ -389,7 +394,7 @@ namespace TradingLib.Common
         /// <param name="name"></param>
         /// <param name="country"></param>
         /// <param name="sessionstr"></param>
-        public Exchange(string ex, string name, Country country,string sessionstr="")
+        public Exchange(string ex, string name, Country country, string sessionstr = "")
         {
             _ex = ex;
             _name = name;
@@ -400,7 +405,7 @@ namespace TradingLib.Common
 
         public override string ToString()
         {
-            return "ID:" + ID.ToString() + " Code:" + EXCode.ToString() + " Name:" + Name.ToString() + " Country:"+ Country.ToString()+" ExIndex:" + Index.ToString(); 
+            return "ID:" + ID.ToString() + " Code:" + EXCode.ToString() + " Name:" + Name.ToString() + " Country:" + Country.ToString() + " ExIndex:" + Index.ToString();
         }
 
         public string Serialize()

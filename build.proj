@@ -85,7 +85,8 @@
   <Target Name="Contrib" DependsOnTargets="Base">
     <MSBuild Projects="TL_Contrib\TradingLib.Contirb.LogServer\TradingLib.Contirb.LogServer.csproj" Properties="Configuration=$(Configuration);" />
     <MSBuild Projects="TL_Contrib\TradingLib.Contrib.CLIServer\TradingLib.Contrib.CLIServer.csproj" Properties="Configuration=$(Configuration);" />
-    <MSBuild Projects="TL_Contrib\TradingLib.Contrib.EmailServer\TradingLib.Contrib.EmailServer.csproj" Properties="Configuration=$(Configuration);" />
+    <MSBuild Projects="TL_Contrib\TradingLib.Contrib.APIService\TradingLib.Contrib.APIService.csproj" Properties="Configuration=$(Configuration);" />
+	<MSBuild Projects="TL_Contrib\TradingLib.Contrib.EmailServer\TradingLib.Contrib.EmailServer.csproj" Properties="Configuration=$(Configuration);" />
     <MSBuild Projects="TL_Contrib\TradingLib.Contrib.WebServer\TradingLib.Contrib.WebPortal.csproj" Properties="Configuration=$(Configuration);" />
     <MSBuild Projects="TL_Contrib\TradingLib.Contrib.FinService\TradingLib.Contrib.FinService.csproj" Properties="Configuration=$(Configuration);" />
     <MSBuild Projects="TL_Contrib\TradingLib.Contrib.TradeFlow\TradingLib.Contrib.TradeFlow.csproj" Properties="Configuration=$(Configuration);" />
@@ -98,6 +99,7 @@
 		<MSBuild Projects="TL_Connector\SimBroker\SimBroker.csproj" Properties="Configuration=$(Configuration);" />
 		<MSBuild Projects="TL_Connector\TLBrokerCTPSplit\TLBrokerCTPSplit.csproj" Properties="Configuration=$(Configuration);" />
 		<MSBuild Projects="TL_Connector\TLBrokerCTP\TLBrokerCTPDirect.csproj" Properties="Configuration=$(Configuration);" />
+		<MSBuild Projects="TL_Connector\TLBrokerCTPResverse\TLBrokerCTPResverse.csproj" Properties="Configuration=$(Configuration);" />
   </Target>
 
   <Target Name="Account" DependsOnTargets="Base">
