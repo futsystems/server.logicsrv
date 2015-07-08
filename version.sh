@@ -3,12 +3,11 @@
 version=$(git describe)
 
 
-major_v=$(echo $version|cut -d'-' -f1|cut -d'.' -f1)
-major=${major_v:1}
+major=$(echo $version|cut -d'-' -f2|cut -d'.' -f1)
 
-minor=$(echo $version|cut -d'-' -f1|cut -d'.' -f2)
+minor=$(echo $version|cut -d'-' -f2|cut -d'.' -f2)
 
-fix=$(echo $version|cut -d'-' -f1|cut -d'.' -f3)
+fix=$(echo $version|cut -d'-' -f2|cut -d'.' -f3)
 
 commit_num=$(echo $version| cut -d'-' -f2)
 commit_hash=$(echo $version| cut -d'-' -f3)
