@@ -9,8 +9,8 @@ minor=$(echo $version|cut -d'-' -f2|cut -d'.' -f2)
 
 fix=$(echo $version|cut -d'-' -f2|cut -d'.' -f3)
 
-commit_num=$(echo $version| cut -d'-' -f2)
-commit_hash=$(echo $version| cut -d'-' -f3)
+commit_num=$(echo $version| cut -d'-' -f3)
+commit_hash=$(echo $version| cut -d'-' -f4)
 
 version_file="Shared/VersionInfo.cs"
 
