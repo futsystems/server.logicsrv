@@ -172,7 +172,12 @@ namespace TradingLib.API
         /// <summary>
         /// 新的平仓明细生成事件
         /// </summary>
-        event Action<PositionCloseDetail> NewPositionCloseDetailEvent;
+        event Action<Trade, PositionCloseDetail> NewPositionCloseDetailEvent;
+
+        /// <summary>
+        /// 新的持仓明细生成事件
+        /// </summary>
+        event Action<Trade, PositionDetail> NewPositionDetailEvent;
 
         #endregion
 

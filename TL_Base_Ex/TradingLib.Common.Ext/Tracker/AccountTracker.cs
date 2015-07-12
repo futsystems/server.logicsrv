@@ -25,13 +25,24 @@ namespace TradingLib.Common
         protected ConcurrentDictionary<string, ThreadSafeList<Trade>> TradeBook = new ConcurrentDictionary<string, ThreadSafeList<Trade>>();
 
         #region 持仓创建事件和平仓明细事件
-        void NewPositionCloseDetail(PositionCloseDetail detail)
+        void NewPositionCloseDetail(Trade close,PositionCloseDetail detail)
         {
             if (NewPositionCloseDetailEvent != null)
-                NewPositionCloseDetailEvent(detail);
+                NewPositionCloseDetailEvent(close,detail);
         }
-        public event Action<PositionCloseDetail> NewPositionCloseDetailEvent;
+        public event Action<Trade,PositionCloseDetail> NewPositionCloseDetailEvent;
 
+        /// <summary>
+        /// 新的持仓明细生成事件
+        /// </summary>
+        void NewPositionDetail(Trade open, PositionDetail detail)
+        {
+            if (NewPositionDetailEvent != null)
+            {
+                NewPositionDetailEvent(open, detail);
+            }
+        }
+        public event Action<Trade, PositionDetail> NewPositionDetailEvent;
 
         void NewPosition(Position pos)
         {
@@ -103,8 +114,11 @@ namespace TradingLib.Common
                 //pt.DefaultAccount = account.ID;
                 PosBook.TryAdd(account.ID, pt);
                 //绑定仓位管理器中的相关事件
-                pt.NewPositionCloseDetailEvent += new Action<PositionCloseDetail>(NewPositionCloseDetail);
+                pt.NewPositionCloseDetailEvent += new Action<Trade,PositionCloseDetail>(NewPositionCloseDetail);
+                pt.NewPositionDetailEvent += new Action<Trade, PositionDetail>(NewPositionDetail);
                 pt.NewPositionEvent += new Action<Position>(NewPosition);
+
+
             }
             baseacc.TKPosition = pt;
 

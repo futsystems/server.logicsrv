@@ -42,6 +42,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Account\IAccountIndicator.cs" />
     <Compile Include="Account\IAccountService.cs" />
     <Compile Include="Account\IRiskRule.cs" />
     <Compile Include="Contrib\EnumContribCommandHandleType.cs" />

@@ -1,0 +1,173 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.ComponentModel;
+
+namespace TradingLib.API
+{
+    /// <summary>
+    /// 跟单方向
+    /// </summary>
+    public enum QSEnumFollowDirection
+    {
+        [Description("正向")]
+        Positive,
+        [Description("反向")]
+        Reverse,
+    }
+
+    /// <summary>
+    /// 跟单价格类别
+    /// </summary>
+    public enum QSEnumFollowPriceType
+    { 
+        /// <summary>
+        /// 以市价方式交易
+        /// </summary>
+        [Description("市价")]
+        MarketPrice,
+        /// <summary>
+        /// 以当时的盘口对手价格交易
+        /// 买入以卖价报单 卖出以买价报单
+        /// </summary>
+        [Description("对手价")]
+        OpponentPrice,
+        /// <summary>
+        /// 以当时的盘口挂单价格交易
+        /// 买入以买价报单 卖出以卖价报单
+        /// </summary>
+        [Description("挂单价")]
+        HangingPrice,
+
+        /// <summary>
+        /// 以成交信号价格偏移一定点数进行报单
+        /// </summary>
+        [Description("信号价")]
+        SignalPrice,
+
+    }
+
+    /// <summary>
+    /// 挂单触发操作阀值
+    /// 1.时间，报单一定时间后没有成交 则触发操作
+    /// 2.价格，报单后价格达到一定波动超过一定范围 则触发操作
+    /// </summary>
+    public enum QSEnumPendingThresholdType
+    {
+        [Description("按时间触发操作")]
+        ByTime,
+
+        [Description("按价格出发操作")]
+        ByTicks,
+    }
+
+    /// <summary>
+    /// 挂单处理方式
+    /// </summary>
+    public enum QSEnumPendingOperationType
+    { 
+        [Description("撤单")]
+        Cancel,
+        [Description("市价追单")]
+        ByMarket,
+    }
+
+    /// <summary>
+    /// 持仓事件类型
+    /// 开仓/平仓
+    /// </summary>
+    public enum QSEnumPositionEventType
+    {
+        /// <summary>
+        /// 开仓
+        /// </summary>
+        EntryPosition,
+
+        /// <summary>
+        /// 平仓
+        /// </summary>
+        ExitPosition,
+    }
+
+    /// <summary>
+    /// 跟单操作类别
+    /// 某个跟单项目在跟单引擎中进行处理
+    /// 根据跟单项与跟单策略参数会产生相应跟单操作
+    /// 
+    /// </summary>
+    public enum QSEnumFollowActionType
+    {
+        [Description("等待")]
+        Wait,
+        [Description("提交委托")]
+        PlaceOrder,
+        [Description("取消委托")]
+        CancelOrder,
+        [Description("关闭跟单项")]
+        CloseItem
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public enum QSEnumFollowStage
+    {
+        /// <summary>
+        /// 根据信号源事件创建跟单项目ItemCreated
+        /// </summary>
+        [Description("新建")]
+        ItemCreated,
+
+        /// <summary>
+        /// 按照跟单策略规则生成委托并发送
+        /// </summary>
+        [Description("已发送")]
+        FollowOrderSent,
+
+        /// <summary>
+        /// 跟单委托待成交
+        /// </summary>
+        [Description("待成交")]
+        FollowOrderOpened,
+
+        /// <summary>
+        /// 跟单委托已经全部成交
+        /// </summary>
+        [Description("全部成交")]
+        FollowOrderFilled,
+
+        /// <summary>
+        /// 跟单委托已经全部成交
+        /// </summary>
+        [Description("部分成交")]
+        FollowOrderPartFilled,
+
+        /// <summary>
+        /// 跟单委托被扯单
+        /// </summary>
+        [Description("发送撤单")]
+        FollowOrderCancelSent,
+
+        /// <summary>
+        /// 跟单委托被扯单
+        /// </summary>
+        [Description("确认撤单")]
+        FollowOrderCanceled,
+
+
+        [Description("跟单项关闭")]
+        ItemClosed
+    }
+
+    /// <summary>
+    /// 信号类别
+    /// </summary>
+    public enum QSEnumSignalType
+    {
+        [Description("外部通道")]
+        Connector,
+        [Description("内部帐户")]
+        Account,
+    }
+}

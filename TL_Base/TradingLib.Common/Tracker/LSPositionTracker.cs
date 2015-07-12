@@ -44,14 +44,16 @@ namespace TradingLib.Common
         {
             poslist.Add(pos);
             NewPosition(pos);
-            pos.NewPositionCloseDetailEvent += new Action<PositionCloseDetail>(NewPositionCloseDetail);
+            pos.NewPositionCloseDetailEvent += new Action<Trade,PositionCloseDetail>(NewPositionCloseDetail);
+            pos.NewPositionDetailEvent += new Action<Trade, PositionDetail>(NewPositionDetail);
         }
 
         void _stk_NewPositionEvent(Position pos)
         {
             poslist.Add(pos);
             NewPosition(pos);
-            pos.NewPositionCloseDetailEvent += new Action<PositionCloseDetail>(NewPositionCloseDetail);
+            pos.NewPositionCloseDetailEvent += new Action<Trade,PositionCloseDetail>(NewPositionCloseDetail);
+            pos.NewPositionDetailEvent += new Action<Trade, PositionDetail>(NewPositionDetail);
         }
 
         #region 响应交易对象数据
@@ -167,16 +169,29 @@ namespace TradingLib.Common
         #endregion
 
 
+
+        /// <summary>
+        /// 新的持仓明细生成事件
+        /// </summary>
+        void NewPositionDetail(Trade open, PositionDetail detail)
+        {
+            if (NewPositionDetailEvent != null)
+            {
+                NewPositionDetailEvent(open, detail);
+            }
+        }
+        public event Action<Trade, PositionDetail> NewPositionDetailEvent;
+
         /// <summary>
         /// 产生新的持仓对象
         /// </summary>
         /// <param name="detail"></param>
-        void NewPositionCloseDetail(PositionCloseDetail detail)
+        void NewPositionCloseDetail(Trade close,PositionCloseDetail detail)
         {
             if (NewPositionCloseDetailEvent != null)
-                NewPositionCloseDetailEvent(detail);
+                NewPositionCloseDetailEvent(close,detail);
         }
-        public event Action<PositionCloseDetail> NewPositionCloseDetailEvent;
+        public event Action<Trade,PositionCloseDetail> NewPositionCloseDetailEvent;
 
 
         /// <summary>

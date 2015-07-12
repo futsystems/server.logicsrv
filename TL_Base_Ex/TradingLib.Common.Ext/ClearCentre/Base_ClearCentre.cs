@@ -34,6 +34,31 @@ namespace TradingLib.Common
             : base(name)
         {
             acctk.NewPositionEvent += new Action<Position>(acctk_NewPositionEvent);
+            acctk.NewPositionCloseDetailEvent += new Action<Trade,PositionCloseDetail>(acctk_NewPositionCloseDetailEvent);
+            acctk.NewPositionDetailEvent += new Action<Trade, PositionDetail>(acctk_NewPositionDetailEvent);
+        }
+
+
+        void acctk_NewPositionDetailEvent(Trade arg1, PositionDetail arg2)
+        {
+            IAccount account = TLCtxHelper.ModuleAccountManager[arg1.Account];
+            if (account != null)
+            {
+                account.FirePositoinDetailEvent(arg1,arg2);
+            }
+        }
+
+        /// <summary>
+        /// 当有持仓关闭时出发持仓关闭时间
+        /// </summary>
+        /// <param name="obj"></param>
+        void acctk_NewPositionCloseDetailEvent(Trade obj1,PositionCloseDetail obj2)
+        {
+            IAccount account = TLCtxHelper.ModuleAccountManager[obj1.Account];
+            if (account != null)
+            {
+                account.FirePositionCloseDetailEvent(obj1, obj2);
+            }
         }
 
         //当帐户交易对象维护器产生持仓时，我们将持仓加入total维护其列表用于快速访问
@@ -41,6 +66,7 @@ namespace TradingLib.Common
         {
             logger.Info("new postion created " + obj.GetPositionKey());
             totaltk.NewPosition(obj);
+
         }
 
         #region 添加或删除交易帐户到清算服务的内存数据哭

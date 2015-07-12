@@ -44,7 +44,7 @@ namespace TradingLib.Core
             try
             {
                 //帐户交易数据维护器产生 平仓明细事件
-                acctk.NewPositionCloseDetailEvent += new Action<PositionCloseDetail>(acctk_NewPositionCloseDetailEvent);
+                acctk.NewPositionCloseDetailEvent += new Action<Trade,PositionCloseDetail>(acctk_NewPositionCloseDetailEvent);
                 
                 //初始化PositionRound生成器
                 prt = new PositionRoundTracker();
@@ -70,7 +70,7 @@ namespace TradingLib.Core
         /// 保存平仓明细记录
         /// </summary>
         /// <param name="obj"></param>
-        void acctk_NewPositionCloseDetailEvent(PositionCloseDetail obj)
+        void acctk_NewPositionCloseDetailEvent(Trade f,PositionCloseDetail obj)
         {
             if (_status == QSEnumClearCentreStatus.CCOPEN)
             {

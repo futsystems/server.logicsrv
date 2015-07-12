@@ -59,6 +59,8 @@ namespace TradingLib.Core
 
         public void OnOrderEvent(Order o)
         {
+            IAccount account = TLCtxHelper.ModuleAccountManager[o.Account];
+
             //更新委托状态
             switch (o.Status)
             {
@@ -87,6 +89,9 @@ namespace TradingLib.Core
             //清算中心响应委托回报
             TLCtxHelper.ModuleClearCentre.GotOrder(o);
 
+            //触发交易账户委托事件
+            account.FireOrderEvent(o);
+
             //?如何完善cancel机制
             if (o.Status == QSEnumOrderStatus.Canceled)
             {
@@ -108,15 +113,23 @@ namespace TradingLib.Core
         {
             //设定系统内成交编号
             AssignTradeID(ref t);
+
+            IAccount account = TLCtxHelper.ModuleAccountManager[t.Account];
+
             //清算中心响应成交回报
             TLCtxHelper.ModuleClearCentre.GotFill(t);//注这里的成交没有结算手续费,成交部分我们需要在结算中心结算结算完手续费后再向客户端发送
-            //对外通知成交
+            
+            
+            //对外通知成交 Indicator总线
             TLCtxHelper.EventIndicator.FireFillEvent(t);
+
+            //触发交易账户成交事件
+            account.FireFillEvent(t);
+
             //对外通知
             this.NotifyFill(t);
 
             //对外通知持仓更新
-            IAccount account = TLCtxHelper.ModuleAccountManager[t.Account];
             if (account != null)
             {
                 //有新的成交数据后,系统自动发送对应的持仓信息

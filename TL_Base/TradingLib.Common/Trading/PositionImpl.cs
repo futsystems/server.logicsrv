@@ -613,6 +613,7 @@ namespace TradingLib.Common
                     PositionDetail d = this.OpenPosition(t);
                     _postodaynewlist.Add(d);//插入今日新开仓持仓明细
                     _postotallist.Add(d);//插入到Totallist便于访问
+                    NewPositionDetail(t, d);//对外触发持仓明细事件
                 }
             }
             else//平仓金额 数量累加
@@ -717,14 +718,20 @@ namespace TradingLib.Common
         /// 产生新的平仓明细
         /// </summary>
         /// <param name="closedetail"></param>
-        void NewPositionCloseDetail(PositionCloseDetail closedetail)
+        void NewPositionCloseDetail(Trade close,PositionCloseDetail closedetail)
         {
             _posclosedetaillist.Add(closedetail);
             if (NewPositionCloseDetailEvent != null)
-                NewPositionCloseDetailEvent(closedetail);
+                NewPositionCloseDetailEvent(close,closedetail);
         }
-        public event Action<PositionCloseDetail> NewPositionCloseDetailEvent;
+        public event Action<Trade,PositionCloseDetail> NewPositionCloseDetailEvent;
 
+        void NewPositionDetail(Trade open, PositionDetail detail)
+        {
+            if (NewPositionDetailEvent != null)
+                NewPositionDetailEvent(open, detail);
+        }
+        public event Action<Trade, PositionDetail> NewPositionDetailEvent;
         
         /// <summary>
         /// 利用平仓成交平掉对应的持仓明细 按照先开先平或者平今平昨的平仓逻辑
@@ -758,7 +765,7 @@ namespace TradingLib.Common
                     closeprofit += closedetail.CloseProfitByDate;//平仓盈亏金额
                     closepoint += closedetail.ClosePointByDate;
                     remainsize -= closedetail.CloseVolume;
-                    NewPositionCloseDetail(closedetail);
+                    NewPositionCloseDetail(close,closedetail);
                 }
             }
 
@@ -785,7 +792,7 @@ namespace TradingLib.Common
                     closeprofit += closedetail.CloseProfitByDate;
                     closepoint += closedetail.ClosePointByDate;
                     remainsize -= closedetail.CloseVolume;
-                    NewPositionCloseDetail(closedetail);
+                    NewPositionCloseDetail(close,closedetail);
                 }
             }
 
