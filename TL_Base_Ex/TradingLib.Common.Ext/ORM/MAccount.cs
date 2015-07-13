@@ -408,6 +408,8 @@ namespace TradingLib.ORM
             }
         }
 
+         
+
         /// <summary>
         /// 某个时间端内所有入金之和
         /// </summary>
@@ -456,6 +458,42 @@ namespace TradingLib.ORM
                 return total.Total;
             }
 
+        }
+
+        /// <summary>
+        /// 查询某个交易日的出入金统计
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="tradingday"></param>
+        /// <returns></returns>
+        public static IEnumerable<CashReport> SelectCashReport(QSEnumEquityType type, int tradingday)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Empty;
+                if (type == QSEnumEquityType.OwnEquity)
+                {
+                    query = String.Format(@"select IFNULL(account1,account2) as account,IFNULL(own_in,0) as cashin,IFNULL(own_out,0) as cashout  FROM
+(
+select * from (SELECT account as account1,Sum(amount) as own_in FROM log_cashtrans where settleday ={0}  and equity_type='OwnEquity' and amount>0 GROUP BY account )tb1   left  join  (SELECT account as account2,Sum(amount) as own_out FROM log_cashtrans where settleday ={0}  and equity_type='OwnEquity' and amount<0 GROUP BY account) tb2 on tb1.account1=tb2.account2
+union
+select * from (SELECT account as account1,Sum(amount) as own_in FROM log_cashtrans where settleday ={0}  and equity_type='OwnEquity' and amount>0 GROUP BY account )tb1   right  join  (SELECT account as account2,Sum(amount) as own_out FROM log_cashtrans where settleday ={0}  and equity_type='OwnEquity' and amount<0 GROUP BY account) tb2 on tb1.account1=tb2.account2
+) as cash_report", tradingday);
+                }
+                else
+                {
+                    query = String.Format(@"select IFNULL(account1,account2) as account,IFNULL(own_in,0) as cashin,IFNULL(own_out,0) as cashout  FROM
+(
+select * from (SELECT account as account1,Sum(amount) as own_in FROM log_cashtrans where settleday ={0}  and equity_type='CreditEquity' and amount>0 GROUP BY account )tb1   left  join  (SELECT account as account2,Sum(amount) as own_out FROM log_cashtrans where settleday ={0}  and equity_type='CreditEquity' and amount<0 GROUP BY account) tb2 on tb1.account1=tb2.account2
+union
+select * from (SELECT account as account1,Sum(amount) as own_in FROM log_cashtrans where settleday ={0}  and equity_type='CreditEquity' and amount>0 GROUP BY account )tb1   right  join  (SELECT account as account2,Sum(amount) as own_out FROM log_cashtrans where settleday ={0}  and equity_type='CreditEquity' and amount<0 GROUP BY account) tb2 on tb1.account1=tb2.account2
+) as cash_report", tradingday);
+                }
+
+                
+                return db.Connection.Query<CashReport>(query, null);
+                
+            }
         }
 
         public static IList<CashTransaction> SelectHistCashTransaction(string account, int begin, int end)
@@ -766,6 +804,21 @@ namespace TradingLib.ORM
                 string query = string.Format("SELECT account,nowcredit FROM log_settlement WHERE account = '{0}' AND settleday = '{1}'", account, settleday);
                 AccountLastCredit settleCredit = db.Connection.Query<AccountLastCredit>(query).SingleOrDefault();//包含多个元素则异常
                 return settleCredit == null ? 0 : settleCredit.NowCredit;
+            }
+        }
+
+        /// <summary>
+        /// 获得某个交易日结束 权益统计数据
+        /// </summary>
+        /// <param name="tradingday"></param>
+        /// <returns></returns>
+        public static IEnumerable<EquityReport> SelectEquityReport(int tradingday)
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = string.Format("SELECT account,nowequity as equity,nowcredit as credit FROM log_settlement WHERE settleday = '{0}'", tradingday);
+                return db.Connection.Query<EquityReport>(query);//包含多个元素则异常
+               
             }
         }
 

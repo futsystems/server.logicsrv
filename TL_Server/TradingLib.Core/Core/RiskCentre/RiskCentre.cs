@@ -248,11 +248,13 @@ namespace TradingLib.Core
             ClearActiveAccount();
 
             //加载帐户规则 帐户规则在清算中心重置帐户时被清楚
-            foreach (IAccount account in _clearcentre.Accounts)
-            { 
-                if(!account.RuleItemLoaded)
-                    this.LoadRuleItem(account);
-            }
+            //foreach (IAccount account in _clearcentre.Accounts)
+            //{ 
+            //    if(!account.RuleItemLoaded)
+            //        this.LoadRuleItem(account);
+            //}
+            LoadRuleItemAll();
+
             Notify("风控中心重置(结算后)[" + DateTime.Now.ToShortDateString() + "]", " ");
         }
 
@@ -262,11 +264,12 @@ namespace TradingLib.Core
         {
             Util.StartStatus(this.PROGRAME);
             //加载帐户规则
-            foreach (IAccount account in _clearcentre.Accounts)
-            {
-                if (!account.RuleItemLoaded)
-                    this.LoadRuleItem(account);
-            }
+            //foreach (IAccount account in _clearcentre.Accounts)
+            //{
+            //    if (!account.RuleItemLoaded)
+            //        this.LoadRuleItem(account);
+            //}
+            LoadRuleItemAll();
         }
 
         public void Stop()

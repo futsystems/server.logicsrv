@@ -40,6 +40,20 @@ namespace TradingLib.ORM
         }
 
         /// <summary>
+        /// 加载所有账户的风控规则设置
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable<RuleItem> SelectAllRuleItems()
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = "SELECT * FROM cfg_rule";
+                IEnumerable<RuleItem> result = db.Connection.Query<RuleItem>(query);
+                return result;
+            }
+        }
+
+        /// <summary>
         /// 更新风控规则项目
         /// </summary>
         /// <param name="item"></param>
