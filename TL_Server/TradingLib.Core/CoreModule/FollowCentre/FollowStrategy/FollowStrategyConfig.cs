@@ -5,13 +5,28 @@ using System.Text;
 using TradingLib.API;
 
 
-namespace TradingLib.Core
+namespace TradingLib.Common
 {
     /// <summary>
     /// 跟单策略参数
     /// </summary>
     public class FollowStrategyConfig
     {
+        /// <summary>
+        /// 数据库全局ID
+        /// </summary>
+        public int ID { get; set; }
+
+        /// <summary>
+        /// 策略名称/编号
+        /// </summary>
+        public string Token { get; set; }
+
+        /// <summary>
+        /// 策略描述
+        /// </summary>
+        public string Desp { get; set; }
+
         /// <summary>
         /// 跟单方向
         /// </summary>
@@ -21,8 +36,6 @@ namespace TradingLib.Core
         /// 跟单倍率
         /// </summary>
         public int FollowPower { get; set; }
-
-
 
         /// <summary>
         /// 开仓跟单价格类型
@@ -74,8 +87,7 @@ namespace TradingLib.Core
         /// 平仓挂单延迟处理方式
         /// </summary>
         public QSEnumPendingOperationType ExitPendingOperationType { get; set; }
-
-        
+ 
     }
 
     

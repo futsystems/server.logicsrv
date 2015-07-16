@@ -7,6 +7,9 @@ using TradingLib.Common;
 
 namespace TradingLib.Core
 {
+    /// <summary>
+    /// 跟单组件 全局访问对象
+    /// </summary>
     public class FollowTracker
     {
         static FollowTracker defaultinstance;

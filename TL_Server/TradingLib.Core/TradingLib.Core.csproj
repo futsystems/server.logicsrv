@@ -100,8 +100,11 @@
     <Compile Include="CoreModule\DataRepository\DataRepository.cs" />
     <Compile Include="CoreModule\ExCore\ExCore-NoTrading\ExCoreNoTrading.cs" />
     <Compile Include="CoreModule\ExCore\ExCore-TradingLogic\MsgExchServer_Notify.cs" />
+    <Compile Include="CoreModule\FollowCentre\FollowCentre.cs" />
     <Compile Include="CoreModule\FollowCentre\FollowItem\FollowItemData.cs" />
     <Compile Include="CoreModule\FollowCentre\FollowStrategy\StrategySignalItem.cs" />
+    <Compile Include="CoreModule\FollowCentre\ORM\MStrategy.cs" />
+    <Compile Include="CoreModule\FollowCentre\Tracker\FollowStrategyTracker.cs" />
     <Compile Include="CoreModule\FollowCentre\Tracker\FollowTracker.cs" />
     <Compile Include="CoreModule\FollowCentre\ORM\MSignal.cs" />
     <Compile Include="CoreModule\FollowCentre\Signal\SignalFactory.cs" />
@@ -188,7 +191,7 @@
     <Compile Include="CoreModule\FollowCentre\FollowStrategy\FollowStrategy_EventFollowAccount.cs" />
     <Compile Include="CoreModule\FollowCentre\IPositionEvent.cs" />
     <Compile Include="CoreModule\FollowCentre\Signal\ISignal.cs" />
-    <Compile Include="CoreModule\FollowCentre\OrderSourceTracker.cs" />
+    <Compile Include="CoreModule\FollowCentre\Tracker\OrderSourceTracker.cs" />
     <Compile Include="CoreModule\FollowCentre\Signal.cs" />
     <Compile Include="CoreModule\FollowCentre\SignalTracker2.cs" />
     <Compile Include="CoreModule\FollowCentre\Tracker\TradeFollowItemTracker.cs" />

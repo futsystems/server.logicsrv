@@ -18,19 +18,19 @@ namespace TradingLib.Core
         {
 
             //通过委托编号查找对应的TradeFollowItem
-            OrderSource source = sourceTracker[o.id];
-            if (source != null)
+            TradeFollowItem item = sourceTracker[o.id];
+            if (item != null)
             {
-                source.FollowItem.GotOrder(o);
+                item.GotOrder(o);
             }
         }
 
         void followAccount_GotFillEvent(Trade t)
         {
-            OrderSource source = sourceTracker[t.id];
-            if (source != null)
+            TradeFollowItem item = sourceTracker[t.id];
+            if (item != null)
             {
-                source.FollowItem.GotTrade(t);
+                item.GotTrade(t);
             }
         }
     }

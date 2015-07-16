@@ -26,9 +26,9 @@ namespace TradingLib.Core
 
 
             //2.生成跟单项目
-            TradeFollowItem followitem = new TradeFollowItem(arg1, arg2, arg3);
+            TradeFollowItem followitem = new TradeFollowItem(this,arg1, arg2, arg3);
 
-            signalTracker.GetFollowItemTracker(arg1.Token).GotTradeFollowItem(followitem);
+            //signalTracker.GetFollowItemTracker(arg1.Token).GotTradeFollowItem(followitem);
 
             //3.跟单项目+配置文件触发委托
 

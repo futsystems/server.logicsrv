@@ -35,7 +35,7 @@ namespace TradingLib.ORM
             using (DBMySql db = new DBMySql())
             {
                 const string query = "SELECT * FROM follow_strategy_signals";
-                IEnumerable<SignalConfig> result = db.Connection.Query<SignalConfig>(query, null);
+                IEnumerable<StrategySignalItem> result = db.Connection.Query<StrategySignalItem>(query, null);
                 return result;
             }
         }

@@ -11,13 +11,26 @@ namespace TradingLib.Core
 {
     /// <summary>
     /// 信号维护器
+    /// 维护了所有信号源和跟单策略的信号组设定
+    /// 
     /// </summary>
     public class SignalTracker
     {
+        /// <summary>
+        /// 信号设定map
+        /// </summary>
         ConcurrentDictionary<int, SignalConfig> configmap = new ConcurrentDictionary<int, SignalConfig>();
+
+        /// <summary>
+        /// 信号数据库ID与信号的映射关系
+        /// </summary>
         ConcurrentDictionary<int, ISignal> signalmap = new ConcurrentDictionary<int, ISignal>();
 
+        /// <summary>
+        /// 跟单策略数据库ID与策略信号组的映射关系，每个跟单策略有一组信号设定
+        /// </summary>
         ConcurrentDictionary<int, ConcurrentDictionary<int, ISignal>> stragysignalmap = new ConcurrentDictionary<int, ConcurrentDictionary<int, ISignal>>();
+        
         public SignalTracker()
         {
             //从数据库加载信号配置

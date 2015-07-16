@@ -53,6 +53,7 @@
     <Compile Include="Core\Function\IBrokerRouter.cs" />
     <Compile Include="Core\Function\IDataRouter.cs" />
     <Compile Include="Core\Function\IExCore.cs" />
+    <Compile Include="Core\Function\IFollowCentre.cs" />
     <Compile Include="Core\Function\ITaskCentre.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Module\IModuleAccountManager.cs" />
@@ -61,6 +62,7 @@
     <Compile Include="Module\IModuleDataRepository.cs" />
     <Compile Include="Module\IModuleDataRouter.cs" />
     <Compile Include="Module\IModuleExCore.cs" />
+    <Compile Include="Module\IModuleFollowCentre.cs" />
     <Compile Include="Module\IModuleMgrExchange.cs" />
     <Compile Include="Module\IModuleRiskCentre.cs" />
     <Compile Include="Module\IModuleSettleCentre.cs" />
