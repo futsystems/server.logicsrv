@@ -51,20 +51,20 @@ namespace OrderRuleSet
             Symbol symbol = o.oSymbol;
 
             //如果不需要检查该合约则直接返回true
-            if (!NeedCheckSymbol(symbol))
-                return true;
+            //if (!NeedCheckSymbol(symbol))
+            //    return true;
 
             //判断是开仓还是平仓如果是开仓则进行判断拒绝,平仓则直接允许
             if (!o.IsEntryPosition) return true;
             //如果是开仓，可用资金-该Order需要占用的保证金为该Order成交后所剩余可用资金，该资金比例是我们监控的主要项目
             decimal power = Account.AvabileFunds - Account.CalOrderFundRequired(o, 0);
 
-            decimal per = (power / Account.NowEquity) * 100;
+            decimal ratio = Account.Margin / (Account.NowEquity+Account.Credit) * 100;
 
-            bool ret = per >= _percent;
+            bool ret = ratio < _percent;
             if (!ret)
             {
-                msg = RuleDescription + " 不满足,委托被拒绝";
+                msg = RuleDescription + " 委托被拒绝";
                 o.Comment = msg;
             }
             return ret;
@@ -78,7 +78,7 @@ namespace OrderRuleSet
         {
             get
             {
-                return "开仓条件:当可用资金比例 " + Util.GetEnumDescription(this.Compare) + " " + _percent.ToString("N2") + "%" + " [" + SymbolSet + "]"; ;
+                return "禁止开仓:当风险度比例 " + Util.GetEnumDescription(this.Compare) + " " + _percent.ToString("N2") + "%" + " [" + SymbolSet + "]"; ;
             }
         }
 
@@ -97,7 +97,7 @@ namespace OrderRuleSet
         /// </summary>
         public static new string Description
         {
-            get { return "当可用资金大于设定百分比时,该委托可接收(可用资金是当前可用资金扣除该委托成交所占用保证金),可用资金比例大于20% 则参考值填写20"; }
+            get { return "当风险度大于设定百分比时,禁止开仓(风险度=保证金/(当前权益+信用额度)),风险度大于80% 则参考值填写80"; }
         }
 
         public static new bool CanSetCompare { get { return false; } }

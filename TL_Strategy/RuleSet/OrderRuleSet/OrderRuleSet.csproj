@@ -49,6 +49,8 @@
     <Compile Include="RSTime.cs" />
     <Compile Include="RSSymbolCanTrade.cs" />
     <Compile Include="RSSymbolBlock.cs" />
+    <Compile Include="RSLots.cs" />
+    <Compile Include="RSPositionHold.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

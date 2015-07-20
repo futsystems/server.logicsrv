@@ -63,14 +63,18 @@ namespace TradingLib.Common
         /// <returns></returns>
         protected bool NeedCheckSymbol(Symbol symbol)
         {
-            //如果有合约过滤集,并且过滤集不包含当前品种,则不用进行风控项检查
-            if (_symbolset != null && !_symbolset.Contains(symbol.SecurityFamily.Code))
-                return false;//如果当前Order的symbol不在我们检查行列，我们直接返回Ture
+            //集合为空 不检查合约，集合不为空则检查合约对应品种
+            if (_symbolset == null || _symbolset.Count==0)
+                return false;
+            ////如果有合约过滤集,并且过滤集不包含当前品种,则不用进行风控项检查
+            //if (_symbolset != null && !_symbolset.Contains(symbol.SecurityFamily.Code))
+            //    return false;//如果当前Order的symbol不在我们检查行列，我们直接返回Ture
             return true;
         }
 
         /// <summary>
         /// 检查合约是否在品种集合中
+        /// 合约集合不为空切该合约品种在品种集中
         /// </summary>
         /// <param name="symbol"></param>
         /// <returns></returns>
