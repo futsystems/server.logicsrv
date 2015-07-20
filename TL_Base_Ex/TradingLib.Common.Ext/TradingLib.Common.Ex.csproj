@@ -72,10 +72,12 @@
     <Compile Include="Contex\Event\EventArgs\ManagerNotifyEventArgs.cs" />
     <Compile Include="Contrib\Task.cs" />
     <Compile Include="ORM\MCommission.cs" />
+    <Compile Include="ORM\MCTPBrokerInfo.cs" />
     <Compile Include="ORM\MMargin.cs" />
     <Compile Include="ORM\MStrategy.cs" />
     <Compile Include="ORM\MSystem.cs" />
     <Compile Include="Tracker\BasicTracker\CommissionTemplateTracker.cs" />
+    <Compile Include="Tracker\BasicTracker\CTPBrokerInfoTracker.cs" />
     <Compile Include="Tracker\BasicTracker\ExStrategyTemplateTracker.cs" />
     <Compile Include="Tracker\BasicTracker\MarginTemplateTracker.cs" />
     <Compile Include="Utils\Account\AccountUtils_xx.cs" />

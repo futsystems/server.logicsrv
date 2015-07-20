@@ -12,6 +12,21 @@ namespace TradingLib.ServiceManager
     public partial class ConnectorManager
     {
 
+        #region 
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QueryCTPBrokerInfo", "QueryCTPBrokerInfo - query ctp broker info", "查询CTP Broker Info")]
+        public void CTE_QueryCTPBrokerInfo(ISession session)
+        {
+            debug("查询CTP交易通道信息", QSEnumDebugLevel.INFO);
+            Manager manger = session.GetManager();
+            if (manger.IsInRoot())
+            {
+                //获得域内所有通道设置
+                CTPBrokerInfo[] ops = manger.Domain.GetCTPBrokerInfos().ToArray();// BasicTracker.ConnectorConfigTracker.ConnecotrConfigs.ToArray();
+                session.ReplyMgr(ops);
+            }
+        }
+
+        #endregion
         #region ConnectorConfig
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryConnectorConfig", "QryConnectorConfig - query broker config", "查询所有通道设置")]
         public void CTE_QueryConnectorConfig(ISession session)

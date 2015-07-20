@@ -221,5 +221,13 @@ namespace TradingLib.Common
         }
 
         #endregion
+
+
+        #region 获得某个域下的期货公司交易服务器信息
+        public static IEnumerable<CTPBrokerInfo> GetCTPBrokerInfos(this Domain domain)
+        {
+            return BasicTracker.CTPBrokerInfoTracker.CTPBrokerInfos.Where(info => info.Domain_ID == domain.ID);
+        }
+        #endregion
     }
 }

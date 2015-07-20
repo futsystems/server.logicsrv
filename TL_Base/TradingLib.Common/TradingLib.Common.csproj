@@ -91,6 +91,7 @@
     <Compile Include="Vendor\ConnectorConfig.cs" />
     <Compile Include="Vendor\ConnectorInfo.cs" />
     <Compile Include="Vendor\ConnectorInterface.cs" />
+    <Compile Include="Vendor\CTPBrokerInfo.cs" />
     <Compile Include="Vendor\IBrokerUtils.cs" />
     <Compile Include="Vendor\PositionMetricImpl.cs" />
     <Compile Include="Vendor\PositionMetricHelper.cs" />

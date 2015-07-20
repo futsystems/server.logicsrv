@@ -40,6 +40,9 @@ namespace TradingLib.Common
         //计算策略模板
         ExStrategyTemplateTracker exstrategytracker;
 
+        //CTP交易通道信息
+        CTPBrokerInfoTracker ctpbrokerinfotracker;
+
         static BasicTracker()
         {
             defaultinstance = new BasicTracker();
@@ -251,6 +254,18 @@ namespace TradingLib.Common
             }
         }
 
+        /// <summary>
+        /// CTP数据信息
+        /// </summary>
+        public static CTPBrokerInfoTracker CTPBrokerInfoTracker
+        {
+            get
+            {
+                if (defaultinstance.ctpbrokerinfotracker == null)
+                    defaultinstance.ctpbrokerinfotracker = new CTPBrokerInfoTracker();
+                return defaultinstance.ctpbrokerinfotracker;
+            }
+        }
 
         //public static void Release()
         //{

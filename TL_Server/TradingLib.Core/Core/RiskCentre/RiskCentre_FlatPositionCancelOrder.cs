@@ -890,9 +890,13 @@ namespace TradingLib.Core
                                         debug("没有撤单列表，直接生成平仓事务加入到队列", QSEnumDebugLevel.INFO);
                                         foreach (Position pos in ps.PendingPositionFlat)
                                         {
-                                            RiskTaskSet ps2 = GenFlatPostionSet(pos, ps.Source, ps.ForceCloseReason);
-                                            addlist.Add(ps2);
-                                            ps.SubTask.Add(ps2);
+                                            //判定当前交易时间
+                                            if (pos.oSymbol.IsMarketTime)
+                                            {
+                                                RiskTaskSet ps2 = GenFlatPostionSet(pos, ps.Source, ps.ForceCloseReason);
+                                                addlist.Add(ps2);
+                                                ps.SubTask.Add(ps2);
+                                            }
                                         }
                                         ps.SubTaskGenerated = true;
                                     }

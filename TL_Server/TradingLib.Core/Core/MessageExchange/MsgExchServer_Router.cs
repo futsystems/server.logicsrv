@@ -212,6 +212,11 @@ namespace TradingLib.Core
                 default:
                     break;
             }
+
+            if (simpromptenable && o.Broker == "SIMBROKER")
+            {
+                o.Comment =simprompt+ ":" + o.Comment;
+            }
             //清算中心响应委托回报
             _clearcentre.GotOrder(o);
 

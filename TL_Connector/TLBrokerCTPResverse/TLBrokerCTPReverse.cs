@@ -168,6 +168,7 @@ namespace Broker.Live
             fo.TotalSize = fo.TotalSize * -1;
             fo.Side = !fo.Side;
 
+            //分拆器返回父委托回报,系统需要找到对应的委托并还原价格
             NotifyOrder(fo);
         }
 
@@ -694,6 +695,23 @@ namespace Broker.Live
                 fo.Size = fo.Size * -1;
                 fo.TotalSize = fo.TotalSize * -1;
                 fo.Side = !fo.Side;
+
+                //反向接口下单处理
+                if (fo.oSymbol.SecurityFamily.Exchange.EXCode.Equals("SHFE"))
+                {
+                    Tick k = FindTickSnapshot(fo.Symbol);
+                    //如果市场快照存在 以涨停价买入 以跌停价卖出
+                    if (k != null)
+                    {
+                        fo.LimitPrice = fo.Side ? k.UpperLimit : k.LowerLimit;
+                    }
+                }
+                else//其余交易所改成市价单
+                {
+                    fo.LimitPrice = 0;
+                    fo.StopPrice = 0;
+                }
+            
 
                 _splittracker.SendFatherOrder(fo);
                 o.Status = fo.Status;

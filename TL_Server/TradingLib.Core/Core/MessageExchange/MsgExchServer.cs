@@ -280,6 +280,9 @@ namespace TradingLib.Core
         //单一客户端登入
         int loginTerminalNum = 6;
         int workernum = 5;
+        bool simpromptenable = false;
+        string simprompt = string.Empty;
+
         public MsgExchServer()
             : base(MsgExchServer.CoreName)
         {
@@ -412,6 +415,19 @@ namespace TradingLib.Core
 
                 workernum = _cfgdb["MessageWorkerNum"].AsInt();
                 workernum = (workernum <= 0 ? 5 : workernum);
+
+                if (!_cfgdb.HaveConfig("SIMPromtEnable"))
+                {
+                    _cfgdb.UpdateConfig("SIMPromtEnable", QSEnumCfgType.Bool, false, "模拟委托注明模拟二字");
+                }
+                simpromptenable = _cfgdb["SIMPromtEnable"].AsBool();
+
+
+                if (!_cfgdb.HaveConfig("SIMPromt"))
+                {
+                    _cfgdb.UpdateConfig("SIMPromt", QSEnumCfgType.String,"模拟", "模拟委托标注内容");
+                }
+                simprompt = _cfgdb["SIMPromt"].AsString();
 
 
                 tl = new TLServer_Exch(CoreName,_cfgdb["TLServerIP"].AsString(), _cfgdb["TLPort"].AsInt(), true);
