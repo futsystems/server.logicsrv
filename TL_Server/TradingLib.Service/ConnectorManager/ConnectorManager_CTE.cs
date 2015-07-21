@@ -12,12 +12,7 @@ namespace TradingLib.ServiceManager
     public partial class ConnectorManager
     {
 
-        [TaskAttr("夜盘收盘后停止通道",2,40,0, "每天晚上2：40停止通道")]//判定当前交易日状态，系统很多其他事务是按结算状态来进行的
-        public void Task_ResetTradingdayNieght()
-        {
-            debug("停止通道连接", QSEnumDebugLevel.INFO);
-            StopConnector();
-        }
+
 
 
         [ContribCommandAttr(QSEnumCommandSource.CLI, "pinterface", "Print Connector Interface - 输出当前成交接口类型", "输出当前成交接口类型")]

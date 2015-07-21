@@ -48,6 +48,7 @@
     <Compile Include="RSEquity.cs" />
     <Compile Include="RSTime.cs" />
     <Compile Include="RSMaxProfit.cs" />
+    <Compile Include="RSEquityCreditRatio.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -11,6 +11,15 @@ namespace TradingLib.ServiceManager
 {
     public partial class ConnectorManager
     {
+        [TaskAttr("日盘收盘后停止通道", 16, 40, 0, "每天下午16：40停止通道")]//判定当前交易日状态，系统很多其他事务是按结算状态来进行的
+        [TaskAttr("夜盘收盘后停止通道", 2, 40, 0, "每天晚上2：40停止通道")]//判定当前交易日状态，系统很多其他事务是按结算状态来进行的
+        public void Task_ResetTradingdayNieght()
+        {
+            debug("停止通道连接", QSEnumDebugLevel.INFO);
+            StopConnector();
+        }
+
+
         /// <summary>
         /// 重置通道连接
         /// </summary>
