@@ -1,0 +1,430 @@
+134607: [LOAD CONTRIB] TradingLib.Contrib.HistReportCentre
+134607: [LOAD CONTRIB] TradingLib.Contrib.CLI.CLIServer
+134607: CLIserver loading....
+134607: [LOAD CONTRIB] TradingLib.Contrib.APIService.APIServiceBundle
+134607: APIServiceBundle is loading ......
+134607: [LOAD CONTRIB] TradingLib.Contrib.FinService.FinServiceCentre
+134607: FinServiceCentre loading......
+134607: Load ServicePlane Type:TradingLib.Contrib.FinService.SPSpecialIFExt
+134607: Load ServicePlane Type:TradingLib.Contrib.FinService.SPCommonissionFixMargin
+134607: Load ServicePlane Type:TradingLib.Contrib.FinService.SPCommonissionBonus
+134607: Load ServicePlane Type:TradingLib.Contrib.FinService.SPSpecialIF
+134607: Load ServicePlane Type:TradingLib.Contrib.FinService.SPBonus
+134607: Load ServicePlane Type:TradingLib.Contrib.FinService.SPInterest
+134607: Load ServicePlane Type:TradingLib.Contrib.FinService.SPInterestFixMargin
+134607: Load Service Instance......
+134607: FinService:ID:10 Account: serviceplan_fk:9 active:True ModifiedTime:20150416104022 is not valid, drop it
+134607: FinService:ID:11 Account: serviceplan_fk:7 active:True ModifiedTime:20150514124213 is not valid, drop it
+134607: [START CONTRIB] TradingLib.Contirb.LogServer.LogServer
+134607: 启动日志服务,监听端口:3369
+134607: [START CONTRIB] TradingLib.Contrib.HistReportCentre
+134607: [START CONTRIB] TradingLib.Contrib.CLI.CLIServer
+134607: [START CONTRIB] TradingLib.Contrib.APIService.APIServiceBundle
+134607: [START CONTRIB] TradingLib.Contrib.FinService.FinServiceCentre
+134607: Telnet server start listening at:8888
+134607: 加载所有交易账户 风控规则
+134607: 添加风控项，帐户:6600007 rultename:AccountRuleSet.RSTime
+134607: 从数据库加载当日交易数据与出入金数据
+134607: 从数据库加载交易日:20150721 交易数据
+134607: 数据库恢复前次结算以来委托数据:5条
+134607: 数据库恢复前次结算以来成交数据:5条
+134607: 数据库恢复前次结算以来取消数据:0条
+134607: 从数据库加载上次结算日:20150720 持仓明细数据
+134607: 数据库恢复前次结算持仓明细数据:0条
+134607: 数据库恢复开启的PositionRound数据:0条
+134607: resume router roder....
+134607: resumed router order num:0
+134607: Starting MgrExch server...
+134607: Try to start server at: *:6670
+134608: try to load sessions form file:cache\MgrExch
+134608: webmsgexch start....
+134608: Start WebMsgRepServer
+134608: try to load sessions form file:cache\MsgExch
+134608: Starting MsgExch server...
+134608: Try to start server at: *:5570
+134609: ----------- Core Started -----------------
+134609: >>>>Context:Binding ContribEvent with ContribCommand(Handler)
+134609: 正常交易日,启动所有通道
+134609: 启动数据通道:FASTTICK
+134609: MasterServer:tick-master.cloud-deploy.com SlaveServer:tick-slave.cloud-deploy.com Port:9000 ReqPort:9001
+134609: Connect to FastTick ReqServer:tcp://tick-master.cloud-deploy.com:9001
+134609: Subscribe to FastTick PubServer:tcp://tick-master.cloud-deploy.com:9000
+134609: DataFeed[FASTTICK] Connected
+134609: DataFeed[FASTTICK] have not registed any symbol,register all symbol we trade
+134609: request market data to datafeed:TA509,TA512,ag1512,j1509,m1508,m1509,IF1507,IF1508,IC1507
+134609: FASTTICK RegisterSymbol CTP:TA509,TA512,ag1512,j1509,m1508,m1509,IF1507,IF1508,IC1507
+134610: tick:IF1508 120@4032.600000 Exch presettlement:3964.600000
+134610: tick:IF1508 120@4032.600000 Exch presettlement:3964.600000
+134610: 模拟引擎启动,成交方式:市场断面扫描 取价方式:盘口价 模拟实盘取价:False
+134610: 从清算中心加载模拟交易记录
+134610: Order Cnt:3 Trade Cnt:3 Max Fill Seq:1649
+134610: Broker[SIMBROKER] Connected
+134611: Try to start broker:HX001
+134611: WrapperFileName:libbroker\ctp20140521_win\TLBrokerWrapper.dll
+134611: BrokerFileName:libbroker\ctp20140521_win\TLBrokerCTP.dll
+134611: ~~~~~XServerInfoFieldSize:404
+134611: #1 wait connected....
+134611: ~~~~~XUserInfoFieldSize:260
+134611: #1 wait logined....
+134612: #2 wait logined....
+134612: 交易帐户登入成功
+134612: Resume trading info from clearcentre....
+134613: Resumed 0 Positions
+134613: Resumed 2 Orders
+134613: Resumed 2 Trades
+134613: 接口:HX001登入成功,可以接受交易请求
+134613: tick:IF1508 60@4036.400000 Exch presettlement:3964.600000
+134845: [LOAD CONTRIB] TradingLib.Contrib.HistReportCentre
+134845: [LOAD CONTRIB] TradingLib.Contrib.CLI.CLIServer
+134845: CLIserver loading....
+134845: [LOAD CONTRIB] TradingLib.Contrib.APIService.APIServiceBundle
+134845: APIServiceBundle is loading ......
+134845: [LOAD CONTRIB] TradingLib.Contrib.FinService.FinServiceCentre
+134845: FinServiceCentre loading......
+134845: Load ServicePlane Type:TradingLib.Contrib.FinService.SPSpecialIFExt
+134845: Load ServicePlane Type:TradingLib.Contrib.FinService.SPCommonissionFixMargin
+134845: Load ServicePlane Type:TradingLib.Contrib.FinService.SPCommonissionBonus
+134845: Load ServicePlane Type:TradingLib.Contrib.FinService.SPSpecialIF
+134845: Load ServicePlane Type:TradingLib.Contrib.FinService.SPBonus
+134845: Load ServicePlane Type:TradingLib.Contrib.FinService.SPInterest
+134845: Load ServicePlane Type:TradingLib.Contrib.FinService.SPInterestFixMargin
+134845: Load Service Instance......
+134845: FinService:ID:10 Account: serviceplan_fk:9 active:True ModifiedTime:20150416104022 is not valid, drop it
+134845: FinService:ID:11 Account: serviceplan_fk:7 active:True ModifiedTime:20150514124213 is not valid, drop it
+134845: [START CONTRIB] TradingLib.Contirb.LogServer.LogServer
+134845: 启动日志服务,监听端口:3369
+134845: [START CONTRIB] TradingLib.Contrib.HistReportCentre
+134845: [START CONTRIB] TradingLib.Contrib.CLI.CLIServer
+134845: [START CONTRIB] TradingLib.Contrib.APIService.APIServiceBundle
+134845: Telnet server start listening at:8888
+134845: [START CONTRIB] TradingLib.Contrib.FinService.FinServiceCentre
+134845: 加载所有交易账户 风控规则
+134845: 添加风控项，帐户:6600007 rultename:AccountRuleSet.RSTime
+134845: 从数据库加载当日交易数据与出入金数据
+134845: 从数据库加载交易日:20150721 交易数据
+134845: 数据库恢复前次结算以来委托数据:5条
+134845: 数据库恢复前次结算以来成交数据:5条
+134845: 数据库恢复前次结算以来取消数据:0条
+134845: 从数据库加载上次结算日:20150720 持仓明细数据
+134845: 数据库恢复前次结算持仓明细数据:0条
+134845: 数据库恢复开启的PositionRound数据:0条
+134845: resume router roder....
+134845: resumed router order num:0
+134845: Starting MgrExch server...
+134845: Try to start server at: *:6670
+135145: [LOAD CONTRIB] TradingLib.Contrib.HistReportCentre
+135146: [LOAD CONTRIB] TradingLib.Contrib.CLI.CLIServer
+135146: CLIserver loading....
+135146: [LOAD CONTRIB] TradingLib.Contrib.APIService.APIServiceBundle
+135146: APIServiceBundle is loading ......
+135146: [LOAD CONTRIB] TradingLib.Contrib.FinService.FinServiceCentre
+135146: FinServiceCentre loading......
+135146: Load ServicePlane Type:TradingLib.Contrib.FinService.SPSpecialIFExt
+135146: Load ServicePlane Type:TradingLib.Contrib.FinService.SPCommonissionFixMargin
+135146: Load ServicePlane Type:TradingLib.Contrib.FinService.SPCommonissionBonus
+135146: Load ServicePlane Type:TradingLib.Contrib.FinService.SPSpecialIF
+135146: Load ServicePlane Type:TradingLib.Contrib.FinService.SPBonus
+135146: Load ServicePlane Type:TradingLib.Contrib.FinService.SPInterest
+135146: Load ServicePlane Type:TradingLib.Contrib.FinService.SPInterestFixMargin
+135146: Load Service Instance......
+135146: FinService:ID:10 Account: serviceplan_fk:9 active:True ModifiedTime:20150416104022 is not valid, drop it
+135146: FinService:ID:11 Account: serviceplan_fk:7 active:True ModifiedTime:20150514124213 is not valid, drop it
+135146: [START CONTRIB] TradingLib.Contirb.LogServer.LogServer
+135146: 启动日志服务,监听端口:3369
+135146: [START CONTRIB] TradingLib.Contrib.HistReportCentre
+135146: [START CONTRIB] TradingLib.Contrib.CLI.CLIServer
+135146: [START CONTRIB] TradingLib.Contrib.APIService.APIServiceBundle
+135146: Telnet server start listening at:8888
+135146: [START CONTRIB] TradingLib.Contrib.FinService.FinServiceCentre
+135146: 加载所有交易账户 风控规则
+135146: 添加风控项，帐户:6600007 rultename:AccountRuleSet.RSTime
+135146: 从数据库加载当日交易数据与出入金数据
+135146: 从数据库加载交易日:20150721 交易数据
+135146: 数据库恢复前次结算以来委托数据:5条
+135146: 数据库恢复前次结算以来成交数据:5条
+135146: 数据库恢复前次结算以来取消数据:0条
+135146: 从数据库加载上次结算日:20150720 持仓明细数据
+135146: 数据库恢复前次结算持仓明细数据:0条
+135146: 数据库恢复开启的PositionRound数据:0条
+135146: resume router roder....
+135146: resumed router order num:0
+135146: Starting MgrExch server...
+135146: Try to start server at: *:6670
+135146: try to load sessions form file:cache\MgrExch
+135146: webmsgexch start....
+135146: Start WebMsgRepServer
+135147: try to load sessions form file:cache\MsgExch
+135147: Starting MsgExch server...
+135147: Try to start server at: *:5570
+135204: [LOAD CONTRIB] TradingLib.Contrib.HistReportCentre
+135204: [LOAD CONTRIB] TradingLib.Contrib.CLI.CLIServer
+135204: CLIserver loading....
+135204: [LOAD CONTRIB] TradingLib.Contrib.APIService.APIServiceBundle
+135204: APIServiceBundle is loading ......
+135204: [LOAD CONTRIB] TradingLib.Contrib.FinService.FinServiceCentre
+135204: FinServiceCentre loading......
+135204: Load ServicePlane Type:TradingLib.Contrib.FinService.SPSpecialIFExt
+135204: Load ServicePlane Type:TradingLib.Contrib.FinService.SPCommonissionFixMargin
+135204: Load ServicePlane Type:TradingLib.Contrib.FinService.SPCommonissionBonus
+135204: Load ServicePlane Type:TradingLib.Contrib.FinService.SPSpecialIF
+135204: Load ServicePlane Type:TradingLib.Contrib.FinService.SPBonus
+135204: Load ServicePlane Type:TradingLib.Contrib.FinService.SPInterest
+135204: Load ServicePlane Type:TradingLib.Contrib.FinService.SPInterestFixMargin
+135204: Load Service Instance......
+135204: FinService:ID:10 Account: serviceplan_fk:9 active:True ModifiedTime:20150416104022 is not valid, drop it
+135204: FinService:ID:11 Account: serviceplan_fk:7 active:True ModifiedTime:20150514124213 is not valid, drop it
+135204: [START CONTRIB] TradingLib.Contirb.LogServer.LogServer
+135204: 启动日志服务,监听端口:3369
+135204: [START CONTRIB] TradingLib.Contrib.HistReportCentre
+135204: [START CONTRIB] TradingLib.Contrib.CLI.CLIServer
+135204: [START CONTRIB] TradingLib.Contrib.APIService.APIServiceBundle
+135204: Telnet server start listening at:8888
+135204: [START CONTRIB] TradingLib.Contrib.FinService.FinServiceCentre
+135204: 加载所有交易账户 风控规则
+135204: 添加风控项，帐户:6600007 rultename:AccountRuleSet.RSTime
+135204: 从数据库加载当日交易数据与出入金数据
+135204: 从数据库加载交易日:20150721 交易数据
+135204: 数据库恢复前次结算以来委托数据:5条
+135205: 数据库恢复前次结算以来成交数据:5条
+135205: 数据库恢复前次结算以来取消数据:0条
+135205: 从数据库加载上次结算日:20150720 持仓明细数据
+135205: 数据库恢复前次结算持仓明细数据:0条
+135205: 数据库恢复开启的PositionRound数据:0条
+135205: resume router roder....
+135205: resumed router order num:0
+135205: Starting MgrExch server...
+135205: Try to start server at: *:6670
+135205: try to load sessions form file:cache\MgrExch
+135205: webmsgexch start....
+135205: Start WebMsgRepServer
+135206: try to load sessions form file:cache\MsgExch
+135206: Starting MsgExch server...
+135206: Try to start server at: *:5570
+135206: ----------- Core Started -----------------
+135206: >>>>Context:Binding ContribEvent with ContribCommand(Handler)
+135206: 正常交易日,启动所有通道
+135206: 启动数据通道:FASTTICK
+135206: MasterServer:tick-master.cloud-deploy.com SlaveServer:tick-slave.cloud-deploy.com Port:9000 ReqPort:9001
+135206: Connect to FastTick ReqServer:tcp://tick-master.cloud-deploy.com:9001
+135206: Subscribe to FastTick PubServer:tcp://tick-master.cloud-deploy.com:9000
+135206: DataFeed[FASTTICK] Connected
+135206: DataFeed[FASTTICK] have not registed any symbol,register all symbol we trade
+135206: request market data to datafeed:TA509,TA512,ag1512,j1509,m1508,m1509,IF1507,IF1508,IC1507
+135206: FASTTICK RegisterSymbol CTP:TA509,TA512,ag1512,j1509,m1508,m1509,IF1507,IF1508,IC1507
+135206: tick:IF1508 47@4018.400000 Exch presettlement:3964.600000
+135206: tick:IF1508 47@4018.400000 Exch presettlement:3964.600000
+135207: 模拟引擎启动,成交方式:市场断面扫描 取价方式:盘口价 模拟实盘取价:False
+135207: 从清算中心加载模拟交易记录
+135207: Order Cnt:3 Trade Cnt:3 Max Fill Seq:1649
+135207: Broker[SIMBROKER] Connected
+135208: Try to start broker:HX001
+135208: WrapperFileName:libbroker\ctp20140521_win\TLBrokerWrapper.dll
+135208: BrokerFileName:libbroker\ctp20140521_win\TLBrokerCTP.dll
+135208: ~~~~~XServerInfoFieldSize:404
+135208: #1 wait connected....
+135208: ~~~~~XUserInfoFieldSize:260
+135208: #1 wait logined....
+135209: #2 wait logined....
+135209: 交易帐户登入成功
+135209: Resume trading info from clearcentre....
+135209: Resumed 0 Positions
+135209: Resumed 2 Orders
+135209: Resumed 2 Trades
+135209: 接口:HX001登入成功,可以接受交易请求
+135209: tick:IF1508 78@4019.600000 Exch presettlement:3964.600000
+140212: [LOAD CONTRIB] TradingLib.Contrib.HistReportCentre
+140212: [LOAD CONTRIB] TradingLib.Contrib.CLI.CLIServer
+140212: CLIserver loading....
+140212: [LOAD CONTRIB] TradingLib.Contrib.APIService.APIServiceBundle
+140212: APIServiceBundle is loading ......
+140212: [LOAD CONTRIB] TradingLib.Contrib.FinService.FinServiceCentre
+140212: FinServiceCentre loading......
+140212: Load ServicePlane Type:TradingLib.Contrib.FinService.SPSpecialIFExt
+140212: Load ServicePlane Type:TradingLib.Contrib.FinService.SPCommonissionFixMargin
+140212: Load ServicePlane Type:TradingLib.Contrib.FinService.SPCommonissionBonus
+140212: Load ServicePlane Type:TradingLib.Contrib.FinService.SPSpecialIF
+140212: Load ServicePlane Type:TradingLib.Contrib.FinService.SPBonus
+140212: Load ServicePlane Type:TradingLib.Contrib.FinService.SPInterest
+140212: Load ServicePlane Type:TradingLib.Contrib.FinService.SPInterestFixMargin
+140212: Load Service Instance......
+140212: FinService:ID:10 Account: serviceplan_fk:9 active:True ModifiedTime:20150416104022 is not valid, drop it
+140212: FinService:ID:11 Account: serviceplan_fk:7 active:True ModifiedTime:20150514124213 is not valid, drop it
+140212: [START CONTRIB] TradingLib.Contirb.LogServer.LogServer
+140212: 启动日志服务,监听端口:3369
+140212: [START CONTRIB] TradingLib.Contrib.HistReportCentre
+140212: [START CONTRIB] TradingLib.Contrib.CLI.CLIServer
+140212: [START CONTRIB] TradingLib.Contrib.APIService.APIServiceBundle
+140212: Telnet server start listening at:8888
+140212: [START CONTRIB] TradingLib.Contrib.FinService.FinServiceCentre
+140212: 加载所有交易账户 风控规则
+140212: 添加风控项，帐户:6600007 rultename:AccountRuleSet.RSTime
+140212: 从数据库加载当日交易数据与出入金数据
+140212: 从数据库加载交易日:20150721 交易数据
+140212: 数据库恢复前次结算以来委托数据:5条
+140212: 数据库恢复前次结算以来成交数据:5条
+140212: 数据库恢复前次结算以来取消数据:0条
+140212: 从数据库加载上次结算日:20150720 持仓明细数据
+140212: 数据库恢复前次结算持仓明细数据:0条
+140212: 数据库恢复开启的PositionRound数据:0条
+140212: resume router roder....
+140212: resumed router order num:0
+140212: Starting MgrExch server...
+140212: Try to start server at: *:6670
+140215: [LOAD CONTRIB] TradingLib.Contrib.HistReportCentre
+140215: [LOAD CONTRIB] TradingLib.Contrib.CLI.CLIServer
+140215: CLIserver loading....
+140215: [LOAD CONTRIB] TradingLib.Contrib.APIService.APIServiceBundle
+140215: APIServiceBundle is loading ......
+140215: [LOAD CONTRIB] TradingLib.Contrib.FinService.FinServiceCentre
+140215: FinServiceCentre loading......
+140215: Load ServicePlane Type:TradingLib.Contrib.FinService.SPSpecialIFExt
+140215: Load ServicePlane Type:TradingLib.Contrib.FinService.SPCommonissionFixMargin
+140215: Load ServicePlane Type:TradingLib.Contrib.FinService.SPCommonissionBonus
+140215: Load ServicePlane Type:TradingLib.Contrib.FinService.SPSpecialIF
+140215: Load ServicePlane Type:TradingLib.Contrib.FinService.SPBonus
+140215: Load ServicePlane Type:TradingLib.Contrib.FinService.SPInterest
+140215: Load ServicePlane Type:TradingLib.Contrib.FinService.SPInterestFixMargin
+140215: Load Service Instance......
+140215: FinService:ID:10 Account: serviceplan_fk:9 active:True ModifiedTime:20150416104022 is not valid, drop it
+140215: FinService:ID:11 Account: serviceplan_fk:7 active:True ModifiedTime:20150514124213 is not valid, drop it
+140215: [START CONTRIB] TradingLib.Contirb.LogServer.LogServer
+140215: 启动日志服务,监听端口:3369
+140215: [START CONTRIB] TradingLib.Contrib.HistReportCentre
+140215: [START CONTRIB] TradingLib.Contrib.CLI.CLIServer
+140215: [START CONTRIB] TradingLib.Contrib.APIService.APIServiceBundle
+140215: Telnet server start listening at:8888
+140215: [START CONTRIB] TradingLib.Contrib.FinService.FinServiceCentre
+140215: 加载所有交易账户 风控规则
+140215: 添加风控项，帐户:6600007 rultename:AccountRuleSet.RSTime
+140215: 从数据库加载当日交易数据与出入金数据
+140215: 从数据库加载交易日:20150721 交易数据
+140215: 数据库恢复前次结算以来委托数据:5条
+140215: 数据库恢复前次结算以来成交数据:5条
+140215: 数据库恢复前次结算以来取消数据:0条
+140215: 从数据库加载上次结算日:20150720 持仓明细数据
+140215: 数据库恢复前次结算持仓明细数据:0条
+140215: 数据库恢复开启的PositionRound数据:0条
+140215: resume router roder....
+140215: resumed router order num:0
+140215: Starting MgrExch server...
+140215: Try to start server at: *:6670
+140742: [LOAD CONTRIB] TradingLib.Contrib.HistReportCentre
+140742: [LOAD CONTRIB] TradingLib.Contrib.CLI.CLIServer
+140742: CLIserver loading....
+140742: [LOAD CONTRIB] TradingLib.Contrib.APIService.APIServiceBundle
+140742: APIServiceBundle is loading ......
+140742: [LOAD CONTRIB] TradingLib.Contrib.FinService.FinServiceCentre
+140742: FinServiceCentre loading......
+140742: Load ServicePlane Type:TradingLib.Contrib.FinService.SPSpecialIFExt
+140742: Load ServicePlane Type:TradingLib.Contrib.FinService.SPCommonissionFixMargin
+140742: Load ServicePlane Type:TradingLib.Contrib.FinService.SPCommonissionBonus
+140742: Load ServicePlane Type:TradingLib.Contrib.FinService.SPSpecialIF
+140742: Load ServicePlane Type:TradingLib.Contrib.FinService.SPBonus
+140742: Load ServicePlane Type:TradingLib.Contrib.FinService.SPInterest
+140742: Load ServicePlane Type:TradingLib.Contrib.FinService.SPInterestFixMargin
+140742: Load Service Instance......
+140742: FinService:ID:10 Account: serviceplan_fk:9 active:True ModifiedTime:20150416104022 is not valid, drop it
+140742: FinService:ID:11 Account: serviceplan_fk:7 active:True ModifiedTime:20150514124213 is not valid, drop it
+140742: [START CONTRIB] TradingLib.Contirb.LogServer.LogServer
+140742: 启动日志服务,监听端口:3369
+140742: [START CONTRIB] TradingLib.Contrib.HistReportCentre
+140742: [START CONTRIB] TradingLib.Contrib.CLI.CLIServer
+140742: [START CONTRIB] TradingLib.Contrib.APIService.APIServiceBundle
+140742: Telnet server start listening at:8888
+140742: [START CONTRIB] TradingLib.Contrib.FinService.FinServiceCentre
+140742: 加载所有交易账户 风控规则
+140742: 添加风控项，帐户:6600007 rultename:AccountRuleSet.RSTime
+140742: 从数据库加载当日交易数据与出入金数据
+140742: 从数据库加载交易日:20150721 交易数据
+140742: 数据库恢复前次结算以来委托数据:5条
+140742: 数据库恢复前次结算以来成交数据:5条
+140742: 数据库恢复前次结算以来取消数据:0条
+140742: 从数据库加载上次结算日:20150720 持仓明细数据
+140742: 数据库恢复前次结算持仓明细数据:0条
+140742: 数据库恢复开启的PositionRound数据:0条
+140742: resume router roder....
+140742: resumed router order num:0
+140742: Starting MgrExch server...
+140742: Try to start server at: *:6670
+140743: try to load sessions form file:cache\MgrExch
+140743: webmsgexch start....
+140743: Start WebMsgRepServer
+140743: try to load sessions form file:cache\MsgExch
+140743: Starting MsgExch server...
+140743: Try to start server at: *:5570
+141030: [LOAD CONTRIB] TradingLib.Contrib.HistReportCentre
+141030: [LOAD CONTRIB] TradingLib.Contrib.CLI.CLIServer
+141030: CLIserver loading....
+141030: [LOAD CONTRIB] TradingLib.Contrib.APIService.APIServiceBundle
+141030: APIServiceBundle is loading ......
+141030: [LOAD CONTRIB] TradingLib.Contrib.FinService.FinServiceCentre
+141030: FinServiceCentre loading......
+141030: Load ServicePlane Type:TradingLib.Contrib.FinService.SPSpecialIFExt
+141030: Load ServicePlane Type:TradingLib.Contrib.FinService.SPCommonissionFixMargin
+141030: Load ServicePlane Type:TradingLib.Contrib.FinService.SPCommonissionBonus
+141030: Load ServicePlane Type:TradingLib.Contrib.FinService.SPSpecialIF
+141030: Load ServicePlane Type:TradingLib.Contrib.FinService.SPBonus
+141030: Load ServicePlane Type:TradingLib.Contrib.FinService.SPInterest
+141030: Load ServicePlane Type:TradingLib.Contrib.FinService.SPInterestFixMargin
+141030: Load Service Instance......
+141030: FinService:ID:10 Account: serviceplan_fk:9 active:True ModifiedTime:20150416104022 is not valid, drop it
+141030: FinService:ID:11 Account: serviceplan_fk:7 active:True ModifiedTime:20150514124213 is not valid, drop it
+141030: [START CONTRIB] TradingLib.Contirb.LogServer.LogServer
+141030: 启动日志服务,监听端口:3369
+141030: [START CONTRIB] TradingLib.Contrib.HistReportCentre
+141030: [START CONTRIB] TradingLib.Contrib.CLI.CLIServer
+141030: [START CONTRIB] TradingLib.Contrib.APIService.APIServiceBundle
+141030: Telnet server start listening at:8888
+141030: [START CONTRIB] TradingLib.Contrib.FinService.FinServiceCentre
+141030: 加载所有交易账户 风控规则
+141030: 添加风控项，帐户:6600007 rultename:AccountRuleSet.RSTime
+141030: 从数据库加载当日交易数据与出入金数据
+141030: 从数据库加载交易日:20150721 交易数据
+141030: 数据库恢复前次结算以来委托数据:5条
+141030: 数据库恢复前次结算以来成交数据:5条
+141030: 数据库恢复前次结算以来取消数据:0条
+141030: 从数据库加载上次结算日:20150720 持仓明细数据
+141030: 数据库恢复前次结算持仓明细数据:0条
+141030: 数据库恢复开启的PositionRound数据:0条
+141030: resume router roder....
+141030: resumed router order num:0
+141030: Starting MgrExch server...
+141030: Try to start server at: *:6670
+141031: try to load sessions form file:cache\MgrExch
+141031: webmsgexch start....
+141031: Start WebMsgRepServer
+141031: try to load sessions form file:cache\MsgExch
+141031: Starting MsgExch server...
+141031: Try to start server at: *:5570
+141032: ----------- Core Started -----------------
+141032: >>>>Context:Binding ContribEvent with ContribCommand(Handler)
+141032: 正常交易日,启动所有通道
+141032: 启动数据通道:FASTTICK
+141032: MasterServer:tick-master.cloud-deploy.com SlaveServer:tick-slave.cloud-deploy.com Port:9000 ReqPort:9001
+141032: Connect to FastTick ReqServer:tcp://tick-master.cloud-deploy.com:9001
+141032: Subscribe to FastTick PubServer:tcp://tick-master.cloud-deploy.com:9000
+141032: DataFeed[FASTTICK] Connected
+141032: DataFeed[FASTTICK] have not registed any symbol,register all symbol we trade
+141032: request market data to datafeed:TA509,TA512,ag1512,j1509,m1508,m1509,IF1507,IF1508,IC1507
+141032: FASTTICK RegisterSymbol CTP:TA509,TA512,ag1512,j1509,m1508,m1509,IF1507,IF1508,IC1507
+141032: tick:IF1508 99@3985.800000 Exch presettlement:3964.600000
+141032: tick:IF1508 99@3985.800000 Exch presettlement:3964.600000
+141033: 模拟引擎启动,成交方式:市场断面扫描 取价方式:盘口价 模拟实盘取价:False
+141033: 从清算中心加载模拟交易记录
+141033: Order Cnt:3 Trade Cnt:3 Max Fill Seq:1649
+141033: Broker[SIMBROKER] Connected
+141033: Try to start broker:HX001
+141033: WrapperFileName:libbroker\ctp20140521_win\TLBrokerWrapper.dll
+141033: BrokerFileName:libbroker\ctp20140521_win\TLBrokerCTP.dll
+141033: ~~~~~XServerInfoFieldSize:404
+141033: #1 wait connected....
+141033: ~~~~~XUserInfoFieldSize:260
+141034: #1 wait logined....
+141034: #2 wait logined....
+141034: 交易帐户登入成功
+141035: Resume trading info from clearcentre....
+141035: Resumed 0 Positions
+141035: Resumed 2 Orders
+141035: Resumed 2 Trades
+141035: 接口:HX001登入成功,可以接受交易请求
+141035: tick:IF1508 98@3986.200000 Exch presettlement:3964.600000

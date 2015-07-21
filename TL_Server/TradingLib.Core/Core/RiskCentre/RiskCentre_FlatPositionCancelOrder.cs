@@ -60,6 +60,11 @@ namespace TradingLib.Core
         public Position Position { get; set; }
 
         /// <summary>
+        /// 平仓比例
+        /// </summary>
+        public decimal Ratio { get; set; }
+
+        /// <summary>
         /// 发送的平仓委托OrderID
         /// </summary>
         public List<long> OrderIDList{ get; set; }
@@ -211,7 +216,7 @@ namespace TradingLib.Core
         /// <param name="pendingorders"></param>
         /// <param name="source"></param>
         /// <param name="closereason"></param>
-        public RiskTaskSet(string account,Position pos,List<long> pendingorders, QSEnumOrderSource source, string closereason)
+        public RiskTaskSet(string account,Position pos,List<long> pendingorders, QSEnumOrderSource source, string closereason,decimal ratio)
         {
             //设定平仓任务标识
             TaskType = QSEnumRiskTaskType.FlatPosition;
@@ -236,6 +241,8 @@ namespace TradingLib.Core
             SubTaskGenerated = false;
 
             OrderIDList = new List<long>();
+
+            Ratio = ratio;
         }
 
         /// <summary>
@@ -267,6 +274,8 @@ namespace TradingLib.Core
             SubTaskGenerated = false;
 
             OrderIDList = new List<long>();
+
+            Ratio = 1;
         }
 
         /// <summary>
@@ -410,6 +419,20 @@ namespace TradingLib.Core
             }
         }
 
+        /// <summary>
+        /// 强平持仓比例
+        /// 将某个账户的持仓平掉一定比例
+        /// ratio = 0.5 平掉50%的持仓
+        /// </summary>
+        /// <param name="accid"></param>
+        /// <param name="source"></param>
+        /// <param name="ratio"></param>
+        /// <param name="closereason"></param>
+        //public void FlatPosition(string accid, QSEnumOrderSource source, decimal ratio = 1, string closereason = "系统强平")
+        //{ 
+            
+        //}
+
 
         /// <summary>
         /// 平掉某个持仓
@@ -417,13 +440,14 @@ namespace TradingLib.Core
         /// 
         /// 在强平过程中需要检查对应的持仓方向上是否有委托
         /// 如果有委托挂单需要先撤单然后再强平
+        /// 强迫某个持仓到指定比例
         /// </summary>
         /// <param name="pos"></param>
         /// <param name="ordersource"></param>
         /// <param name="closereason"></param>
         /// <param name="first"></param>
         /// <returns></returns>
-        public void FlatPosition(Position pos, QSEnumOrderSource ordersource, string closereason)
+        public void FlatPosition(Position pos, QSEnumOrderSource ordersource, string closereason,decimal ratio=1)
         {
             //如果持仓为null  则直接返回
             if (pos == null) return;
@@ -433,7 +457,7 @@ namespace TradingLib.Core
             debug("RiskCentre Flatpostion:" + pos.ToString(), QSEnumDebugLevel.INFO);
 
             //生成平仓任务
-            RiskTaskSet ps = GenFlatPostionSet(pos, ordersource, closereason);
+            RiskTaskSet ps = GenFlatPostionSet(pos, ordersource, closereason,ratio);
             //放入列表中维护
             posflatlist.Add(ps);
         }
@@ -500,7 +524,7 @@ namespace TradingLib.Core
         /// <param name="ordersource"></param>
         /// <param name="closereason"></param>
         /// <returns></returns>
-        RiskTaskSet GenFlatPostionSet(Position pos, QSEnumOrderSource ordersource, string closereason)
+        RiskTaskSet GenFlatPostionSet(Position pos, QSEnumOrderSource ordersource, string closereason,decimal ratio=1)
         {
             IAccount account = _clearcentre[pos.Account];
             if (account == null)
@@ -508,7 +532,7 @@ namespace TradingLib.Core
             //获得对应持仓上的待成交委托
             List<long> pendingorders = account.GetPendingOrders(pos.Symbol).Select(o => o.id).ToList();
             //生成持仓强平事务
-            return new RiskTaskSet(pos.Account, pos, pendingorders, ordersource, closereason);
+            return new RiskTaskSet(pos.Account, pos, pendingorders, ordersource, closereason,ratio);
         }
 
         /// <summary>
@@ -522,9 +546,12 @@ namespace TradingLib.Core
             bool side = pos.isLong ? true : false;
             //绑定合约对象
             IAccount account = _clearcentre[pos.Account];
+            //目标平仓数量
+            int flatsize = (int)(pos.UnsignedSize * set.Ratio);
 
             if (pos.oSymbol.SecurityFamily.Exchange.EXCode.Equals("SHFE"))
             {
+                
                 debug("Position:" + pos.GetPositionKey() + " is in Exchange:SHFE, we need to check Close/CloseToday Split", QSEnumDebugLevel.INFO);
                 Tick snapshot = TLCtxHelper.CmdUtils.GetTickSnapshot(pos.Symbol);
 
@@ -534,7 +561,7 @@ namespace TradingLib.Core
                 
                 if (volyd != 0)
                 {
-                    Order oyd = new OrderImpl(pos.Symbol, volyd * (side ? 1 : -1) * -1);
+                    Order oyd = new OrderImpl(pos.Symbol, (volyd<=flatsize?voltd:flatsize) * (side ? 1 : -1) * -1);
 
                     oyd.Account = pos.Account;
                     oyd.OffsetFlag = QSEnumOffsetFlag.CLOSE;
@@ -555,9 +582,10 @@ namespace TradingLib.Core
                     }
                     SendOrder(oyd);
                 }
-                if (voltd != 0)
+
+                if (voltd != 0 && flatsize>volyd)//有今仓且平仓数量大于昨仓数量 则需要平今仓
                 {
-                    Order otd = new OrderImpl(pos.Symbol, voltd * (side ? 1 : -1) * -1);
+                    Order otd = new OrderImpl(pos.Symbol, ((flatsize-volyd)<voltd?(flatsize-volyd):voltd) * (side ? 1 : -1) * -1);
 
                     otd.Account = pos.Account;
                     otd.OffsetFlag = QSEnumOffsetFlag.CLOSETODAY;
@@ -590,7 +618,8 @@ namespace TradingLib.Core
                 Tick snapshot = TLCtxHelper.CmdUtils.GetTickSnapshot(pos.Symbol);
 
                 //生成市价委托
-                Order o = new  OrderImpl(pos.Symbol,pos.UnsignedSize * (side ? 1 : -1) * -1);
+                Order o = new  OrderImpl(pos.Symbol,flatsize * (side ? 1 : -1) * -1);
+                //Order o = new OrderImpl(pos.Symbol, pos.UnsignedSize * (side ? 1 : -1) * -1);
                 o.Account = pos.Account;
                 o.OffsetFlag = QSEnumOffsetFlag.CLOSE;
                 o.OrderSource = set.Source;
