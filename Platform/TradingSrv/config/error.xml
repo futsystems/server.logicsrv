@@ -40,7 +40,6 @@
 <error id="ACTION_NEED_LIMIT" value="30" prompt="集合竞价需设定报单价"/>
 <error id="RISKCENTRE_CHECK_ERROR" value="100" prompt="风控检查异常"/>
 
-<error id="RISKCENTRE_CHECK_ERROR" value="100" prompt="风控检查异常"/>
 
 <error id="CASHOUT_OVER_AVABILE" value="200" prompt="超出可提金额"/>
 <error id="CASHOUT_STILL_HAVE_POSITION" value="200" prompt="有持仓,不允许出金"/>

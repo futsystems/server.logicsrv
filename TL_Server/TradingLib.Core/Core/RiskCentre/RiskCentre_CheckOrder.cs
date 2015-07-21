@@ -246,6 +246,26 @@ namespace TradingLib.Core
                         return false;
                     }
                 }
+
+                //涨停版 禁止买入
+                if (tk.UpperLimit == tk.Trade)
+                {
+                    if (o.Side)
+                    {
+                        errortitle = "RISKCENTRE_CHECK_ERROR";//保单价格超过涨跌幅
+                        return false;
+                    }
+                }
+                //跌停版 禁止卖出
+                if (tk.LowerLimit == tk.Trade)
+                {
+                    if (!o.Side)
+                    {
+                        errortitle = "RISKCENTRE_CHECK_ERROR";//保单价格超过涨跌幅
+                        return false;
+                    }
+                }
+
             }
 
             return true;
