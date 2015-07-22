@@ -24,6 +24,7 @@ namespace TradingLib.Core
         /// <param name="action"></param>
         void DoAction(FollowAction action)
         {
+            logger.Info("StrategyEngine execution follow action");
             //发送委托
             if (action.ActionType == QSEnumFollowActionType.PlaceOrder)
             { 
@@ -33,7 +34,8 @@ namespace TradingLib.Core
                     //记录委托触发关系
                     sourceTracker.NewOrder(action.FollowItem, o);
                 }
-                
+
+                action.FollowItem.OnSendOrderEvent();
                 //标记委托已发送
                 action.FollowItem.Stage = QSEnumFollowStage.FollowOrderSent;
             }

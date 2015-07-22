@@ -84,6 +84,8 @@ namespace TradingLib.Core
         /// <param name="o"></param>
         public void SendOrder(Order o)
         {
+            o.Account = this._account.ID;
+
             TLCtxHelper.ModuleExCore.SendOrderInternal(o);
         }
 

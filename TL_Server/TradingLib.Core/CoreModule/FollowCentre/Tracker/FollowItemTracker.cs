@@ -17,6 +17,17 @@ namespace TradingLib.Core
 
 
         /// <summary>
+        /// 初始化某个信号的跟单项目维护器
+        /// </summary>
+        /// <param name="signal"></param>
+        public void InitFollowItemTracker(ISignal signal)
+        {
+            if (!signalMap.Keys.Contains(signal.ID))
+            {
+                signalMap.Add(signal.ID, new FollowItemTracker());
+            }
+        }
+        /// <summary>
         /// 按信号ID获得对应的跟单项维护器
         /// </summary>
         /// <param name="id"></param>
@@ -60,7 +71,7 @@ namespace TradingLib.Core
         /// <summary>
         ///记录了OpenTradeID与对应的平仓跟单项的 映射
         /// </summary>
-        ConcurrentDictionary<string, List<TradeFollowItem>> entry2exitMap = new ConcurrentDictionary<string, List<TradeFollowItem>>();
+        //ConcurrentDictionary<string, List<TradeFollowItem>> entry2exitMap = new ConcurrentDictionary<string, List<TradeFollowItem>>();
 
         /// <summary>
         /// 获得跟单项目
@@ -86,11 +97,11 @@ namespace TradingLib.Core
                 }
                 exitMap.TryAdd(item.Key, item);
 
-                if (!entry2exitMap.Keys.Contains(item.PositionEvent.PositionExit.OpenTradeID))
-                {
-                    entry2exitMap.TryAdd(item.PositionEvent.PositionExit.OpenTradeID, new List<TradeFollowItem>());
-                }
-                entry2exitMap[item.PositionEvent.PositionExit.OpenTradeID].Add(item);
+                //if (!entry2exitMap.Keys.Contains(item.PositionEvent.PositionExit.OpenTradeID))
+                //{
+                //    entry2exitMap.TryAdd(item.PositionEvent.PositionExit.OpenTradeID, new List<TradeFollowItem>());
+                //}
+                //entry2exitMap[item.PositionEvent.PositionExit.OpenTradeID].Add(item);
             }
         }
 

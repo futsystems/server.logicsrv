@@ -71,7 +71,7 @@ namespace TradingLib.Core
             }
         }
 
-        public int ID { get; set; }
+        public int ID { get { return _cfg.ID; } }
         public string Token { get { return _account.ID; } }
 
         public IEnumerable<Trade> Trades { get { return _account.Trades; } }

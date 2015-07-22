@@ -25,6 +25,7 @@ namespace TradingLib.Core
         /// </summary>
         public void Start()
         {
+            logger.Info(string.Format("FollowStrategy:{0} Token:{1} is starting",this.ID,this.Token));
             if (followgo) return;
             followgo = true;
             followthread = new Thread(ThreadRun);
@@ -43,8 +44,11 @@ namespace TradingLib.Core
             followthread.Abort();
 
         }
-        RingBuffer<TradeFollowItem> followbuffer = new RingBuffer<TradeFollowItem>();
-        Queue<TradeFollowItem> followQueue = new Queue<TradeFollowItem>();
+
+        const int BufferSize = 1000;
+        RingBuffer<TradeFollowItem> followbuffer = new RingBuffer<TradeFollowItem>(BufferSize);
+        Queue<TradeFollowItem> followQueue = new Queue<TradeFollowItem>(BufferSize);
+
 
         /// <summary>
         /// 将跟单项从缓存中移到队列
@@ -72,6 +76,8 @@ namespace TradingLib.Core
                 TradeFollowItem[] items = followQueue.ToArray();
                 followQueue.Clear();
 
+                List<TradeFollowItem> unclosed = new List<TradeFollowItem>();
+
                 foreach (TradeFollowItem item in items)
                 {
                     //action引擎生成对应的action
@@ -79,25 +85,43 @@ namespace TradingLib.Core
 
                     if (action != null)
                     {
-
                         //记录该action
 
                         //执行该action
+                        //输出actoin
+                        logger.Debug(action.ToString());
                         DoAction(action);
+                    }
+
+                    //将处于未关闭状态的跟单项目放入观察列表
+                    if (item.Stage != QSEnumFollowStage.ItemClosed)
+                    {
+                        unclosed.Add(item);
                     }
                 }
 
+                //将需要观察的跟单项目放入队列
+                foreach (var item in unclosed)
+                {
+                    followQueue.Enqueue(item);
+                }
             }
             catch (Exception ex)
             { 
-            
+                
             }
         }
+
         void ThreadRun()
         {
             while (followgo)
             {
+                //1.将缓存中的跟单项目移动到待处理队列
                 MoveItemIn();
+                //2.处理队列中的跟单项目
+                ProcessFollowItem();
+
+                Thread.Sleep(100);
             }
         }
 

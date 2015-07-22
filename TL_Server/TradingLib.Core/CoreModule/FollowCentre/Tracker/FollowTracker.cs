@@ -24,6 +24,15 @@ namespace TradingLib.Core
         
         }
 
+        /// <summary>
+        /// 初始化
+        /// </summary>
+        public static void Init()
+        {
+            defaultinstance.signalTracker = new SignalTracker();
+            defaultinstance.strategyTracker = new FollowStrategyCfgTracker();
+        }
+
         SignalTracker signalTracker = null;
         /// <summary>
         /// 信号维护器
@@ -37,5 +46,20 @@ namespace TradingLib.Core
                 return defaultinstance.signalTracker;
             }
         }
+
+        FollowStrategyCfgTracker strategyTracker = null;
+
+        public static FollowStrategyCfgTracker StrategyCfgTracker
+        {
+            get
+            {
+                if (defaultinstance.strategyTracker == null)
+                    defaultinstance.strategyTracker = new FollowStrategyCfgTracker();
+                return defaultinstance.strategyTracker;
+            }
+        }
+        
+    
+
     }
 }

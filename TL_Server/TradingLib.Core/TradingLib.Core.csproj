@@ -104,7 +104,7 @@
     <Compile Include="CoreModule\FollowCentre\FollowItem\FollowItemData.cs" />
     <Compile Include="CoreModule\FollowCentre\FollowStrategy\StrategySignalItem.cs" />
     <Compile Include="CoreModule\FollowCentre\ORM\MStrategy.cs" />
-    <Compile Include="CoreModule\FollowCentre\Tracker\FollowStrategyTracker.cs" />
+    <Compile Include="CoreModule\FollowCentre\Tracker\FollowStrategyCfgTracker.cs" />
     <Compile Include="CoreModule\FollowCentre\Tracker\FollowTracker.cs" />
     <Compile Include="CoreModule\FollowCentre\ORM\MSignal.cs" />
     <Compile Include="CoreModule\FollowCentre\Signal\SignalFactory.cs" />
@@ -112,6 +112,7 @@
     <Compile Include="CoreModule\FollowCentre\Signal\SignalWrapperAccount.cs" />
     <Compile Include="CoreModule\FollowCentre\Tracker\SignalTracker.cs" />
     <Compile Include="CoreModule\FollowCentre\Tracker\FollowItemTracker.cs" />
+    <Compile Include="CoreModule\FollowCentre\Utils\Utils_ISignal.cs" />
     <Compile Include="CoreModule\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_ExStrategy.cs" />
     <Compile Include="CoreModule\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_helloworld.cs" />
     <Compile Include="CoreModule\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_Margin.cs" />

@@ -35,5 +35,27 @@ namespace TradingLib.Core
         /// 目标委托
         /// </summary>
         public List<Order> TargetOrders { get; set; }
+
+        public string ToString(bool simple=true)
+        {
+            if (simple)
+            {
+                return this.ActionType.ToString();
+            }
+            else
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Append(string.Format("ActionType:{0}", this.ActionType));
+                foreach (var o in TargetOrders)
+                {
+                    sb.Append(o.GetOrderInfo());
+                }
+                return sb.ToString();
+            }
+        }
+        public override string ToString()
+        {
+            return this.ToString(false);
+        }
     }
 }

@@ -6,6 +6,7 @@ using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
 using TradingLib.ORM;
+using Common.Logging;
 
 namespace TradingLib.Core
 {
@@ -29,13 +30,18 @@ namespace TradingLib.Core
         /// <summary>
         /// 跟单策略数据库ID与策略信号组的映射关系，每个跟单策略有一组信号设定
         /// </summary>
-        ConcurrentDictionary<int, ConcurrentDictionary<int, ISignal>> stragysignalmap = new ConcurrentDictionary<int, ConcurrentDictionary<int, ISignal>>();
-        
+        ConcurrentDictionary<int, ConcurrentDictionary<int, ISignal>> strategysignalmap = new ConcurrentDictionary<int, ConcurrentDictionary<int, ISignal>>();
+
+        ILog logger = null;
         public SignalTracker()
         {
+            logger = LogManager.GetLogger("Follow-SignalTracker");
+
+            logger.Info("加载信号设置,初始化信号对象");
             //从数据库加载信号配置
             foreach (var cfg in ORM.MSignal.SelectSignalConfigs())
             {
+                
                 configmap.TryAdd(cfg.ID, cfg);
 
                 try
@@ -54,20 +60,22 @@ namespace TradingLib.Core
             }
 
             //加载跟单策略的信号map 
+            logger.Info("初始化策略信号映射关系");
             foreach (var item in ORM.MSignal.SelectStrategySignalItems())
             {
-                if (!stragysignalmap.Keys.Contains(item.StrategyID))
+                if (!strategysignalmap.Keys.Contains(item.StrategyID))
                 {
-                    stragysignalmap.TryAdd(item.StrategyID, new ConcurrentDictionary<int, ISignal>());
+                    strategysignalmap.TryAdd(item.StrategyID, new ConcurrentDictionary<int, ISignal>());
                 }
 
                 ISignal signal = this[item.SignalID];
                 if (signal != null)
                 {
-                    stragysignalmap[item.StrategyID].TryAdd(item.SignalID, signal);
+                    strategysignalmap[item.StrategyID].TryAdd(item.SignalID, signal);
                 }
 
             }
+            //
         }
 
         /// <summary>
@@ -97,12 +105,11 @@ namespace TradingLib.Core
         /// <returns></returns>
         public ConcurrentDictionary<int, ISignal> GetStrategySignals(int strategy_id)
         { 
-            ConcurrentDictionary<int, ISignal> target = null;
-            if (stragysignalmap.TryGetValue(strategy_id, out target))
+            if (!strategysignalmap.Keys.Contains(strategy_id))
             {
-                return target;
+                strategysignalmap.TryAdd(strategy_id, new ConcurrentDictionary<int, ISignal>());
             }
-            return null;
+            return strategysignalmap[strategy_id];
         }
 
 

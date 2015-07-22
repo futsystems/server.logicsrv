@@ -208,6 +208,13 @@
       
       <component type="TradingLib.Core.WebMsgExchServer,TradingLib.Core" service="TradingLib.API.IModuleAPIExchange,TradingLib.API.Ex" instance-scope="per-lifetime-scope"/>
 
+	  <component type="TradingLib.Core.FollowCentre,TradingLib.Core" instance-scope="per-lifetime-scope">
+	  <services>
+        <service type="TradingLib.API.IModuleFollowCentre,TradingLib.API.Ex"/>
+		<service type="TradingLib.API.IFollowCentre,TradingLib.API.Ex"/>
+      </services>
+      </component>
+	  
     </components>
   </counter>
   

@@ -17,20 +17,36 @@ namespace TradingLib.Core
         void followAccount_GotOrderEvent(Order o)
         {
 
-            //通过委托编号查找对应的TradeFollowItem
-            TradeFollowItem item = sourceTracker[o.id];
-            if (item != null)
+            try
             {
-                item.GotOrder(o);
+                logger.Info(string.Format("FollowAccount:{0} Got Order:{1}",this.Account,o.GetOrderInfo()));
+                //通过委托编号查找对应的TradeFollowItem
+                TradeFollowItem item = sourceTracker[o.id];
+                if (item != null)
+                {
+                    item.GotOrder(o);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
             }
         }
 
         void followAccount_GotFillEvent(Trade t)
         {
-            TradeFollowItem item = sourceTracker[t.id];
-            if (item != null)
+            try
             {
-                item.GotTrade(t);
+                logger.Info(string.Format("FollowAccount:{0} Got Trade:{1}", this.Account, t.GetTradeInfo()));
+                TradeFollowItem item = sourceTracker[t.id];
+                if (item != null)
+                {
+                    item.GotTrade(t);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
             }
         }
     }

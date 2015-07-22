@@ -87,7 +87,11 @@ namespace TradingLib.Common
         /// 平仓挂单延迟处理方式
         /// </summary>
         public QSEnumPendingOperationType ExitPendingOperationType { get; set; }
- 
+
+        /// <summary>
+        /// 跟单帐号 绑定该账户 策略所有委托从该账户发出
+        /// </summary>
+        public string Account { get; set; }
     }
 
     

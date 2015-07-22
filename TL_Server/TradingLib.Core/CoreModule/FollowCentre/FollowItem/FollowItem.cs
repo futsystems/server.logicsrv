@@ -94,7 +94,6 @@ namespace TradingLib.Core
                 //平仓跟单项目的编号就是开仓成交编号与平仓成交编号的组合 OpenTradeID-CloseTradeID
                 _key = string.Format("{0}-{1}", this.PositionEvent.PositionExit.OpenTradeID, this.PositionEvent.PositionExit.CloseTradeID);
             }
-
             this.Stage = QSEnumFollowStage.ItemCreated;
         }
 
@@ -107,6 +106,14 @@ namespace TradingLib.Core
             
         }
 
+        /// <summary>
+        /// 跟单项目描述
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return string.Format("Strategy:{0} Sig:{1} PE:{2} Status:{3}",this.Strategy.ToString(), this.Signal.GetInfo(), this.PositionEvent.GetInfo(), this.Stage);
+        }
 
         string _key = string.Empty;
         /// <summary>
@@ -116,6 +123,40 @@ namespace TradingLib.Core
         {
             get { return _key; }
         }
+
+        #region 时间参数
+        int _signalTime = 0;
+        /// <summary>
+        /// 信号发生时间
+        /// </summary>
+        public int SignalTime { get { return _signalTime; } }
+
+
+        int _orderSendTime = 0;
+        public int TimeOrderSend { get { return _orderSendTime; } }
+        int _orderOpenTime = 0;
+        /// <summary>
+        /// 委托挂单时间
+        /// </summary>
+        public int TimeOrderOpen { get { return _orderOpenTime; } }
+
+        int _orderFillTime = 0;
+        /// <summary>
+        /// 委托成交时间
+        /// </summary>
+        public int TimeOrderFill { get { return _orderFillTime; } }
+
+        /// <summary>
+        /// 相应委托发送事件
+        /// </summary>
+        /// <param name="o"></param>
+        public void OnSendOrderEvent()
+        {
+            _orderSendTime = Util.ToTLTime();
+            _orderOpenTime = 0;
+            _orderFillTime = 0;
+        }
+        #endregion
 
 
         /// <summary>
@@ -153,13 +194,14 @@ namespace TradingLib.Core
         /// <summary>
         /// 平仓跟单项对应的开仓项
         /// </summary>
-        public TradeFollowItem EntryFollowItem { get; set; }
+        public TradeFollowItem EntryFollowItem { get; private set; }
 
 
+        List<TradeFollowItem> _exitFollowItems = new List<TradeFollowItem>();
         /// <summary>
         /// 开仓跟单项对应的平仓项
         /// </summary>
-        public List<TradeFollowItem> ExitFollowItems { get; set; }
+        public List<TradeFollowItem> ExitFollowItems { get { return _exitFollowItems; } }
 
 
         /// <summary>
@@ -178,15 +220,17 @@ namespace TradingLib.Core
         /// </summary>
         List<FollowAction> _actions = new List<FollowAction>();
 
+
         /// <summary>
-        /// 
+        /// 当前处于工作状态的委托
+        /// 每个跟单项只维护一个工作委托
         /// </summary>
-        /// <param name="action"></param>
-        public void NewActions(FollowAction action)
+        public Order WorkingOrder
         {
-            _actions.Add(action);
+            get {
+                return orderMap.Values.FirstOrDefault();
+            }
         }
-        
         /// <summary>
         /// 获得委托记录
         /// </summary>
@@ -207,6 +251,7 @@ namespace TradingLib.Core
                 { 
                     case QSEnumOrderStatus.Opened:
                         this.Stage = QSEnumFollowStage.FollowOrderOpened;
+                        _orderOpenTime = Util.ToTLTime();
                         break;
                     case QSEnumOrderStatus.PartFilled:
                         this.Stage = QSEnumFollowStage.FollowOrderPartFilled;
@@ -227,9 +272,10 @@ namespace TradingLib.Core
         /// <param name="f"></param>
         public void GotTrade(Trade f)
         {
-            if (tradeMap.Keys.Contains(f.TradeID))
+            if (!tradeMap.Keys.Contains(f.TradeID))
             {
                 tradeMap.TryAdd(f.TradeID, f);
+                _orderFillTime = Util.ToTLTime();
             }
             //计算跟单均价
             _followprice = this.tradeMap.Values.Sum(t => t.xPrice * t.UnsignedSize) / this.tradeMap.Values.Sum(t => t.UnsignedSize);
@@ -241,8 +287,50 @@ namespace TradingLib.Core
             _totalslip += (f.Side ? -1 : 1) * (f.xPrice - this.SignalTrade.xPrice) * f.UnsignedSize;
         }
 
+        /// <summary>
+        /// 绑定操作对象
+        /// </summary>
+        /// <param name="action"></param>
+        public void NewAction(FollowAction action)
+        {
+            _actions.Add(action);
+        }
 
-        
+        /// <summary>
+        /// 绑定平仓跟单项目
+        /// </summary>
+        /// <param name="item"></param>
+        public void NewExitFollowItem(TradeFollowItem item)
+        {
+            if (this.EventType == QSEnumPositionEventType.ExitPosition)
+            {
+                throw new ArgumentException("ExitFolloItem can not run GotExitFollowItem");
+            }
+            if (item.EventType == QSEnumPositionEventType.EntryPosition)
+            {
+                throw new ArgumentException("GotExitFollowItem must use ExitFollowItem");
+            }
+            _exitFollowItems.Add(item);
+        }
+
+        /// <summary>
+        /// 绑定开仓跟单项目
+        /// </summary>
+        /// <param name="item"></param>
+        public void NewEntryFollowItem(TradeFollowItem item)
+        {
+            if (this.EventType == QSEnumPositionEventType.EntryPosition)
+            {
+                throw new ArgumentException("EntryFolloItem can not run NewEntryFollowItem");
+            }
+            if (item.EventType == QSEnumPositionEventType.ExitPosition)
+            {
+                throw new ArgumentException("NewEntryFollowItem must use EntryFollowItem");
+            }
+            this.EntryFollowItem = item;
+        }
+
+
 
         int _firedcount = 0;
         public int FiredCount
@@ -285,6 +373,44 @@ namespace TradingLib.Core
             get
             {
                 return _followfillsize;
+            }
+        }
+
+        /// <summary>
+        /// 开仓跟单项目对应的平仓跟单项成交数量
+        /// </summary>
+        public int ExitFollowFillSize
+        { 
+            get
+            {
+                if (this.EventType == QSEnumPositionEventType.ExitPosition)
+                {
+
+                    throw new ArgumentException("ExitFollowItem have no ExitFollowFillSize");
+                }
+                else
+                {
+                    return this.ExitFollowItems.Sum(item => item.FollowFillSize);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 开仓跟单项目对应的持仓数量
+        /// </summary>
+        public int PositionHoldSize
+        {
+            get
+            {
+                if (this.EventType == QSEnumPositionEventType.ExitPosition)
+                {
+
+                    throw new ArgumentException("ExitFollowItem have no PositionHoldSize");
+                }
+                else
+                {
+                    return this.FollowFillSize - this.ExitFollowFillSize;
+                }
             }
         }
 
@@ -380,7 +506,24 @@ namespace TradingLib.Core
                 return 0;
             }
         }
-        
+
+        /// <summary>
+        /// 是否要处理平仓事件
+        /// 如果开仓跟单失败 则不需要处理对应的平仓事件
+        /// </summary>
+        public bool NeedExitFollow
+        {
+            get
+            {
+                //如果开仓跟单项成交数量为0 则不用处理对应的平仓事件
+                if (this.PositionHoldSize == 0)
+                {
+                    return false;
+                }
+                return true;
+
+            }
+        }
 
 
     }

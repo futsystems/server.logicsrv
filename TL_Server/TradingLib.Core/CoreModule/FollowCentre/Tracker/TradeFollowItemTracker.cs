@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using TradingLib.API;
 using TradingLib.Common;
-using Common.Logging;
+
 
 namespace TradingLib.Core
 {
@@ -17,7 +17,7 @@ namespace TradingLib.Core
     /// 不同的信号可能有相同的成交编号
     /// 追踪了某个信号下对应的委托
     /// </summary>
-    public class TradeFollowItemTracker:BaseSrvObject
+    public class TradeFollowItemTracker
     {
 
         /// <summary>
@@ -47,6 +47,7 @@ namespace TradingLib.Core
         /// 平仓委托映射
         /// </summary>
         ConcurrentDictionary<string, ConcurrentDictionary<long, Order>> exitOrderMap = new ConcurrentDictionary<string, ConcurrentDictionary<long, Order>>();
+
 
 
         /// <summary>
@@ -101,7 +102,7 @@ namespace TradingLib.Core
             {
                 if (entryMap.Keys.Contains(item.Key))
                 {
-                    logger.Warn("TradeFollowItem already exist");
+                    //logger.Warn("TradeFollowItem already exist");
                 }
                 entryMap.TryAdd(item.Key, item);
                 return;
@@ -111,7 +112,7 @@ namespace TradingLib.Core
             {
                 if (exitMap.Keys.Contains(item.Key))
                 {
-                    logger.Warn("TradeFollowItem already exit");
+                    //logger.Warn("TradeFollowItem already exit");
                 }
                 exitMap.TryAdd(item.Key, item);
 
