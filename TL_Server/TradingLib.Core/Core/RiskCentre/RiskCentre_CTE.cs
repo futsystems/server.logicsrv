@@ -87,6 +87,7 @@ namespace TradingLib.Core
                 FlatPosition(pos2, QSEnumOrderSource.RISKCENTRE, "风控强平");
         }
 
+
         [CoreCommandAttr(QSEnumCommandSource.CLI, "pflattask", "pflattask - 打印强平任务列表", "风控中心平仓测试输出列表")]
         public string CTE_PostionFlatSetList()
         {

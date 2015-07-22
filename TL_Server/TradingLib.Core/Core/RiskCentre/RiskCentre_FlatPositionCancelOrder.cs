@@ -462,6 +462,10 @@ namespace TradingLib.Core
             posflatlist.Add(ps);
         }
 
+        public void FlatPosition(Position pos, QSEnumOrderSource ordersource, string closereason)
+        {
+            this.FlatPosition(pos, ordersource, closereason);
+        }
 
 
 
