@@ -10,7 +10,7 @@ using TradingLib.Common;
 namespace TradingLib.Core
 {
 
-    public class FollowCentre : BaseSrvObject,IModuleFollowCentre
+    public partial class FollowCentre : BaseSrvObject,IModuleFollowCentre
     {
 
         const string CoreName = "FollowCentre";

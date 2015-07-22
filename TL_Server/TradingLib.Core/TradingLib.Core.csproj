@@ -101,6 +101,7 @@
     <Compile Include="CoreModule\ExCore\ExCore-NoTrading\ExCoreNoTrading.cs" />
     <Compile Include="CoreModule\ExCore\ExCore-TradingLogic\MsgExchServer_Notify.cs" />
     <Compile Include="CoreModule\FollowCentre\FollowCentre.cs" />
+    <Compile Include="CoreModule\FollowCentre\FollowCentre_.cs" />
     <Compile Include="CoreModule\FollowCentre\FollowItem\FollowItemData.cs" />
     <Compile Include="CoreModule\FollowCentre\FollowStrategy\StrategySignalItem.cs" />
     <Compile Include="CoreModule\FollowCentre\ORM\MStrategy.cs" />
@@ -113,6 +114,7 @@
     <Compile Include="CoreModule\FollowCentre\Tracker\SignalTracker.cs" />
     <Compile Include="CoreModule\FollowCentre\Tracker\FollowItemTracker.cs" />
     <Compile Include="CoreModule\FollowCentre\Utils\Utils_ISignal.cs" />
+    <Compile Include="CoreModule\FollowCentre\FollowCentre_mgr.cs" />
     <Compile Include="CoreModule\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_ExStrategy.cs" />
     <Compile Include="CoreModule\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_helloworld.cs" />
     <Compile Include="CoreModule\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_Margin.cs" />
@@ -177,13 +179,11 @@
     <Compile Include="CoreModule\SettleCentre\SettleCentre_SettleManager.cs" />
     <Compile Include="CoreModule\SettleCentre\TradingCalendar.cs" />
     <Compile Include="CoreModule\SettleCentre\SettleCentre_DataStoreClean.cs" />
-    <Compile Include="CoreModule\FollowCentre\EnumsFollow.cs" />
     <Compile Include="CoreModule\FollowCentre\FollowAccount.cs" />
     <Compile Include="CoreModule\FollowCentre\FollowItem\FollowAction.cs" />
     <Compile Include="CoreModule\FollowCentre\FollowActionTracker.cs" />
     <Compile Include="CoreModule\FollowCentre\FollowItem\FollowItem.cs" />
     <Compile Include="CoreModule\FollowCentre\FollowStrategy\FollowStrategy.cs" />
-    <Compile Include="CoreModule\FollowCentre\FollowStrategy\FollowStrategyConfig.cs" />
     <Compile Include="CoreModule\FollowCentre\FollowStrategy\FollowStrategy_.cs" />
     <Compile Include="CoreModule\FollowCentre\FollowStrategy\FollowStrategy_ActionGen.cs" />
     <Compile Include="CoreModule\FollowCentre\FollowStrategy\FollowStrategy_ProcessFollowItem.cs" />

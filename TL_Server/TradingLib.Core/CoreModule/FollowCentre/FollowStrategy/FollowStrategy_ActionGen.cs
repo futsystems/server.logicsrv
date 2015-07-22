@@ -106,11 +106,22 @@ namespace TradingLib.Core
                         //开仓跟单项
                         if (item.EventType == QSEnumPositionEventType.EntryPosition)
                         {
+                            //挂单延迟未成交 撤单后市价追单
                             if (this.Config.EntryPendingOperationType == QSEnumPendingOperationType.ByMarket)
-                            { 
-                                
+                            {
+                                Order o = GenOrder(item);
+                                if (o != null)
+                                {
+                                    FollowAction action = new FollowAction(item);
+                                    action.ActionType = QSEnumFollowActionType.PlaceOrder;
+                                    o.LimitPrice = 0;
+                                    action.TargetOrders.Add(o);
+                                    logger.Info("StrategyEngine generate acton for item:" + item.ToString());
+                                    return action;
+                                }
+                                return null;
                             }
-                            //挂单延迟未成交 取消则委托取消后 返回关闭操作
+                            //挂单延迟未成交 撤单后 取消跟单项
                             if (this.Config.EntryPendingOperationType == QSEnumPendingOperationType.Cancel)
                             {
                                 FollowAction action = new FollowAction(item);

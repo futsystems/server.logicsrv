@@ -7,8 +7,6 @@ using TradingLib.API;
 using TradingLib.Common;
 using Common.Logging;
 
-
-
 namespace TradingLib.Core
 {
     /// <summary>
