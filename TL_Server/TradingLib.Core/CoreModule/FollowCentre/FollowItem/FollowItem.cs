@@ -88,12 +88,17 @@ namespace TradingLib.Core
             {
                 //开仓跟单项目的编号就是开仓成交的编号OpenTradeID
                 _key = this.PositionEvent.PositionEntry.TradeID;
+                _followkey = string.Format("{0}-{1}", this.Signal.ID, this.PositionEvent.PositionEntry.TradeID);
+
             }
             if (this.PositionEvent.EventType == QSEnumPositionEventType.ExitPosition)
             {
                 //平仓跟单项目的编号就是开仓成交编号与平仓成交编号的组合 OpenTradeID-CloseTradeID
                 _key = string.Format("{0}-{1}", this.PositionEvent.PositionExit.OpenTradeID, this.PositionEvent.PositionExit.CloseTradeID);
+                _followkey = string.Format("{0}-{1}", this.Signal.ID, _key);
             }
+            
+            _side = strategy.Config.FollowDirection == QSEnumFollowDirection.Positive ? trade.Side : !trade.Side;
             this.Stage = QSEnumFollowStage.ItemCreated;
         }
 
@@ -115,6 +120,17 @@ namespace TradingLib.Core
             return string.Format("Strategy:{0} Sig:{1} PE:{2} Status:{3}",this.Strategy.ToString(), this.Signal.GetInfo(), this.PositionEvent.GetInfo(), this.Stage);
         }
 
+        bool _side = false;
+        /// <summary>
+        /// 买入/卖出
+        /// </summary>
+        public bool Side
+        {
+            get
+            {
+                return _side;
+            }
+        }
         string _key = string.Empty;
         /// <summary>
         /// 键值
@@ -123,6 +139,21 @@ namespace TradingLib.Core
         {
             get { return _key; }
         }
+
+
+        string _followkey = string.Empty;
+        /// <summary>
+        /// 跟单项键值
+        /// </summary>
+        public string FollowKey
+        {
+            get
+            {
+                return _followkey;
+            }
+        }
+        
+
 
         #region 时间参数
         int _signalTime = 0;
@@ -501,7 +532,7 @@ namespace TradingLib.Core
                     }
 
                     //(平仓跟单均价 - 开仓跟单均价)*跟单术量
-                    return (this.FollowPrice - this.EntryFollowItem.FollowPrice) * this.FollowFillSize;
+                    return (_side?-1:1)*(this.FollowPrice - this.EntryFollowItem.FollowPrice) * this.FollowFillSize;
                 }
                 return 0;
             }

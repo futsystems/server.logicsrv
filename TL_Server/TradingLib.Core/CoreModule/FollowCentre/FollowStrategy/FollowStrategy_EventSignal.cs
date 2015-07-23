@@ -14,6 +14,8 @@ namespace TradingLib.Core
     
     public partial class FollowStrategy
     {
+
+        List<TradeFollowItem> itemlist = new List<TradeFollowItem>();
         /// <summary>
         /// 响应信号账户的持仓事件
         /// </summary>
@@ -39,6 +41,9 @@ namespace TradingLib.Core
                 if (pe.EventType == QSEnumPositionEventType.EntryPosition)
                 {
                     followitem = new TradeFollowItem(this, signal,trade, pe);
+                    
+                   
+
                 }
                 else//平仓事件需要查找对应的开仓跟单项目
                 {
@@ -68,6 +73,9 @@ namespace TradingLib.Core
                     tk.GotTradeFollowItem(followitem);
                     //放入缓存
                     followbuffer.Write(followitem);
+
+                    //将开仓跟单项目加入列表
+                    itemlist.Add(followitem);
                 }
             }
             catch (Exception ex)

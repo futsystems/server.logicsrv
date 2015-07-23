@@ -59,6 +59,7 @@
     <Compile Include="Account\AccountProfie.cs" />
     <Compile Include="Account\SessionInfo.cs" />
     <Compile Include="Follow\EnumsFollow.cs" />
+    <Compile Include="Follow\FollowItemStruce.cs" />
     <Compile Include="Follow\FollowStrategyConfig.cs" />
     <Compile Include="Follow\FollowStrategyLite.cs" />
     <Compile Include="Manager\UIAccess.cs" />
