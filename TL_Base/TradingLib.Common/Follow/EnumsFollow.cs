@@ -134,13 +134,13 @@ namespace TradingLib.API
         /// <summary>
         /// 跟单委托已经全部成交
         /// </summary>
-        [Description("全部成交")]
+        [Description("全成")]
         FollowOrderFilled,
 
         /// <summary>
         /// 跟单委托已经全部成交
         /// </summary>
-        [Description("部分成交")]
+        [Description("部成")]
         FollowOrderPartFilled,
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace TradingLib.API
         FollowOrderCanceled,
 
 
-        [Description("跟单项关闭")]
+        [Description("关闭")]
         ItemClosed
     }
 

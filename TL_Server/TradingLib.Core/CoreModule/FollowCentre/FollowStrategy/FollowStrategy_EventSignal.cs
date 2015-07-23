@@ -76,6 +76,9 @@ namespace TradingLib.Core
 
                     //将开仓跟单项目加入列表
                     itemlist.Add(followitem);
+
+                    //对外通知跟单项
+                    FollowTracker.NotifyTradeFollowItem(followitem);
                 }
             }
             catch (Exception ex)

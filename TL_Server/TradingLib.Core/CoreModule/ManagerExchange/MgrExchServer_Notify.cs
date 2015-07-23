@@ -122,6 +122,10 @@ namespace TradingLib.Core
         /// <returns></returns>
         public IEnumerable<ILocation> GetNotifyTargets(Predicate<Manager> predictate)
         {
+            if (predictate == null)
+            {
+                return this.NotifyTarges.Where(c => c.Manager != null).Select(info => info.Location).ToArray();
+            }
             //1.过滤没有绑定Manager的custinfoex                2.通过谓词过滤Manager              3.投影成地址
             return this.NotifyTarges.Where(c=>c.Manager!=null).Where(e => predictate(e.Manager)).Select(info => info.Location).ToArray();
         }
@@ -134,6 +138,7 @@ namespace TradingLib.Core
         /// <returns></returns>
         public IEnumerable<ILocation> GetNotifyTargets(IEnumerable<Manager> managers)
         {
+            
             return this.NotifyTarges.Where(c => managers.Any(m => m.ID == c.Manager.ID)).Select(info => info.Location);
         }
 

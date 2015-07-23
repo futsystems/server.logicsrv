@@ -88,14 +88,15 @@ namespace TradingLib.Core
             {
                 //开仓跟单项目的编号就是开仓成交的编号OpenTradeID
                 _key = this.PositionEvent.PositionEntry.TradeID;
-                _followkey = string.Format("{0}-{1}", this.Signal.ID, this.PositionEvent.PositionEntry.TradeID);
-
+                //_followkey = string.Format("{0}-{1}", this.Signal.ID, this.PositionEvent.PositionEntry.TradeID);
+                //开仓跟单项目followkey由全局进行设定
+                _followkey = FollowTracker.NextFollowKey;
             }
             if (this.PositionEvent.EventType == QSEnumPositionEventType.ExitPosition)
             {
                 //平仓跟单项目的编号就是开仓成交编号与平仓成交编号的组合 OpenTradeID-CloseTradeID
                 _key = string.Format("{0}-{1}", this.PositionEvent.PositionExit.OpenTradeID, this.PositionEvent.PositionExit.CloseTradeID);
-                _followkey = string.Format("{0}-{1}", this.Signal.ID, _key);
+                //_followkey = string.Format("{0}-{1}", this.Signal.ID, _key);
             }
             
             _side = strategy.Config.FollowDirection == QSEnumFollowDirection.Positive ? trade.Side : !trade.Side;
@@ -149,7 +150,14 @@ namespace TradingLib.Core
         {
             get
             {
-                return _followkey;
+                if (this.EventType == QSEnumPositionEventType.EntryPosition)
+                {
+                    return _followkey;
+                }
+                else
+                {
+                    return string.Format("{0}-{1}", this.EntryFollowItem.FollowKey, this.PositionEvent.PositionExit.CloseTradeID);
+                }
             }
         }
         
@@ -217,10 +225,20 @@ namespace TradingLib.Core
         public QSEnumPositionEventType EventType { get { return this.PositionEvent.EventType; } }
 
 
+        QSEnumFollowStage _stage = QSEnumFollowStage.ItemCreated;
         /// <summary>
         /// 跟单处理阶段
         /// </summary>
-        public QSEnumFollowStage Stage { get; set; }
+        public QSEnumFollowStage Stage { get { return _stage; } 
+            set 
+            { 
+                _stage = value;
+                if (_stage != QSEnumFollowStage.ItemCreated)
+                {
+                    FollowTracker.NotifyTradeFollowItem(this);
+                }
+            } 
+        }
 
         /// <summary>
         /// 平仓跟单项对应的开仓项
@@ -316,6 +334,8 @@ namespace TradingLib.Core
 
             //计算累计滑动点 成交方向 * (跟单价格 - 信号价格)*手数
             _totalslip += (f.Side ? -1 : 1) * (f.xPrice - this.SignalTrade.xPrice) * f.UnsignedSize;
+
+            FollowTracker.NotifyTradeFollowItem(this);
         }
 
         /// <summary>

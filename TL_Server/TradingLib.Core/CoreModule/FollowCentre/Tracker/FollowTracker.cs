@@ -58,7 +58,32 @@ namespace TradingLib.Core
                 return defaultinstance.strategyTracker;
             }
         }
-        
+
+        public static event Action<TradeFollowItem> NotifyTradeFollowItemEvent;
+
+        /// <summary>
+        /// 对外通知跟单项目的状态变化
+        /// </summary>
+        /// <param name="item"></param>
+        public static void NotifyTradeFollowItem(TradeFollowItem item)
+        {
+            if (NotifyTradeFollowItemEvent != null)
+            {
+                NotifyTradeFollowItemEvent(item);
+            }
+            
+        }
+
+        //委托编号生成器
+        static IdTracker _followIDTracker = new IdTracker();
+
+        public static string NextFollowKey
+        {
+            get
+            {
+                return _followIDTracker.AssignId.ToString();
+            }
+        }
     
 
     }

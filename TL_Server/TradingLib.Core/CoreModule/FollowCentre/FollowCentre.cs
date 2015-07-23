@@ -20,8 +20,8 @@ namespace TradingLib.Core
 
         public FollowCentre()
             : base(FollowCentre.CoreName)
-        { 
-            
+        {
+            FollowTracker.NotifyTradeFollowItemEvent += new Action<TradeFollowItem>(NotifyFollowItem);
         }
 
 
@@ -43,6 +43,22 @@ namespace TradingLib.Core
             
         }
 
+
+        /// <summary>
+        /// 对外通知跟单项目
+        /// </summary>
+        /// <param name="item"></param>
+        public void NotifyFollowItem(TradeFollowItem item)
+        {
+            if (item.EventType == QSEnumPositionEventType.EntryPosition)
+            {
+                TLCtxHelper.ModuleMgrExchange.Notify("FollowCentre", "EntryFollowItemNotify", item.GenEntryFollowItemStruct(), null);
+            }
+            else
+            {
+                TLCtxHelper.ModuleMgrExchange.Notify("FollowCentre", "ExitFollowItemNotify", item.GenExitFollowItemStruct(), null);
+            }
+        }
         
 
         public void Stop()
