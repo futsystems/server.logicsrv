@@ -7,18 +7,18 @@ using TradingLib.Common;
 
 namespace AccountRuleSet
 {
-    public class RSEquity :RuleBase, IAccountCheck
+    public class RSEquityCreditRatio : RuleBase, IAccountCheck
     {
-        private decimal _equity=0;//用于内部使用的值
+        private decimal _ratio=0;//用于内部使用的值
         public override string Value
         {
-            get { return _equity.ToString(); }
+            get { return _ratio.ToString(); }
             set
             {
 
                 try
                 {
-                    _equity = Convert.ToDecimal(value);
+                    _ratio = Convert.ToDecimal(value);
                 }
                 catch (Exception ex)
                 { }
@@ -32,7 +32,9 @@ namespace AccountRuleSet
         {
             msg = string.Empty;
             decimal equity = this.Account.NowEquity;//获得该账户的当前权益
-            bool ret = equity <= _equity;//当前权益小于设定权益
+            
+            bool ret = equity <= _ratio*this.Account.Credit/100;//当前权益小于设定权益
+
             if (!ret || flatStart) return true;//如果该账户有利润或者已经强平则直接返回
 
             if (ret && !flatStart)
@@ -55,18 +57,18 @@ namespace AccountRuleSet
         {
             get
             {
-                return "帐户权益 " + Util.GetEnumDescription(this.Compare) + " " + _equity.ToString("N2") + "[" + SymbolSet + "]" + "强平持仓并禁止交易";
+                return "帐户劣后/优先比例 " + Util.GetEnumDescription(this.Compare) + " " + _ratio.ToString("N2") + "[" + SymbolSet + "]" + "强平持仓并禁止交易";
             }
         }
 
         #region 覆写静态对象
         public static new string Title
         {
-            get { return "强平[帐户权益]"; }
+            get { return "强平[劣后/优先比]"; }
         }
         public static new string Description
         {
-            get { return "帐户权益小于设定值时,强平持仓并禁止交易"; }
+            get { return "劣后/优先比例小于设定值时,强平持仓并禁止交易,2%则填写2"; }
         }
 
         /// <summary>

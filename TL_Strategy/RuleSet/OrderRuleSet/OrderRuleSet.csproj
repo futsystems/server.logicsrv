@@ -36,21 +36,28 @@
       <HintPath>..\..\..\lib\TradingLib\TradingLib.API.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="TradingLib.API.Ex">
+      <HintPath>..\..\..\lib\TradingLib\TradingLib.API.Ex.dll</HintPath>
+    </Reference>
     <Reference Include="TradingLib.Common">
       <HintPath>..\..\..\lib\TradingLib\TradingLib.Common.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="TradingLib.Common.Ex">
+      <HintPath>..\..\..\lib\TradingLib\TradingLib.Common.Ex.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RSCommission.cs" />
     <Compile Include="RSMargin.cs" />
-    <Compile Include="RSSymbolFilter.cs" />
     <Compile Include="RSTime.cs" />
     <Compile Include="RSSymbolCanTrade.cs" />
     <Compile Include="RSSymbolBlock.cs" />
     <Compile Include="RSLots.cs" />
     <Compile Include="RSPositionHold.cs" />
+    <Compile Include="RSPriceLimit.cs" />
+    <Compile Include="RSTimeSpanPass.cs" />
+    <Compile Include="RSTimeSpanBlock.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

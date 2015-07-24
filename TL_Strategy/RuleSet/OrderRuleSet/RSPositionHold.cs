@@ -55,7 +55,8 @@ namespace OrderRuleSet
             if (!o.IsEntryPosition) return true;
 
             Position pos = Account.GetPosition(o.Symbol,o.PositionSide);
-            bool ret = pos.UnsignedSize + o.UnsignedSize  <= _poshold;//当前持仓数量+欲开仓术量 小于等于 最大持仓数量
+            int pendingopen = Account.Orders.Where(tmp => (tmp.Symbol.Equals(symbol)) && tmp.IsPending() && (tmp.PositionSide == o.PositionSide) && (tmp.IsEntryPosition)).Sum(tmp=>o.UnsignedSize);
+            bool ret = pos.UnsignedSize + o.UnsignedSize + pendingopen <= _poshold;//当前持仓数量+欲开仓术量 小于等于 最大持仓数量
             if (!ret)
             {
                 msg = RuleDescription + " 委托被拒绝";

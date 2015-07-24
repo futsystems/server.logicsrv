@@ -8,57 +8,67 @@ using TradingLib.Common;
 
 namespace OrderRuleSet
 {
-    public class RSSymbolCanTrade :RuleBase,IOrderCheck
+    public class RSTimeSpanBlock : RuleBase, IOrderCheck
     {
-
-        private decimal _percent=0;//用于内部使用的值
+        private int _start = 0;
+        private int _end = 0;
         /// <summary>
         /// 参数值
         /// </summary>
-        public override string Value 
-        { 
-            get 
-            { 
-                return _percent.ToString(); 
-            } 
+        public override string Value
+        {
+            get
+            {
+                return string.Format("{0}-{1}", _start, _end);
+            }
             set
             {
                 try
                 {
-                    _percent = Convert.ToDecimal(value);
+                    string[] strs = value.Split('-');
+                    if (strs.Length == 2)
+                    {
+                        _start = int.Parse(strs[0]);
+                        _end = int.Parse(strs[1]);
+                    }
                 }
                 catch (Exception ex)
-                { 
+                {
 
                 }
             }
-        
+
         }
 
-       
+
         /// <summary>
         /// 委托检查逻辑过程,如果接受委托返回true,拒绝委托返回false
         /// </summary>
         /// <param name="o"></param>
         /// <param name="msg"></param>
         /// <returns></returns>
-        public bool checkOrder(Order o,out string msg)
+        public bool checkOrder(Order o, out string msg)
         {
-           
             msg = string.Empty;
-            if (!o.IsEntryPosition) return true;//平仓不检查
             Symbol symbol = o.oSymbol;
 
-            if (IsInSymbolSet(symbol))
-            {
+            //需要检查合约 且 不在合约集 则返回true
+            if (NeedCheckSymbol(o.oSymbol) && !IsInSymbolSet(o.oSymbol))
                 return true;
-            }
-            else
+
+            //判断是开仓还是平仓如果是开仓则进行判断拒绝,平仓则直接允许
+            if (!o.IsEntryPosition) return true;
+
+
+            int now = Util.ToTLTime();
+            bool ret = now >= _start && now <= _end;
+            if (ret)
             {
-                msg = RuleDescription + " 不满足,委托被拒绝";
+                msg = RuleDescription + " 委托被拒绝";
                 o.Comment = msg;
-                return false;
-            }            
+            }
+            return ret;
+
         }
 
         /// <summary>
@@ -68,7 +78,7 @@ namespace OrderRuleSet
         {
             get
             {
-                return "开仓条件:只允许交易集合["+this.SymbolSet.Replace('_',' ')+"]";
+                return "禁止开仓条件:时间段 " +_start.ToString()+ " - " +_end.ToString() + " [" + SymbolSet + "]"; ;
             }
         }
 
@@ -79,7 +89,7 @@ namespace OrderRuleSet
         /// </summary>
         public static new string Title
         {
-            get { return "合约检查:允许交易"; }
+            get { return "时间段内禁止开仓"; }
         }
 
         /// <summary>
@@ -87,11 +97,12 @@ namespace OrderRuleSet
         /// </summary>
         public static new string Description
         {
-            get { return "允许交易设置的品种,品种用逗号分割"; }
+            get { return "在设定时间段内,禁止开仓,93000-103021"; }
         }
 
         public static new bool CanSetCompare { get { return false; } }
 
+        public static new  QSEnumCompareType DefaultCompare { get { return QSEnumCompareType.LessEqual; } }
         /// <summary>
         /// 验证ruleitem设置
         /// </summary>
