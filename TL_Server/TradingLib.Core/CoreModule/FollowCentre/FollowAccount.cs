@@ -98,7 +98,10 @@ namespace TradingLib.Core
             TLCtxHelper.ModuleExCore.CancelOrder(oid);
         }
 
-
+        /// <summary>
+        /// 底层账户
+        /// </summary>
+        public IAccount Account { get { return _account; } }
         /// <summary>
         /// 所有发送的委托
         /// </summary>

@@ -32,5 +32,56 @@ namespace TradingLib.Core
         {
             return itemlist.Where(item => item.EventType == QSEnumPositionEventType.ExitPosition).Select(item => item.GenExitFollowItemStruct());
         }
+
+        public decimal FollowRealizedPL
+        {
+            get
+            {
+                return followAccount.Account.RealizedPL;
+            }
+        }
+
+        public decimal FollowUnRealizedPL
+        {
+            get
+            {
+                return followAccount.Account.UnRealizedPL;
+            }
+        }
+
+        public int TotalFollowCount
+        {
+            get
+            {
+                return itemlist.Where(item => item.EventType == QSEnumPositionEventType.EntryPosition).Count();
+            }
+        }
+
+        public int TotalFollowCountSuccess
+        {
+            get
+            {
+                return itemlist.Where(item => item.EventType == QSEnumPositionEventType.EntryPosition).Count();
+            }
+        }
+
+        /// <summary>
+        /// 所有滑点
+        /// </summary>
+        public decimal TotalSlip
+        {
+            get
+            {
+                return itemlist.Where(item => item.EventType == QSEnumPositionEventType.EntryPosition).Sum(item => item.TotalSlip);
+            }
+        }
+
+        public IEnumerable<TradeFollowItem> FollowItems
+        {
+            get
+            {
+                return itemlist;
+            }
+        }
     }
 }

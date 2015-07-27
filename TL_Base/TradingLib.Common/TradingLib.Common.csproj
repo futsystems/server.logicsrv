@@ -62,6 +62,7 @@
     <Compile Include="Follow\FollowItemStruce.cs" />
     <Compile Include="Follow\FollowStrategyConfig.cs" />
     <Compile Include="Follow\FollowStrategyLite.cs" />
+    <Compile Include="Follow\FollowStrategyStatus.cs" />
     <Compile Include="Manager\UIAccess.cs" />
     <Compile Include="Message\CashOperationNotify.cs" />
     <Compile Include="Message\LogicFront.cs" />

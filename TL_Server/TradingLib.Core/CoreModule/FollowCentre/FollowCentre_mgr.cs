@@ -28,6 +28,34 @@ namespace TradingLib.Core
             }
         }
 
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "UpdateFollowStrategyCfg", "UpdateFollowStrategyCfg - update config of follow strategy", "更新跟单策略参数",QSEnumArgParseType.Json)]
+        public void CTE_QryFollowStrategyList(ISession session,string payload)
+        {
+            Manager manager = session.GetManager();
+            if (!manager.IsRoot())
+            {
+                throw new FutsRspError("无权进行此操作");
+            }
+
+            FollowStrategyConfig cfg = TradingLib.Mixins.Json.JsonMapper.ToObject<FollowStrategyConfig>(payload);
+            if (cfg != null)
+            {
+
+                //新增判断token重复
+                if (cfg.ID==0 && FollowTracker.StrategyCfgTracker[cfg.Token] != null)
+                {
+                    throw new FutsRspError("跟单策略标识:" + cfg.Token + "已存在");
+                }
+                FollowTracker.StrategyCfgTracker.UpdateFollowStrategyConfig(cfg);
+
+                session.OperationSuccess("更新跟单策略参数成功");
+            }
+        }
+
+
+
+
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryEntryFollowItemList", "QryEntryFollowItemList - qry follow item list", "查询跟单项目列表")]
         public void CTE_QryEntryFollowItemList(ISession session, int strategy_id)
         {

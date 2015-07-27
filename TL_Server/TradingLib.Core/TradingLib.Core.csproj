@@ -115,6 +115,7 @@
     <Compile Include="CoreModule\FollowCentre\Tracker\SignalTracker.cs" />
     <Compile Include="CoreModule\FollowCentre\Tracker\FollowItemTracker.cs" />
     <Compile Include="CoreModule\FollowCentre\Utils\Utils_FollowItem.cs" />
+    <Compile Include="CoreModule\FollowCentre\Utils\Utils_FollowStrategy.cs" />
     <Compile Include="CoreModule\FollowCentre\Utils\Utils_ISignal.cs" />
     <Compile Include="CoreModule\FollowCentre\FollowCentre_mgr.cs" />
     <Compile Include="CoreModule\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_ExStrategy.cs" />

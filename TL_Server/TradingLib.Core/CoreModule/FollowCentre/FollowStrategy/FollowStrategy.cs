@@ -46,6 +46,10 @@ namespace TradingLib.Core
 
 
         /// <summary>
+        /// 跟单策略工作状态
+        /// </summary>
+        public QSEnumFollowWorkState WorkState { get; set; }
+        /// <summary>
         /// 跟单策略配置
         /// </summary>
         public FollowStrategyConfig Config { get; set; }
@@ -70,6 +74,8 @@ namespace TradingLib.Core
 
             followitemtracker = new SignalFollowItemTracker();
             sourceTracker = new OrderSourceTracker();
+
+            this.WorkState = QSEnumFollowWorkState.Shutdown;//初始状态处于停止状态
         }
 
         public override string ToString()
@@ -78,6 +84,7 @@ namespace TradingLib.Core
         }
         public void Init()
         {
+
             //1.初始化下单账户
             followAccount = FollowAccount.CreateFollowAccount(this.Account);
             if (followAccount == null)

@@ -170,4 +170,30 @@ namespace TradingLib.API
         [Description("内部帐户")]
         Account,
     }
+
+    /// <summary>
+    /// 跟单工作状态
+    /// 
+    /// </summary>
+    public enum QSEnumFollowWorkState
+    { 
+        /// <summary>
+        /// 开始工作 接受信号并处理信号
+        /// </summary>
+        [Description("开始")]
+        Begin,
+
+        /// <summary>
+        /// 停止处理开仓信号 当前持仓等待平仓信号处理
+        /// </summary>
+        [Description("展停")]
+        Suspend,
+
+        /// <summary>
+        /// 停止跟单策略 该动作会平掉所有持仓
+        /// </summary>
+        [Description("停止")]
+        Shutdown,
+
+    }
 }
