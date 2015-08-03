@@ -82,6 +82,11 @@ namespace TradingLib.API
         /// </summary>
         IEnumerable<Trade> Trades { get; }
 
+
+        /// <summary>
+        /// 信号对应的交易帐户
+        /// </summary>
+        IAccount Account { get; }
         
     }
 }

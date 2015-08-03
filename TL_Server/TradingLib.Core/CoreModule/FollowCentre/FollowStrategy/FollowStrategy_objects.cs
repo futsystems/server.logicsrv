@@ -33,6 +33,16 @@ namespace TradingLib.Core
             return itemlist.Where(item => item.EventType == QSEnumPositionEventType.ExitPosition).Select(item => item.GenExitFollowItemStruct());
         }
 
+
+/**
+ *      跟单帐户的平仓盈亏和浮动盈亏按跟单帐户的统计进行计算
+ *      
+ *      信号侧的平仓盈亏和浮动盈亏按所有信号的累计进行计算
+ * 
+ * */
+        /// <summary>
+        /// 跟单平仓盈亏
+        /// </summary>
         public decimal FollowRealizedPL
         {
             get
@@ -41,6 +51,9 @@ namespace TradingLib.Core
             }
         }
 
+        /// <summary>
+        /// 跟单浮动盈亏
+        /// </summary>
         public decimal FollowUnRealizedPL
         {
             get
@@ -49,7 +62,33 @@ namespace TradingLib.Core
             }
         }
 
-        public int TotalFollowCount
+
+        /// <summary>
+        /// 信号侧平仓盈亏
+        /// </summary>
+        public decimal SignalRealizedPL
+        {
+            get
+            {
+                return signalMap.Values.Sum(sig => sig.Account.RealizedPL);
+            }
+        }
+
+        /// <summary>
+        /// 信号侧浮动盈亏
+        /// </summary>
+        public decimal SignalUnRealizedPL
+        {
+            get
+            {
+                return signalMap.Values.Sum(sig => sig.Account.UnRealizedPL);
+            }
+        }
+
+        /// <summary>
+        /// 总开仓次数
+        /// </summary>
+        public int TotalEntryCount
         {
             get
             {
@@ -57,7 +96,10 @@ namespace TradingLib.Core
             }
         }
 
-        public int TotalFollowCountSuccess
+        /// <summary>
+        /// 总开仓成功次数
+        /// </summary>
+        public int TotalEntrySuccessCount
         {
             get
             {
@@ -81,6 +123,17 @@ namespace TradingLib.Core
             get
             {
                 return itemlist;
+            }
+        }
+
+        /// <summary>
+        /// 信号源个数
+        /// </summary>
+        public int SignalCount
+        {
+            get
+            {
+                return signalMap.Values.Count;
             }
         }
     }

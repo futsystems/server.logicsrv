@@ -272,7 +272,7 @@ namespace TradingLib.Contrib.FinService
                 DBServicePlan sp = FinTracker.ServicePlaneTracker[_defaultspclassname];
                 IAccount acc = TLCtxHelper.ModuleAccountManager[account];
                 //如果是实盘帐号则默认给他开通配资服务
-                if (acc != null && sp != null && (acc.Category == QSEnumAccountCategory.REAL))
+                if (acc != null && sp != null && (acc.Category == QSEnumAccountCategory.SUBACCOUNT))
                 {
                     //如果帐户存在并且服务计划存在 则为该帐户添加对应的配资服务
                     FinTracker.FinServiceTracker.AddFinService(account, sp.ID);

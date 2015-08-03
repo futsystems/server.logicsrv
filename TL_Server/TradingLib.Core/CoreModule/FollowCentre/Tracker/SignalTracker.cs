@@ -38,10 +38,24 @@ namespace TradingLib.Core
             logger = LogManager.GetLogger("Follow-SignalTracker");
 
             logger.Info("加载信号设置,初始化信号对象");
+            //遍历所有交易账户 恢复信号设置
+
+            IEnumerable<SignalConfig> tmp = ORM.MSignal.SelectSignalConfigs();
+            
+            //遍历所有子账户和信号账户
+            foreach (IAccount account in TLCtxHelper.ModuleAccountManager.Accounts.Where(acc => (acc.Category == QSEnumAccountCategory.SUBACCOUNT || acc.Category == QSEnumAccountCategory.SIGACCOUNT)))
+            {
+                //如果信号列表中不包含该帐户 则添加
+                if (!tmp.Any(sig => sig.SignalToken == account.ID))
+                {
+                    ORM.MSignal.InsertSignalConfig(account.ID);
+                }
+            }
+            //遍历信号 将没有对应交易账户的信号删除
+
             //从数据库加载信号配置
             foreach (var cfg in ORM.MSignal.SelectSignalConfigs())
             {
-                
                 configmap.TryAdd(cfg.ID, cfg);
 
                 try
@@ -58,6 +72,7 @@ namespace TradingLib.Core
 
                 }
             }
+
 
             //加载跟单策略的信号map 
             logger.Info("初始化策略信号映射关系");
@@ -98,6 +113,86 @@ namespace TradingLib.Core
         }
 
 
+        /// <summary>
+        /// 获得某个信号源设置
+        /// </summary>
+        /// <param name="signalID"></param>
+        /// <returns></returns>
+        public SignalConfig GetSignalConfig(int signalID)
+        {
+            SignalConfig cfg = null;
+            if (configmap.TryGetValue(signalID, out cfg))
+            {
+                return cfg;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 获得所有信号配置信息
+        /// </summary>
+        public IEnumerable<SignalConfig> SignalConfigs
+        {
+            get
+            {
+                return configmap.Values;
+            }
+        }
+
+        /// <summary>
+        /// 将信号源添加到跟单策略
+        /// </summary>
+        /// <param name="signal"></param>
+        /// <param name="strategy"></param>
+        public void AppendSignalToStrategy(int signalID, int  strategyID)
+        {
+            if (!strategysignalmap.Keys.Contains(strategyID))
+            {
+                strategysignalmap.TryAdd(strategyID, new ConcurrentDictionary<int, ISignal>());
+            }
+
+            ISignal signal = this[signalID];
+            //信号存在且 映射中不包含该信号源
+            if (signal != null && !strategysignalmap[strategyID].Keys.Contains(signalID))
+            {
+                //更新内存映射
+                strategysignalmap[strategyID].TryAdd(signalID, signal);
+                //跟新数据库
+                ORM.MSignal.AppendSignalFromStrategy(signalID, strategyID);
+            }
+        }
+
+        /// <summary>
+        /// 将信号源头从跟单策略中删除
+        /// </summary>
+        /// <param name="signalID"></param>
+        /// <param name="strategyID"></param>
+        public void RemoveSignalFromStrategy(int signalID, int strategyID)
+        {
+            if (!strategysignalmap.Keys.Contains(strategyID))
+            {
+                return;
+            }
+
+            ISignal signal = this[signalID];
+            if (signal != null)
+            {
+                //跟新内存映射
+                strategysignalmap[strategyID].TryRemove(signalID,out signal);
+                //跟新数据库记录
+                ORM.MSignal.RemoveSignalFromStrategy(signalID, strategyID);
+            }
+        }
+        /// <summary>
+        /// 获得所有信号对象
+        /// </summary>
+        public IEnumerable<ISignal> Signlas
+        {
+            get
+            {
+                return signalmap.Values;
+            }
+        }
         /// <summary>
         /// 查找某个跟单策略的信号
         /// </summary>

@@ -55,10 +55,10 @@ namespace TradingLib.API
     /// </summary>
     public enum QSEnumPendingThresholdType
     {
-        [Description("按时间触发操作")]
+        [Description("时间触发")]
         ByTime,
 
-        [Description("按价格出发操作")]
+        [Description("价格触发")]
         ByTicks,
     }
 

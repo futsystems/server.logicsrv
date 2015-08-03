@@ -12,7 +12,7 @@ namespace TradingLib.Common
         {
             _type = MessageTypes.MGRUPDATEACCOUNTCATEGORY;
             this.Account = string.Empty;
-            this.Category = QSEnumAccountCategory.SIMULATION;
+            this.Category = QSEnumAccountCategory.SUBACCOUNT;
         }
 
 

@@ -19,17 +19,19 @@ namespace TradingLib.Core
         {
             FollowStrategyStatus status = new FollowStrategyStatus();
             status.StrategyID = strategy.ID;
-            status.SignalRealizedPL = 0;
-            status.SignalUnRealizedPL = 0;
+            status.SignalRealizedPL = strategy.SignalRealizedPL;
+            status.SignalUnRealizedPL = strategy.SignalUnRealizedPL;
 
             status.FollowRealizedPL = strategy.FollowRealizedPL;
             status.FollowUnRealizedPL = strategy.FollowUnRealizedPL;
 
             status.WorkState = strategy.WorkState;
 
-            status.TotalFollowCount = strategy.TotalFollowCount;
-            status.TotalFollowCountSuccess = strategy.TotalFollowCountSuccess;
+            status.TotalEntryCount = strategy.TotalEntryCount;
+            status.TotalEntrySuccessCount = strategy.TotalEntrySuccessCount;
+
             status.TotalSlip = strategy.TotalSlip;
+            status.SignalCount = strategy.SignalCount;
 
             return status;
         }

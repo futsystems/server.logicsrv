@@ -40,17 +40,24 @@ namespace TradingLib.Common
         /// <summary>
         /// 所有开仓跟单次数
         /// </summary>
-        public int TotalFollowCount { get; set; }
+        public int TotalEntryCount { get; set; }
 
         /// <summary>
         /// 所有开仓跟单次数（成功）
         /// </summary>
-        public int TotalFollowCountSuccess { get; set; }
+        public int TotalEntrySuccessCount { get; set; }
 
         /// <summary>
         /// 所有滑点数量
         /// </summary>
         public decimal TotalSlip { get; set; }
+
+
+        /// <summary>
+        /// 信号源个数
+        /// </summary>
+        public int SignalCount { get; set; }
+
 
         /// <summary>
         /// 跟单策略工作状态

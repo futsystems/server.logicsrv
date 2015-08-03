@@ -13,7 +13,7 @@ namespace TradingLib.Common
         {
             this.Account = string.Empty;
             this.Password = string.Empty;
-            this.Category = QSEnumAccountCategory.SIMULATION;
+            this.Category = QSEnumAccountCategory.SUBACCOUNT;
             this.RouterType = QSEnumOrderTransferType.SIM;
             this.UserID = 0;
             this.RouterID = 0;

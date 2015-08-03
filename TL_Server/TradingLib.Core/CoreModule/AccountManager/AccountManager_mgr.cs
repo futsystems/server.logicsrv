@@ -87,7 +87,7 @@ namespace TradingLib.Core
             create.Category = category;
             create.Password = password;
             //create.RouteGroup = BasicTracker.RouterGroupTracker[routergroup_id];
-            create.RouterType = create.Category == QSEnumAccountCategory.SIMULATION ? QSEnumOrderTransferType.SIM : QSEnumOrderTransferType.LIVE;
+            create.RouterType = QSEnumOrderTransferType.LIVE;
             create.UserID = user_id;
             //create.Domain = manager.Domain;
             create.BaseManagerID = targetmgr.BaseMgrID;
@@ -107,7 +107,7 @@ namespace TradingLib.Core
             Manager manager = session.GetManager();
             var profile = Mixins.Json.JsonMapper.ToObject<AccountProfile>(json);
             var account = profile.Account;
-            QSEnumAccountCategory category = QSEnumAccountCategory.LOANNEE;
+            QSEnumAccountCategory category = QSEnumAccountCategory.MONITERACCOUNT;
             var password = string.Empty;
             var routergroup_id = 0;
             var user_id = 0;

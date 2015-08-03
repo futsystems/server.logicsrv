@@ -59,7 +59,21 @@ namespace TradingLib.Core
                 TLCtxHelper.ModuleMgrExchange.Notify("FollowCentre", "ExitFollowItemNotify", item.GenExitFollowItemStruct(), null);
             }
         }
-        
+
+        /// <summary>
+        /// 通过策略ID编号获得策略对象
+        /// </summary>
+        /// <param name="strategyID"></param>
+        /// <returns></returns>
+        FollowStrategy ID2FollowStrategy(int strategyID)
+        {
+            FollowStrategy target = null;
+            if (strategyMap.TryGetValue(strategyID, out target))
+            {
+                return target;
+            }
+            return null;
+        }
 
         public void Stop()
         { 

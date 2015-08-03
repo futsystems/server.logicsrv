@@ -104,6 +104,7 @@ namespace TradingLib.Core
 
             //4.绑定信号事件 初始化信号维护器 并加载设置的信号;
             logger.Info("绑定信号源交易事件");
+
             //从维护器中获得策略信号map
             signalMap = FollowTracker.SignalTracker.GetStrategySignals(this.ID);
 
@@ -126,38 +127,30 @@ namespace TradingLib.Core
             //throw new NotImplementedException();
         }
 
-        //ISignal GetSignal(string token)
-        //{
-        //    if (string.IsNullOrEmpty(token))
-        //    {
-        //        return null;
-        //    }
-
-        //    ISignal signal = null;
-        //    if (signalMap.TryGetValue(token, out signal))
-        //    {
-        //        return signal;
-        //    }
-        //    return null;
-        //}
 
         /// <summary>
-        /// 策略实例是否包含信号Signal
+        /// 跟单策略添加信号
         /// </summary>
         /// <param name="signal"></param>
-        /// <returns></returns>
-        //bool HaveSignal(ISignal signal)
-        //{
-        //    if (string.IsNullOrEmpty(signal.Token)) return false;
-        //    if (signalMap.Keys.Contains(signal.Token)) return true;
-        //    return false;
-        //}
+        public void AppendSignal(ISignal signal)
+        { 
+            //1.绑定信号事件
 
+            //2.初始化信号所对应的数据维护器
+        
+        }
+
+        public void RemoveSignal(ISignal signal)
+        { 
+            //1.解绑事件绑定
+
+            //2.平掉将该信号对应的持仓
+        }
 
         /// <summary>
-        /// 添加信号到策略对象
+        /// 绑定信号事件
         /// </summary>
-        public void BindSignal(ISignal signal)
+        void BindSignal(ISignal signal)
         {
             if (signal == null)
             {
@@ -170,15 +163,13 @@ namespace TradingLib.Core
             signal.GotPositionEvent += new Action<ISignal, Trade, IPositionEvent>(OnSignalPositionEvent);
         }
 
-       
-
 
 
         /// <summary>
         /// 从策略对象删除信号
         /// </summary>
         /// <param name="siginal"></param>
-        public void UnbindSignal(ISignal signal)
+        void UnbindSignal(ISignal signal)
         {
             if (signal == null)
             {

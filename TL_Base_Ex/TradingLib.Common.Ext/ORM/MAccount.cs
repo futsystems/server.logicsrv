@@ -443,12 +443,14 @@ namespace TradingLib.ORM
         {
             switch (category)
             {
-                case QSEnumAccountCategory.REAL:
+                case QSEnumAccountCategory.SUBACCOUNT:
                     return GlobalConfig.PrefixReal;
-                case QSEnumAccountCategory.SIMULATION:
-                    return GlobalConfig.PrefixSim;
-                case QSEnumAccountCategory.LOANNEE:
-                    return GlobalConfig.PrefixLoannee;
+                case QSEnumAccountCategory.SIGACCOUNT:
+                    return "S";
+                case QSEnumAccountCategory.MONITERACCOUNT:
+                    return "M";
+                case QSEnumAccountCategory.STRATEGYACCOUNT:
+                    return "ST";
                 default:
                     return GlobalConfig.PrefixSim;
             }
@@ -492,7 +494,7 @@ namespace TradingLib.ORM
         /// <param name="user_id"></param>
         /// <param name="category"></param>
         /// <returns></returns>
-        private static bool HaveRequested(int user_id, QSEnumAccountCategory category = QSEnumAccountCategory.SIMULATION)
+        private static bool HaveRequested(int user_id, QSEnumAccountCategory category = QSEnumAccountCategory.SUBACCOUNT)
         {
             using (DBMySql db = new DBMySql())
             {

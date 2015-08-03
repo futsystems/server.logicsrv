@@ -18,7 +18,7 @@ namespace TradingLib.Common
             _id = AccountID;
             this.Execute = true;
             this.IntraDay = true;
-            this.Category = QSEnumAccountCategory.SIMULATION;
+            this.Category = QSEnumAccountCategory.SUBACCOUNT;
             this.OrderRouteType = QSEnumOrderTransferType.SIM;
             this.MAC = string.Empty;
             this.Name = string.Empty;

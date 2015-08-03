@@ -84,7 +84,7 @@ namespace TradingLib.Core
 
         public IEnumerable<Position> PositionsShort { get { return _account.PositionsShort; } }
 
-
+        public IAccount Account { get { return _account; } }
 
         /// <summary>
         /// 信号委托事件
