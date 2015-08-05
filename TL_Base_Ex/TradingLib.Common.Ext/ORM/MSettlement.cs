@@ -56,6 +56,8 @@ namespace TradingLib.ORM
 
         /// <summary>
         /// 检查某个持仓明细是否已经存在
+        /// 需要增加方向判断 增加开仓日期判断 opendate
+        /// 
         /// </summary>
         /// <param name="p"></param>
         /// <returns></returns>
@@ -63,7 +65,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                string query = String.Format("select account from log_position_detail_hist  where `account` = '{0}' AND `settleday` = '{1}' AND  `symbol`='{2}' AND `tradeid`='{3}'", p.Account, p.Settleday, p.Symbol,p.TradeID);
+                string query = String.Format("select account from log_position_detail_hist  where `account` = '{0}' AND `settleday` = '{1}' AND  `symbol`='{2}' AND `tradeid`='{3}' AND `side`='{4}' AND `opendate`='{5}'", p.Account, p.Settleday, p.Symbol, p.TradeID, p.Side ? 1 : 0, p.OpenDate);
                 return db.Connection.Query(query).Count() > 0;
             }
         }

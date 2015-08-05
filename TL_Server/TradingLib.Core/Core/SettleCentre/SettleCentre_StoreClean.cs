@@ -201,6 +201,7 @@ namespace TradingLib.Core
                         pd.Settleday = TLCtxHelper.Ctx.SettleCentre.NextTradingday;
                         //保存持仓明细到数据库
                         ORM.MSettlement.InsertPositionDetail(pd);
+                        //debug(string.Format("Account:{0} Vol:{1} CloseVol:{2} TradeID:{3} Settleday:{4} openday:{5}", pd.Account, pd.Volume, pd.CloseVolume,pd.TradeID,pd.Settleday,pd.OpenDate),QSEnumDebugLevel.INFO);
                         i++;
                     }   
                 }
