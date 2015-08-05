@@ -50,7 +50,6 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RSMargin.cs" />
-    <Compile Include="RSTime.cs" />
     <Compile Include="RSSymbolCanTrade.cs" />
     <Compile Include="RSSymbolBlock.cs" />
     <Compile Include="RSLots.cs" />

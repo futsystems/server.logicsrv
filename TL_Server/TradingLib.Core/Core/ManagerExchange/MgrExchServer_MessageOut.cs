@@ -63,7 +63,7 @@ namespace TradingLib.Core
             messageoutthread = null;
         }
 
-        const int buffize = 1000;
+        const int buffize = 10000;
 
         //实时交易信息缓存
         

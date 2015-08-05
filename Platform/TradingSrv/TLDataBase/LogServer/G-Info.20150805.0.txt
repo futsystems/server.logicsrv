@@ -1,0 +1,45 @@
+143847: [LOAD CONTRIB] TradingLib.Contrib.HistReportCentre
+143847: [LOAD CONTRIB] TradingLib.Contrib.CLI.CLIServer
+143847: CLIserver loading....
+143847: [LOAD CONTRIB] TradingLib.Contrib.APIService.APIServiceBundle
+143847: APIServiceBundle is loading ......
+143847: [LOAD CONTRIB] TradingLib.Contrib.FinService.FinServiceCentre
+143847: FinServiceCentre loading......
+143847: Load ServicePlane Type:TradingLib.Contrib.FinService.SPSpecialIFExt
+143847: Load ServicePlane Type:TradingLib.Contrib.FinService.SPCommonissionFixMargin
+143847: Load ServicePlane Type:TradingLib.Contrib.FinService.SPCommonissionBonus
+143847: Load ServicePlane Type:TradingLib.Contrib.FinService.SPSpecialIF
+143847: Load ServicePlane Type:TradingLib.Contrib.FinService.SPBonus
+143847: Load ServicePlane Type:TradingLib.Contrib.FinService.SPInterest
+143847: Load ServicePlane Type:TradingLib.Contrib.FinService.SPInterestFixMargin
+143847: Load Service Instance......
+143847: FinService:ID:10 Account: serviceplan_fk:9 active:True ModifiedTime:20150416104022 is not valid, drop it
+143847: FinService:ID:11 Account: serviceplan_fk:7 active:True ModifiedTime:20150514124213 is not valid, drop it
+143847: [START CONTRIB] TradingLib.Contirb.LogServer.LogServer
+143847: 启动日志服务,监听端口:3369
+143847: [START CONTRIB] TradingLib.Contrib.HistReportCentre
+143847: [START CONTRIB] TradingLib.Contrib.CLI.CLIServer
+143847: [START CONTRIB] TradingLib.Contrib.APIService.APIServiceBundle
+143847: Telnet server start listening at:8888
+143847: [START CONTRIB] TradingLib.Contrib.FinService.FinServiceCentre
+143847: 加载所有交易账户 风控规则
+143847: 添加风控项，帐户:6600007 rultename:AccountRuleSet.RSTime
+143847: 添加风控项，帐户:6600001 rultename:OrderRuleSet.RSTimeSpanBlock
+143847: 从数据库加载当日交易数据与出入金数据
+143847: 从数据库加载交易日:20150805 交易数据
+143847: 数据库恢复前次结算以来委托数据:14条
+143847: 数据库恢复前次结算以来成交数据:10条
+143847: 数据库恢复前次结算以来取消数据:0条
+143847: 从数据库加载上次结算日:20150804 持仓明细数据
+143847: 数据库恢复前次结算持仓明细数据:0条
+143847: 数据库恢复开启的PositionRound数据:0条
+143847: resume router roder....
+143847: resumed router order num:0
+143847: Starting MgrExch server...
+143847: Try to start server at: *:6670
+143847: try to load sessions form file:cache\MgrExch
+143847: webmsgexch start....
+143847: Start WebMsgRepServer
+143848: try to load sessions form file:cache\MsgExch
+143848: Starting MsgExch server...
+143848: Try to start server at: *:5570
