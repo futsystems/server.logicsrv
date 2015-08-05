@@ -464,7 +464,7 @@ namespace TradingLib.Core
 
         public void FlatPosition(Position pos, QSEnumOrderSource ordersource, string closereason)
         {
-            this.FlatPosition(pos, ordersource, closereason);
+            this.FlatPosition(pos, ordersource, closereason, 1);
         }
 
 
