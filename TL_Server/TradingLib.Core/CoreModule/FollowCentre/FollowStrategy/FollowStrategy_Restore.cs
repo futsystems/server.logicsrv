@@ -45,6 +45,11 @@ namespace TradingLib.Core
             //将开仓跟单项目加入列表
             itemlist.Add(item);
 
+            foreach (var o in item.Orders)
+            {
+                //将跟单项与委托建立映射关系
+                sourceTracker.NewOrder(item, o);
+            }
             //将跟单项目放入内存中的操作可以提炼成单独的CacheItem函数进行操作
             item.InRestore = false;
         }

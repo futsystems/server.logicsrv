@@ -32,17 +32,17 @@ namespace TradingLib.Core
                 //获得跟单项目对应的委托和成交 填充委托与成交
                 //从跟单项委托关系中获得该跟单项的所有委托并填充到对应跟单项目中
 
-                List<Order> orders = new List<Order>();
-                foreach(var d in itemorders)
-                {
-                    if(d.FollowKey == followitem.FollowKey)
-                    {
-                        Order tmpo = TLCtxHelper.ModuleClearCentre.SentOrder(d.OrderID);
-                        orders.Add(tmpo);
-                    }
-                }
+                //List<Order> orders = new List<Order>();
+                //foreach(var d in itemorders)
+                //{
+                //    if(d.FollowKey == followitem.FollowKey)
+                //    {
+                //        Order tmpo = TLCtxHelper.ModuleClearCentre.SentOrder(d.OrderID);
+                //        orders.Add(tmpo);
+                //    }
+                //}
 
-                //IEnumerable<Order> orders = itemorders.Where(item=>item.FollowKey == followitem.FollowKey).Select(item=>TLCtxHelper.ModuleClearCentre.SentOrder(item.OrderID));
+                IEnumerable<Order> orders = itemorders.Where(item=>item.FollowKey == followitem.FollowKey).Select(item=>TLCtxHelper.ModuleClearCentre.SentOrder(item.OrderID));
                 foreach(Order o in orders)
                 {
                     if(o!= null)

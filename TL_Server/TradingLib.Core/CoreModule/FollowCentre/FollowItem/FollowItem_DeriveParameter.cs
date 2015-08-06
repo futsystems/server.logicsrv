@@ -227,6 +227,27 @@ namespace TradingLib.Core
             }
         }
 
+        /// <summary>
+        /// 所有委托
+        /// </summary>
+        public IEnumerable<Order> Orders
+        {
+            get
+            {
+                return orderMap.Values;
+            }
+        }
+
+        /// <summary>
+        /// 所有成交
+        /// </summary>
+        public IEnumerable<Trade> Trades
+        {
+            get
+            {
+                return tradeMap.Values;
+            }
+        }
 
 
         /// <summary>
