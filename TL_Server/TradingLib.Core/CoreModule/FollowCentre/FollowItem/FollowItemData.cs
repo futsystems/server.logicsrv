@@ -18,6 +18,11 @@ namespace TradingLib.Common
         public int ID { get; set; }
 
         /// <summary>
+        /// 跟单键值
+        /// </summary>
+        public string FollowKey { get; set; }
+
+        /// <summary>
         /// 该跟单项所属策略ID
         /// </summary>
         public int StrategyID { get; set; }
@@ -42,5 +47,25 @@ namespace TradingLib.Common
         /// </summary>
         public string CloseTradeID { get; set; }
 
+        /// <summary>
+        /// 跟单项状态
+        /// </summary>
+        public QSEnumFollowStage Stage { get; set; }
+
+
+        /// <summary>
+        /// 跟单方向
+        /// </summary>
+        public bool FollowSide { get; set; }
+
+        /// <summary>
+        /// 跟单乘数
+        /// </summary>
+        public int FollowPower { get; set; }
+
+        /// <summary>
+        /// 结算日
+        /// </summary>
+        public int Settleday { get; set; }
     }
 }

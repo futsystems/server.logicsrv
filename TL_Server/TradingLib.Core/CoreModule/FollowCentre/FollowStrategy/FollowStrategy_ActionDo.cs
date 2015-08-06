@@ -33,6 +33,10 @@ namespace TradingLib.Core
                     this.followAccount.SendOrder(o);
                     //记录委托触发关系
                     sourceTracker.NewOrder(action.FollowItem, o);
+                    //将发送的委托与跟单项目关系储存
+                    FollowItemOrder fo = new FollowItemOrder { FollowKey = action.FollowItem.FollowKey, OrderID = o.id, Settleday = TLCtxHelper.ModuleSettleCentre.NextTradingday };
+                    FollowTracker.FollowItemLogger.NewFollowItemOrder(fo);
+
                 }
 
                 action.FollowItem.OnSendOrderEvent();

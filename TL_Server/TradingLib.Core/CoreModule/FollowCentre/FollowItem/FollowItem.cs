@@ -9,35 +9,12 @@ using TradingLib.Common;
 
 namespace TradingLib.Core
 {
-
-
-
-
-    public class PositionEvent : IPositionEvent
-    {
-        /// <summary>
-        /// 持仓事件类型
-        /// </summary>
-        public QSEnumPositionEventType EventType { get; set; }
-
-        /// <summary>
-        /// 开仓时形成的持仓明细
-        /// </summary>
-        public PositionDetail PositionEntry { get; set; }
-
-        /// <summary>
-        /// 平仓时形成的平仓明细
-        /// </summary>
-        public PositionCloseDetail PositionExit { get; set; }
-
-    }
-
     /// <summary>
     /// 某个信号源的某个成交触发了某个持仓操作事件
     /// 开仓/平仓
     /// 
     /// </summary>
-    public class TradeFollowItem
+    public partial class TradeFollowItem
     {
 
         /// <summary>
@@ -45,8 +22,9 @@ namespace TradingLib.Core
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public FollowItemData ConvertToData(TradeFollowItem item)
+        public FollowItemData ToFollowItemData()
         {
+            TradeFollowItem item = this;
             FollowItemData data = new FollowItemData();
             data.StrategyID = item.Strategy.ID;
             data.SignalID = item.Signal.ID;
@@ -60,6 +38,11 @@ namespace TradingLib.Core
                 data.OpenTradeID = item.PositionEvent.PositionExit.OpenTradeID;
                 data.CloseTradeID = item.PositionEvent.PositionExit.CloseTradeID;
             }
+            data.Stage = item.Stage;
+            data.FollowKey = item.FollowKey;
+            data.FollowPower = item.FollowPower;
+            data.FollowSide = item.FollowSide;
+
 
             return data;
         }
@@ -100,17 +83,62 @@ namespace TradingLib.Core
             }
             
             _side = strategy.Config.FollowDirection == QSEnumFollowDirection.Positive ? trade.Side : !trade.Side;
+            _power = strategy.Config.FollowPower;
+
             this.Stage = QSEnumFollowStage.ItemCreated;
         }
 
-        /// <summary>
-        /// 设定跟单配置
-        /// </summary>
-        /// <param name="cfg"></param>
-        public void BindConfig(FollowStrategyConfig cfg)
-        { 
-            
+
+        bool _inrestore = false;
+        public bool InRestore
+        {
+            get
+            {
+                return _inrestore;
+            }
+            internal set
+            {
+                _inrestore = value;
+            }
         }
+        /// <summary>
+        /// 从数据库获得FollowItemData然后获得对应的对象生成跟单对象
+        /// </summary>
+        /// <param name="followkey"></param>
+        /// <param name="strategy"></param>
+        /// <param name="signal"></param>
+        /// <param name="trade"></param>
+        /// <param name="posevent"></param>
+        /// <param name="followside"></param>
+        /// <param name="followpower"></param>
+        /// <param name="stage"></param>
+        public TradeFollowItem(string followkey,FollowStrategy strategy, ISignal signal, Trade trade, IPositionEvent posevent,bool followside,int followpower,QSEnumFollowStage stage)
+        {
+            _inrestore = true;
+            _followkey = followkey;
+
+            this.Strategy = strategy;
+            this.Signal = signal;
+            this.SignalTrade = trade;
+            this.PositionEvent = posevent;
+
+            if (this.PositionEvent.EventType == QSEnumPositionEventType.EntryPosition)
+            {
+                //开仓跟单项目的编号就是开仓成交的编号OpenTradeID
+                _key = this.PositionEvent.PositionEntry.TradeID;
+            }
+            if (this.PositionEvent.EventType == QSEnumPositionEventType.ExitPosition)
+            {
+                //平仓跟单项目的编号就是开仓成交编号与平仓成交编号的组合 OpenTradeID-CloseTradeID
+                _key = string.Format("{0}-{1}", this.PositionEvent.PositionExit.OpenTradeID, this.PositionEvent.PositionExit.CloseTradeID);
+            }
+
+            _side = followside;
+            _power = followpower;
+            _stage = stage;
+
+        }
+
 
         /// <summary>
         /// 跟单项目描述
@@ -125,16 +153,31 @@ namespace TradingLib.Core
         /// <summary>
         /// 买入/卖出
         /// </summary>
-        public bool Side
+        public bool FollowSide
         {
             get
             {
                 return _side;
             }
         }
+
+        int _power = 1;
+        /// <summary>
+        /// 跟单乘数
+        /// </summary>
+        public int FollowPower
+        {
+            get
+            {
+                return _power;
+            }
+        }
+
         string _key = string.Empty;
         /// <summary>
         /// 键值
+        /// 开仓跟单项键值为成交编号
+        /// 平仓跟单项键值为开仓成交编号-平仓成交编号
         /// </summary>
         public string Key
         {
@@ -145,58 +188,29 @@ namespace TradingLib.Core
         string _followkey = string.Empty;
         /// <summary>
         /// 跟单项键值
+        /// 开仓跟单项目键值为全局设定的编号
+        /// 平仓跟单项目键值为对应开仓跟单键值-平仓成交编号
+        /// 跟单项目键值用于进行全局排列
+        /// 
+        /// 从数据库恢复时直接设定FollowKey
         /// </summary>
         public string FollowKey
         {
             get
             {
-                if (this.EventType == QSEnumPositionEventType.EntryPosition)
-                {
-                    return _followkey;
-                }
-                else
-                {
-                    return string.Format("{0}-{1}", this.EntryFollowItem.FollowKey, this.PositionEvent.PositionExit.CloseTradeID);
-                }
+                return _followkey;
+
+                //if (this.EventType == QSEnumPositionEventType.EntryPosition)
+                //{
+                //    return _followkey;
+                //}
+                //else
+                //{
+                //    return string.Format("{0}-{1}", this.EntryFollowItem.FollowKey, this.PositionEvent.PositionExit.CloseTradeID);
+                //}
             }
         }
         
-
-
-        #region 时间参数
-        int _signalTime = 0;
-        /// <summary>
-        /// 信号发生时间
-        /// </summary>
-        public int SignalTime { get { return _signalTime; } }
-
-
-        int _orderSendTime = 0;
-        public int TimeOrderSend { get { return _orderSendTime; } }
-        int _orderOpenTime = 0;
-        /// <summary>
-        /// 委托挂单时间
-        /// </summary>
-        public int TimeOrderOpen { get { return _orderOpenTime; } }
-
-        int _orderFillTime = 0;
-        /// <summary>
-        /// 委托成交时间
-        /// </summary>
-        public int TimeOrderFill { get { return _orderFillTime; } }
-
-        /// <summary>
-        /// 相应委托发送事件
-        /// </summary>
-        /// <param name="o"></param>
-        public void OnSendOrderEvent()
-        {
-            _orderSendTime = Util.ToTLTime();
-            _orderOpenTime = 0;
-            _orderFillTime = 0;
-        }
-        #endregion
-
 
         /// <summary>
         /// 跟单策略
@@ -231,11 +245,18 @@ namespace TradingLib.Core
         /// </summary>
         public QSEnumFollowStage Stage { get { return _stage; } 
             set 
-            { 
+            {
+                QSEnumFollowStage oldstage = _stage;
                 _stage = value;
+                if (InRestore) return;//如果处于数据恢复状态 则直接返回 状态改变不向外发送通知或数据库记录
+
                 if (_stage != QSEnumFollowStage.ItemCreated)
                 {
                     FollowTracker.NotifyTradeFollowItem(this);
+                }
+                if (oldstage != _stage)
+                {
+                    FollowTracker.FollowItemLogger.NewFollowItemUpdate(this.ToFollowItemData());
                 }
             } 
         }
@@ -263,319 +284,10 @@ namespace TradingLib.Core
         /// </summary>
         ConcurrentDictionary<string, Trade> tradeMap = new ConcurrentDictionary<string, Trade>();
 
-
         /// <summary>
         /// 跟单项的操作
         /// </summary>
         List<FollowAction> _actions = new List<FollowAction>();
-
-
-        /// <summary>
-        /// 当前处于工作状态的委托
-        /// 每个跟单项只维护一个工作委托
-        /// </summary>
-        public Order WorkingOrder
-        {
-            get {
-                return orderMap.Values.FirstOrDefault();
-            }
-        }
-        /// <summary>
-        /// 获得委托记录
-        /// </summary>
-        /// <param name="o"></param>
-        public void GotOrder(Order o)
-        {
-            if (!orderMap.Keys.Contains(o.id))
-            {
-                orderMap.TryAdd(o.id, o);
-                _followsentsize += Math.Abs(o.TotalSize);
-            }
-            else
-            { 
-                //是否需要跟新委托对象
-
-                //根据委托状态更新跟单项状态
-                switch (o.Status)
-                { 
-                    case QSEnumOrderStatus.Opened:
-                        this.Stage = QSEnumFollowStage.FollowOrderOpened;
-                        _orderOpenTime = Util.ToTLTime();
-                        break;
-                    case QSEnumOrderStatus.PartFilled:
-                        this.Stage = QSEnumFollowStage.FollowOrderPartFilled;
-                        break;
-                    case QSEnumOrderStatus.Filled:
-                        this.Stage = QSEnumFollowStage.FollowOrderFilled;
-                        break;
-                    case QSEnumOrderStatus.Canceled:
-                        this.Stage = QSEnumFollowStage.FollowOrderCanceled;
-                        break;
-                }
-            }
-        }
-
-        /// <summary>
-        /// 获得成交记录
-        /// </summary>
-        /// <param name="f"></param>
-        public void GotTrade(Trade f)
-        {
-            if (!tradeMap.Keys.Contains(f.TradeID))
-            {
-                tradeMap.TryAdd(f.TradeID, f);
-                _orderFillTime = Util.ToTLTime();
-            }
-            //计算跟单均价
-            _followprice = this.tradeMap.Values.Sum(t => t.xPrice * t.UnsignedSize) / this.tradeMap.Values.Sum(t => t.UnsignedSize);
-            
-            //累加跟单数量
-            _followfillsize += f.UnsignedSize;
-
-            //计算累计滑动点 成交方向 * (跟单价格 - 信号价格)*手数
-            _totalslip += (f.Side ? -1 : 1) * (f.xPrice - this.SignalTrade.xPrice) * f.UnsignedSize;
-
-            FollowTracker.NotifyTradeFollowItem(this);
-        }
-
-        /// <summary>
-        /// 绑定操作对象
-        /// </summary>
-        /// <param name="action"></param>
-        public void NewAction(FollowAction action)
-        {
-            _actions.Add(action);
-        }
-
-        /// <summary>
-        /// 绑定平仓跟单项目
-        /// </summary>
-        /// <param name="item"></param>
-        public void NewExitFollowItem(TradeFollowItem item)
-        {
-            if (this.EventType == QSEnumPositionEventType.ExitPosition)
-            {
-                throw new ArgumentException("ExitFolloItem can not run GotExitFollowItem");
-            }
-            if (item.EventType == QSEnumPositionEventType.EntryPosition)
-            {
-                throw new ArgumentException("GotExitFollowItem must use ExitFollowItem");
-            }
-            _exitFollowItems.Add(item);
-        }
-
-        /// <summary>
-        /// 绑定开仓跟单项目
-        /// </summary>
-        /// <param name="item"></param>
-        public void NewEntryFollowItem(TradeFollowItem item)
-        {
-            if (this.EventType == QSEnumPositionEventType.EntryPosition)
-            {
-                throw new ArgumentException("EntryFolloItem can not run NewEntryFollowItem");
-            }
-            if (item.EventType == QSEnumPositionEventType.ExitPosition)
-            {
-                throw new ArgumentException("NewEntryFollowItem must use EntryFollowItem");
-            }
-            this.EntryFollowItem = item;
-        }
-
-
-
-        int _firedcount = 0;
-        public int FiredCount
-        {
-            get { return _firedcount; }
-            set { _firedcount = value; }
-        }
-
-        decimal _totalslip = 0;
-        /// <summary>
-        /// 跟单项目的成交滑点
-        /// </summary>
-        public decimal TotalSlip
-        {
-            get
-            {
-                return _totalslip;
-            }
-        }
-
-        decimal _followprice = 0;
-        /// <summary>
-        /// 跟单均价
-        /// 由对应的成交价格 成交数量 加权平均计算
-        /// </summary>
-        public decimal FollowPrice
-        {
-            get
-            {
-                return _followprice;
-            }
-        }
-
-        int _followfillsize = 0;
-        /// <summary>
-        /// 跟单成交数量
-        /// </summary>
-        public int FollowFillSize
-        {
-            get
-            {
-                return _followfillsize;
-            }
-        }
-
-        /// <summary>
-        /// 开仓跟单项目对应的平仓跟单项成交数量
-        /// </summary>
-        public int ExitFollowFillSize
-        { 
-            get
-            {
-                if (this.EventType == QSEnumPositionEventType.ExitPosition)
-                {
-
-                    throw new ArgumentException("ExitFollowItem have no ExitFollowFillSize");
-                }
-                else
-                {
-                    return this.ExitFollowItems.Sum(item => item.FollowFillSize);
-                }
-            }
-        }
-
-        /// <summary>
-        /// 开仓跟单项目对应的持仓数量
-        /// </summary>
-        public int PositionHoldSize
-        {
-            get
-            {
-                if (this.EventType == QSEnumPositionEventType.ExitPosition)
-                {
-
-                    throw new ArgumentException("ExitFollowItem have no PositionHoldSize");
-                }
-                else
-                {
-                    return this.FollowFillSize - this.ExitFollowFillSize;
-                }
-            }
-        }
-
-        int _followsentsize = 0;
-        /// <summary>
-        /// 跟单发送数量
-        /// </summary>
-        public int FollowSentSize
-        {
-            get
-            {
-                return _followsentsize;
-            }
-        }
-
-        /// <summary>
-        /// 信号均价
-        /// </summary>
-        public decimal SignalPrice
-        {
-            get
-            {
-                return this.SignalTrade.xPrice;
-            }
-        }
-
-        /// <summary>
-        /// 跟单项发送的委托是否全部被成交
-        /// 发送数量与成交术量相等则表明该跟单项全部被成交
-        /// </summary>
-        public bool Filled
-        {
-            get
-            {
-                return this.FollowFillSize == this.FollowSentSize;
-            }
-        }
-
-        /// <summary>
-        /// 获得跟单项 处于pending状态的委托
-        /// </summary>
-        public IEnumerable<Order> PendingOrders
-        {
-            get
-            {
-                return orderMap.Values.Where(o => o.IsPending());
-            }
-        }
-
-
-        /// <summary>
-        /// 跟单项 信号盈亏
-        /// </summary>
-        public decimal SignalProfit
-        {
-            get
-            {
-                if (this.EventType == QSEnumPositionEventType.EntryPosition)
-                {
-                    return 0;
-                }
-                if (this.EventType == QSEnumPositionEventType.ExitPosition)
-                {
-                    return this.PositionEvent.PositionExit.ClosePointByDate;
-                }
-                return 0;
-            }
-        }
-
-
-        /// <summary>
-        /// 跟单项 跟单盈亏
-        /// </summary>
-        public decimal FollowProfit
-        {
-            get
-            {
-                if (this.EventType == QSEnumPositionEventType.EntryPosition)
-                {
-                    return 0;
-                }
-                if (this.EventType == QSEnumPositionEventType.ExitPosition)
-                { 
-                    //获得其对应的开仓项
-                    if (this.EntryFollowItem == null)
-                    {
-                        return 0;
-                    }
-
-                    //(平仓跟单均价 - 开仓跟单均价)*跟单术量
-                    return (_side?-1:1)*(this.FollowPrice - this.EntryFollowItem.FollowPrice) * this.FollowFillSize;
-                }
-                return 0;
-            }
-        }
-
-        /// <summary>
-        /// 是否要处理平仓事件
-        /// 如果开仓跟单失败 则不需要处理对应的平仓事件
-        /// </summary>
-        public bool NeedExitFollow
-        {
-            get
-            {
-                //如果开仓跟单项成交数量为0 则不用处理对应的平仓事件
-                if (this.PositionHoldSize == 0)
-                {
-                    return false;
-                }
-                return true;
-
-            }
-        }
-
 
     }
 }

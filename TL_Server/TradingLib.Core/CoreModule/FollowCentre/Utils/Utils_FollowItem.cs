@@ -21,7 +21,7 @@ namespace TradingLib.Core
             entryitem.SignalID = item.Signal.ID;
             entryitem.SignalToken = item.Signal.Token;
             entryitem.FollowKey = item.FollowKey;
-            entryitem.Side = item.Side;
+            entryitem.Side = item.FollowSide;
 
             entryitem.OpenTradeID = item.PositionEvent.PositionEntry.TradeID;
             entryitem.SigPrice = item.SignalTrade.xPrice;
@@ -38,14 +38,6 @@ namespace TradingLib.Core
             entryitem.TotalSlip = item.TotalSlip + item.ExitFollowItems.Sum(f => f.TotalSlip);
             entryitem.TotalRealizedPL = item.ExitFollowItems.Sum(f => f.FollowProfit);
             
-
-            //List<ExitFollowItemStruct> list = new List<ExitFollowItemStruct>();
-            //foreach (var exit in item.ExitFollowItems)
-            //{
-            //    list.Add(exit.GenExitFollowItemStruct());
-            //}
-
-            //entryitem.ExitFollowItems = list.ToArray();
             return entryitem;
         }
 
@@ -60,7 +52,7 @@ namespace TradingLib.Core
 
             ExitFollowItemStruct exit = new ExitFollowItemStruct();
             exit.FollowKey = item.FollowKey;
-            exit.Side = item.Side;
+            exit.Side = item.FollowSide;
             exit.EntryFollowKey = item.EntryFollowItem.FollowKey;
 
             exit.CloseTradeID = item.PositionEvent.PositionExit.CloseTradeID;
@@ -72,6 +64,8 @@ namespace TradingLib.Core
             exit.FollowAvgPrice = item.FollowPrice;
             exit.FollowSlip = item.TotalSlip;
             exit.FollowProfit = item.FollowProfit;
+            exit.Stage = item.Stage;
+
             return exit;
 
         }

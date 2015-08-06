@@ -41,9 +41,6 @@ namespace TradingLib.Core
                 if (pe.EventType == QSEnumPositionEventType.EntryPosition)
                 {
                     followitem = new TradeFollowItem(this, signal,trade, pe);
-                    
-                   
-
                 }
                 else//平仓事件需要查找对应的开仓跟单项目
                 {
@@ -73,9 +70,13 @@ namespace TradingLib.Core
                     tk.GotTradeFollowItem(followitem);
                     //放入缓存
                     followbuffer.Write(followitem);
-
                     //将开仓跟单项目加入列表
                     itemlist.Add(followitem);
+
+                    //数据库记录新生成的跟单项目
+                    FollowItemData data = followitem.ToFollowItemData();
+                    data.Settleday = TLCtxHelper.ModuleSettleCentre.NextTradingday;
+                    FollowTracker.FollowItemLogger.NewFollowItem(data);
 
                     //对外通知跟单项
                     FollowTracker.NotifyTradeFollowItem(followitem);

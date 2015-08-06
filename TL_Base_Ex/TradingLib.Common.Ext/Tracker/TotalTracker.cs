@@ -19,6 +19,9 @@ namespace TradingLib.Common
     {
         ConcurrentDictionary<long, Order> ordermap = new ConcurrentDictionary<long, Order>();
         ConcurrentDictionary<long, Trade> trademap = new ConcurrentDictionary<long, Trade>();
+
+        ConcurrentDictionary<string, Trade> tradeIdMap = new ConcurrentDictionary<string, Trade>();
+
         ConcurrentDictionary<string, Position> positionmap = new ConcurrentDictionary<string, Position>();
 
         public IEnumerable<Order> TotalOrders { get { return ordermap.Values; } }
@@ -38,6 +41,21 @@ namespace TradingLib.Common
             if (ordermap.TryGetValue(oid, out o))
             {
                 return o;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 通过成交编号获得对应的成交
+        /// </summary>
+        /// <param name="tradeid"></param>
+        /// <returns></returns>
+        public Trade FilledTrade(string tradeid)
+        {
+            Trade f = null;
+            if (tradeIdMap.TryGetValue(tradeid, out f))
+            {
+                return f;
             }
             return null;
         }
@@ -91,6 +109,8 @@ namespace TradingLib.Common
         public void NewFill(Trade fill)
         {
             trademap.TryAdd(fill.id, fill);
+            //建立成交编号与成交映射关系
+            tradeIdMap.TryAdd(fill.TradeID, fill);
         }
 
         /// <summary>

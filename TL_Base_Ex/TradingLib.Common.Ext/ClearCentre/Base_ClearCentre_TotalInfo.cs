@@ -21,6 +21,16 @@ namespace TradingLib.Common
         }
 
         /// <summary>
+        /// 通过TradeID获得对应的成交对象
+        /// </summary>
+        /// <param name="tradeid"></param>
+        /// <returns></returns>
+        public Trade FilledTrade(string tradeid)
+        {
+            return totaltk.FilledTrade(tradeid);
+        }
+
+        /// <summary>
         /// 某个委托是否被维护
         /// </summary>
         /// <param name="oid"></param>

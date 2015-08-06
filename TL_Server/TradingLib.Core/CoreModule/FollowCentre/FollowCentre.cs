@@ -26,6 +26,7 @@ namespace TradingLib.Core
 
 
         ConcurrentDictionary<int, FollowStrategy> strategyMap = new ConcurrentDictionary<int, FollowStrategy>();
+        bool _followstart = false;
         public void Start()
         {
 
@@ -38,9 +39,20 @@ namespace TradingLib.Core
                 FollowStrategy strategy = FollowStrategy.CreateStrategy(cfg);
                 strategyMap.TryAdd(strategy.ID, strategy);
                 //启动跟单策略
-                strategy.Start();
+                
             }
             
+            //恢复跟单项目数据
+            RestoreFollowItemData();
+
+
+            //启动跟单策略
+            foreach (var strategy in strategyMap.Values)
+            {
+                strategy.Start();
+            }
+            _followstart = true;
+
         }
 
 

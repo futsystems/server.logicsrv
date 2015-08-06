@@ -31,6 +31,9 @@ namespace TradingLib.Core
         {
             defaultinstance.signalTracker = new SignalTracker();
             defaultinstance.strategyTracker = new FollowStrategyCfgTracker();
+            defaultinstance._followItemLogger = new AsyncFollowLoger();
+            defaultinstance._followItemLogger.Start();
+
         }
 
         SignalTracker signalTracker = null;
@@ -59,7 +62,19 @@ namespace TradingLib.Core
             }
         }
 
+        AsyncFollowLoger _followItemLogger = null;
+        public static AsyncFollowLoger FollowItemLogger
+        {
+            get
+            {
+                if (defaultinstance._followItemLogger == null)
+                    defaultinstance._followItemLogger = new AsyncFollowLoger();
+                return defaultinstance._followItemLogger;
+            }
+        }
+
         public static event Action<TradeFollowItem> NotifyTradeFollowItemEvent;
+
 
         /// <summary>
         /// 对外通知跟单项目的状态变化

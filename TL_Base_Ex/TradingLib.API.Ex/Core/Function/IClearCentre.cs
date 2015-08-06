@@ -71,6 +71,13 @@ namespace TradingLib.API
         Order SentOrder(long oid);
 
         /// <summary>
+        /// 通过成交编号找到对应的成交
+        /// </summary>
+        /// <param name="tradeid"></param>
+        /// <returns></returns>
+        Trade FilledTrade(string tradeid);
+
+        /// <summary>
         /// 所有委托
         /// </summary>
         IEnumerable<Order> TotalOrders { get; }
