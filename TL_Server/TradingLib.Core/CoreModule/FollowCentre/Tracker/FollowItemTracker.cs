@@ -10,6 +10,7 @@ namespace TradingLib.Core
 {
     /// <summary>
     /// 每个跟单策略都有一个跟单项维护器
+    /// 用于记录某个策略下的某个信号对应的跟单项目
     /// </summary>
     public class SignalFollowItemTracker
     {
@@ -27,8 +28,10 @@ namespace TradingLib.Core
                 signalMap.Add(signal.ID, new FollowItemTracker());
             }
         }
+
         /// <summary>
         /// 按信号ID获得对应的跟单项维护器
+        /// 如果指定的signalid不存在 则会创建默认的跟单项目维护器
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -41,11 +44,13 @@ namespace TradingLib.Core
                 {
                     return target;
                 }
-                return null;
+                else
+                {
+                    signalMap.Add(id, new FollowItemTracker());
+                    return signalMap[id];
+                }
             }
         }
-
-
     }
 
 

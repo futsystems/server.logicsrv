@@ -15,7 +15,16 @@ namespace TradingLib.Common
 
     public class FollowItemBase
     {
+        /// <summary>
+        /// 跟单ID
+        /// </summary>
+        public int StrategyID { get; set; }
+
+        /// <summary>
+        /// 跟单方向
+        /// </summary>
         public bool Side { get; set; }
+
         /// <summary>
         /// 信号价格
         /// </summary>
@@ -52,12 +61,9 @@ namespace TradingLib.Common
         /// 状态
         /// </summary>
         public QSEnumFollowStage Stage { get; set; }
-
-
-
-
-
     }
+
+
     /// <summary>
     /// 
     /// </summary>

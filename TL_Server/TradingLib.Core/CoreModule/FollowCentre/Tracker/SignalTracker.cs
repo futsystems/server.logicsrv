@@ -158,7 +158,7 @@ namespace TradingLib.Core
                 //更新内存映射
                 strategysignalmap[strategyID].TryAdd(signalID, signal);
                 //跟新数据库
-                ORM.MSignal.AppendSignalFromStrategy(signalID, strategyID);
+                ORM.MSignal.AppendSignalToStrategy(signalID, strategyID);
             }
         }
 

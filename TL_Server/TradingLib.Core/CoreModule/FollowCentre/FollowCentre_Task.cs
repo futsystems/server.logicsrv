@@ -17,12 +17,9 @@ namespace TradingLib.Core
         public void Task_CollectStrategyStatus()
         {
             if (!_followstart) return;
-            foreach (var startegy in strategyMap.Values)
+            foreach (var strategy in strategyMap.Values)
             {
-                FollowStrategyStatus status = startegy.GenFollowStrategyStatus();
-
-                //通知
-                TLCtxHelper.ModuleMgrExchange.Notify("FollowCentre", "FollowStrategyStatusNotify", status, null);
+                NotifyFollowStrategyStatus(strategy);
             }
         }
     }

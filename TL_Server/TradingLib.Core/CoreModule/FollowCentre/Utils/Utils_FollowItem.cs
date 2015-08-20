@@ -18,6 +18,8 @@ namespace TradingLib.Core
             }
 
             EntryFollowItemStruct entryitem = new EntryFollowItemStruct();
+            entryitem.StrategyID = item.Strategy.ID;
+
             entryitem.SignalID = item.Signal.ID;
             entryitem.SignalToken = item.Signal.Token;
             entryitem.FollowKey = item.FollowKey;
@@ -51,6 +53,8 @@ namespace TradingLib.Core
 
 
             ExitFollowItemStruct exit = new ExitFollowItemStruct();
+            exit.StrategyID = item.Strategy.ID;
+
             exit.FollowKey = item.FollowKey;
             exit.Side = item.FollowSide;
             exit.EntryFollowKey = item.EntryFollowItem.FollowKey;

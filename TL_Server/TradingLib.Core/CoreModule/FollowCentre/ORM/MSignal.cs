@@ -72,7 +72,7 @@ namespace TradingLib.ORM
         /// </summary>
         /// <param name="signalID"></param>
         /// <param name="strategyID"></param>
-        public static void AppendSignalFromStrategy(int signalID, int strategyID)
+        public static void AppendSignalToStrategy(int signalID, int strategyID)
         {
             using (DBMySql db = new DBMySql())
             {

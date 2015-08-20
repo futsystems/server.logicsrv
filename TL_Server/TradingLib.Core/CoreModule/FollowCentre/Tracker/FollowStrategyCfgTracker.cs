@@ -78,6 +78,10 @@ namespace TradingLib.Core
             }
         }
 
+        /// <summary>
+        /// 更新跟单策略(包含添加跟单策略逻辑)
+        /// </summary>
+        /// <param name="cfg"></param>
         public void UpdateFollowStrategyConfig(FollowStrategyConfig cfg)
         {
             FollowStrategyConfig target = null;

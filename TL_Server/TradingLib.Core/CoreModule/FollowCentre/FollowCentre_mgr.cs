@@ -13,6 +13,32 @@ namespace TradingLib.Core
     public partial class FollowCentre
     {
         /// <summary>
+        /// 查询可用策略帐户列表
+        /// 已经被策略绑定的策略帐户无法再次绑定到某个策略
+        /// 策略帐户是用于策略运行时下单
+        /// </summary>
+        /// <param name="session"></param>
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryAvabileStrategyAccount", "QryAvabileStrategyAccount - qry  avabile strategy account list", "查询可用策略帐户列表")]
+        public void CTE_QryAvabileStrategyAccount(ISession session)
+        {
+            Manager manager = session.GetManager();
+            if (!manager.IsRoot())
+            {
+                throw new FutsRspError("无权进行此操作");
+            }
+
+            IEnumerable<IAccount> acclist = TLCtxHelper.ModuleAccountManager.Accounts.Where(acc => acc.Category == QSEnumAccountCategory.STRATEGYACCOUNT);
+
+            IEnumerable<IAccount> avabile = acclist.Where(acc => !FollowTracker.StrategyCfgTracker.StrategyConfigs.Any(cfg => cfg.Account == acc.ID));
+            string[] accounts = avabile.Select(acc=>acc.ID).ToArray();
+            //for (int i = 0; i < accounts.Length; i++)
+            {
+                session.ReplyMgr(accounts);
+            }
+        }
+
+
+        /// <summary>
         /// 获得跟单策略列表
         /// </summary>
         /// <param name="session"></param>
@@ -50,15 +76,55 @@ namespace TradingLib.Core
             if (cfg != null)
             {
 
-                //新增判断token重复
-                if (cfg.ID==0 && FollowTracker.StrategyCfgTracker[cfg.Token] != null)
+                bool isadd = cfg.ID == 0;
+                if (isadd)
                 {
-                    throw new FutsRspError("跟单策略标识:" + cfg.Token + "已存在");
-                }
-                FollowTracker.StrategyCfgTracker.UpdateFollowStrategyConfig(cfg);
+                    //新增判断token重复
+                    if (FollowTracker.StrategyCfgTracker[cfg.Token] != null)
+                    {
+                        throw new FutsRspError("跟单策略标识:" + cfg.Token + "已存在");
+                    }
+                    //添加跟单策略
+                    FollowTracker.StrategyCfgTracker.UpdateFollowStrategyConfig(cfg);
+                    //初始化跟单策略
+                    InitStrategy(FollowTracker.StrategyCfgTracker[cfg.ID]);
+                    //启动跟单策略
+                    FollowStrategy strategy = ID2FollowStrategy(cfg.ID);
+                    strategy.Start();
 
-                session.OperationSuccess("更新跟单策略参数成功");
+                    NotifyFollowStrategyConfig(FollowTracker.StrategyCfgTracker[cfg.ID]);
+                    session.OperationSuccess("添加跟单策略成功");
+                    
+                }
+                else
+                {
+
+                    FollowTracker.StrategyCfgTracker.UpdateFollowStrategyConfig(cfg);
+
+                    NotifyFollowStrategyConfig(FollowTracker.StrategyCfgTracker[cfg.ID]);
+                    session.OperationSuccess("更新跟单策略参数成功");
+                }
             }
+        }
+
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "SetStrategyWorkState", "SetStrategyWorkState - set follow strategy workstate", "设置跟单策略工作状态")]
+        public void CTE_SetWorkState(ISession session,int strategyid,QSEnumFollowWorkState state)
+        {
+            Manager manager = session.GetManager();
+            if (!manager.IsRoot())
+            {
+                throw new FutsRspError("无权进行此操作");
+            }
+
+            FollowStrategy strategy = ID2FollowStrategy(strategyid);
+            if (strategy == null)
+            {
+                throw new FutsRspError(string.Format("策略:{0}不存在", strategyid));
+            }
+
+            strategy.WorkState = state;
+            session.OperationSuccess(string.Format("策略:{0}-{1}工作状态:{2}", strategy.Config.ID, strategy.Config.Token, Util.GetEnumDescription(strategy.WorkState)));
         }
 
 

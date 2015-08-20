@@ -85,6 +85,7 @@ namespace TradingLib.Core
         public void Init()
         {
 
+            logger.Info(string.Format("FollowStrategy:{0}-{0} init",this.Config.ID,this.Config.Token));
             //1.初始化下单账户
             followAccount = FollowAccount.CreateFollowAccount(this.Account);
             if (followAccount == null)
@@ -94,17 +95,16 @@ namespace TradingLib.Core
             }
 
             //2.绑定行情事件 获得市场含情
-            logger.Info("bind market data event");
+            logger.Info("Wire market data event");
             TLCtxHelper.EventIndicator.GotTickEvent += new TickDelegate(EventIndicator_GotTickEvent);
 
             //3.跟单账户交易事件,获得对应下单账户的委托和成交回报
-            logger.Info("绑定跟单帐户交易事件");
+            logger.Info("Wire event of followaccount");
             followAccount.GotFillEvent += new FillDelegate(followAccount_GotFillEvent);
             followAccount.GotOrderEvent += new OrderDelegate(followAccount_GotOrderEvent);
 
             //4.绑定信号事件 初始化信号维护器 并加载设置的信号;
-            logger.Info("绑定信号源交易事件");
-
+            logger.Info("Wire event of signals");
             //从维护器中获得策略信号map
             signalMap = FollowTracker.SignalTracker.GetStrategySignals(this.ID);
 
@@ -135,15 +135,16 @@ namespace TradingLib.Core
         public void AppendSignal(ISignal signal)
         { 
             //1.绑定信号事件
-
+            BindSignal(signal);
             //2.初始化信号所对应的数据维护器
+            followitemtracker.InitFollowItemTracker(signal);
         
         }
 
         public void RemoveSignal(ISignal signal)
         { 
             //1.解绑事件绑定
-
+            UnbindSignal(signal);
             //2.平掉将该信号对应的持仓
         }
 
