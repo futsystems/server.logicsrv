@@ -125,6 +125,11 @@ namespace TradingLib.API
         bool Module_PayOnline { get; set; }
 
         /// <summary>
+        /// 跟单模块
+        /// </summary>
+        bool Module_Follow { get; set; }
+
+        /// <summary>
         /// 实盘路由
         /// </summary>
         bool Router_Live { get; set; }

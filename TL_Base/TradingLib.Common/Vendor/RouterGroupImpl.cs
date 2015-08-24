@@ -9,59 +9,10 @@ using TradingLib.Mixins.Json;
 namespace TradingLib.Common
 {
 
-    public class RouterItemSetting
-    {
-        /// <summary>
-        /// 全局序号
-        /// </summary>
-        public int ID { get; set; }
-
-        /// <summary>
-        /// 优先级
-        /// </summary>
-        public int priority { get; set; }
-
-        /// <summary>
-        /// 路由组ID
-        /// </summary>
-        public int routegroup_id { get; set; }
-
-        /// <summary>
-        /// 实盘帐号ID
-        /// </summary>
-        public int vendor_id { get; set; }
-
-        /// <summary>
-        /// 接受委托规则
-        /// </summary>
-        public string rule { get; set; }
-
-        /// <summary>
-        /// 是否激活
-        /// </summary>
-        public bool Active { get; set; }
-
-    }
     /// <summary>
-    /// 路由与路由组映射关系
+    /// XXXXSetting 数据库数据储存对象
+    /// 在实际业务逻辑中的业务对象 继承该对象 并丰富数据与操作用于实现业务逻辑
     /// </summary>
-    public class RouterItemImpl : RouterItemSetting,RouterItem
-    {
-        RouterGroup _routegroup = null;
-        /// <summary>
-        /// 路由组ID 所属路由组
-        /// </summary>
-        [NoJsonExportAttr()]
-        public RouterGroup RouteGroup { get { return _routegroup; } set { _routegroup = value; } }
-        Vendor _vendor = null;
-        /// <summary>
-        /// 实盘帐号对象
-        /// </summary>
-        [NoJsonExportAttr()]
-        public Vendor Vendor { get { return _vendor; } set { _vendor = value; } }
-    }
-
-
     public class RouterGroupSetting
     {
         /// <summary>
@@ -92,6 +43,9 @@ namespace TradingLib.Common
         
     }
 
+    /// <summary>
+    /// 路由组
+    /// </summary>
     public class RouterGroupImpl : RouterGroupSetting, RouterGroup
     {
         ConcurrentDictionary<int, RouterItem> routeritemmap = new ConcurrentDictionary<int, RouterItem>();
@@ -100,6 +54,8 @@ namespace TradingLib.Common
         /// 域
         /// </summary>
         public Domain Domain { get; internal set; }
+
+
 
         /// <summary>
         /// 返回所有路由项目
@@ -117,10 +73,10 @@ namespace TradingLib.Common
         /// 返回所有Vendor
         /// </summary>
         /// <returns></returns>
-        IEnumerable<Vendor> GetVendors()
-        {
-            return routeritemmap.Values.Where(r => r.Vendor != null).Select(r => r.Vendor);
-        }
+        //IEnumerable<Vendor> GetVendors()
+        //{
+        //    return routeritemmap.Values.Where(r => r.Vendor != null).Select(r => r.Vendor);
+        //}
 
         /// <summary>
         /// 获得IBroker成交路由
@@ -132,12 +88,36 @@ namespace TradingLib.Common
         /// <returns></returns>
         public IBroker GetBroker(string token)
         {
-            Vendor vendor = GetVendors().Where(v => v.GetBrokerToken().Equals(token)).FirstOrDefault();
-            if (vendor != null)
-                return vendor.Broker;
-            else
-                return null;
+            //查找路由项目的主帐户标识
+            return routeritemmap.Values.Where(item => item.GetBrokerToken().Equals(token)).Select(item=>item.Broker).FirstOrDefault();
+            //Vendor vendor = GetVendors().Where(v => v.GetBrokerToken().Equals(token)).FirstOrDefault();
+            //if (vendor != null)
+            //    return vendor.Broker;
+            //else
+            //    return null;
         }
+
+        /// <summary>
+        /// 返回默认的开仓通道，根据策略给出当前可用的开仓通道
+        /// </summary>
+        /// <returns></returns>
+        public IBroker GetBroker(Order o, decimal margintouse)
+        {
+            if (this.Strategy == QSEnumRouterStrategy.Priority)
+            {
+                return PriorityBroker(o, margintouse);
+            }
+            else if (this.Strategy == QSEnumRouterStrategy.Stochastic)
+            {
+                return StochasticBroker(o, margintouse);
+            }
+            else
+            {
+                return StochasticBroker(o, margintouse);
+            }
+
+        }
+
 
         #endregion
 
@@ -146,27 +126,27 @@ namespace TradingLib.Common
         Random rd = new Random(Util.ToTLTime());
 
         /// <summary>
-        /// 返回所有可用开仓的Vendor
+        /// 返回所有可用开仓的路由项目
         /// </summary>
         /// <returns></returns>
-        IEnumerable<Vendor> GetVendorsForOpen()
+        IEnumerable<RouterItem> GetRouterItemsForOpen()
         {
-            return routeritemmap.Values.Where(r => r.Active).Where(r => r.Vendor != null).Select(r => r.Vendor);
+            return routeritemmap.Values.Where(r => r.Active).Where(r => r.Broker != null);
         }
 
         /// <summary>
-        /// 按优先级别排序获得可开仓Vendor
+        /// 按优先级别排序获得可开仓路由项目
         /// </summary>
         /// <returns></returns>
-        IEnumerable<Vendor> GetVendorsForOpenSorted()
+        IEnumerable<RouterItem> GetRouterItemsForOpenSorted()
         {
-            return routeritemmap.Values.Where(r => r.Active).Where(r => r.Vendor != null).OrderBy(r => r.priority).Select(r => r.Vendor);
+            return routeritemmap.Values.Where(r => r.Active).Where(r => r.Broker != null).OrderBy(r => r.priority);
         }
 
         IBroker StochasticBroker(Order o, decimal margintouse)
         {
             //目前实现优随机可用选择
-            IBroker[] brokers = GetVendorsForOpen().Where(v => v.IsBrokerAvabile()).Where(v => v.AcceptEntryOrder(o, margintouse)).Select(v => v.Broker).ToArray();
+            IBroker[] brokers = GetRouterItemsForOpen().Where(v => v.IsBrokerAvabile()).Where(v => v.AcceptEntryOrder(o, margintouse)).Select(v => v.Broker).ToArray();
             if (brokers.Length < 1)
             {
                 return null;
@@ -179,7 +159,7 @@ namespace TradingLib.Common
 
         IBroker PriorityBroker(Order o, decimal margintouse)
         {
-            IBroker[] brokers = GetVendorsForOpenSorted().Where(v => v.IsBrokerAvabile()).Where(v => v.AcceptEntryOrder(o, margintouse)).Select(v => v.Broker).ToArray();
+            IBroker[] brokers = GetRouterItemsForOpenSorted().Where(v => v.IsBrokerAvabile()).Where(v => v.AcceptEntryOrder(o, margintouse)).Select(v => v.Broker).ToArray();
             if (brokers.Length < 1)
             {
                 return null;
@@ -188,50 +168,33 @@ namespace TradingLib.Common
             Util.Info(string.Format("Priority Strategy Select Broker[{0}]", broker.Token));
             return broker;
         }
-        /// <summary>
-        /// 返回默认的开仓通道，根据策略给出当前可用的开仓通道
-        /// </summary>
-        /// <returns></returns>
-        public IBroker GetBroker(Order o,decimal margintouse)
-        {
-            if (this.Strategy == QSEnumRouterStrategy.Priority)
-            {
-                return PriorityBroker(o, margintouse);
-            }
-            else if(this.Strategy == QSEnumRouterStrategy.Stochastic)
-            { 
-                return StochasticBroker(o,margintouse);
-            }
-            else
-            {
-                return StochasticBroker(o,margintouse);
-            }
-           
-        }
+
+
+        
         #endregion
 
 
 
-        public void Start()
-        {
-            foreach (IBroker b in GetBrokers())
-            {
-                if (b != null && !b.IsLive)
-                {
-                    b.Start();
-                }
-            }
-        }
+        //public void Start()
+        //{
+        //    foreach (IBroker b in GetBrokers())
+        //    {
+        //        if (b != null && !b.IsLive)
+        //        {
+        //            b.Start();
+        //        }
+        //    }
+        //}
 
         /// <summary>
         /// 获得所有成交通道 
         /// 不保证成交通道已经启动或逻辑上可用
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<IBroker> GetBrokers()
-        {
-            return GetVendors().Where(v => v.Broker != null).Select(v => v.Broker);
-        }
+        //public IEnumerable<IBroker> GetBrokers()
+        //{
+        //    return GetVendors().Where(v => v.Broker != null).Select(v => v.Broker);
+        //}
 
         ///// <summary>
         ///// 获得所有可用的Broker用于开仓

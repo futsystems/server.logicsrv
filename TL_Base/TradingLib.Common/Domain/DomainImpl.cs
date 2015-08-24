@@ -30,6 +30,8 @@ namespace TradingLib.Common
             this.Module_FinService = false;
             this.Module_PayOnline = false;
             this.Module_SubAgent = false;
+            this.Module_Follow = false;
+            
             this.Router_Live = true;
             this.Router_Sim = true;
             this.Switch_Router = true;
@@ -145,6 +147,10 @@ namespace TradingLib.Common
         /// </summary>
         public bool Module_PayOnline { get; set; }
 
+        /// <summary>
+        /// 跟单模块
+        /// </summary>
+        public bool Module_Follow { get; set; }
 
         /// <summary>
         /// 实盘路由

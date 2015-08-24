@@ -12,12 +12,23 @@ namespace TradingLib.ServiceManager
     {
 
         //接口对象映射表
+        //token->IBroker
         Dictionary<string, IBroker> brokerInstList = new Dictionary<string, IBroker>();
-        //Dictionary<int, IBroker> brokerInstIdMap = new Dictionary<int, IBroker>();
+        //id->IBroker
+        Dictionary<int, IBroker> brokerInstIdMap = new Dictionary<int, IBroker>();
 
         Dictionary<string, IDataFeed> datafeedInstList = new Dictionary<string, IDataFeed>();
 
-
+        //通过ID获得IBroker
+        IBroker ID2Broker(int connector_id)
+        {
+            IBroker broker = null;
+            if (brokerInstIdMap.TryGetValue(connector_id, out broker))
+            {
+                return broker;
+            }
+            return null;
+        }
         /// <summary>
         /// 验证成交接口设置
         /// </summary>
@@ -133,12 +144,19 @@ namespace TradingLib.ServiceManager
             //保存token到broker的map关系
             brokerInstList.Add(cfg.Token, brokerinterface);
             //保存id到broker的map关系
-            //brokerInstIdMap.Add(cfg.ID, brokerinterface);
+            brokerInstIdMap.Add(cfg.ID, brokerinterface);
 
             //4.绑定Broker
-            VendorImpl vendor = BasicTracker.VendorTracker[broker.VendorID];//获得该通道设定的VendorID
-            if (vendor != null)
-                vendor.BindBroker(brokerinterface);
+            //VendorImpl vendor = BasicTracker.VendorTracker[broker.VendorID];//获得该通道设定的VendorID
+            //if (vendor != null)
+            //    vendor.BindBroker(brokerinterface);
+
+            //获得路由条目中connector_id与当前broker的cfg_id相同的条目并进行绑定
+            IEnumerable<RouterItemImpl> routeritems = BasicTracker.RouterGroupTracker.RouterItems.Where(tmp => tmp.Connector_ID == cfg.ID);
+            foreach (var item in routeritems)
+            {
+                item.BindBroker(brokerinterface);
+            }
 
             ////5.绑定状态事件
             broker.Connected += OnBrokerConnected;

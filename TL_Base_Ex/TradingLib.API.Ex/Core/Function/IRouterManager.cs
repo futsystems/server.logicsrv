@@ -12,7 +12,7 @@ namespace TradingLib.API
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        //IBroker FindBroker(int id);
+        IBroker FindBroker(int id);
 
         /// <summary>
         /// 查找成交路由

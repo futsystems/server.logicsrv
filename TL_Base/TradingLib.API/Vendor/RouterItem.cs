@@ -25,7 +25,19 @@ namespace TradingLib.API
         /// <summary>
         /// 实盘帐号ID
         /// </summary>
-        Vendor Vendor { get; }
+        //Vendor Vendor { get; }
+
+        /// <summary>
+        /// 实盘通道Broker接口
+        /// </summary>
+        IBroker Broker { get; set; }
+
+
+        /// <summary>
+        /// 保证金限额
+        /// </summary>
+        decimal MarginLimit { get; set; }
+
 
         /// <summary>
         /// 接受委托规则

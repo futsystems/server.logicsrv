@@ -515,66 +515,66 @@ namespace TradingLib.Core
             //通过实盘帐户同步合约数据
             if (manager.Domain.CFG_SyncVendor_ID !=0)
             {
-                Vendor vendor = BasicTracker.VendorTracker[manager.Domain.CFG_SyncVendor_ID];
-                if (vendor == null || vendor.Domain.ID != manager.domain_id || vendor.Broker == null || !vendor.Broker.IsLive || !(vendor.Broker is TLBroker))
-                { 
-                    throw new FutsRspError("设置的同步实盘帐户无效,请修改同步实盘帐户");
-                }
+                //Vendor vendor = BasicTracker.VendorTracker[manager.Domain.CFG_SyncVendor_ID];
+                //if (vendor == null || vendor.Domain.ID != manager.domain_id || vendor.Broker == null || !vendor.Broker.IsLive || !(vendor.Broker is TLBroker))
+                //{ 
+                //    throw new FutsRspError("设置的同步实盘帐户无效,请修改同步实盘帐户");
+                //}
 
-                TLBroker broker = vendor.Broker as TLBroker;
-                Action<XSymbol,bool> Handler = (sym, islast) =>
-                {
-                    if (islast)
-                    {
-                        logger.Info("got symbol synced....");
-                    }
-                    SymbolImpl tsym = manager.Domain.GetSymbol(sym.Symbol);
-                    //更新
-                    if (tsym != null)
-                    {
-                        tsym.EntryCommission = (decimal)sym.EntryCommission;
-                        tsym.ExitCommission = (decimal)sym.ExitCommission;
-                        tsym.Margin = (decimal)sym.Margin;
-                        tsym.ExpireDate = sym.ExpireDate;//到期日
-                        BasicTracker.SymbolTracker.UpdateSymbol(manager.domain_id, tsym);
-                    }
-                    else//增加
-                    {
-                        SecurityFamilyImpl sec = BasicTracker.SecurityTracker[manager.domain_id, sym.SecurityCode];
-                        //包含对应品种，则增加合约
-                        if (sec != null)
-                        {
-                            tsym = new SymbolImpl();
-                            tsym.Symbol = sym.Symbol;
-                            tsym.Domain_ID = manager.domain_id;
-                            tsym.Margin = (decimal)sym.Margin;
-                            tsym.EntryCommission = (decimal)sym.EntryCommission;
-                            tsym.ExitCommission = (decimal)sym.ExitCommission;
-                            tsym.ExpireDate = sym.ExpireDate;//到期日
+                //TLBroker broker = vendor.Broker as TLBroker;
+                //Action<XSymbol,bool> Handler = (sym, islast) =>
+                //{
+                //    if (islast)
+                //    {
+                //        logger.Info("got symbol synced....");
+                //    }
+                //    SymbolImpl tsym = manager.Domain.GetSymbol(sym.Symbol);
+                //    //更新
+                //    if (tsym != null)
+                //    {
+                //        tsym.EntryCommission = (decimal)sym.EntryCommission;
+                //        tsym.ExitCommission = (decimal)sym.ExitCommission;
+                //        tsym.Margin = (decimal)sym.Margin;
+                //        tsym.ExpireDate = sym.ExpireDate;//到期日
+                //        BasicTracker.SymbolTracker.UpdateSymbol(manager.domain_id, tsym);
+                //    }
+                //    else//增加
+                //    {
+                //        SecurityFamilyImpl sec = BasicTracker.SecurityTracker[manager.domain_id, sym.SecurityCode];
+                //        //包含对应品种，则增加合约
+                //        if (sec != null)
+                //        {
+                //            tsym = new SymbolImpl();
+                //            tsym.Symbol = sym.Symbol;
+                //            tsym.Domain_ID = manager.domain_id;
+                //            tsym.Margin = (decimal)sym.Margin;
+                //            tsym.EntryCommission = (decimal)sym.EntryCommission;
+                //            tsym.ExitCommission = (decimal)sym.ExitCommission;
+                //            tsym.ExpireDate = sym.ExpireDate;//到期日
 
-                            tsym.Strike = (decimal)sym.StrikePrice;
-                            tsym.OptionSide = sym.OptionSide;
+                //            tsym.Strike = (decimal)sym.StrikePrice;
+                //            tsym.OptionSide = sym.OptionSide;
 
-                            tsym.security_fk = sec.ID;
-                            tsym.Tradeable = false;
-                            BasicTracker.SymbolTracker.UpdateSymbol(manager.domain_id, tsym);
-                        }
-                        else
-                        {
-                            logger.Info("symbol:" + sym.Symbol + " have no sec setted. code:" + sym.SecurityCode);
-                        }
-                    }
-                };
+                //            tsym.security_fk = sec.ID;
+                //            tsym.Tradeable = false;
+                //            BasicTracker.SymbolTracker.UpdateSymbol(manager.domain_id, tsym);
+                //        }
+                //        else
+                //        {
+                //            logger.Info("symbol:" + sym.Symbol + " have no sec setted. code:" + sym.SecurityCode);
+                //        }
+                //    }
+                //};
 
-                broker.GotSymbolEvent += new Action<XSymbol, bool>(Handler);
+                //broker.GotSymbolEvent += new Action<XSymbol, bool>(Handler);
 
-                if (!broker.QryInstrument())
-                {
-                    broker.GotSymbolEvent -= new Action<XSymbol, bool>(Handler);
-                    throw new FutsRspError("通道合约数据查询失败");
-                }
-                broker.GotSymbolEvent -= new Action<XSymbol, bool>(Handler);
-                session.OperationSuccess("同步合约数据完成");
+                //if (!broker.QryInstrument())
+                //{
+                //    broker.GotSymbolEvent -= new Action<XSymbol, bool>(Handler);
+                //    throw new FutsRspError("通道合约数据查询失败");
+                //}
+                //broker.GotSymbolEvent -= new Action<XSymbol, bool>(Handler);
+                //session.OperationSuccess("同步合约数据完成");
 
             }//通过主域同步合约数据
             else

@@ -96,9 +96,19 @@ namespace TradingLib.Common
         /// </summary>
         /// <param name="domain"></param>
         /// <returns></returns>
-        public static IEnumerable<VendorImpl> GetVendors(this Domain domain)
+        //public static IEnumerable<VendorImpl> GetVendors(this Domain domain)
+        //{
+        //    return BasicTracker.VendorTracker.Vendors.Where(vendor => vendor.domain_id==domain.ID);
+        //}
+
+        /// <summary>
+        /// 获得某个分区下面的所有路由项目
+        /// </summary>
+        /// <param name="domain"></param>
+        /// <returns></returns>
+        public static IEnumerable<RouterItemImpl> GetRouterItems(this Domain domain)
         {
-            return BasicTracker.VendorTracker.Vendors.Where(vendor => vendor.domain_id==domain.ID);
+            return BasicTracker.RouterGroupTracker.RouterItems.Where(item => item.RouteGroup.Domain.ID == domain.ID);
         }
 
         /// <summary>
@@ -108,7 +118,8 @@ namespace TradingLib.Common
         /// <returns></returns>
         public static IEnumerable<IBroker> GetBrokers(this Domain domain)
         {
-            return domain.GetVendors().Where(v => v.Broker != null).Select(v => v.Broker);
+           
+            return domain.GetRouterItems().Where(v => v.Broker != null).Select(v => v.Broker);
         }
 
         /// <summary>

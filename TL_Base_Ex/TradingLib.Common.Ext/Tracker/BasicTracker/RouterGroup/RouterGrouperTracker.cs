@@ -37,7 +37,8 @@ namespace TradingLib.Common
                     group.AppendRouterItem(item);//实现双向绑定
                 }
                 //绑定实盘帐户对象
-                item.Vendor = BasicTracker.VendorTracker[item.vendor_id];//绑定路由条目的Vendor
+                //item.Vendor = BasicTracker.VendorTracker[item.vendor_id];//绑定路由条目的Vendor
+                //item.Broker = 
                 
             }
         }
@@ -107,7 +108,6 @@ namespace TradingLib.Common
             }
         }
 
-
         public void UpdateRouterGroup(RouterGroupSetting rg)
         {
             RouterGroupImpl target = null;
@@ -148,17 +148,23 @@ namespace TradingLib.Common
                 target.Active = item.Active;
                 target.priority = item.priority;
                 target.rule = item.rule;
+                target.MarginLimit = item.MarginLimit;
+
                 ORM.MRouterGroup.UpdateRouterItem(target);
             }
             else
             {
                 target = new RouterItemImpl();
 
-                target.Active = item.Active;
-                target.priority = item.priority;
                 target.routegroup_id = item.routegroup_id;
+                target.Connector_ID = item.Connector_ID;
+                target.MarginLimit = item.MarginLimit;
+                target.priority = item.priority;
                 target.rule = item.rule;
+                target.Active = item.Active;
                 target.vendor_id = item.vendor_id;
+                
+
 
                 ORM.MRouterGroup.InsertRouterItem(target);
 
@@ -174,7 +180,8 @@ namespace TradingLib.Common
                     group.AppendRouterItem(target);//实现双向绑定
                 }
                 //绑定实盘帐户对象
-                target.Vendor = BasicTracker.VendorTracker[target.vendor_id];//绑定路由条目的Vendor
+                //target.Vendor = BasicTracker.VendorTracker[target.vendor_id];//绑定路由条目的Vendor
+                target.Broker = TLCtxHelper.ServiceRouterManager.FindBroker(target.Connector_ID);
             }
         }
     }

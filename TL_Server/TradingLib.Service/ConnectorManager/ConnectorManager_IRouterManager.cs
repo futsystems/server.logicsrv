@@ -17,6 +17,15 @@ namespace TradingLib.ServiceManager
         public IDataFeed DefaultDataFeed { get { return _defaultdatafeed; } }
 
         /// <summary>
+        /// 通过ConnectorID查找获得IBroker对象
+        /// </summary>
+        /// <param name="connector_id"></param>
+        /// <returns></returns>
+        public IBroker FindBroker(int connector_id)
+        {
+            return ID2Broker(connector_id);
+        }
+        /// <summary>
         /// 查找某个交易路由
         /// 通过交易通道的Token来查找对应的Broker
         /// </summary>

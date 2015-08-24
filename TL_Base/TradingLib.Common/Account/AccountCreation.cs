@@ -15,9 +15,10 @@ namespace TradingLib.Common
             this.Password = string.Empty;
             this.Category = QSEnumAccountCategory.SUBACCOUNT;
             this.RouterType = QSEnumOrderTransferType.SIM;
-            this.UserID = 0;
-            this.RouterID = 0;
-            this.BaseManagerID = 0;
+
+            this.UserID = 0;//交易帐户对应其他系统的userID 用于实现其他系统user与交易系统Account关联
+            this.RouterID = 0;//交易帐户路由组
+            this.BaseManagerID = 0;//该交易帐户属于哪个manager
 
             this.Profile = new AccountProfile();
         }

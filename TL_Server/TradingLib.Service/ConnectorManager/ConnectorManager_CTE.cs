@@ -114,23 +114,23 @@ namespace TradingLib.ServiceManager
         }
         
         #region Vendor RouterGroup
-        [ContribCommandAttr(QSEnumCommandSource.CLI, "vendorstatus", "vendorstatus - print status of vendor", "输出某个实盘帐户状态")]
-        public string PrintConnector(int vid)
-        {
-            StringBuilder sb = new StringBuilder();
-            Vendor vendor = BasicTracker.VendorTracker[vid];
-            if (vendor == null)
-            {
-                return "vendor:" + vid.ToString() + " do not exist";
-            }
-            sb.Append(string.Format("ID:{0} Name:{1} FutCompany:{2} LastEquity:{3}", vendor.ID, vendor.Name, vendor.FutCompany, vendor.LastEquity)+Environment.NewLine);
-            if(vendor.Broker != null)
-            {
-                IBroker broker = vendor.Broker;
-                sb.Append(string.Format("Broker:{0} Margin:{1} RealizedPL:{2} UnRealizedPL:{3}", broker.Token, vendor.CalMargin(), vendor.CalRealizedPL(), vendor.CalUnRealizedPL()));
-            }
-            return sb.ToString();
-        }
+        //[ContribCommandAttr(QSEnumCommandSource.CLI, "vendorstatus", "vendorstatus - print status of vendor", "输出某个实盘帐户状态")]
+        //public string PrintConnector(int vid)
+        //{
+        //    StringBuilder sb = new StringBuilder();
+        //    Vendor vendor = BasicTracker.VendorTracker[vid];
+        //    if (vendor == null)
+        //    {
+        //        return "vendor:" + vid.ToString() + " do not exist";
+        //    }
+        //    sb.Append(string.Format("ID:{0} Name:{1} FutCompany:{2} LastEquity:{3}", vendor.ID, vendor.Name, vendor.FutCompany, vendor.LastEquity)+Environment.NewLine);
+        //    if(vendor.Broker != null)
+        //    {
+        //        IBroker broker = vendor.Broker;
+        //        sb.Append(string.Format("Broker:{0} Margin:{1} RealizedPL:{2} UnRealizedPL:{3}", broker.Token, vendor.CalMargin(), vendor.CalRealizedPL(), vendor.CalUnRealizedPL()));
+        //    }
+        //    return sb.ToString();
+        //}
         #endregion
     }
 }

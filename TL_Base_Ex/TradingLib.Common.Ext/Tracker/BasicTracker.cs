@@ -31,7 +31,7 @@ namespace TradingLib.Common
         //
         ConnectorConfigTracker connectorcfgtracker;
         RouterGrouperTracker rgtracker;
-        VendorTracker vendortracker;
+        //VendorTracker vendortracker;
 
         //帐户绑定主帐户
         AccountConnectorTracker accconnectortracker;
@@ -168,15 +168,15 @@ namespace TradingLib.Common
         /// <summary>
         /// 获得实盘帐户维护器
         /// </summary>
-        public static VendorTracker VendorTracker
-        {
-            get
-            {
-                if (defaultinstance.vendortracker == null)
-                    defaultinstance.vendortracker = new VendorTracker();
-                return defaultinstance.vendortracker;
-            }
-        }
+        //public static VendorTracker VendorTracker
+        //{
+        //    get
+        //    {
+        //        if (defaultinstance.vendortracker == null)
+        //            defaultinstance.vendortracker = new VendorTracker();
+        //        return defaultinstance.vendortracker;
+        //    }
+        //}
 
         /// <summary>
         /// 域维护器

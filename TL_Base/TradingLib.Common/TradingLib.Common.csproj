@@ -89,6 +89,7 @@
     <Compile Include="Trading\Config\MarginTemplateItem.cs" />
     <Compile Include="Trading\MarginConfig.cs" />
     <Compile Include="Trading\MarketData.cs" />
+    <Compile Include="Utils\ChinSpellcs.cs" />
     <Compile Include="Utils\Version.cs" />
     <Compile Include="Tracker\HighLowTracker.cs" />
     <Compile Include="Trading\Utils\SecurityUtils.cs" />
@@ -267,6 +268,8 @@
     <Compile Include="Offset\TrailTracker.cs" />
     <Compile Include="Utils\Util.cs" />
     <Compile Include="Trading\Utils\TradeUtils.cs" />
+    <Compile Include="Vendor\RouterItem.cs" />
+    <Compile Include="Vendor\RouterItemUtils.cs" />
     <Compile Include="Vendor\VendorImpl.cs" />
     <Compile Include="Vendor\VendorUtils.cs" />
   </ItemGroup>

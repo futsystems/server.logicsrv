@@ -69,9 +69,9 @@ namespace TradingLib.ServiceManager
                         foreach (RouterItem item in rg.RouterItems)
                         {
                             //如果Vendor无效或者没有对应的broker则跳过
-                            if (item.Vendor == null || item.Vendor.Broker == null)
+                            if (item.Broker == null)
                                 continue;
-                            StartBrokerViaToken(item.Vendor.Broker.Token);
+                            StartBrokerViaToken(item.Broker.Token);
                             Util.sleep(500);
                         }
                     }

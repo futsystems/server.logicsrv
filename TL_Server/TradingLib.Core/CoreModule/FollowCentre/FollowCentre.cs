@@ -40,6 +40,7 @@ namespace TradingLib.Core
             }
             
             //恢复跟单项目数据
+            RestoreFollowItemData();
 
             //启动跟单策略
             foreach (var strategy in strategyMap.Values)
