@@ -71,6 +71,11 @@ namespace TradingLib.Core
             if(InRestore) return;
             
             FollowTracker.NotifyTradeFollowItem(this);
+            //如果是平仓成交则需要同步更新开仓跟单项状态
+            if (this.EventType == QSEnumPositionEventType.ExitPosition)
+            {
+                FollowTracker.NotifyTradeFollowItem(this.EntryFollowItem);
+            }
             
         }
     }

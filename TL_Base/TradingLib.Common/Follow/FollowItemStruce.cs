@@ -100,6 +100,13 @@ namespace TradingLib.Common
         /// </summary>
         public decimal TotalRealizedPL { get; set; }
 
+
+        /// <summary>
+        /// 持仓数量
+        /// 开仓跟单项形成的跟单持仓数量 - 对应平仓跟单项的成交数量（未平持仓数量）
+        /// </summary>
+        public int PositionHoldSize { get; set; }
+
     }
 
     public class ExitFollowItemStruct : FollowItemBase

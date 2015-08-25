@@ -19,7 +19,7 @@ namespace TradingLib.Core
             if (!_followstart) return;
             foreach (var strategy in strategyMap.Values)
             {
-                //NotifyFollowStrategyStatus(strategy);
+                NotifyFollowStrategyStatus(strategy);
             }
         }
     }

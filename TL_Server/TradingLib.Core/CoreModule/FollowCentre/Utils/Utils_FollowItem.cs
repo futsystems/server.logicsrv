@@ -39,7 +39,8 @@ namespace TradingLib.Core
             //累计滑点
             entryitem.TotalSlip = item.TotalSlip + item.ExitFollowItems.Sum(f => f.TotalSlip);
             entryitem.TotalRealizedPL = item.ExitFollowItems.Sum(f => f.FollowProfit);
-            
+            entryitem.PositionHoldSize = item.PositionHoldSize;
+
             return entryitem;
         }
 
