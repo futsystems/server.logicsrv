@@ -64,7 +64,8 @@ namespace TradingLib.Core
                     if (o.IsEntryPosition)
                     {
                         decimal price = TLCtxHelper.ModuleDataRouter.GetAvabilePrice(o.Symbol);
-                        return rg.GetBroker(o, o.CalFundRequired(price));
+                        decimal margin = o.CalFundRequired(price);
+                        return rg.GetBroker(o, margin);
                     }
                     else//平仓委托按委托中的Broker字段返回
                     {

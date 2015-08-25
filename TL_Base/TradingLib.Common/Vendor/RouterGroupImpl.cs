@@ -159,7 +159,8 @@ namespace TradingLib.Common
 
         IBroker PriorityBroker(Order o, decimal margintouse)
         {
-            IBroker[] brokers = GetRouterItemsForOpenSorted().Where(v => v.IsBrokerAvabile()).Where(v => v.AcceptEntryOrder(o, margintouse)).Select(v => v.Broker).ToArray();
+            IEnumerable<RouterItem> routerItemList = GetRouterItemsForOpenSorted();
+            IBroker[] brokers = routerItemList.Where(v => v.IsBrokerAvabile()).Where(v => v.AcceptEntryOrder(o, margintouse)).Select(v => v.Broker).ToArray();
             if (brokers.Length < 1)
             {
                 return null;

@@ -181,8 +181,23 @@ namespace TradingLib.Common
                 }
                 //绑定实盘帐户对象
                 //target.Vendor = BasicTracker.VendorTracker[target.vendor_id];//绑定路由条目的Vendor
-                target.Broker = TLCtxHelper.ServiceRouterManager.FindBroker(target.Connector_ID);
+                //target.Broker = TLCtxHelper.ServiceRouterManager.FindBroker(target.Connector_ID);
             }
+        }
+
+        /// <summary>
+        /// 通过RouterItemID获得对应的路由项对象
+        /// </summary>
+        /// <param name="item_id"></param>
+        /// <returns></returns>
+        public RouterItemImpl GetRouterItem(int item_id)
+        {
+            RouterItemImpl item = null;
+            if (routeritemmap.TryGetValue(item_id, out item))
+            {
+                return item;
+            }
+            return null;
         }
     }
 }

@@ -310,12 +310,12 @@ namespace TradingLib.ServiceManager
 
                     //Vendor vendor = BasicTracker.VendorTracker[item.vendor_id];
                     IBroker broker = ID2Broker(item.Connector_ID);
-
-                    RouterGroup group = BasicTracker.RouterGroupTracker[item.routegroup_id];
                     if (broker == null)
                     {
                         throw new FutsRspError("指定的成交接口不存在");
                     }
+
+                    RouterGroup group = BasicTracker.RouterGroupTracker[item.routegroup_id];
                     if (group == null)
                     {
                         throw new FutsRspError("指定的路由组不存在");
@@ -327,14 +327,26 @@ namespace TradingLib.ServiceManager
                     }
 
                     //如果是增加路由项目,则组内不能添加相同的帐户
-                    if (isadd && group.RouterItems.Any(r => r.Broker!=null && r.Broker.Token == broker.Token))
+                    if (isadd)
                     {
-                        throw new FutsRspError("组内已经存在该路由");
+                        //检查路由组内是否有对应的路由项目与当前Broker相同
+                        if (group.RouterItems.Any(r => r.Broker != null && r.Broker.Token == broker.Token))
+                        {
+                            throw new FutsRspError("组内已经存在该路由");
+                        }
+
                     }
 
-                    
                     //2.更新参数
                     BasicTracker.RouterGroupTracker.UpdateRouterItem(item);
+
+                    if(isadd)
+                    {
+                        //获得数据结构中的路由项目
+                        RouterItemImpl routerItem = BasicTracker.RouterGroupTracker.GetRouterItem(item.ID);
+                        //如果是添加路由项 则将broker绑定到该RouterItem
+                        routerItem.Broker = broker;
+                    }
 
                     session.NotifyMgr("NotifyRouterItem",item);
                     session.OperationSuccess("更新路由项目成功");
