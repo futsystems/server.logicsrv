@@ -9,7 +9,46 @@ namespace TradingLib.Core
 {
     public static class Utils_FollowItem
     {
+        /// <summary>
+        /// 生成某个跟单项目的所有委托信息
+        /// 首先将跟单项目的所有触发的委托生成对应的信息对象
+        /// 然后再通过成交查找的方式 获得该委托对应的成交项并转换成信息对象
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public static FollowItemOrderInfo[] GenFollowItemOrderInfos(this TradeFollowItem item)
+        {
+            FollowItemOrderInfo[] orders = item.Orders.Select(o => o.ToFollowItemOrder()).ToArray();
+            foreach (var o in orders)
+            {
+                FollowItemTradeInfo[] trades = item.Trades.Where(f => f.id == o.OrderID).Select(f => f.ToFollowItemTrade()).ToArray();
+                o.Trades = trades;
+            }
+            return orders;
+        }
 
+        public static FollowItemDetail GenFollowItemDetail(this TradeFollowItem item)
+        {
+            //开仓跟单项目
+            if (item.EventType == QSEnumPositionEventType.EntryPosition)
+            {
+                FollowItemDetail detail = new FollowItemDetail();
+                detail.FollowKey = item.FollowKey;
+                detail.PositionHoldSize = item.PositionHoldSize;
+                detail.TotalSlip = item.TotalSlip + item.ExitFollowItems.Sum(f => f.TotalSlip);
+                detail.TotalRealizedPL = item.ExitFollowItems.Sum(f => f.FollowProfit);
+
+                detail.EntrySignalTrade = item.SignalTrade.ToFollowItemSignalTrade();
+                detail.EntrySignalTrade.Orders = item.GenFollowItemOrderInfos();
+
+                detail.ExitSignalTrades = item.ExitFollowItems.Select(exit => {FollowItemSignalTradeInfo trade = exit.SignalTrade.ToFollowItemSignalTrade();trade.Orders = exit.GenFollowItemOrderInfos();return trade;}).ToArray();
+                return detail;
+            }
+            else
+            {
+                return item.EntryFollowItem.GenFollowItemDetail();
+            }
+        }
         public static EntryFollowItemStruct GenEntryFollowItemStruct(this TradeFollowItem item)
         {
             if (item.EventType == QSEnumPositionEventType.ExitPosition)

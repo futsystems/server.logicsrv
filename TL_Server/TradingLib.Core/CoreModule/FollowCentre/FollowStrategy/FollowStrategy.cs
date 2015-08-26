@@ -66,6 +66,14 @@ namespace TradingLib.Core
         ConcurrentDictionary<int, ISignal> signalMap = null;
         SignalFollowItemTracker followitemtracker = null;
 
+        public event Action<TradeFollowItem> NewTradeFollowItemEvent;
+
+        void NewTradeFollowItem(TradeFollowItem item)
+        {
+            if (NewTradeFollowItemEvent != null)
+                NewTradeFollowItemEvent(item);
+        }
+
 
         public FollowStrategy(FollowStrategyConfig cfg)
         {
@@ -73,6 +81,7 @@ namespace TradingLib.Core
             this.Config = cfg;
 
             followitemtracker = new SignalFollowItemTracker();
+            followitemtracker.NewTradeFollowItemEvent += new Action<TradeFollowItem>(NewTradeFollowItem);
             sourceTracker = new OrderSourceTracker();
 
             this.WorkState = QSEnumFollowWorkState.Shutdown;//初始状态处于停止状态

@@ -285,5 +285,25 @@ namespace TradingLib.Core
             }
         }
 
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryFollowItemDetail", "QryFollowItemDetail - qry follow item detail", "查询跟单项目明细信息")]
+        public void CTE_QryFollowItemDetail(ISession session, string followkey)
+        {
+            Manager manager = session.GetManager();
+            if (!manager.IsRoot())
+            {
+                throw new FutsRspError("无权进行此操作");
+            }
+            TradeFollowItem item = null;
+            if (followitemmap.TryGetValue(followkey, out item))
+            {
+                FollowItemDetail detail = item.GenFollowItemDetail();
+                session.ReplyMgr(detail);
+
+            }
+            else
+            { 
+            
+            }
+        }
     }
 }

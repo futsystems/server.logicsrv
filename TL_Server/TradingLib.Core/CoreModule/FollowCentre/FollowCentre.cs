@@ -24,7 +24,7 @@ namespace TradingLib.Core
             FollowTracker.NotifyTradeFollowItemEvent += new Action<TradeFollowItem>(NotifyFollowItem);
         }
 
-
+        ConcurrentDictionary<string, TradeFollowItem> followitemmap = new ConcurrentDictionary<string, TradeFollowItem>();
         ConcurrentDictionary<int, FollowStrategy> strategyMap = new ConcurrentDictionary<int, FollowStrategy>();
         bool _followstart = false;
         public void Start()
@@ -47,7 +47,10 @@ namespace TradingLib.Core
             {
                 strategy.Start();
             }
-
+            foreach (var item in followitemmap.Values)
+            { 
+                
+            }
             _followstart = true;
 
         }

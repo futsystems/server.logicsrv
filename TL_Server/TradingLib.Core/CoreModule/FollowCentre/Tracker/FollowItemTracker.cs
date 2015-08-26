@@ -17,6 +17,8 @@ namespace TradingLib.Core
         Dictionary<int, FollowItemTracker> signalMap = new Dictionary<int, FollowItemTracker>();
 
 
+        public event Action<TradeFollowItem> NewTradeFollowItemEvent;
+
         /// <summary>
         /// 初始化某个信号的跟单项目维护器
         /// </summary>
@@ -25,10 +27,18 @@ namespace TradingLib.Core
         {
             if (!signalMap.Keys.Contains(signal.ID))
             {
-                signalMap.Add(signal.ID, new FollowItemTracker());
+                FollowItemTracker tk = new FollowItemTracker();
+                tk.NewTradeFollowItemEvent += new Action<TradeFollowItem>(NewTradeFollowItem);
+                signalMap.Add(signal.ID, tk);
             }
         }
 
+
+        void NewTradeFollowItem(TradeFollowItem item)
+        {
+            if (NewTradeFollowItemEvent != null)
+                NewTradeFollowItemEvent(item);
+        }
         /// <summary>
         /// 按信号ID获得对应的跟单项维护器
         /// 如果指定的signalid不存在 则会创建默认的跟单项目维护器
@@ -78,6 +88,14 @@ namespace TradingLib.Core
         /// </summary>
         //ConcurrentDictionary<string, List<TradeFollowItem>> entry2exitMap = new ConcurrentDictionary<string, List<TradeFollowItem>>();
 
+        public event Action<TradeFollowItem> NewTradeFollowItemEvent;
+
+        void NewTradeFollowItem(TradeFollowItem item)
+        {
+            if (NewTradeFollowItemEvent != null)
+                NewTradeFollowItemEvent(item);
+        }
+
         /// <summary>
         /// 获得跟单项目
         /// </summary>
@@ -91,6 +109,8 @@ namespace TradingLib.Core
                     logger.Warn("TradeFollowItem already exist");
                 }
                 entryMap.TryAdd(item.Key, item);
+                //对外触发事件
+                NewTradeFollowItem(item);
                 return;
             }
 
@@ -101,13 +121,15 @@ namespace TradingLib.Core
                     logger.Warn("TradeFollowItem already exit");
                 }
                 exitMap.TryAdd(item.Key, item);
-
+                //对外触发事件
+                NewTradeFollowItem(item);
                 //if (!entry2exitMap.Keys.Contains(item.PositionEvent.PositionExit.OpenTradeID))
                 //{
                 //    entry2exitMap.TryAdd(item.PositionEvent.PositionExit.OpenTradeID, new List<TradeFollowItem>());
                 //}
                 //entry2exitMap[item.PositionEvent.PositionExit.OpenTradeID].Add(item);
             }
+           
         }
 
         /// <summary>

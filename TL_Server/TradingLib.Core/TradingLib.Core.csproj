@@ -131,6 +131,7 @@
     <Compile Include="CoreModule\FollowCentre\FollowCentre_Restore.cs" />
     <Compile Include="CoreModule\FollowCentre\FollowCentre_FollowStrategy.cs" />
     <Compile Include="CoreModule\FollowCentre\FollowCentre_Notify.cs" />
+    <Compile Include="CoreModule\FollowCentre\Utils\Utils_TradingInfo.cs" />
     <Compile Include="CoreModule\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_ExStrategy.cs" />
     <Compile Include="CoreModule\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_helloworld.cs" />
     <Compile Include="CoreModule\ManagerExchange\PacketHandler\MgrExchServer_PacketHandle_Margin.cs" />
