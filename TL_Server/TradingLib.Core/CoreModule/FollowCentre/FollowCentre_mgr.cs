@@ -107,7 +107,12 @@ namespace TradingLib.Core
             }
         }
 
-
+        /// <summary>
+        /// 设置策略工作状态
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="strategyid"></param>
+        /// <param name="state"></param>
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "SetStrategyWorkState", "SetStrategyWorkState - set follow strategy workstate", "设置跟单策略工作状态")]
         public void CTE_SetWorkState(ISession session,int strategyid,QSEnumFollowWorkState state)
         {
@@ -208,6 +213,12 @@ namespace TradingLib.Core
             strategy.AppendSignal(signal);
         }
 
+        /// <summary>
+        /// 将信号源从策略移除
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="signalID"></param>
+        /// <param name="strategyID"></param>
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "RemoveSignalFromStrategy", "RemoveSignalFromStrategy - remove signal from strategy's signal list", "将信号源从跟单策略信号列表删除")]
         public void CTE_RemoveSignalFromStrategy(ISession session, int signalID, int strategyID)
         {
@@ -239,7 +250,7 @@ namespace TradingLib.Core
 
 
         /// <summary>
-        /// 查询某个跟单策略的跟单项目列表
+        /// 查询某个跟单策略的开仓跟单项目列表
         /// </summary>
         /// <param name="session"></param>
         /// <param name="strategy_id"></param>
@@ -264,6 +275,11 @@ namespace TradingLib.Core
             }
         }
 
+        /// <summary>
+        /// 查询某个跟单策略的平仓跟单项目列表
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="strategy_id"></param>
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryExitFollowItemList", "QryExitFollowItemList - qry follow item list", "查询跟单项目列表")]
         public void CTE_QryExitFollowItemList(ISession session, int strategy_id)
         {
@@ -285,6 +301,11 @@ namespace TradingLib.Core
             }
         }
 
+        /// <summary>
+        /// 查询跟单项目明细
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="followkey"></param>
         [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "QryFollowItemDetail", "QryFollowItemDetail - qry follow item detail", "查询跟单项目明细信息")]
         public void CTE_QryFollowItemDetail(ISession session, string followkey)
         {
@@ -303,6 +324,38 @@ namespace TradingLib.Core
             else
             { 
             
+            }
+        }
+
+        [ContribCommandAttr(QSEnumCommandSource.MessageMgr, "FlatFollowItem", "FlatFollowItem - flat follow item", "强平某个跟单项目")]
+        public void CTE_FlatFollowItem(ISession session, string followkey)
+        {
+            Manager manager = session.GetManager();
+            if (!manager.IsRoot())
+            {
+                throw new FutsRspError("无权进行此操作");
+            }
+            TradeFollowItem item = null;
+            if (followitemmap.TryGetValue(followkey, out item))
+            {
+                //如果提供的是平仓跟单项followkey则找到对应的开仓跟单项目
+                if (item.EventType == QSEnumPositionEventType.ExitPosition)
+                {
+                    item = item.EntryFollowItem;
+                }
+
+                if (item.PositionHoldSize == 0)
+                {
+                    throw new FutsRspError("跟单项目持仓已被平");
+                }
+
+                //执行手工平仓操作
+
+
+            }
+            else
+            {
+
             }
         }
     }
