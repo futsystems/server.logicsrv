@@ -92,7 +92,8 @@ namespace TradingLib.Core
             this.Dump2Log();
 
             //通过事件中继出发数据保存事件
-            //TLCtxHelper.EventSystem.FireSettleDataStoreEvent(this, new SystemEventArgs());
+            TLCtxHelper.EventSystem.FireSettleDataStoreEvent(this, new SystemEventArgs());
+            
         }
 
 

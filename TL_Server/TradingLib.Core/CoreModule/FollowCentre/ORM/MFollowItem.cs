@@ -107,7 +107,41 @@ namespace TradingLib.ORM
         }
 
 
+        /// <summary>
+        /// 转储日内记录到对应的log表
+        /// </summary>
+        public static void DumpInterdayFollowInfos()
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = "replace into follow_items_log select * from follow_items";
+                db.Connection.Execute(query);
 
+                query = "replace into follow_item_trade_map_log select * from follow_item_trade_map";
+                db.Connection.Execute(query);
+
+                query = "replace into follow_item_order_map_log select * from follow_item_order_map";
+                db.Connection.Execute(query);
+            }
+        }
+
+        /// <summary>
+        /// 清空日内跟单记录表
+        /// </summary>
+        public static void ClearInterdayFollowInfos()
+        {
+            using (DBMySql db = new DBMySql())
+            {
+                string query = "delete from follow_items_log";
+                db.Connection.Execute(query);
+
+                query = "delete from follow_item_trade_map_log";
+                db.Connection.Execute(query);
+
+                query = "delete from follow_item_order_map_log";
+                db.Connection.Execute(query);
+            }
+        }
 
     }
 }
