@@ -107,6 +107,13 @@ namespace TradingLib.Core
                 return false;
             }
 
+
+            if (o.oSymbol.SecurityFamily!= null && blockcode.Contains(o.oSymbol.SecurityFamily.Code))
+            {
+                errortitle = "SYMBOL_NOT_TRADEABLE";//合约不可交易
+                return false;
+            }
+
             periodAuctionPlace = o.oSymbol.SecurityFamily.IsInAuctionTime();//是否处于集合竞价报单时段
             periodAuctionExecution = o.oSymbol.SecurityFamily.IsInActionExutionTime();//是否处于集合竞价撮合时段
             periodContinuous = o.oSymbol.SecurityFamily.IsInContinuous();//是否处于连续竞价阶段

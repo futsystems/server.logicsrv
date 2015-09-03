@@ -35,6 +35,7 @@ namespace TradingLib.Core
         string commentOverFlatPositionSize = "可平持仓数量不足";
         bool auctionEnable = false;
         bool flatOrderByLimit = false;//按停版价来发送强平委托
+        List<string> blockcode = null;
 
         public RiskCentre(ClearCentre clearcentre):base(CoreName)
         {
@@ -95,6 +96,11 @@ namespace TradingLib.Core
             }
             flatOrderByLimit = _cfgdb["FlatOrderByLimit"].AsBool();
 
+            if (!_cfgdb.HaveConfig("BlockCodeList"))
+            {
+                _cfgdb.UpdateConfig("BlockCodeList", QSEnumCfgType.String,"IF,IH,IC", "禁止交易品种列表");
+            }
+            blockcode = new List<string>(_cfgdb["BlockCodeList"].AsString().Split(','));
 
             //订阅持仓回合关闭事件
             TLCtxHelper.EventIndicator.GotPositionClosedEvent += new PositionRoundClosedDel(GotPostionRoundClosed);
