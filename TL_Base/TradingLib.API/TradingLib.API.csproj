@@ -49,6 +49,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Shared\VersionInfo.cs">
+      <Link>VersionInfo.cs</Link>
+    </Compile>
     <Compile Include="Account\IAccCal.cs" />
     <Compile Include="Account\IAccOperation.cs" />
     <Compile Include="Account\IAccTradingInfo.cs" />

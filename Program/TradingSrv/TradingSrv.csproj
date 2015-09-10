@@ -113,6 +113,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Shared\VersionInfo.cs">
+      <Link>VersionInfo.cs</Link>
+    </Compile>
     <Compile Include="CoreDaemon.cs" />
     <Compile Include="CoreThread.cs" />
     <Compile Include="Program.cs" />

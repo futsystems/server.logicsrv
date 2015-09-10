@@ -76,6 +76,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Shared\VersionInfo.cs">
+      <Link>VersionInfo.cs</Link>
+    </Compile>
     <Compile Include="Accounts\Account.cs" />
     <Compile Include="Accounts\Account_IAccountIndicator.cs" />
     <Compile Include="Accounts\Account_Session.cs" />
