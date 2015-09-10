@@ -5,9 +5,8 @@
 <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
 <OperatingPlatform Condition="'$(OperatingPlatform)' == ''">Windows</OperatingPlatform>
 <clrzmqSuffix Condition="'$(OperatingPlatform)' == 'Unix'">-unix</clrzmqSuffix>
-<PackageDir>target\logicsrv</PackageDir>
+<PackageDir>package\logicsrv</PackageDir>
 </PropertyGroup>
-
 
   <ItemGroup>
     <CleanFiles Include="lib\TradingLib\*" />
@@ -49,11 +48,9 @@
 		<LibFiles Include="lib\Common.Logging.dll" />
 		<LibFiles Include="lib\Common.Logging.NLog31.dll" />
 		<LibFiles Include="lib\NLog.dll" />
-		<LibFiles Include="lib\NLog.dll" />
 								
 		<LibFiles Condition=" '$(OperatingPlatform)' == 'Windows' " Include="lib\libzmq\clrzmq\clrzmq.dll" />
 		<LibFiles Condition=" '$(OperatingPlatform)' == 'Unix' " Include="lib\libzmq\clrzmq-unix\clrzmq.dll" />
-		<LibFiles Condition=" '$(OperatingPlatform)' == 'Unix' " Include="lib\libzmq\clrzmq-unix\libzmq.a" />
   </ItemGroup>
   <ItemGroup>
     <BuildFilesExecute Include="Platform\TradingSrv\LogicSrv.exe" />
@@ -107,6 +104,7 @@
 		<MSBuild Projects="TL_Connector\TLBrokerCTPSplit\TLBrokerCTPSplit.csproj" Properties="Configuration=$(Configuration);" />
 		<MSBuild Projects="TL_Connector\TLBrokerCTP\TLBrokerCTPDirect.csproj" Properties="Configuration=$(Configuration);" />
 		<MSBuild Projects="TL_Connector\TLBrokerCTPPassThrough\TLBrokerCTPPassThrough.csproj" Properties="Configuration=$(Configuration);" />
+		<MSBuild Projects="TL_Connector\TLBrokerCTPResverse\TLBrokerCTPResverse.csproj" Properties="Configuration=$(Configuration);" />
   </Target>
 
   <Target Name="Account" DependsOnTargets="Base">
@@ -114,8 +112,7 @@
   </Target>
 
   <Target Name="RuleSet" DependsOnTargets="Base">
-		<MSBuild Projects="TL_Strategy\RuleSet\AccountRuleSet\AccountRuleSet.csproj" Properties="Configuration=$(Configuration);" />
-		<MSBuild Projects="TL_Strategy\RuleSet\OrderRuleSet\OrderRuleSet.csproj" Properties="Configuration=$(Configuration);" />
+		<MSBuild Projects="TL_Strategy\RuleSet\AccountRuleSet2\RuleSet2.csproj" Properties="Configuration=$(Configuration);" />
   </Target>
 
 	<Target Name="ExServer" DependsOnTargets="Base">
