@@ -17,11 +17,10 @@ PACKFILES = build/clrzmq.* README.md AUTHORS LICENSE
 .PHONY=all release package clean
 
 #build base server and so on ...
-all:clean base server contrib connector account rule exsrv
+all:clean release base server contrib connector account rule exsrv
 
 
 release:
-	release:
 	$(shell ./version.sh)
 
 package1: release
@@ -56,9 +55,9 @@ publish:
 	$(shell ./build.sh)
 	@echo "\033[32;49;1mLogicSrv Package Build Success Version:$(shell git describe) \033[39;49;0m"
 
+
 publishclean:
 	$(XBUILD) /target:PublishClean $(FLAGS) $(PROJ)
-	
 
 install:
 	
