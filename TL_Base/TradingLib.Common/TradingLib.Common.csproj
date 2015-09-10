@@ -66,10 +66,12 @@
     <Compile Include="Follow\FollowStrategyStatus.cs" />
     <Compile Include="Follow\SignalConfig.cs" />
     <Compile Include="Manager\UIAccess.cs" />
+    <Compile Include="Message\XAPI\BasicInfo.cs" />
     <Compile Include="Message\CashOperationNotify.cs" />
     <Compile Include="Message\LogicFront.cs" />
     <Compile Include="Message\QryTradingParams.cs" />
     <Compile Include="Message\TradingNoticeNotify.cs" />
+    <Compile Include="Message\XAPI\TradingInfo.cs" />
     <Compile Include="ORM\Config\ConfigDB.cs" />
     <Compile Include="ORM\Config\ConfigItem.cs" />
     <Compile Include="ORM\Config\GlobalConfig.cs" />
@@ -90,6 +92,7 @@
     <Compile Include="Trading\Config\MarginTemplateItem.cs" />
     <Compile Include="Trading\MarginConfig.cs" />
     <Compile Include="Trading\MarketData.cs" />
+    <Compile Include="Trading\MarketTime.cs" />
     <Compile Include="Utils\ChinSpellcs.cs" />
     <Compile Include="Utils\Version.cs" />
     <Compile Include="Tracker\HighLowTracker.cs" />

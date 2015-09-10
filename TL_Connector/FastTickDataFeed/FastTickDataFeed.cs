@@ -363,6 +363,22 @@ namespace DataFeed.FastTick
                     }
 
                     //通过FastTickServer的管理端口 请求FastTickServer向行情源订阅行情数据,Publisher的订阅是内部的一个分发订阅 不会产生向行情源订阅实际数据
+                    
+
+                    //如果国外交易所 需要按交易所进行发送
+                    if (kv.Key == QSEnumDataFeedTypes.IQFEED)
+                    {
+                        foreach (var sym in kv.Value)
+                        {
+                            string tmpreq = (kv.Key.ToString() + ":" + sym.Symbol +"|"+sym.SecurityFamily.Exchange.EXCode);
+                            debug(Token + " RegisterSymbol " + tmpreq, QSEnumDebugLevel.INFO);
+                            Send(TradingLib.API.MessageTypes.MGRREGISTERSYMBOLS, tmpreq);
+                            
+                        }
+                        return;
+                    }
+
+                    //默认按 DataFeed:sym0,sym1,sym2的方式发送请求
                     string requeststr = (kv.Key.ToString() + ":" + symlist);
                     debug(Token + " RegisterSymbol " + requeststr, QSEnumDebugLevel.INFO);
                     Send(TradingLib.API.MessageTypes.MGRREGISTERSYMBOLS, requeststr);
@@ -420,6 +436,12 @@ namespace DataFeed.FastTick
             if (symbol.SecurityType == SecurityType.OPT && symbol.SecurityFamily.Exchange.Country == Country.CN)
             {
                 return QSEnumDataFeedTypes.CTPOPT;
+            }
+
+            //国外行情通过IQFeed获取
+            if (symbol.SecurityFamily.Exchange.Country != Country.CN)
+            {
+                return QSEnumDataFeedTypes.IQFEED;
             }
             return QSEnumDataFeedTypes.CTP;
         }

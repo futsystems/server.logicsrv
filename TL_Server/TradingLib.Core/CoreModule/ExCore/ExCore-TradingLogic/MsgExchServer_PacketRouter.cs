@@ -150,6 +150,49 @@ namespace TradingLib.Core
                         SrvOnQryTradingParams(request, account);
                     }
                     break;
+                case MessageTypes.XQRYMARKETTIME://查询交易时间段
+                    {
+                        XQryMarketTimeRequest request = packet as XQryMarketTimeRequest;
+                        SrvOnXQryMarketTime(request, account);
+                    }
+                    break;
+                case MessageTypes.XQRYEXCHANGE://查询交易所
+                    {
+                        XQryExchangeRequuest request = packet as XQryExchangeRequuest;
+                        SrvOnXQryExchange(request, account);
+                    }
+                    break;
+                case MessageTypes.XQRYSECURITY://查询品种
+                    {
+                        XQrySecurityRequest request = packet as XQrySecurityRequest;
+                        SrvOnXQrySecurity(request, account);
+                    }
+                    break;
+                case MessageTypes.XQRYSYMBOL://查询合约
+                    {
+                        XQrySymbolRequest request = packet as XQrySymbolRequest;
+                        SrvOnXQrySymbol(request, account);
+                    }
+                    break;
+                case MessageTypes.XQRYYDPOSITION://查询隔夜持仓
+                    {
+                        XQryYDPositionRequest request = packet as XQryYDPositionRequest;
+                        SrvOnXQryYDPosition(request, account);
+                    }
+                    break;
+                case MessageTypes.XQRYORDER://查询委托
+                    {
+                        XQryOrderRequest request = packet as XQryOrderRequest;
+                        SrvOnXQryOrder(request, account);
+                    }
+                    break;
+                case MessageTypes.XQRYTRADE://查询成交
+                    {
+                        XQryTradeRequest request = packet as XQryTradeRequest;
+                        SrvOnXQryTrade(request, account);
+                    }
+                    break;
+
                 case MessageTypes.CONTRIBREQUEST://扩展请求
                     {
                         ContribRequest request = packet as ContribRequest;

@@ -175,6 +175,27 @@ namespace TradingLib.Common
                     //查询交易参数
                     case MessageTypes.QRYTRADINGPARAMS:
                         return RequestTemplate<QryTradingParamsRequest>.SrvRecvRequest(frontid, clientid, content);
+                    //查询交易时间段
+                    case MessageTypes.XQRYMARKETTIME:
+                        return RequestTemplate<XQryMarketTimeRequest>.SrvRecvRequest(frontid, clientid, content);
+                    //查询交易所
+                    case MessageTypes.XQRYEXCHANGE:
+                        return RequestTemplate<XQryExchangeRequuest>.SrvRecvRequest(frontid, clientid, content);
+                    //查询品种
+                    case MessageTypes.XQRYSECURITY:
+                        return RequestTemplate<XQrySecurityRequest>.SrvRecvRequest(frontid, clientid, content);
+                    //查询合约
+                    case MessageTypes.XQRYSYMBOL:
+                        return RequestTemplate<XQrySymbolRequest>.SrvRecvRequest(frontid, clientid, content);
+                    //查询隔夜持仓
+                    case MessageTypes.XQRYYDPOSITION:
+                        return RequestTemplate<XQryYDPositionRequest>.SrvRecvRequest(frontid, clientid, content);
+                    //查询委托
+                    case MessageTypes.XQRYORDER:
+                        return RequestTemplate<XQryOrderRequest>.SrvRecvRequest(frontid,clientid,content);
+                    //查询成交
+                    case MessageTypes.XQRYTRADE:
+                        return RequestTemplate<XQryTradeRequest>.SrvRecvRequest(frontid, clientid, content);
 
                     #region manager
                     case MessageTypes.MGRLOGINREQUEST://请求登入
@@ -362,6 +383,21 @@ namespace TradingLib.Common
                     return ResponseTemplate<RspQryMarketDataResponse>.CliRecvResponse(content);
                 case MessageTypes.TRADINGPARAMSRESPONSE://交易参数回报
                     return ResponseTemplate<RspQryTradingParamsResponse>.CliRecvResponse(content);
+
+                case MessageTypes.XMARKETTIMERESPONSE://交易时间回报
+                    return ResponseTemplate<RspXQryMarketTimeResponse>.CliRecvResponse(content);
+                case MessageTypes.XEXCHANGERESPNSE://交易所回报
+                    return ResponseTemplate<RspXQryExchangeResponse>.CliRecvResponse(content);
+                case MessageTypes.XSECURITYRESPONSE://品种回报
+                    return ResponseTemplate<RspXQrySecurityResponse>.CliRecvResponse(content);
+                case MessageTypes.XSYMBOLRESPONSE://合约回报
+                    return ResponseTemplate<RspXQrySymbolResponse>.CliRecvResponse(content);
+                case MessageTypes.XYDPOSITIONRESPONSE://持仓回报
+                    return ResponseTemplate<RspXQryYDPositionResponse>.CliRecvResponse(content);
+                case MessageTypes.XORDERRESPONSE://委托回报
+                    return ResponseTemplate<RspXQryOrderResponse>.CliRecvResponse(content);
+                case MessageTypes.XTRADERESPONSE://成交回报
+                    return ResponseTemplate<RspXQryTradeResponse>.CliRecvResponse(content);
 
                 case MessageTypes.TICKNOTIFY:
                     TickNotify ticknotify = new TickNotify();

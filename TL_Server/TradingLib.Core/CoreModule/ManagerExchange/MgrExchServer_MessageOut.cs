@@ -221,8 +221,6 @@ namespace TradingLib.Core
                         notify.PositionDetail = pd;
                         tl.TLSend(notify);
                     }
-                   
-                    
                 }
 
                 //转发当日委托

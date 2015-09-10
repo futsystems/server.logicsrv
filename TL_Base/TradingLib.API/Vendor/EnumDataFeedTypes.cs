@@ -18,6 +18,7 @@ namespace TradingLib.API
         CTP,//国内CTP期货 DataFeed
         CTPOPT,//国内CTP期权 DataFeed
         IB,//外盘IBDataFeed
+        IQFEED,//外盘IQFeed行情源
     };
 
 

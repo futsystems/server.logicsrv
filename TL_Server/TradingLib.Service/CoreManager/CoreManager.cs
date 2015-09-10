@@ -39,7 +39,7 @@ namespace TradingLib.ServiceManager
         private IModuleSettleCentre _settleCentre;//结算中心
         private IModuleRiskCentre _riskCentre;//风控服务
         private IModuleTaskCentre _taskcentre;//调度服务
-        private IModuleFollowCentre _followcentre;//跟单服务
+        //private IModuleFollowCentre _followcentre;//跟单服务
 
         /*
          *  数据库连接缓存 数据库连接 9
@@ -101,8 +101,8 @@ namespace TradingLib.ServiceManager
             logger.Info("[INIT CORE] TaskCentre");
             _taskcentre = TLCtxHelper.Scope.Resolve<IModuleTaskCentre>();//初始化任务执行中心 在所有组件加载完毕后 在统一加载定时任务设置
             
-            logger.Info("[INIT CORE] FollowCentre");
-            _followcentre = TLCtxHelper.Scope.Resolve<IModuleFollowCentre>();
+            //logger.Info("[INIT CORE] FollowCentre");
+            //_followcentre = TLCtxHelper.Scope.Resolve<IModuleFollowCentre>();
             #endregion
 
         }
@@ -140,7 +140,7 @@ namespace TradingLib.ServiceManager
 
             _taskcentre.Start();
 
-            _followcentre.Start();
+            //_followcentre.Start();
 
             logger.Info("----------- Core Started -----------------");
         }

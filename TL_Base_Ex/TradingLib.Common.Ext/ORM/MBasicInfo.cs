@@ -52,7 +52,7 @@ namespace TradingLib.ORM
         {
             using (DBMySql db = new DBMySql())
             {
-                const string query = "SELECT a.id,a.name,a.description,a.markettime FROM info_markettime a";
+                const string query = "SELECT a.id,a.name,a.description,a.timezone,a.markettime FROM info_markettime a";
                 IEnumerable<MarketTime> result = db.Connection.Query<MarketTime, MarketTimeString, MarketTime>(query, (mkttime, mkttimestr) => { mkttime.DeserializeMktTimeString(mkttimestr.MarketTime); return mkttime; }, null, null, false, "markettime", null, null).ToList<MarketTime>();
                 return result;
             }

@@ -90,6 +90,15 @@ namespace TradingLib.API
         QRYMARKETDATA,//查询市场行情
         QRYTRADINGPARAMS,//查询交易参数
 
+        XQRYMARKETTIME,//查询交易时间段
+        XQRYEXCHANGE,//查询交易所
+        XQRYSECURITY,//查询品种
+        XQRYSYMBOL,//查询合约
+        XQRYYDPOSITION,//查询隔夜持仓 (通过隔夜持仓数据与当日成交数据可以完全恢复一个交易帐户的交易状态)
+        XQRYORDER,//查询委托
+        XQRYTRADE,//查询成交
+
+
         DOMREQUEST,//请求DOM市场Level2数据
         IMBALANCEREQUEST,//imbalance..查询这个是什么意思
 
@@ -140,6 +149,13 @@ namespace TradingLib.API
         MARKETDATARESPONSE,//查询市场行情回报
         TRADINGPARAMSRESPONSE,//查询交易参数回报
 
+        XMARKETTIMERESPONSE,//查询交易时间段
+        XEXCHANGERESPNSE,//查询交易所
+        XSECURITYRESPONSE,//查询品种
+        XSYMBOLRESPONSE,//查询合约
+        XYDPOSITIONRESPONSE,//隔夜持仓回报
+        XORDERRESPONSE,//委托回报
+        XTRADERESPONSE,//成交回报
 
         // END STANDARD MESSAGES
 
