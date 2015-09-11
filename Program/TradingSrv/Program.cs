@@ -11,6 +11,9 @@ using TradingLib.BrokerXAPI;
 using Common.Logging;
 using System.Runtime.InteropServices;
 using System.Reflection;
+using System.Xml;
+using System.IO;
+using System.Text;
 
 
 namespace TraddingSrvCLI
@@ -43,6 +46,33 @@ namespace TraddingSrvCLI
             try
             {
                 debug("********* start core daemon *********");
+
+                string xmlfile = Util.GetConfigFile("error.xml");
+                XmlDocument xmlDoc = null;
+                if (File.Exists(xmlfile))
+                {
+                    xmlDoc = new XmlDocument();
+                    xmlDoc.Load(xmlfile);
+                }
+
+                List<XMLRspInfo> rsplist = new List<XMLRspInfo>();
+                XmlNode xn = xmlDoc.SelectSingleNode("errors");
+                XmlNodeList errors = xn.ChildNodes;
+                Util.Debug("total errors:" + errors.Count.ToString());
+                foreach (XmlNode node in errors)
+                {
+                    try
+                    {
+                        
+                    }
+                    catch (Exception ex)
+                    {
+                        Util.Debug("error:" + ex.ToString());
+                    }
+
+                }
+
+
                 CoreDaemon cd = new CoreDaemon();
                 //cd.SendDebugEvent +=new DebugDelegate(debug);
                 //启动核心守护
