@@ -63,7 +63,11 @@ namespace TraddingSrvCLI
                 {
                     try
                     {
-                        
+                        XmlElement error = (XmlElement)node;
+                        string key = error.GetAttribute("id");
+                        int code = int.Parse(error.GetAttribute("value"));
+                        string prompt = error.GetAttribute("prompt");
+                        Console.WriteLine(string.Format("{0}-{1}-{2}", key, code, prompt));
                     }
                     catch (Exception ex)
                     {
