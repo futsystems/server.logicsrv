@@ -46,38 +46,6 @@ namespace TraddingSrvCLI
             try
             {
                 debug("********* start core daemon *********");
-                RspInfoTracker.Init();
-
-                string xmlfile = Util.GetConfigFile("error.xml");
-                XmlDocument xmlDoc = null;
-                if (File.Exists(xmlfile))
-                {
-                    xmlDoc = new XmlDocument();
-                    xmlDoc.Load(xmlfile);
-                }
-
-                List<XMLRspInfo> rsplist = new List<XMLRspInfo>();
-                XmlNode xn = xmlDoc.SelectSingleNode("errors");
-                XmlNodeList errors = xn.ChildNodes;
-                Util.Debug("total errors:" + errors.Count.ToString());
-                foreach (XmlNode node in errors)
-                {
-                    try
-                    {
-                        XmlElement error = (XmlElement)node;
-                        string key = error.GetAttribute("id");
-                        int code = int.Parse(error.GetAttribute("value"));
-                        string prompt = error.GetAttribute("prompt");
-                        Console.WriteLine(string.Format("{0}-{1}-{2}", key, code, prompt));
-                    }
-                    catch (Exception ex)
-                    {
-                        Util.Debug("error:" + ex.ToString());
-                    }
-
-                }
-
-
                 CoreDaemon cd = new CoreDaemon();
                 //cd.SendDebugEvent +=new DebugDelegate(debug);
                 //启动核心守护

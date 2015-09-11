@@ -26,11 +26,11 @@ namespace TradingLib.Common
         }
 
 
-        public static void Init()
-        {
-            _defaultinstance.webapitracker = new XMLRspInfoTracker("WEBAPI", "webapierror.xml", "errors");
-            _defaultinstance.exRspInfoTracker = new XMLRspInfoTracker("EX", "error.xml", "errors");
-        }
+        //public static void Init()
+        //{
+        //    _defaultinstance.webapitracker = new XMLRspInfoTracker("WEBAPI", "webapierror.xml", "errors");
+        //    _defaultinstance.exRspInfoTracker = new XMLRspInfoTracker("EX", "error.xml", "errors");
+        //}
 
 
         /// <summary>
