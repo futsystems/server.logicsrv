@@ -75,6 +75,11 @@ namespace TradingLib.Common
                 defaultinstance = null;
             }
         }
+
+        public static void Init()
+        { 
+            
+        }
         /// <summary>
         /// 管理员对象管理器
         /// </summary>

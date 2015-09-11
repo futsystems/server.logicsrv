@@ -46,6 +46,7 @@ namespace TraddingSrvCLI
             try
             {
                 debug("********* start core daemon *********");
+                RspInfoTracker.Init();
 
                 string xmlfile = Util.GetConfigFile("error.xml");
                 XmlDocument xmlDoc = null;

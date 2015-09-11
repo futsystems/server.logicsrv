@@ -21,6 +21,14 @@ namespace TradingLib.Common
             
         }
 
+
+        public static void Init()
+        {
+            webapitracker = new XMLRspInfoTracker("WEBAPI", "webapierror.xml", "errors");
+            exRspInfoTracker = new XMLRspInfoTracker("EX", "error.xml", "errors");
+        }
+
+
         /// <summary>
         /// 获得web同步调用的回报信息维护器
         /// </summary>
