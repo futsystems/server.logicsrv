@@ -22,6 +22,7 @@ namespace TradingLib.Core
             
             if (totalnum > 0)
             {
+                logger.Info("rule set num:" + totalnum.ToString());
                 for (int i = 0; i < totalnum; i++)
                 {
                     session.ReplyMgr(items[i], i == totalnum - 1);
@@ -29,6 +30,7 @@ namespace TradingLib.Core
             }
             else
             {
+                logger.Info("send null rule item");
                 session.ReplyMgr(null);
             }
         }
