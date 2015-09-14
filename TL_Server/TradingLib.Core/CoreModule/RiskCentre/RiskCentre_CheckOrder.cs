@@ -247,12 +247,12 @@ namespace TradingLib.Core
                 //6.2检查价格是否在涨跌幅度内
                 if (o.isLimit || o.isStop)
                 {
-                    decimal targetprice = o.isLimit ? o.LimitPrice : o.StopPrice;
-                    if (targetprice > tk.UpperLimit || targetprice < tk.LowerLimit)
-                    {
-                        errortitle = "ORDERPRICE_OVERT_LIMIT";//保单价格超过涨跌幅
-                        return false;
-                    }
+                        //decimal targetprice = o.isLimit ? o.LimitPrice : o.StopPrice;
+                        //if (targetprice > tk.UpperLimit || targetprice < tk.LowerLimit)
+                        //{
+                        //    errortitle = "ORDERPRICE_OVERT_LIMIT";//保单价格超过涨跌幅
+                        //    return false;
+                        //}
                 }
             }
             ////6.2检查价格是否在涨跌幅度内
