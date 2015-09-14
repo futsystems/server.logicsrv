@@ -112,7 +112,7 @@
   </Target>
 
   <Target Name="RuleSet" DependsOnTargets="Base">
-		<MSBuild Projects="TL_Strategy\RuleSet\AccountRuleSet2\RuleSet2.csproj" Properties="Configuration=$(Configuration);" />
+		<MSBuild Projects="TL_Strategy\RuleSet\RuleSet2\RuleSet2.csproj" Properties="Configuration=$(Configuration);" />
   </Target>
 
 	<Target Name="ExServer" DependsOnTargets="Base">
