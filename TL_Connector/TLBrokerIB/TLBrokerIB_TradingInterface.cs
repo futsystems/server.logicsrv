@@ -72,7 +72,7 @@ namespace Broker.Live
             //近端ID委托map 用于记录递增的OrderId与委托映射关系
             localOrderID_map.TryAdd(lo.BrokerLocalOrderID, lo);
             //记录父委托和子委托
-            sonFathOrder_Map.TryAdd(lo.id, lo);
+            sonFathOrder_Map.TryAdd(lo.id, o);
             fatherOrder_Map.TryAdd(o.id, o);
             fatherSonOrder_Map.TryAdd(o.id, lo);
 

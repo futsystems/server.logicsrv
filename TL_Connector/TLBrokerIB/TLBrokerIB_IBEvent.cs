@@ -24,6 +24,66 @@ namespace Broker.Live
 
             //if(e.ErrorCode = ErrorMessage.FailSendOrder)
             logger.Error(string.Format("IBClient error tickerid:{0} code:{1} message:{2}", e.TickerId, e.ErrorCode, e.ErrorMsg));
+
+            string code = e.ErrorCode.ToString();
+            switch (code)
+            {
+                case "135"://撤单时找不到该委托
+                    {
+                        Order lo = LocalID2Order(e.TickerId.ToString());//找到对应的本地委托
+                        if (lo == null) return;
+                        Order fatherOrder = SonID2FatherOrder(lo.id);
+                        if (fatherOrder == null) return;
+
+                        OrderAction action = new OrderActionImpl();
+                        action.Account = fatherOrder.Account;
+                        action.ActionFlag = QSEnumOrderActionFlag.Delete;
+                        action.Exchagne = "";
+                        action.Symbol = fatherOrder.Symbol;
+                        action.OrderID = fatherOrder.id;
+                        RspInfo info = new RspInfoImpl();
+                        info.ErrorID=(int)e.ErrorCode;
+                        info.ErrorMessage = "找不到编号为:"+e.TickerId.ToString()+"的委托";
+                        NotifyOrderOrderActionError(action, info);
+
+                        lo.Status = QSEnumOrderStatus.Reject;
+                        //lo.Comment = e.ErrorMsg;
+                        tk.GotOrder(lo); //Broker交易信息管理器
+                        this.LogBrokerOrderUpdate(lo);//委托跟新 更新到数据库
+
+                        fatherOrder.Status = QSEnumOrderStatus.Reject;
+                        fatherOrder.Comment = "找不到编号为:" + e.TickerId.ToString() + "的委托";
+                        NotifyOrder(fatherOrder);
+                        NotifyOrderError(fatherOrder, info);
+
+                        return;
+                    }
+                case "200"://找不到合约
+                    {
+
+                        Order lo = LocalID2Order(e.TickerId.ToString());//找到对应的本地委托
+                        if (lo == null) return;
+                        Order fatherOrder = SonID2FatherOrder(lo.id);
+                        if (fatherOrder == null) return;
+
+                        lo.Status = QSEnumOrderStatus.Reject;
+                        //lo.Comment = e.ErrorMsg;
+                        tk.GotOrder(lo); //Broker交易信息管理器
+                        this.LogBrokerOrderUpdate(lo);//委托跟新 更新到数据库
+
+                        RspInfo info = new RspInfoImpl();
+                        info.ErrorID = (int)e.ErrorCode;
+                        info.ErrorMessage = "找不到对应的合约";
+                        fatherOrder.Status = QSEnumOrderStatus.Reject;
+                        fatherOrder.Comment = "找不到对应的合约";
+                        NotifyOrderError(fatherOrder, info);
+
+
+                        return;
+                    }
+                default:
+                    break;
+            }
         }
 
         void client_NextValidId(object sender, Krs.Ats.IBNet.NextValidIdEventArgs e)
